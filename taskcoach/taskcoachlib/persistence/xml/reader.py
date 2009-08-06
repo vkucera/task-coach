@@ -386,5 +386,6 @@ class TemplateXMLReader(XMLReader):
         for name in ['startdate', 'duedate', 'completiondate', 'reminder']:
             if taskNode.attrib.has_key(name + 'tmpl'):
                 taskNode.attrib[name] = str(eval(taskNode.attrib[name + 'tmpl'], self.__context))
-        taskNode.attrib['subject'] = translate(taskNode.attrib['subject'])
+        if taskNode.attrib.has_key('subject'):
+            taskNode.attrib['subject'] = translate(taskNode.attrib['subject'])
         return super(TemplateXMLReader, self)._parseTaskNode(taskNode)

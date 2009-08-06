@@ -67,7 +67,7 @@ footer = '''
                 <ul>
                     <li><b><a href="download.html" title="Download %(name)s">Download</a></b></li>
                     <li><a href="index.html" title="%(name)s overview">Overview</a></li>
-                    <li><a href="iPhone.html" title="iPhone app">iPhone</a></li>
+                    <li><a href="iPhone.html" title="iPhone/iPod app">iPhone/iPod</a></li>
                     <li><a href="screenshots.html" 
                        title="View some screenshots of %(name)s here">Screenshots</a></li>
                     <li><a href="features.html" 
@@ -95,8 +95,12 @@ footer = '''
                            onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/submit_bug');">Report a bug</a>
                     </li>
                     <li><a href="https://sourceforge.net/tracker/?group_id=130831&atid=719137" 
-                           onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/request_feature');">Request a feature</a>
+                           onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/request_feature');">Request a feature (desktop version)</a>
                     </li>
+                    <li><a href="http://taskcoach.uservoice.com/" 
+                           onClick="javascript: pageTracker._trackPageview('/outgoing/uservoice.com/iPhone');">Request a feature (iPhone/iPod version)</a>
+                    </li>
+
                 </ul>
             </div>
             <div class="navbox">

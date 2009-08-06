@@ -20,28 +20,48 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 '''
 Release steps:
+
 - Get latest translations from Launchpad.
+
 - Run 'make clean all'.
+
 - Run 'make alltests'.
-- Build all remaining packages (MacOS, .deb, .rpm, Fedora) and copy them to 
-  the dist folder.
-- Run this script (phase1) to upload the distributions to Sourceforge, 
-  generate MD5 digests and generate website.
-- Add file releases on Sourceforge by hand.
-- Adapt download pages on Sourceforge for Windows and Mac OS X.
-- Run this script (phase2) to publish to Hypernation.net website, 
-  Chello (Frank's ISP), Twitter and PyPI (Python Package Index) and to send 
-  the announcement email.
-- Post release notification on Freshmeat by hand.
+
+- For each platform, create and upload the packages:
+  MaC OS X:  'make clean dmg; python release.py upload'
+  Ubuntu:    'make clean deb; python release.py upload'
+  Fedora 8:  'make clean fedora; python release.py upload', and
+             'make clean rpm; python release.py upload'
+  Fedora 11: 'make clean fedora; python release.py upload'
+  Windows:   'make clean windist; python release.py upload'
+
+- Mark the Windows and Mac OS X distributions as defaults for their platform:
+  https://sourceforge.net/project/admin/explorer.php?group_id=130831#
+  Navigate into the folder of the latest release and click on the Windows
+  and Mac OS X distributions to set them as default download.
+
+- Run 'python release.py release' to download the distributions from
+  Sourceforge, generate MD5 digests, generate the website, upload the 
+  website to the Hypernation.net website and to Chello (Frank's ISP), 
+  announce the release on Twitter and PyPI (Python Package Index) and to 
+  send the announcement email.
+
+- Post release notification on Freshmeat and Identi.ca by hand.
+
 - Tag source code with tag ReleaseX_Y_Z.
+
 - Create branch if feature release.
-- Merge changes between this release and the previous release to the trunk.
+
+- Merge recent changes to the trunk.
+
 - Add release to Sourceforge bug tracker groups.
+
 - Set bug reports and/or feature requests to Pending state.
+
 - If new release branch, update the buildbot masters configuration.
 '''
 
-import ftplib, smtplib, os, glob, sys, getpass, md5, ConfigParser, \
+import ftplib, smtplib, os, glob, sys, getpass, hashlib, ConfigParser, \
     twitter, taskcoachlib.meta
 
 class Settings(ConfigParser.SafeConfigParser, object):
@@ -57,7 +77,6 @@ class Settings(ConfigParser.SafeConfigParser, object):
                               'sender_name', 'sender_email_address'],
                         chello=['hostname', 'username', 'password', 'folder'],
                         hypernation=['hostname', 'username', 'password', 'folder'],
-                        localftp=['hostname', 'username', 'password', 'folder'],
                         pypi=['username', 'password'],
                         twitter=['username', 'password'])
         for section in defaults:
@@ -78,8 +97,7 @@ class Settings(ConfigParser.SafeConfigParser, object):
         return value
 
 
-def uploadDistributionsToSourceForge(settings):
-    print 'Uploading distributions to SourceForge...'
+def sourceForgeLocation(settings):
     metadata = taskcoachlib.meta.data.metaDict
     project = metadata['filename_lower']
     pr = project[:2]
@@ -87,8 +105,22 @@ def uploadDistributionsToSourceForge(settings):
     username = '%s,%s'%(settings.get('sourceforge', 'username'), project)
     folder = '/home/frs/project/%(p)s/%(pr)s/%(project)s/%(project)s/Release-%(version)s/'%\
              dict(project=project, pr=pr, p=p, version=metadata['version'])
-    os.system('rsync -avP -e ssh dist/* %s@frs.sourceforge.net:%s'%(username, folder))
+    return '%s@frs.sourceforge.net:%s'%(username, folder)
+
+
+def uploadDistributionsToSourceForge(settings):
+    print 'Uploading distributions to SourceForge...'
+    location = sourceForgeLocation(settings)
+    os.system('rsync -avP -e ssh dist/* %s'%location)
     print 'Done uploading distributions to SourceForge.'
+
+
+def downloadDistributionsFromSourceForge(settings):
+    print 'Downloading distributions from SourceForge...'
+    location = sourceForgeLocation(settings)
+    os.system('rsync -avP -e ssh %s dist/'%location)
+    print 'Done downloading distributions from SourceForge.'
+
 
 
 def generateMD5Digests(settings):
@@ -101,7 +133,7 @@ def generateMD5Digests(settings):
 '''
     for filename in glob.glob(os.path.join('dist', '*')):
         
-        md5digest = md5.new(file(filename, 'rb').read())
+        md5digest = hashlib.md5(file(filename, 'rb').read())
         filename = os.path.basename(filename)
         hexdigest = md5digest.hexdigest()
         contents += '''    <TR>
@@ -159,44 +191,6 @@ class SimpleFTP(ftplib.FTP, object):
         print 'Retrieve %s'%filename
         self.retrbinary('RETR %s'%filename, open(filename, 'wb').write)
 
-
-
-def localDownload(settings):
-    ''' Download distributions from a local ftp site to dist dir. '''
-    hostname = settings.get('localftp', 'hostname')
-    username = settings.get('localftp', 'username')
-    password = settings.get('localftp', 'password')
-    metadata = taskcoachlib.meta.data.metaDict
-    folder = settings.get('localftp', 'folder')%metadata
-    if hostname and username and password and folder:
-        print 'Downloading distributions from local FTP site...'
-        ftp = SimpleFTP(hostname, username, password, folder)
-        os.chdir('dist') 
-        for filename in ftp.nlst():
-            if metadata['version'] in filename and not filename.startswith('.'): 
-                ftp.get(filename)
-        os.chdir('..') 
-        ftp.quit()
-        print 'Done downloading distributions from local FTP site...'
-    else:
-        print 'Warning: cannot download from local FTP site; missing credentials'
-
-
-def localUpload(settings):
-    ''' Upload distributions to a local ftp site from dist dir. '''
-    hostname = settings.get('localftp', 'hostname')
-    username = settings.get('localftp', 'username')
-    password = settings.get('localftp', 'password')
-    metadata = taskcoachlib.meta.data.metaDict
-    folder = settings.get('localftp', 'folder')%metadata
-    if hostname and username and password and folder:
-        print 'Uploading distributions to local FTP site...'
-        ftp = SimpleFTP(hostname, username, password, folder)
-        ftp.put('dist')
-        ftp.quit()
-        print 'Done uploading distributions to local FTP site...'
-    else:
-        print 'Warning: cannot upload to local FTP site; missing credentials'
 
 
 def uploadWebsiteToWebsiteHost(settings, websiteName):
@@ -265,17 +259,18 @@ def uploadWebsite(settings):
     uploadWebsiteToHypernation(settings)
     
 
-def phase1(settings):
-    uploadDistributionsToSourceForge(settings)
-    generateMD5Digests(settings)
-    generateWebsite(settings)
-    
-
-def phase2(settings):
-    uploadWebsite(settings)
+def announce(settings):
     registerWithPyPI(settings)
     announceOnTwitter(settings)
     mailAnnouncement(settings)
+
+
+def release(settings):
+    downloadDistributionsFromSourceForge(settings)
+    generateMD5Digests(settings)
+    generateWebsite(settings)
+    uploadWebsite(settings)
+    announce(settings)
 
 
 def latest_release(metadata):
@@ -347,9 +342,9 @@ Server said: %s
         raise smtplib.SMTPException, errstr
 
 
-commands = dict(phase1=phase1, phase2=phase2, 
-                localDownload=localDownload, localUpload=localUpload,
+commands = dict(release=release,
                 upload=uploadDistributionsToSourceForge, 
+                download=downloadDistributionsFromSourceForge, 
                 md5=generateMD5Digests,
                 website=uploadWebsite, 
                 websiteChello=uploadWebsiteToChello, 

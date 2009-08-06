@@ -21,6 +21,7 @@ import test
 from unittests import dummy
 from taskcoachlib import gui, config, patterns, widgets, persistence
 from taskcoachlib.domain import task, effort, date, category, note
+from taskcoachlib.thirdparty import hypertreelist
 
 
 class ViewerTest(test.wxTestCase):
@@ -247,6 +248,7 @@ class FilterableViewerForTasksUnderTest(gui.viewer.mixin.FilterableViewerForTask
 class FilterableViewerForTasks(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
+        task.Task.settings= self.settings
         self.viewer = self.createViewer()
         
     def createViewer(self):
@@ -471,6 +473,7 @@ class ViewerIteratorTestCase(test.wxTestCase):
     def setUp(self):
         super(ViewerIteratorTestCase, self).setUp()
         self.settings = config.Settings(load=False)
+        task.Task.settings = self.settings
         self.taskFile = persistence.TaskFile()
         self.taskList = self.taskFile.tasks()
         self.notebook = widgets.AUINotebook(self.frame)
@@ -540,6 +543,7 @@ class MockWidget(object):
 class UpdatePerSecondViewerTests(object):
     def setUp(self):
         self.settings = config.Settings(load=False)
+        task.Task.settings = self.settings
         self.settings.set('taskviewer', 'columns', "['timeSpent']")
         self.taskFile = persistence.TaskFile()
         self.taskList = task.sorter.Sorter(self.taskFile.tasks(), sortBy='dueDate')
@@ -600,3 +604,13 @@ class EffortListViewerUpdatePerSecondTest(UpdatePerSecondViewerTests,
         test.wxTestCase):
     ListViewerClass = gui.viewer.EffortViewer
 
+
+class ViewerWithColumnsTest(test.wxTestCase):
+    def setUp(self):
+        self.settings = config.Settings(load=False)
+        self.taskFile = persistence.TaskFile()
+        self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile, self.settings)
+        
+    def testDefaultColumnWidth(self):
+        self.assertEqual(hypertreelist._DEFAULT_COL_WIDTH, 
+                         self.viewer.getColumnWidth('subject'))

@@ -62,9 +62,9 @@ class Application(object):
             Application.start(). ''' 
         self.initConfig(loadSettings)
         self.initLanguage()
-        from taskcoachlib import gui, persistence, meta
-        self.wxApp.SetAppName(meta.name)
-        self.wxApp.SetVendorName(meta.author)
+        self.initDomainObjects()
+        self.initApplication()
+        from taskcoachlib import gui, persistence
         gui.init()
         if self.settings.getboolean('window', 'splash'):
             splash = gui.SplashScreen()
@@ -85,12 +85,11 @@ class Application(object):
         
     def initConfig(self, loadSettings):
         from taskcoachlib import config
-        from taskcoachlib.domain import task
         iniFile = self._options.inifile if self._options else None
         self.settings = config.Settings(loadSettings, iniFile)
-        task.Task.settings = self.settings # Let task instances access settings
         
     def initLanguage(self):
+        ''' Initialize the current translation. '''
         from taskcoachlib import i18n
         language = None
         if self._options:
@@ -98,6 +97,16 @@ class Application(object):
         if not language:
             language = self.settings.get('view', 'language')
         i18n.Translator(language)
+        
+    def initDomainObjects(self):
+        ''' Provide relevant domain objects with access to the settings. '''
+        from taskcoachlib.domain import task
+        task.Task.settings = self.settings
+        
+    def initApplication(self):
+        from taskcoachlib import meta
+        self.wxApp.SetAppName(meta.name)
+        self.wxApp.SetVendorName(meta.author)
                 
     def registerSignalHandlers(self):
         signal.signal(signal.SIGTERM, self.onSIGTERM)
