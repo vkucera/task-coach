@@ -61,7 +61,7 @@ Release steps:
 - If new release branch, update the buildbot masters configuration.
 '''
 
-import ftplib, smtplib, os, glob, sys, getpass, md5, ConfigParser, \
+import ftplib, smtplib, os, glob, sys, getpass, hashlib, ConfigParser, \
     twitter, taskcoachlib.meta
 
 class Settings(ConfigParser.SafeConfigParser, object):
@@ -133,7 +133,7 @@ def generateMD5Digests(settings):
 '''
     for filename in glob.glob(os.path.join('dist', '*')):
         
-        md5digest = md5.new(file(filename, 'rb').read())
+        md5digest = hashlib.md5(file(filename, 'rb').read())
         filename = os.path.basename(filename)
         hexdigest = md5digest.hexdigest()
         contents += '''    <TR>
