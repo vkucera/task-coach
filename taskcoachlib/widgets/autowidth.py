@@ -179,8 +179,7 @@ class AutoColumnWidthMixin(object):
         # NOTE: on GTK, the scrollbar is included in the client size, but on
         # Windows it is not included
         if wx.Platform == '__WXMSW__':
-            return isinstance(self, wx.gizmos.TreeListCtrl) or \
-                   isinstance(self, hypertreelist.HyperTreeList)
+            return isinstance(self, hypertreelist.HyperTreeList)
         else:
             return True
  

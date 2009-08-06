@@ -24,6 +24,7 @@ from taskcoachlib import patterns, widgets, command
 from taskcoachlib.domain import date
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, toolbar
+from taskcoachlib.thirdparty import hypertreelist
 import mixin
 
 
@@ -600,7 +601,7 @@ class ViewerWithColumns(Viewer):
     def getColumnWidth(self, columnName):
         columnWidths = self.settings.getdict(self.settingsSection(),
                                              'columnwidths')
-        return columnWidths.get(columnName, wx.gizmos.DEFAULT_COL_WIDTH)
+        return columnWidths.get(columnName, hypertreelist._DEFAULT_COL_WIDTH)
 
     def onResizeColumn(self, column, width):
         columnWidths = self.settings.getdict(self.settingsSection(), 'columnwidths')
