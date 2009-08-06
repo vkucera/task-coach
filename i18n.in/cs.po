@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-06-11 21:28+0000\n"
-"PO-Revision-Date: 2009-07-25 20:07+0000\n"
+"PO-Revision-Date: 2009-08-06 17:51+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-07-25 22:04+0000\n"
+"X-Launchpad-Export-Date: 2009-08-06 18:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: taskcoachlib\domain\category\categorycontainer.py:26
@@ -43,7 +43,7 @@ msgstr "&Editovat úkol..."
 
 #: taskcoachlib\gui\dialog\preferences.py:165
 msgid "Check for new version of %(name)s on startup"
-msgstr "Zkontrolovat nové verze %(name)s při startu"
+msgstr "Kontrolovat nové verze %(name)s při startu"
 
 #: taskcoachlib\gui\dialog\preferences.py:175
 msgid ""
@@ -65,6 +65,8 @@ msgid ""
 "Couldn't load settings from TaskCoach.ini:\n"
 "%s"
 msgstr ""
+"Nemohu načíst nastavení z TaskCoach.ini:\n"
+"%s"
 
 #: taskcoachlib\application\application.py:113
 #: taskcoachlib\gui\iocontroller.py:60
@@ -113,7 +115,7 @@ msgstr "Nová poznámka"
 
 #: taskcoachlib\command\categorizableCommands.py:25
 msgid "Toggle category"
-msgstr ""
+msgstr "Přepnout kategorii"
 
 #: taskcoachlib\command\categoryCommands.py:26
 msgid "New category"
@@ -211,7 +213,7 @@ msgstr "Snížit prioritu"
 
 #: taskcoachlib\command\taskCommands.py:315
 msgid "Add note to task"
-msgstr ""
+msgstr "Přidat poznámku k úkolu"
 
 #: taskcoachlib\config\settings.py:167
 msgid ""
@@ -227,27 +229,27 @@ msgstr "Chyba při ukládání"
 
 #: taskcoachlib\domain\attachment\attachmentlist.py:25
 msgid "New attachment..."
-msgstr ""
+msgstr "Nová příloha..."
 
 #: taskcoachlib\domain\attachment\attachmentlist.py:26
 msgid "Insert a new attachment"
-msgstr ""
+msgstr "Vložit novou přílohu"
 
 #: taskcoachlib\domain\attachment\attachmentlist.py:27
 msgid "Edit attachment..."
-msgstr ""
+msgstr "Editovat přílohu..."
 
 #: taskcoachlib\domain\attachment\attachmentlist.py:28
 msgid "Edit the selected attachments"
-msgstr ""
+msgstr "Editovat vybrané přílohy"
 
 #: taskcoachlib\domain\attachment\attachmentlist.py:29
 msgid "Delete attachment"
-msgstr ""
+msgstr "Smazat přílohu"
 
 #: taskcoachlib\domain\attachment\attachmentlist.py:30
 msgid "Delete the selected attachments"
-msgstr ""
+msgstr "Smazat vybrané přílohy"
 
 #: taskcoachlib\domain\attachment\attachmentlist.py:31
 msgid "Open attachment"
@@ -255,7 +257,7 @@ msgstr "Otevřít přílohu"
 
 #: taskcoachlib\domain\attachment\attachmentlist.py:32
 msgid "Open the selected attachments"
-msgstr ""
+msgstr "Otevřít vybrané přílohy"
 
 #: taskcoachlib\domain\category\categorycontainer.py:24
 msgid "New category..."
@@ -283,7 +285,7 @@ msgstr "Vložit novou podkategorii"
 
 #: taskcoachlib\domain\effort\composite.py:194
 msgid "Total"
-msgstr ""
+msgstr "Celkem"
 
 #: taskcoachlib\domain\effort\composite.py:200
 msgid "Total for %s"
@@ -411,11 +413,11 @@ msgstr "Priorita"
 
 #: taskcoachlib\gui\dialog\editor.py:211
 msgid "Browse"
-msgstr ""
+msgstr "Procházet"
 
 #: taskcoachlib\gui\dialog\editor.py:215
 msgid "Location"
-msgstr ""
+msgstr "Umístění"
 
 #: taskcoachlib\gui\dialog\editor.py:244 taskcoachlib\gui\dialog\editor.py:647
 msgid "Dates"
@@ -617,11 +619,11 @@ msgstr ""
 #: taskcoachlib\gui\dialog\iphone.py:44 taskcoachlib\widgets\buttonbox.py:24
 #: taskcoachlib\widgets\dialog.py:54
 msgid "Cancel"
-msgstr ""
+msgstr "Zrušit"
 
 #: taskcoachlib\gui\dialog\iphone.py:73
 msgid "Synchronizing with %s..."
-msgstr ""
+msgstr "Synchronizovat s %s ..."
 
 #: taskcoachlib\gui\dialog\iphone.py:103
 msgid ""
@@ -632,7 +634,7 @@ msgstr ""
 
 #: taskcoachlib\gui\dialog\iphone.py:108
 msgid "Please download and install Bonjour for Windows from\n"
-msgstr ""
+msgstr "Prosím stáhněte a nainstlaujte Bonjour pro Windows z\n"
 
 #: taskcoachlib\gui\dialog\iphone.py:110
 msgid "Apple's web site"
@@ -653,7 +655,7 @@ msgstr ""
 #: taskcoachlib\widgets\dialog.py:76 taskcoachlib\widgets\dialog.py:79
 #: taskcoachlib\widgets\dialog.py:146 taskcoachlib\widgets\syncmlwarning.py:18
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: taskcoachlib\gui\dialog\preferences.py:118
 msgid ""
@@ -796,7 +798,7 @@ msgstr "Povolit poznámky"
 
 #: taskcoachlib\gui\dialog\preferences.py:273
 msgid "Enable SyncML"
-msgstr ""
+msgstr "Povolit SyncML"
 
 #: taskcoachlib\gui\dialog\preferences.py:276
 msgid "Hour of start of work day"
@@ -817,11 +819,11 @@ msgstr ""
 
 #: taskcoachlib\gui\dialog\preferences.py:297
 msgid "Password for synchronization with iPhone"
-msgstr ""
+msgstr "Helso pro synchronizaci s iPhone"
 
 #: taskcoachlib\gui\dialog\preferences.py:299
 msgid "Bonjour service name"
-msgstr ""
+msgstr "Jméno Bonjour služby"
 
 #: taskcoachlib\gui\dialog\preferences.py:307
 msgid "Check spelling in editors"
@@ -845,7 +847,7 @@ msgstr "Vlastnosti"
 
 #: taskcoachlib\gui\dialog\preferences.py:331
 msgid "iPhone"
-msgstr ""
+msgstr "iPhone"
 
 #: taskcoachlib\gui\dialog\preferences.py:333
 msgid "Editor"
@@ -877,7 +879,7 @@ msgstr "Jedna hodina"
 
 #: taskcoachlib\gui\dialog\reminder.py:30
 msgid "24 hours"
-msgstr ""
+msgstr "24 hodin"
 
 #: taskcoachlib\gui\dialog\reminder.py:30
 msgid "Two hours"
@@ -893,11 +895,11 @@ msgstr "Uspat"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:91
 msgid "SyncML server URL"
-msgstr ""
+msgstr "URL serveru SyncML"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:92
 msgid "User name/ID"
-msgstr ""
+msgstr "Uživatelské jméno/ID"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:101
 msgid "Enable tasks synchronization"
@@ -905,27 +907,27 @@ msgstr ""
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:102
 msgid "Tasks database name"
-msgstr ""
+msgstr "Jméno databáze úkolů"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:104
 #: taskcoachlib\gui\dialog\syncpreferences.py:122
 msgid "Preferred synchonization mode"
-msgstr ""
+msgstr "Preferovaný mód synchronizace"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:105
 #: taskcoachlib\gui\dialog\syncpreferences.py:123
 msgid "Two way"
-msgstr ""
+msgstr "Dvou cestný"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:106
 #: taskcoachlib\gui\dialog\syncpreferences.py:124
 msgid "Slow"
-msgstr ""
+msgstr "Pomalu"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:107
 #: taskcoachlib\gui\dialog\syncpreferences.py:125
 msgid "One way from client"
-msgstr ""
+msgstr "Jednocestně z klienta"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:108
 #: taskcoachlib\gui\dialog\syncpreferences.py:126
@@ -935,7 +937,7 @@ msgstr ""
 #: taskcoachlib\gui\dialog\syncpreferences.py:109
 #: taskcoachlib\gui\dialog\syncpreferences.py:127
 msgid "One way from server"
-msgstr ""
+msgstr "Jednocestně ze serveru"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:110
 #: taskcoachlib\gui\dialog\syncpreferences.py:128
@@ -953,7 +955,7 @@ msgstr ""
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:144
 msgid "Access"
-msgstr ""
+msgstr "Přístup"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:146
 #: taskcoachlib\gui\uicommand.py:1603 taskcoachlib\gui\viewer\task.py:32
@@ -966,7 +968,7 @@ msgstr "Nová verze %(name)s je k dispozici"
 
 #: taskcoachlib\gui\dialog\version.py:37
 msgid "Version %(version)s of %(name)s is available from"
-msgstr ""
+msgstr "Verze %(version)s %(name)s je nyní přístupný z"
 
 #: taskcoachlib\gui\dialog\version.py:40
 msgid "Notify me of new versions."
@@ -995,7 +997,7 @@ msgstr ""
 
 #: taskcoachlib\gui\iocontroller.py:59
 msgid "VCalendar files (*.vcal)|*.vcal|All files (*.*)|*"
-msgstr ""
+msgstr "soubory VCalendar (*.vcal)|*.vcal|Všechny soubory (*.*)|*"
 
 #: taskcoachlib\gui\iocontroller.py:98
 msgid "Open"
@@ -1007,6 +1009,9 @@ msgid ""
 "because it was created by a newer version of %(name)s.\n"
 "Please upgrade %(name)s."
 msgstr ""
+"Nemohu otevřít %(filename)s\n"
+"protože byl vytvořen novější verzí %(name)s.\n"
+"Prosím aktualizujte %(name)s."
 
 #: taskcoachlib\gui\iocontroller.py:122 taskcoachlib\gui\iocontroller.py:157
 msgid "Error while reading %s:\n"
@@ -1033,6 +1038,8 @@ msgid ""
 "Cannot open %(filename)s\n"
 "because it is locked."
 msgstr ""
+"Nemohu otevřít %(filename)s\n"
+"protože je zamčený."
 
 #: taskcoachlib\gui\iocontroller.py:162
 msgid "Merged %(filename)s"
@@ -1053,6 +1060,8 @@ msgid ""
 "Cannot save %s\n"
 "%s"
 msgstr ""
+"Nemohu uložit %s\n"
+"%s"
 
 #: taskcoachlib\gui\iocontroller.py:230
 msgid "Please enter the template name."
@@ -1088,23 +1097,23 @@ msgstr "Exportovat jako CSV..."
 
 #: taskcoachlib\gui\iocontroller.py:289
 msgid "Export as VCalendar..."
-msgstr ""
+msgstr "Exportovat jako VCalendar..."
 
 #: taskcoachlib\gui\iocontroller.py:301
 msgid "Finished synchronization"
-msgstr ""
+msgstr "Dokončena synchronizace"
 
 #: taskcoachlib\gui\iocontroller.py:305
 msgid "Note conflict"
-msgstr ""
+msgstr "Konflikt poznámky"
 
 #: taskcoachlib\gui\iocontroller.py:309
 msgid "Task conflict"
-msgstr ""
+msgstr "Konflikt úkolu"
 
 #: taskcoachlib\gui\iocontroller.py:321
 msgid "Synchronization status"
-msgstr ""
+msgstr "Stav synchronizace"
 
 #: taskcoachlib\gui\iocontroller.py:346
 msgid ""
@@ -1123,10 +1132,12 @@ msgid ""
 "Cannot open %s because it is locked.\n"
 "Break the lock?"
 msgstr ""
+"Nemohu otevřít %s protože je zamčený.\n"
+"Odemknout?"
 
 #: taskcoachlib\gui\iocontroller.py:358 taskcoachlib\gui\iocontroller.py:365
 msgid "%s: file locked"
-msgstr ""
+msgstr "%s: soubor uzamčen"
 
 #: taskcoachlib\gui\iocontroller.py:363
 msgid ""
@@ -1137,7 +1148,7 @@ msgstr ""
 
 #: taskcoachlib\gui\iocontroller.py:370
 msgid "Closed %s"
-msgstr ""
+msgstr "Zavřeno %s"
 
 #: taskcoachlib\gui\iocontroller.py:376
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
@@ -1145,7 +1156,7 @@ msgstr "Uloženo %(nrtasks)d úkolů do %(filename)s"
 
 #: taskcoachlib\gui\mainwindow.py:152 taskcoachlib\gui\uicommand.py:547
 msgid "Warning"
-msgstr ""
+msgstr "Upozornění"
 
 #: taskcoachlib\gui\mainwindow.py:186
 msgid "Welcome to %(name)s version %(version)s"
@@ -1153,15 +1164,15 @@ msgstr "Vítejte v nové verzi %(name)s - %(version)s"
 
 #: taskcoachlib\gui\mainwindow.py:370
 msgid "iPhone/iPod"
-msgstr ""
+msgstr "iPhone/iPod"
 
 #: taskcoachlib\gui\mainwindow.py:377
 msgid "Synchronization type"
-msgstr ""
+msgstr "Typ synchronizace"
 
 #: taskcoachlib\gui\mainwindow.py:387
 msgid "An iPhone or iPod Touch device tried to synchronize with this\n"
-msgstr ""
+msgstr "iPhone nebo iPod Touch zařízení se snaží sychnronizovat s tímto\n"
 
 #: taskcoachlib\gui\mainwindow.py:388
 msgid "task file, but the protocol negotiation failed. Please file a\n"
@@ -1173,7 +1184,7 @@ msgstr ""
 
 #: taskcoachlib\gui\mainwindow.py:390 taskcoachlib\iphone\protocol.py:136
 msgid "Error"
-msgstr ""
+msgstr "Chyba"
 
 #: taskcoachlib\gui\menu.py:174
 msgid "&File"
@@ -1243,7 +1254,7 @@ msgstr "&Filtr"
 
 #: taskcoachlib\gui\menu.py:369 taskcoachlib\gui\menu.py:370
 msgid "&Sort"
-msgstr ""
+msgstr "&Setřídit"
 
 #: taskcoachlib\gui\menu.py:371 taskcoachlib\gui\menu.py:372
 msgid "&Columns"
@@ -1259,7 +1270,7 @@ msgstr "Nástr&oje"
 
 #: taskcoachlib\gui\menu.py:380
 msgid "Show/hide status bar"
-msgstr ""
+msgstr "Zobrazit/skrýt stavový řádek"
 
 #: taskcoachlib\gui\menu.py:380
 msgid "Status&bar"
@@ -1313,19 +1324,19 @@ msgstr ""
 
 #: taskcoachlib\gui\menu.py:460
 msgid "&Hide"
-msgstr ""
+msgstr "Sc&hovat"
 
 #: taskcoachlib\gui\menu.py:460
 msgid "Hide the toolbar"
-msgstr ""
+msgstr "Schovat nástrojovou lištu"
 
 #: taskcoachlib\gui\menu.py:461
 msgid "&Small images"
-msgstr ""
+msgstr "&Malé obrázky"
 
 #: taskcoachlib\gui\menu.py:461
 msgid "Small images (16x16) on the toolbar"
-msgstr ""
+msgstr "Malé obrázky (16x16) na nástrojové liště"
 
 #: taskcoachlib\gui\menu.py:462
 msgid "&Medium-sized images"
@@ -1372,7 +1383,7 @@ msgstr "Strana"
 
 #: taskcoachlib\gui\render.py:40
 msgid "Infinite"
-msgstr ""
+msgstr "Neurčitý"
 
 #: taskcoachlib\gui\render.py:60
 msgid "Every %(frequency)d days"
@@ -1448,7 +1459,7 @@ msgstr "Otevřít %s"
 
 #: taskcoachlib\gui\uicommand.py:459
 msgid "&Merge..."
-msgstr ""
+msgstr "Slouč&it..."
 
 #: taskcoachlib\gui\uicommand.py:460
 msgid "Merge tasks from another file with the current file"
@@ -1488,7 +1499,7 @@ msgstr "Uložit vybrané úlohy do odděleného souboru"
 
 #: taskcoachlib\gui\uicommand.py:513
 msgid "Save selected task as &template"
-msgstr ""
+msgstr "Uloži&t vybraný úkol jako šablonu"
 
 #: taskcoachlib\gui\uicommand.py:514
 msgid "Save the selected task as a task template"
@@ -1496,7 +1507,7 @@ msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:524
 msgid "Add template"
-msgstr ""
+msgstr "Přidat šablonu"
 
 #: taskcoachlib\gui\uicommand.py:525
 msgid "Add a new template from a template file\n"
@@ -1564,7 +1575,7 @@ msgstr "Exportuj jako &HTML..."
 
 #: taskcoachlib\gui\uicommand.py:636
 msgid "Export the current view as HTML file"
-msgstr ""
+msgstr "Exportovat pohled jako HTML soubor"
 
 #: taskcoachlib\gui\uicommand.py:645
 msgid "Export &selection as HTML..."
@@ -1612,19 +1623,19 @@ msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:695
 msgid "S&yncML synchronization"
-msgstr ""
+msgstr "S&yncML synchronizace"
 
 #: taskcoachlib\gui\uicommand.py:696
 msgid "Synchronize with a SyncML server"
-msgstr ""
+msgstr "Synchronizovat s SyncML serverem"
 
 #: taskcoachlib\gui\uicommand.py:700
 msgid "Please enter your password:"
-msgstr ""
+msgstr "Vložte své heslo:"
 
 #: taskcoachlib\gui\uicommand.py:701
 msgid "Task Coach SyncML password"
-msgstr ""
+msgstr "Task Coach SyncML heslo"
 
 #: taskcoachlib\gui\uicommand.py:708
 msgid "&Quit\tCtrl+Q"
@@ -1692,11 +1703,11 @@ msgstr "Edituj nastavení"
 
 #: taskcoachlib\gui\uicommand.py:872
 msgid "SyncML preferences..."
-msgstr ""
+msgstr "Možnosti SyncML ..."
 
 #: taskcoachlib\gui\uicommand.py:873 taskcoachlib\gui\uicommand.py:879
 msgid "Edit SyncML preferences"
-msgstr ""
+msgstr "Editovat možnosti SyncML"
 
 #: taskcoachlib\gui\uicommand.py:885
 msgid "&All\tCtrl+A"
@@ -1788,7 +1799,7 @@ msgstr "Slož vybrané položky  s podpoložkama"
 
 #: taskcoachlib\gui\uicommand.py:1096
 msgid "&Ascending"
-msgstr ""
+msgstr "&Vzestupně"
 
 #: taskcoachlib\gui\uicommand.py:1097
 msgid "Sort ascending (checked) or descending (unchecked)"
@@ -1866,7 +1877,7 @@ msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:1332
 msgid "Create a new task from a template"
-msgstr ""
+msgstr "Vytvořit nový úkol ze šablony"
 
 #: taskcoachlib\gui\uicommand.py:1338
 msgid "New task with selected categories..."
@@ -1926,13 +1937,15 @@ msgstr "Snížit prioritu vybraných úloh"
 
 #: taskcoachlib\gui\uicommand.py:1534
 msgid "Toggle %s"
-msgstr ""
+msgstr "Přepnout %s"
 
 #: taskcoachlib\gui\uicommand.py:1592
 msgid ""
 "Cannot send email:\n"
 "%s"
 msgstr ""
+"Nemohu poslat email:\n"
+"%s"
 
 #: taskcoachlib\gui\uicommand.py:1593
 msgid "%s mail error"
