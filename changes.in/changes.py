@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.73.4', 'August ?, 2009',
+Release('0.73.4', 'August 6, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Prevent text in right-aligned columns, like dates in
