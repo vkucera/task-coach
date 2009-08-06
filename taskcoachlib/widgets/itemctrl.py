@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 import wx, wx.lib.mixins.listctrl, operator, draganddrop, autowidth, tooltip
+from taskcoachlib.thirdparty import hypertreelist
+
 
 class _CtrlWithItems(object):
     ''' Base class for controls with items, such as ListCtrl, TreeCtrl,
@@ -210,7 +212,7 @@ class Column(object):
     def __init__(self, name, columnHeader, *eventTypes, **kwargs):
         self.__name = name
         self.__columnHeader = columnHeader
-        self.width = kwargs.pop('width', wx.gizmos.DEFAULT_COL_WIDTH)
+        self.width = kwargs.pop('width', hypertreelist._DEFAULT_COL_WIDTH)
         # The event types to use for registering an observer that is
         # interested in changes that affect this column:
         self.__eventTypes = eventTypes

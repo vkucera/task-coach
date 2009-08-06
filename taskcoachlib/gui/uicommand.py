@@ -1373,8 +1373,8 @@ class TaskToggleCompletion(NeedsSelectedTasks, ViewerCommand):
             bitmap2='markcompleted', menuText=self.defaultMenuText,
             helpText=self.defaultHelpText,
             kind=wx.ITEM_CHECK, *args, **kwargs)
-        self.currentBitmap = self.bitmap
-        
+        self.currentBitmap = None # Don't know yet what our bitmap is
+                
     def doCommand(self, event):
         markCompletedCommand = command.MarkCompletedCommand( \
             self.viewer.presentation(), self.viewer.curselection())
@@ -1384,10 +1384,7 @@ class TaskToggleCompletion(NeedsSelectedTasks, ViewerCommand):
         super(TaskToggleCompletion, self).onUpdateUI(event)
         allSelectedTasksAreCompleted = self.allSelectedTasksAreCompleted()
         self.updateToolState(allSelectedTasksAreCompleted)
-        if allSelectedTasksAreCompleted:
-            bitmapName = self.bitmap
-        else:
-            bitmapName = self.bitmap2
+        bitmapName = self.bitmap if allSelectedTasksAreCompleted else self.bitmap2
         if bitmapName != self.currentBitmap:
             self.currentBitmap = bitmapName
             self.updateToolBitmap(bitmapName)

@@ -534,7 +534,7 @@ that we can sort out which ones are the most popular.</P>
 <P>Here are some thumbnails of the UI:</P>'''
 appendThumbnails('iPhone', lambda x: x.find('iPhone') != -1)
 
-pages['iPhone_fr'] = '''<H3>iPhone</H3>
+pages['iPhone_fr'] = u'''<H3>iPhone</H3>
         <P>Il existe une application iPhone qui est capable de se
         synchroniser avec %(name)s via le réseau, à partir de la
         version 0.73.2 de %(name)s. Ses principales fonctionnalités
@@ -1258,5 +1258,5 @@ def copyScreenshots(targetFolder, screenshotFolder='screenshots',
 websiteFolder = os.path.join('..', 'website.out')            
 createHTMLPages(websiteFolder, pages)
 createPAD(websiteFolder)
-copyFiles(websiteFolder, '*.png', '*.ico', '*.css', '../icons.in/splash.png', '.htaccess')    
+copyFiles(websiteFolder, '*.png', '*.ico', '*.css', '../icons.in/splash.png') #, '.htaccess')    
 copyScreenshots(websiteFolder)

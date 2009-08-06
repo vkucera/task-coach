@@ -10,13 +10,13 @@ msgstr ""
 "Project-Id-Version: pl\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-06-11 21:28+0000\n"
-"PO-Revision-Date: 2009-06-27 01:52+0000\n"
-"Last-Translator: Baton1 <baton1batonik@gmail.com>\n"
+"PO-Revision-Date: 2009-08-06 18:01+0000\n"
+"Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-07-25 22:04+0000\n"
+"X-Launchpad-Export-Date: 2009-08-06 18:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: taskcoachlib\application\application.py:112
@@ -380,7 +380,7 @@ msgstr "Nowa notatka"
 
 #: taskcoachlib\command\categorizableCommands.py:25
 msgid "Toggle category"
-msgstr ""
+msgstr "Zmień kategorię"
 
 #: taskcoachlib\command\categoryCommands.py:26
 msgid "New category"
@@ -898,6 +898,10 @@ msgid ""
 "the first time. What kind of synchronization\n"
 "would you like to use ?"
 msgstr ""
+"Urządzenie iPhone lub iPod Touch próbuje\n"
+"zsynchronizować się z tym plikiem zadań\n"
+"po raz pierwszy. Jaki rodzaj synchronizacji\n"
+"chcesz wykorzystać?"
 
 #: taskcoachlib\gui\dialog\iphone.py:38
 msgid "Refresh from desktop"
@@ -1348,6 +1352,8 @@ msgid ""
 "Cannot open %(filename)s\n"
 "because it is locked."
 msgstr ""
+"Nie można otworzyć %(filename)s\n"
+"ponieważ jest zablokowany."
 
 #: taskcoachlib\gui\iocontroller.py:162
 msgid "Merged %(filename)s"
@@ -1431,7 +1437,7 @@ msgstr ""
 
 #: taskcoachlib\gui\iocontroller.py:358 taskcoachlib\gui\iocontroller.py:365
 msgid "%s: file locked"
-msgstr ""
+msgstr "plik %s jest zablokowany"
 
 #: taskcoachlib\gui\iocontroller.py:363
 msgid ""
@@ -1454,11 +1460,11 @@ msgstr "Witamy w %(name)s wersja %(version)s"
 
 #: taskcoachlib\gui\mainwindow.py:370
 msgid "iPhone/iPod"
-msgstr ""
+msgstr "iPhone/iPod"
 
 #: taskcoachlib\gui\mainwindow.py:377
 msgid "Synchronization type"
-msgstr ""
+msgstr "Rodzaj synchronizacji"
 
 #: taskcoachlib\gui\mainwindow.py:387
 msgid "An iPhone or iPod Touch device tried to synchronize with this\n"
@@ -1474,7 +1480,7 @@ msgstr ""
 
 #: taskcoachlib\gui\mainwindow.py:390 taskcoachlib\iphone\protocol.py:136
 msgid "Error"
-msgstr ""
+msgstr "Błąd"
 
 #: taskcoachlib\gui\menu.py:174
 msgid "&File"
@@ -1644,7 +1650,7 @@ msgstr "&Rozpocznij śledzenie nakładu"
 
 #: taskcoachlib\gui\menu.py:642
 msgid "%s (subcategories)"
-msgstr ""
+msgstr "%s (podkategorie)"
 
 #: taskcoachlib\gui\menu.py:684
 msgid "%s (subtasks)"
@@ -2843,7 +2849,7 @@ msgstr ""
 
 #: taskcoachlib\gui\viewer\task.py:341
 msgid "Now"
-msgstr ""
+msgstr "Teraz"
 
 #: taskcoachlib\gui\viewer\task.py:547
 msgid "Days left"
@@ -3779,7 +3785,7 @@ msgstr "Proszę podać hasło użytkownika %(user)s na %(server)s:%(port)d"
 
 #: taskcoachlib\mailer\thunderbird.py:249
 msgid "Login failed (%s). Please try again."
-msgstr ""
+msgstr "Logowanie nie powiodło się (%s). Spróbój ponownie."
 
 #: taskcoachlib\persistence\xml\templates.py:8
 msgid "New task due today"
