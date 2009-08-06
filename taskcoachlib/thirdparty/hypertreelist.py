@@ -226,6 +226,7 @@ Version 1.0
 """
 
 import wx
+import wx.gizmos
 
 from customtreectrl import CustomTreeCtrl
 from customtreectrl import DragImage, TreeEvent, GenericTreeItem
