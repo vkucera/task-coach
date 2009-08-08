@@ -183,7 +183,7 @@ class XMLWriter(object):
         return node
 
     def syncMLNode(self, syncMLConfig):
-        node = self.document.createElement('syncml')
+        node = self.document.createElement('syncmlconfig')
         self.__syncMLNode(syncMLConfig, node)
         return node
 
