@@ -62,7 +62,7 @@ class EffortAggregator(patterns.SetDecorator,
         else:
             return event
             
-    def extendSelf(self, tasks):
+    def extendSelf(self, tasks, event=None):
         ''' extendSelf is called when an item is added to the observed
             list. The default behavior of extendSelf is to add the item
             to the observing list (i.e. this list) unchanged. We override 
@@ -71,16 +71,22 @@ class EffortAggregator(patterns.SetDecorator,
         newComposites = []
         for task in tasks:
             newComposites.extend(self.createComposites(task, task.efforts()))
-        super(EffortAggregator, self).extendSelf(newComposites)
+        super(EffortAggregator, self).extendSelf(newComposites, event)
 
-    def removeItemsFromSelf(self, tasks):
+    def removeItemsFromSelf(self, tasks, event=None):
         ''' removeItemsFromSelf is called when an item is removed from the 
             observed list. The default behavior of removeItemsFromSelf is to 
             remove the item from the observing list (i.e. this list)
             unchanged. We override the default behavior to remove the 
             tasks' efforts from the CompositeEfforts they are part of. '''
+        notify = event is None
+        event = event or patterns.Event()
         for task in tasks:
-            self.removeComposites(task, task.efforts())
+            self.removeComposites(task, task.efforts(), event)
+        if notify:
+            event.send()
+        else:
+            return event
 
     def onEffortAddedToTask(self, event):
         newComposites = []
@@ -144,20 +150,22 @@ class EffortAggregator(patterns.SetDecorator,
         self.__composites[key] = newCompositePerPeriod
         return [newCompositePerPeriod]
 
-    def removeComposites(self, task, efforts):
+    def removeComposites(self, task, efforts, event):
         taskAndAncestors = [task] + task.ancestors()
         for effort in efforts:
             for task in taskAndAncestors:
-                self.removeComposite(effort, task)
+                self.removeComposite(effort, task, event)
 
-    def removeComposite(self, anEffort, task):
+    def removeComposite(self, anEffort, task, event):
         key = self.keyForEffort(anEffort, task)
         if key not in self.__composites:
             # A composite may already have been removed, e.g. when a
             # parent and child task have effort in the same period
             return
         compositeToRemove = self.__composites.pop(key)
-        super(EffortAggregator, self).removeItemsFromSelf([compositeToRemove])
+        # FIXME: Can't pass event to removeItemsFromSelf, because 
+        # otherwise 
+        super(EffortAggregator, self).removeItemsFromSelf([compositeToRemove])#, event)
 
     def maxDateTime(self):
         stopTimes = [effort.getStop() for composite in self for effort

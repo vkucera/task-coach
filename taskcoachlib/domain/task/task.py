@@ -111,14 +111,15 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             dueDate=self.dueDate(),
             startDate=max(date.Today(), self.startDate()), parent=self)
 
-    def addChild(self, child):
+    def addChild(self, child, event=None):
         if child in self.children():
-            return
+            return event
+        notify = event is None
+        event = event or patterns.Event()
         oldTotalBudgetLeft = self.budgetLeft(recursive=True)
         oldTotalPriority = self.priority(recursive=True)
-        super(Task, self).addChild(child)
+        super(Task, self).addChild(child, event)
         newTotalBudgetLeft = self.budgetLeft(recursive=True)
-        event = patterns.Event()
         if child.budget(recursive=True):
             event = self.totalBudgetEvent(event)
         if newTotalBudgetLeft != oldTotalBudgetLeft:
@@ -142,16 +143,20 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if child.startDate() < self.startDate():
             self.setStartDate(child.startDate(), event)
 
-        event.send()
+        if notify:
+            event.send()
+        else:
+            return event
         
-    def removeChild(self, child):
+    def removeChild(self, child, event=None):
         if child not in self.children():
-            return
+            return event
+        notify = event is None
+        event = event or patterns.Event()
         oldTotalBudgetLeft = self.budgetLeft(recursive=True)
         oldTotalPriority = self.priority(recursive=True)
-        super(Task, self).removeChild(child)
+        super(Task, self).removeChild(child, event)
         newTotalBudgetLeft = self.budgetLeft(recursive=True)
-        event = patterns.Event()
         if child.budget(recursive=True):
             event = self.totalBudgetEvent(event)
         if newTotalBudgetLeft != oldTotalBudgetLeft:
@@ -169,8 +174,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if self.shouldBeMarkedCompleted(): 
             # The removed child was the last uncompleted child
             self.setCompletionDate(date.Today(), event)
-            
-        event.send()
+        
+        if notify:    
+            event.send()
+        else:
+            return event
         
     def dueDate(self, recursive=False):
         if recursive:

@@ -34,11 +34,15 @@ class Sorter(patterns.ListDecorator):
     def sortEventType(class_):
         return '%s.sorted'%class_
     
-    def extendSelf(self, *args, **kwargs):
-        patterns.Publisher().stopNotifying()
-        super(Sorter, self).extendSelf(*args, **kwargs)
-        patterns.Publisher().startNotifying()
-        self.reset(forceNotification=True)
+    def extendSelf(self, items, event=None):
+        notify = event is None
+        event = event or patterns.Event()
+        super(Sorter, self).extendSelf(items, event)
+        self.reset(event)
+        if notify:
+            event.send()
+        else:
+            return event
 
     # We don't implement removeItemsFromSelf() because there is no need 
     # to resort when items are removed since after removing items the 
@@ -60,14 +64,21 @@ class Sorter(patterns.ListDecorator):
         self._sortCaseSensitive = caseSensitive
         self.reset()
     
-    def reset(self, event=None, forceNotification=False):
+    def reset(self, event=None):
         ''' reset does the actual sorting. If the order of the list changes, 
             observers are notified by means of the list-sorted event. '''
         oldSelf = self[:]
         self.sort(key=self.createSortKeyFunction(), 
                   reverse=not self._sortAscending)
-        if self != oldSelf or forceNotification:
-            patterns.Event(self.sortEventType(), self).send()
+        if self == oldSelf:
+            return event
+        notify = event is None
+        event = event or patterns.Event()
+        event.addSource(self, type=self.sortEventType())
+        if notify:
+            event.send()
+        else:
+            return event
 
     def createSortKeyFunction(self):
         ''' createSortKeyFunction returns a function that is passed to the 
@@ -80,11 +91,16 @@ class Sorter(patterns.ListDecorator):
 
     def _registerObserverForAttribute(self, attribute):
         eventType = self._createEventTypeFromAttribute(attribute)
-        patterns.Publisher().registerObserver(self.reset, eventType=eventType)
+        patterns.Publisher().registerObserver(self.onAttributeChanged, 
+                                              eventType=eventType)
             
     def _removeObserverForAttribute(self, attribute):
         eventType = self._createEventTypeFromAttribute(attribute)
-        patterns.Publisher().removeObserver(self.reset, eventType=eventType)
+        patterns.Publisher().removeObserver(self.onAttributeChanged, 
+                                            eventType=eventType)
+        
+    def onAttributeChanged(self, event):
+        self.reset()
 
     def _createEventTypeFromAttribute(self, attribute):
         ''' At the moment, there are two ways event types are specified: 
