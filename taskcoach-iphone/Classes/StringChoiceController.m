@@ -30,9 +30,13 @@
 	[textField becomeFirstResponder];
 }
 
-- (void)dealloc
+- (void)viewDidUnload
 {
 	[textField release];
+}
+
+- (void)dealloc
+{
 	[placeholder release];
 
     [super dealloc];

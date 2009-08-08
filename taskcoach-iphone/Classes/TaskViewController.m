@@ -111,6 +111,16 @@
 	[self setAddButton];
 }
 
+- (void)dealloc
+{
+	[title release];
+	[headers release];
+	[tapping release];
+	[currentCell release];
+
+    [super dealloc];
+}
+
 - (void)childWasPopped
 {
 	[self loadData];
@@ -118,14 +128,6 @@
 	if (!isCreatingTask)
 		[[PositionStore instance] pop];
 	isCreatingTask = NO;
-}
-
-- (void)dealloc
-{
-	[title release];
-	[headers release];
-
-    [super dealloc];
 }
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated

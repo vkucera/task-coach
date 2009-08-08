@@ -23,11 +23,11 @@
 
 		if (theDate)
 		{
-			date = [[DateUtils instance] dateFromString:theDate];
+			date = [[[DateUtils instance] dateFromString:theDate] retain];
 		}
 		else
 		{
-			date = [NSDate date];
+			date = [[NSDate date] retain];
 		}
 		
 		dayFormat = [[NSDateFormatter alloc] init];
@@ -39,9 +39,8 @@
 
 - (void)dealloc
 {
-	[picker release];
-	[dayLabel release];
 	[dayFormat release];
+	[date release];
 
 	[super dealloc];
 }
@@ -50,6 +49,12 @@
 {
 	picker.date = date;
 	dayLabel.text = [dayFormat stringFromDate:date];
+}
+
+- (void)viewDidUnload
+{
+	[picker release];
+	[dayLabel release];
 }
 
 - (IBAction)onDateChanged:(UIDatePicker *)thePicker

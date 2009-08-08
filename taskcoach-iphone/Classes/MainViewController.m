@@ -19,6 +19,11 @@
 		[viewController performSelector:@selector(childWasPopped)];
 }
 
+- (void)viewDidUnload
+{
+	[viewController release];
+}
+
 - (void)willTerminate
 {
 	if ([viewController respondsToSelector:@selector(willTerminate)])

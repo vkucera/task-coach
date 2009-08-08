@@ -81,9 +81,6 @@
 {
 	[categories release];
 	categories = nil;
-	
-	// XXXFIXME: compiler warning here. WTF ?
-    //[super viewDidUnload];
 }
 
 - (void)fillCell:(UITableViewCell *)cell forCategory:(Category *)category
