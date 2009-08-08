@@ -12,4 +12,11 @@
 
 @synthesize textView;
 
+- (void)dealloc
+{
+	[textView release];
+	
+	[super dealloc];
+}
+
 @end

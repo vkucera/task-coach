@@ -13,6 +13,13 @@
 
 @synthesize dateLabel;
 
+- (void)dealloc
+{
+	[dateLabel release];
+	
+	[super dealloc];
+}
+
 - (void)setDate:(NSString *)date
 {
 	if (date)
