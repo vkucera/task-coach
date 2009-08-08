@@ -11,14 +11,19 @@
 @interface DatePickerViewController : UIViewController
 {
 	UIDatePicker *picker;
+	UILabel *dayLabel;
 	NSDate *date;
 	
 	id target;
 	SEL action;
+	
+	NSDateFormatter *dayFormat;
 }
 
 @property (nonatomic, retain) IBOutlet UIDatePicker *picker;
+@property (nonatomic, retain) IBOutlet UILabel *dayLabel;
 
+- (IBAction)onDateChanged:(UIDatePicker *)picker;
 - (IBAction)onConfirm:(UIButton *)button;
 - (IBAction)onCancel:(UIButton *)button;
 

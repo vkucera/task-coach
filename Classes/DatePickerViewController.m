@@ -12,6 +12,7 @@
 @implementation DatePickerViewController
 
 @synthesize picker;
+@synthesize dayLabel;
 
 - initWithDate:(NSString *)theDate target:(id)theTarget action:(SEL)theAction
 {
@@ -28,6 +29,9 @@
 		{
 			date = [NSDate date];
 		}
+		
+		dayFormat = [[NSDateFormatter alloc] init];
+		[dayFormat setDateFormat:@"EEEE"];
 	}
 
 	return self;
@@ -36,6 +40,8 @@
 - (void)dealloc
 {
 	[picker release];
+	[dayLabel release];
+	[dayFormat release];
 
 	[super dealloc];
 }
@@ -43,6 +49,12 @@
 - (void)viewDidLoad
 {
 	picker.date = date;
+	dayLabel.text = [dayFormat stringFromDate:date];
+}
+
+- (IBAction)onDateChanged:(UIDatePicker *)thePicker
+{
+	dayLabel.text = [dayFormat stringFromDate:thePicker.date];
 }
 
 - (IBAction)onConfirm:(UIButton *)button
