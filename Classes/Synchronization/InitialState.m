@@ -51,7 +51,6 @@
 												  delegate:controller cancelButtonTitle:NSLocalizedString(@"Abort", @"Connection error cancel button title") otherButtonTitles:nil];
 	[view show];
 	[view release];
-	[network release];
 }
 
 - (void)network:(Network *)network didGetData:(NSData *)data controller:(SyncViewController *)controller

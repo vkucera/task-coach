@@ -35,7 +35,6 @@
 				delegate:controller cancelButtonTitle:NSLocalizedString(@"Abort", @"Connection closed cancel button title") otherButtonTitles:nil];
 	[view show];
 	[view release];
-	[network release];
 	[[Database connection] rollback];
 }
 
@@ -50,15 +49,13 @@
 												  delegate:controller cancelButtonTitle:NSLocalizedString(@"Abort", @"Network error cancel button title") otherButtonTitles:nil];
 	[view show];
 	[view release];
-	[network release];
 	[[Database connection] rollback];
 }
 
 - (void)cancel
 {
 	myController.state = nil;
-	//[myNetwork close];
-	[myNetwork release];
+	[myNetwork close];
 	[[Database connection] rollback];
 }
 

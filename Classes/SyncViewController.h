@@ -23,6 +23,7 @@
 	NSInteger port;
 
 	NSObject <State> *state;
+	Network *myNetwork;
 
 	id target;
 	SEL action;

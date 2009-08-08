@@ -40,6 +40,7 @@
 	[activity release];
 	[progress release];
 	[host release];
+	[myNetwork release];
 
 	[super dealloc];
 }
@@ -62,7 +63,8 @@
 	cancelButton.hidden = YES;
 	
 	NSLog(@"Starting synchronization");
-	self.state = [InitialState stateWithNetwork:[[Network alloc] initWithAddress:host port:port delegate:self] controller:self];
+	myNetwork = [[Network alloc] initWithAddress:host port:port delegate:self];
+	self.state = [InitialState stateWithNetwork:myNetwork controller:self];
 }
 
 - (void)setState:(NSObject <State> *)newState
