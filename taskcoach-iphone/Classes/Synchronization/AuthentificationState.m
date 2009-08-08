@@ -125,6 +125,12 @@
 	}
 }
 
+- (void)networkDidClose:(Network *)network controller:(SyncViewController *)controller
+{
+	[myController.password resignFirstResponder];
+	[super networkDidClose:network controller:controller];
+}
+
 // UITextFieldDelegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField

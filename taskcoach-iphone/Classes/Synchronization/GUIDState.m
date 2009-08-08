@@ -78,7 +78,6 @@
 			controller.state = nil;
 			[[Database connection] rollback];
 			[network close];
-			[network release];
 			[controller finished:YES];
 			break;
 	}
