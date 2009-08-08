@@ -36,9 +36,6 @@
 
 - (void)dealloc
 {
-	[label release];
-	[activity release];
-	[progress release];
 	[host release];
 	[myNetwork release];
 
@@ -65,6 +62,15 @@
 	NSLog(@"Starting synchronization");
 	myNetwork = [[Network alloc] initWithAddress:host port:port delegate:self];
 	self.state = [InitialState stateWithNetwork:myNetwork controller:self];
+}
+
+- (void)viewDidUnload
+{
+	[label release];
+	[activity release];
+	[progress release];
+	[password release];
+	[cancelButton release];
 }
 
 - (void)setState:(NSObject <State> *)newState

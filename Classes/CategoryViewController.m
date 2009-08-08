@@ -83,6 +83,12 @@
 	[fileManager release];
 }
 
+- (void)viewDidUnload
+{
+	[navigationController release];
+	[syncButton release];
+}
+
 - (void)childWasPopped
 {
 	NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];

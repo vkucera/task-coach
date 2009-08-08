@@ -1,6 +1,7 @@
 
 2009-08-08  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
     * misc: Display the day name when picking a date
+	* misc: Fixed a number of small memory leaks, as well as a potential crash
 
 2009-08-02  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* misc: The user can now edit the categories associated with a task.
