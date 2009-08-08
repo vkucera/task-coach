@@ -3,7 +3,7 @@
 //  TaskCoach
 //
 //  Created by Jérôme Laheurte on 15/01/09.
-//  Copyright 2009 __MyCompanyName__. All rights reserved.
+//  Copyright 2009 Jérôme Laheurte. See COPYING for details.
 //
 
 #import <UIKit/UIKit.h>

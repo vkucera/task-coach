@@ -3,7 +3,7 @@
 //  iBooks
 //
 //  Created by Jérôme Laheurte on 10/12/08.
-//  Copyright 2008 __MyCompanyName__. All rights reserved.
+//  Copyright 2008 Jérôme Laheurte. See COPYING for details.
 //
 
 #import "Statement.h"
