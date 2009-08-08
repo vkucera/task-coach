@@ -13,6 +13,14 @@
 @synthesize label;
 @synthesize switch_;
 
+- (void)dealloc
+{
+	[switch_ release];
+	[label release];
+	
+	[super dealloc];
+}
+
 - (IBAction)onValueChanged:(UISwitch *)s
 {
 	[delegate onSwitchValueChanged:self];
