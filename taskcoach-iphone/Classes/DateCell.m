@@ -3,7 +3,7 @@
 //  TaskCoach
 //
 //  Created by Jérôme Laheurte on 07/06/09.
-//  Copyright 2009 __MyCompanyName__. All rights reserved.
+//  Copyright 2009 Jérôme Laheurte. See COPYING for details.
 //
 
 #import "DateCell.h"
