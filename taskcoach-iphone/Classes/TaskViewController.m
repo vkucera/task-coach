@@ -24,6 +24,13 @@
 
 @implementation TaskViewController
 
+@synthesize tableViewController;
+
+- (UITableView *)tableView
+{
+	return tableViewController.tableView;
+}
+
 - (void)willTerminate
 {
 	[[PositionStore instance] push:self indexPath:nil];
@@ -94,20 +101,15 @@
 	return self;
 }
 
-- (void)setAddButton
-{
-	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-	[button setFrame:CGRectMake(0, 0, 22, 22)];
-	[button setImage:[UIImage imageNamed:@"addtask.png"] forState:UIControlStateNormal];
-	self.navigationItem.titleView = button;
-	[button addTarget:self action:@selector(onAddTask:) forControlEvents:UIControlEventTouchUpInside];
-}
-
 - (void)viewDidLoad
 {
 	self.navigationItem.title = title;
 	self.navigationItem.rightBarButtonItem = [self editButtonItem];
-	[self setAddButton];
+}
+
+- (void)viewDidUnload
+{
+	[tableViewController release];
 }
 
 - (void)dealloc
@@ -122,6 +124,12 @@
 
 - (void)childWasPopped
 {
+	NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+	if (indexPath)
+	{
+		[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+	}
+
 	[self loadData];
 	[self.tableView reloadData];
 	if (!isCreatingTask)
@@ -131,14 +139,7 @@
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated
 {
-	if (editing)
-	{
-		self.navigationItem.titleView = nil;
-	}
-	else
-	{
-		[self setAddButton];
-	}
+	NSLog(@"Set editing: %d", editing);
 
 	if ([headers count])
 	{
@@ -148,6 +149,7 @@
 		isBecomingEditable = YES;
 
 		[super setEditing:editing animated:animated];
+		[self.tableViewController setEditing:editing animated:animated];
 
 		if (editing)
 		{
@@ -162,6 +164,7 @@
 	{
 		// There's a mess with the pseudo-section used when the data set is empty...
 		[super setEditing:editing animated:animated];
+		[self.tableViewController setEditing:editing animated:animated];
 		[self.tableView reloadData];
 	}
 }
@@ -271,6 +274,8 @@
 		return count + 1;
 	}
 
+	NSLog(@"Sections: %d", count ? count : 1);
+
     return count ? count : 1;
 }
 
@@ -290,13 +295,23 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 	if (self.editing && (section == 0))
+	{
+		NSLog(@"1 row in section %d", section);
+
 		return 1;
+	}
 
 	if ([headers count])
 	{
-		return [[headers objectAtIndex:section - (self.editing ? 1 : 0)] count];
+		NSInteger count = [[headers objectAtIndex:section - (self.editing ? 1 : 0)] count];
+		
+		NSLog(@"%d row(s) in section %d", count, section);
+		
+		return count;
 	}
-	
+
+	NSLog(@"No row in section %d", section);
+
 	return 0;
 }
 
@@ -327,6 +342,10 @@
 		{
 			taskCell = [[[CellFactory cellFactory] createTaskCell] autorelease];
 		}
+
+		// This is already done in the NIB but when switching to non-editing mode, we
+		// must enforce it...
+		taskCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 		TaskList *list = [headers objectAtIndex:indexPath.section - (self.editing ? 1 : 0)];
 		Task *task = [list taskAtIndex:indexPath.row];
@@ -400,7 +419,7 @@
 	}
 }
 
-- (void)onAddTask:(UIButton *)button
+- (void)onAddTask:(UIBarButtonItem *)button
 {
 	Task *task = [[Task alloc] initWithId:-1 name:@"" status:STATUS_NEW taskCoachId:nil description:@""
 								startDate:[[DateUtils instance] stringFromDate:[NSDate date]] dueDate:nil completionDate:nil];

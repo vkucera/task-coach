@@ -13,7 +13,7 @@
 @class TaskList;
 @class TaskCell;
 
-@interface TaskViewController : UITableViewController <UIAlertViewDelegate, RestorableController>
+@interface TaskViewController : UIViewController <UIAlertViewDelegate, RestorableController>
 {
 	NSString *title;
 	NSInteger categoryId;
@@ -24,7 +24,14 @@
 	BOOL isCreatingTask;
 	
 	TaskCell *currentCell;
+	
+	UITableViewController *tableViewController;
 }
+
+@property (nonatomic, readonly) UITableView *tableView;
+@property (nonatomic, retain) IBOutlet UITableViewController *tableViewController;
+
+- (IBAction)onAddTask:(UIBarButtonItem *)button;
 
 - initWithTitle:(NSString *)title category:(NSInteger)categoryId;
 
