@@ -111,7 +111,7 @@
 
 - (void)viewDidUnload
 {
-	[tableViewController release];
+	self.tableViewController = nil;
 }
 
 - (void)dealloc

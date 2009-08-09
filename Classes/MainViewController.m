@@ -21,7 +21,7 @@
 
 - (void)viewDidUnload
 {
-	[viewController release];
+	self.viewController = nil;
 }
 
 - (void)willTerminate

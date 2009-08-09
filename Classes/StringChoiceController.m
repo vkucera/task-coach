@@ -32,7 +32,7 @@
 
 - (void)viewDidUnload
 {
-	[textField release];
+	self.textField = nil;
 }
 
 - (void)dealloc

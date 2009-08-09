@@ -66,11 +66,11 @@
 
 - (void)viewDidUnload
 {
-	[label release];
-	[activity release];
-	[progress release];
-	[password release];
-	[cancelButton release];
+	self.label = nil;
+	self.activity = nil;
+	self.progress = nil;
+	self.password = nil;
+	self.cancelButton = nil;
 }
 
 - (void)setState:(NSObject <State> *)newState
