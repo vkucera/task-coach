@@ -41,11 +41,11 @@
 		
 		if (pos.indexPath.row)
 		{
-			ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:pos.indexPath.row - 1] name] category:[[categories objectAtIndex:pos.indexPath.row - 1] objectId]];
+			ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:pos.indexPath.row - 1] name] category:[[categories objectAtIndex:pos.indexPath.row - 1] objectId] categoryController:self];
 		}
 		else
 		{
-			ctrl = [[TaskViewController alloc] initWithTitle:NSLocalizedString(@"All", @"All categories view title") category:-1];
+			ctrl = [[TaskViewController alloc] initWithTitle:NSLocalizedString(@"All", @"All categories view title") category:-1 categoryController:self];
 		}
 		
 		[[PositionStore instance] push:self indexPath:pos.indexPath];
@@ -106,6 +106,17 @@
 		// And the above code does not actually deselect the selected cell. Duh...
 		[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 	}
+	
+	if (wantSync)
+	{
+		wantSync = NO;
+		[self onSynchronize:nil];
+	}
+}
+
+- (void)setWantSync
+{
+	wantSync = YES;
 }
 
 - (IBAction)onAddCategory:(UIBarButtonItem *)button
@@ -153,11 +164,11 @@
 	
 	if (indexPath.row)
 	{
-		ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:indexPath.row - 1] name] category:[[categories objectAtIndex:indexPath.row - 1] objectId]];
+		ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:indexPath.row - 1] name] category:[[categories objectAtIndex:indexPath.row - 1] objectId] categoryController:self];
 	}
 	else
 	{
-		ctrl = [[TaskViewController alloc] initWithTitle:NSLocalizedString(@"All", @"All categories view title") category:-1];
+		ctrl = [[TaskViewController alloc] initWithTitle:NSLocalizedString(@"All", @"All categories view title") category:-1 categoryController:self];
 	}
 	
 	[[PositionStore instance] push:self indexPath:indexPath];

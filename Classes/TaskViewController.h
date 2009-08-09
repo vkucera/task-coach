@@ -12,6 +12,7 @@
 
 @class TaskList;
 @class TaskCell;
+@class CategoryViewController;
 
 @interface TaskViewController : UIViewController <UIAlertViewDelegate, RestorableController>
 {
@@ -26,13 +27,15 @@
 	TaskCell *currentCell;
 	
 	UITableViewController *tableViewController;
+	CategoryViewController *categoryController;
 }
 
 @property (nonatomic, readonly) UITableView *tableView;
 @property (nonatomic, retain) IBOutlet UITableViewController *tableViewController;
 
 - (IBAction)onAddTask:(UIBarButtonItem *)button;
+- (IBAction)onSync:(UIBarButtonItem *)button;
 
-- initWithTitle:(NSString *)title category:(NSInteger)categoryId;
+- initWithTitle:(NSString *)title category:(NSInteger)categoryId categoryController:(CategoryViewController *)controller;
 
 @end

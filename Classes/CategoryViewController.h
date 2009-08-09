@@ -19,6 +19,7 @@
 {
 	NavigationController *navigationController;
 	UIBarButtonItem *syncButton;
+	BOOL wantSync;
 }
 
 @property (nonatomic, assign) IBOutlet NavigationController *navigationController;
@@ -26,5 +27,7 @@
 
 - (IBAction)onAddCategory:(UIBarButtonItem *)button;
 - (IBAction)onSynchronize:(UIBarButtonItem *)button;
+
+- (void)setWantSync;
 
 @end

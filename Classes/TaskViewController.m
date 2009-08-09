@@ -8,6 +8,7 @@
 
 #import "TaskViewController.h"
 #import "TaskDetailsController.h"
+#import "CategoryViewController.h"
 
 #import "TaskCell.h"
 #import "CellFactory.h"
@@ -88,12 +89,13 @@
 	[list release];
 }
 
-- initWithTitle:(NSString *)theTitle category:(NSInteger)theId
+- initWithTitle:(NSString *)theTitle category:(NSInteger)theId categoryController:(CategoryViewController *)controller
 {
 	if (self = [super initWithNibName:@"TaskView" bundle:[NSBundle mainBundle]])
 	{
 		title = [theTitle retain];
 		categoryId = theId;
+		categoryController = controller;
 
 		[self loadData];
 	}
@@ -419,7 +421,7 @@
 	}
 }
 
-- (void)onAddTask:(UIBarButtonItem *)button
+- (IBAction)onAddTask:(UIBarButtonItem *)button
 {
 	Task *task = [[Task alloc] initWithId:-1 name:@"" status:STATUS_NEW taskCoachId:nil description:@""
 								startDate:[[DateUtils instance] stringFromDate:[NSDate date]] dueDate:nil completionDate:nil];
@@ -427,6 +429,13 @@
 	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:categoryId];
 	[self.navigationController pushViewController:ctrl animated:YES];
 	[ctrl release];
+}
+
+- (IBAction)onSync:(UIBarButtonItem *)button
+{
+	[categoryController setWantSync];
+
+	[self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
