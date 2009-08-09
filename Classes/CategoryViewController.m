@@ -16,7 +16,6 @@
 #import "Database/Statement.h"
 
 #import "Domain/Category.h"
-#import "PositionStore.h"
 
 #import "Configuration.h"
 

@@ -21,11 +21,11 @@ static PositionStore *_instance = nil;
 	return p;
 }
 
-- initWithController:(UITableViewController *)controller indexPath:(NSIndexPath *)path
+- initWithController:(id <RestorableController>)controller indexPath:(NSIndexPath *)path
 {
 	if (self = [super init])
 	{
-		CGPoint p = controller.tableView.contentOffset;
+		CGPoint p = [controller tableView].contentOffset;
 
 		_scrollPosition = p.y;
 		indexPath = [path retain];
@@ -109,7 +109,7 @@ static PositionStore *_instance = nil;
 	[super dealloc];
 }
 
-- (void)push:(UITableViewController *)controller indexPath:(NSIndexPath *)indexPath
+- (void)push:(id <RestorableController>)controller indexPath:(NSIndexPath *)indexPath
 {
 	Position *pos = [[Position alloc] initWithController:controller indexPath:indexPath];
 	[positions addObject:pos];
@@ -121,14 +121,11 @@ static PositionStore *_instance = nil;
 	[positions removeLastObject];
 }
 
-- (void)restore:(UIViewController *)controller
+- (void)restore:(id <RestorableController>)controller
 {
-	if ([controller respondsToSelector:@selector(restorePosition:store:)] && (current < [positions count]))
-	{
-		Position *pos = [positions objectAtIndex:current];
-		++current;
-		[controller performSelector:@selector(restorePosition:store:) withObject:pos withObject:self];
-	}
+	Position *pos = [positions objectAtIndex:current];
+	++current;
+	[controller restorePosition:pos store:self];
 }
 
 @end
