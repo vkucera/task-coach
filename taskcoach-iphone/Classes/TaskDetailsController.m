@@ -158,6 +158,15 @@
 	if (date)
 	{
 		task.startDate = [[DateUtils instance] stringFromDate:date];
+		
+		if (task.dueDate)
+		{
+			NSDate *dueDate = [[DateUtils instance] dateFromString:task.dueDate];
+			if ([dueDate compare:date] == NSOrderedAscending)
+			{
+				task.dueDate = task.startDate;
+			}
+		}
 	}
 	else if (!task.startDate)
 	{
@@ -165,7 +174,9 @@
 	}
 	
 	[self saveTask];
+	
 	[startDateCell setDate:task.startDate];
+	[dueDateCell setDate:task.dueDate];
 }
 
 - (void)onPickDueDate:(NSDate *)date
@@ -175,6 +186,15 @@
 	if (date)
 	{
 		task.dueDate = [[DateUtils instance] stringFromDate:date];
+		
+		if (task.startDate)
+		{
+			NSDate *startDate = [[DateUtils instance] dateFromString:task.startDate];
+			if ([startDate compare:date] == NSOrderedDescending)
+			{
+				task.startDate = task.dueDate;
+			}
+		}
 	}
 	else if (!task.dueDate)
 	{
@@ -182,6 +202,8 @@
 	}
 	
 	[self saveTask];
+
+	[startDateCell setDate:task.startDate];
 	[dueDateCell setDate:task.dueDate];
 }
 
