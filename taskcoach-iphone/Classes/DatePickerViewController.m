@@ -53,8 +53,8 @@
 
 - (void)viewDidUnload
 {
-	[picker release];
-	[dayLabel release];
+	self.picker = nil;
+	self.dayLabel = nil;
 }
 
 - (IBAction)onDateChanged:(UIDatePicker *)thePicker

@@ -84,8 +84,8 @@
 
 - (void)viewDidUnload
 {
-	[navigationController release];
-	[syncButton release];
+	self.navigationController = nil;
+	self.syncButton = nil;
 }
 
 - (void)childWasPopped
