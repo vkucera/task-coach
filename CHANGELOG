@@ -1,4 +1,9 @@
 
+2009-08-09  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
+	* misc: Add a toolbar to the task list, with an add button and a sync button.
+	  Display the category name in the navigation bar.
+	* misc: Ensure consistency between dates.
+
 2009-08-08  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
     * misc: Display the day name when picking a date
 	* misc: Fixed a number of small memory leaks, as well as a potential crash
