@@ -293,13 +293,7 @@ class Publisher(object):
             del self.__observers[(eventType, eventSource)]
             Event('publisher.lastObserverRemovedFor.%s'%eventType, self, 
                 eventType).send()
-                
-    def getCurrentEvent(self):
-        if not self.__currentEvent:
-            self.__currentEvent = Event()
-            self.__currentEventCount = 1
-        return self.__currentEvent
-        
+                        
     def notifyObservers(self, event):
         ''' Notify observers of the event. The event type and sources are 
             extracted from the event. '''
