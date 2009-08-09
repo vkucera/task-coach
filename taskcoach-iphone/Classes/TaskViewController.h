@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+#import "PositionStore.h"
+
 @class TaskList;
 @class TaskCell;
 
-@interface TaskViewController : UITableViewController <UIAlertViewDelegate>
+@interface TaskViewController : UITableViewController <UIAlertViewDelegate, RestorableController>
 {
 	NSString *title;
 	NSInteger categoryId;

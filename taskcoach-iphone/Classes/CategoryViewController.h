@@ -11,10 +11,11 @@
 #import "BaseCategoryViewController.h"
 #import "BonjourBrowser.h"
 #import "SyncViewController.h"
+#import "PositionStore.h"
 
 @class NavigationController;
 
-@interface CategoryViewController : BaseCategoryViewController <BonjourBrowserDelegate>
+@interface CategoryViewController : BaseCategoryViewController <BonjourBrowserDelegate, RestorableController>
 {
 	NavigationController *navigationController;
 	UIBarButtonItem *syncButton;

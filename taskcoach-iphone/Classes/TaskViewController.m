@@ -21,7 +21,6 @@
 #import "Configuration.h"
 
 #import "DateUtils.h"
-#import "PositionStore.h"
 
 @implementation TaskViewController
 
