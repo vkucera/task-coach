@@ -28,6 +28,8 @@ Release('0.73.5', '?? ??, 2009',
     bugsFixed=[
         Bug('''Avoid nested syncml tags in the XML task file''',
             '2832062', '2813816'),
+        Bug('''Some macro's (e.g. "%(name)s") in the help text were not 
+properly expanded.''', '2833904')
         ]
     ),
 
