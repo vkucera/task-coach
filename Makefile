@@ -60,6 +60,9 @@ dmg: prepare
 	$(PYTHON) make.py py2app
 	hdiutil create -ov -imagekey zlib-level=9 -srcfolder build/TaskCoach.app dist/TaskCoach-$(TCVERSION).dmg
 
+winpenpack: prepare 
+	$(PYTHON) make.py bdist_winpenpack
+
 icons: taskcoachlib/gui/icons.py
 
 templates: taskcoachlib/persistence/xml/templates.py

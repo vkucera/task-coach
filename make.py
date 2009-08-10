@@ -20,12 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import meta
 import sys, os, glob
 from setup import setupOptions
-from buildlib import clean, bdist_rpm_fedora, bdist_deb
+from buildlib import clean, bdist_rpm_fedora, bdist_deb, bdist_winpenpack
 
 
 setupOptions['cmdclass'] = dict(clean=clean,
                                 bdist_rpm_fedora=bdist_rpm_fedora,
-                                bdist_deb=bdist_deb)
+                                bdist_deb=bdist_deb,
+                                bdist_winpenpack=bdist_winpenpack)
                                 
 distdir = 'dist'
 builddir = 'build'
@@ -127,6 +128,10 @@ elif sys.argv[1] == 'bdist_deb':
         wxpythonversion=meta.data.wxpythonversionnumber,
         subsection='Office', url=meta.data.url,
         command='/usr/bin/taskcoach.py'))))
+    
+elif sys.argv[1] == 'bdist_winpenpack':
+    from distutils.core import setup
+    setupOptions.update(dict(options=dict(bdist_winpenpack=dict())))
     
 else:
     from distutils.core import setup
