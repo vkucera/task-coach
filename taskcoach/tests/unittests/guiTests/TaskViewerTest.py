@@ -37,10 +37,10 @@ class TaskViewerUnderTest(gui.viewer.task.TaskViewer):
 class TaskViewerTestCase(test.wxTestCase):
     def setUp(self):
         super(TaskViewerTestCase, self).setUp()
+        task.Task.settings = self.settings = config.Settings(load=False)
         self.task = task.Task(subject='task')
         self.child = task.Task(subject='child')
         self.child.setParent(self.task)
-        self.settings = config.Settings(load=False)
         self.taskFile = persistence.TaskFile()
         self.taskList = self.taskFile.tasks()
         self.viewer = TaskViewerUnderTest(self.frame, self.taskFile, 

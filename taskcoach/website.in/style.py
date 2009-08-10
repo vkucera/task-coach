@@ -65,9 +65,7 @@ footer = '''
                 <h2>About %(name)s</h2>
                 <p>%(name)s %(version)s was released on %(date)s.</p>
                 <ul>
-                    <li><b><a href="download.html" title="Download %(name)s">Download</a></b></li>
                     <li><a href="index.html" title="%(name)s overview">Overview</a></li>
-                    <li><a href="iPhone.html" title="iPhone/iPod app">iPhone/iPod</a></li>
                     <li><a href="screenshots.html" 
                        title="View some screenshots of %(name)s here">Screenshots</a></li>
                     <li><a href="features.html" 
@@ -78,6 +76,14 @@ footer = '''
                        title="An overview of bugs fixed and features added per version of %(name)s">Change history</a></li>
                     <li><a href="license.html" 
                        title="Your rights and obligations when using %(name)s">License</a></li>
+                </ul>
+            </div>
+            <div class="navbox">
+                <h2>Get %(name)s for</h2>
+                <ul>
+                    <li><a href="download.html" title="Download %(name)s">Windows, Linux, and Mac OS X</a></li>
+                    <li><a href="iPhone.html" title="iPhone/iPod app">iPhone and iPod Touch</a></li>
+                    <li><a href="portable.html" title="Portable %(name)s">Portable devices</a></li>
                 </ul>
             </div>
             <div class="navbox">

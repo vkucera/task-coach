@@ -226,7 +226,6 @@ class Publisher(object):
     def clear(self):
         ''' Clear the registry of observers. Mainly for testing purposes. '''
         self.__observers = {} # {(eventType, eventSource): set(callbacks)}
-        self.__notifyingSemaphore = 0
     
     @wrapObserver
     def registerObserver(self, observer, eventType, eventSource=None):
@@ -294,11 +293,11 @@ class Publisher(object):
             del self.__observers[(eventType, eventSource)]
             Event('publisher.lastObserverRemovedFor.%s'%eventType, self, 
                 eventType).send()
-        
+                        
     def notifyObservers(self, event):
         ''' Notify observers of the event. The event type and sources are 
             extracted from the event. '''
-        if not self.isNotifying() or not event.sources():
+        if not event.sources():
             return
         # Collect observers *and* the types and sources they are registered for
         observers = dict() # {observer: set([(type, source), ...])} 
@@ -323,19 +322,6 @@ class Publisher(object):
             for observers in self.__observers.values():
                 result |= observers
             return result
-    
-    def stopNotifying(self):
-        ''' Temporarily stop notifying. Calls to stopNotifying and 
-            startNotifying can be nested. As soon as startNotifying has been
-            called the same number of times as stopNotifying, notifying is 
-            resumed again. ''' 
-        self.__notifyingSemaphore += 1
-
-    def startNotifying(self):
-        self.__notifyingSemaphore -= 1
-
-    def isNotifying(self):
-        return self.__notifyingSemaphore == 0
     
 
 class Observer(object):
@@ -374,12 +360,6 @@ class ObservableCollection(object):
         ''' The event type used to notify observers that one or more items
             have been removed from the collection. '''
         return '%s.remove'%class_
-
-    def notifyObserversOfItemsAdded(self, *items):
-        Event(self.addItemEventType(), self, *items).send()
-
-    def notifyObserversOfItemsRemoved(self, *items):
-        Event(self.removeItemEventType(), self, *items).send()
 
     @classmethod
     def modificationEventTypes(class_):
@@ -550,16 +530,16 @@ class CollectionDecorator(Decorator, ObservableCollection):
             Extend to add behaviour. '''
         self.removeItemsFromSelf(event.values())
 
-    def extendSelf(self, items):
+    def extendSelf(self, items, event=None):
         ''' Provide a method to extend this collection without delegating to
             the observed collection. '''
-        super(CollectionDecorator, self).extend(items)
+        return super(CollectionDecorator, self).extend(items, event)
         
-    def removeItemsFromSelf(self, items):
+    def removeItemsFromSelf(self, items, event=None):
         ''' Provide a method to remove items from this collection without 
             delegating to the observed collection. '''
-        super(CollectionDecorator, self).removeItems(items)
-
+        return super(CollectionDecorator, self).removeItems(items, event)
+        
     # Delegate changes to the observed collection
 
     def append(self, *args, **kwargs):

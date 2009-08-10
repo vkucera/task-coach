@@ -52,7 +52,7 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         patterns.Publisher().registerObserver(self.onRemoveEffortFromTask,
             eventType='task.effort.remove')
     
-    def extendSelf(self, tasks):
+    def extendSelf(self, tasks, event=None):
         ''' This method is called when a task is added to the observed list.
             It overrides ObservableListObserver.extendSelf whose default 
             behaviour is to add the item that is added to the observed 
@@ -61,9 +61,9 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         effortsToAdd = []
         for task in tasks:
             effortsToAdd.extend(task.efforts())
-        super(EffortList, self).extendSelf(effortsToAdd)
+        super(EffortList, self).extendSelf(effortsToAdd, event)
         
-    def removeItemsFromSelf(self, tasks):
+    def removeItemsFromSelf(self, tasks, event=None):
         ''' This method is called when a task is removed from the observed 
             list. It overrides ObservableListObserver.removeItemsFromSelf 
             whose default behaviour is to remove the item that was removed
@@ -73,7 +73,7 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         effortsToRemove = []
         for task in tasks:
             effortsToRemove.extend(task.efforts())
-        super(EffortList, self).removeItemsFromSelf(effortsToRemove)
+        super(EffortList, self).removeItemsFromSelf(effortsToRemove, event)
 
     def onAddEffortToTask(self, event):
         effortsToAdd = []
@@ -104,7 +104,7 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         notify = event is None
         event = event or patterns.Event()
         for effort in efforts:
-            event = effort.task().removeEffort(effort, event)
+            effort.task().removeEffort(effort, event)
         if notify:
             event.send()
         else:
@@ -119,7 +119,7 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         notify = event is None
         event = event or patterns.Event()
         for effort in efforts:
-            event = effort.task().addEffort(effort, event)
+            effort.task().addEffort(effort, event)
         if notify:
             event.send()
         else:

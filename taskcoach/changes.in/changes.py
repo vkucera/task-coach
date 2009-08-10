@@ -32,6 +32,14 @@ user using a text editor; Task Coach won't overwrite it.''')
         ]
     ),
                 
+Release('0.73.5', '?? ??, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Avoid nested syncml tags in the XML task file''',
+            '2832062', '2813816'),
+        ]
+    ),
+
 Release('0.73.4', 'August 6, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[

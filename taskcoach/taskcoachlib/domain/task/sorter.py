@@ -31,19 +31,19 @@ class Sorter(base.TreeSorter):
         self.__sortByTaskStatusFirst = kwargs.pop('sortByTaskStatusFirst', True)
         super(Sorter, self).__init__(*args, **kwargs)
         for eventType in ('task.startDate', 'task.completionDate'):
-            patterns.Publisher().registerObserver(self.reset, 
+            patterns.Publisher().registerObserver(self.onAttributeChanged, 
                                                   eventType=eventType)
-    
+            
     def setTreeMode(self, treeMode=True):
         self.__treeMode = treeMode
         try:
             self.observable().setTreeMode(treeMode)
         except AttributeError:
             pass
-        # Make sure we notify our observers even if the sort order does not
-        # change, because when switching from list to tree mode or vice versa
-        # the presentation almost certainly needs to be updated.
-        self.reset(forceNotification=True)
+        event = patterns.Event()
+        self.reset(event)
+        event.addSource(self, type=self.sortEventType()) # force notification
+        event.send() 
 
     def treeMode(self):
         return self.__treeMode
@@ -52,18 +52,18 @@ class Sorter(base.TreeSorter):
         self._invalidateRootItemCache()
         return super(Sorter, self).reset(*args, **kwargs)
         
-    def extendSelf(self, *args, **kwargs):
+    def extendSelf(self, items, event=None):
         self._invalidateRootItemCache()
-        return super(Sorter, self).extendSelf(*args, **kwargs)
+        return super(Sorter, self).extendSelf(items, event)
 
-    def removeItemsFromSelf(self, itemsToRemove):
+    def removeItemsFromSelf(self, itemsToRemove, event=None):
         self._invalidateRootItemCache()
         itemsToRemove = set(itemsToRemove)
         if self.treeMode():
             for item in itemsToRemove.copy():
                 itemsToRemove.update(item.children(recursive=True)) 
         itemsToRemove = [item for item in itemsToRemove if item in self]
-        return super(Sorter, self).removeItemsFromSelf(itemsToRemove)
+        return super(Sorter, self).removeItemsFromSelf(itemsToRemove, event)
 
     def rootItems(self):
         if self.__rootItems is None:

@@ -276,7 +276,11 @@ class XMLReader(object):
     def _parseSyncMLNode(self, nodes, guid):
         syncML = createDefaultSyncConfig(guid)
 
-        for node in nodes.findall('syncml'):
+        nodeName = 'syncmlconfig'
+        if self.__tskversion < 25:
+            nodeName = 'syncml'
+
+        for node in nodes.findall(nodeName):
             self._parseSyncMLNodes(node, syncML)
 
         return syncML

@@ -26,11 +26,10 @@ class EffortSorter(base.Sorter):
     def __init__(self, *args, **kwargs):
         kwargs['sortAscending'] = False
         super(EffortSorter, self).__init__(*args, **kwargs)
-        patterns.Publisher().registerObserver(self.reset, 
-            eventType='effort.start')
-        patterns.Publisher().registerObserver(self.reset,
-            eventType=effort.Effort.taskChangedEventType())
-    
+        for eventType in ['effort.start', effort.Effort.taskChangedEventType()]:
+            patterns.Publisher().registerObserver(self.onAttributeChanged, 
+                                                  eventType=eventType)
+        
     def createSortKeyFunction(self):
         # Sort by start of effort first, then by task subject
         return lambda effort: (effort.getStart(), 

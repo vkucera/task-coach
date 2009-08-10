@@ -38,23 +38,29 @@ class Filter(patterns.SetDecorator):
     def treeMode(self):
         return self.__treeMode
 
-    def extendSelf(self, items):
-        super(Filter, self).extendSelf(self.filter(items))
+    def extendSelf(self, items, event=None):
+        super(Filter, self).extendSelf(self.filter(items), event)
 
-    def removeItemsFromSelf(self, items):
+    def removeItemsFromSelf(self, items, event=None):
         itemsToRemove = set(items)
         if self.treeMode():
             for item in itemsToRemove.copy():
                 itemsToRemove.update(item.children(recursive=True))
         itemsToRemove = [item for item in itemsToRemove if item in self]
-        super(Filter, self).removeItemsFromSelf(itemsToRemove)
+        super(Filter, self).removeItemsFromSelf(itemsToRemove, event)
         
-    def reset(self):
+    def reset(self, event=None):
+        notify = event is None
+        event = event or patterns.Event()
         filteredItems = self.filter(self.observable())
         itemsToAdd = [item for item in filteredItems if item not in self]
         itemsToRemove = [item for item in self if item not in filteredItems]
-        self.removeItemsFromSelf(itemsToRemove)
-        self.extendSelf(itemsToAdd)
+        self.removeItemsFromSelf(itemsToRemove, event)
+        self.extendSelf(itemsToAdd, event)
+        if notify:
+            event.send()
+        else:
+            return event
             
     def filter(self, items):
         ''' filter returns the items that pass the filter. '''
@@ -70,11 +76,17 @@ class SelectedItemsFilter(Filter):
         self.__includeSubItems = kwargs.pop('includeSubItems', True)
         super(SelectedItemsFilter, self).__init__(*args, **kwargs)
 
-    def removeItemsFromSelf(self, items):
-        super(SelectedItemsFilter, self).removeItemsFromSelf(items)
+    def removeItemsFromSelf(self, items, event=None):
+        notify = event is None
+        event = event or patterns.Event()
+        super(SelectedItemsFilter, self).removeItemsFromSelf(items, event)
         self.__selectedItems.difference_update(set(items))
         if not self.__selectedItems:
-            self.extendSelf(self.observable())
+            self.extendSelf(self.observable(), event)
+        if notify:
+            event.send()
+        else:
+            return event
                
     def filter(self, items):
         if self.__selectedItems:
@@ -164,9 +176,11 @@ class DeletedFilter(Filter):
 
     def onObjectMarkedDeletedOrNot(self, event):
         items = event.sources()
-        self.removeItemsFromSelf([item for item in items if item.isDeleted()])
+        newEvent = patterns.Event()
+        self.removeItemsFromSelf([item for item in items if item.isDeleted()], newEvent)
         self.extendSelf([item for item in items if not item.isDeleted() \
-            and item in self.observable() and not item in self])
+            and item in self.observable() and not item in self], newEvent)
+        newEvent.send()
 
     def filter(self, items):
         return [item for item in items if not item.isDeleted()]
