@@ -75,10 +75,10 @@ _TOC = _('''<h3>Table of contents</h3>
   </ul>
 </li>
 </ul>
-''')
+''')%meta.metaDict
 
 _taskSection = _('''<h3><a name="tasks">Tasks</a></h3>
-''')
+''')%meta.metaDict
 
 _aboutTasksSubsection = _('''<h4><a name="abouttasks">About tasks</a></h4>
  
@@ -86,7 +86,7 @@ _aboutTasksSubsection = _('''<h4><a name="abouttasks">About tasks</a></h4>
 represent anything from a simple little thing you have to do, like buying a gift
 for your loved one, to a complete project, consisting of different phases, and
 numerous activities.</p>
-''')
+''')%meta.metaDict
 
 _taskPropertiesSubsection = _('''<h4><a name="taskproperties">Task 
 properties</a></h4>
@@ -126,7 +126,7 @@ subtasks of the task, recursively.</li>
 <li>Total revenue: sum of task revenue and revenue of all subtasks, 
 recursively.</li>
 </ul></p>
-''')
+''')%meta.metaDict
 
 _taskStatesSubsection = _('''<h4><a name="taskstates">Task states</a></h4>
 
@@ -145,7 +145,7 @@ _taskStatesSubsection = _('''<h4><a name="taskstates">Task states</a></h4>
 <li>Under budget: still budget left;</li>
 <li>No budget: the task has no budget.</li>
 </ul></p>
- ''')
+ ''')%meta.metaDict
 
 _taskColorsSubsection = _('''<h4><a name="taskcolors">Task colors</a></h4>
 
@@ -162,10 +162,10 @@ dialog, of course.</p>
 <p>The background color of tasks is determined by the categories the task
 belongs to, see the section about 
 <a href="#categoryproperties">category properties</a> below.</p>
-''')
+''')%meta.metaDict
 
 _effortSection = _('''<h3><a name="effort">Effort</a></h3>
-''')
+''')%meta.metaDict
 
 _aboutEffortSubsection = _('''<h4><a name="abouteffort">About effort</a></h4>
 
@@ -173,7 +173,7 @@ _aboutEffortSubsection = _('''<h4><a name="abouteffort">About effort</a></h4>
 spent by tracking effort. Select a task and invoke 'Start tracking effort' in
 the Effort menu or the context menu or via the 'Start tracking effort' toolbar 
 button.</p>
-''')
+''')%meta.metaDict
 
 _effortPropertiesSubsection = _('''<h4><a name="effortproperties">Effort
 properties</a></h4>
@@ -195,10 +195,10 @@ recursively.</li>
 <li>Revenue: money earned with the time spent.</li>
 <li>Total revenue: money earned with the total time spent.</li>
 </ul></p>
-''')
+''')%meta.metaDict
 
 _categorySection = _('''<h3><a name="categories">Categories</a></h3>
-''')
+''')%meta.metaDict
 
 _aboutCategoriesSubSection = _('''<h4><a name="aboutcategories">About 
 categories</a></h4>
@@ -213,7 +213,7 @@ by checking a category in the category viewer. For example, if you have a
 category 'phone calls' and you check that category, the task viewers will 
 only show tasks belonging to that category; in other words the phone calls 
 you need to make.</p>
-''')
+''')%meta.metaDict
 
 _categoryPropertiesSubSection = _('''<h4><a name="categoryproperties">Category 
 properties</a></h4>
@@ -225,10 +225,10 @@ a parent category with a color, the parent's color will be used.
 If a task belongs to multiple categories that each have a color associated with
 them, a mixture of the colors will be used to render the background of that
 task.</p>
-''')
+''')%meta.metaDict
 
 _emailSection = _('''<h3><a name="email">E-mail (Outlook &amp; Thunderbird) integration</a></h3>
-''')
+''')%meta.metaDict
 
 _aboutEmailSubsection = _('''<h4><a name="aboutemail">About e-mail integration</a></h4>
 
@@ -254,7 +254,7 @@ _emailAttachingSubsection = _('''<h4><a name="emailattach">Attaching an e-mail t
 </ul>
 
 </p>
-''')
+''')%meta.metaDict
 
 _emailCreatingSubsection = _('''<h4><a name="emailcreate">Creating a task from an e-mail</a></h4>
 
@@ -262,10 +262,10 @@ _emailCreatingSubsection = _('''<h4><a name="emailcreate">Creating a task from a
 creates a new task. Its subject is the subject of the mail, its
 description is its content. Additionnaly, the mail is automatically
 attached to the newly created task.</p>
-''')
+''')%meta.metaDict
 
 _syncmlSection = _('''<h3><a name="syncml">SyncML support</a></h3>
-''')
+''')%meta.metaDict
 
 _aboutSyncmlSubsection = _('''<h4><a name="aboutsyncml">What is SyncML</a></h4>
 
@@ -303,7 +303,7 @@ you choose; some examples are:
 The database names are pretty standard; the default values should work.</p>
 
 <p>Each task file has its own client ID, so that two different task files
-will be considered different "devices" by the server.</p>''')
+will be considered different "devices" by the server.</p>''')%meta.metaDict
 
 _syncmlLimitsSubsection = _('''<h4><a name="syncmllimits">Limitations</a></h4>
 
@@ -320,7 +320,7 @@ vcalendar, some %(name)s features cannot be presented to the server.</p>
     <li>Probably some others...</li>
   </ul>
 </p>
-''')
+''')%meta.metaDict
 
 _syncmlTroubleSubsection = _('''<h4><a name="syncmltrouble">Troubleshooting</a></h4>
 
@@ -365,7 +365,7 @@ all these unwanted items.</p>
 ''') % meta.metaDict
 
 _iPhoneSection = _('''<h3><a name="iphone">iPhone and iPod Touch</a></h3>
-''')
+''')%meta.metaDict
 
 _iPhoneAboutSubsection = _('''<h4><a name="taskcoachiphone">%(name)s on the iPhone</a></h4>
 
@@ -390,7 +390,7 @@ your tasks away and modify them:</p>
   <li>Editing of budget</li>
   <li>Multiple task files</li>
   <li>Multiple categories for a task</li>
-</ul>''')
+</ul>''')%meta.metaDict
 
 _iPhoneConfigurationSubsection = _('''<h4><a name="iphoneconf">Configuration</a></h4>
 
@@ -409,7 +409,7 @@ Restart %(name)s. Now, in the preferences, choose the "iPhone" tab and fill in
 at least the password.</p>
 
 <p>When you tap the "Sync" button in the category view, %(name)s
-will automatically detect running instances of %n(name)s on your
+will automatically detect running instances of %(name)s on your
 desktop and ask you to select one (you may have several instances
 running on different computers on your network, or several instances
 on the same computer). The name displayed is, by default, some string
@@ -423,7 +423,7 @@ you synchronize; if it's not running, it will prompt you again.</p>
 no need for the device to be connected through USB nor for iTunes to
 be running.</p>
 
-''')
+''')%meta.metaDict
 
 
 _iPhoneTroubleshootingSubsection = _('''<h4><a name="iphonetrouble">Troubleshooting</a></h4>
@@ -437,7 +437,7 @@ computer is through WiFi.
 <h5>The iPhone can't connect to my computer</h5>
 If you have a firewall, check that ports 4096-4100 are open.
 </p>
-''')
+''')%meta.metaDict
 
 _templatesSection = _('''<h3><a name="templates">Task templates</a></h3>
 ''')
@@ -446,7 +446,7 @@ _aboutTemplatesSubsection = _('''<h4><a name="abouttemplates">About templates</a
 <p>Templates are blueprints for new tasks. Right now, the only task properties that
 can be "parameterized" are the dates. When instantiating a template, the created
 task has its dates replaced with dates relative to the current date.</p>
-''')
+''')%meta.metaDict
 
 _usingTemplatesSubsection = _('''<h4><a name="usingtemplates">Using templates</a></h4>
 <p>One can create a template by selecting a task (only one) and click on the

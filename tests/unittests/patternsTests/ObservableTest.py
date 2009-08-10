@@ -557,37 +557,7 @@ class PublisherTest(test.TestCase):
     def testClear(self):
         self.publisher.registerObserver(self.onEvent, eventType='eventType')
         self.publisher.clear()
-        self.assertEqual([], self.publisher.observers())
-        
-    def testStopNotifying(self):
-        self.publisher.registerObserver(self.onEvent, eventType='eventType')
-        self.publisher.stopNotifying()
-        patterns.Event('eventType', self).send()
-        self.failIf(self.events)
-        
-    def testStartNotifying(self):
-        self.publisher.registerObserver(self.onEvent, eventType='eventType')
-        self.publisher.stopNotifying()
-        self.publisher.startNotifying()
-        patterns.Event('eventType', self).send()
-        self.assertEqual([patterns.Event('eventType', self)], self.events)
-
-    def testNestedStopNotifying(self):
-        self.publisher.registerObserver(self.onEvent, eventType='eventType')
-        self.publisher.stopNotifying()
-        self.publisher.stopNotifying()
-        self.publisher.startNotifying()
-        patterns.Event('eventType', self).send()
-        self.failIf(self.events)
-        
-    def testNestedStartNotifying(self):
-        self.publisher.registerObserver(self.onEvent, eventType='eventType')
-        self.publisher.stopNotifying()
-        self.publisher.stopNotifying()
-        self.publisher.startNotifying()
-        self.publisher.startNotifying()
-        patterns.Event('eventType', self).send()
-        self.assertEqual([patterns.Event('eventType', self)], self.events)
+        self.assertEqual([], self.publisher.observers())        
 
     def testNotificationOfFirstObserverForEventType(self):
         self.publisher.registerObserver(self.onEvent, eventType='publisher.firstObserverRegisteredFor.eventType')
