@@ -112,7 +112,7 @@ class bdist_winpenpack(Command, object):
         
     def zip(self):
         archive_filename = os.path.join(self.dist_dir, 'X-TaskCoach_%s_rev1.zip'%self.version)
-        archive = zipfile.ZipFile(archive_filename, 'w')
+        archive = zipfile.ZipFile(archive_filename, 'w', zipfile.ZIP_DEFLATED)
         for dirpath, dirnames, filenames in os.walk(self.bdist_base_wpp):
             for filename in filenames:
                 filepath = os.path.join(dirpath, filename)
