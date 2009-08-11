@@ -38,10 +38,12 @@ revision:
 
 prepare: icons i18n templates
 
-windist: prepare
-	$(PYTHON) make.py py2exe
+windist: py2exe
 	$(INNOSETUP) build/taskcoach.iss
-
+	
+py2exe: prepare
+	$(PYTHON) make.py py2exe
+	
 sdist: prepare templates dist/TaskCoach-$(TCVERSION).tar.gz
 
 dist/TaskCoach-$(TCVERSION).tar.gz:
@@ -60,7 +62,7 @@ dmg: prepare
 	$(PYTHON) make.py py2app
 	hdiutil create -ov -imagekey zlib-level=9 -srcfolder build/TaskCoach.app dist/TaskCoach-$(TCVERSION).dmg
 
-winpenpack: prepare 
+winpenpack: py2exe 
 	$(PYTHON) make.py bdist_winpenpack
 
 icons: taskcoachlib/gui/icons.py

@@ -131,7 +131,12 @@ elif sys.argv[1] == 'bdist_deb':
     
 elif sys.argv[1] == 'bdist_winpenpack':
     from distutils.core import setup
-    setupOptions.update(dict(options=dict(bdist_winpenpack=dict())))
+    setupOptions.update(dict(options=dict(bdist_winpenpack=dict(\
+        version=meta.data.version,
+        license=meta.data.license_title,
+        url=meta.data.url,
+        filename=meta.data.filename,
+        date=meta.data.date))))
     
 else:
     from distutils.core import setup
