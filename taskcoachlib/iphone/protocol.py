@@ -796,6 +796,9 @@ class TwoWayModifiedTasks(BaseState):
                         self.setState(FullFromDesktopState, disp)
                     else:
                         self.state = 0
+                        self.length = None
+                        disp.set_terminator(4)
+                        return
 
             if disp.protocolVersion == 1 or (disp.protocolVersion == 2 and self.state < 5):
                 if self.state == 5 and self.modifiedTasksCount == 0:
