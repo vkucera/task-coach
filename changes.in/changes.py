@@ -32,7 +32,10 @@ Release('0.73.5', 'August ??, 2009',
 properly expanded.''', '2833904', '2833903'),
         Bug('''Translate tip window and search controls on Windows.''', 
         '2825463')
-        ]
+        ],
+    distributionsChanged=[
+        Distribution('''Added a winPackPen (http://www.winpackpen.com) 
+portable package to the set of available distributions.''')]
     ),
 
 Release('0.73.4', 'August 6, 2009',

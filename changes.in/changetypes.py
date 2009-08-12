@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ class Release:
     def __init__(self, number, date, bugsFixed=None, featuresAdded=None,
             featuresRemoved=None, featuresChanged=None, 
             dependenciesChanged=None, implementationChanged=None,
-            websiteChanges=None, summary=''):
+            websiteChanges=None, distributionsChanged=None, summary=''):
         self.number = number
         self.date = date
         self.summary = summary
@@ -33,6 +33,7 @@ class Release:
         self.dependenciesChanged = dependenciesChanged or []
         self.implementationChanged = implementationChanged or []
         self.websiteChanges = websiteChanges or []
+        self.distributionsChanged = distributionsChanged or []
 
 
 class Change(object):
@@ -57,7 +58,13 @@ class Implementation(Change):
     pass
 
 
+class Distribution(Change):
+    pass
+
+
 class Website(Change):
     def __init__(self, description, url, *sourceForgeIds):
         super(Website, self).__init__(description, *sourceForgeIds)
         self.url = url
+
+
