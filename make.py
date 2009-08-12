@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import meta
-import sys, os, glob
+import sys, os, glob, wx
 from setup import setupOptions
 from buildlib import clean, bdist_rpm_fedora, bdist_deb, bdist_winpenpack
 
@@ -75,6 +75,16 @@ if sys.argv[1] == 'py2exe':
     from distutils.core import setup
     import py2exe
     py2exeDistdir = '%s-%s-win32exe'%(meta.filename, meta.version)
+    # Get .mo files for wxWidgets:
+    locale_dir = os.path.join(os.path.dirname(wx.__file__), 'locale')
+    mo_path = os.path.join('LC_MESSAGES', 'wxstd.mo')
+    mo_files = []
+    for language_dir in os.listdir(locale_dir):
+        mo_abs_filename = os.path.join(locale_dir, language_dir, mo_path)
+        mo_rel_dir = os.path.join('locale', language_dir, 'LC_MESSAGES')
+        mo_files.append((mo_rel_dir, [mo_abs_filename]))
+    # DLL's we redistribute so people don't have to download them:
+    dll_files = [('', ['dist.in/gdiplus.dll', 'dist.in/MSVCP71.DLL'])]
     setupOptions.update({
         'windows' : [{ 'script' : 'taskcoach.pyw', 
             'other_resources' : [(24, 1, manifest)],
@@ -87,7 +97,7 @@ if sys.argv[1] == 'py2exe':
             'packages' : ['taskcoachlib.i18n', 'xml.dom.minidom'], 
             'dist_dir' : os.path.join(builddir, py2exeDistdir),
             'dll_excludes': 'MSVCR80.dll'}},
-        'data_files': [('', ['dist.in/gdiplus.dll', 'dist.in/MSVCP71.DLL'])]})
+        'data_files': dll_files + mo_files})
  
 elif sys.argv[1] == 'py2app':
     from setuptools import setup

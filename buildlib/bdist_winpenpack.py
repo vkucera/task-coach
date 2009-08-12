@@ -89,15 +89,20 @@ class bdist_winpenpack(Command, object):
     def copy_bin(self):
         srcdir = os.path.join(self.bdist_base, 'TaskCoach-%s-win32exe'%self.version)
         destdir = os.path.join(self.bdist_base_wpp, 'Bin', 'TaskCoach')
-        self.copy_files(srcdir, destdir)
+        self.copy_files(srcdir, destdir, copy_recursively=True)
             
-    def copy_files(self, src_dir, dest_dir):
-        for filename in glob.glob(os.path.join(src_dir, '*')):
-            if os.path.isfile(filename):
-                if os.path.splitext(filename)[1] in ('.txt', '.ini'):
-                    self.copy_and_expand(filename, dest_dir)
+    def copy_files(self, src_dir, dest_dir, copy_recursively=False):
+        if not os.path.exists(dest_dir):
+            os.mkdir(dest_dir)
+        for entry in os.listdir(src_dir):
+            abs_entry = os.path.join(src_dir, entry)
+            if os.path.isfile(abs_entry):
+                if os.path.splitext(abs_entry)[1] in ('.txt', '.ini'):
+                    self.copy_and_expand(abs_entry, dest_dir)
                 else:
-                    copy_file(filename, dest_dir)
+                    copy_file(abs_entry, dest_dir)
+            elif os.path.isdir(abs_entry) and copy_recursively:
+                self.copy_files(abs_entry, os.path.join(dest_dir, entry), copy_recursively)
                 
     def copy_and_expand(self, src_filename, dest_dir):
         log.info('copying and expanding %s to %s'%(src_filename, dest_dir))

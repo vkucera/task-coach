@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.73.5', '?? ??, 2009',
+Release('0.73.5', 'August ??, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Avoid nested syncml tags in the XML task file''',
