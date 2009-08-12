@@ -29,7 +29,9 @@ Release('0.73.5', 'August ??, 2009',
         Bug('''Avoid nested syncml tags in the XML task file''',
             '2832062', '2813816'),
         Bug('''Some macro's (e.g. "%(name)s") in the help text were not 
-properly expanded.''', '2833904')
+properly expanded.''', '2833904', '2833903'),
+        Bug('''Translate tip window and search controls on Windows.''', 
+        '2825463')
         ]
     ),
 
