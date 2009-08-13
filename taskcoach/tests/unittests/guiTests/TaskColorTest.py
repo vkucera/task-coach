@@ -46,8 +46,8 @@ class TaskColorTest(test.TestCase):
         self.assertColor(duetoday, wx.Colour(255, 128, 0))
 
     def testDueTomorrow(self):
-        duetoday = task.Task(dueDate=date.Tomorrow())
-        self.assertColor(duetoday, wx.NamedColour('BLACK'))
+        duetomorrow = task.Task(dueDate=date.Tomorrow())
+        self.assertColor(duetomorrow, wx.NamedColour('BLACK'))
 
     def testInactive(self):
         inactive = task.Task(startDate=date.Tomorrow())

@@ -258,7 +258,7 @@ class ColorsPage(SettingsPage):
              ('inactivetasks', _('Click this button to change the color of inactive tasks')),
              ('completedtasks', _('Click this button to change the color of completed tasks')),
              ('overduetasks', _('Click this button to change the color of over due tasks')),
-             ('duetodaytasks', _('Click this button to change the color of tasks due today'))]:
+             ('duesoontasks', _('Click this button to change the color of tasks due soon'))]:
             self.addColorSetting('color', setting, label)
         self.fit()
 
@@ -289,6 +289,9 @@ class TaskBehaviorPage(SettingsPage):
         super(TaskBehaviorPage, self).__init__(*args, **kwargs)
         self.addBooleanSetting('behavior', 'markparentcompletedwhenallchildrencompleted',
             _('Mark parent task completed when all children are completed'))
+        self.addIntegerSetting('behavior', 'duesoondays', 
+            _("Number of days that tasks are considered to be 'due soon'"), 
+            minimum=0, maximum=90)
         self.fit()
 
 
@@ -324,7 +327,7 @@ class Preferences(widgets.ListbookDialog):
         self.SetMinSize((300, 430))
         pages = [\
             (WindowBehaviorPage(parent=self._interior, columns=3, settings=self.settings), _('Window behavior'), 'windows'),
-            (TaskBehaviorPage(parent=self._interior, columns=2, settings=self.settings), _('Task behavior'), 'behavior'),
+            (TaskBehaviorPage(parent=self._interior, columns=3, settings=self.settings), _('Task behavior'), 'behavior'),
             (SavePage(parent=self._interior, columns=3, settings=self.settings), _('Files'), 'save'),
             (LanguagePage(parent=self._interior, columns=3, settings=self.settings), _('Language'), 'language'),
             (ColorsPage(parent=self._interior, columns=1, settings=self.settings, growableColumn=-1), _('Colors'), 'colorize'),

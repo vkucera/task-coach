@@ -368,8 +368,8 @@ class CommonTests(object):
         self.taskList.append(task.Task(completionDate=date.Today()))
         self.assertColor()
 
-    def testChangeDueTodayTaskColor(self):
-        self.setColor('duetodaytasks')
+    def testChangeDueSoonTaskColor(self):
+        self.setColor('duesoontasks')
         self.taskList.append(task.Task(dueDate=date.Today()))
         self.assertColor()
 
@@ -641,10 +641,10 @@ class ColumnsTests(object):
         self.task.setDueDate(date.Yesterday())
         self.assertEqual(wx.RED, self.viewer.getColor(self.task))
         
-    def testColorForTaskDueToday(self):
+    def testColorForTaskDueSoon(self):
         self.taskList.append(self.task)
         self.task.setDueDate(date.Today())
-        expectedColor = wx.Color(*eval(self.settings.get('color', 'duetodaytasks')))
+        expectedColor = wx.Color(*eval(self.settings.get('color', 'duesoontasks')))
         self.assertEqual(expectedColor, self.viewer.getColor(self.task))
 
     def testColorForInactiveTasks(self):

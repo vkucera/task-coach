@@ -124,7 +124,8 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
 
     def __registerForColorChanges(self):
         colorSettings = ['color.%s'%setting for setting in 'activetasks',\
-            'inactivetasks', 'completedtasks', 'duetodaytasks', 'overduetasks']
+            'inactivetasks', 'completedtasks', 'duesoontasks', 'overduetasks'] 
+        colorSettings.append('behavior.duesoondays')
         for colorSetting in colorSettings:
             patterns.Publisher().registerObserver(self.onColorSettingChange, 
                 eventType=colorSetting)
@@ -189,7 +190,7 @@ class RootNode(object):
     def completed(self, *args, **kwargs):
         return False
 
-    dueToday = inactive = overdue = isBeingTracked = completed
+    dueSoon = inactive = overdue = isBeingTracked = completed
 
 
 class SquareMapRootNode(RootNode):
@@ -706,10 +707,10 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
         imageList = wx.ImageList(16, 16)
         self.imageIndex = {}
         for index, image in enumerate(['task', 'task_inactive', 
-            'task_completed', 'task_duetoday', 'task_overdue', 'tasks', 
+            'task_completed', 'task_duesoon', 'task_overdue', 'tasks', 
             'tasks_open', 'tasks_inactive', 'tasks_inactive_open', 
-            'tasks_completed', 'tasks_completed_open', 'tasks_duetoday', 
-            'tasks_duetoday_open', 'tasks_overdue', 'tasks_overdue_open', 
+            'tasks_completed', 'tasks_completed_open', 'tasks_duesoon', 
+            'tasks_duesoon_open', 'tasks_overdue', 'tasks_overdue_open', 
             'start', 'ascending', 'descending', 'ascending_with_status',
             'descending_with_status', 'attachment', 'note']):
             imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, (16,16)))

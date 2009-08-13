@@ -86,7 +86,7 @@ th {
    }
 
    If the exported HTML file contains tasks it possible to change the color of 
-   completed (or overdue, duetoday, inactive, active) tasks like this:
+   completed (or overdue, duesoon, inactive, active) tasks like this:
    
    .completed {
        color: red;

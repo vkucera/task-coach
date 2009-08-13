@@ -114,9 +114,9 @@ class TaskTests(CommonTests):
         self.task.setCompletionDate()
         self.expectInHTML('<tr class="completed">')
 
-    def testTaskDueToday(self):
+    def testTaskDueSoon(self):
         self.task.setDueDate(date.Today())
-        self.expectInHTML('<tr class="duetoday">')
+        self.expectInHTML('<tr class="duesoon">')
         
     def testInactiveTask(self):
         self.task.setStartDate(date.Tomorrow())

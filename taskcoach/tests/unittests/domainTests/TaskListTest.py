@@ -49,10 +49,10 @@ class TaskListTest(test.TestCase):
         self.taskList.append(self.task1)
         self.failUnless(self.taskList.allCompleted())
 
-    def testNrDueToday(self):
-        self.assertEqual(0, self.taskList.nrDueToday())
+    def testNrDueSoon(self):
+        self.assertEqual(0, self.taskList.nrDueSoon())
         self.taskList.append(task.Task(dueDate=date.Today()))
-        self.assertEqual(1, self.taskList.nrDueToday())
+        self.assertEqual(1, self.taskList.nrDueSoon())
         
     def testNrBeingTracked(self):
         self.assertEqual(0, self.taskList.nrBeingTracked())

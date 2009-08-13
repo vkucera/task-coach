@@ -75,7 +75,7 @@ class Viewer2HTMLConverter(object):
             columnStyle = self.indent('.%s {text-align: %s}'%(column.name(), alignment), level+1)
             styleContent.append(columnStyle)
         if self.viewer.isShowingTasks():
-            for status in 'completed', 'duetoday', 'overdue', 'inactive', 'active':
+            for status in 'completed', 'duesoon', 'overdue', 'inactive', 'active':
                 statusColor = color.taskColorForStatus(status, self.settings)
                 statusColor = self.cssColorSyntax(statusColor)
                 statusStyle = '.%s {color: %s}'%(status, statusColor)
@@ -149,8 +149,8 @@ class Viewer2HTMLConverter(object):
                 attributes['class'] = 'completed'
             elif item.overdue():
                 attributes['class'] = 'overdue'
-            elif item.dueToday():
-                attributes['class'] = 'duetoday'
+            elif item.dueSoon():
+                attributes['class'] = 'duesoon'
             elif item.inactive():
                 attributes['class'] = 'inactive'
             else:

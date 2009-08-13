@@ -46,7 +46,7 @@ class TaskTestCase(test.TestCase):
             setattr(self, effortLabel, effort)
             
     def setUp(self):
-        task.Task.settings = config.Settings(load=False)
+        self.settings = task.Task.settings = config.Settings(load=False)
         self.tasks = self.createTasks()
         self.task = self.tasks[0]
         for index, eachTask in enumerate(self.tasks):
@@ -132,8 +132,8 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def testTaskIsNotInactiveByDefault(self):
         self.failIf(self.task.inactive())
         
-    def testTaskIsNotDueTodayByDefault(self):
-        self.failIf(self.task.dueToday())
+    def testTaskIsNotDueSoonByDefault(self):
+        self.failIf(self.task.dueSoon())
 
     def testTaskIsNotDueTomorrowByDefault(self):
         self.failIf(self.task.dueTomorrow())
@@ -519,8 +519,8 @@ class TaskDueTodayTest(TaskTestCase, CommonTaskTests):
     def taskCreationKeywordArguments(self):
         return [{'dueDate': date.Today()}]
     
-    def testIsDueToday(self):
-        self.failUnless(self.task.dueToday())
+    def testIsDueSoon(self):
+        self.failUnless(self.task.dueSoon())
 
     def testDaysLeft(self):
         self.assertEqual(0, self.task.timeLeft().days)
@@ -543,6 +543,13 @@ class TaskDueTomorrowTest(TaskTestCase, CommonTaskTests):
     def testDueDate(self):
         self.assertEqual(self.taskCreationKeywordArguments()[0]['dueDate'], 
                          self.task.dueDate())
+
+    def testDueSoon(self):
+        self.failIf(self.task.dueSoon())
+        
+    def testDueSoon_2days(self):
+        self.settings.set('behavior', 'duesoondays', '2')
+        self.failUnless(self.task.dueSoon())
 
 
 class OverdueTaskTest(TaskTestCase, CommonTaskTests):

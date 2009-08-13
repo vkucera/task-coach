@@ -21,13 +21,13 @@ import wx
 
 def taskColor(task, settings):
     ''' Return the current color of task, based on its status (completed,
-        overdue, duetoday, inactive, or active). '''
+        overdue, duesoon, inactive, or active). '''
     if task.completed():
         status = 'completed'
     elif task.overdue(): 
         status = 'overdue'
-    elif task.dueToday():
-        status = 'duetoday'
+    elif task.dueSoon():
+        status = 'duesoon'
     elif task.inactive(): 
         status = 'inactive'
     else:
@@ -37,5 +37,5 @@ def taskColor(task, settings):
 
 def taskColorForStatus(status, settings):
     ''' Return the task color for the status (one of 'completed', 'overdue', 
-        'duetoday', 'inactive', or 'active'). '''
+        'duesoon', 'inactive', or 'active'). '''
     return wx.Colour(*eval(settings.get('color', '%stasks'%status)))

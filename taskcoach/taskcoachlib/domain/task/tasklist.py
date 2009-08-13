@@ -102,8 +102,8 @@ class TaskList(base.Collection):
     def nrInactive(self):
         return self._nrInterestingTasks(task.Task.inactive)
 
-    def nrDueToday(self):
-        return self._nrInterestingTasks(task.Task.dueToday)
+    def nrDueSoon(self):
+        return self._nrInterestingTasks(task.Task.dueSoon)
     
     def nrBeingTracked(self):
         return self._nrInterestingTasks(task.Task.isBeingTracked)
