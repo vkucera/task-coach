@@ -137,7 +137,7 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
 
     toolTipMessages = \
         [('nrOverdue', _('one task overdue'), _('%d tasks overdue')),
-         ('nrDueToday', _('one task due today'), _('%d tasks due today'))]
+         ('nrDueSoon', _('one task due soon'), _('%d tasks due soon'))]
     
     def __setTooltipText(self):
         ''' Note that Windows XP and Vista limit the text shown in the

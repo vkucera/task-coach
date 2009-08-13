@@ -28,7 +28,10 @@ Release('0.74.0', 'August ?, 2009',
     featuresAdded=[
         Feature('''When exporting data to an HTML file, Task Coach writes a
 simple CSS stylesheet alongside it. The CSS stylesheet can be edited by the 
-user using a text editor; Task Coach won't overwrite it.''')
+user using a text editor; Task Coach won't overwrite it.'''),
+        Feature('''Tasks that are due soon are colored orange. How many
+days left is to be considered 'soon' can now be set via the preferences dialog, 
+in task behavior tab.''', '1312000')
         ]
     ),
                 

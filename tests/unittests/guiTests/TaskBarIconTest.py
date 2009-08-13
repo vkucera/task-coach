@@ -30,7 +30,7 @@ class MainWindowMock(object):
 class TaskBarIconTestCase(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()
-        self.settings = config.Settings(load=False)
+        self.settings = task.Task.settings = config.Settings(load=False)
         self.icon = gui.TaskBarIcon(MainWindowMock(), self.taskList,
             self.settings)
 
@@ -77,14 +77,14 @@ class TaskBarIconTooltipTest(TaskBarIconTooltipTestCase):
         self.taskList.append(task.Task())
         self.assertTooltip('')
 
-    def testOneTaskDueToday(self):
+    def testOneTaskDueSoon(self):
         self.taskList.append(task.Task(dueDate=date.Today()))
-        self.assertTooltip('one task due today')
+        self.assertTooltip('one task due soon')
         
-    def testTwoTasksDueToday(self):
+    def testTwoTasksDueSoon(self):
         self.taskList.append(task.Task(dueDate=date.Today()))
         self.taskList.append(task.Task(dueDate=date.Today()))
-        self.assertTooltip('2 tasks due today')
+        self.assertTooltip('2 tasks due soon')
         
     def testOneTasksOverdue(self):
         self.taskList.append(task.Task(dueDate=date.Yesterday()))
@@ -95,10 +95,10 @@ class TaskBarIconTooltipTest(TaskBarIconTooltipTestCase):
         self.taskList.append(task.Task(dueDate=date.Yesterday()))
         self.assertTooltip('2 tasks overdue')
         
-    def testOneTaskDueTodayAndOneTaskOverdue(self):
+    def testOneTaskDueSoonAndOneTaskOverdue(self):
         self.taskList.append(task.Task(dueDate=date.Yesterday()))
         self.taskList.append(task.Task(dueDate=date.Today()))
-        self.assertTooltip('one task overdue, one task due today')
+        self.assertTooltip('one task overdue, one task due soon')
         
     def testRemoveTask(self):
         newTask = task.Task()

@@ -117,7 +117,7 @@ def taskBitmapNames(task, hasChildren=None):
     
     bitmap = 'tasks' if hasChildren else 'task'            
 
-    for state in 'completed', 'overdue', 'dueToday', 'inactive':
+    for state in 'completed', 'overdue', 'dueSoon', 'inactive':
         if getattr(task, state)():
             bitmap += '_' + state.lower()
             break

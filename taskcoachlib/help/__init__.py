@@ -140,8 +140,9 @@ _taskStatesSubsection = _('''<h4><a name="taskstates">Task states</a></h4>
 <p>In addition, tasks can be referenced as:
 <ul>
 <li>Over due: the due date is in the past;</li>
-<li>Due today: the due date is today;</li>
-<li>Over budget: no buget left;</li>
+<li>Due soon: the due date is soon (what 'soon' is, can be changed in the 
+preferences);</li>
+<li>Over budget: no budget left;</li>
 <li>Under budget: still budget left;</li>
 <li>No budget: the task has no budget.</li>
 </ul></p>
@@ -152,7 +153,7 @@ _taskColorsSubsection = _('''<h4><a name="taskcolors">Task colors</a></h4>
 <p>The text of tasks is colored according to the following rules:
 <ul>
 <li>Over due tasks are red;</li>
-<li>Tasks due today are orange;</li>
+<li>Tasks due soon are orange;</li>
 <li>Active tasks are black text with a blue icon;</li>
 <li>Future tasks are gray, and</li>
 <li>Completed tasks are green.</li>

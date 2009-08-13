@@ -258,7 +258,7 @@ defaults = { \
     'completedtasks': '(0, 255, 0)',
     'overduetasks': '(255, 0, 0)',
     'inactivetasks': '(192, 192, 192)',
-    'duetodaytasks': '(255, 128, 0)' },
+    'duesoontasks': '(255, 128, 0)' },
 'editor': { \
     'maccheckspelling': 'True' },
 'version': { \
@@ -269,7 +269,8 @@ defaults = { \
     'notified': meta.data.version,
     'notify': 'True' },
 'behavior': { \
-    'markparentcompletedwhenallchildrencompleted': 'True' },
+    'markparentcompletedwhenallchildrencompleted': 'True',
+    'duesoondays': '1' },
 'feature': { \
     'notes': 'True',
     'effort': 'True',

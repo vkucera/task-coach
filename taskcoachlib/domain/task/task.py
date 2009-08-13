@@ -323,6 +323,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def active(self):
         return not self.inactive() and not self.completed()
 
+    def dueSoon(self):
+        manyDays = self.settings.getint('behavior', 'duesoondays')
+        return (0 <= self.timeLeft().days < manyDays and not self.completed())
+
     def dueToday(self):
         return (self.dueDate() == date.Today() and not self.completed())
 

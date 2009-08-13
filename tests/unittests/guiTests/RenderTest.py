@@ -151,9 +151,9 @@ class RenderBitmapNames_TaskWithoutChildren(RenderBitmapNames_TestCase,
         self.task.setDueDate(date.Yesterday())
         self.assertBitmapNames('task_overdue')
 
-    def testDueTodayTask(self):
+    def testDueSoonTask(self):
         self.task.setDueDate(date.Today())
-        self.assertBitmapNames('task_duetoday')
+        self.assertBitmapNames('task_duesoon')
 
 
 class RenderBitmapNames_TaskWithChildren(RenderBitmapNames_TestCase,
@@ -177,9 +177,9 @@ class RenderBitmapNames_TaskWithChildren(RenderBitmapNames_TestCase,
         self.task.setDueDate(date.Yesterday())
         self.assertBitmapNames('tasks_overdue', 'tasks_overdue_open')
 
-    def testDueTodayTask(self):
+    def testDueSoonTask(self):
         self.task.setDueDate(date.Today())
-        self.assertBitmapNames('tasks_duetoday', 'tasks_duetoday_open')
+        self.assertBitmapNames('tasks_duesoon', 'tasks_duesoon_open')
         
         
 class RenderException(test.TestCase):
