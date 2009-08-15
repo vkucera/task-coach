@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.73.5', 'August ??, 2009',
+Release('0.73.5', 'August 16, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Avoid nested syncml tags in the XML task file''',
@@ -35,7 +35,16 @@ properly expanded.''', '2833904', '2833903'),
         ],
     distributionsChanged=[
         Distribution('''Added a winPackPen (http://www.winpackpen.com) 
-portable package to the set of available distributions.''')]
+portable package to the set of available distributions.''')],
+    websiteChanges=[
+        Website('''We're now using http://taskcoach.uservoice.com for feature 
+requests. The big advantage of Uservoice over the Sourceforge feature request 
+tracker is that Uservoice allows for voting. Because we have over 250 open 
+feature requests on Sourceforge, it is not possible for us to move all 
+feature requests ourselves. People that submitted a feature request on 
+Sourceforge will receive a notification and a request to help us move their 
+request(s) to Uservoice.''', 
+        'index.html')]
     ),
 
 Release('0.73.4', 'August 6, 2009',
