@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import time
 from taskcoachlib import patterns
 from taskcoachlib.domain import date
+import attribute
 
 
 class SynchronizedObject(object):
@@ -141,12 +142,16 @@ class SynchronizedObject(object):
     def isDeleted(self):
         return self.__status == self.STATUS_DELETED
 
-
+        
 class Object(SynchronizedObject):
     def __init__(self, *args, **kwargs):
-        self.__subject = kwargs.pop('subject', '')
-        self.__description = kwargs.pop('description', '')
-        self.__color = kwargs.pop('color', None)
+        self.__subject = attribute.Attribute(kwargs.pop('subject', ''), self, 
+                                             self.subjectChangedEvent)
+        self.__description = attribute.Attribute(kwargs.pop('description', ''), 
+                                                 self,
+                                                 self.descriptionChangedEvent)
+        self.__color = attribute.Attribute(kwargs.pop('color', None), self,
+                                           self.colorChangedEvent)
         self.__id = kwargs.pop('id', None) or '%s:%s'%(id(self), time.time())
         # FIXME: Not a valid XML id
         # FIXME: When dropping support for python 2.4, use the uuid module
@@ -160,9 +165,9 @@ class Object(SynchronizedObject):
             state = super(Object, self).__getstate__()
         except AttributeError:
             state = dict()
-        state.update(dict(id=self.__id, subject=self.__subject, 
-                          description=self.__description,
-                          color=self.__color))
+        state.update(dict(id=self.__id, subject=self.__subject.get(), 
+                          description=self.__description.get(),
+                          color=self.__color.get()))
         return state
     
     def __setstate__(self, state, event=None):
@@ -191,8 +196,8 @@ class Object(SynchronizedObject):
         # Note: we don't put the id in the state dict, because a copy should
         # get a new id:
         state.update(dict(\
-            subject=self.__subject, description=self.__description,
-            color=self.__color))
+            subject=self.__subject.get(), description=self.__description.get(),
+            color=self.__color.get()))
         return state
     
     def copy(self):
@@ -209,17 +214,10 @@ class Object(SynchronizedObject):
     # Subject:
     
     def subject(self):
-        return self.__subject
+        return self.__subject.get()
     
     def setSubject(self, subject, event=None):
-        if subject == self.__subject:
-            return        
-        notify = event is None
-        event = event or patterns.Event()
-        self.__subject = subject
-        self.subjectChangedEvent(event)
-        if notify:
-            event.send()
+        self.__subject.set(subject, event)
         
     def subjectChangedEvent(self, event):
         event.addSource(self, self.subject(), type=self.subjectChangedEventType())
@@ -231,17 +229,10 @@ class Object(SynchronizedObject):
     # Description:
     
     def description(self):
-        return self.__description
+        return self.__description.get()
     
     def setDescription(self, description, event=None):
-        if description == self.__description:
-            return
-        notify = event is None
-        event = event or patterns.Event()
-        self.__description = description
-        self.descriptionChangedEvent(event)
-        if notify:
-            event.send()
+        self.__description.set(description, event)
         
     def descriptionChangedEvent(self, event):
         event.addSource(self, self.description(), 
@@ -254,20 +245,13 @@ class Object(SynchronizedObject):
     # Color:
     
     def setColor(self, color, event=None):
-        if color == self.__color:
-            return
-        notify = event is None
-        event = event or patterns.Event()
-        self.__color = color
-        self.colorChangedEvent(event)
-        if notify:
-            event.send()
+        self.__color.set(color, event)
         
     def color(self, recursive=False):
         # The 'recursive' argument isn't actually used here, but some
         # code assumes composite objects where there aren't. This is
         # the simplest workaround.
-        return self.__color
+        return self.__color.get()
 
     @classmethod
     def colorChangedEventType(class_):

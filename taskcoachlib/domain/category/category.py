@@ -27,7 +27,10 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
         super(Category, self).__init__(subject=subject, children=children or [], 
                                        parent=parent, description=description,
                                        color=color, *args, **kwargs)
-        self.__categorizables = set(categorizables or [])
+        self.__categorizables = base.SetAttribute(set(categorizables or []),
+                                                  self,
+                                                  self.categorizableAddedEvent,
+                                                  self.categorizableRemovedEvent)
         self.__filtered = filtered
             
     @classmethod
@@ -57,7 +60,7 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
                 
     def __getstate__(self):
         state = super(Category, self).__getstate__()
-        state.update(dict(categorizables=self.__categorizables.copy(), 
+        state.update(dict(categorizables=self.__categorizables.get(), 
                           filtered=self.__filtered))
         return state
         
@@ -72,7 +75,7 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
 
     def __getcopystate__(self):
         state = super(Category, self).__getcopystate__()
-        state.update(dict(categorizables=self.__categorizables.copy(), 
+        state.update(dict(categorizables=self.__categorizables.get(), 
                           filtered=self.__filtered))
         return state
             
@@ -87,53 +90,28 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
             eachCategorizable.totalCategorySubjectChangedEvent(event, subject)      
                     
     def categorizables(self, recursive=False):
-        result = self.__categorizables.copy()
+        result = self.__categorizables.get()
         if recursive:
             for child in self.children():
                 result |= child.categorizables(recursive)
         return result
     
     def addCategorizable(self, *categorizables, **kwargs):
-        categorizables = set(categorizables)
-        event = kwargs.pop('event', None)
-        if categorizables <= self.__categorizables:
-            return
-        notify = event is None
-        event = event or patterns.Event()
-        self.__categorizables |= categorizables
-        self.categorizableAddedEvent(event, *categorizables)
-        if notify:
-            event.send()
+        self.__categorizables.add(set(categorizables), kwargs.pop('event', None))
         
     def categorizableAddedEvent(self, event, *categorizables):
         event.addSource(self, *categorizables, 
                         **dict(type=self.categorizableAddedEventType()))
             
     def removeCategorizable(self, *categorizables, **kwargs):
-        categorizables = set(categorizables)
-        event = kwargs.pop('event', None)
-        if categorizables & self.__categorizables == set():
-            return
-        notify = event is None
-        event = event or patterns.Event()
-        self.__categorizables -= categorizables
-        self.categorizableRemovedEvent(event, *categorizables)
-        if notify:
-            event.send()
-    
+        self.__categorizables.remove(set(categorizables), kwargs.pop('event', None))
+        
     def categorizableRemovedEvent(self, event, *categorizables):
         event.addSource(self, *categorizables,
                         **dict(type=self.categorizableRemovedEventType()))
     
     def setCategorizables(self, categorizables, event=None):
-        if set(categorizables) == self.__categorizables:
-            return
-        notify = event is None
-        event = event or patterns.Event()
-        self.removeCategorizable(*self.categorizables(), **dict(event=event))
-        self.addCategorizable(*categorizables, **dict(event=event))
-        if notify:
-            event.send()
+        self.__categorizables.set(set(categorizables), event)
             
     def isFiltered(self):
         return self.__filtered

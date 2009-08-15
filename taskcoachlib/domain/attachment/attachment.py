@@ -73,7 +73,8 @@ class Attachment(base.Object, NoteOwner):
 
         super(Attachment, self).__init__(*args, **kwargs)
 
-        self.__location = location
+        self.__location = base.Attribute(location, self, 
+                                         self.locationChangedEvent)
 
     def data(self):
         return None
@@ -84,18 +85,15 @@ class Attachment(base.Object, NoteOwner):
         pass
 
     def location(self):
-        return self.__location
+        return self.__location.get()
 
     def setLocation(self, location, event=None):
-        if location == self.__location:
-            return
-        notify = event is None
-        event = event or patterns.Event()
-        self.__location = location
-        event.addSource(self, location, type=self.locationChangedEventType())
-        if notify:
-            event.send()
-
+        self.__location.set(location, event)
+            
+    def locationChangedEvent(self, event):
+        event.addSource(self, self.location(), 
+                        type=self.locationChangedEventType())
+        
     @classmethod
     def locationChangedEventType(class_):
         return '%s.location'%class_

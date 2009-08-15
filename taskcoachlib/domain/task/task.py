@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import patterns
-from taskcoachlib.domain import date, category, note, attachment
+from taskcoachlib.domain import base, date, category, note, attachment
 
 
 class Task(note.NoteOwner, attachment.AttachmentOwner, 
@@ -34,9 +34,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         kwargs['description'] = description
         kwargs['categories'] = categories
         super(Task, self).__init__(*args, **kwargs)
-        self._dueDate        = dueDate or date.Date()
-        self._startDate      = startDate or date.Today()
-        self._completionDate = completionDate or date.Date()
+        self.__dueDate       = base.Attribute(dueDate or date.Date(),
+                                              self, self.dueDateEvent)
+        self.__startDate      = base.Attribute(startDate or date.Today(),
+                                              self, self.startDateEvent)
+        self.__completionDate = completionDate or date.Date()
         self._budget         = budget or date.TimeDelta()
         self._efforts        = efforts or []
         self._priority       = priority
@@ -72,11 +74,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         
     def __getstate__(self):
         state = super(Task, self).__getstate__()
-        state.update(dict(dueDate=self._dueDate, 
-            startDate=self._startDate, completionDate=self._completionDate, 
+        state.update(dict(dueDate=self.__dueDate.get(), 
+            startDate=self.__startDate.get(), 
+            completionDate=self.__completionDate, 
             children=self.children(), parent=self.parent(), 
-            efforts=self._efforts, budget=self._budget,
-            categories=set(self._categories), priority=self._priority, 
+            efforts=self._efforts, budget=self._budget, priority=self._priority, 
             hourlyFee=self._hourlyFee, fixedFee=self._fixedFee, 
             recurrence=self._recurrence.copy(),
             reminder=self._reminder,
@@ -86,8 +88,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     def __getcopystate__(self):
         state = super(Task, self).__getcopystate__()
-        state.update(dict(dueDate=self._dueDate, 
-            startDate=self._startDate, completionDate=self._completionDate, 
+        state.update(dict(dueDate=self.__dueDate.get(), 
+            startDate=self.__startDate.get(), 
+            completionDate=self.__completionDate, 
             efforts=[effort.copy() for effort in self._efforts], 
             budget=self._budget, priority=self._priority, 
             hourlyFee=self._hourlyFee, fixedFee=self._fixedFee, 
@@ -178,20 +181,17 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if recursive:
             childrenDueDates = [child.dueDate(recursive=True) for child in \
                                 self.children() if not child.completed()]
-            return min(childrenDueDates + [self._dueDate])
+            return min(childrenDueDates + [self.__dueDate.get()])
         else:
-            return self._dueDate
+            return self.__dueDate.get()
 
     def setDueDate(self, dueDate, event=None):
-        if dueDate == self._dueDate:
-            return
-
-        notify = event is None
-        event = event or patterns.Event()
-        
-        self._dueDate = dueDate
+        self.__dueDate.set(dueDate, event)
+            
+    def dueDateEvent(self, event):
+        dueDate = self.dueDate()
         event.addSource(self, dueDate, type='task.dueDate')
-
+        
         for child in self.children():
             if child.dueDate() > dueDate:
                 child.setDueDate(dueDate, event)
@@ -200,24 +200,20 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             parent = self.parent()
             if dueDate > parent.dueDate():
                 parent.setDueDate(dueDate, event)
-        
-        if notify:
-            event.send()
 
     def startDate(self, recursive=False):
         if recursive:
             childrenStartDates = [child.startDate(recursive=True) for child in \
                                   self.children() if not child.completed()]
-            return min(childrenStartDates + [self._startDate])
+            return min(childrenStartDates + [self.__startDate.get()])
         else:
-            return self._startDate
+            return self.__startDate.get()
 
     def setStartDate(self, startDate, event=None):
-        if startDate == self._startDate:
-            return
-        notify = event is None
-        event = event or patterns.Event()
-        self._startDate = startDate
+        self.__startDate.set(startDate, event)
+            
+    def startDateEvent(self, event):
+        startDate = self.startDate()
         event.addSource(self, startDate, type='task.startDate')
         
         if not self.recurrence(True): 
@@ -229,9 +225,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             parent = self.parent()
             if parent and startDate < parent.startDate():
                 parent.setStartDate(startDate, event)
-        
-        if notify:
-            event.send()
 
     def timeLeft(self, recursive=False):
         return self.dueDate(recursive) - date.Today()
@@ -240,13 +233,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if recursive:
             childrenCompletionDates = [child.completionDate(recursive=True) \
                 for child in self.children() if child.completed()]
-            return max(childrenCompletionDates + [self._completionDate])
+            return max(childrenCompletionDates + [self.__completionDate])
         else:
-            return self._completionDate
+            return self.__completionDate
 
     def setCompletionDate(self, completionDate=None, event=None):
         completionDate = completionDate or date.Today()
-        if completionDate == self._completionDate:
+        if completionDate == self.__completionDate:
             return
         notify = event is None
         event = event or patterns.Event()
@@ -256,7 +249,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             parent = self.parent()
             if parent:
                 oldParentTotalPriority = parent.priority(recursive=True) 
-            self._completionDate = completionDate
+            self.__completionDate = completionDate
             event.addSource(self, completionDate, type='task.completionDate')
             
             if parent and parent.priority(recursive=True) != \
