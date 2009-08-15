@@ -64,13 +64,11 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
     def __setstate__(self, state, event=None):
         notify = event is None
         event = event or patterns.Event()
-        event = super(Category, self).__setstate__(state, event)
-        event = self.setCategorizables(state['categorizables'], event)
-        event = self.setFiltered(state['filtered'], event)
+        super(Category, self).__setstate__(state, event)
+        self.setCategorizables(state['categorizables'], event)
+        self.setFiltered(state['filtered'], event)
         if notify:
             event.send()
-        else:
-            return event
 
     def __getcopystate__(self):
         state = super(Category, self).__getcopystate__()
@@ -79,16 +77,14 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
         return state
             
     def subjectChangedEvent(self, event):
-        event = super(Category, self).subjectChangedEvent(event)
-        event = self.categorySubjectChangedEvent(event)
-        return event
+        super(Category, self).subjectChangedEvent(event)
+        self.categorySubjectChangedEvent(event)
     
     def categorySubjectChangedEvent(self, event):
         subject = self.subject()
         for eachCategorizable in self.categorizables(recursive=True):
-            event = eachCategorizable.categorySubjectChangedEvent(event, subject)
-            event = eachCategorizable.totalCategorySubjectChangedEvent(event, subject)
-        return event        
+            eachCategorizable.categorySubjectChangedEvent(event, subject)
+            eachCategorizable.totalCategorySubjectChangedEvent(event, subject)      
                     
     def categorizables(self, recursive=False):
         result = self.__categorizables.copy()
@@ -101,73 +97,63 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
         categorizables = set(categorizables)
         event = kwargs.pop('event', None)
         if categorizables <= self.__categorizables:
-            return event
+            return
         notify = event is None
         event = event or patterns.Event()
         self.__categorizables |= categorizables
-        event = self.categorizableAddedEvent(event, *categorizables)
+        self.categorizableAddedEvent(event, *categorizables)
         if notify:
             event.send()
-        else:
-            return event
         
     def categorizableAddedEvent(self, event, *categorizables):
         event.addSource(self, *categorizables, 
                         **dict(type=self.categorizableAddedEventType()))
-        return event
             
     def removeCategorizable(self, *categorizables, **kwargs):
         categorizables = set(categorizables)
         event = kwargs.pop('event', None)
         if categorizables & self.__categorizables == set():
-            return event
+            return
         notify = event is None
         event = event or patterns.Event()
         self.__categorizables -= categorizables
-        event = self.categorizableRemovedEvent(event, *categorizables)
+        self.categorizableRemovedEvent(event, *categorizables)
         if notify:
             event.send()
-        else:
-            return event
     
     def categorizableRemovedEvent(self, event, *categorizables):
         event.addSource(self, *categorizables,
                         **dict(type=self.categorizableRemovedEventType()))
-        return event
     
     def setCategorizables(self, categorizables, event=None):
         if set(categorizables) == self.__categorizables:
-            return event
+            return
         notify = event is None
         event = event or patterns.Event()
-        event = self.removeCategorizable(*self.categorizables(), **dict(event=event))
-        event = self.addCategorizable(*categorizables, **dict(event=event))
+        self.removeCategorizable(*self.categorizables(), **dict(event=event))
+        self.addCategorizable(*categorizables, **dict(event=event))
         if notify:
             event.send()
-        else:
-            return event
             
     def isFiltered(self):
         return self.__filtered
     
     def setFiltered(self, filtered=True, event=None, recursive=True):
         if filtered == self.__filtered:
-            return event
+            return
         notify = event is None
         event = event or patterns.Event()
         self.__filtered = filtered
-        event = self.filterChangedEvent(event)
+        self.filterChangedEvent(event)
         if filtered and recursive:
             for familyMember in self.ancestors() + self.children(recursive=True):
-                event = familyMember.setFiltered(False, event, recursive=False)
+                familyMember.setFiltered(False, event, recursive=False)
         if notify:
             event.send()
-        else:
-            return event
                     
     def filterChangedEvent(self, event):
-        event.addSource(self, self.isFiltered(), type=self.filterChangedEventType())
-        return event
+        event.addSource(self, self.isFiltered(), 
+                        type=self.filterChangedEventType())
                                 
     def contains(self, categorizable, treeMode=False):
         ''' Return whether the categorizable belongs to this category. If an
@@ -187,7 +173,6 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
         ''' Override to include all categorizables (recursively) in the event 
             that belong to this category since their colors (may) have 
             changed too. ''' 
-        event = super(Category, self).colorChangedEvent(event)
+        super(Category, self).colorChangedEvent(event)
         for categorizable in self.categorizables(recursive=True):
-            event = categorizable.colorChangedEvent(event)
-        return event
+            categorizable.colorChangedEvent(event)

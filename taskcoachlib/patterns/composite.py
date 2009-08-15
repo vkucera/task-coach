@@ -103,28 +103,23 @@ class ObservableComposite(Composite):
         oldChildren = self.children()[:]
         super(ObservableComposite, self).__setstate__(state)
         if oldChildren:
-            event = self.removeChildEvent(event, *oldChildren)
+            self.removeChildEvent(event, *oldChildren)
         if self.children():
-            event = self.addChildEvent(event, *self.children())
+            self.addChildEvent(event, *self.children())
         if notify:
             event.send()
-        else:
-            return event
 
     def addChild(self, child, event=None):
         notify = event is None
         event = event or observer.Event()
         super(ObservableComposite, self).addChild(child)
-        event = self.addChildEvent(event, child)
+        self.addChildEvent(event, child)
         if notify:
             event.send()
-        else:
-            return event
 
     def addChildEvent(self, event, *children):
         event.addSource(self, *children, **dict(type=self.addChildEventType()))
-        return event
-    
+
     @classmethod
     def addChildEventType(class_):
         return 'composite(%s).child.add'%class_
@@ -133,15 +128,12 @@ class ObservableComposite(Composite):
         notify = event is None
         event = event or observer.Event()
         super(ObservableComposite, self).removeChild(child)
-        event = self.removeChildEvent(event, child)
+        self.removeChildEvent(event, child)
         if notify:
             event.send()
-        else:
-            return event
 
     def removeChildEvent(self, event, *children):    
         event.addSource(self, *children, **dict(type=self.removeChildEventType()))
-        return event
 
     @classmethod
     def removeChildEventType(class_):
@@ -149,19 +141,17 @@ class ObservableComposite(Composite):
     
     def replaceChildren(self, children, event=None):
         if children == self.children():
-            return event
+            return
         notify = event is None
         event = event or observer.Event()
         oldChildren = self.children()[:]
         super(ObservableComposite, self).replaceChildren(children)
         if oldChildren:
-            event = self.removeChildEvent(event, *oldChildren)
+            self.removeChildEvent(event, *oldChildren)
         if children: 
-            event = self.addChildEvent(event, *children)
+            self.addChildEvent(event, *children)
         if notify:
             event.send()
-        else:
-            return event
         
     @classmethod
     def modificationEventTypes(class_):
@@ -183,7 +173,7 @@ class CompositeCollection(object):
 
     def extend(self, composites, event=None):
         if not composites:
-            return event
+            return
         notify = event is None
         event = event or observer.Event()
         compositesAndAllChildren = self._compositesAndAllChildren(composites) 
@@ -191,8 +181,6 @@ class CompositeCollection(object):
         parentsWithChildrenAdded = self._addCompositesToParent(composites, event)
         if notify:
             event.send()
-        else:
-            return event
             
     def _compositesAndAllChildren(self, composites):
         compositesAndAllChildren = set(composites) 
@@ -215,7 +203,7 @@ class CompositeCollection(object):
 
     def removeItems(self, composites, event=None):
         if not composites:
-            return event
+            return
         notify = event is None
         event = event or observer.Event()
         compositesAndAllChildren = self._compositesAndAllChildren(composites)
@@ -223,8 +211,6 @@ class CompositeCollection(object):
         self._removeCompositesFromParent(composites, event)
         if notify:
             event.send()
-        else:
-            return event
 
     def _removeCompositesFromParent(self, composites, event):
         for composite in composites:

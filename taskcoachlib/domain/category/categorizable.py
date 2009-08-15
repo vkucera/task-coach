@@ -37,12 +37,10 @@ class CategorizableCompositeObject(base.CompositeObject):
     def __setstate__(self, state, event=None):
         notify = event is None
         event = event or patterns.Event()
-        event = super(CategorizableCompositeObject, self).__setstate__(state, event)
-        event = self.setCategories(state['categories'], event)
+        super(CategorizableCompositeObject, self).__setstate__(state, event)
+        self.setCategories(state['categories'], event)
         if notify:
             event.send()
-        else:
-            return event
 
     def __getcopystate__(self):
         state = super(CategorizableCompositeObject, self).__getcopystate__()
@@ -63,7 +61,7 @@ class CategorizableCompositeObject(base.CompositeObject):
         event = kwargs.pop('event', None)
         categories = set(categories)
         if categories <= self._categories:
-            return event
+            return
         notify = event is None
         event = event or patterns.Event()
         self._categories |= categories
@@ -72,11 +70,9 @@ class CategorizableCompositeObject(base.CompositeObject):
             event.addSource(child, *categories, 
                             **dict(type=child.totalCategoryAddedEventType()))
         if not self.color(False) and any(category.color() for category in categories):
-            event = self.colorChangedEvent(event)
+            self.colorChangedEvent(event)
         if notify:
             event.send()
-        else:
-            return event
 
     @classmethod
     def categoryRemovedEventType(class_):
@@ -86,7 +82,7 @@ class CategorizableCompositeObject(base.CompositeObject):
         event = kwargs.pop('event', None)
         categories = set(categories)
         if categories & self._categories == set():
-            return event
+            return
         notify = event is None
         event = event or patterns.Event()
         self._categories -= categories
@@ -95,23 +91,19 @@ class CategorizableCompositeObject(base.CompositeObject):
             event.addSource(child, *categories, 
                             **dict(type=child.totalCategoryRemovedEventType()))
         if not self.color(False) and any(category.color() for category in categories):
-            event = self.colorChangedEvent(event)
+            self.colorChangedEvent(event)
         if notify:
             event.send()
-        else:
-            return event
         
     def setCategories(self, categories, event=None):
         notify = event is None
         event = event or patterns.Event()
         if self._categories:
-            event = self.removeCategory(*self._categories, **dict(event=event))
+            self.removeCategory(*self._categories, **dict(event=event))
         if categories:
-            event = self.addCategory(*categories, **dict(event=event))
+            self.addCategory(*categories, **dict(event=event))
         if notify:
             event.send()
-        else:
-            return event
 
     def color(self, recursive=True):
         myOwnColor = super(CategorizableCompositeObject, self).color(False)
@@ -163,7 +155,6 @@ class CategorizableCompositeObject(base.CompositeObject):
     def categorySubjectChangedEvent(self, event, subject):
         event.addSource(self, subject, 
                         type=self.categorySubjectChangedEventType())
-        return event
     
     @classmethod
     def totalCategorySubjectChangedEventType(class_):
@@ -173,7 +164,6 @@ class CategorizableCompositeObject(base.CompositeObject):
         for categorizable in [self] + self.children(recursive=True):
             event.addSource(categorizable, subject,
                             type=categorizable.totalCategorySubjectChangedEventType())
-        return event
             
     @classmethod
     def modificationEventTypes(class_):

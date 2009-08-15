@@ -59,8 +59,6 @@ class Filter(patterns.SetDecorator):
         self.extendSelf(itemsToAdd, event)
         if notify:
             event.send()
-        else:
-            return event
             
     def filter(self, items):
         ''' filter returns the items that pass the filter. '''
@@ -85,8 +83,6 @@ class SelectedItemsFilter(Filter):
             self.extendSelf(self.observable(), event)
         if notify:
             event.send()
-        else:
-            return event
                
     def filter(self, items):
         if self.__selectedItems:

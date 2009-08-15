@@ -107,8 +107,6 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
             effort.task().removeEffort(effort, event)
         if notify:
             event.send()
-        else:
-            return event
 
     def extend(self, efforts, event=None):
         ''' We override ObservableListObserver.extend because the default
@@ -122,8 +120,6 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
             effort.task().addEffort(effort, event)
         if notify:
             event.send()
-        else:
-            return event
     
     @classmethod        
     def sortEventType(class_):

@@ -88,15 +88,13 @@ class Attachment(base.Object, NoteOwner):
 
     def setLocation(self, location, event=None):
         if location == self.__location:
-            return event
+            return
         notify = event is None
         event = event or patterns.Event()
         self.__location = location
         event.addSource(self, location, type=self.locationChangedEventType())
         if notify:
             event.send()
-        else:
-            return event
 
     @classmethod
     def locationChangedEventType(class_):
@@ -123,14 +121,12 @@ class Attachment(base.Object, NoteOwner):
         notify = event is None
         event = event or patterns.Event()
         try:
-            event = super(Attachment, self).__setstate__(state, event)
+            super(Attachment, self).__setstate__(state, event)
         except AttributeError:
             pass
-        event = self.setLocation(state['location'], event)
+        self.setLocation(state['location'], event)
         if notify:
             event.send()
-        else:
-            return event
 
     def __getcopystate__(self):
         return self.__getstate__()
