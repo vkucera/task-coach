@@ -149,8 +149,10 @@ class IntegrationTest(IntegrationTestCase):
             len(self.getTaskWrittenAndRead(self.task.id()).children(recursive=True)))
        
     def testCategory(self):
-        self.assertEqual(self.task.id(), 
-                         list(list(self.categoriesWrittenAndRead)[0].categorizables())[0].id())
+        categorizables = list(self.categoriesWrittenAndRead)[0].categorizables()
+        categorizableIds = set([item.id() for item in categorizables])
+        self.assertEqual(set([self.task.id(), self.note.id()]), 
+                         categorizableIds)
 
     def testFilteredCategory(self):
         self.failUnless(list(self.categoriesWrittenAndRead)[0].isFiltered())
