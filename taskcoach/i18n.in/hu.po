@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-11 21:28+0000\n"
+"POT-Creation-Date: 2009-08-10 21:18+0000\n"
 "PO-Revision-Date: 2009-07-25 20:24+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Majsa Norbert <nmajsa@szintezis.hu>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-08-06 18:08+0000\n"
+"X-Launchpad-Export-Date: 2009-08-16 14:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "Generated-By: pygettext.py 1.5\n"
@@ -26,13 +26,13 @@ msgstr "%(filename)s hozzáfűzve"
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
 msgstr "%(nrtasks)d feladatot %(filename)s fileba elmentettem"
 
-#: taskcoachlib\application\application.py:112
+#: taskcoachlib\application\application.py:132
 msgid ""
 "Couldn't load settings from TaskCoach.ini:\n"
 "%s"
 msgstr ""
 
-#: taskcoachlib\application\application.py:113
+#: taskcoachlib\application\application.py:133
 #: taskcoachlib\gui\iocontroller.py:60
 msgid "%s file error"
 msgstr "%s file hiba"
@@ -49,35 +49,35 @@ msgstr "Melléklet szerkesztés"
 msgid "Add note to attachment"
 msgstr "Jegyzet a melléklethez"
 
-#: taskcoachlib\command\base.py:111
+#: taskcoachlib\command\base.py:113
 msgid "Copy"
 msgstr "Másol"
 
-#: taskcoachlib\command\base.py:130
+#: taskcoachlib\command\base.py:132
 msgid "Delete"
 msgstr "Töröl"
 
-#: taskcoachlib\command\base.py:156
+#: taskcoachlib\command\base.py:158
 msgid "Cut"
 msgstr "Kivág"
 
-#: taskcoachlib\command\base.py:182
+#: taskcoachlib\command\base.py:184
 msgid "Paste"
 msgstr "Beillesztés"
 
-#: taskcoachlib\command\base.py:243
+#: taskcoachlib\command\base.py:245
 msgid "Drag and drop"
 msgstr "Fogd és vidd"
 
-#: taskcoachlib\command\base.py:283 taskcoachlib\widgets\dialog.py:153
+#: taskcoachlib\command\base.py:285 taskcoachlib\widgets\dialog.py:153
 msgid "Add attachment"
 msgstr "Melléklet hozzáadása"
 
-#: taskcoachlib\command\base.py:310 taskcoachlib\command\noteCommands.py:26
+#: taskcoachlib\command\base.py:312 taskcoachlib\command\noteCommands.py:26
 msgid "New note"
 msgstr "Új jegyzet"
 
-#: taskcoachlib\command\categorizableCommands.py:25
+#: taskcoachlib\command\categorizableCommands.py:26
 msgid "Toggle category"
 msgstr ""
 
@@ -121,65 +121,65 @@ msgstr "Jegyzet szerkesztése"
 msgid "Drag and drop note"
 msgstr "Jegyzet fogd és vidd"
 
-#: taskcoachlib\command\taskCommands.py:55
+#: taskcoachlib\command\taskCommands.py:56
 msgid "Paste into task"
 msgstr "Beillesztés a feladatba"
 
-#: taskcoachlib\command\taskCommands.py:69
+#: taskcoachlib\command\taskCommands.py:70
 msgid "Drag and drop task"
 msgstr "Feladat fogd és vidd"
 
-#: taskcoachlib\command\taskCommands.py:74
+#: taskcoachlib\command\taskCommands.py:75
 msgid "Delete task"
 msgstr "Feladat törlése"
 
-#: taskcoachlib\command\taskCommands.py:98
-#: taskcoachlib\command\taskCommands.py:101
+#: taskcoachlib\command\taskCommands.py:99
+#: taskcoachlib\command\taskCommands.py:102
 msgid "New task"
 msgstr "Új feladat"
 
-#: taskcoachlib\command\taskCommands.py:122
-#: taskcoachlib\command\taskCommands.py:126
+#: taskcoachlib\command\taskCommands.py:123
+#: taskcoachlib\command\taskCommands.py:127
 msgid "New subtask"
 msgstr "Új részfeladat"
 
-#: taskcoachlib\command\taskCommands.py:149
+#: taskcoachlib\command\taskCommands.py:150
 msgid "Edit task"
 msgstr "Feladat szerkesztése"
 
-#: taskcoachlib\command\taskCommands.py:182
+#: taskcoachlib\command\taskCommands.py:183
 msgid "Mark completed"
 msgstr "Teljesítés"
 
-#: taskcoachlib\command\taskCommands.py:198
+#: taskcoachlib\command\taskCommands.py:199
 msgid "Start tracking"
 msgstr "Időmérés indítása"
 
-#: taskcoachlib\command\taskCommands.py:223
+#: taskcoachlib\command\taskCommands.py:224
 msgid "Stop tracking"
 msgstr "Időmérés leállítása"
 
-#: taskcoachlib\command\taskCommands.py:263
+#: taskcoachlib\command\taskCommands.py:264
 msgid "Maximize priority"
 msgstr "Maximum prioritás"
 
-#: taskcoachlib\command\taskCommands.py:273
+#: taskcoachlib\command\taskCommands.py:274
 msgid "Minimize priority"
 msgstr "Minimum prioritás"
 
-#: taskcoachlib\command\taskCommands.py:301
+#: taskcoachlib\command\taskCommands.py:302
 msgid "Increase priority"
 msgstr "Prioritás növelése"
 
-#: taskcoachlib\command\taskCommands.py:308
+#: taskcoachlib\command\taskCommands.py:309
 msgid "Decrease priority"
 msgstr "Prioritás csökkentése"
 
-#: taskcoachlib\command\taskCommands.py:315
+#: taskcoachlib\command\taskCommands.py:316
 msgid "Add note to task"
 msgstr "Jegyzet a feladathoz"
 
-#: taskcoachlib\config\settings.py:167
+#: taskcoachlib\config\settings.py:165
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
@@ -187,7 +187,7 @@ msgstr ""
 "Mentés közbeni hiba %s.ini\n"
 "%s\n"
 
-#: taskcoachlib\config\settings.py:168
+#: taskcoachlib\config\settings.py:166
 msgid "Save error"
 msgstr "Mentési hiba"
 
@@ -223,43 +223,43 @@ msgstr "Melléklet megnyitása"
 msgid "Open the selected attachments"
 msgstr "Kiválasztott melléklet megnyitása"
 
-#: taskcoachlib\domain\category\categorycontainer.py:24
+#: taskcoachlib\domain\category\categorycontainer.py:25
 msgid "New category..."
 msgstr "Új kategória..."
 
-#: taskcoachlib\domain\category\categorycontainer.py:25
+#: taskcoachlib\domain\category\categorycontainer.py:26
 msgid "Insert a new category"
 msgstr "Új kategória beszúrása"
 
-#: taskcoachlib\domain\category\categorycontainer.py:26
+#: taskcoachlib\domain\category\categorycontainer.py:27
 msgid "Edit category..."
 msgstr "Kategória szerkesztése..."
 
-#: taskcoachlib\domain\category\categorycontainer.py:27
+#: taskcoachlib\domain\category\categorycontainer.py:28
 msgid "Edit the selected categories"
 msgstr "Kiválasztott kategória szerkesztése"
 
-#: taskcoachlib\domain\category\categorycontainer.py:28
+#: taskcoachlib\domain\category\categorycontainer.py:29
 msgid "Delete category"
 msgstr "Kategória törlése"
 
-#: taskcoachlib\domain\category\categorycontainer.py:29
+#: taskcoachlib\domain\category\categorycontainer.py:30
 msgid "Delete the selected categories"
 msgstr "Kiválasztott kategória törlése"
 
-#: taskcoachlib\domain\category\categorycontainer.py:30
+#: taskcoachlib\domain\category\categorycontainer.py:31
 msgid "New subcategory..."
 msgstr "Új részkategória..."
 
-#: taskcoachlib\domain\category\categorycontainer.py:31
+#: taskcoachlib\domain\category\categorycontainer.py:32
 msgid "Insert a new subcategory"
 msgstr "Új részkategória beszúrása"
 
-#: taskcoachlib\domain\effort\composite.py:194
+#: taskcoachlib\domain\effort\composite.py:185
 msgid "Total"
 msgstr ""
 
-#: taskcoachlib\domain\effort\composite.py:200
+#: taskcoachlib\domain\effort\composite.py:191
 msgid "Total for %s"
 msgstr ""
 
@@ -287,67 +287,67 @@ msgstr "Ráfordítás &törlése"
 msgid "Delete the selected effort period(s)"
 msgstr "Kiválasztott ráfordítás periódus törlése"
 
-#: taskcoachlib\domain\note\notecontainer.py:24
+#: taskcoachlib\domain\note\notecontainer.py:25
 msgid "New note..."
 msgstr "Új jegyzet..."
 
-#: taskcoachlib\domain\note\notecontainer.py:25
+#: taskcoachlib\domain\note\notecontainer.py:26
 msgid "Insert a new note"
 msgstr "Új jegyzet beszúrása"
 
-#: taskcoachlib\domain\note\notecontainer.py:26
+#: taskcoachlib\domain\note\notecontainer.py:27
 msgid "Edit note..."
 msgstr "Jegyzet szerkesztése..."
 
-#: taskcoachlib\domain\note\notecontainer.py:27
+#: taskcoachlib\domain\note\notecontainer.py:28
 msgid "Edit the selected notes"
 msgstr "Kiválasztott jegyzet szerkesztése"
 
-#: taskcoachlib\domain\note\notecontainer.py:28
+#: taskcoachlib\domain\note\notecontainer.py:29
 msgid "Delete note"
 msgstr "Jegyzet törlése"
 
-#: taskcoachlib\domain\note\notecontainer.py:29
+#: taskcoachlib\domain\note\notecontainer.py:30
 msgid "Delete the selected notes"
 msgstr "Kiválasztott jegyzet törlése"
 
-#: taskcoachlib\domain\note\notecontainer.py:30
+#: taskcoachlib\domain\note\notecontainer.py:31
 msgid "New subnote..."
 msgstr "Új részjegyzet..."
 
-#: taskcoachlib\domain\note\notecontainer.py:31
+#: taskcoachlib\domain\note\notecontainer.py:32
 msgid "Insert a new subnote"
 msgstr "Új részjegyzet beszúrása"
 
-#: taskcoachlib\domain\task\tasklist.py:33
+#: taskcoachlib\domain\task\tasklist.py:34
 msgid "&New task..."
 msgstr "Új &feladat..."
 
-#: taskcoachlib\domain\task\tasklist.py:42
+#: taskcoachlib\domain\task\tasklist.py:43
 msgid "New &subtask..."
 msgstr "Új &részfeladat..."
 
-#: taskcoachlib\domain\task\tasklist.py:54
+#: taskcoachlib\domain\task\tasklist.py:55
 msgid "Insert a new task"
 msgstr "Új feladat beszúrása"
 
-#: taskcoachlib\domain\task\tasklist.py:55
+#: taskcoachlib\domain\task\tasklist.py:56
 msgid "&Edit task..."
 msgstr "F&eladat szerkesztése..."
 
-#: taskcoachlib\domain\task\tasklist.py:56
+#: taskcoachlib\domain\task\tasklist.py:57
 msgid "Edit the selected task"
 msgstr "Kiválasztott feladat szerkesztése"
 
-#: taskcoachlib\domain\task\tasklist.py:57
+#: taskcoachlib\domain\task\tasklist.py:58
 msgid "&Delete task\tCtrl+DEL"
 msgstr "Fela&dat törlése\tCtrl+Del"
 
-#: taskcoachlib\domain\task\tasklist.py:58
+#: taskcoachlib\domain\task\tasklist.py:59
 msgid "Delete the selected task(s)"
 msgstr "Kiválasztott feladat törlése"
 
-#: taskcoachlib\domain\task\tasklist.py:60
+#: taskcoachlib\domain\task\tasklist.py:61
 msgid "Insert a new subtask into the selected task"
 msgstr "Új részfeladat beszúrása a kijelölt feladathoz"
 
@@ -368,9 +368,9 @@ msgid "For this note including all subnotes"
 msgstr "Ehhez a jegyzethez és részjegyzeteihez"
 
 #: taskcoachlib\gui\dialog\editor.py:101
-#: taskcoachlib\gui\viewer\attachment.py:71
-#: taskcoachlib\gui\viewer\base.py:193 taskcoachlib\gui\viewer\category.py:79
-#: taskcoachlib\gui\viewer\note.py:124 taskcoachlib\gui\viewer\task.py:491
+#: taskcoachlib\gui\viewer\attachment.py:74
+#: taskcoachlib\gui\viewer\base.py:218 taskcoachlib\gui\viewer\category.py:82
+#: taskcoachlib\gui\viewer\note.py:128 taskcoachlib\gui\viewer\task.py:494
 #: taskcoachlib\widgets\conflict.py:161 taskcoachlib\widgets\conflict.py:189
 msgid "Subject"
 msgstr "Tárgy"
@@ -378,10 +378,10 @@ msgstr "Tárgy"
 #: taskcoachlib\gui\dialog\editor.py:108 taskcoachlib\gui\dialog\editor.py:646
 #: taskcoachlib\gui\dialog\editor.py:718 taskcoachlib\gui\dialog\editor.py:763
 #: taskcoachlib\gui\dialog\editor.py:776 taskcoachlib\gui\dialog\editor.py:791
-#: taskcoachlib\gui\viewer\attachment.py:79
-#: taskcoachlib\gui\viewer\category.py:85
-#: taskcoachlib\gui\viewer\effort.py:154 taskcoachlib\gui\viewer\note.py:127
-#: taskcoachlib\gui\viewer\task.py:500 taskcoachlib\widgets\conflict.py:166
+#: taskcoachlib\gui\viewer\attachment.py:82
+#: taskcoachlib\gui\viewer\category.py:88
+#: taskcoachlib\gui\viewer\effort.py:154 taskcoachlib\gui\viewer\note.py:131
+#: taskcoachlib\gui\viewer\task.py:503 taskcoachlib\widgets\conflict.py:166
 #: taskcoachlib\widgets\conflict.py:194
 msgid "Description"
 msgstr "Leírás"
@@ -394,7 +394,7 @@ msgstr "Szin választás"
 msgid "Color"
 msgstr "Szín"
 
-#: taskcoachlib\gui\dialog\editor.py:159 taskcoachlib\gui\viewer\task.py:556
+#: taskcoachlib\gui\dialog\editor.py:159 taskcoachlib\gui\viewer\task.py:559
 #: taskcoachlib\widgets\conflict.py:214
 msgid "Priority"
 msgstr "Prioritás"
@@ -411,28 +411,28 @@ msgstr "Hely"
 msgid "Dates"
 msgstr "Dátumok"
 
-#: taskcoachlib\gui\dialog\editor.py:246 taskcoachlib\gui\viewer\task.py:545
+#: taskcoachlib\gui\dialog\editor.py:246 taskcoachlib\gui\viewer\task.py:548
 #: taskcoachlib\widgets\conflict.py:199
 msgid "Start date"
 msgstr "Kezdő dátum"
 
-#: taskcoachlib\gui\dialog\editor.py:247 taskcoachlib\gui\viewer\task.py:546
+#: taskcoachlib\gui\dialog\editor.py:247 taskcoachlib\gui\viewer\task.py:549
 #: taskcoachlib\widgets\conflict.py:204
 msgid "Due date"
 msgstr "Határidő"
 
-#: taskcoachlib\gui\dialog\editor.py:248 taskcoachlib\gui\viewer\task.py:548
+#: taskcoachlib\gui\dialog\editor.py:248 taskcoachlib\gui\viewer\task.py:551
 #: taskcoachlib\widgets\conflict.py:209
 msgid "Completion date"
 msgstr "Teljesítés dátuma"
 
 #: taskcoachlib\gui\dialog\editor.py:264 taskcoachlib\gui\dialog\editor.py:266
-#: taskcoachlib\gui\dialog\reminder.py:35 taskcoachlib\gui\viewer\task.py:563
+#: taskcoachlib\gui\dialog\reminder.py:35 taskcoachlib\gui\viewer\task.py:566
 msgid "Reminder"
 msgstr "Emlékeztető"
 
 #: taskcoachlib\gui\dialog\editor.py:278 taskcoachlib\gui\dialog\editor.py:279
-#: taskcoachlib\gui\viewer\task.py:549
+#: taskcoachlib\gui\viewer\task.py:552
 msgid "Recurrence"
 msgstr "Ismétlődés"
 
@@ -441,19 +441,19 @@ msgstr "Ismétlődés"
 msgid "None"
 msgstr "Nincs"
 
-#: taskcoachlib\gui\dialog\editor.py:283 taskcoachlib\gui\render.py:66
+#: taskcoachlib\gui\dialog\editor.py:283 taskcoachlib\gui\render.py:70
 msgid "Daily"
 msgstr "Naponta"
 
-#: taskcoachlib\gui\dialog\editor.py:283 taskcoachlib\gui\render.py:66
+#: taskcoachlib\gui\dialog\editor.py:283 taskcoachlib\gui\render.py:70
 msgid "Monthly"
 msgstr "Havonta"
 
-#: taskcoachlib\gui\dialog\editor.py:283 taskcoachlib\gui\render.py:66
+#: taskcoachlib\gui\dialog\editor.py:283 taskcoachlib\gui\render.py:70
 msgid "Weekly"
 msgstr "Hetente"
 
-#: taskcoachlib\gui\dialog\editor.py:283 taskcoachlib\gui\render.py:66
+#: taskcoachlib\gui\dialog\editor.py:283 taskcoachlib\gui\render.py:70
 msgid "Yearly"
 msgstr "Évente"
 
@@ -492,40 +492,40 @@ msgid "year(s),"
 msgstr "év(ek)"
 
 #: taskcoachlib\gui\dialog\editor.py:418 taskcoachlib\gui\dialog\editor.py:436
-#: taskcoachlib\gui\dialog\editor.py:652 taskcoachlib\gui\uicommand.py:2148
-#: taskcoachlib\gui\viewer\task.py:550
+#: taskcoachlib\gui\dialog\editor.py:652 taskcoachlib\gui\uicommand.py:2145
+#: taskcoachlib\gui\viewer\task.py:553
 msgid "Budget"
 msgstr "Költségvetés"
 
 #: taskcoachlib\gui\dialog\editor.py:419 taskcoachlib\gui\dialog\editor.py:446
-#: taskcoachlib\gui\uicommand.py:2148 taskcoachlib\gui\viewer\effort.py:171
-#: taskcoachlib\gui\viewer\task.py:561
+#: taskcoachlib\gui\uicommand.py:2145 taskcoachlib\gui\viewer\effort.py:171
+#: taskcoachlib\gui\viewer\task.py:564
 msgid "Revenue"
 msgstr "Bevétel"
 
-#: taskcoachlib\gui\dialog\editor.py:437 taskcoachlib\gui\uicommand.py:2148
-#: taskcoachlib\gui\viewer\effort.py:169 taskcoachlib\gui\viewer\task.py:552
+#: taskcoachlib\gui\dialog\editor.py:437 taskcoachlib\gui\uicommand.py:2145
+#: taskcoachlib\gui\viewer\effort.py:169 taskcoachlib\gui\viewer\task.py:555
 msgid "Time spent"
 msgstr "Ráfordított idő"
 
-#: taskcoachlib\gui\dialog\editor.py:438 taskcoachlib\gui\viewer\task.py:554
+#: taskcoachlib\gui\dialog\editor.py:438 taskcoachlib\gui\viewer\task.py:557
 msgid "Budget left"
 msgstr "Maradék költségvetés"
 
-#: taskcoachlib\gui\dialog\editor.py:444 taskcoachlib\gui\viewer\task.py:558
+#: taskcoachlib\gui\dialog\editor.py:444 taskcoachlib\gui\viewer\task.py:561
 msgid "Hourly fee"
 msgstr "Óradíj"
 
-#: taskcoachlib\gui\dialog\editor.py:445 taskcoachlib\gui\uicommand.py:2148
-#: taskcoachlib\gui\viewer\task.py:559
+#: taskcoachlib\gui\dialog\editor.py:445 taskcoachlib\gui\uicommand.py:2145
+#: taskcoachlib\gui\viewer\task.py:562
 msgid "Fixed fee"
 msgstr "Fix díj"
 
 #: taskcoachlib\gui\dialog\editor.py:528 taskcoachlib\gui\dialog\editor.py:649
 #: taskcoachlib\gui\dialog\editor.py:778
 #: taskcoachlib\gui\viewer\category.py:35
-#: taskcoachlib\gui\viewer\effort.py:155 taskcoachlib\gui\viewer\note.py:131
-#: taskcoachlib\gui\viewer\task.py:522 taskcoachlib\widgets\conflict.py:219
+#: taskcoachlib\gui\viewer\effort.py:155 taskcoachlib\gui\viewer\note.py:135
+#: taskcoachlib\gui\viewer\task.py:525 taskcoachlib\widgets\conflict.py:219
 msgid "Categories"
 msgstr "Kategóriák"
 
@@ -537,12 +537,12 @@ msgstr "Mellékletek (fájlok)"
 #: taskcoachlib\gui\dialog\editor.py:598 taskcoachlib\gui\dialog\editor.py:658
 #: taskcoachlib\gui\dialog\editor.py:766 taskcoachlib\gui\dialog\editor.py:794
 #: taskcoachlib\gui\dialog\syncpreferences.py:148
-#: taskcoachlib\gui\uicommand.py:1613 taskcoachlib\gui\viewer\note.py:33
+#: taskcoachlib\gui\uicommand.py:1610 taskcoachlib\gui\viewer\note.py:33
 msgid "Notes"
 msgstr "Jegyzetek"
 
 #: taskcoachlib\gui\dialog\editor.py:619
-#: taskcoachlib\gui\dialog\preferences.py:325
+#: taskcoachlib\gui\dialog\preferences.py:327
 msgid "Task behavior"
 msgstr "Feladat viselkedése"
 
@@ -593,7 +593,7 @@ msgid ""
 "An iPhone or iPod Touch device is trying\n"
 "to synchronize with this task file for\n"
 "the first time. What kind of synchronization\n"
-"would you like to use ?"
+"would you like to use?"
 msgstr ""
 
 #: taskcoachlib\gui\dialog\iphone.py:38
@@ -635,10 +635,22 @@ msgid ""
 msgstr ""
 
 #: taskcoachlib\gui\dialog\iphone.py:118
-msgid "More details on pybonjour web site"
+msgid "You may find details for your distribution here"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\iphone.py:121 taskcoachlib\widgets\buttonbox.py:24
+#: taskcoachlib\gui\dialog\iphone.py:121
+msgid ""
+"Note that under some systems (Fedora), you may have to\n"
+"install the avahi-compat-libdns_sd package as well as Avahi in order\n"
+"for this to work."
+msgstr ""
+
+#: taskcoachlib\gui\dialog\iphone.py:125
+msgid ""
+"In addition, if you have a firewall, check that ports 4096-4100 are open."
+msgstr ""
+
+#: taskcoachlib\gui\dialog\iphone.py:127 taskcoachlib\widgets\buttonbox.py:24
 #: taskcoachlib\widgets\conflict.py:261 taskcoachlib\widgets\dialog.py:53
 #: taskcoachlib\widgets\dialog.py:76 taskcoachlib\widgets\dialog.py:79
 #: taskcoachlib\widgets\dialog.py:146 taskcoachlib\widgets\syncmlwarning.py:18
@@ -758,7 +770,7 @@ msgstr ""
 "eszközök korlátja.)"
 
 #: taskcoachlib\gui\dialog\preferences.py:186
-#: taskcoachlib\gui\dialog\preferences.py:327
+#: taskcoachlib\gui\dialog\preferences.py:329
 msgid "Language"
 msgstr "Nyelv"
 
@@ -808,57 +820,61 @@ msgstr "Jegyzetek engedélyezése"
 msgid "Enable SyncML"
 msgstr "SyncML engedélyezés"
 
-#: taskcoachlib\gui\dialog\preferences.py:276
+#: taskcoachlib\gui\dialog\preferences.py:275
+msgid "Enable iPhone synchronization"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\preferences.py:278
 msgid "Hour of start of work day"
 msgstr "Napi munkakezdés időpontja"
 
-#: taskcoachlib\gui\dialog\preferences.py:278
+#: taskcoachlib\gui\dialog\preferences.py:280
 msgid "Hour of end of work day"
 msgstr "Napi munka befejezésének időpontja"
 
-#: taskcoachlib\gui\dialog\preferences.py:280
+#: taskcoachlib\gui\dialog\preferences.py:282
 msgid "Minutes between task start/end times"
 msgstr "A feladat kezdés/befejezés közt eltelt percek"
 
-#: taskcoachlib\gui\dialog\preferences.py:289
+#: taskcoachlib\gui\dialog\preferences.py:291
 msgid "Mark parent task completed when all children are completed"
 msgstr ""
 "Fölérendelt feladat bejelölése teljesítettnek, ha az összes részfeladat "
 "teljesült"
 
-#: taskcoachlib\gui\dialog\preferences.py:297
+#: taskcoachlib\gui\dialog\preferences.py:299
 msgid "Password for synchronization with iPhone"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:299
+#: taskcoachlib\gui\dialog\preferences.py:301
 msgid "Bonjour service name"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:307
+#: taskcoachlib\gui\dialog\preferences.py:309
 msgid "Check spelling in editors"
 msgstr "Helyesírás ellenőrzés"
 
-#: taskcoachlib\gui\dialog\preferences.py:324
+#: taskcoachlib\gui\dialog\preferences.py:326
 msgid "Window behavior"
 msgstr "Ablak viselkedése"
 
-#: taskcoachlib\gui\dialog\preferences.py:326
+#: taskcoachlib\gui\dialog\preferences.py:328
 msgid "Files"
 msgstr "Fájlok"
 
-#: taskcoachlib\gui\dialog\preferences.py:328
+#: taskcoachlib\gui\dialog\preferences.py:330
 msgid "Colors"
 msgstr "Színek"
 
-#: taskcoachlib\gui\dialog\preferences.py:329
+#: taskcoachlib\gui\dialog\preferences.py:331
 msgid "Features"
 msgstr "Lehetőségek"
 
-#: taskcoachlib\gui\dialog\preferences.py:331
+#: taskcoachlib\gui\dialog\preferences.py:333
 msgid "iPhone"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:333
+#: taskcoachlib\gui\dialog\preferences.py:335
 msgid "Editor"
 msgstr "Szerkesztő"
 
@@ -967,7 +983,7 @@ msgid "Access"
 msgstr "Hozzáférés"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:146
-#: taskcoachlib\gui\uicommand.py:1603 taskcoachlib\gui\viewer\task.py:32
+#: taskcoachlib\gui\uicommand.py:1600 taskcoachlib\gui\viewer\task.py:32
 msgid "Tasks"
 msgstr "Feladatok"
 
@@ -1145,226 +1161,221 @@ msgstr ""
 msgid "Closed %s"
 msgstr "%s lezárva"
 
-#: taskcoachlib\gui\mainwindow.py:152 taskcoachlib\gui\uicommand.py:547
+#: taskcoachlib\gui\mainwindow.py:152 taskcoachlib\gui\uicommand.py:548
 msgid "Warning"
 msgstr ""
 
-#: taskcoachlib\gui\mainwindow.py:186
+#: taskcoachlib\gui\mainwindow.py:195
 msgid "Welcome to %(name)s version %(version)s"
 msgstr "Üdvözöllek a %(name)s -ban verzió %(version)s"
 
-#: taskcoachlib\gui\mainwindow.py:370
+#: taskcoachlib\gui\mainwindow.py:388
 msgid "iPhone/iPod"
 msgstr ""
 
-#: taskcoachlib\gui\mainwindow.py:377
+#: taskcoachlib\gui\mainwindow.py:395
 msgid "Synchronization type"
 msgstr ""
 
-#: taskcoachlib\gui\mainwindow.py:387
-msgid "An iPhone or iPod Touch device tried to synchronize with this\n"
+#: taskcoachlib\gui\mainwindow.py:405
+msgid ""
+"An iPhone or iPod Touch device tried to synchronize with this\n"
+"task file, but the protocol negotiation failed. Please file a\n"
+"bug report."
 msgstr ""
 
-#: taskcoachlib\gui\mainwindow.py:388
-msgid "task file, but the protocol negotiation failed. Please file a\n"
-msgstr ""
-
-#: taskcoachlib\gui\mainwindow.py:389
-msgid "bug report."
-msgstr ""
-
-#: taskcoachlib\gui\mainwindow.py:390 taskcoachlib\iphone\protocol.py:136
+#: taskcoachlib\gui\mainwindow.py:408 taskcoachlib\iphone\protocol.py:141
 msgid "Error"
 msgstr ""
 
-#: taskcoachlib\gui\menu.py:174
+#: taskcoachlib\gui\menu.py:175
 msgid "&File"
 msgstr "&Fájl"
 
-#: taskcoachlib\gui\menu.py:176
+#: taskcoachlib\gui\menu.py:177
 msgid "&Edit"
 msgstr "&Szerkesztés"
 
-#: taskcoachlib\gui\menu.py:178
+#: taskcoachlib\gui\menu.py:179
 msgid "&View"
 msgstr "&Megjelenítés"
 
-#: taskcoachlib\gui\menu.py:180 taskcoachlib\gui\menu.py:390
+#: taskcoachlib\gui\menu.py:181 taskcoachlib\gui\menu.py:391
 msgid "&Task"
 msgstr "F&eladat"
 
-#: taskcoachlib\gui\menu.py:183
+#: taskcoachlib\gui\menu.py:184
 msgid "Eff&ort"
 msgstr "&Ráfordítás"
 
-#: taskcoachlib\gui\menu.py:185 taskcoachlib\gui\menu.py:399
+#: taskcoachlib\gui\menu.py:186 taskcoachlib\gui\menu.py:400
 #: taskcoachlib\gui\viewer\mixin.py:339 taskcoachlib\gui\viewer\mixin.py:389
 #: taskcoachlib\gui\viewer\mixin.py:409
 msgid "&Category"
 msgstr "&Kategória"
 
-#: taskcoachlib\gui\menu.py:188 taskcoachlib\gui\menu.py:413
+#: taskcoachlib\gui\menu.py:189 taskcoachlib\gui\menu.py:414
 msgid "&Note"
 msgstr "&Jegyzet"
 
-#: taskcoachlib\gui\menu.py:189
+#: taskcoachlib\gui\menu.py:190
 msgid "&Help"
 msgstr "Sú&gó"
 
-#: taskcoachlib\gui\menu.py:220
+#: taskcoachlib\gui\menu.py:221
 msgid "&Export"
 msgstr "&Export"
 
-#: taskcoachlib\gui\menu.py:326
+#: taskcoachlib\gui\menu.py:327
 msgid "&Select"
 msgstr "&Kiválasztás"
 
-#: taskcoachlib\gui\menu.py:351
+#: taskcoachlib\gui\menu.py:352
 msgid "&New viewer"
 msgstr "&Új ablak"
 
-#: taskcoachlib\gui\menu.py:355
+#: taskcoachlib\gui\menu.py:356
 msgid "&Activate next viewer\tCtrl+PgDn"
 msgstr "&Következő ablak bekapcsolása\tCtrl+PgDn"
 
-#: taskcoachlib\gui\menu.py:356
+#: taskcoachlib\gui\menu.py:357
 msgid "Activate the next open viewer"
 msgstr "Következő nyitott ablak bekapcsolása"
 
-#: taskcoachlib\gui\menu.py:359
+#: taskcoachlib\gui\menu.py:360
 msgid "Activate &previous viewer\tCtrl+PgUp"
 msgstr "Előző &ablak bekapcsolása\tCtrl+PgUp"
 
-#: taskcoachlib\gui\menu.py:360
+#: taskcoachlib\gui\menu.py:361
 msgid "Activate the previous open viewer"
 msgstr "Előző nyitott ablak bekapcsolása"
 
-#: taskcoachlib\gui\menu.py:367 taskcoachlib\gui\menu.py:368
+#: taskcoachlib\gui\menu.py:368 taskcoachlib\gui\menu.py:369
 msgid "&Filter"
 msgstr "&Szűrő"
 
-#: taskcoachlib\gui\menu.py:369 taskcoachlib\gui\menu.py:370
+#: taskcoachlib\gui\menu.py:370 taskcoachlib\gui\menu.py:371
 msgid "&Sort"
 msgstr "&Rendezés"
 
-#: taskcoachlib\gui\menu.py:371 taskcoachlib\gui\menu.py:372
+#: taskcoachlib\gui\menu.py:372 taskcoachlib\gui\menu.py:373
 msgid "&Columns"
 msgstr "&Oszlopok"
 
-#: taskcoachlib\gui\menu.py:374
+#: taskcoachlib\gui\menu.py:375
 msgid "&Tree options"
 msgstr "&Könyvtárszerkezet"
 
-#: taskcoachlib\gui\menu.py:378
+#: taskcoachlib\gui\menu.py:379
 msgid "T&oolbar"
 msgstr "&Eszköztár"
 
-#: taskcoachlib\gui\menu.py:380
+#: taskcoachlib\gui\menu.py:381
 msgid "Show/hide status bar"
 msgstr "Státuszsor megjelenítése/elrejtése"
 
-#: taskcoachlib\gui\menu.py:380
+#: taskcoachlib\gui\menu.py:381
 msgid "Status&bar"
 msgstr "Státuszsor"
 
-#: taskcoachlib\gui\menu.py:391
+#: taskcoachlib\gui\menu.py:392
 msgid "Open a new tab with a viewer that displays tasks"
 msgstr "Új fül nyitása feladatok megjelenítésével"
 
-#: taskcoachlib\gui\menu.py:393
+#: taskcoachlib\gui\menu.py:394
 msgid "Task &square map"
 msgstr ""
 
-#: taskcoachlib\gui\menu.py:394
+#: taskcoachlib\gui\menu.py:395
 msgid "Open a new tab with a viewer that displays tasks in a square map"
 msgstr ""
 
-#: taskcoachlib\gui\menu.py:396
+#: taskcoachlib\gui\menu.py:397
 msgid "T&imeline"
 msgstr ""
 
-#: taskcoachlib\gui\menu.py:397
+#: taskcoachlib\gui\menu.py:398
 msgid ""
 "Open a new tab with a viewer that displays a timeline of tasks and effort"
 msgstr ""
 
-#: taskcoachlib\gui\menu.py:400
+#: taskcoachlib\gui\menu.py:401
 msgid "Open a new tab with a viewer that displays categories"
 msgstr "Új fül nyitása kategóriák megjelenítésével"
 
-#: taskcoachlib\gui\menu.py:404
+#: taskcoachlib\gui\menu.py:405
 msgid "&Effort"
 msgstr "&Ráfordítás"
 
-#: taskcoachlib\gui\menu.py:405
+#: taskcoachlib\gui\menu.py:406
 msgid "Open a new tab with a viewer that displays efforts"
 msgstr "Új fül nyitása ráfordítások megjelenítésével"
 
-#: taskcoachlib\gui\menu.py:408
+#: taskcoachlib\gui\menu.py:409
 msgid "Effort for &one task"
 msgstr ""
 
-#: taskcoachlib\gui\menu.py:409
+#: taskcoachlib\gui\menu.py:410
 msgid ""
 "Open a new tab with a viewer that displays efforts for the selected task"
 msgstr ""
 
-#: taskcoachlib\gui\menu.py:414
+#: taskcoachlib\gui\menu.py:415
 msgid "Open a new tab with a viewer that displays notes"
 msgstr "Új fül nyitása jegyzetek megjelenítésével"
 
-#: taskcoachlib\gui\menu.py:460
+#: taskcoachlib\gui\menu.py:461
 msgid "&Hide"
 msgstr "&Elrejtés"
 
-#: taskcoachlib\gui\menu.py:460
+#: taskcoachlib\gui\menu.py:461
 msgid "Hide the toolbar"
 msgstr "Eszköztár elrejtése"
 
-#: taskcoachlib\gui\menu.py:461
+#: taskcoachlib\gui\menu.py:462
 msgid "&Small images"
 msgstr "&Kis ikonok"
 
-#: taskcoachlib\gui\menu.py:461
+#: taskcoachlib\gui\menu.py:462
 msgid "Small images (16x16) on the toolbar"
 msgstr "Kis (16x16) ikonok az eszköztáron"
 
-#: taskcoachlib\gui\menu.py:462
+#: taskcoachlib\gui\menu.py:463
 msgid "&Medium-sized images"
 msgstr "Kö&zepes ikonok"
 
-#: taskcoachlib\gui\menu.py:462
+#: taskcoachlib\gui\menu.py:463
 msgid "Medium-sized images (22x22) on the toolbar"
 msgstr "Közepes(22x22) ikonok az eszköztáron"
 
-#: taskcoachlib\gui\menu.py:463
+#: taskcoachlib\gui\menu.py:464
 msgid "&Large images"
 msgstr "&Nagy ikonok"
 
-#: taskcoachlib\gui\menu.py:463
+#: taskcoachlib\gui\menu.py:464
 msgid "Large images (32x32) on the toolbar"
 msgstr "Nagy(32x32) ikonok az eszköztáron"
 
-#: taskcoachlib\gui\menu.py:477 taskcoachlib\gui\menu.py:703
-#: taskcoachlib\gui\uicommand.py:1329
+#: taskcoachlib\gui\menu.py:478 taskcoachlib\gui\menu.py:704
+#: taskcoachlib\gui\uicommand.py:1330
 msgid "New task &from template"
 msgstr "Új feladat &sablon után"
 
-#: taskcoachlib\gui\menu.py:504 taskcoachlib\gui\menu.py:563
-#: taskcoachlib\gui\menu.py:729 taskcoachlib\gui\menu.py:825
+#: taskcoachlib\gui\menu.py:505 taskcoachlib\gui\menu.py:564
+#: taskcoachlib\gui\menu.py:730 taskcoachlib\gui\menu.py:826
 msgid "&Toggle category"
 msgstr ""
 
-#: taskcoachlib\gui\menu.py:595 taskcoachlib\gui\uicommand.py:1788
-#: taskcoachlib\gui\uicommand.py:1828
+#: taskcoachlib\gui\menu.py:596 taskcoachlib\gui\uicommand.py:1785
+#: taskcoachlib\gui\uicommand.py:1825
 msgid "&Start tracking effort"
 msgstr "Ráfordított idő mérésének elindítása"
 
-#: taskcoachlib\gui\menu.py:642
+#: taskcoachlib\gui\menu.py:643
 msgid "%s (subcategories)"
 msgstr ""
 
-#: taskcoachlib\gui\menu.py:684
+#: taskcoachlib\gui\menu.py:685
 msgid "%s (subtasks)"
 msgstr "(részfeladat) %s"
 
@@ -1372,148 +1383,148 @@ msgstr "(részfeladat) %s"
 msgid "Page"
 msgstr "Oldal"
 
-#: taskcoachlib\gui\render.py:40
+#: taskcoachlib\gui\render.py:44
 msgid "Infinite"
 msgstr "Végtelen"
 
-#: taskcoachlib\gui\render.py:60
+#: taskcoachlib\gui\render.py:64
 msgid "Every %(frequency)d days"
 msgstr "Minden %(frequency)-dik napon"
 
-#: taskcoachlib\gui\render.py:60
+#: taskcoachlib\gui\render.py:64
 msgid "Every %(frequency)d weeks"
 msgstr "Minden %(frequency)-dik héten"
 
-#: taskcoachlib\gui\render.py:61
+#: taskcoachlib\gui\render.py:65
 msgid "Every %(frequency)d months"
 msgstr "Minden %(frequency)-dik hónapban"
 
-#: taskcoachlib\gui\render.py:61
+#: taskcoachlib\gui\render.py:65
 msgid "Every %(frequency)d years"
 msgstr "Minden %(frequency)-dik évben"
 
-#: taskcoachlib\gui\render.py:63
+#: taskcoachlib\gui\render.py:67
 msgid "Every other day"
 msgstr "Következő napon"
 
-#: taskcoachlib\gui\render.py:63
+#: taskcoachlib\gui\render.py:67
 msgid "Every other week"
 msgstr "Következő héten"
 
-#: taskcoachlib\gui\render.py:64
+#: taskcoachlib\gui\render.py:68
 msgid "Every other month"
 msgstr "Következő hónapban"
 
-#: taskcoachlib\gui\render.py:64
+#: taskcoachlib\gui\render.py:68
 msgid "Every other year"
 msgstr "Következő évben"
 
-#: taskcoachlib\gui\render.py:83
+#: taskcoachlib\gui\render.py:85
 msgid "now"
 msgstr "most"
 
-#: taskcoachlib\gui\taskbaricon.py:138
+#: taskcoachlib\gui\taskbaricon.py:139
 msgid "%d tasks overdue"
 msgstr "%d feladat határideje lejárt"
 
-#: taskcoachlib\gui\taskbaricon.py:138
+#: taskcoachlib\gui\taskbaricon.py:139
 msgid "one task overdue"
 msgstr "egy feladat határideje lejárt"
 
-#: taskcoachlib\gui\taskbaricon.py:139
+#: taskcoachlib\gui\taskbaricon.py:140
 msgid "%d tasks due today"
 msgstr "%d feladat határideje ma lejár"
 
-#: taskcoachlib\gui\taskbaricon.py:139
+#: taskcoachlib\gui\taskbaricon.py:140
 msgid "one task due today"
 msgstr "egy feladat határideje ma lejár"
 
-#: taskcoachlib\gui\taskbaricon.py:150
+#: taskcoachlib\gui\taskbaricon.py:151
 msgid "tracking \"%s\""
 msgstr "\"%s\" mérése"
 
-#: taskcoachlib\gui\taskbaricon.py:152
+#: taskcoachlib\gui\taskbaricon.py:153
 msgid "tracking effort for %d tasks"
 msgstr "%d feladat ráfordításmérése"
 
-#: taskcoachlib\gui\uicommand.py:438
+#: taskcoachlib\gui\uicommand.py:439
 msgid "&Open...\tCtrl+O"
 msgstr "&Megnyitás...\tCtrl+O"
 
-#: taskcoachlib\gui\uicommand.py:439
+#: taskcoachlib\gui\uicommand.py:440
 msgid "Open a %s file"
 msgstr "%s file megnyitása"
 
-#: taskcoachlib\gui\uicommand.py:451
+#: taskcoachlib\gui\uicommand.py:452
 msgid "Open %s"
 msgstr "%s megnyitása"
 
-#: taskcoachlib\gui\uicommand.py:459
+#: taskcoachlib\gui\uicommand.py:460
 msgid "&Merge..."
 msgstr "&Hozzáfűzés..."
 
-#: taskcoachlib\gui\uicommand.py:460
+#: taskcoachlib\gui\uicommand.py:461
 msgid "Merge tasks from another file with the current file"
 msgstr "Feladatok hozzáfűzése másik fájlból"
 
-#: taskcoachlib\gui\uicommand.py:469
+#: taskcoachlib\gui\uicommand.py:470
 msgid "&Close\tCtrl+W"
 msgstr "&Kilép\tCtrl+W"
 
-#: taskcoachlib\gui\uicommand.py:470
+#: taskcoachlib\gui\uicommand.py:471
 msgid "Close the current file"
 msgstr "Aktuális fájl bezárása"
 
-#: taskcoachlib\gui\uicommand.py:479
+#: taskcoachlib\gui\uicommand.py:480
 msgid "&Save\tCtrl+S"
 msgstr "M&entés\tCtrl+S"
 
-#: taskcoachlib\gui\uicommand.py:480
+#: taskcoachlib\gui\uicommand.py:481
 msgid "Save the current file"
 msgstr "Aktuális fájl mentése"
 
-#: taskcoachlib\gui\uicommand.py:492
+#: taskcoachlib\gui\uicommand.py:493
 msgid "S&ave as...\tShift+Ctrl+S"
 msgstr "M&entés másként...\tShift+Ctrl+S"
 
-#: taskcoachlib\gui\uicommand.py:493
+#: taskcoachlib\gui\uicommand.py:494
 msgid "Save the current file under a new name"
 msgstr "Aktuális fájl mentése más néven"
 
-#: taskcoachlib\gui\uicommand.py:502
+#: taskcoachlib\gui\uicommand.py:503
 msgid "Sa&ve selection..."
 msgstr "Kiválasztások men&tése..."
 
-#: taskcoachlib\gui\uicommand.py:503
+#: taskcoachlib\gui\uicommand.py:504
 msgid "Save the selected tasks to a separate file"
 msgstr "Kiválasztott feladatok mentése külön fájlba"
 
-#: taskcoachlib\gui\uicommand.py:513
+#: taskcoachlib\gui\uicommand.py:514
 msgid "Save selected task as &template"
 msgstr "Kiválasztott feladat mentése sablonként"
 
-#: taskcoachlib\gui\uicommand.py:514
+#: taskcoachlib\gui\uicommand.py:515
 msgid "Save the selected task as a task template"
 msgstr "Kiválasztott feladat mentése feladat-sablonként"
 
-#: taskcoachlib\gui\uicommand.py:524
+#: taskcoachlib\gui\uicommand.py:525
 msgid "Add template"
 msgstr "Sablon hozzáadása"
 
-#: taskcoachlib\gui\uicommand.py:525
+#: taskcoachlib\gui\uicommand.py:526
 msgid "Add a new template from a template file\n"
 msgstr "Új sablon hozzáadása sablon fileból\n"
 
-#: taskcoachlib\gui\uicommand.py:535
+#: taskcoachlib\gui\uicommand.py:536
 msgid "Purge deleted items"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:536
+#: taskcoachlib\gui\uicommand.py:537
 msgid ""
 "Actually delete deleted tasks and notes (see the SyncML chapter in Help"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:540
+#: taskcoachlib\gui\uicommand.py:541
 msgid ""
 "Purging deleted items is undoable.\n"
 "If you're planning on enabling\n"
@@ -1524,309 +1535,309 @@ msgid ""
 "Do you still want to purge?"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:554
+#: taskcoachlib\gui\uicommand.py:555
 msgid "Page setup...\tShift+Ctrl+P"
 msgstr "Lapbeállítás...\tShift+Ctrl+P"
 
-#: taskcoachlib\gui\uicommand.py:555
+#: taskcoachlib\gui\uicommand.py:556
 msgid "Setup the characteristics of the printer page"
 msgstr "Nyomtatandó lap jellemzőinek beállítása"
 
-#: taskcoachlib\gui\uicommand.py:571 taskcoachlib\gui\uicommand.py:582
+#: taskcoachlib\gui\uicommand.py:572 taskcoachlib\gui\uicommand.py:583
 msgid "Print preview"
 msgstr "Nyomtatási kép"
 
-#: taskcoachlib\gui\uicommand.py:572
+#: taskcoachlib\gui\uicommand.py:573
 msgid "Show a preview of what the print will look like"
 msgstr "Mutasd meg, hogyan néz ki nyomtatásban"
 
-#: taskcoachlib\gui\uicommand.py:590
+#: taskcoachlib\gui\uicommand.py:591
 msgid "Print...\tCtrl+P"
 msgstr "Nyomtatás...\tCtrl+P"
 
-#: taskcoachlib\gui\uicommand.py:591
+#: taskcoachlib\gui\uicommand.py:592
 msgid "Print the current file"
 msgstr "A jelenlegi fájl nyomtatása"
 
-#: taskcoachlib\gui\uicommand.py:614
+#: taskcoachlib\gui\uicommand.py:615
 msgid "Export effort as &iCalendar..."
 msgstr "Ráfordítás exportálása &iCalendar ként..."
 
-#: taskcoachlib\gui\uicommand.py:615
+#: taskcoachlib\gui\uicommand.py:616
 msgid "Export effort in iCalendar (*.ics) format"
 msgstr "Ráfordítás exportálása iCalendar (*.ics) formában"
 
-#: taskcoachlib\gui\uicommand.py:625
+#: taskcoachlib\gui\uicommand.py:626
 msgid "Export selected effort as &iCalendar..."
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:626
+#: taskcoachlib\gui\uicommand.py:627
 msgid "Export selected effort in iCalendar (*.ics) format"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:635
+#: taskcoachlib\gui\uicommand.py:636
 msgid "Export as &HTML..."
 msgstr "Exportálás &HTML formában..."
 
-#: taskcoachlib\gui\uicommand.py:636
+#: taskcoachlib\gui\uicommand.py:637
 msgid "Export the current view as HTML file"
 msgstr "Az aktuális ablak exportálása HTML fileba"
 
-#: taskcoachlib\gui\uicommand.py:645
+#: taskcoachlib\gui\uicommand.py:646
 msgid "Export &selection as HTML..."
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:646
+#: taskcoachlib\gui\uicommand.py:647
 msgid "Export the selection in the current view as HTML file"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:655
+#: taskcoachlib\gui\uicommand.py:656
 msgid "Export as &CSV..."
 msgstr "Exportálás &CSV formában..."
 
-#: taskcoachlib\gui\uicommand.py:656
+#: taskcoachlib\gui\uicommand.py:657
 msgid "Export the current view in Comma Separated Values (CSV) format"
 msgstr "Aktuális ablak mentése vesszővel elválasztott (CSV) formában"
 
-#: taskcoachlib\gui\uicommand.py:665
+#: taskcoachlib\gui\uicommand.py:666
 msgid "Export selection as &CSV..."
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:666
+#: taskcoachlib\gui\uicommand.py:667
 msgid ""
 "Export the selection in the current view in Comma Separated Values (CSV) "
 "format"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:675
+#: taskcoachlib\gui\uicommand.py:676
 msgid "Export as &VCalendar..."
 msgstr "Exportálás &VCalendar formában..."
 
-#: taskcoachlib\gui\uicommand.py:676
+#: taskcoachlib\gui\uicommand.py:677
 msgid "Export the current task viewer in VCalendar format"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:685
+#: taskcoachlib\gui\uicommand.py:686
 msgid "Export selection as &VCalendar..."
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:686
+#: taskcoachlib\gui\uicommand.py:687
 msgid ""
 "Export the selected tasks in the current task viewer in VCalendar format"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:695
+#: taskcoachlib\gui\uicommand.py:696
 msgid "S&yncML synchronization"
 msgstr "S&yncML szinkronizálás"
 
-#: taskcoachlib\gui\uicommand.py:696
+#: taskcoachlib\gui\uicommand.py:697
 msgid "Synchronize with a SyncML server"
 msgstr "Szinkronizálás egy SyncML szerverrel"
 
-#: taskcoachlib\gui\uicommand.py:700
+#: taskcoachlib\gui\uicommand.py:701
 msgid "Please enter your password:"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:701
+#: taskcoachlib\gui\uicommand.py:702
 msgid "Task Coach SyncML password"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:708
+#: taskcoachlib\gui\uicommand.py:709
 msgid "&Quit\tCtrl+Q"
 msgstr "&Kilépés\tCtrl+Q"
 
-#: taskcoachlib\gui\uicommand.py:709
+#: taskcoachlib\gui\uicommand.py:710
 msgid "Exit %s"
 msgstr "Kilépés %s"
 
-#: taskcoachlib\gui\uicommand.py:717
+#: taskcoachlib\gui\uicommand.py:718
 msgid "&Undo"
 msgstr "&Visszavonás"
 
-#: taskcoachlib\gui\uicommand.py:722
+#: taskcoachlib\gui\uicommand.py:723
 msgid "Undo the last command"
 msgstr "Utolsó parancs visszavonása"
 
-#: taskcoachlib\gui\uicommand.py:746
+#: taskcoachlib\gui\uicommand.py:747
 msgid "&Redo"
 msgstr "Ú&jra"
 
-#: taskcoachlib\gui\uicommand.py:751
+#: taskcoachlib\gui\uicommand.py:752
 msgid "Redo the last command that was undone"
 msgstr "Utolsó visszavont parancs lefuttatása"
 
-#: taskcoachlib\gui\uicommand.py:776
+#: taskcoachlib\gui\uicommand.py:777
 msgid "Cu&t\tCtrl+X"
 msgstr "K&ivágás\tCtrl+X"
 
-#: taskcoachlib\gui\uicommand.py:777
+#: taskcoachlib\gui\uicommand.py:778
 msgid "Cut the selected item(s) to the clipboard"
 msgstr "Kiválasztott tételek vágólapra helyezése"
 
-#: taskcoachlib\gui\uicommand.py:799
+#: taskcoachlib\gui\uicommand.py:800
 msgid "&Copy\tCtrl+C"
 msgstr "Má&solás\tCtrl+C"
 
-#: taskcoachlib\gui\uicommand.py:800
+#: taskcoachlib\gui\uicommand.py:801
 msgid "Copy the selected item(s) to the clipboard"
 msgstr "Kiválasztott tételek vágólapra másolása"
 
-#: taskcoachlib\gui\uicommand.py:822
+#: taskcoachlib\gui\uicommand.py:823
 msgid "&Paste\tCtrl+V"
 msgstr "&Beillesztés\tCtrl+V"
 
-#: taskcoachlib\gui\uicommand.py:823
+#: taskcoachlib\gui\uicommand.py:824
 msgid "Paste item(s) from the clipboard"
 msgstr "Tételek másolása a vágólapról"
 
-#: taskcoachlib\gui\uicommand.py:845
+#: taskcoachlib\gui\uicommand.py:846
 msgid "P&aste into task\tShift+Ctrl+V"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:846
+#: taskcoachlib\gui\uicommand.py:847
 msgid "Paste item(s) from the clipboard into the selected task"
 msgstr "Tételek másolása a vágólapról a kiválasztott feladatba"
 
-#: taskcoachlib\gui\uicommand.py:860
+#: taskcoachlib\gui\uicommand.py:861
 msgid "Preferences..."
 msgstr "Beállítások..."
 
-#: taskcoachlib\gui\uicommand.py:861 taskcoachlib\gui\uicommand.py:866
+#: taskcoachlib\gui\uicommand.py:862 taskcoachlib\gui\uicommand.py:867
 msgid "Edit preferences"
 msgstr "Beállítások szerkesztése"
 
-#: taskcoachlib\gui\uicommand.py:872
+#: taskcoachlib\gui\uicommand.py:873
 msgid "SyncML preferences..."
 msgstr "SyncML beállítások..."
 
-#: taskcoachlib\gui\uicommand.py:873 taskcoachlib\gui\uicommand.py:879
+#: taskcoachlib\gui\uicommand.py:874 taskcoachlib\gui\uicommand.py:880
 msgid "Edit SyncML preferences"
 msgstr "SyncML beállítások szerkesztése"
 
-#: taskcoachlib\gui\uicommand.py:885
+#: taskcoachlib\gui\uicommand.py:886
 msgid "&All\tCtrl+A"
 msgstr "&Mind\tCtrl+A"
 
-#: taskcoachlib\gui\uicommand.py:886
+#: taskcoachlib\gui\uicommand.py:887
 msgid "Select all items in the current view"
 msgstr "Minden elem kiválasztása az aktuális nézetben"
 
-#: taskcoachlib\gui\uicommand.py:900
+#: taskcoachlib\gui\uicommand.py:901
 msgid "&Invert selection"
 msgstr "&Kijelölés megfordítása"
 
-#: taskcoachlib\gui\uicommand.py:901
+#: taskcoachlib\gui\uicommand.py:902
 msgid "Select unselected items and unselect selected items"
 msgstr ""
 "Nem kiválasztott elemek kiválasztása, kiválasztott elemek kiválasztásának "
 "törlése"
 
-#: taskcoachlib\gui\uicommand.py:910
+#: taskcoachlib\gui\uicommand.py:911
 msgid "&Clear selection"
 msgstr "&Kiválasztás törlése"
 
-#: taskcoachlib\gui\uicommand.py:911
+#: taskcoachlib\gui\uicommand.py:912
 msgid "Unselect all items"
 msgstr "Minden elem kiválasztásának törlése"
 
-#: taskcoachlib\gui\uicommand.py:919
+#: taskcoachlib\gui\uicommand.py:920
 msgid "&Clear all filters"
 msgstr "&Minden szűrő törlése"
 
-#: taskcoachlib\gui\uicommand.py:920
+#: taskcoachlib\gui\uicommand.py:921
 msgid "Show all items (reset all filters)"
 msgstr "Mindent megmutat (összes szűrő törlése)"
 
-#: taskcoachlib\gui\uicommand.py:958
+#: taskcoachlib\gui\uicommand.py:959
 msgid "&Rename viewer..."
 msgstr "&Ablak átnevezése..."
 
-#: taskcoachlib\gui\uicommand.py:959
+#: taskcoachlib\gui\uicommand.py:960
 msgid "Rename the selected viewer"
 msgstr "Kiválasztott ablak átnevezése"
 
-#: taskcoachlib\gui\uicommand.py:963
+#: taskcoachlib\gui\uicommand.py:964
 msgid "New title for the viewer:"
 msgstr "Ablak új címe"
 
-#: taskcoachlib\gui\uicommand.py:963
+#: taskcoachlib\gui\uicommand.py:964
 msgid "Rename viewer"
 msgstr "Ablak átnevezése"
 
-#: taskcoachlib\gui\uicommand.py:984
+#: taskcoachlib\gui\uicommand.py:985
 msgid "&Hide this column"
 msgstr "&Oszlop elrejtése"
 
-#: taskcoachlib\gui\uicommand.py:985
+#: taskcoachlib\gui\uicommand.py:986
 msgid "Hide the selected column"
 msgstr "A kiválasztott oszlop elrejtése"
 
-#: taskcoachlib\gui\uicommand.py:1032
+#: taskcoachlib\gui\uicommand.py:1033
 msgid "&Expand all items\tShift+Ctrl+E"
 msgstr "&Tételek kibontása\tShift+Ctrl+E"
 
-#: taskcoachlib\gui\uicommand.py:1033
+#: taskcoachlib\gui\uicommand.py:1034
 msgid "Expand all items with subitems"
 msgstr "Minden alárendelt tétellel rendelkező tétel kibontása"
 
-#: taskcoachlib\gui\uicommand.py:1046
+#: taskcoachlib\gui\uicommand.py:1047
 msgid "E&xpand"
 msgstr "Ki&bontás"
 
-#: taskcoachlib\gui\uicommand.py:1046
+#: taskcoachlib\gui\uicommand.py:1047
 msgid "Expand the selected item(s)"
 msgstr "Kiválasztott tételek kibontása"
 
-#: taskcoachlib\gui\uicommand.py:1060
+#: taskcoachlib\gui\uicommand.py:1061
 msgid "&Collapse all items\tShift+Ctrl+C"
 msgstr "Tételek &kibontásának megszüntetése\tShift+Ctrl+C"
 
-#: taskcoachlib\gui\uicommand.py:1061
+#: taskcoachlib\gui\uicommand.py:1062
 msgid "Collapse all items with subitems"
 msgstr ""
 "Minden alárendelt tétellel rendelkező tétel kibontásának megszüntetése"
 
-#: taskcoachlib\gui\uicommand.py:1074
+#: taskcoachlib\gui\uicommand.py:1075
 msgid "C&ollapse"
 msgstr "Ö&sszehúzás"
 
-#: taskcoachlib\gui\uicommand.py:1075
+#: taskcoachlib\gui\uicommand.py:1076
 msgid "Collapse the selected items with subitems"
 msgstr ""
 "A kiválasztott alárendelt tétellel rendelkező tételek kibontásának "
 "megszüntetése"
 
-#: taskcoachlib\gui\uicommand.py:1096
+#: taskcoachlib\gui\uicommand.py:1097
 msgid "&Ascending"
 msgstr "&Növekvő"
 
-#: taskcoachlib\gui\uicommand.py:1097
+#: taskcoachlib\gui\uicommand.py:1098
 msgid "Sort ascending (checked) or descending (unchecked)"
 msgstr "Rendezés növekvő, vagy  csökkenő sorrendbe"
 
-#: taskcoachlib\gui\uicommand.py:1110
+#: taskcoachlib\gui\uicommand.py:1111
 msgid "Sort case sensitive"
 msgstr "Kis/Nagy betű érzékeny rendezés"
 
-#: taskcoachlib\gui\uicommand.py:1111
+#: taskcoachlib\gui\uicommand.py:1112
 msgid ""
 "When comparing text, sorting is case sensitive (checked) or insensitive "
 "(unchecked)"
 msgstr "Szöveg hasonlítása kis/nagy betű figyelembe vételével vagy nem"
 
-#: taskcoachlib\gui\uicommand.py:1124
+#: taskcoachlib\gui\uicommand.py:1125
 msgid "Sort by status &first"
 msgstr "Státusz szerinti rendezés"
 
-#: taskcoachlib\gui\uicommand.py:1125
+#: taskcoachlib\gui\uicommand.py:1126
 msgid "Sort tasks by status (active/inactive/completed) first"
 msgstr "Státusz (aktív/inaktív/teljesített) szerinti rendezés"
 
-#: taskcoachlib\gui\uicommand.py:1145
+#: taskcoachlib\gui\uicommand.py:1146
 msgid "&Active"
 msgstr "&Aktív"
 
-#: taskcoachlib\gui\uicommand.py:1146
+#: taskcoachlib\gui\uicommand.py:1147
 msgid ""
 "Show/hide active tasks (tasks with a start date in the past and a due date "
 "in the future)"
@@ -1834,385 +1845,385 @@ msgstr ""
 "Megjeleníti/elrejti az aktív feladatokat (azokat a feladatokat amelyek "
 "kezdési edeje már letelt, de a határideje még nem telt le)"
 
-#: taskcoachlib\gui\uicommand.py:1158
+#: taskcoachlib\gui\uicommand.py:1159
 msgid "&Inactive"
 msgstr "&Inaktív"
 
-#: taskcoachlib\gui\uicommand.py:1159
+#: taskcoachlib\gui\uicommand.py:1160
 msgid "Show/hide inactive tasks (tasks with a start date in the future)"
 msgstr ""
 "Megjeleníti/elrejti az inaktív feladatokat (azokat a feladatokat ameleknek "
 "kezdő dátuma a jővőben kezdődik)"
 
-#: taskcoachlib\gui\uicommand.py:1171
+#: taskcoachlib\gui\uicommand.py:1172
 msgid "&Completed"
 msgstr "&Teljesített"
 
-#: taskcoachlib\gui\uicommand.py:1172
+#: taskcoachlib\gui\uicommand.py:1173
 msgid "Show/hide completed tasks"
 msgstr "Megjeleníti/elrejti a teljesített feladatokat"
 
-#: taskcoachlib\gui\uicommand.py:1183
+#: taskcoachlib\gui\uicommand.py:1184
 msgid "&Over due"
 msgstr "&Lejárt"
 
-#: taskcoachlib\gui\uicommand.py:1184
+#: taskcoachlib\gui\uicommand.py:1185
 msgid "Show/hide over due tasks (tasks with a due date in the past)"
 msgstr ""
 "Megjeleníti/elrejti a lejárt feladatokat (azokat a feladatokat amelyek "
 "határideje már eltelt)"
 
-#: taskcoachlib\gui\uicommand.py:1196
+#: taskcoachlib\gui\uicommand.py:1197
 msgid "Over &budget"
 msgstr "&Költségtúllépés"
 
-#: taskcoachlib\gui\uicommand.py:1197
+#: taskcoachlib\gui\uicommand.py:1198
 msgid "Show/hide tasks that are over budget"
 msgstr ""
 "Megjeleníti/elrejti azokat a feladatok amelyekben túlléptük a ráfordítható "
 "időt"
 
-#: taskcoachlib\gui\uicommand.py:1209
+#: taskcoachlib\gui\uicommand.py:1210
 msgid "C&omposite"
 msgstr "V&egyes"
 
-#: taskcoachlib\gui\uicommand.py:1210
+#: taskcoachlib\gui\uicommand.py:1211
 msgid "Show/hide tasks with subtasks in list mode"
 msgstr ""
 "A felsorolásban megmutat/elrejt részfeladattal rendelkező feladatokat"
 
-#: taskcoachlib\gui\uicommand.py:1332
+#: taskcoachlib\gui\uicommand.py:1333
 msgid "Create a new task from a template"
 msgstr "Új feladat létrehozása sablonból"
 
-#: taskcoachlib\gui\uicommand.py:1338
+#: taskcoachlib\gui\uicommand.py:1339
 msgid "New task with selected categories..."
 msgstr "Új feladat kiválasztott kategóriákkal..."
 
-#: taskcoachlib\gui\uicommand.py:1339
+#: taskcoachlib\gui\uicommand.py:1340
 msgid "Insert a new task with the selected categories checked"
 msgstr "Új feladat beillesztése a kijelölt kategóriákkal"
 
-#: taskcoachlib\gui\uicommand.py:1367
+#: taskcoachlib\gui\uicommand.py:1368
 msgid "&Mark task completed\tCtrl+RETURN"
 msgstr "&Feladat jelölése teljesítettként\tCtrl+RETURN"
 
-#: taskcoachlib\gui\uicommand.py:1368
+#: taskcoachlib\gui\uicommand.py:1369
 msgid "Mark the selected task(s) completed"
 msgstr "Kiválasztott feladat(ok) teljesítése"
 
-#: taskcoachlib\gui\uicommand.py:1429
+#: taskcoachlib\gui\uicommand.py:1425
 msgid "&Mark task uncompleted\tCtrl+RETURN"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:1435
+#: taskcoachlib\gui\uicommand.py:1433
 msgid "Mark the selected task(s) uncompleted"
 msgstr "Kiválasztott feladat nem teljesítettként megjelölése"
 
-#: taskcoachlib\gui\uicommand.py:1457
+#: taskcoachlib\gui\uicommand.py:1451
 msgid "Maximize priority\tShift+Ctrl+I"
 msgstr "Prioritás maximálása\tShift+Ctrl+I"
 
-#: taskcoachlib\gui\uicommand.py:1458
+#: taskcoachlib\gui\uicommand.py:1452
 msgid "Make the selected task(s) the highest priority task(s)"
 msgstr "A kiválasztott feladat legyen a legmagasabb prioritású"
 
-#: taskcoachlib\gui\uicommand.py:1470
+#: taskcoachlib\gui\uicommand.py:1464
 msgid "Minimize priority\tShift+Ctrl+D"
 msgstr "Prioritás minimalizálása\tShift+Ctrl+D"
 
-#: taskcoachlib\gui\uicommand.py:1471
+#: taskcoachlib\gui\uicommand.py:1465
 msgid "Make the selected task(s) the lowest priority task(s)"
 msgstr "A kiválasztott feladat legyen a legalacsonyabb prioritású"
 
-#: taskcoachlib\gui\uicommand.py:1483
+#: taskcoachlib\gui\uicommand.py:1477
 msgid "Increase priority\tCtrl+I"
 msgstr "Prioritás növelése\tCtrl+I"
 
-#: taskcoachlib\gui\uicommand.py:1484
+#: taskcoachlib\gui\uicommand.py:1478
 msgid "Increase the priority of the selected task(s)"
 msgstr "Kiválasztott feladat prioritásának növelése"
 
-#: taskcoachlib\gui\uicommand.py:1496
+#: taskcoachlib\gui\uicommand.py:1490
 msgid "Decrease priority\tCtrl+D"
 msgstr "Prioritás csökkentése\tCtrl+D"
 
-#: taskcoachlib\gui\uicommand.py:1497
+#: taskcoachlib\gui\uicommand.py:1491
 msgid "Decrease the priority of the selected task(s)"
 msgstr "Kiválasztott feladat prioritásának csökkentése"
 
-#: taskcoachlib\gui\uicommand.py:1534
+#: taskcoachlib\gui\uicommand.py:1528
 msgid "Toggle %s"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:1592
+#: taskcoachlib\gui\uicommand.py:1589
 msgid ""
 "Cannot send email:\n"
 "%s"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:1593
+#: taskcoachlib\gui\uicommand.py:1590
 msgid "%s mail error"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:1598
+#: taskcoachlib\gui\uicommand.py:1595
 msgid "Mail task"
 msgstr "Feladat küldése emailben"
 
-#: taskcoachlib\gui\uicommand.py:1599
+#: taskcoachlib\gui\uicommand.py:1596
 msgid "Mail the task, using your default mailer"
 msgstr "Feladat küldése emailben, az alapértelmezett levelezővel"
 
-#: taskcoachlib\gui\uicommand.py:1608
+#: taskcoachlib\gui\uicommand.py:1605
 msgid "Mail note"
 msgstr "Jegyzet küldése emailben"
 
-#: taskcoachlib\gui\uicommand.py:1609
+#: taskcoachlib\gui\uicommand.py:1606
 msgid "Mail the note, using your default mailer"
 msgstr "Jegyzet küldése emailben, az alapértelmezett levelezővel"
 
-#: taskcoachlib\gui\uicommand.py:1618 taskcoachlib\gui\uicommand.py:1634
-#: taskcoachlib\gui\uicommand.py:1650
+#: taskcoachlib\gui\uicommand.py:1615 taskcoachlib\gui\uicommand.py:1631
+#: taskcoachlib\gui\uicommand.py:1647
 msgid "Add &note"
 msgstr "&Jegyzet hozzáadása"
 
-#: taskcoachlib\gui\uicommand.py:1619
+#: taskcoachlib\gui\uicommand.py:1616
 msgid "Add a note to the selected task(s)"
 msgstr "Jegyzet hozzáadása a kiválasztott feladathoz"
 
-#: taskcoachlib\gui\uicommand.py:1635
+#: taskcoachlib\gui\uicommand.py:1632
 msgid "Add a note to the selected category(ies)"
 msgstr "Jegyzet hozzáadása a kiválasztott kategóriához"
 
-#: taskcoachlib\gui\uicommand.py:1651
+#: taskcoachlib\gui\uicommand.py:1648
 msgid "Add a note to the selected attachment(s)"
 msgstr "Jegyzet hozzáadása a kiválasztott melléklethez"
 
-#: taskcoachlib\gui\uicommand.py:1665
+#: taskcoachlib\gui\uicommand.py:1662
 msgid "&Add attachment"
 msgstr "Melléklet hozzá&adása"
 
-#: taskcoachlib\gui\uicommand.py:1688
+#: taskcoachlib\gui\uicommand.py:1685
 msgid "Browse for files to add as attachment to the selected task(s)"
 msgstr ""
 "Fileok tallózása a kiválasztott feladathoz mellékletként való hozzáadáshoz"
 
-#: taskcoachlib\gui\uicommand.py:1695
+#: taskcoachlib\gui\uicommand.py:1692
 msgid "Browse for files to add as attachment to the selected categories"
 msgstr ""
 "Fileok tallózása a kiválasztott kategóriához mellékletként való hozzáadáshoz"
 
-#: taskcoachlib\gui\uicommand.py:1702
+#: taskcoachlib\gui\uicommand.py:1699
 msgid "Browse for files to add as attachment to the selected note(s)"
 msgstr ""
 "Fileok tallózása a kiválasztott jegyzethez mellékletként való hozzáadáshoz"
 
-#: taskcoachlib\gui\uicommand.py:1710
+#: taskcoachlib\gui\uicommand.py:1707
 msgid "&Open all attachments"
 msgstr "Összes melléklet &megnyitása"
 
-#: taskcoachlib\gui\uicommand.py:1721 taskcoachlib\gui\uicommand.py:1993
+#: taskcoachlib\gui\uicommand.py:1718 taskcoachlib\gui\uicommand.py:1990
 msgid "Error opening attachment"
 msgstr "Melléklet megnyitási hiba"
 
-#: taskcoachlib\gui\uicommand.py:1728
+#: taskcoachlib\gui\uicommand.py:1725
 msgid "Open all attachments of the selected task(s)"
 msgstr "Kiválasztott feladat összes mellékletének megnyitása"
 
-#: taskcoachlib\gui\uicommand.py:1735
+#: taskcoachlib\gui\uicommand.py:1732
 msgid "Open all attachments of the selected categories"
 msgstr "Kiválasztott kategória összes mellékletének megnyitása"
 
-#: taskcoachlib\gui\uicommand.py:1742
+#: taskcoachlib\gui\uicommand.py:1739
 msgid "Open all attachments of the selected note(s)"
 msgstr "Kiválasztott jegyzet összes mellékletének megnyitása"
 
-#: taskcoachlib\gui\uicommand.py:1789
+#: taskcoachlib\gui\uicommand.py:1786
 msgid "Start tracking effort for the selected task(s)"
 msgstr "Ráfordított idő mérésének indítása a kijelölt feladatoknál"
 
-#: taskcoachlib\gui\uicommand.py:1810
+#: taskcoachlib\gui\uicommand.py:1807
 msgid "(No subject)"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:1813
+#: taskcoachlib\gui\uicommand.py:1810
 msgid "Start tracking effort for %s"
 msgstr "%s ráfordítási idő mérésének indítása"
 
-#: taskcoachlib\gui\uicommand.py:1829
+#: taskcoachlib\gui\uicommand.py:1826
 msgid "Select a task via the menu and start tracking effort for it"
 msgstr "Feladat választása a menüből és a ráfordítási idő mérés indítása"
 
-#: taskcoachlib\gui\uicommand.py:1843
+#: taskcoachlib\gui\uicommand.py:1840
 msgid "St&op tracking effort"
 msgstr "Ráfordított idő mérésének leállítása"
 
-#: taskcoachlib\gui\uicommand.py:1844
+#: taskcoachlib\gui\uicommand.py:1841
 msgid "Stop tracking effort for the active task(s)"
 msgstr "Ráfordított idő mérésének leállítása az aktív feladatoknál"
 
-#: taskcoachlib\gui\uicommand.py:1921
+#: taskcoachlib\gui\uicommand.py:1918
 msgid "New note with selected categories..."
 msgstr "Új jegyzet a kiválasztott kategóriákhoz..."
 
-#: taskcoachlib\gui\uicommand.py:1922
+#: taskcoachlib\gui\uicommand.py:1919
 msgid "Insert a new note with the selected categories checked"
 msgstr "Új jegyzet hozzáadása a kiválasztott kategóriákhoz"
 
-#: taskcoachlib\gui\uicommand.py:2027
+#: taskcoachlib\gui\uicommand.py:2024
 msgid "&Help contents\tCtrl+?"
 msgstr "&Súgó\tCtrl+?"
 
-#: taskcoachlib\gui\uicommand.py:2030
+#: taskcoachlib\gui\uicommand.py:2027
 msgid "&Help contents\tCtrl+H"
 msgstr "&Súgó\tCtrl+H"
 
-#: taskcoachlib\gui\uicommand.py:2032
+#: taskcoachlib\gui\uicommand.py:2029
 msgid "Help about the program"
 msgstr "Súgó a programhoz"
 
-#: taskcoachlib\gui\uicommand.py:2033
+#: taskcoachlib\gui\uicommand.py:2030
 msgid "Help"
 msgstr "Súgó"
 
-#: taskcoachlib\gui\uicommand.py:2039
+#: taskcoachlib\gui\uicommand.py:2036
 msgid "&Tips"
 msgstr "&Tipp"
 
-#: taskcoachlib\gui\uicommand.py:2040
+#: taskcoachlib\gui\uicommand.py:2037
 msgid "Tips about the program"
 msgstr "Tippek a program használatához"
 
-#: taskcoachlib\gui\uicommand.py:2053
+#: taskcoachlib\gui\uicommand.py:2050
 msgid "&About %s"
 msgstr "%s &Névjegy"
 
-#: taskcoachlib\gui\uicommand.py:2054
+#: taskcoachlib\gui\uicommand.py:2051
 msgid "Version and contact information about %s"
 msgstr "%s verzió és kapcsolat információk"
 
-#: taskcoachlib\gui\uicommand.py:2055
+#: taskcoachlib\gui\uicommand.py:2052
 msgid "Help: About %s"
 msgstr "Súgó: %s névjegy"
 
-#: taskcoachlib\gui\uicommand.py:2061
+#: taskcoachlib\gui\uicommand.py:2058
 msgid "&License"
 msgstr "&Liszensz"
 
-#: taskcoachlib\gui\uicommand.py:2062
+#: taskcoachlib\gui\uicommand.py:2059
 msgid "%s license"
 msgstr "%s liszensz"
 
-#: taskcoachlib\gui\uicommand.py:2063
+#: taskcoachlib\gui\uicommand.py:2060
 msgid "Help: %s license"
 msgstr "Súgó: %s liszensz"
 
-#: taskcoachlib\gui\uicommand.py:2070
+#: taskcoachlib\gui\uicommand.py:2067
 msgid "&Restore"
 msgstr "&Visszaállítás"
 
-#: taskcoachlib\gui\uicommand.py:2071
+#: taskcoachlib\gui\uicommand.py:2068
 msgid "Restore the window to its previous state"
 msgstr "Ablak visszaállítása előző állapotába"
 
-#: taskcoachlib\gui\uicommand.py:2122
+#: taskcoachlib\gui\uicommand.py:2119
 msgid "Effort details"
 msgstr "Ráfordítás részletezése"
 
-#: taskcoachlib\gui\uicommand.py:2122
+#: taskcoachlib\gui\uicommand.py:2119
 msgid "Effort per day"
 msgstr "Ráfordítás per nap"
 
-#: taskcoachlib\gui\uicommand.py:2123
+#: taskcoachlib\gui\uicommand.py:2120
 msgid "Effort per month"
 msgstr "Ráfordítás per hó"
 
-#: taskcoachlib\gui\uicommand.py:2123
+#: taskcoachlib\gui\uicommand.py:2120
 msgid "Effort per week"
 msgstr "Ráfordítás per hét"
 
-#: taskcoachlib\gui\uicommand.py:2131
+#: taskcoachlib\gui\uicommand.py:2128
 msgid "List of tasks"
 msgstr "Feladatok listája"
 
-#: taskcoachlib\gui\uicommand.py:2131
+#: taskcoachlib\gui\uicommand.py:2128
 msgid "Tree of tasks"
 msgstr "Feladatok szerkezete"
 
-#: taskcoachlib\gui\uicommand.py:2139
+#: taskcoachlib\gui\uicommand.py:2136
 msgid "Filter on all checked categories"
 msgstr "Valamennyi kiválasztott kategória szűrése"
 
-#: taskcoachlib\gui\uicommand.py:2140
+#: taskcoachlib\gui\uicommand.py:2137
 msgid "Filter on any checked category"
 msgstr "A kiválasztott kategória szűrése"
 
-#: taskcoachlib\gui\uicommand.py:2158
+#: taskcoachlib\gui\uicommand.py:2155
 msgid "&Automatic column resizing"
 msgstr "Oszlop &automatikus átméretezése"
 
-#: taskcoachlib\gui\uicommand.py:2159
+#: taskcoachlib\gui\uicommand.py:2156
 msgid "When checked, automatically resize columns to fill available space"
 msgstr ""
 "A kiválasztott oszlop automatikus átméretezése a rendelkezésre álló hely "
 "szerint"
 
-#: taskcoachlib\gui\viewer\attachment.py:65
+#: taskcoachlib\gui\viewer\attachment.py:68
 msgid "Type"
 msgstr "Típus"
 
-#: taskcoachlib\gui\viewer\attachment.py:75
+#: taskcoachlib\gui\viewer\attachment.py:78
 msgid "Sort by subject"
 msgstr "Rendezés tárgy szerint"
 
-#: taskcoachlib\gui\viewer\attachment.py:75
+#: taskcoachlib\gui\viewer\attachment.py:78
 #: taskcoachlib\gui\viewer\mixin.py:337 taskcoachlib\gui\viewer\mixin.py:383
 #: taskcoachlib\gui\viewer\mixin.py:403
 msgid "Sub&ject"
 msgstr "&Tárgy"
 
-#: taskcoachlib\gui\viewer\attachment.py:83
-#: taskcoachlib\gui\viewer\attachment.py:102
-#: taskcoachlib\gui\viewer\category.py:70
-#: taskcoachlib\gui\viewer\category.py:141
+#: taskcoachlib\gui\viewer\attachment.py:86
+#: taskcoachlib\gui\viewer\attachment.py:105
+#: taskcoachlib\gui\viewer\category.py:73
+#: taskcoachlib\gui\viewer\category.py:144
 #: taskcoachlib\gui\viewer\effort.py:230 taskcoachlib\gui\viewer\mixin.py:338
 #: taskcoachlib\gui\viewer\mixin.py:386 taskcoachlib\gui\viewer\mixin.py:406
-#: taskcoachlib\gui\viewer\note.py:101 taskcoachlib\gui\viewer\note.py:127
-#: taskcoachlib\gui\viewer\task.py:650
+#: taskcoachlib\gui\viewer\note.py:105 taskcoachlib\gui\viewer\note.py:131
+#: taskcoachlib\gui\viewer\task.py:653
 msgid "&Description"
 msgstr "&Leírás"
 
-#: taskcoachlib\gui\viewer\attachment.py:83
+#: taskcoachlib\gui\viewer\attachment.py:86
 #: taskcoachlib\gui\viewer\mixin.py:338
 msgid "Sort by description"
 msgstr "Rendezés leírás szerint"
 
-#: taskcoachlib\gui\viewer\attachment.py:103
-#: taskcoachlib\gui\viewer\category.py:71
-#: taskcoachlib\gui\viewer\category.py:142
-#: taskcoachlib\gui\viewer\effort.py:231 taskcoachlib\gui\viewer\note.py:102
-#: taskcoachlib\gui\viewer\task.py:651
+#: taskcoachlib\gui\viewer\attachment.py:106
+#: taskcoachlib\gui\viewer\category.py:74
+#: taskcoachlib\gui\viewer\category.py:145
+#: taskcoachlib\gui\viewer\effort.py:231 taskcoachlib\gui\viewer\note.py:106
+#: taskcoachlib\gui\viewer\task.py:654
 msgid "Show/hide description column"
 msgstr "Megmutatja/elrejti a leírás oszlopot"
 
-#: taskcoachlib\gui\viewer\attachment.py:105
-#: taskcoachlib\gui\viewer\category.py:148 taskcoachlib\gui\viewer\task.py:658
+#: taskcoachlib\gui\viewer\attachment.py:108
+#: taskcoachlib\gui\viewer\category.py:151 taskcoachlib\gui\viewer\task.py:661
 msgid "&Notes"
 msgstr "Meg&jegyzések"
 
-#: taskcoachlib\gui\viewer\attachment.py:106
-#: taskcoachlib\gui\viewer\category.py:149 taskcoachlib\gui\viewer\task.py:659
+#: taskcoachlib\gui\viewer\attachment.py:109
+#: taskcoachlib\gui\viewer\category.py:152 taskcoachlib\gui\viewer\task.py:662
 msgid "Show/hide notes column"
 msgstr "Megmutatja/elrejti a megjegyzések oszlopot"
 
-#: taskcoachlib\gui\viewer\category.py:73
-#: taskcoachlib\gui\viewer\category.py:144 taskcoachlib\gui\viewer\note.py:104
-#: taskcoachlib\gui\viewer\task.py:653
+#: taskcoachlib\gui\viewer\category.py:76
+#: taskcoachlib\gui\viewer\category.py:147 taskcoachlib\gui\viewer\note.py:108
+#: taskcoachlib\gui\viewer\task.py:656
 msgid "&Attachments"
 msgstr "&Mellékletek"
 
-#: taskcoachlib\gui\viewer\category.py:74
-#: taskcoachlib\gui\viewer\category.py:145 taskcoachlib\gui\viewer\note.py:105
+#: taskcoachlib\gui\viewer\category.py:77
+#: taskcoachlib\gui\viewer\category.py:148 taskcoachlib\gui\viewer\note.py:109
 msgid "Show/hide attachments column"
 msgstr "Megmutatja/elrejti a melléklet oszlopot"
 
@@ -2230,17 +2241,17 @@ msgstr "Periódus"
 
 #: taskcoachlib\gui\viewer\effort.py:160 taskcoachlib\gui\viewer\effort.py:236
 #: taskcoachlib\gui\viewer\mixin.py:340 taskcoachlib\gui\viewer\mixin.py:392
-#: taskcoachlib\gui\viewer\mixin.py:412 taskcoachlib\gui\viewer\note.py:110
-#: taskcoachlib\gui\viewer\note.py:137 taskcoachlib\gui\viewer\task.py:530
-#: taskcoachlib\gui\viewer\task.py:665
+#: taskcoachlib\gui\viewer\mixin.py:412 taskcoachlib\gui\viewer\note.py:114
+#: taskcoachlib\gui\viewer\note.py:141 taskcoachlib\gui\viewer\task.py:533
+#: taskcoachlib\gui\viewer\task.py:668
 msgid "Overall categories"
 msgstr "Általános kategóriák"
 
-#: taskcoachlib\gui\viewer\effort.py:173 taskcoachlib\gui\viewer\task.py:553
+#: taskcoachlib\gui\viewer\effort.py:173 taskcoachlib\gui\viewer\task.py:556
 msgid "Total time spent"
 msgstr "Ráfordított összes idő"
 
-#: taskcoachlib\gui\viewer\effort.py:175 taskcoachlib\gui\viewer\task.py:562
+#: taskcoachlib\gui\viewer\effort.py:175 taskcoachlib\gui\viewer\task.py:565
 msgid "Total revenue"
 msgstr "Összes bevétel"
 
@@ -2272,31 +2283,31 @@ msgstr "Szombat"
 msgid "Sunday"
 msgstr "Vasárnap"
 
-#: taskcoachlib\gui\viewer\effort.py:233 taskcoachlib\gui\viewer\note.py:107
-#: taskcoachlib\gui\viewer\note.py:131 taskcoachlib\gui\viewer\task.py:662
+#: taskcoachlib\gui\viewer\effort.py:233 taskcoachlib\gui\viewer\note.py:111
+#: taskcoachlib\gui\viewer\note.py:135 taskcoachlib\gui\viewer\task.py:665
 msgid "&Categories"
 msgstr "&Kategóriák"
 
 #: taskcoachlib\gui\viewer\effort.py:234 taskcoachlib\gui\viewer\effort.py:237
-#: taskcoachlib\gui\viewer\note.py:108 taskcoachlib\gui\viewer\task.py:663
+#: taskcoachlib\gui\viewer\note.py:112 taskcoachlib\gui\viewer\task.py:666
 msgid "Show/hide categories column"
 msgstr "Megmutatja/elrejti a kategória oszlopot"
 
 #: taskcoachlib\gui\viewer\effort.py:239 taskcoachlib\gui\viewer\mixin.py:348
-#: taskcoachlib\gui\viewer\task.py:614
+#: taskcoachlib\gui\viewer\task.py:617
 msgid "&Time spent"
 msgstr "&Ráfordított idő"
 
-#: taskcoachlib\gui\viewer\effort.py:240 taskcoachlib\gui\viewer\task.py:615
+#: taskcoachlib\gui\viewer\effort.py:240 taskcoachlib\gui\viewer\task.py:618
 msgid "Show/hide time spent column"
 msgstr "Megjeleníti/elrejti a ráfordított idő oszlopot"
 
 #: taskcoachlib\gui\viewer\effort.py:242 taskcoachlib\gui\viewer\mixin.py:357
-#: taskcoachlib\gui\viewer\task.py:643
+#: taskcoachlib\gui\viewer\task.py:646
 msgid "&Revenue"
 msgstr "&Bevétel"
 
-#: taskcoachlib\gui\viewer\effort.py:243 taskcoachlib\gui\viewer\task.py:644
+#: taskcoachlib\gui\viewer\effort.py:243 taskcoachlib\gui\viewer\task.py:647
 msgid "Show/hide revenue column"
 msgstr "Megmutatja/elrejti a bevétel oszlopot"
 
@@ -2312,7 +2323,7 @@ msgstr "Megmutatja/elrejti az összes eltelt idő oszlopot"
 msgid "Total &revenue"
 msgstr "Összes &bevétel"
 
-#: taskcoachlib\gui\viewer\effort.py:253 taskcoachlib\gui\viewer\task.py:647
+#: taskcoachlib\gui\viewer\effort.py:253 taskcoachlib\gui\viewer\task.py:650
 msgid "Show/hide total revenue column"
 msgstr "Megmutatja/elrejti az összes bevétel oszlopot"
 
@@ -2412,7 +2423,7 @@ msgstr "Rendezés általános kategória szerint"
 msgid "Sort tasks by start date"
 msgstr "Feladatok rendezése kezdő dátum szerint"
 
-#: taskcoachlib\gui\viewer\mixin.py:341 taskcoachlib\gui\viewer\task.py:584
+#: taskcoachlib\gui\viewer\mixin.py:341 taskcoachlib\gui\viewer\task.py:587
 msgid "&Start date"
 msgstr "&Kezdés dátuma"
 
@@ -2420,7 +2431,7 @@ msgstr "&Kezdés dátuma"
 msgid "Sort tasks by due date"
 msgstr "Feladatok rendezése határidő szerint"
 
-#: taskcoachlib\gui\viewer\mixin.py:342 taskcoachlib\gui\viewer\task.py:587
+#: taskcoachlib\gui\viewer\mixin.py:342 taskcoachlib\gui\viewer\task.py:590
 msgid "&Due date"
 msgstr "H&atáridő"
 
@@ -2436,7 +2447,7 @@ msgstr "Feladatok rendezése teljesítési idő szerint"
 msgid "Sort tasks by number of days left"
 msgstr "Feladatok rendezése hátralévő napok szerint"
 
-#: taskcoachlib\gui\viewer\mixin.py:344 taskcoachlib\gui\viewer\task.py:593
+#: taskcoachlib\gui\viewer\mixin.py:344 taskcoachlib\gui\viewer\task.py:596
 msgid "D&ays left"
 msgstr "&Hátralévő napok"
 
@@ -2444,7 +2455,7 @@ msgstr "&Hátralévő napok"
 msgid "Sort tasks by recurrence"
 msgstr "Feladat rendezése ismétlődés szerint"
 
-#: taskcoachlib\gui\viewer\mixin.py:345 taskcoachlib\gui\viewer\task.py:596
+#: taskcoachlib\gui\viewer\mixin.py:345 taskcoachlib\gui\viewer\task.py:599
 msgid "&Recurrence"
 msgstr "&Ismétlődés"
 
@@ -2452,8 +2463,8 @@ msgstr "&Ismétlődés"
 msgid "Sort tasks by budget"
 msgstr "Feladatok rendezése ráfordítható idő szerint"
 
-#: taskcoachlib\gui\viewer\mixin.py:346 taskcoachlib\gui\viewer\task.py:601
-#: taskcoachlib\gui\viewer\task.py:608
+#: taskcoachlib\gui\viewer\mixin.py:346 taskcoachlib\gui\viewer\task.py:604
+#: taskcoachlib\gui\viewer\task.py:611
 msgid "&Budget"
 msgstr "&Ráfordítható idő"
 
@@ -2461,7 +2472,7 @@ msgstr "&Ráfordítható idő"
 msgid "Sort tasks by total budget"
 msgstr "Feladatok rendezése összes ráfordítható idő szerint"
 
-#: taskcoachlib\gui\viewer\mixin.py:347 taskcoachlib\gui\viewer\task.py:611
+#: taskcoachlib\gui\viewer\mixin.py:347 taskcoachlib\gui\viewer\task.py:614
 msgid "Total b&udget"
 msgstr "&Összes ráfordítható idő"
 
@@ -2473,7 +2484,7 @@ msgstr "Feladatok rendezése ráfordított idő szerint"
 msgid "Sort tasks by total time spent"
 msgstr "Feladatok rendezése összes ráfordított idő szerint"
 
-#: taskcoachlib\gui\viewer\mixin.py:349 taskcoachlib\gui\viewer\task.py:617
+#: taskcoachlib\gui\viewer\mixin.py:349 taskcoachlib\gui\viewer\task.py:620
 msgid "T&otal time spent"
 msgstr "Rá&fordított összes idő"
 
@@ -2481,7 +2492,7 @@ msgstr "Rá&fordított összes idő"
 msgid "Sort tasks by budget left"
 msgstr "Feladatok rendezése maradék ráfordítható idő szerint"
 
-#: taskcoachlib\gui\viewer\mixin.py:350 taskcoachlib\gui\viewer\task.py:620
+#: taskcoachlib\gui\viewer\mixin.py:350 taskcoachlib\gui\viewer\task.py:623
 msgid "Budget &left"
 msgstr "Maradék ráfordítható idő"
 
@@ -2489,7 +2500,7 @@ msgstr "Maradék ráfordítható idő"
 msgid "Sort tasks by total budget left"
 msgstr "Feladatok rendezése összes maradék ráfordítható idő szerint"
 
-#: taskcoachlib\gui\viewer\mixin.py:351 taskcoachlib\gui\viewer\task.py:623
+#: taskcoachlib\gui\viewer\mixin.py:351 taskcoachlib\gui\viewer\task.py:626
 msgid "Total budget l&eft"
 msgstr "Összes maradék ráfordítható idő"
 
@@ -2497,7 +2508,7 @@ msgstr "Összes maradék ráfordítható idő"
 msgid "Sort tasks by priority"
 msgstr "Feladatok rendezése priorítás szerint"
 
-#: taskcoachlib\gui\viewer\mixin.py:352 taskcoachlib\gui\viewer\task.py:668
+#: taskcoachlib\gui\viewer\mixin.py:352 taskcoachlib\gui\viewer\task.py:671
 msgid "&Priority"
 msgstr "&Priorítás"
 
@@ -2505,7 +2516,7 @@ msgstr "&Priorítás"
 msgid "Sort tasks by overall priority"
 msgstr "Feladatok rendezése összegzett priorítás szerint"
 
-#: taskcoachlib\gui\viewer\mixin.py:353 taskcoachlib\gui\viewer\task.py:557
+#: taskcoachlib\gui\viewer\mixin.py:353 taskcoachlib\gui\viewer\task.py:560
 msgid "Overall priority"
 msgstr "Összegzett priorítás"
 
@@ -2513,7 +2524,7 @@ msgstr "Összegzett priorítás"
 msgid "Sort tasks by hourly fee"
 msgstr "Feladatok rendezése óradíj szerint"
 
-#: taskcoachlib\gui\viewer\mixin.py:354 taskcoachlib\gui\viewer\task.py:634
+#: taskcoachlib\gui\viewer\mixin.py:354 taskcoachlib\gui\viewer\task.py:637
 msgid "&Hourly fee"
 msgstr "&Óradíj"
 
@@ -2521,7 +2532,7 @@ msgstr "&Óradíj"
 msgid "Sort tasks by fixed fee"
 msgstr "Feladatok rendezése fix díj szerint"
 
-#: taskcoachlib\gui\viewer\mixin.py:355 taskcoachlib\gui\viewer\task.py:637
+#: taskcoachlib\gui\viewer\mixin.py:355 taskcoachlib\gui\viewer\task.py:640
 msgid "&Fixed fee"
 msgstr "&Fix díj"
 
@@ -2549,7 +2560,7 @@ msgstr "Összes be&vétel"
 msgid "Sort tasks by reminder date and time"
 msgstr "Feladatok rendezése az emlékeztető dátuma és időpontja szerint"
 
-#: taskcoachlib\gui\viewer\mixin.py:359 taskcoachlib\gui\viewer\task.py:674
+#: taskcoachlib\gui\viewer\mixin.py:359 taskcoachlib\gui\viewer\task.py:677
 msgid "&Reminder"
 msgstr "Emléke&ztető"
 
@@ -2569,11 +2580,11 @@ msgstr "Mellékletek rendezése kategória szerint"
 msgid "Sort attachments by overall categories"
 msgstr "Mellékletek rendezése kiemelt kategória szerint"
 
-#: taskcoachlib\gui\viewer\mixin.py:404 taskcoachlib\gui\viewer\note.py:124
+#: taskcoachlib\gui\viewer\mixin.py:404 taskcoachlib\gui\viewer\note.py:128
 msgid "Sort notes by subject"
 msgstr "Jegyzetek rendezése kategória szerint"
 
-#: taskcoachlib\gui\viewer\mixin.py:407 taskcoachlib\gui\viewer\note.py:128
+#: taskcoachlib\gui\viewer\mixin.py:407 taskcoachlib\gui\viewer\note.py:132
 msgid "Sort notes by description"
 msgstr "Jegyzetek rendezése leírás szerint"
 
@@ -2581,31 +2592,31 @@ msgstr "Jegyzetek rendezése leírás szerint"
 msgid "Sort notes by category"
 msgstr "Jegyzetek rendezése kategória szerint"
 
-#: taskcoachlib\gui\viewer\mixin.py:413 taskcoachlib\gui\viewer\note.py:138
+#: taskcoachlib\gui\viewer\mixin.py:413 taskcoachlib\gui\viewer\note.py:142
 msgid "Sort notes by overall categories"
 msgstr "Jegyzetek rendezése kiemelt kategória szerint"
 
-#: taskcoachlib\gui\viewer\note.py:111 taskcoachlib\gui\viewer\task.py:666
+#: taskcoachlib\gui\viewer\note.py:115 taskcoachlib\gui\viewer\task.py:669
 msgid "Show/hide overall categories column"
 msgstr "Megmutatja/elrejti az általános kategória oszlopot"
 
-#: taskcoachlib\gui\viewer\note.py:124
+#: taskcoachlib\gui\viewer\note.py:128
 msgid "&Subject"
 msgstr "&Tárgy"
 
-#: taskcoachlib\gui\viewer\note.py:132
+#: taskcoachlib\gui\viewer\note.py:136
 msgid "Sort notes by categories"
 msgstr "Jegyzetek rendezése kategória szerint"
 
-#: taskcoachlib\gui\viewer\note.py:138
+#: taskcoachlib\gui\viewer\note.py:142
 msgid "&Overall categories"
 msgstr "&Kiemelt kategóriák"
 
-#: taskcoachlib\gui\viewer\note.py:184
+#: taskcoachlib\gui\viewer\note.py:185
 msgid "Notes: %d selected, %d total"
 msgstr "Jegyzetek: kiválasztva %d, összesen %d"
 
-#: taskcoachlib\gui\viewer\note.py:186
+#: taskcoachlib\gui\viewer\note.py:187
 msgid "Status: n/a"
 msgstr "Státusz: nem meghatározott"
 
@@ -2617,90 +2628,90 @@ msgstr "Feladatok: kiválasztott %d, megjelenített %d, összesen %d"
 msgid "Status: %d over due, %d inactive, %d completed"
 msgstr "Státusz: %d lejárt, %d inaktív, %d teljesített"
 
-#: taskcoachlib\gui\viewer\task.py:243
+#: taskcoachlib\gui\viewer\task.py:240
 msgid "Timeline"
 msgstr ""
 
-#: taskcoachlib\gui\viewer\task.py:341
+#: taskcoachlib\gui\viewer\task.py:338
 msgid "Now"
 msgstr ""
 
-#: taskcoachlib\gui\viewer\task.py:357
+#: taskcoachlib\gui\viewer\task.py:354
 msgid "Task square map"
 msgstr ""
 
-#: taskcoachlib\gui\viewer\task.py:547
+#: taskcoachlib\gui\viewer\task.py:550
 msgid "Days left"
 msgstr "Hátralévő idő"
 
-#: taskcoachlib\gui\viewer\task.py:551
+#: taskcoachlib\gui\viewer\task.py:554
 msgid "Total budget"
 msgstr "Összes ráfordítható idő"
 
-#: taskcoachlib\gui\viewer\task.py:555
+#: taskcoachlib\gui\viewer\task.py:558
 msgid "Total budget left"
 msgstr "Összes maradék ráfordítható idő"
 
-#: taskcoachlib\gui\viewer\task.py:560
+#: taskcoachlib\gui\viewer\task.py:563
 msgid "Total fixed fee"
 msgstr "Összes fix díj"
 
-#: taskcoachlib\gui\viewer\task.py:577
+#: taskcoachlib\gui\viewer\task.py:580
 msgid "&Dates"
 msgstr "&Dátumok"
 
-#: taskcoachlib\gui\viewer\task.py:578
+#: taskcoachlib\gui\viewer\task.py:581
 msgid "All date columns"
 msgstr "Összes dátum oszlop"
 
-#: taskcoachlib\gui\viewer\task.py:579
+#: taskcoachlib\gui\viewer\task.py:582
 msgid "Show/hide all date-related columns"
 msgstr "Megmutatja/elrejti az összes dátum-függő oszlopot"
 
-#: taskcoachlib\gui\viewer\task.py:585
+#: taskcoachlib\gui\viewer\task.py:588
 msgid "Show/hide start date column"
 msgstr "Megjeleníti/elrejti kezdés dátuma oszlopot"
 
-#: taskcoachlib\gui\viewer\task.py:588
+#: taskcoachlib\gui\viewer\task.py:591
 msgid "Show/hide due date column"
 msgstr "Megjeleníti/elrejti a határidő oszlopot"
 
-#: taskcoachlib\gui\viewer\task.py:590
+#: taskcoachlib\gui\viewer\task.py:593
 msgid "Co&mpletion date"
 msgstr "T&eljesítés dátuma"
 
-#: taskcoachlib\gui\viewer\task.py:591
+#: taskcoachlib\gui\viewer\task.py:594
 msgid "Show/hide completion date column"
 msgstr "Megjeleníti/elrejti a teljesítés dátuma oszlopot"
 
-#: taskcoachlib\gui\viewer\task.py:594
+#: taskcoachlib\gui\viewer\task.py:597
 msgid "Show/hide days left column"
 msgstr "Megjeleníti/elrejti hátralévő napok oszlopot"
 
-#: taskcoachlib\gui\viewer\task.py:597
+#: taskcoachlib\gui\viewer\task.py:600
 msgid "Show/hide recurrence column"
 msgstr "Megmutatja/elrejti az ismétlődés oszlopot"
 
-#: taskcoachlib\gui\viewer\task.py:602
+#: taskcoachlib\gui\viewer\task.py:605
 msgid "All budget columns"
 msgstr "Valamennyi ráfordítás oszlop"
 
-#: taskcoachlib\gui\viewer\task.py:603
+#: taskcoachlib\gui\viewer\task.py:606
 msgid "Show/hide all budget-related columns"
 msgstr "Megmutatja/elrejti a ráfordítás-függő oszlopokat"
 
-#: taskcoachlib\gui\viewer\task.py:609
+#: taskcoachlib\gui\viewer\task.py:612
 msgid "Show/hide budget column"
 msgstr "Megjeleníti/elrejti a ráfordítható idő oszlopot"
 
-#: taskcoachlib\gui\viewer\task.py:612
+#: taskcoachlib\gui\viewer\task.py:615
 msgid ""
 "Show/hide total budget column (total budget includes budget for subtasks)"
 msgstr ""
 "Megjeleníti/elrejti az összegzett ráfordítható idő oszlopot (összegzett "
 "ráfordítható idő tartalmazza a részfeladatokra ráfordítotható időt is)"
 
-#: taskcoachlib\gui\viewer\task.py:618
+#: taskcoachlib\gui\viewer\task.py:621
 msgid ""
 "Show/hide total time spent column (total time includes time spent on "
 "subtasks)"
@@ -2708,11 +2719,11 @@ msgstr ""
 "Megjeleníti/elrejti az összegzett ráfordított idő oszlopot (összegzett idő "
 "tartalmazza a részfeladatokra ráfordított időt is)"
 
-#: taskcoachlib\gui\viewer\task.py:621
+#: taskcoachlib\gui\viewer\task.py:624
 msgid "Show/hide budget left column"
 msgstr "Megjeleníti/elrejti a maradék ráfordítható idő oszlopot"
 
-#: taskcoachlib\gui\viewer\task.py:624
+#: taskcoachlib\gui\viewer\task.py:627
 msgid ""
 "Show/hide total budget left column (total budget left includes budget left "
 "for subtasks)"
@@ -2720,51 +2731,51 @@ msgstr ""
 "Megjeleníti/elrejti az összegzett ráfordítható idő összlopot (összegzett "
 "ráfordítható idő tartalmazza a részfeladatok ráfordítható idejét is)"
 
-#: taskcoachlib\gui\viewer\task.py:627
+#: taskcoachlib\gui\viewer\task.py:630
 msgid "&Financial"
 msgstr "&Pénzügyi"
 
-#: taskcoachlib\gui\viewer\task.py:628
+#: taskcoachlib\gui\viewer\task.py:631
 msgid "All financial columns"
 msgstr "Összes pénzügyi oszlop"
 
-#: taskcoachlib\gui\viewer\task.py:629
+#: taskcoachlib\gui\viewer\task.py:632
 msgid "Show/hide all finance-related columns"
 msgstr "Megmutatja/elrejti a pénzüggyel összefüggő oszlopokat"
 
-#: taskcoachlib\gui\viewer\task.py:635
+#: taskcoachlib\gui\viewer\task.py:638
 msgid "Show/hide hourly fee column"
 msgstr "Megmutatja/elrejti az óradíj oszlopokat"
 
-#: taskcoachlib\gui\viewer\task.py:638
+#: taskcoachlib\gui\viewer\task.py:641
 msgid "Show/hide fixed fee column"
 msgstr "Megmutatja/elrejti a fix díj oszlopokat"
 
-#: taskcoachlib\gui\viewer\task.py:640
+#: taskcoachlib\gui\viewer\task.py:643
 msgid "&Total fixed fee"
 msgstr "&Összes fix díj"
 
-#: taskcoachlib\gui\viewer\task.py:641
+#: taskcoachlib\gui\viewer\task.py:644
 msgid "Show/hide total fixed fee column"
 msgstr "Megmutatja/elrejti a fix díj oszlopokat"
 
-#: taskcoachlib\gui\viewer\task.py:646
+#: taskcoachlib\gui\viewer\task.py:649
 msgid "T&otal revenue"
 msgstr "&Összes bevétel"
 
-#: taskcoachlib\gui\viewer\task.py:654
+#: taskcoachlib\gui\viewer\task.py:657
 msgid "Show/hide attachment column"
 msgstr "Megmutatja/elrejti a mellékletek oszlopot"
 
-#: taskcoachlib\gui\viewer\task.py:669
+#: taskcoachlib\gui\viewer\task.py:672
 msgid "Show/hide priority column"
 msgstr "Megmutatja/elrejti a prioritás oszlopot"
 
-#: taskcoachlib\gui\viewer\task.py:671
+#: taskcoachlib\gui\viewer\task.py:674
 msgid "O&verall priority"
 msgstr "Ö&sszegzett priorítás"
 
-#: taskcoachlib\gui\viewer\task.py:672
+#: taskcoachlib\gui\viewer\task.py:675
 msgid ""
 "Show/hide overall priority column (overall priority is the maximum priority "
 "of a task and all its subtasks"
@@ -2772,7 +2783,7 @@ msgstr ""
 "Megmutatja/elrejti az összegzett prioritás oszlopot (az összegzett prioritás "
 "a feladatok és részfeladatok maximum prioritása)"
 
-#: taskcoachlib\gui\viewer\task.py:675
+#: taskcoachlib\gui\viewer\task.py:678
 msgid "Show/hide reminder column"
 msgstr "Megmutatja/elrejti az emlékeztető oszlopot"
 
@@ -2816,6 +2827,13 @@ msgid ""
 "    <li><a href=\"#syncmlpurge\">Purging deleted items</a></li>\n"
 "  </ul>\n"
 "</li>\n"
+"<li><a href=\"#iphone\">iPhone and iPod Touch</a>\n"
+"  <ul>\n"
+"    <li><a href=\"#taskcoachiphone\">Task Coach on the iPhone</a></li>\n"
+"    <li><a href=\"#iphoneconf\">Configuration</a></li>\n"
+"    <li><a href=\"#iphonetrouble\">Troubleshooting</a></li>\n"
+"  </ul>\n"
+"</li>\n"
 "<li><a href=\"#templates\">Task templates</a>\n"
 "  <ul>\n"
 "    <li><a href=\"#abouttemplates\">About templates</a></li>\n"
@@ -2825,11 +2843,11 @@ msgid ""
 "</ul>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:73
+#: taskcoachlib\help\__init__.py:80
 msgid "<h3><a name=\"tasks\">Tasks</a></h3>\n"
 msgstr "<h3><a name=\"tasks\">Feladat</a></h3>\n"
 
-#: taskcoachlib\help\__init__.py:76
+#: taskcoachlib\help\__init__.py:83
 msgid ""
 "<h4><a name=\"abouttasks\">About tasks</a></h4>\n"
 " \n"
@@ -2841,7 +2859,7 @@ msgid ""
 "numerous activities.</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:84
+#: taskcoachlib\help\__init__.py:91
 msgid ""
 "<h4><a name=\"taskproperties\">Task \n"
 "properties</a></h4>\n"
@@ -2889,7 +2907,7 @@ msgid ""
 "</ul></p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:124
+#: taskcoachlib\help\__init__.py:131
 msgid ""
 "<h4><a name=\"taskstates\">Task states</a></h4>\n"
 "\n"
@@ -2912,7 +2930,7 @@ msgid ""
 " "
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:143
+#: taskcoachlib\help\__init__.py:150
 msgid ""
 "<h4><a name=\"taskcolors\">Task colors</a></h4>\n"
 "\n"
@@ -2932,11 +2950,11 @@ msgid ""
 "<a href=\"#categoryproperties\">category properties</a> below.</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:160
+#: taskcoachlib\help\__init__.py:167
 msgid "<h3><a name=\"effort\">Effort</a></h3>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:163
+#: taskcoachlib\help\__init__.py:170
 msgid ""
 "<h4><a name=\"abouteffort\">About effort</a></h4>\n"
 "\n"
@@ -2948,7 +2966,7 @@ msgid ""
 "button.</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:171
+#: taskcoachlib\help\__init__.py:178
 msgid ""
 "<h4><a name=\"effortproperties\">Effort\n"
 "properties</a></h4>\n"
@@ -2973,11 +2991,11 @@ msgid ""
 "</ul></p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:193
+#: taskcoachlib\help\__init__.py:200
 msgid "<h3><a name=\"categories\">Categories</a></h3>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:196
+#: taskcoachlib\help\__init__.py:203
 msgid ""
 "<h4><a name=\"aboutcategories\">About \n"
 "categories</a></h4>\n"
@@ -2998,7 +3016,7 @@ msgid ""
 "you need to make.</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:211
+#: taskcoachlib\help\__init__.py:218
 msgid ""
 "<h4><a name=\"categoryproperties\">Category \n"
 "properties</a></h4>\n"
@@ -3013,13 +3031,13 @@ msgid ""
 "task.</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:223
+#: taskcoachlib\help\__init__.py:230
 msgid ""
 "<h3><a name=\"email\">E-mail (Outlook &amp; Thunderbird) "
 "integration</a></h3>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:226
+#: taskcoachlib\help\__init__.py:233
 msgid ""
 "<h4><a name=\"aboutemail\">About e-mail integration</a></h4>\n"
 "\n"
@@ -3035,7 +3053,7 @@ msgid ""
 "e-mails from Thunderbird. This does not apply to Outlook.</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:240
+#: taskcoachlib\help\__init__.py:247
 msgid ""
 "<h4><a name=\"emailattach\">Attaching an e-mail to a task</a></h4>\n"
 "\n"
@@ -3049,7 +3067,7 @@ msgid ""
 "</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:252
+#: taskcoachlib\help\__init__.py:259
 msgid ""
 "<h4><a name=\"emailcreate\">Creating a task from an e-mail</a></h4>\n"
 "\n"
@@ -3059,23 +3077,23 @@ msgid ""
 "attached to the newly created task.</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:260
+#: taskcoachlib\help\__init__.py:267
 msgid "<h3><a name=\"syncml\">SyncML support</a></h3>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:263
+#: taskcoachlib\help\__init__.py:270
 msgid ""
 "<h4><a name=\"aboutsyncml\">What is SyncML</a></h4>\n"
 "\n"
 "<p>This feature is optional and off by default. In order to turn it on,\n"
 "go to the preferences dialog and check it in the Features page.</p>\n"
 "\n"
-"<p>SyncML  is   an  XML  protocol  designed   to  synchronize  several\n"
-"applications  with  a  server.  A  popular open-source  server  is  <a\n"
-"href=\"http://www.funambol.com/\">Funambol</a>.  Synchronization clients\n"
-"are available  for many devices and applications  (Outlook, Pocket PC,\n"
-"iPod, iPhone,  Evolution, etc...),  as well as  so-called \"connectors\"\n"
-"which allow the server  to synchronize with Exchange, Google Calendar,\n"
+"<p>SyncML is an XML protocol designed to synchronize several\n"
+"applications with a server. A popular open-source server is <a\n"
+"href=\"http://www.funambol.com/\">Funambol</a>. Synchronization clients\n"
+"are available for many devices and applications (Outlook, Pocket PC,\n"
+"iPod, iPhone, Evolution, etc...), as well as  so-called \"connectors\"\n"
+"which allow the server to synchronize with Exchange, Google Calendar,\n"
 "etc.</p>\n"
 "\n"
 "<p>%(name)s has built-in SyncML client support. This means you can\n"
@@ -3086,7 +3104,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:284
+#: taskcoachlib\help\__init__.py:291
 msgid ""
 "<h4><a name=\"syncmlsetup\">Setup</a></h4>\n"
 "\n"
@@ -3105,15 +3123,16 @@ msgid ""
 "The database names are pretty standard; the default values should work.</p>\n"
 "\n"
 "<p>Each task file has its own client ID, so that two different task files\n"
-"will de considered different \"devices\" by the server.</p>"
+"will be considered different \"devices\" by the server.</p>"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:301
+#: taskcoachlib\help\__init__.py:308
 msgid ""
 "<h4><a name=\"syncmllimits\">Limitations</a></h4>\n"
 "\n"
 "<p>Some limitations are due to the fact that, the underlying data type being "
-"vcalendar, some TaskCoach features cannot be presented to the server.\n"
+"\n"
+"vcalendar, some %(name)s features cannot be presented to the server.</p>\n"
 "\n"
 "  <ul>\n"
 "    <li>Task and category hierarchy are lost to the server.</li>\n"
@@ -3129,7 +3148,7 @@ msgid ""
 "</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:317
+#: taskcoachlib\help\__init__.py:325
 msgid ""
 "<h4><a name=\"syncmltrouble\">Troubleshooting</a></h4>\n"
 "\n"
@@ -3149,7 +3168,7 @@ msgid ""
 "</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:335
+#: taskcoachlib\help\__init__.py:343
 msgid ""
 "<h4><a name=\"syncmlpurge\">Purging deleted items</a></h4>\n"
 "\n"
@@ -3176,11 +3195,103 @@ msgid ""
 "all these unwanted items.</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:359
+#: taskcoachlib\help\__init__.py:367
+msgid "<h3><a name=\"iphone\">iPhone and iPod Touch</a></h3>\n"
+msgstr ""
+
+#: taskcoachlib\help\__init__.py:370
+msgid ""
+"<h4><a name=\"taskcoachiphone\">%(name)s on the iPhone</a></h4>\n"
+"\n"
+"<p>There is an iPhone/iPod Touch companion app for %(name)s, available on\n"
+"<a "
+"href=\"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=3114"
+"03563&mt=8\">Apple's\n"
+"AppStore.</a> This app has few features right now, but allows you to take\n"
+"your tasks away and modify them:</p>\n"
+"\n"
+"<ul>\n"
+"  <li>Two-way synchronization with %(name)s on the desktop (only one task "
+"file\n"
+"      supported, but a later version will support multiple files)</li>\n"
+"  <li>Edit subject, description and dates</li>\n"
+"  <li>Hierarchical categories</li>\n"
+"  <li>Create new tasks and categories</li>\n"
+"  <li>Mark a task complete by tapping its status LED</li>\n"
+"</ul>\n"
+"\n"
+"<p>Features planned for the next version are:</p>\n"
+"\n"
+"<ul>\n"
+"  <li>Effort tracking</li>\n"
+"  <li>Editing of budget</li>\n"
+"  <li>Multiple task files</li>\n"
+"  <li>Multiple categories for a task</li>\n"
+"</ul>"
+msgstr ""
+
+#: taskcoachlib\help\__init__.py:395
+msgid ""
+"<h4><a name=\"iphoneconf\">Configuration</a></h4>\n"
+"\n"
+"<p>There are some settings for the iPhone app in the Settings "
+"application:</p>\n"
+"\n"
+"<ul>\n"
+"  <li>Show completed: whether to show completed tasks.</li>\n"
+"  <li>Icon position: the LED icon may show up either on the left side or the "
+"right side of the screen.</li>\n"
+"  <li>Compact mode: if this is enabled, the task list has smaller LEDs and "
+"don't show categories or dates.</li>\n"
+"  <li>Confirm complete: if enabled, a message box will pop up for "
+"confirmation when you mark a task complete by tapping its LED.</li>\n"
+"</ul>\n"
+"\n"
+"<p>Before synchronizing, you must also configure %(name)s on the desktop; "
+"in\n"
+"the preferences, in the \"Features\" tab, check \"Enable iPhone "
+"synchronization\".\n"
+"Restart %(name)s. Now, in the preferences, choose the \"iPhone\" tab and "
+"fill in\n"
+"at least the password.</p>\n"
+"\n"
+"<p>When you tap the \"Sync\" button in the category view, %(name)s\n"
+"will automatically detect running instances of %(name)s on your\n"
+"desktop and ask you to select one (you may have several instances\n"
+"running on different computers on your network, or several instances\n"
+"on the same computer). The name displayed is, by default, some string\n"
+"identifying the computer it's running on. To customize this, you may\n"
+"change the \"Bonjour service name\" in the configuration.</p>\n"
+"\n"
+"<p>%(name)s will remember the choosen instance and try it next time\n"
+"you synchronize; if it's not running, it will prompt you again.</p>\n"
+"\n"
+"<p>Note that this synchronization happens through the network; there is\n"
+"no need for the device to be connected through USB nor for iTunes to\n"
+"be running.</p>\n"
+"\n"
+msgstr ""
+
+#: taskcoachlib\help\__init__.py:429
+msgid ""
+"<h4><a name=\"iphonetrouble\">Troubleshooting</a></h4>\n"
+"<p>\n"
+"<h5>My computer doesn't appear in the list when trying to sync</h5>\n"
+"Check that your iPhone/iPod Touch is connected to the same network your\n"
+"computer is through WiFi.\n"
+"</p>\n"
+"\n"
+"<p>\n"
+"<h5>The iPhone can't connect to my computer</h5>\n"
+"If you have a firewall, check that ports 4096-4100 are open.\n"
+"</p>\n"
+msgstr ""
+
+#: taskcoachlib\help\__init__.py:442
 msgid "<h3><a name=\"templates\">Task templates</a></h3>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:362
+#: taskcoachlib\help\__init__.py:445
 msgid ""
 "<h4><a name=\"abouttemplates\">About templates</a></h4>\n"
 "<p>Templates are blueprints for new tasks. Right now, the only task "
@@ -3190,7 +3301,7 @@ msgid ""
 "task has its dates replaced with dates relative to the current date.</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:368
+#: taskcoachlib\help\__init__.py:451
 msgid ""
 "<h4><a name=\"usingtemplates\">Using templates</a></h4>\n"
 "<p>One can create a template by selecting a task (only one) and click on "
@@ -3203,7 +3314,7 @@ msgid ""
 "(.tsktmpl);\n"
 "just select \"Add template\" in the File menu and select the file. Template "
 "files\n"
-"are stored in a subdirectory of the directory where %(name)s.ini is.</p>\n"
+"are stored in a subdirectory of the directory where TaskCoach.ini is.</p>\n"
 "\n"
 "<p>In order to instantiate a task template, use the \"New task from "
 "template\" menu\n"
@@ -3219,20 +3330,20 @@ msgid ""
 "day.</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:394
+#: taskcoachlib\help\__init__.py:479
 msgid ""
 "<h4>%(name)s - %(description)s</h4>\n"
-"<h5>Version %(version)s, %(date)s</h5>\n"
+"<h5>Version %(version)s, Revision %(revision)s, %(date)s</h5>\n"
 "<p>By %(author)s &lt;%(author_email)s&gt;<p>\n"
 "<p><a href=\"%(url)s\" target=\"_blank\">%(url)s</a></p>\n"
 "<p>%(copyright)s</p>\n"
 "<p>%(license_notice_html)s</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:406
+#: taskcoachlib\help\__init__.py:491
 msgid ""
 "\n"
-"Version %(version)s, %(date)s\n"
+"Version %(version)s, Revision %(revision)s, %(date)s\n"
 "\n"
 "By %(author)s <%(author_email)s>\n"
 "\n"
@@ -3242,16 +3353,6 @@ msgid ""
 "%(license)s\n"
 "\n"
 msgstr ""
-"\n"
-"Verzió %(version)s, %(date)s\n"
-"\n"
-"Szerző %(author)s <%(author_email)s>\n"
-"\n"
-"%(url)s\n"
-"\n"
-"%(copyright)s\n"
-"%(license)s\n"
-"\n"
 
 #: taskcoachlib\help\tips.py:26
 msgid ""
@@ -3341,16 +3442,11 @@ msgid ""
 "repetitive patterns emerge."
 msgstr ""
 
-#: taskcoachlib\iphone\protocol.py:133
-msgid "An iPhone or iPod Touch tried to connect to Task Coach,\n"
-msgstr ""
-
-#: taskcoachlib\iphone\protocol.py:134
-msgid "but no password is set. Please set a password in the\n"
-msgstr ""
-
-#: taskcoachlib\iphone\protocol.py:135
-msgid "iPhone section of the configuration and try again."
+#: taskcoachlib\iphone\protocol.py:138
+msgid ""
+"An iPhone or iPod Touch tried to connect to Task Coach,\n"
+"but no password is set. Please set a password in the\n"
+"iPhone section of the configuration and try again."
 msgstr ""
 
 #: taskcoachlib\mailer\__init__.py:61
@@ -3530,6 +3626,29 @@ msgstr ""
 #: taskcoachlib\widgets\syncmlwarning.py:16
 msgid "Never show this dialog again"
 msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "Version %(version)s, %(date)s\n"
+#~ "\n"
+#~ "By %(author)s <%(author_email)s>\n"
+#~ "\n"
+#~ "%(url)s\n"
+#~ "\n"
+#~ "%(copyright)s\n"
+#~ "%(license)s\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Verzió %(version)s, %(date)s\n"
+#~ "\n"
+#~ "Szerző %(author)s <%(author_email)s>\n"
+#~ "\n"
+#~ "%(url)s\n"
+#~ "\n"
+#~ "%(copyright)s\n"
+#~ "%(license)s\n"
+#~ "\n"
 
 #~ msgid "Maximum number of recurrences"
 #~ msgstr "Ismétlődések maximális száma"
