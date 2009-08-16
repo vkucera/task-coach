@@ -385,7 +385,7 @@
 	if (indexPath.section == 0)
 	{
 		Task *task = [[Task alloc] initWithId:-1 name:@"" status:STATUS_NEW taskCoachId:nil description:@""
-									startDate:[[DateUtils instance] stringFromDate:[NSDate date]] dueDate:nil completionDate:nil];
+									startDate:[[DateUtils instance] stringFromDate:[NSDate date]] dueDate:nil completionDate:nil dateStatus:TASKSTATUS_UNDEFINED];
 		isCreatingTask = YES;
 		TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:categoryId];
 		[self.navigationController pushViewController:ctrl animated:YES];
@@ -424,7 +424,7 @@
 - (IBAction)onAddTask:(UIBarButtonItem *)button
 {
 	Task *task = [[Task alloc] initWithId:-1 name:@"" status:STATUS_NEW taskCoachId:nil description:@""
-								startDate:[[DateUtils instance] stringFromDate:[NSDate date]] dueDate:nil completionDate:nil];
+								startDate:[[DateUtils instance] stringFromDate:[NSDate date]] dueDate:nil completionDate:nil dateStatus:TASKSTATUS_UNDEFINED];
 	isCreatingTask = YES;
 	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:categoryId];
 	[self.navigationController pushViewController:ctrl animated:YES];
