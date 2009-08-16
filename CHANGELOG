@@ -1,4 +1,8 @@
 
+2009-08-16  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
+	* misc: Tasks are not due "tomorrow" anymore, but "soon", i.e. due in at most
+	  n days, n being configurable in the settings bundle.
+
 2009-08-09  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* misc: Add a toolbar to the task list, with an add button and a sync button.
 	  Display the category name in the navigation bar.

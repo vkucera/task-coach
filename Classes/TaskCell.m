@@ -28,7 +28,7 @@
 	return @"ledred.png";
 }
 
-- (NSString *)dueTodayLedName
+- (NSString *)dueSoonLedName
 {
 	return @"ledorange.png";
 }
@@ -59,8 +59,8 @@
 		case TASKSTATUS_OVERDUE:
 			leftImage.image = [UIImage imageNamed:[self overdueLedName]];
 			break;
-		case TASKSTATUS_DUETODAY:
-			leftImage.image = [UIImage imageNamed:[self dueTodayLedName]];
+		case TASKSTATUS_DUESOON:
+			leftImage.image = [UIImage imageNamed:[self dueSoonLedName]];
 			break;
 		case TASKSTATUS_STARTED:
 			leftImage.image = [UIImage imageNamed:[self startedLedName]];

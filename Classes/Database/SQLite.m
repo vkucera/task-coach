@@ -8,6 +8,7 @@
 
 #import "SQLite.h"
 #import "Statement.h"
+#import "Configuration.h"
 
 @implementation SQLite
 
@@ -23,18 +24,18 @@
 								reason:[NSString stringWithFormat:@"Could not open %@", filename]
 								userInfo:nil];
 		}
-
 		// Re-create views
 		[[self statementWithSQL:@"DROP VIEW IF EXISTS AllTask"] exec];
 		[[self statementWithSQL:@"DROP VIEW IF EXISTS OverdueTask"] exec];
-		[[self statementWithSQL:@"DROP VIEW IF EXISTS DueTodayTask"] exec];
+		[[self statementWithSQL:@"DROP VIEW IF EXISTS DueTodayTask"] exec]; // Obsolete anyway
+		[[self statementWithSQL:@"DROP VIEW IF EXISTS DueSoonTask"] exec];
 		[[self statementWithSQL:@"DROP VIEW IF EXISTS StartedTask"] exec];
 		[[self statementWithSQL:@"DROP VIEW IF EXISTS NotStartedTask"] exec];
 
 		[[self statementWithSQL:@"CREATE VIEW AllTask AS SELECT * FROM Task WHERE status != 3 ORDER BY name"] exec];
 		[[self statementWithSQL:@"CREATE VIEW OverdueTask AS SELECT * FROM Task WHERE status != 3 AND dueDate < DATE('now') ORDER BY dueDate, startDate DESC"] exec];
-		[[self statementWithSQL:@"CREATE VIEW DueTodayTask AS SELECT * FROM Task WHERE status != 3 AND dueDate == DATE('now') ORDER BY startDate DESC"] exec];
-		[[self statementWithSQL:@"CREATE VIEW StartedTask AS SELECT * FROM Task WHERE status != 3 AND startDate IS NOT NULL AND startDate <= DATE('now') AND (dueDate > DATE('now') OR dueDate IS NULL) ORDER BY startDate"] exec];
+		[[self statementWithSQL:[NSString stringWithFormat:@"CREATE VIEW DueSoonTask AS SELECT * FROM Task WHERE status != 3 AND (dueDate >= DATE('now') AND dueDate < DATE('now', '+%d days')) ORDER BY startDate DESC", [Configuration configuration].soonDays]] exec];
+		[[self statementWithSQL:[NSString stringWithFormat:@"CREATE VIEW StartedTask AS SELECT * FROM Task WHERE status != 3 AND startDate IS NOT NULL AND startDate <= DATE('now') AND (dueDate >= DATE('now', '+%d days') OR dueDate IS NULL) ORDER BY startDate", [Configuration configuration].soonDays]] exec];
 		[[self statementWithSQL:@"CREATE VIEW NotStartedTask AS SELECT * FROM Task WHERE status != 3 AND (startDate IS NULL OR startDate > DATE('now'))"] exec];
 	}
 	

@@ -27,7 +27,7 @@
 	return @"ledredbig.png";
 }
 
-- (NSString *)dueTodayLedName
+- (NSString *)dueSoonLedName
 {
 	return @"ledorangebig.png";
 }
@@ -72,7 +72,7 @@
 		case TASKSTATUS_OVERDUE:
 			infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Due %@", @"Due date infos pattern"), task.dueDate];
 			break;
-		case TASKSTATUS_DUETODAY:
+		case TASKSTATUS_DUESOON:
 			if (task.startDate)
 				infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Started %@", @"Started date infos pattern"), task.startDate];
 			break;
