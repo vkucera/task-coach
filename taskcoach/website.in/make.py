@@ -175,6 +175,19 @@ pages['download'] = \
         <hr>
         <p>
         <table>
+        <tr><td rowspan=4 valign=top><img src="winPenPack.png" alt="winPenPack"></td>
+        <td><b><a
+        href="%(dist_download_prefix)s/X-%(filename)s_%(version)s_rev1.zip" 
+        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/windows');">winPenPack</a> for Microsoft Windows</b></td></tr>
+        <tr><td>Windows versions supported: Windows 2000, XP, Vista</td></tr>
+        <tr><td>Prerequisites: none.</td></tr>
+        <tr><td>Installation: unzip the archive contents in the location where
+        you want %(name)s to be installed.</td></tr>
+        </table>
+        </p>
+        <hr>
+        <p>
+        <table>
         <tr><td rowspan=4 valign=top><img src="mac.png" alt="Mac OS X"></td>
         <td><b><a href="%(dist_download_prefix)s/%(filename)s-%(version)s.dmg"
         onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/macosx');">Disk image (dmg)</a> for Mac OS X</b></td></tr>
