@@ -289,7 +289,7 @@
 			}
 			
 			Task *task = [[Task alloc] initWithId:-1 name:taskSubject status:STATUS_NONE taskCoachId:taskId description:taskDescription
-										startDate:taskStart dueDate:taskDue completionDate:taskCompleted];
+										startDate:taskStart dueDate:taskDue completionDate:taskCompleted dateStatus:TASKSTATUS_UNDEFINED];
 			[task save];
 			NSLog(@"Added task %@", taskSubject);
 			taskLocalId = task.objectId;

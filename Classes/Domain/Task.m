@@ -22,9 +22,10 @@ static Statement *_saveStatement = NULL;
 @synthesize startDate;
 @synthesize dueDate;
 @synthesize completionDate;
+@synthesize taskStatus;
 
 - initWithId:(NSInteger)theId name:(NSString *)theName status:(NSInteger)theStatus taskCoachId:(NSString *)tcId description:(NSString *)theDescription
-			startDate:(NSString *)theStartDate dueDate:(NSString *)theDueDate completionDate:(NSString *)theCompletionDate
+   startDate:(NSString *)theStartDate dueDate:(NSString *)theDueDate completionDate:(NSString *)theCompletionDate dateStatus:(NSInteger)dateStatus
 {
 	if (self = [super initWithId:theId name:theName status:theStatus taskCoachId:tcId])
 	{
@@ -32,6 +33,8 @@ static Statement *_saveStatement = NULL;
 		startDate = [theStartDate retain];
 		dueDate = [theDueDate retain];
 		completionDate = [theCompletionDate retain];
+		
+		taskStatus = dateStatus;
 	}
 	
 	return self;
@@ -80,21 +83,10 @@ static Statement *_saveStatement = NULL;
 
 - (NSInteger)taskStatus
 {
-	NSString *now = [[DateUtils instance] stringFromDate:[NSDate date]];
-	
 	if (completionDate)
 		return TASKSTATUS_COMPLETED;
-	
-	if (dueDate && ([now compare:dueDate] == NSOrderedDescending))
-		return TASKSTATUS_OVERDUE;
 
-	if (dueDate && ([now compare:dueDate] == NSOrderedSame))
-		return TASKSTATUS_DUETODAY;
-	
-	if (startDate && ([now compare:startDate] != NSOrderedAscending))
-		return TASKSTATUS_STARTED;
-
-	return TASKSTATUS_NOTSTARTED;
+	return taskStatus;
 }
 
 - (void)setCompleted:(BOOL)completed

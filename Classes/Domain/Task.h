@@ -11,11 +11,12 @@
 
 @class Category;
 
-#define TASKSTATUS_OVERDUE           0
-#define TASKSTATUS_DUETODAY          1
-#define TASKSTATUS_STARTED           2
-#define TASKSTATUS_NOTSTARTED        3
-#define TASKSTATUS_COMPLETED         4
+#define TASKSTATUS_UNDEFINED         0
+#define TASKSTATUS_OVERDUE           1
+#define TASKSTATUS_DUETODAY          2
+#define TASKSTATUS_STARTED           3
+#define TASKSTATUS_NOTSTARTED        4
+#define TASKSTATUS_COMPLETED         5
 
 @interface Task : DomainObject
 {
@@ -24,6 +25,8 @@
 	NSString *dueDate;
 	NSString *completionDate;
 	
+	NSInteger taskStatus;
+
 	BOOL hasCat;
 }
 
@@ -31,11 +34,11 @@
 @property (nonatomic, retain) NSString *startDate;
 @property (nonatomic, retain) NSString *dueDate;
 @property (nonatomic, retain) NSString *completionDate;
+@property (nonatomic) NSInteger taskStatus;
 
 - initWithId:(NSInteger)ID name:(NSString *)name status:(NSInteger)status taskCoachId:(NSString *)taskCoachId description:(NSString *)description
-   startDate:(NSString *)startDate dueDate:(NSString *)dueDate completionDate:(NSString *)completionDate;
+   startDate:(NSString *)startDate dueDate:(NSString *)dueDate completionDate:(NSString *)completionDate dateStatus:(NSInteger)dateStatus;
 
-- (NSInteger)taskStatus;
 - (void)setCompleted:(BOOL)completed;
 
 - (BOOL)hasCategory:(Category *)category;
