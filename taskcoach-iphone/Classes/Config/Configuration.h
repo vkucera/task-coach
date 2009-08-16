@@ -17,6 +17,8 @@
 	NSInteger iconPosition;
 	BOOL compactTasks;
 	BOOL confirmComplete;
+	
+	NSInteger soonDays;
 
 	NSString *name;
 	NSString *domain;
@@ -26,6 +28,7 @@
 @property (nonatomic, readonly) NSInteger iconPosition;
 @property (nonatomic, readonly) BOOL compactTasks;
 @property (nonatomic, readonly) BOOL confirmComplete;
+@property (nonatomic, readonly) NSInteger soonDays;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *domain;
 

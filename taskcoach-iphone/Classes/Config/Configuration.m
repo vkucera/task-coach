@@ -16,6 +16,7 @@ static Configuration *_configuration = NULL;
 @synthesize iconPosition;
 @synthesize compactTasks;
 @synthesize confirmComplete;
+@synthesize soonDays;
 @synthesize name;
 @synthesize domain;
 
@@ -36,6 +37,12 @@ static Configuration *_configuration = NULL;
 		iconPosition = [config integerForKey:@"iconposition"];
 		compactTasks = [config boolForKey:@"compacttasks"];
 		confirmComplete = [config boolForKey:@"confirmcomplete"];
+		soonDays = [config integerForKey:@"soondays"];
+		
+		if (!soonDays)
+			soonDays = 1;
+		
+		NSLog(@"Soon days: %d", soonDays);
 
 		name = [[config stringForKey:@"name"] copy];
 		domain = [[config stringForKey:@"domain"] copy];

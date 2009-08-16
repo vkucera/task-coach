@@ -67,7 +67,7 @@
 	}
 	[list release];
 	
-	list = [[TaskList alloc] initWithView:@"DueTodayTask" category:categoryId title:NSLocalizedString(@"Due today", @"Due today task title") status:TASKSTATUS_DUETODAY];
+	list = [[TaskList alloc] initWithView:@"DueSoonTask" category:categoryId title:NSLocalizedString(@"Due soon", @"Due soon task title") status:TASKSTATUS_DUESOON];
 	if ([list count])
 	{
 		[headers addObject:list];
