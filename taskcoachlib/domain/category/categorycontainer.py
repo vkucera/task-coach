@@ -34,26 +34,22 @@ class CategoryList(base.Collection):
     def extend(self, categories, event=None):
         notify = event is None
         event = event or patterns.Event()
-        event = super(CategoryList, self).extend(categories, event)
+        super(CategoryList, self).extend(categories, event)
         for category in self._compositesAndAllChildren(categories):
             for categorizable in category.categorizables():
-                event = categorizable.addCategory(category, event=event)
+                categorizable.addCategory(category, event=event)
         if notify:
             event.send()
-        else:
-            return event
                 
     def removeItems(self, categories, event=None):
         notify = event is None
         event = event or patterns.Event()
-        event = super(CategoryList, self).removeItems(categories, event)
+        super(CategoryList, self).removeItems(categories, event)
         for category in self._compositesAndAllChildren(categories):
             for categorizable in category.categorizables():
                 categorizable.removeCategory(category, event=event)
         if notify:
             event.send()
-        else:
-            return event
 
     def findCategoryByName(self, name):
         for category in self:

@@ -275,15 +275,15 @@ go to the preferences dialog and check it in the Features page.</p>
 
 <p>SyncML is an XML protocol designed to synchronize several
 applications with a server. A popular open-source server is <a
-href="http://www.funambol.com/">Funambol</a>. Synchronization clients
-are available for many devices and applications (Outlook, Pocket PC,
-iPod, iPhone, Evolution, etc...), as well as  so-called "connectors"
+href="http://www.funambol.com/" target="_blank">Funambol</a>. Synchronization 
+clients are available for many devices and applications (Outlook, Pocket PC,
+iPod, iPhone, Evolution, etc...), as well as so-called "connectors"
 which allow the server to synchronize with Exchange, Google Calendar,
 etc.</p>
 
 <p>%(name)s has built-in SyncML client support. This means you can
 setup %(name)s to synchronize with the same SyncML server you
-synchronize with with Outlook and have all Outlook tasks and notes in
+synchronize Outlook with and have all Outlook tasks and notes in
 your %(name)s file, as well as %(name)s tasks and notes in Outlook. Or
 your Pocket PC.</p>
 
@@ -297,8 +297,10 @@ items to synchronize (tasks and/or notes). The URL depends on the server
 you choose; some examples are:
 
 <ul>
-  <li><a href="http://www.scheduleworld.com/">ScheduleWorld</a>: http://sync.scheduleworld.com/funambol/ds</li>
-  <li><a href="http://memotoo.com">MemoToo</a>: http://sync.memotoo.com/syncml</li>
+  <li><a href="http://www.scheduleworld.com/" target="_blank">ScheduleWorld</a>: 
+  http://sync.scheduleworld.com/funambol/ds</li>
+  <li><a href="http://memotoo.com" target="_blank">MemoToo</a>: 
+  http://sync.memotoo.com/syncml</li>
 </ul>
 
 The database names are pretty standard; the default values should work.</p>
@@ -371,8 +373,9 @@ _iPhoneSection = _('''<h3><a name="iphone">iPhone and iPod Touch</a></h3>
 _iPhoneAboutSubsection = _('''<h4><a name="taskcoachiphone">%(name)s on the iPhone</a></h4>
 
 <p>There is an iPhone/iPod Touch companion app for %(name)s, available on
-<a href="http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=311403563&mt=8">Apple's
-AppStore.</a> This app has few features right now, but allows you to take
+<a href="http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=311403563&mt=8"
+target="_blank">Apple's AppStore</a>. 
+This app has few features right now, but allows you to take
 your tasks away and modify them:</p>
 
 <ul>

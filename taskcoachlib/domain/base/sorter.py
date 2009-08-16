@@ -41,8 +41,6 @@ class Sorter(patterns.ListDecorator):
         self.reset(event)
         if notify:
             event.send()
-        else:
-            return event
 
     # We don't implement removeItemsFromSelf() because there is no need 
     # to resort when items are removed since after removing items the 
@@ -71,14 +69,13 @@ class Sorter(patterns.ListDecorator):
         self.sort(key=self.createSortKeyFunction(), 
                   reverse=not self._sortAscending)
         if self == oldSelf:
-            return event
+            return
         notify = event is None
         event = event or patterns.Event()
         event.addSource(self, type=self.sortEventType())
         if notify:
             event.send()
-        else:
-            return event
+
 
     def createSortKeyFunction(self):
         ''' createSortKeyFunction returns a function that is passed to the 

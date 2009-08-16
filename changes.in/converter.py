@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -122,6 +122,7 @@ class ReleaseConverter(object):
                 ('Feature%(s)s removed', release.featuresRemoved),
                 ('Implementation%(s)s changed', release.implementationChanged),
                 ('Dependenc%(y)s changed', release.dependenciesChanged),
+                ('Distribution%(s)s changed', release.distributionsChanged),
                 ('Website change%(s)s', release.websiteChanges)]:
             if list:
                 result.append(self.sectionHeader(section, list))

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -20,12 +20,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import StringIO, wx
 import test
 from taskcoachlib import persistence
+from taskcoachlib import config
 from taskcoachlib.domain import task, category, effort, date, note, attachment
 from taskcoachlib.syncml.config import SyncMLConfigNode
 
 
 class IntegrationTestCase(test.TestCase):
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.fd = StringIO.StringIO()
         self.fd.name = 'testfile.tsk'
         self.reader = persistence.XMLReader(self.fd)
@@ -147,8 +149,10 @@ class IntegrationTest(IntegrationTestCase):
             len(self.getTaskWrittenAndRead(self.task.id()).children(recursive=True)))
        
     def testCategory(self):
-        self.assertEqual(self.task.id(), 
-                         list(list(self.categoriesWrittenAndRead)[0].categorizables())[0].id())
+        categorizables = list(self.categoriesWrittenAndRead)[0].categorizables()
+        categorizableIds = set([item.id() for item in categorizables])
+        self.assertEqual(set([self.task.id(), self.note.id()]), 
+                         categorizableIds)
 
     def testFilteredCategory(self):
         self.failUnless(list(self.categoriesWrittenAndRead)[0].isFiltered())

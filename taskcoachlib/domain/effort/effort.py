@@ -34,20 +34,18 @@ class Effort(baseeffort.BaseEffort, base.Object):
             # on the new task, because we assume setTask was invoked by the
             # new task itself.
             self._task = task
-            return event
+            return
         if task in (self._task, None): 
             # command.PasteCommand may try to set the parent to None
-            return event
+            return
         notify = event is None
         event = event or patterns.Event()
-        event = self._task.removeEffort(self, event)
+        self._task.removeEffort(self, event)
         self._task = task
-        event = self._task.addEffort(self, event)
+        self._task.addEffort(self, event)
         event.addSource(self, task, type=self.taskChangedEventType())
         if notify:
             event.send()
-        else:
-            return event
         
     setParent = setTask # FIXME: should we create a common superclass for Effort and Task?
     
@@ -69,14 +67,12 @@ class Effort(baseeffort.BaseEffort, base.Object):
     def __setstate__(self, state, event=None):
         notify = event is None
         event = event or patterns.Event()
-        event = super(Effort, self).__setstate__(state, event)
-        event = self.setTask(state['task'], event)
-        event = self.setStart(state['start'], event)
-        event = self.setStop(state['stop'], event)
+        super(Effort, self).__setstate__(state, event)
+        self.setTask(state['task'], event)
+        self.setStart(state['start'], event)
+        self.setStop(state['stop'], event)
         if notify:
             event.send()
-        else:
-            return event
 
     def __getcopystate__(self):
         state = super(Effort, self).__getcopystate__()
@@ -93,19 +89,17 @@ class Effort(baseeffort.BaseEffort, base.Object):
         
     def setStart(self, startDatetime, event=None):
         if startDatetime == self._start:
-            return event
+            return
         notify = event is None 
         event = event or patterns.Event()
         self._start = startDatetime
-        event = self.task().timeSpentEvent(event, self)
+        self.task().timeSpentEvent(event, self)
         event.addSource(self, self._start, type='effort.start')
         event.addSource(self, self.duration(), type='effort.duration')
         if self.task().hourlyFee():
             event.addSource(self, self.revenue(), type='effort.revenue')
         if notify:
             event.send()
-        else:
-            return event
         
     def setStop(self, newStop=None, event=None):
         if newStop is None:
@@ -113,26 +107,24 @@ class Effort(baseeffort.BaseEffort, base.Object):
         elif newStop == date.DateTime.max:
             newStop = None
         if newStop == self._stop:
-            return event
+            return
         notify = event is None
         event = event or patterns.Event()
         previousStop = self._stop
         self._stop = newStop
         if newStop == None:
             event.addSource(self, type=self.trackStartEventType())
-            event = self.task().startTrackingEvent(event, self)
+            self.task().startTrackingEvent(event, self)
         elif previousStop == None:
             event.addSource(self, type=self.trackStopEventType())
-            event = self.task().stopTrackingEvent(event, self)
-        event = self.task().timeSpentEvent(event, self)
+            self.task().stopTrackingEvent(event, self)
+        self.task().timeSpentEvent(event, self)
         event.addSource(self, newStop, type='effort.stop')
         event.addSource(self, self.duration(), type='effort.duration')
         if self.task().hourlyFee():
-            event = self.revenueEvent(event)
+            self.revenueEvent(event)
         if notify:
             event.send()
-        else:
-            return event
         
     def isBeingTracked(self, recursive=False):
         return self._stop is None
@@ -149,7 +141,6 @@ class Effort(baseeffort.BaseEffort, base.Object):
     
     def revenueEvent(self, event):
         event.addSource(self, self.revenue(), type='effort.revenue')
-        return event
             
     @classmethod    
     def modificationEventTypes(class_):

@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, os, imp, tempfile, locale
+import wx, os, sys, imp, tempfile, locale, gettext
 from taskcoachlib import patterns
 import po2dict
 
@@ -75,8 +75,14 @@ class Translator:
             languageInfo = wx.Locale.FindLanguageInfo(localeString)
             if languageInfo:
                 self.__locale = wx.Locale(languageInfo.Language)
+                # Add the wxWidgets message catalog. This is really only for 
+                # py2exe'ified versions, but it doesn't seem to hurt on other
+                # platforms...
+                localeDir = os.path.join(wx.StandardPaths_Get().GetResourcesDir(), 'locale')
+                self.__locale.AddCatalogLookupPathPrefix(localeDir)
+                self.__locale.AddCatalog('wxstd')
                 break
-            
+
     def _localeStrings(self, language):
         ''' Extract language and language_country from language if possible. '''
         localeStrings = [language]

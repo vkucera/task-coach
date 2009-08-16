@@ -386,20 +386,16 @@ class ObservableSet(ObservableCollection, Set):
         event.addSource(self, item, type=self.addItemEventType())
         if notify:
             event.send()
-        else:
-            return event
 
     def extend(self, items, event=None):
         if not items:
-            return event
+            return
         notify = event is None
         event = event or Event()
         self.update(items)
         event.addSource(self, *items, **dict(type=self.addItemEventType()))
         if notify:
             event.send()
-        else:
-            return event
     
     def remove(self, item, event=None):
         notify = event is None
@@ -408,24 +404,20 @@ class ObservableSet(ObservableCollection, Set):
         event.addSource(self, item, type=self.removeItemEventType())
         if notify:
             event.send()
-        else:
-            return event
     
     def removeItems(self, items, event=None):
         if not items:
-            return event
+            return
         notify = event is None
         event = event or Event()
         self.difference_update(items)
         event.addSource(self, *items, **dict(type=self.removeItemEventType()))
         if notify:
             event.send()
-        else:
-            return event
     
     def clear(self, event=None):
         if not self:
-            return event
+            return
         notify = event is None
         event = event or Event()
         items = tuple(self)
@@ -433,8 +425,6 @@ class ObservableSet(ObservableCollection, Set):
         event.addSource(self, *items, **dict(type=self.removeItemEventType()))
         if notify:
             event.send()
-        else:
-            return event
     
 
 class ObservableList(ObservableCollection, List):
@@ -448,20 +438,16 @@ class ObservableList(ObservableCollection, List):
         event.addSource(self, item, type=self.addItemEventType())
         if notify:
             event.send()
-        else:
-            return event
         
     def extend(self, items, event=None):
         if not items:
-            return event
+            return
         notify = event is None
         event = event or Event()
         super(ObservableList, self).extend(items)
         event.addSource(self, *items, **dict(type=self.addItemEventType()))
         if notify:
             event.send()
-        else:
-            return event
             
     def remove(self, item, event=None):
         notify = event is None
@@ -470,24 +456,20 @@ class ObservableList(ObservableCollection, List):
         event.addSource(self, item, type=self.removeItemEventType())
         if notify:
             event.send()
-        else:
-            return event
     
     def removeItems(self, items, event=None):
         if not items:
-            return event
+            return
         notify = event is None
         event = event or Event()
         super(ObservableList, self).removeItems(items)
         event.addSource(self, *items, **dict(type=self.removeItemEventType()))
         if notify:
             event.send()
-        else:
-            return event
 
     def clear(self, event=None):
         if not self:
-            return event
+            return
         notify = event is None
         event = event or Event()
         items = tuple(self)
@@ -495,8 +477,6 @@ class ObservableList(ObservableCollection, List):
         event.addSource(self, *items, **dict(type=self.removeItemEventType()))
         if notify:
             event.send()
-        else:
-            return event 
                
 
 class CollectionDecorator(Decorator, ObservableCollection):

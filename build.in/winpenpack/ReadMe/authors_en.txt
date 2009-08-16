@@ -1,0 +1,120 @@
+---------------------------------------------------------------------
+winPenPack Project § X-Software collection
+Copyright © 2005-2009 Danilo Leggieri and winPenPack Development Team
+---------------------------------------------------------------------
+
+http://www.winpenpack.com
+winpenpack@gmail.com
+winPenPack License Agreement:
+http://www.winpenpack.com/main/page.php?5
+ 
+ 
+======= 
+Authors			
+=======
+
+
+NOTE: if someone thinks it have to be included in
+this list, please send email us to winpenpack@gmail.com
+
+
+--------
+Contents
+--------
+1. winPenPack Team
+2. Developers
+3. Collaborators
+4. Support and development
+5. Translators
+
+
+
+1. winPenPack Team
+------------------
+
+Danilo Leggieri (Danix): winPenPack project founder, project 
+manager, software and web development, portabilization, 
+users support;
+
+Gabriele Tittonel (tittoproject): X-Launcher development;
+
+Marco Braidotti (Taf): translations, testing, users
+support;
+
+Massimo D'Angelo (icemax): software development, users
+support;
+
+Antonio Renna (ZioZione): software and winPenPack menu 
+development, administration and user support, translations;
+
+Romeo Cafaro (Rcs): administration, software updates, press;
+
+Massimo Pietrolonardo (zandet2): software development and 
+portabilization, administration and users support;
+
+Federico Girotto (Energy): X-Launcher development, software 
+and winPenPack menu development, administration and users support.
+
+
+
+
+2. Developers
+-------------
+
+Roberto Viola (_vroby_ , http://www.sdlbasic.altervista.org):
+winPenPack menu development;
+
+Umberto Mascia (PortableUmbo): software and winPenPack menu 
+development.
+
+
+
+
+3. Collaborators
+----------------
+
+Gaspare Grana (grangas): database, documents and
+menu optimization;
+
+Luca Zoboli (_zulu): plugins, database and web
+development;
+
+Michele Alecci (Moticanus): testing, software 
+reporting, documentation and tutorials.
+
+
+
+
+4. Support and development
+--------------------------
+
+Lamberto Tedaldi (zoiba, http://www.officinepixel.com): free
+software, license and copyright support, graphics;
+
+Andrea Giammarchi (http://pampa.phpsoft.it): Pampa web
+server developer/customizer for winPenPack;
+
+
+
+
+5. Translators
+--------------
+
+Fraggle (German)
+TaZmaniak (French)
+Fonfon (French)
+Urius (Russian)
+Anderson Brazuca (Spanish)
+Fernando Pérez (Spanish)
+Davit Amunarriz (Spanish)
+Taborsky Lubos (Czech)
+C.Felipe de S. Tenreiro (Portuguese)
+Gatobravo (Portuguese)
+Xyrk0 (Slovak)
+Prasit Kaephukhieo (Thai)
+Dritan Cami (Albanian)
+Nekro (Norwegian)
+Piotr Parafiniuk (Polish)
+Edit Maléth (Hungarian)
+Ales Petric (Slovenian)
+Steve Robinson (english translation of X-Launcher tutorial)
