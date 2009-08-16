@@ -40,8 +40,8 @@ pages['index'] = \
         is at version %(version)s. Many people use it on a daily basis, but 
         there are still a lot of 
         features missing. If there's anything you'd like to see included, 
-        <a href="https://sourceforge.net/tracker/?group_id=130831&atid=719137"
-        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/request_feature');">please 
+        <a href="http://taskcoach.uservoice.com/pages/26465"
+        onClick="javascript: pageTracker._trackPageview('/outgoing/uservoice.com/desktop');">please 
         let us know</a>.</P>
         <P>%(name)s is licensed under the <A HREF="license.html">%(license)s</A> 
         and free to use for both 
@@ -72,8 +72,8 @@ u'''        <P><IMG SRC="banner.png" ALT="Bandeau"></P>
         est la %(version)s. Beaucoup de gens l'utilisent quotidiennement, mais
         il y a encore beaucoup de fonctionnalités manquantes. S'il y a quelque chose
         que vous voudriez voir inclu, 
-        <a href="https://sourceforge.net/tracker/?group_id=130831&atid=719137"
-        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/request_feature');">veuillez 
+        <a href="http://taskcoach.uservoice.com/pages/26465"
+        onClick="javascript: pageTracker._trackPageview('/outgoing/uservoice.com/desktop');">veuillez 
         nous le faire savoir</a>.</P>
 
         <P>%(name)s est distribué sous la licence <A HREF="license.html">%(license)s</A>
@@ -468,11 +468,6 @@ pages['features'] = \
             <a href="http://www.funambol.com/">Funambol</a> server such
             as <a href="http://www.scheduleworld.com">ScheduleWorld</a>.
         </UL>
-        <H3>Missing features</H3>
-        <P>
-        See the list of <A HREF="https://sourceforge.net/tracker/?group_id=130831&atid=719137"
-        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/feature_requests');">requested features</A> 
-        for features that people miss.
         </P>'''
 
 pages['features_fr'] = \
@@ -516,11 +511,6 @@ unicode('''        <H3>Fonctionnalités</H3>
             <a href="http://www.funambol.com/">Funambol</a> comme
             <a href="http://www.scheduleworld.com">ScheduleWorld</a>.
         </UL>
-        <H3>Fonctionnalités manquantes</H3>
-        <P>
-        Vous pouvez en consulter la liste des <A HREF="https://sourceforge.net/tracker/?group_id=130831&atid=719137"
-        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/feature_requests');">fonctionnalités demandées</A> 
-        par des utilisateurs.
         </P>''', 'ISO-8859-1')
 
 
@@ -553,8 +543,9 @@ through the network, starting with version 0.73.2 of %(name)s. Main features are
         <P>More features are planned, like support for multiple task files and effort tracking.</P>
 
 <P>For this iPhone and iPod Touch version, we use <a
-href="http://taskcoach.uservoice.com/">UserVoice</a> instead of
-SourceForge trackers. This allows you to vote for feature requests, so
+href="http://taskcoach.uservoice.com/pages/23263"
+onClick="javascript: pageTracker._trackPageview('/outgoing/uservoice.com/iPhone');">UserVoice</a>. 
+This allows you to vote for feature requests, so
 that we can sort out which ones are the most popular.</P>
 
 <P>Here are some thumbnails of the user interface:</P>'''
@@ -577,9 +568,10 @@ pages['iPhone_fr'] = u'''<H3>iPhone et iPod Touch</H3>
 
         </P>D'autres fonctionnalités sont prévues, comme la possibilité de fichiers de tâche multiples et le suivi.</P>
 
-<P>Pour cette version iPhone et iPod Tuouch, nous utilisons <a
-href="http://taskcoach.uservoice.com/">UserVoice</a> au lieu des
-trackers SourceForge. Cela vous permet de voter pour des demandes de
+<P>Pour cette version iPhone et iPod Touch, nous utilisons <a
+href="http://taskcoach.uservoice.com/pages/23263"
+onClick="javascript: pageTracker._trackPageview('/outgoing/uservoice.com/iPhone');">UserVoice</a>. 
+Cela vous permet de voter pour des demandes de
 fonctionnalité, de manière à ce que nous puissions déterminer les plus
 populaires.</P>
 
@@ -934,14 +926,16 @@ pages['devinfo'] = \
     on %(name)s or reuse code.</p>
     
     <h4>Project hosting</h4>
-    <P>%(name)s source code, file downloads and trackers are hosted at 
+    <P>%(name)s source code, file downloads and bug/patch/support trackers are hosted at 
     <a href="https://sourceforge.net/projects/taskcoach/"
        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/taskcoach');" 
        title="%(name)s @ Sourceforge">Sourceforge</a>. Translations are hosted
     at 
     <a href="http://launchpad.net/taskcoach/"
        onClick="javascript: pageTracker._trackPageview('/outgoing/launchpad.net/taskcoach');"
-       title="%(name)s @Launchpad">Launchpad</a>.
+       title="%(name)s @Launchpad">Launchpad</a>. Feature requests are hosted at
+    <a href="http://taskcoach.uservoice.com/"
+       onClick="javascript: pageTracker._trackPageview('/outgoing/uservoice.com');">Uservoice</a>.
     </P>
     
     <h4>Mailinglist</h4>

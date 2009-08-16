@@ -23,24 +23,37 @@ from changetypes import *
 
 releases = [
 
-Release('0.74.0', 'August ?, 2009',
-    summary=''' ... ''',
+Release('0.74.0', 'August 16, 2009',
+    summary='''This release adds better HTML export, a winPenPack version of
+Task Coach, and fixes some bugs. Task Coach now uses Uservoice.com for
+feature requests.''',
     featuresAdded=[
         Feature('''When exporting data to an HTML file, Task Coach writes a
 simple CSS stylesheet alongside it. The CSS stylesheet can be edited by the 
 user using a text editor; Task Coach won't overwrite it.'''),
         Feature('''Tasks that are due soon are colored orange. How many
 days left is to be considered 'soon' can now be set via the preferences dialog, 
-in task behavior tab.''', '1312000')
-        ]
-    ),
-                
-Release('0.73.5', '?? ??, 2009',
-    summary='''This is a bugfix release.''',
+in task behavior tab.''', '1312000')],
     bugsFixed=[
         Bug('''Avoid nested syncml tags in the XML task file''',
             '2832062', '2813816'),
-        ]
+        Bug('''Some macro's (e.g. "%(name)s") in the help text were not 
+properly expanded.''', '2833904', '2833903'),
+        Bug('''Translate tip window and search controls on Windows.''', 
+        '2825463')
+        ],
+    distributionsChanged=[
+        Distribution('''Added a winPackPen (http://www.winpackpen.com) 
+portable package to the set of available distributions.''')],
+    websiteChanges=[
+        Website('''We're now using http://taskcoach.uservoice.com for feature 
+requests. The big advantage of Uservoice over the Sourceforge feature request 
+tracker is that Uservoice allows for voting. Because we have over 250 open 
+feature requests on Sourceforge, it is not possible for us to move all 
+feature requests ourselves. People that submitted a feature request on 
+Sourceforge will receive a notification and a request to help us move their 
+request(s) to Uservoice.''', 
+        'index.html')]
     ),
 
 Release('0.73.4', 'August 6, 2009',

@@ -63,26 +63,22 @@ class TaskList(base.Collection):
     def extend(self, tasks, event=None):
         notify = event is None
         event = event or patterns.Event()
-        event = super(TaskList, self).extend(tasks, event)
+        super(TaskList, self).extend(tasks, event)
         for task in self._compositesAndAllChildren(tasks):
             for category in task.categories():
-                event = category.addCategorizable(task, event=event)
+                category.addCategorizable(task, event=event)
         if notify:
             event.send()
-        else:
-            return event
                 
     def removeItems(self, tasks, event=None):
         notify = event is None
         event = event or patterns.Event()
-        event = super(TaskList, self).removeItems(tasks, event)
+        super(TaskList, self).removeItems(tasks, event)
         for task in self._compositesAndAllChildren(tasks):
             for category in task.categories():
-                event = category.removeCategorizable(task, event=event)
+                category.removeCategorizable(task, event=event)
         if notify:
             event.send()
-        else:
-            return event
     
     def _nrInterestingTasks(self, isInteresting):
         return len(self._getInterestingTasks(isInteresting))

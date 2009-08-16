@@ -1,0 +1,106 @@
+---------------------------------------------------------------------
+winPenPack Project § X-Software collection
+Copyright © 2005-2009 Danilo Leggieri and winPenPack Development Team
+---------------------------------------------------------------------
+
+http://www.winpenpack.com
+winpenpack@gmail.com
+winPenPack License Agreement:
+http://www.winpenpack.com/main/page.php?5
+
+
+==================
+Credits and Thanks
+==================
+
+
+NOTE: if someone thinks it have to be included in
+this list, please email us to winpenpack@gmail.com
+
+
+--------
+Contents
+--------
+1. Hosting
+2. Mirrors and distribution
+3. Suggestions and ideas
+4. Testing
+5. Software authors
+6. Website
+7. Icons and images
+8. Tools and scripting
+
+
+
+1. Hosting
+----------
+The winPenPack project is hosted by ServRent (http://www.servrent.com)
+SourceForge (http://sourceforge.net/projects/winpenpack/)
+
+
+
+2. Mirrors and distribution
+---------------------------
+SourceForge (http://sourceforge.net/projects/winpenpack/)
+Set-Up Soluzioni Informatiche (http://www.set-up.it)
+Uncle Dan’s Corner (http://www.uncledan.it/)
+Pietrolonardo (http://www.pietrolonardo.it/)
+Marvho.com (http://www.marvho.com)
+Scuola Media 5-12 Sassari (http://www.scuolamedia5-12.com)
+TMOhost (http://tmohost.com)
+Tiscali Jack (http://jack.tiscali.it)
+
+
+
+3. Suggestions and ideas
+------------------------
+A big thank to all winPenPack users and a lot of other
+people that provided additional suggestions and bug reports.
+
+
+
+4. Testing 
+----------
+A big thank to all users for testing, especially to Ketty, 
+Moticanus and Grangas who constantly offering their cooperation.
+
+
+4. Software authors
+-------------------
+A big thank to all authors of softwares included in
+winPenPack collections.
+
+
+
+5. Website
+----------
+e107 website system (e107.org, http://www.e107.org)
+e107Italia (e107 italian translation, http://www.e107italia.org)
+
+
+
+6. Icons and images
+-------------------
+Lamberto Tedaldi (Usbix, the winPenPack mascotte,
+http://www.officinepixel.com)
+
+Alexandre Moore (the winPenPack pendrive icon
+and some other images published on winPenPack
+website, http://sa-ki.deviantart.com)
+
+David Vignoni ("Nuvola" icons theme,
+http://www.icon-king.com)
+
+The authors of some icons and images published on 
+http://iconlet.com, released under GPL/LGPL and used 
+for website graphics and launcher's splash screens.
+
+
+
+7. Tools and scripting
+----------------------
+Autoit3 (language used for developing launchers, 
+http://www.autoitscript.com)
+
+Jordan Russell (the winPenPack setup created with
+Innosetup, http://www.jrsoftware.org)

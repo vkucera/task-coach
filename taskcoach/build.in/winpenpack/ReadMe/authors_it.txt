@@ -1,0 +1,118 @@
+---------------------------------------------------------------------
+winPenPack Project § X-Software collection
+Copyright © 2005-2009 Danilo Leggieri and winPenPack Development Team
+---------------------------------------------------------------------
+
+http://www.winpenpack.com
+winpenpack@gmail.com
+winPenPack License Agreement:
+http://www.winpenpack.com/main/page.php?5
+
+
+======
+Autori
+======
+
+
+NOTA: se qualcuno ritiene di dover essere incluso in questo
+elenco, invii una mail a winpenpack@gmail.com
+
+
+------
+Indice
+------
+1. winPenPack Team
+2. Developers
+3. Collaboratori
+4. Supporto e sviluppo
+5. Traduttori
+
+
+
+1. winPenPack Team
+------------------
+
+Danilo Leggieri (Danix): fondatore di winPenPack, project 
+manager, gestione generale e sviluppo web, sviluppo e 
+portabilizzazione, supporto utenti;
+
+Gabriele Tittonel (tittoproject): sviluppo X-Launcher;
+
+Marco Braidotti (Taf): traduzioni, testing, supporto utenti;
+
+Massimo D'Angelo (icemax): sviluppo software, supporto utenti;
+
+Antonio Renna (ZioZione): sviluppo software e winPenPack menù, 
+amministrazione e supporto utenti, traduzioni;
+
+Romeo Cafaro (Rcs): amministrazione, aggiornamenti software, 
+pubblicità;
+
+Massimo Pietrolonardo (zandet2): sviluppo e portabilizzazione, 
+amministrazione e supporto utenti;
+
+Federico Girotto (Energy): sviluppo X-Launcher, sviluppo 
+software e winPenPack menù, amministrazione e supporto utenti.
+
+
+
+
+2. Developers
+-------------
+
+Roberto Viola (_vroby_ , http://www.sdlbasic.altervista.org):
+sviluppo winPenPack menù;
+
+Umberto Mascia (PortableUmbo): sviluppo software e winPenPack 
+menù.
+
+
+
+
+3. Collaboratori
+----------------
+
+Gaspare Grana (grangas): ottimizzazione database, testi,
+documenti e menù;
+
+Luca Zoboli (_zulu): plugin, database e sviluppo web.
+
+Michele Alecci (Moticanus): testing, segnalazione 
+software, documentazione e tutorial.
+
+
+
+
+4. Supporto e sviluppo
+----------------------
+
+Lamberto Tedaldi (zoiba, http://www.officinepixel.com):
+supporto software libero, copyright e licenza, grafica;
+
+Andrea Giammarchi (http://pampa.phpsoft.it/): sviluppo web
+server Pampa per winPenPack;
+
+
+
+
+5. Traduttori
+-------------
+
+Fraggle (Tedesco)
+TaZmaniak (Francese)
+Fonfon (Francese)
+Urius (Russo)
+Anderson Brazuca (Spagnolo)
+Fernando Pérez (Spagnolo)
+Davit Amunarriz (Spagnolo)
+Taborsky Lubos (Ceco)
+C.Felipe de S. Tenreiro (Portoghese)
+Gatobravo (Portoghese)
+Xyrk0 (Slovacco)
+Prasit Kaephukhieo (Tailandese)
+Dritan Cami (Albanese)
+Nekro (Norvegese)
+Piotr Parafiniuk (Polacco)
+Edit Maléth (Ungherese)
+Ales Petric (Sloveno)
+Steve Robinson (traduzione inglese della guida di X-Launcher)

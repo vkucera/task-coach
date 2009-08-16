@@ -34,24 +34,19 @@ class NoteContainer(base.Collection):
     def extend(self, notes, event=None):
         notify = event is None
         event = event or patterns.Event()
-        event = super(NoteContainer, self).extend(notes, event)
+        super(NoteContainer, self).extend(notes, event)
         for note in self._compositesAndAllChildren(notes):
             for category in note.categories():
-                event = category.addCategorizable(note, event=event)
+                category.addCategorizable(note, event=event)
         if notify:
             event.send()
-        else:
-            return event
                 
     def removeItems(self, notes, event=None):
         notify = event is None
         event = event or patterns.Event()
-        event = super(NoteContainer, self).removeItems(notes, event)
+        super(NoteContainer, self).removeItems(notes, event)
         for note in self._compositesAndAllChildren(notes):
             for category in note.categories():
                 category.removeCategorizable(note, event=event)
         if notify:
             event.send()
-        else:
-            return event
-                

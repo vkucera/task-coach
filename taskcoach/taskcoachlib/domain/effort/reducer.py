@@ -46,21 +46,17 @@ class EffortAggregator(patterns.SetDecorator,
         notify = event is None
         event = event or patterns.Event()
         for effort in efforts:
-            event = effort.task().addEffort(effort, event)
+            effort.task().addEffort(effort, event)
         if notify:
             event.send()
-        else:
-            return event
             
     def removeItems(self, efforts, event=None):
         notify = event is None
         event = event or patterns.Event()
         for effort in efforts:
-            event = effort.task().removeEffort(effort, event)
+            effort.task().removeEffort(effort, event)
         if notify:
             event.send()
-        else:
-            return event
             
     def extendSelf(self, tasks, event=None):
         ''' extendSelf is called when an item is added to the observed
@@ -85,8 +81,6 @@ class EffortAggregator(patterns.SetDecorator,
             self.removeComposites(task, task.efforts(), event)
         if notify:
             event.send()
-        else:
-            return event
 
     def onEffortAddedToTask(self, event):
         newComposites = []

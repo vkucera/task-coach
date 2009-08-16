@@ -85,7 +85,7 @@ class SaveStateMixin:
     def __setStates(self, states):
         event = patterns.Event()
         for object, state in zip(self.objectsToBeSaved, states):
-            event = object.__setstate__(state, event)
+            object.__setstate__(state, event)
         event.send()
 
 
