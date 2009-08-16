@@ -23,6 +23,12 @@ from changetypes import *
 
 releases = [
 
+Release('0.74.1', 'August ?, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        ]
+    ),
+    
 Release('0.74.0', 'August 16, 2009',
     summary='''This release adds better HTML export, a winPenPack version of
 Task Coach, and fixes some bugs. Task Coach now uses Uservoice.com for
