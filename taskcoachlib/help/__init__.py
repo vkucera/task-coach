@@ -375,6 +375,8 @@ _iPhoneAboutSubsection = _('''<h4><a name="taskcoachiphone">%(name)s on the iPho
 <p>There is an iPhone/iPod Touch companion app for %(name)s, available on
 <a href="http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=311403563&mt=8"
 target="_blank">Apple's AppStore</a>. 
+(If you don't have iTunes installed on your computer, you'll be presented
+a page where you can download iTunes).
 This app has few features right now, but allows you to take
 your tasks away and modify them:</p>
 
