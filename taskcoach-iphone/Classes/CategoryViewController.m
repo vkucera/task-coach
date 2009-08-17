@@ -110,7 +110,7 @@
 	if (wantSync)
 	{
 		wantSync = NO;
-		[self onSynchronize:nil];
+		[self onSynchronize:syncButton];
 	}
 }
 
