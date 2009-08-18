@@ -26,8 +26,10 @@ releases = [
 Release('0.74.1', 'August ?, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-            Bug('''Prevent exception when locking a file on a machine with a
-hostname containing non-ascii characters.''', '2835047')
+        Bug('''Prevent exception when locking a file on a machine with a
+hostname containing non-ascii characters.''', '2835047'),
+        Bug('''Make the winPenPack portable app start in English 
+by default.''')
         ]
     ),
     

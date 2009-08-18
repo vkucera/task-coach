@@ -57,7 +57,6 @@ class bdist_winpenpack(Command, object):
                                           'X-TaskCoach_%s_rev1'%self.version)
         self.create_winpenpack_paths()
         self.copy_launcher()
-        self.copy_english_users()
         self.copy_readme()
         self.copy_bin()
         self.zip()
@@ -65,7 +64,6 @@ class bdist_winpenpack(Command, object):
     def create_winpenpack_paths(self):
         for pathComponents in [('Bin', 'TaskCoach'), 
                                ('Documents', 'TaskCoach'),
-                               ('English_users',), 
                                ('ReadMe',), 
                                ('User', 'TaskCoach')]:
             path = os.path.join(self.bdist_base_wpp, *pathComponents)
@@ -75,12 +73,7 @@ class bdist_winpenpack(Command, object):
     def copy_launcher(self):
         launcher_src = os.path.join('build.in', 'winpenpack')
         self.copy_files(launcher_src, self.bdist_base_wpp)
-        
-    def copy_english_users(self):
-        users_src = os.path.join('build.in', 'winpenpack', 'English_users')
-        users_dest = os.path.join(self.bdist_base_wpp, 'English_users')
-        self.copy_files(users_src, users_dest)
-        
+               
     def copy_readme(self):
         readme_src = os.path.join('build.in', 'winpenpack', 'ReadMe')
         readme_dest = os.path.join(self.bdist_base_wpp, 'ReadMe')
