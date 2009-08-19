@@ -109,8 +109,23 @@ class AmountEntry(widgets.PanelWithBoxSizer):
 
     def set(self, value):
         self._entry.SetValue(value)
+        
+        
+class PercentageEntry(widgets.PanelWithBoxSizer):
+    def __init__(self, parent, percentage=0, *args, **kwargs):
+        super(PercentageEntry, self).__init__(parent, *args, **kwargs)
+        self._entry = widgets.SpinCtrl(self, value=str(percentage),
+            initial=percentage, size=(100, -1), min=0, max=100)
+        self.add(self._entry)
+        self.fit()
 
+    def get(self):
+        return self._entry.GetValue()
 
+    def set(self, value):
+        self._entry.SetValue(value)
+    
+    
 class TaskComboTreeBox(wx.Panel):
     ''' A ComboTreeBox with tasks. This class does not inherit from the
         ComboTreeBox widget, because that widget is created using a

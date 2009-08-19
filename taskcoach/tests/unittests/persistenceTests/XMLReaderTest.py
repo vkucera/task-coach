@@ -1041,3 +1041,17 @@ class XMLReaderVersion24Test(XMLReaderTestCase):
             '0000011d209a4b6c3f9f7c32000a00b100240032\n'
             '</guid></tasks>')
         self.assertEqual(expectedGUID, actualGUID)
+        
+        
+
+class XMLReaderVersion26Test(XMLReaderTestCase):
+    tskversion = 26 # New in release 0.75.0
+
+    # Release 0.75.0 introduces percentage complete for tasks
+    
+    def testPercentageComplete(self):   
+        tasks = self.writeAndReadTasks(\
+            '<tasks>\n<task subject="Task" status="0" percentageComplete="50"/>\n'
+            '</tasks>\n')
+        self.assertEqual(50, tasks[0].percentageComplete())
+

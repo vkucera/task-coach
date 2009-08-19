@@ -22,6 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+            
+Release('0.75.0', 'September ?, 2009',
+    summary='''This release adds percentage complete tracking for tasks.''',
+    featuresAdded=[
+        Feature('''Tasks have a percentage complete property. ''')
+        ]
+    ),
 
 Release('0.74.0', 'August 16, 2009',
     summary='''This release adds better HTML export, a winPenPack version of

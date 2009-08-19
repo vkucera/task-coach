@@ -342,6 +342,7 @@ class SortableViewerForTasks(SortableViewer):
             (_('&Due date'), _('Sort tasks by due date'), 'dueDate'),
             (_('&Completion date'), _('Sort tasks by completion date'), 'completionDate'),
             (_('D&ays left'), _('Sort tasks by number of days left'), 'timeLeft'),
+            (_('&Percentage complete'), _('Sort tasks by percentage complete'), 'percentageComplete'),
             (_('&Recurrence'), _('Sort tasks by recurrence'), 'recurrence'),
             (_('&Budget'), _('Sort tasks by budget'), 'budget'),
             (_('Total b&udget'), _('Sort tasks by total budget'), 'totalBudget'),

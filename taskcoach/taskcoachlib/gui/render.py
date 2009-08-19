@@ -103,6 +103,10 @@ def monetaryAmount(aFloat):
     ''' Render a monetary amount, using the user's locale. '''
     return '' if round(aFloat, 2) == 0 else \
         locale.format('%.2f', aFloat, grouping=True)
+        
+def percentage(aFloat):
+    ''' Render a percentage. '''
+    return '' if round(aFloat, 0) == 0 else '%.0f%%'%aFloat
 
 def taskBitmapNames(task, hasChildren=None):
     ''' Return two bitmap names for the task, one for unselected tasks and

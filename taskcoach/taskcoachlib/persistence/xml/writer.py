@@ -56,6 +56,8 @@ class XMLWriter(object):
             node.setAttribute('duedate', str(task.dueDate()))
         if task.completionDate() != date.Date():
             node.setAttribute('completiondate', str(task.completionDate()))
+        if task.percentageComplete() != 0:
+            node.setAttribute('percentageComplete', str(task.percentageComplete()))
         if task.recurrence():
             node.appendChild(self.recurrenceNode(task.recurrence()))
         if task.budget() != date.TimeDelta():

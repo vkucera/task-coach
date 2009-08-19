@@ -28,7 +28,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             priority=0, id=None, hourlyFee=0,
             fixedFee=0, reminder=None, categories=None,
             efforts=None, shouldMarkCompletedWhenAllChildrenCompleted=None, 
-            recurrence=None, *args, **kwargs):
+            recurrence=None, percentageComplete=0, *args, **kwargs):
         kwargs['id'] = id
         kwargs['subject'] = subject
         kwargs['description'] = description
@@ -39,6 +39,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__startDate      = base.Attribute(startDate or date.Today(),
                                               self, self.startDateEvent)
         self.__completionDate = completionDate or date.Date()
+        percentageComplete = 100 if self.__completionDate != date.Date() else percentageComplete
+        self.__percentageComplete = base.Attribute(percentageComplete, 
+                                                   self, self.percentageCompleteEvent)
         self._budget         = budget or date.TimeDelta()
         self._efforts        = efforts or []
         self._priority       = priority
@@ -60,6 +63,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.setStartDate(state['startDate'], event)
         self.setDueDate(state['dueDate'], event)
         self.setCompletionDate(state['completionDate'], event)
+        self.setPercentageComplete(state['percentageComplete'], event)
         self.setRecurrence(state['recurrence'], event)
         self.setReminder(state['reminder'], event)
         self.setEfforts(state['efforts'], event)
@@ -77,6 +81,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         state.update(dict(dueDate=self.__dueDate.get(), 
             startDate=self.__startDate.get(), 
             completionDate=self.__completionDate, 
+            percentageComplete=self.__percentageComplete.get(),
             children=self.children(), parent=self.parent(), 
             efforts=self._efforts, budget=self._budget, priority=self._priority, 
             hourlyFee=self._hourlyFee, fixedFee=self._fixedFee, 
@@ -90,7 +95,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         state = super(Task, self).__getcopystate__()
         state.update(dict(dueDate=self.__dueDate.get(), 
             startDate=self.__startDate.get(), 
-            completionDate=self.__completionDate, 
+            completionDate=self.__completionDate,
+            percentageComplete=self.__percentageComplete.get(), 
             efforts=[effort.copy() for effort in self._efforts], 
             budget=self._budget, priority=self._priority, 
             hourlyFee=self._hourlyFee, fixedFee=self._fixedFee, 
@@ -251,12 +257,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 oldParentTotalPriority = parent.priority(recursive=True) 
             self.__completionDate = completionDate
             event.addSource(self, completionDate, type='task.completionDate')
-            
             if parent and parent.priority(recursive=True) != \
                           oldParentTotalPriority:
                 self.totalPriorityEvent(event)                    
             if completionDate != date.Date():
                 self.setReminder(None, event)
+                
+            self.setPercentageComplete(100 if self.completed() else 0, event)
                 
             if parent:
                 if self.completed():
@@ -481,6 +488,18 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def trackStopEventType(class_):
         return '%s.track.stop'%class_
+    
+    # percentage Complete
+    
+    def percentageComplete(self):
+        return self.__percentageComplete.get()
+    
+    def setPercentageComplete(self, percentage, event=None):
+        self.__percentageComplete.set(percentage, event)
+        
+    def percentageCompleteEvent(self, event):
+        event.addSource(self, self.percentageComplete(), 
+                        type='task.percentageComplete')
         
     # priority
     
