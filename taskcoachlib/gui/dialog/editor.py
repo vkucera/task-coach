@@ -417,10 +417,12 @@ class BudgetPage(PageWithHeaders, TaskHeaders):
         # Boxes:
         budgetBox = widgets.BoxWithFlexGridSizer(self, label=_('Budget'), cols=3)
         revenueBox = widgets.BoxWithFlexGridSizer(self, label=_('Revenue'), cols=3)
+        progressBox = widgets.BoxWithFlexGridSizer(self, label=_('Progress'), cols=2)
         # Editable entries:
         self._budgetEntry = entry.TimeDeltaEntry(budgetBox, task.budget())
         self._hourlyFeeEntry = entry.AmountEntry(revenueBox, task.hourlyFee())
         self._fixedFeeEntry = entry.AmountEntry(revenueBox, task.fixedFee())
+        self._percentageCompleteEntry = entry.PercentageEntry(progressBox, task.percentageComplete()) 
         # Readonly entries:
         if task.children():
             recursiveBudget = render.budget(task.budget(recursive=True))
@@ -446,7 +448,11 @@ class BudgetPage(PageWithHeaders, TaskHeaders):
                           recursiveFixedFee, _('Revenue'), 
                           render.monetaryAmount(task.revenue()), recursiveRevenue]:
             revenueBox.add(eachEntry, flag=wx.ALIGN_RIGHT)
-        for box in budgetBox, revenueBox:
+
+        for eachEntry in [_('Percentage complete'), self._percentageCompleteEntry]:
+            progressBox.add(eachEntry, flag=wx.ALIGN_RIGHT)
+            
+        for box in budgetBox, revenueBox, progressBox:
             box.fit()
             self.add(box, proportion=0, flag=wx.EXPAND|wx.ALL, border=5)
         self.fit()
@@ -460,12 +466,14 @@ class BudgetPage(PageWithHeaders, TaskHeaders):
                     fixedFee=self._fixedFeeEntry, 
                     totalFixedFee=self._fixedFeeEntry, 
                     revenue=self._hourlyFeeEntry, 
-                    totalRevenue=self._hourlyFeeEntry)
+                    totalRevenue=self._hourlyFeeEntry,
+                    percentageComplete=self._percentageCompleteEntry)
         
     def ok(self):
         self.item.setBudget(self._budgetEntry.get())
         self.item.setHourlyFee(self._hourlyFeeEntry.get())
         self.item.setFixedFee(self._fixedFeeEntry.get())
+        self.item.setPercentageComplete(self._percentageCompleteEntry.get())
 
 
 class EffortPage(PageWithViewerMixin, PageWithHeaders, TaskHeaders):

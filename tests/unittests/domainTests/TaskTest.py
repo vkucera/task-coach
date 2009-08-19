@@ -180,6 +180,9 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         
     def testTaskDoesNotHaveNotesByDefault(self):
         self.failIf(self.task.notes())
+        
+    def testPercentageCompleteIsZeroByDefault(self):
+        self.assertEqual(0, self.task.percentageComplete())
                                          
     # Setters
 
@@ -229,10 +232,21 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def testSetCompletionDateMakesTaskCompleted(self):
         self.task.setCompletionDate()
         self.failUnless(self.task.completed())
-
+        
     def testSetCompletionDateDefaultsToToday(self):
         self.task.setCompletionDate()
         self.assertEqual(date.Today(), self.task.completionDate())
+        
+    def testSetPercentageComplete(self):
+        self.task.setPercentageComplete(50)
+        self.assertEqual(50, self.task.percentageComplete())
+        
+    def testPercentageCompleteNotification(self):
+        self.registerObserver('task.percentageComplete')
+        self.task.setCompletionDate()
+        self.assertEqual([patterns.Event('task.percentageComplete',
+                                         self.task, 100)], 
+                         self.events)
 
     def testSetDescription(self):
         self.task.setDescription('A new description')
@@ -582,6 +596,16 @@ class CompletedTaskTest(TaskTestCase, CommonTaskTests):
         self.task.setCompletionDate(date.Yesterday())
         self.failUnless(self.task.completed())
 
+    def testCompletedTaskIsHundredProcentComplete(self):
+        self.assertEqual(100, self.task.percentageComplete())
+        
+    def testPercentageCompleteNotification(self):
+        self.registerObserver('task.percentageComplete')
+        self.task.setCompletionDate(date.Date())
+        self.assertEqual([patterns.Event('task.percentageComplete',
+                                         self.task, 0)], 
+                         self.events)
+        
 
 class TaskCompletedInTheFutureTest(TaskTestCase, CommonTaskTests):
     def taskCreationKeywordArguments(self):

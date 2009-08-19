@@ -273,30 +273,44 @@ class CommonTests(object):
                          self.viewer.widget.GetColumn(3).GetText())
 
     def testTurnOnPriorityColumn(self):
-        taskWithPriority = task.Task(priority=10)
-        self.taskList.append(taskWithPriority)
         self.showColumn('priority')
         self.assertEqual(_('Priority'), 
                          self.viewer.widget.GetColumn(3).GetText())
         
     def testTurnOffPriorityColumn(self):
         self.showColumn('priority')
-        taskWithPriority = task.Task(priority=10)
-        self.taskList.append(taskWithPriority)
         self.showColumn('priority', False)
         self.assertEqual(3, self.viewer.widget.GetColumnCount())
         
+    def testTurnOnPercentageCompleteColumn(self):
+        self.showColumn('percentageComplete')
+        self.assertEqual(_('% complete'), 
+                         self.viewer.widget.GetColumn(3).GetText())
+        
+    def testTurnOffPercentageCompleteColumn(self):
+        self.showColumn('percentageComplete')
+        self.showColumn('percentageComplete', False)
+        self.assertEqual(3, self.viewer.widget.GetColumnCount())
+        
+    def testRenderPercentageComplete_0(self):
+        uncompletedTask = task.Task()
+        self.taskList.append(uncompletedTask)
+        self.showColumn('percentageComplete')
+        self.assertEqual('', self.getItemText(0,3))
+
+    def testRenderPercentageComplete_100(self):
+        completedTask = task.Task(completionDate=date.Today())
+        self.taskList.append(completedTask)
+        self.showColumn('percentageComplete')
+        self.assertEqual('100%', self.getItemText(0,3))
+        
     def testTurnOnRecurrenceColumn(self):
-        taskWithRecurrence = task.Task(recurrence=date.Recurrence('weekly'))
-        self.taskList.append(taskWithRecurrence)
         self.showColumn('recurrence')
         self.assertEqual(_('Recurrence'), 
                          self.viewer.widget.GetColumn(3).GetText())
 
     def testTurnOffRecurrenceColumn(self):
         self.showColumn('recurrence')
-        taskWithRecurrence = task.Task(recurrence=date.Recurrence('weekly'))
-        self.taskList.append(taskWithRecurrence)
         self.showColumn('recurrence', False)
         self.assertEqual(3, self.viewer.widget.GetColumnCount())
         

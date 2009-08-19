@@ -21,13 +21,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, StringIO # We cannot use CStringIO since unicode strings are used below.
 import test
-from taskcoachlib import persistence
+from taskcoachlib import persistence, config
 from taskcoachlib.domain import base, task, effort, date, category, note, attachment
 from taskcoachlib.syncml.config import SyncMLConfigNode
 
 
 class XMLWriterTest(test.TestCase):
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.fd = StringIO.StringIO()
         self.fd.name = 'testfile.tsk'
         self.writer = persistence.XMLWriter(self.fd)
@@ -475,3 +476,11 @@ class XMLWriterTest(test.TestCase):
         self.noteContainer.append(aNote)
         aNote.expand()
         self.expectInXML('''expandedContexts="('None',)"''')
+        
+    def testPercentageComplete(self):
+        self.task.setPercentageComplete(50)
+        self.expectInXML('''percentageComplete="50"''')
+
+    def testPercentageComplete_Float(self):
+        self.task.setPercentageComplete(50.0)
+        self.expectInXML('''percentageComplete="50.0"''')

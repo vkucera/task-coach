@@ -72,7 +72,8 @@ class IntegrationTest(IntegrationTestCase):
             priority=4, hourlyFee=100.5, fixedFee=1000, 
             recurrence=date.Recurrence('weekly', max=10, count=5, amount=2),
             reminder=date.DateTime(2004,1,1), color=wx.RED, expandedContexts=['viewer1'],
-            shouldMarkCompletedWhenAllChildrenCompleted=True)
+            shouldMarkCompletedWhenAllChildrenCompleted=True,
+            percentageComplete=2/3.)
         self.child = task.Task()
         self.task.addChild(self.child)
         self.grandChild = task.Task()
@@ -124,6 +125,9 @@ class IntegrationTest(IntegrationTestCase):
  
     def testCompletionDate(self):
         self.assertAttributeWrittenAndRead(self.task, 'completionDate')
+        
+    def testPercentageComplete(self):
+        self.assertAttributeWrittenAndRead(self.task, 'percentageComplete')
  
     def testBudget(self):
         self.assertAttributeWrittenAndRead(self.task, 'budget')

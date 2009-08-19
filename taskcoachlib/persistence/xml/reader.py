@@ -165,6 +165,7 @@ class XMLReader(object):
             startDate=date.parseDate(taskNode.attrib.get('startdate', '')),
             dueDate=date.parseDate(taskNode.attrib.get('duedate', '')),
             completionDate=date.parseDate(taskNode.attrib.get('completiondate', '')),
+            percentageComplete=int(taskNode.attrib.get('percentageComplete','0')),
             budget=date.parseTimeDelta(taskNode.attrib.get('budget', '')),
             priority=int(taskNode.attrib.get('priority', '0')),
             hourlyFee=float(taskNode.attrib.get('hourlyFee', '0')),
