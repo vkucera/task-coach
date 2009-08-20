@@ -997,6 +997,13 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         cat.setColor(wx.RED)
         self.assertEqual(1, len(self.events))
 
+    def testPercentageCompleted(self):
+        self.assertEqual(0, self.task.percentageComplete(recursive=True))
+
+    def testPercentageCompletedWhenChildIs50ProcentComplete(self):
+        self.task1_1.setPercentageComplete(50)
+        self.assertEqual(25, self.task.percentageComplete(recursive=True))
+        
 
 class TaskWithGrandChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def taskCreationKeywordArguments(self):

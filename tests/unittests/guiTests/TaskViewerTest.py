@@ -291,6 +291,16 @@ class CommonTests(object):
         self.showColumn('percentageComplete')
         self.showColumn('percentageComplete', False)
         self.assertEqual(3, self.viewer.widget.GetColumnCount())
+
+    def testTurnOnAveragePercentageCompleteColumn(self):
+        self.showColumn('totalPercentageComplete')
+        self.assertEqual(_('overall % complete'), 
+                         self.viewer.widget.GetColumn(3).GetText())
+
+    def testTurnOffAveragePercentageCompleteColumn(self):
+        self.showColumn('totalPercentageComplete')
+        self.showColumn('totalPercentageComplete', False)
+        self.assertEqual(3, self.viewer.widget.GetColumnCount())
         
     def testRenderPercentageComplete_0(self):
         uncompletedTask = task.Task()

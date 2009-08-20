@@ -487,7 +487,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # percentage Complete
     
     def percentageComplete(self, recursive=False):
-        return self.__percentageComplete.get()
+        percentages = [self.__percentageComplete.get()] 
+        if recursive:
+            percentages.extend([child.percentageComplete(recursive) for child in self.children()])
+        return sum(percentages)/len(percentages)
     
     def setPercentageComplete(self, percentage, event=None):
         if percentage == self.percentageComplete():
