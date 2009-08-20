@@ -241,6 +241,10 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task.setPercentageComplete(50)
         self.assertEqual(50, self.task.percentageComplete())
         
+    def testSet100PercentComplete(self):
+        self.task.setPercentageComplete(100)
+        self.failUnless(self.task.completed())
+        
     def testPercentageCompleteNotification(self):
         self.registerObserver('task.percentageComplete')
         self.task.setCompletionDate()
@@ -598,6 +602,10 @@ class CompletedTaskTest(TaskTestCase, CommonTaskTests):
 
     def testCompletedTaskIsHundredProcentComplete(self):
         self.assertEqual(100, self.task.percentageComplete())
+        
+    def testSetPercentageCompleteToLessThan100MakesTaskUncompleted(self):
+        self.task.setPercentageComplete(99)
+        self.failIf(self.task.completed())
         
     def testPercentageCompleteNotification(self):
         self.registerObserver('task.percentageComplete')

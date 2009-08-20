@@ -430,7 +430,7 @@ class CommonTests(object):
     def testNewItem(self):
         self.taskFile.categories().append(category.Category('cat', filtered=True))
         dialog = self.viewer.newItemDialog(bitmap='new')
-        tree = dialog[0][2].viewer.widget
+        tree = dialog[0][3].viewer.widget
         firstChild, cookie = tree.GetFirstChild(tree.GetRootItem())
         self.failUnless(firstChild.IsChecked())
         

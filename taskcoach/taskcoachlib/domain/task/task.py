@@ -486,11 +486,22 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     
     # percentage Complete
     
-    def percentageComplete(self):
+    def percentageComplete(self, recursive=False):
         return self.__percentageComplete.get()
     
     def setPercentageComplete(self, percentage, event=None):
+        if percentage == self.percentageComplete():
+            return
+        notify = event is None
+        event = event or patterns.Event()
+        oldPercentage = self.percentageComplete()
         self.__percentageComplete.set(percentage, event)
+        if percentage == 100 and oldPercentage != 100 and not self.completed():
+            self.setCompletionDate(date.Today(), event)
+        elif oldPercentage == 100 and percentage != 100 and self.completed():
+            self.setCompletionDate(date.Date(), event)
+        if notify:
+            event.send()
         
     def percentageCompleteEvent(self, event):
         event.addSource(self, self.percentageComplete(), 

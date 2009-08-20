@@ -411,18 +411,45 @@ class DatesPage(PageWithHeaders, TaskHeaders):
         # control it will show the suggested date time
 
 
+class ProgressPage(PageWithHeaders, TaskHeaders):
+    def __init__(self, parent, task, *args, **kwargs):
+        super(ProgressPage, self).__init__(parent, task, *args, **kwargs)
+        # Boxes:
+        progressBox = widgets.BoxWithFlexGridSizer(self, label=_('Progress'), cols=2)
+        # Editable entries:
+        self._percentageCompleteOldValue = task.percentageComplete()
+        self._percentageCompleteEntry = entry.PercentageEntry(progressBox, 
+                                                              self._percentageCompleteOldValue)
+        # Readonly entries:
+        pass
+        # Fill the boxes:
+        for eachEntry in [_('Percentage complete'), self._percentageCompleteEntry]:
+            progressBox.add(eachEntry, flag=wx.ALIGN_RIGHT)
+            
+        for box in progressBox,:
+            box.fit()
+            self.add(box, proportion=0, flag=wx.EXPAND|wx.ALL, border=5)
+        self.fit()
+        
+    def entries(self):
+        return dict(percentageComplete=self._percentageCompleteEntry)
+        
+    def ok(self):
+        newValue = self._percentageCompleteEntry.get()
+        if newValue != self._percentageCompleteOldValue:
+            self.item.setPercentageComplete(newValue)
+
+
 class BudgetPage(PageWithHeaders, TaskHeaders):
     def __init__(self, parent, task, *args, **kwargs):
         super(BudgetPage, self).__init__(parent, task, *args, **kwargs)
         # Boxes:
         budgetBox = widgets.BoxWithFlexGridSizer(self, label=_('Budget'), cols=3)
         revenueBox = widgets.BoxWithFlexGridSizer(self, label=_('Revenue'), cols=3)
-        progressBox = widgets.BoxWithFlexGridSizer(self, label=_('Progress'), cols=2)
         # Editable entries:
         self._budgetEntry = entry.TimeDeltaEntry(budgetBox, task.budget())
         self._hourlyFeeEntry = entry.AmountEntry(revenueBox, task.hourlyFee())
         self._fixedFeeEntry = entry.AmountEntry(revenueBox, task.fixedFee())
-        self._percentageCompleteEntry = entry.PercentageEntry(progressBox, task.percentageComplete()) 
         # Readonly entries:
         if task.children():
             recursiveBudget = render.budget(task.budget(recursive=True))
@@ -449,10 +476,7 @@ class BudgetPage(PageWithHeaders, TaskHeaders):
                           render.monetaryAmount(task.revenue()), recursiveRevenue]:
             revenueBox.add(eachEntry, flag=wx.ALIGN_RIGHT)
 
-        for eachEntry in [_('Percentage complete'), self._percentageCompleteEntry]:
-            progressBox.add(eachEntry, flag=wx.ALIGN_RIGHT)
-            
-        for box in budgetBox, revenueBox, progressBox:
+        for box in budgetBox, revenueBox:
             box.fit()
             self.add(box, proportion=0, flag=wx.EXPAND|wx.ALL, border=5)
         self.fit()
@@ -466,15 +490,13 @@ class BudgetPage(PageWithHeaders, TaskHeaders):
                     fixedFee=self._fixedFeeEntry, 
                     totalFixedFee=self._fixedFeeEntry, 
                     revenue=self._hourlyFeeEntry, 
-                    totalRevenue=self._hourlyFeeEntry,
-                    percentageComplete=self._percentageCompleteEntry)
+                    totalRevenue=self._hourlyFeeEntry)
         
     def ok(self):
         self.item.setBudget(self._budgetEntry.get())
         self.item.setHourlyFee(self._hourlyFeeEntry.get())
         self.item.setFixedFee(self._fixedFeeEntry.get())
-        self.item.setPercentageComplete(self._percentageCompleteEntry.get())
-
+        
 
 class EffortPage(PageWithViewerMixin, PageWithHeaders, TaskHeaders):
     def __init__(self, parent, theTask, taskFile, settings, *args, **kwargs):
@@ -653,6 +675,7 @@ class TaskEditBook(widgets.Listbook):
         super(TaskEditBook, self).__init__(parent)
         self.AddPage(TaskSubjectPage(self, task), _('Description'), 'description')
         self.AddPage(DatesPage(self, task, settings), _('Dates'), 'date')
+        self.AddPage(ProgressPage(self, task), _('Progress'), 'progress')
         self.AddPage(TaskCategoriesPage(self, task, taskFile, settings), 
                      _('Categories'), 'category')
         if settings.getboolean('feature', 'effort'):

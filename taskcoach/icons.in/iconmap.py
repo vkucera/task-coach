@@ -74,6 +74,7 @@ iconlist = [
 ('description', 'actions', 'pencil', [16, 22, 32]),
 ('restore', 'apps', 'kcmkwm', [16]),
 ('budget', 'apps', 'kcalc', [16, 22, 32]),
+('progress', 'actions', 'finish', [16, 22, 32]),
 ('viewalltasks', 'apps', 'kreversi', [16]),
 ('viewnewviewer', 'actions', 'tab_new', [16]),
 ('squaremapviewer', 'actions', 'squaremap', [16]),
