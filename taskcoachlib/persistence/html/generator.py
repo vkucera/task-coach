@@ -44,8 +44,9 @@ class Viewer2HTMLConverter(object):
     
     def html(self, cssFilename, selectionOnly, level=0):
         ''' Returns all HTML, consisting of header and body. '''
+        printing = not cssFilename
         htmlContent = self.htmlHeader(cssFilename, level+1) + \
-                      self.htmlBody(selectionOnly, level+1)
+                      self.htmlBody(selectionOnly, printing, level+1)
         return self.wrap(htmlContent, 'html', level)
     
     def htmlHeader(self, cssFilename, level):
@@ -82,20 +83,28 @@ class Viewer2HTMLConverter(object):
                 styleContent.append(self.indent(statusStyle, level+1))
         return self.wrap(styleContent, 'style', level, type='text/css')
     
-    def htmlBody(self, selectionOnly, level):
+    def htmlBody(self, selectionOnly, printing, level):
         ''' Returns the HTML body section, containing one table with all 
             visible data. '''
-        htmlBodyContent = self.table(selectionOnly, level+1)
+        htmlBodyContent = []
+        if printing:
+            htmlBodyContent.append(self.wrap(self.viewer.title(), 'h1', level, 
+                                             oneLine=True))
+        htmlBodyContent.extend(self.table(selectionOnly, printing, level+1))
         return self.wrap(htmlBodyContent, 'body', level)
     
-    def table(self, selectionOnly, level):
+    def table(self, selectionOnly, printing, level):
         ''' Returns the table, consisting of caption, table header and table 
             body. '''
         visibleColumns = self.viewer.visibleColumns()
-        tableContent = [self.tableCaption(level+1)] + \
-                       self.tableHeader(visibleColumns, level+1) + \
-                       self.tableBody(visibleColumns, selectionOnly, level+1)
-        return self.wrap(tableContent, 'table', level, id='table')
+        tableContent = [] if printing else [self.tableCaption(level+1)]
+        tableContent.extend(self.tableHeader(visibleColumns, level+1) + \
+                            self.tableBody(visibleColumns, selectionOnly, 
+                                           printing, level+1))
+        attributes = dict(id='table')
+        if printing: 
+            attributes['border'] = '1'
+        return self.wrap(tableContent, 'table', level, **attributes)
                 
     def tableCaption(self, level):
         ''' Returns the table caption, based on the viewer title. '''
@@ -123,7 +132,7 @@ class Viewer2HTMLConverter(object):
             attributes['id'] = 'sorted'
         return self.wrap(header, 'th', level, oneLine=True, **attributes)
     
-    def tableBody(self, visibleColumns, selectionOnly, level):
+    def tableBody(self, visibleColumns, selectionOnly, printing, level):
         ''' Returns the table body <tbody>. ''' 
         tree = self.viewer.isTreeViewer()
         self.count = 0
@@ -132,38 +141,55 @@ class Viewer2HTMLConverter(object):
             if selectionOnly and not self.viewer.isselected(item):
                 continue
             self.count += 1
-            tableBodyContent.extend(self.bodyRow(item, visibleColumns, tree, level+1))
+            tableBodyContent.extend(self.bodyRow(item, visibleColumns, tree, 
+                                                 printing, level+1))
         return self.wrap(tableBodyContent, 'tbody', level)
     
-    def bodyRow(self, item, visibleColumns, tree, level):
+    def bodyRow(self, item, visibleColumns, tree, printing, level):
         ''' Returns a <tr> containing the values of item for the 
             visibleColumns. '''
         bodyRowContent = []
         for column in visibleColumns:
             renderedItem = self.render(item, column, indent=not bodyRowContent and tree)
+            if printing:
+                color = self.cssColorSyntax(self.viewer.getColor(item))
+                renderedItem = self.wrap(renderedItem, 'font', level+1, 
+                                         color=color, oneLine=True)
             bodyRowContent.append(self.bodyCell(renderedItem, column, level+1))
-        style = self.bodyRowStyleAttribute(item)
-        attributes = dict(style=style) if style else dict()
-        if self.viewer.isShowingTasks(): 
-            if item.completed():
-                attributes['class'] = 'completed'
-            elif item.overdue():
-                attributes['class'] = 'overdue'
-            elif item.dueSoon():
-                attributes['class'] = 'duesoon'
-            elif item.inactive():
-                attributes['class'] = 'inactive'
-            else:
-                attributes['class'] = 'active'
+        attributes = self.bodyRowBgColor(item, printing)
+        if not printing:
+            attributes.update(self.bodyRowFgColor(item))
         return self.wrap(bodyRowContent, 'tr', level, **attributes)
     
-    def bodyRowStyleAttribute(self, item):
-        ''' Determine the style attribute for item. Returns a CSS style
-            specification: 'background: <color>'. '''
+    def bodyRowBgColor(self, item, printing):
+        ''' Determine the background color for the item. Returns a CSS style
+            specification or a HTML style specification when printing. '''
         bgColor = self.viewer.getBackgroundColor(item)
-        style = 'background: %s'%self.cssColorSyntax(bgColor) if bgColor else ''
-        return style
-    
+        if bgColor:
+            bgColor = self.cssColorSyntax(bgColor)
+        else:
+            return dict()
+        return dict(bgcolor=bgColor) if printing else \
+               dict(style='background: %s'%bgColor)
+               
+    def bodyRowFgColor(self, item):
+        ''' Determine the background color for the item. Returns a CSS style
+            specification. '''
+        if self.viewer.isShowingTasks(): 
+            if item.completed():
+                class_ = 'completed'
+            elif item.overdue():
+                class_ = 'overdue'
+            elif item.dueSoon():
+                class_ = 'duesoon'
+            elif item.inactive():
+                class_ = 'inactive'
+            else:
+                class_ = 'active'
+            return {'class': class_}
+        else:
+            return dict()
+        
     def bodyCell(self, item, column, level):
         ''' Return a <td> for the item/column combination, using the specified
             aligment (one of 'left', 'center', 'right'). '''
