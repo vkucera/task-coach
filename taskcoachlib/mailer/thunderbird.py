@@ -22,8 +22,8 @@ from taskcoachlib.i18n import _
 from taskcoachlib import persistence
 
 
-_RX_MAILBOX = re.compile('mailbox-message://[\w.]+@(.*)#([0-9]+)')
-_RX_IMAP    = re.compile('imap-message://([^@]+)@([^/]+)/(.*)#([0-9]+)')
+_RX_MAILBOX = re.compile('mailbox-message://(.*)@(.*)/(.*)#(\d+)')
+_RX_IMAP    = re.compile('imap-message://([^@]+)@([^/]+)/(.*)#(\d+)')
 
 
 def unquote(s):
@@ -38,6 +38,22 @@ def unquote(s):
         mt = rx.search(s)
 
     return s
+
+
+def loadPreferences():
+    """Reads Thunderbird's prefs.js file and return a dictionnary of
+    configuration options."""
+
+    config = {}
+
+    def user_pref(key, value):
+        config[key] = value
+
+    for line in file(os.path.join(getDefaultProfileDir(), 'prefs.js'), 'r'):
+        if line.startswith('user_pref('):
+            exec line in { 'user_pref': user_pref, 'true': True, 'false': False }
+
+    return config
 
 
 def getThunderbirdDir():
@@ -114,46 +130,61 @@ class ThunderbirdMailboxReader(object):
 
     def __init__(self, url):
         """url is the internal reference to the mail, as collected
-        through drag-n-drop"""
+        through drag-n-drop."""
 
         mt = _RX_MAILBOX.search(url)
+        if mt is None:
+            raise RuntimeError(_('Malformed Thunderbird internal ID: %s. Please file a bug report.') % url)
 
         self.url = url
-        self.path = mt.group(1).replace('%20', ' ').split('/')
-        self.offset = long(mt.group(2))
-        self.filename = os.path.join(getDefaultProfileDir(), 'Mail',
-                                     os.path.join(*tuple(self.path)))
+
+        # The url has the form
+        # mailbox-message://<username>@<hostname>//<filename>#<id>. Or
+        # so I hope.
+
+        config = loadPreferences()
+
+        self.user = unquote(mt.group(1))
+        self.server = unquote(mt.group(2))
+        self.path = unquote(mt.group(3)).split('/')
+        self.offset = long(mt.group(4))
+
+        for i in xrange(200):
+            base = 'mail.server.server%d' % i
+            if config.has_key('%s.userName' % base):
+                if config['%s.userName' % base] == self.user and config['%s.hostname' % base] == self.server:
+                    self.filename = os.path.join(config['%s.directory' % base], *tuple(self.path))
+                    break
+        else:
+            raise RuntimeError(_('Could not find directory for ID %s. Please file a bug report.') % url)
 
         self.fp = file(self.filename, 'rb')
         self.fp.seek(self.offset)
 
         self.done = False
 
-    def read(self, n=None):
+    def read(self):
         """Buffer-like read() method"""
+
         if self.done:
             return ''
 
-        if n is None:
-            lines = []
-            for line in self.fp:
-                if line.strip() == '.':
-                    self.done = True
-                    return ''.join(lines)
-                lines.append(line)
+        lines = []
 
-            self.done = True
-            return ''.join(lines)
-        else:
-            bf = self.fp.read(n)
+        # In theory, the message ends with a single dot. As always, in
+        # theory, theory is like practice but in practice...
 
-            try:
-                idx = bf.find('\r\n.\r\n')
-            except ValueError:
-                return bf
-            else:
-                self.done = True
-                return bf[:idx] + '\r\n'
+        starting = True
+
+        for line in self.fp:
+            if not starting:
+                if line.startswith('From '):
+                    break
+            lines.append(line)
+            starting = False
+
+        self.done = True
+        return ''.join(lines)
 
     def __iter__(self):
         class Iterator(object):
@@ -186,14 +217,9 @@ class ThunderbirdImapReader(object):
         self.user = unquote(mt.group(1))
         self.server = mt.group(2) 
         self.box = mt.group(3)
-        self.uid = int(mt.group(4)) 
+        self.uid = int(mt.group(4))
 
-        config = {}
-        def user_pref(key, value):
-            config[key] = value
-        for line in file(os.path.join(getDefaultProfileDir(), 'prefs.js'), 'r'):
-            if line.startswith('user_pref('):
-                exec line in { 'user_pref': user_pref, 'true': True, 'false': False }
+        config = loadPreferences()
 
         port = None
         stype = None

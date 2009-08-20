@@ -25,12 +25,19 @@ releases = [
 
 Release('0.74.1', 'August ?, 2009',
     summary='''This is a bugfix release.''',
+    featuresAdded=[
+        Feature('''Drag and drop from Thunderbird now works with multiple
+accounts in the default profile.''')
+        ],
+
     bugsFixed=[
         Bug('''Printing didn't work.''', '2840010'),
         Bug('''Prevent exception when locking a file on a machine with a
 hostname containing non-ascii characters.''', '2835047'),
         Bug('''Make the winPenPack portable app start in English 
-by default.''')
+by default.'''),
+        Bug('''Drag and drop from Thunderbird would not work if the storage
+directory wasn't the default.''', '2840460')
         ]
     ),
     
