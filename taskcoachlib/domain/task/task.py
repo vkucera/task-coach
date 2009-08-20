@@ -34,23 +34,24 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         kwargs['description'] = description
         kwargs['categories'] = categories
         super(Task, self).__init__(*args, **kwargs)
-        self.__dueDate       = base.Attribute(dueDate or date.Date(),
-                                              self, self.dueDateEvent)
-        self.__startDate      = base.Attribute(startDate or date.Today(),
-                                              self, self.startDateEvent)
+        self.__dueDate = base.Attribute(dueDate or date.Date(), self, 
+                                        self.dueDateEvent)
+        self.__startDate = base.Attribute(startDate or date.Today(), self, 
+                                          self.startDateEvent)
         self.__completionDate = completionDate or date.Date()
         percentageComplete = 100 if self.__completionDate != date.Date() else percentageComplete
         self.__percentageComplete = base.Attribute(percentageComplete, 
                                                    self, self.percentageCompleteEvent)
-        self._budget         = budget or date.TimeDelta()
-        self._efforts        = efforts or []
-        self._priority       = priority
-        self._hourlyFee      = hourlyFee
-        self._fixedFee       = fixedFee
-        self._reminder       = reminder
+        self.__budget = base.Attribute(budget or date.TimeDelta(), self, 
+                                       self.budgetEvent)
+        self._efforts = efforts or []
+        self.__priority = base.Attribute(priority, self, self.priorityEvent)
+        self.__hourlyFee = base.Attribute(hourlyFee, self, self.hourlyFeeEvent)
+        self.__fixedFee = base.Attribute(fixedFee, self, self.fixedFeeEvent)
+        self.__reminder = base.Attribute(reminder, self, self.reminderEvent)
         if recurrence is None:
             recurrence = date.Recurrence()
-        self._recurrence     = recurrence
+        self._recurrence = recurrence
         self._shouldMarkCompletedWhenAllChildrenCompleted = \
             shouldMarkCompletedWhenAllChildrenCompleted
         for effort in self._efforts:
@@ -83,10 +84,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             completionDate=self.__completionDate, 
             percentageComplete=self.__percentageComplete.get(),
             children=self.children(), parent=self.parent(), 
-            efforts=self._efforts, budget=self._budget, priority=self._priority, 
-            hourlyFee=self._hourlyFee, fixedFee=self._fixedFee, 
+            efforts=self._efforts, budget=self.__budget.get(), 
+            priority=self.__priority.get(), 
+            hourlyFee=self.__hourlyFee.get(), fixedFee=self.__fixedFee.get(), 
             recurrence=self._recurrence.copy(),
-            reminder=self._reminder,
+            reminder=self.__reminder.get(),
             shouldMarkCompletedWhenAllChildrenCompleted=\
                 self._shouldMarkCompletedWhenAllChildrenCompleted))
         return state
@@ -98,10 +100,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             completionDate=self.__completionDate,
             percentageComplete=self.__percentageComplete.get(), 
             efforts=[effort.copy() for effort in self._efforts], 
-            budget=self._budget, priority=self._priority, 
-            hourlyFee=self._hourlyFee, fixedFee=self._fixedFee, 
+            budget=self.__budget.get(), priority=self.__priority.get(), 
+            hourlyFee=self.__hourlyFee.get(), fixedFee=self.__fixedFee.get(), 
             recurrence=self._recurrence.copy(),
-            reminder=self.reminder(), 
+            reminder=self.__reminder.get(), 
             shouldMarkCompletedWhenAllChildrenCompleted=\
                 self._shouldMarkCompletedWhenAllChildrenCompleted))
         return state
@@ -429,21 +431,14 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             event.send()
                 
     def budget(self, recursive=False):
-        result = self._budget
+        result = self.__budget.get()
         if recursive:
             for task in self.children():
                 result += task.budget(recursive)
         return result
         
     def setBudget(self, budget, event=None):
-        if budget == self._budget:
-            return
-        notify = event is None
-        event = event or patterns.Event()
-        self._budget = budget
-        self.budgetEvent(event)
-        if notify:
-            event.send()
+        self.__budget.set(budget, event)
         
     def budgetEvent(self, event):
         event.addSource(self, self.budget(), type='task.budget')
@@ -508,19 +503,12 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             childPriorities = [child.priority(recursive=True) \
                                for child in self.children() \
                                if not child.completed()]
-            return max(childPriorities + [self._priority])
+            return max(childPriorities + [self.__priority.get()])
         else:
-            return self._priority
+            return self.__priority.get()
         
     def setPriority(self, priority, event=None):
-        if priority == self._priority:
-            return
-        notify = event is None
-        event = event or patterns.Event()
-        self._priority = priority
-        self.priorityEvent(event)
-        if notify:
-            event.send()
+        self.__priority.set(priority, event)
         
     def priorityEvent(self, event):
         event.addSource(self, self.priority(), type='task.priority')
@@ -534,17 +522,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # revenue
     
     def hourlyFee(self, recursive=False):
-        return self._hourlyFee
+        return self.__hourlyFee.get()
     
     def setHourlyFee(self, hourlyFee, event=None):
-        if hourlyFee == self._hourlyFee:
-            return
-        notify = event is None
-        event = event or patterns.Event()
-        self._hourlyFee = hourlyFee
-        self.hourlyFeeEvent(event)
-        if notify:
-            event.send()
+        self.__hourlyFee.set(hourlyFee, event)
 
     def hourlyFeeEvent(self, event):
         event.addSource(self, self.hourlyFee(), 
@@ -566,22 +547,15 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def fixedFee(self, recursive=False):
         childFixedFees = sum(child.fixedFee(recursive) for child in 
                              self.children()) if recursive else 0
-        return self._fixedFee + childFixedFees
+        return self.__fixedFee.get() + childFixedFees
     
     def setFixedFee(self, fixedFee, event=None):
-        if fixedFee == self._fixedFee:
-            return
-        notify = event is None
-        event = event or patterns.Event()
-        self._fixedFee = fixedFee
-        self.fixedFeeEvent(event)
-        self.revenueEvent(event)
-        if notify:
-            event.send()
+        self.__fixedFee.set(fixedFee, event)
         
     def fixedFeeEvent(self, event):
         event.addSource(self, self.fixedFee(), type='task.fixedFee')
         self.totalFixedFeeEvent(event)
+        self.revenueEvent(event)
     
     def totalFixedFeeEvent(self, event):
         for ancestor in [self] + self.ancestors():
@@ -591,19 +565,15 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # reminder
     
     def reminder(self, recursive=False):
-        return self._reminder
+        return self.__reminder.get()
 
     def setReminder(self, reminderDateTime=None, event=None):
         if reminderDateTime == date.DateTime.max:
             reminderDateTime = None
-        if reminderDateTime == self._reminder:
-            return
-        self._reminder = reminderDateTime
-        notify = event is None
-        event = event or patterns.Event()
-        event.addSource(self, self._reminder, type='task.reminder')
-        if notify:
-            event.send()
+        self.__reminder.set(reminderDateTime, event)
+            
+    def reminderEvent(self, event):
+        event.addSource(self, self.reminder(), type='task.reminder')
                     
     # Recurrence
     

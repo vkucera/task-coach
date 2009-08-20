@@ -108,3 +108,22 @@ class PrinterTest(test.TestCase):
         self.settings.set('printer', 'orientation', str(wx.LANDSCAPE))
         printerSettings = gui.printer.PrinterSettings(self.settings)
         self.assertEqual(wx.LANDSCAPE, printerSettings.GetOrientation())
+
+
+class HTMLPrintoutTest(test.TestCase):
+    def testCreate(self):
+        class DummyViewer(object):
+            def title(self):
+                return 'title'
+            def visibleColumns(self):
+                return []
+            def isShowingTasks(self):
+                return True
+            def isTreeViewer(self):
+                return False
+            def visibleItems(self):
+                return []
+            
+        printOut = gui.printer.HTMLPrintout(DummyViewer(), 
+                                            config.Settings(load=False))
+        

@@ -375,6 +375,8 @@ _iPhoneAboutSubsection = _('''<h4><a name="taskcoachiphone">%(name)s on the iPho
 <p>There is an iPhone/iPod Touch companion app for %(name)s, available on
 <a href="http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=311403563&mt=8"
 target="_blank">Apple's AppStore</a>. 
+(If you don't have iTunes installed on your computer, you'll be presented
+a page where you can download iTunes).
 This app has few features right now, but allows you to take
 your tasks away and modify them:</p>
 
@@ -431,6 +433,12 @@ be running.</p>
 
 
 _iPhoneTroubleshootingSubsection = _('''<h4><a name="iphonetrouble">Troubleshooting</a></h4>
+<p>
+<h5>I can't seem to find the iPhone/iPod Touch app on Apple's website</h5>
+You need to have iTunes installed on your computer to browse Apple's App Store. 
+<a href="http://www.apple.com/itunes/" target="_blank">Get iTunes</a>.
+</p>
+
 <p>
 <h5>My computer doesn't appear in the list when trying to sync</h5>
 Check that your iPhone/iPod Touch is connected to the same network your

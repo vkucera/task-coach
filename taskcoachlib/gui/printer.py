@@ -81,7 +81,7 @@ class PrinterSettings(object):
 class HTMLPrintout(wx.html.HtmlPrintout):
     def __init__(self, aViewer, settings, printSelectionOnly=False, *args, **kwargs):
         super(HTMLPrintout, self).__init__(*args, **kwargs)
-        htmlText, count = persistence.viewer2html(aViewer, 
+        htmlText, count = persistence.viewer2html(aViewer, settings,
                                                   selectionOnly=printSelectionOnly)
         self.SetHtmlText(htmlText)
         self.SetFooter(_('Page') + ' @PAGENUM@/@PAGESCNT@', wx.html.PAGE_ALL)
