@@ -51,7 +51,7 @@ simple CSS stylesheet alongside it. The CSS stylesheet can be edited by the
 user using a text editor; Task Coach won't overwrite it.'''),
         Feature('''Tasks that are due soon are colored orange. How many
 days left is to be considered 'soon' can now be set via the preferences dialog, 
-in task behavior tab.''', '1312000')],
+in the task behavior tab.''', '1312000')],
     bugsFixed=[
         Bug('''Avoid nested syncml tags in the XML task file''',
             '2832062', '2813816'),
