@@ -30,6 +30,17 @@ Release('0.75.0', 'September ?, 2009',
         ]
     ),
 
+Release('0.74.1', 'August ?, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Printing didn't work.''', '2840010'),
+        Bug('''Prevent exception when locking a file on a machine with a
+hostname containing non-ascii characters.''', '2835047'),
+        Bug('''Make the winPenPack portable app start in English 
+by default.''')
+        ]
+    ),
+    
 Release('0.74.0', 'August 16, 2009',
     summary='''This release adds better HTML export, a winPenPack version of
 Task Coach, and fixes some bugs. Task Coach now uses Uservoice.com for

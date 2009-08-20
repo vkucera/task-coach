@@ -178,7 +178,7 @@ pages['download'] = \
         <tr><td rowspan=4 valign=top><img src="winPenPack.png" alt="winPenPack"></td>
         <td><b><a
         href="%(dist_download_prefix)s/X-%(filename)s_%(version)s_rev1.zip" 
-        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/windows');">winPenPack</a> for Microsoft Windows</b></td></tr>
+        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/windows');">winPenPack</a> portable app for Microsoft Windows</b></td></tr>
         <tr><td>Windows versions supported: Windows 2000, XP, Vista</td></tr>
         <tr><td>Prerequisites: none.</td></tr>
         <tr><td>Installation: unzip the archive contents in the location where
