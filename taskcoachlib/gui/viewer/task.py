@@ -57,20 +57,20 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
         if isinstance(items[0], task.Task):
             return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
                 command.EditTaskCommand(self.presentation(), items),
-                self.taskFile.tasks(), self.taskFile, self.settings, 
+                self.settings, self.taskFile.tasks(), self.taskFile, 
                 bitmap=kwargs['bitmap'],
                 columnName=kwargs.get('columnName', ''))
         else:
             return dialog.editor.EffortEditor(wx.GetTopLevelParent(self),
                 command.EditEffortCommand(self.taskFile.efforts(), items),
-                self.taskFile.efforts(), self.taskFile, self.settings, 
+                self.settings, self.taskFile.efforts(), self.taskFile,  
                 bitmap=kwargs['bitmap'])
-
-    def newSubItemDialog(self, *args, **kwargs):
-        return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
-            command.NewSubTaskCommand(self.presentation(), self.curselection()),
-            self.taskFile.tasks(), self.taskFile, self.settings, 
-            bitmap=kwargs['bitmap'])
+            
+    def editorClass(self):
+        return dialog.editor.TaskEditor
+    
+    def newSubItemCommandClass(self):
+        return command.NewSubTaskCommand
 
     def deleteItemCommand(self):
         return command.DeleteTaskCommand(self.presentation(), self.curselection(),

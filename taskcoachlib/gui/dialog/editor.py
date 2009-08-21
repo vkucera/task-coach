@@ -855,7 +855,7 @@ class EditorWithCommand(widgets.NotebookDialog):
 
 
 class TaskEditor(EditorWithCommand):
-    def __init__(self, parent, command, tasks, taskFile, settings, bitmap='edit', 
+    def __init__(self, parent, command, settings, tasks, taskFile, bitmap='edit', 
                  *args, **kwargs):
         self._settings = settings
         self._taskFile = taskFile
@@ -868,7 +868,7 @@ class TaskEditor(EditorWithCommand):
         
 
 class EffortEditor(EditorWithCommand):
-    def __init__(self, parent, command, efforts, taskFile, settings, 
+    def __init__(self, parent, command, settings, efforts, taskFile, 
                  *args, **kwargs):
         self._taskFile = taskFile
         self._settings = settings

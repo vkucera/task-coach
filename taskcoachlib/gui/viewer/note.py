@@ -206,12 +206,12 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
     def deleteItemCommand(self):
         return command.DeleteCommand(self.presentation(), self.curselection(),
                   shadow=self.settings.getboolean('feature', 'syncml'))
-
-    def newSubItemDialog(self, *args, **kwargs):
-        return dialog.editor.NoteEditor(wx.GetTopLevelParent(self),
-            command.NewSubNoteCommand(self.presentation(), self.curselection()),
-            self.settings, self.presentation(), 
-            self.taskFile, bitmap=kwargs['bitmap'])
+        
+    def editorClass(self):
+        return dialog.editor.NoteEditor
+    
+    def newSubItemCommandClass(self):
+        return command.NewSubNoteCommand
 
 
 class NoteViewer(mixin.FilterableViewerForNotes, BaseNoteViewer): 

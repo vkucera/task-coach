@@ -1286,7 +1286,7 @@ class TaskNew(TaskListCommand, SettingsCommand):
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
             command.NewTaskCommand(self.taskList, 
             categories=self.categoriesForTheNewTask()), 
-            self.taskList, self.mainWindow().taskFile, self.settings, 
+            self.settings, self.taskList, self.mainWindow().taskFile, 
             bitmap=self.bitmap)
         newTaskDialog.Show(show)
         return newTaskDialog # for testing purposes
@@ -1316,7 +1316,7 @@ class TaskNewFromTemplate(TaskNew):
         kwargs['categories'] = self.categoriesForTheNewTask()
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
             command.NewTaskCommand(self.taskList, **kwargs),
-            self.taskList, self.mainWindow().taskFile, self.settings, 
+            self.settings, self.taskList, self.mainWindow().taskFile, 
             bitmap=self.bitmap)
         newTaskDialog.Show(show)
         return newTaskDialog # for testing purposes
@@ -1761,7 +1761,7 @@ class EffortNew(NeedsAtLeastOneTask, ViewerCommand, EffortListCommand,
 
         newEffortDialog = dialog.editor.EffortEditor(self.mainWindow(), 
             command.NewEffortCommand(self.effortList, selectedTasks),
-            self.effortList, self.mainWindow().taskFile, self.settings, 
+            self.settings, self.effortList, self.mainWindow().taskFile, 
             bitmap=self.bitmap)
         newEffortDialog.Show()
 

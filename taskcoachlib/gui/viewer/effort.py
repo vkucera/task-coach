@@ -360,10 +360,10 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
             selectedTasks = [subjectDecoratedTaskList[0][1]]
         return dialog.editor.EffortEditor(wx.GetTopLevelParent(self), 
             command.NewEffortCommand(self.presentation(), selectedTasks),
-            self.taskFile.efforts(), self.taskFile, self.settings, bitmap=bitmap)
+            self.settings, self.taskFile.efforts(), self.taskFile, bitmap=bitmap)
     
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.EffortEditor(wx.GetTopLevelParent(self),
             command.EditEffortCommand(self.presentation(), self.curselection()), 
-            self.taskFile.efforts(), self.taskFile, self.settings, 
+            self.settings, self.taskFile.efforts(), self.taskFile, 
             columnName=kwargs.get('columnName', ''))

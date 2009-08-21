@@ -293,6 +293,14 @@ class Viewer(wx.Panel):
     def deleteItemCommand(self):
         return command.DeleteCommand(self.presentation(), self.curselection())
 
+    def newSubItemDialog(self, bitmap):
+        Editor = self.editorClass()
+        NewSubItemCommand = self.newSubItemCommandClass()
+        newSubItemCommand = NewSubItemCommand(self.presentation(), 
+                                              self.curselection())
+        return Editor(wx.GetTopLevelParent(self), newSubItemCommand,
+            self.settings, self.presentation(), self.taskFile, bitmap=bitmap)
+
 
 class ListViewer(Viewer):
     def isTreeViewer(self):

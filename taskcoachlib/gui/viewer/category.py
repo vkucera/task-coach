@@ -213,13 +213,13 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
             command.EditCategoryCommand(self.presentation(), kwargs['items']),
             self.settings, self.presentation(), self.taskFile, 
             bitmap=kwargs['bitmap'], columnName=kwargs.get('columnName', ''))
+        
+    def editorClass(self):
+        return dialog.editor.CategoryEditor
     
-    def newSubItemDialog(self, *args, **kwargs):
-        return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self),
-            command.NewSubCategoryCommand(self.presentation(), self.curselection()),
-            self.settings, self.presentation(), self.taskFile, 
-            bitmap=kwargs['bitmap'])
-
+    def newSubItemCommandClass(self):
+        return command.NewSubCategoryCommand
+    
 
 class CategoryViewer(BaseCategoryViewer):
     def __init__(self, *args, **kwargs):

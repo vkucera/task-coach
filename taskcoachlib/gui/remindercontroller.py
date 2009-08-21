@@ -87,7 +87,7 @@ class ReminderController(object):
         if dialog.openTaskAfterClose:
             editTask = editor.TaskEditor(self.__mainWindow,
                 command.EditTaskCommand(self.taskList, [task]), 
-                self.taskList, self.__mainWindow.taskFile, self.settings, 
+                self.settings, self.taskList, self.__mainWindow.taskFile, 
                 bitmap='edit')
             editTask.Show(show)
         else:
