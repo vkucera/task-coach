@@ -350,8 +350,6 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
             duration = date.TimeDelta()
         return render.timeSpent(duration)
     
-    # See TaskViewer for why the methods below have two names.
-    
     def newItemDialog(self, *args, **kwargs):
         selectedTasks = kwargs.get('selectedTasks', [])
         bitmap = kwargs.get('bitmap', 'new')
@@ -362,12 +360,10 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
             selectedTasks = [subjectDecoratedTaskList[0][1]]
         return dialog.editor.EffortEditor(wx.GetTopLevelParent(self), 
             command.NewEffortCommand(self.presentation(), selectedTasks),
-            self.taskFile, self.settings, bitmap=bitmap)
-        
-    newEffortDialog = newItemDialog
+            self.taskFile.efforts(), self.taskFile, self.settings, bitmap=bitmap)
     
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.EffortEditor(wx.GetTopLevelParent(self),
             command.EditEffortCommand(self.presentation(), self.curselection()), 
-            self.taskFile, self.settings, 
+            self.taskFile.efforts(), self.taskFile, self.settings, 
             columnName=kwargs.get('columnName', ''))

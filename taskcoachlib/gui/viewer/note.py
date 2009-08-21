@@ -196,8 +196,6 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
         newCommand.do()
         return self.editItemDialog(bitmap=kwargs['bitmap'], items=newCommand.items)
     
-    # See TaskViewer for why the methods below have two names.
-    
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.NoteEditor(wx.GetTopLevelParent(self),
             command.EditNoteCommand(self.presentation(), kwargs['items']),

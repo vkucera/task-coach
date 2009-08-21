@@ -855,11 +855,11 @@ class EditorWithCommand(widgets.NotebookDialog):
 
 
 class TaskEditor(EditorWithCommand):
-    def __init__(self, parent, command, taskFile, settings, bitmap='edit', 
+    def __init__(self, parent, command, tasks, taskFile, settings, bitmap='edit', 
                  *args, **kwargs):
         self._settings = settings
         self._taskFile = taskFile
-        super(TaskEditor, self).__init__(parent, command, taskFile.tasks(), 
+        super(TaskEditor, self).__init__(parent, command, tasks, 
                                          bitmap, *args, **kwargs)
 
     def addPage(self, task):
@@ -868,10 +868,11 @@ class TaskEditor(EditorWithCommand):
         
 
 class EffortEditor(EditorWithCommand):
-    def __init__(self, parent, command, taskFile, settings, *args, **kwargs):
+    def __init__(self, parent, command, efforts, taskFile, settings, 
+                 *args, **kwargs):
         self._taskFile = taskFile
         self._settings = settings
-        super(EffortEditor, self).__init__(parent, command, taskFile.efforts(), 
+        super(EffortEditor, self).__init__(parent, command, efforts, 
                                            *args, **kwargs)
 
     def setFocusOnFirstEntry(self):
@@ -895,10 +896,11 @@ class EffortEditor(EditorWithCommand):
 
 
 class CategoryEditor(EditorWithCommand):
-    def __init__(self, parent, command, settings, taskFile, *args, **kwargs):
+    def __init__(self, parent, command, settings, categories, taskFile, 
+                 *args, **kwargs):
         self._settings = settings
         self._taskFile = taskFile
-        super(CategoryEditor, self).__init__(parent, command, taskFile.categories(), 
+        super(CategoryEditor, self).__init__(parent, command, categories, 
                                              *args, **kwargs)
 
     def addPage(self, category):

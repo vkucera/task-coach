@@ -154,8 +154,6 @@ class AttachmentViewer(mixin.AttachmentDropTarget, base.ViewerWithColumns,
         newCommand.do()
         return self.editItemDialog(bitmap=kwargs['bitmap'], items=newCommand.items)
 
-    newAttachmentDialog = newItemDialog
-
     def editItemDialog(self, *args, **kwargs):
         return dialog.editor.AttachmentEditor(wx.GetTopLevelParent(self),
             command.EditAttachmentCommand(self.presentation(), *args, **kwargs),
