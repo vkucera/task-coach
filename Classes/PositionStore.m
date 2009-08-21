@@ -123,6 +123,9 @@ static PositionStore *_instance = nil;
 
 - (void)restore:(id <RestorableController>)controller
 {
+	if (current >= [positions count])
+		return;
+
 	Position *pos = [positions objectAtIndex:current];
 	++current;
 	[controller restorePosition:pos store:self];
