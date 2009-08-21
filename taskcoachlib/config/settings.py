@@ -136,7 +136,11 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
             wx.SystemOptions.SetOptionInt("mac.textcontrol-use-spell-checker", value)
 
     def getlist(self, section, option):
-        return eval(self.get(section, option))
+        listString = self.get(section, option)
+        try:
+            return eval(listString)
+        except:
+            return []
     
     def setlist(self, section, option, value):
         self.set(section, option, str(value))
