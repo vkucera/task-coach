@@ -216,10 +216,7 @@ class Viewer(wx.Panel):
 
     def visibleColumns(self):
         return [widgets.Column('subject', _('Subject'))]
-    
-    def itemEditor(self, *args, **kwargs):
-        raise NotImplementedError
-    
+        
     def getColor(self, item):
         return wx.BLACK
     

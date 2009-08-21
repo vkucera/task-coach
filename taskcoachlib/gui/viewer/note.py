@@ -214,8 +214,6 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
             command.NewSubNoteCommand(self.presentation(), self.curselection()),
             self.settings, self.presentation(), 
             self.taskFile, bitmap=kwargs['bitmap'])
-        
-    newSubNoteDialog = newSubItemDialog
 
 
 class NoteViewer(mixin.FilterableViewerForNotes, BaseNoteViewer): 

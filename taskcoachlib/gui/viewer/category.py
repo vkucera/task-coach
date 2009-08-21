@@ -218,8 +218,6 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
         return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self),
             command.NewSubCategoryCommand(self.presentation(), self.curselection()),
             self.settings, self.taskFile, bitmap=kwargs['bitmap'])
-        
-    newSubCategoryDialog = newSubItemDialog
 
 
 class CategoryViewer(BaseCategoryViewer):

@@ -1872,7 +1872,7 @@ class CategoryNewSubCategory(NeedsSelectedCategory, CategoriesCommand,
             helpText=categories.newSubItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
-        dialog = self.viewer.newSubCategoryDialog(bitmap=self.bitmap)
+        dialog = self.viewer.newSubItemDialog(bitmap=self.bitmap)
         dialog.Show(show)
 
 
@@ -1931,7 +1931,7 @@ class NoteNewSubNote(NeedsSelectedNote, NotesCommand, ViewerCommand):
             helpText=notes.newSubItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
-        dialog = self.viewer.newSubNoteDialog(bitmap=self.bitmap)
+        dialog = self.viewer.newSubItemDialog(bitmap=self.bitmap)
         dialog.Show(show)
 
 
