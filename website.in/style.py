@@ -100,13 +100,9 @@ footer = '''
                     <li><a href="https://sourceforge.net/tracker/?func=add&group_id=130831&atid=719134" 
                            onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/submit_bug');">Report a bug</a>
                     </li>
-                    <li><a href="http://taskcoach.uservoice.com/pages/26465" 
-                           onClick="javascript: pageTracker._trackPageview('/outgoing/uservoice.com/desktop');">Request a feature (desktop version)</a>
+                    <li><a href="http://taskcoach.uservoice.com/" 
+                           onClick="javascript: pageTracker._trackPageview('/outgoing/uservoice.com/');">Request a feature</a>
                     </li>
-                    <li><a href="http://taskcoach.uservoice.com/pages/23263" 
-                           onClick="javascript: pageTracker._trackPageview('/outgoing/uservoice.com/iPhone');">Request a feature (iPhone/iPod version)</a>
-                    </li>
-
                 </ul>
             </div>
             <div class="navbox">
