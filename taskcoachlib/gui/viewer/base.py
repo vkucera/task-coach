@@ -293,13 +293,22 @@ class Viewer(wx.Panel):
     def deleteItemCommand(self):
         return command.DeleteCommand(self.presentation(), self.curselection())
 
+    def editItemDialog(self, items, bitmap, columnName=''):
+        Editor = self.editorClass()
+        EditItemCommand = self.editItemCommandClass()
+        editItemCommand = EditItemCommand(self.presentation(), items)
+        return Editor(wx.GetTopLevelParent(self), editItemCommand, 
+                      self.settings, self.presentation(), self.taskFile, 
+                      bitmap=bitmap, columnName=columnName)
+        
     def newSubItemDialog(self, bitmap):
         Editor = self.editorClass()
         NewSubItemCommand = self.newSubItemCommandClass()
         newSubItemCommand = NewSubItemCommand(self.presentation(), 
                                               self.curselection())
         return Editor(wx.GetTopLevelParent(self), newSubItemCommand,
-            self.settings, self.presentation(), self.taskFile, bitmap=bitmap)
+                      self.settings, self.presentation(), self.taskFile, 
+                      bitmap=bitmap)
 
 
 class ListViewer(Viewer):

@@ -1251,9 +1251,8 @@ class ObjectEdit(ObjectCommandBase):
             columnName = event.columnName
         except AttributeError:
             columnName = ''
-        editor = self.viewer.editItemDialog(bitmap=self.bitmap,
-                                            items=self.viewer.curselection(),
-                                            columnName=columnName)
+        editor = self.viewer.editItemDialog(self.viewer.curselection(), 
+                                            self.bitmap, columnName)
         editor.Show(show)
 
 

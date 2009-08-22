@@ -362,8 +362,8 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
             command.NewEffortCommand(self.presentation(), selectedTasks),
             self.settings, self.taskFile.efforts(), self.taskFile, bitmap=bitmap)
     
-    def editItemDialog(self, *args, **kwargs):
-        return dialog.editor.EffortEditor(wx.GetTopLevelParent(self),
-            command.EditEffortCommand(self.presentation(), self.curselection()), 
-            self.settings, self.taskFile.efforts(), self.taskFile, 
-            columnName=kwargs.get('columnName', ''))
+    def editorClass(self):
+        return dialog.editor.EffortEditor
+    
+    def editItemCommandClass(self):
+        return command.EditEffortCommand

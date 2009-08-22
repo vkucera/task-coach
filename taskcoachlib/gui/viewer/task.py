@@ -52,25 +52,23 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
     def trackStopEventType(self):
         return task.Task.trackStopEventType()
     
-    def editItemDialog(self, *args, **kwargs):
-        items = kwargs.get('items', self.curselection())
+    def editItemDialog(self, items, bitmap, columnName=''):
         if isinstance(items[0], task.Task):
-            return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
-                command.EditTaskCommand(self.presentation(), items),
-                self.settings, self.taskFile.tasks(), self.taskFile, 
-                bitmap=kwargs['bitmap'],
-                columnName=kwargs.get('columnName', ''))
+            return super(BaseTaskViewer, self).editItemDialog(items, bitmap, columnName)
         else:
             return dialog.editor.EffortEditor(wx.GetTopLevelParent(self),
                 command.EditEffortCommand(self.taskFile.efforts(), items),
                 self.settings, self.taskFile.efforts(), self.taskFile,  
-                bitmap=kwargs['bitmap'])
+                bitmap=bitmap)
             
     def editorClass(self):
         return dialog.editor.TaskEditor
     
     def newSubItemCommandClass(self):
         return command.NewSubTaskCommand
+    
+    def editItemCommandClass(self):
+        return command.EditTaskCommand
 
     def deleteItemCommand(self):
         return command.DeleteTaskCommand(self.presentation(), self.curselection(),

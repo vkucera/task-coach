@@ -194,14 +194,7 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
                                             categories=filteredCategories, 
                                             *args, **kwargs)
         newCommand.do()
-        return self.editItemDialog(bitmap=kwargs['bitmap'], items=newCommand.items)
-    
-    def editItemDialog(self, *args, **kwargs):
-        return dialog.editor.NoteEditor(wx.GetTopLevelParent(self),
-            command.EditNoteCommand(self.presentation(), kwargs['items']),
-            self.settings, self.presentation(),  
-            self.taskFile, bitmap=kwargs['bitmap'],
-            columnName=kwargs.get('columnName', ''))
+        return self.editItemDialog(newCommand.items, kwargs['bitmap'])
     
     def deleteItemCommand(self):
         return command.DeleteCommand(self.presentation(), self.curselection(),
@@ -212,6 +205,9 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
     
     def newSubItemCommandClass(self):
         return command.NewSubNoteCommand
+
+    def editItemCommandClass(self):
+        return command.EditNoteCommand
 
 
 class NoteViewer(mixin.FilterableViewerForNotes, BaseNoteViewer): 
