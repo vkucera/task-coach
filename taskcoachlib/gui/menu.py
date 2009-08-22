@@ -239,7 +239,7 @@ class FileMenu(Menu):
         event.Skip()
     
     def __insertRecentFileMenuItems(self):
-        recentFiles = eval(self.__settings.get('file', 'recentfiles'))
+        recentFiles = self.__settings.getlist('file', 'recentfiles')
         if not recentFiles:
             return
         maximumNumberOfRecentFiles = self.__settings.getint('file', 

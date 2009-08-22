@@ -188,34 +188,25 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
         return status1, status2
 
     def newItemDialog(self, *args, **kwargs):
-        filteredCategories = [category for category in self.taskFile.categories() if
+        kwargs['categories'] = [category for category in self.taskFile.categories() if
                               category.isFiltered()]
-        newCommand = command.NewNoteCommand(self.presentation(), 
-                                            categories=filteredCategories, 
-                                            *args, **kwargs)
-        newCommand.do()
-        return self.editItemDialog(bitmap=kwargs['bitmap'], items=newCommand.items)
-    
-    # See TaskViewer for why the methods below have two names.
-    
-    def editItemDialog(self, *args, **kwargs):
-        return dialog.editor.NoteEditor(wx.GetTopLevelParent(self),
-            command.EditNoteCommand(self.presentation(), kwargs['items']),
-            self.settings, self.presentation(),  
-            self.taskFile, bitmap=kwargs['bitmap'],
-            columnName=kwargs.get('columnName', ''))
+        return super(BaseNoteViewer, self).newItemDialog(*args, **kwargs)
     
     def deleteItemCommand(self):
         return command.DeleteCommand(self.presentation(), self.curselection(),
                   shadow=self.settings.getboolean('feature', 'syncml'))
-
-    def newSubItemDialog(self, *args, **kwargs):
-        return dialog.editor.NoteEditor(wx.GetTopLevelParent(self),
-            command.NewSubNoteCommand(self.presentation(), self.curselection()),
-            self.settings, self.presentation(), 
-            self.taskFile, bitmap=kwargs['bitmap'])
         
-    newSubNoteDialog = newSubItemDialog
+    def editorClass(self):
+        return dialog.editor.NoteEditor
+    
+    def newItemCommandClass(self):
+        return command.NewNoteCommand
+    
+    def newSubItemCommandClass(self):
+        return command.NewSubNoteCommand
+
+    def editItemCommandClass(self):
+        return command.EditNoteCommand
 
 
 class NoteViewer(mixin.FilterableViewerForNotes, BaseNoteViewer): 

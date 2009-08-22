@@ -868,29 +868,30 @@ class EditorWithCommand(widgets.NotebookDialog):
         self._command.do()
         
     def onItemRemoved(self, event):
-        ''' The item we're editing has been removed. Close the tab of the item
-            involved and close the whole editor if there are no tabs left. '''
+        ''' The item we're editing or one of its ancestors has been removed. 
+            Close the tab of the item involved and close the whole editor if 
+            there are no tabs left. '''
         if not self:
             return # Prevent _wxPyDeadObject TypeError
         pagesToCancel = [] # Collect the pages to cancel so we don't modify the 
                            # book widget while we iterate over it
         for item in event.values():
             pagesToCancel.extend([page for page in self \
-                                  if self.isPageDisplayingItem(page, item)])
+                                  if self.isPageDisplayingItemOrChildOfItem(page, item)])
         self.cancelPages(pagesToCancel)
         if len(list(self)) == 0:
             self.cancel()
             
-    def isPageDisplayingItem(self, page, item):
-        return page.item == item
+    def isPageDisplayingItemOrChildOfItem(self, page, item): 
+        return item in [page.item] + page.item.ancestors()
 
 
 class TaskEditor(EditorWithCommand):
-    def __init__(self, parent, command, taskFile, settings, bitmap='edit', 
+    def __init__(self, parent, command, settings, tasks, taskFile, bitmap='edit', 
                  *args, **kwargs):
         self._settings = settings
         self._taskFile = taskFile
-        super(TaskEditor, self).__init__(parent, command, taskFile.tasks(), 
+        super(TaskEditor, self).__init__(parent, command, tasks, 
                                          bitmap, *args, **kwargs)
 
     def addPage(self, task):
@@ -899,10 +900,11 @@ class TaskEditor(EditorWithCommand):
         
 
 class EffortEditor(EditorWithCommand):
-    def __init__(self, parent, command, taskFile, settings, *args, **kwargs):
+    def __init__(self, parent, command, settings, efforts, taskFile, 
+                 *args, **kwargs):
         self._taskFile = taskFile
         self._settings = settings
-        super(EffortEditor, self).__init__(parent, command, taskFile.efforts(), 
+        super(EffortEditor, self).__init__(parent, command, efforts, 
                                            *args, **kwargs)
 
     def setFocusOnFirstEntry(self):
@@ -926,10 +928,11 @@ class EffortEditor(EditorWithCommand):
 
 
 class CategoryEditor(EditorWithCommand):
-    def __init__(self, parent, command, settings, taskFile, *args, **kwargs):
+    def __init__(self, parent, command, settings, categories, taskFile, 
+                 *args, **kwargs):
         self._settings = settings
         self._taskFile = taskFile
-        super(CategoryEditor, self).__init__(parent, command, taskFile.categories(), 
+        super(CategoryEditor, self).__init__(parent, command, categories, 
                                              *args, **kwargs)
 
     def addPage(self, category):

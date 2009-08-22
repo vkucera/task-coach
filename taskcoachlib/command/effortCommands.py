@@ -27,7 +27,7 @@ class NewEffortCommand(base.BaseCommand):
     
     def __init__(self, *args, **kwargs):
         super(NewEffortCommand, self).__init__(*args, **kwargs)
-        self.efforts = [effort.Effort(task) for task in self.items]
+        self.items = self.efforts = [effort.Effort(task) for task in self.items]
         
     def do_command(self):
         for effort in self.efforts:

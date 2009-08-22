@@ -202,25 +202,19 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
             (len(self.curselection()), len(self.presentation()))
         status2 = _('Status: %d filtered')%len([category for category in self.presentation() if category.isFiltered()])
         return status1, status2
-
-    def newItemDialog(self, *args, **kwargs):
-        newCommand = command.NewCategoryCommand(self.presentation(), *args, **kwargs)
-        newCommand.do()
-        return self.editItemDialog(bitmap=kwargs['bitmap'], items=newCommand.items)
-    
-    def editItemDialog(self, *args, **kwargs):
-        return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self),
-            command.EditCategoryCommand(self.presentation(), kwargs['items']),
-            self.settings, self.taskFile, bitmap=kwargs['bitmap'],
-            columnName=kwargs.get('columnName', ''))
-    
-    def newSubItemDialog(self, *args, **kwargs):
-        return dialog.editor.CategoryEditor(wx.GetTopLevelParent(self),
-            command.NewSubCategoryCommand(self.presentation(), self.curselection()),
-            self.settings, self.taskFile, bitmap=kwargs['bitmap'])
         
-    newSubCategoryDialog = newSubItemDialog
-
+    def editorClass(self):
+        return dialog.editor.CategoryEditor
+    
+    def newItemCommandClass(self):
+        return command.NewCategoryCommand
+    
+    def editItemCommandClass(self):
+        return command.EditCategoryCommand
+    
+    def newSubItemCommandClass(self):
+        return command.NewSubCategoryCommand
+    
 
 class CategoryViewer(BaseCategoryViewer):
     def __init__(self, *args, **kwargs):
