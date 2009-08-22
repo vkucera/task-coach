@@ -293,6 +293,13 @@ class Viewer(wx.Panel):
     def deleteItemCommand(self):
         return command.DeleteCommand(self.presentation(), self.curselection())
 
+    def newItemDialog(self, *args, **kwargs):
+        bitmap = kwargs.pop('bitmap')
+        NewItemCommand = self.newItemCommandClass()
+        newItemCommand = NewItemCommand(self.presentation(), *args, **kwargs)
+        newItemCommand.do()
+        return self.editItemDialog(newItemCommand.items, bitmap)
+    
     def editItemDialog(self, items, bitmap, columnName=''):
         Editor = self.editorClass()
         EditItemCommand = self.editItemCommandClass()

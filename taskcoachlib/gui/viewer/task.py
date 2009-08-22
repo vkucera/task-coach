@@ -51,6 +51,11 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
     
     def trackStopEventType(self):
         return task.Task.trackStopEventType()
+
+    def newItemDialog(self, *args, **kwargs):
+        kwargs['categories'] = [category for category in self.taskFile.categories()
+                                if category.isFiltered()]
+        return super(BaseTaskViewer, self).newItemDialog(*args, **kwargs)
     
     def editItemDialog(self, items, bitmap, columnName=''):
         if isinstance(items[0], task.Task):
@@ -63,6 +68,9 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
             
     def editorClass(self):
         return dialog.editor.TaskEditor
+
+    def newItemCommandClass(self):
+        return command.NewTaskCommand
     
     def newSubItemCommandClass(self):
         return command.NewSubTaskCommand
@@ -733,14 +741,6 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
 
     def noteImageIndex(self, task, which):
         return self.imageIndex['note'] if task.notes() else -1 
-
-    def newItemDialog(self, *args, **kwargs):
-        bitmap = kwargs.pop('bitmap')
-        kwargs['categories'] = [category for category in self.taskFile.categories()
-                                if category.isFiltered()]
-        newCommand = command.NewTaskCommand(self.presentation(), **kwargs)
-        newCommand.do()
-        return self.editItemDialog(bitmap=bitmap, items=newCommand.items)
 
     def setSortByTaskStatusFirst(self, *args, **kwargs):
         super(TaskViewer, self).setSortByTaskStatusFirst(*args, **kwargs)

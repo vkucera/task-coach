@@ -149,13 +149,11 @@ class AttachmentViewer(mixin.AttachmentDropTarget, base.ViewerWithColumns,
         except KeyError:
             return -1
 
-    def newItemDialog(self, *args, **kwargs):
-        newCommand = command.NewAttachmentCommand(self.presentation(), *args, **kwargs)
-        newCommand.do()
-        return self.editItemDialog(newCommand.items, kwargs['bitmap'])
-
     def editorClass(self):
         return dialog.editor.AttachmentEditor
+    
+    def newItemCommandClass(self):
+        return command.NewAttachmentCommand
     
     def editItemCommandClass(self):
         return command.EditAttachmentCommand

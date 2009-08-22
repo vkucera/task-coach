@@ -188,13 +188,9 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
         return status1, status2
 
     def newItemDialog(self, *args, **kwargs):
-        filteredCategories = [category for category in self.taskFile.categories() if
+        kwargs['categories'] = [category for category in self.taskFile.categories() if
                               category.isFiltered()]
-        newCommand = command.NewNoteCommand(self.presentation(), 
-                                            categories=filteredCategories, 
-                                            *args, **kwargs)
-        newCommand.do()
-        return self.editItemDialog(newCommand.items, kwargs['bitmap'])
+        return super(BaseNoteViewer, self).newItemDialog(*args, **kwargs)
     
     def deleteItemCommand(self):
         return command.DeleteCommand(self.presentation(), self.curselection(),
@@ -202,6 +198,9 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
         
     def editorClass(self):
         return dialog.editor.NoteEditor
+    
+    def newItemCommandClass(self):
+        return command.NewNoteCommand
     
     def newSubItemCommandClass(self):
         return command.NewSubNoteCommand

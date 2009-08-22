@@ -202,14 +202,12 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
             (len(self.curselection()), len(self.presentation()))
         status2 = _('Status: %d filtered')%len([category for category in self.presentation() if category.isFiltered()])
         return status1, status2
-
-    def newItemDialog(self, *args, **kwargs):
-        newCommand = command.NewCategoryCommand(self.presentation(), *args, **kwargs)
-        newCommand.do()
-        return self.editItemDialog(newCommand.items, kwargs['bitmap'])
         
     def editorClass(self):
         return dialog.editor.CategoryEditor
+    
+    def newItemCommandClass(self):
+        return command.NewCategoryCommand
     
     def editItemCommandClass(self):
         return command.EditCategoryCommand

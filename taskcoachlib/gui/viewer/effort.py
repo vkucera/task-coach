@@ -358,12 +358,13 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
                                         for task in self.tasksToShowEffortFor]
             subjectDecoratedTaskList.sort() # Sort by subject
             selectedTasks = [subjectDecoratedTaskList[0][1]]
-        return dialog.editor.EffortEditor(wx.GetTopLevelParent(self), 
-            command.NewEffortCommand(self.presentation(), selectedTasks),
-            self.settings, self.taskFile.efforts(), self.taskFile, bitmap=bitmap)
-    
+        return super(EffortViewer, self).newItemDialog(selectedTasks, bitmap=bitmap)
+        
     def editorClass(self):
         return dialog.editor.EffortEditor
+    
+    def newItemCommandClass(self):
+        return command.NewEffortCommand
     
     def editItemCommandClass(self):
         return command.EditEffortCommand
