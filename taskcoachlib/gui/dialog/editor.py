@@ -837,21 +837,22 @@ class EditorWithCommand(widgets.NotebookDialog):
         self._command.do()
         
     def onItemRemoved(self, event):
-        ''' The item we're editing has been removed. Close the tab of the item
-            involved and close the whole editor if there are no tabs left. '''
+        ''' The item we're editing or one of its ancestors has been removed. 
+            Close the tab of the item involved and close the whole editor if 
+            there are no tabs left. '''
         if not self:
             return # Prevent _wxPyDeadObject TypeError
         pagesToCancel = [] # Collect the pages to cancel so we don't modify the 
                            # book widget while we iterate over it
         for item in event.values():
             pagesToCancel.extend([page for page in self \
-                                  if self.isPageDisplayingItem(page, item)])
+                                  if self.isPageDisplayingItemOrChildOfItem(page, item)])
         self.cancelPages(pagesToCancel)
         if len(list(self)) == 0:
             self.cancel()
             
-    def isPageDisplayingItem(self, page, item):
-        return page.item == item
+    def isPageDisplayingItemOrChildOfItem(self, page, item): 
+        return item in [page.item] + page.item.ancestors()
 
 
 class TaskEditor(EditorWithCommand):
