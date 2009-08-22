@@ -30,102 +30,12 @@ import wx, asynchat, threading, asyncore, struct, StringIO, random, time, sha
 # Default port is 8001.
 #
 # Integers are sent as 32 bits signed, network byte order.
-# Strings are sent as their length (as integer), then data (UTF-8 encoded).
+# Strings are sent as their length (as integer), then data (UTF-8
+# encoded). The length is computed after encoding.
+# Dates are sent as strings, formatted YYYY-MM-DD.
 #
-# 1) The protocol version is negotiated: Task Coach sends its higher
-# supported version (currently 2). If the iPhone answers 0, it doesn't
-# support it, so decrement and try again. If it answers 1, go to 2.
-# See at the end of this comment to know what's new in protocol 2.
-#
-# 2) SHA1 challenge: Task Coach sends 512 random bytes to the
-# device. The device appends the user provided password as UTF-8 data
-# and sends back the SHA1 hash of the result. Task Coach checks the
-# hash and sends 0 (wrong hash) or 1 (authenticated), and then go to 3.
-#
-# 3) The iPhone sends its device name.
-#
-# 4) The iPhone sends the task file GUID it's associated with, or an
-# empty string if it has never been synced before. If the GUID doesn't
-# match the currently open file, the user is prompted for the kind of
-# synchronization he wants (full from Task Coach or full from device).
-#
-# 5) Task Coach sends the synchronization type to the iPhone. The
-# actual synchronization can begin now.
-#
-# Types are
-#   0 two ways
-#   1 full from Task Coach
-#   2 full from iPhone
-#   3 user cancelled
-#
-# Two-way is actually implemented as: get changes from iPhone, then
-# full from Task Coach. This allows us to avoid keeping track of
-# changes on the Task Coach side; we're not using the change tracking
-# mechanism because it would interfere with SyncML. Cons: no conflict
-# resolution, the device always wins. This should not be a problem in
-# this use case.
-#
-# == Full from Task Coach ==
-#
-# In this scenario, Task Coach first sends the number of categories it
-# will send, then the number of tasks. Then it sends the objects
-# themselves.
-#
-# Categories are sent as:
-#
-#  1) name (string)
-#  2) ID (string)
-#  3) Parent ID (string)
-#
-# Tasks are sent as:
-#
-#  1) title (string)
-#  2) ID (string)
-#  3) description (string)
-#  4) start date
-#  5) due date
-#  6) completion date
-#  7) Number of categories (int)
-#  8) Category IDs (strings)
-#
-# All dates are string, formatted YYYY-MM-DD. An empty string means None.
-#
-# After all categories and tasks have been sent, Task Coach sends the file
-# GUID as a string.
-#
-# After each object has been sent, Task Coach waits for the device to send
-# a status code (integer). Currently it is always 1. This seems necessary for
-# the iPhone UI to update; without that the run loop doesn't have a chance to
-# run anything not network-related...
-#
-# == Full from device ==
-#
-# All conventions are the same as in "Full from Task Coach".
-#
-# 1) The device sends two integers: number of categories, number of tasks
-# 2) For each category, the device sends the category name and waits for its ID.
-# 3) For each task, the device sends the full task (same format as above, without
-#    the ID), and waits for its ID.
-# 4) Task Coach sends the GUID and waits for an integer (currently always 1)
-# 5) Task Coach closes the connection
-#
-# == Two-way ==
-#
-# All conventions are the same as in "Full from Task Coach".
-#
-# 1) The device sends four integers: number of new categories, number of new tasks,
-#    number of deleted tasks, and number of modified tasks.
-# 2) For each new category, the device sends its name, and waits for the ID.
-# 3) For each new task, the device sends it (same format as above, but without the
-#    ID) and waits for its ID.
-# 4) For each deleted task, the device sends its ID.
-# 5) For each modified task, the device sends it (same format as above, without the category Id)
-# 6) Go into "Full from Task Coach" mode.
-
-# What's new in protocol v2
-
-# In the two-way state, when uploading modified tasks from the device to the desktop,
-# it adds the number of categories for the task, then each category ID.
+# The exact workflow for both desktop and device is documented as Dia
+# diagrams, in the "Design" subdirectory of the iPhone sources.
 
 class IPhoneAcceptor(Acceptor):
     def __init__(self, window, settings):

@@ -1251,9 +1251,8 @@ class ObjectEdit(ObjectCommandBase):
             columnName = event.columnName
         except AttributeError:
             columnName = ''
-        editor = self.viewer.editItemDialog(bitmap=self.bitmap,
-                                            items=self.viewer.curselection(),
-                                            columnName=columnName)
+        editor = self.viewer.editItemDialog(self.viewer.curselection(), 
+                                            self.bitmap, columnName)
         editor.Show(show)
 
 
@@ -1286,7 +1285,8 @@ class TaskNew(TaskListCommand, SettingsCommand):
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
             command.NewTaskCommand(self.taskList, 
             categories=self.categoriesForTheNewTask()), 
-            self.mainWindow().taskFile, self.settings, bitmap=self.bitmap)
+            self.settings, self.taskList, self.mainWindow().taskFile, 
+            bitmap=self.bitmap)
         newTaskDialog.Show(show)
         return newTaskDialog # for testing purposes
 
@@ -1315,7 +1315,8 @@ class TaskNewFromTemplate(TaskNew):
         kwargs['categories'] = self.categoriesForTheNewTask()
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
             command.NewTaskCommand(self.taskList, **kwargs),
-            self.mainWindow().taskFile, self.settings, bitmap=self.bitmap)
+            self.settings, self.taskList, self.mainWindow().taskFile, 
+            bitmap=self.bitmap)
         newTaskDialog.Show(show)
         return newTaskDialog # for testing purposes
 
@@ -1652,7 +1653,8 @@ class AttachmentAddNote(NeedsSelectedAttachments, ViewerCommand, SettingsCommand
         noteDialog = dialog.editor.NoteEditor(self.mainWindow(), 
             command.AddAttachmentNoteCommand(self.viewer.presentation(), 
                 self.viewer.curselection()),
-            self.settings, self.mainWindow().taskFile, bitmap=self.bitmap)
+            self.settings, self.viewer.presentation(), 
+            self.mainWindow().taskFile, bitmap=self.bitmap)
         noteDialog.Show(show)
         return noteDialog # for testing purposes
 
@@ -1758,7 +1760,8 @@ class EffortNew(NeedsAtLeastOneTask, ViewerCommand, EffortListCommand,
 
         newEffortDialog = dialog.editor.EffortEditor(self.mainWindow(), 
             command.NewEffortCommand(self.effortList, selectedTasks),
-            self.mainWindow().taskFile, self.settings, bitmap=self.bitmap)
+            self.settings, self.effortList, self.mainWindow().taskFile, 
+            bitmap=self.bitmap)
         newEffortDialog.Show()
 
     @staticmethod    
@@ -1857,9 +1860,10 @@ class CategoryNew(CategoriesCommand, SettingsCommand):
             helpText=categories.newItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
+        taskFile = self.mainWindow().taskFile
         newCategoryDialog = dialog.editor.CategoryEditor(self.mainWindow(), 
             command.NewCategoryCommand(self.categories),
-            self.settings, self.mainWindow().taskFile, bitmap=self.bitmap)
+            self.settings, taskFile.categories(), taskFile, bitmap=self.bitmap)
         newCategoryDialog.Show(show)
         
 
@@ -1872,7 +1876,7 @@ class CategoryNewSubCategory(NeedsSelectedCategory, CategoriesCommand,
             helpText=categories.newSubItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
-        dialog = self.viewer.newSubCategoryDialog(bitmap=self.bitmap)
+        dialog = self.viewer.newSubItemDialog(bitmap=self.bitmap)
         dialog.Show(show)
 
 
@@ -1931,7 +1935,7 @@ class NoteNewSubNote(NeedsSelectedNote, NotesCommand, ViewerCommand):
             helpText=notes.newSubItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
-        dialog = self.viewer.newSubNoteDialog(bitmap=self.bitmap)
+        dialog = self.viewer.newSubItemDialog(bitmap=self.bitmap)
         dialog.Show(show)
 
 

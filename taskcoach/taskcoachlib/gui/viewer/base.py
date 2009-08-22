@@ -216,10 +216,7 @@ class Viewer(wx.Panel):
 
     def visibleColumns(self):
         return [widgets.Column('subject', _('Subject'))]
-    
-    def itemEditor(self, *args, **kwargs):
-        raise NotImplementedError
-    
+        
     def getColor(self, item):
         return wx.BLACK
     
@@ -295,6 +292,32 @@ class Viewer(wx.Panel):
     
     def deleteItemCommand(self):
         return command.DeleteCommand(self.presentation(), self.curselection())
+
+    def newItemDialog(self, *args, **kwargs):
+        bitmap = kwargs.pop('bitmap')
+        NewItemCommand = self.newItemCommandClass()
+        newItemCommand = NewItemCommand(self.presentation(), *args, **kwargs)
+        newItemCommand.do()
+        return self.editItemDialog(newItemCommand.items, bitmap)
+    
+    def editItemDialog(self, items, bitmap, columnName=''):
+        Editor = self.editorClass()
+        EditItemCommand = self.editItemCommandClass()
+        editItemCommand = EditItemCommand(self.presentation(), items)
+        return Editor(wx.GetTopLevelParent(self), editItemCommand, 
+                      self.settings, self.presentation(), self.taskFile, 
+                      bitmap=bitmap, columnName=columnName)
+        
+    def newSubItemDialog(self, bitmap):
+        Editor = self.editorClass()
+        NewSubItemCommand = self.newSubItemCommandClass()
+        newSubItemCommand = NewSubItemCommand(self.presentation(), 
+                                              self.curselection())
+        for item in newSubItemCommand.items:
+            item.parent().expand(True, context=self.settingsSection())
+        return Editor(wx.GetTopLevelParent(self), newSubItemCommand,
+                      self.settings, self.presentation(), self.taskFile, 
+                      bitmap=bitmap)
 
 
 class ListViewer(Viewer):

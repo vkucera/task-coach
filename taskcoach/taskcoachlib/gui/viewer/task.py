@@ -51,23 +51,32 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
     
     def trackStopEventType(self):
         return task.Task.trackStopEventType()
+
+    def newItemDialog(self, *args, **kwargs):
+        kwargs['categories'] = [category for category in self.taskFile.categories()
+                                if category.isFiltered()]
+        return super(BaseTaskViewer, self).newItemDialog(*args, **kwargs)
     
-    def editItemDialog(self, *args, **kwargs):
-        items = kwargs.get('items', self.curselection())
+    def editItemDialog(self, items, bitmap, columnName=''):
         if isinstance(items[0], task.Task):
-            return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
-                command.EditTaskCommand(self.presentation(), items),
-                self.taskFile, self.settings, bitmap=kwargs['bitmap'],
-                columnName=kwargs.get('columnName', ''))
+            return super(BaseTaskViewer, self).editItemDialog(items, bitmap, columnName)
         else:
             return dialog.editor.EffortEditor(wx.GetTopLevelParent(self),
                 command.EditEffortCommand(self.taskFile.efforts(), items),
-                self.taskFile, self.settings, bitmap=kwargs['bitmap'])
+                self.settings, self.taskFile.efforts(), self.taskFile,  
+                bitmap=bitmap)
+            
+    def editorClass(self):
+        return dialog.editor.TaskEditor
 
-    def newSubItemDialog(self, *args, **kwargs):
-        return dialog.editor.TaskEditor(wx.GetTopLevelParent(self),
-            command.NewSubTaskCommand(self.presentation(), self.curselection()),
-            self.taskFile, self.settings, bitmap=kwargs['bitmap'])
+    def newItemCommandClass(self):
+        return command.NewTaskCommand
+    
+    def newSubItemCommandClass(self):
+        return command.NewSubTaskCommand
+    
+    def editItemCommandClass(self):
+        return command.EditTaskCommand
 
     def deleteItemCommand(self):
         return command.DeleteTaskCommand(self.presentation(), self.curselection(),
@@ -740,14 +749,6 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
 
     def noteImageIndex(self, task, which):
         return self.imageIndex['note'] if task.notes() else -1 
-
-    def newItemDialog(self, *args, **kwargs):
-        bitmap = kwargs.pop('bitmap')
-        kwargs['categories'] = [category for category in self.taskFile.categories()
-                                if category.isFiltered()]
-        newCommand = command.NewTaskCommand(self.presentation(), **kwargs)
-        newCommand.do()
-        return self.editItemDialog(bitmap=bitmap, items=newCommand.items)
 
     def setSortByTaskStatusFirst(self, *args, **kwargs):
         super(TaskViewer, self).setSortByTaskStatusFirst(*args, **kwargs)
