@@ -313,6 +313,8 @@ class Viewer(wx.Panel):
         NewSubItemCommand = self.newSubItemCommandClass()
         newSubItemCommand = NewSubItemCommand(self.presentation(), 
                                               self.curselection())
+        for item in newSubItemCommand.items:
+            item.parent().expand(True, context=self.settingsSection())
         return Editor(wx.GetTopLevelParent(self), newSubItemCommand,
                       self.settings, self.presentation(), self.taskFile, 
                       bitmap=bitmap)

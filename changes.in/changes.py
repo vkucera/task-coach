@@ -37,7 +37,8 @@ hostname containing non-ascii characters.''', '2835047'),
         Bug('''Make the winPenPack portable app start in English 
 by default.'''),
         Bug('''Drag and drop from Thunderbird would not work if the storage
-directory wasn't the default.''', '2840460')
+directory wasn't the default.''', '2840460'),
+        Bug('''Expand parent item when adding a sub item.''')
         ]
     ),
     
