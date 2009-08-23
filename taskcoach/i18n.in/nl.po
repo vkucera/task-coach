@@ -6,164 +6,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-10 21:18+0000\n"
+"POT-Creation-Date: 2009-08-20 16:40+0000\n"
 "PO-Revision-Date: 2009-08-10 22:39+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Dutch <frank@niessink.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-08-16 14:16+0000\n"
+"X-Launchpad-Export-Date: 2009-08-22 19:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: NETHERLANDS\n"
 "X-Poedit-Language: dutch\n"
 "Generated-By: pygettext.py 1.5\n"
-
-#: taskcoachlib\help\__init__.py:343
-msgid ""
-"<h4><a name=\"syncmlpurge\">Purging deleted items</a></h4>\n"
-"\n"
-"<p>When SyncML is enabled, deleting a task or a note does not actually\n"
-"delete it, but rather mark it as deleted. The deleted task or note is\n"
-"actually removed from the task or note list on the next\n"
-"synchronization. For this reason, if you happen to use the SyncML\n"
-"feature, then disable it without having done a sync, there may be some\n"
-"deleted notes or tasks in your task file. This is not a problem, but\n"
-"takes a little more disk space.</p>\n"
-"\n"
-"<p>In this case, the \"Purge deleted items\" menu item in the File menu can\n"
-"be used to actually delete these tasks. It is only enabled when you\n"
-"need it, that is when there are items to purge. Be aware that after doing "
-"this,\n"
-"if you re-enable SyncML and make a sync with the same server you used\n"
-"previously, all those items will reappear, as the server\n"
-"doesn't know they're deleted.</p>\n"
-"\n"
-"<p>In addition, prior to version 0.71.4 of %(name)s, these deleted\n"
-"tasks and notes were kept around even with the SyncML feature\n"
-"disabled, so tasks and notes were never actually deleted. the \"Purge\n"
-"deleted items\" menu item can be used when upgrading to 0.71.4 to clear\n"
-"all these unwanted items.</p>\n"
-msgstr ""
-"<h4><a name=\"syncmlpurge\">Verwijderde items definitief "
-"verwijderen</a></h4><p>Als SyncML geactiveerd is zal het verwijderen van een "
-"taak of notitie niet alszodanig verwijderd worden, maar eigenlijk eerst "
-"worden gemarkeerd om verwijderd te worden. De verwijderde taak of notitie "
-"wordt pas echt verwijderd van de taak- of notitielijst tijdens de volgende "
-"synchronisatie. Als gebruik gemaakt wordt van SyncML, en wanneer het weer "
-"wordt gedeactiveerd zonder eerst een synchronisatie te hebben uitgevoerd, "
-"dan kunnen er voor verwijdering gemarkeerde taken of notities achterblijven "
-"in het takenbestand. Dit is geen probleem, maar kost slechts wat "
-"diskruimte.</p><p>In dit geval kan gebruik gemaakt worden van de "
-"\"Verwijderde items definitief verwijderen\" optie in het Bestand menu. Het "
-"is alleen beschikbaar indien nodig, dat wil zeggen als er definitief te "
-"verwijderen items aanwezig zijn. Let er wel op, dat als u na deze aktie "
-"SyncML weer activeert en synchroniseert met dezelfde server als voorheen, "
-"deze items weer zullen verschijnen, omdat de server niet weet dat ze "
-"verwijderd zijn.</p><p>Overigens werd in %(name)s versies lager dan 0.71.4 "
-"de verwijderde taken en notities bewaard zelfs als de SyncML uitbreiding "
-"niet geactiveerd was, zodat taken en notities nooit definitief verwijderd "
-"konden worden. De optie \"Verwijderde items definitief verwijderen\" kan "
-"gebruikt worden bij een upgrade naar 0.71.4 om deze ongewenste items te "
-"schonen.</p>\n"
-
-#~ msgid ""
-#~ "<h3>Table of contents</h3>\n"
-#~ "<ul>\n"
-#~ "<li><a href=\"#tasks\">Tasks</a>\n"
-#~ "    <ul>\n"
-#~ "        <li><a href=\"#abouttasks\">About tasks</a></li>\n"
-#~ "        <li><a href=\"#taskproperties\">Task properties</a></li>\n"
-#~ "        <li><a href=\"#taskstates\">Task states</a></li>\n"
-#~ "        <li><a href=\"#taskcolors\">Task colors</a></li>\n"
-#~ "    </ul>\n"
-#~ "</li>\n"
-#~ "<li><a href=\"#effort\">Effort</a>\n"
-#~ "    <ul>\n"
-#~ "        <li><a href=\"#abouteffort\">About effort</a></li>\n"
-#~ "        <li><a href=\"#effortproperties\">Effort properties</a></li>\n"
-#~ "    </ul>\n"
-#~ "</li>\n"
-#~ "<li><a href=\"#categories\">Categories</a>\n"
-#~ "    <ul>\n"
-#~ "        <li><a href=\"#aboutcategories\">About categories</a></li>\n"
-#~ "        <li><a href=\"#categoryproperties\">Category properties</a></li>\n"
-#~ "    </ul>\n"
-#~ "</li>\n"
-#~ "<li><a href=\"#email\">E-mail (Outlook &amp; Thunderbird) integration</a>\n"
-#~ "  <ul>\n"
-#~ "    <li><a href=\"#aboutemail\">About e-mail integration</a></li>\n"
-#~ "    <li><a href=\"#emailattach\">Attaching an e-mail to a task</a></li>\n"
-#~ "    <li><a href=\"#emailcreate\">Creating a task from an e-mail</a></li>\n"
-#~ "  </ul>\n"
-#~ "</li>\n"
-#~ "<li><a href=\"#syncml\">SyncML support</a>\n"
-#~ "  <ul>\n"
-#~ "    <li><a href=\"#aboutsyncml\">What is SyncML</a></li>\n"
-#~ "    <li><a href=\"#syncmlsetup\">Setup</a></li>\n"
-#~ "    <li><a href=\"#syncmllimits\">Limitations</a></li>\n"
-#~ "    <li><a href=\"#syncmltrouble\">Troubleshooting</a></li>\n"
-#~ "    <li><a href=\"#syncmlpurge\">Purging deleted items</a></li>\n"
-#~ "  </ul>\n"
-#~ "</li>\n"
-#~ "<li><a href=\"#templates\">Task templates</a>\n"
-#~ "  <ul>\n"
-#~ "    <li><a href=\"#abouttemplates\">About templates</a></li>\n"
-#~ "    <li><a href=\"#usingtemplates\">Using templates</a></li>\n"
-#~ "  </ul>\n"
-#~ "</li>\n"
-#~ "</ul>\n"
-#~ msgstr ""
-#~ "<h3>Inhoudsopgave</h3>\n"
-#~ "<ul>\n"
-#~ "<li><a href=\"#tasks\">Taken</a>\n"
-#~ "    <ul>\n"
-#~ "        <li><a href=\"#abouttasks\">Over taken</a></li>\n"
-#~ "        <li><a href=\"#taskproperties\">Eigenschappen van taken</a></li>\n"
-#~ "        <li><a href=\"#taskstates\">Toestanden van taken</a></li>\n"
-#~ "        <li><a href=\"#taskcolors\">Kleuren van taken</a></li>\n"
-#~ "    </ul>\n"
-#~ "</li>\n"
-#~ "<li><a href=\"#effort\">Tijdsbesteding</a>\n"
-#~ "    <ul>\n"
-#~ "        <li><a href=\"#abouteffort\">Over tijdsbestedingen</a></li>\n"
-#~ "        <li><a href=\"#effortproperties\">Eigenschappen van "
-#~ "tijdsbestedingen</a></li>\n"
-#~ "    </ul>\n"
-#~ "</li>\n"
-#~ "<li><a href=\"#categories\">Categorie&euml;n</a>\n"
-#~ "    <ul>\n"
-#~ "        <li><a href=\"#aboutcategories\">Over categorie&euml;n</a></li>\n"
-#~ "        <li><a href=\"#categoryproperties\">Eigenschappen van "
-#~ "categorie&euml;n</a></li>\n"
-#~ "    </ul>\n"
-#~ "</li>\n"
-#~ "<li><a href=\"#email\">E-mail (Outlook &amp; Thunderbird) integratie</a>\n"
-#~ "  <ul>\n"
-#~ "    <li><a href=\"#aboutemail\">Over e-mail integratie</a></li>\n"
-#~ "    <li><a href=\"#emailattach\">Een e-mail bericht aan een taak toevoegen "
-#~ "als bijlage</a></li>\n"
-#~ "    <li><a href=\"#emailcreate\">Een taak maken van een e-mail "
-#~ "bericht</a></li>\n"
-#~ "  </ul>\n"
-#~ "</li>\n"
-#~ "<li><a href=\"#syncml\">SyncML ondersteuning</a>\n"
-#~ "  <ul>\n"
-#~ "    <li><a href=\"#aboutsyncml\">Wat is SyncML</a></li>\n"
-#~ "    <li><a href=\"#syncmlsetup\">Voorbereiding</a></li>\n"
-#~ "    <li><a href=\"#syncmllimits\">Beperkingen</a></li>\n"
-#~ "    <li><a href=\"#syncmltrouble\">Probleemoplossing</a></li>\n"
-#~ "    <li><a href=\"#syncmlpurge\">Verwijderde items definitief "
-#~ "verwijderen</a></li>\n"
-#~ "  </ul>\n"
-#~ "</li>\n"
-#~ "<li><a href=\"#templates\">Taak templates</a>\n"
-#~ "  <ul>\n"
-#~ "    <li><a href=\"#abouttemplates\">Over templates</a></li>\n"
-#~ "    <li><a href=\"#usingtemplates\">Templates gebruiken</a></li>\n"
-#~ "  </ul>\n"
-#~ "</li>\n"
-#~ "</ul>\n"
 
 #: taskcoachlib\application\application.py:132
 msgid ""
@@ -511,7 +365,7 @@ msgstr "Voor deze notitie inclusief alle subnotities"
 #: taskcoachlib\gui\dialog\editor.py:101
 #: taskcoachlib\gui\viewer\attachment.py:74
 #: taskcoachlib\gui\viewer\base.py:218 taskcoachlib\gui\viewer\category.py:82
-#: taskcoachlib\gui\viewer\note.py:128 taskcoachlib\gui\viewer\task.py:494
+#: taskcoachlib\gui\viewer\note.py:128 taskcoachlib\gui\viewer\task.py:495
 #: taskcoachlib\widgets\conflict.py:161 taskcoachlib\widgets\conflict.py:189
 msgid "Subject"
 msgstr "Onderwerp"
@@ -522,7 +376,7 @@ msgstr "Onderwerp"
 #: taskcoachlib\gui\viewer\attachment.py:82
 #: taskcoachlib\gui\viewer\category.py:88
 #: taskcoachlib\gui\viewer\effort.py:154 taskcoachlib\gui\viewer\note.py:131
-#: taskcoachlib\gui\viewer\task.py:503 taskcoachlib\widgets\conflict.py:166
+#: taskcoachlib\gui\viewer\task.py:504 taskcoachlib\widgets\conflict.py:166
 #: taskcoachlib\widgets\conflict.py:194
 msgid "Description"
 msgstr "Beschrijving"
@@ -535,7 +389,7 @@ msgstr "Gebruik deze kleur:"
 msgid "Color"
 msgstr "Kleur"
 
-#: taskcoachlib\gui\dialog\editor.py:159 taskcoachlib\gui\viewer\task.py:559
+#: taskcoachlib\gui\dialog\editor.py:159 taskcoachlib\gui\viewer\task.py:560
 #: taskcoachlib\widgets\conflict.py:214
 msgid "Priority"
 msgstr "Prioriteit"
@@ -552,28 +406,28 @@ msgstr "Locatie"
 msgid "Dates"
 msgstr "Data"
 
-#: taskcoachlib\gui\dialog\editor.py:246 taskcoachlib\gui\viewer\task.py:548
+#: taskcoachlib\gui\dialog\editor.py:246 taskcoachlib\gui\viewer\task.py:549
 #: taskcoachlib\widgets\conflict.py:199
 msgid "Start date"
 msgstr "Startdatum"
 
-#: taskcoachlib\gui\dialog\editor.py:247 taskcoachlib\gui\viewer\task.py:549
+#: taskcoachlib\gui\dialog\editor.py:247 taskcoachlib\gui\viewer\task.py:550
 #: taskcoachlib\widgets\conflict.py:204
 msgid "Due date"
 msgstr "Geplande einddatum"
 
-#: taskcoachlib\gui\dialog\editor.py:248 taskcoachlib\gui\viewer\task.py:551
+#: taskcoachlib\gui\dialog\editor.py:248 taskcoachlib\gui\viewer\task.py:552
 #: taskcoachlib\widgets\conflict.py:209
 msgid "Completion date"
 msgstr "Werkelijke einddatum"
 
 #: taskcoachlib\gui\dialog\editor.py:264 taskcoachlib\gui\dialog\editor.py:266
-#: taskcoachlib\gui\dialog\reminder.py:35 taskcoachlib\gui\viewer\task.py:566
+#: taskcoachlib\gui\dialog\reminder.py:35 taskcoachlib\gui\viewer\task.py:567
 msgid "Reminder"
 msgstr "Herinnering"
 
 #: taskcoachlib\gui\dialog\editor.py:278 taskcoachlib\gui\dialog\editor.py:279
-#: taskcoachlib\gui\viewer\task.py:552
+#: taskcoachlib\gui\viewer\task.py:553
 msgid "Recurrence"
 msgstr "Herhaling"
 
@@ -636,31 +490,31 @@ msgstr "jaar(en)"
 
 #: taskcoachlib\gui\dialog\editor.py:418 taskcoachlib\gui\dialog\editor.py:436
 #: taskcoachlib\gui\dialog\editor.py:652 taskcoachlib\gui\uicommand.py:2145
-#: taskcoachlib\gui\viewer\task.py:553
+#: taskcoachlib\gui\viewer\task.py:554
 msgid "Budget"
 msgstr "Budget"
 
 #: taskcoachlib\gui\dialog\editor.py:419 taskcoachlib\gui\dialog\editor.py:446
 #: taskcoachlib\gui\uicommand.py:2145 taskcoachlib\gui\viewer\effort.py:171
-#: taskcoachlib\gui\viewer\task.py:564
+#: taskcoachlib\gui\viewer\task.py:565
 msgid "Revenue"
 msgstr "Opbrengst"
 
 #: taskcoachlib\gui\dialog\editor.py:437 taskcoachlib\gui\uicommand.py:2145
-#: taskcoachlib\gui\viewer\effort.py:169 taskcoachlib\gui\viewer\task.py:555
+#: taskcoachlib\gui\viewer\effort.py:169 taskcoachlib\gui\viewer\task.py:556
 msgid "Time spent"
 msgstr "Bestede tijd"
 
-#: taskcoachlib\gui\dialog\editor.py:438 taskcoachlib\gui\viewer\task.py:557
+#: taskcoachlib\gui\dialog\editor.py:438 taskcoachlib\gui\viewer\task.py:558
 msgid "Budget left"
 msgstr "Budget over"
 
-#: taskcoachlib\gui\dialog\editor.py:444 taskcoachlib\gui\viewer\task.py:561
+#: taskcoachlib\gui\dialog\editor.py:444 taskcoachlib\gui\viewer\task.py:562
 msgid "Hourly fee"
 msgstr "Tarief per uur"
 
 #: taskcoachlib\gui\dialog\editor.py:445 taskcoachlib\gui\uicommand.py:2145
-#: taskcoachlib\gui\viewer\task.py:562
+#: taskcoachlib\gui\viewer\task.py:563
 msgid "Fixed fee"
 msgstr "Vast tarief"
 
@@ -668,7 +522,7 @@ msgstr "Vast tarief"
 #: taskcoachlib\gui\dialog\editor.py:778
 #: taskcoachlib\gui\viewer\category.py:35
 #: taskcoachlib\gui\viewer\effort.py:155 taskcoachlib\gui\viewer\note.py:135
-#: taskcoachlib\gui\viewer\task.py:525 taskcoachlib\widgets\conflict.py:219
+#: taskcoachlib\gui\viewer\task.py:526 taskcoachlib\widgets\conflict.py:219
 msgid "Categories"
 msgstr "Categorieën"
 
@@ -685,7 +539,7 @@ msgid "Notes"
 msgstr "Notities"
 
 #: taskcoachlib\gui\dialog\editor.py:619
-#: taskcoachlib\gui\dialog\preferences.py:327
+#: taskcoachlib\gui\dialog\preferences.py:330
 msgid "Task behavior"
 msgstr "Taakgedrag"
 
@@ -929,7 +783,7 @@ msgstr ""
 "gebruikersinterface)."
 
 #: taskcoachlib\gui\dialog\preferences.py:186
-#: taskcoachlib\gui\dialog\preferences.py:329
+#: taskcoachlib\gui\dialog\preferences.py:332
 msgid "Language"
 msgstr "Taal"
 
@@ -963,9 +817,8 @@ msgstr ""
 "Klik op deze knop om de kleur van taken die te laat zijn te veranderen"
 
 #: taskcoachlib\gui\dialog\preferences.py:261
-msgid "Click this button to change the color of tasks due today"
+msgid "Click this button to change the color of tasks due soon"
 msgstr ""
-"Klik op deze knop om de kleur van taken die vandaag af moeten te veranderen"
 
 #: taskcoachlib\gui\dialog\preferences.py:270
 msgid "Allow for tracking effort"
@@ -999,39 +852,43 @@ msgstr "Minuten tussen begin en eindtijden van taken"
 msgid "Mark parent task completed when all children are completed"
 msgstr "De taak als afgerond markeren als alle subtaken zijn afgerond"
 
-#: taskcoachlib\gui\dialog\preferences.py:299
+#: taskcoachlib\gui\dialog\preferences.py:293
+msgid "Number of days that tasks are considered to be 'due soon'"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\preferences.py:302
 msgid "Password for synchronization with iPhone"
 msgstr "Wachtvoor voor synchronisatie met iPhone"
 
-#: taskcoachlib\gui\dialog\preferences.py:301
+#: taskcoachlib\gui\dialog\preferences.py:304
 msgid "Bonjour service name"
 msgstr "Bonjour service naam"
 
-#: taskcoachlib\gui\dialog\preferences.py:309
+#: taskcoachlib\gui\dialog\preferences.py:312
 msgid "Check spelling in editors"
 msgstr "Controleer spelling in editors"
 
-#: taskcoachlib\gui\dialog\preferences.py:326
+#: taskcoachlib\gui\dialog\preferences.py:329
 msgid "Window behavior"
 msgstr "Window gedrag"
 
-#: taskcoachlib\gui\dialog\preferences.py:328
+#: taskcoachlib\gui\dialog\preferences.py:331
 msgid "Files"
 msgstr "Bestanden"
 
-#: taskcoachlib\gui\dialog\preferences.py:330
+#: taskcoachlib\gui\dialog\preferences.py:333
 msgid "Colors"
 msgstr "Kleuren"
 
-#: taskcoachlib\gui\dialog\preferences.py:331
+#: taskcoachlib\gui\dialog\preferences.py:334
 msgid "Features"
 msgstr "Functies"
 
-#: taskcoachlib\gui\dialog\preferences.py:333
+#: taskcoachlib\gui\dialog\preferences.py:336
 msgid "iPhone"
 msgstr "iPhone"
 
-#: taskcoachlib\gui\dialog\preferences.py:335
+#: taskcoachlib\gui\dialog\preferences.py:338
 msgid "Editor"
 msgstr "Editor"
 
@@ -1616,12 +1473,12 @@ msgid "one task overdue"
 msgstr "één taak die te laat is"
 
 #: taskcoachlib\gui\taskbaricon.py:140
-msgid "%d tasks due today"
-msgstr "%d taken die vandaag af moeten"
+msgid "%d tasks due soon"
+msgstr ""
 
 #: taskcoachlib\gui\taskbaricon.py:140
-msgid "one task due today"
-msgstr "één taak die vandaag af moet"
+msgid "one task due soon"
+msgstr ""
 
 #: taskcoachlib\gui\taskbaricon.py:151
 msgid "tracking \"%s\""
@@ -2384,7 +2241,7 @@ msgstr "&Onderwerp"
 #: taskcoachlib\gui\viewer\effort.py:230 taskcoachlib\gui\viewer\mixin.py:338
 #: taskcoachlib\gui\viewer\mixin.py:386 taskcoachlib\gui\viewer\mixin.py:406
 #: taskcoachlib\gui\viewer\note.py:105 taskcoachlib\gui\viewer\note.py:131
-#: taskcoachlib\gui\viewer\task.py:653
+#: taskcoachlib\gui\viewer\task.py:654
 msgid "&Description"
 msgstr "&Beschrijving"
 
@@ -2397,23 +2254,23 @@ msgstr "Op beschrijving sorteren"
 #: taskcoachlib\gui\viewer\category.py:74
 #: taskcoachlib\gui\viewer\category.py:145
 #: taskcoachlib\gui\viewer\effort.py:231 taskcoachlib\gui\viewer\note.py:106
-#: taskcoachlib\gui\viewer\task.py:654
+#: taskcoachlib\gui\viewer\task.py:655
 msgid "Show/hide description column"
 msgstr "Kolom met beschrijving tonen/verbergen"
 
 #: taskcoachlib\gui\viewer\attachment.py:108
-#: taskcoachlib\gui\viewer\category.py:151 taskcoachlib\gui\viewer\task.py:661
+#: taskcoachlib\gui\viewer\category.py:151 taskcoachlib\gui\viewer\task.py:662
 msgid "&Notes"
 msgstr "&Notities"
 
 #: taskcoachlib\gui\viewer\attachment.py:109
-#: taskcoachlib\gui\viewer\category.py:152 taskcoachlib\gui\viewer\task.py:662
+#: taskcoachlib\gui\viewer\category.py:152 taskcoachlib\gui\viewer\task.py:663
 msgid "Show/hide notes column"
 msgstr "Notitiekolom tonen/verbergen"
 
 #: taskcoachlib\gui\viewer\category.py:76
 #: taskcoachlib\gui\viewer\category.py:147 taskcoachlib\gui\viewer\note.py:108
-#: taskcoachlib\gui\viewer\task.py:656
+#: taskcoachlib\gui\viewer\task.py:657
 msgid "&Attachments"
 msgstr "Bijl&agen"
 
@@ -2437,16 +2294,16 @@ msgstr "Periode"
 #: taskcoachlib\gui\viewer\effort.py:160 taskcoachlib\gui\viewer\effort.py:236
 #: taskcoachlib\gui\viewer\mixin.py:340 taskcoachlib\gui\viewer\mixin.py:392
 #: taskcoachlib\gui\viewer\mixin.py:412 taskcoachlib\gui\viewer\note.py:114
-#: taskcoachlib\gui\viewer\note.py:141 taskcoachlib\gui\viewer\task.py:533
-#: taskcoachlib\gui\viewer\task.py:668
+#: taskcoachlib\gui\viewer\note.py:141 taskcoachlib\gui\viewer\task.py:534
+#: taskcoachlib\gui\viewer\task.py:669
 msgid "Overall categories"
 msgstr "Alle categorieën"
 
-#: taskcoachlib\gui\viewer\effort.py:173 taskcoachlib\gui\viewer\task.py:556
+#: taskcoachlib\gui\viewer\effort.py:173 taskcoachlib\gui\viewer\task.py:557
 msgid "Total time spent"
 msgstr "Totaal bestede tijd"
 
-#: taskcoachlib\gui\viewer\effort.py:175 taskcoachlib\gui\viewer\task.py:565
+#: taskcoachlib\gui\viewer\effort.py:175 taskcoachlib\gui\viewer\task.py:566
 msgid "Total revenue"
 msgstr "Totale opbrengst"
 
@@ -2479,30 +2336,30 @@ msgid "Sunday"
 msgstr "Zondag"
 
 #: taskcoachlib\gui\viewer\effort.py:233 taskcoachlib\gui\viewer\note.py:111
-#: taskcoachlib\gui\viewer\note.py:135 taskcoachlib\gui\viewer\task.py:665
+#: taskcoachlib\gui\viewer\note.py:135 taskcoachlib\gui\viewer\task.py:666
 msgid "&Categories"
 msgstr "&Categorieën"
 
 #: taskcoachlib\gui\viewer\effort.py:234 taskcoachlib\gui\viewer\effort.py:237
-#: taskcoachlib\gui\viewer\note.py:112 taskcoachlib\gui\viewer\task.py:666
+#: taskcoachlib\gui\viewer\note.py:112 taskcoachlib\gui\viewer\task.py:667
 msgid "Show/hide categories column"
 msgstr "Categorie kolom tonen/verbergen"
 
 #: taskcoachlib\gui\viewer\effort.py:239 taskcoachlib\gui\viewer\mixin.py:348
-#: taskcoachlib\gui\viewer\task.py:617
+#: taskcoachlib\gui\viewer\task.py:618
 msgid "&Time spent"
 msgstr "B&estede tijd"
 
-#: taskcoachlib\gui\viewer\effort.py:240 taskcoachlib\gui\viewer\task.py:618
+#: taskcoachlib\gui\viewer\effort.py:240 taskcoachlib\gui\viewer\task.py:619
 msgid "Show/hide time spent column"
 msgstr "Bestede tijd kolom tonen/verbergen"
 
 #: taskcoachlib\gui\viewer\effort.py:242 taskcoachlib\gui\viewer\mixin.py:357
-#: taskcoachlib\gui\viewer\task.py:646
+#: taskcoachlib\gui\viewer\task.py:647
 msgid "&Revenue"
 msgstr "&Opbrengst"
 
-#: taskcoachlib\gui\viewer\effort.py:243 taskcoachlib\gui\viewer\task.py:647
+#: taskcoachlib\gui\viewer\effort.py:243 taskcoachlib\gui\viewer\task.py:648
 msgid "Show/hide revenue column"
 msgstr "Opbrengst kolom tonen/verbergen"
 
@@ -2518,7 +2375,7 @@ msgstr "Totaal bestede tijd kolom tonen/verbergen"
 msgid "Total &revenue"
 msgstr "Totale opb&rengst"
 
-#: taskcoachlib\gui\viewer\effort.py:253 taskcoachlib\gui\viewer\task.py:650
+#: taskcoachlib\gui\viewer\effort.py:253 taskcoachlib\gui\viewer\task.py:651
 msgid "Show/hide total revenue column"
 msgstr "Totale opbrengst kolom tonen/verbergen"
 
@@ -2619,7 +2476,7 @@ msgstr "Op alle categorieën sorteren"
 msgid "Sort tasks by start date"
 msgstr "Taken op startdatum sorteren"
 
-#: taskcoachlib\gui\viewer\mixin.py:341 taskcoachlib\gui\viewer\task.py:587
+#: taskcoachlib\gui\viewer\mixin.py:341 taskcoachlib\gui\viewer\task.py:588
 msgid "&Start date"
 msgstr "&Startdatum"
 
@@ -2627,7 +2484,7 @@ msgstr "&Startdatum"
 msgid "Sort tasks by due date"
 msgstr "Taken op geplande einddatum sorteren"
 
-#: taskcoachlib\gui\viewer\mixin.py:342 taskcoachlib\gui\viewer\task.py:590
+#: taskcoachlib\gui\viewer\mixin.py:342 taskcoachlib\gui\viewer\task.py:591
 msgid "&Due date"
 msgstr "&Geplande einddatum"
 
@@ -2643,7 +2500,7 @@ msgstr "Taken op werkelijke einddatum sorteren"
 msgid "Sort tasks by number of days left"
 msgstr "Taken sorteren op aantal dagen over"
 
-#: taskcoachlib\gui\viewer\mixin.py:344 taskcoachlib\gui\viewer\task.py:596
+#: taskcoachlib\gui\viewer\mixin.py:344 taskcoachlib\gui\viewer\task.py:597
 msgid "D&ays left"
 msgstr "&Dagen over"
 
@@ -2651,7 +2508,7 @@ msgstr "&Dagen over"
 msgid "Sort tasks by recurrence"
 msgstr "Taken op herhaling sorteren"
 
-#: taskcoachlib\gui\viewer\mixin.py:345 taskcoachlib\gui\viewer\task.py:599
+#: taskcoachlib\gui\viewer\mixin.py:345 taskcoachlib\gui\viewer\task.py:600
 msgid "&Recurrence"
 msgstr "&Herhaling"
 
@@ -2659,8 +2516,8 @@ msgstr "&Herhaling"
 msgid "Sort tasks by budget"
 msgstr "Taken op budget sorteren"
 
-#: taskcoachlib\gui\viewer\mixin.py:346 taskcoachlib\gui\viewer\task.py:604
-#: taskcoachlib\gui\viewer\task.py:611
+#: taskcoachlib\gui\viewer\mixin.py:346 taskcoachlib\gui\viewer\task.py:605
+#: taskcoachlib\gui\viewer\task.py:612
 msgid "&Budget"
 msgstr "&Budget"
 
@@ -2668,7 +2525,7 @@ msgstr "&Budget"
 msgid "Sort tasks by total budget"
 msgstr "Taken op totaal budget sorteren"
 
-#: taskcoachlib\gui\viewer\mixin.py:347 taskcoachlib\gui\viewer\task.py:614
+#: taskcoachlib\gui\viewer\mixin.py:347 taskcoachlib\gui\viewer\task.py:615
 msgid "Total b&udget"
 msgstr "Totaal b&udget"
 
@@ -2680,7 +2537,7 @@ msgstr "Taken op bestede tijd sorteren"
 msgid "Sort tasks by total time spent"
 msgstr "Taken op totaal bestede tijd sorteren"
 
-#: taskcoachlib\gui\viewer\mixin.py:349 taskcoachlib\gui\viewer\task.py:620
+#: taskcoachlib\gui\viewer\mixin.py:349 taskcoachlib\gui\viewer\task.py:621
 msgid "T&otal time spent"
 msgstr "Tot&aal bestede tijd"
 
@@ -2688,7 +2545,7 @@ msgstr "Tot&aal bestede tijd"
 msgid "Sort tasks by budget left"
 msgstr "Taken op budget over sorteren"
 
-#: taskcoachlib\gui\viewer\mixin.py:350 taskcoachlib\gui\viewer\task.py:623
+#: taskcoachlib\gui\viewer\mixin.py:350 taskcoachlib\gui\viewer\task.py:624
 msgid "Budget &left"
 msgstr "Budget &over"
 
@@ -2696,7 +2553,7 @@ msgstr "Budget &over"
 msgid "Sort tasks by total budget left"
 msgstr "Taken op totaal budget over sorteren"
 
-#: taskcoachlib\gui\viewer\mixin.py:351 taskcoachlib\gui\viewer\task.py:626
+#: taskcoachlib\gui\viewer\mixin.py:351 taskcoachlib\gui\viewer\task.py:627
 msgid "Total budget l&eft"
 msgstr "Totaal budget o&ver"
 
@@ -2704,7 +2561,7 @@ msgstr "Totaal budget o&ver"
 msgid "Sort tasks by priority"
 msgstr "Taken sorteren op prioriteit"
 
-#: taskcoachlib\gui\viewer\mixin.py:352 taskcoachlib\gui\viewer\task.py:671
+#: taskcoachlib\gui\viewer\mixin.py:352 taskcoachlib\gui\viewer\task.py:672
 msgid "&Priority"
 msgstr "&Prioriteit"
 
@@ -2712,7 +2569,7 @@ msgstr "&Prioriteit"
 msgid "Sort tasks by overall priority"
 msgstr "Taken sorteren op totale prioriteit"
 
-#: taskcoachlib\gui\viewer\mixin.py:353 taskcoachlib\gui\viewer\task.py:560
+#: taskcoachlib\gui\viewer\mixin.py:353 taskcoachlib\gui\viewer\task.py:561
 msgid "Overall priority"
 msgstr "Totale prioriteit"
 
@@ -2720,7 +2577,7 @@ msgstr "Totale prioriteit"
 msgid "Sort tasks by hourly fee"
 msgstr "Taken op tarief per uur sorteren"
 
-#: taskcoachlib\gui\viewer\mixin.py:354 taskcoachlib\gui\viewer\task.py:637
+#: taskcoachlib\gui\viewer\mixin.py:354 taskcoachlib\gui\viewer\task.py:638
 msgid "&Hourly fee"
 msgstr "&Tarief per uur"
 
@@ -2728,7 +2585,7 @@ msgstr "&Tarief per uur"
 msgid "Sort tasks by fixed fee"
 msgstr "Taken op vast tarief sorteren"
 
-#: taskcoachlib\gui\viewer\mixin.py:355 taskcoachlib\gui\viewer\task.py:640
+#: taskcoachlib\gui\viewer\mixin.py:355 taskcoachlib\gui\viewer\task.py:641
 msgid "&Fixed fee"
 msgstr "&Vast tarief"
 
@@ -2756,7 +2613,7 @@ msgstr "Totale o&pbrengst"
 msgid "Sort tasks by reminder date and time"
 msgstr "Taken op datum en tijdstop van herinnering sorteren"
 
-#: taskcoachlib\gui\viewer\mixin.py:359 taskcoachlib\gui\viewer\task.py:677
+#: taskcoachlib\gui\viewer\mixin.py:359 taskcoachlib\gui\viewer\task.py:678
 msgid "&Reminder"
 msgstr "&Herinnering"
 
@@ -2792,7 +2649,7 @@ msgstr "Notities op categorie sorteren"
 msgid "Sort notes by overall categories"
 msgstr "Notities op alle categorieën sorteren"
 
-#: taskcoachlib\gui\viewer\note.py:115 taskcoachlib\gui\viewer\task.py:669
+#: taskcoachlib\gui\viewer\note.py:115 taskcoachlib\gui\viewer\task.py:670
 msgid "Show/hide overall categories column"
 msgstr "Kolom met alle categorieën tonen/verbergen"
 
@@ -2824,90 +2681,90 @@ msgstr "Taken: %d geselecteerd, %d zichtbaar, %d totaal"
 msgid "Status: %d over due, %d inactive, %d completed"
 msgstr "Status: %d te laat, %d inactief, %d afgerond"
 
-#: taskcoachlib\gui\viewer\task.py:240
+#: taskcoachlib\gui\viewer\task.py:241
 msgid "Timeline"
 msgstr "Tijdslijn"
 
-#: taskcoachlib\gui\viewer\task.py:338
+#: taskcoachlib\gui\viewer\task.py:339
 msgid "Now"
 msgstr "Nu"
 
-#: taskcoachlib\gui\viewer\task.py:354
+#: taskcoachlib\gui\viewer\task.py:355
 msgid "Task square map"
 msgstr "Takenkaart"
 
-#: taskcoachlib\gui\viewer\task.py:550
+#: taskcoachlib\gui\viewer\task.py:551
 msgid "Days left"
 msgstr "Dagen over"
 
-#: taskcoachlib\gui\viewer\task.py:554
+#: taskcoachlib\gui\viewer\task.py:555
 msgid "Total budget"
 msgstr "Totaal budget"
 
-#: taskcoachlib\gui\viewer\task.py:558
+#: taskcoachlib\gui\viewer\task.py:559
 msgid "Total budget left"
 msgstr "Totaal budget over"
 
-#: taskcoachlib\gui\viewer\task.py:563
+#: taskcoachlib\gui\viewer\task.py:564
 msgid "Total fixed fee"
 msgstr "Totaal vast tarief"
 
-#: taskcoachlib\gui\viewer\task.py:580
+#: taskcoachlib\gui\viewer\task.py:581
 msgid "&Dates"
 msgstr "&Data"
 
-#: taskcoachlib\gui\viewer\task.py:581
+#: taskcoachlib\gui\viewer\task.py:582
 msgid "All date columns"
 msgstr "Alle datum kolommen"
 
-#: taskcoachlib\gui\viewer\task.py:582
+#: taskcoachlib\gui\viewer\task.py:583
 msgid "Show/hide all date-related columns"
 msgstr "Alle datum-gerelateerde kolommen tonen/verbergen"
 
-#: taskcoachlib\gui\viewer\task.py:588
+#: taskcoachlib\gui\viewer\task.py:589
 msgid "Show/hide start date column"
 msgstr "Startdatum kolom tonen/verbergen"
 
-#: taskcoachlib\gui\viewer\task.py:591
+#: taskcoachlib\gui\viewer\task.py:592
 msgid "Show/hide due date column"
 msgstr "Geplande einddatum kolom tonen/verbergen"
 
-#: taskcoachlib\gui\viewer\task.py:593
+#: taskcoachlib\gui\viewer\task.py:594
 msgid "Co&mpletion date"
 msgstr "&Werkelijke einddatum"
 
-#: taskcoachlib\gui\viewer\task.py:594
+#: taskcoachlib\gui\viewer\task.py:595
 msgid "Show/hide completion date column"
 msgstr "Werkelijke einddatum kolom tonen/verbergen"
 
-#: taskcoachlib\gui\viewer\task.py:597
+#: taskcoachlib\gui\viewer\task.py:598
 msgid "Show/hide days left column"
 msgstr "Dagen over kolom tonen/verbergen"
 
-#: taskcoachlib\gui\viewer\task.py:600
+#: taskcoachlib\gui\viewer\task.py:601
 msgid "Show/hide recurrence column"
 msgstr "De herhaling kolom tonen/verbergen"
 
-#: taskcoachlib\gui\viewer\task.py:605
+#: taskcoachlib\gui\viewer\task.py:606
 msgid "All budget columns"
 msgstr "Alle budget kolommen"
 
-#: taskcoachlib\gui\viewer\task.py:606
+#: taskcoachlib\gui\viewer\task.py:607
 msgid "Show/hide all budget-related columns"
 msgstr "Alle budget-gerelateerde kolommen tonen/verbergen"
 
-#: taskcoachlib\gui\viewer\task.py:612
+#: taskcoachlib\gui\viewer\task.py:613
 msgid "Show/hide budget column"
 msgstr "Budget kolom tonen/verbergen"
 
-#: taskcoachlib\gui\viewer\task.py:615
+#: taskcoachlib\gui\viewer\task.py:616
 msgid ""
 "Show/hide total budget column (total budget includes budget for subtasks)"
 msgstr ""
 "Totaal budget kolom tonen/verbergen (totaal budget is inclusief budget voor "
 "subtaken)"
 
-#: taskcoachlib\gui\viewer\task.py:621
+#: taskcoachlib\gui\viewer\task.py:622
 msgid ""
 "Show/hide total time spent column (total time includes time spent on "
 "subtasks)"
@@ -2915,11 +2772,11 @@ msgstr ""
 "Totaal bestede tijd kolom tonen/verbergen (totaal bestede tijd is inclusief "
 "tijd besteed aan subtaken)"
 
-#: taskcoachlib\gui\viewer\task.py:624
+#: taskcoachlib\gui\viewer\task.py:625
 msgid "Show/hide budget left column"
 msgstr "Budget over kolom tonen/verbergen"
 
-#: taskcoachlib\gui\viewer\task.py:627
+#: taskcoachlib\gui\viewer\task.py:628
 msgid ""
 "Show/hide total budget left column (total budget left includes budget left "
 "for subtasks)"
@@ -2927,51 +2784,51 @@ msgstr ""
 "Totaal budget over kolom tonen/verbergen (totaal budget over is inclusief "
 "budget over voor subtaken)"
 
-#: taskcoachlib\gui\viewer\task.py:630
+#: taskcoachlib\gui\viewer\task.py:631
 msgid "&Financial"
 msgstr "&Financieel"
 
-#: taskcoachlib\gui\viewer\task.py:631
+#: taskcoachlib\gui\viewer\task.py:632
 msgid "All financial columns"
 msgstr "Alle financiële kolommen"
 
-#: taskcoachlib\gui\viewer\task.py:632
+#: taskcoachlib\gui\viewer\task.py:633
 msgid "Show/hide all finance-related columns"
 msgstr "Alle financiën-gerelateerde kolommen tonen/verbergen"
 
-#: taskcoachlib\gui\viewer\task.py:638
+#: taskcoachlib\gui\viewer\task.py:639
 msgid "Show/hide hourly fee column"
 msgstr "Tarief per uur kolom tonen/verbergen"
 
-#: taskcoachlib\gui\viewer\task.py:641
+#: taskcoachlib\gui\viewer\task.py:642
 msgid "Show/hide fixed fee column"
 msgstr "Vast tarief kolom tonen/verbergen"
 
-#: taskcoachlib\gui\viewer\task.py:643
+#: taskcoachlib\gui\viewer\task.py:644
 msgid "&Total fixed fee"
 msgstr "Totaal vast tarief"
 
-#: taskcoachlib\gui\viewer\task.py:644
+#: taskcoachlib\gui\viewer\task.py:645
 msgid "Show/hide total fixed fee column"
 msgstr "Totaal vast tarief kolom tonen/verbergen"
 
-#: taskcoachlib\gui\viewer\task.py:649
+#: taskcoachlib\gui\viewer\task.py:650
 msgid "T&otal revenue"
 msgstr "T&otale opbrengst"
 
-#: taskcoachlib\gui\viewer\task.py:657
+#: taskcoachlib\gui\viewer\task.py:658
 msgid "Show/hide attachment column"
 msgstr "Bijlage kolom tonen/verbergen"
 
-#: taskcoachlib\gui\viewer\task.py:672
+#: taskcoachlib\gui\viewer\task.py:673
 msgid "Show/hide priority column"
 msgstr "Prioriteit kolom tonen/verbergen"
 
-#: taskcoachlib\gui\viewer\task.py:674
+#: taskcoachlib\gui\viewer\task.py:675
 msgid "O&verall priority"
 msgstr "Totale prioriteit"
 
-#: taskcoachlib\gui\viewer\task.py:675
+#: taskcoachlib\gui\viewer\task.py:676
 msgid ""
 "Show/hide overall priority column (overall priority is the maximum priority "
 "of a task and all its subtasks"
@@ -2979,7 +2836,7 @@ msgstr ""
 "Kolom met totale prioriteit tonen/verbergen (de totale prioriteit is de "
 "maximumprioriteit van een taak en al zijn subtaken)"
 
-#: taskcoachlib\gui\viewer\task.py:678
+#: taskcoachlib\gui\viewer\task.py:679
 msgid "Show/hide reminder column"
 msgstr "Herinneringen kolom tonen/verbergen"
 
@@ -3229,41 +3086,23 @@ msgid ""
 "<p>In addition, tasks can be referenced as:\n"
 "<ul>\n"
 "<li>Over due: the due date is in the past;</li>\n"
-"<li>Due today: the due date is today;</li>\n"
-"<li>Over budget: no buget left;</li>\n"
+"<li>Due soon: the due date is soon (what 'soon' is, can be changed in the \n"
+"preferences);</li>\n"
+"<li>Over budget: no budget left;</li>\n"
 "<li>Under budget: still budget left;</li>\n"
 "<li>No budget: the task has no budget.</li>\n"
 "</ul></p>\n"
 " "
 msgstr ""
-"<h4><a name=\"taskstates\">Toestanden van taken</a></h4>\n"
-"\n"
-"<p>Taken bevinden zich altijd in precies één van de volgende toestanden:\n"
-"<ul>\n"
-"<li>Actief: de startdatum ligt in het verleden en de geplande einddatum in "
-"de toekomst;</li>\n"
-"<li>Inactief: de startdatum ligt in de toekomst, of</li>\n"
-"<li>Afgerond: de taak is klaar.</li>\n"
-"</ul></p>\n"
-"\n"
-"<p>Daarnaast worden taken benoemd als:\n"
-"<ul>\n"
-"<li>Te laat: de geplande einddatum ligt in het verleden;</li>\n"
-"<li>Vandaag af: de geplande einddatum is vandaag;</li>\n"
-"<li>Over budget: er is geen budget over;</li>\n"
-"<li>Onder budget: er is nog budget over;</li>\n"
-"<li>Geen budget: de taak heeft geen budget.</li>\n"
-"</ul></p>\n"
-" "
 
-#: taskcoachlib\help\__init__.py:150
+#: taskcoachlib\help\__init__.py:151
 msgid ""
 "<h4><a name=\"taskcolors\">Task colors</a></h4>\n"
 "\n"
 "<p>The text of tasks is colored according to the following rules:\n"
 "<ul>\n"
 "<li>Over due tasks are red;</li>\n"
-"<li>Tasks due today are orange;</li>\n"
+"<li>Tasks due soon are orange;</li>\n"
 "<li>Active tasks are black text with a blue icon;</li>\n"
 "<li>Future tasks are gray, and</li>\n"
 "<li>Completed tasks are green.</li>\n"
@@ -3275,30 +3114,12 @@ msgid ""
 "belongs to, see the section about \n"
 "<a href=\"#categoryproperties\">category properties</a> below.</p>\n"
 msgstr ""
-"<h4><a name=\"taskcolors\">Kleuren van taken</a></h4>\n"
-"\n"
-"<p>De tekst van taken krijgt een kleur volgens de volgende regels:\n"
-"<ul>\n"
-"<li>Taken die te laat zijn zijn rood;</li>\n"
-"<li>Taken die vandaag af moeten zijn oranje;</li>\n"
-"<li>Actieve taken hebben zwarte tekst en een blauw icoon;</li>\n"
-"<li>Toekomstige taken zijn grijs, en</li>\n"
-"<li>Afgeronde taken zijn groen.</li>\n"
-"</ul>\n"
-"Dit alles onder de aanname dat u de tekstkleuren niet via de instellingen "
-"dialoog hebt \n"
-"veranderd, uiteraard.</p>\n"
-"<p>De achtergrondkleur van de taken wordt bepaald door de categorieën "
-"waartoe\n"
-"de taak behoort, zie de sectie over \n"
-"<a href=\"#categoryproperties\">eigenschappen van categorieën</a> "
-"hieronder.</p>\n"
 
-#: taskcoachlib\help\__init__.py:167
+#: taskcoachlib\help\__init__.py:168
 msgid "<h3><a name=\"effort\">Effort</a></h3>\n"
 msgstr "<h3><a name=\"effort\">Tijdsbesteding</a></h3>\n"
 
-#: taskcoachlib\help\__init__.py:170
+#: taskcoachlib\help\__init__.py:171
 msgid ""
 "<h4><a name=\"abouteffort\">About effort</a></h4>\n"
 "\n"
@@ -3315,7 +3136,7 @@ msgstr ""
 "of in het context menu of via de 'Tijdsbesteding starten' werkbalk "
 "knop.</p>\n"
 
-#: taskcoachlib\help\__init__.py:178
+#: taskcoachlib\help\__init__.py:179
 msgid ""
 "<h4><a name=\"effortproperties\">Effort\n"
 "properties</a></h4>\n"
@@ -3364,11 +3185,11 @@ msgstr ""
 "<li>Totale opbrengst: geld verdiend met de totale bestede tijd.</li>\n"
 "</ul></p>\n"
 
-#: taskcoachlib\help\__init__.py:200
+#: taskcoachlib\help\__init__.py:201
 msgid "<h3><a name=\"categories\">Categories</a></h3>\n"
 msgstr "<h3><a name=\"categories\">Categorieën</a></h3>\n"
 
-#: taskcoachlib\help\__init__.py:203
+#: taskcoachlib\help\__init__.py:204
 msgid ""
 "<h4><a name=\"aboutcategories\">About \n"
 "categories</a></h4>\n"
@@ -3400,7 +3221,7 @@ msgstr ""
 "getoond die tot die categorie behoren, in dit geval dus de telefoontjes die "
 "u nog moet plegen.</p>\n"
 
-#: taskcoachlib\help\__init__.py:218
+#: taskcoachlib\help\__init__.py:219
 msgid ""
 "<h4><a name=\"categoryproperties\">Category \n"
 "properties</a></h4>\n"
@@ -3423,7 +3244,7 @@ msgstr ""
 "categorieën behoort, die elk een eigen kleur hebben, wordt een mix van de "
 "kleuren van die categorieën gebruikt als achtergrondkleur van de taak.</p>\n"
 
-#: taskcoachlib\help\__init__.py:230
+#: taskcoachlib\help\__init__.py:231
 msgid ""
 "<h3><a name=\"email\">E-mail (Outlook &amp; Thunderbird) "
 "integration</a></h3>\n"
@@ -3431,7 +3252,7 @@ msgstr ""
 "<h3><a name=\"email\">E-mail (Outlook &amp; Thunderbird) "
 "integratie</a></h3>\n"
 
-#: taskcoachlib\help\__init__.py:233
+#: taskcoachlib\help\__init__.py:234
 msgid ""
 "<h4><a name=\"aboutemail\">About e-mail integration</a></h4>\n"
 "\n"
@@ -3460,7 +3281,7 @@ msgstr ""
 "berichten tegelijk worden gesleept vanuit Thunderbird. Dit geldt niet voor\n"
 "Outlook.</p>\n"
 
-#: taskcoachlib\help\__init__.py:247
+#: taskcoachlib\help\__init__.py:248
 msgid ""
 "<h4><a name=\"emailattach\">Attaching an e-mail to a task</a></h4>\n"
 "\n"
@@ -3488,7 +3309,7 @@ msgstr ""
 "\n"
 "</p>\n"
 
-#: taskcoachlib\help\__init__.py:259
+#: taskcoachlib\help\__init__.py:260
 msgid ""
 "<h4><a name=\"emailcreate\">Creating a task from an e-mail</a></h4>\n"
 "\n"
@@ -3508,11 +3329,11 @@ msgstr ""
 "Ook wordt het e-mail bericht automatisch aan de taak toegevoegd als "
 "bijlage.</p>\n"
 
-#: taskcoachlib\help\__init__.py:267
+#: taskcoachlib\help\__init__.py:268
 msgid "<h3><a name=\"syncml\">SyncML support</a></h3>\n"
 msgstr "<h3><a name=\"syncml\">SyncML ondersteuning</a></h3>\n"
 
-#: taskcoachlib\help\__init__.py:270
+#: taskcoachlib\help\__init__.py:271
 msgid ""
 "<h4><a name=\"aboutsyncml\">What is SyncML</a></h4>\n"
 "\n"
@@ -3521,21 +3342,23 @@ msgid ""
 "\n"
 "<p>SyncML is an XML protocol designed to synchronize several\n"
 "applications with a server. A popular open-source server is <a\n"
-"href=\"http://www.funambol.com/\">Funambol</a>. Synchronization clients\n"
-"are available for many devices and applications (Outlook, Pocket PC,\n"
-"iPod, iPhone, Evolution, etc...), as well as  so-called \"connectors\"\n"
+"href=\"http://www.funambol.com/\" target=\"_blank\">Funambol</a>. "
+"Synchronization \n"
+"clients are available for many devices and applications (Outlook, Pocket "
+"PC,\n"
+"iPod, iPhone, Evolution, etc...), as well as so-called \"connectors\"\n"
 "which allow the server to synchronize with Exchange, Google Calendar,\n"
 "etc.</p>\n"
 "\n"
 "<p>%(name)s has built-in SyncML client support. This means you can\n"
 "setup %(name)s to synchronize with the same SyncML server you\n"
-"synchronize with with Outlook and have all Outlook tasks and notes in\n"
+"synchronize Outlook with and have all Outlook tasks and notes in\n"
 "your %(name)s file, as well as %(name)s tasks and notes in Outlook. Or\n"
 "your Pocket PC.</p>\n"
 "\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:291
+#: taskcoachlib\help\__init__.py:292
 msgid ""
 "<h4><a name=\"syncmlsetup\">Setup</a></h4>\n"
 "\n"
@@ -3545,10 +3368,11 @@ msgid ""
 "you choose; some examples are:\n"
 "\n"
 "<ul>\n"
-"  <li><a href=\"http://www.scheduleworld.com/\">ScheduleWorld</a>: "
-"http://sync.scheduleworld.com/funambol/ds</li>\n"
-"  <li><a href=\"http://memotoo.com\">MemoToo</a>: "
-"http://sync.memotoo.com/syncml</li>\n"
+"  <li><a href=\"http://www.scheduleworld.com/\" "
+"target=\"_blank\">ScheduleWorld</a>: \n"
+"  http://sync.scheduleworld.com/funambol/ds</li>\n"
+"  <li><a href=\"http://memotoo.com\" target=\"_blank\">MemoToo</a>: \n"
+"  http://sync.memotoo.com/syncml</li>\n"
 "</ul>\n"
 "\n"
 "The database names are pretty standard; the default values should work.</p>\n"
@@ -3557,7 +3381,7 @@ msgid ""
 "will be considered different \"devices\" by the server.</p>"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:308
+#: taskcoachlib\help\__init__.py:311
 msgid ""
 "<h4><a name=\"syncmllimits\">Limitations</a></h4>\n"
 "\n"
@@ -3579,7 +3403,7 @@ msgid ""
 "</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:325
+#: taskcoachlib\help\__init__.py:328
 msgid ""
 "<h4><a name=\"syncmltrouble\">Troubleshooting</a></h4>\n"
 "\n"
@@ -3606,19 +3430,70 @@ msgstr ""
 "Microsoft Visual 8 runtime niet heeft geïnstalleerd. U kunt deze downloaden "
 "vanaf de <a target=\"_blank\" href=\"%s\">Microsoft download site</a>.</p>\n"
 
-#: taskcoachlib\help\__init__.py:367
+#: taskcoachlib\help\__init__.py:346
+msgid ""
+"<h4><a name=\"syncmlpurge\">Purging deleted items</a></h4>\n"
+"\n"
+"<p>When SyncML is enabled, deleting a task or a note does not actually\n"
+"delete it, but rather mark it as deleted. The deleted task or note is\n"
+"actually removed from the task or note list on the next\n"
+"synchronization. For this reason, if you happen to use the SyncML\n"
+"feature, then disable it without having done a sync, there may be some\n"
+"deleted notes or tasks in your task file. This is not a problem, but\n"
+"takes a little more disk space.</p>\n"
+"\n"
+"<p>In this case, the \"Purge deleted items\" menu item in the File menu can\n"
+"be used to actually delete these tasks. It is only enabled when you\n"
+"need it, that is when there are items to purge. Be aware that after doing "
+"this,\n"
+"if you re-enable SyncML and make a sync with the same server you used\n"
+"previously, all those items will reappear, as the server\n"
+"doesn't know they're deleted.</p>\n"
+"\n"
+"<p>In addition, prior to version 0.71.4 of %(name)s, these deleted\n"
+"tasks and notes were kept around even with the SyncML feature\n"
+"disabled, so tasks and notes were never actually deleted. the \"Purge\n"
+"deleted items\" menu item can be used when upgrading to 0.71.4 to clear\n"
+"all these unwanted items.</p>\n"
+msgstr ""
+"<h4><a name=\"syncmlpurge\">Verwijderde items definitief "
+"verwijderen</a></h4><p>Als SyncML geactiveerd is zal het verwijderen van een "
+"taak of notitie niet alszodanig verwijderd worden, maar eigenlijk eerst "
+"worden gemarkeerd om verwijderd te worden. De verwijderde taak of notitie "
+"wordt pas echt verwijderd van de taak- of notitielijst tijdens de volgende "
+"synchronisatie. Als gebruik gemaakt wordt van SyncML, en wanneer het weer "
+"wordt gedeactiveerd zonder eerst een synchronisatie te hebben uitgevoerd, "
+"dan kunnen er voor verwijdering gemarkeerde taken of notities achterblijven "
+"in het takenbestand. Dit is geen probleem, maar kost slechts wat "
+"diskruimte.</p><p>In dit geval kan gebruik gemaakt worden van de "
+"\"Verwijderde items definitief verwijderen\" optie in het Bestand menu. Het "
+"is alleen beschikbaar indien nodig, dat wil zeggen als er definitief te "
+"verwijderen items aanwezig zijn. Let er wel op, dat als u na deze aktie "
+"SyncML weer activeert en synchroniseert met dezelfde server als voorheen, "
+"deze items weer zullen verschijnen, omdat de server niet weet dat ze "
+"verwijderd zijn.</p><p>Overigens werd in %(name)s versies lager dan 0.71.4 "
+"de verwijderde taken en notities bewaard zelfs als de SyncML uitbreiding "
+"niet geactiveerd was, zodat taken en notities nooit definitief verwijderd "
+"konden worden. De optie \"Verwijderde items definitief verwijderen\" kan "
+"gebruikt worden bij een upgrade naar 0.71.4 om deze ongewenste items te "
+"schonen.</p>\n"
+
+#: taskcoachlib\help\__init__.py:370
 msgid "<h3><a name=\"iphone\">iPhone and iPod Touch</a></h3>\n"
 msgstr "<h3><a name=\"iphone\">iPhone en iPod Touch</a></h3>\n"
 
-#: taskcoachlib\help\__init__.py:370
+#: taskcoachlib\help\__init__.py:373
 msgid ""
 "<h4><a name=\"taskcoachiphone\">%(name)s on the iPhone</a></h4>\n"
 "\n"
 "<p>There is an iPhone/iPod Touch companion app for %(name)s, available on\n"
 "<a "
 "href=\"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=3114"
-"03563&mt=8\">Apple's\n"
-"AppStore.</a> This app has few features right now, but allows you to take\n"
+"03563&mt=8\"\n"
+"target=\"_blank\">Apple's AppStore</a>. \n"
+"(If you don't have iTunes installed on your computer, you'll be presented\n"
+"a page where you can download iTunes).\n"
+"This app has few features right now, but allows you to take\n"
 "your tasks away and modify them:</p>\n"
 "\n"
 "<ul>\n"
@@ -3641,7 +3516,7 @@ msgid ""
 "</ul>"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:395
+#: taskcoachlib\help\__init__.py:401
 msgid ""
 "<h4><a name=\"iphoneconf\">Configuration</a></h4>\n"
 "\n"
@@ -3683,9 +3558,16 @@ msgid ""
 "\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:429
+#: taskcoachlib\help\__init__.py:435
 msgid ""
 "<h4><a name=\"iphonetrouble\">Troubleshooting</a></h4>\n"
+"<p>\n"
+"<h5>I can't seem to find the iPhone/iPod Touch app on Apple's website</h5>\n"
+"You need to have iTunes installed on your computer to browse Apple's App "
+"Store. \n"
+"<a href=\"http://www.apple.com/itunes/\" target=\"_blank\">Get iTunes</a>.\n"
+"</p>\n"
+"\n"
 "<p>\n"
 "<h5>My computer doesn't appear in the list when trying to sync</h5>\n"
 "Check that your iPhone/iPod Touch is connected to the same network your\n"
@@ -3698,11 +3580,11 @@ msgid ""
 "</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:442
+#: taskcoachlib\help\__init__.py:454
 msgid "<h3><a name=\"templates\">Task templates</a></h3>\n"
 msgstr "<h3><a name=\"templates\">Taak templates</a></h3>\n"
 
-#: taskcoachlib\help\__init__.py:445
+#: taskcoachlib\help\__init__.py:457
 msgid ""
 "<h4><a name=\"abouttemplates\">About templates</a></h4>\n"
 "<p>Templates are blueprints for new tasks. Right now, the only task "
@@ -3719,7 +3601,7 @@ msgstr ""
 "worden de datums van de nieuwe taak ingevuld met datums relatief aan de "
 "huidige datum.</p>\n"
 
-#: taskcoachlib\help\__init__.py:451
+#: taskcoachlib\help\__init__.py:463
 msgid ""
 "<h4><a name=\"usingtemplates\">Using templates</a></h4>\n"
 "<p>One can create a template by selecting a task (only one) and click on "
@@ -3748,7 +3630,7 @@ msgid ""
 "day.</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:479
+#: taskcoachlib\help\__init__.py:491
 msgid ""
 "<h4>%(name)s - %(description)s</h4>\n"
 "<h5>Version %(version)s, Revision %(revision)s, %(date)s</h5>\n"
@@ -3758,7 +3640,7 @@ msgid ""
 "<p>%(license_notice_html)s</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:491
+#: taskcoachlib\help\__init__.py:503
 msgid ""
 "\n"
 "Version %(version)s, Revision %(revision)s, %(date)s\n"
@@ -4104,8 +3986,56 @@ msgstr ""
 msgid "Never show this dialog again"
 msgstr "Deze dialoog niet meer tonen"
 
+#~ msgid "Click this button to change the color of tasks due today"
+#~ msgstr ""
+#~ "Klik op deze knop om de kleur van taken die vandaag af moeten te veranderen"
+
 #~ msgid "Exported %(nrtasks)d tasks to %(filename)s"
 #~ msgstr "%(nrtasks)d taken geëxporteerd in %(filename)s"
+
+#~ msgid "%d tasks due today"
+#~ msgstr "%d taken die vandaag af moeten"
+
+#~ msgid ""
+#~ "<h4><a name=\"taskstates\">Task states</a></h4>\n"
+#~ "\n"
+#~ "<p>Tasks always have exactly one of the following states:\n"
+#~ "<ul>\n"
+#~ "<li>Active: the start date is in the past and the due date in the "
+#~ "future;</li>\n"
+#~ "<li>Inactive: the start date is in the future, or</li>\n"
+#~ "<li>Completed: the task has been completed.</li>\n"
+#~ "</ul></p>\n"
+#~ "\n"
+#~ "<p>In addition, tasks can be referenced as:\n"
+#~ "<ul>\n"
+#~ "<li>Over due: the due date is in the past;</li>\n"
+#~ "<li>Due today: the due date is today;</li>\n"
+#~ "<li>Over budget: no buget left;</li>\n"
+#~ "<li>Under budget: still budget left;</li>\n"
+#~ "<li>No budget: the task has no budget.</li>\n"
+#~ "</ul></p>\n"
+#~ " "
+#~ msgstr ""
+#~ "<h4><a name=\"taskstates\">Toestanden van taken</a></h4>\n"
+#~ "\n"
+#~ "<p>Taken bevinden zich altijd in precies één van de volgende toestanden:\n"
+#~ "<ul>\n"
+#~ "<li>Actief: de startdatum ligt in het verleden en de geplande einddatum in "
+#~ "de toekomst;</li>\n"
+#~ "<li>Inactief: de startdatum ligt in de toekomst, of</li>\n"
+#~ "<li>Afgerond: de taak is klaar.</li>\n"
+#~ "</ul></p>\n"
+#~ "\n"
+#~ "<p>Daarnaast worden taken benoemd als:\n"
+#~ "<ul>\n"
+#~ "<li>Te laat: de geplande einddatum ligt in het verleden;</li>\n"
+#~ "<li>Vandaag af: de geplande einddatum is vandaag;</li>\n"
+#~ "<li>Over budget: er is geen budget over;</li>\n"
+#~ "<li>Onder budget: er is nog budget over;</li>\n"
+#~ "<li>Geen budget: de taak heeft geen budget.</li>\n"
+#~ "</ul></p>\n"
+#~ " "
 
 #~ msgid ""
 #~ "\n"
@@ -4133,6 +4063,9 @@ msgstr "Deze dialoog niet meer tonen"
 #~ msgid "Exported %(nrtasks)d items to %(filename)s"
 #~ msgstr "%(nrtasks)d items geëxporteerd naar %(filename)s"
 
+#~ msgid "one task due today"
+#~ msgstr "één taak die vandaag af moet"
+
 #~ msgid "Export as iCalendar..."
 #~ msgstr "Als iCalendar exporteren..."
 
@@ -4141,6 +4074,43 @@ msgstr "Deze dialoog niet meer tonen"
 
 #~ msgid "Maximum number of recurrences"
 #~ msgstr "Maximum aantal herhalingen"
+
+#~ msgid ""
+#~ "<h4><a name=\"taskcolors\">Task colors</a></h4>\n"
+#~ "\n"
+#~ "<p>The text of tasks is colored according to the following rules:\n"
+#~ "<ul>\n"
+#~ "<li>Over due tasks are red;</li>\n"
+#~ "<li>Tasks due today are orange;</li>\n"
+#~ "<li>Active tasks are black text with a blue icon;</li>\n"
+#~ "<li>Future tasks are gray, and</li>\n"
+#~ "<li>Completed tasks are green.</li>\n"
+#~ "</ul>\n"
+#~ "This all assumes you have not changed the text colors through the "
+#~ "preferences \n"
+#~ "dialog, of course.</p>\n"
+#~ "<p>The background color of tasks is determined by the categories the task\n"
+#~ "belongs to, see the section about \n"
+#~ "<a href=\"#categoryproperties\">category properties</a> below.</p>\n"
+#~ msgstr ""
+#~ "<h4><a name=\"taskcolors\">Kleuren van taken</a></h4>\n"
+#~ "\n"
+#~ "<p>De tekst van taken krijgt een kleur volgens de volgende regels:\n"
+#~ "<ul>\n"
+#~ "<li>Taken die te laat zijn zijn rood;</li>\n"
+#~ "<li>Taken die vandaag af moeten zijn oranje;</li>\n"
+#~ "<li>Actieve taken hebben zwarte tekst en een blauw icoon;</li>\n"
+#~ "<li>Toekomstige taken zijn grijs, en</li>\n"
+#~ "<li>Afgeronde taken zijn groen.</li>\n"
+#~ "</ul>\n"
+#~ "Dit alles onder de aanname dat u de tekstkleuren niet via de instellingen "
+#~ "dialoog hebt \n"
+#~ "veranderd, uiteraard.</p>\n"
+#~ "<p>De achtergrondkleur van de taken wordt bepaald door de categorieën "
+#~ "waartoe\n"
+#~ "de taak behoort, zie de sectie over \n"
+#~ "<a href=\"#categoryproperties\">eigenschappen van categorieën</a> "
+#~ "hieronder.</p>\n"
 
 #~ msgid "Export the current view in VCalendar format"
 #~ msgstr "Het actieve tabblad in VCalendar formaat exporteren"
@@ -4151,6 +4121,104 @@ msgstr "Deze dialoog niet meer tonen"
 #~ msgstr ""
 #~ "Dit is een ongeldige reguliere expressie.\n"
 #~ "Terugvallen op substring zoeken."
+
+#~ msgid ""
+#~ "<h3>Table of contents</h3>\n"
+#~ "<ul>\n"
+#~ "<li><a href=\"#tasks\">Tasks</a>\n"
+#~ "    <ul>\n"
+#~ "        <li><a href=\"#abouttasks\">About tasks</a></li>\n"
+#~ "        <li><a href=\"#taskproperties\">Task properties</a></li>\n"
+#~ "        <li><a href=\"#taskstates\">Task states</a></li>\n"
+#~ "        <li><a href=\"#taskcolors\">Task colors</a></li>\n"
+#~ "    </ul>\n"
+#~ "</li>\n"
+#~ "<li><a href=\"#effort\">Effort</a>\n"
+#~ "    <ul>\n"
+#~ "        <li><a href=\"#abouteffort\">About effort</a></li>\n"
+#~ "        <li><a href=\"#effortproperties\">Effort properties</a></li>\n"
+#~ "    </ul>\n"
+#~ "</li>\n"
+#~ "<li><a href=\"#categories\">Categories</a>\n"
+#~ "    <ul>\n"
+#~ "        <li><a href=\"#aboutcategories\">About categories</a></li>\n"
+#~ "        <li><a href=\"#categoryproperties\">Category properties</a></li>\n"
+#~ "    </ul>\n"
+#~ "</li>\n"
+#~ "<li><a href=\"#email\">E-mail (Outlook &amp; Thunderbird) integration</a>\n"
+#~ "  <ul>\n"
+#~ "    <li><a href=\"#aboutemail\">About e-mail integration</a></li>\n"
+#~ "    <li><a href=\"#emailattach\">Attaching an e-mail to a task</a></li>\n"
+#~ "    <li><a href=\"#emailcreate\">Creating a task from an e-mail</a></li>\n"
+#~ "  </ul>\n"
+#~ "</li>\n"
+#~ "<li><a href=\"#syncml\">SyncML support</a>\n"
+#~ "  <ul>\n"
+#~ "    <li><a href=\"#aboutsyncml\">What is SyncML</a></li>\n"
+#~ "    <li><a href=\"#syncmlsetup\">Setup</a></li>\n"
+#~ "    <li><a href=\"#syncmllimits\">Limitations</a></li>\n"
+#~ "    <li><a href=\"#syncmltrouble\">Troubleshooting</a></li>\n"
+#~ "    <li><a href=\"#syncmlpurge\">Purging deleted items</a></li>\n"
+#~ "  </ul>\n"
+#~ "</li>\n"
+#~ "<li><a href=\"#templates\">Task templates</a>\n"
+#~ "  <ul>\n"
+#~ "    <li><a href=\"#abouttemplates\">About templates</a></li>\n"
+#~ "    <li><a href=\"#usingtemplates\">Using templates</a></li>\n"
+#~ "  </ul>\n"
+#~ "</li>\n"
+#~ "</ul>\n"
+#~ msgstr ""
+#~ "<h3>Inhoudsopgave</h3>\n"
+#~ "<ul>\n"
+#~ "<li><a href=\"#tasks\">Taken</a>\n"
+#~ "    <ul>\n"
+#~ "        <li><a href=\"#abouttasks\">Over taken</a></li>\n"
+#~ "        <li><a href=\"#taskproperties\">Eigenschappen van taken</a></li>\n"
+#~ "        <li><a href=\"#taskstates\">Toestanden van taken</a></li>\n"
+#~ "        <li><a href=\"#taskcolors\">Kleuren van taken</a></li>\n"
+#~ "    </ul>\n"
+#~ "</li>\n"
+#~ "<li><a href=\"#effort\">Tijdsbesteding</a>\n"
+#~ "    <ul>\n"
+#~ "        <li><a href=\"#abouteffort\">Over tijdsbestedingen</a></li>\n"
+#~ "        <li><a href=\"#effortproperties\">Eigenschappen van "
+#~ "tijdsbestedingen</a></li>\n"
+#~ "    </ul>\n"
+#~ "</li>\n"
+#~ "<li><a href=\"#categories\">Categorie&euml;n</a>\n"
+#~ "    <ul>\n"
+#~ "        <li><a href=\"#aboutcategories\">Over categorie&euml;n</a></li>\n"
+#~ "        <li><a href=\"#categoryproperties\">Eigenschappen van "
+#~ "categorie&euml;n</a></li>\n"
+#~ "    </ul>\n"
+#~ "</li>\n"
+#~ "<li><a href=\"#email\">E-mail (Outlook &amp; Thunderbird) integratie</a>\n"
+#~ "  <ul>\n"
+#~ "    <li><a href=\"#aboutemail\">Over e-mail integratie</a></li>\n"
+#~ "    <li><a href=\"#emailattach\">Een e-mail bericht aan een taak toevoegen "
+#~ "als bijlage</a></li>\n"
+#~ "    <li><a href=\"#emailcreate\">Een taak maken van een e-mail "
+#~ "bericht</a></li>\n"
+#~ "  </ul>\n"
+#~ "</li>\n"
+#~ "<li><a href=\"#syncml\">SyncML ondersteuning</a>\n"
+#~ "  <ul>\n"
+#~ "    <li><a href=\"#aboutsyncml\">Wat is SyncML</a></li>\n"
+#~ "    <li><a href=\"#syncmlsetup\">Voorbereiding</a></li>\n"
+#~ "    <li><a href=\"#syncmllimits\">Beperkingen</a></li>\n"
+#~ "    <li><a href=\"#syncmltrouble\">Probleemoplossing</a></li>\n"
+#~ "    <li><a href=\"#syncmlpurge\">Verwijderde items definitief "
+#~ "verwijderen</a></li>\n"
+#~ "  </ul>\n"
+#~ "</li>\n"
+#~ "<li><a href=\"#templates\">Taak templates</a>\n"
+#~ "  <ul>\n"
+#~ "    <li><a href=\"#abouttemplates\">Over templates</a></li>\n"
+#~ "    <li><a href=\"#usingtemplates\">Templates gebruiken</a></li>\n"
+#~ "  </ul>\n"
+#~ "</li>\n"
+#~ "</ul>\n"
 
 #~ msgid ""
 #~ "<h4><a name=\"syncmllimits\">Limitations</a></h4>\n"
