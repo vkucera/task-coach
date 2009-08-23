@@ -53,6 +53,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 #import "BonjourBrowser.h"
 #import "BrowserViewController.h"
 #import "DomainViewController.h"
+#import "i18n.h"
 
 
 @interface BonjourBrowser ()
@@ -83,10 +84,10 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 	   showCancelButton:(BOOL)showCancelButton {
 	
     // Create some strings that will be used in the DomainViewController.
-	NSString *domainsTitle = NSLocalizedString(@"Domains", @"Domains title");
-	NSString *domainLabel = NSLocalizedString(@"Added Domains", @"Added Domains label");
-	NSString *addDomainTitle = NSLocalizedString(@"Add Domain", @"Add Domain title");
-	NSString *searchingForServicesString = NSLocalizedString(@"Searching for services", @"Searching for services string");
+	NSString *domainsTitle = _("Domains");
+	NSString *domainLabel = _("Added Domains");
+	NSString *addDomainTitle = _("Add Domain");
+	NSString *searchingForServicesString = _("Searching for services");
     
     // Initialize the DomainViewController, which uses a NSNetServiceBrowser to look for Bonjour domains.
 	DomainViewController* dvc = [[DomainViewController alloc] initWithTitle:domainsTitle showDisclosureIndicators:YES customsTitle:domainLabel customs:customDomains addDomainTitle:addDomainTitle showCancelButton:showCancelButton];

@@ -10,6 +10,7 @@
 #import "Network.h"
 #import "SyncViewController.h"
 #import "Database.h"
+#import "i18n.h"
 
 @implementation BaseState
 
@@ -30,9 +31,9 @@
 
 	controller.state = nil;
 	
-	UIAlertView *view = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Connection closed error title")
-				message:NSLocalizedString(@"The connection was unexpectedly closed.", @"Connection closed error message")
-				delegate:controller cancelButtonTitle:NSLocalizedString(@"Abort", @"Connection closed cancel button title") otherButtonTitles:nil];
+	UIAlertView *view = [[UIAlertView alloc] initWithTitle:_("Error")
+				message:_("The connection was unexpectedly closed.")
+				delegate:controller cancelButtonTitle:_("Abort") otherButtonTitles:nil];
 	[view show];
 	[view release];
 	[[Database connection] rollback];
@@ -44,9 +45,9 @@
 
 	controller.state = nil;
 
-	UIAlertView *view = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Network error title")
-												  message:[NSString stringWithFormat:NSLocalizedString(@"A network error occurred: %@", @"Network error message"), [error localizedDescription]]
-												  delegate:controller cancelButtonTitle:NSLocalizedString(@"Abort", @"Network error cancel button title") otherButtonTitles:nil];
+	UIAlertView *view = [[UIAlertView alloc] initWithTitle:_("Error")
+												  message:[NSString stringWithFormat:_("A network error occurred: %@"), [error localizedDescription]]
+												  delegate:controller cancelButtonTitle:_("Abort") otherButtonTitles:nil];
 	[view show];
 	[view release];
 	[[Database connection] rollback];

@@ -12,6 +12,7 @@
 #import "SyncViewController.h"
 #import "Database.h"
 #import "Statement.h"
+#import "i18n.h"
 
 @implementation FullFromDeviceState
 
@@ -34,7 +35,7 @@
 {
 	[[[Database connection] statementWithSQL:@"DELETE FROM Meta WHERE name='guid'"] exec];
 	
-	myController.label.text = NSLocalizedString(@"Synchronizing...", @"Synchronizing title");
+	myController.label.text = _("Synchronizing...");
 	[myController.activity stopAnimating];
 	myController.progress.hidden = NO;
 	

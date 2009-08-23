@@ -22,6 +22,7 @@
 #import "Configuration.h"
 
 #import "DateUtils.h"
+#import "i18n.h"
 
 @implementation TaskViewController
 
@@ -60,28 +61,28 @@
 	TaskList *list;
 	headers = [[NSMutableArray alloc] initWithCapacity:4];
 	
-	list = [[TaskList alloc] initWithView:@"OverdueTask" category:categoryId title:NSLocalizedString(@"Overdue", @"Overdue task title") status:TASKSTATUS_OVERDUE];
+	list = [[TaskList alloc] initWithView:@"OverdueTask" category:categoryId title:_("Overdue") status:TASKSTATUS_OVERDUE];
 	if ([list count])
 	{
 		[headers addObject:list];
 	}
 	[list release];
 	
-	list = [[TaskList alloc] initWithView:@"DueSoonTask" category:categoryId title:NSLocalizedString(@"Due soon", @"Due soon task title") status:TASKSTATUS_DUESOON];
+	list = [[TaskList alloc] initWithView:@"DueSoonTask" category:categoryId title:_("Due soon") status:TASKSTATUS_DUESOON];
 	if ([list count])
 	{
 		[headers addObject:list];
 	}
 	[list release];
 	
-	list = [[TaskList alloc] initWithView:@"StartedTask" category:categoryId title:NSLocalizedString(@"Started", @"Started task title") status:TASKSTATUS_STARTED];
+	list = [[TaskList alloc] initWithView:@"StartedTask" category:categoryId title:_("Started") status:TASKSTATUS_STARTED];
 	if ([list count])
 	{
 		[headers addObject:list];
 	}
 	[list release];
 	
-	list = [[TaskList alloc] initWithView:@"NotStartedTask" category:categoryId title:NSLocalizedString(@"Not started", @"Not started task title") status:TASKSTATUS_NOTSTARTED];
+	list = [[TaskList alloc] initWithView:@"NotStartedTask" category:categoryId title:_("Not started") status:TASKSTATUS_NOTSTARTED];
 	if ([list count])
 	{
 		[headers addObject:list];
@@ -237,10 +238,10 @@
 
 	if ([Configuration configuration].confirmComplete && ![Configuration configuration].showCompleted)
 	{
-		UIAlertView *confirm = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Confirmation", @"Mark task complete confirmation title")
-	        message:[NSString stringWithFormat:NSLocalizedString(@"Do you really want to mark \"%@\" complete ?", @"Mark task complete confirmation message"), [task name]] delegate:self
-			cancelButtonTitle:NSLocalizedString(@"No", @"Cancel mark task complete") otherButtonTitles:nil];
-		[confirm addButtonWithTitle:NSLocalizedString(@"Yes", @"Confirm mark task complete")];
+		UIAlertView *confirm = [[UIAlertView alloc] initWithTitle:_("Confirmation")
+	        message:[NSString stringWithFormat:_("Do you really want to mark \"%@\" complete ?"), [task name]] delegate:self
+			cancelButtonTitle:_("No") otherButtonTitles:nil];
+		[confirm addButtonWithTitle:_("Yes")];
 		[confirm show];
 		[confirm release];
 	}
@@ -291,7 +292,7 @@
 		return [[headers objectAtIndex:section - (self.editing ? 1 : 0)] title];
 	}
 	
-	return NSLocalizedString(@"No tasks.", @"No tasks header");
+	return _("No tasks.");
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -331,10 +332,11 @@
 		}
 
 #ifdef __IPHONE_3_0
-		cell.textLabel.text = NSLocalizedString(@"Add task...", @"Add task cell text");
+		cell.textLabel.text = 
 #else
-		cell.text = NSLocalizedString(@"Add task...", @"Add task cell text");
+		cell.text =
 #endif
+		_("Add task...");
 	}
 	else
 	{

@@ -7,6 +7,7 @@
 //
 
 #import "DateCell.h"
+#import "i18n.h"
 
 
 @implementation DateCell
@@ -29,7 +30,7 @@
 	}
 	else
 	{
-		dateLabel.text = NSLocalizedString(@"None", @"No date set label");
+		dateLabel.text = _("None");
 		[switch_ setOn:NO];
 	}
 }

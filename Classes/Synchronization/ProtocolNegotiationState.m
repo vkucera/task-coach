@@ -12,12 +12,13 @@
 #import "SyncViewController.h"
 
 #import "Database.h"
+#import "i18n.h"
 
 @implementation ProtocolNegotiationState
 
 - (void)activated
 {
-	myController.label.text = NSLocalizedString(@"Protocol negotiation...", @"Protocol negotiation title");
+	myController.label.text = _("Protocol negotiation...");
 	[myNetwork expect:4];
 }
 
@@ -56,11 +57,10 @@
 
 		if (version != 3)
 		{
-			UIAlertView *view = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Warning", @"Protocol version low warning title")
-	                               message:[NSString stringWithFormat:NSLocalizedString(@"It seems that the desktop Task Coach version is too old. Please consider upgrading (you may loose some data if you go on anyway).",
-																						@"Protocol version low warning message"), version]
-														  delegate:self cancelButtonTitle:NSLocalizedString(@"Abort", @"Protocol version low abort button title") otherButtonTitles:nil];
-			[view addButtonWithTitle:NSLocalizedString(@"Go on", @"Protocol version go on button title")];
+			UIAlertView *view = [[UIAlertView alloc] initWithTitle:_("Warning")
+	                               message:[NSString stringWithFormat:_("It seems that the desktop Task Coach version is too old. Please consider upgrading (you may loose some data if you go on anyway)."), version]
+														  delegate:self cancelButtonTitle:_("Abort") otherButtonTitles:nil];
+			[view addButtonWithTitle:_("Go on")];
 			[view show];
 			[view release];
 			return;

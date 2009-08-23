@@ -15,6 +15,7 @@
 #import "Category.h"
 #import "Task.h"
 #import "String+Utils.h"
+#import "i18n.h"
 
 @implementation FullFromDesktopState
 
@@ -30,7 +31,7 @@
 
 - (void)activated
 {
-	myController.label.text = NSLocalizedString(@"Synchronizing...", @"Synchronizing title");
+	myController.label.text = _("Synchronizing...");
 	[myController.activity stopAnimating];
 	myController.progress.hidden = NO;
 
