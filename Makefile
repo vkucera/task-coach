@@ -5,10 +5,6 @@ messages:
 	find Classes -name "*.m" | xargs xgettext -o i18n.in/messages.pot
 
 stringfiles:
-	# These must be updated by hand, unfortunately...
-	for name in DatePickerView MainWindow StringChoice SyncView TaskView; do \
-		ibtool --generate-stringsfile en.lproj/$$name.strings en.lproj/$$name.xib; \
-	done
 	msgcat -o en.lproj/Localizable.strings --stringtable-output i18n.in/messages.pot
 
 translated:
