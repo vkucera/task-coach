@@ -1,0 +1,220 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-08-23 14:28+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: Classes/Bonjour/BonjourBrowser.m:87
+msgid "Domains"
+msgstr ""
+
+#: Classes/Bonjour/BonjourBrowser.m:88
+msgid "Added Domains"
+msgstr ""
+
+#: Classes/Bonjour/BonjourBrowser.m:89
+msgid "Add Domain"
+msgstr ""
+
+#: Classes/Bonjour/BonjourBrowser.m:90
+msgid "Searching for services"
+msgstr ""
+
+#: Classes/SyncViewController.m:59 Classes/Synchronization/InitialState.m:23
+msgid "Connecting..."
+msgstr ""
+
+#: Classes/SyncViewController.m:60
+msgid "Please type your password."
+msgstr ""
+
+#: Classes/TaskViewController.m:64
+msgid "Overdue"
+msgstr ""
+
+#: Classes/TaskViewController.m:71
+msgid "Due soon"
+msgstr ""
+
+#: Classes/TaskViewController.m:78
+msgid "Started"
+msgstr ""
+
+#: Classes/TaskViewController.m:85
+msgid "Not started"
+msgstr ""
+
+#: Classes/TaskViewController.m:241
+msgid "Confirmation"
+msgstr ""
+
+#: Classes/TaskViewController.m:242
+#, objc-format
+msgid "Do you really want to mark \"%@\" complete ?"
+msgstr ""
+
+#: Classes/TaskViewController.m:243
+msgid "No"
+msgstr ""
+
+#: Classes/TaskViewController.m:244
+msgid "Yes"
+msgstr ""
+
+#: Classes/TaskViewController.m:295
+msgid "No tasks."
+msgstr ""
+
+#: Classes/TaskViewController.m:339
+msgid "Add task..."
+msgstr ""
+
+#: Classes/TaskCellBig.m:71
+#, objc-format
+msgid "Completed %@"
+msgstr ""
+
+#: Classes/TaskCellBig.m:74 Classes/TaskCellBig.m:83
+#, objc-format
+msgid "Due %@"
+msgstr ""
+
+#: Classes/TaskCellBig.m:78
+#, objc-format
+msgid "Started %@"
+msgstr ""
+
+#: Classes/DateCell.m:33
+msgid "None"
+msgstr ""
+
+#: Classes/CategoryViewController.m:56 Classes/CategoryViewController.m:298
+#: Classes/CategoryViewController.m:376
+msgid "All"
+msgstr ""
+
+#: Classes/CategoryViewController.m:133 Classes/CategoryViewController.m:250
+#: Classes/CategoryViewController.m:283
+msgid "Enter category name"
+msgstr ""
+
+#: Classes/CategoryViewController.m:346
+msgid "Add subcategory"
+msgstr ""
+
+#: Classes/CategoryViewController.m:398 Classes/CategoryViewController.m:423
+msgid "Looking for Task Coach"
+msgstr ""
+
+#: Classes/TaskCoachAppDelegate.m:24
+msgid "Cancel"
+msgstr ""
+
+#: Classes/TaskCoachAppDelegate.m:25
+msgid "Save"
+msgstr ""
+
+#: Classes/TaskCoachAppDelegate.m:26 Classes/TaskDetailsController.m:59
+msgid "Categories"
+msgstr ""
+
+#: Classes/TaskCoachAppDelegate.m:27
+msgid "Sync"
+msgstr ""
+
+#: Classes/Synchronization/FullFromDeviceState.m:38
+#: Classes/Synchronization/FullFromDesktopState.m:34
+msgid "Synchronizing..."
+msgstr ""
+
+#: Classes/Synchronization/AuthentificationState.m:23
+msgid "Authentication"
+msgstr ""
+
+#: Classes/Synchronization/AuthentificationState.m:99
+#: Classes/Synchronization/BaseState.m:34
+#: Classes/Synchronization/BaseState.m:48
+msgid "Error"
+msgstr ""
+
+#: Classes/Synchronization/AuthentificationState.m:100
+msgid "Incorrect password."
+msgstr ""
+
+#: Classes/Synchronization/AuthentificationState.m:101
+msgid "Retry"
+msgstr ""
+
+#: Classes/Synchronization/InitialState.m:50
+msgid "Connection error"
+msgstr ""
+
+#: Classes/Synchronization/InitialState.m:51
+msgid ""
+"An error occurred while connecting to the remote host. Please check your "
+"settings. Also check that Task Coach is running on the remote host. Last, "
+"check your firewall settings."
+msgstr ""
+
+#: Classes/Synchronization/InitialState.m:52
+#: Classes/Synchronization/BaseState.m:36
+#: Classes/Synchronization/BaseState.m:50
+#: Classes/Synchronization/ProtocolNegotiationState.m:62
+msgid "Abort"
+msgstr ""
+
+#: Classes/Synchronization/BaseState.m:35
+msgid "The connection was unexpectedly closed."
+msgstr ""
+
+#: Classes/Synchronization/BaseState.m:49
+#, objc-format
+msgid "A network error occurred: %@"
+msgstr ""
+
+#: Classes/Synchronization/ProtocolNegotiationState.m:21
+msgid "Protocol negotiation..."
+msgstr ""
+
+#: Classes/Synchronization/ProtocolNegotiationState.m:60
+msgid "Warning"
+msgstr ""
+
+#: Classes/Synchronization/ProtocolNegotiationState.m:61
+#, objc-format
+msgid ""
+"It seems that the desktop Task Coach version is too old. Please consider "
+"upgrading (you may loose some data if you go on anyway)."
+msgstr ""
+
+#: Classes/Synchronization/ProtocolNegotiationState.m:63
+msgid "Go on"
+msgstr ""
+
+#: Classes/TaskDetailsController.m:39
+msgid "Complete"
+msgstr ""
+
+#: Classes/TaskDetailsController.m:67
+msgid "Start date"
+msgstr ""
+
+#: Classes/TaskDetailsController.m:73
+msgid "Due date"
+msgstr ""
+
+#: Classes/TaskDetailsController.m:110 Classes/TaskDetailsController.m:287
+msgid "New task"
+msgstr ""
