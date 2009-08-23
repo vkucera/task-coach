@@ -6,6 +6,9 @@ messages:
 
 stringfiles:
 	msgcat -o en.lproj/Localizable.strings --stringtable-output i18n.in/messages.pot
+	for lang in fr; do \
+		msgcat -o $$lang.lproj/Localizable.strings --stringtable-output i18n.in/$$lang.po; \
+	done
 
 translated:
 	# This generates NIB files for all languages. They must then be edited with
