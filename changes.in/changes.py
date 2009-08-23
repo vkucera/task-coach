@@ -23,6 +23,14 @@ from changetypes import *
 
 releases = [
 
+Release('0.74.2', '?? ??, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''iPhone synchronization: when doing a full refresh
+from desktop, categories parents could be mismatched.''')
+        ]
+    ),
+
 Release('0.74.1', 'August 22, 2009',
     summary='''This is a bugfix release.''',
     featuresAdded=[
