@@ -12,6 +12,8 @@
 
 @interface FullFromDesktopState : BaseState <State>
 {
+	NSMutableDictionary *idMap;
+
 	NSInteger state;
 	NSInteger categoryCount;
 	NSInteger taskCount;

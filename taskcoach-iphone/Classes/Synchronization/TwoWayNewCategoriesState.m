@@ -7,6 +7,7 @@
 //
 
 #import "TwoWayNewCategoriesState.h"
+#import "TwoWayDeletedCategoriesState.h"
 #import "TwoWayNewTasksState.h"
 #import "Network.h"
 #import "Database.h"
@@ -18,7 +19,16 @@
 
 + stateWithNetwork:(Network *)network controller:(SyncViewController *)controller
 {
-	NSObject <State> *next = [TwoWayNewTasksState stateWithNetwork:network controller:controller];
+	NSObject <State> *next;
+	
+	if (controller.protocolVersion >= 3)
+	{
+		next = [TwoWayDeletedCategoriesState stateWithNetwork:network controller:controller];
+	}
+	else
+	{
+		next = [TwoWayNewTasksState stateWithNetwork:network controller:controller];
+	}
 
 	return [[[TwoWayNewCategoriesState alloc] initWithNetwork:network controller:controller nextState:next expectIds:YES] autorelease];
 }
@@ -26,15 +36,13 @@
 - (void)activated
 {
 	[super activated];
-	
-	objectCount = categoryCount;
-	[self afterActivation];
 
-	if (categoryCount)
-	{
-		Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM Category WHERE status=%d", STATUS_NEW]];
-		[req execWithTarget:self action:@selector(onObject:)];
-	}
+	[self start:[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM Category WHERE status=%d", STATUS_NEW]]];
+}
+
+- (void)onCategoryParent:(NSDictionary *)dict
+{
+	[myNetwork appendString:[dict objectForKey:@"taskCoachId"]];
 }
 
 - (void)onObject:(NSDictionary *)dict
@@ -42,6 +50,20 @@
 	[super onObject:dict];
 	
 	[myNetwork appendString:[dict objectForKey:@"name"]];
+	
+	if (myController.protocolVersion >= 3)
+	{
+		if ([dict objectForKey:@"parentId"])
+		{
+			Statement *req = [[Database connection] statementWithSQL:@"SELECT taskCoachId FROM Category WHERE id=?"];
+			[req bindInteger:[(NSNumber *)[dict objectForKey:@"parentId"] intValue] atIndex:1];
+			[req execWithTarget:self action:@selector(onCategoryParent:)];
+		}
+		else
+		{
+			[myNetwork appendInteger:0];
+		}
+	}
 }
 
 - (NSString *)categoryWhereClause

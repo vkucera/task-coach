@@ -12,6 +12,7 @@
 
 @interface FullFromDeviceState : UploadObjectsState
 {
+	NSInteger protocolVersion;
 }
 
 @end

@@ -1,4 +1,7 @@
 
+2009-08-23  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
+	* misc: support for editing categories and creating categories with parents
+
 2009-08-16  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* misc: Tasks are not due "tomorrow" anymore, but "soon", i.e. due in at most
 	  n days, n being configurable in the settings bundle.

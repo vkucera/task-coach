@@ -19,6 +19,11 @@
 		[viewController performSelector:@selector(childWasPopped)];
 }
 
+- (void)viewDidLoad
+{
+	self.navigationItem.rightBarButtonItem = [self.viewController editButtonItem];
+}
+
 - (void)viewDidUnload
 {
 	self.viewController = nil;
