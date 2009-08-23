@@ -15,6 +15,16 @@
 
 @implementation FullFromDeviceState
 
+- initWithNetwork:(Network *)network controller:(SyncViewController *)controller nextState:(NSObject <State> *)next expectIds:(BOOL)expectIds;
+{
+	if (self = [super initWithNetwork:network controller:controller nextState:next expectIds:expectIds])
+	{
+		protocolVersion = controller.protocolVersion;
+	}
+	
+	return self;
+}
+
 + stateWithNetwork:(Network *)network controller:(SyncViewController *)controller
 {
 	return [[[FullFromDeviceState alloc] initWithNetwork:network controller:controller nextState:[FullFromDeviceTaskState stateWithNetwork:network controller:controller] expectIds:YES] autorelease];
@@ -33,11 +43,9 @@
 	[myNetwork appendInteger:categoryCount];
 	[myNetwork appendInteger:taskCount];
 	
-	objectCount = categoryCount;
-	[self afterActivation];
 
-	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM Category WHERE %@", [self categoryWhereClause]]];
-	[req execWithTarget:self action:@selector(onObject:)];
+	// This assumes the primary key is always growing, in order to get parent categories before actual categories
+	[self start:[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM Category WHERE %@ ORDER BY id", [self categoryWhereClause]]]];
 }
 
 - (NSString *)tableName
@@ -45,11 +53,34 @@
 	return @"Category";
 }
 
+- (void)onParentCategory:(NSDictionary *)dict
+{
+	NSLog(@"%@", [dict objectForKey:@"taskCoachId"]);
+
+	[myNetwork appendString:[dict objectForKey:@"taskCoachId"]];
+}
+
 - (void)onObject:(NSDictionary *)dict
 {
 	[super onObject:dict];
 
 	[myNetwork appendString:[dict objectForKey:@"name"]];
+	
+	if (protocolVersion >= 3)
+	{
+		if ([dict valueForKey:@"parentId"])
+		{
+			NSLog(@"TCID for %d", [(NSNumber *)[dict valueForKey:@"parentId"] intValue]);
+
+			Statement *req = [[Database connection] statementWithSQL:@"SELECT taskCoachId FROM Category WHERE id=?"];
+			[req bindInteger:[(NSNumber *)[dict valueForKey:@"parentId"] intValue] atIndex:1];
+			[req execWithTarget:self action:@selector(onParentCategory:)];
+		}
+		else
+		{
+			[myNetwork appendInteger:0];
+		}
+	}
 }
 
 @end

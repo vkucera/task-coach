@@ -13,14 +13,22 @@
 
 @implementation CategoriesSelector
 
+- (void)onCategory:(NSDictionary *)dict
+{
+	[clauses addObject:[NSString stringWithFormat:@"idCategory=%d", [[dict objectForKey:@"id"] intValue]]];
+	
+	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT id FROM Category WHERE parentId=?"]];
+	[req bindInteger:[(NSNumber *)[dict objectForKey:@"id"] intValue] atIndex:1];
+	[req execWithTarget:self action:@selector(onCategory:)];
+}
+
 - initWithId:(NSInteger)catId
 {
 	if (self = [super init])
 	{
 		clauses = [[NSMutableArray alloc] init];
 
-		Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT id, taskCoachId FROM Category WHERE id=%d", catId]];
-		[req execWithTarget:self action:@selector(onCategory:)];
+		[self onCategory:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:catId] forKey:@"id"]];
 	}
 	
 	return self;
@@ -29,15 +37,6 @@
 - (NSString *)clause
 {
 	return [NSString stringWithFormat:@"(%@)", [@" OR " stringByJoiningStrings:clauses]];
-}
-
-- (void)onCategory:(NSDictionary *)dict
-{
-	[clauses addObject:[NSString stringWithFormat:@"idCategory=%d", [[dict objectForKey:@"id"] intValue]]];
-	
-	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT id, taskCoachId FROM Category WHERE parentTaskCoachId=?"]];
-	[req bindString:[dict objectForKey:@"taskCoachId"] atIndex:1];
-	[req execWithTarget:self action:@selector(onCategory:)];
 }
 
 @end

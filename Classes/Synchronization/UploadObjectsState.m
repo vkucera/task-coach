@@ -16,6 +16,38 @@
 
 @implementation UploadObjectsState
 
+- (void)start:(Statement *)req
+{
+	if (objectIds)
+	{
+		// Expecting IDs. Since subsequent actions may need the database to be up to date,
+		// we must wait for the ID before treating the next object, so use the incremental
+		// interface.
+
+		myStatement = [req retain];
+		[req startWithTarget:self action:@selector(onObject:)];
+		
+		if ([req next])
+		{
+			[myNetwork expect:4];
+		}
+		else
+		{
+			// No object.
+			[myStatement release];
+			myStatement = nil;
+
+			myController.state = nextState;
+		}
+	}
+	else
+	{
+		// Bulk.
+		[req execWithTarget:self action:@selector(onObject:)];
+		myController.state = nextState;
+	}
+}
+
 - initWithNetwork:(Network *)network controller:(SyncViewController *)controller nextState:(NSObject <State> *)theNextState expectIds:(BOOL)expectIds
 {
 	if (self = [super initWithNetwork:network controller:controller])
@@ -32,6 +64,7 @@
 {
 	[objectIds release];
 	[nextState release];
+	[myStatement release];
 	
 	[super dealloc];
 }
@@ -54,19 +87,6 @@
 	[req execWithTarget:self action:@selector(onTaskCount:)];
 	
 	total = categoryCount + taskCount;
-}
-
-- (void)afterActivation
-{
-	if (objectCount)
-	{
-		if (objectIds)
-			[myNetwork expect:4];
-	}
-	else
-	{
-		myController.state = nextState;
-	}
 }
 
 - (void)onCategoryCount:(NSDictionary *)dict
@@ -99,25 +119,27 @@
 			break;
 		case 1:
 		{
-			NSLog(@"Got ID: %@", [NSString stringFromUTF8Data:data]);
+			NSLog(@"Got ID: (%d) %@", [[objectIds objectAtIndex:0] intValue], [NSString stringFromUTF8Data:data]);
 
 			Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE %@ SET taskCoachId=? WHERE id=?", [self tableName]]];
 			[req bindString:[NSString stringFromUTF8Data:data] atIndex:1];
 			[req bindInteger:[[objectIds objectAtIndex:0] intValue] atIndex:2];
 			[req exec];
 			[objectIds removeObjectAtIndex:0];
-			
-			objectCount -= 1;
+
 			count += 1;
 			myController.progress.progress = 1.0 * count / total;
-			
-			if (objectCount)
+
+			if ([myStatement next])
 			{
 				state = 0;
 				[network expect:4];
 			}
 			else
 			{
+				[myStatement release];
+				myStatement = nil;
+
 				controller.state = nextState;
 			}
 			

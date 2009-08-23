@@ -14,13 +14,15 @@
 	UITextField *textField;
 
 	NSString *placeholder;
+	NSString *text;
+
 	id target;
 	SEL action;
 }
 
 @property (nonatomic, retain) IBOutlet UITextField *textField;
 
-- initWithPlaceholder:(NSString *)placeholder target:(id)target action:(SEL)action;
+- initWithPlaceholder:(NSString *)placeholder text:(NSString *)text target:(id)target action:(SEL)action;
 
 - (IBAction)onCancel:(UIButton *)button;
 

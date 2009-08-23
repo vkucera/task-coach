@@ -21,6 +21,15 @@
 		}
 		
 		connection = [cn retain];
+		colCount = sqlite3_column_count(pReq);
+		
+		// Find out column names
+		
+		colNames = [[NSMutableArray alloc] initWithCapacity:colCount];
+		for (NSInteger i = 0; i < colCount; ++i)
+		{
+			[colNames addObject:[NSString stringWithUTF8String:sqlite3_column_name(pReq, i)]];
+		}
 	}
 	
 	return self;
@@ -29,7 +38,10 @@
 - (void)dealloc
 {
 	sqlite3_finalize(pReq);
+	
+	[colNames release];
 	[connection release];
+	[myTarget release];
 	
 	[super dealloc];
 }
@@ -78,16 +90,7 @@
 
 - (NSInteger)execWithTarget:(id)target action:(SEL)action
 {
-	NSInteger colCount = sqlite3_column_count(pReq);
 	NSInteger rowCount = 0;
-
-	// Find out column names
-
-	NSMutableArray *colNames = [[NSMutableArray alloc] initWithCapacity:colCount];
-	for (NSInteger i = 0; i < colCount; ++i)
-	{
-		[colNames addObject:[NSString stringWithUTF8String:sqlite3_column_name(pReq, i)]];
-	}
 
 	int rc;
 	NSMutableDictionary *values = [[NSMutableDictionary alloc] initWithCapacity:colCount];
@@ -129,7 +132,6 @@
 	}
 	
 	[values release];
-	[colNames release];
 
 	if (rc != SQLITE_DONE)
 		@throw [NSException exceptionWithName:@"DatabaseError" reason: [connection errmsg] userInfo:nil];
@@ -138,6 +140,72 @@
 		@throw [NSException exceptionWithName:@"DatabaseError" reason: [connection errmsg] userInfo:nil];
 	
 	return rowCount;
+}
+
+- (void)startWithTarget:(id)target action:(SEL)action
+{
+	[myTarget release];
+
+	myTarget = [target retain];
+	myAction = action;
+}
+
+- (BOOL)next
+{
+	int rc;
+	NSMutableDictionary *values = [[NSMutableDictionary alloc] initWithCapacity:colCount];
+
+	if ((rc = sqlite3_step(pReq)) == SQLITE_ROW)
+	{
+		//NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+		
+		@try
+		{
+			[values removeAllObjects];
+			
+			for (int i = 0; i < colCount; ++i)
+			{
+				switch (sqlite3_column_type(pReq, i))
+				{
+					case SQLITE_INTEGER:
+						[values setObject:[NSNumber numberWithInt:sqlite3_column_int(pReq, i)] forKey:[colNames objectAtIndex:i]];
+						break;
+					case SQLITE_TEXT:
+						[values setObject:[NSString stringWithUTF8String:(char*)sqlite3_column_text(pReq, i)] forKey:[colNames objectAtIndex:i]];
+						break;
+					case SQLITE_NULL:
+						break;
+						// TODO: other types
+					default:
+						@throw [NSException exceptionWithName:@"DatabaseError" reason:@"Unknown column type" userInfo:nil];
+				}
+			}
+			
+			[myTarget performSelector:myAction withObject:values];
+		}
+		@finally
+		{
+			//[pool release];
+		}
+	}
+	
+	[values release];
+
+	if (rc == SQLITE_ROW)
+		return YES;
+	
+	if (rc == SQLITE_DONE)
+	{
+		if (sqlite3_reset(pReq) != SQLITE_OK)
+			@throw [NSException exceptionWithName:@"DatabaseError" reason: [connection errmsg] userInfo:nil];
+
+		[myTarget release];
+		myTarget = nil;
+
+		return NO;
+	}
+
+	@throw [NSException exceptionWithName:@"DatabaseError" reason: [connection errmsg] userInfo:nil];
 }
 
 @end

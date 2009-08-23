@@ -12,11 +12,13 @@
 
 @synthesize textField;
 
-- initWithPlaceholder:(NSString *)thePlaceholder target:(id)theTarget action:(SEL)theAction
+- initWithPlaceholder:(NSString *)thePlaceholder text:(NSString *)theText target:(id)theTarget action:(SEL)theAction
 {
 	if (self = [super initWithNibName:@"StringChoice" bundle:[NSBundle mainBundle]])
 	{
 		placeholder = [thePlaceholder retain];
+		text = [theText retain];
+
 		target = theTarget;
 		action = theAction;
 	}
@@ -27,6 +29,8 @@
 - (void)viewDidLoad
 {
 	textField.placeholder = placeholder;
+	textField.text = text;
+
 	[textField becomeFirstResponder];
 }
 
@@ -38,6 +42,7 @@
 - (void)dealloc
 {
 	[placeholder release];
+	[text release];
 
     [super dealloc];
 }

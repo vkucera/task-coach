@@ -20,7 +20,7 @@ static Statement *_saveStatement = nil;
 @synthesize parentId;
 @synthesize level;
 
-- initWithId:(NSInteger)ID name:(NSString *)theName status:(NSInteger)theStatus taskCoachId:(NSString *)theTaskCoachId parentId:(NSString *)theParentId
+- initWithId:(NSInteger)ID name:(NSString *)theName status:(NSInteger)theStatus taskCoachId:(NSString *)theTaskCoachId parentId:(NSNumber *)theParentId
 {
 	if (self = [super initWithId:ID name:theName status:theStatus taskCoachId:theTaskCoachId])
 	{
@@ -42,7 +42,7 @@ static Statement *_saveStatement = nil;
 - (Statement *)saveStatement
 {
 	if (!_saveStatement)
-		_saveStatement = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE %@ SET name=?, status=?, taskCoachId=?, parentTaskCoachId=? WHERE id=?", [self class]]] retain];
+		_saveStatement = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE %@ SET name=?, status=?, taskCoachId=?, parentId=? WHERE id=?", [self class]]] retain];
 	return _saveStatement;
 }
 
@@ -55,7 +55,10 @@ static Statement *_saveStatement = nil;
 {
 	[super bind];
 	
-	[[self saveStatement] bindString:parentId atIndex:4];
+	if (parentId)
+		[[self saveStatement] bindInteger:[parentId intValue] atIndex:4];
+	else
+		[[self saveStatement] bindNullAtIndex:4];
 }
 
 - (NSInteger)count
@@ -97,6 +100,13 @@ static Statement *_saveStatement = nil;
 	
 	[children release];
 	children = nil;
+}
+
+- (void)removeAllTasks
+{
+	Statement *req = [[Database connection] statementWithSQL:@"DELETE FROM TaskHasCategory WHERE idCategory=?"];
+	[req bindInteger:objectId atIndex:1];
+	[req exec];
 }
 
 @end

@@ -14,6 +14,12 @@
 @interface Statement : NSObject {
 	sqlite3_stmt *pReq;
 	SQLite *connection;
+	
+	NSInteger colCount;
+	NSMutableArray *colNames;
+
+	id myTarget;
+	SEL myAction;
 }
 
 - initWithConnection:(SQLite *)cn andSQL:(NSString *)sql;
@@ -25,5 +31,8 @@
 - (void)exec;
 // Returns the number of rows
 - (NSInteger)execWithTarget:(id)target action:(SEL)action;
+
+- (void)startWithTarget:(id)target action:(SEL)action;
+- (BOOL)next;
 
 @end

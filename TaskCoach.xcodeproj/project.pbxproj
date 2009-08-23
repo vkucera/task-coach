@@ -37,6 +37,7 @@
 		A63CC0BB0F5174EC003669FD /* ledgreybig.png in Resources */ = {isa = PBXBuildFile; fileRef = A63CC0B60F5174EC003669FD /* ledgreybig.png */; };
 		A63CC0BC0F5174EC003669FD /* ledorangebig.png in Resources */ = {isa = PBXBuildFile; fileRef = A63CC0B70F5174EC003669FD /* ledorangebig.png */; };
 		A63CC0BD0F5174EC003669FD /* ledredbig.png in Resources */ = {isa = PBXBuildFile; fileRef = A63CC0B80F5174EC003669FD /* ledredbig.png */; };
+		A63E286D10415CCD00A2E672 /* TwoWayDeletedCategoriesState.m in Sources */ = {isa = PBXBuildFile; fileRef = A63E286C10415CCD00A2E672 /* TwoWayDeletedCategoriesState.m */; };
 		A64603A70F2234B500FC71AD /* CellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = A64603A60F2234B500FC71AD /* CellFactory.m */; };
 		A64603AA0F2234D900FC71AD /* TaskCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A64603A90F2234D900FC71AD /* TaskCell.m */; };
 		A64604950F223FC500FC71AD /* ledblue.png in Resources */ = {isa = PBXBuildFile; fileRef = A64604900F223FC500FC71AD /* ledblue.png */; };
@@ -81,6 +82,7 @@
 		A6A975390F26572200622396 /* TaskCellLeft.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6A975370F26572200622396 /* TaskCellLeft.xib */; };
 		A6A9753A0F26572200622396 /* TaskCellRight.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6A975380F26572200622396 /* TaskCellRight.xib */; };
 		A6AEE77F0F21CFA00061CF77 /* Network.m in Sources */ = {isa = PBXBuildFile; fileRef = A6AEE77E0F21CFA00061CF77 /* Network.m */; };
+		A6AFD6BC10414E930065D5B7 /* TwoWayModifiedCategoriesState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6AFD6BB10414E930065D5B7 /* TwoWayModifiedCategoriesState.m */; };
 		A6B264D00FDBCB9400FF2AD0 /* DateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6B264CF0FDBCB9400FF2AD0 /* DateCell.m */; };
 		A6B264DD0FDBCBFE00FF2AD0 /* DateCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6B264DC0FDBCBFE00FF2AD0 /* DateCell.xib */; };
 		A6B7A5B30FA45E110067B76A /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = A6B7A5B20FA45E110067B76A /* iTunesArtwork */; };
@@ -158,6 +160,8 @@
 		A63CC0B60F5174EC003669FD /* ledgreybig.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ledgreybig.png; sourceTree = "<group>"; };
 		A63CC0B70F5174EC003669FD /* ledorangebig.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ledorangebig.png; sourceTree = "<group>"; };
 		A63CC0B80F5174EC003669FD /* ledredbig.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ledredbig.png; sourceTree = "<group>"; };
+		A63E286B10415CCD00A2E672 /* TwoWayDeletedCategoriesState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwoWayDeletedCategoriesState.h; path = Synchronization/TwoWayDeletedCategoriesState.h; sourceTree = "<group>"; };
+		A63E286C10415CCD00A2E672 /* TwoWayDeletedCategoriesState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwoWayDeletedCategoriesState.m; path = Synchronization/TwoWayDeletedCategoriesState.m; sourceTree = "<group>"; };
 		A64603A50F2234B500FC71AD /* CellFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellFactory.h; sourceTree = "<group>"; };
 		A64603A60F2234B500FC71AD /* CellFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CellFactory.m; sourceTree = "<group>"; };
 		A64603A80F2234D900FC71AD /* TaskCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCell.h; sourceTree = "<group>"; };
@@ -231,6 +235,8 @@
 		A6A975380F26572200622396 /* TaskCellRight.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCellRight.xib; sourceTree = SOURCE_ROOT; };
 		A6AEE77D0F21CFA00061CF77 /* Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Network.h; path = Network/Network.h; sourceTree = "<group>"; };
 		A6AEE77E0F21CFA00061CF77 /* Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Network.m; path = Network/Network.m; sourceTree = "<group>"; };
+		A6AFD6BA10414E930065D5B7 /* TwoWayModifiedCategoriesState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwoWayModifiedCategoriesState.h; path = Synchronization/TwoWayModifiedCategoriesState.h; sourceTree = "<group>"; };
+		A6AFD6BB10414E930065D5B7 /* TwoWayModifiedCategoriesState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwoWayModifiedCategoriesState.m; path = Synchronization/TwoWayModifiedCategoriesState.m; sourceTree = "<group>"; };
 		A6B264CE0FDBCB9400FF2AD0 /* DateCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateCell.h; sourceTree = "<group>"; };
 		A6B264CF0FDBCB9400FF2AD0 /* DateCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateCell.m; sourceTree = "<group>"; };
 		A6B264DC0FDBCBFE00FF2AD0 /* DateCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DateCell.xib; sourceTree = SOURCE_ROOT; };
@@ -468,6 +474,10 @@
 				A61AEE780F35CB610086ECD6 /* TwoWayDeletedTasksState.m */,
 				A61AEEF90F35D35C0086ECD6 /* TwoWayModifiedTasksState.h */,
 				A61AEEFA0F35D35C0086ECD6 /* TwoWayModifiedTasksState.m */,
+				A63E286B10415CCD00A2E672 /* TwoWayDeletedCategoriesState.h */,
+				A63E286C10415CCD00A2E672 /* TwoWayDeletedCategoriesState.m */,
+				A6AFD6BA10414E930065D5B7 /* TwoWayModifiedCategoriesState.h */,
+				A6AFD6BB10414E930065D5B7 /* TwoWayModifiedCategoriesState.m */,
 			);
 			name = Synchronization;
 			sourceTree = "<group>";
@@ -711,6 +721,8 @@
 				A6B264D00FDBCB9400FF2AD0 /* DateCell.m in Sources */,
 				A60B6E30102587FA00F9983C /* BaseCategoryViewController.m in Sources */,
 				A60B6ED710258D9D00F9983C /* TaskCategoryPickerController.m in Sources */,
+				A6AFD6BC10414E930065D5B7 /* TwoWayModifiedCategoriesState.m in Sources */,
+				A63E286D10415CCD00A2E672 /* TwoWayDeletedCategoriesState.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

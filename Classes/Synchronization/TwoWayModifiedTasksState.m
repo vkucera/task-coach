@@ -58,7 +58,7 @@
 	[myNetwork appendString:[dict objectForKey:@"dueDate"]];
 	[myNetwork appendString:[dict objectForKey:@"completionDate"]];
 	
-	if (protocolVersion == 2)
+	if (protocolVersion >= 2)
 	{
 		// Send categories as well, they may have been modified on the device.
 		[taskCategories removeAllObjects];

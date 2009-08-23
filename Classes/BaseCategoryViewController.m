@@ -18,7 +18,7 @@
 {
 	Category *category = [[Category alloc] initWithId:[[dict objectForKey:@"id"] intValue] name:[dict objectForKey:@"name"]
 											   status:[[dict objectForKey:@"status"] intValue] taskCoachId:[dict objectForKey:@"taskCoachId"]
-											 parentId:[dict objectForKey:@"parentTaskCoachId"]];
+											 parentId:[dict objectForKey:@"parentId"]];
 	[categories addObject:category];
 }
 
@@ -29,7 +29,8 @@
 	// We're assuming that there are not a bunch of categories, therefore we keep them in memory.
 	// This is not the case with tasks.
 	
-	Statement *req = [[Database connection] statementWithSQL:@"SELECT * FROM Category WHERE status != 3 ORDER BY name"];
+	Statement *req = [[Database connection] statementWithSQL:@"SELECT * FROM Category WHERE status != ? ORDER BY name"];
+	[req bindInteger:STATUS_DELETED atIndex:1];
 	[req execWithTarget:self action:@selector(addCategory:)];
 	
 	NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithCapacity:8];
@@ -37,16 +38,10 @@
 	
 	for (Category *category in categories)
 	{
-		if (category.taskCoachId)
-		{
-			[dict setObject:category forKey:category.taskCoachId];
-			if (!category.parentId)
-				[rootItems addObject:category];
-		}
-		else
-		{
+		[dict setObject:category forKey:[NSNumber numberWithInt:category.objectId]];
+		
+		if (!category.parentId)
 			[rootItems addObject:category];
-		}
 	}
 	
 	for (Category *category in categories)

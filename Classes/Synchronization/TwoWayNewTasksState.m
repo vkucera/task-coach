@@ -26,16 +26,11 @@
 - (void)activated
 {
 	[super activated];
-	
-	objectCount = taskCount;
+
 	taskCategories = [[NSMutableArray alloc] initWithCapacity:2];
-	[self afterActivation];
-	
-	if (taskCount)
-	{
-		Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM Task WHERE Task.status=%d", STATUS_NEW]];
-		[req execWithTarget:self action:@selector(onObject:)];
-	}
+
+
+	[self start:[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM Task WHERE Task.status=%d", STATUS_NEW]]];
 }
 
 - (void)dealloc

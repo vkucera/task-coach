@@ -13,6 +13,8 @@
 @interface TwoWayState : BaseState <State>
 {
 	NSInteger newCategoriesCount;
+	NSInteger deletedCategoriesCount;
+	NSInteger modifiedCategoriesCount;
 	NSInteger newTasksCount;
 	NSInteger deletedTasksCount;
 	NSInteger modifiedTasksCount;

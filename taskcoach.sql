@@ -12,12 +12,13 @@ CREATE TABLE Category
 	name VARCHAR(255) NOT NULL,
 	status INTEGER NOT NULL DEFAULT 1,
 	taskCoachId VARCHAR(255) NULL DEFAULT NULL,
-	parentTaskCoachId VARCHAR(255) NULL DEFAULT NULL
+	parentId INTEGER NULL DEFAULT NULL
 );
 
 CREATE INDEX idxCategoryStatus ON Category (status);
 CREATE INDEX idxCategoryName ON Category (name);
 CREATE INDEX idxCategoryTaskCoachId ON Category (taskcoachId);
+CREATE INDEX idxCategoryParentId ON Category (parentId);
 
 CREATE TABLE Task
 (

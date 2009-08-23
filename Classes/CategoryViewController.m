@@ -24,6 +24,13 @@
 @synthesize navigationController;
 @synthesize syncButton;
 
+- (void)loadCategories
+{
+	[super loadCategories];
+	
+	[self editButtonItem].enabled = ([categories count] != 0);
+}
+
 - (void)willTerminate
 {
 	[[PositionStore instance] push:self indexPath:nil];
@@ -121,7 +128,8 @@
 
 - (IBAction)onAddCategory:(UIBarButtonItem *)button
 {
-	StringChoiceController *ctrl = [[StringChoiceController alloc] initWithPlaceholder:NSLocalizedString(@"Enter category name", @"New category placeholder") target:self action:@selector(onCategoryAdded:)];
+	currentCategory = -1;
+	StringChoiceController *ctrl = [[StringChoiceController alloc] initWithPlaceholder:NSLocalizedString(@"Enter category name", @"New category placeholder") text:nil target:self action:@selector(onCategoryAdded:)];
 	[self.navigationController presentModalViewController:ctrl animated:YES];
 	[ctrl release];
 }
@@ -130,7 +138,18 @@
 {
 	if (name != nil)
 	{
-		Statement *req = [[Database connection] statementWithSQL:@"INSERT INTO Category (name) VALUES (?)"];
+		Statement *req;
+		
+		if (currentCategory >= 0)
+		{
+			Category *parent = [categories objectAtIndex:currentCategory];
+
+			req = [[Database connection] statementWithSQL:@"INSERT INTO Category (name, parentId) VALUES (?, ?)"];
+			[req bindInteger:parent.objectId atIndex:2];
+		}
+		else
+			req = [[Database connection] statementWithSQL:@"INSERT INTO Category (name) VALUES (?)"];
+
 		[req bindString:name atIndex:1];
 		[req exec];
 		[self loadCategories];
@@ -151,58 +170,214 @@
 #endif
 }
 
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated
+{
+	syncButton.enabled = !editing;
+
+	[self.tableView beginUpdates];
+	
+	[super setEditing:editing animated:animated];
+
+	NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:[categories count]];
+	
+	if (editing)
+	{
+		[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationRight];
+
+		for (NSInteger i = 0; i <= [categories count] - 1; ++i)
+		{
+			[indexPaths addObject:[NSIndexPath indexPathForRow:2*i+1 inSection:0]];
+		}
+	
+		[self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationRight];
+	}
+	else
+	{
+		for (NSInteger i = [categories count] - 1; i >= 0; --i)
+		{
+			[indexPaths addObject:[NSIndexPath indexPathForRow:i*2+1 inSection:0]];
+		}
+		
+		[self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationRight];
+		[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationRight];
+	}
+	
+	[indexPaths release];
+
+	[self.tableView endUpdates];
+}
+
+- (void)deleteCategory:(Category *)category
+{
+	[category removeAllTasks];
+
+	for (NSInteger i = 0; i < [categories count]; ++i)
+	{
+		Category *other = [categories objectAtIndex:i];
+		
+		if ([other.parentId intValue] == category.objectId)
+			[self deleteCategory:other];
+	}
+
+	if (category.status == STATUS_NEW)
+	{
+		[category delete];
+	}
+	else
+	{
+		[category setStatus:STATUS_DELETED];
+	}
+
+	[category save];
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	if (editingStyle == UITableViewCellEditingStyleDelete)
+	{
+		[self deleteCategory:[categories objectAtIndex:indexPath.row / 2]];
+		[self loadCategories];
+		[self.tableView reloadData];
+		
+		if ([categories count] == 0)
+			[self setEditing:NO animated:YES];
+	}
+	else
+	{
+		currentCategory = indexPath.row / 2;
+
+		StringChoiceController *ctrl = [[StringChoiceController alloc] initWithPlaceholder:NSLocalizedString(@"Enter category name", @"New category placeholder") text:nil target:self action:@selector(onCategoryAdded:)];
+		[self.navigationController presentModalViewController:ctrl animated:YES];
+		[ctrl release];
+	}
+}
+
 #pragma mark Table view methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [super tableView:tableView numberOfRowsInSection:section] + 1;
+	if (self.editing)
+	{
+		return [super tableView:tableView numberOfRowsInSection:section] * 2;
+	}
+	else
+	{
+		return [super tableView:tableView numberOfRowsInSection:section] + 1;
+	}
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	TaskViewController *ctrl;
-	
-	if (indexPath.row)
+	if (self.editing)
 	{
-		ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:indexPath.row - 1] name] category:[[categories objectAtIndex:indexPath.row - 1] objectId] categoryController:self];
+		if (indexPath.row % 2)
+		{
+			// Can't select those
+			[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+		}
+		else
+		{
+			currentCategory = indexPath.row / 2;
+
+			StringChoiceController *ctrl = [[StringChoiceController alloc] initWithPlaceholder:NSLocalizedString(@"Enter category name", @"Edit category name placeholder") text:[(Category *)[categories objectAtIndex:currentCategory] name] target:self action:@selector(onCategoryChanged:)];
+			[self.navigationController presentModalViewController:ctrl animated:YES];
+			[ctrl release];
+		}
 	}
 	else
 	{
-		ctrl = [[TaskViewController alloc] initWithTitle:NSLocalizedString(@"All", @"All categories view title") category:-1 categoryController:self];
+		TaskViewController *ctrl;
+	
+		if (indexPath.row)
+		{
+			ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:indexPath.row - 1] name] category:[[categories objectAtIndex:indexPath.row - 1] objectId] categoryController:self];
+		}
+		else
+		{
+			ctrl = [[TaskViewController alloc] initWithTitle:NSLocalizedString(@"All", @"All categories view title") category:-1 categoryController:self];
+		}
+	
+		[[PositionStore instance] push:self indexPath:indexPath];
+	
+		[self.navigationController pushViewController:ctrl animated:YES];
+		[ctrl release];
 	}
-	
-	[[PositionStore instance] push:self indexPath:indexPath];
-	
-	[self.navigationController pushViewController:ctrl animated:YES];
-	[ctrl release];
+}
+
+- (void)onCategoryChanged:(NSString *)name
+{
+	if (name != nil)
+	{
+		Category *category = [categories objectAtIndex:currentCategory];
+		
+		category.name = name;
+		[category save];
+	}
+
+	[self.tableView reloadData];
+	[self.navigationController dismissModalViewControllerAnimated:YES];
+	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	UITableViewCell *cell;
 
-	if (indexPath.row)
+	if (self.editing)
 	{
-		cell = [super tableView:tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row - 1 inSection:indexPath.section]];
+		Category *category = [categories objectAtIndex:indexPath.row / 2];
+		
+		if (indexPath.row % 2)
+		{
+			static NSString *CellIdentifier = @"Cell";
+			
+			cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+			if (cell == nil)
+			{
+				cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
+			}
+			
+#ifdef __IPHONE_3_0
+			cell.textLabel.text = NSLocalizedString(@"Add subcategory", @"Add subcategory label");
+#else
+			cell.text = NSLocalizedString(@"Add subcategory", @"Add subcategory label");
+#endif
+			
+			cell.indentationLevel = category.level + 1;
+		}
+		else
+		{
+			cell = [super tableView:tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row / 2 inSection:indexPath.section]];
+		}
 	}
 	else
 	{
-		static NSString *CellIdentifier = @"Cell";
-		
-		cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-		if (cell == nil)
+		if (indexPath.row)
 		{
-			cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
+			cell = [super tableView:tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row - 1 inSection:indexPath.section]];
+		}
+		else
+		{
+			static NSString *CellIdentifier = @"Cell";
+			
+			cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+			if (cell == nil)
+			{
+				cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
+			}
+			
+#ifdef __IPHONE_3_0
+			cell.textLabel.text = NSLocalizedString(@"All", @"All categories name");
+#else
+			cell.text = NSLocalizedString(@"All", @"All categories name");
+#endif
+
+			cell.indentationLevel = 0;
 		}
 
-#ifdef __IPHONE_3_0
-		cell.textLabel.text = NSLocalizedString(@"All", @"All categories name");
-#else
-		cell.text = NSLocalizedString(@"All", @"All categories name");
-#endif
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
 
-	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	return cell;
 }
 
@@ -227,6 +402,11 @@
 		srv.delegate = self;
 		[srv resolveWithTimeout:5];
 	}
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	return (indexPath.row % 2) ? UITableViewCellEditingStyleInsert : UITableViewCellEditingStyleDelete;
 }
 
 // NSNetService delegate

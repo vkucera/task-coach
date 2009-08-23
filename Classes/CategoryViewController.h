@@ -20,6 +20,7 @@
 	NavigationController *navigationController;
 	UIBarButtonItem *syncButton;
 	BOOL wantSync;
+	NSInteger currentCategory;
 }
 
 @property (nonatomic, assign) IBOutlet NavigationController *navigationController;

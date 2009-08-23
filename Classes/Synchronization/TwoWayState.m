@@ -41,13 +41,36 @@
 	[myNetwork appendInteger:newTasksCount];
 	[myNetwork appendInteger:deletedTasksCount];
 	[myNetwork appendInteger:modifiedTasksCount];
-	
+
+	if (myController.protocolVersion >= 3)
+	{
+		req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM Category WHERE status=%d", STATUS_DELETED]];
+		[req execWithTarget:self action:@selector(onDeletedCategoriesCount:)];
+		
+		[myNetwork appendInteger:deletedCategoriesCount];
+
+		req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM Category WHERE status=%d", STATUS_MODIFIED]];
+		[req execWithTarget:self action:@selector(onModifiedCategoriesCount:)];
+		
+		[myNetwork appendInteger:modifiedCategoriesCount];
+	}
+
 	myController.state = [TwoWayNewCategoriesState stateWithNetwork:myNetwork controller:myController];
 }
 
 - (void)onNewCategoriesCount:(NSDictionary *)dict
 {
 	newCategoriesCount = [[dict objectForKey:@"total"] intValue];
+}
+
+- (void)onDeletedCategoriesCount:(NSDictionary *)dict
+{
+	deletedCategoriesCount = [[dict objectForKey:@"total"] intValue];
+}
+
+- (void)onModifiedCategoriesCount:(NSDictionary *)dict
+{
+	modifiedCategoriesCount = [[dict objectForKey:@"total"] intValue];
 }
 
 - (void)onNewTasksCount:(NSDictionary *)dict

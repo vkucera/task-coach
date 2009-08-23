@@ -10,11 +10,13 @@
 
 #import "BaseState.h"
 
+@class Statement;
+
 @interface UploadObjectsState : BaseState <State>
 {
 	NSInteger categoryCount;
 	NSInteger taskCount;
-	NSInteger objectCount;
+	//NSInteger objectCount;
 
 	NSInteger total;
 	NSInteger count;
@@ -23,12 +25,14 @@
 	NSMutableArray *objectIds;
 	
 	NSObject <State> *nextState;
+	Statement *myStatement;
 }
 
 - initWithNetwork:(Network *)network controller:(SyncViewController *)controller nextState:(NSObject <State> *)nextState expectIds:(BOOL)expectIds;
 
+- (void)start:(Statement *)req;
+
 - (void)activated;
-- (void)afterActivation;
 - (void)onObject:(NSDictionary *)dict;
 
 // "abstract" methods

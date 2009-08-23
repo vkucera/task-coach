@@ -42,6 +42,7 @@
 	{
 		case 1:
 		case 2:
+		case 3:
 			response = 1;
 			break;
 	}
@@ -53,7 +54,7 @@
 		NSLog(@"Accepted protocol %d.", version);
 		controller.protocolVersion = version;
 
-		if (version != 2)
+		if (version != 3)
 		{
 			UIAlertView *view = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Warning", @"Protocol version low warning title")
 	                               message:[NSString stringWithFormat:NSLocalizedString(@"It seems that the desktop Task Coach version is too old. Please consider upgrading (you may loose some data if you go on anyway).",

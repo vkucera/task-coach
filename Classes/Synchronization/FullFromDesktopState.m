@@ -18,6 +18,16 @@
 
 @implementation FullFromDesktopState
 
+- initWithNetwork:(Network *)network controller:(SyncViewController *)controller;
+{
+	if (self = [super initWithNetwork:network controller:controller])
+	{
+		idMap = [[NSMutableDictionary alloc] initWithCapacity:32];
+	}
+	
+	return self;
+}
+
 - (void)activated
 {
 	myController.label.text = NSLocalizedString(@"Synchronizing...", @"Synchronizing title");
@@ -39,6 +49,7 @@
 
 - (void)dealloc
 {
+	[idMap release];
 	[categoryName release];
 	[categoryId release];
 	[taskSubject release];
@@ -148,11 +159,14 @@
 		{
 			Category *category;
 			if ([data length])
-				category = [[Category alloc] initWithId:-1 name:categoryName status:STATUS_NONE taskCoachId:categoryId parentId:[NSString stringFromUTF8Data:data]];
+				category = [[Category alloc] initWithId:-1 name:categoryName status:STATUS_NONE taskCoachId:categoryId parentId:[idMap valueForKey:[NSString stringFromUTF8Data:data]]];
 			else
 				category = [[Category alloc] initWithId:-1 name:categoryName status:STATUS_NONE taskCoachId:categoryId];
 
 			[category save];
+			
+			[idMap setValue:[NSNumber numberWithInt:category.objectId] forKey:categoryId];
+
 			[category release];
 
 			NSLog(@"Added category %@", categoryName);
