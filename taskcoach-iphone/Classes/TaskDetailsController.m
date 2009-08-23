@@ -19,6 +19,7 @@
 #import "DateUtils.h"
 #import "Database.h"
 #import "Statement.h"
+#import "i18n.h"
 
 //======================================================================
 
@@ -35,7 +36,7 @@
 
 		SwitchCell *completeCell = [[CellFactory cellFactory] createSwitchCell];
 		[completeCell setDelegate:self];
-		completeCell.label.text = NSLocalizedString(@"Complete", @"Task details complete label");
+		completeCell.label.text = _("Complete");
 		[completeCell.switch_ setOn:(task.completionDate != nil)];
 		[cells addObject:completeCell];
 		
@@ -51,23 +52,25 @@
 		
 		categoriesCell = [[UITableViewCell alloc] initWithFrame:CGRectZero];
 #ifdef __IPHONE_3_0
-		categoriesCell.textLabel.text = NSLocalizedString(@"Categories", @"Categories cell text in task details");
+		categoriesCell.textLabel.text = 
 #else
-		categoriesCell.text = NSLocalizedString(@"Categories", @"Categories cell text in task details");
+		categoriesCell.text = 
 #endif
+		    _("Categories");
+
 		categoriesCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 		[cells addObject:categoriesCell];
 		[categoriesCell release];
 
 		startDateCell = [[CellFactory cellFactory] createDateCell];
 		[startDateCell setDelegate:self];
-		startDateCell.label.text = NSLocalizedString(@"Start date", @"Task details start date label");
+		startDateCell.label.text = _("Start date");
 		[startDateCell setDate:task.startDate];
 		[cells addObject:startDateCell];
 		
 		dueDateCell = [[CellFactory cellFactory] createDateCell];
 		[dueDateCell setDelegate:self];
-		dueDateCell.label.text = NSLocalizedString(@"Due date", @"Task details due date label");
+		dueDateCell.label.text = _("Due date");
 		[dueDateCell setDate:task.dueDate];
 		[cells addObject:dueDateCell];
 	}
@@ -104,7 +107,7 @@
 		// New task.
 		TextFieldCell *cell = [cells objectAtIndex:1];
 		[cell.textField becomeFirstResponder];
-		self.navigationItem.title = NSLocalizedString(@"New task", @"New task editing title");
+		self.navigationItem.title = _("New task");
 	}
 	else
 	{
@@ -281,7 +284,7 @@
 	}
 	else
 	{
-		task.name = NSLocalizedString(@"New task", @"New task subject");
+		task.name = _("New task");
 		textField.text = task.name;
 	}
 

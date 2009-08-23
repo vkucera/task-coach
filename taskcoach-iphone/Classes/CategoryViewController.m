@@ -18,6 +18,7 @@
 #import "Domain/Category.h"
 
 #import "Configuration.h"
+#import "i18n.h"
 
 @implementation CategoryViewController
 
@@ -52,7 +53,7 @@
 		}
 		else
 		{
-			ctrl = [[TaskViewController alloc] initWithTitle:NSLocalizedString(@"All", @"All categories view title") category:-1 categoryController:self];
+			ctrl = [[TaskViewController alloc] initWithTitle:_("All") category:-1 categoryController:self];
 		}
 		
 		[[PositionStore instance] push:self indexPath:pos.indexPath];
@@ -129,7 +130,7 @@
 - (IBAction)onAddCategory:(UIBarButtonItem *)button
 {
 	currentCategory = -1;
-	StringChoiceController *ctrl = [[StringChoiceController alloc] initWithPlaceholder:NSLocalizedString(@"Enter category name", @"New category placeholder") text:nil target:self action:@selector(onCategoryAdded:)];
+	StringChoiceController *ctrl = [[StringChoiceController alloc] initWithPlaceholder:_("Enter category name") text:nil target:self action:@selector(onCategoryAdded:)];
 	[self.navigationController presentModalViewController:ctrl animated:YES];
 	[ctrl release];
 }
@@ -246,7 +247,7 @@
 	{
 		currentCategory = indexPath.row / 2;
 
-		StringChoiceController *ctrl = [[StringChoiceController alloc] initWithPlaceholder:NSLocalizedString(@"Enter category name", @"New category placeholder") text:nil target:self action:@selector(onCategoryAdded:)];
+		StringChoiceController *ctrl = [[StringChoiceController alloc] initWithPlaceholder:_("Enter category name") text:nil target:self action:@selector(onCategoryAdded:)];
 		[self.navigationController presentModalViewController:ctrl animated:YES];
 		[ctrl release];
 	}
@@ -279,7 +280,7 @@
 		{
 			currentCategory = indexPath.row / 2;
 
-			StringChoiceController *ctrl = [[StringChoiceController alloc] initWithPlaceholder:NSLocalizedString(@"Enter category name", @"Edit category name placeholder") text:[(Category *)[categories objectAtIndex:currentCategory] name] target:self action:@selector(onCategoryChanged:)];
+			StringChoiceController *ctrl = [[StringChoiceController alloc] initWithPlaceholder:_("Enter category name") text:[(Category *)[categories objectAtIndex:currentCategory] name] target:self action:@selector(onCategoryChanged:)];
 			[self.navigationController presentModalViewController:ctrl animated:YES];
 			[ctrl release];
 		}
@@ -294,7 +295,7 @@
 		}
 		else
 		{
-			ctrl = [[TaskViewController alloc] initWithTitle:NSLocalizedString(@"All", @"All categories view title") category:-1 categoryController:self];
+			ctrl = [[TaskViewController alloc] initWithTitle:_("All") category:-1 categoryController:self];
 		}
 	
 		[[PositionStore instance] push:self indexPath:indexPath];
@@ -338,10 +339,11 @@
 			}
 			
 #ifdef __IPHONE_3_0
-			cell.textLabel.text = NSLocalizedString(@"Add subcategory", @"Add subcategory label");
+			cell.textLabel.text = 
 #else
-			cell.text = NSLocalizedString(@"Add subcategory", @"Add subcategory label");
+			cell.text = 
 #endif
+				_("Add subcategory");
 			
 			cell.indentationLevel = category.level + 1;
 		}
@@ -367,10 +369,11 @@
 			}
 			
 #ifdef __IPHONE_3_0
-			cell.textLabel.text = NSLocalizedString(@"All", @"All categories name");
+			cell.textLabel.text = 
 #else
-			cell.text = NSLocalizedString(@"All", @"All categories name");
+			cell.text = 
 #endif
+				_("All");
 
 			cell.indentationLevel = 0;
 		}
@@ -392,7 +395,7 @@
 		// Name/domain not defined, browse
 		BonjourBrowser *browser = [[BonjourBrowser alloc] initForType:@"_taskcoachsync._tcp" inDomain:@"local." customDomains:nil showDisclosureIndicators:NO showCancelButton:YES];
 		browser.delegate = self;
-		browser.searchingForServicesString = NSLocalizedString(@"Looking for Task Coach", @"Bonjour search string");
+		browser.searchingForServicesString = _("Looking for Task Coach");
 		[self.navigationController presentModalViewController:browser animated:YES];
 		[browser release];
 	}
@@ -417,7 +420,7 @@
 
 	BonjourBrowser *browser = [[BonjourBrowser alloc] initForType:@"_taskcoachsync._tcp" inDomain:@"local." customDomains:nil showDisclosureIndicators:NO showCancelButton:YES];
 	browser.delegate = self;
-	browser.searchingForServicesString = NSLocalizedString(@"Looking for Task Coach", @"Bonjour search string");
+	browser.searchingForServicesString = _("Looking for Task Coach");
 	[self.navigationController presentModalViewController:browser animated:YES];
 	[browser release];
 	[sender release];

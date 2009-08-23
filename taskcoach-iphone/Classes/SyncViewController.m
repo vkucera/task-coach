@@ -9,6 +9,7 @@
 #import "SyncViewController.h"
 #import "Configuration.h"
 #import "InitialState.h"
+#import "i18n.h"
 
 @implementation SyncViewController
 
@@ -55,7 +56,8 @@
 
 - (void)viewDidLoad
 {
-	label.text = NSLocalizedString(@"Connecting...", @"Connecting title");
+	label.text = _("Connecting...");
+	password.placeholder = _("Please type your password.");
 	password.hidden = YES;
 	cancelButton.hidden = YES;
 	

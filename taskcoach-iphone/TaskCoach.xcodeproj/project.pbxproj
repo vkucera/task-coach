@@ -256,6 +256,7 @@
 		A6D3862D0F24B02A0097F0F6 /* DatePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatePickerViewController.h; sourceTree = "<group>"; };
 		A6D3862E0F24B02A0097F0F6 /* DatePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatePickerViewController.m; sourceTree = "<group>"; };
 		A6D386890F24B4450097F0F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DatePickerView.xib; sourceTree = "<group>"; };
+		A6D5F411104166480098B4D5 /* i18n.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = i18n.h; sourceTree = "<group>"; };
 		A6D8AC020F221BFA006894AA /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		A6DA5C670F3D870900372358 /* DescriptionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescriptionCell.h; sourceTree = "<group>"; };
 		A6DA5C680F3D870900372358 /* DescriptionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DescriptionCell.m; sourceTree = "<group>"; };
@@ -334,6 +335,7 @@
 				A60B6E2F102587FA00F9983C /* BaseCategoryViewController.m */,
 				A60B6ED510258D9D00F9983C /* TaskCategoryPickerController.h */,
 				A60B6ED610258D9D00F9983C /* TaskCategoryPickerController.m */,
+				A6D5F411104166480098B4D5 /* i18n.h */,
 			);
 			path = Classes;
 			sourceTree = "<group>";

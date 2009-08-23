@@ -12,6 +12,7 @@
 #import "ProtocolNegotiationState.h"
 #import "Database.h"
 #import "Configuration.h"
+#import "i18n.h"
 
 // Initial state just waits for the connection to be established.
 
@@ -19,7 +20,7 @@
 
 - (void)activated
 {
-	myController.label.text = NSLocalizedString(@"Connecting...", @"Connecting title");
+	myController.label.text = _("Connecting...");
 }
 
 + stateWithNetwork:(Network *)network controller:(SyncViewController *)controller
@@ -46,9 +47,9 @@
 	[Configuration configuration].name = nil;
 	[[Configuration configuration] save];
 
-	UIAlertView *view = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Connection error", @"Connection error title")
-												   message:NSLocalizedString(@"An error occurred while connecting to the remote host. Please check your settings. Also check that Task Coach is running on the remote host. Last, check your firewall settings.", @"Connection error message")
-												  delegate:controller cancelButtonTitle:NSLocalizedString(@"Abort", @"Connection error cancel button title") otherButtonTitles:nil];
+	UIAlertView *view = [[UIAlertView alloc] initWithTitle:_("Connection error")
+												   message:_("An error occurred while connecting to the remote host. Please check your settings. Also check that Task Coach is running on the remote host. Last, check your firewall settings.")
+												  delegate:controller cancelButtonTitle:_("Abort") otherButtonTitles:nil];
 	[view show];
 	[view release];
 }

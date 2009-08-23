@@ -11,6 +11,7 @@
 #import "Database.h"
 #import "Statement.h"
 #import "String+Utils.h"
+#import "i18n.h"
 
 @implementation TaskCellBig
 
@@ -67,19 +68,19 @@
 	switch ([task taskStatus])
 	{
 		case TASKSTATUS_COMPLETED:
-			infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Completed %@", @"Completed date infos pattern"), task.completionDate];
+			infosLabel.text = [NSString stringWithFormat:_("Completed %@"), task.completionDate];
 			break;
 		case TASKSTATUS_OVERDUE:
-			infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Due %@", @"Due date infos pattern"), task.dueDate];
+			infosLabel.text = [NSString stringWithFormat:_("Due %@"), task.dueDate];
 			break;
 		case TASKSTATUS_DUESOON:
 			if (task.startDate)
-				infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Started %@", @"Started date infos pattern"), task.startDate];
+				infosLabel.text = [NSString stringWithFormat:_("Started %@"), task.startDate];
 			break;
 		case TASKSTATUS_STARTED:
 		case TASKSTATUS_NOTSTARTED:
 			if (task.dueDate)
-				infosLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Due %@", @"Due date infos pattern (started/not started)"), task.dueDate];
+				infosLabel.text = [NSString stringWithFormat:_("Due %@"), task.dueDate];
 			break;
 	}
 }

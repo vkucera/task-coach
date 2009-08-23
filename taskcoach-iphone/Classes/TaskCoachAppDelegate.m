@@ -8,6 +8,7 @@
 
 #import "TaskCoachAppDelegate.h"
 #import "PositionStore.h"
+#import "i18n.h"
 
 @implementation TaskCoachAppDelegate
 
@@ -16,6 +17,15 @@
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application
 {
+	// These lines are just there so that gettext can retrieve strings
+	// in the NIB. Remember to add a line here each time a translatable
+	// string appears in a NIB.
+
+	NSLog(_("Cancel"));
+	NSLog(_("Save"));
+	NSLog(_("Categories"));
+	NSLog(_("Sync"));
+
 	[window addSubview:mainController.view];
 	
 	[window makeKeyAndVisible];

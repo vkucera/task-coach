@@ -14,12 +14,13 @@
 #import "Network.h"
 #import "SyncViewController.h"
 #import "Database.h"
+#import "i18n.h"
 
 @implementation AuthentificationState
 
 - (void)activated
 {
-	myController.label.text = NSLocalizedString(@"Authentication", @"Authentication state title");
+	myController.label.text = _("Authentication");
 	
 	myController.password.delegate = self;
 
@@ -95,9 +96,9 @@
 		}
 		else
 		{
-			UIAlertView *view = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Bad password error title")
-													message:NSLocalizedString(@"Incorrect password.", @"Bad password message")
-													delegate:self cancelButtonTitle:NSLocalizedString(@"Retry", @"Bad password retry button title") otherButtonTitles:nil];
+			UIAlertView *view = [[UIAlertView alloc] initWithTitle:_("Error")
+													message:_("Incorrect password.")
+													delegate:self cancelButtonTitle:_("Retry") otherButtonTitles:nil];
 			[view show];
 			[view release];
 		}
