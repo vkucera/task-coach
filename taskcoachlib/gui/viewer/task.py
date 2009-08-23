@@ -473,6 +473,14 @@ class SquareTaskViewer(BaseTaskViewer):
     
 class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks, 
                  base.SortableViewerWithColumns, BaseTaskViewer):
+    
+    viewerImages = ['task', 'task_inactive', 'task_completed', 'task_duesoon', 
+                    'task_overdue', 'tasks', 'tasks_open', 'tasks_inactive', 
+                    'tasks_inactive_open', 'tasks_completed', 
+                    'tasks_completed_open', 'tasks_duesoon', 
+                    'tasks_duesoon_open', 'tasks_overdue', 'tasks_overdue_open', 
+                    'start', 'ascending', 'descending', 'ascending_with_status',
+                    'descending_with_status', 'attachment', 'note']
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'taskviewer')
@@ -703,29 +711,7 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
 
     def getColor(self, task):
         return color.taskColor(task, self.settings)
-    
-    def getBackgroundColor(self, task):
-        return task.color()
-    
-    def getItemAttr(self, index):
-        task = self.getItemWithIndex(index)
-        return wx.ListItemAttr(self.getColor(task), 
-                               self.getBackgroundColor(task))
-
-    def createImageList(self):
-        imageList = wx.ImageList(16, 16)
-        self.imageIndex = {}
-        for index, image in enumerate(['task', 'task_inactive', 
-            'task_completed', 'task_duesoon', 'task_overdue', 'tasks', 
-            'tasks_open', 'tasks_inactive', 'tasks_inactive_open', 
-            'tasks_completed', 'tasks_completed_open', 'tasks_duesoon', 
-            'tasks_duesoon_open', 'tasks_overdue', 'tasks_overdue_open', 
-            'start', 'ascending', 'descending', 'ascending_with_status',
-            'descending_with_status', 'attachment', 'note']):
-            imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, (16,16)))
-            self.imageIndex[image] = index
-        return imageList
-    
+        
     def getImageIndices(self, task):
         bitmap, bitmap_selected = render.taskBitmapNames(task)
         return self.imageIndex[bitmap], self.imageIndex[bitmap_selected]

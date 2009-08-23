@@ -284,14 +284,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort,
 
     def getItemImage(self, index, which, column=0):
         return -1
-    
-    def getBackgroundColor(self, effort):
-        return effort.task().color()
-    
-    def getItemAttr(self, index):
-        effort = self.getItemWithIndex(index)
-        return wx.ListItemAttr(None, self.getBackgroundColor(effort))
-
+        
     def getItemTooltipData(self, index, column=0):
         if self.settings.getboolean('view', 'descriptionpopups'):
             item = self.getItemWithIndex(index)

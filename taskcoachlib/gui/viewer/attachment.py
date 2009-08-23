@@ -31,6 +31,7 @@ class AttachmentViewer(mixin.AttachmentDropTarget, base.ViewerWithColumns,
                        mixin.SortableViewerForAttachments, 
                        mixin.SearchableViewer, base.ListViewer):
     SorterClass = attachment.AttachmentSorter
+    viewerImages = ['note', 'uri', 'email', 'fileopen']
 
     def __init__(self, *args, **kwargs):
         self.attachments = kwargs.pop('attachmentsToShow')
@@ -122,18 +123,6 @@ class AttachmentViewer(mixin.AttachmentDropTarget, base.ViewerWithColumns,
                            uicommand.AttachmentOpen(attachments=attachment.AttachmentList(),
                                                     viewer=self)]
         return commands
-
-    def createImageList(self):
-        imageList = wx.ImageList(16, 16)
-        self.imageIndex = {}
-        for index, image in enumerate(['note', 'uri', 'email', 'fileopen']):
-            imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, (16,16)))
-            self.imageIndex[image] = index
-        return imageList
-
-    def getItemAttr(self, index):
-        item = self.getItemWithIndex(index)
-        return wx.ListItemAttr(colBack=self.getBackgroundColor(item))
 
     def noteImageIndex(self, attachment, which):
         if attachment.notes():
