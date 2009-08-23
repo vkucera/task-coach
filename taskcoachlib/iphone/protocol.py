@@ -157,7 +157,7 @@ class BaseState(object):
 
 class InitialState(BaseState):
     def init(self, disp):
-        self.currentProtocolVersion = 2
+        self.currentProtocolVersion = 3
         disp.set_terminator(4)
         disp.pushInteger(self.currentProtocolVersion)
 
@@ -243,7 +243,7 @@ class GUIDState(BaseState):
 class FullFromDesktopState(BaseState):
     def init(self, disp):
         self.tasks = filter(self.isTaskEligible, disp.window.taskFile.tasks())
-        self.categories = list([cat for cat in disp.window.taskFile.categories() if not cat.isDeleted()])
+        self.categories = list([cat for cat in disp.window.taskFile.categories().allItemsSorted() if not cat.isDeleted()])
 
         disp.pushInteger(len(self.categories))
         disp.pushInteger(len(self.tasks))
@@ -344,8 +344,31 @@ class FullFromDeviceCategoryState(BaseState):
     def init(self, disp):
         self.length = None
         self.categoryMap = {}
+        self.state = 0
+        self.parent = None
 
         if self.categoryCount:
+            disp.set_terminator(4)
+        else:
+            self.setState(FullFromDeviceTaskState, disp)
+
+    def finalize(self, disp):
+        if self.parent is None:
+            category = Category(self.categoryName)
+        else:
+            category = self.parent.newChild(self.categoryName)
+
+        disp.window.addIPhoneCategory(category)
+        disp.pushString(category.id())
+        self.categoryMap[category.id()] = category
+
+        self.categoryCount -= 1
+        self.count += 1
+        self.dlg.SetProgress(self.count, self.total)
+
+        if self.categoryCount:
+            self.state = 0
+            self.length = None
             disp.set_terminator(4)
         else:
             self.setState(FullFromDeviceTaskState, disp)
@@ -353,22 +376,30 @@ class FullFromDeviceCategoryState(BaseState):
     def handleData(self, disp, data):
         if self.length is None:
             self.length, = struct.unpack('!i', data)
-            disp.set_terminator(self.length)
-        else:
-            category = Category(data.decode('UTF-8'))
-            disp.window.addIPhoneCategory(category)
-            disp.pushString(category.id())
-            self.categoryMap[category.id()] = category
-
-            self.categoryCount -= 1
-            self.count += 1
-            self.dlg.SetProgress(self.count, self.total)
-
-            if self.categoryCount:
-                self.length = None
-                disp.set_terminator(4)
+            if self.length == 0:
+                self.handleData(disp, '')
             else:
-                self.setState(FullFromDeviceTaskState, disp)
+                disp.set_terminator(self.length)
+        else:
+            if self.state == 0:
+                self.categoryName = data.decode('UTF-8')
+
+                if disp.protocolVersion >= 3:
+                    self.length = None
+                    disp.set_terminator(4)
+                    self.state = 1
+                    return
+
+                # Version < 3
+
+                self.finalize(disp)
+            elif self.state == 1:
+                if data:
+                    self.parent = self.categoryMap[data.decode('UTF-8')]
+                else:
+                    self.parent = None
+
+                self.finalize(disp)
 
 
 class FullFromDeviceTaskState(BaseState):
@@ -466,7 +497,10 @@ class FullFromDeviceTaskCategoriesState(BaseState):
 
 class TwoWayState(BaseState):
     def init(self, disp):
-        disp.set_terminator(16)
+        if disp.protocolVersion >= 3:
+            disp.set_terminator(24)
+        else:
+            disp.set_terminator(16)
 
         self.categoryMap = dict()
         for category in disp.window.taskFile.categories():
@@ -477,8 +511,13 @@ class TwoWayState(BaseState):
             self.taskMap[task.id()] = task
 
     def handleData(self, disp, data):
-        (self.newCategoriesCount, self.newTasksCount,
-         self.deletedTasksCount, self.modifiedTasksCount) = struct.unpack('!iiii', data)
+        if disp.protocolVersion >= 3:
+            (self.newCategoriesCount, self.newTasksCount,
+             self.deletedTasksCount, self.modifiedTasksCount,
+             self.deletedCategoriesCount, self.modifiedCategoriesCount) = struct.unpack('!iiiiii', data)
+        else:
+            (self.newCategoriesCount, self.newTasksCount,
+             self.deletedTasksCount, self.modifiedTasksCount) = struct.unpack('!iiii', data)
 
         self.setState(TwoWayNewCategoriesState, disp)
 
@@ -486,7 +525,101 @@ class TwoWayState(BaseState):
 class TwoWayNewCategoriesState(BaseState):
     def init(self, disp):
         if self.newCategoriesCount:
+            self.parent = None
+            self.state = 0
             self.length = None
+            disp.set_terminator(4)
+        else:
+            if disp.protocolVersion >= 3:
+                self.setState(TwoWayDeletedCategoriesState, disp)
+            else:
+                self.setState(TwoWayNewTasksState, disp)
+
+    def finalize(self, disp):
+        if self.parent is None:
+            category = Category(self.categoryName)
+        else:
+            category = self.parent.newChild(self.categoryName)
+
+        disp.window.addIPhoneCategory(category)
+        disp.pushString(category.id())
+        self.categoryMap[category.id()] = category
+
+        self.newCategoriesCount -= 1
+        if self.newCategoriesCount:
+            self.parent = None
+            self.state = 0
+            self.length = None
+            disp.set_terminator(4)
+        else:
+            if disp.protocolVersion >= 3:
+                self.setState(TwoWayDeletedCategoriesState, disp)
+            else:
+                self.setState(TwoWayNewTasksState, disp)
+
+    def handleData(self, disp, data):
+        if self.length is None:
+            self.length, = struct.unpack('!i', data)
+            if self.length == 0:
+                self.handleData('')
+            else:
+                disp.set_terminator(self.length)
+        else:
+            if self.state == 0:
+                self.categoryName = data.decode('UTF-8')
+
+                if disp.protocolVersion < 3:
+                    self.finalize(disp)
+                else:
+                    self.state = 1
+                    self.length = None
+                    disp.set_terminator(4)
+            elif self.state == 1:
+                if data:
+                    self.parent = self.categoryMap[data.decode('UTF-8')]
+                else:
+                    self.parent = None
+
+                self.finalize(disp)
+
+
+class TwoWayDeletedCategoriesState(BaseState):
+    def init(self, disp):
+        if self.deletedCategoriesCount:
+            self.length = None
+            disp.set_terminator(4)
+        else:
+            self.setState(TwoWayModifiedCategoriesState, disp)
+
+    def handleData(self, disp, data):
+        if self.length is None:
+            self.length, = struct.unpack('!i', data)
+            disp.set_terminator(self.length)
+        else:
+            try:
+                category = self.categoryMap[data.decode('UTF-8')]
+            except KeyError:
+                # Probably deleted on the desktop side as well
+                pass
+            else:
+                del self.categoryMap[data.decode('UTF-8')]
+                disp.window.removeIPhoneCategory(category)
+
+            self.deletedCategoriesCount -= 1
+            if self.deletedCategoriesCount:
+                self.length = None
+                disp.set_terminator(4)
+            else:
+                self.setState(TwoWayModifiedCategoriesState, disp)
+
+
+class TwoWayModifiedCategoriesState(BaseState):
+    def init(self, disp):
+        print 'MODIFIED', self.modifiedCategoriesCount
+
+        if self.modifiedCategoriesCount:
+            self.length = None
+            self.state = 0
             disp.set_terminator(4)
         else:
             self.setState(TwoWayNewTasksState, disp)
@@ -494,19 +627,31 @@ class TwoWayNewCategoriesState(BaseState):
     def handleData(self, disp, data):
         if self.length is None:
             self.length, = struct.unpack('!i', data)
-            disp.set_terminator(self.length)
+            if self.length == 0:
+                self.handleData('')
+            else:
+                disp.set_terminator(self.length)
         else:
-            category = Category(data.decode('UTF-8'))
-            disp.window.addIPhoneCategory(category)
-            disp.pushString(category.id())
-            self.categoryMap[category.id()] = category
-
-            self.newCategoriesCount -= 1
-            if self.newCategoriesCount:
+            if self.state == 0:
+                self.categoryName = data.decode('UTF-8')
+                self.state = 1
                 self.length = None
                 disp.set_terminator(4)
-            else:
-                self.setState(TwoWayNewTasksState, disp)
+            elif self.state == 1:
+                try:
+                    category = self.categoryMap[data.decode('UTF-8')]
+                except KeyError:
+                    pass
+                else:
+                    disp.window.modifyIPhoneCategory(category, self.categoryName)
+
+                    self.modifiedCategoriesCount -= 1
+                    if self.modifiedCategoriesCount:
+                        self.state = 0
+                        self.length = None
+                        disp.set_terminator(4)
+                    else:
+                        self.setState(TwoWayNewTasksState, disp)
 
 
 class TwoWayNewTasksState(BaseState):
@@ -710,7 +855,7 @@ class TwoWayModifiedTasks(BaseState):
                         disp.set_terminator(4)
                         return
 
-            if disp.protocolVersion == 1 or (disp.protocolVersion == 2 and self.state < 5):
+            if disp.protocolVersion == 1 or (disp.protocolVersion >= 2 and self.state < 5):
                 if self.state == 5 and self.modifiedTasksCount == 0:
                     self.setState(FullFromDesktopState, disp)
                 else:

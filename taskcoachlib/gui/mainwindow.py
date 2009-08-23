@@ -425,6 +425,14 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
         self.taskFile.categories().append(category)
 
     @synchronized
+    def removeIPhoneCategory(self, category):
+        self.taskFile.categories().remove(category)
+
+    @synchronized
+    def modifyIPhoneCategory(self, category, name):
+        category.setSubject(name)
+
+    @synchronized
     def addIPhoneTask(self, task, categories):
         self.taskFile.tasks().append(task)
         for category in categories:
