@@ -290,6 +290,7 @@ defaults = { \
 'iphone': { \
     'password': '',
     'service': '',
+    'synccompleted': 'True',
     },
 'printer': { \
     'margin_left': '0',
