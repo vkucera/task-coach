@@ -250,6 +250,17 @@
 		A6C30BEA0F48218C00A04E7C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		A6C9843C0F2B77C40088A73F /* GUIDState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIDState.h; path = Synchronization/GUIDState.h; sourceTree = "<group>"; };
 		A6C9843D0F2B77C40088A73F /* GUIDState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GUIDState.m; path = Synchronization/GUIDState.m; sourceTree = "<group>"; };
+		A6D0E4171042E13C006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/DatePickerView.strings; sourceTree = "<group>"; };
+		A6D0E4181042E13C006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/MainWindow.strings; sourceTree = "<group>"; };
+		A6D0E4191042E13C006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/StringChoice.strings; sourceTree = "<group>"; };
+		A6D0E41A1042E13C006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/SyncView.strings; sourceTree = "<group>"; };
+		A6D0E41B1042E13C006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/TaskView.strings; sourceTree = "<group>"; };
+		A6D0E41C1042E150006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A6D0E4281042E169006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/DatePickerView.xib; sourceTree = "<group>"; };
+		A6D0E4291042E169006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		A6D0E42A1042E169006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/StringChoice.xib; sourceTree = "<group>"; };
+		A6D0E42B1042E169006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/SyncView.xib; sourceTree = "<group>"; };
+		A6D0E42C1042E169006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/TaskView.xib; sourceTree = "<group>"; };
 		A6D384540F247DDF0097F0F6 /* TaskDetailsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDetailsController.h; sourceTree = "<group>"; };
 		A6D384550F247DDF0097F0F6 /* TaskDetailsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskDetailsController.m; sourceTree = "<group>"; };
 		A6D384600F247E910097F0F6 /* TaskDetails.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskDetails.xib; sourceTree = "<group>"; };
@@ -365,10 +376,10 @@
 				A68EDEC30F1E1F1700F51FF2 /* MainWindow.xib */,
 				A68EDF840F1E2A6D00F51FF2 /* StringChoice.xib */,
 				A6831FFC102EB057002A7083 /* TaskView.xib */,
-				A6D8AC020F221BFA006894AA /* Settings.bundle */,
-				A6D384600F247E910097F0F6 /* TaskDetails.xib */,
 				A6D386880F24B4450097F0F6 /* DatePickerView.xib */,
 				A6664C270F2B367A00638C68 /* SyncView.xib */,
+				A6D8AC020F221BFA006894AA /* Settings.bundle */,
+				A6D384600F247E910097F0F6 /* TaskDetails.xib */,
 				A67A0C200F6BA57100F48A82 /* Entitlements.plist */,
 				A60B6EE410258EB200F9983C /* TaskCategoryPicker.xib */,
 			);
@@ -610,6 +621,7 @@
 				German,
 				en,
 				fr,
+				nl,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
@@ -742,6 +754,7 @@
 			children = (
 				A6664C280F2B367A00638C68 /* en */,
 				A680C0D40F47367F00A8D18B /* fr */,
+				A6D0E42B1042E169006440A3 /* nl */,
 			);
 			name = SyncView.xib;
 			sourceTree = "<group>";
@@ -751,6 +764,7 @@
 			children = (
 				A680C0C50F47366900A8D18B /* fr */,
 				A67400771042DF0D0094E5F4 /* en */,
+				A6D0E41C1042E150006440A3 /* nl */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -760,6 +774,7 @@
 			children = (
 				A680C0D60F47368E00A8D18B /* fr */,
 				A67400781042DF410094E5F4 /* en */,
+				A6D0E4171042E13C006440A3 /* nl */,
 			);
 			name = DatePickerView.strings;
 			sourceTree = "<group>";
@@ -769,6 +784,7 @@
 			children = (
 				A680C0D80F47368E00A8D18B /* fr */,
 				A674007A1042DF620094E5F4 /* en */,
+				A6D0E4181042E13C006440A3 /* nl */,
 			);
 			name = MainWindow.strings;
 			sourceTree = "<group>";
@@ -778,6 +794,7 @@
 			children = (
 				A680C0DA0F47368E00A8D18B /* fr */,
 				A674007B1042DF6C0094E5F4 /* en */,
+				A6D0E4191042E13C006440A3 /* nl */,
 			);
 			name = StringChoice.strings;
 			sourceTree = "<group>";
@@ -787,6 +804,7 @@
 			children = (
 				A680C0DC0F47368E00A8D18B /* fr */,
 				A674007C1042DF760094E5F4 /* en */,
+				A6D0E41A1042E13C006440A3 /* nl */,
 			);
 			name = SyncView.strings;
 			sourceTree = "<group>";
@@ -796,6 +814,7 @@
 			children = (
 				A6831FFD102EB057002A7083 /* en */,
 				A6832032102EB42F002A7083 /* fr */,
+				A6D0E42C1042E169006440A3 /* nl */,
 			);
 			name = TaskView.xib;
 			sourceTree = "<group>";
@@ -805,6 +824,7 @@
 			children = (
 				A6832037102EB499002A7083 /* fr */,
 				A67400791042DF530094E5F4 /* en */,
+				A6D0E41B1042E13C006440A3 /* nl */,
 			);
 			name = TaskView.strings;
 			sourceTree = "<group>";
@@ -814,6 +834,7 @@
 			children = (
 				A68EDEC40F1E1F1700F51FF2 /* en */,
 				A680C0D20F47367F00A8D18B /* fr */,
+				A6D0E4291042E169006440A3 /* nl */,
 			);
 			name = MainWindow.xib;
 			sourceTree = "<group>";
@@ -823,6 +844,7 @@
 			children = (
 				A68EDF850F1E2A6D00F51FF2 /* en */,
 				A680C0D30F47367F00A8D18B /* fr */,
+				A6D0E42A1042E169006440A3 /* nl */,
 			);
 			name = StringChoice.xib;
 			sourceTree = "<group>";
@@ -832,6 +854,7 @@
 			children = (
 				A6D386890F24B4450097F0F6 /* en */,
 				A680C0D10F47367F00A8D18B /* fr */,
+				A6D0E4281042E169006440A3 /* nl */,
 			);
 			name = DatePickerView.xib;
 			sourceTree = "<group>";

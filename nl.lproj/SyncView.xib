@@ -84,7 +84,7 @@
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<string key="IBUIText"/>
 						<int key="IBUIBorderStyle">3</int>
-						<string key="IBUIPlaceholder"/>
+						<string key="IBUIPlaceholder">Voer uw wachtwoord in.</string>
 						<object class="NSColor" key="IBUITextColor">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MAA</bytes>
@@ -116,10 +116,10 @@
 							<int key="NSfFlags">16</int>
 						</object>
 						<int key="IBUIButtonType">1</int>
-						<string key="IBUIHighlightedTitle">Annuler</string>
-						<string key="IBUIDisabledTitle">Annuler</string>
-						<string key="IBUISelectedTitle">Annuler</string>
-						<string key="IBUINormalTitle">Annuler</string>
+						<string key="IBUIHighlightedTitle">Annuleren</string>
+						<string key="IBUIDisabledTitle">Annuleren</string>
+						<string key="IBUISelectedTitle">Annuleren</string>
+						<string key="IBUINormalTitle">Annuleren</string>
 						<object class="NSColor" key="IBUIHighlightedTitleColor">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MSAxIDEAA</bytes>

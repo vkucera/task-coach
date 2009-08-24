@@ -311,7 +311,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>Localizable.strings</string>
+								<string>CHANGELOG</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -319,11 +319,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>Localizable.strings</string>
+										<string>CHANGELOG</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A67400821042DF7E0094E5F4</string>
+										<string>A6D0E4441042E29C006440A3</string>
 										<key>history</key>
 										<array>
 											<string>A68EE04E0F1E324800F51FF2</string>
@@ -430,7 +430,6 @@
 											<string>A63E287D10415CEE00A2E672</string>
 											<string>A63E287E10415CEE00A2E672</string>
 											<string>A65F726D10415F08003B16CE</string>
-											<string>A6D5F4141041672E0098B4D5</string>
 											<string>A6D5F4161041672E0098B4D5</string>
 											<string>A6D5F44310416B830098B4D5</string>
 											<string>A6D5F44510416B830098B4D5</string>
@@ -455,7 +454,8 @@
 											<string>A6E7A340104176A800C03650</string>
 											<string>A674007D1042DF7E0094E5F4</string>
 											<string>A674007E1042DF7E0094E5F4</string>
-											<string>A674007F1042DF7E0094E5F4</string>
+											<string>A6D0E4411042E29C006440A3</string>
+											<string>A6D0E4421042E29C006440A3</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -589,8 +589,7 @@
 											<string>A6AFD6FE104153440065D5B7</string>
 											<string>A65F726E10415F08003B16CE</string>
 											<string>A6D5F4211041672E0098B4D5</string>
-											<string>A67400801042DF7E0094E5F4</string>
-											<string>A67400811042DF7E0094E5F4</string>
+											<string>A6D0E4431042E29C006440A3</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -674,7 +673,7 @@
 									<key>ContentConfiguration</key>
 									<dict>
 										<key>PBXBuildLogShowsTranscriptDefaultKey</key>
-										<string>{{0, -65}, {1563, 396}}</string>
+										<string>{{0, 27}, {1563, 304}}</string>
 										<key>PBXProjectModuleGUID</key>
 										<string>XCMainBuildResultsModuleGUID</string>
 										<key>PBXProjectModuleLabel</key>
@@ -715,11 +714,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A67400831042DF7E0094E5F4</string>
+				<string>A6D0E4341042E17C006440A3</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A67400841042DF7E0094E5F4</string>
+				<string>A6D0E4351042E17C006440A3</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A67400851042DF7E0094E5F4</string>
+				<string>A6D0E4361042E17C006440A3</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -866,14 +865,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A66224F01041730000A9FD5B</string>
+				<string>A6D0E4451042E29C006440A3</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A66224F11041730000A9FD5B</string>
-				<string>A66224F21041730000A9FD5B</string>
-				<string>A66224F31041730000A9FD5B</string>
-				<string>A66224F41041730000A9FD5B</string>
-				<string>A66224F51041730000A9FD5B</string>
+				<string>A6D0E4461042E29C006440A3</string>
+				<string>A6D0E4471042E29C006440A3</string>
+				<string>A6D0E4481042E29C006440A3</string>
+				<string>A6D0E4491042E29C006440A3</string>
+				<string>A6D0E44A1042E29C006440A3</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debugV3</string>
