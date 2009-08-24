@@ -35,6 +35,11 @@ Release('0.74.2', '?? ??, 2009',
     bugsFixed=[
         Bug('''iPhone synchronization: when doing a full refresh
 from desktop, categories parents could be mismatched.''')
+        ],
+    featuresAdded=[
+        Feature('''Add an option to avoid uploading completed tasks to
+the iPhone/iPod Touch when synchronizing. For people who hide completed
+tasks, this can make the synchronization much quicker.''')
         ]
     ),
 

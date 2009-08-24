@@ -43,7 +43,7 @@ class IPhoneAcceptor(Acceptor):
             password = settings.get('iphone', 'password')
 
             if password:
-                return IPhoneHandler(window, settings.get('iphone', 'password'), fp)
+                return IPhoneHandler(window, settings, fp)
 
             wx.MessageBox(_('''An iPhone or iPod Touch tried to connect to Task Coach,\n'''
                             '''but no password is set. Please set a password in the\n'''
@@ -58,11 +58,11 @@ class IPhoneAcceptor(Acceptor):
 
 
 class IPhoneHandler(asynchat.async_chat):
-    def __init__(self, window, password, fp):
+    def __init__(self, window, settings, fp):
         asynchat.async_chat.__init__(self, fp)
 
         self.window = window
-        self.password = password
+        self.settings = settings
         self.data = StringIO.StringIO()
         self.state = InitialState(self)
 
@@ -109,6 +109,8 @@ class BaseState(object):
 
         self.dlg = None
 
+        self.syncCompleted = disp.settings.getboolean('iphone', 'synccompleted')
+
         self.init(disp, *args, **kwargs)
 
     def isTaskEligible(self, task):
@@ -121,6 +123,9 @@ class BaseState(object):
          * Or it belongs to a category named 'iPhone'
 
          This will probably be more configurable in the future."""
+
+        if task.completed() and not self.syncCompleted:
+            return False
 
         if task.isDeleted():
             return False
@@ -186,7 +191,7 @@ class PasswordState(BaseState):
         disp.set_terminator(20)
 
     def handleData(self, disp, data):
-        if data == sha.sha(self.hashData + disp.password.encode('UTF-8')).digest():
+        if data == sha.sha(self.hashData + disp.settings.get('iphone', 'password').encode('UTF-8')).digest():
             disp.pushInteger(1)
             self.setState(DeviceNameState, disp)
         else:
@@ -615,8 +620,6 @@ class TwoWayDeletedCategoriesState(BaseState):
 
 class TwoWayModifiedCategoriesState(BaseState):
     def init(self, disp):
-        print 'MODIFIED', self.modifiedCategoriesCount
-
         if self.modifiedCategoriesCount:
             self.length = None
             self.state = 0

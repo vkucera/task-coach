@@ -39,6 +39,9 @@ class BaseEffort(object):
 
     def categories(self, recursive=False):
         return self._task.categories(recursive)
+    
+    def color(self):
+        return self.task().color()
 
     @classmethod
     def trackStartEventType(class_):

@@ -302,6 +302,8 @@ class IPhonePage(SettingsPage):
             _('Password for synchronization with iPhone'))
         self.addTextSetting('iphone', 'service',
             _('Bonjour service name'), helpText='restart')
+        self.addBooleanSetting('iphone', 'synccompleted',
+            _('Upload completed tasks to device'), helpText=_('Upload completed tasks to device'))
         self.fit()
 
         

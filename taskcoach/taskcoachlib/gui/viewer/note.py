@@ -30,6 +30,7 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
                      base.SortableViewerWithColumns,
                      mixin.SortableViewerForNotes, base.TreeViewer):
     SorterClass = note.NoteSorter
+    viewerImages = ['ascending', 'descending', 'attachment']
     defaultTitle = _('Notes')
     defaultBitmap = 'note'
     
@@ -70,19 +71,8 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
         notes = super(BaseNoteViewer, self).createFilter(notes)
         return domain.base.DeletedFilter(notes)
 
-    def createImageList(self):
-        imageList = wx.ImageList(16, 16)
-        self.imageIndex = {}
-        for index, image in enumerate(['ascending', 'descending', 'attachment']):
-            imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, (16,16)))
-            self.imageIndex[image] = index
-        return imageList
-
     def attachmentImageIndex(self, note, which):
-        if note.attachments():
-            return self.imageIndex['attachment'] 
-        else:
-            return -1
+        return self.imageIndex['attachment'] if note.attachmens() else -1 
 
     def createToolBarUICommands(self):
         commands = super(BaseNoteViewer, self).createToolBarUICommands()
@@ -153,11 +143,6 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
             renderCallback=lambda note: '')
         columns.insert(2, attachmentsColumn)
         return columns
-                     
-    def getItemText(self, index, column=0):
-        item = self.getItemWithIndex(index)
-        column = self.visibleColumns()[column]
-        return column.render(item)
 
     def getItemTooltipData(self, index, column=0):
         if self.settings.getboolean('view', 'descriptionpopups'):
@@ -170,14 +155,7 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
             return result
         else:
             return []
-    
-    def getBackgroundColor(self, note):
-        return note.color()
-    
-    def getItemAttr(self, index):
-        note = self.getItemWithIndex(index)
-        return wx.ListItemAttr(None, self.getBackgroundColor(note))
-                
+                    
     def isShowingNotes(self):
         return True
 

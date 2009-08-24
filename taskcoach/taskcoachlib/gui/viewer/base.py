@@ -94,6 +94,15 @@ class Viewer(wx.Panel):
     
     def createWidget(self, *args):
         raise NotImplementedError
+    
+    def createImageList(self):
+        size = (16, 16)
+        imageList = wx.ImageList(*size)
+        self.imageIndex = {}
+        for index, image in enumerate(self.viewerImages):
+            imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, size))
+            self.imageIndex[image] = index
+        return imageList
 
     def getWidget(self):
         return self.widget
@@ -216,12 +225,17 @@ class Viewer(wx.Panel):
 
     def visibleColumns(self):
         return [widgets.Column('subject', _('Subject'))]
+    
+    def getItemAttr(self, index):
+        item = self.getItemWithIndex(index)
+        return wx.ListItemAttr(self.getColor(item), 
+                               self.getBackgroundColor(item))
         
     def getColor(self, item):
-        return wx.BLACK
+        return None
     
     def getBackgroundColor(self, item):
-        return None
+        return item.color()
     
     def bitmap(self):
         ''' Return the bitmap that represents this viewer. Used for the 

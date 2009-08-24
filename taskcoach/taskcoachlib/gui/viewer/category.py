@@ -32,6 +32,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
                          mixin.SearchableViewer, 
                          base.SortableViewerWithColumns, base.TreeViewer):
     SorterClass = category.CategorySorter
+    viewerImages = ['ascending', 'descending', 'attachment', 'note']
     defaultTitle = _('Categories')
     defaultBitmap = 'category'
     
@@ -109,14 +110,6 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
                        renderCallback=lambda category: '', **kwargs))
         return columns
     
-    def createImageList(self):
-        imageList = wx.ImageList(16, 16)
-        self.imageIndex = {}
-        for index, image in enumerate(['ascending', 'descending', 'attachment', 'note']):
-            imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, (16,16)))
-            self.imageIndex[image] = index
-        return imageList
-
     def attachmentImageIndex(self, category, which):
         return self.imageIndex['attachment'] if category.attachments() else -1 
         
@@ -161,11 +154,6 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
         category = self.getItemWithIndex(self.widget.GetIndexOfItem(event.GetItem()))
         category.setFiltered(event.GetItem().IsChecked())
         self.onSelect(event) # Notify status bar
-            
-    def getItemText(self, index, column=0):    
-        item = self.getItemWithIndex(index)
-        column = self.visibleColumns()[column]
-        return column.render(item)
 
     def getItemTooltipData(self, index, column=0):
         if self.settings.getboolean('view', 'descriptionpopups'):
@@ -180,14 +168,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
             return result
         else:
             return []
-    
-    def getBackgroundColor(self, item):
-        return item.color()
-    
-    def getItemAttr(self, index):
-        item = self.getItemWithIndex(index)
-        return wx.ListItemAttr(colBack=self.getBackgroundColor(item))
-    
+        
     def getIsItemChecked(self, index):
         item = self.getItemWithIndex(index)
         if isinstance(item, category.Category):
