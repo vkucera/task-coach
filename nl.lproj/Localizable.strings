@@ -1,0 +1,165 @@
+﻿/* Dutch translation for taskcoach-iphone */
+/* Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009 */
+/* This file is distributed under the same license as the taskcoach-iphone package. */
+/* FIRST AUTHOR <EMAIL@ADDRESS>, 2009. */
+/* */
+"" = "Project-Id-Version: taskcoach-iphone\nReport-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\nPOT-Creation-Date: 2009-08-23 14:28+0200\nPO-Revision-Date: 2009-08-23 20:10+0000\nLast-Translator: Frank Niessink <frank@niessink.com>\nLanguage-Team: Dutch <nl@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Launchpad-Export-Date: 2009-08-24 05:32+0000\nX-Generator: Launchpad (build Unknown)\n";
+
+/* File: Classes/Bonjour/BonjourBrowser.m:87 */
+"Domains" = "Domeinen";
+
+/* File: Classes/Bonjour/BonjourBrowser.m:88 */
+"Added Domains" = "Toegevoegde domeinen";
+
+/* File: Classes/Bonjour/BonjourBrowser.m:89 */
+"Add Domain" = "Domein toevoegen";
+
+/* File: Classes/Bonjour/BonjourBrowser.m:90 */
+"Searching for services" = "Services zoeken";
+
+/* File: Classes/SyncViewController.m:59 */
+/* File: Classes/Synchronization/InitialState.m:23 */
+"Connecting..." = "Verbinden...";
+
+/* File: Classes/SyncViewController.m:60 */
+"Please type your password." = "Voer uw wachtwoord in.";
+
+/* File: Classes/TaskViewController.m:64 */
+"Overdue" = "Te laat";
+
+/* File: Classes/TaskViewController.m:71 */
+"Due soon" = "Binnenkort af te ronden";
+
+/* File: Classes/TaskViewController.m:78 */
+"Started" = "Gestart";
+
+/* File: Classes/TaskViewController.m:85 */
+"Not started" = "Niet gestart";
+
+/* File: Classes/TaskViewController.m:241 */
+"Confirmation" = "Bevestiging";
+
+/* File: Classes/TaskViewController.m:242 */
+/* Flag: objc-format */
+"Do you really want to mark \"%@\" complete ?" = "Wilt u \"%@\" echt als afgerond markeren?";
+
+/* File: Classes/TaskViewController.m:243 */
+"No" = "Nee";
+
+/* File: Classes/TaskViewController.m:244 */
+"Yes" = "Ja";
+
+/* File: Classes/TaskViewController.m:295 */
+"No tasks." = "Geen taken.";
+
+/* File: Classes/TaskViewController.m:339 */
+"Add task..." = "Taak toevoegen...";
+
+/* File: Classes/TaskCellBig.m:71 */
+/* Flag: objc-format */
+"Completed %@" = "%@ afgerond";
+
+/* File: Classes/TaskCellBig.m:74 */
+/* File: Classes/TaskCellBig.m:83 */
+/* Flag: objc-format */
+"Due %@" = "%@ af te ronden";
+
+/* File: Classes/TaskCellBig.m:78 */
+/* Flag: objc-format */
+"Started %@" = "%@ gestart";
+
+/* File: Classes/DateCell.m:33 */
+"None" = "Geen";
+
+/* File: Classes/CategoryViewController.m:56 */
+/* File: Classes/CategoryViewController.m:298 */
+/* File: Classes/CategoryViewController.m:376 */
+"All" = "Alle";
+
+/* File: Classes/CategoryViewController.m:133 */
+/* File: Classes/CategoryViewController.m:250 */
+/* File: Classes/CategoryViewController.m:283 */
+"Enter category name" = "Voer categorienaam in";
+
+/* File: Classes/CategoryViewController.m:346 */
+"Add subcategory" = "Subcategorie toevoegen";
+
+/* File: Classes/CategoryViewController.m:398 */
+/* File: Classes/CategoryViewController.m:423 */
+"Looking for Task Coach" = "Task Coach aan het zoeken";
+
+/* File: Classes/TaskCoachAppDelegate.m:24 */
+"Cancel" = "Annuleren";
+
+/* File: Classes/TaskCoachAppDelegate.m:25 */
+"Save" = "Opslaan";
+
+/* File: Classes/TaskCoachAppDelegate.m:26 */
+/* File: Classes/TaskDetailsController.m:59 */
+"Categories" = "Categorieën";
+
+/* File: Classes/TaskCoachAppDelegate.m:27 */
+"Sync" = "Synchroniseren";
+
+/* File: Classes/Synchronization/FullFromDeviceState.m:38 */
+/* File: Classes/Synchronization/FullFromDesktopState.m:34 */
+"Synchronizing..." = "Synchroniseren…";
+
+/* File: Classes/Synchronization/AuthentificationState.m:23 */
+"Authentication" = "Authenticatie";
+
+/* File: Classes/Synchronization/AuthentificationState.m:99 */
+/* File: Classes/Synchronization/BaseState.m:34 */
+/* File: Classes/Synchronization/BaseState.m:48 */
+"Error" = "Fout";
+
+/* File: Classes/Synchronization/AuthentificationState.m:100 */
+"Incorrect password." = "Onjuist wachtwoord.";
+
+/* File: Classes/Synchronization/AuthentificationState.m:101 */
+"Retry" = "Opnieuw proberen";
+
+/* File: Classes/Synchronization/InitialState.m:50 */
+"Connection error" = "Verbindingsfout";
+
+/* File: Classes/Synchronization/InitialState.m:51 */
+"An error occurred while connecting to the remote host. Please check your settings. Also check that Task Coach is running on the remote host. Last, check your firewall settings." = "Er trad een fout op bij het verbinden met de computer. Controleer a.u.b. uw instellingen. Controleer ook of Task Coach draait op de computer. Tenslotte, controleer uw firewall instellingen.";
+
+/* File: Classes/Synchronization/InitialState.m:52 */
+/* File: Classes/Synchronization/BaseState.m:36 */
+/* File: Classes/Synchronization/BaseState.m:50 */
+/* File: Classes/Synchronization/ProtocolNegotiationState.m:62 */
+"Abort" = "Afbreken";
+
+/* File: Classes/Synchronization/BaseState.m:35 */
+"The connection was unexpectedly closed." = "De verbinding werd onverwacht verbroken.";
+
+/* File: Classes/Synchronization/BaseState.m:49 */
+/* Flag: objc-format */
+"A network error occurred: %@" = "Een netwerkfout trad op: %@";
+
+/* File: Classes/Synchronization/ProtocolNegotiationState.m:21 */
+"Protocol negotiation..." = "Protocol onderhandeling...";
+
+/* File: Classes/Synchronization/ProtocolNegotiationState.m:60 */
+"Warning" = "Waarschuwing";
+
+/* File: Classes/Synchronization/ProtocolNegotiationState.m:61 */
+/* Flag: objc-format */
+"It seems that the desktop Task Coach version is too old. Please consider upgrading (you may loose some data if you go on anyway)." = "Het lijkt dat de desktop Task Coach versie te oud is. Overweeg a.u.b. een nieuwere versie te installeren (u zou informatie kunnen verliezen als u nu toch door gaat).";
+
+/* File: Classes/Synchronization/ProtocolNegotiationState.m:63 */
+"Go on" = "Ga door";
+
+/* File: Classes/TaskDetailsController.m:39 */
+"Complete" = "Voltooid";
+
+/* File: Classes/TaskDetailsController.m:67 */
+"Start date" = "Startdatum";
+
+/* File: Classes/TaskDetailsController.m:73 */
+"Due date" = "Geplande einddatum";
+
+/* File: Classes/TaskDetailsController.m:110 */
+/* File: Classes/TaskDetailsController.m:287 */
+"New task" = "Nieuwe taak";
