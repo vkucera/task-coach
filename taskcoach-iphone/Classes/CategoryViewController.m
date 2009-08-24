@@ -158,6 +158,7 @@
 	}
 
 	[self.navigationController dismissModalViewControllerAnimated:YES];
+	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
 }
 
 - (void)fillCell:(UITableViewCell *)cell forCategory:(Category *)category
@@ -273,8 +274,11 @@
 	{
 		if (indexPath.row % 2)
 		{
-			// Can't select those
-			[self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+			currentCategory = indexPath.row / 2;
+			
+			StringChoiceController *ctrl = [[StringChoiceController alloc] initWithPlaceholder:_("Enter category name") text:nil target:self action:@selector(onCategoryAdded:)];
+			[self.navigationController presentModalViewController:ctrl animated:YES];
+			[ctrl release];
 		}
 		else
 		{
