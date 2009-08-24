@@ -186,6 +186,12 @@
 		A6664EC40F2B504800638C68 /* AuthentificationState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AuthentificationState.m; path = Synchronization/AuthentificationState.m; sourceTree = "<group>"; };
 		A673ABF40F2203D000E548BB /* NavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
 		A673ABF50F2203D000E548BB /* NavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
+		A67400771042DF0D0094E5F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A67400781042DF410094E5F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/DatePickerView.strings; sourceTree = "<group>"; };
+		A67400791042DF530094E5F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/TaskView.strings; sourceTree = "<group>"; };
+		A674007A1042DF620094E5F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MainWindow.strings; sourceTree = "<group>"; };
+		A674007B1042DF6C0094E5F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/StringChoice.strings; sourceTree = "<group>"; };
+		A674007C1042DF760094E5F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SyncView.strings; sourceTree = "<group>"; };
 		A6793B250F31E28700AAEC17 /* UploadObjectsState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UploadObjectsState.h; path = Synchronization/UploadObjectsState.h; sourceTree = "<group>"; };
 		A6793B260F31E28700AAEC17 /* UploadObjectsState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UploadObjectsState.m; path = Synchronization/UploadObjectsState.m; sourceTree = "<group>"; };
 		A67A0C200F6BA57100F48A82 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
@@ -372,8 +378,8 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				A6832036102EB499002A7083 /* TaskView.strings */,
 				A60B70EA1025AF0B00F9983C /* CHANGELOG */,
+				A6832036102EB499002A7083 /* TaskView.strings */,
 				A680C0D50F47368E00A8D18B /* DatePickerView.strings */,
 				A680C0D70F47368E00A8D18B /* MainWindow.strings */,
 				A680C0D90F47368E00A8D18B /* StringChoice.strings */,
@@ -744,6 +750,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				A680C0C50F47366900A8D18B /* fr */,
+				A67400771042DF0D0094E5F4 /* en */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -752,6 +759,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				A680C0D60F47368E00A8D18B /* fr */,
+				A67400781042DF410094E5F4 /* en */,
 			);
 			name = DatePickerView.strings;
 			sourceTree = "<group>";
@@ -760,6 +768,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				A680C0D80F47368E00A8D18B /* fr */,
+				A674007A1042DF620094E5F4 /* en */,
 			);
 			name = MainWindow.strings;
 			sourceTree = "<group>";
@@ -768,6 +777,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				A680C0DA0F47368E00A8D18B /* fr */,
+				A674007B1042DF6C0094E5F4 /* en */,
 			);
 			name = StringChoice.strings;
 			sourceTree = "<group>";
@@ -776,6 +786,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				A680C0DC0F47368E00A8D18B /* fr */,
+				A674007C1042DF760094E5F4 /* en */,
 			);
 			name = SyncView.strings;
 			sourceTree = "<group>";
@@ -793,6 +804,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				A6832037102EB499002A7083 /* fr */,
+				A67400791042DF530094E5F4 /* en */,
 			);
 			name = TaskView.strings;
 			sourceTree = "<group>";
