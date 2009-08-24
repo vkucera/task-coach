@@ -1,6 +1,8 @@
 
 2009-08-24  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* nl.lproj/: Added Dutch translation.
+	* misc: Make the "Add subcategory" cell labels gray, it's more readable this
+	  way.
 
 2009-08-23  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* misc: support for editing categories and creating categories with parents

@@ -344,7 +344,14 @@
 			cell.text = 
 #endif
 				_("Add subcategory");
-			
+
+#ifdef __IPHONE_3_0
+			cell.textLabel.textColor =
+#else
+			cell.textColor =
+#endif
+			[UIColor grayColor];
+
 			cell.indentationLevel = category.level + 1;
 		}
 		else
@@ -374,10 +381,17 @@
 			cell.text = 
 #endif
 				_("All");
-
+			
 			cell.indentationLevel = 0;
 		}
-
+		
+#ifdef __IPHONE_3_0
+		cell.textLabel.textColor =
+#else
+		cell.textColor =
+#endif
+		[UIColor blackColor];
+		
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
 

@@ -273,7 +273,6 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>1</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -323,7 +322,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A6D0E4441042E29C006440A3</string>
+										<string>A6283A3B1042E52B00839E86</string>
 										<key>history</key>
 										<array>
 											<string>A68EE04E0F1E324800F51FF2</string>
@@ -442,7 +441,6 @@
 											<string>A6D5F44C10416B830098B4D5</string>
 											<string>A6D5F44D10416B830098B4D5</string>
 											<string>A6D5F44E10416B830098B4D5</string>
-											<string>A6D5F44F10416B830098B4D5</string>
 											<string>A6D5F45010416B830098B4D5</string>
 											<string>A6D5F45110416B830098B4D5</string>
 											<string>A68D08B210416D9900E57327</string>
@@ -455,7 +453,8 @@
 											<string>A674007D1042DF7E0094E5F4</string>
 											<string>A674007E1042DF7E0094E5F4</string>
 											<string>A6D0E4411042E29C006440A3</string>
-											<string>A6D0E4421042E29C006440A3</string>
+											<string>A6283A371042E52B00839E86</string>
+											<string>A6283A381042E52B00839E86</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -590,6 +589,8 @@
 											<string>A65F726E10415F08003B16CE</string>
 											<string>A6D5F4211041672E0098B4D5</string>
 											<string>A6D0E4431042E29C006440A3</string>
+											<string>A6283A391042E52B00839E86</string>
+											<string>A6283A3A1042E52B00839E86</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -673,7 +674,7 @@
 									<key>ContentConfiguration</key>
 									<dict>
 										<key>PBXBuildLogShowsTranscriptDefaultKey</key>
-										<string>{{0, 27}, {1563, 304}}</string>
+										<string>{{0, -65}, {1563, 396}}</string>
 										<key>PBXProjectModuleGUID</key>
 										<string>XCMainBuildResultsModuleGUID</string>
 										<key>PBXProjectModuleLabel</key>
@@ -714,11 +715,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6D0E4341042E17C006440A3</string>
+				<string>A6283A3C1042E52B00839E86</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A6D0E4351042E17C006440A3</string>
+				<string>A6283A3D1042E52B00839E86</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A6D0E4361042E17C006440A3</string>
+				<string>A6283A3E1042E52B00839E86</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -865,14 +866,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6D0E4451042E29C006440A3</string>
+				<string>A6283A3F1042E52B00839E86</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A6D0E4461042E29C006440A3</string>
-				<string>A6D0E4471042E29C006440A3</string>
-				<string>A6D0E4481042E29C006440A3</string>
-				<string>A6D0E4491042E29C006440A3</string>
-				<string>A6D0E44A1042E29C006440A3</string>
+				<string>A6283A401042E52B00839E86</string>
+				<string>A6283A411042E52B00839E86</string>
+				<string>A6283A421042E52B00839E86</string>
+				<string>A6283A431042E52B00839E86</string>
+				<string>A6283A441042E52B00839E86</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debugV3</string>
