@@ -27,7 +27,9 @@ Release('0.74.2', '?? ??, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''iPhone synchronization: when doing a full refresh
-from desktop, categories parents could be mismatched.''')
+from desktop, categories parents could be mismatched.'''),
+        Bug('''A bug in the task filter would cause tasks to be shown that
+were supposed to be hidden.''', '2841854')
         ],
     featuresAdded=[
         Feature('''Add an option to avoid uploading completed tasks to
