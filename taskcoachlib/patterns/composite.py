@@ -163,7 +163,7 @@ class CompositeCollection(object):
         event = event or observer.Event()
         compositesAndAllChildren = self._compositesAndAllChildren(composites) 
         super(CompositeCollection, self).extend(compositesAndAllChildren, event)
-        parentsWithChildrenAdded = self._addCompositesToParent(composites, event)
+        self._addCompositesToParent(composites, event)
         if notify:
             event.send()
             
@@ -174,14 +174,10 @@ class CompositeCollection(object):
         return list(compositesAndAllChildren)
 
     def _addCompositesToParent(self, composites, event):
-        parents = {}
         for composite in composites:
             parent = composite.parent()
             if parent and parent in self and composite not in parent.children():
                 parent.addChild(composite, event)
-                if parent not in composites:
-                    parents.setdefault(parent, []).append(composite)
-        return parents
     
     def remove(self, composite, event=None):
         return self.removeItems([composite], event) if composite in self else event
