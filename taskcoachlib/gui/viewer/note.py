@@ -72,7 +72,7 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
         return domain.base.DeletedFilter(notes)
 
     def attachmentImageIndex(self, note, which):
-        return self.imageIndex['attachment'] if note.attachmens() else -1 
+        return self.imageIndex['attachment'] if note.attachments() else -1 
 
     def createToolBarUICommands(self):
         commands = super(BaseNoteViewer, self).createToolBarUICommands()
