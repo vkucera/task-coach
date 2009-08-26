@@ -16,12 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib.domain import base
+from taskcoachlib.domain import categorizable
 from taskcoachlib.i18n import _
-from taskcoachlib import patterns
 
 
-class NoteContainer(base.Collection):
+class NoteContainer(categorizable.CategorizableContainer):
     newItemMenuText = _('New note...')
     newItemHelpText =  _('Insert a new note')
     editItemMenuText = _('Edit note...')
@@ -30,23 +29,3 @@ class NoteContainer(base.Collection):
     deleteItemHelpText = _('Delete the selected notes')
     newSubItemMenuText = _('New subnote...')
     newSubItemHelpText = _('Insert a new subnote')
-
-    def extend(self, notes, event=None):
-        notify = event is None
-        event = event or patterns.Event()
-        super(NoteContainer, self).extend(notes, event)
-        for note in self._compositesAndAllChildren(notes):
-            for category in note.categories():
-                category.addCategorizable(note, event=event)
-        if notify:
-            event.send()
-                
-    def removeItems(self, notes, event=None):
-        notify = event is None
-        event = event or patterns.Event()
-        super(NoteContainer, self).removeItems(notes, event)
-        for note in self._compositesAndAllChildren(notes):
-            for category in note.categories():
-                category.removeCategorizable(note, event=event)
-        if notify:
-            event.send()

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,12 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib.domain import categorizable
-from taskcoachlib.domain import attachment
-
-
-class Note(attachment.AttachmentOwner, categorizable.CategorizableCompositeObject):
-    ''' This class represents notes. Notes consist of a subject, description, 
-        and attachments. In addition, a note may be assigned to categories. '''
-    pass
+from categorizable import CategorizableCompositeObject
+from categorizablecontainer import CategorizableContainer
 

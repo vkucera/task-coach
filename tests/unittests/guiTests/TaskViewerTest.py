@@ -66,15 +66,17 @@ class TaskViewerTestCase(test.wxTestCase):
         self.viewer.widget.expandAllItems()
         self.assertEqual(self.viewer.size(), len(tasks))
         for index, task in enumerate(tasks):
-            if type(task) == type((),):
-                task, nrChildren = task
-            else:
-                nrChildren = 0
-            subject = task.subject(recursive=not self.viewer.isTreeViewer())
-            treeItem = self.viewer.widget.GetItemChildren(recursively=True)[index]
-            self.assertEqual(subject, self.viewer.widget.GetItemText(treeItem))
-            self.assertEqual(nrChildren, 
-                self.viewer.widget.GetChildrenCount(treeItem, recursively=False))
+            self.assertItem(index, task)
+            
+    def assertItem(self, index, task):
+        if type(task) == type((), ):
+            task, nrChildren = task
+        else:
+            nrChildren = 0
+        subject = task.subject(recursive=not self.viewer.isTreeViewer())
+        treeItem = self.viewer.widget.GetItemChildren(recursively=True)[index]
+        self.assertEqual(subject, self.viewer.widget.GetItemText(treeItem))
+        self.assertEqual(nrChildren, self.viewer.widget.GetChildrenCount(treeItem, recursively=False))
 
     def firstItem(self):
         widget = self.viewer.widget

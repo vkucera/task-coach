@@ -17,8 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import patterns
-from taskcoachlib.domain import base, note, attachment
-import categorizable
+from taskcoachlib.domain import base, note, attachment, categorizable
 
 
 class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject):
