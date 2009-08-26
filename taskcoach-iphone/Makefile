@@ -2,7 +2,9 @@
 all: stringfiles
 
 messages:
-	find Classes -name "*.m" | xargs xgettext -o i18n.in/messages.pot
+	find Classes -name "*.m" | xargs xgettext -o i18n.in/main.pot
+	msgcat -o i18n.in/settings.pot --stringtable-input Settings.bundle/en.lproj/Root.strings
+	msgcat -o i18n.in/messages.pot i18n.in/main.pot i18n.in/settings.pot
 
 stringfiles:
 	msgcat -o en.lproj/Localizable.strings --stringtable-output i18n.in/messages.pot

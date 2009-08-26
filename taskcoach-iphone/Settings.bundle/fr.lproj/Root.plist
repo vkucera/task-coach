@@ -12,13 +12,13 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
-			<string>Affichage</string>
+			<string>Display</string>
 		</dict>
 		<dict>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Montrer terminées</string>
+			<string>Show completed</string>
 			<key>Key</key>
 			<string>showcompleted</string>
 			<key>DefaultValue</key>
@@ -28,7 +28,7 @@
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
-			<string>Position de l&apos;icône</string>
+			<string>Icon position</string>
 			<key>Key</key>
 			<string>iconposition</string>
 			<key>DefaultValue</key>
@@ -40,31 +40,31 @@
 			</array>
 			<key>Titles</key>
 			<array>
-				<string>Droite</string>
-				<string>Gauche</string>
+				<string>Right</string>
+				<string>Left</string>
 			</array>
 		</dict>
 		<dict>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Tâches compactes</string>
+			<string>Compact tasks</string>
 			<key>Key</key>
 			<string>compacttasks</string>
 			<key>DefaultValue</key>
 			<false/>
 		</dict>
 		<dict>
+			<key>Title</key>
+			<string>Misc</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string>Divers</string>
 		</dict>
 		<dict>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Confirmer terminée</string>
+			<string>Confirm complete</string>
 			<key>Key</key>
 			<string>confirmcomplete</string>
 			<key>DefaultValue</key>
@@ -75,10 +75,10 @@
 			<string>1</string>
 			<key>KeyboardType</key>
 			<string>NumberPad</string>
+			<key>Title</key>
+			<string>Due soon # of days</string>
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
-			<key>Title</key>
-			<string># de jours dûe bientôt</string>
 			<key>Key</key>
 			<string>soondays</string>
 		</dict>
