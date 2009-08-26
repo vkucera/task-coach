@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-23 14:28+0200\n"
+"POT-Creation-Date: 2009-08-26 16:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,21 +100,21 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-#: Classes/CategoryViewController.m:56 Classes/CategoryViewController.m:298
-#: Classes/CategoryViewController.m:376
+#: Classes/CategoryViewController.m:56 Classes/CategoryViewController.m:302
+#: Classes/CategoryViewController.m:387
 msgid "All"
 msgstr ""
 
-#: Classes/CategoryViewController.m:133 Classes/CategoryViewController.m:250
-#: Classes/CategoryViewController.m:283
+#: Classes/CategoryViewController.m:133 Classes/CategoryViewController.m:251
+#: Classes/CategoryViewController.m:279 Classes/CategoryViewController.m:287
 msgid "Enter category name"
 msgstr ""
 
-#: Classes/CategoryViewController.m:346
+#: Classes/CategoryViewController.m:350
 msgid "Add subcategory"
 msgstr ""
 
-#: Classes/CategoryViewController.m:398 Classes/CategoryViewController.m:423
+#: Classes/CategoryViewController.m:416 Classes/CategoryViewController.m:441
 msgid "Looking for Task Coach"
 msgstr ""
 
@@ -217,4 +217,31 @@ msgstr ""
 
 #: Classes/TaskDetailsController.m:110 Classes/TaskDetailsController.m:287
 msgid "New task"
+msgstr ""
+
+msgid "Display"
+msgstr ""
+
+msgid "Show completed"
+msgstr ""
+
+msgid "Icon position"
+msgstr ""
+
+msgid "Left"
+msgstr ""
+
+msgid "Right"
+msgstr ""
+
+msgid "Compact tasks"
+msgstr ""
+
+msgid "Misc"
+msgstr ""
+
+msgid "Confirm complete"
+msgstr ""
+
+msgid "Due soon # of days"
 msgstr ""
