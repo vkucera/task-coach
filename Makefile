@@ -12,6 +12,14 @@ stringfiles:
 		msgcat -o $$lang.lproj/Localizable.strings --stringtable-output i18n.in/$$lang.po; \
 	done
 
+settings:
+	# Settings bundle
+	msgcat --stringtable-input -o Settings.po Settings.strings
+	for lang in fr nl; do \
+		msgmerge -N -o - i18n.in/$$lang.po Settings.po | egrep -v "^#" | \
+			msgcat --stringtable-output -o Settings.bundle/$$lang.lproj/Root.strings -; \
+	done
+
 translated:
 	# This generates NIB files for all languages. They must then be edited with
 	# Interface Builder to ensure widget sizes are OK.
@@ -21,4 +29,3 @@ translated:
 				--write $$lang.lproj/$$name.xib en.lproj/$$name.xib; \
 		done; \
 	done
-
