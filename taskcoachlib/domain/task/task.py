@@ -402,8 +402,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         event = event or patterns.Event() 
         oldEfforts = self._efforts
         self._efforts = efforts
-        event.removeEffortEvent(event, oldEfforts)
-        event.addEffortEvent(event, efforts)
+        self.removeEffortEvent(event, oldEfforts)
+        self.addEffortEvent(event, efforts)
         if notify:
             event.send()
 
