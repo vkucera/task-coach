@@ -1,5 +1,21 @@
 
-all: stringfiles
+all: help
+
+help:
+	@echo 'Targets:'
+	@echo '  - messages: Generate messages.pot'
+	@echo '  - stringfiles: Generate Localizable.strings and Root.strings from PO files'
+	@echo '  - settings: Generate Root.strings files for settings bundle'
+	@echo '  - translated: Generate NIB files for all languages'
+	@echo
+	@echo 'Typical use:'
+	@echo '<Linux> $ make messages'
+	@echo '(commit new messages.pot, wait for translators, download PO files)'
+	@echo '<Linux> $ make stringfiles'
+	@echo '<Linux> $ make settings'
+	@echo '(commit)'
+	@echo '<MacOS> $ make translated'
+	@echo '(Check NIB files in Interface Builder, commit)'
 
 messages:
 	find Classes -name "*.m" | xargs xgettext -o i18n.in/main.pot
