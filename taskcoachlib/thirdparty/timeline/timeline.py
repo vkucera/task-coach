@@ -289,7 +289,10 @@ class TimeLine(wx.Panel):
             color = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
         else:
             color = self.adapter.background_color(node)
-            if not color:
+            if color:
+                # The adapter returns a 3-tuple
+                color = wx.Color(*color)
+            else:
                 red = (depth * 10)%255
                 green = 255-((depth * 10)%255)
                 blue = 200
