@@ -50,7 +50,7 @@ setupOptions = {
         'thirdparty.desktop', 'thirdparty.lockfile', 'thirdparty.chardet', 
         'syncml', 'iphone')] +
         ['taskcoachlib.domain.' + subpackage for subpackage in ('base',
-        'date', 'category', 'effort', 'task', 'note', 'attachment')] +
+        'date', 'category', 'effort', 'task', 'note', 'attachment', 'categorizable')] +
         ['taskcoachlib.persistence.' + subpackage for subpackage in ('xml', 
         'ics', 'html', 'csv', 'vcalendar')] + ['buildlib'],
     'scripts': ['taskcoach.py', 'taskcoach.pyw'],

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib.domain import base
 import attachment
 
+
 class AttachmentSorter(base.Sorter):
     DomainObjectClass = attachment.Attachment
     EventTypePrefix = 'attachment'
@@ -28,14 +29,7 @@ class AttachmentSorter(base.Sorter):
         sortKeyName = self._sortKey
         if not self._sortCaseSensitive and sortKeyName in ('subject', 'description'):
             prepareSortValue = lambda stringOrUnicode: stringOrUnicode.lower()
-        elif sortKeyName in ('categories', 'totalCategories'):
-            prepareSortValue = lambda categories: sorted([category.subject() for category in categories])
         else:
             prepareSortValue = lambda value: value
-        kwargs = {}
-        if sortKeyName.startswith('total'):
-            kwargs['recursive'] = True
-            sortKeyName = sortKeyName.replace('total', '')
-            sortKeyName = sortKeyName[0].lower() + sortKeyName[1:]
         return lambda attachment: [prepareSortValue(getattr(attachment, 
-            sortKeyName)(**kwargs))]
+            sortKeyName)())]

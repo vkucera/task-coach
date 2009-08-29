@@ -749,6 +749,15 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
         self.task1.removeChild(self.task1_1)
         self.assertEqual(patterns.Event('task.totalBudget', self.task1,
             date.TimeDelta()), self.events[0])
+        
+    def testRemoveChildWithBudgetAndEffortCausesTotalBudgetNotification(self):
+        self.task1_1.setBudget(date.TimeDelta(hours=10))
+        self.task1_1.addEffort(effort.Effort(self.task1_1, 
+            date.DateTime(2009,1,1,1,0,0), date.DateTime(2009,1,1,11,0,0)))
+        self.registerObserver('task.totalBudget')
+        self.task1.removeChild(self.task1_1)
+        self.assertEqual([patterns.Event('task.totalBudget', self.task1,
+            date.TimeDelta())], self.events)
 
     def testRemoveChildWithoutBudgetCausesNoTotalBudgetNotification(self):
         self.registerObserver('task.totalBudget')

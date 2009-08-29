@@ -42,11 +42,11 @@ class ViewFilter(base.Filter):
     def onTaskChange(self, event):
         tasks = event.sources()
         newEvent = patterns.Event()
-        self.removeItemsFromSelf([task for task in tasks if not \
-                                  self.filterTask(task)], newEvent)
-        self.extendSelf([task for tasks in tasks if self.filterTask(task) \
-                         and task in self.observable() and task not in self], 
-                         newEvent)
+        tasksToRemove = [task for task in tasks if not self.filterTask(task)]
+        self.removeItemsFromSelf(tasksToRemove, newEvent)
+        tasksToAdd = [task for task in tasks if self.filterTask(task) \
+                      and task in self.observable() and task not in self]
+        self.extendSelf(tasksToAdd, newEvent)
         newEvent.send()
             
     def setFilteredByDueDate(self, dueDateString):

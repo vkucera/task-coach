@@ -90,25 +90,21 @@ class Composite(object):
         self.__children.remove(child)
         # We don't reset the parent of the child, because that makes restoring
         # the parent-child relationship easier.
-    
-    # FIXME: this is for do/undo, need a better, generic, implementation
-    def replaceChildren(self, children): 
-        self.__children = children
-    
-    def replaceParent(self, parent):
-        self.__parent = parent
         
 
 class ObservableComposite(Composite):
     def __setstate__(self, state, event=None):
         notify = event is None
-        event = event or patterns.Event()
-        oldChildren = self.children()[:]
+        event = event or observer.Event()
+        oldChildren = set(self.children())
         super(ObservableComposite, self).__setstate__(state)
-        if oldChildren:
-            self.removeChildEvent(event, *oldChildren)
-        if self.children():
-            self.addChildEvent(event, *self.children())
+        newChildren = set(self.children())
+        childrenRemoved = oldChildren - newChildren
+        if childrenRemoved:
+            self.removeChildEvent(event, *childrenRemoved)
+        childrenAdded = newChildren - oldChildren
+        if childrenAdded:
+            self.addChildEvent(event, *childrenAdded)
         if notify:
             event.send()
 
@@ -142,20 +138,6 @@ class ObservableComposite(Composite):
     def removeChildEventType(class_):
         return 'composite(%s).child.remove'%class_
     
-    def replaceChildren(self, children, event=None):
-        if children == self.children():
-            return
-        notify = event is None
-        event = event or observer.Event()
-        oldChildren = self.children()[:]
-        super(ObservableComposite, self).replaceChildren(children)
-        if oldChildren:
-            self.removeChildEvent(event, *oldChildren)
-        if children: 
-            self.addChildEvent(event, *children)
-        if notify:
-            event.send()
-        
     @classmethod
     def modificationEventTypes(class_):
         try:
@@ -181,7 +163,7 @@ class CompositeCollection(object):
         event = event or observer.Event()
         compositesAndAllChildren = self._compositesAndAllChildren(composites) 
         super(CompositeCollection, self).extend(compositesAndAllChildren, event)
-        parentsWithChildrenAdded = self._addCompositesToParent(composites, event)
+        self._addCompositesToParent(composites, event)
         if notify:
             event.send()
             
@@ -192,14 +174,10 @@ class CompositeCollection(object):
         return list(compositesAndAllChildren)
 
     def _addCompositesToParent(self, composites, event):
-        parents = {}
         for composite in composites:
             parent = composite.parent()
             if parent and parent in self and composite not in parent.children():
                 parent.addChild(composite, event)
-                if parent not in composites:
-                    parents.setdefault(parent, []).append(composite)
-        return parents
     
     def remove(self, composite, event=None):
         return self.removeItems([composite], event) if composite in self else event

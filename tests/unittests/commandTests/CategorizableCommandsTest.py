@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test
 from taskcoachlib import patterns, command
-from taskcoachlib.domain import category
+from taskcoachlib.domain import category, categorizable
 from CommandTestCase import CommandTestCase
 
 
@@ -26,7 +26,7 @@ class ToggleCategoryCommandTest(CommandTestCase):
     def setUp(self):
         super(ToggleCategoryCommandTest, self).setUp()
         self.category = category.Category('Cat')
-        self.categorizable = category.categorizable.CategorizableCompositeObject()
+        self.categorizable = categorizable.CategorizableCompositeObject()
         
     def toggleItem(self, items=None):
         check = command.ToggleCategoryCommand(category=self.category, items=items or [])
