@@ -18,11 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import patterns
-from taskcoachlib.domain import base, date, category, note, attachment
+from taskcoachlib.domain import base, date, categorizable, note, attachment
 
 
 class Task(note.NoteOwner, attachment.AttachmentOwner, 
-           category.CategorizableCompositeObject):
+           categorizable.CategorizableCompositeObject):
     def __init__(self, subject='', description='', dueDate=None, 
             startDate=None, completionDate=None, budget=None, 
             priority=0, id=None, hourlyFee=0,
@@ -125,22 +125,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return
         notify = event is None
         event = event or patterns.Event()
-        oldTotalBudgetLeft = self.budgetLeft(recursive=True)
-        oldTotalPriority = self.priority(recursive=True)
         super(Task, self).addChild(child, event)
-        newTotalBudgetLeft = self.budgetLeft(recursive=True)
-        if child.budget(recursive=True):
-            self.totalBudgetEvent(event)
-        if newTotalBudgetLeft != oldTotalBudgetLeft:
-            self.totalBudgetLeftEvent(event)
-        if child.timeSpent(recursive=True):
-            self.totalTimeSpentEvent(event)
-        if self.priority(recursive=True) != oldTotalPriority:
-            self.totalPriorityEvent(event)
-        if child.revenue(recursive=True):
-            self.totalRevenueEvent(event)
-        if child.isBeingTracked(recursive=True):
-            self.startTrackingEvent(event, *child.activeEfforts(recursive=True))
+        self.childChangeEvent(child, event)
             
         if self.shouldBeMarkedCompleted():
             self.setCompletionDate(child.completionDate(), event)
@@ -160,23 +146,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return
         notify = event is None
         event = event or patterns.Event()
-        oldTotalBudgetLeft = self.budgetLeft(recursive=True)
-        oldTotalPriority = self.priority(recursive=True)
         super(Task, self).removeChild(child, event)
-        newTotalBudgetLeft = self.budgetLeft(recursive=True)
-        if child.budget(recursive=True):
-            self.totalBudgetEvent(event)
-        if newTotalBudgetLeft != oldTotalBudgetLeft:
-            self.totalBudgetLeftEvent(event)
-        if child.timeSpent(recursive=True):
-            self.totalTimeSpentEvent(event)
-        if self.priority(recursive=True) != oldTotalPriority:
-            self.totalPriorityEvent(event)
-        if child.revenue(recursive=True):
-            self.totalRevenueEvent(event)
-        if child.isBeingTracked(recursive=True) and not \
-            self.isBeingTracked(recursive=True):
-            self.stopTrackingEvent(event, *child.activeEfforts(recursive=True))
+        self.childChangeEvent(child, event)
             
         if self.shouldBeMarkedCompleted(): 
             # The removed child was the last uncompleted child
@@ -184,6 +155,31 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         
         if notify:    
             event.send()
+            
+    def childChangeEvent(self, child, event):
+        childHasTotalTimeSpent = child.timeSpent(recursive=True)
+        childHasTotalBudget = child.budget(recursive=True)
+        childHasTotalBudgetLeft = child.budgetLeft(recursive=True)
+        childHasTotalRevenue = child.revenue(recursive=True)
+        childTotalPriority = child.priority(recursive=True)
+        # Determine what changes due to the child being added or removed:
+        if childHasTotalTimeSpent:
+            self.totalTimeSpentEvent(event)
+        if childHasTotalRevenue:
+            self.totalRevenueEvent(event)
+        if childHasTotalBudget:
+            self.totalBudgetEvent(event)
+        if childHasTotalBudgetLeft or (childHasTotalTimeSpent and \
+                                       (childHasTotalBudget or self.budget())):
+            self.totalBudgetLeftEvent(event)
+        if childTotalPriority > self.priority():
+            self.totalPriorityEvent(event)
+        if child.isBeingTracked(recursive=True):
+            activeEfforts = child.activeEfforts(recursive=True)
+            if self.isBeingTracked(recursive=True):
+                self.startTrackingEvent(event, *activeEfforts)
+            else:
+                self.stopTrackingEvent(event, *activeEfforts)
         
     def dueDate(self, recursive=False):
         if recursive:
@@ -413,8 +409,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         event = event or patterns.Event() 
         oldEfforts = self._efforts
         self._efforts = efforts
-        event.removeEffortEvent(event, oldEfforts)
-        event.addEffortEvent(event, efforts)
+        self.removeEffortEvent(event, oldEfforts)
+        self.addEffortEvent(event, efforts)
         if notify:
             event.send()
 

@@ -196,6 +196,14 @@ class ObservableCompositeTest(test.TestCase):
         self.assertEqual([self.composite.addChildEventType(), 
                           self.composite.removeChildEventType()], 
                           self.composite.modificationEventTypes())
+        
+    def testSetState(self):
+        self.composite.addChild(self.child)
+        state = self.composite.__getstate__()
+        self.registerObserver(self.composite.removeChildEventType())
+        self.registerObserver(self.composite.addChildEventType())
+        self.composite.__setstate__(state)
+        self.assertEqual([], self.events)
 
             
 class CompositeCollectionTest(test.TestCase):

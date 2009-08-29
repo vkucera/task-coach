@@ -18,21 +18,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test, wx
 from taskcoachlib import patterns
-from taskcoachlib.domain import category, note
+from taskcoachlib.domain import category, categorizable, note
 
 
 class CategorizableCompositeObjectTest(test.TestCase):
     def setUp(self):
-        self.categorizable = category.CategorizableCompositeObject(subject='categorizable')
+        self.categorizable = categorizable.CategorizableCompositeObject(subject='categorizable')
         self.category = category.Category('category')
         
-    categoryAddedEventType = category.CategorizableCompositeObject.categoryAddedEventType()
-    categoryRemovedEventType = category.CategorizableCompositeObject.categoryRemovedEventType()
-    totalCategoryAddedEventType = category.CategorizableCompositeObject.totalCategoryAddedEventType()
-    totalCategoryRemovedEventType = category.CategorizableCompositeObject.totalCategoryRemovedEventType()
-    categorySubjectChangedEventType = category.CategorizableCompositeObject.categorySubjectChangedEventType()
-    totalCategorySubjectChangedEventType = category.CategorizableCompositeObject.totalCategorySubjectChangedEventType()
-    colorChangedEventType = category.CategorizableCompositeObject.colorChangedEventType()
+    categoryAddedEventType = categorizable.CategorizableCompositeObject.categoryAddedEventType()
+    categoryRemovedEventType = categorizable.CategorizableCompositeObject.categoryRemovedEventType()
+    totalCategoryAddedEventType = categorizable.CategorizableCompositeObject.totalCategoryAddedEventType()
+    totalCategoryRemovedEventType = categorizable.CategorizableCompositeObject.totalCategoryRemovedEventType()
+    categorySubjectChangedEventType = categorizable.CategorizableCompositeObject.categorySubjectChangedEventType()
+    totalCategorySubjectChangedEventType = categorizable.CategorizableCompositeObject.totalCategorySubjectChangedEventType()
+    colorChangedEventType = categorizable.CategorizableCompositeObject.colorChangedEventType()
         
     def testCategorizableDoesNotBelongToAnyCategoryByDefault(self):
         for recursive in False, True:
@@ -71,15 +71,15 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.failIf(self.events)
     
     def testAddCategoryViaConstructor(self):
-        categorizable = category.CategorizableCompositeObject(categories=[self.category])
-        self.assertEqual(set([self.category]), categorizable.categories())
+        categorizableObject = categorizable.CategorizableCompositeObject(categories=[self.category])
+        self.assertEqual(set([self.category]), categorizableObject.categories())
         
     def testAddCategoriesViaConstructor(self):
         anotherCategory = category.Category('Another category')
         categories = [self.category, anotherCategory]
-        categorizable = category.CategorizableCompositeObject(categories= \
+        categorizableObject = categorizable.CategorizableCompositeObject(categories= \
             categories)
-        self.assertEqual(set(categories), categorizable.categories())
+        self.assertEqual(set(categories), categorizableObject.categories())
         
     def testAddCategoryDoesNotAddCategorizableToCategory(self):
         self.categorizable.addCategory(self.category)
@@ -87,7 +87,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
         
     def testAddParentToCategory(self):
         self.registerObserver(self.totalCategoryAddedEventType)
-        child = category.CategorizableCompositeObject(subject='child')
+        child = categorizable.CategorizableCompositeObject(subject='child')
         self.categorizable.addChild(child)
         child.setParent(self.categorizable)
         cat = category.Category(subject='Parent category')
@@ -133,7 +133,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
     def testCategorySubjectChanged_NotifySubItemsToo(self):
         self.registerObserver(self.categorySubjectChangedEventType)
         self.registerObserver(self.totalCategorySubjectChangedEventType)
-        childCategorizable = category.CategorizableCompositeObject(subject='Child categorizable')
+        childCategorizable = categorizable.CategorizableCompositeObject(subject='Child categorizable')
         self.categorizable.addChild(childCategorizable)
         self.categorizable.addCategory(self.category)
         self.category.addCategorizable(self.categorizable)
@@ -162,14 +162,14 @@ class CategorizableCompositeObjectTest(test.TestCase):
     
     def testSubItemUsesParentColor(self):
         self.categorizable.addCategory(self.category)
-        child = category.CategorizableCompositeObject()
+        child = categorizable.CategorizableCompositeObject()
         self.categorizable.addChild(child)
         child.setParent(self.categorizable)
         self.category.setColor(wx.RED)
         self.assertEqual(wx.RED, child.color())
         
     def testSubItemDoesNotUseParentColorWhenItHasItsOwnColor(self):
-        child = category.CategorizableCompositeObject()
+        child = categorizable.CategorizableCompositeObject()
         self.categorizable.addChild(child)
         child.setParent(self.categorizable)
         child.addCategory(self.category)
@@ -186,7 +186,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
 
     def testColorChanged_NotifySubItemsToo(self):
         self.registerObserver(self.colorChangedEventType)
-        self.categorizable.addChild(category.CategorizableCompositeObject())
+        self.categorizable.addChild(categorizable.CategorizableCompositeObject())
         self.categorizable.addCategory(self.category)
         self.category.addCategorizable(self.categorizable)
         self.category.setColor(wx.RED)
@@ -258,30 +258,30 @@ class CategorizableCompositeObjectTest(test.TestCase):
                 
     def testParentCategoryIncludedInChildRecursiveCategories(self):
         self.categorizable.addCategory(self.category)
-        child = category.CategorizableCompositeObject()
+        child = categorizable.CategorizableCompositeObject()
         self.categorizable.addChild(child)
         self.assertEqual(set([self.category]), child.categories(recursive=True))
 
     def testParentCategoryNotIncludedInChildCategories(self):
         self.categorizable.addCategory(self.category)
-        child = category.CategorizableCompositeObject()
+        child = categorizable.CategorizableCompositeObject()
         self.categorizable.addChild(child)
         self.assertEqual(set(), child.categories(recursive=False))
         
     def testGrandParentCategoryIncludedInGrandChildRecursiveCategories(self):
         self.categorizable.addCategory(self.category)
-        child = category.CategorizableCompositeObject()
+        child = categorizable.CategorizableCompositeObject()
         self.categorizable.addChild(child)
-        grandchild = category.CategorizableCompositeObject()
+        grandchild = categorizable.CategorizableCompositeObject()
         child.addChild(grandchild)
         self.assertEqual(set([self.category]), 
                          grandchild.categories(recursive=True))
         
     def testGrandParentAndParentCategoriesIncludedInGrandChildRecursiveCategories(self):
         self.categorizable.addCategory(self.category)
-        child = category.CategorizableCompositeObject()
+        child = categorizable.CategorizableCompositeObject()
         self.categorizable.addChild(child)
-        grandchild = category.CategorizableCompositeObject()
+        grandchild = categorizable.CategorizableCompositeObject()
         child.addChild(grandchild)
         childCategory = category.Category('Child category')
         child.addCategory(childCategory)
@@ -290,7 +290,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
         
     def testRemoveCategoryCausesChildNotification(self):
         self.categorizable.addCategory(self.category)
-        child = category.CategorizableCompositeObject()
+        child = categorizable.CategorizableCompositeObject()
         self.categorizable.addChild(child)
         self.registerObserver(self.totalCategoryRemovedEventType)
         self.categorizable.removeCategory(self.category)
@@ -304,7 +304,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.assertEqual(copy.categories(), self.categorizable.categories())
         
     def testModificationEventTypes(self):
-        self.assertEqual(super(category.CategorizableCompositeObject,
+        self.assertEqual(super(categorizable.CategorizableCompositeObject,
                                self.categorizable).modificationEventTypes() + \
                          [self.categoryAddedEventType, 
                           self.categoryRemovedEventType],
@@ -315,8 +315,8 @@ class CategoryTest(test.TestCase):
     def setUp(self):
         self.category = category.Category(subject='category')
         self.subCategory = category.Category(subject='subcategory')
-        self.categorizable = category.CategorizableCompositeObject(subject='parent')
-        self.child = category.CategorizableCompositeObject(subject='child')
+        self.categorizable = categorizable.CategorizableCompositeObject(subject='parent')
+        self.child = categorizable.CategorizableCompositeObject(subject='child')
         
     def testGetState_Subject(self):
         self.assertEqual('category', self.category.__getstate__()['subject'])

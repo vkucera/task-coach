@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, os
 import test
-from taskcoachlib import gui, widgets, config, persistence
+from taskcoachlib import gui, widgets, config, persistence, command, patterns
 from taskcoachlib.gui import render
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, date, effort, category, note, attachment
@@ -66,15 +66,17 @@ class TaskViewerTestCase(test.wxTestCase):
         self.viewer.widget.expandAllItems()
         self.assertEqual(self.viewer.size(), len(tasks))
         for index, task in enumerate(tasks):
-            if type(task) == type((),):
-                task, nrChildren = task
-            else:
-                nrChildren = 0
-            subject = task.subject(recursive=not self.viewer.isTreeViewer())
-            treeItem = self.viewer.widget.GetItemChildren(recursively=True)[index]
-            self.assertEqual(subject, self.viewer.widget.GetItemText(treeItem))
-            self.assertEqual(nrChildren, 
-                self.viewer.widget.GetChildrenCount(treeItem, recursively=False))
+            self.assertItem(index, task)
+            
+    def assertItem(self, index, task):
+        if type(task) == type((), ):
+            task, nrChildren = task
+        else:
+            nrChildren = 0
+        subject = task.subject(recursive=not self.viewer.isTreeViewer())
+        treeItem = self.viewer.widget.GetItemChildren(recursively=True)[index]
+        self.assertEqual(subject, self.viewer.widget.GetItemText(treeItem))
+        self.assertEqual(nrChildren, self.viewer.widget.GetChildrenCount(treeItem, recursively=False))
 
     def firstItem(self):
         widget = self.viewer.widget
@@ -210,6 +212,23 @@ class CommonTests(object):
             self.assertItems((self.task, 1), notCompletedChild)
         else:
             self.assertItems(notCompletedChild, self.task)
+            
+    def testUndoMarkCompletedWhenFilteringCompletedTasks(self):
+        self.viewer.hideCompletedTasks()
+        child1 = task.Task('child1')
+        child2 = task.Task('child2')
+        grandChild = task.Task('grandChild')
+        self.task.addChild(child1)
+        self.task.addChild(child2)
+        child2.addChild(grandChild)
+        self.taskList.append(self.task)
+        self.assertEqual(4, self.viewer.size())
+        markCompletedCommand = command.MarkCompletedCommand(self.taskList, 
+                                                            [grandChild])
+        markCompletedCommand.do()
+        self.assertEqual(2, self.viewer.size())
+        patterns.CommandHistory().undo()
+        self.assertEqual(4, self.viewer.size())
         
     def testGetItemIndexOfChildTask(self):
         child1 = task.Task(subject='1')
