@@ -26,7 +26,7 @@ from taskcoachlib.domain.task import Task
 from taskcoachlib.i18n import _
 
 import wx, asynchat, threading, asyncore, struct, \
-    random, time, sha, cStringIO
+    random, time, sha, cStringIO, socket
 
 # Default port is 8001.
 #
@@ -413,6 +413,8 @@ class IPhoneAcceptor(Acceptor):
 class IPhoneHandler(asynchat.async_chat):
     def __init__(self, window, settings, fp):
         asynchat.async_chat.__init__(self, fp)
+
+        self.setsockopt(socket.SOL_TCP, socket.TCP_NODELAY, 1)
 
         self.window = window
         self.settings = settings
