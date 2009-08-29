@@ -74,13 +74,14 @@
 			infosLabel.text = [NSString stringWithFormat:_("Due %@"), task.dueDate];
 			break;
 		case TASKSTATUS_DUESOON:
-			if (task.startDate)
-				infosLabel.text = [NSString stringWithFormat:_("Started %@"), task.startDate];
+			infosLabel.text = [NSString stringWithFormat:_("Due %@"), task.dueDate];
 			break;
 		case TASKSTATUS_STARTED:
-		case TASKSTATUS_NOTSTARTED:
 			if (task.dueDate)
 				infosLabel.text = [NSString stringWithFormat:_("Due %@"), task.dueDate];
+		case TASKSTATUS_NOTSTARTED:
+			if (task.startDate)
+				infosLabel.text = [NSString stringWithFormat:_("Start %@"), task.startDate];
 			break;
 	}
 }
