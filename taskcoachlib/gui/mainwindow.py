@@ -25,6 +25,10 @@ from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
 from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog, IPhoneSyncDialog
 import viewer, toolbar, uicommand, remindercontroller, artprovider
 
+try:
+    import wx.lib.agw.aui as aui
+except ImportError:
+    import wx.aui as aui
 
 class WindowDimensionsTracker(object):
     ''' Track the dimensions (position and size) of a window in the 
@@ -107,7 +111,7 @@ class WindowDimensionsTracker(object):
 
 
 class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
-    pageClosedEvent = wx.aui.EVT_AUI_PANE_CLOSE
+    pageClosedEvent = aui.EVT_AUI_PANE_CLOSE
     
     def __init__(self, iocontroller, taskFile, settings,
                  splash=None, *args, **kwargs):
@@ -371,7 +375,7 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
                 currentToolbar.window.Destroy()
             if size:
                 bar = toolbar.ToolBar(self, size=size)
-                self.manager.AddPane(bar, wx.aui.AuiPaneInfo().Name('toolbar').
+                self.manager.AddPane(bar, aui.AuiPaneInfo().Name('toolbar').
                                      Caption('Toolbar').ToolbarPane().Top().DestroyOnClose().
                                      LeftDockable(False).RightDockable(False))
             self.manager.Update()
