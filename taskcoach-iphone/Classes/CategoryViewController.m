@@ -386,6 +386,13 @@
 #endif
 				_("All");
 			
+#ifdef __IPHONE_3_0
+			cell.textLabel.textColor =
+#else
+			cell.textColor =
+#endif
+			[UIColor blackColor];
+			
 			cell.indentationLevel = 0;
 		}
 		
