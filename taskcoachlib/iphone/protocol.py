@@ -223,6 +223,11 @@ class ListItem(BaseItem):
 
         super(ListItem, self).__init__(*args, **kwargs)
 
+    def start(self):
+        super(ListItem, self).start()
+
+        self._item.start()
+
     def append(self, item):
         self._item.append(item)
 
