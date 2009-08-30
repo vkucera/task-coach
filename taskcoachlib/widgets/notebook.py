@@ -16,9 +16,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, wx.aui
+import wx
 import draganddrop
 
+# I don't know in which wx version this happened, but on my 2.8.10.1,
+# importing aui from wx.lib.agw gives much better results (visual
+# clues when moving a pane, for instance). Do they have two
+# (different) copies of the code ? Anyway.
+
+try:
+    import wx.lib.agw.aui as aui
+except ImportError:
+    import wx.aui as aui
 
 class GridCursor:
     ''' Utility class to help when adding controls to a GridBagSizer. '''
@@ -183,7 +192,7 @@ class Book(object):
         ''' When the user drags something (currently limited to files because
             the DropTarget created in __init__ is a FileDropTarget) over a tab
             raise the appropriate page. '''
-        # FIXME: HitTest doesn't seem to work with wx.aui.AuiNotebook
+        # FIXME: HitTest doesn't seem to work with aui.AuiNotebook
         pageSelectionArea = pageSelectionArea or self
         pageIndex = pageSelectionArea.HitTest((x, y))
         if type(pageIndex) == type((),):
@@ -274,15 +283,15 @@ class AdvanceSelectionMixin(object):
                 self.Selection = self.PageCount - 1        
 
     
-class AUINotebook(AdvanceSelectionMixin, Book, wx.aui.AuiNotebook):
-    pageChangedEvent = wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED
-    pageClosedEvent = wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSE
+class AUINotebook(AdvanceSelectionMixin, Book, aui.AuiNotebook):
+    pageChangedEvent = aui.EVT_AUINOTEBOOK_PAGE_CHANGED
+    pageClosedEvent = aui.EVT_AUINOTEBOOK_PAGE_CLOSE
     
     def __init__(self, *args, **kwargs):
-        kwargs['style'] = kwargs.get('style', wx.aui.AUI_NB_DEFAULT_STYLE) & ~wx.aui.AUI_NB_CLOSE_ON_ACTIVE_TAB
+        kwargs['style'] = kwargs.get('style', aui.AUI_NB_DEFAULT_STYLE) & ~aui.AUI_NB_CLOSE_ON_ACTIVE_TAB
         super(AUINotebook, self).__init__(*args, **kwargs)
-        self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.onClosePage)
-        self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGING, self.onPageChanging)
+        self.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.onClosePage)
+        self.Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGING, self.onPageChanging)
         
     def onPageChanging(self, event):
         # On Windows, the AuiNotebook changes its pages when other applications
@@ -298,16 +307,20 @@ class AUINotebook(AdvanceSelectionMixin, Book, wx.aui.AuiNotebook):
         event.Skip()
         if self.GetPageCount() <= 2:
             # Prevent last tab from being closed
-            self.ToggleWindowStyle(wx.aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)
+            self.ToggleWindowStyle(aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)
             
     def createImageList(self):
         pass
     
     def AddPage(self, page, name, bitmap=''):
         bitmap = wx.ArtProvider_GetBitmap(bitmap, wx.ART_MENU, self._bitmapSize)
-        wx.aui.AuiNotebook.AddPage(self, page, name, bitmap=bitmap)
+        aui.AuiNotebook.AddPage(self, page, name, bitmap=bitmap)
         if self.GetPageCount() > 1:
-            self.SetWindowStyle(self.GetWindowStyleFlag() | wx.aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)
+            self.SetWindowStyle(self.GetWindowStyleFlag() | aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)
+
+    def __getPageCount(self):
+        return self.GetPageCount()
+    PageCount = property(__getPageCount)
 
 
 class AuiManagedFrameWithNotebookAPI(AdvanceSelectionMixin, wx.Frame):
@@ -315,9 +328,9 @@ class AuiManagedFrameWithNotebookAPI(AdvanceSelectionMixin, wx.Frame):
 
     def __init__(self, *args, **kwargs):
         super(AuiManagedFrameWithNotebookAPI, self).__init__(*args, **kwargs)
-        self.manager = wx.aui.AuiManager(self, 
-            wx.aui.AUI_MGR_DEFAULT|wx.aui.AUI_MGR_ALLOW_ACTIVE_PANE)
-        self.Bind(wx.aui.EVT_AUI_RENDER, self.onRender)
+        self.manager = aui.AuiManager(self, 
+            aui.AUI_MGR_DEFAULT|aui.AUI_MGR_ALLOW_ACTIVE_PANE)
+        self.Bind(aui.EVT_AUI_RENDER, self.onRender)
                 
     def onRender(self, event):
         ''' Whenever the AUI managed frames get rendered, make sure the active
@@ -330,7 +343,7 @@ class AuiManagedFrameWithNotebookAPI(AdvanceSelectionMixin, wx.Frame):
         if windowWithFocus not in self.GetAllPanesAndChildren():
             return # Focus is outside this Frame, don't change the focus
         for pane in self.manager.GetAllPanes():
-            if pane.HasFlag(wx.aui.AuiPaneInfo.optionActive):
+            if pane.HasFlag(aui.AuiPaneInfo.optionActive):
                 if pane.window != windowWithFocus:
                     pane.window.SetFocus()
                 break
@@ -350,7 +363,7 @@ class AuiManagedFrameWithNotebookAPI(AdvanceSelectionMixin, wx.Frame):
                 yield grandChild
 
     def AddPage(self, page, caption, name): 
-        paneInfo = wx.aui.AuiPaneInfo().Name(name).Caption(caption).Left().MaximizeButton().DestroyOnClose().FloatingSize((300,200))
+        paneInfo = aui.AuiPaneInfo().Name(name).Caption(caption).Left().MaximizeButton().DestroyOnClose().FloatingSize((300,200))
         # To ensure we have a center pane we make the first pane the center pane:
         if not self.manager.GetAllPanes():
             paneInfo = paneInfo.Center().CloseButton(False)
@@ -380,13 +393,13 @@ class AuiManagedFrameWithNotebookAPI(AdvanceSelectionMixin, wx.Frame):
         
     def GetSelection(self):
         for index, paneInfo in enumerate(self.manager.GetAllPanes()):
-            if paneInfo.HasFlag(wx.aui.AuiPaneInfo.optionActive):
+            if paneInfo.HasFlag(aui.AuiPaneInfo.optionActive):
                 return index
         return wx.NOT_FOUND
 
     def SetSelection(self, targetIndex, *args):
         for index, paneInfo in enumerate(self.manager.GetAllPanes()):
-            self.manager.GetAllPanes()[index].SetFlag(wx.aui.AuiPaneInfo.optionActive, index==targetIndex)
+            self.manager.GetAllPanes()[index].SetFlag(aui.AuiPaneInfo.optionActive, index==targetIndex)
         self.manager.Update()
         
     Selection = property(GetSelection, SetSelection)

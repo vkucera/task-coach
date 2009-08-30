@@ -36,7 +36,9 @@ Release('0.74.2', '?? ??, 2009',
         Bug('''iPhone synchronization: when doing a full refresh
 from desktop, categories parents could be mismatched.'''),
         Bug('''A bug in the task filter would cause tasks to be shown that
-were supposed to be hidden.''', '2841854')
+were supposed to be hidden.''', '2841854'),
+        Bug('''The Filter submenu would sometimes be in the wrong
+state (enabled or disabled).''')
         ],
     featuresAdded=[
         Feature('''Add an option to avoid uploading completed tasks to
