@@ -318,6 +318,10 @@ class AUINotebook(AdvanceSelectionMixin, Book, aui.AuiNotebook):
         if self.GetPageCount() > 1:
             self.SetWindowStyle(self.GetWindowStyleFlag() | aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)
 
+    def __getPageCount(self):
+        return self.GetPageCount()
+    PageCount = property(__getPageCount)
+
 
 class AuiManagedFrameWithNotebookAPI(AdvanceSelectionMixin, wx.Frame):
     ''' An AUI managed frame that provides (part of) the notebook API. '''
