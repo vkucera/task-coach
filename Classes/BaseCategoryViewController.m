@@ -85,6 +85,14 @@
 #else
 	cell.text = category.name;
 #endif
+	
+#ifdef __IPHONE_3_0
+	cell.textLabel.textColor =
+#else
+	cell.textColor =
+#endif
+	[UIColor blackColor];
+
 	cell.indentationLevel = category.level;
 }
 
