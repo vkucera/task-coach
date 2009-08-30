@@ -97,6 +97,29 @@ class IntegerItem(BaseItem):
         return struct.pack('!i', value)
 
 
+class DataItem(BaseItem):
+    """A bunch of bytes, the count being well known"""
+
+    def __init__(self, count):
+        super(DataItem, self).__init__()
+
+        self.__count = count
+
+    def expect(self):
+        if self.state == 0:
+            return self.__count
+        else:
+            return None
+
+    def feed(self, data):
+        if self.state == 0:
+            self.value = data
+            self.state = 1
+
+    def pack(self, value):
+        return value
+
+
 class StringItem(BaseItem):
     """Strings. Encoded in UTF-8. Packed as their length (encoded),
     then the data. Underlying type: unicode."""
@@ -226,6 +249,8 @@ class ListItem(BaseItem):
     def start(self):
         super(ListItem, self).start()
 
+        self.value = []
+
         self._item.start()
 
     def append(self, item):
@@ -251,7 +276,6 @@ class ListItem(BaseItem):
 
     def feed(self, data):
         if self.state == 0:
-            self.value = []
             self.__count, = struct.unpack('!i', data)
             if self.__count:
                 self._item.start()
@@ -275,6 +299,8 @@ class ItemParser(object):
     StringItem(), ListItem(CompositeItem([FixedSizeStringItem(),
     IntegerITem()]))])."""
 
+    # Special case for DataItem.
+
     formatMap = { 'i': IntegerItem,
                   's': StringItem,
                   'z': FixedSizeStringItem,
@@ -282,9 +308,6 @@ class ItemParser(object):
 
     def __init__(self):
         super(ItemParser, self).__init__()
-
-        self.__current = CompositeItem([])
-        self.__stack = []
 
     @classmethod
     def registerItemType(klass, character, itemClass):
@@ -305,20 +328,35 @@ class ItemParser(object):
         if format.startswith('['):
             return ListItem(self.parse(format[1:-1]))
 
+        current = CompositeItem([])
+        stack = []
+        count = None
+
         for character in format:
             if character == '[':
                 item = ListItem(CompositeItem([]))
-                self.__stack.append(self.__current)
-                self.__current.append(item)
-                self.__current = item
+                stack.append(current)
+                current.append(item)
+                current = item
             elif character == ']':
-                self.__current = self.__stack.pop()
+                current = stack.pop()
+            elif character == 'b':
+                if count is None:
+                    raise ValueError('Wrong format string: %s' % format)
+                current.append(DataItem(count))
+                count = None
+            elif character.isdigit():
+                if count is None:
+                    count = int(character)
+                else:
+                    count *= 10
+                    count += int(character)
             else:
-                self.__current.append(self.formatMap[character]())
+                current.append(self.formatMap[character]())
 
-        assert len(self.__stack) == 0
+        assert len(stack) == 0
 
-        return self.__current
+        return current
 
 
 class State(object):
@@ -520,22 +558,16 @@ class InitialState(BaseState):
 
 class PasswordState(BaseState):
     def init(self):
-        self.__data = cStringIO.StringIO()
-        self.disp().set_terminator(20)
+        super(PasswordState, self).init('20b', 1)
+
         self.hashData = ''.join([struct.pack('B', random.randint(0, 255)) for i in xrange(512)])
-        self.disp().push(self.hashData)
+        self.pack('20b', self.hashData)
 
-        super(PasswordState, self).init(None, 0)
-
-    def collect_incoming_data(self, data):
-        self.__data.write(data)
-
-    def found_terminator(self):
-        if self.__data.getvalue() == sha.sha(self.hashData + self.disp().settings.get('iphone', 'password').encode('UTF-8')).digest():
+    def handleNewObject(self, hash):
+        if hash == sha.sha(self.hashData + self.disp().settings.get('iphone', 'password').encode('UTF-8')).digest():
             self.pack('i', 1)
             self.setState(DeviceNameState)
         else:
-            self.__data = cStringIO.StringIO()
             self.pack('i', 0)
             self.setState(PasswordState)
 
