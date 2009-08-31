@@ -54,7 +54,7 @@ setupOptions = {
     'url': meta.url,
     'license': meta.license,
     'download_url': meta.download,
-    'packages': findPackages('taskcoachlib'),
+    'packages': findPackages('taskcoachlib') + findPackages('buildlib'),
     'scripts': ['taskcoach.py', 'taskcoach.pyw'],
     'classifiers': [\
         'Development Status :: 3 - Alpha',
