@@ -86,6 +86,8 @@ class MainWindowTest(MainWindowTestCase):
         
 
 class MainWindowMaximizeTestCase(MainWindowTestCase):
+    maximized = 'Subclass responsibility'
+    
     def setUp(self):
         super(MainWindowMaximizeTestCase, self).setUp()
         self.mainwindow.Show() # Or IsMaximized() returns always False...
@@ -100,16 +102,15 @@ class MainWindowNotMaximizedTest(MainWindowMaximizeTestCase):
     def testCreate(self):
         self.failIf(self.mainwindow.IsMaximized())
 
-    def testMaximize(self):
+    @test.skipOnPlatform('__WXGTK__')
+    def testMaximize(self): # pragma: no cover
         # Skipping this test under wxGTK. I don't know how it managed
         # to pass before but according to
         # http://trac.wxwidgets.org/ticket/9167 and to my own tests,
         # EVT_MAXIMIZE is a noop under this platform.
-
-        if wx.Platform != '__WXGTK__':
-            self.mainwindow.Maximize()
-            wx.Yield()
-            self.failUnless(self.settings.getboolean('window', 'maximized'))
+        self.mainwindow.Maximize()
+        wx.Yield()
+        self.failUnless(self.settings.getboolean('window', 'maximized'))
 
 
 class MainWindowMaximizedTest(MainWindowMaximizeTestCase):
