@@ -124,7 +124,20 @@ class Epydoc(Compile):
         Compile.__init__(self, **kwargs)
 
     def createSummary(self, log):
-        Compile.createSummary(self, log)
+        # Override the default mechanism because buildbot sees lines
+        # about 'syncmlwarning' and thinks it's actually a warning...
+
+        lines = []
+
+        for line in log.readlines():
+            if line.find('syncmlwarning') != -1:
+                continue
+            if line.lower().find('warning') != -1:
+                lines.append(line)
+
+        if lines:
+            self.hasWarnings = True
+            self.addCompleteLog('warnings', ''.join(lines))
 
         self.addURL('Documentation',
                     'http://www.fraca7.net/TaskCoach-doc/%s/index.html' % (self.getProperty('buildername')))
