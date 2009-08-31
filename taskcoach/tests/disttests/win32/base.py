@@ -147,6 +147,11 @@ class Win32TestCase(unittest.TestCase):
         if win32event.WaitForInputIdle(hProcess, 60000) == win32event.WAIT_TIMEOUT:
             self.fail('Could not launch Task Coach.')
 
+        window = self.findWindow(r'^Errors occurred')
+        if window is not None:
+            window.close()
+            self.fail("Errors occurred. The log content was:\n" + file(self.logfilename, 'rb').read())
+
         window = self.findWindow(r'^Tip of the Day$')
         if window is None:
             self.fail("Tip window didn't appear")

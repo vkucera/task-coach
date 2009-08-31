@@ -81,7 +81,7 @@ website: changes
 	$(PYTHON) tools/webchecker.py website.out/index_fr.html
 
 epydoc:
-	$(EPYDOC) --parse-only -o epydoc.out taskcoachlib taskcoach.py
+	$(EPYDOC) --parse-only -q -o epydoc.out taskcoachlib taskcoach.py
 
 dot:
 	$(PYTHON) dot.py taskcoachlib/gui/viewer > dot.out/viewer.dot
