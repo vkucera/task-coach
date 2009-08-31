@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import platform
+import platform, os
 from distutils.core import setup
 from taskcoachlib import meta
 
@@ -32,6 +32,18 @@ except ImportError:
     print 'WARNING: SyncML is not supported on your platform.'
 
 
+def findPackages(base):
+    result = [base.replace('/', '.')]
+
+    for name in os.listdir(base):
+        fname = os.path.join(base, name)
+        if os.path.isdir(fname) and \
+               os.path.exists(os.path.join(fname, '__init__.py')):
+            result.extend(findPackages(fname))
+
+    return result
+
+
 setupOptions = { 
     'name': meta.filename,
     'author': meta.author,
@@ -42,17 +54,7 @@ setupOptions = {
     'url': meta.url,
     'license': meta.license,
     'download_url': meta.download,
-    'packages': ['taskcoachlib'] + 
-        ['taskcoachlib.' + subpackage for subpackage in ('application', 'meta', 
-        'config', 'command', 'widgets', 'gui', 'gui.dialog', 'gui.viewer', 
-        'i18n', 'patterns', 'mailer', 'help', 'domain', 'persistence', 
-        'thirdparty', 'thirdparty.squaremap', 'thirdparty.timeline', 
-        'thirdparty.desktop', 'thirdparty.lockfile', 'thirdparty.chardet', 
-        'syncml', 'iphone')] +
-        ['taskcoachlib.domain.' + subpackage for subpackage in ('base',
-        'date', 'category', 'effort', 'task', 'note', 'attachment', 'categorizable')] +
-        ['taskcoachlib.persistence.' + subpackage for subpackage in ('xml', 
-        'ics', 'html', 'csv', 'vcalendar')] + ['buildlib'],
+    'packages': findPackages('taskcoachlib'),
     'scripts': ['taskcoach.py', 'taskcoach.pyw'],
     'classifiers': [\
         'Development Status :: 3 - Alpha',
