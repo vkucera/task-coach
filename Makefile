@@ -103,7 +103,7 @@ changes:
 unittests: icons templates
 	cd tests; $(PYTHON) test.py --unittests
 
-integrationtests: icons
+integrationtests: icons templates
 	cd tests; $(PYTHON) test.py --integrationtests
 
 languagetests: icons i18n
