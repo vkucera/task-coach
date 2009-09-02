@@ -18,13 +18,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import sys, unittest, os, time, glob, wx
+import sys, unittest, os, time, wx
 projectRoot = os.path.abspath('..')
 if projectRoot not in sys.path:
     sys.path.insert(0, projectRoot)
 
 
-def ignore(*args, **kwargs):
+def ignore(*args, **kwargs): # pylint: disable-msg=W0613
     pass
 
 
@@ -43,7 +43,7 @@ def skipOnPlatform(*platforms):
     return ignore if wx.Platform in platforms else runTest
     
 
-class TestCase(unittest.TestCase):
+class TestCase(unittest.TestCase, object):
     def assertEqualLists(self, expectedList, actualList):
         self.assertEqual(len(expectedList), len(actualList))
         for item in expectedList:
@@ -87,7 +87,7 @@ class wxTestCase(TestCase):
         self.frame.DestroyChildren() # Clean up GDI objects on Windows
 
 
-class TestResultWithTimings(unittest._TextTestResult):
+class TestResultWithTimings(unittest._TextTestResult): # pylint: disable-msg=W0212
     def __init__(self, *args, **kwargs):
         super(TestResultWithTimings, self).__init__(*args, **kwargs)
         self._timings = {}
@@ -111,14 +111,14 @@ class TextTestRunnerWithTimings(unittest.TextTestRunner):
         return TestResultWithTimings(self.stream, self.descriptions, 
             self.verbosity)
 
-    def run(self, *args, **kwargs):
+    def run(self, *args, **kwargs): # pylint: disable-msg=W0221
         result = super(TextTestRunnerWithTimings, self).run(*args, **kwargs)
         if self._timeTests:
-            sortableTimings = [(time, test) for test, time in result._timings.items()]
+            sortableTimings = [(timing, test) for test, timing in result._timings.items()] # pylint: disable-msg=W0212
             sortableTimings.sort(reverse=True)
             print '\n%d slowest tests:'%self._nrTestsToReport
-            for time, test in sortableTimings[:self._nrTestsToReport]:
-                print '%s (%.2f)'%(test, time)
+            for timing, test in sortableTimings[:self._nrTestsToReport]:
+                print '%s (%.2f)'%(test, timing)
         return result
 
 
@@ -139,7 +139,6 @@ class AllTests(unittest.TestSuite):
     def loadAllTests(self, testFiles):
         testloader = unittest.TestLoader()
         if not testFiles:
-            testfiles = []
             if self._options.unittests:
                 testFiles.extend(self.getTestFilesFromDir('unittests'))
             if self._options.integrationtests:
@@ -161,9 +160,9 @@ class AllTests(unittest.TestSuite):
             # test module contains errors our import will raise an exception
             # while loadTestsFromName ignores exceptions when importing from 
             # modules.
-            module = __import__(moduleName)
+            __import__(moduleName)
             suite = testloader.loadTestsFromName(moduleName)
-            self.addTests(suite._tests)
+            self.addTests(suite._tests) # pylint: disable-msg=W0212
    
     def runTests(self):       
         testrunner = TextTestRunnerWithTimings(
@@ -183,9 +182,9 @@ class AllTests(unittest.TestSuite):
     @staticmethod
     def getFilesFromDir(directory, extension):
         result = []
-        for root, dirs, files in os.walk(directory):
-            result.extend([os.path.join(root, file) for file in files \
-                           if file.endswith(extension)])
+        for root, dirs, filenames in os.walk(directory): # pylint: disable-msg=W0612
+            result.extend([os.path.join(root, filename) for filename in filenames \
+                           if filename.endswith(extension)])
         return result
 
 
@@ -244,17 +243,17 @@ class TestOptionParser(config.OptionParser):
         
         description = dict(dist='the platform-specific package', all='all')
 
-        def help(selection):
+        def helpText(selection):
             return 'run %s tests'%description.get(selection, 'the %s'%selection) + \
                    (' [default]' if selection == 'unit' else '')
         
         for selection in 'unit', 'integration', 'language', 'release', 'dist', 'all':
             testselection.add_option('--%stests'%selection, default=False,
-                action='store_true', help=help(selection))
+                action='store_true', help=helpText(selection))
 
         return testselection
 
-    def parse_args(self):
+    def parse_args(self): # pylint: disable-msg=W0221
         options, args = super(TestOptionParser, self).parse_args()
         if options.profile_report_only:
             options.profile = True
@@ -295,7 +294,7 @@ class TestProfiler:
         if self._options.profile_report_only or self.profile(tests, command):
             self.reportLastRun()
 
-    def profile(self, tests, command):
+    def profile(self, tests, command): # pylint: disable-msg=W0613
         import cProfile
         _locals = dict(locals())
         cProfile.runctx('result = tests.%s()'%command, globals(), _locals,
@@ -306,16 +305,15 @@ class TestProfiler:
         return result.wasSuccessful()
             
     def cleanup(self):
-        import os
         os.remove(self._logfile)
 
     
 if __name__ == '__main__':
-    options, testFiles = TestOptionParser().parse_args()
-    allTests = AllTests(options, testFiles)
-    if options.profile:
-        TestProfiler(options).run(allTests)
+    theOptions, theTestFiles = TestOptionParser().parse_args()
+    allTests = AllTests(theOptions, theTestFiles)
+    if theOptions.profile:
+        TestProfiler(theOptions).run(allTests)
     else:
-        result = allTests.runTests()
-        if not result.wasSuccessful():
+        theResult = allTests.runTests()
+        if not theResult.wasSuccessful():
             sys.exit(1)

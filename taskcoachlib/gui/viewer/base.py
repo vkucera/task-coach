@@ -29,11 +29,14 @@ import mixin
 
 
 class Viewer(wx.Panel):
-    __metaclass__ = patterns.NumberedInstances
-    
     ''' A Viewer shows domain objects (e.g. tasks or efforts) by means of a 
         widget (e.g. a ListCtrl or a TreeListCtrl).'''
-        
+    
+    __metaclass__ = patterns.NumberedInstances
+    defaultTitle = 'Subclass responsibility'
+    defaultBitmap = 'Subclass responsibility'
+    viewerImages = [] # Override in subclass
+    
     def __init__(self, parent, taskFile, settings, *args, **kwargs):
         super(Viewer, self).__init__(parent, -1)
         self.parent = parent # FIXME: Make instance variables private
@@ -120,12 +123,12 @@ class Viewer(wx.Panel):
     def onAttributeChanged(self, event):
         self.refreshItems(*event.sources())
         
-    def onPresentationChanged(self, event):
+    def onPresentationChanged(self, event): # pylint: disable-msg=W0613
         ''' Whenever our presentation is changed (items added, items removed,
             order changed) the viewer refreshes itself. '''
         self.refresh()
         
-    def onSelect(self, *args):
+    def onSelect(self, event=None): # pylint: disable-msg=W0613
         ''' The selection of items in the widget has been changed. Notify 
             our observers and remember the current selection so we can
             restore it later, e.g. after the sort order is changed. '''
@@ -148,6 +151,9 @@ class Viewer(wx.Panel):
         indices = [self.getIndexOfItem(item) for item in items \
                    if item in self.presentation()]
         self.widget.RefreshItems(*indices)
+        
+    def getIndexOfItem(self, item):
+        raise NotImplementedError
                         
     def curselection(self):
         ''' Return a list of items (domain objects) currently selected in our
@@ -155,6 +161,9 @@ class Viewer(wx.Panel):
         # Translate indices returned by the widget into actual domain objects:
         return [self.getItemWithIndex(index) for index in \
                 self.widget.curselection()]
+        
+    def getItemWithIndex(self, index):
+        raise NotImplementedError
         
     def curselectionIsInstanceOf(self, class_):
         ''' Return whether all items in the current selection are instances of
@@ -231,7 +240,7 @@ class Viewer(wx.Panel):
         return wx.ListItemAttr(self.getColor(item), 
                                self.getBackgroundColor(item))
         
-    def getColor(self, item):
+    def getColor(self, item): # pylint: disable-msg=W0613
         return None
     
     def getBackgroundColor(self, item):
@@ -332,6 +341,19 @@ class Viewer(wx.Panel):
         return Editor(wx.GetTopLevelParent(self), newSubItemCommand,
                       self.settings, self.presentation(), self.taskFile, 
                       bitmap=bitmap)
+        
+    def editorClass(self):
+        raise NotImplementedError
+
+    def newItemCommandClass(self):
+        raise NotImplementedError
+
+    def newSubItemCommandClass(self):
+        raise NotImplementedError
+
+    def editItemCommandClass(self):
+        raise NotImplementedError
+    
 
 
 class ListViewer(Viewer):
@@ -543,7 +565,7 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):
         return [item for item in items if item.isBeingTracked(recursive=True)]
 
         
-class ViewerWithColumns(Viewer):
+class ViewerWithColumns(Viewer): # pylint: disable-msg=W0223
     def __init__(self, *args, **kwargs):
         self.__initDone = False
         self.__visibleColumns = []
@@ -638,7 +660,8 @@ class ViewerWithColumns(Viewer):
     def getColumnWidth(self, columnName):
         columnWidths = self.settings.getdict(self.settingsSection(),
                                              'columnwidths')
-        return columnWidths.get(columnName, hypertreelist._DEFAULT_COL_WIDTH)
+        defaultWidth = hypertreelist._DEFAULT_COL_WIDTH # pylint: disable-msg=W0212
+        return columnWidths.get(columnName, defaultWidth)
 
     def onResizeColumn(self, column, width):
         columnWidths = self.settings.getdict(self.settingsSection(), 'columnwidths')
@@ -698,18 +721,18 @@ class ViewerWithColumns(Viewer):
                                  item.categories(recursive=recursive)]))
 
 
-class SortableViewerWithColumns(mixin.SortableViewer, ViewerWithColumns):
+class SortableViewerWithColumns(mixin.SortableViewerMixin, ViewerWithColumns):
     def initColumn(self, column):
         super(SortableViewerWithColumns, self).initColumn(column)
         if self.isSortedBy(column.name()):
             self.widget.showSortColumn(column)
             self.showSortOrder()
 
-    def setSortOrderAscending(self, *args, **kwargs):
+    def setSortOrderAscending(self, *args, **kwargs): # pylint: disable-msg=W0221
         super(SortableViewerWithColumns, self).setSortOrderAscending(*args, **kwargs)
         self.showSortOrder()
         
-    def sortBy(self, *args, **kwargs):
+    def sortBy(self, *args, **kwargs): # pylint: disable-msg=W0221
         super(SortableViewerWithColumns, self).sortBy(*args, **kwargs)
         self.showSortColumn()
 
@@ -723,8 +746,5 @@ class SortableViewerWithColumns(mixin.SortableViewer, ViewerWithColumns):
         self.widget.showSortOrder(self.imageIndex[self.getSortOrderImageIndex()])
         
     def getSortOrderImageIndex(self):
-        if self.isSortOrderAscending():
-            return 'ascending' 
-        else: 
-            return 'descending'
+        return 'ascending' if self.isSortOrderAscending() else 'descending'
 

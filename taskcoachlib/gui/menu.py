@@ -23,7 +23,7 @@ from taskcoachlib.i18n import _
 import uicommand, viewer
 
 
-class Menu(wx.Menu, uicommand.UICommandContainer):
+class Menu(wx.Menu, uicommand.UICommandContainerMixin):
     def __init__(self, window):
         super(Menu, self).__init__()
         self._window = window
@@ -32,7 +32,7 @@ class Menu(wx.Menu, uicommand.UICommandContainer):
         return self.GetMenuItemCount()
 
     def appendUICommand(self, uiCommand):
-        return uiCommand.appendToMenu(self, self._window)
+        return uiCommand.addToMenu(self, self._window)
     
     def appendMenu(self, text, subMenu, bitmap=None):
         subMenuItem = wx.MenuItem(self, id=wx.NewId(), text=text, subMenu=subMenu)
@@ -154,8 +154,8 @@ class DynamicMenuThatGetsUICommandsFromViewer(DynamicMenu):
         try:
             if newCommands == self._uiCommands:
                 return
-        except wx._core.PyDeadObjectError: # Old viewer was closed
-            pass
+        except wx._core.PyDeadObjectError: # pylint: disable-msg=W0212
+            pass  # Old viewer was closed
         self.clearMenu()
         self.fillMenu(newCommands)
         self._uiCommands = newCommands
@@ -223,7 +223,7 @@ class FileMenu(Menu):
                         'export')
         if settings.getboolean('feature', 'syncml'):
             try:
-                import taskcoachlib.syncml.core
+                import taskcoachlib.syncml.core # pylint: disable-msg=W0612
             except ImportError:
                 pass
             else:
@@ -251,7 +251,7 @@ class FileMenu(Menu):
             recentFileMenuPosition = self.__recentFilesStartPosition + 1 + index
             recentFileOpenUICommand = uicommand.RecentFileOpen(filename=recentFile,
                 index=recentFileNumber, iocontroller=self.__iocontroller)
-            recentFileOpenUICommand.appendToMenu(self, self._window, 
+            recentFileOpenUICommand.addToMenu(self, self._window, 
                 recentFileMenuPosition)
             self.__recentFileUICommands.append(recentFileOpenUICommand)
 
@@ -329,7 +329,7 @@ class EditMenu(Menu):
         self.appendUICommands(None, uicommand.EditPreferences(settings))
         if settings.getboolean('feature', 'syncml'):
             try:
-                import taskcoachlib.syncml.core
+                import taskcoachlib.syncml.core # pylint: disable-msg=W0612
             except ImportError:
                 pass
             else:
@@ -633,7 +633,7 @@ class ToggleCategoryMenu(DynamicMenu):
             
     def addMenuItemForCategory(self, category, menu):
         uiCommand = self.uiCommandClass(category=category, viewer=self.viewer)
-        uiCommand.appendToMenu(menu, self._window)
+        uiCommand.addToMenu(menu, self._window)
         children = category.children()[:]
         if children:
             children.sort(key=lambda category: category.subject())
@@ -669,12 +669,12 @@ class StartEffortForTaskMenu(DynamicMenu):
         self.clearMenu()
         activeRootTasks = self._activeRootTasks()
         activeRootTasks.sort(key=lambda task: task.subject())
-        for task in activeRootTasks:
-            self.addMenuItemForTask(task, self)
+        for activeRootTask in activeRootTasks:
+            self.addMenuItemForTask(activeRootTask, self)
                 
     def addMenuItemForTask(self, task, menu):
         uiCommand = uicommand.EffortStartForTask(task=task, taskList=self.tasks)
-        uiCommand.appendToMenu(menu, self._window)
+        uiCommand.addToMenu(menu, self._window)
         activeChildren = [child for child in task.children() if \
                           child in self.tasks and child.active()]
         if activeChildren:
@@ -688,7 +688,8 @@ class StartEffortForTaskMenu(DynamicMenu):
         return bool(self._activeRootTasks())
 
     def _activeRootTasks(self):
-        return [task for task in self.tasks.rootItems() if task.active()]
+        return [rootTask for rootTask in self.tasks.rootItems() \
+                if rootTask.active()]
     
 
 class TaskPopupMenu(Menu):

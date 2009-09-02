@@ -374,7 +374,11 @@ class XMLWriterTest(test.TestCase):
 
     def testNoAttachments(self):
         self.expectNotInXML('attachment')
-        
+    
+    # addAttachment, addNote, etc., are dynamically generated so pylint can't
+    # find them. Disable the error message.
+    # pylint: disable-msg=E1101
+    
     def testTaskWithOneAttachment(self):
         self.task.addAttachments(attachment.FileAttachment('whatever.txt', id='foo'))
         self.expectInXML('<attachment id="foo" location="whatever.txt" status="1" subject="whatever.txt" type="file"/>')

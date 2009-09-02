@@ -20,7 +20,7 @@ import wx
 import test
 from unittests import dummy
 from taskcoachlib import gui, config, persistence
-from taskcoachlib.domain import task, effort, category, note, date, attachment
+from taskcoachlib.domain import task, category, date, attachment
 from taskcoachlib.thirdparty import desktop
 
 if desktop.get_desktop() in ('KDE', 'GNOME'): # pragma: no cover
@@ -43,25 +43,26 @@ class UICommandTest(test.wxTestCase):
         self.frame.SetMenuBar(wx.MenuBar())
         self.frame.CreateToolBar()
 
-    def activate(self, window, id):
-        window.ProcessEvent(wx.CommandEvent(wx.wxEVT_COMMAND_MENU_SELECTED, id))
+    def activate(self, window, windowId):
+        window.ProcessEvent(wx.CommandEvent(wx.wxEVT_COMMAND_MENU_SELECTED, 
+                                            windowId))
 
     def testAppendToMenu(self):
-        id = self.uicommand.appendToMenu(self.menu, self.frame)
-        self.assertEqual(id, self.menu.FindItem(self.uicommand.menuText))
+        menuId = self.uicommand.addToMenu(self.menu, self.frame)
+        self.assertEqual(menuId, self.menu.FindItem(self.uicommand.menuText))
 
     def testAppendToToolBar(self):
-        id = self.uicommand.appendToToolBar(self.frame.GetToolBar())
-        self.assertEqual(0, self.frame.GetToolBar().GetToolPos(id))
+        toolId = self.uicommand.appendToToolBar(self.frame.GetToolBar())
+        self.assertEqual(0, self.frame.GetToolBar().GetToolPos(toolId))
 
     def testActivationFromMenu(self):
-        id = self.uicommand.appendToMenu(self.menu, self.frame)
-        self.activate(self.frame, id)
+        menuId = self.uicommand.addToMenu(self.menu, self.frame)
+        self.activate(self.frame, menuId)
         self.failUnless(self.uicommand.activated)
 
     def testActivationFromToolBar(self):
-        id = self.uicommand.appendToToolBar(self.frame.GetToolBar())
-        self.activate(self.frame.GetToolBar(), id)
+        menuId = self.uicommand.appendToToolBar(self.frame.GetToolBar())
+        self.activate(self.frame.GetToolBar(), menuId)
         self.failUnless(self.uicommand.activated)
 
 
@@ -69,8 +70,6 @@ class wxTestCaseWithFrameAsTopLevelWindow(test.wxTestCase):
     def setUp(self):
         wx.GetApp().SetTopWindow(self.frame)
         self.frame.taskFile = persistence.TaskFile()
-        
-
 
 
 class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
@@ -106,8 +105,9 @@ class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
 
 
 class DummyTask(object):
-    def subject(self, *args, **kwargs):
+    def subject(self, *args, **kwargs): # pylint: disable-msg=W0613
         return 'subject'
+    
     def description(self):
         return 'description'
 
@@ -129,10 +129,12 @@ class DummyViewer(object):
 
 class MailTaskTest(test.TestCase):
     def testException(self):
-        def mail(*args):
-             raise RuntimeError, 'message'
-        def showerror(*args, **kwargs):
-             self.showerror = args
+        def mail(*args): # pylint: disable-msg=W0613
+            raise RuntimeError, 'message'
+        
+        def showerror(*args, **kwargs): # pylint: disable-msg=W0613
+            self.showerror = args
+            
         mailTask = gui.uicommand.TaskMail(viewer=DummyViewer([DummyTask()]))
         mailTask.doCommand(None, mail=mail, showerror=showerror)
         self.assertEqual('Cannot send email:\nmessage', self.showerror[0])
@@ -172,7 +174,7 @@ class TaskNewTest(wxTestCaseWithFrameAsTopLevelWindow):
                                         settings=settings)
         dialog = taskNew.doCommand(None, show=False)
         tree = dialog[0][2].viewer.widget
-        firstChild, cookie = tree.GetFirstChild(tree.GetRootItem())
+        firstChild = tree.GetFirstChild(tree.GetRootItem())[0]
         self.failUnless(firstChild.IsChecked())
         
 
@@ -184,19 +186,19 @@ class NoteNewTest(wxTestCaseWithFrameAsTopLevelWindow):
                                         settings=config.Settings(load=False))
         dialog = noteNew.doCommand(None, show=False)
         tree = dialog[0][1].viewer.widget
-        firstChild, cookie = tree.GetFirstChild(tree.GetRootItem())
+        firstChild = tree.GetFirstChild(tree.GetRootItem())[0]
         self.failUnless(firstChild.IsChecked())
 
 
 class MailNoteTest(test.TestCase):
     def testCreate(self):
-        mailNote = gui.uicommand.NoteMail()
+        gui.uicommand.NoteMail()
 
 
 class EditPreferencesTest(test.TestCase):
     def testEditPreferences(self):
-        self.settings = config.Settings(load=False)
-        editPreferences = gui.uicommand.EditPreferences(settings=self.settings)
+        settings = config.Settings(load=False)
+        editPreferences = gui.uicommand.EditPreferences(settings=settings)
         editPreferences.doCommand(None, show=False)
         # No assert, just checking whether it works without exceptions
         
@@ -257,7 +259,7 @@ class OpenAllAttachmentsTest(test.TestCase):
         self.viewer = DummyViewer([task.Task('Task')])
         self.openAll = gui.uicommand.OpenAllAttachments(settings=settings, 
                                                         viewer=self.viewer)
-        self.errorKwargs = None
+        self.errorArgs = self.errorKwargs = None
 
     def showerror(self, *args, **kwargs): # pragma: no cover
         self.errorArgs = args
@@ -275,6 +277,22 @@ class OpenAllAttachmentsTest(test.TestCase):
                                   style=wx.ICON_ERROR), self.errorKwargs)
         else:
             self.assertNotEqual(0, result)
+            
+    def testMultipleAttachments(self):
+        class DummyAttachment(object):
+            def __init__(self):
+                self.openCalled = False
+            def open(self, attachmentBase): # pylint: disable-msg=W0613
+                self.openCalled = True
+            def isDeleted(self):
+                return False
+            
+        dummyAttachment1 = DummyAttachment()
+        dummyAttachment2 = DummyAttachment()
+        self.viewer.selection[0].addAttachment(dummyAttachment1)
+        self.viewer.selection[0].addAttachment(dummyAttachment2)
+        self.openAll.doCommand(None)
+        self.failUnless(dummyAttachment1.openCalled and dummyAttachment2.openCalled)
 
 
 class ToggleCategoryTest(test.TestCase):

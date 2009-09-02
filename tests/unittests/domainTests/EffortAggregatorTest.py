@@ -22,6 +22,8 @@ from taskcoachlib.domain import task, effort, date
 
 
 class EffortAggregatorTestCase(test.TestCase):
+    aggregation = 'One of: day, week, or month (override in subclass)'
+    
     def setUp(self):
         self.taskList = task.TaskList()
         self.effortAggregator = effort.EffortAggregator(self.taskList, 
@@ -60,7 +62,7 @@ class EffortAggregatorTestCase(test.TestCase):
             'startOf%s'%self.aggregation.capitalize())()
 
                 
-class CommonTests(object):
+class CommonTestsMixin(object):
     def testEmptyTaskList(self):
         self.assertEqual(0, len(self.effortAggregator))
         
@@ -317,15 +319,15 @@ class CommonTests(object):
         self.assertEqual(0, self.effortAggregator.originalLength())
 
 
-class EffortPerDayTest(EffortAggregatorTestCase, CommonTests):
+class EffortPerDayTest(EffortAggregatorTestCase, CommonTestsMixin):
     aggregation = 'day'
 
 
-class EffortPerWeekTest(EffortAggregatorTestCase, CommonTests):
+class EffortPerWeekTest(EffortAggregatorTestCase, CommonTestsMixin):
     aggregation = 'week'
 
 
-class EffortPerMonthTest(EffortAggregatorTestCase, CommonTests):
+class EffortPerMonthTest(EffortAggregatorTestCase, CommonTestsMixin):
     aggregation = 'month'
 
         

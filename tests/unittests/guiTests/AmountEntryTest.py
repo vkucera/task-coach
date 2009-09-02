@@ -23,6 +23,7 @@ from taskcoachlib.gui.dialog import entry
 
 class LocalConv(dict):
     def __init__(self, decimal_point='.', thousands_sep=',', grouping=None):
+        super(LocalConv, self).__init__()
         self.update(dict(decimal_point=decimal_point,
                          thousands_sep=thousands_sep,
                          grouping=grouping or []))

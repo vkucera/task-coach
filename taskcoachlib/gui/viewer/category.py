@@ -27,9 +27,10 @@ from taskcoachlib.gui import uicommand, menu, dialog
 import base, mixin
 
 
-class BaseCategoryViewer(mixin.AttachmentDropTarget, 
-                         mixin.SortableViewerForCategories, 
-                         mixin.SearchableViewer, 
+class BaseCategoryViewer(mixin.AttachmentDropTargetMixin, 
+                         mixin.SortableViewerForCategoriesMixin, 
+                         mixin.SearchableViewerMixin, 
+                         mixin.NoteColumnMixin, mixin.AttachmentColumnMixin,
                          base.SortableViewerWithColumns, base.TreeViewer):
     SorterClass = category.CategorySorter
     viewerImages = ['ascending', 'descending', 'attachment', 'note']
@@ -63,21 +64,9 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
             self.createCategoryPopupMenu(), 
             menu.ColumnPopupMenu(self),
             **self.widgetCreationKeywordArguments())
-        widget.AssignImageList(imageList)
+        widget.AssignImageList(imageList) # pylint: disable-msg=E1101
         return widget
 
-    def createColumnUICommands(self):
-        return [\
-            uicommand.ToggleAutoColumnResizing(viewer=self,
-                                               settings=self.settings),
-            None,
-            uicommand.ViewColumn(menuText=_('&Description'),
-                helpText=_('Show/hide description column'),
-                setting='description', viewer=self),
-            uicommand.ViewColumn(menuText=_('&Attachments'),
-                helpText=_('Show/hide attachments column'),
-                setting='attachments', viewer=self)]
-            
     def _createColumns(self):
         kwargs = dict(renderDescriptionCallback=lambda category: category.description())
         columns = [widgets.Column('subject', _('Subject'), 
@@ -94,7 +83,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
                        width=self.getColumnWidth('description'), 
                        **kwargs),
                    widgets.Column('attachments', '', 
-                       category.Category.attachmentsChangedEventType(),
+                       category.Category.attachmentsChangedEventType(), # pylint: disable-msg=E1101
                        width=self.getColumnWidth('attachments'),
                        alignment=wx.LIST_FORMAT_LEFT,
                        imageIndexCallback=self.attachmentImageIndex,
@@ -102,20 +91,14 @@ class BaseCategoryViewer(mixin.AttachmentDropTarget,
                        renderCallback=lambda category: '', **kwargs)]
         if self.settings.getboolean('feature', 'notes'):
             columns.append(widgets.Column('notes', '', 
-                       category.Category.notesChangedEventType(),
+                       category.Category.notesChangedEventType(), # pylint: disable-msg=E1101
                        width=self.getColumnWidth('notes'),
                        alignment=wx.LIST_FORMAT_LEFT,
                        imageIndexCallback=self.noteImageIndex,
                        headerImageIndex=self.imageIndex['note'],
                        renderCallback=lambda category: '', **kwargs))
         return columns
-    
-    def attachmentImageIndex(self, category, which):
-        return self.imageIndex['attachment'] if category.attachments() else -1 
-        
-    def noteImageIndex(self, category, which):
-        return self.imageIndex['note'] if category.notes() else -1
-
+            
     def createToolBarUICommands(self):
         commands = super(BaseCategoryViewer, self).createToolBarUICommands()
         commands[-2:-2] = [None,

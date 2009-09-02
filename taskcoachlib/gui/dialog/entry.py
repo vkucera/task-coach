@@ -54,18 +54,14 @@ class DateEntry(widgets.PanelWithBoxSizer):
 class TimeDeltaEntry(widgets.PanelWithBoxSizer):
     defaultTimeDelta=date.TimeDelta()
 
-    def __init__(self, parent, timeDelta=defaultTimeDelta, readonly=False,
-                 *args, **kwargs):
+    def __init__(self, parent, timeDelta=defaultTimeDelta, *args, **kwargs):
         super(TimeDeltaEntry, self).__init__(parent, *args, **kwargs)
-        if readonly:
-            self._entry = wx.StaticText(self, label=render.timeSpent(timeDelta))
-        else:
-            hours, minutes, seconds = timeDelta.hoursMinutesSeconds()
-            self._entry = widgets.masked.TextCtrl(self, mask='#{6}:##:##',
-                formatcodes='FS',
-                fields=[masked.Field(formatcodes='r', defaultValue='%6d'%hours),
-                        masked.Field(defaultValue='%02d'%minutes),
-                        masked.Field(defaultValue='%02d'%seconds)])
+        hours, minutes, seconds = timeDelta.hoursMinutesSeconds()
+        self._entry = widgets.masked.TextCtrl(self, mask='#{6}:##:##',
+            formatcodes='FS',
+            fields=[masked.Field(formatcodes='r', defaultValue='%6d'%hours),
+                    masked.Field(defaultValue='%02d'%minutes),
+                    masked.Field(defaultValue='%02d'%seconds)])
         self.add(self._entry, flag=wx.EXPAND|wx.ALL, proportion=1)
         self.fit()
 
@@ -74,17 +70,12 @@ class TimeDeltaEntry(widgets.PanelWithBoxSizer):
 
 
 class AmountEntry(widgets.PanelWithBoxSizer):
-    def __init__(self, parent, amount=0.0, readonly=False, *args, **kwargs):
+    def __init__(self, parent, amount=0.0, *args, **kwargs):
         self.local_conventions = kwargs.pop('localeconv', locale.localeconv())
         super(AmountEntry, self).__init__(parent, *args, **kwargs)
-        # Select factory for creating the entry:
-        createEntry = self.createReadOnlyEntry if readonly else self.createEntry
-        self._entry = createEntry(amount)
+        self._entry = self.createEntry(amount)
         self.add(self._entry)
         self.fit()
-
-    def createReadOnlyEntry(self, amount):
-        return wx.StaticText(self, label=render.monetaryAmount(amount))
 
     def createEntry(self, amount):
         decimalChar = self.local_conventions['decimal_point'] or '.'

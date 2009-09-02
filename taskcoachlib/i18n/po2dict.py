@@ -60,7 +60,7 @@ def make(filename, outfile=None):
         lno += 1
         # If we get a comment line after a msgstr, this is a new entry
         if l[0] == '#' and section == STR:
-            add(msgid, msgstr, fuzzy)
+            add(msgid, msgstr, fuzzy) # pylint: disable-msg=E0601
             section = None
             fuzzy = 0
         # Record a fuzzy mark

@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, uicommand
 
 
-class ToolBar(wx.ToolBar, uicommand.UICommandContainer):
+class ToolBar(wx.ToolBar, uicommand.UICommandContainerMixin):
     def __init__(self, window, size=(32, 32)):
         self.__window = window
         super(ToolBar, self).__init__(window, style=wx.TB_FLAT|wx.TB_NODIVIDER)
@@ -36,7 +36,7 @@ class ToolBar(wx.ToolBar, uicommand.UICommandContainer):
 
     def AppendSeparator(self):
         ''' This little adapter is needed for 
-        uicommand.UICommandContainer.appendUICommands'''
+        uicommand.UICommandContainerMixin.appendUICommands'''
         self.AddSeparator()
 
     def appendUICommand(self, uiCommand):

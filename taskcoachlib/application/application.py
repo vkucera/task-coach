@@ -72,7 +72,8 @@ class Application(object):
             splash = None
         self.taskFile = persistence.LockedTaskFile()
         self.autoSaver = persistence.AutoSaver(self.settings)
-        self.io = gui.IOController(self.taskFile, self.displayMessage, self.settings)
+        self.io = gui.IOController(self.taskFile, self.displayMessage, 
+                                   self.settings)
         self.mainwindow = gui.MainWindow(self.io, self.taskFile, self.settings, 
                                          splash)
         if not self.settings.getboolean('file', 'inifileloaded'):
@@ -80,7 +81,7 @@ class Application(object):
         if loadTaskFile:
             self.io.openAfterStart(self._args)
         wx.SystemOptions.SetOptionInt("mac.textcontrol-use-spell-checker",
-                                      self.settings.getboolean('editor', 'maccheckspelling'))
+            self.settings.getboolean('editor', 'maccheckspelling'))
         self.registerSignalHandlers()
         
     def initConfig(self, loadSettings):
@@ -111,14 +112,14 @@ class Application(object):
     def registerSignalHandlers(self):
         signal.signal(signal.SIGTERM, self.onSIGTERM)
         if hasattr(signal, 'SIGHUP'):
-            signal.signal(signal.SIGHUP, self.onSIGHUP)
+            signal.signal(signal.SIGHUP, self.onSIGHUP) # pylint: disable-msg=E1101
 
-    def onSIGTERM(self, *args):
+    def onSIGTERM(self, *args): # pylint: disable-msg=W0613
         ''' onSIGTERM is called when the process receives a TERM signal. '''
         # Give the user time to save the file:
         self.mainwindow.quit()
 
-    def onSIGHUP(self, *args):
+    def onSIGHUP(self, *args): # pylint: disable-msg=W0613
         ''' onSIGHUP is called when the process receives a HUP signal, 
             typically when the user logs out. '''
         # No time to pop up dialogs, force quit:
