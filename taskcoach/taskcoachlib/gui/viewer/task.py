@@ -27,8 +27,10 @@ from taskcoachlib.gui import uicommand, menu, color, render, dialog
 import base, mixin
 
 
-class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks, 
-                     base.UpdatePerSecondViewer, base.TreeViewer, patterns.Observer):
+class BaseTaskViewer(mixin.SearchableViewerMixin, 
+                     mixin.FilterableViewerForTasksMixin, 
+                     base.UpdatePerSecondViewer, base.TreeViewer, 
+                     patterns.Observer):
     defaultTitle = _('Tasks')
     defaultBitmap = 'task'
     
@@ -143,10 +145,10 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
         patterns.Publisher().registerObserver(self.atMidnight,
             eventType='clock.midnight')
 
-    def atMidnight(self, event):
+    def atMidnight(self, event): # pylint: disable-msg=W0613
         self.refresh()
         
-    def onColorSettingChange(self, event):
+    def onColorSettingChange(self, event): # pylint: disable-msg=W0613
         self.refresh()
         
     def children(self, item):
@@ -178,6 +180,9 @@ class BaseTaskViewer(mixin.SearchableViewer, mixin.FilterableViewerForTasks,
             result.append(('attachment', 
                 [unicode(attachment) for attachment in task.attachments()]))
         return result
+
+    def label(self, task):
+        return task.subject()
 
 
 class RootNode(object):
@@ -324,10 +329,7 @@ class TimelineViewer(BaseTaskViewer):
             return children
         except AttributeError:
             return []
-
-    def label(self, item):
-        return item.subject()
-
+        
     def background_color(self, item):
         return item.color()
 
@@ -427,7 +429,7 @@ class SquareTaskViewer(BaseTaskViewer):
         return self.__transformTaskAttribute(max(getattr(task, self.__orderBy)(recursive=True),
                                                  self.__zero))
     
-    def children_sum(self, children, parent):
+    def children_sum(self, children, parent): # pylint: disable-msg=W0613
         children_sum = sum((getattr(child, self.__orderBy)(recursive=True) for child in children \
                             if child in self.presentation()), self.__zero)
         return self.__transformTaskAttribute(max(children_sum, self.__zero))
@@ -440,20 +442,17 @@ class SquareTaskViewer(BaseTaskViewer):
         return 0
     
     def label(self, task):
-        subject = task.subject()
+        label = super(SquareTaskViewer, self).label(task)
         value = self.render(getattr(task, self.__orderBy)(recursive=False))
-        if value:
-            return '%s (%s)'%(subject, value) 
-        else:
-            return subject
+        return '%s (%s)'%(label, value) if value else label
 
-    def value(self, task, parent=None):
+    def value(self, task, parent=None): # pylint: disable-msg=W0613
         return self.overall(task)
     
-    def background_color(self, task, depth):
+    def background_color(self, task, depth): # pylint: disable-msg=W0613
         return task.color()
 
-    def foreground_color(self, task, depth):
+    def foreground_color(self, task, depth): # pylint: disable-msg=W0613
         return color.taskColor(task, self.settings)
     
     def icon(self, task, isSelected):
@@ -471,7 +470,9 @@ class SquareTaskViewer(BaseTaskViewer):
 
     
     
-class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks, 
+class TaskViewer(mixin.AttachmentDropTargetMixin, 
+                 mixin.SortableViewerForTasksMixin, 
+                 mixin.NoteColumnMixin, mixin.AttachmentColumnMixin,
                  base.SortableViewerWithColumns, BaseTaskViewer):
     
     viewerImages = ['task', 'task_inactive', 'task_completed', 'task_duesoon', 
@@ -503,7 +504,7 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
             uicommand.TaskDragAndDrop(taskList=self.presentation(), viewer=self),
             self.createTaskPopupMenu(), self.createColumnPopupMenu(),
             **self.widgetCreationKeywordArguments())
-        widget.AssignImageList(imageList)
+        widget.AssignImageList(imageList) # pylint: disable-msg=E1101
         return widget    
     
     def _createColumns(self):
@@ -525,7 +526,7 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
                 renderCallback=lambda task: task.description(), 
                 width=self.getColumnWidth('description'), **kwargs)] + \
             [widgets.Column('attachments', '', 
-                task.Task.attachmentsChangedEventType(),
+                task.Task.attachmentsChangedEventType(), # pylint: disable-msg=E1101
                 width=self.getColumnWidth('attachments'),
                 alignment=wx.LIST_FORMAT_LEFT,
                 imageIndexCallback=self.attachmentImageIndex,
@@ -533,7 +534,7 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
                 renderCallback=lambda task: '', **kwargs)]
         if self.settings.getboolean('feature', 'notes'):
             columns.append(widgets.Column('notes', '', 
-                task.Task.notesChangedEventType(),
+                task.Task.notesChangedEventType(), # pylint: disable-msg=E1101
                 width=self.getColumnWidth('notes'),
                 alignment=wx.LIST_FORMAT_LEFT,
                 imageIndexCallback=self.noteImageIndex,
@@ -730,13 +731,7 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
                              wx.TreeItemIcon_SelectedExpanded]
         return expandedImageIndex if expanded else normalImageIndex
                     
-    def attachmentImageIndex(self, task, which):
-        return self.imageIndex['attachment'] if task.attachments() else -1 
-
-    def noteImageIndex(self, task, which):
-        return self.imageIndex['note'] if task.notes() else -1 
-
-    def setSortByTaskStatusFirst(self, *args, **kwargs):
+    def setSortByTaskStatusFirst(self, *args, **kwargs): # pylint: disable-msg=W0221
         super(TaskViewer, self).setSortByTaskStatusFirst(*args, **kwargs)
         self.showSortOrder()
         
@@ -746,7 +741,7 @@ class TaskViewer(mixin.AttachmentDropTarget, mixin.SortableViewerForTasks,
             sortOrderImageIndex += '_with_status' 
         return sortOrderImageIndex
 
-    def setSearchFilter(self, searchString, *args, **kwargs):
+    def setSearchFilter(self, searchString, *args, **kwargs): # pylint: disable-msg=W0221
         super(TaskViewer, self).setSearchFilter(searchString, *args, **kwargs)
         if searchString:
             self.expandAll()           

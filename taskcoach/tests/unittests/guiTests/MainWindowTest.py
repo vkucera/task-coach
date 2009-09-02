@@ -44,7 +44,7 @@ class MainWindowUnderTest(gui.MainWindow):
         self.createStatusBar()
     
 
-class DummyIOController:
+class DummyIOController(object):
     def needSave(self, *args, **kwargs):
         return False # pragma: no cover
 

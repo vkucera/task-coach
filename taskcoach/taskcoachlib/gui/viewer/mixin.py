@@ -19,21 +19,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
 from taskcoachlib import command, patterns
 from taskcoachlib.domain import base, task, category, attachment
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand
 
 
-class SearchableViewer(object):
+class SearchableViewerMixin(object):
     ''' A viewer that is searchable. This is a mixin class. '''
 
     def isSearchable(self):
         return True
     
     def createFilter(self, presentation):
-        presentation = super(SearchableViewer, self).createFilter(presentation)
+        presentation = super(SearchableViewerMixin, self).createFilter(presentation)
         return base.SearchFilter(presentation, **self.searchOptions())
 
     def searchOptions(self):
@@ -66,33 +65,33 @@ class SearchableViewer(object):
     def createToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
         searchUICommand = uicommand.Search(viewer=self, settings=self.settings)
-        return super(SearchableViewer, self).createToolBarUICommands() + \
+        return super(SearchableViewerMixin, self).createToolBarUICommands() + \
             [None, searchUICommand]
             
 
-class FilterableViewer(object):
+class FilterableViewerMixin(object):
     ''' A viewer that is filterable. This is a mixin class. '''
 
     def isFilterable(self):
         return True
     
 
-class FilterableViewerForNotes(FilterableViewer):
+class FilterableViewerForNotesMixin(FilterableViewerMixin):
     def createFilter(self, notesContainer):
-        notesContainer = super(FilterableViewerForNotes, self).createFilter(notesContainer)
+        notesContainer = super(FilterableViewerForNotesMixin, self).createFilter(notesContainer)
         return category.filter.CategoryFilter(notesContainer, 
             categories=self.taskFile.categories(), treeMode=self.isTreeViewer(),
             filterOnlyWhenAllCategoriesMatch=self.settings.getboolean('view',
             'categoryfiltermatchall'))
         
             
-class FilterableViewerForTasks(FilterableViewer):
+class FilterableViewerForTasksMixin(FilterableViewerMixin):
     def __init__(self, *args, **kwargs):
         self.__filterUICommands = None
-        super(FilterableViewerForTasks, self).__init__(*args, **kwargs)
+        super(FilterableViewerForTasksMixin, self).__init__(*args, **kwargs)
 
     def createFilter(self, taskList):
-        taskList = super(FilterableViewerForTasks, self).createFilter(taskList)
+        taskList = super(FilterableViewerForTasksMixin, self).createFilter(taskList)
         return category.filter.CategoryFilter( \
             task.filter.ViewFilter(taskList, treeMode=self.isTreeViewer(), 
                                    **self.viewFilterOptions()), 
@@ -220,18 +219,18 @@ class FilterableViewerForTasks(FilterableViewer):
         self.settings.setboolean(self.settingsSection(), setting, booleanValue)
         
                 
-class SortableViewer(object):
+class SortableViewerMixin(object):
     ''' A viewer that is sortable. This is a mixin class. '''
 
     def __init__(self, *args, **kwargs):
         self._sortUICommands = []
-        super(SortableViewer, self).__init__(*args, **kwargs)
+        super(SortableViewerMixin, self).__init__(*args, **kwargs)
 
     def isSortable(self):
         return True
 
     def registerPresentationObservers(self):
-        super(SortableViewer, self).registerPresentationObservers()
+        super(SortableViewerMixin, self).registerPresentationObservers()
         patterns.Publisher().registerObserver(self.onPresentationChanged, 
             eventType=self.presentation().sortEventType(),
             eventSource=self.presentation())
@@ -287,12 +286,12 @@ class SortableViewer(object):
         self._sortUICommands = []
 
 
-class SortableViewerForTasks(SortableViewer):
+class SortableViewerForTasksMixin(SortableViewerMixin):
     SorterClass = task.sorter.Sorter
     
     def __init__(self, *args, **kwargs):
         self.__sortKeyUnchangedCount = 0
-        super(SortableViewerForTasks, self).__init__(*args, **kwargs)
+        super(SortableViewerForTasksMixin, self).__init__(*args, **kwargs)
     
     def sortBy(self, sortKey):
         # If the user clicks the same column for the third time, toggle
@@ -304,7 +303,7 @@ class SortableViewerForTasks(SortableViewer):
         if self.__sortKeyUnchangedCount > 1:
             self.setSortByTaskStatusFirst(not self.isSortByTaskStatusFirst())
             self.__sortKeyUnchangedCount = 0
-        super(SortableViewerForTasks, self).sortBy(sortKey)
+        super(SortableViewerForTasksMixin, self).sortBy(sortKey)
 
     def isSortByTaskStatusFirst(self):
         return self.settings.getboolean(self.settingsSection(),
@@ -316,7 +315,7 @@ class SortableViewerForTasks(SortableViewer):
         self.presentation().sortByTaskStatusFirst(sortByTaskStatusFirst)
         
     def sorterOptions(self):
-        options = super(SortableViewerForTasks, self).sorterOptions()
+        options = super(SortableViewerForTasksMixin, self).sorterOptions()
         options.update(treeMode=self.isTreeViewer(), 
             sortByTaskStatusFirst=self.isSortByTaskStatusFirst())
         return options
@@ -364,18 +363,18 @@ class SortableViewerForTasks(SortableViewer):
                     viewer=self, value=value, menuText=menuText, helpText=helpText))
 
 
-class SortableViewerForEffort(SortableViewer):
+class SortableViewerForEffortMixin(SortableViewerMixin):
     def sorterOptions(self):
         return dict()
     
 
-class SortableViewerForCategories(SortableViewer):
+class SortableViewerForCategoriesMixin(SortableViewerMixin):
     def createSortUICommands(self):
         self._sortUICommands = [uicommand.ViewerSortOrderCommand(viewer=self),
                                 uicommand.ViewerSortCaseSensitive(viewer=self)]
 
 
-class SortableViewerForAttachments(SortableViewer):
+class SortableViewerForAttachmentsMixin(SortableViewerMixin):
     def createSortUICommands(self):
         self._sortUICommands = \
             [uicommand.ViewerSortOrderCommand(viewer=self),
@@ -395,7 +394,7 @@ class SortableViewerForAttachments(SortableViewer):
                  helpText=_('Sort attachments by overall categories'))]
 
 
-class SortableViewerForNotes(SortableViewer):
+class SortableViewerForNotesMixin(SortableViewerMixin):
     def createSortUICommands(self):
         self._sortUICommands = \
             [uicommand.ViewerSortOrderCommand(viewer=self),
@@ -415,11 +414,11 @@ class SortableViewerForNotes(SortableViewer):
                  helpText=_('Sort notes by overall categories'))]
 
 
-class AttachmentDropTarget(object):
+class AttachmentDropTargetMixin(object):
     ''' Mixin class for viewers that are drop targets for attachments. '''
 
     def widgetCreationKeywordArguments(self):
-        kwargs = super(AttachmentDropTarget, self).widgetCreationKeywordArguments()
+        kwargs = super(AttachmentDropTargetMixin, self).widgetCreationKeywordArguments()
         kwargs['onDropURL'] = self.onDropURL
         kwargs['onDropFiles'] = self.onDropFiles
         kwargs['onDropMail'] = self.onDropMail
@@ -448,9 +447,9 @@ class AttachmentDropTarget(object):
     def onDropFiles(self, index, filenames):
         ''' This method is called by the widget when one or more files
             are dropped on an item. '''
-        base = self.settings.get('file', 'attachmentbase')
+        attachmentBase = self.settings.get('file', 'attachmentbase')
         if base:
-            func = lambda x: attachment.getRelativePath(x, base)
+            func = lambda x: attachment.getRelativePath(x, attachmentBase)
         else:
             func = lambda x: x
         attachments = [attachment.FileAttachment(func(name)) for name in filenames]
@@ -464,4 +463,13 @@ class AttachmentDropTarget(object):
         self._addAttachments([att], index, subject=subject, 
                              description=content)
 
+
+class NoteColumnMixin(object):
+    def noteImageIndex(self, item, which): # pylint: disable-msg=W0613
+        return self.imageIndex['note'] if item.notes() else -1
+    
+
+class AttachmentColumnMixin(object):    
+    def attachmentImageIndex(self, item, which): # pylint: disable-msg=W0613
+        return self.imageIndex['attachment'] if item.attachments() else -1 
 

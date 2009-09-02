@@ -17,16 +17,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, socket
-from taskcoachlib import meta, patterns, widgets, command, help
+import wx
+from taskcoachlib import meta, patterns, widgets, help # pylint: disable-msg=W0622
 from taskcoachlib.i18n import _
-from taskcoachlib.domain import task, effort
 from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
 from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog, IPhoneSyncDialog
 import viewer, toolbar, uicommand, remindercontroller, artprovider
 
 try:
-    import wx.lib.agw.aui as aui
+    import wx.lib.agw.aui as aui # pylint: disable-msg=F0401,E0611
 except ImportError:
     import wx.aui as aui
 
@@ -131,7 +130,7 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
 
         if settings.getboolean('feature', 'syncml'):
             try:
-                import taskcoachlib.syncml.core
+                import taskcoachlib.syncml.core # pylint: disable-msg=W0612
             except ImportError:
                 if settings.getboolean('syncml', 'showwarning'):
                     dlg = widgets.SyncMLWarningDialog(self)
@@ -145,7 +144,7 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
 
         if settings.getboolean('feature', 'iphone'):
             try:
-                from taskcoachlib.thirdparty import pybonjour
+                from taskcoachlib.thirdparty import pybonjour # pylint: disable-msg=W0612
                 from taskcoachlib.iphone import IPhoneAcceptor, BonjourServiceRegister
 
                 acceptor = IPhoneAcceptor(self, settings)
@@ -247,10 +246,10 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
         if self.splash:
             self.splash.Destroy()
                          
-    def onShowStatusBar(self, *args, **kwargs):
+    def onShowStatusBar(self, event=None): # pylint: disable-msg=W0613
         self.showStatusBar(self.settings.getboolean('view', 'statusbar'))
 
-    def onShowToolBar(self, *args, **kwargs):
+    def onShowToolBar(self, event=None): # pylint: disable-msg=W0613
         self.showToolBar(eval(self.settings.get('view', 'toolbar')))
 
     def createTaskBarIcon(self):
@@ -264,7 +263,7 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
 
     def canCreateTaskBarIcon(self):
         try:
-            import taskbaricon
+            import taskbaricon # pylint: disable-msg=W0612
             return True
         except:
             return False
@@ -318,7 +317,7 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
         else:
             self.quit()
 
-    def restore(self, event):
+    def restore(self, event): # pylint: disable-msg=W0613
         self.Show()
         self.Raise()
         self.Refresh() # This is not necessary on Windows/Linux Ubuntu/Mac but
@@ -416,11 +415,11 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
 
     @synchronized
     def clearTasks(self):
-        self.taskFile._clear(False)
+        self.taskFile.clear(False)
 
     @synchronized
     def restoreTasks(self, categories, tasks):
-        self.taskFile._clear(False)
+        self.taskFile.clear(False)
         self.taskFile.categories().extend(categories)
         self.taskFile.tasks().extend(tasks)
 

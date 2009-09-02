@@ -27,9 +27,10 @@ from taskcoachlib.gui import uicommand, menu, dialog
 import base, mixin
 
 
-class AttachmentViewer(mixin.AttachmentDropTarget, base.ViewerWithColumns,
-                       mixin.SortableViewerForAttachments, 
-                       mixin.SearchableViewer, base.ListViewer):
+class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.ViewerWithColumns,
+                       mixin.SortableViewerForAttachmentsMixin, 
+                       mixin.SearchableViewerMixin, mixin.NoteColumnMixin,
+                       base.ListViewer):
     SorterClass = attachment.AttachmentSorter
     viewerImages = ['note', 'uri', 'email', 'fileopen']
 
@@ -89,7 +90,7 @@ class AttachmentViewer(mixin.AttachmentDropTarget, base.ViewerWithColumns,
                                renderCallback=lambda item: item.description(),
                                resizeCallback=self.onResizeColumn),
                 widgets.Column('notes', '', 
-                               attachment.Attachment.notesChangedEventType(),
+                               attachment.Attachment.notesChangedEventType(), # pylint: disable-msg=E1101
                                width=self.getColumnWidth('notes'),
                                alignment=wx.LIST_FORMAT_LEFT,
                                imageIndexCallback=self.noteImageIndex,
@@ -124,13 +125,7 @@ class AttachmentViewer(mixin.AttachmentDropTarget, base.ViewerWithColumns,
                                                     viewer=self)]
         return commands
 
-    def noteImageIndex(self, attachment, which):
-        if attachment.notes():
-            return self.imageIndex['note'] 
-        else:
-            return -1
-
-    def typeImageIndex(self, attachment, which):
+    def typeImageIndex(self, attachment, which): # pylint: disable-msg=W0613
         try:
             return self.imageIndex[{ 'file': 'fileopen',
                                      'uri': 'uri',

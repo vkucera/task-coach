@@ -126,7 +126,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
         if notify:
             event.send()
         
-    def isBeingTracked(self, recursive=False):
+    def isBeingTracked(self, recursive=False): # pylint: disable-msg=W0613
         return self._stop is None
 
     def revenue(self):

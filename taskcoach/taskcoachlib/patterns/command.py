@@ -46,13 +46,13 @@ class CommandHistory:
         self.__history.append(command)
         del self.__future[:]
 
-    def undo(self, *args):
+    def undo(self):
         if self.__history:
             command = self.__history.pop()
             command.undo()
             self.__future.append(command)
 
-    def redo(self, *args):
+    def redo(self):
         if self.__future:
             command = self.__future.pop()
             command.redo()

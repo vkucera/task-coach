@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,10 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import string, re
 import test
-from taskcoachlib import i18n, meta
+from taskcoachlib import meta
 
 
-class TranslationIntegrityTests(object):
+class TranslationIntegrityTestsMixin(object):
     ''' Unittests for translations. This class is subclassed below for each
         translated string in each language. '''
         
@@ -65,8 +65,8 @@ class TranslationIntegrityTests(object):
                                  self.englishString, self.translatedString))
     
     @staticmethod
-    def ellipsisCount(string):
-        return string.count('...') + string.count('…')
+    def ellipsisCount(text):
+        return text.count('...') + text.count('…')
     
     def testMatchingEllipses(self):
         self.assertEqual(self.ellipsisCount(self.englishString),
@@ -75,17 +75,12 @@ class TranslationIntegrityTests(object):
 
     umlautRE = re.compile(r'&[A-Za-z]uml;')
     @classmethod
-    def removeUmlauts(cls, string):
-        return re.sub(cls.umlautRE, '', string)
+    def removeUmlauts(cls, text):
+        return re.sub(cls.umlautRE, '', text)
 
 
-def getLanguages():
-    return [language for language in meta.data.languages.values() \
-            if language is not None]
-        
-
-def createTestCaseClassName(language, englishString, 
-                              prefix='TranslationIntegrityTest'):
+def singleTranslationTestCaseClassName(language, englishString, 
+                                       prefix='TranslationIntegrityTest'):
     ''' Generate a class name for the test case class based on the language
         and the English string. '''
     # Make sure we only use characters allowed in Python identifiers:
@@ -101,19 +96,35 @@ def createTestCaseClassName(language, englishString,
     return className
 
 
-def createTestCaseClass(className, language, englishString, translatedString):
-    class_ = type(className, (TranslationIntegrityTests, test.TestCase), {})
+def singleTranslationTestCaseClass(className, language, englishString, translatedString):
+    class_ = type(className, (TranslationIntegrityTestsMixin, test.TestCase), {})
     class_.language = language
     class_.englishString = englishString
     class_.translatedString = translatedString
     return class_
 
 
-for language in getLanguages():
+def installSingleTranslationTestCaseClass(language, englishString, 
+                                          translatedString):
+    testCaseClassName = singleTranslationTestCaseClassName(language, 
+                                                           englishString)
+    testCaseClass = singleTranslationTestCaseClass(testCaseClassName, 
+        language, englishString, translatedString)
+    globals()[testCaseClassName] = testCaseClass
+
+
+def installTestCaseClasses(language):
     translation = __import__('taskcoachlib.i18n.%s'%language, fromlist=['dict'])
     for englishString, translatedString in translation.dict.iteritems():        
-        className = createTestCaseClassName(language, englishString)
-        class_ = createTestCaseClass(className, language, englishString,
-                                     translatedString)
-        globals()[className] = class_
+        installSingleTranslationTestCaseClass(language, englishString, 
+                                              translatedString)
 
+
+def getLanguages():
+    return [language for language in meta.data.languages.values() \
+            if language is not None]
+        
+        
+for language in getLanguages():
+    installTestCaseClasses(language)
+    

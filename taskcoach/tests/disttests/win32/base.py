@@ -26,7 +26,7 @@ import sys, os, time, re, shutil, unittest
 import win32process, win32event, win32gui, win32con
 
 sys.path.insert(0, os.path.join(os.path.split(__file__)[0], 'sendinput'))
-from sendinput import *
+import sendinput as si
 
 class Window(object):
     def __init__(self, hwnd):
@@ -83,9 +83,9 @@ class Window(object):
         x = int(1.0 * x * 65535 / (right - left))
         y = int(1.0 * y * 65535 / (bottom - top))
 
-        SendInput((INPUT_MOUSE, (x, y, 0, MOUSEEVENTF_ABSOLUTE|MOUSEEVENTF_MOVE, 0)),
-                  (INPUT_MOUSE, (0, 0, 0, MOUSEEVENTF_LEFTDOWN, 0)),
-                  (INPUT_MOUSE, (0, 0, 0, MOUSEEVENTF_LEFTUP, 0)))
+        si.SendInput((si.INPUT_MOUSE, (x, y, 0, si.MOUSEEVENTF_ABSOLUTE|si.MOUSEEVENTF_MOVE, 0)),
+                     (si.INPUT_MOUSE, (0, 0, 0, si.MOUSEEVENTF_LEFTDOWN, 0)),
+                     (si.INPUT_MOUSE, (0, 0, 0, si.MOUSEEVENTF_LEFTUP, 0)))
 
     def close(self):
         """ Closes the window. """

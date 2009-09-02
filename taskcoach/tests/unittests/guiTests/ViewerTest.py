@@ -16,11 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
 import test
-from unittests import dummy
 from taskcoachlib import gui, config, patterns, widgets, persistence
-from taskcoachlib.domain import task, effort, date, category, note
+from taskcoachlib.domain import task, effort, date
 from taskcoachlib.thirdparty import hypertreelist
 
 
@@ -80,7 +78,7 @@ class SortableViewerTest(test.TestCase):
         self.viewer = self.createViewer()
         
     def createViewer(self):
-        viewer = gui.viewer.mixin.SortableViewer()
+        viewer = gui.viewer.mixin.SortableViewerMixin()
         viewer.settings = self.settings
         viewer.settingsSection = lambda: 'taskviewer'
         viewer.SorterClass = task.sorter.Sorter
@@ -135,7 +133,7 @@ class SortableViewerTest(test.TestCase):
 class SortableViewerForTasksTest(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
-        self.viewer = gui.viewer.mixin.SortableViewerForTasks()
+        self.viewer = gui.viewer.mixin.SortableViewerForTasksMixin()
         self.viewer.settings = self.settings
         self.viewer.settingsSection = lambda: 'taskviewer'
         self.viewer.presentation = lambda: task.sorter.Sorter(task.TaskList())
@@ -157,7 +155,8 @@ class DummyViewer(object):
         return presentation
 
 
-class SearchableViewerUnderTest(gui.viewer.mixin.SearchableViewer, DummyViewer):
+class SearchableViewerUnderTest(gui.viewer.mixin.SearchableViewerMixin, 
+                                DummyViewer):
     pass   
 
     
@@ -234,13 +233,13 @@ class SearchableViewerTest(test.TestCase):
 
 class FilterableViewerTest(test.TestCase):
     def setUp(self):
-        self.viewer = gui.viewer.mixin.FilterableViewer()
+        self.viewer = gui.viewer.mixin.FilterableViewerMixin()
         
     def testIsFilterable(self):
         self.failUnless(self.viewer.isFilterable())
 
 
-class FilterableViewerForTasksUnderTest(gui.viewer.mixin.FilterableViewerForTasks, 
+class FilterableViewerForTasksUnderTest(gui.viewer.mixin.FilterableViewerForTasksMixin, 
                                         DummyViewer):
     pass
         
@@ -248,7 +247,7 @@ class FilterableViewerForTasksUnderTest(gui.viewer.mixin.FilterableViewerForTask
 class FilterableViewerForTasks(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
-        task.Task.settings= self.settings
+        task.Task.settings = self.settings
         self.viewer = self.createViewer()
         
     def createViewer(self):
@@ -458,14 +457,16 @@ class FilterableViewerForTasks(test.TestCase):
 class ViewerBaseClassTest(test.wxTestCase):
     def testNotImplementedError(self):
         try:
-            baseViewer = gui.viewer.base.Viewer(self.frame, 
-                persistence.TaskFile(), None, settingsSection='bla')
+            gui.viewer.base.Viewer(self.frame, persistence.TaskFile(), None, 
+                                   settingsSection='bla')
             self.fail('Expected NotImplementedError') # pragma: no cover
         except NotImplementedError:
             pass
 
 
 class ViewerIteratorTestCase(test.wxTestCase):
+    treeMode = 'Subclass responsibility'
+    
     def createViewer(self):
         return gui.viewer.TaskViewer(self.notebook, self.taskFile,
             self.settings)
@@ -485,7 +486,7 @@ class ViewerIteratorTestCase(test.wxTestCase):
         return list(self.viewer.visibleItems())
 
 
-class ViewerIteratorTests(object):
+class ViewerIteratorTestsMixin(object):
     def testEmptyPresentation(self):
         self.assertEqual([], self.getItemsFromIterator())
         
@@ -524,11 +525,11 @@ class ViewerIteratorTests(object):
         self.assertEqual([parent], self.getItemsFromIterator())
         
     
-class TreeViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTests):
+class TreeViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTestsMixin):
     treeMode = 'True'
         
         
-class ListViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTests):
+class ListViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTestsMixin):
     treeMode = 'False'
 
 
@@ -540,7 +541,7 @@ class MockWidget(object):
         self.refreshedItems.extend(indices)
     
 
-class UpdatePerSecondViewerTests(object):
+class UpdatePerSecondViewerTestsMixin(object):
     def setUp(self):
         self.settings = config.Settings(load=False)
         task.Task.settings = self.settings
@@ -595,12 +596,12 @@ class UpdatePerSecondViewerTests(object):
             patterns.Publisher().observers(eventType='clock.second'))
 
 
-class TaskListViewerUpdatePerSecondViewerTest(UpdatePerSecondViewerTests, 
+class TaskListViewerUpdatePerSecondViewerTest(UpdatePerSecondViewerTestsMixin, 
         test.wxTestCase):
     ListViewerClass = gui.viewer.TaskViewer
 
 
-class EffortListViewerUpdatePerSecondTest(UpdatePerSecondViewerTests, 
+class EffortListViewerUpdatePerSecondTest(UpdatePerSecondViewerTestsMixin, 
         test.wxTestCase):
     ListViewerClass = gui.viewer.EffortViewer
 
@@ -612,5 +613,6 @@ class ViewerWithColumnsTest(test.wxTestCase):
         self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile, self.settings)
         
     def testDefaultColumnWidth(self):
-        self.assertEqual(hypertreelist._DEFAULT_COL_WIDTH, 
-                         self.viewer.getColumnWidth('subject'))
+        expectedWidth = hypertreelist._DEFAULT_COL_WIDTH # pylint: disable-msg=W0212
+        self.assertEqual(expectedWidth, self.viewer.getColumnWidth('subject'))
+        

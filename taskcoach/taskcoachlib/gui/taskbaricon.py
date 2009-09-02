@@ -93,7 +93,7 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
 
     def onLeftClick(self, event):
         if self.__window.IsIconized():
-            self.__window.restore(None)
+            self.__window.restore(event)
         else:
             self.__window.Iconize()
 
