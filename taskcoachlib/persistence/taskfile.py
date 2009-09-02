@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os, codecs, shutil, xml
 from taskcoachlib import patterns
 from taskcoachlib.domain import base, date, task, category, note, effort, attachment
-from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
+from taskcoachlib.syncml.config import createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
 from taskcoachlib.thirdparty import lockfile
 
@@ -88,37 +88,45 @@ class TaskFile(patterns.Observer):
     def isEmpty(self):
         return 0 == len(self.categories()) == len(self.tasks()) == len(self.notes())
             
-    def onDomainObjectAddedOrRemoved(self, event):
+    def onDomainObjectAddedOrRemoved(self, event): # pylint: disable-msg=W0613
         self.markDirty()
         
     def onTaskChanged(self, event):
         if self.__loading:
             return
-        tasks = [task for task in event.sources() if task in self.tasks()]
-        if tasks:
+        changedTasks = [changedTask for changedTask in event.sources() \
+                        if changedTask in self.tasks()]
+        if changedTasks:
             self.markDirty()
-            for task in tasks:
-                task.markDirty()
+            for changedTask in changedTasks:
+                changedTask.markDirty()
             
     def onEffortChanged(self, event):
         if self.__loading:
             return
-        efforts = [effort for effort in event.sources() if \
-                   effort.task() in self.tasks()]
-        if efforts:
+        changedEfforts = [changedEffort for changedEffort in event.sources() if \
+                          changedEffort.task() in self.tasks()]
+        if changedEfforts:
             self.markDirty()
-            for effort in efforts:
-                effort.markDirty()
+            for changedEffort in changedEfforts:
+                changedEffort.markDirty()
             
     def onCategoryChanged(self, event):
         if self.__loading:
             return
-        categories = [category for category in event.sources() if \
-                      category in self.categories()]
-        if categories:
-             self.markDirty()
-             for categorizable in category.categorizables():
-                 categorizable.markDirty()
+        changedCategories = [changedCategory for changedCategory in event.sources() if \
+                             changedCategory in self.categories()]
+        if changedCategories:
+            self.markDirty()
+            # Mark all categorizables belonging to the changed category dirty; 
+            # this is needed because in SyncML/vcard world, categories are not 
+            # first-class objects. Instead, each task/contact/etc has a 
+            # categories property which is a comma-separated list of category
+            # names. So, when a category name changes, every associated
+            # categorizable changes.
+            for changedCategory in changedCategories:
+                for categorizable in changedCategory.categorizables():
+                    categorizable.markDirty()
             
     def onNoteChanged(self, event):
         if self.__loading:
@@ -126,8 +134,8 @@ class TaskFile(patterns.Observer):
         # A note may be in self.notes() or it may be a note of another 
         # domain object.
         self.markDirty()
-        for note in event.sources():
-            note.markDirty()
+        for changedNote in event.sources():
+            changedNote.markDirty()
             
     def onAttachmentChanged(self, event):
         if self.__loading:
@@ -135,8 +143,8 @@ class TaskFile(patterns.Observer):
         # Attachments don't know their owner, so we can't check whether the
         # attachment is actually in the task file. Assume it is.
         self.markDirty()
-        for attachment in event.sources():
-            attachment.markDirty()
+        for changedAttachment in event.sources():
+            changedAttachment.markDirty()
 
     def setFilename(self, filename):
         if filename == self.__filename:
@@ -161,7 +169,7 @@ class TaskFile(patterns.Observer):
             self.__needSave = False
             patterns.Event('taskfile.dirty', self, False).send()
             
-    def _clear(self, regenerate=True):
+    def clear(self, regenerate=True):
         self.tasks().clear()
         self.categories().clear()
         self.notes().clear()
@@ -172,7 +180,7 @@ class TaskFile(patterns.Observer):
     def close(self):
         self.setFilename('')
         self.__guid = generate()
-        self._clear()
+        self.clear()
         self.__needSave = False
 
     def _read(self, fd):
@@ -202,7 +210,7 @@ class TaskFile(patterns.Observer):
                 notes = []
                 guid = generate()
                 syncMLConfig = createDefaultSyncConfig(guid)
-            self._clear()
+            self.clear()
             self.categories().extend(categories)
             self.tasks().extend(tasks)
             self.notes().extend(notes)
@@ -244,9 +252,9 @@ class TaskFile(patterns.Observer):
         
     def objectsToOverwrite(self, originalObjects, objectsToMerge):
         objectsToOverwrite = []
-        for object in objectsToMerge:
+        for domainObject in objectsToMerge:
             try:
-                objectsToOverwrite.append(originalObjects.getObjectById(object.id()))
+                objectsToOverwrite.append(originalObjects.getObjectById(domainObject.id()))
             except IndexError:
                 pass
         return objectsToOverwrite
@@ -288,7 +296,7 @@ class LockedTaskFile(TaskFile):
         self.__lock = lockfile.FileLock(filename)
         self.__lock.break_lock()
             
-    def load(self, filename=None, lock=True, breakLock=False):
+    def load(self, filename=None, lock=True, breakLock=False): # pylint: disable-msg=W0221
         ''' Lock the file before we load, if not already locked. '''
         filename = filename or self.filename()
         if lock and filename:

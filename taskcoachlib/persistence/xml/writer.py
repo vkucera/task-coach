@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import xml.dom, os
 from taskcoachlib import meta
-from taskcoachlib.domain import date, attachment, task, note, category
+from taskcoachlib.domain import date, task, note, category
 
 
 class XMLWriter(object):
@@ -35,12 +35,12 @@ class XMLWriter(object):
             'release="%s" tskversion="%d"'%(meta.data.version, 
             self.__versionnr))
         self.document.insertBefore(pi, self.document.documentElement)
-        for task in taskList.rootItems():
-            self.document.documentElement.appendChild(self.taskNode(task))
-        for category in categoryContainer.rootItems():
-            self.document.documentElement.appendChild(self.categoryNode(category, taskList, noteContainer))
-        for note in noteContainer.rootItems():
-            self.document.documentElement.appendChild(self.noteNode(note))
+        for rootTask in taskList.rootItems():
+            self.document.documentElement.appendChild(self.taskNode(rootTask))
+        for rootCategory in categoryContainer.rootItems():
+            self.document.documentElement.appendChild(self.categoryNode(rootCategory, taskList, noteContainer))
+        for rootNote in noteContainer.rootItems():
+            self.document.documentElement.appendChild(self.noteNode(rootNote))
         if syncMLConfig:
             self.document.documentElement.appendChild(self.syncMLNode(syncMLConfig))
         if guid:

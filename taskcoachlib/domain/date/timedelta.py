@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -52,12 +52,17 @@ class TimeDelta(datetime.timedelta):
     def __add__(self, other):
         ''' Make sure we return a TimeDelta instance and not a 
             datetime.timedelta instance '''
-        sum = super(TimeDelta, self).__add__(other)
-        return self.__class__(sum.days, sum.seconds, sum.microseconds)
+        timeDelta = super(TimeDelta, self).__add__(other)
+        return self.__class__(timeDelta.days, 
+                              timeDelta.seconds,
+                              timeDelta.microseconds)
     
     def __sub__(self, other):
-        result = super(TimeDelta, self).__sub__(other)
-        return self.__class__(result.days, result.seconds, result.microseconds)
+        timeDelta = super(TimeDelta, self).__sub__(other)
+        return self.__class__(timeDelta.days, 
+                              timeDelta.seconds, 
+                              timeDelta.microseconds)
+
         
 oneDay = TimeDelta(days=1)
 oneYear = TimeDelta(days=365)

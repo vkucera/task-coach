@@ -83,7 +83,7 @@ _PORTABLECACHE = None
 def getDefaultProfileDir():
     """Returns Thunderbird's default profile directory"""
 
-    global _PORTABLECACHE
+    global _PORTABLECACHE # pylint: disable-msg=W0603
 
     path = getThunderbirdDir()
 
@@ -99,7 +99,7 @@ def getDefaultProfileDir():
 
         for process in wmi.WMI().Win32_Process():
             if process.ExecutablePath.lower().endswith('thunderbirdportable.exe'):
-                _PORTABLEPATH = os.path.join(os.path.split(process.ExecutablePath)[0], 'Data', 'profile')
+                _PORTABLECACHE = os.path.join(os.path.split(process.ExecutablePath)[0], 'Data', 'profile')
                 break
         else:
             raise RuntimeError, 'Could not find Thunderbird profile.'

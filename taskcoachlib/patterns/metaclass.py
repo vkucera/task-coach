@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-''' Module for metaclasses that are not widely recognized patterns. '''
+# Module for metaclasses that are not widely recognized patterns.
 
 class NumberedInstances(type):
     ''' A metaclass that numbers class instances. Use by defining the metaclass 

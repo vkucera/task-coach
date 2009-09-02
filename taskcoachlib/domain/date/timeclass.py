@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,9 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import datetime
 
 class Time(datetime.time):
-    #@classmethod
+    @classmethod
     def now(cls):
         d = datetime.datetime.now()
         return cls(d.hour, d.minute, d.second, d.microsecond)
-    now=classmethod(now)
 

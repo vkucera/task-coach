@@ -16,11 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
 from taskcoachlib.domain import date
+from tests import test
 
 
-class CommonRecurrenceTests(object):
+class CommonRecurrenceTestsMixin(object):
     def testNextDateWithInfiniteDate(self):
         self.assertEqual(date.Date(), self.recur(date.Date()))
 
@@ -45,7 +45,7 @@ class CommonRecurrenceTests(object):
         self.assertEqual(0, self.recur.count)
                 
 
-class NoRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+class NoRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
     def setUp(self):
         self.recur = date.Recurrence()
         
@@ -59,7 +59,7 @@ class NoRecurrenceTest(test.TestCase, CommonRecurrenceTests):
         pass
     
 
-class DailyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+class DailyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
     def setUp(self):
         self.recur = date.Recurrence('daily')
                 
@@ -75,7 +75,7 @@ class DailyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
         self.assertEqual(date.Tomorrow(), self.recur(today))
         
 
-class BiDailyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+class BiDailyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
     def setUp(self):
         self.recur = date.Recurrence('daily', amount=2)
         
@@ -83,7 +83,7 @@ class BiDailyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
         self.assertEqual(date.Tomorrow(), self.recur(date.Yesterday()))
 
 
-class TriDailyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+class TriDailyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
     def setUp(self):
         self.recur = date.Recurrence('daily', amount=3)
         
@@ -91,7 +91,7 @@ class TriDailyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
         self.assertEqual(date.Date(2000,1,4), self.recur(date.Date(2000,1,1)))
             
         
-class WeeklyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+class WeeklyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
     def setUp(self):
         self.January1 = date.Date(2000,1,1)
         self.January8 = date.Date(2000,1,8)
@@ -106,7 +106,7 @@ class WeeklyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
         self.assertEqual(self.January15, self.recur(January8))
 
 
-class BiWeeklyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+class BiWeeklyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
     def setUp(self):
         self.recur = date.Recurrence('weekly', amount=2)
                 
@@ -114,7 +114,7 @@ class BiWeeklyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
         self.assertEqual(date.Date(2000,1,15), self.recur(date.Date(2000,1,1)))
 
 
-class MonthlyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+class MonthlyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
     def setUp(self):
         self.recur = date.Recurrence('monthly')
         
@@ -134,7 +134,7 @@ class MonthlyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
         self.assertEqual(date.Date(2000,5,30), self.recur(date.Date(2000,4,30)))
         
 
-class BiMontlyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+class BiMontlyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
     def setUp(self):
         self.recur = date.Recurrence('monthly', amount=2)
         
@@ -142,7 +142,7 @@ class BiMontlyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
         self.assertEqual(date.Date(2000,3,1), self.recur(date.Date(2000,1,1)))
 
 
-class MonthlySameWeekDayRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+class MonthlySameWeekDayRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
     def setUp(self):
         self.recur = date.Recurrence('monthly', sameWeekday=True)
         
@@ -162,7 +162,7 @@ class MonthlySameWeekDayRecurrenceTest(test.TestCase, CommonRecurrenceTests):
         self.assertEqual(date.Date(2008,6,28), self.recur(date.Date(2008,5,31)))
 
 
-class BiMonthlySameWeekDayRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+class BiMonthlySameWeekDayRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
     def setUp(self):
         self.recur = date.Recurrence('monthly', amount=2, sameWeekday=True)
         
@@ -170,7 +170,7 @@ class BiMonthlySameWeekDayRecurrenceTest(test.TestCase, CommonRecurrenceTests):
         self.assertEqual(date.Date(2008,8,23), self.recur(date.Date(2008,6,28)))
 
 
-class YearlyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+class YearlyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
     def setUp(self):
         self.recur = date.Recurrence('yearly')
         
@@ -202,7 +202,7 @@ class YearlyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
         self.assertEqual(date.Date(2005,2,28), self.recur(date.Date(2004,2,29)))
                 
         
-class BiYearlyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+class BiYearlyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
     def setUp(self):
         self.recur = date.Recurrence('yearly', amount=2)
         
@@ -210,7 +210,7 @@ class BiYearlyRecurrenceTest(test.TestCase, CommonRecurrenceTests):
         self.assertEqual(date.Date(2004,3,1), self.recur(date.Date(2002,3,1)))
             
 
-class YearlySameWeekDayRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+class YearlySameWeekDayRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
     def setUp(self):
         self.recur = date.Recurrence('yearly', sameWeekday=True)
         
@@ -255,7 +255,7 @@ class YearlySameWeekDayRecurrenceTest(test.TestCase, CommonRecurrenceTests):
                          self.recur(date.Date(2008,12,25)))
 
         
-class MaxRecurrenceTest(test.TestCase, CommonRecurrenceTests):
+class MaxRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
     def setUp(self):
         self.recur = date.Recurrence('daily', max=4)
         

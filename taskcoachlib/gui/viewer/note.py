@@ -26,9 +26,11 @@ from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, dialog
 import base, mixin
 
-class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer, 
-                     base.SortableViewerWithColumns,
-                     mixin.SortableViewerForNotes, base.TreeViewer):
+class BaseNoteViewer(mixin.AttachmentDropTargetMixin, 
+                     mixin.SearchableViewerMixin, 
+                     mixin.SortableViewerForNotesMixin,
+                     mixin.AttachmentColumnMixin, 
+                     base.SortableViewerWithColumns, base.TreeViewer):
     SorterClass = note.NoteSorter
     viewerImages = ['ascending', 'descending', 'attachment']
     defaultTitle = _('Notes')
@@ -64,15 +66,12 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
                                self.taskFile.categories(), self), 
             menu.ColumnPopupMenu(self),
             **self.widgetCreationKeywordArguments())
-        widget.AssignImageList(imageList)
+        widget.AssignImageList(imageList) # pylint: disable-msg=E1101
         return widget
     
     def createFilter(self, notes):
         notes = super(BaseNoteViewer, self).createFilter(notes)
         return domain.base.DeletedFilter(notes)
-
-    def attachmentImageIndex(self, note, which):
-        return self.imageIndex['attachment'] if note.attachments() else -1 
 
     def createToolBarUICommands(self):
         commands = super(BaseNoteViewer, self).createToolBarUICommands()
@@ -135,7 +134,7 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
                   note.Note.totalCategorySubjectChangedEventType()), 
                  self.renderCategory)]
         attachmentsColumn = widgets.Column('attachments', '', 
-            note.Note.attachmentsChangedEventType(),
+            note.Note.attachmentsChangedEventType(), # pylint: disable-msg=E1101
             width=self.getColumnWidth('attachments'),
             alignment=wx.LIST_FORMAT_LEFT,
             imageIndexCallback=self.attachmentImageIndex,
@@ -187,5 +186,5 @@ class BaseNoteViewer(mixin.AttachmentDropTarget, mixin.SearchableViewer,
         return command.EditNoteCommand
 
 
-class NoteViewer(mixin.FilterableViewerForNotes, BaseNoteViewer): 
+class NoteViewer(mixin.FilterableViewerForNotesMixin, BaseNoteViewer): 
     pass

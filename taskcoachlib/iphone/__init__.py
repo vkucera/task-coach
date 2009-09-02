@@ -1,6 +1,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,5 +17,5 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib.iphone.protocol import IPhoneAcceptor
-from taskcoachlib.iphone.bonjour import BonjourServiceRegister
+from protocol import IPhoneAcceptor
+from bonjour import BonjourServiceRegister

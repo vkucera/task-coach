@@ -28,8 +28,8 @@ from taskcoachlib.gui import uicommand, menu, render, dialog
 import base, mixin
 
 
-class EffortViewer(base.ListViewer, mixin.SortableViewerForEffort, 
-                   mixin.SearchableViewer, base.UpdatePerSecondViewer, 
+class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin, 
+                   mixin.SearchableViewerMixin, base.UpdatePerSecondViewer, 
                    base.ViewerWithColumns): 
     defaultTitle = _('Effort')
     defaultBitmap = 'start'  
