@@ -89,7 +89,8 @@ class CommonTaskTests(asserts.TaskAsserts):
         self.assertEqual(super(task.Task, self.task).modificationEventTypes() +\
              ['task.dueDate', 'task.startDate', 'task.completionDate', 
               'task.effort.add', 'task.effort.remove', 'task.budget', 
-              'task.priority', task.Task.hourlyFeeChangedEventType(), 
+              'task.percentageComplete', 'task.priority', 
+              task.Task.hourlyFeeChangedEventType(), 
               'task.fixedFee', 'task.reminder', 'task.recurrence',
               'task.setting.shouldMarkCompletedWhenAllChildrenCompleted'],
              self.task.modificationEventTypes())
@@ -1012,6 +1013,13 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):
     def testPercentageCompletedWhenChildIs50ProcentComplete(self):
         self.task1_1.setPercentageComplete(50)
         self.assertEqual(25, self.task.percentageComplete(recursive=True))
+        
+    def testTotalPercentageCompletedNotification(self):
+        self.registerObserver('task.totalPercentageComplete', eventSource=self.task)
+        self.task1_1.setPercentageComplete(50)
+        self.assertEqual([patterns.Event('task.totalPercentageComplete', 
+                                         self.task, 25)],
+                         self.events)
         
 
 class TaskWithGrandChildTest(TaskTestCase, CommonTaskTests, NoBudgetTests):

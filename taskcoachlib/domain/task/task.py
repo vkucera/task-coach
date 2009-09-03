@@ -505,6 +505,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def percentageCompleteEvent(self, event):
         event.addSource(self, self.percentageComplete(), 
                         type='task.percentageComplete')
+        self.totalPercentageCompleteEvent(event)
+        
+    def totalPercentageCompleteEvent(self, event):
+        for ancestor in [self] + self.ancestors():
+            event.addSource(ancestor, ancestor.percentageComplete(recursive=True), 
+                            **dict(type='task.totalPercentageComplete'))
+
         
     # priority
     
