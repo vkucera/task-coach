@@ -28,13 +28,13 @@ from taskcoachlib.domain import date
 class DateEntry(widgets.PanelWithBoxSizer):
     defaultDate = date.Date()
 
-    def __init__(self, parent, date=defaultDate, readonly=False, callback=None,
-                 *args, **kwargs):
+    def __init__(self, parent, initialDate=defaultDate, readonly=False, 
+                 callback=None, *args, **kwargs):
         super(DateEntry, self).__init__(parent, *args, **kwargs)
         self._entry = widgets.DateCtrl(self, callback)
         if readonly:
             self._entry.Disable()
-        self._entry.SetValue(date)
+        self._entry.SetValue(initialDate)
         self.add(self._entry)
         self.fit()
 
@@ -44,8 +44,8 @@ class DateEntry(widgets.PanelWithBoxSizer):
             result = defaultDate
         return result
 
-    def set(self, date=defaultDate):
-        self._entry.SetValue(date)
+    def set(self, newDate=defaultDate):
+        self._entry.SetValue(newDate)
 
     def setToday(self):
         self._entry.SetValue(date.Today())
@@ -104,17 +104,47 @@ class AmountEntry(widgets.PanelWithBoxSizer):
         
 class PercentageEntry(widgets.PanelWithBoxSizer):
     def __init__(self, parent, percentage=0, *args, **kwargs):
+        kwargs['orientation'] = wx.HORIZONTAL
         super(PercentageEntry, self).__init__(parent, *args, **kwargs)
-        self._entry = widgets.SpinCtrl(self, value=str(percentage),
-            initial=percentage, size=(100, -1), min=0, max=100)
-        self.add(self._entry)
+        self._slider = self._createSlider(percentage)
+        self._entry = self._createSpinCtrl(percentage)
+        self.add(self._slider)
+        self.add(self._entry, flag=wx.ALL)
         self.fit()
+        
+    def _createSlider(self, percentage):
+        slider = wx.Slider(self, value=percentage, style=wx.SL_AUTOTICKS,
+                          minValue=0, maxValue=100)
+        slider.SetTickFreq(25, 1)
+        slider.Bind(wx.EVT_SCROLL, self.onSliderScroll)
+        return slider
+        
+    def _createSpinCtrl(self, percentage):
+        entry = widgets.SpinCtrl(self, value=str(percentage),
+            initial=percentage, size=(20, -1), min=0, max=100)
+        for eventType in wx.EVT_SPIN, wx.EVT_KILL_FOCUS:
+            entry.Bind(eventType, self.onSpin)
+        return entry
 
     def get(self):
         return self._entry.GetValue()
 
     def set(self, value):
         self._entry.SetValue(value)
+        self._slider.SetValue(value)
+        
+    def onSliderScroll(self, event): # pylint: disable-msg=W0613
+        self.syncControl(self._entry, self._slider)
+            
+    def onSpin(self, event): # pylint: disable-msg=W0613
+        self.syncControl(self._slider, self._entry)
+            
+    def syncControl(self, controlToWrite, controlToRead):
+        value = controlToRead.GetValue()
+        # Prevent potential endless loop by checking that we really need to set
+        # the value:
+        if controlToWrite.GetValue() != value:
+            controlToWrite.SetValue(value)
     
     
 class TaskComboTreeBox(wx.Panel):
