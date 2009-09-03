@@ -19,9 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os, wx
 import test
-from taskcoachlib import persistence
+from taskcoachlib import persistence, config
 from taskcoachlib.domain import base, task, effort, date, category, note, attachment
-from taskcoachlib.thirdparty import lockfile
 
 
 class FakeAttachment(base.Object):
@@ -44,6 +43,7 @@ class FakeAttachment(base.Object):
 
 class TaskFileTestCase(test.TestCase):
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.createTaskFiles()
         self.task = task.Task()
         self.taskFile.tasks().append(self.task)
@@ -248,6 +248,10 @@ class DirtyTaskFileTest(TaskFileTestCase):
         self.task.setCompletionDate(date.Tomorrow())
         self.failUnless(self.taskFile.needSave())
 
+    def testNeedSave_AfterEditPercentageComplete(self):
+        self.task.setPercentageComplete(50)
+        self.failUnless(self.taskFile.needSave())
+        
     def testNeedSave_AfterEditEffortDescription(self):
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
