@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib.i18n import _
-from taskcoachlib.domain import effort, date
+from taskcoachlib.domain import effort
 import base
 
 
@@ -30,11 +30,11 @@ class NewEffortCommand(base.BaseCommand):
         self.items = self.efforts = [effort.Effort(task) for task in self.items]
         
     def do_command(self):
-        for effort in self.efforts:
+        for effort in self.efforts: # pylint: disable-msg=W0621
             effort.task().addEffort(effort)
             
     def undo_command(self):
-        for effort in self.efforts:
+        for effort in self.efforts: # pylint: disable-msg=W0621
             effort.task().removeEffort(effort)
             
     redo_command = do_command

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ class ICSTestCase(test.TestCase):
         self.icsFile = self.writeAndParse()
         
     def createTaskList(self):
-        self.task = task.Task()
+        self.task = task.Task() # pylint: disable-msg=W0201
         return task.TaskList([self.task])
 
     def writeAndParse(self):
@@ -50,7 +50,7 @@ class ICSTestCase(test.TestCase):
         return [line[:-1] for line in self.fd.readlines()]
 
 
-class CommonICSTests(object):
+class CommonICSTestsMixin(object):
     def testBeginCalendar(self):
         self.assertEqual('BEGIN:VCALENDAR', self.icsFile[0])
 
@@ -63,17 +63,17 @@ class CommonICSTests(object):
             meta.name, meta.version), self.icsFile[2])
 
 
-class WriteEmptyTaskFileAsICSTest(ICSTestCase, CommonICSTests):
+class WriteEmptyTaskFileAsICSTest(ICSTestCase, CommonICSTestsMixin):
     def testNoEffortRecords(self):
         self.assertEqual(4, len(self.icsFile))
 
 
-class WriteOneEffortRecordAsICSTest(ICSTestCase, CommonICSTests):
+class WriteOneEffortRecordAsICSTest(ICSTestCase, CommonICSTestsMixin):
     def createTaskList(self):
         taskList = super(WriteOneEffortRecordAsICSTest, self).createTaskList()
-        self.effort = effort.Effort(self.task, date.DateTime(2005,1,1),
-            date.DateTime(2005,1,2))
-        self.task.addEffort(self.effort)
+        anEffort = effort.Effort(self.task, date.DateTime(2005,1,1), 
+                                 date.DateTime(2005,1,2))
+        self.task.addEffort(anEffort)
         return taskList
     
     def testBeginEvent(self):
@@ -83,11 +83,11 @@ class WriteOneEffortRecordAsICSTest(ICSTestCase, CommonICSTests):
         self.assertEqual('END:VEVENT', self.icsFile[-2])
 
 
-class WriteOneActiveEffortRecordAsICSTest(ICSTestCase, CommonICSTests):
+class WriteOneActiveEffortRecordAsICSTest(ICSTestCase, CommonICSTestsMixin):
     def createTaskList(self):
         taskList = super(WriteOneActiveEffortRecordAsICSTest, self).createTaskList()
-        self.effort = effort.Effort(self.task, date.DateTime(2005,1,1))
-        self.task.addEffort(self.effort)
+        anEffort = effort.Effort(self.task, date.DateTime(2005,1,1))
+        self.task.addEffort(anEffort)
         return taskList
     
     def testBeginEvent(self):

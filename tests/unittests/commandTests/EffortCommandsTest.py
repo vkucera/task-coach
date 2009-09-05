@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,10 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
-from unittests import asserts, dummy
+from unittests import asserts
 from CommandTestCase import CommandTestCase
-from taskcoachlib import command, gui, patterns
+from taskcoachlib import command, patterns
 from taskcoachlib.domain import task, effort, date
 
 
@@ -70,7 +69,7 @@ class EditEffortCommandTest(EffortCommandTestCase):
     def onEvent(self, event):
         self.events.append(event)
         
-    def registerObserver(self, eventType):
+    def registerObserver(self, eventType): # pylint: disable-msg=W0221
         patterns.Publisher().registerObserver(self.onEvent, eventType=eventType)
 
     def testEditStartDateTime(self):

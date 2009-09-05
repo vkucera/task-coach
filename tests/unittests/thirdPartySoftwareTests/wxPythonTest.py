@@ -15,19 +15,18 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
+ 
+''' These are unittests of wxPython functionality. Of course, the goal is
+not to test all wxPython functions, but rather to document platform
+inconsistencies or surprising behaviour. ''' # pylint: disable-msg=W0105
 
 import wx
 import test
 
 
-''' These are unittests of wxPython functionality. Of course, the goal is
-    not to test all wxPython functions, but rather to document platform
-    inconsistencies or surprising behaviour. '''
-
-
 class TextCtrlTest(test.wxTestCase):
     def testClearEmitsNoEventOnMacOSX(self):
-        self.clearTextCausesEvent = False
+        self.clearTextCausesEvent = False # pylint: disable-msg=W0201
         textCtrl = wx.TextCtrl(self.frame)
         textCtrl.Bind(wx.EVT_TEXT, self.onTextChanged)
         textCtrl.Clear()
@@ -36,6 +35,6 @@ class TextCtrlTest(test.wxTestCase):
         else:
             self.failUnless(self.clearTextCausesEvent)
 
-    def onTextChanged(self, event):
+    def onTextChanged(self, event): # pylint: disable-msg=W0613
         self.clearTextCausesEvent = True
 

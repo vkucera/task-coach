@@ -58,9 +58,9 @@ class SetAttribute(object):
         removed = self.__set - values
         self.__set = values
         if added:
-            self.__addEvent(event, *added)
+            self.__addEvent(event, *added) # pylint: disable-msg=W0142
         if removed:
-            self.__removeEvent(event, *removed)
+            self.__removeEvent(event, *removed) # pylint: disable-msg=W0142
         if notify:
             event.send()
             
@@ -70,7 +70,7 @@ class SetAttribute(object):
         notify = event is None
         event = event or patterns.Event()
         self.__set |= values
-        self.__addEvent(event, *values)
+        self.__addEvent(event, *values) # pylint: disable-msg=W0142
         if notify:
             event.send()
             
@@ -80,6 +80,6 @@ class SetAttribute(object):
         notify = event is None
         event = event or patterns.Event()
         self.__set -= values
-        self.__removeEvent(event, *values)
+        self.__removeEvent(event, *values) # pylint: disable-msg=W0142
         if notify:
             event.send()

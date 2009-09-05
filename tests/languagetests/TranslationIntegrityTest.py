@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import string, re
+import string, re # pylint: disable-msg=W0402
 import test
 from taskcoachlib import meta
 
@@ -125,6 +125,9 @@ def getLanguages():
             if language is not None]
         
         
-for language in getLanguages():
-    installTestCaseClasses(language)
+def installAllTestCaseClasses():
+    for language in getLanguages():
+        installTestCaseClasses(language)
+    
+installAllTestCaseClasses()
     

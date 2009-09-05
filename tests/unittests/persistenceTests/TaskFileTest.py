@@ -19,9 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os, wx
 import test
-from taskcoachlib import persistence
+from taskcoachlib import persistence, config
 from taskcoachlib.domain import base, task, effort, date, category, note, attachment
-from taskcoachlib.thirdparty import lockfile
 
 
 class FakeAttachment(base.Object):
@@ -44,6 +43,7 @@ class FakeAttachment(base.Object):
 
 class TaskFileTestCase(test.TestCase):
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.createTaskFiles()
         self.task = task.Task()
         self.taskFile.tasks().append(self.task)
@@ -58,6 +58,7 @@ class TaskFileTestCase(test.TestCase):
         self.filename2 = 'test2.tsk'
         
     def createTaskFiles(self):
+        # pylint: disable-msg=W0201
         self.taskFile = persistence.TaskFile()
         self.emptyTaskFile = persistence.TaskFile()
         
@@ -312,13 +313,13 @@ class DirtyTaskFileTest(TaskFileTestCase):
     def testNeedSave_AfterAddingNoteToTask(self):
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
-        self.task.addNote(note.Note(subject='Note'))
+        self.task.addNote(note.Note(subject='Note')) # pylint: disable-msg=E1101
         self.failUnless(self.taskFile.needSave())
         
     def testNeedSave_AfterTaskNoteChanged(self):
         self.taskFile.setFilename(self.filename)
         newNote = note.Note(subject='Note')
-        self.task.addNote(newNote)
+        self.task.addNote(newNote) # pylint: disable-msg=E1101
         self.taskFile.save()
         newNote.setSubject('New subject')
         self.failUnless(self.taskFile.needSave())
@@ -487,7 +488,7 @@ class DirtyTaskFileTest(TaskFileTestCase):
         self.assertEqual(self.filename2, self.taskFile.lastFilename())
 
 
-class ChangingAttachmentsTests(object):        
+class ChangingAttachmentsTestsMixin(object):        
     def testNeedSave_AfterAttachmentAdded(self):
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
@@ -508,13 +509,13 @@ class ChangingAttachmentsTests(object):
         self.item.setAttachments([FakeAttachment('file', 'attachment2')])
         self.failUnless(self.taskFile.needSave())
 
-    def addAttachment(self, attachment):
+    def addAttachment(self, anAttachment):
         self.taskFile.setFilename(self.filename)
-        self.item.addAttachments(attachment)
+        self.item.addAttachments(anAttachment)
         self.taskFile.save()
                
     def addFileAttachment(self):
-        self.fileAttachment = attachment.FileAttachment('Old location')
+        self.fileAttachment = attachment.FileAttachment('Old location') # pylint: disable-msg=W0201
         self.addAttachment(self.fileAttachment)
 
     def testNeedSave_AfterFileAttachmentLocationChanged(self):
@@ -539,11 +540,11 @@ class ChangingAttachmentsTests(object):
 
     def testNeedSave_AfterFileAttachmentNoteAdded(self):
         self.addFileAttachment()
-        self.fileAttachment.addNote(note.Note(subject='Note'))
+        self.fileAttachment.addNote(note.Note(subject='Note')) # pylint: disable-msg=E1101
         self.failUnless(self.taskFile.needSave())
 
     def addURIAttachment(self):
-        self.uriAttachment = attachment.URIAttachment('Old location')
+        self.uriAttachment = attachment.URIAttachment('Old location') # pylint: disable-msg=W0201
         self.addAttachment(self.uriAttachment)
 
     def testNeedSave_AfterURIAttachmentLocationChanged(self):
@@ -568,11 +569,11 @@ class ChangingAttachmentsTests(object):
 
     def testNeedSave_AfterURIAttachmentNoteAdded(self):
         self.addURIAttachment()
-        self.uriAttachment.addNote(note.Note(subject='Note'))
+        self.uriAttachment.addNote(note.Note(subject='Note')) # pylint: disable-msg=E1101
         self.failUnless(self.taskFile.needSave())
 
     def addMailAttachment(self):
-        self.mailAttachment = attachment.MailAttachment(self.filename, 
+        self.mailAttachment = attachment.MailAttachment(self.filename, # pylint: disable-msg=W0201
                                   readMail=lambda location: ('', ''))
         self.addAttachment(self.mailAttachment)
         
@@ -598,7 +599,7 @@ class ChangingAttachmentsTests(object):
 
     def testNeedSave_AfterMailAttachmentNoteAdded(self):
         self.addMailAttachment()
-        self.mailAttachment.addNote(note.Note(subject='Note'))
+        self.mailAttachment.addNote(note.Note(subject='Note')) # pylint: disable-msg=E1101
         self.failUnless(self.taskFile.needSave())
 
 
@@ -609,21 +610,24 @@ class TaskFileDirtyWhenChangingAttachmentsTestCase(TaskFileTestCase):
     
 
 class TaskFileDirtyWhenChangingTaskAttachmentsTestCase(\
-        TaskFileDirtyWhenChangingAttachmentsTestCase, ChangingAttachmentsTests):
+        TaskFileDirtyWhenChangingAttachmentsTestCase, 
+        ChangingAttachmentsTestsMixin):
     def setUp(self):
         super(TaskFileDirtyWhenChangingTaskAttachmentsTestCase, self).setUp()
         self.item = self.task
 
         
 class TaskFileDirtyWhenChangingNoteAttachmentsTestCase(\
-        TaskFileDirtyWhenChangingAttachmentsTestCase, ChangingAttachmentsTests):
+        TaskFileDirtyWhenChangingAttachmentsTestCase, 
+        ChangingAttachmentsTestsMixin):
     def setUp(self):
         super(TaskFileDirtyWhenChangingNoteAttachmentsTestCase, self).setUp()
         self.item = self.note
 
 
 class TaskFileDirtyWhenChangingCategoryAttachmentsTestCase(\
-        TaskFileDirtyWhenChangingAttachmentsTestCase, ChangingAttachmentsTests):
+        TaskFileDirtyWhenChangingAttachmentsTestCase, 
+        ChangingAttachmentsTestsMixin):
     def setUp(self):
         super(TaskFileDirtyWhenChangingCategoryAttachmentsTestCase, self).setUp()
         self.item = self.category
@@ -642,12 +646,15 @@ class TaskFileSaveAndLoadTest(TaskFileTestCase):
         self.emptyTaskFile.notes().extend(notes)
         self.emptyTaskFile.save()
         self.emptyTaskFile.load()
-        self.assertEqual([task.subject() for task in tasks], 
-            [task.subject() for task in self.emptyTaskFile.tasks()])
-        self.assertEqual([category.subject() for category in categories],
-            [category.subject() for category in self.emptyTaskFile.categories()])
-        self.assertEqual([note.subject() for note in notes],
-            [note.subject() for note in self.emptyTaskFile.notes()])
+        self.assertEqual( \
+            sorted([eachTask.subject() for eachTask in tasks]), 
+            sorted([eachTask.subject() for eachTask in self.emptyTaskFile.tasks()]))
+        self.assertEqual( \
+            sorted([eachCategory.subject() for eachCategory in categories]),
+            sorted([eachCategory.subject() for eachCategory in self.emptyTaskFile.categories()]))
+        self.assertEqual( \
+            sorted([eachNote.subject() for eachNote in notes]),
+            sorted([eachNote.subject() for eachNote in self.emptyTaskFile.notes()]))
         
     def testSaveAndLoad(self):
         self.saveAndLoad([task.Task(subject='ABC'), 
@@ -656,7 +663,8 @@ class TaskFileSaveAndLoadTest(TaskFileTestCase):
     def testSaveAndLoadTaskWithChild(self):
         parentTask = task.Task()
         childTask = task.Task(parent=parentTask)
-        self.saveAndLoad([parentTask])
+        parentTask.addChild(childTask)
+        self.saveAndLoad([parentTask, childTask])
 
     def testSaveAndLoadCategory(self):
         self.saveAndLoad([], [self.category])
@@ -713,7 +721,7 @@ class TaskFileMergeTest(TaskFileTestCase):
         self.merge()
         self.assertEqual(2, len(self.taskFile.categories()))
         
-    def testMerge_SameCategory(self):
+    def testMerge_SameSubject(self):
         self.mergeFile.categories().append(category.Category(self.category.subject()))
         self.merge()
         self.assertEqual([self.category.subject()]*2, 
@@ -759,6 +767,7 @@ class TaskFileMergeTest(TaskFileTestCase):
         
 class LockedTaskFileLockTest(TaskFileTestCase):
     def createTaskFiles(self):
+        # pylint: disable-msg=W0201
         self.taskFile = persistence.LockedTaskFile()
         self.emptyTaskFile = persistence.LockedTaskFile()
         

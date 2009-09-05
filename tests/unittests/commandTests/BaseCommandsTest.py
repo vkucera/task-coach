@@ -16,10 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
 from taskcoachlib import patterns, command
 from taskcoachlib.domain import attachment, task, note, category
 from CommandTestCase import CommandTestCase
+
 
     
 class DeleteCommandTest(CommandTestCase):
@@ -42,12 +42,11 @@ class DeleteCommandTest(CommandTestCase):
                               lambda: self.assertEqual([self.item], self.items))
 
 
-class AddAttachmentTests(object):
-    def addAttachment(self, selectedItems=None, 
-                      attachment=attachment.FileAttachment('attachment')):
-        self.attachment = attachment
+class AddAttachmentTestsMixin(object):
+    def addAttachment(self, selectedItems=None):
+        self.attachment = attachment.FileAttachment('attachment') # pylint: disable-msg=W0201
         addAttachmentCommand = command.AddAttachmentCommand(self.container,
-            selectedItems or [], attachments=[attachment])
+            selectedItems or [], attachments=[self.attachment])
         addAttachmentCommand.do()
 
     def testAddOneAttachmentToOneItem(self):
@@ -65,6 +64,8 @@ class AddAttachmentTests(object):
 
 
 class AddAttachmentTestCase(CommandTestCase):
+    ItemClass = ContainerClass = lambda: 'Subclass responsibility'
+    
     def setUp(self):
         super(AddAttachmentTestCase, self).setUp()
         self.item1 = self.ItemClass(subject='item1')
@@ -72,16 +73,16 @@ class AddAttachmentTestCase(CommandTestCase):
         self.container = self.ContainerClass([self.item1, self.item2])
 
 
-class AddAttachmentCommandWithTasksTest(AddAttachmentTestCase, AddAttachmentTests):
+class AddAttachmentCommandWithTasksTest(AddAttachmentTestCase, AddAttachmentTestsMixin):
     ItemClass = task.Task
     ContainerClass = task.TaskList
 
 
-class AddAttachmentCommandWithNotesTest(AddAttachmentTestCase, AddAttachmentTests):
+class AddAttachmentCommandWithNotesTest(AddAttachmentTestCase, AddAttachmentTestsMixin):
     ItemClass = note.Note
     ContainerClass = note.NoteContainer
 
 
-class AddAttachmentCommandWithCategoriesTest(AddAttachmentTestCase, AddAttachmentTests):
+class AddAttachmentCommandWithCategoriesTest(AddAttachmentTestCase, AddAttachmentTestsMixin):
     ItemClass = category.Category
     ContainerClass = category.CategoryList

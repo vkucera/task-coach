@@ -24,16 +24,16 @@ from taskcoachlib.thirdparty import desktop
 from taskcoachlib.domain.note.noteowner import NoteOwner
 
 
-def getRelativePath(path, base=os.getcwd()):
-    """Tries to guess the relative version of 'path' from 'base'. If
-    not possible, return absolute 'path'. Both 'path' and 'base' must
+def getRelativePath(path, basePath=os.getcwd()):
+    """Tries to guess the relative version of 'path' from 'basePath'. If
+    not possible, return absolute 'path'. Both 'path' and 'basePath' must
     be absolute."""
 
     path = os.path.realpath(os.path.normpath(path))
-    base = os.path.realpath(os.path.normpath(base))
+    basePath = os.path.realpath(os.path.normpath(basePath))
 
     drive1, path1 = os.path.splitdrive(path)
-    drive2, path2 = os.path.splitdrive(base)
+    drive2, path2 = os.path.splitdrive(basePath)
 
     # No relative path is possible if the two are on different drives.
     if drive1 != drive2:
@@ -59,7 +59,7 @@ def getRelativePath(path, base=os.getcwd()):
         path1.insert(0, '..')
         path2.pop(0)
 
-    return os.path.join(*path1)
+    return os.path.join(*path1) # pylint: disable-msg=W0142
 
 
 class Attachment(base.Object, NoteOwner):
@@ -141,7 +141,7 @@ class Attachment(base.Object, NoteOwner):
 class FileAttachment(Attachment):
     type_ = 'file'
 
-    def open(self, workingDir=None, openAttachment=desktop.open):
+    def open(self, workingDir=None, openAttachment=desktop.open): # pylint: disable-msg=W0221
         location = self.location()
         if self.isLocalFile():
             if workingDir and not os.path.isabs(location):

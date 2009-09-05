@@ -29,7 +29,7 @@ class UnicodeAwareConfigParser(ConfigParser.SafeConfigParser):
             value = value.encode('utf-8')
         ConfigParser.SafeConfigParser.set(self, section, setting, value)
 
-    def get(self, section, setting):
+    def get(self, section, setting): # pylint: disable-msg=W0221
         value = ConfigParser.SafeConfigParser.get(self, section, setting)
         return value.decode('utf-8')
     
@@ -70,8 +70,8 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
         if not saveIniFileInProgramDir:
             try:
                 os.remove(self.generatedIniFilename(forceProgramDir=True))
-            except:
-                return
+            except: 
+                return # pylint: disable-msg=W0702
             
     def setDefaults(self):
         for section, settings in defaults.defaults.items():
@@ -85,7 +85,7 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
         for section, setting in noisySettings:
             self.set(section, setting, 'False')
             
-    def add_section(self, section, copyFromSection=None):
+    def add_section(self, section, copyFromSection=None):  # pylint: disable-msg=W0221
         result = super(Settings, self).add_section(section)
         if copyFromSection:
             for name, value in self.items(copyFromSection):
@@ -118,7 +118,7 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
             result = max(result, defaults.minimum[section][option])
         return result
                 
-    def set(self, section, option, value, new=False):
+    def set(self, section, option, value, new=False): # pylint: disable-msg=W0221
         if new:
             currentValue = 'a new option, so use something as current value'\
                 ' that is unlikely to be equal to the new value'
@@ -140,7 +140,7 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
         try:
             return eval(listString)
         except:
-            return []
+            return [] # pylint: disable-msg=W0702
     
     def setlist(self, section, option, value):
         self.set(section, option, str(value))
@@ -165,7 +165,7 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
             iniFile = file(self.filename(), 'w')
             self.write(iniFile)
             iniFile.close()
-        except Exception, message:
+        except Exception, message: # pylint: disable-msg=W0703
             showerror(_('Error while saving %s.ini:\n%s\n')% \
                       (meta.filename, message), caption=_('Save error'), 
                       style=wx.ICON_ERROR)
@@ -195,7 +195,7 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
         try:
             path = os.path.join(environ['APPDATA'], meta.filename)
         except:
-            path = os.path.expanduser("~")
+            path = os.path.expanduser("~") # pylint: disable-msg=W0702
             if path == "~":
                 # path not expanded: apparently, there is no home dir
                 path = os.getcwd()

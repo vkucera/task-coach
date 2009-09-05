@@ -20,6 +20,7 @@ import test
 from taskcoachlib import patterns
 
 
+
 class EventTest(test.TestCase):
     def setUp(self):
         self.event = patterns.Event('eventtype', self, 'some value')
@@ -140,7 +141,7 @@ class EventTest(test.TestCase):
     def testSubEventForTwoTypesWhenEventHasTwoTypes(self):
         self.event.addSource('source', type='another eventtype')
         args = [('eventtype', self), ('another eventtype', 'source')]
-        self.assertEqual(self.event, self.event.subEvent(*args))
+        self.assertEqual(self.event, self.event.subEvent(*args)) # pylint: disable-msg=W0142
 
     def testSubEventForTypeThatIsNotPresent(self):
         self.assertEqual(patterns.Event(), 
@@ -177,6 +178,9 @@ class ObservableCollectionFixture(test.TestCase):
             eventSource=self.collection)
         self.receivedAddEvents = []
         self.receivedRemoveEvents = []
+        
+    def createObservableCollection(self):
+        raise NotImplementedError
 
     def onAdd(self, event):
         self.receivedAddEvents.append(event)
@@ -185,7 +189,7 @@ class ObservableCollectionFixture(test.TestCase):
         self.receivedRemoveEvents.append(event)
 
 
-class ObservableCollectionTests(object):
+class ObservableCollectionTestsMixin(object):
     def testCollectionEqualsItself(self):
         self.failUnless(self.collection == self.collection)
 
@@ -271,7 +275,7 @@ class ObservableCollectionTests(object):
                          self.collection.modificationEventTypes())
 
         
-class ObservableListTest(ObservableCollectionFixture, ObservableCollectionTests):
+class ObservableListTest(ObservableCollectionFixture, ObservableCollectionTestsMixin):
     def createObservableCollection(self):
         return patterns.ObservableList()
 
@@ -281,7 +285,7 @@ class ObservableListTest(ObservableCollectionFixture, ObservableCollectionTests)
         self.assertEqual(2, len(self.collection))
     
 
-class ObservableSetTest(ObservableCollectionFixture, ObservableCollectionTests):
+class ObservableSetTest(ObservableCollectionFixture, ObservableCollectionTestsMixin):
     def createObservableCollection(self):
         return patterns.ObservableSet()
 

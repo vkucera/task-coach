@@ -23,6 +23,7 @@ from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import task, category, date, attachment
 from taskcoachlib.thirdparty import desktop
 
+
 if desktop.get_desktop() in ('KDE', 'GNOME'): # pragma: no cover
     # On a KDE desktop, kfmclient insists on showing an error message for 
     # non-existing files, even when passing --noninteractive, so we make sure 
@@ -133,7 +134,7 @@ class MailTaskTest(test.TestCase):
             raise RuntimeError, 'message'
         
         def showerror(*args, **kwargs): # pylint: disable-msg=W0613
-            self.showerror = args
+            self.showerror = args # pylint: disable-msg=W0201
             
         mailTask = gui.uicommand.TaskMail(viewer=DummyViewer([DummyTask()]))
         mailTask.doCommand(None, mail=mail, showerror=showerror)

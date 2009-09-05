@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
 from unittests import asserts
 from CommandTestCase import CommandTestCase
 from taskcoachlib import patterns, command
@@ -73,10 +72,11 @@ class EditCategoryCommandTest(CategoryCommandTestCase):
         self.categories.append(self.category)
         
     def editCategory(self, categories=None):
-        categories = categories or []
-        editCategory = command.EditCategoryCommand(self.categories, categories)
-        for category in categories:
-            category.setSubject('new')
+        categoriesToEdit = categories or []
+        editCategory = command.EditCategoryCommand(self.categories, 
+                                                   categoriesToEdit)
+        for categoryToEdit in categoriesToEdit:
+            categoryToEdit.setSubject('new')
         editCategory.do()
         
     def testEditCategory_WithoutSelection(self):

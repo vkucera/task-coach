@@ -18,13 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, os
 import test
-from taskcoachlib import gui, widgets, config, persistence, command, patterns
+from taskcoachlib import gui, config, persistence, command, patterns
 from taskcoachlib.gui import render
 from taskcoachlib.i18n import _
-from taskcoachlib.domain import task, date, effort, category, note, attachment
+from taskcoachlib.domain import task, date, effort, category, attachment
 
 
-class TaskViewerUnderTest(gui.viewer.task.TaskViewer):
+
+class TaskViewerUnderTest(gui.viewer.task.TaskViewer): # pylint: disable-msg=W0223
     def __init__(self, *args, **kwargs):
         super(TaskViewerUnderTest, self).__init__(*args, **kwargs)
         self.events = []
@@ -35,6 +36,8 @@ class TaskViewerUnderTest(gui.viewer.task.TaskViewer):
         
 
 class TaskViewerTestCase(test.wxTestCase):
+    treeMode = 'Subclass responsibility'
+    
     def setUp(self):
         super(TaskViewerTestCase, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
@@ -65,18 +68,19 @@ class TaskViewerTestCase(test.wxTestCase):
     def assertItems(self, *tasks):
         self.viewer.widget.expandAllItems()
         self.assertEqual(self.viewer.size(), len(tasks))
-        for index, task in enumerate(tasks):
-            self.assertItem(index, task)
+        for index, eachTask in enumerate(tasks):
+            self.assertItem(index, eachTask)
             
-    def assertItem(self, index, task):
-        if type(task) == type((), ):
-            task, nrChildren = task
+    def assertItem(self, index, aTask):
+        if type(aTask) == type((), ):
+            aTask, nrChildren = aTask
         else:
             nrChildren = 0
-        subject = task.subject(recursive=not self.viewer.isTreeViewer())
+        subject = aTask.subject(recursive=not self.viewer.isTreeViewer())
         treeItem = self.viewer.widget.GetItemChildren(recursively=True)[index]
         self.assertEqual(subject, self.viewer.widget.GetItemText(treeItem))
-        self.assertEqual(nrChildren, self.viewer.widget.GetChildrenCount(treeItem, recursively=False))
+        self.assertEqual(nrChildren, 
+            self.viewer.widget.GetChildrenCount(treeItem, recursively=False))
 
     def firstItem(self):
         widget = self.viewer.widget
@@ -95,9 +99,9 @@ class TaskViewerTestCase(test.wxTestCase):
     def showColumn(self, columnName, show=True):
         self.viewer.showColumnByName(columnName, show)
     
-    def assertColor(self):    
-        self.assertEqual(wx.Colour(*self.newColor), 
-                         self.getFirstItemTextColor())
+    def assertColor(self, expectedColor=None):
+        expectedColor = expectedColor or wx.Colour(*self.newColor)
+        self.assertEqual(expectedColor, self.getFirstItemTextColor())
         
     def assertBackgroundColor(self):
         self.assertEqual(wx.Colour(*self.newColor), 
@@ -107,7 +111,7 @@ class TaskViewerTestCase(test.wxTestCase):
         self.settings.set('color', setting, str(self.newColor))        
         
 
-class CommonTests(object):
+class CommonTestsMixin(object):
     def testCreate(self):
         self.assertItems()
         
@@ -124,9 +128,9 @@ class CommonTests(object):
         self.task.addChild(self.child)
         self.taskList.append(self.task)
         self.viewer.widget.select([self.viewer.getIndexOfItem(self.task)])
-        command = self.viewer.deleteItemCommand()
-        command.do()
-        command.undo()
+        deleteItem = self.viewer.deleteItemCommand()
+        deleteItem.do()
+        deleteItem.undo()
         if self.viewer.isTreeViewer():
             self.assertItems((self.task, 1), self.child)
         else:
@@ -266,8 +270,8 @@ class CommonTests(object):
         self.taskList.append(self.task)
         self.task.setCompletionDate()
         newColor = gui.color.taskColor(self.task, self.settings)
-        self.newColor = newColor.Red(), newColor.Green(), newColor.Blue()
-        self.assertColor()
+        newColor = wx.Colour(newColor.Red(), newColor.Green(), newColor.Blue())
+        self.assertColor(newColor)
 
     def testTurnOnHourlyFeeColumn(self):
         self.showColumn('hourlyFee')
@@ -436,22 +440,22 @@ class CommonTests(object):
         self.taskFile.categories().append(category.Category('cat', filtered=True))
         dialog = self.viewer.newItemDialog(bitmap='new')
         tree = dialog[0][2].viewer.widget
-        firstChild, cookie = tree.GetFirstChild(tree.GetRootItem())
+        firstChild = tree.GetFirstChild(tree.GetRootItem())[0]
         self.failUnless(firstChild.IsChecked())
         
     def testMidnightStatusUpdate(self):
         self.taskList.append(task.Task(subject='test', dueDate=date.Tomorrow()))
         tomorrow = date.Tomorrow()
         midnight = date.DateTime(tomorrow.year, tomorrow.month, tomorrow.day)
-        self.newColor = (255,128,0) # Expected color
         originalToday = date.Today
-        date.Today = lambda: date.Tomorrow() # Make it tomorrow
+        date.Today = date.Tomorrow # Make it tomorrow
         date.Clock().notifyMidnightObservers(now=midnight)
-        self.assertColor()
+        expectedColor = wx.Colour(255,128,0)
+        self.assertColor(expectedColor)
         date.Today = originalToday
 
 
-class TreeOrListModeTests(object):        
+class TreeOrListModeTestsMixin(object):        
     def testModeIsSavedInSettings(self):
         self.assertEqual(self.treeMode, 
             self.settings.getboolean(self.viewer.settingsSection(), 'treemode'))
@@ -531,7 +535,7 @@ class TreeOrListModeTests(object):
         self.assertEqual(expectedIndex, self.viewer.getIndexOfItem(self.child))
             
 
-class ColumnsTests(object):        
+class ColumnsTestsMixin(object):        
     def testGetTimeSpent(self):
         self.taskList.append(self.task)
         self.task.addEffort(effort.Effort(self.task, date.DateTime(2000,1,1),
@@ -673,13 +677,13 @@ class ColumnsTests(object):
         self.assertEqual(expectedColor, self.viewer.getColor(self.task))
 
 
-class TaskViewerInTreeModeTest(CommonTests, ColumnsTests, TreeOrListModeTests, 
-                               TaskViewerTestCase):
+class TaskViewerInTreeModeTest(CommonTestsMixin, ColumnsTestsMixin, 
+                               TreeOrListModeTestsMixin, TaskViewerTestCase):
     treeMode = True
 
 
-class TaskViewerInListModeTest(CommonTests, ColumnsTests, TreeOrListModeTests,
-                               TaskViewerTestCase):
+class TaskViewerInListModeTest(CommonTestsMixin, ColumnsTestsMixin, 
+                               TreeOrListModeTestsMixin, TaskViewerTestCase):
     treeMode = False
         
 

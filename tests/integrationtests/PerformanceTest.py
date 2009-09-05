@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ from taskcoachlib.syncml.config import createDefaultSyncConfig
 
 class PerformanceTest(test.TestCase):
     def createTestFile(self):
-        taskList = task.TaskList([task.Task('test') for i in range(self.nrTasks)])
+        taskList = task.TaskList([task.Task('test') for _ in range(self.nrTasks)])
         taskfile = file(self.taskfilename, 'w')
         taskWriter = persistence.XMLWriter(taskfile)
         taskWriter.write(taskList, category.CategoryList(), note.NoteContainer(),
@@ -38,14 +38,14 @@ class PerformanceTest(test.TestCase):
         self.createTestFile()
 
     def tearDown(self):
-        self.mockApp.mainwindow.quit()
         os.remove(self.taskfilename)
         super(PerformanceTest, self).tearDown()
 
     def testRead(self):
         start = time.time()
-        self.mockApp = mock.App()
-        self.mockApp.io.open(self.taskfilename)
+        mockApp = mock.App()
+        mockApp.io.open(self.taskfilename)
         end = time.time()
-        self.assertEqual(self.nrTasks, len(self.mockApp.taskFile.tasks()))
+        self.assertEqual(self.nrTasks, len(mockApp.taskFile.tasks()))
         self.failUnless(end-start < self.nrTasks/10)
+        mockApp.mainwindow.quit()

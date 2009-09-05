@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, sys
+import wx
 import test
 from unittests import dummy
 from taskcoachlib import widgets
@@ -24,9 +24,9 @@ from taskcoachlib import widgets
         
 class TreeCtrlTestCase(test.wxTestCase):
     def setTree(self, *items, **kwargs):
-        self._tree = items
+        self._tree = items # pylint: disable-msg=W0201
         if kwargs.get('refresh', True):
-            self.treeCtrl.RefreshAllItems()
+            self.treeCtrl.RefreshAllItems() # pylint: disable-msg=E1101
             
     def getItem(self, index):
         item, children = 'root item', self._tree
@@ -37,27 +37,32 @@ class TreeCtrlTestCase(test.wxTestCase):
                 item, children = children[i], []
         return item, children
         
-    def getItemExpanded(self, index):
+    def getItemExpanded(self, index): # pylint: disable-msg=W0613
         return False
     
     def getItemText(self, index):
         return self.getItem(index)[0]
 
-    def getItemImage(self, index, *args, **kwargs):
+    def getItemImage(self, index, *args, **kwargs): # pylint: disable-msg=W0613
         if self.getChildrenCount(index):
             return 1
         else:
             return 0
         
-    def getItemAttr(self, index):
+    def getItemAttr(self, index): # pylint: disable-msg=W0613
         return wx.ListItemAttr()
 
     getItemTooltipText = onSelect = None
                                 
     def getChildrenCount(self, index):
         return len(self.getItem(index)[1])
-            
+    
+    def getFirstTreeItem(self):
+        # pylint: disable-msg=E1101
+        return self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())[0]
+    
     def assertNodes(self, index, treeItem):
+        # pylint: disable-msg=E1101
         self.assertEqual(self.getItemText(index), self.treeCtrl.GetItemText(treeItem))
         childrenCount = self.getChildrenCount(index)
         self.assertEqual(childrenCount, self.treeCtrl.GetChildrenCount(treeItem))
@@ -65,6 +70,7 @@ class TreeCtrlTestCase(test.wxTestCase):
             self.assertNodes(index + (childIndex,), treeChild)
     
     def assertTree(self, *items):
+        # pylint: disable-msg=E1101
         self.setTree(*items)
         self.treeCtrl.expandAllItems()
         self.assertEqual(len(items), len(self.treeCtrl.GetItemChildren()))
@@ -76,7 +82,7 @@ class TreeCtrlTestCase(test.wxTestCase):
         self._tree = []
         
         
-class CommonTests(object):
+class CommonTestsMixin(object):
     ''' Tests for all types of trees. '''
 
     def testCreate(self):
@@ -124,39 +130,39 @@ class CommonTests(object):
 
     def testRetainSelectionWhenEditingTask(self):
         self.setTree('item')
-        item, cookie = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())
+        item = self.getFirstTreeItem()
         self.treeCtrl.SelectItem(item)
         self.failUnless(self.treeCtrl.IsSelected(item))
         self.setTree('new subject')
-        item, cookie = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())
+        item = self.getFirstTreeItem()
         self.failUnless(self.treeCtrl.IsSelected(item))
 
     def testRetainSelectionWhenEditingSubTask(self):
         self.setTree(('parent', ('child',)))
-        item, cookie = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())
+        item = self.getFirstTreeItem()
         self.treeCtrl.SelectItem(item)
         self.failUnless(self.treeCtrl.IsSelected(item))
         self.setTree(('parent', ('new subject',)))
-        item, cookie = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())
+        item = self.getFirstTreeItem()
         self.failUnless(self.treeCtrl.IsSelected(item))
 
     def testRetainSelectionWhenAddingSubTask(self):
         self.setTree('parent')
-        item, cookie = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())
+        item = self.getFirstTreeItem()
         self.treeCtrl.SelectItem(item)
         self.setTree(('parent', ('child',)))
         self.failUnless(self.treeCtrl.IsSelected(item))
 
     def testRetainSelectionWhenAddingSubTask_TwoToplevelTasks(self):
         self.setTree('parent', 'item')
-        item, cookie = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())
+        item = self.getFirstTreeItem()
         self.treeCtrl.SelectItem(item)
         self.setTree(('parent', ('child',)), 'item')
         self.failUnless(self.treeCtrl.IsSelected(item))
 
     def testRemovingASelectedItemMakesAnotherOneSelected(self):
         self.setTree('item 1', 'item 2')
-        item, cookie = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())
+        item = self.getFirstTreeItem()
         self.treeCtrl.SelectItem(item)
         self.setTree('item 2')
         self.failUnless(self.treeCtrl.IsSelected(item))
@@ -165,7 +171,7 @@ class CommonTests(object):
         self.setTree('item')
         self.setTree('new subject', refresh=False)
         self.treeCtrl.RefreshItem((0,))
-        item, cookie = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())
+        item = self.getFirstTreeItem()
         self.assertEqual(self.getItemText((0,)), self.treeCtrl.GetItemText(item))        
 
     def testIsSelectionCollapsable_EmptyTree(self):
@@ -185,39 +191,39 @@ class CommonTests(object):
     
     def testIsSelectionCollapsable_OneSelectedItem(self):
         self.setTree('item 1')
-        item, cookie = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())
+        item = self.getFirstTreeItem()
         self.treeCtrl.SelectItem(item)
         self.failIf(self.treeCtrl.isSelectionCollapsable())
     
     def testIsSelectionExpandable_OneSelectedItem(self):
         self.setTree('item 1')
-        item, cookie = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())
+        item = self.getFirstTreeItem()
         self.treeCtrl.SelectItem(item)
         self.failIf(self.treeCtrl.isSelectionExpandable())
     
     def testIsSelectionCollapsable_SelectedExpandedParent(self):
         self.setTree(('parent', ('child',)))
-        parent, cookie = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())
+        parent = self.getFirstTreeItem()
         self.treeCtrl.Expand(parent)
         self.treeCtrl.SelectItem(parent)
         self.failUnless(self.treeCtrl.isSelectionCollapsable())
     
     def testIsSelectionExpandable_SelectedExpandedParent(self):
         self.setTree(('parent', ('child',)))
-        parent, cookie = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())
+        parent = self.getFirstTreeItem()
         self.treeCtrl.Expand(parent)
         self.treeCtrl.SelectItem(parent)
         self.failIf(self.treeCtrl.isSelectionExpandable())
     
     def testIsSelectionCollapsable_SelectedCollapsedParent(self):
         self.setTree(('parent', ('child',)))
-        parent, cookie = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())
+        parent = self.getFirstTreeItem()
         self.treeCtrl.SelectItem(parent)
         self.failIf(self.treeCtrl.isSelectionCollapsable())
     
     def testIsSelectionExpandable_SelectedCollapsedParent(self):
         self.setTree(('parent', ('child',)))
-        parent, cookie = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())
+        parent = self.getFirstTreeItem()
         self.treeCtrl.SelectItem(parent)
         self.failUnless(self.treeCtrl.isSelectionExpandable())
     
@@ -263,18 +269,18 @@ class CommonTests(object):
 
     def testIsAnyItemCollapsable_OneExpandedParent(self):
         self.setTree(('parent', ('child',)))
-        parent, cookie = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())
+        parent = self.getFirstTreeItem()
         self.treeCtrl.Expand(parent)
         self.failUnless(self.treeCtrl.isAnyItemCollapsable())
         
     def testIsAnyItemExpandable_OneExpandedParent(self):
         self.setTree(('parent', ('child',)))
-        parent, cookie = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())
+        parent = self.getFirstTreeItem()
         self.treeCtrl.Expand(parent)
         self.failIf(self.treeCtrl.isAnyItemExpandable())
         
         
-class TreeListCtrlTest(TreeCtrlTestCase, CommonTests):
+class TreeListCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
     def setUp(self):
         super(TreeListCtrlTest, self).setUp()
         columns = [widgets.Column('subject', 'Subject')]
@@ -287,10 +293,10 @@ class TreeListCtrlTest(TreeCtrlTestCase, CommonTests):
         for bitmapName in ['task', 'tasks']:
             imageList.Add(wx.ArtProvider_GetBitmap(bitmapName, wx.ART_MENU, 
                           (16,16)))
-        self.treeCtrl.AssignImageList(imageList)
+        self.treeCtrl.AssignImageList(imageList) # pylint: disable-msg=E1101
     
 
-class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTests):
+class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
     def setUp(self):
         super(CheckTreeCtrlTest, self).setUp()
         columns = [widgets.Column('subject', 'Subject')]
@@ -301,7 +307,7 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTests):
             self.onSelect, self.onCheck, 
             dummy.DummyUICommand(), dummy.DummyUICommand())
     
-    def getIsItemChecked(self, index):
+    def getIsItemChecked(self, index): # pylint: disable-msg=W0613
         return False
     
     def onCheck(self, event):
@@ -309,8 +315,9 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTests):
 
     def testCheckParentDoesNotCheckChild(self):
         self.setTree(('parent', ('child',)))
+        # pylint: disable-msg=E1101
         self.treeCtrl.ExpandAll()
-        parent, cookie = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())
+        parent = self.getFirstTreeItem()
         self.treeCtrl.CheckItem(parent)
-        child, cookie = self.treeCtrl.GetFirstChild(parent)
+        child = self.treeCtrl.GetFirstChild(parent)[0]
         self.failIf(child.IsChecked())

@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import re, sre_constants
 from taskcoachlib import patterns
-from taskcoachlib.domain.base import object
+from taskcoachlib.domain.base import object as domainobject
 
 
 class Filter(patterns.SetDecorator):
@@ -119,6 +119,7 @@ class SearchFilter(Filter):
     def setSearchFilter(self, searchString, matchCase=False, 
                         includeSubItems=False, searchDescription=False, 
                         doReset=True):
+        # pylint: disable-msg=W0201
         self.__includeSubItems = includeSubItems
         self.__searchDescription = searchDescription
 
@@ -165,8 +166,8 @@ class DeletedFilter(Filter):
     def __init__(self, *args, **kwargs):
         super(DeletedFilter, self).__init__(*args, **kwargs)
 
-        for eventType in [object.Object.markDeletedEventType(),
-                          object.Object.markNotDeletedEventType()]:
+        for eventType in [domainobject.Object.markDeletedEventType(),
+                          domainobject.Object.markNotDeletedEventType()]:
             patterns.Publisher().registerObserver(self.onObjectMarkedDeletedOrNot,
                           eventType=eventType)
 

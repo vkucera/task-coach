@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import time
 from taskcoachlib import patterns
-from taskcoachlib.domain import date
 import attribute
 
 
@@ -208,8 +207,8 @@ class Object(SynchronizedObject):
     def id(self):
         return self.__id
     
-    def setId(self, id):
-        self.__id = id
+    def setId(self, id_):
+        self.__id = id_
         
     # Subject:
     
@@ -247,7 +246,7 @@ class Object(SynchronizedObject):
     def setColor(self, color, event=None):
         self.__color.set(color, event)
         
-    def color(self, recursive=False):
+    def color(self, recursive=False): # pylint: disable-msg=W0613
         # The 'recursive' argument isn't actually used here, but some
         # code assumes composite objects where there aren't. This is
         # the simplest workaround.
@@ -287,7 +286,7 @@ class CompositeObject(Object, patterns.ObservableComposite):
 
     # Subject:
     
-    def subject(self, recursive=False):
+    def subject(self, recursive=False): # pylint: disable-msg=W0221
         subject = super(CompositeObject, self).subject()
         if recursive and self.parent():
             subject = u'%s -> %s'%(self.parent().subject(recursive=True), subject)
@@ -295,7 +294,7 @@ class CompositeObject(Object, patterns.ObservableComposite):
         
     # Description:
         
-    def description(self, recursive=False):
+    def description(self, recursive=False): # pylint: disable-msg=W0221,W0613
         # Allow for the recursive flag, but ignore it
         return super(CompositeObject, self).description()
         

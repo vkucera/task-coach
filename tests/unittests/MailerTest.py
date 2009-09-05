@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,11 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import test
 import taskcoachlib.mailer
 
-class TestMailer(test.TestCase):
-        
+
+class TestMailer(test.TestCase):        
     def testWriteMail(self):
-        def open(mailtoString):
-            self.mailtoString = mailtoString
-        taskcoachlib.mailer.writeMail('to', 'subject', 'body', open=open)
+        def openMail(mailtoString):
+            self.mailtoString = mailtoString # pylint: disable-msg=W0201
+        taskcoachlib.mailer.writeMail('to', 'subject', 'body', open=openMail)
         self.failUnless(self.mailtoString.startswith('mailto:'))
         

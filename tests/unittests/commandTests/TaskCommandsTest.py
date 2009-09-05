@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,8 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
-from unittests import asserts, dummy
+from unittests import asserts
 from CommandTestCase import CommandTestCase
 from taskcoachlib import command, patterns, config
 from taskcoachlib.domain import task, effort, date, category, attachment
@@ -45,7 +44,7 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
             items = list(self.list)
         command.DeleteTaskCommand(self.list, items or [], shadow=shadow).do()
  
-    def paste(self, items=None):
+    def paste(self, items=None): # pylint: disable-msg=W0221
         if items:
             command.PasteIntoTaskCommand(self.taskList, items).do()
         else:
@@ -157,9 +156,9 @@ class DeleteCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
         self.failUnlessParentAndChild(self.parent, self.child)
         self.failUnlessParentAndChild(self.child, self.grandchild)
 
-    def assertShadowed(self, *tasks):
-        for task in tasks:
-            self.failUnless(task.isDeleted())
+    def assertShadowed(self, *shadowedTasks):
+        for shadowedTask in shadowedTasks:
+            self.failUnless(shadowedTask.isDeleted())
         
     def testDeleteParent(self):
         self.delete([self.parent])
@@ -205,12 +204,14 @@ class DeleteCommandWithTasksWithChildrenTest(CommandWithChildrenTestCase):
                                     set([self.parent]) == cat2.categorizables()))
 
     def testDeleteParentAndChildWhenParentAndChildBelongToSameCategory(self):
-        for task in self.parent, self.child:
-            self.category.addCategorizable(task)
-            task.addCategory(self.category)
+        for eachTask in self.parent, self.child:
+            self.category.addCategorizable(eachTask)
+            eachTask.addCategory(self.category)
         self.delete([self.parent])
-        self.assertDoUndoRedo(lambda: self.failIf(self.category.categorizables()), 
-            lambda: self.assertEqualLists([self.parent, self.child], self.category.categorizables()))
+        self.assertDoUndoRedo( \
+            lambda: self.failIf(self.category.categorizables()), 
+            lambda: self.assertEqualLists([self.parent, self.child], 
+                                          self.category.categorizables()))
 
 
 class DeleteCommandWithTasksWithEffortTest(CommandWithEffortTestCase):
@@ -279,22 +280,22 @@ class NewSubTaskCommandTest(TaskCommandTestCase):
 
 class EditTaskCommandTest(TaskCommandTestCase):
     def edit(self, tasks=None, edits=None):
-        tasks = tasks or []
-        editcommand = command.EditTaskCommand(self.taskList, tasks)
-        for task in tasks:
-            task.setSubject('New subject')
-            task.setDescription('New description')
-            task.setBudget(date.TimeDelta(hours=1))
-            task.setCompletionDate()
+        tasksToEdit = tasks or []
+        editcommand = command.EditTaskCommand(self.taskList, tasksToEdit)
+        for taskToEdit in tasksToEdit:
+            taskToEdit.setSubject('New subject')
+            taskToEdit.setDescription('New description')
+            taskToEdit.setBudget(date.TimeDelta(hours=1))
+            taskToEdit.setCompletionDate()
             att = attachment.FileAttachment('attachment')
-            if att in task.attachments():
-                task.removeAttachments(att)
+            if att in taskToEdit.attachments():
+                taskToEdit.removeAttachments(att)
             else:
-                task.addAttachments(att)
-            if self.category in task.categories():
-                task.removeCategory(self.category)
+                taskToEdit.addAttachments(att)
+            if self.category in taskToEdit.categories():
+                taskToEdit.removeCategory(self.category)
             else:
-                task.addCategory(self.category)
+                taskToEdit.addCategory(self.category)
             for edit in edits or []:
                 edit()
         editcommand.do()
@@ -330,6 +331,8 @@ class EditTaskCommandTest(TaskCommandTestCase):
             lambda: self.assertEqual(date.TimeDelta(hours=1), self.task1.budget()),
             lambda: self.assertEqual(date.TimeDelta(), self.task1.budget()))
 
+    # pylint: disable-msg=E1101
+    
     def testAddAttachment(self):
         self.edit([self.task1])
         self.assertDoUndoRedo(
@@ -381,7 +384,7 @@ class EditTaskCommandTest(TaskCommandTestCase):
 
     def testResetRecurrence(self):
         self.task1.setRecurrence(date.Recurrence('weekly'))
-        self.edit([self.task1], edits=[lambda: self.task1.setRecurrence()])
+        self.edit([self.task1], edits=[self.task1.setRecurrence])
         self.assertDoUndoRedo(
             lambda: self.failIf(self.task1.recurrence()),
             lambda: self.assertEqual(date.Recurrence('weekly'), 
@@ -497,7 +500,7 @@ class PriorityCommandTestCase(TaskCommandTestCase):
         super(PriorityCommandTestCase, self).setUp()
         self.taskList.append(self.task2)
 
-    def assertDoUndoRedo(self, priority1do, priority2do, priority1undo, priority2undo):
+    def assertDoUndoRedo(self, priority1do, priority2do, priority1undo, priority2undo): # pylint: disable-msg=W0221
         super(PriorityCommandTestCase, self).assertDoUndoRedo(
             lambda: self.failUnless(priority1do == self.task1.priority() and
                     priority2do == self.task2.priority()),
@@ -596,6 +599,8 @@ class DecreasePriorityCommandTest(PriorityCommandTestCase):
 class AddTaskNoteCommandTest(TaskCommandTestCase):
     def addNote(self, tasks=None):
         command.AddTaskNoteCommand(self.taskList, tasks or []).do()
+    
+    # pylint: disable-msg=E1101
     
     def testEmptySelection(self):
         self.addNote()

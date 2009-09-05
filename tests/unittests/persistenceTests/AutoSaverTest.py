@@ -23,14 +23,14 @@ from taskcoachlib.domain import task, category, date
 
 
 class DummySettings(dict):        
-    def set(self, section, setting, value):
+    def set(self, section, setting, value): # pylint: disable-msg=W0613
         self[setting] = value
         
-    def getboolean(self, section, setting):
+    def getboolean(self, section, setting): # pylint: disable-msg=W0613
         return self.get(setting, 'False') == 'True'
 
 
-class DummyFile:
+class DummyFile(object):
     name = 'testfile.tsk'
 
     def close(self, *args, **kwargs):
@@ -45,27 +45,27 @@ class DummyTaskFile(persistence.TaskFile):
         self.saveCalled = 0
         super(DummyTaskFile, self).__init__(*args, **kwargs)
         
-    def _read(self, *args, **kwargs):
+    def _read(self, *args, **kwargs): # pylint: disable-msg=W0613,W0221
         if self._throw:
             raise IOError
         else:
             return [task.Task()], [category.Category('category')], [], None, None
         
-    def exists(self, *args, **kwargs):
+    def exists(self, *args, **kwargs): # pylint: disable-msg=W0613
         return True
         
-    def _openForRead(self, *args, **kwargs):
+    def _openForRead(self, *args, **kwargs): # pylint: disable-msg=W0613
         return DummyFile()
         
-    def _openForWrite(self, *args, **kwargs):
+    def _openForWrite(self, *args, **kwargs): # pylint: disable-msg=W0613
         return DummyFile()
     
     def save(self, *args, **kwargs):
         self.saveCalled += 1
         super(DummyTaskFile, self).save(*args, **kwargs)
 
-    def load(self, filename=None, throw=False, *args, **kwargs):
-        self._throw = throw
+    def load(self, filename=None, throw=False, *args, **kwargs): # pylint: disable-msg=W0221
+        self._throw = throw # pylint: disable-msg=W0201
         return super(DummyTaskFile, self).load(filename, *args, **kwargs)
 
 
@@ -142,7 +142,7 @@ class TestableAutoSaver(persistence.AutoSaver):
         self.copyCalled = False
         super(TestableAutoSaver, self).__init__(*args, **kwargs)
         
-    def _createBackup(self, *args, **kwargs):
+    def _createBackup(self, *args, **kwargs): # pylint: disable-msg=W0613,W0221
         self.copyCalled = True    
 
 
@@ -160,13 +160,13 @@ class AutoSaverBackupTestCase(test.TestCase):
         now = date.DateTime(2004,1,1)
         self.taskFile.setFilename('whatever.tsk')
         self.assertEqual('whatever.20040101-000000.tsk.bak', 
-            self.autoSaver._backupFilename(self.taskFile, lambda: now))
+            self.autoSaver._backupFilename(self.taskFile, lambda: now)) # pylint: disable-msg=W0212
         
     def testBackupFilenameOfBackupFilename(self):
         self.taskFile.setFilename('whatever.20040101-000000.tsk.bak')
         now = date.DateTime(2004,1,2)
         self.assertEqual('whatever.20040101-000000.20040102-000000.tsk.bak', 
-            self.autoSaver._backupFilename(self.taskFile, lambda: now))
+            self.autoSaver._backupFilename(self.taskFile, lambda: now)) # pylint: disable-msg=W0212
 
     def testDontCreateBackupWhenSettingFilename(self):
         self.settings.set('file', 'backup', 'True')

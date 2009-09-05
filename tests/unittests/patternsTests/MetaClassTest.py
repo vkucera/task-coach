@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,14 +31,15 @@ class SubclassOfNumbered(Numbered):
     pass
 
 
-class NumberedInstancesTests(object):
+class NumberedInstancesTestsMixin(object):
     ''' The tests below should work for a class with NumberedInstances as 
         metaclass as well as for a subclass of a class with NumberedInstances
         as metaclass. '''
         
     def testCounterIncreasesAfterEachInstantation(self):
         for count in range(3):
-            self.assertEqual(count, patterns.NumberedInstances.count.get(self.classUnderTest, 0))
+            self.assertEqual(count, 
+                patterns.NumberedInstances.count.get(self.classUnderTest, 0))
             self.classUnderTest()
         
     def testInstanceNumberIsSet(self):
@@ -46,11 +47,13 @@ class NumberedInstancesTests(object):
             self.assertEqual(count, self.classUnderTest().instanceNumber)
 
 
-class NumberedInstancesTest(NumberedInstancesTests, test.TestCase):
+class NumberedInstancesTest(NumberedInstancesTestsMixin, 
+                            test.TestCase):
     classUnderTest = Numbered
 
 
-class SubclassOfNumberedInstancesTest(NumberedInstancesTests, test.TestCase):
+class SubclassOfNumberedInstancesTest(NumberedInstancesTestsMixin, 
+                                      test.TestCase):
     classUnderTest = SubclassOfNumbered
 
     def testSubclassInstancesHaveTheirOwnNumbers(self):

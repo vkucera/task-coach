@@ -42,6 +42,9 @@ class BaseEffort(object):
     
     def color(self):
         return self.task().color()
+    
+    def duration(self, recursive=False):
+        raise NotImplementedError
 
     @classmethod
     def trackStartEventType(class_):

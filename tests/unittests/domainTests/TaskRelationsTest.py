@@ -20,8 +20,8 @@ import test
 from taskcoachlib import config
 from taskcoachlib.domain import task, date, effort
 
-
-class CommonTaskRelationshipManagerTests(object):
+ 
+class CommonTaskRelationshipManagerTestsMixin(object):
     def setUp(self):
         task.Task.settings = settings = config.Settings(load=False)
         self.parent = task.Task('parent')
@@ -104,9 +104,9 @@ class CommonTaskRelationshipManagerTests(object):
         self.parent.setCompletionDate()
         self.failUnless(self.child.completed())
         
-    def shouldMarkCompletedWhenAllChildrenCompleted(self, task):
-        return task.shouldMarkCompletedWhenAllChildrenCompleted() == True or \
-            (task.shouldMarkCompletedWhenAllChildrenCompleted() == None and \
+    def shouldMarkCompletedWhenAllChildrenCompleted(self, parent):
+        return parent.shouldMarkCompletedWhenAllChildrenCompleted() == True or \
+            (parent.shouldMarkCompletedWhenAllChildrenCompleted() == None and \
              self.markParentCompletedWhenAllChildrenCompleted == True)
         
     def testMarkLastChildCompletedMakesParentRecur(self):
@@ -246,7 +246,7 @@ class CommonTaskRelationshipManagerTests(object):
         self.assertEqual(date.Yesterday(), self.parent.startDate())
 
 
-class MarkParentTaskCompletedTests(object):
+class MarkParentTaskCompletedTestsMixin(object):
     ''' Tests where we expect to parent task to be marked completed, based on
         the fact that all children are completed. This happens when the global
         setting is on and task is indifferent or the task specific setting is 
@@ -277,7 +277,7 @@ class MarkParentTaskCompletedTests(object):
         self.failUnless(self.parent.completed())
     
     
-class DontMarkParentTaskCompletedTests(object):
+class DontMarkParentTaskCompletedTestsMixin(object):
     ''' Tests where we expect the parent task not to be marked completed when 
         all children are completed. This should be the case when the global
         setting is off and task is indifferent or when the task specific 
@@ -308,37 +308,35 @@ class DontMarkParentTaskCompletedTests(object):
         self.failIf(self.parent.completed())        
 
 
-class MarkParentCompletedAutomaticallyIsOn(CommonTaskRelationshipManagerTests,
-                                           MarkParentTaskCompletedTests,
+class MarkParentCompletedAutomaticallyIsOn(CommonTaskRelationshipManagerTestsMixin,
+                                           MarkParentTaskCompletedTestsMixin,
                                            test.TestCase):
     markParentCompletedWhenAllChildrenCompleted = True
 
 
-class MarkParentCompletedAutomaticallyIsOff(CommonTaskRelationshipManagerTests,
-                                            DontMarkParentTaskCompletedTests,
+class MarkParentCompletedAutomaticallyIsOff(CommonTaskRelationshipManagerTestsMixin,
+                                            DontMarkParentTaskCompletedTestsMixin,
                                             test.TestCase):
     markParentCompletedWhenAllChildrenCompleted = False
               
 
 class MarkParentCompletedAutomaticallyIsOnButTaskSettingIsOff( \
-        CommonTaskRelationshipManagerTests, test.TestCase,
-        DontMarkParentTaskCompletedTests):
+        CommonTaskRelationshipManagerTestsMixin, test.TestCase,
+        DontMarkParentTaskCompletedTestsMixin):
     markParentCompletedWhenAllChildrenCompleted = True
     
     def setUp(self):
         super(MarkParentCompletedAutomaticallyIsOnButTaskSettingIsOff, self).setUp()
-        for task in self.parent, self.child:
-            task.setShouldMarkCompletedWhenAllChildrenCompleted(False)
+        for eachTask in self.parent, self.child:
+            eachTask.setShouldMarkCompletedWhenAllChildrenCompleted(False)
 
 
 class MarkParentCompletedAutomaticallyIsOffButTaskSettingIsOn( \
-        CommonTaskRelationshipManagerTests, test.TestCase,
-        MarkParentTaskCompletedTests):
+        CommonTaskRelationshipManagerTestsMixin, test.TestCase,
+        MarkParentTaskCompletedTestsMixin):
     markParentCompletedWhenAllChildrenCompleted = False
 
     def setUp(self):
         super(MarkParentCompletedAutomaticallyIsOffButTaskSettingIsOn, self).setUp()
-        for task in self.parent, self.child:
-            task.setShouldMarkCompletedWhenAllChildrenCompleted(True)
-    
-
+        for eachTask in self.parent, self.child:
+            eachTask.setShouldMarkCompletedWhenAllChildrenCompleted(True)

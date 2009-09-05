@@ -64,7 +64,7 @@ class CompositeTest(test.TestCase):
         self.assertEqual(self.composite, objectWithParent.parent())
         
     def testCreateWithParentDoesNotAddObjectToParent(self):
-        objectWithParent = patterns.Composite(parent=self.composite)
+        patterns.Composite(parent=self.composite)
         self.failIf(self.composite.children())
         
     def testChildrenRecursive_WithoutGrandChildren(self):
@@ -161,21 +161,14 @@ class CompositeTest(test.TestCase):
         
     def testCopy_WithChildren_DoesNotCreateExtraChildrenForOriginal(self):
         self.composite.addChild(self.child)
-        copy = self.composite.copy()
+        self.composite.copy()
         self.assertEqual(1, len(self.composite.children()))
 
         
 class ObservableCompositeTest(test.TestCase):
     def setUp(self):
-        self.events = []
         self.composite = patterns.ObservableComposite()
         self.child = patterns.ObservableComposite()
-        
-    def registerObserver(self, eventType):
-        patterns.Publisher().registerObserver(self.onEvent, eventType)    
-            
-    def onEvent(self, event):
-        self.events.append(event)
         
     def testAddChild(self):
         eventType = self.composite.addChildEventType()
@@ -211,14 +204,7 @@ class CompositeCollectionTest(test.TestCase):
         self.composite = patterns.ObservableComposite()
         self.composite2 = patterns.ObservableComposite()
         self.collection = patterns.CompositeList()
-        self.events = []
-        
-    def onEvent(self, event):
-        self.events.append(event)
-        
-    def registerObserver(self, eventType):
-        patterns.Publisher().registerObserver(self.onEvent, eventType)
-        
+
     def testInitialSize(self):
         self.assertEqual(0, len(self.collection))
         

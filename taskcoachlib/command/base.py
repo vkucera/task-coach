@@ -23,13 +23,16 @@ from taskcoachlib.domain import task, note
 
 
 class BaseCommand(patterns.Command):
-    def __init__(self, list=None, items=None, *args, **kwargs):
+    def __init__(self, list=None, items=None, *args, **kwargs): # pylint: disable-msg=W0622
         super(BaseCommand, self).__init__(*args, **kwargs)
         self.list = list
         self.items = items or []
 
     def __str__(self):
         return self.name()
+    
+    def name(self):
+        raise NotImplementedError
 
     def canDo(self):
         return bool(self.items)
@@ -64,10 +67,12 @@ class BaseCommand(patterns.Command):
         self.__tryInvokeMethodOnSuper('redo_command')
         
 
-class SaveStateMixin:
+class SaveStateMixin(object):
     ''' Mixin class for commands that need to keep the states of objects. 
         Objects should provide __getstate__ and __setstate__ methods. '''
-        
+    
+    # pylint: disable-msg=W0201
+    
     def saveStates(self, objects):
         self.objectsToBeSaved = objects
         self.oldStates = self.__getStates()
@@ -80,12 +85,13 @@ class SaveStateMixin:
         self.__setStates(self.newStates)
 
     def __getStates(self):
-        return [object.__getstate__() for object in self.objectsToBeSaved]
+        return [objectToBeSaved.__getstate__() for objectToBeSaved in 
+                self.objectsToBeSaved]
 
     def __setStates(self, states):
         event = patterns.Event()
-        for object, state in zip(self.objectsToBeSaved, states):
-            object.__setstate__(state, event)
+        for objectToBeSaved, state in zip(self.objectsToBeSaved, states):
+            objectToBeSaved.__setstate__(state, event)
         event.send()
 
 
@@ -113,7 +119,7 @@ class CopyCommand(BaseCommand):
         return _('Copy')
 
     def do_command(self):
-        self.__copies = [item.copy() for item in self.items]
+        self.__copies = [item.copy() for item in self.items] # pylint: disable-msg=W0201
         task.Clipboard().put(self.__copies, self.list)
 
     def undo_command(self):
@@ -159,7 +165,7 @@ class CutCommand(DeleteCommand):
 
     def __putItemsOnClipboard(self):
         cb = task.Clipboard()
-        self.__previousClipboardContents = cb.get()
+        self.__previousClipboardContents = cb.get() # pylint: disable-msg=W0201
         cb.put(self.items, self.list)
 
     def __removeItemsFromClipboard(self):
@@ -223,7 +229,7 @@ class PasteCommand(BaseCommand, SaveStateMixin):
         task.Clipboard().clear() 
         
         
-class EditCommand(BaseCommand, SaveStateMixin):
+class EditCommand(BaseCommand, SaveStateMixin): # pylint: disable-msg=W0223
     def __init__(self, *args, **kwargs):
         super(EditCommand, self).__init__(*args, **kwargs)
         self.saveStates(self.getItemsToSave())
@@ -310,14 +316,17 @@ class AddNoteCommand(BaseCommand):
     def __init__(self, *args, **kwargs):
         super(AddNoteCommand, self).__init__(*args, **kwargs)
         self.notes = [note.Note(subject=_('New note')) \
-                      for item in self.items]
+                      for dummy in self.items]
 
+    def name(self):
+        return _('Add note')
+    
     def addNotes(self):
-        for item, note in zip(self.items, self.notes):
+        for item, note in zip(self.items, self.notes): # pylint: disable-msg=W0621
             item.addNote(note)
 
     def removeNotes(self):
-        for item, note in zip(self.items, self.notes):
+        for item, note in zip(self.items, self.notes): # pylint: disable-msg=W0621
             item.removeNote(note)
     
     def do_command(self):

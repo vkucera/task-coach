@@ -24,6 +24,7 @@ from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, date, effort
 
 
+
 class RenderDaysLeftTest(test.TestCase):
     def testOneDayLeft(self):
         self.assertEqual('1', render.daysLeft(date.TimeDelta(days=1), False))
@@ -128,14 +129,14 @@ class RenderBitmapNames_TestCase(test.TestCase):
                          render.taskBitmapNames(self.task))
 
 
-class RenderBitmapNames_CommonTests(object):        
+class RenderBitmapNames_CommonTestsMixin(object):        
     def testTrackedTask(self):
         self.task.addEffort(effort.Effort(self.task))
         self.assertBitmapNames('start')
     
     
 class RenderBitmapNames_TaskWithoutChildren(RenderBitmapNames_TestCase, 
-                                            RenderBitmapNames_CommonTests):    
+                                            RenderBitmapNames_CommonTestsMixin):    
     def testDefaultTask(self):
         self.assertBitmapNames('task')
         
@@ -157,7 +158,7 @@ class RenderBitmapNames_TaskWithoutChildren(RenderBitmapNames_TestCase,
 
 
 class RenderBitmapNames_TaskWithChildren(RenderBitmapNames_TestCase,
-                                         RenderBitmapNames_CommonTests):
+                                         RenderBitmapNames_CommonTestsMixin):
     def setUp(self):
         super(RenderBitmapNames_TaskWithChildren, self).setUp()
         self.task.addChild(task.Task())

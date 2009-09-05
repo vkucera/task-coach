@@ -48,7 +48,7 @@ class Sorter(base.TreeSorter):
     def treeMode(self):
         return self.__treeMode
         
-    def reset(self, *args, **kwargs):
+    def reset(self, *args, **kwargs): # pylint: disable-msg=W0221
         self._invalidateRootItemCache()
         return super(Sorter, self).reset(*args, **kwargs)
         
@@ -108,7 +108,8 @@ class Sorter(base.TreeSorter):
             kwargs['recursive'] = True
             sortKeyName = sortKeyName.replace('total', '')
             sortKeyName = sortKeyName[0].lower() + sortKeyName[1:]
-        return lambda task: [prepareSortValue(getattr(task, 
+        # pylint: disable-msg=W0142
+        return lambda task: [prepareSortValue(getattr(task,  
             sortKeyName)(**kwargs))]
     
     def _registerObserverForAttribute(self, attribute):

@@ -16,7 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
 import test
 from unittests import dummy
 from taskcoachlib import widgets
@@ -67,8 +66,11 @@ class VirtualListCtrlTestCase(test.wxTestCase):
         self.listctrl.showColumn(self.columns[2], False)
         self.listctrl.showColumn(self.columns[1], True)
         self.listctrl.showColumn(self.columns[2], True)
-        self.assertEqual(self.columns[1].header(), self.listctrl._getColumnHeader(1))
-        self.assertEqual(self.columns[2].header(), self.listctrl._getColumnHeader(2))
+        # pylint: disable-msg=W0212
+        self.assertEqual(self.columns[1].header(), 
+                         self.listctrl._getColumnHeader(1))
+        self.assertEqual(self.columns[2].header(), 
+                         self.listctrl._getColumnHeader(2))
         
     def testShowColumn_HideTwice(self):
         self.listctrl.showColumn(self.columns[2], False)

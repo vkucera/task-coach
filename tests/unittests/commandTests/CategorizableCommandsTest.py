@@ -16,10 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
-from taskcoachlib import patterns, command
+from taskcoachlib import command
 from taskcoachlib.domain import category, categorizable
 from CommandTestCase import CommandTestCase
+
 
 
 class ToggleCategoryCommandTest(CommandTestCase):

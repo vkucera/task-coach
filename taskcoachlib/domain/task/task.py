@@ -23,9 +23,10 @@ from taskcoachlib.domain import base, date, categorizable, note, attachment
 
 class Task(note.NoteOwner, attachment.AttachmentOwner, 
            categorizable.CategorizableCompositeObject):
+    
     def __init__(self, subject='', description='', dueDate=None, 
             startDate=None, completionDate=None, budget=None, 
-            priority=0, id=None, hourlyFee=0,
+            priority=0, id=None, hourlyFee=0, # pylint: disable-msg=W0622
             fixedFee=0, reminder=None, categories=None,
             efforts=None, shouldMarkCompletedWhenAllChildrenCompleted=None, 
             recurrence=None, *args, **kwargs):
@@ -108,7 +109,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return all(child.completed() for child in children) if children \
             else False        
 
-    def newChild(self, subject='New subtask'):
+    def newChild(self, subject='New subtask'): # pylint: disable-msg=W0221
         ''' Subtask constructor '''
         return super(Task, self).newChild(subject=subject, 
             dueDate=self.dueDate(),
@@ -171,9 +172,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if child.isBeingTracked(recursive=True):
             activeEfforts = child.activeEfforts(recursive=True)
             if self.isBeingTracked(recursive=True):
-                self.startTrackingEvent(event, *activeEfforts)
+                self.startTrackingEvent(event, *activeEfforts) # pylint: disable-msg=W0142
             else:
-                self.stopTrackingEvent(event, *activeEfforts)
+                self.stopTrackingEvent(event, *activeEfforts) # pylint: disable-msg=W0142
         
     def dueDate(self, recursive=False):
         if recursive:
@@ -281,7 +282,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             are completed, 3) its setting says it should be completed when
             all of its children are completed. '''
         shouldMarkCompletedAccordingToSetting = \
-            self.settings.getboolean('behavior', 
+            self.settings.getboolean('behavior', # pylint: disable-msg=E1101
                 'markparentcompletedwhenallchildrencompleted')
         shouldMarkCompletedAccordingToTask = \
             self.shouldMarkCompletedWhenAllChildrenCompleted()
@@ -303,7 +304,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return not self.inactive() and not self.completed()
 
     def dueSoon(self):
-        manyDays = self.settings.getint('behavior', 'duesoondays')
+        manyDays = self.settings.getint('behavior', 'duesoondays') # pylint: disable-msg=E1101
         return (0 <= self.timeLeft().days < manyDays and not self.completed())
 
     def dueToday(self):
@@ -453,8 +454,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return budget - self.timeSpent(recursive) if budget else budget
     
     def colorChangedEvent(self, event):
-        super(Task, self).colorChangedEvent(event)    
-        from taskcoachlib.domain import effort # prevent circular import
+        super(Task, self).colorChangedEvent(event)
         color = self.color()
         for task in [self] + self.childrenWithoutOwnColor():
             for eachEffort in task.efforts():
@@ -498,7 +498,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 
     # revenue
     
-    def hourlyFee(self, recursive=False):
+    def hourlyFee(self, recursive=False): # pylint: disable-msg=W0613
         return self.__hourlyFee.get()
     
     def setHourlyFee(self, hourlyFee, event=None):
@@ -541,7 +541,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         
     # reminder
     
-    def reminder(self, recursive=False):
+    def reminder(self, recursive=False): # pylint: disable-msg=W0613
         return self.__reminder.get()
 
     def setReminder(self, reminderDateTime=None, event=None):

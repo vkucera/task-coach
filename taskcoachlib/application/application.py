@@ -41,6 +41,7 @@ class Application(object):
         ''' Call this to start the Application. '''
         if self.settings.getboolean('version', 'notify'):
             from taskcoachlib import meta
+            # pylint: disable-msg=W0201
             self.vc = meta.VersionChecker(self.settings)
             self.vc.start()
         self.copyDefaultTemplates()
@@ -70,6 +71,7 @@ class Application(object):
             splash = gui.SplashScreen()
         else:
             splash = None
+        # pylint: disable-msg=W0201
         self.taskFile = persistence.LockedTaskFile()
         self.autoSaver = persistence.AutoSaver(self.settings)
         self.io = gui.IOController(self.taskFile, self.displayMessage, 
@@ -87,6 +89,7 @@ class Application(object):
     def initConfig(self, loadSettings):
         from taskcoachlib import config
         iniFile = self._options.inifile if self._options else None
+        # pylint: disable-msg=W0201
         self.settings = config.Settings(loadSettings, iniFile)
         
     def initLanguage(self):

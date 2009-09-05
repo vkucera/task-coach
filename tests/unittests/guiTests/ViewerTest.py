@@ -22,6 +22,7 @@ from taskcoachlib.domain import task, effort, date
 from taskcoachlib.thirdparty import hypertreelist
 
 
+
 class ViewerTest(test.wxTestCase):
     def setUp(self):
         super(ViewerTest, self).setUp()
@@ -167,6 +168,7 @@ class SearchableViewerTest(test.TestCase):
         
     def createViewer(self):
         viewer = SearchableViewerUnderTest()
+        # pylint: disable-msg=W0201
         viewer.settings = self.settings
         viewer.settingsSection = lambda: 'taskviewer'
         presentation = viewer.createFilter(task.TaskList())
@@ -252,6 +254,7 @@ class FilterableViewerForTasks(test.TestCase):
         
     def createViewer(self):
         viewer = FilterableViewerForTasksUnderTest()
+        # pylint: disable-msg=W0201
         viewer.taskFile = persistence.TaskFile()
         viewer.settings = self.settings
         viewer.settingsSection = lambda: 'taskviewer'

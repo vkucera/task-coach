@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,14 +20,17 @@ import test
 from taskcoachlib import patterns
 
 
-class Singleton:
+class Singleton(object):
     __metaclass__ = patterns.Singleton
-    pass
+
 
 class SingletonTest(test.TestCase):
     def tearDown(self):
         super(SingletonTest, self).tearDown()
-        Singleton.deleteInstance()
+        self.resetSingleton()
+        
+    def resetSingleton(self):
+        Singleton.deleteInstance() # pylint: disable-msg=E1101
         
     def testCreation(self):
         singleton = Singleton()
@@ -60,32 +63,32 @@ class SingletonTest(test.TestCase):
             __metaclass__ = patterns.Singleton
             def __init__(self):
                 SingletonWithInit._count += 1
-        single1 = SingletonWithInit()
-        single2 = SingletonWithInit()
-        self.assertEqual(1, SingletonWithInit._count)
+        SingletonWithInit()
+        SingletonWithInit()
+        self.assertEqual(1, SingletonWithInit._count) # pylint: disable-msg=W0212
         
     def testDeleteInstance(self):
         singleton1 = Singleton()
-        Singleton.deleteInstance()
+        self.resetSingleton()
         singleton2 = Singleton()
         self.failIf(singleton1 is singleton2)
         
     def testSingletonHasNoInstanceBeforeFirstCreation(self):
-        self.failIf(Singleton.hasInstance())
+        self.failIf(Singleton.hasInstance()) # pylint: disable-msg=E1101
         
     def testSingletonHasInstanceAfterFirstCreation(self):
-        singleton = Singleton()
-        self.failUnless(Singleton.hasInstance())
+        Singleton()
+        self.failUnless(Singleton.hasInstance()) # pylint: disable-msg=E1101
         
     def testSingletonHasInstanceAfterSecondCreation(self):
-        singleton1 = Singleton()
-        singleton2 = Singleton()
-        self.failUnless(Singleton.hasInstance())
+        Singleton()
+        Singleton()
+        self.failUnless(Singleton.hasInstance()) # pylint: disable-msg=E1101
         
     def testSingletonHasNoInstanceAfterDeletion(self):
-        singleton = Singleton()
-        Singleton.deleteInstance()
-        self.failIf(Singleton.hasInstance())
+        Singleton()
+        self.resetSingleton()
+        self.failIf(Singleton.hasInstance()) # pylint: disable-msg=E1101
 
 
 class SingletonSubclassTest(test.TestCase):
@@ -108,6 +111,7 @@ class SingletonSubclassTest(test.TestCase):
     def testSubclassesCanHaveInit(self):
         class Sub(Singleton):
             def __init__(self):
+                super(Sub, self).__init__()
                 self.a = 1
         sub = Sub()
         self.assertEqual(1, sub.a)
@@ -115,6 +119,7 @@ class SingletonSubclassTest(test.TestCase):
     def testSubclassInitCanHaveArgs(self):
         class Sub(Singleton):
             def __init__(self, arg):
+                super(Sub, self).__init__()
                 self.arg = arg
         self.assertEqual('Yo', Sub('Yo').arg)
 
@@ -122,8 +127,9 @@ class SingletonSubclassTest(test.TestCase):
         class Sub(Singleton):
             _count = 0
             def __init__(self):
+                super(Sub, self).__init__()
                 Sub._count += 1
-        sub1 = Sub()
-        sub2 = Sub()
-        self.assertEqual(1, Sub._count)
+        Sub()
+        Sub()
+        self.assertEqual(1, Sub._count) # pylint: disable-msg=W0212
 

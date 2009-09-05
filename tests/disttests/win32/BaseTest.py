@@ -1,6 +1,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -48,7 +49,7 @@ class TestWithTaskFile(base.Win32TestCase):
         w = mainwindow.findChildren('wxWindowClassNR', 'HyperTreeList')
         
         # Double-click the first task to open the task edit dialog:
-        for i in range(2):
+        for _ in range(2):
             w[1].clickAt(5, 30)
 
         editor = self.findWindow(r'^Edit task')

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
 from unittests import asserts
 from CommandTestCase import CommandTestCase
 from taskcoachlib import command, patterns
@@ -55,7 +54,7 @@ class AddNoteCommandTest(NoteCommandTestCase):
     def testAddedNoteIsRootItem(self):
         owner = note.NoteOwner()
         command.AddNoteCommand([owner], [owner]).do()
-        self.failUnless(owner.notes()[0].parent() is None)
+        self.failUnless(owner.notes()[0].parent() is None) # pylint: disable-msg=E1101
         
 
 class NewSubNoteCommandTest(NoteCommandTestCase):
@@ -88,10 +87,10 @@ class EditNoteCommandTest(NoteCommandTestCase):
         self.notes.append(self.note)
         
     def editNote(self, notes=None):
-        notes = notes or []
-        editNote = command.EditNoteCommand(self.notes, notes)
-        for note in notes:
-            note.setSubject('new')
+        notesToEdit = notes or []
+        editNote = command.EditNoteCommand(self.notes, notesToEdit)
+        for noteToEdit in notesToEdit:
+            noteToEdit.setSubject('new')
         editNote.do()
         
     def testEditNote_WithoutSelection(self):

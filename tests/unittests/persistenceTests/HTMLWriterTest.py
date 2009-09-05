@@ -19,7 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, StringIO
 import test
 from taskcoachlib import persistence, gui, config
-from taskcoachlib.domain import task, category, effort, date, note
+from taskcoachlib.domain import task, category, effort, date
+
 
 
 class HTMLWriterUnderTest(persistence.HTMLWriter):
@@ -28,19 +29,22 @@ class HTMLWriterUnderTest(persistence.HTMLWriter):
     
     
 class HTMLWriterTestCase(test.wxTestCase):
+    treeMode = 'Subclass responsibility'
+    
     def setUp(self):
         super(HTMLWriterTestCase, self).setUp()
+        task.Task.settings = self.settings = config.Settings(load=False)
         self.fd = StringIO.StringIO()
         self.filename = 'filename.html'
         self.writer = HTMLWriterUnderTest(self.fd, self.filename)
         self.taskFile = persistence.TaskFile()
         self.task = task.Task('Task subject')
         self.taskFile.tasks().append(self.task)
-        self.settings = config.Settings(load=False)
         self.createViewer()
         
     def createViewer(self):
         self.settings.set('taskviewer', 'treemode', self.treeMode)
+        # pylint: disable-msg=W0201
         self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile,
             self.settings)
 
@@ -65,7 +69,7 @@ class HTMLWriterTestCase(test.wxTestCase):
         self.viewer.widget.select((index,))
 
 
-class CommonTests(object):
+class CommonTestsMixin(object):
     def testHTML(self):
         self.expectInHTML('<html>\n', '</html>\n')
         
@@ -79,7 +83,7 @@ class CommonTests(object):
         self.expectInHTML('  <body>\n', '  </body>\n')
 
 
-class TaskTests(CommonTests):
+class TaskTestsMixin(CommonTestsMixin):
     def testTaskSubject(self):
         self.expectInHTML('>Task subject<')
         
@@ -137,7 +141,7 @@ class TaskTests(CommonTests):
         self.expectInHTML('<tr class="active" style="background: #FF0000">')
         
         
-class HTMLListWriterTest(TaskTests, HTMLWriterTestCase):
+class HTMLListWriterTest(TaskTestsMixin, HTMLWriterTestCase):
     treeMode = 'False'
         
     def testTaskDescription(self):
@@ -151,11 +155,11 @@ class HTMLListWriterTest(TaskTests, HTMLWriterTestCase):
         self.expectInHTML('>Line1<br>Line2<')
                       
 
-class HTMLTreeWriterTest(TaskTests, HTMLWriterTestCase):
+class HTMLTreeWriterTest(TaskTestsMixin, HTMLWriterTestCase):
     treeMode = 'True'
 
 
-class EffortWriterTest(HTMLWriterTestCase, CommonTests):
+class EffortWriterTest(HTMLWriterTestCase, CommonTestsMixin):
     def setUp(self):
         super(EffortWriterTest, self).setUp()
         now = date.DateTime.now()
@@ -163,6 +167,7 @@ class EffortWriterTest(HTMLWriterTestCase, CommonTests):
                                           stop=now + date.TimeDelta(seconds=1)))
 
     def createViewer(self):
+        # pylint: disable-msg=W0201
         self.viewer = gui.viewer.EffortViewer(self.frame, self.taskFile,
             self.settings)
 

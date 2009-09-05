@@ -19,10 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import test, wx
 from unittests import dummy
 from taskcoachlib import gui, config, persistence
-from taskcoachlib.domain import task, effort, date, category, note
+from taskcoachlib.domain import task, effort, date
 
 
-class EffortViewerUnderTest(gui.viewer.EffortViewer):
+class EffortViewerUnderTest(gui.viewer.EffortViewer): # pylint: disable-msg=W0223
     def createWidget(self):
         return dummy.DummyWidget(self)
     
@@ -52,7 +52,7 @@ class EffortViewerForSpecificTasksTest(test.wxTestCase):
         
     def testEffortEditorDoesUseAllTasks(self):
         dialog = self.viewer.newItemDialog()
-        self.assertEqual(2, len(dialog._taskFile.tasks()))
+        self.assertEqual(2, len(dialog._taskFile.tasks())) # pylint: disable-msg=W0212
         
     def testViewerKeepsShowingOnlyEffortForSpecifiedTasksWhenSwitchingAggregation(self):
         self.viewer.showEffortAggregation('week')
@@ -132,6 +132,8 @@ class EffortViewerTest(test.wxTestCase):
 
 
 class EffortViewerAggregationTestCase(test.wxTestCase):
+    aggregation = 'Subclass responsibility'
+    
     def createViewer(self):
         return gui.viewer.EffortViewer(self.frame, self.taskFile, self.settings)
 
@@ -149,8 +151,9 @@ class EffortViewerAggregationTestCase(test.wxTestCase):
             date.DateTime(2008,7,17,1,0,0), date.DateTime(2008,7,17,2,0,0)))            
         mostRecentPeriod = (date.DateTime(2008,7,23,1,0,0), 
                             date.DateTime(2008,7,23,2,0,0))
-        self.task.addEffort(effort.Effort(self.task, *mostRecentPeriod))
         self.task2 = task.Task('Task2')
+        # pylint: disable-msg=W0142
+        self.task.addEffort(effort.Effort(self.task, *mostRecentPeriod))
         self.task2.addEffort(effort.Effort(self.task2, *mostRecentPeriod))
         
         self.taskFile = persistence.TaskFile()
@@ -163,7 +166,7 @@ class EffortViewerAggregationTestCase(test.wxTestCase):
         self.viewer.showEffortAggregation(aggregations[0])
     
 
-class CommonTests(object):
+class CommonTestsMixin(object):
     def testNumberOfItems(self):
         self.assertEqual(self.expectedNumberOfItems, self.viewer.size())
 
@@ -260,7 +263,7 @@ class CommonTests(object):
                          len(self.viewer.currentlyTrackedItems()))
     
 
-class EffortViewerWithoutAggregationTest(CommonTests, 
+class EffortViewerWithoutAggregationTest(CommonTestsMixin, 
                                          EffortViewerAggregationTestCase):
     aggregation = 'details'
     expectedNumberOfItems = 5
@@ -268,21 +271,21 @@ class EffortViewerWithoutAggregationTest(CommonTests,
         date.DateTime(2008,7,23,1,0), date.DateTime(2008,7,23,2,0))
     
 
-class EffortViewerWithAggregationPerDayTest(CommonTests, 
+class EffortViewerWithAggregationPerDayTest(CommonTestsMixin, 
                                             EffortViewerAggregationTestCase):
     aggregation = 'day'
     expectedNumberOfItems = 7 # 4 day/task combinations on 3 days (== 3 total rows) 
     expectedPeriodRendering = gui.render.date(date.Date(2008,7,23))
 
 
-class EffortViewerWithAggregationPerWeekTest(CommonTests, 
+class EffortViewerWithAggregationPerWeekTest(CommonTestsMixin, 
                                              EffortViewerAggregationTestCase):
     aggregation = 'week'
     expectedNumberOfItems = 5 # 3 week/task combinations in 2 weeks (== 2 total rows)
     expectedPeriodRendering = '2008-30'
 
 
-class EffortViewerWithAggregationPerMonthTest(CommonTests, 
+class EffortViewerWithAggregationPerMonthTest(CommonTestsMixin, 
                                               EffortViewerAggregationTestCase):
     aggregation = 'month'
     expectedNumberOfItems = 3 # 2 month/task combinations in 1 month (== 1 total row)
