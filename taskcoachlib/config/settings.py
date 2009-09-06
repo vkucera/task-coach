@@ -204,6 +204,18 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
 
     def pathToTemplatesDir(self):
         path = os.path.join(self.path(), 'taskcoach-templates')
+
+        if '__WXMSW__' in wx.PlatformInfo:
+            # Under Windows, check for a shortcut and follow it if it
+            # exists.
+
+            if os.path.exists(path + '.lnk'):
+                from win32com.client import Dispatch
+
+                shell = Dispatch('WScript.Shell')
+                shortcut = shell.CreateShortcut(path + '.lnk')
+                return shortcut.TargetPath
+
         try:
             os.makedirs(path)
         except OSError:
