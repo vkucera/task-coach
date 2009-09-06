@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -56,3 +56,6 @@ class CategoryList(base.Collection):
             if category.subject() == name:
                 return category
         return None
+    
+    def filteredCategories(self):
+        return [category for category in self if category.isFiltered()]

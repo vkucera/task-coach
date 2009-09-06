@@ -16,7 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib.gui.threads import synchronized, DeferredCallMixin
+# pylint: disable-msg=W0201,E1101
+ 
 from taskcoachlib.patterns.network import Acceptor
 from taskcoachlib.domain.date import Date, parseDate
 
@@ -55,7 +56,6 @@ class BaseItem(object):
 
     def start(self):
         """This method should reinitialize the instance."""
-
         self.state = 0
         self.value = None
 

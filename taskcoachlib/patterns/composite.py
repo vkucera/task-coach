@@ -93,13 +93,14 @@ class Composite(object):
         
 
 class ObservableComposite(Composite):
-    def __setstate__(self, state, event=None):
+    def __setstate__(self, state, event=None): # pylint: disable-msg=W0221
         notify = event is None
         event = event or observer.Event()
         oldChildren = set(self.children())
         super(ObservableComposite, self).__setstate__(state)
         newChildren = set(self.children())
         childrenRemoved = oldChildren - newChildren
+        # pylint: disable-msg=W0142
         if childrenRemoved:
             self.removeChildEvent(event, *childrenRemoved)
         childrenAdded = newChildren - oldChildren
@@ -108,7 +109,7 @@ class ObservableComposite(Composite):
         if notify:
             event.send()
 
-    def addChild(self, child, event=None):
+    def addChild(self, child, event=None): # pylint: disable-msg=W0221
         notify = event is None
         event = event or observer.Event()
         super(ObservableComposite, self).addChild(child)
@@ -123,7 +124,7 @@ class ObservableComposite(Composite):
     def addChildEventType(class_):
         return 'composite(%s).child.add'%class_
 
-    def removeChild(self, child, event=None):
+    def removeChild(self, child, event=None): # pylint: disable-msg=W0221
         notify = event is None
         event = event or observer.Event()
         super(ObservableComposite, self).removeChild(child)

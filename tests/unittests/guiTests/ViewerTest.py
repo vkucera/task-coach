@@ -72,6 +72,11 @@ class ViewerTest(test.wxTestCase):
         self.viewer.setTitle('New title')
         self.assertEqual('New title', self.notebook.GetPageText(0))
 
+    def testGetItemTooltipData(self):
+        self.task.setDescription('Description')
+        expectedData = [(None, ['Description']), ('note', []), ('attachment', [])]
+        self.assertEqual(expectedData, self.viewer.getItemTooltipData((0,)))
+
 
 class SortableViewerTest(test.TestCase):
     def setUp(self):

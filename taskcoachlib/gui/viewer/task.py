@@ -55,8 +55,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
         return task.Task.trackStopEventType()
 
     def newItemDialog(self, *args, **kwargs):
-        kwargs['categories'] = [category for category in self.taskFile.categories()
-                                if category.isFiltered()]
+        kwargs['categories'] = self.taskFile.categories().filteredCategories()
         return super(BaseTaskViewer, self).newItemDialog(*args, **kwargs)
     
     def editItemDialog(self, items, bitmap, columnName=''):

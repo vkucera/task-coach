@@ -81,8 +81,8 @@ class PrinterSettings(object):
 class HTMLPrintout(wx.html.HtmlPrintout):
     def __init__(self, aViewer, settings, printSelectionOnly=False, *args, **kwargs):
         super(HTMLPrintout, self).__init__(*args, **kwargs)
-        htmlText, count = persistence.viewer2html(aViewer, settings,
-                                                  selectionOnly=printSelectionOnly)
+        htmlText = persistence.viewer2html(aViewer, settings,
+                                           selectionOnly=printSelectionOnly)[0]
         self.SetHtmlText(htmlText)
         self.SetFooter(_('Page') + ' @PAGENUM@/@PAGESCNT@', wx.html.PAGE_ALL)
         self.SetFonts('Arial', 'Courier')
@@ -97,10 +97,10 @@ class DCPrintout(wx.Printout):
         self.viewer = viewer
         super(DCPrintout, self).__init__()
         
-    def OnPrintPage(self, page):
+    def OnPrintPage(self, page): # pylint: disable-msg=W0613
         self.viewer.getWidget().Draw(self.GetDC())
         
-    def GetPageInfo(self):
+    def GetPageInfo(self): # pylint: disable-msg=W0221
         return (1, 1, 1, 1)
 
 

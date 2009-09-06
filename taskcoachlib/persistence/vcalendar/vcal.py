@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 This module defines classes and functions to handle the VCalendar
 format.
-'''
+''' # pylint: disable-msg=W0105
 
 from taskcoachlib.domain.base import Object
 from taskcoachlib.domain.date import date
@@ -79,7 +79,7 @@ class VCalendarParser(object):
         domain object creation for the current (parsed) object.
     @ivar tasks: A list of dictionaries suitable to use as
         keyword arguments for task creation, representing all
-        VTODO object in the parsed file. '''
+        VTODO object in the parsed file. ''' # pylint: disable-msg=W0511
 
     def __init__(self, *args, **kwargs):
         super(VCalendarParser, self).__init__(*args, **kwargs)
@@ -90,7 +90,7 @@ class VCalendarParser(object):
 
     def init(self):
         ''' Called after a state change. '''
-        self.kwargs = {}
+        self.kwargs = {} # pylint: disable-msg=W0201
 
     def setState(self, state):
         ''' Sets the state (class) of the parser object. '''
@@ -179,7 +179,7 @@ class VCalendarParser(object):
 
 
 class VTodoParser(VCalendarParser):
-    ''' This is the state responsible for parsing VTODO objects. '''
+    ''' This is the state responsible for parsing VTODO objects. ''' # pylint: disable-msg=W0511
 
     def onFinish(self):
         if not self.kwargs.has_key('startDate'):
@@ -236,9 +236,9 @@ def VCalFromTask(task):
     values = { 'description': quoteString(task.description()),
                'subject': quoteString(task.subject()),
                'priority': min(3, task.priority() + 1),
-               'categories': ','.join(map(quoteString, [unicode(c) for c in task.categories(True)])) }
+               'categories': ','.join([quoteString(unicode(c)) for c in task.categories(True)]) }
 
-    components.append('BEGIN:VTODO')
+    components.append('BEGIN:VTODO') # pylint: disable-msg=W0511
     components.append('UID:%s' % task.id().encode('UTF-8'))
 
     if task.startDate() != date.Date():
@@ -266,7 +266,7 @@ def VCalFromTask(task):
     components.append('DESCRIPTION;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:%(description)s')
     components.append('PRIORITY:%(priority)d')
     components.append('SUMMARY;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:%(subject)s')
-    components.append('END:VTODO')
+    components.append('END:VTODO') # pylint: disable-msg=W0511
 
     text = ''
 

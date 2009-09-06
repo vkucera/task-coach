@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, cgi
 from taskcoachlib.gui import color
 
+# pylint: disable-msg=W0142
 
 def viewer2html(viewer, settings, cssFilename=None, selectionOnly=False):
     converter = Viewer2HTMLConverter(viewer, settings)
@@ -36,6 +37,7 @@ class Viewer2HTMLConverter(object):
         super(Viewer2HTMLConverter, self).__init__()
         self.viewer = viewer
         self.settings = settings
+        self.count = 0
         
     def __call__(self, cssFilename, selectionOnly):
         ''' Create an HTML document. '''
@@ -152,9 +154,9 @@ class Viewer2HTMLConverter(object):
         for column in visibleColumns:
             renderedItem = self.render(item, column, indent=not bodyRowContent and tree)
             if printing:
-                color = self.cssColorSyntax(self.viewer.getColor(item))
+                itemColor = self.cssColorSyntax(self.viewer.getColor(item))
                 renderedItem = self.wrap(renderedItem, 'font', level+1, 
-                                         color=color, oneLine=True)
+                                         color=itemColor, oneLine=True)
             bodyRowContent.append(self.bodyCell(renderedItem, column, level+1))
         attributes = self.bodyRowBgColor(item, printing)
         if not printing:
@@ -220,13 +222,13 @@ class Viewer2HTMLConverter(object):
         return '  ' * level + htmlText
     
     @classmethod
-    def cssColorSyntax(class_, color):
+    def cssColorSyntax(class_, wxColor):
         ''' Translate the wx-color, either a wx.Color instance or a tuple, 
             into CSS syntax. ''' 
         try:
-            return color.GetAsString(wx.C2S_HTML_SYNTAX)
+            return wxColor.GetAsString(wx.C2S_HTML_SYNTAX)
         except AttributeError: # color is a tuple
-            return class_.cssColorSyntax(wx.Color(*color))
+            return class_.cssColorSyntax(wx.Color(*wxColor))
         
     @staticmethod
     def render(item, column, indent=False):

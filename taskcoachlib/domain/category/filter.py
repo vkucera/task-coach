@@ -46,8 +46,7 @@ class CategoryFilter(base.Filter):
         self.__filterOnlyWhenAllCategoriesMatch = filterOnlyWhenAllCategoriesMatch
         
     def filter(self, categorizables):
-        filteredCategories = [category for category in self.__categories 
-                              if category.isFiltered()]
+        filteredCategories = self.__categories.filteredCategories()
         if filteredCategories:
             return [categorizable for categorizable in categorizables if \
                     self.filterCategorizable(categorizable, filteredCategories)]

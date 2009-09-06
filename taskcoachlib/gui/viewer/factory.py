@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import effort, task, category, note
 
+
 def viewerTypes():
     return 'squaretaskviewer', 'taskviewer', 'noteviewer', 'categoryviewer', 'effortviewer'
 
@@ -46,7 +47,7 @@ class addViewers(object):
 
     def addViewers(self, viewerClass):
         numberOfViewersToAdd = self.numberOfViewersToAdd(viewerClass)
-        for i in range(numberOfViewersToAdd):
+        for _ in range(numberOfViewersToAdd):
             viewerInstance = viewerClass(*self.viewerInitArgs, 
                                          **self.viewerKwargs(viewerClass))
             self.viewerContainer.addViewer(viewerInstance)
@@ -54,7 +55,7 @@ class addViewers(object):
     def numberOfViewersToAdd(self, viewerClass):
         return self.settings.getint('view', viewerClass.__name__.lower() + 'count')
 
-    def viewerKwargs(self, viewerClass):
+    def viewerKwargs(self, viewerClass): # pylint: disable-msg=W0613
         return dict()
     
 

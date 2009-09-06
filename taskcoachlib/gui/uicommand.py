@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns, meta, command, help, widgets, persistence
+from taskcoachlib import patterns, meta, command, help, widgets, persistence # pylint: disable-msg=W0622
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import base, task, attachment, effort
 from taskcoachlib.mailer import writeMail
@@ -30,7 +30,7 @@ import dialog, render, viewer, printer
     be invoked by the user via the user interface (menu's, toolbar, etc.).
     See the Taskmaster pattern described here: 
     http://www.objectmentor.com/resources/articles/taskmast.pdf 
-'''
+''' # pylint: disable-msg=W0105
 
 
 class UICommandContainerMixin(object):
@@ -50,7 +50,7 @@ class UICommandContainerMixin(object):
         import menu
         subMenu = menu.Menu(self._window)
         self.appendMenu(menuTitle, subMenu)
-        subMenu.appendUICommands(*uiCommands)
+        subMenu.appendUICommands(*uiCommands) # pylint: disable-msg=W0142
         
 
 class UICommand(object):
@@ -61,7 +61,7 @@ class UICommand(object):
         implement doCommand() and optionally override enabled(). '''
     
     def __init__(self, menuText='', helpText='', bitmap='nobitmap', 
-             kind=wx.ITEM_NORMAL, id=None, bitmap2=None, *args, **kwargs):
+             kind=wx.ITEM_NORMAL, id=None, bitmap2=None, *args, **kwargs): # pylint: disable-msg=W0622
         super(UICommand, self).__init__()
         self.menuText = menuText or '<%s>'%_('None')
         self.helpText = helpText
@@ -304,7 +304,7 @@ class PopupButtonMixin(object):
         args = [self.createPopupMenu()]
         if self.toolbar:
             args.append(self.menuXY())
-        self.mainWindow().PopupMenu(*args)
+        self.mainWindow().PopupMenu(*args) # pylint: disable-msg=W0142
 
     def menuXY(self):
         ''' Location to pop up the menu. '''
@@ -1279,8 +1279,7 @@ class TaskNew(TaskListCommand, SettingsCommand):
         return newTaskDialog # for testing purposes
 
     def categoriesForTheNewTask(self):
-        categories = self.mainWindow().taskFile.categories()
-        return [category for category in categories if category.isFiltered()]
+        return self.mainWindow().taskFile.categories().filteredCategories()
 
 
 class TaskNewFromTemplate(TaskNew):
@@ -1301,6 +1300,7 @@ class TaskNewFromTemplate(TaskNew):
         templateTask = self.__readTemplate()
         kwargs = templateTask.__getcopystate__()
         kwargs['categories'] = self.categoriesForTheNewTask()
+        # pylint: disable-msg=W0142
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
             command.NewTaskCommand(self.taskList, **kwargs),
             self.settings, self.taskList, self.mainWindow().taskFile, 
@@ -1506,7 +1506,7 @@ class DragAndDropCommand(ViewerCommand):
         raise NotImplementedError
     
 
-class TaskDragAndDrop(TaskListCommand, DragAndDropCommand): # pylint: disable-msg=W0223
+class TaskDragAndDrop(DragAndDropCommand, TaskListCommand):
     def createCommand(self, dragItem, dropItem):
         return command.DragAndDropTaskCommand(self.taskList, dragItem, 
                                               drop=dropItem)
@@ -1882,7 +1882,7 @@ class CategoryEdit(ObjectEdit, NeedsSelectedCategoryMixin, CategoriesCommand):
     __containerName__ = 'categories'
 
 
-class CategoryDragAndDrop(CategoriesCommand, DragAndDropCommand):
+class CategoryDragAndDrop(DragAndDropCommand, CategoriesCommand):
     def createCommand(self, dragItem, dropItem):
         return command.DragAndDropCategoryCommand(self.categories, dragItem, 
                                                   drop=dropItem)
@@ -1906,8 +1906,7 @@ class NoteNew(NotesCommand, SettingsCommand):
         return noteDialog # for testing purposes
 
     def categoriesForTheNewNote(self):
-        categories = self.mainWindow().taskFile.categories()
-        return [category for category in categories if category.isFiltered()]
+        return self.mainWindow().taskFile.categories().filteredCategories()
     
 
 class NewNoteWithSelectedCategories(NoteNew, ViewerCommand):
@@ -1941,11 +1940,11 @@ class NoteEdit(ObjectEdit, NeedsSelectedNoteMixin, NotesCommand):
     __containerName__ = 'notes'
 
 
-class NoteDragAndDrop(NotesCommand, DragAndDropCommand):
+class NoteDragAndDrop(DragAndDropCommand, NotesCommand):
     def createCommand(self, dragItem, dropItem):
         return command.DragAndDropNoteCommand(self.notes, dragItem, 
-                                                  drop=dropItem)
-                         
+                                              drop=dropItem)       
+ 
                                                         
 class AttachmentNew(AttachmentsCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
@@ -1999,6 +1998,7 @@ class DialogCommand(UICommand):
         
     def doCommand(self, event):
         self.closed = False
+        # pylint: disable-msg=W0201
         self.dialog = widgets.HTMLDialog(self._dialogTitle, self._dialogText, 
                                     bitmap=self.bitmap, 
                                     direction=self._direction)
@@ -2083,18 +2083,21 @@ class Search(ViewerCommand, SettingsCommand):
 
     def appendToToolBar(self, toolbar):
         searchString, matchCase, includeSubItems, searchDescription = self.viewer.getSearchFilter()
+        # pylint: disable-msg=W0201
         self.searchControl = widgets.SearchCtrl(toolbar, value=searchString,
             style=wx.TE_PROCESS_ENTER, matchCase=matchCase, 
             includeSubItems=includeSubItems, searchDescription=searchDescription,
             callback=self.onFind)
         toolbar.AddControl(self.searchControl)
 
-
-class ToolbarChoiceCommand(UICommand):
-    choiceLabels = choiceData = 'Subclass responsibility'
+    def doCommand(self, event):
+        pass # Not used
     
+
+class ToolbarChoiceCommandMixin(object):
     def appendToToolBar(self, toolbar):
         ''' Add our choice control to the toolbar. '''
+        # pylint: disable-msg=W0201
         self.choiceCtrl = wx.Choice(toolbar, choices=self.choiceLabels)
         self.currentChoice = self.choiceCtrl.Selection
         self.choiceCtrl.Bind(wx.EVT_CHOICE, self.onChoice)
@@ -2110,6 +2113,9 @@ class ToolbarChoiceCommand(UICommand):
         
     def doChoice(self, choice):
         raise NotImplementedError
+    
+    def doCommand(self, event):
+        pass # Not used
         
     def setChoice(self, choice):
         ''' Programmatically set the current choice in the choice control. '''
@@ -2118,7 +2124,7 @@ class ToolbarChoiceCommand(UICommand):
         self.currentChoice = index
 
 
-class EffortViewerAggregationChoice(ViewerCommand, ToolbarChoiceCommand):
+class EffortViewerAggregationChoice(ToolbarChoiceCommandMixin, ViewerCommand):
     choiceLabels = [_('Effort details'), _('Effort per day'), 
                          _('Effort per week'), _('Effort per month')]
     choiceData = ['details', 'day', 'week', 'month']
@@ -2127,7 +2133,7 @@ class EffortViewerAggregationChoice(ViewerCommand, ToolbarChoiceCommand):
         self.viewer.showEffortAggregation(choice)
         
 
-class TaskViewerTreeOrListChoice(ViewerCommand, ToolbarChoiceCommand):
+class TaskViewerTreeOrListChoice(ToolbarChoiceCommandMixin, ViewerCommand):
     choiceLabels = [_('Tree of tasks'), _('List of tasks')]
     choiceData = [True, False]
     
@@ -2135,7 +2141,7 @@ class TaskViewerTreeOrListChoice(ViewerCommand, ToolbarChoiceCommand):
         self.viewer.showTree(choice)
         
 
-class CategoryViewerFilterChoice(SettingsCommand, ToolbarChoiceCommand):
+class CategoryViewerFilterChoice(ToolbarChoiceCommandMixin, SettingsCommand):
     choiceLabels = [_('Filter on all checked categories'),
                     _('Filter on any checked category')]
     choiceData = [True, False]
@@ -2144,7 +2150,7 @@ class CategoryViewerFilterChoice(SettingsCommand, ToolbarChoiceCommand):
         self.settings.set('view', 'categoryfiltermatchall', str(choice))
 
 
-class SquareTaskViewerOrderChoice(ViewerCommand, ToolbarChoiceCommand):
+class SquareTaskViewerOrderChoice(ToolbarChoiceCommandMixin, ViewerCommand):
     choiceLabels = [_('Budget'), _('Time spent'), _('Fixed fee'), _('Revenue')]
     choiceData = ['budget', 'timeSpent', 'fixedFee', 'revenue']
     

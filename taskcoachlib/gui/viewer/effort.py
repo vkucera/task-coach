@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 from taskcoachlib import patterns, command, widgets, domain
 from taskcoachlib.domain import effort, date
-from taskcoachlib.domain.base import filter
+from taskcoachlib.domain.base import filter # pylint: disable-msg=W0622
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, render, dialog
 import base, mixin
@@ -73,7 +73,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
             patterns.Publisher().removeInstance(observer)    
             
     def isSortable(self):
-        return False # FIXME: make effort viewers sortable too?
+        return False # Effort viewers are currently not sortable
     
     def isShowingEffort(self):
         return True
@@ -145,26 +145,27 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         return widget
     
     def _createColumns(self):
+        # pylint: disable-msg=W0142
+        kwargs = dict(renderDescriptionCallback=lambda effort: effort.description(),
+                      resizeCallback=self.onResizeColumn)
         return [widgets.Column(name, columnHeader, eventType, 
-                renderCallback=renderCallback, width=self.getColumnWidth(name),
-                resizeCallback=self.onResizeColumn) \
+                renderCallback=renderCallback,
+                width=self.getColumnWidth(name), **kwargs) \
             for name, columnHeader, eventType, renderCallback in \
             ('period', _('Period'), 'effort.duration', self.renderPeriod),
             ('task', _('Task'), effort.Effort.taskChangedEventType(), lambda effort: effort.task().subject(recursive=True)),
             ('description', _('Description'), effort.Effort.descriptionChangedEventType(), lambda effort: effort.description())] + \
             [widgets.Column('categories', _('Categories'),
              width=self.getColumnWidth('categories'),
-             renderCallback=self.renderCategory, 
-             renderDescriptionCallback=lambda effort: effort.description(),
-             resizeCallback=self.onResizeColumn)] + \
+             renderCallback=self.renderCategory, **kwargs)] + \
             [widgets.Column('totalCategories', _('Overall categories'),
              width=self.getColumnWidth('totalCategories'),
              renderCallback=lambda effort: self.renderCategory(effort, recursive=True),
-             renderDescriptionCallback=lambda effort: effort.description(),
-             resizeCallback=self.onResizeColumn)] + \
+             **kwargs)] + \
             [widgets.Column(name, columnHeader, eventType, 
-             width=self.getColumnWidth(name), resizeCallback=self.onResizeColumn,
-             renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT) \
+             width=self.getColumnWidth(name),
+             renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT,
+             **kwargs) \
             for name, columnHeader, eventType, renderCallback in \
             ('timeSpent', _('Time spent'), 'effort.duration', 
                 lambda effort: render.timeSpent(effort.duration())),
@@ -176,7 +177,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
                  lambda effort: render.monetaryAmount(effort.revenue(recursive=True)))] + \
              [widgets.Column(name, columnHeader, eventType, 
               renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT,
-              width=self.getColumnWidth(name), resizeCallback=self.onResizeColumn) \
+              width=self.getColumnWidth(name), **kwargs) \
              for name, columnHeader, eventType, renderCallback in \
                 ('monday', _('Monday'), 'effort.duration',  
                  lambda effort: self.renderTimeSpentOnDay(effort, 0)),                             
@@ -264,39 +265,33 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
     def createToolBarUICommands(self):
         commands = super(EffortViewer, self).createToolBarUICommands()
         # This is an instance variable for use in unit tests
+        # pylint: disable-msg=W0201
         self.deleteUICommand = uicommand.EffortDelete(viewer=self,
                                                       effortList=self.presentation())
         # This is an instance variable so that the choice can be changed programmatically
         self.aggregationUICommand = \
             uicommand.EffortViewerAggregationChoice(viewer=self)
-        for command in [None, 
-                        uicommand.EffortNew(viewer=self,
-                                            effortList=self.presentation(),
-                                            taskList=self.taskFile.tasks(),
-                                            settings=self.settings),
-                        uicommand.EffortEdit(viewer=self,
-                                             effortList=self.presentation()),
-                        self.deleteUICommand, 
-                        None,
-                        self.aggregationUICommand]:
-            commands.insert(-2, command)
+        for uiCommand in [None, 
+                          uicommand.EffortNew(viewer=self,
+                                              effortList=self.presentation(),
+                                              taskList=self.taskFile.tasks(),
+                                              settings=self.settings),
+                          uicommand.EffortEdit(viewer=self,
+                                               effortList=self.presentation()),
+                          self.deleteUICommand, 
+                          None,
+                          self.aggregationUICommand]:
+            commands.insert(-2, uiCommand)
         return commands
 
     def getItemImage(self, index, which, column=0):
         return -1
-        
-    def getItemTooltipData(self, index, column=0):
-        if self.settings.getboolean('view', 'descriptionpopups'):
-            item = self.getItemWithIndex(index)
-            if item.description():
-                return [(None, map(lambda x: x.rstrip('\r'), item.description().split('\n')))]
-        return []
     
     def curselection(self):
         selection = super(EffortViewer, self).curselection()
         if self.aggregation != 'details':
-            selection = [effort for compositeEffort in selection\
-                                for effort in compositeEffort]
+            selection = [anEffort for compositeEffort in selection\
+                                for anEffort in compositeEffort]
         return selection
 
     def isselected(self, item):
@@ -316,12 +311,12 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         status2 = _('Status: %d tracking')% self.presentation().nrBeingTracked()
         return status1, status2
 
-    def renderPeriod(self, effort):
-        if self._hasRepeatedPeriod(effort):
+    def renderPeriod(self, anEffort):
+        if self._hasRepeatedPeriod(anEffort):
             return ''
-        start = effort.getStart()
+        start = anEffort.getStart()
         if self.aggregation == 'details':
-            return render.dateTimePeriod(start, effort.getStop())
+            return render.dateTimePeriod(start, anEffort.getStop())
         elif self.aggregation == 'day':
             return render.date(start.date())
         elif self.aggregation == 'week':
@@ -329,16 +324,16 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         elif self.aggregation == 'month':
             return render.month(start)
             
-    def _hasRepeatedPeriod(self, effort):
+    def _hasRepeatedPeriod(self, anEffort):
         ''' Return whether the effort has the same period as the previous 
             effort record. '''
-        index = self.presentation().index(effort)
+        index = self.presentation().index(anEffort)
         previousEffort = index > 0 and self.presentation()[index-1] or None
-        return previousEffort and effort.getStart() == previousEffort.getStart()
+        return previousEffort and anEffort.getStart() == previousEffort.getStart()
 
-    def renderTimeSpentOnDay(self, effort, dayOffset):
+    def renderTimeSpentOnDay(self, anEffort, dayOffset):
         if self.aggregation == 'week':
-            duration = effort.durationDay(dayOffset)
+            duration = anEffort.durationDay(dayOffset)
         else:
             duration = date.TimeDelta()
         return render.timeSpent(duration)
@@ -361,3 +356,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
     
     def editItemCommandClass(self):
         return command.EditEffortCommand
+
+    def newSubItemCommandClass(self):
+        pass # efforts are not composite. 
+    

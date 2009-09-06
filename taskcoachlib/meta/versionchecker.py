@@ -43,7 +43,7 @@ class VersionChecker(threading.Thread):
             pad = self.parsePadFile(self.retrievePadFile())
             return pad.findtext('Program_Info/Program_Version')
         except:
-            return self.settings.get('version', 'notified')
+            return self.settings.get('version', 'notified') # pylint: disable-msg=W0702
 
     def parsePadFile(self, padFile):
         return ElementTree.parse(padFile)

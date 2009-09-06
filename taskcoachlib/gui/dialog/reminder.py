@@ -52,7 +52,7 @@ class ReminderDialog(sized_controls.SizedDialog):
         self.Bind(wx.EVT_BUTTON, lambda event: self.Close())
         self.Fit()
 
-    def onOpenTask(self, event):
+    def onOpenTask(self, event): # pylint: disable-msg=W0613
         self.openTaskAfterClose = True
         self.Close()
 

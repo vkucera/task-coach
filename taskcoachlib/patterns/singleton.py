@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+
 class Singleton(type):
     ''' Singleton metaclass. Use by defining the metaclass of a class Singleton,
         e.g.: class ThereCanBeOnlyOne:
@@ -24,6 +25,7 @@ class Singleton(type):
 
     def __call__(class_, *args, **kwargs):
         if not class_.hasInstance():
+            # pylint: disable-msg=W0201
             class_.instance = super(Singleton, class_).__call__(*args, **kwargs)
         return class_.instance
 

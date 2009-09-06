@@ -18,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from taskcoachlib import patterns, command
-from taskcoachlib.i18n import _
 from taskcoachlib.domain import date
 from taskcoachlib.gui.dialog import reminder, editor
 

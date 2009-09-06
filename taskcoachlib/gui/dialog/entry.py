@@ -28,13 +28,13 @@ from taskcoachlib.domain import date
 class DateEntry(widgets.PanelWithBoxSizer):
     defaultDate = date.Date()
 
-    def __init__(self, parent, date=defaultDate, readonly=False, callback=None,
-                 *args, **kwargs):
+    def __init__(self, parent, theDate=defaultDate, readonly=False, 
+                 callback=None, *args, **kwargs):
         super(DateEntry, self).__init__(parent, *args, **kwargs)
         self._entry = widgets.DateCtrl(self, callback)
         if readonly:
             self._entry.Disable()
-        self._entry.SetValue(date)
+        self._entry.SetValue(theDate)
         self.add(self._entry)
         self.fit()
 
@@ -44,8 +44,8 @@ class DateEntry(widgets.PanelWithBoxSizer):
             result = defaultDate
         return result
 
-    def set(self, date=defaultDate):
-        self._entry.SetValue(date)
+    def set(self, newDate=defaultDate):
+        self._entry.SetValue(newDate)
 
     def setToday(self):
         self._entry.SetValue(date.Today())
@@ -123,6 +123,7 @@ class TaskComboTreeBox(wx.Panel):
 
     def _createInterior(self):
         ''' Create the ComboTreebox widget. '''
+        # pylint: disable-msg=W0201
         self._comboTreeBox = combotreebox.ComboTreeBox(self,
             style=wx.CB_READONLY|wx.CB_SORT|wx.TAB_TRAVERSAL)
         boxSizer = wx.BoxSizer()

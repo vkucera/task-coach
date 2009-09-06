@@ -77,10 +77,34 @@ class TranslationIntegrityTestsMixin(object):
     @classmethod
     def removeUmlauts(cls, text):
         return re.sub(cls.umlautRE, '', text)
+        
+        
+# Create all test cases and install them in the global name space:    
+installAllTestCaseClasses() 
 
+def installAllTestCaseClasses():
+    for language in getLanguages():
+        installTestCaseClasses(language)
 
-def singleTranslationTestCaseClassName(language, englishString, 
-                                       prefix='TranslationIntegrityTest'):
+def getLanguages():
+    return [language for language in meta.data.languages.values() \
+            if language is not None]
+
+def installTestCaseClasses(language):
+    translation = __import__('taskcoachlib.i18n.%s'%language, fromlist=['dict'])
+    for englishString, translatedString in translation.dict.iteritems():        
+        installTranslationTestCaseClass(language, englishString, 
+                                              translatedString)
+
+def installTranslationTestCaseClass(language, englishString, 
+                                          translatedString):
+    testCaseClassName = translationTestCaseClassName(language, englishString)
+    testCaseClass = translationTestCaseClass(testCaseClassName, 
+        language, englishString, translatedString)
+    globals()[testCaseClassName] = testCaseClass
+
+def translationTestCaseClassName(language, englishString, 
+                                 prefix='TranslationIntegrityTest'):
     ''' Generate a class name for the test case class based on the language
         and the English string. '''
     # Make sure we only use characters allowed in Python identifiers:
@@ -95,39 +119,10 @@ def singleTranslationTestCaseClassName(language, englishString,
         className = '%s_%s_%s_%d'%(prefix, language, englishString, count)
     return className
 
-
-def singleTranslationTestCaseClass(className, language, englishString, translatedString):
+def translationTestCaseClass(className, language, englishString, translatedString):
     class_ = type(className, (TranslationIntegrityTestsMixin, test.TestCase), {})
     class_.language = language
     class_.englishString = englishString
     class_.translatedString = translatedString
     return class_
 
-
-def installSingleTranslationTestCaseClass(language, englishString, 
-                                          translatedString):
-    testCaseClassName = singleTranslationTestCaseClassName(language, 
-                                                           englishString)
-    testCaseClass = singleTranslationTestCaseClass(testCaseClassName, 
-        language, englishString, translatedString)
-    globals()[testCaseClassName] = testCaseClass
-
-
-def installTestCaseClasses(language):
-    translation = __import__('taskcoachlib.i18n.%s'%language, fromlist=['dict'])
-    for englishString, translatedString in translation.dict.iteritems():        
-        installSingleTranslationTestCaseClass(language, englishString, 
-                                              translatedString)
-
-
-def getLanguages():
-    return [language for language in meta.data.languages.values() \
-            if language is not None]
-        
-        
-def installAllTestCaseClasses():
-    for language in getLanguages():
-        installTestCaseClasses(language)
-    
-installAllTestCaseClasses()
-    

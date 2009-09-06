@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os, re
 
 try:
-    from taskcoachlib.meta.revision import revision
+    from taskcoachlib.meta.revision import revision # pylint: disable-msg=F0401,W0611
 except ImportError:
     revision = 'release'
 
@@ -67,11 +67,11 @@ dist_download_prefix = 'http://downloads.sourceforge.net/%s'%filename_lower
 
 announcement_addresses = 'taskcoach@yahoogroups.com, python-announce@python.org'
 
-copyright = 'Copyright (C) 2004-%s %s'%(release_year, author)
+copyright = 'Copyright (C) 2004-%s %s'%(release_year, author) # pylint: disable-msg=W0622
 license_title = 'GNU General Public License'
 license_version = '3'
 license_title_and_version = '%s version %s'%(license_title, license_version) 
-license = '%s or any later version'%license_title_and_version
+license = '%s or any later version'%license_title_and_version # pylint: disable-msg=W0622
 license_title_and_version_abbrev = 'GPLv%s'%license_version
 license_abbrev = '%s+'%license_title_and_version_abbrev
 license_notice = '''%(name)s is free software: you can redistribute it and/or modify
@@ -145,13 +145,13 @@ languages = {
     'Vietnamese': 'vi'}
 languages_list = ','.join(languages.keys())
 
-def __createDict(locals):
+def __createDict(localsDict):
     ''' Provide the local variables as a dictionary for use in string
         formatting. '''
-    metaDict = {}
-    for key in locals:
+    metaDict = {} # pylint: disable-msg=W0621
+    for key in localsDict:
         if not key.startswith('__'):
-            metaDict[key] = locals[key]
+            metaDict[key] = localsDict[key]
     return metaDict
 
 metaDict = __createDict(locals())
