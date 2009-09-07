@@ -21,6 +21,7 @@ from taskcoachlib import patterns
 from taskcoachlib.domain import task, effort, date
 
 
+
 class EffortAggregatorTestCase(test.TestCase):
     aggregation = 'One of: day, week, or month (override in subclass)'
     
@@ -338,13 +339,13 @@ class MultipleAggregatorsTest(test.TestCase):
         self.effortPerWeek = effort.EffortSorter(effort.EffortAggregator(self.taskList, aggregation='week'))
         
     def testDeleteEffort_StartOfBothPeriods(self):
-        self.task = task.Task()
-        self.taskList.append(self.task)
+        aTask = task.Task()
+        self.taskList.append(aTask)
         # Make sure the start of the day and week are the same, 
         # in other words, use a Monday
-        self.effort = effort.Effort(self.task, date.DateTime(2006,8,28), 
-                            date.DateTime(2006,8,29))
-        self.task.addEffort(self.effort)
-        self.task.removeEffort(self.effort)
+        anEffort = effort.Effort(aTask, date.DateTime(2006,8,28), 
+                                 date.DateTime(2006,8,29))
+        aTask.addEffort(anEffort)
+        aTask.removeEffort(anEffort)
         self.failIf(self.effortPerDay)
 

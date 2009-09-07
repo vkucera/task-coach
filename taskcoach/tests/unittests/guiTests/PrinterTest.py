@@ -21,6 +21,7 @@ import test
 from taskcoachlib import gui, config
 
 
+
 class PrinterTest(test.TestCase):
     def setUp(self):
         super(PrinterTest, self).setUp()
@@ -31,7 +32,10 @@ class PrinterTest(test.TestCase):
 
     def tearDown(self):
         super(PrinterTest, self).tearDown()
-        gui.printer.PrinterSettings.deleteInstance()
+        self.resetPrinterSettings()
+        
+    def resetPrinterSettings(self):
+        gui.printer.PrinterSettings.deleteInstance() # pylint: disable-msg=E1101
  
     def testInitialSettings(self):
         printerSettings = self.printerSettings
@@ -89,7 +93,7 @@ class PrinterTest(test.TestCase):
                          self.settings.getint('printer', 'orientation'))
 
     def testMarginsInPageSetupDataAreUpdatedFromSettings(self):
-        gui.printer.PrinterSettings.deleteInstance()
+        self.resetPrinterSettings()
         for margin in self.margins:
             self.settings.set('printer', 'margin_'+margin, 
                               str(self.margins[margin]))
@@ -98,13 +102,13 @@ class PrinterTest(test.TestCase):
         self.assertEqual(wx.Point(3, 4), printerSettings.GetMarginBottomRight())
         
     def testPaperIdInPageSetupDataIsUpdatedFromSettings(self):
-        gui.printer.PrinterSettings.deleteInstance()
+        self.resetPrinterSettings()
         self.settings.set('printer', 'paper_id', '1')
         printerSettings = gui.printer.PrinterSettings(self.settings)
         self.assertEqual(1, printerSettings.GetPaperId())
 
     def testOrientationInPageSetupDataIsUpdatedFromSettings(self):
-        gui.printer.PrinterSettings.deleteInstance()
+        self.resetPrinterSettings()
         self.settings.set('printer', 'orientation', str(wx.LANDSCAPE))
         printerSettings = gui.printer.PrinterSettings(self.settings)
         self.assertEqual(wx.LANDSCAPE, printerSettings.GetOrientation())
@@ -124,6 +128,5 @@ class HTMLPrintoutTest(test.TestCase):
             def visibleItems(self):
                 return []
             
-        printOut = gui.printer.HTMLPrintout(DummyViewer(), 
-                                            config.Settings(load=False))
+        gui.printer.HTMLPrintout(DummyViewer(), config.Settings(load=False))
         

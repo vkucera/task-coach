@@ -20,7 +20,7 @@ from taskcoachlib import patterns
 from taskcoachlib.i18n import _                   
 
 
-class MaxDateTimeMixin:
+class MaxDateTimeMixin(object):
     def maxDateTime(self):
         stopTimes = [effort.getStop() for effort in self if effort.getStop() is not None]
         if stopTimes:
@@ -95,7 +95,7 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
             records.'''
         return len(self)
         
-    def removeItems(self, efforts, event=None):
+    def removeItems(self, efforts, event=None): # pylint: disable-msg=W0221
         ''' We override ObservableListObserver.removeItems because the default
             implementation is to remove the arguments from the original list,
             which in this case would mean removing efforts from a task list.
@@ -108,7 +108,7 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
         if notify:
             event.send()
 
-    def extend(self, efforts, event=None):
+    def extend(self, efforts, event=None): # pylint: disable-msg=W0221
         ''' We override ObservableListObserver.extend because the default
             implementation is to add the arguments to the original list,
             which in this case would mean adding efforts to a task list.

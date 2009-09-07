@@ -20,20 +20,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, sys
 import test
-from unittests import dummy
-from taskcoachlib import gui, command, config, widgets, persistence
-from taskcoachlib.domain import task, effort, date, category, note, attachment
+from taskcoachlib import gui, command, config, persistence
+from taskcoachlib.domain import task, effort, date, note, attachment
 from taskcoachlib.gui import uicommand
 
 
 class TaskEditorTestCase(test.wxTestCase):
     def setUp(self):
         super(TaskEditorTestCase, self).setUp()
+        task.Task.settings = self.settings = config.Settings(load=False)
         self.taskFile = persistence.TaskFile()
         self.taskList = self.taskFile.tasks()
         self.effortList = self.taskFile.efforts()
         self.taskList.extend(self.createTasks())
-        task.Task.settings = self.settings = config.Settings(load=False)
         self.editor = self.createEditor()
         
     def createEditor(self):
@@ -49,6 +48,9 @@ class TaskEditorTestCase(test.wxTestCase):
         
     def createTasks(self):
         return []
+    
+    def createCommand(self):
+        raise NotImplementedError
 
     def setSubject(self, newSubject, index=0):
         self.editor[index][0].setSubject(newSubject)
@@ -66,10 +68,11 @@ class TaskEditorTestCase(test.wxTestCase):
 class NewTaskTest(TaskEditorTestCase):
     def createCommand(self):
         newTaskCommand = command.NewTaskCommand(self.taskList)
-        self.task = newTaskCommand.items[0]
+        self.task = newTaskCommand.items[0] # pylint: disable-msg=W0201
         return newTaskCommand
 
     def testCreate(self):
+        # pylint: disable-msg=W0212
         self.assertEqual('New task', self.editor[0][0]._subjectEntry.GetValue())
         self.assertEqual(date.Date(), self.editor[0][1]._dueDateEntry.get())
 
@@ -84,16 +87,17 @@ class NewTaskTest(TaskEditorTestCase):
         self.assertEqual('New task', self.task.subject())
 
     def testDueDate(self):
-        self.editor[0][1]._dueDateEntry.set(date.Today())
+        self.editor[0][1]._dueDateEntry.set(date.Today()) # pylint: disable-msg=W0212
         self.editor.ok()
         self.assertEqual(date.Today(), self.task.dueDate())
 
     def testSetCompleted(self):
-        self.editor[0][1]._completionDateEntry.set(date.Today())
+        self.editor[0][1]._completionDateEntry.set(date.Today()) # pylint: disable-msg=W0212
         self.editor.ok()
         self.assertEqual(date.Today(), self.task.completionDate())
 
     def testSetUncompleted(self):
+        # pylint: disable-msg=W0212
         self.editor[0][1]._completionDateEntry.set(date.Today())
         self.editor[0][1]._completionDateEntry.set(date.Date())
         self.editor.ok()
@@ -105,7 +109,7 @@ class NewTaskTest(TaskEditorTestCase):
         self.assertEqual('Description', self.task.description())
         
     def testPriority(self):
-        self.assertEqual(0, self.editor[0][0]._prioritySpinner.GetValue())
+        self.assertEqual(0, self.editor[0][0]._prioritySpinner.GetValue()) # pylint: disable-msg=W0212
 
     def testSetReminder(self):
         reminderDateTime = date.DateTime(2005,1,1)
@@ -141,14 +145,14 @@ class NewTaskTest(TaskEditorTestCase):
     def testOpenAttachmentWithNonAsciiFileNameThrowsException(self): # pragma: no cover
         ''' os.startfile() does not accept unicode filenames. This will be 
             fixed in Python 2.5. This test will fail if the bug is fixed. '''
-        self.errorMessage = ''
-        def onError(*args, **kwargs):
+        self.errorMessage = ''  # pylint: disable-msg=W0201
+        def onError(*args, **kwargs): # pylint: disable-msg=W0613
             self.errorMessage = args[0]
         att = attachment.FileAttachment(u'tÃƒÂ©st.ÃƒÂ©')
-        command = uicommand.AttachmentOpen(\
+        openAttachment = uicommand.AttachmentOpen(\
             viewer=self.editor[0][6].viewer,
             attachments=attachment.AttachmentList([att]))
-        command.doCommand(None, showerror=onError)
+        openAttachment.doCommand(None, showerror=onError)
         if '__WXMSW__' in wx.PlatformInfo: # pragma: no cover
             if sys.version_info < (2,5):
                 errorMessageStart = "'ascii' codec can't encode character"
@@ -181,11 +185,11 @@ class NewTaskTest(TaskEditorTestCase):
 class NewSubTaskTest(TaskEditorTestCase):
     def createCommand(self):
         newSubTaskCommand = command.NewSubTaskCommand(self.taskList, [self.task])
-        self.subtask = newSubTaskCommand.items[0]
+        self.subtask = newSubTaskCommand.items[0] # pylint: disable-msg=W0201
         return newSubTaskCommand
 
     def createTasks(self):
-        self.task = task.Task()
+        self.task = task.Task() # pylint: disable-msg=W0201
         return [self.task]
 
     def testOk(self):
@@ -206,9 +210,10 @@ class EditTaskTest(TaskEditorTestCase):
         return command.EditTaskCommand(self.taskList, [self.task])
 
     def createTasks(self):
+        # pylint: disable-msg=W0201
         self.task = task.Task('Task to edit')
         self.attachment = attachment.FileAttachment('some attachment')
-        self.task.addAttachments(self.attachment)
+        self.task.addAttachments(self.attachment) # pylint: disable-msg=E1101
         return [self.task]
 
     def testOk(self):
@@ -219,6 +224,8 @@ class EditTaskTest(TaskEditorTestCase):
         self.editor.cancel()
         self.assertEqual('Task to edit', self.task.subject())
 
+    # pylint: disable-msg=W0212
+    
     def testSetDueDate(self):
         self.editor[0][1]._dueDateEntry.set(date.Tomorrow())
         self.editor.ok()
@@ -253,13 +260,14 @@ class EditTaskTest(TaskEditorTestCase):
     def testAddAttachment(self):
         self.editor[0][7].viewer.onDropFiles(None, ['filename'])
         self.editor.ok()
+        # pylint: disable-msg=E1101
         self.failUnless('filename' in [att.location() for att in self.task.attachments()])
         self.failUnless('filename' in [att.subject() for att in self.task.attachments()])
         
     def testRemoveAttachment(self):
         self.editor[0][7].viewer.presentation().removeItems([self.attachment])
         self.editor.ok()
-        self.assertEqual([], self.task.attachments())
+        self.assertEqual([], self.task.attachments()) # pylint: disable-msg=E1101
 
 
 class EditMultipleTasksTest(TaskEditorTestCase):
@@ -272,6 +280,7 @@ class EditMultipleTasksTest(TaskEditorTestCase):
         return command.EditTaskCommand(self.taskList, [self.task1, self.task2])
 
     def createTasks(self):
+        # pylint: disable-msg=W0201
         self.task1 = task.Task('Task1')
         self.task2 = task.Task('Task2')
         return [self.task1, self.task2]
@@ -297,6 +306,7 @@ class EditTaskWithChildrenTest(TaskEditorTestCase):
         return command.EditTaskCommand(self.taskList, [self.parent, self.child])
 
     def createTasks(self):
+        # pylint: disable-msg=W0201
         self.parent = task.Task('Parent')
         self.child = task.Task('Child')
         self.parent.addChild(self.child)
@@ -312,6 +322,8 @@ class EditTaskWithChildrenTest(TaskEditorTestCase):
         self.assertEqual('Parent', self.parent.subject())
         self.assertEqual('Child', self.child.subject())
 
+    # pylint: disable-msg=W0212
+    
     def testChangeDueDateOfParentHasNoEffectOnChild(self):
         self.editor[0][1]._dueDateEntry.set(date.Yesterday())
         self.editor.ok()
@@ -328,7 +340,7 @@ class EditTaskWithEffortTest(TaskEditorTestCase):
         return command.EditTaskCommand(self.taskList, [self.task])
 
     def createTasks(self):
-        self.task = task.Task('task')
+        self.task = task.Task('task') # pylint: disable-msg=W0201
         self.task.addEffort(effort.Effort(self.task))
         return [self.task]
     
@@ -347,6 +359,7 @@ class FocusTest(TaskEditorTestCase):
     def testFocus(self):
         if '__WXMAC__' not in wx.PlatformInfo and ('__WXMSW__' not in wx.PlatformInfo or sys.version_info < (2, 5)):
             wx.Yield() # pragma: no cover
+        # pylint: disable-msg=W0212
         self.assertEqual(self.editor[0][0]._subjectEntry, wx.Window_FindFocus())
 
 
@@ -355,6 +368,7 @@ class EffortEditorTest(TaskEditorTestCase):
         return command.EditEffortCommand(self.effortList, self.effortList)
         
     def createTasks(self):
+        # pylint: disable-msg=W0201
         self.task1 = task.Task('task1')
         self.effort = effort.Effort(self.task1)
         self.task1.addEffort(self.effort)
@@ -367,6 +381,7 @@ class EffortEditorTest(TaskEditorTestCase):
             raiseDialog=False)
     
     def testCreate(self):
+        # pylint: disable-msg=W0212
         self.assertEqual(self.effort.getStart().date(), 
             self.editor[0]._startEntry.GetValue().date())
         self.assertEqual(self.effort.task().subject(), 
@@ -380,11 +395,12 @@ class EffortEditorTest(TaskEditorTestCase):
     def testInvalidEffort(self):
         self.effort.setStop(date.DateTime(1900, 1, 1))
         self.editor = self.createEditor()
+        # pylint: disable-msg=W0212
         self.editor._interior[0].preventNegativeEffortDuration()
         self.failIf(self.editor._buttonBox['OK'].IsEnabled())
         
     def testChangeTask(self):
-        self.editor[0]._taskEntry.SetStringSelection('task2')
+        self.editor[0]._taskEntry.SetStringSelection('task2') # pylint: disable-msg=W0212
         self.editor.ok()
         self.assertEqual(self.task2, self.effort.task())
         self.failIf(self.effort in self.task1.efforts())

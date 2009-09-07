@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
-from taskcoachlib import patterns, config
+from taskcoachlib import config
 from taskcoachlib.domain import task, effort, date
 
 
@@ -204,6 +204,7 @@ class TaskSorterSettingsTest(test.TestCase):
 
 class TaskSorterTreeModeTest(test.TestCase):
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.taskList = DummyTaskList()
         self.sorter = task.sorter.Sorter(self.taskList, treeMode=True)        
         self.parent1 = task.Task(subject='parent 1')
@@ -257,6 +258,7 @@ class TaskSorterTreeModeTest(test.TestCase):
             
 class EffortSorterTest(test.TestCase):
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
         self.sorter = effort.EffortSorter(self.effortList)
@@ -278,7 +280,7 @@ class EffortSorterTest(test.TestCase):
 
     def testCreateWhenEffortListIsFilled(self):
         sorter = effort.EffortSorter(self.effortList)
-        self.assertEqual([self.newestEffort, self.oldestEffort], self.sorter)
+        self.assertEqual([self.newestEffort, self.oldestEffort], sorter)
 
     def testAddEffort(self):
         evenNewerEffort = effort.Effort(self.task,

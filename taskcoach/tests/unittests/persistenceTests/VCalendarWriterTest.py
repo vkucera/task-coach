@@ -17,26 +17,29 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, StringIO
+import StringIO
 import test
 from taskcoachlib import persistence, gui, config
 from taskcoachlib.domain import task
 
 
 class VCalWriterTestCase(test.wxTestCase):
+    selectionOnly = treeMode = 'Subclass responsibility'
+    
     def setUp(self):
         super(VCalWriterTestCase, self).setUp()
+        task.Task.settings = self.settings = config.Settings(load=False) 
         self.fd = StringIO.StringIO()
         self.writer = persistence.VCalendarWriter(self.fd)
         self.task1 = task.Task('Task subject 1')
         self.task2 = task.Task('Task subject 2')
         self.taskFile = persistence.TaskFile()
         self.taskFile.tasks().extend([self.task1, self.task2])
-        self.settings = config.Settings(load=False)
         self.createViewer()
 
     def createViewer(self):
         self.settings.set('taskviewer', 'treemode', self.treeMode)
+        # pylint: disable-msg=W0201
         self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile,
             self.settings)
 
@@ -48,7 +51,7 @@ class VCalWriterTestCase(test.wxTestCase):
         self.viewer.widget.select((index,))
 
 
-class VCalendarStartEndTest(object):
+class VCalendarStartEndTestMixin(object):
     def testStart(self):
         self.assertEqual('BEGIN:VCALENDAR', self.vcalFile[0])
 
@@ -56,40 +59,40 @@ class VCalendarStartEndTest(object):
         self.assertEqual('END:VCALENDAR', self.vcalFile[-1])
 
 
-class VCalendarSelectedTest(object):
+class VCalendarSelectedTestMixin(object):
     def setUp(self):
-        super(VCalendarSelectedTest, self).setUp()
+        super(VCalendarSelectedTestMixin, self).setUp()
         self.selectItem((1,))
         self.vcalFile = self.writeAndRead()
 
 
-class TestSelectionOnly(VCalendarStartEndTest,
-                        VCalendarSelectedTest):
+class TestSelectionOnlyMixin(VCalendarStartEndTestMixin, 
+                             VCalendarSelectedTestMixin):
     selectionOnly = True
 
     def testSelected(self):
-        self.assertEqual(self.vcalFile.count('BEGIN:VTODO'), 1)
+        self.assertEqual(self.vcalFile.count('BEGIN:VTODO'), 1) # pylint: disable-msg=W0511
         self.failUnless('SUMMARY;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:Task=20subject=202' in self.vcalFile,
                     '\n'.join(self.vcalFile))
 
 
-class TestSelectionList(TestSelectionOnly, VCalWriterTestCase):
+class TestSelectionList(TestSelectionOnlyMixin, VCalWriterTestCase):
     treeMode = 'False'
 
-class TestSelectionTree(TestSelectionOnly, VCalWriterTestCase):
+class TestSelectionTree(TestSelectionOnlyMixin, VCalWriterTestCase):
     treeMode = 'True'
 
 
-class TestNotSelectionOnly(VCalendarStartEndTest,
-                           VCalendarSelectedTest):
+class TestNotSelectionOnlyMixin(VCalendarStartEndTestMixin, 
+                                VCalendarSelectedTestMixin):
     selectionOnly = False
 
     def testAll(self):
-        self.assertEqual(self.vcalFile.count('BEGIN:VTODO'), 2)
+        self.assertEqual(self.vcalFile.count('BEGIN:VTODO'), 2) # pylint: disable-msg=W0511
 
 
-class TestNotSelectionList(TestNotSelectionOnly, VCalWriterTestCase):
+class TestNotSelectionList(TestNotSelectionOnlyMixin, VCalWriterTestCase):
     treeMode = 'False'
 
-class TestNotSelectionTree(TestNotSelectionOnly, VCalWriterTestCase):
+class TestNotSelectionTree(TestNotSelectionOnlyMixin, VCalWriterTestCase):
     treeMode = 'True'

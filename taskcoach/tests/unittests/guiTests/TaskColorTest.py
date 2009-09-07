@@ -26,8 +26,8 @@ class TaskColorTest(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
         
-    def assertColor(self, task, color):
-        self.assertEqual(color, gui.color.taskColor(task, self.settings))
+    def assertColor(self, aTask, color):
+        self.assertEqual(color, gui.color.taskColor(aTask, self.settings))
 
     def testDefaultTask(self):
         self.assertColor(task.Task(), wx.BLACK)

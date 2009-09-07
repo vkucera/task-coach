@@ -19,13 +19,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-''' render.py - functions to render various objects, like date, time, etc. '''
+''' render.py - functions to render various objects, like date, time, 
+etc. ''' # pylint: disable-msg=W0105
 
 import locale
 from taskcoachlib.i18n import _
 
+# pylint: disable-msg=W0621
 
-def date(date):
+def date(date): 
     ''' render a date (of type date.Date) '''
     if str(date) == '':
         return ''

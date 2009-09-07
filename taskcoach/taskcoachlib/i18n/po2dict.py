@@ -14,12 +14,13 @@ import sys, re, os
 
 MESSAGES = {}
 
+# pylint: disable-msg=W0602,W0603
 
-def add(id, str, fuzzy):
+def add(id_, string, fuzzy):
     "Add a non-fuzzy translation to the dictionary."
     global MESSAGES
-    if not fuzzy and str:
-        MESSAGES[id] = str
+    if not fuzzy and string:
+        MESSAGES[id_] = string
 
 
 def generateDict():
@@ -84,7 +85,7 @@ def make(filename, outfile=None):
         l = l.strip()
         if not l:
             continue
-        # XXX: Does this always follow Python escape semantics?
+        # XXX: Does this always follow Python escape semantics? # pylint: disable-msg=W0511
         l = eval(l)
         if section == ID:
             msgid += l

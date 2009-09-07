@@ -170,8 +170,8 @@ class FilterableViewerForTasksMixin(FilterableViewerMixin):
         self.hideOverbudgetTasks(False)
         self.hideCompositeTasks(False)
         self.setFilteredByDueDate('Unlimited')
-        for category in self.taskFile.categories():
-            category.setFiltered(False)
+        for eachCategory in self.taskFile.categories():
+            eachCategory.setFiltered(False)
         
     def getFilterUICommands(self):
         if not self.__filterUICommands:

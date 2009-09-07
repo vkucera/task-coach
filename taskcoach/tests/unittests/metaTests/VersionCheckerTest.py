@@ -44,7 +44,7 @@ class VersionCheckerUnderTest(meta.VersionChecker):
         else:
             return super(VersionCheckerUnderTest, self).parsePadFile(padFile)
             
-    def notifyUser(self, *args, **kwargs):
+    def notifyUser(self, *args, **kwargs): # pylint: disable-msg=W0221,W0613
         self.userNotified = True
     
 

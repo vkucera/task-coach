@@ -16,14 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-''' Utilities for recurring dates. '''
+''' Utilities for recurring dates. ''' # pylint: disable-msg=W0105
 
 import calendar
 import timedelta, date
 
 
 class Recurrence(object):
-    def __init__(self, unit='', amount=1, sameWeekday=False, max=0, count=0):
+    def __init__(self, unit='', amount=1, sameWeekday=False, max=0, count=0): # pylint: disable-msg=W0622
         assert unit in ['', 'daily', 'weekly', 'monthly', 'yearly']
         assert amount >= 1
         self.unit = unit

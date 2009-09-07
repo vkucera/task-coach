@@ -63,8 +63,9 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
     klass.modificationEventTypes = classmethod(modificationEventTypes)
 
     def objects(instance):
-        objects = getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower()))
-        return [object for object in objects if not object.isDeleted()]
+        ownedObjects = getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower()))
+        return [ownedObject for ownedObject in ownedObjects \
+                if not ownedObject.isDeleted()]
 
     setattr(klass, '%ss' % klass.__ownedType__.lower(), objects)
 
@@ -75,7 +76,7 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
         event = event or patterns.Event()
         setattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower()), 
                                         newObjects)
-        changedEvent(instance, event, *newObjects)
+        changedEvent(instance, event, *newObjects) # pylint: disable-msg=W0142
         if notify:
             event.send()
 
@@ -87,51 +88,51 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
     
     setattr(klass, '%ssChangedEvent' % klass.__ownedType__.lower(), changedEvent)
 
-    def addObject(instance, object, event=None):
+    def addObject(instance, ownedObject, event=None):
         notify = event is None
         event = event or patterns.Event()
-        getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).append(object)
-        changedEvent(instance, event, object)
+        getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).append(ownedObject)
+        changedEvent(instance, event, ownedObject)
         if notify:
             event.send()
 
     setattr(klass, 'add%s' % klass.__ownedType__, addObject)
 
-    def addObjects(instance, *objects, **kwargs):
+    def addObjects(instance, *ownedObjects, **kwargs):
         event = kwargs.pop('event', None)
-        if not objects:
+        if not ownedObjects:
             return
         notify = event is None
         event = event or patterns.Event()
-        getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).extend(objects)
-        changedEvent(instance, event, *objects)
+        getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).extend(ownedObjects)
+        changedEvent(instance, event, *ownedObjects)
         if notify:
             event.send()
 
     setattr(klass, 'add%ss' % klass.__ownedType__, addObjects)
 
-    def removeObject(instance, object, event=None):
+    def removeObject(instance, ownedObject, event=None):
         notify = event is None
         event = event or patterns.Event()
-        getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).remove(object)
-        changedEvent(instance, event, object)
+        getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).remove(ownedObject)
+        changedEvent(instance, event, ownedObject)
         if notify:
             event.send()
 
     setattr(klass, 'remove%s' % klass.__ownedType__, removeObject)
 
-    def removeObjects(instance, *objects, **kwargs):
+    def removeObjects(instance, *ownedObjects, **kwargs):
         event = kwargs.pop('event', None)
-        if not objects:
+        if not ownedObjects:
             return
         notify = event is None
         event = event or patterns.Event()
-        for object in objects:
+        for ownedObject in ownedObjects:
             try:
-                getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).remove(object)
+                getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).remove(ownedObject)
             except ValueError:
                 pass
-        changedEvent(instance, event, *objects)
+        changedEvent(instance, event, *ownedObjects)
         if notify:
             event.send()
         
@@ -165,7 +166,8 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
             state = super(klass, instance).__getcopystate__()
         except AttributeError:
             state = dict()
-        state['%ss' % klass.__ownedType__.lower()] = [object.copy() for object in objects(instance)]
+        state['%ss' % klass.__ownedType__.lower()] = \
+            [ownedObject.copy() for ownedObject in objects(instance)]
         return state
 
     klass.__getcopystate__ = getcopystate

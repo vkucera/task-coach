@@ -168,6 +168,7 @@ class TaskComboTreeBox(wx.Panel):
 
     def _createInterior(self):
         ''' Create the ComboTreebox widget. '''
+        # pylint: disable-msg=W0201
         self._comboTreeBox = combotreebox.ComboTreeBox(self,
             style=wx.CB_READONLY|wx.CB_SORT|wx.TAB_TRAVERSAL)
         boxSizer = wx.BoxSizer()

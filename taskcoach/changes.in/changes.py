@@ -43,7 +43,9 @@ state (enabled or disabled).''')
     featuresAdded=[
         Feature('''Add an option to avoid uploading completed tasks to
 the iPhone/iPod Touch when synchronizing. For people who hide completed
-tasks, this can make the synchronization much quicker.''')
+tasks, this can make the synchronization much quicker.'''),
+        Feature('''Under MS Windows, the task template directory
+may now be a shortcut to another directory.''')
         ]
     ),
 

@@ -113,7 +113,7 @@ class SettingsPage(SettingsPageBase):
 
         super(SettingsPage, self).__init__(*args, **kwargs)
         
-    def addEntry(self, text, control, helpText=''):
+    def addEntry(self, text, control, helpText=''): # pylint: disable-msg=W0221
         if helpText == 'restart':
             helpText = _('This setting will take effect\nafter you restart %s')%meta.name
         super(SettingsPage, self).addEntry(text, control, helpText)

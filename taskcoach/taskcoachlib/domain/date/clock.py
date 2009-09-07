@@ -27,8 +27,8 @@ class LargeIntervalTimer(wx.PyTimer):
         
     maxMillisecondsPerInterval = 24 * 60 * 60 * 1000
     
-    def Start(self, milliseconds, oneShot=True):
-        self.millisecondsToGo = milliseconds
+    def Start(self, milliseconds): # pylint: disable-msg=W0221
+        self.millisecondsToGo = milliseconds # pylint: disable-msg=W0201
         if self.Notify:
             self.Notify()
         
@@ -55,15 +55,15 @@ class PeriodicTimer(wx.PyTimer):
     
     def __init__(self, callback, period):
         assert period in self.periodsAllowed
-        self._period = timedelta.TimeDelta(**{period+'s': 1})
+        self._period = timedelta.TimeDelta(**{period+'s': 1}) # pylint: disable-msg=W0142
         self._resetToStartOfPeriodArguments = self._startOfPeriodArguments(period)
         self._onceTimer = OnceTimer(self._startFiringEveryPeriod)
         super(PeriodicTimer, self).__init__(callback)
 
-    def Start(self, now=None):
+    def Start(self, now=None): # pylint: disable-msg=W0221
         self._onceTimer.Start(self._startOfNextPeriod(now))
         
-    def Stop(self):
+    def Stop(self): # pylint: disable-msg=W0221
         self._onceTimer.Stop()
         super(PeriodicTimer, self).Stop()
                 
@@ -75,7 +75,7 @@ class PeriodicTimer(wx.PyTimer):
             keywordArguments[eachSmallerPeriod] = 0
         return keywordArguments
 
-    def _startFiringEveryPeriod(self, now=None):
+    def _startFiringEveryPeriod(self, now=None): # pylint: disable-msg=W0613
         self.Notify()
         super(PeriodicTimer, self).Start(milliseconds=self._period.milliseconds(), 
                                          oneShot=False)
@@ -96,7 +96,7 @@ class OnceTimer(LargeIntervalTimer):
         if dateTime:
             self.Start(dateTime, now)
         
-    def Start(self, dateTime, now=None):
+    def Start(self, dateTime, now=None): # pylint: disable-msg=W0221
         now = now or dateandtime.DateTime.now()
         timeDelta = dateTime - now
         super(OnceTimer, self).Start(timeDelta.milliseconds())
@@ -150,6 +150,7 @@ class Clock(patterns.Observer):
         self._watchForClockObservers()
         
     def _createTimers(self):
+        # pylint: disable-msg=W0201
         self._secondTimer = PeriodicTimer(self.notifySecondObservers, 'second')
         self._midnightTimer = PeriodicTimer(self.notifyMidnightObservers, 'day')
         self._midnightTimer.Start()
@@ -163,17 +164,17 @@ class Clock(patterns.Observer):
         self.registerObserver(self.onFirstObserverRegisteredFor,
             'publisher.firstObserverRegisteredFor')
                 
-    def onFirstObserverRegisteredForSecond(self, event):
+    def onFirstObserverRegisteredForSecond(self, event): # pylint: disable-msg=W0613
         self._secondTimer.Start()
         
-    def onLastObserverRemovedForSecond(self, event):
+    def onLastObserverRemovedForSecond(self, event): # pylint: disable-msg=W0613
         self._secondTimer.Stop()
     
     def onFirstObserverRegisteredFor(self, event):
         if event.value().startswith('clock.time.'):
             dateTimeString = event.value().split('.')[-1]
             dateTimeTuple = time.strptime(dateTimeString, self.timeFormat)[:6]
-            dateTime = dateandtime.DateTime(*dateTimeTuple)
+            dateTime = dateandtime.DateTime(*dateTimeTuple) # pylint: disable-msg=W0142
             self._scheduledTimer.schedule(dateTime)
             
     def notifySecondObservers(self, now=None):

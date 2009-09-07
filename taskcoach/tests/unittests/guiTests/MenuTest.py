@@ -18,10 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 import test
-from unittests import dummy
 from taskcoachlib import gui, config
 from taskcoachlib.gui import uicommand
-from taskcoachlib.domain import task, effort, category, note
+from taskcoachlib.domain import task, category
 
 
 class MockViewerContainer(object):
@@ -52,7 +51,7 @@ class MockViewerContainer(object):
     def isSortedBy(self, sortKey):
         return sortKey == self.__sortBy
 
-    def isSortOrderAscending(self, *args, **kwargs):
+    def isSortOrderAscending(self, *args, **kwargs): # pylint: disable-msg=W0613
         return self.__ascending
     
     def setSortOrderAscending(self, ascending=True):
@@ -98,7 +97,11 @@ class MenuWithBooleanMenuItemsTestCase(MenuTestCase):
     def setUp(self):
         super(MenuWithBooleanMenuItemsTestCase, self).setUp()
         self.settings = config.Settings(load=False)
+        self.commands = self.createCommands()
 
+    def createCommands(self):
+        raise NotImplementedError
+    
     def assertMenuItemsChecked(self, *expectedStates):
         for command in self.commands:
             self.menu.appendUICommand(command)
@@ -112,10 +115,9 @@ class MenuWithBooleanMenuItemsTestCase(MenuTestCase):
 
 
 class MenuWithCheckItemsTest(MenuWithBooleanMenuItemsTestCase):
-    def setUp(self):
-        super(MenuWithCheckItemsTest, self).setUp()
-        self.commands = [uicommand.UICheckCommand(settings=self.settings,
-            section='view', setting='statusbar')]
+    def createCommands(self):
+        return [uicommand.UICheckCommand(settings=self.settings,
+                                         section='view', setting='statusbar')]
 
     def testCheckedItem(self):
         self.settings.set('view', 'statusbar', 'True')
@@ -127,11 +129,11 @@ class MenuWithCheckItemsTest(MenuWithBooleanMenuItemsTestCase):
 
 
 class MenuWithRadioItemsTest(MenuWithBooleanMenuItemsTestCase):
-    def setUp(self):
-        super(MenuWithRadioItemsTest, self).setUp()
-        self.commands = [uicommand.UIRadioCommand(settings=self.settings,
-                section='view', setting='toolbar', value=value) for value in
-                ['None', '(16, 16)']]
+    def createCommands(self):
+        return [uicommand.UIRadioCommand(settings=self.settings, 
+                                         section='view', setting='toolbar', 
+                                         value=value) \
+                for value in ['None', '(16, 16)']]
 
     def testRadioItem_FirstChecked(self):
         self.settings.set('view', 'toolbar', 'None')
@@ -146,7 +148,7 @@ class MockIOController:
     def __init__(self, *args, **kwargs):
         self.openCalled = False
         
-    def open(self, *args, **kwargs):
+    def open(self, *args, **kwargs): # pylint: disable-msg=W0613
         self.openCalled = True
 
 
@@ -167,7 +169,7 @@ class RecentFilesMenuTest(test.wxTestCase):
         
     def setRecentFilesAndCreateMenu(self, *filenames):
         self.addRecentFiles(*filenames)
-        self.menu = self.createFileMenu()
+        self.menu = self.createFileMenu() # pylint: disable-msg=W0201
     
     def addRecentFiles(self, *filenames):
         self.filenames.extend(filenames)
@@ -271,6 +273,7 @@ class ViewMenuTestCase(test.wxTestCase):
 
 class StartEffortForTaskMenuTest(test.wxTestCase):
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.tasks = task.TaskList()
         self.menu = gui.menu.StartEffortForTaskMenu(self.frame, self.tasks)
         
@@ -302,7 +305,7 @@ class StartEffortForTaskMenuTest(test.wxTestCase):
         self.assertEqual(2, len(self.menu))
         
     def testDeletedChildTasksAreRemoved(self):
-        parent, child = self.addParentAndChild()
+        child = self.addParentAndChild()[1]
         self.tasks.remove(child)
         self.assertEqual(1, len(self.menu))
 

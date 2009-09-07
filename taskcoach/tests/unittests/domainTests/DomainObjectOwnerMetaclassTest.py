@@ -28,4 +28,6 @@ class OwnerUnderTest(object):
 class DomainObjectOwnerMetaclassTest(test.TestCase):
     def testModificationEventTypes(self):
         owner = OwnerUnderTest()
-        self.failUnless(owner.foosChangedEventType() in owner.modificationEventTypes())    
+        # pylint: disable-msg=E1101
+        self.failUnless(owner.foosChangedEventType() in \
+                        owner.modificationEventTypes())    

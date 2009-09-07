@@ -18,9 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 
-"""
-These tests actually assume a fresh configuration (new .ini file, nothing changed).
-"""
+''' These tests actually assume a fresh configuration (new .ini file, 
+nothing changed). ''' # pylint: disable-msg=W0105
 
 import sys, os, time, re, shutil, unittest
 import win32process, win32event, win32gui, win32con
@@ -44,13 +43,13 @@ class Window(object):
 
     def _get_children(self):
         result = []
-        def cb(hwnd, lparam):
+        def cb(hwnd, lparam): # pylint: disable-msg=W0613
             result.append(Window(hwnd))
             return True
         try:
             win32gui.EnumChildWindows(self.hwnd, cb, None)
         except:
-            result = []
+            result = [] # pylint: disable-msg=W0702
         return result
     children = property(_get_children, doc="The window direct children")
 
@@ -60,7 +59,7 @@ class Window(object):
                             doc="Whether the window is the foreground")
 
     def waitFocus(self):
-        for i in xrange(10):
+        for _ in xrange(10):
             time.sleep(1)
             if self.isForeground:
                 return True
@@ -134,7 +133,7 @@ class Win32TestCase(unittest.TestCase):
 
         sinfo = win32process.STARTUPINFO()
         sinfo.dwFlags = 0
-        hProcess, hThread, processId, threadId = win32process.CreateProcess(None,
+        hProcess = win32process.CreateProcess(None,
                     ' '.join(cmd),
                     None,
                     None,
@@ -142,7 +141,7 @@ class Win32TestCase(unittest.TestCase):
                     0,
                     None,
                     os.getcwd(),
-                    sinfo)
+                    sinfo)[0]
         self.processHandle = hProcess
         if win32event.WaitForInputIdle(hProcess, 60000) == win32event.WAIT_TIMEOUT:
             self.fail('Could not launch Task Coach.')
@@ -180,15 +179,15 @@ class Win32TestCase(unittest.TestCase):
 
         titleRegex = re.compile(title)
 
-        for index in xrange(tries):
+        for _ in xrange(tries):
             windows = []
 
-            def enumCb(hwnd, lparam):
+            def enumCb(hwnd, lparam): # pylint: disable-msg=W0613
                 try:
                     if titleRegex.search(win32gui.GetWindowText(hwnd)):
                         windows.append(hwnd)
                 except:
-                    pass
+                    pass # pylint: disable-msg=W0702
                 return True
 
             win32gui.EnumWindows(enumCb, None)

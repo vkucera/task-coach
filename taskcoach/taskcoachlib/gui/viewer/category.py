@@ -68,6 +68,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
         return widget
 
     def _createColumns(self):
+        # pylint: disable-msg=W0142
         kwargs = dict(renderDescriptionCallback=lambda category: category.description())
         columns = [widgets.Column('subject', _('Subject'), 
                        category.Category.subjectChangedEventType(),  
@@ -134,23 +135,9 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                                       self, localOnly)
     
     def onCheck(self, event):
-        category = self.getItemWithIndex(self.widget.GetIndexOfItem(event.GetItem()))
-        category.setFiltered(event.GetItem().IsChecked())
+        categoryToFilter = self.getItemWithIndex(self.widget.GetIndexOfItem(event.GetItem()))
+        categoryToFilter.setFiltered(event.GetItem().IsChecked())
         self.onSelect(event) # Notify status bar
-
-    def getItemTooltipData(self, index, column=0):
-        if self.settings.getboolean('view', 'descriptionpopups'):
-            item = self.getItemWithIndex(index)
-            if item.description():
-                result = [(None, map(lambda x: x.rstrip('\r'),
-                                     item.description().split('\n')))]
-            else:
-                result = []
-            result.append(('note', [note.subject() for note in item.notes()]))
-            result.append(('attachment', [unicode(attachment) for attachment in item.attachments()]))
-            return result
-        else:
-            return []
         
     def getIsItemChecked(self, index):
         item = self.getItemWithIndex(index)
@@ -164,7 +151,8 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
     def statusMessages(self):
         status1 = _('Categories: %d selected, %d total')%\
             (len(self.curselection()), len(self.presentation()))
-        status2 = _('Status: %d filtered')%len([category for category in self.presentation() if category.isFiltered()])
+        filteredCategories = self.presentation().filteredCategories()
+        status2 = _('Status: %d filtered')%len(filteredCategories)
         return status1, status2
         
     def editorClass(self):
@@ -190,6 +178,7 @@ class CategoryViewer(BaseCategoryViewer):
         ''' UI commands to put on the toolbar of this viewer. '''
         toolBarUICommands = super(CategoryViewer, self).getToolBarUICommands()
         toolBarUICommands.insert(-2, None) # Separator
+        # pylint: disable-msg=W0201
         self.filterUICommand = \
             uicommand.CategoryViewerFilterChoice(settings=self.settings)
         toolBarUICommands.insert(-2, self.filterUICommand)

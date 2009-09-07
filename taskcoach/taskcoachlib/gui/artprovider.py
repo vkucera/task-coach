@@ -84,7 +84,7 @@ def init():
     if ('__WXMSW__' in wx.PlatformInfo) and (wx.DisplayDepth() >= 32):
         wx.SystemOptions_SetOption("msw.remap", "0") # pragma: no cover
     try:
-        wx.ArtProvider_PushProvider(ArtProvider())
+        wx.ArtProvider_PushProvider(ArtProvider()) # pylint: disable-msg=E1101
     except AttributeError:
         wx.ArtProvider.Push(ArtProvider())
 

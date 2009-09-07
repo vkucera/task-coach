@@ -266,7 +266,7 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
             import taskbaricon # pylint: disable-msg=W0612
             return True
         except:
-            return False
+            return False # pylint: disable-msg=W0702
         
     def onFilenameChanged(self, event):
         self.setTitle(event.value())

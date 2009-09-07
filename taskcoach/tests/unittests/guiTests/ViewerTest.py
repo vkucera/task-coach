@@ -22,6 +22,7 @@ from taskcoachlib.domain import task, effort, date
 from taskcoachlib.thirdparty import hypertreelist
 
 
+
 class ViewerTest(test.wxTestCase):
     def setUp(self):
         super(ViewerTest, self).setUp()
@@ -70,6 +71,11 @@ class ViewerTest(test.wxTestCase):
     def testSetTitleChangesTabTitle(self):
         self.viewer.setTitle('New title')
         self.assertEqual('New title', self.notebook.GetPageText(0))
+
+    def testGetItemTooltipData(self):
+        self.task.setDescription('Description')
+        expectedData = [(None, ['Description']), ('note', []), ('attachment', [])]
+        self.assertEqual(expectedData, self.viewer.getItemTooltipData((0,)))
 
 
 class SortableViewerTest(test.TestCase):
@@ -167,6 +173,7 @@ class SearchableViewerTest(test.TestCase):
         
     def createViewer(self):
         viewer = SearchableViewerUnderTest()
+        # pylint: disable-msg=W0201
         viewer.settings = self.settings
         viewer.settingsSection = lambda: 'taskviewer'
         presentation = viewer.createFilter(task.TaskList())
@@ -252,6 +259,7 @@ class FilterableViewerForTasks(test.TestCase):
         
     def createViewer(self):
         viewer = FilterableViewerForTasksUnderTest()
+        # pylint: disable-msg=W0201
         viewer.taskFile = persistence.TaskFile()
         viewer.settings = self.settings
         viewer.settingsSection = lambda: 'taskviewer'

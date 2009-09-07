@@ -125,11 +125,11 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.ViewerWithColumns,
                                                     viewer=self)]
         return commands
 
-    def typeImageIndex(self, attachment, which): # pylint: disable-msg=W0613
+    def typeImageIndex(self, anAttachment, which): # pylint: disable-msg=W0613
         try:
             return self.imageIndex[{ 'file': 'fileopen',
                                      'uri': 'uri',
-                                     'mail': 'email'}[attachment.type_]]
+                                     'mail': 'email'}[anAttachment.type_]]
         except KeyError:
             return -1
 

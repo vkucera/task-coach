@@ -161,7 +161,7 @@ class DynamicMenuThatGetsUICommandsFromViewer(DynamicMenu):
         self._uiCommands = newCommands
             
     def fillMenu(self, uiCommands):
-        self.appendUICommands(*uiCommands)
+        self.appendUICommands(*uiCommands) # pylint: disable-msg=W0142
         
     def getUICommands(self):
         raise NotImplementedError
@@ -268,6 +268,7 @@ class ExportMenu(Menu):
     def __init__(self, mainwindow, iocontroller, viewerContainer):
         super(ExportMenu, self).__init__(mainwindow)
         kwargs = dict(iocontroller=iocontroller, viewer=viewerContainer)
+        # pylint: disable-msg=W0142
         self.appendUICommands(
             uicommand.FileExportAsHTML(**kwargs),
             uicommand.FileExportSelectionAsHTML(**kwargs),
@@ -297,7 +298,7 @@ class TaskTemplateMenu(DynamicMenu):
             self._uiCommands = newCommands
      
     def fillMenu(self, uiCommands):
-        self.appendUICommands(*uiCommands)
+        self.appendUICommands(*uiCommands) # pylint: disable-msg=W0142
 
     def getUICommands(self):
         path = self.settings.pathToTemplatesDir()
@@ -341,6 +342,7 @@ class SelectMenu(Menu):
     def __init__(self, mainwindow, viewerContainer):
         super(SelectMenu, self).__init__(mainwindow)
         kwargs = dict(viewer=viewerContainer)
+        # pylint: disable-msg=W0142
         self.appendUICommands(uicommand.SelectAll(**kwargs),
                               uicommand.InvertSelection(**kwargs),
                               uicommand.ClearSelection(**kwargs))
@@ -387,6 +389,7 @@ class ViewViewerMenu(Menu):
         super(ViewViewerMenu, self).__init__(mainwindow)
         ViewViewer = uicommand.ViewViewer
         kwargs = dict(viewer=viewerContainer, taskFile=taskFile, settings=settings)
+        # pylint: disable-msg=W0142
         viewViewerCommands = [\
             ViewViewer(menuText=_('&Task'),
                        helpText=_('Open a new tab with a viewer that displays tasks'),
@@ -465,6 +468,7 @@ class ToolBarMenu(Menu):
             toolbarCommands.append(uicommand.UIRadioCommand(settings=settings,
                 setting='toolbar', value=value, menuText=menuText,
                 helpText=helpText))
+        # pylint: disable-msg=W0142
         self.appendUICommands(*toolbarCommands)
 
 
@@ -628,8 +632,8 @@ class ToggleCategoryMenu(DynamicMenu):
            
     def updateMenuItems(self):
         self.clearMenu()
-        for category in self.categories.rootItems():
-            self.addMenuItemForCategory(category, self)
+        for rootCategory in self.categories.rootItems():
+            self.addMenuItemForCategory(rootCategory, self)
             
     def addMenuItemForCategory(self, category, menu):
         uiCommand = self.uiCommandClass(category=category, viewer=self.viewer)
@@ -841,7 +845,7 @@ class ColumnPopupMenu(Menu):
         wx.CallAfter(self.appendUICommands, *self.getUICommands())
         
     def __setColumn(self, columnIndex):
-        self.__columnIndex = columnIndex
+        self.__columnIndex = columnIndex # pylint: disable-msg=W0201
     
     def __getColumn(self):
         return self.__columnIndex
@@ -858,7 +862,7 @@ class ColumnPopupMenu(Menu):
 
 class EffortViewerColumnPopupMenu(DynamicMenuThatGetsUICommandsFromViewer):
     def __setColumn(self, columnIndex):
-        self.__columnIndex = columnIndex
+        self.__columnIndex = columnIndex # pylint: disable-msg=W0201
     
     def __getColumn(self):
         return self.__columnIndex

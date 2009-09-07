@@ -16,13 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
 from unittests import asserts
 from CommandTestCase import CommandTestCase
 from TaskCommandsTest import TaskCommandTestCase, CommandWithChildrenTestCase, \
     CommandWithEffortTestCase
 from taskcoachlib import command
-from taskcoachlib.domain import task, category, note
+from taskcoachlib.domain import task, note
 
 
 class CutCommandWithTasksTest(TaskCommandTestCase):
@@ -127,6 +126,7 @@ class PasteCommandWithTasksTest(TaskCommandTestCase):
     def testClipboardIsEmptyAfterPaste(self):
         self.cut([self.task1])
         self.paste()
+        # pylint: disable-msg=W0212
         self.assertDoUndoRedo(
             lambda: self.assertEqual([], task.Clipboard()._contents), 
             lambda: self.assertEqual([self.task1], task.Clipboard()._contents))
@@ -158,6 +158,7 @@ class PasteCommandWithEffortTest(CommandWithEffortTestCase):
     def testClipboardIsEmptyAfterPaste(self):
         self.cut([self.effort1])
         self.paste()
+        # pylint: disable-msg=W0212
         self.assertDoUndoRedo(
             lambda: self.assertEqual([], task.Clipboard()._contents), 
             lambda: self.assertEqual([self.effort1], task.Clipboard()._contents))
@@ -333,7 +334,7 @@ class CopyCommandWithEffortTest(CommandWithEffortTestCase):
      
         
 class DragAndDropWithTasksTest(CommandWithChildrenTestCase):
-    def dragAndDrop(self, draggedItems, dropItem):
+    def dragAndDrop(self, draggedItems, dropItem): # pylint: disable-msg=W0222
         command.DragAndDropTaskCommand(self.taskList, draggedItems, drop=[dropItem]).do()
         
     def testDragAndDropRootTask(self):

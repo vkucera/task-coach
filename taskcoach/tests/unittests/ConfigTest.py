@@ -152,7 +152,6 @@ class UnicodeAwareConfigParserTest(test.TestCase):
         for UnicodeAwareConfigParser. '''
         
     def setUp(self):
-        from taskcoachlib import config
         import StringIO
         self.parser = config.settings.UnicodeAwareConfigParser()
         self.parser.add_section('section')
@@ -242,26 +241,29 @@ class ApplicationOptionsTest(test.TestCase):
         super(ApplicationOptionsTest, self).setUp()
         self.parser = config.ApplicationOptionParser()
         
+    def parse(self, *args):
+        return self.parser.parse_args(list(args))[0]
+        
     def testUsage(self):
         self.assertEqual('%prog [options] [.tsk file]', self.parser.usage)
         
     def testLanguage(self):
-        options, args = self.parser.parse_args(['-l', 'nl'])
+        options = self.parse('-l', 'nl')
         self.assertEqual('nl', options.language)
 
     def testLanguageWhenNotChanged(self):
-        options, args = self.parser.parse_args([])
+        options = self.parse()
         self.assertEqual(None, options.language)
         
     def testPoFile(self):
-        options, args = self.parser.parse_args(['-p', 'test.po'])
+        options = self.parse('-p', 'test.po')
         self.assertEqual('test.po', options.pofile)
 
     def testIniFile(self):
-        options, args = self.parser.parse_args(['-i', 'test.ini'])
+        options = self.parse('-i', 'test.ini')
         self.assertEqual('test.ini', options.inifile)
         
     def testProfile(self):
-        options, args = self.parser.parse_args(['--profile'])
+        options = self.parse('--profile')
         self.failUnless(options.profile)
         

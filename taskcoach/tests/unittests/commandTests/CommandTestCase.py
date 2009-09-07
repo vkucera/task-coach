@@ -22,6 +22,8 @@ from taskcoachlib import patterns, command
 
 
 class CommandTestCase(test.wxTestCase, asserts.CommandAsserts):
+    list = []
+    
     def tearDown(self):
         super(CommandTestCase, self).tearDown()
         patterns.CommandHistory().clear()

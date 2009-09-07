@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,12 +28,17 @@ class CtrlWithColumnsTestCase(test.wxTestCase):
         self.column2 = widgets.Column('Column 2', 'eventType2')
         self.control = self.createControl()
 
+    def createControl(self):
+        raise NotImplementedError
 
-class CtrlWithHideableColumnsUnderTest(widgets.itemctrl._CtrlWithHideableColumns, wx.ListCtrl):
+
+class CtrlWithHideableColumnsUnderTest( \
+          widgets.itemctrl._CtrlWithHideableColumns, # pylint: disable-msg=W0212 
+          wx.ListCtrl): 
     pass
 
 
-class CtrlWithHideableColumnsTests(object):
+class CtrlWithHideableColumnsTestsMixin(object):
     def testColumnIsVisibleByDefault(self):
         self.failUnless(self.control.isColumnVisible(self.column1))
         
@@ -48,27 +53,32 @@ class CtrlWithHideableColumnsTests(object):
         
         
 class CtrlWithHideableColumnsTest(CtrlWithColumnsTestCase, 
-                                  CtrlWithHideableColumnsTests):
+                                  CtrlWithHideableColumnsTestsMixin):
     def createControl(self):
         return CtrlWithHideableColumnsUnderTest(self.frame, style=wx.LC_REPORT,
             columns=[self.column1, self.column2])
                 
         
 class CtrlWithSortableColumnsUnderTest( \
-        widgets.itemctrl._CtrlWithSortableColumns, wx.ListCtrl):
+        widgets.itemctrl._CtrlWithSortableColumns, # pylint: disable-msg=W0212 
+        wx.ListCtrl):
     pass
 
 
-class CtrlWithSortableColumnsTests(object):
+class CtrlWithSortableColumnsTestsMixin(object):
+    def assertCurrentSortColumn(self, expectedSortColumn):
+        currentSortColumn = self.control._currentSortColumn() # pylint: disable-msg=W0212
+        self.assertEqual(expectedSortColumn, currentSortColumn)
+        
     def testDefaultSortColumn(self):
-        self.assertEqual(self.column1, self.control._currentSortColumn())
+        self.assertCurrentSortColumn(self.column1)
         
     def testShowSortColumn(self):
         self.control.showSortColumn(self.column2)
-        self.assertEqual(self.column2, self.control._currentSortColumn())
+        self.assertCurrentSortColumn(self.column2)
 
 
-class CtrlWithSortableColumnsTest(CtrlWithColumnsTestCase, CtrlWithSortableColumnsTests):
+class CtrlWithSortableColumnsTest(CtrlWithColumnsTestCase, CtrlWithSortableColumnsTestsMixin):
     def createControl(self):
         return CtrlWithSortableColumnsUnderTest(self.frame, style=wx.LC_REPORT,
             columns=[self.column1, self.column2])            
@@ -79,7 +89,7 @@ class CtrlWithColumnsUnderTest(widgets.itemctrl.CtrlWithColumns, wx.ListCtrl):
 
 
 class CtrlWithColumnsTest(CtrlWithColumnsTestCase, 
-        CtrlWithHideableColumnsTests, CtrlWithSortableColumnsTests):
+        CtrlWithHideableColumnsTestsMixin, CtrlWithSortableColumnsTestsMixin):
     def createControl(self):
         # NOTE: the resizeableColumn is the column that is not hidden
         return CtrlWithColumnsUnderTest(self.frame, style=wx.LC_REPORT,

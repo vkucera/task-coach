@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,8 +20,8 @@ from taskcoachlib import patterns
 
 
 class Collection(patterns.CompositeSet):
-    def getObjectById(self, objectId):
-        for object in self:
-            if objectId == object.id():
-                return object
+    def getObjectById(self, domainObjectId):
+        for domainObject in self:
+            if domainObjectId == domainObject.id():
+                return domainObject
         raise IndexError

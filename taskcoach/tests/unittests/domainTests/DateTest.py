@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, time, datetime, pickle
+import test, time, datetime
 from taskcoachlib.domain import date
 
 
@@ -46,8 +46,8 @@ class DateTest(test.TestCase):
         self.assertEqual('', str(adate))
 
     def testCreateInfiniteDateWithMaxValues(self):
-        max = datetime.date.max
-        infinite = date.Date(max.year, max.month, max.day)
+        maxDate = datetime.date.max
+        infinite = date.Date(maxDate.year, maxDate.month, maxDate.day)
         self.failUnless(infinite is date.Date())
 
     def testInfiniteDateIsSingleton(self):
