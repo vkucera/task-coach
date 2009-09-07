@@ -76,11 +76,8 @@ class TranslationIntegrityTestsMixin(object):
     umlautRE = re.compile(r'&[A-Za-z]uml;')
     @classmethod
     def removeUmlauts(cls, text):
-        return re.sub(cls.umlautRE, '', text)
-        
-        
-# Create all test cases and install them in the global name space:    
-installAllTestCaseClasses() 
+        return re.sub(cls.umlautRE, '', text)      
+    
 
 def installAllTestCaseClasses():
     for language in getLanguages():
@@ -126,3 +123,6 @@ def translationTestCaseClass(className, language, englishString, translatedStrin
     class_.translatedString = translatedString
     return class_
 
+
+# Create all test cases and install them in the global name space:
+installAllTestCaseClasses() 
