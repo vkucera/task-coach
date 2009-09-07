@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -34,7 +34,9 @@ class DummyWindow(wx.Frame):
     def __init__(self):
         super(DummyWindow, self).__init__(None)
         self.taskFile = persistence.TaskFile()
-        
+    
+    # pylint: disable-msg=W0221
+    
     def IsShown(self):
         return True
     
@@ -104,7 +106,7 @@ class ReminderControllerTest(ReminderControllerTestCase):
     def dummyCloseEvent(self, snoozeTimeDelta=None, openAfterClose=False):
         class DummySnoozeOptions(object):
             Selection = 0
-            def GetClientData(self, *args):
+            def GetClientData(self, *args): # pylint: disable-msg=W0613
                 return snoozeTimeDelta
         class DummyDialog(object):
             task = self.task

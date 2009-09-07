@@ -90,7 +90,7 @@ class Viewer(wx.Panel):
         self.parent.SetPageText(self.parent.GetPageIndex(self), title)
 
     def initLayout(self):
-        self._sizer = wx.BoxSizer(wx.VERTICAL)
+        self._sizer = wx.BoxSizer(wx.VERTICAL) # pylint: disable-msg=W0201
         self._sizer.Add(self.toolbar, flag=wx.EXPAND)
         self._sizer.Add(self.widget, proportion=1, flag=wx.EXPAND)
         self.SetSizerAndFit(self._sizer)
@@ -100,8 +100,8 @@ class Viewer(wx.Panel):
     
     def createImageList(self):
         size = (16, 16)
-        imageList = wx.ImageList(*size)
-        self.imageIndex = {}
+        imageList = wx.ImageList(*size) # pylint: disable-msg=W0142
+        self.imageIndex = {} # pylint: disable-msg=W0201
         for index, image in enumerate(self.viewerImages):
             imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, size))
             self.imageIndex[image] = index
@@ -136,10 +136,11 @@ class Viewer(wx.Panel):
             # Some widgets change the selection and send selection events when 
             # deleting all items as part of the Destroy process. Ignore.
             return
-        # Be sure all wx events are handled before we notify our observers: 
-        wx.CallAfter(lambda: patterns.Event(self.selectEventType(), self, self.curselection()).send())
         # Remember the current selection so we can restore it after a refresh:
         self.__selection = self.curselection()
+        # Be sure all wx events are handled before we notify our observers:
+        event = patterns.Event(self.selectEventType(), self, self.__selection)
+        wx.CallAfter(event.send)
 
     def refresh(self):
         self.widget.RefreshAllItems(len(self.presentation()))
@@ -150,7 +151,7 @@ class Viewer(wx.Panel):
     def refreshItems(self, *items):
         indices = [self.getIndexOfItem(item) for item in items \
                    if item in self.presentation()]
-        self.widget.RefreshItems(*indices)
+        self.widget.RefreshItems(*indices) # pylint: disable-msg=W0142
         
     def getIndexOfItem(self, item):
         raise NotImplementedError
@@ -355,8 +356,7 @@ class Viewer(wx.Panel):
         raise NotImplementedError
     
 
-
-class ListViewer(Viewer):
+class ListViewer(Viewer): # pylint: disable-msg=W0223
     def isTreeViewer(self):
         return False
 
@@ -372,7 +372,7 @@ class ListViewer(Viewer):
         return self.presentation().index(item)
     
 
-class TreeViewer(Viewer):
+class TreeViewer(Viewer): # pylint: disable-msg=W0223
     def __init__(self, *args, **kwargs):
         self.__itemsByIndex = dict()
         super(TreeViewer, self).__init__(*args, **kwargs)
@@ -432,7 +432,7 @@ class TreeViewer(Viewer):
     def isTreeViewer(self):
         return True
 
-    def onPresentationChanged(self, *args, **kwargs):
+    def onPresentationChanged(self, *args, **kwargs): # pylint: disable-msg=W0221
         self.__itemsByIndex = dict()
         super(TreeViewer, self).onPresentationChanged(*args, **kwargs)
     
@@ -499,7 +499,7 @@ class TreeViewer(Viewer):
         return item.isExpanded(context=self.settingsSection())
     
     
-class UpdatePerSecondViewer(Viewer, date.ClockObserver):
+class UpdatePerSecondViewer(Viewer, date.ClockObserver):  # pylint: disable-msg=W0223
     def __init__(self, *args, **kwargs):
         self.__trackedItems = set()
         super(UpdatePerSecondViewer, self).__init__(*args, **kwargs)
@@ -534,7 +534,7 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):
     def currentlyTrackedItems(self):
         return list(self.__trackedItems)
 
-    def onEverySecond(self, event):
+    def onEverySecond(self, event): # pylint: disable-msg=W0221,W0613
         self.refreshItems(*self.__trackedItems)
         
     def setTrackedItems(self, items):
@@ -568,6 +568,7 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):
 class ViewerWithColumns(Viewer): # pylint: disable-msg=W0223
     def __init__(self, *args, **kwargs):
         self.__initDone = False
+        self._columns = []
         self.__visibleColumns = []
         self.__columnUICommands = []
         super(ViewerWithColumns, self).__init__(*args, **kwargs)
@@ -674,25 +675,24 @@ class ViewerWithColumns(Viewer): # pylint: disable-msg=W0223
         return column.render(item)
 
     def getItemTooltipData(self, index, column=0):
-        if self.settings.getboolean('view', 'descriptionpopups'):
-            item = self.getItemWithIndex(index)
-            column = self.visibleColumns()[column]
-            if column.renderDescription(item):
-                result = [(None, map(lambda x: x.rstrip('\n'),
-                                     column.renderDescription(item).split('\n')))]
-            else:
-                result = []
-            try:
-                result.append(('note', [note.subject() for note in item.notes()]))
-            except AttributeError:
-                pass
-            try:
-                result.append(('attachment', [unicode(attachment) for attachment in item.attachments()]))
-            except AttributeError:
-                pass
-            return result
-        else:
-            return []
+        result = []
+        if not self.settings.getboolean('view', 'descriptionpopups'):
+            return result        
+        item = self.getItemWithIndex(index)
+        column = self.visibleColumns()[column]
+        description = column.renderDescription(item)
+        if description:
+            lines = description.split('\n')
+            result.append((None, [line.rstrip('\n') for line in lines]))                            
+        try:
+            result.append(('note', [note.subject() for note in item.notes()]))
+        except AttributeError:
+            pass
+        try:
+            result.append(('attachment', [unicode(attachment) for attachment in item.attachments()]))
+        except AttributeError:
+            pass
+        return result
 
     def getItemImage(self, index, which, column=0): 
         item = self.getItemWithIndex(index)
@@ -721,7 +721,7 @@ class ViewerWithColumns(Viewer): # pylint: disable-msg=W0223
                                  item.categories(recursive=recursive)]))
 
 
-class SortableViewerWithColumns(mixin.SortableViewerMixin, ViewerWithColumns):
+class SortableViewerWithColumns(mixin.SortableViewerMixin, ViewerWithColumns): # pylint: disable-msg=W0223
     def initColumn(self, column):
         super(SortableViewerWithColumns, self).initColumn(column)
         if self.isSortedBy(column.name()):

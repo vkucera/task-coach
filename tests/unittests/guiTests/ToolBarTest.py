@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ import wx
 import test
 from unittests import dummy
 from taskcoachlib import gui
-
+ 
 
 class ToolBar(gui.toolbar.ToolBar):
     def uiCommands(self):
@@ -32,8 +32,8 @@ class ToolBarTest(test.wxTestCase):
         gui.init()
         toolbar = ToolBar(self.frame)
         uiCommand = dummy.DummyUICommand(menuText='undo', bitmap='undo')
-        id = toolbar.appendUICommand(uiCommand)
-        self.assertNotEqual(wx.NOT_FOUND, toolbar.GetToolPos(id))
+        toolId = toolbar.appendUICommand(uiCommand)
+        self.assertNotEqual(wx.NOT_FOUND, toolbar.GetToolPos(toolId))
 
 
 class ToolBarSizeTest(test.wxTestCase):

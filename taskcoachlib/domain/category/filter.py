@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.domain import base
-import category
+from category import Category
 
 
 class CategoryFilter(base.Filter):
@@ -31,9 +31,9 @@ class CategoryFilter(base.Filter):
             patterns.Publisher().registerObserver(self.onCategoryChanged,
                                                   eventType=eventType, 
                                                   eventSource=self.__categories)
-        eventTypes = (category.Category.categorizableAddedEventType(),
-                      category.Category.categorizableRemovedEventType(),
-                      category.Category.filterChangedEventType())
+        eventTypes = (Category.categorizableAddedEventType(),
+                      Category.categorizableRemovedEventType(),
+                      Category.filterChangedEventType())
         for eventType in eventTypes:
             patterns.Publisher().registerObserver(self.onCategoryChanged,
                                                   eventType=eventType)
@@ -46,8 +46,7 @@ class CategoryFilter(base.Filter):
         self.__filterOnlyWhenAllCategoriesMatch = filterOnlyWhenAllCategoriesMatch
         
     def filter(self, categorizables):
-        filteredCategories = [category for category in self.__categories 
-                              if category.isFiltered()]
+        filteredCategories = self.__categories.filteredCategories()
         if filteredCategories:
             return [categorizable for categorizable in categorizables if \
                     self.filterCategorizable(categorizable, filteredCategories)]

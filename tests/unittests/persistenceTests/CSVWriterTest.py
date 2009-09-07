@@ -16,13 +16,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, StringIO
+import StringIO
 import test
 from taskcoachlib import persistence, gui, config
-from taskcoachlib.domain import task, category, effort, date, note
+from taskcoachlib.domain import task, effort, date
 
 
 class CSVWriterTestCase(test.wxTestCase):
+    treeMode = 'Subclass responsibility'
+    
     def setUp(self):
         super(CSVWriterTestCase, self).setUp()
         self.fd = StringIO.StringIO()
@@ -35,6 +37,7 @@ class CSVWriterTestCase(test.wxTestCase):
         
     def createViewer(self):
         self.settings.set('taskviewer', 'treemode', self.treeMode)
+        # pylint: disable-msg=W0201
         self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile,
             self.settings)
 
@@ -55,7 +58,7 @@ class CSVWriterTestCase(test.wxTestCase):
         self.viewer.widget.select((index,))
 
 
-class TaskTests(object):
+class TaskTestsMixin(object):
     def testTaskSubject(self):
         self.expectInCSV('Task subject,')
 
@@ -79,7 +82,7 @@ class TaskTests(object):
         self.expectNotInCSV('Child', selectionOnly=True)
                 
         
-class CSVListWriterTest(TaskTests, CSVWriterTestCase):
+class CSVListWriterTest(TaskTestsMixin, CSVWriterTestCase):
     treeMode = 'False'
         
     def testTaskDescription(self):
@@ -93,7 +96,7 @@ class CSVListWriterTest(TaskTests, CSVWriterTestCase):
         self.expectInCSV('"Line1\nLine2"')
                       
 
-class CSVTreeWriterTest(TaskTests, CSVWriterTestCase):
+class CSVTreeWriterTest(TaskTestsMixin, CSVWriterTestCase):
     treeMode = 'True'
 
 
@@ -105,6 +108,7 @@ class EffortWriterTest(CSVWriterTestCase):
                                           stop=now + date.TimeDelta(seconds=1)))
 
     def createViewer(self):
+        # pylint: disable-msg=W0201
         self.viewer = gui.viewer.EffortViewer(self.frame, self.taskFile,
             self.settings)
 

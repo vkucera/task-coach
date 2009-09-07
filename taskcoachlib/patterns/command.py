@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import singleton as patterns
+
 
 class Command(object):
     def __init__(self, *args, **kwargs):
@@ -35,7 +36,7 @@ class Command(object):
         return 'command'
 
 
-class CommandHistory:
+class CommandHistory(object):
     __metaclass__ = patterns.Singleton
 
     def __init__(self):

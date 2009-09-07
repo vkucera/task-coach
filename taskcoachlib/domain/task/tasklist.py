@@ -20,9 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns
 from taskcoachlib.i18n import _
-from taskcoachlib.domain import base, date, categorizable
+from taskcoachlib.domain import date, categorizable
 import task
 
 
@@ -64,7 +63,7 @@ class TaskList(categorizable.CategorizableContainer):
         return len(self._getInterestingTasks(isInteresting))
     
     def _getInterestingTasks(self, isInteresting):
-        return [task for task in self if isInteresting(task)]
+        return [task for task in self if isInteresting(task)] # pylint: disable-msg=W0621
 
     def nrCompleted(self):
         return self._nrInterestingTasks(task.Task.completed)
@@ -93,7 +92,7 @@ class TaskList(categorizable.CategorizableContainer):
             
     def efforts(self):
         result = []
-        for task in self:
+        for task in self: # pylint: disable-msg=W0621
             result.extend(task.efforts())
         return result
         
@@ -108,7 +107,7 @@ class TaskList(categorizable.CategorizableContainer):
         return max(self.__allDates())
 
     def __allDates(self):        
-        realDates = [aDate for task in self 
+        realDates = [aDate for task in self # pylint: disable-msg=W0621
             for aDate in (task.startDate(), task.dueDate(), task.completionDate()) 
             if aDate != date.Date()]
         return realDates or [date.Date()]            
@@ -120,4 +119,4 @@ class TaskList(categorizable.CategorizableContainer):
         return max(self.__allPriorities())
         
     def __allPriorities(self):
-        return [task.priority() for task in self] or (0,)
+        return [task.priority() for task in self] or (0,) # pylint: disable-msg=W0621

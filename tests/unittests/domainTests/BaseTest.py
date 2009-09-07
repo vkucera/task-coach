@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 import test
 from taskcoachlib import patterns
-from taskcoachlib.domain import base, date
+from taskcoachlib.domain import base
 
 
 class SynchronizedObjectTest(test.TestCase):
@@ -32,7 +32,7 @@ class SynchronizedObjectTest(test.TestCase):
     def onEvent(self, event):
         self.events.append(event)
         
-    def registerObserver(self, eventType):
+    def registerObserver(self, eventType): # pylint: disable-msg=W0221
         patterns.Publisher().registerObserver(self.onEvent, eventType)
         
     def assertObjectStatus(self, expectedStatus):
@@ -109,8 +109,8 @@ class ObjectTest(test.TestCase):
     # Id tests:
         
     def testSetIdOnCreation(self):
-        object = base.Object(id='123')
-        self.assertEqual('123', object.id())
+        domainObject = base.Object(id='123')
+        self.assertEqual('123', domainObject.id())
         
     def testIdIsAString(self):
         self.assertEqual(type(''), type(self.object.id()))
@@ -252,6 +252,7 @@ class ObjectTest(test.TestCase):
 class CompositeObjectTest(test.TestCase):
     def setUp(self):
         self.compositeObject = base.CompositeObject()
+        self.child = None
         self.eventsReceived = []
         
     def onEvent(self, event):
@@ -323,6 +324,7 @@ class CompositeObjectTest(test.TestCase):
     def testCopy(self):
         self.compositeObject.expand(context='some_viewer')
         copy = self.compositeObject.copy()
+        # pylint: disable-msg=E1101
         self.assertEqual(copy.expandedContexts(),
                          self.compositeObject.expandedContexts())
         self.compositeObject.expand(context='another_viewer')
@@ -393,6 +395,7 @@ class BaseCollectionTest(test.TestCase):
             pass
         
     def testLookupIdWhenObjectIsInCollection(self):
-        object = base.CompositeObject()
-        self.collection.append(object)
-        self.assertEqual(object, self.collection.getObjectById(object.id()))
+        domainObject = base.CompositeObject()
+        self.collection.append(domainObject)
+        self.assertEqual(domainObject, 
+                         self.collection.getObjectById(domainObject.id()))

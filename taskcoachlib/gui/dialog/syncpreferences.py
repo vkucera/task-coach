@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2008-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib.gui.dialog.preferences import SettingsPageBase
 from taskcoachlib import widgets
-from taskcoachlib.syncml.config import SyncMLConfigNode
 from taskcoachlib.i18n import _
 
 
@@ -36,24 +35,17 @@ class SyncMLBasePage(SettingsPageBase):
                 return str(self.config.children()[0]['spds']['syncml']['Conn'].get(name))
             elif name in [ 'username' ]:
                 return str(self.config.children()[0]['spds']['syncml']['Auth'].get(name))
+
         elif section == 'task':
             for child in self.config.children()[0]['spds']['sources'].children():
                 if child.name.endswith('Tasks'):
-                    break
-            else:
-                return ''
+                    return child.get(name)            
 
-            return child.get(name)
         elif section == 'note':
             for child in self.config.children()[0]['spds']['sources'].children():
                 if child.name.endswith('Notes'):
-                    break
-            else:
-                return ''
-
-            return child.get(name)
-        else:
-            return ''
+                    return child.get(name)
+        return ''
 
     def set(self, section, name, value):
         if section == 'access':
@@ -61,22 +53,18 @@ class SyncMLBasePage(SettingsPageBase):
                 self.config.children()[0]['spds']['syncml']['Conn'].set(name, value)
             elif name in [ 'username' ]:
                 self.config.children()[0]['spds']['syncml']['Auth'].set(name, value)
+
         elif section == 'task':
             for child in self.config.children()[0]['spds']['sources'].children():
                 if child.name.endswith('Tasks'):
+                    child.set(name, value)
                     break
-            else:
-                return
 
-            child.set(name, value)
         elif section == 'note':
             for child in self.config.children()[0]['spds']['sources'].children():
                 if child.name.endswith('Notes'):
+                    child.set(name, value)
                     break
-            else:
-                return
-
-            child.set(name, value)
 
     def ok(self):
         super(SyncMLBasePage, self).ok()

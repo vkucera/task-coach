@@ -41,9 +41,9 @@ class TaskTestCase(test.TestCase):
             self.labelEfforts(child, childLabel)
             
     def labelEfforts(self, parentTask, taskLabel):
-        for effortIndex, effortInstance in enumerate(parentTask.efforts()):
+        for effortIndex, eachEffort in enumerate(parentTask.efforts()):
             effortLabel = '%seffort%d'%(taskLabel, effortIndex+1)
-            setattr(self, effortLabel, effortInstance)
+            setattr(self, effortLabel, eachEffort)
             
     def setUp(self):
         self.settings = task.Task.settings = config.Settings(load=False)
@@ -69,10 +69,12 @@ class TaskTestCase(test.TestCase):
     def taskCreationKeywordArguments(self):
         return [dict(subject='Task')]
 
-    def addEffort(self, hours, parentTask=None):
-        parentTask = parentTask or self.task
+    def addEffort(self, hours, taskToAddEffortTo=None):
+        taskToAddEffortTo = taskToAddEffortTo or self.task
         start = date.DateTime(2005,1,1)
-        parentTask.addEffort(effort.Effort(parentTask, start, start+hours))
+        taskToAddEffortTo.addEffort(effort.Effort(taskToAddEffortTo, 
+                                                  start, start+hours))
+
 
     def assertReminder(self, expectedReminder, taskWithReminder=None):
         taskWithReminder = taskWithReminder or self.task
@@ -96,7 +98,7 @@ class CommonTaskTestsMixin(asserts.TaskAsserts):
              self.task.modificationEventTypes())
         
 
-class NoBudgetTests(object):
+class NoBudgetTestsMixin(object):
     ''' These tests should succeed for all tasks without budget. '''
     def testTaskHasNoBudget(self):
         self.assertEqual(date.TimeDelta(), self.task.budget())
@@ -111,7 +113,7 @@ class NoBudgetTests(object):
         self.assertEqual(date.TimeDelta(), self.task.budgetLeft(recursive=True))
 
 
-class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTests):
+class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
 
     # Getters
 
@@ -202,9 +204,9 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTests):
         self.failIf(self.events)
 
     def testSetDueDate(self):
-        self.date = date.Tomorrow()
-        self.task.setDueDate(self.date)
-        self.assertEqual(self.date, self.task.dueDate())
+        tomorrow = date.Tomorrow()
+        self.task.setDueDate(tomorrow)
+        self.assertEqual(tomorrow, self.task.dueDate())
 
     def testSetDueDateNotification(self):
         self.registerObserver('task.dueDate')
@@ -682,7 +684,7 @@ class TaskWithDescriptionTest(TaskTestCase, CommonTaskTestsMixin):
 
 # pylint: disable-msg=E1101
 
-class TwoTasksTest(TaskTestCase): 
+class TwoTasksTest(TaskTestCase):
     def taskCreationKeywordArguments(self):
         return [{}, {}]
         
@@ -731,7 +733,7 @@ class NewChildOfActiveTask(NewChildTestCase):
         self.assertEqual(date.Today(), self.child.startDate())
         
 
-class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTests):
+class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
     def taskCreationKeywordArguments(self):
         return [{'children': [task.Task(subject='child')]}]
     
@@ -1024,7 +1026,7 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTests):
                          self.events)
         
 
-class TaskWithGrandChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTests):
+class TaskWithGrandChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
     def taskCreationKeywordArguments(self):
         return [{}, {}, {}]
     

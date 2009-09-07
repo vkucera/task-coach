@@ -59,7 +59,7 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
 
     # Event handlers:
 
-    def onTaskListChanged(self, event):
+    def onTaskListChanged(self, event): # pylint: disable-msg=W0613
         self.__setTooltipText()
         self.__startOrStopTicking()
         
@@ -77,11 +77,11 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
         self.__setTooltipText()
         self.__stopTicking()
 
-    def onChangeSubject(self, event):
+    def onChangeSubject(self, event): # pylint: disable-msg=W0613
         self.__setTooltipText()
         self.__setIcon()
 
-    def onChangeDueDate(self, event):
+    def onChangeDueDate(self, event): # pylint: disable-msg=W0613
         self.__setTooltipText()
         self.__setIcon()
 
@@ -101,9 +101,9 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
 
     def setPopupMenu(self, menu):
         self.Bind(wx.EVT_TASKBAR_RIGHT_UP, self.popupTaskBarMenu)
-        self.popupmenu = menu
+        self.popupmenu = menu # pylint: disable-msg=W0201
 
-    def popupTaskBarMenu(self, event):
+    def popupTaskBarMenu(self, event): # pylint: disable-msg=W0613
         self.PopupMenu(self.popupmenu)
 
     # Getters:

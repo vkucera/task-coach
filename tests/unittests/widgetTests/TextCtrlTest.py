@@ -43,6 +43,7 @@ class SingleLineTextCtrlWithEnterButtonTest(test.wxTestCase):
         super(SingleLineTextCtrlWithEnterButtonTest, self).setUp()
         self.textCtrl = widgets.SingleLineTextCtrlWithEnterButton(self.frame, 
             label='Text', onEnter=self.onEnter)
+        self.enteredText = ''
             
     def onEnter(self, text):
         self.enteredText = text

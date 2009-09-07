@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, os, sys, codecs, traceback, shutil
 from taskcoachlib import meta, persistence
 from taskcoachlib.i18n import _
-from taskcoachlib.domain import task
 from taskcoachlib.thirdparty import lockfile
 
 try:
@@ -90,7 +89,7 @@ class IOController(object):
             wx.CallAfter(self.open, filename)
             
     def open(self, filename=None, showerror=wx.MessageBox, 
-             fileExists=os.path.exists, breakLock=False, lock=True, *args):
+             fileExists=os.path.exists, breakLock=False, lock=True):
         if self.__taskFile.needSave():
             if not self.__saveUnsavedChanges():
                 return
@@ -119,6 +118,7 @@ class IOController(object):
                           dict(filename=filename, name=meta.name))
                 return
             except Exception:
+                # pylint: disable-msg=W0142
                 showerror(_('Error while reading %s:\n')%filename + \
                     ''.join(traceback.format_exception(*sys.exc_info())) + \
                     _('Are you sure it is a %s-file?')%meta.name, 
@@ -162,7 +162,7 @@ class IOController(object):
             self.__messageCallback(_('Merged %(filename)s')%{'filename': filename}) 
             self.__addRecentFile(filename)
 
-    def save(self, showerror=wx.MessageBox, *args):
+    def save(self, showerror=wx.MessageBox):
         if self.__taskFile.filename():
             if self._saveSave(self.__taskFile, showerror):
                 return True
@@ -205,15 +205,15 @@ class IOController(object):
         selectionFile.categories().extend(allCategories)
         return selectionFile
     
-    def _saveSave(self, file, showerror, filename=None):
+    def _saveSave(self, taskFile, showerror, filename=None):
         ''' Save the file and show an error message if saving fails. '''
         try:
             if filename:
-                file.saveas(filename)
+                taskFile.saveas(filename)
             else:
-                filename = file.filename()
-                file.save()
-            self.__showSaveMessage(file)
+                filename = taskFile.filename()
+                taskFile.save()
+            self.__showSaveMessage(taskFile)
             self.__addRecentFile(filename)
             return True
         except lockfile.AlreadyLocked:
@@ -340,7 +340,7 @@ class IOController(object):
         
     def __askUserForFile(self, title, fileDialogOpts=None, flags=wx.OPEN):
         fileDialogOpts = fileDialogOpts or self.__tskFileDialogOpts
-        return wx.FileSelector(title, flags=flags, **fileDialogOpts)
+        return wx.FileSelector(title, flags=flags, **fileDialogOpts) # pylint: disable-msg=W0142
 
     def __saveUnsavedChanges(self):
         result = wx.MessageBox(_('You have unsaved changes.\n'

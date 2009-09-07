@@ -18,6 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import singleton
 
+# Ignore this pylint messages:
+# - W0142: * or ** magic
+# - W0622: Redefining builtin types
+# pylint: disable-msg=W0142,W0622
 
 class List(list):
     def __eq__(self, other):
@@ -142,7 +146,7 @@ class Event(object):
                 sourcesToAdd &= set([source])
             kwargs = dict(type=type) # Python doesn't allow type=type after *values 
             for eachSource in sourcesToAdd:
-                subEvent.addSource(eachSource, *self.values(eachSource, type), **kwargs)
+                subEvent.addSource(eachSource, *self.values(eachSource, type), **kwargs) # pylint: disable-msg=W0142
         return subEvent
     
     def send(self):
@@ -225,7 +229,8 @@ class Publisher(object):
         
     def clear(self):
         ''' Clear the registry of observers. Mainly for testing purposes. '''
-        self.__observers = {} # {(eventType, eventSource): set(callbacks)}
+        # observers = {(eventType, eventSource): set(callbacks)}
+        self.__observers = {} # pylint: disable-msg=W0201
     
     @wrapObserver
     def registerObserver(self, observer, eventType, eventSource=None):
@@ -252,14 +257,17 @@ class Publisher(object):
             event source only. If both an event type and an event source are
             specified, the observer is removed for the combination of that
             specific event type and event source only. '''
+        
+        # pylint: disable-msg=W0613
             
         # First, create a match function that will select the combination of
         # event source and event type we're looking for:
+        
         if eventType and eventSource:
             def match(type, source):
                 return type == eventType and source == eventSource
         elif eventType:
-            def match(type, source): return type == eventType
+            def match(type, source): return type == eventType 
         elif eventSource:
             def match(type, source): return source == eventSource
         else:
@@ -267,7 +275,7 @@ class Publisher(object):
 
         # Next, remove observers that are registered for the event source and
         # event type we're looking for, i.e. that match:    
-        matchingKeys = [key for key in self.__observers if match(*key)] 
+        matchingKeys = [key for key in self.__observers if match(*key)]
         for key in matchingKeys:
             self.__observers[key].discard(observer)
         self.notifyObserversOfLastObserverRemoved()
@@ -457,7 +465,7 @@ class ObservableList(ObservableCollection, List):
         if notify:
             event.send()
     
-    def removeItems(self, items, event=None):
+    def removeItems(self, items, event=None): # pylint: disable-msg=W0221
         if not items:
             return
         notify = event is None

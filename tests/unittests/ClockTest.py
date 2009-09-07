@@ -16,12 +16,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx
+import test
 from taskcoachlib import patterns
 from taskcoachlib.domain import date
 
 
-class MockTimer:
+class MockTimer(object):
+    def __init__(self):
+        self.started = self.stopped = False
+        
     def Start(self):
         self.started = True
 
@@ -37,7 +40,7 @@ class ClockTest(test.wxTestCase):
          
     def tearDown(self):
         super(ClockTest, self).tearDown()
-        date.Clock.deleteInstance()
+        date.Clock.deleteInstance() # pylint: disable-msg=E1101
         
     def onEvent(self, event):
         self.events.append(event)
@@ -56,7 +59,7 @@ class ClockTest(test.wxTestCase):
         realSoonNow = date.DateTime.now() + date.TimeDelta(seconds=2)
         patterns.Publisher().registerObserver(self.onEvent, 
             eventType=date.Clock.eventType(realSoonNow))
-        self.clock._scheduledTimer._notify(now=realSoonNow)
+        self.clock._scheduledTimer._notify(now=realSoonNow) # pylint: disable-msg=W0212
         self.assertEqual(1, len(self.events))
 
     def testRegisterForDateChange_Midnight(self):
@@ -82,7 +85,7 @@ class ClockTest(test.wxTestCase):
         self.clock._secondTimer = MockTimer()
         patterns.Publisher().registerObserver(self.onEvent,
             eventType='clock.second')
-        self.failUnless(self.clock._secondTimer.started)
+        self.failUnless(self.clock._secondTimer.started) # pylint: disable-msg=W0212
 
     def testStopClockOnLastObserverRemovedForSecond(self):
         self.clock._secondTimer = MockTimer()
@@ -90,79 +93,72 @@ class ClockTest(test.wxTestCase):
             eventType='clock.second')
         patterns.Publisher().removeObserver(self.onEvent,
             eventType='clock.second')
-        self.failUnless(self.clock._secondTimer.stopped)
+        self.failUnless(self.clock._secondTimer.stopped) # pylint: disable-msg=W0212
 
 
-class PeriodicTimerTest_EverySecond(test.TestCase):
-    def setUp(self):
-        self.events = []
-        self.timer = date.clock.PeriodicTimer(self.onTimer, 'second')
-        self.dateTime = date.DateTime(2000,1,1,10,0,0)
-        
-    def onTimer(self):
-        self.timerFired = True # pragma: no cover
-
-    def testNextWholeSecond(self):
-        self.assertEqual(self.dateTime, 
-            self.timer._startOfNextPeriod(date.DateTime(2000,1,1,9,59,59,100)))
-        
-    def testNextWholeSecond_NowIsOnTheSecond(self):
-        self.assertEqual(self.dateTime + date.TimeDelta(seconds=1),
-            self.timer._startOfNextPeriod(self.dateTime))
-        
-    def testStartOnNextWholeSecond_NowIsAlmostOnTheSecond(self):
-        self.assertEqual(self.dateTime, 
-            self.timer._startOfNextPeriod(date.DateTime(2000, 1, 1, 9, 59, 59, 999999)))
-
-    def testStartOnNextWholeSecond_NowIsJustOverTheSecond(self):
-        self.assertEqual(self.dateTime, 
-            self.timer._startOfNextPeriod(date.DateTime(2000, 1, 1, 9, 59, 59, 1)))
-        
-    def testStartOnNextWholeSecond_NowIsHalfwayTheSecond(self):
-        self.assertEqual(self.dateTime, 
-            self.timer._startOfNextPeriod(date.DateTime(2000, 1, 1, 9, 59, 59, 500000)))
-
-
-class PeriodicTimerTest_EveryMidnight(test.TestCase):
-    def setUp(self):
-        self.events = []
-        self.timer = date.clock.PeriodicTimer(self.onTimer, 'day')
-        self.dateTime = date.DateTime(2000,1,2,0,0,0)
-        
-    def onTimer(self):
-        self.timerFired = True
-
-    def testNextMidnight(self):
-        self.assertEqual(self.dateTime, 
-            self.timer._startOfNextPeriod(date.DateTime(2000,1,1,10,10,10,100)))
-        
-    def testNextMidnight_NowIsMidnigth(self):
-        self.assertEqual(self.dateTime + date.TimeDelta(days=1),
-            self.timer._startOfNextPeriod(self.dateTime))
-        
-    def testNextMidnight_NowIsAlmostMidnight(self):
-        self.assertEqual(self.dateTime, 
-            self.timer._startOfNextPeriod(date.DateTime(2000, 1, 1, 23, 59, 59, 999999)))
-
-    def testNextMidnigth_NowIsJustOverMidnight(self):
-        self.assertEqual(self.dateTime, 
-            self.timer._startOfNextPeriod(date.DateTime(2000, 1, 1, 0, 0, 0, 1)))
-        
-    def testNextMidnight_NowIsNoon(self):
-        self.assertEqual(self.dateTime, 
-            self.timer._startOfNextPeriod(date.DateTime(2000, 1, 1, 12, 0, 0, 0)))
-        
-    def testStartOnStartOfPeriod(self):
-        self.timer._onceTimer._notify()
-        
-
-class FireOnceTest(test.TestCase):    
+class TimerTestCase(test.TestCase):
+    expectedDateTime = 'Subclass responsibility'
+    frequency = 'minute'
+    
     def setUp(self):
         self.timerFired = False
+        self.timer = date.clock.PeriodicTimer(self.onTimer, self.frequency)
+        
+    def onTimer(self, event=None): # pylint: disable-msg=W0613
+        self.timerFired = True # pragma: no cover
+        
+    def assertStartOfNextPeriod(self, *args):
+        dateTime = date.DateTime(*args) if len(args) > 1 else args[0] 
+        self.assertEqual(self.expectedDateTime, 
+                         self.timer._startOfNextPeriod(dateTime)) # pylint: disable-msg=W0212
 
-    def onTimer(self, dateTime):
-        self.timerFired = True
-                
+        
+class PeriodicTimerTest_EverySecond(TimerTestCase):
+    frequency = 'second'
+    expectedDateTime = date.DateTime(2000,1,1,10,0,0)
+    
+    def testNextWholeSecond(self):
+        self.assertStartOfNextPeriod(2000,1,1,9,59,59,100)
+        
+    def testNextWholeSecond_NowIsOnTheSecond(self):
+        self.assertStartOfNextPeriod(self.expectedDateTime - \
+                                     date.TimeDelta(seconds=1))
+        
+    def testStartOnNextWholeSecond_NowIsAlmostOnTheSecond(self):
+        self.assertStartOfNextPeriod(2000, 1, 1, 9, 59, 59, 999999)
+
+    def testStartOnNextWholeSecond_NowIsJustOverTheSecond(self):
+        self.assertStartOfNextPeriod(2000, 1, 1, 9, 59, 59, 1)
+        
+    def testStartOnNextWholeSecond_NowIsHalfwayTheSecond(self):
+        self.assertStartOfNextPeriod(2000, 1, 1, 9, 59, 59, 500000)
+
+
+class PeriodicTimerTest_EveryMidnight(TimerTestCase):
+    frequency = 'day'
+    expectedDateTime = date.DateTime(2000,1,2,0,0,0)
+    
+    def testNextMidnight(self):
+        self.assertStartOfNextPeriod(2000,1,1,10,10,10,100)
+        
+    def testNextMidnight_NowIsMidnigth(self):
+        self.assertStartOfNextPeriod(self.expectedDateTime - \
+                                     date.TimeDelta(days=1))
+        
+    def testNextMidnight_NowIsAlmostMidnight(self):
+        self.assertStartOfNextPeriod(2000, 1, 1, 23, 59, 59, 999999)
+
+    def testNextMidnigth_NowIsJustOverMidnight(self):
+        self.assertStartOfNextPeriod(2000, 1, 1, 0, 0, 0, 1)
+        
+    def testNextMidnight_NowIsNoon(self):
+        self.assertStartOfNextPeriod(2000, 1, 1, 12, 0, 0, 0)
+        
+    def testStartOnStartOfPeriod(self):
+        self.timer._onceTimer._notify() # pylint: disable-msg=W0212
+        
+
+class FireOnceTest(TimerTestCase):                
     def testFireOnce(self):
         now = date.DateTime.now()
         date.clock.OnceTimer(self.onTimer, now)
@@ -182,7 +178,7 @@ class ScheduledTimerTest(test.TestCase):
         self.alarmTime = date.DateTime(2008,1,1,10,0,0)
         self.alarmFired = 0
         
-    def onAlarm(self, *args):
+    def onAlarm(self, *args): # pylint: disable-msg=W0613
         self.alarmFired += 1
         
     def scheduleFutureAlarm(self, alarmTime=None):
@@ -199,9 +195,11 @@ class ScheduledTimerTest(test.TestCase):
         self.scheduleFutureAlarm()
         self.assertEqual([self.alarmTime], self.timer.scheduled())
 
+    # pylint: disable-msg=W0212
+    
     def testInvocationOfFutureAlarm(self):
         self.scheduleFutureAlarm()
-        self.timer._notify()
+        self.timer._notify() 
         self.assertEqual(1, self.alarmFired)
 
     def testInvokedAlarmIsRemovedFromScheduledAlarms(self):

@@ -1,6 +1,7 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,9 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, sys, wx
+import os, wx
 import test, mock
-from taskcoachlib.domain import task
 
 
 class LoadTest(test.TestCase):
@@ -31,9 +31,9 @@ class LoadTest(test.TestCase):
         self.mockApp = mock.App()
 
         # On MacOS, wx.Yield doesn't seem to be enough, so while
-        # running the tests, just short-circuit this.
-
+        # running the tests, just short-circuit this:
         self.oldCallAfter = wx.CallAfter
+        # pylint: disable-msg=W0142
         wx.CallAfter = lambda func, *args, **kwargs: func(*args, **kwargs)
 
     def tearDown(self):
@@ -43,7 +43,7 @@ class LoadTest(test.TestCase):
             os.remove(self.filename)
         super(LoadTest, self).tearDown()
 
-    def mockErrorDialog(self, *args, **kwargs):
+    def mockErrorDialog(self, *args, **kwargs): # pylint: disable-msg=W0613
         self.errorDialogCalled = True
 
     def testLoadInvalidFileDoesNotAffectFile(self):

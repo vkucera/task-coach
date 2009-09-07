@@ -301,9 +301,9 @@ class CategorizableCompositeObjectTest(test.TestCase):
     def testCopy(self):
         self.categorizable.addCategory(self.category)
         copy = self.categorizable.copy()
-        self.assertEqual(copy.categories(), self.categorizable.categories())
+        self.assertEqual(copy.categories(), self.categorizable.categories()) # pylint: disable-msg=E1101
         
-    def testModificationEventTypes(self):
+    def testModificationEventTypes(self): # pylint: disable-msg=E1003
         self.assertEqual(super(categorizable.CategorizableCompositeObject,
                                self.categorizable).modificationEventTypes() + \
                          [self.categoryAddedEventType, 
@@ -394,7 +394,7 @@ class CategoryTest(test.TestCase):
         self.assertEqual(set([self.categorizable]), cat.categorizables())
         
     def testCreateWithCategorizableDoesNotSetCategorizableCategories(self):
-        cat = category.Category('category', [self.categorizable])
+        category.Category('category', [self.categorizable])
         self.assertEqual(set([]), self.categorizable.categories())
     
     def testAddCategorizableToSubCategory(self):
@@ -521,6 +521,8 @@ class CategoryTest(test.TestCase):
         self.category.setSubject('New subject')
         copy = self.category.copy()
         self.assertEqual(copy.subject(), self.category.subject())
+    
+    # pylint: disable-msg=E1101
         
     def testCopy_SubjectIsDifferentFromOriginalSubject(self):
         self.subCategory.setSubject('New subject')
@@ -602,7 +604,7 @@ class CategoryTest(test.TestCase):
         self.category.addNote(aNote)
         self.assertEqual([aNote], self.category.notes())
         
-    def testModificationEventTypes(self):
+    def testModificationEventTypes(self): # pylint: disable-msg=E1003
         self.assertEqual(super(category.Category,
                                self.category).modificationEventTypes() + \
                          [self.category.filterChangedEventType(), 

@@ -24,6 +24,7 @@ from taskcoachlib import widgets
 class DatePickerCtrlThatFixesAllowNoneStyleTest(test.wxTestCase):
     def setUp(self):
         super(DatePickerCtrlThatFixesAllowNoneStyleTest, self).setUp()
+        # pylint: disable-msg=W0212
         self.datePicker = \
             widgets.datectrl._DatePickerCtrlThatFixesAllowNoneStyle(self.frame)
 

@@ -1,6 +1,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -41,7 +42,7 @@ class Acceptor(asynchat.async_chat):
                 except socket.error:
                     pass
                 else:
-                    break;
+                    break
             else:
                 raise RuntimeError, 'Could not find a free port to bind to.'
         else:

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ import sys, os
 import test
 from taskcoachlib import meta
 sys.path.append(os.path.join(test.projectRoot, 'changes.in'))
-import changes
+import changes # pylint: disable-msg=F0401
 
 
 class ChangeHistoryTestCase(test.TestCase):

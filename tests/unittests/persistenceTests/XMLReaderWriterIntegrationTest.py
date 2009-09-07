@@ -65,6 +65,7 @@ class IntegrationTest_EmptyList(IntegrationTestCase):
         
 class IntegrationTest(IntegrationTestCase):
     def fillContainers(self):
+        # pylint: disable-msg=W0201
         self.description = 'Description\nLine 2'
         self.task = task.Task(subject='Subject', description=self.description, 
             startDate=date.Yesterday(), dueDate=date.Tomorrow(), 
@@ -83,6 +84,7 @@ class IntegrationTest(IntegrationTestCase):
         self.category = category.Category('test', [self.task], filtered=True,
                                           description='Description')
         self.categories.append(self.category)
+        # pylint: disable-msg=E1101
         self.task.addAttachments(attachment.FileAttachment('/home/frank/whatever.txt'))
         self.task.addNote(note.Note(subject='Task note'))
         self.task2 = task.Task('Task 2', priority=-1954)
@@ -92,17 +94,18 @@ class IntegrationTest(IntegrationTestCase):
         self.notes.append(self.note)
         self.category.addCategorizable(self.note)
 
-    def getTaskWrittenAndRead(self, id):
-        return [task for task in self.tasksWrittenAndRead if task.id() == id][0]
+    def getTaskWrittenAndRead(self, targetId):
+        # pylint: disable-msg=W0621
+        return [task for task in self.tasksWrittenAndRead if task.id() == targetId][0]
 
-    def assertAttributeWrittenAndRead(self, task, attribute):
-        taskWrittenAndRead = self.getTaskWrittenAndRead(task.id())
-        self.assertEqual(getattr(task, attribute)(), 
+    def assertAttributeWrittenAndRead(self, aTask, attribute):
+        taskWrittenAndRead = self.getTaskWrittenAndRead(aTask.id())
+        self.assertEqual(getattr(aTask, attribute)(), 
                          getattr(taskWrittenAndRead, attribute)())
                          
-    def assertContainedDomainObjectsWrittenAndRead(self, task, attribute):
-        taskWrittenAndRead = self.getTaskWrittenAndRead(task.id())
-        self.assertEqual([obj.id() for obj in getattr(task, attribute)()], 
+    def assertContainedDomainObjectsWrittenAndRead(self, aTask, attribute):
+        taskWrittenAndRead = self.getTaskWrittenAndRead(aTask.id())
+        self.assertEqual([obj.id() for obj in getattr(aTask, attribute)()], 
                          [obj.id() for obj in getattr(taskWrittenAndRead, attribute)()])
                
     def testSubject(self):

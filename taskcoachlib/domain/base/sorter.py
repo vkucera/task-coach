@@ -96,7 +96,7 @@ class Sorter(patterns.ListDecorator):
         patterns.Publisher().removeObserver(self.onAttributeChanged, 
                                             eventType=eventType)
         
-    def onAttributeChanged(self, event):
+    def onAttributeChanged(self, event): # pylint: disable-msg=W0613
         self.reset()
 
     def _createEventTypeFromAttribute(self, attribute):

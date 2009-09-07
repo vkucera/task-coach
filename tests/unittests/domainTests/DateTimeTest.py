@@ -22,13 +22,14 @@ from taskcoachlib.domain import date
 
 class PyDateTimeTest(test.TestCase):
     def testReplaceCannotBeEasilyUsedToFindTheLastDayofTheMonth(self):
-        date = datetime.date(2004, 4, 1) # April 1st, 2004
+        testDate = datetime.date(2004, 4, 1) # April 1st, 2004
         try:
-            lastDayOfApril = date.replace(day=31)
+            lastDayOfApril = testDate.replace(day=31)
             self.fail('Surprise! datetime.date.replace works as we want!') # pragma: no cover
             self.assertEqual(datetime.date(2004, 4, 30), lastDayOfApril) # pragma: no cover
         except ValueError:
             pass
+
 
 class DateTimeTest(test.TestCase):
     def testWeekNumber(self):
@@ -76,7 +77,7 @@ class DateTimeTest(test.TestCase):
 
 class TimeTest(test.TestCase):
     def testNow(self):
-        now = date.Time.now()
+        date.Time.now()
 
 
 class TimeDeltaTest(test.TestCase):

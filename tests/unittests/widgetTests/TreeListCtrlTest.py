@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ class TreeListCtrlTestCase(TreeCtrlTest.TreeCtrlTestCase):
 
     def setUp(self):
         super(TreeListCtrlTestCase, self).setUp()
-        self.createColumns()
+        self._columns = self.createColumns()
         self.treeCtrl = widgets.TreeListCtrl(self.frame, self.columns(), 
             self.getItemText, self.getItemTooltipText, self.getItemImage,
             self.getItemAttr, self.getChildrenCount, self.getItemExpanded,
@@ -37,27 +37,27 @@ class TreeListCtrlTestCase(TreeCtrlTest.TreeCtrlTestCase):
         for bitmapName in ['task', 'tasks']:
             imageList.Add(wx.ArtProvider_GetBitmap(bitmapName, wx.ART_MENU, 
                           (16,16)))
-        self.treeCtrl.AssignImageList(imageList)
+        self.treeCtrl.AssignImageList(imageList) # pylint: disable-msg=E1101
 
     def createColumns(self):
         names = ['treeColumn'] + ['column%d'%index for index in range(1, 5)]
-        self._columns = [widgets.Column(name, name, ('view', 'whatever'), None) for name in names]
+        return [widgets.Column(name, name, ('view', 'whatever'), None) for name in names]
         
     def columns(self):
         return self._columns
     
-    def getItemText(self, index, column=None):
+    def getItemText(self, index, column=None): # pylint: disable-msg=W0221
         itemText = super(TreeListCtrlTestCase, self).getItemText(index)
         if column is None:
             return itemText
         else:
             return '%s in column %s'%(itemText, column)
     
-    def getItemImage(self, index, which, column=None):
+    def getItemImage(self, index, which, column=None): # pylint: disable-msg=W0221,W0613
         return super(TreeListCtrlTestCase, self).getItemImage(index)
 
     
-class TreeListCtrlTest(TreeListCtrlTestCase, TreeCtrlTest.CommonTests):
+class TreeListCtrlTest(TreeListCtrlTestCase, TreeCtrlTest.CommonTestsMixin):
     pass
 
 
@@ -69,8 +69,9 @@ class TreeListCtrlColumnsTest(TreeListCtrlTestCase):
         self.visibleColumns = self.columns()[1:]
         
     def assertColumns(self):
+        # pylint: disable-msg=E1101
         self.assertEqual(len(self.visibleColumns)+1, self.treeCtrl.GetColumnCount())
-        item, cookie = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())
+        item = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())[0]
         for columnIndex in range(1, len(self.visibleColumns)):
             self.assertEqual(self.getItemText((0,), columnIndex), 
                              self.treeCtrl.GetItemText(item, columnIndex))

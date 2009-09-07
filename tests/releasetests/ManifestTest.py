@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,16 +28,14 @@ class ManifestTest(test.TestCase):
         self.manifest = [os.path.join(test.projectRoot, filename[:-1]) 
                          for filename in manifestLines]
 
-    def missingPyFiles(self, *dir):
+    def missingPyFiles(self, *folders):
         missing = []
-        for root, dirs, files in os.walk(os.path.join(test.projectRoot, *dir)):
+        for root, dirs, files in os.walk(os.path.join(test.projectRoot, *folders)):
             pyfiles = [os.path.join(root, filename) for filename in files 
                        if filename.endswith('.py')]
             for filename in pyfiles:
                 if filename not in self.manifest:
                     missing.append(filename)
-            if 'CVS' in dirs:
-                dirs.remove('CVS')
         return missing
 
     def testAllSourcePyFilesAreInManifest(self):

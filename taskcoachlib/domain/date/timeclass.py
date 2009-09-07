@@ -18,9 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
 
+
 class Time(datetime.time):
     @classmethod
-    def now(cls):
+    def now(class_):
         d = datetime.datetime.now()
-        return cls(d.hour, d.minute, d.second, d.microsecond)
+        return class_(d.hour, d.minute, d.second, d.microsecond)
 

@@ -39,6 +39,7 @@ class GetRelativePathTest(test.TestCase):
         
 class FileAttachmentTest(test.TestCase):
     def setUp(self):
+        self.filename = ''
         self.attachment = attachment.FileAttachment('filename')
         self.events = []
         
@@ -68,6 +69,7 @@ class FileAttachmentTest(test.TestCase):
                                 
     def testCopy(self):
         copy = self.attachment.copy()
+        # pylint: disable-msg=E1101
         self.assertEqual(copy.location(), self.attachment.location())
         self.attachment.setDescription('new')
         self.assertEqual(copy.location(), self.attachment.location())
@@ -82,6 +84,7 @@ class FileAttachmentTest(test.TestCase):
 
     def testModificationEventTypes(self):
         Attachment = attachment.Attachment
+        # pylint: disable-msg=E1101
         self.assertEqual([Attachment.notesChangedEventType(),
                           Attachment.subjectChangedEventType(),
                           Attachment.descriptionChangedEventType(),

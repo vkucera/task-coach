@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, test
 from taskcoachlib import gui, config, persistence, meta
 
+
 class MockViewer(wx.Frame):
     def title(self):
         return ''
@@ -45,7 +46,7 @@ class MainWindowUnderTest(gui.MainWindow):
     
 
 class DummyIOController(object):
-    def needSave(self, *args, **kwargs):
+    def needSave(self, *args, **kwargs): # pylint: disable-msg=W0613
         return False # pragma: no cover
 
 
@@ -130,7 +131,7 @@ class MainWindowIconizedTest(MainWindowTestCase):
     def setSettings(self):
         self.settings.set('window', 'starticonized', 'Always')
     
-    @test.skipOnPlatform('__WXGTK__') # FIXME: test fails on Fedora, don't know why nor how to fix it    
+    @test.skipOnPlatform('__WXGTK__') # Test fails on Fedora, don't know why nor how to fix it    
     def testIsIconized(self):
         self.failUnless(self.mainwindow.IsIconized())
                         

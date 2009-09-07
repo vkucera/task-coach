@@ -30,7 +30,7 @@ class XMLWriter(object):
     def write(self, taskList, categoryContainer,
               noteContainer, syncMLConfig, guid):
         domImplementation = xml.dom.getDOMImplementation()
-        self.document = domImplementation.createDocument(None, 'tasks', None)
+        self.document = domImplementation.createDocument(None, 'tasks', None) # pylint: disable-msg=W0201
         pi = self.document.createProcessingInstruction('taskcoach', 
             'release="%s" tskversion="%d"'%(meta.data.version, 
             self.__versionnr))
@@ -47,7 +47,7 @@ class XMLWriter(object):
             self.document.documentElement.appendChild(self.textNode('guid', guid))
         self.document.writexml(self.__fd, newl='\n')
 
-    def taskNode(self, task):
+    def taskNode(self, task): # pylint: disable-msg=W0621
         node = self.baseCompositeNode(task, 'task', self.taskNode)
         node.setAttribute('status', str(task.getStatus()))
         if task.startDate() != date.Date():
@@ -75,8 +75,8 @@ class XMLWriter(object):
                               str(task.shouldMarkCompletedWhenAllChildrenCompleted()))
         for effort in task.efforts():
             node.appendChild(self.effortNode(effort))
-        for note in task.notes():
-            node.appendChild(self.noteNode(note))
+        for eachNote in task.notes():
+            node.appendChild(self.noteNode(eachNote))
         for attachment in task.attachments():
             node.appendChild(self.attachmentNode(attachment))
         return node
@@ -110,7 +110,7 @@ class XMLWriter(object):
             node.appendChild(self.textNode('description', effort.description()))
         return node
     
-    def categoryNode(self, category, *categorizableContainers):
+    def categoryNode(self, category, *categorizableContainers): # pylint: disable-msg=W0621
         def inCategorizableContainer(categorizable):
             for container in categorizableContainers:
                 if categorizable in container:
@@ -120,8 +120,8 @@ class XMLWriter(object):
                                       categorizableContainers)
         if category.isFiltered():
             node.setAttribute('filtered', str(category.isFiltered()))
-        for note in category.notes():
-            node.appendChild(self.noteNode(note))
+        for eachNote in category.notes():
+            node.appendChild(self.noteNode(eachNote))
         for attachment in category.attachments():
             node.appendChild(self.attachmentNode(attachment))
         # Make sure the categorizables referenced are actually in the 
@@ -132,7 +132,7 @@ class XMLWriter(object):
             node.setAttribute('categorizables', categorizableIds)
         return node
     
-    def noteNode(self, note):
+    def noteNode(self, note): # pylint: disable-msg=W0621
         node = self.baseCompositeNode(note, 'note', self.noteNode)
         for attachment in note.attachments():
             node.appendChild(self.attachmentNode(attachment))
@@ -166,7 +166,7 @@ class XMLWriter(object):
             node.setAttribute('expandedContexts', 
                               str(tuple(sorted(item.expandedContexts()))))
         for child in item.children():
-            node.appendChild(childNodeFactory(child, *childNodeFactoryArgs))
+            node.appendChild(childNodeFactory(child, *childNodeFactoryArgs)) # pylint: disable-msg=W0142
         return node
 
     def attachmentNode(self, attachment):
@@ -180,8 +180,8 @@ class XMLWriter(object):
             dataNode.setAttribute('extension',
                                   os.path.splitext(attachment.location())[-1])
             node.appendChild(dataNode)
-        for note in attachment.notes():
-            node.appendChild(self.noteNode(note))
+        for eachNote in attachment.notes():
+            node.appendChild(self.noteNode(eachNote))
         return node
 
     def syncMLNode(self, syncMLConfig):
@@ -214,13 +214,13 @@ class XMLWriter(object):
 
 
 class TemplateXMLWriter(XMLWriter):
-    def write(self, tsk):
+    def write(self, tsk): # pylint: disable-msg=W0221
         super(TemplateXMLWriter, self).write(task.TaskList([tsk]),
                    category.CategoryList(),
                    note.NoteContainer(),
                    None, None)
 
-    def taskNode(self, task):
+    def taskNode(self, task): # pylint: disable-msg=W0621
         node = super(TemplateXMLWriter, self).taskNode(task)
 
         today = date.Today()

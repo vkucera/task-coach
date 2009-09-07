@@ -35,7 +35,7 @@ class TempFiles(object):
             try:
                 os.remove(name)
             except:
-                pass
+                pass # pylint: disable-msg=W0702
 
 
 def get_temp_file(**kwargs):

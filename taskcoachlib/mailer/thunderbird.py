@@ -51,6 +51,7 @@ def loadPreferences():
 
     for line in file(os.path.join(getDefaultProfileDir(), 'prefs.js'), 'r'):
         if line.startswith('user_pref('):
+            # pylint: disable-msg=W0122
             exec line in { 'user_pref': user_pref, 'true': True, 'false': False }
 
     return config

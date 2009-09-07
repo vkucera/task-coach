@@ -165,8 +165,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
         return status1, status2
 
     def newItemDialog(self, *args, **kwargs):
-        kwargs['categories'] = [category for category in self.taskFile.categories() if
-                              category.isFiltered()]
+        kwargs['categories'] = self.taskFile.categories().filteredCategories()
         return super(BaseNoteViewer, self).newItemDialog(*args, **kwargs)
     
     def deleteItemCommand(self):

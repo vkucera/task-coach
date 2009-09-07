@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
 import test
 from taskcoachlib import gui, config
 
@@ -30,6 +29,8 @@ class PreferencesTest(test.wxTestCase):
         self.originalColor = self.settings.get('color', 'activetasks')
         self.newColor = (1, 2, 29)
         
+    # pylint: disable-msg=W0212
+    
     def testCancel(self):
         self.preferences[4]._colorSettings[0][2].SetColour(self.newColor)
         self.preferences.cancel()

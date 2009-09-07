@@ -40,7 +40,7 @@ class IOControllerTest(test.TestCase):
                 shutil.rmtree(filename + '.lock') # pragma: no cover
         super(IOControllerTest, self).tearDown()
         
-    def doIOAndCheckRecentFiles(self, open=None, saveas=None, 
+    def doIOAndCheckRecentFiles(self, open=None, saveas=None, # pylint: disable-msg=W0622
             saveselection=None, merge=None, expectedFilenames=None):
         open = open or []
         saveas = saveas or []
@@ -50,7 +50,7 @@ class IOControllerTest(test.TestCase):
         self.checkRecentFiles(expectedFilenames or \
             open+saveas+saveselection+merge)
     
-    def doIO(self, open, saveas, saveselection, merge):
+    def doIO(self, open, saveas, saveselection, merge): # pylint: disable-msg=W0622
         for filename in open:
             self.iocontroller.open(filename, fileExists=lambda filename: True)
         for filename in saveas:
@@ -96,8 +96,8 @@ class IOControllerTest(test.TestCase):
         
     def testSaveTaskFileWithoutTasksButWithNotes(self):
         self.taskFile.notes().append(note.Note(subject='Note'))
-        def saveasReplacement(*args, **kwargs):
-            self.saveAsCalled = True
+        def saveasReplacement(*args, **kwargs): # pylint: disable-msg=W0613
+            self.saveAsCalled = True # pylint: disable-msg=W0201
         originalSaveAs = self.iocontroller.__class__.saveas
         self.iocontroller.__class__.saveas = saveasReplacement
         self.iocontroller.save()
@@ -106,24 +106,24 @@ class IOControllerTest(test.TestCase):
     
     def testIOErrorOnSave(self):
         self.taskFile.setFilename(self.filename1)
-        def saveasReplacement(*args, **kwargs):
+        def saveasReplacement(*args, **kwargs): # pylint: disable-msg=W0613
             self.saveAsCalled = True
         originalSaveAs = self.iocontroller.__class__.saveas
         self.iocontroller.__class__.saveas = saveasReplacement
         self.taskFile.raiseIOError = True
-        def showerror(*args, **kwargs):
-            self.showerrorCalled = True
+        def showerror(*args, **kwargs): # pylint: disable-msg=W0613
+            self.showerrorCalled = True # pylint: disable-msg=W0201
         self.iocontroller.save(showerror=showerror)
         self.failUnless(self.showerrorCalled and self.saveAsCalled)
         self.iocontroller.__class__.saveas = originalSaveAs
 
     def testIOErrorOnSaveAs(self):
         self.taskFile.raiseIOError = True
-        def saveasReplacement(*args, **kwargs):
+        def saveasReplacement(*args, **kwargs): # pylint: disable-msg=W0613
             self.saveAsCalled = True
         originalSaveAs = self.iocontroller.__class__.saveas
-        def showerror(*args, **kwargs):
-            self.showerrorCalled = True
+        def showerror(*args, **kwargs): # pylint: disable-msg=W0613
+            self.showerrorCalled = True 
             # Prevent the recursive call of saveas:
             self.iocontroller.__class__.saveas = saveasReplacement
         self.iocontroller.saveas(filename=self.filename1, showerror=showerror)
@@ -149,10 +149,10 @@ class IOControllerTest(test.TestCase):
     def testIOErrorOnSaveSave(self):
         self.taskFile.raiseIOError = True
         self.taskFile.setFilename(self.filename1)
-        def showerror(*args, **kwargs):
+        def showerror(*args, **kwargs): # pylint: disable-msg=W0613
             self.showerrorCalled = True
         self.taskFile.tasks().append(task.Task())
-        self.iocontroller._saveSave(self.taskFile, showerror)
+        self.iocontroller._saveSave(self.taskFile, showerror) # pylint: disable-msg=W0212
         self.failUnless(self.showerrorCalled)
 
     def testNothingDeleted(self):

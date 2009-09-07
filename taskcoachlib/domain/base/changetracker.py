@@ -32,10 +32,11 @@ class ChangeTracker(patterns.Observer):
         self.registerForCollectionChanges()
         self.registerForItemChanges()
         
-    def reset(self): # pylint: disable-msg=W0201
+    def reset(self): 
         self.registerForItemChanges([item for item in self.__collection \
                                      if item.id() in self.__added])
         self.__added = set()
+        # pylint: disable-msg=W0201
         self.__removed = set()
         self.__modified = set()
         

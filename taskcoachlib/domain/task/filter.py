@@ -42,7 +42,7 @@ class ViewFilter(base.Filter):
     def onTaskChange(self, event):
         tasks = event.sources()
         newEvent = patterns.Event()
-        tasksToRemove = [task for task in tasks if not self.filterTask(task)]
+        tasksToRemove = [task for task in tasks if not self.filterTask(task)] # pylint: disable-msg=W0621
         self.removeItemsFromSelf(tasksToRemove, newEvent)
         tasksToAdd = [task for task in tasks if self.filterTask(task) \
                       and task in self.observable() and task not in self]
@@ -78,9 +78,9 @@ class ViewFilter(base.Filter):
         self.reset()
         
     def filter(self, tasks):
-        return [task for task in tasks if self.filterTask(task)]
+        return [task for task in tasks if self.filterTask(task)] # pylint: disable-msg=W0621
     
-    def filterTask(self, task):
+    def filterTask(self, task): # pylint: disable-msg=W0621
         result = True
         if self.__hideCompletedTasks and task.completed():
             result = False
