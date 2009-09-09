@@ -283,11 +283,80 @@ class SortableViewerMixin(object):
         ''' (Re)Create the UICommands for sorting. These UICommands are put
             in the View->Sort menu and are used when the user clicks a column
             header. '''
+        self._sortUICommands = self.createSortOrderUICommands()
+        sortByCommands = self.createSortByUICommands()
+        if sortByCommands:
+            self._sortUICommands.append(None) # Separator
+            self._sortUICommands.extend(sortByCommands)
+        
+    def createSortOrderUICommands(self):
+        ''' Create the UICommands for changing sort order, like ascending/
+            descending, and match case. '''
+        return [uicommand.ViewerSortOrderCommand(viewer=self),
+                uicommand.ViewerSortCaseSensitive(viewer=self)]
+        
+    def createSortByUICommands(self):
+        ''' Create the UICommands for changing what the items are sorted by,
+            i.e. the columns. '''
+        return [uicommand.ViewerSortByCommand(viewer=self, value='subject',
+                    menuText=_('Sub&ject'),
+                    helpText=self.sortBySubjectHelpText),
+                uicommand.ViewerSortByCommand(viewer=self, value='description',
+                    menuText=_('&Description'),
+                    helpText=self.sortByDescriptionHelpText)]
+
+
+class SortableViewerForEffortMixin(SortableViewerMixin):
+    def sorterOptions(self):
+        return dict()
+
+    def createSortUICommands(self):
+        ''' Override because no sort uiCommmands are needed for effort viewers. 
+            Although they are sorted, the sort order cannot be changed at the 
+            moment. '''
         self._sortUICommands = []
+        
+
+class SortableViewerForCategoriesMixin(SortableViewerMixin):
+    sortBySubjectHelpText = _('Sort categories by subject')
+    sortByDescriptionHelpText = _('Sort categories by description')
 
 
-class SortableViewerForTasksMixin(SortableViewerMixin):
+class SortableViewerForCategorizablesMixin(SortableViewerMixin):
+    ''' Mixin class to create uiCommands for sorting categorizables. '''
+
+    def createSortByUICommands(self):
+        commands = super(SortableViewerForCategorizablesMixin, self).createSortByUICommands()
+        commands.extend(
+               [uicommand.ViewerSortByCommand(viewer=self, value='categories',
+                    menuText=_('&Category'),
+                    helpText=self.sortByCategoryHelpText),
+                uicommand.ViewerSortByCommand(viewer=self,
+                    value='totalCategories', menuText=_('Overall categories'),
+                    helpText=self.sortByTotalCategoryHelpText)])
+        return commands
+
+
+class SortableViewerForAttachmentsMixin(SortableViewerForCategorizablesMixin):
+    sortBySubjectHelpText = _('Sort attachments by subject')
+    sortByDescriptionHelpText = _('Sort attachments by description')
+    sortByCategoryHelpText = _('Sort attachments by category')
+    sortByTotalCategoryHelpText = _('Sort attachments by overall categories')
+    
+
+class SortableViewerForNotesMixin(SortableViewerForCategorizablesMixin):
+    sortBySubjectHelpText = _('Sort notes by subject')
+    sortByDescriptionHelpText = _('Sort notes by description')
+    sortByCategoryHelpText = _('Sort notes by category')
+    sortByTotalCategoryHelpText = _('Sort notes by overall categories')
+
+
+class SortableViewerForTasksMixin(SortableViewerForCategorizablesMixin):
     SorterClass = task.sorter.Sorter
+    sortBySubjectHelpText = _('Sort tasks by subject')
+    sortByDescriptionHelpText = _('Sort tasks by description')
+    sortByCategoryHelpText = _('Sort tasks by category')
+    sortByTotalCategoryHelpText = _('Sort tasks by overall categories')
     
     def __init__(self, *args, **kwargs):
         self.__sortKeyUnchangedCount = 0
@@ -320,12 +389,13 @@ class SortableViewerForTasksMixin(SortableViewerMixin):
             sortByTaskStatusFirst=self.isSortByTaskStatusFirst())
         return options
 
-    def createSortUICommands(self):
-        self._sortUICommands = \
-            [uicommand.ViewerSortOrderCommand(viewer=self),
-             uicommand.ViewerSortCaseSensitive(viewer=self),
-             uicommand.ViewerSortByTaskStatusFirst(viewer=self),
-             None]
+    def createSortOrderUICommands(self):
+        commands = super(SortableViewerForTasksMixin, self).createSortOrderUICommands()
+        commands.append(uicommand.ViewerSortByTaskStatusFirst(viewer=self))
+        return commands
+    
+    def createSortByUICommands(self):
+        commands = super(SortableViewerForTasksMixin, self).createSortByUICommands()
         effortOn = self.settings.getboolean('feature', 'effort')
         dependsOnEffortFeature = ['budget', 'totalBudget', 
                                   'timeSpent', 'totalTimeSpent',
@@ -333,10 +403,6 @@ class SortableViewerForTasksMixin(SortableViewerMixin):
                                   'hourlyFee', 'fixedFee', 'totalFixedFee',
                                   'revenue', 'totalRevenue']
         for menuText, helpText, value in [\
-            (_('Sub&ject'), _('Sort tasks by subject'), 'subject'),
-            (_('&Description'), _('Sort by description'), 'description'),
-            (_('&Category'), _('Sort by category'), 'categories'),
-            (_('Overall categories'), _('Sort by overall categories'), 'totalCategories'),
             (_('&Start date'), _('Sort tasks by start date'), 'startDate'),
             (_('&Due date'), _('Sort tasks by due date'), 'dueDate'),
             (_('&Completion date'), _('Sort tasks by completion date'), 'completionDate'),
@@ -359,60 +425,10 @@ class SortableViewerForTasksMixin(SortableViewerMixin):
             (_('Total re&venue'), _('Sort tasks by total revenue'), 'totalRevenue'),
             (_('&Reminder'), _('Sort tasks by reminder date and time'), 'reminder')]:
             if value not in dependsOnEffortFeature or (value in dependsOnEffortFeature and effortOn):
-                self._sortUICommands.append(uicommand.ViewerSortByCommand(\
+                commands.append(uicommand.ViewerSortByCommand(\
                     viewer=self, value=value, menuText=menuText, helpText=helpText))
-
-
-class SortableViewerForEffortMixin(SortableViewerMixin):
-    def sorterOptions(self):
-        return dict()
+        return commands
     
-
-class SortableViewerForCategoriesMixin(SortableViewerMixin):
-    def createSortUICommands(self):
-        self._sortUICommands = [uicommand.ViewerSortOrderCommand(viewer=self),
-                                uicommand.ViewerSortCaseSensitive(viewer=self)]
-
-
-class SortableViewerForAttachmentsMixin(SortableViewerMixin):
-    def createSortUICommands(self):
-        self._sortUICommands = \
-            [uicommand.ViewerSortOrderCommand(viewer=self),
-             uicommand.ViewerSortCaseSensitive(viewer=self),
-             None,
-             uicommand.ViewerSortByCommand(viewer=self, value='subject',
-                 menuText=_('Sub&ject'),
-                 helpText=_('Sort attachments by subject')),
-             uicommand.ViewerSortByCommand(viewer=self, value='description',
-                 menuText=_('&Description'),
-                 helpText=_('Sort attachments by description')),
-             uicommand.ViewerSortByCommand(viewer=self, value='categories',
-                 menuText=_('&Category'),
-                 helpText=_('Sort attachments by category')),
-             uicommand.ViewerSortByCommand(viewer=self,
-                 value='totalCategories', menuText=_('Overall categories'),
-                 helpText=_('Sort attachments by overall categories'))]
-
-
-class SortableViewerForNotesMixin(SortableViewerMixin):
-    def createSortUICommands(self):
-        self._sortUICommands = \
-            [uicommand.ViewerSortOrderCommand(viewer=self),
-             uicommand.ViewerSortCaseSensitive(viewer=self),
-             None,
-             uicommand.ViewerSortByCommand(viewer=self, value='subject',
-                 menuText=_('Sub&ject'),
-                 helpText=_('Sort notes by subject')),
-             uicommand.ViewerSortByCommand(viewer=self, value='description',
-                 menuText=_('&Description'),
-                 helpText=_('Sort notes by description')),
-             uicommand.ViewerSortByCommand(viewer=self, value='categories',
-                 menuText=_('&Category'),
-                 helpText=_('Sort notes by category')),
-             uicommand.ViewerSortByCommand(viewer=self,
-                 value='totalCategories', menuText=_('Overall categories'),
-                 helpText=_('Sort notes by overall categories'))]
-
 
 class AttachmentDropTargetMixin(object):
     ''' Mixin class for viewers that are drop targets for attachments. '''
