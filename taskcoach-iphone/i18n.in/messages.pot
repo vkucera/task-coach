@@ -243,5 +243,5 @@ msgstr ""
 msgid "Confirm complete"
 msgstr ""
 
-msgid "Due soon # of days"
+msgid "Due soon # of days     "
 msgstr ""
