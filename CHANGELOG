@@ -1,6 +1,10 @@
 
+==== 1.1 beta 2: 2009-09-12 ====
+
 2009-09-12  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* TextFieldCell.xib: increase font size.
+	* misc: enhance French translation for settings bundle; add spaces at the end
+	  of the string so that the value does not appear to be part of the label.
 
 ==== 1.1 beta 1: 2009-09-06 ====
 
