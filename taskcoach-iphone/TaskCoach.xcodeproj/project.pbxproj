@@ -921,12 +921,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jérôme Laheurte";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "035640E0-8125-481E-8C2E-5CF31AA1098C";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "685429E5-CBC5-4C7A-870C-13E6CAE1C337";
 				SDKROOT = iphoneos2.2.1;
 			};
 			name = "1.1 beta 1";
