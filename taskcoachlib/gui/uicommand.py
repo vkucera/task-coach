@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
+import os, wx
 from taskcoachlib import patterns, meta, command, help, widgets, persistence # pylint: disable-msg=W0622
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import base, task, attachment, effort
@@ -391,6 +391,16 @@ class NeedsSelectedNoteMixin(NeedsNoteViewerMixin, NeedsSelectionMixin):
 
 class NeedsSelectedAttachmentsMixin(NeedsAttachmentViewerMixin, NeedsSelectionMixin):
     pass
+
+
+class NeedsSelectedAttachmentThatCanBeOpenMixin(NeedsSelectedAttachmentsMixin):
+    def enabled(self, event):
+        if super(NeedsSelectedAttachmentThatCanBeOpenMixin, self).enabled(event):
+            for attachment in self.viewer.curselection():
+                if attachment.type_ == 'file':
+                    if not os.path.exists(attachment.normalizedLocation()):
+                        return False
+            return True
 
 
 class NeedsAtLeastOneTaskMixin(object):
@@ -1696,7 +1706,7 @@ class AddNoteAttachment(NeedsNoteViewerMixin, AddAttachment):
             *args, **kwargs)
             
 
-class OpenAllAttachments(NeedsSelectionWithAttachmentsMixin, ViewerCommand, 
+class OpenAllAttachments(NeedsSelectedAttachmentThatCanBeOpenMixin, ViewerCommand, 
                          SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(OpenAllAttachments, self).__init__(\
@@ -1971,7 +1981,7 @@ class AttachmentEdit(ObjectEdit, NeedsSelectedAttachmentsMixin, AttachmentsComma
     __containerName__ = 'attachments'
 
 
-class AttachmentOpen(NeedsSelectedAttachmentsMixin, ViewerCommand, AttachmentsCommand):
+class AttachmentOpen(NeedsSelectedAttachmentThatCanBeOpenMixin, ViewerCommand, AttachmentsCommand):
     def __init__(self, *args, **kwargs):
         attachments = kwargs['attachments']
         super(AttachmentOpen, self).__init__(bitmap='fileopen',

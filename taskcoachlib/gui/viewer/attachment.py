@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
+import os, wx
 from taskcoachlib import command, widgets
 from taskcoachlib.domain import attachment
 from taskcoachlib.i18n import _
@@ -32,7 +32,7 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.ViewerWithColumns,
                        mixin.SearchableViewerMixin, mixin.NoteColumnMixin,
                        base.ListViewer):
     SorterClass = attachment.AttachmentSorter
-    viewerImages = ['note', 'uri', 'email', 'fileopen']
+    viewerImages = ['note', 'uri', 'email', 'fileopen', 'fileopen_red']
 
     def __init__(self, *args, **kwargs):
         self.attachments = kwargs.pop('attachmentsToShow')
@@ -126,9 +126,13 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.ViewerWithColumns,
         return commands
 
     def typeImageIndex(self, anAttachment, which): # pylint: disable-msg=W0613
+        if anAttachment.type_ == 'file':
+            if os.path.exists(anAttachment.normalizedLocation()):
+                return self.imageIndex['fileopen']
+            return self.imageIndex['fileopen_red']
+
         try:
-            return self.imageIndex[{ 'file': 'fileopen',
-                                     'uri': 'uri',
+            return self.imageIndex[{ 'uri': 'uri',
                                      'mail': 'email'}[anAttachment.type_]]
         except KeyError:
             return -1

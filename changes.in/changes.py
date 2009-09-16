@@ -38,7 +38,10 @@ state (enabled or disabled).''')
 the iPhone/iPod Touch when synchronizing. For people who hide completed
 tasks, this can make the synchronization much quicker.'''),
         Feature('''Under MS Windows, the task template directory
-may now be a shortcut to another directory.''')
+may now be a shortcut to another directory.'''),
+        Feature('''In the attachment viewer, display a red icon for
+files attachments when the file does not exist. Also prevent the user
+from trying to open it.''')
         ]
     ),
 
