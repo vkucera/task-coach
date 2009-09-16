@@ -142,12 +142,15 @@ class FileAttachment(Attachment):
     type_ = 'file'
 
     def open(self, workingDir=None, openAttachment=desktop.open): # pylint: disable-msg=W0221
+        return openAttachment(self.normalizedLocation(workingDir))
+
+    def normalizedLocation(self, workingDir=None):
         location = self.location()
         if self.isLocalFile():
             if workingDir and not os.path.isabs(location):
                 location = os.path.join(workingDir, location)
             location = os.path.normpath(location)
-        return openAttachment(location)
+        return location
 
     def isLocalFile(self):
         return urlparse.urlparse(self.location())[0] == ''
