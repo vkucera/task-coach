@@ -47,8 +47,8 @@ class VCalWriterTestCase(test.wxTestCase):
         self.writer.write(self.viewer, self.settings, self.selectionOnly)
         return self.fd.getvalue().split('\r\n')[:-1]
 
-    def selectItem(self, index):
-        self.viewer.widget.select((index,))
+    def selectItem(self, items):
+        self.viewer.widget.select(items)
 
 
 class VCalendarStartEndTestMixin(object):
@@ -62,7 +62,7 @@ class VCalendarStartEndTestMixin(object):
 class VCalendarSelectedTestMixin(object):
     def setUp(self):
         super(VCalendarSelectedTestMixin, self).setUp()
-        self.selectItem((1,))
+        self.selectItem([self.task2])
         self.vcalFile = self.writeAndRead()
 
 

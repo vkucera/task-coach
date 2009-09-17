@@ -118,3 +118,125 @@ class DropTarget(wx.DropTarget):
 
         self.reinit()
         return wx.DragCopy
+
+
+class TreeHelperMixin(object):
+    """ This class provides methods that are not part of the API of any 
+    tree control, but are convenient to have available. """
+
+    def GetItemChildren(self, item=None, recursively=False):
+        """ Return the children of item as a list. """
+        if not item:
+            item = self.GetRootItem()
+            if not item:
+                return []
+        children = []
+        child, cookie = self.GetFirstChild(item)
+        while child:
+            children.append(child)
+            if recursively:
+                children.extend(self.GetItemChildren(child, True))
+            child, cookie = self.GetNextChild(item, cookie)
+        return children
+
+
+class TreeCtrlDragAndDropMixin(TreeHelperMixin):
+    """ This is a mixin class that can be used to easily implement
+    dragging and dropping of tree items. It can be mixed in with 
+    wx.TreeCtrl, wx.gizmos.TreeListCtrl, or wx.lib.customtree.CustomTreeCtrl.
+
+    To use it derive a new class from this class and one of the tree
+    controls, e.g.:
+    class MyTree(TreeCtrlDragAndDropMixin, wx.TreeCtrl):
+        ...
+
+    You *must* implement OnDrop. OnDrop is called when the user has
+    dropped an item on top of another item. It's up to you to decide how
+    to handle the drop. If you are using this mixin together with the
+    VirtualTree mixin, it makes sense to rearrange your underlying data
+    and then call RefreshItems to let the virtual tree refresh itself. """    
+ 
+    def __init__(self, *args, **kwargs):
+        kwargs['style'] = kwargs.get('style', wx.TR_DEFAULT_STYLE) | \
+                          wx.TR_HIDE_ROOT
+        super(TreeCtrlDragAndDropMixin, self).__init__(*args, **kwargs)
+        self.Bind(wx.EVT_TREE_BEGIN_DRAG, self.OnBeginDrag)
+
+    def OnDrop(self, dropItem, dragItem):
+        """ This function must be overloaded in the derived class.
+        dragItem is the item being dragged by the user. dropItem is the
+        item dragItem is dropped upon. If the user doesn't drop dragItem
+        on another item, dropItem equals the (hidden) root item of the
+        tree control. """
+        raise NotImplementedError
+
+    def OnBeginDrag(self, event):
+        # We allow only one item to be dragged at a time, to keep it simple
+        if self.GetSelections():
+            self._dragItem = self.GetSelections()[0]
+        else:
+            self._dragItem = event.GetItem()
+        if self._dragItem and self._dragItem != self.GetRootItem(): 
+            self.StartDragging()
+            event.Allow()
+        else:
+            event.Veto()
+
+    def OnEndDrag(self, event):
+        self.StopDragging()
+        dropTarget = event.GetItem()
+        if not dropTarget:
+            dropTarget = self.GetRootItem()
+        if self.IsValidDropTarget(dropTarget):
+            self.UnselectAll()
+            if dropTarget != self.GetRootItem():
+                self.SelectItem(dropTarget)
+            self.OnDrop(dropTarget, self._dragItem)
+        
+    def OnDragging(self, event):
+        if not event.Dragging():
+            self.StopDragging()
+            return
+        item, flags, column = self.HitTest(wx.Point(event.GetX(), event.GetY()))
+        if not item:
+            item = self.GetRootItem()
+        if self.IsValidDropTarget(item):
+            self.SetCursorToDragging()
+        else:
+            self.SetCursorToDroppingImpossible()
+        if flags & wx.TREE_HITTEST_ONITEMBUTTON:
+            self.Expand(item)
+        if self.GetSelections() != [item]:
+            self.UnselectAll()
+            if item != self.GetRootItem(): 
+                self.SelectItem(item)
+        event.Skip()
+        
+    def StartDragging(self):
+        self.GetMainWindow().Bind(wx.EVT_MOTION, self.OnDragging)
+        self.Bind(wx.EVT_TREE_END_DRAG, self.OnEndDrag)
+        self.SetCursorToDragging()
+
+    def StopDragging(self):
+        self.GetMainWindow().Unbind(wx.EVT_MOTION)
+        self.Unbind(wx.EVT_TREE_END_DRAG)
+        self.ResetCursor()
+        self.UnselectAll()
+        self.SelectItem(self._dragItem)
+        
+    def SetCursorToDragging(self):
+        self.GetMainWindow().SetCursor(wx.StockCursor(wx.CURSOR_HAND))
+        
+    def SetCursorToDroppingImpossible(self):
+        self.GetMainWindow().SetCursor(wx.StockCursor(wx.CURSOR_NO_ENTRY))
+        
+    def ResetCursor(self):
+        self.GetMainWindow().SetCursor(wx.NullCursor)
+
+    def IsValidDropTarget(self, dropTarget):
+        if dropTarget: 
+            allChildren = self.GetItemChildren(self._dragItem, recursively=True)
+            parent = self.GetItemParent(self._dragItem) 
+            return dropTarget not in [self._dragItem, parent] + allChildren
+        else:
+            return True        

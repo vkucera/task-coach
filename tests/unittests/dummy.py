@@ -30,8 +30,8 @@ class DummyWidget(wx.Frame):
     def curselection(self):
         return self._selection
 
-    def select(self, indices):
-        self._selection = indices
+    def select(self, items):
+        self._selection = items
 
     def GetItemCount(self):
         return len(self.viewer.presentation())

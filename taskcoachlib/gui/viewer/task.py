@@ -149,12 +149,6 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
         
     def onColorSettingChange(self, event): # pylint: disable-msg=W0613
         self.refresh()
-        
-    def children(self, item):
-        try:
-            return [child for child in item.children() if child in self.presentation()]
-        except AttributeError:
-            return []
 
     def iconName(self, item, isSelected):
         if not hasattr(item, 'children'):
@@ -169,7 +163,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
         if not self.settings.getboolean('view', 'descriptionpopups'):
             return []
         result = [(self.iconName(task, task in self.curselection()), 
-                   [self.label(task)])]
+                   [self.getItemText(task)])]
         if task.description():
             result.append((None, map(lambda x: x.rstrip('\n'),
                                  task.description().split('\n'))))
@@ -181,7 +175,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
         return result
 
     def label(self, task):
-        return task.subject()
+        return self.getItemText(task)
 
 
 class RootNode(object):
@@ -264,7 +258,7 @@ class TimelineViewer(BaseTaskViewer):
     def createWidget(self):
         self.rootNode = TimelineRootNode(self.presentation())
         return widgets.Timeline(self, self.rootNode, self.onSelect, self.onEdit,
-                                self.getItemTooltipData, self.createTaskPopupMenu())
+                                self.createTaskPopupMenu())
 
     def onEdit(self, item):
         if isinstance(item, task.Task):
@@ -384,7 +378,7 @@ class SquareTaskViewer(BaseTaskViewer):
         return widgets.SquareMap(self, SquareMapRootNode(self.presentation()), 
             self.onSelect, 
             uicommand.TaskEdit(taskList=self.presentation(), viewer=self),
-            self.getItemTooltipData, self.createTaskPopupMenu())
+            self.createTaskPopupMenu())
         
     def getToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
@@ -440,10 +434,10 @@ class SquareTaskViewer(BaseTaskViewer):
             return max(self.__transformTaskAttribute(self.__zero), (overall - children_sum))/float(overall)
         return 0
     
-    def label(self, task):
-        label = super(SquareTaskViewer, self).label(task)
+    def getItemText(self, task):
+        text = super(SquareTaskViewer, self).getItemText(task)
         value = self.render(getattr(task, self.__orderBy)(recursive=False))
-        return '%s (%s)'%(label, value) if value else label
+        return '%s (%s)'%(text, value) if value else text
 
     def value(self, task, parent=None): # pylint: disable-msg=W0613
         return self.overall(task)
@@ -496,9 +490,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
     def createWidget(self):
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
-        widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText,
-            self.getItemTooltipData, self.getItemImage, self.getItemAttr,
-            self.getChildrenCount, self.getItemExpanded, self.onSelect, 
+        widget = widgets.TreeListCtrl(self, self.columns(), self.onSelect, 
             uicommand.TaskEdit(taskList=self.presentation(), viewer=self),
             uicommand.TaskDragAndDrop(taskList=self.presentation(), viewer=self),
             self.createTaskPopupMenu(), self.createColumnPopupMenu(),
@@ -760,8 +752,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
     def getItemParent(self, item):
         return super(TaskViewer, self).getItemParent(item) if \
             self.isTreeViewer() else None
-            
-    def getChildrenCount(self, index):
-        return super(TaskViewer, self).getChildrenCount(index) if \
-            self.isTreeViewer() or (index == ()) else 0
 
+    def children(self, item=None):
+        return super(TaskViewer, self).children(item) if \
+            (self.isTreeViewer() or item is None) else []

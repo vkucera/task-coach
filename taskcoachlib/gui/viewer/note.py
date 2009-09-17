@@ -57,9 +57,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
     def createWidget(self):
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
-        widget = widgets.TreeListCtrl(self, self.columns(), self.getItemText, 
-            self.getItemTooltipData, self.getItemImage, self.getItemAttr, 
-            self.getChildrenCount, self.getItemExpanded, self.onSelect,
+        widget = widgets.TreeListCtrl(self, self.columns(), self.onSelect,
             uicommand.NoteEdit(viewer=self, notes=self.presentation()),
             uicommand.NoteDragAndDrop(viewer=self, notes=self.presentation()),
             menu.NotePopupMenu(self.parent, self.settings, self.presentation(),
@@ -143,14 +141,13 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
         columns.insert(2, attachmentsColumn)
         return columns
 
-    def getItemTooltipData(self, index, column=0):
+    def getItemTooltipData(self, item, column=0):
         if self.settings.getboolean('view', 'descriptionpopups'):
-            note = self.getItemWithIndex(index)
-            if note.description():
-                result = [(None, map(lambda x: x.rstrip('\r'), note.description().split('\n')))]
+            if item.description():
+                result = [(None, map(lambda x: x.rstrip('\r'), item.description().split('\n')))]
             else:
                 result = []
-            result.append(('attachment', [unicode(attachment) for attachment in note.attachments()]))
+            result.append(('attachment', [unicode(attachment) for attachment in item.attachments()]))
             return result
         else:
             return []

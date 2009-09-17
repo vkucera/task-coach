@@ -34,6 +34,14 @@ class _CtrlWithItems(object):
             return item.IsOk()          # for Tree(List)Ctrl
         except AttributeError:
             return item != wx.NOT_FOUND # for ListCtrl
+        
+    def _objectBelongingTo(self, item):
+        if not self._itemIsOk(item):
+            return None
+        try:
+            return self.GetItemPyData(item) # TreeListCtrl
+        except AttributeError:
+            return self.getItemWithIndex(item) # ListCtrl
 
     def SelectItem(self, item, *args, **kwargs):
         try:
@@ -80,8 +88,7 @@ class _CtrlWithItemPopupMenu(_CtrlWithPopupMenu):
             # Make sure the item under the mouse is selected because that
             # is what users expect and what is most user-friendly. Not all
             # widgets do this by default, e.g. the TreeListCtrl does not.
-            item, flags, column = self.HitTest(event.GetPoint(), 
-                                               alwaysReturnColumn=True)
+            item, flags, column = self.HitTest(event.GetPoint())
             if not self._itemIsOk(item):
                 return
             if not self.IsSelected(item):
@@ -132,44 +139,26 @@ class _CtrlWithDropTarget(_CtrlWithItems):
             self.GetMainWindow().SetDropTarget(dropTarget)
 
     def onDropURL(self, x, y, url):
-        item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
+        item, flags, column = self.HitTest((x, y))
         if self.__onDropURLCallback:
-            if self._itemIsOk(item):
-                self.__onDropURLCallback(self.GetIndexOfItem(item), url)
-            else:
-                self.__onDropURLCallback(None, url)
+            self.__onDropURLCallback(self._objectBelongingTo(item), url)
 
     def onDropFiles(self, x, y, filenames):
-        item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
+        item, flags, column = self.HitTest((x, y))
         if self.__onDropFilesCallback:
-            if self._itemIsOk(item):
-                self.__onDropFilesCallback(self.GetIndexOfItem(item), filenames)
-            else:
-                self.__onDropFilesCallback(None, filenames)
+            self.__onDropFilesCallback(self._objectBelongingTo(item), filenames)
 
     def onDropMail(self, x, y, mail):
-        item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
+        item, flags, column = self.HitTest((x, y))
         if self.__onDropMailCallback:
-            if self._itemIsOk(item):
-                self.__onDropMailCallback(self.GetIndexOfItem(item), mail)
-            else:
-                self.__onDropMailCallback(None, mail)
+            self.__onDropMailCallback(self._objectBelongingTo(item), mail)
 
     def onDragOver(self, x, y, defaultResult):
-        item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
+        item, flags, column = self.HitTest((x, y))
         if self._itemIsOk(item):
             if flags & wx.TREE_HITTEST_ONITEMBUTTON:
                 self.Expand(item)
         return defaultResult
-        
-    def GetIndexOfItem(self, item):
-        # Convert the item into an index. For ListCtrls this is not 
-        # necessary, so an AttributeError will be raised. In that case the
-        # item is already an index, so we can simply return the item.
-        try:
-            return super(_CtrlWithDropTarget, self).GetIndexOfItem(item)
-        except AttributeError:
-            return item
 
     def GetMainWindow(self):
         try:
@@ -183,17 +172,12 @@ class CtrlWithToolTip(_CtrlWithItems, tooltip.ToolTipMixin):
     def __init__(self, *args, **kwargs):
         super(CtrlWithToolTip, self).__init__(*args, **kwargs)
         self.__tip = tooltip.SimpleToolTip(self)
-        
-    def GetIndexOfItem(self, item):
-        try:
-            return super(CtrlWithToolTip, self).GetIndexOfItem(item)
-        except AttributeError:
-            return item
 
     def OnBeforeShowToolTip(self, x, y): 
-        item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
-        if self._itemIsOk(item):    
-            tooltipData = self.OnGetItemTooltipData(self.GetIndexOfItem(item), column)
+        item, flags, column = self.HitTest(wx.Point(x, y))
+        object = self._objectBelongingTo(item)
+        if object:
+            tooltipData = self.getItemTooltipData(object, column)
             doShow = reduce(operator.__or__,
                             map(bool, [data[1] for data in tooltipData]),
                             False)

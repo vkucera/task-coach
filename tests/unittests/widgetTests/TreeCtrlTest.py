@@ -23,212 +23,243 @@ from taskcoachlib import widgets
 
         
 class TreeCtrlTestCase(test.wxTestCase):
-    def setTree(self, *items, **kwargs):
-        self._tree = items # pylint: disable-msg=W0201
-        if kwargs.get('refresh', True):
-            self.treeCtrl.RefreshAllItems() # pylint: disable-msg=E1101
-            
-    def getItem(self, index):
-        item, children = 'root item', self._tree
-        for i in index:
-            try: 
-                item, children = children[i]
-            except ValueError:
-                item, children = children[i], []
-        return item, children
-        
-    def getItemExpanded(self, index): # pylint: disable-msg=W0613
-        return False
-    
-    def getItemText(self, index):
-        return self.getItem(index)[0]
-
-    def getItemImage(self, index, *args, **kwargs): # pylint: disable-msg=W0613
-        if self.getChildrenCount(index):
-            return 1
-        else:
-            return 0
-        
-    def getItemAttr(self, index): # pylint: disable-msg=W0613
-        return wx.ListItemAttr()
-
-    getItemTooltipText = onSelect = None
-                                
-    def getChildrenCount(self, index):
-        return len(self.getItem(index)[1])
+    onSelect = None
     
     def getFirstTreeItem(self):
         # pylint: disable-msg=E1101
         return self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())[0]
-    
-    def assertNodes(self, index, treeItem):
-        # pylint: disable-msg=E1101
-        self.assertEqual(self.getItemText(index), self.treeCtrl.GetItemText(treeItem))
-        childrenCount = self.getChildrenCount(index)
-        self.assertEqual(childrenCount, self.treeCtrl.GetChildrenCount(treeItem))
-        for childIndex, treeChild in zip(range(childrenCount), self.treeCtrl.GetItemChildren(treeItem)):
-            self.assertNodes(index + (childIndex,), treeChild)
-    
-    def assertTree(self, *items):
-        # pylint: disable-msg=E1101
-        self.setTree(*items)
-        self.treeCtrl.expandAllItems()
-        self.assertEqual(len(items), len(self.treeCtrl.GetItemChildren()))
-        for index, treeItem in zip(range(len(self._tree)), self.treeCtrl.GetItemChildren()):            
-            self.assertNodes((index,), treeItem)
                 
     def setUp(self):
         super(TreeCtrlTestCase, self).setUp()
-        self._tree = []
+        self.children = dict()
+        self.frame.children = lambda item: self.children.get(item, [])
+        self.frame.getItemText = lambda item, column: item
+        self.frame.getItemImage = lambda item, which, column: -1
+        self.frame.getColor = lambda item: None
+        self.frame.getBackgroundColor = lambda item: None
+        self.frame.getIsItemChecked = lambda item: False
+        self.frame.getItemExpanded = lambda item: False
         
         
 class CommonTestsMixin(object):
     ''' Tests for all types of trees. '''
 
     def testCreate(self):
-        self.assertTree()
-
-    def testOneItem(self):
-        self.assertTree('item 0')
-        
-    def testTwoItems(self):
-        self.assertTree('item 0', 'item 1')
-        
-    def testRemoveAllItems(self):
-        self.setTree('item 0', 'item 1')
-        self.assertTree()
-
-    def testOneParentAndOneChild(self):
-        self.assertTree(('item 0', ('item 1',)))
-
-    def testOneParentAndTwoChildren(self):
-        self.assertTree(('item 0', ('item 1', 'item 2')))
+        self.assertEqual(0, len(self.treeCtrl.GetItemChildren()))
     
-    def testAddOneChild(self):
-        self.setTree(('parent', ('child 1',)))
-        self.assertTree(('parent', ('child 1', 'child 2')))
-
-    def testDeleteOneChild(self):
-        self.setTree(('parent', ('child 1', 'child 2')))
-        self.assertTree(('parent', ('child 2',)))
+    def testOneItem(self):
+        self.children[None] = ['item 0']
+        self.treeCtrl.RefreshAllItems(1)
+        self.assertEqual(1, len(self.treeCtrl.GetItemChildren()))
+    
+    def testTwoItems(self):
+        self.children[None] = ['item 0', 'item 1']
+        self.treeCtrl.RefreshAllItems(2)
+        self.assertEqual(2, len(self.treeCtrl.GetItemChildren()))
+    
+    def testRemoveAllItems(self):
+        self.children[None] = ['item 0', 'item 1']
+        self.treeCtrl.RefreshAllItems(2)
+        self.children[None] = []
+        self.treeCtrl.RefreshAllItems(0)
+        self.assertEqual(0, len(self.treeCtrl.GetItemChildren()))
         
+    def testOneParentAndOneChild(self):
+        self.children[None] = ['item 0']
+        self.children['item 0'] = ['item 0.0']
+        self.treeCtrl.RefreshAllItems(2)
+        self.assertEqual(1, len(self.treeCtrl.GetItemChildren()))
+        self.assertEqual(1, len(self.treeCtrl.GetItemChildren(self.getFirstTreeItem())))
+        
+    def testOneParentAndTwoChildren(self):
+        self.children[None] = ['item 0']
+        self.children['item 0'] = ['item 0.0', 'item 0.1']
+        self.treeCtrl.RefreshAllItems(3)
+        self.assertEqual(1, len(self.treeCtrl.GetItemChildren()))
+        self.assertEqual(2, len(self.treeCtrl.GetItemChildren(self.getFirstTreeItem())))
+
+    def testAddOneChild(self):
+        self.children[None] = ['item 0']
+        self.children['item 0'] = ['item 0.0']
+        self.treeCtrl.RefreshAllItems(2)
+        self.children['item 0'] = ['item 0.0', 'item 0.1']
+        self.treeCtrl.RefreshAllItems(3)
+        self.assertEqual(1, len(self.treeCtrl.GetItemChildren()))
+        self.assertEqual(2, len(self.treeCtrl.GetItemChildren(self.getFirstTreeItem())))        
+             
+    def testDeleteOneChild(self):
+        self.children[None] = ['item 0']
+        self.children['item 0'] = ['item 0.0', 'item 0.1']
+        self.treeCtrl.RefreshAllItems(3)
+        self.children['item 0'] = ['item 0.0']
+        self.treeCtrl.RefreshAllItems(2)
+        self.assertEqual(1, len(self.treeCtrl.GetItemChildren()))
+        self.assertEqual(1, len(self.treeCtrl.GetItemChildren(self.getFirstTreeItem())))
+    
     def testReorderItems(self):
-        self.setTree('item 0', 'item 1')
-        self.assertTree('item 1', 'item 0')
-
+        self.children[None] = ['item 0', 'item 1']
+        self.treeCtrl.RefreshAllItems(2)
+        self.children[None] = ['item 1', 'item 0']
+        self.treeCtrl.RefreshAllItems(2)
+        self.assertEqual('item 1', self.treeCtrl.GetItemText(self.getFirstTreeItem()))
+    
     def testReorderChildren(self):
-        self.setTree(('parent', ('child 1', 'child 2')))
-        self.assertTree(('parent', ('child 2', 'child 1')))
-
+        self.children[None] = ['item 0']
+        self.children['item 0'] = ['item 0.0', 'item 0.1']
+        self.treeCtrl.RefreshAllItems(3)
+        self.children['item 0'] = ['item 0.1', 'item 0.0']
+        self.treeCtrl.RefreshAllItems(3)
+        self.assertEqual('item 0.1', self.treeCtrl.GetItemText(self.treeCtrl.GetFirstChild(self.getFirstTreeItem())[0]))
+        
     def testReorderParentsAndOneChild(self):
-        self.assertTree(('parent', ('child',)), 'item')
-        self.assertTree('item', ('parent', ('child',)))
-
+        self.children[None] = ['item 0', 'item 1']
+        self.children['item 0'] = ['item 0.0']
+        self.treeCtrl.RefreshAllItems(3)
+        self.children[None] = ['item 1', 'item 0']
+        self.treeCtrl.RefreshAllItems(3)
+        self.assertEqual('item 1', self.treeCtrl.GetItemText(self.getFirstTreeItem()))
+    
     def testReorderParentsAndTwoChildren(self):
-        self.assertTree(('parent 1', ('child 1', 'child 2')), 'parent 2')
-        self.assertTree('parent 2', ('parent 1', ('child 2', 'child 1')))
-
+        self.children[None] = ['item 0', 'item 1']
+        self.children['item 0'] = ['item 0.0', 'item 0.1']
+        self.treeCtrl.RefreshAllItems(4)
+        self.children[None] = ['item 1', 'item 0']
+        self.children['item 0'] = ['item 0.1', 'item 0.0']
+        self.treeCtrl.RefreshAllItems(4)
+        self.assertEqual('item 1', self.treeCtrl.GetItemText(self.getFirstTreeItem()))
+        self.assertEqual(0, len(self.treeCtrl.GetItemChildren(self.getFirstTreeItem())))
+    
     def testRetainSelectionWhenEditingTask(self):
-        self.setTree('item')
+        self.children[None] = ['item 0']
+        self.treeCtrl.RefreshAllItems(1)
         item = self.getFirstTreeItem()
         self.treeCtrl.SelectItem(item)
         self.failUnless(self.treeCtrl.IsSelected(item))
-        self.setTree('new subject')
+        self.children[None] = ['item 0']
+        self.treeCtrl.RefreshAllItems(1)
         item = self.getFirstTreeItem()
         self.failUnless(self.treeCtrl.IsSelected(item))
-
+ 
     def testRetainSelectionWhenEditingSubTask(self):
-        self.setTree(('parent', ('child',)))
+        self.children[None] = ['item 0']
+        self.children['item 0'] = ['item 0.0']
+        self.treeCtrl.RefreshAllItems(2)
         item = self.getFirstTreeItem()
         self.treeCtrl.SelectItem(item)
         self.failUnless(self.treeCtrl.IsSelected(item))
-        self.setTree(('parent', ('new subject',)))
+        self.children['item 0'] = ['item 0.0']
+        self.treeCtrl.RefreshAllItems(2)
         item = self.getFirstTreeItem()
         self.failUnless(self.treeCtrl.IsSelected(item))
-
+    
     def testRetainSelectionWhenAddingSubTask(self):
-        self.setTree('parent')
+        self.children[None] = ['item 0']
+        self.treeCtrl.RefreshAllItems(1)
         item = self.getFirstTreeItem()
         self.treeCtrl.SelectItem(item)
-        self.setTree(('parent', ('child',)))
+        self.failUnless(self.treeCtrl.IsSelected(item))
+        self.children['item 0'] = ['item 0.0']
+        self.treeCtrl.RefreshAllItems(2)
+        item = self.getFirstTreeItem()        
         self.failUnless(self.treeCtrl.IsSelected(item))
 
     def testRetainSelectionWhenAddingSubTask_TwoToplevelTasks(self):
-        self.setTree('parent', 'item')
+        self.children[None] = ['item 0', 'item 1']
+        self.treeCtrl.RefreshAllItems(2)
         item = self.getFirstTreeItem()
         self.treeCtrl.SelectItem(item)
-        self.setTree(('parent', ('child',)), 'item')
         self.failUnless(self.treeCtrl.IsSelected(item))
-
-    def testRemovingASelectedItemMakesAnotherOneSelected(self):
-        self.setTree('item 1', 'item 2')
-        item = self.getFirstTreeItem()
-        self.treeCtrl.SelectItem(item)
-        self.setTree('item 2')
+        self.children['item 0'] = ['item 0.0']
+        self.treeCtrl.RefreshAllItems(3)
+        item = self.getFirstTreeItem()        
         self.failUnless(self.treeCtrl.IsSelected(item))
         
-    def testRefreshItem(self):
-        self.setTree('item')
-        self.setTree('new subject', refresh=False)
-        self.treeCtrl.RefreshItem((0,))
+    def testRemovingASelectedItemDoesNotMakeAnotherOneSelected(self):
+        self.children[None] = ['item 0', 'item 1']
+        self.treeCtrl.RefreshAllItems(2)
         item = self.getFirstTreeItem()
-        self.assertEqual(self.getItemText((0,)), self.treeCtrl.GetItemText(item))        
+        self.treeCtrl.SelectItem(item)
+        self.failUnless(self.treeCtrl.IsSelected(item))
+        self.children[None] = ['item 1']
+        self.treeCtrl.RefreshAllItems(1)
+        self.failIf(self.treeCtrl.curselection())
+        
+    def testRefreshItem(self):
+        self.children[None] = ['item 0']
+        self.treeCtrl.RefreshAllItems(1)
+        self.treeCtrl.RefreshItems('item 0')
+        item = self.getFirstTreeItem()
+        self.assertEqual('item 0', self.treeCtrl.GetItemText(item))        
 
     def testIsSelectionCollapsable_EmptyTree(self):
         self.failIf(self.treeCtrl.isSelectionCollapsable())
     
     def testIsSelectionExpandable_EmptyTree(self):
         self.failIf(self.treeCtrl.isSelectionExpandable())
-        
+       
     def testIsSelectionCollapsable_OneUnselectedItem(self):
-        self.setTree('item 1')
+        self.children[None] = ['item 0']
+        self.treeCtrl.RefreshAllItems(1)
         self.failIf(self.treeCtrl.isSelectionCollapsable())
     
     def testIsSelectionExpandable_OneUnselectedItem(self):
-        self.setTree('item 1')
-        self.treeCtrl.UnselectAll()
+        self.children[None] = ['item 0']
+        self.treeCtrl.RefreshAllItems(1)
         self.failIf(self.treeCtrl.isSelectionExpandable())
     
     def testIsSelectionCollapsable_OneSelectedItem(self):
-        self.setTree('item 1')
+        self.children[None] = ['item 0']
+        self.treeCtrl.RefreshAllItems(1)
         item = self.getFirstTreeItem()
         self.treeCtrl.SelectItem(item)
         self.failIf(self.treeCtrl.isSelectionCollapsable())
     
     def testIsSelectionExpandable_OneSelectedItem(self):
-        self.setTree('item 1')
+        self.children[None] = ['item 0']
+        self.treeCtrl.RefreshAllItems(1)
         item = self.getFirstTreeItem()
         self.treeCtrl.SelectItem(item)
         self.failIf(self.treeCtrl.isSelectionExpandable())
     
     def testIsSelectionCollapsable_SelectedExpandedParent(self):
-        self.setTree(('parent', ('child',)))
+        self.children[None] = ['item 0']
+        self.children['item 0'] = ['item 0.0']
+        self.treeCtrl.RefreshAllItems(2)
         parent = self.getFirstTreeItem()
         self.treeCtrl.Expand(parent)
         self.treeCtrl.SelectItem(parent)
         self.failUnless(self.treeCtrl.isSelectionCollapsable())
     
     def testIsSelectionExpandable_SelectedExpandedParent(self):
-        self.setTree(('parent', ('child',)))
+        self.children[None] = ['item 0']
+        self.children['item 0'] = ['item 0.0']
+        self.treeCtrl.RefreshAllItems(2)
         parent = self.getFirstTreeItem()
         self.treeCtrl.Expand(parent)
         self.treeCtrl.SelectItem(parent)
         self.failIf(self.treeCtrl.isSelectionExpandable())
     
     def testIsSelectionCollapsable_SelectedCollapsedParent(self):
-        self.setTree(('parent', ('child',)))
+        self.children[None] = ['item 0']
+        self.children['item 0'] = ['item 0.0']
+        self.treeCtrl.RefreshAllItems(2)
         parent = self.getFirstTreeItem()
         self.treeCtrl.SelectItem(parent)
         self.failIf(self.treeCtrl.isSelectionCollapsable())
     
     def testIsSelectionExpandable_SelectedCollapsedParent(self):
-        self.setTree(('parent', ('child',)))
+        self.children[None] = ['item 0']
+        self.children['item 0'] = ['item 0.0']
+        self.treeCtrl.RefreshAllItems(2)
         parent = self.getFirstTreeItem()
         self.treeCtrl.SelectItem(parent)
         self.failUnless(self.treeCtrl.isSelectionExpandable())
     
     def testIsSelectionCollapsable_CollapsedAndExpandedTasksInSelection(self):
-        self.setTree(('parent1', ('child 1',)), ('parent 2', ('child 2',)))
+        self.children[None] = ['item 0', 'item 1']
+        self.children['item 0'] = ['item 0.0']
+        self.children['item 1'] = ['item 1.0']
+        self.treeCtrl.RefreshAllItems(4)
         parent1, cookie = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())
         self.treeCtrl.Expand(parent1)
         self.treeCtrl.SelectItem(parent1)
@@ -237,57 +268,67 @@ class CommonTestsMixin(object):
         self.failUnless(self.treeCtrl.isSelectionCollapsable())
     
     def testIsSelectionExpandable_CollapsedAndExpandedTasksInSelection(self):
-        self.setTree(('parent1', ('child 1',)), ('parent 2', ('child 2',)))
+        self.children[None] = ['item 0', 'item 1']
+        self.children['item 0'] = ['item 0.0']
+        self.children['item 1'] = ['item 1.0']
+        self.treeCtrl.RefreshAllItems(4)
         parent1, cookie = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())
         self.treeCtrl.Expand(parent1)
         self.treeCtrl.SelectItem(parent1)
         parent2, cookie = self.treeCtrl.GetNextChild(self.treeCtrl.GetRootItem(), cookie)
         self.treeCtrl.SelectItem(parent2)
         self.failUnless(self.treeCtrl.isSelectionExpandable())
-
+    
     def testIsAnyItemCollapsable_NoItems(self):
         self.failIf(self.treeCtrl.isAnyItemCollapsable())
-        
+      
     def testIsAnyItemExpandable_NoItems(self):
         self.failIf(self.treeCtrl.isAnyItemExpandable())
         
     def testIsAnyItemCollapsable_OneItem(self):
-        self.setTree('item')
+        self.children[None] = ['item 0']
+        self.treeCtrl.RefreshAllItems(1)
         self.failIf(self.treeCtrl.isAnyItemCollapsable())
-    
+   
     def testIsAnyItemExpandable_OneItem(self):
-        self.setTree('item')
+        self.children[None] = ['item 0']
+        self.treeCtrl.RefreshAllItems(1)
         self.failIf(self.treeCtrl.isAnyItemExpandable())
-    
+        
     def testIsAnyItemCollapsable_OneCollapsedParent(self):
-        self.setTree(('parent', ('child',)))
+        self.children[None] = ['item 0']
+        self.children['item 0'] = ['item 0.0']
+        self.treeCtrl.RefreshAllItems(2)
         self.failIf(self.treeCtrl.isAnyItemCollapsable())
-    
+       
     def testIsAnyItemExpandable_OneCollapsedParent(self):
-        self.setTree(('parent', ('child',)))
+        self.children[None] = ['item 0']
+        self.children['item 0'] = ['item 0.0']
+        self.treeCtrl.RefreshAllItems(2)
         self.failUnless(self.treeCtrl.isAnyItemExpandable())
-
+    
     def testIsAnyItemCollapsable_OneExpandedParent(self):
-        self.setTree(('parent', ('child',)))
+        self.children[None] = ['item 0']
+        self.children['item 0'] = ['item 0.0']
+        self.treeCtrl.RefreshAllItems(2)
         parent = self.getFirstTreeItem()
         self.treeCtrl.Expand(parent)
         self.failUnless(self.treeCtrl.isAnyItemCollapsable())
-        
+           
     def testIsAnyItemExpandable_OneExpandedParent(self):
-        self.setTree(('parent', ('child',)))
+        self.children[None] = ['item 0']
+        self.children['item 0'] = ['item 0.0']
+        self.treeCtrl.RefreshAllItems(2)
         parent = self.getFirstTreeItem()
         self.treeCtrl.Expand(parent)
         self.failIf(self.treeCtrl.isAnyItemExpandable())
-        
+
         
 class TreeListCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
     def setUp(self):
         super(TreeListCtrlTest, self).setUp()
         columns = [widgets.Column('subject', 'Subject')]
-        self.treeCtrl = widgets.TreeListCtrl(self.frame, columns,
-            self.getItemText,
-            self.getItemTooltipText, self.getItemImage, self.getItemAttr,
-            self.getChildrenCount, self.getItemExpanded, self.onSelect, 
+        self.treeCtrl = widgets.TreeListCtrl(self.frame, columns, self.onSelect, 
             dummy.DummyUICommand(), dummy.DummyUICommand())
         imageList = wx.ImageList(16, 16)
         for bitmapName in ['task', 'tasks']:
@@ -301,21 +342,19 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
         super(CheckTreeCtrlTest, self).setUp()
         columns = [widgets.Column('subject', 'Subject')]
         self.treeCtrl = widgets.CheckTreeCtrl(self.frame, columns,
-            self.getItemText,
-            self.getItemTooltipText, self.getItemImage, self.getItemAttr,
-            self.getChildrenCount, self.getItemExpanded, self.getIsItemChecked, 
             self.onSelect, self.onCheck, 
             dummy.DummyUICommand(), dummy.DummyUICommand())
     
-    def getIsItemChecked(self, index): # pylint: disable-msg=W0613
+    def getIsItemChecked(self, item): # pylint: disable-msg=W0613
         return False
     
     def onCheck(self, event):
         pass
 
     def testCheckParentDoesNotCheckChild(self):
-        self.setTree(('parent', ('child',)))
-        # pylint: disable-msg=E1101
+        self.children[None] = ['item 0']
+        self.children['item 0'] = ['item 0.0']
+        self.treeCtrl.RefreshAllItems(2)
         self.treeCtrl.ExpandAll()
         parent = self.getFirstTreeItem()
         self.treeCtrl.CheckItem(parent)

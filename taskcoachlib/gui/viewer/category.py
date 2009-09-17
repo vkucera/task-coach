@@ -55,10 +55,8 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
     def createWidget(self):
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
-        widget = widgets.CheckTreeCtrl(self, self._columns, self.getItemText, 
-            self.getItemTooltipData, self.getItemImage, self.getItemAttr, 
-            self.getChildrenCount, self.getItemExpanded,
-            self.getIsItemChecked, self.onSelect, self.onCheck,
+        widget = widgets.CheckTreeCtrl(self, self._columns,
+            self.onSelect, self.onCheck,
             uicommand.CategoryEdit(viewer=self, categories=self.presentation()),
             uicommand.CategoryDragAndDrop(viewer=self, categories=self.presentation()),
             self.createCategoryPopupMenu(), 
@@ -135,12 +133,11 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                                       self, localOnly)
     
     def onCheck(self, event):
-        categoryToFilter = self.getItemWithIndex(self.widget.GetIndexOfItem(event.GetItem()))
+        categoryToFilter = self.widget.GetItemPyData(event.GetItem())
         categoryToFilter.setFiltered(event.GetItem().IsChecked())
         self.onSelect(event) # Notify status bar
         
-    def getIsItemChecked(self, index):
-        item = self.getItemWithIndex(index)
+    def getIsItemChecked(self, item):
         if isinstance(item, category.Category):
             return item.isFiltered()
         return False

@@ -127,7 +127,7 @@ class CommonTestsMixin(object):
     def testUndoRemoveTaskWithSubtask(self):
         self.task.addChild(self.child)
         self.taskList.append(self.task)
-        self.viewer.widget.select([self.viewer.getIndexOfItem(self.task)])
+        self.viewer.widget.select([self.task])
         deleteItem = self.viewer.deleteItemCommand()
         deleteItem.do()
         deleteItem.undo()
@@ -138,7 +138,7 @@ class CommonTestsMixin(object):
 
     def testCurrent(self):
         self.taskList.append(self.task)
-        self.viewer.widget.select([(0,)])
+        self.viewer.widget.select([self.task])
         self.assertEqual([self.task], self.viewer.curselection())
 
     def testDeleteSelectedTask(self):
@@ -233,17 +233,6 @@ class CommonTestsMixin(object):
         self.assertEqual(2, self.viewer.size())
         patterns.CommandHistory().undo()
         self.assertEqual(4, self.viewer.size())
-        
-    def testGetItemIndexOfChildTask(self):
-        child1 = task.Task(subject='1')
-        child2 = task.Task(subject='2')
-        self.task.addChild(child1)
-        self.task.addChild(child2)
-        self.taskList.append(self.task)
-        if self.viewer.isTreeViewer():
-            self.assertEqual((0, 0), self.viewer.getIndexOfItem(child1))
-        else:
-            self.assertEqual((0,), self.viewer.getIndexOfItem(child1))
             
     def testSubjectColumnIsVisible(self):
         self.assertEqual(_('Subject'), self.viewer.widget.GetColumn(0).GetText())
@@ -409,15 +398,14 @@ class CommonTestsMixin(object):
     def testOnDropFiles(self):
         aTask = task.Task()
         self.taskList.append(aTask)
-        self.viewer.onDropFiles(self.viewer.getIndexOfItem(aTask), ['filename'])
+        self.viewer.onDropFiles(aTask, ['filename'])
         self.assertEqual([attachment.FileAttachment('filename')],
                          self.viewer.presentation()[0].attachments())
 
     def testOnDropURL(self):
         aTask = task.Task()
         self.taskList.append(aTask)
-        self.viewer.onDropURL(self.viewer.getIndexOfItem(aTask), 
-                              'http://www.example.com/')
+        self.viewer.onDropURL(aTask, 'http://www.example.com/')
         self.assertEqual([attachment.URIAttachment('http://www.example.com/')],
                          self.viewer.presentation()[0].attachments())
 
@@ -425,7 +413,7 @@ class CommonTestsMixin(object):
         file('test.mail', 'wb').write('Subject: foo\r\n\r\nBody\r\n')
         aTask = task.Task()
         self.taskList.append(aTask)
-        self.viewer.onDropMail(self.viewer.getIndexOfItem(aTask), 'test.mail')
+        self.viewer.onDropMail(aTask, 'test.mail')
         self.assertEqual([attachment.MailAttachment('test.mail')],
                          self.viewer.presentation()[0].attachments())
         
@@ -467,26 +455,6 @@ class TreeOrListModeTestsMixin(object):
         else:
             expectedSubject = 'task -> child'
         self.assertEqual(expectedSubject, self.viewer.renderSubject(self.child))
-        
-    def testGetItemChildrenCount(self):
-        self.task.addChild(self.child)
-        self.taskList.append(self.task)
-        if self.treeMode:
-            expectedChildrenCount = 1
-        else:
-            expectedChildrenCount = 0
-        self.assertEqual(expectedChildrenCount, 
-                         self.viewer.getChildrenCount((0,)))
-                         
-    def testGetItemChildrenCount_RootItems(self):
-        self.task.addChild(self.child)
-        self.taskList.append(self.task)
-        if self.treeMode:
-            expectedChildrenCount = 1
-        else:
-            expectedChildrenCount = 2
-        self.assertEqual(expectedChildrenCount, 
-                         self.viewer.getChildrenCount(()))
                          
     def testItemOrder(self):
         self.task.addChild(self.child)
@@ -514,25 +482,6 @@ class TreeOrListModeTestsMixin(object):
             self.assertItems(self.task, self.child)
         else:
             self.assertItems((self.task, 1), self.child)
-    
-    def testGetIndexOfItem(self):
-        self.task.addChild(self.child)
-        self.taskList.append(self.task)
-        if self.treeMode:
-            expectedIndex = (0,0)
-        else:
-            expectedIndex = (0,)
-        self.assertEqual(expectedIndex, self.viewer.getIndexOfItem(self.child))
-
-    def testSortOrderOfChildDueToday(self):
-        self.task.addChild(self.child)
-        self.taskList.append(self.task)
-        self.child.setDueDate(date.Today())
-        if self.treeMode:
-            expectedIndex = (0,0)
-        else:
-            expectedIndex = (0,)
-        self.assertEqual(expectedIndex, self.viewer.getIndexOfItem(self.child))
             
 
 class ColumnsTestsMixin(object):        
@@ -553,16 +502,20 @@ class ColumnsTestsMixin(object):
         self.assertEqual("24:00:00", totalTimeSpent)
         
     def testGetSelection(self):
-        self.viewer.presentation().extend([task.Task('a'), task.Task('b')])
-        self.viewer.widget.select([(0,)])
-        self.assertEqual('a', self.viewer.curselection()[0].subject())
+        taskA = task.Task('a')
+        taskB = task.Task('b')
+        self.viewer.presentation().extend([taskA, taskB])
+        self.viewer.widget.select([taskA])
+        self.assertEqual([taskA], self.viewer.curselection())
 
     def testGetSelection_AfterResort(self):
-        self.viewer.presentation().extend([task.Task('a'), task.Task('b')])
-        self.viewer.widget.select([(0,)])
-        self.viewer.onSelect([(0,)])
+        taskA = task.Task('a')
+        taskB = task.Task('b')
+        self.viewer.presentation().extend([taskA, taskB])
+        self.viewer.widget.select([taskA])
+        self.viewer.onSelect([taskA])
         self.viewer.setSortOrderAscending(False)
-        self.assertEqual('a', self.viewer.curselection()[0].subject())
+        self.assertEqual([taskA], self.viewer.curselection())
         
     def testChangeSubject(self):
         self.taskList.append(self.task)

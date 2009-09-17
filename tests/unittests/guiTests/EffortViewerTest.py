@@ -202,7 +202,7 @@ class CommonTestsMixin(object):
         self.assertEqual(expectedNumberOfItems, self.viewer.size())
 
     def testDelete(self):
-        self.viewer.widget.select((0,))
+        self.viewer.widget.select([self.task.efforts()[-1]])
         self.viewer.deleteUICommand.doCommand(None)
         if self.aggregation == 'details':
             expectedNumberOfItems = self.expectedNumberOfItems - 1
