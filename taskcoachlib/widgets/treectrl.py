@@ -60,12 +60,6 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
     def isCollapseExpandButtonClicked(self, event):
         flags = self.HitTest(event.GetPosition())[1]
         return flags & wx.TREE_HITTEST_ONITEMBUTTON
-    
-    def isClickablePartOfNodeClicked(self, event):
-        ''' Return whether the user double clicked some part of the node that
-            can also receive regular mouse clicks. '''
-        return self.isClickablePartOfNodeClicked(event) or \
-            self.isCheckBoxClicked(event)
             
     def isCheckBoxClicked(self, event):
         flags = self.HitTest(event.GetPosition())[1]
