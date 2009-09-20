@@ -136,7 +136,14 @@
 	{
 		if (cell.switch_.on)
 		{
-			DatePickerViewController *ctrl = [[DatePickerViewController alloc] initWithDate:task.dueDate target:self action:@selector(onPickDueDate:)];
+			NSString *date = nil;
+
+			if (task.dueDate)
+				date = task.dueDate;
+			else if (task.startDate)
+				date = task.startDate;
+
+			DatePickerViewController *ctrl = [[DatePickerViewController alloc] initWithDate:date target:self action:@selector(onPickDueDate:)];
 			[self.navigationController presentModalViewController:ctrl animated:YES];
 			[ctrl release];
 		}
