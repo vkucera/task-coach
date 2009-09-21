@@ -35,14 +35,6 @@
 	return self;
 }
 
-- (void)dealloc
-{
-	[host release];
-	[myNetwork release];
-
-	[super dealloc];
-}
-
 - (void)finished:(BOOL)ok
 {
 	[target performSelector:action];
@@ -73,6 +65,16 @@
 	self.progress = nil;
 	self.password = nil;
 	self.cancelButton = nil;
+}
+
+- (void)dealloc
+{
+	[self viewDidUnload];
+
+	[host release];
+	[myNetwork release];
+	
+	[super dealloc];
 }
 
 - (void)setState:(NSObject <State> *)newState

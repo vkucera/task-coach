@@ -117,6 +117,8 @@
 
 - (void)dealloc
 {
+	[self viewDidUnload];
+
 	[title release];
 	[headers release];
 	[tapping release];

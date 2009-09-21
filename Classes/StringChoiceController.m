@@ -41,6 +41,8 @@
 
 - (void)dealloc
 {
+	[self viewDidUnload];
+
 	[placeholder release];
 	[text release];
 

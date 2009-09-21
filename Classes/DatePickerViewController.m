@@ -37,14 +37,6 @@
 	return self;
 }
 
-- (void)dealloc
-{
-	[dayFormat release];
-	[date release];
-
-	[super dealloc];
-}
-
 - (void)viewDidLoad
 {
 	picker.date = date;
@@ -55,6 +47,16 @@
 {
 	self.picker = nil;
 	self.dayLabel = nil;
+}
+
+- (void)dealloc
+{
+	[self viewDidUnload];
+
+	[dayFormat release];
+	[date release];
+	
+	[super dealloc];
 }
 
 - (IBAction)onDateChanged:(UIDatePicker *)thePicker

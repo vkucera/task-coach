@@ -78,6 +78,13 @@
 	categories = nil;
 }
 
+- (void)dealloc
+{
+	[self viewDidUnload];
+	
+	[super dealloc];
+}
+
 - (void)fillCell:(UITableViewCell *)cell forCategory:(Category *)category
 {
 #ifdef __IPHONE_3_0
