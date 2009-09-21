@@ -29,6 +29,13 @@
 	self.viewController = nil;
 }
 
+- (void)dealloc
+{
+	[self viewDidUnload];
+	
+	[super dealloc];
+}
+
 - (void)willTerminate
 {
 	if ([viewController respondsToSelector:@selector(willTerminate)])

@@ -95,6 +95,12 @@
 	self.navigationController = nil;
 	self.syncButton = nil;
 }
+- (void)dealloc
+{
+	[self viewDidUnload];
+	
+	[super dealloc];
+}
 
 - (void)childWasPopped
 {
