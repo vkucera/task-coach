@@ -98,8 +98,9 @@ i18n.in/messages.pot: $(shell find taskcoachlib -name '*.py' | grep -v i18n)
 
 changes:
 	$(PYTHON) changes.in/make.py text > CHANGES.txt
-	$(PYTHON) changes.in/make.py html > website.in/changes.html
- 
+	$(PYTHON) changes.in/make.py html 7 > website.in/changes.html
+	$(PYTHON) changes.in/make.py html > website.in/all_changes.html
+
 unittests: icons templates
 	cd tests; $(PYTHON) test.py --unittests
 
