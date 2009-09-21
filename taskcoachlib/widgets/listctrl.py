@@ -40,7 +40,8 @@ class _ListCtrl(wx.ListCtrl):
         self.SetItemState(index, ~currentState, wx.LIST_STATE_SELECTED)
      
         
-class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, itemctrl.CtrlWithToolTip, _ListCtrl):
+class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin, 
+                      itemctrl.CtrlWithToolTipMixin, _ListCtrl):
     def __init__(self, parent, columns, selectCommand=None, editCommand=None, 
                  itemPopupMenu=None, columnPopupMenu=None, resizeableColumn=0, 
                  *args, **kwargs):

@@ -20,9 +20,12 @@ import wx, itemctrl, draganddrop
 from taskcoachlib.thirdparty import hypertreelist
 from taskcoachlib.thirdparty import customtreectrl as customtree
 
+# pylint: disable-msg=E1101,E1103
 
 class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin, 
                     hypertreelist.HyperTreeList):
+    # pylint: disable-msg=W0223
+
     def GetSelections(self):
         ''' If the root item is hidden, it should never be selected, 
         unfortunately, CustomTreeCtrl and HyperTreeList allow it to be 
@@ -143,8 +146,8 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
         return self.ItemHasChildren(item) and self.IsExpanded(item)
     
 
-class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, 
-                   itemctrl.CtrlWithToolTip, HyperTreeList):
+class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin, 
+                   itemctrl.CtrlWithToolTipMixin, HyperTreeList):
     # TreeListCtrl uses ALIGN_LEFT, ..., ListCtrl uses LIST_FORMAT_LEFT, ... for
     # specifying alignment of columns. This dictionary allows us to map from the 
     # ListCtrl constants to the TreeListCtrl constants:
@@ -165,6 +168,7 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns,
         self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand)
 
     def bindEventHandlers(self, selectCommand, editCommand, dragAndDropCommand):
+        # pylint: disable-msg=W0201
         self.selectCommand = selectCommand
         self.editCommand = editCommand
         self.dragAndDropCommand = dragAndDropCommand
@@ -209,23 +213,23 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns,
             if self.__adapter.getItemExpanded(childObject):
                 self.Expand(childItem)
             
-    def _refreshObject(self, item, object):
+    def _refreshObject(self, item, domainObject):
         for columnIndex in range(self.GetColumnCount()):
-            text = self.__adapter.getItemText(object, columnIndex)
+            text = self.__adapter.getItemText(domainObject, columnIndex)
             if text:
                 self.SetItemText(item, text, columnIndex)                
             for which in (wx.TreeItemIcon_Expanded, wx.TreeItemIcon_Normal):
-                image = self.__adapter.getItemImage(object, which, columnIndex)
+                image = self.__adapter.getItemImage(domainObject, which, columnIndex)
                 if image >= 0:
                     self.SetItemImage(item, image, 
                                       column=columnIndex, which=which)
-        fgColor = self.__adapter.getColor(object)
+        fgColor = self.__adapter.getColor(domainObject)
         if fgColor:
             self.SetItemTextColour(item, fgColor)
-        bgColor = self.__adapter.getBackgroundColor(object)
+        bgColor = self.__adapter.getBackgroundColor(domainObject)
         if bgColor:
             self.SetItemBackgroundColour(item, bgColor)
-        self.SelectItem(item, object in self.__selection)
+        self.SelectItem(item, domainObject in self.__selection)
 
     # Event handlers
     
@@ -257,7 +261,7 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns,
     def onItemActivated(self, event):
         ''' Attach the column clicked on to the event so we can use it elsewhere. '''
         mousePosition = self.GetMainWindow().ScreenToClient(wx.GetMousePosition())
-        item, flags, column = self.HitTest(mousePosition)
+        item, _, column = self.HitTest(mousePosition)
         if item:
             # Only get the column name if the hittest returned an item,
             # otherwise the item was activated from the menu or by double 
@@ -267,7 +271,7 @@ class TreeListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns,
         self.editCommand(event)
         event.Skip(False)        
         
-    # Override CtrlWithColumns with TreeListCtrl specific behaviour:
+    # Override CtrlWithColumnsMixin with TreeListCtrl specific behaviour:
         
     def _setColumns(self, *args, **kwargs):
         super(TreeListCtrl, self)._setColumns(*args, **kwargs)
@@ -314,9 +318,9 @@ class CheckTreeCtrl(TreeListCtrl):
         self.Bind(hypertreelist.EVT_TREE_ITEM_CHECKED, checkCommand)
         self.getIsItemChecked = parent.getIsItemChecked
         
-    def _refreshObject(self, item, object):
-        super(CheckTreeCtrl, self)._refreshObject(item, object)
-        self.CheckItem(item, self.getIsItemChecked(object))
+    def _refreshObject(self, item, domainObject):
+        super(CheckTreeCtrl, self)._refreshObject(item, domainObject)
+        self.CheckItem(item, self.getIsItemChecked(domainObject))
         
     def onItemActivated(self, event):
         if self.isDoubleClicked(event):

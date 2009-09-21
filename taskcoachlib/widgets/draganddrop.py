@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -60,7 +60,8 @@ class DropTarget(wx.DropTarget):
         self.__onDragOverCallback = onDragOverCallback
         self.reinit()
 
-    def reinit(self):
+    def reinit(self): 
+        # pylint: disable-msg=W0201
         self.__compositeDataObject = wx.DataObjectComposite()
         self.__urlDataObject = wx.TextDataObject()
         self.__fileDataObject = wx.FileDataObject()
@@ -68,7 +69,8 @@ class DropTarget(wx.DropTarget):
         self.__macThunderbirdMailDataObject = wx.CustomDataObject('MZ\x00\x00')
         self.__outlookDataObject = wx.CustomDataObject('Object Descriptor')
         for dataObject in self.__fileDataObject, \
-                          self.__thunderbirdMailDataObject, self.__outlookDataObject, \
+                          self.__thunderbirdMailDataObject, \
+                          self.__outlookDataObject, \
                           self.__macThunderbirdMailDataObject, \
                           self.__urlDataObject:
             # Note: The first data object added is the preferred data object.
@@ -161,21 +163,23 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
                           wx.TR_HIDE_ROOT
         super(TreeCtrlDragAndDropMixin, self).__init__(*args, **kwargs)
         self.Bind(wx.EVT_TREE_BEGIN_DRAG, self.OnBeginDrag)
+        self._dragItem = None
 
     def OnDrop(self, dropItem, dragItem):
-        """ This function must be overloaded in the derived class.
+        ''' This function must be overloaded in the derived class.
         dragItem is the item being dragged by the user. dropItem is the
         item dragItem is dropped upon. If the user doesn't drop dragItem
         on another item, dropItem equals the (hidden) root item of the
-        tree control. """
+        tree control. '''
         raise NotImplementedError
 
     def OnBeginDrag(self, event):
+        ''' This method is called when the drag starts. It either allows the
+        drag and starts it or it vetoes the drag when the dragged item is the
+        root item. '''
+        selections = self.GetSelections()
         # We allow only one item to be dragged at a time, to keep it simple
-        if self.GetSelections():
-            self._dragItem = self.GetSelections()[0]
-        else:
-            self._dragItem = event.GetItem()
+        self._dragItem = self.selections[0] if selections else event.GetItem()
         if self._dragItem and self._dragItem != self.GetRootItem(): 
             self.StartDragging()
             event.Allow()
@@ -197,7 +201,7 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
         if not event.Dragging():
             self.StopDragging()
             return
-        item, flags, column = self.HitTest(wx.Point(event.GetX(), event.GetY()))
+        item, flags = self.HitTest(wx.Point(event.GetX(), event.GetY()))[:2]
         if not item:
             item = self.GetRootItem()
         if self.IsValidDropTarget(item):
