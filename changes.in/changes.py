@@ -31,7 +31,9 @@ from desktop, categories parents could be mismatched.'''),
         Bug('''A bug in the task filter would cause tasks to be shown that
 were supposed to be hidden.''', '2841854'),
         Bug('''The Filter submenu would sometimes be in the wrong
-state (enabled or disabled).''')
+state (enabled or disabled).'''),
+        Bug('''On Linux, locking two task files in the same folder, e.g. when 
+merging, would make Task Coach think that its task file was locked by another instance of Task Coach.''', '2852216')
         ],
     featuresAdded=[
         Feature('''Add an option to avoid uploading completed tasks to

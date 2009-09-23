@@ -169,10 +169,10 @@ class LockBase:
         else:
             tname = ""
         dirname = os.path.dirname(self.lock_file)
+        basename = os.path.basename(self.lock_file)
         try:
-            self.unique_name = os.path.join(dirname,
-                                            "%s.%s%s" % (self.hostname,
-                                                         tname, self.pid))
+            self.unique_name = os.path.join(dirname, "%s.%s.%s%s" % (basename, 
+                                            self.hostname, tname, self.pid))
         except UnicodeDecodeError:
             self.unique_name = os.path.join(dirname, "%s%s" % (tname, self.pid))
 

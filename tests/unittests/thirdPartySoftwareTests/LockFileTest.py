@@ -41,3 +41,11 @@ class LockFileTest(test.TestCase):
         with self.lock:
             self.failUnless(self.lock.is_locked())
         self.failIf(self.lock.is_locked())
+
+    def testLockingTwoFiles(self):
+        self.lock.acquire()
+        tmpfile2 = tempfile.NamedTemporaryFile()
+        lock2 = lockfile.FileLock(tmpfile2.name)
+        lock2.acquire()
+        self.failUnless(self.lock.is_locked())
+        self.failUnless(lock2.is_locked())
