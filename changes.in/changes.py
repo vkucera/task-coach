@@ -46,7 +46,7 @@ may now be a shortcut to another directory.'''),
 files attachments when the file does not exist. Also prevent the user
 from trying to open it.''')
         ],
-    featureRemoved=[
+    featuresRemoved=[
         Feature('''Removed the Edit->Select->Invert selection menu item since
 it was very slow and not very useful.''')]
     ),
