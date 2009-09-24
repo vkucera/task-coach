@@ -184,10 +184,7 @@ class Viewer(wx.Panel):
         
     def endOfSelectAll(self):
         self.__selectingAllItems = False
-        
-    def invertselection(self):
-        self.widget.invertselection()
-        
+
     def clearselection(self):
         self.widget.clearselection()
         

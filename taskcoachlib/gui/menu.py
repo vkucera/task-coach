@@ -344,7 +344,6 @@ class SelectMenu(Menu):
         kwargs = dict(viewer=viewerContainer)
         # pylint: disable-msg=W0142
         self.appendUICommands(uicommand.SelectAll(**kwargs),
-                              uicommand.InvertSelection(**kwargs),
                               uicommand.ClearSelection(**kwargs))
 
 

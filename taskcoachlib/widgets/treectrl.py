@@ -78,8 +78,6 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
     def expandSelectedItems(self):
         for item in self.GetSelections():
             self.Expand(item)
-            for child in self.GetItemChildren(item, recursively=True):
-                self.Expand(child)
                 
     def collapseSelectedItems(self):
         for item in self.GetSelections():
@@ -96,11 +94,6 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
     def selectall(self):
         if self.GetCount() > 0:
             self.SelectAll()
-        self.selectCommand()
-
-    def invertselection(self):
-        for item in self.GetItemChildren(recursively=True):
-            self.ToggleItemSelection(item)
         self.selectCommand()
         
     def isSelectionCollapsable(self):
@@ -287,10 +280,6 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         else:
             super(TreeListCtrl, self).InsertColumn(columnIndex, columnHeader, 
                 *args, **kwargs)
-        # Put a default value in the new column otherwise GetItemText will fail
-        for item in self.GetItemChildren(recursively=True):
-            self.SetItemText(item, '', self.GetColumnCount()-1)
-            self.SetItemImage(item, -1, column=self.GetColumnCount()-1)
         self.SetColumnAlignment(columnIndex, format)
     
 

@@ -141,11 +141,6 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
         for index in range(self.GetItemCount()):
             self.Select(index)
 
-    def invertselection(self):
-        for index in range(self.GetItemCount()):
-            self.ToggleItemSelection(index)
-        self.selectCommand()            
-
 
 class ListCtrl(VirtualListCtrl):
     pass

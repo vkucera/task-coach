@@ -894,17 +894,6 @@ class SelectAll(NeedsItemsMixin, ViewerCommand):
             self.viewer.selectall()
 
 
-class InvertSelection(NeedsItemsMixin, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        super(InvertSelection, self).__init__( \
-            menuText=_('&Invert selection'),
-            helpText=_('Select unselected items and unselect selected items'), 
-            *args, **kwargs)
-
-    def doCommand(self, event):
-        self.viewer.invertselection()
-
-
 class ClearSelection(NeedsSelectionMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(ClearSelection, self).__init__(menuText=_('&Clear selection'), 
