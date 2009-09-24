@@ -104,38 +104,26 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
         self.selectCommand()
         
     def isSelectionCollapsable(self):
-        for item in self.GetItemChildren(recursively=True):
-            if item in self.GetSelections() and self.isItemCollapsable(item): 
+        for item in self.GetSelections():
+            if self.isItemCollapsable(item):
                 return True
         return False
-    
+        
     def isSelectionExpandable(self):
-        for item in self.GetItemChildren(recursively=True):
-            if item in self.GetSelections() and self.isItemExpandable(item): 
+        for item in self.GetSelections():
+            if self.isItemExpandable(item):
                 return True
         return False
-    
+        
     def isAnyItemCollapsable(self):
-        for item in self.GetItemChildren(recursively=True):
-            if self.ItemHasChildren(item) and self.IsExpanded(item): 
+        for item in self.GetItemChildren():
+            if self.isItemCollapsable(item): 
                 return True
         return False
     
     def isAnyItemExpandable(self):
-        for item in self.GetItemChildren(recursively=True):
+        for item in self.GetItemChildren():
             if self.isItemExpandable(item): 
-                return True
-        return False
-    
-    def isExpandable(self, objects):
-        for item in self.GetItemChildren(recursively=True):
-            if self.GetItemPyData(item) in objects and self.isItemExpandable(item): 
-                return True
-        return False
-    
-    def isCollapsable(self, objects):
-        for item in self.GetItemChildren(recursively=True):
-            if self.GetItemPyData(item) in objects and self.isItemCollapsable(item): 
                 return True
         return False
     
