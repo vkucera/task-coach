@@ -27,12 +27,12 @@ class CSVWriterTestCase(test.wxTestCase):
     
     def setUp(self):
         super(CSVWriterTestCase, self).setUp()
+        task.Task.settings = self.settings = config.Settings(load=False)
         self.fd = StringIO.StringIO()
         self.writer = persistence.CSVWriter(self.fd)
         self.taskFile = persistence.TaskFile()
         self.task = task.Task('Task subject')
         self.taskFile.tasks().append(self.task)
-        self.settings = config.Settings(load=False)
         self.createViewer()
         
     def createViewer(self):
@@ -54,8 +54,8 @@ class CSVWriterTestCase(test.wxTestCase):
         csv = self.__writeAndRead(selectionOnly)
         self.failIf(csvFragment in csv, '%s in %s'%(csvFragment, csv))
 
-    def selectItem(self, index):
-        self.viewer.widget.select((index,))
+    def selectItem(self, items):
+        self.viewer.widget.select(items)
 
 
 class TaskTestsMixin(object):
@@ -68,17 +68,13 @@ class TaskTestsMixin(object):
     def testWriteSelectionOnly_SelectedChild(self):
         child = task.Task('Child', parent=self.task)
         self.taskFile.tasks().append(child)
-        if self.treeMode == 'True':
-            self.selectItem((0, 0))
-            self.expectInCSV('Task subject,', selectionOnly=True)
-        else:
-            self.selectItem((1,))
-            self.expectNotInCSV('Task subject,', selectionOnly=True)
+        self.selectItem([child])
+        self.expectInCSV('Child,', selectionOnly=True)
 
     def testWriteSelectionOnly_SelectedParent(self):
         child = task.Task('Child', parent=self.task)
         self.taskFile.tasks().append(child)
-        self.selectItem((0,))
+        self.selectItem([self.task])
         self.expectNotInCSV('Child', selectionOnly=True)
                 
         

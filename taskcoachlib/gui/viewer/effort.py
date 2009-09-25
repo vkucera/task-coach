@@ -133,9 +133,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
             
     def createWidget(self):
         self._columns = self._createColumns()
-        widget = widgets.ListCtrl(self, self.columns(),
-            self.getItemText, self.getItemTooltipData, self.getItemImage,
-            self.getItemAttr, self.onSelect,
+        widget = widgets.ListCtrl(self, self.columns(), self.onSelect,
             uicommand.EffortEdit(viewer=self, effortList=self.presentation()),
             menu.EffortPopupMenu(self.parent, self.taskFile.tasks(), 
                                  self.settings, self.presentation(), self),
@@ -293,6 +291,14 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
             selection = [anEffort for compositeEffort in selection\
                                 for anEffort in compositeEffort]
         return selection
+    
+    def getIndexOfItem(self, item):
+        if self.aggregation == 'details':
+            return super(EffortViewer, self).getIndexOfItem(item)
+        for index, compositeEffort in enumerate(self.presentation()):
+            if item in compositeEffort:
+                return index
+        return -1
 
     def isselected(self, item):
         """When this viewer is in aggregation mode, L{curselection}

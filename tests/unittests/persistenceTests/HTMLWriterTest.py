@@ -65,8 +65,8 @@ class HTMLWriterTestCase(test.wxTestCase):
         for htmlFragment in htmlFragments:
             self.failIf(htmlFragment in html, '%s in %s'%(htmlFragment, html))
 
-    def selectItem(self, index):
-        self.viewer.widget.select((index,))
+    def selectItem(self, items):
+        self.viewer.widget.select(items)
 
 
 class CommonTestsMixin(object):
@@ -97,7 +97,7 @@ class TaskTestsMixin(CommonTestsMixin):
         child = task.Task('Child')
         self.task.addChild(child)
         self.taskFile.tasks().append(child)
-        self.selectItem(1)
+        self.selectItem([child])
         self.expectInHTML('>Task subject<')
 
     def testColumnStyle(self):

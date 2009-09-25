@@ -44,7 +44,6 @@ class Viewer(wx.Panel):
         self.settings = settings
         self.__settingsSection = kwargs.pop('settingsSection')
         self.__instanceNumber = kwargs.pop('instanceNumber')
-        self.__selection = []
         # Flag so that we don't notify observers while we're selecting all items
         self.__selectingAllItems = False
         self.__toolbarUICommands = None
@@ -136,22 +135,16 @@ class Viewer(wx.Panel):
             # Some widgets change the selection and send selection events when 
             # deleting all items as part of the Destroy process. Ignore.
             return
-        # Remember the current selection so we can restore it after a refresh:
-        self.__selection = self.curselection()
         # Be sure all wx events are handled before we notify our observers:
-        event = patterns.Event(self.selectEventType(), self, self.__selection)
+        event = patterns.Event(self.selectEventType(), self, self.curselection())
         wx.CallAfter(event.send)
 
     def refresh(self):
         self.widget.RefreshAllItems(len(self.presentation()))
-        # Restore the selection:
-        self.widget.select([self.getIndexOfItem(item) for item \
-                            in self.__selection if item in self.presentation()])
     
     def refreshItems(self, *items):
-        indices = [self.getIndexOfItem(item) for item in items \
-                   if item in self.presentation()]
-        self.widget.RefreshItems(*indices) # pylint: disable-msg=W0142
+        items = [item for item in items if item in self.presentation()]
+        self.widget.RefreshItems(*items) # pylint: disable-msg=W0142
         
     def getIndexOfItem(self, item):
         raise NotImplementedError
@@ -159,9 +152,7 @@ class Viewer(wx.Panel):
     def curselection(self):
         ''' Return a list of items (domain objects) currently selected in our
             widget. '''
-        # Translate indices returned by the widget into actual domain objects:
-        return [self.getItemWithIndex(index) for index in \
-                self.widget.curselection()]
+        return self.widget.curselection()
         
     def getItemWithIndex(self, index):
         raise NotImplementedError
@@ -193,10 +184,7 @@ class Viewer(wx.Panel):
         
     def endOfSelectAll(self):
         self.__selectingAllItems = False
-        
-    def invertselection(self):
-        self.widget.invertselection()
-        
+
     def clearselection(self):
         self.widget.clearselection()
         
@@ -236,8 +224,7 @@ class Viewer(wx.Panel):
     def visibleColumns(self):
         return [widgets.Column('subject', _('Subject'))]
     
-    def getItemAttr(self, index):
-        item = self.getItemWithIndex(index)
+    def getItemAttr(self, item):
         return wx.ListItemAttr(self.getColor(item), 
                                self.getBackgroundColor(item))
         
@@ -391,19 +378,8 @@ class TreeViewer(Viewer): # pylint: disable-msg=W0223
         # If we get an expanded or collapsed event for the root item, ignore it
         if treeItem == self.widget.GetRootItem():
             return
-        # Somehow we can get expanded or collapsed events for items that are
-        # not the root item, but don't have a parent item either, resulting
-        # in an empty index. I don't really understand how that can happen.
-        # Ignore these items. See SF bug report #1840111. Also, it seems we
-        # can get events for items that have a parent, but are not a child 
-        # of that parent item, in which case GetIndexOfItem raises a ValueError.
-        try:
-            index = self.widget.GetIndexOfItem(treeItem)
-        except ValueError:
-            index = None
-        if index:
-            item = self.getItemWithIndex(index)
-            item.expand(expanded, context=self.settingsSection())
+        item = self.widget.GetItemPyData(treeItem)
+        item.expand(expanded, context=self.settingsSection())
     
     def expandAll(self):
         self.widget.expandAllItems()
@@ -486,17 +462,18 @@ class TreeViewer(Viewer): # pylint: disable-msg=W0223
     def getItemParent(self, item):
         ''' Allow for overriding what the parent of an item is. '''
         return item.parent()
-        
-    def getChildrenCount(self, index):
-        if index == ():
-            return len(self.getRootItems())
-        else:
-            item = self.getItemWithIndex(index)
-            return len([child for child in item.children() if child in self.presentation()])
-    
-    def getItemExpanded(self, index):
-        item = self.getItemWithIndex(index)
+
+    def getItemExpanded(self, item):
         return item.isExpanded(context=self.settingsSection())
+    
+    def children(self, parent=None):
+        if parent:
+            return [child for child in self.presentation() if child.parent() == parent]
+        else:
+            return self.getRootItems()
+        
+    def getItemText(self, item):
+        return item.subject()
     
     
 class UpdatePerSecondViewer(Viewer, date.ClockObserver):  # pylint: disable-msg=W0223
@@ -669,16 +646,14 @@ class ViewerWithColumns(Viewer): # pylint: disable-msg=W0223
         columnWidths[column.name()] = width
         self.settings.setdict(self.settingsSection(), 'columnwidths', columnWidths)
                             
-    def getItemText(self, index, column=0):
-        item = self.getItemWithIndex(index)
+    def getItemText(self, item, column=0):
         column = self.visibleColumns()[column]
         return column.render(item)
 
-    def getItemTooltipData(self, index, column=0):
+    def getItemTooltipData(self, item, column=0):
         result = []
         if not self.settings.getboolean('view', 'descriptionpopups'):
             return result        
-        item = self.getItemWithIndex(index)
         column = self.visibleColumns()[column]
         description = column.renderDescription(item)
         if description:
@@ -694,8 +669,7 @@ class ViewerWithColumns(Viewer): # pylint: disable-msg=W0223
             pass
         return result
 
-    def getItemImage(self, index, which, column=0): 
-        item = self.getItemWithIndex(index)
+    def getItemImage(self, item, which, column=0): 
         column = self.visibleColumns()[column]
         return column.imageIndex(item, which) 
             

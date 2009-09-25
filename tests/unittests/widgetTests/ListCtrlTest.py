@@ -23,11 +23,16 @@ from taskcoachlib import widgets
 
 class VirtualListCtrlTestCase(test.wxTestCase):
 
-    getItemText = getItemImage = getItemAttr = onSelect = lambda *args: None
+    onSelect = lambda *args: None
 
     def createListCtrl(self):
-        return widgets.ListCtrl(self.frame, self.columns,
-            self.getItemText, self.getItemImage, self.getItemAttr, self.onSelect, 
+        self.frame.getItemWithIndex = lambda index: index
+        self.frame.getIndexOfItem = lambda item: item if type(item) == type(0) else 0
+        self.frame.getItemText = lambda item, column: ''
+        self.frame.getItemTooltipData = lambda item: []
+        self.frame.getItemImage = lambda item, which, column: None
+        self.frame.getItemAttr = lambda item: None
+        return widgets.ListCtrl(self.frame, self.columns, self.onSelect, 
             dummy.DummyUICommand())
 
     def createColumns(self, nrColumns):

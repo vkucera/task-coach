@@ -75,7 +75,7 @@ class ViewerTest(test.wxTestCase):
     def testGetItemTooltipData(self):
         self.task.setDescription('Description')
         expectedData = [(None, ['Description']), ('note', []), ('attachment', [])]
-        self.assertEqual(expectedData, self.viewer.getItemTooltipData((0,)))
+        self.assertEqual(expectedData, self.viewer.getItemTooltipData(self.task))
 
 
 class SortableViewerTest(test.TestCase):
@@ -545,8 +545,8 @@ class MockWidget(object):
     def __init__(self):
         self.refreshedItems = []
         
-    def RefreshItems(self, *indices):
-        self.refreshedItems.extend(indices)
+    def RefreshItems(self, *items):
+        self.refreshedItems.extend(items)
     
 
 class UpdatePerSecondViewerTestsMixin(object):
@@ -558,7 +558,8 @@ class UpdatePerSecondViewerTestsMixin(object):
         self.taskList = task.sorter.Sorter(self.taskFile.tasks(), sortBy='dueDate')
         self.updateViewer = self.createUpdateViewer()
         self.trackedTask = task.Task(subject='tracked')
-        self.trackedTask.addEffort(effort.Effort(self.trackedTask))
+        self.trackedEffort = effort.Effort(self.trackedTask)
+        self.trackedTask.addEffort(self.trackedEffort)
         self.taskList.append(self.trackedTask)
         
     def createUpdateViewer(self):
@@ -572,11 +573,9 @@ class UpdatePerSecondViewerTestsMixin(object):
         self.updateViewer.widget = MockWidget()
         self.updateViewer.onEverySecond(patterns.Event('clock.second', 
             date.Clock()))
-        expectedIndex = self.taskList.index(self.trackedTask)
-        if self.updateViewer.isTreeViewer():
-            expectedIndex = (expectedIndex,)
-        self.assertEqual([expectedIndex], 
-            self.updateViewer.widget.refreshedItems)
+        usingTaskViewer = self.ListViewerClass == gui.viewer.TaskViewer
+        expected = self.trackedTask if usingTaskViewer else self.trackedEffort
+        self.assertEqual([expected], self.updateViewer.widget.refreshedItems)
 
     def testClockNotificationResultsInRefreshedItem_OnlyForTrackedItems(self):
         self.taskList.append(task.Task('not tracked'))

@@ -109,8 +109,9 @@ class ReleaseConverter(object):
         self._changeConverter = self.ChangeConverterClass()
 
     def _addS(self, listToCount):
-        return {'s' : len(listToCount) > 1 and 's' or '',
-                'y' : len(listToCount) > 1 and 'ies' or 'y' }
+        multiple = len(listToCount) > 1
+        return dict(s='s' if multiple else '',
+                    y='ies' if multiple else 'y')
 
     def convert(self, release, greeting=''):
         result = [self.summary(release, greeting)]

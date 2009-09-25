@@ -440,27 +440,27 @@ class AttachmentDropTargetMixin(object):
         kwargs['onDropMail'] = self.onDropMail
         return kwargs
         
-    def _addAttachments(self, attachments, index, **itemDialogKwargs):
+    def _addAttachments(self, attachments, item, **itemDialogKwargs):
         ''' Add attachments. If index refers to an existing domain object, 
             add the attachments to that object. If index is None, use the 
             newItemDialog to create a new domain object and add the attachments
             to that new object. '''
-        if index is None:
+        if item is None:
             newItemDialog = self.newItemDialog(bitmap='new',
                 attachments=attachments, **itemDialogKwargs)
             newItemDialog.Show()
         else:
             addAttachment = command.AddAttachmentCommand(self.presentation(),
-                [self.getItemWithIndex(index)], attachments=attachments)
+                [item], attachments=attachments)
             addAttachment.do()
 
-    def onDropURL(self, index, url):
+    def onDropURL(self, item, url):
         ''' This method is called by the widget when a URL is dropped on an 
             item. '''
         attachments = [attachment.URIAttachment(url)]
-        self._addAttachments(attachments, index)
+        self._addAttachments(attachments, item)
 
-    def onDropFiles(self, index, filenames):
+    def onDropFiles(self, item, filenames):
         ''' This method is called by the widget when one or more files
             are dropped on an item. '''
         attachmentBase = self.settings.get('file', 'attachmentbase')
@@ -469,15 +469,14 @@ class AttachmentDropTargetMixin(object):
         else:
             func = lambda x: x
         attachments = [attachment.FileAttachment(func(name)) for name in filenames]
-        self._addAttachments(attachments, index)
+        self._addAttachments(attachments, item)
 
-    def onDropMail(self, index, mail):
+    def onDropMail(self, item, mail):
         ''' This method is called by the widget when a mail message is dropped
             on an item. '''
         att = attachment.MailAttachment(mail)
         subject, content = att.read()
-        self._addAttachments([att], index, subject=subject, 
-                             description=content)
+        self._addAttachments([att], item, subject=subject, description=content)
 
 
 class NoteColumnMixin(object):

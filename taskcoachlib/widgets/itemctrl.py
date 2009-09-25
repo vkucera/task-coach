@@ -18,14 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 ''' Base classes for controls with items, such as ListCtrl, TreeCtrl, 
-    and TreeListCtrl. '''
+    and TreeListCtrl. ''' # pylint: disable-msg=W0105
 
 
-import wx, wx.lib.mixins.listctrl, operator, draganddrop, autowidth, tooltip
+import wx, wx.lib.mixins.listctrl, draganddrop, autowidth, tooltip
 from taskcoachlib.thirdparty import hypertreelist
 
 
-class _CtrlWithItems(object):
+class _CtrlWithItemsMixin(object):
     ''' Base class for controls with items, such as ListCtrl, TreeCtrl,
         TreeListCtrl, etc. '''
 
@@ -34,11 +34,19 @@ class _CtrlWithItems(object):
             return item.IsOk()          # for Tree(List)Ctrl
         except AttributeError:
             return item != wx.NOT_FOUND # for ListCtrl
+        
+    def _objectBelongingTo(self, item):
+        if not self._itemIsOk(item):
+            return None
+        try:
+            return self.GetItemPyData(item) # TreeListCtrl
+        except AttributeError:
+            return self.getItemWithIndex(item) # ListCtrl
 
     def SelectItem(self, item, *args, **kwargs):
         try:
             # Tree(List)Ctrl:
-            super(_CtrlWithItems, self).SelectItem(item, *args, **kwargs)
+            super(_CtrlWithItemsMixin, self).SelectItem(item, *args, **kwargs)
         except AttributeError:
             # ListCtrl:
             select = kwargs.get('select', True)
@@ -48,7 +56,7 @@ class _CtrlWithItems(object):
             self.SetItemState(item, newState, wx.LIST_STATE_SELECTED)
 
 
-class _CtrlWithPopupMenu(_CtrlWithItems):
+class _CtrlWithPopupMenuMixin(_CtrlWithItemsMixin):
     ''' Base class for controls with popupmenu's. '''
     
     @staticmethod
@@ -57,12 +65,12 @@ class _CtrlWithPopupMenu(_CtrlWithItems):
             eventSource.Bind(eventType, eventHandler)
 
 
-class _CtrlWithItemPopupMenu(_CtrlWithPopupMenu):
+class _CtrlWithItemPopupMenuMixin(_CtrlWithPopupMenuMixin):
     ''' Popupmenu's on items. '''
 
     def __init__(self, *args, **kwargs):
         self.__popupMenu = kwargs.pop('itemPopupMenu')
-        super(_CtrlWithItemPopupMenu, self).__init__(*args, **kwargs)
+        super(_CtrlWithItemPopupMenuMixin, self).__init__(*args, **kwargs)
         if self.__popupMenu is not None:
             self._attachPopupMenu(self,
                 (wx.EVT_LIST_ITEM_RIGHT_CLICK, wx.EVT_TREE_ITEM_RIGHT_CLICK,
@@ -80,8 +88,7 @@ class _CtrlWithItemPopupMenu(_CtrlWithPopupMenu):
             # Make sure the item under the mouse is selected because that
             # is what users expect and what is most user-friendly. Not all
             # widgets do this by default, e.g. the TreeListCtrl does not.
-            item, flags, column = self.HitTest(event.GetPoint(), 
-                                               alwaysReturnColumn=True)
+            item = self.HitTest(event.GetPoint())[0]
             if not self._itemIsOk(item):
                 return
             if not self.IsSelected(item):
@@ -90,7 +97,7 @@ class _CtrlWithItemPopupMenu(_CtrlWithPopupMenu):
         self.PopupMenu(self.__popupMenu)
 
 
-class _CtrlWithColumnPopupMenu(_CtrlWithPopupMenu):
+class _CtrlWithColumnPopupMenuMixin(_CtrlWithPopupMenuMixin):
     ''' This class enables a right-click popup menu on column headers. The 
         popup menu should expect a public property columnIndex to be set so 
         that the control can tell the menu which column the user clicked to
@@ -98,7 +105,7 @@ class _CtrlWithColumnPopupMenu(_CtrlWithPopupMenu):
     
     def __init__(self, *args, **kwargs):
         self.__popupMenu = kwargs.pop('columnPopupMenu')
-        super(_CtrlWithColumnPopupMenu, self).__init__(*args, **kwargs)
+        super(_CtrlWithColumnPopupMenuMixin, self).__init__(*args, **kwargs)
         if self.__popupMenu is not None:
             self._attachPopupMenu(self, [wx.EVT_LIST_COL_RIGHT_CLICK],
                 self.onColumnPopupMenu)
@@ -116,14 +123,14 @@ class _CtrlWithColumnPopupMenu(_CtrlWithPopupMenu):
         event.Skip()
         
 
-class _CtrlWithDropTarget(_CtrlWithItems):
+class _CtrlWithDropTargetMixin(_CtrlWithItemsMixin):
     ''' Control that accepts files, e-mails or URLs being dropped onto items. '''
     
     def __init__(self, *args, **kwargs):
         self.__onDropURLCallback = kwargs.pop('onDropURL', None)
         self.__onDropFilesCallback = kwargs.pop('onDropFiles', None)
         self.__onDropMailCallback = kwargs.pop('onDropMail', None)
-        super(_CtrlWithDropTarget, self).__init__(*args, **kwargs)
+        super(_CtrlWithDropTargetMixin, self).__init__(*args, **kwargs)
         if self.__onDropURLCallback or self.__onDropFilesCallback or self.__onDropMailCallback:
             dropTarget = draganddrop.DropTarget(self.onDropURL,
                                                 self.onDropFiles,
@@ -132,79 +139,53 @@ class _CtrlWithDropTarget(_CtrlWithItems):
             self.GetMainWindow().SetDropTarget(dropTarget)
 
     def onDropURL(self, x, y, url):
-        item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
+        item = self.HitTest((x, y))[0]
         if self.__onDropURLCallback:
-            if self._itemIsOk(item):
-                self.__onDropURLCallback(self.GetIndexOfItem(item), url)
-            else:
-                self.__onDropURLCallback(None, url)
+            self.__onDropURLCallback(self._objectBelongingTo(item), url)
 
     def onDropFiles(self, x, y, filenames):
-        item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
+        item = self.HitTest((x, y))[0]
         if self.__onDropFilesCallback:
-            if self._itemIsOk(item):
-                self.__onDropFilesCallback(self.GetIndexOfItem(item), filenames)
-            else:
-                self.__onDropFilesCallback(None, filenames)
+            self.__onDropFilesCallback(self._objectBelongingTo(item), filenames)
 
     def onDropMail(self, x, y, mail):
-        item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
+        item = self.HitTest((x, y))[0]
         if self.__onDropMailCallback:
-            if self._itemIsOk(item):
-                self.__onDropMailCallback(self.GetIndexOfItem(item), mail)
-            else:
-                self.__onDropMailCallback(None, mail)
+            self.__onDropMailCallback(self._objectBelongingTo(item), mail)
 
     def onDragOver(self, x, y, defaultResult):
-        item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
+        item, flags = self.HitTest((x, y))[:2]
         if self._itemIsOk(item):
             if flags & wx.TREE_HITTEST_ONITEMBUTTON:
                 self.Expand(item)
         return defaultResult
-        
-    def GetIndexOfItem(self, item):
-        # Convert the item into an index. For ListCtrls this is not 
-        # necessary, so an AttributeError will be raised. In that case the
-        # item is already an index, so we can simply return the item.
-        try:
-            return super(_CtrlWithDropTarget, self).GetIndexOfItem(item)
-        except AttributeError:
-            return item
 
     def GetMainWindow(self):
         try:
-            return super(_CtrlWithDropTarget, self).GetMainWindow()
+            return super(_CtrlWithDropTargetMixin, self).GetMainWindow()
         except AttributeError:
             return self
 
 
-class CtrlWithToolTip(_CtrlWithItems, tooltip.ToolTipMixin):
+class CtrlWithToolTipMixin(_CtrlWithItemsMixin, tooltip.ToolTipMixin):
     ''' Control that has a different tooltip for each item '''
     def __init__(self, *args, **kwargs):
-        super(CtrlWithToolTip, self).__init__(*args, **kwargs)
+        super(CtrlWithToolTipMixin, self).__init__(*args, **kwargs)
         self.__tip = tooltip.SimpleToolTip(self)
-        
-    def GetIndexOfItem(self, item):
-        try:
-            return super(CtrlWithToolTip, self).GetIndexOfItem(item)
-        except AttributeError:
-            return item
 
     def OnBeforeShowToolTip(self, x, y): 
-        item, flags, column = self.HitTest((x, y), alwaysReturnColumn=True)
-        if self._itemIsOk(item):    
-            tooltipData = self.OnGetItemTooltipData(self.GetIndexOfItem(item), column)
-            doShow = reduce(operator.__or__,
-                            map(bool, [data[1] for data in tooltipData]),
-                            False)
-            
+        item, _, column = self.HitTest(wx.Point(x, y))
+        domainObject = self._objectBelongingTo(item)
+        if domainObject:
+            tooltipData = self.getItemTooltipData(domainObject, column)
+            doShow = any([data[1] for data in tooltipData])
             if doShow:
                 self.__tip.SetData(tooltipData)
                 return self.__tip
         return None
 
 
-class CtrlWithItems(_CtrlWithItemPopupMenu, _CtrlWithDropTarget):
+class CtrlWithItemsMixin(_CtrlWithItemPopupMenuMixin, _CtrlWithDropTargetMixin):
     pass
 
 
@@ -212,7 +193,7 @@ class Column(object):
     def __init__(self, name, columnHeader, *eventTypes, **kwargs):
         self.__name = name
         self.__columnHeader = columnHeader
-        self.width = kwargs.pop('width', hypertreelist._DEFAULT_COL_WIDTH)
+        self.width = kwargs.pop('width', hypertreelist._DEFAULT_COL_WIDTH) # pylint: disable-msg=W0212
         # The event types to use for registering an observer that is
         # interested in changes that affect this column:
         self.__eventTypes = eventTypes
@@ -256,16 +237,16 @@ class Column(object):
     def renderDescription(self, *args, **kwargs):
         return self.__renderDescriptionCallback(*args, **kwargs)
 
-    def defaultRenderer(self, *args, **kwargs):
+    def defaultRenderer(self, *args, **kwargs): # pylint: disable-msg=W0613
         return unicode(args[0])
 
-    def defaultDescriptionRenderer(self, *args, **kwargs):
+    def defaultDescriptionRenderer(self, *args, **kwargs): # pylint: disable-msg=W0613
         return None
 
     def alignment(self):
         return self.__alignment
     
-    def defaultImageIndex(self, *args, **kwargs):
+    def defaultImageIndex(self, *args, **kwargs): # pylint: disable-msg=W0613
         return -1
     
     def imageIndex(self, *args, **kwargs):
@@ -275,14 +256,14 @@ class Column(object):
         return self.name() == other.name()
         
 
-class _BaseCtrlWithColumns(object):
+class _BaseCtrlWithColumnsMixin(object):
     ''' A base class for all controls with columns. Note that this class and 
         its subclasses do not support addition or deletion of columns after 
         the initial setting of columns. '''
 
     def __init__(self, *args, **kwargs):
         self.__allColumns = kwargs.pop('columns')
-        super(_BaseCtrlWithColumns, self).__init__(*args, **kwargs)
+        super(_BaseCtrlWithColumnsMixin, self).__init__(*args, **kwargs)
         # This  is  used to  keep  track  of  which column  has  which
         # index. The only  other way would be (and  was) find a column
         # using its header, which causes problems when several columns
@@ -343,7 +324,7 @@ class _BaseCtrlWithColumns(object):
             raise ValueError, '%s: unknown column' % column.name()
 
         
-class _CtrlWithHideableColumns(_BaseCtrlWithColumns):        
+class _CtrlWithHideableColumnsMixin(_BaseCtrlWithColumnsMixin):        
     ''' This class supports hiding columns. '''
     
     def showColumn(self, column, show=True):
@@ -363,9 +344,9 @@ class _CtrlWithHideableColumns(_BaseCtrlWithColumns):
     def _getColumnIndex(self, column):
         ''' _getColumnIndex returns the actual columnIndex of the column if it 
             is visible, or the position it would have if it were visible. '''
-        columnIndexWhenAllColumnsVisible = super(_CtrlWithHideableColumns, self)._getColumnIndex(column)
+        columnIndexWhenAllColumnsVisible = super(_CtrlWithHideableColumnsMixin, self)._getColumnIndex(column)
         for columnIndex, visibleColumn in enumerate(self._visibleColumns()):
-            if super(_CtrlWithHideableColumns, self)._getColumnIndex(visibleColumn) >= columnIndexWhenAllColumnsVisible:
+            if super(_CtrlWithHideableColumnsMixin, self)._getColumnIndex(visibleColumn) >= columnIndexWhenAllColumnsVisible:
                 return columnIndex
         return self.GetColumnCount() # Column header not found
 
@@ -373,12 +354,12 @@ class _CtrlWithHideableColumns(_BaseCtrlWithColumns):
         return [self._getColumn(columnIndex) for columnIndex in range(self.GetColumnCount())]
 
 
-class _CtrlWithSortableColumns(_BaseCtrlWithColumns):
+class _CtrlWithSortableColumnsMixin(_BaseCtrlWithColumnsMixin):
     ''' This class adds sort indicators and clickable column headers that 
         trigger callbacks to (re)sort the contents of the control. '''
     
     def __init__(self, *args, **kwargs):
-        super(_CtrlWithSortableColumns, self).__init__(*args, **kwargs)
+        super(_CtrlWithSortableColumnsMixin, self).__init__(*args, **kwargs)
         self.Bind(wx.EVT_LIST_COL_CLICK, self.onColumnClick)
         self.__currentSortColumn = self._getColumn(0)
         self.__currentSortImageIndex = -1
@@ -426,9 +407,9 @@ class _CtrlWithSortableColumns(_BaseCtrlWithColumns):
             self.SetColumn(columnIndex, columnInfo)
 
 
-class _CtrlWithAutoResizedColumns(autowidth.AutoColumnWidthMixin):
+class _CtrlWithAutoResizedColumnsMixin(autowidth.AutoColumnWidthMixin):
     def __init__(self, *args, **kwargs):
-        super(_CtrlWithAutoResizedColumns, self).__init__(*args, **kwargs)
+        super(_CtrlWithAutoResizedColumnsMixin, self).__init__(*args, **kwargs)
         self.Bind(wx.EVT_LIST_COL_END_DRAG, self.onEndColumnResize)
         
     def onEndColumnResize(self, event):
@@ -438,14 +419,16 @@ class _CtrlWithAutoResizedColumns(autowidth.AutoColumnWidthMixin):
         event.Skip()
         
 
-class CtrlWithColumns(_CtrlWithAutoResizedColumns, _CtrlWithHideableColumns,
-                      _CtrlWithSortableColumns, _CtrlWithColumnPopupMenu):
-    ''' CtrlWithColumns combines the functionality of its four parent classes: 
-        automatic resizing of columns, hideable columns, columns with sort 
-        indicators, and column popup menu's. '''
+class CtrlWithColumnsMixin(_CtrlWithAutoResizedColumnsMixin, 
+                           _CtrlWithHideableColumnsMixin,
+                           _CtrlWithSortableColumnsMixin, 
+                           _CtrlWithColumnPopupMenuMixin):
+    ''' CtrlWithColumnsMixin combines the functionality of its four parent 
+        classes: automatic resizing of columns, hideable columns, columns with 
+        sort indicators, and column popup menu's. '''
         
     def showColumn(self, column, show=True):
-        super(CtrlWithColumns, self).showColumn(column, show)
+        super(CtrlWithColumnsMixin, self).showColumn(column, show)
         # Show sort indicator if the column that was just made visible is being sorted on
         if show and column == self._currentSortColumn():
             self._showSortImage()
@@ -453,11 +436,11 @@ class CtrlWithColumns(_CtrlWithAutoResizedColumns, _CtrlWithHideableColumns,
     def _clearSortImage(self):
         # Only clear the sort image if the column in question is visible
         if self.isColumnVisible(self._currentSortColumn()):
-            super(CtrlWithColumns, self)._clearSortImage()
+            super(CtrlWithColumnsMixin, self)._clearSortImage()
             
     def _showSortImage(self):
         # Only show the sort image if the column in question is visible
         if self.isColumnVisible(self._currentSortColumn()):
-            super(CtrlWithColumns, self)._showSortImage()
+            super(CtrlWithColumnsMixin, self)._showSortImage()
             
 
