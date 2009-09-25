@@ -21,41 +21,40 @@ import wx, itemctrl
 class _ListCtrl(wx.ListCtrl):
     ''' Make ListCtrl API more like the TreeList and TreeListCtrl API '''
     
-    def HitTest(self, (x,y), alwaysReturnColumn=False):
-        ''' Return a three-tuple (item, flag, column) if alwaysReturnColumn is
-        True. '''
+    def HitTest(self, (x,y)):
+        ''' Always return a three-tuple (item, flag, column). '''
         index, flags = super(_ListCtrl, self).HitTest((x,y))
-        if alwaysReturnColumn:
-            column = 0
-            if self.InReportView():
-                # Determine the column in which the user clicked
-                cumulativeColumnWidth = 0
-                for columnIndex in range(self.GetColumnCount()):
-                    cumulativeColumnWidth += self.GetColumnWidth(columnIndex)
-                    if x <= cumulativeColumnWidth:
-                        column = columnIndex
-                        break
-            return index, flags, column
-        else:
-            return index, flags
+        column = 0
+        if self.InReportView():
+            # Determine the column in which the user clicked
+            cumulativeColumnWidth = 0
+            for columnIndex in range(self.GetColumnCount()):
+                cumulativeColumnWidth += self.GetColumnWidth(columnIndex)
+                if x <= cumulativeColumnWidth:
+                    column = columnIndex
+                    break
+        return index, flags, column
 
     def ToggleItemSelection(self, index):
         currentState = self.GetItemState(index, wx.LIST_STATE_SELECTED)
         self.SetItemState(index, ~currentState, wx.LIST_STATE_SELECTED)
      
         
-class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, itemctrl.CtrlWithToolTip, _ListCtrl):
-    def __init__(self, parent, columns, getItemText, getItemTooltipData, getItemImage,
-            getItemAttr, selectCommand=None, editCommand=None, itemPopupMenu=None, 
-            columnPopupMenu=None, resizeableColumn=0, *args, **kwargs):
+class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin, 
+                      itemctrl.CtrlWithToolTipMixin, _ListCtrl):
+    def __init__(self, parent, columns, selectCommand=None, editCommand=None, 
+                 itemPopupMenu=None, columnPopupMenu=None, resizeableColumn=0, 
+                 *args, **kwargs):
         super(VirtualListCtrl, self).__init__(parent,
             style=wx.LC_REPORT|wx.LC_VIRTUAL, columns=columns, 
             resizeableColumn=resizeableColumn, itemPopupMenu=itemPopupMenu, 
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
-        self.getItemText = getItemText
-        self.getItemTooltipData = getItemTooltipData
-        self.getItemImage = getItemImage
-        self.getItemAttr = getItemAttr
+        self.getItemWithIndex = parent.getItemWithIndex
+        self.getIndexOfItem = parent.getIndexOfItem
+        self.getItemText = parent.getItemText
+        self.getItemTooltipData = parent.getItemTooltipData
+        self.getItemImage = parent.getItemImage
+        self.getItemAttr = parent.getItemAttr
         self.bindEventHandlers(selectCommand, editCommand)
             
     def bindEventHandlers(self, selectCommand, editCommand):
@@ -69,21 +68,24 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, itemctrl
             self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onItemActivated)  
 
     def OnGetItemText(self, rowIndex, columnIndex):
-        return self.getItemText(rowIndex, columnIndex)
+        return self.getItemText(self.getItemWithIndex(rowIndex), columnIndex)
 
     def OnGetItemTooltipData(self, rowIndex, columnIndex):
-        return self.getItemTooltipData(rowIndex, columnIndex)
+        return self.getItemTooltipData(self.getItemWithIndex(rowIndex), 
+                                       columnIndex)
 
     def OnGetItemImage(self, rowIndex):
-        return self.getItemImage(rowIndex, wx.TreeItemIcon_Normal, 0)[0]
+        return self.getItemImage(self.getItemWithIndex(rowIndex), 
+                                 wx.TreeItemIcon_Normal, 0)[0]
     
     def OnGetItemColumnImage(self, rowIndex, columnIndex):
-        return self.getItemImage(rowIndex, wx.TreeItemIcon_Normal, columnIndex)
+        return self.getItemImage(self.getItemWithIndex(rowIndex), 
+                                 wx.TreeItemIcon_Normal, columnIndex)
 
     def OnGetItemAttr(self, rowIndex):
         # We need to keep a reference to the item attribute to prevent it
         # from being garbage collected too soon.
-        self.__itemAttribute = self.getItemAttr(rowIndex)
+        self.__itemAttribute = self.getItemAttr(self.getItemWithIndex(rowIndex))
         return self.__itemAttribute
         
     def onSelect(self, event):
@@ -93,7 +95,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, itemctrl
         ''' Override default behavior to attach the column clicked on
             to the event so we can use it elsewhere. '''
         mousePosition = self.GetMainWindow().ScreenToClient(wx.GetMousePosition())
-        index, flags, column = self.HitTest(mousePosition, alwaysReturnColumn=True)
+        index, flags, column = self.HitTest(mousePosition)
         if index >= 0:
             # Only get the column name if the hittest returned an item,
             # otherwise the item was activated from the menu or by double 
@@ -110,35 +112,34 @@ class VirtualListCtrl(itemctrl.CtrlWithItems, itemctrl.CtrlWithColumns, itemctrl
             # The VirtualListCtrl makes sure only visible items are updated
             super(VirtualListCtrl, self).RefreshItems(0, count-1)
 
-    def RefreshItems(self, *indices):
+    def RefreshItems(self, *items):
         ''' Refresh specific items. '''
-        if len(indices) <= 5:
-            for index in indices:
-                self.RefreshItem(index)
+        if len(items) <= 5:
+            for item in items:
+                self.RefreshItem(self.getIndexOfItem(item))
         else:
             self.RefreshAllItems(self.GetItemCount())
         
     def curselection(self):
+        return [self.getItemWithIndex(index) for index in self.curselectionIndices()]
+    
+    def curselectionIndices(self):
         return wx.lib.mixins.listctrl.getListCtrlSelection(self)
 
-    def select(self, indices):
+    def select(self, items):
+        indices = [self.getIndexOfItem(item) for item in items]
         for index in range(self.GetItemCount()):
             self.Select(index, index in indices)
         if self.curselection():
             self.Focus(self.GetFirstSelected())        
     
     def clearselection(self):
-        for index in self.curselection():
+        for index in self.curselectionIndices():
             self.Select(index, False)
 
     def selectall(self):
         for index in range(self.GetItemCount()):
             self.Select(index)
-
-    def invertselection(self):
-        for index in range(self.GetItemCount()):
-            self.ToggleItemSelection(index)
-        self.selectCommand()            
 
 
 class ListCtrl(VirtualListCtrl):

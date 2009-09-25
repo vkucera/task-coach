@@ -552,8 +552,7 @@ class LocalCategoryViewer(LocalDragAndDropFixMixin, viewer.BaseCategoryViewer):
         super(LocalCategoryViewer, self).__init__(*args, **kwargs)
         self.widget.ExpandAll()
     
-    def getIsItemChecked(self, index):
-        item = self.getItemWithIndex(index)
+    def getIsItemChecked(self, item):
         if isinstance(item, category.Category):
             return item in self.item.categories()
         return False
@@ -590,8 +589,7 @@ class CategoriesPage(PageWithViewerMixin, PageWithHeaders):
         treeCtrl = self.viewer.widget
         treeCtrl.ExpandAll()
         for categoryNode in treeCtrl.GetItemChildren(recursively=True):
-            categoryIndex = treeCtrl.GetIndexOfItem(categoryNode)
-            categoryObject = self.viewer.getItemWithIndex(categoryIndex)
+            categoryObject = treeCtrl.GetItemPyData(categoryNode)
             if categoryNode.IsChecked():
                 categoryObject.addCategorizable(self.item)
                 self.item.addCategory(categoryObject)

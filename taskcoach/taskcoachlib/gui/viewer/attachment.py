@@ -54,9 +54,7 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.ViewerWithColumns,
     def createWidget(self):
         imageList = self.createImageList()
         self._columns = self._createColumns()
-        widget = widgets.ListCtrl(self, self.columns(),
-            self.getItemText, self.getItemTooltipData, self.getItemImage,
-            self.getItemAttr, self.onSelect,
+        widget = widgets.ListCtrl(self, self.columns(), self.onSelect,
             uicommand.AttachmentEdit(viewer=self, attachments=self.presentation()),
             menu.AttachmentPopupMenu(self.parent, self.settings, self.presentation(), 
                                      self),

@@ -30,15 +30,21 @@ Release('0.75.0', 'September ?, 2009',
         ]
     ),
 
-Release('0.74.2', '?? ??, 2009',
-    summary='''This is a bugfix release.''',
+Release('0.74.2', 'September 25, 2009',
+    summary='''This is a bugfix release that fixes several minor bugs and
+increases performance.''',
     bugsFixed=[
         Bug('''iPhone synchronization: when doing a full refresh
 from desktop, categories parents could be mismatched.'''),
         Bug('''A bug in the task filter would cause tasks to be shown that
 were supposed to be hidden.''', '2841854'),
-        Bug('''The Filter submenu would sometimes be in the wrong
-state (enabled or disabled).''')
+        Bug('''The filter submenu would sometimes be in the wrong
+state (enabled or disabled).'''),
+        Bug('''On Linux, locking two task files in the same folder, e.g. when 
+merging, would make Task Coach think that its task file was locked by another 
+instance of Task Coach.''', '2852216'),
+        Bug('''Performance improvements. Task Coach still isn't super fast,
+but at least performance should be a bit better now.''', '2807678', '2683002')
         ],
     featuresAdded=[
         Feature('''Add an option to avoid uploading completed tasks to
@@ -49,7 +55,10 @@ may now be a shortcut to another directory.'''),
         Feature('''In the attachment viewer, display a red icon for
 files attachments when the file does not exist. Also prevent the user
 from trying to open it.''')
-        ]
+        ],
+    featuresRemoved=[
+        Feature('''Removed the Edit->Select->Invert selection menu item since
+it was very slow and not very useful.''')]
     ),
 
 Release('0.74.1', 'August 22, 2009',

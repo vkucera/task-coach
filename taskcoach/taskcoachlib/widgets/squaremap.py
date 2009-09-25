@@ -22,10 +22,9 @@ import tooltip
 
 
 class SquareMap(tooltip.ToolTipMixin, squaremap.SquareMap):
-    def __init__(self, parent, rootNode, onSelect, onEdit, getItemTooltipData,
-                 popupMenu):
+    def __init__(self, parent, rootNode, onSelect, onEdit, popupMenu):
         self.__selection = []
-        self.getItemTooltipData = getItemTooltipData
+        self.getItemTooltipData = parent.getItemTooltipData
         super(SquareMap, self).__init__(parent, model=rootNode, adapter=parent, 
                                         highlight=False)
         
@@ -51,7 +50,7 @@ class SquareMap(tooltip.ToolTipMixin, squaremap.SquareMap):
         wx.CallAfter(self.selectCommand)
         event.Skip()
         
-    def select(self, index):
+    def select(self, items):
         pass
     
     def onEdit(self, event):

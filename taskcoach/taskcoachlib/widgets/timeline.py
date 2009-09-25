@@ -22,10 +22,9 @@ import tooltip
 
 
 class Timeline(tooltip.ToolTipMixin, timeline.TimeLine):
-    def __init__(self, parent, rootNode, onSelect, onEdit, getItemTooltipData,
-                 popupMenu):
+    def __init__(self, parent, rootNode, onSelect, onEdit, popupMenu):
         self.__selection = []
-        self.getItemTooltipData = getItemTooltipData
+        self.getItemTooltipData = parent.getItemTooltipData
         super(Timeline, self).__init__(parent, model=rootNode, adapter=parent)
         self.__tip = tooltip.SimpleToolTip(self)
         self.selectCommand = onSelect
@@ -49,7 +48,7 @@ class Timeline(tooltip.ToolTipMixin, timeline.TimeLine):
         wx.CallAfter(self.selectCommand)
         event.Skip()
         
-    def select(self, index):
+    def select(self, items):
         pass
     
     def onEdit(self, event):

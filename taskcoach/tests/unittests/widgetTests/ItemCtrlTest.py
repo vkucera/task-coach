@@ -33,7 +33,7 @@ class CtrlWithColumnsTestCase(test.wxTestCase):
 
 
 class CtrlWithHideableColumnsUnderTest( \
-          widgets.itemctrl._CtrlWithHideableColumns, # pylint: disable-msg=W0212 
+          widgets.itemctrl._CtrlWithHideableColumnsMixin, # pylint: disable-msg=W0212 
           wx.ListCtrl): 
     pass
 
@@ -60,7 +60,7 @@ class CtrlWithHideableColumnsTest(CtrlWithColumnsTestCase,
                 
         
 class CtrlWithSortableColumnsUnderTest( \
-        widgets.itemctrl._CtrlWithSortableColumns, # pylint: disable-msg=W0212 
+        widgets.itemctrl._CtrlWithSortableColumnsMixin, # pylint: disable-msg=W0212 
         wx.ListCtrl):
     pass
 
@@ -84,7 +84,8 @@ class CtrlWithSortableColumnsTest(CtrlWithColumnsTestCase, CtrlWithSortableColum
             columns=[self.column1, self.column2])            
         
         
-class CtrlWithColumnsUnderTest(widgets.itemctrl.CtrlWithColumns, wx.ListCtrl):
+class CtrlWithColumnsUnderTest(widgets.itemctrl.CtrlWithColumnsMixin, 
+                               wx.ListCtrl):
     pass
 
 

@@ -1,5 +1,5 @@
 ; Task Coach - Your friendly task manager
-; Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+; Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 ; 
 ; Task Coach is free software: you can redistribute it and/or modify
 ; it under the terms of the GNU General Public License as published by
@@ -69,6 +69,7 @@ Name: "{userstartup}\%(name)s"; Filename: "{app}\%(filename)s.exe"; Tasks: users
 
 [Run]
 Filename: "{app}\%(filename)s.exe"; Description: "{cm:LaunchProgram,%(name)s}"; Flags: nowait postinstall skipifsilent
+Filename: "%(url)s/changes.html"; Description: "Show recent changes (opens a webbrowser)"; Flags: shellexec nowait postinstall skipifsilent
 
 [UninstallDelete]
 Type: files; Name: "{app}\%(filename)s.url"

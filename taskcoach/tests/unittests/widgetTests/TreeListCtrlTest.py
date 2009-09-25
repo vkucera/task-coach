@@ -30,8 +30,7 @@ class TreeListCtrlTestCase(TreeCtrlTest.TreeCtrlTestCase):
         super(TreeListCtrlTestCase, self).setUp()
         self._columns = self.createColumns()
         self.treeCtrl = widgets.TreeListCtrl(self.frame, self.columns(), 
-            self.getItemText, self.getItemTooltipText, self.getItemImage,
-            self.getItemAttr, self.getChildrenCount, self.getItemExpanded,
+            self.getItemTooltipText,
             self.onSelect, dummy.DummyUICommand(), dummy.DummyUICommand())
         imageList = wx.ImageList(16, 16)
         for bitmapName in ['task', 'tasks']:
@@ -64,7 +63,7 @@ class TreeListCtrlTest(TreeListCtrlTestCase, TreeCtrlTest.CommonTestsMixin):
 class TreeListCtrlColumnsTest(TreeListCtrlTestCase):
     def setUp(self):
         super(TreeListCtrlColumnsTest, self).setUp()
-        self.setTree('item')
+        self.children[None] = ['item']
         self.treeCtrl.RefreshAllItems(1)
         self.visibleColumns = self.columns()[1:]
         
@@ -73,8 +72,7 @@ class TreeListCtrlColumnsTest(TreeListCtrlTestCase):
         self.assertEqual(len(self.visibleColumns)+1, self.treeCtrl.GetColumnCount())
         item = self.treeCtrl.GetFirstChild(self.treeCtrl.GetRootItem())[0]
         for columnIndex in range(1, len(self.visibleColumns)):
-            self.assertEqual(self.getItemText((0,), columnIndex), 
-                             self.treeCtrl.GetItemText(item, columnIndex))
+            self.assertEqual('item', self.treeCtrl.GetItemText(item, columnIndex))
     
     def showColumn(self, name, show=True):
         column = widgets.Column(name, name, ('view', 'whatever'), None)

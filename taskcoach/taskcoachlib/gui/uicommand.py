@@ -894,17 +894,6 @@ class SelectAll(NeedsItemsMixin, ViewerCommand):
             self.viewer.selectall()
 
 
-class InvertSelection(NeedsItemsMixin, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        super(InvertSelection, self).__init__( \
-            menuText=_('&Invert selection'),
-            helpText=_('Select unselected items and unselect selected items'), 
-            *args, **kwargs)
-
-    def doCommand(self, event):
-        self.viewer.invertselection()
-
-
 class ClearSelection(NeedsSelectionMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(ClearSelection, self).__init__(menuText=_('&Clear selection'), 
@@ -995,7 +984,7 @@ class HideCurrentColumn(ViewerCommand):
         widget = self.viewer.getWidget() # Must use method to make sure viewer dispatch works!
         x, y = widget.ScreenToClient(wx.GetMousePosition())
         # Use wx.Point because CustomTreeCtrl assumes a wx.Point instance:
-        columnIndex = widget.HitTest(wx.Point(x, y), alwaysReturnColumn=True)[2]
+        columnIndex = widget.HitTest(wx.Point(x, y))[2]
         # The TreeListCtrl returns -1 for the first column sometimes,
         # don't understand why. Work around as follows:
         if columnIndex == -1:
@@ -1497,17 +1486,12 @@ class TaskDecPriority(NeedsSelectedTasksMixin, TaskListCommand, ViewerCommand):
 
 
 class DragAndDropCommand(ViewerCommand):
-    def onCommandActivate(self, dropItemIndex, dragItemIndex): # pylint: disable-msg=W0221
+    def onCommandActivate(self, dropItem, dragItem): # pylint: disable-msg=W0221
         ''' Override omCommandActivate to be able to accept two items instead
             of one event. '''
-        self.doCommand(dropItemIndex, dragItemIndex)
+        self.doCommand(dropItem, dragItem)
 
-    def doCommand(self, dropItemIndex, dragItemIndex): # pylint: disable-msg=W0221
-        dragItem = [self.viewer.getItemWithIndex(dragItemIndex)]
-        if dropItemIndex >= 0:
-            dropItem = [self.viewer.getItemWithIndex(dropItemIndex)]
-        else:
-            dropItem = None
+    def doCommand(self, dropItem, dragItem): # pylint: disable-msg=W0221
         dragAndDropCommand = self.createCommand(dragItem, dropItem)
         if dragAndDropCommand.canDo():
             dragAndDropCommand.do()
@@ -1518,8 +1502,8 @@ class DragAndDropCommand(ViewerCommand):
 
 class TaskDragAndDrop(DragAndDropCommand, TaskListCommand):
     def createCommand(self, dragItem, dropItem):
-        return command.DragAndDropTaskCommand(self.taskList, dragItem, 
-                                              drop=dropItem)
+        return command.DragAndDropTaskCommand(self.taskList, [dragItem], 
+                                              drop=[dropItem])
 
 
 class ToggleCategory(NeedsSelectionMixin, ViewerCommand):
@@ -1894,8 +1878,8 @@ class CategoryEdit(ObjectEdit, NeedsSelectedCategoryMixin, CategoriesCommand):
 
 class CategoryDragAndDrop(DragAndDropCommand, CategoriesCommand):
     def createCommand(self, dragItem, dropItem):
-        return command.DragAndDropCategoryCommand(self.categories, dragItem, 
-                                                  drop=dropItem)
+        return command.DragAndDropCategoryCommand(self.categories, [dragItem], 
+                                                  drop=[dropItem])
 
 
 class NoteNew(NotesCommand, SettingsCommand):
@@ -1952,8 +1936,8 @@ class NoteEdit(ObjectEdit, NeedsSelectedNoteMixin, NotesCommand):
 
 class NoteDragAndDrop(DragAndDropCommand, NotesCommand):
     def createCommand(self, dragItem, dropItem):
-        return command.DragAndDropNoteCommand(self.notes, dragItem, 
-                                              drop=dropItem)       
+        return command.DragAndDropNoteCommand(self.notes, [dragItem], 
+                                              drop=[dropItem])
  
                                                         
 class AttachmentNew(AttachmentsCommand, SettingsCommand):

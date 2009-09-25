@@ -344,7 +344,6 @@ class SelectMenu(Menu):
         kwargs = dict(viewer=viewerContainer)
         # pylint: disable-msg=W0142
         self.appendUICommands(uicommand.SelectAll(**kwargs),
-                              uicommand.InvertSelection(**kwargs),
                               uicommand.ClearSelection(**kwargs))
 
 
@@ -852,7 +851,7 @@ class ColumnPopupMenu(Menu):
     
     # columnIndex is the index of the column clicked by the user to popup 
     # this menu.  This property should be set by the control popping up this 
-    # menu (see widgets._CtrlWithColumnPopupMenu).
+    # menu (see widgets._CtrlWithColumnPopupMenuMixin).
     columnIndex = property(__getColumn, __setColumn) 
                             
     def getUICommands(self):
@@ -869,7 +868,7 @@ class EffortViewerColumnPopupMenu(DynamicMenuThatGetsUICommandsFromViewer):
     
     # columnIndex is the index of the column clicked by the user to popup 
     # this menu. This property should be set by the control popping up 
-    # this menu (see widgets._CtrlWithColumnPopupMenu).
+    # this menu (see widgets._CtrlWithColumnPopupMenuMixin).
     columnIndex = property(__getColumn, __setColumn) 
 
     def registerForMenuUpdate(self):

@@ -130,7 +130,10 @@ u'''        <H3>Dons</H3>
         </P>
 '''
 
+
 pages['changes'] = file('changes.html').read().decode('UTF-8')
+pages['changes'] += '<P><A HREF="all_changes.html">View complete change history</A></P>'
+pages['all_changes'] = file('all_changes.html').read().decode('UTF-8')
 
 try:
     md5 = '<P>The MD5 digests for the files are as follows:' + \

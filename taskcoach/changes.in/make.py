@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,6 +25,9 @@ elif sys.argv[1] == 'html':
 else:
     raise ValueError, 'Unknown target format (%s)'%sys.argv[1]
 
-for release in changes.releases:
+numberOfReleases = int(sys.argv[2]) if len(sys.argv) >= 3 else sys.maxint
+    
+releases = changes.releases[:numberOfReleases]
+for release in releases:
     print converter.convert(release)
 
