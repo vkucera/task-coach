@@ -79,10 +79,8 @@ class PrinterSettings(object):
 
 
 class HTMLPrintout(wx.html.HtmlPrintout):
-    def __init__(self, aViewer, settings, printSelectionOnly=False, *args, **kwargs):
-        super(HTMLPrintout, self).__init__(*args, **kwargs)
-        htmlText = persistence.viewer2html(aViewer, settings,
-                                           selectionOnly=printSelectionOnly)[0]
+    def __init__(self, htmlText, settings):
+        super(HTMLPrintout, self).__init__()
         self.SetHtmlText(htmlText)
         self.SetFooter(_('Page') + ' @PAGENUM@/@PAGESCNT@', wx.html.PAGE_ALL)
         self.SetFonts('Arial', 'Courier')
@@ -103,9 +101,17 @@ class DCPrintout(wx.Printout):
     def GetPageInfo(self): # pylint: disable-msg=W0221
         return (1, 1, 1, 1)
 
-
-def Printout(viewer, settings, printSelectionOnly=False, *args, **kwargs):
+        
+def Printout(viewer, settings, printSelectionOnly=False, 
+             twoPrintouts=False):
     if hasattr(viewer.getWidget(), 'Draw'):
         return DCPrintout(viewer)
     else:
-        return HTMLPrintout(viewer, settings, printSelectionOnly, *args, **kwargs)
+        htmlText = persistence.viewer2html(viewer, settings, 
+                                           selectionOnly=printSelectionOnly)[0]
+        result = HTMLPrintout(htmlText, settings)
+        if twoPrintouts:
+            result = (result, HTMLPrintout(htmlText, settings))
+        return result
+        
+        

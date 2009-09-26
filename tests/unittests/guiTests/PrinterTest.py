@@ -116,17 +116,5 @@ class PrinterTest(test.TestCase):
 
 class HTMLPrintoutTest(test.TestCase):
     def testCreate(self):
-        class DummyViewer(object):
-            def title(self):
-                return 'title'
-            def visibleColumns(self):
-                return []
-            def isShowingTasks(self):
-                return True
-            def isTreeViewer(self):
-                return False
-            def visibleItems(self):
-                return []
-            
-        gui.printer.HTMLPrintout(DummyViewer(), config.Settings(load=False))
+        gui.printer.HTMLPrintout('<html></html>', config.Settings(load=False))
         
