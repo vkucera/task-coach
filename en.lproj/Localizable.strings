@@ -4,7 +4,7 @@
 /* FIRST AUTHOR <EMAIL@ADDRESS>, YEAR. */
 /* */
 /* Flag: untranslated */
-"" = "" /* = "Project-Id-Version: PACKAGE VERSION\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2009-08-23 14:28+0200\nPO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\nLast-Translator: FULL NAME <EMAIL@ADDRESS>\nLanguage-Team: LANGUAGE <LL@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\n" */;
+"" = "" /* = "Project-Id-Version: PACKAGE VERSION\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2009-08-26 16:53+0200\nPO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\nLast-Translator: FULL NAME <EMAIL@ADDRESS>\nLanguage-Team: LANGUAGE <LL@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\n" */;
 
 /* File: Classes/Bonjour/BonjourBrowser.m:87 */
 /* Flag: untranslated */
@@ -93,23 +93,24 @@
 "None" = "None";
 
 /* File: Classes/CategoryViewController.m:56 */
-/* File: Classes/CategoryViewController.m:298 */
-/* File: Classes/CategoryViewController.m:376 */
+/* File: Classes/CategoryViewController.m:302 */
+/* File: Classes/CategoryViewController.m:387 */
 /* Flag: untranslated */
 "All" = "All";
 
 /* File: Classes/CategoryViewController.m:133 */
-/* File: Classes/CategoryViewController.m:250 */
-/* File: Classes/CategoryViewController.m:283 */
+/* File: Classes/CategoryViewController.m:251 */
+/* File: Classes/CategoryViewController.m:279 */
+/* File: Classes/CategoryViewController.m:287 */
 /* Flag: untranslated */
 "Enter category name" = "Enter category name";
 
-/* File: Classes/CategoryViewController.m:346 */
+/* File: Classes/CategoryViewController.m:350 */
 /* Flag: untranslated */
 "Add subcategory" = "Add subcategory";
 
-/* File: Classes/CategoryViewController.m:398 */
-/* File: Classes/CategoryViewController.m:423 */
+/* File: Classes/CategoryViewController.m:416 */
+/* File: Classes/CategoryViewController.m:441 */
 /* Flag: untranslated */
 "Looking for Task Coach" = "Looking for Task Coach";
 
@@ -210,3 +211,30 @@
 /* File: Classes/TaskDetailsController.m:287 */
 /* Flag: untranslated */
 "New task" = "New task";
+
+/* Flag: untranslated */
+"Display" = "Display";
+
+/* Flag: untranslated */
+"Show completed" = "Show completed";
+
+/* Flag: untranslated */
+"Icon position" = "Icon position";
+
+/* Flag: untranslated */
+"Left" = "Left";
+
+/* Flag: untranslated */
+"Right" = "Right";
+
+/* Flag: untranslated */
+"Compact tasks" = "Compact tasks";
+
+/* Flag: untranslated */
+"Misc" = "Misc";
+
+/* Flag: untranslated */
+"Confirm complete" = "Confirm complete";
+
+/* Flag: untranslated */
+"Due soon # of days     " = "Due soon # of days     ";

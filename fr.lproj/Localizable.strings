@@ -1,4 +1,4 @@
-﻿"" = "Project-Id-Version: Task Coach\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2009-08-23 14:28+0200\nPO-Revision-Date: \nLast-Translator: Jérôme Laheurte <fraca7@free.fr>\nLanguage-Team: Jérôme Laheurte <fraca7@free.fr>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Poedit-Language: fr\nX-Poedit-Country: France\nX-Poedit-SourceCharset: utf-8\n";
+﻿"" = "Project-Id-Version: Task Coach\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2009-08-26 16:53+0200\nPO-Revision-Date: 2009-09-26 08:15+0000\nLast-Translator: Jérôme Laheurte <fraca7@free.fr>\nLanguage-Team: Jérôme Laheurte <fraca7@free.fr>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Launchpad-Export-Date: 2009-09-27 06:32+0000\nX-Generator: Launchpad (build Unknown)\nX-Poedit-Country: France\nX-Poedit-Language: fr\nX-Poedit-SourceCharset: utf-8\n";
 
 /* File: Classes/Bonjour/BonjourBrowser.m:87 */
 "Domains" = "Domaines";
@@ -67,20 +67,21 @@
 "None" = "Aucune";
 
 /* File: Classes/CategoryViewController.m:56 */
-/* File: Classes/CategoryViewController.m:298 */
-/* File: Classes/CategoryViewController.m:376 */
+/* File: Classes/CategoryViewController.m:302 */
+/* File: Classes/CategoryViewController.m:387 */
 "All" = "Toutes";
 
 /* File: Classes/CategoryViewController.m:133 */
-/* File: Classes/CategoryViewController.m:250 */
-/* File: Classes/CategoryViewController.m:283 */
+/* File: Classes/CategoryViewController.m:251 */
+/* File: Classes/CategoryViewController.m:279 */
+/* File: Classes/CategoryViewController.m:287 */
 "Enter category name" = "Entrez le nom de la catégorie";
 
-/* File: Classes/CategoryViewController.m:346 */
+/* File: Classes/CategoryViewController.m:350 */
 "Add subcategory" = "Ajouter une sous-catégorie";
 
-/* File: Classes/CategoryViewController.m:398 */
-/* File: Classes/CategoryViewController.m:423 */
+/* File: Classes/CategoryViewController.m:416 */
+/* File: Classes/CategoryViewController.m:441 */
 "Looking for Task Coach" = "Recherche de Task Coach";
 
 /* File: Classes/TaskCoachAppDelegate.m:24 */
@@ -158,3 +159,21 @@
 /* File: Classes/TaskDetailsController.m:110 */
 /* File: Classes/TaskDetailsController.m:287 */
 "New task" = "Nouvelle tâche";
+
+"Display" = "Affichage";
+
+"Show completed" = "Montrer terminées";
+
+"Icon position" = "Position de l'icône";
+
+"Left" = "Gauche";
+
+"Right" = "Droite";
+
+"Compact tasks" = "Tâches compactes";
+
+"Misc" = "Divers";
+
+"Confirm complete" = "Confirmer terminée";
+
+"Due soon # of days     " = "# jours dûe bientôt     ";
