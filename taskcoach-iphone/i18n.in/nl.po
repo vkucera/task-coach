@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach-iphone\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-23 14:28+0200\n"
-"PO-Revision-Date: 2009-08-23 20:10+0000\n"
+"POT-Creation-Date: 2009-08-26 16:53+0200\n"
+"PO-Revision-Date: 2009-09-26 11:39+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-08-24 05:32+0000\n"
+"X-Launchpad-Export-Date: 2009-09-27 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: Classes/Bonjour/BonjourBrowser.m:87
@@ -101,21 +101,21 @@ msgstr "%@ gestart"
 msgid "None"
 msgstr "Geen"
 
-#: Classes/CategoryViewController.m:56 Classes/CategoryViewController.m:298
-#: Classes/CategoryViewController.m:376
+#: Classes/CategoryViewController.m:56 Classes/CategoryViewController.m:302
+#: Classes/CategoryViewController.m:387
 msgid "All"
 msgstr "Alle"
 
-#: Classes/CategoryViewController.m:133 Classes/CategoryViewController.m:250
-#: Classes/CategoryViewController.m:283
+#: Classes/CategoryViewController.m:133 Classes/CategoryViewController.m:251
+#: Classes/CategoryViewController.m:279 Classes/CategoryViewController.m:287
 msgid "Enter category name"
 msgstr "Voer categorienaam in"
 
-#: Classes/CategoryViewController.m:346
+#: Classes/CategoryViewController.m:350
 msgid "Add subcategory"
 msgstr "Subcategorie toevoegen"
 
-#: Classes/CategoryViewController.m:398 Classes/CategoryViewController.m:423
+#: Classes/CategoryViewController.m:416 Classes/CategoryViewController.m:441
 msgid "Looking for Task Coach"
 msgstr "Task Coach aan het zoeken"
 
@@ -202,9 +202,9 @@ msgid ""
 "It seems that the desktop Task Coach version is too old. Please consider "
 "upgrading (you may loose some data if you go on anyway)."
 msgstr ""
-"Het lijkt dat de desktop Task Coach versie te oud is. Overweeg a.u.b. een "
-"nieuwere versie te installeren (u zou informatie kunnen verliezen als u nu "
-"toch door gaat)."
+"De desktop Task Coach versie lijkt te oud. Overweeg a.u.b. een nieuwere "
+"versie te installeren (u zou informatie kunnen verliezen als u nu toch door "
+"gaat)."
 
 #: Classes/Synchronization/ProtocolNegotiationState.m:63
 msgid "Go on"
@@ -225,3 +225,30 @@ msgstr "Geplande einddatum"
 #: Classes/TaskDetailsController.m:110 Classes/TaskDetailsController.m:287
 msgid "New task"
 msgstr "Nieuwe taak"
+
+msgid "Display"
+msgstr "Weergave"
+
+msgid "Show completed"
+msgstr "Toon afgeronde taken"
+
+msgid "Icon position"
+msgstr "Icoon positie"
+
+msgid "Left"
+msgstr "Links"
+
+msgid "Right"
+msgstr "Rechts"
+
+msgid "Compact tasks"
+msgstr "Taken compact weergeven"
+
+msgid "Misc"
+msgstr "Diversen"
+
+msgid "Confirm complete"
+msgstr "Bevestig afronding"
+
+msgid "Due soon # of days     "
+msgstr "Spoedig af te ronden # dagen     "

@@ -3,7 +3,7 @@
 /* This file is distributed under the same license as the taskcoach-iphone package. */
 /* FIRST AUTHOR <EMAIL@ADDRESS>, 2009. */
 /* */
-"" = "Project-Id-Version: taskcoach-iphone\nReport-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\nPOT-Creation-Date: 2009-08-23 14:28+0200\nPO-Revision-Date: 2009-08-23 20:10+0000\nLast-Translator: Frank Niessink <frank@niessink.com>\nLanguage-Team: Dutch <nl@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Launchpad-Export-Date: 2009-08-24 05:32+0000\nX-Generator: Launchpad (build Unknown)\n";
+"" = "Project-Id-Version: taskcoach-iphone\nReport-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\nPOT-Creation-Date: 2009-08-26 16:53+0200\nPO-Revision-Date: 2009-09-26 11:39+0000\nLast-Translator: Frank Niessink <frank@niessink.com>\nLanguage-Team: Dutch <nl@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Launchpad-Export-Date: 2009-09-27 06:32+0000\nX-Generator: Launchpad (build Unknown)\n";
 
 /* File: Classes/Bonjour/BonjourBrowser.m:87 */
 "Domains" = "Domeinen";
@@ -72,20 +72,21 @@
 "None" = "Geen";
 
 /* File: Classes/CategoryViewController.m:56 */
-/* File: Classes/CategoryViewController.m:298 */
-/* File: Classes/CategoryViewController.m:376 */
+/* File: Classes/CategoryViewController.m:302 */
+/* File: Classes/CategoryViewController.m:387 */
 "All" = "Alle";
 
 /* File: Classes/CategoryViewController.m:133 */
-/* File: Classes/CategoryViewController.m:250 */
-/* File: Classes/CategoryViewController.m:283 */
+/* File: Classes/CategoryViewController.m:251 */
+/* File: Classes/CategoryViewController.m:279 */
+/* File: Classes/CategoryViewController.m:287 */
 "Enter category name" = "Voer categorienaam in";
 
-/* File: Classes/CategoryViewController.m:346 */
+/* File: Classes/CategoryViewController.m:350 */
 "Add subcategory" = "Subcategorie toevoegen";
 
-/* File: Classes/CategoryViewController.m:398 */
-/* File: Classes/CategoryViewController.m:423 */
+/* File: Classes/CategoryViewController.m:416 */
+/* File: Classes/CategoryViewController.m:441 */
 "Looking for Task Coach" = "Task Coach aan het zoeken";
 
 /* File: Classes/TaskCoachAppDelegate.m:24 */
@@ -146,7 +147,7 @@
 
 /* File: Classes/Synchronization/ProtocolNegotiationState.m:61 */
 /* Flag: objc-format */
-"It seems that the desktop Task Coach version is too old. Please consider upgrading (you may loose some data if you go on anyway)." = "Het lijkt dat de desktop Task Coach versie te oud is. Overweeg a.u.b. een nieuwere versie te installeren (u zou informatie kunnen verliezen als u nu toch door gaat).";
+"It seems that the desktop Task Coach version is too old. Please consider upgrading (you may loose some data if you go on anyway)." = "De desktop Task Coach versie lijkt te oud. Overweeg a.u.b. een nieuwere versie te installeren (u zou informatie kunnen verliezen als u nu toch door gaat).";
 
 /* File: Classes/Synchronization/ProtocolNegotiationState.m:63 */
 "Go on" = "Ga door";
@@ -163,3 +164,21 @@
 /* File: Classes/TaskDetailsController.m:110 */
 /* File: Classes/TaskDetailsController.m:287 */
 "New task" = "Nieuwe taak";
+
+"Display" = "Weergave";
+
+"Show completed" = "Toon afgeronde taken";
+
+"Icon position" = "Icoon positie";
+
+"Left" = "Links";
+
+"Right" = "Rechts";
+
+"Compact tasks" = "Taken compact weergeven";
+
+"Misc" = "Diversen";
+
+"Confirm complete" = "Bevestig afronding";
+
+"Due soon # of days     " = "Spoedig af te ronden # dagen     ";

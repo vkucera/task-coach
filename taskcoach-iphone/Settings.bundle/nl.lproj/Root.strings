@@ -1,28 +1,19 @@
-"" = "Project-Id-Version: taskcoach-iphone\nReport-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\nPOT-Creation-Date: 2009-08-23 14:28+0200\nPO-Revision-Date: 2009-08-23 20:10+0000\nLast-Translator: Frank Niessink <frank@niessink.com>\nLanguage-Team: Dutch <nl@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Launchpad-Export-Date: 2009-08-24 05:32+0000\nX-Generator: Launchpad (build Unknown)\n";
+"" = "Project-Id-Version: taskcoach-iphone\nReport-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\nPOT-Creation-Date: 2009-08-26 16:53+0200\nPO-Revision-Date: 2009-09-26 11:39+0000\nLast-Translator: Frank Niessink <frank@niessink.com>\nLanguage-Team: Dutch <nl@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Launchpad-Export-Date: 2009-09-27 06:32+0000\nX-Generator: Launchpad (build Unknown)\n";
 
-/* Flag: untranslated */
-"Display" = "Display";
+"Display" = "Weergave";
 
-/* Flag: untranslated */
-"Show completed" = "Show completed";
+"Show completed" = "Toon afgeronde taken";
 
-/* Flag: untranslated */
-"Icon position" = "Icon position";
+"Icon position" = "Icoon positie";
 
-/* Flag: untranslated */
-"Left" = "Left";
+"Left" = "Links";
 
-/* Flag: untranslated */
-"Right" = "Right";
+"Right" = "Rechts";
 
-/* Flag: untranslated */
-"Compact tasks" = "Compact tasks";
+"Compact tasks" = "Taken compact weergeven";
 
-/* Flag: untranslated */
-"Misc" = "Misc";
+"Misc" = "Diversen";
 
-/* Flag: untranslated */
-"Confirm complete" = "Confirm complete";
+"Confirm complete" = "Bevestig afronding";
 
-/* Flag: untranslated */
-"Due soon # of days     " = "Due soon # of days     ";
+"Due soon # of days     " = "Spoedig af te ronden # dagen     ";
