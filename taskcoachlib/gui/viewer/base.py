@@ -154,9 +154,6 @@ class Viewer(wx.Panel):
             widget. '''
         return self.widget.curselection()
         
-    def getItemWithIndex(self, index):
-        raise NotImplementedError
-        
     def curselectionIsInstanceOf(self, class_):
         ''' Return whether all items in the current selection are instances of
             class_. Can be overridden in subclasses that show only one type
@@ -425,27 +422,6 @@ class TreeViewer(Viewer): # pylint: disable-msg=W0223
             yield item
             for child in yieldAllChildren(item):
                 yield child
-
-    def getItemWithIndex(self, index):
-        ''' Return the item in the presentation with the specified index. index
-            is a tuple of indices that specifies the path to the item. E.g.,
-            (0,2,1) is (read the tuple from right to left) the second child 
-            of the third child of the first root item. '''
-        # This is performance critical code
-        try:
-            return self.__itemsByIndex[index]
-        except KeyError:
-            pass
-        children = self.getRootItems()
-        presentation = self.presentation()
-        for i in index[:-1]:
-            item = children[i]
-            childIndices = [presentation.index(child) for child in item.children() \
-                            if child in presentation]
-            childIndices.sort()
-            children = [presentation[childIndex] for childIndex in childIndices]
-        self.__itemsByIndex[index] = item = children[index[-1]]
-        return item
         
     def getRootItems(self):
         ''' Allow for overriding what the rootItems are. '''
