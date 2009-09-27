@@ -434,7 +434,11 @@ class TreeViewer(Viewer): # pylint: disable-msg=W0223
     
     def children(self, parent=None):
         if parent:
-            return [child for child in self.presentation() if child.parent() == parent]
+            children = parent.children()
+            if children:
+                return [child for child in self.presentation() if child in children]
+            else:
+                return []
         else:
             return self.getRootItems()
         

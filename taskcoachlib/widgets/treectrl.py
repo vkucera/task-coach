@@ -167,11 +167,13 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         return [self.GetItemPyData(item) for item in self.GetSelections()]
     
     def RefreshAllItems(self, count=0):
+        self.Freeze()
         self.DeleteAllItems()
         rootItem = self.GetRootItem()
         if not rootItem:
             rootItem = self.AddRoot('Hidden root')
         self._addObjectRecursively(rootItem)
+        self.Thaw()
             
     def RefreshItems(self, *objects):
         self._refreshTargetObjects(self.GetRootItem(), *objects)

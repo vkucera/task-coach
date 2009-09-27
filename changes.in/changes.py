@@ -22,6 +22,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+            
+Release('0.74.3', 'October ?, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Exporting and printing, including displaying the print preview,
+is now much faster.''')
+        ]
+    ),
 
 Release('0.74.2', 'September 25, 2009',
     summary='''This is a bugfix release that fixes several minor bugs and
