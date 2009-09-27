@@ -146,9 +146,6 @@ class Viewer(wx.Panel):
         items = [item for item in items if item in self.presentation()]
         self.widget.RefreshItems(*items) # pylint: disable-msg=W0142
         
-    def getIndexOfItem(self, item):
-        raise NotImplementedError
-                        
     def curselection(self):
         ''' Return a list of items (domain objects) currently selected in our
             widget. '''
@@ -411,29 +408,22 @@ class TreeViewer(Viewer): # pylint: disable-msg=W0223
     
     def visibleItems(self):
         ''' Iterate over the items in the presentation. '''            
-        def yieldAllChildren(parent):
-            for item in self.presentation():
-                itemParent = self.getItemParent(item)
-                if itemParent and itemParent == parent:
-                    yield item
-                    for child in yieldAllChildren(item):
+                            
+        def yieldItemsAndChildren(items):
+            sortedItems = [item for item in self.presentation() if item in items]
+            for item in sortedItems:
+                yield item
+                children = self.children(item)
+                if children:
+                    for child in yieldItemsAndChildren(children):
                         yield child
-        for item in self.getRootItems():
+
+        for item in yieldItemsAndChildren(self.getRootItems()):
             yield item
-            for child in yieldAllChildren(item):
-                yield child
         
     def getRootItems(self):
         ''' Allow for overriding what the rootItems are. '''
         return self.presentation().rootItems()
-
-    def getIndexOfItem(self, item):
-        parent = self.getItemParent(item)
-        if parent:
-            children = [child for child in self.presentation() if child.parent() == parent]
-            return self.getIndexOfItem(parent) + (children.index(item),)
-        else:
-            return (self.getRootItems().index(item),)
             
     def getItemParent(self, item):
         ''' Allow for overriding what the parent of an item is. '''
