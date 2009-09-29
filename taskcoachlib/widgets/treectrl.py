@@ -168,6 +168,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
     
     def RefreshAllItems(self, count=0):
         self.Freeze()
+        self.__selection = self.curselection()
         self.DeleteAllItems()
         rootItem = self.GetRootItem()
         if not rootItem:
@@ -176,6 +177,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         self.Thaw()
             
     def RefreshItems(self, *objects):
+        self.__selection = self.curselection()
         self._refreshTargetObjects(self.GetRootItem(), *objects)
             
     def _refreshTargetObjects(self, parentItem, *targetObjects):
@@ -212,14 +214,16 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         bgColor = self.__adapter.getBackgroundColor(domainObject)
         if bgColor:
             self.SetItemBackgroundColour(item, bgColor)
-        self.SelectItem(item, domainObject in self.__selection)
+        shouldBeSelected = domainObject in self.__selection
+        isSelected = self.IsSelected(item)
+        if shouldBeSelected != isSelected:
+            self.ToggleItemSelection(item)
 
     # Event handlers
     
     def onSelect(self, event):
         # Use CallAfter to prevent handling the select while items are 
         # being deleted:
-        self.__selection = self.curselection()
         wx.CallAfter(self.selectCommand) 
         event.Skip()
 

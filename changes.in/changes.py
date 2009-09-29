@@ -27,7 +27,10 @@ Release('0.74.3', 'October ?, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Exporting and printing, including displaying the print preview,
-is now much faster.''')
+is now much faster.'''),
+        Bug('''Drag and drop wasn't working.'''),
+        Bug('''Starting or stopping effort tracking for a selected task
+would cause the task to be unselected.''', '2869959')
         ]
     ),
 

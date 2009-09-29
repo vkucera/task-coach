@@ -129,8 +129,7 @@ class Viewer(wx.Panel):
         
     def onSelect(self, event=None): # pylint: disable-msg=W0613
         ''' The selection of items in the widget has been changed. Notify 
-            our observers and remember the current selection so we can
-            restore it later, e.g. after the sort order is changed. '''
+            our observers. '''
         if self.IsBeingDeleted() or self.__selectingAllItems:
             # Some widgets change the selection and send selection events when 
             # deleting all items as part of the Destroy process. Ignore.
