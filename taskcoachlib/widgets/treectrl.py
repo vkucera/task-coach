@@ -44,7 +44,7 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
     
     MainWindow = property(fget=GetMainWindow)
     
-    def HitTest(self, point):
+    def HitTest(self, point): # pylint: disable-msg=W0221
         ''' Always return a three-tuple (item, flags, column). '''
         if type(point) == type(()):
             point = wx.Point(point[0], point[1])
@@ -166,7 +166,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
     def curselection(self):
         return [self.GetItemPyData(item) for item in self.GetSelections()]
     
-    def RefreshAllItems(self, count=0):
+    def RefreshAllItems(self, count=0): # pylint: disable-msg=W0613
         self.Freeze()
         self.__selection = self.curselection()
         self.DeleteAllItems()
@@ -275,6 +275,8 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
     
     def GetItemCount(self):
         return self.GetCount()
+    
+    # pylint: disable-msg=W0221
     
     def DeleteColumn(self, columnIndex):
         self.RemoveColumn(columnIndex)
