@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx
+import test
 from taskcoachlib.widgets import treectrl
 
 
@@ -36,9 +36,12 @@ class DummyEvent(object):
     
     
 class TreeCtrlDragAndDropMixinTest(test.wxTestCase):
+    # pylint: disable-msg=E1101
+    
     def setUp(self):
         self.treeCtrl = treectrl.HyperTreeList(self.frame)
         self.treeCtrl.AddColumn('First')
+        
         self.rootItem = self.treeCtrl.AddRoot('root')
         self.item = self.treeCtrl.AppendItem(self.rootItem, 'item')
         
@@ -57,7 +60,6 @@ class TreeCtrlDragAndDropMixinTest(test.wxTestCase):
         
     def testEventIsAllowedWhenDragBeginsWithItem(self):
         event = DummyEvent(self.item)
-        assert self.item != self.treeCtrl.GetRootItem()
         self.treeCtrl.OnBeginDrag(event)
         self.assertEventIsAllowed(event)
         
