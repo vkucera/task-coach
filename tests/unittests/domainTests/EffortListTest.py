@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,13 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
-from taskcoachlib import patterns
+from taskcoachlib import patterns, config
 from taskcoachlib.domain import task, effort, date
 
 
 class EffortListTest(test.TestCase):
     def setUp(self):
         self.events = []
+        task.Task.settings = config.Settings(load=False)
         self.task = task.Task()
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
@@ -114,3 +115,19 @@ class EffortListTest(test.TestCase):
         self.failUnless(self.effort in self.effortList)
         self.assertEqual(1, len(self.task.efforts()))
         self.assertEqual(self.effort, self.task.efforts()[0])
+
+    def testRemoveTaskWithEffort(self):
+        self.task.addEffort(self.effort)
+        anotherTask = task.Task('Another task without effort')
+        self.taskList.append(anotherTask)
+        self.assertEqual(1, len(self.effortList))
+        self.taskList.remove(self.task)
+        self.assertEqual(0, len(self.effortList))
+        
+    def testRemoveTaskWithoutEffort(self):
+        self.task.addEffort(self.effort)
+        anotherTask = task.Task('Another task without effort')
+        self.taskList.append(anotherTask)
+        self.assertEqual(1, len(self.effortList))
+        self.taskList.remove(anotherTask)
+        self.assertEqual(1, len(self.effortList))

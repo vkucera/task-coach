@@ -30,7 +30,9 @@ Release('0.74.3', 'October ?, 2009',
 is now much faster.'''),
         Bug('''Drag and drop wasn't working.'''),
         Bug('''Starting or stopping effort tracking for a selected task
-would cause the task to be unselected.''', '2869959')
+would cause the task to be unselected.''', '2869959'),
+        Bug('''Don't show effort records twice in the effort viewer after 
+deleting a task without effort records.''', '2869520')
         ]
     ),
 

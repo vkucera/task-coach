@@ -210,6 +210,11 @@ class CommonTestsMixin(object):
             expectedNumberOfItems = self.expectedNumberOfItems - 3
         self.assertEqual(expectedNumberOfItems, self.viewer.size())
     
+    def testDeleteTask(self):
+        self.taskFile.tasks().remove(self.task2)
+        expectedNumberOfItems = self.expectedNumberOfItems - 1
+        self.assertEqual(expectedNumberOfItems, self.viewer.size())
+        
     def testColumnUICommands(self):
         if self.aggregation == 'details':
             expectedLength = 7
@@ -270,7 +275,7 @@ class EffortViewerWithoutAggregationTest(CommonTestsMixin,
     expectedPeriodRendering = gui.render.dateTimePeriod(\
         date.DateTime(2008,7,23,1,0), date.DateTime(2008,7,23,2,0))
     
-
+    
 class EffortViewerWithAggregationPerDayTest(CommonTestsMixin, 
                                             EffortViewerAggregationTestCase):
     aggregation = 'day'
