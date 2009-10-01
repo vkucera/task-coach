@@ -105,13 +105,14 @@ class DCPrintout(wx.Printout):
 def Printout(viewer, settings, printSelectionOnly=False, 
              twoPrintouts=False):
     if hasattr(viewer.getWidget(), 'Draw'):
-        return DCPrintout(viewer)
+        def _printout():
+            return DCPrintout(viewer)
     else:
         htmlText = persistence.viewer2html(viewer, settings, 
                                            selectionOnly=printSelectionOnly)[0]
-        result = HTMLPrintout(htmlText, settings)
-        if twoPrintouts:
-            result = (result, HTMLPrintout(htmlText, settings))
-        return result
-        
-        
+        def _printout():
+            return HTMLPrintout(htmlText, settings)
+    result = _printout()
+    if twoPrintouts:
+        result = (result, _printout())
+    return result

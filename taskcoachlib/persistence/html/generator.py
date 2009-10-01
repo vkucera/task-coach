@@ -154,9 +154,11 @@ class Viewer2HTMLConverter(object):
         for column in visibleColumns:
             renderedItem = self.render(item, column, indent=not bodyRowContent and tree)
             if printing:
-                itemColor = self.cssColorSyntax(self.viewer.getColor(item))
-                renderedItem = self.wrap(renderedItem, 'font', level+1, 
-                                         color=itemColor, oneLine=True)
+                itemColor = self.viewer.getColor(item)
+                if itemColor:
+                    itemColor = self.cssColorSyntax(itemColor)
+                    renderedItem = self.wrap(renderedItem, 'font', level+1, 
+                                             color=itemColor, oneLine=True)
             bodyRowContent.append(self.bodyCell(renderedItem, column, level+1))
         attributes = self.bodyRowBgColor(item, printing)
         if not printing:

@@ -32,7 +32,8 @@ is now much faster.'''),
         Bug('''Starting or stopping effort tracking for a selected task
 would cause the task to be unselected.''', '2869959'),
         Bug('''Don't show effort records twice in the effort viewer after 
-deleting or dragging and dropping a task.''', '2869520', '2859882')
+deleting or dragging and dropping a task.''', '2869520', '2859882'),
+        Bug('''Fix printing of non-task viewers.''', '2871365')
         ]
     ),
 
