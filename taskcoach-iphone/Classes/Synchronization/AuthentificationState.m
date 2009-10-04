@@ -54,9 +54,10 @@
 
 - (void)dealloc
 {
+	[currentPassword release];
+
 #if !TARGET_IPHONE_SIMULATOR
 	[keychain release];
-	[currentPassword release];
 #endif
 	
 	[super dealloc];
