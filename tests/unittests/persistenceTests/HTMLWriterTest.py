@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, StringIO
+import wx, StringIO, os
 import test
 from taskcoachlib import persistence, gui, config
 from taskcoachlib.domain import task, category, effort, date
@@ -36,6 +36,12 @@ class HTMLWriterTestCase(test.wxTestCase):
         self.taskFile.tasks().append(self.task)
         self.viewer = self.createViewer()
         
+    def tearDown(self):
+        super(HTMLWriterTestCase, self).tearDown()
+        cssFilename = self.filename + '.css'
+        if os.path.exists(cssFilename):
+            os.remove(cssFilename)
+            
     def createViewer(self):
         raise NotImplementedError
 
