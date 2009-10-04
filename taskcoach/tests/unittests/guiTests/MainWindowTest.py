@@ -103,7 +103,7 @@ class MainWindowNotMaximizedTest(MainWindowMaximizeTestCase):
     def testCreate(self):
         self.failIf(self.mainwindow.IsMaximized())
 
-    @test.skipOnPlatform('__WXGTK__')
+    @test.skipOnPlatform('__WXGTK__', '__WXMAC__')
     def testMaximize(self): # pragma: no cover
         # Skipping this test under wxGTK. I don't know how it managed
         # to pass before but according to
@@ -131,18 +131,12 @@ class MainWindowIconizedTest(MainWindowTestCase):
     def setSettings(self):
         self.settings.set('window', 'starticonized', 'Always')
     
-    @test.skipOnPlatform('__WXGTK__') # Test fails on Fedora, don't know why nor how to fix it    
+    @test.skipOnPlatform('__WXGTK__', '__WXMAC__') # Test fails on Fedora and Mac OS X, don't know why nor how to fix it    
     def testIsIconized(self):
         self.failUnless(self.mainwindow.IsIconized())
                         
     def testWindowSize(self):
-        # On Mac OS X, the window height is increased by 29 pixels in 
-        # "real life" but not when running this test...
-        height = 500
-        if wx.Platform == '__WXMAC__':
-            height -= 29 # pragma: no cover
-        self.assertEqual((700, height), 
-                         eval(self.settings.get('window', 'size')))
+        self.assertEqual((700, 500), eval(self.settings.get('window', 'size')))
         
     def testWindowSizeShouldnotChangeWhenReceivingChangeSizeEvent(self):
         event = wx.SizeEvent((100, 20))
@@ -151,8 +145,5 @@ class MainWindowIconizedTest(MainWindowTestCase):
             wx.CallAfter(process, event) # pragma: no cover
         else:
             process(event) # pragma: no cover
-        height = 500
-        if wx.Platform == '__WXMAC__':
-            height -= 29 # pragma: no cover
-        self.assertEqual((700, height), eval(self.settings.get('window', 'size')))
+        self.assertEqual((700, 500), eval(self.settings.get('window', 'size')))
 

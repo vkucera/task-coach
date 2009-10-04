@@ -573,8 +573,8 @@ class PrintPreview(ViewerCommand, SettingsCommand):
             bitmap='printpreview', id=wx.ID_PREVIEW, *args, **kwargs)
 
     def doCommand(self, event):
-        printout = printer.Printout(self.viewer, self.settings)
-        printout2 = printer.Printout(self.viewer, self.settings)
+        printout, printout2 = printer.Printout(self.viewer, self.settings, 
+                                               twoPrintouts=True)
         printerSettings = printer.PrinterSettings(self.settings)
         preview = wx.PrintPreview(printout, printout2, 
                                   printerSettings.printData)

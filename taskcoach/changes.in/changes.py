@@ -23,10 +23,26 @@ from changetypes import *
 
 releases = [
             
-Release('0.75.0', 'September ?, 2009',
+Release('0.75.0', 'October ?, 2009',
     summary='''This release adds percentage complete tracking for tasks.''',
     featuresAdded=[
         Feature('''Tasks have a percentage complete property. ''')
+        ]
+    ),
+            
+Release('0.74.3', 'October 4, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Exporting and printing, including displaying the print preview,
+is now much faster.'''),
+        Bug('''Drag and drop wasn't working.'''),
+        Bug('''Starting or stopping effort tracking for a selected task
+would cause the task to be unselected.''', '2869959'),
+        Bug('''Don't show effort records twice in the effort viewer after 
+deleting or dragging and dropping a task.''', '2869520', '2859882'),
+        Bug('''Fix printing of non-task viewers.''', '2871365'),
+        Bug('''Task Coach wouldn't start when using the tabbed main window
+mode on Mac OS X.''', '2867585')
         ]
     ),
 

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,8 +16,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os
-import test, setup
+import os, test
+
+# Tests are run with ./tests as current dir, but setup.py expects the project
+# root folder to be the current dir. Work around that by changing
+# the current dir while importing setup.py:
+cwd = os.path.realpath(os.path.curdir)
+os.chdir('..')
+import setup
+os.chdir(cwd)
 
 
 class LineEndingsTest(test.TestCase):

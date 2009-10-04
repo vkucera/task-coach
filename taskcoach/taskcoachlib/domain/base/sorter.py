@@ -76,7 +76,6 @@ class Sorter(patterns.ListDecorator):
         if notify:
             event.send()
 
-
     def createSortKeyFunction(self):
         ''' createSortKeyFunction returns a function that is passed to the 
             builtin list.sort method to extract the sort key from each element

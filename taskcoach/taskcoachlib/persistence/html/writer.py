@@ -99,7 +99,7 @@ class HTMLWriter(object):
     def __init__(self, fd, filename=None):
         self.__fd = fd
         self.__filename = filename
-        self.__cssFilename = os.path.splitext(filename)[0] + '.css'
+        self.__cssFilename = os.path.splitext(filename)[0] + '.css' if filename else ''
 
     def write(self, viewer, settings, selectionOnly=False):
         cssFilename = os.path.basename(self.__cssFilename)
@@ -109,7 +109,7 @@ class HTMLWriter(object):
         return count
     
     def _writeCSS(self):
-        if os.path.exists(self.__cssFilename):
+        if not self.__cssFilename or os.path.exists(self.__cssFilename):
             return
         try:
             fd = open(self.__cssFilename, 'wb')
