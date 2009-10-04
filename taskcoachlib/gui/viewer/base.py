@@ -129,8 +129,7 @@ class Viewer(wx.Panel):
         
     def onSelect(self, event=None): # pylint: disable-msg=W0613
         ''' The selection of items in the widget has been changed. Notify 
-            our observers and remember the current selection so we can
-            restore it later, e.g. after the sort order is changed. '''
+            our observers. '''
         if self.IsBeingDeleted() or self.__selectingAllItems:
             # Some widgets change the selection and send selection events when 
             # deleting all items as part of the Destroy process. Ignore.
@@ -146,16 +145,10 @@ class Viewer(wx.Panel):
         items = [item for item in items if item in self.presentation()]
         self.widget.RefreshItems(*items) # pylint: disable-msg=W0142
         
-    def getIndexOfItem(self, item):
-        raise NotImplementedError
-                        
     def curselection(self):
         ''' Return a list of items (domain objects) currently selected in our
             widget. '''
         return self.widget.curselection()
-        
-    def getItemWithIndex(self, index):
-        raise NotImplementedError
         
     def curselectionIsInstanceOf(self, class_):
         ''' Return whether all items in the current selection are instances of
@@ -414,50 +407,22 @@ class TreeViewer(Viewer): # pylint: disable-msg=W0223
     
     def visibleItems(self):
         ''' Iterate over the items in the presentation. '''            
-        def yieldAllChildren(parent):
-            for item in self.presentation():
-                itemParent = self.getItemParent(item)
-                if itemParent and itemParent == parent:
-                    yield item
-                    for child in yieldAllChildren(item):
+                            
+        def yieldItemsAndChildren(items):
+            sortedItems = [item for item in self.presentation() if item in items]
+            for item in sortedItems:
+                yield item
+                children = self.children(item)
+                if children:
+                    for child in yieldItemsAndChildren(children):
                         yield child
-        for item in self.getRootItems():
-            yield item
-            for child in yieldAllChildren(item):
-                yield child
 
-    def getItemWithIndex(self, index):
-        ''' Return the item in the presentation with the specified index. index
-            is a tuple of indices that specifies the path to the item. E.g.,
-            (0,2,1) is (read the tuple from right to left) the second child 
-            of the third child of the first root item. '''
-        # This is performance critical code
-        try:
-            return self.__itemsByIndex[index]
-        except KeyError:
-            pass
-        children = self.getRootItems()
-        presentation = self.presentation()
-        for i in index[:-1]:
-            item = children[i]
-            childIndices = [presentation.index(child) for child in item.children() \
-                            if child in presentation]
-            childIndices.sort()
-            children = [presentation[childIndex] for childIndex in childIndices]
-        self.__itemsByIndex[index] = item = children[index[-1]]
-        return item
+        for item in yieldItemsAndChildren(self.getRootItems()):
+            yield item
         
     def getRootItems(self):
         ''' Allow for overriding what the rootItems are. '''
         return self.presentation().rootItems()
-
-    def getIndexOfItem(self, item):
-        parent = self.getItemParent(item)
-        if parent:
-            children = [child for child in self.presentation() if child.parent() == parent]
-            return self.getIndexOfItem(parent) + (children.index(item),)
-        else:
-            return (self.getRootItems().index(item),)
             
     def getItemParent(self, item):
         ''' Allow for overriding what the parent of an item is. '''
@@ -468,7 +433,11 @@ class TreeViewer(Viewer): # pylint: disable-msg=W0223
     
     def children(self, parent=None):
         if parent:
-            return [child for child in self.presentation() if child.parent() == parent]
+            children = parent.children()
+            if children:
+                return [child for child in self.presentation() if child in children]
+            else:
+                return []
         else:
             return self.getRootItems()
         

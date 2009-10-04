@@ -16,37 +16,34 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, StringIO
+import wx, StringIO, os
 import test
 from taskcoachlib import persistence, gui, config
 from taskcoachlib.domain import task, category, effort, date
-
-
-
-class HTMLWriterUnderTest(persistence.HTMLWriter):
-    def _writeCSS(self):
-        pass
     
     
 class HTMLWriterTestCase(test.wxTestCase):
     treeMode = 'Subclass responsibility'
+    filename = 'Subclass responsibility'
     
     def setUp(self):
         super(HTMLWriterTestCase, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
         self.fd = StringIO.StringIO()
-        self.filename = 'filename.html'
-        self.writer = HTMLWriterUnderTest(self.fd, self.filename)
+        self.writer = persistence.HTMLWriter(self.fd, self.filename)
         self.taskFile = persistence.TaskFile()
         self.task = task.Task('Task subject')
         self.taskFile.tasks().append(self.task)
-        self.createViewer()
+        self.viewer = self.createViewer()
         
+    def tearDown(self):
+        super(HTMLWriterTestCase, self).tearDown()
+        cssFilename = self.filename + '.css'
+        if os.path.exists(cssFilename):
+            os.remove(cssFilename)
+            
     def createViewer(self):
-        self.settings.set('taskviewer', 'treemode', self.treeMode)
-        # pylint: disable-msg=W0201
-        self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile,
-            self.settings)
+        raise NotImplementedError
 
     def __writeAndRead(self, selectionOnly):
         self.writer.write(self.viewer, self.settings, selectionOnly)
@@ -83,12 +80,15 @@ class CommonTestsMixin(object):
         self.expectInHTML('  <body>\n', '  </body>\n')
 
 
+class TaskWriterTestCase(HTMLWriterTestCase):
+    def createViewer(self):
+        self.settings.set('taskviewer', 'treemode', self.treeMode)
+        return gui.viewer.TaskViewer(self.frame, self.taskFile, self.settings)
+
+
 class TaskTestsMixin(CommonTestsMixin):
     def testTaskSubject(self):
         self.expectInHTML('>Task subject<')
-        
-    def testCSSLink(self):
-        self.expectInHTML('<link href="filename.css" rel="stylesheet" type="text/css" media="screen">')
         
     def testWriteSelectionOnly(self):
         self.expectNotInHTML('>Task subject<', selectionOnly=True)
@@ -112,38 +112,53 @@ class TaskTestsMixin(CommonTestsMixin):
         
     def testOverdueTask(self):
         self.task.setDueDate(date.Yesterday())
-        self.expectInHTML('<tr class="overdue">')
+        fragment = '<tr class="overdue">' if self.filename else '<font color="#FF0000">Task subject</font>'
+        self.expectInHTML(fragment)
 
     def testCompletedTask(self):
         self.task.setCompletionDate()
-        self.expectInHTML('<tr class="completed">')
+        if self.filename:
+            self.expectInHTML('<tr class="completed">')
+        else:
+            self.expectInHTML('<font color="#00FF00">Task subject</font>')
 
     def testTaskDueSoon(self):
         self.task.setDueDate(date.Today())
-        self.expectInHTML('<tr class="duesoon">')
+        fragment = '<tr class="duesoon">' if self.filename else '<font color="#FF8000">Task subject</font>' 
+        self.expectInHTML(fragment)
         
     def testInactiveTask(self):
         self.task.setStartDate(date.Tomorrow())
-        self.expectInHTML('<tr class="inactive">')
+        fragment = '<tr class="inactive">' if self.filename else '<font color="#C0C0C0">Task subject</font>'
+        self.expectInHTML(fragment)
 
     def testTaskColor(self):
         self.task.setColor(wx.RED)
-        self.expectInHTML('<tr class="active" style="background: #FF0000">')
+        fragment = '<tr class="active" style="background: #FF0000">' if self.filename else '<tr bgcolor="#FF0000">'
+        self.expectInHTML(fragment)
         
-    def testCategoryColor(self):
+    def testTaskHasCategoryColor(self):
         cat = category.Category('cat', color=wx.RED)
         self.task.addCategory(cat)
-        self.expectInHTML('<tr class="active" style="background: #FF0000">')
+        fragment = '<tr class="active" style="background: #FF0000">' if self.filename else '<tr bgcolor="#FF0000">'
+        self.expectInHTML(fragment)
 
     def testCategoryColorAsTuple(self):
         cat = category.Category('cat', color=(255, 0, 0, 0))
         self.task.addCategory(cat)
-        self.expectInHTML('<tr class="active" style="background: #FF0000">')
+        if self.filename:
+            self.expectInHTML('<tr class="active" style="background: #FF0000">')
+        else:
+            self.expectInHTML('<tr bgcolor="#FF0000">')
+
+    def testCSSLink(self):
+        if self.filename:
+            self.expectInHTML('<link href="filename.css" rel="stylesheet" type="text/css" media="screen">')
+        else:
+            self.expectNotInHTML('stylesheet')
         
-        
-class HTMLListWriterTest(TaskTestsMixin, HTMLWriterTestCase):
-    treeMode = 'False'
-        
+
+class TaskListTestsMixin(object):
     def testTaskDescription(self):
         self.task.setDescription('Task description')
         self.viewer.showColumnByName('description')
@@ -153,23 +168,39 @@ class HTMLListWriterTest(TaskTestsMixin, HTMLWriterTestCase):
         self.task.setDescription('Line1\nLine2')
         self.viewer.showColumnByName('description')
         self.expectInHTML('>Line1<br>Line2<')
+        
+        
+class TaskListExportTest(TaskTestsMixin, TaskListTestsMixin, TaskWriterTestCase):
+    treeMode = 'False'
+    filename = 'filename'
+
+
+class TaskListPrintTest(TaskTestsMixin, TaskListTestsMixin, TaskWriterTestCase):
+    treeMode = 'False'
+    filename = ''
                       
 
-class HTMLTreeWriterTest(TaskTestsMixin, HTMLWriterTestCase):
+class TaskTreeExportTest(TaskTestsMixin, TaskWriterTestCase):
     treeMode = 'True'
+    filename = 'filename'
 
 
-class EffortWriterTest(HTMLWriterTestCase, CommonTestsMixin):
+class TaskTreePrintTest(TaskTestsMixin, TaskWriterTestCase):
+    treeMode = 'True'
+    filename = ''
+    
+
+class EffortWriterTestCase(CommonTestsMixin, HTMLWriterTestCase):
+    filename = 'filename'
+    
     def setUp(self):
-        super(EffortWriterTest, self).setUp()
+        super(EffortWriterTestCase, self).setUp()
         now = date.DateTime.now()
         self.task.addEffort(effort.Effort(self.task, start=now,
                                           stop=now + date.TimeDelta(seconds=1)))
 
     def createViewer(self):
-        # pylint: disable-msg=W0201
-        self.viewer = gui.viewer.EffortViewer(self.frame, self.taskFile,
-            self.settings)
+        return gui.viewer.EffortViewer(self.frame, self.taskFile, self.settings)
 
     def testTaskSubject(self):
         self.expectInHTML('>Task subject<')
@@ -179,4 +210,35 @@ class EffortWriterTest(HTMLWriterTestCase, CommonTestsMixin):
         
     def testColumnStyle(self):
         self.expectInHTML('      .task {text-align: left}\n')
+        
+        
+class CategoryWriterTestsMixin(CommonTestsMixin):
+    def testCategorySubject(self):
+        self.expectInHTML('>Category<')
+        
+    def testCategoryColor(self):
+        self.category.setColor(wx.RED)
+        if self.filename:
+            self.expectInHTML('<tr style="background: #FF0000">')
+        else:
+            self.expectInHTML('<tr bgcolor="#FF0000">')
+        
 
+class CategoryWriterTestCase(HTMLWriterTestCase):
+    def setUp(self):
+        super(CategoryWriterTestCase, self).setUp()
+        self.category = category.Category('Category')
+        self.taskFile.categories().append(self.category)
+
+    def createViewer(self):
+        return gui.viewer.CategoryViewer(self.frame, self.taskFile, 
+                                         self.settings)
+
+        
+class CategoryWriterExportTest(CategoryWriterTestsMixin, CategoryWriterTestCase):
+    filename = 'filename'
+        
+
+class CategoryWriterPrintTest(CategoryWriterTestsMixin, CategoryWriterTestCase):
+    filename = ''
+    

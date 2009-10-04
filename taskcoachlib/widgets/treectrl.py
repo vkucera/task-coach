@@ -44,7 +44,7 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
     
     MainWindow = property(fget=GetMainWindow)
     
-    def HitTest(self, point):
+    def HitTest(self, point): # pylint: disable-msg=W0221
         ''' Always return a three-tuple (item, flags, column). '''
         if type(point) == type(()):
             point = wx.Point(point[0], point[1])
@@ -166,14 +166,18 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
     def curselection(self):
         return [self.GetItemPyData(item) for item in self.GetSelections()]
     
-    def RefreshAllItems(self, count=0):
+    def RefreshAllItems(self, count=0): # pylint: disable-msg=W0613
+        self.Freeze()
+        self.__selection = self.curselection()
         self.DeleteAllItems()
         rootItem = self.GetRootItem()
         if not rootItem:
             rootItem = self.AddRoot('Hidden root')
         self._addObjectRecursively(rootItem)
+        self.Thaw()
             
     def RefreshItems(self, *objects):
+        self.__selection = self.curselection()
         self._refreshTargetObjects(self.GetRootItem(), *objects)
             
     def _refreshTargetObjects(self, parentItem, *targetObjects):
@@ -210,14 +214,16 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         bgColor = self.__adapter.getBackgroundColor(domainObject)
         if bgColor:
             self.SetItemBackgroundColour(item, bgColor)
-        self.SelectItem(item, domainObject in self.__selection)
+        shouldBeSelected = domainObject in self.__selection
+        isSelected = self.IsSelected(item)
+        if shouldBeSelected != isSelected:
+            self.ToggleItemSelection(item)
 
     # Event handlers
     
     def onSelect(self, event):
         # Use CallAfter to prevent handling the select while items are 
         # being deleted:
-        self.__selection = self.curselection()
         wx.CallAfter(self.selectCommand) 
         event.Skip()
 
@@ -269,6 +275,8 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
     
     def GetItemCount(self):
         return self.GetCount()
+    
+    # pylint: disable-msg=W0221
     
     def DeleteColumn(self, columnIndex):
         self.RemoveColumn(columnIndex)

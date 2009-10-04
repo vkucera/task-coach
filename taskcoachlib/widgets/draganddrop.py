@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, urlparse
+import wx
 from taskcoachlib.mailer import thunderbird, outlook
 
 
@@ -27,17 +27,17 @@ class FileDropTarget(wx.FileDropTarget):
         self.__onDropCallback = onDropCallback
         self.__onDragOverCallback = onDragOverCallback or self.__defaultDragOverCallback
         
-    def OnDropFiles(self, x, y, filenames):
+    def OnDropFiles(self, x, y, filenames): # pylint: disable-msg=W0221
         if self.__onDropCallback:
             self.__onDropCallback(x, y, filenames)
             return True
         else:
             return False
 
-    def OnDragOver(self, x, y, defaultResult):
+    def OnDragOver(self, x, y, defaultResult): # pylint: disable-msg=W0221
         return self.__onDragOverCallback(x, y, defaultResult)
     
-    def __defaultDragOverCallback(self, x, y, defaultResult):
+    def __defaultDragOverCallback(self, x, y, defaultResult): # pylint: disable-msg=W0613
         return defaultResult
     
     
@@ -46,7 +46,7 @@ class TextDropTarget(wx.TextDropTarget):
         wx.TextDropTarget.__init__(self)
         self.__onDropCallback = onDropCallback
         
-    def OnDropText(self, x, y, text):
+    def OnDropText(self, x, y, text): # pylint: disable-msg=W0613,W0221
         self.__onDropCallback(text)
 
 
@@ -79,16 +79,16 @@ class DropTarget(wx.DropTarget):
             self.__compositeDataObject.Add(dataObject)
         self.SetDataObject(self.__compositeDataObject)
 
-    def OnDragOver(self, x, y, result):
+    def OnDragOver(self, x, y, result): # pylint: disable-msg=W0221
         if self.__onDragOverCallback is None:
             return result
         self.__onDragOverCallback(x, y, result)
         return wx.DragCopy
 
-    def OnDrop(self, x, y):
+    def OnDrop(self, x, y): # pylint: disable-msg=W0613,W0221
         return True
     
-    def OnData(self, x, y, result):
+    def OnData(self, x, y, result): # pylint: disable-msg=W0613
         self.GetData()
 
         format = self.__compositeDataObject.GetReceivedFormat()
@@ -179,7 +179,7 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
         root item. '''
         selections = self.GetSelections()
         # We allow only one item to be dragged at a time, to keep it simple
-        self._dragItem = self.selections[0] if selections else event.GetItem()
+        self._dragItem = selections[0] if selections else event.GetItem()
         if self._dragItem and self._dragItem != self.GetRootItem(): 
             self.StartDragging()
             event.Allow()

@@ -135,7 +135,7 @@ class Viewer2HTMLConverter(object):
         return self.wrap(header, 'th', level, oneLine=True, **attributes)
     
     def tableBody(self, visibleColumns, selectionOnly, printing, level):
-        ''' Returns the table body <tbody>. ''' 
+        ''' Returns the table body <tbody>. '''
         tree = self.viewer.isTreeViewer()
         self.count = 0
         tableBodyContent = []
@@ -154,9 +154,11 @@ class Viewer2HTMLConverter(object):
         for column in visibleColumns:
             renderedItem = self.render(item, column, indent=not bodyRowContent and tree)
             if printing:
-                itemColor = self.cssColorSyntax(self.viewer.getColor(item))
-                renderedItem = self.wrap(renderedItem, 'font', level+1, 
-                                         color=itemColor, oneLine=True)
+                itemColor = self.viewer.getColor(item)
+                if itemColor:
+                    itemColor = self.cssColorSyntax(itemColor)
+                    renderedItem = self.wrap(renderedItem, 'font', level+1, 
+                                             color=itemColor, oneLine=True)
             bodyRowContent.append(self.bodyCell(renderedItem, column, level+1))
         attributes = self.bodyRowBgColor(item, printing)
         if not printing:
@@ -175,7 +177,7 @@ class Viewer2HTMLConverter(object):
                dict(style='background: %s'%bgColor)
                
     def bodyRowFgColor(self, item):
-        ''' Determine the background color for the item. Returns a CSS style
+        ''' Determine the foreground color for the item. Returns a CSS style
             specification. '''
         if self.viewer.isShowingTasks(): 
             if item.completed():
@@ -193,8 +195,7 @@ class Viewer2HTMLConverter(object):
             return dict()
         
     def bodyCell(self, item, column, level):
-        ''' Return a <td> for the item/column combination, using the specified
-            aligment (one of 'left', 'center', 'right'). '''
+        ''' Return a <td> for the item/column combination. '''
         attributes = {'class': column.name()}
         return self.wrap(item, 'td', level, oneLine=True, **attributes)
     
@@ -232,7 +233,7 @@ class Viewer2HTMLConverter(object):
         
     @staticmethod
     def render(item, column, indent=False):
-        ''' Render the item based on the column, escape HTML and indent if 
+        ''' Render the item based on the column, escape HTML and indent
             the item with non-breaking spaces, if indent == True. '''
         # Escape the rendered item and then replace newlines with <br>. 
         renderedItem = cgi.escape(column.render(item)).replace('\n', '<br>')

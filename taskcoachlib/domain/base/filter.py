@@ -92,7 +92,7 @@ class SelectedItemsFilter(Filter):
                     result.extend(item.children(recursive=True))
             return result
         else:
-            return items
+            return [item for item in items if item not in self]
      
     def itemOrAncestorInSelectedItems(self, item):
         if item in self.__selectedItems:

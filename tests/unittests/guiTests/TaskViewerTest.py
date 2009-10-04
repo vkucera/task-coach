@@ -147,6 +147,13 @@ class CommonTestsMixin(object):
         self.taskList.removeItems(self.viewer.curselection())
         self.assertItems()
 
+    def testSelectedTaskStaysSelectedWhenStartingEffortTracking(self):
+        self.taskList.append(self.task)
+        self.viewer.widget.select([self.task])
+        self.assertEqual([self.task], self.viewer.curselection())
+        self.task.addEffort(effort.Effort(self.task))
+        self.assertEqual([self.task], self.viewer.curselection())
+        
     def testChildOrder(self):
         child1 = task.Task(subject='1')
         self.task.addChild(child1)
