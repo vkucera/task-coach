@@ -33,7 +33,9 @@ is now much faster.'''),
 would cause the task to be unselected.''', '2869959'),
         Bug('''Don't show effort records twice in the effort viewer after 
 deleting or dragging and dropping a task.''', '2869520', '2859882'),
-        Bug('''Fix printing of non-task viewers.''', '2871365')
+        Bug('''Fix printing of non-task viewers.''', '2871365'),
+        Bug('''Task Coach wouldn't start when using the tabbed main window
+mode on Mac OS X.''', '2867585')
         ]
     ),
 
