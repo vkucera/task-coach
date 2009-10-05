@@ -27,7 +27,9 @@ Release('0.74.4', 'October ?, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Typing in time controls (effort start and stop, reminder)
-didn't work on Mac OS X.''', '2798329')
+didn't work on Mac OS X.''', '2798329'),
+        Bug('''Prevent the locked file dialog and the new 
+version notification dialog of blocking each other on Mac OS X.''')
         ]
     ),
             

@@ -60,10 +60,8 @@ class VersionChecker(threading.Thread):
         from taskcoachlib.gui.dialog import version 
         VersionDialog = VersionDialog or version.VersionDialog
         dialog = VersionDialog(wx.GetApp().GetTopWindow(), 
-                               version=latestVersion)
-        dialog.ShowModal()
-        self.settings.set('version', 'notify', str(dialog.check.GetValue())) 
-        dialog.Destroy()
+                               version=latestVersion, settings=self.settings)
+        dialog.Show() 
 
     @staticmethod
     def tupleVersion(versionString):
