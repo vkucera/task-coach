@@ -61,7 +61,8 @@ class VersionChecker(threading.Thread):
         VersionDialog = VersionDialog or version.VersionDialog
         dialog = VersionDialog(wx.GetApp().GetTopWindow(), 
                                version=latestVersion, settings=self.settings)
-        dialog.Show() 
+        dialog.Show()
+        return dialog
 
     @staticmethod
     def tupleVersion(versionString):
