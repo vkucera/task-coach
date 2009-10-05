@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
+import combo
 from taskcoachlib.domain import date
 
 
@@ -175,8 +176,7 @@ class TimeCtrl(Panel):
             self._controls[0].SetValue(value)
     
     def _createControls(self, callback):
-        # TODO: use wx.lib.masked.ComboBox or wx.lib.masked.TimeCtrl?
-        control = wx.ComboBox(self, value=self._showSeconds and '00:00:00' or '00:00',
+        control = combo.ComboCtrl(self, value=self._showSeconds and '00:00:00' or '00:00',
                               choices=self._choices(), 
                               size=(self._showSeconds and 100 or 75,-1))
         control.Bind(wx.EVT_TEXT, callback)

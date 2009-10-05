@@ -23,6 +23,14 @@ from changetypes import *
 
 releases = [
             
+Release('0.74.4', 'October ?, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Typing in time controls (effort start and stop, reminder)
+didn't work on Mac OS X.''', '2798329')
+        ]
+    ),
+            
 Release('0.74.3', 'October 4, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
