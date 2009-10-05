@@ -107,3 +107,7 @@ class ViewerContainerTest(test.wxTestCase):
         self.container.onPageClosed(DummyEvent())
         self.failUnless(self.events)
 
+    def testActiveViewerAfterChangingToAuiManagedFrame(self):
+        self.settings.setboolean('view', 'tabbedmainwindow', False)
+        self.assertEqual(self.viewer1, self.container.activeViewer())
+
