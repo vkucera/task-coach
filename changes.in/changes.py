@@ -29,7 +29,10 @@ Release('0.74.4', 'October ?, 2009',
         Bug('''Typing in time controls (effort start and stop, reminder)
 didn't work on Mac OS X.''', '2798329'),
         Bug('''Prevent the locked file dialog and the new 
-version notification dialog of blocking each other on Mac OS X.''')
+version notification dialog of blocking each other on Mac OS X.'''),
+        Bug('''When using the context menu of a selected effort record to 
+create a new effort record use the task of the selected effort record as 
+task of the new effort record as well.''', '2873933')
         ]
     ),
             

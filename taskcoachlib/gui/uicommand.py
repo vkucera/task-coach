@@ -1738,11 +1738,15 @@ class EffortNew(NeedsAtLeastOneTaskMixin, ViewerCommand, EffortListCommand,
             menuText=effortList.newItemMenuText, 
             helpText=effortList.newItemHelpText, *args, **kwargs)
 
-    def doCommand(self, event):
+    def doCommand(self, event, show=True):
         if self.viewer.isShowingTasks() and self.viewer.curselection():
             selectedTasks = self.viewer.curselection()
         elif self.viewer.isShowingEffort():
-            selectedTasks = [self.firstTask(self.viewer.domainObjectsToView())]
+            selectedEfforts = self.viewer.curselection()
+            if selectedEfforts:
+                selectedTasks = [selectedEfforts[0].task()]
+            else:
+                selectedTasks = [self.firstTask(self.viewer.domainObjectsToView())]
         else:
             selectedTasks = [self.firstTask(self.taskList)]
 
@@ -1750,7 +1754,9 @@ class EffortNew(NeedsAtLeastOneTaskMixin, ViewerCommand, EffortListCommand,
             command.NewEffortCommand(self.effortList, selectedTasks),
             self.settings, self.effortList, self.mainWindow().taskFile, 
             bitmap=self.bitmap)
-        newEffortDialog.Show()
+        if show:
+            newEffortDialog.Show()
+        return newEffortDialog
 
     @staticmethod    
     def firstTask(tasks):
