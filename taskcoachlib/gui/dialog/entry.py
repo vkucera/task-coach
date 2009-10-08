@@ -108,13 +108,13 @@ class PercentageEntry(widgets.PanelWithBoxSizer):
         super(PercentageEntry, self).__init__(parent, *args, **kwargs)
         self._slider = self._createSlider(percentage)
         self._entry = self._createSpinCtrl(percentage)
-        self.add(self._slider)
-        self.add(self._entry, flag=wx.ALL)
+        self.add(self._slider, proportion=2)
+        self.add(self._entry)
         self.fit()
         
     def _createSlider(self, percentage):
         slider = wx.Slider(self, value=percentage, style=wx.SL_AUTOTICKS,
-                          minValue=0, maxValue=100)
+                          minValue=0, maxValue=100, size=(150,-1))
         slider.SetTickFreq(25, 1)
         slider.Bind(wx.EVT_SCROLL, self.onSliderScroll)
         return slider
@@ -122,7 +122,7 @@ class PercentageEntry(widgets.PanelWithBoxSizer):
     def _createSpinCtrl(self, percentage):
         entry = widgets.SpinCtrl(self, value=str(percentage),
             initial=percentage, size=(20, -1), min=0, max=100)
-        for eventType in wx.EVT_SPIN, wx.EVT_KILL_FOCUS:
+        for eventType in wx.EVT_SPINCTRL, wx.EVT_KILL_FOCUS:
             entry.Bind(eventType, self.onSpin)
         return entry
 
