@@ -27,6 +27,13 @@ class Panel(wx.Panel):
         super(Panel, self).__init__(parent, *args, **kwargs)
         self._controls = self._createControls(callback)
         self._layout()
+        if '__WXGTK__' == wx.Platform:
+            # Many EVT_CHILD_FOCUS are sent on wxGTK, see 
+            # http://trac.wxwidgets.org/ticket/11305. Ignore these events
+            self.Bind(wx.EVT_CHILD_FOCUS, self.onChildFocus)
+
+    def onChildFocus(self, event):
+        pass
         
     def _createControls(self, callback):
         raise NotImplementedError
