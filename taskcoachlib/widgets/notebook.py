@@ -18,16 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 import draganddrop
+import taskcoachlib.thirdparty.aui as aui
 
-# I don't know in which wx version this happened, but on my 2.8.10.1,
-# importing aui from wx.lib.agw gives much better results (visual
-# clues when moving a pane, for instance). Do they have two
-# (different) copies of the code ? Anyway.
-
-try:
-    import wx.lib.agw.aui as aui
-except ImportError:
-    import wx.aui as aui
 
 class GridCursor:
     ''' Utility class to help when adding controls to a GridBagSizer. '''
@@ -366,7 +358,7 @@ class AuiManagedFrameWithNotebookAPI(AdvanceSelectionMixin, wx.Frame):
         paneInfo = aui.AuiPaneInfo().Name(name).Caption(caption).Left().MaximizeButton().DestroyOnClose().FloatingSize((300,200))
         # To ensure we have a center pane we make the first pane the center pane:
         if not self.manager.GetAllPanes():
-            paneInfo = paneInfo.Center().CloseButton(False)
+            paneInfo = paneInfo.CenterPane().CloseButton(False)
         self.manager.AddPane(page, paneInfo)
         self.manager.Update()
 
