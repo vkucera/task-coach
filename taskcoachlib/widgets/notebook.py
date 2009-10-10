@@ -322,23 +322,6 @@ class AuiManagedFrameWithNotebookAPI(AdvanceSelectionMixin, wx.Frame):
         super(AuiManagedFrameWithNotebookAPI, self).__init__(*args, **kwargs)
         self.manager = aui.AuiManager(self, 
             aui.AUI_MGR_DEFAULT|aui.AUI_MGR_ALLOW_ACTIVE_PANE)
-        self.Bind(aui.EVT_AUI_RENDER, self.onRender)
-                
-    def onRender(self, event):
-        ''' Whenever the AUI managed frames get rendered, make sure the active
-            pane has focus. '''
-        event.Skip()
-        self.SetFocusToActivePane()
-        
-    def SetFocusToActivePane(self):
-        windowWithFocus = wx.Window.FindFocus()
-        if windowWithFocus not in self.GetAllPanesAndChildren():
-            return # Focus is outside this Frame, don't change the focus
-        for pane in self.manager.GetAllPanes():
-            if pane.HasFlag(aui.AuiPaneInfo.optionActive):
-                if pane.window != windowWithFocus:
-                    pane.window.SetFocus()
-                break
         
     def GetAllPanesAndChildren(self):
         ''' Yield all managed windows and their children, recursively. '''
@@ -358,7 +341,7 @@ class AuiManagedFrameWithNotebookAPI(AdvanceSelectionMixin, wx.Frame):
         paneInfo = aui.AuiPaneInfo().Name(name).Caption(caption).Left().MaximizeButton().DestroyOnClose().FloatingSize((300,200))
         # To ensure we have a center pane we make the first pane the center pane:
         if not self.manager.GetAllPanes():
-            paneInfo = paneInfo.CenterPane().CloseButton(False)
+            paneInfo = paneInfo.Center().Caption(caption).CloseButton(False).Floatable(False)
         self.manager.AddPane(page, paneInfo)
         self.manager.Update()
 
