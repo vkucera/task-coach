@@ -113,21 +113,26 @@ class ViewerContainer(object):
         event.Skip()
 
     def onPageClosed(self, event):
-        try: # Notebooks and similar widgets:
-            viewer = self.viewers[event.GetSelection()]
-        except AttributeError: # Aui managed frame:
-            if event.GetPane().IsToolbar():
-                return
-            viewer = event.GetPane().window
-        # When closing an AUI managed frame, we get two close events, 
-        # be prepared:
-        if viewer in self.viewers:
-            self._closePage(viewer)
-            if self.__currentPageNumber >= len(self.viewers):
-                self._changePage(0)
+        if event.GetPane().IsToolbar():
+            return
+        window = event.GetPane().window
+        if hasattr(window, 'GetPage'):
+            # Window is a notebook, close each of its pages
+            for pageIndex in range(window.GetPageCount()):
+                self._closePage(window.GetPage(pageIndex))
+        else:
+            # Window is a viewer, close it
+            self._closePage(window)
+        # Make sure the current pane is a valid pane
+        if self.__currentPageNumber >= len(self.viewers):
+            self._changePage(0)
         event.Skip()
         
     def _closePage(self, viewer):
+        # When closing an AUI managed frame, we get two close events, 
+        # be prepared:
+        if not viewer in self.viewers:
+            return
         self.viewers.remove(viewer)
         viewer.detach()
         setting = viewer.__class__.__name__.lower() + 'count'
