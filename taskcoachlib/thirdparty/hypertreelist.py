@@ -1493,6 +1493,7 @@ class TreeListMainWindow(CustomTreeCtrl):
                  style = wx.TR_DEFAULT_STYLE, validator = wx.DefaultValidator,
                  name="wxtreelistmainwindow"):
 
+        self._buffered = False
         CustomTreeCtrl.__init__(self, parent, id, pos, size, style, 0, validator, name)
         
         self._shiftItem = None
