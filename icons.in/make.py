@@ -18,10 +18,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wxversion
+import wxversion, sys
 wxversion.ensureMinimal("2.8")
+sys.path.append('../tools')
 
-import os, wx.tools.img2py
+import os, img2py
 
 def extractIcon(iconZipFile, pngFilename, pngZipped):
     pngFile = file(pngFilename, 'wb')
@@ -32,7 +33,7 @@ def addIcon(pngName, pngFilename, iconPyFile, first):
     options = ['-F', '-i', '-c', '-a', '-n%s'%pngName, pngFilename, iconPyFile]
     if first:
         options.remove('-a')
-    wx.tools.img2py.main(options)
+    img2py.main(options)
 
 def extractAndAddIcon(iconZipFile, iconPyFile, pngName, pngZipped, first):
     pngFilename = '%s.png'%pngName
@@ -58,7 +59,7 @@ def makeIconPyFile(iconPyFile):
 
 def makeSplashScreen(iconPyFile):
     options = ['-F', '-c', '-a', '-nsplash', 'splash.png', iconPyFile]
-    wx.tools.img2py.main(options)
+    img2py.main(options)
 
 
 if __name__ == '__main__':

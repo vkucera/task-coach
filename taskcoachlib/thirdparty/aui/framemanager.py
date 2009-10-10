@@ -6841,7 +6841,7 @@ class AuiManager(wx.EvtHandler):
                     bookBasePaneInfo = AuiPaneInfo()
                     bookBasePaneInfo.SetDockPos(paneInfo).NotebookControl(id). \
                         CloseButton(False).SetNameFromNotebookId(). \
-                        NotebookDockable(False)
+                        NotebookDockable(False).Floatable(paneInfo.IsFloatable())
                     bookBasePaneInfo.best_size = paneInfo.best_size
                     panes.append(bookBasePaneInfo)
 
