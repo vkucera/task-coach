@@ -2808,7 +2808,7 @@ class AuiNotebook(wx.PyControl):
             # so select the next page from the main tab
             # catalogue
 
-            if page_idx < self._tabs.GetPageCount():
+            if 0 <= page_idx < self._tabs.GetPageCount():
                 new_active = self._tabs.GetPage(page_idx).window
             
             if not new_active and self._tabs.GetPageCount() > 0:
