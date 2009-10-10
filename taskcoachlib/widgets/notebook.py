@@ -338,10 +338,10 @@ class AuiManagedFrameWithNotebookAPI(AdvanceSelectionMixin, wx.Frame):
                 yield grandChild
 
     def AddPage(self, page, caption, name): 
-        paneInfo = aui.AuiPaneInfo().Name(name).Caption(caption).Left().MaximizeButton().DestroyOnClose().FloatingSize((300,200))
+        paneInfo = aui.AuiPaneInfo().Name(name).Caption(caption).CaptionVisible().Left().MaximizeButton().DestroyOnClose().FloatingSize((300,200))
         # To ensure we have a center pane we make the first pane the center pane:
         if not self.manager.GetAllPanes():
-            paneInfo = paneInfo.Center().Caption(caption).CloseButton(False).Floatable(False)
+            paneInfo = paneInfo.Center().CloseButton(False).Floatable(False)
         self.manager.AddPane(page, paneInfo)
         self.manager.Update()
 
