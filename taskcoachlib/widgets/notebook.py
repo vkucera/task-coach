@@ -322,20 +322,6 @@ class AuiManagedFrameWithNotebookAPI(AdvanceSelectionMixin, wx.Frame):
         super(AuiManagedFrameWithNotebookAPI, self).__init__(*args, **kwargs)
         self.manager = aui.AuiManager(self, 
             aui.AUI_MGR_DEFAULT|aui.AUI_MGR_ALLOW_ACTIVE_PANE)
-        
-    def GetAllPanesAndChildren(self):
-        ''' Yield all managed windows and their children, recursively. '''
-        for pane in self.manager.GetAllPanes():
-            yield pane
-            for child in self.GetAllChildren(pane.window):
-                yield child
-    
-    def GetAllChildren(self, window):
-        ''' Yield all child windows of window, recursively. '''                
-        for child in window.GetChildren():
-            yield child
-            for grandChild in self.GetAllChildren(child):
-                yield grandChild
 
     def AddPage(self, page, caption, name): 
         paneInfo = aui.AuiPaneInfo()
