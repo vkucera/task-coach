@@ -22,14 +22,26 @@ from taskcoachlib import gui, config, widgets, patterns, persistence
 from taskcoachlib.domain import task
 
 
+class DummyPane(object):
+    def __init__(self, window):
+        self.window = window
+        
+    def IsToolbar(self):
+        return False
+        
+        
 class DummyEvent(object):
-    def __init__(self, selection=0):
+    def __init__(self, selection=0, window=None):
         self.__selection = selection
+        self.__pane = DummyPane(window)
     
     def GetSelection(self):
         return self.__selection
         
     Selection = property(GetSelection)
+    
+    def GetPane(self):
+        return self.__pane
 
     def Skip(self):
         pass
@@ -81,22 +93,22 @@ class ViewerContainerTest(test.wxTestCase):
         self.failUnless(self.events)
         
     def testCloseViewer_RemovesViewerFromContainer(self):
-        self.container.onPageClosed(DummyEvent())
+        self.container.onPageClosed(DummyEvent(window=self.viewer1))
         self.assertEqual([self.viewer2], self.container.viewers)
         
     def testCloseViewer_RemovesViewerFromSettings(self):
-        self.container.onPageClosed(DummyEvent())
+        self.container.onPageClosed(DummyEvent(window=self.viewer1))
         self.assertEqual(1, self.settings.getint('view', 
             'viewerwithdummywidgetcount'))
         
     def testCloseViewer_ChangesActiveViewer(self):
         self.container.onPageChanged(DummyEvent(1))
-        self.container.onPageClosed(DummyEvent())
-        self.assertEqual(self.viewer2, self.container.activeViewer())
+        self.container.onPageClosed(DummyEvent(window=self.viewer2))
+        self.assertEqual(self.viewer1, self.container.activeViewer())
         
     def testCloseViewer_SavesActiveViewerInSettings(self):
         self.container.onPageChanged(DummyEvent(1))
-        self.container.onPageClosed(DummyEvent())
+        self.container.onPageClosed(DummyEvent(window=self.viewer2))
         self.assertEqual(0, self.settings.getint('view', 'mainviewer'))
 
     def testCloseViewer_NotifiesObserversAboutNewActiveViewer(self):
@@ -104,7 +116,7 @@ class ViewerContainerTest(test.wxTestCase):
         patterns.Publisher().registerObserver(self.onEvent, 
             eventType=self.container.viewerChangeEventType(), 
             eventSource=self.container)
-        self.container.onPageClosed(DummyEvent())
+        self.container.onPageClosed(DummyEvent(window=self.viewer2))
         self.failUnless(self.events)
 
     def testActiveViewerAfterChangingToAuiManagedFrame(self):
