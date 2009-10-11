@@ -91,12 +91,12 @@ class HTMLPrintout(wx.html.HtmlPrintout):
 
                 
 class DCPrintout(wx.Printout):
-    def __init__(self, viewer):
-        self.viewer = viewer
+    def __init__(self, widget):
+        self.widget = widget
         super(DCPrintout, self).__init__()
         
     def OnPrintPage(self, page): # pylint: disable-msg=W0613
-        self.viewer.getWidget().Draw(self.GetDC())
+        self.widget.Draw(self.GetDC())
         
     def GetPageInfo(self): # pylint: disable-msg=W0221
         return (1, 1, 1, 1)
@@ -104,9 +104,10 @@ class DCPrintout(wx.Printout):
         
 def Printout(viewer, settings, printSelectionOnly=False, 
              twoPrintouts=False):
-    if hasattr(viewer.getWidget(), 'Draw'):
+    widget = viewer.getWidget()
+    if hasattr(widget, 'Draw'):
         def _printout():
-            return DCPrintout(viewer)
+            return DCPrintout(widget)
     else:
         htmlText = persistence.viewer2html(viewer, settings, 
                                            selectionOnly=printSelectionOnly)[0]
