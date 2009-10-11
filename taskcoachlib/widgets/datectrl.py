@@ -47,7 +47,7 @@ class Panel(wx.Panel):
 
 
 class _DatePickerCtrlThatDisablesDropDownButton(wx.DatePickerCtrl):
-    ''' The default DatePickerControl on Mac OS X and Linux don't disable
+    ''' The default DatePickerControl on Mac OS X and Linux doesn't disable
         the calendar drop down button. This class fixes that. '''
 
     def Disable(self):
