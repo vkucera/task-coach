@@ -393,16 +393,6 @@ class NeedsSelectedAttachmentsMixin(NeedsAttachmentViewerMixin, NeedsSelectionMi
     pass
 
 
-class NeedsSelectedAttachmentThatCanBeOpenMixin(NeedsSelectedAttachmentsMixin):
-    def enabled(self, event):
-        if super(NeedsSelectedAttachmentThatCanBeOpenMixin, self).enabled(event):
-            for attachment in self.viewer.curselection():
-                if attachment.type_ == 'file':
-                    if not os.path.exists(attachment.normalizedLocation()):
-                        return False
-            return True
-
-
 class NeedsAtLeastOneTaskMixin(object):
     def enabled(self, event): # pylint: disable-msg=W0613
         return len(self.taskList) > 0
@@ -1690,7 +1680,7 @@ class AddNoteAttachment(NeedsNoteViewerMixin, AddAttachment):
             *args, **kwargs)
             
 
-class OpenAllAttachments(NeedsSelectedAttachmentThatCanBeOpenMixin, ViewerCommand, 
+class OpenAllAttachments(NeedsSelectionWithAttachmentsMixin, ViewerCommand, 
                          SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(OpenAllAttachments, self).__init__(\
@@ -1971,7 +1961,7 @@ class AttachmentEdit(ObjectEdit, NeedsSelectedAttachmentsMixin, AttachmentsComma
     __containerName__ = 'attachments'
 
 
-class AttachmentOpen(NeedsSelectedAttachmentThatCanBeOpenMixin, ViewerCommand, AttachmentsCommand):
+class AttachmentOpen(NeedsSelectedAttachmentsMixin, ViewerCommand, AttachmentsCommand):
     def __init__(self, *args, **kwargs):
         attachments = kwargs['attachments']
         super(AttachmentOpen, self).__init__(bitmap='fileopen',

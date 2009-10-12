@@ -34,7 +34,9 @@ version notification dialog of blocking each other on Mac OS X.'''),
 create a new effort record use the task of the selected effort record as 
 task of the new effort record as well.''', '2873933'),
         Bug('''After expanding all items (Shift+Ctrl+E), keep items expanded
-even when sort order changes or tasks are completed.''', '2841854')
+even when sort order changes or tasks are completed.''', '2841854'),
+        Bug('''The "Open all attachments" menu item was always disabled.''', 
+            '2874180')
         ]
     ),
             
