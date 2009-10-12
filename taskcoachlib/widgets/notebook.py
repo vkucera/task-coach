@@ -18,16 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 import draganddrop
+import taskcoachlib.thirdparty.aui as aui
 
-# I don't know in which wx version this happened, but on my 2.8.10.1,
-# importing aui from wx.lib.agw gives much better results (visual
-# clues when moving a pane, for instance). Do they have two
-# (different) copies of the code ? Anyway.
-
-try:
-    import wx.lib.agw.aui as aui
-except ImportError:
-    import wx.aui as aui
 
 class GridCursor:
     ''' Utility class to help when adding controls to a GridBagSizer. '''
@@ -330,43 +322,15 @@ class AuiManagedFrameWithNotebookAPI(AdvanceSelectionMixin, wx.Frame):
         super(AuiManagedFrameWithNotebookAPI, self).__init__(*args, **kwargs)
         self.manager = aui.AuiManager(self, 
             aui.AUI_MGR_DEFAULT|aui.AUI_MGR_ALLOW_ACTIVE_PANE)
-        self.Bind(aui.EVT_AUI_RENDER, self.onRender)
-                
-    def onRender(self, event):
-        ''' Whenever the AUI managed frames get rendered, make sure the active
-            pane has focus. '''
-        event.Skip()
-        self.SetFocusToActivePane()
-        
-    def SetFocusToActivePane(self):
-        windowWithFocus = wx.Window.FindFocus()
-        if windowWithFocus not in self.GetAllPanesAndChildren():
-            return # Focus is outside this Frame, don't change the focus
-        for pane in self.manager.GetAllPanes():
-            if pane.HasFlag(aui.AuiPaneInfo.optionActive):
-                if pane.window != windowWithFocus:
-                    pane.window.SetFocus()
-                break
-        
-    def GetAllPanesAndChildren(self):
-        ''' Yield all managed windows and their children, recursively. '''
-        for pane in self.manager.GetAllPanes():
-            yield pane
-            for child in self.GetAllChildren(pane.window):
-                yield child
-    
-    def GetAllChildren(self, window):
-        ''' Yield all child windows of window, recursively. '''                
-        for child in window.GetChildren():
-            yield child
-            for grandChild in self.GetAllChildren(child):
-                yield grandChild
 
     def AddPage(self, page, caption, name): 
-        paneInfo = aui.AuiPaneInfo().Name(name).Caption(caption).Left().MaximizeButton().DestroyOnClose().FloatingSize((300,200))
+        paneInfo = aui.AuiPaneInfo()
         # To ensure we have a center pane we make the first pane the center pane:
-        if not self.manager.GetAllPanes():
-            paneInfo = paneInfo.Center().CloseButton(False)
+        if self.manager.GetAllPanes():
+            paneInfo = paneInfo.CloseButton(True).Floatable(True).FloatingSize((300,200)).Left()
+        else:
+            paneInfo = paneInfo.CenterPane().CloseButton(False).Floatable(False)
+        paneInfo = paneInfo.Name(name).Caption(caption).CaptionVisible().MaximizeButton().DestroyOnClose()
         self.manager.AddPane(page, paneInfo)
         self.manager.Update()
 

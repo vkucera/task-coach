@@ -27,7 +27,6 @@ except ImportError:
 # Edit these for every release:
 
 # The buildbot sets TCVERSION when building snapshots.
-
 version = os.environ.get('TCVERSION', '0.75.0')
 tskversion = 26 # Current version number of the task file format
 release_day = '0' # Day number of the release, 1-31, as string
@@ -59,7 +58,7 @@ author_email = 'developers@taskcoach.org'
 filename = name.replace(' ', '')
 filename_lower = filename.lower()
 
-url = 'http://www.taskcoach.org/'
+url = 'http://www.taskcoach.org/' # Don't remove the trailing slash, other code is assuming it will be there
 screenshot = url + 'screenshots/0.71.2-Windows_XP-Tasks_categories_and_effort.png'
 icon = url + 'taskcoach.png'
 pad = url + 'pad.xml'

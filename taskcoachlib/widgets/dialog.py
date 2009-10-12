@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -44,7 +44,6 @@ class Dialog(wx.Dialog):
         self._verticalSizer.Add(self._buttonBox, 0, wx.ALIGN_CENTER)
         self._panel.SetSizerAndFit(self._verticalSizer)
         self.SetSizerAndFit(self._panelSizer)
-        self.Bind(wx.EVT_CLOSE, self.onClose)
         if raiseDialog:
             wx.CallAfter(self.Raise)
         wx.CallAfter(self._panel.SetFocus)
@@ -66,10 +65,6 @@ class Dialog(wx.Dialog):
         if event:
             event.Skip()
         self.Close(True)
-        self.Destroy()
-        
-    def onClose(self, event):
-        event.Skip()
         self.Destroy()
         
     def disableOK(self):

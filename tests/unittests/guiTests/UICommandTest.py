@@ -20,7 +20,7 @@ import wx
 import test
 from unittests import dummy
 from taskcoachlib import gui, config, persistence
-from taskcoachlib.domain import task, category, date, attachment
+from taskcoachlib.domain import task, category, date, attachment, effort
 from taskcoachlib.thirdparty import desktop
 
 
@@ -114,9 +114,12 @@ class DummyTask(object):
 
 
 class DummyViewer(object):
-    def __init__(self, selection=None):
+    def __init__(self, selection=None, showingEffort=False, 
+                 domainObjectsToView=None):
         self.selection = selection or []
-
+        self.showingEffort = showingEffort
+        self.domainObjects = domainObjectsToView
+        
     def curselection(self):
         return self.selection
 
@@ -126,6 +129,14 @@ class DummyViewer(object):
     def isShowingCategories(self):
         return self.selection and isinstance(self.selection[0], category.Category)
 
+    def isShowingTasks(self):
+        return False
+
+    def isShowingEffort(self):
+        return self.showingEffort
+    
+    def domainObjectsToView(self):
+        return self.domainObjects
 
 
 class MailTaskTest(test.TestCase):
@@ -177,7 +188,7 @@ class TaskNewTest(wxTestCaseWithFrameAsTopLevelWindow):
         tree = dialog[0][3].viewer.widget
         firstChild = tree.GetFirstChild(tree.GetRootItem())[0]
         self.failUnless(firstChild.IsChecked())
-        
+
 
 class NoteNewTest(wxTestCaseWithFrameAsTopLevelWindow):
     def testNewNoteWithCategories(self):        
@@ -190,6 +201,24 @@ class NoteNewTest(wxTestCaseWithFrameAsTopLevelWindow):
         firstChild = tree.GetFirstChild(tree.GetRootItem())[0]
         self.failUnless(firstChild.IsChecked())
 
+
+class EffortNewTest(wxTestCaseWithFrameAsTopLevelWindow):
+    def testNewEffortUsesTaskOfSelectedEffort(self):
+        task1 = task.Task('task 1')
+        task2 = task.Task('task 2')
+        effort_task2 = effort.Effort(task2)
+        task2.addEffort(effort_task2)
+        self.frame.taskFile.tasks().extend([task1, task2])
+        viewer = DummyViewer(task2.efforts(), showingEffort=True, 
+                             domainObjectsToView=self.frame.taskFile.tasks())
+        effortNew = gui.uicommand.EffortNew(effortList=self.frame.taskFile.efforts(),
+                                            taskList=self.frame.taskFile.tasks(),
+                                            viewer=viewer,
+                                            settings=config.Settings(load=False))
+        dialog = effortNew.doCommand(None, show=False)
+        for eachEffort in dialog._command.efforts:
+            self.assertEqual(task2, eachEffort.task())
+        
 
 class MailNoteTest(test.TestCase):
     def testCreate(self):

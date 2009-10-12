@@ -30,6 +30,28 @@ Release('0.75.0', 'October ?, 2009',
         ]
     ),
             
+Release('0.74.4', 'October ?, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Typing in time controls (effort start and stop, reminder)
+didn't work on Mac OS X.''', '2798329'),
+        Bug('''Prevent the locked file dialog and the new 
+version notification dialog of blocking each other on Mac OS X.'''),
+        Bug('''When using the context menu of a selected effort record to 
+create a new effort record use the task of the selected effort record as 
+task of the new effort record as well.''', '2873933'),
+        Bug('''After expanding all items (Shift+Ctrl+E), keep items expanded
+even when sort order changes or tasks are completed.''', '2841854'),
+        Bug('''The "Open all attachments" menu item was always disabled.''', 
+            '2874180'),
+        Bug('''When sorting tasks and notes by their categories use the 
+recursive subjects (e.g. 'Parent -> Child') of the categories to sort by. 
+Previous versions would only use the 'Child' part.''', '2874153'),
+        Bug('''Remove double slash ('//') from URL used in Windows 
+installer.''', '2877126')
+        ]
+    ),
+            
 Release('0.74.3', 'October 4, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[

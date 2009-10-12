@@ -393,16 +393,6 @@ class NeedsSelectedAttachmentsMixin(NeedsAttachmentViewerMixin, NeedsSelectionMi
     pass
 
 
-class NeedsSelectedAttachmentThatCanBeOpenMixin(NeedsSelectedAttachmentsMixin):
-    def enabled(self, event):
-        if super(NeedsSelectedAttachmentThatCanBeOpenMixin, self).enabled(event):
-            for attachment in self.viewer.curselection():
-                if attachment.type_ == 'file':
-                    if not os.path.exists(attachment.normalizedLocation()):
-                        return False
-            return True
-
-
 class NeedsAtLeastOneTaskMixin(object):
     def enabled(self, event): # pylint: disable-msg=W0613
         return len(self.taskList) > 0
@@ -1690,7 +1680,7 @@ class AddNoteAttachment(NeedsNoteViewerMixin, AddAttachment):
             *args, **kwargs)
             
 
-class OpenAllAttachments(NeedsSelectedAttachmentThatCanBeOpenMixin, ViewerCommand, 
+class OpenAllAttachments(NeedsSelectionWithAttachmentsMixin, ViewerCommand, 
                          SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(OpenAllAttachments, self).__init__(\
@@ -1738,11 +1728,15 @@ class EffortNew(NeedsAtLeastOneTaskMixin, ViewerCommand, EffortListCommand,
             menuText=effortList.newItemMenuText, 
             helpText=effortList.newItemHelpText, *args, **kwargs)
 
-    def doCommand(self, event):
+    def doCommand(self, event, show=True):
         if self.viewer.isShowingTasks() and self.viewer.curselection():
             selectedTasks = self.viewer.curselection()
         elif self.viewer.isShowingEffort():
-            selectedTasks = [self.firstTask(self.viewer.domainObjectsToView())]
+            selectedEfforts = self.viewer.curselection()
+            if selectedEfforts:
+                selectedTasks = [selectedEfforts[0].task()]
+            else:
+                selectedTasks = [self.firstTask(self.viewer.domainObjectsToView())]
         else:
             selectedTasks = [self.firstTask(self.taskList)]
 
@@ -1750,7 +1744,9 @@ class EffortNew(NeedsAtLeastOneTaskMixin, ViewerCommand, EffortListCommand,
             command.NewEffortCommand(self.effortList, selectedTasks),
             self.settings, self.effortList, self.mainWindow().taskFile, 
             bitmap=self.bitmap)
-        newEffortDialog.Show()
+        if show:
+            newEffortDialog.Show()
+        return newEffortDialog
 
     @staticmethod    
     def firstTask(tasks):
@@ -1965,7 +1961,7 @@ class AttachmentEdit(ObjectEdit, NeedsSelectedAttachmentsMixin, AttachmentsComma
     __containerName__ = 'attachments'
 
 
-class AttachmentOpen(NeedsSelectedAttachmentThatCanBeOpenMixin, ViewerCommand, AttachmentsCommand):
+class AttachmentOpen(NeedsSelectedAttachmentsMixin, ViewerCommand, AttachmentsCommand):
     def __init__(self, *args, **kwargs):
         attachments = kwargs['attachments']
         super(AttachmentOpen, self).__init__(bitmap='fileopen',
