@@ -36,7 +36,10 @@ task of the new effort record as well.''', '2873933'),
         Bug('''After expanding all items (Shift+Ctrl+E), keep items expanded
 even when sort order changes or tasks are completed.''', '2841854'),
         Bug('''The "Open all attachments" menu item was always disabled.''', 
-            '2874180')
+            '2874180'),
+        Bug('''When sorting tasks and notes by their categories use the 
+recursive subjects (e.g. 'Parent -> Child') of the categories to sort by. 
+Previous versions would only use the 'Child' part.''', '2874153')
         ]
     ),
             
