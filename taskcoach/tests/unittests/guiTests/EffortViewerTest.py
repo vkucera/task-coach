@@ -215,6 +215,13 @@ class CommonTestsMixin(object):
         expectedNumberOfItems = self.expectedNumberOfItems - 1
         self.assertEqual(expectedNumberOfItems, self.viewer.size())
         
+    def testNewEffortUsesSameTaskAsSelectedEffort(self):
+        self.viewer.widget.select([self.task2.efforts()[-1]])
+        dialog = self.viewer.newItemDialog(selectedTasks=[self.task2], 
+                                           bitmap='new')
+        for effort in dialog._command.efforts:
+            self.assertEqual(self.task2, effort.task())
+        
     def testColumnUICommands(self):
         if self.aggregation == 'details':
             expectedLength = 7

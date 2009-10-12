@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ from taskcoachlib.widgets import sized_controls
 class VersionDialog(sized_controls.SizedDialog):
     def __init__(self, *args, **kwargs):
         version = kwargs.pop('version')
+        self.settings = kwargs.pop('settings')
         kwargs['title'] = kwargs.get('title', 
             _('New version of %(name)s available')%dict(name=meta.data.name))
         super(VersionDialog, self).__init__(*args, **kwargs)
@@ -41,3 +42,8 @@ class VersionDialog(sized_controls.SizedDialog):
         self.check.SetValue(True)
         self.SetButtonSizer(self.CreateStdDialogButtonSizer(wx.OK))
         self.Fit()
+        self.Bind(wx.EVT_CLOSE, self.onClose)
+        
+    def onClose(self, event):
+        event.Skip()
+        self.settings.set('version', 'notify', str(self.check.GetValue())) 

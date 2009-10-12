@@ -34,6 +34,7 @@ class ViewerContainer(object):
         self.bindContainerWidgetEvents()
         self._settings = settings
         self.__setting = setting
+        self.__tabbedMainWindow = settings.getboolean('view', 'tabbedmainwindow')
         self.viewers = []
         self.__currentPageNumber = 0
         # Prepare for an exception, because this setting used to be a string
@@ -94,7 +95,7 @@ class ViewerContainer(object):
         ''' Return the active viewer, i.e. the viewer that has the focus. '''
         # There is no pageChanged event for the AuiManager, so we have
         # to check which pane is active.
-        if not self._settings.getboolean('view', 'tabbedmainwindow'):
+        if not self.__tabbedMainWindow:
             for viewer in self.viewers:
                 info = self.containerWidget.manager.GetPane(viewer)
                 if info.HasFlag(info.optionActive):
@@ -112,21 +113,26 @@ class ViewerContainer(object):
         event.Skip()
 
     def onPageClosed(self, event):
-        try: # Notebooks and similar widgets:
-            viewer = self.viewers[event.GetSelection()]
-        except AttributeError: # Aui managed frame:
-            if event.GetPane().IsToolbar():
-                return
-            viewer = event.GetPane().window
-        # When closing an AUI managed frame, we get two close events, 
-        # be prepared:
-        if viewer in self.viewers:
-            self._closePage(viewer)
-            if self.__currentPageNumber >= len(self.viewers):
-                self._changePage(0)
+        if event.GetPane().IsToolbar():
+            return
+        window = event.GetPane().window
+        if hasattr(window, 'GetPage'):
+            # Window is a notebook, close each of its pages
+            for pageIndex in range(window.GetPageCount()):
+                self._closePage(window.GetPage(pageIndex))
+        else:
+            # Window is a viewer, close it
+            self._closePage(window)
+        # Make sure the current pane is a valid pane
+        if self.__currentPageNumber >= len(self.viewers):
+            self._changePage(0)
         event.Skip()
         
     def _closePage(self, viewer):
+        # When closing an AUI managed frame, we get two close events, 
+        # be prepared:
+        if not viewer in self.viewers:
+            return
         self.viewers.remove(viewer)
         viewer.detach()
         setting = viewer.__class__.__name__.lower() + 'count'

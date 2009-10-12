@@ -43,10 +43,10 @@ Release steps:
 - Run 'python release.py release' to download the distributions from
   Sourceforge, generate MD5 digests, generate the website, upload the 
   website to the Hypernation.net website and to Chello (Frank's ISP), 
-  announce the release on Twitter and PyPI (Python Package Index) and to 
-  send the announcement email.
+  announce the release on Twitter, Freshmeat and PyPI (Python Package 
+  Index) and to send the announcement email.
 
-- Post release notification on Freshmeat and Identi.ca by hand.
+- Post release notification on Identi.ca by hand.
 
 - Tag source code with tag ReleaseX_Y_Z.
 
@@ -61,8 +61,9 @@ Release steps:
 - If new release branch, update the buildbot masters configuration.
 '''
 
-import ftplib, smtplib, os, glob, sys, getpass, hashlib, ConfigParser, \
-    twitter, taskcoachlib.meta
+import ftplib, smtplib, httplib, os, glob, sys, getpass, hashlib, \
+    ConfigParser, simplejson, codecs, twitter, taskcoachlib.meta
+
 
 class Settings(ConfigParser.SafeConfigParser, object):
     def __init__(self):
@@ -78,7 +79,8 @@ class Settings(ConfigParser.SafeConfigParser, object):
                         chello=['hostname', 'username', 'password', 'folder'],
                         hypernation=['hostname', 'username', 'password', 'folder'],
                         pypi=['username', 'password'],
-                        twitter=['username', 'password'])
+                        twitter=['username', 'password'],
+                        freshmeat=['auth_code'])
         for section in defaults:
             self.add_section(section)
             for option in defaults[section]:
@@ -254,6 +256,24 @@ def announceOnTwitter(settings):
     print 'Done announcing on twitter.'
 
 
+def announceOnFreshmeat(settings):
+    print 'Announcing on Freshmeat...'
+    auth_code = settings.get('freshmeat', 'auth_code')
+    metadata = taskcoachlib.meta.data.metaDict
+    version = '%(version)s'%metadata
+    changelog = latest_release(metadata, summaryOnly=True)
+    tag = 'Feature enhancements' if version.endswith('.0') else 'Bug fixes'
+    release = dict(version=version, changelog=changelog, tag_list=tag)
+    body = codecs.encode(simplejson.dumps(dict(auth_code=auth_code, release=release)))
+    connection = httplib.HTTPConnection('freshmeat.net:80')
+    path = '/projects/taskcoach/releases.json'
+    connection.request("POST", path, body, {"Content-Type": "application/json"})
+    response = connection.getresponse()
+    if response.status != 201:
+        print "Request failed: %d %s"%(response.status, response.reason)
+    print 'Done announcing on Freshmeat.'
+
+
 def uploadWebsite(settings):
     uploadWebsiteToChello(settings)
     uploadWebsiteToHypernation(settings)
@@ -262,6 +282,7 @@ def uploadWebsite(settings):
 def announce(settings):
     registerWithPyPI(settings)
     announceOnTwitter(settings)
+    announceOnFreshmeat(settings)
     mailAnnouncement(settings)
 
 
@@ -273,13 +294,18 @@ def release(settings):
     announce(settings)
 
 
-def latest_release(metadata):
+def latest_release(metadata, summaryOnly=False):
     sys.path.insert(0, 'changes.in')
     import changes, converter
     del sys.path[0]
-    return converter.ReleaseToTextConverter().convert(changes.releases[0],
-        greeting="We're happy to announce release %(version)s "
-                  "of %(name)s."%metadata)
+    greeting = 'release %(version)s of %(name)s.'%metadata
+    if summaryOnly:
+        greeting = greeting.capitalize() 
+    else:
+        greeting = "We're happy to announce " + greeting
+    textConverter = converter.ReleaseToTextConverter()
+    convert = textConverter.summary if summaryOnly else textConverter.convert
+    return convert(changes.releases[0], greeting)
 
 
 def mailAnnouncement(settings):
@@ -350,6 +376,7 @@ commands = dict(release=release,
                 websiteChello=uploadWebsiteToChello, 
                 websiteHN=uploadWebsiteToHypernation,
                 twitter=announceOnTwitter, 
+                freshmeat=announceOnFreshmeat,
                 pypi=registerWithPyPI, announce=mailAnnouncement)
 settings = Settings()
 try:

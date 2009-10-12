@@ -29,7 +29,7 @@ class NoteSorter(base.TreeSorter):
         if not self._sortCaseSensitive and sortKeyName in ('subject', 'description'):
             prepareSortValue = lambda stringOrUnicode: stringOrUnicode.lower()
         elif sortKeyName in ('categories', 'totalCategories'):
-            prepareSortValue = lambda categories: sorted([category.subject() for category in categories])
+            prepareSortValue = lambda categories: sorted([category.subject(recursive=True) for category in categories])
         else:
             prepareSortValue = lambda value: value
         kwargs = {}

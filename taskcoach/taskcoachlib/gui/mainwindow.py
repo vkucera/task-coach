@@ -22,12 +22,9 @@ from taskcoachlib import meta, patterns, widgets, help # pylint: disable-msg=W06
 from taskcoachlib.i18n import _
 from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
 from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog, IPhoneSyncDialog
+import taskcoachlib.thirdparty.aui as aui
 import viewer, toolbar, uicommand, remindercontroller, artprovider
 
-try:
-    import wx.lib.agw.aui as aui # pylint: disable-msg=F0401,E0611
-except ImportError:
-    import wx.aui as aui
 
 class WindowDimensionsTracker(object):
     ''' Track the dimensions (position and size) of a window in the 

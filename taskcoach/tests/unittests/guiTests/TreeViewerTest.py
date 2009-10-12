@@ -24,7 +24,7 @@ from taskcoachlib.domain import task
 class TreeViewerTest(test.wxTestCase):
     def setUp(self):
         super(TreeViewerTest, self).setUp()
-        self.settings = config.Settings(load=False)
+        task.Task.settings = self.settings = config.Settings(load=False)
         taskFile = persistence.TaskFile()
         self.viewer = gui.viewer.TaskViewer(self.frame, taskFile,
             self.settings)
@@ -50,3 +50,6 @@ class TreeViewerTest(test.wxTestCase):
         self.widget.Collapse(firstVisibleItem)
         self.failIf(self.parent.isExpanded(context=self.expansionContext))
         
+    def testExpandall(self):
+        self.viewer.expandAll()
+        self.failUnless(self.parent.isExpanded(context=self.expansionContext))
