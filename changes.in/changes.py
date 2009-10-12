@@ -32,7 +32,9 @@ didn't work on Mac OS X.''', '2798329'),
 version notification dialog of blocking each other on Mac OS X.'''),
         Bug('''When using the context menu of a selected effort record to 
 create a new effort record use the task of the selected effort record as 
-task of the new effort record as well.''', '2873933')
+task of the new effort record as well.''', '2873933'),
+        Bug('''After expanding all items (Shift+Ctrl+E), keep items expanded
+even when sort order changes or tasks are completed.''', '2841854')
         ]
     ),
             
