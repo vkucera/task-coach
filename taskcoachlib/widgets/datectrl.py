@@ -53,8 +53,9 @@ class _BetterDatePickerCtrl(wx.DatePickerCtrl):
 
     def __init__(self, *args, **kwargs):
         super(_BetterDatePickerCtrl, self).__init__(*args, **kwargs)
-        comboCtrl = self.GetChildren()[0]
-        comboCtrl.Bind(wx.EVT_KEY_DOWN, self.onKey)
+        if wx.Platform != '__WXMSW__':
+            comboCtrl = self.GetChildren()[0]
+            comboCtrl.Bind(wx.EVT_KEY_DOWN, self.onKey)
 
     def onKey(self, event):
         keyCode = event.GetKeyCode()
