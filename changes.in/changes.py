@@ -41,7 +41,9 @@ even when sort order changes or tasks are completed.''', '2841854'),
 recursive subjects (e.g. 'Parent -> Child') of the categories to sort by. 
 Previous versions would only use the 'Child' part.''', '2874153'),
         Bug('''Remove double slash ('//') from URL used in Windows 
-installer.''', '2877126')
+installer.''', '2877126'),
+        Bug('''On Linux and Mac OS X, changing dates by typing a new date 
+(i.e. not using the dropdown menu) didn't work.''', '2874408', '2867623')
         ]
     ),
             

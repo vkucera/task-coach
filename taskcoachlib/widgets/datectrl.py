@@ -46,17 +46,45 @@ class Panel(wx.Panel):
         self.SetSizerAndFit(self._sizer)
 
 
-class _DatePickerCtrlThatDisablesDropDownButton(wx.DatePickerCtrl):
+class _BetterDatePickerCtrl(wx.DatePickerCtrl):
     ''' The default DatePickerControl on Mac OS X and Linux doesn't disable
-        the calendar drop down button. This class fixes that. '''
+        the calendar drop down button. This class fixes that and keyboard
+        navigation. '''
+
+    def __init__(self, *args, **kwargs):
+        super(_BetterDatePickerCtrl, self).__init__(*args, **kwargs)
+        comboCtrl = self.GetChildren()[0]
+        comboCtrl.Bind(wx.EVT_KEY_DOWN, self.onKey)
+
+    def onKey(self, event):
+        keyCode = event.GetKeyCode()
+        if keyCode == wx.WXK_RETURN:
+            # Move to the next field so that the contents of the text control,
+            # that might be edited by the user, are updated by the datepicker:
+            self.GetParent().Navigate() 
+            # Next, click the default button of the dialog:
+            button = self.getTopLevelWindow().GetDefaultItem()
+            click = wx.CommandEvent()
+            click.SetEventType(wx.EVT_BUTTON.typeId)
+            wx.PostEvent(button, click)
+        elif keyCode == wx.WXK_TAB:
+            self.GetParent().Navigate(not event.ShiftDown())
+        else:
+            event.Skip()
+
+    def getTopLevelWindow(self):
+        window = self
+        while not window.IsTopLevel():
+            window = window.GetParent()
+        return window
 
     def Disable(self):
-        super(_DatePickerCtrlThatDisablesDropDownButton, self).Disable()
+        super(_BetterDatePickerCtrl, self).Disable()
         for child in self.Children:
             child.Disable()
             
     def Enable(self, enable=True):
-        super(_DatePickerCtrlThatDisablesDropDownButton, self).Enable(enable)
+        super(_BetterDatePickerCtrl, self).Enable(enable)
         for child in self.Children:
             child.Enable(enable)
             
@@ -70,8 +98,8 @@ class _DatePickerCtrlThatFixesAllowNoneStyle(Panel):
     def _createControls(self, callback):
         self.__check = wx.CheckBox(self)
         self.__check.Bind(wx.EVT_CHECKBOX, self.onCheck)
-        self.__datePicker = _DatePickerCtrlThatDisablesDropDownButton(self, 
-            *self.__args, **self.__kwargs)
+        self.__datePicker = _BetterDatePickerCtrl(self, *self.__args, 
+                                                  **self.__kwargs)
         self.__datePicker.Disable()
         return [self.__check, self.__datePicker]
 
