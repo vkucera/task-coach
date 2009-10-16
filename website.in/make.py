@@ -1260,6 +1260,10 @@ def copyFiles(folder, *patterns):
 def createPAD(folder, filename='pad.xml'):
     padTemplate = file(filename).read()
     writeFile(folder, filename, padTemplate%meta.metaDict)
+
+def createVersionFile(folder, filename='version.txt'):
+    textTemplate = file(filename).read()
+    writeFile(folder, filename, textTemplate%meta.metaDict)
     
 def createHTMLPages(targetFolder, pages):    
     for title, text in pages.items():
@@ -1294,5 +1298,6 @@ def copyScreenshots(targetFolder, screenshotFolder='screenshots',
 websiteFolder = os.path.join('..', 'website.out')            
 createHTMLPages(websiteFolder, pages)
 createPAD(websiteFolder)
+createVersionFile(websiteFolder)
 copyFiles(websiteFolder, '*.png', '*.jpg', '*.ico', '*.css', '../icons.in/splash.png') #, '.htaccess')    
 copyScreenshots(websiteFolder)
