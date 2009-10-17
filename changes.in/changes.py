@@ -29,7 +29,7 @@ bugs, most notably that entering dates with the keyboard was not working
 on Mac OS X and Linux.''',
     bugsFixed=[
         Bug('''Typing in time controls (effort start and stop, reminder)
-didn't work on Mac OS X.''', '2798329'),
+didn't work on Mac OS X.''', '2798239'),
         Bug('''Prevent the locked file dialog and the new 
 version notification dialog of blocking each other on Mac OS X.'''),
         Bug('''When using the context menu of a selected effort record to 
