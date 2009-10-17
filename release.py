@@ -43,10 +43,8 @@ Release steps:
 - Run 'python release.py release' to download the distributions from
   Sourceforge, generate MD5 digests, generate the website, upload the 
   website to the Hypernation.net website and to Chello (Frank's ISP), 
-  announce the release on Twitter, Freshmeat and PyPI (Python Package 
-  Index) and to send the announcement email.
-
-- Post release notification on Identi.ca by hand.
+  announce the release on Twitter, Identi.ca, Freshmeat and PyPI (Python 
+  Package Index) and to send the announcement email.
 
 - Tag source code with tag ReleaseX_Y_Z.
 
@@ -61,8 +59,8 @@ Release steps:
 - If new release branch, update the buildbot masters configuration.
 '''
 
-import ftplib, smtplib, httplib, os, glob, sys, getpass, hashlib, \
-    ConfigParser, simplejson, codecs, twitter, taskcoachlib.meta
+import ftplib, smtplib, httplib, urllib, os, glob, sys, getpass, hashlib, \
+    base64, ConfigParser, simplejson, codecs, taskcoachlib.meta
 
 
 class Settings(ConfigParser.SafeConfigParser, object):
@@ -80,6 +78,7 @@ class Settings(ConfigParser.SafeConfigParser, object):
                         hypernation=['hostname', 'username', 'password', 'folder'],
                         pypi=['username', 'password'],
                         twitter=['username', 'password'],
+                        identica=['username', 'password'],
                         freshmeat=['auth_code'])
         for section in defaults:
             self.add_section(section)
@@ -122,7 +121,6 @@ def downloadDistributionsFromSourceForge(settings):
     location = sourceForgeLocation(settings)
     os.system('rsync -avP -e ssh %s dist/'%location)
     print 'Done downloading distributions from SourceForge.'
-
 
 
 def generateMD5Digests(settings):
@@ -194,7 +192,6 @@ class SimpleFTP(ftplib.FTP, object):
         self.retrbinary('RETR %s'%filename, open(filename, 'wb').write)
 
 
-
 def uploadWebsiteToWebsiteHost(settings, websiteName):
     settingsSection = websiteName.lower()
     hostname = settings.get(settingsSection, 'hostname')
@@ -246,14 +243,13 @@ def registerWithPyPI(settings):
     print 'Done registering with PyPI.'
 
 
-def announceOnTwitter(settings):
-    print 'Announcing on twitter...'
-    username = settings.get('twitter', 'username')
-    password = settings.get('twitter', 'password')
-    metadata = taskcoachlib.meta.data.metaDict
-    api = twitter.Api(username=username, password=password)
-    api.PostUpdate('Release %(version)s of %(name)s is available from %(url)s'%metadata)
-    print 'Done announcing on twitter.'
+def httpPostRequest(host, api_call, body, contentType, ok=200, **headers):
+    headers['Content-Type'] = contentType
+    connection = httplib.HTTPConnection('%s:80'%host)
+    connection.request('POST', api_call, body, headers)
+    response = connection.getresponse()
+    if response.status != ok:
+        print 'Request failed: %d %s'%(response.status, response.reason)
 
 
 def announceOnFreshmeat(settings):
@@ -264,14 +260,36 @@ def announceOnFreshmeat(settings):
     changelog = latest_release(metadata, summaryOnly=True)
     tag = 'Feature enhancements' if version.endswith('.0') else 'Bug fixes'
     release = dict(version=version, changelog=changelog, tag_list=tag)
-    body = codecs.encode(simplejson.dumps(dict(auth_code=auth_code, release=release)))
-    connection = httplib.HTTPConnection('freshmeat.net:80')
+    body = codecs.encode(simplejson.dumps(dict(auth_code=auth_code, 
+                                               release=release)))
     path = '/projects/taskcoach/releases.json'
-    connection.request("POST", path, body, {"Content-Type": "application/json"})
-    response = connection.getresponse()
-    if response.status != 201:
-        print "Request failed: %d %s"%(response.status, response.reason)
+    httpPostRequest('freshmeat.net', path, body, 'application/json', ok=201)
     print 'Done announcing on Freshmeat.'
+
+
+def announceViaTwitterApi(settings, section, host, api_prefix=''):
+    print 'Announcing on %s...'%host
+    credentials = ':'.join(settings.get(section, credential) \
+                           for credential in ('username', 'password'))
+    basic_auth = base64.encodestring(credentials)[:-1]
+    metadata = taskcoachlib.meta.data.metaDict
+    status = 'Release %(version)s of %(name)s is available from %(url)s'%metadata
+    connection = httplib.HTTPConnection('%s:80'%host)
+    api_call = api_prefix + '/statuses/update.json'
+    body = '='.join((urllib.quote(body_part.encode('utf-8')) \
+                     for body_part in ('status', status)))
+    httpPostRequest(host, api_call, body, 
+                    'application/x-www-form-urlencoded; charset=utf-8',
+                    Authorization='Basic %s'%basic_auth)
+    print 'Done announcing on %s.'%host
+
+
+def announceOnTwitter(settings):
+    announceViaTwitterApi(settings, 'twitter', 'twitter.com')
+    
+
+def announceOnIdentica(settings):
+    announceViaTwitterApi(settings, 'identica', 'identi.ca', '/api')
 
 
 def uploadWebsite(settings):
@@ -282,6 +300,7 @@ def uploadWebsite(settings):
 def announce(settings):
     registerWithPyPI(settings)
     announceOnTwitter(settings)
+    announceOnIdentica(settings)
     announceOnFreshmeat(settings)
     mailAnnouncement(settings)
 
@@ -375,9 +394,11 @@ commands = dict(release=release,
                 website=uploadWebsite, 
                 websiteChello=uploadWebsiteToChello, 
                 websiteHN=uploadWebsiteToHypernation,
-                twitter=announceOnTwitter, 
+                twitter=announceOnTwitter,
+                identica=announceOnIdentica,
                 freshmeat=announceOnFreshmeat,
-                pypi=registerWithPyPI, announce=mailAnnouncement)
+                pypi=registerWithPyPI, 
+                mail=mailAnnouncement)
 settings = Settings()
 try:
     commands[sys.argv[1]](settings)

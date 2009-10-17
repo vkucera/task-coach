@@ -30,8 +30,10 @@ Release('0.75.0', 'October ?, 2009',
         ]
     ),
             
-Release('0.74.4', 'October ?, 2009',
-    summary='''This is a bugfix release.''',
+Release('0.74.4', 'October 17, 2009',
+    summary='''This is a bugfix release that fixes some user interface
+bugs, most notably that entering dates with the keyboard was not working 
+on Mac OS X and Linux.''',
     bugsFixed=[
         Bug('''Typing in time controls (effort start and stop, reminder)
 didn't work on Mac OS X.''', '2798329'),
@@ -48,7 +50,9 @@ even when sort order changes or tasks are completed.''', '2841854'),
 recursive subjects (e.g. 'Parent -> Child') of the categories to sort by. 
 Previous versions would only use the 'Child' part.''', '2874153'),
         Bug('''Remove double slash ('//') from URL used in Windows 
-installer.''', '2877126')
+installer.''', '2877126'),
+        Bug('''On Linux and Mac OS X, changing dates by typing a new date 
+(i.e. not using the dropdown menu) didn't work.''', '2874408', '2867623')
         ]
     ),
             
