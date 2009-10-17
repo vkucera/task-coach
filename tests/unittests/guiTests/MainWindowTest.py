@@ -130,13 +130,20 @@ class MainWindowIconizedTest(MainWindowTestCase):
             
     def setSettings(self):
         self.settings.set('window', 'starticonized', 'Always')
+        
+    def expectedHeight(self):
+        height = 500
+        if '__WXMAC__' == wx.Platform:
+            height -= 29
+        return height
     
     @test.skipOnPlatform('__WXGTK__', '__WXMAC__') # Test fails on Fedora and Mac OS X, don't know why nor how to fix it    
     def testIsIconized(self):
         self.failUnless(self.mainwindow.IsIconized())
                         
     def testWindowSize(self):
-        self.assertEqual((700, 500), eval(self.settings.get('window', 'size')))
+        self.assertEqual((700, self.expectedHeight()), 
+                         eval(self.settings.get('window', 'size')))
         
     def testWindowSizeShouldnotChangeWhenReceivingChangeSizeEvent(self):
         event = wx.SizeEvent((100, 20))
@@ -145,5 +152,6 @@ class MainWindowIconizedTest(MainWindowTestCase):
             wx.CallAfter(process, event) # pragma: no cover
         else:
             process(event) # pragma: no cover
-        self.assertEqual((700, 500), eval(self.settings.get('window', 'size')))
+        self.assertEqual((700, self.expectedHeight()),
+                         eval(self.settings.get('window', 'size')))
 
