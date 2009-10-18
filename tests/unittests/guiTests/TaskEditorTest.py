@@ -50,7 +50,7 @@ class TaskEditorTestCase(test.wxTestCase):
         return []
     
     def createCommand(self):
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     def setSubject(self, newSubject, index=0):
         self.editor[index][0].setSubject(newSubject)

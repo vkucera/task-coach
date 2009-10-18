@@ -29,7 +29,7 @@ class CtrlWithColumnsTestCase(test.wxTestCase):
         self.control = self.createControl()
 
     def createControl(self):
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
 
 class CtrlWithHideableColumnsUnderTest( \
