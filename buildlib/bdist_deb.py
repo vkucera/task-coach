@@ -32,10 +32,13 @@ class bdist_deb(Command, object):
          'base directory for creating built distributions [build]'),
         ('dist-dir=', 'd', 'directory to put final deb files in [dist]'),
         ('package=', None, 'package name of the application'),
-        ('section=', None, 'section of the menu to put the application in [Applications]'),
-        ('subsection=', None, 'subsection of the menu to put the application in'),
+        ('section=', None, 
+         'section of the menu to put the application in [Applications]'),
+        ('subsection=', None, 
+         'subsection of the menu to put the application in'),
         ('title=', None, 'title of the application'),
-        ('description=', None, 'brief single line description of the application'),
+        ('description=', None, 
+         'brief single line description of the application'),
         ('long-description=', None, 'long description of the application'),
         ('version=', None, 'version of the application'),
         ('package-version=', None, 'version of the package [1]'),
@@ -44,7 +47,8 @@ class bdist_deb(Command, object):
         ('priority=', None, 'priority of the deb package [optional]'),
         ('urgency=', None, 'urgency of the deb package [low]'),
         ('maintainer=', None, 'maintainer of the deb package [<author>]'),
-        ('maintainer-email=', None, 'email address of the package maintainer [<author-email>]'),
+        ('maintainer-email=', None, 
+         'email address of the package maintainer [<author-email>]'),
         ('author=', None, 'author of the application'),
         ('author-email=', None, 'email address of the application author'),
         ('copyright=', None, 'copyright notice of the application'),
@@ -53,6 +57,8 @@ class bdist_deb(Command, object):
         ('license-summary=', None, 'summary of the license of the application'),
         ('license-path=', None, 'path of the license on Debian systems'),
         ('wxpythonversion=', None, 'minimal wxPython version needed'),
+        ('sdist-dirs-to-exclude=', None, 
+         'dirs in the source distribution to exclude from the deb package'),
         ('url=', None, 'url of the application homepage'),
         ('architecture=', None, 'architecure of the deb package [all]')]
 
@@ -69,7 +75,8 @@ class bdist_deb(Command, object):
             self.author_email = self.copyright = self.license = \
             self.license_abbrev = self.license_summary = self.license_path = \
             self.url = self.version = self.package_version = \
-            self.distribution = self.wxpythonversion = None
+            self.distribution = self.wxpythonversion = \
+            self.sdist_dirs_to_exclude = None
                     
     def finalize_options(self):
         mandatoryOptions = [\
@@ -102,6 +109,8 @@ class bdist_deb(Command, object):
             self.distribution = 'UNRELEASED'
         if not self.wxpythonversion:
             self.wxpythonversion = '2.8'
+        self.sdist_dirs_to_exclude = self.sdist_dirs_to_exclude.split(',') \
+            if self.sdist_dirs_to_exclude else []
         self.subsection_lower = self.subsection.lower()
         self.datetime = time.strftime('%a, %d %b %Y %H:%M:%S +0000', 
                                       time.gmtime())
@@ -114,6 +123,7 @@ class bdist_deb(Command, object):
     def run(self):
         self.copy_sdist()
         self.untar_sdist()
+        self.remove_sdist_dirs_to_exclude()
         self.create_debian_dir()
         self.write_debian_files()
         self.build_debian_package()
@@ -145,6 +155,15 @@ class bdist_deb(Command, object):
             os.rename(extracted_dir, expected_extracted_dir)
         self.extracted_dir = expected_extracted_dir
         
+    def remove_sdist_dirs_to_exclude(self):
+        ''' Remove directories from the source distribution that are not 
+            needed for the debian package. '''
+        for relative_dir in self.sdist_dirs_to_exclude:
+            absolute_dir = os.path.join(self.extracted_dir, relative_dir)
+            if self.verbose:
+                log.info('removing %s from source distribution'%relative_dir)
+            shutil.rmtree(absolute_dir)
+
     def create_debian_dir(self):
         ''' Create the debian dir for package files. '''
         self.debian_dir = os.path.join(self.extracted_dir, 'debian')
