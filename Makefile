@@ -56,7 +56,7 @@ fedora: prepare changes
 	$(PYTHON) make.py bdist_rpm_fedora 
 
 deb: sdist
-	$(PYTHON) make.py bdist_deb --sdist=dist/TaskCoach-$(TCVERSION).tar.gz --sdist-dirs-to-exclude="taskcoachlib/bin.in/windows,taskcoachlib/bin.in/macos"
+	$(PYTHON) make.py bdist_deb --sdist=dist/TaskCoach-$(TCVERSION).tar.gz --sdist-exclude="taskcoachlib/bin.in/windows,taskcoachlib/bin.in/macos"
 
 dmg: prepare
 	$(PYTHON) make.py py2app
