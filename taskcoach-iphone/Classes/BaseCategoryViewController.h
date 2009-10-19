@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @class Category;
+@class BadgedCell;
 
 @interface BaseCategoryViewController : UITableViewController
 {
@@ -17,6 +18,6 @@
 
 - (void)loadCategories;
 
-- (void)fillCell:(UITableViewCell *)cell forCategory:(Category *)category;
+- (void)fillCell:(BadgedCell *)cell forCategory:(Category *)category;
 
 @end

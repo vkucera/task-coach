@@ -23,7 +23,7 @@
 
 - initWithId:(NSInteger)ID name:(NSString *)name status:(NSInteger)status taskCoachId:(NSString *)taskCoachId parentId:(NSNumber *)parentId;
 
-- (NSInteger)count;
+- (NSInteger)countForTable:(NSString *)tableName;
 
 - (void)addChild:(Category *)child;
 - (void)finalizeChildren:(NSMutableArray *)categories;

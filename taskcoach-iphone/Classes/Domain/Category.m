@@ -61,7 +61,7 @@ static Statement *_saveStatement = nil;
 		[[self saveStatement] bindNullAtIndex:4];
 }
 
-- (NSInteger)count
+- (NSInteger)countForTable:(NSString *)tableName
 {
 	NSMutableArray *where = [[NSMutableArray alloc] initWithCapacity:2];
 	
@@ -72,7 +72,7 @@ static Statement *_saveStatement = nil;
 	[where addObject:[sel clause]];
 	[sel release];
 	
-	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM AllTask LEFT JOIN TaskHasCategory ON id=idTask WHERE %@", [@" AND " stringByJoiningStrings:where]]] execWithTarget:self action:@selector(setCount:)];
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM %@ LEFT JOIN TaskHasCategory ON id=idTask WHERE %@", tableName, [@" AND " stringByJoiningStrings:where]]] execWithTarget:self action:@selector(setCount:)];
 
 	return taskCount;
 }

@@ -8,6 +8,7 @@
 
 #import "TaskCategoryPickerController.h"
 #import "Task.h"
+#import "BadgedCell.h"
 
 @implementation TaskCategoryPickerController
 
@@ -28,7 +29,7 @@
 	[super dealloc];
 }
 
-- (void)fillCell:(UITableViewCell *)cell forCategory:(Category *)category
+- (void)fillCell:(BadgedCell *)cell forCategory:(Category *)category
 {
 	[super fillCell:cell forCategory:category];
 	
