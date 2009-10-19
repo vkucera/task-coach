@@ -13,6 +13,7 @@
 #import "SwitchCell.h"
 #import "DateCell.h"
 #import "DescriptionCell.h"
+#import "BadgedCell.h"
 
 #import "Configuration.h"
 
@@ -25,6 +26,7 @@ static CellFactory *_cellFactory = NULL;
 @synthesize switchCellTemplate;
 @synthesize dateCellTemplate;
 @synthesize descriptionCellTemplate;
+@synthesize badgedCellTemplate;
 
 + (CellFactory *)cellFactory
 {
@@ -75,6 +77,12 @@ static CellFactory *_cellFactory = NULL;
 {
 	[[NSBundle mainBundle] loadNibNamed:@"DescriptionCell" owner:self options:nil];
 	return descriptionCellTemplate;
+}
+
+- (BadgedCell *)createBadgedCell
+{
+	[[NSBundle mainBundle] loadNibNamed:@"BadgedCell" owner:self options:nil];
+	return [badgedCellTemplate retain];
 }
 
 @end

@@ -11,6 +11,8 @@
 #import "StringChoiceController.h"
 #import "TaskViewController.h"
 #import "SyncViewController.h"
+#import "BadgedCell.h"
+#import "CellFactory.h"
 
 #import "Database/Database.h"
 #import "Database/Statement.h"
@@ -167,15 +169,39 @@
 	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
 }
 
-- (void)fillCell:(UITableViewCell *)cell forCategory:(Category *)category
+- (void)fillCell:(BadgedCell *)cell forCategory:(Category *)category
 {
 	[super fillCell:cell forCategory:category];
 
-#ifdef __IPHONE_3_0
-	cell.textLabel.text = [NSString stringWithFormat:@"%@ (%d)", [category name], [category count]];
-#else
-	cell.text = [NSString stringWithFormat:@"%@ (%d)", [category name], [category count]];
-#endif
+	cell.textLabel.text = [category name];
+	cell.badge.text = [NSString stringWithFormat:@"%d", [category countForTable:@"AllTask"]];
+	cell.badge.capsuleColor = [UIColor blackColor];
+
+	NSInteger count;
+	
+	count = [category countForTable:@"NotStartedTask"];
+	if (count)
+	{
+		[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", count] capsuleColor:[UIColor grayColor]];
+	}
+	
+	count = [category countForTable:@"StartedTask"];
+	if (count)
+	{
+		[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", count] capsuleColor:[UIColor blueColor]];
+	}
+	
+	count = [category countForTable:@"DueSoonTask"];
+	if (count)
+	{
+		[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", count] capsuleColor:[UIColor orangeColor]];
+	}
+	
+	count = [category countForTable:@"OverdueTask"];
+	if (count)
+	{
+		[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", count] capsuleColor:[UIColor redColor]];
+	}
 }
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated
@@ -332,7 +358,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	UITableViewCell *cell;
+	BadgedCell *cell;
 
 	if (self.editing)
 	{
@@ -340,79 +366,74 @@
 		
 		if (indexPath.row % 2)
 		{
-			static NSString *CellIdentifier = @"Cell";
-			
-			cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+			static NSString *CellIdentifier = @"BadgedCell";
+
+			cell = (BadgedCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
 			if (cell == nil)
 			{
-				cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
+				cell = [[[CellFactory cellFactory] createBadgedCell] autorelease];
 			}
-			
-#ifdef __IPHONE_3_0
-			cell.textLabel.text = 
-#else
-			cell.text = 
-#endif
-				_("Add subcategory");
 
-#ifdef __IPHONE_3_0
-			cell.textLabel.textColor =
-#else
-			cell.textColor =
-#endif
-			[UIColor grayColor];
+			cell.textLabel.text = _("Add subcategory");
+			cell.textLabel.textColor = [UIColor grayColor];
+			cell.badge.text = nil;
 
 			cell.indentationLevel = category.level + 1;
 		}
 		else
 		{
-			cell = [super tableView:tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row / 2 inSection:indexPath.section]];
+			cell = (BadgedCell *)[super tableView:tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row / 2 inSection:indexPath.section]];
 		}
 	}
 	else
 	{
 		if (indexPath.row)
 		{
-			cell = [super tableView:tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row - 1 inSection:indexPath.section]];
+			cell = (BadgedCell *)[super tableView:tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row - 1 inSection:indexPath.section]];
 		}
 		else
 		{
-			static NSString *CellIdentifier = @"Cell";
+			static NSString *CellIdentifier = @"BadgedCell";
 			
-			cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+			cell = (BadgedCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
 			if (cell == nil)
 			{
-				cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
+				cell = [[[CellFactory cellFactory] createBadgedCell] autorelease];
 			}
 			
-#ifdef __IPHONE_3_0
-			cell.textLabel.text = 
-#else
-			cell.text = 
-#endif
-				_("All");
-			
-#ifdef __IPHONE_3_0
-			cell.textLabel.textColor =
-#else
-			cell.textColor =
-#endif
-			[UIColor blackColor];
+			[cell.badge clearAnnotations];
+			cell.textLabel.text = _("All");
+			cell.textLabel.textColor = [UIColor blackColor];
+
+			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM AllTask WHERE completionDate IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
+			cell.badge.text = [NSString stringWithFormat:@"%d", totalCount];
+			cell.badge.capsuleColor = [UIColor blackColor];
+			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM NotStartedTask WHERE completionDate IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
+			if (totalCount)
+				[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", totalCount] capsuleColor:[UIColor grayColor]];
+			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM StartedTask WHERE completionDate IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
+			if (totalCount)
+				[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", totalCount] capsuleColor:[UIColor blueColor]];
+			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM DueSoonTask WHERE completionDate IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
+			if (totalCount)
+				[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", totalCount] capsuleColor:[UIColor orangeColor]];
+			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM OverdueTask WHERE completionDate IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
+			if (totalCount)
+				[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", totalCount] capsuleColor:[UIColor redColor]];
 			
 			cell.indentationLevel = 0;
 		}
 		
-#ifdef __IPHONE_3_0
-		cell.textLabel.textColor =
-#else
-		cell.textColor =
-#endif
-		[UIColor blackColor];
-		
+		cell.textLabel.textColor = [UIColor blackColor];
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
 
 	return cell;
+}
+
+- (void)onGotTotal:(NSDictionary *)dict
+{
+	totalCount = [[dict objectForKey:@"total"] intValue];
 }
 
 //===========================================================

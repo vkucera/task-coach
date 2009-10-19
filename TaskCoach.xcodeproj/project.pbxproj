@@ -27,6 +27,10 @@
 		A61AEE790F35CB610086ECD6 /* TwoWayDeletedTasksState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AEE780F35CB610086ECD6 /* TwoWayDeletedTasksState.m */; };
 		A61AEEFB0F35D35C0086ECD6 /* TwoWayModifiedTasksState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AEEFA0F35D35C0086ECD6 /* TwoWayModifiedTasksState.m */; };
 		A61DE2390F1E3F5B004BC97E /* Task.m in Sources */ = {isa = PBXBuildFile; fileRef = A61DE2380F1E3F5B004BC97E /* Task.m */; };
+		A61F544F108CB57A00BDFD6D /* BadgeItem.m in Sources */ = {isa = PBXBuildFile; fileRef = A61F544C108CB57A00BDFD6D /* BadgeItem.m */; };
+		A61F5450108CB57A00BDFD6D /* BadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = A61F544E108CB57A00BDFD6D /* BadgeView.m */; };
+		A61F5454108CB5B400BDFD6D /* BadgedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A61F5453108CB5B400BDFD6D /* BadgedCell.m */; };
+		A61F5458108CB67800BDFD6D /* BadgedCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A61F5457108CB67800BDFD6D /* BadgedCell.xib */; };
 		A627606A0F221D0A0041D761 /* Configuration.m in Sources */ = {isa = PBXBuildFile; fileRef = A62760690F221D0A0041D761 /* Configuration.m */; };
 		A62760710F221EFC0041D761 /* String+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = A62760700F221EFC0041D761 /* String+Utils.m */; };
 		A63CC07C0F517055003669FD /* TaskCellLeftBig.xib in Resources */ = {isa = PBXBuildFile; fileRef = A63CC07A0F517055003669FD /* TaskCellLeftBig.xib */; };
@@ -147,6 +151,13 @@
 		A61AEEFA0F35D35C0086ECD6 /* TwoWayModifiedTasksState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwoWayModifiedTasksState.m; path = Synchronization/TwoWayModifiedTasksState.m; sourceTree = "<group>"; };
 		A61DE2370F1E3F5B004BC97E /* Task.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Task.h; path = Domain/Task.h; sourceTree = "<group>"; };
 		A61DE2380F1E3F5B004BC97E /* Task.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Task.m; path = Domain/Task.m; sourceTree = "<group>"; };
+		A61F544B108CB57A00BDFD6D /* BadgeItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BadgeItem.h; path = Thirdparty/Badge/BadgeItem.h; sourceTree = "<group>"; };
+		A61F544C108CB57A00BDFD6D /* BadgeItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BadgeItem.m; path = Thirdparty/Badge/BadgeItem.m; sourceTree = "<group>"; };
+		A61F544D108CB57A00BDFD6D /* BadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BadgeView.h; path = Thirdparty/Badge/BadgeView.h; sourceTree = "<group>"; };
+		A61F544E108CB57A00BDFD6D /* BadgeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BadgeView.m; path = Thirdparty/Badge/BadgeView.m; sourceTree = "<group>"; };
+		A61F5452108CB5B400BDFD6D /* BadgedCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BadgedCell.h; sourceTree = "<group>"; };
+		A61F5453108CB5B400BDFD6D /* BadgedCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BadgedCell.m; sourceTree = "<group>"; };
+		A61F5457108CB67800BDFD6D /* BadgedCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BadgedCell.xib; sourceTree = "<group>"; };
 		A62760680F221D0A0041D761 /* Configuration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Configuration.h; path = Config/Configuration.h; sourceTree = "<group>"; };
 		A62760690F221D0A0041D761 /* Configuration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Configuration.m; path = Config/Configuration.m; sourceTree = "<group>"; };
 		A627606F0F221EFC0041D761 /* String+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "String+Utils.h"; path = "Utils/String+Utils.h"; sourceTree = "<group>"; };
@@ -316,6 +327,7 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				A61F544A108CB56200BDFD6D /* Thirdparty */,
 				A67E47DD0F5A937700000A24 /* Bonjour */,
 				A6664D3B0F2B417B00638C68 /* Synchronization */,
 				A6D386B40F24C12E0097F0F6 /* Cells */,
@@ -436,6 +448,17 @@
 				288765FC0DF74451002DB57D /* CoreGraphics.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A61F544A108CB56200BDFD6D /* Thirdparty */ = {
+			isa = PBXGroup;
+			children = (
+				A61F544B108CB57A00BDFD6D /* BadgeItem.h */,
+				A61F544C108CB57A00BDFD6D /* BadgeItem.m */,
+				A61F544D108CB57A00BDFD6D /* BadgeView.h */,
+				A61F544E108CB57A00BDFD6D /* BadgeView.m */,
+			);
+			name = Thirdparty;
 			sourceTree = "<group>";
 		};
 		A627605B0F221CF20041D761 /* Config */ = {
@@ -582,6 +605,9 @@
 				A6B264CE0FDBCB9400FF2AD0 /* DateCell.h */,
 				A6B264CF0FDBCB9400FF2AD0 /* DateCell.m */,
 				A6B264DC0FDBCBFE00FF2AD0 /* DateCell.xib */,
+				A61F5452108CB5B400BDFD6D /* BadgedCell.h */,
+				A61F5453108CB5B400BDFD6D /* BadgedCell.m */,
+				A61F5457108CB67800BDFD6D /* BadgedCell.xib */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -676,6 +702,7 @@
 				A60B70EB1025AF0B00F9983C /* CHANGELOG in Resources */,
 				A6831FFE102EB057002A7083 /* TaskView.xib in Resources */,
 				A6832038102EB499002A7083 /* TaskView.strings in Resources */,
+				A61F5458108CB67800BDFD6D /* BadgedCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -743,6 +770,9 @@
 				A60B6ED710258D9D00F9983C /* TaskCategoryPickerController.m in Sources */,
 				A6AFD6BC10414E930065D5B7 /* TwoWayModifiedCategoriesState.m in Sources */,
 				A63E286D10415CCD00A2E672 /* TwoWayDeletedCategoriesState.m in Sources */,
+				A61F544F108CB57A00BDFD6D /* BadgeItem.m in Sources */,
+				A61F5450108CB57A00BDFD6D /* BadgeView.m in Sources */,
+				A61F5454108CB5B400BDFD6D /* BadgedCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -981,7 +1011,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2D5D1246-9F1B-4CF1-B315-E08B7378ED7B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "60932F3E-25B2-47AB-A622-37FA87ADB45F";
 				SDKROOT = iphoneos2.2.1;
 			};
 			name = Debug;
@@ -995,7 +1025,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2D5D1246-9F1B-4CF1-B315-E08B7378ED7B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "60932F3E-25B2-47AB-A622-37FA87ADB45F";
 				SDKROOT = iphoneos2.2.1;
 			};
 			name = Release;

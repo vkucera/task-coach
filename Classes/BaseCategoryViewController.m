@@ -10,7 +10,8 @@
 #import "Category.h"
 #import "Database.h"
 #import "Statement.h"
-
+#import "BadgedCell.h"
+#import "CellFactory.h"
 
 @implementation BaseCategoryViewController
 
@@ -85,20 +86,13 @@
 	[super dealloc];
 }
 
-- (void)fillCell:(UITableViewCell *)cell forCategory:(Category *)category
+- (void)fillCell:(BadgedCell *)cell forCategory:(Category *)category
 {
-#ifdef __IPHONE_3_0
+	[cell.badge clearAnnotations];
+	cell.badge.text = nil;
+
 	cell.textLabel.text = category.name;
-#else
-	cell.text = category.name;
-#endif
-	
-#ifdef __IPHONE_3_0
-	cell.textLabel.textColor =
-#else
-	cell.textColor =
-#endif
-	[UIColor blackColor];
+	cell.textLabel.textColor = [UIColor blackColor];
 
 	cell.indentationLevel = category.level;
 }
@@ -117,12 +111,12 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"BadgedCell";
 	
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    BadgedCell *cell = (BadgedCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
 	{
-        cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[CellFactory cellFactory] createBadgedCell] autorelease];
     }
 
 	Category *category = [categories objectAtIndex:indexPath.row];
