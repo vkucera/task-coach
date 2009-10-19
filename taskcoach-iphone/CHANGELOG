@@ -1,4 +1,8 @@
 
+2009-10-19  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
+	* misc: Add badges in the category view to show number of (not started/started/
+	  due soon/overdue) tasks in this category.
+
 2009-09-20  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* TaskDetailsController.m: Default due date is start date if there is one.
 

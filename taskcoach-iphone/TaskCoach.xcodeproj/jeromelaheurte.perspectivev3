@@ -312,7 +312,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>CategoryViewController.m</string>
+								<string>CHANGELOG</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -320,11 +320,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>CategoryViewController.m</string>
+										<string>CHANGELOG</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A61F561F108CC86100BDFD6D</string>
+										<string>A60BE462108CC99800AB9983</string>
 										<key>history</key>
 										<array>
 											<string>A6B5E01D106E04E200E3774E</string>
@@ -357,7 +357,8 @@
 											<string>A61F55FA108CC76600BDFD6D</string>
 											<string>A61F55FB108CC76600BDFD6D</string>
 											<string>A61F55FC108CC76600BDFD6D</string>
-											<string>A61F55FD108CC76600BDFD6D</string>
+											<string>A60BE45A108CC94F00AB9983</string>
+											<string>A60BE45B108CC94F00AB9983</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -374,87 +375,25 @@
 											<string>A68A606610821E7E00D723FE</string>
 											<string>A6C2F42F1083708700CE7C4B</string>
 											<string>A61F547E108CB8FD00BDFD6D</string>
-											<string>A61F547F108CB8FD00BDFD6D</string>
 											<string>A61F5480108CB8FD00BDFD6D</string>
 											<string>A61F5481108CB8FD00BDFD6D</string>
 											<string>A61F5482108CB8FD00BDFD6D</string>
 											<string>A61F5483108CB8FD00BDFD6D</string>
-											<string>A61F5484108CB8FD00BDFD6D</string>
-											<string>A61F5485108CB8FD00BDFD6D</string>
-											<string>A61F5486108CB8FD00BDFD6D</string>
-											<string>A61F5487108CB8FD00BDFD6D</string>
-											<string>A61F5488108CB8FD00BDFD6D</string>
-											<string>A61F5489108CB8FD00BDFD6D</string>
 											<string>A61F548A108CB8FD00BDFD6D</string>
 											<string>A61F548B108CB8FD00BDFD6D</string>
-											<string>A61F548C108CB8FD00BDFD6D</string>
-											<string>A61F548D108CB8FD00BDFD6D</string>
-											<string>A61F548E108CB8FD00BDFD6D</string>
 											<string>A61F548F108CB8FD00BDFD6D</string>
 											<string>A61F5490108CB8FD00BDFD6D</string>
-											<string>A61F5491108CB8FD00BDFD6D</string>
-											<string>A61F5492108CB8FD00BDFD6D</string>
-											<string>A61F5493108CB8FD00BDFD6D</string>
-											<string>A61F54A7108CB94100BDFD6D</string>
 											<string>A61F54AB108CB94C00BDFD6D</string>
-											<string>A61F54B9108CB9BB00BDFD6D</string>
-											<string>A61F54BA108CB9BB00BDFD6D</string>
-											<string>A61F54D2108CBA2400BDFD6D</string>
-											<string>A61F54D3108CBA2400BDFD6D</string>
-											<string>A61F54D4108CBA2400BDFD6D</string>
-											<string>A61F54D5108CBA2400BDFD6D</string>
-											<string>A61F54F8108CBAC200BDFD6D</string>
-											<string>A61F54F9108CBAC200BDFD6D</string>
-											<string>A61F5504108CBB6300BDFD6D</string>
 											<string>A61F5505108CBB6300BDFD6D</string>
 											<string>A61F5506108CBB6300BDFD6D</string>
-											<string>A61F5507108CBB6300BDFD6D</string>
-											<string>A61F5508108CBB6300BDFD6D</string>
-											<string>A61F5509108CBB6300BDFD6D</string>
-											<string>A61F5516108CBBF900BDFD6D</string>
-											<string>A61F5525108CBC9200BDFD6D</string>
-											<string>A61F5526108CBC9200BDFD6D</string>
 											<string>A61F5527108CBC9200BDFD6D</string>
-											<string>A61F5537108CBCDC00BDFD6D</string>
-											<string>A61F554D108CBD3200BDFD6D</string>
-											<string>A61F5561108CBD9B00BDFD6D</string>
-											<string>A61F5562108CBD9B00BDFD6D</string>
-											<string>A61F5563108CBD9B00BDFD6D</string>
-											<string>A61F5564108CBD9B00BDFD6D</string>
 											<string>A61F5565108CBD9B00BDFD6D</string>
 											<string>A61F5566108CBD9B00BDFD6D</string>
-											<string>A61F5578108CBDFF00BDFD6D</string>
-											<string>A61F558A108CBE8400BDFD6D</string>
-											<string>A61F559E108CBF1900BDFD6D</string>
-											<string>A61F55B1108CBFC100BDFD6D</string>
 											<string>A61F55B2108CBFC100BDFD6D</string>
 											<string>A61F55B3108CBFC100BDFD6D</string>
 											<string>A61F55B4108CBFC100BDFD6D</string>
 											<string>A61F55B5108CBFC100BDFD6D</string>
-											<string>A61F55B6108CBFC100BDFD6D</string>
-											<string>A61F55B7108CBFC100BDFD6D</string>
-											<string>A61F55B8108CBFC100BDFD6D</string>
-											<string>A61F55BE108CC05B00BDFD6D</string>
-											<string>A61F55BF108CC05B00BDFD6D</string>
-											<string>A61F55D4108CC35700BDFD6D</string>
-											<string>A61F55D5108CC35700BDFD6D</string>
-											<string>A61F55D6108CC35700BDFD6D</string>
-											<string>A61F55D7108CC35700BDFD6D</string>
-											<string>A61F55D8108CC35700BDFD6D</string>
-											<string>A61F55D9108CC35700BDFD6D</string>
-											<string>A61F55DA108CC35700BDFD6D</string>
-											<string>A61F55DB108CC35700BDFD6D</string>
-											<string>A61F55DC108CC35700BDFD6D</string>
-											<string>A61F55DD108CC35700BDFD6D</string>
-											<string>A61F55DE108CC35700BDFD6D</string>
-											<string>A61F55FE108CC76600BDFD6D</string>
-											<string>A61F55FF108CC76600BDFD6D</string>
-											<string>A61F5600108CC76600BDFD6D</string>
-											<string>A61F5601108CC76600BDFD6D</string>
-											<string>A61F5602108CC76600BDFD6D</string>
-											<string>A61F5603108CC76600BDFD6D</string>
-											<string>A61F5604108CC76600BDFD6D</string>
-											<string>A61F5605108CC76600BDFD6D</string>
+											<string>A60BE45C108CC94F00AB9983</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -538,7 +477,7 @@
 									<key>ContentConfiguration</key>
 									<dict>
 										<key>PBXBuildLogShowsTranscriptDefaultKey</key>
-										<string>{{0, 29}, {1563, 231}}</string>
+										<string>{{0, -60}, {1563, 320}}</string>
 										<key>PBXProjectModuleGUID</key>
 										<string>XCMainBuildResultsModuleGUID</string>
 										<key>PBXProjectModuleLabel</key>
@@ -579,11 +518,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A61F5495108CB8FD00BDFD6D</string>
+				<string>A60BE45E108CC94F00AB9983</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A61F5496108CB8FD00BDFD6D</string>
+				<string>A60BE45F108CC94F00AB9983</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A61F5497108CB8FD00BDFD6D</string>
+				<string>A60BE460108CC94F00AB9983</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -767,8 +706,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>A61F549E108CB8FD00BDFD6D</string>
-		<string>A61F54A0108CB8FD00BDFD6D</string>
 		<string>/Users/jeromelaheurte/Dev/taskcoach-trunk/taskcoach-iphone/TaskCoach.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
