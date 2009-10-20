@@ -35,19 +35,32 @@ const float kBadgeConcaveCapsuleClippingTrim = 3.0f;
 
 #pragma mark Lifetime
 
+- (void)initialize
+{
+	self.backgroundColor = [UIColor clearColor];
+	
+	primaryItem = [[BadgeItem alloc] init];
+	annotations = [[NSMutableArray arrayWithCapacity:1] retain];
+	
+	margin = kBadgeViewDefaultMargin;
+	
+	self.text = nil;
+	self.textColor = [UIColor whiteColor];
+	self.capsuleColor = [UIColor grayColor];
+}
+
 - initWithCoder:(NSCoder *)encoder
 {
 	if (self = [super initWithCoder:encoder]) {
-		self.backgroundColor = [UIColor clearColor];
-		
-		primaryItem = [[BadgeItem alloc] init];
-		annotations = [[NSMutableArray arrayWithCapacity:1] retain];
-		
-		margin = kBadgeViewDefaultMargin;
-		
-		self.text = nil;
-		self.textColor = [UIColor whiteColor];
-		self.capsuleColor = [UIColor grayColor];
+		[self initialize];
+	}
+	
+	return self;
+}
+
+- (id)initWithFrame:(CGRect)frame {
+	if (self = [super initWithFrame:frame]) {
+		[self initialize];
 	}
 	
 	return self;
@@ -106,8 +119,7 @@ const float kBadgeConcaveCapsuleClippingTrim = 3.0f;
 	[self setNeedsDisplay];
 }
 
-- (void)clearAnnotations
-{
+- (void)clearAnnotations {
 	[annotations removeAllObjects];
 	[self setNeedsDisplay];
 }
