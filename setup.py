@@ -83,7 +83,7 @@ system = platform.system()
 if system == 'Linux':
     setupOptions['package_data'] = {'taskcoachlib': ['bin.in/linux/_pysyncml.so']}
 elif system == 'Windows':
-    setUpOptions['scripts'].append('taskcoach.pyw')
+    setupOptions['scripts'].append('taskcoach.pyw')
 
 if __name__ == '__main__':
     setup(**setupOptions)
