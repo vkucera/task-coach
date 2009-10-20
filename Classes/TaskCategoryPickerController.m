@@ -42,7 +42,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	Category *category = [categories objectAtIndex:indexPath.row];
-	UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+	BadgedCell *cell = (BadgedCell *)[self.tableView cellForRowAtIndexPath:indexPath];
 	
 	if ([myTask hasCategory:category])
 	{

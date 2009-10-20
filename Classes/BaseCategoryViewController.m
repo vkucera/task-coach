@@ -95,6 +95,7 @@
 	cell.textLabel.textColor = [UIColor blackColor];
 
 	cell.indentationLevel = category.level;
+	cell.accessoryType = UITableViewCellAccessoryNone;
 }
 
 #pragma mark Table view methods
