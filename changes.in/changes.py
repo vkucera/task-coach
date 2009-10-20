@@ -25,7 +25,8 @@ releases = [
 
 Release('0.74.5', 'October 18, 2009',
     summary='''This is a bugfix release.''',
-    bugsFixed=[]
+    bugsFixed=[
+        Bug('''Make opening (task) edit dialogs faster.''')]
     ),
             
 Release('0.74.4', 'October 17, 2009',
