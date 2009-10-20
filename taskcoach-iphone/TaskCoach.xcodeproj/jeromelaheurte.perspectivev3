@@ -274,7 +274,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>36</integer>
+									<integer>2</integer>
 									<integer>1</integer>
 									<integer>0</integer>
 								</array>
@@ -308,14 +308,12 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>BaseCategoryViewController.m</string>
+								<string>BadgeView.h</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -323,11 +321,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>BaseCategoryViewController.m</string>
+										<string>BadgeView.h</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A64FF745108E2166003A4737</string>
+										<string>A6068279108E2322009B496B</string>
 										<key>history</key>
 										<array>
 											<string>A6B5E01D106E04E200E3774E</string>
@@ -351,17 +349,17 @@
 											<string>A61F559D108CBF1900BDFD6D</string>
 											<string>A61F55AC108CBFC100BDFD6D</string>
 											<string>A61F55AE108CBFC100BDFD6D</string>
-											<string>A61F55D0108CC35700BDFD6D</string>
 											<string>A61F55D1108CC35700BDFD6D</string>
 											<string>A61F55D2108CC35700BDFD6D</string>
 											<string>A61F55FB108CC76600BDFD6D</string>
-											<string>A61F55FC108CC76600BDFD6D</string>
 											<string>A60BE45A108CC94F00AB9983</string>
 											<string>A64FF739108E2166003A4737</string>
 											<string>A64FF73A108E2166003A4737</string>
 											<string>A64FF73B108E2166003A4737</string>
 											<string>A64FF73C108E2166003A4737</string>
-											<string>A61F55FA108CC76600BDFD6D</string>
+											<string>A6068274108E2322009B496B</string>
+											<string>A6068275108E2322009B496B</string>
+											<string>A6068276108E2322009B496B</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -397,13 +395,8 @@
 											<string>A61F55B4108CBFC100BDFD6D</string>
 											<string>A61F55B5108CBFC100BDFD6D</string>
 											<string>A64FF73D108E2166003A4737</string>
-											<string>A64FF73E108E2166003A4737</string>
-											<string>A64FF73F108E2166003A4737</string>
-											<string>A64FF740108E2166003A4737</string>
-											<string>A64FF741108E2166003A4737</string>
-											<string>A64FF742108E2166003A4737</string>
-											<string>A64FF743108E2166003A4737</string>
-											<string>A64FF744108E2166003A4737</string>
+											<string>A6068277108E2322009B496B</string>
+											<string>A6068278108E2322009B496B</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -432,6 +425,8 @@
 							<key>Tabs</key>
 							<array>
 								<dict>
+									<key>BecomeActive</key>
+									<true/>
 									<key>ContentConfiguration</key>
 									<dict>
 										<key>PBXProjectModuleGUID</key>
@@ -528,11 +523,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A64FF746108E2166003A4737</string>
+				<string>A606827A108E2322009B496B</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A64FF747108E2166003A4737</string>
+				<string>A606827B108E2322009B496B</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A64FF748108E2166003A4737</string>
+				<string>A606827C108E2322009B496B</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -716,8 +711,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>A64FF74F108E2166003A4737</string>
-		<string>A64FF750108E2166003A4737</string>
 		<string>/Users/jeromelaheurte/Dev/taskcoach-trunk/taskcoach-iphone/TaskCoach.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
