@@ -20,13 +20,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import meta
 import sys, os, glob, wx
 from setup import setupOptions
-from buildlib import clean, bdist_rpm_fedora, bdist_deb, bdist_winpenpack
+from buildlib import clean, bdist_rpm_fedora, bdist_deb, bdist_winpenpack, \
+    bdist_portableapps
 
 
 setupOptions['cmdclass'] = dict(clean=clean,
                                 bdist_rpm_fedora=bdist_rpm_fedora,
                                 bdist_deb=bdist_deb,
-                                bdist_winpenpack=bdist_winpenpack)
+                                bdist_winpenpack=bdist_winpenpack,
+                                bdist_portableapps=bdist_portableapps)
                                 
 distdir = 'dist'
 builddir = 'build'
@@ -142,6 +144,16 @@ elif sys.argv[1] == 'bdist_deb':
 elif sys.argv[1] == 'bdist_winpenpack':
     from distutils.core import setup
     setupOptions.update(dict(options=dict(bdist_winpenpack=dict(\
+        version=meta.data.version,
+        license=meta.data.license_title,
+        url=meta.data.url,
+        filename=meta.data.filename,
+        date=meta.data.date))))
+    
+elif sys.argv[1] == 'bdist_portableapps':
+    from distutils.core import setup
+    setupOptions.update(dict(options=dict(bdist_portableapps=dict(\
+        name=meta.data.name,
         version=meta.data.version,
         license=meta.data.license_title,
         url=meta.data.url,

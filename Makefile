@@ -64,7 +64,10 @@ dmg: prepare
 
 winpenpack: py2exe 
 	$(PYTHON) make.py bdist_winpenpack
-
+	
+portableapps: py2exe
+	$(PYTHON) make.py bdist_portableapps
+	
 icons: taskcoachlib/gui/icons.py
 
 templates: taskcoachlib/persistence/xml/templates.py
