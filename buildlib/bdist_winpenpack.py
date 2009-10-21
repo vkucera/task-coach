@@ -29,7 +29,7 @@ class bdist_winpenpack(Command, object):
     user_options = [
         ('bdist-base=', None, 
          'base directory for creating built distributions [build]'),
-        ('dist-dir=', 'd', 'directory to put final deb files in [dist]'),
+        ('dist-dir=', 'd', 'directory to put final package files in [dist]'),
         ('version=', None, 'version of the application'),
         ('license=', None, 'license (title) of the application'),
         ('url=', None, 'url of the application homepage'),
