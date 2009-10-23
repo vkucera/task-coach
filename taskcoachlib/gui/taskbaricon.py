@@ -50,10 +50,8 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
             eventType=task.Task.trackStopEventType())
         patterns.Publisher().registerObserver(self.onChangeDueDate,
             eventType='task.dueDate')
-        if '__WXGTK__' == wx.Platform:
-            self.Bind(wx.EVT_TASKBAR_LEFT_DOWN, self.onLeftClick)
-        else:
-            self.Bind(wx.EVT_TASKBAR_LEFT_DCLICK, mainwindow.restore)
+        event = wx.EVT_TASKBAR_LEFT_DOWN if '__WXGTK__' == wx.Platform else wx.EVT_TASKBAR_LEFT_DCLICK    
+        self.Bind(event, self.onTaskbarClick)
         self.__setTooltipText()
         self.__setIcon()
 
@@ -91,7 +89,7 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
             self.__toggleTrackingBitmap()
             self.__setIcon()
 
-    def onLeftClick(self, event):
+    def onTaskbarClick(self, event):
         if self.__window.IsIconized():
             self.__window.restore(event)
         else:
