@@ -24,6 +24,7 @@ DOT="dot"       # dot should be on the path
 
 ifeq (CYGWIN_NT,$(findstring CYGWIN_NT,$(shell uname)))
     INNOSETUP="/cygdrive/c/Program Files/Inno Setup 5/ISCC.exe"
+    PORTABLEAPPSINSTALLER="/cygdrive/c/Program Files/PortableApps.comInstaller/PortableApps.comInstaller.exe"
     EPYDOC=$(PYTHON) $(shell python -c "import os, sys; print \"'\" + os.path.join(os.path.split(sys.executable)[0], 'Scripts', 'epydoc.py') + \"'\"")
 else
     EPYDOC="epydoc"
@@ -67,7 +68,9 @@ winpenpack: py2exe
 	
 portableapps: py2exe
 	$(PYTHON) make.py bdist_portableapps
-	
+	$(PORTABLEAPPSINSTALLER) "c:\Documents and Settings\Frank\workspace\taskcoach0_74\build\TaskCoachPortable"
+	mv build/TaskCoachPortable_$(TCVERSION).paf.exe dist
+
 icons: taskcoachlib/gui/icons.py
 
 templates: taskcoachlib/persistence/xml/templates.py

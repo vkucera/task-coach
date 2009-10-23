@@ -20,9 +20,9 @@ import os, glob, zipfile
 from distutils.core import Command
 from distutils.file_util import copy_file
 from distutils import log, errors
+import bdist_portable_base
 
-
-class bdist_portableapps(Command, object):
+class bdist_portableapps(bdist_portable_base.bdist_portable_base):
     
     description = 'create a PortableApps package'
     
@@ -62,7 +62,6 @@ class bdist_portableapps(Command, object):
         self.copy_defaultdata()
         self.copy_bin()
         self.copy_other()
-        #self.zip()
         
     def create_portableapps_paths(self):
         for pathComponents in [('App', 'AppInfo'),
@@ -98,38 +97,5 @@ class bdist_portableapps(Command, object):
         src = os.path.join('build.in', 'portableapps', 'Other')
         dest = os.path.join(self.bdist_base_pa, 'Other')
         self.copy_files(src, dest, copy_recursively=True)
-        
             
-    def copy_files(self, src_dir, dest_dir, copy_recursively=False):
-        if not os.path.exists(dest_dir):
-            os.mkdir(dest_dir)
-        for entry in os.listdir(src_dir):
-            abs_entry = os.path.join(src_dir, entry)
-            if os.path.isfile(abs_entry):
-                if os.path.splitext(abs_entry)[1] in ('.txt', '.ini'):
-                    self.copy_and_expand(abs_entry, dest_dir)
-                else:
-                    copy_file(abs_entry, dest_dir)
-            elif os.path.isdir(abs_entry) and copy_recursively:
-                self.copy_files(abs_entry, os.path.join(dest_dir, entry), copy_recursively)
-                
-    def copy_and_expand(self, src_filename, dest_dir):
-        log.info('copying and expanding %s to %s'%(src_filename, dest_dir))
-        src_file = file(src_filename, 'rb')
-        contents = src_file.read()
-        src_file.close()
-        contents = contents%self.__dict__
-        dest_filename = os.path.join(dest_dir, os.path.basename(src_filename))
-        dest_file = file(dest_filename, 'wb')
-        dest_file.write(contents)
-        dest_file.close()
-        
-    def zip(self):
-        archive_filename = os.path.join(self.dist_dir, 'X-TaskCoach_%s_rev1.zip'%self.version)
-        archive = zipfile.ZipFile(archive_filename, 'w', zipfile.ZIP_DEFLATED)
-        for dirpath, dirnames, filenames in os.walk(self.bdist_base_wpp):
-            for filename in filenames:
-                filepath = os.path.join(dirpath, filename)
-                arcname = filepath[len(self.bdist_base_wpp):]
-                archive.write(filepath, arcname)
-        archive.close()
+

@@ -23,10 +23,13 @@ from changetypes import *
 
 releases = [
 
-Release('0.74.5', 'October 18, 2009',
+Release('0.74.5', 'October 23, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''Make opening (task) edit dialogs faster.''', '2884522')]
+        Bug('''Make opening (task) edit dialogs faster.''', '2884522')],
+    distributionsChanged=[
+        Distribution('''Added a PortableApps version of Task Coach to the 
+set of available distributions.''')]
     ),
             
 Release('0.74.4', 'October 17, 2009',
