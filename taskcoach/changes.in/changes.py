@@ -23,18 +23,22 @@ from changetypes import *
 
 releases = [
 
+Release('0.75.0', 'October ?, 2009',
+    summary='''This release adds percentage complete tracking for tasks.''',
+    featuresAdded=[
+        Feature('''Tasks have a percentage complete property.''', 
+                'http://uservoice.com/a/Icogx'),
+        Feature('''Double clicking the task bar icon will iconize the main
+window when it is visible and restore it when iconized (Mac OS X and Windows).''',
+                'http://uservoice.com/a/dKfBt')
+        ]
+    ),
+    
 Release('0.74.5', 'October 18, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[]
     ),
-            
-Release('0.75.0', 'October ?, 2009',
-    summary='''This release adds percentage complete tracking for tasks.''',
-    featuresAdded=[
-        Feature('''Tasks have a percentage complete property. ''')
-        ]
-    ),
-            
+        
 Release('0.74.4', 'October 17, 2009',
     summary='''This is a bugfix release that fixes some user interface
 bugs, most notably that entering dates with the keyboard was not working 
