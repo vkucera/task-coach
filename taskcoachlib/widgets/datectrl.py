@@ -205,11 +205,12 @@ class TimeCtrl(Panel):
         super(TimeCtrl, self).__init__(parent, callback, *args, **kwargs)
         
     def SetValue(self, time):
-        if time is not None:
-            value = '%02d:%02d'%(time.hour, time.minute)
-            if self._showSeconds:
-                value += ':%02d'%time.second
-            self._controls[0].SetValue(value)
+        if time is None:
+            time = date.DateTime.now().time()
+        value = '%02d:%02d'%(time.hour, time.minute)
+        if self._showSeconds:
+            value += ':%02d'%time.second
+        self._controls[0].SetValue(value)
     
     def _createControls(self, callback):
         control = combo.ComboCtrl(self, value=self._showSeconds and '00:00:00' or '00:00',
@@ -235,7 +236,10 @@ class TimeCtrl(Panel):
         except:
             time = date.Time()
         return time
-
+    
+    def Enable(self, enable=True):
+        self._controls[0].Enable(enable)
+        
 
 class DateTimeCtrl(Panel):
     def __init__(self, parent, dateTime, callback=None, noneAllowed=True,
