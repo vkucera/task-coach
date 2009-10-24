@@ -31,6 +31,7 @@ else
 endif
 
 TCVERSION=$(shell python -c "import taskcoachlib.meta.data as data; print data.version")
+TCPORTABLE=$(shell python -c "import os; print \"'\" + os.path.join(os.getcwd(), 'build', 'TaskCoachPortable') + \"'\"")
 
 all: windist sdist website
 
@@ -65,10 +66,11 @@ dmg: prepare
 
 winpenpack: py2exe 
 	$(PYTHON) make.py bdist_winpenpack
+
 	
 portableapps: py2exe
 	$(PYTHON) make.py bdist_portableapps
-	$(PORTABLEAPPSINSTALLER) "c:\Documents and Settings\Frank\workspace\taskcoach0_74\build\TaskCoachPortable"
+	$(PORTABLEAPPSINSTALLER) $(TCPORTABLE)
 	mv build/TaskCoachPortable_$(TCVERSION).paf.exe dist
 
 icons: taskcoachlib/gui/icons.py
