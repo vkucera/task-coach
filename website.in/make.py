@@ -40,7 +40,7 @@ pages['index'] = \
         is at version %(version)s. Many people use it on a daily basis, but 
         there are still a lot of 
         features missing. If there's anything you'd like to see included, 
-        <a href="http://taskcoach.uservoice.com/pages/26465"
+        <a href="http://taskcoach.uservoice.com/"
         onClick="javascript: pageTracker._trackPageview('/outgoing/uservoice.com/desktop');">please 
         let us know</a>.</P>
         <P>%(name)s is licensed under the <A HREF="license.html">%(license)s</A> 

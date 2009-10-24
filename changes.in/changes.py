@@ -23,6 +23,7 @@ from changetypes import *
 
 releases = [
 
+
 Release('0.75.0', 'October ?, 2009',
     summary='''This release adds percentage complete tracking for tasks.''',
     featuresAdded=[
@@ -34,8 +35,9 @@ window when it is visible and restore it when iconized (Mac OS X and Windows).''
         ]
     ),
     
-Release('0.74.5', 'October 23, 2009',
-    summary='''This is a bugfix release.''',
+Release('0.74.5', 'October 24, 2009',
+    summary='''This is a bugfix release that also adds a PortableApps version
+of Task Coach.''',
     bugsFixed=[
         Bug('''Make opening (task) edit dialogs faster.''', '2884522'),
         Bug('''Use 'now' as default time in effort dialogs on Mac OS X 
@@ -44,7 +46,7 @@ instead of '0:00:00'.''', '2874824')],
         Feature('''When browsing for an attachment, start in the
 current attachment directory.'''),
         Feature('''Under Windows, prevent users from deleting
-temporary files and thus loosing all their e-mail attachments''')],
+temporary files and thus loosing all their e-mail attachments.''')],
     distributionsChanged=[
         Distribution('''Added a PortableApps version of Task Coach to the 
 set of available distributions.''')]
