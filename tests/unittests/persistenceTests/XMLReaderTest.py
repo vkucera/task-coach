@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import xml.parsers.expat, wx, StringIO, os
+import xml.parsers.expat, wx, StringIO, os, tempfile
 import test
 from taskcoachlib import persistence
 from taskcoachlib.domain import date
@@ -67,7 +67,41 @@ class XMLReaderTestCase(test.TestCase):
         _, categories, notes, _, _ = self.writeAndRead(xmlContents)
         return categories, notes
     
-    
+
+class TempFileLockTest(XMLReaderTestCase):
+    tskversion = 25
+
+    def setUp(self):
+        self.oldMkstemp = tempfile.mkstemp
+        def newMkstemp(*args, **kwargs):
+            handle, name = self.oldMkstemp(*args, **kwargs)
+            self.__filename = name
+            return handle, name
+        tempfile.mkstemp = newMkstemp
+
+        super(TempFileLockTest, self).setUp()
+
+    def tearDown(self):
+        tempfile.mkstemp = self.oldMkstemp
+        super(TempFileLockTest, self).tearDown()
+
+    def testLock(self):
+        if os.name == 'nt':
+            import base64
+            tasks = self.writeAndReadTasks(\
+                '<tasks>\n<task status="0">\n'
+                '<attachment type="mail" status="0">\n'
+                '<data extension="eml">%s</data>\n'
+                '</attachment>\n</task>\n</tasks>\n'%base64.encodestring('Data'))
+
+            try:
+                os.remove(self.__filename)
+            except:
+                pass
+
+            self.assert_(os.path.exists(self.__filename))
+
+
 class XMLReaderVersion6Test(XMLReaderTestCase):
     tskversion = 6
 

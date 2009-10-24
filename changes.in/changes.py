@@ -31,7 +31,9 @@ Release('0.74.5', 'October 23, 2009',
 instead of '0:00:00'.''', '2874824')],
     featuresAdded=[
         Feature('''When browsing for an attachment, start in the
-current attachment's directory.''')],
+current attachment directory.'''),
+        Feature('''Under Windows, prevent users from deleting
+temporary files and thus loosing all their e-mail attachments''')],
     distributionsChanged=[
         Distribution('''Added a PortableApps version of Task Coach to the 
 set of available distributions.''')]
