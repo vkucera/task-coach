@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import threading, wx, urllib2
-import xml.etree.ElementTree as ElementTree
 import data
  
 
@@ -40,16 +39,16 @@ class VersionChecker(threading.Thread):
             
     def getLatestVersion(self):
         try:
-            pad = self.parsePadFile(self.retrievePadFile())
-            return pad.findtext('Program_Info/Program_Version')
+            versionText = self.parseVersionFile(self.retrieveVersionFile())
+            return versionText.strip()
         except:
             return self.settings.get('version', 'notified') # pylint: disable-msg=W0702
 
-    def parsePadFile(self, padFile):
-        return ElementTree.parse(padFile)
+    def parseVersionFile(self, versionFile):
+        return versionFile.readline()
 
-    def retrievePadFile(self):
-        return urllib2.urlopen(data.pad)
+    def retrieveVersionFile(self):
+        return urllib2.urlopen(data.version_url)
 
     def notifyUser(self, latestVersion):
         # Must use CallAfter because this is a non-GUI thread
