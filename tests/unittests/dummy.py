@@ -23,15 +23,10 @@ from taskcoachlib import widgets, patterns, persistence, gui
 class DummyWidget(wx.Frame):
     def __init__(self, viewer):
         super(DummyWidget, self).__init__(viewer)
-        self._selection = []
         self.viewer = viewer
-        self.refreshedItems = []
 
     def curselection(self):
-        return self._selection
-
-    def select(self, items):
-        self._selection = items
+        return []
 
     def GetItemCount(self):
         return len(self.viewer.presentation())

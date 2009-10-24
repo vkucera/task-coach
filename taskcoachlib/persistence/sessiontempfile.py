@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os, atexit, tempfile
 from taskcoachlib import patterns
 
-
 class TempFiles(object):
     __metaclass__ = patterns.Singleton
     
@@ -28,10 +27,17 @@ class TempFiles(object):
         atexit.register(self.cleanup)
         
     def register(self, filename):
-        self.__tempFiles.append(filename)
+        # Keep an open handle to the file. Under Windows, this
+        # prevents the user from deleting it. I couldn't find a
+        # way to prevent deletion of a file under Linux without
+        # preventing read access; on the other hand few Linux
+        # users clean up their temp dir themselves...
+        fp = file(filename, 'rb')
+        self.__tempFiles.append((fp, filename))
 
     def cleanup(self):
-        for name in self.__tempFiles:
+        for fp, name in self.__tempFiles:
+            fp.close()
             try:
                 os.remove(name)
             except:

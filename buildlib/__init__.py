@@ -20,3 +20,4 @@ from clean import clean
 from bdist_rpm_fedora import bdist_rpm_fedora
 from bdist_deb import bdist_deb
 from bdist_winpenpack import bdist_winpenpack
+from bdist_portableapps import bdist_portableapps

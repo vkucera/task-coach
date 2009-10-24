@@ -43,7 +43,7 @@ class HTMLWriterTestCase(test.wxTestCase):
             os.remove(cssFilename)
             
     def createViewer(self):
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     def __writeAndRead(self, selectionOnly):
         self.writer.write(self.viewer, self.settings, selectionOnly)

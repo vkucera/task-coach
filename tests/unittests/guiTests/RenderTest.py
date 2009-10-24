@@ -207,4 +207,4 @@ class RenderException(test.TestCase):
         try:
             render.exception(Exception, e)
         except UnicodeEncodeError:
-            self.fail()
+            self.fail() # pragma: no cover

@@ -44,16 +44,6 @@ class TreeListCtrlTestCase(TreeCtrlTest.TreeCtrlTestCase):
         
     def columns(self):
         return self._columns
-    
-    def getItemText(self, index, column=None): # pylint: disable-msg=W0221
-        itemText = super(TreeListCtrlTestCase, self).getItemText(index)
-        if column is None:
-            return itemText
-        else:
-            return '%s in column %s'%(itemText, column)
-    
-    def getItemImage(self, index, which, column=None): # pylint: disable-msg=W0221,W0613
-        return super(TreeListCtrlTestCase, self).getItemImage(index)
 
     
 class TreeListCtrlTest(TreeListCtrlTestCase, TreeCtrlTest.CommonTestsMixin):

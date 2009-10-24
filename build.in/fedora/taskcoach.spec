@@ -77,7 +77,6 @@ desktop-file-install --vendor fedora \
 %%{_datadir}/pixmaps/taskcoach.png
 %%doc CHANGES.txt LICENSE.txt PUBLICITY.txt README.txt TODO.tsk
 
-%%exclude %%{_bindir}/taskcoach.pyw
 %%exclude %%{_libdir}/python*/site-packages/buildlib/*.py*
 %%if 0%%{?fedora} >= 11
 %%exclude %%{_libdir}/python*/site-packages/taskcoachlib/bin.in/*
