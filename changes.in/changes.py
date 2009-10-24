@@ -23,35 +23,29 @@ from changetypes import *
 
 releases = [
 
-
-Release('0.75.0', 'October ?, 2009',
-    summary='''This release adds percentage complete tracking for tasks.''',
+Release('0.75.0', 'October 24, 2009',
+    summary='''This release adds percentage complete tracking for tasks,
+a PortableApps version of Task Coach and some minor features and bug fixes.''',
     featuresAdded=[
         Feature('''Tasks have a percentage complete property.''', 
                 'http://uservoice.com/a/Icogx'),
         Feature('''Double clicking the task bar icon will iconize the main
-window when it is visible and restore it when iconized (Mac OS X and Windows).''',
-                'http://uservoice.com/a/dKfBt')
-        ]
-    ),
-    
-Release('0.74.5', 'October 24, 2009',
-    summary='''This is a bugfix release that also adds a PortableApps version
-of Task Coach.''',
+window when it is visible and restore it when iconized (Mac OS X and 
+Windows).''', 'http://uservoice.com/a/dKfBt'),
+        Feature('''When browsing for an attachment, start in the
+current attachment directory.'''),
+        Feature('''Under Windows, prevent users from deleting
+temporary files and thus loosing all their e-mail attachments.''')
+        ],
     bugsFixed=[
         Bug('''Make opening (task) edit dialogs faster.''', '2884522'),
         Bug('''Use 'now' as default time in effort dialogs on Mac OS X 
 instead of '0:00:00'.''', '2874824')],
-    featuresAdded=[
-        Feature('''When browsing for an attachment, start in the
-current attachment directory.'''),
-        Feature('''Under Windows, prevent users from deleting
-temporary files and thus loosing all their e-mail attachments.''')],
     distributionsChanged=[
         Distribution('''Added a PortableApps version of Task Coach to the 
 set of available distributions.''')]
     ),
-        
+
 Release('0.74.4', 'October 17, 2009',
     summary='''This is a bugfix release that fixes some user interface
 bugs, most notably that entering dates with the keyboard was not working 
