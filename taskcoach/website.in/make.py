@@ -169,7 +169,20 @@ pages['download'] = \
         <td><b><a
         href="%(dist_download_prefix)s/%(filename)s-%(version)s-win32.exe" 
         onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/windows');">Installer</a> for Microsoft Windows</b></td></tr>
-        <tr><td>Windows versions supported: Windows 2000, XP, Vista</td></tr>
+        <tr><td>Windows versions supported: Windows 2000, XP, Vista, Windows 7</td></tr>
+        <tr><td>Prerequisites: none.</td></tr>
+        <tr><td>Installation: run the installer; it will guide you through
+        the installation process.</td></tr>
+        </table>
+        </p>
+        <hr>
+        <p>
+        <table>
+        <tr><td rowspan=4 valign=top><img src="PortableAppsIcon.png" alt="PortableApps"></td>
+        <td><b><a
+        href="%(dist_download_prefix)s/%(filename)sPortable_%(version)s.paf.exe" 
+        onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/windows');">TaskCoachPortable</a> portable app for Microsoft Windows</b></td></tr>
+        <tr><td>Windows versions supported: Windows 2000, XP, Vista, Windows 7</td></tr>
         <tr><td>Prerequisites: none.</td></tr>
         <tr><td>Installation: run the installer; it will guide you through
         the installation process.</td></tr>
@@ -182,7 +195,7 @@ pages['download'] = \
         <td><b><a
         href="%(dist_download_prefix)s/X-%(filename)s_%(version)s_rev1.zip" 
         onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download/windows');">winPenPack</a> portable app for Microsoft Windows</b></td></tr>
-        <tr><td>Windows versions supported: Windows 2000, XP, Vista</td></tr>
+        <tr><td>Windows versions supported: Windows 2000, XP, Vista, Windows 7</td></tr>
         <tr><td>Prerequisites: none.</td></tr>
         <tr><td>Installation: unzip the archive contents in the location where
         you want %(name)s to be installed.</td></tr>
@@ -427,11 +440,13 @@ pages['portable'] = \
         <p>%(name)s is portable. Just <a href="download.html">download</a> it 
         and install it to a portable device.
         In addition, in the files tab of the preferences dialog 
-        ('Edit' -> 'Preferences'), check 'Save settings (TaskCoach.ini) in 
-        the same directory as the program' to make sure your settings are 
+        ('Edit' -> 'Preferences'), check "Save settings (%(filename)s.ini) in 
+        the same directory as the program" to make sure your settings are 
         saved on the portable device.</p>
         <p>%(name)s is also part of the portable application suites listed 
-        below.</p>
+        below. The latest version of %(name)s for these portable application
+        suites can always be <a href="download.html">downloaded from our 
+        website</a>.</p>
         <hr>
         <p>
         <a href="http://portableapps.com/apps/office/task_coach_portable">

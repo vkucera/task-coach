@@ -43,7 +43,7 @@ class CategoryEditorTestCase(test.wxTestCase):
         super(CategoryEditorTestCase, self).tearDown()
         
     def createCommand(self):
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
     
     def createCategories(self):
         return []

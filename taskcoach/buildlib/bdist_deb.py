@@ -57,8 +57,8 @@ class bdist_deb(Command, object):
         ('license-summary=', None, 'summary of the license of the application'),
         ('license-path=', None, 'path of the license on Debian systems'),
         ('wxpythonversion=', None, 'minimal wxPython version needed'),
-        ('sdist-dirs-to-exclude=', None, 
-         'dirs in the source distribution to exclude from the deb package'),
+        ('sdist-exclude=', None, 
+         'dirs and files in the source distribution to exclude from the deb package'),
         ('url=', None, 'url of the application homepage'),
         ('architecture=', None, 'architecure of the deb package [all]')]
 
@@ -76,7 +76,7 @@ class bdist_deb(Command, object):
             self.license_abbrev = self.license_summary = self.license_path = \
             self.url = self.version = self.package_version = \
             self.distribution = self.wxpythonversion = \
-            self.sdist_dirs_to_exclude = None
+            self.sdist_exclude = None
                     
     def finalize_options(self):
         mandatoryOptions = [\
@@ -109,8 +109,8 @@ class bdist_deb(Command, object):
             self.distribution = 'UNRELEASED'
         if not self.wxpythonversion:
             self.wxpythonversion = '2.8'
-        self.sdist_dirs_to_exclude = self.sdist_dirs_to_exclude.split(',') \
-            if self.sdist_dirs_to_exclude else []
+        self.sdist_exclude = self.sdist_exclude.split(',') \
+            if self.sdist_exclude else []
         self.subsection_lower = self.subsection.lower()
         self.datetime = time.strftime('%a, %d %b %Y %H:%M:%S +0000', 
                                       time.gmtime())
@@ -123,7 +123,7 @@ class bdist_deb(Command, object):
     def run(self):
         self.copy_sdist()
         self.untar_sdist()
-        self.remove_sdist_dirs_to_exclude()
+        self.remove_sdist_excludes()
         self.create_debian_dir()
         self.write_debian_files()
         self.build_debian_package()
@@ -155,14 +155,17 @@ class bdist_deb(Command, object):
             os.rename(extracted_dir, expected_extracted_dir)
         self.extracted_dir = expected_extracted_dir
         
-    def remove_sdist_dirs_to_exclude(self):
-        ''' Remove directories from the source distribution that are not 
-            needed for the debian package. '''
-        for relative_dir in self.sdist_dirs_to_exclude:
-            absolute_dir = os.path.join(self.extracted_dir, relative_dir)
+    def remove_sdist_excludes(self):
+        ''' Remove directories and files from the source distribution that are 
+            not needed for the debian package. '''
+        for relative_path in self.sdist_exclude:
+            absolute_path = os.path.join(self.extracted_dir, relative_path)
             if self.verbose:
-                log.info('removing %s from source distribution'%relative_dir)
-            shutil.rmtree(absolute_dir)
+                log.info('removing %s from source distribution'%relative_path)
+            if os.path.isdir(absolute_path):
+                shutil.rmtree(absolute_path)
+            else:
+                os.remove(absolute_path)
 
     def create_debian_dir(self):
         ''' Create the debian dir for package files. '''

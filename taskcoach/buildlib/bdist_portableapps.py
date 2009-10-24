@@ -16,19 +16,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, zipfile
-from distutils import errors
+import os, glob, zipfile
+from distutils.core import Command
+from distutils.file_util import copy_file
+from distutils import log, errors
 import bdist_portable_base
 
-
-class bdist_winpenpack(bdist_portable_base.bdist_portable_base):
+class bdist_portableapps(bdist_portable_base.bdist_portable_base):
     
-    description = 'create a winPenPack X-Software package'
+    description = 'create a PortableApps package'
     
     user_options = [
         ('bdist-base=', None, 
          'base directory for creating built distributions [build]'),
         ('dist-dir=', 'd', 'directory to put final package files in [dist]'),
+        ('name=', None, 'name of the application'),
         ('version=', None, 'version of the application'),
         ('license=', None, 'license (title) of the application'),
         ('url=', None, 'url of the application homepage'),
@@ -38,10 +40,11 @@ class bdist_winpenpack(bdist_portable_base.bdist_portable_base):
     def initialize_options(self):
         self.bdist_base = 'build'
         self.dist_dir = 'dist'
-        self.version = self.license = self.url = self.filename = self.date = None
+        self.name = self.version = self.license = self.url = self.filename = self.date = None
     
     def finalize_options(self):
-        mandatoryOptions = [('version', 'the version of the application'),
+        mandatoryOptions = [('name', 'the name of the application'),
+                            ('version', 'the version of the application'),
                             ('license', 'the title of the license'),
                             ('url', 'the url of the application homepage'),
                             ('filename', 'the filename of the application without extension'),
@@ -52,43 +55,47 @@ class bdist_winpenpack(bdist_portable_base.bdist_portable_base):
                     'you must provide %s (--%s)'%(description, option)
 
     def run(self):
-        self.bdist_base_wpp = os.path.join(self.bdist_base, 
-                                          'X-TaskCoach_%s_rev1'%self.version)
-        self.create_winpenpack_paths()
+        self.bdist_base_pa = os.path.join(self.bdist_base, 'TaskCoachPortable')
+        self.create_portableapps_paths()
         self.copy_launcher()
-        self.copy_readme()
+        self.copy_appinfo()
+        self.copy_defaultdata()
         self.copy_bin()
-        self.zip()
+        self.copy_other()
         
-    def create_winpenpack_paths(self):
-        for pathComponents in [('Bin', 'TaskCoach'), 
-                               ('Documents', 'TaskCoach'),
-                               ('ReadMe',), 
-                               ('User', 'TaskCoach')]:
-            path = os.path.join(self.bdist_base_wpp, *pathComponents)
+    def create_portableapps_paths(self):
+        for pathComponents in [('App', 'AppInfo'),
+                               ('App', 'DefaultData', 'settings'),
+                               ('App', 'TaskCoach'), 
+                               ('Data', ),
+                               ('Other', 'Help', 'images'), 
+                               ('Other', 'Source')]:
+            path = os.path.join(self.bdist_base_pa, *pathComponents)
             if not os.path.exists(path):
                 os.makedirs(path)
                     
     def copy_launcher(self):
-        launcher_src = os.path.join('build.in', 'winpenpack')
-        self.copy_files(launcher_src, self.bdist_base_wpp)
+        launcher_src = os.path.join('build.in', 'portableapps')
+        self.copy_files(launcher_src, self.bdist_base_pa)
                
-    def copy_readme(self):
-        readme_src = os.path.join('build.in', 'winpenpack', 'ReadMe')
-        readme_dest = os.path.join(self.bdist_base_wpp, 'ReadMe')
-        self.copy_files(readme_src, readme_dest)
+    def copy_appinfo(self):
+        src = os.path.join('build.in', 'portableapps', 'App', 'AppInfo')
+        dest = os.path.join(self.bdist_base_pa, 'App', 'AppInfo')
+        self.copy_files(src, dest)
+        
+    def copy_defaultdata(self):
+        src = os.path.join('build.in', 'portableapps', 'App', 'DefaultData', 'settings')
+        dest = os.path.join(self.bdist_base_pa, 'App', 'DefaultData', 'settings')
+        self.copy_files(src, dest)
 
     def copy_bin(self):
-        srcdir = os.path.join(self.bdist_base, 'TaskCoach-%s-win32exe'%self.version)
-        destdir = os.path.join(self.bdist_base_wpp, 'Bin', 'TaskCoach')
-        self.copy_files(srcdir, destdir, copy_recursively=True)
+        src = os.path.join(self.bdist_base, 'TaskCoach-%s-win32exe'%self.version)
+        dest = os.path.join(self.bdist_base_pa, 'App', 'TaskCoach')
+        self.copy_files(src, dest, copy_recursively=True)
         
-    def zip(self):
-        archive_filename = os.path.join(self.dist_dir, 'X-TaskCoach_%s_rev1.zip'%self.version)
-        archive = zipfile.ZipFile(archive_filename, 'w', zipfile.ZIP_DEFLATED)
-        for dirpath, dirnames, filenames in os.walk(self.bdist_base_wpp):
-            for filename in filenames:
-                filepath = os.path.join(dirpath, filename)
-                arcname = filepath[len(self.bdist_base_wpp):]
-                archive.write(filepath, arcname)
-        archive.close()
+    def copy_other(self):
+        src = os.path.join('build.in', 'portableapps', 'Other')
+        dest = os.path.join(self.bdist_base_pa, 'Other')
+        self.copy_files(src, dest, copy_recursively=True)
+            
+

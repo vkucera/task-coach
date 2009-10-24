@@ -55,7 +55,7 @@ setupOptions = {
     'license': meta.license,
     'download_url': meta.download,
     'packages': findPackages('taskcoachlib') + findPackages('buildlib'),
-    'scripts': ['taskcoach.py', 'taskcoach.pyw'],
+    'scripts': ['taskcoach.py'],
     'classifiers': [\
         'Development Status :: 3 - Alpha',
         'Intended Audience :: End Users/Desktop',
@@ -79,10 +79,11 @@ if 'debian' in platform.dist():
         ('share/applications', ['build.in/fedora/taskcoach.desktop']), 
         ('share/pixmaps', ['icons.in/taskcoach.png'])]
 
-
-if platform.system() == 'Linux':
+system = platform.system()
+if system == 'Linux':
     setupOptions['package_data'] = {'taskcoachlib': ['bin.in/linux/_pysyncml.so']}
-
+elif system == 'Windows':
+    setupOptions['scripts'].append('taskcoach.pyw')
 
 if __name__ == '__main__':
     setup(**setupOptions)

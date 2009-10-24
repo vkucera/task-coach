@@ -24,6 +24,7 @@ DOT="dot"       # dot should be on the path
 
 ifeq (CYGWIN_NT,$(findstring CYGWIN_NT,$(shell uname)))
     INNOSETUP="/cygdrive/c/Program Files/Inno Setup 5/ISCC.exe"
+    PORTABLEAPPSINSTALLER="/cygdrive/c/Program Files/PortableApps.comInstaller/PortableApps.comInstaller.exe"
     EPYDOC=$(PYTHON) $(shell python -c "import os, sys; print \"'\" + os.path.join(os.path.split(sys.executable)[0], 'Scripts', 'epydoc.py') + \"'\"")
 else
     EPYDOC="epydoc"
@@ -56,7 +57,7 @@ fedora: prepare changes
 	$(PYTHON) make.py bdist_rpm_fedora 
 
 deb: sdist
-	$(PYTHON) make.py bdist_deb --sdist=dist/TaskCoach-$(TCVERSION).tar.gz --sdist-dirs-to-exclude="taskcoachlib/bin.in/windows,taskcoachlib/bin.in/macos"
+	$(PYTHON) make.py bdist_deb --sdist=dist/TaskCoach-$(TCVERSION).tar.gz --sdist-exclude="taskcoachlib/bin.in/windows,taskcoachlib/bin.in/macos"
 
 dmg: prepare
 	$(PYTHON) make.py py2app
@@ -64,6 +65,11 @@ dmg: prepare
 
 winpenpack: py2exe 
 	$(PYTHON) make.py bdist_winpenpack
+	
+portableapps: py2exe
+	$(PYTHON) make.py bdist_portableapps
+	$(PORTABLEAPPSINSTALLER) "c:\Documents and Settings\Frank\workspace\taskcoach0_74\build\TaskCoachPortable"
+	mv build/TaskCoachPortable_$(TCVERSION).paf.exe dist
 
 icons: taskcoachlib/gui/icons.py
 

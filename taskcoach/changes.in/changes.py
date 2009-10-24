@@ -34,9 +34,20 @@ window when it is visible and restore it when iconized (Mac OS X and Windows).''
         ]
     ),
     
-Release('0.74.5', 'October 18, 2009',
+Release('0.74.5', 'October 23, 2009',
     summary='''This is a bugfix release.''',
-    bugsFixed=[]
+    bugsFixed=[
+        Bug('''Make opening (task) edit dialogs faster.''', '2884522'),
+        Bug('''Use 'now' as default time in effort dialogs on Mac OS X 
+instead of '0:00:00'.''', '2874824')],
+    featuresAdded=[
+        Feature('''When browsing for an attachment, start in the
+current attachment directory.'''),
+        Feature('''Under Windows, prevent users from deleting
+temporary files and thus loosing all their e-mail attachments''')],
+    distributionsChanged=[
+        Distribution('''Added a PortableApps version of Task Coach to the 
+set of available distributions.''')]
     ),
         
 Release('0.74.4', 'October 17, 2009',

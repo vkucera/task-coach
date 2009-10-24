@@ -134,12 +134,12 @@ class MainWindowIconizedTest(MainWindowTestCase):
     def expectedHeight(self):
         height = 500
         if '__WXMAC__' == wx.Platform:
-            height -= 29
+            height -= 29 # pragma: no cover
         return height
     
     @test.skipOnPlatform('__WXGTK__', '__WXMAC__') # Test fails on Fedora and Mac OS X, don't know why nor how to fix it    
     def testIsIconized(self):
-        self.failUnless(self.mainwindow.IsIconized())
+        self.failUnless(self.mainwindow.IsIconized()) # pragma: no cover
                         
     def testWindowSize(self):
         self.assertEqual((700, self.expectedHeight()), 

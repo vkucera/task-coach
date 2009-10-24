@@ -8379,7 +8379,11 @@ class AuiManager(wx.EvtHandler):
         # active panes are allowed by the owner)
 
         window = event.GetWindow()
-        if isinstance(window.GetParent(), AuiFloatingFrame):
+        if isinstance(window, wx.Dialog):
+            # ignore EVT_CHILD_FOCUS events originating from dialogs not 
+            # managed by AUI
+            rootManager = None
+        elif isinstance(window.GetParent(), AuiFloatingFrame):
             rootManager = GetManager(window)
         else:
             rootManager = self

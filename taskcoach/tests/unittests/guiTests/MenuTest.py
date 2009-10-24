@@ -100,7 +100,7 @@ class MenuWithBooleanMenuItemsTestCase(MenuTestCase):
         self.commands = self.createCommands()
 
     def createCommands(self):
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
     
     def assertMenuItemsChecked(self, *expectedStates):
         for command in self.commands:
