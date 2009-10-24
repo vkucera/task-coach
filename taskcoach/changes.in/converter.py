@@ -26,8 +26,8 @@ class ChangeConverter(object):
         result = self.preProcess(change.description)
         if hasattr(change, 'url'):
             result += ' (%s)'%self.convertURL(change.url)
-        if change.sourceForgeIds:
-            convertedIds = self.convertSourceForgeIds(change)
+        if change.changeIds:
+            convertedIds = self.convertChangeIds(change)
             result += ' (%s)'%', '.join(convertedIds)
         return self.postProcess(result)
     
@@ -37,11 +37,11 @@ class ChangeConverter(object):
     def postProcess(self, convertedChange):
         return convertedChange
 
-    def convertSourceForgeIds(self, change):
-        return [self.convertSourceForgeId(change, id) for id in change.sourceForgeIds]
+    def convertChangeIds(self, change):
+        return [self.convertChangeId(change, id) for id in change.changeIds]
 
-    def convertSourceForgeId(self, change, sourceForgeId):
-        return sourceForgeId
+    def convertChangeId(self, change, changeId):
+        return changeId
 
     def convertURL(self, url):
         return url
@@ -62,17 +62,17 @@ class ChangeToTextConverter(ChangeConverter):
         convertedChange = self._multipleSpaces.sub(' ', convertedChange)
         return convertedChange
 
-    def convertSourceForgeId(self, change, sourceForgeId):
-        return 'SF#%s'%sourceForgeId
+    def convertChangeId(self, change, changeId):
+        return changeId if changeId.startswith('http') else 'SF#%s'%changeId
         
 
-bugLink = '<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=%(id)s&group_id=130831&atid=719134">%(id)s</A>'
-
-rfeLink = '<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=%(id)s&group_id=130831&atid=719137">%(id)s</A>'
-
-noLink = '%(id)s'
-
 class ChangeToHTMLConverter(ChangeConverter):
+
+    LinkToSourceForge = '<A HREF="https://sourceforge.net/tracker/index.php?func=detail&aid=%%(id)s&group_id=130831&atid=%(atid)s">%%(id)s</A>'
+    LinkToSourceForgeBugReport = LinkToSourceForge%{'atid': '719134'}
+    LinkToSourceForgeFeatureRequest = LinkToSourceForge%{'atid': '719137'}
+    LinkToURL = '<A HREF="%(id)s">%(id)s</A>'
+    NoLink = '%(id)s'
 
     def preProcess(self, changeToBeConverted):
         changeToBeConverted = re.sub('<', '&lt;', changeToBeConverted)
@@ -89,14 +89,16 @@ class ChangeToHTMLConverter(ChangeConverter):
         convertedChange = ''.join(listOfConvertedUrlsAndTextFragments)
         return '<LI>%s</LI>'%convertedChange
 
-    def convertSourceForgeId(self, change, sourceForgeId):
-        if isinstance(change, changetypes.Bug):
-            template = bugLink    
+    def convertChangeId(self, change, changeId):
+        if changeId.startswith('http'):
+            template = self.LinkToURL
+        elif isinstance(change, changetypes.Bug):
+            template = self.LinkToSourceForgeBugReport    
         elif isinstance(change, changetypes.Feature):
-            template = rfeLink
+            template = self.LinkToSourceForgeFeatureRequest
         else:
-            template = noLink
-        return template%{'id': sourceForgeId}
+            template = self.NoLink
+        return template%{'id': changeId}
 
     def convertURL(self, url):
         return '<A HREF="%s">%s</A>'%(url, url)

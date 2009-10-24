@@ -28,21 +28,18 @@ class VersionCheckerUnderTest(meta.VersionChecker):
         self.userNotified = False
         super(VersionCheckerUnderTest, self).__init__(*args, **kwargs)
         
-    def retrievePadFile(self):
+    def retrieveVersionFile(self):
         if self.retrievalException:
             raise self.retrievalException
         else:
             import StringIO
-            return StringIO.StringIO('<?xml version="1.0" encoding="UTF-8" ?>\n'
-                                     '<XML_DIZ_INFO><Program_Info>'
-                                     '<Program_Version>%s</Program_Version>'
-                                     '</Program_Info></XML_DIZ_INFO>'%self.version)
+            return StringIO.StringIO('%s\n'%self.version)
             
-    def parsePadFile(self, padFile):
+    def parseVersionFile(self, versionFile):
         if self.parseException:
             raise self.parseException
         else:
-            return super(VersionCheckerUnderTest, self).parsePadFile(padFile)
+            return super(VersionCheckerUnderTest, self).parseVersionFile(versionFile)
             
     def notifyUser(self, *args, **kwargs): # pylint: disable-msg=W0221,W0613
         self.userNotified = True
