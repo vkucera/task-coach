@@ -37,9 +37,9 @@ class Release:
 
 
 class Change(object):
-    def __init__(self, description, *sourceForgeIds):
+    def __init__(self, description, *changeIds):
         self.description = description
-        self.sourceForgeIds = sourceForgeIds
+        self.changeIds = changeIds
 
 
 class Bug(Change):
@@ -63,8 +63,8 @@ class Distribution(Change):
 
 
 class Website(Change):
-    def __init__(self, description, url, *sourceForgeIds):
-        super(Website, self).__init__(description, *sourceForgeIds)
+    def __init__(self, description, url, *changeIds):
+        super(Website, self).__init__(description, *changeIds)
         self.url = url
 
 
