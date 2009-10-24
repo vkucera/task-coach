@@ -29,6 +29,9 @@ Release('0.74.5', 'October 23, 2009',
         Bug('''Make opening (task) edit dialogs faster.''', '2884522'),
         Bug('''Use 'now' as default time in effort dialogs on Mac OS X 
 instead of '0:00:00'.''', '2874824')],
+    featuresAdded=[
+        Feature('''When browsing for an attachment, start in the
+current attachment's directory.''')],
     distributionsChanged=[
         Distribution('''Added a PortableApps version of Task Coach to the 
 set of available distributions.''')]

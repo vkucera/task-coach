@@ -231,7 +231,13 @@ class AttachmentSubjectPage(SubjectPage):
         super(AttachmentSubjectPage, self).ok()
 
     def onSelectLocation(self, event): # pylint: disable-msg=W0613
-        filename = widgets.AttachmentSelector()
+        if self.item.type_ == 'file':
+            basePath = os.path.split(self.item.normalizedLocation())[0]
+        else:
+            basePath = os.getcwd()
+
+        filename = widgets.AttachmentSelector(default_path=basePath)
+
         if filename:
             if self.basePath:
                 filename = attachment.getRelativePath(filename, self.basePath)
