@@ -52,9 +52,11 @@ Release steps:
 
 - Merge recent changes to the trunk.
 
-- Add release to Sourceforge bug tracker groups.
+- Add release to Sourceforge bug tracker and support request groups.
 
-- Set bug reports and/or feature requests to Pending state.
+- Set bug reports on Sourceforge to Pending state.
+
+- Mark feature requests on Uservoice completed.
 
 - If new release branch, update the buildbot masters configuration.
 '''
