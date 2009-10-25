@@ -22,6 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+            
+Release('0.75.1', 'October 24, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''...''')
+        ]
+    ),
 
 Release('0.75.0', 'October 24, 2009',
     summary='''This release adds percentage complete tracking for tasks,
