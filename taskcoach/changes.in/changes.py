@@ -23,6 +23,15 @@ from changetypes import *
 
 releases = [
             
+Release('0.76.0', 'October 31, 2009',
+    summary='''This release adds buttons on the toolbar of task viewers to
+hide completed and/or future tasks.''',
+    featuresAdded=[
+        Feature('''Task viewers now have buttons on the toolbar to hide or 
+show completed and/or inactive (future) tasks.''', 'http://uservoice.com/a/EfkNL')
+        ]
+    ),
+            
 Release('0.75.1', 'October 24, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
