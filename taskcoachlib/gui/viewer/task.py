@@ -90,10 +90,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
 
     def createToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
-        taskUICommands = super(BaseTaskViewer, self).createToolBarUICommands()
-
-        # Don't use extend() because we want the search box to be at the end.
-        taskUICommands[-2:-2] = \
+        taskUICommands = \
             [None,
              uicommand.TaskNew(taskList=self.presentation(),
                                settings=self.settings),
@@ -105,9 +102,17 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
              uicommand.TaskEdit(taskList=self.presentation(), viewer=self),
              uicommand.TaskDelete(taskList=self.presentation(), viewer=self),
              None,
-             uicommand.TaskToggleCompletion(viewer=self)]
+             uicommand.TaskToggleCompletion(viewer=self),
+             None,
+              # Override the default menu texts to provide a better tooltip:
+             uicommand.ViewerHideCompletedTasks(viewer=self,
+                 menuText=_('Show/hide completed tasks'),
+                 bitmap='filtercompletedtasks'),
+             uicommand.ViewerHideInactiveTasks(viewer=self,
+                 menuText=_('Show/hide inactive tasks'),
+                 bitmap='filterinactivetasks')]
         if self.settings.getboolean('feature', 'effort'):
-            taskUICommands[-2:-2] = [
+            taskUICommands.extend([
                 # EffortStart needs a reference to the original (task) list to
                 # be able to stop tracking effort for tasks that are already 
                 # being tracked, but that might be filtered in the viewer's 
@@ -115,8 +120,11 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
                 None,
                 uicommand.EffortStart(viewer=self, 
                                       taskList=self.taskFile.tasks()),
-                uicommand.EffortStop(taskList=self.presentation())]
-        return taskUICommands
+                uicommand.EffortStop(taskList=self.presentation())])
+        
+        baseUICommands = super(BaseTaskViewer, self).createToolBarUICommands()    
+        # Insert the task viewer UI commands before the search box:
+        return baseUICommands[:-2] + taskUICommands + baseUICommands[-2:]
  
     def statusMessages(self):
         status1 = _('Tasks: %d selected, %d visible, %d total')%\

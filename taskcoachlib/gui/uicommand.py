@@ -203,8 +203,9 @@ class BooleanSettingsCommand(SettingsCommand): # pylint: disable-msg=W0223
 
 class UICheckCommand(BooleanSettingsCommand):
     def __init__(self, *args, **kwargs):
+        kwargs['bitmap'] = kwargs.get('bitmap', self.getBitmap())
         super(UICheckCommand, self).__init__(kind=wx.ITEM_CHECK, 
-            bitmap=self.getBitmap(), *args, **kwargs)
+            *args, **kwargs)
         
     def isSettingChecked(self):
         return self.settings.getboolean(self.section, self.setting)
@@ -1133,9 +1134,9 @@ class ViewerHideActiveTasks(ViewerCommand, UICheckCommand):
 
 class ViewerHideInactiveTasks(ViewerCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):
-        super(ViewerHideInactiveTasks, self).__init__(menuText=_('&Inactive'), 
-            helpText=_('Show/hide inactive tasks (tasks with a start date in the future)'),
-            *args, **kwargs)
+        kwargs['menuText'] = kwargs.get('menuText', _('&Inactive'))
+        kwargs['helpText'] = kwargs.get('helpText', _('Show/hide inactive tasks (tasks with a start date in the future)'))
+        super(ViewerHideInactiveTasks, self).__init__(*args, **kwargs)
         
     def isSettingChecked(self):
         return self.viewer.isHidingInactiveTasks()
@@ -1146,8 +1147,9 @@ class ViewerHideInactiveTasks(ViewerCommand, UICheckCommand):
         
 class ViewerHideCompletedTasks(ViewerCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):
-        super(ViewerHideCompletedTasks, self).__init__(menuText=_('&Completed'), 
-            helpText=_('Show/hide completed tasks'), *args, **kwargs)
+        kwargs['menuText'] = kwargs.get('menuText', _('&Completed'))
+        kwargs['helpText'] = kwargs.get('helpText', _('Show/hide completed tasks'))
+        super(ViewerHideCompletedTasks, self).__init__(*args, **kwargs)
          
     def isSettingChecked(self):
         return self.viewer.isHidingCompletedTasks()
