@@ -26,7 +26,7 @@ releases = [
 Release('0.75.1', 'October 24, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''...''')
+        Bug('''Iterating over viewers wasn't working in tabbed mode.''')
         ]
     ),
 
