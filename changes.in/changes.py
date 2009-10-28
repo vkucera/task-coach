@@ -23,10 +23,12 @@ from changetypes import *
 
 releases = [
             
-Release('0.75.1', 'October 24, 2009',
+Release('0.75.1', 'October 28, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''Iterating over viewers wasn't working in tabbed mode.''')
+        Bug('''Iterating over viewers wasn't working in tabbed mode.'''),
+        Bug('''When merging a task file with categories, don't break the 
+links between tasks/notes and categories.''', '2882493')
         ]
     ),
 

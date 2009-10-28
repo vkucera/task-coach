@@ -768,6 +768,22 @@ class TaskFileMergeTest(TaskFileTestCase):
         self.assertEqual(1, len(self.taskFile.categories()))
         self.assertEqual('merged category', list(self.taskFile.categories())[0].subject())
         
+    def testMerge_CategoryLinkedToTask(self):
+        self.task.addCategory(self.category)
+        self.category.addCategorizable(self.task)
+        mergedCategory = category.Category('merged category', id=self.category.id())
+        self.mergeFile.categories().append(mergedCategory)
+        self.merge()
+        self.assertEqual(self.category.id(), list(self.task.categories())[0].id())
+
+    def testMerge_CategoryLinkedToNote(self):
+        self.note.addCategory(self.category)
+        self.category.addCategorizable(self.note)
+        mergedCategory = category.Category('merged category', id=self.category.id())
+        self.mergeFile.categories().append(mergedCategory)
+        self.merge()
+        self.assertEqual(self.category.id(), list(self.note.categories())[0].id())
+        
         
 class LockedTaskFileLockTest(TaskFileTestCase):
     def createTaskFiles(self):
