@@ -296,7 +296,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         if self.aggregation == 'details':
             return super(EffortViewer, self).getIndexOfItem(item)
         for index, compositeEffort in enumerate(self.presentation()):
-            if item in compositeEffort:
+            if item == compositeEffort or item in compositeEffort:
                 return index
         return -1
 

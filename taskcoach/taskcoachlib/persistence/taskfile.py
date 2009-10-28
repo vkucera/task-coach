@@ -240,16 +240,20 @@ class TaskFile(patterns.Observer):
         mergeFile.load(filename)
         self.__loading = True
         self.tasks().removeItems(self.objectsToOverwrite(self.tasks(), mergeFile.tasks()))
+        categoryMap = dict()
+        self.rememberCategoryLinks(categoryMap, self.tasks())
         self.tasks().extend(mergeFile.tasks().rootItems())
         self.notes().removeItems(self.objectsToOverwrite(self.notes(), mergeFile.notes()))
+        self.rememberCategoryLinks(categoryMap, self.notes())
         self.notes().extend(mergeFile.notes().rootItems())
         self.categories().removeItems(self.objectsToOverwrite(self.categories(),
                                                               mergeFile.categories()))
         self.categories().extend(mergeFile.categories().rootItems())
+        self.restoreCategoryLinks(categoryMap)
         mergeFile.close()
         self.__loading = False
         self.markDirty(force=True)
-        
+
     def objectsToOverwrite(self, originalObjects, objectsToMerge):
         objectsToOverwrite = []
         for domainObject in objectsToMerge:
@@ -258,6 +262,20 @@ class TaskFile(patterns.Observer):
             except IndexError:
                 pass
         return objectsToOverwrite
+        
+    def rememberCategoryLinks(self, categoryMap, categorizables):
+        for categorizable in categorizables:
+            for category in categorizable.categories():
+                categoryMap.setdefault(category.id(), []).append(categorizable)
+            
+    def restoreCategoryLinks(self, categoryMap):
+        categories = self.categories()
+        for categoryId, categorizables in categoryMap.iteritems():
+            category = categories.getObjectById(categoryId)
+            for categorizable in categorizables:
+                categorizable.addCategory(category)
+                category.addCategorizable(categorizable)
+        
     
     def needSave(self):
         return not self.__loading and self.__needSave

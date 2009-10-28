@@ -201,8 +201,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
     def _refreshObject(self, item, domainObject):
         for columnIndex in range(self.GetColumnCount()):
             text = self.__adapter.getItemText(domainObject, columnIndex)
-            if text:
-                self.SetItemText(item, text, columnIndex)                
+            self.SetItemText(item, text, columnIndex)                
             for which in (wx.TreeItemIcon_Expanded, wx.TreeItemIcon_Normal):
                 image = self.__adapter.getItemImage(domainObject, which, columnIndex)
                 if image >= 0:

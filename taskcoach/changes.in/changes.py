@@ -32,10 +32,16 @@ show completed and/or inactive (future) tasks.''', 'http://uservoice.com/a/EfkNL
         ]
     ),
             
-Release('0.75.1', 'October 24, 2009',
+Release('0.75.1', 'October 28, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''...''')
+        Bug('''Iterating over viewers wasn't working in tabbed mode.'''),
+        Bug('''When merging a task file with categories, don't break the 
+links between tasks/notes and categories.''', '2882493'),
+        Bug('''Tree viewers wouldn't properly refresh when an attribute of
+a task, category, or note was changed to be empty.''', '2806354'),
+        Bug('''When tracking effort, effort viewers in aggregated mode (showing
+effort per day/week/month) were not being updated very second.''')
         ]
     ),
 
