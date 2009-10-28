@@ -263,19 +263,21 @@ class AdvanceSelectionMixin(object):
     def AdvanceSelection(self, forward=True):
         if self.PageCount <= 1:
             return # Not enough pages to advance selection
+        curSelection = self.GetSelection()
+        minSelection, maxSelection = 0, self.PageCount - 1
         if forward:
-            if 0 <= self.Selection < self.PageCount - 1:
-                self.Selection += 1
-            else:
-                self.Selection = 0
+            newSelection = curSelection + 1 if minSelection <= curSelection < maxSelection else minSelection
         else:
-            if 1 <= self.Selection < self.PageCount:
-                self.Selection -= 1
-            else:
-                self.Selection = self.PageCount - 1        
+            newSelection = curSelection - 1 if minSelection < curSelection <= maxSelection else maxSelection
+        self.SetSelection(newSelection)
 
     
 class AUINotebook(AdvanceSelectionMixin, Book, aui.AuiNotebook):
+    # We don't use aui.AuiNotebook.AdvanceSelection, but our own version from
+    # AdvanceSelectionMixin, because aui.AuiNotebook.AdvanceSelection iterates
+    # over the pages in the current tab container only, and doesn't move the 
+    # selection to other tab containers.
+      
     pageChangedEvent = aui.EVT_AUINOTEBOOK_PAGE_CHANGED
     pageClosedEvent = aui.EVT_AUINOTEBOOK_PAGE_CLOSE
     
