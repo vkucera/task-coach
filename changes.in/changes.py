@@ -30,7 +30,9 @@ Release('0.75.1', 'October 28, 2009',
         Bug('''When merging a task file with categories, don't break the 
 links between tasks/notes and categories.''', '2882493'),
         Bug('''Tree viewers wouldn't properly refresh when an attribute of
-a task, category, or note was changed to be empty.''', '2806354')
+a task, category, or note was changed to be empty.''', '2806354'),
+        Bug('''When tracking effort, effort viewers in aggregated mode (showing
+effort per day/week/month) were not being updated very second.''')
         ]
     ),
 
