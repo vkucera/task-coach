@@ -28,7 +28,9 @@ Release('0.75.1', 'October 28, 2009',
     bugsFixed=[
         Bug('''Iterating over viewers wasn't working in tabbed mode.'''),
         Bug('''When merging a task file with categories, don't break the 
-links between tasks/notes and categories.''', '2882493')
+links between tasks/notes and categories.''', '2882493'),
+        Bug('''Tree viewers wouldn't properly refresh when an attribute of
+a task, category, or note was changed to be empty.''', '2806354')
         ]
     ),
 
