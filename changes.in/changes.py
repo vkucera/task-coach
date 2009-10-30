@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
             
-Release('0.75.1', 'October 28, 2009',
+Release('0.75.1', 'October 30, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Iterating over viewers wasn't working in tabbed mode.'''),
@@ -32,7 +32,8 @@ links between tasks/notes and categories.''', '2882493'),
         Bug('''Tree viewers wouldn't properly refresh when an attribute of
 a task, category, or note was changed to be empty.''', '2806354'),
         Bug('''When tracking effort, effort viewers in aggregated mode (showing
-effort per day/week/month) were not being updated very second.''')
+effort per day/week/month) were not being updated very second.'''),
+        Bug('''Tabs in the tabbed window layout could not be closed.''')
         ]
     ),
 
