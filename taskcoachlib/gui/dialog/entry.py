@@ -84,8 +84,8 @@ class AmountEntry(widgets.PanelWithBoxSizer):
         # The thousands separator may come up as ISO-8859-1 character
         # 0xa0, which looks like a space but isn't ASCII, which
         # confuses NumCtrl... Play it safe and avoid any non-ASCII
-        # character here.
-        if ord(groupChar) >= 128:
+        # character here, or groupChars that consist of multiple characters.
+        if len(groupChar) > 1 or ord(groupChar) >= 128:
             groupChar = ' '
         # Prevent decimalChar and groupChar from being the same:
         if groupChar == decimalChar:

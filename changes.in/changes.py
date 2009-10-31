@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
             
-Release('0.75.1', 'October 30, 2009',
+Release('0.75.1', 'October 31, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Iterating over viewers wasn't working in tabbed mode.'''),
@@ -33,7 +33,9 @@ links between tasks/notes and categories.''', '2882493'),
 a task, category, or note was changed to be empty.''', '2806354'),
         Bug('''When tracking effort, effort viewers in aggregated mode (showing
 effort per day/week/month) were not being updated very second.'''),
-        Bug('''Tabs in the tabbed window layout could not be closed.''')
+        Bug('''Tabs in the tabbed window layout could not be closed.'''),
+        Bug('''Don't complain when the system locale has a thousands separator
+that consists of more than one character.''', '2889931')
         ]
     ),
 
