@@ -35,7 +35,7 @@ a task, category, or note was changed to be empty.''', '2806354'),
 effort per day/week/month) were not being updated very second.'''),
         Bug('''Tabs in the tabbed window layout could not be closed.'''),
         Bug('''Don't complain when the system locale has a thousands separator
-that consists of more than one character.''', '2889931')
+that consists of more than one character.''', '2889931', '2888714')
         ]
     ),
 
