@@ -7,3 +7,4 @@ prune dist.in
 recursive-include taskcoachlib/bin.in *.so *.pyd
 include build.in/fedora/taskcoach.desktop
 include icons.in/taskcoach.png
+prune website.in
