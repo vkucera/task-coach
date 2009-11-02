@@ -285,23 +285,12 @@ class AUINotebook(AdvanceSelectionMixin, Book, aui.AuiNotebook):
         kwargs['style'] = kwargs.get('style', aui.AUI_NB_DEFAULT_STYLE) & ~aui.AUI_NB_CLOSE_ON_ACTIVE_TAB
         super(AUINotebook, self).__init__(*args, **kwargs)
         self.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.onClosePage)
-        self.Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGING, self.onPageChanging)
-        
-    def onPageChanging(self, event):
-        # On Windows, the AuiNotebook changes its pages when other applications
-        # are minimized. Prevent this by vetoing PAGE_CHANGING events when our
-        # top level window is not active:
-        if '__WXMSW__' in wx.PlatformInfo and \
-                not self.GetTopLevelParent().IsActive():
-            event.Veto()
-        else:
-            event.Skip()
-                    
+                 
     def onClosePage(self, event):
         event.Skip()
         if self.GetPageCount() <= 2:
             # Prevent last tab from being closed
-            self.ToggleWindowStyle(aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)
+            self.SetWindowStyleFlag(self.GetWindowStyleFlag() & ~aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)
             
     def createImageList(self):
         pass
@@ -310,7 +299,7 @@ class AUINotebook(AdvanceSelectionMixin, Book, aui.AuiNotebook):
         bitmap = wx.ArtProvider_GetBitmap(bitmap, wx.ART_MENU, self._bitmapSize)
         aui.AuiNotebook.AddPage(self, page, name, bitmap=bitmap)
         if self.GetPageCount() > 1:
-            self.SetWindowStyle(self.GetWindowStyleFlag() | aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)
+            self.SetWindowStyleFlag(self.GetWindowStyleFlag() | aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)
 
     def __getPageCount(self):
         return self.GetPageCount()

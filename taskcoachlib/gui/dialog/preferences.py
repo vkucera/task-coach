@@ -138,8 +138,6 @@ class SavePage(SettingsPage):
             _('Auto save after every change'))
         self.addBooleanSetting('file', 'backup', 
             _('Create a backup copy before\noverwriting a %s file')%meta.name)
-        self.addIntegerSetting('file', 'maxrecentfiles',
-            _('Maximum number of recent files to remember'), minimum=0, maximum=9)
         self.addBooleanSetting('file', 'saveinifileinprogramdir',
             _('Save settings (%s.ini) in the same\ndirectory as the program') \
               %meta.filename, 

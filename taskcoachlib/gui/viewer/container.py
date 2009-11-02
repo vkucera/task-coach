@@ -113,9 +113,12 @@ class ViewerContainer(object):
         event.Skip()
 
     def onPageClosed(self, event):
-        if event.GetPane().IsToolbar():
-            return
-        window = event.GetPane().window
+        if hasattr(event, 'GetPane'):
+            if event.GetPane().IsToolbar():
+                return
+            window = event.GetPane().window
+        else:
+            window = self.containerWidget.GetPage(event.GetSelection())
         if hasattr(window, 'GetPage'):
             # Window is a notebook, close each of its pages
             for pageIndex in range(window.GetPageCount()):
