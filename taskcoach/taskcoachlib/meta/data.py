@@ -66,7 +66,7 @@ version_url = url + 'version.txt'
 download = url + 'download.html'
 dist_download_prefix = 'http://downloads.sourceforge.net/%s'%filename_lower
 
-announcement_addresses = 'taskcoach@yahoogroups.com, python-announce@python.org'
+announcement_addresses = 'taskcoach@yahoogroups.com, python-announce-list@python.org'
 
 copyright = 'Copyright (C) 2004-%s %s'%(release_year, author) # pylint: disable-msg=W0622
 license_title = 'GNU General Public License'

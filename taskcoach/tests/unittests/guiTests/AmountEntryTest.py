@@ -73,3 +73,6 @@ class AmountEntryTest(test.wxTestCase):
     def testNonAsciiThousandsSeparator(self):
         entry.AmountEntry(self.frame, localeconv=LocalConv(thousands_sep=u'é', 
                                                            grouping=[3,3,3]))
+
+    def testMultiCharThousandsSeparator(self):
+        entry.AmountEntry(self.frame, localeconv=LocalConv(thousands_sep='..'))

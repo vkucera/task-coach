@@ -32,7 +32,7 @@ show completed and/or inactive (future) tasks.''', 'http://uservoice.com/a/EfkNL
         ]
     ),
             
-Release('0.75.1', 'October 28, 2009',
+Release('0.75.1', 'October 31, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Iterating over viewers wasn't working in tabbed mode.'''),
@@ -41,8 +41,14 @@ links between tasks/notes and categories.''', '2882493'),
         Bug('''Tree viewers wouldn't properly refresh when an attribute of
 a task, category, or note was changed to be empty.''', '2806354'),
         Bug('''When tracking effort, effort viewers in aggregated mode (showing
-effort per day/week/month) were not being updated very second.''')
-        ]
+effort per day/week/month) were not being updated every second.'''),
+        Bug('''Tabs in the tabbed window layout could not be closed.'''),
+        Bug('''Don't complain when the system locale has a thousands separator
+that consists of more than one character.''', '2889931', '2888714')
+        ],
+    featuresRemoved=[
+        Feature('''Don't allow the user edit the maximum number of recent files
+to show, simply use some reasonable maximum (9).''')]
     ),
 
 Release('0.75.0', 'October 24, 2009',

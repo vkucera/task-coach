@@ -244,7 +244,7 @@ defaults = { \
     'blinktaskbariconwhentrackingeffort': 'True' },
 'file': { \
     'recentfiles': '[]',
-    'maxrecentfiles': '4',
+    'maxrecentfiles': '9',
     'lastfile': '',
     'autosave': 'False',
     'backup': 'False',
