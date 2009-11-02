@@ -36,7 +36,10 @@ effort per day/week/month) were not being updated very second.'''),
         Bug('''Tabs in the tabbed window layout could not be closed.'''),
         Bug('''Don't complain when the system locale has a thousands separator
 that consists of more than one character.''', '2889931', '2888714')
-        ]
+        ],
+    featuresRemoved=[
+        Feature('''Don't allow the user edit the maximum number of recent files
+to show, simply use some reasonable maximum (9).''')]
     ),
 
 Release('0.75.0', 'October 24, 2009',
