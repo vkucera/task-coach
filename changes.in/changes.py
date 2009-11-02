@@ -32,7 +32,7 @@ links between tasks/notes and categories.''', '2882493'),
         Bug('''Tree viewers wouldn't properly refresh when an attribute of
 a task, category, or note was changed to be empty.''', '2806354'),
         Bug('''When tracking effort, effort viewers in aggregated mode (showing
-effort per day/week/month) were not being updated very second.'''),
+effort per day/week/month) were not being updated every second.'''),
         Bug('''Tabs in the tabbed window layout could not be closed.'''),
         Bug('''Don't complain when the system locale has a thousands separator
 that consists of more than one character.''', '2889931', '2888714')
