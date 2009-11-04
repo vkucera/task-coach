@@ -24,4 +24,4 @@ from categorizableCommands import *
 from noteCommands import *
 from attachmentCommands import *
 from base import CopyCommand, DeleteCommand, CutCommand, PasteCommand, \
-    AddAttachmentCommand, AddNoteCommand
+    AddAttachmentCommand, AddNoteCommand, EditSubjectCommand

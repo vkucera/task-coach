@@ -329,7 +329,7 @@ class TreeListCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
         super(TreeListCtrlTest, self).setUp()
         columns = [widgets.Column('subject', 'Subject')]
         self.treeCtrl = widgets.TreeListCtrl(self.frame, columns, self.onSelect, 
-            dummy.DummyUICommand(), dummy.DummyUICommand())
+            dummy.DummyUICommand(), dummy.DummyUICommand(), dummy.DummyUICommand())
         imageList = wx.ImageList(16, 16)
         for bitmapName in ['task', 'tasks']:
             imageList.Add(wx.ArtProvider_GetBitmap(bitmapName, wx.ART_MENU, 

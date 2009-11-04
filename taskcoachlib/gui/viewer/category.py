@@ -59,6 +59,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
             self.onSelect, self.onCheck,
             uicommand.CategoryEdit(viewer=self, categories=self.presentation()),
             uicommand.CategoryDragAndDrop(viewer=self, categories=self.presentation()),
+            uicommand.EditSubject(viewer=self),
             self.createCategoryPopupMenu(), 
             menu.ColumnPopupMenu(self),
             **self.widgetCreationKeywordArguments())

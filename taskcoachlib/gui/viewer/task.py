@@ -501,6 +501,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
         widget = widgets.TreeListCtrl(self, self.columns(), self.onSelect, 
             uicommand.TaskEdit(taskList=self.presentation(), viewer=self),
             uicommand.TaskDragAndDrop(taskList=self.presentation(), viewer=self),
+            uicommand.EditSubject(viewer=self),
             self.createTaskPopupMenu(), self.createColumnPopupMenu(),
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(imageList) # pylint: disable-msg=E1101

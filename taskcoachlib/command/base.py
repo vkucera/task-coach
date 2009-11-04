@@ -337,3 +337,24 @@ class AddNoteCommand(BaseCommand):
         
     def redo_command(self):
         self.addNotes()    
+
+
+class EditSubjectCommand(BaseCommand):
+    def __init__(self, *args, **kwargs):
+        self.__newSubject = kwargs.pop('subject')
+        super(EditSubjectCommand, self).__init__(*args, **kwargs)
+        self.__oldSubjects = [item.subject() for item in self.items]
+        
+    def name(self):
+        return _('Edit subject')
+    
+    def do_command(self):
+        for item in self.items:
+            item.setSubject(self.__newSubject)
+            
+    def undo_command(self):
+        for item, oldSubject in zip(self.items, self.__oldSubjects):
+            item.setSubject(oldSubject)
+            
+    def redo_command(self):
+        self.do_command()

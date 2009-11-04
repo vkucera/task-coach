@@ -139,26 +139,31 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
     ct_type = 0
     
     def __init__(self, parent, columns, selectCommand, editCommand, 
-                 dragAndDropCommand, itemPopupMenu=None, columnPopupMenu=None, 
+                 dragAndDropCommand, editSubjectCommand,
+                 itemPopupMenu=None, columnPopupMenu=None, 
                  *args, **kwargs):    
         self.__adapter = parent
         self.__selection = []
         super(TreeListCtrl, self).__init__(parent, style=self.getStyle(), 
             columns=columns, resizeableColumn=0, itemPopupMenu=itemPopupMenu,
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
-        self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand)
+        self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand,
+                               editSubjectCommand)
 
-    def bindEventHandlers(self, selectCommand, editCommand, dragAndDropCommand):
+    def bindEventHandlers(self, selectCommand, editCommand, dragAndDropCommand,
+                          editSubjectCommand):
         # pylint: disable-msg=W0201
         self.selectCommand = selectCommand
         self.editCommand = editCommand
         self.dragAndDropCommand = dragAndDropCommand
+        self.editSubjectCommand = editSubjectCommand
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.onSelect)
         self.Bind(wx.EVT_TREE_KEY_DOWN, self.onKeyDown)
         self.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.onItemActivated)
         # We deal with double clicks ourselves, to prevent the default behaviour
         # of collapsing or expanding nodes on double click. 
         self.GetMainWindow().Bind(wx.EVT_LEFT_DCLICK, self.onDoubleClick)
+        self.Bind(wx.EVT_TREE_END_LABEL_EDIT, self.onEndEdit)
         
     def getItemTooltipData(self, item, column):
         return self.__adapter.getItemTooltipData(item, column)
@@ -255,19 +260,26 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             column = max(0, column) # FIXME: Why can the column be -1?
             event.columnName = self._getColumn(column).name()
         self.editCommand(event)
-        event.Skip(False)        
+        event.Skip(False)
+        
+    def onEndEdit(self, event):
+        domainObject = self.GetItemPyData(event.GetItem())
+        newValue = event.GetLabel()
+        self.editSubjectCommand(domainObject, newValue)
+        event.Skip()
         
     # Override CtrlWithColumnsMixin with TreeListCtrl specific behaviour:
         
     def _setColumns(self, *args, **kwargs):
         super(TreeListCtrl, self)._setColumns(*args, **kwargs)
         self.SetMainColumn(0)
+        self.SetColumnEditable(0, True)
                         
     # Extend TreeMixin with TreeListCtrl specific behaviour:
 
     def getStyle(self):
         return (wx.TR_DEFAULT_STYLE | wx.TR_HIDE_ROOT | wx.TR_MULTIPLE \
-            | wx.TR_HAS_BUTTONS | wx.TR_FULL_ROW_HIGHLIGHT | wx.WANTS_CHARS \
+            | wx.TR_EDIT_LABELS | wx.TR_HAS_BUTTONS | wx.TR_FULL_ROW_HIGHLIGHT | wx.WANTS_CHARS \
             | customtree.TR_HAS_VARIABLE_ROW_HEIGHT) & ~hypertreelist.TR_NO_HEADER 
 
     # Adapters to make the TreeListCtrl more like the ListCtrl
