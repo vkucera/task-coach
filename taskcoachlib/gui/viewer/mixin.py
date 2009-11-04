@@ -101,7 +101,6 @@ class FilterableViewerForTasksMixin(FilterableViewerMixin):
     
     def viewFilterOptions(self):
         options = dict(dueDateFilter=self.getFilteredByDueDate(),
-                       hideActiveTasks=self.isHidingActiveTasks(),
                        hideCompletedTasks=self.isHidingCompletedTasks(),
                        hideInactiveTasks=self.isHidingInactiveTasks(),
                        hideOverdueTasks=self.isHidingOverdueTasks(),
@@ -120,13 +119,6 @@ class FilterableViewerForTasksMixin(FilterableViewerMixin):
     def getFilteredByDueDate(self):
         return self.settings.get(self.settingsSection(), 'tasksdue')
     
-    def hideActiveTasks(self, hide=True):
-        self.__setBooleanSetting('hideactivetasks', hide)
-        self.presentation().hideActiveTasks(hide)
-        
-    def isHidingActiveTasks(self):
-        return self.__getBooleanSetting('hideactivetasks')
-
     def hideInactiveTasks(self, hide=True):
         self.__setBooleanSetting('hideinactivetasks', hide)
         self.presentation().hideInactiveTasks(hide)
@@ -163,7 +155,6 @@ class FilterableViewerForTasksMixin(FilterableViewerMixin):
         return self.__getBooleanSetting('hidecompositetasks')
     
     def resetFilter(self):
-        self.hideActiveTasks(False)
         self.hideInactiveTasks(False)
         self.hideCompletedTasks(False)
         self.hideOverdueTasks(False)
@@ -200,7 +191,6 @@ class FilterableViewerForTasksMixin(FilterableViewerMixin):
             dueDateFilter(_('&Year'), _('Only show tasks due this year'),
                           'Year'))
         statusFilterCommands = [_('&Hide tasks that are'),
-            uicommand.ViewerHideActiveTasks(viewer=self),
             uicommand.ViewerHideInactiveTasks(viewer=self),
             uicommand.ViewerHideCompletedTasks(viewer=self),
             None,
