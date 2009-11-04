@@ -1118,19 +1118,6 @@ class ViewerFilterByDueDate(ViewerCommand, UIRadioCommand):
         self.viewer.setFilteredByDueDate(self.value)
 
 
-class ViewerHideActiveTasks(ViewerCommand, UICheckCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewerHideActiveTasks, self).__init__(menuText=_('&Active'), 
-            helpText=_('Show/hide active tasks (tasks with a start date in the past and a due date in the future)'),
-            *args, **kwargs)
-        
-    def isSettingChecked(self):
-        return self.viewer.isHidingActiveTasks()
-        
-    def doCommand(self, event):
-        self.viewer.hideActiveTasks(self._isMenuItemChecked(event))
-
-
 class ViewerHideInactiveTasks(ViewerCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):
         super(ViewerHideInactiveTasks, self).__init__(menuText=_('&Inactive'), 

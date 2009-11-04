@@ -25,7 +25,6 @@ class ViewFilter(base.Filter):
     def __init__(self, *args, **kwargs):
         self.__dueDateFilter = self.stringToDueDate(kwargs.pop('dueDateFilter', 
                                                                'Unlimited'))
-        self.__hideActiveTasks = kwargs.pop('hideActiveTasks', False)
         self.__hideCompletedTasks = kwargs.pop('hideCompletedTasks', False)
         self.__hideInactiveTasks = kwargs.pop('hideInactiveTasks', False)
         self.__hideOverdueTasks = kwargs.pop('hideOverdueTasks', False)
@@ -53,10 +52,6 @@ class ViewFilter(base.Filter):
         self.__dueDateFilter = self.stringToDueDate(dueDateString)
         self.reset()
     
-    def hideActiveTasks(self, hide=True):
-        self.__hideActiveTasks = hide
-        self.reset()
-
     def hideInactiveTasks(self, hide=True):
         self.__hideInactiveTasks = hide
         self.reset()
@@ -87,8 +82,6 @@ class ViewFilter(base.Filter):
         elif self.__hideInactiveTasks and task.inactive():
             result = False
         elif self.__hideOverdueTasks and task.overdue():
-            result = False
-        elif self.__hideActiveTasks and task.active():
             result = False
         elif self.__hideOverbudgetTasks and \
             task.budgetLeft(recursive=True) < date.TimeDelta():

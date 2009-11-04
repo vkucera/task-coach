@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
             
-Release('0.75.1', 'October 31, 2009',
+Release('0.75.1', 'November 1, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Iterating over viewers wasn't working in tabbed mode.'''),
@@ -38,8 +38,9 @@ effort per day/week/month) were not being updated every second.'''),
 that consists of more than one character.''', '2889931', '2888714')
         ],
     featuresRemoved=[
-        Feature('''Don't allow the user edit the maximum number of recent files
-to show, simply use some reasonable maximum (9).''')]
+        Feature('''Don't have a setting for the maximum number of recent files
+to show, simply use some reasonable maximum (9).'''),
+        Feature('''It's no longer possible to hide active tasks.''')]
     ),
 
 Release('0.75.0', 'October 24, 2009',
