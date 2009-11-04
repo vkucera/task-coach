@@ -60,6 +60,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
         widget = widgets.TreeListCtrl(self, self.columns(), self.onSelect,
             uicommand.NoteEdit(viewer=self, notes=self.presentation()),
             uicommand.NoteDragAndDrop(viewer=self, notes=self.presentation()),
+            uicommand.EditSubject(viewer=self),
             menu.NotePopupMenu(self.parent, self.settings, self.presentation(),
                                self.taskFile.categories(), self), 
             menu.ColumnPopupMenu(self),
@@ -143,10 +144,8 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
 
     def getItemTooltipData(self, item, column=0):
         if self.settings.getboolean('view', 'descriptionpopups'):
-            if item.description():
-                result = [(None, map(lambda x: x.rstrip('\r'), item.description().split('\n')))]
-            else:
-                result = []
+            lines = [line.rstrip('\r') for line in item.description().split('\n')] 
+            result = [(None, lines)] if lines else [] 
             result.append(('attachment', [unicode(attachment) for attachment in item.attachments()]))
             return result
         else:

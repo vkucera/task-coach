@@ -86,3 +86,32 @@ class AddAttachmentCommandWithNotesTest(AddAttachmentTestCase, AddAttachmentTest
 class AddAttachmentCommandWithCategoriesTest(AddAttachmentTestCase, AddAttachmentTestsMixin):
     ItemClass = category.Category
     ContainerClass = category.CategoryList
+    
+    
+class EditSubjectTestCase(CommandTestCase):
+    ItemClass = task.Task
+    ContainerClass = task.TaskList
+    
+    def setUp(self):
+        super(EditSubjectTestCase, self).setUp()
+        self.item1 = self.ItemClass(subject='item1')
+        self.item2 = self.ItemClass(subject='item2')
+        self.container = self.ContainerClass([self.item1, self.item2])
+        
+    def editSubject(self, newSubject, *items):
+        editSubjectCommand = command.EditSubjectCommand(self.container, 
+                                                        items, 
+                                                        subject=newSubject)
+        editSubjectCommand.do()
+        
+    def testEditSubject(self):
+        self.editSubject('new', self.item1)
+        self.assertDoUndoRedo(lambda: self.assertEqual('new', self.item1.subject()),
+                              lambda: self.assertEqual('item1', self.item1.subject()))
+        
+    def testEditMultipleSubjects(self):
+        self.editSubject('new', self.item1, self.item2)
+        self.assertDoUndoRedo(lambda: self.assertEqual('newnew', 
+                                      self.item1.subject() + self.item2.subject()),
+                              lambda: self.assertEqual('item1item2', 
+                                      self.item1.subject() + self.item2.subject()))

@@ -1479,7 +1479,7 @@ class TaskDecPriority(NeedsSelectedTasksMixin, TaskListCommand, ViewerCommand):
 
 class DragAndDropCommand(ViewerCommand):
     def onCommandActivate(self, dropItem, dragItem): # pylint: disable-msg=W0221
-        ''' Override omCommandActivate to be able to accept two items instead
+        ''' Override onCommandActivate to be able to accept two items instead
             of one event. '''
         self.doCommand(dropItem, dragItem)
 
@@ -1497,6 +1497,19 @@ class TaskDragAndDrop(DragAndDropCommand, TaskListCommand):
         return command.DragAndDropTaskCommand(self.taskList, [dragItem], 
                                               drop=[dropItem])
 
+
+class EditSubject(ViewerCommand):
+    def onCommandActivate(self, item, newSubject): # pylint: disable-msg=W0221
+        ''' Override onCommandActivate to tbe able to accept an item and the
+            new subject. '''
+        self.doCommand(item, newSubject)
+        
+    def doCommand(self, item, newSubject):
+        if newSubject and newSubject != item.subject():
+            editSubject = command.EditSubjectCommand(self.viewer.presentation(),
+                                                     [item], subject=newSubject)
+            editSubject.do()
+        
 
 class ToggleCategory(NeedsSelectionMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
