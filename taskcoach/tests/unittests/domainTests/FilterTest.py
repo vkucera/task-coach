@@ -105,11 +105,6 @@ class ViewFilterTests(object):
         self.filter.append(self.task)
         self.assertEqual(1, len(self.filter))
         
-    def testViewActiveTasks(self):
-        self.filter.append(self.task)
-        self.filter.hideActiveTasks()
-        self.assertEqual(0, len(self.filter))
-
     def testFilterCompletedTask(self):
         self.task.setCompletionDate()
         self.filter.append(self.task)

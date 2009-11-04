@@ -289,29 +289,6 @@ class FilterableViewerForTasks(test.TestCase):
         self.viewer.setFilteredByDueDate('Today')
         self.viewer.setFilteredByDueDate('Unlimited')
         self.failUnless(self.viewer.presentation())
-        
-    def testIsNotHidingActiveTasksByDefault(self):
-        self.failIf(self.viewer.isHidingActiveTasks())
-
-    def testHideActiveTasks(self):
-        self.viewer.hideActiveTasks()
-        self.failUnless(self.viewer.isHidingActiveTasks())
-    
-    def testHideActiveTasks_SetsSetting(self):
-        self.viewer.hideActiveTasks()
-        self.failUnless(self.settings.getboolean(self.viewer.settingsSection(), 
-                                                 'hideactivetasks'))
-
-    def testHideActiveTasks_AffectsPresentation(self):
-        self.viewer.presentation().append(task.Task())
-        self.viewer.hideActiveTasks()
-        self.failIf(self.viewer.presentation())
-        
-    def testUnhideActiveTasks(self):
-        self.viewer.presentation().append(task.Task())
-        self.viewer.hideActiveTasks()
-        self.viewer.hideActiveTasks(False)
-        self.failUnless(self.viewer.presentation())
 
     def testIsNotHidingInactiveTasksByDefault(self):
         self.failIf(self.viewer.isHidingInactiveTasks())
@@ -439,7 +416,6 @@ class FilterableViewerForTasks(test.TestCase):
         self.assertEqual(2, len(self.viewer.presentation()))
         
     def testClearAllFilters(self):
-        self.viewer.hideActiveTasks()
         self.viewer.hideInactiveTasks()
         self.viewer.hideCompletedTasks()
         self.viewer.hideOverdueTasks()
@@ -447,7 +423,6 @@ class FilterableViewerForTasks(test.TestCase):
         self.viewer.hideCompositeTasks()
         self.viewer.setFilteredByDueDate('Today')
         self.viewer.resetFilter()
-        self.failIf(self.viewer.isHidingActiveTasks())
         self.failIf(self.viewer.isHidingInactiveTasks())
         self.failIf(self.viewer.isHidingCompletedTasks())
         self.failIf(self.viewer.isHidingOverdueTasks())
