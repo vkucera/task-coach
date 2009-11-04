@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
             
-Release('0.75.1', 'November 1, 2009',
+Release('0.75.1', 'November 4, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Iterating over viewers wasn't working in tabbed mode.'''),
