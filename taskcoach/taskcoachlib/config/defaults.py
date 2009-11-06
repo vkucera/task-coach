@@ -62,8 +62,6 @@ defaults = { \
     'tasksdue': 'Unlimited',
     'hidecompletedtasks': 'False',
     'hideinactivetasks': 'False',
-    'hideoverduetasks': 'False',
-    'hideoverbudgettasks': 'False',
     'hidecompositetasks': 'False' },
 'squaretaskviewer': { \
     'title': '',
@@ -75,8 +73,6 @@ defaults = { \
     'tasksdue': 'Unlimited',
     'hidecompletedtasks': 'False',
     'hideinactivetasks': 'False',
-    'hideoverduetasks': 'False',
-    'hideoverbudgettasks': 'False',
     'hidecompositetasks': 'False' },
 'timelineviewer': { \
     'title': '',
@@ -87,8 +83,6 @@ defaults = { \
     'tasksdue': 'Unlimited',
     'hidecompletedtasks': 'False',
     'hideinactivetasks': 'False',
-    'hideoverduetasks': 'False',
-    'hideoverbudgettasks': 'False',
     'hidecompositetasks': 'False' },
 'categoryviewer': { \
     'title': '',

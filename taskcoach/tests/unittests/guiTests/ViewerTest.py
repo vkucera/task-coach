@@ -335,56 +335,6 @@ class FilterableViewerForTasks(test.TestCase):
         self.viewer.hideCompletedTasks()
         self.viewer.hideCompletedTasks(False)
         self.failUnless(self.viewer.presentation())
-        
-    def testIsNotHidingOverdueTasksByDefault(self):
-        self.failIf(self.viewer.isHidingOverdueTasks())
-        
-    def testHideOverdueTasks(self):
-        self.viewer.hideOverdueTasks()
-        self.failUnless(self.viewer.isHidingOverdueTasks())
-        
-    def testHideOverdueTasks_SetsSetting(self):
-        self.viewer.hideOverdueTasks()
-        self.failUnless(self.settings.getboolean(self.viewer.settingsSection(),
-                                                 'hideoverduetasks'))
-        
-    def testHideOverdueTasks_AffectsPresentation(self):
-        self.viewer.presentation().append(task.Task(dueDate=date.Yesterday()))
-        self.viewer.hideOverdueTasks()
-        self.failIf(self.viewer.presentation())
-        
-    def testUnhideOverdueTasks(self):
-        self.viewer.presentation().append(task.Task(dueDate=date.Yesterday()))
-        self.viewer.hideOverdueTasks()
-        self.viewer.hideOverdueTasks(False)
-        self.failUnless(self.viewer.presentation())
-        
-    def testIsNotHidingOverbudgetTasksByDefault(self):
-        self.failIf(self.viewer.isHidingOverbudgetTasks())
-        
-    def testHideOverbudgetTasks(self):
-        self.viewer.hideOverbudgetTasks()
-        self.failUnless(self.viewer.isHidingOverbudgetTasks())
-        
-    def testHideOverbudgetTasks_SetsSetting(self):
-        self.viewer.hideOverbudgetTasks()
-        self.failUnless(self.settings.getboolean(self.viewer.settingsSection(),
-                                                 'hideoverbudgettasks'))
-        
-    def testHideOverbudgetTasks_AffectsPresentation(self):
-        overBudgetTask = task.Task(budget=date.TimeDelta(hours=10))
-        overBudgetTask.addEffort(effort.Effort(overBudgetTask, date.Date(2000,1,1), date.Date(2000,1,2)))
-        self.viewer.presentation().append(overBudgetTask)
-        self.viewer.hideOverbudgetTasks()
-        self.failIf(self.viewer.presentation())
-        
-    def testUnhideOverbudgetTasks(self):
-        overBudgetTask = task.Task(budget=date.TimeDelta(hours=10))
-        overBudgetTask.addEffort(effort.Effort(overBudgetTask, date.Date(2000,1,1), date.Date(2000,1,2)))
-        self.viewer.presentation().append(overBudgetTask)
-        self.viewer.hideOverbudgetTasks()
-        self.viewer.hideOverbudgetTasks(False)
-        self.failUnless(self.viewer.presentation())
 
     def testIsNotHidingCompositeTasksByDefault(self):
         self.failIf(self.viewer.isHidingCompositeTasks())
@@ -418,15 +368,11 @@ class FilterableViewerForTasks(test.TestCase):
     def testClearAllFilters(self):
         self.viewer.hideInactiveTasks()
         self.viewer.hideCompletedTasks()
-        self.viewer.hideOverdueTasks()
-        self.viewer.hideOverbudgetTasks()
         self.viewer.hideCompositeTasks()
         self.viewer.setFilteredByDueDate('Today')
         self.viewer.resetFilter()
         self.failIf(self.viewer.isHidingInactiveTasks())
         self.failIf(self.viewer.isHidingCompletedTasks())
-        self.failIf(self.viewer.isHidingOverdueTasks())
-        self.failIf(self.viewer.isHidingOverbudgetTasks())
         self.failIf(self.viewer.isHidingCompositeTasks())
         self.failUnless(self.viewer.isFilteredByDueDate('Unlimited'))     
         

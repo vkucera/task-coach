@@ -103,8 +103,6 @@ class FilterableViewerForTasksMixin(FilterableViewerMixin):
         options = dict(dueDateFilter=self.getFilteredByDueDate(),
                        hideCompletedTasks=self.isHidingCompletedTasks(),
                        hideInactiveTasks=self.isHidingInactiveTasks(),
-                       hideOverdueTasks=self.isHidingOverdueTasks(),
-                       hideOverBudgetTasks=self.isHidingOverbudgetTasks(),
                        hideCompositeTasks=self.isHidingCompositeTasks())
         return options
     
@@ -133,20 +131,6 @@ class FilterableViewerForTasksMixin(FilterableViewerMixin):
     def isHidingCompletedTasks(self):
         return self.__getBooleanSetting('hidecompletedtasks')
     
-    def hideOverdueTasks(self, hide=True):
-        self.__setBooleanSetting('hideoverduetasks', hide)
-        self.presentation().hideOverdueTasks(hide)
-        
-    def isHidingOverdueTasks(self):
-        return self.__getBooleanSetting('hideoverduetasks')
-    
-    def hideOverbudgetTasks(self, hide=True):
-        self.__setBooleanSetting('hideoverbudgettasks', hide)
-        self.presentation().hideOverbudgetTasks(hide)
-    
-    def isHidingOverbudgetTasks(self):
-        return self.__getBooleanSetting('hideoverbudgettasks')
-    
     def hideCompositeTasks(self, hide=True):
         self.__setBooleanSetting('hidecompositetasks', hide)
         self.presentation().hideCompositeTasks(hide)
@@ -157,8 +141,6 @@ class FilterableViewerForTasksMixin(FilterableViewerMixin):
     def resetFilter(self):
         self.hideInactiveTasks(False)
         self.hideCompletedTasks(False)
-        self.hideOverdueTasks(False)
-        self.hideOverbudgetTasks(False)
         self.hideCompositeTasks(False)
         self.setFilteredByDueDate('Unlimited')
         for eachCategory in self.taskFile.categories():
@@ -190,17 +172,12 @@ class FilterableViewerForTasksMixin(FilterableViewerMixin):
                           'Month'),
             dueDateFilter(_('&Year'), _('Only show tasks due this year'),
                           'Year'))
-        statusFilterCommands = [_('&Hide tasks that are'),
-            uicommand.ViewerHideInactiveTasks(viewer=self),
-            uicommand.ViewerHideCompletedTasks(viewer=self),
-            None,
-            uicommand.ViewerHideOverdueTasks(viewer=self),
-            uicommand.ViewerHideCompositeTasks(viewer=self)]
-        if self.settings.getboolean('feature', 'effort'):
-            statusFilterCommands.insert(-2,
-                uicommand.ViewerHideOverbudgetTasks(viewer=self))
-        return [uicommand.ResetFilter(viewer=self), None, dueDateFilterCommands, 
-                tuple(statusFilterCommands)]
+        return [uicommand.ResetFilter(viewer=self), 
+                None,
+                dueDateFilterCommands, 
+                uicommand.ViewerHideCompletedTasks(viewer=self),
+                uicommand.ViewerHideInactiveTasks(viewer=self),
+                uicommand.ViewerHideCompositeTasks(viewer=self)]
 
     def __getBooleanSetting(self, setting):
         return self.settings.getboolean(self.settingsSection(), setting)
