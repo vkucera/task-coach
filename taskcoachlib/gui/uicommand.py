@@ -1120,7 +1120,7 @@ class ViewerFilterByDueDate(ViewerCommand, UIRadioCommand):
 
 class ViewerHideInactiveTasks(ViewerCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):
-        super(ViewerHideInactiveTasks, self).__init__(menuText=_('&Inactive'), 
+        super(ViewerHideInactiveTasks, self).__init__(menuText=_('Hide &inactive tasks'), 
             helpText=_('Show/hide inactive tasks (tasks with a start date in the future)'),
             *args, **kwargs)
         
@@ -1133,7 +1133,7 @@ class ViewerHideInactiveTasks(ViewerCommand, UICheckCommand):
         
 class ViewerHideCompletedTasks(ViewerCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):
-        super(ViewerHideCompletedTasks, self).__init__(menuText=_('&Completed'), 
+        super(ViewerHideCompletedTasks, self).__init__(menuText=_('Hide &completed tasks'), 
             helpText=_('Show/hide completed tasks'), *args, **kwargs)
          
     def isSettingChecked(self):
@@ -1143,35 +1143,9 @@ class ViewerHideCompletedTasks(ViewerCommand, UICheckCommand):
         self.viewer.hideCompletedTasks(self._isMenuItemChecked(event))
 
 
-class ViewerHideOverdueTasks(ViewerCommand, UICheckCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewerHideOverdueTasks, self).__init__(menuText=_('&Over due'), 
-            helpText=_('Show/hide over due tasks (tasks with a due date in the past)'),
-            *args, **kwargs)
-
-    def isSettingChecked(self):
-        return self.viewer.isHidingOverdueTasks()
-        
-    def doCommand(self, event):
-        self.viewer.hideOverdueTasks(self._isMenuItemChecked(event))
-
-
-class ViewerHideOverbudgetTasks(ViewerCommand, UICheckCommand):
-    def __init__(self, *args, **kwargs):
-        super(ViewerHideOverbudgetTasks, self).__init__(menuText=_('Over &budget'), 
-            helpText=_('Show/hide tasks that are over budget'),
-            *args, **kwargs)
-        
-    def isSettingChecked(self):
-        return self.viewer.isHidingOverbudgetTasks()
-        
-    def doCommand(self, event):
-        self.viewer.hideOverbudgetTasks(self._isMenuItemChecked(event))
-
-
 class ViewerHideCompositeTasks(ViewerCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):
-        super(ViewerHideCompositeTasks, self).__init__(menuText=_('C&omposite'),
+        super(ViewerHideCompositeTasks, self).__init__(menuText=_('Hide c&omposite tasks'),
             helpText=_('Show/hide tasks with subtasks in list mode'), 
             *args, **kwargs)
             
