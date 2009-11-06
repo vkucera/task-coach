@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
             
-Release('0.76.0', 'November 4, 2009',
+Release('0.76.0', 'November 6, 2009',
     summary='''This release adds buttons on the toolbar of task viewers to
 hide completed and/or future tasks.''',
     featuresAdded=[
