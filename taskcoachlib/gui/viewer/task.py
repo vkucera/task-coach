@@ -133,7 +133,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
         return status1, status2
     
     def nrOfVisibleTasks(self):
-        # Make this overridable for viewers where the widgets does not show all
+        # Make this overridable for viewers where the widget does not show all
         # items in the presentation, i.e. the widget does filtering on its own.
         return len(self.presentation())
 
