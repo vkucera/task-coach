@@ -104,12 +104,9 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
              None,
              uicommand.TaskToggleCompletion(viewer=self),
              None,
-              # Override the default menu texts to provide a better tooltip:
              uicommand.ViewerHideCompletedTasks(viewer=self,
-                 menuText=_('Show/hide completed tasks'),
                  bitmap='filtercompletedtasks'),
              uicommand.ViewerHideInactiveTasks(viewer=self,
-                 menuText=_('Show/hide inactive tasks'),
                  bitmap='filterinactivetasks')]
         if self.settings.getboolean('feature', 'effort'):
             taskUICommands.extend([
