@@ -40,6 +40,8 @@ revision:
 
 prepare: icons i18n templates
 
+windists: windist winpenpack portableapps
+
 windist: py2exe
 	$(INNOSETUP) build/taskcoach.iss
 	
