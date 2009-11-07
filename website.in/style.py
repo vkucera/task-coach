@@ -45,7 +45,7 @@ pageTracker._trackPageview();
                 <tr>
                     <td valign=top>
                         <a href="index.html">
-                            <img align="center" src="taskcoach.png"
+                            <img align="center" src="images/taskcoach.png"
                                  style="border-style: none"/>
                         </a>
                     </td>
@@ -79,11 +79,15 @@ footer = '''
                 </ul>
             </div>
             <div class="navbox">
-                <h2>Get %(name)s for</h2>
+                <h2>Get %(name)s</h2>
                 <ul>
-                    <li><a href="download.html" title="Download %(name)s">Windows, Linux, and Mac OS X</a></li>
-                    <li><a href="iPhone.html" title="iPhone/iPod app">iPhone and iPod Touch</a></li>
-                    <li><a href="portable.html" title="Portable %(name)s">Portable devices</a></li>
+                    <li><a href="download_for_windows.html" title="Download %(name)s for Windows">Windows</a></li>
+                    <li><a href="download_for_mac.html" title="Download %(name)s for Mac OS X">Mac OS X</a></li>
+                    <li><a href="download_for_linux.html" title="Download %(name)s for Linux">Linux</a></li>
+                    <li><a href="download_for_iphone.html" title="Download %(name)s for iPhone and iPod Touch">iPhone and iPod Touch</a></li>
+                    <li><a href="download_sources.html" title="Download %(name)s sources">Sources</a></li>
+                    <li><a href="download_daily_build.html" title="Download %(name)s daily builds">Daily builds</a></li>
+                    <li><a href="download_old_releases.html" title="Download old releases of %(name)s ">Old releases</a></li>
                 </ul>
             </div>
             <div class="navbox">
@@ -120,11 +124,11 @@ footer = '''
                 <h2>Credits</h2>
                 <p>
                     <a href="http://www.python.org" 
-                       onClick="javascript: pageTracker._trackPageview('/outgoing/python.org');"><img src="python-powered-w-70x28.png" alt="Python"
+                       onClick="javascript: pageTracker._trackPageview('/outgoing/python.org');"><img src="images/python-powered-w-70x28.png" alt="Python"
                        width="70" height="28" border="0"></a><br>
                     <a href="http://www.wxpython.org" 
                        onClick="javascript: pageTracker._trackPageview('/outgoing/wxpython.org');"><img
-                       src="powered-by-wxpython-80x15.png"
+                       src="images/powered-by-wxpython-80x15.png"
                        alt="wxPython" width="80" height="15" border="0"></a><br>
                     <a href="http://www.icon-king.com" 
                        onClick="javascript: pageTracker._trackPageview('/outgoing/icon-king.com');">Nuvola icon set</a><br>
@@ -229,11 +233,11 @@ footer_fr = unicode('''
                 <h2>Références</h2>
                 <p>
                     <a href="http://www.python.org" 
-                       onClick="javascript: pageTracker._trackPageview('/outgoing/python.org');"><img src="python-powered-w-70x28.png" alt="Python"
+                       onClick="javascript: pageTracker._trackPageview('/outgoing/python.org');"><img src="images/python-powered-w-70x28.png" alt="Python"
                        width="70" height="28" border="0"></a><br>
                     <a href="http://www.wxpython.org" 
                        onClick="javascript: pageTracker._trackPageview('/outgoing/wxpython.org');"><img
-                       src="powered-by-wxpython-80x15.png"
+                       src="images/powered-by-wxpython-80x15.png"
                        alt="wxPython" width="80" height="15" border="0"></a><br>
                     <a href="http://www.icon-king.com" 
                        onClick="javascript: pageTracker._trackPageview('/outgoing/icon-king.com');">Nuvola icon set</a><br>
