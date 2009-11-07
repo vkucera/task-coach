@@ -23,19 +23,16 @@ from changetypes import *
 
 releases = [
             
-Release('0.76.0', 'November 6, 2009',
+Release('0.76.0', 'November 7, 2009',
     summary='''This release adds buttons on the toolbar of task viewers to
-hide completed and/or future tasks.''',
+hide completed and/or future tasks, makes subjects editable in-line, removes
+a couple of silly features, and fixes some bugs.''',
     featuresAdded=[
         Feature('''Task viewers now have buttons on the toolbar to hide or 
 show completed and/or inactive (future) tasks.''', 'http://uservoice.com/a/EfkNL'),
         Feature('''Subjects of tasks, notes and categories can be edited in-line
 by clicking the subject of a selected item.''')
-        ]
-    ),
-            
-Release('0.75.1', 'November 6, 2009',
-    summary='''This is a bugfix release.''',
+        ],
     bugsFixed=[
         Bug('''Iterating over viewers wasn't working in tabbed mode.'''),
         Bug('''When merging a task file with categories, don't break the 
