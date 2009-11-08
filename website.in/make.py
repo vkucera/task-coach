@@ -89,30 +89,37 @@ pages['changes'] += '<P><A HREF="all_changes.html">View complete change history<
 pages['all_changes'] = file('all_changes.html').read().decode('UTF-8')
 
 
-prerequisites = '''<a href="http://www.python.org/download/" 
-onClick="javascript: pageTracker._trackPageview('/outgoing/python.org/download');">Python</a> 
-<strong>%(pythonversion)s</strong> 
-and <a href="http://www.wxpython.org/download.php" 
-onClick="javascript: pageTracker._trackPageview('/outgoing/wxpython.org/download');">wxPython</a>
-<strong>%(wxpythonversion)s</strong> (or newer)'''
+prerequisites = '''
+              <a href="http://www.python.org/download/" 
+                 onClick="javascript: pageTracker._trackPageview('/outgoing/python.org/download');">Python</a> 
+              <strong>%(pythonversion)s</strong> and 
+              <a href="http://www.wxpython.org/download.php" 
+                 onClick="javascript: pageTracker._trackPageview('/outgoing/wxpython.org/download');">wxPython</a>
+              <strong>%(wxpythonversion)s</strong> (or newer)'''
 
 
-def download_header():
-    return '''        <h3>Download %(name)s (release %(version)s)</h3>
-        <p>
-          <b>A word of warning:</b> %(name)s is currently alpha-state software. 
+def download_header(platform=None, release=None, warning=None):
+    title = 'Download %(name)s'
+    if release:
+        title += ' release %s'%release
+    if platform:
+        title += ' for %s'%platform
+    if not warning:
+        warning = '''%(name)s is currently alpha-state software. 
           This means that %(name)s contains bugs. We do our best to prevent 
           bugs and fix them as soon as possible. Still, we strongly advise you 
           to make backups of your work on a regular basis, and especially before 
-          upgrading.
-        </p>
-        '''
+          upgrading.'''
+    return '        <h3>%s</h3>\n'%title + \
+'''        <p>
+          <b>A word of warning:</b> ''' + warning + '\n        </p>'
+          
 
 def download_table(**kwargs):
     filename = kwargs['download_url'].split('/')[-1]%meta.metaDict
     md5 = md5digests.get(filename, '')
     kwargs['rows'] = 5 if md5 else 4
-    kwargs['md5'] = '<tr><td>MD5 digest: %s.\n</td></tr>\n'%md5 if md5 else ''
+    kwargs['md5'] = '\n            <tr><td>MD5 digest: %s.</td></tr>'%md5 if md5 else ''
     # Deal with platforms that are not a name but 'all platforms':
     platform = kwargs['platform']
     kwargs['platform_versions'] = 'Platforms' if platform == 'all platforms' else platform + ' versions'
@@ -131,11 +138,10 @@ def download_table(**kwargs):
             </tr>
             <tr><td>%(platform_versions)s supported: %(platform_versions_supported)s.</td></tr>
             <tr><td>Prerequisites: %(prerequisites)s.</td></tr>
-            <tr><td>Installation: %(installation)s.</td></tr>
-            %(md5)s
+            <tr><td>Installation: %(installation)s.</td></tr>%(md5)s
           </table>
-        </p>
-    '''%kwargs
+        </p>'''%kwargs
+
 
 windowsOptions = dict(platform='Microsoft Windows',
                       platform_lower='windows',
@@ -160,10 +166,12 @@ windowsPenPack = download_table(image='winPenPack',
                                 installation='unzip the archive contents in the location where you want %(name)s to be installed',
                                 **windowsOptions) 
   
-sep = '        <hr>\n'
+sep = '\n        <hr>\n'
 
-pages['download_for_windows'] = sep.join([download_header(), windowsInstaller,
-                                          windowsPortableApp, windowsPenPack]) 
+pages['download_for_windows'] = sep.join([download_header(platform='Microsoft Windows',
+                                                          release='%(version)s'), 
+                                          windowsInstaller, windowsPortableApp, 
+                                          windowsPenPack]) 
 
 
 macDMG = download_table(image='mac',
@@ -174,7 +182,9 @@ macDMG = download_table(image='mac',
                         prerequisites='none',
                         installation='double click the package and drop the %(name)s application in your programs folder')
 
-pages['download_for_mac'] = sep.join([download_header(), macDMG])
+pages['download_for_mac'] = sep.join([download_header(platform='Mac OS X',
+                                                      release='%(version)s'), 
+                                                      macDMG])
 
 
 debian = download_table(image='debian', 
@@ -183,9 +193,10 @@ debian = download_table(image='debian',
                         platform='Debian', platform_lower='debian',
                         platform_versions_supported='Debian GNU/Linux 4.0 ("etch") and later',
                         prerequisites=prerequisites + ''' If your Debian 
-        installation does not have the minimally required wxPython version you 
-        will need to install it yourself following 
-        <a href="http://wiki.wxpython.org/InstallingOnUbuntuOrDebian">these instructions</a>''',
+              installation does not have the minimally required wxPython version 
+              you will need to install it yourself following 
+              <a href="http://wiki.wxpython.org/InstallingOnUbuntuOrDebian">these 
+              instructions</a>''',
                         installation='double click the package to start the installer')
 
 ubuntu = download_table(image='ubuntu',
@@ -194,9 +205,10 @@ ubuntu = download_table(image='ubuntu',
                         platform='Ubuntu', platform_lower='ubuntu',
                         platform_versions_supported='Ubuntu 8.04 LTS ("Hardy Heron") and later',
                         prerequisites=prerequisites + ''' If your Ubuntu 
-        installation does not have the minimally required wxPython version you 
-        will need to install it yourself following 
-        <a href="http://wiki.wxpython.org/InstallingOnUbuntuOrDebian">these instructions</a>''',
+              installation does not have the minimally required wxPython version 
+              you will need to install it yourself following 
+              <a href="http://wiki.wxpython.org/InstallingOnUbuntuOrDebian">these 
+              instructions</a>''',
                         installation='double click the package to start the installer')
 
 gentoo = download_table(image='gentoo',
@@ -231,7 +243,9 @@ linux = download_table(image='linux',
                        prerequisites=prerequisites,
                        installation='use your package manager to install the package')
 
-pages['download_for_linux'] = sep.join([download_header(), debian, ubuntu, gentoo,
+pages['download_for_linux'] = sep.join([download_header(platform='Linux',
+                                                        release='%(version)s'), 
+                                        debian, ubuntu, gentoo,
                                         fedora8, fedora11, linux])
 
 
@@ -243,14 +257,16 @@ iphone = download_table(image='appstore',
                         prerequisites='none',
                         installation='buy %(name)s from the AppStore via iTunes or your iPhone or iPod Touch')
                         
-pages['download_for_iphone'] = sep.join([download_header(), iphone])
+pages['download_for_iphone'] = sep.join([download_header(platform='iPhone and iPod Touch',
+                                                         release='1.1'), 
+                                         iphone])
 
 
 sourceOptions = dict(image='source', prerequisites=prerequisites,
                      installation='''decompress the archive and run <tt>python 
-        setup.py install</tt>. If you have a previous version of %(name)s 
-        installed, you may need to force old files to be overwritten: 
-        <tt>python setup.py install --force</tt>''')
+              setup.py install</tt>. If you have a previous version of %(name)s 
+              installed, you may need to force old files to be overwritten: 
+              <tt>python setup.py install --force</tt>''')
 
 source_rpm = download_table(download_url='%(dist_download_prefix)s/%(filename)s-%(version)s-1.src.rpm',
                             package_type='Source RPM package',
@@ -276,22 +292,20 @@ subversion = download_table(image='sources',
                             platform='all platforms', platform_lower='subversion',
                             platform_versions_supported='All platforms that support the prerequisites',
                             prerequisites=prerequisites,
-                            installation='''run <tt>make prepare</tt> to generate the icons
-        and language files and then <tt>python taskcoach.py</tt> to start the
-        application''')
+                            installation='''run <tt>make prepare</tt> to generate 
+              the icons and language files and then <tt>python taskcoach.py</tt> 
+              to start the application''')
 
 
-pages['download_sources'] = sep.join([download_header(), source_rpm, source_zip, 
+pages['download_sources'] = sep.join([download_header(release='%(version)s'), 
+                                      source_rpm, source_zip, 
                                       source_tgz, subversion])
 
 
 buildbotOptions = dict(platform='all platforms', 
                        platform_versions_supported='See the different download sections',
                        prerequisites='See the different download sections',
-                       installation='''These packages are automatically generated by our <a
-        href="http://www.fraca7.net:8010/waterfall">buildbot</a> each
-        time a change is checked in the source tree. This is bleeding
-        edge, use at your own risk''')
+                       installation='See the different download sections')
 
 latest_bugfixes = download_table(image='bug',
                                  download_url='http://www.fraca7.net/TaskCoach-packages/latest_bugfixes.py',
@@ -304,9 +318,14 @@ latest_features = download_table(image='latest_features',
                                  package_type='Latest features',
                                  platform_lower='latest_features',
                                  **buildbotOptions)
-                                
-pages['download_daily_build'] = sep.join([download_header(), latest_bugfixes,
-                                          latest_features])
+
+warning = '''          These packages are automatically generated by our <a
+        href="http://www.fraca7.net:8010/waterfall">buildbot</a> each
+        time a change is checked in the source tree. This is bleeding
+        edge, use at your own risk.'''
+        
+pages['download_daily_build'] = sep.join([download_header(warning=warning), 
+                                          latest_bugfixes, latest_features])
 
 old_releases = download_table(image='archive',
                               download_url='ttp://sourceforge.net/project/showfiles.php?group_id=130831&package_id=143476',
