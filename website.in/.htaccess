@@ -1,4 +1,0 @@
-RewriteEngine on
-RewriteCond %{HTTP:Accept-Language} (fr) [NC]
-RewriteRule (.*)\.html $1_fr.html [L]
-RewriteRule / /index_fr.html [L]
