@@ -127,27 +127,18 @@ def downloadDistributionsFromSourceForge(settings):
 
 def generateMD5Digests(settings):
     print 'Generating MD5 digests...'
-    contents = '''<TABLE>
-    <TR>
-        <TH ALIGN='LEFT'>Filename</TH>
-        <TH ALIGN='LEFT'>MD5 digest</TH>
-    </TR>
-'''
+    contents = '''md5digests = {\n'''
     for filename in glob.glob(os.path.join('dist', '*')):
         
         md5digest = hashlib.md5(file(filename, 'rb').read())
         filename = os.path.basename(filename)
         hexdigest = md5digest.hexdigest()
-        contents += '''    <TR>
-        <TD>%s</TD>
-        <TD>%s</TD>
-    </TR>
-'''%(filename, hexdigest)
+        contents += '''    "%s": "%s",\n'''%(filename, hexdigest)
         print 'MD5 digest for %s is %s'%(filename, hexdigest)
-    contents += '</TABLE>\n'
+    contents += '}\n'
     
     print 'Writing MD5 digests...'
-    md5digestsFile = file(os.path.join('website.in', 'md5digests.html'), 'w')
+    md5digestsFile = file(os.path.join('website.in', 'md5digests.py'), 'w')
     md5digestsFile.write(contents)
     md5digestsFile.close()
     print 'Done generating MD5 digests.'

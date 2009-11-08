@@ -23,6 +23,20 @@ from changetypes import *
 
 releases = [
             
+Release('0.77.0', 'November 8, 2009',
+    summary=''' ... ''',
+    featuresAdded=[
+        Feature(''' ... ''')
+        ]
+    ),
+            
+Release('0.76.1', 'November 7, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug(''' ... ''')
+        ]
+    ),
+            
 Release('0.76.0', 'November 7, 2009',
     summary='''This release adds buttons on the toolbar of task viewers to
 hide completed and/or future tasks, makes subjects editable in-line, removes
