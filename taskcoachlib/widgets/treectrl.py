@@ -209,9 +209,8 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             self.SetItemText(item, text, columnIndex)                
             for which in (wx.TreeItemIcon_Expanded, wx.TreeItemIcon_Normal):
                 image = self.__adapter.getItemImage(domainObject, which, columnIndex)
-                if image >= 0:
-                    self.SetItemImage(item, image, 
-                                      column=columnIndex, which=which)
+                image = image if image >= 0 else -1
+                self.SetItemImage(item, image, column=columnIndex, which=which)
         fgColor = self.__adapter.getColor(domainObject)
         if fgColor:
             self.SetItemTextColour(item, fgColor)

@@ -23,10 +23,11 @@ from changetypes import *
 
 releases = [
             
-Release('0.76.1', 'November 7, 2009',
+Release('0.76.1', 'November 9, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug(''' ... ''')
+        Bug('''The notes and attachment columns were not properly refreshed
+after removing the last note or attachment.''', '2894530')
         ]
     ),
             
