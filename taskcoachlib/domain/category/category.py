@@ -21,8 +21,9 @@ from taskcoachlib.domain import base, note, attachment
 
 
 class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject):
-    def __init__(self, subject, categorizables=None, children=None, filtered=False, 
-                 parent=None, description='', color=None, *args, **kwargs):
+    def __init__(self, subject, categorizables=None, children=None, 
+                 filtered=False, parent=None, description='', color=None, 
+                 exclusiveSubcategories=False, *args, **kwargs):
         super(Category, self).__init__(subject=subject, children=children or [], 
                                        parent=parent, description=description,
                                        color=color, *args, **kwargs)
@@ -31,6 +32,7 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
                                                   self.categorizableAddedEvent,
                                                   self.categorizableRemovedEvent)
         self.__filtered = filtered
+        self.__exclusiveSubcategories = exclusiveSubcategories
             
     @classmethod
     def filterChangedEventType(class_):
@@ -51,16 +53,24 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
         return 'category.categorizable.removed'
     
     @classmethod
+    def exclusiveSubcategoriesChangedEventType(class_):
+        ''' Event type to notify observers that subcategories have become
+            exclusive (or vice versa). '''
+        return 'category.exclusiveSubcategories'
+    
+    @classmethod
     def modificationEventTypes(class_):
         eventTypes = super(Category, class_).modificationEventTypes()
         return eventTypes + [class_.filterChangedEventType(),
                              class_.categorizableAddedEventType(),
-                             class_.categorizableRemovedEventType()]
+                             class_.categorizableRemovedEventType(),
+                             class_.exclusiveSubcategoriesChangedEventType()]
                 
     def __getstate__(self):
         state = super(Category, self).__getstate__()
         state.update(dict(categorizables=self.__categorizables.get(), 
-                          filtered=self.__filtered))
+                          filtered=self.__filtered),
+                          exclusiveSubcategories=self.__exclusiveSubcategories)
         return state
         
     def __setstate__(self, state, event=None):
@@ -69,6 +79,7 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
         super(Category, self).__setstate__(state, event)
         self.setCategorizables(state['categorizables'], event)
         self.setFiltered(state['filtered'], event)
+        self.makeSubcategoriesExclusive(state['exclusiveSubcategories'], event)
         if notify:
             event.send()
 
@@ -115,7 +126,7 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
     def isFiltered(self):
         return self.__filtered
     
-    def setFiltered(self, filtered=True, event=None, recursive=True):
+    def setFiltered(self, filtered=True, event=None, recursive=True, uncheckSiblings=True):
         if filtered == self.__filtered:
             return
         notify = event is None
@@ -125,6 +136,12 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
         if filtered and recursive:
             for familyMember in self.ancestors() + self.children(recursive=True):
                 familyMember.setFiltered(False, event, recursive=False)
+        parent = self.parent()
+        if uncheckSiblings and parent and parent.hasExclusiveSubcategories():
+            for child in parent.children():
+                if child == self:
+                    continue
+                child.setFiltered(False, event=event, uncheckSiblings=False)
         if notify:
             event.send()
                     
@@ -153,3 +170,22 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
         super(Category, self).colorChangedEvent(event)
         for categorizable in self.categorizables(recursive=True):
             categorizable.colorChangedEvent(event)
+
+    def hasExclusiveSubcategories(self):
+        return self.__exclusiveSubcategories
+    
+    def makeSubcategoriesExclusive(self, exclusive=True, event=None):
+        if exclusive == self.hasExclusiveSubcategories():
+            return
+        notify = event is None
+        event = event or patterns.Event()
+        self.__exclusiveSubcategories = exclusive
+        self.exclusiveSubcategoriesEvent(event)
+        for child in self.children():
+            child.setFiltered(False, event=event)
+        if notify:
+            event.send()
+            
+    def exclusiveSubcategoriesEvent(self, event):
+        event.addSource(self, self.hasExclusiveSubcategories(), 
+                        type=self.exclusiveSubcategoriesChangedEventType())

@@ -191,6 +191,22 @@ class CategorySubjectPage(SubjectPage):
         super(CategorySubjectPage, self).__init__(theCategory, parent, 
                                                   columns=3, *args, **kwargs)
 
+    def addEntries(self):
+        super(CategorySubjectPage, self).addEntries()
+        self.addExclusiveSubcategoriesEntry()
+       
+    def addExclusiveSubcategoriesEntry(self):
+        exclusive = self.item.hasExclusiveSubcategories()
+        self._exclusiveSubcategoriesCheckBox = \
+            wx.CheckBox(self, label=_('Mutually exclusive'))
+        self._exclusiveSubcategoriesCheckBox.SetValue(exclusive)
+        self.addEntry(_('Subcategories'), self._exclusiveSubcategoriesCheckBox,
+                      flags=[None, wx.ALL])
+
+    def ok(self):
+        self.item.makeSubcategoriesExclusive(self._exclusiveSubcategoriesCheckBox.GetValue())
+        super(CategorySubjectPage, self).ok()
+        
 
 class NoteSubjectPage(SubjectPage):
     def __init__(self, parent, theNote, *args, **kwargs):

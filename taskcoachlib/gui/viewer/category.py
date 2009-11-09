@@ -42,7 +42,8 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
         super(BaseCategoryViewer, self).__init__(*args, **kwargs)
         for eventType in category.Category.subjectChangedEventType(), \
                          category.Category.filterChangedEventType(), \
-                         category.Category.colorChangedEventType():
+                         category.Category.colorChangedEventType(), \
+                         category.Category.exclusiveSubcategoriesChangedEventType():
             patterns.Publisher().registerObserver(self.onAttributeChanged, 
                 eventType)
             
@@ -133,6 +134,14 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
         return menu.CategoryPopupMenu(self.parent, self.settings, self.taskFile,
                                       self, localOnly)
     
+    def onAttributeChanged(self, event):
+        if category.Category.exclusiveSubcategoriesChangedEventType() in event.types():
+            # The HyperTreeList has no way of selectively changing the ct_type 
+            # of specific items, so we have to refresh them all:
+            self.widget.RefreshAllItems() 
+        else:
+            super(BaseCategoryViewer, self).onAttributeChanged(event)
+        
     def onCheck(self, event):
         categoryToFilter = self.widget.GetItemPyData(event.GetItem())
         categoryToFilter.setFiltered(event.GetItem().IsChecked())
@@ -143,6 +152,10 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
             return item.isFiltered()
         return False
 
+    def getItemParentHasExclusiveChildren(self, item):
+        parent = item.parent()
+        return parent and parent.hasExclusiveSubcategories()
+    
     def isShowingCategories(self):
         return True
 

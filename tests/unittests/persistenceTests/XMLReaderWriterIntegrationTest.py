@@ -82,7 +82,8 @@ class IntegrationTest(IntegrationTestCase):
         self.task.addEffort(effort.Effort(self.task, start=date.DateTime(2004,1,1), 
             stop=date.DateTime(2004,1,2), description=self.description))
         self.category = category.Category('test', [self.task], filtered=True,
-                                          description='Description')
+                                          description='Description', 
+                                          exclusiveSubcategories=True)
         self.categories.append(self.category)
         # pylint: disable-msg=E1101
         self.task.addAttachments(attachment.FileAttachment('/home/frank/whatever.txt'))
@@ -163,6 +164,9 @@ class IntegrationTest(IntegrationTestCase):
 
     def testFilteredCategory(self):
         self.failUnless(list(self.categoriesWrittenAndRead)[0].isFiltered())
+
+    def testExclusiveSubcategories(self):
+        self.failUnless(list(self.categoriesWrittenAndRead)[0].hasExclusiveSubcategories())
         
     def testPriority(self):
         self.assertAttributeWrittenAndRead(self.task, 'priority')

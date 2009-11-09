@@ -115,7 +115,8 @@ class XMLReader(object):
             self._parseCategoryNodes, categorizablesById)
         kwargs.update(dict(\
             notes=self._parseNoteNodes(categoryNode),
-            filtered=self._parseBoolean(categoryNode.attrib.get('filtered', 'False'))))
+            filtered=self._parseBoolean(categoryNode.attrib.get('filtered', 'False')),
+            exclusiveSubcategories=self._parseBoolean(categoryNode.attrib.get('exclusiveSubcategories', 'False'))))
         if self.__tskversion < 19:
             categorizableIds = categoryNode.attrib.get('tasks', '')
         else:

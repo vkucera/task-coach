@@ -339,12 +339,13 @@ class TreeListCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
 
 class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
     def setUp(self):
+        self.frame.getItemParentHasExclusiveChildren = lambda item: False
         super(CheckTreeCtrlTest, self).setUp()
         columns = [widgets.Column('subject', 'Subject')]
         self.treeCtrl = widgets.CheckTreeCtrl(self.frame, columns,
             self.onSelect, self.onCheck, 
             dummy.DummyUICommand(), dummy.DummyUICommand())
-    
+        
     def getIsItemChecked(self, item): # pylint: disable-msg=W0613
         return False
     
