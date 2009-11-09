@@ -1072,7 +1072,6 @@ class XMLReaderVersion24Test(XMLReaderTestCase):
             '</guid></tasks>')
         self.assertEqual(expectedGUID, actualGUID)
         
-        
 
 class XMLReaderVersion26Test(XMLReaderTestCase):
     tskversion = 26 # New in release 0.75.0
@@ -1085,3 +1084,24 @@ class XMLReaderVersion26Test(XMLReaderTestCase):
             '</tasks>\n')
         self.assertEqual(50, tasks[0].percentageComplete())
 
+
+class XMLReaderVersion27Test(XMLReaderTestCase):
+    tskversion = 27 # New in release 0.76.0
+    
+    # Release 0.76.0 introduces exclusive subcategories
+    
+    def testExclusiveSubcategories(self):
+        categories = self.writeAndReadCategories(\
+            '<categories>\n'
+            '<category subject="Category" exclusiveSubcategories="True"'
+            ' status="0"/>\n'
+            '</categories>\n')
+        self.failUnless(categories[0].hasExclusiveSubcategories())
+        
+    def testNoExclusiveSubcategoriesByDefault(self):
+        categories = self.writeAndReadCategories(\
+            '<categories>\n'
+            '<category subject="Category" status="0"/>\n'
+            '</categories>\n')
+        self.failIf(categories[0].hasExclusiveSubcategories())
+        

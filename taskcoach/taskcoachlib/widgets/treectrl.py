@@ -168,6 +168,9 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
     def getItemTooltipData(self, item, column):
         return self.__adapter.getItemTooltipData(item, column)
     
+    def getItemCTType(self, item): # pylint: disable-msg=W0613
+        return self.ct_type
+    
     def curselection(self):
         return [self.GetItemPyData(item) for item in self.GetSelections()]
     
@@ -196,7 +199,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             
     def _addObjectRecursively(self, parentItem, parentObject=None):
         for childObject in self.__adapter.children(parentObject):
-            childItem = self.AppendItem(parentItem, '', self.ct_type, 
+            childItem = self.AppendItem(parentItem, '', self.getItemCTType(childObject), 
                                         data=childObject)
             self._refreshObject(childItem, childObject)
             self._addObjectRecursively(childItem, childObject)  
@@ -303,8 +306,6 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
     
 
 class CheckTreeCtrl(TreeListCtrl):
-    ct_type = 1
-    
     def __init__(self, parent, columns, selectCommand, checkCommand, 
                  editCommand, dragAndDropCommand, itemPopupMenu=None, 
                  *args, **kwargs):
@@ -313,10 +314,23 @@ class CheckTreeCtrl(TreeListCtrl):
             itemPopupMenu, *args, **kwargs)
         self.Bind(hypertreelist.EVT_TREE_ITEM_CHECKED, checkCommand)
         self.getIsItemChecked = parent.getIsItemChecked
+        self.getItemParentHasExclusiveChildren = parent.getItemParentHasExclusiveChildren
+        
+    def getItemCTType(self, item):
+        ''' Use radio buttons (ct_type == 2) when the item has "exclusive" 
+            children, meaning that only one child can be checked at a time. Use
+            check boxes (ct_type == 1) otherwise. '''
+        return 2 if self.getItemParentHasExclusiveChildren(item) else 1 
         
     def _refreshObject(self, item, domainObject):
         super(CheckTreeCtrl, self)._refreshObject(item, domainObject)
-        self.CheckItem(item, self.getIsItemChecked(domainObject))
+        checked = self.getIsItemChecked(domainObject)
+        if self.getItemCTType(domainObject) == 2:
+            # Use UnCheckRadioParent because CheckItem always keeps at least
+            # one item selected, which we don't want to enforce
+            self.UnCheckRadioParent(item, checked)
+        else:
+            self.CheckItem(item, checked)
         
     def onItemActivated(self, event):
         if self.isDoubleClicked(event):
@@ -328,3 +342,4 @@ class CheckTreeCtrl(TreeListCtrl):
             
     def isDoubleClicked(self, event):
         return hasattr(event, 'LeftDClick') and event.LeftDClick()
+    

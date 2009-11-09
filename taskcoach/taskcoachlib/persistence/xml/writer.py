@@ -120,6 +120,8 @@ class XMLWriter(object):
                                       categorizableContainers)
         if category.isFiltered():
             node.setAttribute('filtered', str(category.isFiltered()))
+        if category.hasExclusiveSubcategories():
+            node.setAttribute('exclusiveSubcategories', str(category.hasExclusiveSubcategories()))
         for eachNote in category.notes():
             node.appendChild(self.noteNode(eachNote))
         for attachment in category.attachments():

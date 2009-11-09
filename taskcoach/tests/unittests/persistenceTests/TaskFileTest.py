@@ -414,6 +414,13 @@ class DirtyTaskFileTest(TaskFileTestCase):
         self.category.setColor(wx.RED)
         self.failUnless(self.taskFile.needSave())
         
+    def testNeedSave_AfterMakingSubclassesExclusive(self):
+        self.taskFile.categories().append(self.category)
+        self.taskFile.setFilename(self.filename)
+        self.taskFile.save()
+        self.category.makeSubcategoriesExclusive()
+        self.failUnless(self.taskFile.needSave())
+        
     def testNeedSave_AfterNoteSubjectChanged(self):   
         list(self.taskFile.notes())[0].setSubject('new subject')
         self.failUnless(self.taskFile.needSave())

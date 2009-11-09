@@ -488,3 +488,10 @@ class XMLWriterTest(test.TestCase):
     def testPercentageComplete_Float(self):
         self.task.setPercentageComplete(50.0)
         self.expectInXML('''percentageComplete="50.0"''')
+        
+    def testExclusiveSubcategories(self):
+        self.category.makeSubcategoriesExclusive()
+        self.expectInXML('''exclusiveSubcategories="True"''')
+
+    def testNonExclusiveSubcategoriesByDefault(self):
+        self.expectNotInXML('''exclusiveSubcategories''')
