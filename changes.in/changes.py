@@ -32,8 +32,22 @@ Release('0.77.0', 'November 9, 2009',
             
 Release('0.76.1', 'November 7, 2009',
     summary='''This is a bugfix release.''',
+
+Release('0.76.1', 'November 10, 2009',
+    summary='''This release adds Growl support on Mac OS X, and fixes
+some bugs.''',
+    featuresAdded=[
+        Feature('''On Mac OS X, you can optionally choose to use Growl for
+reminders. When enabled, this disables two other features: snooze/don't snooze
+and open task on reminder.'''),
+        Feature('''Added back the possibility to hide active tasks so that 
+people can have a task viewer that only displays completed tasks.''', 
+'http://uservoice.com/a/NQCUV')
+        ],
     bugsFixed=[
-        Bug(''' ... ''')
+        Bug('''The notes and attachment columns were not properly refreshed
+after removing the last note or attachment.''', '2894530'),
+        Bug('''Reminders would randomly not work.''', '2888688')
         ]
     ),
             

@@ -27,11 +27,10 @@ class ViewFilter(base.Filter):
                                                                'Unlimited'))
         self.__hideCompletedTasks = kwargs.pop('hideCompletedTasks', False)
         self.__hideInactiveTasks = kwargs.pop('hideInactiveTasks', False)
-        self.__hideOverdueTasks = kwargs.pop('hideOverdueTasks', False)
-        self.__hideOverbudgetTasks = kwargs.pop('hideOverbudgetTasks', False)
+        self.__hideActiveTasks = kwargs.pop('hideActiveTasks', False)
         self.__hideCompositeTasks = kwargs.pop('hideCompositeTasks', False)
         for eventType in ('task.dueDate', 'task.startDate', 
-                          'task.completionDate', 'task.budgetLeft',
+                          'task.completionDate', 
                           task.Task.addChildEventType(),
                           task.Task.removeChildEventType()):
             patterns.Publisher().registerObserver(self.onTaskChange,
@@ -55,17 +54,13 @@ class ViewFilter(base.Filter):
     def hideInactiveTasks(self, hide=True):
         self.__hideInactiveTasks = hide
         self.reset()
+
+    def hideActiveTasks(self, hide=True):
+        self.__hideActiveTasks = hide
+        self.reset()
         
     def hideCompletedTasks(self, hide=True):
         self.__hideCompletedTasks = hide
-        self.reset()
-        
-    def hideOverbudgetTasks(self, hide=True):
-        self.__hideOverbudgetTasks = hide
-        self.reset()
-        
-    def hideOverdueTasks(self, hide=True):
-        self.__hideOverdueTasks = hide
         self.reset()
         
     def hideCompositeTasks(self, hide=True):
@@ -81,10 +76,7 @@ class ViewFilter(base.Filter):
             result = False
         elif self.__hideInactiveTasks and task.inactive():
             result = False
-        elif self.__hideOverdueTasks and task.overdue():
-            result = False
-        elif self.__hideOverbudgetTasks and \
-            task.budgetLeft(recursive=True) < date.TimeDelta():
+        elif self.__hideActiveTasks and task.active():
             result = False
         elif self.__hideCompositeTasks and not self.treeMode() and task.children():
             result = False

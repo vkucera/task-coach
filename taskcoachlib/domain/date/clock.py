@@ -92,17 +92,19 @@ class OnceTimer(LargeIntervalTimer):
             
     def __init__(self, callback, dateTime=None, now=None):
         self.__callback = callback
+        self.__requestedDateTime = None
         super(OnceTimer, self).__init__(self._notify)
         if dateTime:
             self.Start(dateTime, now)
         
     def Start(self, dateTime, now=None): # pylint: disable-msg=W0221
+        self.__requestedDateTime = dateTime
         now = now or dateandtime.DateTime.now()
         timeDelta = dateTime - now
         super(OnceTimer, self).Start(timeDelta.milliseconds())
 
     def _notify(self, now=None):
-        now = now or dateandtime.DateTime.now()
+        now = now or self.__requestedDateTime or dateandtime.DateTime.now()
         self.__callback(now)
 
 

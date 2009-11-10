@@ -86,6 +86,7 @@ class StackedFilterTest(test.TestCase):
 
 class ViewFilterTestCase(test.TestCase):
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.list = task.TaskList()
         self.filter = task.filter.ViewFilter(self.list, treeMode=self.treeMode)
         self.task = task.Task(subject='task')
@@ -177,19 +178,6 @@ class ViewFilterTests(object):
         self.filter.setFilteredByDueDate('Workweek')
         self.assertEqual(1, len(self.filter))
 
-    def testFilterOverDueTasks(self):
-        self.task.addChild(self.dueYesterday)
-        self.list.append(self.task)
-        self.filter.hideOverdueTasks()
-        self.assertEqual(1, len(self.filter))
-
-    def testFilterOverBudgetTasks(self):
-        self.task.setBudget(date.TimeDelta(hours=10))
-        self.task.addEffort(effort.Effort(self.task, date.Date(2000,1,1), date.Date(2000,1,2)))
-        self.list.append(self.task)
-        self.filter.hideOverbudgetTasks()
-        self.assertEqual(0, len(self.filter))
-
 
 class ViewFilterInListModeTest(ViewFilterTests, ViewFilterTestCase):
     treeMode = False
@@ -210,6 +198,7 @@ class ViewFilterInTreeModeTest(ViewFilterTests, ViewFilterTestCase):
 
 class HideCompositeTasksTestCase(ViewFilterTestCase):
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.list = task.TaskList()
         self.filter = task.filter.ViewFilter(self.list, treeMode=self.treeMode)
         self.task = task.Task(subject='task')
@@ -284,6 +273,7 @@ class HideCompositeTasksInTreeModeTest(HideCompositeTasksTests,
 
 class SearchFilterTest(test.TestCase):
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.parent = task.Task(subject='*ABC', description='Parent description')
         self.child = task.Task(subject='DEF', description='Child description')
         self.parent.addChild(self.child)
@@ -391,6 +381,7 @@ class CategoryFilterHelpers(object):
     
 class CategoryFilterFixtureAndCommonTests(CategoryFilterHelpers):
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.parent = task.Task('parent')
         self.parentCategory = category.Category('parent')
         self.parentCategory.addCategorizable(self.parent)
@@ -582,6 +573,7 @@ class DeletedFilterTest(test.TestCase):
 
 class SelectedItemsFilterTest(test.TestCase):
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.task = task.Task()
         self.child = task.Task(parent=self.task)
         self.list = task.TaskList([self.task])
