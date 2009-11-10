@@ -63,18 +63,40 @@ class TaskEditorTestCase(test.wxTestCase):
         
     def setRecurrence(self, newRecurrence, index=0):
         self.editor[index][1].setRecurrence(newRecurrence)
+        
+        
+class EditorDisplayTest(TaskEditorTestCase):
+    ''' Does the editor display the task data correctly when opened? '''
+    
+    def createCommand(self):
+        return command.EditTaskCommand(self.taskList, [self.task])
+    
+    def createTasks(self):
+        # pylint: disable-msg=W0201
+        self.task = task.Task('Task to edit')
+        self.task.setRecurrence(date.Recurrence('daily', amount=1))
+        return [self.task]
+    
+    def testSubject(self):
+        self.assertEqual('Task to edit', self.editor[0][0]._subjectEntry.GetValue())
 
+    def testDueDate(self):
+        self.assertEqual(date.Date(), self.editor[0][1]._dueDateEntry.get())
+        
+    def testRecurrenceUnit(self):
+        choice = self.editor[0][1]._recurrenceEntry
+        self.assertEqual('Daily', choice.GetString(choice.GetSelection()))
 
+    def testRecurrenceFrequency(self):
+        freq = self.editor[0][1]._recurrenceFrequencyEntry
+        self.assertEqual(1, freq.GetValue())
+        
+        
 class NewTaskTest(TaskEditorTestCase):
     def createCommand(self):
         newTaskCommand = command.NewTaskCommand(self.taskList)
         self.task = newTaskCommand.items[0] # pylint: disable-msg=W0201
         return newTaskCommand
-
-    def testCreate(self):
-        # pylint: disable-msg=W0212
-        self.assertEqual('New task', self.editor[0][0]._subjectEntry.GetValue())
-        self.assertEqual(date.Date(), self.editor[0][1]._dueDateEntry.get())
 
     def testOk(self):
         self.setSubject('Done')
@@ -121,6 +143,12 @@ class NewTaskTest(TaskEditorTestCase):
         self.setRecurrence(date.Recurrence('weekly'))
         self.editor.ok()
         self.assertEqual('weekly', self.task.recurrence().unit)
+        
+    def testSetDailyRecurrence(self):
+        self.setRecurrence(date.Recurrence('daily', amount=1))
+        self.editor.ok()
+        self.assertEqual('daily', self.task.recurrence().unit)
+        self.assertEqual(1, self.task.recurrence().amount)
         
     def testSetYearlyRecurrence(self):
         self.setRecurrence(date.Recurrence('yearly'))
