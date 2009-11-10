@@ -1131,6 +1131,19 @@ class ViewerHideInactiveTasks(ViewerCommand, UICheckCommand):
     def doCommand(self, event):
         self.viewer.hideInactiveTasks(self._isMenuItemChecked(event))
 
+
+class ViewerHideActiveTasks(ViewerCommand, UICheckCommand):
+    def __init__(self, *args, **kwargs):
+        super(ViewerHideActiveTasks, self).__init__(menuText=_('Hide &active tasks'), 
+            helpText=_('Show/hide active tasks (tasks with a start date in the past that are not completed)'),
+            *args, **kwargs)
+        
+    def isSettingChecked(self):
+        return self.viewer.isHidingActiveTasks()
+        
+    def doCommand(self, event):
+        self.viewer.hideActiveTasks(self._isMenuItemChecked(event))
+
         
 class ViewerHideCompletedTasks(ViewerCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):
