@@ -27,7 +27,8 @@ Release('0.76.1', 'November 9, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''The notes and attachment columns were not properly refreshed
-after removing the last note or attachment.''', '2894530')
+after removing the last note or attachment.''', '2894530'),
+        Bug('''Reminders would randomly not work.''')
         ]
     ),
             
