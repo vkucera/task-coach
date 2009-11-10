@@ -268,6 +268,9 @@ class FeaturesPage(SettingsPage):
             _('Allow for tracking effort'), helpText='restart')
         self.addBooleanSetting('feature', 'notes', _('Allow for taking notes'),
             helpText='restart')
+        if '__WXMAC__' in wx.PlatformInfo:
+            self.addBooleanSetting('feature', 'growl', _('Use Growl for reminders'),
+                helpText=_('Use a Growl notification instead of a dialog for reminders'))
         self.addBooleanSetting('feature', 'syncml', _('Enable SyncML'),
             helpText='restart')
         self.addBooleanSetting('feature', 'iphone', _('Enable iPhone synchronization'),

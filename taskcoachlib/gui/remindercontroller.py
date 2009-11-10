@@ -20,6 +20,25 @@ import wx
 from taskcoachlib import patterns, command
 from taskcoachlib.domain import date
 from taskcoachlib.gui.dialog import reminder, editor
+from taskcoachlib.i18n import _
+
+
+if '__WXMAC__' in wx.PlatformInfo:
+    import sys, os, struct
+
+    if struct.calcsize('L') == 8:
+        _subdir = 'IA64'
+    else:
+        _subdir = 'IA32'
+
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'bin.in', 'macos', _subdir))
+
+    from taskcoachlib.thirdparty.Growl import GrowlNotifier, Image
+    from taskcoachlib import meta
+
+    class TaskCoachGrowlNotifier(GrowlNotifier):
+        applicationName = meta.name
+        notifications = [u'Reminder']
 
 
 class ReminderController(object):
@@ -56,10 +75,15 @@ class ReminderController(object):
         for task, reminderDateTime in self.__tasksWithReminders.items():
             if reminderDateTime <= now:
                 self.showReminderMessage(task)
-                self.__removeReminder(task)
+                if not ('__WXMAC__' in wx.PlatformInfo and self.settings.getboolean('feature', 'growl')):
+                    self.__removeReminder(task)
         self.requestUserAttention()
         
     def requestUserAttention(self):
+        if '__WXMAC__' in wx.PlatformInfo and self.settings.getboolean('feature', 'growl'):
+            # When using Growl, this is not necessary. Even when not using Growl, it's
+            # annoying as hell. Anyway.
+            return
         self.__mainWindowWasHidden = not self.__mainWindow.IsShown()
         if self.__mainWindowWasHidden:
             self.__mainWindow.Show()
@@ -67,6 +91,16 @@ class ReminderController(object):
             self.__mainWindow.RequestUserAttention()
         
     def showReminderMessage(self, task):
+        if '__WXMAC__' in wx.PlatformInfo:
+            if self.settings.getboolean('feature', 'growl'):
+                notifier = TaskCoachGrowlNotifier(applicationIcon=Image.imageWithIconForCurrentApplication())
+                notifier.register()
+                notifier.notify(noteType=u'Reminder', title=_('%s Reminder') % meta.name,
+                                description=task.subject(), sticky=True)
+                self.__removeReminder(task)
+                task.setReminder(None)
+                return
+
         reminderDialog = reminder.ReminderDialog(task, self.__mainWindow)
         reminderDialog.Bind(wx.EVT_CLOSE, self.onCloseReminderDialog)        
         reminderDialog.Show()

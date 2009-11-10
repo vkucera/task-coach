@@ -24,7 +24,13 @@ from changetypes import *
 releases = [
             
 Release('0.76.1', 'November 9, 2009',
-    summary='''This is a bugfix release.''',
+    summary='''This release adds Growl support on Mac OS X, and fixes
+some bugs.''',
+    featuresAdded=[
+        Feature('''On Mac OS X, you can optionally choose to use Growl for
+reminders. When enabled, this disables two other features: snooze/don't snooze
+and open task on reminder.''')
+        ],
     bugsFixed=[
         Bug('''The notes and attachment columns were not properly refreshed
 after removing the last note or attachment.''', '2894530'),
