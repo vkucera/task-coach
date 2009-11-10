@@ -92,6 +92,7 @@ class OnceTimer(LargeIntervalTimer):
             
     def __init__(self, callback, dateTime=None, now=None):
         self.__callback = callback
+        self.__requestedDateTime = None
         super(OnceTimer, self).__init__(self._notify)
         if dateTime:
             self.Start(dateTime, now)
@@ -103,7 +104,7 @@ class OnceTimer(LargeIntervalTimer):
         super(OnceTimer, self).Start(timeDelta.milliseconds())
 
     def _notify(self, now=None):
-        now = now or self.__requestedDateTime
+        now = now or self.__requestedDateTime or dateandtime.DateTime.now()
         self.__callback(now)
 
 
