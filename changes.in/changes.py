@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
             
-Release('0.76.1', 'November 9, 2009',
+Release('0.76.1', 'November 10, 2009',
     summary='''This release adds Growl support on Mac OS X, and fixes
 some bugs.''',
     featuresAdded=[
@@ -34,7 +34,7 @@ and open task on reminder.''')
     bugsFixed=[
         Bug('''The notes and attachment columns were not properly refreshed
 after removing the last note or attachment.''', '2894530'),
-        Bug('''Reminders would randomly not work.''')
+        Bug('''Reminders would randomly not work.''', '2888688')
         ]
     ),
             
