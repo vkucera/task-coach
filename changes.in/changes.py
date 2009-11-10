@@ -29,7 +29,10 @@ some bugs.''',
     featuresAdded=[
         Feature('''On Mac OS X, you can optionally choose to use Growl for
 reminders. When enabled, this disables two other features: snooze/don't snooze
-and open task on reminder.''')
+and open task on reminder.'''),
+        Feature('''Added back the possibility to hide active tasks so that 
+people can have a task viewer that only displays completed tasks.''', 
+'http://uservoice.com/a/NQCUV')
         ],
     bugsFixed=[
         Bug('''The notes and attachment columns were not properly refreshed

@@ -103,6 +103,7 @@ class FilterableViewerForTasksMixin(FilterableViewerMixin):
         options = dict(dueDateFilter=self.getFilteredByDueDate(),
                        hideCompletedTasks=self.isHidingCompletedTasks(),
                        hideInactiveTasks=self.isHidingInactiveTasks(),
+                       hideActiveTasks=self.isHidingActiveTasks(),
                        hideCompositeTasks=self.isHidingCompositeTasks())
         return options
     
@@ -124,6 +125,13 @@ class FilterableViewerForTasksMixin(FilterableViewerMixin):
     def isHidingInactiveTasks(self):
         return self.__getBooleanSetting('hideinactivetasks')
     
+    def hideActiveTasks(self, hide=True):
+        self.__setBooleanSetting('hideactivetasks', hide)
+        self.presentation().hideActiveTasks(hide)
+
+    def isHidingActiveTasks(self):
+        return self.__getBooleanSetting('hideactivetasks')
+    
     def hideCompletedTasks(self, hide=True):
         self.__setBooleanSetting('hidecompletedtasks', hide)
         self.presentation().hideCompletedTasks(hide)
@@ -140,6 +148,7 @@ class FilterableViewerForTasksMixin(FilterableViewerMixin):
     
     def resetFilter(self):
         self.hideInactiveTasks(False)
+        self.hideActiveTasks(False)
         self.hideCompletedTasks(False)
         self.hideCompositeTasks(False)
         self.setFilteredByDueDate('Unlimited')
@@ -177,6 +186,7 @@ class FilterableViewerForTasksMixin(FilterableViewerMixin):
                 dueDateFilterCommands, 
                 uicommand.ViewerHideCompletedTasks(viewer=self),
                 uicommand.ViewerHideInactiveTasks(viewer=self),
+                uicommand.ViewerHideActiveTasks(viewer=self),
                 uicommand.ViewerHideCompositeTasks(viewer=self)]
 
     def __getBooleanSetting(self, setting):
