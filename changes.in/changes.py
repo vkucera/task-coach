@@ -47,7 +47,9 @@ people can have a task viewer that only displays completed tasks.''',
     bugsFixed=[
         Bug('''The notes and attachment columns were not properly refreshed
 after removing the last note or attachment.''', '2894530'),
-        Bug('''Reminders would randomly not work.''', '2888688')
+        Bug('''Reminders would randomly not work.''', '2888688'),
+        Bug('''Recurrence frequency would be reset to zero when edited.''', 
+            '2895085')
         ]
     ),
             

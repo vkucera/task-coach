@@ -84,6 +84,17 @@ if system == 'Linux':
     setupOptions['package_data'] = {'taskcoachlib': ['bin.in/linux/_pysyncml.so']}
 elif system == 'Windows':
     setupOptions['scripts'].append('taskcoach.pyw')
+else:
+    # When packaging for MacOS, choose the right binary depending on
+    # the platform word size. Actually, we're always packaging on 32
+    # bits.
+    import sys, struct
+    if struct.calcsize('L') == 4:
+        sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'macos', 'IA32'))
+    else:
+        sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'macos', 'IA64'))
+    import _growl
+    import _growlImage
 
 if __name__ == '__main__':
     setup(**setupOptions)

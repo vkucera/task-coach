@@ -324,7 +324,7 @@ class DatesPage(TaskHeadersMixin, PageWithHeaders):
         panelSizer.Add(staticText, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3,-1))
         self._recurrenceFrequencyEntry = widgets.SpinCtrl(panel, size=(50,-1), 
-                                                          min=1)
+                                                          initial=1, min=1)
         panelSizer.Add(self._recurrenceFrequencyEntry, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3,-1))
         self._recurrenceStaticText = wx.StaticText(panel, label='reserve some space')
@@ -346,7 +346,7 @@ class DatesPage(TaskHeadersMixin, PageWithHeaders):
         panelSizer.Add(self._maxRecurrenceCheckBox, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3,-1))
         self._maxRecurrenceCountEntry = widgets.SpinCtrl(panel, size=(50,-1), 
-                                                         min=1)
+                                                         initial=1, min=1)
         panelSizer.Add(self._maxRecurrenceCountEntry)
         panel.SetSizerAndFit(panelSizer)
         recurrenceBox.add(panel)
