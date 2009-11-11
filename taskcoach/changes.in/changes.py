@@ -29,9 +29,6 @@ Release('0.77.0', 'November 9, 2009',
         Feature('''Categories can have mutually exclusive subcategories.''')
         ]
     ),
-            
-Release('0.76.1', 'November 7, 2009',
-    summary='''This is a bugfix release.''',
 
 Release('0.76.1', 'November 10, 2009',
     summary='''This release adds Growl support on Mac OS X, and fixes
