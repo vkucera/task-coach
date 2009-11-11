@@ -391,7 +391,7 @@ class CategoryTest(test.TestCase):
         self.category.makeSubcategoriesExclusive(False)
         self.failIf(self.subCategory.isFiltered())
         
-    def testCheckingAnExclusiveSubcategoryUnchecksOtherSubcategories(self):
+    def testCheckingAnExclusiveSubcategoryUnchecksSiblings(self):
         self.category.makeSubcategoriesExclusive(True)
         self.category.addChild(self.subCategory)
         anotherSubcategory = category.Category('Another subcategory')
@@ -400,6 +400,17 @@ class CategoryTest(test.TestCase):
         anotherSubcategory.setFiltered(True)
         self.failIf(self.subCategory.isFiltered())
         self.failUnless(anotherSubcategory.isFiltered())
+        
+    def testCheckingAnExclusiveSubcategoryUnchecksSubcategoriesOfSiblings(self):
+        self.category.makeSubcategoriesExclusive(True)
+        self.category.addChild(self.subCategory)
+        anotherSubcategory = category.Category('Another subcategory')
+        self.category.addChild(anotherSubcategory)
+        grandChild = category.Category('Grand child')
+        self.subCategory.addChild(grandChild)
+        grandChild.setFiltered(True)
+        anotherSubcategory.setFiltered(True)
+        self.failIf(grandChild.isFiltered())
         
     # Event types:
         
