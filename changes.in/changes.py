@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
             
-Release('0.77.0', 'November 9, 2009',
+Release('0.77.0', 'November 11, 2009',
     summary=''' ... ''',
     featuresAdded=[
         Feature('''Categories can have mutually exclusive subcategories.''')
