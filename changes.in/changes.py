@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
             
-Release('0.76.1', 'November 10, 2009',
+Release('0.76.1', 'November 11, 2009',
     summary='''This release adds Growl support on Mac OS X, and fixes
 some bugs.''',
     featuresAdded=[
@@ -39,7 +39,10 @@ people can have a task viewer that only displays completed tasks.''',
 after removing the last note or attachment.''', '2894530'),
         Bug('''Reminders would randomly not work.''', '2888688'),
         Bug('''Recurrence frequency would be reset to zero when edited.''', 
-            '2895085')
+            '2895085'),
+        Bug('''Instead of the whole description, show only the first few lines 
+of descriptions in the description column of task, note, and category 
+viewers.''')
         ]
     ),
             
