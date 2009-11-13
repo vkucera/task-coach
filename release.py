@@ -393,7 +393,8 @@ commands = dict(release=release,
                 identica=announceOnIdentica,
                 freshmeat=announceOnFreshmeat,
                 pypi=registerWithPyPI, 
-                mail=mailAnnouncement)
+                mail=mailAnnouncement,
+                announce=announce)
 settings = Settings()
 try:
     commands[sys.argv[1]](settings)
