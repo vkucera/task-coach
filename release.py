@@ -166,6 +166,7 @@ class SimpleFTP(ftplib.FTP, object):
             
     def put(self, folder):
         for root, dirs, filenames in os.walk(folder):
+            changedDir = root != folder
             if root != folder:
                 print 'Change into %s'%root
                 self.cwd(os.path.basename(root))
@@ -179,6 +180,8 @@ class SimpleFTP(ftplib.FTP, object):
                 print 'Store %s'%os.path.join(root, filename)
                 self.storbinary('STOR %s'%filename, 
                                 file(os.path.join(root, filename), 'rb'))
+            if changedDir:
+                self.cwd('..')
 
     def get(self, filename):
         print 'Retrieve %s'%filename
@@ -197,7 +200,6 @@ def uploadWebsiteToWebsiteHost(settings, websiteName):
         ftp = SimpleFTP(hostname, username, password, folder)
         os.chdir('website.out')
         ftp.put('.')
-        ftp.put('.htaccess')
         ftp.quit()
         os.chdir('..')
         print 'Done uploading website to %s.'%websiteName
