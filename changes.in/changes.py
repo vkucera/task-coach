@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
             
-Release('0.76.1', 'November 11, 2009',
+Release('0.76.1', 'November 13, 2009',
     summary='''This release adds Growl support on Mac OS X, and fixes
 some bugs.''',
     featuresAdded=[
