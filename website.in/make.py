@@ -127,7 +127,7 @@ def download_table(**kwargs):
           <table>
             <tr>
               <td rowspan=%(rows)s valign=top>
-                <img src="icons/%(image)s.png" alt="%(image)s">
+                <img src="images/%(image)s.png" alt="%(image)s">
               </td>
               <td>
                 <b>
@@ -818,6 +818,6 @@ createHTMLPages(websiteFolder, pages)
 createPAD(websiteFolder)
 createVersionFile(websiteFolder)
 copyFiles(websiteFolder, '*.ico', '*.css')
-for subFolder in 'screenshots', 'icons', 'images':
+for subFolder in 'screenshots', 'images':
     copyDir(websiteFolder, subFolder)
 createThumbnails(os.path.join(websiteFolder, 'screenshots'))
