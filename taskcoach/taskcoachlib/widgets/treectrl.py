@@ -199,7 +199,8 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             
     def _addObjectRecursively(self, parentItem, parentObject=None):
         for childObject in self.__adapter.children(parentObject):
-            childItem = self.AppendItem(parentItem, '', self.getItemCTType(childObject), 
+            childItem = self.AppendItem(parentItem, '', 
+                                        self.getItemCTType(childObject), 
                                         data=childObject)
             self._refreshObject(childItem, childObject)
             self._addObjectRecursively(childItem, childObject)  
@@ -207,6 +208,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
                 self.Expand(childItem)
             
     def _refreshObject(self, item, domainObject):
+        self.SetItemType(item, self.getItemCTType(domainObject))
         for columnIndex in range(self.GetColumnCount()):
             text = self.__adapter.getItemText(domainObject, columnIndex)
             self.SetItemText(item, text, columnIndex)                

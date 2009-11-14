@@ -136,9 +136,13 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
     
     def onAttributeChanged(self, event):
         if category.Category.exclusiveSubcategoriesChangedEventType() in event.types():
-            # The HyperTreeList has no way of selectively changing the ct_type 
-            # of specific items, so we have to refresh them all:
-            self.widget.RefreshAllItems() 
+            # We need to refresh the children of the changed item as well 
+            # because they have use radio buttons instead of checkboxes, or
+            # vice versa:
+            items = event.sources()
+            for item in items.copy():
+                items |= set(item.children())
+            self.widget.RefreshItems(*items) 
         else:
             super(BaseCategoryViewer, self).onAttributeChanged(event)
         
