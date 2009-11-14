@@ -23,6 +23,13 @@ from changetypes import *
 
 releases = [
             
+Release('0.76.2', 'November 14, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug(''' ... ''')
+        ]
+    ),
+            
 Release('0.76.1', 'November 13, 2009',
     summary='''This release adds Growl support on Mac OS X, and fixes
 some bugs.''',

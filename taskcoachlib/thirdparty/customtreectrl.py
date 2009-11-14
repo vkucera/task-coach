@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 14 Jul 2009, 11.00 GMT
+# Latest Revision: 17 Sep 2009, 09.00 GMT
 #
 #
 # TODO List
@@ -217,7 +217,7 @@ License And Version
 
 CustomTreeCtrl is freeware and distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 14 Jul 2009, 11.00 GMT
+Latest Revision: Andrea Gavana @ 17 Sep 2009, 09.00 GMT
 Version 2.0
 
 """
@@ -1449,6 +1449,17 @@ class GenericTreeItem(object):
 
         return self._type
     
+
+    def SetType(self, ct_type):
+        """
+        Sets the item type. It should be one of:
+        0: normal items
+        1: checkbox item
+        2: radiobutton item
+        """
+
+        self._type = ct_type
+
 
     def SetHyperText(self, hyper=True):
         """Sets whether the item is hypertext or not."""
@@ -2989,6 +3000,23 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             raise Exception("\nERROR: Invalid Item")
         
         return item.GetType()
+
+
+    def SetItemType(self, item, ct_type):
+        """
+        Sets the item type:
+        0: normal
+        1: checkbox item
+        2: radiobutton item
+        """
+
+        if not item:
+            raise Exception("\nERROR: Invalid Item")
+        
+        item.SetType(ct_type)
+        self.CalculatePositions()
+        self.Refresh()
+
 
 # -----------------------------------------------------------------------------
 # item status inquiries
