@@ -520,7 +520,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
                 task.Task.descriptionChangedEventType(), 
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                     value='description'),
-                renderCallback=lambda task: task.description(), 
+                renderCallback=lambda task: render.multilineText(task.description()), 
                 width=self.getColumnWidth('description'), **kwargs)] + \
             [widgets.Column('attachments', '', 
                 task.Task.attachmentsChangedEventType(), # pylint: disable-msg=E1101

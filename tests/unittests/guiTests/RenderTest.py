@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
+from taskcoachlib import config
 from taskcoachlib.gui import render
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, date, effort
@@ -120,6 +121,7 @@ class RenderRecurrenceTest(test.TestCase):
 
 class RenderBitmapNames_TestCase(test.TestCase):
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.task = task.Task()
 
     def assertBitmapNames(self, bitmap, bitmap_selected=None):
@@ -208,3 +210,20 @@ class RenderException(test.TestCase):
             render.exception(Exception, e)
         except UnicodeEncodeError:
             self.fail() # pragma: no cover
+
+
+class RenderMultilineText(test.TestCase):
+    def testRenderOneLine(self):
+        self.assertEqual('line1', render.multilineText('line1'))
+        
+    def testRenderTwoLines(self):
+        self.assertEqual('line1\nline2', render.multilineText('line1\nline2'))
+        
+    def testRenderThreeLines(self):
+        self.assertEqual('line1\nline2\nline3', 
+                         render.multilineText('line1\nline2\nline3'))
+
+    def testRenderFourLines(self):
+        self.assertEqual('line1\nline2\n...', 
+                         render.multilineText('line1\nline2\nline3\nline4'))
+        

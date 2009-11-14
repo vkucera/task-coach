@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 13 July 2009, 11.00 GMT
+# Latest Revision: 03 Oct 2009, 21.00 GMT
 #
 #
 # TODO List
@@ -220,7 +220,7 @@ License And Version
 
 HyperTreeList is freeware and distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 13 July 2009, 11.00 GMT
+Latest Revision: Andrea Gavana @ 03 Oct 2009, 21.00 GMT
 Version 1.0
 
 """
@@ -1211,7 +1211,7 @@ class TreeListItem(GenericTreeItem):
             self._wnd[column] = wnd
         elif column < self._owner.GetColumnCount():
             howmany = self._owner.GetColumnCount()
-            for i in xrange(len(self._wnd)+1):
+            for i in xrange(len(self._wnd), column+1):
                 if i >= howmany:
                     break
                 self._wnd.append(None)
@@ -1349,7 +1349,7 @@ class EditTextCtrl(wx.TextCtrl):
         
         x, y = self._owner.CalcScrolledPosition(x+2, item.GetY())
 
-        image_w = image_h = wcheck = 0
+        image_w = image_h = wcheck = hcheck = 0
         image = item.GetCurrentImage(column)
 
         if image != _NO_IMAGE:
@@ -1482,7 +1482,13 @@ class EditTextCtrl(wx.TextCtrl):
 
         return self._itemEdited
 
-    
+
+    def column(self): 
+        """Returns the column currently edited.""" 
+
+        return self._column
+
+
 # ---------------------------------------------------------------------------
 # wxTreeListMainWindow implementation
 # ---------------------------------------------------------------------------
@@ -1512,6 +1518,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         self._checkWidth = self._checkWidth2 = 0
         self._checkHeight = self._checkHeight2 = 0
         self._windowStyle = style
+        self._current = None
 
         # TextCtrl initial settings for editable items
         self._renameTimer = TreeListRenameTimer(self)
@@ -1558,12 +1565,18 @@ class TreeListMainWindow(CustomTreeCtrl):
 
     def GetItemImage(self, item, column=None, which=wx.TreeItemIcon_Normal):
 
+        if column < 0:
+            return _NO_IMAGE
+        
         column = (column is not None and [column] or [self._main_column])[0]
         return item.GetImage(which, column)
 
 
     def SetItemImage(self, item, image, column=None, which=wx.TreeItemIcon_Normal):
 
+        if column < 0:
+            return
+        
         column = (column is not None and [column] or [self._main_column])[0]
         
         item.SetImage(column, image, which)
@@ -1884,6 +1897,11 @@ class TreeListMainWindow(CustomTreeCtrl):
         return item.IsEnabled()
     
 
+    def GetCurrentItem(self):
+
+        return self._current
+
+    
     def GetColumnCount(self):
 
         return self._owner.GetHeaderWindow().GetColumnCount()
@@ -2429,7 +2447,7 @@ class TreeListMainWindow(CustomTreeCtrl):
                 dc.Clear()
 
         else:
-        	dc = wx.PaintDC(self)
+            dc = wx.PaintDC(self)
 
         self.PrepareDC(dc)
 
@@ -2484,7 +2502,10 @@ class TreeListMainWindow(CustomTreeCtrl):
         w, h = self.GetSize()
         column = -1
 
-        if point.x <0:
+        if not isinstance(point, wx.Point):
+            point = wx.Point(*point)
+
+        if point.x < 0:
             flags |= wx.TREE_HITTEST_TOLEFT
         if point.x > w:
             flags |= wx.TREE_HITTEST_TORIGHT
@@ -2543,7 +2564,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         elif alignment == wx.ALIGN_CENTER:
             style = wx.TE_CENTER
             
-        if self._textCtrl != None and item != self._textCtrl.item():
+        if self._textCtrl != None and (item != self._textCtrl.item() or column != self._textCtrl.column()):
             self._textCtrl.StopEditing()
             
         self._textCtrl = EditTextCtrl(self, -1, self._editItem, column,
@@ -3173,7 +3194,7 @@ _methods = ["GetIndent", "SetIndent", "GetSpacing", "SetSpacing", "GetImageList"
             "CheckChilds", "CheckSameLevel", "GetItemWindowEnabled", "SetItemWindowEnabled", "GetItemType",
             "IsDescendantOf", "SetItemHyperText", "IsItemHyperText", "SetItemBold", "SetItemDropHighlight", "SetItemItalic",
             "GetEditControl", "ShouldInheritColours", "GetItemWindow", "SetItemWindow", "SetItemTextColour", "HideItem",
-            "DeleteAllItems", "ItemHasChildren", "ToggleItemSelection"]
+            "DeleteAllItems", "ItemHasChildren", "ToggleItemSelection", "SetItemType", "GetCurrentItem"]
 
 
 class HyperTreeList(wx.PyControl):
@@ -3196,6 +3217,7 @@ class HyperTreeList(wx.PyControl):
         
         self._main_win = TreeListMainWindow(self, -1, wx.Point(0, 0), size, main_style, validator)
         self._main_win._buffered = False
+
         self._header_win = TreeListHeaderWindow(self, -1, self._main_win, wx.Point(0, 0),
                                                 wx.DefaultSize, wx.TAB_TRAVERSAL)
         self._header_win._buffered = False
@@ -3395,11 +3417,10 @@ class HyperTreeList(wx.PyControl):
 
     def SetColumnShown(self, column, shown):
 
-        if column == self.GetMainColumn():
-            raise Exception("The main column may not be hidden")
-        
-        self._header_win.SetColumn(column, self.GetColumn(column).SetShown((self.GetMainColumn()==column and [True] or [shown])[0]))
-        self._header_win.Refresh()
+        if self._main_win.GetMainColumn() == column:
+            shown = True # Main column cannot be hidden
+            
+        self.SetColumn(column, self.GetColumn(column).SetShown(shown))
 
 
     def IsColumnEditable(self, column):

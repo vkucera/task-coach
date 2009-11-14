@@ -23,7 +23,7 @@ import wx
 from taskcoachlib import patterns, command, widgets, domain
 from taskcoachlib.domain import note
 from taskcoachlib.i18n import _
-from taskcoachlib.gui import uicommand, menu, dialog
+from taskcoachlib.gui import uicommand, menu, dialog, render
 import base, mixin
 
 class BaseNoteViewer(mixin.AttachmentDropTargetMixin, 
@@ -119,7 +119,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
             ('description', _('Description'), _('&Description'), 
                 _('Sort notes by description'), 
                 (note.Note.descriptionChangedEventType(),), 
-                lambda note: note.description()),
+                lambda note: render.multilineText(note.description())),
             ('categories', _('Categories'), _('&Categories'), 
                 _('Sort notes by categories'), 
                 (note.Note.categoryAddedEventType(), 
