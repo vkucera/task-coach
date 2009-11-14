@@ -48,7 +48,7 @@ windist: py2exe
 py2exe: prepare
 	$(PYTHON) make.py py2exe
 	
-sdist: prepare templates dist/TaskCoach-$(TCVERSION).tar.gz
+sdist: prepare changes templates dist/TaskCoach-$(TCVERSION).tar.gz
 
 dist/TaskCoach-$(TCVERSION).tar.gz:
 	$(PYTHON) make.py sdist --formats=zip,gztar --no-prune

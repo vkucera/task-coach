@@ -23,7 +23,7 @@ import wx
 from taskcoachlib import patterns, command, widgets
 from taskcoachlib.domain import category 
 from taskcoachlib.i18n import _
-from taskcoachlib.gui import uicommand, menu, dialog
+from taskcoachlib.gui import uicommand, menu, dialog, render
 import base, mixin
 
 
@@ -80,7 +80,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                        category.Category.descriptionChangedEventType(), 
                        sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                            value='description'),
-                       renderCallback=lambda category: category.description(), 
+                       renderCallback=lambda category: render.multilineText(category.description()), 
                        width=self.getColumnWidth('description'), 
                        **kwargs),
                    widgets.Column('attachments', '', 

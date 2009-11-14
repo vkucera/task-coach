@@ -132,6 +132,13 @@ def taskBitmapNames(task, hasChildren=None):
 
     return bitmap, bitmap_selected
 
+def multilineText(text, maxLines=3):
+    lines = text.split('\n')
+    if len(lines) > maxLines:
+        return '\n'.join(lines[:maxLines-1] + ['...'])
+    else:
+        return text
+
 def exception(exception, instance):
     ''' Safely render an exception, being prepared for new exceptions. '''
 
