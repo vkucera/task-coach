@@ -126,31 +126,15 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
     def isFiltered(self):
         return self.__filtered
     
-    def setFiltered(self, filtered=True, event=None, recursive=True, uncheckSiblings=True):
+    def setFiltered(self, filtered=True, event=None):
         if filtered == self.__filtered:
             return
         notify = event is None
         event = event or patterns.Event()
         self.__filtered = filtered
         self.filterChangedEvent(event)
-        if recursive:
-            if filtered:
-                for familyMember in [a for a in self.ancestors() if not (a.parent() and a.parent().hasExclusiveSubcategories())] + self.children(recursive=True):
-                    familyMember.setFiltered(False, event, recursive=False)
-            else:
-                for child in self.children(recursive=True):
-                    child.setFiltered(False, event, recursive=False)
-        parent = self.parent()
-        # If this category is mutual exclusive with its siblings, uncheck them:
-        if uncheckSiblings and parent and parent.hasExclusiveSubcategories():
-            for child in parent.children():
-                if child == self:
-                    continue
-                child.setFiltered(False, event=event, recursive=False, uncheckSiblings=False)
-                for grandChild in child.children(recursive=True):
-                    grandChild.setFiltered(False, event=event, recursive=False, uncheckSiblings=False)
         if notify:
-            event.send()            
+            event.send()
                     
     def filterChangedEvent(self, event):
         event.addSource(self, self.isFiltered(), 

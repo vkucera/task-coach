@@ -339,7 +339,7 @@ class TreeListCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
 
 class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
     def setUp(self):
-        self.frame.getItemParentHasExclusiveChildren = lambda item: False
+        self.frame.getItemParentHasExclusiveChildren = lambda item: item.startswith('mutual')
         super(CheckTreeCtrlTest, self).setUp()
         columns = [widgets.Column('subject', 'Subject')]
         self.treeCtrl = widgets.CheckTreeCtrl(self.frame, columns,
@@ -359,5 +359,41 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
         self.treeCtrl.ExpandAll()
         parent = self.getFirstTreeItem()
         self.treeCtrl.CheckItem(parent)
-        child = self.treeCtrl.GetFirstChild(parent)[0]
+        child = self.treeCtrl.GetItemChildren(parent)[0]
         self.failIf(child.IsChecked())
+        
+    def testCheckParentOfMutualExclusiveChildrenUnchecksAllChildren(self):
+        self.children[None] = ['parent']
+        self.children['parent'] = ['mutual 1', 'mutual 2']
+        self.treeCtrl.RefreshAllItems(3)
+        self.treeCtrl.ExpandAll()
+        parent = self.getFirstTreeItem()
+        children = self.treeCtrl.GetItemChildren(parent)
+        self.treeCtrl.CheckItem(children[0])
+        self.treeCtrl.CheckItem(parent)
+        for child in children:
+            self.failIf(child.IsChecked())
+        
+    def testCheckParentOfMutualExclusiveChildrenUnchecksAllChildrenRecursively(self):
+        self.children[None] = ['parent']
+        self.children['parent'] = ['mutual 1', 'mutual 2']
+        self.children['mutual 1'] = ['1.1']
+        self.treeCtrl.RefreshAllItems(4)
+        self.treeCtrl.ExpandAll()
+        parent = self.getFirstTreeItem()
+        children = self.treeCtrl.GetItemChildren(parent, recursively=True)
+        grandchild = children[1]
+        self.treeCtrl.CheckItem(grandchild)
+        self.treeCtrl.CheckItem(parent)
+        self.failIf(grandchild.IsChecked())
+        
+    def testCheckMutualExclusiveChildUnchecksParent(self):
+        self.children[None] = ['parent']
+        self.children['parent'] = ['mutual 1', 'mutual 2']
+        self.treeCtrl.RefreshAllItems(3)
+        self.treeCtrl.ExpandAll()
+        parent = self.getFirstTreeItem()
+        children = self.treeCtrl.GetItemChildren(parent)
+        self.treeCtrl.CheckItem(parent)
+        self.treeCtrl.CheckItem(children[0])
+        self.failIf(self.treeCtrl.IsItemChecked(parent))
