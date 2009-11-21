@@ -207,21 +207,43 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             if self.__adapter.getItemExpanded(childObject):
                 self.Expand(childItem)
             
-    def _refreshObject(self, item, domainObject):
+    def _refreshObject(self, *args):
+        self._refreshAspects(('ItemType', 'Columns', 'Colors', 'Selection'), *args)
+
+    def _refreshAspects(self, aspects, *args):
+        for aspect in aspects:
+            refreshAspect = getattr(self, '_refresh%s'%aspect)
+            refreshAspect(*args)
+        
+    def _refreshItemType(self, item, domainObject):
         self.SetItemType(item, self.getItemCTType(domainObject))
+        
+    def _refreshColumns(self, item, domainObject):
         for columnIndex in range(self.GetColumnCount()):
-            text = self.__adapter.getItemText(domainObject, columnIndex)
-            self.SetItemText(item, text, columnIndex)                
-            for which in (wx.TreeItemIcon_Expanded, wx.TreeItemIcon_Normal):
-                image = self.__adapter.getItemImage(domainObject, which, columnIndex)
-                image = image if image >= 0 else -1
-                self.SetItemImage(item, image, column=columnIndex, which=which)
+            self._refreshColumn(item, domainObject, columnIndex)
+                
+    def _refreshColumn(self, *args):
+        self._refreshAspects(('Text', 'Image'), *args)
+            
+    def _refreshText(self, item, domainObject, columnIndex):
+        text = self.__adapter.getItemText(domainObject, columnIndex)
+        self.SetItemText(item, text, columnIndex)                
+                
+    def _refreshImage(self, item, domainObject, columnIndex):
+        for which in (wx.TreeItemIcon_Expanded, wx.TreeItemIcon_Normal):
+            image = self.__adapter.getItemImage(domainObject, which, columnIndex)
+            image = image if image >= 0 else -1
+            self.SetItemImage(item, image, column=columnIndex, which=which)
+
+    def _refreshColors(self, item, domainObject):
         fgColor = self.__adapter.getColor(domainObject)
         if fgColor:
             self.SetItemTextColour(item, fgColor)
         bgColor = self.__adapter.getBackgroundColor(domainObject)
         if bgColor:
             self.SetItemBackgroundColour(item, bgColor)
+        
+    def _refreshSelection(self, item, domainObject):
         shouldBeSelected = domainObject in self.__selection
         isSelected = self.IsSelected(item)
         if shouldBeSelected != isSelected:
@@ -310,28 +332,58 @@ class CheckTreeCtrl(TreeListCtrl):
     def __init__(self, parent, columns, selectCommand, checkCommand, 
                  editCommand, dragAndDropCommand, itemPopupMenu=None, 
                  *args, **kwargs):
+        self.__checking = False
         super(CheckTreeCtrl, self).__init__(parent, columns,
             selectCommand, editCommand, dragAndDropCommand, 
             itemPopupMenu, *args, **kwargs)
-        self.Bind(hypertreelist.EVT_TREE_ITEM_CHECKED, checkCommand)
+        self.checkCommand = checkCommand
+        self.Bind(hypertreelist.EVT_TREE_ITEM_CHECKED, self.onItemChecked)
         self.getIsItemChecked = parent.getIsItemChecked
         self.getItemParentHasExclusiveChildren = parent.getItemParentHasExclusiveChildren
         
-    def getItemCTType(self, item):
-        ''' Use radio buttons (ct_type == 2) when the item has "exclusive" 
+    def getItemCTType(self, domainObject):
+        ''' Use radio buttons (ct_type == 2) when the object has "exclusive" 
             children, meaning that only one child can be checked at a time. Use
             check boxes (ct_type == 1) otherwise. '''
-        return 2 if self.getItemParentHasExclusiveChildren(item) else 1 
+        return 2 if self.getItemParentHasExclusiveChildren(domainObject) else 1 
         
     def _refreshObject(self, item, domainObject):
         super(CheckTreeCtrl, self)._refreshObject(item, domainObject)
-        checked = self.getIsItemChecked(domainObject)
-        if self.getItemCTType(domainObject) == 2:
-            # Use UnCheckRadioParent because CheckItem always keeps at least
-            # one item selected, which we don't want to enforce
-            self.UnCheckRadioParent(item, checked)
-        else:
-            self.CheckItem(item, checked)
+        # Use CheckItem2 so no events get sent:
+        self.CheckItem2(item, self.getIsItemChecked(domainObject))
+        parent = item.GetParent()
+        while parent:
+            if self.GetItemType(parent) == 2:
+                self.EnableItem(item, self.IsItemChecked(parent))
+                break
+            parent = parent.GetParent()
+
+    def onItemChecked(self, event):
+        if self.__checking:
+            self.checkCommand(event)
+            # Ignore checked events while we're making the tree consistent
+            return
+        self.__checking = True
+        item = event.GetItem()
+        # Uncheck mutual exclusive children:
+        for child in self.GetItemChildren(item):
+            if self.GetItemType(child) == 2:
+                self.CheckItem(child, False)
+                # Recursively uncheck children of mutual exclusive children:
+                for grandchild in self.GetItemChildren(child, recursively=True):
+                    self.CheckItem(grandchild, False)
+        # If this item is mutual exclusive, recursively uncheck siblings and parent:
+        parent = item.GetParent()
+        if parent and self.GetItemType(item) == 2:
+            for child in self.GetItemChildren(parent):
+                if child == item:
+                    continue
+                for grandchild in self.GetItemChildren(child, recursively=True):
+                    self.CheckItem(grandchild, False)
+            if self.GetItemType(parent) != 2:
+                self.CheckItem(parent, False)
+        self.__checking = False
+        self.checkCommand(event)
         
     def onItemActivated(self, event):
         if self.isDoubleClicked(event):

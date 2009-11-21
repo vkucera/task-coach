@@ -177,34 +177,6 @@ class CategoryTest(test.TestCase):
         filteredCategory = category.Category('test', filtered=True)
         self.failUnless(filteredCategory.isFiltered())
         
-    def testSetFilteredOnTurnsOffFilteringForChild(self):
-        self.category.addChild(self.subCategory)
-        self.subCategory.setFiltered()
-        self.category.setFiltered()
-        self.failIf(self.subCategory.isFiltered())
-
-    def testSetFilteredOnTurnsOffFilteringForGrandChild(self):
-        self.category.addChild(self.subCategory)
-        grandChild = category.Category('grand child')
-        self.subCategory.addChild(grandChild)
-        grandChild.setFiltered()
-        self.category.setFiltered()
-        self.failIf(grandChild.isFiltered())
-        
-    def testSetFilteredOnForChildTurnsOffFilteringForParent(self):
-        self.category.setFiltered()
-        self.category.addChild(self.subCategory)
-        self.subCategory.setFiltered()
-        self.failIf(self.category.isFiltered())
-
-    def testSetFilteredOnForGrandChildTurnsOffFilteringForGrandParent(self):
-        self.category.setFiltered()
-        self.category.addChild(self.subCategory)
-        grandChild = category.Category('grand child')
-        self.subCategory.addChild(grandChild)
-        grandChild.setFiltered()
-        self.failIf(self.category.isFiltered())
-        
     # Contains:
         
     def testContains_NoCategorizables(self):
@@ -389,28 +361,7 @@ class CategoryTest(test.TestCase):
         self.subCategory.setFiltered(True)
         self.category.addChild(self.subCategory)
         self.category.makeSubcategoriesExclusive(False)
-        self.failIf(self.subCategory.isFiltered())
-        
-    def testCheckingAnExclusiveSubcategoryUnchecksSiblings(self):
-        self.category.makeSubcategoriesExclusive(True)
-        self.category.addChild(self.subCategory)
-        anotherSubcategory = category.Category('Another subcategory')
-        self.category.addChild(anotherSubcategory)
-        self.subCategory.setFiltered(True)
-        anotherSubcategory.setFiltered(True)
-        self.failIf(self.subCategory.isFiltered())
-        self.failUnless(anotherSubcategory.isFiltered())
-        
-    def testCheckingAnExclusiveSubcategoryUnchecksSubcategoriesOfSiblings(self):
-        self.category.makeSubcategoriesExclusive(True)
-        self.category.addChild(self.subCategory)
-        anotherSubcategory = category.Category('Another subcategory')
-        self.category.addChild(anotherSubcategory)
-        grandChild = category.Category('Grand child')
-        self.subCategory.addChild(grandChild)
-        grandChild.setFiltered(True)
-        anotherSubcategory.setFiltered(True)
-        self.failIf(grandChild.isFiltered())
+        self.failIf(self.subCategory.isFiltered())        
         
     # Event types:
         
