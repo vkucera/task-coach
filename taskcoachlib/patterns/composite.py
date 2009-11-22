@@ -62,7 +62,7 @@ class Composite(object):
         self.__parent = parent
     
     def children(self, recursive=False):
-        # Warning: this must satisfy the same condition than
+        # Warning: this must satisfy the same condition as
         # allItemsSorted() below.
 
         if recursive:
@@ -72,6 +72,13 @@ class Composite(object):
             return result
         else:
             return self.__children
+        
+    def siblings(self):
+        parent = self.parent()
+        if parent:
+            return [child for child in parent.children() if child != self]
+        else:
+            return []
 
     def copy(self, *args, **kwargs):
         kwargs['parent'] = self.parent()

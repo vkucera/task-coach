@@ -139,7 +139,7 @@ class DynamicMenu(Menu):
 
             
 class DynamicMenuThatGetsUICommandsFromViewer(DynamicMenu):
-    def __init__(self, viewer, parentMenu=None, labelInParentMenu=''):
+    def __init__(self, viewer, parentMenu=None, labelInParentMenu=''): # pylint: disable-msg=W0621
         self._uiCommands = None
         super(DynamicMenuThatGetsUICommandsFromViewer, self).__init__(\
             viewer, parentMenu, labelInParentMenu)
@@ -609,7 +609,7 @@ class TaskBarMenu(Menu):
         
 
 class ToggleCategoryMenu(DynamicMenu):
-    def __init__(self, mainwindow, categories, viewer):
+    def __init__(self, mainwindow, categories, viewer): # pylint: disable-msg=W0621
         self.categories = categories
         self.viewer = viewer
         if viewer.isViewerContainer():
@@ -631,19 +631,25 @@ class ToggleCategoryMenu(DynamicMenu):
            
     def updateMenuItems(self):
         self.clearMenu()
-        for rootCategory in self.categories.rootItems():
-            self.addMenuItemForCategory(rootCategory, self)
+        self.addMenuItemsForCategories(self.categories.rootItems(), self)
             
-    def addMenuItemForCategory(self, category, menu):
-        uiCommand = self.uiCommandClass(category=category, viewer=self.viewer)
-        uiCommand.addToMenu(menu, self._window)
-        children = category.children()[:]
-        if children:
-            children.sort(key=lambda category: category.subject())
-            subMenu = wx.Menu()
-            for child in children:
-                self.addMenuItemForCategory(child, subMenu)
-            menu.AppendSubMenu(subMenu, _('%s (subcategories)')%category.subject())
+    def addMenuItemsForCategories(self, categories, menu):
+        categories = categories[:]
+        categories.sort(key=lambda category: category.subject())
+        for category in categories:
+            uiCommand = self.uiCommandClass(category=category, viewer=self.viewer)
+            uiCommand.addToMenu(menu, self._window)
+        categoriesWithChildren = [category for category in categories if category.children()]
+        if categoriesWithChildren:
+            menu.AppendSeparator()
+            for category in categoriesWithChildren:
+                subMenu = wx.Menu()
+                self.addMenuItemsForCategories(category.children(), subMenu)
+                menu.AppendSubMenu(subMenu, self.subMenuLabel(category))            
+    
+    @staticmethod
+    def subMenuLabel(category): # pylint: disable-msg=W0621
+        return _('%s (subcategories)')%category.subject()
     
     def enabled(self):
         return bool(self.categories)
@@ -675,7 +681,7 @@ class StartEffortForTaskMenu(DynamicMenu):
         for activeRootTask in activeRootTasks:
             self.addMenuItemForTask(activeRootTask, self)
                 
-    def addMenuItemForTask(self, task, menu):
+    def addMenuItemForTask(self, task, menu): # pylint: disable-msg=W0621
         uiCommand = uicommand.EffortStartForTask(task=task, taskList=self.tasks)
         uiCommand.addToMenu(menu, self._window)
         activeChildren = [child for child in task.children() if \

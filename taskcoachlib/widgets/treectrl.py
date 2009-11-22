@@ -345,7 +345,15 @@ class CheckTreeCtrl(TreeListCtrl):
         ''' Use radio buttons (ct_type == 2) when the object has "exclusive" 
             children, meaning that only one child can be checked at a time. Use
             check boxes (ct_type == 1) otherwise. '''
-        return 2 if self.getItemParentHasExclusiveChildren(domainObject) else 1 
+        return 2 if self.getItemParentHasExclusiveChildren(domainObject) else 1
+    
+    def CheckItem(self, item, checked=True):
+        if self.GetItemType(item) == 2:
+            # Use UnCheckRadioParent because CheckItem always keeps at least
+            # one item selected, which we don't want to enforce
+            self.UnCheckRadioParent(item, checked)
+        else:
+            super(CheckTreeCtrl, self).CheckItem(item, checked)
         
     def _refreshObject(self, item, domainObject):
         super(CheckTreeCtrl, self)._refreshObject(item, domainObject)
@@ -359,9 +367,10 @@ class CheckTreeCtrl(TreeListCtrl):
             parent = parent.GetParent()
 
     def onItemChecked(self, event):
-        if self.__checking:
+        if self.__checking: 
+            # Ignore checked events while we're making the tree consistent,
+            # only invoke the callback:
             self.checkCommand(event)
-            # Ignore checked events while we're making the tree consistent
             return
         self.__checking = True
         item = event.GetItem()
@@ -378,6 +387,7 @@ class CheckTreeCtrl(TreeListCtrl):
             for child in self.GetItemChildren(parent):
                 if child == item:
                     continue
+                self.CheckItem(child, False)
                 for grandchild in self.GetItemChildren(child, recursively=True):
                     self.CheckItem(grandchild, False)
             if self.GetItemType(parent) != 2:
