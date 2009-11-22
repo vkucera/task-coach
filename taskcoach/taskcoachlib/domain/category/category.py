@@ -165,6 +165,10 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
     def hasExclusiveSubcategories(self):
         return self.__exclusiveSubcategories
     
+    def isMutualExclusive(self):
+        parent = self.parent()
+        return parent and parent.hasExclusiveSubcategories()
+    
     def makeSubcategoriesExclusive(self, exclusive=True, event=None):
         if exclusive == self.hasExclusiveSubcategories():
             return

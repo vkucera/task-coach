@@ -27,8 +27,11 @@ class ToggleCategoryCommand(base.BaseCommand):
     
     def __init__(self, *args, **kwargs):
         self.category = kwargs.pop('category')
-        super(ToggleCategoryCommand, self).__init__(*args, **kwargs)
-    
+        super(ToggleCategoryCommand, self).__init__(*args, **kwargs) 
+        # Keep track of previous category per categorizable in case of mutual 
+        # exclusive categories:
+        self.__previous_category = dict()
+        
     def do_command(self):
         self.toggle_category()
         
@@ -40,7 +43,25 @@ class ToggleCategoryCommand(base.BaseCommand):
             if self.category in item.categories():
                 self.category.removeCategorizable(item, event=event)
                 item.removeCategory(self.category, event=event)
+                if self.category.isMutualExclusive():
+                    self.restore_previous_category(item, event)
             else:
                 self.category.addCategorizable(item, event=event)
                 item.addCategory(self.category, event=event)
-        event.send()  
+                if self.category.isMutualExclusive():
+                    self.remove_previous_category(item, event)
+        event.send()
+        
+    def remove_previous_category(self, item, event):
+        for sibling in self.category.siblings():
+            if item in sibling.categorizables():
+                sibling.removeCategorizable(item, event=event)
+                item.removeCategory(sibling, event=event)
+                self.__previous_category[item] = sibling
+                break
+
+    def restore_previous_category(self, item, event):
+        if item in self.__previous_category:
+            previous_category = self.__previous_category[item]
+            previous_category.addCategorizable(item, event=event)
+            item.addCategory(previous_category, event=event)

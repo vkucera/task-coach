@@ -1488,8 +1488,11 @@ class ToggleCategory(NeedsSelectionMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
         self.category = kwargs.pop('category')
         subject = self.category.subject()
+        parent = self.category.parent()
+        mutualExclusive = parent and parent.hasExclusiveSubcategories()
+        kind = wx.ITEM_RADIO if mutualExclusive else wx.ITEM_CHECK
         super(ToggleCategory, self).__init__(menuText=subject,
-            helpText=_('Toggle %s')%subject, kind=wx.ITEM_CHECK, *args, **kwargs)
+            helpText=_('Toggle %s')%subject, kind=kind, *args, **kwargs)
         
     def doCommand(self, event):
         check = command.ToggleCategoryCommand(category=self.category,

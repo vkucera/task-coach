@@ -313,14 +313,68 @@ class StartEffortForTaskMenuTest(test.wxTestCase):
 class ToggleCategoryMenuTest(test.wxTestCase):
     def setUp(self):
         self.categories = category.CategoryList()
-        self.category = category.Category('Category')
+        self.category1 = category.Category('Category 1')
+        self.category2 = category.Category('Category 2')
         self.viewerContainer = MockViewerContainer() 
         self.menu = gui.menu.ToggleCategoryMenu(self.frame, self.categories,
                                                 self.viewerContainer)
+        
+    def setUpSubcategories(self):
+        self.category1.addChild(self.category2)
+        self.categories.append(self.category1)
         
     def testMenuInitiallyEmpty(self):
         self.assertEqual(0, len(self.menu))
         
     def testOneCategory(self):
-        self.categories.append(self.category)
+        self.categories.append(self.category1)
         self.assertEqual(1, len(self.menu))
+
+    def testTwoCategories(self):
+        self.categories.extend([self.category1, self.category2])
+        self.assertEqual(2, len(self.menu))
+        
+    def testSubcategory(self):
+        self.setUpSubcategories()
+        self.assertEqual(3, len(self.menu))
+
+    def testSubcategorySubmenuLabel(self):
+        self.setUpSubcategories()
+        self.assertEqual(gui.menu.ToggleCategoryMenu.subMenuLabel(self.category1), 
+                         self.menu.GetMenuItems()[2].GetLabel())
+
+    def testSubcategorySubmenuItemLabel(self):
+        self.setUpSubcategories()
+        subMenu = self.menu.GetMenuItems()[2].GetSubMenu()
+        label = subMenu.GetMenuItems()[0].GetLabel()
+        self.assertEqual(self.category2.subject(), label)
+                
+    def testMutualExclusiveSubcategories_AreRadio(self):
+        self.category1.makeSubcategoriesExclusive()
+        self.setUpSubcategories()
+        category3 = category.Category('Category 3')
+        self.category1.addChild(category3)
+        subMenu = self.menu.GetMenuItems()[2].GetSubMenu()
+        for subMenuItem in subMenu.GetMenuItems():
+            self.assertEqual(wx.ITEM_RADIO, subMenuItem.GetKind())
+        
+    def testMutualExclusiveSubcategories_OnlyOneChecked(self):
+        self.category1.makeSubcategoriesExclusive()
+        self.setUpSubcategories()
+        category3 = category.Category('Category 3')
+        self.category1.addChild(category3)
+        subMenuItems = self.menu.GetMenuItems()[2].GetSubMenu().GetMenuItems()
+        checkedItems = [item for item in subMenuItems if item.IsChecked()]
+        self.assertEqual(1, len(checkedItems))
+        
+    def testMutualExclusiveSubcategoriesWithSubcategories(self):
+        self.category1.makeSubcategoriesExclusive()
+        self.setUpSubcategories()
+        category3 = category.Category('Category 3')
+        self.category1.addChild(category3)
+        category4 = category.Category('Category 4')
+        category3.addChild(category4)
+        subMenuItems = self.menu.GetMenuItems()[2].GetSubMenu().GetMenuItems()
+        checkedItems = [item for item in subMenuItems if item.IsChecked()]
+        self.assertEqual(1, len(checkedItems))
+        

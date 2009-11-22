@@ -100,6 +100,19 @@ class CompositeTest(test.TestCase):
         self.composite.addChild(self.child)
         self.assertEqual([self.composite, self.child], self.composite.family())
         
+    def testSiblingsWithoutParentIsEmpty(self):
+        self.failIf(self.composite.siblings())
+        
+    def testSiblingsWithoutSiblings(self):
+        self.composite.addChild(self.child)
+        self.failIf(self.child.siblings())
+        
+    def testSiblingsWithOneSibling(self):
+        self.composite.addChild(self.child)
+        child2 = patterns.Composite()
+        self.composite.addChild(child2)
+        self.assertEqual([child2], self.child.siblings())
+        
     def testNewChild_HasCorrectParent(self):
         child = self.composite.newChild()
         self.assertEqual(self.composite, child.parent())
