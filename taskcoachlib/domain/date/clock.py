@@ -21,7 +21,34 @@ from taskcoachlib import patterns
 import dateandtime, date, timedelta
 
 
-class LargeIntervalTimer(wx.PyTimer):
+class Timer(wx.EvtHandler):
+    """A timer that fires a callback. This is similar in
+    functionnality to wx.PyTimer except for the fact that it works."""
+
+    def __init__(self, callback=None):
+        super(Timer, self).__init__()
+
+        self.__callback = callback
+        self.__timer = wx.Timer()
+        self.__timer.Bind(wx.EVT_TIMER, self.__OnNotify)
+
+    def Start(self, milliseconds, oneShot=True):
+        self.__timer.Start(milliseconds, oneShot)
+
+    def Stop(self):
+        self.__timer.Stop()
+
+    def __OnNotify(self, evt):
+        if self.__callback is None:
+            self.Notify()
+        else:
+            self.__callback()
+
+    def Notify(self):
+        pass
+
+
+class LargeIntervalTimer(Timer):
     ''' A timer that allows for unbounded large intervals, by dividing up the
         interval in pieces. '''
         
@@ -29,8 +56,7 @@ class LargeIntervalTimer(wx.PyTimer):
     
     def Start(self, milliseconds): # pylint: disable-msg=W0221
         self.millisecondsToGo = milliseconds # pylint: disable-msg=W0201
-        if self.Notify:
-            self.Notify()
+        self.Notify()
         
     def Notify(self):
         if self.millisecondsToGo <= 0:
@@ -47,7 +73,7 @@ class LargeIntervalTimer(wx.PyTimer):
         super(LargeIntervalTimer, self).Start(nextInterval, oneShot=True)
         
 
-class PeriodicTimer(wx.PyTimer):
+class PeriodicTimer(Timer):
     ''' PeriodicTimer allows for scheduling a callback to be called on a
         periodic basis. '''
 
