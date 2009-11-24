@@ -39,13 +39,10 @@ class Timer(wx.EvtHandler):
         self.__timer.Stop()
 
     def __OnNotify(self, evt):
-        if self.__callback is None:
-            self.Notify()
-        else:
-            self.__callback()
+        self.Notify()
 
     def Notify(self):
-        pass
+        self.__callback()
 
 
 class LargeIntervalTimer(Timer):
