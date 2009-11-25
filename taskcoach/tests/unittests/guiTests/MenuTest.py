@@ -349,23 +349,23 @@ class ToggleCategoryMenuTest(test.wxTestCase):
         label = subMenu.GetMenuItems()[0].GetLabel()
         self.assertEqual(self.category2.subject(), label)
                 
-    def testMutualExclusiveSubcategories_AreRadio(self):
+    def testMutualExclusiveSubcategories_AreCheckItems(self):
         self.category1.makeSubcategoriesExclusive()
         self.setUpSubcategories()
         category3 = category.Category('Category 3')
         self.category1.addChild(category3)
         subMenu = self.menu.GetMenuItems()[2].GetSubMenu()
         for subMenuItem in subMenu.GetMenuItems():
-            self.assertEqual(wx.ITEM_RADIO, subMenuItem.GetKind())
+            self.assertEqual(wx.ITEM_CHECK, subMenuItem.GetKind())
         
-    def testMutualExclusiveSubcategories_OnlyOneChecked(self):
+    def testMutualExclusiveSubcategories_NoneChecked(self):
         self.category1.makeSubcategoriesExclusive()
         self.setUpSubcategories()
         category3 = category.Category('Category 3')
         self.category1.addChild(category3)
         subMenuItems = self.menu.GetMenuItems()[2].GetSubMenu().GetMenuItems()
         checkedItems = [item for item in subMenuItems if item.IsChecked()]
-        self.assertEqual(1, len(checkedItems))
+        self.failIf(checkedItems)
         
     def testMutualExclusiveSubcategoriesWithSubcategories(self):
         self.category1.makeSubcategoriesExclusive()
@@ -376,5 +376,4 @@ class ToggleCategoryMenuTest(test.wxTestCase):
         category3.addChild(category4)
         subMenuItems = self.menu.GetMenuItems()[2].GetSubMenu().GetMenuItems()
         checkedItems = [item for item in subMenuItems if item.IsChecked()]
-        self.assertEqual(1, len(checkedItems))
-        
+        self.failIf(checkedItems)
