@@ -1488,9 +1488,16 @@ class ToggleCategory(NeedsSelectionMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
         self.category = kwargs.pop('category')
         subject = self.category.subject()
-        parent = self.category.parent()
-        mutualExclusive = parent and parent.hasExclusiveSubcategories()
-        kind = wx.ITEM_RADIO if mutualExclusive else wx.ITEM_CHECK
+        # Would like to use wx.ITEM_RADIO for mutual exclusive categories, but
+        # a menu with radio items always has to have at least of the items 
+        # checked, while we allow none of the mutual exclusive categories to
+        # be checked. Dynamically changing between wx.ITEM_CHECK and 
+        # wx.ITEM_RADIO would be a work-around in theory, using wx.ITEM_CHECK 
+        # when none of the mutual exclusive categories is checked and 
+        # wx.ITEM_RADIO otherwise, but dynamically changing the type of menu 
+        # items isn't possible. Hence, we use wx.ITEM_CHECK, even for mutual 
+        # exclusive categories.
+        kind = wx.ITEM_CHECK
         super(ToggleCategory, self).__init__(menuText=subject,
             helpText=_('Toggle %s')%subject, kind=kind, *args, **kwargs)
         
@@ -1502,11 +1509,22 @@ class ToggleCategory(NeedsSelectionMixin, ViewerCommand):
     def onUpdateUI(self, event):
         super(ToggleCategory, self).onUpdateUI(event)
         if self.enabled(event):
+            check = self.category in self.viewer.curselection()[0].categories()
             for menuItem in self.menuItems:
-                menuItem.Check(self.category in self.viewer.curselection()[0].categories())
+                menuItem.Check(check)
 
     def enabled(self, event):
-        return super(ToggleCategory, self).enabled(event) and not self.viewer.isShowingCategories()
+        viewerHasSelection = super(ToggleCategory, self).enabled(event)
+        viewerIsNotShowingCategories = not self.viewer.isShowingCategories()
+        if viewerHasSelection and viewerIsNotShowingCategories:
+            selectionCategories = self.viewer.curselection()[0].categories()
+            for ancestor in self.category.ancestors():
+                if ancestor.isMutualExclusive() and ancestor not in selectionCategories:
+                    return False # Not all mutual exclusive ancestors are checked
+            return True # All mutual exclusive ancestors are checked
+        else:
+            return False # Either viewer is not showing categories or no selection
+
 
 
 class TaskToggleCategory(ToggleCategory):
