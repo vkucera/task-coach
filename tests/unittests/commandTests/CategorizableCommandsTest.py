@@ -21,17 +21,19 @@ from taskcoachlib.domain import category, categorizable
 from CommandTestCase import CommandTestCase
 
 
-class ToggleCategoryCommandTest(CommandTestCase):
+class ToggleCategoryCommandTestCase(CommandTestCase):
     def setUp(self):
-        super(ToggleCategoryCommandTest, self).setUp()
+        super(ToggleCategoryCommandTestCase, self).setUp()
         self.category = category.Category('Cat')
-        self.categorizable = categorizable.CategorizableCompositeObject()
+        self.categorizable = categorizable.CategorizableCompositeObject(subject='Categorizable')
         
     def toggleItem(self, items=None, category=None):
         check = command.ToggleCategoryCommand(category=category or self.category, 
                                               items=items or [])
         check.do()
 
+
+class ToggleCategory(ToggleCategoryCommandTestCase):
     def testToggleCategory_AffectsCategorizable(self):
         self.toggleItem([self.categorizable])
         self.assertDoUndoRedo(\
@@ -43,30 +45,70 @@ class ToggleCategoryCommandTest(CommandTestCase):
         self.assertDoUndoRedo(\
             lambda: self.assertEqual(set([self.categorizable]), self.category.categorizables()),
             lambda: self.assertEqual(set(), self.category.categorizables()))
-                
+
+
+class ToggleMutualExclusiveCategories(ToggleCategoryCommandTestCase):
+    def setUp(self):
+        super(ToggleMutualExclusiveCategories, self).setUp()
+        self.subCategory1, self.subCategory2 = self.addMutualExclusiveSubcategories(self.category)
         
-    def testToggleMutualExclusiveSubcategory(self):
+    def addMutualExclusiveSubcategories(self, parentCategory): 
         subCategory1 = category.Category('subCategory1')
         subCategory2 = category.Category('subCategory2')
-        self.category.addChild(subCategory1)
-        self.category.addChild(subCategory2)
-        self.category.makeSubcategoriesExclusive()
-        self.categorizable.addCategory(subCategory1)
-        subCategory1.addCategorizable(self.categorizable)
-        self.toggleItem([self.categorizable], subCategory2)
+        parentCategory.addChild(subCategory1)
+        parentCategory.addChild(subCategory2)
+        parentCategory.makeSubcategoriesExclusive()
+        return subCategory1, subCategory2
+
+    def testToggleMutualExclusiveSubcategory(self):
+        self.categorizable.addCategory(self.subCategory1)
+        self.subCategory1.addCategorizable(self.categorizable)
+        self.toggleItem([self.categorizable], self.subCategory2)
         self.assertDoUndoRedo(
-            lambda: self.assertEqual(set([subCategory2]), self.categorizable.categories()),
-            lambda: self.assertEqual(set([subCategory1]), self.categorizable.categories()))
+            lambda: self.assertEqual(set([self.subCategory2]), self.categorizable.categories()),
+            lambda: self.assertEqual(set([self.subCategory1]), self.categorizable.categories()))
 
     def testToggleMutualExclusiveSubcategoryThatIsAlreadyChecked(self):
-        subCategory1 = category.Category('subCategory1')
-        subCategory2 = category.Category('subCategory2')
-        self.category.addChild(subCategory1)
-        self.category.addChild(subCategory2)
-        self.category.makeSubcategoriesExclusive()
-        self.categorizable.addCategory(subCategory1)
-        subCategory1.addCategorizable(self.categorizable)
-        self.toggleItem([self.categorizable], subCategory1)
+        self.categorizable.addCategory(self.subCategory1)
+        self.subCategory1.addCategorizable(self.categorizable)
+        self.toggleItem([self.categorizable], self.subCategory1)
         self.assertDoUndoRedo(
             lambda: self.assertEqual(set(), self.categorizable.categories()),
-            lambda: self.assertEqual(set([subCategory1]), self.categorizable.categories()))
+            lambda: self.assertEqual(set([self.subCategory1]), self.categorizable.categories()))
+        
+    def testToggleMutualExclusiveSubcategoryUnchecksParent(self):
+        self.categorizable.addCategory(self.category)
+        self.category.addCategorizable(self.categorizable)
+        self.toggleItem([self.categorizable], self.subCategory1)
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(set(), self.category.categorizables()),
+            lambda: self.assertEqual(set([self.categorizable]), self.category.categorizables()))
+
+    def testToggleMutualExclusiveCategoryUnchecksCheckedChild(self):
+        self.categorizable.addCategory(self.subCategory1)
+        self.subCategory1.addCategorizable(self.categorizable)
+        self.toggleItem([self.categorizable], self.category)
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(set(), self.subCategory1.categorizables()),
+            lambda: self.assertEqual(set([self.categorizable]), self.subCategory1.categorizables()))
+
+    def testToggleMutualExclusiveSubcategoryDoesNotUncheckMutualExclusiveParent(self):
+        subCategory1_1, subCategory1_2 = self.addMutualExclusiveSubcategories(self.subCategory1)
+        self.categorizable.addCategory(self.subCategory1)
+        self.subCategory1.addCategorizable(self.categorizable)
+        self.categorizable.addCategory(subCategory1_1)
+        subCategory1_1.addCategorizable(self.categorizable)
+        self.toggleItem([self.categorizable], subCategory1_2)
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(set([self.categorizable]), self.subCategory1.categorizables()))
+
+    def testToggleMutualExclusiveSubcategoryRecursivelyUnchecksCheckedChildren(self):
+        subCategory1_1 = self.addMutualExclusiveSubcategories(self.subCategory1)[0]
+        self.categorizable.addCategory(self.subCategory1)
+        self.subCategory1.addCategorizable(self.categorizable)
+        self.categorizable.addCategory(subCategory1_1)
+        subCategory1_1.addCategorizable(self.categorizable)
+        self.toggleItem([self.categorizable], self.subCategory2)
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(set(), subCategory1_1.categorizables()),
+            lambda: self.assertEqual(set([self.categorizable]), subCategory1_1.categorizables()))
