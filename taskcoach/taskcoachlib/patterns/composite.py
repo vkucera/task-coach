@@ -73,10 +73,14 @@ class Composite(object):
         else:
             return self.__children
         
-    def siblings(self):
+    def siblings(self, recursive=False):
         parent = self.parent()
         if parent:
-            return [child for child in parent.children() if child != self]
+            result = [child for child in parent.children() if child != self]
+            if recursive:
+                for child in result[:]:
+                    result.extend(child.children(recursive=True))
+            return result
         else:
             return []
 
