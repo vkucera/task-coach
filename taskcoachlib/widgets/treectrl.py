@@ -260,6 +260,8 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
     def onKeyDown(self, event):
         if event.GetKeyCode() == wx.WXK_RETURN:
             self.editCommand(event)
+        elif event.GetKeyCode() == wx.WXK_F2 and self.GetSelections():
+            self.EditLabel(self.GetSelections()[0])
         else:
             event.Skip()
          

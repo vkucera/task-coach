@@ -28,7 +28,9 @@ Release('0.77.0', 'November 28, 2009',
     featuresAdded=[
         Feature('''Categories can have mutually exclusive subcategories. This
 makes it easier to e.g. create your own statuses or to keep track of which
-task was assigned to whom.''')
+task was assigned to whom.'''),
+        Feature('''F2 can be used to start in-line editing of the subject of a 
+task, category or note.''')
         ]
     ),
 
