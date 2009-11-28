@@ -29,7 +29,9 @@ Release('0.76.2', 'November 28, 2009',
         Bug('''Only the first reminder defined in a session
 would be fired.''', '2901254'),
         Bug('''Don't start in-line editing of subjects when an item is double
-clicked.''', '2896654')
+clicked.''', '2896654'),
+        Bug('''Don't open effort viewer contex (right-click) menu twice on
+every right-click.''', '2902389')
         ]
     ),
             
