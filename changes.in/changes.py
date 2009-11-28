@@ -23,11 +23,13 @@ from changetypes import *
 
 releases = [
             
-Release('0.76.2', 'November 14, 2009',
+Release('0.76.2', 'November 28, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Only the first reminder defined in a session
-would be fired.''', '2901254')
+would be fired.''', '2901254'),
+        Bug('''Don't start in-line editing of subjects when an item is double
+clicked.''', '2896654')
         ]
     ),
             

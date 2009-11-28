@@ -144,6 +144,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
                  *args, **kwargs):    
         self.__adapter = parent
         self.__selection = []
+        self.__dontStartEditingLabelBecauseUserDoubleClicked = False
         super(TreeListCtrl, self).__init__(parent, style=self.getStyle(), 
             columns=columns, resizeableColumn=0, itemPopupMenu=itemPopupMenu,
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
@@ -163,6 +164,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         # We deal with double clicks ourselves, to prevent the default behaviour
         # of collapsing or expanding nodes on double click. 
         self.GetMainWindow().Bind(wx.EVT_LEFT_DCLICK, self.onDoubleClick)
+        self.Bind(wx.EVT_TREE_BEGIN_LABEL_EDIT, self.onBeginEdit)
         self.Bind(wx.EVT_TREE_END_LABEL_EDIT, self.onEndEdit)
         
     def getItemTooltipData(self, item, column):
@@ -243,6 +245,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         self.dragAndDropCommand(dropItem, dragItem)
                 
     def onDoubleClick(self, event):
+        self.__dontStartEditingLabelBecauseUserDoubleClicked = True
         if self.isClickablePartOfNodeClicked(event):
             event.Skip(False)
         else:
@@ -260,6 +263,13 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             event.columnName = self._getColumn(column).name()
         self.editCommand(event)
         event.Skip(False)
+        
+    def onBeginEdit(self, event):
+        if self.__dontStartEditingLabelBecauseUserDoubleClicked:
+            event.Veto()
+            self.__dontStartEditingLabelBecauseUserDoubleClicked = False
+        else:
+            event.Skip()
         
     def onEndEdit(self, event):
         domainObject = self.GetItemPyData(event.GetItem())
