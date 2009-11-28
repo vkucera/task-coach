@@ -23,10 +23,12 @@ from changetypes import *
 
 releases = [
             
-Release('0.77.0', 'November 21, 2009',
-    summary=''' ... ''',
+Release('0.77.0', 'November 28, 2009',
+    summary='''Categories can have mutually exclusive subcategories.''',
     featuresAdded=[
-        Feature('''Categories can have mutually exclusive subcategories.''')
+        Feature('''Categories can have mutually exclusive subcategories. This
+makes it easier to e.g. create your own statuses or to keep track of which
+task was assigned to whom.''')
         ]
     ),
 
