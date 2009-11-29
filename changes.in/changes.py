@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
             
-Release('0.77.0', 'November 28, 2009',
+Release('0.77.0', 'November 29, 2009',
     summary='''Categories can have mutually exclusive subcategories.''',
     featuresAdded=[
         Feature('''Categories can have mutually exclusive subcategories. This
@@ -34,10 +34,16 @@ task, category or note.''', 'http://uservoice.com/a/9pLUT')
         ]
     ),
 
-Release('0.76.2', 'November 14, 2009',
+Release('0.76.2', 'November 29, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug(''' ... ''')
+        Bug('''Only the first reminder defined in a session
+would be fired.''', '2901254'),
+        Bug('''Don't start in-line editing of subjects when an item is double
+clicked. Properly close the subject edit text control, e.g. when sort order
+is changed.''', '2896654', '2899913'),
+        Bug('''Don't open effort viewer contex (right-click) menu twice on
+every right-click.''', '2902389')
         ]
     ),
             
