@@ -126,6 +126,16 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
     def isItemCollapsable(self, item):
         return self.ItemHasChildren(item) and self.IsExpanded(item)
     
+    def IsLabelBeingEdited(self):
+        return bool(self.GetLabelTextCtrl())
+    
+    def StopEditing(self):
+        if self.IsLabelBeingEdited():
+            self.GetLabelTextCtrl().StopEditing()
+            
+    def GetLabelTextCtrl(self):
+        return self.GetMainWindow()._textCtrl
+    
 
 class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin, 
                    itemctrl.CtrlWithToolTipMixin, HyperTreeList):
@@ -175,6 +185,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
     
     def RefreshAllItems(self, count=0): # pylint: disable-msg=W0613
         self.Freeze()
+        self.StopEditing()
         self.__selection = self.curselection()
         self.DeleteAllItems()
         rootItem = self.GetRootItem()
@@ -184,6 +195,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         self.Thaw()
             
     def RefreshItems(self, *objects):
+        self.StopEditing()
         self.__selection = self.curselection()
         self._refreshTargetObjects(self.GetRootItem(), *objects)
             
@@ -268,6 +280,10 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         if self.__dontStartEditingLabelBecauseUserDoubleClicked:
             event.Veto()
             self.__dontStartEditingLabelBecauseUserDoubleClicked = False
+        elif self.IsLabelBeingEdited():
+            # Don't start editing another label when the user is still editing
+            # a label. This prevents left-over text controls in the tree.
+            event.Veto()
         else:
             event.Skip()
         
