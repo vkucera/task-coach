@@ -126,6 +126,16 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
     def isItemCollapsable(self, item):
         return self.ItemHasChildren(item) and self.IsExpanded(item)
     
+    def IsLabelBeingEdited(self):
+        return bool(self.GetLabelTextCtrl())
+    
+    def StopEditing(self):
+        if self.IsLabelBeingEdited():
+            self.GetLabelTextCtrl().StopEditing()
+            
+    def GetLabelTextCtrl(self):
+        return self.GetMainWindow()._textCtrl
+    
 
 class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin, 
                    itemctrl.CtrlWithToolTipMixin, HyperTreeList):
@@ -144,6 +154,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
                  *args, **kwargs):    
         self.__adapter = parent
         self.__selection = []
+        self.__dontStartEditingLabelBecauseUserDoubleClicked = False
         super(TreeListCtrl, self).__init__(parent, style=self.getStyle(), 
             columns=columns, resizeableColumn=0, itemPopupMenu=itemPopupMenu,
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
@@ -163,6 +174,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         # We deal with double clicks ourselves, to prevent the default behaviour
         # of collapsing or expanding nodes on double click. 
         self.GetMainWindow().Bind(wx.EVT_LEFT_DCLICK, self.onDoubleClick)
+        self.Bind(wx.EVT_TREE_BEGIN_LABEL_EDIT, self.onBeginEdit)
         self.Bind(wx.EVT_TREE_END_LABEL_EDIT, self.onEndEdit)
         
     def getItemTooltipData(self, item, column):
@@ -176,6 +188,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
     
     def RefreshAllItems(self, count=0): # pylint: disable-msg=W0613
         self.Freeze()
+        self.StopEditing()
         self.__selection = self.curselection()
         self.DeleteAllItems()
         rootItem = self.GetRootItem()
@@ -185,6 +198,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         self.Thaw()
             
     def RefreshItems(self, *objects):
+        self.StopEditing()
         self.__selection = self.curselection()
         self._refreshTargetObjects(self.GetRootItem(), *objects)
             
@@ -272,6 +286,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         self.dragAndDropCommand(dropItem, dragItem)
                 
     def onDoubleClick(self, event):
+        self.__dontStartEditingLabelBecauseUserDoubleClicked = True
         if self.isClickablePartOfNodeClicked(event):
             event.Skip(False)
         else:
@@ -289,6 +304,17 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             event.columnName = self._getColumn(column).name()
         self.editCommand(event)
         event.Skip(False)
+        
+    def onBeginEdit(self, event):
+        if self.__dontStartEditingLabelBecauseUserDoubleClicked:
+            event.Veto()
+            self.__dontStartEditingLabelBecauseUserDoubleClicked = False
+        elif self.IsLabelBeingEdited():
+            # Don't start editing another label when the user is still editing
+            # a label. This prevents left-over text controls in the tree.
+            event.Veto()
+        else:
+            event.Skip()
         
     def onEndEdit(self, event):
         domainObject = self.GetItemPyData(event.GetItem())

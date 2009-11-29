@@ -73,8 +73,7 @@ class _CtrlWithItemPopupMenuMixin(_CtrlWithPopupMenuMixin):
         super(_CtrlWithItemPopupMenuMixin, self).__init__(*args, **kwargs)
         if self.__popupMenu is not None:
             self._attachPopupMenu(self,
-                (wx.EVT_LIST_ITEM_RIGHT_CLICK, wx.EVT_TREE_ITEM_RIGHT_CLICK,
-                 wx.EVT_CONTEXT_MENU), 
+                (wx.EVT_TREE_ITEM_RIGHT_CLICK, wx.EVT_CONTEXT_MENU), 
                 self.onItemPopupMenu)
 
     def onItemPopupMenu(self, event):
