@@ -328,7 +328,7 @@ pages['download_daily_build'] = sep.join([download_header(warning=warning),
                                           latest_bugfixes, latest_features])
 
 old_releases = download_table(image='archive',
-                              download_url='ttp://sourceforge.net/project/showfiles.php?group_id=130831&package_id=143476',
+                              download_url='http://sourceforge.net/project/showfiles.php?group_id=130831&package_id=143476',
                               package_type='Old releases',
                               platform='all platforms', platform_lower='old_releases',
                               platform_versions_supported='See the different download sections',
