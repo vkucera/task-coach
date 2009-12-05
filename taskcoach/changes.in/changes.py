@@ -23,19 +23,17 @@ from changetypes import *
 
 releases = [
             
-Release('0.77.0', 'November 29, 2009',
-    summary='''Categories can have mutually exclusive subcategories.''',
+Release('0.77.0', 'December 6, 2009',
+    summary='''This release adds mutually exclusive categories and fixes some
+bugs.''',
     featuresAdded=[
         Feature('''Categories can have mutually exclusive subcategories. This
 makes it easier to e.g. create your own statuses or to keep track of which
 task was assigned to whom.''', 'http://uservoice.com/a/tvOIS'),
         Feature('''F2 can be used to start in-line editing of the subject of a 
-task, category or note.''', 'http://uservoice.com/a/9pLUT')
-        ]
-    ),
-
-Release('0.76.2', 'November 29, 2009',
-    summary='''This is a bugfix release.''',
+task, category or note.''', 'http://uservoice.com/a/9pLUT'),
+        Feature('''Added partial Mongolian translation.''')
+        ],
     bugsFixed=[
         Bug('''Only the first reminder defined in a session
 would be fired.''', '2901254'),

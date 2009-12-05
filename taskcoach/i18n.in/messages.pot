@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2009-11-27 23:59+West-Europa (standaardtijd)\n"
+"POT-Creation-Date: 2009-12-05 23:12+West-Europa (standaardtijd)\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -553,7 +553,7 @@ msgid "Notes"
 msgstr ""
 
 #: taskcoachlib\gui\dialog\editor.py:688
-#: taskcoachlib\gui\dialog\preferences.py:333
+#: taskcoachlib\gui\dialog\preferences.py:334
 msgid "Task behavior"
 msgstr ""
 
@@ -761,121 +761,121 @@ msgid ""
 msgstr ""
 
 #: taskcoachlib\gui\dialog\preferences.py:184
-#: taskcoachlib\gui\dialog\preferences.py:335
+#: taskcoachlib\gui\dialog\preferences.py:336
 msgid "Language"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:240
+#: taskcoachlib\gui\dialog\preferences.py:241
 msgid ""
 "If your language is not available, or the translation needs \n"
 "improving, please consider helping. See:"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:247
+#: taskcoachlib\gui\dialog\preferences.py:248
 msgid "Language not found?"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:255
+#: taskcoachlib\gui\dialog\preferences.py:256
 msgid "Click this button to change the color of active tasks"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:256
+#: taskcoachlib\gui\dialog\preferences.py:257
 msgid "Click this button to change the color of inactive tasks"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:257
+#: taskcoachlib\gui\dialog\preferences.py:258
 msgid "Click this button to change the color of completed tasks"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:258
+#: taskcoachlib\gui\dialog\preferences.py:259
 msgid "Click this button to change the color of over due tasks"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:259
+#: taskcoachlib\gui\dialog\preferences.py:260
 msgid "Click this button to change the color of tasks due soon"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:268
+#: taskcoachlib\gui\dialog\preferences.py:269
 msgid "Allow for tracking effort"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:269
+#: taskcoachlib\gui\dialog\preferences.py:270
 msgid "Allow for taking notes"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:272
+#: taskcoachlib\gui\dialog\preferences.py:273
 msgid "Use Growl for reminders"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:273
+#: taskcoachlib\gui\dialog\preferences.py:274
 msgid "Use a Growl notification instead of a dialog for reminders"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:274
+#: taskcoachlib\gui\dialog\preferences.py:275
 msgid "Enable SyncML"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:276
+#: taskcoachlib\gui\dialog\preferences.py:277
 msgid "Enable iPhone synchronization"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:279
+#: taskcoachlib\gui\dialog\preferences.py:280
 msgid "Hour of start of work day"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:281
+#: taskcoachlib\gui\dialog\preferences.py:282
 msgid "Hour of end of work day"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:283
+#: taskcoachlib\gui\dialog\preferences.py:284
 msgid "Minutes between task start/end times"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:292
+#: taskcoachlib\gui\dialog\preferences.py:293
 msgid "Mark parent task completed when all children are completed"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:294
+#: taskcoachlib\gui\dialog\preferences.py:295
 msgid "Number of days that tasks are considered to be 'due soon'"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:303
+#: taskcoachlib\gui\dialog\preferences.py:304
 msgid "Password for synchronization with iPhone"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:305
+#: taskcoachlib\gui\dialog\preferences.py:306
 msgid "Bonjour service name"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:307
+#: taskcoachlib\gui\dialog\preferences.py:308
 msgid "Upload completed tasks to device"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:315
+#: taskcoachlib\gui\dialog\preferences.py:316
 msgid "Check spelling in editors"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:332
+#: taskcoachlib\gui\dialog\preferences.py:333
 msgid "Window behavior"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:334
+#: taskcoachlib\gui\dialog\preferences.py:335
 msgid "Files"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:336
+#: taskcoachlib\gui\dialog\preferences.py:337
 msgid "Colors"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:337
+#: taskcoachlib\gui\dialog\preferences.py:338
 msgid "Features"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:339
+#: taskcoachlib\gui\dialog\preferences.py:340
 msgid "iPhone"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\preferences.py:341
+#: taskcoachlib\gui\dialog\preferences.py:342
 msgid "Editor"
 msgstr ""
 

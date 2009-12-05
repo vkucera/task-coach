@@ -216,6 +216,7 @@ class LanguagePage(SettingsPage):
              ('lv_LV', u'Latviešu (Latvian)'),
              ('lt_LT', u'Lietuvių kalba (Lithuanian)'),
              ('mr_IN', u'मराठी Marāṭhī (Marathi)'),
+             ('mn_CN', u'Монгол бичиг (Mongolian)'),
              ('nb_NO', u'Bokmål (Norwegian Bokmal)'),
              ('nn_NO', u'Nynorsk (Norwegian Nynorsk)'),
              ('fa_IR', u'فارسی (Persian)'),
