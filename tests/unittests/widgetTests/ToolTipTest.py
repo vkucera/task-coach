@@ -52,10 +52,10 @@ class ToolTipMixinTestCase(test.TestCase):
         self.assertEqual((0, 5, 2*width, height-10), tipWindow.rect)
         
     def testTipThatFallsOfBottomOfScreen(self):
-        height = wx.ClientDisplayRect()[3]
+        _, displayY, _, height = wx.ClientDisplayRect()
         tipWindow = DummyToolTipWindow((10, 100))
         self.tooltipMixin.DoShowTip(0, height-10, tipWindow)
-        self.assertEqual((0, height-105, 10, 100), tipWindow.rect)
+        self.assertEqual((0, height-105+displayY, 10, 100), tipWindow.rect)
 
 
 class SimpleToolTipUnderTest(tooltip.SimpleToolTip):
