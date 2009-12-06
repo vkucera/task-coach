@@ -27,7 +27,7 @@ class wxApp(wx.App):
     
     def onQueryEndSession(self, event):
         # This makes sure we don't block shutdown on Windows
-        pass
+        pass # pragma: no cover
     
 
 class Application(object):
@@ -67,10 +67,8 @@ class Application(object):
         self.initApplication()
         from taskcoachlib import gui, persistence
         gui.init()
-        if self.settings.getboolean('window', 'splash'):
-            splash = gui.SplashScreen()
-        else:
-            splash = None
+        showSplashScreen = self.settings.getboolean('window', 'splash')
+        splash = gui.SplashScreen() if showSplashScreen else None
         # pylint: disable-msg=W0201
         self.taskFile = persistence.LockedTaskFile()
         self.autoSaver = persistence.AutoSaver(self.settings)

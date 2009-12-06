@@ -208,8 +208,8 @@ class RenderException(test.TestCase):
         e = Exception(u'é')
         try:
             render.exception(Exception, e)
-        except UnicodeEncodeError:
-            self.fail() # pragma: no cover
+        except UnicodeEncodeError: # pragma: no cover
+            self.fail() 
 
 
 class RenderMultilineText(test.TestCase):
