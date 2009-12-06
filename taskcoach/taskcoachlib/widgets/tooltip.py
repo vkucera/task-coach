@@ -43,7 +43,7 @@ class ToolTipMixin(object):
         # ClientDisplayRect() returns the whole display size, not
         # taking the taskbar into account...
 
-        displayX, displayY, displayWidth, displayHeight = wx.ClientDisplayRect()
+        _, displayY, _, displayHeight = wx.ClientDisplayRect()
         tipWidth, tipHeight = self.__tip.GetSizeTuple()
 
         if tipHeight > displayHeight:
@@ -67,7 +67,7 @@ class ToolTipMixin(object):
     def OnBeforeShowToolTip(self, x, y):
         """Should return a wx.Frame instance that will be displayed as
         the tooltip, or None."""
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     def __OnMotion(self, event):
         x, y = event.GetPosition()
@@ -184,7 +184,7 @@ class SimpleToolTip(ToolTipBase):
         icon, lines = self.data[sectionIndex]
         sectionWidth, sectionHeight = 0, 0
         for line in lines:
-            lineWidth, lineHeight = dc.GetTextExtent(line)
+            lineWidth, lineHeight = self._calculateLineSize(dc, line)
             sectionHeight += lineHeight + 1
             sectionWidth = max(sectionWidth, lineWidth)
         if 0 < sectionIndex < len(self.data) - 1:
@@ -192,6 +192,9 @@ class SimpleToolTip(ToolTipBase):
         if icon:
             sectionWidth += 24 # Reserve width for icon(s)
         return sectionWidth, sectionHeight
+    
+    def _calculateLineSize(self, dc, line):
+        return dc.GetTextExtent(line)
 
     def OnPaint(self, event):
         dc = wx.PaintDC(self)

@@ -29,8 +29,7 @@ class OwnerUnderTest(object):
     
 
 class Foo(object):
-    def isDeleted(self):
-        return False
+    pass
 
     
 class OwnerTest(test.TestCase):

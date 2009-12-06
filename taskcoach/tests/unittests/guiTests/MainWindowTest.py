@@ -27,9 +27,6 @@ class MockViewer(wx.Frame):
     def bitmap(self):
         return ''
     
-    def statusMessages(self):
-        return '', ''
-    
     def settingsSection(self):
         return 'taskviewer'
     
