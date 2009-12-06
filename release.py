@@ -226,7 +226,7 @@ def registerWithPyPI(settings):
     from setup import setupOptions
     languagesThatPyPIDoesNotRecognize = ['Basque', 'Breton', 'Estonian', 
         'Galician', 'Lithuanian', 'Norwegian (Bokmal)', 'Norwegian (Nynorsk)', 
-        'Slovene', 'German (Low)']
+        'Slovene', 'German (Low)', 'Mongolian']
     for language in languagesThatPyPIDoesNotRecognize:
         setupOptions['classifiers'].remove('Natural Language :: %s'%language)
     from distutils.core import setup
