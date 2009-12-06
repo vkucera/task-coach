@@ -26,7 +26,8 @@ releases = [
 Release('0.77.1', 'December 6, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug(''' ... '''),
+        Bug('''Make file locking work on Windows computers that have a  
+hostname with non-ASCII characters in it.''', '2904864'),
         Bug(''' ... ''')
         ]
     ),
