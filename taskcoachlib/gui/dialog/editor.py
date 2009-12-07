@@ -927,7 +927,7 @@ class EditorWithCommand(widgets.NotebookDialog):
         if len(list(self)) == 0:
             self.cancel()
             
-    def isPageDisplayingItemOrChildOfItem(self, page, item): 
+    def isPageDisplayingItemOrChildOfItem(self, page, item):
         return item in [page.item] + page.item.ancestors()
 
 
@@ -966,7 +966,7 @@ class EffortEditor(EditorWithCommand):
             self._taskFile.tasks(), self._settings)
         self._interior.AddPage(page, effort.task().subject())
 
-    def isPageDisplayingItem(self, page, item):
+    def isPageDisplayingItemOrChildOfItem(self, page, item):
         if hasattr(item, 'setTask'):
             return page.item == item # Regular effort
         else:
