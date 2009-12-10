@@ -115,6 +115,20 @@
 	}
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+	if ((toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft) || (toInterfaceOrientation == UIInterfaceOrientationLandscapeRight))
+		self.navigationItem.hidesBackButton = YES;
+
+	return YES;
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+	if ([UIDevice currentDevice].orientation == UIInterfaceOrientationPortrait)
+		self.navigationItem.hidesBackButton = NO;
+}
+
 - (void)onSwitchValueChanged:(SwitchCell *)cell
 {
 	if (cell == startDateCell)
