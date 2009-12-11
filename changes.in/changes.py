@@ -23,12 +23,15 @@ from changetypes import *
 
 releases = [
 
-Release('0.77.1', 'December 6, 2009',
+Release('0.77.1', 'December 11, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Make file locking work on Windows computers that have a  
-hostname with non-ASCII characters in it.''', '2904864'),
-        Bug(''' ... ''')
+hostname with non-ASCII characters in it.''', '2904864')
+        ],
+    featuresChanged=[
+        Feature('''Merged the four menu items for exporting tasks and effort to 
+iCalendar and vCalendar formats into two menu items.''')
         ]
     ),
             
