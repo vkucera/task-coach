@@ -72,6 +72,7 @@ class Application(object):
         # pylint: disable-msg=W0201
         self.taskFile = persistence.LockedTaskFile()
         self.autoSaver = persistence.AutoSaver(self.settings)
+        self.autoBackup = persistence.AutoBackup(self.settings)
         self.io = gui.IOController(self.taskFile, self.displayMessage, 
                                    self.settings)
         self.mainwindow = gui.MainWindow(self.io, self.taskFile, self.settings, 
