@@ -33,7 +33,7 @@ hostname with non-ASCII characters in it.''', '2904864')
         Feature('''When making backups of task files on every save, Task
 Coach now limits the number of backups of the task file. The number of backups 
 retained increases logarithmically with the age of the oldest backup of the
-task file.'''),
+task file.''', 'http://uservoice.com/a/5FrtF'),
         Feature('''Merged the four menu items for exporting tasks and effort to 
 iCalendar and vCalendar formats into two menu items.''')
         ]
