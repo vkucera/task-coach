@@ -28,5 +28,7 @@ from csv.generator import viewer2csv
 from csv.writer import CSVWriter
 from icalendar.writer import iCalendarWriter
 from icalendar.ical import VCalendarParser
-from taskfile import TaskFile, LockedTaskFile, AutoSaver, AutoBackup
+from taskfile import TaskFile, LockedTaskFile
+from autosaver import AutoSaver
+from autobackup import AutoBackup
 from sessiontempfile import get_temp_file
