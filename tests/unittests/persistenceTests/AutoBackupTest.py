@@ -58,17 +58,57 @@ class AutoBackupTest(test.TestCase):
     def onCopyFile(self, *args):
         self.copyCalled = True
         
+    def globNone(self, pattern):
+        return []
+        
     def glob(self, pattern):
         self.pattern = pattern
+        return self.oneBackupFile()
+    
+    def oneBackupFile(self):
         return [self.backup.backupFilename(self.taskFile)]
 
     def glob2(self, pattern):
-        return [self.backup.backupFilename(self.taskFile),
-                self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2000,1,1,1,1,1))]
+        return self.twoBackupFiles()
+        
+    def twoBackupFiles(self):
+        files = [self.backup.backupFilename(self.taskFile),
+                 self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2000,1,1,1,1,1))]
+        files.sort()
+        return files
+
+    def threeBackupFiles(self):
+        files = [self.backup.backupFilename(self.taskFile),
+                 self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2005,1,1,1,1,1)),
+                 self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2000,1,1,1,1,1))]
+        files.sort()
+        return files
+        
+    def fourBackupFiles(self):
+        files = [self.backup.backupFilename(self.taskFile),
+                 self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2001,1,1,1,1,1)),
+                 self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2002,1,1,1,1,1)),
+                 self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2000,1,1,1,1,1))]
+        files.sort()
+        return files
+
+    def fiveBackupFiles(self):
+        files = [self.backup.backupFilename(self.taskFile),
+                 self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2001,1,1,1,1,1)),
+                 self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2002,1,1,1,1,1)),
+                 self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2002,1,1,1,1,2)),
+                 self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2000,1,1,1,1,1))]
+        files.sort()
+        return files
 
     def globMany(self, pattern):
-        return [self.backup.backupFilename(self.taskFile)]*100 + \
+        return self.manyBackupFiles()
+    
+    def manyBackupFiles(self):
+        files = [self.backup.backupFilename(self.taskFile)]*100 + \
             [self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2000,1,1,1,1,1))]
+        files.sort()
+        return files
         
     def testNoBackupFiles(self):
         self.assertEqual([], self.backup.backupFiles(self.taskFile, glob=lambda pattern: []))
@@ -77,25 +117,17 @@ class AutoBackupTest(test.TestCase):
         self.assertEqual(['1'], self.backup.backupFiles(self.taskFile, glob=lambda pattern: ['1']))
         
     def testNotTooManyBackupFiles(self):
-        self.failIf(self.backup.tooManyBackupFiles(self.taskFile))
+        self.assertEqual(0, self.backup.numberOfExtraneousBackupFiles(self.oneBackupFile()))
 
-    def testTooManyBackupFiles_(self):
-        self.failUnless(self.backup.tooManyBackupFiles(self.taskFile, glob=self.globMany))
-
-    def testExtraneousBackupFiles(self):
-        self.failUnless(self.backup.extraneousBackupFiles(self.taskFile, self.globMany))
-                
-    def testExtraneousBackFilesDoesNotIncludeOldest(self):
-        self.failIf(self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2000,1,1,1,1,1)) in 
-                    self.backup.extraneousBackupFiles(self.taskFile, self.globMany))
+    def testTooManyBackupFiles_(self):    
+        self.assertEqual(86, self.backup.numberOfExtraneousBackupFiles(self.manyBackupFiles()))
 
     def testRemoveExtraneousBackFiles(self):
         self.removedFiles = []
         def remove(filename):
             self.removedFiles.append(filename)
-        backupFilesToRemove = self.backup.extraneousBackupFiles(self.taskFile, self.globMany)
         self.backup.removeExtraneousBackupFiles(self.taskFile, remove=remove, glob=self.globMany)
-        self.assertEqual(backupFilesToRemove, self.removedFiles)
+        self.assertEqual(86, len(self.removedFiles))
                 
     def testRemoveExtraneousBackFiles_OSError(self):
         def remove(filename):
@@ -134,3 +166,11 @@ class AutoBackupTest(test.TestCase):
         self.settings.set('file', 'backup', 'True')
         self.taskFile.setFilename('newname.tsk')
         self.failIf(self.copyCalled)
+                        
+    def testLeastUniqueBackupFile_FourBackupFiles(self):  
+        self.assertEqual(self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2001,1,1,1,1,1)), 
+                         self.backup.leastUniqueBackupFile(self.fourBackupFiles()))
+        
+    def testLeastUniqueBackupFile_FiveBackupFiles(self):  
+        self.assertEqual(self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2002,1,1,1,1,1)), 
+                         self.backup.leastUniqueBackupFile(self.fiveBackupFiles()))

@@ -27,6 +27,8 @@ class AutoBackup(patterns.Observer):
         file before it is overwritten. To prevent the number of backups growing
         indefinitely, AutoBackup removes older backups. '''
         
+    minNrOfBackupFiles = 3 # Keep at least three backup files.
+        
     def __init__(self, settings, copyfile=shutil.copyfile):
         super(AutoBackup, self).__init__()
         self.__settings = settings
@@ -40,58 +42,60 @@ class AutoBackup(patterns.Observer):
         for taskFile in event.sources():
             if self.needBackup(taskFile):
                 self.createBackup(taskFile)
-            if self.tooManyBackupFiles(taskFile):
-                self.removeExtraneousBackupFiles(taskFile)
+            self.removeExtraneousBackupFiles(taskFile)
 
     def needBackup(self, taskFile):
         return self.__settings.getboolean('file', 'backup') and taskFile.exists()
 
     def createBackup(self, taskFile):
         self.__copyfile(taskFile.filename(), self.backupFilename(taskFile))
-
-    def tooManyBackupFiles(self, taskFile, glob=glob.glob):
-        return bool(self.extraneousBackupFiles(taskFile, glob))
     
     def removeExtraneousBackupFiles(self, taskFile, remove=os.remove, 
                                     glob=glob.glob):
-        for backupFile in self.extraneousBackupFiles(taskFile, glob):
+        backupFiles = self.backupFiles(taskFile, glob)
+        if len(backupFiles) <= self.minNrOfBackupFiles:
+            return
+        for _ in range(self.numberOfExtraneousBackupFiles(backupFiles)):
             try:
-                remove(backupFile)
+                remove(self.leastUniqueBackupFile(backupFiles))
             except OSError:
                 pass # Ignore errors
 
-    def extraneousBackupFiles(self, taskFile, glob=glob.glob):
-        backupFiles = self.backupFiles(taskFile, glob)
-        backupFiles.sort()
-        backupFiles = backupFiles[1:-1] # Keep oldest and newest
-        return backupFiles[self.maxNrOfBackupFiles(taskFile, glob)-2:]
+    def numberOfExtraneousBackupFiles(self, backupFiles):
+        assert backupFiles
+        oldestBackupFile = backupFiles[0]
+        return max(0, len(backupFiles) - self.maxNrOfBackupFiles(oldestBackupFile))
 
-    def maxNrOfBackupFiles(self, taskFile, glob):
+    def maxNrOfBackupFiles(self, oldestBackupFile):
         ''' The maximum number of backup files we keep depends on the age of
             the oldest backup file. The older the oldest backup file (that is
             never removed), the more backup files we keep. '''
-        oldestBackupFile = self.oldestBackupFile(taskFile, glob)
-        if oldestBackupFile:
-            dt = oldestBackupFile.split('.')[-3]
-            parts = (int(part) for part in (dt[0:4], dt[4:6], dt[6:8], dt[9:11], dt[11:13], dt[13:14]))
-            oldestDateTime = date.DateTime(*parts)
-            now = date.DateTime.now()
-            delta = now-oldestDateTime
-            return max(3, int(math.log(max(1, delta.hours() * 60))))
-        else:
-            return 3
+        age = date.DateTime.now() - self.backupDateTime(oldestBackupFile)
+        ageInMinutes = age.hours() * 60
+        # We keep log(ageInMinutes) backups, but at least 3: 
+        return max(self.minNrOfBackupFiles, int(math.log(max(1, ageInMinutes))))
     
-    def oldestBackupFile(self, taskFile, glob):
-        backupFiles = self.backupFiles(taskFile, glob)
-        backupFiles.sort()
-        return backupFiles[0] if backupFiles else None
+    def leastUniqueBackupFile(self, backupFiles):
+        ''' Find the backupFile that is closest (in time) to its neighbors,
+            i.e. that is the least unique. Ignore the oldest and newest 
+            backups. '''
+        assert len(backupFiles) > self.minNrOfBackupFiles
+        deltas = []
+        for index in range(1, len(backupFiles)-1):
+            delta = self.backupDateTime(backupFiles[index+1]) - \
+                    self.backupDateTime(backupFiles[index-1])
+            deltas.append((delta, backupFiles[index]))
+        deltas.sort()
+        return deltas[0][1]
 
     @staticmethod
     def backupFiles(taskFile, glob=glob.glob):
         root, ext = os.path.splitext(taskFile.filename())
         datePattern = '[0-9]'*8
         timePattern = '[0-9]'*6
-        return glob('%s.%s-%s.tsk.bak'%(root, datePattern, timePattern))
+        files = glob('%s.%s-%s.tsk.bak'%(root, datePattern, timePattern))
+        files.sort()
+        return files
 
     @staticmethod
     def backupFilename(taskFile, now=date.DateTime.now):
@@ -103,3 +107,11 @@ class AutoBackup(patterns.Observer):
             root, ext = os.path.splitext(root)
         return root + '.' + now + ext + '.bak'
                 
+    @staticmethod
+    def backupDateTime(backupFilename):
+        ''' Parse the date and time from the filename and return a DateTime 
+            instance. '''
+        dt = backupFilename.split('.')[-3]
+        parts = (int(part) for part in (dt[0:4], dt[4:6], dt[6:8], 
+                                        dt[9:11], dt[11:13], dt[13:14]))
+        return date.DateTime(*parts)
