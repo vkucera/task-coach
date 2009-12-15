@@ -1564,10 +1564,15 @@ class MailItem(ViewerCommand):
     def mail(self, subject, body, mail, showerror):
         try:
             mail('', subject, body)
-        except Exception, reason: # pylint: disable-msg=W0703
-            showerror(_('Cannot send email:\n%s')%reason, 
-                      caption=_('%s mail error')%meta.name, style=wx.ICON_ERROR)        
-        
+        except:
+            # Try again with a dummy recipient:
+            try:
+                mail('recipient@domain.com', subject, body)
+            except Exception, reason: # pylint: disable-msg=W0703
+                showerror(_('Cannot send email:\n%s')%reason, 
+                      caption=_('%s mail error')%meta.name, 
+                      style=wx.ICON_ERROR)        
+ 
 
 class TaskMail(NeedsSelectedTasksMixin, MailItem):
     def __init__(self, *args, **kwargs):
