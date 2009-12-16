@@ -22,7 +22,7 @@
 		);
 	};
 	29B97313FDCFA39411CA2CEA /* Project object */ = {
-		activeBuildConfigurationName = Debug;
+		activeBuildConfigurationName = Distribution;
 		activeExecutable = A68EDEB00F1E1EDF00F51FF2 /* TaskCoach */;
 		activeSDKPreference = iphoneos3.0;
 		activeTarget = 1D6058900D05DD3D006BFB54 /* TaskCoach */;
@@ -133,8 +133,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 282648988;
-			PBXWorkspaceStateSaveDate = 282648988;
+			PBXPerProjectTemplateStateSaveDate = 282649191;
+			PBXWorkspaceStateSaveDate = 282649191;
 		};
 		perUserProjectItems = {
 			A61F5473108CB8FD00BDFD6D /* PBXTextBookmark */ = A61F5473108CB8FD00BDFD6D /* PBXTextBookmark */;
@@ -164,10 +164,10 @@
 			A652EFEA10D8E05300E60212 /* PBXTextBookmark */ = A652EFEA10D8E05300E60212 /* PBXTextBookmark */;
 			A652EFFB10D8E10100E60212 /* PBXTextBookmark */ = A652EFFB10D8E10100E60212 /* PBXTextBookmark */;
 			A652EFFC10D8E10100E60212 /* PBXTextBookmark */ = A652EFFC10D8E10100E60212 /* PBXTextBookmark */;
+			A672720310D8E2BD000D175E /* PBXTextBookmark */ = A672720310D8E2BD000D175E /* PBXTextBookmark */;
+			A672720410D8E2BD000D175E /* PlistBookmark */ = A672720410D8E2BD000D175E /* PlistBookmark */;
+			A672720510D8E2BD000D175E /* PlistBookmark */ = A672720510D8E2BD000D175E /* PlistBookmark */;
 			A673A2E010D8E1C10047D967 /* PBXTextBookmark */ = A673A2E010D8E1C10047D967 /* PBXTextBookmark */;
-			A673A2E110D8E1C10047D967 /* PBXTextBookmark */ = A673A2E110D8E1C10047D967 /* PBXTextBookmark */;
-			A673A2E210D8E1C10047D967 /* PBXTextBookmark */ = A673A2E210D8E1C10047D967 /* PBXTextBookmark */;
-			A68196E21077873E00B4C250 /* PlistBookmark */ = A68196E21077873E00B4C250 /* PlistBookmark */;
 			A683DFFA106E052900C8A7C3 /* PBXTextBookmark */ = A683DFFA106E052900C8A7C3 /* PBXTextBookmark */;
 			A68A605810821E7E00D723FE /* PBXTextBookmark */ = A68A605810821E7E00D723FE /* PBXTextBookmark */;
 			A68A605910821E7E00D723FE /* PBXTextBookmark */ = A68A605910821E7E00D723FE /* PBXTextBookmark */;
@@ -858,6 +858,40 @@
 			sepNavVisRange = "{1229, 294}";
 		};
 	};
+	A672720310D8E2BD000D175E /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = A60B70EA1025AF0B00F9983C /* CHANGELOG */;
+		name = "CHANGELOG: 7";
+		rLen = 0;
+		rLoc = 353;
+		rType = 0;
+		vrLen = 2416;
+		vrLoc = 0;
+	};
+	A672720410D8E2BD000D175E /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = 8D1107310486CEB800E47090 /* Info.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+			LSRequiresIPhoneOS,
+		);
+		name = "/Users/jeromelaheurte/Dev/taskcoach-trunk/taskcoach-iphone/Info.plist";
+		rLen = 0;
+		rLoc = 9223372036854775807;
+	};
+	A672720510D8E2BD000D175E /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = 8D1107310486CEB800E47090 /* Info.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+			LSRequiresIPhoneOS,
+		);
+		name = "/Users/jeromelaheurte/Dev/taskcoach-trunk/taskcoach-iphone/Info.plist";
+		rLen = 0;
+		rLoc = 9223372036854775807;
+	};
 	A673A2E010D8E1C10047D967 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = A6142CD20F35DE61001DD420 /* PositionStore.m */;
@@ -867,26 +901,6 @@
 		rType = 0;
 		vrLen = 894;
 		vrLoc = 866;
-	};
-	A673A2E110D8E1C10047D967 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A60B70EA1025AF0B00F9983C /* CHANGELOG */;
-		name = "CHANGELOG: 3";
-		rLen = 0;
-		rLoc = 117;
-		rType = 0;
-		vrLen = 2359;
-		vrLoc = 0;
-	};
-	A673A2E210D8E1C10047D967 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A60B70EA1025AF0B00F9983C /* CHANGELOG */;
-		name = "CHANGELOG: 7";
-		rLen = 0;
-		rLoc = 353;
-		rType = 0;
-		vrLen = 2416;
-		vrLoc = 0;
 	};
 	A673ABF40F2203D000E548BB /* NavigationController.h */ = {
 		uiCtxt = {
@@ -1002,18 +1016,6 @@
 			sepNavVisRange = "{0, 498}";
 			sepNavWindowFrame = "{{15, 173}, {1009, 1000}}";
 		};
-	};
-	A68196E21077873E00B4C250 /* PlistBookmark */ = {
-		isa = PlistBookmark;
-		fRef = 8D1107310486CEB800E47090 /* Info.plist */;
-		fallbackIsa = PBXBookmark;
-		isK = 0;
-		kPath = (
-			LSRequiresIPhoneOS,
-		);
-		name = "/Users/jeromelaheurte/Dev/taskcoach-trunk/taskcoach-iphone/Info.plist";
-		rLen = 0;
-		rLoc = 2147483647;
 	};
 	A6832037102EB499002A7083 /* fr */ = {
 		uiCtxt = {
