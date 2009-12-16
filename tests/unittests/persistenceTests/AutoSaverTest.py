@@ -18,16 +18,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
-from taskcoachlib import persistence
+from taskcoachlib import persistence, config
 from taskcoachlib.domain import task, category, date
 
 
-class DummySettings(dict):        
+class DummySettings(dict):
+    def __init__(self):
+        super(DummySettings, self).__init__()
+        self.maxnrofbackups = 5
+        
     def set(self, section, setting, value): # pylint: disable-msg=W0613
         self[setting] = value
         
     def getboolean(self, section, setting): # pylint: disable-msg=W0613
         return self.get(setting, 'False') == 'True'
+    
+    def getint(self, section, settings):
+        return self.maxnrofbackups
 
 
 class DummyFile(object):
@@ -135,61 +142,3 @@ class AutoSaverTestCase(test.TestCase):
         self.taskFile.setFilename('whatever.tsk')
         self.taskFile.merge('another-non-existing-file.tsk')
         self.assertEqual(1, self.taskFile.saveCalled)
-
-
-class TestableAutoSaver(persistence.AutoSaver):
-    def __init__(self, *args, **kwargs):
-        self.copyCalled = False
-        super(TestableAutoSaver, self).__init__(*args, **kwargs)
-        
-    def _createBackup(self, *args, **kwargs): # pylint: disable-msg=W0613,W0221
-        self.copyCalled = True    
-
-
-class AutoSaverBackupTestCase(test.TestCase):
-    def setUp(self):
-        self.settings = DummySettings()
-        self.taskFile = DummyTaskFile()
-        self.autoSaver = TestableAutoSaver(self.settings)
-
-    def tearDown(self):
-        super(AutoSaverBackupTestCase, self).tearDown()
-        del self.autoSaver
-        
-    def testBackupFilename(self):
-        now = date.DateTime(2004,1,1)
-        self.taskFile.setFilename('whatever.tsk')
-        self.assertEqual('whatever.20040101-000000.tsk.bak', 
-            self.autoSaver._backupFilename(self.taskFile, lambda: now)) # pylint: disable-msg=W0212
-        
-    def testBackupFilenameOfBackupFilename(self):
-        self.taskFile.setFilename('whatever.20040101-000000.tsk.bak')
-        now = date.DateTime(2004,1,2)
-        self.assertEqual('whatever.20040101-000000.20040102-000000.tsk.bak', 
-            self.autoSaver._backupFilename(self.taskFile, lambda: now)) # pylint: disable-msg=W0212
-
-    def testDontCreateBackupWhenSettingFilename(self):
-        self.settings.set('file', 'backup', 'True')
-        self.taskFile.setFilename('whatever.tsk')
-        self.failIf(self.autoSaver.copyCalled)
-
-    def testDontCreateBackupOnOpen(self):
-        self.settings.set('file', 'backup', 'True')
-        self.taskFile.setFilename('whatever.tsk')
-        self.taskFile.load()
-        self.failIf(self.autoSaver.copyCalled)
-        
-    def testCreateBackupOnSave_ButBackupOff(self):
-        self.settings.set('file', 'backup', 'False')
-        self.taskFile.setFilename('whatever.tsk')
-        self.taskFile.tasks().append(task.Task())
-        self.taskFile.save()
-        self.failIf(self.autoSaver.copyCalled)
-        
-    def testCreateBackupOnSave(self):
-        self.settings.set('file', 'backup', 'True')
-        self.taskFile.setFilename('whatever.tsk')
-        self.taskFile.tasks().append(task.Task())
-        self.taskFile.save()
-        self.failUnless(self.autoSaver.copyCalled)
-                

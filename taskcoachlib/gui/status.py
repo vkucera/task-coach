@@ -54,7 +54,10 @@ class StatusBar(wx.StatusBar):
         wx.CallAfter(self._displayStatus)
 
     def _displayStatus(self):
-        status1, status2 = self.viewer.statusMessages()
+        try:
+            status1, status2 = self.viewer.statusMessages()
+        except AttributeError:
+            return # Viewer container contains no viewers 
         super(StatusBar, self).SetStatusText(status1, 0)
         super(StatusBar, self).SetStatusText(status2, 1)
 

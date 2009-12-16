@@ -42,7 +42,7 @@ class TimeDelta(datetime.timedelta):
         ''' Return hours as float. '''
         hours, minutes, seconds = self.hoursMinutesSeconds()
         return hours + (minutes / 60.) + (seconds / 3600.)
-    
+        
     def milliseconds(self):
         ''' Timedelta expressed in number of milliseconds. '''
         return int(round((self.days * self.millisecondsPerDay) + \

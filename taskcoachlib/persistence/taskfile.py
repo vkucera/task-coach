@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, codecs, shutil, xml
+import os, codecs, xml
 from taskcoachlib import patterns
-from taskcoachlib.domain import base, date, task, category, note, effort, attachment
+from taskcoachlib.domain import base, task, category, note, effort, attachment
 from taskcoachlib.syncml.config import createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
 from taskcoachlib.thirdparty import lockfile
@@ -338,43 +338,3 @@ class LockedTaskFile(TaskFile):
         result = super(LockedTaskFile, self).close()
         self.release_lock()
         return result
-        
-    
-class AutoSaver(patterns.Observer):
-    def __init__(self, settings, *args, **kwargs):
-        super(AutoSaver, self).__init__(*args, **kwargs)
-        self.__settings = settings
-        self.registerObserver(self.onTaskFileDirty, eventType='taskfile.dirty')
-        self.registerObserver(self.onTaskFileAboutToSave,
-                              eventType='taskfile.aboutToSave')
-            
-    def onTaskFileDirty(self, event):
-        for taskFile in event.sources():
-            if self._needSave(taskFile):
-                taskFile.save()
-        
-    def onTaskFileAboutToSave(self, event):
-        for taskFile in event.sources():
-            if self._needBackup(taskFile):
-                self._createBackup(taskFile)
-    
-    def _needSave(self, taskFile):
-        return taskFile.filename() and taskFile.needSave() and \
-            self._isOn('autosave')
-    
-    def _needBackup(self, taskFile):        
-        return self._isOn('backup') and taskFile.exists()
-    
-    def _createBackup(self, taskFile):
-        shutil.copyfile(taskFile.filename(), self._backupFilename(taskFile))
-        
-    def _backupFilename(self, taskFile, now=date.DateTime.now):
-        now = now().strftime('%Y%m%d-%H%M%S')
-        root, ext = os.path.splitext(taskFile.filename())
-        if ext == '.bak':
-            root, ext = os.path.splitext(root)
-        return root + '.' + now + ext + '.bak'
-        
-    def _isOn(self, booleanSetting):
-        return self.__settings.getboolean('file', booleanSetting)
-
