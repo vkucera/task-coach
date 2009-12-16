@@ -21,10 +21,10 @@
 	// in the NIB. Remember to add a line here each time a translatable
 	// string appears in a NIB.
 
-	NSLog(_("Cancel"));
-	NSLog(_("Save"));
-	NSLog(_("Categories"));
-	NSLog(_("Sync"));
+	_("Cancel");
+	_("Save");
+	_("Categories");
+	_("Sync");
 
 	[window addSubview:mainController.view];
 	
