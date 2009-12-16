@@ -22,6 +22,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+
+Release('0.78.0', 'December 16, 2009',
+    summary='''This release adds ...''',
+    featuresAdded=[
+        Feature(''' ... ''')
+        ]
+    ),
+    
+Release('0.77.1', 'December 14, 2009',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Make file locking work on Windows computers that have a  
+hostname with non-ASCII characters in it.''', '2904864')
+        ],
+    featuresChanged=[
+        Feature('''Task Coach now limits the number of backups made of a task 
+file. The number of backups retained increases logarithmically with the age 
+of the oldest backup of the task file. When Task Coach needs to remove a backup
+it tries to keep the remaining backups spread evenly across time.''', 
+'http://uservoice.com/a/5FrtF'),
+        Feature('''Merged the four menu items for exporting tasks and effort to 
+iCalendar and vCalendar formats into two menu items.''')
+        ]
+    ),
             
 Release('0.77.0', 'December 6, 2009',
     summary='''This release adds mutually exclusive categories and fixes some

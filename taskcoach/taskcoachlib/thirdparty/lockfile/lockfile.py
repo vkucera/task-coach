@@ -303,10 +303,15 @@ class MkdirFileLock(LockBase):
             tname = ""
         # Lock file itself is a directory.  Place the unique file name into
         # it.
-        self.unique_name  = os.path.join(self.lock_file,
-                                         "%s.%s%s" % (self.hostname,
-                                                      tname,
-                                                      self.pid))
+        try:
+            self.unique_name = os.path.join(self.lock_file,
+                                            "%s.%s%s" % (self.hostname,
+                                                         tname,
+                                                         self.pid))
+        except UnicodeDecodeError:
+            self.unique_name = os.path.join(self.lock_file,
+                                            "non-ascii-hostname.%s%s"% (tname, 
+                                                                        self.pid))
 
     def acquire(self, timeout=None):
         end_time = time.time()

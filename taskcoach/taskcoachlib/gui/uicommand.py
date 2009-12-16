@@ -340,6 +340,12 @@ class NeedsEffortViewerMixin(object):
             self.viewer.isShowingEffort()
 
 
+class NeedsTaskOrEffortViewerMixin(object):
+    def enabled(self, event):
+        return super(NeedsTaskOrEffortViewerMixin, self).enabled(event) and \
+            (self.viewer.isShowingTasks() or self.viewer.isShowingEffort())
+            
+
 class NeedsCategoryViewerMixin(object):
     def enabled(self, event):
         return super(NeedsCategoryViewerMixin, self).enabled(event) and \
@@ -362,6 +368,13 @@ class NeedsSelectedTasksMixin(NeedsSelectionMixin):
     def enabled(self, event):
         return super(NeedsSelectedTasksMixin, self).enabled(event) and \
             self.viewer.curselectionIsInstanceOf(task.Task)
+
+
+class NeedsSelectedTasksOrEffortsMixin(NeedsSelectionMixin):
+    def enabled(self, event):
+        return super(NeedsSelectedTasksOrEffortsMixin, self).enabled(event) and \
+            (self.viewer.curselectionIsInstanceOf(task.Task) or \
+             self.viewer.curselectionIsInstanceOf(effort.Effort))
 
 
 class NeedsOneSelectedTaskMixin(NeedsSelectedTasksMixin):
@@ -598,28 +611,6 @@ class Print(ViewerCommand, SettingsCommand):
             wxPrinter.PrintDialogData.ToPage = wxPrinter.PrintDialogData.MaxPage
         wxPrinter.Print(self.mainWindow(), printout, prompt=False)
  
-
-class FileExportEffortAsICS(NeedsEffortViewerMixin, IOCommand, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        super(FileExportEffortAsICS, self).__init__(\
-            menuText=_('Export effort as &iCalendar...'), 
-            helpText=_('Export effort in iCalendar (*.ics) format'),
-            bitmap='exportasics', *args, **kwargs)
-
-    def doCommand(self, event):
-        self.iocontroller.exportEffortAsICS(self.viewer)
-
-
-class FileExportSelectedEffortAsICS(NeedsSelectedEffortMixin, IOCommand, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        super(FileExportSelectedEffortAsICS, self).__init__(\
-            menuText=_('Export selected effort as &iCalendar...'), 
-            helpText=_('Export selected effort in iCalendar (*.ics) format'),
-            bitmap='exportasics', *args, **kwargs)
-
-    def doCommand(self, event):
-        self.iocontroller.exportEffortAsICS(self.viewer, selectionOnly=True)
-        
         
 class FileExportAsHTML(IOCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
@@ -661,24 +652,24 @@ class FileExportSelectionAsCSV(NeedsSelectionMixin, IOCommand, ViewerCommand):
         self.iocontroller.exportAsCSV(self.viewer, selectionOnly=True)
 
 
-class FileExportAsVCalendar(NeedsTaskViewerMixin, IOCommand, ViewerCommand):
+class FileExportAsICalendar(NeedsTaskOrEffortViewerMixin, IOCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(FileExportAsVCalendar, self).__init__(menuText=_('Export as &VCalendar...'),
-            helpText=_('Export the current task viewer in VCalendar format'),
+        super(FileExportAsICalendar, self).__init__(menuText=_('Export as &iCalendar...'),
+            helpText=_('Export the items in the current viewer in iCalendar format'),
             bitmap='exportasvcal', *args, **kwargs)
 
     def doCommand(self, event):
-        self.iocontroller.exportAsVCalendar(self.viewer)
+        self.iocontroller.exportAsICalendar(self.viewer)
 
 
-class FileExportSelectionAsVCalendar(NeedsSelectedTasksMixin, IOCommand, ViewerCommand):
+class FileExportSelectionAsICalendar(NeedsSelectedTasksOrEffortsMixin, IOCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(FileExportSelectionAsVCalendar, self).__init__(menuText=_('Export selection as &VCalendar...'),
-            helpText=_('Export the selected tasks in the current task viewer in VCalendar format'),
+        super(FileExportSelectionAsICalendar, self).__init__(menuText=_('Export selection as &iCalendar...'),
+            helpText=_('Export the selected items in the current viewer in iCalendar format'),
             bitmap='exportasvcal', *args, **kwargs)
 
     def doCommand(self, event):
-        self.iocontroller.exportAsVCalendar(self.viewer, selectionOnly=True)
+        self.iocontroller.exportAsICalendar(self.viewer, selectionOnly=True)
 
 
 class FileSynchronize(IOCommand, SettingsCommand):
@@ -1573,10 +1564,15 @@ class MailItem(ViewerCommand):
     def mail(self, subject, body, mail, showerror):
         try:
             mail('', subject, body)
-        except Exception, reason: # pylint: disable-msg=W0703
-            showerror(_('Cannot send email:\n%s')%reason, 
-                      caption=_('%s mail error')%meta.name, style=wx.ICON_ERROR)        
-        
+        except:
+            # Try again with a dummy recipient:
+            try:
+                mail('recipient@domain.com', subject, body)
+            except Exception, reason: # pylint: disable-msg=W0703
+                showerror(_('Cannot send email:\n%s')%reason, 
+                      caption=_('%s mail error')%meta.name, 
+                      style=wx.ICON_ERROR)        
+ 
 
 class TaskMail(NeedsSelectedTasksMixin, MailItem):
     def __init__(self, *args, **kwargs):

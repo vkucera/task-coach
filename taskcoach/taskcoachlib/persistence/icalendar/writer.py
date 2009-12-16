@@ -17,7 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib.persistence.vcalendar import vcal
+from taskcoachlib.persistence.icalendar import ical
+from taskcoachlib.domain import task
+from taskcoachlib import meta
 
 
 def extendedWithAncestors(selection):
@@ -29,14 +31,14 @@ def extendedWithAncestors(selection):
     return extendedSelection
 
 
-class VCalendarWriter(object):
+class iCalendarWriter(object):
     def __init__(self, fd, filename=None):
         self.__fd = fd
 
     def write(self, viewer, settings, selectionOnly=False): # pylint: disable-msg=W0613
         self.__fd.write('BEGIN:VCALENDAR\r\n')
-        self.__fd.write('VERSION: 1.0\r\n')
-
+        self._writeMetaData()
+        
         tree = viewer.isTreeViewer()
         if selectionOnly:
             selection = viewer.curselection()
@@ -44,11 +46,19 @@ class VCalendarWriter(object):
                 selection = extendedWithAncestors(selection)
 
         count = 0
-        for task in viewer.visibleItems():
-            if selectionOnly and task not in selection:
+        for item in viewer.visibleItems():
+            if selectionOnly and item not in selection:
                 continue
-            self.__fd.write(vcal.VCalFromTask(task))
+            transform = ical.VCalFromTask if isinstance(item, task.Task) else ical.VCalFromEffort
+            self.__fd.write(transform(item, encoding=False))
             count += 1
             
         self.__fd.write('END:VCALENDAR\r\n')
         return count
+
+    def _writeMetaData(self):
+        self.__fd.write('VERSION:2.0\r\n')
+        domain = meta.url.strip('http://').strip('/')
+        self.__fd.write('PRODID:-//%s//NONSGML %s V%s//EN\r\n'%(domain, 
+                                                                meta.name, 
+                                                                meta.version))

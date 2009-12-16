@@ -17,9 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 # This is the persistence package. It contains classes for reading and
-# writing domain objects in different formats such as XML, ICS/vCalendar, ...
+# writing domain objects in different formats such as XML, HTML, iCalendar, ...
 
-from ics.writer import ICSWriter
 from xml.writer import XMLWriter, TemplateXMLWriter
 from xml.reader import XMLReader, TemplateXMLReader
 from xml.templates import getDefaultTemplates
@@ -27,7 +26,9 @@ from html.writer import HTMLWriter
 from html.generator import viewer2html
 from csv.generator import viewer2csv
 from csv.writer import CSVWriter
-from vcalendar.writer import VCalendarWriter
-from vcalendar.vcal import VCalendarParser
-from taskfile import TaskFile, LockedTaskFile, AutoSaver
+from icalendar.writer import iCalendarWriter
+from icalendar.ical import VCalendarParser
+from taskfile import TaskFile, LockedTaskFile
+from autosaver import AutoSaver
+from autobackup import AutoBackup
 from sessiontempfile import get_temp_file

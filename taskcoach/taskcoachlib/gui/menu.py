@@ -272,12 +272,10 @@ class ExportMenu(Menu):
         self.appendUICommands(
             uicommand.FileExportAsHTML(**kwargs),
             uicommand.FileExportSelectionAsHTML(**kwargs),
-            uicommand.FileExportEffortAsICS(**kwargs),
-            uicommand.FileExportSelectedEffortAsICS(**kwargs),
             uicommand.FileExportAsCSV(**kwargs),
             uicommand.FileExportSelectionAsCSV(**kwargs),
-            uicommand.FileExportAsVCalendar(**kwargs),
-            uicommand.FileExportSelectionAsVCalendar(**kwargs))
+            uicommand.FileExportAsICalendar(**kwargs),
+            uicommand.FileExportSelectionAsICalendar(**kwargs))
 
 
 class TaskTemplateMenu(DynamicMenu):

@@ -53,9 +53,6 @@ class IOController(object):
         self.__csvFileDialogOpts = {'default_path': defaultPath,
             'default_extension': 'csv', 'wildcard': 
             _('CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*')}
-        self.__vcalFileDialogOpts = {'default_path': defaultPath, 
-            'default_extension': 'vcal', 'wildcard': 
-            _('VCalendar files (*.vcal)|*.vcal|All files (*.*)|*') }
         self.__errorMessageOptions = dict(caption=_('%s file error')%meta.name, 
                                           style=wx.ICON_ERROR)
 
@@ -272,11 +269,6 @@ class IOController(object):
         else:
             return False
 
-    def exportEffortAsICS(self, viewer, selectionOnly=False):
-        return self.export(_('Export effort as iCalendar...'), 
-            self.__icsFileDialogOpts, persistence.ICSWriter, viewer, 
-            selectionOnly)
-        
     def exportAsHTML(self, viewer, selectionOnly=False):
         return self.export(_('Export as HTML...'), self.__htmlFileDialogOpts, 
             persistence.HTMLWriter, viewer, selectionOnly)
@@ -285,9 +277,9 @@ class IOController(object):
         return self.export(_('Export as CSV...'), self.__csvFileDialogOpts, 
             persistence.CSVWriter, viewer, selectionOnly)
         
-    def exportAsVCalendar(self, viewer, selectionOnly=False):
-        return self.export(_('Export as VCalendar...'),
-            self.__vcalFileDialogOpts, persistence.VCalendarWriter, viewer, 
+    def exportAsICalendar(self, viewer, selectionOnly=False):
+        return self.export(_('Export as iCalendar...'),
+            self.__icsFileDialogOpts, persistence.iCalendarWriter, viewer, 
             selectionOnly)
 
     def synchronize(self, password):
@@ -379,7 +371,6 @@ class IOController(object):
 
     def __updateDefaultPath(self, filename):
         for options in [self.__tskFileDialogOpts, self.__csvFileDialogOpts,
-                        self.__icsFileDialogOpts, self.__htmlFileDialogOpts,
-                        self.__vcalFileDialogOpts]:
+                        self.__icsFileDialogOpts, self.__htmlFileDialogOpts]:
             options['default_path'] = os.path.dirname(filename)
 

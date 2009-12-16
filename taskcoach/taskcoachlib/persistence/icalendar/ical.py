@@ -31,7 +31,7 @@ import time, calendar, datetime
 #{ Utility functions
 
 def parseDate(fulldate):
-    ''' Parses a date as seen in vcalendar files into a 
+    ''' Parses a date as seen in iCalendar files into a 
     L{taskcoachlib.domain.date.Date} object. '''
 
     dt, tm = fulldate.split('T')
@@ -47,8 +47,14 @@ def parseDate(fulldate):
 
 def fmtDate(dt):
     ''' Formats a L{taskcoachlib.domain.date.Date} object to a string
-    suitable for inclusion in a vcalendar file. '''
+    suitable for inclusion in an iCcalendar file. '''
     return '%04d%02d%02dT000000' % (dt.year, dt.month, dt.day)
+
+def fmtDateTime(dt):
+    ''' Formats a L{taskcoachlib.domain.date.DateTime} object to a string
+    suitable for inclusion in an iCalendar file. '''
+    return '%04d%02d%02dT%02d%02d%02d' % (dt.year, dt.month, dt.day,
+                                          dt.hour, dt.minute, dt.second)
 
 def quoteString(s):
     ''' The 'quoted-printable' codec doesn't encode \n, but tries to
@@ -65,10 +71,10 @@ def quoteString(s):
 
 #}
 
-#{ Parsing VCalendar files
+#{ Parsing iCalendar files
 
 class VCalendarParser(object):
-    ''' Base parser class for vcalendar files. This uses the State
+    ''' Base parser class for iCalendar files. This uses the State
     pattern (in its Python incarnation, replacing the class of an
     object at runtime) in order to parse different objects in the
     VCALENDAR. Other states are
@@ -225,36 +231,31 @@ class VTodoParser(VCalendarParser):
 #}
 
 #==============================================================================
-#{ Generating VCalendar files.
+#{ Generating iCalendar files.
 
-def VCalFromTask(task):
+def VCalFromTask(task, encoding=True):
     ''' This function returns a string representing the task in
-    vcalendar format. '''
+        iCalendar format. '''
+
+    encoding = ';CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE' if encoding else ''
+    quote = quoteString if encoding else lambda s: s.encode('UTF-8')
 
     components = []
-
-    values = { 'description': quoteString(task.description()),
-               'subject': quoteString(task.subject()),
-               'priority': min(3, task.priority() + 1),
-               'categories': ','.join([quoteString(unicode(c)) for c in task.categories(True)]) }
-
     components.append('BEGIN:VTODO') # pylint: disable-msg=W0511
     components.append('UID:%s' % task.id().encode('UTF-8'))
 
     if task.startDate() != date.Date():
-        components.append('DTSTART:%(startDate)s')
-        values['startDate'] = fmtDate(task.startDate())
+        components.append('DTSTART:%s'%fmtDate(task.startDate()))
 
     if task.dueDate() != date.Date():
-        components.append('DUE:%(dueDate)s')
-        values['dueDate'] = fmtDate(task.dueDate())
+        components.append('DUE:%s'%fmtDate(task.dueDate()))
 
     if task.completionDate() != date.Date():
-        components.append('COMPLETED:%(completionDate)s')
-        values['completionDate'] = fmtDate(task.completionDate())
+        components.append('COMPLETED:%s'%fmtDate(task.completionDate()))
 
     if task.categories(True):
-        components.append('CATEGORIES;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:%(categories)s')
+        categories = ','.join([quote(unicode(c)) for c in task.categories(True)])
+        components.append('CATEGORIES%s:%s'%(encoding, categories))
 
     if task.completed():
         components.append('STATUS:COMPLETED')
@@ -263,30 +264,39 @@ def VCalFromTask(task):
     else:
         components.append('STATUS:CANCELLED') # Hum...
 
-    components.append('DESCRIPTION;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:%(description)s')
-    components.append('PRIORITY:%(priority)d')
-    components.append('SUMMARY;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:%(subject)s')
+    components.append('DESCRIPTION%s:%s'%(encoding, quote(task.description())))
+    components.append('PRIORITY:%d'%min(3, task.priority() + 1))
+    components.append('SUMMARY%s:%s'%(encoding, quote(task.subject())))
     components.append('END:VTODO') # pylint: disable-msg=W0511
 
-    text = ''
-
-    for component in components:
-        line = component % values
-
-        if len(line) <= 75:
-            text += line + '\r\n'
-        else:
-            text += line[:75] + '\r\n'
-            line = line[75:]
-
-            while True:
-                if len(line) < 75:
-                    text += ' ' + line + '\r\n'
-                    break
-                else:
-                    text += ' ' + line[:75] + '\r\n'
-                    line = line[75:]
-
-    return text
+    return fold(components)
 
 #}
+
+def VCalFromEffort(effort, encoding=True):
+    encoding = ';CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE' if encoding else ''
+    quote = quoteString if encoding else lambda s: s.encode('UTF-8')
+    components = []
+    components.append('BEGIN:VEVENT')
+    components.append('UID:%s' % effort.id().encode('UTF-8'))
+    components.append('SUMMARY%s:%s'%(encoding, quote(effort.subject())))
+    components.append('DESCRIPTION%s:%s'%(encoding, quote(effort.description())))
+    components.append('DTSTART:%s'%fmtDateTime(effort.getStart()))
+    if effort.getStop():
+        components.append('DTEND:%s'%fmtDateTime(effort.getStop()))
+    components.append('END:VEVENT')
+    return fold(components)
+
+
+def fold(components, linewidth=75, eol='\r\n', indent=' '):
+    lines = []
+    # The iCalendar standard doesn't clearly state whether the maximum line 
+    # width includes the indentation or not. We keep on the safe side:
+    indentedlinewidth = linewidth - len(indent)
+    for component in components:
+        line, remainder = component[:linewidth], component[linewidth:]
+        lines.append(line)
+        while remainder:
+            line, remainder = remainder[:indentedlinewidth], remainder[indentedlinewidth:]
+            lines.append(indent + line)
+    return eol.join(lines) + eol if lines else ''
