@@ -25,13 +25,9 @@ from taskcoachlib.domain import date
 
 class XMLReaderTestCase(test.TestCase):
     tskversion = 'Subclass responsibility'
-    
-    def setUp(self):
-        self.fd = StringIO.StringIO()
-        self.fd.name = 'testfile.tsk'
-        self.reader = persistence.XMLReader(self.fd)
 
     def writeAndRead(self, xmlContents):
+        # pylint: disable-msg=W0201
         self.fd = StringIO.StringIO()
         self.fd.name = 'testfile.tsk'
         self.reader = persistence.XMLReader(self.fd)
@@ -75,7 +71,7 @@ class TempFileLockTest(XMLReaderTestCase):
         self.oldMkstemp = tempfile.mkstemp
         def newMkstemp(*args, **kwargs):
             handle, name = self.oldMkstemp(*args, **kwargs)
-            self.__filename = name
+            self.__filename = name # pylint: disable-msg=W0201
             return handle, name
         tempfile.mkstemp = newMkstemp
 
@@ -88,16 +84,15 @@ class TempFileLockTest(XMLReaderTestCase):
     def testLock(self):
         if os.name == 'nt':
             import base64
-            tasks = self.writeAndReadTasks(\
+            self.writeAndReadTasks(\
                 '<tasks>\n<task status="0">\n'
                 '<attachment type="mail" status="0">\n'
                 '<data extension="eml">%s</data>\n'
                 '</attachment>\n</task>\n</tasks>\n'%base64.encodestring('Data'))
-
             try:
                 os.remove(self.__filename)
             except:
-                pass
+                pass # pylint: disable-msg=W0702
 
             self.assert_(os.path.exists(self.__filename))
 
@@ -345,8 +340,9 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
     tskversion = 20 # New in release 0.71.0
            
     def testReadEmptyStream(self):
+        reader = persistence.XMLReader(StringIO.StringIO())
         try:
-            self.reader.read()
+            reader.read()
             self.fail('Expected ExpatError') # pragma: no cover
         except xml.parsers.expat.ExpatError:
             pass

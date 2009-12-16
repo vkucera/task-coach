@@ -32,8 +32,7 @@ class PIParser(ET.XMLTreeBuilder):
     def __init__(self):
         ET.XMLTreeBuilder.__init__(self)
         self._parser.ProcessingInstructionHandler = self.handle_pi
-
-        self.tskversion = None
+        self.tskversion = meta.data.tskversion
 
     def handle_pi(self, target, data):
         if target == 'taskcoach':
@@ -55,7 +54,7 @@ class XMLReader(object):
         parser = PIParser()
         tree = ET.parse(self.__fd, parser)
         root = tree.getroot()
-        self.__tskversion = parser.tskversion  # pylint: disable-msg=W0201
+        self.__tskversion = parser.tskversion # pylint: disable-msg=W0201
         if self.__tskversion > meta.data.tskversion:
             raise XMLReaderTooNewException # Version number of task file is too high
         tasks = self._parseTaskNodes(root)
@@ -221,7 +220,7 @@ class XMLReader(object):
             id, subject, description, and return them as a 
             keyword arguments dictionary that can be passed to the domain 
             object constructor. '''
-        attributes = dict(id=node.attrib.get('id', None),
+        attributes = dict(id=node.attrib.get('id', ''),
             subject=node.attrib.get('subject', ''),
             description=self._parseDescription(node),
             color=self._parseTuple(node.attrib.get('color', ''), None))
@@ -229,10 +228,10 @@ class XMLReader(object):
         if self.__tskversion <= 20:
             attributes['attachments'] = self._parseAttachmentsBeforeVersion21(node)
         if self.__tskversion >= 22:
-            attributes['status'] = int(node.attrib['status'])
+            attributes['status'] = int(node.attrib.get('status', '1'))
 
         return attributes
-
+    
     def _parseBaseCompositeAttributes(self, node, parseChildren, *parseChildrenArgs):
         """Same as _parseBaseAttributes, but also parse children and expandedContexts."""
         kwargs = self._parseBaseAttributes(node)
