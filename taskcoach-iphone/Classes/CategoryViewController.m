@@ -108,10 +108,10 @@
 {
 	NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
 
+	[[PositionStore instance] pop];
+	
 	if (indexPath)
 	{
-		[[PositionStore instance] pop];
-		
 		[self.tableView reloadData];
 
 		// XXXFIXME: reloadData is not enough to refresh the task count ?
@@ -376,6 +376,7 @@
 
 			cell.textLabel.text = _("Add subcategory");
 			cell.textLabel.textColor = [UIColor grayColor];
+			[cell.badge clearAnnotations];
 			cell.badge.text = nil;
 
 			cell.indentationLevel = category.level + 1;
@@ -402,8 +403,8 @@
 			}
 			
 			[cell.badge clearAnnotations];
+
 			cell.textLabel.text = _("All");
-			cell.textLabel.textColor = [UIColor blackColor];
 
 			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM AllTask WHERE completionDate IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
 			cell.badge.text = [NSString stringWithFormat:@"%d", totalCount];
@@ -423,10 +424,13 @@
 			
 			cell.indentationLevel = 0;
 		}
-		
+
 		cell.textLabel.textColor = [UIColor blackColor];
-		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
+
+	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	
+	[cell layoutSubviews];
 
 	return cell;
 }

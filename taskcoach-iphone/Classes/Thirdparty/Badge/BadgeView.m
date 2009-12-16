@@ -27,7 +27,7 @@
 
 @synthesize margin;
 
-const float kBadgeViewDefaultMargin = 10.0f;
+const float kBadgeViewDefaultMargin = 0.0f;
 
 const float kBadgeCapsulePadding = 2.0f;
 const float kBadgeConcaveCapsuleClippingOffset = 1.0f;
@@ -38,7 +38,7 @@ const float kBadgeConcaveCapsuleClippingTrim = 3.0f;
 - (void)initialize
 {
 	self.backgroundColor = [UIColor clearColor];
-	
+
 	primaryItem = [[BadgeItem alloc] init];
 	annotations = [[NSMutableArray arrayWithCapacity:1] retain];
 	
@@ -47,6 +47,8 @@ const float kBadgeConcaveCapsuleClippingTrim = 3.0f;
 	self.text = nil;
 	self.textColor = [UIColor whiteColor];
 	self.capsuleColor = [UIColor grayColor];
+	
+	self.contentMode = UIViewContentModeRedraw;
 }
 
 - initWithCoder:(NSCoder *)encoder
@@ -80,7 +82,6 @@ const float kBadgeConcaveCapsuleClippingTrim = 3.0f;
 
 - (void)setText:(NSString *)value {
 	primaryItem.text = value;
-	[self setNeedsDisplay];
 }
 
 - (UIColor*)textColor {
@@ -89,7 +90,6 @@ const float kBadgeConcaveCapsuleClippingTrim = 3.0f;
 
 - (void)setTextColor:(UIColor *)value {
 	primaryItem.textColor = value;
-	[self setNeedsDisplay];
 }
 
 - (UIColor*)capsuleColor {
@@ -98,7 +98,6 @@ const float kBadgeConcaveCapsuleClippingTrim = 3.0f;
 
 - (void) setCapsuleColor:(UIColor *)value {
 	primaryItem.capsuleColor = value;
-	[self setNeedsDisplay];
 }
 
 - (void)addAnnotation:(NSString*)itemText {
@@ -114,14 +113,12 @@ const float kBadgeConcaveCapsuleClippingTrim = 3.0f;
 	annotation.text = itemText;
 	annotation.textColor = itemTextColor;
 	annotation.capsuleColor = itemCapsuleColor;
-  [annotations addObject:annotation];
+	[annotations addObject:annotation];
 	[annotation release];
-	[self setNeedsDisplay];
 }
 
 - (void)clearAnnotations {
 	[annotations removeAllObjects];
-	[self setNeedsDisplay];
 }
 
 #pragma mark Drawing
@@ -211,6 +208,37 @@ const float kBadgeConcaveCapsuleClippingTrim = 3.0f;
 		[self drawCapsuleFor:annotation inBounds:rectangle withFont:font facing:facing];
 		--facing;
 	}
+}
+
+- (CGSize)sizeThatFits:(CGSize)size
+{
+	UIFont* font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]];
+	
+	CGRect rectangle = [self getBoundsForItem:primaryItem withFont:font facing:0];
+	CGFloat x = CGRectGetMaxX( self.bounds ) - CGRectGetWidth( rectangle ) - margin;
+	CGFloat y = ( CGRectGetMaxY( self.bounds ) - CGRectGetMaxY( rectangle ) ) / 2.0;
+	rectangle = CGRectOffset( rectangle, x, y );
+	CGFloat offset = -CGRectGetWidth( rectangle ) - kBadgeCapsulePadding;
+	
+	int facing = -1;
+	for( BadgeItem* annotation in annotations )
+	{
+		rectangle = [self getBoundsForItem:annotation withFont:font facing:facing];
+		rectangle = CGRectOffset( rectangle, offset, 0.0);
+		offset -= CGRectGetWidth( rectangle ) + kBadgeCapsulePadding;
+
+		x = CGRectGetMaxX( self.bounds ) - CGRectGetWidth( rectangle ) - margin;
+		y = ( CGRectGetMaxY( self.bounds ) - CGRectGetMaxY( rectangle ) ) / 2.0;
+		rectangle = CGRectOffset( rectangle, x, y );
+		
+		--facing;
+	}
+
+	size.width = -offset + 2 * kBadgeViewDefaultMargin;
+	
+	NSLog(@"Size: %.2f/%.2f", size.width, size.height);
+	
+	return size;
 }
 
 @end
