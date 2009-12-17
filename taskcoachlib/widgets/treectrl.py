@@ -324,7 +324,8 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
     def onEndEdit(self, event):
         domainObject = self.GetItemPyData(event.GetItem())
         newValue = event.GetLabel()
-        self.editSubjectCommand(domainObject, newValue)
+        # Give HyperTreeList a chance to properly close the text editor:
+        wx.FutureCall(50, self.editSubjectCommand, domainObject, newValue)
         event.Skip()
         
     # Override CtrlWithColumnsMixin with TreeListCtrl specific behaviour:
