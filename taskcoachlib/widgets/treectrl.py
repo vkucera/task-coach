@@ -92,7 +92,7 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
         self.selectCommand()
 
     def selectall(self):
-        if self.GetCount() > 0:
+        if self.GetItemCount() > 0:
             self.SelectAll()
         self.selectCommand()
         
@@ -135,6 +135,11 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
             
     def GetLabelTextCtrl(self):
         return self.GetMainWindow()._textCtrl
+    
+    def GetItemCount(self):
+        rootItem = self.GetRootItem()
+        return self.GetChildrenCount(rootItem, recursively=True) \
+            if rootItem else 0
     
 
 class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin, 
@@ -336,11 +341,6 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             | wx.TR_EDIT_LABELS | wx.TR_HAS_BUTTONS | wx.TR_FULL_ROW_HIGHLIGHT | wx.WANTS_CHARS \
             | customtree.TR_HAS_VARIABLE_ROW_HEIGHT) & ~hypertreelist.TR_NO_HEADER 
 
-    # Adapters to make the TreeListCtrl more like the ListCtrl
-    
-    def GetItemCount(self):
-        return self.GetCount()
-    
     # pylint: disable-msg=W0221
     
     def DeleteColumn(self, columnIndex):
