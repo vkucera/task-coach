@@ -220,10 +220,11 @@ class XMLReader(object):
             id, subject, description, and return them as a 
             keyword arguments dictionary that can be passed to the domain 
             object constructor. '''
+        bgColorAttribute = 'color' if self.__tskversion <= 27 else 'bgColor'
         attributes = dict(id=node.attrib.get('id', ''),
             subject=node.attrib.get('subject', ''),
             description=self._parseDescription(node),
-            color=self._parseTuple(node.attrib.get('color', ''), None))
+            bgColor=self._parseTuple(node.attrib.get(bgColorAttribute, ''), None))
 
         if self.__tskversion <= 20:
             attributes['attachments'] = self._parseAttachmentsBeforeVersion21(node)

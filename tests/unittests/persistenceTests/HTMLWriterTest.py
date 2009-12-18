@@ -106,7 +106,7 @@ class TaskTestsMixin(CommonTestsMixin):
     def testTaskStatusStyle(self):
         self.expectInHTML('      .completed {color: #00FF00}\n')
         
-    def testTaskStatusStyleWhenColorChangedInSettings(self):
+    def testTaskStatusStyleWhenForegroundColorChangedInSettings(self):
         self.settings.set('color', 'completedtasks', str(wx.RED))
         self.expectInHTML('      .completed {color: #FF0000}\n')
         
@@ -132,19 +132,19 @@ class TaskTestsMixin(CommonTestsMixin):
         fragment = '<tr class="inactive">' if self.filename else '<font color="#C0C0C0">Task subject</font>'
         self.expectInHTML(fragment)
 
-    def testTaskColor(self):
-        self.task.setColor(wx.RED)
+    def testTaskBackgroundColor(self):
+        self.task.setBackgroundColor(wx.RED)
         fragment = '<tr class="active" style="background: #FF0000">' if self.filename else '<tr bgcolor="#FF0000">'
         self.expectInHTML(fragment)
         
-    def testTaskHasCategoryColor(self):
-        cat = category.Category('cat', color=wx.RED)
+    def testTaskHasCategoryBackgroundColor(self):
+        cat = category.Category('cat', bgColor=wx.RED)
         self.task.addCategory(cat)
         fragment = '<tr class="active" style="background: #FF0000">' if self.filename else '<tr bgcolor="#FF0000">'
         self.expectInHTML(fragment)
 
-    def testCategoryColorAsTuple(self):
-        cat = category.Category('cat', color=(255, 0, 0, 0))
+    def testCategoryBackgroundColorAsTuple(self):
+        cat = category.Category('cat', bgColor=(255, 0, 0, 0))
         self.task.addCategory(cat)
         if self.filename:
             self.expectInHTML('<tr class="active" style="background: #FF0000">')
@@ -216,8 +216,8 @@ class CategoryWriterTestsMixin(CommonTestsMixin):
     def testCategorySubject(self):
         self.expectInHTML('>Category<')
         
-    def testCategoryColor(self):
-        self.category.setColor(wx.RED)
+    def testCategoryBackgroundColor(self):
+        self.category.setBackgroundColor(wx.RED)
         if self.filename:
             self.expectInHTML('<tr style="background: #FF0000">')
         else:

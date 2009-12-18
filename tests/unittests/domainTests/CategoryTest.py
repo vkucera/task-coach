@@ -36,8 +36,8 @@ class CategoryTest(test.TestCase):
     def testGetState_Description(self):
         self.assertEqual('', self.category.__getstate__()['description'])
         
-    def testGetState_Color(self):
-        self.assertEqual(None, self.category.__getstate__()['color'])
+    def testGetState_BackgroundColor(self):
+        self.assertEqual(None, self.category.__getstate__()['bgColor'])
         
     def testGetState_ExclusiveSubcategories(self):
         self.assertEqual(False, self.category.__getstate__()['exclusiveSubcategories'])
@@ -50,7 +50,7 @@ class CategoryTest(test.TestCase):
         
     def testSetState_OneNotification(self):
         newState = dict(subject='New subject', description='New description',
-                        color=wx.RED, status=self.category.STATUS_DELETED,
+                        bgColor=wx.RED, status=self.category.STATUS_DELETED,
                         parent=None, children=[self.subCategory], id=self.category.id(),
                         categorizables=[self.categorizable], notes=[],
                         attachments=[], filtered=True, exclusiveSubcategories=True)
@@ -277,39 +277,39 @@ class CategoryTest(test.TestCase):
         
     # Color:
         
-    def testGetDefaultColor(self):
-        self.assertEqual(None, self.category.color())
+    def testGetDefaultBackgroundColor(self):
+        self.assertEqual(None, self.category.backgroundColor())
         
-    def testSetColor(self):
-        self.category.setColor(wx.RED)
-        self.assertEqual(wx.RED, self.category.color())
+    def testSetBackgroundColor(self):
+        self.category.setBackgroundColor(wx.RED)
+        self.assertEqual(wx.RED, self.category.backgroundColor())
         
-    def testCopy_ColorIsCopied(self):
-        self.category.setColor(wx.RED)
+    def testCopy_BackgroundColorIsCopied(self):
+        self.category.setBackgroundColor(wx.RED)
         copy = self.category.copy()
-        self.assertEqual(wx.RED, copy.color())
+        self.assertEqual(wx.RED, copy.backgroundColor())
         
-    def testColorChangeNotification(self):
-        eventType = category.Category.colorChangedEventType()
+    def testBackgroundColorChangeNotification(self):
+        eventType = category.Category.backgroundColorChangedEventType()
         self.registerObserver(eventType)
-        self.category.setColor(wx.RED)
+        self.category.setBackgroundColor(wx.RED)
         self.assertEqual(1, len(self.events))
         
-    def testSubCategoryWithoutColorHasParentColor(self):
+    def testSubCategoryWithoutBackgroundColorHasParentBackgroundColor(self):
         self.category.addChild(self.subCategory)
-        self.category.setColor(wx.RED)
-        self.assertEqual(wx.RED, self.subCategory.color())
+        self.category.setBackgroundColor(wx.RED)
+        self.assertEqual(wx.RED, self.subCategory.backgroundColor())
         
-    def testSubCategoryWithoutColorHasNoOwnColor(self):
+    def testSubCategoryWithoutBackgroundColorHasNoOwnBackgroundColor(self):
         self.category.addChild(self.subCategory)
-        self.category.setColor(wx.RED)
-        self.assertEqual(None, self.subCategory.color(recursive=False))
+        self.category.setBackgroundColor(wx.RED)
+        self.assertEqual(None, self.subCategory.backgroundColor(recursive=False))
                 
-    def testParentColorChangeNotification(self):
-        eventType = category.Category.colorChangedEventType()
+    def testParentBackgroundColorChangeNotification(self):
+        eventType = category.Category.backgroundColorChangedEventType()
         self.registerObserver(eventType)
         self.category.addChild(self.subCategory)
-        self.category.setColor(wx.RED)
+        self.category.setBackgroundColor(wx.RED)
         self.assertEqual(1, len(self.events))
         
     # Notes:

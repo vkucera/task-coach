@@ -225,7 +225,7 @@ class Viewer(wx.Panel):
         return None
     
     def getBackgroundColor(self, item):
-        return item.color()
+        return item.backgroundColor()
     
     def bitmap(self):
         ''' Return the bitmap that represents this viewer. Used for the 

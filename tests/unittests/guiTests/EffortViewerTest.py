@@ -116,15 +116,15 @@ class EffortViewerTest(test.wxTestCase):
         self.viewer = gui.viewer.EffortViewer(self.frame, taskFile, self.settings)
         
     @test.skipOnPlatform('__WXMSW__') # GetItemBackgroundColour doesn't work on Windows
-    def testEffortColor(self): # pragma: no cover
-        self.task.setColor(wx.RED)
+    def testEffortBackgroundColor(self): # pragma: no cover
+        self.task.setBackgroundColor(wx.RED)
         self.task.addEffort(self.effort1)
         self.assertEqual(wx.RED, self.viewer.widget.GetItemBackgroundColour(0))
 
     @test.skipOnPlatform('__WXMSW__') # GetItemBackgroundColour doesn't work on Windows
-    def testUpdateEffortColor(self): # pragma: no cover
+    def testUpdateEffortBackgroundColor(self): # pragma: no cover
         self.task.addEffort(self.effort1)
-        self.task.setColor(wx.RED)
+        self.task.setBackgroundColor(wx.RED)
         self.assertEqual(wx.RED, self.viewer.widget.GetItemBackgroundColour(0))
         
     def testIsSelected(self):

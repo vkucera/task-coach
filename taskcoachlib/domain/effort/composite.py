@@ -102,8 +102,8 @@ class CompositeEffort(BaseCompositeEffort):
             eventType='task.revenue', eventSource=task)
         patterns.Publisher().registerObserver(self.onTotalRevenueChanged,
             eventType='task.totalRevenue', eventSource=task)
-        patterns.Publisher().registerObserver(self.onColorChanged,
-            eventType=task.colorChangedEventType(), eventSource=task)
+        patterns.Publisher().registerObserver(self.onBackgroundColorChanged,
+            eventType=task.backgroundColorChangedEventType(), eventSource=task)
 
     def __hash__(self):
         return hash((self.task(), self.getStart()))
@@ -167,9 +167,9 @@ class CompositeEffort(BaseCompositeEffort):
                               self._getEfforts(False) if effort.description()]
         return '\n'.join(effortDescriptions)
     
-    def onColorChanged(self, event):
+    def onBackgroundColorChanged(self, event):
         return # FIXME: CompositeEffort does not derive from base.Object
-        patterns.Event(self.colorChangedEventType(), self, event.value()).send()
+        patterns.Event(self.backgroundColorChangedEventType(), self, event.value()).send()
         
 
 class CompositeEffortPerPeriod(BaseCompositeEffort):
@@ -192,7 +192,7 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
         class Total(object):
             def subject(self, *args, **kwargs): # pylint: disable-msg=W0613
                 return _('Total')
-            def color(self, *args, **kwargs): # pylint: disable-msg=W0613
+            def backgroundColor(self, *args, **kwargs): # pylint: disable-msg=W0613
                 return None
         return Total()
 
