@@ -38,7 +38,7 @@ class TreeViewerTest(test.wxTestCase):
         self.widget = self.viewer.widget
                 
     def testWidgetDisplayAllItems(self):
-        self.assertEqual(2, self.viewer.widget.GetCount())
+        self.assertEqual(2, self.viewer.widget.GetItemCount())
         
     def testExpand(self):
         self.widget.Expand(self.widget.GetFirstVisibleItem())
