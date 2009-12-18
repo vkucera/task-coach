@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 04 Oct 2009, 10.00 GMT
+# Latest Revision: 18 Dec 2009, 09.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -32,17 +32,17 @@ Description
 
 framemanager is the central module of the AUI class framework.
 
-L{AuiManager} manages the panes associated with it for a particular wx.Frame, using
+L{AuiManager} manages the panes associated with it for a particular `wx.Frame`, using
 a pane's L{AuiPaneInfo} information to determine each pane's docking and floating
 behavior. AuiManager uses wxPython' sizer mechanism to plan the layout of each frame.
 It uses a replaceable dock art class to do all drawing, so all drawing is localized
 in one area, and may be customized depending on an application's specific needs.
 
 AuiManager works as follows: the programmer adds panes to the class, or makes
-changes to existing pane properties (dock position, floating state, show state, etc.).
+changes to existing pane properties (dock position, floating state, show state, etc...).
 To apply these changes, AuiManager's L{AuiManager.Update} function is called. This batch
 processing can be used to avoid flicker, by modifying more than one pane at a time,
-and then "committing" all of the changes at once by calling Update().
+and then "committing" all of the changes at once by calling `Update()`.
 
 Panes can be added quite easily::
 
@@ -66,27 +66,27 @@ Layers, Rows and Directions, Positions
 Inside AUI, the docking layout is figured out by checking several pane parameters.
 Four of these are important for determining where a pane will end up.
 
-Direction - Each docked pane has a direction, Top, Bottom, Left, Right, or Center.
+**Direction** - Each docked pane has a direction, `Top`, `Bottom`, `Left`, `Right`, or `Center`.
 This is fairly self-explanatory. The pane will be placed in the location specified
 by this variable.
 
-Position - More than one pane can be placed inside of a "dock." Imagine to panes
+**Position** - More than one pane can be placed inside of a "dock". Imagine two panes
 being docked on the left side of a window. One pane can be placed over another.
 In proportionally managed docks, the pane position indicates it's sequential position,
 starting with zero. So, in our scenario with two panes docked on the left side, the
 top pane in the dock would have position 0, and the second one would occupy position 1. 
 
-Row - A row can allow for two docks to be placed next to each other. One of the most
+**Row** - A row can allow for two docks to be placed next to each other. One of the most
 common places for this to happen is in the toolbar. Multiple toolbar rows are allowed,
 the first row being in row 0, and the second in row 1. Rows can also be used on
 vertically docked panes. 
 
-Layer - A layer is akin to an onion. Layer 0 is the very center of the managed pane.
+**Layer** - A layer is akin to an onion. Layer 0 is the very center of the managed pane.
 Thus, if a pane is in layer 0, it will be closest to the center window (also sometimes
 known as the "content window"). Increasing layers "swallow up" all layers of a lower
 value. This can look very similar to multiple rows, but is different because all panes
 in a lower level yield to panes in higher levels. The best way to understand layers
-is by running the AUI sample (AUI.py).
+is by running the AUI sample (`AUI.py`).
 """
 
 __author__ = "Andrea Gavana <andrea.gavana@gmail.com>"
@@ -103,9 +103,12 @@ import auibook
 import tabmdi
 import dockart
 
-from aui_utilities import Clip, PaneCreateStippleBitmap
+from aui_utilities import Clip, PaneCreateStippleBitmap, GetDockingImage, GetSlidingPoints
 
 from aui_constants import *
+
+# Define this as a translation function
+_ = wx.GetTranslation
 
 _winxptheme = False
 if wx.Platform == "__WXMSW__":
@@ -162,7 +165,8 @@ class AuiDockInfo(object):
 
     def __init__(self):
         """
-        Default class constructor. Used internally, do not call it in your code!
+        Default class constructor.
+        Used internally, do not call it in your code!
         """
 
         object.__init__(self)
@@ -208,7 +212,8 @@ class AuiDockingGuideInfo(object):
 
     def __init__(self, other=None):
         """
-        Default class constructor. Used internally, do not call it in your code!
+        Default class constructor.
+        Used internally, do not call it in your code!
 
         :param `other`: another instance of L{AuiDockingGuideInfo}.
         """
@@ -302,7 +307,10 @@ class AuiDockUIPart(object):
     typePaneButton = 8
 
     def __init__(self):
-        """ Default class constructor. Used internally, do not call it in your code! """
+        """
+        Default class constructor.
+        Used internally, do not call it in your code!
+        """
         
         self.orientation = wx.VERTICAL
         self.type = 0
@@ -316,7 +324,8 @@ class AuiPaneButton(object):
 
     def __init__(self, button_id):
         """
-        Default class constructor. Used internally, do not call it in your code!
+        Default class constructor.
+        Used internally, do not call it in your code!
 
         :param `button_id`: the pane button identifier.
         """
@@ -354,14 +363,14 @@ class AuiManagerEvent(wx.PyCommandEvent):
         Returns a copy of the event.
 
         Any event that is posted to the wxPython event system for later action (via
-        L{wx.EvtHandler.AddPendingEvent} or L{wx.PostEvent}) must implement this method.
+        `wx.EvtHandler.AddPendingEvent` or `wx.PostEvent`) must implement this method.
         All wxPython events fully implement this method, but any derived events
         implemented by the user should also implement this method just in case they
         (or some event derived from them) are ever posted.
 
         All wxPython events implement a copy constructor, so the easiest way of
-        implementing the Clone function is to implement a copy constructor for a new
-        event (call it MyEvent) and then define the Clone function like this::
+        implementing the L{Clone} function is to implement a copy constructor for a new
+        event (call it `MyEvent`) and then define the L{Clone} function like this::
 
             def Clone(self):
                 return MyEvent(self)
@@ -383,9 +392,9 @@ class AuiManagerEvent(wx.PyCommandEvent):
 
     def SetDC(self, pdc):
         """
-        Associates a L{wx.DC} device context to this event.
+        Associates a `wx.DC` device context to this event.
 
-        :param `pdc`: a L{wx.DC} device context object. 
+        :param `pdc`: a `wx.DC` device context object. 
         """
 
         self.dc = pdc
@@ -418,7 +427,7 @@ class AuiManagerEvent(wx.PyCommandEvent):
 
 
     def GetDC(self):
-        """ Returns the associated L{wx.DC} device context (if any). """
+        """ Returns the associated `wx.DC` device context (if any). """
 
         return self.dc
     
@@ -443,7 +452,7 @@ class AuiManagerEvent(wx.PyCommandEvent):
         vetoing the change because otherwise the applications behaviour (which
         just refuses to do what the user wants) might be quite surprising.
 
-        :param `veto`: whether to veto the event or not.        
+        :param `veto`: ``True`` to veto the event, ``False`` otherwise.
         """
 
         self.veto_flag = veto
@@ -459,7 +468,7 @@ class AuiManagerEvent(wx.PyCommandEvent):
         """
         Sets whether the event can be vetoed or not.
 
-        :param `can_veto`: a bool flag.
+        :param `can_veto`: a bool flag. ``True`` if the event can be vetoed, ``False`` otherwise.
         """
 
         self.canveto_flag = can_veto
@@ -506,20 +515,21 @@ class AuiPaneInfo(object):
     optionTopSnapped       = 2**22
     optionBottomSnapped    = 2**23
     optionFlyOut           = 2**24
+    optionCaptionLeft      = 2**25
 
-    buttonClose            = 2**25
-    buttonMaximize         = 2**26
-    buttonMinimize         = 2**27
-    buttonPin              = 2**28
+    buttonClose            = 2**26
+    buttonMaximize         = 2**27
+    buttonMinimize         = 2**28
+    buttonPin              = 2**29
     
-    buttonCustom1          = 2**29
-    buttonCustom2          = 2**30
-    buttonCustom3          = 2**31
+    buttonCustom1          = 2**30
+    buttonCustom2          = 2**31
+    buttonCustom3          = 2**32
 
-    savedHiddenState       = 2**32    # used internally
-    actionPane             = 2**33    # used internally
-    wasMaximized           = 2**34    # used internally
-    needsRestore           = 2**35    # used internally
+    savedHiddenState       = 2**33    # used internally
+    actionPane             = 2**34    # used internally
+    wasMaximized           = 2**35    # used internally
+    needsRestore           = 2**36    # used internally
 
 
     def __init__(self):
@@ -553,7 +563,11 @@ class AuiPaneInfo(object):
         
     
     def dock_direction_get(self):
-        """ Getter for the `dock_direction`."""
+        """
+        Getter for the `dock_direction`.
+
+        :see: L{dock_direction_set} for a set of valid docking directions.
+        """
         
         if self.IsMaximized():
             return AUI_DOCK_CENTER
@@ -565,7 +579,21 @@ class AuiPaneInfo(object):
         """
         Setter for the `dock_direction`.
 
-        :param `value`: the docking direction (see L{aui_constants}).
+        :param `value`: the docking direction. This cab ne one of the following bits:
+
+        ============================ ======= =============================================
+        Dock Flag                     Value  Description
+        ============================ ======= =============================================
+        ``AUI_DOCK_NONE``                  0 No docking direction.
+        ``AUI_DOCK_TOP``                   1 Top docking direction.
+        ``AUI_DOCK_RIGHT``                 2 Right docking direction.
+        ``AUI_DOCK_BOTTOM``                3 Bottom docking direction.
+        ``AUI_DOCK_LEFT``                  4 Left docking direction.
+        ``AUI_DOCK_CENTER``                5 Center docking direction.
+        ``AUI_DOCK_CENTRE``                5 Centre docking direction.
+        ``AUI_DOCK_NOTEBOOK_PAGE``         6 Automatic AuiNotebooks docking style.
+        ============================ ======= =============================================
+        
         """
         
         self._dock_direction = value
@@ -574,64 +602,65 @@ class AuiPaneInfo(object):
 
     def IsOk(self):
         """
-        IsOk() returns True if the L{AuiPaneInfo} structure is valid.
-        A pane structure is valid if it has an associated window.
+        Returns ``True`` if the L{AuiPaneInfo} structure is valid.
+
+        :note: A pane structure is valid if it has an associated window.
         """
         
         return self.window != None
 
 
     def IsMaximized(self):
-        """ IsMaximized() returns True if the pane is maximized. """
+        """ Returns ``True`` if the pane is maximized. """
         
         return self.HasFlag(self.optionMaximized)
 
 
     def IsMinimized(self):
-        """ IsMinimized() returns True if the pane is minimized. """
+        """ Returns ``True`` if the pane is minimized. """
 
         return self.HasFlag(self.optionMinimized)
 
 
     def IsFixed(self):
-        """ IsFixed() returns True if the pane cannot be resized. """
+        """ Returns ``True`` if the pane cannot be resized. """
         
         return not self.HasFlag(self.optionResizable)
 
     
     def IsResizeable(self):
-        """ IsResizeable() returns True if the pane can be resized. """
+        """ Returns ``True`` if the pane can be resized. """
         
         return self.HasFlag(self.optionResizable)
 
     
     def IsShown(self):
-        """ IsShown() returns True if the pane is currently shown. """
+        """ Returns ``True`` if the pane is currently shown. """
         
         return not self.HasFlag(self.optionHidden)
 
     
     def IsFloating(self):
-        """ IsFloating() returns True if the pane is floating. """
+        """ Returns ``True`` if the pane is floating. """
 
         return self.HasFlag(self.optionFloating)
 
     
     def IsDocked(self):
-        """ IsDocked() returns True if the pane is docked. """
+        """ Returns ``True`` if the pane is docked. """
         
         return not self.HasFlag(self.optionFloating)
 
     
     def IsToolbar(self):
-        """ IsToolbar() returns True if the pane contains a toolbar. """
+        """ Returns ``True`` if the pane contains a toolbar. """
 
         return self.HasFlag(self.optionToolbar)
 
     
     def IsTopDockable(self):
         """
-        IsTopDockable() returns True if the pane can be docked at the top
+        Returns ``True`` if the pane can be docked at the top
         of the managed frame.
         """
         
@@ -640,7 +669,7 @@ class AuiPaneInfo(object):
     
     def IsBottomDockable(self):
         """
-        IsBottomDockable() returns True if the pane can be docked at the bottom
+        Returns ``True`` if the pane can be docked at the bottom
         of the managed frame.
         """
         
@@ -649,7 +678,7 @@ class AuiPaneInfo(object):
     
     def IsLeftDockable(self):
         """
-        IsLeftDockable() returns True if the pane can be docked at the left
+        Returns ``True`` if the pane can be docked at the left
         of the managed frame.
         """
         
@@ -658,7 +687,7 @@ class AuiPaneInfo(object):
 
     def IsRightDockable(self):
         """
-        IsRightDockable() returns True if the pane can be docked at the right
+        Returns ``True`` if the pane can be docked at the right
         of the managed frame.
         """
         
@@ -666,7 +695,7 @@ class AuiPaneInfo(object):
 
 
     def IsDockable(self):
-        """ IsDockable() returns True if the pane can be docked. """
+        """ Returns ``True`` if the pane can be docked. """
         
         return self.IsTopDockable() or self.IsBottomDockable() or self.IsLeftDockable() or \
                self.IsRightDockable() or self.IsNotebookDockable()
@@ -674,7 +703,7 @@ class AuiPaneInfo(object):
     
     def IsFloatable(self):
         """
-        IsFloatable() returns True if the pane can be undocked and displayed as a
+        Returns ``True`` if the pane can be undocked and displayed as a
         floating window.
         """
 
@@ -683,7 +712,7 @@ class AuiPaneInfo(object):
     
     def IsMovable(self):
         """
-        IsMovable() returns True if the docked frame can be undocked or moved to
+        Returns ``True`` if the docked frame can be undocked or moved to
         another dock position.
         """
         
@@ -692,9 +721,11 @@ class AuiPaneInfo(object):
 
     def IsDestroyOnClose(self):
         """
-        IsDestroyOnClose() returns True if the pane should be destroyed when it is closed.
-        Normally a pane is simply hidden when the close button is clicked. Setting DestroyOnClose()
-        to True will cause the window to be destroyed when the user clicks the pane's close button.
+        Returns ``True`` if the pane should be destroyed when it is closed.
+        
+        Normally a pane is simply hidden when the close button is clicked. Calling L{DestroyOnClose}
+        with a ``True`` input parameter will cause the window to be destroyed when the user clicks
+        the pane's close button.
         """
         
         return self.HasFlag(self.optionDestroyOnClose)
@@ -702,103 +733,88 @@ class AuiPaneInfo(object):
 
     def IsNotebookDockable(self):
         """
-        IsNotebookDockable() returns True if a pane can be docked on top to another
-        to create a L{auibook.AuiNotebook}.
+        Returns ``True`` if a pane can be docked on top to another to create a
+        L{AuiNotebook}.
         """
 
         return self.HasFlag(self.optionNotebookDockable)
     
 
     def IsTopSnappable(self):
-        """
-        IsTopSnappable() returns True if the pane can be snapped at the top
-        of the managed frame.
-        """
+        """ Returns ``True`` if the pane can be snapped at the top of the managed frame. """
         
         return self.HasFlag(self.optionTopSnapped)
 
     
     def IsBottomSnappable(self):
-        """
-        IsBottomSnappable() returns True if the pane can be snapped at the bottom
-        of the managed frame.
-        """
+        """ Returns ``True`` if the pane can be snapped at the bottom of the managed frame. """
         
         return self.HasFlag(self.optionBottomSnapped)
 
     
     def IsLeftSnappable(self):
-        """
-        IsLeftSnappable() returns True if the pane can be snapped at the left
-        of the managed frame.
-        """
+        """ Returns ``True`` if the pane can be snapped on the left of the managed frame. """
         
         return self.HasFlag(self.optionLeftSnapped) 
 
 
     def IsRightSnappable(self):
-        """
-        IsRightSnappable() returns True if the pane can be snapped at the right
-        of the managed frame.
-        """
+        """ Returns ``True`` if the pane can be snapped on the right of the managed frame. """
         
         return self.HasFlag(self.optionRightSnapped)
 
 
     def IsSnappable(self):
-        """ IsSnappable() returns True if the pane can be snapped. """
+        """ Returns ``True`` if the pane can be snapped. """
         
         return self.IsTopSnappable() or self.IsBottomSnappable() or self.IsLeftSnappable() or \
                self.IsRightSnappable()
 
 
     def IsFlyOut(self):
-        """ IsFlyOut() returns True if the floating pane has a "fly-out" effect. """
+        """ Returns ``True`` if the floating pane has a "fly-out" effect. """
 
         return self.HasFlag(self.optionFlyOut)        
             
 
     def HasCaption(self):
-        """ HasCaption() returns True if the pane displays a caption. """
+        """ Returns ``True`` if the pane displays a caption. """
         
         return self.HasFlag(self.optionCaption)
+
     
+    def HasCaptionLeft(self):
+        """ Returns ``True`` if the pane displays a caption on the left (rotated by 90 degrees). """
+        
+        return self.HasFlag(self.optionCaptionLeft)
+
 
     def HasGripper(self):
-        """ HasGripper() returns True if the pane displays a gripper. """
+        """ Returns ``True`` if the pane displays a gripper. """
         
         return self.HasFlag(self.optionGripper) 
 
 
     def HasBorder(self):
-        """ HasBorder() returns True if the pane displays a border. """
+        """ Returns ``True`` if the pane displays a border. """
         
         return self.HasFlag(self.optionPaneBorder)
 
     
     def HasCloseButton(self):
-        """
-        HasCloseButton() returns True if the pane displays a button to close
-        the pane.
-        """
+        """ Returns ``True`` if the pane displays a button to close the pane. """
 
         return self.HasFlag(self.buttonClose) 
 
 
     def HasMaximizeButton(self):
-        """
-        HasMaximizeButton() returns True if the pane displays a button to
-        maximize the pane.
-        """
+        """ Returns ``True`` if the pane displays a button to maximize the pane. """
         
         return self.HasFlag(self.buttonMaximize)
 
     
     def HasMinimizeButton(self):
-        """
-        HasMinimizeButton() returns True if the pane displays a button to
-        minimize the pane.
-        """
+        """ Returns ``True`` if the pane displays a button to minimize the pane. """
         
         return self.HasFlag(self.buttonMinimize) 
 
@@ -808,47 +824,57 @@ class AuiPaneInfo(object):
         Returns the minimization style for this pane.
 
         Possible return values are:
-        
-        - ``AUI_MINIMIZE_POS_SMART``: Minimizes the pane on the closest tool bar
-        - ``AUI_MINIMIZE_POS_TOP``: Minimizes the pane on the top tool bar
-        - ``AUI_MINIMIZE_POS_LEFT``: Minimizes the pane on its left tool bar
-        - ``AUI_MINIMIZE_POS_RIGHT``: Minimizes the pane on its right tool bar
-        - ``AUI_MINIMIZE_POS_BOTTOM``: Minimizes the pane on its bottom tool bar
-        - ``AUI_MINIMIZE_POS_MASK``: Mask to filter the position flags
-        - ``AUI_MINIMIZE_CAPT_HIDE``: Hides the caption of the minimized pane
-        - ``AUI_MINIMIZE_CAPT_SMART``: Displays the caption in the best rotation (horizontal or clockwise)
-        - ``AUI_MINIMIZE_CAPT_HORZ``: Displays the caption horizontally
-        - ``AUI_MINIMIZE_CAPT_MASK``: Mask to filter the caption flags
+
+        ============================== ========= ==============================
+        Minimize Mode Flag             Hex Value Description
+        ============================== ========= ==============================
+        ``AUI_MINIMIZE_POS_SMART``          0x01 Minimizes the pane on the closest tool bar
+        ``AUI_MINIMIZE_POS_TOP``            0x02 Minimizes the pane on the top tool bar
+        ``AUI_MINIMIZE_POS_LEFT``           0x03 Minimizes the pane on its left tool bar
+        ``AUI_MINIMIZE_POS_RIGHT``          0x04 Minimizes the pane on its right tool bar
+        ``AUI_MINIMIZE_POS_BOTTOM``         0x05 Minimizes the pane on its bottom tool bar
+        ``AUI_MINIMIZE_POS_MASK``           0x07 Mask to filter the position flags
+        ``AUI_MINIMIZE_CAPT_HIDE``           0x0 Hides the caption of the minimized pane
+        ``AUI_MINIMIZE_CAPT_SMART``         0x08 Displays the caption in the best rotation (horizontal or clockwise)
+        ``AUI_MINIMIZE_CAPT_HORZ``          0x10 Displays the caption horizontally
+        ``AUI_MINIMIZE_CAPT_MASK``          0x18 Mask to filter the caption flags
+        ============================== ========= ==============================
 
         The flags can be filtered with the following masks:
-        - ``AUI_MINIMIZE_POS_MASK``: Filters the position flags;
-        - ``AUI_MINIMIZE_CAPT_MASK``: Filters the caption flags.
+
+        ============================== ========= ==============================
+        Minimize Mask Flag             Hex Value Description
+        ============================== ========= ==============================        
+        ``AUI_MINIMIZE_POS_MASK``           0x07 Filters the position flags
+        ``AUI_MINIMIZE_CAPT_MASK``          0x18 Filters the caption flags
+        ============================== ========= ==============================
+
         """
         
         return self.minimize_mode
     
 
     def HasPinButton(self):
-        """ HasPinButton() returns True if the pane displays a button to float the pane. """
+        """ Returns ``True`` if the pane displays a button to float the pane. """
         
         return self.HasFlag(self.buttonPin) 
 
 
     def HasGripperTop(self):
-        """ HasGripper() returns True if the pane displays a gripper at the top. """
+        """ Returns ``True`` if the pane displays a gripper at the top. """
 
         return self.HasFlag(self.optionGripperTop)
 
 
     def Window(self, w):
         """
-        Associate a L{wx.Window} derived window to this pane.
+        Associate a `wx.Window` derived window to this pane.
 
         This normally does not need to be specified, as the window pointer is
         automatically assigned to the L{AuiPaneInfo} structure as soon as it is
         added to the manager.
 
-        :param `window`: a L{wx.Window} derived window.
+        :param `w`: a `wx.Window` derived window.
         """
 
         self.window = w
@@ -857,12 +883,16 @@ class AuiPaneInfo(object):
     
     def Name(self, name):
         """
-        Name() sets the name of the pane so it can be referenced in lookup functions.
+        Sets the name of the pane so it can be referenced in lookup functions.
 
         If a name is not specified by the user, a random name is assigned to the pane
         when it is added to the manager.
 
         :param `name`: a string specifying the pane name.
+
+        :warning: If you are using L{AuiManager.SavePerspective} and L{AuiManager.LoadPerspective}, you will have
+         to specify a name for your pane using L{Name}, as randomly generated names can
+         not be properly restored.
         """
 
         self.name = name
@@ -871,7 +901,7 @@ class AuiPaneInfo(object):
     
     def Caption(self, caption):
         """
-        Caption() sets the caption of the pane.
+        Sets the caption of the pane.
 
         :param `caption`: a string specifying the pane caption.
         """
@@ -882,9 +912,10 @@ class AuiPaneInfo(object):
     
     def Left(self):
         """ 
-        Left() sets the pane dock position to the left side of the frame.
+        Sets the pane dock position to the left side of the frame.
 
-        This is the same thing as calling Direction(``AUI_DOCK_LEFT``).
+        :note: This is the same thing as calling L{Direction} with ``AUI_DOCK_LEFT`` as
+         parameter.
         """
         
         self.dock_direction = AUI_DOCK_LEFT
@@ -893,9 +924,10 @@ class AuiPaneInfo(object):
     
     def Right(self):
         """
-        Right() sets the pane dock position to the right side of the frame.
+        Sets the pane dock position to the right side of the frame.
 
-        This is the same thing as calling Direction(``AUI_DOCK_RIGHT``).
+        :note: This is the same thing as calling L{Direction} with ``AUI_DOCK_RIGHT`` as
+         parameter.
         """
         
         self.dock_direction = AUI_DOCK_RIGHT
@@ -904,9 +936,10 @@ class AuiPaneInfo(object):
     
     def Top(self):
         """
-        Top() sets the pane dock position to the top of the frame.
+        Sets the pane dock position to the top of the frame.
 
-        This is the same thing as calling Direction(``AUI_DOCK_TOP``).
+        :note: This is the same thing as calling L{Direction} with ``AUI_DOCK_TOP`` as
+         parameter.
         """
 
         self.dock_direction = AUI_DOCK_TOP
@@ -915,9 +948,10 @@ class AuiPaneInfo(object):
     
     def Bottom(self):
         """
-        Bottom() sets the pane dock position to the bottom of the frame.
+        Sets the pane dock position to the bottom of the frame.
 
-        This is the same thing as calling Direction(``AUI_DOCK_BOTTOM``).
+        :note: This is the same thing as calling L{Direction} with ``AUI_DOCK_BOTTOM`` as
+         parameter.
         """
 
         self.dock_direction = AUI_DOCK_BOTTOM
@@ -926,12 +960,13 @@ class AuiPaneInfo(object):
     
     def Center(self):
         """
-        Center() sets the pane to the center position of the frame.
+        Sets the pane to the center position of the frame.
 
         The centre pane is the space in the middle after all border panes (left, top,
         right, bottom) are subtracted from the layout.
 
-        This is the same thing as calling Direction(``AUI_DOCK_CENTER``). 
+        :note: This is the same thing as calling L{Direction} with ``AUI_DOCK_CENTER`` as
+         parameter.
         """
         
         self.dock_direction = AUI_DOCK_CENTER
@@ -940,12 +975,13 @@ class AuiPaneInfo(object):
         
     def Centre(self):
         """
-        Centre() sets the pane to the center position of the frame.
+        Sets the pane to the center position of the frame.
 
         The centre pane is the space in the middle after all border panes (left, top,
         right, bottom) are subtracted from the layout.
 
-        This is the same thing as calling Direction(``AUI_DOCK_CENTRE``). 
+        :note: This is the same thing as calling L{Direction} with ``AUI_DOCK_CENTRE`` as
+         parameter.
         """
         
         self.dock_direction = AUI_DOCK_CENTRE
@@ -954,11 +990,13 @@ class AuiPaneInfo(object):
     
     def Direction(self, direction):
         """
-        Direction() determines the direction of the docked pane. It is functionally the
-        same as calling Left(), Right(), Top() or Bottom(), except that docking direction
+        Determines the direction of the docked pane. It is functionally the
+        same as calling L{Left}, L{Right}, L{Top} or L{Bottom}, except that docking direction
         may be specified programmatically via the parameter `direction`.
 
-        :param `direction`: the direction of the docked pane (see L{aui_constants}).
+        :param `direction`: the direction of the docked pane.
+
+        :see: L{dock_direction_set} for a list of valid docking directions.        
         """
         
         self.dock_direction = direction
@@ -967,7 +1005,7 @@ class AuiPaneInfo(object):
     
     def Layer(self, layer):
         """
-        Layer() determines the layer of the docked pane.
+        Determines the layer of the docked pane.
 
         The dock layer is similar to an onion, the inner-most layer being layer 0. Each
         shell moving in the outward direction has a higher layer number. This allows for
@@ -982,7 +1020,7 @@ class AuiPaneInfo(object):
     
     def Row(self, row):
         """
-        Row() determines the row of the docked pane.
+        Determines the row of the docked pane.
 
         :param `row`: the row of the docked pane.
         """
@@ -993,7 +1031,7 @@ class AuiPaneInfo(object):
     
     def Position(self, pos):
         """
-        Position() determines the position of the docked pane.
+        Determines the position of the docked pane.
 
         :param `pos`: the position of the docked pane.
         """
@@ -1004,12 +1042,12 @@ class AuiPaneInfo(object):
 
     def MinSize(self, arg1=None, arg2=None):
         """
-        MinSize() sets the minimum size of the pane.
+        Sets the minimum size of the pane.
 
-        This method is splitted in 2 versions depending on the input type. If `arg1` is
-        a wx.Size object, then L{MinSize1) is called. Otherwise, L{MinSize2} is called.
+        This method is split in 2 versions depending on the input type. If `arg1` is
+        a `wx.Size` object, then L{MinSize1} is called. Otherwise, L{MinSize2} is called.
 
-        :param `arg1`: a wx.Size object, a (x, y) tuple or or a `x` coordinate.
+        :param `arg1`: a `wx.Size` object, a (x, y) tuple or or a `x` coordinate.
         :param `arg2`: a `y` coordinate (only if `arg1` is a `x` coordinate, otherwise unused).
         """
         
@@ -1024,12 +1062,21 @@ class AuiPaneInfo(object):
 
     
     def MinSize1(self, size):
+        """
+        Sets the minimum size of the pane.
 
+        :see: L{MinSize} for an explanation of input parameters.
+        """
         self.min_size = size
         return self
 
 
     def MinSize2(self, x, y):
+        """
+        Sets the minimum size of the pane.
+
+        :see: L{MinSize} for an explanation of input parameters.
+        """
 
         self.min_size = wx.Size(x, y)
         return self
@@ -1037,12 +1084,12 @@ class AuiPaneInfo(object):
 
     def MaxSize(self, arg1=None, arg2=None):
         """
-        MaxSize() sets the maximum size of the pane.
+        Sets the maximum size of the pane.
 
-        This method is splitted in 2 versions depending on the input type. If `arg1` is
-        a wx.Size object, then L{MaxSize1) is called. Otherwise, L{MaxSize2} is called.
+        This method is split in 2 versions depending on the input type. If `arg1` is
+        a `wx.Size` object, then L{MaxSize1} is called. Otherwise, L{MaxSize2} is called.
 
-        :param `arg1`: a wx.Size object, a (x, y) tuple or a `x` coordinate.
+        :param `arg1`: a `wx.Size` object, a (x, y) tuple or a `x` coordinate.
         :param `arg2`: a `y` coordinate (only if `arg1` is a `x` coordinate, otherwise unused).
         """
         
@@ -1057,12 +1104,22 @@ class AuiPaneInfo(object):
     
     
     def MaxSize1(self, size):
+        """
+        Sets the maximum size of the pane.
+
+        :see: L{MaxSize} for an explanation of input parameters.
+        """
 
         self.max_size = size
         return self
 
 
     def MaxSize2(self, x, y):
+        """
+        Sets the maximum size of the pane.
+
+        :see: L{MaxSize} for an explanation of input parameters.
+        """
 
         self.max_size.Set(x,y)
         return self
@@ -1070,13 +1127,13 @@ class AuiPaneInfo(object):
 
     def BestSize(self, arg1=None, arg2=None):
         """
-        BestSize() sets the ideal size for the pane. The docking manager will attempt to use
+        Sets the ideal size for the pane. The docking manager will attempt to use
         this size as much as possible when docking or floating the pane.
 
-        This method is splitted in 2 versions depending on the input type. If `arg1` is
-        a wx.Size object, then L{BestSize1) is called. Otherwise, L{BestSize2} is called.
+        This method is split in 2 versions depending on the input type. If `arg1` is
+        a `wx.Size` object, then L{BestSize1} is called. Otherwise, L{BestSize2} is called.
 
-        :param `arg1`: a wx.Size object, a (x, y) tuple or a `x` coordinate.
+        :param `arg1`: a `wx.Size` object, a (x, y) tuple or a `x` coordinate.
         :param `arg2`: a `y` coordinate (only if `arg1` is a `x` coordinate, otherwise unused).
         """
         
@@ -1091,12 +1148,22 @@ class AuiPaneInfo(object):
     
             
     def BestSize1(self, size):
+        """
+        Sets the best size of the pane.
+
+        :see: L{BestSize} for an explanation of input parameters.
+        """
 
         self.best_size = size
         return self
 
     
     def BestSize2(self, x, y):
+        """
+        Sets the best size of the pane.
+
+        :see: L{BestSize} for an explanation of input parameters.
+        """
 
         self.best_size.Set(x,y)
         return self
@@ -1104,9 +1171,9 @@ class AuiPaneInfo(object):
     
     def FloatingPosition(self, pos):
         """
-        FloatingPosition() sets the position of the floating pane.
+        Sets the position of the floating pane.
 
-        :param `pos`: a wx.Point or a tuple indicating the pane floating position.
+        :param `pos`: a `wx.Point` or a tuple indicating the pane floating position.
         """
         
         self.floating_pos = wx.Point(*pos)
@@ -1115,9 +1182,9 @@ class AuiPaneInfo(object):
     
     def FloatingSize(self, size):
         """
-        FloatingSize() sets the size of the floating pane.
+        Sets the size of the floating pane.
 
-        :param `size`: a wx.Size or a tuple indicating the pane floating size.
+        :param `size`: a `wx.Size` or a tuple indicating the pane floating size.
         """
         
         self.floating_size = wx.Size(*size)
@@ -1125,16 +1192,16 @@ class AuiPaneInfo(object):
 
 
     def Maximize(self):
-        """ Maximized() makes the pane take up the full area."""
+        """ Makes the pane take up the full area."""
 
         return self.SetFlag(self.optionMaximized, True)
 
 
     def Minimize(self):
         """
-        Minimize() makes the pane minimized in a L{auibar.AuiToolBar}.
+        Makes the pane minimized in a L{AuiToolBar}.
 
-        Clicking on the minimize button causes a new L{auibar.AuiToolBar} to be created
+        Clicking on the minimize button causes a new L{AuiToolBar} to be created
         and added to the frame manager, (currently the implementation is such that
         panes at West will have a toolbar at the right, panes at South will have
         toolbars at the bottom etc...) and the pane is hidden in the manager.
@@ -1152,19 +1219,26 @@ class AuiPaneInfo(object):
 
         The minimized pane can have a specific position in the work space:
 
-        - ``AUI_MINIMIZE_POS_SMART``: Minimizes the pane on the closest tool bar
-        - ``AUI_MINIMIZE_POS_TOP``: Minimizes the pane on the top tool bar
-        - ``AUI_MINIMIZE_POS_LEFT``: Minimizes the pane on its left tool bar
-        - ``AUI_MINIMIZE_POS_RIGHT``: Minimizes the pane on its right tool bar
-        - ``AUI_MINIMIZE_POS_BOTTOM``: Minimizes the pane on its bottom tool bar
+        ============================== ========= ==============================
+        Minimize Mode Flag             Hex Value Description
+        ============================== ========= ==============================
+        ``AUI_MINIMIZE_POS_SMART``          0x01 Minimizes the pane on the closest tool bar
+        ``AUI_MINIMIZE_POS_TOP``            0x02 Minimizes the pane on the top tool bar
+        ``AUI_MINIMIZE_POS_LEFT``           0x03 Minimizes the pane on its left tool bar
+        ``AUI_MINIMIZE_POS_RIGHT``          0x04 Minimizes the pane on its right tool bar
+        ``AUI_MINIMIZE_POS_BOTTOM``         0x05 Minimizes the pane on its bottom tool bar
+        ============================== ========= ==============================
 
         The caption of the minimized pane can be displayed in different modes:
+
+        ============================== ========= ==============================
+        Caption Mode Flag              Hex Value Description
+        ============================== ========= ==============================
+        ``AUI_MINIMIZE_CAPT_HIDE``           0x0 Hides the caption of the minimized pane
+        ``AUI_MINIMIZE_CAPT_SMART``         0x08 Displays the caption in the best rotation (horizontal in the top and in the bottom tool bar or clockwise in the right and in the left tool bar)
+        ``AUI_MINIMIZE_CAPT_HORZ``          0x10 Displays the caption horizontally
+        ============================== ========= ==============================
         
-        - ``AUI_MINIMIZE_CAPT_HIDE``: Hides the caption of the minimized pane
-        - ``AUI_MINIMIZE_CAPT_SMART``: Displays the caption in the best rotation
-          (horizontal in the top and in the bottom tool bar or clockwise in the right
-          and in the left tool bar)
-        - ``AUI_MINIMIZE_CAPT_HORZ``: Displays the caption horizontally.
         """
         
         self.minimize_mode = mode
@@ -1172,15 +1246,15 @@ class AuiPaneInfo(object):
     
 
     def Restore(self):
-        """ Restore() reverse of L{Maximize} and L{Minimize}."""
+        """ Is the reverse of L{Maximize} and L{Minimize}."""
         
         return self.SetFlag(self.optionMaximized or self.optionMinimized, False)
 
     
     def Fixed(self):
         """
-        Fixed() forces a pane to be fixed size so that it cannot be resized.
-        After calling Fixed(), L{IsFixed()} will return True.
+        Forces a pane to be fixed size so that it cannot be resized.
+        After calling L{Fixed}, L{IsFixed} will return ``True``.
         """
         
         return self.SetFlag(self.optionResizable, False)
@@ -1188,12 +1262,12 @@ class AuiPaneInfo(object):
     
     def Resizable(self, resizable=True):
         """
-        Resizable() allows a pane to be resizable if `resizable` is True, and forces
-        it to be a fixed size if `resizeable` is False.
+        Allows a pane to be resizable if `resizable` is ``True``, and forces
+        it to be a fixed size if `resizeable` is ``False``.
 
-        If `resizeable` is False, this is simply an antonym for L{Fixed()}.
+        If `resizable` is ``False``, this is simply an antonym for L{Fixed}.
 
-        :param `resizeable`: whether the pane will be resizeable or not.
+        :param `resizable`: whether the pane will be resizeable or not.
         """
         
         return self.SetFlag(self.optionResizable, resizable)
@@ -1201,7 +1275,7 @@ class AuiPaneInfo(object):
 
     def Transparent(self, alpha):
         """
-        Transparent() makes the pane transparent when floating.
+        Makes the pane transparent when floating.
 
         :param `alpha`: an integer value between 0 and 255 for pane transparency.
         """
@@ -1215,7 +1289,7 @@ class AuiPaneInfo(object):
     
     def Dock(self):
         """
-        Dock() indicates that a pane should be docked. It is the opposite of L{Float()}.
+        Indicates that a pane should be docked. It is the opposite of L{Float}.
         """
 
         if self.IsNotebookPage():
@@ -1227,7 +1301,7 @@ class AuiPaneInfo(object):
     
     def Float(self):
         """
-        Float() indicates that a pane should be floated. It is the opposite of L{Dock()}.
+        Indicates that a pane should be floated. It is the opposite of L{Dock}.
         """
 
         if self.IsNotebookPage():
@@ -1238,14 +1312,18 @@ class AuiPaneInfo(object):
 
     
     def Hide(self):
-        """ Hide() indicates that a pane should be hidden. """
+        """
+        Indicates that a pane should be hidden.
+
+        Calling L{Show} (``False``) achieve the same effect.
+        """
         
         return self.SetFlag(self.optionHidden, True)
 
     
     def Show(self, show=True):
         """
-        Show() indicates that a pane should be shown.
+        Indicates that a pane should be shown.
 
         :param `show`: whether the pane should be shown or not.
         """
@@ -1256,8 +1334,8 @@ class AuiPaneInfo(object):
     # By defaulting to 1000, the tab will get placed at the end
     def NotebookPage(self, id, tab_position=1000):
         """
-        NotebookPage() forces a pane to be a notebook page, so that the pane can be
-        docked on top to another to create a L{auibook.AuiNotebook}.
+        Forces a pane to be a notebook page, so that the pane can be
+        docked on top to another to create a L{AuiNotebook}.
 
         :param `id`: the notebook id;
         :param `tab_position`: the tab number of the pane once docked in a notebook.
@@ -1276,7 +1354,7 @@ class AuiPaneInfo(object):
 
     def NotebookControl(self, id):
         """
-        NotebookControl() forces a pane to be a notebook control (L{auibook.AuiNotebook}).
+        Forces a pane to be a notebook control (L{AuiNotebook}).
 
         :param `id`: the notebook id.
         """
@@ -1292,29 +1370,25 @@ class AuiPaneInfo(object):
     
 
     def HasNotebook(self):
-        """ HasNotebook() returns whether a pane has a L{auibook.AuiNotebook} or not. """
+        """ Returns whether a pane has a L{AuiNotebook} or not. """
 
         return self.notebook_id >= 0
 
 
     def IsNotebookPage(self):
-        """
-        IsNotebookPage() returns whether the pane is a notebook page in a L{auibook.AuiNotebook}.
-        """
+        """ Returns whether the pane is a notebook page in a L{AuiNotebook}. """
 
         return self.notebook_id >= 0 and self.dock_direction == AUI_DOCK_NOTEBOOK_PAGE
 
 
     def IsNotebookControl(self):
-        """
-        IsNotebookControl() returns whether the pane is a notebook control (L{auibook.AuiNotebook}).
-        """
+        """ Returns whether the pane is a notebook control (L{AuiNotebook}). """
 
         return not self.IsNotebookPage() and self.HasNotebook()
 
 
     def SetNameFromNotebookId(self):
-        """ Sets the pane name once docked in a L{auibook.AuiNotebook} using the notebook id. """
+        """ Sets the pane name once docked in a L{AuiNotebook} using the notebook id. """
 
         if self.notebook_id >= 0:
             self.name = "__notebook_%d"%self.notebook_id
@@ -1322,20 +1396,26 @@ class AuiPaneInfo(object):
         return self
 
 
-    def CaptionVisible(self, visible=True):
+    def CaptionVisible(self, visible=True, left=False):
         """
-        CaptionVisible() indicates that a pane caption should be visible. If False, no pane
+        Indicates that a pane caption should be visible. If `visible` is ``False``, no pane
         caption is drawn.
 
-        :param `visible`: whether the caption should be visible or not.
+        :param `visible`: whether the caption should be visible or not;
+        :param `left`: whether the caption should be drawn on the left (rotated by 90 degrees) or not.
         """
-        
+
+        if left:
+            self.SetFlag(self.optionCaption, False)
+            return self.SetFlag(self.optionCaptionLeft, visible)
+
+        self.SetFlag(self.optionCaptionLeft, False)
         return self.SetFlag(self.optionCaption, visible)
 
     
     def PaneBorder(self, visible=True):
         """
-        PaneBorder() indicates that a border should be drawn for the pane.
+        Indicates that a border should be drawn for the pane.
 
         :param `visible`: whether the pane border should be visible or not.
         """
@@ -1345,7 +1425,7 @@ class AuiPaneInfo(object):
     
     def Gripper(self, visible=True):
         """
-        Gripper() indicates that a gripper should be drawn for the pane.
+        Indicates that a gripper should be drawn for the pane.
 
         :param `visible`: whether the gripper should be visible or not.
         """
@@ -1355,7 +1435,7 @@ class AuiPaneInfo(object):
 
     def GripperTop(self, attop=True):
         """
-        GripperTop() indicates that a gripper should be drawn at the top of the pane.
+        Indicates that a gripper should be drawn at the top of the pane.
 
         :param `attop`: whether the gripper should be drawn at the top or not.
         """
@@ -1365,7 +1445,7 @@ class AuiPaneInfo(object):
     
     def CloseButton(self, visible=True):
         """
-        CloseButton() indicates that a close button should be drawn for the pane.
+        Indicates that a close button should be drawn for the pane.
 
         :param `visible`: whether the close button should be visible or not.
         """
@@ -1375,7 +1455,7 @@ class AuiPaneInfo(object):
     
     def MaximizeButton(self, visible=True):
         """
-        MaximizeButton() indicates that a maximize button should be drawn for the pane.
+        Indicates that a maximize button should be drawn for the pane.
 
         :param `visible`: whether the maximize button should be visible or not.
         """
@@ -1385,7 +1465,7 @@ class AuiPaneInfo(object):
     
     def MinimizeButton(self, visible=True):
         """
-        MinimizeButton() indicates that a minimize button should be drawn for the pane.
+        Indicates that a minimize button should be drawn for the pane.
 
         :param `visible`: whether the minimize button should be visible or not.
         """
@@ -1395,7 +1475,7 @@ class AuiPaneInfo(object):
     
     def PinButton(self, visible=True):
         """
-        PinButton() indicates that a pin button should be drawn for the pane.
+        Indicates that a pin button should be drawn for the pane.
 
         :param `visible`: whether the pin button should be visible or not.
         """
@@ -1405,10 +1485,10 @@ class AuiPaneInfo(object):
     
     def DestroyOnClose(self, b=True):
         """
-        DestroyOnClose() indicates whether a pane should be destroyed when it is closed.
+        Indicates whether a pane should be destroyed when it is closed.
 
         Normally a pane is simply hidden when the close button is clicked. Setting
-        DestroyOnClose to True will cause the window to be destroyed when the user clicks
+        `b` to ``True`` will cause the window to be destroyed when the user clicks
         the pane's close button.
 
         :param `b`: whether the pane should be destroyed when it is closed or not.
@@ -1419,7 +1499,7 @@ class AuiPaneInfo(object):
     
     def TopDockable(self, b=True):
         """
-        TopDockable() indicates whether a pane can be docked at the top of the frame.
+        Indicates whether a pane can be docked at the top of the frame.
 
         :param `b`: whether the pane can be docked at the top or not.
         """
@@ -1429,7 +1509,7 @@ class AuiPaneInfo(object):
     
     def BottomDockable(self, b=True):
         """
-        BottomDockable() indicates whether a pane can be docked at the bottom of the frame.
+        Indicates whether a pane can be docked at the bottom of the frame.
 
         :param `b`: whether the pane can be docked at the bottom or not.
         """
@@ -1439,7 +1519,7 @@ class AuiPaneInfo(object):
     
     def LeftDockable(self, b=True):
         """
-        LeftDockable() indicates whether a pane can be docked on the left of the frame.
+        Indicates whether a pane can be docked on the left of the frame.
 
         :param `b`: whether the pane can be docked at the left or not.
         """
@@ -1449,7 +1529,7 @@ class AuiPaneInfo(object):
     
     def RightDockable(self, b=True):
         """
-        RightDockable() indicates whether a pane can be docked on the right of the frame.
+        Indicates whether a pane can be docked on the right of the frame.
 
         :param `b`: whether the pane can be docked at the right or not.
         """
@@ -1459,7 +1539,7 @@ class AuiPaneInfo(object):
     
     def Floatable(self, b=True):
         """
-        Floatable() sets whether the user will be able to undock a pane and turn it
+        Sets whether the user will be able to undock a pane and turn it
         into a floating window.
 
         :param `b`: whether the pane can be floated or not.
@@ -1470,7 +1550,7 @@ class AuiPaneInfo(object):
     
     def Movable(self, b=True):
         """
-        Movable() indicates whether a frame can be moved.
+        Indicates whether a pane can be moved.
 
         :param `b`: whether the pane can be moved or not.
         """
@@ -1480,8 +1560,7 @@ class AuiPaneInfo(object):
 
     def NotebookDockable(self, b=True):
         """
-        NotebookDockable() indicates whether a pane can be docked in an automatic
-        L{auibook.AuiNotebook}.
+        Indicates whether a pane can be docked in an automatic L{AuiNotebook}.
 
         :param `b`: whether the pane can be docked in a notebook or not.
         """
@@ -1491,7 +1570,7 @@ class AuiPaneInfo(object):
 
     def DockFixed(self, b=True):
         """
-        DockFixed() causes the containing dock to have no resize sash. This is useful
+        Causes the containing dock to have no resize sash. This is useful
         for creating panes that span the entire width or height of a dock, but should
         not be resizable in the other direction.
 
@@ -1503,8 +1582,8 @@ class AuiPaneInfo(object):
                                    
     def Dockable(self, b=True):
         """
-        Dockable() specifies whether a frame can be docked or not. It is the same as specifying
-        TopDockable(b).BottomDockable(b).LeftDockable(b).RightDockable(b).
+        Specifies whether a frame can be docked or not. It is the same as specifying
+        L{TopDockable} . L{BottomDockable} . L{LeftDockable} . L{RightDockable} .
 
         :param `b`: whether the frame can be docked or not.
         """
@@ -1514,7 +1593,7 @@ class AuiPaneInfo(object):
 
     def TopSnappable(self, b=True):
         """
-        TopSnappable() indicates whether a pane can be snapped at the top of the main frame.
+        Indicates whether a pane can be snapped at the top of the main frame.
 
         :param `b`: whether the pane can be snapped at the top of the main frame or not.
         """
@@ -1524,7 +1603,7 @@ class AuiPaneInfo(object):
     
     def BottomSnappable(self, b=True):
         """
-        BottomSnappable() indicates whether a pane can be snapped at the bottom of the main frame.
+        Indicates whether a pane can be snapped at the bottom of the main frame.
 
         :param `b`: whether the pane can be snapped at the bottom of the main frame or not.
         """
@@ -1534,7 +1613,7 @@ class AuiPaneInfo(object):
     
     def LeftSnappable(self, b=True):
         """
-        LeftSnappable() indicates whether a pane can be snapped on the left of the main frame.
+        Indicates whether a pane can be snapped on the left of the main frame.
 
         :param `b`: whether the pane can be snapped at the left of the main frame or not.
         """
@@ -1544,7 +1623,7 @@ class AuiPaneInfo(object):
     
     def RightSnappable(self, b=True):
         """
-        RightSnappable() indicates whether a pane can be snapped on the right of the main frame.
+        Indicates whether a pane can be snapped on the right of the main frame.
 
         :param `b`: whether the pane can be snapped at the right of the main frame or not.
         """
@@ -1554,8 +1633,8 @@ class AuiPaneInfo(object):
 
     def Snappable(self, b=True):
         """
-        Snappable() indicates whether a pane can be snapped on the main frame. This is
-        equivalent as calling TopSnappable(b).BottomSnappable(b).LeftSnappable(b).RightSnappable(b).
+        Indicates whether a pane can be snapped on the main frame. This is
+        equivalent as calling L{TopSnappable} . L{BottomSnappable} . L{LeftSnappable} . L{RightSnappable} .
 
         :param `b`: whether the pane can be snapped on the main frame or not.
         """
@@ -1565,7 +1644,7 @@ class AuiPaneInfo(object):
 
     def FlyOut(self, b=True):
         """
-        FlyOut() indicates whether a pane, when floating, has a "fly-out" effect
+        Indicates whether a pane, when floating, has a "fly-out" effect
         (i.e., floating panes which only show themselves when moused over).
 
         :param `b`: whether the pane can be snapped on the main frame or not.
@@ -1595,7 +1674,7 @@ class AuiPaneInfo(object):
 
 
     def DefaultPane(self):
-        """ DefaultPane() specifies that the pane should adopt the default pane settings. """
+        """ Specifies that the pane should adopt the default pane settings. """
         
         state = self.state    
         state |= self.optionTopDockable | self.optionBottomDockable | \
@@ -1611,7 +1690,8 @@ class AuiPaneInfo(object):
     
     def CentrePane(self):
         """
-        CentrePane() specifies that the pane should adopt the default center pane settings.
+        Specifies that the pane should adopt the default center pane settings.
+
         Centre panes usually do not have caption bars. This function provides an easy way of
         preparing a pane to be displayed in the center dock position.
         """
@@ -1621,7 +1701,8 @@ class AuiPaneInfo(object):
     
     def CenterPane(self):
         """
-        CenterPane() specifies that the pane should adopt the default center pane settings.
+        Specifies that the pane should adopt the default center pane settings.
+
         Centre panes usually do not have caption bars. This function provides an easy way of
         preparing a pane to be displayed in the center dock position.
         """
@@ -1631,15 +1712,13 @@ class AuiPaneInfo(object):
     
      
     def ToolbarPane(self):
-        """
-        ToolbarPane() specifies that the pane should adopt the default toolbar pane settings.
-        """
+        """ Specifies that the pane should adopt the default toolbar pane settings. """
         
         self.DefaultPane()
         state = self.state
         
         state |= (self.optionToolbar | self.optionGripper)
-        state &= ~(self.optionResizable | self.optionCaption)
+        state &= ~(self.optionResizable | self.optionCaption | self.optionCaptionLeft)
         
         if self.dock_layer == 0:
             self.dock_layer = 10
@@ -1651,11 +1730,11 @@ class AuiPaneInfo(object):
 
     def Icon(self, icon):
         """
-        Icon specifies whether an icon is drawn on the left of the caption text when
-        the pane is docked. If `icon` is None or wx.NullIcon, no icon is drawn on
+        Specifies whether an icon is drawn on the left of the caption text when
+        the pane is docked. If `icon` is ``None`` or `wx.NullIcon`, no icon is drawn on
         the caption space.
 
-        :param icon: an icon to draw on the caption space, or None.
+        :param icon: an icon to draw on the caption space, or ``None``.
         """
 
         if icon is None:
@@ -1667,11 +1746,11 @@ class AuiPaneInfo(object):
 
     def SetFlag(self, flag, option_state):
         """
-        SetFlag() turns the property given by `flag` on or off with the `option_state`
+        Turns the property given by `flag` on or off with the `option_state`
         parameter.
 
         :param `flag`: the property to set;
-        :param `option_state`: either True or False.
+        :param `option_state`: either ``True`` or ``False``.
         """
         
         state = self.state
@@ -1688,7 +1767,7 @@ class AuiPaneInfo(object):
     
     def HasFlag(self, flag):
         """
-        HasFlag() returns True if the the property specified by flag is active for the pane.
+        Returns ``True`` if the the property specified by flag is active for the pane.
 
         :param `flag`: the property to check for activity.
         """
@@ -1697,11 +1776,11 @@ class AuiPaneInfo(object):
 
 
     def CountButtons(self):
-        """ CountButtons() returns the number of visible buttons in the docked pane. """
+        """ Returns the number of visible buttons in the docked pane. """
 
         n = 0
         
-        if self.HasCaption():
+        if self.HasCaption() or self.HasCaptionLeft():
             if isinstance(wx.GetTopLevelParent(self.window), AuiFloatingFrame):
                 return 1
             
@@ -1718,12 +1797,12 @@ class AuiPaneInfo(object):
     
 
     def IsHorizontal(self):
-        """ IsHorizontal() returns True if the pane `dock_direction` is horizontal. """
+        """ Returns ``True`` if the pane `dock_direction` is horizontal. """
 
         return self.dock_direction in [AUI_DOCK_TOP, AUI_DOCK_BOTTOM]
 
     def IsVertical(self):
-        """ IsVertical() returns True if the pane `dock_direction` is vertical. """
+        """ Returns ``True`` if the pane `dock_direction` is vertical. """
 
         return self.dock_direction in [AUI_DOCK_LEFT, AUI_DOCK_RIGHT]
 
@@ -1743,14 +1822,14 @@ class AuiDockingGuide(wx.Frame):
         """
         Default class constructor. Used internally, do not call it in your code!
 
-        :param `parent`: the AuiDockingGuide parent;
+        :param `parent`: the L{AuiDockingGuide} parent;
         :param `id`: the window identifier. It may take a value of -1 to indicate a default value.
         :param `title`: the caption to be displayed on the frame's title bar.
         :param `pos`: the window position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform.
         :param `size`: the window size. A value of (-1, -1) indicates a default size, chosen by
          either the windowing system or wxPython, depending on platform.
-        :param `style`: the window style. See L{wx.Frame}.
+        :param `style`: the window style. 
         :param `name`: the name of the window. This parameter is used to associate a name with the
          item, allowing the application user to set Motif resource values for individual windows.
         """
@@ -1774,7 +1853,7 @@ class AuiDockingGuide(wx.Frame):
         To be overridden by parent classes.
 
         :param `valid`: whether a pane can be docked on top to another to form an automatic
-         L{auibook.AuiNotebook}.
+         L{AuiNotebook}.
         """
         
         return 0
@@ -1790,15 +1869,17 @@ class AuiDockingGuide(wx.Frame):
 class AuiDockingGuideWindow(wx.Window):
     """ Target class for L{AuiSingleDockingGuide} and L{AuiCenterDockingGuide}. """
 
-    def __init__(self, parent, rect, direction=0, center=False):
+    def __init__(self, parent, rect, direction=0, center=False, useAero=False):
         """
         Default class constructor. Used internally, do not call it in your code!
 
-        :param `parent`: the AuiDockingGuideWindow parent;
+        :param `parent`: the L{AuiDockingGuideWindow} parent;
         :param `rect`: the window rect;
         :param `direction`: one of ``wx.TOP``, ``wx.BOTTOM``, ``wx.LEFT``, ``wx.RIGHT``,
          ``wx.CENTER``;
-        :param `center`: whether the calling class is a L{AuiCenterDockingGuide}.
+        :param `center`: whether the calling class is a L{AuiCenterDockingGuide};
+        :param `useAero`: whether to use the new Aero-style bitmaps or Whidbey-style bitmaps
+         for the docking guide.
         """
 
         wx.Window.__init__(self, parent, -1, rect.GetPosition(), rect.GetSize(), wx.NO_BORDER)
@@ -1806,28 +1887,10 @@ class AuiDockingGuideWindow(wx.Window):
         self._direction = direction
         self._center = center
         self._valid = True
-
-        if center:
-            imgName = ""
-        else:
-            imgName = "_single"
-            
-        if direction == wx.TOP:
-            self._bmp_unfocus = eval("up%s"%imgName).GetBitmap()
-            self._bmp_focus = eval("up_focus%s"%imgName).GetBitmap()
-        elif direction == wx.BOTTOM:
-            self._bmp_unfocus = eval("down%s"%imgName).GetBitmap()
-            self._bmp_focus = eval("down_focus%s"%imgName).GetBitmap()
-        elif direction == wx.LEFT:
-            self._bmp_unfocus = eval("left%s"%imgName).GetBitmap()
-            self._bmp_focus = eval("left_focus%s"%imgName).GetBitmap()
-        elif direction == wx.RIGHT:
-            self._bmp_unfocus = eval("right%s"%imgName).GetBitmap()
-            self._bmp_focus = eval("right_focus%s"%imgName).GetBitmap()
-        else:
-            self._bmp_unfocus = eval("tab%s"%imgName).GetBitmap()
-            self._bmp_focus = eval("tab_focus%s"%imgName).GetBitmap()
-
+        self._useAero = useAero
+        
+        self._bmp_unfocus, self._bmp_focus = GetDockingImage(direction, useAero, center)
+        
         self._currentImage = self._bmp_unfocus
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
         
@@ -1853,10 +1916,11 @@ class AuiDockingGuideWindow(wx.Window):
 
     def OnEraseBackground(self, event):
         """
-        Handles the wx.EVT_ERASE_BACKGROUND event for L{AuiDockingGuideWindow}.
-        This is intentiobnally empty to reduce flickering while drawing.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{AuiDockingGuideWindow}.
 
-        :param `event`: L{wx.EraseEvent} to be processed.
+        :param `event`: a `wx.EraseEvent` to be processed.
+
+        :note: This is intentiobnally empty to reduce flickering while drawing.
         """
 
         pass
@@ -1866,7 +1930,7 @@ class AuiDockingGuideWindow(wx.Window):
         """
         Draws the docking guide background.
 
-        :param `dc`: a L{wx.DC} device context object.
+        :param `dc`: a `wx.DC` device context object.
         """
 
         rect = self.GetClientRect()
@@ -1905,8 +1969,8 @@ class AuiDockingGuideWindow(wx.Window):
         """
         Draws a dotted line (not used if the docking guide images are ok).
 
-        :param `dc`: a L{wx.DC} device context object;
-        :param `point`: a L{wx.Point} where to start drawing the dotted line;
+        :param `dc`: a `wx.DC` device context object;
+        :param `point`: a `wx.Point` where to start drawing the dotted line;
         :param `length`: the length of the dotted line;
         :param `vertical`: whether it is a vertical docking guide window or not.
         """
@@ -1923,7 +1987,7 @@ class AuiDockingGuideWindow(wx.Window):
         """
         Draws the docking guide icon (not used if the docking guide images are ok).
 
-        :param `dc`: a L{wx.DC} device context object.
+        :param `dc`: a `wx.DC` device context object.
         """
 
         rect = wx.Rect(*self.GetClientRect())
@@ -1993,7 +2057,7 @@ class AuiDockingGuideWindow(wx.Window):
         """
         Draws the docking guide arrow icon (not used if the docking guide images are ok).
 
-        :param `dc`: a L{wx.DC} device context object.
+        :param `dc`: a `wx.DC` device context object.
         """
 
         rect = self.GetClientRect()
@@ -2034,9 +2098,9 @@ class AuiDockingGuideWindow(wx.Window):
     
     def OnPaint(self, event):
         """
-        Handles the wx.EVT_PAINT event for L{AuiDockingGuideWindow}.
+        Handles the ``wx.EVT_PAINT`` event for L{AuiDockingGuideWindow}.
 
-        :param `event`: a L{wx.PaintEvent} to be processed.
+        :param `event`: a `wx.PaintEvent` to be processed.
         """
 
         dc = wx.AutoBufferedPaintDC(self)
@@ -2050,7 +2114,7 @@ class AuiDockingGuideWindow(wx.Window):
         """
         Draws the whole docking guide window (not used if the docking guide images are ok).
 
-        :param `dc`: a L{wx.DC} device context object.
+        :param `dc`: a `wx.DC` device context object.
         """
 
         self.DrawBackground(dc)
@@ -2066,7 +2130,7 @@ class AuiDockingGuideWindow(wx.Window):
         images if the mouse is inside the docking guide or unfocused images if it is
         outside.
 
-        :param `pos`: a L{wx.Point} mouse position.
+        :param `pos`: a `wx.Point` mouse position.
         """
 
         inside = self.GetScreenRect().Contains(pos)
@@ -2079,6 +2143,7 @@ class AuiDockingGuideWindow(wx.Window):
         if image != self._currentImage:
             self._currentImage = image
             self.Refresh()
+            self.Update()
 
 
 # ---------------------------------------------------------------------------
@@ -2092,26 +2157,142 @@ class AuiSingleDockingGuide(AuiDockingGuide):
         """
         Default class constructor. Used internally, do not call it in your code!
 
-        :param `parent`: the AuiSingleDockingGuide parent;
+        :param `parent`: the L{AuiSingleDockingGuide} parent;
         :param `direction`: one of ``wx.TOP``, ``wx.BOTTOM``, ``wx.LEFT``, ``wx.RIGHT``.
         """
 
         self._direction = direction
 
-        AuiDockingGuide.__init__(self, parent, style=wx.FRAME_TOOL_WINDOW | wx.STAY_ON_TOP |
-                                 wx.FRAME_NO_TASKBAR | wx.NO_BORDER, name="auiSingleDockTarget")
+        style = wx.FRAME_TOOL_WINDOW | wx.STAY_ON_TOP | \
+                wx.FRAME_NO_TASKBAR | wx.NO_BORDER
+
+        # Use of FRAME_SHAPED on wxMac causes the frame to be visible
+        # breaking the docking hints.
+        if wx.Platform != '__WXMAC__':
+            style |= wx.FRAME_SHAPED
+
+        AuiDockingGuide.__init__(self, parent, style=style, name="auiSingleDockTarget")
         
         self.Hide()
 
-        if direction in [wx.TOP, wx.BOTTOM]:
-            sizeX, sizeY = guideSizeX, guideSizeY
+        useAero = GetManager(self.GetParent()).GetFlags() & AUI_MGR_AERO_DOCKING_GUIDES
+        useWhidbey = GetManager(self.GetParent()).GetFlags() & AUI_MGR_WHIDBEY_DOCKING_GUIDES
+        
+        self._useAero = useAero or useWhidbey
+        self._valid = True
+        
+        if useAero:
+            sizeX, sizeY = aeroguideSizeX, aeroguideSizeY
+        elif useWhidbey:
+            sizeX, sizeY = whidbeySizeX, whidbeySizeY
         else:
-            sizeX, sizeY = guideSizeY, guideSizeX
+            sizeX, sizeY = guideSizeX, guideSizeY
+
+        if direction not in [wx.TOP, wx.BOTTOM]:
+            sizeX, sizeY = sizeY, sizeX
+
+        if self._useAero:
+            self.CreateShapesWithStyle(useWhidbey)
+            
+            if wx.Platform == "__WXGTK__":
+                self.Bind(wx.EVT_WINDOW_CREATE, self.SetGuideShape)
+            else:
+                self.SetGuideShape()
+            
+            self.SetSize(self.region.GetBox().GetSize())
+        else:
+            self.SetSize((sizeX, sizeY))
             
         self.rect = wx.Rect(0, 0, sizeX, sizeY)
-        self.target = AuiDockingGuideWindow(self, self.rect, direction, False)
 
-        self.SetSize(self.rect.GetSize())
+        if self._useAero:
+            useAero = (useWhidbey and [2] or [1])[0]
+        else:
+            useAero = 0
+            
+        self.target = AuiDockingGuideWindow(self, self.rect, direction, False, useAero)
+
+
+    def CreateShapesWithStyle(self, useWhidbey):
+        """
+        Creates the docking guide window shape based on which docking bitmaps are used.
+
+        :param `useWhidbey`: if ``True``, use Whidbey-style bitmaps; if ``False``, use the
+         Aero-style bitmaps.
+         """
+
+        sizeX, sizeY = aeroguideSizeX, aeroguideSizeY
+        if useWhidbey:
+            sizeX, sizeY = whidbeySizeX, whidbeySizeY
+
+        if self._direction not in [wx.TOP, wx.BOTTOM]:
+            sizeX, sizeY = sizeY, sizeX
+
+        useAero = (useWhidbey and [2] or [1])[0]      
+        bmp, dummy = GetDockingImage(self._direction, useAero, False)
+        region = wx.RegionFromBitmap(bmp)
+            
+        self.region = region
+        
+
+    def AeroMove(self, pos):
+        """
+        Moves the docking window to the new position. Overridden in children classes.
+
+        :param `pos`: the new docking guide position.
+        """
+
+        pass
+    
+
+    def SetGuideShape(self, event=None):
+        """
+        Sets the correct shape for the docking guide window.
+
+        :param `event`: on wxGTK, a `wx.WindowCreateEvent` event to process.
+        """
+
+        self.SetShape(self.region)        
+                
+        if event is not None:
+            # Skip the event on wxGTK
+            event.Skip()
+            wx.CallAfter(wx.SafeYield, self, True)
+
+
+    def SetShape(self, region):
+        """
+        If the platform supports it, sets the shape of the window to that depicted by `region`.
+        The system will not display or respond to any mouse event for the pixels that lie
+        outside of the region. To reset the window to the normal rectangular shape simply call
+        L{SetShape} again with an empty region. 
+
+        :param `region`: the shape of the frame.
+
+        :note: Overridden for wxMac.        
+        """
+        
+        if wx.Platform == '__WXMAC__':
+            # HACK so we don't crash when SetShape is called
+            return
+        else:
+            super(AuiSingleDockingGuide, self).SetShape(region)
+
+
+    def SetValid(self, valid):
+        """
+        Sets the docking direction as valid or invalid.
+
+        :param `valid`: whether the docking direction is allowed or not.
+        """
+
+        self._valid = valid
+
+
+    def IsValid(self):
+        """ Returns whether the docking direction is valid. """
+        
+        return self._valid
 
 
     def UpdateDockGuide(self, pos):
@@ -2120,7 +2301,7 @@ class AuiSingleDockingGuide(AuiDockingGuide):
         images if the mouse is inside the docking guide or unfocused images if it is
         outside.
 
-        :param `pos`: a L{wx.Point} mouse position.
+        :param `pos`: a `wx.Point` mouse position.
         """
 
         self.target.UpdateDockGuide(pos)
@@ -2149,63 +2330,19 @@ class AuiCenterDockingGuide(AuiDockingGuide):
     
     def __init__(self, parent):
         """
-        Default class constructor. Used internally, do not call it in your code!
+        Default class constructor.
+        Used internally, do not call it in your code!
 
-        :param `parent`: the AuiCenterDockingGuide parent.
+        :param `parent`: the L{AuiCenterDockingGuide} parent.
         """
 
         AuiDockingGuide.__init__(self, parent, style=wx.FRAME_TOOL_WINDOW | wx.STAY_ON_TOP |
                                  wx.FRAME_NO_TASKBAR | wx.NO_BORDER | wx.FRAME_SHAPED,
                                  name="auiCenterDockTarget")
-        
+
         self.Hide()
 
-        rectLeft = wx.Rect(0, guideSizeY, guideSizeY, guideSizeX)
-        rectTop = wx.Rect(guideSizeY, 0, guideSizeX, guideSizeY)
-        rectRight = wx.Rect(guideSizeY+guideSizeX, guideSizeY, guideSizeY, guideSizeX)
-        rectBottom = wx.Rect(guideSizeY, guideSizeX + guideSizeY, guideSizeX, guideSizeY)
-        rectCenter = wx.Rect(guideSizeY, guideSizeY, guideSizeX, guideSizeX)
-        self.targetLeft = AuiDockingGuideWindow(self, rectLeft, wx.LEFT, True)
-        self.targetTop = AuiDockingGuideWindow(self, rectTop, wx.TOP, True)
-        self.targetRight = AuiDockingGuideWindow(self, rectRight, wx.RIGHT, True)
-        self.targetBottom = AuiDockingGuideWindow(self, rectBottom, wx.BOTTOM, True)
-        self.targetCenter = AuiDockingGuideWindow(self, rectCenter, wx.CENTER, True)
-
-        # top-left diamond
-        tld = [wx.Point(rectTop.x, rectTop.y+rectTop.height-8),
-               wx.Point(rectLeft.x+rectLeft.width-8, rectLeft.y),
-               rectTop.GetBottomLeft()]
-        # bottom-left diamond
-        bld = [wx.Point(rectLeft.x+rectLeft.width-8, rectLeft.y+rectLeft.height),
-               wx.Point(rectBottom.x, rectBottom.y+8),
-               rectBottom.GetTopLeft()]
-        # top-right diamond
-        trd = [wx.Point(rectTop.x+rectTop.width, rectTop.y+rectTop.height-8),
-               wx.Point(rectRight.x+8, rectRight.y),
-               rectRight.GetTopLeft()]        
-        # bottom-right diamond
-        brd = [wx.Point(rectRight.x+8, rectRight.y+rectRight.height),
-               wx.Point(rectBottom.x+rectBottom.width, rectBottom.y+8),
-               rectBottom.GetTopRight()]
-
-        self._triangles = [tld[0:2], bld[0:2],
-                           [wx.Point(rectTop.x+rectTop.width-1, rectTop.y+rectTop.height-8),
-                            wx.Point(rectRight.x+7, rectRight.y)],
-                           [wx.Point(rectRight.x+7, rectRight.y+rectRight.height),
-                            wx.Point(rectBottom.x+rectBottom.width-1, rectBottom.y+8)]]
-        
-        region = wx.Region()
-        region.UnionRect(rectLeft)
-        region.UnionRect(rectTop)
-        region.UnionRect(rectRight)
-        region.UnionRect(rectBottom)
-        region.UnionRect(rectCenter)
-        region.UnionRegion(wx.RegionFromPoints(tld))
-        region.UnionRegion(wx.RegionFromPoints(bld))
-        region.UnionRegion(wx.RegionFromPoints(trd))
-        region.UnionRegion(wx.RegionFromPoints(brd))
-
-        self.region = region
+        self.CreateShapesWithStyle()
         self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
         
         if wx.Platform == "__WXGTK__":
@@ -2213,21 +2350,117 @@ class AuiCenterDockingGuide(AuiDockingGuide):
         else:
             self.SetGuideShape()
             
-        self.SetSize(region.GetBox().GetSize())
+        self.SetSize(self.region.GetBox().GetSize())
 
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
 
 
+    def CreateShapesWithStyle(self):
+        """ Creates the docking guide window shape based on which docking bitmaps are used. """
+
+        useAero = (GetManager(self.GetParent()).GetFlags() & AUI_MGR_AERO_DOCKING_GUIDES) != 0
+        useWhidbey = (GetManager(self.GetParent()).GetFlags() & AUI_MGR_WHIDBEY_DOCKING_GUIDES) != 0
+
+        self._useAero = 0
+        if useAero:
+            self._useAero = 1
+        elif useWhidbey:
+            self._useAero = 2
+        
+        if useAero:
+            sizeX, sizeY = aeroguideSizeX, aeroguideSizeY
+        elif useWhidbey:
+            sizeX, sizeY = whidbeySizeX, whidbeySizeY          
+        else:
+            sizeX, sizeY = guideSizeX, guideSizeY
+
+        rectLeft = wx.Rect(0, sizeY, sizeY, sizeX)
+        rectTop = wx.Rect(sizeY, 0, sizeX, sizeY)
+        rectRight = wx.Rect(sizeY+sizeX, sizeY, sizeY, sizeX)
+        rectBottom = wx.Rect(sizeY, sizeX + sizeY, sizeX, sizeY)
+        rectCenter = wx.Rect(sizeY, sizeY, sizeX, sizeX)
+            
+        if not self._useAero:
+
+            self.targetLeft = AuiDockingGuideWindow(self, rectLeft, wx.LEFT, True, useAero)
+            self.targetTop = AuiDockingGuideWindow(self, rectTop, wx.TOP, True, useAero)
+            self.targetRight = AuiDockingGuideWindow(self, rectRight, wx.RIGHT, True, useAero)
+            self.targetBottom = AuiDockingGuideWindow(self, rectBottom, wx.BOTTOM, True, useAero)
+            self.targetCenter = AuiDockingGuideWindow(self, rectCenter, wx.CENTER, True, useAero)
+
+            
+            # top-left diamond
+            tld = [wx.Point(rectTop.x, rectTop.y+rectTop.height-8),
+                   wx.Point(rectLeft.x+rectLeft.width-8, rectLeft.y),
+                   rectTop.GetBottomLeft()]
+            # bottom-left diamond
+            bld = [wx.Point(rectLeft.x+rectLeft.width-8, rectLeft.y+rectLeft.height),
+                   wx.Point(rectBottom.x, rectBottom.y+8),
+                   rectBottom.GetTopLeft()]
+            # top-right diamond
+            trd = [wx.Point(rectTop.x+rectTop.width, rectTop.y+rectTop.height-8),
+                   wx.Point(rectRight.x+8, rectRight.y),
+                   rectRight.GetTopLeft()]        
+            # bottom-right diamond
+            brd = [wx.Point(rectRight.x+8, rectRight.y+rectRight.height),
+                   wx.Point(rectBottom.x+rectBottom.width, rectBottom.y+8),
+                   rectBottom.GetTopRight()]
+
+            self._triangles = [tld[0:2], bld[0:2],
+                               [wx.Point(rectTop.x+rectTop.width-1, rectTop.y+rectTop.height-8),
+                                wx.Point(rectRight.x+7, rectRight.y)],
+                               [wx.Point(rectRight.x+7, rectRight.y+rectRight.height),
+                                wx.Point(rectBottom.x+rectBottom.width-1, rectBottom.y+8)]]
+            
+            region = wx.Region()
+            region.UnionRect(rectLeft)
+            region.UnionRect(rectTop)
+            region.UnionRect(rectRight)
+            region.UnionRect(rectBottom)
+            region.UnionRect(rectCenter)
+            region.UnionRegion(wx.RegionFromPoints(tld))
+            region.UnionRegion(wx.RegionFromPoints(bld))
+            region.UnionRegion(wx.RegionFromPoints(trd))
+            region.UnionRegion(wx.RegionFromPoints(brd))
+
+        elif useAero:
+
+            self._aeroBmp = aero_dock_pane.GetBitmap()
+            region = wx.RegionFromBitmap(self._aeroBmp)
+
+            self._allAeroBmps = [aero_dock_pane_left.GetBitmap(), aero_dock_pane_top.GetBitmap(),
+                                 aero_dock_pane_right.GetBitmap(), aero_dock_pane_bottom.GetBitmap(),
+                                 aero_dock_pane_center.GetBitmap(), aero_dock_pane.GetBitmap()]
+            self._deniedBitmap = aero_denied.GetBitmap()
+            self._aeroRects = [rectLeft, rectTop, rectRight, rectBottom, rectCenter]
+            self._valid = True
+
+        elif useWhidbey:
+
+            self._aeroBmp = whidbey_dock_pane.GetBitmap()
+            region = wx.RegionFromBitmap(self._aeroBmp)
+
+            self._allAeroBmps = [whidbey_dock_pane_left.GetBitmap(), whidbey_dock_pane_top.GetBitmap(),
+                                 whidbey_dock_pane_right.GetBitmap(), whidbey_dock_pane_bottom.GetBitmap(),
+                                 whidbey_dock_pane_center.GetBitmap(), whidbey_dock_pane.GetBitmap()]
+            self._deniedBitmap = whidbey_denied.GetBitmap()
+            self._aeroRects = [rectLeft, rectTop, rectRight, rectBottom, rectCenter]
+            self._valid = True
+            
+            
+        self.region = region
+        
+
     def SetGuideShape(self, event=None):
         """
         Sets the correct shape for the docking guide window.
 
-        :param `event`: on wxGTK, a L{wx.WindowCreateEvent} event to process.
+        :param `event`: on wxGTK, a `wx.WindowCreateEvent` event to process.
         """
 
         self.SetShape(self.region)        
-                
+
         if event is not None:
             # Skip the event on wxGTK
             event.Skip()
@@ -2240,13 +2473,31 @@ class AuiCenterDockingGuide(AuiDockingGuide):
         images if the mouse is inside the docking guide or unfocused images if it is
         outside.
 
-        :param `pos`: a L{wx.Point} mouse position.
+        :param `pos`: a `wx.Point` mouse position.
         """
 
-        for target in self.GetChildren():
-            target.UpdateDockGuide(pos)
-            
-        
+        if not self._useAero:
+            for target in self.GetChildren():
+                target.UpdateDockGuide(pos)
+        else:
+            lenRects = len(self._aeroRects)
+            for indx, rect in enumerate(self._aeroRects):
+                if rect.Contains(pos):
+                    if self._allAeroBmps[indx] != self._aeroBmp:
+                        if indx < lenRects - 1 or (indx == lenRects - 1 and self._valid):
+                            self._aeroBmp = self._allAeroBmps[indx]
+                            self.Refresh()
+                        else:
+                            self._aeroBmp = self._allAeroBmps[-1]
+                            self.Refresh()
+                            
+                    return
+
+            if self._aeroBmp != self._allAeroBmps[-1]:
+                self._aeroBmp = self._allAeroBmps[-1]
+                self.Refresh()
+
+
     def HitTest(self, x, y):
         """
         Checks if the mouse position is inside the target windows rect.
@@ -2255,16 +2506,24 @@ class AuiCenterDockingGuide(AuiDockingGuide):
         :param `y`: the `y` mouse position.
         """
 
-        if self.targetLeft.GetScreenRect().Contains((x, y)):
-            return wx.LEFT
-        if self.targetTop.GetScreenRect().Contains((x, y)):
-            return wx.UP
-        if self.targetRight.GetScreenRect().Contains((x, y)):
-            return wx.RIGHT
-        if self.targetBottom.GetScreenRect().Contains((x, y)):
-            return wx.DOWN
-        if self.targetCenter.IsValid() and self.targetCenter.GetScreenRect().Contains((x, y)):
-            return wx.CENTER
+        if not self._useAero:
+            if self.targetLeft.GetScreenRect().Contains((x, y)):
+                return wx.LEFT
+            if self.targetTop.GetScreenRect().Contains((x, y)):
+                return wx.UP
+            if self.targetRight.GetScreenRect().Contains((x, y)):
+                return wx.RIGHT
+            if self.targetBottom.GetScreenRect().Contains((x, y)):
+                return wx.DOWN
+            if self.targetCenter.IsValid() and self.targetCenter.GetScreenRect().Contains((x, y)):
+                return wx.CENTER
+        else:
+            constants = [wx.LEFT, wx.UP, wx.RIGHT, wx.DOWN, wx.CENTER]
+            lenRects = len(self._aeroRects)
+            for indx, rect in enumerate(self._aeroRects):
+                if rect.Contains((x, y)):
+                    if indx < lenRects or (indx == lenRects-1 and self._valid):
+                        return constants[indx]
 
         return -1
 
@@ -2272,23 +2531,59 @@ class AuiCenterDockingGuide(AuiDockingGuide):
     def ValidateNotebookDocking(self, valid):
         """
         Sets whether a pane can be docked on top of another to create an automatic
-        L{auibook.AuiNotebook}.
+        L{AuiNotebook}.
 
         :param `valid`: whether a pane can be docked on top to another to form an automatic
-         L{auibook.AuiNotebook}.
+         L{AuiNotebook}.
         """
 
-        if self.targetCenter.IsValid() != valid:        
-            self.targetCenter.SetValid(valid)
-            self.targetCenter.Refresh()
+        if not self._useAero:
+            if self.targetCenter.IsValid() != valid:        
+                self.targetCenter.SetValid(valid)
+                self.targetCenter.Refresh()
+        else:
+            if self._valid != valid:
+                self._valid = valid
+                self.Refresh()
     
 
+    def AeroMove(self, pos):
+        """
+        Moves the docking guide window to the new position.
+
+        :param `pos`: the new docking guide position.
+        """
+
+        if not self._useAero:
+            return
+
+        useWhidbey = (GetManager(self.GetParent()).GetFlags() & AUI_MGR_WHIDBEY_DOCKING_GUIDES) != 0
+
+        if useWhidbey:
+            sizeX, sizeY = whidbeySizeX, whidbeySizeY            
+        else:
+            sizeX, sizeY = aeroguideSizeX, aeroguideSizeY
+            
+        size = self.GetSize()
+        
+        leftRect, topRect, rightRect, bottomRect, centerRect = self._aeroRects
+        thePos = pos + wx.Point((size.x-sizeY)/2, (size.y-sizeX)/2)
+        
+        centerRect.SetPosition(thePos)
+
+        leftRect.SetPosition(thePos + wx.Point(-sizeY, 0))
+        topRect.SetPosition(thePos + wx.Point(0, -sizeY))
+        rightRect.SetPosition(thePos + wx.Point(sizeX, 0))
+        bottomRect.SetPosition(thePos + wx.Point(0, sizeX))
+        
+        
     def OnEraseBackground(self, event):
         """
-        Handles the wx.EVT_ERASE_BACKGROUND event for L{AuiCenterDockingGuide}.
-        This is intentiobnally empty to reduce flickering while drawing.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{AuiCenterDockingGuide}.
 
-        :param `event`: L{wx.EraseEvent} to be processed.
+        :param `event`: `wx.EraseEvent` to be processed.
+
+        :note: This is intentiobnally empty to reduce flickering while drawing.
         """
         
         pass
@@ -2296,19 +2591,33 @@ class AuiCenterDockingGuide(AuiDockingGuide):
 
     def OnPaint(self, event):
         """
-        Handles the wx.EVT_PAINT event for L{AuiCenterDockingGuide}.
+        Handles the ``wx.EVT_PAINT`` event for L{AuiCenterDockingGuide}.
 
-        :param `event`: a L{wx.PaintEvent} to be processed.
+        :param `event`: a `wx.PaintEvent` to be processed.
         """
 
         dc = wx.AutoBufferedPaintDC(self)
 
-        dc.SetBrush(wx.Brush(colourTargetBackground))
-        dc.SetPen(wx.Pen(colourTargetBorder))
+        if self._useAero:
+            dc.SetBrush(wx.TRANSPARENT_BRUSH)
+            dc.SetPen(wx.TRANSPARENT_PEN)
+        else:
+            dc.SetBrush(wx.Brush(colourTargetBackground))
+            dc.SetPen(wx.Pen(colourTargetBorder))
 
         rect = self.GetClientRect()
         dc.DrawRectangle(rect.x, rect.y, rect.width, rect.height)
 
+        if self._useAero:
+            dc.DrawBitmap(self._aeroBmp, 0, 0, True)
+            if not self._valid:
+                diff = (self._useAero == 2 and [1] or [0])[0]
+                bmpX, bmpY = self._deniedBitmap.GetWidth(), self._deniedBitmap.GetHeight()
+                xPos, yPos = (rect.x + (rect.width)/2 - bmpX/2), (rect.y + (rect.height)/2 - bmpY/2)
+                dc.DrawBitmap(self._deniedBitmap, xPos+1, yPos+diff, True)
+                
+            return
+        
         dc.SetPen(wx.Pen(colourTargetBorder, 2))
         for pts in self._triangles:
             dc.DrawLinePoint(pts[0], pts[1])
@@ -2328,14 +2637,14 @@ class AuiDockingHintWindow(wx.Frame):
         """
         Default class constructor. Used internally, do not call it in your code!
 
-        :param `parent`: the AuiDockingGuide parent;
+        :param `parent`: the L{AuiDockingGuide} parent;
         :param `id`: the window identifier. It may take a value of -1 to indicate a default value.
-        :param `title`: the caption to be displayed on the frame's title bar.
+        :param `title`: the caption to be displayed on the frame's title bar;
         :param `pos`: the window position. A value of (-1, -1) indicates a default position,
-         chosen by either the windowing system or wxPython, depending on platform.
+         chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the window size. A value of (-1, -1) indicates a default size, chosen by
-         either the windowing system or wxPython, depending on platform.
-        :param `style`: the window style. See L{wx.Frame}.
+         either the windowing system or wxPython, depending on platform;
+        :param `style`: the window style;
         :param `name`: the name of the window. This parameter is used to associate a name with the
          item, allowing the application user to set Motif resource values for individual windows.
         """
@@ -2349,8 +2658,8 @@ class AuiDockingHintWindow(wx.Frame):
         self._blindMode = False
         self.SetBackgroundColour(colourHintBackground)
         
-        # Can't set background color on a frame on wxMac
-        # so add a panel to set the color on.
+        # Can't set background colour on a frame on wxMac
+        # so add a panel to set the colour on.
         if wx.Platform == '__WXMAC__':
             sizer = wx.BoxSizer(wx.HORIZONTAL)
             self.panel = wx.Panel(self)
@@ -2407,9 +2716,14 @@ class AuiDockingHintWindow(wx.Frame):
 
     def SetShape(self, region):
         """
-        Overridden for wxMac.
+        If the platform supports it, sets the shape of the window to that depicted by `region`.
+        The system will not display or respond to any mouse event for the pixels that lie
+        outside of the region. To reset the window to the normal rectangular shape simply call
+        L{SetShape} again with an empty region. 
 
-        :param `region`: the shape of the frame.        
+        :param `region`: the shape of the frame.
+
+        :note: Overridden for wxMac.        
         """
         
         if wx.Platform == '__WXMAC__':
@@ -2434,9 +2748,9 @@ class AuiDockingHintWindow(wx.Frame):
 
     def OnSize(self, event):
         """
-        Handles the wx.EVT_SIZE event for L{AuiDockingHintWindow}.
+        Handles the ``wx.EVT_SIZE`` event for L{AuiDockingHintWindow}.
 
-        :param `event`: a L{wx.SizeEvent} to be processed.
+        :param `event`: a `wx.SizeEvent` to be processed.
         """
 
         if self._blindMode or not self.CanSetTransparent():
@@ -2456,16 +2770,30 @@ class AuiFloatingFrame(wx.MiniFrame):
         """
         Default class constructor. Used internally, do not call it in your code!
 
-        :param `parent`: the AuiFloatingFrame parent;
+        :param `parent`: the L{AuiFloatingFrame} parent;
         :param `owner_mgr`: the L{AuiManager} that manages the floating pane;
         :param `pane`: the L{AuiPaneInfo} pane that is about to float;
         :param `id`: the window identifier. It may take a value of -1 to indicate a default value.
         :param `title`: the caption to be displayed on the frame's title bar.
-        :param `style`: the window style. See L{wx.Frame}.
+        :param `style`: the window style.
         """
-
+            
         if pane and pane.IsResizeable():
             style += wx.RESIZE_BORDER
+        if pane:
+            self._is_toolbar = pane.IsToolbar()
+
+        self._useNativeMiniframes = False
+        if AuiManager_UseNativeMiniframes(owner_mgr):
+            # On wxMac we always use native miniframes
+            self._useNativeMiniframes = True
+            style += wx.CAPTION + wx.SYSTEM_MENU
+            if pane.HasCloseButton():
+                style += wx.CLOSE_BOX
+            if pane.HasMaximizeButton():
+                style += wx.MAXIMIZE_BOX
+            if pane.HasMinimizeButton():
+                style += wx.MINIMIZE_BOX
             
         wx.MiniFrame.__init__(self, parent, id, title, pos=pane.floating_pos,
                               size=pane.floating_size, style=style, name="auiFloatingFrame")
@@ -2476,16 +2804,31 @@ class AuiFloatingFrame(wx.MiniFrame):
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.Bind(wx.EVT_SIZE, self.OnSize)
         self.Bind(wx.EVT_ACTIVATE, self.OnActivate)
-        self.Bind(wx.EVT_MOVE, self.OnMove)
         self.Bind(wx.EVT_TIMER, self.OnCheckFlyTimer, self._check_fly_timer)
         self.Bind(wx.EVT_TIMER, self.OnFlyTimer, self._fly_timer)
         self.Bind(EVT_AUI_FIND_MANAGER, self.OnFindManager)
+
+        if self._useNativeMiniframes:
+            self.Bind(wx.EVT_MOVE, self.OnMoveEvent)
+            self.Bind(wx.EVT_MOVING, self.OnMoveEvent)
+            self.Bind(wx.EVT_IDLE, self.OnIdle)
+            self._useNativeMiniframes = True
+            self.SetExtraStyle(wx.WS_EX_PROCESS_IDLE)
+        else:
+            self.Bind(wx.EVT_MOVE, self.OnMove)
 
         self._fly = False
         self._send_size = True
         self._alpha_amount = 255
         
         self._owner_mgr = owner_mgr
+        self._moving = False
+        self._lastDirection = None
+
+        self._last_rect = wx.Rect()
+        self._last2_rect = wx.Rect()
+        self._last3_rect = wx.Rect()
+
         self._mgr = AuiManager()
         self._mgr.SetManagedWindow(self)
         self._mgr.SetArtProvider(owner_mgr.GetArtProvider())
@@ -2533,7 +2876,12 @@ class AuiFloatingFrame(wx.MiniFrame):
         :param `pane`: the L{AuiPaneInfo} to analyze.
         """
 
+        self._is_toolbar = pane.IsToolbar()
         self._pane_window = pane.window
+
+        if isinstance(pane.window, auibar.AuiToolBar):
+            pane.window.SetAuiManager(self._mgr)
+        
         self._pane_window.Reparent(self)
         
         contained_pane = self.CopyAttributes(pane)
@@ -2543,7 +2891,7 @@ class AuiFloatingFrame(wx.MiniFrame):
                        PaneBorder(False). \
                        Layer(0).Row(0).Position(0)
 
-        if not contained_pane.HasGripper():
+        if not contained_pane.HasGripper() and not self._useNativeMiniframes:
             contained_pane.CaptionVisible(True)
 
         indx = self._owner_mgr._panes.index(pane)
@@ -2612,7 +2960,9 @@ class AuiFloatingFrame(wx.MiniFrame):
                 else:
                     size.x += self._owner_mgr._art.GetMetric(AUI_DOCKART_GRIPPER_SIZE)
 
-            size.y += self._owner_mgr._art.GetMetric(AUI_DOCKART_CAPTION_SIZE)
+            if not self._useNativeMiniframes:
+                size.y += self._owner_mgr._art.GetMetric(AUI_DOCKART_CAPTION_SIZE)
+                
             pane.floating_size = size
             
             self.SetClientSize(size)
@@ -2634,9 +2984,9 @@ class AuiFloatingFrame(wx.MiniFrame):
 
     def OnSize(self, event):
         """
-        Handles the wx.EVT_SIZE event for L{AuiFloatingFrame}.
+        Handles the ``wx.EVT_SIZE`` event for L{AuiFloatingFrame}.
 
-        :param `event`: a L{wx.SizeEvent} to be processed.
+        :param `event`: a `wx.SizeEvent` to be processed.
         """
 
         if self._owner_mgr and self._send_size:
@@ -2645,9 +2995,9 @@ class AuiFloatingFrame(wx.MiniFrame):
     
     def OnClose(self, event):
         """
-        Handles the wx.EVT_CLOSE event for L{AuiFloatingFrame}.
+        Handles the ``wx.EVT_CLOSE`` event for L{AuiFloatingFrame}.
 
-        :param `event`: a L{wx.CloseEvent} to be processed.
+        :param `event`: a `wx.CloseEvent` to be processed.
         """
 
         if self._owner_mgr:
@@ -2655,14 +3005,22 @@ class AuiFloatingFrame(wx.MiniFrame):
 
         if not event.GetVeto():
             self._mgr.DetachPane(self._pane_window)
+
+            if isinstance(self._pane_window, auibar.AuiToolBar):
+                pane.window.SetAuiManager(self._owner_mgr)
+
+            # if we do not do this, then we can crash...
+            if self._owner_mgr and self._owner_mgr._action_window == self:
+                self._owner_mgr._action_window = None
+
             self.Destroy()
     
 
     def OnActivate(self, event):
         """
-        Handles the wx.EVT_ACTIVATE event for L{AuiFloatingFrame}.
+        Handles the ``wx.EVT_ACTIVATE`` event for L{AuiFloatingFrame}.
 
-        :param `event`: a L{wx.ActivateEvent} to be processed.
+        :param `event`: a `wx.ActivateEvent` to be processed.
         """
 
         if self._owner_mgr and event.GetActive():
@@ -2671,21 +3029,155 @@ class AuiFloatingFrame(wx.MiniFrame):
 
     def OnMove(self, event):
         """
-        Handles the wx.EVT_MOVE event for L{AuiFloatingFrame}.
+        Handles the ``wx.EVT_MOVE`` event for L{AuiFloatingFrame}.
 
-        :param `event`: a L{wx.MoveEvent} to be processed.
+        :param `event`: a `wx.MoveEvent` to be processed.
+
+        :note: This event is not processed on wxMAC or if L{AuiManager} is not using the
+         ``AUI_MGR_USE_NATIVE_MINIFRAMES`` style.
         """
 
         if self._owner_mgr:
             self._owner_mgr.OnFloatingPaneMoved(self._pane_window, event)
                 
 
+    def OnMoveEvent(self, event):
+        """
+        Handles the ``wx.EVT_MOVE`` and ``wx.EVT_MOVING`` events for L{AuiFloatingFrame}.
+
+        :param `event`: a `wx.MoveEvent` to be processed.
+
+        :note: This event is only processed on wxMAC or if L{AuiManager} is using the
+         ``AUI_MGR_USE_NATIVE_MINIFRAMES`` style.
+        """
+
+        win_rect = self.GetRect()
+
+        if win_rect == self._last_rect:
+            return
+
+        # skip the first move event
+        if self._last_rect.IsEmpty():        
+            self._last_rect = wx.Rect(*win_rect)
+            return
+        
+        # skip if moving too fast to avoid massive redraws and
+        # jumping hint windows
+        if abs(win_rect.x - self._last_rect.x) > 3 or abs(win_rect.y - self._last_rect.y) > 3:
+            self._last3_rect = wx.Rect(*self._last2_rect)
+            self._last2_rect = wx.Rect(*self._last_rect)
+            self._last_rect = wx.Rect(*win_rect)
+            return
+
+        # prevent frame redocking during resize
+        if self._last_rect.GetSize() != win_rect.GetSize():
+            self._last3_rect = wx.Rect(*self._last2_rect)
+            self._last2_rect = wx.Rect(*self._last_rect)
+            self._last_rect = wx.Rect(*win_rect)
+            return
+
+        self._last3_rect = wx.Rect(*self._last2_rect)
+        self._last2_rect = wx.Rect(*self._last_rect)
+        self._last_rect = wx.Rect(*win_rect)
+
+        if not wx.GetMouseState().LeftDown():
+            return
+
+        if not self._moving:        
+            self.OnMoveStart(event)
+            self._moving = True
+
+        if self._last3_rect.IsEmpty():
+            return
+
+        self.OnMoving(event)
+
+
+    def OnIdle(self, event):
+        """
+        Handles the ``wx.EVT_IDLE`` event for L{AuiFloatingFrame}.
+
+        :param `event`: a `wx.IdleEvent` event to be processed.
+
+        :note: This event is only processed on wxMAC or if L{AuiManager} is using the
+         ``AUI_MGR_USE_NATIVE_MINIFRAMES`` style.        
+        """
+
+        if self._moving:        
+            if not wx.GetMouseState().LeftDown():            
+                self._moving = False
+                self.OnMoveFinished()
+            else:            
+                event.RequestMore()
+
+        
+    def OnMoveStart(self, event):
+        """
+        The user has just started moving the floating pane.
+
+        :param `event`: an instance of `wx.MouseEvent`.
+    
+        :note: This method is used only on wxMAC or if L{AuiManager} is using the
+         ``AUI_MGR_USE_NATIVE_MINIFRAMES`` style.
+        """
+
+        # notify the owner manager that the pane has started to move
+        if self._owner_mgr:
+            if self._owner_mgr._from_move:
+                return
+            self._owner_mgr._action_window = self._pane_window
+            point = wx.GetMousePosition()
+            action_offset = point - self.GetPosition()
+
+            if self._is_toolbar:
+                self._owner_mgr._toolbar_action_offset = action_offset
+                self._owner_mgr.OnMotion_DragToolbarPane(point)
+            else:
+                self._owner_mgr._action_offset = action_offset
+                self._owner_mgr.OnMotion_DragFloatingPane(point)
+
+    
+    def OnMoving(self, event):
+        """
+        The user is moving the floating pane.
+
+        :param `event`: an instance of `wx.MouseEvent`.
+        
+        :note: This method is used only on wxMAC or if L{AuiManager} is using the
+         ``AUI_MGR_USE_NATIVE_MINIFRAMES`` style.
+        """
+
+        # notify the owner manager that the pane is moving
+        self.OnMoveStart(event)
+        
+
+    def OnMoveFinished(self):
+        """
+        The user has just finished moving the floating pane.
+
+        :note: This method is used only on wxMAC or if L{AuiManager} is using the
+         ``AUI_MGR_USE_NATIVE_MINIFRAMES`` style.
+        """
+
+        # notify the owner manager that the pane has finished moving
+        if self._owner_mgr:
+            self._owner_mgr._action_window = self._pane_window
+            point = wx.GetMousePosition()
+            if self._is_toolbar:
+                self._owner_mgr.OnLeftUp_DragToolbarPane(point)
+            else:
+                self._owner_mgr.OnLeftUp_DragFloatingPane(point)
+
+            self._owner_mgr.OnFloatingPaneMoved(self._pane_window, point)
+    
+
     def OnCheckFlyTimer(self, event):
         """
-        Handles the wx.EVT_TIMER event for L{AuiFloatingFrame}.
-        This is used solely for "fly-out" panes.
+        Handles the ``wx.EVT_TIMER`` event for L{AuiFloatingFrame}.
 
-        :param `event`: a L{wx.TimerEvent} to be processed.
+        :param `event`: a `wx.TimerEvent` to be processed.
+
+        :note: This is used solely for "fly-out" panes.        
         """
         
         if self._owner_mgr:
@@ -2697,9 +3189,9 @@ class AuiFloatingFrame(wx.MiniFrame):
 
     def OnFindManager(self, event):
         """
-        Handles the EVT_AUI_FIND_MANAGER event for L{AuiFloatingFrame}.
+        Handles the ``EVT_AUI_FIND_MANAGER`` event for L{AuiFloatingFrame}.
 
-        :param `event`: a EVT_AUI_FIND_MANAGER event to be processed.
+        :param `event`: a L{AuiManagerEvent} event to be processed.
         """
         
         event.SetManager(self._owner_mgr)
@@ -2731,9 +3223,9 @@ class AuiFloatingFrame(wx.MiniFrame):
 
     def OnFlyTimer(self, event):            
         """
-        Handles the wx.EVT_TIMER event for L{AuiFloatingFrame}.
+        Handles the ``wx.EVT_TIMER`` event for L{AuiFloatingFrame}.
 
-        :param `event`: a L{wx.TimerEvent} to be processed.
+        :param `event`: a `wx.TimerEvent` to be processed.
         """
 
         current_size = self.GetClientSize()
@@ -2789,7 +3281,7 @@ def DrawResizeHint(dc, rect):
     """
     Draws a resize hint while a sash is dragged.
 
-    :param `rect`: a L{wx.Rect} rectangle which specifies the sash dimensions.
+    :param `rect`: a `wx.Rect` rectangle which specifies the sash dimensions.
     """
         
     if wx.Platform == "__WXMSW__" and wx.App.GetComCtl32Version() >= 600:
@@ -2816,7 +3308,7 @@ def DrawResizeHint(dc, rect):
 
 def CopyDocksAndPanes(src_docks, src_panes):
     """
-    CopyDocksAndPanes() - this utility function creates shallow copies of
+    This utility function creates shallow copies of
     the dock and pane info. L{AuiDockInfo} usually contain pointers
     to L{AuiPaneInfo} classes, thus this function is necessary to reliably
     reconstruct that relationship in the new dock info and pane info arrays.
@@ -2840,7 +3332,7 @@ def CopyDocksAndPanes(src_docks, src_panes):
 
 def CopyDocksAndPanes2(src_docks, src_panes):
     """
-    CopyDocksAndPanes2() - this utility function creates full copies of
+    This utility function creates full copies of
     the dock and pane info. L{AuiDockInfo} usually contain pointers
     to L{AuiPaneInfo} classes, thus this function is necessary to reliably
     reconstruct that relationship in the new dock info and pane info arrays.
@@ -2905,7 +3397,7 @@ def CopyDocksAndPanes2(src_docks, src_panes):
 
 def GetMaxLayer(docks, dock_direction):
     """
-    GetMaxLayer() is an internal function which returns
+    This is an internal function which returns
     the highest layer inside the specified dock.
 
     :param `docks`: a list of L{AuiDockInfo};
@@ -2923,7 +3415,7 @@ def GetMaxLayer(docks, dock_direction):
 
 def GetMaxRow(panes, dock_direction, dock_layer):
     """
-    GetMaxRow() is an internal function which returns
+    This is an internal function which returns
     the highest layer inside the specified dock.
 
     :param `panes`: a list of L{AuiPaneInfo};
@@ -2943,7 +3435,7 @@ def GetMaxRow(panes, dock_direction, dock_layer):
 
 def DoInsertDockLayer(panes, dock_direction, dock_layer):
     """
-    DoInsertDockLayer() is an internal function that inserts a new dock
+    This is an internal function that inserts a new dock
     layer by incrementing all existing dock layer values by one.
     
     :param `panes`: a list of L{AuiPaneInfo};
@@ -2963,7 +3455,7 @@ def DoInsertDockLayer(panes, dock_direction, dock_layer):
 
 def DoInsertDockRow(panes, dock_direction, dock_layer, dock_row):
     """
-    DoInsertDockRow() is an internal function that inserts a new dock
+    This is an internal function that inserts a new dock
     row by incrementing all existing dock row values by one.
     
     :param `panes`: a list of L{AuiPaneInfo};
@@ -2982,7 +3474,7 @@ def DoInsertDockRow(panes, dock_direction, dock_layer, dock_row):
     
 def DoInsertPane(panes, dock_direction, dock_layer, dock_row, dock_pos):
     """
-    DoInsertPane() is an internal function that inserts a new pane
+    This is an internal function that inserts a new pane
     by incrementing all existing dock position values by one.
     
     :param `panes`: a list of L{AuiPaneInfo};
@@ -3006,7 +3498,7 @@ def DoInsertPane(panes, dock_direction, dock_layer, dock_row, dock_pos):
 
 def FindDocks(docks, dock_direction, dock_layer=-1, dock_row=-1, reverse=False):
     """
-    FindDocks() is an internal function that returns a list of docks which meet
+    This is an internal function that returns a list of docks which meet
     the specified conditions in the parameters and returns a sorted array
     (sorted by layer and then row).
     
@@ -3025,9 +3517,10 @@ def FindDocks(docks, dock_direction, dock_layer=-1, dock_row=-1, reverse=False):
     
     return arr
 
+
 def FindOppositeDocks(docks, dock_direction):
     """
-    FindOppositeDocks() is an internal function that returns a list of docks
+    This is an internal function that returns a list of docks
     which is related to the opposite direction.
 
     :param `docks`: a list of L{AuiDockInfo};
@@ -3048,11 +3541,11 @@ def FindOppositeDocks(docks, dock_direction):
 
 def FindPaneInDock(dock, window):
     """
-    FindPaneInDock() looks up a specified window pointer inside a dock.
-    If found, the corresponding L{AuiPaneInfo} pointer is returned, otherwise None.
+    This method looks up a specified window pointer inside a dock.
+    If found, the corresponding L{AuiPaneInfo} pointer is returned, otherwise ``None``.
 
     :param `dock`: a L{AuiDockInfo} structure;
-    :param `window`: a L{wx.Window} derived window (associated to a pane).
+    :param `window`: a `wx.Window` derived window (associated to a pane).
     """
 
     for p in dock.panes:
@@ -3096,7 +3589,7 @@ def GetInternalFrameRect(window, docks):
     """
     Returns the window rectangle excluding toolbars.
 
-    :param `window`: a L{wx.Window} derived window;
+    :param `window`: a `wx.Window` derived window;
     :param `docks`: a list of L{AuiDockInfo} structures.
     """
 
@@ -3120,8 +3613,8 @@ def CheckOutOfWindow(window, pt):
     """
     Checks if a point is outside the window rectangle.
     
-    :param `window`: a L{wx.Window} derived window;
-    :param `pt`: a L{wx.Point} object.
+    :param `window`: a `wx.Window` derived window;
+    :param `pt`: a `wx.Point` object.
     """
 
     auiWindowMargin = 30
@@ -3135,9 +3628,9 @@ def CheckEdgeDrop(window, docks, pt):
     """
     Checks on which edge of a window the drop action has taken place.
 
-    :param `window`: a L{wx.Window} derived window;
+    :param `window`: a `wx.Window` derived window;
     :param `docks`: a list of L{AuiDockInfo} structures;
-    :param `pt`: a L{wx.Point} object.
+    :param `pt`: a `wx.Point` object.
     """
 
     screenPt = window.ClientToScreen(pt)
@@ -3165,7 +3658,7 @@ def CheckEdgeDrop(window, docks, pt):
 
 def RemovePaneFromDocks(docks, pane, exc=None):
     """
-    RemovePaneFromDocks() removes a pane window from all docks
+    Removes a pane window from all docks
     with a possible exception specified by parameter `exc`.
 
     :param `docks`: a list of L{AuiDockInfo} structures;
@@ -3188,7 +3681,7 @@ def RemovePaneFromDocks(docks, pane, exc=None):
 
 def RenumberDockRows(docks):
     """
-    RenumberDockRows() takes a dock and assigns sequential numbers
+    Takes a dock and assigns sequential numbers
     to existing rows.  Basically it takes out the gaps so if a
     dock has rows with numbers 0, 2, 5, they will become 0, 1, 2.
 
@@ -3285,11 +3778,11 @@ def GetNotebookRoot(panes, notebook_id):
 
 def EscapeDelimiters(s):
     """
-    EscapeDelimiters() changes "" into "\" and "|" into "\|"
-    in the input string.  This is an internal functions which is
-    used for saving perspectives.
+    Changes "" into "\" and "|" into "\|" in the input string.  
 
-    :param `s`: the string to be analyzed.    
+    :param `s`: the string to be analyzed.
+
+    :note: This is an internal functions which is used for saving perspectives.    
     """
     
     result = s.replace(";", "\\")
@@ -3319,7 +3812,10 @@ def AuiManager_HasLiveResize(manager):
     Static function which returns if the input `manager` should have "live resize"
     behaviour.
 
-    :param `manager`: an instance of L{AuiManager}.    
+    :param `manager`: an instance of L{AuiManager}.
+
+    :note: Thie method always returns ``True`` on wxMac as this platform doesn't have
+     the ability to use `wx.ScreenDC` to draw sashes.
     """
 
     # With Core Graphics on Mac, it's not possible to show sash feedback,
@@ -3329,6 +3825,27 @@ def AuiManager_HasLiveResize(manager):
         return True
     else:
         return (manager.GetFlags() & AUI_MGR_LIVE_RESIZE) == AUI_MGR_LIVE_RESIZE
+
+
+# Convenience function
+def AuiManager_UseNativeMiniframes(manager):
+    """
+    Static function which returns if the input `manager` should use native `wx.MiniFrame` as
+    floating panes.
+
+    :param `manager`: an instance of L{AuiManager}.
+
+    :note: Thie method always returns ``True`` on wxMac as this platform doesn't have
+     the ability to use custom drawn miniframes.
+    """
+
+    # With Core Graphics on Mac, it's not possible to show sash feedback,
+    # so we'll always use live update instead.
+    
+    if wx.Platform == "__WXMAC__":
+        return True
+    else:
+        return (manager.GetFlags() & AUI_MGR_USE_NATIVE_MINIFRAMES) == AUI_MGR_USE_NATIVE_MINIFRAMES
 
 
 def GetManager(window):
@@ -3342,9 +3859,14 @@ def GetManager(window):
      the window hierarchy underneath the managed window.
     """
     
+    if not isinstance(wx.GetTopLevelParent(window), AuiFloatingFrame):
+        if isinstance(window, auibar.AuiToolBar):
+            return window.GetAuiManager()
+    
     evt = AuiManagerEvent(wxEVT_AUI_FIND_MANAGER)
     evt.SetManager(None)
     evt.ResumePropagation(wx.EVENT_PROPAGATE_MAX)
+
     if not window.GetEventHandler().ProcessEvent(evt):
         return None
 
@@ -3355,89 +3877,97 @@ def GetManager(window):
 
 class AuiManager(wx.EvtHandler):
     """
-    AuiManager manages the panes associated with it for a particular L{wx.Frame},
+    AuiManager manages the panes associated with it for a particular `wx.Frame`,
     using a pane's L{AuiPaneInfo} information to determine each pane's docking and
-    floating behavior. AuiManager uses wxPython's sizer mechanism to plan the
+    floating behavior. L{AuiManager} uses wxPython's sizer mechanism to plan the
     layout of each frame. It uses a replaceable dock art class to do all drawing,
     so all drawing is localized in one area, and may be customized depending on an
     applications' specific needs.
 
-    AuiManager works as follows: the programmer adds panes to the class, or makes
-    changes to existing pane properties (dock position, floating state, show state, etc.).
-    To apply these changes, AuiManager's L{Update()} function is called. This batch
+    L{AuiManager} works as follows: the programmer adds panes to the class, or makes
+    changes to existing pane properties (dock position, floating state, show state, etc...).
+    To apply these changes, the L{AuiManager.Update} function is called. This batch
     processing can be used to avoid flicker, by modifying more than one pane at a time,
-    and then "committing" all of the changes at once by calling Update().
+    and then "committing" all of the changes at once by calling `Update()`.
 
     Panes can be added quite easily::
 
-      text1 = wx.TextCtrl(self, -1)
-      text2 = wx.TextCtrl(self, -1)
-      self._mgr.AddPane(text1, AuiPaneInfo().Left().Caption("Pane Number One"))
-      self._mgr.AddPane(text2, AuiPaneInfo().Bottom().Caption("Pane Number Two"))
+        text1 = wx.TextCtrl(self, -1)
+        text2 = wx.TextCtrl(self, -1)
+        self._mgr.AddPane(text1, AuiPaneInfo().Left().Caption("Pane Number One"))
+        self._mgr.AddPane(text2, AuiPaneInfo().Bottom().Caption("Pane Number Two"))
 
-      self._mgr.Update()
+        self._mgr.Update()
+
 
     Later on, the positions can be modified easily. The following will float an
     existing pane in a tool window::
 
-      self._mgr.GetPane(text1).Float()
+        self._mgr.GetPane(text1).Float()
 
 
-    Layers, Rows and Directions, Positions:
+    **Layers, Rows and Directions, Positions:**
     
     Inside AUI, the docking layout is figured out by checking several pane parameters.
     Four of these are important for determining where a pane will end up.
 
-    Direction - Each docked pane has a direction, Top, Bottom, Left, Right, or Center.
+    **Direction** - Each docked pane has a direction, `Top`, `Bottom`, `Left`, `Right`, or `Center`.
     This is fairly self-explanatory. The pane will be placed in the location specified
     by this variable.
 
-    Position - More than one pane can be placed inside of a "dock." Imagine to panes
+    **Position** - More than one pane can be placed inside of a "dock". Imagine two panes
     being docked on the left side of a window. One pane can be placed over another.
     In proportionally managed docks, the pane position indicates it's sequential position,
     starting with zero. So, in our scenario with two panes docked on the left side, the
     top pane in the dock would have position 0, and the second one would occupy position 1. 
 
-    Row - A row can allow for two docks to be placed next to each other. One of the most
+    **Row** - A row can allow for two docks to be placed next to each other. One of the most
     common places for this to happen is in the toolbar. Multiple toolbar rows are allowed,
     the first row being in row 0, and the second in row 1. Rows can also be used on
     vertically docked panes. 
 
-    Layer - A layer is akin to an onion. Layer 0 is the very center of the managed pane.
+    **Layer** - A layer is akin to an onion. Layer 0 is the very center of the managed pane.
     Thus, if a pane is in layer 0, it will be closest to the center window (also sometimes
     known as the "content window"). Increasing layers "swallow up" all layers of a lower
     value. This can look very similar to multiple rows, but is different because all panes
     in a lower level yield to panes in higher levels. The best way to understand layers
-    is by running the AUI sample (AUIDemo.py).
+    is by running the AUI sample (`AUI.py`).
     """
 
     def __init__(self, managed_window=None, flags=None):
         """
         Default class constructor.
         
-        :param `managed_window`: specifies the window which should be managed.
+        :param `managed_window`: specifies the window which should be managed;
         :param `flags`: specifies options which allow the frame management behavior to be
          modified. `flags` can be a combination of the following style bits:
 
-        ==================================== ==================================
-        Flag name                            Description
-        ==================================== ==================================
-        ``AUI_MGR_ALLOW_FLOATING``           Allow floating of panes
-        ``AUI_MGR_ALLOW_ACTIVE_PANE``        If a pane becomes active, "highlight" it in the interface
-        ``AUI_MGR_TRANSPARENT_DRAG``         If the platform supports it, set transparency on a floating pane while it is dragged by the user
-        ``AUI_MGR_TRANSPARENT_HINT``         If the platform supports it, show a transparent hint window when the user is about to dock a floating pane
-        ``AUI_MGR_VENETIAN_BLINDS_HINT``     Show a "venetian blind" effect when the user is about to dock a floating pane
-        ``AUI_MGR_RECTANGLE_HINT``           Show a rectangle hint effect when the user is about to dock a floating pane
-        ``AUI_MGR_HINT_FADE``                If the platform supports it, the hint window will fade in and out
-        ``AUI_MGR_NO_VENETIAN_BLINDS_FADE``  Disables the "venetian blind" fade in and out
-        ``AUI_MGR_LIVE_RESIZE``              Live resize when the user drag a sash
-        ==================================== ==================================
+         ==================================== ==================================
+         Flag name                            Description
+         ==================================== ==================================
+         ``AUI_MGR_ALLOW_FLOATING``           Allow floating of panes
+         ``AUI_MGR_ALLOW_ACTIVE_PANE``        If a pane becomes active, "highlight" it in the interface
+         ``AUI_MGR_TRANSPARENT_DRAG``         If the platform supports it, set transparency on a floating pane while it is dragged by the user
+         ``AUI_MGR_TRANSPARENT_HINT``         If the platform supports it, show a transparent hint window when the user is about to dock a floating pane
+         ``AUI_MGR_VENETIAN_BLINDS_HINT``     Show a "venetian blind" effect when the user is about to dock a floating pane
+         ``AUI_MGR_RECTANGLE_HINT``           Show a rectangle hint effect when the user is about to dock a floating pane
+         ``AUI_MGR_HINT_FADE``                If the platform supports it, the hint window will fade in and out
+         ``AUI_MGR_NO_VENETIAN_BLINDS_FADE``  Disables the "venetian blind" fade in and out
+         ``AUI_MGR_LIVE_RESIZE``              Live resize when the user drag a sash
+         ``AUI_MGR_ANIMATE_FRAMES``           Fade-out floating panes when they are closed (all platforms which support frames transparency) and show a moving rectangle when they are docked (Windows < Vista and GTK only)
+         ``AUI_MGR_AERO_DOCKING_GUIDES``      Use the new Aero-style bitmaps as docking guides
+         ``AUI_MGR_PREVIEW_MINIMIZED_PANES``  Slide in and out minimized panes to preview them
+         ``AUI_MGR_WHIDBEY_DOCKING_GUIDES``   Use the new Whidbey-style bitmaps as docking guides
+         ``AUI_MGR_SMOOTH_DOCKING``           Performs a "smooth" docking of panes (a la PyQT)
+         ``AUI_MGR_USE_NATIVE_MINIFRAMES``    Use miniframes with native caption bar as floating panes instead or custom drawn caption bars (forced on wxMac)
+         ==================================== ==================================
 
-        Default value for `flags` is:
-        ``AUI_MGR_DEFAULT`` = ``AUI_MGR_ALLOW_FLOATING`` |
-                              ``AUI_MGR_TRANSPARENT_HINT`` | 
-                              ``AUI_MGR_HINT_FADE`` | 
-                              ``AUI_MGR_NO_VENETIAN_BLINDS_FADE``
+         Default value for `flags` is:
+         ``AUI_MGR_DEFAULT`` = ``AUI_MGR_ALLOW_FLOATING`` | ``AUI_MGR_TRANSPARENT_HINT`` | ``AUI_MGR_HINT_FADE`` | ``AUI_MGR_NO_VENETIAN_BLINDS_FADE``
+
+         :note: If using the ``AUI_MGR_USE_NATIVE_MINIFRAMES``, double-clicking on a
+          floating pane caption will not re-dock the pane, but simply maximize it (if
+          L{AuiPaneInfo.MaximizeButton} has been set to ``True``) or do nothing.
         """
 
         wx.EvtHandler.__init__(self)
@@ -3485,6 +4015,11 @@ class AuiManager(wx.EvtHandler):
             self._animation_step = 30.0
         else:
             self._animation_step = 5.0
+
+        self._hint_rect = wx.Rect()
+
+        self._preview_timer = wx.Timer(self, wx.ID_ANY)
+        self._sliding_frame = None
         
         if managed_window:
             self.SetManagedWindow(managed_window)
@@ -3501,6 +4036,8 @@ class AuiManager(wx.EvtHandler):
         self.Bind(wx.EVT_CHILD_FOCUS, self.OnChildFocus)
         self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, self.OnCaptureLost)
         self.Bind(wx.EVT_TIMER, self.OnHintFadeTimer, self._hint_fadetimer)
+        self.Bind(wx.EVT_TIMER, self.SlideIn, self._preview_timer)
+
         self.Bind(wx.EVT_MOVE, self.OnMove)
         self.Bind(wx.EVT_SYS_COLOUR_CHANGED, self.OnSysColourChanged)
         
@@ -3518,7 +4055,7 @@ class AuiManager(wx.EvtHandler):
         """
         Creates a floating frame for the windows.
 
-        :param `parent`: the floating frame parent
+        :param `parent`: the floating frame parent;
         :param `pane_info`: the L{AuiPaneInfo} class with all the pane's information.
         """
 
@@ -3543,10 +4080,12 @@ class AuiManager(wx.EvtHandler):
 
     def GetPaneByWidget(self, window):
         """
-        This version of L{GetPane()} looks up a pane based on a
-        'pane window', see below comment for more info.
+        This version of L{GetPane} looks up a pane based on a
+        'pane window'.
 
-        :param `window`: a L{wx.Window} derived window.        
+        :param `window`: a `wx.Window` derived window.
+
+        :see: L{GetPane}
         """
 
         for p in self._panes:
@@ -3558,10 +4097,12 @@ class AuiManager(wx.EvtHandler):
 
     def GetPaneByName(self, name):
         """
-        This version of L{GetPane()} looks up a pane based on a
-        'pane name', see below comment for more info.
+        This version of L{GetPane} looks up a pane based on a
+        'pane name'.
 
         :param `name`: the pane name.
+
+        :see: L{GetPane}        
         """
         
         for p in self._panes:
@@ -3573,19 +4114,16 @@ class AuiManager(wx.EvtHandler):
 
     def GetPane(self, item):
         """
-        GetPane() looks up a L{AuiPaneInfo} structure based
-        on the supplied window pointer. Upon failure, GetPane()
+        Looks up a L{AuiPaneInfo} structure based
+        on the supplied window pointer. Upon failure, L{GetPane}
         returns an empty L{AuiPaneInfo}, a condition which can be checked
-        by calling L{AuiPaneInfo.IsOk()}.
+        by calling L{AuiPaneInfo.IsOk}.
 
         The pane info's structure may then be modified. Once a pane's
-        info is modified, L{AuiManager.Update()} must be called to
+        info is modified, L{AuiManager.Update} must be called to
         realize the changes in the UI.
 
-        :param `item`: either a pane name or a L{wx.Window}.
-        
-        @note: AG: added to handle 2 different versions of GetPane() for
-        wxPython.
+        :param `item`: either a pane name or a `wx.Window`.        
         """
 
         if isinstance(item, basestring):
@@ -3604,8 +4142,8 @@ class AuiManager(wx.EvtHandler):
         """
         Shows or hides a pane based on the window passed as input.
 
-        :param `window`: a L{wx.Window} derived window;
-        :param `show`: True to show the pane, False otherwise.
+        :param `window`: a `wx.Window` derived window;
+        :param `show`: ``True`` to show the pane, ``False`` otherwise.
         """
 
         p = self.GetPane(window)
@@ -3631,10 +4169,11 @@ class AuiManager(wx.EvtHandler):
             
     def HitTest(self, x, y):
         """
-        HitTest() is an internal function which determines
+        This is an internal function which determines
         which UI item the specified coordinates are over.
         
-        :param `(x, y)`: specify a position in client coordinates.
+        :param `x`: specifies a x position in client coordinates;
+        :param `y`: specifies a y position in client coordinates.
         """
 
         result = None
@@ -3666,7 +4205,7 @@ class AuiManager(wx.EvtHandler):
         input point belongs to.
 
         :param `panes`: a list of L{AuiPaneInfo} instances;
-        :param `pt`: a L{wx.Point} object.
+        :param `pt`: a `wx.Point` object.
         """
 
         for paneInfo in panes:
@@ -3681,24 +4220,34 @@ class AuiManager(wx.EvtHandler):
 
     def SetFlags(self, flags):
         """
-        This method is used to specify AuiManager's settings flags.
+        This method is used to specify L{AuiManager}'s settings flags.
 
         :param `flags`: specifies options which allow the frame management behavior
          to be modified. `flags` can be one of the following style bits:
 
-        ==================================== ==================================
-        Flag name                            Description
-        ==================================== ==================================
-        ``AUI_MGR_ALLOW_FLOATING``           Allow floating of panes
-        ``AUI_MGR_ALLOW_ACTIVE_PANE``        If a pane becomes active, "highlight" it in the interface
-        ``AUI_MGR_TRANSPARENT_DRAG``         If the platform supports it, set transparency on a floating pane while it is dragged by the user
-        ``AUI_MGR_TRANSPARENT_HINT``         If the platform supports it, show a transparent hint window when the user is about to dock a floating pane
-        ``AUI_MGR_VENETIAN_BLINDS_HINT``     Show a "venetian blind" effect when the user is about to dock a floating pane
-        ``AUI_MGR_RECTANGLE_HINT``           Show a rectangle hint effect when the user is about to dock a floating pane
-        ``AUI_MGR_HINT_FADE``                If the platform supports it, the hint window will fade in and out
-        ``AUI_MGR_NO_VENETIAN_BLINDS_FADE``  Disables the "venetian blind" fade in and out
-        ``AUI_MGR_LIVE_RESIZE``              Live resize when the user drag a sash
-        ==================================== ==================================
+         ==================================== ==================================
+         Flag name                            Description
+         ==================================== ==================================
+         ``AUI_MGR_ALLOW_FLOATING``           Allow floating of panes
+         ``AUI_MGR_ALLOW_ACTIVE_PANE``        If a pane becomes active, "highlight" it in the interface
+         ``AUI_MGR_TRANSPARENT_DRAG``         If the platform supports it, set transparency on a floating pane while it is dragged by the user
+         ``AUI_MGR_TRANSPARENT_HINT``         If the platform supports it, show a transparent hint window when the user is about to dock a floating pane
+         ``AUI_MGR_VENETIAN_BLINDS_HINT``     Show a "venetian blind" effect when the user is about to dock a floating pane
+         ``AUI_MGR_RECTANGLE_HINT``           Show a rectangle hint effect when the user is about to dock a floating pane
+         ``AUI_MGR_HINT_FADE``                If the platform supports it, the hint window will fade in and out
+         ``AUI_MGR_NO_VENETIAN_BLINDS_FADE``  Disables the "venetian blind" fade in and out
+         ``AUI_MGR_LIVE_RESIZE``              Live resize when the user drag a sash
+         ``AUI_MGR_ANIMATE_FRAMES``           Fade-out floating panes when they are closed (all platforms which support frames transparency) and show a moving rectangle when they are docked (Windows < Vista and GTK only)
+         ``AUI_MGR_AERO_DOCKING_GUIDES``      Use the new Aero-style bitmaps as docking guides
+         ``AUI_MGR_PREVIEW_MINIMIZED_PANES``  Slide in and out minimized panes to preview them
+         ``AUI_MGR_WHIDBEY_DOCKING_GUIDES``   Use the new Whidbey-style bitmaps as docking guides        
+         ``AUI_MGR_SMOOTH_DOCKING``           Performs a "smooth" docking of panes (a la PyQT)
+         ``AUI_MGR_USE_NATIVE_MINIFRAMES``    Use miniframes with native caption bar as floating panes instead or custom drawn caption bars (forced on wxMac)
+         ==================================== ==================================
+
+         :note: If using the ``AUI_MGR_USE_NATIVE_MINIFRAMES``, double-clicking on a
+          floating pane caption will not re-dock the pane, but simply maximize it (if
+          L{AuiPaneInfo.MaximizeButton} has been set to ``True``) or do nothing.
         
         """
         
@@ -3712,7 +4261,11 @@ class AuiManager(wx.EvtHandler):
 
 
     def GetFlags(self):
-        """ Returns the current manager's flags. """
+        """
+        Returns the current manager's flags.
+
+        :see: L{SetFlags} for a list of possible L{AuiManager} flags.
+        """
         
         return self._flags
         
@@ -3724,7 +4277,7 @@ class AuiManager(wx.EvtHandler):
         controls are also allowed.
 
         :param `managed_window`: specifies the window which should be managed by
-         the frame manager.
+         the AUI manager.
         """
 
         if not managed_window:
@@ -3766,39 +4319,30 @@ class AuiManager(wx.EvtHandler):
 
 
     def SetFrame(self, managed_window):
-        """ Deprecated, use L{SetManagedWindow} instead. """
+        """
+        Called to specify the frame or window which is to be managed by L{AuiManager}.
+        Frame management is not restricted to just frames. Child windows or custom
+        controls are also allowed.
+
+        :param `managed_window`: specifies the window which should be managed by
+         the AUI manager.
+
+        :warning: This method is now deprecated, use L{SetManagedWindow} instead.
+        """
 
         DeprecationWarning("This method is deprecated, use SetManagedWindow instead.")
         return self.SetManagedWindow(managed_window)
     
         
     def GetFrame(self):
-        """ Deprecated, use L{GetManagedWindow} instead. """
+        """
+        Returns the window being managed by L{AuiManager}.
+
+        :warning: This method is now deprecated, use L{GetManagedWindow} instead.
+        """
 
         DeprecationWarning("This method is deprecated, use GetManagedWindow instead.")        
         return self._frame
-
-
-    def GetManager(self, window):
-        """
-        This function will return the aui manager for a given window.
-        
-        :param `window`: this parameter should be any child window or grand-child
-         window (and so on) of the frame/window managed by L{AuiManager}. The window
-         does not need to be managed by the manager itself, nor does it even need
-         to be a child or sub-child of a managed window. It must however be inside
-         the window hierarchy underneath the managed window.
-        """
-        
-        evt = AuiManagerEvent(wxEVT_AUI_FIND_MANAGER)
-        evt.SetManager(None)
-        evt.ResumePropagation(wx.EVENT_PROPAGATE_MAX)
-        if not window.GetEventHandler().ProcessEvent(evt):
-            return None
-
-        return evt.GetManager()
-
-    GetManager = staticmethod(GetManager)
 
 
     def CreateGuideWindows(self):
@@ -3849,7 +4393,7 @@ class AuiManager(wx.EvtHandler):
     def UnInit(self):
         """
         Uninitializes the framework and should be called before a managed frame or
-        window is destroyed. UnInit() is usually called in the managed wx.Frame's
+        window is destroyed. L{UnInit} is usually called in the managed `wx.Frame`/`wx.Window`
         destructor.
 
         It is necessary to call this function before the managed frame or window is
@@ -3884,7 +4428,7 @@ class AuiManager(wx.EvtHandler):
 
     def FireEvent(self, evtType, pane, canVeto=False):
         """
-        Fires one of the wxEVT_AUI_PANE_FLOATED/FLOATING/DOCKING/DOCKED event. 
+        Fires one of the ``EVT_AUI_PANE_FLOATED``/``FLOATING``/``DOCKING``/``DOCKED`` event. 
 
         :param `evtType`: one of the aforementioned events;
         :param `pane`: the `AuiPaneInfo` instance;
@@ -3901,8 +4445,8 @@ class AuiManager(wx.EvtHandler):
     
     def CanUseModernDockArt(self):
         """
-        Returns whether L{dockart.ModernDockArt} can be used (Windows XP only,
-        requires Mark Hammonds's pywin32 package).
+        Returns whether L{ModernDockArt} can be used (Windows XP/Vista/7 only,
+        requires Mark Hammonds's `pywin32` package).
         """
 
         if not _winxptheme:
@@ -3920,13 +4464,13 @@ class AuiManager(wx.EvtHandler):
     
     def SetArtProvider(self, art_provider):
         """
-        Instructs AuiManager to use art provider specified by the parameter
+        Instructs L{AuiManager} to use art provider specified by the parameter
         `art_provider` for all drawing calls. This allows plugable look-and-feel
         features.
 
-        The previous art provider object, if any, will be deleted by L{AuiManager}.
+        :param `art_provider`: a AUI dock art provider.
 
-        :param `art_provider`: a AUI dock art provider.        
+        :note: The previous art provider object, if any, will be deleted by L{AuiManager}.
         """
 
         # delete the last art provider, if any
@@ -3944,20 +4488,20 @@ class AuiManager(wx.EvtHandler):
     def AddPane(self, window, arg1=None, arg2=None, target=None):
         """
         Tells the frame manager to start managing a child window. There
-        are three versions of this function. The first verison allows the full spectrum
-        of pane parameter possibilities (AddPane1). The second version is used for
-        simpler user interfaces which do not require as much configuration (AddPane2).
-        The last version allows a drop position to be specified, which will determine
-        where the pane will be added.
+        are four versions of this function. The first verison allows the full spectrum
+        of pane parameter possibilities (L{AddPane1}). The second version is used for
+        simpler user interfaces which do not require as much configuration (L{AddPane2}).
+        The L{AddPane3} version allows a drop position to be specified, which will determine
+        where the pane will be added. The L{AddPane4} version allows to turn the target
+        L{AuiPaneInfo} pane into a notebook and the added pane into a page.
 
-        In wxPython, simply call AddPane.
+        In wxPython, simply call L{AddPane}.
 
         :param `window`: the child window to manage;
         :param `arg1`: a L{AuiPaneInfo} or an integer value (direction);
-        :param `arg2`: a L{AuiPaneInfo} or a L{wx.Point} (drop position).
-        9/8/2009:
+        :param `arg2`: a L{AuiPaneInfo} or a `wx.Point` (drop position);
         :param `target`: a L{AuiPaneInfo} to be turned into a notebook
-                         and new pane added to it as a page
+         and new pane added to it as a page.
          """
  
         if target in self._panes:
@@ -4067,6 +4611,8 @@ class AuiManager(wx.EvtHandler):
                     pinfo.best_size.y = pinfo.min_size.y
 
         self._panes[-1] = pinfo
+        if isinstance(window, auibar.AuiToolBar):
+            window.SetAuiManager(self)
 
         return True
 
@@ -4107,10 +4653,7 @@ class AuiManager(wx.EvtHandler):
 
 
     def AddPane4(self, window, pane_info, target):
-        """
-        See comments on L{AddPane}.
-        Added 09/08/2009 for adding pane into automatic notebook.
-        """
+        """ See comments on L{AddPane}. """
         
         if not self.AddPane(window, pane_info):
             return False
@@ -4147,13 +4690,14 @@ class AuiManager(wx.EvtHandler):
 
     def InsertPane(self, window, pane_info, insert_level=AUI_INSERT_PANE):
         """
-        InsertPane() is used to insert either a previously unmanaged pane window
+        This method is used to insert either a previously unmanaged pane window
         into the frame manager, or to insert a currently managed pane somewhere else.
-        InsertPane() will push all panes, rows, or docks aside and insert the window
-        into the position specified by `pane_info`. Because `pane_info` can
-        specify either a pane, dock row, or dock layer, the `insert_level` parameter is
-        used to disambiguate this. The parameter insert_level can take a value of
-        ``AUI_INSERT_PANE``, ``AUI_INSERT_ROW`` or ``AUI_INSERT_DOCK``.
+        L{InsertPane} will push all panes, rows, or docks aside and insert the window
+        into the position specified by `pane_info`.
+
+        Because `pane_info` can specify either a pane, dock row, or dock layer, the
+        `insert_level` parameter is used to disambiguate this. The parameter `insert_level`
+        can take a value of ``AUI_INSERT_PANE``, ``AUI_INSERT_ROW`` or ``AUI_INSERT_DOCK``.
 
         :param `window`: the window to be inserted and managed;
         :param `pane_info`: the insert location for the new window;
@@ -4210,11 +4754,11 @@ class AuiManager(wx.EvtHandler):
     
     def DetachPane(self, window):
         """
-        DetachPane() tells the L{AuiManager} to stop managing the pane specified
+        Tells the L{AuiManager} to stop managing the pane specified
         by `window`. The window, if in a floated frame, is reparented to the frame
-        managed by AuiManager.
+        managed by L{AuiManager}.
 
-        :param `window`: the window to be un-managed by the AuiManager.      
+        :param `window`: the window to be un-managed.
         """
         
         for p in self._panes:
@@ -4263,7 +4807,7 @@ class AuiManager(wx.EvtHandler):
 
     def ClosePane(self, pane_info):
         """
-        ClosePane() destroys or hides the pane depending on its flags.
+        Destroys or hides the pane depending on its flags.
 
         :param `pane_info`: a L{AuiPaneInfo} instance.
         """
@@ -4322,7 +4866,7 @@ class AuiManager(wx.EvtHandler):
 
     def MaximizePane(self, pane_info):
         """
-        MaximizePane() maximizes the input pane.
+        Maximizes the input pane.
 
         :param `pane_info`: a L{AuiPaneInfo} instance.
         """
@@ -4353,8 +4897,7 @@ class AuiManager(wx.EvtHandler):
 
     def RestorePane(self, pane_info):
         """
-        RestorePane() restores the input pane from a previous maximized or
-        minimized state.
+        Restores the input pane from a previous maximized or minimized state.
 
         :param `pane_info`: a L{AuiPaneInfo} instance.
         """
@@ -4390,7 +4933,7 @@ class AuiManager(wx.EvtHandler):
         """
         Activates the pane to which `window` is associated.
 
-        :param `window`: a L{wx.Window} derived window.
+        :param `window`: a `wx.Window` derived window.
         """
 
         if self.GetFlags() & AUI_MGR_ALLOW_ACTIVE_PANE:
@@ -4406,7 +4949,7 @@ class AuiManager(wx.EvtHandler):
 
     def CreateNotebook(self):
         """
-        Creates an automatic L{auibook.AuiNotebook} when a pane is docked on
+        Creates an automatic L{AuiNotebook} when a pane is docked on
         top of another pane.
         """
 
@@ -4424,9 +4967,9 @@ class AuiManager(wx.EvtHandler):
 
     def SavePaneInfo(self, pane):
         """
-        SavePaneInfo() is similar to L{SavePerspective}, with the exception
+        This method is similar to L{AuiManager.SavePerspective}, with the exception
         that it only saves information about a single pane. It is used in
-        combination with L{LoadPaneInfo()}.
+        combination with L{LoadPaneInfo}.
 
         :param `pane`: a L{AuiPaneInfo} instance to save.        
         """
@@ -4458,9 +5001,9 @@ class AuiManager(wx.EvtHandler):
 
     def LoadPaneInfo(self, pane_part, pane):
         """
-        LoadPaneInfo() is similar to to L{LoadPerspective}, with the exception that
+        This method is similar to to L{AuiManager.LoadPerspective}, with the exception that
         it only loads information about a single pane. It is used in combination
-        with L{SavePaneInfo()}.
+        with L{SavePaneInfo}.
 
         :param `pane_part`: the string to analyze;
         :param `pane`: the L{AuiPaneInfo} structure in which to load `pane_part`.
@@ -4540,9 +5083,10 @@ class AuiManager(wx.EvtHandler):
     def SavePerspective(self):
         """
         Saves the entire user interface layout into an encoded string, which can then
-        be stored by the application (probably using wx.Config). When a perspective
-        is restored using L{LoadPerspective()}, the entire user interface will return
-        to the state it was when the perspective was saved.
+        be stored by the application (probably using `wx.Config`).
+
+        When a perspective is restored using L{LoadPerspective}, the entire user
+        interface will return to the state it was when the perspective was saved.
         """
 
         result = "layout2|"
@@ -4560,12 +5104,13 @@ class AuiManager(wx.EvtHandler):
 
     def LoadPerspective(self, layout, update=True):
         """
-        LoadPerspective() loads a layout which was saved with L{SavePerspective()}
-        If the `update` flag parameter is True, L{AuiManager.Update()} will be
+        Loads a layout which was saved with L{SavePerspective}.
+        
+        If the `update` flag parameter is ``True``, L{AuiManager.Update} will be
         automatically invoked, thus realizing the saved perspective on screen.
 
         :param `layout`: a string which contains a saved AUI layout;
-        :param `update`: whether to update immediately the GUI or not.
+        :param `update`: whether to update immediately the window or not.
         """
 
         input = layout
@@ -4699,6 +5244,9 @@ class AuiManager(wx.EvtHandler):
             if dock.IsHorizontal():
                 if pane.HasGripper() and not pane.HasGripperTop():
                     size += gripper_size
+
+                if pane.HasCaptionLeft():
+                    size += caption_size
                     
                 size += pane.best_size.x
                  
@@ -4706,7 +5254,7 @@ class AuiManager(wx.EvtHandler):
                 if pane.HasGripper() and pane.HasGripperTop():
                     size += gripper_size
 
-                if pane.HasCaption():
+                if pane.HasCaption() and not pane.HasCaptionLeft():
                     size += caption_size
                     
                 size += pane.best_size.y
@@ -4747,7 +5295,7 @@ class AuiManager(wx.EvtHandler):
         """
         Adds a pane into the existing layout (in an existing dock).
 
-        :param `cont`: a L{wx.Sizer} object;
+        :param `cont`: a `wx.Sizer` object;
         :param `dock`: the L{AuiDockInfo} structure in which to add the pane;
         :param `pane`: the L{AuiPaneInfo} instance to add to the dock;
         :param `uiparts`: a list of UI parts in the interface;
@@ -4796,13 +5344,52 @@ class AuiManager(wx.EvtHandler):
         button_width_total = button_count*pane_button_size
         if button_count >= 1:
             button_width_total += 3
-        
-        if pane.HasCaption():
-        
+
+        caption, captionLeft = pane.HasCaption(), pane.HasCaptionLeft()
+        button_count = len(pane.buttons)
+
+        if captionLeft:
+            caption_sizer = wx.BoxSizer(wx.VERTICAL)
+
+            # add pane buttons to the caption
+            dummy_parts = []
+            for btn_id in xrange(len(pane.buttons)-1, -1, -1):
+                sizer_item = caption_sizer.Add((caption_size, pane_button_size), 0, wx.EXPAND)
+                part = AuiDockUIPart()
+                part.type = AuiDockUIPart.typePaneButton
+                part.dock = dock
+                part.pane = pane
+                part.button = pane.buttons[btn_id]
+                part.orientation = orientation
+                part.cont_sizer = caption_sizer
+                part.sizer_item = sizer_item
+                dummy_parts.append(part)
+            
+            sizer_item = caption_sizer.Add((caption_size, 1), 1, wx.EXPAND)
+            vert_pane_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
             # create the caption sizer
             part = AuiDockUIPart()
+
+            part.type = AuiDockUIPart.typeCaption
+            part.dock = dock
+            part.pane = pane
+            part.button = None
+            part.orientation = orientation
+            part.cont_sizer = vert_pane_sizer
+            part.sizer_item = sizer_item
+            caption_part_idx = len(uiparts)
+            uiparts.append(part)
+            uiparts.extend(dummy_parts)
+
+        elif caption:
+
             caption_sizer = wx.BoxSizer(wx.HORIZONTAL)
             sizer_item = caption_sizer.Add((1, caption_size), 1, wx.EXPAND)
+
+            # create the caption sizer
+            part = AuiDockUIPart()
+
             part.type = AuiDockUIPart.typeCaption
             part.dock = dock
             part.pane = pane
@@ -4813,10 +5400,9 @@ class AuiManager(wx.EvtHandler):
             caption_part_idx = len(uiparts)
             uiparts.append(part)
 
-            button_count = len(pane.buttons)
             # add pane buttons to the caption
             for button in pane.buttons:
-                sizer_item = caption_sizer.Add((pane_button_size, caption_size), 0, wx.EXPAND)
+                sizer_item = caption_sizer.Add((pane_button_size, caption_size), 0, wx.EXPAND)                        
                 part = AuiDockUIPart()
                 part.type = AuiDockUIPart.typePaneButton
                 part.dock = dock
@@ -4827,15 +5413,19 @@ class AuiManager(wx.EvtHandler):
                 part.sizer_item = sizer_item
                 uiparts.append(part)
 
+        if caption or captionLeft:
             # if we have buttons, add a little space to the right
             # of them to ease visual crowding
             if button_count >= 1:
-                caption_sizer.Add((3, caption_size), 0, wx.EXPAND)
-        
+                if captionLeft:
+                    caption_sizer.Add((caption_size, 3), 0, wx.EXPAND)
+                else:
+                    caption_sizer.Add((3, caption_size), 0, wx.EXPAND)
+
             # add the caption sizer
             sizer_item = vert_pane_sizer.Add(caption_sizer, 0, wx.EXPAND)
             uiparts[caption_part_idx].sizer_item = sizer_item
-                
+                    
         # add the pane window itself
         if spacer_only or not pane.window:
             sizer_item = vert_pane_sizer.Add((1, 1), 1, wx.EXPAND)
@@ -4866,8 +5456,8 @@ class AuiManager(wx.EvtHandler):
         if min_size != wx.Size(-1, -1):
             vert_pane_sizer.SetItemMinSize(len(vert_pane_sizer.GetChildren())-1, (min_size.x, min_size.y))
         
-        # add the verticle sizer (caption, pane window) to the
-        # horizontal sizer (gripper, verticle sizer)
+        # add the vertical/horizontal sizer (caption, pane window) to the
+        # horizontal sizer (gripper, vertical sizer)
         horz_pane_sizer.Add(vert_pane_sizer, 1, wx.EXPAND)
 
         # finally, add the pane sizer to the dock sizer
@@ -4894,7 +5484,7 @@ class AuiManager(wx.EvtHandler):
         """
         Adds a dock into the existing layout.
 
-        :param `cont`: a L{wx.Sizer} object;
+        :param `cont`: a `wx.Sizer` object;
         :param `dock`: the L{AuiDockInfo} structure to add to the layout;
         :param `uiparts`: a list of UI parts in the interface;
         :param `spacer_only`: whether to add a simple spacer or a real window.
@@ -5180,14 +5770,22 @@ class AuiManager(wx.EvtHandler):
                 # but only if at least one pane inside the dock has a caption
                 if dock.IsHorizontal():
                     for pane in dock.panes:
-                        if pane.HasCaption():
+                        if pane.HasCaption() and not pane.HasCaptionLeft():
                             size = size + caption_size
                             break
-
+                else:
+                    for pane in dock.panes:
+                        if pane.HasCaptionLeft() and not pane.HasCaption():
+                            size = size + caption_size
+                            break
+                    
                 # new dock's size may not be more than the dock constraint
                 # parameter specifies.  See SetDockSizeConstraint()
                 max_dock_x_size = int(self._dock_constraint_x*float(cli_size.x))
                 max_dock_y_size = int(self._dock_constraint_y*float(cli_size.y))
+                if cli_size <= wx.Size(20, 20):
+                    max_dock_x_size = 10000
+                    max_dock_y_size = 10000
 
                 if dock.IsHorizontal():
                     size = min(size, max_dock_y_size)
@@ -5203,6 +5801,7 @@ class AuiManager(wx.EvtHandler):
             # determine the dock's minimum size
             plus_border = False
             plus_caption = False
+            plus_caption_left = False
             dock_min_size = 0
             for pane in dock.panes:
                 if pane.min_size != wx.Size(-1, -1):
@@ -5210,6 +5809,8 @@ class AuiManager(wx.EvtHandler):
                         plus_border = True
                     if pane.HasCaption():
                         plus_caption = True
+                    if pane.HasCaptionLeft():
+                        plus_caption_left = True
                     if dock.IsHorizontal():
                         if pane.min_size.y > dock_min_size:
                             dock_min_size = pane.min_size.y
@@ -5220,6 +5821,8 @@ class AuiManager(wx.EvtHandler):
             if plus_border:
                 dock_min_size += pane_border_size*2
             if plus_caption and dock.IsHorizontal():
+                dock_min_size += caption_size
+            if plus_caption_left and dock.IsVertical():
                 dock_min_size += caption_size
                
             dock.min_size = dock_min_size
@@ -5399,8 +6002,8 @@ class AuiManager(wx.EvtHandler):
         size. For horizontal docks, this would be 1/3 of the window height. For vertical
         docks, 1/3 of the width. Calling this function will adjust this constraint value.
 
-        The numbers must be between 0.0 and 1.0. For instance, calling SetDockSizeContraint
-        with 0.5, 0.5 will cause new docks to be limited to half of the size of the entire
+        The numbers must be between 0.0 and 1.0. For instance, calling L{SetDockSizeConstraint}
+        with (0.5, 0.5) will cause new docks to be limited to half of the size of the entire
         managed window.
 
         :param `width_pct`: a float number representing the x dock size constraint;
@@ -5412,9 +6015,10 @@ class AuiManager(wx.EvtHandler):
 
 
     def GetDockSizeConstraint(self):
-        """ Returns the current dock constraint values.
+        """
+        Returns the current dock constraint values.
 
-        See L{SetDockSizeConstraint} for more information.
+        :see: L{SetDockSizeConstraint}
         """
 
         return self._dock_constraint_x, self._dock_constraint_y
@@ -5423,18 +6027,18 @@ class AuiManager(wx.EvtHandler):
     def Update(self):
         """
         This method is called after any number of changes are made to any of the
-        managed panes. Update() must be invoked after L{AddPane} or L{InsertPane} are
+        managed panes. L{Update} must be invoked after L{AddPane} or L{InsertPane} are
         called in order to "realize" or "commit" the changes.
 
         In addition, any number of changes may be made to L{AuiPaneInfo} structures
-        (retrieved with L{AuiManager.GetPane}), but to realize the changes, Update()
+        (retrieved with L{GetPane}), but to realize the changes, L{Update}
         must be called. This construction allows pane flicker to be avoided by updating
         the whole layout at one time.
         """
 
         self._hover_button = None
         self._action_part = None
-    
+        
         # destroy floating panes which have been
         # redocked or are becoming non-floating
         for p in self._panes:
@@ -5453,7 +6057,7 @@ class AuiManager(wx.EvtHandler):
             # a pane, we need to cancel that action here to prevent
             # a spurious crash.
             if self._action_window == p.frame:
-                if wx.Window.GetCapture() == self._frame:
+                if self._frame.HasCapture():
                     self._frame.ReleaseMouse()
                 self._action = actionNone
                 self._action_window = None
@@ -5467,6 +6071,9 @@ class AuiManager(wx.EvtHandler):
         
             # reparent to self._frame and destroy the pane
             p.window.Reparent(self._frame)
+            if isinstance(p.window, auibar.AuiToolBar):
+                p.window.SetAuiManager(self)
+
             p.frame.SetSizer(None)
             p.frame.Destroy()
             p.frame = None
@@ -5561,10 +6168,8 @@ class AuiManager(wx.EvtHandler):
         old_pane_rects = []
         pane_count = len(self._panes)
         
-        for ii in xrange(pane_count):
+        for p in self._panes:
             r = wx.Rect()
-            p = self._panes[ii]
-
             if p.window and p.IsShown() and p.IsDocked():
                 r = p.rect
 
@@ -5586,11 +6191,11 @@ class AuiManager(wx.EvtHandler):
                     p.window.Refresh()
                     p.window.Update()
 
-        self._frame.Refresh()
+        self.Repaint()
     
 
     def UpdateNotebook(self):
-        """ Updates the automatic L{auibook.AuiNotebook} in the layout (if any). """
+        """ Updates the automatic L{AuiNotebook} in the layout (if any exists). """
 
         # Workout how many notebooks we need.
         max_notebook = -1
@@ -5870,7 +6475,7 @@ class AuiManager(wx.EvtHandler):
         frameRect = GetInternalFrameRect(self._frame, self._docks)
         mousePos = wx.GetMousePosition()
 
-        for guide in self._guides:
+        for indx, guide in enumerate(self._guides):
         
             pt = wx.Point()
             guide_size = guide.host.GetSize()
@@ -5901,12 +6506,16 @@ class AuiManager(wx.EvtHandler):
                 pt.y = rc.y + rc.height / 2
                 if paneInfo.HasCaption():
                     pt.y -= captionSize / 2
+                elif paneInfo.HasCaptionLeft():
+                    pt.x -= captionSize / 2
 
             # guide will be centered around point 'pt'
             targetPosition = wx.Point(pt.x - guide_size.x / 2, pt.y - guide_size.y / 2)
 
             if guide.host.GetPosition() != targetPosition:
                 guide.host.Move(targetPosition)
+                
+            guide.host.AeroMove(targetPosition)
 
             if guide.dock_direction == AUI_DOCK_CENTER:
                 guide.host.ValidateNotebookDocking(paneInfo.IsNotebookDockable())
@@ -5918,10 +6527,12 @@ class AuiManager(wx.EvtHandler):
                         
     def DoFrameLayout(self):
         """
-        DoFrameLayout() is an internal function which invokes L{wx.Sizer.Layout}
+        This is an internal function which invokes `wx.Sizer.Layout`
         on the frame's main sizer, then measures all the various UI items
-        and updates their internal rectangles.  This should always be called
-        instead of calling self._managed_window.Layout() directly.
+        and updates their internal rectangles.
+
+        :note: This should always be called instead of calling
+         `self._managed_window.Layout()` directly.
         """
 
         self._frame.Layout()
@@ -5961,7 +6572,7 @@ class AuiManager(wx.EvtHandler):
 
     def GetPanePart(self, wnd):
         """
-        GetPanePart() looks up the pane border UI part of the
+        Looks up the pane border UI part of the
         pane specified. This allows the caller to get the exact rectangle
         of the pane in question, including decorations like caption and border.
 
@@ -5983,11 +6594,13 @@ class AuiManager(wx.EvtHandler):
 
     def GetDockPixelOffset(self, test):
         """
-        GetDockPixelOffset() is an internal function which returns
+        This is an internal function which returns
         a dock's offset in pixels from the left side of the window
         (for horizontal docks) or from the top of the window (for
-        vertical docks).  This value is necessary for calculating
-        fixed-pane/toolbar offsets when they are dragged.
+        vertical docks).
+
+        This value is necessary for calculating fixed-pane/toolbar offsets
+        when they are dragged.
 
         :param `test`: a fake L{AuiPaneInfo} for testing purposes.
         """
@@ -6022,6 +6635,7 @@ class AuiManager(wx.EvtHandler):
                     return dock.rect.x
             
         return 0
+    
 
     def GetLastKnownDock(self, dock):
         """
@@ -6034,13 +6648,12 @@ class AuiManager(wx.EvtHandler):
 
         
         if dock.IsOk():
-            dockstr = "dock_%d%d%d"%(dock.dock_direction,dock.dock_layer,dock.dock_row)
-            
-            if dockstr in self._lastknowndocks:
-                
+            dockstr = "dock_%d%d%d"%(dock.dock_direction, dock.dock_layer, dock.dock_row)            
+            if dockstr in self._lastknowndocks:                
                 return self._lastknowndocks[dockstr]
 
         return None
+
         
     def UpdateLastKnownDock(self, dock):
         """
@@ -6049,10 +6662,9 @@ class AuiManager(wx.EvtHandler):
         :param `dock`: a L{AuiDockInfo} instance.
         """
 
-
         self._lastknowndocks["dock_%d%d%d"%(dock.dock_direction,
-                                                   dock.dock_layer,
-                                                   dock.dock_row)] = dock
+                                            dock.dock_layer,
+                                            dock.dock_row)] = dock
 
 
     def GetPartnerDock(self, dock):
@@ -6382,9 +6994,9 @@ class AuiManager(wx.EvtHandler):
 
     def PaneFromTabEvent(self, event):
         """
-        Returns a L{AuiPaneInfo} from a L{auibook.AuiNotebookEvent} event.
+        Returns a L{AuiPaneInfo} from a L{AuiNotebookEvent} event.
 
-        :param `event`: a L{auibook.AuiNotebookEvent} event.
+        :param `event`: a L{AuiNotebookEvent} event.
         """
 
         obj = event.GetEventObject()
@@ -6413,9 +7025,9 @@ class AuiManager(wx.EvtHandler):
 
     def OnTabBeginDrag(self, event):
         """
-        Handles the L{auibook.EVT_AUINOTEBOOK_BEGIN_DRAG} event.
+        Handles the ``EVT_AUINOTEBOOK_BEGIN_DRAG`` event.
 
-        :param `event`: a L{auibook.EVT_AUINOTEBOOK_BEGIN_DRAG} event.
+        :param `event`: a L{AuiNotebookEvent} event to be processed.
         """
 
         if self._masterManager:
@@ -6433,11 +7045,14 @@ class AuiManager(wx.EvtHandler):
                 # set initial float position - may have to think about this
                 # offset a bit more later ...
                 self._action_offset = wx.Point(20, 10)
+                self._toolbar_action_offset = wx.Point(20, 10)
+                
                 paneInfo.floating_pos = mouse - self._action_offset
                 paneInfo.dock_pos = AUI_DOCK_NONE
                 paneInfo.notebook_id = -1
 
                 tab = event.GetEventObject()
+
                 if tab.HasCapture():
                     tab.ReleaseMouse()
 
@@ -6448,7 +7063,7 @@ class AuiManager(wx.EvtHandler):
                 self.Update()
 
                 self._action_window = paneInfo.window
-
+                    
                 self._frame.CaptureMouse()
                 event.SetDispatched(True)
             
@@ -6460,9 +7075,9 @@ class AuiManager(wx.EvtHandler):
 
     def OnTabPageClose(self, event):
         """
-        Handles the L{auibook.EVT_AUINOTEBOOK_PAGE_CLOSE} event.
+        Handles the ``EVT_AUINOTEBOOK_PAGE_CLOSE`` event.
 
-        :param `event`: a L{auibook.EVT_AUINOTEBOOK_PAGE_CLOSE} event.
+        :param `event`: a L{AuiNotebookEvent} event to be processed.
         """
 
         if self._masterManager:
@@ -6494,9 +7109,9 @@ class AuiManager(wx.EvtHandler):
 
     def OnTabSelected(self, event):
         """
-        Handles the L{auibook.EVT_AUINOTEBOOK_PAGE_CHANGED} event.
+        Handles the ``EVT_AUINOTEBOOK_PAGE_CHANGED`` event.
 
-        :param `event`: a L{auibook.EVT_AUINOTEBOOK_PAGE_CHANGED} event.
+        :param `event`: a L{AuiNotebookEvent} event to be processed.
         """
         
         if self._masterManager:
@@ -6522,7 +7137,7 @@ class AuiManager(wx.EvtHandler):
 
 
     def GetNotebooks(self):
-        """ Returns all the automatic L{auibook.AuiNotebook} in the L{AuiManager}. """
+        """ Returns all the automatic L{AuiNotebook} in the L{AuiManager}. """
 
         if self._masterManager:
             return self._masterManager.GetNotebooks()
@@ -6532,7 +7147,7 @@ class AuiManager(wx.EvtHandler):
 
     def SetMasterManager(self, manager):
         """
-        Sets the master manager for an automatic L{auibook.AuiNotebook}.
+        Sets the master manager for an automatic L{AuiNotebook}.
 
         :param `manager`: an instance of L{AuiManager}.
         """
@@ -6542,9 +7157,9 @@ class AuiManager(wx.EvtHandler):
         
     def ProcessDockResult(self, target, new_pos):
         """
-        ProcessDockResult() is a utility function used by DoDrop() - it checks
+        This is a utility function used by L{DoDrop} - it checks
         if a dock operation is allowed, the new dock position is copied into
-        the target info.  If the operation was allowed, the function returns True.
+        the target info. If the operation was allowed, the function returns ``True``.
 
         :param `target`: the L{AuiPaneInfo} instance to be docked;
         :param `new_pos`: the new docking position if the docking operation is allowed.
@@ -6576,7 +7191,7 @@ class AuiManager(wx.EvtHandler):
         Switches the toolbar orientation from vertical to horizontal and vice-versa.
         This is especially useful for vertical docked toolbars once they float.
 
-        :param `pane`: an instance of L{AuiPaneInfo}, which may have a L{auibar.AuiToolBar}
+        :param `pane`: an instance of L{AuiPaneInfo}, which may have a L{AuiToolBar}
          window associated with it.
         """
 
@@ -6614,7 +7229,7 @@ class AuiManager(wx.EvtHandler):
 
     def DoDrop(self, docks, panes, target, pt, offset=wx.Point(0, 0)):
         """
-        DoDrop() is an important function. It basically takes a mouse position,
+        This is an important function. It basically takes a mouse position,
         and determines where the panes new position would be. If the pane is to be
         dropped, it performs the drop operation using the specified dock and pane
         arrays. By specifying copy dock and pane arrays when calling, a "what-if"
@@ -7263,9 +7878,9 @@ class AuiManager(wx.EvtHandler):
         """
         Draws a pane button in the caption (convenience function).
 
-        :param `dc`: a L{wx.DC} device context object;
+        :param `dc`: a `wx.DC` device context object;
         :param `part`: the UI part to analyze;
-        :param `pt`: a L{wx.Point} object, specifying the mouse location.
+        :param `pt`: a `wx.Point` object, specifying the mouse location.
         """
 
         if not self.IsPaneButtonVisible(part):
@@ -7307,7 +7922,7 @@ class AuiManager(wx.EvtHandler):
 
     def CalculateHintRect(self, pane_window, pt, offset):
         """
-        CalculateHintRect() calculates the drop hint rectangle.
+        Calculates the drop hint rectangle.
 
         The method first calls L{DoDrop} to determine the exact position the pane would
         be at were if dropped. If the pane would indeed become docked at the
@@ -7362,6 +7977,7 @@ class AuiManager(wx.EvtHandler):
         panes.append(hint)
 
         sizer, panes, docks, uiparts = self.LayoutAll(panes, docks, [], True, False)
+        
         client_size = self._frame.GetClientSize()
         sizer.SetDimension(0, 0, client_size.x, client_size.y)
         sizer.Layout()
@@ -7403,7 +8019,7 @@ class AuiManager(wx.EvtHandler):
 
     def DrawHintRect(self, pane_window, pt, offset):
         """
-        DrawHintRect() calculates the hint rectangle by calling
+        Calculates the hint rectangle by calling
         L{CalculateHintRect}. If there is a rectangle, it shows it
         by calling L{ShowHint}, otherwise it hides any hint
         rectangle currently shown.
@@ -7418,8 +8034,10 @@ class AuiManager(wx.EvtHandler):
 
         if rect.IsEmpty():
             self.HideHint()
+            self._hint_rect = wx.Rect()
         else:
             self.ShowHint(rect)
+            self._hint_rect = wx.Rect(*rect)
 
 
     def GetPartSizerRect(self, uiparts):
@@ -7495,8 +8113,8 @@ class AuiManager(wx.EvtHandler):
         """
         Handles the resizing of a floating pane.
 
-        :param `wnd` a L{wx.Window} derived window, managed by the pane;
-        :param `size`: a L{wx.Size} object, specifying the new pane floating size.
+        :param `wnd` a `wx.Window` derived window, managed by the pane;
+        :param `size`: a `wx.Size` object, specifying the new pane floating size.
         """
 
         # try to find the pane
@@ -7517,8 +8135,8 @@ class AuiManager(wx.EvtHandler):
         """
         Handles the close event of a floating pane.
 
-        :param `wnd` a L{wx.Window} derived window, managed by the pane;
-        :param `event`: a L{wx.CloseEvent} to be processed.
+        :param `wnd` a `wx.Window` derived window, managed by the pane;
+        :param `event`: a `wx.CloseEvent` to be processed.
         """
         
         # try to find the pane
@@ -7549,7 +8167,7 @@ class AuiManager(wx.EvtHandler):
         """
         Handles the activation event of a floating pane.
 
-        :param `wnd` a L{wx.Window} derived window, managed by the pane.
+        :param `wnd`: a `wx.Window` derived window, managed by the pane.
         """
         
         pane = self.GetPane(wnd)
@@ -7561,12 +8179,12 @@ class AuiManager(wx.EvtHandler):
             self.RefreshCaptions()
 
 
-    def OnFloatingPaneMoved(self, wnd, event):
+    def OnFloatingPaneMoved(self, wnd, eventOrPt):
         """
         Handles the move event of a floating pane.
 
-        :param `wnd` a L{wx.Window} derived window, managed by the pane;
-        :param `event`: a L{wx.MoveEvent} to be processed.
+        :param `wnd`: a `wx.Window` derived window, managed by the pane;
+        :param `event`: a `wx.MoveEvent` to be processed.
         """
         
         pane = self.GetPane(wnd)
@@ -7576,7 +8194,11 @@ class AuiManager(wx.EvtHandler):
         if not pane.IsSnappable():
             return
 
-        pane_pos = event.GetPosition()
+        if isinstance(eventOrPt, wx.Point):
+            pane_pos = wx.Point(*eventOrPt)
+        else:
+            pane_pos = eventOrPt.GetPosition()
+
         pane_size = pane.floating_size
 
         self.SnapPane(pane, pane_pos, pane_size, False)
@@ -7589,7 +8211,7 @@ class AuiManager(wx.EvtHandler):
         :param `pane`: a L{AuiPaneInfo} instance;
         :param `pane_pos`: the new pane floating position;
         :param `pane_size`: the new pane floating size;
-        :param `toSnap`: a bool variable to check if SnapPane was called from
+        :param `toSnap`: a bool variable to check if L{SnapPane} was called from
          a move event.
         """
 
@@ -7665,13 +8287,14 @@ class AuiManager(wx.EvtHandler):
         """
         Handles the mouse click on the pane gripper.
 
-        :param `pane_window`: a L{wx.Window} derived window, managed by the pane;
-        :param `start`: a L{wx.Point} object, specifying the clicking position;
+        :param `pane_window`: a `wx.Window` derived window, managed by the pane;
+        :param `start`: a `wx.Point` object, specifying the clicking position;
         :param `offset`: an offset point from the `start` position.
         """
 
         # try to find the pane
         paneInfo = self.GetPane(pane_window)
+
         if not paneInfo.IsOk():
             raise Exception("Pane window not found")
 
@@ -7685,6 +8308,8 @@ class AuiManager(wx.EvtHandler):
         self._action_window = pane_window
         self._action_start = start
         self._action_offset = offset
+        self._toolbar_action_offset = wx.Point(*self._action_offset)
+        
         self._frame.CaptureMouse()
 
         if paneInfo.IsDocked():
@@ -7700,6 +8325,7 @@ class AuiManager(wx.EvtHandler):
                 windowPt = paneInfo.frame.GetRect().GetTopLeft()
                 originPt = paneInfo.frame.ClientToScreen(wx.Point())
                 self._action_offset += originPt - windowPt
+                self._toolbar_action_offset = wx.Point(*self._action_offset)
 
                 if self._flags & AUI_MGR_TRANSPARENT_DRAG:
                     paneInfo.frame.SetTransparent(150)
@@ -7710,7 +8336,7 @@ class AuiManager(wx.EvtHandler):
 
     def OnRender(self, event):        
         """
-        OnRender() draws all of the pane captions, sashes,
+        Draws all of the pane captions, sashes,
         backgrounds, captions, grippers, pane borders and buttons.
         It renders the entire user interface.
 
@@ -7720,46 +8346,86 @@ class AuiManager(wx.EvtHandler):
         # if the frame is about to be deleted, don't bother
         if not self._frame or self._frame.IsBeingDeleted():
             return
+        
+        if not self._frame.GetSizer():
+            return
+
+        mouse = wx.GetMouseState()
+        mousePos = wx.Point(mouse.GetX(), mouse.GetY())
+        point = self._frame.ScreenToClient(mousePos)
+        art = self._art
 
         dc = event.GetDC()
-
-        if wx.Platform == "__WXMAC__":
-            dc.Clear()
-    
+        
         for part in self._uiparts:
-
-            # don't draw hidden pane items
-            if part.sizer_item and ((not part.sizer_item.IsWindow() and not part.sizer_item.IsSpacer() and \
-                                     not part.sizer_item.IsSizer()) or not part.sizer_item.IsShown()):
+        
+            # don't draw hidden pane items or items that aren't windows
+            if part.sizer_item and ((not part.sizer_item.IsWindow() and \
+                                     not part.sizer_item.IsSpacer() and \
+                                     not part.sizer_item.IsSizer()) or \
+                                    not part.sizer_item.IsShown()):
+            
                 continue
             
-            if part.type == AuiDockUIPart.typeDockSizer or \
-               part.type == AuiDockUIPart.typePaneSizer:
-                self._art.DrawSash(dc, self._frame, part.orientation, part.rect)
-            elif part.type == AuiDockUIPart.typeBackground:
-                self._art.DrawBackground(dc, self._frame, part.orientation, part.rect)
-            elif part.type == AuiDockUIPart.typeCaption:
-                self._art.DrawCaption(dc, self._frame, part.pane.caption, part.rect, part.pane)
-            elif part.type == AuiDockUIPart.typeGripper:
-                self._art.DrawGripper(dc, self._frame, part.rect, part.pane)
-            elif part.type == AuiDockUIPart.typePaneBorder:
-                self._art.DrawBorder(dc, self._frame, part.rect, part.pane)
-            elif part.type == AuiDockUIPart.typePaneButton:
-                self._art.DrawPaneButton(dc, self._frame, part.button.button_id,
-                                         AUI_BUTTON_STATE_NORMAL, part.rect, part.pane)
-                
+            ptype = part.type
+                    
+            if ptype in [AuiDockUIPart.typeDockSizer, AuiDockUIPart.typePaneSizer]:
+                art.DrawSash(dc, self._frame, part.orientation, part.rect)
 
+            elif ptype == AuiDockUIPart.typeBackground:
+                art.DrawBackground(dc, self._frame, part.orientation, part.rect)
+
+            elif ptype == AuiDockUIPart.typeCaption:
+                art.DrawCaption(dc, self._frame, part.pane.caption, part.rect, part.pane)
+
+            elif ptype == AuiDockUIPart.typeGripper:
+                art.DrawGripper(dc, self._frame, part.rect, part.pane)
+
+            elif ptype == AuiDockUIPart.typePaneBorder:
+                art.DrawBorder(dc, self._frame, part.rect, part.pane)
+
+            elif ptype == AuiDockUIPart.typePaneButton:                
+                self.DrawPaneButton(dc, part, point)
+
+
+    def Repaint(self, dc=None):
+        """
+        Repaints the entire frame decorations (sashes, borders, buttons and so on).
+        It renders the entire user interface.
+
+        :param `dc`: if not ``None``, an instance of `wx.PaintDC`.
+        """
+        
+        w, h = self._frame.GetClientSize()
+
+        # Figure out which dc to use; if one
+        # has been specified, use it, otherwise
+        # make a client dc
+        if dc is None:
+            client_dc = wx.ClientDC(self._frame)
+            dc = client_dc
+
+        # If the frame has a toolbar, the client area
+        # origin will not be (0, 0).
+        pt = self._frame.GetClientAreaOrigin()
+        if pt.x != 0 or pt.y != 0:
+            dc.SetDeviceOrigin(pt.x, pt.y)
+
+        # Render all the items
+        self.Render(dc)
+
+                
     def Render(self, dc):
         """
-        Render() fires a render event, which is normally handled by
-        L{AuiManager.OnRender}. This allows the render function to
+        Fires a render event, which is normally handled by
+        L{OnRender}. This allows the render function to
         be overridden via the render event.
 
         This can be useful for painting custom graphics in the main window.
         Default behavior can be invoked in the overridden function by calling
-        OnRender().
+        L{OnRender}.
 
-        :param `dc`: : a L{wx.DC} device context object.        
+        :param `dc`: a `wx.DC` device context object.        
         """
 
         e = AuiManagerEvent(wxEVT_AUI_RENDER)
@@ -7772,7 +8438,7 @@ class AuiManager(wx.EvtHandler):
         """
         Handles the mouse double click on the pane caption.
 
-        :param `pane_window`: a L{wx.Window} derived window, managed by the pane.
+        :param `pane_window`: a `wx.Window` derived window, managed by the pane.
         """
 
         # try to find the pane
@@ -7808,12 +8474,16 @@ class AuiManager(wx.EvtHandler):
                     paneInfo = self.SwitchToolBarOrientation(paneInfo)
 
                 e = self.FireEvent(wxEVT_AUI_PANE_DOCKED, paneInfo, canVeto=False)
-                    
+
         else:
 
             e = self.FireEvent(wxEVT_AUI_PANE_FLOATING, paneInfo, canVeto=True)
             if e.GetVeto():
                 return
+
+            # float the window
+            if paneInfo.IsMaximized():
+                self.RestorePane(paneInfo)
             
             if paneInfo.floating_pos == wx.Point(-1, -1):
                 captionSize = self._art.GetMetric(AUI_DOCKART_CAPTION_SIZE)
@@ -7834,77 +8504,34 @@ class AuiManager(wx.EvtHandler):
 
     def OnPaint(self, event):
         """
-        Handles the wx.EVT_PAINT event for L{AuiManager}.
+        Handles the ``wx.EVT_PAINT`` event for L{AuiManager}.
 
-        :param `event`: an instance of L{wx.PaintEvent} to be processed.
+        :param `event`: an instance of `wx.PaintEvent` to be processed.
         """
         
         dc = wx.PaintDC(self._frame)
-
-        # if the frame is about to be deleted, don't bother
-        if not self._frame or self._frame.IsBeingDeleted():
-            return
-        
-        if not self._frame.GetSizer():
-            return
-
-        mouse = wx.GetMouseState()
-        mousePos = wx.Point(mouse.GetX(), mouse.GetY())
-        point = self._frame.ScreenToClient(mousePos)
-        art = self._art
-        
-        if wx.Platform == "__WXMAC__":
-            dc.Clear()
-
-        for part in self._uiparts:
-        
-            # don't draw hidden pane items or items that aren't windows
-            if part.sizer_item and ((not part.sizer_item.IsWindow() and \
-                                     not part.sizer_item.IsSpacer() and \
-                                     not part.sizer_item.IsSizer()) or \
-                                    not part.sizer_item.IsShown()):
-            
-                continue
-            
-            ptype = part.type
-                    
-            if ptype in [AuiDockUIPart.typeDockSizer, AuiDockUIPart.typePaneSizer]:
-                art.DrawSash(dc, self._frame, part.orientation, part.rect)
-
-            elif ptype == AuiDockUIPart.typeBackground:
-                art.DrawBackground(dc, self._frame, part.orientation, part.rect)
-
-            elif ptype == AuiDockUIPart.typeCaption:
-                art.DrawCaption(dc, self._frame, part.pane.caption, part.rect, part.pane)
-
-            elif ptype == AuiDockUIPart.typeGripper:
-                art.DrawGripper(dc, self._frame, part.rect, part.pane)
-
-            elif ptype == AuiDockUIPart.typePaneBorder:
-                art.DrawBorder(dc, self._frame, part.rect, part.pane)
-
-            elif ptype == AuiDockUIPart.typePaneButton:                
-                self.DrawPaneButton(dc, part, point)
+        self.Repaint(dc)
                 
 
     def OnEraseBackground(self, event):
         """
-        Handles the wx.EVT_ERASE_BACKGROUND event for L{AuiManager}.
-        This is intentiobnally empty (excluding wxMAC) to reduce
-        flickering while drawing.
+        Handles the ``wx.EVT_ERASE_BACKGROUND`` event for L{AuiManager}.
 
-        :param `event`: L{wx.EraseEvent} to be processed.
+        :param `event`: `wx.EraseEvent` to be processed.
+
+        :note: This is intentionally empty (excluding wxMAC) to reduce
+         flickering while drawing.
         """
         
         if wx.Platform == "__WXMAC__":
-            event.Skip()        
+            event.Skip()
 
 
     def OnSize(self, event):
         """
-        Handles the wx.EVT_SIZE event for L{AuiManager}.
+        Handles the ``wx.EVT_SIZE`` event for L{AuiManager}.
 
-        :param `event`: a L{wx.SizeEvent} to be processed.
+        :param `event`: a `wx.SizeEvent` to be processed.
         """
         
         skipped = False
@@ -7916,7 +8543,8 @@ class AuiManager(wx.EvtHandler):
                 
             self.Update()
             
-            if isinstance(self._frame, wx.MDIParentFrame):
+            if isinstance(self._frame, wx.MDIParentFrame) or isinstance(self._frame, tabmdi.AuiMDIClientWindow) \
+               or isinstance(self._frame, tabmdi.AuiMDIParentFrame):
                 # for MDI parent frames, this event must not
                 # be "skipped".  In other words, the parent frame
                 # must not be allowed to resize the client window
@@ -7932,9 +8560,9 @@ class AuiManager(wx.EvtHandler):
 
     def OnFindManager(self, event):
         """
-        Handles the EVT_AUI_FIND_MANAGER event for L{AuiManager}.
+        Handles the ``EVT_AUI_FIND_MANAGER`` event for L{AuiManager}.
 
-        :param `event`: a EVT_AUI_FIND_MANAGER event to be processed.
+        :param `event`: a `EVT_AUI_FIND_MANAGER` event to be processed.
         """
         
         # Initialize to None
@@ -7953,9 +8581,9 @@ class AuiManager(wx.EvtHandler):
 
     def OnSetCursor(self, event):
         """
-        Handles the wx.EVT_SET_CURSOR event for L{AuiManager}.
+        Handles the ``wx.EVT_SET_CURSOR`` event for L{AuiManager}.
 
-        :param `event`: a L{wx.SetCursorEvent} to be processed.
+        :param `event`: a `wx.SetCursorEvent` to be processed.
         """
         
         # determine cursor
@@ -7984,7 +8612,7 @@ class AuiManager(wx.EvtHandler):
         Updates/redraws the UI part containing a pane button.
 
         :param `button_ui_part`: the UI part the button belongs to;
-        :param `event`: a L{wx.MouseEvent} to be processed.
+        :param `event`: a `wx.MouseEvent` to be processed.
         """
 
         hit_test = self.HitTest(*event.GetPosition())
@@ -8021,9 +8649,9 @@ class AuiManager(wx.EvtHandler):
 
     def OnLeftDown(self, event):
         """
-        Handles the wx.EVT_LEFT_DOWN event for L{AuiManager}.
+        Handles the ``wx.EVT_LEFT_DOWN`` event for L{AuiManager}.
 
-        :param `event`: a L{wx.MouseEvent} to be processed.
+        :param `event`: a `wx.MouseEvent` to be processed.
         """
         
         part = self.HitTest(*event.GetPosition())
@@ -8092,9 +8720,9 @@ class AuiManager(wx.EvtHandler):
 
     def OnLeftDClick(self, event):
         """
-        Handles the wx.EVT_LEFT_DCLICK event for L{AuiManager}.
+        Handles the ``wx.EVT_LEFT_DCLICK`` event for L{AuiManager}.
 
-        :param `event`: a L{wx.MouseEvent} to be processed.
+        :param `event`: a `wx.MouseEvent` to be processed.
         """
         
         part = self.HitTest(event.GetX(), event.GetY())
@@ -8124,7 +8752,7 @@ class AuiManager(wx.EvtHandler):
         """
         Ends a resize action, or for live update, resizes the sash.
 
-        :param `event`: a L{wx.MouseEvent} to be processed.
+        :param `event`: a `wx.MouseEvent` to be processed.
         """
 
         clientPt = event.GetPosition()
@@ -8239,9 +8867,9 @@ class AuiManager(wx.EvtHandler):
 
     def OnLeftUp(self, event):
         """
-        Handles the wx.EVT_LEFT_UP event for L{AuiManager}.
+        Handles the ``wx.EVT_LEFT_UP`` event for L{AuiManager}.
 
-        :param `event`: a L{wx.MouseEvent} to be processed.
+        :param `event`: a `wx.MouseEvent` to be processed.
         """
 
         if self._action == actionResize:
@@ -8259,7 +8887,7 @@ class AuiManager(wx.EvtHandler):
         else:
             event.Skip()        
 
-        if wx.Window.GetCapture() == self._frame:
+        if self._frame.HasCapture():
             self._frame.ReleaseMouse()
             
         self._action = actionNone
@@ -8267,9 +8895,9 @@ class AuiManager(wx.EvtHandler):
 
     def OnMotion(self, event):
         """
-        Handles the wx.EVT_MOTION event for L{AuiManager}.
+        Handles the ``wx.EVT_MOTION`` event for L{AuiManager}.
 
-        :param `event`: a L{wx.MouseEvent} to be processed.
+        :param `event`: a `wx.MouseEvent` to be processed.
         """
 
         if self._action == actionResize:
@@ -8290,9 +8918,9 @@ class AuiManager(wx.EvtHandler):
     
     def OnLeaveWindow(self, event):
         """
-        Handles the wx.EVT_LEAVE_WINDOW event for L{AuiManager}.
+        Handles the ``wx.EVT_LEAVE_WINDOW`` event for L{AuiManager}.
 
-        :param `event`: a L{wx.MouseEvent} to be processed.
+        :param `event`: a `wx.MouseEvent` to be processed.
         """
 
         if self._hover_button:
@@ -8302,9 +8930,9 @@ class AuiManager(wx.EvtHandler):
 
     def OnCaptureLost(self, event):
         """
-        Handles the wx.EVT_MOUSE_CAPTURE_LOST event for L{AuiManager}.
+        Handles the ``wx.EVT_MOUSE_CAPTURE_LOST`` event for L{AuiManager}.
 
-        :param `event`: a L{wx.MouseCaptureLostEvent} to be processed.
+        :param `event`: a `wx.MouseCaptureLostEvent` to be processed.
         """
         
         # cancel the operation in progress, if any
@@ -8315,9 +8943,9 @@ class AuiManager(wx.EvtHandler):
 
     def OnHintFadeTimer(self, event):
         """
-        Handles the wx.EVT_TIMER event for L{AuiManager}.
+        Handles the ``wx.EVT_TIMER`` event for L{AuiManager}.
 
-        :param `event`: a L{wx.TimerEvent} to be processed.
+        :param `event`: a `wx.TimerEvent` to be processed.
         """
 
         if not self._hint_window or self._hint_fadeamt >= self._hint_fademax:
@@ -8330,9 +8958,9 @@ class AuiManager(wx.EvtHandler):
 
     def OnMove(self, event):
         """
-        Handles the wx.EVT_MOVE event for L{AuiManager}.
+        Handles the ``wx.EVT_MOVE`` event for L{AuiManager}.
 
-        :param `event`: a L{wx.MoveEvent} to be processed.
+        :param `event`: a `wx.MoveEvent` to be processed.
         """
 
         if isinstance(self._frame, AuiFloatingFrame) and self._frame.IsShownOnScreen():
@@ -8352,9 +8980,9 @@ class AuiManager(wx.EvtHandler):
 
     def OnSysColourChanged(self, event):
         """
-        Handles the wx.EVT_SYS_COLOUR_CHANGED event for L{AuiManager}.
+        Handles the ``wx.EVT_SYS_COLOUR_CHANGED`` event for L{AuiManager}.
 
-        :param `event`: a L{wx.SysColourChangedEvent} to be processed.
+        :param `event`: a `wx.SysColourChangedEvent` to be processed.
         """
         
         # This event is probably triggered by a theme change 
@@ -8369,9 +8997,9 @@ class AuiManager(wx.EvtHandler):
 
     def OnChildFocus(self, event):
         """
-        Handles the wx.EVT_CHILD_FOCUS event for L{AuiManager}.
+        Handles the ``wx.EVT_CHILD_FOCUS`` event for L{AuiManager}.
 
-        :param `event`: a L{wx.ChildFocusEvent} to be processed.
+        :param `event`: a `wx.ChildFocusEvent` to be processed.
         """
 
         # when a child pane has it's focus set, we should change the 
@@ -8380,7 +9008,7 @@ class AuiManager(wx.EvtHandler):
 
         window = event.GetWindow()
         if isinstance(window, wx.Dialog):
-            # ignore EVT_CHILD_FOCUS events originating from dialogs not 
+            # Ignore EVT_CHILD_FOCUS events originating from dialogs not
             # managed by AUI
             rootManager = None
         elif isinstance(window.GetParent(), AuiFloatingFrame):
@@ -8398,7 +9026,7 @@ class AuiManager(wx.EvtHandler):
         """
         Sub-handler for the L{OnMotion} event.
 
-        :param `event`: a L{wx.MouseEvent} to be processed.
+        :param `event`: a `wx.MouseEvent` to be processed.
         """
         
         clientPt = event.GetPosition()
@@ -8450,6 +9078,11 @@ class AuiManager(wx.EvtHandler):
             # adjust action offset for window frame
             windowPt = self._action_pane.frame.GetRect().GetTopLeft()
             originPt = self._action_pane.frame.ClientToScreen(wx.Point())
+            self._toolbar_action_offset = originPt - windowPt
+            
+            if self._flags & AUI_MGR_USE_NATIVE_MINIFRAMES:
+                originPt = windowPt + wx.Point(3, 3)
+                
             self._action_offset += originPt - windowPt
 
             # action offset is used here to make it feel "natural" to the user
@@ -8474,7 +9107,7 @@ class AuiManager(wx.EvtHandler):
         """
         Sub-handler for the L{OnMotion} event.
 
-        :param `event`: a L{wx.MouseEvent} to be processed.
+        :param `event`: a `wx.MouseEvent` to be processed.
         """
 
         if AuiManager_HasLiveResize(self):
@@ -8482,8 +9115,10 @@ class AuiManager(wx.EvtHandler):
                 self._action_part = self._uiparts[self._currentDragItem]
             else:
                 self._currentDragItem = self._uiparts.index(self._action_part)
-                        
-            self._frame.ReleaseMouse()
+
+            if self._frame.HasCapture():
+                self._frame.ReleaseMouse()
+                
             self.DoEndResizeAction(event)
             self._frame.CaptureMouse()
             return
@@ -8529,13 +9164,15 @@ class AuiManager(wx.EvtHandler):
         """
         Sub-handler for the L{OnLeftUp} event.
 
-        :param `event`: a L{wx.MouseEvent} to be processed.
+        :param `event`: a `wx.MouseEvent` to be processed.
         """
         
         if self._currentDragItem != -1 and AuiManager_HasLiveResize(self):
             self._action_part = self._uiparts[self._currentDragItem]
 
-            self._frame.ReleaseMouse()
+            if self._frame.HasCapture():
+                self._frame.ReleaseMouse()
+                
             self.DoEndResizeAction(event)
             self._currentDragItem = -1
             return
@@ -8553,7 +9190,7 @@ class AuiManager(wx.EvtHandler):
         """
         Sub-handler for the L{OnLeftUp} event.
 
-        :param `event`: a L{wx.MouseEvent} to be processed.
+        :param `event`: a `wx.MouseEvent` to be processed.
         """
         
         self._hover_button = None
@@ -8573,6 +9210,11 @@ class AuiManager(wx.EvtHandler):
         
 
     def CheckPaneMove(self, pane):
+        """
+        Checks if a pane has moved by a visible amount.
+
+        :param `pane`: an instance of L{AuiPaneInfo}.
+        """
 
         win_rect = pane.frame.GetRect()
         win_rect.x, win_rect.y = pane.floating_pos
@@ -8595,15 +9237,22 @@ class AuiManager(wx.EvtHandler):
         return True        
         
 
-    def OnMotion_DragFloatingPane(self, event):
+    def OnMotion_DragFloatingPane(self, eventOrPt):
         """
         Sub-handler for the L{OnMotion} event.
 
-        :param `event`: a L{wx.MouseEvent} to be processed.
+        :param `event`: a `wx.MouseEvent` to be processed.
         """
+
+        isPoint = False
+        if isinstance(eventOrPt, wx.Point):
+            clientPt = self._frame.ScreenToClient(eventOrPt)
+            screenPt = wx.Point(*eventOrPt)
+            isPoint = True
+        else:
+            clientPt = eventOrPt.GetPosition()
+            screenPt = self._frame.ClientToScreen(clientPt)
         
-        clientPt = event.GetPosition()
-        screenPt = self._frame.ClientToScreen(clientPt)
         framePos = wx.Point()
         
         # try to find the pane
@@ -8624,7 +9273,10 @@ class AuiManager(wx.EvtHandler):
                 pane.frame.SetTransparent(254)
                         
             if not self._hint_window or not self._hint_window.IsShown():
-                pane.frame.Move(pane.floating_pos)
+                if (self._flags & AUI_MGR_USE_NATIVE_MINIFRAMES) == 0 or not isPoint:
+                    self._from_move = True
+                    pane.frame.Move(pane.floating_pos)
+                    self._from_move = False
 
             if self._flags & AUI_MGR_TRANSPARENT_DRAG:
                 pane.frame.SetTransparent(150)
@@ -8662,19 +9314,23 @@ class AuiManager(wx.EvtHandler):
                 self.UpdateDockingGuides(paneInfo)
                 ShowDockingGuides(self._guides, True)
                 break
-            
+
         self.DrawHintRect(pane.window, clientPt, action_offset)
 
 
-    def OnLeftUp_DragFloatingPane(self, event):
+    def OnLeftUp_DragFloatingPane(self, eventOrPt):
         """
         Sub-handler for the L{OnLeftUp} event.
 
-        :param `event`: a L{wx.MouseEvent} to be processed.
+        :param `event`: a `wx.MouseEvent` to be processed.
         """
-        
-        clientPt = event.GetPosition()
-        screenPt = self._frame.ClientToScreen(clientPt)
+
+        if isinstance(eventOrPt, wx.Point):
+            clientPt = self._frame.ScreenToClient(eventOrPt)
+            screenPt = wx.Point(*eventOrPt)
+        else:
+            clientPt = eventOrPt.GetPosition()
+            screenPt = self._frame.ClientToScreen(clientPt)
 
         # try to find the pane
         paneInfo = self.GetPane(self._action_window)
@@ -8702,7 +9358,10 @@ class AuiManager(wx.EvtHandler):
                         return
 
                     e = self.FireEvent(wxEVT_AUI_PANE_DOCKED, paneInfo, canVeto=False)
-                
+
+                    if self._flags & AUI_MGR_SMOOTH_DOCKING:
+                        self.SmoothDock(paneInfo)
+
                 self._panes[indx] = paneInfo
             
         # if the pane is still floating, update it's floating
@@ -8727,15 +9386,21 @@ class AuiManager(wx.EvtHandler):
         ShowDockingGuides(self._guides, False)
 
 
-    def OnMotion_DragToolbarPane(self, event):
+    def OnMotion_DragToolbarPane(self, eventOrPt):
         """
         Sub-handler for the L{OnMotion} event.
 
-        :param `event`: a L{wx.MouseEvent} to be processed.
+        :param `event`: a `wx.MouseEvent` to be processed.
         """
         
-        clientPt = event.GetPosition()
-        screenPt = self._frame.ClientToScreen(clientPt)
+        isPoint = False
+        if isinstance(eventOrPt, wx.Point):
+            clientPt = self._frame.ScreenToClient(eventOrPt)
+            screenPt = wx.Point(*eventOrPt)
+            isPoint = True
+        else:
+            clientPt = eventOrPt.GetPosition()
+            screenPt = self._frame.ClientToScreen(clientPt)
 
         pane = self.GetPane(self._action_window)
         if not pane.IsOk():
@@ -8744,6 +9409,7 @@ class AuiManager(wx.EvtHandler):
         pane.state |= AuiPaneInfo.actionPane
         indx = self._panes.index(pane)
 
+        ret = False
         # is the pane dockable?
         if self.CanDockPanel(pane):
             # do the drop calculation
@@ -8751,7 +9417,7 @@ class AuiManager(wx.EvtHandler):
         
         # update floating position
         if pane.IsFloating():
-            pane.floating_pos = screenPt - self._action_offset
+            pane.floating_pos = screenPt - self._toolbar_action_offset
 
         # move the pane window
         if pane.frame:
@@ -8759,27 +9425,30 @@ class AuiManager(wx.EvtHandler):
                 # return
                 # HACK: Terrible hack on wxMSW (!)
                 pane.frame.SetTransparent(254)
-                
-            pane.frame.Move(pane.floating_pos)
 
+            self._from_move = True
+            pane.frame.Move(pane.floating_pos)
+            self._from_move = False
+                
             if self._flags & AUI_MGR_TRANSPARENT_DRAG:
                 pane.frame.SetTransparent(150)
 
-        self._panes[indx] = pane        
-        self.Update()
+        self._panes[indx] = pane
+        if ret:
+            wx.CallAfter(self.Update)
 
         # when release the button out of the window.
         # TODO: a better fix is needed.
         if not wx.GetMouseState().LeftDown():
             self._action = actionNone
-            self.OnLeftUp_DragToolbarPane(event)
+            self.OnLeftUp_DragToolbarPane(eventOrPt)
 
 
     def OnMotion_Other(self, event):
         """
         Sub-handler for the L{OnMotion} event.
 
-        :param `event`: a L{wx.MouseEvent} to be processed.
+        :param `event`: a `wx.MouseEvent` to be processed.
         """
         
         part = self.HitTest(*event.GetPosition())
@@ -8804,15 +9473,21 @@ class AuiManager(wx.EvtHandler):
             self._hover_button = None
         
         
-    def OnLeftUp_DragToolbarPane(self, event):
+    def OnLeftUp_DragToolbarPane(self, eventOrPt):
         """
         Sub-handler for the L{OnLeftUp} event.
 
-        :param `event`: a L{wx.MouseEvent} to be processed.
+        :param `event`: a `wx.MouseEvent` to be processed.
         """
         
-        clientPt = event.GetPosition()
-        screenPt = self._frame.ClientToScreen(clientPt)
+        isPoint = False
+        if isinstance(eventOrPt, wx.Point):
+            clientPt = self._frame.ScreenToClient(eventOrPt)
+            screenPt = wx.Point(*eventOrPt)
+            isPoint = True
+        else:
+            clientPt = eventOrPt.GetPosition()
+            screenPt = self._frame.ClientToScreen(clientPt)
 
         # try to find the pane
         pane = self.GetPane(self._action_window)
@@ -8838,9 +9513,9 @@ class AuiManager(wx.EvtHandler):
 
     def OnPaneButton(self, event):
         """
-        Handles the EVT_AUI_PANE_BUTTON event for L{AuiManager}.
+        Handles the ``EVT_AUI_PANE_BUTTON`` event for L{AuiManager}.
 
-        :param `event`: a EVT_AUI_PANE_BUTTON to be processed.
+        :param `event`: a `EVT_AUI_PANE_BUTTON` to be processed.
         """
 
         if not event.pane:
@@ -8886,7 +9561,6 @@ class AuiManager(wx.EvtHandler):
 
             if not e.GetVeto():
                 self.MinimizePane(pane)
-                self.Update()
     
         elif event.button == AUI_BUTTON_MAXIMIZE_RESTORE and not pane.IsMaximized():
         
@@ -8929,9 +9603,9 @@ class AuiManager(wx.EvtHandler):
 
     def MinimizePane(self, paneInfo):
         """
-        Minimizes a pane in a newly and automatically created L{auibar.AuiToolBar}.
+        Minimizes a pane in a newly and automatically created L{AuiToolBar}.
 
-        Clicking on the minimize button causes a new L{auibar.AuiToolBar} to be created
+        Clicking on the minimize button causes a new L{AuiToolBar} to be created
         and added to the frame manager, (currently the implementation is such that
         panes at West will have a toolbar at the right, panes at South will have
         toolbars at the bottom etc...) and the pane is hidden in the manager.
@@ -8998,6 +9672,7 @@ class AuiManager(wx.EvtHandler):
             win_rect = paneInfo.window.GetScreenRect()
             
             minimize_toolbar = auibar.AuiToolBar(self.GetManagedWindow(), style=tbStyle)
+            minimize_toolbar.Hide()
             minimize_toolbar.SetToolBitmapSize(wx.Size(16, 16))
 
             if paneInfo.icon and paneInfo.icon.IsOk():
@@ -9006,6 +9681,7 @@ class AuiManager(wx.EvtHandler):
                 restore_bitmap = self._art._restore_bitmap
                 
             minimize_toolbar.AddSimpleTool(ID_RESTORE_FRAME, paneInfo.caption, restore_bitmap, "Restore " + paneInfo.caption)
+            minimize_toolbar.SetAuiManager(self)
             minimize_toolbar.Realize()
             toolpanelname = paneInfo.name + "_min"
 
@@ -9046,6 +9722,7 @@ class AuiManager(wx.EvtHandler):
             if paneInfo.window and paneInfo.window.IsShown():
                 paneInfo.window.Show(False)
 
+            minimize_toolbar.Show()
             self.Update()
             if self._flags & AUI_MGR_ANIMATE_FRAMES:
                 self.AnimateDocking(win_rect, minimize_toolbar.GetScreenRect())
@@ -9053,9 +9730,9 @@ class AuiManager(wx.EvtHandler):
 
     def OnRestoreMinimizedPane(self, event):
         """
-        Handles the EVT_AUI_PANE_MIN_RESTORE event for L{AuiManager}.
+        Handles the ``EVT_AUI_PANE_MIN_RESTORE`` event for L{AuiManager}.
 
-        :param `event`: an instance of EVT_AUI_PANE_MIN_RESTORE to be processed.
+        :param `event`: an instance of L{AuiManagerEvent} to be processed.
         """
 
         self.RestoreMinimizedPane(event.pane)
@@ -9097,10 +9774,11 @@ class AuiManager(wx.EvtHandler):
 
     def AnimateDocking(self, win_rect, pane_rect):
         """
-        Animates the minimization/docking of a pane a la Eclipse.
+        Animates the minimization/docking of a pane a la Eclipse, using a `wx.ScreenDC`
+        to draw a "moving docking rectangle" on the screen.
 
         :param `win_rect`: the original pane screen rectangle;
-        :pane `pane_rect`: the newly created toolbar/pane screen rectangle.
+        :param `pane_rect`: the newly created toolbar/pane screen rectangle.
         """
 
         if wx.Platform == "__WXMAC__":
@@ -9135,6 +9813,44 @@ class AuiManager(wx.EvtHandler):
             dc.DrawRoundedRectangleRect(new_rect, 3)
             
 
+    def SmoothDock(self, paneInfo):
+        """
+        This method implements a smooth docking effect for floating panes, similar to
+        what the PyQT library does with its floating windows.
+
+        :param `paneInfo`: an instance of L{AuiPaneInfo}.
+
+        :note: The smooth docking effect can only be used if you set the ``AUI_MGR_SMOOTH_DOCKING``
+         style to L{AuiManager}.
+        """
+
+        if paneInfo.IsToolbar():
+            return
+
+        if not paneInfo.frame or self._hint_rect.IsEmpty():
+            return
+
+        hint_rect = self._hint_rect
+        win_rect = paneInfo.frame.GetScreenRect()
+
+        xstart, ystart = win_rect.x, win_rect.y
+        xend, yend = hint_rect.x, hint_rect.y
+
+        step = self.GetAnimationStep()/3
+
+        wstep = int((win_rect.width - hint_rect.width)/step)
+        hstep = int((win_rect.height - hint_rect.height)/step)
+        xstep = int((win_rect.x - hint_rect.x))/step
+        ystep = int((win_rect.y - hint_rect.y))/step
+
+        for i in xrange(int(step)):
+            width, height = win_rect.width - i*wstep, win_rect.height - i*hstep
+            x, y = xstart - i*xstep, ystart - i*ystep
+            new_rect = wx.Rect(x, y, width, height)
+            paneInfo.frame.SetRect(new_rect)
+            wx.MilliSleep(10)            
+        
+            
     def SetSnapLimits(self, x, y):
         """
         Modifies the snap limits used when snapping the `managed_window` to the screen
@@ -9146,7 +9862,7 @@ class AuiManager(wx.EvtHandler):
         set these two variables. Default values are 15 pixels.
     
         :param `x`: the minimum horizontal distance below which the snap occurs;
-        :param `x`: the minimum vertical distance below which the snap occurs.
+        :param `y`: the minimum vertical distance below which the snap occurs.
         """
 
         self._snap_limits = (x, y)
@@ -9154,7 +9870,11 @@ class AuiManager(wx.EvtHandler):
 
 
     def Snap(self):
-        """ Snaps the main frame to specified position on the screen (see L{SnapToScreen}). """
+        """
+        Snaps the main frame to specified position on the screen.
+
+        :see: L{SnapToScreen}
+        """
         
         snap, hAlign, vAlign, monitor = self._is_docked
         if not snap:
@@ -9238,7 +9958,7 @@ class AuiManager(wx.EvtHandler):
         """
         Requests the user attention by intermittently highlighting the pane caption.
 
-        :param `pane_window`: a L{wx.Window} derived window, managed by the pane.
+        :param `pane_window`: a `wx.Window` derived window, managed by the pane.
         """
                 
         # try to find the pane
@@ -9261,4 +9981,105 @@ class AuiManager(wx.EvtHandler):
                 self._frame.RefreshRect(part.rect, True)
                 break
 
+
+    def StartPreviewTimer(self, toolbar):
+        """
+        Starts a timer for sliding in and out a minimized pane.
+
+        :param `toolbar`: the L{AuiToolBar} containing the minimized pane tool.
+        """
+
+        toolbar_pane = self.GetPane(toolbar)
+        toolbar_name = toolbar_pane.name
+        
+        pane_name = toolbar_name[0:-4]
+        
+        self._sliding_pane = self.GetPane(pane_name)
+        self._sliding_rect = toolbar.GetScreenRect()
+        self._sliding_direction = toolbar_pane.dock_direction
+        self._sliding_frame = None
+        
+        self._preview_timer.Start(1000, wx.TIMER_ONE_SHOT)
+
+
+    def StopPreviewTimer(self):
+        """ Stops a timer for sliding in and out a minimized pane. """
+
+        if self._preview_timer.IsRunning():
+            self._preview_timer.Stop()
+
+        self.SlideOut()
+        self._sliding_pane = None
+
+
+    def SlideIn(self, event):
+        """
+        Handles the ``wx.EVT_TIMER`` event for L{AuiManager}.
+
+        :param `event`: a `wx.TimerEvent` to be processed.
+
+        :note: This is used solely for sliding in and out minimized panes.
+        """
+
+        window = self._sliding_pane.window
+        self._sliding_frame = wx.MiniFrame(None, -1, title=_("Pane Preview"),
+                                           style=wx.FRAME_TOOL_WINDOW | wx.STAY_ON_TOP |
+                                           wx.FRAME_NO_TASKBAR | wx.CAPTION)
+        window.Reparent(self._sliding_frame)
+        self._sliding_frame.SetSize((0, 0))
+        window.Show()
+        self._sliding_frame.Show()
+        
+        size = window.GetBestSize()
+
+        startX, startY, stopX, stopY = GetSlidingPoints(self._sliding_rect, size, self._sliding_direction)
+        
+        step = stopX/10
+        window_size = 0
+        
+        for i in xrange(0, stopX, step):
+            window_size = i
+            self._sliding_frame.SetDimensions(startX, startY, window_size, stopY)
+            self._sliding_frame.Refresh()
+            self._sliding_frame.Update()
+            wx.MilliSleep(10)
+
+        self._sliding_frame.SetDimensions(startX, startY, stopX, stopY)
+        self._sliding_frame.Refresh()
+        self._sliding_frame.Update()
+        
+
+    def SlideOut(self):
+        """ Slides out a preview of a minimized pane. """
+
+        if not self._sliding_frame:
+            return
+
+        window = self._sliding_frame.GetChildren()[0]
+        size = window.GetBestSize()
+        
+        startX, startY, stopX, stopY = GetSlidingPoints(self._sliding_rect, size, self._sliding_direction)
+
+        step = stopX/10
+        window_size = 0
+        
+        for i in xrange(stopX, 0, -step):
+            window_size = i
+            self._sliding_frame.SetDimensions(startX, startY, window_size, stopY)
+            self._sliding_frame.Refresh()
+            self._sliding_frame.Update()
+            self._frame.RefreshRect(wx.Rect(startX+window_size, startY, step, stopY))
+            self._frame.Update()
+            wx.MilliSleep(10)
+
+        self._sliding_frame.SetDimensions(startX, startY, 0, stopY)
+
+        window.Hide()
+        window.Reparent(self._frame)
+
+        self._sliding_frame.Hide()
+        self._sliding_frame.Destroy()
+        self._sliding_frame = None
+        self._sliding_pane = None
+        
         
