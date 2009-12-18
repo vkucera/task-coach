@@ -1,12 +1,12 @@
 """
-SwitcherDialog
-==============
+Description
+===========
 
 The idea of `SwitcherDialog` is to make it easier to implement keyboard
 navigation in AUI and other applications that have multiple panes and
 tabs.
 
-A key combination with a modifier (such as ``Ctrl``+``Tab``) shows the
+A key combination with a modifier (such as ``Ctrl`` + ``Tab``) shows the
 dialog, and the user holds down the modifier whilst navigating with
 ``Tab`` and arrow keys before releasing the modifier to dismiss the dialog
 and activate the selected pane.
@@ -18,18 +18,18 @@ for logical grouping, and you can force a column break if you need to.
 The modifier used for invoking and dismissing the dialog can be customised,
 as can the colours, number of rows, and the key used for cycling through
 the items. So you can use different keys on different platforms if
-required (especially since ``Ctrl``+``Tab`` is reserved on some platforms).
+required (especially since ``Ctrl`` + ``Tab`` is reserved on some platforms).
 
 Items are shown as names and optional 16x16 images.
 
 
-Using SwitcherDialog
+Base Functionalities
 ====================
 
 To use the dialog, you set up the items in a `SwitcherItems` object,
 before passing this to the `SwitcherDialog` instance.
 
-Call `AddItem` and optionally `AddGroup` to add items and headings. These
+Call L{SwitcherItems.AddItem} and optionally L{SwitcherItems.AddGroup} to add items and headings. These
 functions take a label (to be displayed to the user), an identifying name,
 an integer id, and a bitmap. The name and id are purely for application-defined
 identification. You may also set a description to be displayed when each
@@ -40,109 +40,108 @@ Have created the dialog, you call `ShowModal()`, and if the return value is
 ``wx.ID_OK``, retrieve the selection from the dialog and activate the pane.
 
 The sample code below shows a generic method of finding panes and notebook
-tabs within the current `AuiManager`, and using the pane name or notebook
+tabs within the current L{AuiManager}, and using the pane name or notebook
 tab position to display the pane.
 
 The only other code to add is a menu item with the desired accelerator,
-whose modifier matches the one you pass to `SwitcherDialog.SetModifierKey`
+whose modifier matches the one you pass to L{SwitcherDialog.SetModifierKey} 
 (the default being ``wx.WXK_CONTROL``).
 
 
-AUI Example
-===========
+Usage
+=====
 
 Menu item::
------------
 
-if wx.Platform == "__WXMAC__":
-    switcherAccel = "Alt+Tab"
-elif wx.Platform == "__WXGTK__":
-    switcherAccel = "Ctrl+/"
-else:
-    switcherAccel = "Ctrl+Tab"
+    if wx.Platform == "__WXMAC__":
+        switcherAccel = "Alt+Tab"
+    elif wx.Platform == "__WXGTK__":
+        switcherAccel = "Ctrl+/"
+    else:
+        switcherAccel = "Ctrl+Tab"
 
-view_menu.Append(ID_SwitchPane, _("S&witch Window...") + "\t" + switcherAccel)
+    view_menu.Append(ID_SwitchPane, _("S&witch Window...") + "\t" + switcherAccel)
 
 
 Event handler::
----------------
 
-def OnSwitchPane(self, event):
+    def OnSwitchPane(self, event):
 
-    items = SwitcherItems()
-    items.SetRowCount(12)
+        items = SwitcherItems()
+        items.SetRowCount(12)
 
-    # Add the main windows and toolbars, in two separate columns
-    # We'll use the item 'id' to store the notebook selection, or -1 if not a page
+        # Add the main windows and toolbars, in two separate columns
+        # We'll use the item 'id' to store the notebook selection, or -1 if not a page
 
-    for k in xrange(2):
-        if k == 0:
-            items.AddGroup(_("Main Windows"), "mainwindows")
-        else:
-            items.AddGroup(_("Toolbars"), "toolbars").BreakColumn()
+        for k in xrange(2):
+            if k == 0:
+                items.AddGroup(_("Main Windows"), "mainwindows")
+            else:
+                items.AddGroup(_("Toolbars"), "toolbars").BreakColumn()
+
+            for pane in self._mgr.GetAllPanes():
+                name = pane.name
+                caption = pane.caption
+
+                toolbar = isinstance(info.window, wx.ToolBar) or isinstance(info.window, aui.AuiToolBar)
+                if caption and (toolBar  and k == 1) or (not toolBar and k == 0):
+                    items.AddItem(caption, name, -1).SetWindow(pane.window)
+
+        # Now add the wxAuiNotebook pages
+
+        items.AddGroup(_("Notebook Pages"), "pages").BreakColumn()
 
         for pane in self._mgr.GetAllPanes():
-            name = pane.name
-            caption = pane.caption
-
-            toolbar = isinstance(info.window, wx.ToolBar) or isinstance(info.window, aui.AuiToolBar)
-            if caption and (toolBar  and k == 1) or (not toolBar and k == 0):
-                items.AddItem(caption, name, -1).SetWindow(pane.window)
-
-    # Now add the wxAuiNotebook pages
-
-    items.AddGroup(_("Notebook Pages"), "pages").BreakColumn()
-
-    for pane in self._mgr.GetAllPanes():
-        nb = pane.window
-        if isinstance(nb, aui.AuiNotebook):
-            for j in xrange(nb.GetPageCount()):
-
-                name = nb.GetPageText(j)
-                win = nb.GetPage(j)
-
-                items.AddItem(name, name, j, nb.GetPageBitmap(j)).SetWindow(win)
-
-    # Select the focused window
-
-    idx = items.GetIndexForFocus()
-    if idx != wx.NOT_FOUND:
-        items.SetSelection(idx)
-
-    if wx.Platform == "__WXMAC__":
-        items.SetBackgroundColour(wx.WHITE)
-    
-    # Show the switcher dialog
-
-    dlg = SwitcherDialog(items, wx.GetApp().GetTopWindow())
-
-    # In GTK+ we can't use Ctrl+Tab; we use Ctrl+/ instead and tell the switcher
-    # to treat / in the same was as tab (i.e. cycle through the names)
-
-    if wx.Platform == "__WXGTK__":
-        dlg.SetExtraNavigationKey(wxT('/'))
-
-    if wx.Platform == "__WXMAC__":
-        dlg.SetBackgroundColour(wx.WHITE)
-        dlg.SetModifierKey(wx.WXK_ALT)
-
-    ans = dlg.ShowModal()
-
-    if ans == wx.ID_OK and dlg.GetSelection() != -1:
-        item = items.GetItem(dlg.GetSelection())
-
-        if item.GetId() == -1:
-            info = self._mgr.GetPane(item.GetName())
-            info.Show()
-            self._mgr.Update()
-            info.window.SetFocus()
-
-        else:
-            nb = item.GetWindow().GetParent()
-            win = item.GetWindow();
+            nb = pane.window
             if isinstance(nb, aui.AuiNotebook):
-                nb.SetSelection(item.GetId())
-                win.SetFocus()
+                for j in xrange(nb.GetPageCount()):
+
+                    name = nb.GetPageText(j)
+                    win = nb.GetPage(j)
+
+                    items.AddItem(name, name, j, nb.GetPageBitmap(j)).SetWindow(win)
+
+        # Select the focused window
+
+        idx = items.GetIndexForFocus()
+        if idx != wx.NOT_FOUND:
+            items.SetSelection(idx)
+
+        if wx.Platform == "__WXMAC__":
+            items.SetBackgroundColour(wx.WHITE)
+        
+        # Show the switcher dialog
+
+        dlg = SwitcherDialog(items, wx.GetApp().GetTopWindow())
+
+        # In GTK+ we can't use Ctrl+Tab; we use Ctrl+/ instead and tell the switcher
+        # to treat / in the same was as tab (i.e. cycle through the names)
+
+        if wx.Platform == "__WXGTK__":
+            dlg.SetExtraNavigationKey(wxT('/'))
+
+        if wx.Platform == "__WXMAC__":
+            dlg.SetBackgroundColour(wx.WHITE)
+            dlg.SetModifierKey(wx.WXK_ALT)
+
+        ans = dlg.ShowModal()
+
+        if ans == wx.ID_OK and dlg.GetSelection() != -1:
+            item = items.GetItem(dlg.GetSelection())
+
+            if item.GetId() == -1:
+                info = self._mgr.GetPane(item.GetName())
+                info.Show()
+                self._mgr.Update()
+                info.window.SetFocus()
+
+            else:
+                nb = item.GetWindow().GetParent()
+                win = item.GetWindow();
+                if isinstance(nb, aui.AuiNotebook):
+                    nb.SetSelection(item.GetId())
+                    win.SetFocus()
+
 
 """
 
@@ -181,7 +180,7 @@ class SwitcherItem(object):
 
     def Copy(self, item):
         """
-        Copy operator between 2 L{SwitcherItem}s.
+        Copy operator between 2 L{SwitcherItem} instances.
 
         :param `item`: another instance of L{SwitcherItem}.
         """
@@ -373,9 +372,9 @@ class SwitcherItems(object):
 
     def Copy(self, items):
         """
-        Copy operator between 2 L{SwitcherItems}s.
+        Copy operator between 2 L{SwitcherItems}.
 
-        :param `item`: another instance of L{SwitcherItems}.
+        :param `items`: another instance of L{SwitcherItems}.
         """
         
         self.Clear()
@@ -1019,7 +1018,7 @@ class MultiColumnListCtrl(wx.PyControl):
     def SetExtraNavigationKey(self, keyCode):
         """
         Set an extra key that can be used to cycle through items,
-        in case not using the Ctrl+Tab combination.
+        in case not using the ``Ctrl`` + ``Tab`` combination.
         """
 
         self._extraNavigationKey = keyCode
@@ -1048,12 +1047,13 @@ class MultiColumnListCtrl(wx.PyControl):
 class SwitcherDialog(wx.Dialog):
     """
     SwitcherDialog shows a L{MultiColumnListCtrl} with a list of panes
-    and tabs for the user to choose. Ctrl+Tab cycles through them.
+    and tabs for the user to choose. ``Ctrl`` + ``Tab`` cycles through them.
     """
 
     def __init__(self, items, parent, aui_manager, id=wx.ID_ANY, title=_("Pane Switcher"), pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.STAY_ON_TOP|wx.DIALOG_NO_PARENT|wx.BORDER_SIMPLE):
-
+        """ Default class constructor. """
+        
         self._switcherBorderStyle = (style & wx.BORDER_MASK)
         if self._switcherBorderStyle == wx.BORDER_NONE:
             self._switcherBorderStyle = wx.BORDER_SIMPLE
