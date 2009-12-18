@@ -88,6 +88,6 @@ class FileAttachmentTest(test.TestCase):
         self.assertEqual([Attachment.notesChangedEventType(),
                           Attachment.subjectChangedEventType(),
                           Attachment.descriptionChangedEventType(),
-                          Attachment.colorChangedEventType(),
+                          Attachment.backgroundColorChangedEventType(),
                           Attachment.locationChangedEventType()], 
                          Attachment.modificationEventTypes())

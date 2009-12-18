@@ -145,7 +145,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
             patterns.Publisher().registerObserver(self.onColorSettingChange, 
                 eventType=colorSetting)
         patterns.Publisher().registerObserver(self.onAttributeChanged,
-            eventType=task.Task.colorChangedEventType())
+            eventType=task.Task.backgroundColorChangedEventType())
         patterns.Publisher().registerObserver(self.atMidnight,
             eventType='clock.midnight')
 
@@ -196,7 +196,7 @@ class RootNode(object):
         else:
             return self.tasks.rootItems()
 
-    def color(self, *args, **kwargs):
+    def backgroundColor(self, *args, **kwargs):
         return None
 
     def completed(self, *args, **kwargs):
@@ -329,7 +329,7 @@ class TimelineViewer(BaseTaskViewer):
             return []
         
     def background_color(self, item):
-        return item.color()
+        return item.backgroundColor()
 
     def foreground_color(self, item, depth=0):
         if hasattr(item, 'children'):
@@ -448,7 +448,7 @@ class SquareTaskViewer(BaseTaskViewer):
         return self.overall(task)
     
     def background_color(self, task, depth): # pylint: disable-msg=W0613
-        return task.color()
+        return task.backgroundColor()
 
     def foreground_color(self, task, depth): # pylint: disable-msg=W0613
         return color.taskColor(task, self.settings)

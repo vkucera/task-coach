@@ -262,7 +262,7 @@ class CommonTestsMixin(object):
         self.assertNotEqual(-1, self.viewer.widget.GetColumn(0).GetImage())
         self.assertEqual(-1, self.viewer.widget.GetColumn(1).GetImage())
     
-    def testColorWhenTaskIsCompleted(self):
+    def testForegroundColorWhenTaskIsCompleted(self):
         self.taskList.append(self.task)
         self.task.setCompletionDate()
         newColor = gui.color.taskColor(self.task, self.settings)
@@ -396,27 +396,27 @@ class CommonTestsMixin(object):
         else:    
             self.assertItems(child2, self.child, self.task, task2)
     
-    def testChangeActiveTaskColor(self):
+    def testChangeActiveTaskForegroundColor(self):
         self.taskList.append(task.Task(subject='test'))
         self.setColor('activetasks')
         self.assertColor()
     
-    def testChangeInactiveTaskColor(self):
+    def testChangeInactiveTaskForegroundColor(self):
         self.setColor('inactivetasks')
         self.taskList.append(task.Task(startDate=date.Tomorrow()))
         self.assertColor()
     
-    def testChangeCompletedTaskColor(self):
+    def testChangeCompletedTaskForegroundColor(self):
         self.setColor('completedtasks')
         self.taskList.append(task.Task(completionDate=date.Today()))
         self.assertColor()
 
-    def testChangeDueSoonTaskColor(self):
+    def testChangeDueSoonTaskForegroundColor(self):
         self.setColor('duesoontasks')
         self.taskList.append(task.Task(dueDate=date.Today()))
         self.assertColor()
 
-    def testChangeOverDueTaskColor(self):
+    def testChangeOverDueTaskForegroundColor(self):
         self.setColor('overduetasks')
         self.taskList.append(task.Task(dueDate=date.Yesterday()))
         self.assertColor()
@@ -448,8 +448,8 @@ class CommonTestsMixin(object):
         self.assertEqual([attachment.MailAttachment('test.mail')],
                          self.viewer.presentation()[0].attachments())
         
-    def testCategoryColor(self):
-        cat = category.Category('category with color', color=self.newColor)
+    def testCategoryBackgroundColor(self):
+        cat = category.Category('category with background color', bgColor=self.newColor)
         cat.addCategorizable(self.task)
         self.task.addCategory(cat)
         self.taskList.append(self.task)
@@ -635,26 +635,26 @@ class ColumnsTestsMixin(object):
         
     # Test all attributes...
 
-    def testGetColorForDefaultTask(self):
+    def testForegroundColorForDefaultTask(self):
         self.assertEqual(wx.BLACK, self.viewer.getColor(self.task))
 
-    def testGetColorForCompletedTask(self):
+    def testForegroundColorForCompletedTask(self):
         self.taskList.append(self.task)
         self.task.setCompletionDate()
         self.assertEqual(wx.GREEN, self.viewer.getColor(self.task))
         
-    def testColorForOverDueTask(self):
+    def testForegroundColorForOverDueTask(self):
         self.taskList.append(self.task)
         self.task.setDueDate(date.Yesterday())
         self.assertEqual(wx.RED, self.viewer.getColor(self.task))
         
-    def testColorForTaskDueSoon(self):
+    def testForegroundColorForTaskDueSoon(self):
         self.taskList.append(self.task)
         self.task.setDueDate(date.Today())
         expectedColor = wx.Color(*eval(self.settings.get('color', 'duesoontasks')))
         self.assertEqual(expectedColor, self.viewer.getColor(self.task))
 
-    def testColorForInactiveTasks(self):
+    def testForegroundColorForInactiveTasks(self):
         self.taskList.append(self.task)
         self.task.setStartDate(date.Tomorrow())
         expectedColor = wx.Color(*eval(self.settings.get('color', 'inactivetasks')))

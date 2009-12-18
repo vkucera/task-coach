@@ -108,7 +108,7 @@ class SubjectPage(Page, widgets.BookPage):
     def addEntries(self):
         self.addSubjectEntry()
         self.addDescriptionEntry()
-        self.addColorEntry()        
+        self.addBackgroundColorEntry()        
         
     def addSubjectEntry(self):
         # pylint: disable-msg=W0201
@@ -124,18 +124,18 @@ class SubjectPage(Page, widgets.BookPage):
         self.addEntry(_('Description'), self._descriptionEntry,
             flags=[None, wx.ALL|wx.EXPAND], growable=True)
 
-    def addColorEntry(self):
+    def addBackgroundColorEntry(self):
         # pylint: disable-msg=W0201,W0142
-        currentColor = self.item.color(recursive=False)
-        self._colorCheckBox = wx.CheckBox(self, label=_('Use this color:'))
-        self._colorCheckBox.SetValue(currentColor is not None)
+        currentBgColor = self.item.backgroundColor(recursive=False)
+        self._bgColorCheckBox = wx.CheckBox(self, label=_('Use this color:'))
+        self._bgColorCheckBox.SetValue(currentBgColor is not None)
         # wx.ColourPickerCtrl on Mac OS X expects a wx.Color and fails on tuples
         # so convert the tuple to a wx.Color:
-        currentColor = wx.Color(*currentColor) if currentColor else wx.WHITE
-        self._colorButton = wx.ColourPickerCtrl(self, -1, currentColor)
-        self._colorButton.Bind(wx.EVT_COLOURPICKER_CHANGED,
-            lambda event: self._colorCheckBox.SetValue(True))
-        self.addEntry(_('Color'), self._colorCheckBox, self._colorButton,
+        currentBgColor = wx.Color(*currentBgColor) if currentBgColor else wx.WHITE
+        self._bgColorButton = wx.ColourPickerCtrl(self, -1, currentBgColor)
+        self._bgColorButton.Bind(wx.EVT_COLOURPICKER_CHANGED,
+            lambda event: self._bgColorCheckBox.SetValue(True))
+        self.addEntry(_('Color'), self._bgColorCheckBox, self._bgColorButton,
                       flags=[None, None, wx.ALL])
 
     def setSubject(self, subject):
@@ -147,11 +147,9 @@ class SubjectPage(Page, widgets.BookPage):
     def ok(self):
         self.item.setSubject(self._subjectEntry.GetValue())
         self.item.setDescription(self._descriptionEntry.GetValue())
-        if self._colorCheckBox.IsChecked():
-            color = self._colorButton.GetColour()
-        else:
-            color = None
-        self.item.setColor(color)
+        bgColorChecked = self._bgColorCheckBox.IsChecked()
+        bgColor = self._bgColorButton.GetColour() if bgColorChecked else None
+        self.item.setBackgroundColor(bgColor)
         super(SubjectPage, self).ok()
                         
     def entries(self):
@@ -226,7 +224,7 @@ class AttachmentSubjectPage(SubjectPage):
         self.addSubjectEntry()
         self.addLocationEntry()
         self.addDescriptionEntry()
-        self.addColorEntry()
+        self.addBackgroundColorEntry()
 
     def addLocationEntry(self):
         panel = wx.Panel(self, wx.ID_ANY)

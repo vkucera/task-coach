@@ -308,35 +308,35 @@ class XMLWriterTest(test.TestCase):
         cat.addCategorizable(aNote)
         self.expectInXML('<category categorizables="noteId" id="catId" status="1" subject="cat"/>')
 
-    def testCategoryColor(self):
-        self.categoryContainer.append(category.Category(subject='test', color=wx.RED))
-        self.expectInXML('color="(255, 0, 0, 255)"')
+    def testCategoryBackgroundColor(self):
+        self.categoryContainer.append(category.Category(subject='test', bgColor=wx.RED))
+        self.expectInXML('bgColor="(255, 0, 0, 255)"')
 
-    def testDontWriteInheritedCategoryColor(self):
-        parent = category.Category(subject='test', color=wx.RED)
+    def testDontWriteInheritedCategoryBackgroundColor(self):
+        parent = category.Category(subject='test', bgColor=wx.RED)
         child = category.Category(subject='child', id='id')
         parent.addChild(child)
         self.categoryContainer.append(parent)
         self.expectInXML('<category id="id" status="1" subject="child"/>')
         
-    def testTaskColor(self):
-        self.task.setColor(wx.RED)
-        self.expectInXML('color="(255, 0, 0, 255)"')
+    def testTaskBackgroundColor(self):
+        self.task.setBackgroundColor(wx.RED)
+        self.expectInXML('bgColor="(255, 0, 0, 255)"')
         
-    def testDontWriteInheritedTaskColor(self):
-        self.task.setColor(wx.RED)
+    def testDontWriteInheritedTaskBackgroundColor(self):
+        self.task.setBackgroundColor(wx.RED)
         child = task.Task(subject='child', id='id', startDate=date.Date())
         self.task.addChild(child)
         self.taskList.append(child)
         self.expectInXML('<task id="id" status="1" subject="child"/>')
 
-    def testNoteColor(self):
-        aNote = note.Note(color=wx.RED)
+    def testNoteBackgroundColor(self):
+        aNote = note.Note(bgColor=wx.RED)
         self.noteContainer.append(aNote)
-        self.expectInXML('color="(255, 0, 0, 255)"')
+        self.expectInXML('bgColor="(255, 0, 0, 255)"')
         
-    def testDontWriteInheritedNoteColor(self):
-        parent = note.Note(color=wx.RED)
+    def testDontWriteInheritedNoteBackgroundColor(self):
+        parent = note.Note(bgColor=wx.RED)
         child = note.Note(subject='child', id='id')
         parent.addChild(child)
         self.noteContainer.append(parent)

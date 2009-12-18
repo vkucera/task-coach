@@ -100,7 +100,7 @@ class ObjectTest(test.TestCase):
         self.eventsReceived = []
         for eventType in (self.object.subjectChangedEventType(), 
                           self.object.descriptionChangedEventType(),
-                          self.object.colorChangedEventType()):
+                          self.object.backgroundColorChangedEventType()):
             patterns.Publisher().registerObserver(self.onEvent, eventType)
 
     def onEvent(self, event):
@@ -182,18 +182,18 @@ class ObjectTest(test.TestCase):
     
     def testGetState(self):
         self.assertEqual(dict(subject='', description='', id=self.object.id(),
-                              status=self.object.getStatus(), color=None), 
+                              status=self.object.getStatus(), bgColor=None), 
                          self.object.__getstate__())
 
     def testSetState(self):
         newState = dict(subject='New', description='New', id=None,
-                        status=self.object.STATUS_DELETED, color=wx.RED)
+                        status=self.object.STATUS_DELETED, bgColor=wx.RED)
         self.object.__setstate__(newState)
         self.assertEqual(newState, self.object.__getstate__())
         
     def testSetState_SendsOneNotification(self):
         newState = dict(subject='New', description='New', id=None,
-                        status=self.object.STATUS_DELETED, color=wx.RED)
+                        status=self.object.STATUS_DELETED, bgColor=wx.RED)
         self.object.__setstate__(newState)
         self.assertEqual(1, len(self.eventsReceived))
         
@@ -210,10 +210,10 @@ class ObjectTest(test.TestCase):
         copy = self.object.copy()
         self.assertEqual(copy.description(), self.object.description())
 
-    def testCopy_ColorIsCopied(self):
-        self.object.setColor(wx.RED)
+    def testCopy_BackgroundColorIsCopied(self):
+        self.object.setBackgroundColor(wx.RED)
         copy = self.object.copy()
-        self.assertEqual(copy.color(), self.object.color())
+        self.assertEqual(copy.backgroundColor(), self.object.backgroundColor())
         
     def testCopy_ShouldUseSubclassForCopy(self):
         copy = self.subclassObject.copy()
@@ -221,23 +221,23 @@ class ObjectTest(test.TestCase):
 
     # Color tests
     
-    def testDefaultColor(self):
-        self.assertEqual(None, self.object.color())
+    def testDefaultBackgroundColor(self):
+        self.assertEqual(None, self.object.backgroundColor())
     
-    def testSetColor(self):
-        self.object.setColor(wx.RED)
-        self.assertEqual(wx.RED, self.object.color())
+    def testSetBackgroundColor(self):
+        self.object.setBackgroundColor(wx.RED)
+        self.assertEqual(wx.RED, self.object.backgroundColor())
 
-    def testSetColorWithTupleColor(self):
-        self.object.setColor((255, 0, 0, 255))
-        self.assertEqual(wx.RED, self.object.color())
+    def testSetBackgroundColorWithTupleColor(self):
+        self.object.setBackgroundColor((255, 0, 0, 255))
+        self.assertEqual(wx.RED, self.object.backgroundColor())
 
-    def testSetColorOnCreation(self):
-        domainObject = base.Object(color=wx.GREEN)
-        self.assertEqual(wx.GREEN, domainObject.color())
+    def testSetBackgroundColorOnCreation(self):
+        domainObject = base.Object(bgColor=wx.GREEN)
+        self.assertEqual(wx.GREEN, domainObject.backgroundColor())
     
-    def testColorChangedNotification(self):
-        self.object.setColor(wx.BLACK)
+    def testBackgroundColorChangedNotification(self):
+        self.object.setBackgroundColor(wx.BLACK)
         self.assertEqual(1, len(self.eventsReceived))
 
     # Event types:
@@ -245,7 +245,7 @@ class ObjectTest(test.TestCase):
     def testModificationEventTypes(self):
         self.assertEqual([self.object.subjectChangedEventType(),
                           self.object.descriptionChangedEventType(),
-                          self.object.colorChangedEventType()], 
+                          self.object.backgroundColorChangedEventType()], 
                          self.object.modificationEventTypes())
 
 
@@ -304,21 +304,21 @@ class CompositeObjectTest(test.TestCase):
         self.addChild(subject='child')
         self.assertEqual(u'parent -> child', self.child.subject(recursive=True))
 
-    def testSubItemUsesParentColor(self):
+    def testSubItemUsesParentBackgroundColor(self):
         self.addChild()
-        self.compositeObject.setColor(wx.RED)
-        self.assertEqual(wx.RED, self.child.color())
+        self.compositeObject.setBackgroundColor(wx.RED)
+        self.assertEqual(wx.RED, self.child.backgroundColor())
         
-    def testSubItemDoesNotUseParentColorIfItHasItsOwnColor(self):
-        self.addChild(color=wx.RED)
-        self.compositeObject.setColor(wx.BLUE)        
-        self.assertEqual(wx.RED, self.child.color())
+    def testSubItemDoesNotUseParentBackgroundColorIfItHasItsOwnBackgroundColor(self):
+        self.addChild(bgColor=wx.RED)
+        self.compositeObject.setBackgroundColor(wx.BLUE)        
+        self.assertEqual(wx.RED, self.child.backgroundColor())
         
-    def testColorChangedNotification(self):
+    def testBackgroundColorChangedNotification(self):
         self.addChild()
         patterns.Publisher().registerObserver(self.onEvent,
-            eventType=base.CompositeObject.colorChangedEventType())
-        self.compositeObject.setColor(wx.RED)
+            eventType=base.CompositeObject.backgroundColorChangedEventType())
+        self.compositeObject.setBackgroundColor(wx.RED)
         self.assertEqual(1, len(self.eventsReceived))
 
     def testCopy(self):
@@ -378,7 +378,7 @@ class CompositeObjectTest(test.TestCase):
                           self.compositeObject.removeChildEventType(),
                           self.compositeObject.subjectChangedEventType(),
                           self.compositeObject.descriptionChangedEventType(),
-                          self.compositeObject.colorChangedEventType(),
+                          self.compositeObject.backgroundColorChangedEventType(),
                           self.compositeObject.expansionChangedEventType()], 
                          self.compositeObject.modificationEventTypes())
 

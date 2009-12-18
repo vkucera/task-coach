@@ -32,14 +32,14 @@ class CategorizableCompositeObjectTest(test.TestCase):
     totalCategoryRemovedEventType = categorizable.CategorizableCompositeObject.totalCategoryRemovedEventType()
     categorySubjectChangedEventType = categorizable.CategorizableCompositeObject.categorySubjectChangedEventType()
     totalCategorySubjectChangedEventType = categorizable.CategorizableCompositeObject.totalCategorySubjectChangedEventType()
-    colorChangedEventType = categorizable.CategorizableCompositeObject.colorChangedEventType()
+    backgroundColorChangedEventType = categorizable.CategorizableCompositeObject.backgroundColorChangedEventType()
         
     def testCategorizableDoesNotBelongToAnyCategoryByDefault(self):
         for recursive in False, True:
             self.failIf(self.categorizable.categories(recursive=recursive))
     
-    def testCategorizableHasNoColorByDefault(self):
-        self.assertEqual(None, self.categorizable.color())
+    def testCategorizableHasNoBackgroundColorByDefault(self):
+        self.assertEqual(None, self.categorizable.backgroundColor())
     
     def testAddCategory(self):
         self.categorizable.addCategory(self.category)
@@ -144,117 +144,117 @@ class CategorizableCompositeObjectTest(test.TestCase):
         expectedEvent.addSource(childCategorizable, 'New subject', type=self.totalCategorySubjectChangedEventType)
         self.assertEqual([expectedEvent], self.events) 
 
-    def testColor(self):
+    def testBackgroundColor(self):
         self.categorizable.addCategory(self.category)
-        self.category.setColor(wx.RED)
-        self.assertEqual(wx.RED, self.categorizable.color())
+        self.category.setBackgroundColor(wx.RED)
+        self.assertEqual(wx.RED, self.categorizable.backgroundColor())
 
-    def testCategorizableOwnColorOverridesCategoryColor(self):
+    def testCategorizableOwnBackgroundColorOverridesCategoryBackgroundColor(self):
         self.categorizable.addCategory(self.category)
-        self.category.setColor(wx.RED)
-        self.categorizable.setColor(wx.GREEN)
-        self.assertEqual(wx.GREEN, self.categorizable.color())
+        self.category.setBackgroundColor(wx.RED)
+        self.categorizable.setBackgroundColor(wx.GREEN)
+        self.assertEqual(wx.GREEN, self.categorizable.backgroundColor())
         
-    def testColorWithTupleColor(self):
+    def testBackgroundColorWithTupleColor(self):
         self.categorizable.addCategory(self.category)
-        self.category.setColor((255, 0, 0, 255))
-        self.assertEqual(wx.RED, self.categorizable.color())
+        self.category.setBackgroundColor((255, 0, 0, 255))
+        self.assertEqual(wx.RED, self.categorizable.backgroundColor())
     
-    def testSubItemUsesParentColor(self):
+    def testSubItemUsesParentBackgroundColor(self):
         self.categorizable.addCategory(self.category)
         child = categorizable.CategorizableCompositeObject()
         self.categorizable.addChild(child)
         child.setParent(self.categorizable)
-        self.category.setColor(wx.RED)
-        self.assertEqual(wx.RED, child.color())
+        self.category.setBackgroundColor(wx.RED)
+        self.assertEqual(wx.RED, child.backgroundColor())
         
-    def testSubItemDoesNotUseParentColorWhenItHasItsOwnColor(self):
+    def testSubItemDoesNotUseParentBackgroundColorWhenItHasItsOwnBackgroundColor(self):
         child = categorizable.CategorizableCompositeObject()
         self.categorizable.addChild(child)
         child.setParent(self.categorizable)
         child.addCategory(self.category)
-        self.categorizable.setColor(wx.RED)
-        self.category.setColor(wx.BLUE)
-        self.assertEqual(wx.BLUE, child.color())
+        self.categorizable.setBackgroundColor(wx.RED)
+        self.category.setBackgroundColor(wx.BLUE)
+        self.assertEqual(wx.BLUE, child.backgroundColor())
     
-    def testColorChanged(self):
+    def testBackgroundColorChanged(self):
         self.categorizable.addCategory(self.category)
         self.category.addCategorizable(self.categorizable)
-        self.registerObserver(self.colorChangedEventType)
-        self.category.setColor(wx.RED)
+        self.registerObserver(self.backgroundColorChangedEventType)
+        self.category.setBackgroundColor(wx.RED)
         self.assertEqual(1, len(self.events))
 
-    def testColorChanged_NotifySubItemsToo(self):
-        self.registerObserver(self.colorChangedEventType)
+    def testBackgroundColorChanged_NotifySubItemsToo(self):
+        self.registerObserver(self.backgroundColorChangedEventType)
         self.categorizable.addChild(categorizable.CategorizableCompositeObject())
         self.categorizable.addCategory(self.category)
         self.category.addCategorizable(self.categorizable)
-        self.category.setColor(wx.RED)
+        self.category.setBackgroundColor(wx.RED)
         self.assertEqual(1, len(self.events))
         
-    def testCategorizableDoesNotNotifyWhenItHasItsOwnColor(self):
+    def testCategorizableDoesNotNotifyWhenItHasItsOwnBackgroundColor(self):
         self.categorizable.addCategory(self.category)
-        self.categorizable.setColor(wx.RED)
-        self.registerObserver(self.categorizable.colorChangedEventType())
-        self.category.setColor(wx.GREEN)
+        self.categorizable.setBackgroundColor(wx.RED)
+        self.registerObserver(self.categorizable.backgroundColorChangedEventType())
+        self.category.setBackgroundColor(wx.GREEN)
         self.assertEqual(0, len(self.events))
         
-    def testParentColorChanged(self):
-        self.registerObserver(self.colorChangedEventType)
+    def testParentBackgroundColorChanged(self):
+        self.registerObserver(self.backgroundColorChangedEventType)
         subCategory = category.Category('Subcategory')
         self.category.addChild(subCategory)
         subCategory.setParent(self.category)
         self.categorizable.addCategory(subCategory)
         subCategory.addCategorizable(self.categorizable)
-        self.category.setColor(wx.RED)
+        self.category.setBackgroundColor(wx.RED)
         self.assertEqual(1, len(self.events))
         
-    def testAddCategoryWithColor(self):
-        self.registerObserver(self.colorChangedEventType)
+    def testAddCategoryWithBackgroundColor(self):
+        self.registerObserver(self.backgroundColorChangedEventType)
         newCategory = category.Category('New category')
-        newCategory.setColor(wx.RED)
+        newCategory.setBackgroundColor(wx.RED)
         self.categorizable.addCategory(newCategory)
         self.assertEqual(1, len(self.events))
         
-    def testAddCategoryWithParentWithColor(self):
-        self.registerObserver(self.colorChangedEventType)
+    def testAddCategoryWithParentWithBackgroundColor(self):
+        self.registerObserver(self.backgroundColorChangedEventType)
         parentCategory = category.Category('Parent')
-        parentCategory.setColor(wx.RED)
+        parentCategory.setBackgroundColor(wx.RED)
         childCategory = category.Category('Child')
         parentCategory.addChild(childCategory)
         childCategory.setParent(parentCategory)
         self.categorizable.addCategory(childCategory)
         self.assertEqual(1, len(self.events))
         
-    def testRemoveCategoryWithColor(self):
+    def testRemoveCategoryWithBackgroundColor(self):
         self.categorizable.addCategory(self.category)
-        self.category.setColor(wx.RED)
-        self.registerObserver(self.colorChangedEventType)
+        self.category.setBackgroundColor(wx.RED)
+        self.registerObserver(self.backgroundColorChangedEventType)
         self.categorizable.removeCategory(self.category)
         self.assertEqual(1, len(self.events))
         
-    def testColorWhenOneOutOfTwoCategoriesHasColor(self):
+    def testBackgroundColorWhenOneOutOfTwoCategoriesHasBackgroundColor(self):
         self.categorizable.addCategory(self.category)
         self.categorizable.addCategory(category.Category('Another category'))
-        self.category.setColor(wx.RED)
-        self.assertEqual(wx.RED, self.categorizable.color())
+        self.category.setBackgroundColor(wx.RED)
+        self.assertEqual(wx.RED, self.categorizable.backgroundColor())
         
-    def testColorWhenBothCategoriesHaveSameColor(self):
+    def testBackgroundColorWhenBothCategoriesHaveSameBackgroundColor(self):
         self.categorizable.addCategory(self.category)
         anotherCategory = category.Category('Another category')
         self.categorizable.addCategory(anotherCategory)
         for cat in [self.category, anotherCategory]:
-            cat.setColor(wx.RED)
-        self.assertEqual(wx.RED, self.categorizable.color())
+            cat.setBackgroundColor(wx.RED)
+        self.assertEqual(wx.RED, self.categorizable.backgroundColor())
                 
-    def testColorWhenBothCategoriesHaveDifferentColors(self):
+    def testBackgroundColorWhenBothCategoriesHaveDifferentBackgroundColors(self):
         self.categorizable.addCategory(self.category)
         anotherCategory = category.Category('Another category')
         self.categorizable.addCategory(anotherCategory)
-        self.category.setColor(wx.RED)
-        anotherCategory.setColor(wx.BLUE)
+        self.category.setBackgroundColor(wx.RED)
+        anotherCategory.setBackgroundColor(wx.BLUE)
         expectedColor = wx.Color(127, 0, 127, 255)
-        self.assertEqual(expectedColor, self.categorizable.color())
+        self.assertEqual(expectedColor, self.categorizable.backgroundColor())
                 
     def testParentCategoryIncludedInChildRecursiveCategories(self):
         self.categorizable.addCategory(self.category)

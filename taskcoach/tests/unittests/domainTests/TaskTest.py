@@ -994,21 +994,21 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
         self.task1_1.setFixedFee(1000)
         self.assertEqual(3000, self.task.revenue(recursive=True))
         
-    def testColorChangeNotificationOfEfforts(self):
-        self.registerObserver(effort.Effort.colorChangedEventType())
+    def testBackgroundColorChangeNotificationOfEfforts(self):
+        self.registerObserver(effort.Effort.backgroundColorChangedEventType())
         self.task.addEffort(effort.Effort(self.task))
         self.task1_1.addEffort(effort.Effort(self.task1_1))
-        self.task.setColor(wx.RED)
+        self.task.setBackgroundColor(wx.RED)
         self.assertEqual(1, len(self.events))
 
-    def testColorChangeNotificationOfEfforts_ViaCategory(self):
-        self.registerObserver(effort.Effort.colorChangedEventType())
+    def testBackgroundColorChangeNotificationOfEfforts_ViaCategory(self):
+        self.registerObserver(effort.Effort.backgroundColorChangedEventType())
         self.task.addEffort(effort.Effort(self.task))
         self.task1_1.addEffort(effort.Effort(self.task1_1))
         cat = category.Category('Cat')
         cat.addCategorizable(self.task)
         self.task.addCategory(cat)
-        cat.setColor(wx.RED)
+        cat.setBackgroundColor(wx.RED)
         self.assertEqual(1, len(self.events))
 
     def testPercentageCompleted(self):
@@ -1075,10 +1075,10 @@ class TaskWithOneEffortTest(TaskTestCase, CommonTaskTestsMixin):
     def testRevenueWithEffortButWithZeroFee(self):
         self.assertEqual(0, self.task.revenue())
 
-    def testNotifyEffortOfColorChange(self):
-        self.registerObserver(effort.Effort.colorChangedEventType())
-        self.task.setColor(wx.RED)
-        self.assertEqual(patterns.Event(effort.Effort.colorChangedEventType(), 
+    def testNotifyEffortOfBackgroundColorChange(self):
+        self.registerObserver(effort.Effort.backgroundColorChangedEventType())
+        self.task.setBackgroundColor(wx.RED)
+        self.assertEqual(patterns.Event(effort.Effort.backgroundColorChangedEventType(), 
             self.task1effort1, wx.RED), self.events[0])
         
 
@@ -1161,10 +1161,10 @@ class TaskWithChildAndEffortTest(TaskTestCase, CommonTaskTestsMixin):
         self.task1_1.setHourlyFee(100)
         self.assertEqual(4800, self.task.revenue(recursive=True))
         
-    def testChildEffortColorNotification(self):
-        self.registerObserver(self.task1_1effort1.colorChangedEventType(), 
+    def testChildEffortBackgroundColorNotification(self):
+        self.registerObserver(self.task1_1effort1.backgroundColorChangedEventType(), 
                               self.task1_1effort1)
-        self.task.setColor(wx.RED)
+        self.task.setBackgroundColor(wx.RED)
         self.assertEqual([wx.RED], [event.value() for event in self.events])
         
 

@@ -460,13 +460,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         budget = self.budget(recursive)
         return budget - self.timeSpent(recursive) if budget else budget
     
-    def colorChangedEvent(self, event):
-        super(Task, self).colorChangedEvent(event)
-        color = self.color()
-        for task in [self] + self.childrenWithoutOwnColor():
+    def backgroundColorChangedEvent(self, event):
+        super(Task, self).backgroundColorChangedEvent(event)
+        bgColor = self.backgroundColor()
+        for task in [self] + self.childrenWithoutOwnBackgroundColor():
             for eachEffort in task.efforts():
-                event.addSource(eachEffort, color, 
-                                type=eachEffort.colorChangedEventType())
+                event.addSource(eachEffort, bgColor, 
+                                type=eachEffort.backgroundColorChangedEventType())
                     
     @classmethod
     def totalTimeSpentChangedEventType(class_):

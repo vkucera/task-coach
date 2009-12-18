@@ -233,8 +233,8 @@ class DirtyTaskFileTest(TaskFileTestCase):
         self.task.setDescription('new description')
         self.failUnless(self.taskFile.needSave())
 
-    def testNeedSave_AfterEditTaskColor(self):
-        self.task.setColor(wx.RED)
+    def testNeedSave_AfterEditTaskBackgroundColor(self):
+        self.task.setBackgroundColor(wx.RED)
         self.failUnless(self.taskFile.needSave())
         
     def testNeedSave_AfterEditTaskStartDate(self):
@@ -283,11 +283,11 @@ class DirtyTaskFileTest(TaskFileTestCase):
         self.effort.setTask(task2)
         self.failUnless(self.taskFile.needSave())
 
-    def testNeedSave_AfterEditEffortColor(self):
+    def testNeedSave_AfterEditEffortBackgroundColor(self):
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()
         self.failIf(self.taskFile.needSave())
-        self.effort.setColor(wx.RED)
+        self.effort.setBackgroundColor(wx.RED)
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterTaskAddedToCategory(self):
@@ -407,11 +407,11 @@ class DirtyTaskFileTest(TaskFileTestCase):
         self.category.setDescription('new description')
         self.failUnless(self.taskFile.needSave())
         
-    def testNeedSave_AfterChangingCategoryColor(self):
+    def testNeedSave_AfterChangingCategoryBackgroundColor(self):
         self.taskFile.categories().append(self.category)
         self.taskFile.setFilename(self.filename)
         self.taskFile.save()        
-        self.category.setColor(wx.RED)
+        self.category.setBackgroundColor(wx.RED)
         self.failUnless(self.taskFile.needSave())
         
     def testNeedSave_AfterMakingSubclassesExclusive(self):
@@ -429,8 +429,8 @@ class DirtyTaskFileTest(TaskFileTestCase):
         list(self.taskFile.notes())[0].setDescription('new description')
         self.failUnless(self.taskFile.needSave())
 
-    def testNeedSave_AfterNoteColorChanged(self):    
-        list(self.taskFile.notes())[0].setColor(wx.RED)
+    def testNeedSave_AfterNoteBackgroundColorChanged(self):    
+        list(self.taskFile.notes())[0].setBackgroundColor(wx.RED)
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterAddNoteChild(self):     
@@ -544,9 +544,9 @@ class ChangingAttachmentsTestsMixin(object):
         self.fileAttachment.setDescription('New description')
         self.failUnless(self.taskFile.needSave())
 
-    def testNeedSave_AfterFileAttachmentColorChanged(self):
+    def testNeedSave_AfterFileAttachmentBackgroundColorChanged(self):
         self.addFileAttachment()
-        self.fileAttachment.setColor(wx.RED)
+        self.fileAttachment.setBackgroundColor(wx.RED)
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterFileAttachmentNoteAdded(self):
@@ -573,9 +573,9 @@ class ChangingAttachmentsTestsMixin(object):
         self.uriAttachment.setDescription('New description')
         self.failUnless(self.taskFile.needSave())
 
-    def testNeedSave_AfterURIAttachmentColorChanged(self):
+    def testNeedSave_AfterURIAttachmentBackgroundColorChanged(self):
         self.addURIAttachment()
-        self.uriAttachment.setColor(wx.RED)
+        self.uriAttachment.setBackgroundColor(wx.RED)
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterURIAttachmentNoteAdded(self):
@@ -603,9 +603,9 @@ class ChangingAttachmentsTestsMixin(object):
         self.mailAttachment.setDescription('New description')
         self.failUnless(self.taskFile.needSave())
 
-    def testNeedSave_AfterMailAttachmentColorChanged(self):
+    def testNeedSave_AfterMailAttachmentBackgroundColorChanged(self):
         self.addMailAttachment()
-        self.mailAttachment.setColor(wx.RED)
+        self.mailAttachment.setBackgroundColor(wx.RED)
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterMailAttachmentNoteAdded(self):
