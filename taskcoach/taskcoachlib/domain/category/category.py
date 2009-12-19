@@ -153,7 +153,15 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
             if categorizableToInvestigate in containedCategorizables:
                 return True
         return False
-    
+
+    def foregroundColorChangedEvent(self, event):
+        ''' Override to include all categorizables (recursively) in the event 
+            that belong to this category since their foreground colors (may) 
+            have changed too. ''' 
+        super(Category, self).foregroundColorChangedEvent(event)
+        for categorizable in self.categorizables(recursive=True):
+            categorizable.foregroundColorChangedEvent(event)
+
     def backgroundColorChangedEvent(self, event):
         ''' Override to include all categorizables (recursively) in the event 
             that belong to this category since their background colors (may) 

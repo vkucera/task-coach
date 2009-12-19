@@ -39,6 +39,9 @@ class BaseEffort(object):
 
     def categories(self, recursive=False):
         return self._task.categories(recursive)
+
+    def foregroundColor(self):
+        return self.task().foregroundColor()
     
     def backgroundColor(self):
         return self.task().backgroundColor()

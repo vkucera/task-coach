@@ -21,7 +21,6 @@ from taskcoachlib import patterns
 from taskcoachlib.domain import task, effort, date
 
 
-
 class EffortAggregatorTestCase(test.TestCase):
     aggregation = 'One of: day, week, or month (override in subclass)'
     

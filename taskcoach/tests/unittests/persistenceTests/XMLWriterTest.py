@@ -308,9 +308,20 @@ class XMLWriterTest(test.TestCase):
         cat.addCategorizable(aNote)
         self.expectInXML('<category categorizables="noteId" id="catId" status="1" subject="cat"/>')
 
+    def testCategoryForegroundColor(self):
+        self.categoryContainer.append(category.Category(subject='test', fgColor=wx.RED))
+        self.expectInXML('fgColor="(255, 0, 0, 255)"')
+
     def testCategoryBackgroundColor(self):
         self.categoryContainer.append(category.Category(subject='test', bgColor=wx.RED))
         self.expectInXML('bgColor="(255, 0, 0, 255)"')
+
+    def testDontWriteInheritedCategoryForegroundColor(self):
+        parent = category.Category(subject='test', fgColor=wx.RED)
+        child = category.Category(subject='child', id='id')
+        parent.addChild(child)
+        self.categoryContainer.append(parent)
+        self.expectInXML('<category id="id" status="1" subject="child"/>')
 
     def testDontWriteInheritedCategoryBackgroundColor(self):
         parent = category.Category(subject='test', bgColor=wx.RED)
@@ -318,10 +329,21 @@ class XMLWriterTest(test.TestCase):
         parent.addChild(child)
         self.categoryContainer.append(parent)
         self.expectInXML('<category id="id" status="1" subject="child"/>')
+
+    def testTaskForegroundColor(self):
+        self.task.setForegroundColor(wx.RED)
+        self.expectInXML('fgColor="(255, 0, 0, 255)"')
         
     def testTaskBackgroundColor(self):
         self.task.setBackgroundColor(wx.RED)
         self.expectInXML('bgColor="(255, 0, 0, 255)"')
+
+    def testDontWriteInheritedTaskForegroundColor(self):
+        self.task.setForegroundColor(wx.RED)
+        child = task.Task(subject='child', id='id', startDate=date.Date())
+        self.task.addChild(child)
+        self.taskList.append(child)
+        self.expectInXML('<task id="id" status="1" subject="child"/>')
         
     def testDontWriteInheritedTaskBackgroundColor(self):
         self.task.setBackgroundColor(wx.RED)
@@ -330,10 +352,22 @@ class XMLWriterTest(test.TestCase):
         self.taskList.append(child)
         self.expectInXML('<task id="id" status="1" subject="child"/>')
 
+    def testNoteForegroundColor(self):
+        aNote = note.Note(fgColor=wx.RED)
+        self.noteContainer.append(aNote)
+        self.expectInXML('fgColor="(255, 0, 0, 255)"')
+
     def testNoteBackgroundColor(self):
         aNote = note.Note(bgColor=wx.RED)
         self.noteContainer.append(aNote)
         self.expectInXML('bgColor="(255, 0, 0, 255)"')
+
+    def testDontWriteInheritedNoteForegroundColor(self):
+        parent = note.Note(fgColor=wx.RED)
+        child = note.Note(subject='child', id='id')
+        parent.addChild(child)
+        self.noteContainer.append(parent)
+        self.expectInXML('<note id="id" status="1" subject="child"/>')
         
     def testDontWriteInheritedNoteBackgroundColor(self):
         parent = note.Note(bgColor=wx.RED)

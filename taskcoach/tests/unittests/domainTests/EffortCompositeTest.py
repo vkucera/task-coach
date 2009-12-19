@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
-from taskcoachlib import patterns
+from taskcoachlib import patterns, config
 from taskcoachlib.domain import task, effort, date
 
 
@@ -297,6 +297,7 @@ class CompositeEffortTest(test.TestCase):
 
 class CompositeEffortWithSubTasksTest(test.TestCase):
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.task = task.Task(subject='task')
         self.child = task.Task(subject='child')
         self.child2 = task.Task(subject='child2')
@@ -439,6 +440,7 @@ class CompositeEffortWithSubTasksTest(test.TestCase):
 
 class CompositeEffortWithSubTasksRevenueTest(test.TestCase):
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.task = task.Task(subject='task')
         self.child = task.Task(subject='child')
         self.task.addChild(self.child)

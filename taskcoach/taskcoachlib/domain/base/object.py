@@ -149,6 +149,8 @@ class Object(SynchronizedObject):
         self.__description = attribute.Attribute(kwargs.pop('description', ''), 
                                                  self,
                                                  self.descriptionChangedEvent)
+        self.__fgColor = attribute.Attribute(kwargs.pop('fgColor', None), self, 
+                                             self.foregroundColorChangedEvent)
         self.__bgColor = attribute.Attribute(kwargs.pop('bgColor', None), self,
                                              self.backgroundColorChangedEvent)
         self.__id = kwargs.pop('id', None) or '%s:%s'%(id(self), time.time())
@@ -166,6 +168,7 @@ class Object(SynchronizedObject):
             state = dict()
         state.update(dict(id=self.__id, subject=self.__subject.get(), 
                           description=self.__description.get(),
+                          fgColor=self.__fgColor.get(),
                           bgColor=self.__bgColor.get()))
         return state
     
@@ -179,6 +182,7 @@ class Object(SynchronizedObject):
         self.setId(state['id'])
         self.setSubject(state['subject'], event)
         self.setDescription(state['description'], event)
+        self.setForegroundColor(state['fgColor'], event)
         self.setBackgroundColor(state['bgColor'], event)
         if notify:
             event.send()
@@ -196,7 +200,7 @@ class Object(SynchronizedObject):
         # get a new id:
         state.update(dict(\
             subject=self.__subject.get(), description=self.__description.get(),
-            bgColor=self.__bgColor.get()))
+            fgColor=self.__fgColor.get(), bgColor=self.__bgColor.get()))
         return state
     
     def copy(self):
@@ -243,6 +247,23 @@ class Object(SynchronizedObject):
     
     # Color:
     
+    def setForegroundColor(self, color, event=None):
+        self.__fgColor.set(color, event)
+    
+    def foregroundColor(self, recursive=False): # pylint: disable-msg=W0613
+        # The 'recursive' argument isn't actually used here, but some
+        # code assumes composite objects where there aren't. This is
+        # the simplest workaround.
+        return self.__fgColor.get()
+
+    def foregroundColorChangedEvent(self, event):
+        event.addSource(self, self.foregroundColor(), 
+                        type=self.foregroundColorChangedEventType())
+
+    @classmethod
+    def foregroundColorChangedEventType(class_):
+        return '%s.fgColor'%class_
+    
     def setBackgroundColor(self, color, event=None):
         self.__bgColor.set(color, event)
         
@@ -252,13 +273,13 @@ class Object(SynchronizedObject):
         # the simplest workaround.
         return self.__bgColor.get()
 
-    @classmethod
-    def backgroundColorChangedEventType(class_):
-        return '%s.bgColor'%class_
-    
     def backgroundColorChangedEvent(self, event):
         event.addSource(self, self.backgroundColor(), 
                         type=self.backgroundColorChangedEventType())
+
+    @classmethod
+    def backgroundColorChangedEventType(class_):
+        return '%s.bgColor'%class_
         
     # Event types:
     
@@ -270,6 +291,7 @@ class Object(SynchronizedObject):
             eventTypes = []
         return eventTypes + [class_.subjectChangedEventType(),
                              class_.descriptionChangedEventType(),
+                             class_.foregroundColorChangedEventType(),
                              class_.backgroundColorChangedEventType()]
 
 
@@ -339,6 +361,28 @@ class CompositeObject(Object, patterns.ObservableComposite):
         event.addSource(self, type=self.expansionChangedEventType())
     
     # Color:
+
+    def foregroundColor(self, recursive=True):
+        myFgColor = super(CompositeObject, self).foregroundColor()
+        if not myFgColor and recursive and self.parent():
+            return self.parent().foregroundColor()
+        else:
+            return myFgColor
+
+    def foregroundColorChangedEvent(self, event):
+        super(CompositeObject, self).foregroundColorChangedEvent(event)
+        children = self.childrenWithoutOwnForegroundColor()
+        fgColor = self.foregroundColor(recursive=False)
+        for child in children:
+            event.addSource(child, fgColor, type=child.foregroundColorChangedEventType())
+
+    def childrenWithoutOwnForegroundColor(self, parent=None):
+        parent = parent or self
+        children = []
+        for child in parent.children():
+            if child.foregroundColor(recursive=False) is None:
+                children.extend([child] + self.childrenWithoutOwnForegroundColor(child))
+        return children
         
     def backgroundColor(self, recursive=True):
         myBgColor = super(CompositeObject, self).backgroundColor()

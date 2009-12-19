@@ -993,12 +993,29 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
         self.task.setFixedFee(2000)
         self.task1_1.setFixedFee(1000)
         self.assertEqual(3000, self.task.revenue(recursive=True))
+
+    def testForegroundColorChangeNotificationOfEfforts(self):
+        self.registerObserver(effort.Effort.foregroundColorChangedEventType())
+        self.task.addEffort(effort.Effort(self.task))
+        self.task1_1.addEffort(effort.Effort(self.task1_1))
+        self.task.setForegroundColor(wx.RED)
+        self.assertEqual(1, len(self.events))
         
     def testBackgroundColorChangeNotificationOfEfforts(self):
         self.registerObserver(effort.Effort.backgroundColorChangedEventType())
         self.task.addEffort(effort.Effort(self.task))
         self.task1_1.addEffort(effort.Effort(self.task1_1))
         self.task.setBackgroundColor(wx.RED)
+        self.assertEqual(1, len(self.events))
+
+    def testForegroundColorChangeNotificationOfEfforts_ViaCategory(self):
+        self.registerObserver(effort.Effort.foregroundColorChangedEventType())
+        self.task.addEffort(effort.Effort(self.task))
+        self.task1_1.addEffort(effort.Effort(self.task1_1))
+        cat = category.Category('Cat')
+        cat.addCategorizable(self.task)
+        self.task.addCategory(cat)
+        cat.setForegroundColor(wx.RED)
         self.assertEqual(1, len(self.events))
 
     def testBackgroundColorChangeNotificationOfEfforts_ViaCategory(self):

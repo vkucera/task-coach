@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import test, wx
 from unittests import asserts 
 from taskcoachlib import patterns
 from taskcoachlib.domain import task, effort, date, category
@@ -43,6 +43,14 @@ class EffortTest(test.TestCase, asserts.Mixin):
         
     def testDuration(self):
         self.assertEqual(date.TimeDelta(days=1), self.effort.duration())
+        
+    def testForegroundColor(self):
+        self.task.setForegroundColor(wx.RED)
+        self.assertEqual(wx.RED, self.effort.foregroundColor())
+
+    def testBackgroundColor(self):
+        self.task.setBackgroundColor(wx.RED)
+        self.assertEqual(wx.RED, self.effort.backgroundColor())
 
     def testNotificationForSetStart(self):
         patterns.Publisher().registerObserver(self.onEvent,
