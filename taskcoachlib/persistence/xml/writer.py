@@ -154,6 +154,8 @@ class XMLWriter(object):
         ''' Create a node and add the attributes that all composite domain
             objects share, such as id, subject, description. '''
         node = self.__baseNode(item, nodeName)
+        if item.foregroundColor():
+            node.setAttribute('fgColor', str(item.foregroundColor()))
         if item.backgroundColor():
             node.setAttribute('bgColor', str(item.backgroundColor()))
         return node
@@ -162,6 +164,8 @@ class XMLWriter(object):
         """Same as baseNode, but also create child nodes by means of
         the childNodeFactory."""
         node = self.__baseNode(item, nodeName)
+        if item.foregroundColor(recursive=False):
+            node.setAttribute('fgColor', str(item.foregroundColor(recursive=False)))
         if item.backgroundColor(recursive=False):
             node.setAttribute('bgColor', str(item.backgroundColor(recursive=False)))
         if item.expandedContexts():

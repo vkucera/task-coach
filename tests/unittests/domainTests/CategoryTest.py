@@ -35,6 +35,9 @@ class CategoryTest(test.TestCase):
         
     def testGetState_Description(self):
         self.assertEqual('', self.category.__getstate__()['description'])
+
+    def testGetState_ForegroundColor(self):
+        self.assertEqual(None, self.category.__getstate__()['fgColor'])
         
     def testGetState_BackgroundColor(self):
         self.assertEqual(None, self.category.__getstate__()['bgColor'])
@@ -50,7 +53,8 @@ class CategoryTest(test.TestCase):
         
     def testSetState_OneNotification(self):
         newState = dict(subject='New subject', description='New description',
-                        bgColor=wx.RED, status=self.category.STATUS_DELETED,
+                        fgColor=wx.WHITE, bgColor=wx.RED, 
+                        status=self.category.STATUS_DELETED,
                         parent=None, children=[self.subCategory], id=self.category.id(),
                         categorizables=[self.categorizable], notes=[],
                         attachments=[], filtered=True, exclusiveSubcategories=True)
@@ -276,34 +280,69 @@ class CategoryTest(test.TestCase):
         self.assertEqual(1, len(self.events))
         
     # Color:
+
+    def testGetDefaultForegroundColor(self):
+        self.assertEqual(None, self.category.foregroundColor())
         
     def testGetDefaultBackgroundColor(self):
         self.assertEqual(None, self.category.backgroundColor())
+
+    def testSetForegroundColor(self):
+        self.category.setForegroundColor(wx.RED)
+        self.assertEqual(wx.RED, self.category.foregroundColor())
         
     def testSetBackgroundColor(self):
         self.category.setBackgroundColor(wx.RED)
         self.assertEqual(wx.RED, self.category.backgroundColor())
+
+    def testCopy_ForegroundColorIsCopied(self):
+        self.category.setForegroundColor(wx.RED)
+        copy = self.category.copy()
+        self.assertEqual(wx.RED, copy.foregroundColor())
         
     def testCopy_BackgroundColorIsCopied(self):
         self.category.setBackgroundColor(wx.RED)
         copy = self.category.copy()
         self.assertEqual(wx.RED, copy.backgroundColor())
+
+    def testForegroundColorChangeNotification(self):
+        eventType = category.Category.foregroundColorChangedEventType()
+        self.registerObserver(eventType)
+        self.category.setForegroundColor(wx.RED)
+        self.assertEqual(1, len(self.events))
         
     def testBackgroundColorChangeNotification(self):
         eventType = category.Category.backgroundColorChangedEventType()
         self.registerObserver(eventType)
         self.category.setBackgroundColor(wx.RED)
         self.assertEqual(1, len(self.events))
+    
+    def testSubCategoryWithoutForegroundColorHasParentForegroundColor(self):
+        self.category.addChild(self.subCategory)
+        self.category.setForegroundColor(wx.RED)
+        self.assertEqual(wx.RED, self.subCategory.foregroundColor())
         
     def testSubCategoryWithoutBackgroundColorHasParentBackgroundColor(self):
         self.category.addChild(self.subCategory)
         self.category.setBackgroundColor(wx.RED)
         self.assertEqual(wx.RED, self.subCategory.backgroundColor())
+
+    def testSubCategoryWithoutForegroundColorHasNoOwnForegroundColor(self):
+        self.category.addChild(self.subCategory)
+        self.category.setForegroundColor(wx.RED)
+        self.assertEqual(None, self.subCategory.foregroundColor(recursive=False))
         
     def testSubCategoryWithoutBackgroundColorHasNoOwnBackgroundColor(self):
         self.category.addChild(self.subCategory)
         self.category.setBackgroundColor(wx.RED)
         self.assertEqual(None, self.subCategory.backgroundColor(recursive=False))
+
+    def testParentForegroundColorChangeNotification(self):
+        eventType = category.Category.foregroundColorChangedEventType()
+        self.registerObserver(eventType)
+        self.category.addChild(self.subCategory)
+        self.category.setForegroundColor(wx.RED)
+        self.assertEqual(1, len(self.events))
                 
     def testParentBackgroundColorChangeNotification(self):
         eventType = category.Category.backgroundColorChangedEventType()

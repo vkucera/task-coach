@@ -100,6 +100,7 @@ class ObjectTest(test.TestCase):
         self.eventsReceived = []
         for eventType in (self.object.subjectChangedEventType(), 
                           self.object.descriptionChangedEventType(),
+                          self.object.foregroundColorChangedEventType(),
                           self.object.backgroundColorChangedEventType()):
             patterns.Publisher().registerObserver(self.onEvent, eventType)
 
@@ -182,22 +183,24 @@ class ObjectTest(test.TestCase):
     
     def testGetState(self):
         self.assertEqual(dict(subject='', description='', id=self.object.id(),
-                              status=self.object.getStatus(), bgColor=None), 
+                              status=self.object.getStatus(), fgColor=None,
+                              bgColor=None), 
                          self.object.__getstate__())
 
     def testSetState(self):
         newState = dict(subject='New', description='New', id=None,
-                        status=self.object.STATUS_DELETED, bgColor=wx.RED)
+                        status=self.object.STATUS_DELETED, 
+                        fgColor=wx.GREEN, bgColor=wx.RED,)
         self.object.__setstate__(newState)
         self.assertEqual(newState, self.object.__getstate__())
         
     def testSetState_SendsOneNotification(self):
         newState = dict(subject='New', description='New', id=None,
-                        status=self.object.STATUS_DELETED, bgColor=wx.RED)
+                        status=self.object.STATUS_DELETED, 
+                        fgColor=wx.GREEN, bgColor=wx.RED)
         self.object.__setstate__(newState)
         self.assertEqual(1, len(self.eventsReceived))
         
-    
     # Copy tests:
         
     def testCopy_SubjectIsCopied(self):
@@ -210,6 +213,11 @@ class ObjectTest(test.TestCase):
         copy = self.object.copy()
         self.assertEqual(copy.description(), self.object.description())
 
+    def testCopy_ForegroundColorIsCopied(self):
+        self.object.setForegroundColor(wx.RED)
+        copy = self.object.copy()
+        self.assertEqual(copy.foregroundColor(), self.object.foregroundColor())
+
     def testCopy_BackgroundColorIsCopied(self):
         self.object.setBackgroundColor(wx.RED)
         copy = self.object.copy()
@@ -221,6 +229,25 @@ class ObjectTest(test.TestCase):
 
     # Color tests
     
+    def testDefaultForegroundColor(self):
+        self.assertEqual(None, self.object.foregroundColor())
+        
+    def testSetForegroundColor(self):
+        self.object.setForegroundColor(wx.GREEN)
+        self.assertEqual(wx.GREEN, self.object.foregroundColor())
+    
+    def testSetForegroundColorWithTupleColor(self):
+        self.object.setForegroundColor((255, 0, 0, 255))
+        self.assertEqual(wx.RED, self.object.foregroundColor())
+
+    def testSetForegroundColorOnCreation(self):
+        domainObject = base.Object(fgColor=wx.GREEN)
+        self.assertEqual(wx.GREEN, domainObject.foregroundColor())
+    
+    def testForegroundColorChangedNotification(self):
+        self.object.setForegroundColor(wx.BLACK)
+        self.assertEqual(1, len(self.eventsReceived))
+
     def testDefaultBackgroundColor(self):
         self.assertEqual(None, self.object.backgroundColor())
     
@@ -245,6 +272,7 @@ class ObjectTest(test.TestCase):
     def testModificationEventTypes(self):
         self.assertEqual([self.object.subjectChangedEventType(),
                           self.object.descriptionChangedEventType(),
+                          self.object.foregroundColorChangedEventType(),
                           self.object.backgroundColorChangedEventType()], 
                          self.object.modificationEventTypes())
 
@@ -303,6 +331,23 @@ class CompositeObjectTest(test.TestCase):
         self.compositeObject.setSubject('parent')
         self.addChild(subject='child')
         self.assertEqual(u'parent -> child', self.child.subject(recursive=True))
+
+    def testSubItemUsesParentForegroundColor(self):
+        self.addChild()
+        self.compositeObject.setForegroundColor(wx.RED)
+        self.assertEqual(wx.RED, self.child.foregroundColor())
+
+    def testSubItemDoesNotUseParentForegroundColorIfItHasItsOwnForegroundColor(self):
+        self.addChild(fgColor=wx.RED)
+        self.compositeObject.setForegroundColor(wx.BLUE)        
+        self.assertEqual(wx.RED, self.child.foregroundColor())
+
+    def testForegroundColorChangedNotification(self):
+        self.addChild()
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType=base.CompositeObject.foregroundColorChangedEventType())
+        self.compositeObject.setForegroundColor(wx.RED)
+        self.assertEqual(1, len(self.eventsReceived))
 
     def testSubItemUsesParentBackgroundColor(self):
         self.addChild()
@@ -378,6 +423,7 @@ class CompositeObjectTest(test.TestCase):
                           self.compositeObject.removeChildEventType(),
                           self.compositeObject.subjectChangedEventType(),
                           self.compositeObject.descriptionChangedEventType(),
+                          self.compositeObject.foregroundColorChangedEventType(),
                           self.compositeObject.backgroundColorChangedEventType(),
                           self.compositeObject.expansionChangedEventType()], 
                          self.compositeObject.modificationEventTypes())

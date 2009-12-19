@@ -68,6 +68,8 @@ class CategorizableCompositeObject(base.CompositeObject):
         for child in self.children(recursive=True):
             event.addSource(child, *categories, 
                             **dict(type=child.totalCategoryAddedEventType()))
+        if not self.foregroundColor(False) and any(category.foregroundColor() for category in categories):
+            self.foregroundColorChangedEvent(event)
         if not self.backgroundColor(False) and any(category.backgroundColor() for category in categories):
             self.backgroundColorChangedEvent(event)
 
@@ -83,12 +85,24 @@ class CategorizableCompositeObject(base.CompositeObject):
         for child in self.children(recursive=True):
             event.addSource(child, *categories, 
                             **dict(type=child.totalCategoryRemovedEventType()))
+        if not self.foregroundColor(False) and any(category.foregroundColor() for category in categories):
+            self.foregroundColorChangedEvent(event)
         if not self.backgroundColor(False) and any(category.backgroundColor() for category in categories):
             self.backgroundColorChangedEvent(event)
         
     def setCategories(self, categories, event=None):
         self.__categories.set(set(categories), event)
 
+    def foregroundColor(self, recursive=True):
+        myOwnFgColor = super(CategorizableCompositeObject, self).foregroundColor(False)
+        if myOwnFgColor or not recursive:
+            return myOwnFgColor
+        categoryBasedFgColor = self._categoryForegroundColor()
+        if categoryBasedFgColor:
+            return categoryBasedFgColor
+        else:
+            return super(CategorizableCompositeObject, self).foregroundColor(True)
+                
     def backgroundColor(self, recursive=True):
         myOwnBgColor = super(CategorizableCompositeObject, self).backgroundColor(False)
         if myOwnBgColor or not recursive:
@@ -96,11 +110,19 @@ class CategorizableCompositeObject(base.CompositeObject):
         categoryBasedBgColor = self._categoryBackgroundColor()
         if categoryBasedBgColor:
             return categoryBasedBgColor
-        if recursive:
-            return super(CategorizableCompositeObject, self).backgroundColor(True)
         else:
-            return None
-        
+            return super(CategorizableCompositeObject, self).backgroundColor(True)
+
+    def _categoryForegroundColor(self):
+        ''' If a categorizable object belongs to a category that has a 
+            foreground color associated with it, the categorizable object is 
+            colored accordingly. When a categorizable object belongs to 
+            multiple categories, the color is mixed. If a categorizable 
+            composite object has no foreground color of its own, it uses its 
+            parent's foreground color. '''
+        colors = [category.foregroundColor() for category in self.categories()]
+        return self._mixColors(colors)
+
     def _categoryBackgroundColor(self):
         ''' If a categorizable object belongs to a category that has a 
             background color associated with it, the categorizable object is 
@@ -108,23 +130,22 @@ class CategorizableCompositeObject(base.CompositeObject):
             multiple categories, the color is mixed. If a categorizable 
             composite object has no background color of its own, it uses its 
             parent's background color. '''
-        colorSum, colorCount = [0, 0, 0, 0], 0
-        for category in self.categories():
-            categoryBgColor = category.backgroundColor()
-            if categoryBgColor:
+        colors = [category.backgroundColor() for category in self.categories()]
+        return self._mixColors(colors)
+        
+    def _mixColors(self, colors):
+        colorSums, colorCount = [0, 0, 0, 0], 0
+        for color in colors:
+            if color:
                 try:
-                    categoryBgColor = categoryBgColor.Get(includeAlpha=True)
+                    color = color.Get(includeAlpha=True)
                 except AttributeError:
-                    pass # categoryBgColor is already a tuple
-                for colorIndex in range(4): 
-                    colorSum[colorIndex] += categoryBgColor[colorIndex]
+                    pass # color is already a tuple
+                for colorIndex in range(4):
+                    colorSums[colorIndex] += color[colorIndex]
                 colorCount += 1
-        if colorCount:
-            return (colorSum[0]/colorCount, colorSum[1]/colorCount,
-                    colorSum[2]/colorCount, colorSum[3]/colorCount)
-        else:
-            return None
-            
+        return tuple(colorSum/colorCount for colorSum in colorSums) if colorCount else None
+        
     @classmethod
     def totalCategoryAddedEventType(class_):
         return 'categorizable.totalCategory.add'

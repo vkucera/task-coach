@@ -224,6 +224,7 @@ class XMLReader(object):
         attributes = dict(id=node.attrib.get('id', ''),
             subject=node.attrib.get('subject', ''),
             description=self._parseDescription(node),
+            fgColor=self._parseTuple(node.attrib.get('fgColor', ''), None),
             bgColor=self._parseTuple(node.attrib.get(bgColorAttribute, ''), None))
 
         if self.__tskversion <= 20:

@@ -1106,16 +1106,40 @@ class XMLReaderVersion28Test(XMLReaderTestCase):
     tskversion = 28 # New in release 0.78.0
     
     # Release 0.78.0 introduces foreground colors that can be set per object.
+
+    def testTaskForegroundColor(self):
+        tasks = self.writeAndReadTasks(\
+            '<tasks>\n<task subject="Task" fgColor="(255,0,0)"/>\n'
+            '</tasks>\n')
+        self.assertEqual(wx.RED, tasks[0].foregroundColor())
     
     def testTaskBackgroundColor(self):
         tasks = self.writeAndReadTasks(\
-            '<tasks>\n<task subject="Task" status="0" bgColor="(255,0,0)"/>\n'
+            '<tasks>\n<task subject="Task" bgColor="(255,0,0)"/>\n'
             '</tasks>\n')
         self.assertEqual(wx.RED, tasks[0].backgroundColor())
+
+    def testCategoryForegroundColor(self):
+        categories = self.writeAndReadCategories(\
+            '<categories>\n<category subject="Category" fgColor="(255,0,0)"/>\n'
+            '</categories>\n')
+        self.assertEqual(wx.RED, categories[0].foregroundColor())
         
     def testCategoryBackgroundColor(self):
         categories = self.writeAndReadCategories(\
-            '<categories>\n<category subject="Task" bgColor="(255,0,0)"/>\n'
+            '<categories>\n<category subject="Category" bgColor="(255,0,0)"/>\n'
             '</categories>\n')
         self.assertEqual(wx.RED, categories[0].backgroundColor())
+        
+    def testNoteForegroundColor(self):
+        notes = self.writeAndReadNotes(\
+            '<notes>\n<note subject="Note" fgColor="(255,0,0)"/>\n'
+            '</notes>\n')
+        self.assertEqual(wx.RED, notes[0].foregroundColor())
+        
+    def testNoteBackgroundColor(self):
+        notes = self.writeAndReadNotes(\
+            '<notes>\n<note subject="Note" bgColor="(255,0,0)"/>\n'
+            '</notes>\n')
+        self.assertEqual(wx.RED, notes[0].backgroundColor())
         

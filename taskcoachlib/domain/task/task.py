@@ -459,6 +459,14 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def budgetLeft(self, recursive=False):
         budget = self.budget(recursive)
         return budget - self.timeSpent(recursive) if budget else budget
+
+    def foregroundColorChangedEvent(self, event):
+        super(Task, self).foregroundColorChangedEvent(event)
+        fgColor = self.foregroundColor()
+        for task in [self] + self.childrenWithoutOwnForegroundColor():
+            for eachEffort in task.efforts():
+                event.addSource(eachEffort, fgColor, 
+                                type=eachEffort.foregroundColorChangedEventType())
     
     def backgroundColorChangedEvent(self, event):
         super(Task, self).backgroundColorChangedEvent(event)
