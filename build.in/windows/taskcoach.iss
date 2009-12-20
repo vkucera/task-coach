@@ -74,3 +74,5 @@ Filename: "%(url)schanges.html"; Description: "Show recent changes (opens a webb
 [UninstallDelete]
 Type: files; Name: "{app}\%(filename)s.url"
 
+[InstallDelete]
+Type: files; Name:"{app}\UxTheme.dll"
