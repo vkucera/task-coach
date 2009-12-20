@@ -82,7 +82,6 @@ if 'debian' in platform.dist():
 system = platform.system()
 if system == 'Linux':
     setupOptions['package_data'] = {'taskcoachlib': ['bin.in/linux/_pysyncml.so']}
-    setupOptions['dll_excludes'] = ['UxTheme.dll']
 elif system == 'Windows':
     setupOptions['scripts'].append('taskcoach.pyw')
 else:

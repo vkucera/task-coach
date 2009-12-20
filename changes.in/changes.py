@@ -23,13 +23,13 @@ from changetypes import *
 
 releases = [
 
-Release('0.77.1', 'December 14, 2009',
+Release('0.77.1', 'December 20, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Make file locking work on Windows computers that have a  
 hostname with non-ASCII characters in it.''', '2904864'),
         Bug('''Avoid deploying UxTheme.dll because it causes problems
-on 64-bits systems.''')
+on 64-bits Windows systems.''', '2911280', '2897639')
         ],
     featuresChanged=[
         Feature('''Task Coach now limits the number of backups made of a task 
