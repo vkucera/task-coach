@@ -1,4 +1,7 @@
 
+2009-12-22  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
+	* BadgedCell.m: Fix categories indentation level.
+
 ==== 1.2: 2009-12-16 ====
 
 2009-10-19  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
