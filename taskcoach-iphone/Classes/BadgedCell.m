@@ -24,9 +24,9 @@
 	CGSize badgeSize = [self.badge sizeThatFits:self.badge.bounds.size];
 
 	CGRect labelRect;
-	labelRect.origin.x = 20;
+	labelRect.origin.x = 20 + 10 * self.indentationLevel;
 	labelRect.origin.y = 11;
-	labelRect.size.width = self.contentView.bounds.size.width - badgeSize.width - 60;
+	labelRect.size.width = self.contentView.bounds.size.width - badgeSize.width - 60 - 10 * self.indentationLevel;
 	labelRect.size.height = self.contentView.bounds.size.height - 22;
 	self.textLabel.frame = labelRect;
 
