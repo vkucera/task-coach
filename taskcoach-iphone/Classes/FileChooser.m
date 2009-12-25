@@ -30,6 +30,8 @@
 
 - (void)dealloc
 {
+	// Hack: if we do that before the animation is finished, the first row is not actually updated...
+	[catCtrl.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
 	[files release];
 	
 	[super dealloc];
