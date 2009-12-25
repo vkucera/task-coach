@@ -326,7 +326,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A613740C10E50A5600FF8210</string>
+										<string>A6C9A0D410E50AF700CBDC03</string>
 										<key>history</key>
 										<array>
 											<string>A6B5E01D106E04E200E3774E</string>
@@ -410,7 +410,7 @@
 											<string>A61373B210E5042C00FF8210</string>
 											<string>A61373D510E5079300FF8210</string>
 											<string>A61373F710E508CD00FF8210</string>
-											<string>A61373EA10E5083C00FF8210</string>
+											<string>A613740C10E50A5600FF8210</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -533,11 +533,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A61373B510E5042C00FF8210</string>
+				<string>A6C9A0C910E50AF700CBDC03</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A61373B610E5042C00FF8210</string>
+				<string>A6C9A0CA10E50AF700CBDC03</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A61373B710E5042C00FF8210</string>
+				<string>A6C9A0CB10E50AF700CBDC03</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -686,14 +686,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A61373B810E5042C00FF8210</string>
+				<string>A6C9A0CC10E50AF700CBDC03</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A61373B910E5042C00FF8210</string>
-				<string>A61373BA10E5042C00FF8210</string>
-				<string>A61373BB10E5042C00FF8210</string>
-				<string>A61373BC10E5042C00FF8210</string>
-				<string>A61373BD10E5042C00FF8210</string>
+				<string>A6C9A0CD10E50AF700CBDC03</string>
+				<string>A6C9A0CE10E50AF700CBDC03</string>
+				<string>A6C9A0CF10E50AF700CBDC03</string>
+				<string>A6C9A0D010E50AF700CBDC03</string>
+				<string>A6C9A0D110E50AF700CBDC03</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
 			<string>2</string>
@@ -725,8 +725,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>A61373C610E5045100FF8210</string>
-		<string>A61373BF10E5042C00FF8210</string>
+		<string>A6C9A0D210E50AF700CBDC03</string>
+		<string>A6C9A0D310E50AF700CBDC03</string>
 		<string>/Users/jeromelaheurte/Dev/taskcoach-iphone/taskcoach-iphone/TaskCoach.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
