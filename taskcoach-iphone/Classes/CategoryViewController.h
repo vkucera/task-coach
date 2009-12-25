@@ -27,6 +27,7 @@
 @property (nonatomic, assign) IBOutlet NavigationController *navigationController;
 @property (nonatomic, assign) IBOutlet UIBarButtonItem *syncButton;
 
+- (IBAction)onChooseFile:(UIBarButtonItem *)button;
 - (IBAction)onAddCategory:(UIBarButtonItem *)button;
 - (IBAction)onSynchronize:(UIBarButtonItem *)button;
 

@@ -11,6 +11,7 @@
 #import "StringChoiceController.h"
 #import "TaskViewController.h"
 #import "SyncViewController.h"
+#import "FileChooser.h"
 #import "BadgedCell.h"
 #import "CellFactory.h"
 
@@ -135,6 +136,13 @@
 	wantSync = YES;
 }
 
+- (IBAction)onChooseFile:(UIBarButtonItem *)button
+{
+	FileChooser *chooser = [[FileChooser alloc] initWithController:self];
+	[self.navigationController presentModalViewController:chooser animated:YES];
+	[chooser release];
+}
+
 - (IBAction)onAddCategory:(UIBarButtonItem *)button
 {
 	currentCategory = -1;
@@ -153,13 +161,19 @@
 		{
 			Category *parent = [categories objectAtIndex:currentCategory];
 
-			req = [[Database connection] statementWithSQL:@"INSERT INTO Category (name, parentId) VALUES (?, ?)"];
-			[req bindInteger:parent.objectId atIndex:2];
+			req = [[Database connection] statementWithSQL:@"INSERT INTO Category (name, fileId, parentId) VALUES (?, ?, ?)"];
+			[req bindInteger:parent.objectId atIndex:3];
 		}
 		else
-			req = [[Database connection] statementWithSQL:@"INSERT INTO Category (name) VALUES (?)"];
+			req = [[Database connection] statementWithSQL:@"INSERT INTO Category (name, fileId) VALUES (?, ?)"];
 
 		[req bindString:name atIndex:1];
+
+		if ([Database connection].currentFile)
+			[req bindInteger:[[Database connection].currentFile intValue] atIndex:2];
+		else
+			[req bindNullAtIndex:2];
+
 		[req exec];
 		[self loadCategories];
 		[self.tableView reloadData];

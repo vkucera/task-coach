@@ -20,9 +20,9 @@ static Statement *_saveStatement = nil;
 @synthesize parentId;
 @synthesize level;
 
-- initWithId:(NSInteger)ID name:(NSString *)theName status:(NSInteger)theStatus taskCoachId:(NSString *)theTaskCoachId parentId:(NSNumber *)theParentId
+- initWithId:(NSInteger)ID fileId:(NSNumber *)theFileId name:(NSString *)theName status:(NSInteger)theStatus taskCoachId:(NSString *)theTaskCoachId parentId:(NSNumber *)theParentId
 {
-	if (self = [super initWithId:ID name:theName status:theStatus taskCoachId:theTaskCoachId])
+	if (self = [super initWithId:ID fileId:theFileId name:theName status:theStatus taskCoachId:theTaskCoachId])
 	{
 		parentId = [theParentId retain];
 		children = [[NSMutableArray alloc] init];
@@ -42,13 +42,13 @@ static Statement *_saveStatement = nil;
 - (Statement *)saveStatement
 {
 	if (!_saveStatement)
-		_saveStatement = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE %@ SET name=?, status=?, taskCoachId=?, parentId=? WHERE id=?", [self class]]] retain];
+		_saveStatement = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE %@ SET fileId=?, name=?, status=?, taskCoachId=?, parentId=? WHERE id=?", [self class]]] retain];
 	return _saveStatement;
 }
 
 - (void)bindId
 {
-	[[self saveStatement] bindInteger:objectId atIndex:5];
+	[[self saveStatement] bindInteger:objectId atIndex:6];
 }
 
 - (void)bind
@@ -56,9 +56,9 @@ static Statement *_saveStatement = nil;
 	[super bind];
 	
 	if (parentId)
-		[[self saveStatement] bindInteger:[parentId intValue] atIndex:4];
+		[[self saveStatement] bindInteger:[parentId intValue] atIndex:5];
 	else
-		[[self saveStatement] bindNullAtIndex:4];
+		[[self saveStatement] bindNullAtIndex:5];
 }
 
 - (NSInteger)countForTable:(NSString *)tableName

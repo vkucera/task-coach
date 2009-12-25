@@ -25,16 +25,16 @@
 {
 	Statement *req;
 	
-	req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM Category WHERE status=%d", STATUS_NEW]];
+	req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM CurrentCategory WHERE status=%d", STATUS_NEW]];
 	[req execWithTarget:self action:@selector(onNewCategoriesCount:)];
 	
-	req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM Task WHERE status=%d", STATUS_NEW]];
+	req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM CurrentTask WHERE status=%d", STATUS_NEW]];
 	[req execWithTarget:self action:@selector(onNewTasksCount:)];
 	
-	req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM Task WHERE status=%d", STATUS_DELETED]];
+	req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM CurrentTask WHERE status=%d", STATUS_DELETED]];
 	[req execWithTarget:self action:@selector(onDeletedTasksCount:)];
 	
-	req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM Task WHERE status=%d", STATUS_MODIFIED]];
+	req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM CurrentTask WHERE status=%d", STATUS_MODIFIED]];
 	[req execWithTarget:self action:@selector(onModifiedTasksCount:)];
 	
 	[myNetwork appendInteger:newCategoriesCount];
@@ -42,18 +42,15 @@
 	[myNetwork appendInteger:deletedTasksCount];
 	[myNetwork appendInteger:modifiedTasksCount];
 
-	if (myController.protocolVersion >= 3)
-	{
-		req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM Category WHERE status=%d", STATUS_DELETED]];
-		[req execWithTarget:self action:@selector(onDeletedCategoriesCount:)];
+	req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM CurrentCategory WHERE status=%d", STATUS_DELETED]];
+	[req execWithTarget:self action:@selector(onDeletedCategoriesCount:)];
 		
-		[myNetwork appendInteger:deletedCategoriesCount];
+	[myNetwork appendInteger:deletedCategoriesCount];
 
-		req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM Category WHERE status=%d", STATUS_MODIFIED]];
-		[req execWithTarget:self action:@selector(onModifiedCategoriesCount:)];
+	req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM CurrentCategory WHERE status=%d", STATUS_MODIFIED]];
+	[req execWithTarget:self action:@selector(onModifiedCategoriesCount:)];
 		
-		[myNetwork appendInteger:modifiedCategoriesCount];
-	}
+	[myNetwork appendInteger:modifiedCategoriesCount];
 
 	myController.state = [TwoWayNewCategoriesState stateWithNetwork:myNetwork controller:myController];
 }

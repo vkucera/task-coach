@@ -36,7 +36,7 @@
 @property (nonatomic, retain) NSString *completionDate;
 @property (nonatomic) NSInteger taskStatus;
 
-- initWithId:(NSInteger)ID name:(NSString *)name status:(NSInteger)status taskCoachId:(NSString *)taskCoachId description:(NSString *)description
+- initWithId:(NSInteger)ID fileId:(NSNumber *)fileId name:(NSString *)name status:(NSInteger)status taskCoachId:(NSString *)taskCoachId description:(NSString *)description
    startDate:(NSString *)startDate dueDate:(NSString *)dueDate completionDate:(NSString *)completionDate dateStatus:(NSInteger)dateStatus;
 
 - (void)setCompleted:(BOOL)completed;

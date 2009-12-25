@@ -144,7 +144,7 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
                 from taskcoachlib.thirdparty import pybonjour # pylint: disable-msg=W0612
                 from taskcoachlib.iphone import IPhoneAcceptor, BonjourServiceRegister
 
-                acceptor = IPhoneAcceptor(self, settings)
+                acceptor = IPhoneAcceptor(self, settings, iocontroller)
                 self.bonjourRegister = BonjourServiceRegister(settings, acceptor.port)
             except:
                 from taskcoachlib.gui.dialog.iphone import IPhoneBonjourDialog

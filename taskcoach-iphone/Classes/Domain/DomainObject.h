@@ -16,17 +16,19 @@
 @interface DomainObject : NSObject
 {
 	NSInteger objectId;
+	NSNumber *fileId;
 	NSString *name;
 	NSInteger status;
 	NSString *taskCoachId;
 }
 
 @property (nonatomic, readonly) NSInteger objectId;
+@property (nonatomic, retain, readonly) NSNumber *fileId;
 @property (nonatomic, retain) NSString *name;
 @property (nonatomic, readonly) NSInteger status;
 @property (nonatomic, copy) NSString *taskCoachId;
 
-- initWithId:(NSInteger)ID name:(NSString *)name status:(NSInteger)status taskCoachId:(NSString *)taskCoachId;
+- initWithId:(NSInteger)ID fileId:(NSNumber *)fileId name:(NSString *)name status:(NSInteger)status taskCoachId:(NSString *)taskCoachId; // XXXTODO fileId
 
 - (void)setStatus:(NSInteger)status;
 - (void)delete;

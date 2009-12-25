@@ -6,15 +6,29 @@
 -- 2: modified
 -- 3: deleted
 
+CREATE TABLE TaskCoachFile
+(
+	id INTEGER PRIMARY KEY,
+	name VARCHAR(255),
+	guid CHAR(40) NOT NULL,
+	visible BOOLEAN NOT NULL DEFAULT 0
+);
+
+CREATE INDEX idxTaskCoachFileGUID ON TaskCoachFile (guid);
+CREATE INDEX idxTaskCoachFileName ON TaskCoachFile (name);
+CREATE INDEX idxTaskCoachFileVisible ON TaskCoachFile (visible);
+
 CREATE TABLE Category
 (
 	id INTEGER PRIMARY KEY,
+	fileId INTEGER NULL DEFAULT NULL,
 	name VARCHAR(255) NOT NULL,
 	status INTEGER NOT NULL DEFAULT 1,
 	taskCoachId VARCHAR(255) NULL DEFAULT NULL,
 	parentId INTEGER NULL DEFAULT NULL
 );
 
+CREATE INDEX idxCategoryFile ON Category (fileId);
 CREATE INDEX idxCategoryStatus ON Category (status);
 CREATE INDEX idxCategoryName ON Category (name);
 CREATE INDEX idxCategoryTaskCoachId ON Category (taskcoachId);
@@ -23,6 +37,7 @@ CREATE INDEX idxCategoryParentId ON Category (parentId);
 CREATE TABLE Task
 (
 	id INTEGER PRIMARY KEY,
+	fileId INTEGER NULL DEFAULT NULL,
 	name VARCHAR(2048) NOT NULL,
 	status INTEGER NOT NULL DEFAULT 1,
 	taskCoachId VARCHAR(255) NULL DEFAULT NULL,
@@ -38,6 +53,7 @@ CREATE TABLE Task
 	completionDate CHAR(10) NULL DEFAULT NULL
 );
 
+CREATE INDEX idxTaskFile ON Task (fileId);
 CREATE INDEX idxTaskStatus ON Task (status);
 CREATE INDEX idxTaskName ON Task (name);
 CREATE INDEX idxTaskTaskCoachId ON Task (taskcoachId);
@@ -61,4 +77,4 @@ CREATE UNIQUE INDEX idxMetaName ON Meta (name);
 
 -- Initial data
 
-INSERT INTO Meta (name, value) VALUES ('version', '1');
+INSERT INTO Meta (name, value) VALUES ('version', '3');

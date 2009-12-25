@@ -292,6 +292,9 @@ class IOController(object):
 
         self.__messageCallback(_('Finished synchronization'))
 
+    def filename(self):
+        return self.__taskFile.filename()
+
     def resolveNoteConflict(self, flags, local, remote):
         return self.resolveConflict(conflict.NoteConflictPanel, 
                                     flags, local, remote, _('Note conflict'))

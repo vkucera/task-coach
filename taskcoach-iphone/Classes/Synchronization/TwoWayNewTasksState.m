@@ -29,8 +29,7 @@
 
 	taskCategories = [[NSMutableArray alloc] initWithCapacity:2];
 
-
-	[self start:[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM Task WHERE Task.status=%d", STATUS_NEW]]];
+	[self start:[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM CurrentTask WHERE CurrentTask.status=%d", STATUS_NEW]]];
 }
 
 - (void)dealloc
@@ -53,6 +52,7 @@
 	[myNetwork appendString:[dict objectForKey:@"completionDate"]];
 
 	[taskCategories removeAllObjects];
+
 	Statement *req = [[Database connection] statementWithSQL:@"SELECT taskCoachId FROM Category, TaskHasCategory WHERE idCategory=id AND idTask=?"];
 	[req bindInteger:[[dict objectForKey:@"id"] intValue] atIndex:1];
 	[req execWithTarget:self action:@selector(onFoundCategory:)];

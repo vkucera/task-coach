@@ -27,7 +27,7 @@ from taskcoachlib.domain.task import Task
 from taskcoachlib.i18n import _
 
 import wx, asynchat, threading, asyncore, struct, \
-    random, time, sha, cStringIO, socket
+    random, time, sha, cStringIO, socket, os
 
 # Default port is 8001.
 #
@@ -434,12 +434,12 @@ class State(object):
 # Actual protocol
 
 class IPhoneAcceptor(Acceptor):
-    def __init__(self, window, settings):
+    def __init__(self, window, settings, iocontroller):
         def factory(fp, addr):
             password = settings.get('iphone', 'password')
 
             if password:
-                return IPhoneHandler(window, settings, fp)
+                return IPhoneHandler(window, settings, iocontroller, fp)
 
             wx.MessageBox(_('''An iPhone or iPod Touch tried to connect to Task Coach,\n'''
                             '''but no password is set. Please set a password in the\n'''
@@ -454,16 +454,17 @@ class IPhoneAcceptor(Acceptor):
 
 
 class IPhoneHandler(asynchat.async_chat):
-    def __init__(self, window, settings, fp):
+    def __init__(self, window, settings, iocontroller, fp):
         asynchat.async_chat.__init__(self, fp)
 
         self.setsockopt(socket.SOL_TCP, socket.TCP_NODELAY, 1)
 
         self.window = window
         self.settings = settings
+        self.iocontroller = iocontroller
         self.state = BaseState(self)
 
-        self.state.setState(InitialState, 3)
+        self.state.setState(InitialState, 4)
 
         random.seed(time.time())
 
@@ -547,7 +548,8 @@ class InitialState(BaseState):
             self.setState(PasswordState)
         else:
             if self.version == 1:
-                self.disp().close()
+                # Do not close the connection because it causes an error on the
+                # device. It will do it itself.
                 self.disp().window.notifyIPhoneProtocolFailed()
             else:
                 self.setState(InitialState, self.version - 1)
@@ -586,25 +588,50 @@ class DeviceNameState(BaseState):
 
 class GUIDState(BaseState):
     def init(self):
-        super(GUIDState, self).init('z', 1)
+        if self.version >= 4:
+            super(GUIDState, self).init('i', 1)
+            self.pack('s', self.disp().window.taskFile.guid())
+        else:
+            super(GUIDState, self).init('z', 1)
 
     def handleNewObject(self, guid):
-        type_ = self.disp().window.getIPhoneSyncType(guid)
-
-        self.pack('i', type_)
-
-        if type_ != 3:
+        if self.version >= 4:
             self.dlg = self.disp().window.createIPhoneProgressDialog(self.deviceName)
             self.dlg.Started()
+            self.setState(TaskFileNameState)
+        else:
+            type_ = self.disp().window.getIPhoneSyncType(guid)
 
-        if type_ == 0:
-            self.setState(TwoWayState)
-        elif type_ == 1:
-            self.setState(FullFromDesktopState)
-        elif type_ == 2:
-            self.setState(FullFromDeviceState)
+            self.pack('i', type_)
 
-        # On cancel, the other end will close the connection
+            if type_ != 3:
+                self.dlg = self.disp().window.createIPhoneProgressDialog(self.deviceName)
+                self.dlg.Started()
+
+            if type_ == 0:
+                self.setState(TwoWayState)
+            elif type_ == 1:
+                self.setState(FullFromDesktopState)
+            elif type_ == 2:
+                self.setState(FullFromDeviceState)
+
+            # On cancel, the other end will close the connection
+
+    def finished(self):
+        pass
+
+
+class TaskFileNameState(BaseState):
+    def init(self):
+        super(TaskFileNameState, self).init('i', 1)
+
+        filename = self.disp().iocontroller.filename()
+        if filename:
+            filename = os.path.splitext(os.path.split(filename)[1])[0]
+        self.pack('z', filename)
+
+    def handleNewObject(self, response):
+        self.setState(TwoWayState)
 
     def finished(self):
         pass

@@ -35,10 +35,10 @@
 	[myController.activity stopAnimating];
 	myController.progress.hidden = NO;
 
-	[[[Database connection] statementWithSQL:@"DELETE FROM Category"] exec];
-	[[[Database connection] statementWithSQL:@"DELETE FROM Task"] exec];
-	[[[Database connection] statementWithSQL:@"DELETE FROM TaskHasCategory"] exec];
-	[[[Database connection] statementWithSQL:@"DELETE FROM Meta WHERE name='guid'"] exec];
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"DELETE FROM TaskHasCategory WHERE idTask IN (SELECT id FROM Task WHERE fileId=%@)", [Database connection].currentFile]] exec];
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"DELETE FROM TaskHasCategory WHERE idCategory IN (SELECT id FROM Category WHERE fileId=%@)", [Database connection].currentFile]] exec];
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"DELETE FROM Task WHERE fileId=%@", [Database connection].currentFile]] exec];
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"DELETE FROM Category WHERE fileId=%@", [Database connection].currentFile]] exec];
 	
 	[myNetwork expect:8];
 }
@@ -159,10 +159,11 @@
 		case CATEGORY_PARENT_ID:
 		{
 			Category *category;
+
 			if ([data length])
-				category = [[Category alloc] initWithId:-1 name:categoryName status:STATUS_NONE taskCoachId:categoryId parentId:[idMap valueForKey:[NSString stringFromUTF8Data:data]]];
+				category = [[Category alloc] initWithId:-1 fileId:[Database connection].currentFile name:categoryName status:STATUS_NONE taskCoachId:categoryId parentId:[idMap valueForKey:[NSString stringFromUTF8Data:data]]];
 			else
-				category = [[Category alloc] initWithId:-1 name:categoryName status:STATUS_NONE taskCoachId:categoryId];
+				category = [[Category alloc] initWithId:-1 fileId:[Database connection].currentFile name:categoryName status:STATUS_NONE taskCoachId:categoryId];
 
 			[category save];
 			
@@ -303,7 +304,7 @@
 				taskCompleted = nil;
 			}
 			
-			Task *task = [[Task alloc] initWithId:-1 name:taskSubject status:STATUS_NONE taskCoachId:taskId description:taskDescription
+			Task *task = [[Task alloc] initWithId:-1 fileId:[Database connection].currentFile name:taskSubject status:STATUS_NONE taskCoachId:taskId description:taskDescription
 										startDate:taskStart dueDate:taskDue completionDate:taskCompleted dateStatus:TASKSTATUS_UNDEFINED];
 			[task save];
 			NSLog(@"Added task %@", taskSubject);
@@ -390,13 +391,7 @@
 			break;
 		case GUID:
 		{
-			NSString *guid = [[NSString stringFromUTF8Data:data] retain];
-			Statement *req = [[Database connection] statementWithSQL:@"INSERT INTO Meta (name, value) VALUES (?, ?)"];
-			[req bindString:@"guid" atIndex:1];
-			[req bindString:guid atIndex:2];
-			[req exec];
-			[guid release];
-
+			// We don't care any more
 			[network appendInteger:1];
 			
 			controller.state = [EndState stateWithNetwork:network controller:controller];

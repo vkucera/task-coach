@@ -80,10 +80,10 @@
 {
 	Statement *req;
 	
-	req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM Category WHERE %@", [self categoryWhereClause]]];
+	req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM CurrentCategory WHERE %@", [self categoryWhereClause]]];
 	[req execWithTarget:self action:@selector(onCategoryCount:)];
 	
-	req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM Task WHERE %@", [self taskWhereClause]]];
+	req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM CurrentTask WHERE %@", [self taskWhereClause]]];
 	[req execWithTarget:self action:@selector(onTaskCount:)];
 	
 	total = categoryCount + taskCount;

@@ -260,6 +260,7 @@
 
 	if (cell == categoriesCell)
 	{
+		// XXXTODO: filter by file
 		TaskCategoryPickerController *categoryPicker = [[TaskCategoryPickerController alloc] initWithTask:task];
 		[self.navigationController pushViewController:categoryPicker animated:YES];
 		[categoryPicker release];

@@ -21,7 +21,7 @@
 @property (nonatomic, readonly) NSNumber *parentId;
 @property (nonatomic) NSInteger level;
 
-- initWithId:(NSInteger)ID name:(NSString *)name status:(NSInteger)status taskCoachId:(NSString *)taskCoachId parentId:(NSNumber *)parentId;
+- initWithId:(NSInteger)ID fileId:(NSNumber *)fileId name:(NSString *)name status:(NSInteger)status taskCoachId:(NSString *)taskCoachId parentId:(NSNumber *)parentId;
 
 - (NSInteger)countForTable:(NSString *)tableName;
 

@@ -25,7 +25,7 @@
 {
 	[super activated];
 	
-	[self start:[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM Category WHERE status=%d", STATUS_MODIFIED]]];
+	[self start:[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM CurrentCategory WHERE status=%d", STATUS_MODIFIED]]];
 }
 
 - (void)onObject:(NSDictionary *)dict

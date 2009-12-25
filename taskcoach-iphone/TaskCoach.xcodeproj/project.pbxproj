@@ -12,8 +12,6 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
-		A604D98E0F31C25B00D3DC79 /* FullFromDeviceState.m in Sources */ = {isa = PBXBuildFile; fileRef = A604D98D0F31C25B00D3DC79 /* FullFromDeviceState.m */; };
-		A604D99C0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m in Sources */ = {isa = PBXBuildFile; fileRef = A604D99B0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m */; };
 		A604D9AB0F31CB6100D3DC79 /* GetGUIDState.m in Sources */ = {isa = PBXBuildFile; fileRef = A604D9AA0F31CB6100D3DC79 /* GetGUIDState.m */; };
 		A60575FF0FA457590054E4C3 /* addtask.png in Resources */ = {isa = PBXBuildFile; fileRef = A60575FE0FA457590054E4C3 /* addtask.png */; };
 		A60B6E30102587FA00F9983C /* BaseCategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A60B6E2F102587FA00F9983C /* BaseCategoryViewController.m */; };
@@ -107,6 +105,9 @@
 		A6DDED1B0F46C5D30047AEF5 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6DDED1A0F46C5D30047AEF5 /* Security.framework */; };
 		A6DDF8500F1F974000F35108 /* TaskList.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF84F0F1F974000F35108 /* TaskList.m */; };
 		A6DDF8540F1F988600F35108 /* TaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF8530F1F988600F35108 /* TaskViewController.m */; };
+		A6E83C5A10E4C9AF00FF3E45 /* FileChooser.m in Sources */ = {isa = PBXBuildFile; fileRef = A6E83C5810E4C9AF00FF3E45 /* FileChooser.m */; };
+		A6E83C5B10E4C9AF00FF3E45 /* FileChooser.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6E83C5910E4C9AF00FF3E45 /* FileChooser.xib */; };
+		A6E83D0F10E4E34800FF3E45 /* TaskFileNameState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6E83D0E10E4E34800FF3E45 /* TaskFileNameState.m */; };
 		A6EA679A0F2255E7004108B5 /* CheckView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6EA67990F2255E7004108B5 /* CheckView.m */; };
 		A6F8BF740F46F93C00385F57 /* CategoriesSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F8BF730F46F93C00385F57 /* CategoriesSelector.m */; };
 		A6F8E3FA0F2C6CFD007D929C /* FullFromDesktopState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F8E3F90F2C6CFD007D929C /* FullFromDesktopState.m */; };
@@ -124,10 +125,6 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* TaskCoach_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCoach_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A604D98C0F31C25B00D3DC79 /* FullFromDeviceState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FullFromDeviceState.h; path = Synchronization/FullFromDeviceState.h; sourceTree = "<group>"; };
-		A604D98D0F31C25B00D3DC79 /* FullFromDeviceState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FullFromDeviceState.m; path = Synchronization/FullFromDeviceState.m; sourceTree = "<group>"; };
-		A604D99A0F31C7FA00D3DC79 /* FullFromDeviceTaskState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FullFromDeviceTaskState.h; path = Synchronization/FullFromDeviceTaskState.h; sourceTree = "<group>"; };
-		A604D99B0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FullFromDeviceTaskState.m; path = Synchronization/FullFromDeviceTaskState.m; sourceTree = "<group>"; };
 		A604D9A90F31CB6100D3DC79 /* GetGUIDState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetGUIDState.h; path = Synchronization/GetGUIDState.h; sourceTree = "<group>"; };
 		A604D9AA0F31CB6100D3DC79 /* GetGUIDState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetGUIDState.m; path = Synchronization/GetGUIDState.m; sourceTree = "<group>"; };
 		A60575FE0FA457590054E4C3 /* addtask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = addtask.png; sourceTree = "<group>"; };
@@ -296,6 +293,11 @@
 		A6DDF84F0F1F974000F35108 /* TaskList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TaskList.m; path = Database/TaskList.m; sourceTree = "<group>"; };
 		A6DDF8520F1F988600F35108 /* TaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskViewController.h; sourceTree = "<group>"; };
 		A6DDF8530F1F988600F35108 /* TaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskViewController.m; sourceTree = "<group>"; };
+		A6E83C5710E4C9AF00FF3E45 /* FileChooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileChooser.h; sourceTree = "<group>"; };
+		A6E83C5810E4C9AF00FF3E45 /* FileChooser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileChooser.m; sourceTree = "<group>"; };
+		A6E83C5910E4C9AF00FF3E45 /* FileChooser.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FileChooser.xib; sourceTree = "<group>"; };
+		A6E83D0D10E4E34800FF3E45 /* TaskFileNameState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TaskFileNameState.h; path = Synchronization/TaskFileNameState.h; sourceTree = "<group>"; };
+		A6E83D0E10E4E34800FF3E45 /* TaskFileNameState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TaskFileNameState.m; path = Synchronization/TaskFileNameState.m; sourceTree = "<group>"; };
 		A6EA67980F2255E7004108B5 /* CheckView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckView.h; sourceTree = "<group>"; };
 		A6EA67990F2255E7004108B5 /* CheckView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckView.m; sourceTree = "<group>"; };
 		A6F8BF720F46F93C00385F57 /* CategoriesSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CategoriesSelector.h; path = Database/CategoriesSelector.h; sourceTree = "<group>"; };
@@ -365,6 +367,9 @@
 				A60B6ED510258D9D00F9983C /* TaskCategoryPickerController.h */,
 				A60B6ED610258D9D00F9983C /* TaskCategoryPickerController.m */,
 				A6D5F411104166480098B4D5 /* i18n.h */,
+				A6E83C5710E4C9AF00FF3E45 /* FileChooser.h */,
+				A6E83C5810E4C9AF00FF3E45 /* FileChooser.m */,
+				A6E83C5910E4C9AF00FF3E45 /* FileChooser.xib */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -498,10 +503,6 @@
 				A6F8E3F90F2C6CFD007D929C /* FullFromDesktopState.m */,
 				A6F8E4920F2C7574007D929C /* EndState.h */,
 				A6F8E4930F2C7574007D929C /* EndState.m */,
-				A604D98C0F31C25B00D3DC79 /* FullFromDeviceState.h */,
-				A604D98D0F31C25B00D3DC79 /* FullFromDeviceState.m */,
-				A604D99A0F31C7FA00D3DC79 /* FullFromDeviceTaskState.h */,
-				A604D99B0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m */,
 				A604D9A90F31CB6100D3DC79 /* GetGUIDState.h */,
 				A604D9AA0F31CB6100D3DC79 /* GetGUIDState.m */,
 				A6793B250F31E28700AAEC17 /* UploadObjectsState.h */,
@@ -520,6 +521,8 @@
 				A63E286C10415CCD00A2E672 /* TwoWayDeletedCategoriesState.m */,
 				A6AFD6BA10414E930065D5B7 /* TwoWayModifiedCategoriesState.h */,
 				A6AFD6BB10414E930065D5B7 /* TwoWayModifiedCategoriesState.m */,
+				A6E83D0D10E4E34800FF3E45 /* TaskFileNameState.h */,
+				A6E83D0E10E4E34800FF3E45 /* TaskFileNameState.m */,
 			);
 			name = Synchronization;
 			sourceTree = "<group>";
@@ -706,6 +709,7 @@
 				A6831FFE102EB057002A7083 /* TaskView.xib in Resources */,
 				A6832038102EB499002A7083 /* TaskView.strings in Resources */,
 				A61F5458108CB67800BDFD6D /* BadgedCell.xib in Resources */,
+				A6E83C5B10E4C9AF00FF3E45 /* FileChooser.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -750,8 +754,6 @@
 				A6C9843E0F2B77C40088A73F /* GUIDState.m in Sources */,
 				A6F8E3FA0F2C6CFD007D929C /* FullFromDesktopState.m in Sources */,
 				A6F8E4940F2C7574007D929C /* EndState.m in Sources */,
-				A604D98E0F31C25B00D3DC79 /* FullFromDeviceState.m in Sources */,
-				A604D99C0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m in Sources */,
 				A604D9AB0F31CB6100D3DC79 /* GetGUIDState.m in Sources */,
 				A6793B270F31E28700AAEC17 /* UploadObjectsState.m in Sources */,
 				A61AECFC0F35BA450086ECD6 /* TwoWayState.m in Sources */,
@@ -776,6 +778,8 @@
 				A61F544F108CB57A00BDFD6D /* BadgeItem.m in Sources */,
 				A61F5450108CB57A00BDFD6D /* BadgeView.m in Sources */,
 				A61F5454108CB5B400BDFD6D /* BadgedCell.m in Sources */,
+				A6E83C5A10E4C9AF00FF3E45 /* FileChooser.m in Sources */,
+				A6E83D0F10E4E34800FF3E45 /* TaskFileNameState.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -931,7 +935,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2FEE6CC8-C167-4C62-B6EB-4617DB472B5C";
-				SDKROOT = iphoneos3.0;
+				SDKROOT = iphoneos3.1.2;
 			};
 			name = Distribution;
 		};
@@ -961,7 +965,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "685429E5-CBC5-4C7A-870C-13E6CAE1C337";
-				SDKROOT = iphoneos3.0;
+				SDKROOT = iphoneos3.1.2;
 			};
 			name = "1.1 beta 1";
 		};
@@ -988,7 +992,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D70F4831-F2EC-48DE-9E3C-2E9B862265B6";
-				SDKROOT = iphoneos3.0;
+				SDKROOT = iphoneos3.1.2;
 			};
 			name = "Release Frank";
 		};
@@ -1015,7 +1019,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos3.0;
+				SDKROOT = iphoneos3.1.2;
 			};
 			name = Debug;
 		};
@@ -1029,7 +1033,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "60932F3E-25B2-47AB-A622-37FA87ADB45F";
-				SDKROOT = iphoneos3.0;
+				SDKROOT = iphoneos3.1.2;
 			};
 			name = Release;
 		};

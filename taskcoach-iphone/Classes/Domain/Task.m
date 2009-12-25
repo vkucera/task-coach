@@ -24,10 +24,10 @@ static Statement *_saveStatement = NULL;
 @synthesize completionDate;
 @synthesize taskStatus;
 
-- initWithId:(NSInteger)theId name:(NSString *)theName status:(NSInteger)theStatus taskCoachId:(NSString *)tcId description:(NSString *)theDescription
+- initWithId:(NSInteger)theId fileId:(NSNumber *)theFileId name:(NSString *)theName status:(NSInteger)theStatus taskCoachId:(NSString *)tcId description:(NSString *)theDescription
    startDate:(NSString *)theStartDate dueDate:(NSString *)theDueDate completionDate:(NSString *)theCompletionDate dateStatus:(NSInteger)dateStatus
 {
-	if (self = [super initWithId:theId name:theName status:theStatus taskCoachId:tcId])
+	if (self = [super initWithId:theId fileId:theFileId name:theName status:theStatus taskCoachId:tcId])
 	{
 		description = [theDescription retain];
 		startDate = [theStartDate retain];
@@ -53,23 +53,23 @@ static Statement *_saveStatement = NULL;
 - (Statement *)saveStatement
 {
 	if (!_saveStatement)
-		_saveStatement = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE %@ SET name=?, status=?, taskCoachId=?, description=?, startDate=?, dueDate=?, completionDate=? WHERE id=?", [self class]]] retain];
+		_saveStatement = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE %@ SET fileId=?, name=?, status=?, taskCoachId=?, description=?, startDate=?, dueDate=?, completionDate=? WHERE id=?", [self class]]] retain];
 	return _saveStatement;
 }
 
 - (void)bindId
 {
-	[[self saveStatement] bindInteger:objectId atIndex:8];
+	[[self saveStatement] bindInteger:objectId atIndex:9];
 }
 
 - (void)bind
 {
 	[super bind];
 
-	[[self saveStatement] bindString:description atIndex:4];
-	[[self saveStatement] bindString:startDate atIndex:5];
-	[[self saveStatement] bindString:dueDate atIndex:6];
-	[[self saveStatement] bindString:completionDate atIndex:7];
+	[[self saveStatement] bindString:description atIndex:5];
+	[[self saveStatement] bindString:startDate atIndex:6];
+	[[self saveStatement] bindString:dueDate atIndex:7];
+	[[self saveStatement] bindString:completionDate atIndex:8];
 }
 
 - (void)delete
