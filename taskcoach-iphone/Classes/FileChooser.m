@@ -28,6 +28,13 @@
 	return self;
 }
 
+- (void)viewDidLoad
+{
+	[super viewDidLoad];
+
+	[self setEditing:YES];
+}
+
 - (void)dealloc
 {
 	// Hack: if we do that before the animation is finished, the first row is not actually updated...
@@ -89,9 +96,9 @@
 	NSArray *file = [files objectAtIndex:indexPath.row];
 	cell.textLabel.text = [file objectAtIndex:1];
 	if ([[file objectAtIndex:2] intValue])
-		cell.accessoryType = UITableViewCellAccessoryCheckmark;
+		cell.editingAccessoryType = UITableViewCellAccessoryCheckmark;
 	else
-		cell.accessoryType = UITableViewCellAccessoryNone;
+		cell.editingAccessoryType = UITableViewCellAccessoryNone;
 
     return cell;
 }
@@ -127,6 +134,52 @@
 	[catCtrl.tableView reloadData];
 	
 	[catCtrl.navigationController dismissModalViewControllerAnimated:YES];
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	if (editingStyle == UITableViewCellEditingStyleDelete)
+	{
+		NSInteger fileId = [[[files objectAtIndex:indexPath.row] objectAtIndex:0] intValue];
+
+		// Also delete all tasks and categories...
+		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"DELETE FROM TaskHasCategory WHERE idTask IN (SELECT id FROM Task WHERE fileId=%d)", fileId]] exec];
+		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"DELETE FROM TaskHasCategory WHERE idCategory IN (SELECT id FROM Category WHERE fileId=%d)", fileId]] exec];
+		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"DELETE FROM Task WHERE fileId=%d", fileId]] exec];
+		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"DELETE FROM Category WHERE fileId=%d", fileId]] exec];
+		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"DELETE FROM TaskCoachFile WHERE id=%d", fileId]] exec];
+
+		[self.tableView beginUpdates];
+
+		if ([[[files objectAtIndex:indexPath.row] objectAtIndex:2] intValue])
+		{
+			[files removeObjectAtIndex:indexPath.row];
+
+			// This was the current file; choose another one, if there is one
+			if ([files count])
+			{
+				[[files objectAtIndex:0] replaceObjectAtIndex:2 withObject:[NSNumber numberWithInt:1]];
+				[Database connection].currentFile = [[files objectAtIndex:0] objectAtIndex:0];
+				[self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+			}
+			else
+			{
+				// Huh
+				[catCtrl loadCategories];
+				[catCtrl.tableView reloadData];
+				[catCtrl.navigationController dismissModalViewControllerAnimated:YES];
+			}
+
+		}
+		else
+		{
+			[files removeObjectAtIndex:indexPath.row];
+		}
+
+	}
+
+	[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+	[self.tableView endUpdates];
 }
 
 @end

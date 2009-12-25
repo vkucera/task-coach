@@ -274,9 +274,8 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>14</integer>
-									<integer>1</integer>
-									<integer>0</integer>
+									<integer>65</integer>
+									<integer>64</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
@@ -315,7 +314,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>CategoryViewController.m</string>
+								<string>FileChooser.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -323,11 +322,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>CategoryViewController.m</string>
+										<string>FileChooser.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A63B2CFB10E5004E00B7CC44</string>
+										<string>A613740C10E50A5600FF8210</string>
 										<key>history</key>
 										<array>
 											<string>A6B5E01D106E04E200E3774E</string>
@@ -365,7 +364,6 @@
 											<string>A6E83B9B10E4C28300FF3E45</string>
 											<string>A6E83B9C10E4C28300FF3E45</string>
 											<string>A6E83C6B10E4CF5B00FF3E45</string>
-											<string>A6E83C6C10E4CF5B00FF3E45</string>
 											<string>A6E83C6D10E4CF5B00FF3E45</string>
 											<string>A6E83C9810E4D4F400FF3E45</string>
 											<string>A6E83CD710E4D6CF00FF3E45</string>
@@ -408,10 +406,11 @@
 											<string>A6E83DF610E4F5B600FF3E45</string>
 											<string>A6E83DF710E4F5B600FF3E45</string>
 											<string>A63523A910E4FB2500FA2C60</string>
-											<string>A63523AA10E4FB2500FA2C60</string>
 											<string>A63B2CD010E4FE9C00B7CC44</string>
-											<string>A63B2CF710E5001000B7CC44</string>
-											<string>A63B2CF810E5001000B7CC44</string>
+											<string>A61373B210E5042C00FF8210</string>
+											<string>A61373D510E5079300FF8210</string>
+											<string>A61373F710E508CD00FF8210</string>
+											<string>A61373EA10E5083C00FF8210</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -534,11 +533,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A63B2CD310E4FE9C00B7CC44</string>
+				<string>A61373B510E5042C00FF8210</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A63B2CD410E4FE9C00B7CC44</string>
+				<string>A61373B610E5042C00FF8210</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A63B2CD510E4FE9C00B7CC44</string>
+				<string>A61373B710E5042C00FF8210</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -687,14 +686,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A63B2CD610E4FE9C00B7CC44</string>
+				<string>A61373B810E5042C00FF8210</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A63B2CD710E4FE9C00B7CC44</string>
-				<string>A63B2CD810E4FE9C00B7CC44</string>
-				<string>A63B2CD910E4FE9C00B7CC44</string>
-				<string>A63B2CDA10E4FE9C00B7CC44</string>
-				<string>A63B2CDB10E4FE9C00B7CC44</string>
+				<string>A61373B910E5042C00FF8210</string>
+				<string>A61373BA10E5042C00FF8210</string>
+				<string>A61373BB10E5042C00FF8210</string>
+				<string>A61373BC10E5042C00FF8210</string>
+				<string>A61373BD10E5042C00FF8210</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
 			<string>2</string>
@@ -726,8 +725,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>A63B2CE910E4FEE600B7CC44</string>
-		<string>A63B2CDD10E4FE9C00B7CC44</string>
+		<string>A61373C610E5045100FF8210</string>
+		<string>A61373BF10E5042C00FF8210</string>
 		<string>/Users/jeromelaheurte/Dev/taskcoach-iphone/taskcoach-iphone/TaskCoach.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
