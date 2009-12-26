@@ -13,6 +13,7 @@
 #import "Statement.h"
 
 #import "DateUtils.h"
+#import "Configuration.h"
 
 static Statement *_saveStatement = NULL;
 
@@ -23,9 +24,10 @@ static Statement *_saveStatement = NULL;
 @synthesize dueDate;
 @synthesize completionDate;
 @synthesize taskStatus;
+@synthesize parentId;
 
 - initWithId:(NSInteger)theId fileId:(NSNumber *)theFileId name:(NSString *)theName status:(NSInteger)theStatus taskCoachId:(NSString *)tcId description:(NSString *)theDescription
-   startDate:(NSString *)theStartDate dueDate:(NSString *)theDueDate completionDate:(NSString *)theCompletionDate dateStatus:(NSInteger)dateStatus
+   startDate:(NSString *)theStartDate dueDate:(NSString *)theDueDate completionDate:(NSString *)theCompletionDate dateStatus:(NSInteger)dateStatus parentId:(NSNumber *)myParent
 {
 	if (self = [super initWithId:theId fileId:theFileId name:theName status:theStatus taskCoachId:tcId])
 	{
@@ -33,7 +35,8 @@ static Statement *_saveStatement = NULL;
 		startDate = [theStartDate retain];
 		dueDate = [theDueDate retain];
 		completionDate = [theCompletionDate retain];
-		
+		parentId = [myParent retain];
+
 		taskStatus = dateStatus;
 	}
 	
@@ -47,19 +50,21 @@ static Statement *_saveStatement = NULL;
 	[dueDate release];
 	[completionDate release];
 
+	self.parentId = nil;
+
 	[super dealloc];
 }
 
 - (Statement *)saveStatement
 {
 	if (!_saveStatement)
-		_saveStatement = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE %@ SET fileId=?, name=?, status=?, taskCoachId=?, description=?, startDate=?, dueDate=?, completionDate=? WHERE id=?", [self class]]] retain];
+		_saveStatement = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE %@ SET fileId=?, name=?, status=?, taskCoachId=?, description=?, startDate=?, dueDate=?, completionDate=?, parentId=? WHERE id=?", [self class]]] retain];
 	return _saveStatement;
 }
 
 - (void)bindId
 {
-	[[self saveStatement] bindInteger:objectId atIndex:9];
+	[[self saveStatement] bindInteger:objectId atIndex:10];
 }
 
 - (void)bind
@@ -70,6 +75,11 @@ static Statement *_saveStatement = NULL;
 	[[self saveStatement] bindString:startDate atIndex:6];
 	[[self saveStatement] bindString:dueDate atIndex:7];
 	[[self saveStatement] bindString:completionDate atIndex:8];
+
+	if (parentId)
+		[[self saveStatement] bindInteger:[parentId intValue] atIndex:9];
+	else
+		[[self saveStatement] bindNullAtIndex:9];
 }
 
 - (void)delete
@@ -77,6 +87,8 @@ static Statement *_saveStatement = NULL;
 	Statement *req = [[Database connection] statementWithSQL:@"DELETE FROM TaskHasCategory WHERE idTask=?"];
 	[req bindInteger:objectId atIndex:1];
 	[req exec];
+
+	// XXXTODO: delete subtasks as well
 
 	[super delete];
 }
@@ -134,9 +146,28 @@ static Statement *_saveStatement = NULL;
 	[self save];
 }
 
+- (void)onChildCount:(NSDictionary *)dict
+{
+	ccount = [[dict objectForKey:@"total"] intValue];
+}
+
+- (NSInteger)childrenCount
+{
+	if ([Configuration configuration].showCompleted)
+	{
+		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(id) AS total FROM Task WHERE parentId=%d", objectId]] execWithTarget:self action:@selector(onChildCount:)];
+	}
+	else
+	{
+		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(id) AS total FROM Task WHERE parentId=%d AND completionDate IS NULL", objectId]] execWithTarget:self action:@selector(onChildCount:)];
+	}
+
+	return ccount;
+}
+
 // Overridden setters
 
-// setCategory is not there because it can't be changed from the UI.
+// XXXTODO: mark subtasks deleted when marking this one deleted
 
 - (void)setDescription:(NSString *)descr
 {

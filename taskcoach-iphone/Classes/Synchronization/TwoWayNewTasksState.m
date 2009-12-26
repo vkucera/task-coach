@@ -35,8 +35,15 @@
 - (void)dealloc
 {
 	[taskCategories release];
+	[parentId release];
 	
 	[super dealloc];
+}
+
+- (void)onParentId:(NSDictionary *)dict
+{
+	[parentId release];
+	parentId = [[dict objectForKey:@"taskcoachId"] retain];
 }
 
 - (void)onObject:(NSDictionary *)dict
@@ -50,6 +57,17 @@
 	[myNetwork appendString:[dict objectForKey:@"startDate"]];
 	[myNetwork appendString:[dict objectForKey:@"dueDate"]];
 	[myNetwork appendString:[dict objectForKey:@"completionDate"]];
+
+	if ([dict objectForKey:@"parentId"])
+	{
+		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT taskcoachId FROM Task WHERE id=%d", [[dict objectForKey:@"parentId"] intValue]]] execWithTarget:self action:@selector(onParentId:)];
+		[myNetwork appendString:parentId];
+	}
+	else
+	{
+		[myNetwork appendInteger:0];
+	}
+
 
 	[taskCategories removeAllObjects];
 

@@ -20,8 +20,6 @@
 	// Cleanup
 	Statement *req;
 	
-	// XXXTODO fileId
-	
 	req = [[Database connection] statementWithSQL:@"DELETE FROM Task WHERE status=? AND fileId=?"];
 	[req bindInteger:STATUS_DELETED atIndex:1];
 	[req bindInteger:[[Database connection].currentFile intValue] atIndex:2];

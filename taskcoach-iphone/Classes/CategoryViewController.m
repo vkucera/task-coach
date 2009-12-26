@@ -52,11 +52,11 @@
 		
 		if (pos.indexPath.row)
 		{
-			ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:pos.indexPath.row - 1] name] category:[[categories objectAtIndex:pos.indexPath.row - 1] objectId] categoryController:self];
+			ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:pos.indexPath.row - 1] name] category:[[categories objectAtIndex:pos.indexPath.row - 1] objectId] categoryController:self parentTask:nil];
 		}
 		else
 		{
-			ctrl = [[TaskViewController alloc] initWithTitle:_("All") category:-1 categoryController:self];
+			ctrl = [[TaskViewController alloc] initWithTitle:_("All") category:-1 categoryController:self parentTask:nil];
 		}
 		
 		[[PositionStore instance] push:self indexPath:pos.indexPath];
@@ -341,11 +341,11 @@
 	
 		if (indexPath.row)
 		{
-			ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:indexPath.row - 1] name] category:[[categories objectAtIndex:indexPath.row - 1] objectId] categoryController:self];
+			ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:indexPath.row - 1] name] category:[[categories objectAtIndex:indexPath.row - 1] objectId] categoryController:self parentTask:nil];
 		}
 		else
 		{
-			ctrl = [[TaskViewController alloc] initWithTitle:_("All") category:-1 categoryController:self];
+			ctrl = [[TaskViewController alloc] initWithTitle:_("All") category:-1 categoryController:self parentTask:nil];
 		}
 	
 		[[PositionStore instance] push:self indexPath:indexPath];
@@ -420,19 +420,19 @@
 
 			cell.textLabel.text = _("All");
 
-			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM AllTask WHERE completionDate IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
+			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM AllTask WHERE completionDate IS NULL AND parentId IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
 			cell.badge.text = [NSString stringWithFormat:@"%d", totalCount];
 			cell.badge.capsuleColor = [UIColor blackColor];
-			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM NotStartedTask WHERE completionDate IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
+			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM NotStartedTask WHERE completionDate IS NULL AND parentId IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
 			if (totalCount)
 				[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", totalCount] capsuleColor:[UIColor grayColor]];
-			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM StartedTask WHERE completionDate IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
+			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM StartedTask WHERE completionDate IS NULL AND parentId IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
 			if (totalCount)
 				[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", totalCount] capsuleColor:[UIColor blueColor]];
-			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM DueSoonTask WHERE completionDate IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
+			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM DueSoonTask WHERE completionDate IS NULL AND parentId IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
 			if (totalCount)
 				[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", totalCount] capsuleColor:[UIColor orangeColor]];
-			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM OverdueTask WHERE completionDate IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
+			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM OverdueTask WHERE completionDate IS NULL AND parentId IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
 			if (totalCount)
 				[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", totalCount] capsuleColor:[UIColor redColor]];
 			

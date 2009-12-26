@@ -639,7 +639,13 @@ class TaskFileNameState(BaseState):
 
 class FullFromDesktopState(BaseState):
     def init(self):
-        self.tasks = filter(self.isTaskEligible, self.disp().window.taskFile.tasks())
+        if self.version >= 4:
+            if self.syncCompleted:
+                self.tasks = list([task for task in self.disp().window.taskFile.tasks().allItemsSorted() if not task.isDeleted()])
+            else:
+                self.tasks = list([task for task in self.disp().window.taskFile.tasks().allItemsSorted() if not (task.isDeleted() or task.completed())])
+        else:
+            self.tasks = filter(self.isTaskEligible, self.disp().window.taskFile.tasks())
         self.categories = list([cat for cat in self.disp().window.taskFile.categories().allItemsSorted() if not cat.isDeleted()])
 
         self.pack('ii', len(self.categories), len(self.tasks))
@@ -675,19 +681,31 @@ class FullFromDesktopTaskState(BaseState):
     def init(self):
         super(FullFromDesktopTaskState, self).init('i', len(self.tasks))
 
-        self.sendObject()
+        if self.tasks:
+            self.sendObject()
 
     def sendObject(self):
         if self.tasks:
             task = self.tasks.pop(0)
-            self.pack('sssddd[s]',
-                      task.subject(),
-                      task.id(),
-                      task.description(),
-                      task.startDate(),
-                      task.dueDate(),
-                      task.completionDate(),
-                      [category.id() for category in task.categories()])
+            if self.version < 4:
+                self.pack('sssddd[s]',
+                          task.subject(),
+                          task.id(),
+                          task.description(),
+                          task.startDate(),
+                          task.dueDate(),
+                          task.completionDate(),
+                          [category.id() for category in task.categories()])
+            else:
+                self.pack('sssdddz[s]',
+                          task.subject(),
+                          task.id(),
+                          task.description(),
+                          task.startDate(),
+                          task.dueDate(),
+                          task.completionDate(),
+                          task.parent().id() if task.parent() is not None else None,
+                          [category.id() for category in task.categories()])
 
     def handleNewObject(self, code):
         self.count += 1
@@ -755,7 +773,7 @@ class FullFromDeviceTaskState(BaseState):
         task = Task(subject=subject, description=description, startDate=startDate,
                     dueDate=dueDate, completionDate=completionDate)
 
-        self.disp().window.addIPhoneTask(task, [self.categoryMap[id_] for id_ in categories])
+        self.disp().window.addIPhoneTask(task, None, [self.categoryMap[id_] for id_ in categories])
 
         self.count += 1
         self.dlg.SetProgress(self.count, self.total)
@@ -848,7 +866,10 @@ class TwoWayModifiedCategoriesState(BaseState):
             self.disp().window.modifyIPhoneCategory(category, name)
 
     def finished(self):
-        self.setState(TwoWayNewTasksState)
+        if self.version < 4:
+            self.setState(TwoWayNewTasksState)
+        else:
+            self.setState(TwoWayNewTasksState4)
 
 
 class TwoWayNewTasksState(BaseState):
@@ -859,7 +880,26 @@ class TwoWayNewTasksState(BaseState):
         task = Task(subject=subject, description=description, startDate=startDate,
                     dueDate=dueDate, completionDate=completionDate)
 
-        self.disp().window.addIPhoneTask(task, [self.categoryMap[catId] for catId in categories])
+        self.disp().window.addIPhoneTask(task, None, [self.categoryMap[catId] for catId in categories])
+
+        self.taskMap[task.id()] = task
+        self.pack('s', task.id())
+
+    def finished(self):
+        self.setState(TwoWayDeletedTasksState)
+
+
+class TwoWayNewTasksState4(BaseState):
+    def init(self):
+        super(TwoWayNewTasksState4, self).init('ssdddz[s]', self.newTasksCount)
+
+    def handleNewObject(self, (subject, description, startDate, dueDate, completionDate, parentId, categories)):
+        task = Task(subject=subject, description=description, startDate=startDate,
+                    dueDate=dueDate, completionDate=completionDate)
+
+        parent = self.taskMap[parentId] if parentId else None
+
+        self.disp().window.addIPhoneTask(task, parent, [self.categoryMap[catId] for catId in categories])
 
         self.taskMap[task.id()] = task
         self.pack('s', task.id())

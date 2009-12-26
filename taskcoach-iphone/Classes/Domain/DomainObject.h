@@ -28,7 +28,7 @@
 @property (nonatomic, readonly) NSInteger status;
 @property (nonatomic, copy) NSString *taskCoachId;
 
-- initWithId:(NSInteger)ID fileId:(NSNumber *)fileId name:(NSString *)name status:(NSInteger)status taskCoachId:(NSString *)taskCoachId; // XXXTODO fileId
+- initWithId:(NSInteger)ID fileId:(NSNumber *)fileId name:(NSString *)name status:(NSInteger)status taskCoachId:(NSString *)taskCoachId;
 
 - (void)setStatus:(NSInteger)status;
 - (void)delete;

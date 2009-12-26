@@ -88,12 +88,19 @@
 #define TASK_DATE_1                          16
 #define TASK_DATE_LENGTH_2                   17
 #define TASK_DATE_2                          18
-#define TASK_CATEGORY_COUNT                  19
-#define TASK_CATEGORY_ID_LENGTH              20
-#define TASK_CATEGORY_ID                     21
+#define TASK_PARENT_LENGTH                   19
+#define TASK_PARENT                          20
+#define TASK_CATEGORY_COUNT                  21
+#define TASK_CATEGORY_ID_LENGTH              22
+#define TASK_CATEGORY_ID                     23
 
-#define GUID_LENGTH                          22
-#define GUID                                 23
+#define GUID_LENGTH                          24
+#define GUID                                 25
+
+- (void)onFoundParent:(NSDictionary *)dict
+{
+	parentLocalId = [[dict objectForKey:@"id"] intValue];
+}
 
 - (void)network:(Network *)network didGetData:(NSData *)data controller:(SyncViewController *)controller
 {
@@ -281,6 +288,41 @@
 
 			break;
 		}
+		case TASK_PARENT_LENGTH:
+		{
+			NSInteger length = ntohl(*((int32_t *)[data bytes]));
+			
+			parentLocalId = -1;
+			
+			if (length)
+			{
+				state = TASK_PARENT;
+				[network expect:length];
+			}
+			else
+			{
+				state = TASK_CATEGORY_COUNT;
+				[network expect:4];
+			}
+
+			break;
+		}
+		case TASK_PARENT:
+		{
+			NSString *tcId = [NSString stringFromUTF8Data:data];
+			NSLog(@"Task parent: %@", tcId);
+
+			Statement *req = [[Database connection] statementWithSQL:@"SELECT id FROM Task WHERE taskcoachId=?"];
+			[req bindString:tcId atIndex:1];
+			[req execWithTarget:self action:@selector(onFoundParent:)];
+
+			assert(parentLocalId != -1);
+
+			state = TASK_CATEGORY_COUNT;
+			[network expect:4];
+			
+			break;
+		}
 		case TASK_CATEGORY_COUNT:
 		{
 			taskCategoryCount = ntohl(*((int32_t *)[data bytes]));
@@ -304,8 +346,20 @@
 				taskCompleted = nil;
 			}
 			
-			Task *task = [[Task alloc] initWithId:-1 fileId:[Database connection].currentFile name:taskSubject status:STATUS_NONE taskCoachId:taskId description:taskDescription
-										startDate:taskStart dueDate:taskDue completionDate:taskCompleted dateStatus:TASKSTATUS_UNDEFINED];
+			Task *task;
+			if (parentLocalId > 0)
+			{
+				task = [[Task alloc] initWithId:-1 fileId:[Database connection].currentFile name:taskSubject status:STATUS_NONE taskCoachId:taskId description:taskDescription
+											startDate:taskStart dueDate:taskDue completionDate:taskCompleted dateStatus:TASKSTATUS_UNDEFINED
+											 parentId:[NSNumber numberWithInt:parentLocalId]];
+			}
+			else
+			{
+				task = [[Task alloc] initWithId:-1 fileId:[Database connection].currentFile name:taskSubject status:STATUS_NONE taskCoachId:taskId description:taskDescription
+											startDate:taskStart dueDate:taskDue completionDate:taskCompleted dateStatus:TASKSTATUS_UNDEFINED
+											 parentId:nil];
+			}
+
 			[task save];
 			NSLog(@"Added task %@", taskSubject);
 			taskLocalId = task.objectId;

@@ -73,6 +73,15 @@
 	}
 	
 	[leftImage setTarget:self action:@selector(onTapImage)];
+
+	if ([task childrenCount])
+	{
+		self.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+	}
+	else
+	{
+		self.accessoryType = UITableViewCellAccessoryNone;
+	}
 }
 
 - (void)dealloc

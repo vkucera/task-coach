@@ -27,7 +27,10 @@
 	
 	NSInteger taskStatus;
 
+	NSNumber *parentId;
+
 	BOOL hasCat;
+	NSInteger ccount;
 }
 
 @property (nonatomic, retain) NSString *description;
@@ -35,14 +38,17 @@
 @property (nonatomic, retain) NSString *dueDate;
 @property (nonatomic, retain) NSString *completionDate;
 @property (nonatomic) NSInteger taskStatus;
+@property (nonatomic, retain) NSNumber *parentId;
 
 - initWithId:(NSInteger)ID fileId:(NSNumber *)fileId name:(NSString *)name status:(NSInteger)status taskCoachId:(NSString *)taskCoachId description:(NSString *)description
-   startDate:(NSString *)startDate dueDate:(NSString *)dueDate completionDate:(NSString *)completionDate dateStatus:(NSInteger)dateStatus;
+   startDate:(NSString *)startDate dueDate:(NSString *)dueDate completionDate:(NSString *)completionDate dateStatus:(NSInteger)dateStatus parentId:(NSNumber *)parentId;
 
 - (void)setCompleted:(BOOL)completed;
 
 - (BOOL)hasCategory:(Category *)category;
 - (void)removeCategory:(Category *)category;
 - (void)addCategory:(Category *)category;
+
+- (NSInteger)childrenCount;
 
 @end

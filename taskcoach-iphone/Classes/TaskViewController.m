@@ -35,11 +35,12 @@
 
 - (void)willTerminate
 {
-	[[PositionStore instance] push:self indexPath:nil];
+	// [[PositionStore instance] push:self indexPath:nil];
 }
 
 - (void)restorePosition:(Position *)pos store:(PositionStore *)store
 {
+	/*
 	[self.tableView setContentOffset:pos.scrollPosition animated:NO];
 	
 	if (pos.indexPath)
@@ -52,37 +53,42 @@
 		[[PositionStore instance] push:self indexPath:pos.indexPath];
 		[ctrl release];
 	}
+	 */
 }
 
 - (void)loadData
 {
 	[headers release];
+
+	NSNumber *parentId = nil;
+	if (parentTask)
+		parentId = [NSNumber numberWithInt:parentTask.objectId];
 	
 	TaskList *list;
 	headers = [[NSMutableArray alloc] initWithCapacity:4];
 	
-	list = [[TaskList alloc] initWithView:@"OverdueTask" category:categoryId title:_("Overdue") status:TASKSTATUS_OVERDUE];
+	list = [[TaskList alloc] initWithView:@"OverdueTask" category:categoryId title:_("Overdue") status:TASKSTATUS_OVERDUE parentTask:parentId];
 	if ([list count])
 	{
 		[headers addObject:list];
 	}
 	[list release];
 	
-	list = [[TaskList alloc] initWithView:@"DueSoonTask" category:categoryId title:_("Due soon") status:TASKSTATUS_DUESOON];
+	list = [[TaskList alloc] initWithView:@"DueSoonTask" category:categoryId title:_("Due soon") status:TASKSTATUS_DUESOON parentTask:parentId];
 	if ([list count])
 	{
 		[headers addObject:list];
 	}
 	[list release];
 	
-	list = [[TaskList alloc] initWithView:@"StartedTask" category:categoryId title:_("Started") status:TASKSTATUS_STARTED];
+	list = [[TaskList alloc] initWithView:@"StartedTask" category:categoryId title:_("Started") status:TASKSTATUS_STARTED parentTask:parentId];
 	if ([list count])
 	{
 		[headers addObject:list];
 	}
 	[list release];
 	
-	list = [[TaskList alloc] initWithView:@"NotStartedTask" category:categoryId title:_("Not started") status:TASKSTATUS_NOTSTARTED];
+	list = [[TaskList alloc] initWithView:@"NotStartedTask" category:categoryId title:_("Not started") status:TASKSTATUS_NOTSTARTED parentTask:parentId];
 	if ([list count])
 	{
 		[headers addObject:list];
@@ -90,10 +96,11 @@
 	[list release];
 }
 
-- initWithTitle:(NSString *)theTitle category:(NSInteger)theId categoryController:(CategoryViewController *)controller
+- initWithTitle:(NSString *)theTitle category:(NSInteger)theId categoryController:(CategoryViewController *)controller parentTask:(Task *)parent
 {
 	if (self = [super initWithNibName:@"TaskView" bundle:[NSBundle mainBundle]])
 	{
+		parentTask = [parent retain];
 		title = [theTitle retain];
 		categoryId = theId;
 		categoryController = controller;
@@ -119,6 +126,7 @@
 {
 	[self viewDidUnload];
 
+	[parentTask release];
 	[title release];
 	[headers release];
 	[tapping release];
@@ -137,8 +145,10 @@
 
 	[self loadData];
 	[self.tableView reloadData];
+	/*
 	if (!isCreatingTask)
 		[[PositionStore instance] pop];
+	 */
 	isCreatingTask = NO;
 }
 
@@ -389,7 +399,8 @@
 	if (indexPath.section == 0)
 	{
 		Task *task = [[Task alloc] initWithId:-1 fileId:[Database connection].currentFile name:@"" status:STATUS_NEW taskCoachId:nil description:@""
-									startDate:[[DateUtils instance] stringFromDate:[NSDate date]] dueDate:nil completionDate:nil dateStatus:TASKSTATUS_UNDEFINED];
+									startDate:[[DateUtils instance] stringFromDate:[NSDate date]] dueDate:nil completionDate:nil dateStatus:TASKSTATUS_UNDEFINED
+									 parentId:nil]; // XXXTODO parentId
 		isCreatingTask = YES;
 		TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:categoryId];
 		[self.navigationController pushViewController:ctrl animated:YES];
@@ -427,9 +438,9 @@
 
 - (IBAction)onAddTask:(UIBarButtonItem *)button
 {
-	// XXXTODO fileId
 	Task *task = [[Task alloc] initWithId:-1 fileId:[Database connection].currentFile name:@"" status:STATUS_NEW taskCoachId:nil description:@""
-								startDate:[[DateUtils instance] stringFromDate:[NSDate date]] dueDate:nil completionDate:nil dateStatus:TASKSTATUS_UNDEFINED];
+								startDate:[[DateUtils instance] stringFromDate:[NSDate date]] dueDate:nil completionDate:nil dateStatus:TASKSTATUS_UNDEFINED
+								 parentId:nil]; // XXXTODO parentId
 	isCreatingTask = YES;
 	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:categoryId];
 	[self.navigationController pushViewController:ctrl animated:YES];
@@ -463,7 +474,16 @@
 	Task *task = [[headers objectAtIndex:indexPath.section - (self.editing ? 1 : 0)] taskAtIndex:indexPath.row];
 	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:-1];
 	[self.navigationController pushViewController:ctrl animated:YES];
-	[[PositionStore instance] push:self indexPath:indexPath];
+	//[[PositionStore instance] push:self indexPath:indexPath];
+	[ctrl release];
+}
+
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
+{
+	Task *task = [[headers objectAtIndex:indexPath.section] taskAtIndex:indexPath.row];
+	// - initWithTitle:(NSString *)title category:(NSInteger)categoryId categoryController:(CategoryViewController *)controller parentTask:(Task *)parent;
+	TaskViewController *ctrl = [[TaskViewController alloc] initWithTitle:task.name category:-1 categoryController:categoryController parentTask:task];
+	[self.navigationController pushViewController:ctrl animated:YES];
 	[ctrl release];
 }
 

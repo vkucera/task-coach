@@ -32,6 +32,7 @@
 	
 	NSInteger taskCategoryCount;
 	NSInteger taskLocalId;
+	NSInteger parentLocalId;
 }
 
 @end

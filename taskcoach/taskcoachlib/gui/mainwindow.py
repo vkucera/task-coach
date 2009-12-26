@@ -433,8 +433,10 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
         category.setSubject(name)
 
     @synchronized
-    def addIPhoneTask(self, task, categories):
+    def addIPhoneTask(self, task, parent, categories):
         self.taskFile.tasks().append(task)
+        if parent is not None:
+            parent.addChild(task)
         for category in categories:
             task.addCategory(category)
             category.addCategorizable(task)

@@ -82,6 +82,9 @@
 			[[self statementWithSQL:@"ALTER TABLE Task ADD COLUMN fileId INTEGER NULL DEFAULT NULL"] exec];
 			[[self statementWithSQL:@"CREATE INDEX idxTaskFile ON Task (fileId)"] exec];
 			
+			[[self statementWithSQL:@"ALTER TABLE Task ADD COLUMN parentId INTEGER NULL DEFAULT NULL"] exec];
+			[[self statementWithSQL:@"CREATE INDEX idxTaskParentId ON Task (parentId)"] exec];
+
 			// Create the main file, if applicable.
 			[[self statementWithSQL:@"SELECT value FROM Meta WHERE name=\"guid\""] execWithTarget:self action:@selector(upgradeFileTable:)];
 		}

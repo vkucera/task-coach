@@ -68,6 +68,8 @@ static Statement *_saveStatement = nil;
 	if (![Configuration configuration].showCompleted)
 		[where addObject:@"completionDate IS NULL"];
 
+	[where addObject:@"parentId IS NULL"];
+
 	CategoriesSelector *sel = [[CategoriesSelector alloc] initWithId:objectId];
 	[where addObject:[sel clause]];
 	[sel release];

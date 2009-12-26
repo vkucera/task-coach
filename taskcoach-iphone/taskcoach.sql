@@ -50,13 +50,16 @@ CREATE TABLE Task
 	
 	startDate CHAR(10) NULL DEFAULT NULL,
 	dueDate CHAR(10) NULL DEFAULT NULL,
-	completionDate CHAR(10) NULL DEFAULT NULL
+	completionDate CHAR(10) NULL DEFAULT NULL,
+
+	parentId INTEGER NULL DEFAULT NULL
 );
 
 CREATE INDEX idxTaskFile ON Task (fileId);
 CREATE INDEX idxTaskStatus ON Task (status);
 CREATE INDEX idxTaskName ON Task (name);
 CREATE INDEX idxTaskTaskCoachId ON Task (taskcoachId);
+CREATE INDEX idxTaskParentId ON Task (parentId);
 
 CREATE TABLE TaskHasCategory
 (
