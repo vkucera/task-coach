@@ -43,7 +43,7 @@
 - (void)onParentId:(NSDictionary *)dict
 {
 	[parentId release];
-	parentId = [[dict objectForKey:@"taskcoachId"] retain];
+	parentId = [[dict objectForKey:@"taskCoachId"] retain];
 }
 
 - (void)onObject:(NSDictionary *)dict
@@ -60,7 +60,7 @@
 
 	if ([dict objectForKey:@"parentId"])
 	{
-		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT taskcoachId FROM Task WHERE id=%d", [[dict objectForKey:@"parentId"] intValue]]] execWithTarget:self action:@selector(onParentId:)];
+		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT taskCoachId FROM Task WHERE id=%d", [[dict objectForKey:@"parentId"] intValue]]] execWithTarget:self action:@selector(onParentId:)];
 		[myNetwork appendString:parentId];
 	}
 	else

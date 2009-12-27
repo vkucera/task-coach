@@ -773,7 +773,7 @@ class FullFromDeviceTaskState(BaseState):
         task = Task(subject=subject, description=description, startDate=startDate,
                     dueDate=dueDate, completionDate=completionDate)
 
-        self.disp().window.addIPhoneTask(task, None, [self.categoryMap[id_] for id_ in categories])
+        self.disp().window.addIPhoneTask(task, [self.categoryMap[id_] for id_ in categories])
 
         self.count += 1
         self.dlg.SetProgress(self.count, self.total)
@@ -880,7 +880,7 @@ class TwoWayNewTasksState(BaseState):
         task = Task(subject=subject, description=description, startDate=startDate,
                     dueDate=dueDate, completionDate=completionDate)
 
-        self.disp().window.addIPhoneTask(task, None, [self.categoryMap[catId] for catId in categories])
+        self.disp().window.addIPhoneTask(task, [self.categoryMap[catId] for catId in categories])
 
         self.taskMap[task.id()] = task
         self.pack('s', task.id())
@@ -894,12 +894,12 @@ class TwoWayNewTasksState4(BaseState):
         super(TwoWayNewTasksState4, self).init('ssdddz[s]', self.newTasksCount)
 
     def handleNewObject(self, (subject, description, startDate, dueDate, completionDate, parentId, categories)):
-        task = Task(subject=subject, description=description, startDate=startDate,
-                    dueDate=dueDate, completionDate=completionDate)
-
         parent = self.taskMap[parentId] if parentId else None
 
-        self.disp().window.addIPhoneTask(task, parent, [self.categoryMap[catId] for catId in categories])
+        task = Task(subject=subject, description=description, startDate=startDate,
+                    dueDate=dueDate, completionDate=completionDate, parent=parent)
+
+        self.disp().window.addIPhoneTask(task, [self.categoryMap[catId] for catId in categories])
 
         self.taskMap[task.id()] = task
         self.pack('s', task.id())

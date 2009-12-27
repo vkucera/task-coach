@@ -41,7 +41,7 @@
 							   dueDate:[dict objectForKey:@"dueDate"]
 						       completionDate:[dict objectForKey:@"completionDate"]
 							   dateStatus:status
-							   parentId:nil]; // XXXTODO parentId
+							   parentId:[dict objectForKey:@"parentId"]];
 	[tasks addObject:task];
 	[task release];
 }

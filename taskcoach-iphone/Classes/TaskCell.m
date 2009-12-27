@@ -82,6 +82,8 @@
 	{
 		self.accessoryType = UITableViewCellAccessoryNone;
 	}
+
+	self.editingAccessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 }
 
 - (void)dealloc

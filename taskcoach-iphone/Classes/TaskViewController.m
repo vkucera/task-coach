@@ -96,11 +96,12 @@
 	[list release];
 }
 
-- initWithTitle:(NSString *)theTitle category:(NSInteger)theId categoryController:(CategoryViewController *)controller parentTask:(Task *)parent
+- initWithTitle:(NSString *)theTitle category:(NSInteger)theId categoryController:(CategoryViewController *)controller parentTask:(Task *)parent edit:(BOOL)edit
 {
 	if (self = [super initWithNibName:@"TaskView" bundle:[NSBundle mainBundle]])
 	{
 		parentTask = [parent retain];
+		shouldEdit = edit;
 		title = [theTitle retain];
 		categoryId = theId;
 		categoryController = controller;
@@ -115,6 +116,7 @@
 {
 	self.navigationItem.title = title;
 	self.navigationItem.rightBarButtonItem = [self editButtonItem];
+	self.editing = shouldEdit;
 }
 
 - (void)viewDidUnload
@@ -161,7 +163,8 @@
 		// See editingStyleForRowAtIndexPath. Without this trick, the first task
 		// gets an Insert editing style as well as the newly-inserted row.
 
-		isBecomingEditable = YES;
+		if (animated)
+			isBecomingEditable = YES;
 
 		[super setEditing:editing animated:animated];
 		[self.tableViewController setEditing:editing animated:animated];
@@ -398,9 +401,13 @@
 {
 	if (indexPath.section == 0)
 	{
+		NSNumber *pid = nil;
+		if (parentTask)
+			pid = [NSNumber numberWithInt:parentTask.objectId];
+
 		Task *task = [[Task alloc] initWithId:-1 fileId:[Database connection].currentFile name:@"" status:STATUS_NEW taskCoachId:nil description:@""
 									startDate:[[DateUtils instance] stringFromDate:[NSDate date]] dueDate:nil completionDate:nil dateStatus:TASKSTATUS_UNDEFINED
-									 parentId:nil]; // XXXTODO parentId
+									 parentId:pid];
 		isCreatingTask = YES;
 		TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:categoryId];
 		[self.navigationController pushViewController:ctrl animated:YES];
@@ -438,9 +445,13 @@
 
 - (IBAction)onAddTask:(UIBarButtonItem *)button
 {
+	NSNumber *pid = nil;
+	if (parentTask)
+		pid = [NSNumber numberWithInt:parentTask.objectId];
+
 	Task *task = [[Task alloc] initWithId:-1 fileId:[Database connection].currentFile name:@"" status:STATUS_NEW taskCoachId:nil description:@""
 								startDate:[[DateUtils instance] stringFromDate:[NSDate date]] dueDate:nil completionDate:nil dateStatus:TASKSTATUS_UNDEFINED
-								 parentId:nil]; // XXXTODO parentId
+								 parentId:pid];
 	isCreatingTask = YES;
 	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:categoryId];
 	[self.navigationController pushViewController:ctrl animated:YES];
@@ -480,9 +491,8 @@
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
 {
-	Task *task = [[headers objectAtIndex:indexPath.section] taskAtIndex:indexPath.row];
-	// - initWithTitle:(NSString *)title category:(NSInteger)categoryId categoryController:(CategoryViewController *)controller parentTask:(Task *)parent;
-	TaskViewController *ctrl = [[TaskViewController alloc] initWithTitle:task.name category:-1 categoryController:categoryController parentTask:task];
+	Task *task = [[headers objectAtIndex:indexPath.section - (self.editing ? 1 : 0)] taskAtIndex:indexPath.row];
+	TaskViewController *ctrl = [[TaskViewController alloc] initWithTitle:task.name category:-1 categoryController:categoryController parentTask:task edit:self.editing];
 	[self.navigationController pushViewController:ctrl animated:YES];
 	[ctrl release];
 }

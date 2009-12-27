@@ -53,11 +53,11 @@
 		
 		if (pos.indexPath.row)
 		{
-			ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:pos.indexPath.row - 1] name] category:[[categories objectAtIndex:pos.indexPath.row - 1] objectId] categoryController:self parentTask:nil];
+			ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:pos.indexPath.row - 1] name] category:[[categories objectAtIndex:pos.indexPath.row - 1] objectId] categoryController:self parentTask:nil edit:NO];
 		}
 		else
 		{
-			ctrl = [[TaskViewController alloc] initWithTitle:_("All") category:-1 categoryController:self parentTask:nil];
+			ctrl = [[TaskViewController alloc] initWithTitle:_("All") category:-1 categoryController:self parentTask:nil edit:NO];
 		}
 		
 		[[PositionStore instance] push:self indexPath:pos.indexPath];
@@ -344,11 +344,11 @@
 	
 		if (indexPath.row)
 		{
-			ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:indexPath.row - 1] name] category:[[categories objectAtIndex:indexPath.row - 1] objectId] categoryController:self parentTask:nil];
+			ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:indexPath.row - 1] name] category:[[categories objectAtIndex:indexPath.row - 1] objectId] categoryController:self parentTask:nil edit:NO];
 		}
 		else
 		{
-			ctrl = [[TaskViewController alloc] initWithTitle:_("All") category:-1 categoryController:self parentTask:nil];
+			ctrl = [[TaskViewController alloc] initWithTitle:_("All") category:-1 categoryController:self parentTask:nil edit:NO];
 		}
 	
 		[[PositionStore instance] push:self indexPath:indexPath];
