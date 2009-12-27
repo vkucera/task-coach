@@ -7,6 +7,7 @@
 //
 
 #import "StringChoiceController.h"
+#import "i18n.h"
 
 @implementation StringChoiceController
 
@@ -63,7 +64,10 @@
 	}
 	else
 	{
-		// XXXTODO: alert
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Empty text.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+		[alert show];
+		[alert release];
+
 		return NO;
 	}
 }
