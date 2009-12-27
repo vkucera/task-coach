@@ -22,6 +22,7 @@
 	UITableViewCell *categoriesCell;
 	DateCell *startDateCell;
 	DateCell *dueDateCell;
+	DateCell *completionDateCell;
 	
 	DescriptionCell *descriptionCell;
 

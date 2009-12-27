@@ -34,12 +34,6 @@
 
 		cells = [[NSMutableArray alloc] initWithCapacity:5];
 
-		SwitchCell *completeCell = [[CellFactory cellFactory] createSwitchCell];
-		[completeCell setDelegate:self];
-		completeCell.label.text = _("Complete");
-		[completeCell.switch_ setOn:(task.completionDate != nil)];
-		[cells addObject:completeCell];
-		
 		TextFieldCell *nameCell = [[CellFactory cellFactory] createTextFieldCell];
 		nameCell.textField.delegate = self;
 		nameCell.textField.text = task.name;
@@ -64,15 +58,21 @@
 
 		startDateCell = [[CellFactory cellFactory] createDateCell];
 		[startDateCell setDelegate:self];
-		startDateCell.label.text = _("Start date");
+		startDateCell.label.text = _("Start");
 		[startDateCell setDate:task.startDate];
 		[cells addObject:startDateCell];
 		
 		dueDateCell = [[CellFactory cellFactory] createDateCell];
 		[dueDateCell setDelegate:self];
-		dueDateCell.label.text = _("Due date");
+		dueDateCell.label.text = _("Due");
 		[dueDateCell setDate:task.dueDate];
 		[cells addObject:dueDateCell];
+		
+		completionDateCell = [[CellFactory cellFactory] createDateCell];
+		[completionDateCell setDelegate:self];
+		completionDateCell.label.text = _("Completion");
+		[completionDateCell setDate:task.completionDate];
+		[cells addObject:completionDateCell];
 	}
 
 	return self;
@@ -168,10 +168,20 @@
 			[dueDateCell setDate:nil];
 		}
 	}
-	else
+	else if (cell == completionDateCell)
 	{
-		[task setCompleted:cell.switch_.on];
-		[self saveTask];
+		if (cell.switch_.on)
+		{
+			DatePickerViewController *ctrl = [[DatePickerViewController alloc] initWithDate:task.completionDate target:self action:@selector(onPickCompletionDate:)];
+			[self.navigationController presentModalViewController:ctrl animated:YES];
+			[ctrl release];
+		}
+		else
+		{
+			task.completionDate = nil;
+			[self saveTask];
+			[completionDateCell setDate:nil];
+		}
 	}
 }
 
@@ -231,6 +241,19 @@
 	[dueDateCell setDate:task.dueDate];
 }
 
+- (void)onPickCompletionDate:(NSDate *)date
+{
+	[self.navigationController dismissModalViewControllerAnimated:YES];
+
+	if (date)
+		task.completionDate = [[DateUtils instance] stringFromDate:date];
+	else
+		task.completionDate = nil;
+
+	[self saveTask];
+	[completionDateCell setDate:task.completionDate];
+}
+
 #pragma mark Table view methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -271,6 +294,10 @@
 	else if (cell == dueDateCell)
 	{
 		ctrl = [[DatePickerViewController alloc] initWithDate:task.dueDate target:self action:@selector(onPickDueDate:)];
+	}
+	else if (cell == completionDateCell)
+	{
+		ctrl = [[DatePickerViewController alloc] initWithDate:task.completionDate target:self action:@selector(onPickCompletionDate:)];
 	}
 
 	if (ctrl)
