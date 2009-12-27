@@ -308,6 +308,8 @@
 					<key>Dock</key>
 					<array>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -325,7 +327,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A61B541910E76731008C5CF4</string>
+										<string>A6DE334110E7691E00596E3B</string>
 										<key>history</key>
 										<array>
 											<string>A6B5E01D106E04E200E3774E</string>
@@ -415,10 +417,10 @@
 											<string>A692DC6510E7665700976EE2</string>
 											<string>A692DC6610E7665700976EE2</string>
 											<string>A692DC6710E7665700976EE2</string>
-											<string>A692DC6810E7665700976EE2</string>
-											<string>A61B541610E76731008C5CF4</string>
 											<string>A61B541710E76731008C5CF4</string>
-											<string>A61B541810E76731008C5CF4</string>
+											<string>A6DE333E10E7691E00596E3B</string>
+											<string>A6DE333F10E7691E00596E3B</string>
+											<string>A6DE334010E7691E00596E3B</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -457,14 +459,12 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {1663, 187}}</string>
+										<string>{{10, 27}, {0, -27}}</string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
 								</dict>
 								<dict>
-									<key>BecomeActive</key>
-									<true/>
 									<key>ContentConfiguration</key>
 									<dict>
 										<key>PBXProjectModuleGUID</key>
@@ -543,11 +543,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A61B541A10E76731008C5CF4</string>
+				<string>A6DE334210E7691E00596E3B</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A61B541B10E76731008C5CF4</string>
+				<string>A6DE334310E7691E00596E3B</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A61B541C10E76731008C5CF4</string>
+				<string>A6DE334410E7691E00596E3B</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -696,14 +696,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A61B541D10E76731008C5CF4</string>
+				<string>A6DE334510E7691E00596E3B</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A61B541E10E76731008C5CF4</string>
-				<string>A61B541F10E76731008C5CF4</string>
-				<string>A61B542010E76731008C5CF4</string>
-				<string>A61B542110E76731008C5CF4</string>
-				<string>A61B542210E76731008C5CF4</string>
+				<string>A6DE334610E7691E00596E3B</string>
+				<string>A6DE334710E7691E00596E3B</string>
+				<string>A6DE334810E7691E00596E3B</string>
+				<string>A6DE334910E7691E00596E3B</string>
+				<string>A6DE334A10E7691E00596E3B</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
 			<string>2</string>
@@ -735,8 +735,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>A61B542310E76731008C5CF4</string>
-		<string>A61B542410E76731008C5CF4</string>
+		<string>A6DE334B10E7691E00596E3B</string>
+		<string>A6DE334C10E7691E00596E3B</string>
 		<string>/Users/jeromelaheurte/Dev/taskcoach-iphone/taskcoach-iphone/TaskCoach.xcodeproj</string>
 	</array>
 	<key>WindowString</key>

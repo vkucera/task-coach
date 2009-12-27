@@ -82,13 +82,20 @@ static Statement *_saveStatement = NULL;
 		[[self saveStatement] bindNullAtIndex:9];
 }
 
+- (void)deleteSubtasks:(NSDictionary *)dict
+{
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"DELETE FROM TaskHasCategory WHERE idTask=%@", [dict objectForKey:@"id"]]] exec];
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT id FROM Task WHERE parentId=%@", [dict objectForKey:@"id"]]] execWithTarget:self action:@selector(deleteSubtasks:)];
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"DELETE FROM Task WHERE id=%@", [dict objectForKey:@"id"]]] exec];
+}
+
 - (void)delete
 {
 	Statement *req = [[Database connection] statementWithSQL:@"DELETE FROM TaskHasCategory WHERE idTask=?"];
 	[req bindInteger:objectId atIndex:1];
 	[req exec];
 
-	// XXXTODO: delete subtasks as well
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT id FROM Task WHERE parentId=%d", objectId]] execWithTarget:self action:@selector(deleteSubtasks:)];
 
 	[super delete];
 }
@@ -167,7 +174,8 @@ static Statement *_saveStatement = NULL;
 
 // Overridden setters
 
-// XXXTODO: mark subtasks deleted when marking this one deleted
+// There is no need to mark subtasks deleted. They will be deleted in the FullFromDesktop state of the
+// next sync.
 
 - (void)setDescription:(NSString *)descr
 {
