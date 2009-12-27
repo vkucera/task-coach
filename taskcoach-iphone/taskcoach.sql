@@ -70,6 +70,18 @@ CREATE TABLE TaskHasCategory
 CREATE INDEX idxTaskHasCategoryTask ON TaskHasCategory (idTask);
 CREATE INDEX idxTaskHasCategoryCategory ON TaskHasCategory (idCategory);
 
+CREATE TABLE Effort
+(
+	id INTEGER PRIMARY KEY,
+	taskId INTEGER NOT NULL,
+	started CHAR(19) NOT NULL,
+	ended CHAR(19) NULL DEFAULT NULL
+);
+
+CREATE INDEX idxEffortTask ON Effort (taskId);
+CREATE INDEX idxEffortStarted ON Effort (started);
+CREATE INDEX idxEffortEnded ON Effort (ended);
+
 CREATE TABLE Meta
 (
 	name VARCHAR(255) NOT NULL,

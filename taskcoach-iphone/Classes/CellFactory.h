@@ -14,6 +14,7 @@
 @class DateCell;
 @class DescriptionCell;
 @class BadgedCell;
+@class ButtonCell;
 
 @interface CellFactory : NSObject
 {
@@ -23,6 +24,7 @@
 	DateCell *dateCellTemplate;
 	DescriptionCell *descriptionCellTemplate;
 	BadgedCell *badgedCellTemplate;
+	ButtonCell *buttonCellTemplate;
 }
 
 @property (nonatomic, assign) IBOutlet TaskCell *taskCellTemplate;
@@ -31,6 +33,7 @@
 @property (nonatomic, assign) IBOutlet DateCell *dateCellTemplate;
 @property (nonatomic, assign) IBOutlet DescriptionCell *descriptionCellTemplate;
 @property (nonatomic, assign) IBOutlet BadgedCell *badgedCellTemplate;
+@property (nonatomic, assign) IBOutlet ButtonCell *buttonCellTemplate;
 
 + (CellFactory *)cellFactory;
 
@@ -40,5 +43,6 @@
 - (DateCell *)createDateCell;
 - (DescriptionCell *)createDescriptionCell;
 - (BadgedCell *)createBadgedCell;
+- (ButtonCell *)createButtonCell;
 
 @end

@@ -25,6 +25,32 @@
 
 @implementation TaskDetailsController
 
+- (void)updateTrackButton
+{
+	BOOL isTracking = [task startTimeOfCurrentEffort] != nil;
+
+	UIImage *img;
+
+	if (isTracking)
+	{
+		img = [[UIImage imageNamed:@"blueButton.png"] stretchableImageWithLeftCapWidth:12.0 topCapHeight:0.0];
+	}
+	else
+	{
+		img = [[UIImage imageNamed:@"redButton.png"] stretchableImageWithLeftCapWidth:12.0 topCapHeight:0.0];
+	}
+
+	[effortCell.button setBackgroundImage:img forState:UIControlStateNormal];
+
+	img = [[UIImage imageNamed:@"whiteButton.png"] stretchableImageWithLeftCapWidth:12.0 topCapHeight:0.0];
+	[effortCell.button setBackgroundImage:img forState:UIControlStateHighlighted];
+
+	if (isTracking)
+		[effortCell.button setTitle:_("Stop tracking") forState:UIControlStateNormal];
+	else
+		[effortCell.button setTitle:_("Start tracking") forState:UIControlStateNormal];
+}
+
 - initWithTask:(Task *)theTask category:(NSInteger)category
 {
 	if (self = [super initWithNibName:@"TaskDetails" bundle:[NSBundle mainBundle]])
@@ -33,6 +59,12 @@
 		categoryId = category;
 
 		cells = [[NSMutableArray alloc] initWithCapacity:5];
+
+		effortCell = [[CellFactory cellFactory] createButtonCell];
+		[self updateTrackButton];
+		[effortCell.button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+		[effortCell setTarget:self action:@selector(onTrack:)];
+		[cells addObject:effortCell];
 
 		TextFieldCell *nameCell = [[CellFactory cellFactory] createTextFieldCell];
 		nameCell.textField.delegate = self;
@@ -254,6 +286,20 @@
 	[completionDateCell setDate:task.completionDate];
 }
 
+- (void)onTrack:(ButtonCell *)cell
+{
+	if ([task startTimeOfCurrentEffort])
+	{
+		[task stopTracking];
+	}
+	else
+	{
+		[task startTracking];
+	}
+
+	[self updateTrackButton];
+}
+
 #pragma mark Table view methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -312,7 +358,7 @@
 	UITableViewCell *cell = [cells objectAtIndex:indexPath.row];
 	
 	if (cell == descriptionCell)
-		return 180;
+		return 150;
 	return 44;
 }
 

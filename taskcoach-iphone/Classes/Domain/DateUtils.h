@@ -15,3 +15,11 @@
 + (DateUtils *)instance;
 
 @end
+
+@interface TimeUtils : NSDateFormatter
+{
+}
+
++ (TimeUtils *)instance;
+
+@end

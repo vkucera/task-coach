@@ -18,6 +18,11 @@
 @synthesize leftImage;
 @synthesize titleLabel;
 
+- (NSString *)trackingLedName
+{
+	return @"ledclock.png";
+}
+
 - (NSString *)completedLedName
 {
 	return @"ledgreen.png";
@@ -50,28 +55,35 @@
 	action = theAction;
 
 	titleLabel.text = task.name;
-	
-	switch ([task taskStatus])
+
+	if ([task startTimeOfCurrentEffort])
 	{
-		case TASKSTATUS_COMPLETED:
-			leftImage.image = [UIImage imageNamed:[self completedLedName]];
-			break;
-		case TASKSTATUS_OVERDUE:
-			leftImage.image = [UIImage imageNamed:[self overdueLedName]];
-			break;
-		case TASKSTATUS_DUESOON:
-			leftImage.image = [UIImage imageNamed:[self dueSoonLedName]];
-			break;
-		case TASKSTATUS_STARTED:
-			leftImage.image = [UIImage imageNamed:[self startedLedName]];
-			break;
-		case TASKSTATUS_NOTSTARTED:
-			leftImage.image = [UIImage imageNamed:[self notStartedLedName]];
-			break;
-		default:
-			break;
+		leftImage.image = [UIImage imageNamed:[self trackingLedName]];
 	}
-	
+	else
+	{
+		switch ([task taskStatus])
+		{
+			case TASKSTATUS_COMPLETED:
+				leftImage.image = [UIImage imageNamed:[self completedLedName]];
+				break;
+			case TASKSTATUS_OVERDUE:
+				leftImage.image = [UIImage imageNamed:[self overdueLedName]];
+				break;
+			case TASKSTATUS_DUESOON:
+				leftImage.image = [UIImage imageNamed:[self dueSoonLedName]];
+				break;
+			case TASKSTATUS_STARTED:
+				leftImage.image = [UIImage imageNamed:[self startedLedName]];
+				break;
+			case TASKSTATUS_NOTSTARTED:
+				leftImage.image = [UIImage imageNamed:[self notStartedLedName]];
+				break;
+			default:
+				break;
+		}
+	}
+
 	[leftImage setTarget:self action:@selector(onTapImage)];
 
 	if ([task childrenCount])

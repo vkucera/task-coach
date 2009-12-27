@@ -36,6 +36,9 @@
 	
 	req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM CurrentTask WHERE status=%d", STATUS_MODIFIED]];
 	[req execWithTarget:self action:@selector(onModifiedTasksCount:)];
+
+	req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM Effort, Task WHERE Task.id=Effort.taskId AND Task.status != %d", STATUS_DELETED]];
+	[req execWithTarget:self action:@selector(onEffortCount:)];
 	
 	[myNetwork appendInteger:newCategoriesCount];
 	[myNetwork appendInteger:newTasksCount];
@@ -51,6 +54,8 @@
 	[req execWithTarget:self action:@selector(onModifiedCategoriesCount:)];
 		
 	[myNetwork appendInteger:modifiedCategoriesCount];
+
+	[myNetwork appendInteger:effortCount];
 
 	myController.state = [TwoWayNewCategoriesState stateWithNetwork:myNetwork controller:myController];
 }
@@ -83,6 +88,11 @@
 - (void)onModifiedTasksCount:(NSDictionary *)dict
 {
 	modifiedTasksCount = [[dict objectForKey:@"total"] intValue];
+}
+
+- (void)onEffortCount:(NSDictionary *)dict
+{
+	effortCount = [[dict objectForKey:@"total"] intValue];
 }
 
 - (void)networkDidConnect:(Network *)network controller:(SyncViewController *)controller

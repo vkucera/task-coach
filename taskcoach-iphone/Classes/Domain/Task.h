@@ -31,6 +31,7 @@
 
 	BOOL hasCat;
 	NSInteger ccount;
+	NSString *_currentEffort;
 }
 
 @property (nonatomic, retain) NSString *description;
@@ -50,5 +51,9 @@
 - (void)addCategory:(Category *)category;
 
 - (NSInteger)childrenCount;
+
+- (NSDate *)startTimeOfCurrentEffort;
+- (void)startTracking;
+- (void)stopTracking;
 
 @end

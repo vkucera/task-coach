@@ -51,6 +51,7 @@
 
 	switch (version)
 	{
+		// No breaks here, it's intentional.
 		case 1:
 		{
 			NSLog(@"Upgrading to version 2");
@@ -84,6 +85,11 @@
 			
 			[[self statementWithSQL:@"ALTER TABLE Task ADD COLUMN parentId INTEGER NULL DEFAULT NULL"] exec];
 			[[self statementWithSQL:@"CREATE INDEX idxTaskParentId ON Task (parentId)"] exec];
+
+			[[self statementWithSQL:@"CREATE TABLE Effort (id INTEGER PRIMARY KEY, taskId INTEGER NOT NULL, started CHAR(19) NOT NULL, ended CHAR(19) NOT NULL)"] exec];
+			[[self statementWithSQL:@"CREATE INDEX idxEffortTask ON Effort (taskId)"] exec];
+			[[self statementWithSQL:@"CREATE INDEX idxEffortStarted ON Effort (started)"] exec];
+			[[self statementWithSQL:@"CREATE INDEX idxEffortEnded ON Effort (ended)"] exec];
 
 			// Create the main file, if applicable.
 			[[self statementWithSQL:@"SELECT value FROM Meta WHERE name=\"guid\""] execWithTarget:self action:@selector(upgradeFileTable:)];

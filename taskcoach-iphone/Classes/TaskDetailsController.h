@@ -11,6 +11,7 @@
 #import "SwitchCell.h"
 #import "DateCell.h"
 #import "DescriptionCell.h"
+#import "ButtonCell.h"
 
 @class Task;
 
@@ -18,7 +19,8 @@
 {
 	Task *task;
 	NSMutableArray *cells;
-	
+
+	ButtonCell *effortCell;
 	UITableViewCell *categoriesCell;
 	DateCell *startDateCell;
 	DateCell *dueDateCell;

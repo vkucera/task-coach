@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # pylint: disable-msg=W0201,E1101
  
 from taskcoachlib.patterns.network import Acceptor
-from taskcoachlib.domain.date import Date, parseDate
+from taskcoachlib.domain.date import Date, parseDate, DateTime, parseDateTime
 
 from taskcoachlib.domain.category import Category
 from taskcoachlib.domain.task import Task
@@ -186,6 +186,27 @@ class DateItem(FixedSizeStringItem):
             return super(DateItem, self).pack('%04d-%02d-%02d' % (value.year, value.month, value.day))
 
 
+class DateTimeItem(FixedSizeStringItem):
+    """Date and time, YYYY-MM-DD HH:MM:SS"""
+
+    def feed(self, data):
+        super(DateTimeItem, self).feed(data)
+
+        if self.state == 2:
+            if self.value is None:
+                self.value = DateTime()
+            else:
+                self.value = parseDateTime(self.value)
+
+    def pack(self, value):
+        if value == DateTime():
+            return super(DateTimeItem, self).pack(None)
+        else:
+            return super(DateTimeItem, self).pack('%04d-%02d-%02d %02d:%02d:%02d' % (value.year, value.month,
+                                                                                     value.day, value.hour,
+                                                                                     value.minute, value.second))
+
+
 class CompositeItem(BaseItem):
     """A succession of several types. Underlying type: tuple. An
     exception is made if there is only 1 child, the type is then the
@@ -304,7 +325,8 @@ class ItemParser(object):
     formatMap = { 'i': IntegerItem,
                   's': StringItem,
                   'z': FixedSizeStringItem,
-                  'd': DateItem }
+                  'd': DateItem,
+                  't': DateTimeItem }
 
     def __init__(self):
         super(ItemParser, self).__init__()
@@ -789,7 +811,12 @@ class TwoWayState(BaseState):
         self.categoryMap = dict([(category.id(), category) for category in self.disp().window.taskFile.categories()])
         self.taskMap = dict([(task.id(), task) for task in self.disp().window.taskFile.tasks()])
 
-        super(TwoWayState, self).init(('iiii' if self.version < 3 else 'iiiiii'), 1)
+        if self.version < 3:
+            super(TwoWayState, self).init('iiii', 1)
+        elif self.version < 4:
+            super(TwoWayState, self).init('iiiiii', 1)
+        else:
+            super(TwoWayState, self).init('iiiiiii', 1)
 
     def handleNewObject(self, args):
         if self.version < 3:
@@ -797,13 +824,21 @@ class TwoWayState(BaseState):
              self.newTasksCount,
              self.deletedTasksCount,
              self.modifiedTasksCount) = args
-        else:
+        elif self.version < 4:
             (self.newCategoriesCount,
              self.newTasksCount,
              self.deletedTasksCount,
              self.modifiedTasksCount,
              self.deletedCategoriesCount,
              self.modifiedCategoriesCount) = args
+        else:
+            (self.newCategoriesCount,
+             self.newTasksCount,
+             self.deletedTasksCount,
+             self.modifiedTasksCount,
+             self.deletedCategoriesCount,
+             self.modifiedCategoriesCount,
+             self.effortsCount) = args
 
         self.setState(TwoWayNewCategoriesState)
 
@@ -942,6 +977,25 @@ class TwoWayModifiedTasks(BaseState):
             pass
         else:
             self.disp().window.modifyIPhoneTask(task, subject, description, startDate, dueDate, completionDate, categories)
+
+    def finished(self):
+        if self.version < 4:
+            self.setState(FullFromDesktopState)
+        else:
+            self.setState(TwoWayEffortsState)
+
+
+class TwoWayEffortsState(BaseState):
+    def init(self):
+        super(TwoWayEffortsState, self).init('stt', self.effortsCount)
+
+    def handleNewObject(self, (taskId, started, ended)):
+        try:
+            task = self.taskMap[taskId]
+        except KeyError:
+            pass
+
+        self.disp().window.addIPhoneEffort(task, started, ended)
 
     def finished(self):
         self.setState(FullFromDesktopState)

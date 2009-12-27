@@ -73,7 +73,7 @@ static Database *database = nil;
 	[super rollback];
 	[currentFile release];
 	currentFile = nil;
-	[[self statementWithSQL:@"SELECT id FROM TaskCoachFile WHERE visible"] execWithTarget:self action:@selector(updateCurrrentFile:)];
+	[[self statementWithSQL:@"SELECT id FROM TaskCoachFile WHERE visible"] execWithTarget:self action:@selector(updateCurrentFile:)];
 }
 
 @end

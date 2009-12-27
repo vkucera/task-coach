@@ -24,6 +24,7 @@ from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
 from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog, IPhoneSyncDialog
 import taskcoachlib.thirdparty.aui as aui
 import viewer, toolbar, uicommand, remindercontroller, artprovider
+from taskcoachlib.domain.effort import Effort
 
 
 class WindowDimensionsTracker(object):
@@ -442,6 +443,10 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
     @synchronized
     def removeIPhoneTask(self, task):
         self.taskFile.tasks().remove(task)
+
+    @synchronized
+    def addIPhoneEffort(self, task, start, end):
+        task.addEffort(Effort(task, start, end))
 
     @synchronized
     def modifyIPhoneTask(self, task, subject, description, startDate, dueDate, completionDate, categories):

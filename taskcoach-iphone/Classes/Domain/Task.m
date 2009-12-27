@@ -172,6 +172,33 @@ static Statement *_saveStatement = NULL;
 	return ccount;
 }
 
+- (void)updateCurrentEffort:(NSDictionary *)dict
+{
+	_currentEffort = [[dict objectForKey:@"started"] retain];
+}
+
+- (NSDate *)startTimeOfCurrentEffort
+{
+	_currentEffort = nil;
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT started FROM Effort WHERE ended IS NULL AND taskId=%d", objectId]] execWithTarget:self action:@selector(updateCurrentEffort:)];
+	return [_currentEffort autorelease];
+}
+
+- (void)startTracking
+{
+	// First, stop tracking if applicable.
+	[self stopTracking];
+
+	// And create new effort
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"INSERT INTO Effort (taskId, started) VALUES (%d, \"%@\")", objectId, [[TimeUtils instance] stringFromDate:[NSDate date]]]] exec];
+}
+
+- (void)stopTracking
+{
+	NSString *now = [[TimeUtils instance] stringFromDate:[NSDate date]];
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE Effort SET ended=\"%@\" WHERE ended IS NULL", now]] exec];
+}
+
 // Overridden setters
 
 // There is no need to mark subtasks deleted. They will be deleted in the FullFromDesktop state of the
