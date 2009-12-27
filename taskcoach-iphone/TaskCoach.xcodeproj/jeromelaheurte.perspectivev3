@@ -274,6 +274,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
+									<integer>14</integer>
 									<integer>1</integer>
 									<integer>0</integer>
 								</array>
@@ -307,12 +308,14 @@
 					<key>Dock</key>
 					<array>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>Database.m</string>
+								<string>CategoryViewController.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -320,11 +323,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>Database.m</string>
+										<string>CategoryViewController.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A6144CC510E753B400B449A7</string>
+										<string>A627F05310E7558600B856F4</string>
 										<key>history</key>
 										<array>
 											<string>A6B5E01D106E04E200E3774E</string>
@@ -358,7 +361,6 @@
 											<string>A6E83B9B10E4C28300FF3E45</string>
 											<string>A6E83B9C10E4C28300FF3E45</string>
 											<string>A6E83C6B10E4CF5B00FF3E45</string>
-											<string>A6E83C6D10E4CF5B00FF3E45</string>
 											<string>A6E83D0210E4E16F00FF3E45</string>
 											<string>A6E83D0610E4E16F00FF3E45</string>
 											<string>A6E83D0810E4E16F00FF3E45</string>
@@ -392,7 +394,6 @@
 											<string>A64F96AB10E607F100233CF4</string>
 											<string>A64F96AC10E607F100233CF4</string>
 											<string>A64F96AD10E607F100233CF4</string>
-											<string>A64F96B010E607F100233CF4</string>
 											<string>A64F96B110E607F100233CF4</string>
 											<string>A64F96B310E607F100233CF4</string>
 											<string>A64F96B610E607F100233CF4</string>
@@ -401,12 +402,10 @@
 											<string>A64F974410E60DF100233CF4</string>
 											<string>A64F977410E612EF00233CF4</string>
 											<string>A64F977510E612EF00233CF4</string>
-											<string>A64F978D10E616A900233CF4</string>
 											<string>A64F978E10E616A900233CF4</string>
 											<string>A64F978F10E616A900233CF4</string>
 											<string>A64F979110E616A900233CF4</string>
 											<string>A64F979310E616A900233CF4</string>
-											<string>A64F979410E616A900233CF4</string>
 											<string>A64F979510E616A900233CF4</string>
 											<string>A64F97BA10E6193E00233CF4</string>
 											<string>A64F97BB10E6193E00233CF4</string>
@@ -416,7 +415,12 @@
 											<string>A6BFECCC10E6206F00D5CE87</string>
 											<string>A6144CBE10E753B400B449A7</string>
 											<string>A6144CBF10E753B400B449A7</string>
-											<string>A6144CC010E753B400B449A7</string>
+											<string>A627F04D10E7558600B856F4</string>
+											<string>A627F04E10E7558600B856F4</string>
+											<string>A627F04F10E7558600B856F4</string>
+											<string>A627F05010E7558600B856F4</string>
+											<string>A627F05110E7558600B856F4</string>
+											<string>A627F05210E7558600B856F4</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -445,8 +449,6 @@
 							<key>Tabs</key>
 							<array>
 								<dict>
-									<key>BecomeActive</key>
-									<true/>
 									<key>ContentConfiguration</key>
 									<dict>
 										<key>PBXProjectModuleGUID</key>
@@ -475,7 +477,7 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {1663, 264}}</string>
+										<string>{{10, 27}, {1663, 200}}</string>
 									</dict>
 									<key>Module</key>
 									<string>PBXProjectFindModule</string>
@@ -541,11 +543,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6144CC210E753B400B449A7</string>
+				<string>A627F05410E7558600B856F4</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A6144CC310E753B400B449A7</string>
+				<string>A627F05510E7558600B856F4</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A6144CC410E753B400B449A7</string>
+				<string>A627F05610E7558600B856F4</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -694,14 +696,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A631AD1A10E61BA0005550B0</string>
+				<string>A627F05710E7558600B856F4</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A631AD1B10E61BA0005550B0</string>
-				<string>A631AD1C10E61BA0005550B0</string>
-				<string>A631AD1D10E61BA0005550B0</string>
-				<string>A631AD1E10E61BA0005550B0</string>
-				<string>A68EDEBA0F1E1EED00F51FF2</string>
+				<string>A627F05810E7558600B856F4</string>
+				<string>A627F05910E7558600B856F4</string>
+				<string>A627F05A10E7558600B856F4</string>
+				<string>A627F05B10E7558600B856F4</string>
+				<string>A627F05C10E7558600B856F4</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
 			<string>2</string>
@@ -733,6 +735,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
+		<string>A627F05D10E7558600B856F4</string>
+		<string>A627F05E10E7558600B856F4</string>
 		<string>/Users/jeromelaheurte/Dev/taskcoach-iphone/taskcoach-iphone/TaskCoach.xcodeproj</string>
 	</array>
 	<key>WindowString</key>

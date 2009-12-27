@@ -27,6 +27,7 @@
 
 @synthesize navigationController;
 @synthesize syncButton;
+@synthesize fileButton;
 
 - (void)loadCategories
 {
@@ -91,6 +92,8 @@
 	}
 	
 	[fileManager release];
+
+	fileButton.enabled = ([Database connection].currentFile != nil);
 }
 
 - (void)viewDidUnload
@@ -509,6 +512,7 @@
 	[self.tableView reloadData];
 	[self.navigationController dismissModalViewControllerAnimated:YES];
 	syncButton.enabled = YES;
+	fileButton.enabled = ([Database connection].currentFile != nil);
 }
 
 - (void)bonjourBrowser:(BonjourBrowser*)browser didResolveInstance:(NSNetService*)ref

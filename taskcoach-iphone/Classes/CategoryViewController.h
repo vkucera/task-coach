@@ -19,6 +19,7 @@
 {
 	NavigationController *navigationController;
 	UIBarButtonItem *syncButton;
+	UIBarButtonItem *fileButton;
 	BOOL wantSync;
 	NSInteger currentCategory;
 	NSInteger totalCount;
@@ -26,6 +27,7 @@
 
 @property (nonatomic, assign) IBOutlet NavigationController *navigationController;
 @property (nonatomic, assign) IBOutlet UIBarButtonItem *syncButton;
+@property (nonatomic, assign) IBOutlet UIBarButtonItem *fileButton;
 
 - (IBAction)onChooseFile:(UIBarButtonItem *)button;
 - (IBAction)onAddCategory:(UIBarButtonItem *)button;
