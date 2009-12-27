@@ -68,4 +68,12 @@ static Database *database = nil;
 	self.currentFile = [dict objectForKey:@"id"];
 }
 
+- (void)rollback
+{
+	[super rollback];
+	[currentFile release];
+	currentFile = nil;
+	[[self statementWithSQL:@"SELECT id FROM TaskCoachFile WHERE visible"] execWithTarget:self action:@selector(updateCurrrentFile:)];
+}
+
 @end
