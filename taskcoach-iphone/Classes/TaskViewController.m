@@ -35,25 +35,43 @@
 
 - (void)willTerminate
 {
-	// [[PositionStore instance] push:self indexPath:nil];
+	[[PositionStore instance] push:self indexPath:nil type:TYPE_SUBTASK];
 }
 
 - (void)restorePosition:(Position *)pos store:(PositionStore *)store
 {
-	/*
 	[self.tableView setContentOffset:pos.scrollPosition animated:NO];
 	
 	if (pos.indexPath)
 	{
-		[self.tableView selectRowAtIndexPath:pos.indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-		
-		Task *task = [[headers objectAtIndex:pos.indexPath.section - (self.editing ? 1 : 0)] taskAtIndex:pos.indexPath.row];
-		TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:-1];
-		[self.navigationController pushViewController:ctrl animated:NO];
-		[[PositionStore instance] push:self indexPath:pos.indexPath];
-		[ctrl release];
+		switch (pos.type)
+		{
+			case TYPE_DETAILS:
+			{
+				[self.tableView selectRowAtIndexPath:pos.indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+
+				Task *task = [[headers objectAtIndex:pos.indexPath.section - (self.editing ? 1 : 0)] taskAtIndex:pos.indexPath.row];
+				TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:-1];
+				[self.navigationController pushViewController:ctrl animated:NO];
+				[[PositionStore instance] push:self indexPath:pos.indexPath type:TYPE_DETAILS];
+				[ctrl release];
+
+				break;
+			}
+			case TYPE_SUBTASK:
+			{
+				Task *task = [[headers objectAtIndex:pos.indexPath.section] taskAtIndex:pos.indexPath.row];
+				TaskViewController *ctrl = [[TaskViewController alloc] initWithTitle:task.name category:-1 categoryController:categoryController parentTask:task edit:self.editing];
+				[self.navigationController pushViewController:ctrl animated:NO];
+				[[PositionStore instance] push:self indexPath:pos.indexPath type:TYPE_SUBTASK];
+				[ctrl release];
+
+				[store restore:ctrl];
+
+				break;
+			}
+		}
 	}
-	 */
 }
 
 - (void)loadData
@@ -147,10 +165,10 @@
 
 	[self loadData];
 	[self.tableView reloadData];
-	/*
+
 	if (!isCreatingTask)
 		[[PositionStore instance] pop];
-	 */
+
 	isCreatingTask = NO;
 }
 
@@ -485,7 +503,7 @@
 	Task *task = [[headers objectAtIndex:indexPath.section - (self.editing ? 1 : 0)] taskAtIndex:indexPath.row];
 	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:-1];
 	[self.navigationController pushViewController:ctrl animated:YES];
-	//[[PositionStore instance] push:self indexPath:indexPath];
+	[[PositionStore instance] push:self indexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:(self.editing ? indexPath.section - 1 : 0)] type:TYPE_DETAILS];
 	[ctrl release];
 }
 
@@ -493,6 +511,7 @@
 {
 	Task *task = [[headers objectAtIndex:indexPath.section - (self.editing ? 1 : 0)] taskAtIndex:indexPath.row];
 	TaskViewController *ctrl = [[TaskViewController alloc] initWithTitle:task.name category:-1 categoryController:categoryController parentTask:task edit:self.editing];
+	[[PositionStore instance] push:self indexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:(self.editing ? indexPath.section - 1 : 0)] type:TYPE_SUBTASK];
 	[self.navigationController pushViewController:ctrl animated:YES];
 	[ctrl release];
 }

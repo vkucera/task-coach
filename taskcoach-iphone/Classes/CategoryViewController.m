@@ -38,7 +38,7 @@
 
 - (void)willTerminate
 {
-	[[PositionStore instance] push:self indexPath:nil];
+	[[PositionStore instance] push:self indexPath:nil type:0];
 }
 
 - (void)restorePosition:(Position *)pos store:(PositionStore *)store
@@ -48,7 +48,7 @@
 	if (pos.indexPath)
 	{
 		[self.tableView selectRowAtIndexPath:pos.indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-
+		
 		TaskViewController *ctrl;
 		
 		if (pos.indexPath.row)
@@ -60,11 +60,11 @@
 			ctrl = [[TaskViewController alloc] initWithTitle:_("All") category:-1 categoryController:self parentTask:nil edit:NO];
 		}
 		
-		[[PositionStore instance] push:self indexPath:pos.indexPath];
+		[[PositionStore instance] push:self indexPath:pos.indexPath type:pos.type];
 		
 		[self.navigationController pushViewController:ctrl animated:YES];
 		[ctrl release];
-
+		
 		[store restore:ctrl];
 	}
 }
@@ -82,11 +82,11 @@
 		[fileManager createDirectoryAtPath:cachesDir attributes:nil];
 	}
 	
-	NSString *path = [cachesDir stringByAppendingPathComponent:@"positions.store"];
+	NSString *path = [cachesDir stringByAppendingPathComponent:@"positions.store.v2"];
 	
 	if ([fileManager fileExistsAtPath:path])
 	{
-		PositionStore *store = [[PositionStore alloc] initWithFile:[cachesDir stringByAppendingPathComponent:@"positions.store"]];
+		PositionStore *store = [[PositionStore alloc] initWithFile:[cachesDir stringByAppendingPathComponent:@"positions.store.v2"]];
 		[store restore:self];
 		[store release];
 	}
@@ -351,7 +351,7 @@
 			ctrl = [[TaskViewController alloc] initWithTitle:_("All") category:-1 categoryController:self parentTask:nil edit:NO];
 		}
 	
-		[[PositionStore instance] push:self indexPath:indexPath];
+		[[PositionStore instance] push:self indexPath:indexPath type:TYPE_DETAILS];
 	
 		[self.navigationController pushViewController:ctrl animated:YES];
 		[ctrl release];
