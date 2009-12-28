@@ -53,7 +53,7 @@ class TreeListCtrlTest(TreeListCtrlTestCase, TreeCtrlTest.CommonTestsMixin):
 class TreeListCtrlColumnsTest(TreeListCtrlTestCase):
     def setUp(self):
         super(TreeListCtrlColumnsTest, self).setUp()
-        self.children[None] = ['item']
+        self.children[None] = [TreeCtrlTest.DummyDomainObject('item')]
         self.treeCtrl.RefreshAllItems(1)
         self.visibleColumns = self.columns()[1:]
         

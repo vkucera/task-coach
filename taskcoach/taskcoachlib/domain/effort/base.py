@@ -40,11 +40,11 @@ class BaseEffort(object):
     def categories(self, recursive=False):
         return self._task.categories(recursive)
 
-    def foregroundColor(self):
-        return self.task().foregroundColor()
+    def foregroundColor(self, recursive=False):
+        return self.task().foregroundColor(recursive)
     
-    def backgroundColor(self):
-        return self.task().backgroundColor()
+    def backgroundColor(self, recursive=False):
+        return self.task().backgroundColor(recursive)
     
     def duration(self, recursive=False):
         raise NotImplementedError

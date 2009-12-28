@@ -265,7 +265,7 @@ class CommonTestsMixin(object):
     def testForegroundColorWhenTaskIsCompleted(self):
         self.taskList.append(self.task)
         self.task.setCompletionDate()
-        newColor = gui.color.taskColor(self.task, self.settings)
+        newColor = self.task.statusColor()
         newColor = wx.Colour(newColor.Red(), newColor.Green(), newColor.Blue())
         self.assertColor(newColor)
 
@@ -634,31 +634,6 @@ class ColumnsTestsMixin(object):
         self.assertEqual(render.monetaryAmount(300.), self.getItemText(0, 3))
         
     # Test all attributes...
-
-    def testForegroundColorForDefaultTask(self):
-        self.assertEqual(wx.BLACK, self.viewer.getColor(self.task))
-
-    def testForegroundColorForCompletedTask(self):
-        self.taskList.append(self.task)
-        self.task.setCompletionDate()
-        self.assertEqual(wx.GREEN, self.viewer.getColor(self.task))
-        
-    def testForegroundColorForOverDueTask(self):
-        self.taskList.append(self.task)
-        self.task.setDueDate(date.Yesterday())
-        self.assertEqual(wx.RED, self.viewer.getColor(self.task))
-        
-    def testForegroundColorForTaskDueSoon(self):
-        self.taskList.append(self.task)
-        self.task.setDueDate(date.Today())
-        expectedColor = wx.Color(*eval(self.settings.get('color', 'duesoontasks')))
-        self.assertEqual(expectedColor, self.viewer.getColor(self.task))
-
-    def testForegroundColorForInactiveTasks(self):
-        self.taskList.append(self.task)
-        self.task.setStartDate(date.Tomorrow())
-        expectedColor = wx.Color(*eval(self.settings.get('color', 'inactivetasks')))
-        self.assertEqual(expectedColor, self.viewer.getColor(self.task))
 
 
 class TaskViewerInTreeModeTest(CommonTestsMixin, ColumnsTestsMixin, 

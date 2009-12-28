@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, cgi
-from taskcoachlib.gui import color
+from taskcoachlib.domain import task
 
 # pylint: disable-msg=W0142
 
@@ -79,7 +79,7 @@ class Viewer2HTMLConverter(object):
             styleContent.append(columnStyle)
         if self.viewer.isShowingTasks():
             for status in 'completed', 'duesoon', 'overdue', 'inactive', 'active':
-                statusColor = color.taskColorForStatus(status, self.settings)
+                statusColor = task.Task.colorForStatus(status)
                 statusColor = self.cssColorSyntax(statusColor)
                 statusStyle = '.%s {color: %s}'%(status, statusColor)
                 styleContent.append(self.indent(statusStyle, level+1))
@@ -154,7 +154,7 @@ class Viewer2HTMLConverter(object):
         for column in visibleColumns:
             renderedItem = self.render(item, column, indent=not bodyRowContent and tree)
             if printing:
-                itemColor = self.viewer.getColor(item)
+                itemColor = item.foregroundColor(recursive=True)
                 if itemColor:
                     itemColor = self.cssColorSyntax(itemColor)
                     renderedItem = self.wrap(renderedItem, 'font', level+1, 
@@ -168,7 +168,7 @@ class Viewer2HTMLConverter(object):
     def bodyRowBgColor(self, item, printing):
         ''' Determine the background color for the item. Returns a CSS style
             specification or a HTML style specification when printing. '''
-        bgColor = self.viewer.getBackgroundColor(item)
+        bgColor = item.backgroundColor(recursive=True)
         if bgColor:
             bgColor = self.cssColorSyntax(bgColor)
         else:

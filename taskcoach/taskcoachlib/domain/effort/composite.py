@@ -103,7 +103,7 @@ class CompositeEffort(BaseCompositeEffort):
         patterns.Publisher().registerObserver(self.onTotalRevenueChanged,
             eventType='task.totalRevenue', eventSource=task)
         '''
-        FIMXE! CompositeEffort does not derive from base.Objec
+        FIMXE! CompositeEffort does not derive from base.Object
         patterns.Publisher().registerObserver(self.onBackgroundColorChanged,
             eventType=task.backgroundColorChangedEventType(), eventSource=task)
         patterns.Publisher().registerObserver(self.onForegroundColorChanged,
@@ -199,9 +199,12 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
             
     def task(self):
         class Total(object):
-            def subject(self, *args, **kwargs): # pylint: disable-msg=W0613
+            # pylint: disable-msg=W0613
+            def subject(self, *args, **kwargs): 
                 return _('Total')
-            def backgroundColor(self, *args, **kwargs): # pylint: disable-msg=W0613
+            def foregroundColor(self, *args, **kwargs):
+                return None
+            def backgroundColor(self, *args, **kwargs):
                 return None
         return Total()
 

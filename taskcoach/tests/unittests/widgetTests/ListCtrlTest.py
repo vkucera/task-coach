@@ -31,7 +31,6 @@ class VirtualListCtrlTestCase(test.wxTestCase):
         self.frame.getItemText = lambda item, column: ''
         self.frame.getItemTooltipData = lambda item: []
         self.frame.getItemImage = lambda item, which, column: None
-        self.frame.getItemAttr = lambda item: None
         return widgets.ListCtrl(self.frame, self.columns, self.onSelect, 
             dummy.DummyUICommand())
 
