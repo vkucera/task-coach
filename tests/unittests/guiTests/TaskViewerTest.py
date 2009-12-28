@@ -313,7 +313,7 @@ class CommonTestsMixin(object):
 
     def testTurnOnAveragePercentageCompleteColumn(self):
         self.showColumn('totalPercentageComplete')
-        self.assertEqual(_('overall % complete'), 
+        self.assertEqual(_('Overall % complete'), 
                          self.viewer.widget.GetColumn(3).GetText())
 
     def testTurnOffAveragePercentageCompleteColumn(self):
