@@ -42,6 +42,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
         super(BaseCategoryViewer, self).__init__(*args, **kwargs)
         for eventType in category.Category.subjectChangedEventType(), \
                          category.Category.filterChangedEventType(), \
+                         category.Category.foregroundColorChangedEventType(), \
                          category.Category.backgroundColorChangedEventType(), \
                          category.Category.exclusiveSubcategoriesChangedEventType():
             patterns.Publisher().registerObserver(self.onAttributeChanged, 

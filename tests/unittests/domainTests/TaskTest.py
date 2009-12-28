@@ -1674,3 +1674,34 @@ class TaskWithDailyRecurrenceWithRecurringChildFixture(\
     def createRecurrence(self):
         return date.Recurrence('daily')
 
+
+class TaskColorTest(test.TestCase):
+    def setUp(self):
+        super(TaskColorTest, self).setUp()
+        task.Task.settings = config.Settings(load=False)
+        
+    def testDefaultTask(self):
+        self.assertEqual(wx.BLACK, task.Task().statusColor())
+
+    def testCompletedTask(self):
+        completed = task.Task()
+        completed.setCompletionDate()
+        self.assertEqual(wx.GREEN, completed.statusColor())
+
+    def testOverDueTask(self):
+        overdue = task.Task(dueDate=date.Yesterday())
+        self.assertEqual(wx.RED, overdue.statusColor())
+
+    def testDueTodayTask(self):
+        duetoday = task.Task(dueDate=date.Today())
+        self.assertEqual(wx.Colour(255, 128, 0), duetoday.statusColor())
+
+    def testDueTomorrow(self):
+        duetomorrow = task.Task(dueDate=date.Tomorrow())
+        self.assertEqual(wx.NamedColour('BLACK'), duetomorrow.statusColor())
+
+    def testInactive(self):
+        inactive = task.Task(startDate=date.Tomorrow())
+        self.assertEqual(wx.Colour(*eval(task.Task.settings.get('color', 
+                         'inactivetasks'))), inactive.statusColor())
+

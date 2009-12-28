@@ -2750,6 +2750,7 @@ class TreeListMainWindow(CustomTreeCtrl):
                 itemrect = wx.Rect(0, item.GetY() + off_h, total_w-1, total_h - off_h)
                 dc.SetBrush(wx.Brush(colBg, wx.SOLID))
                 dc.DrawRectangleRect(itemrect)
+                dc.SetTextForeground(colText)
                                                 
             else:
                 dc.SetTextForeground(colText)

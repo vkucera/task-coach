@@ -36,7 +36,7 @@ class CategoryEditorTestCase(test.wxTestCase):
             self.settings, self.categories, self.taskFile, raiseDialog=False)
 
     def tearDown(self):
-        # TaskEditor uses CallAfter for setting the focus, make sure those 
+        # CategoryEditor uses CallAfter for setting the focus, make sure those 
         # calls are dealt with, otherwise they'll turn up in other tests
         if '__WXMAC__' not in wx.PlatformInfo and ('__WXMSW__' not in wx.PlatformInfo or sys.version_info < (2, 5)):
             wx.Yield() # pragma: no cover 

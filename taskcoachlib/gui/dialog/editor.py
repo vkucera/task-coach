@@ -232,7 +232,7 @@ class AttachmentSubjectPage(SubjectPage):
         self.addSubjectEntry()
         self.addLocationEntry()
         self.addDescriptionEntry()
-        self.addBackgroundColorEntry()
+        self.addColorEntry()
 
     def addLocationEntry(self):
         panel = wx.Panel(self, wx.ID_ANY)
