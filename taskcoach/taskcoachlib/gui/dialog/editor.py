@@ -101,7 +101,7 @@ class NoteHeadersMixin(object):
 class SubjectPage(Page, widgets.BookPage):
     def __init__(self, item, *args, **kwargs):
         self.item = item
-        super(SubjectPage, self).__init__(columns=6, *args, **kwargs)
+        super(SubjectPage, self).__init__(columns=5, *args, **kwargs)
         self.addEntries()
         self.fit()
         
@@ -126,25 +126,25 @@ class SubjectPage(Page, widgets.BookPage):
 
     def addColorEntry(self):
         # pylint: disable-msg=W0201,W0142
-        self._colorCheckBox = wx.CheckBox(self, label=_('Use colors'))
+        self._fgColorCheckBox = wx.CheckBox(self, label=_('Use foreground color:'))
+        self._bgColorCheckBox = wx.CheckBox(self, label=_('Use background color:'))
         currentFgColor = self.item.foregroundColor(recursive=False)
         currentBgColor = self.item.backgroundColor(recursive=False)
-        self._colorCheckBox.SetValue((currentFgColor is not None) or \
-                                     (currentBgColor is not None))
+        self._fgColorCheckBox.SetValue(currentFgColor is not None)
+        self._bgColorCheckBox.SetValue(currentBgColor is not None)
         # wx.ColourPickerCtrl on Mac OS X expects a wx.Color and fails on tuples
         # so convert the tuples to a wx.Color:
         currentFgColor = wx.Color(*currentFgColor) if currentFgColor else wx.BLACK
         currentBgColor = wx.Color(*currentBgColor) if currentBgColor else wx.WHITE
         self._fgColorButton = wx.ColourPickerCtrl(self, col=currentFgColor)
         self._bgColorButton = wx.ColourPickerCtrl(self, col=currentBgColor)
-        checkColorCheckBox = lambda event: self._colorCheckBox.SetValue(True)
-        self._fgColorButton.Bind(wx.EVT_COLOURPICKER_CHANGED, checkColorCheckBox)
-        self._bgColorButton.Bind(wx.EVT_COLOURPICKER_CHANGED, checkColorCheckBox)
-        self.addEntry(_('Color'), self._colorCheckBox, 
-                      _('Foreground:'), self._fgColorButton, 
-                      _('Background:'), self._bgColorButton,
-                      flags=[None, None, wx.ALIGN_CENTRE_VERTICAL, wx.ALL, 
-                                         wx.ALIGN_CENTRE_VERTICAL, wx.ALL])
+        checkFgColorCheckBox = lambda event: self._fgColorCheckBox.SetValue(True)
+        checkBgColorCheckBox = lambda event: self._bgColorCheckBox.SetValue(True)
+        self._fgColorButton.Bind(wx.EVT_COLOURPICKER_CHANGED, checkFgColorCheckBox)
+        self._bgColorButton.Bind(wx.EVT_COLOURPICKER_CHANGED, checkBgColorCheckBox)
+        self.addEntry(_('Color'), self._fgColorCheckBox, self._fgColorButton, 
+                      self._bgColorCheckBox, self._bgColorButton,
+                      flags=[None, None, wx.ALL, None, wx.ALL])
 
     def setSubject(self, subject):
         self._subjectEntry.SetValue(subject)
@@ -155,9 +155,10 @@ class SubjectPage(Page, widgets.BookPage):
     def ok(self):
         self.item.setSubject(self._subjectEntry.GetValue())
         self.item.setDescription(self._descriptionEntry.GetValue())
-        colorChecked = self._colorCheckBox.IsChecked()
-        fgColor = self._fgColorButton.GetColour() if colorChecked else None
-        bgColor = self._bgColorButton.GetColour() if colorChecked else None
+        fgColorChecked = self._fgColorCheckBox.IsChecked()
+        bgColorChecked = self._bgColorCheckBox.IsChecked()
+        fgColor = self._fgColorButton.GetColour() if fgColorChecked else None
+        bgColor = self._bgColorButton.GetColour() if bgColorChecked else None
         self.item.setForegroundColor(fgColor)
         self.item.setBackgroundColor(bgColor)
         super(SubjectPage, self).ok()

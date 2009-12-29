@@ -255,13 +255,10 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             self.SetItemImage(item, image, column=columnIndex, which=which)
 
     def _refreshColors(self, item, domainObject):
-        bgColor = domainObject.backgroundColor(recursive=True)
-        if bgColor:
-            self.SetItemBackgroundColour(item, bgColor)
-
-        fgColor = domainObject.foregroundColor(recursive=True)
-        if fgColor:
-            self.SetItemTextColour(item, fgColor)
+        bgColor = domainObject.backgroundColor(recursive=True) or wx.NullColour
+        self.SetItemBackgroundColour(item, bgColor)
+        fgColor = domainObject.foregroundColor(recursive=True) or wx.NullColour
+        self.SetItemTextColour(item, fgColor)
         
     def _refreshSelection(self, item, domainObject):
         shouldBeSelected = domainObject in self.__selection
