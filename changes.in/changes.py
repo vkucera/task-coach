@@ -23,10 +23,14 @@ from changetypes import *
 
 releases = [
 
-Release('0.78.0', 'December 18, 2009',
-    summary='''This release adds ...''',
+Release('0.78.0', 'December 29, 2009',
+    summary='''This release adds configurable foreground colors.''',
     featuresAdded=[
-        Feature(''' ... ''')
+        Feature('''In addition to the background color, the foreground (text) 
+color of tasks, categories and notes can now also be changed. Tasks and notes 
+that don't have their own foreground color use the foreground color of the 
+categories they belong to. Effort records use the foreground color of the task 
+they belong to. ''')
         ]
     ),
     
