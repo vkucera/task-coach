@@ -121,7 +121,7 @@ class CategorizableCompositeObject(base.CompositeObject):
             composite object has no foreground color of its own, it uses its 
             parent's foreground color. '''
         colors = [category.foregroundColor() for category in self.categories()]
-        return self._mixColors(colors)
+        return self.mixColors(colors)
 
     def _categoryBackgroundColor(self):
         ''' If a categorizable object belongs to a category that has a 
@@ -131,9 +131,10 @@ class CategorizableCompositeObject(base.CompositeObject):
             composite object has no background color of its own, it uses its 
             parent's background color. '''
         colors = [category.backgroundColor() for category in self.categories()]
-        return self._mixColors(colors)
-        
-    def _mixColors(self, colors):
+        return self.mixColors(colors)
+    
+    @staticmethod    
+    def mixColors(colors):
         colorSums, colorCount = [0, 0, 0, 0], 0
         for color in colors:
             if color:

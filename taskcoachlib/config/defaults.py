@@ -248,11 +248,11 @@ defaults = { \
     'inifileloaderror': ''
     },
 'color': { \
-    'activetasks': '(0, 0, 0)',
-    'completedtasks': '(0, 255, 0)',
-    'overduetasks': '(255, 0, 0)',
-    'inactivetasks': '(192, 192, 192)',
-    'duesoontasks': '(255, 128, 0)' },
+    'activetasks': '(0, 0, 0, 255)',
+    'completedtasks': '(0, 255, 0, 255)',
+    'overduetasks': '(255, 0, 0, 255)',
+    'inactivetasks': '(192, 192, 192, 255)',
+    'duesoontasks': '(255, 128, 0, 255)' },
 'editor': { \
     'maccheckspelling': 'True' },
 'version': { \
