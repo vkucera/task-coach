@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.78.0', 'December 29, 2009',
+Release('0.78.0', 'December 30, 2009',
     summary='''This release adds configurable foreground colors.''',
     featuresAdded=[
         Feature('''In addition to the background color, the foreground (text) 
@@ -36,11 +36,16 @@ item.''')
         ]
     ),
     
-Release('0.77.1', 'December 14, 2009',
+Release('0.77.1', 'December 30, 2009',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Make file locking work on Windows computers that have a  
-hostname with non-ASCII characters in it.''', '2904864')
+hostname with non-ASCII characters in it.''', '2904864'),
+        Bug('''Avoid deploying UxTheme.dll because it causes problems
+on 64-bits Windows systems.''', '2911280', '2897639'),
+        Bug('''Correctly refresh task square map and task time line viewers
+after stopping effort tracking, i.e. stop showing the clock icon on the
+previously tracked task.''')
         ],
     featuresChanged=[
         Feature('''Task Coach now limits the number of backups made of a task 

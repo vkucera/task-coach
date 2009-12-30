@@ -98,7 +98,7 @@ if sys.argv[1] == 'py2exe':
             # are imported implicitly:
             'packages' : ['taskcoachlib.i18n', 'xml.dom.minidom'], 
             'dist_dir' : os.path.join(builddir, py2exeDistdir),
-            'dll_excludes': 'MSVCR80.dll'}},
+            'dll_excludes': ['MSVCR80.dll', 'UxTheme.dll']}},
         'data_files': dll_files + mo_files})
  
 elif sys.argv[1] == 'py2app':
