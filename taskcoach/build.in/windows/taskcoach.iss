@@ -49,6 +49,9 @@ Source: "%(filename)s-%(version)s-win32exe\*"; DestDir: "{app}"; Flags: ignoreve
 [INI]
 Filename: "{app}\%(filename)s.url"; Section: "InternetShortcut"; Key: "URL"; String: "%(url)s"
 
+[InstallDelete]
+Type: files; Name: "{app}\UxTheme.dll"
+
 [Registry]
 Root: HKCR; Subkey: ".tsk"; ValueType: string; ValueName: ""; ValueData: "TaskCoach"; Flags: uninsdeletevalue; Check: IsAdminLoggedOn
 Root: HKCR; Subkey: "TaskCoach"; ValueType: string; ValueName: ""; ValueData: "%(name)s File"; Flags: uninsdeletekey; Check: IsAdminLoggedOn
@@ -73,4 +76,3 @@ Filename: "%(url)schanges.html"; Description: "Show recent changes (opens a webb
 
 [UninstallDelete]
 Type: files; Name: "{app}\%(filename)s.url"
-
