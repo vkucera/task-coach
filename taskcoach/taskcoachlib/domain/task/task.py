@@ -463,7 +463,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     def foregroundColor(self, recursive=False):
         fgColor = super(Task, self).foregroundColor(recursive)
-        return fgColor if fgColor or not recursive else self.statusColor()
+        if not recursive:
+            return fgColor
+        '''
+        if self.active() and not (self.dueSoon() or self.overdue()):
+            return fgColor
+        '''
+        return self.mixColors((fgColor, self.statusColor()))
     
     def statusColor(self):
         ''' Return the current color of task, based on its status (completed,
