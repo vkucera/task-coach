@@ -30,7 +30,9 @@ Release('0.78.0', 'December 29, 2009',
 color of tasks, categories and notes can now also be changed. Tasks and notes 
 that don't have their own foreground color use the foreground color of the 
 categories they belong to. Effort records use the foreground color of the task 
-they belong to. ''')
+they belong to. '''),
+        Feature('''Added Ctrl+E keyboard shortcut to "New effort..." menu 
+item.''')
         ]
     ),
     

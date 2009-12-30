@@ -23,14 +23,11 @@ from taskcoachlib.i18n import _
 class MaxDateTimeMixin(object):
     def maxDateTime(self):
         stopTimes = [effort.getStop() for effort in self if effort.getStop() is not None]
-        if stopTimes:
-            return max(stopTimes)
-        else:
-            return None
+        return max(stopTimes) if stopTimes else None
 
 
 class EffortUICommandNamesMixin(object):
-    newItemMenuText = _('&New effort...')
+    newItemMenuText = _('&New effort...\tCtrl+E')
     newItemHelpText =  _('Add an effort period to the selected task(s)')
     editItemMenuText = _('&Edit effort...')
     editItemHelpText = _('Edit the selected effort period(s)')
