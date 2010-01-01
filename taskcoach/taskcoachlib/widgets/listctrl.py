@@ -95,9 +95,13 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
         item = self.getItemWithIndex(rowIndex)
         foregroundColor = item.foregroundColor(recursive=True)
         backgroundColor = item.backgroundColor(recursive=True)
+        itemAttrArgs = [foregroundColor, backgroundColor] 
+        font = item.font(recursive=True)
+        if font:
+            itemAttrArgs.append(font)
         # We need to keep a reference to the item attribute to prevent it
         # from being garbage collected too soon:
-        self.__itemAttribute = wx.ListItemAttr(foregroundColor, backgroundColor)
+        self.__itemAttribute = wx.ListItemAttr(*itemAttrArgs)
         return self.__itemAttribute
         
     def onSelect(self, event):

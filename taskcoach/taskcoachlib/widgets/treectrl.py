@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -227,7 +227,8 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
                 self.Expand(childItem)
             
     def _refreshObject(self, *args):
-        self._refreshAspects(('ItemType', 'Columns', 'Colors', 'Selection'), *args)
+        self._refreshAspects(('ItemType', 'Columns', 'Colors', 'Font', 
+                              'Selection'), *args)
 
     def _refreshAspects(self, aspects, *args):
         for aspect in aspects:
@@ -259,6 +260,11 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         self.SetItemBackgroundColour(item, bgColor)
         fgColor = domainObject.foregroundColor(recursive=True) or wx.NullColour
         self.SetItemTextColour(item, fgColor)
+        
+    def _refreshFont(self, item, domainObject):
+        defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        font = domainObject.font(recursive=True) or defaultFont
+        self.SetItemFont(item, font)
         
     def _refreshSelection(self, item, domainObject):
         shouldBeSelected = domainObject in self.__selection

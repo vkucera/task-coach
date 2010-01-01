@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -1105,7 +1105,7 @@ class XMLReaderVersion27Test(XMLReaderTestCase):
 class XMLReaderVersion28Test(XMLReaderTestCase):
     tskversion = 28 # New in release 0.78.0
     
-    # Release 0.78.0 introduces foreground colors that can be set per object.
+    # Release 0.78.0 introduces foreground colors and fonts that can be set per object.
 
     def testTaskForegroundColor(self):
         tasks = self.writeAndReadTasks(\
@@ -1143,3 +1143,33 @@ class XMLReaderVersion28Test(XMLReaderTestCase):
             '</notes>\n')
         self.assertEqual(wx.RED, notes[0].backgroundColor())
         
+    def testTaskFont(self):
+        tasks = self.writeAndReadTasks(\
+            '<tasks>\n<task subject="Task" font="%s"/>\n'
+            '</tasks>\n'%wx.SWISS_FONT.GetNativeFontInfoDesc())
+        self.assertEqual(wx.SWISS_FONT, tasks[0].font())
+        
+    def testNoTaskFont(self):
+        tasks = self.writeAndReadTasks(\
+            '<tasks>\n<task subject="Task"/>\n</tasks>\n')
+        self.assertEqual(None, tasks[0].font())
+
+    def testCategoryFont(self):
+        categories = self.writeAndReadCategories(\
+            '<categories>\n<category subject="Category" font="%s"/>\n'
+            '</categories>\n'%wx.SWISS_FONT.GetNativeFontInfoDesc())
+        self.assertEqual(wx.SWISS_FONT, categories[0].font())
+
+    def testNoteFont(self):
+        notes = self.writeAndReadNotes(\
+            '<notes>\n<note subject="Note" font="%s"/>\n'
+            '</notes>\n'%wx.SWISS_FONT.GetNativeFontInfoDesc())
+        self.assertEqual(wx.SWISS_FONT, notes[0].font())
+
+    def testAttachmentFont(self):
+        tasks = self.writeAndReadTasks(\
+            '<tasks>\n<task subject="Task">\n'
+            '<attachment type="file" location="whatever" font="%s"/>\n'
+            '</task>\n</tasks>\n'%wx.SWISS_FONT.GetNativeFontInfoDesc())
+        self.assertEqual(wx.SWISS_FONT, tasks[0].attachments()[0].font())
+            

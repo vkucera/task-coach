@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Carl Zmola <zmola@acm.org>
@@ -108,7 +108,8 @@ class SubjectPage(Page, widgets.BookPage):
     def addEntries(self):
         self.addSubjectEntry()
         self.addDescriptionEntry()
-        self.addColorEntry()        
+        self.addColorEntry()
+        self.addFontEntry()
         
     def addSubjectEntry(self):
         # pylint: disable-msg=W0201
@@ -146,6 +147,19 @@ class SubjectPage(Page, widgets.BookPage):
                       self._bgColorCheckBox, self._bgColorButton,
                       flags=[None, None, wx.ALL, None, wx.ALL])
 
+    def addFontEntry(self):
+        self._fontCheckBox = wx.CheckBox(self, label=_('Use font:'))
+        currentFont = self.item.font()
+        self._fontCheckBox.SetValue(currentFont is not None)
+        defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        self._fontButton = wx.FontPickerCtrl(self, 
+            initial=currentFont or defaultFont,
+            style=wx.FNTP_USEFONT_FOR_LABEL|wx.FNTP_FONTDESC_AS_LABEL)
+        checkFontCheckBox = lambda event: self._fontCheckBox.SetValue(True)
+        self._fontButton.Bind(wx.EVT_FONTPICKER_CHANGED, checkFontCheckBox)
+        self.addEntry(_('Font'), self._fontCheckBox, self._fontButton,
+                      flags=[None, None, wx.ALL])
+                
     def setSubject(self, subject):
         self._subjectEntry.SetValue(subject)
 
@@ -161,6 +175,9 @@ class SubjectPage(Page, widgets.BookPage):
         bgColor = self._bgColorButton.GetColour() if bgColorChecked else None
         self.item.setForegroundColor(fgColor)
         self.item.setBackgroundColor(bgColor)
+        fontChecked = self._fontCheckBox.IsChecked()
+        font = self._fontButton.GetSelectedFont() if fontChecked else None
+        self.item.setFont(font)
         super(SubjectPage, self).ok()
                         
     def entries(self):
@@ -234,6 +251,7 @@ class AttachmentSubjectPage(SubjectPage):
         self.addLocationEntry()
         self.addDescriptionEntry()
         self.addColorEntry()
+        self.addFontEntry()
 
     def addLocationEntry(self):
         panel = wx.Panel(self, wx.ID_ANY)

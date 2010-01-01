@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@ from taskcoachlib import gui, config, persistence, command, patterns
 from taskcoachlib.gui import render
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, date, effort, category, attachment
-
 
 
 class TaskViewerUnderTest(gui.viewer.task.TaskViewer): # pylint: disable-msg=W0223
@@ -95,6 +94,9 @@ class TaskViewerTestCase(test.wxTestCase):
     
     def getFirstItemBackgroundColor(self):
         return self.viewer.widget.GetItemBackgroundColour(self.firstItem())
+
+    def getFirstItemFont(self):
+        return self.viewer.widget.GetItemFont(self.firstItem())
 
     def showColumn(self, columnName, show=True):
         self.viewer.showColumnByName(columnName, show)
@@ -473,6 +475,10 @@ class CommonTestsMixin(object):
         self.assertColor(expectedColor)
         date.Today = originalToday
 
+    def testFont(self):
+        self.taskList.append(task.Task(font=wx.SWISS_FONT))
+        self.assertEqual(wx.SWISS_FONT, self.getFirstItemFont())
+        
 
 class TreeOrListModeTestsMixin(object):        
     def testModeIsSavedInSettings(self):

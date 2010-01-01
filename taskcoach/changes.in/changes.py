@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2009 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -23,14 +23,18 @@ from changetypes import *
 
 releases = [
 
-Release('0.78.0', 'December 30, 2009',
-    summary='''This release adds configurable foreground colors.''',
+Release('0.78.0', 'January 1, 2010',
+    summary='''This release adds configurable fonts and foreground colors.''',
     featuresAdded=[
+        Feature('''Tasks, categories, notes and attachment can have their own
+font. Tasks, notes and attachments that don't have their own font use the font
+of the categories they belong to. Effort records use the font of the task they
+belong to.'''),
         Feature('''In addition to the background color, the foreground (text) 
-color of tasks, categories and notes can now also be changed. Tasks and notes 
-that don't have their own foreground color use the foreground color of the 
-categories they belong to. Effort records use the foreground color of the task 
-they belong to. '''),
+color of tasks, categories, notes and attachments can now also be changed. 
+Tasks, notes and attachments that don't have their own foreground color use the 
+foreground color of the categories they belong to. Effort records use the 
+foreground color of the task they belong to.'''),
         Feature('''Added Ctrl+E keyboard shortcut to "New effort..." menu 
 item.''')
         ]
