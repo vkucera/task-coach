@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import re, os, datetime, StringIO
+import re, os, datetime, StringIO, wx
 import xml.etree.ElementTree as ET
 from taskcoachlib.domain import date, effort, task, category, note, attachment
 from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
@@ -225,7 +225,8 @@ class XMLReader(object):
             subject=node.attrib.get('subject', ''),
             description=self._parseDescription(node),
             fgColor=self._parseTuple(node.attrib.get('fgColor', ''), None),
-            bgColor=self._parseTuple(node.attrib.get(bgColorAttribute, ''), None))
+            bgColor=self._parseTuple(node.attrib.get(bgColorAttribute, ''), None),
+            font=self._parseFontDesc(node.attrib.get('font', ''), None))
 
         if self.__tskversion <= 20:
             attributes['attachments'] = self._parseAttachmentsBeforeVersion21(node)
@@ -357,6 +358,13 @@ class XMLReader(object):
                     
     def _parseDateTime(self, dateTimeText):
         return self._parse(dateTimeText, date.parseDateTime, None)
+    
+    def _parseFontDesc(self, fontDesc, defaultValue):
+        if fontDesc:
+            font = wx.FontFromNativeInfoString(fontDesc)
+            if font.IsOk():
+                return font
+        return defaultValue
     
     def _parseBoolean(self, booleanText, defaultValue=None):
         def textToBoolean(text):

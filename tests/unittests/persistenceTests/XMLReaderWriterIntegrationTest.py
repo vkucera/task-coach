@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -72,8 +72,8 @@ class IntegrationTest(IntegrationTestCase):
             completionDate=date.Yesterday(), budget=date.TimeDelta(hours=1), 
             priority=4, hourlyFee=100.5, fixedFee=1000, 
             recurrence=date.Recurrence('weekly', max=10, count=5, amount=2),
-            reminder=date.DateTime(2004,1,1), fgColor=wx.BLUE, bgColor=wx.RED, 
-            expandedContexts=['viewer1'],
+            reminder=date.DateTime(2004,1,1), fgColor=wx.BLUE, bgColor=wx.RED,
+            font=wx.SWISS_FONT, expandedContexts=['viewer1'],
             shouldMarkCompletedWhenAllChildrenCompleted=True,
             percentageComplete=2/3.)
         self.child = task.Task()
@@ -122,6 +122,9 @@ class IntegrationTest(IntegrationTestCase):
     def testBackgroundColor(self):
         self.assertAttributeWrittenAndRead(self.task, 'backgroundColor')
 
+    def testFont(self):
+        self.assertAttributeWrittenAndRead(self.task, 'font')
+        
     def testExpansionState(self):
         self.assertAttributeWrittenAndRead(self.task, 'isExpanded')
          

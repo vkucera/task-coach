@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 from taskcoachlib import patterns
 from taskcoachlib.domain import base, date, categorizable, note, attachment
+from taskcoachlib.domain.attribute import color
 
 
 class Task(note.NoteOwner, attachment.AttachmentOwner, 
@@ -465,11 +466,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         fgColor = super(Task, self).foregroundColor(recursive)
         if not recursive:
             return fgColor
-        '''
-        if self.active() and not (self.dueSoon() or self.overdue()):
-            return fgColor
-        '''
-        return self.mixColors((fgColor, self.statusColor()))
+        return color.ColorMixer.mix((fgColor, self.statusColor()))
     
     def statusColor(self):
         ''' Return the current color of task, based on its status (completed,

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -90,5 +90,6 @@ class FileAttachmentTest(test.TestCase):
                           Attachment.descriptionChangedEventType(),
                           Attachment.foregroundColorChangedEventType(),
                           Attachment.backgroundColorChangedEventType(),
+                          Attachment.fontChangedEventType(),
                           Attachment.locationChangedEventType()], 
                          Attachment.modificationEventTypes())

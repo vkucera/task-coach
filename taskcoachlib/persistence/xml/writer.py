@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -151,23 +151,27 @@ class XMLWriter(object):
         return node
 
     def baseNode(self, item, nodeName):
-        ''' Create a node and add the attributes that all composite domain
+        ''' Create a node and add the attributes that all domain
             objects share, such as id, subject, description. '''
         node = self.__baseNode(item, nodeName)
         if item.foregroundColor():
             node.setAttribute('fgColor', str(item.foregroundColor()))
         if item.backgroundColor():
             node.setAttribute('bgColor', str(item.backgroundColor()))
+        if item.font():
+            node.setAttribute('font', str(item.font().GetNativeFontInfoDesc()))
         return node
 
     def baseCompositeNode(self, item, nodeName, childNodeFactory, childNodeFactoryArgs=()):
-        """Same as baseNode, but also create child nodes by means of
-        the childNodeFactory."""
+        ''' Same as baseNode, but also create child nodes by means of
+            the childNodeFactory. '''
         node = self.__baseNode(item, nodeName)
         if item.foregroundColor(recursive=False):
             node.setAttribute('fgColor', str(item.foregroundColor(recursive=False)))
         if item.backgroundColor(recursive=False):
             node.setAttribute('bgColor', str(item.backgroundColor(recursive=False)))
+        if item.font(recursive=False):
+            node.setAttribute('font', str(item.font(recursive=False).GetNativeFontInfoDesc()))
         if item.expandedContexts():
             node.setAttribute('expandedContexts', 
                               str(tuple(sorted(item.expandedContexts()))))

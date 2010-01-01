@@ -233,6 +233,7 @@ class TimeLine(wx.Panel):
         else:
             iconWidth = 0
         if h >= dc.GetTextExtent('ABC')[1]:
+            dc.SetFont(self.fontForNode(dc, node, depth))
             dc.SetTextForeground(self.textForegroundForNode(node, depth))
             dc.DrawText(self.adapter.label(node), x + iconWidth + 2, y+2)
         dc.DestroyClippingRegion()
@@ -282,6 +283,15 @@ class TimeLine(wx.Panel):
             if not fg_color:
                 fg_color = wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOWTEXT)
         return fg_color
+    
+    def fontForNode(self, dc, node, depth=0):
+        ''' Determine the font to use to display the label of the given node,
+            scaled for printing if necessary. '''
+        font = self.adapter.font(node, depth)
+        font = font if font else wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        scale = dc.GetPPI()[0] / wx.ScreenDC().GetPPI()[0]
+        font.SetPointSize(scale*font.GetPointSize())
+        return font
 
     def brushForNode(self, node, isSequentialNode=False, depth=0):
         ''' Create brush to use to display the given node '''

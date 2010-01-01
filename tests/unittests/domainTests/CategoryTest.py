@@ -53,7 +53,7 @@ class CategoryTest(test.TestCase):
         
     def testSetState_OneNotification(self):
         newState = dict(subject='New subject', description='New description',
-                        fgColor=wx.WHITE, bgColor=wx.RED, 
+                        fgColor=wx.WHITE, bgColor=wx.RED, font=wx.SWISS_FONT,
                         status=self.category.STATUS_DELETED,
                         parent=None, children=[self.subCategory], id=self.category.id(),
                         categorizables=[self.categorizable], notes=[],

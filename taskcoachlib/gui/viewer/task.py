@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
@@ -145,7 +145,8 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
             patterns.Publisher().registerObserver(self.onColorSettingChange, 
                 eventType=colorSetting)
         for eventType in (task.Task.foregroundColorChangedEventType(),
-                          task.Task.backgroundColorChangedEventType()):
+                          task.Task.backgroundColorChangedEventType(),
+                          task.Task.fontChangedEventType()):
             patterns.Publisher().registerObserver(self.onAttributeChanged,
                                                   eventType=eventType)
         patterns.Publisher().registerObserver(self.atMidnight,
@@ -202,6 +203,9 @@ class RootNode(object):
         return None
 
     def backgroundColor(self, *args, **kwargs):
+        return None
+    
+    def font(self, *args, **kwargs):
         return None
 
     def completed(self, *args, **kwargs):
@@ -338,6 +342,9 @@ class TimelineViewer(BaseTaskViewer):
           
     def background_color(self, item, depth=0):
         return item.backgroundColor(recursive=True)
+    
+    def font(self, item, depth=0):
+        return item.font(recursive=True)
 
     def icon(self, item, isSelected=False):
         bitmap = self.iconName(item, isSelected)
@@ -454,6 +461,9 @@ class SquareTaskViewer(BaseTaskViewer):
         
     def background_color(self, task, depth): # pylint: disable-msg=W0613
         return task.backgroundColor(recursive=True)
+    
+    def font(self, task, depth): # pylint: disable-msg=W0613
+        return task.font(recursive=True)
 
     def icon(self, task, isSelected):
         bitmap = self.iconName(task, isSelected)
