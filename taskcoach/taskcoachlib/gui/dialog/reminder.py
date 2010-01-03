@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import meta, patterns
+from taskcoachlib import meta, patterns, command
 from taskcoachlib.widgets import sized_controls
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import date
@@ -55,21 +55,33 @@ class ReminderDialog(sized_controls.SizedDialog):
         for choice, timeDelta in zip(self.snoozeChoices, self.snoozeTimes):
             self.snoozeOptions.Append(choice, timeDelta)
         self.snoozeOptions.SetSelection(0)
-        self.SetButtonSizer(self.CreateStdDialogButtonSizer(wx.OK))
+        buttonSizer = self.CreateStdDialogButtonSizer(wx.OK)
+        self.markCompleted = wx.Button(self, label=_('Mark task completed'))
+        self.markCompleted.Bind(wx.EVT_BUTTON, self.onMarkTaskCompleted)
+        if self.task.completed():
+            self.markCompleted.Disable()
+        buttonSizer.Add(self.markCompleted)
+        self.SetButtonSizer(buttonSizer)
         self.Bind(wx.EVT_CLOSE, self.onClose)
         self.Fit()
 
     def onOpenTask(self, event): # pylint: disable-msg=W0613
         self.openTaskAfterClose = True
         self.Close()
-
+        
+    def onMarkTaskCompleted(self, event): # pylint: disable-msg=W0613
+        self.Close()
+        command.MarkCompletedCommand(self.taskList, [self.task]).do()
+    
     def onTaskRemoved(self, event):
         if self.task in event.values():
             self.Close()
             
-    def onTaskCompletionDateChanged(self, event):
+    def onTaskCompletionDateChanged(self, event): # pylint: disable-msg=W0613
         if self.task.completed():
             self.Close()
+        else:
+            self.markCompleted.Enable()
     
     def onClose(self, event):
         event.Skip()
