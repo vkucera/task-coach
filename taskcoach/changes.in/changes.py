@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.78.0', 'January 2, 2010',
+Release('0.78.0', 'January 3, 2010',
     summary='''This release adds configurable fonts and foreground colors.''',
     featuresAdded=[
         Feature('''Tasks, categories, notes and attachment can have their own
