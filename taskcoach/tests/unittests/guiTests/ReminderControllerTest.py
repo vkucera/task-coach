@@ -116,6 +116,8 @@ class ReminderControllerTest(ReminderControllerTestCase):
                 pass
         class DummyEvent(object):
             EventObject = DummyDialog()
+            def Skip(self):
+                pass
         return DummyEvent()
     
     def testOnCloseReminderResetsReminder(self):
