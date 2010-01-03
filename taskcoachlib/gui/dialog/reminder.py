@@ -63,6 +63,7 @@ class ReminderDialog(sized_controls.SizedDialog):
         buttonSizer.Add(self.markCompleted)
         self.SetButtonSizer(buttonSizer)
         self.Bind(wx.EVT_CLOSE, self.onClose)
+        self.Bind(wx.EVT_BUTTON, self.onOK, id=self.GetAffirmativeId())
         self.Fit()
 
     def onOpenTask(self, event): # pylint: disable-msg=W0613
@@ -86,3 +87,7 @@ class ReminderDialog(sized_controls.SizedDialog):
     def onClose(self, event):
         event.Skip()
         patterns.Publisher().removeInstance(self)
+        
+    def onOK(self, event):
+        event.Skip()
+        self.Close()
