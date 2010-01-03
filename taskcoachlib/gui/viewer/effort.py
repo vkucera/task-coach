@@ -49,7 +49,8 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         self.aggregationUICommand.setChoice(self.aggregation)
         self.createColumnUICommands()
         for eventType in (effort.Effort.foregroundColorChangedEventType(),  
-                          effort.Effort.backgroundColorChangedEventType()):
+                          effort.Effort.backgroundColorChangedEventType(),
+                          effort.Effort.fontChangedEventType()):
             patterns.Publisher().registerObserver(self.onAttributeChanged,
                                                   eventType=eventType)
         

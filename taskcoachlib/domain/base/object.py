@@ -288,7 +288,10 @@ class Object(SynchronizedObject):
     
     # Font:
     
-    def font(self):
+    def font(self, recursive=False): # pylint: disable-msg=W0613
+        # The 'recursive' argument isn't actually used here, but some
+        # code assumes composite objects where there aren't. This is
+        # the simplest workaround.
         return self.__font.get()
     
     def setFont(self, font, event=None):

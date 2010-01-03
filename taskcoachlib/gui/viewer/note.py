@@ -40,9 +40,10 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
         kwargs.setdefault('settingsSection', 'noteviewer')
         self.notesToShow = kwargs.get('notesToShow', None)
         super(BaseNoteViewer, self).__init__(*args, **kwargs)
-        for eventType in [note.Note.subjectChangedEventType(),
+        for eventType in (note.Note.subjectChangedEventType(),
                           note.Note.foregroundColorChangedEventType(),
-                          note.Note.backgroundColorChangedEventType()]:
+                          note.Note.backgroundColorChangedEventType(),
+                          note.Note.fontChangedEventType()):
             patterns.Publisher().registerObserver(self.onAttributeChanged, 
                                                   eventType)
         
