@@ -36,7 +36,9 @@ Tasks, notes and attachments that don't have their own foreground color use the
 foreground color of the categories they belong to. Effort records use the 
 foreground color of the task they belong to.'''),
         Feature('''Added Ctrl+E keyboard shortcut to "New effort..." menu 
-item.''')
+item.'''),
+        Feature('''Reminder dialogs have an extra button to mark the  
+task completed.''')
         ]
     ),
     
