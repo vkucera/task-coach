@@ -106,6 +106,7 @@ class ReminderController(object):
         reminderDialog.Show()
         
     def onCloseReminderDialog(self, event, show=True):
+        print 'onCloseReminderDialog'
         event.Skip()
         dialog = event.EventObject
         task = dialog.task
