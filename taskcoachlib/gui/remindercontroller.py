@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -101,11 +101,12 @@ class ReminderController(object):
                 task.setReminder(None)
                 return
 
-        reminderDialog = reminder.ReminderDialog(task, self.__mainWindow)
+        reminderDialog = reminder.ReminderDialog(task, self.taskList, self.__mainWindow)
         reminderDialog.Bind(wx.EVT_CLOSE, self.onCloseReminderDialog)        
         reminderDialog.Show()
         
     def onCloseReminderDialog(self, event, show=True):
+        event.Skip()
         dialog = event.EventObject
         task = dialog.task
         snoozeOptions = dialog.snoozeOptions

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import meta
+from taskcoachlib import meta, patterns
 from taskcoachlib.widgets import sized_controls
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import date
@@ -31,10 +31,17 @@ class ReminderDialog(sized_controls.SizedDialog):
     snoozeTimes = [date.TimeDelta(minutes=minutes) for minutes in \
                    (0, 5, 10, 15, 30, 60, 120, 24*60)]
     
-    def __init__(self, task, *args, **kwargs):
+    def __init__(self, task, taskList, *args, **kwargs):
         kwargs['title'] = kwargs.get('title', meta.name + ' ' + _('Reminder'))
         super(ReminderDialog, self).__init__(*args, **kwargs)
         self.task = task
+        self.taskList = taskList
+        patterns.Publisher().registerObserver(self.onTaskRemoved, 
+                                              eventType=self.taskList.removeItemEventType(),
+                                              eventSource=self.taskList)
+        patterns.Publisher().registerObserver(self.onTaskCompletionDateChanged, 
+                                              eventType='task.completionDate',
+                                              eventSource=self.task)
         self.openTaskAfterClose = False
         pane = self.GetContentsPane()
         pane.SetSizerType("form")
@@ -56,4 +63,14 @@ class ReminderDialog(sized_controls.SizedDialog):
         self.openTaskAfterClose = True
         self.Close()
 
-
+    def onTaskRemoved(self, event):
+        if self.task in event.values():
+            self.Close()
+            
+    def onTaskCompletionDateChanged(self, event):
+        if self.task.completed():
+            self.Close()
+            
+    def Close(self):
+        patterns.Publisher().removeInstance(self)
+        super(ReminderDialog, self).Close()
