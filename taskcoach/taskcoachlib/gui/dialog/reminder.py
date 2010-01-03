@@ -56,7 +56,7 @@ class ReminderDialog(sized_controls.SizedDialog):
             self.snoozeOptions.Append(choice, timeDelta)
         self.snoozeOptions.SetSelection(0)
         self.SetButtonSizer(self.CreateStdDialogButtonSizer(wx.OK))
-        self.Bind(wx.EVT_BUTTON, lambda event: self.Close())
+        self.Bind(wx.EVT_CLOSE, self.onClose)
         self.Fit()
 
     def onOpenTask(self, event): # pylint: disable-msg=W0613
@@ -70,7 +70,7 @@ class ReminderDialog(sized_controls.SizedDialog):
     def onTaskCompletionDateChanged(self, event):
         if self.task.completed():
             self.Close()
-            
-    def Close(self):
+    
+    def onClose(self, event):
+        event.Skip()
         patterns.Publisher().removeInstance(self)
-        super(ReminderDialog, self).Close()
