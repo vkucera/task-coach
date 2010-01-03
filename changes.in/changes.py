@@ -38,7 +38,7 @@ foreground color of the task they belong to.'''),
         Feature('''Added Ctrl+E keyboard shortcut to "New effort..." menu 
 item.'''),
         Feature('''Reminder dialogs have an extra button to mark the  
-task completed.''')
+task completed.''', 'http://uservoice.com/a/5HVq3')
         ]
     ),
     
