@@ -1146,8 +1146,8 @@ class XMLReaderVersion28Test(XMLReaderTestCase):
     def testTaskFont(self):
         tasks = self.writeAndReadTasks(\
             '<tasks>\n<task subject="Task" font="%s"/>\n'
-            '</tasks>\n'%wx.SWISS_FONT.GetNativeFontInfoDesc())
-        self.assertEqual(wx.SWISS_FONT, tasks[0].font())
+            '</tasks>\n'%wx.NORMAL_FONT.GetNativeFontInfoDesc())
+        self.assertEqual(wx.NORMAL_FONT, tasks[0].font())
         
     def testNoTaskFont(self):
         tasks = self.writeAndReadTasks(\
@@ -1157,19 +1157,19 @@ class XMLReaderVersion28Test(XMLReaderTestCase):
     def testCategoryFont(self):
         categories = self.writeAndReadCategories(\
             '<categories>\n<category subject="Category" font="%s"/>\n'
-            '</categories>\n'%wx.SWISS_FONT.GetNativeFontInfoDesc())
-        self.assertEqual(wx.SWISS_FONT, categories[0].font())
+            '</categories>\n'%wx.NORMAL_FONT.GetNativeFontInfoDesc())
+        self.assertEqual(wx.NORMAL_FONT, categories[0].font())
 
     def testNoteFont(self):
         notes = self.writeAndReadNotes(\
             '<notes>\n<note subject="Note" font="%s"/>\n'
-            '</notes>\n'%wx.SWISS_FONT.GetNativeFontInfoDesc())
-        self.assertEqual(wx.SWISS_FONT, notes[0].font())
+            '</notes>\n'%wx.NORMAL_FONT.GetNativeFontInfoDesc())
+        self.assertEqual(wx.NORMAL_FONT, notes[0].font())
 
     def testAttachmentFont(self):
         tasks = self.writeAndReadTasks(\
             '<tasks>\n<task subject="Task">\n'
             '<attachment type="file" location="whatever" font="%s"/>\n'
-            '</task>\n</tasks>\n'%wx.SWISS_FONT.GetNativeFontInfoDesc())
-        self.assertEqual(wx.SWISS_FONT, tasks[0].attachments()[0].font())
+            '</task>\n</tasks>\n'%wx.NORMAL_FONT.GetNativeFontInfoDesc())
+        self.assertEqual(wx.NORMAL_FONT, tasks[0].attachments()[0].font())
             
