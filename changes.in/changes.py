@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2009 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.77.1', 'December 30, 2009',
+Release('0.77.1', 'January 4, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Make file locking work on Windows computers that have a  
@@ -32,7 +32,9 @@ hostname with non-ASCII characters in it.''', '2904864'),
 on 64-bits Windows systems.''', '2911280', '2897639'),
         Bug('''Correctly refresh task square map and task time line viewers
 after stopping effort tracking, i.e. stop showing the clock icon on the
-previously tracked task.''')
+previously tracked task.'''),
+        Bug('''When maximizing and restoring panes (viewers), don't change the 
+order.''', '2922952')
         ],
     featuresChanged=[
         Feature('''Task Coach now limits the number of backups made of a task 
