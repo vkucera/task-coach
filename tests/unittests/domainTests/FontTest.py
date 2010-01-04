@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -87,37 +87,40 @@ class MixFontsTest(test.TestCase):
     def testFontUnderline_NormalAndUnderlined(self):
         self.failUnless(self.mixFonts(self.font, self.underlinedFont).GetUnderlined())
        
-    def testFontFamily_NormalAndSwiss(self):
+    def testFontFamily_DefaultAndSwiss(self):
         self.assertEqual(wx.FONTFAMILY_SWISS, 
                          self.mixFonts(self.font, self.swissFont).GetFamily()) 
         
-    def testFontFamily_NormalAndDecorative(self):
+    @test.skipOnPlatform('__WXGTK__')
+    def testFontFamily_DefaultAndDecorative(self):
         self.assertEqual(wx.FONTFAMILY_DECORATIVE, 
-                         self.mixFonts(self.font,
+                         self.mixFonts(self.font, 
                                        self.decorativeFont).GetFamily()) 
         
-    def testFontFamily_NormalAndRoman(self):
+    def testFontFamily_DefaultAndRoman(self):
         self.assertEqual(wx.FONTFAMILY_ROMAN, 
-                         self.mixFonts(self.font,
+                         self.mixFonts(self.font, self.romanFont,
                                        self.romanFont).GetFamily())
         
-    def testFontFamily_NormalAndScript(self):
+    @test.skipOnPlatform('__WXGTK__')
+    def testFontFamily_DefaultAndScript(self):
         self.assertEqual(wx.FONTFAMILY_SCRIPT, 
                          self.mixFonts(self.font,
                                        self.scriptFont).GetFamily())
         
-    def testFontFamily_NormalAndModern(self):
+    @test.skipOnPlatform('__WXGTK__')
+    def testFontFamily_DefaultAndModern(self):
         self.assertEqual(wx.FONTFAMILY_MODERN, 
-                         self.mixFonts(self.font,
+                         self.mixFonts(self.font, 
                                        self.modernFont).GetFamily())
 
-    def testFontFamily_NormalAndTeletype(self):
+    def testFontFamily_DefaultAndTeletype(self):
         self.assertEqual(wx.FONTFAMILY_TELETYPE, 
-                         self.mixFonts(self.font,
+                         self.mixFonts(self.font, self.teletypeFont,
                                        self.teletypeFont).GetFamily())
 
-    def testFontFamily_RomandAndTeletypeAndTwoModern(self):
-        self.assertEqual(wx.FONTFAMILY_MODERN, 
-                         self.mixFonts(self.romanFont, self.modernFont,
-                                       self.teletypeFont,
-                                       self.modernFont).GetFamily())
+    def testFontFamily_RomandAndSwissAndTwoTeletype(self):
+        self.assertEqual(wx.FONTFAMILY_TELETYPE, 
+                         self.mixFonts(self.romanFont, self.teletypeFont,
+                                       self.swissFont,
+                                       self.teletypeFont).GetFamily())

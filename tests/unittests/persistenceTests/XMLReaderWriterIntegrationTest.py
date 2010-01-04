@@ -73,7 +73,7 @@ class IntegrationTest(IntegrationTestCase):
             priority=4, hourlyFee=100.5, fixedFee=1000, 
             recurrence=date.Recurrence('weekly', max=10, count=5, amount=2),
             reminder=date.DateTime(2004,1,1), fgColor=wx.BLUE, bgColor=wx.RED,
-            font=wx.SWISS_FONT, expandedContexts=['viewer1'],
+            font=wx.NORMAL_FONT, expandedContexts=['viewer1'],
             shouldMarkCompletedWhenAllChildrenCompleted=True,
             percentageComplete=2/3.)
         self.child = task.Task()
