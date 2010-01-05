@@ -18,18 +18,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 import test
-from taskcoachlib import gui
+from taskcoachlib import gui, config
 from taskcoachlib.domain import task, date
 
 
 class ReminderDialogTest(test.wxTestCase):
     def setUp(self):
         super(ReminderDialogTest, self).setUp()
+        task.Task.settings = self.settings = config.Settings(load=False)
         self.task = task.Task('Task') 
         self.taskList = task.TaskList()
         self.taskList.append(self.task)
         self.dialog = gui.dialog.reminder.ReminderDialog(self.task, 
-            self.taskList, self.frame)
+            self.taskList, self.settings, self.frame)
 
     def testMarkTaskCompleted(self): 
         self.dialog.onMarkTaskCompleted(None)

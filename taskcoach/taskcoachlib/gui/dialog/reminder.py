@@ -25,17 +25,22 @@ from taskcoachlib.gui import render
 
 
 class ReminderDialog(sized_controls.SizedDialog):
-    snoozeChoices = [_("Don't snooze"), _('Five minutes'), _('Ten minutes'),
-                     _('Fifteen minutes'), _('Half an hour'), _('One hour'),
-                     _('Two hours'), _('24 hours')]
-    snoozeTimes = [date.TimeDelta(minutes=minutes) for minutes in \
-                   (0, 5, 10, 15, 30, 60, 120, 24*60)]
+    snoozeChoices = [(5, _('5 minutes')), (10, _('10 minutes')), (15, _('15 minutes')), 
+             (20, _('20 minutes')), (30, _('30 minutes')), 
+             (45, _('45 minutes')), (60, _('1 hour')), (90, _('1.5 hour')), 
+             (120, _('2 hours')), (3*60, _('3 hours')), (4*60, _('4 hours')), 
+             (6*60, _('6 hours')), (8*60, _('8 hours')), (12*60, _('12 hours')), 
+             (18*60, _('18 hours')), (24*60, _('24 hours')),
+             (48*60, _('48 hours')), (72*60, _('72 hours'))] # FIMXE: duplicated in preferences dialog
+    snoozeTimes = [date.TimeDelta(minutes=minutes[0]) for minutes in \
+                   snoozeChoices]
     
-    def __init__(self, task, taskList, *args, **kwargs):
+    def __init__(self, task, taskList, settings, *args, **kwargs):
         kwargs['title'] = kwargs.get('title', meta.name + ' ' + _('Reminder'))
         super(ReminderDialog, self).__init__(*args, **kwargs)
         self.task = task
         self.taskList = taskList
+        self.settings = settings
         patterns.Publisher().registerObserver(self.onTaskRemoved, 
                                               eventType=self.taskList.removeItemEventType(),
                                               eventSource=self.taskList)
@@ -52,8 +57,10 @@ class ReminderDialog(sized_controls.SizedDialog):
             render.dateTime(self.task.reminder()), _('Snooze') + ':':
             wx.StaticText(pane, label=label)
         self.snoozeOptions = wx.ComboBox(pane)
+        snoozeTimesUserWantsToSee = eval(self.settings.get('view', 'snoozetimes'))
         for choice, timeDelta in zip(self.snoozeChoices, self.snoozeTimes):
-            self.snoozeOptions.Append(choice, timeDelta)
+            if choice[0] in snoozeTimesUserWantsToSee:
+                self.snoozeOptions.Append(choice[1], timeDelta)
         self.snoozeOptions.SetSelection(0)
         buttonSizer = self.CreateStdDialogButtonSizer(wx.OK)
         self.markCompleted = wx.Button(self, label=_('Mark task completed'))
