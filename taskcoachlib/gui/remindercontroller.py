@@ -101,7 +101,7 @@ class ReminderController(object):
                 task.setReminder(None)
                 return
 
-        reminderDialog = reminder.ReminderDialog(task, self.taskList, self.__mainWindow)
+        reminderDialog = reminder.ReminderDialog(task, self.taskList, self.settings, self.__mainWindow)
         reminderDialog.Bind(wx.EVT_CLOSE, self.onCloseReminderDialog)        
         reminderDialog.Show()
         
