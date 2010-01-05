@@ -109,15 +109,16 @@ class ReminderController(object):
         event.Skip()
         dialog = event.EventObject
         task = dialog.task
-        snoozeOptions = dialog.snoozeOptions
-        snoozeTimeDelta = snoozeOptions.GetClientData(snoozeOptions.Selection)
-        if snoozeTimeDelta:
-            newReminder = date.DateTime.now() + snoozeTimeDelta
-        else:
-            newReminder = None
-        task.setReminder(newReminder) # Note that this is not undoable
-        # Undoing the snoozing makes little sense, because it would set the 
-        # reminder back to its original date-time, which is now in the past.
+        if not dialog.ignoreSnoozeOption:
+            snoozeOptions = dialog.snoozeOptions
+            snoozeTimeDelta = snoozeOptions.GetClientData(snoozeOptions.Selection)
+            if snoozeTimeDelta:
+                newReminder = date.DateTime.now() + snoozeTimeDelta
+            else:
+                newReminder = None
+            task.setReminder(newReminder) # Note that this is not undoable
+            # Undoing the snoozing makes little sense, because it would set the 
+            # reminder back to its original date-time, which is now in the past.
         if dialog.openTaskAfterClose:
             editTask = editor.TaskEditor(self.__mainWindow,
                 command.EditTaskCommand(self.taskList, [task]), 

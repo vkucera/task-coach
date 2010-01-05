@@ -42,7 +42,7 @@ class ReminderDialog(sized_controls.SizedDialog):
         patterns.Publisher().registerObserver(self.onTaskCompletionDateChanged, 
                                               eventType='task.completionDate',
                                               eventSource=self.task)
-        self.openTaskAfterClose = False
+        self.openTaskAfterClose = self.ignoreSnoozeOption = False
         pane = self.GetContentsPane()
         pane.SetSizerType("form")
         wx.StaticText(pane, label=_('Task') + ':')
@@ -71,6 +71,7 @@ class ReminderDialog(sized_controls.SizedDialog):
         self.Close()
         
     def onMarkTaskCompleted(self, event): # pylint: disable-msg=W0613
+        self.ignoreSnoozeOption = True
         self.Close()
         command.MarkCompletedCommand(self.taskList, [self.task]).do()
     
