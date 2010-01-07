@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.77.1', 'January 4, 2010',
+Release('0.77.1', 'January 7, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Make file locking work on Windows computers that have a  

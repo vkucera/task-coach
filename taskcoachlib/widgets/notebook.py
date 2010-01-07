@@ -234,7 +234,7 @@ class Listbook(Book, wx.Listbook):
     pageChangedEvent = wx.EVT_LISTBOOK_PAGE_CHANGED
 
     def __init__(self, *args, **kwargs):
-        kwargs['style'] = wx.BK_TOP
+        kwargs['style'] = wx.LB_TOP
         super(Listbook, self).__init__(*args, **kwargs)
         self.Bind(wx.EVT_NAVIGATION_KEY, self.onNavigate)
         
