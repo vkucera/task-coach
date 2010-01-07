@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
+from taskcoachlib import config
 from taskcoachlib.domain import task, effort, date
 from taskcoachlib import config
 
