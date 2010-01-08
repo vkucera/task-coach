@@ -55,7 +55,9 @@ on 64-bits Windows systems.''', '2911280', '2897639'),
 after stopping effort tracking, i.e. stop showing the clock icon on the
 previously tracked task.'''),
         Bug('''When maximizing and restoring panes (viewers), don't change the 
-order.''', '2922952')
+order.''', '2922952'),
+        Bug('''Slightly faster redrawing of task viewers after sorting or 
+filtering.''')
         ],
     featuresChanged=[
         Feature('''Task Coach now limits the number of backups made of a task 
