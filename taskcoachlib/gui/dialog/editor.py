@@ -132,6 +132,7 @@ class SubjectPage(Page, widgets.BookPage):
         currentFgColor = self.item.foregroundColor(recursive=False)
         currentBgColor = self.item.backgroundColor(recursive=False)
         self._fgColorCheckBox.SetValue(currentFgColor is not None)
+        self._fgColorCheckBox.Bind(wx.EVT_CHECKBOX, self.onFgColourCheckBoxChecked)
         self._bgColorCheckBox.SetValue(currentBgColor is not None)
         # wx.ColourPickerCtrl on Mac OS X expects a wx.Color and fails on tuples
         # so convert the tuples to a wx.Color:
@@ -139,26 +140,49 @@ class SubjectPage(Page, widgets.BookPage):
         currentBgColor = wx.Color(*currentBgColor) if currentBgColor else wx.WHITE
         self._fgColorButton = wx.ColourPickerCtrl(self, col=currentFgColor)
         self._bgColorButton = wx.ColourPickerCtrl(self, col=currentBgColor)
-        checkFgColorCheckBox = lambda event: self._fgColorCheckBox.SetValue(True)
-        checkBgColorCheckBox = lambda event: self._bgColorCheckBox.SetValue(True)
-        self._fgColorButton.Bind(wx.EVT_COLOURPICKER_CHANGED, checkFgColorCheckBox)
-        self._bgColorButton.Bind(wx.EVT_COLOURPICKER_CHANGED, checkBgColorCheckBox)
+        self._fgColorButton.Bind(wx.EVT_COLOURPICKER_CHANGED, self.onFgColourPicked)
+        self._bgColorButton.Bind(wx.EVT_COLOURPICKER_CHANGED, self.onBgColourPicked)
         self.addEntry(_('Color'), self._fgColorCheckBox, self._fgColorButton, 
                       self._bgColorCheckBox, self._bgColorButton,
                       flags=[None, None, wx.ALL, None, wx.ALL])
 
+    def onFgColourCheckBoxChecked(self, event):
+        ''' User toggled the foreground colour check box. Update the colour
+            of the font colour button. '''
+        self._fontButton.SetColour(self._fgColorButton.GetColour() if \
+                                   event.IsChecked() else wx.NullColour)
+
+    def onFgColourPicked(self, event):
+        ''' User picked a foreground colour. Check the foreground colour check
+            box and update the font colour button. '''
+        self._fgColorCheckBox.SetValue(True)
+        self._fontButton.SetColour(self._fgColorButton.GetColour())
+
+    def onBgColourPicked(self, event):
+        ''' User picked a background colour. Check the background colour check
+            box. '''
+        self._bgColorCheckBox.SetValue(True)
+
     def addFontEntry(self):
         self._fontCheckBox = wx.CheckBox(self, label=_('Use font:'))
         currentFont = self.item.font()
+        currentColor = self._fgColorButton.GetColour()
         self._fontCheckBox.SetValue(currentFont is not None)
         defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        self._fontButton = wx.FontPickerCtrl(self, 
-            initial=currentFont or defaultFont,
-            style=wx.FNTP_USEFONT_FOR_LABEL|wx.FNTP_FONTDESC_AS_LABEL)
-        checkFontCheckBox = lambda event: self._fontCheckBox.SetValue(True)
-        self._fontButton.Bind(wx.EVT_FONTPICKER_CHANGED, checkFontCheckBox)
+        self._fontButton = widgets.FontPickerCtrl(self,
+            font=currentFont or defaultFont, colour=currentColor)
+        self._fontButton.Bind(wx.EVT_FONTPICKER_CHANGED,
+                              self.onFontPickerChanged)
         self.addEntry(_('Font'), self._fontCheckBox, self._fontButton,
                       flags=[None, None, wx.ALL])
+
+    def onFontPickerChanged(self, event):
+        ''' User picked a font. Check the font check box and change the
+            foreground color if needed. '''
+        self._fontCheckBox.SetValue(True)
+        if self._fontButton.GetSelectedColour() != self._fgColorButton.GetColour():
+            self._fgColorCheckBox.SetValue(True)
+            self._fgColorButton.SetColour(self._fontButton.GetSelectedColour())
                 
     def setSubject(self, subject):
         self._subjectEntry.SetValue(subject)

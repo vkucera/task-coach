@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -36,6 +36,7 @@ from searchctrl import SearchCtrl
 from spinctrl import SpinCtrl
 from tooltip import ToolTipMixin, SimpleToolTip
 from dirchooser import DirectoryChooser
+from fontpicker import FontPickerCtrl
 from syncmlwarning import SyncMLWarningDialog
 import masked
 try:
