@@ -36,7 +36,9 @@ previously tracked task.'''),
         Bug('''When maximizing and restoring panes (viewers), don't change the 
 order.''', '2922952'),
         Bug('''Slightly faster redrawing of task viewers after sorting or 
-filtering.''')
+filtering.'''),
+        Bug('''In some circumstances, synchronization with an iPhone/iPod
+Touch device would crash the app.''', '2925618')
         ],
     featuresChanged=[
         Feature('''Task Coach now limits the number of backups made of a task 

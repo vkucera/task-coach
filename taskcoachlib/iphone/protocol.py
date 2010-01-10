@@ -627,7 +627,8 @@ class FullFromDesktopCategoryState(BaseState):
     def init(self):
         super(FullFromDesktopCategoryState, self).init('i', len(self.categories))
 
-        self.sendObject()
+        if self.categories:
+            self.sendObject()
 
     def sendObject(self):
         if self.categories:
@@ -648,7 +649,8 @@ class FullFromDesktopTaskState(BaseState):
     def init(self):
         super(FullFromDesktopTaskState, self).init('i', len(self.tasks))
 
-        self.sendObject()
+        if self.tasks:
+            self.sendObject()
 
     def sendObject(self):
         if self.tasks:
