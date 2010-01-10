@@ -24,7 +24,8 @@ from changetypes import *
 releases = [
 
 Release('0.78.0', 'January 10, 2010',
-    summary='''This release adds configurable fonts and foreground colors.''',
+    summary='''This release adds configurable fonts and foreground colors,
+enhances the reminder dialog, makes other small changes and fixes some bugs.''',
     featuresAdded=[
         Feature('''Tasks, categories, notes and attachment can have their own
 font. Tasks, notes and attachments that don't have their own font use the font
