@@ -41,11 +41,7 @@ item.'''),
 task completed.''', 'http://uservoice.com/a/5HVq3'),
         Feature('''The snooze times offered by the reminder dialog can be
 configured via the preferences dialog.''')
-        ]
-    ),
-    
-Release('0.77.1', 'January 7, 2010',
-    summary='''This is a bugfix release.''',
+        ],
     bugsFixed=[
         Bug('''Make file locking work on Windows computers that have a  
 hostname with non-ASCII characters in it.''', '2904864'),
