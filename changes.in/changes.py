@@ -23,6 +23,13 @@ from changetypes import *
 
 releases = [
 
+Release('0.78.1', 'January 10, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug(''' ... '''),
+        ]
+    ),
+
 Release('0.78.0', 'January 10, 2010',
     summary='''This release adds configurable fonts and foreground colors,
 enhances the reminder dialog, makes other small changes and fixes some bugs.''',
