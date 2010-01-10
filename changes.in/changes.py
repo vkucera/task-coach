@@ -3,7 +3,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2009 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2007-2010 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.78.0', 'January 7, 2010',
+Release('0.78.0', 'January 10, 2010',
     summary='''This release adds configurable fonts and foreground colors.''',
     featuresAdded=[
         Feature('''Tasks, categories, notes and attachment can have their own
@@ -57,7 +57,9 @@ previously tracked task.'''),
         Bug('''When maximizing and restoring panes (viewers), don't change the 
 order.''', '2922952'),
         Bug('''Slightly faster redrawing of task viewers after sorting or 
-filtering.''')
+filtering.'''),
+        Bug('''In some circumstances, synchronization with an iPhone/iPod
+Touch device would crash the app.''', '2925618')
         ],
     featuresChanged=[
         Feature('''Task Coach now limits the number of backups made of a task 
