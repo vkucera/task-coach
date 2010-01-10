@@ -153,6 +153,8 @@ class Object(SynchronizedObject):
                                              self.foregroundColorChangedEvent)
         self.__bgColor = attribute.Attribute(kwargs.pop('bgColor', None), self,
                                              self.backgroundColorChangedEvent)
+        self.__font = attribute.Attribute(kwargs.pop('font', None), self,
+                                          self.fontChangedEvent)
         self.__id = kwargs.pop('id', None) or '%s:%s'%(id(self), time.time())
         # FIXME: Not a valid XML id
         # FIXME: When dropping support for python 2.4, use the uuid module
@@ -169,7 +171,8 @@ class Object(SynchronizedObject):
         state.update(dict(id=self.__id, subject=self.__subject.get(), 
                           description=self.__description.get(),
                           fgColor=self.__fgColor.get(),
-                          bgColor=self.__bgColor.get()))
+                          bgColor=self.__bgColor.get(),
+                          font=self.__font.get()))
         return state
     
     def __setstate__(self, state, event=None):
@@ -184,6 +187,7 @@ class Object(SynchronizedObject):
         self.setDescription(state['description'], event)
         self.setForegroundColor(state['fgColor'], event)
         self.setBackgroundColor(state['bgColor'], event)
+        self.setFont(state['font'], event)
         if notify:
             event.send()
 
@@ -200,7 +204,8 @@ class Object(SynchronizedObject):
         # get a new id:
         state.update(dict(\
             subject=self.__subject.get(), description=self.__description.get(),
-            fgColor=self.__fgColor.get(), bgColor=self.__bgColor.get()))
+            fgColor=self.__fgColor.get(), bgColor=self.__bgColor.get(),
+            font=self.__font.get()))
         return state
     
     def copy(self):
@@ -280,6 +285,24 @@ class Object(SynchronizedObject):
     @classmethod
     def backgroundColorChangedEventType(class_):
         return '%s.bgColor'%class_
+    
+    # Font:
+    
+    def font(self, recursive=False): # pylint: disable-msg=W0613
+        # The 'recursive' argument isn't actually used here, but some
+        # code assumes composite objects where there aren't. This is
+        # the simplest workaround.
+        return self.__font.get()
+    
+    def setFont(self, font, event=None):
+        self.__font.set(font, event)
+        
+    def fontChangedEvent(self, event):
+        event.addSource(self, self.font(), type=self.fontChangedEventType())
+
+    @classmethod    
+    def fontChangedEventType(class_):
+        return '%s.font'%class_
         
     # Event types:
     
@@ -292,7 +315,8 @@ class Object(SynchronizedObject):
         return eventTypes + [class_.subjectChangedEventType(),
                              class_.descriptionChangedEventType(),
                              class_.foregroundColorChangedEventType(),
-                             class_.backgroundColorChangedEventType()]
+                             class_.backgroundColorChangedEventType(),
+                             class_.fontChangedEventType()]
 
 
 class CompositeObject(Object, patterns.ObservableComposite):
@@ -404,6 +428,30 @@ class CompositeObject(Object, patterns.ObservableComposite):
         for child in parent.children():
             if child.backgroundColor(recursive=False) is None:
                 children.extend([child] + self.childrenWithoutOwnBackgroundColor(child))
+        return children
+    
+    # Font:
+    
+    def font(self, recursive=False):
+        myFont = super(CompositeObject, self).font()
+        if not myFont and recursive and self.parent():
+            return self.parent().font(recursive=True)
+        else:
+            return myFont
+
+    def fontChangedEvent(self, event):
+        super(CompositeObject, self).fontChangedEvent(event)
+        children = self.childrenWithoutOwnFont()
+        font = self.font(recursive=False)
+        for child in children:
+            event.addSource(child, font, type=child.fontChangedEventType())
+            
+    def childrenWithoutOwnFont(self, parent=None):
+        parent = parent or self
+        children = []
+        for child in parent.children():
+            if child.font(recursive=False) is None:
+                children.extend([child] + self.childrenWithoutOwnFont(child))
         return children
 
     # Event types:

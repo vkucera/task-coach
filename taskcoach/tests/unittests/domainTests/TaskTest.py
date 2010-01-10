@@ -549,6 +549,15 @@ class TaskDueTodayTest(TaskTestCase, CommonTaskTestsMixin):
     def testDueDate(self):
         self.assertEqual(self.taskCreationKeywordArguments()[0]['dueDate'], 
             self.task.dueDate())
+        
+    def testDefaultDueSoonColor(self):
+        expectedColor = wx.Colour(*eval(self.settings.get('color', 'duesoontasks')))
+        self.assertEqual(expectedColor, self.task.foregroundColor(recursive=True))
+        
+    def testColorWhenTaskHasOwnColor(self):
+        expectedColor = wx.Colour(191, 128, 64, 255)
+        self.task.setForegroundColor((128, 128, 128, 255))
+        self.assertEqual(expectedColor, self.task.foregroundColor(recursive=True))
 
 
 class TaskDueTomorrowTest(TaskTestCase, CommonTaskTestsMixin):
@@ -587,6 +596,15 @@ class OverdueTaskTest(TaskTestCase, CommonTaskTestsMixin):
     def testDueDate(self):
         self.assertEqual(self.taskCreationKeywordArguments()[0]['dueDate'], self.task.dueDate())
 
+    def testDefaultOverdueColor(self):
+        expectedColor = wx.Colour(*eval(self.settings.get('color', 'overduetasks')))
+        self.assertEqual(expectedColor, self.task.foregroundColor(recursive=True))
+        
+    def testColorWhenTaskHasOwnColor(self):
+        expectedColor = wx.Colour(191, 64, 64, 255)
+        self.task.setForegroundColor((128, 128, 128, 255))
+        self.assertEqual(expectedColor, self.task.foregroundColor(recursive=True))
+
 
 class CompletedTaskTest(TaskTestCase, CommonTaskTestsMixin):
     def taskCreationKeywordArguments(self):
@@ -616,6 +634,15 @@ class CompletedTaskTest(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual([patterns.Event('task.percentageComplete',
                                          self.task, 0)], 
                          self.events)
+
+    def testDefaultCompletedColor(self):
+        expectedColor = wx.Colour(*eval(self.settings.get('color', 'completedtasks')))
+        self.assertEqual(expectedColor, self.task.foregroundColor(recursive=True))
+        
+    def testColorWhenTaskHasOwnColor(self):
+        expectedColor = wx.Colour(64, 191, 64, 255)
+        self.task.setForegroundColor((128, 128, 128, 255))
+        self.assertEqual(expectedColor, self.task.foregroundColor(recursive=True))
         
 
 class TaskCompletedInTheFutureTest(TaskTestCase, CommonTaskTestsMixin):
@@ -643,6 +670,15 @@ class InactiveTaskTest(TaskTestCase, CommonTaskTestsMixin):
     def testSetStartDateToTodayMakesTaskActive(self):
         self.task.setStartDate(date.Today())
         self.failUnless(self.task.active())
+
+    def testDefaultInactiveColor(self):
+        expectedColor = wx.Colour(*eval(self.settings.get('color', 'inactivetasks')))
+        self.assertEqual(expectedColor, self.task.foregroundColor(recursive=True))
+        
+    def testColorWhenTaskHasOwnColor(self):
+        expectedColor = wx.Colour(160, 160, 160, 255)
+        self.task.setForegroundColor((128, 128, 128, 255))
+        self.assertEqual(expectedColor, self.task.foregroundColor(recursive=True))
 
 
 class TaskWithSubject(TaskTestCase, CommonTaskTestsMixin):
@@ -1673,4 +1709,35 @@ class TaskWithDailyRecurrenceWithRecurringChildFixture(\
     
     def createRecurrence(self):
         return date.Recurrence('daily')
+
+
+class TaskColorTest(test.TestCase):
+    def setUp(self):
+        super(TaskColorTest, self).setUp()
+        task.Task.settings = config.Settings(load=False)
+        
+    def testDefaultTask(self):
+        self.assertEqual(wx.BLACK, task.Task().statusColor())
+
+    def testCompletedTask(self):
+        completed = task.Task()
+        completed.setCompletionDate()
+        self.assertEqual(wx.GREEN, completed.statusColor())
+
+    def testOverDueTask(self):
+        overdue = task.Task(dueDate=date.Yesterday())
+        self.assertEqual(wx.RED, overdue.statusColor())
+
+    def testDueTodayTask(self):
+        duetoday = task.Task(dueDate=date.Today())
+        self.assertEqual(wx.Colour(255, 128, 0), duetoday.statusColor())
+
+    def testDueTomorrow(self):
+        duetomorrow = task.Task(dueDate=date.Tomorrow())
+        self.assertEqual(wx.NamedColour('BLACK'), duetomorrow.statusColor())
+
+    def testInactive(self):
+        inactive = task.Task(startDate=date.Tomorrow())
+        self.assertEqual(wx.Colour(*eval(task.Task.settings.get('color', 
+                         'inactivetasks'))), inactive.statusColor())
 

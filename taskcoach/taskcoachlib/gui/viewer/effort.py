@@ -48,8 +48,11 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         self.aggregation = self.settings.get(self.settingsSection(), 'aggregation')
         self.aggregationUICommand.setChoice(self.aggregation)
         self.createColumnUICommands()
-        patterns.Publisher().registerObserver(self.onAttributeChanged,
-            eventType=effort.Effort.backgroundColorChangedEventType())
+        for eventType in (effort.Effort.foregroundColorChangedEventType(),  
+                          effort.Effort.backgroundColorChangedEventType(),
+                          effort.Effort.fontChangedEventType()):
+            patterns.Publisher().registerObserver(self.onAttributeChanged,
+                                                  eventType=eventType)
         
     def domainObjectsToView(self):
         if self.__domainObjectsToView is None:

@@ -22,11 +22,11 @@ from taskcoachlib.domain import base, note, attachment
 
 class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject):
     def __init__(self, subject, categorizables=None, children=None, 
-                 filtered=False, parent=None, description='', bgColor=None, 
+                 filtered=False, parent=None, description='',  
                  exclusiveSubcategories=False, *args, **kwargs):
         super(Category, self).__init__(subject=subject, children=children or [], 
                                        parent=parent, description=description,
-                                       bgColor=bgColor, *args, **kwargs)
+                                       *args, **kwargs)
         self.__categorizables = base.SetAttribute(set(categorizables or []),
                                                   self,
                                                   self.categorizableAddedEvent,
@@ -169,6 +169,14 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
         super(Category, self).backgroundColorChangedEvent(event)
         for categorizable in self.categorizables(recursive=True):
             categorizable.backgroundColorChangedEvent(event)
+            
+    def fontChangedEvent(self, event):
+        ''' Override to include all categorizables (recursively) in the event 
+            that belong to this category since their font (may) have changed 
+            too. ''' 
+        super(Category, self).fontChangedEvent(event)
+        for categorizable in self.categorizables(recursive=True):
+            categorizable.fontChangedEvent(event)
 
     def hasExclusiveSubcategories(self):
         return self.__exclusiveSubcategories

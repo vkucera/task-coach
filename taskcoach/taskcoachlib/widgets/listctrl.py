@@ -49,12 +49,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
             style=wx.LC_REPORT|wx.LC_VIRTUAL, columns=columns, 
             resizeableColumn=resizeableColumn, itemPopupMenu=itemPopupMenu, 
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
-        self.getItemWithIndex = parent.getItemWithIndex
-        self.getIndexOfItem = parent.getIndexOfItem
-        self.getItemText = parent.getItemText
-        self.getItemTooltipData = parent.getItemTooltipData
-        self.getItemImage = parent.getItemImage
-        self.getItemAttr = parent.getItemAttr
+        self.__parent = parent
         self.bindEventHandlers(selectCommand, editCommand)
             
     def bindEventHandlers(self, selectCommand, editCommand):
@@ -66,26 +61,47 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
         if editCommand:
             self.editCommand = editCommand
             self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onItemActivated)  
+            
+    def getItemWithIndex(self, rowIndex):
+        return self.__parent.getItemWithIndex(rowIndex)
 
+    def getItemText(self, domainObject, columnIndex):
+        return self.__parent.getItemText(domainObject, columnIndex)
+    
+    def getItemTooltipData(self, domainObject, columnIndex):
+        return self.__parent.getItemTooltipData(domainObject, columnIndex)
+    
+    def getItemImage(self, domainObject, columnIndex=0):
+        return self.__parent.getItemImage(domainObject, wx.TreeItemIcon_Normal, 
+                                          columnIndex)
+    
     def OnGetItemText(self, rowIndex, columnIndex):
-        return self.getItemText(self.getItemWithIndex(rowIndex), columnIndex)
+        item = self.getItemWithIndex(rowIndex)
+        return self.getItemText(item, columnIndex)
 
     def OnGetItemTooltipData(self, rowIndex, columnIndex):
-        return self.getItemTooltipData(self.getItemWithIndex(rowIndex), 
-                                       columnIndex)
+        item = self.getItemWithIndex(rowIndex)
+        return self.getItemTooltipData(item, columnIndex)
 
     def OnGetItemImage(self, rowIndex):
-        return self.getItemImage(self.getItemWithIndex(rowIndex), 
-                                 wx.TreeItemIcon_Normal, 0)[0]
+        item = self.getItemWithIndex(rowIndex)
+        return self.getItemImage(item)
     
     def OnGetItemColumnImage(self, rowIndex, columnIndex):
-        return self.getItemImage(self.getItemWithIndex(rowIndex), 
-                                 wx.TreeItemIcon_Normal, columnIndex)
+        item = self.getItemWithIndex(rowIndex)
+        return self.getItemImage(item, columnIndex)
 
     def OnGetItemAttr(self, rowIndex):
+        item = self.getItemWithIndex(rowIndex)
+        foregroundColor = item.foregroundColor(recursive=True)
+        backgroundColor = item.backgroundColor(recursive=True)
+        itemAttrArgs = [foregroundColor, backgroundColor] 
+        font = item.font(recursive=True)
+        if font:
+            itemAttrArgs.append(font)
         # We need to keep a reference to the item attribute to prevent it
-        # from being garbage collected too soon.
-        self.__itemAttribute = self.getItemAttr(self.getItemWithIndex(rowIndex))
+        # from being garbage collected too soon:
+        self.__itemAttribute = wx.ListItemAttr(*itemAttrArgs)
         return self.__itemAttribute
         
     def onSelect(self, event):
@@ -116,7 +132,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
         ''' Refresh specific items. '''
         if len(items) <= 5:
             for item in items:
-                self.RefreshItem(self.getIndexOfItem(item))
+                self.RefreshItem(self.__parent.getIndexOfItem(item))
         else:
             self.RefreshAllItems(self.GetItemCount())
         
@@ -127,7 +143,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
         return wx.lib.mixins.listctrl.getListCtrlSelection(self)
 
     def select(self, items):
-        indices = [self.getIndexOfItem(item) for item in items]
+        indices = [self.__parent.getIndexOfItem(item) for item in items]
         for index in range(self.GetItemCount()):
             self.Select(index, index in indices)
         if self.curselection():

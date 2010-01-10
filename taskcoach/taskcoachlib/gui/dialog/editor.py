@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Carl Zmola <zmola@acm.org>
@@ -101,14 +101,15 @@ class NoteHeadersMixin(object):
 class SubjectPage(Page, widgets.BookPage):
     def __init__(self, item, *args, **kwargs):
         self.item = item
-        super(SubjectPage, self).__init__(*args, **kwargs)
+        super(SubjectPage, self).__init__(columns=5, *args, **kwargs)
         self.addEntries()
         self.fit()
         
     def addEntries(self):
         self.addSubjectEntry()
         self.addDescriptionEntry()
-        self.addBackgroundColorEntry()        
+        self.addColorEntry()
+        self.addFontEntry()
         
     def addSubjectEntry(self):
         # pylint: disable-msg=W0201
@@ -124,20 +125,65 @@ class SubjectPage(Page, widgets.BookPage):
         self.addEntry(_('Description'), self._descriptionEntry,
             flags=[None, wx.ALL|wx.EXPAND], growable=True)
 
-    def addBackgroundColorEntry(self):
+    def addColorEntry(self):
         # pylint: disable-msg=W0201,W0142
+        self._fgColorCheckBox = wx.CheckBox(self, label=_('Use foreground color:'))
+        self._bgColorCheckBox = wx.CheckBox(self, label=_('Use background color:'))
+        currentFgColor = self.item.foregroundColor(recursive=False)
         currentBgColor = self.item.backgroundColor(recursive=False)
-        self._bgColorCheckBox = wx.CheckBox(self, label=_('Use this color:'))
+        self._fgColorCheckBox.SetValue(currentFgColor is not None)
+        self._fgColorCheckBox.Bind(wx.EVT_CHECKBOX, self.onFgColourCheckBoxChecked)
         self._bgColorCheckBox.SetValue(currentBgColor is not None)
         # wx.ColourPickerCtrl on Mac OS X expects a wx.Color and fails on tuples
-        # so convert the tuple to a wx.Color:
+        # so convert the tuples to a wx.Color:
+        currentFgColor = wx.Color(*currentFgColor) if currentFgColor else wx.BLACK
         currentBgColor = wx.Color(*currentBgColor) if currentBgColor else wx.WHITE
-        self._bgColorButton = wx.ColourPickerCtrl(self, -1, currentBgColor)
-        self._bgColorButton.Bind(wx.EVT_COLOURPICKER_CHANGED,
-            lambda event: self._bgColorCheckBox.SetValue(True))
-        self.addEntry(_('Color'), self._bgColorCheckBox, self._bgColorButton,
+        self._fgColorButton = wx.ColourPickerCtrl(self, col=currentFgColor)
+        self._bgColorButton = wx.ColourPickerCtrl(self, col=currentBgColor)
+        self._fgColorButton.Bind(wx.EVT_COLOURPICKER_CHANGED, self.onFgColourPicked)
+        self._bgColorButton.Bind(wx.EVT_COLOURPICKER_CHANGED, self.onBgColourPicked)
+        self.addEntry(_('Color'), self._fgColorCheckBox, self._fgColorButton, 
+                      self._bgColorCheckBox, self._bgColorButton,
+                      flags=[None, None, wx.ALL, None, wx.ALL])
+
+    def onFgColourCheckBoxChecked(self, event):
+        ''' User toggled the foreground colour check box. Update the colour
+            of the font colour button. '''
+        self._fontButton.SetColour(self._fgColorButton.GetColour() if \
+                                   event.IsChecked() else wx.NullColour)
+
+    def onFgColourPicked(self, event):
+        ''' User picked a foreground colour. Check the foreground colour check
+            box and update the font colour button. '''
+        self._fgColorCheckBox.SetValue(True)
+        self._fontButton.SetColour(self._fgColorButton.GetColour())
+
+    def onBgColourPicked(self, event):
+        ''' User picked a background colour. Check the background colour check
+            box. '''
+        self._bgColorCheckBox.SetValue(True)
+
+    def addFontEntry(self):
+        self._fontCheckBox = wx.CheckBox(self, label=_('Use font:'))
+        currentFont = self.item.font()
+        currentColor = self._fgColorButton.GetColour()
+        self._fontCheckBox.SetValue(currentFont is not None)
+        defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        self._fontButton = widgets.FontPickerCtrl(self,
+            font=currentFont or defaultFont, colour=currentColor)
+        self._fontButton.Bind(wx.EVT_FONTPICKER_CHANGED,
+                              self.onFontPickerChanged)
+        self.addEntry(_('Font'), self._fontCheckBox, self._fontButton,
                       flags=[None, None, wx.ALL])
 
+    def onFontPickerChanged(self, event):
+        ''' User picked a font. Check the font check box and change the
+            foreground color if needed. '''
+        self._fontCheckBox.SetValue(True)
+        if self._fontButton.GetSelectedColour() != self._fgColorButton.GetColour():
+            self._fgColorCheckBox.SetValue(True)
+            self._fgColorButton.SetColour(self._fontButton.GetSelectedColour())
+                
     def setSubject(self, subject):
         self._subjectEntry.SetValue(subject)
 
@@ -147,9 +193,15 @@ class SubjectPage(Page, widgets.BookPage):
     def ok(self):
         self.item.setSubject(self._subjectEntry.GetValue())
         self.item.setDescription(self._descriptionEntry.GetValue())
+        fgColorChecked = self._fgColorCheckBox.IsChecked()
         bgColorChecked = self._bgColorCheckBox.IsChecked()
+        fgColor = self._fgColorButton.GetColour() if fgColorChecked else None
         bgColor = self._bgColorButton.GetColour() if bgColorChecked else None
+        self.item.setForegroundColor(fgColor)
         self.item.setBackgroundColor(bgColor)
+        fontChecked = self._fontCheckBox.IsChecked()
+        font = self._fontButton.GetSelectedFont() if fontChecked else None
+        self.item.setFont(font)
         super(SubjectPage, self).ok()
                         
     def entries(self):
@@ -159,8 +211,7 @@ class SubjectPage(Page, widgets.BookPage):
     
 class TaskSubjectPage(SubjectPage):
     def __init__(self, parent, theTask, *args, **kwargs):
-        super(TaskSubjectPage, self).__init__(theTask, parent, columns=3, 
-                                              *args, **kwargs)
+        super(TaskSubjectPage, self).__init__(theTask, parent, *args, **kwargs)
         
     def addEntries(self):
         super(TaskSubjectPage, self).addEntries()
@@ -187,7 +238,7 @@ class TaskSubjectPage(SubjectPage):
 class CategorySubjectPage(SubjectPage):
     def __init__(self, parent, theCategory, *args, **kwargs):
         super(CategorySubjectPage, self).__init__(theCategory, parent, 
-                                                  columns=3, *args, **kwargs)
+                                                  *args, **kwargs)
 
     def addEntries(self):
         super(CategorySubjectPage, self).addEntries()
@@ -208,14 +259,13 @@ class CategorySubjectPage(SubjectPage):
 
 class NoteSubjectPage(SubjectPage):
     def __init__(self, parent, theNote, *args, **kwargs):
-        super(NoteSubjectPage, self).__init__(theNote, parent, columns=3, 
-                                              *args, **kwargs)
+        super(NoteSubjectPage, self).__init__(theNote, parent, *args, **kwargs)
             
 
 class AttachmentSubjectPage(SubjectPage):
     def __init__(self, parent, theAttachment, basePath, *args, **kwargs):
         super(AttachmentSubjectPage, self).__init__(theAttachment, parent, 
-                                                    columns=3, *args, **kwargs)
+                                                    *args, **kwargs)
         self.basePath = basePath
         
     def addEntries(self):
@@ -224,7 +274,8 @@ class AttachmentSubjectPage(SubjectPage):
         self.addSubjectEntry()
         self.addLocationEntry()
         self.addDescriptionEntry()
-        self.addBackgroundColorEntry()
+        self.addColorEntry()
+        self.addFontEntry()
 
     def addLocationEntry(self):
         panel = wx.Panel(self, wx.ID_ANY)

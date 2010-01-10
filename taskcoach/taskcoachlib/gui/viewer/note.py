@@ -40,8 +40,10 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
         kwargs.setdefault('settingsSection', 'noteviewer')
         self.notesToShow = kwargs.get('notesToShow', None)
         super(BaseNoteViewer, self).__init__(*args, **kwargs)
-        for eventType in [note.Note.subjectChangedEventType(),
-                          note.Note.backgroundColorChangedEventType()]:
+        for eventType in (note.Note.subjectChangedEventType(),
+                          note.Note.foregroundColorChangedEventType(),
+                          note.Note.backgroundColorChangedEventType(),
+                          note.Note.fontChangedEventType()):
             patterns.Publisher().registerObserver(self.onAttributeChanged, 
                                                   eventType)
         
@@ -145,7 +147,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
     def getItemTooltipData(self, item, column=0):
         if self.settings.getboolean('view', 'descriptionpopups'):
             lines = [line.rstrip('\r') for line in item.description().split('\n')] 
-            result = [(None, lines)] if lines else [] 
+            result = [(None, lines)] if lines and lines != [''] else [] 
             result.append(('attachment', [unicode(attachment) for attachment in item.attachments()]))
             return result
         else:

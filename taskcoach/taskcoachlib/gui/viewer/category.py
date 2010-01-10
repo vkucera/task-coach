@@ -40,10 +40,12 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'categoryviewer')
         super(BaseCategoryViewer, self).__init__(*args, **kwargs)
-        for eventType in category.Category.subjectChangedEventType(), \
-                         category.Category.filterChangedEventType(), \
-                         category.Category.backgroundColorChangedEventType(), \
-                         category.Category.exclusiveSubcategoriesChangedEventType():
+        for eventType in (category.Category.subjectChangedEventType(),
+                          category.Category.filterChangedEventType(),
+                          category.Category.foregroundColorChangedEventType(),
+                          category.Category.backgroundColorChangedEventType(),
+                          category.Category.fontChangedEventType(),
+                          category.Category.exclusiveSubcategoriesChangedEventType()):
             patterns.Publisher().registerObserver(self.onAttributeChanged, 
                 eventType)
             
@@ -137,7 +139,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
     def onAttributeChanged(self, event):
         if category.Category.exclusiveSubcategoriesChangedEventType() in event.types():
             # We need to refresh the children of the changed item as well 
-            # because they have use radio buttons instead of checkboxes, or
+            # because they have to use radio buttons instead of checkboxes, or
             # vice versa:
             items = event.sources()
             for item in items.copy():

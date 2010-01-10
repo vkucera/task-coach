@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -40,11 +40,14 @@ class BaseEffort(object):
     def categories(self, recursive=False):
         return self._task.categories(recursive)
 
-    def foregroundColor(self):
-        return self.task().foregroundColor()
+    def foregroundColor(self, recursive=False):
+        return self.task().foregroundColor(recursive)
     
-    def backgroundColor(self):
-        return self.task().backgroundColor()
+    def backgroundColor(self, recursive=False):
+        return self.task().backgroundColor(recursive)
+    
+    def font(self, recursive=False):
+        return self.task().font(recursive)
     
     def duration(self, recursive=False):
         raise NotImplementedError

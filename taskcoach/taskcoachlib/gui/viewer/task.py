@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
@@ -23,7 +23,7 @@ import wx
 from taskcoachlib import patterns, command, widgets, domain
 from taskcoachlib.domain import task, date
 from taskcoachlib.i18n import _
-from taskcoachlib.gui import uicommand, menu, color, render, dialog
+from taskcoachlib.gui import uicommand, menu, render, dialog
 import base, mixin
 
 
@@ -144,8 +144,11 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
         for colorSetting in colorSettings:
             patterns.Publisher().registerObserver(self.onColorSettingChange, 
                 eventType=colorSetting)
-        patterns.Publisher().registerObserver(self.onAttributeChanged,
-            eventType=task.Task.backgroundColorChangedEventType())
+        for eventType in (task.Task.foregroundColorChangedEventType(),
+                          task.Task.backgroundColorChangedEventType(),
+                          task.Task.fontChangedEventType()):
+            patterns.Publisher().registerObserver(self.onAttributeChanged,
+                                                  eventType=eventType)
         patterns.Publisher().registerObserver(self.atMidnight,
             eventType='clock.midnight')
 
@@ -196,7 +199,13 @@ class RootNode(object):
         else:
             return self.tasks.rootItems()
 
+    def foregroundColor(self, *args, **kwargs):
+        return None
+
     def backgroundColor(self, *args, **kwargs):
+        return None
+    
+    def font(self, *args, **kwargs):
         return None
 
     def completed(self, *args, **kwargs):
@@ -327,16 +336,16 @@ class TimelineViewer(BaseTaskViewer):
             return children
         except AttributeError:
             return []
-        
-    def background_color(self, item):
-        return item.backgroundColor()
 
     def foreground_color(self, item, depth=0):
-        if hasattr(item, 'children'):
-            return color.taskColor(item, self.settings)
-        else:
-            return None
-  
+        return item.foregroundColor(recursive=True)
+          
+    def background_color(self, item, depth=0):
+        return item.backgroundColor(recursive=True)
+    
+    def font(self, item, depth=0):
+        return item.font(recursive=True)
+
     def icon(self, item, isSelected=False):
         bitmap = self.iconName(item, isSelected)
         return wx.ArtProvider_GetIcon(bitmap, wx.ART_MENU, (16,16))
@@ -446,13 +455,16 @@ class SquareTaskViewer(BaseTaskViewer):
 
     def value(self, task, parent=None): # pylint: disable-msg=W0613
         return self.overall(task)
-    
-    def background_color(self, task, depth): # pylint: disable-msg=W0613
-        return task.backgroundColor()
 
     def foreground_color(self, task, depth): # pylint: disable-msg=W0613
-        return color.taskColor(task, self.settings)
+        return task.foregroundColor(recursive=True)
+        
+    def background_color(self, task, depth): # pylint: disable-msg=W0613
+        return task.backgroundColor(recursive=True)
     
+    def font(self, task, depth): # pylint: disable-msg=W0613
+        return task.font(recursive=True)
+
     def icon(self, task, isSelected):
         bitmap = self.iconName(task, isSelected)
         return wx.ArtProvider_GetIcon(bitmap, wx.ART_MENU, (16,16))
@@ -565,7 +577,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
             ('dueDate', _('Due date'), lambda task: render.date(task.dueDate()), None),
             ('completionDate', _('Completion date'), lambda task: render.date(task.completionDate()), None),
             ('percentageComplete', _('% complete'), lambda task: render.percentage(task.percentageComplete()), None),
-            ('totalPercentageComplete', _('overall % complete'), lambda task: render.percentage(task.percentageComplete(recursive=True)), None),
+            ('totalPercentageComplete', _('Overall % complete'), lambda task: render.percentage(task.percentageComplete(recursive=True)), None),
             ('timeLeft', _('Days left'), lambda task: render.daysLeft(task.timeLeft(), task.completed()), None),
             ('recurrence', _('Recurrence'), lambda task: render.recurrence(task.recurrence()), None),
             ('budget', _('Budget'), lambda task: render.budget(task.budget()), None),
@@ -714,9 +726,6 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
 
     def createColumnPopupMenu(self):
         return menu.ColumnPopupMenu(self)
-
-    def getColor(self, task):
-        return color.taskColor(task, self.settings)
         
     def getImageIndices(self, task):
         bitmap, bitmap_selected = render.taskBitmapNames(task)

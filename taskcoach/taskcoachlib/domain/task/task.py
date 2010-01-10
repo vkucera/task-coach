@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -17,8 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import wx
 from taskcoachlib import patterns
 from taskcoachlib.domain import base, date, categorizable, note, attachment
+from taskcoachlib.domain.attribute import color
 
 
 class Task(note.NoteOwner, attachment.AttachmentOwner, 
@@ -460,6 +462,31 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         budget = self.budget(recursive)
         return budget - self.timeSpent(recursive) if budget else budget
 
+    def foregroundColor(self, recursive=False):
+        fgColor = super(Task, self).foregroundColor(recursive)
+        if not recursive:
+            return fgColor
+        return color.ColorMixer.mix((fgColor, self.statusColor()))
+    
+    def statusColor(self):
+        ''' Return the current color of task, based on its status (completed,
+            overdue, duesoon, inactive, or active). '''
+        if self.completed():
+            status = 'completed'
+        elif self.overdue(): 
+            status = 'overdue'
+        elif self.dueSoon():
+            status = 'duesoon'
+        elif self.inactive(): 
+            status = 'inactive'
+        else:
+            status = 'active'
+        return self.colorForStatus(status)
+    
+    @classmethod
+    def colorForStatus(class_, status):
+        return wx.Colour(*eval(class_.settings.get('color', '%stasks'%status)))
+    
     def foregroundColorChangedEvent(self, event):
         super(Task, self).foregroundColorChangedEvent(event)
         fgColor = self.foregroundColor()

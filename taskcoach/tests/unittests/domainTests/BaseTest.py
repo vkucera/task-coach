@@ -101,7 +101,8 @@ class ObjectTest(test.TestCase):
         for eventType in (self.object.subjectChangedEventType(), 
                           self.object.descriptionChangedEventType(),
                           self.object.foregroundColorChangedEventType(),
-                          self.object.backgroundColorChangedEventType()):
+                          self.object.backgroundColorChangedEventType(),
+                          self.object.fontChangedEventType()):
             patterns.Publisher().registerObserver(self.onEvent, eventType)
 
     def onEvent(self, event):
@@ -184,20 +185,20 @@ class ObjectTest(test.TestCase):
     def testGetState(self):
         self.assertEqual(dict(subject='', description='', id=self.object.id(),
                               status=self.object.getStatus(), fgColor=None,
-                              bgColor=None), 
+                              bgColor=None, font=None), 
                          self.object.__getstate__())
 
     def testSetState(self):
         newState = dict(subject='New', description='New', id=None,
                         status=self.object.STATUS_DELETED, 
-                        fgColor=wx.GREEN, bgColor=wx.RED,)
+                        fgColor=wx.GREEN, bgColor=wx.RED, font=wx.SWISS_FONT)
         self.object.__setstate__(newState)
         self.assertEqual(newState, self.object.__getstate__())
         
     def testSetState_SendsOneNotification(self):
         newState = dict(subject='New', description='New', id=None,
                         status=self.object.STATUS_DELETED, 
-                        fgColor=wx.GREEN, bgColor=wx.RED)
+                        fgColor=wx.GREEN, bgColor=wx.RED, font=wx.SWISS_FONT)
         self.object.__setstate__(newState)
         self.assertEqual(1, len(self.eventsReceived))
         
@@ -222,6 +223,11 @@ class ObjectTest(test.TestCase):
         self.object.setBackgroundColor(wx.RED)
         copy = self.object.copy()
         self.assertEqual(copy.backgroundColor(), self.object.backgroundColor())
+        
+    def testCopy_FontIsCopied(self):
+        self.object.setFont(wx.SWISS_FONT)
+        copy = self.object.copy()
+        self.assertEqual(copy.font(), self.object.font())
         
     def testCopy_ShouldUseSubclassForCopy(self):
         copy = self.subclassObject.copy()
@@ -266,14 +272,32 @@ class ObjectTest(test.TestCase):
     def testBackgroundColorChangedNotification(self):
         self.object.setBackgroundColor(wx.BLACK)
         self.assertEqual(1, len(self.eventsReceived))
+        
+    # Font tests:
+    
+    def testDefaultFont(self):
+        self.assertEqual(None, self.object.font())
+        
+    def testSetFont(self):
+        self.object.setFont(wx.SWISS_FONT)
+        self.assertEqual(wx.SWISS_FONT, self.object.font())
 
+    def testSetFontOnCreation(self):
+        domainObject = base.Object(font=wx.SWISS_FONT)
+        self.assertEqual(wx.SWISS_FONT, domainObject.font())
+
+    def testFontChangedNotification(self):
+        self.object.setFont(wx.SWISS_FONT)
+        self.assertEqual(1, len(self.eventsReceived))
+        
     # Event types:
     
     def testModificationEventTypes(self):
         self.assertEqual([self.object.subjectChangedEventType(),
                           self.object.descriptionChangedEventType(),
                           self.object.foregroundColorChangedEventType(),
-                          self.object.backgroundColorChangedEventType()], 
+                          self.object.backgroundColorChangedEventType(),
+                          self.object.fontChangedEventType()], 
                          self.object.modificationEventTypes())
 
 
@@ -335,35 +359,55 @@ class CompositeObjectTest(test.TestCase):
     def testSubItemUsesParentForegroundColor(self):
         self.addChild()
         self.compositeObject.setForegroundColor(wx.RED)
-        self.assertEqual(wx.RED, self.child.foregroundColor())
+        self.assertEqual(wx.RED, self.child.foregroundColor(recursive=True))
 
     def testSubItemDoesNotUseParentForegroundColorIfItHasItsOwnForegroundColor(self):
         self.addChild(fgColor=wx.RED)
         self.compositeObject.setForegroundColor(wx.BLUE)        
-        self.assertEqual(wx.RED, self.child.foregroundColor())
+        self.assertEqual(wx.RED, self.child.foregroundColor(recursive=True))
 
     def testForegroundColorChangedNotification(self):
         self.addChild()
         patterns.Publisher().registerObserver(self.onEvent,
-            eventType=base.CompositeObject.foregroundColorChangedEventType())
+            eventType=base.CompositeObject.foregroundColorChangedEventType(),
+            eventSource=self.child)
         self.compositeObject.setForegroundColor(wx.RED)
         self.assertEqual(1, len(self.eventsReceived))
 
     def testSubItemUsesParentBackgroundColor(self):
         self.addChild()
         self.compositeObject.setBackgroundColor(wx.RED)
-        self.assertEqual(wx.RED, self.child.backgroundColor())
+        self.assertEqual(wx.RED, self.child.backgroundColor(recursive=True))
         
     def testSubItemDoesNotUseParentBackgroundColorIfItHasItsOwnBackgroundColor(self):
         self.addChild(bgColor=wx.RED)
         self.compositeObject.setBackgroundColor(wx.BLUE)        
-        self.assertEqual(wx.RED, self.child.backgroundColor())
+        self.assertEqual(wx.RED, self.child.backgroundColor(recursive=True))
         
     def testBackgroundColorChangedNotification(self):
         self.addChild()
         patterns.Publisher().registerObserver(self.onEvent,
-            eventType=base.CompositeObject.backgroundColorChangedEventType())
+            eventType=base.CompositeObject.backgroundColorChangedEventType(),
+            eventSource=self.child)
         self.compositeObject.setBackgroundColor(wx.RED)
+        self.assertEqual(1, len(self.eventsReceived))
+        
+    def testSubItemUsesParentFont(self):
+        self.addChild()
+        self.compositeObject.setFont(wx.ITALIC_FONT)
+        self.assertEqual(wx.ITALIC_FONT, self.child.font(recursive=True))
+        
+    def testSubItemDoesNotUseParentFontIfItHasItsOwnFont(self):
+        self.addChild(font=wx.SWISS_FONT)
+        self.compositeObject.setFont(wx.ITALIC_FONT)
+        self.assertEqual(wx.SWISS_FONT, self.child.font(recursive=True))
+        
+    def testFontChangedNotification(self):
+        self.addChild()
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType=base.CompositeObject.fontChangedEventType(), 
+            eventSource=self.child)
+        self.compositeObject.setFont(wx.SWISS_FONT)
         self.assertEqual(1, len(self.eventsReceived))
 
     def testCopy(self):
@@ -425,6 +469,7 @@ class CompositeObjectTest(test.TestCase):
                           self.compositeObject.descriptionChangedEventType(),
                           self.compositeObject.foregroundColorChangedEventType(),
                           self.compositeObject.backgroundColorChangedEventType(),
+                          self.compositeObject.fontChangedEventType(),
                           self.compositeObject.expansionChangedEventType()], 
                          self.compositeObject.modificationEventTypes())
 

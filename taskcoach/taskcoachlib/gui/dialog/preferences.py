@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008-2009 Jerome Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 
@@ -30,6 +30,7 @@ class SettingsPageBase(widgets.BookPage):
         super(SettingsPageBase, self).__init__(*args, **kwargs)
         self._booleanSettings = []
         self._choiceSettings = []
+        self._multipleChoiceSettings = []
         self._integerSettings = []
         self._colorSettings = []
         self._pathSettings = []
@@ -51,6 +52,16 @@ class SettingsPageBase(widgets.BookPage):
             choice.SetSelection(0)
         self.addEntry(text, choice, helpText)
         self._choiceSettings.append((section, setting, choice))
+        
+    def addMultipleChoiceSettings(self, section, setting, text, choices, helpText=''):
+        ''' choices is a list of (number, text) tuples. '''
+        multipleChoice = wx.CheckListBox(self, choices=[choice[1] for choice in choices])
+        checkedNumbers = eval(self.get(section, setting))
+        for index in range(len(choices)):
+            multipleChoice.Check(index, choices[index][0] in checkedNumbers)
+        self.addEntry(text, multipleChoice, helpText)
+        self._multipleChoiceSettings.append((section, setting, multipleChoice, 
+                                             [choice[0] for choice in choices]))
         
     def addIntegerSetting(self, section, setting, text, minimum=0, maximum=100,
             helpText=''):
@@ -85,6 +96,9 @@ class SettingsPageBase(widgets.BookPage):
         for section, setting, choice in self._choiceSettings:
             self.set(section, setting, 
                               choice.GetClientData(choice.GetSelection()))
+        for section, setting, multipleChoice, choices in self._multipleChoiceSettings:
+            self.set(section, setting,
+                     str([choices[index] for index in range(len(choices)) if multipleChoice.IsChecked(index)]))
         for section, setting, spin in self._integerSettings:
             self.set(section, setting, str(spin.GetValue()))
         for section, setting, colorButton in self._colorSettings:
@@ -110,7 +124,6 @@ class SettingsPageBase(widgets.BookPage):
 class SettingsPage(SettingsPageBase):
     def __init__(self, settings=None, *args, **kwargs):
         self.settings = settings
-
         super(SettingsPage, self).__init__(*args, **kwargs)
         
     def addEntry(self, text, control, helpText=''): # pylint: disable-msg=W0221
@@ -294,6 +307,15 @@ class TaskBehaviorPage(SettingsPage):
         self.addIntegerSetting('behavior', 'duesoondays', 
             _("Number of days that tasks are considered to be 'due soon'"), 
             minimum=0, maximum=90)
+        self.addMultipleChoiceSettings('view', 'snoozetimes', 
+            _('Snooze times to offer in task reminder dialog'), 
+            [(5, _('5 minutes')), (10, _('10 minutes')), (15, _('15 minutes')), 
+             (20, _('20 minutes')), (30, _('30 minutes')), 
+             (45, _('45 minutes')), (60, _('1 hour')), (90, _('1.5 hour')), 
+             (120, _('2 hours')), (3*60, _('3 hours')), (4*60, _('4 hours')), 
+             (6*60, _('6 hours')), (8*60, _('8 hours')), (12*60, _('12 hours')), 
+             (18*60, _('18 hours')), (24*60, _('24 hours')),
+             (48*60, _('48 hours')), (72*60, _('72 hours'))]) # FIMXE: duplicated in reminder dialog
         self.fit()
 
 

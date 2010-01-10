@@ -202,18 +202,10 @@ class SquareMap( wx.Panel ):
         dc.SetBackground( brush )
         dc.Clear()
         if self.model:
-            dc.SetFont(self.FontForLabels(dc))
             w, h = dc.GetSize()
             self.DrawBox( dc, self.model, 0,0,w,h, hot_map = self.hot_map )
         dc.EndDrawing()
         
-    def FontForLabels(self, dc):
-        ''' Return the default GUI font, scaled for printing if necessary. '''
-        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        scale = dc.GetPPI()[0] / wx.ScreenDC().GetPPI()[0]
-        font.SetPointSize(scale*font.GetPointSize())
-        return font
-    
     def BrushForNode( self, node, depth=0 ):
         """Create brush to use to display the given node"""
         if node == self.selectedNode:
@@ -245,6 +237,15 @@ class SquareMap( wx.Panel ):
             if not fg_color:
                 fg_color = wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOWTEXT)
         return fg_color
+    
+    def FontForNode(self, dc, node, depth=0):
+        """Determine the font to use to display the label of the given node,
+           scaled for printing if necessary"""
+        font = self.adapter.font(node, depth)
+        font = font if font else wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        scale = dc.GetPPI()[0] / wx.ScreenDC().GetPPI()[0]
+        font.SetPointSize(scale*font.GetPointSize())
+        return font
     
     def DrawBox( self, dc, node, x,y,w,h, hot_map, depth=0 ):
         """Draw a model-node's box and all children nodes"""
@@ -287,6 +288,7 @@ class SquareMap( wx.Panel ):
         else:
             iconWidth = 0
         if self.labels and h >= dc.GetTextExtent('ABC')[1]:
+            dc.SetFont(self.FontForNode(dc, node, depth))
             dc.SetTextForeground(self.TextForegroundForNode(node, depth))
             dc.DrawText(self.adapter.label(node), x + iconWidth + 2, y+2)
         dc.DestroyClippingRegion()
@@ -348,6 +350,9 @@ class DefaultAdapter( object ):
         return None
     def foreground_color(self, node, depth):
         ''' The color to use for the label. '''
+        return None
+    def font(self, node, depth):
+        ''' The font to use for the label. '''
         return None
     def icon(self, node, isSelected):
         ''' The icon to display in the node. '''

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 
@@ -42,6 +42,7 @@ defaults = { \
     'efforthourstart': '8',          # Earliest time, i.e. start of working day
     'efforthourend': '18',           # Last time, i.e. end of working day
     'effortminuteinterval': '15',    # Generate times with this interval
+    'snoozetimes': "[5, 10, 15, 30, 60, 120, 1440]",
     'perspective': '',               # The layout of the viewers in the main window
     'tabbedmainwindow': 'False'},
 'taskviewer': { \
@@ -248,11 +249,11 @@ defaults = { \
     'inifileloaderror': ''
     },
 'color': { \
-    'activetasks': '(0, 0, 0)',
-    'completedtasks': '(0, 255, 0)',
-    'overduetasks': '(255, 0, 0)',
-    'inactivetasks': '(192, 192, 192)',
-    'duesoontasks': '(255, 128, 0)' },
+    'activetasks': '(0, 0, 0, 255)',
+    'completedtasks': '(0, 255, 0, 255)',
+    'overduetasks': '(255, 0, 0, 255)',
+    'inactivetasks': '(192, 192, 192, 255)',
+    'duesoontasks': '(255, 128, 0, 255)' },
 'editor': { \
     'maccheckspelling': 'True' },
 'version': { \

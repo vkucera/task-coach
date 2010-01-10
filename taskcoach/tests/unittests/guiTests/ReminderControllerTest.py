@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -111,11 +111,14 @@ class ReminderControllerTest(ReminderControllerTestCase):
         class DummyDialog(object):
             task = self.task
             openTaskAfterClose = openAfterClose
+            ignoreSnoozeOption = False
             snoozeOptions = DummySnoozeOptions()
             def Destroy(self):
                 pass
         class DummyEvent(object):
             EventObject = DummyDialog()
+            def Skip(self):
+                pass
         return DummyEvent()
     
     def testOnCloseReminderResetsReminder(self):
@@ -166,4 +169,5 @@ class ReminderControllerTest_TwoTasksWithSameReminderDateTime(ReminderController
         self.taskList.remove(self.task1)
         date.Clock().notifySpecificTimeObservers(now=self.reminderDateTime)
         self.assertEqual([self.task2], self.reminderController.messages)
-        
+
+

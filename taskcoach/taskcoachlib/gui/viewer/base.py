@@ -43,11 +43,14 @@ class Viewer(wx.Panel):
         self.taskFile = taskFile
         self.settings = settings
         self.__settingsSection = kwargs.pop('settingsSection')
+        # The how maniest of this viewer type are we? Used for settings
         self.__instanceNumber = kwargs.pop('instanceNumber')
         # Flag so that we don't notify observers while we're selecting all items
         self.__selectingAllItems = False
         self.__toolbarUICommands = None
+        # What are we presenting:
         self.__presentation = self.createSorter(self.createFilter(self.domainObjectsToView()))
+        # The widget used to present the presentation:
         self.widget = self.createWidget()
         self.toolbar = toolbar.ToolBar(self, (16, 16))
         self.initLayout()
@@ -216,16 +219,6 @@ class Viewer(wx.Panel):
 
     def visibleColumns(self):
         return [widgets.Column('subject', _('Subject'))]
-    
-    def getItemAttr(self, item):
-        return wx.ListItemAttr(self.getColor(item), 
-                               self.getBackgroundColor(item))
-        
-    def getColor(self, item): # pylint: disable-msg=W0613
-        return None
-    
-    def getBackgroundColor(self, item):
-        return item.backgroundColor()
     
     def bitmap(self):
         ''' Return the bitmap that represents this viewer. Used for the 
@@ -476,12 +469,16 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):  # pylint: disable-msg=
         super(UpdatePerSecondViewer, self).onPresentationChanged(event)
 
     def onStartTracking(self, event):
-        self.addTrackedItems([item for item in event.sources() \
-                              if item in self.presentation()])
+        startedItems = [item for item in event.sources() \
+                        if item in self.presentation()]
+        self.addTrackedItems(startedItems)
+        self.refreshItems(*startedItems)
 
     def onStopTracking(self, event):
-        self.removeTrackedItems([item for item in event.sources() \
-                                 if item in self.presentation()])
+        stoppedItems = [item for item in event.sources() \
+                        if item in self.presentation()]
+        self.removeTrackedItems(stoppedItems)
+        self.refreshItems(*stoppedItems)
             
     def currentlyTrackedItems(self):
         return list(self.__trackedItems)

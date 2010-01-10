@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import test, wx
 from taskcoachlib import patterns
 from taskcoachlib.domain import note
 
@@ -97,13 +97,13 @@ class NoteTest(test.TestCase):
     def testGetState(self):
         self.assertEqual(dict(id=self.note.id(), subject='', description='', parent=None,
             categories=set(), attachments=[], children=self.note.children(),
-            status=self.note.getStatus(), fgColor=None, bgColor=None),
+            status=self.note.getStatus(), fgColor=None, bgColor=None, font=None),
             self.note.__getstate__())
         
     def testSetState(self):
         self.note.__setstate__(dict(id='id', subject='new', description='new', 
             parent=None, children=[], status=42, attachments=[], categories=[],
-            fgColor=(1,1,1,1), bgColor=(0,0,0,255)))
+            fgColor=(1,1,1,1), bgColor=(0,0,0,255), font=wx.SWISS_FONT))
         self.assertEqual('new', self.note.description())
         
         

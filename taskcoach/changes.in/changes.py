@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2009 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -23,18 +23,41 @@ from changetypes import *
 
 releases = [
 
-Release('0.78.0', 'December 18, 2009',
-    summary='''This release adds ...''',
+Release('0.78.0', 'January 7, 2010',
+    summary='''This release adds configurable fonts and foreground colors.''',
     featuresAdded=[
-        Feature(''' ... ''')
+        Feature('''Tasks, categories, notes and attachment can have their own
+font. Tasks, notes and attachments that don't have their own font use the font
+of the categories they belong to. Effort records use the font of the task they
+belong to.'''),
+        Feature('''In addition to the background color, the foreground (text) 
+color of tasks, categories, notes and attachments can now also be changed. 
+Tasks, notes and attachments that don't have their own foreground color use the 
+foreground color of the categories they belong to. Effort records use the 
+foreground color of the task they belong to.'''),
+        Feature('''Added Ctrl+E keyboard shortcut to "New effort..." menu 
+item.'''),
+        Feature('''Reminder dialogs have an extra button to mark the  
+task completed.''', 'http://uservoice.com/a/5HVq3'),
+        Feature('''The snooze times offered by the reminder dialog can be
+configured via the preferences dialog.''')
         ]
     ),
     
-Release('0.77.1', 'December 14, 2009',
+Release('0.77.1', 'January 7, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Make file locking work on Windows computers that have a  
-hostname with non-ASCII characters in it.''', '2904864')
+hostname with non-ASCII characters in it.''', '2904864'),
+        Bug('''Avoid deploying UxTheme.dll because it causes problems
+on 64-bits Windows systems.''', '2911280', '2897639'),
+        Bug('''Correctly refresh task square map and task time line viewers
+after stopping effort tracking, i.e. stop showing the clock icon on the
+previously tracked task.'''),
+        Bug('''When maximizing and restoring panes (viewers), don't change the 
+order.''', '2922952'),
+        Bug('''Slightly faster redrawing of task viewers after sorting or 
+filtering.''')
         ],
     featuresChanged=[
         Feature('''Task Coach now limits the number of backups made of a task 

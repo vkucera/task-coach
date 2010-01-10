@@ -16,8 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import wx
 from taskcoachlib import patterns
-from taskcoachlib.domain import base
+from taskcoachlib.domain import base 
+from taskcoachlib.domain.attribute import font, color
 
 
 class CategorizableCompositeObject(base.CompositeObject):
@@ -68,10 +70,12 @@ class CategorizableCompositeObject(base.CompositeObject):
         for child in self.children(recursive=True):
             event.addSource(child, *categories, 
                             **dict(type=child.totalCategoryAddedEventType()))
-        if not self.foregroundColor(False) and any(category.foregroundColor() for category in categories):
+        if not self.foregroundColor(recursive=False) and any(category.foregroundColor(recursive=True) for category in categories):
             self.foregroundColorChangedEvent(event)
-        if not self.backgroundColor(False) and any(category.backgroundColor() for category in categories):
+        if not self.backgroundColor(recursive=False) and any(category.backgroundColor(recursive=True) for category in categories):
             self.backgroundColorChangedEvent(event)
+        if not self.font(recursive=False) and any(category.font(recursive=True) for category in categories):
+            self.fontChangedEvent(event)
 
     @classmethod
     def categoryRemovedEventType(class_):
@@ -85,11 +89,13 @@ class CategorizableCompositeObject(base.CompositeObject):
         for child in self.children(recursive=True):
             event.addSource(child, *categories, 
                             **dict(type=child.totalCategoryRemovedEventType()))
-        if not self.foregroundColor(False) and any(category.foregroundColor() for category in categories):
+        if not self.foregroundColor(recursive=False) and any(category.foregroundColor(recursive=True) for category in categories):
             self.foregroundColorChangedEvent(event)
-        if not self.backgroundColor(False) and any(category.backgroundColor() for category in categories):
+        if not self.backgroundColor(recursive=False) and any(category.backgroundColor(recursive=True) for category in categories):
             self.backgroundColorChangedEvent(event)
-        
+        if not self.font(recursive=False) and any(category.font(recursive=True) for category in categories):
+            self.fontChangedEvent(event)
+            
     def setCategories(self, categories, event=None):
         self.__categories.set(set(categories), event)
 
@@ -121,7 +127,7 @@ class CategorizableCompositeObject(base.CompositeObject):
             composite object has no foreground color of its own, it uses its 
             parent's foreground color. '''
         colors = [category.foregroundColor() for category in self.categories()]
-        return self._mixColors(colors)
+        return color.ColorMixer.mix(colors)
 
     def _categoryBackgroundColor(self):
         ''' If a categorizable object belongs to a category that has a 
@@ -131,20 +137,26 @@ class CategorizableCompositeObject(base.CompositeObject):
             composite object has no background color of its own, it uses its 
             parent's background color. '''
         colors = [category.backgroundColor() for category in self.categories()]
-        return self._mixColors(colors)
-        
-    def _mixColors(self, colors):
-        colorSums, colorCount = [0, 0, 0, 0], 0
-        for color in colors:
-            if color:
-                try:
-                    color = color.Get(includeAlpha=True)
-                except AttributeError:
-                    pass # color is already a tuple
-                for colorIndex in range(4):
-                    colorSums[colorIndex] += color[colorIndex]
-                colorCount += 1
-        return tuple(colorSum/colorCount for colorSum in colorSums) if colorCount else None
+        return color.ColorMixer.mix(colors)
+    
+    def font(self, recursive=False):
+        myFont = super(CategorizableCompositeObject, self).font(recursive=False)
+        if myFont or not recursive:
+            return myFont
+        categoryBasedFont = self._categoryFont()
+        if categoryBasedFont:
+            return categoryBasedFont
+        else:
+            return super(CategorizableCompositeObject, self).font(recursive=True)
+
+    def _categoryFont(self):
+        ''' If a categorizable object belongs to a category that has a 
+            font associated with it, the categorizable object uses that font. 
+            When a categorizable object belongs to multiple categories, the 
+            font is mixed. If a categorizable composite object has no font of 
+            its own, it uses its parent's font. '''
+        fonts = [category.font(recursive=True) for category in self.categories()]
+        return font.FontMixer.mix(*fonts)
         
     @classmethod
     def totalCategoryAddedEventType(class_):

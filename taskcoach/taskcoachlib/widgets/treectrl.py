@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -212,22 +212,26 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         while childItem:
             itemObject = self.GetItemPyData(childItem) 
             if itemObject in targetObjects:
-                self._refreshObject(childItem, itemObject)
+                self._refreshObjectCompletely(childItem, itemObject)
             self._refreshTargetObjects(childItem, *targetObjects)
             childItem, cookie = self.GetNextChild(parentItem, cookie)
             
+    def _refreshObjectCompletely(self, *args):
+        self._refreshAspects(('ItemType', 'Columns', 'Font', 'Colors',
+                              'Selection'), *args)
+        
     def _addObjectRecursively(self, parentItem, parentObject=None):
         for childObject in self.__adapter.children(parentObject):
             childItem = self.AppendItem(parentItem, '', 
                                         self.getItemCTType(childObject), 
                                         data=childObject)
-            self._refreshObject(childItem, childObject)
+            self._refreshObjectMinimally(childItem, childObject)
             self._addObjectRecursively(childItem, childObject)  
             if self.__adapter.getItemExpanded(childObject):
                 self.Expand(childItem)
             
-    def _refreshObject(self, *args):
-        self._refreshAspects(('ItemType', 'Columns', 'Colors', 'Selection'), *args)
+    def _refreshObjectMinimally(self, *args):
+        self._refreshAspects(('Columns', 'Colors', 'Font', 'Selection'), *args)
 
     def _refreshAspects(self, aspects, *args):
         for aspect in aspects:
@@ -255,12 +259,15 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             self.SetItemImage(item, image, column=columnIndex, which=which)
 
     def _refreshColors(self, item, domainObject):
-        fgColor = self.__adapter.getColor(domainObject)
-        if fgColor:
-            self.SetItemTextColour(item, fgColor)
-        bgColor = self.__adapter.getBackgroundColor(domainObject)
-        if bgColor:
-            self.SetItemBackgroundColour(item, bgColor)
+        bgColor = domainObject.backgroundColor(recursive=True) or wx.NullColour
+        self.SetItemBackgroundColour(item, bgColor)
+        fgColor = domainObject.foregroundColor(recursive=True) or wx.NullColour
+        self.SetItemTextColour(item, fgColor)
+        
+    def _refreshFont(self, item, domainObject):
+        defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        font = domainObject.font(recursive=True) or defaultFont
+        self.SetItemFont(item, font)
         
     def _refreshSelection(self, item, domainObject):
         shouldBeSelected = domainObject in self.__selection
@@ -384,8 +391,15 @@ class CheckTreeCtrl(TreeListCtrl):
         else:
             super(CheckTreeCtrl, self).CheckItem(item, checked)
         
-    def _refreshObject(self, item, domainObject):
-        super(CheckTreeCtrl, self)._refreshObject(item, domainObject)
+    def _refreshObjectCompletely(self, item, domainObject):
+        super(CheckTreeCtrl, self)._refreshObjectCompletely(item, domainObject)
+        self._refreshCheckState(item, domainObject)
+        
+    def _refreshObjectMinimally(self, item, domainObject):
+        super(CheckTreeCtrl, self)._refreshObjectMinimally(item, domainObject)
+        self._refreshCheckState(item, domainObject)
+    
+    def _refreshCheckState(self, item, domainObject):
         # Use CheckItem2 so no events get sent:
         self.CheckItem2(item, self.getIsItemChecked(domainObject))
         parent = item.GetParent()

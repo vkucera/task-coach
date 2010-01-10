@@ -509,6 +509,11 @@ class UpdatePerSecondViewerTestsMixin(object):
         self.trackedTask.stopTracking()
         self.failIf(self.updateViewer.onEverySecond in
             patterns.Publisher().observers(eventType='clock.second'))
+        
+    def testStopTrackingRefreshesTrackedItems(self):
+        self.updateViewer.widget = MockWidget()
+        self.trackedTask.stopTracking()
+        self.assertEqual(2, len(self.updateViewer.widget.refreshedItems))
             
     def testRemoveTrackedChildAndParentRemovesViewerFromClockObservers(self):
         parent = task.Task()
