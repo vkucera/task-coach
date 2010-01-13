@@ -271,6 +271,8 @@ class XMLReader(object):
         kwargs = {}
         if self.__tskversion >= 22:
             kwargs['status'] = int(effortNode.attrib['status'])
+        if self.__tskversion >= 29:
+            kwargs['id'] = effortNode.attrib['id']
         start = effortNode.attrib.get('start', '')
         stop = effortNode.attrib.get('stop', '')
         description = self._parseDescription(effortNode)

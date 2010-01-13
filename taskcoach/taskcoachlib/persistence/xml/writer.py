@@ -97,6 +97,7 @@ class XMLWriter(object):
     def effortNode(self, effort):
         node = self.document.createElement('effort')
         formattedStart = self.formatDateTime(effort.getStart())
+        node.setAttribute('id', effort.id())
         node.setAttribute('status', str(effort.getStatus()))
         node.setAttribute('start', formattedStart)
         stop = effort.getStop()
