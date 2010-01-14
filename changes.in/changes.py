@@ -26,7 +26,7 @@ releases = [
 Release('0.78.1', 'January 10, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug(''' ... '''),
+        Bug('''Synchronizing with the iPhone didn't work.''', '2925618'),
         ]
     ),
 
