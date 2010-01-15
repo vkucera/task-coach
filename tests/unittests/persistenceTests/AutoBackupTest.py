@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -123,6 +123,7 @@ class AutoBackupTest(test.TestCase):
         self.assertEqual(86, self.backup.numberOfExtraneousBackupFiles(self.manyBackupFiles()))
 
     def testRemoveExtraneousBackFiles(self):
+        self.backup.maxNrOfBackupFilesToRemoveAtOnce = 100
         self.removedFiles = []
         def remove(filename):
             self.removedFiles.append(filename)
