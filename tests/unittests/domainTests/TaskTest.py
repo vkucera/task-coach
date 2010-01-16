@@ -1068,6 +1068,12 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
         cat.setBackgroundColor(wx.RED)
         self.assertEqual(1, len(self.events))
 
+    def testChildUsesForegroundColorOfParentsCategory(self):
+        cat = category.Category('Cat', fgColor=wx.RED)
+        cat.addCategorizable(self.task)
+        self.task.addCategory(cat)
+        self.assertEqual(wx.RED, self.task1_1.foregroundColor(recursive=True))
+
     def testPercentageCompleted(self):
         self.assertEqual(0, self.task.percentageComplete(recursive=True))
 

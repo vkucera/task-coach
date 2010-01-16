@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -389,7 +389,7 @@ class CompositeObject(Object, patterns.ObservableComposite):
     def foregroundColor(self, recursive=True):
         myFgColor = super(CompositeObject, self).foregroundColor()
         if not myFgColor and recursive and self.parent():
-            return self.parent().foregroundColor()
+            return self.parent().foregroundColor(recursive=True)
         else:
             return myFgColor
 
@@ -411,7 +411,7 @@ class CompositeObject(Object, patterns.ObservableComposite):
     def backgroundColor(self, recursive=True):
         myBgColor = super(CompositeObject, self).backgroundColor()
         if not myBgColor and recursive and self.parent():
-            return self.parent().backgroundColor()
+            return self.parent().backgroundColor(recursive=True)
         else:
             return myBgColor
                 

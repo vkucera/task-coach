@@ -30,7 +30,9 @@ Release('0.78.1', 'January 16, 2010',
         Bug('''Synchronizing with the iPhone didn't work.''', '2925618'),
         Bug('''When an active task's foreground color is the default (black),
 don't mix that color with the foreground colors of the task's categories.''',
-'2930751')
+'2930751'),
+        Bug('''Let subtasks use their parent's category-based foreground
+color when they don't have their own foreground color.''', '2930751')
         ]
     ),
 
