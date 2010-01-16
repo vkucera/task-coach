@@ -37,6 +37,7 @@ for filename in glob.glob(os.path.join(sys.argv[1], '*.py')):
     matches = classdef.findall(contents)
     if not matches:
         continue
+
     module = os.path.basename(filename)[:-len('.py')]
     print 'subgraph cluster%s {'%module
     print 'label=%s'%module
