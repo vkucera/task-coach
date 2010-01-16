@@ -34,7 +34,7 @@ don't mix that color with the foreground colors of the task's categories.''',
         Bug('''Let subtasks use their parent's category-based foreground
 color when they don't have their own foreground color.''', '2930751'),
         Bug('''When there are a lot of old backup files don't clean them
-up all at once, but instead a few on each save.''', '2929692')
+up all at once, but instead a few on each save.''', '2929692', '2929475')
         ]
     ),
 
