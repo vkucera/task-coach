@@ -565,7 +565,7 @@ class PasswordState(BaseState):
         self.pack('20b', self.hashData)
 
     def handleNewObject(self, hash):
-        local = hashlib.md5()
+        local = hashlib.sha1()
         local.update(self.hashData + self.disp().settings.get('iphone', 'password').encode('UTF-8'))
 
         if hash == local.digest():
