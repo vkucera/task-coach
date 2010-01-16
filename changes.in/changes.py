@@ -32,7 +32,9 @@ Release('0.78.1', 'January 16, 2010',
 don't mix that color with the foreground colors of the task's categories.''',
 '2930751'),
         Bug('''Let subtasks use their parent's category-based foreground
-color when they don't have their own foreground color.''', '2930751')
+color when they don't have their own foreground color.''', '2930751'),
+        Bug('''When there are a lot of old backup files don't clean them
+up all at once, but instead a few on each save.''', '2929692')
         ]
     ),
 
