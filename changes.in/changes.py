@@ -62,7 +62,7 @@ configured via the preferences dialog.''')
         Bug('''Make file locking work on Windows computers that have a  
 hostname with non-ASCII characters in it.''', '2904864'),
         Bug('''Avoid deploying UxTheme.dll because it causes problems
-on 64-bits Windows systems.''', '2911280', '2897639'),
+on 64-bits Windows systems.''', '2911280', '2897639', '2886396'),
         Bug('''Correctly refresh task square map and task time line viewers
 after stopping effort tracking, i.e. stop showing the clock icon on the
 previously tracked task.'''),
