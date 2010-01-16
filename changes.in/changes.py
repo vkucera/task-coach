@@ -27,7 +27,10 @@ Release('0.78.1', 'January 16, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Bring back the "Don't snooze" option in reminder dialogs.'''),
-        Bug('''Synchronizing with the iPhone didn't work.''', '2925618')
+        Bug('''Synchronizing with the iPhone didn't work.''', '2925618'),
+        Bug('''When an active task's foreground color is the default (black),
+don't mix that color with the foreground colors of the task's categories.''',
+'2930751')
         ]
     ),
 
