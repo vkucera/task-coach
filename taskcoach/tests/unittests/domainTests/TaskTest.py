@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -186,7 +186,11 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         
     def testPercentageCompleteIsZeroByDefault(self):
         self.assertEqual(0, self.task.percentageComplete())
-                                         
+
+    def testDefaultColor(self):
+        for recursive in False, True:
+            self.assertEqual(None, self.task.foregroundColor(recursive))
+
     # Setters
 
     def testSetStartDate(self):
@@ -1064,6 +1068,12 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
         cat.setBackgroundColor(wx.RED)
         self.assertEqual(1, len(self.events))
 
+    def testChildUsesForegroundColorOfParentsCategory(self):
+        cat = category.Category('Cat', fgColor=wx.RED)
+        cat.addCategorizable(self.task)
+        self.task.addCategory(cat)
+        self.assertEqual(wx.RED, self.task1_1.foregroundColor(recursive=True))
+
     def testPercentageCompleted(self):
         self.assertEqual(0, self.task.percentageComplete(recursive=True))
 
@@ -1741,3 +1751,9 @@ class TaskColorTest(test.TestCase):
         self.assertEqual(wx.Colour(*eval(task.Task.settings.get('color', 
                          'inactivetasks'))), inactive.statusColor())
 
+    def testActiveTaskWithCategory(self):
+        activeTask = task.Task()
+        redCategory = category.Category(subject='Red category', fgColor=wx.RED)
+        activeTask.addCategory(redCategory)
+        redCategory.addCategorizable(activeTask)
+        self.assertEqual(wx.RED, activeTask.foregroundColor(recursive=True))

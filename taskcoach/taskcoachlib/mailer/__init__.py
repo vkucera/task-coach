@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -57,13 +57,8 @@ def readMail(filename, readContent=True):
         except UnicodeError:
             encoding = chardet.detect(content)['encoding']
 
-    if subject is None:
-        subject = _('Untitled e-mail')
-    else:
-        subject = subject.decode(encoding)
-
+    subject = _('Untitled e-mail') if subject is None else subject.decode(encoding)
     content = content.decode(encoding)
-
     return subject, content
 
 def openMailWithOutlook(filename):
@@ -108,12 +103,7 @@ def writeMail(to, subject, body, open=desktop.open):
     def unicode_quote(s):
         # This is like urllib.quote but leaves out Unicode characters,
         # which urllib.quote does not support.
-        chars = []
-        for c in s:
-            if ord(c) >= 128:
-                chars.append(c)
-            else:
-                chars.append(urllib.quote(c))
+        chars = [c if ord(c) >= 128 else urllib.quote(c) for c in s]
         return ''.join(chars)
 
     # FIXME: Very  strange things happen on  MacOS X. If  there is one

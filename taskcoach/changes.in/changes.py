@@ -23,13 +23,28 @@ from changetypes import *
 
 releases = [
 
-Release('0.79.0', 'January 10, 2010',
+Release('0.79.0', 'January 17, 2010',
     summary='''This release ...''',
     featuresAdded=[
         Feature(''' ... ''')
         ]
     ),
     
+Release('0.78.1', 'January 17, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Bring back the "Don't snooze" option in reminder dialogs.'''),
+        Bug('''Synchronizing with the iPhone didn't work.''', '2925618'),
+        Bug('''When an active task's foreground color is the default (black),
+don't mix that color with the foreground colors of the task's categories.''',
+'2930751'),
+        Bug('''Let subtasks use their parent's category-based foreground
+color when they don't have their own foreground color.''', '2930751'),
+        Bug('''When there are a lot of old backup files don't clean them
+up all at once, but instead a few on each save.''', '2929692', '2929475')
+        ]
+    ),
+
 Release('0.78.0', 'January 10, 2010',
     summary='''This release adds configurable fonts and foreground colors,
 enhances the reminder dialog, makes other small changes and fixes some bugs.''',
@@ -54,7 +69,7 @@ configured via the preferences dialog.''')
         Bug('''Make file locking work on Windows computers that have a  
 hostname with non-ASCII characters in it.''', '2904864'),
         Bug('''Avoid deploying UxTheme.dll because it causes problems
-on 64-bits Windows systems.''', '2911280', '2897639'),
+on 64-bits Windows systems.''', '2911280', '2897639', '2886396'),
         Bug('''Correctly refresh task square map and task time line viewers
 after stopping effort tracking, i.e. stop showing the clock icon on the
 previously tracked task.'''),

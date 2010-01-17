@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -28,7 +28,8 @@ class AutoBackup(patterns.Observer):
         indefinitely, AutoBackup removes older backups. '''
         
     minNrOfBackupFiles = 3 # Keep at least three backup files.
-        
+    maxNrOfBackupFilesToRemoveAtOnce = 3 # Slowly reduce the number of backups
+    
     def __init__(self, settings, copyfile=shutil.copyfile):
         super(AutoBackup, self).__init__()
         self.__settings = settings
@@ -53,24 +54,23 @@ class AutoBackup(patterns.Observer):
     def removeExtraneousBackupFiles(self, taskFile, remove=os.remove, 
                                     glob=glob.glob):
         backupFiles = self.backupFiles(taskFile, glob)
-        if len(backupFiles) <= self.minNrOfBackupFiles:
-            return
-        for _ in range(self.numberOfExtraneousBackupFiles(backupFiles)):
+        for _ in range(min(self.maxNrOfBackupFilesToRemoveAtOnce,
+                           self.numberOfExtraneousBackupFiles(backupFiles))):
             try:
                 remove(self.leastUniqueBackupFile(backupFiles))
             except OSError:
                 pass # Ignore errors
 
     def numberOfExtraneousBackupFiles(self, backupFiles):
-        assert backupFiles
-        oldestBackupFile = backupFiles[0]
-        return max(0, len(backupFiles) - self.maxNrOfBackupFiles(oldestBackupFile))
+        return max(0, len(backupFiles) - self.maxNrOfBackupFiles(backupFiles))
 
-    def maxNrOfBackupFiles(self, oldestBackupFile):
+    def maxNrOfBackupFiles(self, backupFiles):
         ''' The maximum number of backup files we keep depends on the age of
             the oldest backup file. The older the oldest backup file (that is
             never removed), the more backup files we keep. '''
-        age = date.DateTime.now() - self.backupDateTime(oldestBackupFile)
+        if not backupFiles:
+            return 0
+        age = date.DateTime.now() - self.backupDateTime(backupFiles[0])
         ageInMinutes = age.hours() * 60
         # We keep log(ageInMinutes) backups, but at least 3: 
         return max(self.minNrOfBackupFiles, int(math.log(max(1, ageInMinutes))))
