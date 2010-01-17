@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.78.1', 'January 16, 2010',
+Release('0.78.1', 'January 17, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Bring back the "Don't snooze" option in reminder dialogs.'''),
