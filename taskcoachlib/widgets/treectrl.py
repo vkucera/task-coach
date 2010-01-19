@@ -228,8 +228,11 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             self._refreshObjectMinimally(childItem, childObject)
             self._addObjectRecursively(childItem, childObject)  
             if self.__adapter.getItemExpanded(childObject):
-                self.Expand(childItem)
-            
+                # Call Expand on the item instead of on the tree
+                # (self.Expand(childItem)) to prevent lots of events
+                # (EVT_TREE_ITEM_EXPANDING/EXPANDED) being sent
+                childItem.Expand()
+
     def _refreshObjectMinimally(self, *args):
         self._refreshAspects(('Columns', 'Colors', 'Font', 'Selection'), *args)
 
