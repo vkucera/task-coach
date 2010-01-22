@@ -27,9 +27,9 @@ except ImportError:
 # Edit these for every release:
 
 # The buildbot sets TCVERSION when building snapshots.
-version = os.environ.get('TCVERSION', '0.78.0')
+version = os.environ.get('TCVERSION', '0.79.0')
 tskversion = 29 # Current version number of the task file format
-release_day = '7' # Day number of the release, 1-31, as string
+release_day = '17' # Day number of the release, 1-31, as string
 release_month = 'January' # Month of the release in plain English 
 release_year = '2010' # Year of the release as string
 release_status = 'alpha' # One of 'alpha', 'beta', 'stable'

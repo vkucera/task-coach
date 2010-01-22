@@ -466,7 +466,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         fgColor = super(Task, self).foregroundColor(recursive)
         if not recursive:
             return fgColor
-        return color.ColorMixer.mix((fgColor, self.statusColor()))
+        statusColor = self.statusColor()
+        if statusColor == wx.BLACK:
+            return fgColor
+        elif fgColor == None:
+            return statusColor
+        else:
+            return color.ColorMixer.mix((fgColor, statusColor))
     
     def statusColor(self):
         ''' Return the current color of task, based on its status (completed,

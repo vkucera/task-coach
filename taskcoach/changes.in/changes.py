@@ -3,7 +3,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2009 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2007-2010 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,8 +23,31 @@ from changetypes import *
 
 releases = [
 
-Release('0.78.0', 'January 7, 2010',
-    summary='''This release adds configurable fonts and foreground colors.''',
+Release('0.79.0', 'January 17, 2010',
+    summary='''This release ...''',
+    featuresAdded=[
+        Feature(''' ... ''')
+        ]
+    ),
+    
+Release('0.78.1', 'January 17, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Bring back the "Don't snooze" option in reminder dialogs.'''),
+        Bug('''Synchronizing with the iPhone didn't work.''', '2925618'),
+        Bug('''When an active task's foreground color is the default (black),
+don't mix that color with the foreground colors of the task's categories.''',
+'2930751'),
+        Bug('''Let subtasks use their parent's category-based foreground
+color when they don't have their own foreground color.''', '2930751'),
+        Bug('''When there are a lot of old backup files don't clean them
+up all at once, but instead a few on each save.''', '2929692', '2929475')
+        ]
+    ),
+
+Release('0.78.0', 'January 10, 2010',
+    summary='''This release adds configurable fonts and foreground colors,
+enhances the reminder dialog, makes other small changes and fixes some bugs.''',
     featuresAdded=[
         Feature('''Tasks, categories, notes and attachment can have their own
 font. Tasks, notes and attachments that don't have their own font use the font
@@ -41,23 +64,21 @@ item.'''),
 task completed.''', 'http://uservoice.com/a/5HVq3'),
         Feature('''The snooze times offered by the reminder dialog can be
 configured via the preferences dialog.''')
-        ]
-    ),
-    
-Release('0.77.1', 'January 7, 2010',
-    summary='''This is a bugfix release.''',
+        ],
     bugsFixed=[
         Bug('''Make file locking work on Windows computers that have a  
 hostname with non-ASCII characters in it.''', '2904864'),
         Bug('''Avoid deploying UxTheme.dll because it causes problems
-on 64-bits Windows systems.''', '2911280', '2897639'),
+on 64-bits Windows systems.''', '2911280', '2897639', '2886396'),
         Bug('''Correctly refresh task square map and task time line viewers
 after stopping effort tracking, i.e. stop showing the clock icon on the
 previously tracked task.'''),
         Bug('''When maximizing and restoring panes (viewers), don't change the 
 order.''', '2922952'),
         Bug('''Slightly faster redrawing of task viewers after sorting or 
-filtering.''')
+filtering.'''),
+        Bug('''In some circumstances, synchronization with an iPhone/iPod
+Touch device would crash the app.''', '2925618')
         ],
     featuresChanged=[
         Feature('''Task Coach now limits the number of backups made of a task 

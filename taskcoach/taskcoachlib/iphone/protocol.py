@@ -1,6 +1,7 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2008-2009 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2008-2010 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,7 +28,7 @@ from taskcoachlib.domain.task import Task
 from taskcoachlib.i18n import _
 
 import wx, asynchat, threading, asyncore, struct, \
-    random, time, sha, cStringIO, socket, os
+    random, time, hashlib, cStringIO, socket, os
 
 # Default port is 8001.
 #
@@ -588,7 +589,10 @@ class PasswordState(BaseState):
         self.pack('20b', self.hashData)
 
     def handleNewObject(self, hash):
-        if hash == sha.sha(self.hashData + self.disp().settings.get('iphone', 'password').encode('UTF-8')).digest():
+        local = hashlib.sha1()
+        local.update(self.hashData + self.disp().settings.get('iphone', 'password').encode('UTF-8'))
+
+        if hash == local.digest():
             self.pack('i', 1)
             self.setState(DeviceNameState)
         else:
@@ -682,7 +686,8 @@ class FullFromDesktopCategoryState(BaseState):
     def init(self):
         super(FullFromDesktopCategoryState, self).init('i', len(self.categories))
 
-        self.sendObject()
+        if self.categories:
+            self.sendObject()
 
     def sendObject(self):
         if self.categories:
