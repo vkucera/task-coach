@@ -18,7 +18,9 @@
 	NSInteger newTasksCount;
 	NSInteger deletedTasksCount;
 	NSInteger modifiedTasksCount;
-	NSInteger effortCount;
+	NSInteger newEffortsCount;
+	NSInteger modifiedEffortsCount;
+	NSInteger deletedEffortsCount;
 }
 
 @end

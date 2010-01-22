@@ -6,11 +6,10 @@
 //  Copyright 2009 Jérôme Laheurte. All rights reserved.
 //
 
-#import "BaseState.h"
+#import "UploadObjectsState.h"
 
-@interface TwoWayEffortsState : BaseState <State>
+@interface TwoWayNewEffortsState : UploadObjectsState
 {
-	NSNumber *trackingTask;
 }
 
 @end

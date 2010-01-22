@@ -27,7 +27,7 @@
 
 - (void)updateTrackButton
 {
-	BOOL isTracking = [task startTimeOfCurrentEffort] != nil;
+	BOOL isTracking = [task currentEffort] != nil;
 
 	UIImage *img;
 
@@ -288,7 +288,7 @@
 
 - (void)onTrack:(ButtonCell *)cell
 {
-	if ([task startTimeOfCurrentEffort])
+	if ([task currentEffort])
 	{
 		[task stopTracking];
 	}

@@ -56,7 +56,7 @@
 
 	titleLabel.text = task.name;
 
-	if ([task startTimeOfCurrentEffort])
+	if ([task currentEffort])
 	{
 		leftImage.image = [UIImage imageNamed:[self trackingLedName]];
 	}

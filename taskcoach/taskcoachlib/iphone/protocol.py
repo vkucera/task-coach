@@ -24,6 +24,7 @@ from taskcoachlib.domain.date import Date, parseDate, DateTime, parseDateTime
 
 from taskcoachlib.domain.category import Category
 from taskcoachlib.domain.task import Task
+from taskcoachlib.domain.effort import Effort
 
 from taskcoachlib.i18n import _
 
@@ -194,13 +195,11 @@ class DateTimeItem(FixedSizeStringItem):
         super(DateTimeItem, self).feed(data)
 
         if self.state == 2:
-            if self.value is None:
-                self.value = DateTime()
-            else:
+            if self.value is not None:
                 self.value = parseDateTime(self.value)
 
     def pack(self, value):
-        if value == DateTime():
+        if value is None:
             return super(DateTimeItem, self).pack(None)
         else:
             return super(DateTimeItem, self).pack('%04d-%02d-%02d %02d:%02d:%02d' % (value.year, value.month,
@@ -668,15 +667,23 @@ class FullFromDesktopState(BaseState):
         if self.version >= 4:
             if self.syncCompleted:
                 self.tasks = list([task for task in self.disp().window.taskFile.tasks().allItemsSorted() if not task.isDeleted()])
+                self.efforts = list([effort for effort in self.disp().window.taskFile.efforts().allItemsSorted() \
+                                         if effort.task() is None or not effort.task().isDeleted()])
             else:
                 self.tasks = list([task for task in self.disp().window.taskFile.tasks().allItemsSorted() if not (task.isDeleted() or task.completed())])
+                self.efforts = list([effort for effort in self.disp().window.taskFile.efforts() \
+                                         if effort.task() is None or not (effort.task().isDeleted() or effort.task().completed())])
         else:
             self.tasks = filter(self.isTaskEligible, self.disp().window.taskFile.tasks())
         self.categories = list([cat for cat in self.disp().window.taskFile.categories().allItemsSorted() if not cat.isDeleted()])
 
-        self.pack('ii', len(self.categories), len(self.tasks))
+        if self.version >= 4:
+            self.pack('iii', len(self.categories), len(self.tasks), len(self.efforts))
+            self.total = len(self.categories) + len(self.tasks) + len(self.efforts)
+        else:
+            self.pack('ii', len(self.categories), len(self.tasks))
+            self.total = len(self.categories) + len(self.tasks)
 
-        self.total = len(self.categories) + len(self.tasks)
         self.count = 0
 
         self.setState(FullFromDesktopCategoryState)
@@ -733,6 +740,35 @@ class FullFromDesktopTaskState(BaseState):
                           task.completionDate(),
                           task.parent().id() if task.parent() is not None else None,
                           [category.id() for category in task.categories()])
+
+    def handleNewObject(self, code):
+        self.count += 1
+        self.dlg.SetProgress(self.count, self.total)
+        self.sendObject()
+
+    def finished(self):
+        if self.version >= 4:
+            self.setState(FullFromDesktopEffortState)
+        else:
+            self.setState(SendGUIDState)
+
+
+class FullFromDesktopEffortState(BaseState):
+    def init(self):
+        super(FullFromDesktopEffortState, self).init('i', len(self.efforts))
+
+        if self.efforts:
+            self.sendObject()
+
+    def sendObject(self):
+        if self.efforts:
+            effort = self.efforts.pop(0)
+            self.pack('ssztt',
+                      effort.id(),
+                      effort.subject(),
+                      effort.task().id() if effort.task() is not None else None,
+                      effort.getStart(),
+                      effort.getStop())
 
     def handleNewObject(self, code):
         self.count += 1
@@ -815,13 +851,14 @@ class TwoWayState(BaseState):
     def init(self):
         self.categoryMap = dict([(category.id(), category) for category in self.disp().window.taskFile.categories()])
         self.taskMap = dict([(task.id(), task) for task in self.disp().window.taskFile.tasks()])
+        self.effortMap = dict([(effort.id(), effort) for effort in self.disp().window.taskFile.efforts()])
 
         if self.version < 3:
             super(TwoWayState, self).init('iiii', 1)
         elif self.version < 4:
             super(TwoWayState, self).init('iiiiii', 1)
         else:
-            super(TwoWayState, self).init('iiiiiii', 1)
+            super(TwoWayState, self).init('iiiiiiiii', 1)
 
     def handleNewObject(self, args):
         if self.version < 3:
@@ -843,7 +880,9 @@ class TwoWayState(BaseState):
              self.modifiedTasksCount,
              self.deletedCategoriesCount,
              self.modifiedCategoriesCount,
-             self.effortsCount) = args
+             self.newEffortsCount,
+             self.modifiedEffortsCount,
+             self.deletedEffortsCount) = args
 
         self.setState(TwoWayNewCategoriesState)
 
@@ -987,22 +1026,48 @@ class TwoWayModifiedTasks(BaseState):
         if self.version < 4:
             self.setState(FullFromDesktopState)
         else:
-            self.setState(TwoWayEffortsState)
+            self.setState(TwoWayNewEffortsState)
 
 
-class TwoWayEffortsState(BaseState):
+class TwoWayNewEffortsState(BaseState):
     def init(self):
-        super(TwoWayEffortsState, self).init('stt', self.effortsCount)
+        super(TwoWayNewEffortsState, self).init('sztt', self.newEffortsCount)
 
-    def handleNewObject(self, (taskId, started, ended)):
-        try:
-            task = self.taskMap[taskId]
-        except KeyError:
-            pass
+    def handleNewObject(self, (subject, taskId, started, ended)):
+        task = None
+        if taskId is not None:
+            try:
+                task = self.taskMap[taskId]
+            except KeyError:
+                pass
 
-        self.disp().window.addIPhoneEffort(task, started, ended)
+        effort = Effort(task, started, ended, subject=subject)
+        self.disp().window.addIPhoneEffort(task, effort)
+        self.pack('s', effort.id())
+
+        self.effortMap[effort.id()] = effort
 
     def finished(self):
+        self.setState(TwoWayModifiedEffortsState)
+
+
+class TwoWayModifiedEffortsState(BaseState):
+    def init(self):
+        super(TwoWayModifiedEffortsState, self).init('sstt', self.modifiedEffortsCount)
+
+    def handleNewObject(self, (id_, subject, started, ended)):
+        # Actually, the taskId cannot be modified on the device, which saves
+        # us some headaches.
+
+        try:
+            effort = self.effortMap[id_]
+        except KeyError:
+            pass
+        else:
+            self.disp().window.modifyIPhoneEffort(effort, subject, started, ended)
+
+    def finished(self):
+        # Efforts cannot be deleted on the iPhone yet.
         self.setState(FullFromDesktopState)
 
 

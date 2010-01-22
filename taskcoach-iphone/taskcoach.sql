@@ -31,7 +31,7 @@ CREATE TABLE Category
 CREATE INDEX idxCategoryFile ON Category (fileId);
 CREATE INDEX idxCategoryStatus ON Category (status);
 CREATE INDEX idxCategoryName ON Category (name);
-CREATE INDEX idxCategoryTaskCoachId ON Category (taskcoachId);
+CREATE INDEX idxCategoryTaskCoachId ON Category (taskCoachId);
 CREATE INDEX idxCategoryParentId ON Category (parentId);
 
 CREATE TABLE Task
@@ -58,7 +58,7 @@ CREATE TABLE Task
 CREATE INDEX idxTaskFile ON Task (fileId);
 CREATE INDEX idxTaskStatus ON Task (status);
 CREATE INDEX idxTaskName ON Task (name);
-CREATE INDEX idxTaskTaskCoachId ON Task (taskcoachId);
+CREATE INDEX idxTaskTaskCoachId ON Task (taskCoachId);
 CREATE INDEX idxTaskParentId ON Task (parentId);
 
 CREATE TABLE TaskHasCategory
@@ -73,12 +73,21 @@ CREATE INDEX idxTaskHasCategoryCategory ON TaskHasCategory (idCategory);
 CREATE TABLE Effort
 (
 	id INTEGER PRIMARY KEY,
-	taskId INTEGER NOT NULL,
-	started CHAR(19) NOT NULL,
+	fileId INTEGER NULL DEFAULT NULL,
+	name VARCHAR(2048) NOT NULL,
+	status INTEGER NOT NULL DEFAULT 1,
+	taskCoachId VARCHAR(255) NULL DEFAULT NULL,
+
+	taskId INTEGER,
+	started CHAR(19),
 	ended CHAR(19) NULL DEFAULT NULL
 );
 
 CREATE INDEX idxEffortTask ON Effort (taskId);
+CREATE INDEX idxEffortFile ON Effort (fileId);
+CREATE INDEX idxEffortName ON Effort (name);
+CREATE INDEX idxEffortStatus ON Effort (status);
+CREATE INDEX idxEffortTaskCoachId ON Effort (taskCoachId);
 CREATE INDEX idxEffortStarted ON Effort (started);
 CREATE INDEX idxEffortEnded ON Effort (ended);
 

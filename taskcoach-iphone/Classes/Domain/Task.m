@@ -8,6 +8,7 @@
 
 #import "Task.h"
 #import "Category.h"
+#import "Effort.h"
 
 #import "Database.h"
 #import "Statement.h"
@@ -84,6 +85,7 @@ static Statement *_saveStatement = NULL;
 
 - (void)deleteSubtasks:(NSDictionary *)dict
 {
+	// XXXTODO: delete efforts as well ?
 	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"DELETE FROM TaskHasCategory WHERE idTask=%@", [dict objectForKey:@"id"]]] exec];
 	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT id FROM Task WHERE parentId=%@", [dict objectForKey:@"id"]]] execWithTarget:self action:@selector(deleteSubtasks:)];
 	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"DELETE FROM Task WHERE id=%@", [dict objectForKey:@"id"]]] exec];
@@ -91,6 +93,7 @@ static Statement *_saveStatement = NULL;
 
 - (void)delete
 {
+	// XXXTODO: delete efforts as well ?
 	Statement *req = [[Database connection] statementWithSQL:@"DELETE FROM TaskHasCategory WHERE idTask=?"];
 	[req bindInteger:objectId atIndex:1];
 	[req exec];
@@ -172,31 +175,40 @@ static Statement *_saveStatement = NULL;
 	return ccount;
 }
 
-- (void)updateCurrentEffort:(NSDictionary *)dict
+- (void)updateEffort:(NSDictionary *)dict
 {
-	_currentEffort = [[dict objectForKey:@"started"] retain];
+	NSDate *ended = nil;
+	if ([dict objectForKey:@"ended"])
+		ended = [[TimeUtils instance] dateFromString:[dict objectForKey:@"ended"]];
+
+	_effort = [[Effort alloc] initWithId:[[dict objectForKey:@"id"] intValue] fileId:[dict objectForKey:@"fileId"] name:[dict objectForKey:@"name"] status:[[dict objectForKey:@"status"] intValue] taskCoachId:[dict objectForKey:@"taskCoachId"]
+								 started:[[TimeUtils instance] dateFromString:[dict objectForKey:@"started"]] ended:ended taskId:[dict objectForKey:@"taskId"]];
 }
 
-- (NSDate *)startTimeOfCurrentEffort
+- (Effort *)currentEffort
 {
-	_currentEffort = nil;
-	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT started FROM Effort WHERE ended IS NULL AND taskId=%d", objectId]] execWithTarget:self action:@selector(updateCurrentEffort:)];
-	return [_currentEffort autorelease];
+	_effort = nil;
+
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM Effort WHERE taskId=%d AND ended IS NULL", objectId]] execWithTarget:self action:@selector(updateEffort:)];
+
+	return [_effort autorelease];
 }
 
 - (void)startTracking
 {
-	// First, stop tracking if applicable.
-	[self stopTracking];
+	// First, stop tracking if applicable. This shouldn't happen though...
+	if ([self currentEffort])
+		[self stopTracking];
 
 	// And create new effort
-	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"INSERT INTO Effort (taskId, started) VALUES (%d, \"%@\")", objectId, [[TimeUtils instance] stringFromDate:[NSDate date]]]] exec];
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"INSERT INTO Effort (fileId, name, taskId, started) VALUES (\"%@\", \"\", %d, \"%@\")", fileId, objectId, [[TimeUtils instance] stringFromDate:[NSDate date]]]] exec];
 }
 
 - (void)stopTracking
 {
-	NSString *now = [[TimeUtils instance] stringFromDate:[NSDate date]];
-	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE Effort SET ended=\"%@\" WHERE ended IS NULL", now]] exec];
+	Effort *effort = [self currentEffort];
+	effort.ended = [NSDate date];
+	[effort save];
 }
 
 // Overridden setters

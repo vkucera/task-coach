@@ -7,7 +7,7 @@
 //
 
 #import "TwoWayModifiedTasksState.h"
-#import "TwoWayEffortsState.h"
+#import "TwoWayNewEffortsState.h"
 
 #import "Network.h"
 #import "SyncViewController.h"
@@ -45,7 +45,7 @@
 	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM CurrentTask WHERE status=%d", STATUS_MODIFIED]];
 	[req execWithTarget:self action:@selector(onModifiedTask:)];
 	
-	myController.state = [TwoWayEffortsState stateWithNetwork:myNetwork controller:myController];
+	myController.state = [TwoWayNewEffortsState stateWithNetwork:myNetwork controller:myController];
 }
 
 - (void)onModifiedTask:(NSDictionary *)dict

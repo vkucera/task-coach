@@ -10,6 +10,7 @@
 #import "DomainObject.h"
 
 @class Category;
+@class Effort;
 
 #define TASKSTATUS_UNDEFINED         0
 #define TASKSTATUS_OVERDUE           1
@@ -31,7 +32,7 @@
 
 	BOOL hasCat;
 	NSInteger ccount;
-	NSString *_currentEffort;
+	NSString *_effort;
 }
 
 @property (nonatomic, retain) NSString *description;
@@ -52,7 +53,7 @@
 
 - (NSInteger)childrenCount;
 
-- (NSDate *)startTimeOfCurrentEffort;
+- (Effort *)currentEffort;
 - (void)startTracking;
 - (void)stopTracking;
 

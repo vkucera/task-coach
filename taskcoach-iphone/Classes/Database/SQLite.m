@@ -86,7 +86,11 @@
 			[[self statementWithSQL:@"ALTER TABLE Task ADD COLUMN parentId INTEGER NULL DEFAULT NULL"] exec];
 			[[self statementWithSQL:@"CREATE INDEX idxTaskParentId ON Task (parentId)"] exec];
 
-			[[self statementWithSQL:@"CREATE TABLE Effort (id INTEGER PRIMARY KEY, taskId INTEGER NOT NULL, started CHAR(19) NOT NULL, ended CHAR(19) NOT NULL)"] exec];
+			[[self statementWithSQL:@"CREATE TABLE Effort (id INTEGER PRIMARY KEY, fileId INTEGER NULL DEFAULT NULL, name VARCHAR(2048) NOT NULL, status INTEGER NOT NULL DEFAULT 1, taskCoachId VARCHAR(255) NULL DEFAULT NULL, taskId INTEGER, started CHAR(19), ended CHAR(19))"] exec];
+			[[self statementWithSQL:@"CREATE INDEX idxEffortFile ON Effort (fileId)"] exec];
+			[[self statementWithSQL:@"CREATE INDEX idxEffortName ON Effort (name)"] exec];
+			[[self statementWithSQL:@"CREATE INDEX idxEffortStatus ON Effort (status)"] exec];
+			[[self statementWithSQL:@"CREATE INDEX idxEffortTaskCoachId ON Effort (taskCoachId)"] exec];
 			[[self statementWithSQL:@"CREATE INDEX idxEffortTask ON Effort (taskId)"] exec];
 			[[self statementWithSQL:@"CREATE INDEX idxEffortStarted ON Effort (started)"] exec];
 			[[self statementWithSQL:@"CREATE INDEX idxEffortEnded ON Effort (ended)"] exec];
@@ -119,6 +123,7 @@
 		// Re-create views
 		[[self statementWithSQL:@"DROP VIEW IF EXISTS CurrentTask"] exec];
 		[[self statementWithSQL:@"DROP VIEW IF EXISTS CurrentCategory"] exec];
+		[[self statementWithSQL:@"DROP VIEW IF EXISTS CurrentEffort"] exec];
 		[[self statementWithSQL:@"DROP VIEW IF EXISTS AllTask"] exec];
 		[[self statementWithSQL:@"DROP VIEW IF EXISTS OverdueTask"] exec];
 		[[self statementWithSQL:@"DROP VIEW IF EXISTS DueTodayTask"] exec]; // Obsolete anyway
@@ -128,6 +133,7 @@
 
 		[[self statementWithSQL:@"CREATE VIEW CurrentTask AS SELECT * FROM Task LEFT JOIN TaskCoachFile ON Task.fileId=TaskCoachFile.id WHERE TaskCoachFile.visible OR Task.fileId IS NULL"] exec];
 		[[self statementWithSQL:@"CREATE VIEW CurrentCategory AS SELECT * FROM Category LEFT JOIN TaskCoachFile ON Category.fileId=TaskCoachFile.id WHERE TaskCoachFile.visible OR Category.fileId IS NULL"] exec];
+		[[self statementWithSQL:@"CREATE VIEW CurrentEffort AS SELECT * FROM Effort LEFT JOIN TaskCoachFile ON Effort.fileId=TaskCoachFile.id WHERE TaskCoachFile.visible OR Effort.fileId IS NULL"] exec];
 
 		[[self statementWithSQL:@"CREATE VIEW AllTask AS SELECT * FROM CurrentTask WHERE status != 3 ORDER BY name"] exec];
 		[[self statementWithSQL:@"CREATE VIEW OverdueTask AS SELECT * FROM CurrentTask WHERE status != 3 AND dueDate < DATE('now') ORDER BY dueDate, startDate DESC"] exec];
