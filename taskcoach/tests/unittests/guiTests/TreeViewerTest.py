@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -36,16 +36,20 @@ class TreeViewerTest(test.wxTestCase):
         taskFile.tasks().extend([self.parent, self.child])
         self.viewer.refresh()
         self.widget = self.viewer.widget
+
+    def firstItem(self):
+        root = self.widget.GetRootItem()
+        return self.widget.GetFirstChild(root)[0]
                 
     def testWidgetDisplayAllItems(self):
         self.assertEqual(2, self.viewer.widget.GetItemCount())
         
     def testExpand(self):
-        self.widget.Expand(self.widget.GetFirstVisibleItem())
+        self.widget.Expand(self.firstItem())
         self.failUnless(self.parent.isExpanded(context=self.expansionContext))
         
     def testCollapse(self):
-        firstVisibleItem = self.widget.GetFirstVisibleItem()
+        firstVisibleItem = self.firstItem()
         self.widget.Expand(firstVisibleItem)
         self.widget.Collapse(firstVisibleItem)
         self.failIf(self.parent.isExpanded(context=self.expansionContext))

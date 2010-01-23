@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-# -*- encoding: ISO-8859-1 -*-
+# -*- encoding: UTF-8 -*-
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008-2009 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -33,19 +33,19 @@ except ImportError:
 
 pages = {}
 pages['index'] = \
-'''        <P><IMG SRC="images/banner.png" ALT="Banner image"></P>
-        <P>%(name)s is a simple open source todo manager to manage personal 
-        tasks and todo lists. It grew out of Frank's frustration that well-known 
-        task managers, such as those provided with Outlook or Lotus Notes, do
-        not provide facilities for composite tasks. Often, tasks and
-        other things todo consist of several activities. %(name)s is
-        designed to deal with composite tasks.</P>
-        <P>%(name)s is developed by Frank Niessink and Jerome Laheurte, with 
+u'''        <P><IMG SRC="images/banner.png" ALT="Banner image"></P>
+        <P>%(name)s is a simple open source todo manager to keep track of
+        personal tasks and todo lists. It grew out of a frustration that
+        most task managers do not provide facilities for composite tasks.
+        Often, tasks and other things todo consist of several activities.
+        %(name)s is designed to deal with composite tasks. In addition, it offers
+        effort tracking, categories, and notes. %(name)s is available for Windows,
+        Mac OS X, Linux, and iPhone and iPod Touch.</P>
+        <P>%(name)s is developed by Frank Niessink and Jérôme Laheurte, with
         help of different people providing translations. Currently, %(name)s 
         is at version %(version)s. Many people use it on a daily basis, but 
-        there are still a lot of 
-        features missing. If there's anything you'd like to see included, 
-        <a href="http://taskcoach.uservoice.com/"
+        there are still a lot of features missing. If there's anything you'd
+        like to see included, <a href="http://taskcoach.uservoice.com/"
         onClick="javascript: pageTracker._trackPageview('/outgoing/uservoice.com/desktop');">please 
         let us know</a>.</P>
         <P>%(name)s is licensed under the <A HREF="license.html">%(license)s</A> 
@@ -59,7 +59,7 @@ pages['index'] = \
         costs; any amount is appreciated).</P>
         <P>%(name)s is developed using a number of products, see 
         credits at the left.</P>
-        <P>Enjoy, <a href="mailto:%(author_email)s">%(author)s</a></P>
+        <P>Enjoy, <a href="mailto:%(author_email)s">%(author_unicode)s</a></P>
         <!-- AppStoreHQ:claim_code:258f8973d401112a215d79afdb82fef934ee56c9 -->
         '''
 
