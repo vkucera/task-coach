@@ -328,7 +328,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A6CFB6341109D746004DB892</string>
+										<string>A64C378A110B5E16008722EE</string>
 										<key>history</key>
 										<array>
 											<string>A6B5E01D106E04E200E3774E</string>
@@ -436,7 +436,7 @@
 											<string>A6CFB61E1109D58B004DB892</string>
 											<string>A6CFB61F1109D58B004DB892</string>
 											<string>A6CFB6301109D6E4004DB892</string>
-											<string>A6CFB62D1109D6AC004DB892</string>
+											<string>A6CFB6341109D746004DB892</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -559,11 +559,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6CFB54C1109BFF1004DB892</string>
+				<string>A64C3787110B5E16008722EE</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A6CFB54D1109BFF1004DB892</string>
+				<string>A64C3788110B5E16008722EE</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A6CFB54E1109BFF1004DB892</string>
+				<string>A64C3789110B5E16008722EE</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -751,8 +751,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>A6CFB5551109BFF1004DB892</string>
-		<string>A6CFB5561109BFF1004DB892</string>
 		<string>/Users/jeromelaheurte/Dev/taskcoach-iphone/taskcoach-iphone/TaskCoach.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
