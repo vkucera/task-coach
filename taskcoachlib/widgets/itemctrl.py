@@ -365,15 +365,12 @@ class _CtrlWithSortableColumnsMixin(_BaseCtrlWithColumnsMixin):
                 
     def onColumnClick(self, event):
         event.Skip()
-        columnIndex = event.GetColumn()
-        if columnIndex >= self.GetColumnCount():
-            return
-        column = self._getColumn(columnIndex)
         # Make sure the window this control is in has focus:
         event.GetEventObject().MainWindow.SetFocus()
-        if 0 <= event.GetColumn() < self.GetColumnCount():
-            column = self._getColumn(event.GetColumn())
-            # Use CallAfter to make sure the window this control is in is 
+        columnIndex = event.GetColumn()
+        if 0 <= columnIndex < self.GetColumnCount():
+            column = self._getColumn(columnIndex)
+            # Use CallAfter to make sure the window this control is in is
             # activated before we process the column click:
             wx.CallAfter(column.sort, event)
         
