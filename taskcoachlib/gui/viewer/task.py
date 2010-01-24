@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2007-2008 Jérôme Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -271,8 +273,10 @@ class TimelineViewer(BaseTaskViewer):
         
     def createWidget(self):
         self.rootNode = TimelineRootNode(self.presentation())
+        itemPopupMenu = self.createTaskPopupMenu()
+        self._popupMenus.append(itemPopupMenu)
         return widgets.Timeline(self, self.rootNode, self.onSelect, self.onEdit,
-                                self.createTaskPopupMenu())
+                                itemPopupMenu)
 
     def onEdit(self, item):
         if isinstance(item, task.Task):
@@ -389,10 +393,12 @@ class SquareTaskViewer(BaseTaskViewer):
         return class_ == task.Task
     
     def createWidget(self):
+        itemPopupMenu = self.createTaskPopupMenu()
+        self._popupMenus.append(itemPopupMenu)
         return widgets.SquareMap(self, SquareMapRootNode(self.presentation()), 
             self.onSelect, 
             uicommand.TaskEdit(taskList=self.presentation(), viewer=self),
-            self.createTaskPopupMenu())
+            itemPopupMenu)
         
     def getToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
@@ -507,11 +513,14 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
     def createWidget(self):
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
+        itemPopupMenu = self.createTaskPopupMenu()
+        columnPopupMenu = self.createColumnPopupMenu()
+        self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         widget = widgets.TreeListCtrl(self, self.columns(), self.onSelect, 
             uicommand.TaskEdit(taskList=self.presentation(), viewer=self),
             uicommand.TaskDragAndDrop(taskList=self.presentation(), viewer=self),
             uicommand.EditSubject(viewer=self),
-            self.createTaskPopupMenu(), self.createColumnPopupMenu(),
+            itemPopupMenu, columnPopupMenu,
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(imageList) # pylint: disable-msg=E1101
         return widget    

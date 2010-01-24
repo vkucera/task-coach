@@ -27,7 +27,8 @@ Release('0.78.3', 'January 23, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Free up resources (user objects and memory) on Windows when
-closing dialogs.''')
+closing dialogs. The memory leak was caused by popup menu's in dialogs not
+being deleted.''')
         ]
     ),
 

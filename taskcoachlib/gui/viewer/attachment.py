@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
+Copyright (C) 2007-2008 Jérôme Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -53,12 +55,14 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.ViewerWithColumns,
 
     def createWidget(self):
         imageList = self.createImageList()
+        itemPopupMenu = menu.AttachmentPopupMenu(self.parent, self.settings,
+            self.presentation(), self)
+        columnPopupMenu = menu.ColumnPopupMenu(self)
+        self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         self._columns = self._createColumns()
         widget = widgets.ListCtrl(self, self.columns(), self.onSelect,
             uicommand.AttachmentEdit(viewer=self, attachments=self.presentation()),
-            menu.AttachmentPopupMenu(self.parent, self.settings, self.presentation(), 
-                                     self),
-            menu.ColumnPopupMenu(self),
+            itemPopupMenu, columnPopupMenu,
             resizeableColumn=1, **self.widgetCreationKeywordArguments())
         widget.SetColumnWidth(0, 150)
         widget.AssignImageList(imageList, wx.IMAGE_LIST_SMALL)

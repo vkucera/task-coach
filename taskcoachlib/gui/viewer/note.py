@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
+Copyright (C) 2007-2008 Jérôme Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -59,13 +61,15 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
     def createWidget(self):
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
+        itemPopupMenu = menu.NotePopupMenu(self.parent, self.settings,
+            self.presentation(), self.taskFile.categories(), self)
+        columnPopupMenu = menu.ColumnPopupMenu(self)
+        self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         widget = widgets.TreeListCtrl(self, self.columns(), self.onSelect,
             uicommand.NoteEdit(viewer=self, notes=self.presentation()),
             uicommand.NoteDragAndDrop(viewer=self, notes=self.presentation()),
             uicommand.EditSubject(viewer=self),
-            menu.NotePopupMenu(self.parent, self.settings, self.presentation(),
-                               self.taskFile.categories(), self), 
-            menu.ColumnPopupMenu(self),
+            itemPopupMenu, columnPopupMenu,
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(imageList) # pylint: disable-msg=E1101
         return widget

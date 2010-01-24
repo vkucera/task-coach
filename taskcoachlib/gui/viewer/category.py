@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
+Copyright (C) 2007-2008 Jérôme Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -58,16 +60,22 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
     def createWidget(self):
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
+        itemPopupMenu = self.createCategoryPopupMenu()
+        columnPopupMenu = menu.ColumnPopupMenu(self)
+        self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         widget = widgets.CheckTreeCtrl(self, self._columns,
             self.onSelect, self.onCheck,
             uicommand.CategoryEdit(viewer=self, categories=self.presentation()),
             uicommand.CategoryDragAndDrop(viewer=self, categories=self.presentation()),
             uicommand.EditSubject(viewer=self),
-            self.createCategoryPopupMenu(), 
-            menu.ColumnPopupMenu(self),
+            itemPopupMenu, columnPopupMenu,
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(imageList) # pylint: disable-msg=E1101
         return widget
+
+    def createCategoryPopupMenu(self, localOnly=False):
+        return menu.CategoryPopupMenu(self.parent, self.settings, self.taskFile,
+                                      self, localOnly)
 
     def _createColumns(self):
         # pylint: disable-msg=W0142
@@ -131,11 +139,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                 helpText=_('Show/hide notes column'),
                 setting='notes', viewer=self))
         return commands
-        
-    def createCategoryPopupMenu(self, localOnly=False):
-        return menu.CategoryPopupMenu(self.parent, self.settings, self.taskFile,
-                                      self, localOnly)
-    
+
     def onAttributeChanged(self, event):
         if category.Category.exclusiveSubcategoriesChangedEventType() in event.types():
             # We need to refresh the children of the changed item as well 
