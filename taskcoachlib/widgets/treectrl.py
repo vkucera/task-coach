@@ -364,7 +364,13 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             super(TreeListCtrl, self).InsertColumn(columnIndex, columnHeader, 
                 *args, **kwargs)
         self.SetColumnAlignment(columnIndex, format)
-    
+
+    def showColumn(self, *args, **kwargs):
+        ''' Stop editing before we hide or show a column to prevent problems
+            redrawing the tree list control contents. '''
+        self.StopEditing()
+        super(TreeListCtrl, self).showColumn(*args, **kwargs)
+
 
 class CheckTreeCtrl(TreeListCtrl):
     def __init__(self, parent, columns, selectCommand, checkCommand, 
