@@ -23,12 +23,15 @@ from changetypes import *
 
 releases = [
 
-Release('0.78.3', 'January 24, 2010',
+Release('0.78.3', 'January 26, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Free up resources (user objects and memory) on Windows when
 closing dialogs. The memory leak was caused by popup menu's in dialogs not
-being deleted.''', '2938091')
+being deleted.''', '2938091'),
+        Bug('''Close the inline subject edit control before showing or hiding
+columns in tree viewers, to prevent problems redrawing the tree items.''',
+'2940211')
         ]
     ),
 
