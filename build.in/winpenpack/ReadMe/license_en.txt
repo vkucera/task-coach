@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------
 winPenPack Project § X-Software collection
-Copyright © 2005-2009 Danilo Leggieri and winPenPack Development Team
+Copyright © 2005-2010 Danilo Leggieri and winPenPack Development Team
 ---------------------------------------------------------------------
 
 http://www.winpenpack.com
@@ -321,8 +321,8 @@ Some images used in web site, in download section and in splash screens of
 our portable softwares are original work of winPenPack Team, other images 
 are created by modifying pre-existing open source images, and others, always 
 released under open source licenses (GPL/LGPL, etc.. .) are downloaded from 
-sites awarding free licensed images (such as http://iconlet.com) and they 
-are used in unmodified form.
+websites of original programs or from sites awarding free licensed images 
+(such as http://iconlet.com) and they are used in unmodified form.
 
 It is our purpose to do every effort in order to respect programs and images 
 licenses and trademarks rights. But, although our efforts, and because of 
@@ -336,8 +336,8 @@ adjustments.
 
 
 
-9. Disclaimer and no warranty
------------------------------
+9. Disclaimer of warranty and limitation of liability
+-----------------------------------------------------
 
 winPenPack, X-Softwares and all winPenPack components are distributed "AS IS" 
 WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, including, but not 

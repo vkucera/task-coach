@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------
 winPenPack Project § X-Software collection
-Copyright © 2005-2009 Danilo Leggieri and winPenPack Development Team
+Copyright © 2005-2010 Danilo Leggieri and winPenPack Development Team
 ---------------------------------------------------------------------
 
 http://www.winpenpack.com
@@ -9,9 +9,9 @@ winPenPack License Agreement:
 http://www.winpenpack.com/main/page.php?5
 
 
-==================
-Credits and Thanks
-==================
+==============================================
+Credits and Thanks (last revision: 16.12.2009)
+==============================================
 
 
 NOTE: if someone thinks it have to be included in
@@ -23,12 +23,13 @@ Contents
 --------
 1. Hosting
 2. Mirrors and distribution
-3. Suggestions and ideas
-4. Testing
-5. Software authors
-6. Website
-7. Icons and images
-8. Tools and scripting
+3. Old winPenPack Team members and contributors
+4. Suggestions and ideas
+5. Testing
+6. Software authors
+7. Website
+8. Icons and images
+9. Tools and scripting
 
 
 
@@ -47,57 +48,73 @@ Uncle Dan’s Corner (http://www.uncledan.it/)
 Pietrolonardo (http://www.pietrolonardo.it/)
 Marvho.com (http://www.marvho.com)
 Scuola Media 5-12 Sassari (http://www.scuolamedia5-12.com)
-TMOhost (http://tmohost.com)
 Tiscali Jack (http://jack.tiscali.it)
+Cruleworld's LifeStream (http://t03.us/)
+Bl4ckh3r0 (http://dp1987.altervista.org/portale/)
 
 
 
-3. Suggestions and ideas
+3. Old winPenPack Team members and contributors
+-----------------------------------------------
+Umberto Mascia (PortableUmbo);
+Luca Zoboli (_zulu);
+Matteo Salvi (El Salvador);
+Marnie B. (Ketty);
+Ciro Iorio (Alchimista);
+Simone Grassini (Simongr).
+
+
+
+4. Suggestions and ideas
 ------------------------
 A big thank to all winPenPack users and a lot of other
 people that provided additional suggestions and bug reports.
 
 
 
-4. Testing 
+5. Testing 
 ----------
 A big thank to all users for testing, especially to Ketty, 
 Moticanus and Grangas who constantly offering their cooperation.
 
 
-4. Software authors
+
+6. Software authors
 -------------------
-A big thank to all authors of softwares included in
-winPenPack collections.
+A big thank to all authors of softwares included in winPenPack 
+collections.
 
 
 
-5. Website
+7. Website
 ----------
 e107 website system (e107.org, http://www.e107.org)
 e107Italia (e107 italian translation, http://www.e107italia.org)
 
 
 
-6. Icons and images
+8. Icons and images
 -------------------
 Lamberto Tedaldi (Usbix, the winPenPack mascotte,
 http://www.officinepixel.com)
 
-Alexandre Moore (the winPenPack pendrive icon
-and some other images published on winPenPack
-website, http://sa-ki.deviantart.com)
+Alexandre Moore (the winPenPack pendrive icon and some other 
+images published on winPenPack website, http://sa-ki.deviantart.com)
 
-David Vignoni ("Nuvola" icons theme,
-http://www.icon-king.com)
+David Vignoni ("Nuvola" icons theme, http://www.icon-king.com)
 
-The authors of some icons and images published on 
-http://iconlet.com, released under GPL/LGPL and used 
-for website graphics and launcher's splash screens.
+The authors of images published under open source licenses 
+(GPL, LGPL, etc..) on Iconlet (http://iconlet.com/), 
+Wikipedia (http://wikipedia.org/), Open Clip Art Library 
+(http://openclipart.org/) and other similar websites, used 
+for graphics in winPenPack web site and for X-Software's 
+splash screens. For more details please read the additional 
+notes about trademarks and copyright 
+(http://www.winpenpack.com/main/page.php?5#infringement).
 
 
 
-7. Tools and scripting
+9. Tools and scripting
 ----------------------
 Autoit3 (language used for developing launchers, 
 http://www.autoitscript.com)
