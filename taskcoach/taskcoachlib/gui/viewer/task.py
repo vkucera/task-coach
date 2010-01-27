@@ -26,7 +26,7 @@ from taskcoachlib import patterns, command, widgets, domain
 from taskcoachlib.domain import task, date
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, render, dialog
-from taskcoachlib.thirdparty.calendar import wxSCHEDULER_NEXT, wxSCHEDULER_PREV
+from taskcoachlib.thirdparty.calendar import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, wxSCHEDULER_TODAY
 import base, mixin
 
 
@@ -491,7 +491,7 @@ class CalendarViewer(BaseTaskViewer):
     # XXXTODO: selection, icon, popup
 
     defaultTitle = _('Calendar')
-    defaultBitmap = 'calendarviewer'
+    defaultBitmap = 'date'
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'calendarviewer')
@@ -537,7 +537,7 @@ class CalendarViewer(BaseTaskViewer):
         return toolBarUICommands
 
     def SetViewType(self, type_):
-        if type_ not in [wxSCHEDULER_NEXT, wxSCHEDULER_PREV]:
+        if type_ not in [wxSCHEDULER_NEXT, wxSCHEDULER_TODAY, wxSCHEDULER_PREV]:
             self.settings.set(self.settingsSection(), 'viewtype', str(type_))
         self.widget.SetViewType(type_)
         if type_ in [wxSCHEDULER_NEXT, wxSCHEDULER_PREV]:
