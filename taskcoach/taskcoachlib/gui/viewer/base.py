@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
+Copyright (C) 2007-2008 Jérôme Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -48,6 +50,9 @@ class Viewer(wx.Panel):
         # Flag so that we don't notify observers while we're selecting all items
         self.__selectingAllItems = False
         self.__toolbarUICommands = None
+        # Popup menus we have to destroy before closing the viewer to prevent 
+        # memory leakage:
+        self._popupMenus = []
         # What are we presenting:
         self.__presentation = self.createSorter(self.createFilter(self.domainObjectsToView()))
         # The widget used to present the presentation:
@@ -78,6 +83,8 @@ class Viewer(wx.Panel):
         ''' Should be called by viewer.container before closing the viewer '''
         patterns.Publisher().removeInstance(self.presentation())
         patterns.Publisher().removeInstance(self)
+        for popupMenu in self._popupMenus:
+            popupMenu.Destroy()
 
     @classmethod
     def selectEventType(class_):

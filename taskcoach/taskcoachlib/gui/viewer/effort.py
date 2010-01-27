@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
+Copyright (C) 2007-2008 Jérôme Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -136,11 +138,13 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
             
     def createWidget(self):
         self._columns = self._createColumns()
+        itemPopupMenu = menu.EffortPopupMenu(self.parent, self.taskFile.tasks(),
+            self.settings, self.presentation(), self)
+        columnPopupMenu = menu.EffortViewerColumnPopupMenu(self)
+        self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         widget = widgets.ListCtrl(self, self.columns(), self.onSelect,
             uicommand.EffortEdit(viewer=self, effortList=self.presentation()),
-            menu.EffortPopupMenu(self.parent, self.taskFile.tasks(), 
-                                 self.settings, self.presentation(), self),
-            menu.EffortViewerColumnPopupMenu(self),
+            itemPopupMenu, columnPopupMenu,
             resizeableColumn=1, **self.widgetCreationKeywordArguments())
         widget.SetColumnWidth(0, 150)
         return widget

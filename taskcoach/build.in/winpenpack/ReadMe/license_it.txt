@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------
 winPenPack Project § X-Software collection
-Copyright © 2005-2009 Danilo Leggieri and winPenPack Development Team
+Copyright © 2005-2010 Danilo Leggieri and winPenPack Development Team
 ---------------------------------------------------------------------
 
 http://www.winpenpack.com
@@ -313,9 +313,9 @@ setup estratto) e non modificata, più raramente in forma modificata.
 Alcune immagini presenti nel sito, nelle schede download e negli splash screen 
 dei programmi sono opera originale del winPenPack Team, altre nascono dalla 
 modifica di immagini open source preesistenti, ed altre ancora, rilasciate 
-sempre sotto le licenze open source (GPL/LGPL, etc..), vengono scaricate da 
-siti che distribuiscono immagini sotto licenza libera (ad esempio 
-http://iconlet.com) e sono utilizzate in forma non modificata.
+sempre sotto le licenze open source (GPL/LGPL, etc..), vengono scaricate dai 
+siti dei programmi originali o da siti che distribuiscono immagini sotto licenza 
+libera (ad esempio http://iconlet.com) e vengono utilizzate in forma non modificata.
 
 E' nostra intenzione fare ogni sforzo per rispettare le licenze dei programmi, 
 delle immagini e i diritti sui marchi. Tuttavia, nonostante i nostri sforzi, 
