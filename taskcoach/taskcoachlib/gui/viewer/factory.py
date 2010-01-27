@@ -20,7 +20,7 @@ import effort, task, category, note
 
 
 def viewerTypes():
-    return 'squaretaskviewer', 'taskviewer', 'noteviewer', 'categoryviewer', 'effortviewer'
+    return 'squaretaskviewer', 'taskviewer', 'noteviewer', 'categoryviewer', 'effortviewer', 'calendarviewer'
 
 
 class addViewers(object):
@@ -39,6 +39,7 @@ class addViewers(object):
         self.addViewers(task.TaskViewer)
         self.addViewers(task.SquareTaskViewer)
         self.addViewers(task.TimelineViewer)
+        self.addViewers(task.CalendarViewer)
         if self.settings.getboolean('feature', 'effort'):
             self.addViewers(effort.EffortViewer)
         self.addViewers(category.CategoryViewer)

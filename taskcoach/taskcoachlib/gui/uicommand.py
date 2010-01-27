@@ -23,6 +23,8 @@ from taskcoachlib import patterns, meta, command, help, widgets, persistence # p
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import base, task, attachment, effort
 from taskcoachlib.mailer import writeMail
+from taskcoachlib.thirdparty.calendar import wxSCHEDULER_DAILY, wxSCHEDULER_WEEKLY, \
+     wxSCHEDULER_MONTHLY, wxSCHEDULER_NEXT, wxSCHEDULER_PREV
 import dialog, render, viewer, printer
 
 
@@ -2151,7 +2153,25 @@ class SquareTaskViewerOrderChoice(ToolbarChoiceCommandMixin, ViewerCommand):
     
     def doChoice(self, choice):
         self.viewer.orderBy(choice)
-        
+
+
+class CalendarViewerTypeChoice(ToolbarChoiceCommandMixin, ViewerCommand):
+    choiceLabels = [_('Day'), _('Week'), _('Month')]
+    choiceData = [wxSCHEDULER_DAILY, wxSCHEDULER_WEEKLY, wxSCHEDULER_MONTHLY]
+
+    def doChoice(self, choice):
+        self.viewer.SetViewType(choice)
+
+
+class CalendarViewerNextPeriod(ViewerCommand):
+    def doCommand(self, event):
+        self.viewer.SetViewType(wxSCHEDULER_NEXT)
+
+
+class CalendarViewerPreviousPeriod(ViewerCommand):
+    def doCommand(self, event):
+        self.viewer.SetViewType(wxSCHEDULER_PREV)
+
 
 class ToggleAutoColumnResizing(UICheckCommand, ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):

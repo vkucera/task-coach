@@ -34,6 +34,7 @@ defaults = { \
     'effortviewercount': '0',        # Number of effort viewers in main window
     'squaretaskviewercount': '0',
     'timelineviewercount': '0',
+    'calendarviewercount': '0',
     'language': 'en_US',             # Language and locale
     'categoryfiltermatchall': 'False',
     'descriptionpopups': 'True',
@@ -79,6 +80,19 @@ defaults = { \
     'hidecompositetasks': 'False' },
 'timelineviewer': { \
     'title': '',
+    'searchfilterstring': '',
+    'searchfiltermatchcase': 'False',
+    'searchfilterincludesubitems': 'False',
+    'searchdescription': 'False',
+    'tasksdue': 'Unlimited',
+    'hidecompletedtasks': 'False',
+    'hideinactivetasks': 'False',
+    'hideactivetasks': 'False',
+    'hidecompositetasks': 'False' },
+'calendarviewer': { \
+    'title': '',
+    'viewtype': '1',
+    'viewdate': '',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',

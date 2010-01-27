@@ -24,6 +24,7 @@ from taskcoachlib import patterns, command, widgets, domain
 from taskcoachlib.domain import task, date
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, render, dialog
+from taskcoachlib.thirdparty.calendar import wxSCHEDULER_NEXT, wxSCHEDULER_PREV
 import base, mixin
 
 
@@ -479,7 +480,71 @@ class SquareTaskViewer(BaseTaskViewer):
         return self.renderer[self.__orderBy](value)
 
     
-    
+
+class CalendarViewer(BaseTaskViewer):
+    # XXXTODO: selection, icon, popup
+
+    defaultTitle = _('Calendar')
+    defaultBitmap = 'calendarviewer'
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('settingsSection', 'calendarviewer')
+        super(CalendarViewer, self).__init__(*args, **kwargs)
+
+        self.widget.SetViewType(self.settings.getint(self.settingsSection(), 'viewtype'))
+        self.typeUICommand.setChoice(self.settings.getint(self.settingsSection(), 'viewtype'))
+
+        start = self.settings.get(self.settingsSection(), 'viewdate')
+        if start:
+            dt = wx.DateTime.Now()
+            dt.ParseDateTime(start)
+            self.widget.SetDate(dt)
+
+        self.widget.SetWorkHours(self.settings.getint('view', 'efforthourstart'),
+                                 self.settings.getint('view', 'efforthourend'))
+
+        self.registerObserver(self.onWorkingHourChanged,
+                              eventType='view.efforthourstart')
+        self.registerObserver(self.onWorkingHourChanged,
+                             eventType='view.efforthourend')
+
+        for eventType in (task.Task.subjectChangedEventType(), 'task.startDate',
+            'task.dueDate', 'task.completionDate'):
+            self.registerObserver(self.onAttributeChanged, eventType)
+
+    def onWorkingHourChanged(self, event):
+        self.widget.SetWorkHours(self.settings.getint('view', 'efforthourstart'),
+                                 self.settings.getint('view', 'efforthourend'))
+
+    def createWidget(self):
+        return widgets.Calendar(self, self.presentation())
+
+    def getToolBarUICommands(self):
+        ''' UI commands to put on the toolbar of this viewer. '''
+        toolBarUICommands = super(CalendarViewer, self).getToolBarUICommands()
+        toolBarUICommands.insert(-2, None) # Separator
+        self.typeUICommand = uicommand.CalendarViewerTypeChoice(viewer=self)
+        toolBarUICommands.insert(-2, self.typeUICommand)
+        toolBarUICommands.insert(-2, uicommand.CalendarViewerPreviousPeriod(viewer=self,
+                                                                            bitmap='prev'))
+        toolBarUICommands.insert(-2, uicommand.CalendarViewerNextPeriod(viewer=self,
+                                                                        bitmap='next'))
+        return toolBarUICommands
+
+    def SetViewType(self, type_):
+        if type_ not in [wxSCHEDULER_NEXT, wxSCHEDULER_PREV]:
+            self.settings.set(self.settingsSection(), 'viewtype', str(type_))
+        self.widget.SetViewType(type_)
+        if type_ in [wxSCHEDULER_NEXT, wxSCHEDULER_PREV]:
+            dt = self.widget.GetDate()
+            now = wx.DateTime.Today()
+            if (dt.GetYear(), dt.GetMonth(), dt.GetDay()) == (now.GetYear(), now.GetMonth(), now.GetDay()):
+                toSave = ''
+            else:
+                toSave = dt.Format()
+            self.settings.set(self.settingsSection(), 'viewdate', toSave)
+
+
 class TaskViewer(mixin.AttachmentDropTargetMixin, 
                  mixin.SortableViewerForTasksMixin, 
                  mixin.NoteColumnMixin, mixin.AttachmentColumnMixin,
