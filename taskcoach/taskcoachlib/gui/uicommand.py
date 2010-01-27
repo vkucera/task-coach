@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 
@@ -18,11 +18,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, wx
+import wx
 from taskcoachlib import patterns, meta, command, help, widgets, persistence # pylint: disable-msg=W0622
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import base, task, attachment, effort
 from taskcoachlib.mailer import writeMail
+from taskcoachlib.thirdparty.calendar import wxSCHEDULER_DAILY, wxSCHEDULER_WEEKLY, \
+     wxSCHEDULER_MONTHLY, wxSCHEDULER_NEXT, wxSCHEDULER_PREV
 import dialog, render, viewer, printer
 
 
@@ -2151,7 +2153,25 @@ class SquareTaskViewerOrderChoice(ToolbarChoiceCommandMixin, ViewerCommand):
     
     def doChoice(self, choice):
         self.viewer.orderBy(choice)
-        
+
+
+class CalendarViewerTypeChoice(ToolbarChoiceCommandMixin, ViewerCommand):
+    choiceLabels = [_('Day'), _('Week'), _('Month')]
+    choiceData = [wxSCHEDULER_DAILY, wxSCHEDULER_WEEKLY, wxSCHEDULER_MONTHLY]
+
+    def doChoice(self, choice):
+        self.viewer.SetViewType(choice)
+
+
+class CalendarViewerNextPeriod(ViewerCommand):
+    def doCommand(self, event):
+        self.viewer.SetViewType(wxSCHEDULER_NEXT)
+
+
+class CalendarViewerPreviousPeriod(ViewerCommand):
+    def doCommand(self, event):
+        self.viewer.SetViewType(wxSCHEDULER_PREV)
+
 
 class ToggleAutoColumnResizing(UICheckCommand, ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):

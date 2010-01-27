@@ -3,7 +3,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2010 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2007-2010 Jérôme Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,13 +23,32 @@ from changetypes import *
 
 releases = [
 
-Release('0.79.0', 'January 17, 2010',
+Release('0.79.0', 'January 23, 2010',
     summary='''This release ...''',
     featuresAdded=[
         Feature(''' ... ''')
         ]
     ),
     
+Release('0.78.3', 'January 26, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Free up resources (user objects and memory) on Windows when
+closing dialogs. The memory leak was caused by popup menu's in dialogs not
+being deleted.''', '2938091'),
+        Bug('''Close the inline subject edit control before showing or hiding
+columns in tree viewers, to prevent problems redrawing the tree items.''',
+'2940211')
+        ]
+    ),
+
+Release('0.78.2', 'January 23, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Faster redrawing of task/category/note trees.''')
+        ]
+    ),
+
 Release('0.78.1', 'January 17, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
@@ -766,7 +785,7 @@ Patch supplied by Rob McMullen.'''),
         Feature('''The effort tracking feature can be turned off via the
 preferences dialog.'''),
         Feature('''The system tray icon shows the task being tracked in 
-its tool tip. Patch provided by João Alexandre de Toledo.'''),
+its tool tip. Patch provided by JoÃ£o Alexandre de Toledo.'''),
         Feature('''Categories and notes can have attachments.'''),
         Feature('''Tasks and categories can contain notes. ''', '1954879', 
                 '2140239', '1525434'),
@@ -994,7 +1013,7 @@ task file over their existing data.''', '1893634'),
         Bug('''On Mac OS X, users couldn't enter 'P' and 'M' in text boxes,
 because these were mapped to menu items. Reorganized keyboard shortcuts to fix 
 this.''', '1890566'),
-        Bug('''The arrow ('→') and infinity symbol ('∞') are not 
+        Bug('''The arrow ('â†’') and infinity symbol ('âˆž') are not 
 visible on all computers, so Task Coach is back to using '->' and 'Infinite'
 again.''')]),
     
@@ -1031,10 +1050,10 @@ by task status first', 'descending, without sorting by task status first'.''')],
 date columns. To be consistent with how other attributes are displayed in 
 columns, Task Coach now simply displays nothing for unset dates in date
 columns.'''),
-        Feature('''Task Coach now uses the infinity symbol ('∞') to display
+        Feature('''Task Coach now uses the infinity symbol ('âˆž') to display
 the number of days left for tasks without a due date, instead of the word 
 'Infinite'.'''),
-        Feature('''Task Coach now uses a real arrow symbol ('→') instead of 
+        Feature('''Task Coach now uses a real arrow symbol ('â†’') instead of 
 '->' for separating parent and child subjects in the different viewers.''')],
     featuresRemoved=[
         Feature('''Task Coach no longer keeps track of the 'last modification 
@@ -1230,7 +1249,7 @@ events in other situations as well, most notably when changing virtual
 desktops. So, to reduce the chances of confusing new users this option is off 
 by default.''', '1721166')],
     featuresAdded=[
-        Feature('''Added Breton translation thanks to Ronan Le Déroff'''),
+        Feature('''Added Breton translation thanks to Ronan Le DÃ©roff'''),
         Feature('''Show a tooltip with a task's description when the mouse
 is hovering over a task. Patch provided by Jerome Laheurte.''', '1642608',
 '1619521', '1578623'),
@@ -1285,7 +1304,7 @@ Excel.''', '1660670'),
 tree viewer, child tasks hidden by a filter would still be exported.''', 
 '1659307')],
     featuresAdded=[
-        Feature('Added Slovak translation thanks to Viliam Búr'),
+        Feature('Added Slovak translation thanks to Viliam BÃºr'),
         Feature('''Printing a selection is enabled (except on Mac OSX).'''),
         Feature('''The notebook that contains the different views allows for
 dragging and dropping of tabs, enabling you to create almost any layout you
@@ -1639,7 +1658,7 @@ instead of 'Ctrl-D' and 'Ctrl-Enter' marks the selected task(s) completed.''',
     featuresAdded=[
         Feature('''Double-clicking the system tray icon when Task Coach
 is not minimized will raise the Task Coach window.''', '1242520'),
-        Feature('''Added Spanish translation thanks to Juan José.''')],
+        Feature('''Added Spanish translation thanks to Juan JosÃ©.''')],
     implementationChanged=[
         Implementation('''Task ids are now persistent, i.e. they are saved to
 and loaded from the Task Coach (XML) file. This will make it easier, in the future,

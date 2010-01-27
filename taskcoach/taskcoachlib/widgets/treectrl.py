@@ -160,6 +160,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         self.__adapter = parent
         self.__selection = []
         self.__dontStartEditingLabelBecauseUserDoubleClicked = False
+        self.__defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         super(TreeListCtrl, self).__init__(parent, style=self.getStyle(), 
             columns=columns, resizeableColumn=0, itemPopupMenu=itemPopupMenu,
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
@@ -200,6 +201,8 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         if not rootItem:
             rootItem = self.AddRoot('Hidden root')
         self._addObjectRecursively(rootItem)
+        if self.GetSelections():
+            self.ScrollTo(self.GetSelections()[0])
         self.Thaw()
             
     def RefreshItems(self, *objects):
@@ -228,8 +231,11 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             self._refreshObjectMinimally(childItem, childObject)
             self._addObjectRecursively(childItem, childObject)  
             if self.__adapter.getItemExpanded(childObject):
-                self.Expand(childItem)
-            
+                # Call Expand on the item instead of on the tree
+                # (self.Expand(childItem)) to prevent lots of events
+                # (EVT_TREE_ITEM_EXPANDING/EXPANDED) being sent
+                childItem.Expand()
+
     def _refreshObjectMinimally(self, *args):
         self._refreshAspects(('Columns', 'Colors', 'Font', 'Selection'), *args)
 
@@ -250,13 +256,13 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             
     def _refreshText(self, item, domainObject, columnIndex):
         text = self.__adapter.getItemText(domainObject, columnIndex)
-        self.SetItemText(item, text, columnIndex)                
+        item.SetText(columnIndex, text)
                 
     def _refreshImage(self, item, domainObject, columnIndex):
         for which in (wx.TreeItemIcon_Expanded, wx.TreeItemIcon_Normal):
             image = self.__adapter.getItemImage(domainObject, which, columnIndex)
             image = image if image >= 0 else -1
-            self.SetItemImage(item, image, column=columnIndex, which=which)
+            item.SetImage(columnIndex, image, which)
 
     def _refreshColors(self, item, domainObject):
         bgColor = domainObject.backgroundColor(recursive=True) or wx.NullColour
@@ -265,15 +271,11 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         self.SetItemTextColour(item, fgColor)
         
     def _refreshFont(self, item, domainObject):
-        defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        font = domainObject.font(recursive=True) or defaultFont
+        font = domainObject.font(recursive=True) or self.__defaultFont
         self.SetItemFont(item, font)
         
     def _refreshSelection(self, item, domainObject):
-        shouldBeSelected = domainObject in self.__selection
-        isSelected = self.IsSelected(item)
-        if shouldBeSelected != isSelected:
-            self.ToggleItemSelection(item)
+        item.SetHilight(domainObject in self.__selection)
 
     # Event handlers
     
@@ -362,7 +364,13 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             super(TreeListCtrl, self).InsertColumn(columnIndex, columnHeader, 
                 *args, **kwargs)
         self.SetColumnAlignment(columnIndex, format)
-    
+
+    def showColumn(self, *args, **kwargs):
+        ''' Stop editing before we hide or show a column to prevent problems
+            redrawing the tree list control contents. '''
+        self.StopEditing()
+        super(TreeListCtrl, self).showColumn(*args, **kwargs)
+
 
 class CheckTreeCtrl(TreeListCtrl):
     def __init__(self, parent, columns, selectCommand, checkCommand, 

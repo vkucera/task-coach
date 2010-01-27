@@ -107,6 +107,8 @@ iconlist = [
 ('incpriority', 'actions', '1uparrow', [16]),
 ('decpriority', 'actions', '1downarrow', [16]),
 ('uri', 'filesystems', 'www', [16]),
+('prev', 'actions', '1leftarrow', [16, 22]),
+('next', 'actions', '1rightarrow', [16, 22]),
 ]
 
 icons = {}

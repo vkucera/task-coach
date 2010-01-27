@@ -35,7 +35,7 @@ class TestWithTaskFile(base.Win32TestCase):
     def test_launch(self):
         self.failUnless(self.findWindow(r'^Task Coach file error$') is None,
                         'Error dialog appeared')
-        window = self.findWindow(r'^Task Coach')
+        window = self.findWindow(r'^Task Coach', tries=20)
         self.failIf(window is None,
                     'Cannot find main window')
         self.failUnless(window.title.endswith('testfile.tsk'),
@@ -45,7 +45,7 @@ class TestWithTaskFile(base.Win32TestCase):
         filename = self.args[0][1:-1] # Remove "'s
         timestamp = os.stat(filename).st_mtime
 
-        mainwindow = self.findWindow(r'^Task Coach')
+        mainwindow = self.findWindow(r'^Task Coach', tries=20)
         w = mainwindow.findChildren('wxWindowClassNR', 'HyperTreeList')
         
         # Double-click the first task to open the task edit dialog:

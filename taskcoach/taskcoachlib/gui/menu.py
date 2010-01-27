@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -84,8 +84,10 @@ class DynamicMenu(Menu):
         # handlers get a chance too:
         if hasattr(event, 'Skip'):
             event.Skip()
-        if self._window: # Check that window is still alive
+        try: # Prepare for menu or window to be destroyed
             self.updateMenu()
+        except wx.PyDeadObjectError:
+            pass
         
     def updateMenu(self):
         ''' Updating the menu consists of two steps: updating the menu item
@@ -397,6 +399,9 @@ class ViewViewerMenu(Menu):
             ViewViewer(menuText=_('T&imeline'),
                        helpText=_('Open a new tab with a viewer that displays a timeline of tasks and effort'),
                        viewerClass=viewer.TimelineViewer, **kwargs),
+            ViewViewer(menuText=_('&Calendar'),
+                       helpText=_('Open a new tab with a viewer that displays tasks in a calendar'),
+                       viewerClass=viewer.CalendarViewer, **kwargs),
             ViewViewer(menuText=_('&Category'),
                        helpText=_('Open a new tab with a viewer that displays categories'),
                        viewerClass=viewer.CategoryViewer, **kwargs)]

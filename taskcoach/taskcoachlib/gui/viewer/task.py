@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2007-2008 Jérôme Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -24,6 +26,7 @@ from taskcoachlib import patterns, command, widgets, domain
 from taskcoachlib.domain import task, date
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, render, dialog
+from taskcoachlib.thirdparty.calendar import wxSCHEDULER_NEXT, wxSCHEDULER_PREV
 import base, mixin
 
 
@@ -271,8 +274,10 @@ class TimelineViewer(BaseTaskViewer):
         
     def createWidget(self):
         self.rootNode = TimelineRootNode(self.presentation())
+        itemPopupMenu = self.createTaskPopupMenu()
+        self._popupMenus.append(itemPopupMenu)
         return widgets.Timeline(self, self.rootNode, self.onSelect, self.onEdit,
-                                self.createTaskPopupMenu())
+                                itemPopupMenu)
 
     def onEdit(self, item):
         if isinstance(item, task.Task):
@@ -389,10 +394,12 @@ class SquareTaskViewer(BaseTaskViewer):
         return class_ == task.Task
     
     def createWidget(self):
+        itemPopupMenu = self.createTaskPopupMenu()
+        self._popupMenus.append(itemPopupMenu)
         return widgets.SquareMap(self, SquareMapRootNode(self.presentation()), 
             self.onSelect, 
             uicommand.TaskEdit(taskList=self.presentation(), viewer=self),
-            self.createTaskPopupMenu())
+            itemPopupMenu)
         
     def getToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
@@ -479,7 +486,71 @@ class SquareTaskViewer(BaseTaskViewer):
         return self.renderer[self.__orderBy](value)
 
     
-    
+
+class CalendarViewer(BaseTaskViewer):
+    # XXXTODO: selection, icon, popup
+
+    defaultTitle = _('Calendar')
+    defaultBitmap = 'calendarviewer'
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('settingsSection', 'calendarviewer')
+        super(CalendarViewer, self).__init__(*args, **kwargs)
+
+        self.widget.SetViewType(self.settings.getint(self.settingsSection(), 'viewtype'))
+        self.typeUICommand.setChoice(self.settings.getint(self.settingsSection(), 'viewtype'))
+
+        start = self.settings.get(self.settingsSection(), 'viewdate')
+        if start:
+            dt = wx.DateTime.Now()
+            dt.ParseDateTime(start)
+            self.widget.SetDate(dt)
+
+        self.widget.SetWorkHours(self.settings.getint('view', 'efforthourstart'),
+                                 self.settings.getint('view', 'efforthourend'))
+
+        self.registerObserver(self.onWorkingHourChanged,
+                              eventType='view.efforthourstart')
+        self.registerObserver(self.onWorkingHourChanged,
+                             eventType='view.efforthourend')
+
+        for eventType in (task.Task.subjectChangedEventType(), 'task.startDate',
+            'task.dueDate', 'task.completionDate'):
+            self.registerObserver(self.onAttributeChanged, eventType)
+
+    def onWorkingHourChanged(self, event):
+        self.widget.SetWorkHours(self.settings.getint('view', 'efforthourstart'),
+                                 self.settings.getint('view', 'efforthourend'))
+
+    def createWidget(self):
+        return widgets.Calendar(self, self.presentation())
+
+    def getToolBarUICommands(self):
+        ''' UI commands to put on the toolbar of this viewer. '''
+        toolBarUICommands = super(CalendarViewer, self).getToolBarUICommands()
+        toolBarUICommands.insert(-2, None) # Separator
+        self.typeUICommand = uicommand.CalendarViewerTypeChoice(viewer=self)
+        toolBarUICommands.insert(-2, self.typeUICommand)
+        toolBarUICommands.insert(-2, uicommand.CalendarViewerPreviousPeriod(viewer=self,
+                                                                            bitmap='prev'))
+        toolBarUICommands.insert(-2, uicommand.CalendarViewerNextPeriod(viewer=self,
+                                                                        bitmap='next'))
+        return toolBarUICommands
+
+    def SetViewType(self, type_):
+        if type_ not in [wxSCHEDULER_NEXT, wxSCHEDULER_PREV]:
+            self.settings.set(self.settingsSection(), 'viewtype', str(type_))
+        self.widget.SetViewType(type_)
+        if type_ in [wxSCHEDULER_NEXT, wxSCHEDULER_PREV]:
+            dt = self.widget.GetDate()
+            now = wx.DateTime.Today()
+            if (dt.GetYear(), dt.GetMonth(), dt.GetDay()) == (now.GetYear(), now.GetMonth(), now.GetDay()):
+                toSave = ''
+            else:
+                toSave = dt.Format()
+            self.settings.set(self.settingsSection(), 'viewdate', toSave)
+
+
 class TaskViewer(mixin.AttachmentDropTargetMixin, 
                  mixin.SortableViewerForTasksMixin, 
                  mixin.NoteColumnMixin, mixin.AttachmentColumnMixin,
@@ -507,11 +578,14 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
     def createWidget(self):
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
+        itemPopupMenu = self.createTaskPopupMenu()
+        columnPopupMenu = self.createColumnPopupMenu()
+        self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         widget = widgets.TreeListCtrl(self, self.columns(), self.onSelect, 
             uicommand.TaskEdit(taskList=self.presentation(), viewer=self),
             uicommand.TaskDragAndDrop(taskList=self.presentation(), viewer=self),
             uicommand.EditSubject(viewer=self),
-            self.createTaskPopupMenu(), self.createColumnPopupMenu(),
+            itemPopupMenu, columnPopupMenu,
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(imageList) # pylint: disable-msg=E1101
         return widget    
