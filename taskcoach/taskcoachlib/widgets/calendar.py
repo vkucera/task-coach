@@ -42,10 +42,15 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
         EVT_SCHEDULE_ACTIVATED(self, self.OnActivation)
 
     def OnActivation(self, event):
+        if self.__selection:
+            self.taskMap[self.__selection[0].id()].setSelected(False)
+
         if event.schedule is None:
             self.__selection = []
         else:
             self.__selection = [event.schedule.task]
+            event.schedule.setSelected(True)
+
         wx.CallAfter(self.selectCommand)
         event.Skip()
 
@@ -68,6 +73,7 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
 
                 if task.id() == selectionId:
                     self.__selection = [task]
+                    schedule.setSelected(True)
 
         self.Add(schedules)
         wx.CallAfter(self.selectCommand)
@@ -123,8 +129,19 @@ class TaskSchedule(wxSchedule):
     def __init__(self, task):
         super(TaskSchedule, self).__init__()
 
+        self.__selected = False
+
         self.clientdata = task
         self.update()
+
+    def setSelected(self, selected):
+        self.__selected = selected
+        if selected:
+            color = self.color
+            r, g, b = color.Red(), color.Green(), color.Blue()
+            self.color = wx.Color(int(r / 2), int(g / 2), int((b + 255) / 2))
+        else:
+            self.color = wx.Color(*(self.task.backgroundColor() or (255, 255, 255)))
 
     @property
     def task(self):
