@@ -192,6 +192,7 @@ class wxSchedulerPaint(object):
                 newSchedule.start       = utils.copyDateTime(schedule.start)
                 newSchedule.end         = utils.copyDateTime(schedule.end)
                 newSchedule.notes       = schedule.notes
+                newSchedule.icon        = schedule.icon
                 newSchedule.clientdata  = schedule
                 
                 schedInDay.append(newSchedule)
@@ -307,6 +308,12 @@ class wxSchedulerPaint(object):
                 dc.DrawRectangle(startX, startY, schedW, endH)
                 
                 runY = startY
+
+                if schedule.icon:
+                   bitmap = wx.ArtProvider.GetBitmap(schedule.icon, wx.ART_FRAME_ICON, (16, 16))
+                   dc.DrawBitmap(bitmap, startX + 5, runY, True)
+                   runY += 20
+
                 for line in description:
                     dc.DrawText(line, startX + 5, runY)
                     runY += dc.GetTextExtent(line)[1]

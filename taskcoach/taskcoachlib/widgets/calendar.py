@@ -24,12 +24,13 @@ import tooltip
 
 
 class Calendar(tooltip.ToolTipMixin, wxScheduler):
-    def __init__(self, parent, taskList, onSelect, *args, **kwargs):
+    def __init__(self, parent, taskList, iconProvider,  onSelect, *args, **kwargs):
         self.getItemTooltipData = parent.getItemTooltipData
 
         super(Calendar, self).__init__(parent, wx.ID_ANY, *args, **kwargs)
 
         self.selectCommand = onSelect
+        self.iconProvider = iconProvider
 
         self.__tip = tooltip.SimpleToolTip(self)
         self.__selection = []
@@ -67,7 +68,7 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
 
         for task in self.taskList:
             if task.startDate() != Date() and task.dueDate() != Date() and not task.isDeleted():
-                schedule = TaskSchedule(task)
+                schedule = TaskSchedule(task, self.iconProvider)
                 schedules.append(schedule)
                 self.taskMap[task.id()] = schedule
 
@@ -90,7 +91,7 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
             elif self.taskMap.has_key(task.id()):
                 self.taskMap[task.id()].update()
             else:
-                schedule = TaskSchedule(task)
+                schedule = TaskSchedule(task, self.iconProvider)
                 self.taskMap[task.id()] = schedule
                 self.Add([schedule])
 
@@ -126,12 +127,13 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
 
 
 class TaskSchedule(wxSchedule):
-    def __init__(self, task):
+    def __init__(self, task, iconProvider):
         super(TaskSchedule, self).__init__()
 
         self.__selected = False
 
         self.clientdata = task
+        self.iconProvider = iconProvider
         self.update()
 
     def setSelected(self, selected):
@@ -162,5 +164,7 @@ class TaskSchedule(wxSchedule):
                 self.done = True
 
             self.color = wx.Color(*(self.task.backgroundColor() or (255, 255, 255)))
+
+            self.icon = self.iconProvider(self.task, False)
         finally:
             self.Thaw()

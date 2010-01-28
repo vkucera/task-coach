@@ -488,7 +488,7 @@ class SquareTaskViewer(BaseTaskViewer):
     
 
 class CalendarViewer(BaseTaskViewer):
-    # XXXTODO: icon, popup
+    # XXXTODO: popup
 
     defaultTitle = _('Calendar')
     defaultBitmap = 'date'
@@ -523,7 +523,7 @@ class CalendarViewer(BaseTaskViewer):
                                  self.settings.getint('view', 'efforthourend'))
 
     def createWidget(self):
-        return widgets.Calendar(self, self.presentation(), self.onSelect)
+        return widgets.Calendar(self, self.presentation(), self.iconName, self.onSelect)
 
     def getToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''

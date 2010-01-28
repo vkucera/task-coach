@@ -34,7 +34,8 @@ class wxSchedule(wx.EvtHandler):
         self._start = wx.DateTime().Now()
         self._category = "Work"
         self._clientdata = None
-        
+        self._icon = None
+
         #Need for freeze the event notification
         self._freeze = False 
     # -- Global methods
@@ -52,7 +53,7 @@ class wxSchedule(wx.EvtHandler):
         """
         data = dict( [ (attr, getattr(self, attr) ) 
                        for attr in ("category", "color", "description", 
-                                    "done", "end", "notes","start", "clientdata")
+                                    "done", "end", "notes","start", "icon", "clientdata")
                      ]
                    )
         return data
@@ -74,6 +75,7 @@ class wxSchedule(wx.EvtHandler):
         evt.end = self._end
         evt.notes = self._notes
         evt.start = self._start
+        evt.icon = self._icon
         evt.schedule = self
         evt.SetEventObject( self )
         
@@ -186,12 +188,19 @@ class wxSchedule(wx.EvtHandler):
         """
         return self._start
 
+    def getIcon(self):
+        return self._icon
+
+    def setIcon(self, icon):
+        self._icon = icon
+        self._eventNotification()
+
     def SetClientData(self, clientdata):
         self._clientdata = clientdata
     
     def GetClientData(self):
         return self._clientdata
-    
+
     category = property(getCategory, setCategory)
     color = property(getColor, setColor)
     description = property(getDescription, setDescription)
@@ -199,5 +208,6 @@ class wxSchedule(wx.EvtHandler):
     start = property(getStart, setStart)
     end = property(getEnd, setEnd)
     notes = property(getNotes, setNotes)
+    icon = property(getIcon, setIcon)
     clientdata = property(GetClientData, SetClientData)
         
