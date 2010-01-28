@@ -17,25 +17,44 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, operator
-from taskcoachlib.thirdparty.calendar import wxScheduler, wxSchedule
+from taskcoachlib.thirdparty.calendar import wxScheduler, wxSchedule, \
+    EVT_SCHEDULE_ACTIVATED
 from taskcoachlib.domain.date import Date
 import tooltip
 
 
 class Calendar(tooltip.ToolTipMixin, wxScheduler):
-    def __init__(self, parent, taskList, *args, **kwargs):
+    def __init__(self, parent, taskList, onSelect, *args, **kwargs):
         self.getItemTooltipData = parent.getItemTooltipData
 
         super(Calendar, self).__init__(parent, wx.ID_ANY, *args, **kwargs)
 
+        self.selectCommand = onSelect
+
         self.__tip = tooltip.SimpleToolTip(self)
+        self.__selection = []
 
         self.SetResizable(True)
 
         self.taskList = taskList
         self.RefreshAllItems(0)
 
+        EVT_SCHEDULE_ACTIVATED(self, self.OnActivation)
+
+    def OnActivation(self, event):
+        if event.schedule is None:
+            self.__selection = []
+        else:
+            self.__selection = [event.schedule.task]
+        wx.CallAfter(self.selectCommand)
+        event.Skip()
+
     def RefreshAllItems(self, count):
+        selectionId = None
+        if self.__selection:
+            selectionId = self.__selection[0].id()
+        self.__selection = []
+
         self.DeleteAll()
 
         schedules = []
@@ -47,7 +66,11 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
                 schedules.append(schedule)
                 self.taskMap[task.id()] = schedule
 
+                if task.id() == selectionId:
+                    self.__selection = [task]
+
         self.Add(schedules)
+        wx.CallAfter(self.selectCommand)
 
     def RefreshItems(self, *args):
         for task in args:
@@ -55,6 +78,9 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
                 if self.taskMap.has_key(task.id()):
                     self.Delete(self.taskMap[task.id()])
                     del self.taskMap[task.id()]
+                    if self.__selection and self.__selection[0].id() == task.id():
+                        self.__selection = []
+                        wx.CallAfter(self.selectCommand)
             elif self.taskMap.has_key(task.id()):
                 self.taskMap[task.id()].update()
             else:
@@ -87,7 +113,7 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
     MainWindow = property(GetMainWindow)
 
     def curselection(self):
-        return []
+        return self.__selection
 
     def isAnyItemCollapsable(self):
         return False
