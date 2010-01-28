@@ -139,9 +139,7 @@ class TaskSchedule(wxSchedule):
     def setSelected(self, selected):
         self.__selected = selected
         if selected:
-            color = self.color
-            r, g, b = color.Red(), color.Green(), color.Blue()
-            self.color = wx.Color(int(r / 2), int(g / 2), int((b + 255) / 2))
+            self.color = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
         else:
             self.color = wx.Color(*(self.task.backgroundColor() or (255, 255, 255)))
 
