@@ -540,7 +540,7 @@ class CalendarViewer(BaseTaskViewer):
         if type_ not in [wxSCHEDULER_NEXT, wxSCHEDULER_TODAY, wxSCHEDULER_PREV]:
             self.settings.set(self.settingsSection(), 'viewtype', str(type_))
         self.widget.SetViewType(type_)
-        if type_ in [wxSCHEDULER_NEXT, wxSCHEDULER_PREV]:
+        if type_ in [wxSCHEDULER_NEXT, wxSCHEDULER_TODAY, wxSCHEDULER_PREV]:
             dt = self.widget.GetDate()
             now = wx.DateTime.Today()
             if (dt.GetYear(), dt.GetMonth(), dt.GetDay()) == (now.GetYear(), now.GetMonth(), now.GetDay()):
