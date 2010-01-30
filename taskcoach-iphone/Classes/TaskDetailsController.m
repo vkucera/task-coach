@@ -286,6 +286,11 @@
 	[completionDateCell setDate:task.completionDate];
 }
 
+- (void)onTrackedTasksCount:(NSDictionary *)dict
+{
+	trackedTasksCount = [[dict objectForKey:@"total"] intValue];
+}
+
 - (void)onTrack:(ButtonCell *)cell
 {
 	if ([task currentEffort])
@@ -294,7 +299,21 @@
 	}
 	else
 	{
-		[task startTracking];
+		Statement *st = [[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM CurrentEffort WHERE ended IS NULL"];
+		trackedTasksCount = 0;
+		[st execWithTarget:self action:@selector(onTrackedTasksCount:)];
+
+		if (trackedTasksCount)
+		{
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Warning") message:[NSString stringWithFormat:_("There are %d task(s) currently tracked. Stop tracking them ?"), trackedTasksCount]
+														   delegate:self cancelButtonTitle:_("Cancel") otherButtonTitles:_("Yes"), _("No"), nil];
+			[alert show];
+			[alert release];
+		}
+		else
+		{
+			[task startTracking];
+		}
 	}
 
 	[self updateTrackButton];
@@ -407,6 +426,38 @@
 - (void)onSaveDescription:(UIBarButtonItem *)button
 {
 	[descriptionCell.textView resignFirstResponder];
+}
+
+// UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+	switch (buttonIndex)
+	{
+		case 0: // Cancel
+			break;
+		case 1: // Yes: stop tracking other tasks
+		{
+			NSString *now = [[TimeUtils instance] stringFromDate:[NSDate date]];
+			Statement *req;
+			if ([[Database connection] currentFile])
+			{
+				req = [[Database connection] statementWithSQL:@"UPDATE Effort SET ended=? WHERE ended IS NULL AND (fileId=? OR fileId IS NULL)"];
+				[req bindInteger:[[[Database connection] currentFile] intValue] atIndex:2];
+			}
+			else
+			{
+				req = [[Database connection] statementWithSQL:@"UPDATE Effort SET ended=? WHERE ended IS NULL AND fileId IS NULL"];
+			}
+			[req bindString:now atIndex:1];
+			[req exec];
+		}
+			// No break; intended
+		case 2: // No, don't stop tracking others
+			[task startTracking];
+			[self updateTrackButton];
+			break;
+	}
 }
 
 @end

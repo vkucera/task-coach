@@ -29,6 +29,7 @@
 	DescriptionCell *descriptionCell;
 
 	NSInteger categoryId;
+	NSInteger trackedTasksCount;
 }
 
 - initWithTask:(Task *)task category:(NSInteger)category;
