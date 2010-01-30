@@ -61,6 +61,7 @@ u'''        <P><IMG SRC="images/banner.png" ALT="Banner image"></P>
         credits at the left.</P>
         <P>Enjoy, <a href="mailto:%(author_email)s">%(author_unicode)s</a></P>
         <!-- AppStoreHQ:claim_code:258f8973d401112a215d79afdb82fef934ee56c9 -->
+        <!-- AppStoreHQ:developer_claim_code:d28c5a79965194fd06870ec80ab83114356b664d -->
         '''
 
 pages['donations'] = \
