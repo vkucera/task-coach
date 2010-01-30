@@ -318,7 +318,7 @@ class AuiManagedFrameWithNotebookAPI(AdvanceSelectionMixin, wx.Frame):
         paneInfo = aui.AuiPaneInfo()
         # To ensure we have a center pane we make the first pane the center pane:
         if self.manager.GetAllPanes():
-            paneInfo = paneInfo.CloseButton(True).Floatable(True).Right().BestSize((200,-1))
+            paneInfo = paneInfo.CloseButton(True).Floatable(True).Right().FloatingSize((300,200)).BestSize((200,200))
         else:
             paneInfo = paneInfo.CenterPane().CloseButton(False).Floatable(False)
         paneInfo = paneInfo.Name(name).Caption(caption).CaptionVisible().MaximizeButton().DestroyOnClose()

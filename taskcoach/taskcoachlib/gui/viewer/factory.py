@@ -67,10 +67,7 @@ class addOneViewer(addViewers):
         super(addOneViewer, self).__init__(viewerContainer, taskFile, settings)
         
     def numberOfViewersToAdd(self, viewerClass):
-        if viewerClass == self.viewerClass:
-            return 1
-        else:
-            return 0
+        return 1 if viewerClass == self.viewerClass else 0
         
     def viewerKwargs(self, viewerClass):
         return self.kwargs

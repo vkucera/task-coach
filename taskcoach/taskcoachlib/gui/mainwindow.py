@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
-Copyright (C) 2008-2009 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
+Copyright (C) 2008-2009 Jérôme Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -212,10 +214,14 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
                 # is changed between versions
                 perspective = ''
                 break
+
         self.manager.LoadPerspective(perspective)
-        # Ignore the titles that are saved in the perspective, they may be 
-        # incorrect when the user changes translation:
         for pane in self.manager.GetAllPanes():
+            # Prevent zombie panes by making sure all panes are visible
+            if not pane.IsShown():
+                pane.Show()
+            # Ignore the titles that are saved in the perspective, they may be
+            # incorrect when the user changes translation:
             if hasattr(pane.window, 'title'):
                 pane.Caption(pane.window.title())
         self.manager.Update()
