@@ -1,3 +1,6 @@
+
+http://code.google.com/p/wxscheduler/
+
 Welcome to wxScheduler, the new schedule library for python made, with wxpython! 
 This library do the view/add/draw work for show your events, like Evolution/ and other
 softwares.

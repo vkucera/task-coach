@@ -35,10 +35,12 @@ Release('0.78.3', 'January 26, 2010',
     bugsFixed=[
         Bug('''Free up resources (user objects and memory) on Windows when
 closing dialogs. The memory leak was caused by popup menu's in dialogs not
-being deleted.''', '2938091'),
+being deleted.''', '2938091', '2891350', '2560895', '2444185', '2214043'),
         Bug('''Close the inline subject edit control before showing or hiding
 columns in tree viewers, to prevent problems redrawing the tree items.''',
-'2940211')
+'2940211'),
+        Bug('''Prevent "zombie" viewers; viewers that are not visible but do
+still use processing power.''', '2932609')
         ]
     ),
 

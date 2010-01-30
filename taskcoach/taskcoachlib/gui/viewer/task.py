@@ -3,7 +3,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2008 Jérôme Laheurte <fraca7@free.fr>
+Copyright (C) 2007-2010 Jérôme Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -26,7 +26,7 @@ from taskcoachlib import patterns, command, widgets, domain
 from taskcoachlib.domain import task, date
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, render, dialog
-from taskcoachlib.thirdparty.calendar import wxSCHEDULER_NEXT, wxSCHEDULER_PREV
+from taskcoachlib.thirdparty.calendar import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, wxSCHEDULER_TODAY
 import base, mixin
 
 
@@ -488,10 +488,10 @@ class SquareTaskViewer(BaseTaskViewer):
     
 
 class CalendarViewer(BaseTaskViewer):
-    # XXXTODO: selection, icon, popup
+    # XXXTODO: popup
 
     defaultTitle = _('Calendar')
-    defaultBitmap = 'calendarviewer'
+    defaultBitmap = 'date'
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'calendarviewer')
@@ -523,7 +523,7 @@ class CalendarViewer(BaseTaskViewer):
                                  self.settings.getint('view', 'efforthourend'))
 
     def createWidget(self):
-        return widgets.Calendar(self, self.presentation())
+        return widgets.Calendar(self, self.presentation(), self.iconName, self.onSelect)
 
     def getToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
@@ -531,17 +531,16 @@ class CalendarViewer(BaseTaskViewer):
         toolBarUICommands.insert(-2, None) # Separator
         self.typeUICommand = uicommand.CalendarViewerTypeChoice(viewer=self)
         toolBarUICommands.insert(-2, self.typeUICommand)
-        toolBarUICommands.insert(-2, uicommand.CalendarViewerPreviousPeriod(viewer=self,
-                                                                            bitmap='prev'))
-        toolBarUICommands.insert(-2, uicommand.CalendarViewerNextPeriod(viewer=self,
-                                                                        bitmap='next'))
+        toolBarUICommands.insert(-2, uicommand.CalendarViewerPreviousPeriod(viewer=self))
+        toolBarUICommands.insert(-2, uicommand.CalendarViewerToday(viewer=self))
+        toolBarUICommands.insert(-2, uicommand.CalendarViewerNextPeriod(viewer=self))
         return toolBarUICommands
 
     def SetViewType(self, type_):
-        if type_ not in [wxSCHEDULER_NEXT, wxSCHEDULER_PREV]:
+        if type_ not in [wxSCHEDULER_NEXT, wxSCHEDULER_TODAY, wxSCHEDULER_PREV]:
             self.settings.set(self.settingsSection(), 'viewtype', str(type_))
         self.widget.SetViewType(type_)
-        if type_ in [wxSCHEDULER_NEXT, wxSCHEDULER_PREV]:
+        if type_ in [wxSCHEDULER_NEXT, wxSCHEDULER_TODAY, wxSCHEDULER_PREV]:
             dt = self.widget.GetDate()
             now = wx.DateTime.Today()
             if (dt.GetYear(), dt.GetMonth(), dt.GetDay()) == (now.GetYear(), now.GetMonth(), now.GetDay()):

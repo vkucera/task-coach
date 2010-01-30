@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2007-2010 Jérôme Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -24,7 +26,7 @@ from taskcoachlib.i18n import _
 from taskcoachlib.domain import base, task, attachment, effort
 from taskcoachlib.mailer import writeMail
 from taskcoachlib.thirdparty.calendar import wxSCHEDULER_DAILY, wxSCHEDULER_WEEKLY, \
-     wxSCHEDULER_MONTHLY, wxSCHEDULER_NEXT, wxSCHEDULER_PREV
+     wxSCHEDULER_MONTHLY, wxSCHEDULER_NEXT, wxSCHEDULER_PREV, wxSCHEDULER_TODAY
 import dialog, render, viewer, printer
 
 
@@ -2164,14 +2166,33 @@ class CalendarViewerTypeChoice(ToolbarChoiceCommandMixin, ViewerCommand):
 
 
 class CalendarViewerNextPeriod(ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(CalendarViewerNextPeriod, self).__init__( \
+            menuText=_('&Next period'),
+            helpText=_('Show next period'), bitmap='next', *args, **kwargs)
+
     def doCommand(self, event):
         self.viewer.SetViewType(wxSCHEDULER_NEXT)
 
 
 class CalendarViewerPreviousPeriod(ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(CalendarViewerPreviousPeriod, self).__init__( \
+            menuText=_('&Previous period'),
+            helpText=_('Show previous period'), bitmap='prev', *args, **kwargs)
+            
     def doCommand(self, event):
         self.viewer.SetViewType(wxSCHEDULER_PREV)
 
+
+class CalendarViewerToday(ViewerCommand):
+    def __init__(self, *args, **kwargs):
+        super(CalendarViewerToday, self).__init__(menuText=_('&Today'),
+            helpText=_('Show today'), bitmap='date', *args, **kwargs)
+            
+    def doCommand(self, event):
+        self.viewer.SetViewType(wxSCHEDULER_TODAY)
+        
 
 class ToggleAutoColumnResizing(UICheckCommand, ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
