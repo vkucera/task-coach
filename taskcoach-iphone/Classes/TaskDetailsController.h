@@ -25,6 +25,7 @@
 	DateCell *startDateCell;
 	DateCell *dueDateCell;
 	DateCell *completionDateCell;
+	UITableViewCell *effortsCell;
 	
 	DescriptionCell *descriptionCell;
 

@@ -15,12 +15,6 @@ static Statement *_saveStatement = nil;
 
 @implementation Effort
 
-- (Task *)task
-{
-	// XXXTODO
-	return nil;
-}
-
 - (NSDate *)started
 {
 	return started;
@@ -28,7 +22,8 @@ static Statement *_saveStatement = nil;
 
 - (void)setStarted:(NSDate *)theDate
 {
-	started = theDate;
+	[started release];
+	started = [theDate retain];
 	[self setStatus:STATUS_MODIFIED];
 }
 
@@ -39,7 +34,8 @@ static Statement *_saveStatement = nil;
 
 - (void)setEnded:(NSDate *)theDate
 {
-	ended = theDate;
+	[ended release];
+	ended = [theDate retain];
 	[self setStatus:STATUS_MODIFIED];
 }
 
@@ -47,8 +43,8 @@ static Statement *_saveStatement = nil;
 {
 	if (self = [super initWithId:ID fileId:theFileId name:theName status:theStatus taskCoachId:tcId])
 	{
-		self.started = _started;
-		self.ended = _ended;
+		started = [_started retain];
+		ended = [_ended retain];
 		taskId = [_taskId retain];
 	}
 	
@@ -57,8 +53,8 @@ static Statement *_saveStatement = nil;
 
 - (void)dealloc
 {
-	self.started = nil;
-	self.ended = nil;
+	[started release];
+	[ended release];
 	[taskId release];
 	
 	[super dealloc];

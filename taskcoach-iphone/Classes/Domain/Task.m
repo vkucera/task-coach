@@ -194,6 +194,29 @@ static Statement *_saveStatement = NULL;
 	return [_effort autorelease];
 }
 
+- (void)onEffort:(NSDictionary *)dict
+{
+	NSDate *ended = nil;
+	if ([dict objectForKey:@"ended"])
+		ended = [[TimeUtils instance] dateFromString:[dict objectForKey:@"ended"]];
+
+	[_efforts addObject:[[[Effort alloc] initWithId:[[dict objectForKey:@"id"] intValue] fileId:[dict objectForKey:@"fileId"] name:[dict objectForKey:@"name"]
+											 status:[[dict objectForKey:@"status"] intValue] taskCoachId:[dict objectForKey:@"taskCoachId"]
+											started:[[TimeUtils instance] dateFromString:[dict objectForKey:@"started"]]
+											  ended:ended
+											 taskId:[dict objectForKey:@"taskId"]] autorelease]];
+}
+
+- (NSArray *)efforts
+{
+	_efforts = [[NSMutableArray alloc] init];
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM CurrentEffort WHERE taskId=%d AND status != %d ORDER BY started DESC", objectId, STATUS_DELETED]] execWithTarget:self action:@selector(onEffort:)];
+	NSArray *result = [NSArray arrayWithArray:_efforts];
+	[_efforts release];
+	_efforts = nil;
+	return result;
+}
+
 - (void)startTracking
 {
 	// First, stop tracking if applicable. This shouldn't happen though...

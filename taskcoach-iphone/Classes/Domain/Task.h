@@ -33,6 +33,7 @@
 	BOOL hasCat;
 	NSInteger ccount;
 	NSString *_effort;
+	NSMutableArray *_efforts;
 }
 
 @property (nonatomic, retain) NSString *description;
@@ -54,6 +55,7 @@
 - (NSInteger)childrenCount;
 
 - (Effort *)currentEffort;
+- (NSArray *)efforts;
 - (void)startTracking;
 - (void)stopTracking;
 

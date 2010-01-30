@@ -9,6 +9,7 @@
 #import "TaskDetailsController.h"
 #import "DatePickerViewController.h"
 #import "TaskCategoryPickerController.h"
+#import "EffortView.h"
 
 #import "Task.h"
 
@@ -49,6 +50,26 @@
 		[effortCell.button setTitle:_("Stop tracking") forState:UIControlStateNormal];
 	else
 		[effortCell.button setTitle:_("Start tracking") forState:UIControlStateNormal];
+
+	// Efforts can only be added
+	NSInteger effortCount = [[task efforts] count];
+
+	if (effortCount)
+	{
+		if (!effortsCell)
+		{
+			effortsCell = [[UITableViewCell alloc] initWithFrame:CGRectZero];
+			effortsCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			[cells addObject:effortsCell];
+			[effortsCell release];
+			effortsCell.textLabel.text = [NSString stringWithFormat:_("%d effort(s)"), effortCount];
+			[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:[cells count] - 1 inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+		}
+		else
+		{
+			effortsCell.textLabel.text = [NSString stringWithFormat:_("%d effort(s)"), effortCount];
+		}
+	}
 }
 
 - initWithTask:(Task *)theTask category:(NSInteger)category
@@ -61,7 +82,6 @@
 		cells = [[NSMutableArray alloc] initWithCapacity:5];
 
 		effortCell = [[CellFactory cellFactory] createButtonCell];
-		[self updateTrackButton];
 		[effortCell.button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
 		[effortCell setTarget:self action:@selector(onTrack:)];
 		[cells addObject:effortCell];
@@ -105,6 +125,8 @@
 		completionDateCell.label.text = _("Completion");
 		[completionDateCell setDate:task.completionDate];
 		[cells addObject:completionDateCell];
+
+		[self updateTrackButton];
 	}
 
 	return self;
@@ -363,6 +385,12 @@
 	else if (cell == completionDateCell)
 	{
 		ctrl = [[DatePickerViewController alloc] initWithDate:task.completionDate target:self action:@selector(onPickCompletionDate:)];
+	}
+	else if (cell = effortsCell)
+	{
+		EffortView *c = [[EffortView alloc] initWithTask:task];
+		[self.navigationController pushViewController:c animated:YES];
+		[c release];
 	}
 
 	if (ctrl)

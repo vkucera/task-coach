@@ -18,7 +18,6 @@
 
 @property (nonatomic, retain) NSDate *started;
 @property (nonatomic, retain) NSDate *ended;
-@property (nonatomic, readonly) Task *task;
 
 - initWithId:(NSInteger)ID fileId:(NSNumber *)fileId name:(NSString *)name status:(NSInteger)status taskCoachId:(NSString *)taskCoachId started:(NSDate *)started ended:(NSDate *)ended taskId:(NSNumber *)taskId;
 
