@@ -35,12 +35,23 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
         self.__tip = tooltip.SimpleToolTip(self)
         self.__selection = []
 
+        self.__showNoStartDate = False
+        self.__showNoDueDate = False
+
         self.SetResizable(True)
 
         self.taskList = taskList
         self.RefreshAllItems(0)
 
         EVT_SCHEDULE_ACTIVATED(self, self.OnActivation)
+
+    def SetShowNoStartDate(self, doShow):
+        self.__showNoStartDate = doShow
+        self.RefreshAllItems(0)
+
+    def SetShowNoDueDate(self, doShow):
+        self.__showNoDueDate = doShow
+        self.RefreshAllItems(0)
 
     def OnActivation(self, event):
         if self.__selection:
@@ -68,8 +79,10 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
 
         for task in self.taskList:
             if not task.isDeleted():
-                if task.startDate() == Date() and task.dueDate() == Date():
-                    # Nothing to see...
+                if task.startDate() == Date() and not self.__showNoStartDate:
+                    continue
+
+                if task.dueDate() == Date() and not self.__showNoDueDate:
                     continue
 
                 schedule = TaskSchedule(task, self.iconProvider)
@@ -85,19 +98,34 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
 
     def RefreshItems(self, *args):
         for task in args:
-            if (task.startDate() == Date() and task.dueDate() == Date()) or task.isDeleted():
+            doShow = True
+
+            if task.isDeleted():
+                doShow = False
+
+            if task.startDate() == Date() and task.dueDate() == Date():
+                doShow = False
+
+            if task.startDate() == Date() and not self.__showNoStartDate:
+                doShow = False
+
+            if task.dueDate() == Date() and not self.__showNoDueDate:
+                doShow = False
+
+            if doShow:
+                if self.taskMap.has_key(task.id()):
+                    self.taskMap[task.id()].update()
+                else:
+                    schedule = TaskSchedule(task, self.iconProvider)
+                    self.taskMap[task.id()] = schedule
+                    self.Add([schedule])
+            else:
                 if self.taskMap.has_key(task.id()):
                     self.Delete(self.taskMap[task.id()])
                     del self.taskMap[task.id()]
                     if self.__selection and self.__selection[0].id() == task.id():
                         self.__selection = []
                         wx.CallAfter(self.selectCommand)
-            elif self.taskMap.has_key(task.id()):
-                self.taskMap[task.id()].update()
-            else:
-                schedule = TaskSchedule(task, self.iconProvider)
-                self.taskMap[task.id()] = schedule
-                self.Add([schedule])
 
     def GetItemCount(self):
         return len(self.GetSchedules())

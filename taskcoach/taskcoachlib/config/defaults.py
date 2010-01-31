@@ -93,6 +93,8 @@ defaults = { \
     'title': '',
     'viewtype': '1',
     'viewdate': '',
+    'shownostart': 'False',
+    'shownodue': 'False',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',

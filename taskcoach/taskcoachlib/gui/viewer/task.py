@@ -502,6 +502,8 @@ class CalendarViewer(BaseTaskViewer):
         self.widget.SetStyle(wxSCHEDULER_HORIZONTAL)
 
         self.typeUICommand.setChoice(self.settings.getint(self.settingsSection(), 'viewtype'))
+        self.filterChoiceUICommand.setChoice((self.settings.getboolean(self.settingsSection(), 'shownostart'),
+                                              self.settings.getboolean(self.settingsSection(), 'shownodue')))
 
         start = self.settings.get(self.settingsSection(), 'viewdate')
         if start:
@@ -511,6 +513,9 @@ class CalendarViewer(BaseTaskViewer):
 
         self.widget.SetWorkHours(self.settings.getint('view', 'efforthourstart'),
                                  self.settings.getint('view', 'efforthourend'))
+
+        self.widget.SetShowNoStartDate(self.settings.getboolean(self.settingsSection(), 'shownostart'))
+        self.widget.SetShowNoDueDate(self.settings.getboolean(self.settingsSection(), 'shownodue'))
 
         self.registerObserver(self.onWorkingHourChanged,
                               eventType='view.efforthourstart')
@@ -537,6 +542,8 @@ class CalendarViewer(BaseTaskViewer):
         toolBarUICommands.insert(-2, uicommand.CalendarViewerPreviousPeriod(viewer=self))
         toolBarUICommands.insert(-2, uicommand.CalendarViewerToday(viewer=self))
         toolBarUICommands.insert(-2, uicommand.CalendarViewerNextPeriod(viewer=self))
+        self.filterChoiceUICommand = uicommand.CalendarViewerTaskFilterChoice(viewer=self)
+        toolBarUICommands.insert(-2, self.filterChoiceUICommand)
         return toolBarUICommands
 
     def SetViewType(self, type_):
@@ -551,6 +558,14 @@ class CalendarViewer(BaseTaskViewer):
             else:
                 toSave = dt.Format()
             self.settings.set(self.settingsSection(), 'viewdate', toSave)
+
+    def SetShowNoStartDate(self, doShow):
+        self.settings.setboolean(self.settingsSection(), 'shownostart', doShow)
+        self.widget.SetShowNoStartDate(doShow)
+
+    def SetShowNoDueDate(self, doShow):
+        self.settings.setboolean(self.settingsSection(), 'shownodue', doShow)
+        self.widget.SetShowNoDueDate(doShow)
 
 
 class TaskViewer(mixin.AttachmentDropTargetMixin, 

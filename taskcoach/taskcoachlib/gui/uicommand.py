@@ -2192,7 +2192,16 @@ class CalendarViewerToday(ViewerCommand):
             
     def doCommand(self, event):
         self.viewer.SetViewType(wxSCHEDULER_TODAY)
-        
+
+
+class CalendarViewerTaskFilterChoice(ToolbarChoiceCommandMixin, ViewerCommand):
+    choiceLabels = [_('Start and due date'), _('Start date'), _('Due date'), _('All')]
+    choiceData = [(True, True), (True, False), (False, True), (False, False)]
+
+    def doChoice(self, (showStart, showDue)):
+        self.viewer.SetShowNoStartDate(not showStart)
+        self.viewer.SetShowNoDueDate(not showDue)
+
 
 class ToggleAutoColumnResizing(UICheckCommand, ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
