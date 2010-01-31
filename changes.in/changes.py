@@ -26,6 +26,8 @@ releases = [
 Release('0.78.3', 'January 31, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bug('''In some cases, when typing dates in the editor, they would
+be reset to the current day.''', '2942425'),
         Bug('''Free up resources (user objects and memory) on Windows when
 closing dialogs. The memory leak was caused by popup menu's in dialogs not
 being deleted.''', '2938091', '2891350', '2560895', '2444185', '2214043'),
