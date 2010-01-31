@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------
-winPenPack Project § X-Software collection
-Copyright © 2005-2010 Danilo Leggieri and winPenPack Development Team
+winPenPack Project ï¿½ X-Software collection
+Copyright ï¿½ 2005-2010 Danilo Leggieri and winPenPack Development Team
 ---------------------------------------------------------------------
 
 http://www.winpenpack.com
@@ -112,7 +112,7 @@ Modifications between 1.1 and 1.3 releases:
 - (BugFix) ShowSplash bug: on Vista and Win2000, the Splash Screen
   was not visualized.
 
-- (BugFix) WriteToReg: the "%%" string was written as "%"
+- (BugFix) WriteToReg: the "%%%%" string was written as "%%"
   on the .reg file.
 
 - (BugFix) MultipleIstance=false (with Java) bug: used with Java 
