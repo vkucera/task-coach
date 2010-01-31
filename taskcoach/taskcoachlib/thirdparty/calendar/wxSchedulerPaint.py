@@ -39,6 +39,8 @@ class wxSchedulerPaint( object ):
 		
 		self._hourH		= 0
 		self._offsetTop	= 0
+
+		self._style = wxSCHEDULER_VERTICAL
 				
 	def _doClickControl( self, point ):
 		self._processEvt( wxEVT_COMMAND_SCHEDULE_ACTIVATED, point )
@@ -177,22 +179,82 @@ class wxSchedulerPaint( object ):
 		
 		for schedule in schedules:
 			if schedule.start.IsSameDate( day ) | schedule.end.IsSameDate( day ) | day.IsBetween( schedule.start, schedule.end ):
-				newSchedule = wxSchedule()
-				
-				newSchedule.category	= schedule.category
-				newSchedule.color		= schedule.color
-				newSchedule.description = schedule.description
-				newSchedule.done		= schedule.done
-				newSchedule.start	 	= utils.copyDateTime( schedule.start )
-				newSchedule.end		 	= utils.copyDateTime( schedule.end )
-				newSchedule.notes	 	= schedule.notes
+				newSchedule = schedule.Clone()
+				# This is used to find the original schedule object in _findSchedule.
 				newSchedule.clientdata	= schedule
-				newSchedule.icon	 	= schedule.icon
-				
+
 				schedInDay.append( newSchedule )
 		
 		return schedInDay
-		
+
+	def _getSchedInPeriod( self, schedules, start, end):
+		"""
+		Returns a list of copied schedules that intersect with
+		the  period  defined by	 'start'  and 'end'.  Schedule
+		start and end are trimmed so as to lie between 'start'
+		and 'end'.
+		"""
+		results = []
+
+		for schedule in schedules:
+			if schedule.start.IsLaterThan(end):
+				continue
+                        if start.IsLaterThan(schedule.end):
+				continue
+
+			newSchedule = schedule.Clone()
+			# This is used to find the original schedule object in _findSchedule.
+			newSchedule.clientdata	= schedule
+
+			if start.IsLaterThan(schedule.start):
+				newSchedule.start = utils.copyDateTime(start)
+			if schedule.end.IsLaterThan(end):
+				newSchedule.end = utils.copyDateTime(end)
+
+                        results.append(newSchedule)
+
+		return results
+
+	def _splitSchedules( self, schedules ):
+		"""
+		Returns	 a list	 of lists  of schedules.  Schedules in
+		each list are guaranteed not to collide.
+		"""
+		results = []
+		current = []
+
+		schedules = schedules[:] # Don't alter original list
+		def compare(a, b):
+			if a.start.IsEqualTo(b.start):
+				return 0
+			if a.start.IsEarlierThan(b.start):
+				return -1
+			return 1
+		schedules.sort(compare)
+
+		def findNext(schedule):
+			# Among schedules that start after this one ends, find the "nearest".
+			candidateSchedule = None
+			minDelta = None
+			for sched in schedules:
+				if sched.start.IsLaterThan(schedule.end):
+					delta = sched.start.Subtract(schedule.end)
+					if minDelta is None or minDelta > delta:
+						minDelta = delta
+						candidateSchedule = sched
+			return candidateSchedule
+
+		while schedules:
+			schedule = schedules[0]
+			while schedule:
+				current.append(schedule)
+				schedules.remove(schedule)
+				schedule = findNext(schedule)
+			results.append(current)
+			current = []
+
+		return results
+
 	def _paintDay( self, dc, day, offsetX, width, hourH ):
 		"""
 		Draw column width schedules
@@ -314,14 +376,121 @@ class wxSchedulerPaint( object ):
 					runY += dc.GetTextExtent( line )[1]
 				
 				self._schedulesCoords.append( ( schedule, wx.Point( startX, startY ), wx.Point( startX + schedW, startY + endH ) ) )
-					
+
+	def _paintPeriodHorizontal( self, dc, start, end, x, y, width ):
+		"""
+		Draws  schedules  as  horizontal bars,	with  variable
+		height, depending on their description.
+		"""
+		blocks = self._splitSchedules(self._getSchedInPeriod(self._schedules, start, end))
+
+		font = dc.GetFont()
+		font.SetPointSize( 8 )
+		font.SetWeight( wx.FONTWEIGHT_NORMAL )
+		dc.SetFont( font )
+
+		offsetY = y + SCHEDULE_INSIDE_MARGIN
+
+		totalSpan = end.Subtract(start).GetMinutes()
+
+		offsetY += SCHEDULE_INSIDE_MARGIN
+
+		for block in blocks:
+			slots = len( block )
+			maxDY = 0
+
+			for schedule in block:
+				slots = len( block )
+				spanStart = schedule.start.Subtract(start).GetMinutes()
+				spanEnd = schedule.end.Subtract(start).GetMinutes()
+
+				startX = x + int(1.0 * width * spanStart / totalSpan)
+				endX = y + int(1.0 * width * spanEnd / totalSpan)
+
+				text = self._shrinkText(dc, schedule.description, endX - startX - 2 * SCHEDULE_INSIDE_MARGIN, SCHEDULE_MAX_HEIGHT)
+				textW, textH = 0, 0
+				for line in text:
+					tW, tH = dc.GetTextExtent(line)
+					textW = max(textW, tW)
+					textH += tH
+
+				dc.SetBrush(wx.Brush(schedule.color))
+				dc.DrawRectangle(startX, offsetY, endX - startX, textH + 2 * SCHEDULE_INSIDE_MARGIN)
+				self._schedulesCoords.append((schedule, wx.Point(startX, offsetY),
+							      wx.Point(endX, offsetY + textH + 2 * SCHEDULE_INSIDE_MARGIN)))
+
+				localOffset = 0
+				for line in text:
+					dc.DrawText(line, startX + SCHEDULE_INSIDE_MARGIN, offsetY + localOffset + SCHEDULE_INSIDE_MARGIN)
+					localOffset += dc.GetTextExtent(line)[1]
+
+				maxDY = max(maxDY, textH)
+
+				offsetY += maxDY + 3 * SCHEDULE_INSIDE_MARGIN
+
 	def _paintDaily( self, dc, day ):
 		"""
 		Display day schedules
 		"""
 		hourH = self._paintHours( dc, self._day_size.height )
 		self._paintDay( dc, self.GetDate(), LEFT_COLUMN_SIZE, self._day_size.width, hourH )
-		
+
+	def _paintDailyHorizontal( self, dc, day ):
+		startHours = utils.copyDate( day )
+		startHours.SetHour( self._lstDisplayedHours[0].GetHour() )
+		startHours.SetMinute( self._lstDisplayedHours[0].GetMinute() )
+		startHours.SetSecond(0)
+
+		endHours = utils.copyDate( day )
+		endHours.SetHour( self._lstDisplayedHours[ - 1].GetHour() )
+		endHours.SetMinute( self._lstDisplayedHours[ - 1].GetMinute() )
+		endHours.SetSecond(0)
+
+		x = LEFT_COLUMN_SIZE
+		totalSpan = endHours.Subtract(startHours).GetMinutes()
+
+		offsetY = 0
+		width = self._day_size.width
+
+		dc.SetBrush( wx.Brush( DAY_BACKGROUND_BRUSH ) )
+		dc.DrawRectangle(x, 0, width, 32767)
+
+		text = '%s %s %s' % ( day.GetWeekDayName( day.GetWeekDay() )[:3], day.GetDay(), day.GetMonthName( day.GetMonth() ) )
+		textW, textH = dc.GetTextExtent( text )
+		dc.DrawText(text, int((width - textW) / 2), offsetY)
+		offsetY += textH + SCHEDULE_INSIDE_MARGIN
+
+		# Draw hours
+		hourWidth = width / int(totalSpan / 60)
+
+		maxDY = 0
+		for i in xrange(startHours.GetHour(), endHours.GetHour() + 1):
+			startX = x + int(1.0 * width * (i - startHours.GetHour()) * 60 / totalSpan)
+			dc.DrawText('%d' % i, startX + 2, offsetY + 2)
+			maxDY = max(maxDY, dc.GetTextExtent('%d' % i)[1])
+			dc.DrawLine(startX, offsetY, startX, 32767) # Humph
+		for i in xrange(startHours.GetHour(), endHours.GetHour()):
+			startX = x + int(1.0 * width * (i - startHours.GetHour()) * 60 / totalSpan)
+			dc.DrawLine(startX + hourWidth / 2, offsetY + maxDY + 1, startX + hourWidth / 2, 32767)
+
+		offsetY += maxDY
+		dc.DrawLine(x, offsetY + 1, x + width, offsetY + 1)
+
+		self._paintPeriodHorizontal(dc, startHours, endHours, x, offsetY, width)
+
+		# Gray out non worked hours
+		dc.SetBrush(wx.Brush(wx.SystemSettings_GetColour(wx.SYS_COLOUR_INACTIVEBORDER)))
+
+		startPause = utils.copyDateTime(self._startingPauseHour)
+		startPause.SetSecond(0)
+
+		endPause = utils.copyDateTime(self._endingPauseHour)
+		endPause.SetSecond(0)
+
+		startSpan = startPause.Subtract(startHours).GetMinutes()
+		dc.DrawRectangle(x + int(1.0 * width * startSpan / totalSpan), offsetY,
+				 int(1.0 * width * (endPause.Subtract(startHours).GetMinutes() - startSpan) / totalSpan) + 1, 32767)
+
 	def _paintHours( self, dc, height ):
 		"""
 		Draw left column with hours
@@ -429,7 +598,11 @@ class wxSchedulerPaint( object ):
 							
 							self._schedulesCoords.append( ( schedule, wx.Point( x, y ), wx.Point( x + textW, y + textH ) ) )
 							y += textH 
-		
+
+	def _paintMonthlyHorizontal( self, dc, day ):
+		# XXXTODO
+		dc.DrawText('Not yet implemented', 10, 10)
+
 	def _paintWeekly( self, dc, day ):
 		"""
 		Display weekly schedule
@@ -443,11 +616,60 @@ class wxSchedulerPaint( object ):
 		for weekday in xrange( 7 ):
 			# Must do a copy of wxDateTime object else I append a reference of 
 			# same object mupliplied for 7
-			days.append( utils.copyDateTime( day.SetToWeekDayInSameWeek( weekday, self._weekstart ) ) )
+			days.append( utils.copyDateTime( utils.setToWeekDayInSameWeek( day, weekday, self._weekstart ) ) )
 			
 		for weekday, day in enumerate( days ):
 			self._paintDay( dc, day, LEFT_COLUMN_SIZE + width * weekday, width, hourH )
-	
+
+	def _paintWeeklyHorizontal( self, dc, day ):
+		"""
+		Display weekly schedule, in horizontal mode
+		"""
+
+		width = self._week_size.width
+		x = LEFT_COLUMN_SIZE
+		offsetY = SCHEDULE_INSIDE_MARGIN
+
+		dc.SetBrush( wx.Brush( DAY_BACKGROUND_BRUSH ) )
+		dc.DrawRectangle(x, 0, width, 32767)
+
+		startDay = utils.copyDateTime(utils.setToWeekDayInSameWeek(day, 0, self._weekstart))
+
+		endDay = utils.copyDateTime(utils.setToWeekDayInSameWeek(day, 6, self._weekstart))
+		endDay.SetHour(23)
+		endDay.SetMinute(59)
+		endDay.SetSecond(59)
+
+		totalSpan = endDay.Subtract(startDay).GetMinutes()
+
+		font = dc.GetFont()
+		font.SetPointSize( 8 )
+		font.SetWeight( wx.FONTWEIGHT_BOLD )
+		dc.SetFont( font )
+
+		maxDY = 0
+		for dayN in xrange(7):
+			startX = x + int(1.0 * width * dayN * 24 * 60 / totalSpan)
+			endX = x + int(1.0 * width * (dayN + 1) * 24 * 60 / totalSpan)
+
+			theDay = utils.copyDateTime(utils.setToWeekDayInSameWeek(day, dayN, self._weekstart))
+
+			text = '%s %s %s' % ( theDay.GetWeekDayName( theDay.GetWeekDay() )[:3], theDay.GetDay(), theDay.GetMonthName( theDay.GetMonth() ) )
+			textW, textH = dc.GetTextExtent( text )
+			dc.DrawText(text, startX + int((endX - startX - textW) / 2), offsetY)
+			maxDY = max(maxDY, textH)
+
+		for dayN in xrange(7):
+			endX = x + int(1.0 * width * (dayN + 1) * 24 * 60 / totalSpan)
+			dc.DrawLine(endX, offsetY, endX, 32767)
+
+		offsetY += maxDY
+		dc.DrawLine(x, offsetY + 4, x + width, offsetY + 4)
+
+		offsetY += maxDY + SCHEDULE_INSIDE_MARGIN
+
+		self._paintPeriodHorizontal(dc, startDay, endDay, x, offsetY, width)
+
 	def _processEvt( self, commandEvent, point ):
 		""" 
 		Process the command event passed at the given point
@@ -545,8 +767,8 @@ class wxSchedulerPaint( object ):
 		if self._viewType == wxSCHEDULER_DAILY:
 			pass
 		elif self._viewType == wxSCHEDULER_WEEKLY:
-			min.SetToWeekDayInSameWeek( 0, 2 )
-			max.SetToWeekDayInSameWeek( 6, 2 )
+			utils.setToWeekDayInSameWeek( min, 0, wxSCHEDULER_WEEKSTART_SUNDAY )
+			utils.SetToWeekDayInSameWeek( max, 6, wxSCHEDULER_WEEKSTART_SUNDAY )
 		elif self._viewType == wxSCHEDULER_MONTHLY:
 			min.SetDay( 1 )
 			max.SetToLastMonthDay()
@@ -603,7 +825,7 @@ class wxSchedulerPaint( object ):
 		return size
 		
 	def OnPaint( self, evt = None ):
-		self._schedulesCoords = list()  
+		self._schedulesCoords = list()	
 
 		# Do the draw
 		if self._dc == None:
@@ -625,22 +847,44 @@ class wxSchedulerPaint( object ):
 		dc.Clear()
 
 		dc.SetDeviceOrigin( -scrollX, - scrollY )
-		
+
 		# Get a copy of wxDateTime object
 		day = utils.copyDate( self.GetDate() )
-		
-		if self._viewType == wxSCHEDULER_DAILY:
-			self._paintDaily( dc, day )
-			
-		elif self._viewType == wxSCHEDULER_WEEKLY:
-			self._paintWeekly( dc, day )
-			
-		elif self._viewType == wxSCHEDULER_MONTHLY:
-			self._paintMonthly( dc, day )
-	
+
+		if self._style == wxSCHEDULER_VERTICAL:
+			if self._viewType == wxSCHEDULER_DAILY:
+				self._paintDaily( dc, day )
+
+			elif self._viewType == wxSCHEDULER_WEEKLY:
+				self._paintWeekly( dc, day )
+
+			elif self._viewType == wxSCHEDULER_MONTHLY:
+				self._paintMonthly( dc, day )
+		else:
+			if self._viewType == wxSCHEDULER_DAILY:
+				self._paintDailyHorizontal( dc, day )
+
+			elif self._viewType == wxSCHEDULER_WEEKLY:
+				self._paintWeeklyHorizontal( dc, day )
+
+			elif self._viewType == wxSCHEDULER_MONTHLY:
+				self._paintMonthlyHorizontal( dc, day )
+
+
 	def SetResizable( self, value ):
 		"""
 		Draw proportionally of actual space but not down on minimun sizes
 		The actual sze is retrieved by GetSize() method of derived object
 		"""
 		self._resizable = bool( value )
+
+	def SetStyle(self, style):
+		"""
+		Sets  the drawing  style.  Values  for 'style'	may be
+		wxSCHEDULER_VERTICAL	   (the	      default)	    or
+		wxSCHEDULER_HORIZONTAL.
+		"""
+		self._style = style
+
+	def GetStyle( self ):
+		return self._style

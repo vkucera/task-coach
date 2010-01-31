@@ -4,6 +4,8 @@
 import warnings
 import wx
 
+from wxScheduleUtils import copyDateTime
+
 #New event
 wxEVT_COMMAND_SCHEDULE_CHANGE = wx.NewEventType()
 EVT_SCHEDULE_CHANGE = wx.PyEventBinder( wxEVT_COMMAND_SCHEDULE_CHANGE )
@@ -47,13 +49,15 @@ class wxSchedule( wx.EvtHandler ):
 		# Need for freeze the event notification
 		self._freeze = False 
 	
-	def __getattribute__(self, name):
+	def __getattr__(self, name):
 		if name[:3] in [ 'get', 'set' ]:
 			warnings.warn( "getData() is deprecated, use GetData() instead", DeprecationWarning, stacklevel=2 )
 			
 			name = name[0].upper() + name[1:]
 		
-		return super( wxSchedule, self ).__getattribute__( name )
+			return getattr(self, name)
+
+		raise AttributeError(name)
 		
 	# Global methods
 	def Freeze( self ):
@@ -86,7 +90,16 @@ class wxSchedule( wx.EvtHandler ):
 			data[ attribute ] = self.__getattribute__( attribute )
 		
 		return data
-						
+
+	def Clone(self):
+		newSchedule = wxSchedule()
+		for name, value in self.GetData().items():
+			setattr(newSchedule, name, value)
+		# start and end should be copied as well
+		newSchedule._start = copyDateTime(newSchedule._start)
+		newSchedule._end = copyDateTime(newSchedule._end)
+		return newSchedule
+
 	# Internal methods
 	
 	def _eventNotification( self ):

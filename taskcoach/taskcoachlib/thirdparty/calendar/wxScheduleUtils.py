@@ -24,3 +24,16 @@ def copyDateTime(value):
 		)
 	else:
 		return wx.DateTime()
+
+def setToWeekDayInSameWeek(day, offset, startDay=1):
+	"""wxDateTime's    SetToWeekDayInSameWeek   appears    to   be
+	buggish. When told that the  week starts on Monday, it results
+	in   the  following   'week'  on   Jan,  31st,   2010:  31/01,
+	25/01-30/01..."""
+	# Loop backwards until we find the start day
+	while True:
+		if day.GetWeekDay() == startDay:
+			break
+		day.SubtractDS(wx.DateSpan(days=1))
+	day.AddDS(wx.DateSpan(days=offset))
+	return day
