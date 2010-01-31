@@ -418,12 +418,21 @@ class wxSchedulerPaint( object ):
 					textW = max(textW, tW)
 					textH += tH
 
+				if schedule.icon:
+					textH += 20
+
 				dc.SetBrush(wx.Brush(schedule.color))
 				dc.DrawRectangle(startX, offsetY, endX - startX, textH + 2 * SCHEDULE_INSIDE_MARGIN)
 				self._schedulesCoords.append((schedule, wx.Point(startX, offsetY),
 							      wx.Point(endX, offsetY + textH + 2 * SCHEDULE_INSIDE_MARGIN)))
 
-				localOffset = 0
+				if schedule.icon:
+					bitmap = wx.ArtProvider.GetBitmap( schedule.icon, wx.ART_FRAME_ICON, (16, 16) )
+					dc.DrawBitmap( bitmap, startX + 4, offsetY + 4, True )
+					localOffset = 20
+				else:
+					localOffset = 0
+
 				dc.SetTextForeground( schedule.foreground )
 				for line in text:
 					dc.DrawText(line, startX + SCHEDULE_INSIDE_MARGIN, offsetY + localOffset + SCHEDULE_INSIDE_MARGIN)
