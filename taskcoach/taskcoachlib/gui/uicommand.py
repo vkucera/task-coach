@@ -2196,11 +2196,11 @@ class CalendarViewerToday(ViewerCommand):
 
 class CalendarViewerTaskFilterChoice(ToolbarChoiceCommandMixin, ViewerCommand):
     choiceLabels = [_('Start and due date'), _('Start date'), _('Due date'), _('All')]
-    choiceData = [(True, True), (True, False), (False, True), (False, False)]
+    choiceData = [(False, False), (False, True), (True, False), (True, True)]
 
     def doChoice(self, (showStart, showDue)):
-        self.viewer.SetShowNoStartDate(not showStart)
-        self.viewer.SetShowNoDueDate(not showDue)
+        self.viewer.SetShowNoStartDate(showStart)
+        self.viewer.SetShowNoDueDate(showDue)
 
 
 class ToggleAutoColumnResizing(UICheckCommand, ViewerCommand, SettingsCommand):
