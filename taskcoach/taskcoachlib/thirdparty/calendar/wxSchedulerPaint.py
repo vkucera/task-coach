@@ -429,7 +429,7 @@ class wxSchedulerPaint( object ):
 
 				maxDY = max(maxDY, textH)
 
-				offsetY += maxDY + 3 * SCHEDULE_INSIDE_MARGIN
+                        offsetY += maxDY + 3 * SCHEDULE_INSIDE_MARGIN
 
 	def _paintDaily( self, dc, day ):
 		"""
