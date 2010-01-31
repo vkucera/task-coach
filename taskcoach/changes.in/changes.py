@@ -23,11 +23,10 @@ from changetypes import *
 
 releases = [
 
-Release('0.79.0', 'January 23, 2010',
+Release('0.79.0', 'January 31, 2010',
     summary='''This release adds a calendar viewer for tasks.''',
     featuresAdded=[
-        Feature('''Calendar viewer for tasks''',
-                'http://taskcoach.uservoice.com/forums/26465-desktop-version-windows-linux-mac-of-task-coach/suggestions/289033-calendar-view?ref=title')
+        Feature('''Calendar viewer for tasks''', 'http://uservoice.com/a/iQI4g')
         ]
     ),
     
