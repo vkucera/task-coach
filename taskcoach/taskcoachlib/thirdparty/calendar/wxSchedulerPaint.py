@@ -277,6 +277,7 @@ class wxSchedulerPaint( object ):
 		self._offsetTop = offsetY
 		
 		dc.DrawRectangle( offsetX, 0, width, textH * 1.5 )
+		dc.SetTextForeground( wx.BLACK )
 		dc.DrawText( text, offsetX + ( width - textW ) / 2, textH * .25 )
 		
 		# Body
@@ -370,7 +371,8 @@ class wxSchedulerPaint( object ):
 					bitmap = wx.ArtProvider.GetBitmap( schedule.icon, wx.ART_FRAME_ICON, (16, 16) )
 					dc.DrawBitmap( bitmap, startX + 5, runY, True )
 					runY += 20
-				
+
+				dc.SetTextForeground( schedule.foreground )
 				for line in description:
 					dc.DrawText( line, startX + 5, runY )
 					runY += dc.GetTextExtent( line )[1]
@@ -420,6 +422,7 @@ class wxSchedulerPaint( object ):
 							      wx.Point(endX, offsetY + textH + 2 * SCHEDULE_INSIDE_MARGIN)))
 
 				localOffset = 0
+				dc.SetTextForeground( schedule.foreground )
 				for line in text:
 					dc.DrawText(line, startX + SCHEDULE_INSIDE_MARGIN, offsetY + localOffset + SCHEDULE_INSIDE_MARGIN)
 					localOffset += dc.GetTextExtent(line)[1]
@@ -457,6 +460,7 @@ class wxSchedulerPaint( object ):
 
 		text = '%s %s %s' % ( day.GetWeekDayName( day.GetWeekDay() )[:3], day.GetDay(), day.GetMonthName( day.GetMonth() ) )
 		textW, textH = dc.GetTextExtent( text )
+		dc.SetTextForeground( wx.BLACK )
 		dc.DrawText(text, int((width - textW) / 2), offsetY)
 		offsetY += textH + SCHEDULE_INSIDE_MARGIN
 
@@ -512,6 +516,7 @@ class wxSchedulerPaint( object ):
 		font.SetPointSize( 12 )
 		font.SetWeight( wx.FONTWEIGHT_NORMAL )
 		dc.SetFont( font )
+		dc.SetTextForeground( wx.BLACK )
 		hourW, hourH = dc.GetTextExtent( " 24" )
 		
 		if ( height - offsetY ) > ( len( self._lstDisplayedHours ) * hourH ):
@@ -547,6 +552,7 @@ class wxSchedulerPaint( object ):
 		x = ( self._month_cell_size.width * 7 - textW ) / 2
 		y = ( HEADER_COLUMN_SIZE - textH ) / 2
 		offset = HEADER_COLUMN_SIZE
+		dc.SetTextForeground( wx.BLACK )
 		dc.DrawText( text, x, y )
 		
 		# Draw month grid
@@ -575,7 +581,8 @@ class wxSchedulerPaint( object ):
 					textW, textH = dc.GetTextExtent( monthDay )
 					x += cellW - SCHEDULE_INSIDE_MARGIN - textW
 					y += SCHEDULE_INSIDE_MARGIN
-					
+
+					dc.SetTextForeground( wx.BLACK )
 					dc.DrawText( monthDay, x, y )
 					
 					# Draw schedules for this day
@@ -594,6 +601,7 @@ class wxSchedulerPaint( object ):
 							
 							dc.SetBrush( wx.Brush( schedule.color ) )
 							dc.DrawRectangle( x, y, textW, textH )
+							dc.SetTextForeground( schedule.foreground )
 							dc.DrawText( text, x + textH * .05, y + textH * .05 )
 							
 							self._schedulesCoords.append( ( schedule, wx.Point( x, y ), wx.Point( x + textW, y + textH ) ) )
@@ -611,6 +619,7 @@ class wxSchedulerPaint( object ):
 
 		text = "%s %s" % ( day.GetMonthName( day.GetMonth() ), day.GetYear() )
 		textW, textH = dc.GetTextExtent( text )
+		dc.SetTextForeground( wx.BLACK )
 		dc.DrawText(text, int((width - textW) / 2), offsetY)
 		offsetY += textH + SCHEDULE_INSIDE_MARGIN
 
@@ -630,16 +639,16 @@ class wxSchedulerPaint( object ):
 
 		maxDY = 0
 		for i in xrange(count):
-		   startX = x + int(1.0 * i * width / count)
-		   endX = x + int(1.0 * (i + 1) * width / count)
-		   text = '%d' % (i + 1)
-		   textW, textH = dc.GetTextExtent(text)
-		   dc.DrawText(text, startX + int((endX - startX - textW) / 2), offsetY)
-		   maxDY = max(maxDY, textH)
+			startX = x + int(1.0 * i * width / count)
+			endX = x + int(1.0 * (i + 1) * width / count)
+			text = '%d' % (i + 1)
+			textW, textH = dc.GetTextExtent(text)
+			dc.DrawText(text, startX + int((endX - startX - textW) / 2), offsetY)
+			maxDY = max(maxDY, textH)
 		offsetY += maxDY
 		for i in xrange(count + 1):
-		   startX = x + int(1.0 * i * width / count)
-		   dc.DrawLine(startX, offsetY + 4, startX, 32675)
+			startX = x + int(1.0 * i * width / count)
+			dc.DrawLine(startX, offsetY + 4, startX, 32675)
 
 		dc.DrawLine(x, offsetY + 4, x + width, offsetY + 4)
 		offsetY += SCHEDULE_INSIDE_MARGIN
@@ -689,6 +698,7 @@ class wxSchedulerPaint( object ):
 		font.SetPointSize( 8 )
 		font.SetWeight( wx.FONTWEIGHT_BOLD )
 		dc.SetFont( font )
+		dc.SetTextForeground( wx.BLACK )
 
 		maxDY = 0
 		for dayN in xrange(7):

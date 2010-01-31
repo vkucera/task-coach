@@ -17,6 +17,8 @@ EVT_SCHEDULE_CHANGE = wx.PyEventBinder( wxEVT_COMMAND_SCHEDULE_CHANGE )
 class wxSchedule( wx.EvtHandler ):
 	
 	SCHEDULE_DEFAULT_COLOR = wx.Color( 247, 212, 57 )  
+	SCHEDULE_DEFAULT_FOREGROUND = wx.BLACK
+
 	CATEGORIES = {
 		"Work"		: wx.GREEN,
 		"Holiday"	: wx.GREEN,
@@ -37,6 +39,7 @@ class wxSchedule( wx.EvtHandler ):
 		super( wxSchedule, self ).__init__()
 		
 		self._color			= self.SCHEDULE_DEFAULT_COLOR
+		self._foreground                = self.SCHEDULE_DEFAULT_FOREGROUND
 		self._category		= "Work"
 		self._description	= ''
 		self._notes			= ''
@@ -76,6 +79,7 @@ class wxSchedule( wx.EvtHandler ):
 		attributes = [ 
 			"category", 
 			"color", 
+			"foreground",
 			"description", 
 			"done", 
 			"end", 
@@ -112,6 +116,7 @@ class wxSchedule( wx.EvtHandler ):
 		
 		evt.category	= self._category
 		evt.color		= self._color
+		evt.foreground = self._foreground
 		evt.description	= self._description
 		evt.done		= self._done
 		evt.end			= self._end
@@ -167,6 +172,18 @@ class wxSchedule( wx.EvtHandler ):
 		Return the color
 		"""
 		return self._color
+
+	def SetForeground( self, color ):
+		"""
+		Sets the text color
+		"""
+		self._foreground = color
+
+	def GetForeground( self ):
+		"""
+		Returns the text color
+		"""
+		return self._foreground
 
 	def SetDescription( self, description ):
 		"""
@@ -263,6 +280,7 @@ class wxSchedule( wx.EvtHandler ):
 	
 	category = property( GetCategory, SetCategory )
 	color = property( GetColor, SetColor )
+	foreground = property( GetForeground, SetForeground )
 	description = property( GetDescription, SetDescription )
 	done = property( GetDone, SetDone )
 	start = property( GetStart, SetStart )
