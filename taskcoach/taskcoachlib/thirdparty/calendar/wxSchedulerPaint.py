@@ -600,8 +600,51 @@ class wxSchedulerPaint( object ):
 							y += textH 
 
 	def _paintMonthlyHorizontal( self, dc, day ):
-		# XXXTODO
-		dc.DrawText('Not yet implemented', 10, 10)
+		font = dc.GetFont()
+		font.SetPointSize( 8 )
+		font.SetWeight( wx.FONTWEIGHT_BOLD )
+		dc.SetFont( font )
+
+                x = LEFT_COLUMN_SIZE
+                offsetY = SCHEDULE_INSIDE_MARGIN
+		width = self._month_cell_size.width * 7
+
+		text = "%s %s" % ( day.GetMonthName( day.GetMonth() ), day.GetYear() )
+		textW, textH = dc.GetTextExtent( text )
+		dc.DrawText(text, int((width - textW) / 2), offsetY)
+		offsetY += textH + SCHEDULE_INSIDE_MARGIN
+
+		start, count = calendar.monthrange(day.GetYear(), day.GetMonth() + 1)
+
+		startDay = utils.copyDateTime(day)
+		startDay.SetDay(1)
+		startDay.SetHour(0)
+		startDay.SetMinute(0)
+		startDay.SetSecond(0)
+
+		endDay = utils.copyDateTime(day)
+		endDay.SetDay(count)
+		endDay.SetHour(23)
+		endDay.SetMinute(59)
+		endDay.SetSecond(59)
+
+		maxDY = 0
+		for i in xrange(count):
+		   startX = x + int(1.0 * i * width / count)
+		   endX = x + int(1.0 * (i + 1) * width / count)
+		   text = '%d' % (i + 1)
+		   textW, textH = dc.GetTextExtent(text)
+		   dc.DrawText(text, startX + int((endX - startX - textW) / 2), offsetY)
+		   maxDY = max(maxDY, textH)
+		offsetY += maxDY
+		for i in xrange(count + 1):
+		   startX = x + int(1.0 * i * width / count)
+		   dc.DrawLine(startX, offsetY + 4, startX, 32675)
+
+		dc.DrawLine(x, offsetY + 4, x + width, offsetY + 4)
+		offsetY += SCHEDULE_INSIDE_MARGIN
+
+		self._paintPeriodHorizontal(dc, startDay, endDay, x, offsetY, width)
 
 	def _paintWeekly( self, dc, day ):
 		"""
