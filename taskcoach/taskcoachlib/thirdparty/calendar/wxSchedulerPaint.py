@@ -41,7 +41,9 @@ class wxSchedulerPaint( object ):
 		self._offsetTop	= 0
 
 		self._style = wxSCHEDULER_VERTICAL
-				
+
+		self._minHeight = 0
+
 	def _doClickControl( self, point ):
 		self._processEvt( wxEVT_COMMAND_SCHEDULE_ACTIVATED, point )
 		
@@ -416,12 +418,21 @@ class wxSchedulerPaint( object ):
 					textW = max(textW, tW)
 					textH += tH
 
+				if schedule.icon:
+					textH += 20
+
 				dc.SetBrush(wx.Brush(schedule.color))
 				dc.DrawRectangle(startX, offsetY, endX - startX, textH + 2 * SCHEDULE_INSIDE_MARGIN)
 				self._schedulesCoords.append((schedule, wx.Point(startX, offsetY),
 							      wx.Point(endX, offsetY + textH + 2 * SCHEDULE_INSIDE_MARGIN)))
 
-				localOffset = 0
+				if schedule.icon:
+					bitmap = wx.ArtProvider.GetBitmap( schedule.icon, wx.ART_FRAME_ICON, (16, 16) )
+					dc.DrawBitmap( bitmap, startX + 4, offsetY + 4, True )
+					localOffset = 20
+				else:
+					localOffset = 0
+
 				dc.SetTextForeground( schedule.foreground )
 				for line in text:
 					dc.DrawText(line, startX + SCHEDULE_INSIDE_MARGIN, offsetY + localOffset + SCHEDULE_INSIDE_MARGIN)
@@ -429,7 +440,11 @@ class wxSchedulerPaint( object ):
 
 				maxDY = max(maxDY, textH)
 
-				offsetY += maxDY + 3 * SCHEDULE_INSIDE_MARGIN
+			offsetY += maxDY + 3 * SCHEDULE_INSIDE_MARGIN
+
+		if self._minHeight != offsetY:
+			self._minHeight = offsetY
+			self._calcScrollBar()
 
 	def _paintDaily( self, dc, day ):
 		"""
@@ -480,7 +495,7 @@ class wxSchedulerPaint( object ):
 		offsetY += maxDY
 		dc.DrawLine(x, offsetY + 1, x + width, offsetY + 1)
 
-		self._paintPeriodHorizontal(dc, startHours, endHours, x, offsetY, width)
+		height = self._paintPeriodHorizontal(dc, startHours, endHours, x, offsetY, width)
 
 		# Gray out non worked hours
 		dc.SetBrush(wx.Brush(wx.SystemSettings_GetColour(wx.SYS_COLOUR_INACTIVEBORDER)))
@@ -837,39 +852,57 @@ class wxSchedulerPaint( object ):
 		objsize = self.GetSize()
 		if isinstance( self, wx.ScrolledWindow ):
 			objsize -= wx.Size( 20, 20 )
-		
+
 		if self._viewType == wxSCHEDULER_DAILY:
 			# Calculate day view size
+
+			if self._style == wxSCHEDULER_HORIZONTAL:
+				minSize = wx.Size(DAY_SIZE_MIN.width, self._minHeight)
+			else:
+				minSize = DAY_SIZE_MIN
+
 			if self._resizable:
 				objsize.width -= LEFT_COLUMN_SIZE
 				objsize.height -= HEADER_COLUMN_SIZE
 				
-				self._day_size = self._getNewSize( objsize, DAY_SIZE_MIN )
+				self._day_size = self._getNewSize( objsize, minSize )
 			else:
 				self._day_size = DAY_SIZE_MIN
 				
 			size = wx.Size( LEFT_COLUMN_SIZE + self._day_size.width, self._day_size.height + HEADER_COLUMN_SIZE )
 		elif self._viewType == wxSCHEDULER_WEEKLY:
 			# Calculate week view size
+
+			if self._style == wxSCHEDULER_HORIZONTAL:
+				minSize = wx.Size(WEEK_SIZE_MIN.width, self._minHeight)
+			else:
+				minSize = WEEK_SIZE_MIN
+
 			if self._resizable:
 				objsize.width -= LEFT_COLUMN_SIZE
 				objsize.height -= HEADER_COLUMN_SIZE
 				
-				self._week_size = self._getNewSize( objsize, WEEK_SIZE_MIN )
+				self._week_size = self._getNewSize( objsize, minSize )
 			else:
 				self._week_size = WEEK_SIZE_MIN
 			
 			size = wx.Size( LEFT_COLUMN_SIZE + self._week_size.width, self._week_size.height + HEADER_COLUMN_SIZE )
 		elif self._viewType == wxSCHEDULER_MONTHLY:
 			# Calculate month view size
+
 			day = self.GetDate()
 			weeks = len( calendar.monthcalendar( day.GetYear(), day.GetMonth() + 1 ) )
+
+			if self._style == wxSCHEDULER_HORIZONTAL:
+				minSize = wx.Size(MONTH_CELL_SIZE_MIN.width, self._minHeight / weeks)
+			else:
+				minSize = MONTH_CELL_SIZE_MIN
 				
 			if self._resizable:
 				objsize.height -= HEADER_COLUMN_SIZE
 				objsize = wx.Size( objsize.width / 7, objsize.height / weeks )
 				
-				self._month_cell_size = self._getNewSize( objsize, MONTH_CELL_SIZE_MIN )
+				self._month_cell_size = self._getNewSize( objsize, minSize )
 			else:
 				self._month_cell_size = MONTH_CELL_SIZE_MIN
 			
