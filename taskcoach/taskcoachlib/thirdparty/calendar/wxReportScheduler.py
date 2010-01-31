@@ -14,8 +14,9 @@ class wxReportScheduler( wx.Printout ):
 	For other info on wxPrintOut class and methods check the wxPython 
 	documentation (RTFM for nerds ;-) ).
 	"""
-	def __init__( self, format, day, schedules ):
+	def __init__( self, format, style, day, schedules ):
 		self._format	= format
+		self._style = style
 		self._day		= day
 		self._schedules	= schedules
 		self.pages		= 1
@@ -29,6 +30,7 @@ class wxReportScheduler( wx.Printout ):
 		"""
 		scheduler = wxSchedulerPrint( dc )
 		scheduler.SetViewType( self._format )
+		scheduler.SetStyle( self._style )
 		scheduler.SetDate( day )
 		
 		return scheduler

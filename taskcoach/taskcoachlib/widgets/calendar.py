@@ -162,6 +162,7 @@ class TaskSchedule(wxSchedule):
                 self.done = True
 
             self.color = wx.Color(*(self.task.backgroundColor() or (255, 255, 255)))
+            self.foreground = wx.Color(*(self.task.foregroundColor(True) or (0, 0, 0)))
 
             self.icon = self.iconProvider(self.task, False)
         finally:

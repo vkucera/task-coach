@@ -231,8 +231,6 @@
 			<key>Layout</key>
 			<array>
 				<dict>
-					<key>BecomeActive</key>
-					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -324,7 +322,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A6E7C098111443A000B230E2</string>
+										<string>A6D358DE11144D4900E27361</string>
 										<key>history</key>
 										<array>
 											<string>A6B5E01D106E04E200E3774E</string>
@@ -438,7 +436,7 @@
 											<string>A6E7C094111443A000B230E2</string>
 											<string>A6E7C095111443A000B230E2</string>
 											<string>A6E7C096111443A000B230E2</string>
-											<string>A6E7C097111443A000B230E2</string>
+											<string>A6E7C098111443A000B230E2</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -561,11 +559,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6E7C099111443A000B230E2</string>
+				<string>A6D358DF11144D4900E27361</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A6E7C09A111443A000B230E2</string>
+				<string>A6D358E011144D4900E27361</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A6E7C09B111443A000B230E2</string>
+				<string>A6D358E111144D4900E27361</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -714,14 +712,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6E7C09C111443A000B230E2</string>
+				<string>A6D358E211144D4900E27361</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A6E7C09D111443A000B230E2</string>
-				<string>A6E7C09E111443A000B230E2</string>
-				<string>A6E7C09F111443A000B230E2</string>
-				<string>A6E7C0A0111443A000B230E2</string>
-				<string>A6E7C0A1111443A000B230E2</string>
+				<string>A6D358E311144D4900E27361</string>
+				<string>A6D358E411144D4900E27361</string>
+				<string>A6D358E511144D4900E27361</string>
+				<string>A6D358E611144D4900E27361</string>
+				<string>A6D358E711144D4900E27361</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
 			<string>2</string>
@@ -753,8 +751,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>A6E7C0A2111443A000B230E2</string>
-		<string>A6E7C0A3111443A000B230E2</string>
+		<string>A6D358E811144D4900E27361</string>
+		<string>A6D358E911144D4900E27361</string>
 		<string>/Users/jeromelaheurte/Dev/taskcoach-iphone/taskcoach-iphone/TaskCoach.xcodeproj</string>
 	</array>
 	<key>WindowString</key>

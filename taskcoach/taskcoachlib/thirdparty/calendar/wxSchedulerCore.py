@@ -95,18 +95,17 @@ class wxSchedulerCore( wxSchedulerPaint ):
 		"""
 		
 		if self._viewType == wxSCHEDULER_DAILY:
-			daysAdd = 1
+			offset = wx.DateSpan(days=1)
 		elif self._viewType == wxSCHEDULER_WEEKLY:
-			daysAdd = 7
+			offset = wx.DateSpan(weeks=1)
 		elif self._viewType == wxSCHEDULER_MONTHLY:
 			daysAdd = self._currentDate.GetNumberOfDaysInMonth( self._currentDate.GetMonth() )
-			
-		TSAdd = wx.DateSpan( days=daysAdd )
-		
+			offset = wx.DateSpan(months=1)
+
 		if side == wxSCHEDULER_NEXT:
-			self._currentDate.AddDS( TSAdd )
+			self._currentDate.AddDS( offset )
 		elif side == wxSCHEDULER_PREV:
-			self._currentDate.SubtractDS( TSAdd )
+			self._currentDate.SubtractDS( offset )
 			
 	#-----------------------
 	#  External methods
