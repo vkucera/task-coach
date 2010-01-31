@@ -67,7 +67,11 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
         self.taskMap = {}
 
         for task in self.taskList:
-            if task.startDate() != Date() and task.dueDate() != Date() and not task.isDeleted():
+            if not task.isDeleted():
+                if task.startDate() == Date() and task.dueDate() == Date():
+                    # Nothing to see...
+                    continue
+
                 schedule = TaskSchedule(task, self.iconProvider)
                 schedules.append(schedule)
                 self.taskMap[task.id()] = schedule
@@ -81,7 +85,7 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
 
     def RefreshItems(self, *args):
         for task in args:
-            if task.dueDate() == Date() or task.startDate() == Date() or task.isDeleted():
+            if (task.startDate() == Date() and task.dueDate() == Date()) or task.isDeleted():
                 if self.taskMap.has_key(task.id()):
                     self.Delete(self.taskMap[task.id()])
                     del self.taskMap[task.id()]
@@ -153,10 +157,16 @@ class TaskSchedule(wxSchedule):
             self.description = self.task.subject()
 
             started = self.task.startDate()
-            self.start = wx.DateTimeFromDMY(started.day, started.month - 1, started.year)
+            if started == Date():
+                self.start = wx.DateTimeFromDMY(1, 1, 0) # Huh
+            else:
+                self.start = wx.DateTimeFromDMY(started.day, started.month - 1, started.year)
 
             ended = self.task.dueDate()
-            self.end = wx.DateTimeFromDMY(ended.day, ended.month - 1, ended.year, 23, 59, 59)
+            if ended == Date():
+                self.end = wx.DateTimeFromDMY(1, 1, 9999)
+            else:
+                self.end = wx.DateTimeFromDMY(ended.day, ended.month - 1, ended.year, 23, 59, 59)
 
             if self.task.completed():
                 self.done = True
