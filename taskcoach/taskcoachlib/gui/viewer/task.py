@@ -567,6 +567,21 @@ class CalendarViewer(BaseTaskViewer):
         self.settings.setboolean(self.settingsSection(), 'shownodue', doShow)
         self.widget.SetShowNoDueDate(doShow)
 
+    # We need to override these because BaseTaskViewer is a tree viewer, but
+    # CalendarViewer is not. There is probably a better solution...
+
+    def isSelectionExpandable(self):
+        return False
+
+    def isSelectionCollapsable(self):
+        return False
+
+    def isAnyItemExpandable(self):
+        return False
+
+    def isAnyItemCollapsable(self):
+        return False
+
 
 class TaskViewer(mixin.AttachmentDropTargetMixin, 
                  mixin.SortableViewerForTasksMixin, 
