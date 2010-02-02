@@ -29,6 +29,8 @@
 - (void)activated
 {
 	[super activated];
+	
+	NSLog(@"New categories: activated.");
 
 	[self start:[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM CurrentCategory WHERE status=%d", STATUS_NEW]]];
 }
@@ -40,15 +42,21 @@
 
 - (void)onObject:(NSDictionary *)dict
 {
+	NSLog(@"Found category.");
+
 	[super onObject:dict];
 
 	[myNetwork appendString:[dict objectForKey:@"name"]];
-	
+
 	if ([dict objectForKey:@"parentId"])
 	{
 		Statement *req = [[Database connection] statementWithSQL:@"SELECT taskCoachId FROM Category WHERE id=?"];
 		[req bindInteger:[(NSNumber *)[dict objectForKey:@"parentId"] intValue] atIndex:1];
 		[req execWithTarget:self action:@selector(onCategoryParent:)];
+	}
+	else
+	{
+		[myNetwork appendString:nil];
 	}
 }
 
