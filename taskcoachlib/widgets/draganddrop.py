@@ -196,6 +196,18 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
             if dropTarget != self.GetRootItem():
                 self.SelectItem(dropTarget)
             self.OnDrop(dropTarget, self._dragItem)
+        else:
+            # Work around an issue with HyperTreeList. HyperTreeList will
+            # restore the selection to the last item highlighted by the drag,
+            # after we have processed the end drag event. That's not what we
+            # want, so use wx.CallAfter to clear the selection after
+            # HyperTreeList did its (wrong) thing and reselect the previously
+            # dragged item.
+            wx.CallAfter(self.selectDraggedItem)
+
+    def selectDraggedItem(self):
+        self.UnselectAll()
+        self.SelectItem(self._dragItem)
         
     def OnDragging(self, event):
         if not event.Dragging():
