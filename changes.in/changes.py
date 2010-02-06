@@ -23,11 +23,13 @@ from changetypes import *
 
 releases = [
 
-Release('0.78.4', 'January 31, 2010',
+Release('0.78.4', 'February 6, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''In some cases, when typing dates in the editor, they would
-be reset to the current day.''', '2942425')
+be reset to the current day.''', '2942425'),
+        Bug('''Clear the drag image after dropping an item onto white space 
+(on Linux).''', '2947127')
         ]
     ),
 

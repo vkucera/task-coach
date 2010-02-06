@@ -3519,6 +3519,7 @@ class TreeListMainWindow(CustomTreeCtrl):
             
             if self._dragImage:
                 self._dragImage.EndDrag()
+                self.Refresh()
 
             if self._dropTarget:
                 self._dropTarget.SetHilight(False)
