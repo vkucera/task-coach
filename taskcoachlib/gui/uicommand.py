@@ -1311,6 +1311,8 @@ class TaskDelete(ObjectDelete, NeedsSelectedTasksMixin, TaskListCommand):
 class TaskToggleCompletion(NeedsSelectedTasksMixin, ViewerCommand):
     defaultMenuText = _('&Mark task completed\tCtrl+RETURN')
     defaultHelpText = _('Mark the selected task(s) completed')
+    alternativeMenuText = _('&Mark task uncompleted\tCtrl+RETURN')
+    alternativeHelpText = _('Mark the selected task(s) uncompleted')
     
     def __init__(self, *args, **kwargs):
         super(TaskToggleCompletion, self).__init__(bitmap='markuncompleted',
@@ -1365,18 +1367,12 @@ class TaskToggleCompletion(NeedsSelectedTasksMixin, ViewerCommand):
     def getMenuText(self, allSelectedTasksAreCompleted=None): # pylint: disable-msg=W0221
         if allSelectedTasksAreCompleted is None:
             allSelectedTasksAreCompleted = self.allSelectedTasksAreCompleted()
-        if allSelectedTasksAreCompleted:
-            return _('&Mark task uncompleted\tCtrl+RETURN')
-        else:
-            return self.defaultMenuText
+        return self.alternativeMenuText if allSelectedTasksAreCompleted else self.defaultMenuText
         
     def getHelpText(self, allSelectedTasksAreCompleted=None): # pylint: disable-msg=W0221
         if allSelectedTasksAreCompleted is None:
             allSelectedTasksAreCompleted = self.allSelectedTasksAreCompleted()
-        if allSelectedTasksAreCompleted:
-            return _('Mark the selected task(s) uncompleted')
-        else:
-            return self.defaultHelpText
+        return self.alternativeHelpText if allSelectedTasksAreCompleted else self.defaultHelpText
         
     def allSelectedTasksAreCompleted(self):
         if super(TaskToggleCompletion, self).enabled(None) and \
