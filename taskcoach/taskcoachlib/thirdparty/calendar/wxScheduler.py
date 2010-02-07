@@ -15,6 +15,7 @@ class wxScheduler( wxSchedulerCore, scrolled.ScrolledPanel ):
 		self.Bind( wx.EVT_PAINT, self.OnPaint )
 		self.Bind( wx.EVT_SIZE, self.OnSize )
 		self.Bind( wx.EVT_LEFT_DOWN, self.OnClick )
+		self.Bind( wx.EVT_RIGHT_DOWN, self.OnRightClick )
 		self.Bind( wx.EVT_LEFT_DCLICK, self.OnDClick )
 		self.Bind( wx.EVT_SCROLLWIN, self.OnScroll )
 
@@ -26,7 +27,10 @@ class wxScheduler( wxSchedulerCore, scrolled.ScrolledPanel ):
 	# Events
 	def OnClick( self, evt ):
 		self._doClickControl( self._getEventCoordinates( evt ) )
-		
+
+	def OnRightClick( self, evt ):
+		self._doRightClickControl( self._getEventCoordinates( evt ) )
+
 	def OnDClick( self, evt ):
 		self._doDClickControl( self._getEventCoordinates( evt ) )
 		

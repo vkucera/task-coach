@@ -18,19 +18,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, operator
 from taskcoachlib.thirdparty.calendar import wxScheduler, wxSchedule, \
-    EVT_SCHEDULE_ACTIVATED
+    EVT_SCHEDULE_ACTIVATED, EVT_SCHEDULE_RIGHT_CLICK
 from taskcoachlib.domain.date import Date
 import tooltip
 
 
 class Calendar(tooltip.ToolTipMixin, wxScheduler):
-    def __init__(self, parent, taskList, iconProvider,  onSelect, *args, **kwargs):
+    def __init__(self, parent, taskList, iconProvider,  onSelect, popupMenu, *args, **kwargs):
         self.getItemTooltipData = parent.getItemTooltipData
 
         super(Calendar, self).__init__(parent, wx.ID_ANY, *args, **kwargs)
 
         self.selectCommand = onSelect
         self.iconProvider = iconProvider
+        self.popupMenu = popupMenu
 
         self.__tip = tooltip.SimpleToolTip(self)
         self.__selection = []
@@ -44,6 +45,7 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
         self.RefreshAllItems(0)
 
         EVT_SCHEDULE_ACTIVATED(self, self.OnActivation)
+        EVT_SCHEDULE_RIGHT_CLICK(self, self.OnPopup)
 
     def SetShowNoStartDate(self, doShow):
         self.__showNoStartDate = doShow
@@ -65,6 +67,10 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
 
         wx.CallAfter(self.selectCommand)
         event.Skip()
+
+    def OnPopup(self, event):
+        self.OnActivation(event)
+        wx.CallAfter(self.PopupMenu, self.popupMenu)
 
     def RefreshAllItems(self, count):
         selectionId = None
