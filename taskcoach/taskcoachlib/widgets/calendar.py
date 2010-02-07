@@ -18,19 +18,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, operator
 from taskcoachlib.thirdparty.calendar import wxScheduler, wxSchedule, \
-    EVT_SCHEDULE_ACTIVATED, EVT_SCHEDULE_RIGHT_CLICK
+    EVT_SCHEDULE_ACTIVATED, EVT_SCHEDULE_RIGHT_CLICK, \
+    EVT_SCHEDULE_DCLICK
 from taskcoachlib.domain.date import Date
 import tooltip
 
 
 class Calendar(tooltip.ToolTipMixin, wxScheduler):
-    def __init__(self, parent, taskList, iconProvider,  onSelect, popupMenu, *args, **kwargs):
+    def __init__(self, parent, taskList, iconProvider,  onSelect, onEdit, popupMenu, *args, **kwargs):
         self.getItemTooltipData = parent.getItemTooltipData
 
         super(Calendar, self).__init__(parent, wx.ID_ANY, *args, **kwargs)
 
         self.selectCommand = onSelect
         self.iconProvider = iconProvider
+        self.editCommand = onEdit
         self.popupMenu = popupMenu
 
         self.__tip = tooltip.SimpleToolTip(self)
@@ -46,6 +48,7 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
 
         EVT_SCHEDULE_ACTIVATED(self, self.OnActivation)
         EVT_SCHEDULE_RIGHT_CLICK(self, self.OnPopup)
+        EVT_SCHEDULE_DCLICK(self, self.OnEdit)
 
     def SetShowNoStartDate(self, doShow):
         self.__showNoStartDate = doShow
@@ -71,6 +74,10 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
     def OnPopup(self, event):
         self.OnActivation(event)
         wx.CallAfter(self.PopupMenu, self.popupMenu)
+
+    def OnEdit(self, event):
+        if event.schedule is not None:
+            self.editCommand(event.schedule.task)
 
     def RefreshAllItems(self, count):
         selectionId = None
