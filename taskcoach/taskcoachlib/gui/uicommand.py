@@ -317,9 +317,10 @@ class PopupButtonMixin(object):
         windowX = self.mainWindow().GetPosition()[0]
         buttonWidth = self.toolbar.GetToolSize()[0]
         menuX = mouseX - windowX - 0.5 * buttonWidth
-        toolbarY = self.toolbar.GetPosition()[1]
         toolbarHeight = self.toolbar.GetSize()[1]
-        menuY = toolbarY + toolbarHeight
+        mouseY = wx.GetMousePosition()[1]
+        windowY = self.mainWindow().GetPosition()[1]
+        menuY = mouseY - windowY - 1.5 * toolbarHeight
         return menuX, menuY
     
     def createPopupMenu(self):
