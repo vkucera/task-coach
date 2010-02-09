@@ -22,3 +22,6 @@ class wxSchedulerPrint( wxSchedulerCore ):
 		Return a wx.Size() object representing the page's size
 		"""
 		return self.GetDc().GetSize()
+
+	def Refresh( self ):
+		pass

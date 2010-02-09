@@ -27,7 +27,7 @@ from taskcoachlib.domain import task, date
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, render, dialog
 from taskcoachlib.thirdparty.calendar import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, \
-    wxSCHEDULER_TODAY, wxSCHEDULER_HORIZONTAL
+    wxSCHEDULER_TODAY, wxSCHEDULER_HORIZONTAL, wxFancyDrawer
 import base, mixin
 
 
@@ -531,8 +531,13 @@ class CalendarViewer(BaseTaskViewer):
     def createWidget(self):
         itemPopupMenu = self.createTaskPopupMenu()
         self._popupMenus.append(itemPopupMenu)
-        return widgets.Calendar(self, self.presentation(), self.iconName, self.onSelect,
-                                self.onEdit, itemPopupMenu)
+        widget = widgets.Calendar(self, self.presentation(), self.iconName, self.onSelect,
+                                  self.onEdit, itemPopupMenu)
+
+        # If called directly, we crash with a Cairo asser failing...
+        wx.CallAfter(widget.SetDrawer, wxFancyDrawer)
+
+        return widget
 
     def onEdit(self, item):
         edit = uicommand.TaskEdit(taskList=self.presentation(), viewer=self)

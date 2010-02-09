@@ -59,6 +59,8 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
         self.RefreshAllItems(0)
 
     def OnActivation(self, event):
+        self.SetFocus()
+
         if self.__selection:
             self.taskMap[self.__selection[0].id()].SetSelected(False)
 
@@ -201,13 +203,13 @@ class TaskSchedule(wxSchedule):
             if started == Date():
                 self.start = wx.DateTimeFromDMY(1, 1, 0) # Huh
             else:
-                self.start = wx.DateTimeFromDMY(started.day, started.month - 1, started.year)
+                self.start = wx.DateTimeFromDMY(started.day, started.month - 1, started.year, 0, 0, 1)
 
             ended = self.task.dueDate()
             if ended == Date():
                 self.end = wx.DateTimeFromDMY(1, 1, 9999)
             else:
-                self.end = wx.DateTimeFromDMY(ended.day, ended.month - 1, ended.year, 23, 59, 59)
+                self.end = wx.DateTimeFromDMY(ended.day, ended.month - 1, ended.year, 23, 59, 0)
 
             if self.task.completed():
                 self.done = True
