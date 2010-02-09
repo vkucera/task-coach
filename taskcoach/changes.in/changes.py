@@ -31,7 +31,7 @@ drag and drop support for Mail.app under Snow Leopard, and fixes a few bugs.''',
         Feature('''Drag and drop e-mail from Mail.app, on Snow Leopard.''',
                 'http://taskcoach.uservoice.com/forums/26465-desktop-version-windows-linux-mac-of-task-coach/suggestions/408567-can-you-add-drag-and-drop-support-for-macos-mail') # Copy to clipboard does not seem to work with Firefox on MacOS X 10.6 :(
         ],
-    bugsFixes=[
+    bugsFixed=[
         Bug('''The template pop-up menu in task viewers would not show up
 at the right position.''')
         ]
