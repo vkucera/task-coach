@@ -20,7 +20,7 @@ class wxDrawer(object):
 		self.context = context
 		self.displayedHours = displayedHours
 
-	def DrawDayHeader(self, day, x, y, w, h):
+	def DrawDayHeader(self, day, x, y, w, h, highlight=False):
 		"""
 		Draws the header for a day. Returns the header's size.
 		"""
@@ -32,7 +32,7 @@ class wxDrawer(object):
 		"""
 		raise NotImplementedError
 
-	def DrawSimpleDayHeader(self, day, x, y, w, h):
+	def DrawSimpleDayHeader(self, day, x, y, w, h, highlight=False):
 		"""
 		Draws the header for a day, in compact form. Returns
 		the header's size.
@@ -296,7 +296,7 @@ class HeaderDrawerDCMixin(object):
 	"""
 
 	def _DrawHeader(self, text, x, y, w, h, pointSize=8, weight=wx.FONTWEIGHT_BOLD,
-			bgBrushColor=SCHEDULER_BACKGROUND_BRUSH, alignRight=False):
+			alignRight=False):
 		font = self.context.GetFont()
 		font.SetPointSize( pointSize )
 		font.SetWeight( weight )
@@ -304,7 +304,7 @@ class HeaderDrawerDCMixin(object):
 
 		textW, textH = self.context.GetTextExtent( text )
 
-		self.context.SetBrush( wx.Brush( bgBrushColor ) )
+		self.context.SetBrush( wx.Brush( SCHEDULER_BACKGROUND_BRUSH ) )
 		self.context.DrawRectangle( x, y, w, textH * 1.5 )
 
 		self.context.SetTextForeground( wx.BLACK )
@@ -316,13 +316,34 @@ class HeaderDrawerDCMixin(object):
 
 		return w, textH * 1.5
 
-	def DrawDayHeader(self, day, x, y, width, height):
-		w, h = super(HeaderDrawerDCMixin, self).DrawDayHeader(day, x, y, width, height)
+	def DrawDayHeader(self, day, x, y, width, height, highlight=False):
+		w, h = super(HeaderDrawerDCMixin, self).DrawDayHeader(day, x, y, width, height, highlight=highlight)
 
 		y += h
 		height -= h
 
-		self.context.SetBrush(wx.Brush(DAY_BACKGROUND_BRUSH))
+		if highlight:
+			color = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+		else:
+			color = DAY_BACKGROUND_BRUSH
+
+		self.context.SetBrush(wx.Brush(color))
+		self.context.DrawRectangle(x, y, width, height)
+
+		return w, h
+
+	def DrawSimpleDayHeader(self, day, x, y, width, height, highlight=False):
+		w, h = super(HeaderDrawerDCMixin, self).DrawSimpleDayHeader(day, x, y, width, height, highlight=highlight)
+
+		y += h
+		height -= h
+
+		if highlight:
+			color = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+		else:
+			color = DAY_BACKGROUND_BRUSH
+
+		self.context.SetBrush(wx.Brush(color))
 		self.context.DrawRectangle(x, y, width, height)
 
 		return w, h
@@ -338,7 +359,8 @@ class HeaderDrawerDCMixin(object):
 		results = []
 
 		if day is not None:
-			headerW, headerH = self.DrawSimpleDayHeader(day, x, y, width, height)
+			headerW, headerH = self.DrawSimpleDayHeader(day, x, y, width, height,
+								    day.IsSameDate(wx.DateTime.Now()))
 			y += headerH
 			height -= headerH
 
@@ -349,8 +371,6 @@ class HeaderDrawerDCMixin(object):
 			height -= 2 * SCHEDULE_OUTSIDE_MARGIN
 
 			self.context.SetPen(FOREGROUND_PEN)
-			self.context.SetBrush(wx.Brush(DAY_BACKGROUND_BRUSH))
-			self.context.DrawRectangle(x, y, width, height)
 
 			totalHeight = 0
 
@@ -381,7 +401,7 @@ class HeaderDrawerGCMixin(object):
 	"""
 
 	def _DrawHeader(self, text, x, y, w, h, pointSize=10, weight=wx.FONTWEIGHT_BOLD,
-			bgBrushColor=SCHEDULER_BACKGROUND_BRUSH, alignRight=False):
+			alignRight=False):
 		font = wx.NORMAL_FONT
 		font.SetPointSize( pointSize )
 		font.SetWeight( weight )
@@ -394,7 +414,8 @@ class HeaderDrawerGCMixin(object):
 		x2 = x + w
 		y2 = y + textH * 1.5
 
-		self.context.SetBrush(self.context.CreateLinearGradientBrush(x1, y1, x2, y2, wx.Color(128, 128, 128), bgBrushColor))
+		self.context.SetBrush(self.context.CreateLinearGradientBrush(x1, y1, x2, y2, wx.Color(128, 128, 128),
+									     SCHEDULER_BACKGROUND_BRUSH))
 		self.context.DrawRectangle(x1, y1, x2 - x1, y2 - y1)
 
 		if alignRight:
@@ -404,15 +425,39 @@ class HeaderDrawerGCMixin(object):
 
 		return w, textH * 1.5
 
-	def DrawDayHeader(self, day, x, y, width, height):
-		w, h = super(HeaderDrawerGCMixin, self).DrawDayHeader(day, x, y, width, height)
+	def DrawDayHeader(self, day, x, y, width, height, highlight=False):
+		w, h = super(HeaderDrawerGCMixin, self).DrawDayHeader(day, x, y, width, height, highlight=highlight)
 
 		y += h
 		height -= h
 
-		self.context.SetBrush(wx.Brush(DAY_BACKGROUND_BRUSH))
+		if highlight:
+			color = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+		else:
+			color = DAY_BACKGROUND_BRUSH
+
+		brush = self.context.CreateLinearGradientBrush(x, y, x + width, y + height, color, DAY_BACKGROUND_BRUSH)
+		self.context.SetBrush(brush)
 		self.context.SetPen(FOREGROUND_PEN)
 		self.context.DrawRectangle(x, y, width, height)
+
+		return w, h
+
+	def DrawSimpleDayHeader(self, day, x, y, width, height, highlight=False):
+		w, h = super(HeaderDrawerGCMixin, self).DrawSimpleDayHeader(day, x, y, width, height, highlight=highlight)
+
+		y += h
+		height -= h
+
+		if highlight:
+			color = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
+		else:
+			color = DAY_BACKGROUND_BRUSH
+
+		brush = self.context.CreateLinearGradientBrush(x, y, x + width, y + height, color, DAY_BACKGROUND_BRUSH)
+		self.context.SetBrush(brush)
+		self.context.SetPen(FOREGROUND_PEN)
+		self.context.DrawRoundedRectangle(x, y, width, height, SCHEDULE_INSIDE_MARGIN)
 
 		return w, h
 
@@ -432,7 +477,8 @@ class HeaderDrawerGCMixin(object):
 		results = []
 
 		if day is not None:
-			headerW, headerH = self.DrawSimpleDayHeader(day, x, y, width, height)
+			headerW, headerH = self.DrawSimpleDayHeader(day, x, y, width, height,
+								    highlight=day.IsSameDate(wx.DateTime.Now()))
 			y += headerH
 			height -= headerH
 
@@ -443,8 +489,6 @@ class HeaderDrawerGCMixin(object):
 			height -= 2 * SCHEDULE_OUTSIDE_MARGIN
 
 			self.context.SetPen(FOREGROUND_PEN)
-			self.context.SetBrush(wx.Brush(DAY_BACKGROUND_BRUSH))
-			self.context.DrawRoundedRectangle(x, y, width, height, SCHEDULE_INSIDE_MARGIN)
 
 			totalHeight = 0
 
@@ -475,27 +519,17 @@ class HeaderDrawerMixin(object):
 	A mixin that draws header using the _DrawHeader method.
 	"""
 
-	def DrawDayHeader(self, day, x, y, width, height):
-		if day.IsSameDate(wx.DateTime.Now()):
-			bg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
-		else:
-			bg = SCHEDULER_BACKGROUND_BRUSH
-
+	def DrawDayHeader(self, day, x, y, width, height, highlight=False):
 		return self._DrawHeader('%s %s %s' % ( day.GetWeekDayName( day.GetWeekDay() )[:3], day.GetDay(), day.GetMonthName( day.GetMonth() ) ),
-					x, y, width, height, bgBrushColor=bg)
+					x, y, width, height)
 
 	def DrawMonthHeader(self, day, x, y, w, h):
 		return self._DrawHeader('%s %s' % ( day.GetMonthName( day.GetMonth() ), day.GetYear() ),
 					x, y, w, h)
 
-	def DrawSimpleDayHeader(self, day, x, y, w, h):
-		if day.IsSameDate(wx.DateTime.Now()):
-			bg = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
-		else:
-			bg = wx.Colour(242, 241, 239)
-
+	def DrawSimpleDayHeader(self, day, x, y, w, h, highlight=False):
 		return self._DrawHeader('%d' % day.GetDay(), x, y, w, h,
-					weight=wx.FONTWEIGHT_NORMAL, alignRight=True, bgBrushColor=bg)
+					weight=wx.FONTWEIGHT_NORMAL, alignRight=True)
 
 
 class wxBaseDrawer(HeaderDrawerDCMixin, HeaderDrawerMixin, wxDrawer):

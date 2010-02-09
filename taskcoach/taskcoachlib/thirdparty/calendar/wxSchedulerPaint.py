@@ -307,7 +307,8 @@ class wxSchedulerPaint( object ):
 		maxDY = 0
 		for weekday in xrange(7):
 			theDay = utils.setToWeekDayInSameWeek(utils.copyDateTime(firstDay), weekday, self._weekstart)
-			w, h = drawer.DrawDayHeader(theDay, x + weekday * 1.0 * width / 7, y, 1.0 * width / 7, height)
+			w, h = drawer.DrawDayHeader(theDay, x + weekday * 1.0 * width / 7, y, 1.0 * width / 7, height,
+						    highlight=theDay.IsSameDate(wx.DateTime.Now()))
 			maxDY = max(maxDY, h)
 
 		if self._style == wxSCHEDULER_VERTICAL:
@@ -394,7 +395,9 @@ class wxSchedulerPaint( object ):
 			for idx in xrange(daysCount):
 				theDay = utils.copyDateTime(day)
 				theDay.AddDS(wx.DateSpan(days=idx))
-				w, h = drawer.DrawSimpleDayHeader(theDay, x + 1.0 * idx * width / daysCount, y, 1.0 * width / daysCount, height)
+				w, h = drawer.DrawSimpleDayHeader(theDay, x + 1.0 * idx * width / daysCount,
+								  y, 1.0 * width / daysCount, height,
+								  theDay.IsSameDate(wx.DateTime.Now()))
 				maxDY = max(maxDY, h)
 
 			y += maxDY
