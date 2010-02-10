@@ -14,9 +14,10 @@ class wxReportScheduler( wx.Printout ):
 	For other info on wxPrintOut class and methods check the wxPython 
 	documentation (RTFM for nerds ;-) ).
 	"""
-	def __init__( self, format, style, day, schedules ):
+	def __init__( self, format, style, drawerClass, day, schedules ):
 		self._format	= format
 		self._style = style
+		self._drawerClass = drawerClass
 		self._day		= day
 		self._schedules	= schedules
 		self.pages		= 1
@@ -31,6 +32,7 @@ class wxReportScheduler( wx.Printout ):
 		scheduler = wxSchedulerPrint( dc )
 		scheduler.SetViewType( self._format )
 		scheduler.SetStyle( self._style )
+		scheduler.SetDrawer( self._drawerClass )
 		scheduler.SetDate( day )
 		
 		return scheduler
@@ -45,30 +47,12 @@ class wxReportScheduler( wx.Printout ):
 		dc = self.GetDC()
 		scheduler = self._GetScheduler( dc, self._day )
 		
-		dcW, dcH = dc.GetSizeTuple()
-		mm = float( dcW ) / dc.GetSizeMM().width
-		
-		marginL = 10 * mm
-		marginR = 10 * mm
-		marginT = 10 * mm
-		marginB = 15 * mm
-		
-		dcW	-= marginL - marginR - 5
-		dcH	-= marginT - marginB - 5
-		
-		size = scheduler.GetViewSize()
-		
-		scaleX = float( dcW ) / size.width
-		scaleY = float( dcH ) / size.height
-		scale = min( scaleX, scaleY )
-		
-		dc.SetUserScale( scale, scale )
-		dc.SetDeviceOrigin( marginL / scale, marginT / scale )
-		
 		for schedule in self._schedules:
 			scheduler.Add( schedule )
-			
-		schedSize = scheduler.GetViewSize()
+
+		size = scheduler.GetViewSize()
+		self.FitThisSizeToPage(size)
+
 		scheduler.Draw()
 		
 		return True

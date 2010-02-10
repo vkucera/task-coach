@@ -27,7 +27,7 @@ from taskcoachlib.domain import task, date
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, render, dialog
 from taskcoachlib.thirdparty.calendar import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, \
-    wxSCHEDULER_TODAY, wxSCHEDULER_HORIZONTAL
+    wxSCHEDULER_TODAY, wxSCHEDULER_HORIZONTAL, wxFancyDrawer
 import base, mixin
 
 
@@ -489,8 +489,6 @@ class SquareTaskViewer(BaseTaskViewer):
     
 
 class CalendarViewer(BaseTaskViewer):
-    # XXXTODO: popup, double-click
-
     defaultTitle = _('Calendar')
     defaultBitmap = 'date'
 
@@ -531,7 +529,19 @@ class CalendarViewer(BaseTaskViewer):
                                  self.settings.getint('view', 'efforthourend'))
 
     def createWidget(self):
-        return widgets.Calendar(self, self.presentation(), self.iconName, self.onSelect)
+        itemPopupMenu = self.createTaskPopupMenu()
+        self._popupMenus.append(itemPopupMenu)
+        widget = widgets.Calendar(self, self.presentation(), self.iconName, self.onSelect,
+                                  self.onEdit, itemPopupMenu)
+
+        # If called directly, we crash with a Cairo asser failing...
+        wx.CallAfter(widget.SetDrawer, wxFancyDrawer)
+
+        return widget
+
+    def onEdit(self, item):
+        edit = uicommand.TaskEdit(taskList=self.presentation(), viewer=self)
+        edit(item)
 
     def getToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
@@ -566,6 +576,21 @@ class CalendarViewer(BaseTaskViewer):
     def SetShowNoDueDate(self, doShow):
         self.settings.setboolean(self.settingsSection(), 'shownodue', doShow)
         self.widget.SetShowNoDueDate(doShow)
+
+    # We need to override these because BaseTaskViewer is a tree viewer, but
+    # CalendarViewer is not. There is probably a better solution...
+
+    def isSelectionExpandable(self):
+        return False
+
+    def isSelectionCollapsable(self):
+        return False
+
+    def isAnyItemExpandable(self):
+        return False
+
+    def isAnyItemCollapsable(self):
+        return False
 
 
 class TaskViewer(mixin.AttachmentDropTargetMixin, 

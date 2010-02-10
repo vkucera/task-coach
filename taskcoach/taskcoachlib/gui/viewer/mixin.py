@@ -423,6 +423,7 @@ class AttachmentDropTargetMixin(object):
             newItemDialog to create a new domain object and add the attachments
             to that new object. '''
         if item is None:
+            itemDialogKwargs['subject'] = attachments[0].subject()
             newItemDialog = self.newItemDialog(bitmap='new',
                 attachments=attachments, **itemDialogKwargs)
             newItemDialog.Show()

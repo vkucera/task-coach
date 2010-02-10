@@ -6,3 +6,4 @@ from wxSchedule import *
 from wxScheduleUtils import *
 from wxScheduler import *
 from wxSchedulerConstants import *
+from wxDrawer import *

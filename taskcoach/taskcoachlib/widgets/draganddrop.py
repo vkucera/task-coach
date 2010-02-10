@@ -1,7 +1,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2007-2010 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -66,13 +66,16 @@ class DropTarget(wx.DropTarget):
         self.__urlDataObject = wx.TextDataObject()
         self.__fileDataObject = wx.FileDataObject()
         self.__thunderbirdMailDataObject = wx.CustomDataObject('text/x-moz-message')
-        self.__macThunderbirdMailDataObject = wx.CustomDataObject('MZ\x00\x00')
+        self.__macThunderbirdMailDataObject = wx.CustomDataObject('MZ\x00\x00') # Doesn't work any more...
         self.__outlookDataObject = wx.CustomDataObject('Object Descriptor')
+        # Starting with Snow Leopard, mail.app supports the message: protocol
+        self.__macMailObject = wx.CustomDataObject('public.url')
         for dataObject in self.__fileDataObject, \
                           self.__thunderbirdMailDataObject, \
                           self.__outlookDataObject, \
                           self.__macThunderbirdMailDataObject, \
-                          self.__urlDataObject:
+                          self.__urlDataObject, \
+                          self.__macMailObject:
             # Note: The first data object added is the preferred data object.
             # We add urlData as last so that Outlook messages are not 
             # interpreted as text objects.
@@ -117,6 +120,10 @@ class DropTarget(wx.DropTarget):
             if self.__onDropMailCallback:
                 for mail in outlook.getCurrentSelection():
                     self.__onDropMailCallback(x, y, mail)
+        elif format.GetId() == 'public.url':
+            url = self.__macMailObject.GetData()
+            if url.startswith('message:') and self.__onDropURLCallback:
+                self.__onDropURLCallback(x, y, url)
 
         self.reinit()
         return wx.DragCopy

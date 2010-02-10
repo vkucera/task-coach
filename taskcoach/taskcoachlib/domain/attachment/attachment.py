@@ -159,6 +159,13 @@ class FileAttachment(Attachment):
 class URIAttachment(Attachment):
     type_ = 'uri'
 
+    def __init__(self, location, *args, **kwargs):
+        if location.startswith('message:'):
+            subject = mailer.getSubjectOfMail(location[8:])
+            if subject:
+                kwargs['subject'] = subject
+        super(URIAttachment, self).__init__(location, *args, **kwargs)
+
     def open(self, workingDir=None):
         return desktop.open(self.location())
 

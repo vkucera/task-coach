@@ -18,19 +18,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, operator
 from taskcoachlib.thirdparty.calendar import wxScheduler, wxSchedule, \
-    EVT_SCHEDULE_ACTIVATED
+    EVT_SCHEDULE_ACTIVATED, EVT_SCHEDULE_RIGHT_CLICK, \
+    EVT_SCHEDULE_DCLICK
 from taskcoachlib.domain.date import Date
 import tooltip
 
 
 class Calendar(tooltip.ToolTipMixin, wxScheduler):
-    def __init__(self, parent, taskList, iconProvider,  onSelect, *args, **kwargs):
+    def __init__(self, parent, taskList, iconProvider,  onSelect, onEdit, popupMenu, *args, **kwargs):
         self.getItemTooltipData = parent.getItemTooltipData
 
         super(Calendar, self).__init__(parent, wx.ID_ANY, *args, **kwargs)
 
         self.selectCommand = onSelect
         self.iconProvider = iconProvider
+        self.editCommand = onEdit
+        self.popupMenu = popupMenu
 
         self.__tip = tooltip.SimpleToolTip(self)
         self.__selection = []
@@ -44,6 +47,8 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
         self.RefreshAllItems(0)
 
         EVT_SCHEDULE_ACTIVATED(self, self.OnActivation)
+        EVT_SCHEDULE_RIGHT_CLICK(self, self.OnPopup)
+        EVT_SCHEDULE_DCLICK(self, self.OnEdit)
 
     def SetShowNoStartDate(self, doShow):
         self.__showNoStartDate = doShow
@@ -54,6 +59,8 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
         self.RefreshAllItems(0)
 
     def OnActivation(self, event):
+        self.SetFocus()
+
         if self.__selection:
             self.taskMap[self.__selection[0].id()].SetSelected(False)
 
@@ -65,6 +72,14 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
 
         wx.CallAfter(self.selectCommand)
         event.Skip()
+
+    def OnPopup(self, event):
+        self.OnActivation(event)
+        wx.CallAfter(self.PopupMenu, self.popupMenu)
+
+    def OnEdit(self, event):
+        if event.schedule is not None:
+            self.editCommand(event.schedule.task)
 
     def RefreshAllItems(self, count):
         selectionId = None
@@ -188,13 +203,13 @@ class TaskSchedule(wxSchedule):
             if started == Date():
                 self.start = wx.DateTimeFromDMY(1, 1, 0) # Huh
             else:
-                self.start = wx.DateTimeFromDMY(started.day, started.month - 1, started.year)
+                self.start = wx.DateTimeFromDMY(started.day, started.month - 1, started.year, 0, 0, 1)
 
             ended = self.task.dueDate()
             if ended == Date():
                 self.end = wx.DateTimeFromDMY(1, 1, 9999)
             else:
-                self.end = wx.DateTimeFromDMY(ended.day, ended.month - 1, ended.year, 23, 59, 59)
+                self.end = wx.DateTimeFromDMY(ended.day, ended.month - 1, ended.year, 23, 59, 0)
 
             if self.task.completed():
                 self.done = True

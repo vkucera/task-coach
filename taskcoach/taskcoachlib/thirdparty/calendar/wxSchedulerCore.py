@@ -8,7 +8,7 @@ import wx
 import wxScheduleUtils as utils
 
 if sys.version.startswith( "2.3" ):
-   from sets import Set as set
+	from sets import Set as set
 
 
 class InvalidSchedule( Exception ):
@@ -255,13 +255,7 @@ class wxSchedulerCore( wxSchedulerPaint ):
 	def Previous( self, steps=1 ):
 		for step in xrange( steps ):
 			self.SetViewType( wxSCHEDULER_PREV )
-		
-	def Refresh( self ):
-		"""
-		Override this method with the one for desired output
-		"""
-		pass
-	
+
 	def SetDate( self, date=None ):
 		# Go to the date. Default is today.
 		if date == None:
