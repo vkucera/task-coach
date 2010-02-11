@@ -198,16 +198,14 @@ class wxDrawer(object):
 			currentDay.AddDS(wx.DateSpan(days=dayNumber))
 
 			for startHour, endHour in workingHours:
-				startHourCopy = copyDateTime(startHour)
-				startHourCopy.SetDay(currentDay.GetDay())
-				startHourCopy.SetMonth(currentDay.GetMonth())
-				startHourCopy.SetYear(currentDay.GetYear())
+				startHourCopy = copyDateTime(currentDay)
+				startHourCopy.SetHour(startHour.GetHour())
+				startHourCopy.SetMinute(startHour.GetMinute())
 				startHourCopy.SetSecond(0)
 
-				endHourCopy = copyDateTime(endHour)
-				endHourCopy.SetDay(currentDay.GetDay())
-				endHourCopy.SetMonth(currentDay.GetMonth())
-				endHourCopy.SetYear(currentDay.GetYear())
+				endHourCopy = copyDateTime(currentDay)
+				endHourCopy.SetHour(endHour.GetHour())
+				endHourCopy.SetMinute(endHour.GetMinute())
 				endHourCopy.SetSecond(0)
 
 				totalSpan += endHourCopy.Subtract(startHourCopy).GetMinutes()

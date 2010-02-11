@@ -488,19 +488,30 @@ class wxSchedulerPaint( object ):
 		else:
 			size = self.GetSize()
 
+		bitmap = None
+
 		if self._dc is None:
 			if self._drawerClass.use_gc or not self._autoBufferedDC:
-				dc = wx.PaintDC(self)
+				# Trying  to  double-buffer  ourselves
+				# here.  Unfortunately,  this does not
+				# work on Windows when using a GC...
+
+				if self._drawerClass.use_gc and '__WXMSW__' in wx.PlatformInfo:
+					dc = wx.PaintDC(self)
+					self.PrepareDC(dc)
+				else:
+					bitmap = wx.EmptyBitmap(size.GetWidth(), size.GetHeight())
 			else:
 				dc = wx.AutoBufferedPaintDC(self)
-
-			self.PrepareDC( dc )
+				self.PrepareDC( dc )
 		else:
 			# We  can't assume that  the underlying  DC is
 			# supported by  GraphicsContext, so draw first
 			# into a bitmap
 
 			bitmap = wx.EmptyBitmap(size.GetWidth(), size.GetHeight())
+
+		if bitmap is not None:
 			dc = wx.MemoryDC()
 			dc.SelectObject(bitmap)
 
@@ -514,16 +525,25 @@ class wxSchedulerPaint( object ):
 
 			if self._drawerClass.use_gc:
 				context = wx.GraphicsContext.Create(dc)
-				#scrollX, scrollY = self.CalcUnscrolledPosition(0, 0)
-				#context.Translate(-scrollX, -scrollY)
 			else:
 				context = dc
 
 			self.DoPaint(self._drawerClass(context, self._lstDisplayedHours), 0, 0, size.GetWidth(), size.GetHeight())
 
-			if self._dc is not None:
+			if bitmap is not None:
 				dc.SelectObject(wx.NullBitmap)
-				self._dc.DrawBitmap(bitmap, 0, 0, True)
+
+				if self._dc is None:
+					dc = wx.PaintDC(self)
+					self.PrepareDC(dc)
+
+					dc.BeginDrawing()
+					try:
+						dc.DrawBitmap(bitmap, 0, 0, True)
+					finally:
+						dc.EndDrawing()
+				else:
+					self._dc.DrawBitmap(bitmap, 0, 0, True)
 		finally:
 			dc.EndDrawing()
 
