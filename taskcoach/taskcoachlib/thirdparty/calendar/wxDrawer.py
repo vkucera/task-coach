@@ -67,9 +67,14 @@ class wxDrawer(object):
 			self.context.DrawRoundedRectangle(x, y, w, h, SCHEDULE_INSIDE_MARGIN)
 
 			offsetY = SCHEDULE_INSIDE_MARGIN
-			if schedule.icon:
-				bitmap = wx.ArtProvider.GetBitmap( schedule.icon, wx.ART_FRAME_ICON, (16, 16) )
-				self.context.DrawBitmap( bitmap, x + 5, y + offsetY, 16, 16 )
+			if schedule.icons:
+				offsetX = 5
+				for icon in schedule.icons:
+					bitmap = wx.ArtProvider.GetBitmap( icon, wx.ART_FRAME_ICON, (16, 16) )
+					self.context.DrawBitmap( bitmap, x + offsetX, y + offsetY, 16, 16 )
+					offsetX += 20
+					if offsetX > w - SCHEDULE_INSIDE_MARGIN:
+						break
 				offsetY += 20
 
 			font = wx.NORMAL_FONT
@@ -89,9 +94,14 @@ class wxDrawer(object):
 			self.context.DrawRectangle(x, y, w, h)
 
 			offsetY = SCHEDULE_INSIDE_MARGIN
-			if schedule.icon:
-				bitmap = wx.ArtProvider.GetBitmap( schedule.icon, wx.ART_FRAME_ICON, (16, 16) )
-				self.context.DrawBitmap( bitmap, x + 5, y + offsetY, True )
+			if schedule.icons:
+				offsetX = 5
+				for icon in schedule.icons:
+					bitmap = wx.ArtProvider.GetBitmap( icon, wx.ART_FRAME_ICON, (16, 16) )
+					self.context.DrawBitmap( bitmap, x + offsetX, y + offsetY, True )
+					offsetX += 20
+					if offsetX > w - SCHEDULE_INSIDE_MARGIN:
+						break
 				offsetY += 20
 
 			font = self.context.GetFont()
@@ -154,7 +164,7 @@ class wxDrawer(object):
 		# Height is variable
 
 		actualHeight = SCHEDULE_INSIDE_MARGIN * 2
-		if schedule.icon:
+		if schedule.icons:
 			actualHeight += 20
 
 		x = x + position * width / total + SCHEDULE_OUTSIDE_MARGIN
@@ -198,14 +208,16 @@ class wxDrawer(object):
 			currentDay.AddDS(wx.DateSpan(days=dayNumber))
 
 			for startHour, endHour in workingHours:
-				startHourCopy = copyDateTime(currentDay)
-				startHourCopy.SetHour(startHour.GetHour())
-				startHourCopy.SetMinute(startHour.GetMinute())
+				startHourCopy = copyDateTime(startHour)
+				startHourCopy.SetDay(currentDay.GetDay())
+				startHourCopy.SetMonth(currentDay.GetMonth())
+				startHourCopy.SetYear(currentDay.GetYear())
 				startHourCopy.SetSecond(0)
 
-				endHourCopy = copyDateTime(currentDay)
-				endHourCopy.SetHour(endHour.GetHour())
-				endHourCopy.SetMinute(endHour.GetMinute())
+				endHourCopy = copyDateTime(endHour)
+				endHourCopy.SetDay(currentDay.GetDay())
+				endHourCopy.SetMonth(currentDay.GetMonth())
+				endHourCopy.SetYear(currentDay.GetYear())
 				endHourCopy.SetSecond(0)
 
 				totalSpan += endHourCopy.Subtract(startHourCopy).GetMinutes()

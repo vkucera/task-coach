@@ -150,6 +150,11 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
         wx.CallAfter(self.selectCommand)
 
     def RefreshItems(self, *args):
+        selectionId = None
+        if self.__selection:
+            selectionId = self.__selection[0].id()
+        self.__selection = []
+
         for task in args:
             doShow = True
 
@@ -167,11 +172,16 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
 
             if doShow:
                 if self.taskMap.has_key(task.id()):
-                    self.taskMap[task.id()].update()
+                    schedule = self.taskMap[task.id()]
+                    schedule.update()
                 else:
                     schedule = TaskSchedule(task, self.iconProvider)
                     self.taskMap[task.id()] = schedule
                     self.Add([schedule])
+
+                if task.id() == selectionId:
+                    self.__selection = [task]
+                    schedule.SetSelected(True)
             else:
                 if self.taskMap.has_key(task.id()):
                     self.Delete(self.taskMap[task.id()])
@@ -255,6 +265,12 @@ class TaskSchedule(wxSchedule):
             self.color = wx.Color(*(self.task.backgroundColor() or (255, 255, 255)))
             self.foreground = wx.Color(*(self.task.foregroundColor(True) or (0, 0, 0)))
 
-            self.icon = self.iconProvider(self.task, False)
+            self.icons = [self.iconProvider(self.task, False)]
+
+            if self.task.attachments():
+                self.icons.append('attachment')
+
+            if self.task.notes():
+                self.icons.append('note')
         finally:
             self.Thaw()

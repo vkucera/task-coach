@@ -522,7 +522,9 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
                              eventType='view.efforthourend')
 
         for eventType in (task.Task.subjectChangedEventType(), 'task.startDate',
-            'task.dueDate', 'task.completionDate'):
+            'task.dueDate', 'task.completionDate',
+                          task.Task.attachmentsChangedEventType(),
+                          task.Task.notesChangedEventType()):
             self.registerObserver(self.onAttributeChanged, eventType)
 
     def onWorkingHourChanged(self, event):
