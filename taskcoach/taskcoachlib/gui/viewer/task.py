@@ -488,7 +488,8 @@ class SquareTaskViewer(BaseTaskViewer):
 
     
 
-class CalendarViewer(BaseTaskViewer):
+class CalendarViewer(mixin.AttachmentDropTargetMixin,
+                     BaseTaskViewer):
     defaultTitle = _('Calendar')
     defaultBitmap = 'date'
 
@@ -532,7 +533,8 @@ class CalendarViewer(BaseTaskViewer):
         itemPopupMenu = self.createTaskPopupMenu()
         self._popupMenus.append(itemPopupMenu)
         widget = widgets.Calendar(self, self.presentation(), self.iconName, self.onSelect,
-                                  self.onEdit, self.onCreate, itemPopupMenu)
+                                  self.onEdit, self.onCreate, itemPopupMenu,
+                                  **self.widgetCreationKeywordArguments())
 
         # If called directly, we crash with a Cairo asser failing...
         wx.CallAfter(widget.SetDrawer, wxFancyDrawer)

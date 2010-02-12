@@ -21,6 +21,7 @@ from taskcoachlib.thirdparty.calendar import wxScheduler, wxSchedule, \
     EVT_SCHEDULE_ACTIVATED, EVT_SCHEDULE_RIGHT_CLICK, \
     EVT_SCHEDULE_DCLICK
 from taskcoachlib.domain.date import Date
+from taskcoachlib.widgets import draganddrop
 import tooltip
 
 
@@ -29,7 +30,17 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
                  onCreate, popupMenu, *args, **kwargs):
         self.getItemTooltipData = parent.getItemTooltipData
 
+        self.__onDropURLCallback = kwargs.pop('onDropURL', None)
+        self.__onDropFilesCallback = kwargs.pop('onDropFiles', None)
+        self.__onDropMailCallback = kwargs.pop('onDropMail', None)
+
+        self.dropTarget = draganddrop.DropTarget(self.OnDropURL,
+                                                 self.OnDropFiles,
+                                                 self.OnDropMail)
+
         super(Calendar, self).__init__(parent, wx.ID_ANY, *args, **kwargs)
+
+        self.SetDropTarget(self.dropTarget)
 
         self.selectCommand = onSelect
         self.iconProvider = iconProvider
@@ -51,6 +62,26 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
         EVT_SCHEDULE_ACTIVATED(self, self.OnActivation)
         EVT_SCHEDULE_RIGHT_CLICK(self, self.OnPopup)
         EVT_SCHEDULE_DCLICK(self, self.OnEdit)
+
+    def _handleDrop(self, x, y, object, cb):
+        if cb is not None:
+            item = self._findSchedule(wx.Point(x, y))
+
+            if item is not  None:
+                if isinstance(item, TaskSchedule):
+                    cb(item.task, object)
+                else:
+                    date = Date(item.GetYear(), item.GetMonth() + 1, item.GetDay())
+                    cb(None, object, startDate=date, dueDate=date)
+
+    def OnDropURL(self, x, y, url):
+        self._handleDrop(x, y, url, self.__onDropURLCallback)
+
+    def OnDropFiles(self, x, y, filenames):
+        self._handleDrop(x, y, filenames, self.__onDropFilesCallback)
+
+    def OnDropMail(self, x, y, mail):
+        self._handleDrop(x, y, mail, self.__onDropMailCallback)
 
     def SetShowNoStartDate(self, doShow):
         self.__showNoStartDate = doShow
