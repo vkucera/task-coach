@@ -1223,6 +1223,7 @@ class ObjectDelete(ObjectCommandBase):
         
 class TaskNew(TaskListCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
+        self.taskKeywords = kwargs.pop('taskKeywords', dict())
         taskList = kwargs['taskList']
         if 'menuText' not in kwargs:
             kwargs['menuText'] = taskList.newItemMenuText
@@ -1232,7 +1233,7 @@ class TaskNew(TaskListCommand, SettingsCommand):
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
             command.NewTaskCommand(self.taskList, 
-            categories=self.categoriesForTheNewTask()), 
+            categories=self.categoriesForTheNewTask(), **self.taskKeywords), 
             self.settings, self.taskList, self.mainWindow().taskFile, 
             bitmap=self.bitmap)
         newTaskDialog.Show(show)

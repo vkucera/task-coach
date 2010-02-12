@@ -21,18 +21,31 @@ from taskcoachlib.thirdparty.calendar import wxScheduler, wxSchedule, \
     EVT_SCHEDULE_ACTIVATED, EVT_SCHEDULE_RIGHT_CLICK, \
     EVT_SCHEDULE_DCLICK
 from taskcoachlib.domain.date import Date
+from taskcoachlib.widgets import draganddrop
 import tooltip
 
 
 class Calendar(tooltip.ToolTipMixin, wxScheduler):
-    def __init__(self, parent, taskList, iconProvider,  onSelect, onEdit, popupMenu, *args, **kwargs):
+    def __init__(self, parent, taskList, iconProvider,  onSelect, onEdit,
+                 onCreate, popupMenu, *args, **kwargs):
         self.getItemTooltipData = parent.getItemTooltipData
 
+        self.__onDropURLCallback = kwargs.pop('onDropURL', None)
+        self.__onDropFilesCallback = kwargs.pop('onDropFiles', None)
+        self.__onDropMailCallback = kwargs.pop('onDropMail', None)
+
+        self.dropTarget = draganddrop.DropTarget(self.OnDropURL,
+                                                 self.OnDropFiles,
+                                                 self.OnDropMail)
+
         super(Calendar, self).__init__(parent, wx.ID_ANY, *args, **kwargs)
+
+        self.SetDropTarget(self.dropTarget)
 
         self.selectCommand = onSelect
         self.iconProvider = iconProvider
         self.editCommand = onEdit
+        self.createCommand = onCreate
         self.popupMenu = popupMenu
 
         self.__tip = tooltip.SimpleToolTip(self)
@@ -49,6 +62,26 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
         EVT_SCHEDULE_ACTIVATED(self, self.OnActivation)
         EVT_SCHEDULE_RIGHT_CLICK(self, self.OnPopup)
         EVT_SCHEDULE_DCLICK(self, self.OnEdit)
+
+    def _handleDrop(self, x, y, object, cb):
+        if cb is not None:
+            item = self._findSchedule(wx.Point(x, y))
+
+            if item is not  None:
+                if isinstance(item, TaskSchedule):
+                    cb(item.task, object)
+                else:
+                    date = Date(item.GetYear(), item.GetMonth() + 1, item.GetDay())
+                    cb(None, object, startDate=date, dueDate=date)
+
+    def OnDropURL(self, x, y, url):
+        self._handleDrop(x, y, url, self.__onDropURLCallback)
+
+    def OnDropFiles(self, x, y, filenames):
+        self._handleDrop(x, y, filenames, self.__onDropFilesCallback)
+
+    def OnDropMail(self, x, y, mail):
+        self._handleDrop(x, y, mail, self.__onDropMailCallback)
 
     def SetShowNoStartDate(self, doShow):
         self.__showNoStartDate = doShow
@@ -78,7 +111,12 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
         wx.CallAfter(self.PopupMenu, self.popupMenu)
 
     def OnEdit(self, event):
-        if event.schedule is not None:
+        if event.schedule is None:
+            if event.date is not None:
+                self.createCommand(Date(event.date.GetYear(),
+                                        event.date.GetMonth() + 1,
+                                        event.date.GetDay()))
+        else:
             self.editCommand(event.schedule.task)
 
     def RefreshAllItems(self, count):
@@ -112,6 +150,11 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
         wx.CallAfter(self.selectCommand)
 
     def RefreshItems(self, *args):
+        selectionId = None
+        if self.__selection:
+            selectionId = self.__selection[0].id()
+        self.__selection = []
+
         for task in args:
             doShow = True
 
@@ -129,11 +172,16 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
 
             if doShow:
                 if self.taskMap.has_key(task.id()):
-                    self.taskMap[task.id()].update()
+                    schedule = self.taskMap[task.id()]
+                    schedule.update()
                 else:
                     schedule = TaskSchedule(task, self.iconProvider)
                     self.taskMap[task.id()] = schedule
                     self.Add([schedule])
+
+                if task.id() == selectionId:
+                    self.__selection = [task]
+                    schedule.SetSelected(True)
             else:
                 if self.taskMap.has_key(task.id()):
                     self.Delete(self.taskMap[task.id()])
@@ -217,6 +265,12 @@ class TaskSchedule(wxSchedule):
             self.color = wx.Color(*(self.task.backgroundColor() or (255, 255, 255)))
             self.foreground = wx.Color(*(self.task.foregroundColor(True) or (0, 0, 0)))
 
-            self.icon = self.iconProvider(self.task, False)
+            self.icons = [self.iconProvider(self.task, False)]
+
+            if self.task.attachments():
+                self.icons.append('attachment')
+
+            if self.task.notes():
+                self.icons.append('note')
         finally:
             self.Thaw()

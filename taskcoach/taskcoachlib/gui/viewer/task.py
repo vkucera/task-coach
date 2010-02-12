@@ -488,7 +488,8 @@ class SquareTaskViewer(BaseTaskViewer):
 
     
 
-class CalendarViewer(BaseTaskViewer):
+class CalendarViewer(mixin.AttachmentDropTargetMixin,
+                     BaseTaskViewer):
     defaultTitle = _('Calendar')
     defaultBitmap = 'date'
 
@@ -521,7 +522,9 @@ class CalendarViewer(BaseTaskViewer):
                              eventType='view.efforthourend')
 
         for eventType in (task.Task.subjectChangedEventType(), 'task.startDate',
-            'task.dueDate', 'task.completionDate'):
+            'task.dueDate', 'task.completionDate',
+                          task.Task.attachmentsChangedEventType(),
+                          task.Task.notesChangedEventType()):
             self.registerObserver(self.onAttributeChanged, eventType)
 
     def onWorkingHourChanged(self, event):
@@ -532,7 +535,8 @@ class CalendarViewer(BaseTaskViewer):
         itemPopupMenu = self.createTaskPopupMenu()
         self._popupMenus.append(itemPopupMenu)
         widget = widgets.Calendar(self, self.presentation(), self.iconName, self.onSelect,
-                                  self.onEdit, itemPopupMenu)
+                                  self.onEdit, self.onCreate, itemPopupMenu,
+                                  **self.widgetCreationKeywordArguments())
 
         # If called directly, we crash with a Cairo asser failing...
         wx.CallAfter(widget.SetDrawer, wxFancyDrawer)
@@ -542,6 +546,11 @@ class CalendarViewer(BaseTaskViewer):
     def onEdit(self, item):
         edit = uicommand.TaskEdit(taskList=self.presentation(), viewer=self)
         edit(item)
+
+    def onCreate(self, date):
+        create = uicommand.TaskNew(taskList=self.presentation(), settings=self.settings,
+                                   taskKeywords=dict(startDate=date, dueDate=date))
+        create(None)
 
     def getToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''

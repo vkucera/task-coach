@@ -432,13 +432,13 @@ class AttachmentDropTargetMixin(object):
                 [item], attachments=attachments)
             addAttachment.do()
 
-    def onDropURL(self, item, url):
+    def onDropURL(self, item, url, **kwargs):
         ''' This method is called by the widget when a URL is dropped on an 
             item. '''
         attachments = [attachment.URIAttachment(url)]
-        self._addAttachments(attachments, item)
+        self._addAttachments(attachments, item, **kwargs)
 
-    def onDropFiles(self, item, filenames):
+    def onDropFiles(self, item, filenames, **kwargs):
         ''' This method is called by the widget when one or more files
             are dropped on an item. '''
         attachmentBase = self.settings.get('file', 'attachmentbase')
@@ -447,14 +447,14 @@ class AttachmentDropTargetMixin(object):
         else:
             func = lambda x: x
         attachments = [attachment.FileAttachment(func(name)) for name in filenames]
-        self._addAttachments(attachments, item)
+        self._addAttachments(attachments, item, **kwargs)
 
-    def onDropMail(self, item, mail):
+    def onDropMail(self, item, mail, **kwargs):
         ''' This method is called by the widget when a mail message is dropped
             on an item. '''
         att = attachment.MailAttachment(mail)
         subject, content = att.read()
-        self._addAttachments([att], item, subject=subject, description=content)
+        self._addAttachments([att], item, subject=subject, description=content, **kwargs)
 
 
 class NoteColumnMixin(object):

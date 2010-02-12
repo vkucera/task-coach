@@ -224,8 +224,9 @@ class DeleteCommandWithTasksWithEffortTest(CommandWithEffortTestCase):
 
 
 class NewTaskCommandTest(TaskCommandTestCase):
-    def new(self, categories=None):
-        newTaskCommand = command.NewTaskCommand(self.taskList, categories=categories or [])
+    def new(self, categories=None, **kwargs):
+        newTaskCommand = command.NewTaskCommand(self.taskList, categories=categories or [],
+                                                **kwargs)
         newTask = newTaskCommand.items[0]
         newTaskCommand.do()
         return newTask
@@ -242,6 +243,11 @@ class NewTaskCommandTest(TaskCommandTestCase):
         self.assertDoUndoRedo(
             lambda: self.assertEqual(set([cat]), newTask.categories()),
             lambda: self.assertTaskList(self.originalList))
+
+    def testNewTaskWithKeywords(self):
+        d = date.Date(2042, 2, 3)
+        newTask = self.new(startDate=d)
+        self.assertEqual(d, newTask.startDate())
 
 
 class NewSubTaskCommandTest(TaskCommandTestCase):

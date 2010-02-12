@@ -47,7 +47,7 @@ class wxSchedule( wx.EvtHandler ):
 		self._start			= wx.DateTime().Now()
 		self._done			= False
 		self._clientdata	= None
-		self._icon			= None
+		self._icons			= []
 		
 		# Need for freeze the event notification
 		self._freeze = False 
@@ -86,7 +86,7 @@ class wxSchedule( wx.EvtHandler ):
 			"notes",
 			"start", 
 			"clientdata",
-			"icon",
+			"icons",
 		]
 		data = dict()
 					 
@@ -122,7 +122,7 @@ class wxSchedule( wx.EvtHandler ):
 		evt.end			= self._end
 		evt.notes		= self._notes
 		evt.start		= self._start
-		evt.icon		= self._icon
+		evt.icons		= self._icons
 		evt.schedule	= self
 		
 		evt.SetEventObject( self )
@@ -264,11 +264,11 @@ class wxSchedule( wx.EvtHandler ):
 		"""
 		return self._start
 	
-	def GetIcon(self):
-		return self._icon
+	def GetIcons(self):
+		return self._icons
 	
-	def SetIcon(self, value):
-		self._icon = value
+	def SetIcons(self, value):
+		self._icons = value
 		
 		self._eventNotification()
 
@@ -287,4 +287,4 @@ class wxSchedule( wx.EvtHandler ):
 	end = property( GetEnd, SetEnd )
 	notes = property( GetNotes, SetNotes )
 	clientdata = property( GetClientData, SetClientData )
-	icon = property( GetIcon, SetIcon )
+	icons = property( GetIcons, SetIcons )
