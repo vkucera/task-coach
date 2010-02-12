@@ -25,7 +25,8 @@ import tooltip
 
 
 class Calendar(tooltip.ToolTipMixin, wxScheduler):
-    def __init__(self, parent, taskList, iconProvider,  onSelect, onEdit, popupMenu, *args, **kwargs):
+    def __init__(self, parent, taskList, iconProvider,  onSelect, onEdit,
+                 onCreate, popupMenu, *args, **kwargs):
         self.getItemTooltipData = parent.getItemTooltipData
 
         super(Calendar, self).__init__(parent, wx.ID_ANY, *args, **kwargs)
@@ -33,6 +34,7 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
         self.selectCommand = onSelect
         self.iconProvider = iconProvider
         self.editCommand = onEdit
+        self.createCommand = onCreate
         self.popupMenu = popupMenu
 
         self.__tip = tooltip.SimpleToolTip(self)
@@ -78,7 +80,12 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
         wx.CallAfter(self.PopupMenu, self.popupMenu)
 
     def OnEdit(self, event):
-        if event.schedule is not None:
+        if event.schedule is None:
+            if event.date is not None:
+                self.createCommand(Date(event.date.GetYear(),
+                                        event.date.GetMonth() + 1,
+                                        event.date.GetDay()))
+        else:
             self.editCommand(event.schedule.task)
 
     def RefreshAllItems(self, count):

@@ -532,7 +532,7 @@ class CalendarViewer(BaseTaskViewer):
         itemPopupMenu = self.createTaskPopupMenu()
         self._popupMenus.append(itemPopupMenu)
         widget = widgets.Calendar(self, self.presentation(), self.iconName, self.onSelect,
-                                  self.onEdit, itemPopupMenu)
+                                  self.onEdit, self.onCreate, itemPopupMenu)
 
         # If called directly, we crash with a Cairo asser failing...
         wx.CallAfter(widget.SetDrawer, wxFancyDrawer)
@@ -542,6 +542,11 @@ class CalendarViewer(BaseTaskViewer):
     def onEdit(self, item):
         edit = uicommand.TaskEdit(taskList=self.presentation(), viewer=self)
         edit(item)
+
+    def onCreate(self, date):
+        create = uicommand.TaskNew(taskList=self.presentation(), settings=self.settings,
+                                   taskKeywords=dict(startDate=date, dueDate=date))
+        create(None)
 
     def getToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
