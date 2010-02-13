@@ -2212,7 +2212,7 @@ class CalendarViewerToday(ViewerCommand):
         try:
             self.viewer.SetViewType(wxSCHEDULER_TODAY)
         finally:
-            self.viewer.freeze()
+            self.viewer.thaw()
 
 
 class CalendarViewerTaskFilterChoice(ToolbarChoiceCommandMixin, ViewerCommand):
