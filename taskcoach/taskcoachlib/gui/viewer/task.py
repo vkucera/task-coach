@@ -527,6 +527,9 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
                           task.Task.notesChangedEventType()):
             self.registerObserver(self.onAttributeChanged, eventType)
 
+    def onEverySecond(self, event): # pylint: disable-msg=W0221,W0613
+        pass # Too expensive
+
     def atMidnight(self, event): # pylint: disable-msg=W0613
         if not self.settings.get(self.settingsSection(), 'viewdate'):
             # User has selected the "current" date/time; it may have
