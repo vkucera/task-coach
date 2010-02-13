@@ -435,6 +435,13 @@ class DatesPage(TaskHeadersMixin, PageWithHeaders):
             self.suggestReminder()
 
     def ok(self):
+        # Funny things happen with the date pickers without this (to
+        # reproduce: create a task, enter the start date by hand,
+        # click OK; the date is the current date instead of the one
+        # typed in).
+        wx.CallAfter(self._ok)
+
+    def _ok(self):
         recurrenceDict = {0: '', 1: 'daily', 2: 'weekly', 3: 'monthly', 4: 'yearly'}
         kwargs = dict(unit=recurrenceDict[self._recurrenceEntry.Selection])
         if self._maxRecurrenceCheckBox.IsChecked():

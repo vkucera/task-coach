@@ -93,6 +93,16 @@ class EditorDisplayTest(TaskEditorTestCase):
         
         
 class NewTaskTest(TaskEditorTestCase):
+    def setUp(self):
+        super(NewTaskTest, self).setUp()
+
+        self.__old = wx.CallAfter
+        wx.CallAfter = lambda func, *args, **kwargs: func(*args, **kwargs)
+
+    def tearDown(self):
+        wx.CallAfter = self.__old
+        super(NewTaskTest, self).tearDown()
+
     def createCommand(self):
         newTaskCommand = command.NewTaskCommand(self.taskList)
         self.task = newTaskCommand.items[0] # pylint: disable-msg=W0201
@@ -233,6 +243,16 @@ class EditTaskTest(TaskEditorTestCase):
     def setUp(self):
         super(EditTaskTest, self).setUp()
         self.setSubject('Done')
+
+        # We  need  to  replace  wx.CallAfter  because  it's  used  in
+        # ok(). wx.Yield() does not seem to be enough.
+
+        self.__old = wx.CallAfter
+        wx.CallAfter = lambda func, *args, **kwargs: func(*args, **kwargs)
+
+    def tearDown(self):
+        wx.CallAfter = self.__old
+        super(EditTaskTest, self).tearDown()
 
     def createCommand(self):
         return command.EditTaskCommand(self.taskList, [self.task])

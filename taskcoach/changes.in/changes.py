@@ -36,8 +36,18 @@ drag and drop support for Mail.app under Snow Leopard, and fixes a few bugs.''',
 at the right position.''')
         ]
     ),
-    
-Release('0.78.3', 'January 26, 2010',
+
+Release('0.78.4', 'February 6, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''In some cases, when typing dates in the editor, they would
+be reset to the current day.''', '2942425'),
+        Bug('''Clear the drag image after dropping an item onto white space 
+(on Linux).''', '2947127')
+        ]
+    ),
+
+Release('0.78.3', 'January 31, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Free up resources (user objects and memory) on Windows when
