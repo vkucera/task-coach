@@ -18,6 +18,11 @@
 @synthesize infosLabel;
 @synthesize categoriesLabel;
 
+- (NSString *)trackingLedName
+{
+	return @"ledclockbig.png";
+}
+
 - (NSString *)completedLedName
 {
 	return @"ledgreenbig.png";

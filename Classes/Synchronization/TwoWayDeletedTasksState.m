@@ -24,7 +24,7 @@
 
 - (void)activated
 {
-	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT taskCoachId FROM Task WHERE status=%d", STATUS_DELETED]];
+	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT taskCoachId FROM CurrentTask WHERE status=%d", STATUS_DELETED]];
 	[req execWithTarget:self action:@selector(onDeletedTask:)];
 	
 	myController.state = [TwoWayModifiedTasksState stateWithNetwork:myNetwork controller:myController];

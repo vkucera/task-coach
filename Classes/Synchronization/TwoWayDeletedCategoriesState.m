@@ -22,7 +22,7 @@
 
 - (void)activated
 {
-	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT taskCoachId FROM Category WHERE status=%d", STATUS_DELETED]];
+	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT taskCoachId FROM CurrentCategory WHERE status=%d", STATUS_DELETED]];
 	[req execWithTarget:self action:@selector(onDeletedCategory:)];
 	
 	myController.state = [TwoWayModifiedCategoriesState stateWithNetwork:myNetwork controller:myController];

@@ -21,14 +21,7 @@
 {
 	NSObject <State> *next;
 	
-	if (controller.protocolVersion >= 3)
-	{
-		next = [TwoWayDeletedCategoriesState stateWithNetwork:network controller:controller];
-	}
-	else
-	{
-		next = [TwoWayNewTasksState stateWithNetwork:network controller:controller];
-	}
+	next = [TwoWayDeletedCategoriesState stateWithNetwork:network controller:controller];
 
 	return [[[TwoWayNewCategoriesState alloc] initWithNetwork:network controller:controller nextState:next expectIds:YES] autorelease];
 }
@@ -36,8 +29,10 @@
 - (void)activated
 {
 	[super activated];
+	
+	NSLog(@"New categories: activated.");
 
-	[self start:[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM Category WHERE status=%d", STATUS_NEW]]];
+	[self start:[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM CurrentCategory WHERE status=%d", STATUS_NEW]]];
 }
 
 - (void)onCategoryParent:(NSDictionary *)dict
@@ -47,22 +42,21 @@
 
 - (void)onObject:(NSDictionary *)dict
 {
+	NSLog(@"Found category.");
+
 	[super onObject:dict];
-	
+
 	[myNetwork appendString:[dict objectForKey:@"name"]];
-	
-	if (myController.protocolVersion >= 3)
+
+	if ([dict objectForKey:@"parentId"])
 	{
-		if ([dict objectForKey:@"parentId"])
-		{
-			Statement *req = [[Database connection] statementWithSQL:@"SELECT taskCoachId FROM Category WHERE id=?"];
-			[req bindInteger:[(NSNumber *)[dict objectForKey:@"parentId"] intValue] atIndex:1];
-			[req execWithTarget:self action:@selector(onCategoryParent:)];
-		}
-		else
-		{
-			[myNetwork appendInteger:0];
-		}
+		Statement *req = [[Database connection] statementWithSQL:@"SELECT taskCoachId FROM Category WHERE id=?"];
+		[req bindInteger:[(NSNumber *)[dict objectForKey:@"parentId"] intValue] atIndex:1];
+		[req execWithTarget:self action:@selector(onCategoryParent:)];
+	}
+	else
+	{
+		[myNetwork appendString:nil];
 	}
 }
 

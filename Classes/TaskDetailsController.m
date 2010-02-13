@@ -9,6 +9,7 @@
 #import "TaskDetailsController.h"
 #import "DatePickerViewController.h"
 #import "TaskCategoryPickerController.h"
+#import "EffortView.h"
 
 #import "Task.h"
 
@@ -25,6 +26,52 @@
 
 @implementation TaskDetailsController
 
+- (void)updateTrackButton
+{
+	BOOL isTracking = [task currentEffort] != nil;
+
+	UIImage *img;
+
+	if (isTracking)
+	{
+		img = [[UIImage imageNamed:@"blueButton.png"] stretchableImageWithLeftCapWidth:12.0 topCapHeight:0.0];
+	}
+	else
+	{
+		img = [[UIImage imageNamed:@"redButton.png"] stretchableImageWithLeftCapWidth:12.0 topCapHeight:0.0];
+	}
+
+	[effortCell.button setBackgroundImage:img forState:UIControlStateNormal];
+
+	img = [[UIImage imageNamed:@"whiteButton.png"] stretchableImageWithLeftCapWidth:12.0 topCapHeight:0.0];
+	[effortCell.button setBackgroundImage:img forState:UIControlStateHighlighted];
+
+	if (isTracking)
+		[effortCell.button setTitle:_("Stop tracking") forState:UIControlStateNormal];
+	else
+		[effortCell.button setTitle:_("Start tracking") forState:UIControlStateNormal];
+
+	// Efforts can only be added
+	NSInteger effortCount = [[task efforts] count];
+
+	if (effortCount)
+	{
+		if (!effortsCell)
+		{
+			effortsCell = [[UITableViewCell alloc] initWithFrame:CGRectZero];
+			effortsCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			[cells addObject:effortsCell];
+			[effortsCell release];
+			effortsCell.textLabel.text = [NSString stringWithFormat:_("%d effort(s)"), effortCount];
+			[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:[cells count] - 1 inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+		}
+		else
+		{
+			effortsCell.textLabel.text = [NSString stringWithFormat:_("%d effort(s)"), effortCount];
+		}
+	}
+}
+
 - initWithTask:(Task *)theTask category:(NSInteger)category
 {
 	if (self = [super initWithNibName:@"TaskDetails" bundle:[NSBundle mainBundle]])
@@ -34,12 +81,11 @@
 
 		cells = [[NSMutableArray alloc] initWithCapacity:5];
 
-		SwitchCell *completeCell = [[CellFactory cellFactory] createSwitchCell];
-		[completeCell setDelegate:self];
-		completeCell.label.text = _("Complete");
-		[completeCell.switch_ setOn:(task.completionDate != nil)];
-		[cells addObject:completeCell];
-		
+		effortCell = [[CellFactory cellFactory] createButtonCell];
+		[effortCell.button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+		[effortCell setTarget:self action:@selector(onTrack:)];
+		[cells addObject:effortCell];
+
 		TextFieldCell *nameCell = [[CellFactory cellFactory] createTextFieldCell];
 		nameCell.textField.delegate = self;
 		nameCell.textField.text = task.name;
@@ -64,15 +110,23 @@
 
 		startDateCell = [[CellFactory cellFactory] createDateCell];
 		[startDateCell setDelegate:self];
-		startDateCell.label.text = _("Start date");
+		startDateCell.label.text = _("Start");
 		[startDateCell setDate:task.startDate];
 		[cells addObject:startDateCell];
 		
 		dueDateCell = [[CellFactory cellFactory] createDateCell];
 		[dueDateCell setDelegate:self];
-		dueDateCell.label.text = _("Due date");
+		dueDateCell.label.text = _("Due");
 		[dueDateCell setDate:task.dueDate];
 		[cells addObject:dueDateCell];
+		
+		completionDateCell = [[CellFactory cellFactory] createDateCell];
+		[completionDateCell setDelegate:self];
+		completionDateCell.label.text = _("Completion");
+		[completionDateCell setDate:task.completionDate];
+		[cells addObject:completionDateCell];
+
+		[self updateTrackButton];
 	}
 
 	return self;
@@ -168,10 +222,20 @@
 			[dueDateCell setDate:nil];
 		}
 	}
-	else
+	else if (cell == completionDateCell)
 	{
-		[task setCompleted:cell.switch_.on];
-		[self saveTask];
+		if (cell.switch_.on)
+		{
+			DatePickerViewController *ctrl = [[DatePickerViewController alloc] initWithDate:task.completionDate target:self action:@selector(onPickCompletionDate:)];
+			[self.navigationController presentModalViewController:ctrl animated:YES];
+			[ctrl release];
+		}
+		else
+		{
+			task.completionDate = nil;
+			[self saveTask];
+			[completionDateCell setDate:nil];
+		}
 	}
 }
 
@@ -231,6 +295,52 @@
 	[dueDateCell setDate:task.dueDate];
 }
 
+- (void)onPickCompletionDate:(NSDate *)date
+{
+	[self.navigationController dismissModalViewControllerAnimated:YES];
+
+	if (date)
+		task.completionDate = [[DateUtils instance] stringFromDate:date];
+	else
+		task.completionDate = nil;
+
+	[self saveTask];
+	[completionDateCell setDate:task.completionDate];
+}
+
+- (void)onTrackedTasksCount:(NSDictionary *)dict
+{
+	trackedTasksCount = [[dict objectForKey:@"total"] intValue];
+}
+
+- (void)onTrack:(ButtonCell *)cell
+{
+	if ([task currentEffort])
+	{
+		[task stopTracking];
+	}
+	else
+	{
+		Statement *st = [[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM CurrentEffort WHERE ended IS NULL"];
+		trackedTasksCount = 0;
+		[st execWithTarget:self action:@selector(onTrackedTasksCount:)];
+
+		if (trackedTasksCount)
+		{
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Warning") message:[NSString stringWithFormat:_("There are %d task(s) currently tracked. Stop tracking them ?"), trackedTasksCount]
+														   delegate:self cancelButtonTitle:_("Cancel") otherButtonTitles:_("Yes"), _("No"), nil];
+			[alert show];
+			[alert release];
+		}
+		else
+		{
+			[task startTracking];
+		}
+	}
+
+	[self updateTrackButton];
+}
+
 #pragma mark Table view methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -272,6 +382,16 @@
 	{
 		ctrl = [[DatePickerViewController alloc] initWithDate:task.dueDate target:self action:@selector(onPickDueDate:)];
 	}
+	else if (cell == completionDateCell)
+	{
+		ctrl = [[DatePickerViewController alloc] initWithDate:task.completionDate target:self action:@selector(onPickCompletionDate:)];
+	}
+	else if (cell = effortsCell)
+	{
+		EffortView *c = [[EffortView alloc] initWithTask:task];
+		[self.navigationController pushViewController:c animated:YES];
+		[c release];
+	}
 
 	if (ctrl)
 	{
@@ -285,7 +405,7 @@
 	UITableViewCell *cell = [cells objectAtIndex:indexPath.row];
 	
 	if (cell == descriptionCell)
-		return 180;
+		return 150;
 	return 44;
 }
 
@@ -334,6 +454,38 @@
 - (void)onSaveDescription:(UIBarButtonItem *)button
 {
 	[descriptionCell.textView resignFirstResponder];
+}
+
+// UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+	switch (buttonIndex)
+	{
+		case 0: // Cancel
+			break;
+		case 1: // Yes: stop tracking other tasks
+		{
+			NSString *now = [[TimeUtils instance] stringFromDate:[NSDate date]];
+			Statement *req;
+			if ([[Database connection] currentFile])
+			{
+				req = [[Database connection] statementWithSQL:@"UPDATE Effort SET ended=? WHERE ended IS NULL AND (fileId=? OR fileId IS NULL)"];
+				[req bindInteger:[[[Database connection] currentFile] intValue] atIndex:2];
+			}
+			else
+			{
+				req = [[Database connection] statementWithSQL:@"UPDATE Effort SET ended=? WHERE ended IS NULL AND fileId IS NULL"];
+			}
+			[req bindString:now atIndex:1];
+			[req exec];
+		}
+			// No break; intended
+		case 2: // No, don't stop tracking others
+			[task startTracking];
+			[self updateTrackButton];
+			break;
+	}
 }
 
 @end

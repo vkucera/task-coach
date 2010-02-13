@@ -10,6 +10,7 @@
 #import "DomainObject.h"
 
 @class Category;
+@class Effort;
 
 #define TASKSTATUS_UNDEFINED         0
 #define TASKSTATUS_OVERDUE           1
@@ -27,7 +28,12 @@
 	
 	NSInteger taskStatus;
 
+	NSNumber *parentId;
+
 	BOOL hasCat;
+	NSInteger ccount;
+	NSString *_effort;
+	NSMutableArray *_efforts;
 }
 
 @property (nonatomic, retain) NSString *description;
@@ -35,14 +41,22 @@
 @property (nonatomic, retain) NSString *dueDate;
 @property (nonatomic, retain) NSString *completionDate;
 @property (nonatomic) NSInteger taskStatus;
+@property (nonatomic, retain) NSNumber *parentId;
 
-- initWithId:(NSInteger)ID name:(NSString *)name status:(NSInteger)status taskCoachId:(NSString *)taskCoachId description:(NSString *)description
-   startDate:(NSString *)startDate dueDate:(NSString *)dueDate completionDate:(NSString *)completionDate dateStatus:(NSInteger)dateStatus;
+- initWithId:(NSInteger)ID fileId:(NSNumber *)fileId name:(NSString *)name status:(NSInteger)status taskCoachId:(NSString *)taskCoachId description:(NSString *)description
+   startDate:(NSString *)startDate dueDate:(NSString *)dueDate completionDate:(NSString *)completionDate dateStatus:(NSInteger)dateStatus parentId:(NSNumber *)parentId;
 
 - (void)setCompleted:(BOOL)completed;
 
 - (BOOL)hasCategory:(Category *)category;
 - (void)removeCategory:(Category *)category;
 - (void)addCategory:(Category *)category;
+
+- (NSInteger)childrenCount;
+
+- (Effort *)currentEffort;
+- (NSArray *)efforts;
+- (void)startTracking;
+- (void)stopTracking;
 
 @end

@@ -11,6 +11,7 @@
 #import "SwitchCell.h"
 #import "DateCell.h"
 #import "DescriptionCell.h"
+#import "ButtonCell.h"
 
 @class Task;
 
@@ -18,14 +19,18 @@
 {
 	Task *task;
 	NSMutableArray *cells;
-	
+
+	ButtonCell *effortCell;
 	UITableViewCell *categoriesCell;
 	DateCell *startDateCell;
 	DateCell *dueDateCell;
+	DateCell *completionDateCell;
+	UITableViewCell *effortsCell;
 	
 	DescriptionCell *descriptionCell;
 
 	NSInteger categoryId;
+	NSInteger trackedTasksCount;
 }
 
 - initWithTask:(Task *)task category:(NSInteger)category;

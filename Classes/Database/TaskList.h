@@ -13,6 +13,7 @@
 
 @interface TaskList : NSObject
 {
+	NSNumber *parent;
 	NSMutableArray *tasks;
 	NSInteger firstIndex;
 	Statement *request;
@@ -22,11 +23,12 @@
 	NSInteger status;
 }
 
+@property (nonatomic, readonly) NSNumber *parent;
 @property (nonatomic, readonly) NSInteger count;
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) NSInteger status;
 
-- initWithView:(NSString *)viewName category:(NSInteger)categoryId title:(NSString *)title status:(NSInteger)status;
+- initWithView:(NSString *)viewName category:(NSInteger)categoryId title:(NSString *)title status:(NSInteger)status parentTask:(NSNumber *)parent;
 
 - (Task *)taskAtIndex:(NSInteger)index;
 - (void)reload;

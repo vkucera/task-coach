@@ -16,8 +16,6 @@
 	UILabel *label;
 	UIActivityIndicatorView *activity;
 	UIProgressView *progress;
-	UITextField *password;
-	UIButton *cancelButton;
 
 	NSString *host;
 	NSInteger port;
@@ -34,8 +32,6 @@
 @property (nonatomic, retain) IBOutlet UILabel *label;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *activity;
 @property (nonatomic, retain) IBOutlet UIProgressView *progress;
-@property (nonatomic, retain) IBOutlet UITextField *password;
-@property (nonatomic, retain) IBOutlet UIButton *cancelButton;
 
 @property (nonatomic, retain) NSObject <State> *state;
 @property (nonatomic) NSInteger protocolVersion;
@@ -44,6 +40,6 @@
 
 - (void)finished:(BOOL)ok;
 
-- (IBAction)onCancel:(UIButton *)button;
+- (void)cancel;
 
 @end

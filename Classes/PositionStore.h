@@ -11,6 +11,9 @@
 @class PositionStore;
 @class Position;
 
+#define TYPE_SUBTASK 0
+#define TYPE_DETAILS 1
+
 @protocol RestorableController
 
 - (UITableView *)tableView;
@@ -22,12 +25,14 @@
 {
 	NSInteger _scrollPosition;
 	NSIndexPath *indexPath;
+	NSInteger type;
 }
 
 @property (nonatomic, readonly) CGPoint scrollPosition;
 @property (nonatomic, readonly) NSIndexPath *indexPath;
+@property (nonatomic, readonly) NSInteger type;
 
-- initWithController:(id <RestorableController>)controller indexPath:(NSIndexPath *)indexPath;
+- initWithController:(id <RestorableController>)controller indexPath:(NSIndexPath *)indexPath type:(NSInteger)type;
 
 @end
 
@@ -42,7 +47,7 @@
 - initWithFile:(NSString *)path;
 - (void)save:(NSString *)path;
 
-- (void)push:(id <RestorableController>)controller indexPath:(NSIndexPath *)indexPath;
+- (void)push:(id <RestorableController>)controller indexPath:(NSIndexPath *)indexPath type:(NSInteger)type;
 - (void)pop;
 
 - (void)restore:(id <RestorableController>)controller;

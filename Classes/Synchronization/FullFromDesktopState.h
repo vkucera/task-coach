@@ -17,6 +17,7 @@
 	NSInteger state;
 	NSInteger categoryCount;
 	NSInteger taskCount;
+	NSInteger effortCount;
 	NSInteger doneCount;
 	NSInteger total;
 	
@@ -29,9 +30,17 @@
 	NSString *taskStart;
 	NSString *taskDue;
 	NSString *taskCompleted;
-	
+
+	NSString *effortId;
+	NSString *effortSubject;
+	NSString *effortTaskId;
+	NSDate *effortStarted;
+	NSDate *effortEnded;
+
 	NSInteger taskCategoryCount;
 	NSInteger taskLocalId;
+	NSInteger parentLocalId;
+	NSInteger effortTaskLocalId;
 }
 
 @end

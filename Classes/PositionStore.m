@@ -13,6 +13,7 @@ static PositionStore *_instance = nil;
 @implementation Position
 
 @synthesize indexPath;
+@synthesize type;
 
 - (CGPoint)scrollPosition
 {
@@ -21,7 +22,7 @@ static PositionStore *_instance = nil;
 	return p;
 }
 
-- initWithController:(id <RestorableController>)controller indexPath:(NSIndexPath *)path
+- initWithController:(id <RestorableController>)controller indexPath:(NSIndexPath *)path type:(NSInteger)theType
 {
 	if (self = [super init])
 	{
@@ -29,6 +30,7 @@ static PositionStore *_instance = nil;
 
 		_scrollPosition = p.y;
 		indexPath = [path retain];
+		type = theType;
 	}
 	
 	return self;
@@ -40,6 +42,7 @@ static PositionStore *_instance = nil;
 	{
 		_scrollPosition = [coder decodeIntegerForKey:@"scrollPosition"];
 		indexPath = [[coder decodeObjectForKey:@"indexPath"] retain];
+		type = [coder decodeIntegerForKey:@"type"];
 	}
 	
 	return self;
@@ -56,6 +59,7 @@ static PositionStore *_instance = nil;
 {
 	[coder encodeInteger:_scrollPosition forKey:@"scrollPosition"];
 	[coder encodeObject:indexPath forKey:@"indexPath"];
+	[coder encodeInteger:type forKey:@"type"];
 }
 
 @end
@@ -109,9 +113,9 @@ static PositionStore *_instance = nil;
 	[super dealloc];
 }
 
-- (void)push:(id <RestorableController>)controller indexPath:(NSIndexPath *)indexPath
+- (void)push:(id <RestorableController>)controller indexPath:(NSIndexPath *)indexPath type:(NSInteger)theType
 {
-	Position *pos = [[Position alloc] initWithController:controller indexPath:indexPath];
+	Position *pos = [[Position alloc] initWithController:controller indexPath:indexPath type:theType];
 	[positions addObject:pos];
 	[pos release];
 }

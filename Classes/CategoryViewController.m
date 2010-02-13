@@ -11,6 +11,7 @@
 #import "StringChoiceController.h"
 #import "TaskViewController.h"
 #import "SyncViewController.h"
+#import "FileChooser.h"
 #import "BadgedCell.h"
 #import "CellFactory.h"
 
@@ -26,6 +27,7 @@
 
 @synthesize navigationController;
 @synthesize syncButton;
+@synthesize fileButton;
 
 - (void)loadCategories
 {
@@ -36,7 +38,7 @@
 
 - (void)willTerminate
 {
-	[[PositionStore instance] push:self indexPath:nil];
+	[[PositionStore instance] push:self indexPath:nil type:0];
 }
 
 - (void)restorePosition:(Position *)pos store:(PositionStore *)store
@@ -46,23 +48,23 @@
 	if (pos.indexPath)
 	{
 		[self.tableView selectRowAtIndexPath:pos.indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-
+		
 		TaskViewController *ctrl;
 		
 		if (pos.indexPath.row)
 		{
-			ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:pos.indexPath.row - 1] name] category:[[categories objectAtIndex:pos.indexPath.row - 1] objectId] categoryController:self];
+			ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:pos.indexPath.row - 1] name] category:[[categories objectAtIndex:pos.indexPath.row - 1] objectId] categoryController:self parentTask:nil edit:NO];
 		}
 		else
 		{
-			ctrl = [[TaskViewController alloc] initWithTitle:_("All") category:-1 categoryController:self];
+			ctrl = [[TaskViewController alloc] initWithTitle:_("All") category:-1 categoryController:self parentTask:nil edit:NO];
 		}
 		
-		[[PositionStore instance] push:self indexPath:pos.indexPath];
+		[[PositionStore instance] push:self indexPath:pos.indexPath type:pos.type];
 		
 		[self.navigationController pushViewController:ctrl animated:YES];
 		[ctrl release];
-
+		
 		[store restore:ctrl];
 	}
 }
@@ -80,16 +82,18 @@
 		[fileManager createDirectoryAtPath:cachesDir attributes:nil];
 	}
 	
-	NSString *path = [cachesDir stringByAppendingPathComponent:@"positions.store"];
+	NSString *path = [cachesDir stringByAppendingPathComponent:@"positions.store.v2"];
 	
 	if ([fileManager fileExistsAtPath:path])
 	{
-		PositionStore *store = [[PositionStore alloc] initWithFile:[cachesDir stringByAppendingPathComponent:@"positions.store"]];
+		PositionStore *store = [[PositionStore alloc] initWithFile:[cachesDir stringByAppendingPathComponent:@"positions.store.v2"]];
 		[store restore:self];
 		[store release];
 	}
 	
 	[fileManager release];
+
+	fileButton.enabled = ([Database connection].fileNumber >= 2);
 }
 
 - (void)viewDidUnload
@@ -135,6 +139,13 @@
 	wantSync = YES;
 }
 
+- (IBAction)onChooseFile:(UIBarButtonItem *)button
+{
+	FileChooser *chooser = [[FileChooser alloc] initWithController:self];
+	[self.navigationController presentModalViewController:chooser animated:YES];
+	[chooser release];
+}
+
 - (IBAction)onAddCategory:(UIBarButtonItem *)button
 {
 	currentCategory = -1;
@@ -153,13 +164,19 @@
 		{
 			Category *parent = [categories objectAtIndex:currentCategory];
 
-			req = [[Database connection] statementWithSQL:@"INSERT INTO Category (name, parentId) VALUES (?, ?)"];
-			[req bindInteger:parent.objectId atIndex:2];
+			req = [[Database connection] statementWithSQL:@"INSERT INTO Category (name, fileId, parentId) VALUES (?, ?, ?)"];
+			[req bindInteger:parent.objectId atIndex:3];
 		}
 		else
-			req = [[Database connection] statementWithSQL:@"INSERT INTO Category (name) VALUES (?)"];
+			req = [[Database connection] statementWithSQL:@"INSERT INTO Category (name, fileId) VALUES (?, ?)"];
 
 		[req bindString:name atIndex:1];
+
+		if ([Database connection].currentFile)
+			[req bindInteger:[[Database connection].currentFile intValue] atIndex:2];
+		else
+			[req bindNullAtIndex:2];
+
 		[req exec];
 		[self loadCategories];
 		[self.tableView reloadData];
@@ -327,14 +344,14 @@
 	
 		if (indexPath.row)
 		{
-			ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:indexPath.row - 1] name] category:[[categories objectAtIndex:indexPath.row - 1] objectId] categoryController:self];
+			ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:indexPath.row - 1] name] category:[[categories objectAtIndex:indexPath.row - 1] objectId] categoryController:self parentTask:nil edit:NO];
 		}
 		else
 		{
-			ctrl = [[TaskViewController alloc] initWithTitle:_("All") category:-1 categoryController:self];
+			ctrl = [[TaskViewController alloc] initWithTitle:_("All") category:-1 categoryController:self parentTask:nil edit:NO];
 		}
 	
-		[[PositionStore instance] push:self indexPath:indexPath];
+		[[PositionStore instance] push:self indexPath:indexPath type:TYPE_DETAILS];
 	
 		[self.navigationController pushViewController:ctrl animated:YES];
 		[ctrl release];
@@ -406,19 +423,19 @@
 
 			cell.textLabel.text = _("All");
 
-			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM AllTask WHERE completionDate IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
+			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM AllTask WHERE completionDate IS NULL AND parentId IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
 			cell.badge.text = [NSString stringWithFormat:@"%d", totalCount];
 			cell.badge.capsuleColor = [UIColor blackColor];
-			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM NotStartedTask WHERE completionDate IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
+			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM NotStartedTask WHERE completionDate IS NULL AND parentId IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
 			if (totalCount)
 				[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", totalCount] capsuleColor:[UIColor grayColor]];
-			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM StartedTask WHERE completionDate IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
+			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM StartedTask WHERE completionDate IS NULL AND parentId IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
 			if (totalCount)
 				[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", totalCount] capsuleColor:[UIColor blueColor]];
-			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM DueSoonTask WHERE completionDate IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
+			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM DueSoonTask WHERE completionDate IS NULL AND parentId IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
 			if (totalCount)
 				[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", totalCount] capsuleColor:[UIColor orangeColor]];
-			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM OverdueTask WHERE completionDate IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
+			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM OverdueTask WHERE completionDate IS NULL AND parentId IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
 			if (totalCount)
 				[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", totalCount] capsuleColor:[UIColor redColor]];
 			
@@ -495,6 +512,7 @@
 	[self.tableView reloadData];
 	[self.navigationController dismissModalViewControllerAnimated:YES];
 	syncButton.enabled = YES;
+	fileButton.enabled = ([Database connection].fileNumber >= 2);
 }
 
 - (void)bonjourBrowser:(BonjourBrowser*)browser didResolveInstance:(NSNetService*)ref
