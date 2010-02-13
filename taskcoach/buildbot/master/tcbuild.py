@@ -95,6 +95,8 @@ class Coverage(Compile):
 
     def __init__(self, **kwargs):
         kwargs['command'] = ['make', 'coverage']
+        # Same remark as for UnitTests
+        kwargs['haltOnFailure'] = False
         Compile.__init__(self, **kwargs)
 
     def createSummary(self, log):
