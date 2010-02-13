@@ -25,7 +25,8 @@ releases = [
 
 Release('0.79.0', 'January 31, 2010',
     summary='''This release adds a calendar viewer for tasks and partial
-drag and drop support for Mail.app under Snow Leopard, and fixes a few bugs.''',
+drag and drop support for Mail.app under Leopard and Snow Leopard, and
+fixes a few bugs.''',
     featuresAdded=[
         Feature('''Calendar viewer for tasks''', 'http://uservoice.com/a/iQI4g'),
         Feature('''Drag and drop e-mail from Mail.app, on Leopard and Snow Leopard.''',
