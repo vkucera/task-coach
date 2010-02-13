@@ -68,6 +68,18 @@ static Database *database = nil;
 	self.currentFile = [dict objectForKey:@"id"];
 }
 
+- (void)onFileNumber:(NSDictionary *)dict
+{
+	fileNumber = [[dict objectForKey:@"total"] intValue];
+}
+
+- (NSInteger)fileNumber
+{
+	[[self statementWithSQL:@"SELECT COUNT(*) AS total FROM TaskCoachFile"] execWithTarget:self action:@selector(onFileNumber:)];
+	
+	return fileNumber;
+}
+
 - (void)rollback
 {
 	[super rollback];

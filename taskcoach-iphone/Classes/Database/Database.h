@@ -13,9 +13,11 @@
 @interface Database : SQLite
 {
 	NSNumber *currentFile;
+	NSInteger fileNumber;
 }
 
 @property (nonatomic, retain) NSNumber *currentFile;
+@property (nonatomic, readonly) NSInteger fileNumber;
 
 // This is a Singleton
 + (Database *)connection;
