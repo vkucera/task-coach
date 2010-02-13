@@ -12,10 +12,13 @@ class wxScheduler( wxSchedulerCore, scrolled.ScrolledPanel ):
 
 		super( wxScheduler, self ).__init__( *args, **kwds )
 
+		self._sizeTimer = None
+
 		self.Bind( wx.EVT_PAINT, self.OnPaint )
 		self.Bind( wx.EVT_LEFT_DOWN, self.OnClick )
 		self.Bind( wx.EVT_RIGHT_DOWN, self.OnRightClick )
 		self.Bind( wx.EVT_LEFT_DCLICK, self.OnDClick )
+		self.Bind( wx.EVT_SIZE, self.OnSize )
 
 		self.SetScrollRate(10, 10)
 
@@ -29,11 +32,27 @@ class wxScheduler( wxSchedulerCore, scrolled.ScrolledPanel ):
 	def OnDClick( self, evt ):
 		self._doDClickControl( self._getEventCoordinates( evt ) )
 
+	def OnSize( self, evt ):
+		if self._sizeTimer is None:
+			id_ = wx.NewId()
+			self._sizeTimer = wx.Timer(self, id_)
+			self.Bind( wx.EVT_TIMER, self.OnSizeTimer, id=id_ )
+
+		self._sizeTimer.Start(250, True)
+		evt.Skip()
+
+	def OnSizeTimer( self, evt ):
+		self.Unbind( wx.EVT_TIMER )
+		self._sizeTimer = None
+		self.Refresh()
+
 	def Add( self, *args, **kwds ):
 		wxSchedulerCore.Add( self, *args, **kwds )
 		self._controlBindSchedules()
 		
 	def Refresh(self):
+		self._bitmap = None
+
 		super(wxScheduler, self).Refresh()
 		self.GetSizer().FitInside(self)
 
