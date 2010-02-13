@@ -27,7 +27,7 @@ from taskcoachlib.domain import task, date
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, render, dialog
 from taskcoachlib.thirdparty.calendar import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, \
-    wxSCHEDULER_TODAY, wxSCHEDULER_HORIZONTAL, wxFancyDrawer
+    wxSCHEDULER_TODAY, wxSCHEDULER_HORIZONTAL, wxSCHEDULER_TODAY, wxFancyDrawer
 import base, mixin
 
 
@@ -526,6 +526,14 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
                           task.Task.attachmentsChangedEventType(),
                           task.Task.notesChangedEventType()):
             self.registerObserver(self.onAttributeChanged, eventType)
+
+    def atMidnight(self, event): # pylint: disable-msg=W0613
+        if not self.settings.get(self.settingsSection(), 'viewdate'):
+            # User has selected the "current" date/time; it may have
+            # changed now
+            self.SetViewType(wxSCHEDULER_TODAY)
+
+        super(CalendarViewer, self).atMidnight(event)
 
     def onWorkingHourChanged(self, event):
         self.widget.SetWorkHours(self.settings.getint('view', 'efforthourstart'),
