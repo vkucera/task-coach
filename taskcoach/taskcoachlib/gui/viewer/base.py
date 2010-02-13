@@ -148,6 +148,12 @@ class Viewer(wx.Panel):
         event = patterns.Event(self.selectEventType(), self, self.curselection())
         wx.CallAfter(event.send)
 
+    def freeze(self):
+        self.widget.Freeze()
+
+    def thaw(self):
+        self.widget.Thaw()
+
     def refresh(self):
         self.widget.RefreshAllItems(len(self.presentation()))
     

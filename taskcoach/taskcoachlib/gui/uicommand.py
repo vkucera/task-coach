@@ -1150,8 +1150,11 @@ class ViewerHideCompletedTasks(ViewerCommand, UICheckCommand):
         return self.viewer.isHidingCompletedTasks()
         
     def doCommand(self, event):
-        self.viewer.hideCompletedTasks(self._isMenuItemChecked(event))
-
+        self.viewer.freeze()
+        try:
+            self.viewer.hideCompletedTasks(self._isMenuItemChecked(event))
+        finally:
+            self.viewer.thaw()
 
 class ViewerHideCompositeTasks(ViewerCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):
@@ -2164,7 +2167,11 @@ class CalendarViewerTypeChoice(ToolbarChoiceCommandMixin, ViewerCommand):
     choiceData = [wxSCHEDULER_DAILY, wxSCHEDULER_WEEKLY, wxSCHEDULER_MONTHLY]
 
     def doChoice(self, choice):
-        self.viewer.SetViewType(choice)
+        self.viewer.freeze()
+        try:
+            self.viewer.SetViewType(choice)
+        finally:
+            self.viewer.thaw()
 
 
 class CalendarViewerNextPeriod(ViewerCommand):
@@ -2174,7 +2181,11 @@ class CalendarViewerNextPeriod(ViewerCommand):
             helpText=_('Show next period'), bitmap='next', *args, **kwargs)
 
     def doCommand(self, event):
-        self.viewer.SetViewType(wxSCHEDULER_NEXT)
+        self.viewer.freeze()
+        try:
+            self.viewer.SetViewType(wxSCHEDULER_NEXT)
+        finally:
+            self.viewer.thaw()
 
 
 class CalendarViewerPreviousPeriod(ViewerCommand):
@@ -2184,7 +2195,11 @@ class CalendarViewerPreviousPeriod(ViewerCommand):
             helpText=_('Show previous period'), bitmap='prev', *args, **kwargs)
             
     def doCommand(self, event):
-        self.viewer.SetViewType(wxSCHEDULER_PREV)
+        self.viewer.freeze()
+        try:
+            self.viewer.SetViewType(wxSCHEDULER_PREV)
+        finally:
+            self.viewer.thaw()
 
 
 class CalendarViewerToday(ViewerCommand):
@@ -2193,7 +2208,11 @@ class CalendarViewerToday(ViewerCommand):
             helpText=_('Show today'), bitmap='date', *args, **kwargs)
             
     def doCommand(self, event):
-        self.viewer.SetViewType(wxSCHEDULER_TODAY)
+        self.viewer.freeze()
+        try:
+            self.viewer.SetViewType(wxSCHEDULER_TODAY)
+        finally:
+            self.viewer.freeze()
 
 
 class CalendarViewerTaskFilterChoice(ToolbarChoiceCommandMixin, ViewerCommand):
@@ -2201,8 +2220,12 @@ class CalendarViewerTaskFilterChoice(ToolbarChoiceCommandMixin, ViewerCommand):
     choiceData = [(False, False), (False, True), (True, False), (True, True)]
 
     def doChoice(self, (showStart, showDue)):
-        self.viewer.SetShowNoStartDate(showStart)
-        self.viewer.SetShowNoDueDate(showDue)
+        self.viewer.freeze()
+        try:
+            self.viewer.SetShowNoStartDate(showStart)
+            self.viewer.SetShowNoDueDate(showDue)
+        finally:
+            self.viewer.thaw()
 
 
 class ToggleAutoColumnResizing(UICheckCommand, ViewerCommand, SettingsCommand):

@@ -13,6 +13,8 @@ class wxScheduler( wxSchedulerCore, scrolled.ScrolledPanel ):
 		super( wxScheduler, self ).__init__( *args, **kwds )
 
 		self._sizeTimer = None
+		self._frozen = False
+		self._dirty = False
 
 		self.Bind( wx.EVT_PAINT, self.OnPaint )
 		self.Bind( wx.EVT_LEFT_DOWN, self.OnClick )
@@ -51,10 +53,22 @@ class wxScheduler( wxSchedulerCore, scrolled.ScrolledPanel ):
 		self._controlBindSchedules()
 		
 	def Refresh(self):
-		self._bitmap = None
+		if self._frozen:
+			self._dirty = True
+		else:
+			self._bitmap = None
 
-		super(wxScheduler, self).Refresh()
-		self.GetSizer().FitInside(self)
+			super(wxScheduler, self).Refresh()
+			self.GetSizer().FitInside(self)
+			self._dirty = False
+
+	def Freeze(self):
+		self._frozen = True
+
+	def Thaw(self):
+		self._frozen = False
+		if self._dirty:
+			self.Refresh()
 
 	def SetResizable( self, value ):
 		"""
