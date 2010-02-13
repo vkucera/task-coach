@@ -33,6 +33,12 @@ class EffortTest(test.TestCase, asserts.Mixin):
     def onEvent(self, event):
         self.events.append(event)
         
+    def testId(self):
+        self.assert_(self.effort.id() is not None)
+
+    def testStatus(self):
+        self.assertEqual(self.effort.getStatus(), self.effort.STATUS_NEW)
+
     def testCreate(self):
         self.assertEqual(self.task, self.effort.task())
         self.assertEqual('', self.effort.description())
@@ -152,7 +158,16 @@ class EffortTest(test.TestCase, asserts.Mixin):
         self.assertEqualEfforts(copyEffort, self.effort)
         self.assertEqual(copyEffort.description(), 
             self.effort.description())
-        
+
+    def testCopyHasDifferentId(self):
+        copyEffort = self.effort.copy()
+        self.assertNotEqual(copyEffort.id(), self.effort.id())
+
+    def testCopyHasStatusNew(self):
+        self.effort.markDeleted()
+        copyEffort = self.effort.copy()
+        self.assertEqual(copyEffort.getStatus(), copyEffort.STATUS_NEW)
+
     def testDescription(self):
         self.effort.setDescription('description')
         self.assertEqual('description', self.effort.description())

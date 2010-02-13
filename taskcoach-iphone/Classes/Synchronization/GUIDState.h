@@ -12,7 +12,8 @@
 
 @interface GUIDState : BaseState <State>
 {
-	NSString *guid;
+	NSInteger state;
+	NSNumber *fileId;
 }
 
 @end

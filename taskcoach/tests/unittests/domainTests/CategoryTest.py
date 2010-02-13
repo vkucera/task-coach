@@ -234,7 +234,16 @@ class CategoryTest(test.TestCase):
         self.category.setSubject('New subject')
         copy = self.category.copy()
         self.assertEqual(copy.subject(), self.category.subject())
-    
+
+    def testCopy_IdIsDifferent(self):
+        copy = self.category.copy()
+        self.assertNotEqual(copy.id(), self.category.id())
+
+    def testCopy_StatusIsNew(self):
+        self.category.markDeleted()
+        copy = self.category.copy()
+        self.assertEqual(copy.getStatus(), copy.STATUS_NEW)
+
     # pylint: disable-msg=E1101
         
     def testCopy_SubjectIsDifferentFromOriginalSubject(self):

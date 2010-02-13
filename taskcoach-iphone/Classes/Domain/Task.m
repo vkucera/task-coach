@@ -8,11 +8,13 @@
 
 #import "Task.h"
 #import "Category.h"
+#import "Effort.h"
 
 #import "Database.h"
 #import "Statement.h"
 
 #import "DateUtils.h"
+#import "Configuration.h"
 
 static Statement *_saveStatement = NULL;
 
@@ -23,17 +25,19 @@ static Statement *_saveStatement = NULL;
 @synthesize dueDate;
 @synthesize completionDate;
 @synthesize taskStatus;
+@synthesize parentId;
 
-- initWithId:(NSInteger)theId name:(NSString *)theName status:(NSInteger)theStatus taskCoachId:(NSString *)tcId description:(NSString *)theDescription
-   startDate:(NSString *)theStartDate dueDate:(NSString *)theDueDate completionDate:(NSString *)theCompletionDate dateStatus:(NSInteger)dateStatus
+- initWithId:(NSInteger)theId fileId:(NSNumber *)theFileId name:(NSString *)theName status:(NSInteger)theStatus taskCoachId:(NSString *)tcId description:(NSString *)theDescription
+   startDate:(NSString *)theStartDate dueDate:(NSString *)theDueDate completionDate:(NSString *)theCompletionDate dateStatus:(NSInteger)dateStatus parentId:(NSNumber *)myParent
 {
-	if (self = [super initWithId:theId name:theName status:theStatus taskCoachId:tcId])
+	if (self = [super initWithId:theId fileId:theFileId name:theName status:theStatus taskCoachId:tcId])
 	{
 		description = [theDescription retain];
 		startDate = [theStartDate retain];
 		dueDate = [theDueDate retain];
 		completionDate = [theCompletionDate retain];
-		
+		parentId = [myParent retain];
+
 		taskStatus = dateStatus;
 	}
 	
@@ -47,36 +51,54 @@ static Statement *_saveStatement = NULL;
 	[dueDate release];
 	[completionDate release];
 
+	self.parentId = nil;
+
 	[super dealloc];
 }
 
 - (Statement *)saveStatement
 {
 	if (!_saveStatement)
-		_saveStatement = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE %@ SET name=?, status=?, taskCoachId=?, description=?, startDate=?, dueDate=?, completionDate=? WHERE id=?", [self class]]] retain];
+		_saveStatement = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE %@ SET fileId=?, name=?, status=?, taskCoachId=?, description=?, startDate=?, dueDate=?, completionDate=?, parentId=? WHERE id=?", [self class]]] retain];
 	return _saveStatement;
 }
 
 - (void)bindId
 {
-	[[self saveStatement] bindInteger:objectId atIndex:8];
+	[[self saveStatement] bindInteger:objectId atIndex:10];
 }
 
 - (void)bind
 {
 	[super bind];
 
-	[[self saveStatement] bindString:description atIndex:4];
-	[[self saveStatement] bindString:startDate atIndex:5];
-	[[self saveStatement] bindString:dueDate atIndex:6];
-	[[self saveStatement] bindString:completionDate atIndex:7];
+	[[self saveStatement] bindString:description atIndex:5];
+	[[self saveStatement] bindString:startDate atIndex:6];
+	[[self saveStatement] bindString:dueDate atIndex:7];
+	[[self saveStatement] bindString:completionDate atIndex:8];
+
+	if (parentId)
+		[[self saveStatement] bindInteger:[parentId intValue] atIndex:9];
+	else
+		[[self saveStatement] bindNullAtIndex:9];
+}
+
+- (void)deleteSubtasks:(NSDictionary *)dict
+{
+	// XXXTODO: delete efforts as well ?
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"DELETE FROM TaskHasCategory WHERE idTask=%@", [dict objectForKey:@"id"]]] exec];
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT id FROM Task WHERE parentId=%@", [dict objectForKey:@"id"]]] execWithTarget:self action:@selector(deleteSubtasks:)];
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"DELETE FROM Task WHERE id=%@", [dict objectForKey:@"id"]]] exec];
 }
 
 - (void)delete
 {
+	// XXXTODO: delete efforts as well ?
 	Statement *req = [[Database connection] statementWithSQL:@"DELETE FROM TaskHasCategory WHERE idTask=?"];
 	[req bindInteger:objectId atIndex:1];
 	[req exec];
+
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT id FROM Task WHERE parentId=%d", objectId]] execWithTarget:self action:@selector(deleteSubtasks:)];
 
 	[super delete];
 }
@@ -134,9 +156,88 @@ static Statement *_saveStatement = NULL;
 	[self save];
 }
 
+- (void)onChildCount:(NSDictionary *)dict
+{
+	ccount = [[dict objectForKey:@"total"] intValue];
+}
+
+- (NSInteger)childrenCount
+{
+	if ([Configuration configuration].showCompleted)
+	{
+		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(id) AS total FROM Task WHERE parentId=%d", objectId]] execWithTarget:self action:@selector(onChildCount:)];
+	}
+	else
+	{
+		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(id) AS total FROM Task WHERE parentId=%d AND completionDate IS NULL", objectId]] execWithTarget:self action:@selector(onChildCount:)];
+	}
+
+	return ccount;
+}
+
+- (void)updateEffort:(NSDictionary *)dict
+{
+	NSDate *ended = nil;
+	if ([dict objectForKey:@"ended"])
+		ended = [[TimeUtils instance] dateFromString:[dict objectForKey:@"ended"]];
+
+	_effort = [[Effort alloc] initWithId:[[dict objectForKey:@"id"] intValue] fileId:[dict objectForKey:@"fileId"] name:[dict objectForKey:@"name"] status:[[dict objectForKey:@"status"] intValue] taskCoachId:[dict objectForKey:@"taskCoachId"]
+								 started:[[TimeUtils instance] dateFromString:[dict objectForKey:@"started"]] ended:ended taskId:[dict objectForKey:@"taskId"]];
+}
+
+- (Effort *)currentEffort
+{
+	_effort = nil;
+
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM Effort WHERE taskId=%d AND ended IS NULL", objectId]] execWithTarget:self action:@selector(updateEffort:)];
+
+	return [_effort autorelease];
+}
+
+- (void)onEffort:(NSDictionary *)dict
+{
+	NSDate *ended = nil;
+	if ([dict objectForKey:@"ended"])
+		ended = [[TimeUtils instance] dateFromString:[dict objectForKey:@"ended"]];
+
+	[_efforts addObject:[[[Effort alloc] initWithId:[[dict objectForKey:@"id"] intValue] fileId:[dict objectForKey:@"fileId"] name:[dict objectForKey:@"name"]
+											 status:[[dict objectForKey:@"status"] intValue] taskCoachId:[dict objectForKey:@"taskCoachId"]
+											started:[[TimeUtils instance] dateFromString:[dict objectForKey:@"started"]]
+											  ended:ended
+											 taskId:[dict objectForKey:@"taskId"]] autorelease]];
+}
+
+- (NSArray *)efforts
+{
+	_efforts = [[NSMutableArray alloc] init];
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM CurrentEffort WHERE taskId=%d AND status != %d ORDER BY started DESC", objectId, STATUS_DELETED]] execWithTarget:self action:@selector(onEffort:)];
+	NSArray *result = [NSArray arrayWithArray:_efforts];
+	[_efforts release];
+	_efforts = nil;
+	return result;
+}
+
+- (void)startTracking
+{
+	// First, stop tracking if applicable. This shouldn't happen though...
+	if ([self currentEffort])
+		[self stopTracking];
+
+	// And create new effort
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"INSERT INTO Effort (fileId, name, taskId, started) VALUES (\"%@\", \"\", %d, \"%@\")", fileId, objectId, [[TimeUtils instance] stringFromDate:[NSDate date]]]] exec];
+}
+
+- (void)stopTracking
+{
+	Effort *effort = [self currentEffort];
+	effort.ended = [NSDate date];
+	[effort save];
+}
+
 // Overridden setters
 
-// setCategory is not there because it can't be changed from the UI.
+// There is no need to mark subtasks deleted. They will be deleted in the FullFromDesktop state of the
+// next sync.
 
 - (void)setDescription:(NSString *)descr
 {

@@ -18,8 +18,6 @@
 @synthesize progress;
 @synthesize state;
 @synthesize protocolVersion;
-@synthesize password;
-@synthesize cancelButton;
 
 - initWithTarget:(id)theTarget action:(SEL)theAction host:(NSString *)theHost port:(NSInteger)thePort
 {
@@ -40,7 +38,7 @@
 	[target performSelector:action];
 }
 
-- (IBAction)onCancel:(UIButton *)button
+- (void)cancel
 {
 	[state cancel];
 	[target performSelector:action];
@@ -49,9 +47,6 @@
 - (void)viewDidLoad
 {
 	label.text = _("Connecting...");
-	password.placeholder = _("Please type your password.");
-	password.hidden = YES;
-	cancelButton.hidden = YES;
 	
 	NSLog(@"Starting synchronization");
 	myNetwork = [[Network alloc] initWithAddress:host port:port delegate:self];
@@ -63,8 +58,6 @@
 	self.label = nil;
 	self.activity = nil;
 	self.progress = nil;
-	self.password = nil;
-	self.cancelButton = nil;
 }
 
 - (void)dealloc

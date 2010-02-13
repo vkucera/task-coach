@@ -236,8 +236,6 @@ const float kBadgeConcaveCapsuleClippingTrim = 3.0f;
 
 	size.width = -offset + 2 * kBadgeViewDefaultMargin;
 	
-	NSLog(@"Size: %.2f/%.2f", size.width, size.height);
-	
 	return size;
 }
 

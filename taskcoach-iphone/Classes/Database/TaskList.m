@@ -22,6 +22,7 @@
 
 @implementation TaskList
 
+@synthesize parent;
 @synthesize count;
 @synthesize title;
 @synthesize status;
@@ -33,21 +34,24 @@
 
 - (void)taskCallback:(NSDictionary *)dict
 {
-	Task *task = [[Task alloc] initWithId:[[dict objectForKey:@"id"] intValue] name:[dict objectForKey:@"name"] status:[[dict objectForKey:@"status"] intValue]
+	Task *task = [[Task alloc] initWithId:[[dict objectForKey:@"id"] intValue] fileId:[dict objectForKey:@"fileId"] name:[dict objectForKey:@"name"] status:[[dict objectForKey:@"status"] intValue]
 							   taskCoachId:[dict objectForKey:@"taskCoachId"]
 							   description:[dict objectForKey:@"description"]
 							   startDate:[dict objectForKey:@"startDate"]
 							   dueDate:[dict objectForKey:@"dueDate"]
 						       completionDate:[dict objectForKey:@"completionDate"]
-							   dateStatus:status];
+							   dateStatus:status
+							   parentId:[dict objectForKey:@"parentId"]];
 	[tasks addObject:task];
 	[task release];
 }
 
-- initWithView:(NSString *)viewName category:(NSInteger)categoryId title:(NSString *)theTitle status:(NSInteger)theStatus
+- initWithView:(NSString *)viewName category:(NSInteger)categoryId title:(NSString *)theTitle status:(NSInteger)theStatus parentTask:(NSNumber *)theParent
 {
 	if (self = [super init])
 	{
+		parent = [theParent retain];
+
 		tasks = [[NSMutableArray alloc] initWithCapacity:CACHELENGTH];
 
 		NSMutableArray *where = [[NSMutableArray alloc] initWithCapacity:2];
@@ -62,6 +66,15 @@
 		if (![Configuration configuration].showCompleted)
 		{
 			[where addObject:@"completionDate IS NULL"];
+		}
+
+		if (parent)
+		{
+			[where addObject:[NSString stringWithFormat:@"parentId=%d", [parent intValue]]];
+		}
+		else
+		{
+			[where addObject:@"parentId IS NULL"];
 		}
 
 		NSString *req;
@@ -92,6 +105,7 @@
 
 - (void)dealloc
 {
+	[parent release];
 	[tasks release];
 	[request release];
 	[countRequest release];

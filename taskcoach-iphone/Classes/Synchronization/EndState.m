@@ -20,20 +20,31 @@
 	// Cleanup
 	Statement *req;
 	
-	req = [[Database connection] statementWithSQL:@"DELETE FROM Task WHERE status=?"];
+	req = [[Database connection] statementWithSQL:@"DELETE FROM Task WHERE status=? AND fileId=?"];
 	[req bindInteger:STATUS_DELETED atIndex:1];
+	[req bindInteger:[[Database connection].currentFile intValue] atIndex:2];
 	[req exec];
 	
-	req = [[Database connection] statementWithSQL:@"DELETE FROM Category WHERE status=?"];
+	req = [[Database connection] statementWithSQL:@"DELETE FROM Category WHERE status=? AND fileId=?"];
 	[req bindInteger:STATUS_DELETED atIndex:1];
+	[req bindInteger:[[Database connection].currentFile intValue] atIndex:2];
+	[req exec];
+
+	// XXXTODO: efforts
+	
+	req = [[Database connection] statementWithSQL:@"UPDATE Category SET STATUS=? WHERE fileId=?"];
+	[req bindInteger:STATUS_NONE atIndex:1];
+	[req bindInteger:[[Database connection].currentFile intValue] atIndex:2];
 	[req exec];
 	
-	req = [[Database connection] statementWithSQL:@"UPDATE Category SET STATUS=?"];
+	req = [[Database connection] statementWithSQL:@"UPDATE Task SET STATUS=? WHERE fileId=?"];
 	[req bindInteger:STATUS_NONE atIndex:1];
+	[req bindInteger:[[Database connection].currentFile intValue] atIndex:2];
 	[req exec];
 	
-	req = [[Database connection] statementWithSQL:@"UPDATE Task SET STATUS=?"];
+	req = [[Database connection] statementWithSQL:@"UPDATE Effort SET STATUS=? WHERE fileId=?"];
 	[req bindInteger:STATUS_NONE atIndex:1];
+	[req bindInteger:[[Database connection].currentFile intValue] atIndex:2];
 	[req exec];
 	
 	[[Database connection] commit];

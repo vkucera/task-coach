@@ -17,7 +17,7 @@
 
 - (void)addCategory:(NSDictionary *)dict
 {
-	Category *category = [[Category alloc] initWithId:[[dict objectForKey:@"id"] intValue] name:[dict objectForKey:@"name"]
+	Category *category = [[Category alloc] initWithId:[[dict objectForKey:@"id"] intValue] fileId:[dict objectForKey:@"fileId"] name:[dict objectForKey:@"name"]
 											   status:[[dict objectForKey:@"status"] intValue] taskCoachId:[dict objectForKey:@"taskCoachId"]
 											 parentId:[dict objectForKey:@"parentId"]];
 	[categories addObject:category];
@@ -30,7 +30,7 @@
 	// We're assuming that there are not a bunch of categories, therefore we keep them in memory.
 	// This is not the case with tasks.
 	
-	Statement *req = [[Database connection] statementWithSQL:@"SELECT * FROM Category WHERE status != ? ORDER BY name"];
+	Statement *req = [[Database connection] statementWithSQL:@"SELECT * FROM CurrentCategory WHERE status != ? ORDER BY name"];
 	[req bindInteger:STATUS_DELETED atIndex:1];
 	[req execWithTarget:self action:@selector(addCategory:)];
 	

@@ -7,7 +7,7 @@
 //
 
 #import "TwoWayModifiedTasksState.h"
-#import "FullFromDesktopState.h"
+#import "TwoWayNewEffortsState.h"
 
 #import "Network.h"
 #import "SyncViewController.h"
@@ -26,7 +26,6 @@
 {
 	if (self = [super initWithNetwork:network controller:controller])
 	{
-		protocolVersion = controller.protocolVersion;
 	}
 	
 	return self;
@@ -43,10 +42,10 @@
 {
 	taskCategories = [[NSMutableArray alloc] initWithCapacity:2];
 
-	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM Task WHERE status=%d", STATUS_MODIFIED]];
+	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM CurrentTask WHERE status=%d", STATUS_MODIFIED]];
 	[req execWithTarget:self action:@selector(onModifiedTask:)];
 	
-	myController.state = [FullFromDesktopState stateWithNetwork:myNetwork controller:myController];
+	myController.state = [TwoWayNewEffortsState stateWithNetwork:myNetwork controller:myController];
 }
 
 - (void)onModifiedTask:(NSDictionary *)dict
@@ -58,21 +57,18 @@
 	[myNetwork appendString:[dict objectForKey:@"dueDate"]];
 	[myNetwork appendString:[dict objectForKey:@"completionDate"]];
 	
-	if (protocolVersion >= 2)
+	// Send categories as well, they may have been modified on the device.
+	[taskCategories removeAllObjects];
+
+	Statement *req = [[Database connection] statementWithSQL:@"SELECT taskCoachId FROM Category, TaskHasCategory WHERE idCategory=id AND idTask=?"];
+	[req bindInteger:[[dict objectForKey:@"id"] intValue] atIndex:1];
+	[req execWithTarget:self action:@selector(onFoundCategory:)];
+	[myNetwork appendInteger:[taskCategories count]];
+	for (NSString *catId in taskCategories)
 	{
-		// Send categories as well, they may have been modified on the device.
-		[taskCategories removeAllObjects];
+		NSLog(@"Send category for modified task (v2): %@", catId);
 
-		Statement *req = [[Database connection] statementWithSQL:@"SELECT taskCoachId FROM Category, TaskHasCategory WHERE idCategory=id AND idTask=?"];
-		[req bindInteger:[[dict objectForKey:@"id"] intValue] atIndex:1];
-		[req execWithTarget:self action:@selector(onFoundCategory:)];
-		[myNetwork appendInteger:[taskCategories count]];
-		for (NSString *catId in taskCategories)
-		{
-			NSLog(@"Send category for modified task (v2): %@", catId);
-
-			[myNetwork appendString:catId];
-		}
+		[myNetwork appendString:catId];
 	}
 }
 

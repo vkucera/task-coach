@@ -87,6 +87,15 @@ class CommonTaskTestsMixin(asserts.TaskAsserts):
         copy = self.task.copy()
         self.assertTaskCopy(copy, self.task)
 
+    def testCopy_IdIsDifferent(self):
+        copy = self.task.copy()
+        self.assertNotEqual(copy.id(), self.task.id())
+
+    def testCopy_statusIsNew(self):
+        self.task.markDeleted()
+        copy = self.task.copy()
+        self.assertEqual(copy.getStatus(), copy.STATUS_NEW)
+
     def testModificationEventTypes(self): # pylint: disable-msg=E1003
         self.assertEqual(super(task.Task, self.task).modificationEventTypes() +\
              ['task.dueDate', 'task.startDate', 'task.completionDate', 

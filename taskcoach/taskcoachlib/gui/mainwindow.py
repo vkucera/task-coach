@@ -146,7 +146,7 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
                 from taskcoachlib.thirdparty import pybonjour # pylint: disable-msg=W0612
                 from taskcoachlib.iphone import IPhoneAcceptor, BonjourServiceRegister
 
-                acceptor = IPhoneAcceptor(self, settings)
+                acceptor = IPhoneAcceptor(self, settings, iocontroller)
                 self.bonjourRegister = BonjourServiceRegister(settings, acceptor.port)
             except:
                 from taskcoachlib.gui.dialog.iphone import IPhoneBonjourDialog
@@ -448,6 +448,17 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
     @synchronized
     def removeIPhoneTask(self, task):
         self.taskFile.tasks().remove(task)
+
+    @synchronized
+    def addIPhoneEffort(self, task, effort):
+        if task is not None:
+            task.addEffort(effort)
+
+    @synchronized
+    def modifyIPhoneEffort(self, effort, subject, started, ended):
+        effort.setSubject(subject)
+        effort.setStart(started)
+        effort.setStop(ended)
 
     @synchronized
     def modifyIPhoneTask(self, task, subject, description, startDate, dueDate, completionDate, categories):

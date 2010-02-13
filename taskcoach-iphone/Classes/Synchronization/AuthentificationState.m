@@ -14,21 +14,24 @@
 #import "Network.h"
 #import "SyncViewController.h"
 #import "Database.h"
+#import "AlertPrompt.h"
 #import "i18n.h"
 
 @implementation AuthentificationState
+
+- (void)askForPassword
+{
+	AlertPrompt *prompt = [[AlertPrompt alloc] initWithTitle:_("Please type your password.") message:@"\n" delegate:self cancelButtonTitle:_("Cancel") okButtonTitle:_("OK")];
+	[prompt show];
+	[prompt release];
+}
 
 - (void)activated
 {
 	myController.label.text = _("Authentication");
 	
-	myController.password.delegate = self;
-
 #if TARGET_IPHONE_SIMULATOR
-	myController.password.hidden = NO;
-	myController.cancelButton.hidden = NO;
-
-	[myController.password becomeFirstResponder];
+	[self askForPassword];
 #else
 	keychain = [[KeychainWrapper alloc] init];
 	currentPassword = [[keychain objectForKey:(id)kSecValueData] retain];
@@ -39,10 +42,7 @@
 	}
 	else
 	{
-		myController.password.hidden = NO;
-		myController.cancelButton.hidden = NO;
-
-		[myController.password becomeFirstResponder];
+		[self askForPassword];
 	}
 #endif
 }
@@ -61,12 +61,6 @@
 #endif
 	
 	[super dealloc];
-}
-
-- (void)cancel
-{
-	myController.password.delegate = nil;
-	[super cancel];
 }
 
 - (void)networkDidConnect:(Network *)network controller:(SyncViewController *)controller
@@ -129,31 +123,24 @@
 
 - (void)networkDidClose:(Network *)network controller:(SyncViewController *)controller
 {
-	[myController.password resignFirstResponder];
 	[super networkDidClose:network controller:controller];
 }
 
-// UITextFieldDelegate
+// UIAlertViewDelegate
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-	[textField resignFirstResponder];
-	textField.hidden = YES;
-	myController.cancelButton.hidden = YES;
-	[currentPassword release];
-	currentPassword = [textField.text copy];
-	[myNetwork expect:512];
-
-	return NO;
-}
-
-// UIAlertViewDelegate.
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	myController.password.hidden = NO;
-	myController.cancelButton.hidden = NO;
-	[myController.password becomeFirstResponder];
+	switch (buttonIndex)
+	{
+		case 0: // Cancel
+			[myController cancel];
+			break;
+		case 1: // OK
+			[currentPassword release];
+			currentPassword = [((AlertPrompt *)alertView).enteredText retain];
+			[myNetwork expect:512];
+			break;
+	}
 }
 
 @end

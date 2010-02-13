@@ -38,12 +38,12 @@
 	int32_t response = 0;
 
 	NSLog(@"Protocol version: %d", version);
-	
+
+	// Starting with 2.0, protocols 1, 2 and 3 are not supported any more on the iPhone app.
+
 	switch (version)
 	{
-		case 1:
-		case 2:
-		case 3:
+		case 4:
 			response = 1;
 			break;
 	}
@@ -54,23 +54,12 @@
 	{
 		NSLog(@"Accepted protocol %d.", version);
 		controller.protocolVersion = version;
-
-		if (version != 3)
-		{
-			UIAlertView *view = [[UIAlertView alloc] initWithTitle:_("Warning")
-	                               message:[NSString stringWithFormat:_("It seems that the desktop Task Coach version is too old. Please consider upgrading (you may loose some data if you go on anyway)."), version]
-														  delegate:self cancelButtonTitle:_("Abort") otherButtonTitles:nil];
-			[view addButtonWithTitle:_("Go on")];
-			[view show];
-			[view release];
-			return;
-		}
-
 		controller.state = [AuthentificationState stateWithNetwork:network controller:controller];
 	}
 	else
 	{
-		[network expect:4];
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("The version of the desktop Task Coach is too old. Please upgrade it and retry.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+		[alert show];
 	}
 }
 
@@ -78,15 +67,9 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-	if (buttonIndex == 0) // Abort
-	{
-		[myController finished:NO];
-		[self cancel];
-	}
-	else
-	{
-		myController.state = [AuthentificationState stateWithNetwork:myNetwork controller:myController];
-	}
+	[myController finished:NO];
+	[myNetwork close];
+	[self cancel];
 }
 
 @end

@@ -10,6 +10,7 @@
 
 #import "PositionStore.h"
 
+@class Task;
 @class TaskList;
 @class TaskCell;
 @class CategoryViewController;
@@ -18,6 +19,8 @@
 {
 	NSString *title;
 	NSInteger categoryId;
+	Task *parentTask;
+	BOOL shouldEdit;
 
 	NSMutableArray *headers;
 	BOOL isBecomingEditable;
@@ -36,6 +39,6 @@
 - (IBAction)onAddTask:(UIBarButtonItem *)button;
 - (IBAction)onSync:(UIBarButtonItem *)button;
 
-- initWithTitle:(NSString *)title category:(NSInteger)categoryId categoryController:(CategoryViewController *)controller;
+- initWithTitle:(NSString *)title category:(NSInteger)categoryId categoryController:(CategoryViewController *)controller parentTask:(Task *)parent edit:(BOOL)edit;
 
 @end

@@ -1172,4 +1172,19 @@ class XMLReaderVersion28Test(XMLReaderTestCase):
             '<attachment type="file" location="whatever" font="%s"/>\n'
             '</task>\n</tasks>\n'%wx.NORMAL_FONT.GetNativeFontInfoDesc())
         self.assertEqual(wx.NORMAL_FONT, tasks[0].attachments()[0].font())
-            
+
+
+class XMLReaderVersion29Test(XMLReaderTestCase):
+    tskversion = 29
+
+    def testEffortNewId(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task id="foo">
+                <effort id="foobar" start="2004-01-01 10:00:00.123000" 
+                        stop="2004-01-01 10:30:00.123000"
+                        status="1"
+                        description="Yo"/>
+            </task>
+        </tasks>''')
+        self.assertEqual(tasks[0].efforts()[0].id(), 'foobar')

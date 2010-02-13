@@ -14,7 +14,9 @@
 #import "SyncViewController.h"
 #import "Category.h"
 #import "Task.h"
+#import "Effort.h"
 #import "String+Utils.h"
+#import "DateUtils.h"
 #import "i18n.h"
 
 @implementation FullFromDesktopState
@@ -35,12 +37,13 @@
 	[myController.activity stopAnimating];
 	myController.progress.hidden = NO;
 
-	[[[Database connection] statementWithSQL:@"DELETE FROM Category"] exec];
-	[[[Database connection] statementWithSQL:@"DELETE FROM Task"] exec];
-	[[[Database connection] statementWithSQL:@"DELETE FROM TaskHasCategory"] exec];
-	[[[Database connection] statementWithSQL:@"DELETE FROM Meta WHERE name='guid'"] exec];
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"DELETE FROM TaskHasCategory WHERE idTask IN (SELECT id FROM Task WHERE fileId=%@)", [Database connection].currentFile]] exec];
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"DELETE FROM TaskHasCategory WHERE idCategory IN (SELECT id FROM Category WHERE fileId=%@)", [Database connection].currentFile]] exec];
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"DELETE FROM Task WHERE fileId=%@", [Database connection].currentFile]] exec];
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"DELETE FROM Category WHERE fileId=%@", [Database connection].currentFile]] exec];
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"DELETE FROM Effort WHERE fileId=%@", [Database connection].currentFile]] exec];
 	
-	[myNetwork expect:8];
+	[myNetwork expect:12];
 }
 
 + stateWithNetwork:(Network *)network controller:(SyncViewController *)controller
@@ -59,6 +62,11 @@
 	[taskStart release];
 	[taskDue release];
 	[taskCompleted release];
+	[effortId release];
+	[effortSubject release];
+	[effortTaskId release];
+	[effortStarted release];
+	[effortEnded release];
 	
 	[super dealloc];
 }
@@ -88,12 +96,52 @@
 #define TASK_DATE_1                          16
 #define TASK_DATE_LENGTH_2                   17
 #define TASK_DATE_2                          18
-#define TASK_CATEGORY_COUNT                  19
-#define TASK_CATEGORY_ID_LENGTH              20
-#define TASK_CATEGORY_ID                     21
+#define TASK_PARENT_LENGTH                   19
+#define TASK_PARENT                          20
+#define TASK_CATEGORY_COUNT                  21
+#define TASK_CATEGORY_ID_LENGTH              22
+#define TASK_CATEGORY_ID                     23
 
-#define GUID_LENGTH                          22
-#define GUID                                 23
+#define EFFORT_ID_LENGTH                     24
+#define EFFORT_ID                            25
+#define EFFORT_SUBJECT_LENGTH                26
+#define EFFORT_SUBJECT                       27
+#define EFFORT_TASKID_LENGTH                 28
+#define EFFORT_TASKID                        29
+#define EFFORT_STARTED_LENGTH                30
+#define EFFORT_STARTED                       31
+#define EFFORT_ENDED_LENGTH                  32
+#define EFFORT_ENDED                         33
+
+#define GUID_LENGTH                          34
+#define GUID                                 35
+
+- (void)onFoundParent:(NSDictionary *)dict
+{
+	parentLocalId = [[dict objectForKey:@"id"] intValue];
+}
+
+- (void)onFoundEffortTask:(NSDictionary *)dict
+{
+	effortTaskLocalId = [[dict objectForKey:@"id"] intValue];
+}
+
+- (void)createEffort
+{
+	NSNumber *theTaskId = nil;
+
+	if (effortTaskId)
+	{
+		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT id FROM Task WHERE taskCoachId=\"%@\"", effortTaskId]] execWithTarget:self action:@selector(onFoundEffortTask:)];
+		theTaskId = [NSNumber numberWithInt:effortTaskLocalId];
+	}
+
+	NSLog(@"New effort: %@/%@/%@/%@/%@/%@", [Database connection].currentFile, effortSubject, effortId, effortStarted, effortEnded, theTaskId);
+
+	Effort *effort = [[Effort alloc] initWithId:-1 fileId:[Database connection].currentFile name:effortSubject status:STATUS_NONE taskCoachId:effortId started:effortStarted ended:effortEnded taskId:theTaskId];
+	[effort save];
+	[effort release];
+}
 
 - (void)network:(Network *)network didGetData:(NSData *)data controller:(SyncViewController *)controller
 {
@@ -102,6 +150,8 @@
 		case INITIAL:
 			categoryCount = ntohl(*((int32_t *)[data bytes]));
 			taskCount = ntohl(*((int32_t *)([data bytes] + 4)));
+			effortCount = ntohl(*((int32_t *)([data bytes] + 8)));
+			
 			total = categoryCount + taskCount;
 			controller.progress.progress = 0;
 			
@@ -114,6 +164,10 @@
 			else if (taskCount)
 			{
 				state = TASK_SUBJECT_LENGTH;
+			}
+			else if (effortCount)
+			{
+				state = EFFORT_ID_LENGTH;
 			}
 			else
 			{
@@ -159,10 +213,11 @@
 		case CATEGORY_PARENT_ID:
 		{
 			Category *category;
+
 			if ([data length])
-				category = [[Category alloc] initWithId:-1 name:categoryName status:STATUS_NONE taskCoachId:categoryId parentId:[idMap valueForKey:[NSString stringFromUTF8Data:data]]];
+				category = [[Category alloc] initWithId:-1 fileId:[Database connection].currentFile name:categoryName status:STATUS_NONE taskCoachId:categoryId parentId:[idMap valueForKey:[NSString stringFromUTF8Data:data]]];
 			else
-				category = [[Category alloc] initWithId:-1 name:categoryName status:STATUS_NONE taskCoachId:categoryId];
+				category = [[Category alloc] initWithId:-1 fileId:[Database connection].currentFile name:categoryName status:STATUS_NONE taskCoachId:categoryId];
 
 			[category save];
 			
@@ -187,6 +242,10 @@
 				if (taskCount)
 				{
 					state = TASK_SUBJECT_LENGTH;
+				}
+				else if (effortCount)
+				{
+					state = EFFORT_ID_LENGTH;
 				}
 				else
 				{
@@ -280,6 +339,41 @@
 
 			break;
 		}
+		case TASK_PARENT_LENGTH:
+		{
+			NSInteger length = ntohl(*((int32_t *)[data bytes]));
+			
+			parentLocalId = -1;
+			
+			if (length)
+			{
+				state = TASK_PARENT;
+				[network expect:length];
+			}
+			else
+			{
+				state = TASK_CATEGORY_COUNT;
+				[network expect:4];
+			}
+
+			break;
+		}
+		case TASK_PARENT:
+		{
+			NSString *tcId = [NSString stringFromUTF8Data:data];
+			NSLog(@"Task parent: %@", tcId);
+
+			Statement *req = [[Database connection] statementWithSQL:@"SELECT id FROM Task WHERE taskcoachId=?"];
+			[req bindString:tcId atIndex:1];
+			[req execWithTarget:self action:@selector(onFoundParent:)];
+
+			assert(parentLocalId != -1);
+
+			state = TASK_CATEGORY_COUNT;
+			[network expect:4];
+			
+			break;
+		}
 		case TASK_CATEGORY_COUNT:
 		{
 			taskCategoryCount = ntohl(*((int32_t *)[data bytes]));
@@ -303,8 +397,20 @@
 				taskCompleted = nil;
 			}
 			
-			Task *task = [[Task alloc] initWithId:-1 name:taskSubject status:STATUS_NONE taskCoachId:taskId description:taskDescription
-										startDate:taskStart dueDate:taskDue completionDate:taskCompleted dateStatus:TASKSTATUS_UNDEFINED];
+			Task *task;
+			if (parentLocalId > 0)
+			{
+				task = [[Task alloc] initWithId:-1 fileId:[Database connection].currentFile name:taskSubject status:STATUS_NONE taskCoachId:taskId description:taskDescription
+											startDate:taskStart dueDate:taskDue completionDate:taskCompleted dateStatus:TASKSTATUS_UNDEFINED
+											 parentId:[NSNumber numberWithInt:parentLocalId]];
+			}
+			else
+			{
+				task = [[Task alloc] initWithId:-1 fileId:[Database connection].currentFile name:taskSubject status:STATUS_NONE taskCoachId:taskId description:taskDescription
+											startDate:taskStart dueDate:taskDue completionDate:taskCompleted dateStatus:TASKSTATUS_UNDEFINED
+											 parentId:nil];
+			}
+
 			[task save];
 			NSLog(@"Added task %@", taskSubject);
 			taskLocalId = task.objectId;
@@ -326,6 +432,10 @@
 				if (taskCount)
 				{
 					state = TASK_SUBJECT_LENGTH;
+				}
+				else if (effortCount)
+				{
+					state = EFFORT_ID_LENGTH;
 				}
 				else
 				{
@@ -368,6 +478,10 @@
 				{
 					state = TASK_SUBJECT_LENGTH;
 				}
+				else if (effortCount)
+				{
+					state = EFFORT_ID_LENGTH;
+				}
 				else
 				{
 					state = GUID_LENGTH;
@@ -383,6 +497,114 @@
 			
 			break;
 		}
+		case EFFORT_ID_LENGTH:
+			state = EFFORT_ID;
+			[network expect:ntohl(*((int32_t *)[data bytes]))];
+			break;
+		case EFFORT_ID:
+			[effortId release];
+			effortId = [[NSString stringFromUTF8Data:data] retain];
+			state = EFFORT_SUBJECT_LENGTH;
+			[network expect:4];
+			break;
+		case EFFORT_SUBJECT_LENGTH:
+			state = EFFORT_SUBJECT;
+			[network expect:ntohl(*((int32_t *)[data bytes]))];
+			break;
+		case EFFORT_SUBJECT:
+			[effortSubject release];
+			effortSubject = [[NSString stringFromUTF8Data:data] retain];
+			state = EFFORT_TASKID_LENGTH;
+			[network expect:4];
+			break;
+		case EFFORT_TASKID_LENGTH:
+		{
+			[effortTaskId release];
+			effortTaskId = nil;
+
+			NSInteger length = ntohl(*((int32_t *)[data bytes]));
+			if (length)
+			{
+				state = EFFORT_TASKID;
+				[network expect:length];
+			}
+			else
+			{
+				state = EFFORT_STARTED_LENGTH;
+				[network expect:4];
+			}
+			break;
+		}
+		case EFFORT_TASKID:
+			effortTaskId = [[NSString stringFromUTF8Data:data] retain];
+			state = EFFORT_STARTED_LENGTH;
+			[network expect:4];
+			break;
+		case EFFORT_STARTED_LENGTH:
+			// Never null.
+			state = EFFORT_STARTED;
+			[network expect:ntohl(*((int32_t *)[data bytes]))];
+			break;
+		case EFFORT_STARTED:
+			[effortStarted release];
+			effortStarted = [[[TimeUtils instance] dateFromString:[NSString stringFromUTF8Data:data]] retain];
+			state = EFFORT_ENDED_LENGTH;
+			[network expect:4];
+			break;
+		case EFFORT_ENDED_LENGTH:
+		{
+			[effortEnded release];
+			effortEnded = nil;
+			
+			NSInteger length = ntohl(*((int32_t *)[data bytes]));
+			
+			if (length)
+			{
+				state = EFFORT_ENDED;
+				[network expect:length];
+			}
+			else
+			{
+				[self createEffort];
+				
+				--effortCount;
+				++doneCount;
+				controller.progress.progress = 1.0 * doneCount / total;
+
+				if (effortCount)
+				{
+					state = EFFORT_ID_LENGTH;
+				}
+				else
+				{
+					state = GUID_LENGTH;
+				}
+
+				[network appendInteger:1];
+				[network expect:4];
+			}
+			break;
+		}
+		case EFFORT_ENDED:
+			effortEnded = [[[TimeUtils instance] dateFromString:[NSString stringFromUTF8Data:data]] retain];
+			[self createEffort];
+			
+			--effortCount;
+			++doneCount;
+			controller.progress.progress = 1.0 * doneCount / total;
+			
+			if (effortCount)
+			{
+				state = EFFORT_ID_LENGTH;
+			}
+			else
+			{
+				state = GUID_LENGTH;
+			}
+			
+			[network appendInteger:1];
+			[network expect:4];
+			break;
 		case GUID_LENGTH:
 			state = GUID;
 			[network expect:ntohl(*((int32_t *)[data bytes]))];
@@ -390,13 +612,7 @@
 			break;
 		case GUID:
 		{
-			NSString *guid = [[NSString stringFromUTF8Data:data] retain];
-			Statement *req = [[Database connection] statementWithSQL:@"INSERT INTO Meta (name, value) VALUES (?, ?)"];
-			[req bindString:@"guid" atIndex:1];
-			[req bindString:guid atIndex:2];
-			[req exec];
-			[guid release];
-
+			// We don't care any more
 			[network appendInteger:1];
 			
 			controller.state = [EndState stateWithNetwork:network controller:controller];

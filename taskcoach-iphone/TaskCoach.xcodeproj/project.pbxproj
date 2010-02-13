@@ -12,8 +12,6 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
-		A604D98E0F31C25B00D3DC79 /* FullFromDeviceState.m in Sources */ = {isa = PBXBuildFile; fileRef = A604D98D0F31C25B00D3DC79 /* FullFromDeviceState.m */; };
-		A604D99C0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m in Sources */ = {isa = PBXBuildFile; fileRef = A604D99B0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m */; };
 		A604D9AB0F31CB6100D3DC79 /* GetGUIDState.m in Sources */ = {isa = PBXBuildFile; fileRef = A604D9AA0F31CB6100D3DC79 /* GetGUIDState.m */; };
 		A60575FF0FA457590054E4C3 /* addtask.png in Resources */ = {isa = PBXBuildFile; fileRef = A60575FE0FA457590054E4C3 /* addtask.png */; };
 		A60B6E30102587FA00F9983C /* BaseCategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A60B6E2F102587FA00F9983C /* BaseCategoryViewController.m */; };
@@ -21,6 +19,8 @@
 		A60B6EE510258EB200F9983C /* TaskCategoryPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = A60B6EE410258EB200F9983C /* TaskCategoryPicker.xib */; };
 		A60B70EB1025AF0B00F9983C /* CHANGELOG in Resources */ = {isa = PBXBuildFile; fileRef = A60B70EA1025AF0B00F9983C /* CHANGELOG */; };
 		A6142CD30F35DE61001DD420 /* PositionStore.m in Sources */ = {isa = PBXBuildFile; fileRef = A6142CD20F35DE61001DD420 /* PositionStore.m */; };
+		A61AA5C01114304900AA1E38 /* EffortView.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AA5BE1114304900AA1E38 /* EffortView.m */; };
+		A61AA5C11114304900AA1E38 /* EffortView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A61AA5BF1114304900AA1E38 /* EffortView.xib */; };
 		A61AECFC0F35BA450086ECD6 /* TwoWayState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AECFB0F35BA450086ECD6 /* TwoWayState.m */; };
 		A61AED000F35BBD20086ECD6 /* TwoWayNewCategoriesState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AECFF0F35BBD20086ECD6 /* TwoWayNewCategoriesState.m */; };
 		A61AED620F35C30F0086ECD6 /* TwoWayNewTasksState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AED610F35C30F0086ECD6 /* TwoWayNewTasksState.m */; };
@@ -91,7 +91,17 @@
 		A6B264DD0FDBCBFE00FF2AD0 /* DateCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6B264DC0FDBCBFE00FF2AD0 /* DateCell.xib */; };
 		A6B7A5B30FA45E110067B76A /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = A6B7A5B20FA45E110067B76A /* iTunesArtwork */; };
 		A6C30BEB0F48218C00A04E7C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = A6C30BEA0F48218C00A04E7C /* Default.png */; };
+		A6C3CEF810E76C8C00483057 /* ButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C3CEF710E76C8C00483057 /* ButtonCell.m */; };
+		A6C3CEFA10E76CB600483057 /* ButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6C3CEF910E76CB600483057 /* ButtonCell.xib */; };
+		A6C3CF2210E76F8600483057 /* blueButton.png in Resources */ = {isa = PBXBuildFile; fileRef = A6C3CF2010E76F8600483057 /* blueButton.png */; };
+		A6C3CF2310E76F8600483057 /* whiteButton.png in Resources */ = {isa = PBXBuildFile; fileRef = A6C3CF2110E76F8600483057 /* whiteButton.png */; };
+		A6C3CFB610E782D800483057 /* ledclock.png in Resources */ = {isa = PBXBuildFile; fileRef = A6C3CFB410E782D800483057 /* ledclock.png */; };
+		A6C3CFB710E782D800483057 /* ledclockbig.png in Resources */ = {isa = PBXBuildFile; fileRef = A6C3CFB510E782D800483057 /* ledclockbig.png */; };
+		A6C3CFE110E7846200483057 /* redButton.png in Resources */ = {isa = PBXBuildFile; fileRef = A6C3CFE010E7846200483057 /* redButton.png */; };
 		A6C9843E0F2B77C40088A73F /* GUIDState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C9843D0F2B77C40088A73F /* GUIDState.m */; };
+		A6CFB4D31109A9A8004DB892 /* Effort.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CFB4D21109A9A8004DB892 /* Effort.m */; };
+		A6CFB50A1109BBC5004DB892 /* TwoWayNewEffortsState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CFB5091109BBC5004DB892 /* TwoWayNewEffortsState.m */; };
+		A6CFB5B21109C691004DB892 /* TwoWayModifiedEffortsState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CFB5B11109C691004DB892 /* TwoWayModifiedEffortsState.m */; };
 		A6D384560F247DDF0097F0F6 /* TaskDetailsController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6D384550F247DDF0097F0F6 /* TaskDetailsController.m */; };
 		A6D384610F247E910097F0F6 /* TaskDetails.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6D384600F247E910097F0F6 /* TaskDetails.xib */; };
 		A6D3846C0F2481C80097F0F6 /* TextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6D3846B0F2481C80097F0F6 /* TextFieldCell.m */; };
@@ -107,6 +117,10 @@
 		A6DDED1B0F46C5D30047AEF5 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6DDED1A0F46C5D30047AEF5 /* Security.framework */; };
 		A6DDF8500F1F974000F35108 /* TaskList.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF84F0F1F974000F35108 /* TaskList.m */; };
 		A6DDF8540F1F988600F35108 /* TaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF8530F1F988600F35108 /* TaskViewController.m */; };
+		A6E7C0801114418D00B230E2 /* AlertPrompt.m in Sources */ = {isa = PBXBuildFile; fileRef = A6E7C07F1114418D00B230E2 /* AlertPrompt.m */; };
+		A6E83C5A10E4C9AF00FF3E45 /* FileChooser.m in Sources */ = {isa = PBXBuildFile; fileRef = A6E83C5810E4C9AF00FF3E45 /* FileChooser.m */; };
+		A6E83C5B10E4C9AF00FF3E45 /* FileChooser.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6E83C5910E4C9AF00FF3E45 /* FileChooser.xib */; };
+		A6E83D0F10E4E34800FF3E45 /* TaskFileNameState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6E83D0E10E4E34800FF3E45 /* TaskFileNameState.m */; };
 		A6EA679A0F2255E7004108B5 /* CheckView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6EA67990F2255E7004108B5 /* CheckView.m */; };
 		A6F8BF740F46F93C00385F57 /* CategoriesSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F8BF730F46F93C00385F57 /* CategoriesSelector.m */; };
 		A6F8E3FA0F2C6CFD007D929C /* FullFromDesktopState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F8E3F90F2C6CFD007D929C /* FullFromDesktopState.m */; };
@@ -124,10 +138,6 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* TaskCoach_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCoach_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A604D98C0F31C25B00D3DC79 /* FullFromDeviceState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FullFromDeviceState.h; path = Synchronization/FullFromDeviceState.h; sourceTree = "<group>"; };
-		A604D98D0F31C25B00D3DC79 /* FullFromDeviceState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FullFromDeviceState.m; path = Synchronization/FullFromDeviceState.m; sourceTree = "<group>"; };
-		A604D99A0F31C7FA00D3DC79 /* FullFromDeviceTaskState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FullFromDeviceTaskState.h; path = Synchronization/FullFromDeviceTaskState.h; sourceTree = "<group>"; };
-		A604D99B0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FullFromDeviceTaskState.m; path = Synchronization/FullFromDeviceTaskState.m; sourceTree = "<group>"; };
 		A604D9A90F31CB6100D3DC79 /* GetGUIDState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetGUIDState.h; path = Synchronization/GetGUIDState.h; sourceTree = "<group>"; };
 		A604D9AA0F31CB6100D3DC79 /* GetGUIDState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetGUIDState.m; path = Synchronization/GetGUIDState.m; sourceTree = "<group>"; };
 		A60575FE0FA457590054E4C3 /* addtask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = addtask.png; sourceTree = "<group>"; };
@@ -139,6 +149,9 @@
 		A60B70EA1025AF0B00F9983C /* CHANGELOG */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG; sourceTree = "<group>"; };
 		A6142CD10F35DE61001DD420 /* PositionStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PositionStore.h; sourceTree = "<group>"; };
 		A6142CD20F35DE61001DD420 /* PositionStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PositionStore.m; sourceTree = "<group>"; };
+		A61AA5BD1114304900AA1E38 /* EffortView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EffortView.h; sourceTree = "<group>"; };
+		A61AA5BE1114304900AA1E38 /* EffortView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EffortView.m; sourceTree = "<group>"; };
+		A61AA5BF1114304900AA1E38 /* EffortView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EffortView.xib; sourceTree = "<group>"; };
 		A61AECFA0F35BA450086ECD6 /* TwoWayState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwoWayState.h; path = Synchronization/TwoWayState.h; sourceTree = "<group>"; };
 		A61AECFB0F35BA450086ECD6 /* TwoWayState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwoWayState.m; path = Synchronization/TwoWayState.m; sourceTree = "<group>"; };
 		A61AECFE0F35BBD20086ECD6 /* TwoWayNewCategoriesState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwoWayNewCategoriesState.h; path = Synchronization/TwoWayNewCategoriesState.h; sourceTree = "<group>"; };
@@ -259,8 +272,22 @@
 		A6B264DC0FDBCBFE00FF2AD0 /* DateCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DateCell.xib; sourceTree = SOURCE_ROOT; };
 		A6B7A5B20FA45E110067B76A /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
 		A6C30BEA0F48218C00A04E7C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		A6C3CEF610E76C8C00483057 /* ButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonCell.h; sourceTree = "<group>"; };
+		A6C3CEF710E76C8C00483057 /* ButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ButtonCell.m; sourceTree = "<group>"; };
+		A6C3CEF910E76CB600483057 /* ButtonCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ButtonCell.xib; sourceTree = "<group>"; };
+		A6C3CF2010E76F8600483057 /* blueButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueButton.png; sourceTree = "<group>"; };
+		A6C3CF2110E76F8600483057 /* whiteButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = whiteButton.png; sourceTree = "<group>"; };
+		A6C3CFB410E782D800483057 /* ledclock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ledclock.png; sourceTree = "<group>"; };
+		A6C3CFB510E782D800483057 /* ledclockbig.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ledclockbig.png; sourceTree = "<group>"; };
+		A6C3CFE010E7846200483057 /* redButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redButton.png; sourceTree = "<group>"; };
 		A6C9843C0F2B77C40088A73F /* GUIDState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIDState.h; path = Synchronization/GUIDState.h; sourceTree = "<group>"; };
 		A6C9843D0F2B77C40088A73F /* GUIDState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GUIDState.m; path = Synchronization/GUIDState.m; sourceTree = "<group>"; };
+		A6CFB4D11109A9A8004DB892 /* Effort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Effort.h; path = Domain/Effort.h; sourceTree = "<group>"; };
+		A6CFB4D21109A9A8004DB892 /* Effort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Effort.m; path = Domain/Effort.m; sourceTree = "<group>"; };
+		A6CFB5081109BBC5004DB892 /* TwoWayNewEffortsState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwoWayNewEffortsState.h; path = Synchronization/TwoWayNewEffortsState.h; sourceTree = "<group>"; };
+		A6CFB5091109BBC5004DB892 /* TwoWayNewEffortsState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwoWayNewEffortsState.m; path = Synchronization/TwoWayNewEffortsState.m; sourceTree = "<group>"; };
+		A6CFB5B01109C691004DB892 /* TwoWayModifiedEffortsState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwoWayModifiedEffortsState.h; path = Synchronization/TwoWayModifiedEffortsState.h; sourceTree = "<group>"; };
+		A6CFB5B11109C691004DB892 /* TwoWayModifiedEffortsState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwoWayModifiedEffortsState.m; path = Synchronization/TwoWayModifiedEffortsState.m; sourceTree = "<group>"; };
 		A6D0E4171042E13C006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/DatePickerView.strings; sourceTree = "<group>"; };
 		A6D0E4181042E13C006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/MainWindow.strings; sourceTree = "<group>"; };
 		A6D0E4191042E13C006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/StringChoice.strings; sourceTree = "<group>"; };
@@ -296,6 +323,13 @@
 		A6DDF84F0F1F974000F35108 /* TaskList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TaskList.m; path = Database/TaskList.m; sourceTree = "<group>"; };
 		A6DDF8520F1F988600F35108 /* TaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskViewController.h; sourceTree = "<group>"; };
 		A6DDF8530F1F988600F35108 /* TaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskViewController.m; sourceTree = "<group>"; };
+		A6E7C07E1114418D00B230E2 /* AlertPrompt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlertPrompt.h; path = Thirdparty/AlertPrompt.h; sourceTree = "<group>"; };
+		A6E7C07F1114418D00B230E2 /* AlertPrompt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlertPrompt.m; path = Thirdparty/AlertPrompt.m; sourceTree = "<group>"; };
+		A6E83C5710E4C9AF00FF3E45 /* FileChooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileChooser.h; sourceTree = "<group>"; };
+		A6E83C5810E4C9AF00FF3E45 /* FileChooser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileChooser.m; sourceTree = "<group>"; };
+		A6E83C5910E4C9AF00FF3E45 /* FileChooser.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FileChooser.xib; sourceTree = "<group>"; };
+		A6E83D0D10E4E34800FF3E45 /* TaskFileNameState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TaskFileNameState.h; path = Synchronization/TaskFileNameState.h; sourceTree = "<group>"; };
+		A6E83D0E10E4E34800FF3E45 /* TaskFileNameState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TaskFileNameState.m; path = Synchronization/TaskFileNameState.m; sourceTree = "<group>"; };
 		A6EA67980F2255E7004108B5 /* CheckView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckView.h; sourceTree = "<group>"; };
 		A6EA67990F2255E7004108B5 /* CheckView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckView.m; sourceTree = "<group>"; };
 		A6F8BF720F46F93C00385F57 /* CategoriesSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CategoriesSelector.h; path = Database/CategoriesSelector.h; sourceTree = "<group>"; };
@@ -365,6 +399,12 @@
 				A60B6ED510258D9D00F9983C /* TaskCategoryPickerController.h */,
 				A60B6ED610258D9D00F9983C /* TaskCategoryPickerController.m */,
 				A6D5F411104166480098B4D5 /* i18n.h */,
+				A6E83C5710E4C9AF00FF3E45 /* FileChooser.h */,
+				A6E83C5810E4C9AF00FF3E45 /* FileChooser.m */,
+				A6E83C5910E4C9AF00FF3E45 /* FileChooser.xib */,
+				A61AA5BD1114304900AA1E38 /* EffortView.h */,
+				A61AA5BE1114304900AA1E38 /* EffortView.m */,
+				A61AA5BF1114304900AA1E38 /* EffortView.xib */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -417,6 +457,11 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A6C3CFE010E7846200483057 /* redButton.png */,
+				A6C3CFB410E782D800483057 /* ledclock.png */,
+				A6C3CFB510E782D800483057 /* ledclockbig.png */,
+				A6C3CF2010E76F8600483057 /* blueButton.png */,
+				A6C3CF2110E76F8600483057 /* whiteButton.png */,
 				A6B7A5B20FA45E110067B76A /* iTunesArtwork */,
 				A60575FE0FA457590054E4C3 /* addtask.png */,
 				A63CC0B40F5174EC003669FD /* ledbluebig.png */,
@@ -453,6 +498,8 @@
 		A61F544A108CB56200BDFD6D /* Thirdparty */ = {
 			isa = PBXGroup;
 			children = (
+				A6E7C07E1114418D00B230E2 /* AlertPrompt.h */,
+				A6E7C07F1114418D00B230E2 /* AlertPrompt.m */,
 				A61F544B108CB57A00BDFD6D /* BadgeItem.h */,
 				A61F544C108CB57A00BDFD6D /* BadgeItem.m */,
 				A61F544D108CB57A00BDFD6D /* BadgeView.h */,
@@ -498,10 +545,6 @@
 				A6F8E3F90F2C6CFD007D929C /* FullFromDesktopState.m */,
 				A6F8E4920F2C7574007D929C /* EndState.h */,
 				A6F8E4930F2C7574007D929C /* EndState.m */,
-				A604D98C0F31C25B00D3DC79 /* FullFromDeviceState.h */,
-				A604D98D0F31C25B00D3DC79 /* FullFromDeviceState.m */,
-				A604D99A0F31C7FA00D3DC79 /* FullFromDeviceTaskState.h */,
-				A604D99B0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m */,
 				A604D9A90F31CB6100D3DC79 /* GetGUIDState.h */,
 				A604D9AA0F31CB6100D3DC79 /* GetGUIDState.m */,
 				A6793B250F31E28700AAEC17 /* UploadObjectsState.h */,
@@ -520,6 +563,12 @@
 				A63E286C10415CCD00A2E672 /* TwoWayDeletedCategoriesState.m */,
 				A6AFD6BA10414E930065D5B7 /* TwoWayModifiedCategoriesState.h */,
 				A6AFD6BB10414E930065D5B7 /* TwoWayModifiedCategoriesState.m */,
+				A6E83D0D10E4E34800FF3E45 /* TaskFileNameState.h */,
+				A6E83D0E10E4E34800FF3E45 /* TaskFileNameState.m */,
+				A6CFB5081109BBC5004DB892 /* TwoWayNewEffortsState.h */,
+				A6CFB5091109BBC5004DB892 /* TwoWayNewEffortsState.m */,
+				A6CFB5B01109C691004DB892 /* TwoWayModifiedEffortsState.h */,
+				A6CFB5B11109C691004DB892 /* TwoWayModifiedEffortsState.m */,
 			);
 			name = Synchronization;
 			sourceTree = "<group>";
@@ -567,6 +616,8 @@
 				A68EDF430F1E275700F51FF2 /* DomainObject.m */,
 				A692198D0F24CDEA0010D2BA /* DateUtils.h */,
 				A692198E0F24CDEA0010D2BA /* DateUtils.m */,
+				A6CFB4D11109A9A8004DB892 /* Effort.h */,
+				A6CFB4D21109A9A8004DB892 /* Effort.m */,
 			);
 			name = Domain;
 			sourceTree = "<group>";
@@ -608,6 +659,9 @@
 				A61F5452108CB5B400BDFD6D /* BadgedCell.h */,
 				A61F5453108CB5B400BDFD6D /* BadgedCell.m */,
 				A61F5457108CB67800BDFD6D /* BadgedCell.xib */,
+				A6C3CEF610E76C8C00483057 /* ButtonCell.h */,
+				A6C3CEF710E76C8C00483057 /* ButtonCell.m */,
+				A6C3CEF910E76CB600483057 /* ButtonCell.xib */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -706,6 +760,14 @@
 				A6831FFE102EB057002A7083 /* TaskView.xib in Resources */,
 				A6832038102EB499002A7083 /* TaskView.strings in Resources */,
 				A61F5458108CB67800BDFD6D /* BadgedCell.xib in Resources */,
+				A6E83C5B10E4C9AF00FF3E45 /* FileChooser.xib in Resources */,
+				A6C3CEFA10E76CB600483057 /* ButtonCell.xib in Resources */,
+				A6C3CF2210E76F8600483057 /* blueButton.png in Resources */,
+				A6C3CF2310E76F8600483057 /* whiteButton.png in Resources */,
+				A6C3CFB610E782D800483057 /* ledclock.png in Resources */,
+				A6C3CFB710E782D800483057 /* ledclockbig.png in Resources */,
+				A6C3CFE110E7846200483057 /* redButton.png in Resources */,
+				A61AA5C11114304900AA1E38 /* EffortView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -750,8 +812,6 @@
 				A6C9843E0F2B77C40088A73F /* GUIDState.m in Sources */,
 				A6F8E3FA0F2C6CFD007D929C /* FullFromDesktopState.m in Sources */,
 				A6F8E4940F2C7574007D929C /* EndState.m in Sources */,
-				A604D98E0F31C25B00D3DC79 /* FullFromDeviceState.m in Sources */,
-				A604D99C0F31C7FA00D3DC79 /* FullFromDeviceTaskState.m in Sources */,
 				A604D9AB0F31CB6100D3DC79 /* GetGUIDState.m in Sources */,
 				A6793B270F31E28700AAEC17 /* UploadObjectsState.m in Sources */,
 				A61AECFC0F35BA450086ECD6 /* TwoWayState.m in Sources */,
@@ -776,6 +836,14 @@
 				A61F544F108CB57A00BDFD6D /* BadgeItem.m in Sources */,
 				A61F5450108CB57A00BDFD6D /* BadgeView.m in Sources */,
 				A61F5454108CB5B400BDFD6D /* BadgedCell.m in Sources */,
+				A6E83C5A10E4C9AF00FF3E45 /* FileChooser.m in Sources */,
+				A6E83D0F10E4E34800FF3E45 /* TaskFileNameState.m in Sources */,
+				A6C3CEF810E76C8C00483057 /* ButtonCell.m in Sources */,
+				A6CFB4D31109A9A8004DB892 /* Effort.m in Sources */,
+				A6CFB50A1109BBC5004DB892 /* TwoWayNewEffortsState.m in Sources */,
+				A6CFB5B21109C691004DB892 /* TwoWayModifiedEffortsState.m in Sources */,
+				A61AA5C01114304900AA1E38 /* EffortView.m in Sources */,
+				A6E7C0801114418D00B230E2 /* AlertPrompt.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -925,13 +993,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jérôme Laheurte";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2FEE6CC8-C167-4C62-B6EB-4617DB472B5C";
-				SDKROOT = iphoneos3.0;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos3.1.2;
 			};
 			name = Distribution;
 		};
@@ -955,13 +1023,13 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jérôme Laheurte";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "685429E5-CBC5-4C7A-870C-13E6CAE1C337";
-				SDKROOT = iphoneos3.0;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos3.1.2;
 			};
 			name = "1.1 beta 1";
 		};
@@ -982,13 +1050,13 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jérôme Laheurte";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D70F4831-F2EC-48DE-9E3C-2E9B862265B6";
-				SDKROOT = iphoneos3.0;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos3.1.2;
 			};
 			name = "Release Frank";
 		};
@@ -1015,7 +1083,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos3.0;
+				SDKROOT = iphoneos3.1.2;
 			};
 			name = Debug;
 		};
@@ -1023,13 +1091,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jérôme Laheurte";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "60932F3E-25B2-47AB-A622-37FA87ADB45F";
-				SDKROOT = iphoneos3.0;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos3.1.2;
 			};
 			name = Release;
 		};

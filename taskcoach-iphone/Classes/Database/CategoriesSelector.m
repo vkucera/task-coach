@@ -17,7 +17,7 @@
 {
 	[clauses addObject:[NSString stringWithFormat:@"idCategory=%d", [[dict objectForKey:@"id"] intValue]]];
 	
-	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT id FROM Category WHERE parentId=?"]];
+	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT id FROM CurrentCategory WHERE parentId=?"]];
 	[req bindInteger:[(NSNumber *)[dict objectForKey:@"id"] intValue] atIndex:1];
 	[req execWithTarget:self action:@selector(onCategory:)];
 }

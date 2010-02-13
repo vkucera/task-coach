@@ -13,6 +13,8 @@ static Database *database = nil;
 
 @implementation Database
 
+@synthesize currentFile;
+
 + (Database *)connection
 {
 	if (!database)
@@ -41,7 +43,7 @@ static Database *database = nil;
 	
 	if (self = [super initWithFilename:databasePath])
 	{
-		// Nothing yet
+		[[self statementWithSQL:@"SELECT id FROM TaskCoachFile WHERE visible"] execWithTarget:self action:@selector(updateCurrentFile:)];
 	}
 
 	return self;
@@ -56,7 +58,34 @@ static Database *database = nil;
 
 - (void)dealloc
 {
+	self.currentFile = nil;
+
 	[super dealloc];
+}
+
+- (void)updateCurrentFile:(NSDictionary *)dict
+{
+	self.currentFile = [dict objectForKey:@"id"];
+}
+
+- (void)onFileNumber:(NSDictionary *)dict
+{
+	fileNumber = [[dict objectForKey:@"total"] intValue];
+}
+
+- (NSInteger)fileNumber
+{
+	[[self statementWithSQL:@"SELECT COUNT(*) AS total FROM TaskCoachFile"] execWithTarget:self action:@selector(onFileNumber:)];
+	
+	return fileNumber;
+}
+
+- (void)rollback
+{
+	[super rollback];
+	[currentFile release];
+	currentFile = nil;
+	[[self statementWithSQL:@"SELECT id FROM TaskCoachFile WHERE visible"] execWithTarget:self action:@selector(updateCurrentFile:)];
 }
 
 @end

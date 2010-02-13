@@ -13,6 +13,7 @@
 @interface TwoWayNewTasksState : UploadObjectsState
 {
 	NSMutableArray *taskCategories;
+	NSString *parentId;
 }
 
 @end

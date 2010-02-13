@@ -110,10 +110,10 @@ class XMLWriterTest(test.TestCase):
         taskEffort = effort.Effort(self.task, date.DateTime(2004,1,1),
             date.DateTime(2004,1,2), description='description\nline 2')
         self.task.addEffort(taskEffort)
-        self.expectInXML('<effort start="%s" status="%d" stop="%s">\n'
+        self.expectInXML('<effort id="%s" start="%s" status="%d" stop="%s">\n'
                          '<description>\ndescription\nline 2\n</description>\n'
                          '</effort>'% \
-            (taskEffort.getStart(), base.SynchronizedObject.STATUS_NEW, taskEffort.getStop()))
+            (taskEffort.id(), taskEffort.getStart(), base.SynchronizedObject.STATUS_NEW, taskEffort.getStop()))
         
     def testThatEffortTimesDoNotContainMilliseconds(self):
         self.task.addEffort(effort.Effort(self.task, 
@@ -136,7 +136,7 @@ class XMLWriterTest(test.TestCase):
         
     def testActiveEffort(self):
         self.task.addEffort(effort.Effort(self.task, date.DateTime(2004,1,1)))
-        self.expectInXML('<effort start="%s" status="%d"/>'%(self.task.efforts()[0].getStart(), base.SynchronizedObject.STATUS_NEW))
+        self.expectInXML('<effort id="%s" start="%s" status="%d"/>'%(self.task.efforts()[0].id(), self.task.efforts()[0].getStart(), base.SynchronizedObject.STATUS_NEW))
                 
     def testNoEffortByDefault(self):
         self.expectNotInXML('<efforts>')
