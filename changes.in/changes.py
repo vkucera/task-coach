@@ -29,7 +29,10 @@ Release('0.78.4', 'February 6, 2010',
         Bug('''In some cases, when typing dates in the editor, they would
 be reset to the current day.''', '2942425'),
         Bug('''Clear the drag image after dropping an item onto white space 
-(on Linux).''', '2947127')
+(on Linux).''', '2947127'),
+        Bug('''Reminders that should have fired when the computer was asleep
+would'nt until the next launch of Task Coach (Windows and MacOS only).''',
+            '2888688')
         ]
     ),
 
