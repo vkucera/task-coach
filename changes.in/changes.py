@@ -32,7 +32,9 @@ be reset to the current day.''', '2942425'),
 (on Linux).''', '2947127'),
         Bug('''Reminders that should have fired when the computer was asleep
 would'nt until the next launch of Task Coach (Windows and MacOS only).''',
-            '2888688')
+            '2888688'),
+        Bug('''On MacOS X, task viewers would not be refreshed at midnight
+if the computer was sleeping by this time.''')
         ]
     ),
 
