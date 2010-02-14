@@ -34,7 +34,7 @@ be reset to the current day.''', '2942425'),
 would'nt until the next launch of Task Coach (Windows and MacOS only).''',
             '2888688'),
         Bug('''On MacOS X, task viewers would not be refreshed at midnight
-if the computer was sleeping by this time.''')
+if the computer was sleeping by this time.'''),
         ]
     ),
 
