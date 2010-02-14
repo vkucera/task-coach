@@ -543,6 +543,9 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
 
         super(CalendarViewer, self).atMidnight(event)
 
+    def onWake(self, event):
+        self.atMidnight(event)
+
     def onWorkingHourChanged(self, event):
         self.widget.SetWorkHours(self.settings.getint('view', 'efforthourstart'),
                                  self.settings.getint('view', 'efforthourend'))
