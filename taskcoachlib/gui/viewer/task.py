@@ -153,8 +153,13 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
                                                   eventType=eventType)
         patterns.Publisher().registerObserver(self.atMidnight,
             eventType='clock.midnight')
+        patterns.Puslisher().registerObserver(self.onWake,
+            eventType='powermgt.on')
 
     def atMidnight(self, event): # pylint: disable-msg=W0613
+        self.refresh()
+
+    def onWake(self, event):
         self.refresh()
         
     def onColorSettingChange(self, event): # pylint: disable-msg=W0613
