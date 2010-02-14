@@ -91,10 +91,13 @@ else:
     import sys, struct
     if struct.calcsize('L') == 4:
         sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'macos', 'IA32'))
+        sys.path.insert(0, os.path.join('extension', 'macos', 'bin-ia32'))
     else:
         sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'macos', 'IA64'))
+        sys.path.insert(0, os.path.join('extension', 'macos', 'bin-ia32'))
     import _growl
     import _growlImage
+    import _powermgt
 
 if __name__ == '__main__':
     setup(**setupOptions)

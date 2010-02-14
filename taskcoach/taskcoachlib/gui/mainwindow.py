@@ -24,6 +24,7 @@ from taskcoachlib import meta, patterns, widgets, help # pylint: disable-msg=W06
 from taskcoachlib.i18n import _
 from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
 from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog, IPhoneSyncDialog
+from taskcoachlib.powermgt import PowerStateMixin
 import taskcoachlib.thirdparty.aui as aui
 import viewer, toolbar, uicommand, remindercontroller, artprovider
 
@@ -108,7 +109,7 @@ class WindowDimensionsTracker(object):
         self.setSetting('iconized', iconized)
 
 
-class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
+class MainWindow(DeferredCallMixin, PowerStateMixin, widgets.AuiManagedFrameWithNotebookAPI):
     pageClosedEvent = aui.EVT_AUI_PANE_CLOSE
     
     def __init__(self, iocontroller, taskFile, settings,
@@ -298,7 +299,11 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
             self.bonjourRegister.stop()
         wx.GetApp().ProcessIdle()
         wx.GetApp().ExitMainLoop()
-        
+
+        # For PowerStateMixin
+
+        self.OnQuit()
+
     def saveViewerCounts(self):
         ''' Save the number of viewers for each viewer type. '''
         counts = {}
@@ -386,7 +391,13 @@ class MainWindow(DeferredCallMixin, widgets.AuiManagedFrameWithNotebookAPI):
         if event.GetPane().IsToolbar():
             self.settings.set('view', 'toolbar', 'None')
         event.Skip()
-        
+
+    # Power management
+
+    def OnPowerState(self, state):
+        patterns.observer.Event('powermgt.%s' % {self.POWERON: 'on', self.POWEROFF: 'off'}[state],
+                                self).send()
+
     # iPhone-related methods. These are called from the asyncore thread so they're deferred.
 
     @synchronized

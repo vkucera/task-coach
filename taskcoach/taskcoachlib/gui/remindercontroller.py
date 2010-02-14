@@ -52,13 +52,27 @@ class ReminderController(object):
         patterns.Publisher().registerObserver(self.onRemoveTask,
             eventType=taskList.removeItemEventType(),
             eventSource=taskList)
+        patterns.Publisher().registerObserver(self.onWake, eventType='powermgt.on')
         self.__tasksWithReminders = {} # {task: reminderDateTime}
         self.__mainWindow = mainWindow
         self.__mainWindowWasHidden = False
         self.__registerRemindersForTasks(taskList)
         self.settings = settings
         self.taskList = taskList
-    
+
+    def onWake(self, event):
+        # Reminders set for when the computer was asleep must be
+        # bumped
+
+        now = date.DateTime.today()
+
+        for task, reminderDateTime in self.__tasksWithReminders.items():
+            if reminderDateTime <= now:
+                self.showReminderMessage(task)
+                if not ('__WXMAC__' in wx.PlatformInfo and self.settings.getboolean('feature', 'growl')):
+                    self.__removeReminder(task)
+        self.requestUserAttention()
+
     def onAddTask(self, event):
         self.__registerRemindersForTasks(event.values())
                 
