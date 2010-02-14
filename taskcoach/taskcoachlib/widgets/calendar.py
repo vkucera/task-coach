@@ -194,7 +194,10 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
         return len(self.GetSchedules())
         
     def OnBeforeShowToolTip(self, x, y):
-        schedule = self._findSchedule(wx.Point(x, y))
+        originX, originY = self.GetViewStart()
+        unitX, unitY = self.GetScrollPixelsPerUnit()
+
+        schedule = self._findSchedule(wx.Point(x + originX * unitX, y + originY * unitY))
 
         if schedule and isinstance(schedule, TaskSchedule):
             item = schedule.task
