@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.78.4', 'February 6, 2010',
+Release('0.78.4', 'February 14, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''In some cases, when typing dates in the editor, they would
@@ -31,9 +31,9 @@ be reset to the current day.''', '2942425'),
         Bug('''Clear the drag image after dropping an item onto white space 
 (on Linux).''', '2947127'),
         Bug('''Reminders that should have fired when the computer was asleep
-would'nt until the next launch of Task Coach (Windows and MacOS only).''',
+wouldn't until the next launch of Task Coach (Windows and Mac OS X only).''',
             '2888688'),
-        Bug('''On MacOS X, task viewers would not be refreshed at midnight
+        Bug('''On Mac OS X, task viewers would not be refreshed at midnight
 if the computer was sleeping by this time.''')
         ]
     ),
