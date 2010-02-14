@@ -510,7 +510,9 @@ class wxSchedulerPaint( object ):
 		if self._dc:
 			dc = self._dc
 		else:
-			dc = wx.PaintDC(self)
+			# When using a wx.PaintDC, the area stays gray
+			# under MS Windows, unless you scroll it...
+			dc = wx.ClientDC(self)
 
 		self.PrepareDC(dc)
 		dc.BeginDrawing()
