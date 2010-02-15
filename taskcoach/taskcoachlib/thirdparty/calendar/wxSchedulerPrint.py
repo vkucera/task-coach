@@ -15,6 +15,7 @@ class wxSchedulerPrint( wxSchedulerCore ):
 		"""
 		Draw object on DC
 		"""
+		self.DrawBuffer()
 		self.OnPaint()
 		
 	def GetSize( self ):

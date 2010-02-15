@@ -25,28 +25,6 @@ wxEVT_COMMAND_SCHEDULE_DCLICK = wx.NewEventType()
 EVT_SCHEDULE_DCLICK = wx.PyEventBinder( wxEVT_COMMAND_SCHEDULE_DCLICK )
 
 
-class DummyDC(object):
-	"""
-	This fakes  a DC/GraphicsContext  except for the  methods that
-	allow to compute text extent.
-	"""
-
-	def __init__(self, dc):
-		self._dc = dc
-
-	def GetFont(self):
-		return self._dc.GetFont()
-
-	def SetFont(self, font, *args):
-		self._dc.SetFont(font, *args)
-
-	def GetTextExtent(self, text):
-		return self._dc.GetTextExtent(text)
-
-	def __getattr__(self, name):
-		return lambda *args, **kwargs: None
-
-
 class wxSchedulerSizer(wx.PySizer):
 	def __init__(self, minSizeCallback):
 		super(wxSchedulerSizer, self).__init__()
@@ -476,45 +454,50 @@ class wxSchedulerPaint( object ):
 
 		return wx.Size(minW, minH)
 
+	def DrawBuffer( self ):
+		if isinstance(self, wx.ScrolledWindow):
+			size = self.GetVirtualSize()
+		else:
+			size = self.GetSize()
+
+		self._bitmap = wx.EmptyBitmap(size.GetWidth(), size.GetHeight())
+		memDC = wx.MemoryDC()
+		memDC.SelectObject(self._bitmap)
+		try:
+			memDC.BeginDrawing()
+			try:
+				memDC.SetBackground( wx.Brush( SCHEDULER_BACKGROUND_BRUSH ) )
+				memDC.SetPen( FOREGROUND_PEN )
+				memDC.Clear()
+				memDC.SetFont(wx.NORMAL_FONT)
+
+				if self._drawerClass.use_gc:
+					context = wx.GraphicsContext.Create(memDC)
+				else:
+					context = memDC
+
+				width, height = self.DoPaint(self._drawerClass(context, self._lstDisplayedHours),
+							     0, 0, size.GetWidth(), size.GetHeight())
+			finally:
+				memDC.EndDrawing()
+		finally:
+			memDC.SelectObject(wx.NullBitmap)
+
+		# Bad things may happen here from time to time.
+		if isinstance(self, wx.ScrolledWindow):
+			if int(width) > size.GetWidth() or int(height) > size.GetHeight():
+				self.SetVirtualSize(wx.Size(int(width), int(height)))
+				self.DrawBuffer()
+
 	def OnPaint( self, evt = None ):
 		# Do the draw
-
-		if self._bitmap is None:
-			if isinstance(self, wx.ScrolledWindow):
-				size = self.GetVirtualSize()
-			else:
-				size = self.GetSize()
-
-			self._bitmap = wx.EmptyBitmap(size.GetWidth(), size.GetHeight())
-			memDC = wx.MemoryDC()
-			memDC.SelectObject(self._bitmap)
-			try:
-				memDC.BeginDrawing()
-				try:
-					memDC.SetBackground( wx.Brush( SCHEDULER_BACKGROUND_BRUSH ) )
-					memDC.SetPen( FOREGROUND_PEN )
-					memDC.Clear()
-					memDC.SetFont(wx.NORMAL_FONT)
-
-					if self._drawerClass.use_gc:
-						context = wx.GraphicsContext.Create(memDC)
-					else:
-						context = memDC
-
-					self.DoPaint(self._drawerClass(context, self._lstDisplayedHours), 0, 0, size.GetWidth(), size.GetHeight())
-				finally:
-					memDC.EndDrawing()
-			finally:
-				memDC.SelectObject(wx.NullBitmap)
 
 		if self._dc:
 			dc = self._dc
 		else:
-			# When using a wx.PaintDC, the area stays gray
-			# under MS Windows, unless you scroll it...
-			dc = wx.ClientDC(self)
+			dc = wx.PaintDC(self)
+			self.PrepareDC(dc)
 
-		self.PrepareDC(dc)
 		dc.BeginDrawing()
 		try:
 			dc.DrawBitmap(self._bitmap, 0, 0, False)
