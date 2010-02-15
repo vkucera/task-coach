@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import subprocess
+import subprocess, wx
 
 def getSubjectOfMail(messageId):
     """This should return the subject of the mail having the specified
@@ -31,8 +31,12 @@ tell application "Mail"
 end tell
 '''
 
-    sp = subprocess.Popen('osascript', stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    out, err = sp.communicate(script)
+    wx.SetCursor(wx.HOURGLASS_CURSOR)
+    try:
+        sp = subprocess.Popen('osascript', stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        out, err = sp.communicate(script)
+    finally:
+        wx.SetCursor(wx.STANDARD_CURSOR)
 
     if sp.returncode:
         return ''
