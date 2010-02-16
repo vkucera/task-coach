@@ -447,9 +447,14 @@ class wxSchedulerPaint( object ):
 				else:
 					size = self.GetSize()
 
+				# XXXFIXME: find a better way not to alter coordinates...
+				tmpCoords = self._datetimeCoords[:]
+
 				# Actually, only the min height may vary...
 				_, minH = self.DoPaint(self._drawerClass(context, self._lstDisplayedHours),
 						       0, 0, size.GetWidth(), 0)
+
+				self._datetimeCoords = tmpCoords
 			finally:
 				memDC.SelectObject(wx.NullBitmap)
 
