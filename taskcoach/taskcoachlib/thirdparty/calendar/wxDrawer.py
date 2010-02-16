@@ -118,6 +118,8 @@ class wxDrawer(object):
 				if offsetY + SCHEDULE_INSIDE_MARGIN >= h:
 					break
 
+		schedule.clientdata.bounds = (x, y, w, h)
+
 	def DrawScheduleVertical(self, schedule, day, workingHours, x, y, width, height):
 		"""Draws a schedule vertically."""
 

@@ -268,12 +268,14 @@ class TaskSchedule(wxSchedule):
             self.color = wx.Color(*(self.task.backgroundColor() or (255, 255, 255)))
             self.foreground = wx.Color(*(self.task.foregroundColor(True) or (0, 0, 0)))
 
-            self.icons = [self.iconProvider(self.task, False)]
+            icons = [self.iconProvider(self.task, False)]
 
             if self.task.attachments():
-                self.icons.append('attachment')
+                icons.append('attachment')
 
             if self.task.notes():
-                self.icons.append('note')
+                icons.append('note')
+
+            self.icons = icons
         finally:
             self.Thaw()

@@ -42,6 +42,7 @@ class wxScheduler( wxSchedulerCore, scrolled.ScrolledPanel ):
 		evt.Skip()
 
 	def OnSizeTimer( self, evt ):
+		self.InvalidateMinSize()
 		self.Refresh()
 
 	def Add( self, *args, **kwds ):
@@ -70,10 +71,19 @@ class wxScheduler( wxSchedulerCore, scrolled.ScrolledPanel ):
 		Call derived method and force wxDC refresh
 		"""
 		super(wxScheduler, self).SetResizable(value)
+		self.InvalidateMinSize()
 		self.Refresh()
 
-		#self._calcScrollBar()
-		
+	def OnScheduleChanged( self, event ):
+		if self._frozen:
+			self._dirty = True
+		else:
+			if event.layoutNeeded:
+				self.InvalidateMinSize()
+				self.Refresh()
+			else:
+				self.RefreshSchedule(event.schedule)
+
 	def _controlBindSchedules( self ):
 		"""
 		Control if all the schedules into self._schedules
@@ -83,7 +93,7 @@ class wxScheduler( wxSchedulerCore, scrolled.ScrolledPanel ):
 		bindSc = set( self._schBind )
 		
 		for sc in ( currentSc - bindSc ):
-			sc.Bind( EVT_SCHEDULE_CHANGE, lambda x: wx.CallAfter( self.Refresh ) )
+			sc.Bind( EVT_SCHEDULE_CHANGE, self.OnScheduleChanged )
 			self._schBind.append( sc )
 
 	def _getEventCoordinates( self, event ):
@@ -105,4 +115,5 @@ class wxScheduler( wxSchedulerCore, scrolled.ScrolledPanel ):
 
 	def SetViewType( self, view=None ):
 		super(wxScheduler, self).SetViewType(view)
+		self.InvalidateMinSize()
 		self.Refresh()

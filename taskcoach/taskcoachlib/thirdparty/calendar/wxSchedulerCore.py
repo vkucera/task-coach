@@ -128,7 +128,8 @@ class wxSchedulerCore( wxSchedulerPaint ):
 				
 		else:
 			raise ValueError( "Invalid value passed" )
-		
+
+		self.InvalidateMinSize()
 		self.Refresh()
 		
 	def Delete( self, index ):
@@ -147,16 +148,21 @@ class wxSchedulerCore( wxSchedulerPaint ):
 		#Remove from our bind list and unbind the event
 		self._schBind.remove( schedule )
 		schedule.Unbind( EVT_SCHEDULE_CHANGE )
-		
+
+		self.InvalidateMinSize()
 		self.Refresh()
 		
 	def DeleteAll( self ):
 		"""
 		Delete all schedules
 		"""
-		while len( self._schedules ) > 0:
-			self.Delete( 0 )
-	
+		self.Freeze()
+		try:
+			while len( self._schedules ) > 0:
+				self.Delete( 0 )
+		finally:
+			self.Thaw()
+
 	def GetDate( self ):
 		""" 
 		Return the current day view
@@ -249,12 +255,22 @@ class wxSchedulerCore( wxSchedulerPaint ):
 			return start.IsEarlierThan( schedule.start ) and end.IsLaterThan( schedule.end )
 		
 	def Next( self, steps=1 ):
-		for step in xrange( steps ):
-			self.SetViewType( wxSCHEDULER_NEXT )
-		
+		self.Freeze()
+		try:
+			for step in xrange( steps ):
+				self.SetViewType( wxSCHEDULER_NEXT )
+			self.InvalidateMinSize()
+		finally:
+			self.Thaw()
+
 	def Previous( self, steps=1 ):
-		for step in xrange( steps ):
-			self.SetViewType( wxSCHEDULER_PREV )
+		self.Freeze()
+		try:
+			for step in xrange( steps ):
+				self.SetViewType( wxSCHEDULER_PREV )
+			self.InvalidateMinSize()
+		finally:
+			self.Thaw()
 
 	def SetDate( self, date=None ):
 		# Go to the date. Default is today.
@@ -262,6 +278,7 @@ class wxSchedulerCore( wxSchedulerPaint ):
 			date = wx.DateTime.Now()
 		self._currentDate = date
 		self._calculateWorkHour()
+		self.InvalidateMinSize()
 		self.Refresh()
 			
 	def SetDc( self, dc=None ):
@@ -279,6 +296,7 @@ class wxSchedulerCore( wxSchedulerPaint ):
 		
 		self._showOnlyWorkHour = value
 		self._calculateWorkHour()
+		self.InvalidateMinSize()
 		self.Refresh()
 	
 	def SetViewType( self, view=None ):
@@ -307,6 +325,7 @@ class wxSchedulerCore( wxSchedulerPaint ):
 		Defaults it's start on Monday
 		"""
 		self._weekstart = weekstart
+		self.InvalidateMinSize()
 		self.Refresh()
 			
 	def SetWorkHours( self, start, stop ):
@@ -316,4 +335,5 @@ class wxSchedulerCore( wxSchedulerPaint ):
 		self._startingHour.SetHour( start )
 		self._endingHour.SetHour( stop )
 		self._calculateWorkHour()
+		self.InvalidateMinSize()
 		self.Refresh()

@@ -50,7 +50,8 @@ class wxSchedule( wx.EvtHandler ):
 		self._icons			= []
 		
 		# Need for freeze the event notification
-		self._freeze = False 
+		self._freeze = False
+		self._layoutNeeded = False
 	
 	def __getattr__(self, name):
 		if name[:3] in [ 'get', 'set' ]:
@@ -66,12 +67,13 @@ class wxSchedule( wx.EvtHandler ):
 	def Freeze( self ):
 		# Freeze the event notification
 		self._freeze = True
+		self._layoutNeeded = False
 	
 	def Thaw( self ):
 		# Wake up the event
 		self._freeze = False
-		self._eventNotification()
-		
+		self._eventNotification( self._layoutNeeded )
+
 	def GetData(self):
 		"""
 		Return wxSchedule data into a dict
@@ -106,11 +108,13 @@ class wxSchedule( wx.EvtHandler ):
 
 	# Internal methods
 	
-	def _eventNotification( self ):
+	def _eventNotification( self, layoutNeeded=False ):
 		""" If not freeze, wake up and call the event notification
 		"""
-		if self._freeze: return
-		
+		if self._freeze:
+			self._layoutNeeded = self._layoutNeeded or layoutNeeded
+			return
+
 		#Create the event and propagete it
 		evt = wx.PyCommandEvent( wxEVT_COMMAND_SCHEDULE_CHANGE )
 		
@@ -124,7 +128,8 @@ class wxSchedule( wx.EvtHandler ):
 		evt.start		= self._start
 		evt.icons		= self._icons
 		evt.schedule	= self
-		
+		evt.layoutNeeded = layoutNeeded
+
 		evt.SetEventObject( self )
 		
 		self.ProcessEvent( evt )
@@ -193,7 +198,7 @@ class wxSchedule( wx.EvtHandler ):
 			raise ValueError, "Description can be only a str value"
 
 		self._description = description
-		self._eventNotification()
+		self._eventNotification( True )
 		
 	def GetDescription( self ):
 		"""
@@ -225,7 +230,7 @@ class wxSchedule( wx.EvtHandler ):
 			raise ValueError, "dateTime can be only a wx.DateTime value"
 
 		self._end = dtEnd
-		self._eventNotification()
+		self._eventNotification( True )
 	
 	def GetEnd( self ):
 		""" 
@@ -256,7 +261,7 @@ class wxSchedule( wx.EvtHandler ):
 			raise ValueError, "dateTime can be only a wx.DateTime value"
 		
 		self._start = dtStart
-		self._eventNotification()
+		self._eventNotification( True )
 	
 	def GetStart( self ):
 		""" 
@@ -267,10 +272,12 @@ class wxSchedule( wx.EvtHandler ):
 	def GetIcons(self):
 		return self._icons
 	
-	def SetIcons(self, value):
-		self._icons = value
+	def SetIcons(self, icons):
+		layoutNeeded = (bool(icons) and not bool(self._icons)) or \
+			       (bool(self._icons) and not bool(icons))
+		self._icons = icons
 		
-		self._eventNotification()
+		self._eventNotification( layoutNeeded )
 
 	def SetClientData( self, clientdata ):
 		self._clientdata = clientdata

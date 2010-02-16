@@ -5,7 +5,7 @@ from wxSchedule import wxSchedule
 from wxDrawer import wxBaseDrawer, wxFancyDrawer
 from wxSchedulerCore import *
 import calendar
-import string
+import math
 import sys
 import wx
 import wxScheduleUtils as utils
@@ -48,6 +48,7 @@ class wxSchedulerPaint( object ):
 		#self._drawerClass = wxFancyDrawer
 
 		self._bitmap = None
+		self._minSize = None
 
 		if isinstance(self, wx.ScrolledWindow):
 			self.SetSizer(wxSchedulerSizer(self.CalcMinSize))
@@ -422,7 +423,7 @@ class wxSchedulerPaint( object ):
 
 		return wx.Size(max(size.width, minSize.width), max(size.height, minSize.height))
 
-	def CalcMinSize(self):
+	def _CalcMinSize(self):
 		if self._viewType == wxSCHEDULER_DAILY:
 			minW, minH = DAY_SIZE_MIN.width, DAY_SIZE_MIN.height
 		elif self._viewType == wxSCHEDULER_WEEKLY:
@@ -453,6 +454,14 @@ class wxSchedulerPaint( object ):
 				memDC.SelectObject(wx.NullBitmap)
 
 		return wx.Size(minW, minH)
+
+	def CalcMinSize(self):
+		if self._minSize is None:
+			self._minSize = self._CalcMinSize()
+		return self._minSize
+
+	def InvalidateMinSize(self):
+		self._minSize = None
 
 	def DrawBuffer( self ):
 		if isinstance(self, wx.ScrolledWindow):
@@ -489,6 +498,30 @@ class wxSchedulerPaint( object ):
 				self.SetVirtualSize(wx.Size(int(width), int(height)))
 				self.DrawBuffer()
 
+	def RefreshSchedule( self, schedule ):
+		memDC = wx.MemoryDC()
+		memDC.SelectObject(self._bitmap)
+		try:
+			memDC.BeginDrawing()
+			memDC.SetBackground( wx.Brush( SCHEDULER_BACKGROUND_BRUSH ) )
+			memDC.SetPen( FOREGROUND_PEN )
+			memDC.SetFont(wx.NORMAL_FONT)
+
+			if self._drawerClass.use_gc:
+				context = wx.GraphicsContext.Create(memDC)
+			else:
+				context = memDC
+
+			self._drawerClass(context, self._lstDisplayedHours)._DrawSchedule(schedule, *schedule.bounds)
+		finally:
+			memDC.SelectObject(wx.NullBitmap)
+
+		originX, originY = self.GetViewStart()
+		unitX, unitY = self.GetScrollPixelsPerUnit()
+		x, y, w, h = schedule.bounds
+		self.RefreshRect(wx.Rect(math.floor(x - originX * unitX) - 1, math.floor(y - originY * unitY) - 1,
+					 math.ceil(w) + 2, math.ceil(h) + 2))
+
 	def OnPaint( self, evt = None ):
 		# Do the draw
 
@@ -518,6 +551,7 @@ class wxSchedulerPaint( object ):
 		wxSCHEDULER_HORIZONTAL.
 		"""
 		self._style = style
+		self.InvalidateMinSize()
 		self.Refresh()
 
 	def GetStyle( self ):
@@ -531,6 +565,7 @@ class wxSchedulerPaint( object ):
 		Sets the drawer class.
 		"""
 		self._drawerClass = drawerClass
+		self.InvalidateMinSize()
 		self.Refresh()
 
 	def GetDrawer(self):
