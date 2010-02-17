@@ -122,7 +122,7 @@ class wxSchedulerPaint( object ):
 		schedules = schedules[:] # Don't alter original list
 		def compare(a, b):
 			if a.start.IsEqualTo(b.start):
-				return 0
+				return cmp(a.description, b.description)
 			if a.start.IsEarlierThan(b.start):
 				return -1
 			return 1
