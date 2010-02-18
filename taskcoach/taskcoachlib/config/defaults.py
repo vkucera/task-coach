@@ -93,6 +93,7 @@ defaults = { \
     'title': '',
     'viewtype': '1',
     'viewdate': '',
+    'gradient': 'False',
     'shownostart': 'False',
     'shownodue': 'False',
     'searchfilterstring': '',

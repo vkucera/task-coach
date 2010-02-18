@@ -293,6 +293,9 @@ class FeaturesPage(SettingsPage):
             _('Hour of start of work day'), minimum=0, maximum=23)
         self.addIntegerSetting('view', 'efforthourend',
             _('Hour of end of work day'), minimum=1, maximum=24)
+        self.addBooleanSetting('calendarviewer', 'gradient',
+            _('Use gradients in calendar views.\nThis may slow down Task Coach.'),
+            helpText='restart')
         self.addChoiceSetting('view', 'effortminuteinterval',
             _('Minutes between task start/end times'),
             [('5', '5'), ('10', '10'), ('15', '15'), ('20', '20'), ('30', '30')])

@@ -557,8 +557,9 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
                                   self.onEdit, self.onCreate, itemPopupMenu,
                                   **self.widgetCreationKeywordArguments())
 
-        # If called directly, we crash with a Cairo asser failing...
-        wx.CallAfter(widget.SetDrawer, wxFancyDrawer)
+        if self.settings.getboolean('calendarviewer', 'gradient'):
+            # If called directly, we crash with a Cairo assert failing...
+            wx.CallAfter(widget.SetDrawer, wxFancyDrawer)
 
         return widget
 
