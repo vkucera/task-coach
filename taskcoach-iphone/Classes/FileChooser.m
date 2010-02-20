@@ -21,7 +21,7 @@
 		catCtrl = ctrl;
 
 		files = [[NSMutableArray alloc] init];
-		Statement *req = [[Database connection] statementWithSQL:@"SELECT * FROM TaskCoachFile ORDER BY name"];
+		Statement *req = [[Database connection] statementWithSQL:@"SELECT * FROM TaskCoachFile ORDER BY name COLLATE CSDIA"];
 		[req execWithTarget:self action:@selector(onAddFile:)];
 	}
 	

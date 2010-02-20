@@ -10,6 +10,14 @@
 #import "Statement.h"
 #import "Configuration.h"
 
+static int collation(void *p, int s1, const void *p1, int s2, const void *p2)
+{
+	NSString *str1 = [NSString stringWithUTF8String:(const char *)p1];
+	NSString *str2 = [NSString stringWithUTF8String:(const char *)p2];
+
+	return [str1 compare:str2 options:NSDiacriticInsensitiveSearch];
+}
+
 @implementation SQLite
 
 @synthesize inTransaction;
@@ -115,7 +123,16 @@
 								reason:[NSString stringWithFormat:@"Could not open %@", filename]
 								userInfo:nil];
 		}
-
+		
+		if (sqlite3_create_collation(pDb, "CSDIA", SQLITE_UTF8, NULL, collation) != SQLITE_OK)
+		{
+			NSLog(@"Could not create collation.");
+		}
+		else
+		{
+			NSLog(@"Collation created.");
+		}
+		
 		// Database upgrade from previous versions
 		
 		[[self statementWithSQL:@"SELECT value FROM Meta WHERE name=\"version\""] execWithTarget:self action:@selector(onDatabaseUpgrade:)];
@@ -135,7 +152,7 @@
 		[[self statementWithSQL:@"CREATE VIEW CurrentCategory AS SELECT * FROM Category LEFT JOIN TaskCoachFile ON Category.fileId=TaskCoachFile.id WHERE TaskCoachFile.visible OR Category.fileId IS NULL"] exec];
 		[[self statementWithSQL:@"CREATE VIEW CurrentEffort AS SELECT * FROM Effort LEFT JOIN TaskCoachFile ON Effort.fileId=TaskCoachFile.id WHERE TaskCoachFile.visible OR Effort.fileId IS NULL"] exec];
 
-		[[self statementWithSQL:@"CREATE VIEW AllTask AS SELECT * FROM CurrentTask WHERE status != 3 ORDER BY name"] exec];
+		[[self statementWithSQL:@"CREATE VIEW AllTask AS SELECT * FROM CurrentTask WHERE status != 3 ORDER BY name COLLATE CSDIA"] exec];
 		[[self statementWithSQL:@"CREATE VIEW OverdueTask AS SELECT * FROM CurrentTask WHERE status != 3 AND dueDate < DATE('now') ORDER BY dueDate, startDate DESC"] exec];
 		[[self statementWithSQL:[NSString stringWithFormat:@"CREATE VIEW DueSoonTask AS SELECT * FROM CurrentTask WHERE status != 3 AND (dueDate >= DATE('now') AND dueDate < DATE('now', '+%d days')) ORDER BY startDate DESC", [Configuration configuration].soonDays]] exec];
 		[[self statementWithSQL:[NSString stringWithFormat:@"CREATE VIEW StartedTask AS SELECT * FROM CurrentTask WHERE status != 3 AND startDate IS NOT NULL AND startDate <= DATE('now') AND (dueDate >= DATE('now', '+%d days') OR dueDate IS NULL) ORDER BY startDate", [Configuration configuration].soonDays]] exec];
