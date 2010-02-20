@@ -50,7 +50,6 @@
 		A64604980F223FC500FC71AD /* ledorange.png in Resources */ = {isa = PBXBuildFile; fileRef = A64604930F223FC500FC71AD /* ledorange.png */; };
 		A64604990F223FC500FC71AD /* ledred.png in Resources */ = {isa = PBXBuildFile; fileRef = A64604940F223FC500FC71AD /* ledred.png */; };
 		A6664C230F2B35F300638C68 /* SyncViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664C220F2B35F300638C68 /* SyncViewController.m */; };
-		A6664C290F2B367A00638C68 /* SyncView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6664C270F2B367A00638C68 /* SyncView.xib */; };
 		A6664D3F0F2B41A000638C68 /* State.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664D3E0F2B41A000638C68 /* State.m */; };
 		A6664DD90F2B47A000638C68 /* ProtocolNegotiationState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664DD80F2B47A000638C68 /* ProtocolNegotiationState.m */; };
 		A6664DDC0F2B486000638C68 /* BaseState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664DDB0F2B486000638C68 /* BaseState.m */; };
@@ -67,7 +66,6 @@
 		A680C0DD0F47368E00A8D18B /* DatePickerView.strings in Resources */ = {isa = PBXBuildFile; fileRef = A680C0D50F47368E00A8D18B /* DatePickerView.strings */; };
 		A680C0DE0F47368E00A8D18B /* MainWindow.strings in Resources */ = {isa = PBXBuildFile; fileRef = A680C0D70F47368E00A8D18B /* MainWindow.strings */; };
 		A680C0DF0F47368E00A8D18B /* StringChoice.strings in Resources */ = {isa = PBXBuildFile; fileRef = A680C0D90F47368E00A8D18B /* StringChoice.strings */; };
-		A680C0E00F47368E00A8D18B /* SyncView.strings in Resources */ = {isa = PBXBuildFile; fileRef = A680C0DB0F47368E00A8D18B /* SyncView.strings */; };
 		A6831FFE102EB057002A7083 /* TaskView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6831FFC102EB057002A7083 /* TaskView.xib */; };
 		A6832038102EB499002A7083 /* TaskView.strings in Resources */ = {isa = PBXBuildFile; fileRef = A6832036102EB499002A7083 /* TaskView.strings */; };
 		A68EDEC50F1E1F1700F51FF2 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = A68EDEC30F1E1F1700F51FF2 /* MainWindow.xib */; };
@@ -117,6 +115,7 @@
 		A6DDED1B0F46C5D30047AEF5 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6DDED1A0F46C5D30047AEF5 /* Security.framework */; };
 		A6DDF8500F1F974000F35108 /* TaskList.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF84F0F1F974000F35108 /* TaskList.m */; };
 		A6DDF8540F1F988600F35108 /* TaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF8530F1F988600F35108 /* TaskViewController.m */; };
+		A6E46386113028A500976293 /* SyncView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6E46385113028A500976293 /* SyncView.xib */; };
 		A6E7C0801114418D00B230E2 /* AlertPrompt.m in Sources */ = {isa = PBXBuildFile; fileRef = A6E7C07F1114418D00B230E2 /* AlertPrompt.m */; };
 		A6E83C5A10E4C9AF00FF3E45 /* FileChooser.m in Sources */ = {isa = PBXBuildFile; fileRef = A6E83C5810E4C9AF00FF3E45 /* FileChooser.m */; };
 		A6E83C5B10E4C9AF00FF3E45 /* FileChooser.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6E83C5910E4C9AF00FF3E45 /* FileChooser.xib */; };
@@ -197,7 +196,6 @@
 		A64604940F223FC500FC71AD /* ledred.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ledred.png; sourceTree = "<group>"; };
 		A6664C210F2B35F300638C68 /* SyncViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncViewController.h; sourceTree = "<group>"; };
 		A6664C220F2B35F300638C68 /* SyncViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncViewController.m; sourceTree = "<group>"; };
-		A6664C280F2B367A00638C68 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SyncView.xib; sourceTree = "<group>"; };
 		A6664D3D0F2B41A000638C68 /* State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = State.h; path = Synchronization/State.h; sourceTree = "<group>"; };
 		A6664D3E0F2B41A000638C68 /* State.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = State.m; path = Synchronization/State.m; sourceTree = "<group>"; };
 		A6664DD70F2B47A000638C68 /* ProtocolNegotiationState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProtocolNegotiationState.h; path = Synchronization/ProtocolNegotiationState.h; sourceTree = "<group>"; };
@@ -215,7 +213,6 @@
 		A67400791042DF530094E5F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/TaskView.strings; sourceTree = "<group>"; };
 		A674007A1042DF620094E5F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MainWindow.strings; sourceTree = "<group>"; };
 		A674007B1042DF6C0094E5F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/StringChoice.strings; sourceTree = "<group>"; };
-		A674007C1042DF760094E5F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SyncView.strings; sourceTree = "<group>"; };
 		A6793B250F31E28700AAEC17 /* UploadObjectsState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UploadObjectsState.h; path = Synchronization/UploadObjectsState.h; sourceTree = "<group>"; };
 		A6793B260F31E28700AAEC17 /* UploadObjectsState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UploadObjectsState.m; path = Synchronization/UploadObjectsState.m; sourceTree = "<group>"; };
 		A67A0C200F6BA57100F48A82 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
@@ -231,11 +228,9 @@
 		A680C0D10F47367F00A8D18B /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/DatePickerView.xib; sourceTree = "<group>"; };
 		A680C0D20F47367F00A8D18B /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		A680C0D30F47367F00A8D18B /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/StringChoice.xib; sourceTree = "<group>"; };
-		A680C0D40F47367F00A8D18B /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/SyncView.xib; sourceTree = "<group>"; };
 		A680C0D60F47368E00A8D18B /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/DatePickerView.strings; sourceTree = "<group>"; };
 		A680C0D80F47368E00A8D18B /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/MainWindow.strings; sourceTree = "<group>"; };
 		A680C0DA0F47368E00A8D18B /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/StringChoice.strings; sourceTree = "<group>"; };
-		A680C0DC0F47368E00A8D18B /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/SyncView.strings; sourceTree = "<group>"; };
 		A6831FFD102EB057002A7083 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TaskView.xib; sourceTree = "<group>"; };
 		A6832032102EB42F002A7083 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/TaskView.xib; sourceTree = "<group>"; };
 		A6832037102EB499002A7083 /* fr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/TaskView.strings; sourceTree = "<group>"; };
@@ -291,13 +286,11 @@
 		A6D0E4171042E13C006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/DatePickerView.strings; sourceTree = "<group>"; };
 		A6D0E4181042E13C006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/MainWindow.strings; sourceTree = "<group>"; };
 		A6D0E4191042E13C006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/StringChoice.strings; sourceTree = "<group>"; };
-		A6D0E41A1042E13C006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/SyncView.strings; sourceTree = "<group>"; };
 		A6D0E41B1042E13C006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/TaskView.strings; sourceTree = "<group>"; };
 		A6D0E41C1042E150006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A6D0E4281042E169006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/DatePickerView.xib; sourceTree = "<group>"; };
 		A6D0E4291042E169006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		A6D0E42A1042E169006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/StringChoice.xib; sourceTree = "<group>"; };
-		A6D0E42B1042E169006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/SyncView.xib; sourceTree = "<group>"; };
 		A6D0E42C1042E169006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/TaskView.xib; sourceTree = "<group>"; };
 		A6D384540F247DDF0097F0F6 /* TaskDetailsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDetailsController.h; sourceTree = "<group>"; };
 		A6D384550F247DDF0097F0F6 /* TaskDetailsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskDetailsController.m; sourceTree = "<group>"; };
@@ -323,6 +316,7 @@
 		A6DDF84F0F1F974000F35108 /* TaskList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TaskList.m; path = Database/TaskList.m; sourceTree = "<group>"; };
 		A6DDF8520F1F988600F35108 /* TaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskViewController.h; sourceTree = "<group>"; };
 		A6DDF8530F1F988600F35108 /* TaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskViewController.m; sourceTree = "<group>"; };
+		A6E46385113028A500976293 /* SyncView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SyncView.xib; sourceTree = "<group>"; };
 		A6E7C07E1114418D00B230E2 /* AlertPrompt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlertPrompt.h; path = Thirdparty/AlertPrompt.h; sourceTree = "<group>"; };
 		A6E7C07F1114418D00B230E2 /* AlertPrompt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlertPrompt.m; path = Thirdparty/AlertPrompt.m; sourceTree = "<group>"; };
 		A6E83C5710E4C9AF00FF3E45 /* FileChooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileChooser.h; sourceTree = "<group>"; };
@@ -429,10 +423,10 @@
 				A68EDF840F1E2A6D00F51FF2 /* StringChoice.xib */,
 				A6831FFC102EB057002A7083 /* TaskView.xib */,
 				A6D386880F24B4450097F0F6 /* DatePickerView.xib */,
-				A6664C270F2B367A00638C68 /* SyncView.xib */,
 				A6D8AC020F221BFA006894AA /* Settings.bundle */,
 				A6D384600F247E910097F0F6 /* TaskDetails.xib */,
 				A67A0C200F6BA57100F48A82 /* Entitlements.plist */,
+				A6E46385113028A500976293 /* SyncView.xib */,
 				A60B6EE410258EB200F9983C /* TaskCategoryPicker.xib */,
 			);
 			name = CustomTemplate;
@@ -446,7 +440,6 @@
 				A680C0D50F47368E00A8D18B /* DatePickerView.strings */,
 				A680C0D70F47368E00A8D18B /* MainWindow.strings */,
 				A680C0D90F47368E00A8D18B /* StringChoice.strings */,
-				A680C0DB0F47368E00A8D18B /* SyncView.strings */,
 				32CA4F630368D1EE00C91783 /* TaskCoach_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 				A68EDEF60F1E227500F51FF2 /* taskcoach.sql */,
@@ -736,13 +729,11 @@
 				A6D3868A0F24B4450097F0F6 /* DatePickerView.xib in Resources */,
 				A6A975390F26572200622396 /* TaskCellLeft.xib in Resources */,
 				A6A9753A0F26572200622396 /* TaskCellRight.xib in Resources */,
-				A6664C290F2B367A00638C68 /* SyncView.xib in Resources */,
 				A6DA5C780F3D87F300372358 /* DescriptionCell.xib in Resources */,
 				A680C0C60F47366900A8D18B /* Localizable.strings in Resources */,
 				A680C0DD0F47368E00A8D18B /* DatePickerView.strings in Resources */,
 				A680C0DE0F47368E00A8D18B /* MainWindow.strings in Resources */,
 				A680C0DF0F47368E00A8D18B /* StringChoice.strings in Resources */,
-				A680C0E00F47368E00A8D18B /* SyncView.strings in Resources */,
 				A6C30BEB0F48218C00A04E7C /* Default.png in Resources */,
 				A63CC07C0F517055003669FD /* TaskCellLeftBig.xib in Resources */,
 				A63CC07D0F517055003669FD /* TaskCellRightBig.xib in Resources */,
@@ -768,6 +759,7 @@
 				A6C3CFB710E782D800483057 /* ledclockbig.png in Resources */,
 				A6C3CFE110E7846200483057 /* redButton.png in Resources */,
 				A61AA5C11114304900AA1E38 /* EffortView.xib in Resources */,
+				A6E46386113028A500976293 /* SyncView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -850,16 +842,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		A6664C270F2B367A00638C68 /* SyncView.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A6664C280F2B367A00638C68 /* en */,
-				A680C0D40F47367F00A8D18B /* fr */,
-				A6D0E42B1042E169006440A3 /* nl */,
-			);
-			name = SyncView.xib;
-			sourceTree = "<group>";
-		};
 		A680C0C40F47366900A8D18B /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -898,16 +880,6 @@
 				A6D0E4191042E13C006440A3 /* nl */,
 			);
 			name = StringChoice.strings;
-			sourceTree = "<group>";
-		};
-		A680C0DB0F47368E00A8D18B /* SyncView.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A680C0DC0F47368E00A8D18B /* fr */,
-				A674007C1042DF760094E5F4 /* en */,
-				A6D0E41A1042E13C006440A3 /* nl */,
-			);
-			name = SyncView.strings;
 			sourceTree = "<group>";
 		};
 		A6831FFC102EB057002A7083 /* TaskView.xib */ = {
