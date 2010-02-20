@@ -22,9 +22,9 @@
 		);
 	};
 	29B97313FDCFA39411CA2CEA /* Project object */ = {
-		activeBuildConfigurationName = Debug;
+		activeBuildConfigurationName = Beta1v2;
 		activeExecutable = A68EDEB00F1E1EDF00F51FF2 /* TaskCoach */;
-		activeSDKPreference = iphonesimulator3.1.2;
+		activeSDKPreference = iphoneos3.1.2;
 		activeTarget = 1D6058900D05DD3D006BFB54 /* TaskCoach */;
 		addToTargets = (
 			1D6058900D05DD3D006BFB54 /* TaskCoach */,
@@ -116,7 +116,7 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					1284,
+					1384,
 					60,
 					20,
 					48,
@@ -133,8 +133,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 288361448;
-			PBXWorkspaceStateSaveDate = 288361448;
+			PBXPerProjectTemplateStateSaveDate = 288366847;
+			PBXWorkspaceStateSaveDate = 288366847;
 		};
 		perUserProjectItems = {
 			A608092211301222002A0E0B /* PBXTextBookmark */ = A608092211301222002A0E0B /* PBXTextBookmark */;
@@ -145,8 +145,6 @@
 			A608098B113016EF002A0E0B /* PBXTextBookmark */ = A608098B113016EF002A0E0B /* PBXTextBookmark */;
 			A608098C113016EF002A0E0B /* PBXTextBookmark */ = A608098C113016EF002A0E0B /* PBXTextBookmark */;
 			A608098D113016EF002A0E0B /* PBXTextBookmark */ = A608098D113016EF002A0E0B /* PBXTextBookmark */;
-			A608098E113016EF002A0E0B /* PBXTextBookmark */ = A608098E113016EF002A0E0B /* PBXTextBookmark */;
-			A608099111301700002A0E0B /* PBXTextBookmark */ = A608099111301700002A0E0B /* PBXTextBookmark */;
 			A61373D510E5079300FF8210 /* PBXTextBookmark */ = A61373D510E5079300FF8210 /* PBXTextBookmark */;
 			A61AA5D51114357B00AA1E38 /* PBXTextBookmark */ = A61AA5D51114357B00AA1E38 /* PBXTextBookmark */;
 			A61AA5D61114357B00AA1E38 /* PBXTextBookmark */ = A61AA5D61114357B00AA1E38 /* PBXTextBookmark */;
@@ -159,10 +157,13 @@
 			A61AA6D011143D2200AA1E38 /* PBXTextBookmark */ = A61AA6D011143D2200AA1E38 /* PBXTextBookmark */;
 			A61F555E108CBD9B00BDFD6D /* PBXTextBookmark */ = A61F555E108CBD9B00BDFD6D /* PBXTextBookmark */;
 			A61F555F108CBD9B00BDFD6D /* PBXTextBookmark */ = A61F555F108CBD9B00BDFD6D /* PBXTextBookmark */;
-			A621FDE710E0C7C5005601A6 /* PlistBookmark */ = A621FDE710E0C7C5005601A6 /* PlistBookmark */;
 			A621FE0E10E0C857005601A6 /* PBXTextBookmark */ = A621FE0E10E0C857005601A6 /* PBXTextBookmark */;
 			A6258868111741DB00FE248E /* PBXTextBookmark */ = A6258868111741DB00FE248E /* PBXTextBookmark */;
 			A627F04E10E7558600B856F4 /* PBXTextBookmark */ = A627F04E10E7558600B856F4 /* PBXTextBookmark */;
+			A62C520411302201000B83E4 /* PBXTextBookmark */ = A62C520411302201000B83E4 /* PBXTextBookmark */;
+			A62C520511302201000B83E4 /* PlistBookmark */ = A62C520511302201000B83E4 /* PlistBookmark */;
+			A62C52101130223E000B83E4 /* PlistBookmark */ = A62C52101130223E000B83E4 /* PlistBookmark */;
+			A62C52121130224E000B83E4 /* PlistBookmark */ = A62C52121130224E000B83E4 /* PlistBookmark */;
 			A63FB6E811269798005A538F /* PBXTextBookmark */ = A63FB6E811269798005A538F /* PBXTextBookmark */;
 			A63FB6E911269798005A538F /* PBXTextBookmark */ = A63FB6E911269798005A538F /* PBXTextBookmark */;
 			A63FB6EA11269798005A538F /* PBXTextBookmark */ = A63FB6EA11269798005A538F /* PBXTextBookmark */;
@@ -187,7 +188,6 @@
 			A6AD577A10E7599A00AD7BAF /* PBXTextBookmark */ = A6AD577A10E7599A00AD7BAF /* PBXTextBookmark */;
 			A6AD57A010E75BA400AD7BAF /* PBXTextBookmark */ = A6AD57A010E75BA400AD7BAF /* PBXTextBookmark */;
 			A6AD57AB10E75C0F00AD7BAF /* PBXTextBookmark */ = A6AD57AB10E75C0F00AD7BAF /* PBXTextBookmark */;
-			A6B5E01D106E04E200E3774E /* PlistBookmark */ = A6B5E01D106E04E200E3774E /* PlistBookmark */;
 			A6C3CF2A10E7706B00483057 /* PBXBookmark */ = A6C3CF2A10E7706B00483057 /* PBXBookmark */;
 			A6C3CF2B10E7706B00483057 /* PBXBookmark */ = A6C3CF2B10E7706B00483057 /* PBXBookmark */;
 			A6C3CF6010E7712500483057 /* PBXTextBookmark */ = A6C3CF6010E7712500483057 /* PBXTextBookmark */;
@@ -330,6 +330,7 @@
 	};
 	A608093C1130158D002A0E0B /* NSString.h */ = {
 		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
 		name = NSString.h;
 		path = /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.2.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSString.h;
 		sourceTree = "<absolute>";
@@ -373,23 +374,6 @@
 		rType = 0;
 		vrLen = 2576;
 		vrLoc = 5304;
-	};
-	A608098E113016EF002A0E0B /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A68EDEDF0F1E212A00F51FF2 /* SQLite.m */;
-		rLen = 8;
-		rLoc = 7365;
-		rType = 0;
-	};
-	A608099111301700002A0E0B /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A68EDEDF0F1E212A00F51FF2 /* SQLite.m */;
-		name = "SQLite.m: 126";
-		rLen = 0;
-		rLoc = 4920;
-		rType = 0;
-		vrLen = 3278;
-		vrLoc = 4662;
 	};
 	A60B6E2E102587FA00F9983C /* BaseCategoryViewController.h */ = {
 		uiCtxt = {
@@ -700,18 +684,6 @@
 		vrLen = 1424;
 		vrLoc = 0;
 	};
-	A621FDE710E0C7C5005601A6 /* PlistBookmark */ = {
-		isa = PlistBookmark;
-		fRef = 8D1107310486CEB800E47090 /* Info.plist */;
-		fallbackIsa = PBXBookmark;
-		isK = 0;
-		kPath = (
-			LSRequiresIPhoneOS,
-		);
-		name = "/Users/jeromelaheurte/Dev/taskcoach-trunk/taskcoach-iphone/Info.plist";
-		rLen = 0;
-		rLoc = 9223372036854775808;
-	};
 	A621FE0E10E0C857005601A6 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = A61F5453108CB5B400BDFD6D /* BadgedCell.m */;
@@ -769,6 +741,50 @@
 		rType = 0;
 		vrLen = 317;
 		vrLoc = 0;
+	};
+	A62C520411302201000B83E4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = A68EDEDF0F1E212A00F51FF2 /* SQLite.m */;
+		name = "SQLite.m: 126";
+		rLen = 0;
+		rLoc = 4920;
+		rType = 0;
+		vrLen = 3277;
+		vrLoc = 4662;
+	};
+	A62C520511302201000B83E4 /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = A67A0C200F6BA57100F48A82 /* Entitlements.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+		);
+		name = "/Users/jeromelaheurte/Dev/taskcoach-trunk/taskcoach-iphone/Entitlements.plist";
+		rLen = 0;
+		rLoc = 9223372036854775807;
+	};
+	A62C52101130223E000B83E4 /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = 8D1107310486CEB800E47090 /* Info.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+			LSRequiresIPhoneOS,
+		);
+		name = "/Users/jeromelaheurte/Dev/taskcoach-trunk/taskcoach-iphone/Info.plist";
+		rLen = 0;
+		rLoc = 9223372036854775807;
+	};
+	A62C52121130224E000B83E4 /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = A67A0C200F6BA57100F48A82 /* Entitlements.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+		);
+		name = "/Users/jeromelaheurte/Dev/taskcoach-trunk/taskcoach-iphone/Entitlements.plist";
+		rLen = 0;
+		rLoc = 9223372036854775807;
 	};
 	A63CC07F0F5170FC003669FD /* TaskCellBig.h */ = {
 		uiCtxt = {
@@ -1350,9 +1366,9 @@
 	};
 	A68EDEDF0F1E212A00F51FF2 /* SQLite.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {2217, 2912}}";
-			sepNavSelRange = "{7596, 0}";
-			sepNavVisRange = "{6396, 1131}";
+			sepNavIntBoundsRect = "{{0, 0}, {2217, 2717}}";
+			sepNavSelRange = "{4920, 0}";
+			sepNavVisRange = "{4662, 3277}";
 		};
 	};
 	A68EDEE00F1E212A00F51FF2 /* Statement.h */ = {
@@ -1552,17 +1568,6 @@
 			sepNavSelRange = "{182, 0}";
 			sepNavVisRange = "{0, 469}";
 		};
-	};
-	A6B5E01D106E04E200E3774E /* PlistBookmark */ = {
-		isa = PlistBookmark;
-		fRef = A67A0C200F6BA57100F48A82 /* Entitlements.plist */;
-		fallbackIsa = PBXBookmark;
-		isK = 0;
-		kPath = (
-		);
-		name = "/Users/jeromelaheurte/Dev/taskcoach-trunk/taskcoach-iphone/Entitlements.plist";
-		rLen = 0;
-		rLoc = 2147483647;
 	};
 	A6C3CEF610E76C8C00483057 /* ButtonCell.h */ = {
 		uiCtxt = {

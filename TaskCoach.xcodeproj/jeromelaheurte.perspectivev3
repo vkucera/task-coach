@@ -231,6 +231,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -267,6 +269,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateExpansionKey</key>
 							<array>
 								<string>29B97314FDCFA39411CA2CEA</string>
+								<string>1C37FBAC04509CD000000102</string>
 								<string>1C77FABC04509CD000000102</string>
 								<string>1C3E0DCA080725EA00A55177</string>
 							</array>
@@ -305,14 +308,12 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>SQLite.m</string>
+								<string>Entitlements.plist</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -320,14 +321,13 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>SQLite.m</string>
+										<string>Entitlements.plist</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A608099111301700002A0E0B</string>
+										<string>A62C52121130224E000B83E4</string>
 										<key>history</key>
 										<array>
-											<string>A6B5E01D106E04E200E3774E</string>
 											<string>A683DFFA106E052900C8A7C3</string>
 											<string>A6E276E8106F40EE006E5F0D</string>
 											<string>A68A605910821E7E00D723FE</string>
@@ -342,7 +342,6 @@
 											<string>A652EFBD10D8DF1A00E60212</string>
 											<string>A652EFD410D8DF6900E60212</string>
 											<string>A652EFD610D8DF6900E60212</string>
-											<string>A621FDE710E0C7C5005601A6</string>
 											<string>A621FE0E10E0C857005601A6</string>
 											<string>A6E83B6110E4B6AE00FF3E45</string>
 											<string>A6E83B6210E4B6AE00FF3E45</string>
@@ -437,7 +436,9 @@
 											<string>A608098B113016EF002A0E0B</string>
 											<string>A608098C113016EF002A0E0B</string>
 											<string>A608098D113016EF002A0E0B</string>
-											<string>A608098E113016EF002A0E0B</string>
+											<string>A62C520411302201000B83E4</string>
+											<string>A62C52101130223E000B83E4</string>
+											<string>A62C520511302201000B83E4</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -477,6 +478,8 @@
 									<dict>
 										<key>Frame</key>
 										<string>{{10, 27}, {1663, 259}}</string>
+										<key>RubberWindowFrame</key>
+										<string>15 177 2020 1234 0 0 2560 1418 </string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -493,8 +496,6 @@
 									<dict>
 										<key>Frame</key>
 										<string>{{10, 27}, {1663, 259}}</string>
-										<key>RubberWindowFrame</key>
-										<string>15 177 2020 1234 0 0 2560 1418 </string>
 									</dict>
 									<key>Module</key>
 									<string>PBXProjectFindModule</string>
@@ -560,11 +561,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A608091111300BF2002A0E0B</string>
+				<string>A62C51F411302101000B83E4</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A608091211300BF2002A0E0B</string>
+				<string>A62C51F511302101000B83E4</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A608091311300BF2002A0E0B</string>
+				<string>A62C51F611302101000B83E4</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -752,8 +753,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>A608093011301235002A0E0B</string>
-		<string>A608093111301235002A0E0B</string>
 		<string>/Users/jeromelaheurte/Dev/taskcoach-trunk/taskcoach-iphone/TaskCoach.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
