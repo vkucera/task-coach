@@ -269,6 +269,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateExpansionKey</key>
 							<array>
 								<string>29B97314FDCFA39411CA2CEA</string>
+								<string>080E96DDFE201D6D7F000001</string>
 								<string>1C37FBAC04509CD000000102</string>
 								<string>1C77FABC04509CD000000102</string>
 								<string>1C3E0DCA080725EA00A55177</string>
@@ -276,6 +277,8 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
+									<integer>12</integer>
+									<integer>1</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -313,7 +316,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>Root.strings</string>
+								<string>TaskCoachAppDelegate.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -321,11 +324,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>Root.strings</string>
+										<string>TaskCoachAppDelegate.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A6DF2C541130279900CD3630</string>
+										<string>A61AF00311302929002DF0BB</string>
 										<key>history</key>
 										<array>
 											<string>A68A605910821E7E00D723FE</string>
@@ -410,7 +413,6 @@
 											<string>A6E7C08E111443A000B230E2</string>
 											<string>A6E7C08F111443A000B230E2</string>
 											<string>A6E7C090111443A000B230E2</string>
-											<string>A6E7C091111443A000B230E2</string>
 											<string>A6E7C093111443A000B230E2</string>
 											<string>A6E7C094111443A000B230E2</string>
 											<string>A6E7C095111443A000B230E2</string>
@@ -438,7 +440,8 @@
 											<string>A632AC68113026AC00CF9F5E</string>
 											<string>A632AC69113026AC00CF9F5E</string>
 											<string>A6DF2C521130279900CD3630</string>
-											<string>A6DF2C531130279900CD3630</string>
+											<string>A61AEFF811302929002DF0BB</string>
+											<string>A61AEFF911302929002DF0BB</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -561,11 +564,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6DF2C561130279900CD3630</string>
+				<string>A61AEFFB11302929002DF0BB</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A6DF2C571130279900CD3630</string>
+				<string>A61AEFFC11302929002DF0BB</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A6DF2C581130279900CD3630</string>
+				<string>A61AEFFD11302929002DF0BB</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -640,8 +643,8 @@
 								<string>yes</string>
 								<key>sizes</key>
 								<array>
-									<string>{{0, 0}, {667, 375}}</string>
-									<string>{{667, 0}, {1353, 375}}</string>
+									<string>{{0, 0}, {667, 377}}</string>
+									<string>{{667, 0}, {1353, 377}}</string>
 								</array>
 							</dict>
 							<key>VerticalSplitView</key>
@@ -656,8 +659,8 @@
 								<string>yes</string>
 								<key>sizes</key>
 								<array>
-									<string>{{0, 0}, {2020, 375}}</string>
-									<string>{{0, 375}, {2020, 406}}</string>
+									<string>{{0, 0}, {2020, 377}}</string>
+									<string>{{0, 377}, {2020, 404}}</string>
 								</array>
 							</dict>
 						</dict>
@@ -690,7 +693,7 @@
 								<real>977</real>
 							</array>
 							<key>Frame</key>
-							<string>{{667, 0}, {1353, 375}}</string>
+							<string>{{667, 0}, {1353, 377}}</string>
 						</dict>
 					</dict>
 					<key>Module</key>
@@ -714,13 +717,13 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A608091411300BF2002A0E0B</string>
+				<string>A61AEFFE11302929002DF0BB</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A608091511300BF2002A0E0B</string>
-				<string>A608091611300BF2002A0E0B</string>
-				<string>A608091711300BF2002A0E0B</string>
-				<string>A608091811300BF2002A0E0B</string>
+				<string>A61AEFFF11302929002DF0BB</string>
+				<string>A61AF00011302929002DF0BB</string>
+				<string>A61AF00111302929002DF0BB</string>
+				<string>A61AF00211302929002DF0BB</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
