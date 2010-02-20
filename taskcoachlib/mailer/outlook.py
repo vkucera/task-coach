@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, tempfile
+import os, stat, tempfile
 from taskcoachlib import persistence
 
 
@@ -66,7 +66,8 @@ if os.name == 'nt':
                         dst.write(line)
             finally:
                 dst.close()
+                if os.name == 'nt':
+                    os.chmod(name, stat.S_IREAD)
             ret.append(name)
 
         return ret
-

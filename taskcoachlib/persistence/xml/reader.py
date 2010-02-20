@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import re, os, datetime, StringIO, wx
+import re, os, stat, datetime, StringIO, wx
 import xml.etree.ElementTree as ET
 from taskcoachlib.domain import date, effort, task, category, note, attachment
 from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
@@ -334,6 +334,9 @@ class XMLReader(object):
 
                 location = sessiontempfile.get_temp_file(suffix=ext)
                 file(location, 'wb').write(data.decode('base64'))
+
+                if os.name == 'nt':
+                    os.chmod(location, stat.S_IREAD)
 
         return attachment.AttachmentFactory(location,  # pylint: disable-msg=W0142
                                             attachmentNode.attrib['type'],

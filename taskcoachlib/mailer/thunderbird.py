@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, re, imaplib, ConfigParser, wx
+import os, stat, re, imaplib, ConfigParser, wx
 from taskcoachlib.i18n import _
 from taskcoachlib import persistence
 
@@ -307,4 +307,8 @@ def getMail(id_):
 
     filename = persistence.get_temp_file(suffix='.eml')
     reader.saveToFile(file(filename, 'wb'))
+
+    if os.name == 'nt':
+        os.chmod(filename, stat.S_IREAD)
+
     return filename
