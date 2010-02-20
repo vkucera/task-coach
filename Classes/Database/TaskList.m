@@ -90,7 +90,7 @@
 
 		[where release];
 
-		request = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * %@ GROUP BY id ORDER BY name LIMIT ?,?", req]] retain];
+		request = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * %@ GROUP BY id ORDER BY name COLLATE CSDIA LIMIT ?,?", req]] retain];
 		countRequest = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(DISTINCT(id)) AS total %@", req]] retain];
 
 		title = [theTitle copy];
