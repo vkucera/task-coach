@@ -1,0 +1,19 @@
+﻿"" = "Project-Id-Version: Task Coach\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2010-02-20 15:23+0100\nPO-Revision-Date: 2010-02-20 15:13+0100\nLast-Translator: Jérôme Laheurte <fraca7@free.fr>\nLanguage-Team: Jérôme Laheurte <fraca7@free.fr>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Launchpad-Export-Date: 2009-09-27 06:32+0000\nX-Generator: Launchpad (build Unknown)\nX-Poedit-Country: France\nX-Poedit-Language: fr\nX-Poedit-SourceCharset: utf-8\n";
+
+"Display" = "Affichage";
+
+"Show completed" = "Montrer terminées";
+
+"Icon position" = "Position de l'icône";
+
+"Left" = "Gauche";
+
+"Right" = "Droite";
+
+"Compact tasks" = "Tâches compactes";
+
+"Misc" = "Divers";
+
+"Confirm complete" = "Confirmer terminée";
+
+"Due soon # of days     " = "# jours dûe bientôt     ";

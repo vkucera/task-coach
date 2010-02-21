@@ -1,0 +1,298 @@
+/* SOME DESCRIPTIVE TITLE. */
+/* Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER */
+/* This file is distributed under the same license as the PACKAGE package. */
+/* FIRST AUTHOR <EMAIL@ADDRESS>, YEAR. */
+/* */
+/* Flag: untranslated */
+"" = "" /* = "Project-Id-Version: PACKAGE VERSION\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2010-02-20 15:23+0100\nPO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\nLast-Translator: FULL NAME <EMAIL@ADDRESS>\nLanguage-Team: LANGUAGE <LL@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\n" */;
+
+/* File: Classes/StringChoiceController.m:67 */
+/* File: Classes/Synchronization/AuthentificationState.m:94 */
+/* File: Classes/Synchronization/BaseState.m:34 */
+/* File: Classes/Synchronization/BaseState.m:48 */
+/* File: Classes/Synchronization/ProtocolNegotiationState.m:61 */
+/* Flag: untranslated */
+"Error" = "Error";
+
+/* File: Classes/StringChoiceController.m:67 */
+/* Flag: untranslated */
+"Empty text." = "Empty text.";
+
+/* File: Classes/StringChoiceController.m:67 */
+/* File: Classes/Synchronization/AuthentificationState.m:24 */
+/* File: Classes/Synchronization/ProtocolNegotiationState.m:61 */
+/* Flag: untranslated */
+"OK" = "OK";
+
+/* File: Classes/Bonjour/BonjourBrowser.m:87 */
+/* Flag: untranslated */
+"Domains" = "Domains";
+
+/* File: Classes/Bonjour/BonjourBrowser.m:88 */
+/* Flag: untranslated */
+"Added Domains" = "Added Domains";
+
+/* File: Classes/Bonjour/BonjourBrowser.m:89 */
+/* Flag: untranslated */
+"Add Domain" = "Add Domain";
+
+/* File: Classes/Bonjour/BonjourBrowser.m:90 */
+/* Flag: untranslated */
+"Searching for services" = "Searching for services";
+
+/* File: Classes/SyncViewController.m:49 */
+/* File: Classes/Synchronization/InitialState.m:23 */
+/* Flag: untranslated */
+"Connecting..." = "Connecting...";
+
+/* File: Classes/EffortView.m:43 */
+/* Flag: untranslated */
+/* Flag: objc-format */
+"%d seconds" = "%d seconds";
+
+/* File: Classes/EffortView.m:50 */
+/* Flag: untranslated */
+/* Flag: objc-format */
+"%d minutes" = "%d minutes";
+
+/* File: Classes/EffortView.m:57 */
+/* Flag: untranslated */
+/* Flag: objc-format */
+"%d hours" = "%d hours";
+
+/* File: Classes/EffortView.m:63 */
+/* Flag: untranslated */
+/* Flag: objc-format */
+"%d days" = "%d days";
+
+/* File: Classes/EffortView.m:102 */
+/* Flag: untranslated */
+/* Flag: objc-format */
+"Started %@" = "Started %@";
+
+/* File: Classes/TaskViewController.m:88 */
+/* Flag: untranslated */
+"Overdue" = "Overdue";
+
+/* File: Classes/TaskViewController.m:95 */
+/* Flag: untranslated */
+"Due soon" = "Due soon";
+
+/* File: Classes/TaskViewController.m:102 */
+/* Flag: untranslated */
+"Started" = "Started";
+
+/* File: Classes/TaskViewController.m:109 */
+/* Flag: untranslated */
+"Not started" = "Not started";
+
+/* File: Classes/TaskViewController.m:274 */
+/* Flag: untranslated */
+"Confirmation" = "Confirmation";
+
+/* File: Classes/TaskViewController.m:275 */
+/* Flag: untranslated */
+/* Flag: objc-format */
+"Do you really want to mark \"%@\" complete ?" = "Do you really want to mark \"%@\" complete ?";
+
+/* File: Classes/TaskViewController.m:276 */
+/* File: Classes/TaskDetailsController.m:331 */
+/* Flag: untranslated */
+"No" = "No";
+
+/* File: Classes/TaskViewController.m:277 */
+/* File: Classes/TaskDetailsController.m:331 */
+/* Flag: untranslated */
+"Yes" = "Yes";
+
+/* File: Classes/TaskViewController.m:328 */
+/* Flag: untranslated */
+"No tasks." = "No tasks.";
+
+/* File: Classes/TaskViewController.m:372 */
+/* Flag: untranslated */
+"Add task..." = "Add task...";
+
+/* File: Classes/TaskCellBig.m:76 */
+/* Flag: untranslated */
+/* Flag: objc-format */
+"Completed %@" = "Completed %@";
+
+/* File: Classes/TaskCellBig.m:79 */
+/* File: Classes/TaskCellBig.m:82 */
+/* File: Classes/TaskCellBig.m:86 */
+/* Flag: untranslated */
+/* Flag: objc-format */
+"Due %@" = "Due %@";
+
+/* File: Classes/TaskCellBig.m:89 */
+/* Flag: untranslated */
+/* Flag: objc-format */
+"Start %@" = "Start %@";
+
+/* File: Classes/DateCell.m:33 */
+/* Flag: untranslated */
+"None" = "None";
+
+/* File: Classes/CategoryViewController.m:60 */
+/* File: Classes/CategoryViewController.m:351 */
+/* File: Classes/CategoryViewController.m:424 */
+/* Flag: untranslated */
+"All" = "All";
+
+/* File: Classes/CategoryViewController.m:152 */
+/* File: Classes/CategoryViewController.m:300 */
+/* File: Classes/CategoryViewController.m:328 */
+/* File: Classes/CategoryViewController.m:336 */
+/* Flag: untranslated */
+"Enter category name" = "Enter category name";
+
+/* File: Classes/CategoryViewController.m:394 */
+/* Flag: untranslated */
+"Add subcategory" = "Add subcategory";
+
+/* File: Classes/CategoryViewController.m:471 */
+/* File: Classes/CategoryViewController.m:496 */
+/* Flag: untranslated */
+"Looking for Task Coach" = "Looking for Task Coach";
+
+/* File: Classes/TaskCoachAppDelegate.m:24 */
+/* File: Classes/Synchronization/AuthentificationState.m:24 */
+/* File: Classes/TaskDetailsController.m:331 */
+/* Flag: untranslated */
+"Cancel" = "Cancel";
+
+/* File: Classes/TaskCoachAppDelegate.m:25 */
+/* Flag: untranslated */
+"Save" = "Save";
+
+/* File: Classes/TaskCoachAppDelegate.m:26 */
+/* File: Classes/TaskDetailsController.m:105 */
+/* Flag: untranslated */
+"Categories" = "Categories";
+
+/* File: Classes/TaskCoachAppDelegate.m:27 */
+/* Flag: untranslated */
+"Sync" = "Sync";
+
+/* File: Classes/Synchronization/AuthentificationState.m:24 */
+/* Flag: untranslated */
+"Please type your password." = "Please type your password.";
+
+/* File: Classes/Synchronization/AuthentificationState.m:31 */
+/* Flag: untranslated */
+"Authentication" = "Authentication";
+
+/* File: Classes/Synchronization/AuthentificationState.m:95 */
+/* Flag: untranslated */
+"Incorrect password." = "Incorrect password.";
+
+/* File: Classes/Synchronization/AuthentificationState.m:96 */
+/* Flag: untranslated */
+"Retry" = "Retry";
+
+/* File: Classes/Synchronization/InitialState.m:50 */
+/* Flag: untranslated */
+"Connection error" = "Connection error";
+
+/* File: Classes/Synchronization/InitialState.m:51 */
+/* Flag: untranslated */
+"An error occurred while connecting to the remote host. Please check your settings. Also check that Task Coach is running on the remote host. Last, check your firewall settings." = "An error occurred while connecting to the remote host. Please check your settings. Also check that Task Coach is running on the remote host. Last, check your firewall settings.";
+
+/* File: Classes/Synchronization/InitialState.m:52 */
+/* File: Classes/Synchronization/BaseState.m:36 */
+/* File: Classes/Synchronization/BaseState.m:50 */
+/* Flag: untranslated */
+"Abort" = "Abort";
+
+/* File: Classes/Synchronization/BaseState.m:35 */
+/* Flag: untranslated */
+"The connection was unexpectedly closed." = "The connection was unexpectedly closed.";
+
+/* File: Classes/Synchronization/BaseState.m:49 */
+/* Flag: untranslated */
+/* Flag: objc-format */
+"A network error occurred: %@" = "A network error occurred: %@";
+
+/* File: Classes/Synchronization/ProtocolNegotiationState.m:21 */
+/* Flag: untranslated */
+"Protocol negotiation..." = "Protocol negotiation...";
+
+/* File: Classes/Synchronization/ProtocolNegotiationState.m:61 */
+/* Flag: untranslated */
+"The version of the desktop Task Coach is too old. Please upgrade it and retry." = "The version of the desktop Task Coach is too old. Please upgrade it and retry.";
+
+/* File: Classes/Synchronization/FullFromDesktopState.m:36 */
+/* Flag: untranslated */
+"Synchronizing..." = "Synchronizing...";
+
+/* File: Classes/TaskDetailsController.m:50 */
+/* Flag: untranslated */
+"Stop tracking" = "Stop tracking";
+
+/* File: Classes/TaskDetailsController.m:52 */
+/* Flag: untranslated */
+"Start tracking" = "Start tracking";
+
+/* File: Classes/TaskDetailsController.m:65 */
+/* File: Classes/TaskDetailsController.m:70 */
+/* Flag: untranslated */
+/* Flag: objc-format */
+"%d effort(s)" = "%d effort(s)";
+
+/* File: Classes/TaskDetailsController.m:113 */
+/* Flag: untranslated */
+"Start" = "Start";
+
+/* File: Classes/TaskDetailsController.m:119 */
+/* Flag: untranslated */
+"Due" = "Due";
+
+/* File: Classes/TaskDetailsController.m:125 */
+/* Flag: untranslated */
+"Completion" = "Completion";
+
+/* File: Classes/TaskDetailsController.m:164 */
+/* File: Classes/TaskDetailsController.m:428 */
+/* Flag: untranslated */
+"New task" = "New task";
+
+/* File: Classes/TaskDetailsController.m:330 */
+/* Flag: untranslated */
+"Warning" = "Warning";
+
+/* File: Classes/TaskDetailsController.m:330 */
+/* Flag: untranslated */
+/* Flag: objc-format */
+"There are %d task(s) currently tracked. Stop tracking them ?" = "There are %d task(s) currently tracked. Stop tracking them ?";
+
+/* File: Classes/FileChooser.m:56 */
+/* Flag: untranslated */
+"Unnamed file" = "Unnamed file";
+
+/* Flag: untranslated */
+"Display" = "Display";
+
+/* Flag: untranslated */
+"Show completed" = "Show completed";
+
+/* Flag: untranslated */
+"Icon position" = "Icon position";
+
+/* Flag: untranslated */
+"Left" = "Left";
+
+/* Flag: untranslated */
+"Right" = "Right";
+
+/* Flag: untranslated */
+"Compact tasks" = "Compact tasks";
+
+/* Flag: untranslated */
+"Misc" = "Misc";
+
+/* Flag: untranslated */
+"Confirm complete" = "Confirm complete";
+
+/* Flag: untranslated */
+"Due soon # of days     " = "Due soon # of days     ";

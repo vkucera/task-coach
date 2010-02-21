@@ -1,0 +1,308 @@
+# Russian translation for taskcoach-iphone
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# This file is distributed under the same license as the taskcoach-iphone package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: taskcoach-iphone\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-02-20 15:23+0100\n"
+"PO-Revision-Date: 2010-02-20 19:28+0000\n"
+"Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
+"Language-Team: Russian <ru@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2010-02-21 08:32+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#: Classes/StringChoiceController.m:67
+#: Classes/Synchronization/AuthentificationState.m:94
+#: Classes/Synchronization/BaseState.m:34
+#: Classes/Synchronization/BaseState.m:48
+#: Classes/Synchronization/ProtocolNegotiationState.m:61
+msgid "Error"
+msgstr "Ошибка"
+
+#: Classes/StringChoiceController.m:67
+msgid "Empty text."
+msgstr "Пустой текст."
+
+#: Classes/StringChoiceController.m:67
+#: Classes/Synchronization/AuthentificationState.m:24
+#: Classes/Synchronization/ProtocolNegotiationState.m:61
+msgid "OK"
+msgstr "OK"
+
+#: Classes/Bonjour/BonjourBrowser.m:87
+msgid "Domains"
+msgstr "Домены"
+
+#: Classes/Bonjour/BonjourBrowser.m:88
+msgid "Added Domains"
+msgstr "Добавленные домены"
+
+#: Classes/Bonjour/BonjourBrowser.m:89
+msgid "Add Domain"
+msgstr "Добавить домен"
+
+#: Classes/Bonjour/BonjourBrowser.m:90
+msgid "Searching for services"
+msgstr "Поиск сервисов"
+
+#: Classes/SyncViewController.m:49 Classes/Synchronization/InitialState.m:23
+msgid "Connecting..."
+msgstr "Подключение..."
+
+#: Classes/EffortView.m:43
+#, objc-format
+msgid "%d seconds"
+msgstr "%d секунд(ы)"
+
+#: Classes/EffortView.m:50
+#, objc-format
+msgid "%d minutes"
+msgstr "%d минут(ы)"
+
+#: Classes/EffortView.m:57
+#, objc-format
+msgid "%d hours"
+msgstr "%d часа(ов)"
+
+#: Classes/EffortView.m:63
+#, objc-format
+msgid "%d days"
+msgstr "%d дня(ей)"
+
+#: Classes/EffortView.m:102
+#, objc-format
+msgid "Started %@"
+msgstr "Начата %@"
+
+#: Classes/TaskViewController.m:88
+msgid "Overdue"
+msgstr "Просрочено"
+
+#: Classes/TaskViewController.m:95
+msgid "Due soon"
+msgstr "Скоро истекает"
+
+#: Classes/TaskViewController.m:102
+msgid "Started"
+msgstr "Начато"
+
+#: Classes/TaskViewController.m:109
+msgid "Not started"
+msgstr "Не начато"
+
+#: Classes/TaskViewController.m:274
+msgid "Confirmation"
+msgstr "Подтверждение"
+
+#: Classes/TaskViewController.m:275
+#, objc-format
+msgid "Do you really want to mark \"%@\" complete ?"
+msgstr "Вы действительно хотите пометить \"%@\" завершенной?"
+
+#: Classes/TaskViewController.m:276 Classes/TaskDetailsController.m:331
+msgid "No"
+msgstr "Нет"
+
+#: Classes/TaskViewController.m:277 Classes/TaskDetailsController.m:331
+msgid "Yes"
+msgstr "Да"
+
+#: Classes/TaskViewController.m:328
+msgid "No tasks."
+msgstr "Нет задач."
+
+#: Classes/TaskViewController.m:372
+msgid "Add task..."
+msgstr "Добавить задачу..."
+
+#: Classes/TaskCellBig.m:76
+#, objc-format
+msgid "Completed %@"
+msgstr "Выполнена %@"
+
+#: Classes/TaskCellBig.m:79 Classes/TaskCellBig.m:82 Classes/TaskCellBig.m:86
+#, objc-format
+msgid "Due %@"
+msgstr "Истекает %@"
+
+#: Classes/TaskCellBig.m:89
+#, objc-format
+msgid "Start %@"
+msgstr "Начать %@"
+
+#: Classes/DateCell.m:33
+msgid "None"
+msgstr "Нет"
+
+#: Classes/CategoryViewController.m:60 Classes/CategoryViewController.m:351
+#: Classes/CategoryViewController.m:424
+msgid "All"
+msgstr "Все"
+
+#: Classes/CategoryViewController.m:152 Classes/CategoryViewController.m:300
+#: Classes/CategoryViewController.m:328 Classes/CategoryViewController.m:336
+msgid "Enter category name"
+msgstr "Введите название категории"
+
+#: Classes/CategoryViewController.m:394
+msgid "Add subcategory"
+msgstr "Добавить подкатегорию"
+
+#: Classes/CategoryViewController.m:471 Classes/CategoryViewController.m:496
+msgid "Looking for Task Coach"
+msgstr "Поиск Task Coach"
+
+#: Classes/TaskCoachAppDelegate.m:24
+#: Classes/Synchronization/AuthentificationState.m:24
+#: Classes/TaskDetailsController.m:331
+msgid "Cancel"
+msgstr "Отмена"
+
+#: Classes/TaskCoachAppDelegate.m:25
+msgid "Save"
+msgstr "Сохранить"
+
+#: Classes/TaskCoachAppDelegate.m:26 Classes/TaskDetailsController.m:105
+msgid "Categories"
+msgstr "Категории"
+
+#: Classes/TaskCoachAppDelegate.m:27
+msgid "Sync"
+msgstr "Синхр."
+
+#: Classes/Synchronization/AuthentificationState.m:24
+msgid "Please type your password."
+msgstr "Введите ваш пароль"
+
+#: Classes/Synchronization/AuthentificationState.m:31
+msgid "Authentication"
+msgstr "Авторизация"
+
+#: Classes/Synchronization/AuthentificationState.m:95
+msgid "Incorrect password."
+msgstr "Неверный пароль."
+
+#: Classes/Synchronization/AuthentificationState.m:96
+msgid "Retry"
+msgstr "Повтор"
+
+#: Classes/Synchronization/InitialState.m:50
+msgid "Connection error"
+msgstr "Ошибка подключения"
+
+#: Classes/Synchronization/InitialState.m:51
+msgid ""
+"An error occurred while connecting to the remote host. Please check your "
+"settings. Also check that Task Coach is running on the remote host. Last, "
+"check your firewall settings."
+msgstr ""
+"Произошла ошибка при подключении к удаленному хосту. Пожалуйста, проверьте "
+"настройки. Также проверьте, что Task Coach работает на удаленном хосте. И "
+"последнее, проверьте настройки брандмауэра."
+
+#: Classes/Synchronization/InitialState.m:52
+#: Classes/Synchronization/BaseState.m:36
+#: Classes/Synchronization/BaseState.m:50
+msgid "Abort"
+msgstr "Отменить"
+
+#: Classes/Synchronization/BaseState.m:35
+msgid "The connection was unexpectedly closed."
+msgstr "Соединение было неожиданно закрыто."
+
+#: Classes/Synchronization/BaseState.m:49
+#, objc-format
+msgid "A network error occurred: %@"
+msgstr "Произошла сетевая ошибка: %@"
+
+#: Classes/Synchronization/ProtocolNegotiationState.m:21
+msgid "Protocol negotiation..."
+msgstr "Согласование протокола..."
+
+#: Classes/Synchronization/ProtocolNegotiationState.m:61
+msgid ""
+"The version of the desktop Task Coach is too old. Please upgrade it and "
+"retry."
+msgstr ""
+"Версия Task Coach на компьютере устарела. Пожалуйста, обновите её и "
+"повторите."
+
+#: Classes/Synchronization/FullFromDesktopState.m:36
+msgid "Synchronizing..."
+msgstr "Синхронизация..."
+
+#: Classes/TaskDetailsController.m:50
+msgid "Stop tracking"
+msgstr "Остановить учет"
+
+#: Classes/TaskDetailsController.m:52
+msgid "Start tracking"
+msgstr "Начать учет"
+
+#: Classes/TaskDetailsController.m:65 Classes/TaskDetailsController.m:70
+#, objc-format
+msgid "%d effort(s)"
+msgstr "%d выполнение(я)"
+
+#: Classes/TaskDetailsController.m:113
+msgid "Start"
+msgstr "Начало"
+
+#: Classes/TaskDetailsController.m:119
+msgid "Due"
+msgstr "Срок"
+
+#: Classes/TaskDetailsController.m:125
+msgid "Completion"
+msgstr "Завершение"
+
+#: Classes/TaskDetailsController.m:164 Classes/TaskDetailsController.m:428
+msgid "New task"
+msgstr "Новая задача"
+
+#: Classes/TaskDetailsController.m:330
+msgid "Warning"
+msgstr "Предупреждение"
+
+#: Classes/TaskDetailsController.m:330
+#, objc-format
+msgid "There are %d task(s) currently tracked. Stop tracking them ?"
+msgstr ""
+"Существует %d задач(а) отслеживаемая(ые) сейчас. Остановить слежение за ними?"
+
+#: Classes/FileChooser.m:56
+msgid "Unnamed file"
+msgstr "Файл без имени"
+
+msgid "Display"
+msgstr "Показать"
+
+msgid "Show completed"
+msgstr "Показать завершенные"
+
+msgid "Icon position"
+msgstr "Позиция иконки"
+
+msgid "Left"
+msgstr "Слева"
+
+msgid "Right"
+msgstr "Справа"
+
+msgid "Compact tasks"
+msgstr "Соединить задачи"
+
+msgid "Misc"
+msgstr "Разное"
+
+msgid "Confirm complete"
+msgstr "Подтвердить завершение"
+
+msgid "Due soon # of days     "
+msgstr "Скоро истекает № дней     "
