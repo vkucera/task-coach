@@ -1,19 +1,19 @@
-﻿"" = "Project-Id-Version: Task Coach\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2010-02-20 15:23+0100\nPO-Revision-Date: 2010-02-20 15:13+0100\nLast-Translator: Jérôme Laheurte <fraca7@free.fr>\nLanguage-Team: Jérôme Laheurte <fraca7@free.fr>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Launchpad-Export-Date: 2009-09-27 06:32+0000\nX-Generator: Launchpad (build Unknown)\nX-Poedit-Country: France\nX-Poedit-Language: fr\nX-Poedit-SourceCharset: utf-8\n";
+﻿"" = "Project-Id-Version: taskcoach-iphone\nReport-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\nPOT-Creation-Date: 2010-02-20 15:23+0100\nPO-Revision-Date: 2010-02-20 19:28+0000\nLast-Translator: Nkolay Parukhin <parukhin@gmail.com>\nLanguage-Team: Russian <ru@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Launchpad-Export-Date: 2010-02-21 08:32+0000\nX-Generator: Launchpad (build Unknown)\n";
 
-"Display" = "Affichage";
+"Display" = "Показать";
 
-"Show completed" = "Montrer terminées";
+"Show completed" = "Показать завершенные";
 
-"Icon position" = "Position de l'icône";
+"Icon position" = "Позиция иконки";
 
-"Left" = "Gauche";
+"Left" = "Слева";
 
-"Right" = "Droite";
+"Right" = "Справа";
 
-"Compact tasks" = "Tâches compactes";
+"Compact tasks" = "Соединить задачи";
 
-"Misc" = "Divers";
+"Misc" = "Разное";
 
-"Confirm complete" = "Confirmer terminée";
+"Confirm complete" = "Подтвердить завершение";
 
-"Due soon # of days     " = "# jours dûe bientôt     ";
+"Due soon # of days     " = "Скоро истекает № дней     ";
