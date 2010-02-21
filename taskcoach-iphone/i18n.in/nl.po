@@ -7,15 +7,33 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach-iphone\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-26 16:53+0200\n"
-"PO-Revision-Date: 2009-09-26 11:39+0000\n"
+"POT-Creation-Date: 2010-02-20 15:23+0100\n"
+"PO-Revision-Date: 2010-02-20 16:33+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-09-27 06:32+0000\n"
+"X-Launchpad-Export-Date: 2010-02-21 08:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#: Classes/StringChoiceController.m:67
+#: Classes/Synchronization/AuthentificationState.m:94
+#: Classes/Synchronization/BaseState.m:34
+#: Classes/Synchronization/BaseState.m:48
+#: Classes/Synchronization/ProtocolNegotiationState.m:61
+msgid "Error"
+msgstr "Fout"
+
+#: Classes/StringChoiceController.m:67
+msgid "Empty text."
+msgstr "Geen tekst."
+
+#: Classes/StringChoiceController.m:67
+#: Classes/Synchronization/AuthentificationState.m:24
+#: Classes/Synchronization/ProtocolNegotiationState.m:61
+msgid "OK"
+msgstr "OK"
 
 #: Classes/Bonjour/BonjourBrowser.m:87
 msgid "Domains"
@@ -33,93 +51,116 @@ msgstr "Domein toevoegen"
 msgid "Searching for services"
 msgstr "Services zoeken"
 
-#: Classes/SyncViewController.m:59 Classes/Synchronization/InitialState.m:23
+#: Classes/SyncViewController.m:49 Classes/Synchronization/InitialState.m:23
 msgid "Connecting..."
 msgstr "Verbinden..."
 
-#: Classes/SyncViewController.m:60
-msgid "Please type your password."
-msgstr "Voer uw wachtwoord in."
+#: Classes/EffortView.m:43
+#, objc-format
+msgid "%d seconds"
+msgstr "%d seconden"
 
-#: Classes/TaskViewController.m:64
+#: Classes/EffortView.m:50
+#, objc-format
+msgid "%d minutes"
+msgstr "%d minuten"
+
+#: Classes/EffortView.m:57
+#, objc-format
+msgid "%d hours"
+msgstr "%d uren"
+
+#: Classes/EffortView.m:63
+#, objc-format
+msgid "%d days"
+msgstr "%d dagen"
+
+#: Classes/EffortView.m:102
+#, objc-format
+msgid "Started %@"
+msgstr "%@ gestart"
+
+#: Classes/TaskViewController.m:88
 msgid "Overdue"
 msgstr "Te laat"
 
-#: Classes/TaskViewController.m:71
+#: Classes/TaskViewController.m:95
 msgid "Due soon"
 msgstr "Binnenkort af te ronden"
 
-#: Classes/TaskViewController.m:78
+#: Classes/TaskViewController.m:102
 msgid "Started"
 msgstr "Gestart"
 
-#: Classes/TaskViewController.m:85
+#: Classes/TaskViewController.m:109
 msgid "Not started"
 msgstr "Niet gestart"
 
-#: Classes/TaskViewController.m:241
+#: Classes/TaskViewController.m:274
 msgid "Confirmation"
 msgstr "Bevestiging"
 
-#: Classes/TaskViewController.m:242
+#: Classes/TaskViewController.m:275
 #, objc-format
 msgid "Do you really want to mark \"%@\" complete ?"
 msgstr "Wilt u \"%@\" echt als afgerond markeren?"
 
-#: Classes/TaskViewController.m:243
+#: Classes/TaskViewController.m:276 Classes/TaskDetailsController.m:331
 msgid "No"
 msgstr "Nee"
 
-#: Classes/TaskViewController.m:244
+#: Classes/TaskViewController.m:277 Classes/TaskDetailsController.m:331
 msgid "Yes"
 msgstr "Ja"
 
-#: Classes/TaskViewController.m:295
+#: Classes/TaskViewController.m:328
 msgid "No tasks."
 msgstr "Geen taken."
 
-#: Classes/TaskViewController.m:339
+#: Classes/TaskViewController.m:372
 msgid "Add task..."
 msgstr "Taak toevoegen..."
 
-#: Classes/TaskCellBig.m:71
+#: Classes/TaskCellBig.m:76
 #, objc-format
 msgid "Completed %@"
 msgstr "%@ afgerond"
 
-#: Classes/TaskCellBig.m:74 Classes/TaskCellBig.m:83
+#: Classes/TaskCellBig.m:79 Classes/TaskCellBig.m:82 Classes/TaskCellBig.m:86
 #, objc-format
 msgid "Due %@"
 msgstr "%@ af te ronden"
 
-#: Classes/TaskCellBig.m:78
+#: Classes/TaskCellBig.m:89
 #, objc-format
-msgid "Started %@"
-msgstr "%@ gestart"
+msgid "Start %@"
+msgstr "Start %@"
 
 #: Classes/DateCell.m:33
 msgid "None"
 msgstr "Geen"
 
-#: Classes/CategoryViewController.m:56 Classes/CategoryViewController.m:302
-#: Classes/CategoryViewController.m:387
+#: Classes/CategoryViewController.m:60 Classes/CategoryViewController.m:351
+#: Classes/CategoryViewController.m:424
 msgid "All"
 msgstr "Alle"
 
-#: Classes/CategoryViewController.m:133 Classes/CategoryViewController.m:251
-#: Classes/CategoryViewController.m:279 Classes/CategoryViewController.m:287
+#: Classes/CategoryViewController.m:152 Classes/CategoryViewController.m:300
+#: Classes/CategoryViewController.m:328 Classes/CategoryViewController.m:336
 msgid "Enter category name"
 msgstr "Voer categorienaam in"
 
-#: Classes/CategoryViewController.m:350
+#: Classes/CategoryViewController.m:394
 msgid "Add subcategory"
 msgstr "Subcategorie toevoegen"
 
-#: Classes/CategoryViewController.m:416 Classes/CategoryViewController.m:441
+#: Classes/CategoryViewController.m:471 Classes/CategoryViewController.m:496
 msgid "Looking for Task Coach"
 msgstr "Task Coach aan het zoeken"
 
 #: Classes/TaskCoachAppDelegate.m:24
+#: Classes/Synchronization/AuthentificationState.m:24
+#: Classes/TaskDetailsController.m:331
 msgid "Cancel"
 msgstr "Annuleren"
 
@@ -127,7 +168,7 @@ msgstr "Annuleren"
 msgid "Save"
 msgstr "Opslaan"
 
-#: Classes/TaskCoachAppDelegate.m:26 Classes/TaskDetailsController.m:59
+#: Classes/TaskCoachAppDelegate.m:26 Classes/TaskDetailsController.m:105
 msgid "Categories"
 msgstr "Categorieën"
 
@@ -135,26 +176,19 @@ msgstr "Categorieën"
 msgid "Sync"
 msgstr "Synchroniseren"
 
-#: Classes/Synchronization/FullFromDeviceState.m:38
-#: Classes/Synchronization/FullFromDesktopState.m:34
-msgid "Synchronizing..."
-msgstr "Synchroniseren…"
+#: Classes/Synchronization/AuthentificationState.m:24
+msgid "Please type your password."
+msgstr "Voer uw wachtwoord in."
 
-#: Classes/Synchronization/AuthentificationState.m:23
+#: Classes/Synchronization/AuthentificationState.m:31
 msgid "Authentication"
 msgstr "Authenticatie"
 
-#: Classes/Synchronization/AuthentificationState.m:99
-#: Classes/Synchronization/BaseState.m:34
-#: Classes/Synchronization/BaseState.m:48
-msgid "Error"
-msgstr "Fout"
-
-#: Classes/Synchronization/AuthentificationState.m:100
+#: Classes/Synchronization/AuthentificationState.m:95
 msgid "Incorrect password."
 msgstr "Onjuist wachtwoord."
 
-#: Classes/Synchronization/AuthentificationState.m:101
+#: Classes/Synchronization/AuthentificationState.m:96
 msgid "Retry"
 msgstr "Opnieuw proberen"
 
@@ -175,7 +209,6 @@ msgstr ""
 #: Classes/Synchronization/InitialState.m:52
 #: Classes/Synchronization/BaseState.m:36
 #: Classes/Synchronization/BaseState.m:50
-#: Classes/Synchronization/ProtocolNegotiationState.m:62
 msgid "Abort"
 msgstr "Afbreken"
 
@@ -192,39 +225,59 @@ msgstr "Een netwerkfout trad op: %@"
 msgid "Protocol negotiation..."
 msgstr "Protocol onderhandeling..."
 
-#: Classes/Synchronization/ProtocolNegotiationState.m:60
+#: Classes/Synchronization/ProtocolNegotiationState.m:61
+msgid ""
+"The version of the desktop Task Coach is too old. Please upgrade it and "
+"retry."
+msgstr ""
+"De Task Coach desktop versie is te oud. Installeer a.u.b. een nieuwere "
+"versie en probeer opnieuw."
+
+#: Classes/Synchronization/FullFromDesktopState.m:36
+msgid "Synchronizing..."
+msgstr "Synchroniseren…"
+
+#: Classes/TaskDetailsController.m:50
+msgid "Stop tracking"
+msgstr "Tijdsbesteding stoppen"
+
+#: Classes/TaskDetailsController.m:52
+msgid "Start tracking"
+msgstr "Tijdsbesteding starten"
+
+#: Classes/TaskDetailsController.m:65 Classes/TaskDetailsController.m:70
+#, objc-format
+msgid "%d effort(s)"
+msgstr "%d tijdsbesteding(en)"
+
+#: Classes/TaskDetailsController.m:113
+msgid "Start"
+msgstr "Start"
+
+#: Classes/TaskDetailsController.m:119
+msgid "Due"
+msgstr "Te doen"
+
+#: Classes/TaskDetailsController.m:125
+msgid "Completion"
+msgstr "Afronding"
+
+#: Classes/TaskDetailsController.m:164 Classes/TaskDetailsController.m:428
+msgid "New task"
+msgstr "Nieuwe taak"
+
+#: Classes/TaskDetailsController.m:330
 msgid "Warning"
 msgstr "Waarschuwing"
 
-#: Classes/Synchronization/ProtocolNegotiationState.m:61
+#: Classes/TaskDetailsController.m:330
 #, objc-format
-msgid ""
-"It seems that the desktop Task Coach version is too old. Please consider "
-"upgrading (you may loose some data if you go on anyway)."
-msgstr ""
-"De desktop Task Coach versie lijkt te oud. Overweeg a.u.b. een nieuwere "
-"versie te installeren (u zou informatie kunnen verliezen als u nu toch door "
-"gaat)."
+msgid "There are %d task(s) currently tracked. Stop tracking them ?"
+msgstr "Er wordt tijd bijgehouden voor %d taken. Tijdsbesteding stoppen?"
 
-#: Classes/Synchronization/ProtocolNegotiationState.m:63
-msgid "Go on"
-msgstr "Ga door"
-
-#: Classes/TaskDetailsController.m:39
-msgid "Complete"
-msgstr "Voltooid"
-
-#: Classes/TaskDetailsController.m:67
-msgid "Start date"
-msgstr "Startdatum"
-
-#: Classes/TaskDetailsController.m:73
-msgid "Due date"
-msgstr "Geplande einddatum"
-
-#: Classes/TaskDetailsController.m:110 Classes/TaskDetailsController.m:287
-msgid "New task"
-msgstr "Nieuwe taak"
+#: Classes/FileChooser.m:56
+msgid "Unnamed file"
+msgstr "Naamloos bestand"
 
 msgid "Display"
 msgstr "Weergave"
@@ -252,3 +305,24 @@ msgstr "Bevestig afronding"
 
 msgid "Due soon # of days     "
 msgstr "Spoedig af te ronden # dagen     "
+
+#~ msgid "Complete"
+#~ msgstr "Voltooid"
+
+#~ msgid "Go on"
+#~ msgstr "Ga door"
+
+#~ msgid "Start date"
+#~ msgstr "Startdatum"
+
+#~ msgid "Due date"
+#~ msgstr "Geplande einddatum"
+
+#, objc-format
+#~ msgid ""
+#~ "It seems that the desktop Task Coach version is too old. Please consider "
+#~ "upgrading (you may loose some data if you go on anyway)."
+#~ msgstr ""
+#~ "De desktop Task Coach versie lijkt te oud. Overweeg a.u.b. een nieuwere "
+#~ "versie te installeren (u zou informatie kunnen verliezen als u nu toch door "
+#~ "gaat)."
