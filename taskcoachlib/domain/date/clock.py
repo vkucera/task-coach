@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -91,13 +91,18 @@ class PeriodicTimer(Timer):
         super(PeriodicTimer, self).Stop()
                 
     def _startOfPeriodArguments(self, period):
+        # Make sure that if the period is daily or more, we fire after the start
+        # of the new day by adding 10 seconds to the start of the next period:
+        startOfPeriod = dict(year=0, month=0, day=0, hour=0, minute=0,
+                             second=10 if period in ['year', 'month', 'day'] else 0,
+                             microsecond=0)
         keywordArguments = dict()
         periods = self.periodsAllowed + ['microsecond']
         smallerPeriods = periods[periods.index(period)+1:]
         for eachSmallerPeriod in smallerPeriods:
-            keywordArguments[eachSmallerPeriod] = 0
+            keywordArguments[eachSmallerPeriod] = startOfPeriod[eachSmallerPeriod]
         return keywordArguments
-
+    
     def _startFiringEveryPeriod(self, now=None): # pylint: disable-msg=W0613
         self.Notify()
         super(PeriodicTimer, self).Start(milliseconds=self._period.milliseconds(), 
