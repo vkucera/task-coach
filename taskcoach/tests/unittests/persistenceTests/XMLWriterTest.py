@@ -3,7 +3,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2007 Jérôme Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -537,3 +537,47 @@ class XMLWriterTest(test.TestCase):
         self.expectInXML('<attachment font="%s" id="foo" '
                          'location="whatever.txt" status="1" '
                          'subject="whatever.txt" type="file"/>'%wx.SWISS_FONT.GetNativeFontInfoDesc())
+
+    def testTaskIcon(self):
+        self.task.setIcon('icon')
+        self.expectInXML('icon="icon"')
+
+    def testNoTaskIcon(self):
+        self.expectNotInXML('icon')
+
+    def testSelectedTaskIcon(self):
+        self.task.setSelectedIcon('icon')
+        self.expectInXML('selectedIcon="icon"')
+
+    def testNoSelectedTaskIcon(self):
+        self.expectNotInXML('selectedIcon')
+
+    def testNoteIcon(self):
+        self.note.setIcon('icon')
+        self.expectInXML('icon="icon"')
+
+    def testSelectedNoteIcon(self):
+        self.note.setSelectedIcon('icon')
+        self.expectInXML('selectedIcon="icon"')
+        
+    def testCategoryIcon(self):
+        self.category.setIcon('icon')
+        self.expectInXML('icon="icon"')
+
+    def testSelectedCategoryIcon(self):
+        self.category.setSelectedIcon('icon')
+        self.expectInXML('selectedIcon="icon"')
+
+    def testAttachmentIcon(self):
+        att = attachment.FileAttachment('whatever.txt', id='foo', icon='icon')
+        self.task.addAttachments(att)
+        self.expectInXML('<attachment icon="icon" id="foo" '
+                         'location="whatever.txt" status="1" '
+                         'subject="whatever.txt" type="file"/>')
+
+    def testSelectedAttachmentIcon(self):
+        att = attachment.FileAttachment('whatever.txt', id='foo', selectedIcon='icon')
+        self.task.addAttachments(att)
+        self.expectInXML('<attachment id="foo" location="whatever.txt" '
+                         'selectedIcon="icon" status="1" '
+                         'subject="whatever.txt" type="file"/>')

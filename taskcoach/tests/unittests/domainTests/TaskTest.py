@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2008 Jérôme Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -200,6 +202,12 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         for recursive in False, True:
             self.assertEqual(None, self.task.foregroundColor(recursive))
 
+    def testDefaultIcon(self):
+        self.assertEqual('task', self.task.icon(recursive=True))
+
+    def testDefaultSelectedIcon(self):
+        self.assertEqual('task', self.task.selectedIcon(recursive=True))
+
     # Setters
 
     def testSetStartDate(self):
@@ -362,7 +370,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.task.setRecurrence(date.Recurrence('weekly'))
         self.assertEqual([patterns.Event('task.recurrence', self.task,
             date.Recurrence('weekly'))], self.events)
-                        
+
     # Add child
         
     def testAddChildNotification(self):
@@ -572,6 +580,12 @@ class TaskDueTodayTest(TaskTestCase, CommonTaskTestsMixin):
         self.task.setForegroundColor((128, 128, 128, 255))
         self.assertEqual(expectedColor, self.task.foregroundColor(recursive=True))
 
+    def testIcon(self):
+        self.assertEqual('task_duesoon', self.task.icon(recursive=True))
+
+    def testSelectedIcon(self):
+        self.assertEqual('task_duesoon', self.task.selectedIcon(recursive=True))
+
 
 class TaskDueTomorrowTest(TaskTestCase, CommonTaskTestsMixin):
     def taskCreationKeywordArguments(self):
@@ -594,6 +608,20 @@ class TaskDueTomorrowTest(TaskTestCase, CommonTaskTestsMixin):
         self.settings.set('behavior', 'duesoondays', '2')
         self.failUnless(self.task.dueSoon())
 
+    def testIconNotDueSoon(self):
+        self.assertEqual('task', self.task.icon(recursive=True))
+
+    def testselectedIconNotDueSoon(self):
+        self.assertEqual('task', self.task.selectedIcon(recursive=True))
+
+    def testIconDueSoon(self):
+        self.settings.set('behavior', 'duesoondays', '2')
+        self.assertEqual('task_duesoon', self.task.icon(recursive=True))
+
+    def testSelectedIconDueSoon(self):
+        self.settings.set('behavior', 'duesoondays', '2')
+        self.assertEqual('task_duesoon', self.task.selectedIcon(recursive=True))
+        
 
 class OverdueTaskTest(TaskTestCase, CommonTaskTestsMixin):
     def taskCreationKeywordArguments(self):
@@ -617,6 +645,12 @@ class OverdueTaskTest(TaskTestCase, CommonTaskTestsMixin):
         expectedColor = wx.Colour(191, 64, 64, 255)
         self.task.setForegroundColor((128, 128, 128, 255))
         self.assertEqual(expectedColor, self.task.foregroundColor(recursive=True))
+
+    def testIcon(self):
+        self.assertEqual('task_overdue', self.task.icon(recursive=True))
+
+    def testSelectedIcon(self):
+        self.assertEqual('task_overdue', self.task.selectedIcon(recursive=True))
 
 
 class CompletedTaskTest(TaskTestCase, CommonTaskTestsMixin):
@@ -656,7 +690,14 @@ class CompletedTaskTest(TaskTestCase, CommonTaskTestsMixin):
         expectedColor = wx.Colour(64, 191, 64, 255)
         self.task.setForegroundColor((128, 128, 128, 255))
         self.assertEqual(expectedColor, self.task.foregroundColor(recursive=True))
-        
+
+    def testIcon(self):
+        self.assertEqual('task_completed', self.task.icon(recursive=True))
+
+    def testSelectedIcon(self):
+        self.assertEqual('task_completed',
+                         self.task.selectedIcon(recursive=True))
+
 
 class TaskCompletedInTheFutureTest(TaskTestCase, CommonTaskTestsMixin):
     def taskCreationKeywordArguments(self):
@@ -685,13 +726,23 @@ class InactiveTaskTest(TaskTestCase, CommonTaskTestsMixin):
         self.failUnless(self.task.active())
 
     def testDefaultInactiveColor(self):
-        expectedColor = wx.Colour(*eval(self.settings.get('color', 'inactivetasks')))
-        self.assertEqual(expectedColor, self.task.foregroundColor(recursive=True))
+        expectedColor = wx.Colour(*eval(self.settings.get('color',
+                                                          'inactivetasks')))
+        self.assertEqual(expectedColor,
+                         self.task.foregroundColor(recursive=True))
         
     def testColorWhenTaskHasOwnColor(self):
         expectedColor = wx.Colour(160, 160, 160, 255)
         self.task.setForegroundColor((128, 128, 128, 255))
-        self.assertEqual(expectedColor, self.task.foregroundColor(recursive=True))
+        self.assertEqual(expectedColor,
+                         self.task.foregroundColor(recursive=True))
+
+    def testIcon(self):
+        self.assertEqual('task_inactive', self.task.icon(recursive=True))
+
+    def testSelectedIcon(self):
+        self.assertEqual('task_inactive',
+                         self.task.selectedIcon(recursive=True))
 
 
 class TaskWithSubject(TaskTestCase, CommonTaskTestsMixin):
@@ -1096,7 +1147,65 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
         self.assertEqual([patterns.Event('task.totalPercentageComplete', 
                                          self.task, 25)],
                          self.events)
-        
+
+    def testIcon(self):
+        self.assertEqual('tasks', self.task.icon(recursive=True))
+
+    def testSelectedIcon(self):
+        self.assertEqual('tasks_open', self.task.selectedIcon(recursive=True))
+
+
+class CompletedTaskWithChildTest(TaskTestCase):
+    def taskCreationKeywordArguments(self):
+        return [{'completionDate': date.Today(),
+                 'children': [task.Task(subject='child')]}]
+
+    def testIcon(self):
+        self.assertEqual('tasks_completed', self.task.icon(recursive=True))
+
+    def testSelectedIcon(self):
+        self.assertEqual('tasks_completed_open',
+                         self.task.selectedIcon(recursive=True))
+
+
+class OverdueTaskWithChildTest(TaskTestCase):
+    def taskCreationKeywordArguments(self):
+        return [{'dueDate': date.Yesterday(),
+                 'children': [task.Task(subject='child')]}]
+
+    def testIcon(self):
+        self.assertEqual('tasks_overdue', self.task.icon(recursive=True))
+
+    def testSelectedIcon(self):
+        self.assertEqual('tasks_overdue_open',
+                         self.task.selectedIcon(recursive=True))
+
+
+class DuesoonTaskWithChildTest(TaskTestCase):
+    def taskCreationKeywordArguments(self):
+        return [{'dueDate': date.Today(),
+                 'children': [task.Task(subject='child')]}]
+
+    def testIcon(self):
+        self.assertEqual('tasks_duesoon', self.task.icon(recursive=True))
+
+    def testSelectedIcon(self):
+        self.assertEqual('tasks_duesoon_open',
+                         self.task.selectedIcon(recursive=True))
+
+
+class InactiveTaskWithChildTest(TaskTestCase):
+    def taskCreationKeywordArguments(self):
+        return [{'startDate': date.Tomorrow(),
+                 'children': [task.Task(subject='child')]}]
+
+    def testIcon(self):
+        self.assertEqual('tasks_inactive', self.task.icon(recursive=True))
+
+    def testSelectedIcon(self):
+        self.assertEqual('tasks_inactive_open',
+                         self.task.selectedIcon(recursive=True))
+
 
 class TaskWithGrandChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
     def taskCreationKeywordArguments(self):
@@ -1208,6 +1317,12 @@ class TaskWithActiveEffort(TaskTestCase, CommonTaskTestsMixin):
         self.task.stopTracking()
         self.assertEqual([patterns.Event(self.task.trackStopEventType(), 
             self.task, self.task1effort1)], self.events)
+
+    def testIcon(self):
+        self.assertEqual('start', self.task.icon(recursive=True))
+
+    def testSelectedIcon(self):
+        self.assertEqual('start', self.task.selectedIcon(recursive=True))
 
 
 class TaskWithChildAndEffortTest(TaskTestCase, CommonTaskTestsMixin):

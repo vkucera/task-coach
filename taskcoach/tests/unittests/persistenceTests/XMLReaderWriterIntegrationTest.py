@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2007 Jérôme Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -73,7 +75,8 @@ class IntegrationTest(IntegrationTestCase):
             priority=4, hourlyFee=100.5, fixedFee=1000, 
             recurrence=date.Recurrence('weekly', max=10, count=5, amount=2),
             reminder=date.DateTime(2004,1,1), fgColor=wx.BLUE, bgColor=wx.RED,
-            font=wx.NORMAL_FONT, expandedContexts=['viewer1'],
+            font=wx.NORMAL_FONT, expandedContexts=['viewer1'], icon='icon',
+            selectedIcon='selectedIcon',
             shouldMarkCompletedWhenAllChildrenCompleted=True,
             percentageComplete=2/3.)
         self.child = task.Task()
@@ -124,6 +127,9 @@ class IntegrationTest(IntegrationTestCase):
 
     def testFont(self):
         self.assertAttributeWrittenAndRead(self.task, 'font')
+
+    def testIcon(self):
+        self.assertAttributeWrittenAndRead(self.task, 'icon')
         
     def testExpansionState(self):
         self.assertAttributeWrittenAndRead(self.task, 'isExpanded')

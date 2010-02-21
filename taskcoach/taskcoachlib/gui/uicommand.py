@@ -1803,7 +1803,7 @@ class EffortStartForTask(TaskListCommand):
         self.task = kwargs.pop('task')
         subject = self.task.subject() or _('(No subject)') 
         super(EffortStartForTask, self).__init__( \
-            bitmap=render.taskBitmapNames(self.task)[0], menuText=subject,
+            bitmap=self.task.icon(recursive=True), menuText=subject,
             helpText=_('Start tracking effort for %s')%subject, 
             *args, **kwargs)
         

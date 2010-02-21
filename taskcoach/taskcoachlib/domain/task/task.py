@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2008 Jérôme Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -508,7 +510,27 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             for eachEffort in task.efforts():
                 event.addSource(eachEffort, bgColor, 
                                 type=eachEffort.backgroundColorChangedEventType())
-                    
+
+    def icon(self, recursive=False):
+        icon = super(Task, self).icon()
+        return icon if icon or not recursive else self.__stateBasedIcon(selected=False)
+
+    def selectedIcon(self, recursive=False):
+        icon = super(Task, self).selectedIcon()
+        return icon if icon or not recursive else self.__stateBasedIcon(selected=True)
+
+    def __stateBasedIcon(self, selected=False):
+        if self.isBeingTracked():
+            icon = 'start'
+        else:
+            icon = 'tasks' if self.children() else 'task'
+            for state in 'completed', 'overdue', 'dueSoon', 'inactive':
+                if getattr(self, state)():
+                    icon += '_' + state.lower()
+                    break
+            icon += '_open' if selected and self.children() else ''
+        return icon
+
     @classmethod
     def totalTimeSpentChangedEventType(class_):
         return 'task.totalTimeSpent'

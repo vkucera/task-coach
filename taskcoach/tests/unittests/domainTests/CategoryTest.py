@@ -57,7 +57,8 @@ class CategoryTest(test.TestCase):
                         status=self.category.STATUS_DELETED,
                         parent=None, children=[self.subCategory], id=self.category.id(),
                         categorizables=[self.categorizable], notes=[],
-                        attachments=[], filtered=True, exclusiveSubcategories=True)
+                        attachments=[], filtered=True, exclusiveSubcategories=True,
+                        icon='icon', selectedIcon='selected')
         for eventType in self.category.modificationEventTypes():
             self.registerObserver(eventType)
         self.category.__setstate__(newState)

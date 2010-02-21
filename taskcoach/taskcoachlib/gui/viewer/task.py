@@ -168,13 +168,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
         self.refresh()
 
     def iconName(self, item, isSelected):
-        if not hasattr(item, 'children'):
-            return ''
-        bitmap, bitmap_selected = render.taskBitmapNames(item, 
-                                                         self.children(item))
-        if isSelected:
-            bitmap = bitmap_selected
-        return bitmap
+        return item.selectedIcon(recursive=True) if isSelected else item.icon(recursive=True)
         
     def getItemTooltipData(self, task):
         if not self.settings.getboolean('view', 'descriptionpopups'):
@@ -479,7 +473,7 @@ class SquareTaskViewer(BaseTaskViewer):
         return task.font(recursive=True)
 
     def icon(self, task, isSelected):
-        bitmap = self.iconName(task, isSelected)
+        bitmap = self.iconName(task, isSelected) or 'task'
         return wx.ArtProvider_GetIcon(bitmap, wx.ART_MENU, (16,16))
 
     # Helper methods
@@ -521,13 +515,11 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         self.widget.SetShowNoStartDate(self.settings.getboolean(self.settingsSection(), 'shownostart'))
         self.widget.SetShowNoDueDate(self.settings.getboolean(self.settingsSection(), 'shownodue'))
 
-        self.registerObserver(self.onWorkingHourChanged,
-                              eventType='view.efforthourstart')
-        self.registerObserver(self.onWorkingHourChanged,
-                             eventType='view.efforthourend')
+        for eventType in ('view.efforthourstart', 'view.efforthourend'):
+            self.registerObserver(self.onWorkingHourChanged, eventType)
 
         for eventType in (task.Task.subjectChangedEventType(), 'task.startDate',
-            'task.dueDate', 'task.completionDate',
+                          'task.dueDate', 'task.completionDate',
                           task.Task.attachmentsChangedEventType(),
                           task.Task.notesChangedEventType()):
             self.registerObserver(self.onAttributeChanged, eventType)
@@ -873,7 +865,8 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
         return menu.ColumnPopupMenu(self)
         
     def getImageIndices(self, task):
-        bitmap, bitmap_selected = render.taskBitmapNames(task)
+        bitmap = task.icon(recursive=True)
+        bitmap_selected = task.selectedIcon(recursive=True) or bitmap
         return self.imageIndex[bitmap], self.imageIndex[bitmap_selected]
 
     def subjectImageIndex(self, task, which):

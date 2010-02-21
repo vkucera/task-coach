@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -102,7 +102,9 @@ class ObjectTest(test.TestCase):
                           self.object.descriptionChangedEventType(),
                           self.object.foregroundColorChangedEventType(),
                           self.object.backgroundColorChangedEventType(),
-                          self.object.fontChangedEventType()):
+                          self.object.fontChangedEventType(),
+                          self.object.iconChangedEventType(),
+                          self.object.selectedIconChangedEventType()):
             patterns.Publisher().registerObserver(self.onEvent, eventType)
 
     def onEvent(self, event):
@@ -185,20 +187,22 @@ class ObjectTest(test.TestCase):
     def testGetState(self):
         self.assertEqual(dict(subject='', description='', id=self.object.id(),
                               status=self.object.getStatus(), fgColor=None,
-                              bgColor=None, font=None), 
+                              bgColor=None, font=None, icon='', selectedIcon=''),
                          self.object.__getstate__())
 
     def testSetState(self):
         newState = dict(subject='New', description='New', id=None,
                         status=self.object.STATUS_DELETED, 
-                        fgColor=wx.GREEN, bgColor=wx.RED, font=wx.SWISS_FONT)
+                        fgColor=wx.GREEN, bgColor=wx.RED, font=wx.SWISS_FONT,
+                        icon='icon', selectedIcon='selectedIcon')
         self.object.__setstate__(newState)
         self.assertEqual(newState, self.object.__getstate__())
         
     def testSetState_SendsOneNotification(self):
         newState = dict(subject='New', description='New', id=None,
                         status=self.object.STATUS_DELETED, 
-                        fgColor=wx.GREEN, bgColor=wx.RED, font=wx.SWISS_FONT)
+                        fgColor=wx.GREEN, bgColor=wx.RED, font=wx.SWISS_FONT,
+                        icon='icon', selectedIcon='selectedIcon')
         self.object.__setstate__(newState)
         self.assertEqual(1, len(self.eventsReceived))
         
@@ -228,6 +232,11 @@ class ObjectTest(test.TestCase):
         self.object.setFont(wx.SWISS_FONT)
         copy = self.object.copy()
         self.assertEqual(copy.font(), self.object.font())
+
+    def testCopy_IconIsCopied(self):
+        self.object.setIcon('icon')
+        copy = self.object.copy()
+        self.assertEqual(copy.icon(), self.object.icon())
         
     def testCopy_ShouldUseSubclassForCopy(self):
         copy = self.subclassObject.copy()
@@ -289,7 +298,43 @@ class ObjectTest(test.TestCase):
     def testFontChangedNotification(self):
         self.object.setFont(wx.SWISS_FONT)
         self.assertEqual(1, len(self.eventsReceived))
-        
+
+    # Icon tests:
+
+    def testDefaultIcon(self):
+        self.assertEqual('', self.object.icon())
+
+    def testSetIcon(self):
+        self.object.setIcon('icon')
+        self.assertEqual('icon', self.object.icon())
+
+    def testSetIconOnCreation(self):
+        domainObject = base.Object(icon='icon')
+        self.assertEqual('icon', domainObject.icon())
+
+    def testIconChangedNotification(self):
+        self.object.setIcon('icon')
+        self.assertEqual(1, len(self.eventsReceived))
+
+    def testDefaultSelectedIcon(self):
+        self.assertEqual('', self.object.selectedIcon())
+
+    def testSetSelectedIcon(self):
+        self.object.setSelectedIcon('selected')
+        self.assertEqual('selected', self.object.selectedIcon())
+
+    def testSelectedIconAfterSettingRegularIconOnly(self):
+        self.object.setIcon('icon')
+        self.assertEqual('', self.object.selectedIcon())
+
+    def testSetSelectedIconOnCreation(self):
+        domainObject = base.Object(selectedIcon='icon')
+        self.assertEqual('icon', domainObject.selectedIcon())
+
+    def testSelectedIconChangedNotification(self):
+        self.object.setSelectedIcon('icon')
+        self.assertEqual(1, len(self.eventsReceived))
+
     # Event types:
     
     def testModificationEventTypes(self):
@@ -297,7 +342,9 @@ class ObjectTest(test.TestCase):
                           self.object.descriptionChangedEventType(),
                           self.object.foregroundColorChangedEventType(),
                           self.object.backgroundColorChangedEventType(),
-                          self.object.fontChangedEventType()], 
+                          self.object.fontChangedEventType(),
+                          self.object.iconChangedEventType(),
+                          self.object.selectedIconChangedEventType()],
                          self.object.modificationEventTypes())
 
 
@@ -410,6 +457,47 @@ class CompositeObjectTest(test.TestCase):
         self.compositeObject.setFont(wx.SWISS_FONT)
         self.assertEqual(1, len(self.eventsReceived))
 
+    def testSubItemUsesParentIcon(self):
+        self.addChild()
+        self.compositeObject.setIcon('icon')
+        self.assertEqual('icon', self.child.icon(recursive=True))
+
+    def testSubItemDoesNotUseParentIconIfItHasItsOwnIcon(self):
+        self.addChild(icon='childIcon')
+        self.compositeObject.setIcon('icon')
+        self.assertEqual('childIcon', self.child.icon(recursive=True))
+
+    def testIconChangedNotification(self):
+        self.addChild()
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType=base.CompositeObject.iconChangedEventType(),
+            eventSource=self.child)
+        self.compositeObject.setIcon('icon')
+        self.assertEqual(1, len(self.eventsReceived))
+
+    def testSubItemUsesParentSelectedIcon(self):
+        self.addChild()
+        self.compositeObject.setSelectedIcon('icon')
+        self.assertEqual('icon', self.child.selectedIcon(recursive=True))
+
+    def testSubItemDoesNotUseParentSelectedIconIfItHasItsOwnSelectedIcon(self):
+        self.addChild(selectedIcon='childIcon')
+        self.compositeObject.setSelectedIcon('icon')
+        self.assertEqual('childIcon', self.child.selectedIcon(recursive=True))
+
+    def testSubItemUsesParentSelectedIconEvenIfItHasItsOwnIcon(self):
+        self.addChild(icon='childIcon')
+        self.compositeObject.setSelectedIcon('icon')
+        self.assertEqual('icon', self.child.selectedIcon(recursive=True))
+
+    def testSelectedIconChangedNotification(self):
+        self.addChild()
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType=base.CompositeObject.selectedIconChangedEventType(),
+            eventSource=self.child)
+        self.compositeObject.setSelectedIcon('icon')
+        self.assertEqual(1, len(self.eventsReceived))
+        
     def testCopy(self):
         self.compositeObject.expand(context='some_viewer')
         copy = self.compositeObject.copy()
@@ -470,6 +558,8 @@ class CompositeObjectTest(test.TestCase):
                           self.compositeObject.foregroundColorChangedEventType(),
                           self.compositeObject.backgroundColorChangedEventType(),
                           self.compositeObject.fontChangedEventType(),
+                          self.compositeObject.iconChangedEventType(),
+                          self.compositeObject.selectedIconChangedEventType(),
                           self.compositeObject.expansionChangedEventType()], 
                          self.compositeObject.modificationEventTypes())
 

@@ -2,8 +2,8 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
-Copyright (C) 2009 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
+Copyright (C) 2009 Jérôme Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -109,28 +109,6 @@ def monetaryAmount(aFloat):
 def percentage(aFloat):
     ''' Render a percentage. '''
     return '' if round(aFloat, 0) == 0 else '%.0f%%'%aFloat
-
-def taskBitmapNames(task, hasChildren=None):
-    ''' Return two bitmap names for the task, one for unselected tasks and
-    one for selected tasks. The bitmaps depend on the state of the task and 
-    whether the task has children. '''
-    
-    if task.isBeingTracked():
-        return 'start', 'start'
-     
-    if hasChildren is None:
-        hasChildren = bool(task.children())
-    
-    bitmap = 'tasks' if hasChildren else 'task'            
-
-    for state in 'completed', 'overdue', 'dueSoon', 'inactive':
-        if getattr(task, state)():
-            bitmap += '_' + state.lower()
-            break
-
-    bitmap_selected = bitmap + '_open' if hasChildren else bitmap
-
-    return bitmap, bitmap_selected
 
 def multilineText(text, maxLines=3):
     lines = text.split('\n')

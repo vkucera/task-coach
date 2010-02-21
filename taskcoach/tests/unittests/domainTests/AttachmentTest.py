@@ -91,5 +91,7 @@ class FileAttachmentTest(test.TestCase):
                           Attachment.foregroundColorChangedEventType(),
                           Attachment.backgroundColorChangedEventType(),
                           Attachment.fontChangedEventType(),
+                          Attachment.iconChangedEventType(),
+                          Attachment.selectedIconChangedEventType(),
                           Attachment.locationChangedEventType()], 
                          Attachment.modificationEventTypes())

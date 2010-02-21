@@ -3,7 +3,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2008 Jérôme Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -155,6 +155,10 @@ class Object(SynchronizedObject):
                                              self.backgroundColorChangedEvent)
         self.__font = attribute.Attribute(kwargs.pop('font', None), self,
                                           self.fontChangedEvent)
+        self.__icon = attribute.Attribute(kwargs.pop('icon', ''), self,
+                                          self.iconChangedEvent)
+        self.__selectedIcon = attribute.Attribute(kwargs.pop('selectedIcon', ''), self,
+                                                  self.selectedIconChangedEvent)
         self.__id = kwargs.pop('id', None) or '%s:%s'%(id(self), time.time())
         # FIXME: Not a valid XML id
         # FIXME: When dropping support for python 2.4, use the uuid module
@@ -172,7 +176,9 @@ class Object(SynchronizedObject):
                           description=self.__description.get(),
                           fgColor=self.__fgColor.get(),
                           bgColor=self.__bgColor.get(),
-                          font=self.__font.get()))
+                          font=self.__font.get(),
+                          icon=self.__icon.get(),
+                          selectedIcon=self.__selectedIcon.get()))
         return state
     
     def __setstate__(self, state, event=None):
@@ -188,6 +194,8 @@ class Object(SynchronizedObject):
         self.setForegroundColor(state['fgColor'], event)
         self.setBackgroundColor(state['bgColor'], event)
         self.setFont(state['font'], event)
+        self.setIcon(state['icon'], event)
+        self.setSelectedIcon(state['selectedIcon'], event)
         if notify:
             event.send()
 
@@ -205,7 +213,8 @@ class Object(SynchronizedObject):
         state.update(dict(\
             subject=self.__subject.get(), description=self.__description.get(),
             fgColor=self.__fgColor.get(), bgColor=self.__bgColor.get(),
-            font=self.__font.get()))
+            font=self.__font.get(), icon=self.__icon.get(),
+            selectedIcon=self.__selectedIcon.get()))
         return state
     
     def copy(self):
@@ -303,7 +312,36 @@ class Object(SynchronizedObject):
     @classmethod    
     def fontChangedEventType(class_):
         return '%s.font'%class_
-        
+
+    # Icons:
+
+    def icon(self):
+        return self.__icon.get()
+
+    def setIcon(self, icon, event=None):
+        self.__icon.set(icon, event)
+
+    def iconChangedEvent(self, event):
+        event.addSource(self, self.icon(), type=self.iconChangedEventType())
+
+    @classmethod
+    def iconChangedEventType(class_):
+        return '%s.icon'%class_
+
+    def selectedIcon(self):
+        return self.__selectedIcon.get()
+
+    def setSelectedIcon(self, icon, event=None):
+        self.__selectedIcon.set(icon, event)
+
+    def selectedIconChangedEvent(self, event):
+        event.addSource(self, self.selectedIcon(),
+                        type=self.selectedIconChangedEventType())
+
+    @classmethod
+    def selectedIconChangedEventType(class_):
+        return '%s.selectedIcon'%class_
+    
     # Event types:
     
     @classmethod
@@ -316,7 +354,9 @@ class Object(SynchronizedObject):
                              class_.descriptionChangedEventType(),
                              class_.foregroundColorChangedEventType(),
                              class_.backgroundColorChangedEventType(),
-                             class_.fontChangedEventType()]
+                             class_.fontChangedEventType(),
+                             class_.iconChangedEventType(),
+                             class_.selectedIconChangedEventType()]
 
 
 class CompositeObject(Object, patterns.ObservableComposite):
@@ -454,6 +494,52 @@ class CompositeObject(Object, patterns.ObservableComposite):
                 children.extend([child] + self.childrenWithoutOwnFont(child))
         return children
 
+    # Icon:
+
+    def icon(self, recursive=False):
+        myIcon = super(CompositeObject, self).icon()
+        if not myIcon and recursive and self.parent():
+            return self.parent().icon(recursive=True)
+        else:
+            return myIcon
+
+    def iconChangedEvent(self, event):
+        super(CompositeObject, self).iconChangedEvent(event)
+        children = self.childrenWithoutOwnIcon()
+        icon = self.icon(recursive=False)
+        for child in children:
+            event.addSource(child, icon, type=child.iconChangedEventType())
+
+    def childrenWithoutOwnIcon(self, parent=None):
+        parent = parent or self
+        children = []
+        for child in parent.children():
+            if not child.icon(recursive=False):
+                children.extend([child] + self.childrenWithoutOwnIcon(child))
+        return children
+
+    def selectedIcon(self, recursive=False):
+        myIcon = super(CompositeObject, self).selectedIcon()
+        if not myIcon and recursive and self.parent():
+            return self.parent().selectedIcon(recursive=True)
+        else:
+            return myIcon
+
+    def selectedIconChangedEvent(self, event):
+        super(CompositeObject, self).selectedIconChangedEvent(event)
+        children = self.childrenWithoutOwnSelectedIcon()
+        icon = self.selectedIcon(recursive=False)
+        for child in children:
+            event.addSource(child, icon, type=child.selectedIconChangedEventType())
+
+    def childrenWithoutOwnSelectedIcon(self, parent=None):
+        parent = parent or self
+        children = []
+        for child in parent.children():
+            if not child.selectedIcon(recursive=False):
+                children.extend([child] + self.childrenWithoutOwnSelectedIcon(child))
+        return children
+    
     # Event types:
 
     @classmethod

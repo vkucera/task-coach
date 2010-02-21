@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2007 Jérôme Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -1187,4 +1189,42 @@ class XMLReaderVersion29Test(XMLReaderTestCase):
                         description="Yo"/>
             </task>
         </tasks>''')
-        self.assertEqual(tasks[0].efforts()[0].id(), 'foobar')
+        self.assertEqual('foobar', tasks[0].efforts()[0].id())
+
+    def testTaskIcon(self):
+        tasks = self.writeAndReadTasks('<tasks><task icon="icon"/></tasks>')
+        self.assertEqual('icon', tasks[0].icon())
+
+    def testSelectedTaskIcon(self):
+        tasks = self.writeAndReadTasks('<tasks><task selectedIcon="icon"/></tasks>')
+        self.assertEqual('icon', tasks[0].selectedIcon())
+
+    def testNoteIcon(self):
+        notes = self.writeAndReadNotes('<tasks><note icon="icon"/></tasks>')
+        self.assertEqual('icon', notes[0].icon())
+
+    def testSelectedNoteIcon(self):
+        notes = self.writeAndReadNotes('<tasks><note selectedIcon="icon"/></tasks>')
+        self.assertEqual('icon', notes[0].selectedIcon())
+
+    def testCategoryIcon(self):
+        categories = self.writeAndReadCategories('<tasks><category icon="icon"/></tasks>')
+        self.assertEqual('icon', categories[0].icon())
+
+    def testSelectedCategoryIcon(self):
+        categories = self.writeAndReadCategories('<tasks><category selectedIcon="icon"/></tasks>')
+        self.assertEqual('icon', categories[0].selectedIcon())
+
+    def testAttachmentIcon(self):
+        tasks = self.writeAndReadTasks(\
+            '<tasks><task subject="Task">'
+            '<attachment type="file" location="whatever" icon="icon"/>'
+            '</task></tasks>')
+        self.assertEqual('icon', tasks[0].attachments()[0].icon())
+
+    def testSelectedAttachmentIcon(self):
+        tasks = self.writeAndReadTasks(\
+            '<tasks><task subject="Task">'
+            '<attachment type="file" location="whatever" selectedIcon="icon"/>'
+            '</task></tasks>')
+        self.assertEqual('icon', tasks[0].attachments()[0].selectedIcon())

@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2007 Jérôme Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -226,7 +228,9 @@ class XMLReader(object):
             description=self._parseDescription(node),
             fgColor=self._parseTuple(node.attrib.get('fgColor', ''), None),
             bgColor=self._parseTuple(node.attrib.get(bgColorAttribute, ''), None),
-            font=self._parseFontDesc(node.attrib.get('font', ''), None))
+            font=self._parseFontDesc(node.attrib.get('font', ''), None),
+            icon=node.attrib.get('icon', ''),
+            selectedIcon=node.attrib.get('selectedIcon', ''))
 
         if self.__tskversion <= 20:
             attributes['attachments'] = self._parseAttachmentsBeforeVersion21(node)
