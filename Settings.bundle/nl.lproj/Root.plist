@@ -76,7 +76,7 @@
 			<key>KeyboardType</key>
 			<string>NumberPad</string>
 			<key>Title</key>
-			<string>Due soon # of days</string>
+			<string>Due soon # of days     </string>
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 			<key>Key</key>
