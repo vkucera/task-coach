@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -136,7 +136,8 @@ class PeriodicTimerTest_EverySecond(TimerTestCase):
 
 class PeriodicTimerTest_EveryMidnight(TimerTestCase):
     frequency = 'day'
-    expectedDateTime = date.DateTime(2000,1,2,0,0,0)
+    # The clock is 10 seconds late to make sure it fires on the right day:
+    expectedDateTime = date.DateTime(2000,1,2,0,0,10)
     
     def testNextMidnight(self):
         self.assertStartOfNextPeriod(2000,1,1,10,10,10,100)
