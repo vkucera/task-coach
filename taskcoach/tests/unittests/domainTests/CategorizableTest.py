@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -497,8 +497,56 @@ class CategorizableCompositeObjectTest(test.TestCase):
         expectedFontSize = (biggerFont.GetPointSize() + font.GetPointSize()) / 2
         self.assertEqual(expectedFontSize, 
                          self.categorizable.font(recursive=True).GetPointSize())
-            
-    # Note: other font combinations are tested below in MixFontsTest
+
+    def testUseCategoryIcon(self):
+        self.category.setIcon('categoryIcon')
+        self.categorizable.addCategory(self.category)
+        self.assertEqual('categoryIcon', self.categorizable.icon(recursive=True))
+
+    def testDontUseCategoryIconWhenCategorizableHasItsOwnIcon(self):
+        self.category.setIcon('categoryIcon')
+        self.categorizable.setIcon('icon')
+        self.categorizable.addCategory(self.category)
+        self.assertEqual('icon', self.categorizable.icon(recursive=True))
+
+    def testDontUseCategoryIconWhenNotRecursive(self):
+        self.category.setIcon('categoryIcon')
+        self.categorizable.addCategory(self.category)
+        self.failIf(self.categorizable.icon(recursive=False))
+
+    def testUseCategoryIconEvenWhenCategorizableHasARecursiveIcon(self):
+        child = categorizable.CategorizableCompositeObject(subject='child')
+        self.categorizable.addChild(child)
+        self.categorizable.setIcon('icon')
+        self.category.setIcon('categoryIcon')
+        child.addCategory(self.category)
+        self.assertEqual('categoryIcon', child.icon(recursive=True))
+
+    def testUseCategorySelectedIcon(self):
+        self.category.setSelectedIcon('categoryIcon')
+        self.categorizable.addCategory(self.category)
+        self.assertEqual('categoryIcon',
+                         self.categorizable.selectedIcon(recursive=True))
+
+    def testDontUseCategorySelectedIconWhenCategorizableHasItsOwnSelectedIcon(self):
+        self.category.setSelectedIcon('categoryIcon')
+        self.categorizable.setSelectedIcon('icon')
+        self.categorizable.addCategory(self.category)
+        self.assertEqual('icon',
+                         self.categorizable.selectedIcon(recursive=True))
+
+    def testDontUseCategorySelectedIconWhenNotRecursive(self):
+        self.category.setSelectedIcon('categoryIcon')
+        self.categorizable.addCategory(self.category)
+        self.failIf(self.categorizable.selectedIcon(recursive=False))
+
+    def testUseCategorySelectedIconEvenWhenCategorizableHasARecursiveSelectedIcon(self):
+        child = categorizable.CategorizableCompositeObject(subject='child')
+        self.categorizable.addChild(child)
+        self.categorizable.setSelectedIcon('icon')
+        self.category.setSelectedIcon('categoryIcon')
+        child.addCategory(self.category)
+        self.assertEqual('categoryIcon', child.selectedIcon(recursive=True))
     
     def testParentCategoryIncludedInChildRecursiveCategories(self):
         self.categorizable.addCategory(self.category)
