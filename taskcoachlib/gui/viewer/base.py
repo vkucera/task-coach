@@ -20,6 +20,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
+from wx._core import PyDeadObjectError
+import wx._core
 
 import wx
 from taskcoachlib import patterns, widgets, command
@@ -84,7 +86,10 @@ class Viewer(wx.Panel):
         patterns.Publisher().removeInstance(self.presentation())
         patterns.Publisher().removeInstance(self)
         for popupMenu in self._popupMenus:
-            popupMenu.Destroy()
+            try:
+                popupMenu.Destroy()
+            except:
+                pass # Ignore PyDeadError
 
     @classmethod
     def selectEventType(class_):
