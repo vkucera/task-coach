@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -81,6 +81,6 @@ class NewAttachmentTest(AttachmentEditorTestCase):
         self.assertEqual('Description', self.attachment.description())
         
     def testAddNote(self):
-        self.editor[0][1].notes.append(note.Note(subject='New note'))
+        self.editor[0][2].notes.append(note.Note(subject='New note'))
         self.editor.ok()
         self.assertEqual(1, len(self.attachment.notes()))

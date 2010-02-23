@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -88,7 +88,7 @@ class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
             taskList=self.taskFile.tasks(), viewer=self.viewer, 
             categories=self.categories, settings=self.settings)
         dialog = taskNew.doCommand(None, show=False)
-        tree = dialog[0][3].viewer.widget
+        tree = dialog[0][4].viewer.widget
         return tree.GetFirstChild(tree.GetRootItem())[0]
 
     def selectFirstCategory(self):
@@ -185,7 +185,7 @@ class TaskNewTest(wxTestCaseWithFrameAsTopLevelWindow):
         taskNew = gui.uicommand.TaskNew(taskList=self.frame.taskFile.tasks(), 
                                         settings=settings)
         dialog = taskNew.doCommand(None, show=False)
-        tree = dialog[0][3].viewer.widget
+        tree = dialog[0][4].viewer.widget
         firstChild = tree.GetFirstChild(tree.GetRootItem())[0]
         self.failUnless(firstChild.IsChecked())
 
@@ -197,7 +197,7 @@ class NoteNewTest(wxTestCaseWithFrameAsTopLevelWindow):
         noteNew = gui.uicommand.NoteNew(notes=self.frame.taskFile.notes(), 
                                         settings=config.Settings(load=False))
         dialog = noteNew.doCommand(None, show=False)
-        tree = dialog[0][1].viewer.widget
+        tree = dialog[0][2].viewer.widget
         firstChild = tree.GetFirstChild(tree.GetRootItem())[0]
         self.failUnless(firstChild.IsChecked())
 

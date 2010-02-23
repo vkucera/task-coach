@@ -40,7 +40,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
     
     def __init__(self, *args, **kwargs):
         super(BaseTaskViewer, self).__init__(*args, **kwargs)
-        self.__registerForColorChanges()
+        self.__registerForAppearanceChanges()
         
     def domainObjectsToView(self):
         return self.taskFile.tasks()
@@ -141,7 +141,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
         # items in the presentation, i.e. the widget does filtering on its own.
         return len(self.presentation())
 
-    def __registerForColorChanges(self):
+    def __registerForAppearanceChanges(self):
         colorSettings = ['color.%s'%setting for setting in 'activetasks',\
             'inactivetasks', 'completedtasks', 'duesoontasks', 'overduetasks'] 
         colorSettings.append('behavior.duesoondays')
@@ -150,7 +150,9 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
                 eventType=colorSetting)
         for eventType in (task.Task.foregroundColorChangedEventType(),
                           task.Task.backgroundColorChangedEventType(),
-                          task.Task.fontChangedEventType()):
+                          task.Task.fontChangedEventType(),
+                          task.Task.iconChangedEventType(),
+                          task.Task.selectedIconChangedEventType()):
             patterns.Publisher().registerObserver(self.onAttributeChanged,
                                                   eventType=eventType)
         patterns.Publisher().registerObserver(self.atMidnight,
@@ -866,7 +868,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
         
     def getImageIndices(self, task):
         bitmap = task.icon(recursive=True)
-        bitmap_selected = task.selectedIcon(recursive=True) or bitmap
+        bitmap_selected = task.selectedIcon(recursive=True) or bitmap 
         return self.imageIndex[bitmap], self.imageIndex[bitmap_selected]
 
     def subjectImageIndex(self, task, which):

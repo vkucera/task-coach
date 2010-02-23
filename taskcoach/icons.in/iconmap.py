@@ -75,6 +75,7 @@ iconlist = [
 ('filtercompletedtasks', 'actions', 'ledgreen_faded', [16]),
 ('filterinactivetasks', 'actions', 'ledgrey_faded', [16]),
 ('description', 'actions', 'pencil', [16, 22, 32]),
+('appearance', 'actions', 'colorize', [16, 22, 32]),
 ('restore', 'apps', 'kcmkwm', [16]),
 ('budget', 'apps', 'kcalc', [16, 22, 32]),
 ('progress', 'actions', 'finish', [16, 22, 32]),
