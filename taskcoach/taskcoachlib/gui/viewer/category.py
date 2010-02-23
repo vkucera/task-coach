@@ -35,7 +35,13 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                          mixin.NoteColumnMixin, mixin.AttachmentColumnMixin,
                          base.SortableViewerWithColumns, base.TreeViewer):
     SorterClass = category.CategorySorter
-    viewerImages = ['ascending', 'descending', 'attachment', 'note']
+    viewerImages = ['task', 'task_inactive', 'task_completed', 'task_duesoon',
+                    'task_overdue', 'tasks', 'tasks_open', 'tasks_inactive',
+                    'tasks_inactive_open', 'tasks_completed',
+                    'tasks_completed_open', 'tasks_duesoon',
+                    'tasks_duesoon_open', 'tasks_overdue', 'tasks_overdue_open',
+                    'start', 'ascending', 'descending', 'ascending_with_status',
+                    'descending_with_status', 'attachment', 'note']
     defaultTitle = _('Categories')
     defaultBitmap = 'category'
     
@@ -47,6 +53,8 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                           category.Category.foregroundColorChangedEventType(),
                           category.Category.backgroundColorChangedEventType(),
                           category.Category.fontChangedEventType(),
+                          category.Category.iconChangedEventType(),
+                          category.Category.selectedIconChangedEventType(),
                           category.Category.exclusiveSubcategoriesChangedEventType()):
             patterns.Publisher().registerObserver(self.onAttributeChanged, 
                 eventType)
@@ -83,7 +91,8 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
         columns = [widgets.Column('subject', _('Subject'), 
                        category.Category.subjectChangedEventType(),  
                        sortCallback=uicommand.ViewerSortByCommand(viewer=self,
-                           value='subject'), 
+                           value='subject'),
+                       imageIndexCallback=self.subjectImageIndex,
                        width=self.getColumnWidth('subject'), 
                        **kwargs),
                    widgets.Column('description', _('Description'), 
@@ -109,7 +118,18 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                        headerImageIndex=self.imageIndex['note'],
                        renderCallback=lambda category: '', **kwargs))
         return columns
-            
+
+    def getImageIndices(self, category):
+        bitmap = category.icon(recursive=True)
+        bitmap_selected = category.selectedIcon(recursive=True) or bitmap
+        return self.imageIndex[bitmap] if bitmap else -1, self.imageIndex[bitmap_selected] if bitmap_selected else -1
+
+    def subjectImageIndex(self, category, which):
+        normalImageIndex, expandedImageIndex = self.getImageIndices(category)
+        expanded = which in [wx.TreeItemIcon_Expanded,
+                             wx.TreeItemIcon_SelectedExpanded]
+        return expandedImageIndex if expanded else normalImageIndex
+    
     def createToolBarUICommands(self):
         commands = super(BaseCategoryViewer, self).createToolBarUICommands()
         commands[-2:-2] = [None,

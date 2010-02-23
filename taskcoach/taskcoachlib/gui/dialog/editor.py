@@ -315,13 +315,15 @@ class AppearancePage(Page, widgets.BookPage):
         self._iconEntry = wx.combo.BitmapComboBox(self, style=wx.CB_READONLY)
         self._iconEntry.Append(_('No icon'), clientData='')
         size = (16, 16)
-        images = dict(task=_('Task'), tasks=_('Tasks'), start=_('Clock'))
-        for imageName in images:
+        images = dict(task=_('Task'), tasks=_('Tasks'),
+                      tasks_completed_open=_('Completed tasks'), start=_('Clock'))
+        for imageName in sorted(images.keys()):
             bitmap = wx.ArtProvider_GetBitmap(imageName, wx.ART_MENU, size)
             self._iconEntry.Append(images[imageName], bitmap, 
                                    clientData=imageName)
         icon = self.item.icon()
-        self._iconEntry.SetValue(images[icon] if icon else _('No icon'))
+        currentSelectionIndex = sorted(images.keys()).index(icon) + 1 if icon else 0
+        self._iconEntry.SetSelection(currentSelectionIndex)
         self.addEntry(_('Icon'), self._iconEntry, flags=[None, wx.ALL|wx.EXPAND])
 
     def ok(self):
