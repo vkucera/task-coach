@@ -34,7 +34,13 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
                      mixin.AttachmentColumnMixin, 
                      base.SortableViewerWithColumns, base.TreeViewer):
     SorterClass = note.NoteSorter
-    viewerImages = ['ascending', 'descending', 'attachment']
+    viewerImages = ['task', 'task_inactive', 'task_completed', 'task_duesoon',
+                    'task_overdue', 'tasks', 'tasks_open', 'tasks_inactive',
+                    'tasks_inactive_open', 'tasks_completed',
+                    'tasks_completed_open', 'tasks_duesoon',
+                    'tasks_duesoon_open', 'tasks_overdue', 'tasks_overdue_open',
+                    'start', 'ascending', 'descending', 'ascending_with_status',
+                    'descending_with_status', 'attachment', 'note']
     defaultTitle = _('Notes')
     defaultBitmap = 'note'
     
@@ -45,7 +51,9 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
         for eventType in (note.Note.subjectChangedEventType(),
                           note.Note.foregroundColorChangedEventType(),
                           note.Note.backgroundColorChangedEventType(),
-                          note.Note.fontChangedEventType()):
+                          note.Note.fontChangedEventType(),
+                          note.Note.iconChangedEventType(),
+                          note.Note.selectedIconChangedEventType()):
             patterns.Publisher().registerObserver(self.onAttributeChanged, 
                                                   eventType)
         
@@ -117,6 +125,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self, 
                     value=name.lower(), menuText=sortMenuText, 
                     helpText=sortHelpText),
+                imageIndexCallback=self.subjectImageIndex,
                 *eventTypes) \
             for name, columnHeader, sortMenuText, sortHelpText, eventTypes, renderCallback in \
             ('subject', _('Subject'), _('&Subject'), _('Sort notes by subject'), 
@@ -148,6 +157,17 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
         columns.insert(2, attachmentsColumn)
         return columns
 
+    def getImageIndices(self, note):
+        bitmap = note.icon(recursive=True)
+        bitmap_selected = note.selectedIcon(recursive=True) or bitmap
+        return self.imageIndex[bitmap] if bitmap else -1, self.imageIndex[bitmap_selected] if bitmap_selected else -1
+
+    def subjectImageIndex(self, note, which):
+        normalImageIndex, expandedImageIndex = self.getImageIndices(note)
+        expanded = which in [wx.TreeItemIcon_Expanded,
+                             wx.TreeItemIcon_SelectedExpanded]
+        return expandedImageIndex if expanded else normalImageIndex
+    
     def getItemTooltipData(self, item, column=0):
         if self.settings.getboolean('view', 'descriptionpopups'):
             lines = [line.rstrip('\r') for line in item.description().split('\n')] 
