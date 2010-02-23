@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
-from taskcoachlib import patterns
+from taskcoachlib import patterns, config
 from taskcoachlib.domain import task, effort, date
 
 
@@ -25,6 +25,7 @@ class EffortAggregatorTestCase(test.TestCase):
     aggregation = 'One of: day, week, or month (override in subclass)'
     
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.taskList = task.TaskList()
         self.effortAggregator = effort.EffortAggregator(self.taskList, 
             aggregation=self.aggregation)

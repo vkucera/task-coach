@@ -156,6 +156,26 @@ class CategorizableCompositeObject(base.CompositeObject):
             its own, it uses its parent's font. '''
         fonts = [category.font(recursive=True) for category in self.categories()]
         return font.FontMixer.mix(*fonts)
+
+    def icon(self, recursive=False):
+        icon = super(CategorizableCompositeObject, self).icon(recursive=False)
+        if icon or not recursive:
+            return icon
+        for category in self.categories():
+            categoryIcon = category.icon(recursive=True)
+            if categoryIcon:
+                return categoryIcon
+        return super(CategorizableCompositeObject, self).icon(recursive=True)
+
+    def selectedIcon(self, recursive=False):
+        icon = super(CategorizableCompositeObject, self).selectedIcon(recursive=False)
+        if icon or not recursive:
+            return icon
+        for category in self.categories():
+            categoryIcon = category.selectedIcon(recursive=True)
+            if categoryIcon:
+                return categoryIcon
+        return super(CategorizableCompositeObject, self).selectedIcon(recursive=True)
         
     @classmethod
     def totalCategoryAddedEventType(class_):
