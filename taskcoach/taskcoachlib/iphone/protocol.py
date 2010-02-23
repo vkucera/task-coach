@@ -29,7 +29,7 @@ from taskcoachlib.domain.effort import Effort
 from taskcoachlib.i18n import _
 
 import wx, asynchat, threading, asyncore, struct, \
-    random, time, hashlib, cStringIO, socket, os
+    random, time, hashlib, cStringIO, socket, os, sys
 
 # Default port is 8001.
 #
@@ -484,11 +484,17 @@ class IPhoneHandler(asynchat.async_chat):
         self.window = window
         self.settings = settings
         self.iocontroller = iocontroller
+
+        self.logs = []
+
         self.state = BaseState(self)
 
         self.state.setState(InitialState, 4)
 
         random.seed(time.time())
+
+    def log(self, msg, *args):
+        self.logs.append(msg % args)
 
     def collect_incoming_data(self, data):
         self.state.collect_incoming_data(data)
@@ -501,6 +507,18 @@ class IPhoneHandler(asynchat.async_chat):
         self.close()
 
     def handle_error(self):
+        log = u'\n'.join(self.logs) + '\n'
+        import traceback, StringIO
+        bf = StringIO.StringIO()
+        traceback.print_exc(file=bf)
+        log += bf.getvalue()
+        log = log.encode('UTF-8')
+
+        if hasattr(sys, 'frozen'):
+            file(os.path.join(os.path.split(sys.executable)[0], 'sync.log'), 'wb').write(log)
+        else:
+            print log
+
         asynchat.async_chat.handle_error(self)
         self.close()
         self.state.handleClose()
@@ -567,6 +585,7 @@ class InitialState(BaseState):
 
     def handleNewObject(self, accepted):
         if accepted:
+            self.disp().log(u'Protocol version: %d', self.version)
             self.setState(PasswordState)
         else:
             if self.version == 1:
@@ -574,6 +593,7 @@ class InitialState(BaseState):
                 # device. It will do it itself.
                 self.disp().window.notifyIPhoneProtocolFailed()
             else:
+                self.disp().log(u'Rejected protocol version %d', self.version)
                 self.setState(InitialState, self.version - 1)
 
     def finished(self):
@@ -592,9 +612,11 @@ class PasswordState(BaseState):
         local.update(self.hashData + self.disp().settings.get('iphone', 'password').encode('UTF-8'))
 
         if hash == local.digest():
+            self.disp().log(u'Hash OK.')
             self.pack('i', 1)
             self.setState(DeviceNameState)
         else:
+            self.disp().log(u'Hash KO.')
             self.pack('i', 0)
             self.setState(PasswordState)
 
@@ -607,6 +629,7 @@ class DeviceNameState(BaseState):
         super(DeviceNameState, self).init('s', 1)
 
     def handleNewObject(self, name):
+        self.disp().log(u'Device name: %s', name)
         self.deviceName = name
         self.setState(GUIDState)
 
@@ -620,6 +643,8 @@ class GUIDState(BaseState):
             super(GUIDState, self).init('z', 1)
 
     def handleNewObject(self, guid):
+        self.disp().log(u'GUID: %s', guid)
+
         if self.version >= 4:
             self.dlg = self.disp().window.createIPhoneProgressDialog(self.deviceName)
             self.dlg.Started()
@@ -653,6 +678,7 @@ class TaskFileNameState(BaseState):
         filename = self.disp().iocontroller.filename()
         if filename:
             filename = os.path.splitext(os.path.split(filename)[1])[0]
+        self.disp().log(u'Sending file name: %s', filename)
         self.pack('z', filename)
 
     def handleNewObject(self, response):
