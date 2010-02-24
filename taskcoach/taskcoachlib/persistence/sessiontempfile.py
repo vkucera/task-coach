@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, atexit, tempfile
+import os, stat, atexit, tempfile
 from taskcoachlib import patterns
 
 class TempFiles(object):
@@ -27,18 +27,13 @@ class TempFiles(object):
         atexit.register(self.cleanup)
         
     def register(self, filename):
-        # Keep an open handle to the file. Under Windows, this
-        # prevents the user from deleting it. I couldn't find a
-        # way to prevent deletion of a file under Linux without
-        # preventing read access; on the other hand few Linux
-        # users clean up their temp dir themselves...
-        fp = file(filename, 'rb')
-        self.__tempFiles.append((fp, filename))
+        self.__tempFiles.append(filename)
 
     def cleanup(self):
-        for fp, name in self.__tempFiles:
-            fp.close()
+        for name in self.__tempFiles:
             try:
+                if os.name == 'nt':
+                    os.chmod(name, stat.S_IREAD|stat.S_IWRITE)
                 os.remove(name)
             except:
                 pass # pylint: disable-msg=W0702
