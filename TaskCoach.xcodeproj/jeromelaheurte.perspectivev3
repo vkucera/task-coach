@@ -231,6 +231,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -275,7 +277,6 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>2</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -308,14 +309,12 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>CHANGELOG</string>
+								<string>Info.plist</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -323,11 +322,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>CHANGELOG</string>
+										<string>Info.plist</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A6322D4711312F59004FD5FF</string>
+										<string>A6B92DEB1136F19700C9AF28</string>
 										<key>history</key>
 										<array>
 											<string>A68A605910821E7E00D723FE</string>
@@ -444,8 +443,8 @@
 											<string>A6FE8A9211312B7E000C7821</string>
 											<string>A6FE8A9411312B7E000C7821</string>
 											<string>A6322D4111312DD1004FD5FF</string>
-											<string>A6322D4611312F59004FD5FF</string>
-											<string>A6CFB51E1109BF5F004DB892</string>
+											<string>A6B92DE51136F19700C9AF28</string>
+											<string>A6B92DE61136F19700C9AF28</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -568,11 +567,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6322D4311312DD1004FD5FF</string>
+				<string>A6B92DE81136F19700C9AF28</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A6322D4411312DD1004FD5FF</string>
+				<string>A6B92DE91136F19700C9AF28</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A6322D4511312DD1004FD5FF</string>
+				<string>A6B92DEA1136F19700C9AF28</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -721,14 +720,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6FE8A7E113129DB000C7821</string>
+				<string>A6A5AA1B1136F13E00C1FCD5</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A6FE8A7F113129DB000C7821</string>
-				<string>A6FE8A80113129DB000C7821</string>
-				<string>A6FE8A81113129DB000C7821</string>
-				<string>A6FE8A82113129DB000C7821</string>
-				<string>A6FE8A83113129DB000C7821</string>
+				<string>A6A5AA1C1136F13E00C1FCD5</string>
+				<string>A6A5AA1D1136F13E00C1FCD5</string>
+				<string>A6A5AA1E1136F13E00C1FCD5</string>
+				<string>A6A5AA1F1136F13E00C1FCD5</string>
+				<string>A6A5AA201136F13E00C1FCD5</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
 			<string>2</string>
