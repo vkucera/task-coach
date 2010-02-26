@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ class NewCategoryTest(CategoryEditorTestCase):
         self.assertEqual('Description', self.category.description())
         
     def testAddNote(self):
-        self.editor[0][2].notes.append(note.Note(subject='New note'))
+        self.editor[0][1].notes.append(note.Note(subject='New note'))
         self.editor.ok()
         self.assertEqual(1, len(self.category.notes()))
 
@@ -132,12 +132,12 @@ class EditCategoryTest(CategoryEditorTestCase):
         self.assertEqual('Category to edit', self.category.subject())
 
     def testAddAttachment(self):
-        self.editor[0][3].viewer.onDropFiles(None, ['filename'])
+        self.editor[0][2].viewer.onDropFiles(None, ['filename'])
         self.editor.ok()
         self.failUnless('filename' in [att.location() for att in self.category.attachments()])
         self.failUnless('filename' in [att.subject() for att in self.category.attachments()])
         
     def testRemoveAttachment(self):
-        self.editor[0][3].viewer.presentation().removeItems([self.attachment])
+        self.editor[0][2].viewer.presentation().removeItems([self.attachment])
         self.editor.ok()
         self.assertEqual([], self.category.attachments())
