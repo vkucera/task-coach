@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -177,6 +177,22 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
         super(Category, self).fontChangedEvent(event)
         for categorizable in self.categorizables(recursive=True):
             categorizable.fontChangedEvent(event)
+
+    def iconChangedEvent(self, event):
+        ''' Override to include all categorizables (recursively) in the event
+            that belong to this category since their icon (may) have changed
+            too. '''
+        super(Category, self).iconChangedEvent(event)
+        for categorizable in self.categorizables(recursive=True):
+            categorizable.iconChangedEvent(event)
+
+    def selectedIconChangedEvent(self, event):
+        ''' Override to include all categorizables (recursively) in the event
+            that belong to this category since their selected icon (may) have
+            changed too. '''
+        super(Category, self).selectedIconChangedEvent(event)
+        for categorizable in self.categorizables(recursive=True):
+            categorizable.selectedIconChangedEvent(event)
 
     def hasExclusiveSubcategories(self):
         return self.__exclusiveSubcategories

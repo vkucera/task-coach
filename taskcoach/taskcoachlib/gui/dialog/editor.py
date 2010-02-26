@@ -313,16 +313,41 @@ class AppearancePage(Page, widgets.BookPage):
     
     def addIconEntry(self):
         self._iconEntry = wx.combo.BitmapComboBox(self, style=wx.CB_READONLY)
-        self._iconEntry.Append(_('No icon'), clientData='')
         size = (16, 16)
-        images = dict(task=_('Task'), tasks=_('Tasks'),
-                      tasks_completed_open=_('Completed tasks'), start=_('Clock'))
+        images = dict(task=_('Blue led'),
+                      task_inactive=_('Grey led'),
+                      task_completed=_('Green led'),
+                      task_duesoon=_('Orange led'),
+                      task_overdue=_('Red led'),
+                      tasks=_('Blue folder'),
+                      tasks_completed=_('Green folder'),
+                      tasks_inactive=('Grey folder'),
+                      tasks_duesoon=_('Orange folder'),
+                      tasks_overdue=('Red folder'),
+                      attachment=_('Attachment'),
+                      note=_('Note'),
+                      date=_('Calendar'),
+                      start=_('Clock'),
+                      email=_('Envelope'),
+                      category=_('Blue folder with arrow'),
+                      help=_('Question mark'),
+                      info=_('Information'),
+                      on=_('Check mark'),
+                      search=('Magnifier glass'),
+                      description=_('Pencil'),
+                      budget=_('Calculator'),
+                      configure=_('Wrench'),
+                      language=_('Talking head'),
+                      colorize=_('Palette'),
+                      behavior=_('Cogwheel'),
+                      sync=_('Loop'))
+        images[''] = _('No icon')
         for imageName in sorted(images.keys()):
             bitmap = wx.ArtProvider_GetBitmap(imageName, wx.ART_MENU, size)
             self._iconEntry.Append(images[imageName], bitmap, 
                                    clientData=imageName)
         icon = self.item.icon()
-        currentSelectionIndex = sorted(images.keys()).index(icon) + 1 if icon else 0
+        currentSelectionIndex = sorted(images.keys()).index(icon)
         self._iconEntry.SetSelection(currentSelectionIndex)
         self.addEntry(_('Icon'), self._iconEntry, flags=[None, wx.ALL|wx.EXPAND])
 
@@ -336,7 +361,10 @@ class AppearancePage(Page, widgets.BookPage):
         fontChecked = self._fontCheckBox.IsChecked()
         font = self._fontButton.GetSelectedFont() if fontChecked else None
         self.item.setFont(font)
-        self.item.setIcon(self._iconEntry.GetClientData(self._iconEntry.GetSelection()))
+        icon = self._iconEntry.GetClientData(self._iconEntry.GetSelection())
+        selectedIcon = icon + '_open' if icon.startswith('tasks') else icon
+        self.item.setIcon(icon)
+        self.item.setSelectedIcon(selectedIcon)
         super(AppearancePage, self).ok()
 
 
@@ -799,8 +827,6 @@ class TaskEditBook(widgets.Listbook):
     def __init__(self, parent, theTask, taskFile, settings, *args, **kwargs):
         super(TaskEditBook, self).__init__(parent)
         self.AddPage(TaskSubjectPage(self, theTask), _('Description'), 'description')
-        self.AddPage(AppearancePage(theTask, self), _('Appearance'), 
-                     'appearance')
         self.AddPage(DatesPage(self, theTask, settings), _('Dates'), 'date')
         self.AddPage(ProgressPage(self, theTask), _('Progress'), 'progress')
         self.AddPage(TaskCategoriesPage(self, theTask, taskFile, settings), 
@@ -810,13 +836,14 @@ class TaskEditBook(widgets.Listbook):
                          _('Budget'), 'budget')
             self.AddPage(EffortPage(self, theTask, taskFile, settings), 
                          _('Effort'), 'start')
-
         if settings.getboolean('feature', 'notes'):
             self.AddPage(NotesPage(self, theTask, settings, taskFile), 
                          _('Notes'), 'note')
         self.AddPage(AttachmentsPage(self, theTask, settings, taskFile, 
                                      settingsSection='attachmentviewerintaskeditor'), 
                      _('Attachments'), 'attachment')
+        self.AddPage(AppearancePage(theTask, self), _('Appearance'),
+                     'appearance')
         self.AddPage(BehaviorPage(self, theTask), _('Behavior'), 'behavior')
         self.item = theTask
 
@@ -922,14 +949,14 @@ class CategoryEditBook(widgets.Listbook):
         super(CategoryEditBook, self).__init__(parent, *args, **kwargs)
         self.AddPage(CategorySubjectPage(self, theCategory), 
                      _('Description'), 'description')
-        self.AddPage(AppearancePage(theCategory, self), _('Appearance'), 
-                     'appearance')
         if settings.getboolean('feature', 'notes'):
             self.AddPage(NotesPage(self, theCategory, settings, taskFile), 
                          _('Notes'), 'note')
         self.AddPage(AttachmentsPage(self, theCategory, settings, taskFile, 
                                      settingsSection='attachmentviewerincategoryeditor'), 
                      _('Attachments'), 'attachment')
+        self.AddPage(AppearancePage(theCategory, self), _('Appearance'),
+                     'appearance')
 
 
 class NoteEditBook(widgets.Listbook):
@@ -937,13 +964,13 @@ class NoteEditBook(widgets.Listbook):
         self.item = theNote
         super(NoteEditBook, self).__init__(parent, *args, **kwargs)
         self.AddPage(NoteSubjectPage(self, theNote), _('Description'), 'description')
-        self.AddPage(AppearancePage(theNote, self), _('Appearance'), 
-                     'appearance')
         self.AddPage(NoteCategoriesPage(self, theNote, taskFile, settings), 
                      _('Categories'), 'category')
-        self.AddPage(AttachmentsPage(self, theNote, settings, taskFile, 
+        self.AddPage(AttachmentsPage(self, theNote, settings, taskFile,
                                      settingsSection='attachmentviewerinnoteeditor'),
                      _('Attachments'), 'attachment')
+        self.AddPage(AppearancePage(theNote, self), _('Appearance'),
+                     'appearance')
 
 
 class AttachmentEditBook(widgets.Listbook):
@@ -954,11 +981,11 @@ class AttachmentEditBook(widgets.Listbook):
         self.AddPage(AttachmentSubjectPage(self, theAttachment,
                                            settings.get('file', 'attachmentbase')), 
                      _('Description'), 'description')
-        self.AddPage(AppearancePage(theAttachment, self), _('Appearance'), 
-                     'appearance')
         if settings.getboolean('feature', 'notes'):
             self.AddPage(NotesPage(self, theAttachment, settings, taskFile), 
                          _('Notes'), 'note')
+        self.AddPage(AppearancePage(theAttachment, self), _('Appearance'),
+                     'appearance')
 
 
 class EditorWithCommand(widgets.NotebookDialog):

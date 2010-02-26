@@ -202,10 +202,16 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         for recursive in False, True:
             self.assertEqual(None, self.task.foregroundColor(recursive))
 
-    def testDefaultIcon(self):
+    def testDefaultOwnIcon(self):
+        self.assertEqual('', self.task.icon(recursive=False))
+
+    def testDefaultRecursiveIcon(self):
         self.assertEqual('task', self.task.icon(recursive=True))
 
-    def testDefaultSelectedIcon(self):
+    def testDefaultOwnSelectedIcon(self):
+        self.assertEqual('', self.task.selectedIcon(recursive=False))
+
+    def testDefaultRecursiveSelectedIcon(self):
         self.assertEqual('task', self.task.selectedIcon(recursive=True))
 
     # Setters
@@ -1669,7 +1675,24 @@ class TaskWithHourlyFeeFixture(TaskTestCase, CommonTaskTestsMixin):
         self.task.setHourlyFee(200)
         self.assertEqual([patterns.Event('effort.revenue', self.effort, 200)],
                          self.events)
-    
+
+
+class TaskWithCategoryTestCase(TaskTestCase):
+    def taskCreationKeywordArguments(self):
+        self.category = category.Category('category')
+        return [dict(categories=set([self.category]))]
+
+    def testCategory(self):
+        self.assertEqual(set([self.category]), self.task.categories())
+
+    def testCategoryIcon(self):
+        self.category.setIcon('icon')
+        self.assertEqual('icon', self.task.icon(recursive=True))
+
+    def testCategorySelectedIcon(self):
+        self.category.setSelectedIcon('icon')
+        self.assertEqual('icon', self.task.selectedIcon(recursive=True))
+        
 
 class RecurringTaskTestCase(TaskTestCase):
     def taskCreationKeywordArguments(self):

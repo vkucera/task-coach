@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -360,7 +360,25 @@ class CategoryTest(test.TestCase):
         self.category.addChild(self.subCategory)
         self.category.setBackgroundColor(wx.RED)
         self.assertEqual(1, len(self.events))
-        
+
+    # Icon:
+
+    def testIconChangedNotification(self):
+        eventType = categorizable.CategorizableCompositeObject.iconChangedEventType()
+        self.registerObserver(eventType)
+        self.category.addCategorizable(self.categorizable)
+        self.category.setIcon('icon')
+        self.assertEqual([patterns.Event(eventType, self.categorizable, '')],
+                         self.events)
+
+    def testSelectedIconChangedNotification(self):
+        eventType = categorizable.CategorizableCompositeObject.selectedIconChangedEventType()
+        self.registerObserver(eventType)
+        self.category.addCategorizable(self.categorizable)
+        self.category.setSelectedIcon('icon')
+        self.assertEqual([patterns.Event(eventType, self.categorizable, '')],
+                         self.events)
+
     # Notes:
         
     def testAddNote(self):

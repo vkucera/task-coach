@@ -620,14 +620,6 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
                  mixin.SortableViewerForTasksMixin, 
                  mixin.NoteColumnMixin, mixin.AttachmentColumnMixin,
                  base.SortableViewerWithColumns, BaseTaskViewer):
-    
-    viewerImages = ['task', 'task_inactive', 'task_completed', 'task_duesoon', 
-                    'task_overdue', 'tasks', 'tasks_open', 'tasks_inactive', 
-                    'tasks_inactive_open', 'tasks_completed', 
-                    'tasks_completed_open', 'tasks_duesoon', 
-                    'tasks_duesoon_open', 'tasks_overdue', 'tasks_overdue_open', 
-                    'start', 'ascending', 'descending', 'ascending_with_status',
-                    'descending_with_status', 'attachment', 'note']
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'taskviewer')

@@ -159,23 +159,29 @@ class CategorizableCompositeObject(base.CompositeObject):
 
     def icon(self, recursive=False):
         icon = super(CategorizableCompositeObject, self).icon(recursive=False)
-        if icon or not recursive:
-            return icon
+        if not icon and recursive:
+            icon = self.categoryIcon() or super(CategorizableCompositeObject, self).icon(recursive=True)
+        return icon
+
+    def categoryIcon(self):
         for category in self.categories():
-            categoryIcon = category.icon(recursive=True)
-            if categoryIcon:
-                return categoryIcon
-        return super(CategorizableCompositeObject, self).icon(recursive=True)
+            icon = category.icon(recursive=True)
+            if icon:
+                return icon
+        return ''
 
     def selectedIcon(self, recursive=False):
         icon = super(CategorizableCompositeObject, self).selectedIcon(recursive=False)
-        if icon or not recursive:
-            return icon
+        if not icon and recursive:
+            icon = self.categorySelectedIcon() or super(CategorizableCompositeObject, self).selectedIcon(recursive=True)
+        return icon
+
+    def categorySelectedIcon(self):
         for category in self.categories():
-            categoryIcon = category.selectedIcon(recursive=True)
-            if categoryIcon:
-                return categoryIcon
-        return super(CategorizableCompositeObject, self).selectedIcon(recursive=True)
+            icon = category.selectedIcon(recursive=True)
+            if icon:
+                return icon
+        return ''
         
     @classmethod
     def totalCategoryAddedEventType(class_):

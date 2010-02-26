@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -88,17 +88,17 @@ iconlist = [
 ('viewexpand', 'actions', 'edit_add', [16]),
 ('viewcollapse', 'actions', 'edit_remove', [16]),
 ('configure', 'actions', 'configure', [16]),
-('language', 'apps', 'edu_languages', [22]),
+('language', 'apps', 'edu_languages', [16, 22]),
 ('ascending', 'actions', 'up', [16]),
 ('descending', 'actions', 'down', [16]),
 ('ascending_with_status', 'actions', 'sort_ascending_with_status', [16]),
 ('descending_with_status', 'actions', 'sort_descending_with_status', [16]),
 ('category', 'filesystems', 'folder_download', [16, 22]),
 ('note', 'apps', 'knotes', [16, 22]),
-('colorize', 'actions', 'colorize', [22]),
+('colorize', 'actions', 'colorize', [16, 22]),
 ('windows', 'apps', 'window_list', [22]),
 ('email', 'apps', 'email', [16, 22]),
-('behavior', 'actions', 'misc', [22]),
+('behavior', 'actions', 'misc', [16, 22]),
 ('sync', 'actions', 'kaboodleloop', [16, 22]),
 ('iphone', 'devices', 'pda', [22]),
 ('access', 'filesystems', 'www', [22]),

@@ -512,12 +512,16 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                                 type=eachEffort.backgroundColorChangedEventType())
 
     def icon(self, recursive=False):
-        icon = super(Task, self).icon()
-        return icon if icon or not recursive else self.__stateBasedIcon(selected=False)
+        icon = super(Task, self).icon(recursive=False)
+        if not icon and recursive:
+            icon = self.categoryIcon() or self.__stateBasedIcon(selected=False)
+        return icon
 
     def selectedIcon(self, recursive=False):
-        icon = super(Task, self).selectedIcon()
-        return icon if icon or not recursive else self.__stateBasedIcon(selected=True)
+        icon = super(Task, self).selectedIcon(recursive=False)
+        if not icon and recursive:
+            icon = self.categorySelectedIcon() or self.__stateBasedIcon(selected=True)
+        return icon
 
     def __stateBasedIcon(self, selected=False):
         if self.isBeingTracked():
@@ -530,7 +534,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                     break
             icon += '_open' if selected and self.children() else ''
         return icon
-
+    
     @classmethod
     def totalTimeSpentChangedEventType(class_):
         return 'task.totalTimeSpent'

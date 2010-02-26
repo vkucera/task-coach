@@ -36,6 +36,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
     foregroundColorChangedEventType = categorizable.CategorizableCompositeObject.foregroundColorChangedEventType()
     backgroundColorChangedEventType = categorizable.CategorizableCompositeObject.backgroundColorChangedEventType()
     fontChangedEventType = categorizable.CategorizableCompositeObject.fontChangedEventType()
+    iconChangedEventType = categorizable.CategorizableCompositeObject.iconChangedEventType()
         
     def testCategorizableDoesNotBelongToAnyCategoryByDefault(self):
         for recursive in False, True:

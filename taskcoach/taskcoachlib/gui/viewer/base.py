@@ -20,8 +20,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
-from wx._core import PyDeadObjectError
-import wx._core
 
 import wx
 from taskcoachlib import patterns, widgets, command
@@ -39,7 +37,16 @@ class Viewer(wx.Panel):
     __metaclass__ = patterns.NumberedInstances
     defaultTitle = 'Subclass responsibility'
     defaultBitmap = 'Subclass responsibility'
-    viewerImages = [] # Override in subclass
+    viewerImages = ['task', 'task_inactive', 'task_completed', 'task_duesoon',
+                    'task_overdue', 'tasks', 'tasks_open', 'tasks_inactive',
+                    'tasks_inactive_open', 'tasks_completed',
+                    'tasks_completed_open', 'tasks_duesoon',
+                    'tasks_duesoon_open', 'tasks_overdue', 'tasks_overdue_open',
+                    'start', 'date', 'ascending', 'descending',
+                    'ascending_with_status', 'descending_with_status',
+                    'attachment', 'note', 'email', 'category', 'on', 'search',
+                    'description', 'budget', 'configure', 'language', 'colorize',
+                    'behavior', 'sync']
     
     def __init__(self, parent, taskFile, settings, *args, **kwargs):
         super(Viewer, self).__init__(parent, -1)
