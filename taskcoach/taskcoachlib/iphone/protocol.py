@@ -691,7 +691,7 @@ class FullFromDesktopState(BaseState):
         if self.version >= 4:
             if self.syncCompleted:
                 self.tasks = list([task for task in self.disp().window.taskFile.tasks().allItemsSorted() if not task.isDeleted()])
-                self.efforts = list([effort for effort in self.disp().window.taskFile.efforts().allItemsSorted() \
+                self.efforts = list([effort for effort in self.disp().window.taskFile.efforts() \
                                          if effort.task() is None or not effort.task().isDeleted()])
             else:
                 self.tasks = list([task for task in self.disp().window.taskFile.tasks().allItemsSorted() if not (task.isDeleted() or task.completed())])
