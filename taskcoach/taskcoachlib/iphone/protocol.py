@@ -689,14 +689,16 @@ class FullFromDesktopState(BaseState):
         self.disp().log(_('Full from desktop.'))
 
         if self.version >= 4:
+            allEfforts = self.disp().window.taskFile.efforts()
+
             if self.syncCompleted:
                 self.tasks = list([task for task in self.disp().window.taskFile.tasks().allItemsSorted() if not task.isDeleted()])
-                self.efforts = list([effort for effort in self.disp().window.taskFile.efforts() \
-                                         if effort.task() is None or not effort.task().isDeleted()])
+                self.efforts = list([effort for effort in  allEfforts \
+                                  if effort.task() is None or not effort.task().isDeleted()])
             else:
                 self.tasks = list([task for task in self.disp().window.taskFile.tasks().allItemsSorted() if not (task.isDeleted() or task.completed())])
-                self.efforts = list([effort for effort in self.disp().window.taskFile.efforts() \
-                                         if effort.task() is None or not (effort.task().isDeleted() or effort.task().completed())])
+                self.efforts = list([effort for effort in allEfforts \
+                                  if effort.task() is None or not (effort.task().isDeleted() or effort.task().completed())])
         else:
             self.tasks = filter(self.isTaskEligible, self.disp().window.taskFile.tasks())
         self.categories = list([cat for cat in self.disp().window.taskFile.categories().allItemsSorted() if not cat.isDeleted()])
