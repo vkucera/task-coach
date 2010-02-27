@@ -304,6 +304,7 @@ defaults = { \
     'password': '',
     'service': '',
     'synccompleted': 'True',
+    'showlog': 'False',
     },
 'printer': { \
     'margin_left': '0',

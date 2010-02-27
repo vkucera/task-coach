@@ -401,8 +401,8 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, widgets.AuiManagedFrameWith
     # iPhone-related methods. These are called from the asyncore thread so they're deferred.
 
     @synchronized
-    def createIPhoneProgressDialog(self, deviceName):
-        return IPhoneSyncDialog(deviceName, self, wx.ID_ANY, _('iPhone/iPod'))
+    def createIPhoneProgressDialog(self):
+        return IPhoneSyncDialog(self.settings, self, wx.ID_ANY, _('iPhone/iPod'), size=wx.Size(400, 300))
 
     @synchronized
     def getIPhoneSyncType(self, guid):

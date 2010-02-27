@@ -331,6 +331,8 @@ class IPhonePage(SettingsPage):
             _('Bonjour service name'), helpText='restart')
         self.addBooleanSetting('iphone', 'synccompleted',
             _('Upload completed tasks to device'), helpText=_('Upload completed tasks to device'))
+        self.addBooleanSetting('iphone', 'showlog',
+            _('Show sync log'), helpText=_('Show the synchronization log'))
         self.fit()
 
         
