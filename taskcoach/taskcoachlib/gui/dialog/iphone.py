@@ -98,7 +98,7 @@ class IPhoneSyncDialog(DeferredCallMixin, wx.Dialog):
 
     @synchronized
     def SetDeviceName(self, name):
-        self.SetTitle(_('Synchronizing with %s...'))
+        self.SetTitle(_('Synchronizing with %s...') % name)
 
     @synchronized
     def SetProgress(self, value, total):
