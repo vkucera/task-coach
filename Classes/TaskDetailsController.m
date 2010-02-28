@@ -161,7 +161,11 @@
 		// New task.
 		TextFieldCell *cell = [cells objectAtIndex:1];
 		[cell.textField becomeFirstResponder];
-		self.navigationItem.title = _("New task");
+
+		if (task.parentId)
+			self.navigationItem.title = _("New subtask");
+		else
+			self.navigationItem.title = _("New task");
 	}
 	else
 	{

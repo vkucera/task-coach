@@ -231,8 +231,6 @@
 			<key>Layout</key>
 			<array>
 				<dict>
-					<key>BecomeActive</key>
-					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -269,7 +267,6 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateExpansionKey</key>
 							<array>
 								<string>29B97314FDCFA39411CA2CEA</string>
-								<string>19C28FACFE9D520D11CA2CBB</string>
 								<string>1C37FBAC04509CD000000102</string>
 								<string>1C77FABC04509CD000000102</string>
 								<string>1C3E0DCA080725EA00A55177</string>
@@ -277,6 +274,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
+									<integer>2</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -309,12 +307,14 @@
 					<key>Dock</key>
 					<array>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>Info.plist</string>
+								<string>CHANGELOG</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -322,11 +322,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>Info.plist</string>
+										<string>CHANGELOG</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A6B92DEB1136F19700C9AF28</string>
+										<string>A656EBE4113A548700998F1E</string>
 										<key>history</key>
 										<array>
 											<string>A68A605910821E7E00D723FE</string>
@@ -407,7 +407,6 @@
 											<string>A61AA6B111143BFD00AA1E38</string>
 											<string>A61AA6CF11143D2200AA1E38</string>
 											<string>A61AA6D011143D2200AA1E38</string>
-											<string>A6E7C08E111443A000B230E2</string>
 											<string>A6E7C08F111443A000B230E2</string>
 											<string>A6E7C090111443A000B230E2</string>
 											<string>A6E7C093111443A000B230E2</string>
@@ -443,8 +442,9 @@
 											<string>A6FE8A9211312B7E000C7821</string>
 											<string>A6FE8A9411312B7E000C7821</string>
 											<string>A6322D4111312DD1004FD5FF</string>
-											<string>A6B92DE51136F19700C9AF28</string>
-											<string>A6B92DE61136F19700C9AF28</string>
+											<string>A6532E26113A53F300DD4BF2</string>
+											<string>A656EBDD113A544F00998F1E</string>
+											<string>A656EBDE113A544F00998F1E</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -567,11 +567,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6B92DE81136F19700C9AF28</string>
+				<string>A656EBE0113A544F00998F1E</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A6B92DE91136F19700C9AF28</string>
+				<string>A656EBE1113A544F00998F1E</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A6B92DEA1136F19700C9AF28</string>
+				<string>A656EBE2113A544F00998F1E</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -646,8 +646,8 @@
 								<string>yes</string>
 								<key>sizes</key>
 								<array>
-									<string>{{0, 0}, {667, 380}}</string>
-									<string>{{667, 0}, {1353, 380}}</string>
+									<string>{{0, 0}, {667, 382}}</string>
+									<string>{{667, 0}, {1353, 382}}</string>
 								</array>
 							</dict>
 							<key>VerticalSplitView</key>
@@ -662,8 +662,8 @@
 								<string>yes</string>
 								<key>sizes</key>
 								<array>
-									<string>{{0, 0}, {2020, 380}}</string>
-									<string>{{0, 380}, {2020, 401}}</string>
+									<string>{{0, 0}, {2020, 382}}</string>
+									<string>{{0, 382}, {2020, 399}}</string>
 								</array>
 							</dict>
 						</dict>
@@ -696,7 +696,7 @@
 								<real>977</real>
 							</array>
 							<key>Frame</key>
-							<string>{{667, 0}, {1353, 380}}</string>
+							<string>{{667, 0}, {1353, 382}}</string>
 						</dict>
 					</dict>
 					<key>Module</key>
@@ -720,14 +720,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6A5AA1B1136F13E00C1FCD5</string>
+				<string>A6532E2C113A53F300DD4BF2</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A6A5AA1C1136F13E00C1FCD5</string>
-				<string>A6A5AA1D1136F13E00C1FCD5</string>
-				<string>A6A5AA1E1136F13E00C1FCD5</string>
-				<string>A6A5AA1F1136F13E00C1FCD5</string>
-				<string>A6A5AA201136F13E00C1FCD5</string>
+				<string>A6532E2D113A53F300DD4BF2</string>
+				<string>A6532E2E113A53F300DD4BF2</string>
+				<string>A6532E2F113A53F300DD4BF2</string>
+				<string>A6532E30113A53F300DD4BF2</string>
+				<string>A68EDEBA0F1E1EED00F51FF2</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
 			<string>2</string>
