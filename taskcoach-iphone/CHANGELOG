@@ -1,4 +1,8 @@
 
+2010-02-28  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
+	* misc: When creating a subtask, the navigation bar would read "New task"
+	  instead of "New subtask".
+
 2010-02-21  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* misc: Add Russian translation, thanks to Nikolay Parukhin
 
