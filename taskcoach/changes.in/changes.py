@@ -23,14 +23,15 @@ from changetypes import *
 
 releases = [
 
-Release('0.79.0', 'January 31, 2010',
+Release('0.79.0', 'March 6, 2010',
     summary='''This release adds a calendar viewer for tasks and partial
 drag and drop support for Mail.app under Leopard and Snow Leopard, and
 fixes a few bugs.''',
     featuresAdded=[
-        Feature('''Calendar viewer for tasks''', 'http://uservoice.com/a/iQI4g'),
-        Feature('''Drag and drop e-mail from Mail.app, on Leopard and Snow Leopard.''',
-                'http://uservoice.com/a/niJMS')
+        Feature('''Calendar viewer for tasks''', 
+                'http://uservoice.com/a/iQI4g'),
+        Feature('''Drag and drop e-mail from Mail.app, on Leopard and Snow 
+Leopard.''', 'http://uservoice.com/a/niJMS')
         ],
     bugsFixed=[
         Bug('''The template pop-up menu in task viewers would not show up
@@ -38,7 +39,7 @@ at the right position.''')
         ]
     ),
 
-Release('0.78.4', 'February 14, 2010',
+Release('0.78.4', 'March 6, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''In some cases, when typing dates in the editor, they would
@@ -50,8 +51,11 @@ wouldn't until the next launch of Task Coach (Windows and Mac OS X only).''',
             '2888688'),
         Bug('''On Mac OS X, task viewers would not be refreshed at midnight
 if the computer was sleeping by this time.'''),
-        Bug(''''Having too many mail attachments on Windows would cause a
-"Too many open files" error.''')
+        Bug('''Having too many mail attachments on Windows would cause a
+"Too many open files" error.'''),
+        Bug('''When closing a viewer, Task Coach would sometimes try to destroy
+an already deleted right-click menu, leading to an exception or an error
+message in the log file.''', '2948302')
         ]
     ),
 

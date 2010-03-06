@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-'''
+helpText = '''
 Release steps:
 
 - Get latest translations from Launchpad.
@@ -382,6 +382,10 @@ Server said: %s
         raise smtplib.SMTPException, errstr
 
 
+def help(settings):
+    print helpText
+
+
 commands = dict(release=release,
                 upload=uploadDistributionsToSourceForge, 
                 download=downloadDistributionsFromSourceForge, 
@@ -394,7 +398,8 @@ commands = dict(release=release,
                 freshmeat=announceOnFreshmeat,
                 pypi=registerWithPyPI, 
                 mail=mailAnnouncement,
-                announce=announce)
+                announce=announce,
+                help=help)
 settings = Settings()
 try:
     commands[sys.argv[1]](settings)
