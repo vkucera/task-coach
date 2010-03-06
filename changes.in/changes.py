@@ -35,7 +35,7 @@ wouldn't until the next launch of Task Coach (Windows and Mac OS X only).''',
             '2888688'),
         Bug('''On Mac OS X, task viewers would not be refreshed at midnight
 if the computer was sleeping by this time.'''),
-        Bug(''''Having too many mail attachments on Windows would cause a
+        Bug('''Having too many mail attachments on Windows would cause a
 "Too many open files" error.'''),
         Bug('''When closing a viewer, Task Coach would sometimes try to destroy
 an already deleted right-click menu, leading to an exception or an error
