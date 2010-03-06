@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.78.4', 'February 14, 2010',
+Release('0.78.4', 'March 6, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''In some cases, when typing dates in the editor, they would
