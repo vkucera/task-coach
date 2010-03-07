@@ -10,7 +10,7 @@
 #import "Database.h"
 #import "Statement.h"
 #import "Configuration.h"
-#import "CategoriesSelector.h"
+#import "TaskList.h"
 #import "String+Utils.h"
 
 static Statement *_saveStatement = nil;
@@ -73,22 +73,17 @@ static Statement *_saveStatement = nil;
 {
 	NSNumber *count = [countCache objectForKey:tableName];
 	if (count)
-		return [count intValue];
+	{
+		taskCount = [count intValue];
+	}
+	else
+	{
+		TaskList *list = [[TaskList alloc] initWithView:tableName category:objectId title:@"" status:0 parentTask:nil];
+		taskCount = [list count];
+		[list release];
 
-	NSMutableArray *where = [[NSMutableArray alloc] initWithCapacity:2];
-	
-	if (![Configuration configuration].showCompleted)
-		[where addObject:@"completionDate IS NULL"];
-
-	[where addObject:@"parentId IS NULL"];
-
-	CategoriesSelector *sel = [[CategoriesSelector alloc] initWithId:objectId];
-	[where addObject:[sel clause]];
-	[sel release];
-	
-	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM %@ LEFT JOIN TaskHasCategory ON id=idTask WHERE %@", tableName, [@" AND " stringByJoiningStrings:where]]] execWithTarget:self action:@selector(setCount:)];
-
-	[countCache setObject:[NSNumber numberWithInt:taskCount] forKey:tableName];
+		[countCache setObject:[NSNumber numberWithInt:taskCount] forKey:tableName];
+	}
 
 	return taskCount;
 }
