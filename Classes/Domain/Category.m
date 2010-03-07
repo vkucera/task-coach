@@ -26,6 +26,13 @@ static Statement *_saveStatement = nil;
 	{
 		parentId = [theParentId retain];
 		children = [[NSMutableArray alloc] init];
+
+		[self invalidateCache];
+
+		[self countForTable:@"NotStartedTask"];
+		[self countForTable:@"StartedTask"];
+		[self countForTable:@"DueSoonTask"];
+		[self countForTable:@"OverdueTask"];
 	}
 	
 	return self;
@@ -35,6 +42,7 @@ static Statement *_saveStatement = nil;
 {
 	[parentId release];
 	[children release];
+	[countCache release];
 
 	[super dealloc];
 }
@@ -63,6 +71,10 @@ static Statement *_saveStatement = nil;
 
 - (NSInteger)countForTable:(NSString *)tableName
 {
+	NSNumber *count = [countCache objectForKey:tableName];
+	if (count)
+		return [count intValue];
+
 	NSMutableArray *where = [[NSMutableArray alloc] initWithCapacity:2];
 	
 	if (![Configuration configuration].showCompleted)
@@ -75,6 +87,8 @@ static Statement *_saveStatement = nil;
 	[sel release];
 	
 	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(*) AS total FROM %@ LEFT JOIN TaskHasCategory ON id=idTask WHERE %@", tableName, [@" AND " stringByJoiningStrings:where]]] execWithTarget:self action:@selector(setCount:)];
+
+	[countCache setObject:[NSNumber numberWithInt:taskCount] forKey:tableName];
 
 	return taskCount;
 }
@@ -109,6 +123,12 @@ static Statement *_saveStatement = nil;
 	Statement *req = [[Database connection] statementWithSQL:@"DELETE FROM TaskHasCategory WHERE idCategory=?"];
 	[req bindInteger:objectId atIndex:1];
 	[req exec];
+}
+
+- (void)invalidateCache
+{
+	[countCache release];
+	countCache = [[NSMutableDictionary alloc] init];
 }
 
 @end

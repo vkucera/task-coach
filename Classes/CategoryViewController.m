@@ -113,7 +113,10 @@
 	NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
 
 	[[PositionStore instance] pop];
-	
+
+	for (Category *category in categories)
+		[category invalidateCache];
+
 	if (indexPath)
 	{
 		[self.tableView reloadData];

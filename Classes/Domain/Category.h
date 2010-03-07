@@ -16,6 +16,8 @@
 	NSInteger taskCount;
 	NSInteger level;
 	NSMutableArray *children;
+
+	NSMutableDictionary *countCache;
 }
 
 @property (nonatomic, readonly) NSNumber *parentId;
@@ -29,5 +31,7 @@
 - (void)finalizeChildren:(NSMutableArray *)categories;
 
 - (void)removeAllTasks;
+
+- (void)invalidateCache;
 
 @end
