@@ -122,7 +122,6 @@
 		[self.tableView reloadData];
 
 		// XXXFIXME: reloadData is not enough to refresh the task count ?
-
 		for (NSIndexPath *path in [self.tableView indexPathsForVisibleRows])
 			[self.tableView deselectRowAtIndexPath:path animated:YES];
 
@@ -449,6 +448,8 @@
 	}
 
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	
+	[cell.badge setNeedsDisplay];
 	
 	[cell layoutSubviews];
 
