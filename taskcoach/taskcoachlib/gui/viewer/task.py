@@ -446,7 +446,7 @@ class SquareTaskViewer(BaseTaskViewer):
                                                  self.__zero))
     
     def children_sum(self, children, parent): # pylint: disable-msg=W0613
-        children_sum = sum((getattr(child, self.__orderBy)(recursive=True) for child in children \
+        children_sum = sum((max(getattr(child, self.__orderBy)(recursive=True), self.__zero) for child in children \
                             if child in self.presentation()), self.__zero)
         return self.__transformTaskAttribute(max(children_sum, self.__zero))
     
@@ -482,7 +482,8 @@ class SquareTaskViewer(BaseTaskViewer):
     
     renderer = dict(budget=render.budget, timeSpent=render.timeSpent, 
                     fixedFee=render.monetaryAmount, 
-                    revenue=render.monetaryAmount)
+                    revenue=render.monetaryAmount,
+                    priority=render.priority)
     
     def render(self, value):
         return self.renderer[self.__orderBy](value)

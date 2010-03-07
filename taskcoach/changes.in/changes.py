@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('0.79.0', 'March 6, 2010',
+Release('0.79.0', 'March 7, 2010',
     summary='''This release adds a calendar viewer for tasks and partial
 drag and drop support for Mail.app under Leopard and Snow Leopard, and
 fixes a few bugs.''',
@@ -31,7 +31,10 @@ fixes a few bugs.''',
         Feature('''Calendar viewer for tasks''', 
                 'http://uservoice.com/a/iQI4g'),
         Feature('''Drag and drop e-mail from Mail.app, on Leopard and Snow 
-Leopard.''', 'http://uservoice.com/a/niJMS')
+Leopard.''', 'http://uservoice.com/a/niJMS'),
+        Feature('''The square map task viewer can also display tasks by
+priority. Note that tasks with negative priorities are not displayed.''',
+        'http://uservoice.com/a/kxeoS'),
         ],
     bugsFixed=[
         Bug('''The template pop-up menu in task viewers would not show up

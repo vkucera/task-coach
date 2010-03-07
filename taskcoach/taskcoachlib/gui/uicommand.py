@@ -2151,8 +2151,8 @@ class CategoryViewerFilterChoice(ToolbarChoiceCommandMixin, SettingsCommand):
 
 
 class SquareTaskViewerOrderChoice(ToolbarChoiceCommandMixin, ViewerCommand):
-    choiceLabels = [_('Budget'), _('Time spent'), _('Fixed fee'), _('Revenue')]
-    choiceData = ['budget', 'timeSpent', 'fixedFee', 'revenue']
+    choiceLabels = [_('Budget'), _('Time spent'), _('Fixed fee'), _('Revenue'), _('Priority')]
+    choiceData = ['budget', 'timeSpent', 'fixedFee', 'revenue', 'priority']
     
     def doChoice(self, choice):
         self.viewer.orderBy(choice)
