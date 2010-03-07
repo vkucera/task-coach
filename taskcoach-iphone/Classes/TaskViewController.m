@@ -84,7 +84,7 @@
 	
 	TaskList *list;
 	headers = [[NSMutableArray alloc] initWithCapacity:4];
-	
+
 	list = [[TaskList alloc] initWithView:@"OverdueTask" category:categoryId title:_("Overdue") status:TASKSTATUS_OVERDUE parentTask:parentId];
 	if ([list count])
 	{

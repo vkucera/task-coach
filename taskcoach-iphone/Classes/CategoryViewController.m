@@ -197,29 +197,11 @@
 	cell.badge.capsuleColor = [UIColor blackColor];
 
 	NSInteger count;
-	
-	count = [category countForTable:@"NotStartedTask"];
-	if (count)
-	{
-		[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", count] capsuleColor:[UIColor grayColor]];
-	}
-	
-	count = [category countForTable:@"StartedTask"];
-	if (count)
-	{
-		[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", count] capsuleColor:[UIColor blueColor]];
-	}
-	
+
 	count = [category countForTable:@"DueSoonTask"];
 	if (count)
 	{
 		[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", count] capsuleColor:[UIColor orangeColor]];
-	}
-	
-	count = [category countForTable:@"OverdueTask"];
-	if (count)
-	{
-		[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", count] capsuleColor:[UIColor redColor]];
 	}
 }
 
@@ -395,8 +377,8 @@
 
 			cell.textLabel.text = _("Add subcategory");
 			cell.textLabel.textColor = [UIColor grayColor];
-			[cell.badge clearAnnotations];
 			cell.badge.text = nil;
+			[cell.badge clearAnnotations];
 
 			cell.indentationLevel = category.level + 1;
 		}
@@ -421,26 +403,17 @@
 				cell = [[[CellFactory cellFactory] createBadgedCell] autorelease];
 			}
 			
-			[cell.badge clearAnnotations];
-
 			cell.textLabel.text = _("All");
+			[cell.badge clearAnnotations];
 
 			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM AllTask WHERE completionDate IS NULL AND parentId IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
 			cell.badge.text = [NSString stringWithFormat:@"%d", totalCount];
 			cell.badge.capsuleColor = [UIColor blackColor];
-			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM NotStartedTask WHERE completionDate IS NULL AND parentId IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
-			if (totalCount)
-				[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", totalCount] capsuleColor:[UIColor grayColor]];
-			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM StartedTask WHERE completionDate IS NULL AND parentId IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
-			if (totalCount)
-				[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", totalCount] capsuleColor:[UIColor blueColor]];
+
 			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM DueSoonTask WHERE completionDate IS NULL AND parentId IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
 			if (totalCount)
 				[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", totalCount] capsuleColor:[UIColor orangeColor]];
-			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM OverdueTask WHERE completionDate IS NULL AND parentId IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
-			if (totalCount)
-				[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", totalCount] capsuleColor:[UIColor redColor]];
-			
+
 			cell.indentationLevel = 0;
 		}
 

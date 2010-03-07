@@ -3,6 +3,14 @@
 	* misc: Speed up category view
 	* CategoryViewController: fix a display bug that prevented the badges from
 	  refreshing in some cases.
+	* misc: More intuitive task view. When viewing tasks belonging to a category,
+	  subtasks that belong to that category are also shown, except if one of
+	  their ancestors belongs to the same category. The previous behaviour was
+	  to only show top-level tasks belonging to the category, so people using
+	  subcategories for subtasks would not see anything when selecting the
+	  subcategory...
+	* misc: Badges now only show total count and due soon count, for performance
+	  reasons.
 
 2010-02-28  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* misc: When creating a subtask, the navigation bar would read "New task"

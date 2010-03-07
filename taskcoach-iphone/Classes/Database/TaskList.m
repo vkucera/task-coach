@@ -10,7 +10,6 @@
 
 #import "Database.h"
 #import "Statement.h"
-#import "CategoriesSelector.h"
 
 #import "Task.h"
 
@@ -18,50 +17,26 @@
 
 #import "Configuration.h"
 
-#define CACHELENGTH (8 * 3)
-
 @implementation TaskList
 
 @synthesize parent;
-@synthesize count;
 @synthesize title;
 @synthesize status;
 
-- (void)countCallback:(NSDictionary *)dict
-{
-	count = [[dict objectForKey:@"total"] intValue];
-}
-
-- (void)taskCallback:(NSDictionary *)dict
-{
-	Task *task = [[Task alloc] initWithId:[[dict objectForKey:@"id"] intValue] fileId:[dict objectForKey:@"fileId"] name:[dict objectForKey:@"name"] status:[[dict objectForKey:@"status"] intValue]
-							   taskCoachId:[dict objectForKey:@"taskCoachId"]
-							   description:[dict objectForKey:@"description"]
-							   startDate:[dict objectForKey:@"startDate"]
-							   dueDate:[dict objectForKey:@"dueDate"]
-						       completionDate:[dict objectForKey:@"completionDate"]
-							   dateStatus:status
-							   parentId:[dict objectForKey:@"parentId"]];
-	[tasks addObject:task];
-	[task release];
-}
-
 - initWithView:(NSString *)viewName category:(NSInteger)categoryId title:(NSString *)theTitle status:(NSInteger)theStatus parentTask:(NSNumber *)theParent
 {
+	NSLog(@"TaskList: %d %@", categoryId, theParent);
+
 	if (self = [super init])
 	{
 		parent = [theParent retain];
+		title = [theTitle copy];
+		status = theStatus;
 
-		tasks = [[NSMutableArray alloc] initWithCapacity:CACHELENGTH];
+		tasks = [[NSMutableArray alloc] init];
 
 		NSMutableArray *where = [[NSMutableArray alloc] initWithCapacity:2];
-		
-		if (categoryId != -1)
-		{
-			CategoriesSelector *sel = [[CategoriesSelector alloc] initWithId:categoryId];
-			[where addObject:[sel clause]];
-			[sel release];
-		}
+		NSString *clauses;
 
 		if (![Configuration configuration].showCompleted)
 		{
@@ -74,29 +49,30 @@
 		}
 		else
 		{
-			[where addObject:@"parentId IS NULL"];
+			if (categoryId == -1) // All tasks
+			{
+				[where addObject:@"parentId IS NULL"];
+			}
 		}
 
-		NSString *req;
-
-		if ([where count])
+		if (categoryId == -1)
 		{
-			req = [NSString stringWithFormat:@"FROM %@ LEFT JOIN TaskHasCategory ON id=idTask WHERE %@", viewName, [@" AND " stringByJoiningStrings:where]];
+			clauses = [[NSString stringWithFormat:@" WHERE %@", [@" AND " stringByJoiningStrings:where]] retain];
 		}
 		else
 		{
-			req = [NSString stringWithFormat:@"FROM %@ LEFT JOIN TaskHasCategory ON id=idTask", viewName];
+			// GROUP BY id is there because of tasks that have several categories...
+			[where addObject:[NSString stringWithFormat:@"idCategory=%d", categoryId]];
+			[where addObject:@"id=idTask"];
+			clauses = [[NSString stringWithFormat:@", TaskHasCategory WHERE %@ GROUP BY id", [@" AND " stringByJoiningStrings:where]] retain];
 		}
+
+		request = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM %@%@ ORDER BY name COLLATE CSDIA", viewName, clauses]] retain];
+		
+		NSLog(@"%@", [NSString stringWithFormat:@"SELECT * FROM %@%@ ORDER BY name COLLATE CSDIA", viewName, clauses]);
 
 		[where release];
 
-		request = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * %@ GROUP BY id ORDER BY name COLLATE CSDIA LIMIT ?,?", req]] retain];
-		countRequest = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT COUNT(DISTINCT(id)) AS total %@", req]] retain];
-
-		title = [theTitle copy];
-		status = theStatus;
-
-		// firstIndex is already initialized to 0
 		[self reload];
 	}
 	
@@ -107,36 +83,78 @@
 {
 	[parent release];
 	[tasks release];
-	[request release];
-	[countRequest release];
 	[title release];
+	[request release];
 	
 	[super dealloc];
+}
+
+- (Task *)taskAtIndex:(NSInteger)index
+{
+	return [tasks objectAtIndex:index];
+}
+
+- (NSInteger)count
+{
+	return [tasks count];
+}
+
+- (void)taskCallback:(NSDictionary *)dict
+{
+	Task *task = [[Task alloc] initWithId:[[dict objectForKey:@"id"] intValue] fileId:[dict objectForKey:@"fileId"] name:[dict objectForKey:@"name"] status:[[dict objectForKey:@"status"] intValue]
+							  taskCoachId:[dict objectForKey:@"taskCoachId"]
+							  description:[dict objectForKey:@"description"]
+								startDate:[dict objectForKey:@"startDate"]
+								  dueDate:[dict objectForKey:@"dueDate"]
+						   completionDate:[dict objectForKey:@"completionDate"]
+							   dateStatus:status
+								 parentId:[dict objectForKey:@"parentId"]];
+	[tasks addObject:task];
+	[task release];
 }
 
 - (void)reload
 {
 	[tasks removeAllObjects];
-	[request bindInteger:firstIndex atIndex:1];
-	[request bindInteger:CACHELENGTH atIndex:2];
 	[request execWithTarget:self action:@selector(taskCallback:)];
-	[countRequest execWithTarget:self action:@selector(countCallback:)];
-}
 
-- (Task *)taskAtIndex:(NSInteger)index
-{
-	if (index < firstIndex)
+	// Now, remove all subtasks that have an ancestor that belongs to this category, if applicable.
+	if (!parent)
 	{
-		firstIndex -= CACHELENGTH;
-		[self reload];
+		NSMutableDictionary *taskIds = [[NSMutableDictionary alloc] initWithCapacity:[tasks count]];
+		for (Task *task in tasks)
+			[taskIds setObject:task forKey:[NSNumber numberWithInt:task.objectId]];
+
+		while (1)
+		{
+			BOOL modified = NO;
+
+			for (NSNumber *taskId in [taskIds allKeys])
+			{
+				Task *task = [taskIds objectForKey:taskId];
+				if (task && task.parentId)
+				{
+					if ([taskIds objectForKey:task.parentId])
+					{
+						[taskIds removeObjectForKey:taskId];
+						modified = YES;
+					}
+				}
+			}
+
+			if (!modified)
+				break;
+		}
+
+		NSArray *oldTasks = [NSArray arrayWithArray:tasks];
+		[tasks removeAllObjects];
+
+		for (Task *task in oldTasks)
+		{
+			if ([taskIds objectForKey:[NSNumber numberWithInt:task.objectId]])
+				[tasks addObject:task];
+		}
 	}
-	else if (index >= firstIndex + CACHELENGTH)
-	{
-		firstIndex += CACHELENGTH;
-		[self reload];
-	}
-	
-	return [tasks objectAtIndex:index - firstIndex];
 }
 
 @end

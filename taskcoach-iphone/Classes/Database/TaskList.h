@@ -14,13 +14,11 @@
 @interface TaskList : NSObject
 {
 	NSNumber *parent;
-	NSMutableArray *tasks;
-	NSInteger firstIndex;
-	Statement *request;
-	Statement *countRequest;
-	NSInteger count;
 	NSString *title;
 	NSInteger status;
+	NSString *clause;
+	NSMutableArray *tasks;
+	Statement *request;
 }
 
 @property (nonatomic, readonly) NSNumber *parent;
@@ -31,6 +29,7 @@
 - initWithView:(NSString *)viewName category:(NSInteger)categoryId title:(NSString *)title status:(NSInteger)status parentTask:(NSNumber *)parent;
 
 - (Task *)taskAtIndex:(NSInteger)index;
+
 - (void)reload;
 
 @end
