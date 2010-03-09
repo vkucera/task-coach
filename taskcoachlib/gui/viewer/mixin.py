@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
+Copyright (C) 2007-2008 Jérôme Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -441,11 +443,10 @@ class AttachmentDropTargetMixin(object):
         ''' This method is called by the widget when one or more files
             are dropped on an item. '''
         attachmentBase = self.settings.get('file', 'attachmentbase')
-        if base:
-            func = lambda x: attachment.getRelativePath(x, attachmentBase)
-        else:
-            func = lambda x: x
-        attachments = [attachment.FileAttachment(func(name)) for name in filenames]
+        if attachmentBase:
+            filenames = [attachment.getRelativePath(filename, attachmentBase) \
+                         for filename in filenames]
+        attachments = [attachment.FileAttachment(filename) for filename in filenames]
         self._addAttachments(attachments, item)
 
     def onDropMail(self, item, mail):
