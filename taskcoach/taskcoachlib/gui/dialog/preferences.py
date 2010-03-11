@@ -352,17 +352,17 @@ class EditorPage(SettingsPage):
 class Preferences(widgets.ListbookDialog):
     def __init__(self, settings=None, *args, **kwargs):
         self.settings = settings
-        super(Preferences, self).__init__(bitmap='configure', *args, **kwargs) 
+        super(Preferences, self).__init__(bitmap='wrench_icon', *args, **kwargs)
                    
     def addPages(self):
         self.SetMinSize((300, 430))
         pages = [\
             (WindowBehaviorPage(parent=self._interior, columns=3, settings=self.settings), _('Window behavior'), 'windows'),
-            (TaskBehaviorPage(parent=self._interior, columns=3, settings=self.settings), _('Task behavior'), 'behavior'),
+            (TaskBehaviorPage(parent=self._interior, columns=3, settings=self.settings), _('Task behavior'), 'cogwheel_icon'),
             (SavePage(parent=self._interior, columns=3, settings=self.settings), _('Files'), 'save'),
-            (LanguagePage(parent=self._interior, columns=3, settings=self.settings), _('Language'), 'language'),
-            (ColorsPage(parent=self._interior, columns=1, settings=self.settings, growableColumn=-1), _('Colors'), 'colorize'),
-            (FeaturesPage(parent=self._interior, columns=3, settings=self.settings), _('Features'), 'behavior')]
+            (LanguagePage(parent=self._interior, columns=3, settings=self.settings), _('Language'), 'people_talking_icon'),
+            (ColorsPage(parent=self._interior, columns=1, settings=self.settings, growableColumn=-1), _('Colors'), 'palette_icon'),
+            (FeaturesPage(parent=self._interior, columns=3, settings=self.settings), _('Features'), 'cogwheel_icon')]
         if self.settings.getboolean('feature', 'iphone'):
             pages.append((IPhonePage(parent=self._interior, columns=3, settings=self.settings), _('iPhone'), 'iphone'))
         if '__WXMAC__' in wx.PlatformInfo:

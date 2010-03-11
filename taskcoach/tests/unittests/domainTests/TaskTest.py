@@ -206,13 +206,13 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.assertEqual('', self.task.icon(recursive=False))
 
     def testDefaultRecursiveIcon(self):
-        self.assertEqual('task', self.task.icon(recursive=True))
+        self.assertEqual('led_blue_icon', self.task.icon(recursive=True))
 
     def testDefaultOwnSelectedIcon(self):
         self.assertEqual('', self.task.selectedIcon(recursive=False))
 
     def testDefaultRecursiveSelectedIcon(self):
-        self.assertEqual('task', self.task.selectedIcon(recursive=True))
+        self.assertEqual('led_blue_icon', self.task.selectedIcon(recursive=True))
 
     # Setters
 
@@ -587,10 +587,10 @@ class TaskDueTodayTest(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual(expectedColor, self.task.foregroundColor(recursive=True))
 
     def testIcon(self):
-        self.assertEqual('task_duesoon', self.task.icon(recursive=True))
+        self.assertEqual('led_orange_icon', self.task.icon(recursive=True))
 
     def testSelectedIcon(self):
-        self.assertEqual('task_duesoon', self.task.selectedIcon(recursive=True))
+        self.assertEqual('led_orange_icon', self.task.selectedIcon(recursive=True))
 
 
 class TaskDueTomorrowTest(TaskTestCase, CommonTaskTestsMixin):
@@ -615,18 +615,18 @@ class TaskDueTomorrowTest(TaskTestCase, CommonTaskTestsMixin):
         self.failUnless(self.task.dueSoon())
 
     def testIconNotDueSoon(self):
-        self.assertEqual('task', self.task.icon(recursive=True))
+        self.assertEqual('led_blue_icon', self.task.icon(recursive=True))
 
     def testselectedIconNotDueSoon(self):
-        self.assertEqual('task', self.task.selectedIcon(recursive=True))
+        self.assertEqual('led_blue_icon', self.task.selectedIcon(recursive=True))
 
     def testIconDueSoon(self):
         self.settings.set('behavior', 'duesoondays', '2')
-        self.assertEqual('task_duesoon', self.task.icon(recursive=True))
+        self.assertEqual('led_orange_icon', self.task.icon(recursive=True))
 
     def testSelectedIconDueSoon(self):
         self.settings.set('behavior', 'duesoondays', '2')
-        self.assertEqual('task_duesoon', self.task.selectedIcon(recursive=True))
+        self.assertEqual('led_orange_icon', self.task.selectedIcon(recursive=True))
         
 
 class OverdueTaskTest(TaskTestCase, CommonTaskTestsMixin):
@@ -653,10 +653,10 @@ class OverdueTaskTest(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual(expectedColor, self.task.foregroundColor(recursive=True))
 
     def testIcon(self):
-        self.assertEqual('task_overdue', self.task.icon(recursive=True))
+        self.assertEqual('led_red_icon', self.task.icon(recursive=True))
 
     def testSelectedIcon(self):
-        self.assertEqual('task_overdue', self.task.selectedIcon(recursive=True))
+        self.assertEqual('led_red_icon', self.task.selectedIcon(recursive=True))
 
 
 class CompletedTaskTest(TaskTestCase, CommonTaskTestsMixin):
@@ -698,10 +698,10 @@ class CompletedTaskTest(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual(expectedColor, self.task.foregroundColor(recursive=True))
 
     def testIcon(self):
-        self.assertEqual('task_completed', self.task.icon(recursive=True))
+        self.assertEqual('led_green_icon', self.task.icon(recursive=True))
 
     def testSelectedIcon(self):
-        self.assertEqual('task_completed',
+        self.assertEqual('led_green_icon',
                          self.task.selectedIcon(recursive=True))
 
 
@@ -744,10 +744,10 @@ class InactiveTaskTest(TaskTestCase, CommonTaskTestsMixin):
                          self.task.foregroundColor(recursive=True))
 
     def testIcon(self):
-        self.assertEqual('task_inactive', self.task.icon(recursive=True))
+        self.assertEqual('led_grey_icon', self.task.icon(recursive=True))
 
     def testSelectedIcon(self):
-        self.assertEqual('task_inactive',
+        self.assertEqual('led_grey_icon',
                          self.task.selectedIcon(recursive=True))
 
 
@@ -1155,10 +1155,10 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
                          self.events)
 
     def testIcon(self):
-        self.assertEqual('tasks', self.task.icon(recursive=True))
+        self.assertEqual('folder_blue_icon', self.task.icon(recursive=True))
 
     def testSelectedIcon(self):
-        self.assertEqual('tasks_open', self.task.selectedIcon(recursive=True))
+        self.assertEqual('folder_blue_open_icon', self.task.selectedIcon(recursive=True))
 
 
 class CompletedTaskWithChildTest(TaskTestCase):
@@ -1167,10 +1167,10 @@ class CompletedTaskWithChildTest(TaskTestCase):
                  'children': [task.Task(subject='child')]}]
 
     def testIcon(self):
-        self.assertEqual('tasks_completed', self.task.icon(recursive=True))
+        self.assertEqual('folder_green_icon', self.task.icon(recursive=True))
 
     def testSelectedIcon(self):
-        self.assertEqual('tasks_completed_open',
+        self.assertEqual('folder_green_open_icon',
                          self.task.selectedIcon(recursive=True))
 
 
@@ -1180,10 +1180,10 @@ class OverdueTaskWithChildTest(TaskTestCase):
                  'children': [task.Task(subject='child')]}]
 
     def testIcon(self):
-        self.assertEqual('tasks_overdue', self.task.icon(recursive=True))
+        self.assertEqual('folder_red_icon', self.task.icon(recursive=True))
 
     def testSelectedIcon(self):
-        self.assertEqual('tasks_overdue_open',
+        self.assertEqual('folder_red_open_icon',
                          self.task.selectedIcon(recursive=True))
 
 
@@ -1193,10 +1193,10 @@ class DuesoonTaskWithChildTest(TaskTestCase):
                  'children': [task.Task(subject='child')]}]
 
     def testIcon(self):
-        self.assertEqual('tasks_duesoon', self.task.icon(recursive=True))
+        self.assertEqual('folder_orange_icon', self.task.icon(recursive=True))
 
     def testSelectedIcon(self):
-        self.assertEqual('tasks_duesoon_open',
+        self.assertEqual('folder_orange_open_icon',
                          self.task.selectedIcon(recursive=True))
 
 
@@ -1206,10 +1206,10 @@ class InactiveTaskWithChildTest(TaskTestCase):
                  'children': [task.Task(subject='child')]}]
 
     def testIcon(self):
-        self.assertEqual('tasks_inactive', self.task.icon(recursive=True))
+        self.assertEqual('folder_grey_icon', self.task.icon(recursive=True))
 
     def testSelectedIcon(self):
-        self.assertEqual('tasks_inactive_open',
+        self.assertEqual('folder_grey_open_icon',
                          self.task.selectedIcon(recursive=True))
 
 
@@ -1325,10 +1325,10 @@ class TaskWithActiveEffort(TaskTestCase, CommonTaskTestsMixin):
             self.task, self.task1effort1)], self.events)
 
     def testIcon(self):
-        self.assertEqual('start', self.task.icon(recursive=True))
+        self.assertEqual('clock_icon', self.task.icon(recursive=True))
 
     def testSelectedIcon(self):
-        self.assertEqual('start', self.task.selectedIcon(recursive=True))
+        self.assertEqual('clock_icon', self.task.selectedIcon(recursive=True))
 
 
 class TaskWithChildAndEffortTest(TaskTestCase, CommonTaskTestsMixin):

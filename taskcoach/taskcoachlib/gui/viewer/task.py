@@ -181,9 +181,9 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
             result.append((None, map(lambda x: x.rstrip('\n'),
                                  task.description().split('\n'))))
         if task.notes():
-            result.append(('note', [note.subject() for note in task.notes()]))
+            result.append(('note_icon', [note.subject() for note in task.notes()]))
         if task.attachments():
-            result.append(('attachment', 
+            result.append(('paperclip_icon',
                 [unicode(attachment) for attachment in task.attachments()]))
         return result
 
@@ -493,7 +493,7 @@ class SquareTaskViewer(BaseTaskViewer):
 class CalendarViewer(mixin.AttachmentDropTargetMixin,
                      BaseTaskViewer):
     defaultTitle = _('Calendar')
-    defaultBitmap = 'date'
+    defaultBitmap = 'calendar_icon'
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'calendarviewer')
@@ -671,7 +671,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
                 width=self.getColumnWidth('attachments'),
                 alignment=wx.LIST_FORMAT_LEFT,
                 imageIndexCallback=self.attachmentImageIndex,
-                headerImageIndex=self.imageIndex['attachment'],
+                headerImageIndex=self.imageIndex['paperclip_icon'],
                 renderCallback=lambda task: '', **kwargs)]
         if self.settings.getboolean('feature', 'notes'):
             columns.append(widgets.Column('notes', '', 
@@ -679,7 +679,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
                 width=self.getColumnWidth('notes'),
                 alignment=wx.LIST_FORMAT_LEFT,
                 imageIndexCallback=self.noteImageIndex,
-                headerImageIndex=self.imageIndex['note'],
+                headerImageIndex=self.imageIndex['note_icon'],
                 renderCallback=lambda task: '', **kwargs))
         columns.extend(
             [widgets.Column('categories', _('Categories'), 

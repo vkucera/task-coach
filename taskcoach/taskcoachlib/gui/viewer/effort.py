@@ -34,7 +34,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
                    mixin.SearchableViewerMixin, base.UpdatePerSecondViewer, 
                    base.ViewerWithColumns): 
     defaultTitle = _('Effort')
-    defaultBitmap = 'start'  
+    defaultBitmap = 'clock_icon'
     SorterClass = effort.EffortSorter
     
     def __init__(self, *args, **kwargs):

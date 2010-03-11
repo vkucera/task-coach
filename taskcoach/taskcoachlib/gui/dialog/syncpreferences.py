@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2008-2009 Frank Niessink <frank@niessink.com>
-Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2008-2010 Frank Niessink <frank@niessink.com>
+Copyright (C) 2008 Jérôme Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -121,19 +123,16 @@ class SyncMLNotePage(SyncMLBasePage):
 class SyncMLPreferences(widgets.ListbookDialog):
     def __init__(self, iocontroller=None, *args, **kwargs):
         self.iocontroller = iocontroller
-
-        super(SyncMLPreferences, self).__init__(bitmap='configure', *args, **kwargs)
+        super(SyncMLPreferences, self).__init__(bitmap='wrench_icon', *args,
+                                                **kwargs)
 
     def addPages(self):
         self.SetMinSize((300, 300))
-
-        pages = [ (SyncMLAccessPage(parent=self._interior, columns=3, iocontroller=self.iocontroller,
-                                    growableColumn=1),
-                   _('Access'), 'access'),
-                  (SyncMLTaskPage(parent=self._interior, columns=3, iocontroller=self.iocontroller),
-                   _('Tasks'), 'taskcoach'),
-                  (SyncMLNotePage(parent=self._interior, columns=3, iocontroller=self.iocontroller),
-                   _('Notes'), 'note') ]
+        kwargs = dict(parent=self._interior, columns=3,
+                      iocontroller=self.iocontroller)
+        pages = [(SyncMLAccessPage(growableColumn=1, **kwargs), _('Access'), 'access'),
+                 (SyncMLTaskPage(**kwargs), _('Tasks'), 'taskcoach'),
+                 (SyncMLNotePage(**kwargs), _('Notes'), 'note')]
 
         for page, title, bitmap in pages:
             self._interior.AddPage(page, title, bitmap=bitmap)

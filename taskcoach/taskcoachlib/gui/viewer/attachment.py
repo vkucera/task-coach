@@ -34,7 +34,8 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.ViewerWithColumns,
                        mixin.SearchableViewerMixin, mixin.NoteColumnMixin,
                        base.ListViewer):
     SorterClass = attachment.AttachmentSorter
-    viewerImages = base.ListViewer.viewerImages + ['note', 'uri', 'email', 'fileopen', 'fileopen_red']
+    viewerImages = base.ListViewer.viewerImages + ['earth_blue_icon',
+                   'fileopen', 'fileopen_red']
 
     def __init__(self, *args, **kwargs):
         self.attachments = kwargs.pop('attachmentsToShow')
@@ -96,7 +97,7 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.ViewerWithColumns,
                                width=self.getColumnWidth('notes'),
                                alignment=wx.LIST_FORMAT_LEFT,
                                imageIndexCallback=self.noteImageIndex,
-                               headerImageIndex=self.imageIndex['note'],
+                               headerImageIndex=self.imageIndex['note_icon'],
                                renderCallback=lambda item: '',
                                resizeCallback=self.onResizeColumn),
                 ]
@@ -134,7 +135,7 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.ViewerWithColumns,
             return self.imageIndex['fileopen_red']
 
         try:
-            return self.imageIndex[{ 'uri': 'uri',
+            return self.imageIndex[{ 'uri': 'earth_blue_icon',
                                      'mail': 'email'}[anAttachment.type_]]
         except KeyError:
             return -1

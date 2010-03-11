@@ -33,7 +33,7 @@ class TreeListCtrlTestCase(TreeCtrlTest.TreeCtrlTestCase):
             self.getItemTooltipText,
             self.onSelect, dummy.DummyUICommand(), dummy.DummyUICommand())
         imageList = wx.ImageList(16, 16)
-        for bitmapName in ['task', 'tasks']:
+        for bitmapName in ['led_blue_icon', 'folder_blue_icon']:
             imageList.Add(wx.ArtProvider_GetBitmap(bitmapName, wx.ART_MENU, 
                           (16,16)))
         self.treeCtrl.AssignImageList(imageList) # pylint: disable-msg=E1101

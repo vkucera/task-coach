@@ -510,7 +510,8 @@ class TaskMenu(Menu):
                 )
         self.appendMenu(_('&Toggle category'),
                         ToggleCategoryMenu(mainwindow, categories=categories,
-                                          viewer=viewerContainer), 'category')
+                                           viewer=viewerContainer),
+                        'folder_blue_arrow_icon')
             
             
 class EffortMenu(Menu):
@@ -569,7 +570,8 @@ class NoteMenu(Menu):
                                              settings=settings))
         self.appendMenu(_('&Toggle category'),
                         ToggleCategoryMenu(mainwindow, categories=categories,
-                                           viewer=viewerContainer), 'category')
+                                           viewer=viewerContainer),
+                        'folder_blue_arrow_icon')
 
         
 class HelpMenu(Menu):
@@ -603,7 +605,7 @@ class TaskBarMenu(Menu):
             self.appendMenu(label,
                 StartEffortForTaskMenu(taskBarIcon, 
                                        base.filter.DeletedFilter(tasks), 
-                                       self, label), 'start')
+                                       self, label), 'clock_icon')
             self.appendUICommands(uicommand.EffortStop(taskList=tasks))
         self.appendUICommands(
             None,
@@ -742,7 +744,8 @@ class TaskPopupMenu(Menu):
                                       settings=settings))
         self.appendMenu(_('&Toggle category'),
                         ToggleCategoryMenu(mainwindow, categories=categories,
-                                           viewer=taskViewer), 'category')
+                                           viewer=taskViewer),
+                        'folder_blue_arrow_icon')
         if settings.getboolean('feature', 'effort'):
             self.appendUICommands(
                 None,
@@ -838,7 +841,8 @@ class NotePopupMenu(Menu):
                                              settings=settings))
         self.appendMenu(_('&Toggle category'),
                         ToggleCategoryMenu(mainwindow, categories=categories,
-                                           viewer=noteViewer), 'category')
+                                           viewer=noteViewer),
+                        'folder_blue_arrow_icon')
         self.appendUICommands(
             None,
             uicommand.ViewExpandSelected(viewer=noteViewer),

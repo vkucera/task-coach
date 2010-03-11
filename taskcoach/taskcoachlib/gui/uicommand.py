@@ -681,7 +681,7 @@ class FileSynchronize(IOCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(FileSynchronize, self).__init__(menuText=_('S&yncML synchronization'),
             helpText=_('Synchronize with a SyncML server'),
-            bitmap='sync', *args, **kwargs)
+            bitmap='arrows_looped_icon', *args, **kwargs)
 
     def doCommand(self, event):
         password = wx.GetPasswordFromUser(_('Please enter your password:'), 
@@ -845,7 +845,7 @@ class EditPasteIntoTask(NeedsSelectedTasksMixin, ViewerCommand):
 class EditPreferences(SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(EditPreferences, self).__init__(menuText=_('Preferences...'),
-            helpText=_('Edit preferences'), bitmap='configure', 
+            helpText=_('Edit preferences'), bitmap='wrench_icon',
             id=wx.ID_PREFERENCES, *args, **kwargs)
             
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
@@ -857,7 +857,7 @@ class EditPreferences(SettingsCommand):
 class EditSyncPreferences(IOCommand):
     def __init__(self, *args, **kwargs):
         super(EditSyncPreferences, self).__init__(menuText=_('SyncML preferences...'),
-            helpText=_('Edit SyncML preferences'), bitmap='sync',
+            helpText=_('Edit SyncML preferences'), bitmap='arrows_looped_icon',
             *args, **kwargs)
 
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
@@ -1537,7 +1537,7 @@ class NoteToggleCategory(ToggleCategory):
 
 class MailItem(ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(MailItem, self).__init__(bitmap='email', *args, **kwargs)
+        super(MailItem, self).__init__(bitmap='envelope_icon', *args, **kwargs)
 
     def doCommand(self, event, mail=writeMail, showerror=wx.MessageBox): # pylint: disable-msg=W0221
         items = self.viewer.curselection()
@@ -1650,7 +1650,7 @@ class AttachmentAddNote(NeedsSelectedAttachmentsMixin, ViewerCommand, SettingsCo
 class AddAttachment(NeedsSelectionMixin, ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(AddAttachment, self).__init__(menuText=_('&Add attachment'),          
-            bitmap='attachment', *args, **kwargs)
+            bitmap='paperclip_icon', *args, **kwargs)
         
     def doCommand(self, event):
         filename = widgets.AttachmentSelector()
@@ -1695,7 +1695,7 @@ class OpenAllAttachments(NeedsSelectionWithAttachmentsMixin, ViewerCommand,
     def __init__(self, *args, **kwargs):
         super(OpenAllAttachments, self).__init__(\
            menuText=_('&Open all attachments'), 
-           bitmap='attachment', *args, **kwargs)
+           bitmap='paperclip_icon', *args, **kwargs)
         
     def doCommand(self, event, showerror=wx.MessageBox): # pylint: disable-msg=W0221
         attachmentBase = self.settings.get('file', 'attachmentbase')
@@ -1778,7 +1778,7 @@ class EffortStart(NeedsSelectedTasksMixin, ViewerCommand, TaskListCommand):
     ''' UICommand to start tracking effort for the selected task(s). '''
     
     def __init__(self, *args, **kwargs):
-        super(EffortStart, self).__init__(bitmap='start', 
+        super(EffortStart, self).__init__(bitmap='clock_icon',
             menuText=_('&Start tracking effort'), 
             helpText=_('Start tracking effort for the selected task(s)'), 
             *args, **kwargs)
@@ -2024,15 +2024,16 @@ class Help(DialogCommand):
             # Use a letter, because 'Ctrl-?' doesn't work on Windows:
             menuText = _('&Help contents\tCtrl+H')
         super(Help, self).__init__(menuText=menuText,
-            helpText=_('Help about the program'), bitmap='help', 
-            dialogTitle=_('Help'), dialogText=help.helpHTML, id=wx.ID_HELP, 
-            *args, **kwargs)
+            helpText=_('Help about the program'),
+            bitmap='led_blue_questionmark_icon', dialogTitle=_('Help'),
+            dialogText=help.helpHTML, id=wx.ID_HELP, *args, **kwargs)
 
 
 class Tips(SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(Tips, self).__init__(menuText=_('&Tips'),
-            helpText=_('Tips about the program'), bitmap='help', *args, **kwargs)
+            helpText=_('Tips about the program'),
+            bitmap='led_blue_questionmark_icon', *args, **kwargs)
 
     def doCommand(self, event):
         help.showTips(self.mainWindow(), self.settings)
@@ -2040,7 +2041,8 @@ class Tips(SettingsCommand):
 
 class InfoCommand(DialogCommand):
     def __init__(self, *args, **kwargs):
-        super(InfoCommand, self).__init__(bitmap='info', *args, **kwargs)
+        super(InfoCommand, self).__init__(bitmap='led_blue_information_icon',
+                                          *args, **kwargs)
     
     
 class HelpAbout(InfoCommand):
@@ -2201,7 +2203,7 @@ class CalendarViewerPreviousPeriod(ViewerCommand):
 class CalendarViewerToday(ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(CalendarViewerToday, self).__init__(menuText=_('&Today'),
-            helpText=_('Show today'), bitmap='date', *args, **kwargs)
+            helpText=_('Show today'), bitmap='calendar_icon', *args, **kwargs)
             
     def doCommand(self, event):
         self.viewer.freeze()

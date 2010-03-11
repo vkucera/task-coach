@@ -523,17 +523,22 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             icon = self.categorySelectedIcon() or self.__stateBasedIcon(selected=True)
         return icon
 
+    stateColorMap = (('completed', '_green'), ('overdue', '_red'),
+                     ('dueSoon', '_orange'), ('inactive', '_grey'))
+
     def __stateBasedIcon(self, selected=False):
         if self.isBeingTracked():
-            icon = 'start'
+            icon = 'clock'
         else:
-            icon = 'tasks' if self.children() else 'task'
-            for state in 'completed', 'overdue', 'dueSoon', 'inactive':
+            icon = 'folder' if self.children() else 'led'
+            for state, color in self.stateColorMap:
                 if getattr(self, state)():
-                    icon += '_' + state.lower()
+                    icon += color
                     break
+            else:
+                icon += '_blue'
             icon += '_open' if selected and self.children() else ''
-        return icon
+        return icon + '_icon'
     
     @classmethod
     def totalTimeSpentChangedEventType(class_):

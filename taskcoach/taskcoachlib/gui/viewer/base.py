@@ -37,16 +37,38 @@ class Viewer(wx.Panel):
     __metaclass__ = patterns.NumberedInstances
     defaultTitle = 'Subclass responsibility'
     defaultBitmap = 'Subclass responsibility'
-    viewerImages = ['task', 'task_inactive', 'task_completed', 'task_duesoon',
-                    'task_overdue', 'tasks', 'tasks_open', 'tasks_inactive',
-                    'tasks_inactive_open', 'tasks_completed',
-                    'tasks_completed_open', 'tasks_duesoon',
-                    'tasks_duesoon_open', 'tasks_overdue', 'tasks_overdue_open',
-                    'start', 'date', 'ascending', 'descending',
+    viewerImages = ['led_blue_icon',
+                    'led_grey_icon',
+                    'led_green_icon',
+                    'led_orange_icon',
+                    'led_red_icon',
+                    'folder_blue_icon',
+                    'folder_blue_open_icon',
+                    'folder_grey_icon',
+                    'folder_grey_open_icon',
+                    'folder_green_icon',
+                    'folder_green_open_icon',
+                    'folder_orange_icon',
+                    'folder_orange_open_icon',
+                    'folder_red_icon',
+                    'folder_red_open_icon',
+                    'ascending', 'descending',
                     'ascending_with_status', 'descending_with_status',
-                    'attachment', 'note', 'email', 'category', 'on', 'search',
-                    'description', 'budget', 'configure', 'language', 'colorize',
-                    'behavior', 'sync']
+                    'arrows_looped_icon',
+                    'calculator_icon',
+                    'calendar_icon',
+                    'checkmark_green_icon',
+                    'clock_icon',
+                    'cogwheel_icon',
+                    'envelope_icon',
+                    'folder_blue_arrow_icon',
+                    'magnifier_glass_icon',
+                    'note_icon',
+                    'palette_icon',
+                    'paperclip_icon',
+                    'pencil_icon',
+                    'people_talking_icon',
+                    'wrench_icon']
     
     def __init__(self, parent, taskFile, settings, *args, **kwargs):
         super(Viewer, self).__init__(parent, -1)
@@ -124,7 +146,11 @@ class Viewer(wx.Panel):
         imageList = wx.ImageList(*size) # pylint: disable-msg=W0142
         self.imageIndex = {} # pylint: disable-msg=W0201
         for index, image in enumerate(self.viewerImages):
-            imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, size))
+            try:
+                imageList.Add(wx.ArtProvider_GetBitmap(image, wx.ART_MENU, size))
+            except:
+                print image
+                raise
             self.imageIndex[image] = index
         return imageList
 
@@ -657,11 +683,11 @@ class ViewerWithColumns(Viewer): # pylint: disable-msg=W0223
             lines = description.split('\n')
             result.append((None, [line.rstrip('\n') for line in lines]))                            
         try:
-            result.append(('note', [note.subject() for note in item.notes()]))
+            result.append(('note_icon', [note.subject() for note in item.notes()]))
         except AttributeError:
             pass
         try:
-            result.append(('attachment', [unicode(attachment) for attachment in item.attachments()]))
+            result.append(('paperclip_icon', [unicode(attachment) for attachment in item.attachments()]))
         except AttributeError:
             pass
         return result

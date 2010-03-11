@@ -459,10 +459,10 @@ class AttachmentDropTargetMixin(object):
 
 class NoteColumnMixin(object):
     def noteImageIndex(self, item, which): # pylint: disable-msg=W0613
-        return self.imageIndex['note'] if item.notes() else -1
+        return self.imageIndex['note_icon'] if item.notes() else -1
     
 
 class AttachmentColumnMixin(object):    
     def attachmentImageIndex(self, item, which): # pylint: disable-msg=W0613
-        return self.imageIndex['attachment'] if item.attachments() else -1 
+        return self.imageIndex['paperclip_icon'] if item.attachments() else -1
 

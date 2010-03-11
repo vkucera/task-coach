@@ -145,7 +145,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
             width=self.getColumnWidth('attachments'),
             alignment=wx.LIST_FORMAT_LEFT,
             imageIndexCallback=self.attachmentImageIndex,
-            headerImageIndex=self.imageIndex['attachment'],
+            headerImageIndex=self.imageIndex['paperclip_icon'],
             renderCallback=lambda note: '')
         columns.insert(2, attachmentsColumn)
         return columns
@@ -165,7 +165,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
         if self.settings.getboolean('view', 'descriptionpopups'):
             lines = [line.rstrip('\r') for line in item.description().split('\n')] 
             result = [(None, lines)] if lines and lines != [''] else [] 
-            result.append(('attachment', [unicode(attachment) for attachment in item.attachments()]))
+            result.append(('paperclip_icon', [unicode(attachment) for attachment in item.attachments()]))
             return result
         else:
             return []

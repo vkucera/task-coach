@@ -36,7 +36,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                          base.SortableViewerWithColumns, base.TreeViewer):
     SorterClass = category.CategorySorter
     defaultTitle = _('Categories')
-    defaultBitmap = 'category'
+    defaultBitmap = 'folder_blue_arrow_icon'
     
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'categoryviewer')
@@ -100,7 +100,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                        width=self.getColumnWidth('attachments'),
                        alignment=wx.LIST_FORMAT_LEFT,
                        imageIndexCallback=self.attachmentImageIndex,
-                       headerImageIndex=self.imageIndex['attachment'],
+                       headerImageIndex=self.imageIndex['paperclip_icon'],
                        renderCallback=lambda category: '', **kwargs)]
         if self.settings.getboolean('feature', 'notes'):
             columns.append(widgets.Column('notes', '', 
@@ -108,7 +108,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                        width=self.getColumnWidth('notes'),
                        alignment=wx.LIST_FORMAT_LEFT,
                        imageIndexCallback=self.noteImageIndex,
-                       headerImageIndex=self.imageIndex['note'],
+                       headerImageIndex=self.imageIndex['note_icon'],
                        renderCallback=lambda category: '', **kwargs))
         return columns
 

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,11 +27,11 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         self.__matchCase = kwargs.pop('matchCase', False)
         self.__includeSubItems = kwargs.pop('includeSubItems', False)
         self.__searchDescription = kwargs.pop('searchDescription', False)
-        size = kwargs.pop('size', (16, 16))
+        self.__bitmapSize = kwargs.pop('size', (16, 16))
         super(SearchCtrl, self).__init__(*args, **kwargs)
-        self.SetSearchMenuBitmap(wx.ArtProvider_GetBitmap('searchmenu', wx.ART_TOOLBAR, size))
-        self.SetSearchBitmap(wx.ArtProvider_GetBitmap('search', wx.ART_TOOLBAR, size))
-        self.SetCancelBitmap(wx.ArtProvider_GetBitmap('cancel', wx.ART_TOOLBAR, size))
+        self.SetSearchMenuBitmap(self.getBitmap('magnifier_glass_dropdown_icon'))
+        self.SetSearchBitmap(self.getBitmap('magnifier_glass_icon'))
+        self.SetCancelBitmap(self.getBitmap('cross_red_icon'))
         self.__timer = wx.Timer(self)
         self.__recentSearches = []
         self.__maxRecentSearches = 5
@@ -42,6 +42,10 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         
     def GetMainWindow(self):
         return self
+
+    def getBitmap(self, bitmap):
+        return wx.ArtProvider_GetBitmap(bitmap, wx.ART_TOOLBAR,
+                                        self.__bitmapSize)
 
     def createMenu(self):
         menu = wx.Menu()
@@ -177,10 +181,7 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
     def Enable(self, enable=True):
         ''' When wx.SearchCtrl is disabled it doesn't grey out the buttons,
             so we remove those. '''
-        if enable:
-            self.SetValue('')
-        else:
-            self.SetValue(_('Viewer not searchable'))
+        self.SetValue('' if enable else _('Viewer not searchable'))
         super(SearchCtrl, self).Enable(enable)
         self.ShowCancelButton(enable and bool(self.GetValue()))
         self.ShowSearchButton(enable)
