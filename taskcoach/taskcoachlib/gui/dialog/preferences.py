@@ -360,11 +360,11 @@ class Preferences(widgets.ListbookDialog):
             (WindowBehaviorPage(parent=self._interior, columns=3, settings=self.settings), _('Window behavior'), 'windows'),
             (TaskBehaviorPage(parent=self._interior, columns=3, settings=self.settings), _('Task behavior'), 'cogwheel_icon'),
             (SavePage(parent=self._interior, columns=3, settings=self.settings), _('Files'), 'save'),
-            (LanguagePage(parent=self._interior, columns=3, settings=self.settings), _('Language'), 'people_talking_icon'),
+            (LanguagePage(parent=self._interior, columns=3, settings=self.settings), _('Language'), 'person_talking_icon'),
             (ColorsPage(parent=self._interior, columns=1, settings=self.settings, growableColumn=-1), _('Colors'), 'palette_icon'),
             (FeaturesPage(parent=self._interior, columns=3, settings=self.settings), _('Features'), 'cogwheel_icon')]
         if self.settings.getboolean('feature', 'iphone'):
-            pages.append((IPhonePage(parent=self._interior, columns=3, settings=self.settings), _('iPhone'), 'iphone'))
+            pages.append((IPhonePage(parent=self._interior, columns=3, settings=self.settings), _('iPhone'), 'pda_icon'))
         if '__WXMAC__' in wx.PlatformInfo:
             pages.append((EditorPage(parent=self._interior, columns=2, settings=self.settings), _('Editor'), 'edit'))
         for page, title, bitmap in pages:

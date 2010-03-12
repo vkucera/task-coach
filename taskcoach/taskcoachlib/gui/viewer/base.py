@@ -37,11 +37,22 @@ class Viewer(wx.Panel):
     __metaclass__ = patterns.NumberedInstances
     defaultTitle = 'Subclass responsibility'
     defaultBitmap = 'Subclass responsibility'
-    viewerImages = ['led_blue_icon',
-                    'led_grey_icon',
-                    'led_green_icon',
-                    'led_orange_icon',
-                    'led_red_icon',
+    viewerImages = ['arrow_down_icon',
+                    'arrow_down_with_status_icon',
+                    'arrow_up_icon',
+                    'arrow_up_with_status_icon',
+                    'arrows_looped_icon',
+                    'calculator_icon',
+                    'calendar_icon',
+                    'checkmark_green_icon',
+                    'clock_icon',
+                    'clock_alarm',
+                    'clock_stopwatch_icon',
+                    'cogwheel_icon',
+                    'cross_red_icon',
+                    'earth_blue_icon',
+                    'envelope_icon',
+                    'folder_blue_arrow_icon',
                     'folder_blue_icon',
                     'folder_blue_open_icon',
                     'folder_grey_icon',
@@ -52,22 +63,24 @@ class Viewer(wx.Panel):
                     'folder_orange_open_icon',
                     'folder_red_icon',
                     'folder_red_open_icon',
-                    'ascending', 'descending',
-                    'ascending_with_status', 'descending_with_status',
-                    'arrows_looped_icon',
-                    'calculator_icon',
-                    'calendar_icon',
-                    'checkmark_green_icon',
-                    'clock_icon',
-                    'cogwheel_icon',
-                    'envelope_icon',
-                    'folder_blue_arrow_icon',
+                    'heart_icon',
+                    'led_blue_icon',
+                    'led_blue_questionmark_icon',
+                    'led_blue_information_icon',
+                    'led_grey_icon',
+                    'led_green_icon',
+                    'led_orange_icon',
+                    'led_red_icon',
                     'magnifier_glass_icon',
                     'note_icon',
                     'palette_icon',
+                    'pda_icon',
                     'paperclip_icon',
                     'pencil_icon',
-                    'people_talking_icon',
+                    'person_id_icon',
+                    'person_talking_icon',
+                    'sign_warning_icon',
+                    'trashcan_icon',
                     'wrench_icon']
     
     def __init__(self, parent, taskFile, settings, *args, **kwargs):
@@ -740,8 +753,8 @@ class SortableViewerWithColumns(mixin.SortableViewerMixin, ViewerWithColumns): #
                 break
 
     def showSortOrder(self):
-        self.widget.showSortOrder(self.imageIndex[self.getSortOrderImageIndex()])
+        self.widget.showSortOrder(self.imageIndex[self.getSortOrderImage()])
         
-    def getSortOrderImageIndex(self):
-        return 'ascending' if self.isSortOrderAscending() else 'descending'
+    def getSortOrderImage(self):
+        return 'arrow_up_icon' if self.isSortOrderAscending() else 'arrow_down_icon'
 

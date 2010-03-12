@@ -36,7 +36,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
                      base.UpdatePerSecondViewer, base.TreeViewer, 
                      patterns.Observer):
     defaultTitle = _('Tasks')
-    defaultBitmap = 'task'
+    defaultBitmap = 'led_blue_icon'
     
     def __init__(self, *args, **kwargs):
         super(BaseTaskViewer, self).__init__(*args, **kwargs)
@@ -874,11 +874,11 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
         super(TaskViewer, self).setSortByTaskStatusFirst(*args, **kwargs)
         self.showSortOrder()
         
-    def getSortOrderImageIndex(self):
-        sortOrderImageIndex = super(TaskViewer, self).getSortOrderImageIndex()
+    def getSortOrderImage(self):
+        sortOrderImage = super(TaskViewer, self).getSortOrderImage()
         if self.isSortByTaskStatusFirst():
-            sortOrderImageIndex += '_with_status' 
-        return sortOrderImageIndex
+            sortOrderImage = sortOrderImage.rstrip('icon') + 'with_status_icon'
+        return sortOrderImage
 
     def setSearchFilter(self, searchString, *args, **kwargs): # pylint: disable-msg=W0221
         super(TaskViewer, self).setSearchFilter(searchString, *args, **kwargs)

@@ -130,9 +130,9 @@ class SyncMLPreferences(widgets.ListbookDialog):
         self.SetMinSize((300, 300))
         kwargs = dict(parent=self._interior, columns=3,
                       iocontroller=self.iocontroller)
-        pages = [(SyncMLAccessPage(growableColumn=1, **kwargs), _('Access'), 'access'),
+        pages = [(SyncMLAccessPage(growableColumn=1, **kwargs), _('Access'), 'earth_blue_icon'),
                  (SyncMLTaskPage(**kwargs), _('Tasks'), 'taskcoach'),
-                 (SyncMLNotePage(**kwargs), _('Notes'), 'note')]
+                 (SyncMLNotePage(**kwargs), _('Notes'), 'note_icon')]
 
         for page, title, bitmap in pages:
             self._interior.AddPage(page, title, bitmap=bitmap)

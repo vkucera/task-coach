@@ -34,8 +34,7 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.ViewerWithColumns,
                        mixin.SearchableViewerMixin, mixin.NoteColumnMixin,
                        base.ListViewer):
     SorterClass = attachment.AttachmentSorter
-    viewerImages = base.ListViewer.viewerImages + ['earth_blue_icon',
-                   'fileopen', 'fileopen_red']
+    viewerImages = base.ListViewer.viewerImages + ['fileopen', 'fileopen_red']
 
     def __init__(self, *args, **kwargs):
         self.attachments = kwargs.pop('attachmentsToShow')

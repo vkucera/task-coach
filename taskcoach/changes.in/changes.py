@@ -23,10 +23,11 @@ from changetypes import *
 
 releases = [
 
-Release('0.79.0', 'March 7, 2010',
-    summary='''This release adds a calendar viewer for tasks and partial
-drag and drop support for Mail.app under Leopard and Snow Leopard, and
-fixes a few bugs.''',
+Release('1.0.0', 'March 13, 2010',
+    summary='''To mark that Task Coach has been available for five years
+now, we call this release version 1.0. This release adds a calendar viewer
+for tasks, partial drag and drop support for Mail.app under Leopard and
+Snow Leopard, and configurable icons.''',
     featuresAdded=[
         Feature('''Calendar viewer for tasks''', 
                 'http://uservoice.com/a/iQI4g'),
@@ -35,6 +36,7 @@ Leopard.''', 'http://uservoice.com/a/niJMS'),
         Feature('''The square map task viewer can also display tasks by
 priority. Note that tasks with negative priorities are not displayed.''',
         'http://uservoice.com/a/kxeoS'),
+        Feature('''The icons of tasks, notes, and categories can be changed.''')
         ],
     bugsFixed=[
         Bug('''The template pop-up menu in task viewers would not show up

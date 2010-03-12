@@ -314,12 +314,18 @@ class AppearancePage(Page, widgets.BookPage):
     def addIconEntry(self):
         self._iconEntry = wx.combo.BitmapComboBox(self, style=wx.CB_READONLY)
         size = (16, 16)
-        images = dict(arrows_looped_icon=_('Arrows looped'),
+        images = dict(arrow_up_icon=_('Arrow up'),
+                      arrow_down_icon=_('Arrow down'),
+                      arrows_looped_icon=_('Arrows looped'),
                       calculator_icon=_('Calculator'),
                       calendar_icon=_('Calendar'),
                       checkmark_green_icon=_('Check mark'),
                       clock_icon=_('Clock'),
+                      clock_alarm=_('Alarm clock'),
+                      clock_stopwatch_icon=_('Stopwatch'),
                       cogwheel_icon=_('Cogwheel'),
+                      cross_red_icon=_('Red cross'),
+                      earth_blue_icon=_('Earth'),
                       envelope_icon=_('Envelope'),
                       folder_blue_icon=_('Blue folder'),
                       folder_green_icon=_('Green folder'),
@@ -327,6 +333,7 @@ class AppearancePage(Page, widgets.BookPage):
                       folder_orange_icon=_('Orange folder'),
                       folder_red_icon=('Red folder'),
                       folder_blue_arrow_icon=_('Blue folder with arrow'),
+                      heart_icon=_('Heart'),
                       led_blue_questionmark_icon=_('Question mark'),
                       led_blue_information_icon=_('Information'),
                       led_blue_icon=_('Blue led'),
@@ -338,8 +345,12 @@ class AppearancePage(Page, widgets.BookPage):
                       note_icon=_('Note'),
                       palette_icon=_('Palette'),
                       paperclip_icon=_('Paperclip'),
+                      pda_icon=_('Handheld computer'),
                       pencil_icon=_('Pencil'),
-                      people_talking_icon=_('People talking'),
+                      person_id_icon=_('Identification'),
+                      person_talking_icon=_('Person talking'),
+                      sign_warning_icon=_('Warning sign'),
+                      trashcan_icon=_('Trashcan'),
                       wrench_icon=_('Wrench'))
         images[''] = _('No icon')
         for imageName in sorted(images.keys()):

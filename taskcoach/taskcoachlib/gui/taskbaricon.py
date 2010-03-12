@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 João Alexandre de Toledo <jtoledo@griffo.com.br>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -28,8 +28,8 @@ import artprovider
         
 class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
     def __init__(self, mainwindow, taskList, settings, 
-            defaultBitmap='taskcoach', tickBitmap='tick', tackBitmap='tack', 
-            *args, **kwargs):
+            defaultBitmap='taskcoach', tickBitmap='clock_icon',
+            tackBitmap='clock_stopwatch_icon', *args, **kwargs):
         super(TaskBarIcon, self).__init__(*args, **kwargs)
         self.__window = mainwindow
         self.__taskList = taskList
@@ -146,9 +146,10 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
         if trackedTasks:
             count = len(trackedTasks)
             if count == 1:
-                textParts.append(_('tracking "%s"')%trackedTasks[0].subject())
+                tracking = _('tracking "%s"')%trackedTasks[0].subject()
             else:
-                textParts.append(_('tracking effort for %d tasks')%count)
+                tracking = _('tracking effort for %d tasks')%count
+            textParts.append(tracking)
         else:
             for getCountMethodName, singular, plural in self.toolTipMessages:
                 count = getattr(self.__taskList, getCountMethodName)()
@@ -168,10 +169,8 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
         self.__bitmap = self.__defaultBitmap
 
     def __toggleTrackingBitmap(self):
-        if self.__bitmap == self.__tickBitmap:
-            self.__bitmap = self.__tackBitmap
-        else:
-            self.__bitmap = self.__tickBitmap
+        tick, tack = self.__tickBitmap, self.__tackBitmap
+        self.__bitmap = tack if self.__bitmap == tick else tick
 
     def __setIcon(self):
         icon = artprovider.getIcon(self.__bitmap)

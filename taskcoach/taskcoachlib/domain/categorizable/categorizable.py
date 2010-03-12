@@ -75,6 +75,8 @@ class CategorizableCompositeObject(base.CompositeObject):
             self.backgroundColorChangedEvent(event)
         if not self.font(recursive=False) and any(category.font(recursive=True) for category in categories):
             self.fontChangedEvent(event)
+        if not self.icon(recursive=False) and any(category.icon(recursive=True) for category in categories):
+            self.iconChangedEvent(event)
 
     @classmethod
     def categoryRemovedEventType(class_):
@@ -94,6 +96,8 @@ class CategorizableCompositeObject(base.CompositeObject):
             self.backgroundColorChangedEvent(event)
         if not self.font(recursive=False) and any(category.font(recursive=True) for category in categories):
             self.fontChangedEvent(event)
+        if not self.icon(recursive=False) and any(category.icon(recursive=True) for category in categories):
+            self.iconChangedEvent(event)
             
     def setCategories(self, categories, event=None):
         self.__categories.set(set(categories), event)

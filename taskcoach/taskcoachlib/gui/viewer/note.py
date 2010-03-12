@@ -35,7 +35,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
                      base.SortableViewerWithColumns, base.TreeViewer):
     SorterClass = note.NoteSorter
     defaultTitle = _('Notes')
-    defaultBitmap = 'note'
+    defaultBitmap = 'note_icon'
     
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'noteviewer')

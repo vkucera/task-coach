@@ -1818,7 +1818,7 @@ class EffortStartForTask(TaskListCommand):
 class EffortStartButton(PopupButtonMixin, TaskListCommand):
     def __init__(self, *args, **kwargs):
         kwargs['taskList'] = base.filter.DeletedFilter(kwargs['taskList'])
-        super(EffortStartButton, self).__init__(bitmap='startmenu',
+        super(EffortStartButton, self).__init__(bitmap='clock_menu_icon',
             menuText=_('&Start tracking effort'),
             helpText=_('Select a task via the menu and start tracking effort for it'),
             *args, **kwargs)
@@ -1833,7 +1833,7 @@ class EffortStartButton(PopupButtonMixin, TaskListCommand):
 
 class EffortStop(TaskListCommand):
     def __init__(self, *args, **kwargs):
-        super(EffortStop, self).__init__(bitmap='stop',
+        super(EffortStop, self).__init__(bitmap='clock_stop_icon',
             menuText=_('St&op tracking effort'),
             helpText=_('Stop tracking effort for the active task(s)'), 
             *args, **kwargs)
