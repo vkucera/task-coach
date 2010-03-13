@@ -25,7 +25,7 @@ import wx
 from taskcoachlib import patterns, widgets, command
 from taskcoachlib.domain import date
 from taskcoachlib.i18n import _
-from taskcoachlib.gui import uicommand, toolbar
+from taskcoachlib.gui import uicommand, toolbar, artprovider
 from taskcoachlib.thirdparty import hypertreelist
 import mixin
 
@@ -37,70 +37,8 @@ class Viewer(wx.Panel):
     __metaclass__ = patterns.NumberedInstances
     defaultTitle = 'Subclass responsibility'
     defaultBitmap = 'Subclass responsibility'
-    viewerImages = ['arrow_down_icon',
-                    'arrow_down_with_status_icon',
-                    'arrow_up_icon',
-                    'arrow_up_with_status_icon',
-                    'arrows_looped_icon',
-                    'book_icon', 'books_icon',
-                    'bug_icon',
-                    'calculator_icon',
-                    'calendar_icon',
-                    'checkmark_green_icon',
-                    'clock_icon',
-                    'clock_alarm',
-                    'clock_stopwatch_icon',
-                    'cogwheel_icon',
-                    'computer_desktop_icon',
-                    'computer_laptop_icon',
-                    'computer_handheld_icon',
-                    'cross_red_icon',
-                    'earth_blue_icon',
-                    'earth_green_icon',
-                    'envelope_icon',
-                    'folder_blue_arrow_icon',
-                    'folder_blue_icon',
-                    'folder_blue_open_icon',
-                    'folder_grey_icon',
-                    'folder_grey_open_icon',
-                    'folder_green_icon',
-                    'folder_green_open_icon',
-                    'folder_orange_icon',
-                    'folder_orange_open_icon',
-                    'folder_red_icon',
-                    'folder_red_open_icon',
-                    'heart_icon',
-                    'hearts_icon',
-                    'house_green_icon',
-                    'house_red_icon',
-                    'led_blue_icon',
-                    'led_blue_light_icon',
-                    'led_blue_questionmark_icon',
-                    'led_blue_information_icon',
-                    'led_grey_icon',
-                    'led_green_icon',
-                    'led_green_light_icon',
-                    'led_orange_icon',
-                    'led_purple_icon',
-                    'led_red_icon',
-                    'led_yellow_icon',
-                    'magnifier_glass_icon',
-                    'note_icon',
-                    'palette_icon',
-                    'paperclip_icon',
-                    'pencil_icon',
-                    'person_icon', 'persons_icon',
-                    'person_id_icon',
-                    'person_talking_icon',
-                    'symbol_plus_icon',
-                    'symbol_minus_icon',
-                    'sign_warning_icon',
-                    'star_red_icon', 'star_yellow_icon',
-                    'trashcan_icon',
-                    'weather_lightning_icon',
-                    'weather_umbrella_icon',
-                    'weather_sunny_icon',
-                    'wrench_icon']
+    viewerImages = artprovider.itemImages.keys()
+    viewerImages.remove('')
     
     def __init__(self, parent, taskFile, settings, *args, **kwargs):
         super(Viewer, self).__init__(parent, -1)

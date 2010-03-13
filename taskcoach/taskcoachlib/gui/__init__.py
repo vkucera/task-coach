@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2008 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,5 +22,5 @@ from dialog.editor import TaskEditor, EffortEditor, CategoryEditor
 from dialog.preferences import Preferences
 from iocontroller import IOController
 from remindercontroller import ReminderController
-from artprovider import init
+from artprovider import init, itemImages
 from taskbaricon import TaskBarIcon
