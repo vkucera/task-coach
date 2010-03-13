@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from clean import clean
 from bdist_rpm_fedora import bdist_rpm_fedora
+from bdist_rpm_opensuse import bdist_rpm_opensuse
 from bdist_deb import bdist_deb
 from bdist_winpenpack import bdist_winpenpack
 from bdist_portableapps import bdist_portableapps

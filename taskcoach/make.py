@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -20,12 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import meta
 import sys, os, glob, wx
 from setup import setupOptions
-from buildlib import clean, bdist_rpm_fedora, bdist_deb, bdist_winpenpack, \
-    bdist_portableapps
+from buildlib import (clean, bdist_rpm_fedora, bdist_rpm_opensuse,
+    bdist_deb, bdist_winpenpack, bdist_portableapps)
 
 
 setupOptions['cmdclass'] = dict(clean=clean,
                                 bdist_rpm_fedora=bdist_rpm_fedora,
+                                bdist_rpm_opensuse=bdist_rpm_opensuse,
                                 bdist_deb=bdist_deb,
                                 bdist_winpenpack=bdist_winpenpack,
                                 bdist_portableapps=bdist_portableapps)
@@ -123,6 +124,14 @@ elif sys.argv[1] == 'bdist_rpm_fedora':
     # On Fedora, to keep the rpm build process going when it finds 
     # unpackaged files you need to create a ~/.rpmmacros file 
     # containing the line '%_unpackaged_files_terminate_build 0'.
+
+elif sys.argv[1] == 'bdist_rpm_opensuse':
+    from distutils.core import setup
+    spec_file = file('build.in/opensuse/taskcoach.spec').read()%meta.metaDict
+    spec_file = spec_file.split('\n')
+    setupOptions.update(dict(options=dict(bdist_rpm_opensuse=dict(\
+        spec_file=spec_file, icon='icons.in/taskcoach.png', 
+        desktop_file='build.in/opensuse/taskcoach.desktop'))))
 
 elif sys.argv[1] == 'bdist_deb':
     from distutils.core import setup

@@ -1,5 +1,5 @@
 # Task Coach - Your friendly task manager
-# Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+# Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 # 
 # Task Coach is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -58,6 +58,9 @@ rpm: prepare
 
 fedora: prepare changes
 	$(PYTHON) make.py bdist_rpm_fedora 
+
+opensuse: prepare changes
+	$(PYTHON) make.py bdist_rpm_opensuse 
 
 deb: sdist
 	$(PYTHON) make.py bdist_deb --sdist=dist/TaskCoach-$(TCVERSION).tar.gz --sdist-exclude="taskcoachlib/bin.in/windows,taskcoachlib/bin.in/macos"

@@ -220,6 +220,14 @@ gentoo = download_table(image='gentoo',
                         prerequisites=prerequisites,
                         installation='%(name)s is included in Gentoo Portage. Install with emerge: <tt>$ emerge taskcoach</tt>')
 
+opensuse = download_table(image='opensuse',
+                          download_url='(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.opensuse.noarch.rpm',
+                          package_type='RPM package',
+                          platform='OpenSuse', platform_lower='opensuse',
+                          platform_versions_supported='OpenSuse 11.2',
+                          prerequisites=prerequisites,
+                          installation='double click the package to start the installer')
+
 fedora8 = download_table(image='fedora',
                          download_url='%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.fc8.noarch.rpm',
                          package_type='RPM package',
@@ -246,7 +254,7 @@ linux = download_table(image='linux',
 
 pages['download_for_linux'] = sep.join([download_header(platform='Linux',
                                                         release='%(version)s'), 
-                                        debian, ubuntu, gentoo,
+                                        debian, ubuntu, gentoo, opensuse,
                                         fedora8, fedora11, linux])
 
 
