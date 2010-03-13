@@ -364,7 +364,7 @@ class Preferences(widgets.ListbookDialog):
             (ColorsPage(parent=self._interior, columns=1, settings=self.settings, growableColumn=-1), _('Colors'), 'palette_icon'),
             (FeaturesPage(parent=self._interior, columns=3, settings=self.settings), _('Features'), 'cogwheel_icon')]
         if self.settings.getboolean('feature', 'iphone'):
-            pages.append((IPhonePage(parent=self._interior, columns=3, settings=self.settings), _('iPhone'), 'pda_icon'))
+            pages.append((IPhonePage(parent=self._interior, columns=3, settings=self.settings), _('iPhone'), 'computer_handheld_icon'))
         if '__WXMAC__' in wx.PlatformInfo:
             pages.append((EditorPage(parent=self._interior, columns=2, settings=self.settings), _('Editor'), 'edit'))
         for page, title, bitmap in pages:

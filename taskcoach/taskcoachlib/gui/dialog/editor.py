@@ -310,55 +310,78 @@ class AppearancePage(Page, widgets.BookPage):
         if self._fontButton.GetSelectedColour() != self._fgColorButton.GetColour():
             self._fgColorCheckBox.SetValue(True)
             self._fgColorButton.SetColour(self._fontButton.GetSelectedColour())
-    
+
+    images = dict(arrow_up_icon=_('Arrow up'),
+                  arrow_down_icon=_('Arrow down'),
+                  arrows_looped_icon=_('Arrows looped'),
+                  book_icon=_('Book'),
+                  books_icon=_('Books'),
+                  bug_icon=_('Ladybug'),
+                  calculator_icon=_('Calculator'),
+                  calendar_icon=_('Calendar'),
+                  checkmark_green_icon=_('Check mark'),
+                  clock_icon=_('Clock'),
+                  clock_alarm=_('Alarm clock'),
+                  clock_stopwatch_icon=_('Stopwatch'),
+                  cogwheel_icon=_('Cogwheel'),
+                  computer_desktop_icon=_('Desktop computer'),
+                  computer_laptop_icon=('Laptop computer'),
+                  computer_handheld_icon=_('Handheld computer'),
+                  cross_red_icon=_('Red cross'),
+                  earth_blue_icon=_('Blue earth'),
+                  earth_green_icon=_('Green earth'),
+                  envelope_icon=_('Envelope'),
+                  folder_blue_icon=_('Blue folder'),
+                  folder_green_icon=_('Green folder'),
+                  folder_grey_icon=('Grey folder'),
+                  folder_orange_icon=_('Orange folder'),
+                  folder_red_icon=('Red folder'),
+                  folder_blue_arrow_icon=_('Blue folder with arrow'),
+                  heart_icon=_('Heart'),
+                  hearts_icon=_('Hearts'),
+                  house_green_icon=_('Green house'),
+                  house_red_icon=_('Red house'),
+                  led_blue_questionmark_icon=_('Question mark'),
+                  led_blue_information_icon=_('Information'),
+                  led_blue_icon=_('Blue led'),
+                  led_blue_light_icon=_('Light blue led'),
+                  led_grey_icon=_('Grey led'),
+                  led_green_icon=_('Green led'),
+                  led_green_light_icon=_('Light green led'),
+                  led_orange_icon=_('Orange led'),
+                  led_purple_icon=_('Purple led'),
+                  led_red_icon=_('Red led'),
+                  led_yellow_icon=_('Yellow led'),
+                  magnifier_glass_icon=_('Magnifier glass'),
+                  note_icon=_('Note'),
+                  palette_icon=_('Palette'),
+                  paperclip_icon=_('Paperclip'),
+                  pencil_icon=_('Pencil'),
+                  person_icon=_('Person'),
+                  persons_icon=('People'),
+                  person_id_icon=_('Identification'),
+                  person_talking_icon=_('Person talking'),
+                  sign_warning_icon=_('Warning sign'),
+                  symbol_minus_icon=_('Minus'),
+                  symbol_plus_icon=_('Plus'),
+                  star_red_icon=_('Red star'),
+                  star_yellow_icon=_('Yellow star'),
+                  trashcan_icon=_('Trashcan'),
+                  weather_lightning_icon=_('Lightning'),
+                  weather_umbrella_icon=_('Umbrella'),
+                  weather_sunny_icon=_('Partly sunny'),
+                  wrench_icon=_('Wrench'))
+    images[''] = _('No icon')
+
     def addIconEntry(self):
         self._iconEntry = wx.combo.BitmapComboBox(self, style=wx.CB_READONLY)
         size = (16, 16)
-        images = dict(arrow_up_icon=_('Arrow up'),
-                      arrow_down_icon=_('Arrow down'),
-                      arrows_looped_icon=_('Arrows looped'),
-                      calculator_icon=_('Calculator'),
-                      calendar_icon=_('Calendar'),
-                      checkmark_green_icon=_('Check mark'),
-                      clock_icon=_('Clock'),
-                      clock_alarm=_('Alarm clock'),
-                      clock_stopwatch_icon=_('Stopwatch'),
-                      cogwheel_icon=_('Cogwheel'),
-                      cross_red_icon=_('Red cross'),
-                      earth_blue_icon=_('Earth'),
-                      envelope_icon=_('Envelope'),
-                      folder_blue_icon=_('Blue folder'),
-                      folder_green_icon=_('Green folder'),
-                      folder_grey_icon=('Grey folder'),
-                      folder_orange_icon=_('Orange folder'),
-                      folder_red_icon=('Red folder'),
-                      folder_blue_arrow_icon=_('Blue folder with arrow'),
-                      heart_icon=_('Heart'),
-                      led_blue_questionmark_icon=_('Question mark'),
-                      led_blue_information_icon=_('Information'),
-                      led_blue_icon=_('Blue led'),
-                      led_grey_icon=_('Grey led'),
-                      led_green_icon=_('Green led'),
-                      led_orange_icon=_('Orange led'),
-                      led_red_icon=_('Red led'),
-                      magnifier_glass_icon=('Magnifier glass'),
-                      note_icon=_('Note'),
-                      palette_icon=_('Palette'),
-                      paperclip_icon=_('Paperclip'),
-                      pda_icon=_('Handheld computer'),
-                      pencil_icon=_('Pencil'),
-                      person_id_icon=_('Identification'),
-                      person_talking_icon=_('Person talking'),
-                      sign_warning_icon=_('Warning sign'),
-                      trashcan_icon=_('Trashcan'),
-                      wrench_icon=_('Wrench'))
-        images[''] = _('No icon')
-        for imageName in sorted(images.keys()):
+        for imageName in sorted(self.images.keys()):
             bitmap = wx.ArtProvider_GetBitmap(imageName, wx.ART_MENU, size)
-            self._iconEntry.Append(images[imageName], bitmap, 
+            self._iconEntry.Append(self.images[imageName], bitmap,
                                    clientData=imageName)
         icon = self.item.icon()
-        currentSelectionIndex = sorted(images.keys()).index(icon)
+        currentSelectionIndex = sorted(self.images.keys()).index(icon)
         self._iconEntry.SetSelection(currentSelectionIndex)
         self.addEntry(_('Icon'), self._iconEntry, flags=[None, wx.ALL|wx.EXPAND])
 

@@ -1017,7 +1017,7 @@ class ViewExpandAll(NeedsTreeViewerMixin, ViewerCommand):
 
 class ViewExpandSelected(NeedsSelectionMixin, NeedsTreeViewerMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(ViewExpandSelected, self).__init__(bitmap='viewexpand',
+        super(ViewExpandSelected, self).__init__(bitmap='symbol_plus_icon',
             menuText=_('E&xpand'), helpText=_('Expand the selected item(s)'),
             *args, **kwargs)
     
@@ -1045,7 +1045,7 @@ class ViewCollapseAll(NeedsTreeViewerMixin, ViewerCommand):
 
 class ViewCollapseSelected(NeedsTreeViewerMixin, NeedsSelectionMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(ViewCollapseSelected, self).__init__(bitmap='viewcollapse',
+        super(ViewCollapseSelected, self).__init__(bitmap='symbol_minus_icon',
             menuText=_('C&ollapse'),
             helpText=_('Collapse the selected items with subitems'), 
             *args, **kwargs)
