@@ -88,6 +88,7 @@
 		A6B264D00FDBCB9400FF2AD0 /* DateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6B264CF0FDBCB9400FF2AD0 /* DateCell.m */; };
 		A6B264DD0FDBCBFE00FF2AD0 /* DateCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6B264DC0FDBCBFE00FF2AD0 /* DateCell.xib */; };
 		A6B7A5B30FA45E110067B76A /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = A6B7A5B20FA45E110067B76A /* iTunesArtwork */; };
+		A6BD9AB7114CD1B500AC781C /* SubcategoriesSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = A6BD9AB6114CD1B500AC781C /* SubcategoriesSelector.m */; };
 		A6C30BEB0F48218C00A04E7C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = A6C30BEA0F48218C00A04E7C /* Default.png */; };
 		A6C3CEF810E76C8C00483057 /* ButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C3CEF710E76C8C00483057 /* ButtonCell.m */; };
 		A6C3CEFA10E76CB600483057 /* ButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6C3CEF910E76CB600483057 /* ButtonCell.xib */; };
@@ -265,6 +266,8 @@
 		A6B264CF0FDBCB9400FF2AD0 /* DateCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateCell.m; sourceTree = "<group>"; };
 		A6B264DC0FDBCBFE00FF2AD0 /* DateCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DateCell.xib; sourceTree = SOURCE_ROOT; };
 		A6B7A5B20FA45E110067B76A /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
+		A6BD9AB5114CD1B500AC781C /* SubcategoriesSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubcategoriesSelector.h; sourceTree = "<group>"; };
+		A6BD9AB6114CD1B500AC781C /* SubcategoriesSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubcategoriesSelector.m; sourceTree = "<group>"; };
 		A6C30BEA0F48218C00A04E7C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		A6C3CEF610E76C8C00483057 /* ButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonCell.h; sourceTree = "<group>"; };
 		A6C3CEF710E76C8C00483057 /* ButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ButtonCell.m; sourceTree = "<group>"; };
@@ -594,6 +597,8 @@
 				A68EDEE10F1E212A00F51FF2 /* Statement.m */,
 				A6DDF84E0F1F974000F35108 /* TaskList.h */,
 				A6DDF84F0F1F974000F35108 /* TaskList.m */,
+				A6BD9AB5114CD1B500AC781C /* SubcategoriesSelector.h */,
+				A6BD9AB6114CD1B500AC781C /* SubcategoriesSelector.m */,
 			);
 			name = Database;
 			sourceTree = "<group>";
@@ -836,6 +841,7 @@
 				A6CFB5B21109C691004DB892 /* TwoWayModifiedEffortsState.m in Sources */,
 				A61AA5C01114304900AA1E38 /* EffortView.m in Sources */,
 				A6E7C0801114418D00B230E2 /* AlertPrompt.m in Sources */,
+				A6BD9AB7114CD1B500AC781C /* SubcategoriesSelector.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
