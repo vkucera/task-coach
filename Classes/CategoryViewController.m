@@ -193,7 +193,8 @@
 	[super fillCell:cell forCategory:category];
 
 	cell.textLabel.text = [category name];
-	cell.badge.text = [NSString stringWithFormat:@"%d", [category countForTable:@"AllTask"]];
+	// XXXFIXME
+	/* cell.badge.text = [NSString stringWithFormat:@"%d", [category countForTable:@"AllTask"]];
 	cell.badge.capsuleColor = [UIColor blackColor];
 
 	NSInteger count;
@@ -202,7 +203,7 @@
 	if (count)
 	{
 		[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", count] capsuleColor:[UIColor orangeColor]];
-	}
+	} */
 }
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated
@@ -406,13 +407,14 @@
 			cell.textLabel.text = _("All");
 			[cell.badge clearAnnotations];
 
-			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM AllTask WHERE completionDate IS NULL AND parentId IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
+			// XXXFIXME
+			/* [[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM AllTask WHERE completionDate IS NULL AND parentId IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
 			cell.badge.text = [NSString stringWithFormat:@"%d", totalCount];
 			cell.badge.capsuleColor = [UIColor blackColor];
 
 			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM DueSoonTask WHERE completionDate IS NULL AND parentId IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
 			if (totalCount)
-				[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", totalCount] capsuleColor:[UIColor orangeColor]];
+				[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", totalCount] capsuleColor:[UIColor orangeColor]]; */
 
 			cell.indentationLevel = 0;
 		}
