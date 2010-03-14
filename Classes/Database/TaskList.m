@@ -10,6 +10,7 @@
 
 #import "Database.h"
 #import "Statement.h"
+#import "SubcategoriesSelector.h"
 
 #import "Task.h"
 
@@ -62,14 +63,15 @@
 		else
 		{
 			// GROUP BY id is there because of tasks that have several categories...
-			[where addObject:[NSString stringWithFormat:@"idCategory=%d", categoryId]];
+			SubcategoriesSelector *sel = [[SubcategoriesSelector alloc] initWithCategory:categoryId];
+			[where addObject:[sel clause]];
+			[sel release];
+
 			[where addObject:@"id=idTask"];
 			clauses = [[NSString stringWithFormat:@", TaskHasCategory WHERE %@ GROUP BY id", [@" AND " stringByJoiningStrings:where]] retain];
 		}
 
 		request = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM %@%@ ORDER BY name COLLATE CSDIA", viewName, clauses]] retain];
-		
-		NSLog(@"%@", [NSString stringWithFormat:@"SELECT * FROM %@%@ ORDER BY name COLLATE CSDIA", viewName, clauses]);
 
 		[where release];
 

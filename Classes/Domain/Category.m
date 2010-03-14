@@ -29,10 +29,12 @@ static Statement *_saveStatement = nil;
 
 		[self invalidateCache];
 
+		/*
 		[self countForTable:@"NotStartedTask"];
 		[self countForTable:@"StartedTask"];
 		[self countForTable:@"DueSoonTask"];
 		[self countForTable:@"OverdueTask"];
+		 */
 	}
 	
 	return self;
