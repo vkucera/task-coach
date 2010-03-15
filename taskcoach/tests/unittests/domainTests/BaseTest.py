@@ -497,7 +497,41 @@ class CompositeObjectTest(test.TestCase):
             eventSource=self.child)
         self.compositeObject.setSelectedIcon('icon')
         self.assertEqual(1, len(self.eventsReceived))
-        
+
+    def testCompositeWithChildrenUsesPluralIconIfAvailable(self):
+        self.compositeObject.setIcon('book_icon')
+        self.assertEqual('book_icon', self.compositeObject.icon(recursive=True))
+        self.addChild()
+        self.assertEqual('books_icon', self.compositeObject.icon(recursive=True))
+        self.assertEqual('book_icon', self.compositeObject.icon(recursive=False))
+
+    def testCompositeWithChildrenUsesPluralSelectedIconIfAvailable(self):
+        self.compositeObject.setSelectedIcon('book_icon')
+        self.assertEqual('book_icon', self.compositeObject.selectedIcon(recursive=True))
+        self.addChild()
+        self.assertEqual('books_icon', self.compositeObject.selectedIcon(recursive=True))
+        self.assertEqual('book_icon', self.compositeObject.selectedIcon(recursive=False))
+
+    def testCompositeWithoutChildrenUsesSingularIconIfAvailable(self):
+        self.compositeObject.setIcon('books_icon')
+        self.assertEqual('books_icon', self.compositeObject.icon(recursive=False))
+        self.assertEqual('book_icon', self.compositeObject.icon(recursive=True))
+
+    def testCompositeWithoutChildrenUsesSingularSelectedIconIfAvailable(self):
+        self.compositeObject.setSelectedIcon('books_icon')
+        self.assertEqual('books_icon', self.compositeObject.selectedIcon(recursive=False))
+        self.assertEqual('book_icon', self.compositeObject.selectedIcon(recursive=True))
+
+    def testChildOfCompositeUsesSingularIconIfAvailable(self):
+        self.compositeObject.setIcon('books_icon')
+        self.addChild()
+        self.assertEqual('book_icon', self.child.icon(recursive=True))
+
+    def testChildOfCompositeUsesSingularSelectedIconIfAvailable(self):
+        self.compositeObject.setSelectedIcon('books_icon')
+        self.addChild()
+        self.assertEqual('book_icon', self.child.selectedIcon(recursive=True))
+
     def testCopy(self):
         self.compositeObject.expand(context='some_viewer')
         copy = self.compositeObject.copy()

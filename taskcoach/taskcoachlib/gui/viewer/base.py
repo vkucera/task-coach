@@ -37,8 +37,7 @@ class Viewer(wx.Panel):
     __metaclass__ = patterns.NumberedInstances
     defaultTitle = 'Subclass responsibility'
     defaultBitmap = 'Subclass responsibility'
-    viewerImages = artprovider.itemImages.keys()
-    viewerImages.remove('')
+    viewerImages = artprovider.itemImages
     
     def __init__(self, parent, taskFile, settings, *args, **kwargs):
         super(Viewer, self).__init__(parent, -1)

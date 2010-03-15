@@ -314,11 +314,11 @@ class AppearancePage(Page, widgets.BookPage):
     def addIconEntry(self):
         self._iconEntry = wx.combo.BitmapComboBox(self, style=wx.CB_READONLY)
         size = (16, 16)
-        imageNames = sorted(artprovider.itemImages.keys())
+        imageNames = sorted(artprovider.chooseableItemImages.keys())
         for imageName in imageNames:
+            label = artprovider.chooseableItemImages[imageName]
             bitmap = wx.ArtProvider_GetBitmap(imageName, wx.ART_MENU, size)
-            self._iconEntry.Append(artprovider.itemImages[imageName], bitmap,
-                                   clientData=imageName)
+            self._iconEntry.Append(label, bitmap, clientData=imageName)
         icon = self.item.icon()
         currentSelectionIndex = imageNames.index(icon)
         self._iconEntry.SetSelection(currentSelectionIndex)

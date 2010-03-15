@@ -1160,6 +1160,20 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
     def testSelectedIcon(self):
         self.assertEqual('folder_blue_open_icon', self.task.selectedIcon(recursive=True))
 
+    def testChildIcon(self):
+        self.assertEqual('led_blue_icon', self.task1_1.icon(recursive=True))
+
+    def testChildSelectedIcon(self):
+        self.assertEqual('led_blue_icon', self.task1_1.selectedIcon(recursive=True))
+
+    def testIconWithPluralVersion(self):
+        self.task.setIcon('books_icon')
+        self.assertEqual('books_icon', self.task.icon(recursive=True))
+
+    def testIconWithSingularVersion(self):
+        self.task.setIcon('book_icon')
+        self.assertEqual('books_icon', self.task.icon(recursive=True))
+
 
 class CompletedTaskWithChildTest(TaskTestCase):
     def taskCreationKeywordArguments(self):

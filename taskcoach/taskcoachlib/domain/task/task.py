@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 from taskcoachlib import patterns
 from taskcoachlib.domain import base, date, categorizable, note, attachment
-from taskcoachlib.domain.attribute import color
+from taskcoachlib.domain.attribute import color, icon
 
 
 class Task(note.NoteOwner, attachment.AttachmentOwner, 
@@ -515,30 +515,31 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         icon = super(Task, self).icon(recursive=False)
         if not icon and recursive:
             icon = self.categoryIcon() or self.__stateBasedIcon(selected=False)
-        return icon
+        return self.pluralOrSingularIcon(icon)
 
     def selectedIcon(self, recursive=False):
         icon = super(Task, self).selectedIcon(recursive=False)
         if not icon and recursive:
             icon = self.categorySelectedIcon() or self.__stateBasedIcon(selected=True)
-        return icon
+        return self.pluralOrSingularIcon(icon)
 
     stateColorMap = (('completed', '_green'), ('overdue', '_red'),
                      ('dueSoon', '_orange'), ('inactive', '_grey'))
 
     def __stateBasedIcon(self, selected=False):
         if self.isBeingTracked():
-            icon = 'clock'
+            taskIcon = 'clock'
         else:
-            icon = 'folder' if self.children() else 'led'
+            taskIcon = 'led'
             for state, color in self.stateColorMap:
                 if getattr(self, state)():
-                    icon += color
+                    taskIcon += color
                     break
             else:
-                icon += '_blue'
-            icon += '_open' if selected and self.children() else ''
-        return icon + '_icon'
+                taskIcon += '_blue'
+            taskIcon = self.pluralOrSingularIcon(taskIcon+'_icon')[:-len('_icon')]
+            taskIcon += '_open' if selected and self.children() else ''
+        return taskIcon + '_icon'
     
     @classmethod
     def totalTimeSpentChangedEventType(class_):

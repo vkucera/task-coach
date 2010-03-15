@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import time
 from taskcoachlib import patterns
 import attribute
+from taskcoachlib.domain.attribute import icon
 
 
 class SynchronizedObject(object):
@@ -498,10 +499,11 @@ class CompositeObject(Object, patterns.ObservableComposite):
 
     def icon(self, recursive=False):
         myIcon = super(CompositeObject, self).icon()
-        if not myIcon and recursive and self.parent():
-            return self.parent().icon(recursive=True)
-        else:
+        if not recursive:
             return myIcon
+        if not myIcon and self.parent():
+            myIcon = self.parent().icon(recursive=True)
+        return self.pluralOrSingularIcon(myIcon)
 
     def iconChangedEvent(self, event):
         super(CompositeObject, self).iconChangedEvent(event)
@@ -520,10 +522,11 @@ class CompositeObject(Object, patterns.ObservableComposite):
 
     def selectedIcon(self, recursive=False):
         myIcon = super(CompositeObject, self).selectedIcon()
-        if not myIcon and recursive and self.parent():
-            return self.parent().selectedIcon(recursive=True)
-        else:
+        if not recursive:
             return myIcon
+        if not myIcon and self.parent():
+            myIcon = self.parent().selectedIcon(recursive=True)
+        return self.pluralOrSingularIcon(myIcon)
 
     def selectedIconChangedEvent(self, event):
         super(CompositeObject, self).selectedIconChangedEvent(event)
@@ -539,6 +542,11 @@ class CompositeObject(Object, patterns.ObservableComposite):
             if not child.selectedIcon(recursive=False):
                 children.extend([child] + self.childrenWithoutOwnSelectedIcon(child))
         return children
+
+    def pluralOrSingularIcon(self, myIcon):
+        hasChildren = any(child for child in self.children() if not child.isDeleted())
+        mapping = icon.itemImagePlural if hasChildren else icon.itemImageSingular
+        return mapping.get(myIcon, myIcon)
     
     # Event types:
 
