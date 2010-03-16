@@ -1,5 +1,5 @@
 # Task Coach - Your friendly task manager
-# Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+# Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 # 
 # Task Coach is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ windist: py2exe
 py2exe: prepare
 	$(PYTHON) make.py py2exe
 	
-sdist: prepare changes templates dist/TaskCoach-$(TCVERSION).tar.gz
+sdist: prepare changes dist/TaskCoach-$(TCVERSION).tar.gz
 
 dist/TaskCoach-$(TCVERSION).tar.gz:
 	$(PYTHON) make.py sdist --formats=zip,gztar --no-prune
