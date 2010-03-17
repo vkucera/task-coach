@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-03-17 23:00+CET\n"
+"POT-Creation-Date: 2010-03-17 23:03+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3732,7 +3732,7 @@ msgid ""
 msgstr ""
 
 #: taskcoachlib/help/tips.py:26
-msgid "%(name)s is currently alpha software. Although the %(name)s developers try hard to prevent them, bugs do happen. So, backing up your work on a regular basis is strongly advised."
+msgid "%(name)s is actively developed. Although the %(name)s developers try hard to prevent them, bugs do happen. So, backing up your work on a regular basis is strongly advised."
 msgstr ""
 
 #: taskcoachlib/help/tips.py:27
