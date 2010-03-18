@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-03-17 23:03+CET\n"
+"POT-Creation-Date: 2010-03-18 15:11+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3926,6 +3926,10 @@ msgstr ""
 msgid "Untitled e-mail"
 msgstr ""
 
+#: taskcoachlib/mailer/macmail.py:49
+msgid "Mail.app message"
+msgstr ""
+
 #: taskcoachlib/mailer/thunderbird.py:138
 msgid "Malformed Thunderbird internal ID: %s. Please file a bug report."
 msgstr ""
@@ -3943,11 +3947,11 @@ msgid "Login failed (%s). Please try again."
 msgstr ""
 
 #: taskcoachlib/persistence/xml/templates.py:8
-msgid "New task due tomorrow"
+msgid "New task due today"
 msgstr ""
 
 #: taskcoachlib/persistence/xml/templates.py:10
-msgid "New task due today"
+msgid "New task due tomorrow"
 msgstr ""
 
 #: taskcoachlib/syncml/basesource.py:58 taskcoachlib/syncml/basesource.py:70

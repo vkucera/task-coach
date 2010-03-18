@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import subprocess, wx
+from taskcoachlib.i18n import _
 
 def getSubjectOfMail(messageId):
     """This should return the subject of the mail having the specified
@@ -24,7 +25,7 @@ def getSubjectOfMail(messageId):
     will only return the subject of the currently selected mail in
     Mail.app."""
 
-    script = '''
+    """script = '''
 tell application "Mail"
     set theMessages to selection
     subject of beginning of theMessages
@@ -41,4 +42,9 @@ end tell
     if sp.returncode:
         return ''
 
-    return out.strip()
+    return out.strip()"""
+
+    # The above code is slow, wrong and dangerous. I'll try to fix it some day.
+
+    return _('Mail.app message')
+
