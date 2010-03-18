@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ Release steps:
 
 - For each platform, create and upload the packages:
   MaC OS X:  'make clean dmg; python release.py upload'
-  Ubuntu:    'make clean sdist deb; python release.py upload'
+  Ubuntu:    'make clean sdist_linux deb; python release.py upload'
   Fedora 8:  'make clean fedora; python release.py upload', and
              'make clean rpm; python release.py upload'
   Fedora 11: 'make clean fedora; python release.py upload'

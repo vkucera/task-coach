@@ -4,7 +4,8 @@ include TODO.tsk
 include setup.py
 include make.py
 prune dist.in
-recursive-include taskcoachlib/bin.in *.so *.pyd
+recursive-include taskcoachlib/bin.in/linux *.so *.pyd
 include build.in/fedora/taskcoach.desktop
 include icons.in/taskcoach.png
 prune website.in
+

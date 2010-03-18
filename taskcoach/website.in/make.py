@@ -283,16 +283,16 @@ source_rpm = download_table(download_url='%(dist_download_prefix)s/%(filename)s-
                             platform_versions_supported='All Linux platforms that support RPM and the prerequisites',
                             **sourceOptions)
 
-source_zip = download_table(download_url='%(dist_download_prefix)s/%(filename)s-%(version)s.zip',
-                            package_type='Source zip archive',
-                            platform='all platforms', platform_lower='source_zip',
-                            platform_versions_supported='All platforms that support the prerequisites',
-                            **sourceOptions)
-
 source_tgz = download_table(download_url='%(dist_download_prefix)s/%(filename)s-%(version)s.tar.gz',
                             package_type='Source tar archive',
-                            platform='all platforms', platform_lower='source_gz',
-                            platform_versions_supported='All platforms that support the prerequisites',
+                            platform='Linux', platform_lower='source_gz',
+                            platform_versions_supported='All Linix platforms that support the prerequisites',
+                            **sourceOptions)
+
+source_zip = download_table(download_url='%(dist_download_prefix)s/%(filename)s-%(version)s.zip',
+                            package_type='Source zip archive',
+                            platform='Windows', platform_lower='source_zip',
+                            platform_versions_supported='All Windows platforms that support the prerequisites',
                             **sourceOptions)
 
 subversion = download_table(image='sources',

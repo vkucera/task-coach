@@ -40,7 +40,7 @@ revision:
 
 prepare: icons i18n templates
 
-windists: windist winpenpack portableapps
+windists: windist winpenpack portableapps sdist_windows
 
 windist: py2exe
 	$(INNOSETUP) build/taskcoach.iss
@@ -48,10 +48,15 @@ windist: py2exe
 py2exe: prepare
 	$(PYTHON) make.py py2exe
 	
-sdist: prepare changes templates dist/TaskCoach-$(TCVERSION).tar.gz
+sdist_windows: prepare changes templates dist/TaskCoach-$(TCVERSION).zip
+
+dist/TaskCoach-$(TCVERSION).zip:
+	$(PYTHON) make.py sdist --formats=zip --no-prune --template=build.in/windows/MANIFEST.in
+
+sdist_linux: prepare changes templates dist/TaskCoach-$(TCVERSION).tar.gz
 
 dist/TaskCoach-$(TCVERSION).tar.gz:
-	$(PYTHON) make.py sdist --formats=zip,gztar --no-prune
+	$(PYTHON) make.py sdist --formats=gztar --no-prune --template=build.in/debian/MANIFEST.in
 
 rpm: prepare
 	$(PYTHON) make.py bdist_rpm --requires "python2.5,python-wxgtk2.8" --group "Applications/Productivity"
