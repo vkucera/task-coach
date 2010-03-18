@@ -33,8 +33,6 @@ endif
 TCVERSION=$(shell python -c "import taskcoachlib.meta.data as data; print data.version")
 TCPORTABLE=$(shell python -c "import os; print \"'\" + os.path.join(os.getcwd(), 'build', 'TaskCoachPortable') + \"'\"")
 
-all: windist sdist website
-
 revision:
 	echo "revision='$(TCVERSION)'" > taskcoachlib/meta/revision.py
 
@@ -67,8 +65,8 @@ fedora: prepare changes
 opensuse: prepare changes
 	$(PYTHON) make.py bdist_rpm_opensuse 
 
-deb: sdist
-	$(PYTHON) make.py bdist_deb --sdist=dist/TaskCoach-$(TCVERSION).tar.gz --sdist-exclude="taskcoachlib/bin.in/windows,taskcoachlib/bin.in/macos"
+deb: sdist_linux
+	$(PYTHON) make.py bdist_deb --sdist=dist/TaskCoach-$(TCVERSION).tar.gz
 
 dmg: prepare
 	$(PYTHON) make.py py2app
@@ -127,7 +125,7 @@ integrationtests: icons templates
 languagetests: icons i18n
 	cd tests; $(PYTHON) test.py --languagetests
 
-releasetests: sdist 
+releasetests: icons i18n sdist_linux
 	cd tests; $(PYTHON) test.py --releasetests
 
 # FIXME: disttests should depend on either windist, deb, rpm or dmg...
