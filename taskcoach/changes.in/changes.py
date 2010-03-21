@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.0.0', 'March 15, 2010',
+Release('1.0.0', 'March 21, 2010',
     summary='''To mark that Task Coach has been available for five years
 now, we call this release version 1.0. This release adds a calendar viewer
 for tasks, partial drag and drop support for Mail.app under Leopard and
@@ -41,6 +41,14 @@ priority. Note that tasks with negative priorities are not displayed.''',
     bugsFixed=[
         Bug('''The template pop-up menu in task viewers would not show up
 at the right position.''')
+        ]
+    ),
+
+Release('0.78.5', 'March 21, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''When adding a template, open the file dialog in the default
+template folder.''')
         ]
     ),
 
