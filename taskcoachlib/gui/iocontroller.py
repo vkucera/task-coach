@@ -235,7 +235,8 @@ class IOController(object):
     def addtemplate(self):
         filename = self.__askUserForFile(_('Open template...'),
                       fileDialogOpts={'default_extension': 'tsktmpl',
-                                      'wildcard': _('%s template files (*.tsktmpl)|*.tsktmpl')%meta.name },
+                                      'wildcard': _('%s template files (*.tsktmpl)|*.tsktmpl')%meta.name,
+                                      'default_path': self.__settings.pathToTemplatesDir()},
                                          flags=wx.OPEN)
         if filename:
             shutil.copyfile(filename,

@@ -23,10 +23,11 @@ from changetypes import *
 
 releases = [
 
-Release('0.78.5', 'March 9, 2010',
+Release('0.78.5', 'March 21, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''  ...  ''')
+        Bug('''When adding a template, open the file dialog in the default
+template folder.''')
         ]
     ),
 
