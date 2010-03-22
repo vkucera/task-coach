@@ -23,16 +23,16 @@ from changetypes import *
 
 releases = [
 
-Release('1.0.0', 'March 21, 2010',
+Release('1.0.0', 'March 22, 2010',
     summary='''To mark that Task Coach has been available for five years
 now, we call this release version 1.0. This release adds a calendar viewer
-for tasks, partial drag and drop support for Mail.app under Leopard and
-Snow Leopard, and configurable icons.''',
+for tasks, partial drag and drop support for Mail.app under Mac OS X Leopard
+and Snow Leopard, and configurable icons.''',
     featuresAdded=[
-        Feature('''Calendar viewer for tasks''', 
+        Feature('''Calendar viewer for tasks.''',
                 'http://uservoice.com/a/iQI4g'),
-        Feature('''Drag and drop e-mail from Mail.app, on Leopard and Snow 
-Leopard.''', 'http://uservoice.com/a/niJMS'),
+        Feature('''Drag and drop e-mail from Mail.app, on Max OS X Leopard and
+Snow Leopard.''', 'http://uservoice.com/a/niJMS'),
         Feature('''The square map task viewer can also display tasks by
 priority. Note that tasks with negative priorities are not displayed.''',
         'http://uservoice.com/a/kxeoS'),
@@ -41,14 +41,6 @@ priority. Note that tasks with negative priorities are not displayed.''',
     bugsFixed=[
         Bug('''The template pop-up menu in task viewers would not show up
 at the right position.''')
-        ]
-    ),
-
-Release('0.78.5', 'March 21, 2010',
-    summary='''This is a bugfix release.''',
-    bugsFixed=[
-        Bug('''When adding a template, open the file dialog in the default
-template folder.''')
         ]
     ),
 

@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
-Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
+Copyright (C) 2008 Jérôme Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,7 +35,7 @@ except ImportError:
 class IOController(object): 
     ''' IOController is responsible for opening, closing, loading,
     saving, and exporting files. It also presents the necessary dialogs
-    to let the user specify what file to load/save/etc.'''
+    to let the user specify what file to load/save/etc. '''
 
     def __init__(self, taskFile, messageCallback, settings): 
         super(IOController, self).__init__()
@@ -234,10 +236,9 @@ class IOController(object):
 
     def addtemplate(self):
         filename = self.__askUserForFile(_('Open template...'),
-                      fileDialogOpts={'default_extension': 'tsktmpl',
-                                      'wildcard': _('%s template files (*.tsktmpl)|*.tsktmpl')%meta.name,
-                                      'default_path': self.__settings.pathToTemplatesDir()},
-                                         flags=wx.OPEN)
+            fileDialogOpts={'default_extension': 'tsktmpl',
+                            'wildcard': _('%s template files (*.tsktmpl)|*.tsktmpl')%meta.name},
+            flags=wx.OPEN)
         if filename:
             shutil.copyfile(filename,
                             os.path.join(self.__settings.pathToTemplatesDir(),
