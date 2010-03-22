@@ -23,6 +23,14 @@ from changetypes import *
 
 releases = [
 
+Release('1.0.1', 'March 22, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Task Coach would try to use a non-existing icon when
+the SyncML feature was turned on.''')
+        ]
+    ),
+
 Release('1.0.0', 'March 22, 2010',
     summary='''To mark that Task Coach has been available for five years
 now, we call this release version 1.0. This release adds a calendar viewer
