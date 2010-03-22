@@ -64,6 +64,8 @@ fedora: sdist_linux
 
 opensuse: sdist_linux
 	$(PYTHON) make.py bdist_rpm_opensuse 
+	mv dist/taskcoach-$(TCVERSION)-1.noarch.rpm dist/taskcoach-$(TCVERSION)-1.opensuse.noarch.rpm
+	mv dist/taskcoach-$(TCVERSION)-1.src.rpm dist/taskcoach-$(TCVERSION)-1.opensuse.src.rpm
 
 deb: sdist_linux
 	$(PYTHON) make.py bdist_deb --sdist=dist/TaskCoach-$(TCVERSION).tar.gz
