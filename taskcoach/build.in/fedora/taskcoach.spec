@@ -1,5 +1,5 @@
 # Task Coach - Your friendly task manager
-# Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+# Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 # Copyright (C) 2008 Marcin Zajaczkowski <mszpak@wp.pl>
 # 
 # Task Coach is free software: you can redistribute it and/or modify
@@ -78,11 +78,11 @@ desktop-file-install --vendor fedora \
 %%doc CHANGES.txt LICENSE.txt PUBLICITY.txt README.txt TODO.tsk
 
 %%exclude %%{_libdir}/python*/site-packages/buildlib/*.py*
-%%if 0%%{?fedora} >= 11
-%%exclude %%{_libdir}/python*/site-packages/taskcoachlib/bin.in/*
-%%endif
 
 %%changelog
+* Wed Mar 24 2010 Frank Niessink <frank ATT niessink DOTT com> - 1.0.1-1
+- no need to exclude pysyncml library here for Fedora 11
+
 * Wed Mar 19 2008 Frank Niessink <frank ATT niessink DOTT com> - 0.70.0-1
 - integrate Fedora RPM build step into Task Coach build process
 
