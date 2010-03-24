@@ -23,11 +23,13 @@ from changetypes import *
 
 releases = [
 
-Release('1.0.1', 'March 22, 2010',
+Release('1.0.1', 'March 24, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Task Coach would try to use a non-existing icon when
-the SyncML feature was turned on.''')
+the SyncML feature was turned on.'''),
+        Bug('''Task Coach wouldn't install properly on Ubuntu 10.04. Added
+a deb for Ubuntu 10.04.''', '2975538')
         ]
     ),
 
