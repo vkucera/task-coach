@@ -29,7 +29,11 @@ Release('1.0.1', 'March 24, 2010',
         Bug('''Task Coach would try to use a non-existing icon when
 the SyncML feature was turned on.'''),
         Bug('''Task Coach wouldn't install properly on Ubuntu 10.04. Added
-a deb for Ubuntu 10.04.''', '2975538')
+a deb for Ubuntu 10.04.''', '2975538'),
+        Bug('''When setting the end working hour to 24, the calendar viewer
+would crash.''', '2975347'),
+        Bug('''When trying to display tasks with notes, the calendar viewer
+would crash.''')
         ]
     ),
 
