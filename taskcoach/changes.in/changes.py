@@ -33,7 +33,9 @@ a deb for Ubuntu 10.04.''', '2975538'),
         Bug('''When setting the end working hour to 24, the calendar viewer
 would crash.''', '2975347'),
         Bug('''When trying to display tasks with notes, the calendar viewer
-would crash.''')
+would crash.'''),
+        Bug('''Synchronization with the iPhone did not work.''',
+            '2975920', '2976427')
         ]
     ),
 
