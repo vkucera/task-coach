@@ -106,11 +106,11 @@ def download_header(platform=None, release=None, warning=None):
     if platform:
         title += ' for %s'%platform
     if not warning:
-        warning = '''%(name)s is currently alpha-state software. 
-          This means that %(name)s contains bugs. We do our best to prevent 
-          bugs and fix them as soon as possible. Still, we strongly advise you 
-          to make backups of your work on a regular basis, and especially before 
-          upgrading.'''
+        warning = '''%(name)s is actively developed. New features are added
+          on a regular basis. This means that %(name)s contains bugs. We do 
+          our best to prevent bugs and fix them as soon as possible. Still, 
+          we <strong>strongly</strong> advise you to make backups of your 
+          work on a regular basis, and especially before upgrading.'''
     return '        <h3>%s</h3>\n'%title + \
 '''        <p>
           <b>A word of warning:</b> ''' + warning + '\n        </p>'
