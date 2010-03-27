@@ -201,7 +201,7 @@ class UploadEXE(UploadBase, EXEMixin):
 # Source
 
 class BuildSource(DistCompile):
-    name = 'sdist'
+    name = 'sdist_linux'
     description = ['Generating', 'source', 'distribution']
     descriptionDone = ['Source', 'distribution']
 
