@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: TaskCoach\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-03-22 23:58+0000\n"
-"PO-Revision-Date: 2010-03-24 18:20+0000\n"
+"PO-Revision-Date: 2010-03-27 11:00+0000\n"
 "Last-Translator: Jérôme Laheurte <fraca7@free.fr>\n"
 "Language-Team: Français <fraca7@free.fr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-24 18:24+0000\n"
+"X-Launchpad-Export-Date: 2010-03-27 11:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: France\n"
 "X-Poedit-Language: fr_FR\n"
@@ -268,7 +268,7 @@ msgstr "Total pour %s"
 
 #: taskcoachlib/domain/effort/effortlist.py:30
 msgid "&New effort...\tCtrl+E"
-msgstr "&Nouvel effort... \t Ctrl+E"
+msgstr "&Nouvel effort...\tCtrl+E"
 
 #: taskcoachlib/domain/effort/effortlist.py:31
 msgid "Add an effort period to the selected task(s)"
@@ -2002,7 +2002,7 @@ msgstr "Sauvegarder la tâche sélectionnée comme patron de tâche"
 
 #: taskcoachlib/gui/uicommand.py:533
 msgid "Add template..."
-msgstr "Ajouter un patron"
+msgstr "Ajouter un patron..."
 
 #: taskcoachlib/gui/uicommand.py:534
 msgid "Add a new template from a template file\n"
@@ -2099,7 +2099,7 @@ msgstr ""
 
 #: taskcoachlib/gui/uicommand.py:662
 msgid "Export as &iCalendar..."
-msgstr "Exporter au format &iCalendar"
+msgstr "Exporter au format &iCalendar..."
 
 #: taskcoachlib/gui/uicommand.py:663
 msgid "Export the items in the current viewer in iCalendar format"
@@ -2107,7 +2107,7 @@ msgstr "Exporter les éléments de la vue courante au format iCalendar"
 
 #: taskcoachlib/gui/uicommand.py:672
 msgid "Export selection as &iCalendar..."
-msgstr "Exporter la sélection au format &iCalendar"
+msgstr "Exporter la sélection au format &iCalendar..."
 
 #: taskcoachlib/gui/uicommand.py:673
 msgid "Export the selected items in the current viewer in iCalendar format"
