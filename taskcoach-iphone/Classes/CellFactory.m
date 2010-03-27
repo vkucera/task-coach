@@ -15,6 +15,7 @@
 #import "DescriptionCell.h"
 #import "BadgedCell.h"
 #import "ButtonCell.h"
+#import "SearchCell.h"
 
 #import "Configuration.h"
 
@@ -29,6 +30,7 @@ static CellFactory *_cellFactory = NULL;
 @synthesize descriptionCellTemplate;
 @synthesize badgedCellTemplate;
 @synthesize buttonCellTemplate;
+@synthesize searchCellTemplate;
 
 + (CellFactory *)cellFactory
 {
@@ -91,6 +93,12 @@ static CellFactory *_cellFactory = NULL;
 {
 	[[NSBundle mainBundle] loadNibNamed:@"ButtonCell" owner:self options:nil];
 	return [buttonCellTemplate retain];
+}
+
+- (SearchCell *)createSearchCell
+{
+	[[NSBundle mainBundle] loadNibNamed:@"SearchCell" owner:self options:nil];
+	return [searchCellTemplate retain];
 }
 
 @end

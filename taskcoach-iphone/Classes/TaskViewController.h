@@ -14,8 +14,9 @@
 @class TaskList;
 @class TaskCell;
 @class CategoryViewController;
+@class SearchCell;
 
-@interface TaskViewController : UIViewController <UIAlertViewDelegate, RestorableController>
+@interface TaskViewController : UIViewController <UIAlertViewDelegate, RestorableController, UISearchBarDelegate>
 {
 	NSString *title;
 	NSInteger categoryId;
@@ -31,6 +32,8 @@
 	
 	UITableViewController *tableViewController;
 	CategoryViewController *categoryController;
+
+	SearchCell *searchCell;
 }
 
 @property (nonatomic, readonly) UITableView *tableView;

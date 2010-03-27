@@ -19,6 +19,7 @@
 	NSString *clause;
 	NSMutableArray *tasks;
 	Statement *request;
+	BOOL filtered;
 }
 
 @property (nonatomic, readonly) NSNumber *parent;
@@ -26,7 +27,7 @@
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) NSInteger status;
 
-- initWithView:(NSString *)viewName category:(NSInteger)categoryId title:(NSString *)title status:(NSInteger)status parentTask:(NSNumber *)parent;
+- initWithView:(NSString *)viewName category:(NSInteger)categoryId title:(NSString *)title status:(NSInteger)status parentTask:(NSNumber *)parent searchWord:(NSString *)searchWord;
 
 - (Task *)taskAtIndex:(NSInteger)index;
 

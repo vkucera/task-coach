@@ -80,7 +80,7 @@ static Statement *_saveStatement = nil;
 	}
 	else
 	{
-		TaskList *list = [[TaskList alloc] initWithView:tableName category:objectId title:@"" status:0 parentTask:nil];
+		TaskList *list = [[TaskList alloc] initWithView:tableName category:objectId title:@"" status:0 parentTask:nil searchWord:nil];
 		taskCount = [list count];
 		[list release];
 

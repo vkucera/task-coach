@@ -81,6 +81,8 @@
 		A68EDF860F1E2A6D00F51FF2 /* StringChoice.xib in Resources */ = {isa = PBXBuildFile; fileRef = A68EDF840F1E2A6D00F51FF2 /* StringChoice.xib */; };
 		A68EDF890F1E2A7F00F51FF2 /* StringChoiceController.m in Sources */ = {isa = PBXBuildFile; fileRef = A68EDF880F1E2A7F00F51FF2 /* StringChoiceController.m */; };
 		A692198F0F24CDEA0010D2BA /* DateUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A692198E0F24CDEA0010D2BA /* DateUtils.m */; };
+		A69F6C2F115E2196003F68F5 /* SearchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A69F6C2E115E2196003F68F5 /* SearchCell.m */; };
+		A69F6C31115E21A5003F68F5 /* SearchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A69F6C30115E21A5003F68F5 /* SearchCell.xib */; };
 		A6A975390F26572200622396 /* TaskCellLeft.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6A975370F26572200622396 /* TaskCellLeft.xib */; };
 		A6A9753A0F26572200622396 /* TaskCellRight.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6A975380F26572200622396 /* TaskCellRight.xib */; };
 		A6AEE77F0F21CFA00061CF77 /* Network.m in Sources */ = {isa = PBXBuildFile; fileRef = A6AEE77E0F21CFA00061CF77 /* Network.m */; };
@@ -256,6 +258,9 @@
 		A68EDF880F1E2A7F00F51FF2 /* StringChoiceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringChoiceController.m; sourceTree = "<group>"; };
 		A692198D0F24CDEA0010D2BA /* DateUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DateUtils.h; path = Domain/DateUtils.h; sourceTree = "<group>"; };
 		A692198E0F24CDEA0010D2BA /* DateUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DateUtils.m; path = Domain/DateUtils.m; sourceTree = "<group>"; };
+		A69F6C2D115E2196003F68F5 /* SearchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchCell.h; sourceTree = "<group>"; };
+		A69F6C2E115E2196003F68F5 /* SearchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchCell.m; sourceTree = "<group>"; };
+		A69F6C30115E21A5003F68F5 /* SearchCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchCell.xib; sourceTree = "<group>"; };
 		A6A975370F26572200622396 /* TaskCellLeft.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCellLeft.xib; sourceTree = SOURCE_ROOT; };
 		A6A975380F26572200622396 /* TaskCellRight.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCellRight.xib; sourceTree = SOURCE_ROOT; };
 		A6AEE77D0F21CFA00061CF77 /* Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Network.h; path = Network/Network.h; sourceTree = "<group>"; };
@@ -632,6 +637,8 @@
 		A6D386B40F24C12E0097F0F6 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				A69F6C2D115E2196003F68F5 /* SearchCell.h */,
+				A69F6C2E115E2196003F68F5 /* SearchCell.m */,
 				A63CC07A0F517055003669FD /* TaskCellLeftBig.xib */,
 				A63CC07B0F517055003669FD /* TaskCellRightBig.xib */,
 				A6A975370F26572200622396 /* TaskCellLeft.xib */,
@@ -660,6 +667,7 @@
 				A6C3CEF610E76C8C00483057 /* ButtonCell.h */,
 				A6C3CEF710E76C8C00483057 /* ButtonCell.m */,
 				A6C3CEF910E76CB600483057 /* ButtonCell.xib */,
+				A69F6C30115E21A5003F68F5 /* SearchCell.xib */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -766,6 +774,7 @@
 				A6C3CFE110E7846200483057 /* redButton.png in Resources */,
 				A61AA5C11114304900AA1E38 /* EffortView.xib in Resources */,
 				A6E46386113028A500976293 /* SyncView.xib in Resources */,
+				A69F6C31115E21A5003F68F5 /* SearchCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -842,6 +851,7 @@
 				A61AA5C01114304900AA1E38 /* EffortView.m in Sources */,
 				A6E7C0801114418D00B230E2 /* AlertPrompt.m in Sources */,
 				A6BD9AB7114CD1B500AC781C /* SubcategoriesSelector.m in Sources */,
+				A69F6C2F115E2196003F68F5 /* SearchCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
