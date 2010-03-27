@@ -412,12 +412,15 @@
 		return UITableViewCellEditingStyleDelete;
 	}
 
-	return ((indexPath.section != 0) || (indexPath.row != 0)) ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleInsert;
+	if (self.editing)
+		return ((indexPath.section != 0) || (indexPath.row != 0)) ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleInsert;
+	
+	return UITableViewCellEditingStyleDelete;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (indexPath.section == 0)
+	if ((indexPath.section == 0) && self.editing)
 	{
 		NSNumber *pid = nil;
 		if (parentTask)
@@ -433,7 +436,7 @@
 	}
 	else
 	{
-		Task *task = [[headers objectAtIndex:indexPath.section - 1] taskAtIndex:indexPath.row];
+		Task *task = [[headers objectAtIndex:indexPath.section - (self.editing ? 1 : 0)] taskAtIndex:indexPath.row];
 		
 		if (task.status == STATUS_NEW)
 		{
@@ -446,16 +449,16 @@
 			[task save];
 		}
 
-		if ([[headers objectAtIndex:indexPath.section - 1] count] == 1)
+		if ([[headers objectAtIndex:indexPath.section - (self.editing ? 1 : 0)] count] == 1)
 		{
 			// The whole section is removed
-			[headers removeObjectAtIndex:indexPath.section - 1];
+			[headers removeObjectAtIndex:indexPath.section - (self.editing ? 1 : 0)];
 			[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationFade];
 		}
 		else
 		{
 			// The section stays, a row disappears
-			[[headers objectAtIndex:indexPath.section - 1] reload];
+			[[headers objectAtIndex:indexPath.section - (self.editing ? 1 : 0)] reload];
 			[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
 		}
 	}
