@@ -24,7 +24,7 @@
 @synthesize title;
 @synthesize status;
 
-- initWithView:(NSString *)viewName category:(NSInteger)categoryId title:(NSString *)theTitle status:(NSInteger)theStatus parentTask:(NSNumber *)theParent
+- initWithView:(NSString *)viewName category:(NSInteger)categoryId title:(NSString *)theTitle status:(NSInteger)theStatus parentTask:(NSNumber *)theParent searchWord:(NSString *)searchWord
 {
 	NSLog(@"TaskList: %d %@", categoryId, theParent);
 
@@ -38,10 +38,17 @@
 
 		NSMutableArray *where = [[NSMutableArray alloc] initWithCapacity:2];
 		NSString *clauses;
-
+		
 		if (![Configuration configuration].showCompleted)
 		{
 			[where addObject:@"completionDate IS NULL"];
+		}
+		
+		if (searchWord)
+		{
+			filtered = YES;
+			NSString *escaped = [searchWord stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+			[where addObject:[NSString stringWithFormat:@"(name LIKE \"%%%@%%\" OR description LIKE \"%%%@%%\")", escaped, escaped]];
 		}
 
 		if (parent)
@@ -120,42 +127,40 @@
 	[tasks removeAllObjects];
 	[request execWithTarget:self action:@selector(taskCallback:)];
 
-	// Now, remove all subtasks that have an ancestor that belongs to this category, if applicable.
-	if (!parent)
+	// Now, remove all subtasks that have an ancestor in this list.
+
+	NSMutableDictionary *taskIds = [[NSMutableDictionary alloc] initWithCapacity:[tasks count]];
+	for (Task *task in tasks)
+		[taskIds setObject:task forKey:[NSNumber numberWithInt:task.objectId]];
+	
+	while (1)
 	{
-		NSMutableDictionary *taskIds = [[NSMutableDictionary alloc] initWithCapacity:[tasks count]];
-		for (Task *task in tasks)
-			[taskIds setObject:task forKey:[NSNumber numberWithInt:task.objectId]];
-
-		while (1)
+		BOOL modified = NO;
+		
+		for (NSNumber *taskId in [taskIds allKeys])
 		{
-			BOOL modified = NO;
-
-			for (NSNumber *taskId in [taskIds allKeys])
+			Task *task = [taskIds objectForKey:taskId];
+			if (task && task.parentId)
 			{
-				Task *task = [taskIds objectForKey:taskId];
-				if (task && task.parentId)
+				if ([taskIds objectForKey:task.parentId])
 				{
-					if ([taskIds objectForKey:task.parentId])
-					{
-						[taskIds removeObjectForKey:taskId];
-						modified = YES;
-					}
+					[taskIds removeObjectForKey:taskId];
+					modified = YES;
 				}
 			}
-
-			if (!modified)
-				break;
 		}
-
-		NSArray *oldTasks = [NSArray arrayWithArray:tasks];
-		[tasks removeAllObjects];
-
-		for (Task *task in oldTasks)
-		{
-			if ([taskIds objectForKey:[NSNumber numberWithInt:task.objectId]])
-				[tasks addObject:task];
-		}
+		
+		if (!modified)
+			break;
+	}
+	
+	NSArray *oldTasks = [NSArray arrayWithArray:tasks];
+	[tasks removeAllObjects];
+	
+	for (Task *task in oldTasks)
+	{
+		if ([taskIds objectForKey:[NSNumber numberWithInt:task.objectId]])
+			[tasks addObject:task];
 	}
 }
 

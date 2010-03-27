@@ -15,6 +15,7 @@
 @class DescriptionCell;
 @class BadgedCell;
 @class ButtonCell;
+@class SearchCell;
 
 @interface CellFactory : NSObject
 {
@@ -25,6 +26,7 @@
 	DescriptionCell *descriptionCellTemplate;
 	BadgedCell *badgedCellTemplate;
 	ButtonCell *buttonCellTemplate;
+	SearchCell *searchCellTemplate;
 }
 
 @property (nonatomic, assign) IBOutlet TaskCell *taskCellTemplate;
@@ -34,6 +36,7 @@
 @property (nonatomic, assign) IBOutlet DescriptionCell *descriptionCellTemplate;
 @property (nonatomic, assign) IBOutlet BadgedCell *badgedCellTemplate;
 @property (nonatomic, assign) IBOutlet ButtonCell *buttonCellTemplate;
+@property (nonatomic, assign) IBOutlet SearchCell *searchCellTemplate;
 
 + (CellFactory *)cellFactory;
 
@@ -44,5 +47,6 @@
 - (DescriptionCell *)createDescriptionCell;
 - (BadgedCell *)createBadgedCell;
 - (ButtonCell *)createButtonCell;
+- (SearchCell *)createSearchCell;
 
 @end

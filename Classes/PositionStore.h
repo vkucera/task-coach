@@ -26,13 +26,15 @@
 	NSInteger _scrollPosition;
 	NSIndexPath *indexPath;
 	NSInteger type;
+	NSString *searchWord;
 }
 
 @property (nonatomic, readonly) CGPoint scrollPosition;
 @property (nonatomic, readonly) NSIndexPath *indexPath;
 @property (nonatomic, readonly) NSInteger type;
+@property (nonatomic, copy) NSString *searchWord;
 
-- initWithController:(id <RestorableController>)controller indexPath:(NSIndexPath *)indexPath type:(NSInteger)type;
+- initWithController:(id <RestorableController>)controller indexPath:(NSIndexPath *)indexPath type:(NSInteger)type searchWord:(NSString *)searchWord;
 
 @end
 
@@ -47,7 +49,7 @@
 - initWithFile:(NSString *)path;
 - (void)save:(NSString *)path;
 
-- (void)push:(id <RestorableController>)controller indexPath:(NSIndexPath *)indexPath type:(NSInteger)type;
+- (void)push:(id <RestorableController>)controller indexPath:(NSIndexPath *)indexPath type:(NSInteger)type searchWord:(NSString *)searchWord;
 - (void)pop;
 
 - (void)restore:(id <RestorableController>)controller;

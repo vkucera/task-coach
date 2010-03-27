@@ -14,6 +14,7 @@ static PositionStore *_instance = nil;
 
 @synthesize indexPath;
 @synthesize type;
+@synthesize searchWord;
 
 - (CGPoint)scrollPosition
 {
@@ -22,7 +23,7 @@ static PositionStore *_instance = nil;
 	return p;
 }
 
-- initWithController:(id <RestorableController>)controller indexPath:(NSIndexPath *)path type:(NSInteger)theType
+- initWithController:(id <RestorableController>)controller indexPath:(NSIndexPath *)path type:(NSInteger)theType searchWord:(NSString *)word
 {
 	if (self = [super init])
 	{
@@ -31,6 +32,8 @@ static PositionStore *_instance = nil;
 		_scrollPosition = p.y;
 		indexPath = [path retain];
 		type = theType;
+		if ([word length])
+			searchWord = [word copy];
 	}
 	
 	return self;
@@ -43,6 +46,7 @@ static PositionStore *_instance = nil;
 		_scrollPosition = [coder decodeIntegerForKey:@"scrollPosition"];
 		indexPath = [[coder decodeObjectForKey:@"indexPath"] retain];
 		type = [coder decodeIntegerForKey:@"type"];
+		searchWord = [[coder decodeObjectForKey:@"searchWord"] copy];
 	}
 	
 	return self;
@@ -51,6 +55,7 @@ static PositionStore *_instance = nil;
 - (void)dealloc
 {
 	[indexPath release];
+	[searchWord release];
 	
 	[super dealloc];
 }
@@ -60,6 +65,8 @@ static PositionStore *_instance = nil;
 	[coder encodeInteger:_scrollPosition forKey:@"scrollPosition"];
 	[coder encodeObject:indexPath forKey:@"indexPath"];
 	[coder encodeInteger:type forKey:@"type"];
+	if (searchWord)
+		[coder encodeObject:searchWord forKey:@"searchWord"];
 }
 
 @end
@@ -113,9 +120,9 @@ static PositionStore *_instance = nil;
 	[super dealloc];
 }
 
-- (void)push:(id <RestorableController>)controller indexPath:(NSIndexPath *)indexPath type:(NSInteger)theType
+- (void)push:(id <RestorableController>)controller indexPath:(NSIndexPath *)indexPath type:(NSInteger)theType searchWord:(NSString *)word
 {
-	Position *pos = [[Position alloc] initWithController:controller indexPath:indexPath type:theType];
+	Position *pos = [[Position alloc] initWithController:controller indexPath:indexPath type:theType searchWord:word];
 	[positions addObject:pos];
 	[pos release];
 }

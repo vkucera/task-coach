@@ -38,7 +38,7 @@
 
 - (void)willTerminate
 {
-	[[PositionStore instance] push:self indexPath:nil type:0];
+	[[PositionStore instance] push:self indexPath:nil type:0 searchWord:nil];
 }
 
 - (void)restorePosition:(Position *)pos store:(PositionStore *)store
@@ -60,7 +60,7 @@
 			ctrl = [[TaskViewController alloc] initWithTitle:_("All") category:-1 categoryController:self parentTask:nil edit:NO];
 		}
 		
-		[[PositionStore instance] push:self indexPath:pos.indexPath type:pos.type];
+		[[PositionStore instance] push:self indexPath:pos.indexPath type:pos.type searchWord:nil];
 		
 		[self.navigationController pushViewController:ctrl animated:YES];
 		[ctrl release];
@@ -82,11 +82,11 @@
 		[fileManager createDirectoryAtPath:cachesDir attributes:nil];
 	}
 	
-	NSString *path = [cachesDir stringByAppendingPathComponent:@"positions.store.v2"];
+	NSString *path = [cachesDir stringByAppendingPathComponent:@"positions.store.v3"];
 	
 	if ([fileManager fileExistsAtPath:path])
 	{
-		PositionStore *store = [[PositionStore alloc] initWithFile:[cachesDir stringByAppendingPathComponent:@"positions.store.v2"]];
+		PositionStore *store = [[PositionStore alloc] initWithFile:[cachesDir stringByAppendingPathComponent:@"positions.store.v3"]];
 		[store restore:self];
 		[store release];
 	}
@@ -336,7 +336,7 @@
 			ctrl = [[TaskViewController alloc] initWithTitle:_("All") category:-1 categoryController:self parentTask:nil edit:NO];
 		}
 	
-		[[PositionStore instance] push:self indexPath:indexPath type:TYPE_DETAILS];
+		[[PositionStore instance] push:self indexPath:indexPath type:TYPE_DETAILS searchWord:nil];
 	
 		[self.navigationController pushViewController:ctrl animated:YES];
 		[ctrl release];
