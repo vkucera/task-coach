@@ -200,7 +200,7 @@ class UploadEXE(UploadBase, EXEMixin):
 
 # Source
 
-class BuildSource(DistCompile):
+class BuildSourceTar(DistCompile):
     name = 'sdist_linux'
     description = ['Generating', 'source', 'distribution']
     descriptionDone = ['Source', 'distribution']
@@ -212,6 +212,16 @@ class BuildSource(DistCompile):
         self.addURL('download .tar.gz',
                     'http://www.fraca7.net/TaskCoach-packages/%s/TaskCoach-r%s.tar.gz' % (self.getProperty('branch') or '',
                                                                                           self.getProperty('got_revision')))
+
+class BuildSourceZip(DistCompile):
+    name = 'sdist_windows'
+    description = ['Generating', 'source', 'distribution']
+    descriptionDone = ['Source', 'distribution']
+
+    def createSummary(self, log):
+        # Special case, handle this ourselves
+        # DistCompile.createSummary(self, log)
+
         self.addURL('download .zip',
                     'http://www.fraca7.net/TaskCoach-packages/%s/TaskCoach-r%s.zip' % (self.getProperty('branch') or '',
                                                                                        self.getProperty('got_revision')))
