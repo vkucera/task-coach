@@ -78,7 +78,7 @@
 			clauses = [[NSString stringWithFormat:@", TaskHasCategory WHERE %@ GROUP BY id", [@" AND " stringByJoiningStrings:where]] retain];
 		}
 
-		request = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM %@%@ ORDER BY name COLLATE CSDIA", viewName, clauses]] retain];
+		request = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM %@%@ ORDER BY dueDate, name COLLATE CSDIA", viewName, clauses]] retain];
 
 		[where release];
 

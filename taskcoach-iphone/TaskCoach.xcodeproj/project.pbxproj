@@ -49,6 +49,7 @@
 		A64604970F223FC500FC71AD /* ledgrey.png in Resources */ = {isa = PBXBuildFile; fileRef = A64604920F223FC500FC71AD /* ledgrey.png */; };
 		A64604980F223FC500FC71AD /* ledorange.png in Resources */ = {isa = PBXBuildFile; fileRef = A64604930F223FC500FC71AD /* ledorange.png */; };
 		A64604990F223FC500FC71AD /* ledred.png in Resources */ = {isa = PBXBuildFile; fileRef = A64604940F223FC500FC71AD /* ledred.png */; };
+		A655D0D9115F694B00B34DCA /* taskcoach.db in Resources */ = {isa = PBXBuildFile; fileRef = A655D0D8115F694B00B34DCA /* taskcoach.db */; };
 		A6664C230F2B35F300638C68 /* SyncViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664C220F2B35F300638C68 /* SyncViewController.m */; };
 		A6664D3F0F2B41A000638C68 /* State.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664D3E0F2B41A000638C68 /* State.m */; };
 		A6664DD90F2B47A000638C68 /* ProtocolNegotiationState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664DD80F2B47A000638C68 /* ProtocolNegotiationState.m */; };
@@ -74,7 +75,6 @@
 		A68EDEE30F1E212A00F51FF2 /* SQLite.m in Sources */ = {isa = PBXBuildFile; fileRef = A68EDEDF0F1E212A00F51FF2 /* SQLite.m */; };
 		A68EDEE40F1E212A00F51FF2 /* Statement.m in Sources */ = {isa = PBXBuildFile; fileRef = A68EDEE10F1E212A00F51FF2 /* Statement.m */; };
 		A68EDEF30F1E222700F51FF2 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A68EDEF20F1E222700F51FF2 /* libsqlite3.0.dylib */; };
-		A68EDEF80F1E230C00F51FF2 /* taskcoach.db in Resources */ = {isa = PBXBuildFile; fileRef = A68EDEF70F1E230C00F51FF2 /* taskcoach.db */; };
 		A68EDEFC0F1E23BF00F51FF2 /* TaskCoach.png in Resources */ = {isa = PBXBuildFile; fileRef = A68EDEFB0F1E23BF00F51FF2 /* TaskCoach.png */; };
 		A68EDF440F1E275700F51FF2 /* Category.m in Sources */ = {isa = PBXBuildFile; fileRef = A68EDF410F1E275700F51FF2 /* Category.m */; };
 		A68EDF450F1E275700F51FF2 /* DomainObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A68EDF430F1E275700F51FF2 /* DomainObject.m */; };
@@ -196,6 +196,7 @@
 		A64604920F223FC500FC71AD /* ledgrey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ledgrey.png; sourceTree = "<group>"; };
 		A64604930F223FC500FC71AD /* ledorange.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ledorange.png; sourceTree = "<group>"; };
 		A64604940F223FC500FC71AD /* ledred.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ledred.png; sourceTree = "<group>"; };
+		A655D0D8115F694B00B34DCA /* taskcoach.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = taskcoach.db; sourceTree = "<group>"; };
 		A6664C210F2B35F300638C68 /* SyncViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncViewController.h; sourceTree = "<group>"; };
 		A6664C220F2B35F300638C68 /* SyncViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncViewController.m; sourceTree = "<group>"; };
 		A6664D3D0F2B41A000638C68 /* State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = State.h; path = Synchronization/State.h; sourceTree = "<group>"; };
@@ -247,7 +248,6 @@
 		A68EDEE10F1E212A00F51FF2 /* Statement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Statement.m; path = Database/Statement.m; sourceTree = "<group>"; };
 		A68EDEF20F1E222700F51FF2 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		A68EDEF60F1E227500F51FF2 /* taskcoach.sql */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = taskcoach.sql; sourceTree = "<group>"; };
-		A68EDEF70F1E230C00F51FF2 /* taskcoach.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = taskcoach.db; sourceTree = "<group>"; };
 		A68EDEFB0F1E23BF00F51FF2 /* TaskCoach.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TaskCoach.png; sourceTree = "<group>"; };
 		A68EDF400F1E275700F51FF2 /* Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Category.h; path = Domain/Category.h; sourceTree = "<group>"; };
 		A68EDF410F1E275700F51FF2 /* Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Category.m; path = Domain/Category.m; sourceTree = "<group>"; };
@@ -460,6 +460,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A655D0D8115F694B00B34DCA /* taskcoach.db */,
 				A6C3CFE010E7846200483057 /* redButton.png */,
 				A6C3CFB410E782D800483057 /* ledclock.png */,
 				A6C3CFB510E782D800483057 /* ledclockbig.png */,
@@ -479,7 +480,6 @@
 				A64604930F223FC500FC71AD /* ledorange.png */,
 				A64604940F223FC500FC71AD /* ledred.png */,
 				A68EDEFB0F1E23BF00F51FF2 /* TaskCoach.png */,
-				A68EDEF70F1E230C00F51FF2 /* taskcoach.db */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				A6C30BEA0F48218C00A04E7C /* Default.png */,
 			);
@@ -728,7 +728,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A68EDEC50F1E1F1700F51FF2 /* MainWindow.xib in Resources */,
-				A68EDEF80F1E230C00F51FF2 /* taskcoach.db in Resources */,
 				A68EDEFC0F1E23BF00F51FF2 /* TaskCoach.png in Resources */,
 				A68EDF860F1E2A6D00F51FF2 /* StringChoice.xib in Resources */,
 				A6D8AC030F221BFA006894AA /* Settings.bundle in Resources */,
@@ -775,6 +774,7 @@
 				A61AA5C11114304900AA1E38 /* EffortView.xib in Resources */,
 				A6E46386113028A500976293 /* SyncView.xib in Resources */,
 				A69F6C31115E21A5003F68F5 /* SearchCell.xib in Resources */,
+				A655D0D9115F694B00B34DCA /* taskcoach.db in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
