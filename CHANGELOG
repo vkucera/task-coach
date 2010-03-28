@@ -1,4 +1,6 @@
 
+==== Beta 3: 2010-03-27====
+
 2010-03-27  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* misc: Fix a crash when deleting a task through a "wipe" gesture
 	* misc: Add a search bar in task view
