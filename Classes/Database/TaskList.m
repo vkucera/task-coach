@@ -132,7 +132,7 @@
 	NSMutableDictionary *taskIds = [[NSMutableDictionary alloc] initWithCapacity:[tasks count]];
 	for (Task *task in tasks)
 		[taskIds setObject:task forKey:[NSNumber numberWithInt:task.objectId]];
-	
+
 	while (1)
 	{
 		BOOL modified = NO;
@@ -153,10 +153,10 @@
 		if (!modified)
 			break;
 	}
-	
+
 	NSArray *oldTasks = [NSArray arrayWithArray:tasks];
 	[tasks removeAllObjects];
-	
+
 	for (Task *task in oldTasks)
 	{
 		if ([taskIds objectForKey:[NSNumber numberWithInt:task.objectId]])

@@ -12,10 +12,15 @@
 
 static int collation(void *p, int s1, const void *p1, int s2, const void *p2)
 {
-	NSString *str1 = [NSString stringWithUTF8String:(const char *)p1];
-	NSString *str2 = [NSString stringWithUTF8String:(const char *)p2];
+	NSString *str1 = [[NSString alloc] initWithBytes:p1 length:s1 encoding:NSUTF8StringEncoding];
+	NSString *str2 = [[NSString alloc] initWithBytes:p2 length:s2 encoding:NSUTF8StringEncoding];
 
-	return [str1 compare:str2 options:NSDiacriticInsensitiveSearch];
+	NSComparisonResult result = [str1 localizedCaseInsensitiveCompare:str2];
+
+	[str1 release];
+	[str2 release];
+
+	return result;
 }
 
 @implementation SQLite
