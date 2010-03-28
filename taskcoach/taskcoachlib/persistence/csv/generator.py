@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,10 +29,8 @@ def extendedWithAncestors(selection):
 class RowBuilder(object):
     def __init__(self, visibleColumns, isTree):
         self.__visibleColumns = visibleColumns
-        if isTree:
-            self.indent = lambda item: ' ' * len(item.ancestors())
-        else:
-            self.indent = lambda item: ''
+        self.indent = lambda item: ' ' * len(item.ancestors()) if isTree else \
+                      lambda item: ''
         
     def headerRow(self):
         return [column.header() for column in self.__visibleColumns]
