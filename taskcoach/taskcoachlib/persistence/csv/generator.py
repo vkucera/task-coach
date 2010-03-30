@@ -29,8 +29,10 @@ def extendedWithAncestors(selection):
 class RowBuilder(object):
     def __init__(self, visibleColumns, isTree):
         self.__visibleColumns = visibleColumns
-        self.indent = lambda item: ' ' * len(item.ancestors()) if isTree else \
-                      lambda item: ''
+        if isTree:
+            self.indent = lambda item: ' ' * len(item.ancestors())
+        else:
+            self.indent = lambda item: ''
         
     def headerRow(self):
         return [column.header() for column in self.__visibleColumns]

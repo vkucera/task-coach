@@ -23,10 +23,14 @@ from changetypes import *
 
 releases = [
 
-Release('1.0.2', 'March 28, 2010',
+Release('1.0.2', 'March 30, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug(''' ... ''')
+        Bug('''Exports and prints would show long descriptions abbreviated with
+"...", exactly as the long descriptions were displayed in the description 
+column of task, category, and note tree viewers. To fix this, the task, 
+category, and note tree viewers show descriptions fully (when the description 
+column is visible).''', '2975805')
         ],
     ),
 
