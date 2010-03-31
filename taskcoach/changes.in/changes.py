@@ -30,7 +30,8 @@ Release('1.0.2', 'March 30, 2010',
 "...", exactly as the long descriptions were displayed in the description 
 column of task, category, and note tree viewers. To fix this, the task, 
 category, and note tree viewers show descriptions fully (when the description 
-column is visible).''', '2975805')
+column is visible).''', '2975805'),
+        Bug('''In the calendar viewer, march 31st would not appear.''', '2979461'),
         ],
     ),
 
