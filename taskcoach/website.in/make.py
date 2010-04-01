@@ -426,8 +426,8 @@ def appendThumbnails(name):
         caption = '%s (release %s on %s)'%(description, release, platform)
         thumbnailFilename = 'screenshots/Thumb-'+basename
         thumbnailImage = '<IMG SRC="%s" ALT="%s">'%(thumbnailFilename, caption)
-        image = '<A HREF="%s">%s</A>'%(filename.replace('\\', '/'), thumbnailImage)
-        pages[name] += '<P>%s<BR>%s</P>'%(caption, image)
+        image = '<A HREF="%s" REL="lightbox">%s</A>'%(filename.replace('\\', '/'), thumbnailImage)
+        pages[name] += '<P ALIGN="CENTER">%s<BR>%s</P>'%(caption, image)
 
 
 
@@ -837,6 +837,6 @@ createHTMLPages(websiteFolder, pages)
 createPAD(websiteFolder)
 createVersionFile(websiteFolder)
 copyFiles(websiteFolder, 'robots.txt', '*.ico', '*.css')
-for subFolder in 'screenshots', 'images':
+for subFolder in 'screenshots', 'images', 'js', 'css':
     copyDir(websiteFolder, subFolder)
 createThumbnails(os.path.join(websiteFolder, 'screenshots'))
