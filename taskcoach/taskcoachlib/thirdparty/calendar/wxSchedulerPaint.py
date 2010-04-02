@@ -361,10 +361,7 @@ class wxSchedulerPaint( object ):
 
 			minHeight = h
 
-			end = utils.copyDateTime(day)
-			end.AddDS(wx.DateSpan(months=1))
-
-			daysCount = end.Subtract(day).GetDays()
+			daysCount = wx.DateTime.GetNumberOfDaysInMonth(day.GetMonth())
 
 			maxDY = 0
 			for idx in xrange(daysCount):
@@ -379,7 +376,7 @@ class wxSchedulerPaint( object ):
 			height -= maxDY
 			minHeight += maxDY
 
-			w, h = self._paintPeriod(drawer, day, end.Subtract(day).GetDays(), x, y, width, height)
+			w, h = self._paintPeriod(drawer, day, daysCount, x, y, width, height)
 			minHeight += h
 
 			return w, minHeight

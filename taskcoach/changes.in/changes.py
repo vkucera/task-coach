@@ -23,6 +23,35 @@ from changetypes import *
 
 releases = [
 
+Release('1.0.2', 'March 30, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Exports and prints would show long descriptions abbreviated with
+"...", exactly as the long descriptions were displayed in the description 
+column of task, category, and note tree viewers. To fix this, the task, 
+category, and note tree viewers show descriptions fully (when the description 
+column is visible).''', '2975805'),
+        Bug('''In the calendar viewer, march 31st would not appear.''', '2979461'),
+        Bug('''13th hour would not show up in daily calendar view''', '2979452'),
+        ],
+    ),
+
+Release('1.0.1', 'March 26, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Task Coach would try to use a non-existing icon when
+the SyncML feature was turned on.''', '2975952'),
+        Bug('''Task Coach wouldn't install properly on Ubuntu 10.04. Added
+a deb for Ubuntu 10.04.''', '2975538'),
+        Bug('''When setting the end working hour to 24, the calendar viewer
+would crash.''', '2975347'),
+        Bug('''When trying to display tasks with notes, the calendar viewer
+would crash.'''),
+        Bug('''Synchronization with the iPhone did not work.''',
+            '2975920', '2976427')
+        ]
+    ),
+
 Release('1.0.0', 'March 22, 2010',
     summary='''To mark that Task Coach has been available for five years
 now, we call this release version 1.0. This release adds a calendar viewer

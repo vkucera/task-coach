@@ -106,11 +106,11 @@ def download_header(platform=None, release=None, warning=None):
     if platform:
         title += ' for %s'%platform
     if not warning:
-        warning = '''%(name)s is currently alpha-state software. 
-          This means that %(name)s contains bugs. We do our best to prevent 
-          bugs and fix them as soon as possible. Still, we strongly advise you 
-          to make backups of your work on a regular basis, and especially before 
-          upgrading.'''
+        warning = '''%(name)s is actively developed. New features are added
+          on a regular basis. This means that %(name)s contains bugs. We do 
+          our best to prevent bugs and fix them as soon as possible. Still, 
+          we <strong>strongly</strong> advise you to make backups of your 
+          work on a regular basis, and especially before upgrading.'''
     return '        <h3>%s</h3>\n'%title + \
 '''        <p>
           <b>A word of warning:</b> ''' + warning + '\n        </p>'
@@ -200,17 +200,27 @@ debian = download_table(image='debian',
               instructions</a>''',
                         installation='double click the package to start the installer')
 
-ubuntu = download_table(image='ubuntu',
+ubuntu8 = download_table(image='ubuntu',
                         download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_all.deb',
                         package_type='Debian package (deb)',
                         platform='Ubuntu', platform_lower='ubuntu',
-                        platform_versions_supported='Ubuntu 8.04 LTS ("Hardy Heron") and later',
+                        platform_versions_supported='Ubuntu 8.04 LTS ("Hardy Heron"), Ubuntu 9.04 ("Jaunty Jackalope"), and Ubuntu 9.10 ("Karmic Koala")',
                         prerequisites=prerequisites + ''' If your Ubuntu 
               installation does not have the minimally required wxPython version 
               you will need to install it yourself following 
               <a href="http://wiki.wxpython.org/InstallingOnUbuntuOrDebian">these 
               instructions</a>''',
                         installation='double click the package to start the installer')
+
+ubuntu10 = download_table(image='ubuntu',
+                        download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_ubuntu10_all.deb',
+                        package_type='Debian package (deb)',
+                        platform='Ubuntu', platform_lower='ubuntu',
+                        platform_versions_supported='Ubuntu 10.04 LTS ("Lucid Lynx") and newer',
+                        prerequisites=prerequisites,
+                        installation='''double click the package to start the 
+installer. Note: %(name)s is not added to the Applications menu due to a bug in either Ubuntu 10.04 or %(name)s. You need to start %(name)s from a terminal 
+by typing "%(filename_lower)s.py")''')
 
 gentoo = download_table(image='gentoo',
                         download_url='http://packages.gentoo.org/package/app-office/taskcoach',
@@ -221,7 +231,7 @@ gentoo = download_table(image='gentoo',
                         installation='%(name)s is included in Gentoo Portage. Install with emerge: <tt>$ emerge taskcoach</tt>')
 
 opensuse = download_table(image='opensuse',
-                          download_url='(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.opensuse.noarch.rpm',
+                          download_url='%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.opensuse.noarch.rpm',
                           package_type='RPM package',
                           platform='OpenSuse', platform_lower='opensuse',
                           platform_versions_supported='OpenSuse 11.2',
@@ -254,8 +264,8 @@ linux = download_table(image='linux',
 
 pages['download_for_linux'] = sep.join([download_header(platform='Linux',
                                                         release='%(version)s'), 
-                                        debian, ubuntu, gentoo, opensuse,
-                                        fedora8, fedora11, linux])
+                                        debian, ubuntu8, ubuntu10, gentoo, 
+                                        opensuse, fedora8, fedora11, linux])
 
 
 iphone = download_table(image='appstore',
@@ -408,16 +418,45 @@ through the network, starting with version 0.73.2 of %(name)s. Main features are
 
 
 def appendThumbnails(name):
-    for filename in reversed(glob.glob(os.path.join('screenshots', '*.png'))):
-        basename = os.path.basename(filename)
-        release, platform, description = basename.split('-')
-        platform = platform.replace('_', ' ')
-        description = description[:-len('.png')].replace('_', ' ')
-        caption = '%s (release %s on %s)'%(description, release, platform)
-        thumbnailFilename = 'screenshots/Thumb-'+basename
-        thumbnailImage = '<IMG SRC="%s" ALT="%s">'%(thumbnailFilename, caption)
-        image = '<A HREF="%s">%s</A>'%(filename.replace('\\', '/'), thumbnailImage)
-        pages[name] += '<P>%s<BR>%s</P>'%(caption, image)
+    systems = reversed([path for path in os.listdir('screenshots') \
+                            if os.path.isdir(os.path.join('screenshots', path)) and \
+                            not path.startswith('.')])
+
+    pages[name] += '<CENTER><TABLE BORDER="0">'
+
+    for system in systems:
+        images = []
+
+        for filename in list(reversed(glob.glob(os.path.join('screenshots', system, '*.png')))):
+            basename = os.path.basename(filename)
+            thumbnailFilename = os.path.join('screenshots', system, 'Thumb-%s' % basename)
+            release, platform, description = basename.split('-')
+            platform = platform.replace('_', ' ')
+            description = description[:-len('.png')].replace('_', ' ')
+            caption = '%s (release %s on %s)' % (description, release, platform)
+            images.append((caption, thumbnailFilename, filename.replace('\\', '/')))
+
+        pages[name] += '<TR><TD COLSPAN="3" ALIGN="CENTER">%s</TD></TR>' % system
+
+        while images:
+            pages[name] += '<TR>'
+            for x in xrange(3):
+                if x < len(images):
+                    caption, _, _ = images[x]
+                    pages[name] += '<TD ALIGN="CENTER">%s</TD>' % caption
+                else:
+                    pages[name] += '<TD></TD>'
+            pages[name] += '</TR><TR>'
+
+            for x in xrange(3):
+                if images:
+                    caption, thumbnailFilename, filename = images.pop(0)
+                    pages[name] += '<TD ALIGN="CENTER"><A HREF="%s" REL="lightbox"><IMG SRC="%s" ALT="%s" /></A></TD' % (filename,
+                                                                                                                         thumbnailFilename,
+                                                                                                                         caption)
+            pages[name] += '</TR>'
+
+    pages[name] += '</TABLE></CENTER>'
 
 
 
@@ -761,9 +800,9 @@ pages['devinfo'] = \
 '''
 
 
-def ensureFolderExists(folder):    
+def ensureFolderExists(folder):
     if not os.path.exists(folder):
-        os.mkdir(folder)
+        os.makedirs(folder)
 
 def writeFile(folder, filename, contents):
     ensureFolderExists(folder)
@@ -777,7 +816,7 @@ def expandPatterns(*patterns):
     for pattern in patterns:
         for filename in glob.glob(pattern):
             yield filename
-    
+
 def copyFiles(folder, *patterns):
     ensureFolderExists(folder)
     for source in expandPatterns(*patterns):
@@ -827,6 +866,9 @@ createHTMLPages(websiteFolder, pages)
 createPAD(websiteFolder)
 createVersionFile(websiteFolder)
 copyFiles(websiteFolder, 'robots.txt', '*.ico', '*.css')
-for subFolder in 'screenshots', 'images':
+for subFolder in 'images', 'js', 'css':
     copyDir(websiteFolder, subFolder)
-createThumbnails(os.path.join(websiteFolder, 'screenshots'))
+for subFolder in os.listdir('screenshots'):
+    if not subFolder.startswith('.'):
+        copyDir(websiteFolder, os.path.join('screenshots', subFolder))
+        createThumbnails(os.path.join(websiteFolder, 'screenshots', subFolder))

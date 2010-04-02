@@ -475,7 +475,7 @@ class SquareTaskViewer(BaseTaskViewer):
         return task.font(recursive=True)
 
     def icon(self, task, isSelected):
-        bitmap = self.iconName(task, isSelected) or 'task'
+        bitmap = self.iconName(task, isSelected) or 'led_blue_icon'
         return wx.ArtProvider_GetIcon(bitmap, wx.ART_MENU, (16,16))
 
     # Helper methods
@@ -664,7 +664,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
                 task.Task.descriptionChangedEventType(), 
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                     value='description'),
-                renderCallback=lambda task: render.multilineText(task.description()), 
+                renderCallback=lambda task: task.description(), 
                 width=self.getColumnWidth('description'), **kwargs)] + \
             [widgets.Column('attachments', '', 
                 task.Task.attachmentsChangedEventType(), # pylint: disable-msg=E1101
