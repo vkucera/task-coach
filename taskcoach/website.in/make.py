@@ -418,16 +418,45 @@ through the network, starting with version 0.73.2 of %(name)s. Main features are
 
 
 def appendThumbnails(name):
-    for filename in reversed(glob.glob(os.path.join('screenshots', '*.png'))):
-        basename = os.path.basename(filename)
-        release, platform, description = basename.split('-')
-        platform = platform.replace('_', ' ')
-        description = description[:-len('.png')].replace('_', ' ')
-        caption = '%s (release %s on %s)'%(description, release, platform)
-        thumbnailFilename = 'screenshots/Thumb-'+basename
-        thumbnailImage = '<IMG SRC="%s" ALT="%s">'%(thumbnailFilename, caption)
-        image = '<A HREF="%s" REL="lightbox">%s</A>'%(filename.replace('\\', '/'), thumbnailImage)
-        pages[name] += '<P ALIGN="CENTER">%s<BR>%s</P>'%(caption, image)
+    systems = reversed([path for path in os.listdir('screenshots') \
+                            if os.path.isdir(os.path.join('screenshots', path)) and \
+                            not path.startswith('.')])
+
+    pages[name] += '<CENTER><TABLE BORDER="0">'
+
+    for system in systems:
+        images = []
+
+        for filename in list(reversed(glob.glob(os.path.join('screenshots', system, '*.png')))):
+            basename = os.path.basename(filename)
+            thumbnailFilename = os.path.join('screenshots', system, 'Thumb-%s' % basename)
+            release, platform, description = basename.split('-')
+            platform = platform.replace('_', ' ')
+            description = description[:-len('.png')].replace('_', ' ')
+            caption = '%s (release %s on %s)' % (description, release, platform)
+            images.append((caption, thumbnailFilename, filename.replace('\\', '/')))
+
+        pages[name] += '<TR><TD COLSPAN="3" ALIGN="CENTER">%s</TD></TR>' % system
+
+        while images:
+            pages[name] += '<TR>'
+            for x in xrange(3):
+                if x < len(images):
+                    caption, _, _ = images[x]
+                    pages[name] += '<TD ALIGN="CENTER">%s</TD>' % caption
+                else:
+                    pages[name] += '<TD></TD>'
+            pages[name] += '</TR><TR>'
+
+            for x in xrange(3):
+                if images:
+                    caption, thumbnailFilename, filename = images.pop(0)
+                    pages[name] += '<TD ALIGN="CENTER"><A HREF="%s" REL="lightbox"><IMG SRC="%s" ALT="%s" /></A></TD' % (filename,
+                                                                                                                         thumbnailFilename,
+                                                                                                                         caption)
+            pages[name] += '</TR>'
+
+    pages[name] += '</TABLE></CENTER>'
 
 
 
@@ -771,9 +800,9 @@ pages['devinfo'] = \
 '''
 
 
-def ensureFolderExists(folder):    
+def ensureFolderExists(folder):
     if not os.path.exists(folder):
-        os.mkdir(folder)
+        os.makedirs(folder)
 
 def writeFile(folder, filename, contents):
     ensureFolderExists(folder)
@@ -787,7 +816,7 @@ def expandPatterns(*patterns):
     for pattern in patterns:
         for filename in glob.glob(pattern):
             yield filename
-    
+
 def copyFiles(folder, *patterns):
     ensureFolderExists(folder)
     for source in expandPatterns(*patterns):
@@ -837,6 +866,9 @@ createHTMLPages(websiteFolder, pages)
 createPAD(websiteFolder)
 createVersionFile(websiteFolder)
 copyFiles(websiteFolder, 'robots.txt', '*.ico', '*.css')
-for subFolder in 'screenshots', 'images', 'js', 'css':
+for subFolder in 'images', 'js', 'css':
     copyDir(websiteFolder, subFolder)
-createThumbnails(os.path.join(websiteFolder, 'screenshots'))
+for subFolder in os.listdir('screenshots'):
+    if not subFolder.startswith('.'):
+        copyDir(websiteFolder, os.path.join('screenshots', subFolder))
+        createThumbnails(os.path.join(websiteFolder, 'screenshots', subFolder))
