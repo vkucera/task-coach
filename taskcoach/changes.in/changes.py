@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.0.2', 'March 30, 2010',
+Release('1.0.2', 'April 2, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Exports and prints would show long descriptions abbreviated with
@@ -33,6 +33,8 @@ category, and note tree viewers show descriptions fully (when the description
 column is visible).''', '2975805'),
         Bug('''In the calendar viewer, march 31st would not appear.''', '2979461'),
         Bug('''13th hour would not show up in daily calendar view''', '2979452'),
+        Bug('''The position of the main window wouldn't be saved so it
+couldn't be restored the next session.''', '2969292')
         ],
     ),
 
