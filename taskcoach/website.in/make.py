@@ -254,6 +254,16 @@ fedora11 = download_table(image='fedora',
                           prerequisites=prerequisites,
                           installation='<tt>$ sudo yum install --nogpgcheck %(filename_lower)s-%(version)s-1.fc*.noarch.rpm</tt>')
 
+redhat_el4 = download_table(image='redhat',
+                            download_url='%(dist_download_prefix)s/%(filename)s-%(version)s.tar.gz',
+                            package_type='Source tar archive',
+                            platform='Red hat Enterprise Linux 4', platform_lower='redhat',
+                            platform_versions_supported='Red Hat Enterprise Linux 4',
+                            prerequisites=prerequisites,
+                            installation='''follow the instructions on
+<a href='http://warped.org/blog/2010/04/02/ch0wned-installing-taskcoach-and-all-its-depenencies-in-home-for-el4/'>
+Max Baker's blog</a>.''')
+                            
 linux = download_table(image='linux',
                        download_url='%(dist_download_prefix)s/%(filename)s-%(version)s-1.noarch.rpm',
                        package_type='RPM package',
@@ -265,7 +275,8 @@ linux = download_table(image='linux',
 pages['download_for_linux'] = sep.join([download_header(platform='Linux',
                                                         release='%(version)s'), 
                                         debian, ubuntu8, ubuntu10, gentoo, 
-                                        opensuse, fedora8, fedora11, linux])
+                                        opensuse, fedora8, fedora11, redhat_el4,
+                                        linux])
 
 
 iphone = download_table(image='appstore',
