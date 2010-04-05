@@ -231,6 +231,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -267,7 +269,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateExpansionKey</key>
 							<array>
 								<string>29B97314FDCFA39411CA2CEA</string>
-								<string>080E96DDFE201D6D7F000001</string>
+								<string>19C28FACFE9D520D11CA2CBB</string>
 								<string>1C37FBAC04509CD000000102</string>
 								<string>1C77FABC04509CD000000102</string>
 								<string>1C3E0DCA080725EA00A55177</string>
@@ -275,8 +277,8 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>10</integer>
-									<integer>1</integer>
+									<integer>6</integer>
+									<integer>5</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -314,7 +316,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>TaskList.m</string>
+								<string>Info.plist</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -322,11 +324,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>TaskList.m</string>
+										<string>Info.plist</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A61DA103115F70C600AA2EFC</string>
+										<string>A681F1941169E513005136C0</string>
 										<key>history</key>
 										<array>
 											<string>A68A605910821E7E00D723FE</string>
@@ -435,8 +437,6 @@
 											<string>A69F6D91115E37E4003F68F5</string>
 											<string>A69F6D92115E37E4003F68F5</string>
 											<string>A69F6DC5115E38A8003F68F5</string>
-											<string>A6BAF2FD115E39910017A185</string>
-											<string>A655D08E115F665C00B34DCA</string>
 											<string>A655D08F115F665C00B34DCA</string>
 											<string>A655D090115F665C00B34DCA</string>
 											<string>A655D0AC115F67DA00B34DCA</string>
@@ -449,7 +449,10 @@
 											<string>A65A790C115F6CA10046DC57</string>
 											<string>A65A790D115F6CA10046DC57</string>
 											<string>A61DA0F8115F70C600AA2EFC</string>
-											<string>A61DA0F9115F70C600AA2EFC</string>
+											<string>A6BE8DE61169E4B3008F19B1</string>
+											<string>A681F1921169E513005136C0</string>
+											<string>A681F1931169E513005136C0</string>
+											<string>A655D08E115F665C00B34DCA</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -478,8 +481,6 @@
 							<key>Tabs</key>
 							<array>
 								<dict>
-									<key>BecomeActive</key>
-									<true/>
 									<key>ContentConfiguration</key>
 									<dict>
 										<key>PBXProjectModuleGUID</key>
@@ -491,8 +492,6 @@
 									<dict>
 										<key>Frame</key>
 										<string>{{10, 27}, {1663, 177}}</string>
-										<key>RubberWindowFrame</key>
-										<string>34 162 2020 1234 0 0 2560 1418 </string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -546,7 +545,9 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {1663, 219}}</string>
+										<string>{{10, 27}, {1663, 177}}</string>
+										<key>RubberWindowFrame</key>
+										<string>34 162 2020 1234 0 0 2560 1418 </string>
 									</dict>
 									<key>Module</key>
 									<string>PBXBuildResultsModule</string>
@@ -574,11 +575,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A61DA0FB115F70C600AA2EFC</string>
+				<string>A681F1951169E513005136C0</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A61DA0FC115F70C600AA2EFC</string>
+				<string>A681F1961169E513005136C0</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A61DA0FD115F70C600AA2EFC</string>
+				<string>A681F1971169E513005136C0</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -727,14 +728,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A61DA0FE115F70C600AA2EFC</string>
+				<string>A65E390211620C6800DA22BC</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A61DA0FF115F70C600AA2EFC</string>
-				<string>A61DA100115F70C600AA2EFC</string>
-				<string>A61DA101115F70C600AA2EFC</string>
-				<string>A61DA102115F70C600AA2EFC</string>
-				<string>A68EDEBA0F1E1EED00F51FF2</string>
+				<string>A65E390311620C6800DA22BC</string>
+				<string>A65E390411620C6800DA22BC</string>
+				<string>A65E390511620C6800DA22BC</string>
+				<string>A65E390611620C6800DA22BC</string>
+				<string>A65E390711620C6800DA22BC</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
 			<string>2</string>
