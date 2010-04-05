@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-20 15:23+0100\n"
+"POT-Creation-Date: 2010-04-05 11:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -79,44 +79,48 @@ msgstr ""
 msgid "Started %@"
 msgstr ""
 
-#: Classes/TaskViewController.m:88
+#: Classes/TaskViewController.m:59
 msgid "Overdue"
 msgstr ""
 
-#: Classes/TaskViewController.m:95
+#: Classes/TaskViewController.m:66
 msgid "Due soon"
 msgstr ""
 
-#: Classes/TaskViewController.m:102
+#: Classes/TaskViewController.m:73
 msgid "Started"
 msgstr ""
 
-#: Classes/TaskViewController.m:109
+#: Classes/TaskViewController.m:80
 msgid "Not started"
 msgstr ""
 
-#: Classes/TaskViewController.m:274
+#: Classes/TaskViewController.m:142
+msgid "Search tasks..."
+msgstr ""
+
+#: Classes/TaskViewController.m:293
 msgid "Confirmation"
 msgstr ""
 
-#: Classes/TaskViewController.m:275
+#: Classes/TaskViewController.m:294
 #, objc-format
 msgid "Do you really want to mark \"%@\" complete ?"
 msgstr ""
 
-#: Classes/TaskViewController.m:276 Classes/TaskDetailsController.m:331
+#: Classes/TaskViewController.m:295 Classes/TaskDetailsController.m:335
 msgid "No"
 msgstr ""
 
-#: Classes/TaskViewController.m:277 Classes/TaskDetailsController.m:331
+#: Classes/TaskViewController.m:296 Classes/TaskDetailsController.m:335
 msgid "Yes"
 msgstr ""
 
-#: Classes/TaskViewController.m:328
+#: Classes/TaskViewController.m:350
 msgid "No tasks."
 msgstr ""
 
-#: Classes/TaskViewController.m:372
+#: Classes/TaskViewController.m:397
 msgid "Add task..."
 msgstr ""
 
@@ -139,27 +143,27 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-#: Classes/CategoryViewController.m:60 Classes/CategoryViewController.m:351
-#: Classes/CategoryViewController.m:424
+#: Classes/CategoryViewController.m:60 Classes/CategoryViewController.m:336
+#: Classes/CategoryViewController.m:407
 msgid "All"
 msgstr ""
 
-#: Classes/CategoryViewController.m:152 Classes/CategoryViewController.m:300
-#: Classes/CategoryViewController.m:328 Classes/CategoryViewController.m:336
+#: Classes/CategoryViewController.m:154 Classes/CategoryViewController.m:285
+#: Classes/CategoryViewController.m:313 Classes/CategoryViewController.m:321
 msgid "Enter category name"
 msgstr ""
 
-#: Classes/CategoryViewController.m:394
+#: Classes/CategoryViewController.m:379
 msgid "Add subcategory"
 msgstr ""
 
-#: Classes/CategoryViewController.m:471 Classes/CategoryViewController.m:496
+#: Classes/CategoryViewController.m:450 Classes/CategoryViewController.m:475
 msgid "Looking for Task Coach"
 msgstr ""
 
 #: Classes/TaskCoachAppDelegate.m:24
 #: Classes/Synchronization/AuthentificationState.m:24
-#: Classes/TaskDetailsController.m:331
+#: Classes/TaskDetailsController.m:335
 msgid "Cancel"
 msgstr ""
 
@@ -256,15 +260,19 @@ msgstr ""
 msgid "Completion"
 msgstr ""
 
-#: Classes/TaskDetailsController.m:164 Classes/TaskDetailsController.m:428
+#: Classes/TaskDetailsController.m:166
+msgid "New subtask"
+msgstr ""
+
+#: Classes/TaskDetailsController.m:168 Classes/TaskDetailsController.m:432
 msgid "New task"
 msgstr ""
 
-#: Classes/TaskDetailsController.m:330
+#: Classes/TaskDetailsController.m:334
 msgid "Warning"
 msgstr ""
 
-#: Classes/TaskDetailsController.m:330
+#: Classes/TaskDetailsController.m:334
 #, objc-format
 msgid "There are %d task(s) currently tracked. Stop tracking them ?"
 msgstr ""
