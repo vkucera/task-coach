@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.0.2', 'April 3, 2010',
+Release('1.0.2', 'April 6, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Exports and prints would show long descriptions abbreviated with
@@ -37,7 +37,9 @@ column is visible).''', '2975805'),
 couldn't be restored the next session.''', '2969292'),
         Bug('''On Ubuntu, when the user would scroll to the bottom of a tree
 viewer and collaps an item, the tree would not be redrawn correctly.''', 
-'2947136')
+'2947136'),
+        Bug('''Setting a task to 100% complete didn't work.''', 
+            '2982561')
         ],
     ),
 
