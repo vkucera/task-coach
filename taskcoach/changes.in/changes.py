@@ -39,7 +39,10 @@ couldn't be restored the next session.''', '2969292'),
 viewer and collaps an item, the tree would not be redrawn correctly.''', 
 '2947136'),
         Bug('''Setting a task to 100% complete didn't work.''', 
-            '2982561')
+            '2982561'),
+        Bug('''When the user clicks on a URL embedded in a description
+and the URL fails to open, show an error dialog instead of throwing an 
+exception.''')
         ],
     ),
 
