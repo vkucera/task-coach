@@ -32,7 +32,8 @@ column of task, category, and note tree viewers. To fix this, the task,
 category, and note tree viewers show descriptions fully (when the description 
 column is visible).''', '2975805'),
         Bug('''In the calendar viewer, March 31st would not appear.''', '2979461'),
-        Bug('''13th hour would not show up in daily calendar view''', '2979452'),
+        Bug('''The 13th hour would not show up in thr daily calendar view.''', 
+            '2979452'),
         Bug('''The position of the main window wouldn't be saved so it
 couldn't be restored the next session.''', '2969292'),
         Bug('''On Ubuntu, when the user would scroll to the bottom of a tree
