@@ -98,6 +98,8 @@ prerequisites = '''
                  onClick="javascript: pageTracker._trackPageview('/outgoing/wxpython.org/download');">wxPython</a>
               <strong>%(wxpythonversion)s</strong> (or newer)'''
 
+prerequisites26 = prerequisites%dict(pythonversion='2.6', 
+                                     wxpythonversion='%(wxpythonversion)s')
 
 def download_header(platform=None, release=None, warning=None):
     title = 'Download %(name)s'
@@ -201,10 +203,10 @@ debian = download_table(image='debian',
                         installation='double click the package to start the installer')
 
 ubuntu8 = download_table(image='ubuntu',
-                        download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_all.deb',
+                        download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_py25.deb',
                         package_type='Debian package (deb)',
                         platform='Ubuntu', platform_lower='ubuntu',
-                        platform_versions_supported='Ubuntu 8.04 LTS ("Hardy Heron"), Ubuntu 9.04 ("Jaunty Jackalope"), and Ubuntu 9.10 ("Karmic Koala")',
+                        platform_versions_supported='Ubuntu 8.04 LTS ("Hardy Heron") and Ubuntu 9.04 ("Jaunty Jackalope")',
                         prerequisites=prerequisites + ''' If your Ubuntu 
               installation does not have the minimally required wxPython version 
               you will need to install it yourself following 
@@ -213,13 +215,13 @@ ubuntu8 = download_table(image='ubuntu',
                         installation='double click the package to start the installer')
 
 ubuntu10 = download_table(image='ubuntu',
-                        download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_ubuntu10_all.deb',
+                        download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_py26.deb',
                         package_type='Debian package (deb)',
                         platform='Ubuntu', platform_lower='ubuntu',
-                        platform_versions_supported='Ubuntu 10.04 LTS ("Lucid Lynx") and newer',
-                        prerequisites=prerequisites,
+                        platform_versions_supported='Ubuntu 9.10 ("Karmic Koala"), Ubuntu 10.04 LTS ("Lucid Lynx") and newer',
+                        prerequisites=prerequisites26,
                         installation='''double click the package to start the 
-installer. Note: %(name)s is not added to the Applications menu due to a bug in either Ubuntu 10.04 or %(name)s. You need to start %(name)s from a terminal 
+installer. Note: %(name)s is not added to the Applications menu due to a bug in %(name)s. You need to start %(name)s from a terminal 
 by typing "%(filename_lower)s.py")''')
 
 gentoo = download_table(image='gentoo',
@@ -251,7 +253,7 @@ fedora11 = download_table(image='fedora',
                           package_type='RPM package',
                           platform='Fedora', platform_lower='fedora',
                           platform_versions_supported='Fedora 11 and later',
-                          prerequisites=prerequisites,
+                          prerequisites=prerequisites26,
                           installation='<tt>$ sudo yum install --nogpgcheck %(filename_lower)s-%(version)s-1.fc*.noarch.rpm</tt>')
 
 redhat_el4 = download_table(image='redhat',
