@@ -40,11 +40,12 @@ couldn't be restored the next session.''', '2969292'),
         Bug('''On Ubuntu, when the user would scroll to the bottom of a tree
 viewer and collaps an item, the tree would not be redrawn correctly.''', 
 '2947136'),
-        Bug('''Setting a task to 100 procent complete didn't work.''', 
+        Bug('''Setting a task to 100 percent complete didn't work.''', 
             '2982561'),
         Bug('''When the user clicks on a URL embedded in a description
 and the URL fails to open, show an error dialog instead of throwing an 
-exception.''')
+exception.'''),
+        Bug('''The website pointed Ubuntu 9.10 users to the wrong deb package.''', '2983202')
         ],
     featuresAdded=[
         Feature('''Support for Snarl under Windows (for reminders).'''),
