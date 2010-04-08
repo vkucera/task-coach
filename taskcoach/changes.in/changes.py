@@ -24,7 +24,8 @@ from changetypes import *
 releases = [
 
 Release('1.0.2', 'April 6, 2010',
-    summary='''This is a bugfix release.''',
+    summary='''This release fixes some bugs, and adds support for the Snarl
+notification system.''',
     bugsFixed=[
         Bug('''Exports and prints would show long descriptions abbreviated with
 "...", exactly as the long descriptions were displayed in the description 
@@ -44,6 +45,9 @@ viewer and collaps an item, the tree would not be redrawn correctly.''',
         Bug('''When the user clicks on a URL embedded in a description
 and the URL fails to open, show an error dialog instead of throwing an 
 exception.''')
+        ],
+    featuresAdded=[
+        Feature('''Support for Snarl under Windows (for reminders).'''),
         ],
     ),
 
