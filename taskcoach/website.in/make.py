@@ -202,7 +202,7 @@ debian = download_table(image='debian',
               instructions</a>''',
                         installation='double click the package to start the installer')
 
-ubuntu8 = download_table(image='ubuntu',
+ubuntu_py25 = download_table(image='ubuntu',
                         download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_py25.deb',
                         package_type='Debian package (deb)',
                         platform='Ubuntu', platform_lower='ubuntu',
@@ -214,15 +214,14 @@ ubuntu8 = download_table(image='ubuntu',
               instructions</a>''',
                         installation='double click the package to start the installer')
 
-ubuntu10 = download_table(image='ubuntu',
+ubuntu_py26 = download_table(image='ubuntu',
                         download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_py26.deb',
                         package_type='Debian package (deb)',
                         platform='Ubuntu', platform_lower='ubuntu',
                         platform_versions_supported='Ubuntu 9.10 ("Karmic Koala"), Ubuntu 10.04 LTS ("Lucid Lynx") and newer',
                         prerequisites=prerequisites26,
                         installation='''double click the package to start the 
-installer. Note: %(name)s is not added to the Applications menu due to a bug in %(name)s. You need to start %(name)s from a terminal 
-by typing "%(filename_lower)s.py")''')
+installer.''')
 
 gentoo = download_table(image='gentoo',
                         download_url='http://packages.gentoo.org/package/app-office/taskcoach',
@@ -276,9 +275,9 @@ linux = download_table(image='linux',
 
 pages['download_for_linux'] = sep.join([download_header(platform='Linux',
                                                         release='%(version)s'), 
-                                        debian, ubuntu8, ubuntu10, gentoo, 
-                                        opensuse, fedora8, fedora11, redhat_el4,
-                                        linux])
+                                        ubuntu_py26, ubuntu_py25, debian,
+                                        fedora11, fedora8, gentoo, opensuse,
+                                        redhat_el4, linux])
 
 
 iphone = download_table(image='appstore',
