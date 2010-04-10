@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.0.2', 'April 9, 2010',
+Release('1.0.2', 'April 10, 2010',
     summary='''This release fixes some bugs, and adds support for the Snarl
 notification system.''',
     bugsFixed=[
