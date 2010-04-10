@@ -170,7 +170,7 @@ class SimpleFTP(ftplib.FTP, object):
     def put(self, folder):
         for root, dirs, filenames in os.walk(folder):
             if root != folder:
-                print 'Change into %s'%root, 
+                print 'Change into %s'%root
                 for part in root.split(os.sep):
                     self.cwd(part)
             for dir in dirs:
