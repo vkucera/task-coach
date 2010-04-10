@@ -246,7 +246,7 @@ class UploadSourceZip(FileUpload):
 
 class DEBMixin:
     def filename(self):
-        return 'taskcoach_r%%s-1_all_%s.deb' % self.variant
+        return 'taskcoach_r%%s-1_%s.deb' % self.variant
 
 
 class BuildDEB(DistCompile, DEBMixin):
