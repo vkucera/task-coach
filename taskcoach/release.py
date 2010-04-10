@@ -28,13 +28,14 @@ Release steps:
 - Run 'make alltests'.
 
 - For each platform, create and upload the packages:
-  MaC OS X:  'make clean dmg; python release.py upload'
-  Ubuntu:    'make clean sdist_linux deb; python release.py upload'
-  Fedora 8:  'make clean fedora; python release.py upload', and
-             'make clean rpm; python release.py upload'
-  Fedora 11: 'make clean fedora; python release.py upload'
-  OpenSuse:  'make clean opensuse; python release.py upload'
-  Windows:   'make clean windists; python release.py upload'
+  MaC OS X:    'make clean dmg; python release.py upload'
+  Ubuntu 8.10: 'make clean sdist_linux deb; python release.py upload'
+  Ubuntu 9.10: 'make clean sdist_linux deb; python release.py upload'
+  Fedora 8:    'make clean fedora; python release.py upload', and
+               'make clean rpm; python release.py upload'
+  Fedora 11:   'make clean fedora; python release.py upload'
+  OpenSuse:    'make clean opensuse; python release.py upload'
+  Windows:     'make clean windists; python release.py upload'
 
 - Mark the Windows and Mac OS X distributions as defaults for their platform:
   https://sourceforge.net/project/admin/explorer.php?group_id=130831#
