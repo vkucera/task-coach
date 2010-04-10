@@ -28,13 +28,14 @@ Release steps:
 - Run 'make alltests'.
 
 - For each platform, create and upload the packages:
-  MaC OS X:  'make clean dmg; python release.py upload'
-  Ubuntu:    'make clean sdist_linux deb; python release.py upload'
-  Fedora 8:  'make clean fedora; python release.py upload', and
-             'make clean rpm; python release.py upload'
-  Fedora 11: 'make clean fedora; python release.py upload'
-  OpenSuse:  'make clean opensuse; python release.py upload'
-  Windows:   'make clean windists; python release.py upload'
+  MaC OS X:    'make clean dmg; python release.py upload'
+  Ubuntu 8.10: 'make clean sdist_linux deb; python release.py upload'
+  Ubuntu 9.10: 'make clean sdist_linux deb; python release.py upload'
+  Fedora 8:    'make clean fedora; python release.py upload', and
+               'make clean rpm; python release.py upload'
+  Fedora 11:   'make clean fedora; python release.py upload'
+  OpenSuse:    'make clean opensuse; python release.py upload'
+  Windows:     'make clean windists; python release.py upload'
 
 - Mark the Windows and Mac OS X distributions as defaults for their platform:
   https://sourceforge.net/project/admin/explorer.php?group_id=130831#
@@ -157,6 +158,7 @@ class SimpleFTP(ftplib.FTP, object):
     def __init__(self, hostname, username, password, folder='.'):
         super(SimpleFTP, self).__init__(hostname, username, password)
         self.ensure_folder(folder)
+        self.remote_root = folder
             
     def ensure_folder(self, folder):
         try:
@@ -167,10 +169,10 @@ class SimpleFTP(ftplib.FTP, object):
             
     def put(self, folder):
         for root, dirs, filenames in os.walk(folder):
-            changedDir = root != folder
             if root != folder:
                 print 'Change into %s'%root
-                self.cwd(os.path.basename(root))
+                for part in root.split(os.sep):
+                    self.cwd(part)
             for dir in dirs:
                 print 'Create %s'%os.path.join(root, dir)
                 try:
@@ -181,8 +183,7 @@ class SimpleFTP(ftplib.FTP, object):
                 print 'Store %s'%os.path.join(root, filename)
                 self.storbinary('STOR %s'%filename, 
                                 file(os.path.join(root, filename), 'rb'))
-            if changedDir:
-                self.cwd('..')
+            self.cwd(self.remote_root)
 
     def get(self, filename):
         print 'Retrieve %s'%filename

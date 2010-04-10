@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.0.2', 'April 9, 2010',
+Release('1.0.2', 'April 10, 2010',
     summary='''This release fixes some bugs, and adds support for the Snarl
 notification system.''',
     bugsFixed=[
@@ -47,9 +47,9 @@ and the URL fails to open, show an error dialog instead of throwing an
 exception.'''),
         Bug('''The website pointed Ubuntu 9.10 users to the wrong deb package.''', '2983202'),
         Bug('''On Ubuntu 10.04, Task Coach wouldn't be added to the Applications/Office menu.''', '2978098'),
-        Bug('''When changing a task dates by double-clicking it in the
-calendar viewer, if the change would make the task disappear from the
-current period, the task was not properly drawn.''')
+        Bug('''After double clicking a task in the calendar viewer and
+changing its dates, if the change would make the task disappear from the
+current period, the task would not be properly drawn.''')
         ],
     featuresAdded=[
         Feature('''Support for Snarl under Windows (for reminders).'''),
