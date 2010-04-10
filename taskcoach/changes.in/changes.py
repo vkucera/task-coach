@@ -46,7 +46,10 @@ viewer and collaps an item, the tree would not be redrawn correctly.''',
 and the URL fails to open, show an error dialog instead of throwing an 
 exception.'''),
         Bug('''The website pointed Ubuntu 9.10 users to the wrong deb package.''', '2983202'),
-        Bug('''On Ubuntu 10.04, Task Coach wouldn't be added to the Applications/Office menu.''', '2978098')
+        Bug('''On Ubuntu 10.04, Task Coach wouldn't be added to the Applications/Office menu.''', '2978098'),
+        Bug('''When changing a task dates by double-clicking it in the
+calendar viewer, if the change would make the task disappear from the
+current period, the task was not properly drawn.''')
         ],
     featuresAdded=[
         Feature('''Support for Snarl under Windows (for reminders).'''),
