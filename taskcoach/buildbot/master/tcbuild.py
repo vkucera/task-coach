@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from buildbot.steps.shell import Compile, WithProperties
+from buildbot.steps.shell import Compile, ShellCommand, WithProperties
 from buildbot.steps.transfer import FileUpload, DirectoryUpload
 from buildbot import interfaces
 from buildbot.process.buildstep import SUCCESS, FAILURE
@@ -86,6 +86,13 @@ class DistributionTests(Compile):
     def __init__(self, **kwargs):
         kwargs['command'] = ['make', 'disttests']
         Compile.__init__(self, **kwargs)
+
+
+class KillEXE(ShellCommand):
+    name = 'Cleanup'
+    command = ['taskkill', '/F', '/IM', 'taskcoach.exe']
+    description = ['Killing', 'exe']
+    descriptionDone = ['Exe', 'killed']
 
 
 class Coverage(Compile):
