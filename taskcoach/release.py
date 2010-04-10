@@ -158,6 +158,7 @@ class SimpleFTP(ftplib.FTP, object):
     def __init__(self, hostname, username, password, folder='.'):
         super(SimpleFTP, self).__init__(hostname, username, password)
         self.ensure_folder(folder)
+        self.remote_root = folder
             
     def ensure_folder(self, folder):
         try:
@@ -168,10 +169,10 @@ class SimpleFTP(ftplib.FTP, object):
             
     def put(self, folder):
         for root, dirs, filenames in os.walk(folder):
-            changedDir = root != folder
             if root != folder:
-                print 'Change into %s'%root
-                self.cwd(os.path.basename(root))
+                print 'Change into %s'%root, 
+                for part in root.split(os.sep):
+                    self.cwd(part)
             for dir in dirs:
                 print 'Create %s'%os.path.join(root, dir)
                 try:
@@ -182,8 +183,7 @@ class SimpleFTP(ftplib.FTP, object):
                 print 'Store %s'%os.path.join(root, filename)
                 self.storbinary('STOR %s'%filename, 
                                 file(os.path.join(root, filename), 'rb'))
-            if changedDir:
-                self.cwd('..')
+            self.cwd(self.remote_root)
 
     def get(self, filename):
         print 'Retrieve %s'%filename
