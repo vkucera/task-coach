@@ -246,7 +246,7 @@ class UploadSourceZip(FileUpload):
 
 class DEBMixin:
     def filename(self):
-        return 'taskcoach_r%s-1_all.deb'
+        return 'taskcoach_r%%s-1_all_%s.deb' % self.variant
 
 
 class BuildDEB(DistCompile, DEBMixin):
@@ -254,9 +254,16 @@ class BuildDEB(DistCompile, DEBMixin):
     description = ['Generating', 'Debian', 'package']
     descriptionDone = ['Debian', 'package']
 
+    def __init__(self, **kwargs):
+        self.variant = kwargs.pop('variant')
+        DistCompile.__init__(self, **kwargs)
+
 
 class UploadDEB(UploadBase, DEBMixin):
-    pass
+    def __init__(self, **kwargs):
+        self.variant = kwargs.pop('variant')
+        UploadBase.__init__(self, **kwargs)
+
 
 # Generic RPM
 
