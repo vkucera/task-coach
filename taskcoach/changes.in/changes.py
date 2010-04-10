@@ -23,16 +23,36 @@ from changetypes import *
 
 releases = [
 
-Release('1.0.2', 'March 30, 2010',
-    summary='''This is a bugfix release.''',
+Release('1.0.2', 'April 9, 2010',
+    summary='''This release fixes some bugs, and adds support for the Snarl
+notification system.''',
     bugsFixed=[
         Bug('''Exports and prints would show long descriptions abbreviated with
 "...", exactly as the long descriptions were displayed in the description 
 column of task, category, and note tree viewers. To fix this, the task, 
 category, and note tree viewers show descriptions fully (when the description 
 column is visible).''', '2975805'),
-        Bug('''In the calendar viewer, march 31st would not appear.''', '2979461'),
-        Bug('''13th hour would not show up in daily calendar view''', '2979452'),
+        Bug('''In the calendar viewer, March 31st would not appear.''', '2979461'),
+        Bug('''The 13th hour would not show up in thr daily calendar view.''', 
+            '2979452'),
+        Bug('''The position of the main window wouldn't be saved so it
+couldn't be restored the next session.''', '2969292'),
+        Bug('''On Ubuntu, when the user would scroll to the bottom of a tree
+viewer and collaps an item, the tree would not be redrawn correctly.''', 
+'2947136'),
+        Bug('''Setting a task to 100 percent complete didn't work.''', 
+            '2982561'),
+        Bug('''When the user clicks on a URL embedded in a description
+and the URL fails to open, show an error dialog instead of throwing an 
+exception.'''),
+        Bug('''The website pointed Ubuntu 9.10 users to the wrong deb package.''', '2983202'),
+        Bug('''On Ubuntu 10.04, Task Coach wouldn't be added to the Applications/Office menu.''', '2978098'),
+        Bug('''When changing a task dates by double-clicking it in the
+calendar viewer, if the change would make the task disappear from the
+current period, the task was not properly drawn.''')
+        ],
+    featuresAdded=[
+        Feature('''Support for Snarl under Windows (for reminders).'''),
         ],
     ),
 

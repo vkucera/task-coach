@@ -74,8 +74,15 @@ opensuse: sdist_linux
 	mv dist/taskcoach-$(TCVERSION)-1.noarch.rpm dist/taskcoach-$(TCVERSION)-1.opensuse.noarch.rpm
 	mv dist/taskcoach-$(TCVERSION)-1.src.rpm dist/taskcoach-$(TCVERSION)-1.opensuse.src.rpm
 
+ifeq ("2.5","$(PYTHONVERSION)")
+    pydeb="py25"
+else
+    pydeb="py26"
+endif
+
 deb: sdist_linux
 	$(PYTHON) make.py bdist_deb --sdist=dist/TaskCoach-$(TCVERSION).tar.gz
+	mv dist/taskcoach_$(TCVERSION)-1_all.deb dist/taskcoach_$(TCVERSION)-1_$(pydeb).deb
 
 dmg: prepare
 	$(PYTHON) make.py py2app
@@ -105,7 +112,7 @@ website: changes
 	$(PYTHON) tools/webchecker.py website.out/index.html
 
 epydoc:
-	$(EPYDOC) --parse-only -q -o epydoc.out taskcoachlib taskcoach.py
+	$(EPYDOC) --parse-only -v --simple-term -o epydoc.out taskcoachlib taskcoach.py
 
 dot:
 	$(PYTHON) dot.py taskcoachlib/gui/viewer > dot.out/viewer.dot

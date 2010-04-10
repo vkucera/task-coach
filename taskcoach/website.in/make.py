@@ -98,6 +98,8 @@ prerequisites = '''
                  onClick="javascript: pageTracker._trackPageview('/outgoing/wxpython.org/download');">wxPython</a>
               <strong>%(wxpythonversion)s</strong> (or newer)'''
 
+prerequisites26 = prerequisites%dict(pythonversion='2.6', 
+                                     wxpythonversion='%(wxpythonversion)s')
 
 def download_header(platform=None, release=None, warning=None):
     title = 'Download %(name)s'
@@ -200,11 +202,11 @@ debian = download_table(image='debian',
               instructions</a>''',
                         installation='double click the package to start the installer')
 
-ubuntu8 = download_table(image='ubuntu',
-                        download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_all.deb',
+ubuntu_py25 = download_table(image='ubuntu',
+                        download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_py25.deb',
                         package_type='Debian package (deb)',
                         platform='Ubuntu', platform_lower='ubuntu',
-                        platform_versions_supported='Ubuntu 8.04 LTS ("Hardy Heron"), Ubuntu 9.04 ("Jaunty Jackalope"), and Ubuntu 9.10 ("Karmic Koala")',
+                        platform_versions_supported='Ubuntu 8.04 LTS ("Hardy Heron") and Ubuntu 9.04 ("Jaunty Jackalope")',
                         prerequisites=prerequisites + ''' If your Ubuntu 
               installation does not have the minimally required wxPython version 
               you will need to install it yourself following 
@@ -212,15 +214,14 @@ ubuntu8 = download_table(image='ubuntu',
               instructions</a>''',
                         installation='double click the package to start the installer')
 
-ubuntu10 = download_table(image='ubuntu',
-                        download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_ubuntu10_all.deb',
+ubuntu_py26 = download_table(image='ubuntu',
+                        download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_py26.deb',
                         package_type='Debian package (deb)',
                         platform='Ubuntu', platform_lower='ubuntu',
-                        platform_versions_supported='Ubuntu 10.04 LTS ("Lucid Lynx") and newer',
-                        prerequisites=prerequisites,
+                        platform_versions_supported='Ubuntu 9.10 ("Karmic Koala"), Ubuntu 10.04 LTS ("Lucid Lynx") and newer',
+                        prerequisites=prerequisites26,
                         installation='''double click the package to start the 
-installer. Note: %(name)s is not added to the Applications menu due to a bug in either Ubuntu 10.04 or %(name)s. You need to start %(name)s from a terminal 
-by typing "%(filename_lower)s.py")''')
+installer.''')
 
 gentoo = download_table(image='gentoo',
                         download_url='http://packages.gentoo.org/package/app-office/taskcoach',
@@ -251,9 +252,19 @@ fedora11 = download_table(image='fedora',
                           package_type='RPM package',
                           platform='Fedora', platform_lower='fedora',
                           platform_versions_supported='Fedora 11 and later',
-                          prerequisites=prerequisites,
+                          prerequisites=prerequisites26,
                           installation='<tt>$ sudo yum install --nogpgcheck %(filename_lower)s-%(version)s-1.fc*.noarch.rpm</tt>')
 
+redhat_el4 = download_table(image='redhat',
+                            download_url='%(dist_download_prefix)s/%(filename)s-%(version)s.tar.gz',
+                            package_type='Source tar archive',
+                            platform='Red hat Enterprise Linux 4', platform_lower='redhat',
+                            platform_versions_supported='Red Hat Enterprise Linux 4',
+                            prerequisites=prerequisites,
+                            installation='''follow the instructions on
+<a href='http://warped.org/blog/2010/04/02/ch0wned-installing-taskcoach-and-all-its-depenencies-in-home-for-el4/'>
+Max Baker's blog</a>.''')
+                            
 linux = download_table(image='linux',
                        download_url='%(dist_download_prefix)s/%(filename)s-%(version)s-1.noarch.rpm',
                        package_type='RPM package',
@@ -264,8 +275,9 @@ linux = download_table(image='linux',
 
 pages['download_for_linux'] = sep.join([download_header(platform='Linux',
                                                         release='%(version)s'), 
-                                        debian, ubuntu8, ubuntu10, gentoo, 
-                                        opensuse, fedora8, fedora11, linux])
+                                        ubuntu_py26, ubuntu_py25, debian,
+                                        fedora11, fedora8, gentoo, opensuse,
+                                        redhat_el4, linux])
 
 
 iphone = download_table(image='appstore',
