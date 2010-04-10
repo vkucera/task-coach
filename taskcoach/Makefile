@@ -112,7 +112,7 @@ website: changes
 	$(PYTHON) tools/webchecker.py website.out/index.html
 
 epydoc:
-	$(EPYDOC) --parse-only -q --simple-term -o epydoc.out taskcoachlib taskcoach.py
+	$(EPYDOC) --parse-only -v --simple-term -o epydoc.out taskcoachlib taskcoach.py
 
 dot:
 	$(PYTHON) dot.py taskcoachlib/gui/viewer > dot.out/viewer.dot
