@@ -3,7 +3,7 @@
 /* This file is distributed under the same license as the taskcoach-iphone package. */
 /* FIRST AUTHOR <EMAIL@ADDRESS>, 2009. */
 /* */
-"" = "Project-Id-Version: taskcoach-iphone\nReport-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\nPOT-Creation-Date: 2010-02-20 15:23+0100\nPO-Revision-Date: 2010-02-20 16:33+0000\nLast-Translator: Frank Niessink <frank@niessink.com>\nLanguage-Team: Dutch <nl@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Launchpad-Export-Date: 2010-02-21 08:28+0000\nX-Generator: Launchpad (build Unknown)\n";
+"" = "Project-Id-Version: taskcoach-iphone\nReport-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\nPOT-Creation-Date: 2010-04-05 11:52+0200\nPO-Revision-Date: 2010-04-10 14:48+0000\nLast-Translator: Frank Niessink <frank@niessink.com>\nLanguage-Team: Dutch <nl@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Launchpad-Export-Date: 2010-04-11 08:48+0000\nX-Generator: Launchpad (build Unknown)\n";
 
 /* File: Classes/StringChoiceController.m:67 */
 /* File: Classes/Synchronization/AuthentificationState.m:94 */
@@ -56,37 +56,40 @@
 /* Flag: objc-format */
 "Started %@" = "%@ gestart";
 
-/* File: Classes/TaskViewController.m:88 */
+/* File: Classes/TaskViewController.m:59 */
 "Overdue" = "Te laat";
 
-/* File: Classes/TaskViewController.m:95 */
+/* File: Classes/TaskViewController.m:66 */
 "Due soon" = "Binnenkort af te ronden";
 
-/* File: Classes/TaskViewController.m:102 */
+/* File: Classes/TaskViewController.m:73 */
 "Started" = "Gestart";
 
-/* File: Classes/TaskViewController.m:109 */
+/* File: Classes/TaskViewController.m:80 */
 "Not started" = "Niet gestart";
 
-/* File: Classes/TaskViewController.m:274 */
+/* File: Classes/TaskViewController.m:142 */
+"Search tasks..." = "Zoek taken...";
+
+/* File: Classes/TaskViewController.m:293 */
 "Confirmation" = "Bevestiging";
 
-/* File: Classes/TaskViewController.m:275 */
+/* File: Classes/TaskViewController.m:294 */
 /* Flag: objc-format */
 "Do you really want to mark \"%@\" complete ?" = "Wilt u \"%@\" echt als afgerond markeren?";
 
-/* File: Classes/TaskViewController.m:276 */
-/* File: Classes/TaskDetailsController.m:331 */
+/* File: Classes/TaskViewController.m:295 */
+/* File: Classes/TaskDetailsController.m:335 */
 "No" = "Nee";
 
-/* File: Classes/TaskViewController.m:277 */
-/* File: Classes/TaskDetailsController.m:331 */
+/* File: Classes/TaskViewController.m:296 */
+/* File: Classes/TaskDetailsController.m:335 */
 "Yes" = "Ja";
 
-/* File: Classes/TaskViewController.m:328 */
+/* File: Classes/TaskViewController.m:350 */
 "No tasks." = "Geen taken.";
 
-/* File: Classes/TaskViewController.m:372 */
+/* File: Classes/TaskViewController.m:397 */
 "Add task..." = "Taak toevoegen...";
 
 /* File: Classes/TaskCellBig.m:76 */
@@ -107,26 +110,26 @@
 "None" = "Geen";
 
 /* File: Classes/CategoryViewController.m:60 */
-/* File: Classes/CategoryViewController.m:351 */
-/* File: Classes/CategoryViewController.m:424 */
+/* File: Classes/CategoryViewController.m:336 */
+/* File: Classes/CategoryViewController.m:407 */
 "All" = "Alle";
 
-/* File: Classes/CategoryViewController.m:152 */
-/* File: Classes/CategoryViewController.m:300 */
-/* File: Classes/CategoryViewController.m:328 */
-/* File: Classes/CategoryViewController.m:336 */
+/* File: Classes/CategoryViewController.m:154 */
+/* File: Classes/CategoryViewController.m:285 */
+/* File: Classes/CategoryViewController.m:313 */
+/* File: Classes/CategoryViewController.m:321 */
 "Enter category name" = "Voer categorienaam in";
 
-/* File: Classes/CategoryViewController.m:394 */
+/* File: Classes/CategoryViewController.m:379 */
 "Add subcategory" = "Subcategorie toevoegen";
 
-/* File: Classes/CategoryViewController.m:471 */
-/* File: Classes/CategoryViewController.m:496 */
+/* File: Classes/CategoryViewController.m:450 */
+/* File: Classes/CategoryViewController.m:475 */
 "Looking for Task Coach" = "Task Coach aan het zoeken";
 
 /* File: Classes/TaskCoachAppDelegate.m:24 */
 /* File: Classes/Synchronization/AuthentificationState.m:24 */
-/* File: Classes/TaskDetailsController.m:331 */
+/* File: Classes/TaskDetailsController.m:335 */
 "Cancel" = "Annuleren";
 
 /* File: Classes/TaskCoachAppDelegate.m:25 */
@@ -198,14 +201,17 @@
 /* File: Classes/TaskDetailsController.m:125 */
 "Completion" = "Afronding";
 
-/* File: Classes/TaskDetailsController.m:164 */
-/* File: Classes/TaskDetailsController.m:428 */
+/* File: Classes/TaskDetailsController.m:166 */
+"New subtask" = "Nieuwe subtaak";
+
+/* File: Classes/TaskDetailsController.m:168 */
+/* File: Classes/TaskDetailsController.m:432 */
 "New task" = "Nieuwe taak";
 
-/* File: Classes/TaskDetailsController.m:330 */
+/* File: Classes/TaskDetailsController.m:334 */
 "Warning" = "Waarschuwing";
 
-/* File: Classes/TaskDetailsController.m:330 */
+/* File: Classes/TaskDetailsController.m:334 */
 /* Flag: objc-format */
 "There are %d task(s) currently tracked. Stop tracking them ?" = "Er wordt tijd bijgehouden voor %d taken. Tijdsbesteding stoppen?";
 

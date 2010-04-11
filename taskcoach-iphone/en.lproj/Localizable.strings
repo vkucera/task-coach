@@ -4,7 +4,7 @@
 /* FIRST AUTHOR <EMAIL@ADDRESS>, YEAR. */
 /* */
 /* Flag: untranslated */
-"" = "" /* = "Project-Id-Version: PACKAGE VERSION\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2010-02-20 15:23+0100\nPO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\nLast-Translator: FULL NAME <EMAIL@ADDRESS>\nLanguage-Team: LANGUAGE <LL@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\n" */;
+"" = "" /* = "Project-Id-Version: PACKAGE VERSION\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2010-04-05 11:52+0200\nPO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\nLast-Translator: FULL NAME <EMAIL@ADDRESS>\nLanguage-Team: LANGUAGE <LL@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\n" */;
 
 /* File: Classes/StringChoiceController.m:67 */
 /* File: Classes/Synchronization/AuthentificationState.m:94 */
@@ -70,46 +70,50 @@
 /* Flag: objc-format */
 "Started %@" = "Started %@";
 
-/* File: Classes/TaskViewController.m:88 */
+/* File: Classes/TaskViewController.m:59 */
 /* Flag: untranslated */
 "Overdue" = "Overdue";
 
-/* File: Classes/TaskViewController.m:95 */
+/* File: Classes/TaskViewController.m:66 */
 /* Flag: untranslated */
 "Due soon" = "Due soon";
 
-/* File: Classes/TaskViewController.m:102 */
+/* File: Classes/TaskViewController.m:73 */
 /* Flag: untranslated */
 "Started" = "Started";
 
-/* File: Classes/TaskViewController.m:109 */
+/* File: Classes/TaskViewController.m:80 */
 /* Flag: untranslated */
 "Not started" = "Not started";
 
-/* File: Classes/TaskViewController.m:274 */
+/* File: Classes/TaskViewController.m:142 */
+/* Flag: untranslated */
+"Search tasks..." = "Search tasks...";
+
+/* File: Classes/TaskViewController.m:293 */
 /* Flag: untranslated */
 "Confirmation" = "Confirmation";
 
-/* File: Classes/TaskViewController.m:275 */
+/* File: Classes/TaskViewController.m:294 */
 /* Flag: untranslated */
 /* Flag: objc-format */
 "Do you really want to mark \"%@\" complete ?" = "Do you really want to mark \"%@\" complete ?";
 
-/* File: Classes/TaskViewController.m:276 */
-/* File: Classes/TaskDetailsController.m:331 */
+/* File: Classes/TaskViewController.m:295 */
+/* File: Classes/TaskDetailsController.m:335 */
 /* Flag: untranslated */
 "No" = "No";
 
-/* File: Classes/TaskViewController.m:277 */
-/* File: Classes/TaskDetailsController.m:331 */
+/* File: Classes/TaskViewController.m:296 */
+/* File: Classes/TaskDetailsController.m:335 */
 /* Flag: untranslated */
 "Yes" = "Yes";
 
-/* File: Classes/TaskViewController.m:328 */
+/* File: Classes/TaskViewController.m:350 */
 /* Flag: untranslated */
 "No tasks." = "No tasks.";
 
-/* File: Classes/TaskViewController.m:372 */
+/* File: Classes/TaskViewController.m:397 */
 /* Flag: untranslated */
 "Add task..." = "Add task...";
 
@@ -135,30 +139,30 @@
 "None" = "None";
 
 /* File: Classes/CategoryViewController.m:60 */
-/* File: Classes/CategoryViewController.m:351 */
-/* File: Classes/CategoryViewController.m:424 */
+/* File: Classes/CategoryViewController.m:336 */
+/* File: Classes/CategoryViewController.m:407 */
 /* Flag: untranslated */
 "All" = "All";
 
-/* File: Classes/CategoryViewController.m:152 */
-/* File: Classes/CategoryViewController.m:300 */
-/* File: Classes/CategoryViewController.m:328 */
-/* File: Classes/CategoryViewController.m:336 */
+/* File: Classes/CategoryViewController.m:154 */
+/* File: Classes/CategoryViewController.m:285 */
+/* File: Classes/CategoryViewController.m:313 */
+/* File: Classes/CategoryViewController.m:321 */
 /* Flag: untranslated */
 "Enter category name" = "Enter category name";
 
-/* File: Classes/CategoryViewController.m:394 */
+/* File: Classes/CategoryViewController.m:379 */
 /* Flag: untranslated */
 "Add subcategory" = "Add subcategory";
 
-/* File: Classes/CategoryViewController.m:471 */
-/* File: Classes/CategoryViewController.m:496 */
+/* File: Classes/CategoryViewController.m:450 */
+/* File: Classes/CategoryViewController.m:475 */
 /* Flag: untranslated */
 "Looking for Task Coach" = "Looking for Task Coach";
 
 /* File: Classes/TaskCoachAppDelegate.m:24 */
 /* File: Classes/Synchronization/AuthentificationState.m:24 */
-/* File: Classes/TaskDetailsController.m:331 */
+/* File: Classes/TaskDetailsController.m:335 */
 /* Flag: untranslated */
 "Cancel" = "Cancel";
 
@@ -252,16 +256,20 @@
 /* Flag: untranslated */
 "Completion" = "Completion";
 
-/* File: Classes/TaskDetailsController.m:164 */
-/* File: Classes/TaskDetailsController.m:428 */
+/* File: Classes/TaskDetailsController.m:166 */
+/* Flag: untranslated */
+"New subtask" = "New subtask";
+
+/* File: Classes/TaskDetailsController.m:168 */
+/* File: Classes/TaskDetailsController.m:432 */
 /* Flag: untranslated */
 "New task" = "New task";
 
-/* File: Classes/TaskDetailsController.m:330 */
+/* File: Classes/TaskDetailsController.m:334 */
 /* Flag: untranslated */
 "Warning" = "Warning";
 
-/* File: Classes/TaskDetailsController.m:330 */
+/* File: Classes/TaskDetailsController.m:334 */
 /* Flag: untranslated */
 /* Flag: objc-format */
 "There are %d task(s) currently tracked. Stop tracking them ?" = "There are %d task(s) currently tracked. Stop tracking them ?";

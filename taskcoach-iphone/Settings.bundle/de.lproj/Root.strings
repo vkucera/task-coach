@@ -1,0 +1,19 @@
+﻿"" = "Project-Id-Version: taskcoach-iphone\nReport-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\nPOT-Creation-Date: 2010-04-05 11:52+0200\nPO-Revision-Date: 2010-04-10 15:25+0000\nLast-Translator: Frank Niessink <frank@niessink.com>\nLanguage-Team: German <de@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Launchpad-Export-Date: 2010-04-11 08:52+0000\nX-Generator: Launchpad (build Unknown)\n";
+
+"Display" = "Bildschirm";
+
+"Show completed" = "Erledigte Aufgaben anzeigen";
+
+"Icon position" = "Symbol Position";
+
+"Left" = "Links";
+
+"Right" = "Rechts";
+
+"Compact tasks" = "Aufgaben verdichten";
+
+"Misc" = "Verschiedenes";
+
+"Confirm complete" = "Erledigt bestätigen";
+
+"Due soon # of days     " = "Bald fällig # Tage     ";
