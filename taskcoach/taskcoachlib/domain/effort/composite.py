@@ -210,6 +210,9 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
                 return None
         return Total()
 
+    def isTotal(self):
+        return True
+
     def description(self, *args, **kwargs): # pylint: disable-msg=W0613
         return _('Total for %s')%render.dateTimePeriod(self.getStart(), self.getStop())
 

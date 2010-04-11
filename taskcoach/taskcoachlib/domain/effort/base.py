@@ -52,6 +52,9 @@ class BaseEffort(object):
     def duration(self, recursive=False):
         raise NotImplementedError
 
+    def isTotal(self):
+        return False # Are we a detail effort or a total effort? For sorting.
+
     @classmethod
     def trackStartEventType(class_):
         return 'effort.track.start' 
