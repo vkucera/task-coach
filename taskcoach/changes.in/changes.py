@@ -3,7 +3,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2010 JÃ©rÃ´me Laheurte <fraca7@free.fr>
+Copyright (C) 2007-2010 Jérôme Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,6 +23,15 @@ from changetypes import *
 
 releases = [
 
+Release('1.0.3', 'April 11, 2010',
+    summary='''This release ...''',
+    featuresAdded=[
+        Feature('''Use item titles in dialogs and in the undo/redo menu to
+make it clearer what items the user is/was working on.''',
+        'http://uservoice.com/a/9zBuo')
+        ]
+    ),
+    
 Release('1.0.2', 'April 10, 2010',
     summary='''This release fixes some bugs, and adds support for the Snarl
 notification system.''',

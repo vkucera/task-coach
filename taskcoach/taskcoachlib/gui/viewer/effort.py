@@ -3,7 +3,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2008 JÃ©rÃ´me Laheurte <fraca7@free.fr>
+Copyright (C) 2007-2008 Jérôme Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -374,5 +374,8 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         return command.EditEffortCommand
 
     def newSubItemCommandClass(self):
-        pass # efforts are not composite. 
+        pass # efforts are not composite.
+
+    def deleteItemCommandClass(self):
+        return command.DeleteEffortCommand
     
