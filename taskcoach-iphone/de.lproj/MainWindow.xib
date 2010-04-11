@@ -132,7 +132,7 @@
 							<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						</object>
 						<object class="IBUINavigationItem" key="IBUINavigationItem" id="1010082308">
-							<string key="IBUITitle">Catégories</string>
+							<string key="IBUITitle">Kategorien</string>
 						</object>
 						<reference key="IBUIParentViewController" ref="1019111547"/>
 						<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>

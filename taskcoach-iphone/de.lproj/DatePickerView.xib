@@ -81,7 +81,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<object class="IBUIButton" id="45459228">
 						<reference key="NSNextResponder" ref="453008371"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{228, 253}, {72, 37}}</string>
+						<string key="NSFrame">{{198, 253}, {102, 37}}</string>
 						<reference key="NSSuperview" ref="453008371"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
@@ -93,10 +93,10 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 							<int key="NSfFlags">16</int>
 						</object>
 						<int key="IBUIButtonType">1</int>
-						<string key="IBUIHighlightedTitle">Opslaan</string>
-						<string key="IBUIDisabledTitle">Opslaan</string>
-						<string key="IBUISelectedTitle">Opslaan</string>
-						<string key="IBUINormalTitle">Opslaan</string>
+						<string key="IBUIHighlightedTitle">Speichern</string>
+						<string key="IBUIDisabledTitle">Speichern</string>
+						<string key="IBUISelectedTitle">Speichern</string>
+						<string key="IBUINormalTitle">Speichern</string>
 						<object class="NSColor" key="IBUIHighlightedTitleColor" id="775927502">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MSAxIDEAA</bytes>
@@ -113,7 +113,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<object class="IBUIButton" id="359180103">
 						<reference key="NSNextResponder" ref="453008371"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 253}, {97, 37}}</string>
+						<string key="NSFrame">{{20, 253}, {106, 37}}</string>
 						<reference key="NSSuperview" ref="453008371"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
@@ -121,10 +121,10 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<reference key="IBUIFont" ref="238874666"/>
 						<int key="IBUIButtonType">1</int>
-						<string key="IBUIHighlightedTitle">Annuleren</string>
-						<string key="IBUIDisabledTitle">Annuleren</string>
-						<string key="IBUISelectedTitle">Annuleren</string>
-						<string key="IBUINormalTitle">Annuleren</string>
+						<string key="IBUIHighlightedTitle">Abbrechen</string>
+						<string key="IBUIDisabledTitle">Abbrechen</string>
+						<string key="IBUISelectedTitle">Abbrechen</string>
+						<string key="IBUINormalTitle">Abbrechen</string>
 						<reference key="IBUIHighlightedTitleColor" ref="775927502"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
@@ -473,7 +473,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="878572759">
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="365836028">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">UIKit.framework/Headers/UIResponder.h</string>
 					</object>
@@ -513,7 +513,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 				<object class="IBPartialClassDescription">
 					<string key="className">UIResponder</string>
 					<string key="superclassName">NSObject</string>
-					<reference key="sourceIdentifier" ref="878572759"/>
+					<reference key="sourceIdentifier" ref="365836028"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">UISearchBar</string>
