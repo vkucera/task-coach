@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-20 15:23+0100\n"
-"PO-Revision-Date: 2010-02-20 15:13+0100\n"
+"POT-Creation-Date: 2010-04-05 11:52+0200\n"
+"PO-Revision-Date: 2010-04-05 11:06+0000\n"
 "Last-Translator: Jérôme Laheurte <fraca7@free.fr>\n"
 "Language-Team: Jérôme Laheurte <fraca7@free.fr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-09-27 06:32+0000\n"
+"X-Launchpad-Export-Date: 2010-04-11 08:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: France\n"
 "X-Poedit-Language: fr\n"
@@ -49,8 +49,7 @@ msgstr "Ajouter domaine"
 msgid "Searching for services"
 msgstr "Recherche des services"
 
-#: Classes/SyncViewController.m:49
-#: Classes/Synchronization/InitialState.m:23
+#: Classes/SyncViewController.m:49 Classes/Synchronization/InitialState.m:23
 msgid "Connecting..."
 msgstr "Connexion..."
 
@@ -79,46 +78,48 @@ msgstr "%d jours"
 msgid "Started %@"
 msgstr "Démarrée %@"
 
-#: Classes/TaskViewController.m:88
+#: Classes/TaskViewController.m:59
 msgid "Overdue"
 msgstr "En dépassement"
 
-#: Classes/TaskViewController.m:95
+#: Classes/TaskViewController.m:66
 msgid "Due soon"
 msgstr "Dûe(s) bientôt"
 
-#: Classes/TaskViewController.m:102
+#: Classes/TaskViewController.m:73
 msgid "Started"
 msgstr "Démarrée(s)"
 
-#: Classes/TaskViewController.m:109
+#: Classes/TaskViewController.m:80
 msgid "Not started"
 msgstr "Pas démarrée(s)"
 
-#: Classes/TaskViewController.m:274
+#: Classes/TaskViewController.m:142
+msgid "Search tasks..."
+msgstr "Rechercher des tâches..."
+
+#: Classes/TaskViewController.m:293
 msgid "Confirmation"
 msgstr "Confirmation"
 
-#: Classes/TaskViewController.m:275
+#: Classes/TaskViewController.m:294
 #, objc-format
 msgid "Do you really want to mark \"%@\" complete ?"
 msgstr "Voulez-vous vraiment marquer \"%@\" terminée ?"
 
-#: Classes/TaskViewController.m:276
-#: Classes/TaskDetailsController.m:331
+#: Classes/TaskViewController.m:295 Classes/TaskDetailsController.m:335
 msgid "No"
 msgstr "Non"
 
-#: Classes/TaskViewController.m:277
-#: Classes/TaskDetailsController.m:331
+#: Classes/TaskViewController.m:296 Classes/TaskDetailsController.m:335
 msgid "Yes"
 msgstr "Oui"
 
-#: Classes/TaskViewController.m:328
+#: Classes/TaskViewController.m:350
 msgid "No tasks."
 msgstr "Pas de tâches."
 
-#: Classes/TaskViewController.m:372
+#: Classes/TaskViewController.m:397
 msgid "Add task..."
 msgstr "Ajouter une tâche..."
 
@@ -127,9 +128,7 @@ msgstr "Ajouter une tâche..."
 msgid "Completed %@"
 msgstr "Terminée %@"
 
-#: Classes/TaskCellBig.m:79
-#: Classes/TaskCellBig.m:82
-#: Classes/TaskCellBig.m:86
+#: Classes/TaskCellBig.m:79 Classes/TaskCellBig.m:82 Classes/TaskCellBig.m:86
 #, objc-format
 msgid "Due %@"
 msgstr "Dûe %@"
@@ -143,31 +142,27 @@ msgstr "Démarrée %@"
 msgid "None"
 msgstr "Aucune"
 
-#: Classes/CategoryViewController.m:60
-#: Classes/CategoryViewController.m:351
-#: Classes/CategoryViewController.m:424
+#: Classes/CategoryViewController.m:60 Classes/CategoryViewController.m:336
+#: Classes/CategoryViewController.m:407
 msgid "All"
 msgstr "Toutes"
 
-#: Classes/CategoryViewController.m:152
-#: Classes/CategoryViewController.m:300
-#: Classes/CategoryViewController.m:328
-#: Classes/CategoryViewController.m:336
+#: Classes/CategoryViewController.m:154 Classes/CategoryViewController.m:285
+#: Classes/CategoryViewController.m:313 Classes/CategoryViewController.m:321
 msgid "Enter category name"
 msgstr "Entrez le nom de la catégorie"
 
-#: Classes/CategoryViewController.m:394
+#: Classes/CategoryViewController.m:379
 msgid "Add subcategory"
 msgstr "Ajouter une sous-catégorie"
 
-#: Classes/CategoryViewController.m:471
-#: Classes/CategoryViewController.m:496
+#: Classes/CategoryViewController.m:450 Classes/CategoryViewController.m:475
 msgid "Looking for Task Coach"
 msgstr "Recherche de Task Coach"
 
 #: Classes/TaskCoachAppDelegate.m:24
 #: Classes/Synchronization/AuthentificationState.m:24
-#: Classes/TaskDetailsController.m:331
+#: Classes/TaskDetailsController.m:335
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -175,8 +170,7 @@ msgstr "Annuler"
 msgid "Save"
 msgstr "Sauver"
 
-#: Classes/TaskCoachAppDelegate.m:26
-#: Classes/TaskDetailsController.m:105
+#: Classes/TaskCoachAppDelegate.m:26 Classes/TaskDetailsController.m:105
 msgid "Categories"
 msgstr "Catégories"
 
@@ -205,8 +199,14 @@ msgid "Connection error"
 msgstr "Erreur de connexion"
 
 #: Classes/Synchronization/InitialState.m:51
-msgid "An error occurred while connecting to the remote host. Please check your settings. Also check that Task Coach is running on the remote host. Last, check your firewall settings."
-msgstr "Une erreur est survenue lors de la connexion à l'hôte distant. Veuillez vérifier vos paramètres. Vérifier également que Task Coach tourne sur l'hôte distant. Enfin, vérifiez la configuration de votre pare-feu."
+msgid ""
+"An error occurred while connecting to the remote host. Please check your "
+"settings. Also check that Task Coach is running on the remote host. Last, "
+"check your firewall settings."
+msgstr ""
+"Une erreur est survenue lors de la connexion à l'hôte distant. Veuillez "
+"vérifier vos paramètres. Vérifier également que Task Coach tourne sur l'hôte "
+"distant. Enfin, vérifiez la configuration de votre pare-feu."
 
 #: Classes/Synchronization/InitialState.m:52
 #: Classes/Synchronization/BaseState.m:36
@@ -228,8 +228,12 @@ msgid "Protocol negotiation..."
 msgstr "Négotiation du protocole..."
 
 #: Classes/Synchronization/ProtocolNegotiationState.m:61
-msgid "The version of the desktop Task Coach is too old. Please upgrade it and retry."
-msgstr "Cette version de Task Coach pour le bureau est trop vieille. Veuillez la mettre à jour et réessayer."
+msgid ""
+"The version of the desktop Task Coach is too old. Please upgrade it and "
+"retry."
+msgstr ""
+"Cette version de Task Coach pour le bureau est trop vieille. Veuillez la "
+"mettre à jour et réessayer."
 
 #: Classes/Synchronization/FullFromDesktopState.m:36
 msgid "Synchronizing..."
@@ -243,8 +247,7 @@ msgstr "Arrêter le suivi"
 msgid "Start tracking"
 msgstr "Démarrer le suivi"
 
-#: Classes/TaskDetailsController.m:65
-#: Classes/TaskDetailsController.m:70
+#: Classes/TaskDetailsController.m:65 Classes/TaskDetailsController.m:70
 #, objc-format
 msgid "%d effort(s)"
 msgstr "%d effort(s)"
@@ -261,16 +264,19 @@ msgstr "Dûe"
 msgid "Completion"
 msgstr "Terminée"
 
-#: Classes/TaskDetailsController.m:164
-#: Classes/TaskDetailsController.m:428
+#: Classes/TaskDetailsController.m:166
+msgid "New subtask"
+msgstr "Nouvelle sous-tâche"
+
+#: Classes/TaskDetailsController.m:168 Classes/TaskDetailsController.m:432
 msgid "New task"
 msgstr "Nouvelle tâche"
 
-#: Classes/TaskDetailsController.m:330
+#: Classes/TaskDetailsController.m:334
 msgid "Warning"
 msgstr "Avertissement"
 
-#: Classes/TaskDetailsController.m:330
+#: Classes/TaskDetailsController.m:334
 #, objc-format
 msgid "There are %d task(s) currently tracked. Stop tracking them ?"
 msgstr "Il y a %d tâche(s) suivies. Voulez-vous stopper leur suivi ?"
@@ -306,17 +312,20 @@ msgstr "Confirmer terminée"
 msgid "Due soon # of days     "
 msgstr "# jours dûe bientôt     "
 
+#, objc-format
 #~ msgid ""
 #~ "It seems that the desktop Task Coach version is too old. Please consider "
 #~ "upgrading (you may loose some data if you go on anyway)."
 #~ msgstr ""
 #~ "Il semble que la version de Task Coach sur le bureau est trop ancienne. "
-#~ "Veuillez installer une version plus récente (perte de données potentielle "
-#~ "si vous continuez tout de même)."
+#~ "Veuillez installer une version plus récente (perte de données potentielle si "
+#~ "vous continuez tout de même)."
+
 #~ msgid "Go on"
 #~ msgstr "Continuer"
+
 #~ msgid "Start date"
 #~ msgstr "Date de départ"
+
 #~ msgid "Due date"
 #~ msgstr "Date dûe"
-
