@@ -1,14 +1,19 @@
-﻿"" = "Project-Id-Version: Task Coach\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2010-04-05 11:52+0200\nPO-Revision-Date: 2010-04-05 11:06+0000\nLast-Translator: Jérôme Laheurte <fraca7@free.fr>\nLanguage-Team: Jérôme Laheurte <fraca7@free.fr>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Launchpad-Export-Date: 2010-04-11 08:48+0000\nX-Generator: Launchpad (build Unknown)\nX-Poedit-Country: France\nX-Poedit-Language: fr\nX-Poedit-SourceCharset: utf-8\n";
+﻿/* German translation for taskcoach-iphone */
+/* Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010 */
+/* This file is distributed under the same license as the taskcoach-iphone package. */
+/* FIRST AUTHOR <EMAIL@ADDRESS>, 2010. */
+/* */
+"" = "Project-Id-Version: taskcoach-iphone\nReport-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\nPOT-Creation-Date: 2010-04-05 11:52+0200\nPO-Revision-Date: 2010-04-10 15:25+0000\nLast-Translator: Frank Niessink <frank@niessink.com>\nLanguage-Team: German <de@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Launchpad-Export-Date: 2010-04-11 08:52+0000\nX-Generator: Launchpad (build Unknown)\n";
 
 /* File: Classes/StringChoiceController.m:67 */
 /* File: Classes/Synchronization/AuthentificationState.m:94 */
 /* File: Classes/Synchronization/BaseState.m:34 */
 /* File: Classes/Synchronization/BaseState.m:48 */
 /* File: Classes/Synchronization/ProtocolNegotiationState.m:61 */
-"Error" = "Erreur";
+"Error" = "Fehler";
 
 /* File: Classes/StringChoiceController.m:67 */
-"Empty text." = "Texte vide.";
+"Empty text." = "Keine Text.";
 
 /* File: Classes/StringChoiceController.m:67 */
 /* File: Classes/Synchronization/AuthentificationState.m:24 */
@@ -16,230 +21,221 @@
 "OK" = "OK";
 
 /* File: Classes/Bonjour/BonjourBrowser.m:87 */
-"Domains" = "Domaines";
+"Domains" = "Domänen";
 
 /* File: Classes/Bonjour/BonjourBrowser.m:88 */
-"Added Domains" = "Domaines ajoutés";
+"Added Domains" = "Hinzugefügte Domänen";
 
 /* File: Classes/Bonjour/BonjourBrowser.m:89 */
-"Add Domain" = "Ajouter domaine";
+"Add Domain" = "Domäne hinzufügen";
 
 /* File: Classes/Bonjour/BonjourBrowser.m:90 */
-"Searching for services" = "Recherche des services";
+"Searching for services" = "Services suchen";
 
 /* File: Classes/SyncViewController.m:49 */
 /* File: Classes/Synchronization/InitialState.m:23 */
-"Connecting..." = "Connexion...";
+"Connecting..." = "Verbinde...";
 
 /* File: Classes/EffortView.m:43 */
 /* Flag: objc-format */
-"%d seconds" = "%d secondes";
+"%d seconds" = "%d Sekunden";
 
 /* File: Classes/EffortView.m:50 */
 /* Flag: objc-format */
-"%d minutes" = "%d minutes";
+"%d minutes" = "%d Minuten";
 
 /* File: Classes/EffortView.m:57 */
 /* Flag: objc-format */
-"%d hours" = "%d heures";
+"%d hours" = "%d Stunden";
 
 /* File: Classes/EffortView.m:63 */
 /* Flag: objc-format */
-"%d days" = "%d jours";
+"%d days" = "%d Tage";
 
 /* File: Classes/EffortView.m:102 */
 /* Flag: objc-format */
-"Started %@" = "Démarrée %@";
+"Started %@" = "%@ gestartet";
 
 /* File: Classes/TaskViewController.m:59 */
-"Overdue" = "En dépassement";
+"Overdue" = "Überfällig";
 
 /* File: Classes/TaskViewController.m:66 */
-"Due soon" = "Dûe(s) bientôt";
+"Due soon" = "Bald fällig";
 
 /* File: Classes/TaskViewController.m:73 */
-"Started" = "Démarrée(s)";
+"Started" = "Gestartet";
 
 /* File: Classes/TaskViewController.m:80 */
-"Not started" = "Pas démarrée(s)";
+"Not started" = "Nicht gestartet";
 
 /* File: Classes/TaskViewController.m:142 */
-"Search tasks..." = "Rechercher des tâches...";
+"Search tasks..." = "Aufgaben suchen...";
 
 /* File: Classes/TaskViewController.m:293 */
-"Confirmation" = "Confirmation";
+"Confirmation" = "Bestätigung";
 
 /* File: Classes/TaskViewController.m:294 */
 /* Flag: objc-format */
-"Do you really want to mark \"%@\" complete ?" = "Voulez-vous vraiment marquer \"%@\" terminée ?";
+"Do you really want to mark \"%@\" complete ?" = "Wollen Sie \"%@\" wirklich als erledigt markieren?";
 
 /* File: Classes/TaskViewController.m:295 */
 /* File: Classes/TaskDetailsController.m:335 */
-"No" = "Non";
+"No" = "Nein";
 
 /* File: Classes/TaskViewController.m:296 */
 /* File: Classes/TaskDetailsController.m:335 */
-"Yes" = "Oui";
+"Yes" = "Ja";
 
 /* File: Classes/TaskViewController.m:350 */
-"No tasks." = "Pas de tâches.";
+"No tasks." = "Keine Aufgaben.";
 
 /* File: Classes/TaskViewController.m:397 */
-"Add task..." = "Ajouter une tâche...";
+"Add task..." = "Aufgabe einfügen...";
 
 /* File: Classes/TaskCellBig.m:76 */
 /* Flag: objc-format */
-"Completed %@" = "Terminée %@";
+"Completed %@" = "%@ als erledigt markieren";
 
 /* File: Classes/TaskCellBig.m:79 */
 /* File: Classes/TaskCellBig.m:82 */
 /* File: Classes/TaskCellBig.m:86 */
 /* Flag: objc-format */
-"Due %@" = "Dûe %@";
+"Due %@" = "%@ fällig";
 
 /* File: Classes/TaskCellBig.m:89 */
 /* Flag: objc-format */
-"Start %@" = "Démarrée %@";
+"Start %@" = "%@ starten";
 
 /* File: Classes/DateCell.m:33 */
-"None" = "Aucune";
+"None" = "Keine";
 
 /* File: Classes/CategoryViewController.m:60 */
 /* File: Classes/CategoryViewController.m:336 */
 /* File: Classes/CategoryViewController.m:407 */
-"All" = "Toutes";
+"All" = "Alle";
 
 /* File: Classes/CategoryViewController.m:154 */
 /* File: Classes/CategoryViewController.m:285 */
 /* File: Classes/CategoryViewController.m:313 */
 /* File: Classes/CategoryViewController.m:321 */
-"Enter category name" = "Entrez le nom de la catégorie";
+"Enter category name" = "Kategoriename eingeben";
 
 /* File: Classes/CategoryViewController.m:379 */
-"Add subcategory" = "Ajouter une sous-catégorie";
+"Add subcategory" = "Unterkategorie hinzufügen";
 
 /* File: Classes/CategoryViewController.m:450 */
 /* File: Classes/CategoryViewController.m:475 */
-"Looking for Task Coach" = "Recherche de Task Coach";
+"Looking for Task Coach" = "Task Coach suchen";
 
 /* File: Classes/TaskCoachAppDelegate.m:24 */
 /* File: Classes/Synchronization/AuthentificationState.m:24 */
 /* File: Classes/TaskDetailsController.m:335 */
-"Cancel" = "Annuler";
+"Cancel" = "Abbrechen";
 
 /* File: Classes/TaskCoachAppDelegate.m:25 */
-"Save" = "Sauver";
+"Save" = "Speichern";
 
 /* File: Classes/TaskCoachAppDelegate.m:26 */
 /* File: Classes/TaskDetailsController.m:105 */
-"Categories" = "Catégories";
+"Categories" = "Kategorien";
 
 /* File: Classes/TaskCoachAppDelegate.m:27 */
 "Sync" = "Sync";
 
 /* File: Classes/Synchronization/AuthentificationState.m:24 */
-"Please type your password." = "Veuillez entrer votre mot de passe.";
+"Please type your password." = "Bitte Passwort eingeben.";
 
 /* File: Classes/Synchronization/AuthentificationState.m:31 */
-"Authentication" = "Authentification";
+"Authentication" = "Authentifizierung";
 
 /* File: Classes/Synchronization/AuthentificationState.m:95 */
-"Incorrect password." = "Mot de passe incorrect.";
+"Incorrect password." = "Falsches Passwort.";
 
 /* File: Classes/Synchronization/AuthentificationState.m:96 */
-"Retry" = "Réessayer";
+"Retry" = "Erneut versuchen";
 
 /* File: Classes/Synchronization/InitialState.m:50 */
-"Connection error" = "Erreur de connexion";
+"Connection error" = "Verbindungsfehler";
 
 /* File: Classes/Synchronization/InitialState.m:51 */
-"An error occurred while connecting to the remote host. Please check your settings. Also check that Task Coach is running on the remote host. Last, check your firewall settings." = "Une erreur est survenue lors de la connexion à l'hôte distant. Veuillez vérifier vos paramètres. Vérifier également que Task Coach tourne sur l'hôte distant. Enfin, vérifiez la configuration de votre pare-feu.";
+/* Flag: untranslated */
+"An error occurred while connecting to the remote host. Please check your settings. Also check that Task Coach is running on the remote host. Last, check your firewall settings." = "An error occurred while connecting to the remote host. Please check your settings. Also check that Task Coach is running on the remote host. Last, check your firewall settings.";
 
 /* File: Classes/Synchronization/InitialState.m:52 */
 /* File: Classes/Synchronization/BaseState.m:36 */
 /* File: Classes/Synchronization/BaseState.m:50 */
-"Abort" = "Abandonner";
+"Abort" = "Abbrechen";
 
 /* File: Classes/Synchronization/BaseState.m:35 */
-"The connection was unexpectedly closed." = "La connexion a été fermée de manière innatendue.";
+/* Flag: untranslated */
+"The connection was unexpectedly closed." = "The connection was unexpectedly closed.";
 
 /* File: Classes/Synchronization/BaseState.m:49 */
+/* Flag: untranslated */
 /* Flag: objc-format */
-"A network error occurred: %@" = "Une erreur réseau est survenue: %@";
+"A network error occurred: %@" = "A network error occurred: %@";
 
 /* File: Classes/Synchronization/ProtocolNegotiationState.m:21 */
-"Protocol negotiation..." = "Négotiation du protocole...";
+"Protocol negotiation..." = "Protokoll negoziieren...";
 
 /* File: Classes/Synchronization/ProtocolNegotiationState.m:61 */
-"The version of the desktop Task Coach is too old. Please upgrade it and retry." = "Cette version de Task Coach pour le bureau est trop vieille. Veuillez la mettre à jour et réessayer.";
+/* Flag: untranslated */
+"The version of the desktop Task Coach is too old. Please upgrade it and retry." = "The version of the desktop Task Coach is too old. Please upgrade it and retry.";
 
 /* File: Classes/Synchronization/FullFromDesktopState.m:36 */
-"Synchronizing..." = "Synchronisation en cours...";
+"Synchronizing..." = "Synchronisieren…";
 
 /* File: Classes/TaskDetailsController.m:50 */
-"Stop tracking" = "Arrêter le suivi";
+"Stop tracking" = "Stoppuhr anhalten";
 
 /* File: Classes/TaskDetailsController.m:52 */
-"Start tracking" = "Démarrer le suivi";
+"Start tracking" = "Stoppuhr starten";
 
 /* File: Classes/TaskDetailsController.m:65 */
 /* File: Classes/TaskDetailsController.m:70 */
 /* Flag: objc-format */
-"%d effort(s)" = "%d effort(s)";
+"%d effort(s)" = "%d Aufwände";
 
 /* File: Classes/TaskDetailsController.m:113 */
-"Start" = "Démarrer";
+"Start" = "Starten";
 
 /* File: Classes/TaskDetailsController.m:119 */
-"Due" = "Dûe";
+"Due" = "Fällig";
 
 /* File: Classes/TaskDetailsController.m:125 */
-"Completion" = "Terminée";
+"Completion" = "Erledigung";
 
 /* File: Classes/TaskDetailsController.m:166 */
-"New subtask" = "Nouvelle sous-tâche";
+"New subtask" = "Neue Teilaufgabe";
 
 /* File: Classes/TaskDetailsController.m:168 */
 /* File: Classes/TaskDetailsController.m:432 */
-"New task" = "Nouvelle tâche";
+"New task" = "Neue Aufgabe";
 
 /* File: Classes/TaskDetailsController.m:334 */
-"Warning" = "Avertissement";
+"Warning" = "Warnung";
 
 /* File: Classes/TaskDetailsController.m:334 */
 /* Flag: objc-format */
-"There are %d task(s) currently tracked. Stop tracking them ?" = "Il y a %d tâche(s) suivies. Voulez-vous stopper leur suivi ?";
+"There are %d task(s) currently tracked. Stop tracking them ?" = "%d Aufwände wurden aufgezeichnet.  Aufzeichnung benden?";
 
 /* File: Classes/FileChooser.m:56 */
-"Unnamed file" = "Fichier anonyme";
+"Unnamed file" = "Datei ohne Name";
 
-"Display" = "Affichage";
+"Display" = "Bildschirm";
 
-"Show completed" = "Montrer terminées";
+"Show completed" = "Erledigte Aufgaben anzeigen";
 
-"Icon position" = "Position de l'icône";
+"Icon position" = "Symbol Position";
 
-"Left" = "Gauche";
+"Left" = "Links";
 
-"Right" = "Droite";
+"Right" = "Rechts";
 
-"Compact tasks" = "Tâches compactes";
+"Compact tasks" = "Aufgaben verdichten";
 
-"Misc" = "Divers";
+"Misc" = "Verschiedenes";
 
-"Confirm complete" = "Confirmer terminée";
+"Confirm complete" = "Erledigt bestätigen";
 
-"Due soon # of days     " = "# jours dûe bientôt     ";
-
-/* Flag: unmatched */
-/* Flag: objc-format */
-"It seems that the desktop Task Coach version is too old. Please consider upgrading (you may loose some data if you go on anyway)." = "Il semble que la version de Task Coach sur le bureau est trop ancienne. Veuillez installer une version plus récente (perte de données potentielle si vous continuez tout de même).";
-
-/* Flag: unmatched */
-"Go on" = "Continuer";
-
-/* Flag: unmatched */
-"Start date" = "Date de départ";
-
-/* Flag: unmatched */
-"Due date" = "Date dûe";
+"Due soon # of days     " = "Bald fällig # Tage     ";

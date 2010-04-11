@@ -1,0 +1,12 @@
+﻿
+/* Class = "IBUIButton"; disabledTitle = "Cancel"; ObjectID = "8"; */
+"8.disabledTitle" = "Annuler";
+
+/* Class = "IBUIButton"; highlightedTitle = "Cancel"; ObjectID = "8"; */
+"8.highlightedTitle" = "Annuler";
+
+/* Class = "IBUIButton"; normalTitle = "Cancel"; ObjectID = "8"; */
+"8.normalTitle" = "Annuler";
+
+/* Class = "IBUIButton"; selectedTitle = "Cancel"; ObjectID = "8"; */
+"8.selectedTitle" = "Annuler";
