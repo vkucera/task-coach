@@ -28,7 +28,9 @@ Release('1.0.3', 'April 11, 2010',
     bugsFixed=[
         Bug('''When showing effort records in aggregate mode (per day, per week,
 per month), always put the Total row on the first line of its period.''',
-'2895940')
+'2895940'),
+        Bug('''The download link for the Debian package wasn't pointing at any
+package.''', '2985649')
         ],
     featuresAdded=[
         Feature('''Use item titles in dialogs and in the undo/redo menu to

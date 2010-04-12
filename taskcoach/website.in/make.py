@@ -191,7 +191,7 @@ pages['download_for_mac'] = sep.join([download_header(platform='Mac OS X',
 
 
 debian = download_table(image='debian', 
-                        download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_all.deb',
+                        download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_py25.deb',
                         package_type='Debian package (deb)',
                         platform='Debian', platform_lower='debian',
                         platform_versions_supported='Debian GNU/Linux 4.0 ("etch") and later',
