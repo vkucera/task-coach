@@ -35,7 +35,10 @@ package.''', '2985649')
     featuresAdded=[
         Feature('''Use item titles in dialogs and in the undo/redo menu to
 make it clearer what items the user is/was working on.''',
-        'http://uservoice.com/a/9zBuo')
+        'http://uservoice.com/a/9zBuo'),
+        Feature('''In the task, category, and note viewers, show long
+descriptions in a text control with scrollbars so they don't take up too much
+vertical space.''', 'http://uservoice.com/a/h37jH')
         ]
     ),
     
