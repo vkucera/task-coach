@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Carl Zmola <zmola@acm.org>
@@ -179,7 +179,8 @@ class TaskComboTreeBox(wx.Panel):
         ''' Add the root tasks to the ComboTreeBox, including all their
             subtasks. '''
         for task in rootTasks:
-            self._addTaskRecursively(task)
+            if not task.isDeleted():
+                self._addTaskRecursively(task)
 
     def _addTaskRecursively(self, task, parentItem=None):
         ''' Add a task to the ComboTreeBox and then recursively add its
@@ -187,7 +188,8 @@ class TaskComboTreeBox(wx.Panel):
         item = self._comboTreeBox.Append(task.subject(), parent=parentItem,
                                          clientData=task)
         for child in task.children():
-            self._addTaskRecursively(child, item)
+            if not child.isDeleted():
+                self._addTaskRecursively(child, item)
 
     def SetSelection(self, task):
         ''' Select the given task. '''
