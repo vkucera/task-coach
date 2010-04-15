@@ -104,7 +104,11 @@ defaults = { \
     'hidecompletedtasks': 'False',
     'hideinactivetasks': 'False',
     'hideactivetasks': 'False',
-    'hidecompositetasks': 'False' },
+    'hidecompositetasks': 'False',
+    'sortby': 'subject',
+    'sortascending': 'True',
+    'sortcasesensitive': 'False',
+    'sortbystatusfirst': 'True' },
 'categoryviewer': { \
     'title': '',
     'sortby': 'subject',

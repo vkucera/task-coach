@@ -491,6 +491,7 @@ class SquareTaskViewer(BaseTaskViewer):
     
 
 class CalendarViewer(mixin.AttachmentDropTargetMixin,
+                     mixin.SortableViewerForTasksMixin,
                      BaseTaskViewer):
     defaultTitle = _('Calendar')
     defaultBitmap = 'calendar_icon'

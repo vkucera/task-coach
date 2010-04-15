@@ -40,10 +40,11 @@ make it clearer what items the user is/was working on.''',
         'http://uservoice.com/a/9zBuo'),
         Feature('''In the task, category, and note viewers, show long
 descriptions in a text control with scrollbars so they don't take up too much
-vertical space.''', 'http://uservoice.com/a/h37jH')
+vertical space.''', 'http://uservoice.com/a/h37jH'),
+        Feature('''Tasks can now be sorted in the calendar viewer'''),
         ]
     ),
-    
+
 Release('1.0.2', 'April 10, 2010',
     summary='''This release fixes some bugs, and adds support for the Snarl
 notification system.''',
