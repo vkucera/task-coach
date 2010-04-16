@@ -32,7 +32,9 @@ per month), always put the Total row on the first line of its period.''',
         Bug('''The download link for the Debian package wasn't pointing at any
 package.''', '2985649'),
         Bug('''Don't show deleted tasks in the task dropdown of the effort
-edit dialog.''', '2987202')
+edit dialog.''', '2987202'),
+        Bug('''Snarl notifications wouldn't work when the subject or
+description included non-ASCII characters.''', '2986071')
         ],
     featuresAdded=[
         Feature('''Use item titles in dialogs and in the undo/redo menu to

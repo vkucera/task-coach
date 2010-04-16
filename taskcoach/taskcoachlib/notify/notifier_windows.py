@@ -33,7 +33,7 @@ class SnarlNotifier(AbstractNotifier):
         os.close(fd)
         bitmap.SaveFile(filename, wx.BITMAP_TYPE_PNG)
         try:
-            snarl.snShowMessage(title, summary, iconPath=filename)
+            snarl.snShowMessage(title.encode('UTF-8'), summary.encode('UTF-8'), iconPath=filename)
         finally:
             os.remove(filename)
 
