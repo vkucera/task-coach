@@ -45,9 +45,9 @@ filenames if both the user and the native save dialog don't add it.''',
 make it clearer what items the user is/was working on.''',
         'http://uservoice.com/a/9zBuo'),
         Feature('''In the task, category, and note viewers, show long
-descriptions in a text control with scrollbars so they don't take up too much
-vertical space.''', 'http://uservoice.com/a/h37jH'),
-        Feature('''Tasks can now be sorted in the calendar viewer'''),
+descriptions in a text control with scrollbars so the rows don't take up too
+much vertical space.''', 'http://uservoice.com/a/h37jH'),
+        Feature('''Tasks can now be sorted in the calendar viewer.'''),
         ]
     ),
 
