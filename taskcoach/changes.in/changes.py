@@ -23,8 +23,9 @@ from changetypes import *
 
 releases = [
 
-Release('1.0.3', 'April 14, 2010',
-    summary='''This release ...''',
+Release('1.0.3', 'April 18, 2010',
+    summary='''This release fixes a few bugs, and improves a few features, such
+as making the calendar view sortable.''', 
     bugsFixed=[
         Bug('''When showing effort records in aggregate mode (per day, per week,
 per month), always put the Total row on the first line of its period.''',
@@ -34,7 +35,10 @@ package.''', '2985649'),
         Bug('''Don't show deleted tasks in the task dropdown of the effort
 edit dialog.''', '2987202'),
         Bug('''Snarl notifications wouldn't work when the subject or
-description included non-ASCII characters.''', '2986071')
+description included non-ASCII characters.''', '2986071'),
+        Bug('''When saving files, make sure the default extension is added to 
+filenames if both the user and the native save dialog don't add it.''', 
+            '2978204')
         ],
     featuresAdded=[
         Feature('''Use item titles in dialogs and in the undo/redo menu to

@@ -337,7 +337,14 @@ class IOController(object):
         
     def __askUserForFile(self, title, fileDialogOpts=None, flags=wx.OPEN):
         fileDialogOpts = fileDialogOpts or self.__tskFileDialogOpts
-        return wx.FileSelector(title, flags=flags, **fileDialogOpts) # pylint: disable-msg=W0142
+        filename = wx.FileSelector(title, flags=flags, **fileDialogOpts) # pylint: disable-msg=W0142
+        if flags == wx.SAVE:
+            # On Ubuntu, the default extension is not added automatically to
+            # a filename typed by the user. Add the extension if necessary.
+            extension = os.path.extsep + fileDialogOpts['default_extension']
+            if not filename.endswith(extension):
+                filename += extension
+        return filename
 
     def __saveUnsavedChanges(self):
         result = wx.MessageBox(_('You have unsaved changes.\n'
