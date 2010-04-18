@@ -274,6 +274,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
+									<integer>2</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -306,12 +307,14 @@
 					<key>Dock</key>
 					<array>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>Info.plist</string>
+								<string>CHANGELOG</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -319,11 +322,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>Info.plist</string>
+										<string>CHANGELOG</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A6BDE7431171C99C00979568</string>
+										<string>A6465A7611745B4200C4CD0E</string>
 										<key>history</key>
 										<array>
 											<string>A68A605910821E7E00D723FE</string>
@@ -445,9 +448,9 @@
 											<string>A65A790D115F6CA10046DC57</string>
 											<string>A61DA0F8115F70C600AA2EFC</string>
 											<string>A6BE8DE61169E4B3008F19B1</string>
-											<string>A681F1921169E513005136C0</string>
 											<string>A681F1931169E513005136C0</string>
-											<string>A66D8B7311706B1D0035994E</string>
+											<string>A6465A7011745B4200C4CD0E</string>
+											<string>A6465A7111745B4200C4CD0E</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -487,6 +490,8 @@
 									<dict>
 										<key>Frame</key>
 										<string>{{10, 27}, {1663, 177}}</string>
+										<key>RubberWindowFrame</key>
+										<string>34 162 2020 1234 0 0 2560 1418 </string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -541,8 +546,6 @@
 									<dict>
 										<key>Frame</key>
 										<string>{{10, 27}, {1663, 177}}</string>
-										<key>RubberWindowFrame</key>
-										<string>34 162 2020 1234 0 0 2560 1418 </string>
 									</dict>
 									<key>Module</key>
 									<string>PBXBuildResultsModule</string>
@@ -570,11 +573,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6BDE7191171C8A100979568</string>
+				<string>A6465A7311745B4200C4CD0E</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A6BDE71A1171C8A100979568</string>
+				<string>A6465A7411745B4200C4CD0E</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A6BDE71B1171C8A100979568</string>
+				<string>A6465A7511745B4200C4CD0E</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -723,14 +726,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A65E390211620C6800DA22BC</string>
+				<string>A63CE8021171CA230096F27F</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A65E390311620C6800DA22BC</string>
-				<string>A65E390411620C6800DA22BC</string>
-				<string>A65E390511620C6800DA22BC</string>
-				<string>A65E390611620C6800DA22BC</string>
-				<string>A65E390711620C6800DA22BC</string>
+				<string>A63CE8031171CA230096F27F</string>
+				<string>A63CE8041171CA230096F27F</string>
+				<string>A63CE8051171CA230096F27F</string>
+				<string>A63CE8061171CA230096F27F</string>
+				<string>A63CE8071171CA230096F27F</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
 			<string>2</string>
