@@ -1078,12 +1078,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jérôme Laheurte";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "62C3D3F1-227F-4F5F-A667-6B910FE5ABB1";
 				SDKROOT = iphoneos3.1.2;
 			};
 			name = Distribution;
@@ -1099,7 +1099,7 @@
 				GCC_PREFIX_HEADER = TaskCoach_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				PRODUCT_NAME = TaskCoach;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2FEE6CC8-C167-4C62-B6EB-4617DB472B5C";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 			};
 			name = Distribution;
 		};
