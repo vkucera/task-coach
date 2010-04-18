@@ -1,0 +1,20 @@
+﻿"" = "Project-Id-Version: taskcoach-iphone\nReport-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\nPOT-Creation-Date: 2010-04-05 11:52+0200\nPO-Revision-Date: 2009-11-03 22:54+0000\nLast-Translator: Krit Marukawisutthigul <Unknown>\nLanguage-Team: Thai <th@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Launchpad-Export-Date: 2010-04-18 08:48+0000\nX-Generator: Launchpad (build Unknown)\n";
+
+"Display" = "แสดง";
+
+"Show completed" = "แสดงที่เสร็จแล้ว";
+
+"Icon position" = "ตำแหน่งไอคอน";
+
+"Left" = "ซ้าย";
+
+"Right" = "ขวา";
+
+"Compact tasks" = "ชุดภาระ";
+
+"Misc" = "อื่นๆ";
+
+"Confirm complete" = "ยืนยันเสร็จสิ้น";
+
+/* Flag: untranslated */
+"Due soon # of days     " = "Due soon # of days     ";
