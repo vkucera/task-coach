@@ -1,18 +1,16 @@
-/* SOME DESCRIPTIVE TITLE. */
-/* Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER */
-/* This file is distributed under the same license as the PACKAGE package. */
-/* FIRST AUTHOR <EMAIL@ADDRESS>, YEAR. */
+﻿/* Thai translation for taskcoach-iphone */
+/* Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009 */
+/* This file is distributed under the same license as the taskcoach-iphone package. */
+/* FIRST AUTHOR <EMAIL@ADDRESS>, 2009. */
 /* */
-/* Flag: untranslated */
-"" = "" /* = "Project-Id-Version: PACKAGE VERSION\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2010-04-05 11:52+0200\nPO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\nLast-Translator: FULL NAME <EMAIL@ADDRESS>\nLanguage-Team: LANGUAGE <LL@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\n" */;
+"" = "Project-Id-Version: taskcoach-iphone\nReport-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\nPOT-Creation-Date: 2010-04-05 11:52+0200\nPO-Revision-Date: 2009-11-03 22:54+0000\nLast-Translator: Krit Marukawisutthigul <Unknown>\nLanguage-Team: Thai <th@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Launchpad-Export-Date: 2010-04-18 08:48+0000\nX-Generator: Launchpad (build Unknown)\n";
 
 /* File: Classes/StringChoiceController.m:67 */
 /* File: Classes/Synchronization/AuthentificationState.m:94 */
 /* File: Classes/Synchronization/BaseState.m:34 */
 /* File: Classes/Synchronization/BaseState.m:48 */
 /* File: Classes/Synchronization/ProtocolNegotiationState.m:61 */
-/* Flag: untranslated */
-"Error" = "Error";
+"Error" = "ผิดพลาด";
 
 /* File: Classes/StringChoiceController.m:67 */
 /* Flag: untranslated */
@@ -25,25 +23,20 @@
 "OK" = "OK";
 
 /* File: Classes/Bonjour/BonjourBrowser.m:87 */
-/* Flag: untranslated */
-"Domains" = "Domains";
+"Domains" = "โดเมน";
 
 /* File: Classes/Bonjour/BonjourBrowser.m:88 */
-/* Flag: untranslated */
-"Added Domains" = "Added Domains";
+"Added Domains" = "เพิ่มโดเมน";
 
 /* File: Classes/Bonjour/BonjourBrowser.m:89 */
-/* Flag: untranslated */
-"Add Domain" = "Add Domain";
+"Add Domain" = "เพิ่มโดเมน";
 
 /* File: Classes/Bonjour/BonjourBrowser.m:90 */
-/* Flag: untranslated */
-"Searching for services" = "Searching for services";
+"Searching for services" = "ค้นหาบริการ";
 
 /* File: Classes/SyncViewController.m:49 */
 /* File: Classes/Synchronization/InitialState.m:23 */
-/* Flag: untranslated */
-"Connecting..." = "Connecting...";
+"Connecting..." = "กำลังเชื่อมต่อ...";
 
 /* File: Classes/EffortView.m:43 */
 /* Flag: untranslated */
@@ -66,68 +59,55 @@
 "%d days" = "%d days";
 
 /* File: Classes/EffortView.m:102 */
-/* Flag: untranslated */
 /* Flag: objc-format */
-"Started %@" = "Started %@";
+"Started %@" = "เริ่มเมื่อ %@";
 
 /* File: Classes/TaskViewController.m:59 */
-/* Flag: untranslated */
-"Overdue" = "Overdue";
+"Overdue" = "เกินกำหนด";
 
 /* File: Classes/TaskViewController.m:66 */
-/* Flag: untranslated */
-"Due soon" = "Due soon";
+"Due soon" = "ถึงกำหนดเร็วๆนี้";
 
 /* File: Classes/TaskViewController.m:73 */
-/* Flag: untranslated */
-"Started" = "Started";
+"Started" = "เริ่มแล้ว";
 
 /* File: Classes/TaskViewController.m:80 */
-/* Flag: untranslated */
-"Not started" = "Not started";
+"Not started" = "ยังไม่เริ่ม";
 
 /* File: Classes/TaskViewController.m:142 */
 /* Flag: untranslated */
 "Search tasks..." = "Search tasks...";
 
 /* File: Classes/TaskViewController.m:293 */
-/* Flag: untranslated */
-"Confirmation" = "Confirmation";
+"Confirmation" = "การยืนยัน";
 
 /* File: Classes/TaskViewController.m:294 */
-/* Flag: untranslated */
 /* Flag: objc-format */
-"Do you really want to mark \"%@\" complete ?" = "Do you really want to mark \"%@\" complete ?";
+"Do you really want to mark \"%@\" complete ?" = "คุณแน่ใจหรือว่าต้องการทำเครื่องหมายว่า \"%@\" เสร็จสิ้น ?";
 
 /* File: Classes/TaskViewController.m:295 */
 /* File: Classes/TaskDetailsController.m:335 */
-/* Flag: untranslated */
-"No" = "No";
+"No" = "ไม่";
 
 /* File: Classes/TaskViewController.m:296 */
 /* File: Classes/TaskDetailsController.m:335 */
-/* Flag: untranslated */
-"Yes" = "Yes";
+"Yes" = "ใช่";
 
 /* File: Classes/TaskViewController.m:350 */
-/* Flag: untranslated */
-"No tasks." = "No tasks.";
+"No tasks." = "ไม่มีงาน.";
 
 /* File: Classes/TaskViewController.m:397 */
-/* Flag: untranslated */
-"Add task..." = "Add task...";
+"Add task..." = "เพิ่มงาน...";
 
 /* File: Classes/TaskCellBig.m:76 */
-/* Flag: untranslated */
 /* Flag: objc-format */
-"Completed %@" = "Completed %@";
+"Completed %@" = "เสร็จเมื่อ %@";
 
 /* File: Classes/TaskCellBig.m:79 */
 /* File: Classes/TaskCellBig.m:82 */
 /* File: Classes/TaskCellBig.m:86 */
-/* Flag: untranslated */
 /* Flag: objc-format */
-"Due %@" = "Due %@";
+"Due %@" = "กำหนดส่ง %@";
 
 /* File: Classes/TaskCellBig.m:89 */
 /* Flag: untranslated */
@@ -135,69 +115,56 @@
 "Start %@" = "Start %@";
 
 /* File: Classes/DateCell.m:33 */
-/* Flag: untranslated */
-"None" = "None";
+"None" = "ไม่มี";
 
 /* File: Classes/CategoryViewController.m:60 */
 /* File: Classes/CategoryViewController.m:336 */
 /* File: Classes/CategoryViewController.m:407 */
-/* Flag: untranslated */
-"All" = "All";
+"All" = "ทั้งหมวด";
 
 /* File: Classes/CategoryViewController.m:154 */
 /* File: Classes/CategoryViewController.m:285 */
 /* File: Classes/CategoryViewController.m:313 */
 /* File: Classes/CategoryViewController.m:321 */
-/* Flag: untranslated */
-"Enter category name" = "Enter category name";
+"Enter category name" = "กรอกชื่อหมวดหมู่";
 
 /* File: Classes/CategoryViewController.m:379 */
-/* Flag: untranslated */
-"Add subcategory" = "Add subcategory";
+"Add subcategory" = "เพิ่มหมวดหมู่ย่อย";
 
 /* File: Classes/CategoryViewController.m:450 */
 /* File: Classes/CategoryViewController.m:475 */
-/* Flag: untranslated */
-"Looking for Task Coach" = "Looking for Task Coach";
+"Looking for Task Coach" = "กำลังมองหาTask Coach";
 
 /* File: Classes/TaskCoachAppDelegate.m:24 */
 /* File: Classes/Synchronization/AuthentificationState.m:24 */
 /* File: Classes/TaskDetailsController.m:335 */
-/* Flag: untranslated */
-"Cancel" = "Cancel";
+"Cancel" = "ยกเลิก";
 
 /* File: Classes/TaskCoachAppDelegate.m:25 */
-/* Flag: untranslated */
-"Save" = "Save";
+"Save" = "จัดเก็บ";
 
 /* File: Classes/TaskCoachAppDelegate.m:26 */
 /* File: Classes/TaskDetailsController.m:105 */
-/* Flag: untranslated */
-"Categories" = "Categories";
+"Categories" = "หมวดหมู่";
 
 /* File: Classes/TaskCoachAppDelegate.m:27 */
-/* Flag: untranslated */
-"Sync" = "Sync";
+"Sync" = "ทำให้ตรงกัน";
 
 /* File: Classes/Synchronization/AuthentificationState.m:24 */
-/* Flag: untranslated */
-"Please type your password." = "Please type your password.";
+"Please type your password." = "กรุณากรอกรหัสผ่านของท่าน.";
 
 /* File: Classes/Synchronization/AuthentificationState.m:31 */
 /* Flag: untranslated */
 "Authentication" = "Authentication";
 
 /* File: Classes/Synchronization/AuthentificationState.m:95 */
-/* Flag: untranslated */
-"Incorrect password." = "Incorrect password.";
+"Incorrect password." = "รหัสผ่านไม่ถูกต้อง.";
 
 /* File: Classes/Synchronization/AuthentificationState.m:96 */
-/* Flag: untranslated */
-"Retry" = "Retry";
+"Retry" = "ลองใหม่";
 
 /* File: Classes/Synchronization/InitialState.m:50 */
-/* Flag: untranslated */
-"Connection error" = "Connection error";
+"Connection error" = "การเชื่อมต่อผิดพลาด";
 
 /* File: Classes/Synchronization/InitialState.m:51 */
 /* Flag: untranslated */
@@ -206,17 +173,15 @@
 /* File: Classes/Synchronization/InitialState.m:52 */
 /* File: Classes/Synchronization/BaseState.m:36 */
 /* File: Classes/Synchronization/BaseState.m:50 */
-/* Flag: untranslated */
-"Abort" = "Abort";
+"Abort" = "ยกเลิก";
 
 /* File: Classes/Synchronization/BaseState.m:35 */
 /* Flag: untranslated */
 "The connection was unexpectedly closed." = "The connection was unexpectedly closed.";
 
 /* File: Classes/Synchronization/BaseState.m:49 */
-/* Flag: untranslated */
 /* Flag: objc-format */
-"A network error occurred: %@" = "A network error occurred: %@";
+"A network error occurred: %@" = "ข้อผิดพลาดเกิดขึ้นในเครือข่าย: %@";
 
 /* File: Classes/Synchronization/ProtocolNegotiationState.m:21 */
 /* Flag: untranslated */
@@ -227,8 +192,7 @@
 "The version of the desktop Task Coach is too old. Please upgrade it and retry." = "The version of the desktop Task Coach is too old. Please upgrade it and retry.";
 
 /* File: Classes/Synchronization/FullFromDesktopState.m:36 */
-/* Flag: untranslated */
-"Synchronizing..." = "Synchronizing...";
+"Synchronizing..." = "กำลังทำให้ตรงกัน...";
 
 /* File: Classes/TaskDetailsController.m:50 */
 /* Flag: untranslated */
@@ -262,12 +226,10 @@
 
 /* File: Classes/TaskDetailsController.m:168 */
 /* File: Classes/TaskDetailsController.m:432 */
-/* Flag: untranslated */
-"New task" = "New task";
+"New task" = "งานใหม่";
 
 /* File: Classes/TaskDetailsController.m:334 */
-/* Flag: untranslated */
-"Warning" = "Warning";
+"Warning" = "คำเตือน";
 
 /* File: Classes/TaskDetailsController.m:334 */
 /* Flag: untranslated */
@@ -278,29 +240,21 @@
 /* Flag: untranslated */
 "Unnamed file" = "Unnamed file";
 
-/* Flag: untranslated */
-"Display" = "Display";
+"Display" = "แสดง";
 
-/* Flag: untranslated */
-"Show completed" = "Show completed";
+"Show completed" = "แสดงที่เสร็จแล้ว";
 
-/* Flag: untranslated */
-"Icon position" = "Icon position";
+"Icon position" = "ตำแหน่งไอคอน";
 
-/* Flag: untranslated */
-"Left" = "Left";
+"Left" = "ซ้าย";
 
-/* Flag: untranslated */
-"Right" = "Right";
+"Right" = "ขวา";
 
-/* Flag: untranslated */
-"Compact tasks" = "Compact tasks";
+"Compact tasks" = "ชุดภาระ";
 
-/* Flag: untranslated */
-"Misc" = "Misc";
+"Misc" = "อื่นๆ";
 
-/* Flag: untranslated */
-"Confirm complete" = "Confirm complete";
+"Confirm complete" = "ยืนยันเสร็จสิ้น";
 
 /* Flag: untranslated */
 "Due soon # of days     " = "Due soon # of days     ";
