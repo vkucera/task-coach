@@ -1,0 +1,20 @@
+﻿"" = "Project-Id-Version: taskcoach-iphone\nReport-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\nPOT-Creation-Date: 2010-04-05 11:52+0200\nPO-Revision-Date: 2009-11-16 13:32+0000\nLast-Translator: Kuvaly [LCT] <kuvaly@seznam.cz>\nLanguage-Team: Czech <cs@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Launchpad-Export-Date: 2010-04-18 08:48+0000\nX-Generator: Launchpad (build Unknown)\n";
+
+"Display" = "Zobrazit";
+
+"Show completed" = "Zobrazení kompletní";
+
+"Icon position" = "Pozice ikonky";
+
+"Left" = "Nalevo";
+
+"Right" = "Napravo";
+
+"Compact tasks" = "Kompaktní úkoly";
+
+"Misc" = "Různé";
+
+"Confirm complete" = "Potvrzení kompletní";
+
+/* Flag: untranslated */
+"Due soon # of days     " = "Due soon # of days     ";
