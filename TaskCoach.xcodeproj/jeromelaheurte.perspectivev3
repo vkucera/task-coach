@@ -280,7 +280,7 @@
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 0}, {335, 1168}}</string>
+							<string>{{0, 0}, {335, 1141}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -290,14 +290,14 @@
 					<key>GeometryConfiguration</key>
 					<dict>
 						<key>Frame</key>
-						<string>{{0, 0}, {352, 1186}}</string>
+						<string>{{0, 0}, {352, 1159}}</string>
 						<key>GroupTreeTableConfiguration</key>
 						<array>
 							<string>MainColumn</string>
 							<real>335</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>121 184 1763 1206 0 0 2560 1418 </string>
+						<string>121 211 1957 1179 0 0 2560 1418 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -313,7 +313,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>Root.strings</string>
+								<string>CHANGELOG</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -321,11 +321,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>Root.strings</string>
+										<string>CHANGELOG</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A6DFFBD1117B03FB00A479EC</string>
+										<string>A603F1E4117B06A400A92C60</string>
 										<key>history</key>
 										<array>
 											<string>A68A605910821E7E00D723FE</string>
@@ -450,13 +450,19 @@
 											<string>A681F1931169E513005136C0</string>
 											<string>A6465A7011745B4200C4CD0E</string>
 											<string>A64F4148117B022600E60105</string>
-											<string>A602F816117B033900232ED1</string>
 											<string>A602F817117B033900232ED1</string>
 											<string>A602F818117B033900232ED1</string>
 											<string>A602F819117B033900232ED1</string>
 											<string>A602F81A117B033900232ED1</string>
 											<string>A602F81B117B033900232ED1</string>
-											<string>A602F81E117B033900232ED1</string>
+											<string>A6EAE1FF117B0659001730A0</string>
+											<string>A6EAE200117B0659001730A0</string>
+											<string>A6EAE201117B0659001730A0</string>
+											<string>A6EAE202117B0659001730A0</string>
+											<string>A6EAE203117B0659001730A0</string>
+											<string>A6EAE204117B0659001730A0</string>
+											<string>A603F1E2117B06A400A92C60</string>
+											<string>A603F1E3117B06A400A92C60</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -470,14 +476,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {1406, 977}}</string>
+								<string>{{0, 0}, {1600, 950}}</string>
 								<key>RubberWindowFrame</key>
-								<string>121 184 1763 1206 0 0 2560 1418 </string>
+								<string>121 211 1957 1179 0 0 2560 1418 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>977pt</string>
+							<string>950pt</string>
 						</dict>
 						<dict>
 							<key>Proportion</key>
@@ -495,9 +501,9 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {1406, 177}}</string>
+										<string>{{10, 27}, {1600, 177}}</string>
 										<key>RubberWindowFrame</key>
-										<string>121 184 1763 1206 0 0 2560 1418 </string>
+										<string>121 211 1957 1179 0 0 2560 1418 </string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -560,7 +566,7 @@
 						</dict>
 					</array>
 					<key>Proportion</key>
-					<string>1406pt</string>
+					<string>1600pt</string>
 				</dict>
 			</array>
 			<key>Name</key>
@@ -579,11 +585,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6DFFBD3117B03FB00A479EC</string>
+				<string>A603F1DC117B066A00A92C60</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A6DFFBD4117B03FB00A479EC</string>
+				<string>A603F1DD117B066A00A92C60</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A6DFFBD5117B03FB00A479EC</string>
+				<string>A603F1DE117B066A00A92C60</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -774,7 +780,7 @@
 		<string>/Users/jeromelaheurte/Dev/taskcoach-trunk/taskcoach-iphone/TaskCoach.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>121 184 1763 1206 0 0 2560 1418 </string>
+	<string>121 211 1957 1179 0 0 2560 1418 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>
