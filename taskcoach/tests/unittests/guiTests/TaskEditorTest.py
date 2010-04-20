@@ -413,7 +413,8 @@ class FocusTest(TaskEditorTestCase):
 
 class EffortEditorTest(TaskEditorTestCase):      
     def createCommand(self):
-        return command.EditEffortCommand(self.effortList, self.effortList)
+        sortedEfforts = effort.EffortSorter(self.effortList)
+        return command.EditEffortCommand(sortedEfforts, sortedEfforts)
         
     def createTasks(self):
         # pylint: disable-msg=W0201

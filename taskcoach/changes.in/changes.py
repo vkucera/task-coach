@@ -3,7 +3,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2010 JÃ©rÃ´me Laheurte <fraca7@free.fr>
+Copyright (C) 2007-2010 Jérôme Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,6 +22,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+
+Release('1.0.3', 'April 19, 2010',
+    summary='''This release fixes a few bugs, and improves a few features, such
+as making the calendar view sortable.''', 
+    bugsFixed=[
+        Bug('''When showing effort records in aggregate mode (per day, per week,
+per month), always put the Total row on the first line of its period.''',
+'2895940'),
+        Bug('''The download link for the Debian package wasn't pointing at any
+package.''', '2985649'),
+        Bug('''Don't show deleted tasks in the task dropdown of the effort
+edit dialog.''', '2987202'),
+        Bug('''Snarl notifications wouldn't work when the subject or
+description included non-ASCII characters.''', '2986071'),
+        Bug('''When saving files, make sure the default extension is added to 
+filenames if both the user and the native save dialog don't add it.''', 
+            '2978204')
+        ],
+    featuresAdded=[
+        Feature('''Use item titles in dialogs and in the undo/redo menu to
+make it clearer what items the user is/was working on.''',
+        'http://uservoice.com/a/9zBuo'),
+        Feature('''In the task, category, and note viewers, show long
+descriptions in a text control with scrollbars so the rows don't take up too
+much vertical space.''', 'http://uservoice.com/a/h37jH'),
+        Feature('''Tasks can now be sorted in the calendar viewer.'''),
+        ]
+    ),
 
 Release('1.0.2', 'April 10, 2010',
     summary='''This release fixes some bugs, and adds support for the Snarl

@@ -191,7 +191,7 @@ pages['download_for_mac'] = sep.join([download_header(platform='Mac OS X',
 
 
 debian = download_table(image='debian', 
-                        download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_all.deb',
+                        download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_py25.deb',
                         package_type='Debian package (deb)',
                         platform='Debian', platform_lower='debian',
                         platform_versions_supported='Debian GNU/Linux 4.0 ("etch") and later',
@@ -564,97 +564,6 @@ pages['mailinglist'] = \
         onClick="javascript: pageTracker._trackPageview('/outgoing/gmane.org');">Gmane</a>.</p>
 '''
         
-
-pages['faq'] = \
-'''    <H3>Frequently asked questions</H3>
-    <P><I>I upgraded to a new version and now I cannot load my %(name)s file. It
-    says: "Error loading &lt;myfile&gt;.tsk. Are you sure it is a %(name)s file?".
-    I'm sure the file's ok. What next?</I></P>
-    <P>Remove your TaskCoach.ini file and try again. Sometimes errors in
-    loading old settings files will cause %(name)s to barf on .tsk files that
-    are just fine. The TaskCoach.ini file is located in C:\Documents and
-    Settings\&lt;yourname&gt;\Application Data\TaskCoach if you're on Windows 
-    and in /home/&lt;yourname&gt;/.TaskCoach if you're on Linux.</P>
-    <P><I>I'm on Windows and when installing a new version of %(name)s the
-    installer complains it cannot replace the MSVCP7.dll.</I></P>
-    <P>Make sure the old version of %(name)s is not still running, nor 
-    any applications started via %(name)s (e.g. a browser started by clicking 
-    on a link inside %(name)s).</P>
-    <P><I>I'm on Linux and after running taskcoach.py I get the message 
-    "ERROR: cannot import the library 'taskcoachlib' " and I was redirected 
-    here.</I></P>
-    <P>This probably means that the python version you are using to run
-    taskcoach.py is different than the python version where the taskcoachlib 
-    folder was installed to, and hence python cannot find the library. 
-    The taskcoachlib folder is located in 
-    /usr/lib/python2.X/site-packages. If you find the taskcoachlib folder and
-    run taskcoach.py with the same python version, %(name)s should run. So 
-    if taskcoachlib is in /usr/lib/python2.X/site-packages and taskcoach.py is
-    located in /usr/bin then 'python2.X /usr/bin/taskcoach.py' should work. To
-    solve this more permanently you can move the taskcoachlib folder to the
-    site-packages folder of your default python. To find out what your default
-    python is, just start python from the command line, look for the version
-    number and then exit with Control-D. Next, move the taskcoachlib folder 
-    from its current location to the site-packages folder of your default python
-    version as follows (2.D is the version number of your default python
-    version, 2.C is the version number where taskcoachlib was installed):
-    'mv /usr/lib/python2.C/site-packages/taskcoachlib 
-    /usr/lib/python2.D/site-packages'. Now running taskcoach.py should work.</P> 
-    <P><I>I'm on Linux, using a window manager with virtual desktops. If
-    I switch (back) to the virtual desktop where %(name)s was running, I can 
-    no longer find it. Where did %(name)s go?</I></P>
-    <P>%(name)s is probably minimized. Look for the little %(name)s icon
-    in the system tray, click on it with your right mouse button and
-    select 'Restore'.  Apparently, switching between virtual desktops is
-    implemented by sending a minimize event to applications.
-    Unfortunately, %(name)s has no way to distinguish between minimize
-    events caused by the window manager and minimize events caused by
-    the user minimizing the window. If you run into this issue, you may
-    want to change the setting 'Hide main window when iconized', see
-    'Edit' -> 'Preferences'.</P>
-    <P><I>Can I track effort for more than one task at the same
-    time?</I></P>
-    <P>Yes, when you are tracking effort for a task, select the second
-    task, right-click and select 'New effort...'. When you don't fill in
-    an end-time, effort for that second task will be tracked too.</P>
-    <P><I>How can I mark a task 'inactive'?</I></P>
-    <P>Set the start date of the task to a future data or don't set 
-    a start date at all by unchecking the start date check box.</P>
-    <P><I>How does resizing of columns work?</I>
-    <P>In all viewers with columns, the subject column is automatically
-    resized to fill up any remaining space. To resize a column, drag the 
-    <b>right</b> border of the header of the column you want to resize. If you
-    make the subject column wider all other columns will be made
-    smaller. If you make the subject column smaller all other columns will be
-    made wider. If you make another column wider, the subject column will be 
-    made smaller and vice versa.</P>
-    <P><I>Can I run %(name)s from a USB stick?</I></P>
-    <P>Yes, just install it on a USB stick. In addition, in the files tab of
-    the preferences dialog ('Edit' -> 'Preferences'), check 'Save settings 
-    (TaskCoach.ini) in the same directory as the program' to make sure your
-    settings are saved on the USB stick.</P>
-    <P><I>Can I have a global hotkey to enter new tasks?</I></P>
-    <P>On Windows, install <A HREF="http://www.autohotkey.com">AutoHotkey</A> 
-    (it's open source and free) and put this in your <TT>AutoHotKey.ahk</TT>
-    script:
-    <PRE>^!n::
-IfWinExist Task Coach
-{
-    WinActivate Task Coach
-}
-else
-{
-    Run %%A_ProgramFiles%%\\TaskCoach\\taskcoach.exe
-}
-WinWaitActive Task Coach
-WinMenuSelectItem Task Coach,, Task, New task...
-return
-</PRE>
-    This will register Control-Alt-N as global hotkey for entering a new
-    task. %(name)s will be started if necessary. If you use a translation, you
-    need to change 'Task, New task...' into your language.</P>
-    <P>We'd appreciate suggestions for other platforms...</P> 
-'''
 
 pages['devinfo'] = \
 '''    <h3>Information for developers</h3>

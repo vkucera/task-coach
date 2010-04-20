@@ -3,7 +3,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2008 Jérôme Laheurte <fraca7@free.fr>
+Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -307,9 +307,6 @@ class Viewer(wx.Panel):
             uicommand.EditPaste()
             ]
     
-    def deleteItemCommand(self):
-        return command.DeleteCommand(self.presentation(), self.curselection())
-
     def newItemDialog(self, *args, **kwargs):
         bitmap = kwargs.pop('bitmap')
         NewItemCommand = self.newItemCommandClass()
@@ -347,6 +344,12 @@ class Viewer(wx.Panel):
 
     def editItemCommandClass(self):
         raise NotImplementedError
+
+    def deleteItemCommand(self):
+        return self.deleteItemCommandClass()(self.presentation(), self.curselection())
+
+    def deleteItemCommandClass(self):
+        return command.DeleteCommand
     
 
 class ListViewer(Viewer): # pylint: disable-msg=W0223

@@ -269,6 +269,13 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             
     def _refreshText(self, item, domainObject, columnIndex):
         text = self.__adapter.getItemText(domainObject, columnIndex)
+        if text.count('\n') > 3:
+            columnWidth = self.GetColumnWidth(columnIndex)
+            textCtrl = wx.TextCtrl(self, value=text,
+                                   style=wx.TE_MULTILINE|wx.TE_READONLY|wx.BORDER_NONE,
+                                   size=(columnWidth, 60))
+            self.SetItemWindow(item, textCtrl, column=columnIndex)
+            text = ''
         item.SetText(columnIndex, text)
                 
     def _refreshImage(self, item, domainObject, columnIndex):

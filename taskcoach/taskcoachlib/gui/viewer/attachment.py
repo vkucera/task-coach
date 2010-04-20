@@ -138,7 +138,10 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.ViewerWithColumns,
                                      'mail': 'email'}[anAttachment.type_]]
         except KeyError:
             return -1
-
+    
+    def deleteItemCommand(self):
+        return command.DeleteAttachmentCommand(self.presentation(), self.curselection())
+    
     def editorClass(self):
         return dialog.editor.AttachmentEditor
     
@@ -147,3 +150,6 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.ViewerWithColumns,
     
     def editItemCommandClass(self):
         return command.EditAttachmentCommand
+
+    def deleteItemCommandClass(self):
+        return command.DeleteAttachmentCommand

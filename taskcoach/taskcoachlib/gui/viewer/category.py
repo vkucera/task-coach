@@ -200,6 +200,9 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
     
     def newSubItemCommandClass(self):
         return command.NewSubCategoryCommand
+
+    def deleteItemCommandClass(self):
+        return command.DeleteCategoryCommand
     
 
 class CategoryViewer(BaseCategoryViewer):

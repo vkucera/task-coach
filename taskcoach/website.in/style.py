@@ -98,7 +98,7 @@ footer = '''
                 <h2>Get support</h2>
                 <ul>
                     <li><a href="mailinglist.html">Join mailinglist</a></li>
-                    <li><a href="faq.html">Frequently asked questions</a></li>
+                    <li><a href="https://answers.launchpad.net/taskcoach/+faqs">Frequently asked questions</a></li>
                     <li><a href="https://sourceforge.net/tracker/?group_id=130831&atid=719135" 
                            onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/request_support');">Request support</a>
                     </li>

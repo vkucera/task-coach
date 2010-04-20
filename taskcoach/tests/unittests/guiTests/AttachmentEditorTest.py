@@ -35,13 +35,7 @@ class AttachmentEditorTestCase(test.wxTestCase):
         return gui.dialog.editor.AttachmentEditor(self.frame, self.createCommand(),
             self.settings, self.attachments, self.taskFile, raiseDialog=False)
 
-    def tearDown(self):
-        # AttachmentEditor uses CallAfter for setting the focus, make sure those 
-        # calls are dealt with, otherwise they'll turn up in other tests
-        if '__WXMAC__' not in wx.PlatformInfo and ('__WXMSW__' not in wx.PlatformInfo or sys.version_info < (2, 5)):
-            wx.Yield() # pragma: no cover 
-        super(AttachmentEditorTestCase, self).tearDown()
-        
+
     def createCommand(self):
         raise NotImplementedError # pragma: no cover
     

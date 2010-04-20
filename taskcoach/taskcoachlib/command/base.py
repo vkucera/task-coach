@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
+
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -30,9 +32,15 @@ class BaseCommand(patterns.Command):
 
     def __str__(self):
         return self.name()
+
+    singular_name = 'Do something with %s' # Override in subclass
+    plural_name = 'Do something'           # Override in subclass
     
     def name(self):
-        raise NotImplementedError
+        return self.singular_name%self.name_subject(self.items[0]) if len(self.items) == 1 else self.plural_name
+
+    def name_subject(self, item):
+        return item.subject()
 
     def canDo(self):
         return bool(self.items)
@@ -114,9 +122,42 @@ class CompositeMixin(object):
                 if composite.parent() != None]
 
 
-class CopyCommand(BaseCommand):
+class NewItemCommand(BaseCommand):
     def name(self):
-        return _('Copy')
+        # Override to always return the singular name without a subject. The
+        # subject would be something like "New task", so not very interesting.
+        return self.singular_name
+
+    def do_command(self):
+        self.list.extend(self.items)
+
+    def undo_command(self):
+        self.list.removeItems(self.items)
+
+    def redo_command(self):
+        self.list.extend(self.items)
+        
+
+class NewSubItemCommand(BaseCommand):
+    def name_subject(self, subitem):
+        # Override to use the subject of the parent of the new subitem instead
+        # of the subject of the new subitem itself, which wouldn't be very
+        # interesting because it's something like 'New subitem'.
+        return subitem.parent().subject()
+
+    def do_command(self):
+        self.list.extend(self.items)
+
+    def undo_command(self):
+        self.list.removeItems(self.items)
+
+    def redo_command(self):
+        self.list.extend(self.items)
+
+    
+class CopyCommand(BaseCommand):
+    plular_name = _('Copy')
+    singular_name = _('Copy "%s"')
 
     def do_command(self):
         self.__copies = [item.copy() for item in self.items] # pylint: disable-msg=W0201
@@ -130,12 +171,12 @@ class CopyCommand(BaseCommand):
 
         
 class DeleteCommand(BaseCommand, SaveStateMixin):
+    plural_name = _('Delete')
+    singular_name = _('Delete "%s"')
+
     def __init__(self, *args, **kwargs):
         self.__shadow = kwargs.pop('shadow', False)
         super(DeleteCommand, self).__init__(*args, **kwargs)
-
-    def name(self):
-        return _('Delete')
 
     def do_command(self):
         if self.__shadow:
@@ -160,8 +201,8 @@ class DeleteCommand(BaseCommand, SaveStateMixin):
 
 
 class CutCommand(DeleteCommand):
-    def name(self):
-        return _('Cut')
+    plural_name = _('Cut')
+    singular_name = _('Cut "%s"')
 
     def __putItemsOnClipboard(self):
         cb = task.Clipboard()
@@ -186,8 +227,8 @@ class CutCommand(DeleteCommand):
 
         
 class PasteCommand(BaseCommand, SaveStateMixin):
-    def name(self):
-        return _('Paste')
+    plural_name = _('Paste')
+    singular_name = _('Paste "%s"')
 
     def __init__(self, *args, **kwargs):
         super(PasteCommand, self).__init__(*args, **kwargs)
@@ -230,6 +271,9 @@ class PasteCommand(BaseCommand, SaveStateMixin):
         
         
 class EditCommand(BaseCommand, SaveStateMixin): # pylint: disable-msg=W0223
+    plural_name = _('Edit')
+    singular_name = _('Edit "%s"')
+
     def __init__(self, *args, **kwargs):
         super(EditCommand, self).__init__(*args, **kwargs)
         self.saveStates(self.getItemsToSave())
@@ -247,8 +291,8 @@ class EditCommand(BaseCommand, SaveStateMixin): # pylint: disable-msg=W0223
         
 
 class DragAndDropCommand(BaseCommand, SaveStateMixin, CompositeMixin):
-    def name(self):
-        return _('Drag and drop')
+    plural_name = _('Drag and drop')
+    singular_name = _('Drag and drop "%s"')
     
     def __init__(self, *args, **kwargs):
         dropTargets = kwargs.pop('drop')
@@ -287,8 +331,8 @@ class DragAndDropCommand(BaseCommand, SaveStateMixin, CompositeMixin):
         
 
 class AddAttachmentCommand(BaseCommand):
-    def name(self):
-        return _('Add attachment')
+    plural_name = _('Add attachment')
+    singular_name = _('Add attachment to "%s"')
     
     def __init__(self, *args, **kwargs):
         self.__attachments = kwargs.pop('attachments')
@@ -313,13 +357,13 @@ class AddAttachmentCommand(BaseCommand):
         
 
 class AddNoteCommand(BaseCommand):
+    plural_name = _('Add note')
+    singular_name = _('Add note to "%s"')
+
     def __init__(self, *args, **kwargs):
         super(AddNoteCommand, self).__init__(*args, **kwargs)
         self.notes = [note.Note(subject=_('New note')) \
                       for dummy in self.items]
-
-    def name(self):
-        return _('Add note')
     
     def addNotes(self):
         for item, note in zip(self.items, self.notes): # pylint: disable-msg=W0621
@@ -340,13 +384,13 @@ class AddNoteCommand(BaseCommand):
 
 
 class EditSubjectCommand(BaseCommand):
+    plural_name = _('Edit subjects')
+    singular_name = _('Edit subject "%s"')
+
     def __init__(self, *args, **kwargs):
         self.__newSubject = kwargs.pop('subject')
         super(EditSubjectCommand, self).__init__(*args, **kwargs)
         self.__oldSubjects = [item.subject() for item in self.items]
-        
-    def name(self):
-        return _('Edit subject')
     
     def do_command(self):
         for item in self.items:

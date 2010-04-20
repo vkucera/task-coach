@@ -184,7 +184,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
         return super(BaseNoteViewer, self).newItemDialog(*args, **kwargs)
     
     def deleteItemCommand(self):
-        return command.DeleteCommand(self.presentation(), self.curselection(),
+        return command.DeleteNoteCommand(self.presentation(), self.curselection(),
                   shadow=self.settings.getboolean('feature', 'syncml'))
         
     def editorClass(self):

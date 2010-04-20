@@ -122,13 +122,13 @@ class wxSchedulerPaint( object ):
 		current = []
 
 		schedules = schedules[:] # Don't alter original list
-		def compare(a, b):
-			if a.start.IsEqualTo(b.start):
-				return cmp(a.description, b.description)
-			if a.start.IsEarlierThan(b.start):
-				return -1
-			return 1
-		schedules.sort(compare)
+## 		def compare(a, b):
+## 			if a.start.IsEqualTo(b.start):
+## 				return cmp(a.description, b.description)
+## 			if a.start.IsEarlierThan(b.start):
+## 				return -1
+## 			return 1
+## 		schedules.sort(compare)
 
 		def findNext(schedule):
 			# Among schedules that start after this one ends, find the "nearest".

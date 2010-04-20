@@ -3,7 +3,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2010 Jérôme Laheurte <fraca7@free.fr>
+Copyright (C) 2007-2010 Jerome Laheurte <fraca7@free.fr>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -491,6 +491,7 @@ class SquareTaskViewer(BaseTaskViewer):
     
 
 class CalendarViewer(mixin.AttachmentDropTargetMixin,
+                     mixin.SortableViewerForTasksMixin,
                      BaseTaskViewer):
     defaultTitle = _('Calendar')
     defaultBitmap = 'calendar_icon'
