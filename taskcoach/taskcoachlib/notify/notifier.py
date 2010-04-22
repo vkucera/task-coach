@@ -30,7 +30,7 @@ class AbstractNotifier(object):
     def isAvailable(self):
         raise NotImplementedError
 
-    def notify(self, title, summary, bitmap):
+    def notify(self, title, summary, bitmap, **kwargs):
         raise NotImplementedError
 
     @classmethod

@@ -48,6 +48,7 @@ make it clearer what items the user is/was working on.''',
 descriptions in a text control with scrollbars so the rows don't take up too
 much vertical space.''', 'http://uservoice.com/a/h37jH'),
         Feature('''Tasks can now be sorted in the calendar viewer.'''),
+        Feature('''Support for libnotify under Linux (for reminders).'''),
         ]
     ),
 

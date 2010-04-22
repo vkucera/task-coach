@@ -23,6 +23,8 @@ if '__WXMSW__' in wx.PlatformInfo:
     from notifier_windows import *
 elif '__WXMAC__' in wx.PlatformInfo:
     from notifier_macos import *
+else:
+    from notifier_libnotify import *
 
 
 from notifier import *
