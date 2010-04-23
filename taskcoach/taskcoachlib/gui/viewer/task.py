@@ -171,7 +171,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
 
     def iconName(self, item, isSelected):
         return item.selectedIcon(recursive=True) if isSelected else item.icon(recursive=True)
-        
+
     def getItemTooltipData(self, task):
         if not self.settings.getboolean('view', 'descriptionpopups'):
             return []
@@ -181,10 +181,10 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
             result.append((None, map(lambda x: x.rstrip('\n'),
                                  task.description().split('\n'))))
         if task.notes():
-            result.append(('note_icon', [note.subject() for note in task.notes()]))
+            result.append(('note_icon', sorted([note.subject() for note in task.notes()])))
         if task.attachments():
             result.append(('paperclip_icon',
-                [unicode(attachment) for attachment in task.attachments()]))
+                sorted([unicode(attachment) for attachment in task.attachments()])))
         return result
 
     def label(self, task):
