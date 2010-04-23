@@ -335,7 +335,7 @@ class AppearancePage(Page, widgets.BookPage):
         font = self._fontButton.GetSelectedFont() if fontChecked else None
         self.item.setFont(font)
         icon = self._iconEntry.GetClientData(self._iconEntry.GetSelection())
-        selectedIcon = icon.strip('_icon') + '_open_icon' if (icon.startswith('folder') and icon.count('_') == 2) else icon
+        selectedIcon = icon[:-len('_icon')] + '_open_icon' if (icon.startswith('folder') and icon.count('_') == 2) else icon
         self.item.setIcon(icon)
         self.item.setSelectedIcon(selectedIcon)
         super(AppearancePage, self).ok()

@@ -40,7 +40,9 @@ description included non-ASCII characters.''', '2986071'),
 filenames if both the user and the native save dialog don't add it.''', 
             '2978204'),
         Bug('''When listing notes and attachment in a popup window, show
-them sorted instead of in a seemingly random order.''', '2991230')
+them sorted instead of in a seemingly random order.''', '2991230'),
+        Bug('''Don't crash and corrupt the task file when the user
+assigns the green folder icon to a task, category or note.''', '2991511')
         ],
     featuresAdded=[
         Feature('''Use item titles in dialogs and in the undo/redo menu to
