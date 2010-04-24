@@ -77,9 +77,9 @@ class wxDrawer(object):
 						break
 				offsetY += 20
 
-			font = wx.NORMAL_FONT
-			font.SetPointSize(10)
-			font.SetWeight(wx.FONTWEIGHT_NORMAL)
+			font = schedule.font
+## 			font.SetPointSize(10)
+## 			font.SetWeight(wx.FONTWEIGHT_NORMAL)
 			self.context.SetFont(font, schedule.foreground)
 
 			description = self._shrinkText( self.context, schedule.description, w - 2 * SCHEDULE_INSIDE_MARGIN, h )
@@ -104,9 +104,10 @@ class wxDrawer(object):
 						break
 				offsetY += 20
 
-			font = self.context.GetFont()
-			font.SetPointSize(8)
-			font.SetWeight(wx.FONTWEIGHT_NORMAL)
+			font = schedule.font
+## 			font = self.context.GetFont()
+## 			font.SetPointSize(8)
+## 			font.SetWeight(wx.FONTWEIGHT_NORMAL)
 			self.context.SetFont(font)
 
 			self.context.SetTextForeground( schedule.foreground )
@@ -126,14 +127,16 @@ class wxDrawer(object):
 		size, position, total = self.ScheduleSize(schedule, workingHours, day, 1)
 
 		if self.use_gc:
-			font = wx.NORMAL_FONT
-			font.SetPointSize(10)
-			font.SetWeight(wx.FONTWEIGHT_NORMAL)
+			font = schedule.font
+## 			font = wx.NORMAL_FONT
+## 			font.SetPointSize(10)
+## 			font.SetWeight(wx.FONTWEIGHT_NORMAL)
 			self.context.SetFont(font, schedule.color)
 		else:
-			font = self.context.GetFont()
-			font.SetPointSize( 8 )
-			font.SetWeight( wx.FONTWEIGHT_NORMAL )
+			font = schedule.font
+## 			font = self.context.GetFont()
+## 			font.SetPointSize( 8 )
+## 			font.SetWeight( wx.FONTWEIGHT_NORMAL )
 			self.context.SetTextForeground( schedule.foreground )
 			self.context.SetFont(font)
 
@@ -152,14 +155,16 @@ class wxDrawer(object):
 		size, position, total = self.ScheduleSize(schedule, workingHours, day, daysCount)
 
 		if self.use_gc:
-			font = wx.NORMAL_FONT
-			font.SetPointSize(10)
-			font.SetWeight(wx.FONTWEIGHT_NORMAL)
+			font = schedule.font
+## 			font = wx.NORMAL_FONT
+## 			font.SetPointSize(10)
+## 			font.SetWeight(wx.FONTWEIGHT_NORMAL)
 			self.context.SetFont(font, schedule.color)
 		else:
-			font = self.context.GetFont()
-			font.SetPointSize( 8 )
-			font.SetWeight( wx.FONTWEIGHT_NORMAL )
+			font = schedule.font
+## 			font = self.context.GetFont()
+## 			font.SetPointSize( 8 )
+## 			font.SetWeight( wx.FONTWEIGHT_NORMAL )
 			self.context.SetTextForeground( schedule.color )
 			self.context.SetFont(font)
 
@@ -518,7 +523,7 @@ class HeaderDrawerGCMixin(object):
 				self.context.DrawRoundedRectangle(x, y, width, textH * 1.2, 1.0 * textH / 2)
 				results.append((schedule, wx.Point(x, y), wx.Point(x + width, y + textH * 1.2)))
 
-				self.context.SetFont(font, schedule.foreground)
+				self.context.SetFont(schedule.font, schedule.foreground)
 				self.context.DrawText(description, x + SCHEDULE_INSIDE_MARGIN, y + textH * 0.1)
 
 				y += textH * 1.2

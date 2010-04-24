@@ -39,6 +39,9 @@ class wxSchedule( wx.EvtHandler ):
 		super( wxSchedule, self ).__init__()
 		
 		self._color			= self.SCHEDULE_DEFAULT_COLOR
+		self._font                      = wx.NORMAL_FONT
+		self._font.SetPointSize(10)
+		self._font.SetWeight(wx.FONTWEIGHT_NORMAL)
 		self._foreground                = self.SCHEDULE_DEFAULT_FOREGROUND
 		self._category		= "Work"
 		self._description	= ''
@@ -80,7 +83,8 @@ class wxSchedule( wx.EvtHandler ):
 		"""
 		attributes = [ 
 			"category", 
-			"color", 
+			"color",
+			"font",
 			"foreground",
 			"description", 
 			"done", 
@@ -120,6 +124,7 @@ class wxSchedule( wx.EvtHandler ):
 		
 		evt.category	= self._category
 		evt.color		= self._color
+		evt.font                = self._font
 		evt.foreground = self._foreground
 		evt.description	= self._description
 		evt.done		= self._done
@@ -177,6 +182,26 @@ class wxSchedule( wx.EvtHandler ):
 		Return the color
 		"""
 		return self._color
+
+	def SetFont( self, font ):
+		"""
+		Set the font
+		"""
+
+		if font is None:
+			self._font = wx.NORMAL_FONT
+			self._font.SetPointSize(10)
+			self._font.SetWeight(wx.FONTWEIGHT_NORMAL)
+		else:
+			self._font = font
+
+		self._eventNotification()
+
+	def GetFont( self ):
+		"""
+		Return the font
+		"""
+		return self._font
 
 	def SetForeground( self, color ):
 		"""
@@ -287,6 +312,7 @@ class wxSchedule( wx.EvtHandler ):
 	
 	category = property( GetCategory, SetCategory )
 	color = property( GetColor, SetColor )
+	font = property( GetFont, SetFont )
 	foreground = property( GetForeground, SetForeground )
 	description = property( GetDescription, SetDescription )
 	done = property( GetDone, SetDone )

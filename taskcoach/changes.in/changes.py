@@ -44,7 +44,8 @@ them sorted instead of in a seemingly random order.''', '2991230'),
         Bug('''Don't crash and corrupt the task file when the user
 assigns the green folder icon to a task, category or note.''', '2991511'),
         Bug('''Tasks wouldn't use the exact same font as the category they
-belong to.''', '2990350')
+belong to.''', '2990350'),
+        Bug('''The calendar view didn't handle the task's font.''', '2990875')
         ],
     featuresAdded=[
         Feature('''Use item titles in dialogs and in the undo/redo menu to
