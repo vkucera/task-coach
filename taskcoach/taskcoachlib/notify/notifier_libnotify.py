@@ -16,26 +16,41 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import tempfile, wx, os
+
 from notifier import AbstractNotifier
-import snarl, tempfile, os, wx
+from taskcoachlib.meta import data
 
+class LibnotifyNotifier(AbstractNotifier):
+    def __init__(self):
+        super(LibnotifyNotifier, self).__init__()
 
-class SnarlNotifier(AbstractNotifier):
+        try:
+            import pynotify
+        except ImportError:
+            self.__notify = None
+        else:
+            self.__notify = pynotify
+            self.__notify.init(data.name)
+
     def getName(self):
-        return u'Snarl'
+        return u'libnotify'
 
     def isAvailable(self):
-        return bool(snarl.snGetVersion())
+        return self.__notify is not None
 
-    def notify(self, title, summary, bitmap, **kwargs):
-        # Hum. Snarl needs a file.
+    def notify(self, title, summary, bitmap):
+        # Libnotify needs a file, like Snarl.
         fd, filename = tempfile.mkstemp('.png')
         os.close(fd)
         bitmap.SaveFile(filename, wx.BITMAP_TYPE_PNG)
         try:
-            snarl.snShowMessage(title.encode('UTF-8'), summary.encode('UTF-8'), iconPath=filename)
+            n = self.__notify.Notification(title.encode('UTF-8'),
+                                           summary.encode('UTF-8'),
+                                           filename)
+            n.show()
         finally:
             os.remove(filename)
 
 
-AbstractNotifier.register(SnarlNotifier())
+AbstractNotifier.register(LibnotifyNotifier())

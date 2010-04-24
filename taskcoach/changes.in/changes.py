@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.0.3', 'April 19, 2010',
+Release('1.0.3', 'April 23, 2010',
     summary='''This release fixes a few bugs, and improves a few features, such
 as making the calendar view sortable.''', 
     bugsFixed=[
@@ -38,7 +38,14 @@ edit dialog.''', '2987202'),
 description included non-ASCII characters.''', '2986071'),
         Bug('''When saving files, make sure the default extension is added to 
 filenames if both the user and the native save dialog don't add it.''', 
-            '2978204')
+            '2978204'),
+        Bug('''When listing notes and attachment in a popup window, show
+them sorted instead of in a seemingly random order.''', '2991230'),
+        Bug('''Don't crash and corrupt the task file when the user
+assigns the green folder icon to a task, category or note.''', '2991511'),
+        Bug('''Tasks wouldn't use the exact same font as the category they
+belong to.''', '2990350'),
+        Bug('''The calendar view didn't handle the task's font.''', '2990875')
         ],
     featuresAdded=[
         Feature('''Use item titles in dialogs and in the undo/redo menu to
@@ -48,6 +55,7 @@ make it clearer what items the user is/was working on.''',
 descriptions in a text control with scrollbars so the rows don't take up too
 much vertical space.''', 'http://uservoice.com/a/h37jH'),
         Feature('''Tasks can now be sorted in the calendar viewer.'''),
+        Feature('''Support for libnotify under Linux (for reminders).'''),
         ]
     ),
 

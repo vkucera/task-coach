@@ -655,11 +655,11 @@ class ViewerWithColumns(Viewer): # pylint: disable-msg=W0223
             lines = description.split('\n')
             result.append((None, [line.rstrip('\n') for line in lines]))                            
         try:
-            result.append(('note_icon', [note.subject() for note in item.notes()]))
+            result.append(('note_icon', sorted([note.subject() for note in item.notes()])))
         except AttributeError:
             pass
         try:
-            result.append(('paperclip_icon', [unicode(attachment) for attachment in item.attachments()]))
+            result.append(('paperclip_icon', sorted([unicode(attachment) for attachment in item.attachments()])))
         except AttributeError:
             pass
         return result

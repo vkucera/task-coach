@@ -89,7 +89,8 @@ class ReminderController(object):
         notifier = self.settings.get('feature', 'notifier')
         if notifier != 'Native' and notify.AbstractNotifier.get(notifier) is not None:
             notify.AbstractNotifier.get(notifier).notify(_('%s Reminder') % meta.name, task.subject(),
-                                                         wx.ArtProvider.GetBitmap('taskcoach', size=wx.Size(32, 32)))
+                                                         wx.ArtProvider.GetBitmap('taskcoach', size=wx.Size(32, 32)),
+                                                         windowId=self.__mainWindow.GetHandle())
             self.__removeReminder(task)
             task.setReminder(None)
             return False

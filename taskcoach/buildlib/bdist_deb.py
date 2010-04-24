@@ -246,6 +246,7 @@ Homepage: %(url)s
 Package: %(package)s
 Architecture: %(architecture)s
 Depends: python, python-wxgtk2.8 (>= %(wxpythonversion)s), python-wxversion
+Recommends: python-notify
 Description: %(description)s.
 %(long_description)s
 '''

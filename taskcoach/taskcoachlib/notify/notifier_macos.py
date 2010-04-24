@@ -51,7 +51,7 @@ class GrowlNotifier(AbstractNotifier):
     def isAvailable(self):
         return self._available
 
-    def notify(self, title, summary, bitmap):
+    def notify(self, title, summary, bitmap, **kwargs):
         # The bitmap is not actually used here...
         self._notifier.notify(noteType=u'Reminder', title=title, description=summary,
                               sticky=True)
