@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.0.3', 'April 23, 2010',
+Release('1.0.3', 'April 25, 2010',
     summary='''This release fixes a few bugs, and improves a few features, such
 as making the calendar view sortable.''', 
     bugsFixed=[
