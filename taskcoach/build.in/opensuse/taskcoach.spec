@@ -73,8 +73,10 @@ desktop-file-install --vendor opensuse \
 %%doc CHANGES.txt LICENSE.txt PUBLICITY.txt README.txt TODO.tsk
 
 %%exclude %%{_libdir}/python*/site-packages/buildlib/*.py*
-%%exclude %%{_libdir}/python*/site-packages/taskcoachlib/bin.in/*
 
 %%changelog
+* Fri Mar 26 2010 Frank Niessink <frank ATT niessink DOTT com> - 1.0.1-1
+- no need to exclude pysyncml library here, it is no longer included upstream
+
 * Sun Mar 13 2010 Frank Niessink <frank ATT niessink DOTT com> - 1.0.0-1
 - integrate OpenSuse RPM build step into Task Coach build process
