@@ -38,7 +38,7 @@ edit dialog.''', '2987202'),
 description included non-ASCII characters.''', '2986071'),
         Bug('''When saving files, make sure the default extension is added to 
 filenames if both the user and the native save dialog don't add it.''', 
-            '2978204'),
+            '2987204'),
         Bug('''When listing notes and attachment in a popup window, show
 them sorted instead of in a seemingly random order.''', '2991230'),
         Bug('''Don't crash and corrupt the task file when the user
