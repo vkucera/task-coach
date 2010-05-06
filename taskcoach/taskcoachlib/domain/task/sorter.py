@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ class Sorter(base.TreeSorter):
         self.__treeMode = kwargs.pop('treeMode', False)
         self.__sortByTaskStatusFirst = kwargs.pop('sortByTaskStatusFirst', True)
         super(Sorter, self).__init__(*args, **kwargs)
-        for eventType in ('task.startDate', 'task.completionDate'):
+        for eventType in ('task.startDateTime', 'task.completionDateTime'):
             patterns.Publisher().registerObserver(self.onAttributeChanged, 
                                                   eventType=eventType)
             
@@ -117,12 +117,12 @@ class Sorter(base.TreeSorter):
         # sorting by status depends on those two attributes, hence we don't
         # need to subscribe to these two attributes when they become the sort
         # key.
-        if attribute not in ('completionDate', 'startDate'):
+        if attribute not in ('completionDateTime', 'startDateTime'):
             super(Sorter, self)._registerObserverForAttribute(attribute)
             
     def _removeObserverForAttribute(self, attribute):
          # See comment at _registerObserverForAttribute.
-        if attribute not in ('completionDate', 'startDate'):
+        if attribute not in ('completionDateTime', 'startDateTime'):
             super(Sorter, self)._removeObserverForAttribute(attribute)
         
     def _createEventTypeFromAttribute(self, attribute):

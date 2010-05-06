@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -241,16 +241,16 @@ class DirtyTaskFileTest(TaskFileTestCase):
         self.task.setBackgroundColor(wx.RED)
         self.failUnless(self.taskFile.needSave())
         
-    def testNeedSave_AfterEditTaskStartDate(self):
-        self.task.setStartDate(date.Tomorrow())
+    def testNeedSave_AfterEditTaskStartDateTime(self):
+        self.task.setStartDateTime(date.Now() + date.oneHour)
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterEditTaskDueDate(self):
-        self.task.setDueDate(date.Tomorrow())
+        self.task.setDueDateTime(date.Now() + date.oneDay)
         self.failUnless(self.taskFile.needSave())
         
     def testNeedSave_AfterEditTaskCompletionDate(self):
-        self.task.setCompletionDate(date.Tomorrow())
+        self.task.setCompletionDateTime(date.Now())
         self.failUnless(self.taskFile.needSave())
 
     def testNeedSave_AfterEditPercentageComplete(self):
@@ -706,7 +706,7 @@ class TaskFileSaveAndLoadTest(TaskFileTestCase):
         
     def testSaveAndLoad(self):
         self.saveAndLoad([task.Task(subject='ABC'), 
-            task.Task(dueDate=date.Tomorrow())])
+            task.Task(dueDateTime=date.Now() + date.oneDay)])
 
     def testSaveAndLoadTaskWithChild(self):
         parentTask = task.Task()

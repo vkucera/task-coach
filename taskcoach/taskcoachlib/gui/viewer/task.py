@@ -239,7 +239,7 @@ class SquareMapRootNode(RootNode):
 class TimelineRootNode(RootNode):
     def children(self, recursive=False):
         children = super(TimelineRootNode, self).children(recursive)
-        children.sort(key=lambda task: task.startDate())
+        children.sort(key=lambda task: task.startDateTime())
         return children
     
     def parallel_children(self, recursive=False):
@@ -248,19 +248,19 @@ class TimelineRootNode(RootNode):
     def sequential_children(self):
         return []
 
-    def startDate(self, recursive=False):
-        startDates = [item.startDate(recursive=True) for item in self.parallel_children()]
-        startDates = [aDate for aDate in startDates if aDate != date.Date()]
-        if not startDates:
-            startDates.append(date.Today())
-        return min(startDates)
+    def startDateTime(self, recursive=False):
+        startDateTimes = [item.startDateTime(recursive=True) for item in self.parallel_children()]
+        startDateTimes = [dt for dt in startDateTimes if dt != date.DateTime()]
+        if not startDateTimes:
+            startDateTimes.append(date.Now())
+        return min(startDateTimes)
     
-    def dueDate(self, recursive=False):
-        dueDates = [item.dueDate(recursive=True) for item in self.parallel_children()]
-        dueDates = [aDate for aDate in dueDates if aDate != date.Date()]
-        if not dueDates:
-            dueDates.append(date.Tomorrow())    
-        return max(dueDates)
+    def dueDateTime(self, recursive=False):
+        dueDateTimes = [item.dueDateTime(recursive=True) for item in self.parallel_children()]
+        dueDatetimes = [dt for dt in dueDateTimes if dt != date.DateTime()]
+        if not dueDateTimes:
+            dueDateTimes.append(date.Now() + date.oneDay)    
+        return max(dueDateTimes)
     
 
 class TimelineViewer(BaseTaskViewer):
@@ -270,8 +270,8 @@ class TimelineViewer(BaseTaskViewer):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'timelineviewer')
         super(TimelineViewer, self).__init__(*args, **kwargs)
-        for eventType in (task.Task.subjectChangedEventType(), 'task.startDate',
-            'task.dueDate', 'task.completionDate'):
+        for eventType in (task.Task.subjectChangedEventType(), 'task.startDateTime',
+            'task.dueDateTime', 'task.completionDateTime'):
             self.registerObserver(self.onAttributeChanged, eventType)
         
     def createWidget(self):
@@ -306,8 +306,8 @@ class TimelineViewer(BaseTaskViewer):
  
     def start(self, item, recursive=False):
         try:
-            start = item.startDate(recursive=recursive)
-            if start == date.Date():
+            start = item.startDateTime(recursive=recursive)
+            if start == date.DateTime():
                 return None
         except AttributeError:
             start = item.getStart()
@@ -316,10 +316,10 @@ class TimelineViewer(BaseTaskViewer):
     def stop(self, item, recursive=False):
         try:
             if item.completed():
-                stop = item.completionDate(recursive=recursive)
+                stop = item.completionDateTime(recursive=recursive)
             else:
-                stop = item.dueDate(recursive=recursive)
-            if stop == date.Date():
+                stop = item.dueDateTime(recursive=recursive)
+            if stop == date.DateTime():
                 return None   
             else:
                 stop += date.oneDay
@@ -339,7 +339,7 @@ class TimelineViewer(BaseTaskViewer):
         try:
             children = [child for child in item.children(recursive=recursive) \
                         if child in self.presentation()]
-            children.sort(key=lambda task: task.startDate())
+            children.sort(key=lambda task: task.startDateTime())
             return children
         except AttributeError:
             return []
@@ -358,7 +358,7 @@ class TimelineViewer(BaseTaskViewer):
         return wx.ArtProvider_GetIcon(bitmap, wx.ART_MENU, (16,16))
     
     def now(self):
-        return date.Today().toordinal()
+        return date.Now().toordinal()
     
     def nowlabel(self):
         return _('Now')
@@ -388,8 +388,8 @@ class SquareTaskViewer(BaseTaskViewer):
         super(SquareTaskViewer, self).__init__(*args, **kwargs)
         self.orderBy(self.settings.get(self.settingsSection(), 'sortby'))
         self.orderUICommand.setChoice(self.__orderBy)
-        for eventType in (task.Task.subjectChangedEventType(), 'task.dueDate',
-            'task.startDate', 'task.completionDate'):
+        for eventType in (task.Task.subjectChangedEventType(), 'task.dueDateTime',
+            'task.startDateTime', 'task.completionDateTime'):
             self.registerObserver(self.onAttributeChanged, eventType)
 
     def curselectionIsInstanceOf(self, class_):
@@ -522,8 +522,8 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         for eventType in ('view.efforthourstart', 'view.efforthourend'):
             self.registerObserver(self.onWorkingHourChanged, eventType)
 
-        for eventType in (task.Task.subjectChangedEventType(), 'task.startDate',
-                          'task.dueDate', 'task.completionDate',
+        for eventType in (task.Task.subjectChangedEventType(), 'task.startDateTime',
+                          'task.dueDateTime', 'task.completionDateTime',
                           task.Task.attachmentsChangedEventType(),
                           task.Task.notesChangedEventType()):
             self.registerObserver(self.onAttributeChanged, eventType)
@@ -563,9 +563,11 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         edit = uicommand.TaskEdit(taskList=self.presentation(), viewer=self)
         edit(item)
 
-    def onCreate(self, date):
-        create = uicommand.TaskNew(taskList=self.presentation(), settings=self.settings,
-                                   taskKeywords=dict(startDate=date, dueDate=date))
+    def onCreate(self, dateTime):
+        create = uicommand.TaskNew(taskList=self.presentation(), 
+                                   settings=self.settings,
+                                   taskKeywords=dict(startDateTime=dateTime, 
+                                                     dueDateTime=dateTime))
         create(None)
 
     def getToolBarUICommands(self):
@@ -654,7 +656,8 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
                       resizeCallback=self.onResizeColumn)
         columns = [widgets.Column('subject', _('Subject'), 
                 task.Task.subjectChangedEventType(), 
-                'task.completionDate', 'task.dueDate', 'task.startDate',
+                'task.completionDateTime', 'task.dueDateTime', 
+                'task.startDateTime',
                 task.Task.trackStartEventType(), task.Task.trackStopEventType(), 
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                     value='subject'),
@@ -706,9 +709,9 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
                                   'hourlyFee', 'fixedFee', 'totalFixedFee',
                                   'revenue', 'totalRevenue']
         for name, columnHeader, renderCallback, eventType in [
-            ('startDate', _('Start date'), lambda task: render.date(task.startDate()), None),
-            ('dueDate', _('Due date'), lambda task: render.date(task.dueDate()), None),
-            ('completionDate', _('Completion date'), lambda task: render.date(task.completionDate()), None),
+            ('startDate', _('Start date'), lambda task: render.dateTime(task.startDateTime()), None),
+            ('dueDate', _('Due date'), lambda task: render.dateTime(task.dueDateTime()), None),
+            ('completionDate', _('Completion date'), lambda task: render.dateTime(task.completionDateTime()), None),
             ('percentageComplete', _('% complete'), lambda task: render.percentage(task.percentageComplete()), None),
             ('totalPercentageComplete', _('Overall % complete'), lambda task: render.percentage(task.percentageComplete(recursive=True)), None),
             ('timeLeft', _('Days left'), lambda task: render.daysLeft(task.timeLeft(), task.completed()), None),

@@ -48,8 +48,8 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
             eventType=task.Task.trackStartEventType())
         patterns.Publisher().registerObserver(self.onStopTracking,
             eventType=task.Task.trackStopEventType())
-        patterns.Publisher().registerObserver(self.onChangeDueDate,
-            eventType='task.dueDate')
+        patterns.Publisher().registerObserver(self.onChangeDueDateTime,
+            eventType='task.dueDateTime')
         event = wx.EVT_TASKBAR_LEFT_DOWN if '__WXGTK__' == wx.Platform else wx.EVT_TASKBAR_LEFT_DCLICK    
         self.Bind(event, self.onTaskbarClick)
         self.__setTooltipText()
@@ -79,7 +79,7 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
         self.__setTooltipText()
         self.__setIcon()
 
-    def onChangeDueDate(self, event): # pylint: disable-msg=W0613
+    def onChangeDueDateTime(self, event): # pylint: disable-msg=W0613
         self.__setTooltipText()
         self.__setIcon()
 

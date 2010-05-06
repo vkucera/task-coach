@@ -102,22 +102,22 @@ class FilterableViewerForTasksMixin(FilterableViewerMixin):
             'categoryfiltermatchall'))
     
     def viewFilterOptions(self):
-        options = dict(dueDateFilter=self.getFilteredByDueDate(),
+        options = dict(dueDateTimeFilter=self.getFilteredByDueDateTime(),
                        hideCompletedTasks=self.isHidingCompletedTasks(),
                        hideInactiveTasks=self.isHidingInactiveTasks(),
                        hideActiveTasks=self.isHidingActiveTasks(),
                        hideCompositeTasks=self.isHidingCompositeTasks())
         return options
     
-    def isFilteredByDueDate(self, dueDateString):
-        return dueDateString == self.settings.get(self.settingsSection(), 
-                                                  'tasksdue')
+    def isFilteredByDueDateTime(self, dueDateTimeString):
+        return dueDateTimeString == self.settings.get(self.settingsSection(), 
+                                                      'tasksdue')
     
-    def setFilteredByDueDate(self, dueDateString):
-        self.settings.set(self.settingsSection(), 'tasksdue', dueDateString)
-        self.presentation().setFilteredByDueDate(dueDateString)
+    def setFilteredByDueDateTime(self, dueDateTimeString):
+        self.settings.set(self.settingsSection(), 'tasksdue', dueDateTimeString)
+        self.presentation().setFilteredByDueDateTime(dueDateTimeString)
         
-    def getFilteredByDueDate(self):
+    def getFilteredByDueDateTime(self):
         return self.settings.get(self.settingsSection(), 'tasksdue')
     
     def hideInactiveTasks(self, hide=True):
@@ -153,7 +153,7 @@ class FilterableViewerForTasksMixin(FilterableViewerMixin):
         self.hideActiveTasks(False)
         self.hideCompletedTasks(False)
         self.hideCompositeTasks(False)
-        self.setFilteredByDueDate('Unlimited')
+        self.setFilteredByDueDateTime('Unlimited')
         for eachCategory in self.taskFile.categories():
             eachCategory.setFiltered(False)
         
@@ -163,29 +163,29 @@ class FilterableViewerForTasksMixin(FilterableViewerMixin):
         return self.__filterUICommands
 
     def createFilterUICommands(self):
-        def dueDateFilter(menuText, helpText, value):
-            return uicommand.ViewerFilterByDueDate(menuText=menuText, 
-                                                   helpText=helpText,
-                                                   value=value, viewer=self)
-        dueDateFilterCommands = (_('Show only tasks &due before end of'),
-            dueDateFilter(_('&Unlimited'), _('Show all tasks'), 'Unlimited'),
-            dueDateFilter(_('&Today'),_('Only show tasks due today'), 'Today'),
-            dueDateFilter(_('T&omorrow'),
-                          _('Only show tasks due today and tomorrow'), 
-                          'Tomorrow'),
-            dueDateFilter(_('Wo&rkweek'), 
-                          _('Only show tasks due this work week (i.e. before Friday)'),
-                          'Workweek'),
-            dueDateFilter(_('&Week'), 
-                          _('Only show tasks due this week (i.e. before Sunday)'),
-                          'Week'),
-            dueDateFilter(_('&Month'), _('Only show tasks due this month'), 
-                          'Month'),
-            dueDateFilter(_('&Year'), _('Only show tasks due this year'),
-                          'Year'))
+        def dueDateTimeFilter(menuText, helpText, value):
+            return uicommand.ViewerFilterByDueDateTime(menuText=menuText, 
+                                                       helpText=helpText,
+                                                       value=value, viewer=self)
+        dueDateTimeFilterCommands = (_('Show only tasks &due before end of'),
+            dueDateTimeFilter(_('&Unlimited'), _('Show all tasks'), 'Unlimited'),
+            dueDateTimeFilter(_('&Today'),_('Only show tasks due today'), 'Today'),
+            dueDateTimeFilter(_('T&omorrow'),
+                              _('Only show tasks due today and tomorrow'), 
+                              'Tomorrow'),
+            dueDateTimeFilter(_('Wo&rkweek'), 
+                              _('Only show tasks due this work week (i.e. before Friday)'),
+                              'Workweek'),
+            dueDateTimeFilter(_('&Week'), 
+                              _('Only show tasks due this week (i.e. before Sunday)'),
+                              'Week'),
+            dueDateTimeFilter(_('&Month'), _('Only show tasks due this month'), 
+                              'Month'),
+            dueDateTimeFilter(_('&Year'), _('Only show tasks due this year'),
+                              'Year'))
         return [uicommand.ResetFilter(viewer=self), 
                 None,
-                dueDateFilterCommands, 
+                dueDateTimeFilterCommands, 
                 uicommand.ViewerHideCompletedTasks(viewer=self),
                 uicommand.ViewerHideInactiveTasks(viewer=self),
                 uicommand.ViewerHideActiveTasks(viewer=self),

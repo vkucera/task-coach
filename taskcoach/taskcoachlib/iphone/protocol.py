@@ -108,10 +108,7 @@ class DataItem(BaseItem):
         self.__count = count
 
     def expect(self):
-        if self.state == 0:
-            return self.__count
-        else:
-            return None
+        return self.__count if self.state == 0 else None
 
     def feed(self, data):
         if self.state == 0:
@@ -176,16 +173,11 @@ class DateItem(FixedSizeStringItem):
         super(DateItem, self).feed(data)
 
         if self.state == 2:
-            if self.value is None:
-                self.value = Date()
-            else:
-                self.value = parseDate(self.value)
+            self.value = Date() if self.value is None else parseDate(self.value)
 
     def pack(self, value):
-        if value == Date():
-            return super(DateItem, self).pack(None)
-        else:
-            return super(DateItem, self).pack('%04d-%02d-%02d' % (value.year, value.month, value.day))
+        value = None if value == Date() else value.isoformat()
+        return super(DateTime, self).pack(value)
 
 
 class DateTimeItem(FixedSizeStringItem):
@@ -199,13 +191,10 @@ class DateTimeItem(FixedSizeStringItem):
                 self.value = parseDateTime(self.value)
 
     def pack(self, value):
-        if value is None:
-            return super(DateTimeItem, self).pack(None)
-        else:
-            return super(DateTimeItem, self).pack('%04d-%02d-%02d %02d:%02d:%02d' % (value.year, value.month,
-                                                                                     value.day, value.hour,
-                                                                                     value.minute, value.second))
-
+        if value is not None:
+            value = value.replace(microsecond=0, tzinfo=None).isoformat(sep=' ')
+        return super(DateTimeItem, self).pack(value)
+    
 
 class CompositeItem(BaseItem):
     """A succession of several types. Underlying type: tuple. An
@@ -239,10 +228,7 @@ class CompositeItem(BaseItem):
 
             return expect
         else:
-            if len(self._items) == 1:
-                self.value = self.value[0]
-            else:
-                self.value = tuple(self.value)
+            self.value = self.value[0] if len(self._items) == 1 else tuple(self.value)
             return None
 
     def feed(self, data):
@@ -756,18 +742,18 @@ class FullFromDesktopTaskState(BaseState):
                           task.subject(),
                           task.id(),
                           task.description(),
-                          task.startDate(),
-                          task.dueDate(),
-                          task.completionDate(),
+                          task.startDateTime().date(),
+                          task.dueDateTime().date(),
+                          task.completionDateTime().date(),
                           [category.id() for category in task.categories()])
             else:
                 self.pack('sssdddz[s]',
                           task.subject(),
                           task.id(),
                           task.description(),
-                          task.startDate(),
-                          task.dueDate(),
-                          task.completionDate(),
+                          task.startDateTime().date(),
+                          task.dueDateTime().date(),
+                          task.completionDateTime().date(),
                           task.parent().id() if task.parent() is not None else None,
                           [category.id() for category in task.categories()])
 
@@ -867,8 +853,10 @@ class FullFromDeviceTaskState(BaseState):
         super(FullFromDeviceTaskState, self).init('ssddd[s]', self.taskCount)
 
     def handleNewObject(self, (subject, description, startDate, dueDate, completionDate, categories)):
-        task = Task(subject=subject, description=description, startDate=startDate,
-                    dueDate=dueDate, completionDate=completionDate)
+        task = Task(subject=subject, description=description, 
+                    startDateTime=DateTime(startDate.year, startDate.month, startDate.day),
+                    dueDateTime=DateTime(dueDate.year, dueDate.month, dueDate.day), 
+                    completionDateTime=DateTime(completionDate.year, completionDate.month, completionDate.day))
 
         self.disp().window.addIPhoneTask(task, [self.categoryMap[id_] for id_ in categories])
 
@@ -1003,8 +991,10 @@ class TwoWayNewTasksState(BaseState):
         super(TwoWayNewTasksState, self).init('ssddd[s]', self.newTasksCount)
 
     def handleNewObject(self, (subject, description, startDate, dueDate, completionDate, categories)):
-        task = Task(subject=subject, description=description, startDate=startDate,
-                    dueDate=dueDate, completionDate=completionDate)
+        task = Task(subject=subject, description=description, 
+                    startDateTime=DateTime(startDate.year, startDate.month, startDate.day),
+                    dueDateTime=DateTime(dueDate.year, dueDate.month, dueDate.day), 
+                    completionDateTime=DateTime(completionDate.year, completionDate.month, completionDate.day))
 
         self.disp().window.addIPhoneTask(task, [self.categoryMap[catId] for catId in categories])
         self.disp().log(_('New task %s'), task.id())
@@ -1023,8 +1013,11 @@ class TwoWayNewTasksState4(BaseState):
     def handleNewObject(self, (subject, description, startDate, dueDate, completionDate, parentId, categories)):
         parent = self.taskMap[parentId] if parentId else None
 
-        task = Task(subject=subject, description=description, startDate=startDate,
-                    dueDate=dueDate, completionDate=completionDate, parent=parent)
+        task = Task(subject=subject, description=description, 
+                    startDateTime=DateTime(startDate.year, startDate.month, startDate.day),
+                    dueDateTime=DateTime(dueDate.year, dueDate.month, dueDate.day), 
+                    completionDateTime=DateTime(completionDate.year, completionDate.month, completionDate.year), 
+                    parent=parent)
 
         self.disp().window.addIPhoneTask(task, [self.categoryMap[catId] for catId in categories])
         self.disp().log(_('New task %s'), task.id())
@@ -1065,13 +1058,19 @@ class TwoWayModifiedTasks(BaseState):
             subject, taskId, description, startDate, dueDate, completionDate, categories = args
             categories = [self.categoryMap[catId] for catId in categories]
 
+        startDateTime = DateTime(startDate.year, startDate.month, startDate.day)
+        dueDateTime = DateTime(dueDate.year, dueDate.month, dueDate.day), 
+        completionDateTime = DateTime(completionDate.year, completionDate.month, 
+                                      completionDate.year),
         try:
             task = self.taskMap[taskId]
         except KeyError:
             pass
         else:
             self.disp().log(_('Modify task %s'), task.id())
-            self.disp().window.modifyIPhoneTask(task, subject, description, startDate, dueDate, completionDate, categories)
+            self.disp().window.modifyIPhoneTask(task, subject, description, 
+                                                startDateTime, dueDateTime, 
+                                                completionDateTime, categories)
 
     def finished(self):
         if self.version < 4:

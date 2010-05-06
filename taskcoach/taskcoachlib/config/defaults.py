@@ -49,7 +49,7 @@ defaults = { \
 'taskviewer': { \
     'title': '',                     # User supplied viewer title 
     'treemode': 'True',              # True = tree mode, False = list mode
-    'sortby': 'dueDate',
+    'sortby': 'dueDateTime',
     'sortascending': 'True',
     'sortbystatusfirst': 'True',
     'sortcasesensitive': 'True',

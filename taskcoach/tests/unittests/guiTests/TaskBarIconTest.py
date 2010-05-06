@@ -73,31 +73,31 @@ class TaskBarIconTooltipTest(TaskBarIconTooltipTestCase):
     def testNoTasks(self):
         self.assertTooltip('')
         
-    def testOneTaskNoDueDate(self):
+    def testOneTaskNoDueDateTime(self):
         self.taskList.append(task.Task())
         self.assertTooltip('')
 
     def testOneTaskDueSoon(self):
-        self.taskList.append(task.Task(dueDate=date.Today()))
+        self.taskList.append(task.Task(dueDateTime=date.Now() + date.oneHour))
         self.assertTooltip('one task due soon')
         
     def testTwoTasksDueSoon(self):
-        self.taskList.append(task.Task(dueDate=date.Today()))
-        self.taskList.append(task.Task(dueDate=date.Today()))
+        self.taskList.append(task.Task(dueDateTime=date.Now() + date.oneHour))
+        self.taskList.append(task.Task(dueDateTime=date.Now() + date.oneHour))
         self.assertTooltip('2 tasks due soon')
         
     def testOneTasksOverdue(self):
-        self.taskList.append(task.Task(dueDate=date.Yesterday()))
+        self.taskList.append(task.Task(dueDateTime=date.Now() - date.oneDay))
         self.assertTooltip('one task overdue')
         
     def testTwoTasksOverdue(self):
-        self.taskList.append(task.Task(dueDate=date.Yesterday()))
-        self.taskList.append(task.Task(dueDate=date.Yesterday()))
+        self.taskList.append(task.Task(dueDateTime=date.Now() - date.oneDay))
+        self.taskList.append(task.Task(dueDateTime=date.Now() - date.oneDay))
         self.assertTooltip('2 tasks overdue')
         
     def testOneTaskDueSoonAndOneTaskOverdue(self):
-        self.taskList.append(task.Task(dueDate=date.Yesterday()))
-        self.taskList.append(task.Task(dueDate=date.Today()))
+        self.taskList.append(task.Task(dueDateTime=date.Now() - date.oneDay))
+        self.taskList.append(task.Task(dueDateTime=date.Now() + date.oneHour))
         self.assertTooltip('one task overdue, one task due soon')
         
     def testRemoveTask(self):
@@ -107,7 +107,7 @@ class TaskBarIconTooltipTest(TaskBarIconTooltipTestCase):
         self.assertTooltip('')
         
     def testRemoveOverdueTask(self):
-        overdueTask = task.Task(dueDate=date.Yesterday())
+        overdueTask = task.Task(dueDateTime=date.Now() - date.oneDay)
         self.taskList.append(overdueTask)
         self.taskList.remove(overdueTask)
         self.assertTooltip('')

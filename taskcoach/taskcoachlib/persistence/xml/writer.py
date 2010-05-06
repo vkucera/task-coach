@@ -52,12 +52,12 @@ class XMLWriter(object):
     def taskNode(self, task): # pylint: disable-msg=W0621
         node = self.baseCompositeNode(task, 'task', self.taskNode)
         node.setAttribute('status', str(task.getStatus()))
-        if task.startDate() != date.Date():
-            node.setAttribute('startdate', str(task.startDate()))
-        if task.dueDate() != date.Date():
-            node.setAttribute('duedate', str(task.dueDate()))
-        if task.completionDate() != date.Date():
-            node.setAttribute('completiondate', str(task.completionDate()))
+        if task.startDateTime() != date.DateTime():
+            node.setAttribute('startdate', str(task.startDateTime()))
+        if task.dueDateTime() != date.DateTime():
+            node.setAttribute('duedate', str(task.dueDateTime()))
+        if task.completionDateTime() != date.DateTime():
+            node.setAttribute('completiondate', str(task.completionDateTime()))
         if task.percentageComplete() != 0:
             node.setAttribute('percentageComplete', str(task.percentageComplete()))
         if task.recurrence():
@@ -244,22 +244,14 @@ class TemplateXMLWriter(XMLWriter):
     def taskNode(self, task): # pylint: disable-msg=W0621
         node = super(TemplateXMLWriter, self).taskNode(task)
 
-        today = date.Today()
-        todayTime = date.DateTime(today.year, today.month, today.day)
-
-        for name in ['startDate', 'dueDate', 'completionDate']:
-            dt = getattr(task, name)()
-            if dt != date.Date():
-                node.removeAttribute(name.lower())
-                delta = dt - today
-                node.setAttribute(name.lower() + 'tmpl',
-                                  'Today() + %s' % repr(delta))
-        for name in ['reminder']:
-            dt = getattr(task, name)()
-            if dt is not None:
-                node.removeAttribute(name.lower())
-                delta = dt - todayTime
-                node.setAttribute(name.lower() + 'tmpl',
-                                  'DateTime(Today().year, Today().month, Today().day) + %s' % repr(delta))
+        for name, getter in [('startdate', 'startDateTime'),
+                             ('duedate', 'dueDateTime'),
+                             ('completiondate', 'completionDateTime'),
+                             ('reminder', 'reminder')]:
+            dateTime = getattr(task, getter)()
+            if dateTime != date.DateTime():
+                node.removeAttribute(name)
+                delta = dateTime - date.Now()
+                node.setAttribute(name + 'tmpl', 'Now() + %s' % repr(delta))
 
         return node

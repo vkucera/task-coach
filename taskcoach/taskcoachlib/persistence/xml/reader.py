@@ -164,9 +164,9 @@ class XMLReader(object):
     def _parseTaskNode(self, taskNode):
         kwargs = self._parseBaseCompositeAttributes(taskNode, self._parseTaskNodes)
         kwargs.update(dict(
-            startDate=date.parseDate(taskNode.attrib.get('startdate', '')),
-            dueDate=date.parseDate(taskNode.attrib.get('duedate', '')),
-            completionDate=date.parseDate(taskNode.attrib.get('completiondate', '')),
+            startDateTime=date.parseDateTime(taskNode.attrib.get('startdate', '')),
+            dueDateTime=date.parseDateTime(taskNode.attrib.get('duedate', '')),
+            completionDateTime=date.parseDateTime(taskNode.attrib.get('completiondate', '')),
             percentageComplete=int(taskNode.attrib.get('percentageComplete','0')),
             budget=date.parseTimeDelta(taskNode.attrib.get('budget', '')),
             priority=int(taskNode.attrib.get('priority', '0')),

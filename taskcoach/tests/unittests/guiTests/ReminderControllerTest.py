@@ -100,7 +100,7 @@ class ReminderControllerTest(ReminderControllerTestCase):
         
     def testMarkTaskCompletedRemovesReminder(self):
         self.task.setReminder(self.reminderDateTime)
-        self.task.setCompletionDate(date.Today())
+        self.task.setCompletionDateTime(date.Now())
         self.assertEqual([], patterns.Publisher().observers(eventType=\
                 date.Clock.eventType(self.reminderDateTime)))
         

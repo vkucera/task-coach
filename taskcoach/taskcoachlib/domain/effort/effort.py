@@ -87,12 +87,12 @@ class Effort(baseeffort.BaseEffort, base.Object):
             stop = now()
         return stop - self._start
         
-    def setStart(self, startDatetime, event=None):
-        if startDatetime == self._start:
+    def setStart(self, startDateTime, event=None):
+        if startDateTime == self._start:
             return
         notify = event is None 
         event = event or patterns.Event()
-        self._start = startDatetime
+        self._start = startDateTime
         self.task().timeSpentEvent(event, self)
         event.addSource(self, self._start, type='effort.start')
         event.addSource(self, self.duration(), type='effort.duration')

@@ -51,6 +51,32 @@ class DateEntry(widgets.PanelWithBoxSizer):
         self._entry.SetValue(date.Today())
 
 
+class DateTimeEntry(widgets.PanelWithBoxSizer):
+    defaultDateTime = date.DateTime()
+
+    def __init__(self, parent, initialDateTime=defaultDateTime, readonly=False, 
+                 callback=None, *args, **kwargs):
+        super(DateTimeEntry, self).__init__(parent, *args, **kwargs)
+        self._entry = widgets.DateTimeCtrl(self, callback=callback)
+        if readonly:
+            self._entry.Disable()
+        self._entry.SetValue(initialDateTime)
+        self.add(self._entry)
+        self.fit()
+
+    def get(self, defaultDateTime=None):
+        result = self._entry.GetValue()
+        if result == date.DateTime() and defaultDateTime:
+            result = defaultDateTime
+        return result
+
+    def set(self, newDateTime=defaultDateTime):
+        self._entry.SetValue(newDateTime)
+
+    def setToday(self):
+        self._entry.SetValue(date.Now())
+
+
 class TimeDeltaEntry(widgets.PanelWithBoxSizer):
     defaultTimeDelta=date.TimeDelta()
 

@@ -474,12 +474,13 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, widgets.AuiManagedFrameWith
         effort.setStop(ended)
 
     @synchronized
-    def modifyIPhoneTask(self, task, subject, description, startDate, dueDate, completionDate, categories):
+    def modifyIPhoneTask(self, task, subject, description, startDateTime, 
+                         dueDateTime, completionDateTime, categories):
         task.setSubject(subject)
         task.setDescription(description)
-        task.setStartDate(startDate)
-        task.setDueDate(dueDate)
-        task.setCompletionDate(completionDate)
+        task.setStartDateTime(startDateTime)
+        task.setDueDateTime(dueDateTime)
+        task.setCompletionDateTime(completionDateTime)
 
         if categories is not None: # Protocol v2
             for category in task.categories():

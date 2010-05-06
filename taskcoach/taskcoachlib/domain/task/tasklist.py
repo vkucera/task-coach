@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 João Alexandre de Toledo <jtoledo@griffo.com.br>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -100,18 +100,6 @@ class TaskList(categorizable.CategorizableContainer):
         ''' Provide a way for bypassing the __len__ method of decorators. '''
         return len([t for t in self if not t.isDeleted()])
     
-    def minDate(self):      
-        return min(self.__allDates())
-          
-    def maxDate(self):
-        return max(self.__allDates())
-
-    def __allDates(self):        
-        realDates = [aDate for task in self # pylint: disable-msg=W0621
-            for aDate in (task.startDate(), task.dueDate(), task.completionDate()) 
-            if aDate != date.Date()]
-        return realDates or [date.Date()]            
-
     def minPriority(self):
         return min(self.__allPriorities())
         

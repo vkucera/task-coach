@@ -24,7 +24,8 @@ etc. ''' # pylint: disable-msg=W0105
 
 import locale
 from taskcoachlib.i18n import _
-
+from taskcoachlib.domain import date as datemodule
+ 
 # pylint: disable-msg=W0621
 
 def date(date): 
@@ -41,8 +42,7 @@ def daysLeft(timeLeft, completedTask):
     ''' Render time left (of type date.TimeDelta) in days. '''
     if completedTask:
         return ''
-    from taskcoachlib.domain import date
-    if timeLeft == date.TimeDelta.max:
+    if timeLeft == datemodule.TimeDelta.max:
         return _('Infinite') # u'∞' would be nice, but not all fonts have it
     else:
         return str(timeLeft.days)
@@ -50,10 +50,9 @@ def daysLeft(timeLeft, completedTask):
 def timeSpent(timeSpent):
     ''' render time spent (of type date.TimeDelta) as
     "<hours>:<minutes>:<seconds>" '''
-    from taskcoachlib.domain import date
-    if timeSpent == date.TimeDelta():
+    if timeSpent == datemodule.TimeDelta():
         return ''
-    if timeSpent < date.TimeDelta():
+    if timeSpent < datemodule.TimeDelta():
         sign = '-'
     else:
         sign = ''
@@ -80,7 +79,10 @@ def budget(aBudget):
         
 def dateTime(dateTime):
     # Don't use %+ because it prints seconds as well.
-    return '%s %s' % (date(dateTime), time(dateTime)) if dateTime else ''
+    if dateTime == datemodule.DateTime():
+        return ''
+    else:
+        return '%s %s' % (date(dateTime), time(dateTime)) if dateTime else ''
     
 def dateTimePeriod(start, stop):
     if stop is None:

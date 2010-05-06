@@ -170,11 +170,11 @@ class MarkCompletedTest(test.TestCase):
         
     def testEnabledWhenSelectedTaskIsCompleted(self):
         self.assertMarkCompletedIsEnabled(
-            selection=[task.Task(completionDate=date.Today())])
+            selection=[task.Task(completionDateTime=date.Now())])
         
     def testEnabledWhenSelectedTasksAreBothCompletedAndUncompleted(self):
         self.assertMarkCompletedIsEnabled(
-            selection=[task.Task(completionDate=date.Today()), task.Task()])
+            selection=[task.Task(completionDateTime=date.Now()), task.Task()])
 
 
 class TaskNewTest(wxTestCaseWithFrameAsTopLevelWindow):

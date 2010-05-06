@@ -3,7 +3,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2010 Jérôme Laheurte <fraca7@free.fr>
+Copyright (C) 2007-2010 Jï¿½rï¿½me Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,6 +23,19 @@ from changetypes import *
 
 releases = [
 
+Release('1.1.0', 'May 6, 2010',
+    summary='''This release adds time to start, due and completion dates of 
+tasks.''',
+    featuresAdded=[
+        Feature('''The start, due and completion dates of tasks now also include
+a time.''', 'http://uservoice.com/a/nd3mH')
+        ],
+    implementationChanged=[
+        Implementation('''The task file format was changed to support start, due
+and completion date and time. The task file format version number is now 30.''')
+        ]
+    ),
+    
 Release('1.0.3', 'April 25, 2010',
     summary='''This release fixes a few bugs, and improves a few features, such
 as making the calendar view sortable.''', 

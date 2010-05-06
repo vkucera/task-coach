@@ -1107,12 +1107,12 @@ class ViewerSortByTaskStatusFirst(ViewerCommand, UICheckCommand):
         self.viewer.setSortByTaskStatusFirst(self._isMenuItemChecked(event))
 
 
-class ViewerFilterByDueDate(ViewerCommand, UIRadioCommand):
+class ViewerFilterByDueDateTime(ViewerCommand, UIRadioCommand):
     def isSettingChecked(self):
-        return self.viewer.isFilteredByDueDate(self.value)
+        return self.viewer.isFilteredByDueDateTime(self.value)
     
     def doCommand(self, event):
-        self.viewer.setFilteredByDueDate(self.value)
+        self.viewer.setFilteredByDueDateTime(self.value)
 
 
 class ViewerHideInactiveTasks(ViewerCommand, UICheckCommand):
@@ -1259,7 +1259,7 @@ class TaskNewFromTemplate(TaskNew):
 
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
         # The task template is read every time because it's the
-        # TemplateXMLReader that evaluates dynamic values (Today()
+        # TemplateXMLReader that evaluates dynamic values (Now()
         # should be evaluated at task creation for instance).
         templateTask = self.__readTemplate()
         kwargs = templateTask.__getcopystate__()

@@ -46,7 +46,7 @@ class ReminderDialog(sized_controls.SizedDialog):
                                               eventType=self.taskList.removeItemEventType(),
                                               eventSource=self.taskList)
         patterns.Publisher().registerObserver(self.onTaskCompletionDateChanged, 
-                                              eventType='task.completionDate',
+                                              eventType='task.completionDateTime',
                                               eventSource=self.task)
         self.openTaskAfterClose = self.ignoreSnoozeOption = False
         pane = self.GetContentsPane()

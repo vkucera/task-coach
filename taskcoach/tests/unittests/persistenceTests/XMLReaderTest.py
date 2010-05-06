@@ -380,29 +380,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         <tasks>
             <task subject="???"/>
         </tasks>\n''')
-        self.assertEqual('???', tasks[0].subject())
-        
-    def testStartDate(self):
-        tasks = self.writeAndReadTasks('''
-        <tasks>
-            <task startdate="2005-04-17"/>
-        </tasks>\n''')
-        self.assertEqual(date.Date(2005,4,17), tasks[0].startDate())
-        
-    def testDueDate(self):
-        tasks = self.writeAndReadTasks('''
-        <tasks>
-            <task duedate="2005-04-17"/>
-        </tasks>\n''')
-        self.assertEqual(date.Date(2005,4,17), tasks[0].dueDate())
-        
-    def testCompletionDate(self):
-        tasks = self.writeAndReadTasks('''
-        <tasks>
-            <task completiondate="2005-01-01"/>
-        </tasks>\n''')
-        self.assertEqual(date.Date(2005,1,1), tasks[0].completionDate())
-        self.failUnless(tasks[0].completed())
+        self.assertEqual('???', tasks[0].subject())        
         
     def testBudget(self):
         tasks = self.writeAndReadTasks('''
@@ -1228,3 +1206,79 @@ class XMLReaderVersion29Test(XMLReaderTestCase):
             '<attachment type="file" location="whatever" selectedIcon="icon"/>'
             '</task></tasks>')
         self.assertEqual('icon', tasks[0].attachments()[0].selectedIcon())
+
+
+class XMLReaderVersion30Test(XMLReaderTestCase):
+    tskversion = 30 # New in release 1.1.0.
+
+    def testStartDateTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task startdate="2005-04-17 10:05:11"/>
+        </tasks>\n''')
+        self.assertEqual(date.DateTime(2005,4,17,10,5,11), 
+                         tasks[0].startDateTime())
+
+    def testStartDateTimeWithoutTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task startdate="2005-04-17"/>
+        </tasks>\n''')
+        self.assertEqual(date.DateTime(2005,4,17), tasks[0].startDateTime())
+
+    def testStartDateTimeWithMicroseconds(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task startdate="2005-01-01 22:01:30.456"/>
+        </tasks>\n''')
+        self.assertEqual(date.DateTime(2005,1,1,22,1,30,456), 
+                         tasks[0].startDateTime())
+        
+    def testDueDateTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task duedate="2005-04-17 13:05:59"/>
+        </tasks>\n''')
+        self.assertEqual(date.DateTime(2005,4,17,13,5,59), 
+                         tasks[0].dueDateTime())
+
+    def testDueDateTimeWithoutTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task duedate="2005-04-17"/>
+        </tasks>\n''')
+        self.assertEqual(date.DateTime(2005,4,17), tasks[0].dueDateTime())
+
+    def testDueDateTimeWithMicroseconds(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task duedate="2005-01-01 22:01:30.456000"/>
+        </tasks>\n''')
+        self.assertEqual(date.DateTime(2005,1,1,22,1,30,456000), 
+                         tasks[0].dueDateTime())
+        
+    def testCompletionDateTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task completiondate="2005-01-01 22:01:30"/>
+        </tasks>\n''')
+        self.assertEqual(date.DateTime(2005,1,1,22,1,30), 
+                         tasks[0].completionDateTime())
+        self.failUnless(tasks[0].completed())
+
+    def testCompletionDateTimeWithMicroseconds(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task completiondate="2005-01-01 22:01:30.456000"/>
+        </tasks>\n''')
+        self.assertEqual(date.DateTime(2005,1,1,22,1,30,456000), 
+                         tasks[0].completionDateTime())
+        self.failUnless(tasks[0].completed())
+
+    def testCompletionDateTimeWithoutTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task completiondate="2005-01-01"/>
+        </tasks>\n''')
+        self.assertEqual(date.DateTime(2005,1,1), tasks[0].completionDateTime())
+        self.failUnless(tasks[0].completed())

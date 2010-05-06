@@ -345,7 +345,7 @@ class DatesPage(TaskHeadersMixin, PageWithHeaders):
     def __init__(self, parent, theTask, settings, *args, **kwargs):
         super(DatesPage, self).__init__(parent, theTask, *args, **kwargs)
         self._settings = settings
-        self._previousCompletionDate = theTask.completionDate()
+        self._previousCompletionDateTime = theTask.completionDateTime()
         datesBox = self.addDatesBox(theTask)
         reminderBox = self.addReminderBox(theTask)
         recurrenceBox = self.addRecurrenceBox(theTask)
@@ -358,21 +358,21 @@ class DatesPage(TaskHeadersMixin, PageWithHeaders):
     def addDatesBox(self, theTask):
         datesBox = widgets.BoxWithFlexGridSizer(self, label=_('Dates'), cols=3)
         self.addHeaders(datesBox)
-        for label, taskMethodName in [(_('Start date'), 'startDate'),
-                                      (_('Due date'), 'dueDate'),
-                                      (_('Completion date'), 'completionDate')]:
+        for label, taskMethodName in [(_('Start date'), 'startDateTime'),
+                                      (_('Due date'), 'dueDateTime'),
+                                      (_('Completion date'), 'completionDateTime')]:
             datesBox.add(label)
             taskMethod = getattr(theTask, taskMethodName)
-            dateEntry = entry.DateEntry(datesBox, taskMethod(),
-                                        callback=self.onDateChanged)
-            setattr(self, '_%sEntry'%taskMethodName, dateEntry)
-            datesBox.add(dateEntry)
+            dateTimeEntry = entry.DateTimeEntry(datesBox, taskMethod(),
+                                                callback=self.onDateTimeChanged)
+            setattr(self, '_%sEntry'%taskMethodName, dateTimeEntry)
+            datesBox.add(dateTimeEntry)
             if theTask.children():
-                recursiveDateEntry = entry.DateEntry(datesBox,
+                recursiveDateTimeEntry = entry.DateTimeEntry(datesBox,
                     taskMethod(recursive=True), readonly=True)
             else:
-                recursiveDateEntry = (0, 0)
-            datesBox.add(recursiveDateEntry)
+                recursiveDateTimeEntry = (0, 0)
+            datesBox.add(recursiveDateTimeEntry)
         return datesBox
         
     def addReminderBox(self, theTask):
@@ -437,9 +437,10 @@ class DatesPage(TaskHeadersMixin, PageWithHeaders):
     
     def entries(self):
         # pylint: disable-msg=E1101
-        return dict(startDate=self._startDateEntry, dueDate=self._dueDateEntry,
-                    completionDate=self._completionDateEntry, 
-                    timeLeft=self._dueDateEntry, 
+        return dict(startDateTime=self._startDateTimeEntry, 
+                    dueDateTime=self._dueDateTimeEntry,
+                    completionDateTime=self._completionDateTimeEntry, 
+                    timeLeft=self._dueDateTimeEntry, 
                     reminder=self._reminderDateTimeEntry, 
                     recurrence=self._recurrenceEntry)
     
@@ -457,11 +458,13 @@ class DatesPage(TaskHeadersMixin, PageWithHeaders):
         maxRecurrenceOn = event.IsChecked()
         self._maxRecurrenceCountEntry.Enable(maxRecurrenceOn)
 
-    def onDateChanged(self, event):
-        ''' Called when one of the DateEntries is changed by the user. Update
-            the suggested reminder if no reminder was set by the user. '''
+    def onDateTimeChanged(self, event):
+        ''' Called when one of the DateTimeEntries is changed by the user. 
+            Update the suggested reminder if no reminder was set by the user. '''
         event.Skip()
-        if self._reminderDateTimeEntry.GetValue() == date.DateTime.max:
+        # Make sure the reminderDateTimeEntry has been created:
+        if hasattr(self, '_reminderDateTimeEntry') and \
+            self._reminderDateTimeEntry.GetValue() == date.DateTime.max:
             self.suggestReminder()
 
     def ok(self):
@@ -480,11 +483,11 @@ class DatesPage(TaskHeadersMixin, PageWithHeaders):
         kwargs['sameWeekday'] = self._recurrenceSameWeekdayCheckBox.IsChecked()
         # pylint: disable-msg=E1101,W0142
         self.item.setRecurrence(date.Recurrence(**kwargs))
-        self.item.setStartDate(self._startDateEntry.get())
-        self.item.setDueDate(self._dueDateEntry.get())
-        newCompletionDate = self._completionDateEntry.get()
-        if newCompletionDate != self._previousCompletionDate:
-            self.item.setCompletionDate(newCompletionDate)
+        self.item.setStartDateTime(self._startDateTimeEntry.get())
+        self.item.setDueDateTime(self._dueDateTimeEntry.get())
+        newCompletionDateTime = self._completionDateTimeEntry.get()
+        if newCompletionDateTime != self._previousCompletionDateTime:
+            self.item.setCompletionDateTime(newCompletionDateTime)
         self.item.setReminder(self._reminderDateTimeEntry.GetValue())
 
     def setReminder(self, reminder):
@@ -523,14 +526,10 @@ class DatesPage(TaskHeadersMixin, PageWithHeaders):
         # The suggested date for the reminder is the first date from the
         # list of candidates that is a real date:
         # pylint: disable-msg=E1101
-        candidates = [self._dueDateEntry.get(), self._startDateEntry.get(),
-                      date.Tomorrow()]
-        suggestedDate = [candidate for candidate in candidates \
-                         if date.Today() <= candidate < date.Date()][0]
-        # Add a suggested time of 8:00 AM:
-        suggestedDateTime = date.DateTime(suggestedDate.year,
-                                          suggestedDate.month,
-                                          suggestedDate.day, 8, 0, 0)
+        candidates = [self._dueDateTimeEntry.get(), self._startDateTimeEntry.get(),
+                      date.Now() + date.oneDay]
+        suggestedDateTime = [candidate for candidate in candidates \
+                            if date.Now() <= candidate < date.DateTime()][0]
         # Now, make sure the suggested date time is set in the control
         self.setReminder(suggestedDateTime)
         # And then disable the control (because the SetValue in the

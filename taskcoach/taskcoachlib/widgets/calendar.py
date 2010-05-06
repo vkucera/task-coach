@@ -1,6 +1,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2010 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,13 +21,13 @@ import wx, operator
 from taskcoachlib.thirdparty.calendar import wxScheduler, wxSchedule, \
     EVT_SCHEDULE_ACTIVATED, EVT_SCHEDULE_RIGHT_CLICK, \
     EVT_SCHEDULE_DCLICK
-from taskcoachlib.domain.date import Date
+from taskcoachlib.domain import date
 from taskcoachlib.widgets import draganddrop
 import tooltip
 
 
 class Calendar(tooltip.ToolTipMixin, wxScheduler):
-    def __init__(self, parent, taskList, iconProvider,  onSelect, onEdit,
+    def __init__(self, parent, taskList, iconProvider, onSelect, onEdit,
                  onCreate, popupMenu, *args, **kwargs):
         self.getItemTooltipData = parent.getItemTooltipData
 
@@ -72,8 +73,8 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
                 if isinstance(item, TaskSchedule):
                     cb(item.task, object)
                 else:
-                    date = Date(item.GetYear(), item.GetMonth() + 1, item.GetDay())
-                    cb(None, object, startDate=date, dueDate=date)
+                    datetime = date.DateTime(item.GetYear(), item.GetMonth() + 1, item.GetDay())
+                    cb(None, object, startDateTime=datetime, dueDateTime=datetime.endOfDay())
 
     def OnDropURL(self, x, y, url):
         self._handleDrop(x, y, url, self.__onDropURLCallback)
@@ -114,9 +115,12 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
     def OnEdit(self, event):
         if event.schedule is None:
             if event.date is not None:
-                self.createCommand(Date(event.date.GetYear(),
-                                        event.date.GetMonth() + 1,
-                                        event.date.GetDay()))
+                self.createCommand(date.DateTime(event.date.GetYear(),
+                                                 event.date.GetMonth() + 1,
+                                                 event.date.GetDay(),
+                                                 event.date.GetHour(),
+                                                 event.date.GetMinute(),
+                                                 event.date.GetSecond()))
         else:
             self.editCommand(event.schedule.task)
 
@@ -133,10 +137,10 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
 
         for task in self.taskList:
             if not task.isDeleted():
-                if task.startDate() == Date() and not self.__showNoStartDate:
+                if task.startDateTime() == date.DateTime() and not self.__showNoStartDate:
                     continue
 
-                if task.dueDate() == Date() and not self.__showNoDueDate:
+                if task.dueDateTime() == date.DateTime() and not self.__showNoDueDate:
                     continue
 
                 schedule = TaskSchedule(task, self.iconProvider)
@@ -162,13 +166,13 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
             if task.isDeleted():
                 doShow = False
 
-            if task.startDate() == Date() and task.dueDate() == Date():
+            if task.startDateTime() == date.DateTime() and task.dueDateTime() == date.DateTime():
                 doShow = False
 
-            if task.startDate() == Date() and not self.__showNoStartDate:
+            if task.startDateTime() == date.DateTime() and not self.__showNoStartDate:
                 doShow = False
 
-            if task.dueDate() == Date() and not self.__showNoDueDate:
+            if task.dueDateTime() == date.DateTime() and not self.__showNoDueDate:
                 doShow = False
 
             if doShow:
@@ -251,17 +255,21 @@ class TaskSchedule(wxSchedule):
         try:
             self.description = self.task.subject()
 
-            started = self.task.startDate()
-            if started == Date():
+            started = self.task.startDateTime()
+            if started == date.DateTime():
                 self.start = wx.DateTimeFromDMY(1, 1, 0) # Huh
             else:
-                self.start = wx.DateTimeFromDMY(started.day, started.month - 1, started.year, 0, 0, 1)
+                self.start = wx.DateTimeFromDMY(started.day, started.month - 1, 
+                                                started.year, started.hour, 
+                                                started.minute, started.second)
 
-            ended = self.task.dueDate()
-            if ended == Date():
+            ended = self.task.dueDateTime()
+            if ended == date.DateTime():
                 self.end = wx.DateTimeFromDMY(1, 1, 9999)
             else:
-                self.end = wx.DateTimeFromDMY(ended.day, ended.month - 1, ended.year, 23, 59, 0)
+                self.end = wx.DateTimeFromDMY(ended.day, ended.month - 1, 
+                                              ended.year, ended.hour,
+                                              ended.minute, ended.second)
 
             if self.task.completed():
                 self.done = True

@@ -174,9 +174,9 @@ class MarkCompletedCommand(EditTaskCommand, EffortCommand):
         super(MarkCompletedCommand, self).do_command()
         for item in self.items:
             if item.completed():
-                item.setCompletionDate(date.Date())
+                item.setCompletionDateTime(date.DateTime())
             else:
-                item.setCompletionDate()
+                item.setCompletionDateTime()
 
     def tasksToStopTracking(self):
         return self.items

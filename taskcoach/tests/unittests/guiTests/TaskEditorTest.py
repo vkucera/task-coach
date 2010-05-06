@@ -29,6 +29,8 @@ class TaskEditorTestCase(test.wxTestCase):
     def setUp(self):
         super(TaskEditorTestCase, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
+        self.tomorrow = date.Now() + date.oneDay
+        self.yesterday = date.Now() - date.oneDay
         self.taskFile = persistence.TaskFile()
         self.taskList = self.taskFile.tasks()
         self.effortList = self.taskFile.efforts()
@@ -80,8 +82,8 @@ class EditorDisplayTest(TaskEditorTestCase):
     def testSubject(self):
         self.assertEqual('Task to edit', self.editor[0][0]._subjectEntry.GetValue())
 
-    def testDueDate(self):
-        self.assertEqual(date.Date(), self.editor[0][1]._dueDateEntry.get())
+    def testDueDateTime(self):
+        self.assertEqual(date.DateTime(), self.editor[0][1]._dueDateTimeEntry.get())
         
     def testRecurrenceUnit(self):
         choice = self.editor[0][1]._recurrenceEntry
@@ -119,21 +121,27 @@ class NewTaskTest(TaskEditorTestCase):
         self.assertEqual('New task', self.task.subject())
 
     def testDueDate(self):
-        self.editor[0][1]._dueDateEntry.set(date.Today()) # pylint: disable-msg=W0212
+        now = date.Now()
+        self.editor[0][1]._dueDateTimeEntry.set(now) # pylint: disable-msg=W0212
         self.editor.ok()
-        self.assertEqual(date.Today(), self.task.dueDate())
+        self.assertAlmostEqual(now.toordinal(), 
+                               self.task.dueDateTime().toordinal(),
+                               places=2)
 
     def testSetCompleted(self):
-        self.editor[0][1]._completionDateEntry.set(date.Today()) # pylint: disable-msg=W0212
+        now = date.Now()
+        self.editor[0][1]._completionDateTimeEntry.set(now) # pylint: disable-msg=W0212
         self.editor.ok()
-        self.assertEqual(date.Today(), self.task.completionDate())
+        self.assertAlmostEqual(now.toordinal(), 
+                               self.task.completionDateTime().toordinal(),
+                               places=2)
 
     def testSetUncompleted(self):
         # pylint: disable-msg=W0212
-        self.editor[0][1]._completionDateEntry.set(date.Today())
-        self.editor[0][1]._completionDateEntry.set(date.Date())
+        self.editor[0][1]._completionDateTimeEntry.set(date.Now())
+        self.editor[0][1]._completionDateTimeEntry.set(date.DateTime())
         self.editor.ok()
-        self.assertEqual(date.Date(), self.task.completionDate())
+        self.assertEqual(date.DateTime(), self.task.completionDateTime())
 
     def testSetDescription(self):
         self.setDescription('Description')
@@ -274,15 +282,26 @@ class EditTaskTest(TaskEditorTestCase):
 
     # pylint: disable-msg=W0212
     
-    def testSetDueDate(self):
-        self.editor[0][1]._dueDateEntry.set(date.Tomorrow())
+    def testSetDueDateTime(self):
+        self.editor[0][1]._dueDateTimeEntry.set(self.tomorrow)
         self.editor.ok()
-        self.assertEqual(date.Tomorrow(), self.task.dueDate())
+        self.assertAlmostEqual(self.tomorrow.toordinal(), 
+                               self.task.dueDateTime().toordinal(),
+                               places=2)
 
-    def testSetStartDate(self):
-        self.editor[0][1]._startDateEntry.set(date.Tomorrow())
+    def testSetStartDateTime(self):
+        self.editor[0][1]._startDateTimeEntry.set(self.tomorrow)
         self.editor.ok()
-        self.assertEqual(date.Tomorrow(), self.task.startDate())
+        self.assertAlmostEqual(self.tomorrow.toordinal(), 
+                               self.task.startDateTime().toordinal(),
+                               places=2)
+
+    def testSetCompletionDateTime(self):
+        self.editor[0][1]._completionDateTimeEntry.set(self.tomorrow)
+        self.editor.ok()
+        self.assertAlmostEqual(self.tomorrow.toordinal(), 
+                               self.task.completionDateTime().toordinal(),
+                               places=2)
         
     def testSetNegativePriority(self):
         self.editor[0][0]._prioritySpinner.SetValue(-1)
@@ -372,15 +391,17 @@ class EditTaskWithChildrenTest(TaskEditorTestCase):
 
     # pylint: disable-msg=W0212
     
-    def testChangeDueDateOfParentHasNoEffectOnChild(self):
-        self.editor[0][1]._dueDateEntry.set(date.Yesterday())
+    def testChangeDueDateTimeOfParentHasNoEffectOnChild(self):
+        self.editor[0][1]._dueDateTimeEntry.set(self.yesterday)
         self.editor.ok()
-        self.assertEqual(date.Date(), self.child.dueDate())
+        self.assertEqual(date.DateTime(), self.child.dueDateTime())
 
-    def testChangeStartDateOfParentHasNoEffectOnChild(self):
-        self.editor[0][1]._startDateEntry.set(date.Tomorrow())
+    def testChangeStartDateTimeOfParentHasNoEffectOnChild(self):
+        self.editor[0][1]._startDateTimeEntry.set(self.tomorrow)
         self.editor.ok()
-        self.assertEqual(date.Today(), self.child.startDate())
+        self.assertAlmostEqual(date.Now().toordinal(), 
+                               self.child.startDateTime().toordinal(),
+                               places=2)
 
 
 class EditTaskWithEffortTest(TaskEditorTestCase):    
