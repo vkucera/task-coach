@@ -182,6 +182,9 @@ class DateItem(FixedSizeStringItem):
                 self.value = parseDate(self.value)
 
     def pack(self, value):
+        if isinstance(value, DateTime):
+            value = Date(value.year, value.month, value.day)
+
         if value == Date():
             return super(DateItem, self).pack(None)
         else:
