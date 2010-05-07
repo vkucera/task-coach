@@ -1226,6 +1226,13 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         </tasks>\n''')
         self.assertEqual(date.DateTime(2005,4,17), tasks[0].startDateTime())
 
+    def testNoStartDateTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task />
+        </tasks>\n''')
+        self.assertEqual(None, tasks[0].startDateTime())
+
     def testStartDateTimeWithMicroseconds(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -1248,6 +1255,13 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
             <task duedate="2005-04-17"/>
         </tasks>\n''')
         self.assertEqual(date.DateTime(2005,4,17), tasks[0].dueDateTime())
+
+    def testNoDueDateTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task />
+        </tasks>\n''')
+        self.assertEqual(date.DateTime(), tasks[0].dueDateTime())
 
     def testDueDateTimeWithMicroseconds(self):
         tasks = self.writeAndReadTasks('''
@@ -1274,6 +1288,13 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         self.assertEqual(date.DateTime(2005,1,1,22,1,30,456000), 
                          tasks[0].completionDateTime())
         self.failUnless(tasks[0].completed())
+
+    def testNoCompletionDateTime(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task />
+        </tasks>\n''')
+        self.assertEqual(date.DateTime(), tasks[0].completionDateTime())
 
     def testCompletionDateTimeWithoutTime(self):
         tasks = self.writeAndReadTasks('''
