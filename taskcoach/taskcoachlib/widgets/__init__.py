@@ -27,7 +27,7 @@ from listctrl import ListCtrl
 from treectrl import CheckTreeCtrl, TreeListCtrl
 from squaremap import SquareMap
 from timeline import Timeline
-from datectrl import DateCtrl, DateTimeCtrl, DatePickerCtrl
+from datectrl import DateTimeCtrl, DatePickerCtrl
 from textctrl import SingleLineTextCtrl, SingleLineTextCtrlWithEnterButton, \
     MultiLineTextCtrl, StaticTextWithToolTip
 from panel import PanelWithBoxSizer, BoxWithFlexGridSizer, BoxWithBoxSizer
