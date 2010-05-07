@@ -30,8 +30,8 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
         self.categories = category.CategoryList()
         self.category = category.Category('cat')
         self.categories.append(self.category)
-        self.task1 = task.Task('task1')
-        self.task2 = task.Task('task2')
+        self.task1 = task.Task('task1', startDateTime=date.Now())
+        self.task2 = task.Task('task2', startDateTime=date.Now())
         self.taskList.append(self.task1)
         self.originalList = [self.task1]
         

@@ -103,10 +103,11 @@ class NewTaskCommand(base.NewItemCommand):
         description = kwargs.pop('description', '')
         attachments = kwargs.pop('attachments', [])
         categories = kwargs.pop('categories', [])
+        startDateTime = kwargs.pop('startDateTime', date.Now())
         super(NewTaskCommand, self).__init__(*args, **kwargs)
         self.items = [task.Task(subject=subject, description=description, 
                                 attachments=attachments, categories=categories,
-                                **kwargs)]
+                                startDateTime=startDateTime, **kwargs)]
 
 
 class NewSubTaskCommand(base.NewSubItemCommand, SaveTaskStateMixin):

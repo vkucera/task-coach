@@ -20,7 +20,7 @@ import wx
 import test
 from taskcoachlib import gui, config
 from taskcoachlib.gui import uicommand
-from taskcoachlib.domain import task, category
+from taskcoachlib.domain import task, category, date
 
 
 class MockViewerContainer(object):
@@ -278,7 +278,7 @@ class StartEffortForTaskMenuTest(test.wxTestCase):
         self.menu = gui.menu.StartEffortForTaskMenu(self.frame, self.tasks)
         
     def addTask(self):
-        newTask = task.Task(subject='Subject')
+        newTask = task.Task(subject='Subject', startDateTime=date.Now())
         self.tasks.append(newTask)
         return newTask
     

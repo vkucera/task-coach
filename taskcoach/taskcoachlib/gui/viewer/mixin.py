@@ -382,9 +382,9 @@ class SortableViewerForTasksMixin(SortableViewerForCategorizablesMixin):
                                   'hourlyFee', 'fixedFee', 'totalFixedFee',
                                   'revenue', 'totalRevenue']
         for menuText, helpText, value in [\
-            (_('&Start date'), _('Sort tasks by start date'), 'startDate'),
-            (_('&Due date'), _('Sort tasks by due date'), 'dueDate'),
-            (_('&Completion date'), _('Sort tasks by completion date'), 'completionDate'),
+            (_('&Start date'), _('Sort tasks by start date'), 'startDateTime'),
+            (_('&Due date'), _('Sort tasks by due date'), 'dueDateTime'),
+            (_('&Completion date'), _('Sort tasks by completion date'), 'completionDateTime'),
             (_('D&ays left'), _('Sort tasks by number of days left'), 'timeLeft'),
             (_('&Percentage complete'), _('Sort tasks by percentage complete'), 'percentageComplete'),
             (_('&Overall percentage complete'), _('Sort tasks by overall percentage complete'), 'totalPercentageComplete'),

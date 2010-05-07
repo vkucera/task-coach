@@ -374,8 +374,8 @@ class EditTaskWithChildrenTest(TaskEditorTestCase):
 
     def createTasks(self):
         # pylint: disable-msg=W0201
-        self.parent = task.Task('Parent')
-        self.child = task.Task('Child')
+        self.parent = task.Task('Parent', startDateTime=date.Now())
+        self.child = task.Task('Child', startDateTime=date.Now())
         self.parent.addChild(self.child)
         return [self.parent] # self.child is added to tasklist automatically
 

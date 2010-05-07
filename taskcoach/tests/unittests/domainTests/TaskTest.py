@@ -125,21 +125,20 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
     def testTaskHasNoDueDateTimeByDefault(self):
         self.assertEqual(date.DateTime(), self.task.dueDateTime())    
 
-    def testTaskStartDateTimeIsNowByDefault(self):
-        self.assertAlmostEqual(date.Now().toordinal(), 
-                               self.task.startDateTime().toordinal())
-
-    def testTaskIsNotCompletedByDefault(self):
-        self.failIf(self.task.completed())
+    def testTaskHasNoStartDateTimeByDefault(self):
+        self.assertEqual(date.DateTime(), self.task.startDateTime())
 
     def testTaskHasNoCompletionDateTimeByDefault(self):
         self.assertEqual(date.DateTime(), self.task.completionDateTime())
 
-    def testTaskIsActiveByDefault(self):
-        self.failUnless(self.task.active())
+    def testTaskIsNotCompletedByDefault(self):
+        self.failIf(self.task.completed())
+
+    def testTaskIsNotActiveByDefault(self):
+        self.failIf(self.task.active())
         
-    def testTaskIsNotInactiveByDefault(self):
-        self.failIf(self.task.inactive())
+    def testTaskIsInactiveByDefault(self):
+        self.failUnless(self.task.inactive())
         
     def testTaskIsNotDueSoonByDefault(self):
         self.failIf(self.task.dueSoon())
@@ -194,20 +193,19 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.assertEqual(0, self.task.percentageComplete())
 
     def testDefaultColor(self):
-        for recursive in False, True:
-            self.assertEqual(None, self.task.foregroundColor(recursive))
+        self.assertEqual(None, self.task.foregroundColor())
 
     def testDefaultOwnIcon(self):
         self.assertEqual('', self.task.icon(recursive=False))
 
     def testDefaultRecursiveIcon(self):
-        self.assertEqual('led_blue_icon', self.task.icon(recursive=True))
+        self.assertEqual('led_grey_icon', self.task.icon(recursive=True))
 
     def testDefaultOwnSelectedIcon(self):
         self.assertEqual('', self.task.selectedIcon(recursive=False))
 
     def testDefaultRecursiveSelectedIcon(self):
-        self.assertEqual('led_blue_icon', self.task.selectedIcon(recursive=True))
+        self.assertEqual('led_grey_icon', self.task.selectedIcon(recursive=True))
 
     # Setters
 
@@ -635,7 +633,8 @@ class TaskDueTodayTest(TaskTestCase, CommonTaskTestsMixin):
 
 class TaskDueTomorrowTest(TaskTestCase, CommonTaskTestsMixin):
     def taskCreationKeywordArguments(self):
-        return [{'dueDateTime': self.tomorrow}]
+        return [{'dueDateTime': self.tomorrow.endOfDay(),
+                 'startDateTime': date.Now()}]
         
     def testIsDueTomorrow(self):
         self.failUnless(self.task.dueTomorrow())
@@ -859,8 +858,7 @@ class NewChildOfDefaultTaskTest(NewChildTestCase):
         self.assertEqual(self.task.dueDateTime(), self.child.dueDateTime())
                 
     def testNewChildHasStartDateTimeNow(self):
-        self.assertAlmostEqual(date.Now().toordinal(), 
-                               self.child.startDateTime().toordinal())
+        self.assertEqual(date.DateTime(), self.child.startDateTime())
 
     def testNewChildIsNotCompleted(self):
         self.failIf(self.child.completed())
@@ -885,7 +883,9 @@ class NewChildOfActiveTask(NewChildTestCase):
 
 class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
     def taskCreationKeywordArguments(self):
-        return [{'children': [task.Task(subject='child')]}]
+        return [{'startDateTime': date.Now(),
+                 'children': [task.Task(subject='child',
+                                        startDateTime=date.Now())]}]
     
     def testRemoveChildNotification(self):
         self.registerObserver(task.Task.removeChildEventType())
@@ -1989,7 +1989,7 @@ class TaskColorTest(test.TestCase):
         self.tomorrow = date.Now() + date.oneDay
         
     def testDefaultTask(self):
-        self.assertEqual(wx.BLACK, task.Task().statusColor())
+        self.assertEqual(wx.Colour(192, 192, 192), task.Task().statusColor())
 
     def testCompletedTask(self):
         completed = task.Task()
@@ -2005,16 +2005,17 @@ class TaskColorTest(test.TestCase):
         self.assertEqual(wx.Colour(255, 128, 0), duetoday.statusColor())
 
     def testDueTomorrow(self):
-        duetomorrow = task.Task(dueDateTime=self.tomorrow + date.oneHour)
+        duetomorrow = task.Task(startDateTime=date.Now(),
+                                dueDateTime=self.tomorrow + date.oneHour)
         self.assertEqual(wx.NamedColour('BLACK'), duetomorrow.statusColor())
 
-    def testInactive(self):
-        inactive = task.Task(startDateTime=self.tomorrow)
+    def testActive(self):
+        active = task.Task(startDateTime=date.Now())
         self.assertEqual(wx.Colour(*eval(task.Task.settings.get('color', 
-                         'inactivetasks'))), inactive.statusColor())
+                         'activetasks'))), active.statusColor())
 
     def testActiveTaskWithCategory(self):
-        activeTask = task.Task()
+        activeTask = task.Task(startDateTime=date.Now())
         redCategory = category.Category(subject='Red category', fgColor=wx.RED)
         activeTask.addCategory(redCategory)
         redCategory.addCategorizable(activeTask)

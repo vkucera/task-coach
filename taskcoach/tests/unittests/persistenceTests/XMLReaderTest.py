@@ -1231,7 +1231,7 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         <tasks>
             <task />
         </tasks>\n''')
-        self.assertEqual(None, tasks[0].startDateTime())
+        self.assertEqual(date.DateTime(), tasks[0].startDateTime())
 
     def testStartDateTimeWithMicroseconds(self):
         tasks = self.writeAndReadTasks('''

@@ -57,7 +57,7 @@ defaults = { \
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
     'searchdescription': 'False',
-    'columns': "['startDate', 'dueDate']",
+    'columns': "['startDateTime', 'dueDateTime']",
     'columnsalwaysvisible': "['subject']",
     'columnwidths': "{'attachments': 28, 'notes': 28}",
     'columnautoresizing': 'True',

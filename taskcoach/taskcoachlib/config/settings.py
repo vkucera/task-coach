@@ -112,12 +112,37 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
                 result = self.get(section, option) # recursive call
             else:
                 raise
+        result = self._ensureMinimum(section, option, result)
+        result = self._fixValuesFromOldIniFiles(section, option, result)
+        return result
+    
+    def _ensureMinimum(self, section, option, result):
         # Some settings may have a minimum value, make sure we return at 
         # least that minimum value:
         if section in defaults.minimum and option in defaults.minimum[section]:
             result = max(result, defaults.minimum[section][option])
         return result
-                
+    
+    def _fixValuesFromOldIniFiles(self, section, option, result):
+        ''' Try to fix settings from old TaskCoach.ini files that are no longer 
+            valid. '''
+        # Starting with release 1.1.0, the date properties of tasks (startDate,
+        # dueDate and completionDate) are datetimes: 
+        taskDateColumns = ('startDate', 'dueDate', 'completionDate')
+        if option == 'sortby' and result in taskDateColumns:
+            result += 'Time'
+        elif option == 'columns':
+            columns = [(col + 'Time' if col in taskDateColumns else col) for col in eval(result)]
+            result = str(columns)
+        elif option == 'columnwidths':
+            widths = dict()
+            for column, width in eval(result).items():
+                if column in taskDateColumns:
+                    column += 'Time'
+                widths[column] = width
+            result = str(widths)
+        return result
+
     def set(self, section, option, value, new=False): # pylint: disable-msg=W0221
         if new:
             currentValue = 'a new option, so use something as current value'\

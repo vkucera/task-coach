@@ -41,7 +41,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         super(Task, self).__init__(*args, **kwargs)
         self.__dueDateTime = base.Attribute(dueDateTime or date.DateTime(), self, 
                                             self.dueDateTimeEvent)
-        self.__startDateTime = base.Attribute(startDateTime or date.Now(), self, 
+        self.__startDateTime = base.Attribute(startDateTime or date.DateTime(), self, 
                                               self.startDateTimeEvent)
         self.__completionDateTime = base.Attribute(completionDateTime or date.DateTime(), 
                                                    self, self.completionDateTimeEvent)
@@ -111,16 +111,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             shouldMarkCompletedWhenAllChildrenCompleted=\
                 self._shouldMarkCompletedWhenAllChildrenCompleted))
         return state
-
-    # Hack to prevent exceptions after Date was changed to
-    # DateTime. Users who had a viewer sorted on a date would have to
-    # delete their TaskCoach.ini file or get an AttributeError when
-    # opening a file.
-
-    def __getattr__(self, name):
-        if name in ['dueDate', 'startDate', 'completionDate']:
-            return getattr(self, name + 'Time')
-        raise AttributeError(name)
 
     def allChildrenCompleted(self):
         ''' Return whether all children (non-recursively) are completed. '''

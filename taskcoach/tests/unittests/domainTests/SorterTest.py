@@ -72,8 +72,10 @@ class TaskSorterSettingsTest(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()
         self.sorter = task.sorter.Sorter(self.taskList)        
-        self.task1 = task.Task(subject='A', dueDateTime=date.Now() + date.oneDay)
-        self.task2 = task.Task(subject='B', dueDateTime=date.Now() + date.oneHour)
+        self.task1 = task.Task(subject='A', startDateTime=date.Now(),
+                               dueDateTime=date.Now() + date.oneDay)
+        self.task2 = task.Task(subject='B', startDateTime=date.Now(),
+                               dueDateTime=date.Now() + date.oneHour)
         self.taskList.extend([self.task1, self.task2])
 
     def testSortDueDateTime(self):
@@ -139,6 +141,7 @@ class TaskSorterSettingsTest(test.TestCase):
         self.assertEqual([self.task1, self.task2, task3], list(self.sorter))
 
     def testSortCaseInsensitive(self):
+        self.sorter.sortByTaskStatusFirst(False)
         self.sorter.sortCaseSensitive(False)
         self.sorter.sortBy('subject')
         task3 = task.Task('a')

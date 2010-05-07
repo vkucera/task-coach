@@ -76,22 +76,22 @@ class SettingsTest(SettingsTestCase):
         
     def testGetNonExistingSettingFromSection1DefaultsToBaseSection(self):
         self.settings.add_section('effortviewer1')
-        self.settings.set('effortviewer', 'columnwidths', '[10]')
-        self.assertEqual([10], 
+        self.settings.set('effortviewer', 'columnwidths', 'dict(subject=10)')
+        self.assertEqual(dict(subject=10), 
             self.settings.getlist('effortviewer1', 'columnwidths'))
 
     def testGetNonExistingSettingFromSection2DefaultsToSection1(self):
         self.settings.add_section('effortviewer1')
         self.settings.add_section('effortviewer2')
-        self.settings.set('effortviewer1', 'columnwidths', '[10]')
-        self.assertEqual([10], 
+        self.settings.set('effortviewer1', 'columnwidths', 'dict(subject=10)')
+        self.assertEqual(dict(subject=10), 
             self.settings.getlist('effortviewer2', 'columnwidths'))
 
     def testGetNonExistingSettingFromSection2DefaultsToBaseSection(self):
         self.settings.add_section('effortviewer1')
         self.settings.add_section('effortviewer2')
-        self.settings.set('effortviewer', 'columnwidths', '[10]')
-        self.assertEqual([10], 
+        self.settings.set('effortviewer', 'columnwidths', 'dict(subject=10)')
+        self.assertEqual(dict(subject=10), 
             self.settings.getlist('effortviewer2', 'columnwidths'))
         
     def testGetNonExistingSettingFromSection2RaisesException(self):
@@ -101,10 +101,10 @@ class SettingsTest(SettingsTestCase):
             self.settings.getlist, 'effortviewer2', 'nonexisting')
 
     def testAddSectionAndSkipOne(self):
-        self.settings.set('effortviewer', 'columnwidths', '[10]')
+        self.settings.set('effortviewer', 'columnwidths', 'dict(subject=10)')
         self.settings.add_section('effortviewer2', 
             copyFromSection='effortviewer')
-        self.assertEqual([10], 
+        self.assertEqual(dict(subject=10), 
             self.settings.getlist('effortviewer2', 'columnwidths'))
         
 

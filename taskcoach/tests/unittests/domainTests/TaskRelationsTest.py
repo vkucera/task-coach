@@ -26,12 +26,12 @@ class CommonTaskRelationshipManagerTestsMixin(object):
         task.Task.settings = settings = config.Settings(load=False)
         self.yesterday = date.Now() - date.oneDay
         self.tomorrow = date.Now() + date.oneDay
-        self.parent = task.Task('parent')
-        self.child = task.Task('child')
+        self.parent = task.Task('parent', startDateTime=date.Now())
+        self.child = task.Task('child', startDateTime=date.Now())
         self.parent.addChild(self.child)
         self.child.setParent(self.parent)
-        self.child2 = task.Task('child2')
-        self.grandchild = task.Task('grandchild')
+        self.child2 = task.Task('child2', startDateTime=date.Now())
+        self.grandchild = task.Task('grandchild', startDateTime=date.Now())
         settings.set('behavior', 'markparentcompletedwhenallchildrencompleted', 
             str(self.markParentCompletedWhenAllChildrenCompleted))
         self.taskList = task.TaskList([self.parent, self.child2, self.grandchild])
