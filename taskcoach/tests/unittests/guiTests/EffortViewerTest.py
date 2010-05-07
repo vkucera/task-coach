@@ -287,7 +287,7 @@ class EffortViewerWithAggregationPerDayTest(CommonTestsMixin,
                                             EffortViewerAggregationTestCase):
     aggregation = 'day'
     expectedNumberOfItems = 7 # 4 day/task combinations on 3 days (== 3 total rows) 
-    expectedPeriodRendering = gui.render.date(date.Date(2008,7,23))
+    expectedPeriodRendering = gui.render.date(date.DateTime(2008,7,23))
 
 
 class EffortViewerWithAggregationPerWeekTest(CommonTestsMixin, 
@@ -301,5 +301,5 @@ class EffortViewerWithAggregationPerMonthTest(CommonTestsMixin,
                                               EffortViewerAggregationTestCase):
     aggregation = 'month'
     expectedNumberOfItems = 3 # 2 month/task combinations in 1 month (== 1 total row)
-    expectedPeriodRendering = gui.render.month(date.Date(2008,07,01))
+    expectedPeriodRendering = gui.render.month(date.DateTime(2008,07,01))
 
