@@ -176,6 +176,9 @@ class DateItem(FixedSizeStringItem):
             self.value = Date() if self.value is None else parseDate(self.value)
 
     def pack(self, value):
+        if isinstance(value, DateTime):
+            value = Date(value.year, value.month, value.day)
+
         value = None if value == Date() else value.isoformat()
         return super(DateTime, self).pack(value)
 
