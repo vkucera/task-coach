@@ -198,7 +198,7 @@ class VTodoParser(VCalendarParser):
                    not self.kwargs.has_key('completionDateTime'):
                 # Some servers only give the status, and not the date (SW)
                 if self.kwargs.has_key('last-modified'):
-                    self.kwargs['completionDateTime'] = parseDate(self.kwargs['last-modified'])
+                    self.kwargs['completionDateTime'] = parseDateTime(self.kwargs['last-modified'])
                 else:
                     self.kwargs['completionDateTime'] = date.Now()
 

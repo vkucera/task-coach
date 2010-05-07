@@ -192,31 +192,40 @@ class YearlyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
         self.recur = date.Recurrence('yearly')
         
     def testJanuary1(self):
-        self.assertEqual(date.Date(2002,1,1), self.recur(date.Date(2001,1,1)))
+        self.assertEqual(date.DateTime(2002,1,1), 
+                         self.recur(date.DateTime(2001,1,1)))
 
     def testJanuary1_LeapYear(self):
-        self.assertEqual(date.Date(2001,1,1), self.recur(date.Date(2000,1,1)))
+        self.assertEqual(date.DateTime(2001,1,1), 
+                         self.recur(date.DateTime(2000,1,1)))
 
     def testMarch1_LeapYear(self):
-        self.assertEqual(date.Date(2001,3,1), self.recur(date.Date(2000,3,1)))
+        self.assertEqual(date.DateTime(2001,3,1), 
+                         self.recur(date.DateTime(2000,3,1)))
         
     def testMarch1_YearBeforeLeapYear(self):
-        self.assertEqual(date.Date(2004,3,1), self.recur(date.Date(2003,3,1)))
+        self.assertEqual(date.DateTime(2004,3,1), 
+                         self.recur(date.DateTime(2003,3,1)))
 
     def testFebruary1_YearBeforeLeapYear(self):
-        self.assertEqual(date.Date(2004,2,1), self.recur(date.Date(2003,2,1)))
+        self.assertEqual(date.DateTime(2004,2,1), 
+                         self.recur(date.DateTime(2003,2,1)))
 
     def testFebruary28(self):
-        self.assertEqual(date.Date(2003,2,28), self.recur(date.Date(2002,2,28)))
+        self.assertEqual(date.DateTime(2003,2,28), 
+                         self.recur(date.DateTime(2002,2,28)))
 
     def testFebruary28_LeapYear(self):
-        self.assertEqual(date.Date(2005,2,28), self.recur(date.Date(2004,2,28)))
+        self.assertEqual(date.DateTime(2005,2,28), 
+                         self.recur(date.DateTime(2004,2,28)))
 
     def testFebruary28_YearBeforeLeapYear(self):
-        self.assertEqual(date.Date(2004,2,28), self.recur(date.Date(2003,2,28)))
+        self.assertEqual(date.DateTime(2004,2,28), 
+                         self.recur(date.DateTime(2003,2,28)))
 
     def testFebruary29(self):
-        self.assertEqual(date.Date(2005,2,28), self.recur(date.Date(2004,2,29)))
+        self.assertEqual(date.DateTime(2005,2,28), 
+                         self.recur(date.DateTime(2004,2,29)))
                 
         
 class BiYearlyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
@@ -224,7 +233,8 @@ class BiYearlyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
         self.recur = date.Recurrence('yearly', amount=2)
         
     def testEveryOtherYear(self):
-        self.assertEqual(date.Date(2004,3,1), self.recur(date.Date(2002,3,1)))
+        self.assertEqual(date.DateTime(2004,3,1), 
+                         self.recur(date.DateTime(2002,3,1)))
             
 
 class YearlySameWeekDayRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
@@ -232,44 +242,48 @@ class YearlySameWeekDayRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin)
         self.recur = date.Recurrence('yearly', sameWeekday=True)
         
     def testFirstTuesdayOfTheYear(self):
-        self.assertEqual(date.Date(2009,1,6), self.recur(date.Date(2008,1,1)))
+        self.assertEqual(date.DateTime(2009,1,6), 
+                         self.recur(date.DateTime(2008,1,1)))
 
     def testFirstWednesdayOfTheYear(self):
-        self.assertEqual(date.Date(2009,1,7), self.recur(date.Date(2008,1,2)))
+        self.assertEqual(date.DateTime(2009,1,7), 
+                         self.recur(date.DateTime(2008,1,2)))
 
     def testFirstThursdayOfTheYear(self):
-        self.assertEqual(date.Date(2009,1,1), self.recur(date.Date(2008,1,3)))
+        self.assertEqual(date.DateTime(2009,1,1), 
+                         self.recur(date.DateTime(2008,1,3)))
 
     def testFirstFridayOfTheYear(self):
-        self.assertEqual(date.Date(2009,1,2), self.recur(date.Date(2008,1,4)))
+        self.assertEqual(date.DateTime(2009,1,2), 
+                         self.recur(date.DateTime(2008,1,4)))
 
     def testLastWednesdayOfTheYear(self):
-        self.assertEqual(date.Date(2009,12,30), 
-                         self.recur(date.Date(2008,12,31)))
+        self.assertEqual(date.DateTime(2009,12,30), 
+                         self.recur(date.DateTime(2008,12,31)))
 
     def testLastTuesdayOfTheYear(self):
-        self.assertEqual(date.Date(2009,12,29), 
-                         self.recur(date.Date(2008,12,30)))
+        self.assertEqual(date.DateTime(2009,12,29), 
+                         self.recur(date.DateTime(2008,12,30)))
 
     def testLastMondayOfTheYear(self):
-        self.assertEqual(date.Date(2009,12,28), 
-                         self.recur(date.Date(2008,12,29)))
+        self.assertEqual(date.DateTime(2009,12,28), 
+                         self.recur(date.DateTime(2008,12,29)))
 
     def testLastSundayOfTheYear(self):
-        self.assertEqual(date.Date(2009,12,27), 
-                         self.recur(date.Date(2008,12,28)))
+        self.assertEqual(date.DateTime(2009,12,27), 
+                         self.recur(date.DateTime(2008,12,28)))
 
     def testLastSaturdayOfTheYear(self):
-        self.assertEqual(date.Date(2009,12,26), 
-                         self.recur(date.Date(2008,12,27)))
+        self.assertEqual(date.DateTime(2009,12,26), 
+                         self.recur(date.DateTime(2008,12,27)))
 
     def testLastFridayOfTheYear(self):
-        self.assertEqual(date.Date(2009,12,25), 
-                         self.recur(date.Date(2008,12,26)))
+        self.assertEqual(date.DateTime(2009,12,25), 
+                         self.recur(date.DateTime(2008,12,26)))
 
     def testLastThursdayOfTheYear(self):
-        self.assertEqual(date.Date(2009,12,24), 
-                         self.recur(date.Date(2008,12,25)))
+        self.assertEqual(date.DateTime(2009,12,24), 
+                         self.recur(date.DateTime(2008,12,25)))
 
         
 class MaxRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
@@ -277,14 +291,14 @@ class MaxRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin):
         self.recur = date.Recurrence('daily', max=4)
         
     def testFirst(self):
-        self.assertEqual(date.Date(2000,1,2), 
-                         self.recur(date.Date(2000,1,1), next=True))
+        self.assertEqual(date.DateTime(2000,1,2), 
+                         self.recur(date.DateTime(2000,1,1), next=True))
         
     def testCountAfterFirst(self):
-        self.recur(date.Date(2000,1,1), next=True)
+        self.recur(date.DateTime(2000,1,1), next=True)
         self.assertEqual(1, self.recur.count)
         
     def testLast(self):
         self.recur.count = 4
-        self.assertEqual(None, self.recur(date.Date(2000,1,1), next=True))
+        self.assertEqual(None, self.recur(date.DateTime(2000,1,1), next=True))
 
