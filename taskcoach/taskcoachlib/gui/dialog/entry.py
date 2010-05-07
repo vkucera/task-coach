@@ -25,32 +25,6 @@ from taskcoachlib import widgets
 from taskcoachlib.domain import date
 
 
-class DateEntry(widgets.PanelWithBoxSizer):
-    defaultDate = date.Date()
-
-    def __init__(self, parent, initialDate=defaultDate, readonly=False, 
-                 callback=None, *args, **kwargs):
-        super(DateEntry, self).__init__(parent, *args, **kwargs)
-        self._entry = widgets.DateCtrl(self, callback)
-        if readonly:
-            self._entry.Disable()
-        self._entry.SetValue(initialDate)
-        self.add(self._entry)
-        self.fit()
-
-    def get(self, defaultDate=None):
-        result = self._entry.GetValue()
-        if result == date.Date() and defaultDate:
-            result = defaultDate
-        return result
-
-    def set(self, newDate=defaultDate):
-        self._entry.SetValue(newDate)
-
-    def setToday(self):
-        self._entry.SetValue(date.Today())
-
-
 class DateTimeEntry(widgets.PanelWithBoxSizer):
     defaultDateTime = date.DateTime()
 
