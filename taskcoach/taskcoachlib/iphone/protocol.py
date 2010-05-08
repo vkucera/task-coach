@@ -177,10 +177,11 @@ class DateItem(FixedSizeStringItem):
 
     def pack(self, value):
         if isinstance(value, DateTime):
+            print value
             value = Date(value.year, value.month, value.day)
 
         value = None if value == Date() else value.isoformat()
-        return super(DateTime, self).pack(value)
+        return super(DateItem, self).pack(value)
 
 
 class DateTimeItem(FixedSizeStringItem):
@@ -1011,15 +1012,15 @@ class TwoWayNewTasksState(BaseState):
 
 class TwoWayNewTasksState4(BaseState):
     def init(self):
-        super(TwoWayNewTasksState4, self).init('ssdddz[s]', self.newTasksCount)
+        super(TwoWayNewTasksState4, self).init('sstttz[s]', self.newTasksCount)
 
-    def handleNewObject(self, (subject, description, startDate, dueDate, completionDate, parentId, categories)):
+    def handleNewObject(self, (subject, description, startDateTime, dueDateTime, completionDateTime, parentId, categories)):
         parent = self.taskMap[parentId] if parentId else None
 
         task = Task(subject=subject, description=description, 
-                    startDateTime=DateTime(startDate.year, startDate.month, startDate.day),
-                    dueDateTime=DateTime(dueDate.year, dueDate.month, dueDate.day), 
-                    completionDateTime=DateTime(completionDate.year, completionDate.month, completionDate.year), 
+                    startDateTime=startDateTime,
+                    dueDateTime=dueDateTime, 
+                    completionDateTime=completionDateTime, 
                     parent=parent)
 
         self.disp().window.addIPhoneTask(task, [self.categoryMap[catId] for catId in categories])
