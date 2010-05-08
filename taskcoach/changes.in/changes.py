@@ -23,12 +23,16 @@ from changetypes import *
 
 releases = [
 
-Release('1.1.0', 'May 7, 2010',
+Release('1.1.0', 'May 8, 2010',
     summary='''This release adds time to start, due and completion dates of 
 tasks.''',
     featuresAdded=[
         Feature('''The start, due and completion dates of tasks now also include
-a time.''', 'http://uservoice.com/a/nd3mH')
+a time. When reading old task files, Task Coach gives tasks a time based on the
+start hour and end hour of the work day. The work day start hour and end hour 
+can be changed via the preferences dialog (Edit->Preferences). Start dates get a
+time equal to the work day start hour, due dates and completion dates get a time
+equal to the work day end hour. ''', 'http://uservoice.com/a/nd3mH')
         ],
     implementationChanged=[
         Implementation('''The task file format was changed to support start, due

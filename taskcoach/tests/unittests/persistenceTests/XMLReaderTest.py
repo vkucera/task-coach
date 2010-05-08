@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import xml.parsers.expat, wx, StringIO, os, tempfile
 import test
-from taskcoachlib import persistence
+from taskcoachlib import persistence, config
 from taskcoachlib.domain import date
 
 
@@ -1210,6 +1210,12 @@ class XMLReaderVersion29Test(XMLReaderTestCase):
 
 class XMLReaderVersion30Test(XMLReaderTestCase):
     tskversion = 30 # New in release 1.1.0.
+    
+    def setUp(self):
+        super(XMLReaderVersion30Test, self).setUp()
+        settings = config.Settings(load=False)
+        self.startHour = settings.getint('view', 'efforthourstart')
+        self.endHour = settings.getint('view', 'efforthourend')
 
     def testStartDateTime(self):
         tasks = self.writeAndReadTasks('''
@@ -1224,7 +1230,8 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         <tasks>
             <task startdate="2005-04-17"/>
         </tasks>\n''')
-        self.assertEqual(date.DateTime(2005,4,17), tasks[0].startDateTime())
+        self.assertEqual(date.DateTime(2005,4,17, self.startHour), 
+                         tasks[0].startDateTime())
 
     def testNoStartDateTime(self):
         tasks = self.writeAndReadTasks('''
@@ -1254,7 +1261,8 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         <tasks>
             <task duedate="2005-04-17"/>
         </tasks>\n''')
-        self.assertEqual(date.DateTime(2005,4,17), tasks[0].dueDateTime())
+        self.assertEqual(date.DateTime(2005,4,17, self.endHour), 
+                         tasks[0].dueDateTime())
 
     def testNoDueDateTime(self):
         tasks = self.writeAndReadTasks('''
@@ -1301,5 +1309,6 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         <tasks>
             <task completiondate="2005-01-01"/>
         </tasks>\n''')
-        self.assertEqual(date.DateTime(2005,1,1), tasks[0].completionDateTime())
+        self.assertEqual(date.DateTime(2005,1,1, self.endHour), 
+                         tasks[0].completionDateTime())
         self.failUnless(tasks[0].completed())

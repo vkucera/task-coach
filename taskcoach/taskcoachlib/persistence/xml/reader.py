@@ -47,9 +47,11 @@ class XMLReaderTooNewException(Exception):
 
 
 class XMLReader(object):
-    def __init__(self, fd):
+    def __init__(self, fd, startHour=8, endHour=18):
         self.__fd = fd
-
+        self.__startHour = startHour
+        self.__endHour = endHour
+        
     def read(self):
         if self._hasBrokenLines():
             self._fixBrokenLines()
@@ -164,9 +166,12 @@ class XMLReader(object):
     def _parseTaskNode(self, taskNode):
         kwargs = self._parseBaseCompositeAttributes(taskNode, self._parseTaskNodes)
         kwargs.update(dict(
-            startDateTime=date.parseDateTime(taskNode.attrib.get('startdate', '')),
-            dueDateTime=date.parseDateTime(taskNode.attrib.get('duedate', '')),
-            completionDateTime=date.parseDateTime(taskNode.attrib.get('completiondate', '')),
+            startDateTime=date.parseDateTime(taskNode.attrib.get('startdate', ''), 
+                                             self.__startHour),
+            dueDateTime=date.parseDateTime(taskNode.attrib.get('duedate', ''), 
+                                           self.__endHour),
+            completionDateTime=date.parseDateTime(taskNode.attrib.get('completiondate', ''), 
+                                                  self.__endHour),
             percentageComplete=int(taskNode.attrib.get('percentageComplete','0')),
             budget=date.parseTimeDelta(taskNode.attrib.get('budget', '')),
             priority=int(taskNode.attrib.get('priority', '0')),
@@ -365,8 +370,8 @@ class XMLReader(object):
                 text = text[:-1]
         return text
                     
-    def _parseDateTime(self, dateTimeText):
-        return self._parse(dateTimeText, date.parseDateTime, None)
+    def _parseDateTime(self, dateTimeText, *timeDefaults):
+        return self._parse(dateTimeText, date.parseDateTime, None, *timeDefaults)
     
     def _parseFontDesc(self, fontDesc, defaultValue):
         if fontDesc:
@@ -389,9 +394,9 @@ class XMLReader(object):
         else:
             return defaultValue
     
-    def _parse(self, text, parseFunction, defaultValue):
+    def _parse(self, text, parseFunction, defaultValue, *parseArgs):
         try:
-            return parseFunction(text)
+            return parseFunction(text, *parseArgs) if parseArgs else parseFunction(text) 
         except ValueError:
             return defaultValue
 

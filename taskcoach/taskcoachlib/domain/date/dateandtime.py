@@ -115,11 +115,13 @@ DateTime.max = DateTime(datetime.datetime.max.year, 12, 31).endOfDay()
 DateTime.min = DateTime(datetime.datetime.min.year, 1, 1).startOfDay()
 
 
-def parseDateTime(string):
+def parseDateTime(string, *timeDefaults):
     if string in ('', 'None'):
         return None
     else:
         args = [int(arg) for arg in re.split('[-:. ]', string)]
+        if len(args) == 3: # We parsed a date, no time
+            args.extend(timeDefaults)
         return DateTime(*args) # pylint: disable-msg=W0142
         
 
