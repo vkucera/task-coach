@@ -1011,10 +1011,20 @@ class TwoWayNewTasksState(BaseState):
 
 class TwoWayNewTasksState4(BaseState):
     def init(self):
-        super(TwoWayNewTasksState4, self).init('sstttz[s]', self.newTasksCount)
+        super(TwoWayNewTasksState4, self).init('ssddtz[s]', self.newTasksCount)
 
-    def handleNewObject(self, (subject, description, startDateTime, dueDateTime, completionDateTime, parentId, categories)):
+    def handleNewObject(self, (subject, description, startDate, dueDate, completionDateTime, parentId, categories)):
         parent = self.taskMap[parentId] if parentId else None
+
+        startDateTime = DateTime() if startDate == Date() else DateTime(year=startDate.year,
+                                                                        month=startDate.month,
+                                                                        day=startDate.day,
+                                                                        hour=self.disp().settings.getint('view', 'efforthourstart'))
+
+        dueDateTime = DateTime() if dueDate == Date() else DateTime(year=dueDate.year,
+                                                                    month=dueDate.month,
+                                                                    day=dueDate.day,
+                                                                    hour=self.disp().settings.getint('view', 'efforthourend'))
 
         task = Task(subject=subject, description=description, 
                     startDateTime=startDateTime,
