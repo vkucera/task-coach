@@ -30,16 +30,6 @@ from taskcoachlib.domain import task, category, date, note, attachment
 from taskcoachlib.gui.dialog import entry
 
 
-def createDateTimeCtrl(parent, value, settings, callback=None, noneAllowed=True, **kwargs):
-    ''' Factory function for creating a DateTimeCtrl widget using the user
-        settings for earliest and latest times and interval. '''
-    starthour = settings.getint('view', 'efforthourstart')
-    endhour = settings.getint('view', 'efforthourend')
-    interval = settings.getint('view', 'effortminuteinterval')
-    return widgets.DateTimeCtrl(parent, value, callback, noneAllowed=noneAllowed,
-        starthour=starthour, endhour=endhour, interval=interval, **kwargs)
-
-
 class Page(object):
     def entries(self):
         ''' A mapping of names of columns to entries on this editor page. '''
@@ -178,8 +168,9 @@ class CategorySubjectPage(SubjectPage):
        
     def addExclusiveSubcategoriesEntry(self):
         exclusive = self.item.hasExclusiveSubcategories()
+        # pylint: disable-msg=W0201
         self._exclusiveSubcategoriesCheckBox = \
-            wx.CheckBox(self, label=_('Mutually exclusive'))
+            wx.CheckBox(self, label=_('Mutually exclusive')) 
         self._exclusiveSubcategoriesCheckBox.SetValue(exclusive)
         self.addEntry(_('Subcategories'), self._exclusiveSubcategoriesCheckBox,
                       flags=[None, wx.ALL])
@@ -279,18 +270,19 @@ class AppearancePage(Page, widgets.BookPage):
         self._fontButton.SetColour(self._fgColorButton.GetColour() if \
                                    event.IsChecked() else wx.NullColour)
 
-    def onFgColourPicked(self, event):
+    def onFgColourPicked(self, event): # pylint: disable-msg=W0613 
         ''' User picked a foreground colour. Check the foreground colour check
             box and update the font colour button. '''
         self._fgColorCheckBox.SetValue(True)
         self._fontButton.SetColour(self._fgColorButton.GetColour())
 
-    def onBgColourPicked(self, event):
+    def onBgColourPicked(self, event): # pylint: disable-msg=W0613 
         ''' User picked a background colour. Check the background colour check
             box. '''
         self._bgColorCheckBox.SetValue(True)
 
     def addFontEntry(self):
+        # pylint: disable-msg=W0201
         self._fontCheckBox = wx.CheckBox(self, label=_('Use font:'))
         currentFont = self.item.font()
         currentColor = self._fgColorButton.GetColour()
@@ -303,7 +295,7 @@ class AppearancePage(Page, widgets.BookPage):
         self.addEntry(_('Font'), self._fontCheckBox, self._fontButton,
                       flags=[None, None, wx.ALL])
 
-    def onFontPickerChanged(self, event):
+    def onFontPickerChanged(self, event): # pylint: disable-msg=W0613 
         ''' User picked a font. Check the font check box and change the
             foreground color if needed. '''
         self._fontCheckBox.SetValue(True)
@@ -312,6 +304,7 @@ class AppearancePage(Page, widgets.BookPage):
             self._fgColorButton.SetColour(self._fontButton.GetSelectedColour())
 
     def addIconEntry(self):
+        # pylint: disable-msg=W0201
         self._iconEntry = wx.combo.BitmapComboBox(self, style=wx.CB_READONLY)
         size = (16, 16)
         imageNames = sorted(artprovider.chooseableItemImages.keys())
@@ -363,13 +356,14 @@ class DatesPage(TaskHeadersMixin, PageWithHeaders):
                                       (_('Completion date'), 'completionDateTime')]:
             datesBox.add(label)
             taskMethod = getattr(theTask, taskMethodName)
-            dateTimeEntry = entry.DateTimeEntry(datesBox, taskMethod(),
+            dateTimeEntry = entry.DateTimeEntry(datesBox, self._settings, 
+                                                taskMethod(),
                                                 callback=self.onDateTimeChanged)
             setattr(self, '_%sEntry'%taskMethodName, dateTimeEntry)
             datesBox.add(dateTimeEntry)
             if theTask.children():
                 recursiveDateTimeEntry = entry.DateTimeEntry(datesBox,
-                    taskMethod(recursive=True), readonly=True)
+                    self._settings, taskMethod(recursive=True), readonly=True)
             else:
                 recursiveDateTimeEntry = (0, 0)
             datesBox.add(recursiveDateTimeEntry)
@@ -380,11 +374,11 @@ class DatesPage(TaskHeadersMixin, PageWithHeaders):
                                                    cols=2)
         reminderBox.add(_('Reminder'))
         # pylint: disable-msg=W0201
-        self._reminderDateTimeEntry = createDateTimeCtrl(reminderBox,
-            theTask.reminder(), self._settings)
+        self._reminderDateTimeEntry = entry.DateTimeEntry(reminderBox,
+            self._settings, theTask.reminder())
         # If the user has not set a reminder, make sure that the default 
         # date time in the reminder entry is a reasonable suggestion:
-        if self._reminderDateTimeEntry.GetValue() == date.DateTime.max:
+        if self._reminderDateTimeEntry.get() == date.DateTime():
             self.suggestReminder()
         reminderBox.add(self._reminderDateTimeEntry)
         return reminderBox
@@ -464,7 +458,7 @@ class DatesPage(TaskHeadersMixin, PageWithHeaders):
         event.Skip()
         # Make sure the reminderDateTimeEntry has been created:
         if hasattr(self, '_reminderDateTimeEntry') and \
-            self._reminderDateTimeEntry.GetValue() == date.DateTime.max:
+            self._reminderDateTimeEntry.get() == date.DateTime():
             self.suggestReminder()
 
     def ok(self):
@@ -488,10 +482,10 @@ class DatesPage(TaskHeadersMixin, PageWithHeaders):
         newCompletionDateTime = self._completionDateTimeEntry.get()
         if newCompletionDateTime != self._previousCompletionDateTime:
             self.item.setCompletionDateTime(newCompletionDateTime)
-        self.item.setReminder(self._reminderDateTimeEntry.GetValue())
+        self.item.setReminder(self._reminderDateTimeEntry.get())
 
     def setReminder(self, reminder):
-        self._reminderDateTimeEntry.SetValue(reminder)
+        self._reminderDateTimeEntry.set(reminder)
 
     def setRecurrence(self, recurrence):
         index = {'': 0, 'daily': 1, 'weekly': 2, 'monthly': 3, 'yearly': 4}[recurrence.unit]
@@ -852,9 +846,11 @@ class EffortEditBook(Page, widgets.BookPage):
                       flags=[None, wx.ALL|wx.EXPAND])
 
     def addStartAndStopEntries(self):
-        # pylint: disable-msg=W0201
-        self._startEntry = createDateTimeCtrl(self, self._effort.getStart(),
-            self._settings, self.onPeriodChanged, noneAllowed=False, showSeconds=True)
+        # pylint: disable-msg=W0201,W0142
+        dateTimeEntryKwArgs = dict(callback=self.onPeriodChanged, 
+                                   showSeconds=True)
+        self._startEntry = entry.DateTimeEntry(self, self._settings,
+            self._effort.getStart(), noneAllowed=False, **dateTimeEntryKwArgs)
         startFromLastEffortButton = wx.Button(self,
             label=_('Start tracking from last stop time'))
         self.Bind(wx.EVT_BUTTON, self.onStartFromLastEffort,
@@ -862,15 +858,15 @@ class EffortEditBook(Page, widgets.BookPage):
         if self._effortList.maxDateTime() is None:
             startFromLastEffortButton.Disable()
 
-        self._stopEntry = createDateTimeCtrl(self, self._effort.getStop(),
-            self._settings, self.onPeriodChanged, noneAllowed=True, showSeconds=True)
+        self._stopEntry = entry.DateTimeEntry(self, self._settings, 
+            self._effort.getStop(), noneAllowed=True, **dateTimeEntryKwArgs)
         flags = [None, wx.ALIGN_RIGHT|wx.ALL, wx.ALIGN_LEFT|wx.ALL, None]
         self.addEntry(_('Start'), self._startEntry,
             startFromLastEffortButton,  flags=flags)
         self.addEntry(_('Stop'), self._stopEntry, '', flags=flags)
 
     def onStartFromLastEffort(self, event): # pylint: disable-msg=W0613
-        self._startEntry.SetValue(self._effortList.maxDateTime())
+        self._startEntry.set(self._effortList.maxDateTime())
         self.preventNegativeEffortDuration()
 
     def addDescriptionEntry(self):
@@ -883,8 +879,8 @@ class EffortEditBook(Page, widgets.BookPage):
 
     def ok(self):
         self._effort.setTask(self._taskEntry.GetSelection())
-        self._effort.setStart(self._startEntry.GetValue())
-        self._effort.setStop(self._stopEntry.GetValue())
+        self._effort.setStart(self._startEntry.get())
+        self._effort.setStop(self._stopEntry.get())
         self._effort.setDescription(self._descriptionEntry.GetValue())
 
     def onPeriodChanged(self, *args, **kwargs): # pylint: disable-msg=W0613
@@ -895,7 +891,7 @@ class EffortEditBook(Page, widgets.BookPage):
         wx.CallAfter(self.preventNegativeEffortDuration)
 
     def preventNegativeEffortDuration(self):
-        if self._startEntry.GetValue() > self._stopEntry.GetValue():
+        if self._startEntry.get() > self._stopEntry.get():
             self._editor.disableOK()
         else:
             self._editor.enableOK()

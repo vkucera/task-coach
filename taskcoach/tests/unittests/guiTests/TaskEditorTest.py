@@ -453,7 +453,7 @@ class EffortEditorTest(TaskEditorTestCase):
     def testCreate(self):
         # pylint: disable-msg=W0212
         self.assertEqual(self.effort.getStart().date(), 
-            self.editor[0]._startEntry.GetValue().date())
+            self.editor[0]._startEntry.get().date())
         self.assertEqual(self.effort.task().subject(), 
             self.editor[0]._taskEntry.GetValue())
 

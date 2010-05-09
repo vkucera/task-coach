@@ -19,12 +19,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import test
 from taskcoachlib.gui.dialog import entry 
 from taskcoachlib.domain import date
+from taskcoachlib import config
 
 
 class DateTimeEntryTest(test.wxTestCase):
     def setUp(self):
         super(DateTimeEntryTest, self).setUp()
-        self.dateTimeEntry = entry.DateTimeEntry(self.frame)
+        self.dateTimeEntry = entry.DateTimeEntry(self.frame, 
+                                                 config.Settings(load=False))
         self.dateTime = date.DateTime(2004, 1, 1)
 
     def testCreate(self):
@@ -44,15 +46,13 @@ class DateTimeEntryTest(test.wxTestCase):
         self.dateTimeEntry.set(self.dateTime)
         self.assertEqual(self.dateTime, self.dateTimeEntry.get())
 
-    def testValidDateTimeWithDefaultDateTime(self):
-        self.dateTimeEntry.set(self.dateTime)
-        self.assertEqual(self.dateTime, self.dateTimeEntry.get(date.Now()))
-
 
 class DateEntryConstructorTest(test.wxTestCase):
     def testCreateWithDate(self):
         tomorrow = date.Now() + date.oneDay
-        dateTimeEntry = entry.DateTimeEntry(self.frame, tomorrow)
+        dateTimeEntry = entry.DateTimeEntry(self.frame, 
+                                            config.Settings(load=False), 
+                                            tomorrow)
         self.assertAlmostEqual(tomorrow.toordinal(), 
                                dateTimeEntry.get().toordinal(),
                                places=2)
