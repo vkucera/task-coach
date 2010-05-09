@@ -134,6 +134,9 @@
 
 - (void)dealloc
 {
+	[datePicker.view removeFromSuperview];
+	[datePicker release];
+
 	[task release];
 	[cells release];
 
@@ -187,6 +190,39 @@
 		self.navigationItem.hidesBackButton = NO;
 }
 
+- (void)presentDatePicker:(UIViewController *)ctrl
+{
+	if (datePicker)
+	{
+		[datePicker.view removeFromSuperview];
+		[datePicker release];
+		datePicker = nil;
+	}
+
+	ctrl.view.hidden = YES;
+	[self.navigationController.view addSubview:ctrl.view];
+	self.view.userInteractionEnabled = NO;
+	ctrl.view.bounds = self.navigationController.view.bounds;
+	
+	[UIView beginAnimations:@"DatePickerAnimation" context:nil];
+	[UIView setAnimationDuration:1.0];
+	[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.navigationController.view cache:YES];
+	ctrl.view.hidden = NO;
+	[UIView commitAnimations];
+
+	datePicker = [ctrl retain];
+}
+
+- (void)dismissDatePicker
+{
+	self.view.userInteractionEnabled = YES;
+	[UIView beginAnimations:@"DatePickerAnimation" context:nil];
+	[UIView setAnimationDuration:1.0];
+	[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:self.navigationController.view cache:YES];
+	datePicker.view.hidden = YES;
+	[UIView commitAnimations];
+}
+
 - (void)onSwitchValueChanged:(SwitchCell *)cell
 {
 	if (cell == startDateCell)
@@ -194,7 +230,7 @@
 		if (cell.switch_.on)
 		{
 			DatePickerViewController *ctrl = [[DatePickerViewController alloc] initWithDate:task.startDate target:self action:@selector(onPickStartDate:)];
-			[self.navigationController presentModalViewController:ctrl animated:YES];
+			[self presentDatePicker:ctrl];
 			[ctrl release];
 		}
 		else
@@ -216,7 +252,7 @@
 				date = task.startDate;
 
 			DatePickerViewController *ctrl = [[DatePickerViewController alloc] initWithDate:date target:self action:@selector(onPickDueDate:)];
-			[self.navigationController presentModalViewController:ctrl animated:YES];
+			[self presentDatePicker:ctrl];
 			[ctrl release];
 		}
 		else
@@ -231,7 +267,7 @@
 		if (cell.switch_.on)
 		{
 			DatePickerViewController *ctrl = [[DatePickerViewController alloc] initWithDate:task.completionDate target:self action:@selector(onPickCompletionDate:)];
-			[self.navigationController presentModalViewController:ctrl animated:YES];
+			[self presentDatePicker:ctrl];
 			[ctrl release];
 		}
 		else
@@ -245,7 +281,7 @@
 
 - (void)onPickStartDate:(NSDate *)date
 {
-	[self.navigationController dismissModalViewControllerAnimated:YES];
+	[self dismissDatePicker];
 
 	if (date)
 	{
@@ -275,7 +311,7 @@
 
 - (void)onPickDueDate:(NSDate *)date
 {
-	[self.navigationController dismissModalViewControllerAnimated:YES];
+	[self dismissDatePicker];
 	
 	if (date)
 	{
@@ -304,7 +340,7 @@
 
 - (void)onPickCompletionDate:(NSDate *)date
 {
-	[self.navigationController dismissModalViewControllerAnimated:YES];
+	[self dismissDatePicker];
 
 	if (date)
 		task.completionDate = [[TimeUtils instance] stringFromDate:date];
@@ -402,7 +438,7 @@
 
 	if (ctrl)
 	{
-		[self.navigationController presentModalViewController:ctrl animated:YES];
+		[self presentDatePicker:ctrl];
 		[ctrl release];
 	}
 }

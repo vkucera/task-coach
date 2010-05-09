@@ -31,6 +31,8 @@
 
 	NSInteger categoryId;
 	NSInteger trackedTasksCount;
+
+	UIViewController *datePicker;
 }
 
 - initWithTask:(Task *)task category:(NSInteger)category;

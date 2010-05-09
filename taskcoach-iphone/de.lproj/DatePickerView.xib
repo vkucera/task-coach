@@ -37,13 +37,13 @@
 			</object>
 			<object class="IBUIView" id="453008371">
 				<reference key="NSNextResponder"/>
-				<int key="NSvFlags">292</int>
+				<int key="NSvFlags">319</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<object class="IBUIDatePicker" id="606792406">
 						<reference key="NSNextResponder" ref="453008371"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrameSize">{320, 216}</string>
+						<string key="NSFrame">{{0, 105}, {320, 216}}</string>
 						<reference key="NSSuperview" ref="453008371"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -80,7 +80,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<object class="IBUIButton" id="45459228">
 						<reference key="NSNextResponder" ref="453008371"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{200, 224}, {100, 37}}</string>
+						<string key="NSFrame">{{198, 329}, {102, 37}}</string>
 						<reference key="NSSuperview" ref="453008371"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
@@ -112,7 +112,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<object class="IBUIButton" id="359180103">
 						<reference key="NSNextResponder" ref="453008371"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 224}, {99, 37}}</string>
+						<string key="NSFrame">{{20, 329}, {105, 37}}</string>
 						<reference key="NSSuperview" ref="453008371"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
@@ -132,14 +132,11 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<reference key="IBUINormalTitleShadowColor" ref="1013361555"/>
 					</object>
 				</object>
-				<string key="NSFrameSize">{320, 460}</string>
+				<string key="NSFrameSize">{320, 480}</string>
 				<reference key="NSSuperview"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
-					<int key="NSColorSpace">3</int>
-					<bytes key="NSWhite">MQA</bytes>
-					<object class="NSColorSpace" key="NSCustomColorSpace">
-						<int key="NSID">2</int>
-					</object>
+					<int key="NSColorSpace">1</int>
+					<bytes key="NSRGB">MCAwIDAgMC41AA</bytes>
 				</object>
 				<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 			</object>
@@ -208,8 +205,8 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="606792406"/>
-							<reference ref="45459228"/>
 							<reference ref="359180103"/>
+							<reference ref="45459228"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -246,7 +243,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<string>DatePickerViewController</string>
 					<string>UIResponder</string>
-					<string>{{2793, 1038}, {320, 460}}</string>
+					<string>{{2904, 1129}, {320, 480}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
