@@ -1,6 +1,7 @@
 
 2010-05-09  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* misc: start/due/completion dates now include time as well.
+	* misc: Better UI for picking date/time
 
 ==== Release 2.0: 2010-04-05 ====
 
