@@ -25,10 +25,10 @@ from taskcoachlib.domain import note, attachment
 class AttachmentEditorTestCase(test.wxTestCase):
     def setUp(self):
         super(AttachmentEditorTestCase, self).setUp()
-        self.taskFile = persistence.TaskFile()
+        self.settings = config.Settings(load=False)
+        self.taskFile = persistence.TaskFile(self.settings)
         self.attachments = attachment.AttachmentList()
         self.attachments.extend(self.createAttachments())
-        self.settings = config.Settings(load=False)
         self.editor = self.createEditor()
         
     def createEditor(self):

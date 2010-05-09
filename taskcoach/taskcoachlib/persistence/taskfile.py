@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -26,7 +26,8 @@ from taskcoachlib.thirdparty import lockfile
 
 
 class TaskFile(patterns.Observer):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, settings, *args, **kwargs):
+        self.__settings = settings
         self.__filename = self.__lastFilename = ''
         self.__needSave = self.__loading = False
         self.__tasks = task.TaskList()
@@ -184,7 +185,7 @@ class TaskFile(patterns.Observer):
         self.__needSave = False
 
     def _read(self, fd):
-        return xml.XMLReader(fd).read()
+        return xml.XMLReader(fd, self.__settings).read()
         
     def exists(self):
         return os.path.isfile(self.__filename)
@@ -236,7 +237,7 @@ class TaskFile(patterns.Observer):
         self.save()
 
     def merge(self, filename):
-        mergeFile = self.__class__()
+        mergeFile = self.__class__(self.__settings)
         mergeFile.load(filename)
         self.__loading = True
         self.tasks().removeItems(self.objectsToOverwrite(self.tasks(), mergeFile.tasks()))

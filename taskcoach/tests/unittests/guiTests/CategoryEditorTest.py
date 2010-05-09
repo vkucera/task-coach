@@ -25,10 +25,10 @@ from taskcoachlib.domain import category, note, attachment
 class CategoryEditorTestCase(test.wxTestCase):
     def setUp(self):
         super(CategoryEditorTestCase, self).setUp()
-        self.taskFile = persistence.TaskFile()
+        self.settings = config.Settings(load=False)
+        self.taskFile = persistence.TaskFile(self.settings)
         self.categories = self.taskFile.categories()
         self.categories.extend(self.createCategories())
-        self.settings = config.Settings(load=False)
         self.editor = self.createEditor()
         
     def createEditor(self):

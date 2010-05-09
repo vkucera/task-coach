@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.1.0', 'May 8, 2010',
+Release('1.1.0', 'May 9, 2010',
     summary='''This release adds time to start, due and completion dates of 
 tasks.''',
     featuresAdded=[

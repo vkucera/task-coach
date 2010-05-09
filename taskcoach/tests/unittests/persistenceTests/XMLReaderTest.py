@@ -27,12 +27,16 @@ from taskcoachlib.domain import date
 
 class XMLReaderTestCase(test.TestCase):
     tskversion = 'Subclass responsibility'
-
+    
+    def setUp(self):
+        super(XMLReaderTestCase, self).setUp()
+        self.settings = config.Settings(load=False)
+        
     def writeAndRead(self, xmlContents):
         # pylint: disable-msg=W0201
         self.fd = StringIO.StringIO()
         self.fd.name = 'testfile.tsk'
-        self.reader = persistence.XMLReader(self.fd)
+        self.reader = persistence.XMLReader(self.fd, self.settings)
         allXML = '<?taskcoach release="whatever" tskversion="%d"?>\n'%self.tskversion + xmlContents
         self.fd.write(allXML)
         self.fd.seek(0)
@@ -342,7 +346,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
     tskversion = 20 # New in release 0.71.0
            
     def testReadEmptyStream(self):
-        reader = persistence.XMLReader(StringIO.StringIO())
+        reader = persistence.XMLReader(StringIO.StringIO(), self.settings)
         try:
             reader.read()
             self.fail('Expected ExpatError') # pragma: no cover
@@ -1211,12 +1215,6 @@ class XMLReaderVersion29Test(XMLReaderTestCase):
 class XMLReaderVersion30Test(XMLReaderTestCase):
     tskversion = 30 # New in release 1.1.0.
     
-    def setUp(self):
-        super(XMLReaderVersion30Test, self).setUp()
-        settings = config.Settings(load=False)
-        self.startHour = settings.getint('view', 'efforthourstart')
-        self.endHour = settings.getint('view', 'efforthourend')
-
     def testStartDateTime(self):
         tasks = self.writeAndReadTasks('''
         <tasks>
@@ -1230,7 +1228,8 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         <tasks>
             <task startdate="2005-04-17"/>
         </tasks>\n''')
-        self.assertEqual(date.DateTime(2005,4,17, self.startHour), 
+        startHour = self.settings.getint('view', 'efforthourstart')
+        self.assertEqual(date.DateTime(2005,4,17, startHour), 
                          tasks[0].startDateTime())
 
     def testNoStartDateTime(self):
@@ -1261,7 +1260,17 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         <tasks>
             <task duedate="2005-04-17"/>
         </tasks>\n''')
-        self.assertEqual(date.DateTime(2005,4,17, self.endHour), 
+        endHour = self.settings.getint('view', 'efforthourend')
+        self.assertEqual(date.DateTime(2005,4,17, endHour), 
+                         tasks[0].dueDateTime())
+
+    def testDueDateTimeWithoutTimeWhenEndHourIs24(self):
+        self.settings.set('view', 'efforthourend', '24')
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task duedate="2005-04-17"/>
+        </tasks>\n''')
+        self.assertEqual(date.DateTime(2005,4,17,23,59,59,999999), 
                          tasks[0].dueDateTime())
 
     def testNoDueDateTime(self):
@@ -1309,6 +1318,7 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         <tasks>
             <task completiondate="2005-01-01"/>
         </tasks>\n''')
-        self.assertEqual(date.DateTime(2005,1,1, self.endHour), 
+        endHour = self.settings.getint('view', 'efforthourend')
+        self.assertEqual(date.DateTime(2005,1,1, endHour), 
                          tasks[0].completionDateTime())
         self.failUnless(tasks[0].completed())

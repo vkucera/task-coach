@@ -69,15 +69,14 @@ class UICommandTest(test.wxTestCase):
 
 class wxTestCaseWithFrameAsTopLevelWindow(test.wxTestCase):
     def setUp(self):
+        self.settings = config.Settings(load=False)
         wx.GetApp().SetTopWindow(self.frame)
-        self.frame.taskFile = persistence.TaskFile()
+        self.taskFile = self.frame.taskFile = persistence.TaskFile(self.settings)
 
 
 class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
     def setUp(self):
         super(NewTaskWithSelectedCategoryTest, self).setUp()
-        self.settings = config.Settings(load=False)
-        self.taskFile = self.frame.taskFile = persistence.TaskFile()
         self.categories = self.taskFile.categories()
         self.categories.append(category.Category('cat'))
         self.viewer = gui.viewer.CategoryViewer(self.frame, self.taskFile, 
@@ -179,11 +178,10 @@ class MarkCompletedTest(test.TestCase):
 
 class TaskNewTest(wxTestCaseWithFrameAsTopLevelWindow):
     def testNewTaskWithCategories(self):
-        settings = config.Settings(load=False)
         cat = category.Category('cat', filtered=True)
-        self.frame.taskFile.categories().append(cat)
-        taskNew = gui.uicommand.TaskNew(taskList=self.frame.taskFile.tasks(), 
-                                        settings=settings)
+        self.taskFile.categories().append(cat)
+        taskNew = gui.uicommand.TaskNew(taskList=self.taskFile.tasks(), 
+                                        settings=self.settings)
         dialog = taskNew.doCommand(None, show=False)
         tree = dialog[0][3].viewer.widget
         firstChild = tree.GetFirstChild(tree.GetRootItem())[0]
@@ -193,9 +191,9 @@ class TaskNewTest(wxTestCaseWithFrameAsTopLevelWindow):
 class NoteNewTest(wxTestCaseWithFrameAsTopLevelWindow):
     def testNewNoteWithCategories(self):        
         cat = category.Category('cat', filtered=True)
-        self.frame.taskFile.categories().append(cat)
-        noteNew = gui.uicommand.NoteNew(notes=self.frame.taskFile.notes(), 
-                                        settings=config.Settings(load=False))
+        self.taskFile.categories().append(cat)
+        noteNew = gui.uicommand.NoteNew(notes=self.taskFile.notes(), 
+                                        settings=self.settings)
         dialog = noteNew.doCommand(None, show=False)
         tree = dialog[0][1].viewer.widget
         firstChild = tree.GetFirstChild(tree.GetRootItem())[0]
@@ -208,13 +206,13 @@ class EffortNewTest(wxTestCaseWithFrameAsTopLevelWindow):
         task2 = task.Task('task 2')
         effort_task2 = effort.Effort(task2)
         task2.addEffort(effort_task2)
-        self.frame.taskFile.tasks().extend([task1, task2])
+        self.taskFile.tasks().extend([task1, task2])
         viewer = DummyViewer(task2.efforts(), showingEffort=True, 
-                             domainObjectsToView=self.frame.taskFile.tasks())
-        effortNew = gui.uicommand.EffortNew(effortList=self.frame.taskFile.efforts(),
-                                            taskList=self.frame.taskFile.tasks(),
-                                            viewer=viewer,
-                                            settings=config.Settings(load=False))
+                             domainObjectsToView=self.taskFile.tasks())
+        effortNew = gui.uicommand.EffortNew(effortList=self.taskFile.efforts(),
+                                            taskList=self.taskFile.tasks(),
+                                            viewer=viewer, 
+                                            settings=self.settings)
         dialog = effortNew.doCommand(None, show=False)
         for eachEffort in dialog._command.efforts:
             self.assertEqual(task2, eachEffort.task())

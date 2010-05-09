@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import StringIO
 import test
-from taskcoachlib import persistence
+from taskcoachlib import persistence, config
 
 
 class TemplateXMLReaderTestCase(test.TestCase):
@@ -27,7 +27,8 @@ class TemplateXMLReaderTestCase(test.TestCase):
     def setUp(self):
         self.fd = StringIO.StringIO()
         self.fd.name = 'testfile.tsk'
-        self.reader = persistence.TemplateXMLReader(self.fd)
+        self.reader = persistence.TemplateXMLReader(self.fd, 
+                                                    config.Settings(load=False))
         
     def writeAndRead(self, xml):
         xml = '<?taskcoach release="whatever" tskversion="%d"?>\n'%self.tskversion + xml

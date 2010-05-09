@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ class CSVWriterTestCase(test.wxTestCase):
         task.Task.settings = self.settings = config.Settings(load=False)
         self.fd = StringIO.StringIO()
         self.writer = persistence.CSVWriter(self.fd)
-        self.taskFile = persistence.TaskFile()
+        self.taskFile = persistence.TaskFile(self.settings)
         self.task = task.Task('Task subject')
         self.taskFile.tasks().append(self.task)
         self.createViewer()

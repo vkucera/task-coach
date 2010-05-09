@@ -25,7 +25,7 @@ class CategoryViewerTest(test.wxTestCase):
     def setUp(self):
         super(CategoryViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
-        taskFile = persistence.TaskFile()
+        taskFile = persistence.TaskFile(self.settings)
         self.categories = taskFile.categories()
         self.viewer = gui.viewer.CategoryViewer(self.frame, taskFile, 
                                                 self.settings)

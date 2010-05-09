@@ -31,7 +31,7 @@ class HTMLWriterTestCase(test.wxTestCase):
         task.Task.settings = self.settings = config.Settings(load=False)
         self.fd = StringIO.StringIO()
         self.writer = persistence.HTMLWriter(self.fd, self.filename)
-        self.taskFile = persistence.TaskFile()
+        self.taskFile = persistence.TaskFile(self.settings)
         self.task = task.Task('Task subject', startDateTime=date.Now())
         self.taskFile.tasks().append(self.task)
         self.viewer = self.createViewer()

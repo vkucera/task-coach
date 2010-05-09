@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ class EffortViewerForSpecificTasksTest(test.wxTestCase):
     def setUp(self):
         super(EffortViewerForSpecificTasksTest, self).setUp()
         self.settings = config.Settings(load=False)
-        taskFile = persistence.TaskFile()
+        taskFile = persistence.TaskFile(self.settings)
         self.task1 = task.Task('Task 1')
         self.task2 = task.Task('Task 2')
         taskFile.tasks().extend([self.task1, self.task2])
@@ -63,7 +63,7 @@ class EffortViewerStatusMessageTest(test.wxTestCase):
     def setUp(self):
         super(EffortViewerStatusMessageTest, self).setUp()
         self.settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile()
+        self.taskFile = persistence.TaskFile(self.settings)
         self.task = task.Task()
         self.taskFile.tasks().append(self.task)
         self.effort1 = effort.Effort(self.task, date.DateTime(2006,1,1),
@@ -106,7 +106,7 @@ class EffortViewerTest(test.wxTestCase):
     def setUp(self):
         super(EffortViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
-        taskFile = persistence.TaskFile()
+        taskFile = persistence.TaskFile(self.settings)
         self.task = task.Task()
         taskFile.tasks().append(self.task)
         self.effort1 = effort.Effort(self.task, date.DateTime(2006,1,1),
@@ -156,7 +156,7 @@ class EffortViewerAggregationTestCase(test.wxTestCase):
         self.task.addEffort(effort.Effort(self.task, *mostRecentPeriod))
         self.task2.addEffort(effort.Effort(self.task2, *mostRecentPeriod))
         
-        self.taskFile = persistence.TaskFile()
+        self.taskFile = persistence.TaskFile(self.settings)
         self.taskFile.tasks().extend([self.task, self.task2])
         self.viewer = self.createViewer()
 

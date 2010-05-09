@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ from taskcoachlib.domain import task, note, category
 class IOControllerTest(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
-        self.taskFile = dummy.TaskFile()
+        self.taskFile = dummy.TaskFile(self.settings)
         self.iocontroller = gui.IOController(self.taskFile, 
             lambda *args: None, self.settings)
         self.filename1 = 'whatever.tsk'
@@ -141,7 +141,7 @@ class IOControllerTest(test.TestCase):
             aCategory.addCategorizable(eachTask)
         self.iocontroller.saveselection(tasks=self.taskFile.tasks(), 
                                         filename=self.filename1)
-        taskFile = persistence.TaskFile()
+        taskFile = persistence.TaskFile(self.settings)
         taskFile.setFilename(self.filename1)
         taskFile.load()
         self.assertEqual(1, len(taskFile.categories()))            
@@ -204,12 +204,12 @@ class IOControllerTest(test.TestCase):
         self.assertEqual(self.taskFile.notes(), [myNote])
 
     def testMerge(self):
-        mergeFile = persistence.TaskFile()
+        mergeFile = persistence.TaskFile(self.settings)
         mergeFile.setFilename(self.filename2)
         mergeFile.tasks().append(task.Task(subject='Task to merge'))
         mergeFile.save()
         mergeFile.close()
-        targetFile = persistence.TaskFile()
+        targetFile = persistence.TaskFile(self.settings)
         iocontroller = gui.IOController(targetFile, lambda *args: None, 
                                         self.settings)
         iocontroller.merge(self.filename2)

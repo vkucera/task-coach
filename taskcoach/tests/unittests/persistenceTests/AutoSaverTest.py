@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -79,7 +79,7 @@ class DummyTaskFile(persistence.TaskFile):
 class AutoSaverTestCase(test.TestCase):
     def setUp(self):
         self.settings = DummySettings()
-        self.taskFile = DummyTaskFile()
+        self.taskFile = DummyTaskFile(self.settings)
         self.autoSaver = persistence.AutoSaver(self.settings)
         
     def tearDown(self):

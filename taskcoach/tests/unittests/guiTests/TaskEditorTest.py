@@ -31,7 +31,7 @@ class TaskEditorTestCase(test.wxTestCase):
         task.Task.settings = self.settings = config.Settings(load=False)
         self.tomorrow = date.Now() + date.oneDay
         self.yesterday = date.Now() - date.oneDay
-        self.taskFile = persistence.TaskFile()
+        self.taskFile = persistence.TaskFile(self.settings)
         self.taskList = self.taskFile.tasks()
         self.effortList = self.taskFile.efforts()
         self.taskList.extend(self.createTasks())
