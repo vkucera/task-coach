@@ -11,6 +11,7 @@
 #import "SyncViewController.h"
 #import "Database.h"
 #import "i18n.h"
+#import "DateUtils.h"
 
 @implementation BaseState
 
@@ -23,6 +24,26 @@
 	}
 	
 	return self;
+}
+
+- (void)sendDate:(NSString *)date
+{
+	if (date)
+	{
+		if (myController.protocolVersion >= 5)
+		{
+			// The database is already up to date so the string has the right format
+			[myNetwork appendString:date];
+		}
+		else
+		{
+			[myNetwork appendString:[[DateUtils instance] stringFromDate:[[TimeUtils instance] dateFromString:date]]];
+		}
+	}
+	else
+	{
+		[myNetwork appendString:nil];
+	}
 }
 
 - (void)networkDidClose:(Network *)network controller:(SyncViewController *)controller

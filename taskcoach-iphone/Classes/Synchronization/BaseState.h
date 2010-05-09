@@ -16,6 +16,8 @@
 	SyncViewController *myController;
 }
 
+- (void)sendDate:(NSString *)date;
+
 - initWithNetwork:(Network *)network controller:(SyncViewController *)controller;
 
 - (void)networkDidClose:(Network *)network controller:(SyncViewController *)controller;

@@ -16,6 +16,8 @@
 #import "DateUtils.h"
 #import "Configuration.h"
 
+#import "NSDate+Utils.h"
+
 static Statement *_saveStatement = NULL;
 
 @implementation Task
@@ -114,7 +116,7 @@ static Statement *_saveStatement = NULL;
 - (void)setCompleted:(BOOL)completed
 {
 	if (completed)
-		self.completionDate = [[DateUtils instance] stringFromDate:[NSDate date]];
+		self.completionDate = [[TimeUtils instance] stringFromDate:[NSDate dateRounded]];
 	else
 		self.completionDate = nil;
 }

@@ -14,6 +14,7 @@
 @interface SQLite : NSObject {
 	sqlite3 *pDb;
 	BOOL inTransaction;
+	NSInteger dbVersion;
 }
 
 @property (readonly) BOOL inTransaction;

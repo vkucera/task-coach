@@ -316,14 +316,17 @@
 		case TASK_DATE_2:
 		{
 			NSString **pStr;
+			NSString *suffix = nil;
 			
 			switch (state)
 			{
 				case TASK_DATE_0:
 					pStr = &taskStart;
+					suffix = @" 08:00:00";
 					break;
 				case TASK_DATE_1:
 					pStr = &taskDue;
+					suffix = @" 18:00:00";
 					break;
 				case TASK_DATE_2:
 					pStr = &taskCompleted;
@@ -331,7 +334,22 @@
 			}
 
 			[*pStr release];
-			*pStr = [[NSString stringFromUTF8Data:data] retain];
+			if ([data length])
+			{
+				if (controller.protocolVersion <= 4)
+				{
+					*pStr = [[[NSString stringFromUTF8Data:data] stringByAppendingString:suffix] retain];
+				}
+				else
+				{
+					*pStr = [[NSString stringFromUTF8Data:data] retain];
+				}
+			}
+			else
+			{
+				*pStr = nil;
+			}
+				
 			NSLog(@"Date: %@", *pStr);
 			
 			state = state + 1;

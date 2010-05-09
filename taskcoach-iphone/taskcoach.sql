@@ -11,7 +11,9 @@ CREATE TABLE TaskCoachFile
 	id INTEGER PRIMARY KEY,
 	name VARCHAR(255),
 	guid CHAR(40) NOT NULL,
-	visible BOOLEAN NOT NULL DEFAULT 0
+	visible BOOLEAN NOT NULL DEFAULT 0,
+	startHour INTEGER NOT NULL DEFAULT 8,
+	endHour INTEGER NOT NULL DEFAULT 18
 );
 
 CREATE INDEX idxTaskCoachFileGUID ON TaskCoachFile (guid);
@@ -48,9 +50,9 @@ CREATE TABLE Task
 	
 	-- Dates are represented as YYYY-MM-DD strings
 	
-	startDate CHAR(10) NULL DEFAULT NULL,
-	dueDate CHAR(10) NULL DEFAULT NULL,
-	completionDate CHAR(10) NULL DEFAULT NULL,
+	startDate CHAR(19) NULL DEFAULT NULL,
+	dueDate CHAR(19) NULL DEFAULT NULL,
+	completionDate CHAR(19) NULL DEFAULT NULL,
 
 	parentId INTEGER NULL DEFAULT NULL
 );
@@ -101,4 +103,4 @@ CREATE UNIQUE INDEX idxMetaName ON Meta (name);
 
 -- Initial data
 
-INSERT INTO Meta (name, value) VALUES ('version', '3');
+INSERT INTO Meta (name, value) VALUES ('version', '4');

@@ -56,13 +56,11 @@ static int collation(void *p, int s1, const void *p1, int s2, const void *p2)
 	[[self statementWithSQL:@"DELETE FROM Meta WHERE name=\"guid\""] exec];
 }
 
-- (void)onDatabaseUpgrade:(NSDictionary *)dict
+- (void)upgradeDatabase
 {
-	NSInteger version = atoi([(NSString *)[dict valueForKey:@"value"] UTF8String]);
-	
-	NSLog(@"Database version: %d", version);
+	NSLog(@"Database version: %d", dbVersion);
 
-	switch (version)
+	switch (dbVersion)
 	{
 		// No breaks here, it's intentional.
 		case 1:
@@ -111,11 +109,41 @@ static int collation(void *p, int s1, const void *p1, int s2, const void *p2)
 			// Create the main file, if applicable.
 			[[self statementWithSQL:@"SELECT value FROM Meta WHERE name=\"guid\""] execWithTarget:self action:@selector(upgradeFileTable:)];
 		}
+		case 3:
+		{
+			NSLog(@"Upgrading to version 4");
+
+			// Add day start and end hours, default 8/18
+			[[self statementWithSQL:@"ALTER TABLE TaskCoachFile ADD COLUMN startHour INTEGER NOT NULL DEFAULT 8"] exec];
+			[[self statementWithSQL:@"ALTER TABLE TaskCoachFile ADD COLUMN endHour INTEGER NOT NULL DEFAULT 18"] exec];
+
+			// Alter date columns to hold date + time. Must use a temp table because
+			// alter table does not support this.
+			[[self statementWithSQL:@"CREATE TEMPORARY TABLE migTask (id INTEGER, fileId INTEGER, name VARCHAR(2048), status INTEGER, taskCoachId VARCHAR(255), description TEXT, startDate CHAR(10), dueDate CHAR(10), completionDate CHAR(10), parentId INTEGER)"] exec];
+			[[self statementWithSQL:@"INSERT INTO migTask SELECT * FROM Task"] exec];
+			[[self statementWithSQL:@"DROP TABLE Task"] exec];
+			[[self statementWithSQL:@"CREATE TABLE Task (id INTEGER PRIMARY KEY, fileId INTEGER NULL DEFAULT NULL, name VARCHAR(2048) NOT NULL, status INTEGER NOT NULL DEFAULT 1, taskCoachId VARCHAR(255) NULL DEFAULT NULL, description TEXT NOT NULL DEFAULT '', startDate CHAR(19) NULL DEFAULT NULL, dueDate CHAR(19) NULL DEFAULT NULL, completionDate CHAR(19) NULL DEFAULT NULL, parentId INTEGER NULL DEFAULT NULL)"] exec];
+			[[self statementWithSQL:@"CREATE INDEX idxTaskFile ON Task (fileId)"] exec];
+			[[self statementWithSQL:@"CREATE INDEX idxTaskStatus ON Task (status)"] exec];
+			[[self statementWithSQL:@"CREATE INDEX idxTaskName ON Task (name)"] exec];
+			[[self statementWithSQL:@"CREATE INDEX idxTaskTaskCoachId ON Task (taskCoachId)"] exec];
+			[[self statementWithSQL:@"CREATE INDEX idxTaskParentId ON Task (parentId)"] exec];
+			[[self statementWithSQL:@"INSERT INTO Task SELECT * FROM migTask"] exec];
+			[[self statementWithSQL:@"DROP TABLE migTask"] exec];
+			// Default start and end hours
+			[[self statementWithSQL:@"UPDATE Task SET startDate=startDate || ' 08:00:00'"] exec];
+			[[self statementWithSQL:@"UPDATE Task SET dueDate=dueDate || ' 18:00:00'"] exec];
+		}
 	}
 	
 	NSLog(@"Database up to date.");
 	
-	[[self statementWithSQL:@"UPDATE Meta SET value=\"3\" WHERE name=\"version\""] exec];
+	[[self statementWithSQL:@"UPDATE Meta SET value=\"4\" WHERE name=\"version\""] exec];
+}
+
+- (void)onDatabaseVersion:(NSDictionary *)dict
+{
+	dbVersion = atoi([[dict objectForKey:@"value"] UTF8String]);
 }
 
 - initWithFilename:(NSString *)filename
@@ -140,7 +168,8 @@ static int collation(void *p, int s1, const void *p1, int s2, const void *p2)
 		
 		// Database upgrade from previous versions
 		
-		[[self statementWithSQL:@"SELECT value FROM Meta WHERE name=\"version\""] execWithTarget:self action:@selector(onDatabaseUpgrade:)];
+		[[self statementWithSQL:@"SELECT value FROM Meta WHERE name=\"version\""] execWithTarget:self action:@selector(onDatabaseVersion:)];
+		[self upgradeDatabase];
 
 		// Re-create views
 		[[self statementWithSQL:@"DROP VIEW IF EXISTS CurrentTask"] exec];
@@ -158,10 +187,10 @@ static int collation(void *p, int s1, const void *p1, int s2, const void *p2)
 		[[self statementWithSQL:@"CREATE VIEW CurrentEffort AS SELECT * FROM Effort LEFT JOIN TaskCoachFile ON Effort.fileId=TaskCoachFile.id WHERE TaskCoachFile.visible OR Effort.fileId IS NULL"] exec];
 
 		[[self statementWithSQL:@"CREATE VIEW AllTask AS SELECT * FROM CurrentTask WHERE status != 3"] exec];
-		[[self statementWithSQL:@"CREATE VIEW OverdueTask AS SELECT * FROM CurrentTask WHERE status != 3 AND dueDate < DATE('now')"] exec];
-		[[self statementWithSQL:[NSString stringWithFormat:@"CREATE VIEW DueSoonTask AS SELECT * FROM CurrentTask WHERE status != 3 AND (dueDate >= DATE('now') AND dueDate < DATE('now', '+%d days'))", [Configuration configuration].soonDays]] exec];
-		[[self statementWithSQL:[NSString stringWithFormat:@"CREATE VIEW StartedTask AS SELECT * FROM CurrentTask WHERE status != 3 AND startDate IS NOT NULL AND startDate <= DATE('now') AND (dueDate >= DATE('now', '+%d days') OR dueDate IS NULL)", [Configuration configuration].soonDays]] exec];
-		[[self statementWithSQL:@"CREATE VIEW NotStartedTask AS SELECT * FROM CurrentTask WHERE status != 3 AND (startDate IS NULL OR startDate > DATE('now'))"] exec];
+		[[self statementWithSQL:@"CREATE VIEW OverdueTask AS SELECT * FROM CurrentTask WHERE status != 3 AND dueDate < DATETIME('now')"] exec];
+		[[self statementWithSQL:[NSString stringWithFormat:@"CREATE VIEW DueSoonTask AS SELECT * FROM CurrentTask WHERE status != 3 AND (dueDate >= DATETIME('now') AND dueDate < DATETIME('now', '+%d days')) AND startDate < DATETIME('now')", [Configuration configuration].soonDays]] exec];
+		[[self statementWithSQL:[NSString stringWithFormat:@"CREATE VIEW StartedTask AS SELECT * FROM CurrentTask WHERE status != 3 AND startDate IS NOT NULL AND startDate <= DATETIME('now') AND (dueDate >= DATETIME('now', '+%d days') OR dueDate IS NULL)", [Configuration configuration].soonDays]] exec];
+		[[self statementWithSQL:@"CREATE VIEW NotStartedTask AS SELECT * FROM CurrentTask WHERE status != 3 AND (startDate IS NULL OR startDate > DATETIME('now'))"] exec];
 	}
 	
 	return self;

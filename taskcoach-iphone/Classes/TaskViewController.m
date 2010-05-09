@@ -25,6 +25,8 @@
 #import "DateUtils.h"
 #import "i18n.h"
 
+#import "NSDate+Utils.h"
+
 @implementation TaskViewController
 
 @synthesize tableViewController;
@@ -472,7 +474,7 @@
 			pid = [NSNumber numberWithInt:parentTask.objectId];
 
 		Task *task = [[Task alloc] initWithId:-1 fileId:[Database connection].currentFile name:@"" status:STATUS_NEW taskCoachId:nil description:@""
-									startDate:[[DateUtils instance] stringFromDate:[NSDate date]] dueDate:nil completionDate:nil dateStatus:TASKSTATUS_UNDEFINED
+									startDate:[[TimeUtils instance] stringFromDate:[NSDate dateRounded]] dueDate:nil completionDate:nil dateStatus:TASKSTATUS_UNDEFINED
 									 parentId:pid];
 		isCreatingTask = YES;
 		TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:categoryId];
@@ -516,7 +518,7 @@
 		pid = [NSNumber numberWithInt:parentTask.objectId];
 
 	Task *task = [[Task alloc] initWithId:-1 fileId:[Database connection].currentFile name:@"" status:STATUS_NEW taskCoachId:nil description:@""
-								startDate:[[DateUtils instance] stringFromDate:[NSDate date]] dueDate:nil completionDate:nil dateStatus:TASKSTATUS_UNDEFINED
+								startDate:[[TimeUtils instance] stringFromDate:[NSDate dateRounded]] dueDate:nil completionDate:nil dateStatus:TASKSTATUS_UNDEFINED
 								 parentId:pid];
 	isCreatingTask = YES;
 	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:categoryId];

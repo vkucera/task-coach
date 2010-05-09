@@ -53,9 +53,10 @@
 	[myNetwork appendString:[dict objectForKey:@"name"]];
 	[myNetwork appendString:[dict objectForKey:@"taskCoachId"]];
 	[myNetwork appendString:[dict objectForKey:@"description"]];
-	[myNetwork appendString:[dict objectForKey:@"startDate"]];
-	[myNetwork appendString:[dict objectForKey:@"dueDate"]];
-	[myNetwork appendString:[dict objectForKey:@"completionDate"]];
+
+	[self sendDate:[dict objectForKey:@"startDate"]];
+	[self sendDate:[dict objectForKey:@"dueDate"]];
+	[self sendDate:[dict objectForKey:@"completionDate"]];
 	
 	// Send categories as well, they may have been modified on the device.
 	[taskCategories removeAllObjects];

@@ -246,17 +246,19 @@
 - (void)onPickStartDate:(NSDate *)date
 {
 	[self.navigationController dismissModalViewControllerAnimated:YES];
-	
+
 	if (date)
 	{
-		task.startDate = [[DateUtils instance] stringFromDate:date];
+		task.startDate = [[TimeUtils instance] stringFromDate:date];
 		
 		if (task.dueDate)
 		{
-			NSDate *dueDate = [[DateUtils instance] dateFromString:task.dueDate];
+			NSDate *dueDate = [[TimeUtils instance] dateFromString:task.dueDate];
 			if ([dueDate compare:date] == NSOrderedAscending)
 			{
-				task.dueDate = task.startDate;
+				NSDate *date = [[TimeUtils instance] dateFromString:task.startDate];
+				[date addTimeInterval:3600];
+				task.dueDate = [[TimeUtils instance] stringFromDate:date];
 			}
 		}
 	}
@@ -277,13 +279,14 @@
 	
 	if (date)
 	{
-		task.dueDate = [[DateUtils instance] stringFromDate:date];
+		task.dueDate = [[TimeUtils instance] stringFromDate:date];
 		
 		if (task.startDate)
 		{
-			NSDate *startDate = [[DateUtils instance] dateFromString:task.startDate];
+			NSDate *startDate = [[TimeUtils instance] dateFromString:task.startDate];
 			if ([startDate compare:date] == NSOrderedDescending)
 			{
+				// Substract one hour ?
 				task.startDate = task.dueDate;
 			}
 		}
@@ -304,7 +307,7 @@
 	[self.navigationController dismissModalViewControllerAnimated:YES];
 
 	if (date)
-		task.completionDate = [[DateUtils instance] stringFromDate:date];
+		task.completionDate = [[TimeUtils instance] stringFromDate:date];
 	else
 		task.completionDate = nil;
 

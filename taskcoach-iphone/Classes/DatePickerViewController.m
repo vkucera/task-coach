@@ -8,11 +8,11 @@
 
 #import "DatePickerViewController.h"
 #import "DateUtils.h"
+#import "NSDate+Utils.h"
 
 @implementation DatePickerViewController
 
 @synthesize picker;
-@synthesize dayLabel;
 
 - initWithDate:(NSString *)theDate target:(id)theTarget action:(SEL)theAction
 {
@@ -23,11 +23,11 @@
 
 		if (theDate)
 		{
-			date = [[[DateUtils instance] dateFromString:theDate] retain];
+			date = [[[TimeUtils instance] dateFromString:theDate] retain];
 		}
 		else
 		{
-			date = [[NSDate date] retain];
+			date = [[NSDate dateRounded] retain];
 		}
 		
 		dayFormat = [[NSDateFormatter alloc] init];
@@ -40,13 +40,11 @@
 - (void)viewDidLoad
 {
 	picker.date = date;
-	dayLabel.text = [dayFormat stringFromDate:date];
 }
 
 - (void)viewDidUnload
 {
 	self.picker = nil;
-	self.dayLabel = nil;
 }
 
 - (void)dealloc
@@ -57,11 +55,6 @@
 	[date release];
 	
 	[super dealloc];
-}
-
-- (IBAction)onDateChanged:(UIDatePicker *)thePicker
-{
-	dayLabel.text = [dayFormat stringFromDate:thePicker.date];
 }
 
 - (IBAction)onConfirm:(UIButton *)button

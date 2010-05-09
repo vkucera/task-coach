@@ -20,6 +20,10 @@
 
 	id myTarget;
 	SEL myAction;
+
+#ifdef DEBUG
+	NSString *sqlString;
+#endif
 }
 
 - initWithConnection:(SQLite *)cn andSQL:(NSString *)sql;

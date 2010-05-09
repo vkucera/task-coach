@@ -197,7 +197,28 @@ class DateTimeItem(FixedSizeStringItem):
         if value is not None:
             value = value.replace(microsecond=0, tzinfo=None).isoformat(sep=' ')
         return super(DateTimeItem, self).pack(value)
-    
+
+
+class InfiniteDateTimeItem(FixedSizeStringItem):
+    """Same as L{DateTimeItem}, but 'no date' is a DateTime() value
+    instead of None."""
+
+    def feed(self, data):
+        super(InfiniteDateTimeItem, self).feed(data)
+
+        if self.state == 2:
+            if self.value is None:
+                self.value = DateTime()
+            else:
+                self.value = parseDateTime(self.value)
+
+    def pack(self, value):
+        if value == DateTime():
+            value = None
+        if value is not None:
+            value = value.replace(microsecond=0, tzinfo=None).isoformat(sep=' ')
+        return super(InfiniteDateTimeItem, self).pack(value)
+
 
 class CompositeItem(BaseItem):
     """A succession of several types. Underlying type: tuple. An
@@ -315,7 +336,8 @@ class ItemParser(object):
                   's': StringItem,
                   'z': FixedSizeStringItem,
                   'd': DateItem,
-                  't': DateTimeItem }
+                  't': DateTimeItem,
+                  'f': InfiniteDateTimeItem }
 
     def __init__(self):
         super(ItemParser, self).__init__()
@@ -444,6 +466,11 @@ class State(object):
 ###############################################################################
 # Actual protocol
 
+# There's a problem that prevents the 2.0 iPhone app to fallback to protocol
+# version 5, so do not set this to 5 before 2.1 is on the AppStore...
+
+_PROTOVERSION = 4
+
 class IPhoneAcceptor(Acceptor):
     def __init__(self, window, settings, iocontroller):
         def factory(fp, addr):
@@ -476,7 +503,7 @@ class IPhoneHandler(asynchat.async_chat):
 
         self.state = BaseState(self)
 
-        self.state.setState(InitialState, 4)
+        self.state.setState(InitialState, _PROTOVERSION)
 
         random.seed(time.time())
 
@@ -564,7 +591,7 @@ class InitialState(BaseState):
 
         super(InitialState, self).init('i', 1)
 
-        if self.version == 4:
+        if self.version == _PROTOVERSION:
             self.dlg = self.disp().window.createIPhoneProgressDialog()
             self.dlg.Started()
 
@@ -749,7 +776,7 @@ class FullFromDesktopTaskState(BaseState):
                           task.dueDateTime().date(),
                           task.completionDateTime().date(),
                           [category.id() for category in task.categories()])
-            else:
+            elif self.version < 5:
                 self.pack('sssdddz[s]',
                           task.subject(),
                           task.id(),
@@ -757,6 +784,16 @@ class FullFromDesktopTaskState(BaseState):
                           task.startDateTime().date(),
                           task.dueDateTime().date(),
                           task.completionDateTime().date(),
+                          task.parent().id() if task.parent() is not None else None,
+                          [category.id() for category in task.categories()])
+            else:
+                self.pack('sssfffz[s]',
+                          task.subject(),
+                          task.id(),
+                          task.description(),
+                          task.startDateTime(),
+                          task.dueDateTime(),
+                          task.completionDateTime(),
                           task.parent().id() if task.parent() is not None else None,
                           [category.id() for category in task.categories()])
 
@@ -985,8 +1022,10 @@ class TwoWayModifiedCategoriesState(BaseState):
     def finished(self):
         if self.version < 4:
             self.setState(TwoWayNewTasksState)
-        else:
+        elif self.version < 5:
             self.setState(TwoWayNewTasksState4)
+        else:
+            self.setState(TwoWayNewTasksState5)
 
 
 class TwoWayNewTasksState(BaseState):
@@ -1011,20 +1050,44 @@ class TwoWayNewTasksState(BaseState):
 
 class TwoWayNewTasksState4(BaseState):
     def init(self):
-        super(TwoWayNewTasksState4, self).init('ssddtz[s]', self.newTasksCount)
+        super(TwoWayNewTasksState4, self).init('ssddfz[s]', self.newTasksCount)
 
     def handleNewObject(self, (subject, description, startDate, dueDate, completionDateTime, parentId, categories)):
         parent = self.taskMap[parentId] if parentId else None
 
-        startDateTime = DateTime() if startDate == Date() else DateTime(year=startDate.year,
-                                                                        month=startDate.month,
-                                                                        day=startDate.day,
-                                                                        hour=self.disp().settings.getint('view', 'efforthourstart'))
+        if self.version < 5:
+            startDateTime = DateTime() if startDate == Date() else DateTime(year=startDate.year,
+                                                                            month=startDate.month,
+                                                                            day=startDate.day,
+                                                                            hour=self.disp().settings.getint('view', 'efforthourstart'))
 
-        dueDateTime = DateTime() if dueDate == Date() else DateTime(year=dueDate.year,
-                                                                    month=dueDate.month,
-                                                                    day=dueDate.day,
-                                                                    hour=self.disp().settings.getint('view', 'efforthourend'))
+            dueDateTime = DateTime() if dueDate == Date() else DateTime(year=dueDate.year,
+                                                                        month=dueDate.month,
+                                                                        day=dueDate.day,
+                                                                        hour=self.disp().settings.getint('view', 'efforthourend'))
+
+        task = Task(subject=subject, description=description, 
+                    startDateTime=startDateTime,
+                    dueDateTime=dueDateTime, 
+                    completionDateTime=completionDateTime, 
+                    parent=parent)
+
+        self.disp().window.addIPhoneTask(task, [self.categoryMap[catId] for catId in categories])
+        self.disp().log(_('New task %s'), task.id())
+
+        self.taskMap[task.id()] = task
+        self.pack('s', task.id())
+
+    def finished(self):
+        self.setState(TwoWayDeletedTasksState)
+
+
+class TwoWayNewTasksState5(BaseState):
+    def init(self):
+        super(TwoWayNewTasksState5, self).init('ssfffz[s]', self.newTasksCount)
+
+    def handleNewObject(self, (subject, description, startDateTime, dueDateTime, completionDateTime, parentId, categories)):
+        parent = self.taskMap[parentId] if parentId else None
 
         task = Task(subject=subject, description=description, 
                     startDateTime=startDateTime,
@@ -1061,7 +1124,12 @@ class TwoWayDeletedTasksState(BaseState):
 
 class TwoWayModifiedTasks(BaseState):
     def init(self):
-        super(TwoWayModifiedTasks, self).init(('sssddd' if self.version < 2 else 'sssddd[s]'), self.modifiedTasksCount)
+        if self.version < 2:
+            super(TwoWayModifiedTasks, self).init('sssddd', self.modifiedTasksCount)
+        elif self.version < 5:
+            super(TwoWayModifiedTasks, self).init('sssddd[s]', self.modifiedTasksCount)
+        else:
+            super(TwoWayModifiedTasks, self).init('sssfff[s]', self.modifiedTasksCount)
 
     def handleNewObject(self, args):
         if self.version < 2:
@@ -1071,10 +1139,18 @@ class TwoWayModifiedTasks(BaseState):
             subject, taskId, description, startDate, dueDate, completionDate, categories = args
             categories = [self.categoryMap[catId] for catId in categories]
 
-        startDateTime = DateTime(startDate.year, startDate.month, startDate.day)
-        dueDateTime = DateTime(dueDate.year, dueDate.month, dueDate.day), 
-        completionDateTime = DateTime(completionDate.year, completionDate.month, 
-                                      completionDate.year),
+        if self.version < 5:
+            startDateTime = DateTime(startDate.year, startDate.month, startDate.day,
+                self.disp().settings.getint('view', 'efforthourstart')) if startDate != Date() else DateTime()
+            dueDateTime = DateTime(dueDate.year, dueDate.month, dueDate.day,
+                self.disp().settings.getint('view', 'efforthourend')) if dueDate != Date() else DateTime()
+            completionDateTime = DateTime(completionDate.year, completionDate.month, 
+                completionDate.day) if completionDate != Date() else DateTime()
+        else:
+            startDateTime = startDate
+            dueDateTime = dueDate
+            completionDateTime = completionDate
+
         try:
             task = self.taskMap[taskId]
         except KeyError:

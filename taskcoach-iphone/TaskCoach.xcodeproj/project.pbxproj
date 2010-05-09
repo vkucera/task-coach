@@ -56,6 +56,7 @@
 		A6664DDC0F2B486000638C68 /* BaseState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664DDB0F2B486000638C68 /* BaseState.m */; };
 		A6664DE70F2B498300638C68 /* InitialState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664DE60F2B498300638C68 /* InitialState.m */; };
 		A6664EC50F2B504800638C68 /* AuthentificationState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664EC40F2B504800638C68 /* AuthentificationState.m */; };
+		A66EE70C1196AEAF006758BB /* NSDate+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = A66EE70B1196AEAF006758BB /* NSDate+Utils.m */; };
 		A673ABF60F2203D000E548BB /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A673ABF50F2203D000E548BB /* NavigationController.m */; };
 		A6793B270F31E28700AAEC17 /* UploadObjectsState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6793B260F31E28700AAEC17 /* UploadObjectsState.m */; };
 		A67A0C210F6BA57100F48A82 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = A67A0C200F6BA57100F48A82 /* Entitlements.plist */; };
@@ -214,6 +215,8 @@
 		A6664DE60F2B498300638C68 /* InitialState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InitialState.m; path = Synchronization/InitialState.m; sourceTree = "<group>"; };
 		A6664EC30F2B504800638C68 /* AuthentificationState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AuthentificationState.h; path = Synchronization/AuthentificationState.h; sourceTree = "<group>"; };
 		A6664EC40F2B504800638C68 /* AuthentificationState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AuthentificationState.m; path = Synchronization/AuthentificationState.m; sourceTree = "<group>"; };
+		A66EE70A1196AEAF006758BB /* NSDate+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Utils.h"; sourceTree = "<group>"; };
+		A66EE70B1196AEAF006758BB /* NSDate+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Utils.m"; sourceTree = "<group>"; };
 		A673ABF40F2203D000E548BB /* NavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
 		A673ABF50F2203D000E548BB /* NavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		A67400771042DF0D0094E5F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -556,6 +559,8 @@
 			children = (
 				A627606F0F221EFC0041D761 /* String+Utils.h */,
 				A62760700F221EFC0041D761 /* String+Utils.m */,
+				A66EE70A1196AEAF006758BB /* NSDate+Utils.h */,
+				A66EE70B1196AEAF006758BB /* NSDate+Utils.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -886,6 +891,7 @@
 				A6E7C0801114418D00B230E2 /* AlertPrompt.m in Sources */,
 				A6BD9AB7114CD1B500AC781C /* SubcategoriesSelector.m in Sources */,
 				A69F6C2F115E2196003F68F5 /* SearchCell.m in Sources */,
+				A66EE70C1196AEAF006758BB /* NSDate+Utils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1136,11 +1142,13 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				RUN_CLANG_STATIC_ANALYZER = NO;
 				SDKROOT = iphoneos3.1.2;
 			};
 			name = Debug;

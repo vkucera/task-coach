@@ -44,6 +44,7 @@
 	switch (version)
 	{
 		case 4:
+		case 5:
 			response = 1;
 			break;
 	}
@@ -58,8 +59,15 @@
 	}
 	else
 	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("The version of the desktop Task Coach is too old. Please upgrade it and retry.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-		[alert show];
+		if (version <= 3)
+		{
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("The version of the desktop Task Coach is too old. Please upgrade it and retry.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+			[alert show];
+		}
+		else
+		{
+			[myNetwork expect:4];
+		}
 	}
 }
 

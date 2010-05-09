@@ -30,6 +30,10 @@
 		{
 			[colNames addObject:[NSString stringWithUTF8String:sqlite3_column_name(pReq, i)]];
 		}
+
+#ifdef DEBUG
+		sqlString = [sql copy];
+#endif
 	}
 	
 	return self;
@@ -42,6 +46,10 @@
 	[colNames release];
 	[connection release];
 	[myTarget release];
+
+#ifdef DEBUG
+	[sqlString release];
+#endif
 	
 	[super dealloc];
 }
