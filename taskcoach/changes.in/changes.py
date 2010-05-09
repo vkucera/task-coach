@@ -40,6 +40,14 @@ and completion date and time. The task file format version number is now 30.''')
         ]
     ),
     
+Release('1.0.4', 'May XX, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+       Bug('''When starting iconized on Mac OS X, the application window
+would close.''', '2992764')
+        ],
+    ),
+
 Release('1.0.3', 'April 25, 2010',
     summary='''This release fixes a few bugs, and improves a few features, such
 as making the calendar view sortable.''', 
