@@ -80,7 +80,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<object class="IBUIButton" id="45459228">
 						<reference key="NSNextResponder" ref="453008371"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{228, 329}, {72, 37}}</string>
+						<string key="NSFrame">{{228, 20}, {72, 37}}</string>
 						<reference key="NSSuperview" ref="453008371"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
@@ -112,7 +112,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<object class="IBUIButton" id="359180103">
 						<reference key="NSNextResponder" ref="453008371"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 329}, {98, 37}}</string>
+						<string key="NSFrame">{{20, 20}, {94, 37}}</string>
 						<reference key="NSSuperview" ref="453008371"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
@@ -243,7 +243,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<string>DatePickerViewController</string>
 					<string>UIResponder</string>
-					<string>{{2904, 1129}, {320, 480}}</string>
+					<string>{{3062, 1160}, {320, 480}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
