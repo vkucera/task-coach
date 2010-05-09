@@ -34,6 +34,7 @@
 	CategoryViewController *categoryController;
 
 	SearchCell *searchCell;
+	NSTimer *minuteTimer;
 }
 
 @property (nonatomic, readonly) UITableView *tableView;

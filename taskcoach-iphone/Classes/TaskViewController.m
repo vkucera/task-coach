@@ -155,11 +155,26 @@
 	self.navigationItem.title = title;
 	self.navigationItem.rightBarButtonItem = [self editButtonItem];
 	self.editing = shouldEdit;
+
+	NSDate *nextUpdate = [NSDate dateRounded];
+	nextUpdate = [nextUpdate addTimeInterval:60];
+	minuteTimer = [[NSTimer alloc] initWithFireDate:nextUpdate interval:60 target:self selector:@selector(onMinuteTimer:) userInfo:nil repeats:YES];
+	[[NSRunLoop currentRunLoop] addTimer:minuteTimer forMode:NSDefaultRunLoopMode];
 }
 
 - (void)viewDidUnload
 {
 	self.tableViewController = nil;
+
+	[minuteTimer invalidate];
+	[minuteTimer release];
+	minuteTimer = nil;
+}
+
+- (void)onMinuteTimer:(NSTimer *)theTimer
+{
+	[self loadData];
+	[self.tableView reloadData];
 }
 
 - (void)dealloc

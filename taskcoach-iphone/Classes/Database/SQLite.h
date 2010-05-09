@@ -32,4 +32,6 @@
 
 - (NSInteger)lastRowID;
 
+- (void)recreateViews;
+
 @end

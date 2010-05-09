@@ -170,30 +170,34 @@ static int collation(void *p, int s1, const void *p1, int s2, const void *p2)
 		
 		[[self statementWithSQL:@"SELECT value FROM Meta WHERE name=\"version\""] execWithTarget:self action:@selector(onDatabaseVersion:)];
 		[self upgradeDatabase];
-
-		// Re-create views
-		[[self statementWithSQL:@"DROP VIEW IF EXISTS CurrentTask"] exec];
-		[[self statementWithSQL:@"DROP VIEW IF EXISTS CurrentCategory"] exec];
-		[[self statementWithSQL:@"DROP VIEW IF EXISTS CurrentEffort"] exec];
-		[[self statementWithSQL:@"DROP VIEW IF EXISTS AllTask"] exec];
-		[[self statementWithSQL:@"DROP VIEW IF EXISTS OverdueTask"] exec];
-		[[self statementWithSQL:@"DROP VIEW IF EXISTS DueTodayTask"] exec]; // Obsolete anyway
-		[[self statementWithSQL:@"DROP VIEW IF EXISTS DueSoonTask"] exec];
-		[[self statementWithSQL:@"DROP VIEW IF EXISTS StartedTask"] exec];
-		[[self statementWithSQL:@"DROP VIEW IF EXISTS NotStartedTask"] exec];
-
-		[[self statementWithSQL:@"CREATE VIEW CurrentTask AS SELECT * FROM Task LEFT JOIN TaskCoachFile ON Task.fileId=TaskCoachFile.id WHERE TaskCoachFile.visible OR Task.fileId IS NULL"] exec];
-		[[self statementWithSQL:@"CREATE VIEW CurrentCategory AS SELECT * FROM Category LEFT JOIN TaskCoachFile ON Category.fileId=TaskCoachFile.id WHERE TaskCoachFile.visible OR Category.fileId IS NULL"] exec];
-		[[self statementWithSQL:@"CREATE VIEW CurrentEffort AS SELECT * FROM Effort LEFT JOIN TaskCoachFile ON Effort.fileId=TaskCoachFile.id WHERE TaskCoachFile.visible OR Effort.fileId IS NULL"] exec];
-
-		[[self statementWithSQL:@"CREATE VIEW AllTask AS SELECT * FROM CurrentTask WHERE status != 3"] exec];
-		[[self statementWithSQL:@"CREATE VIEW OverdueTask AS SELECT * FROM CurrentTask WHERE status != 3 AND dueDate < DATETIME('now', 'localtime')"] exec];
-		[[self statementWithSQL:[NSString stringWithFormat:@"CREATE VIEW DueSoonTask AS SELECT * FROM CurrentTask WHERE status != 3 AND (dueDate >= DATETIME('now', 'localtime') AND dueDate < DATETIME('now', 'localtime', '+%d days')) AND startDate < DATETIME('now', 'localtime')", [Configuration configuration].soonDays]] exec];
-		[[self statementWithSQL:[NSString stringWithFormat:@"CREATE VIEW StartedTask AS SELECT * FROM CurrentTask WHERE status != 3 AND startDate IS NOT NULL AND startDate <= DATETIME('now', 'localtime') AND (dueDate >= DATETIME('now', 'localtime', '+%d days') OR dueDate IS NULL)", [Configuration configuration].soonDays]] exec];
-		[[self statementWithSQL:@"CREATE VIEW NotStartedTask AS SELECT * FROM CurrentTask WHERE status != 3 AND (startDate IS NULL OR startDate > DATETIME('now', 'localtime'))"] exec];
+		[self recreateViews];
 	}
 	
 	return self;
+}
+
+- (void)recreateViews
+{
+	// Re-create views
+	[[self statementWithSQL:@"DROP VIEW IF EXISTS CurrentTask"] exec];
+	[[self statementWithSQL:@"DROP VIEW IF EXISTS CurrentCategory"] exec];
+	[[self statementWithSQL:@"DROP VIEW IF EXISTS CurrentEffort"] exec];
+	[[self statementWithSQL:@"DROP VIEW IF EXISTS AllTask"] exec];
+	[[self statementWithSQL:@"DROP VIEW IF EXISTS OverdueTask"] exec];
+	[[self statementWithSQL:@"DROP VIEW IF EXISTS DueTodayTask"] exec]; // Obsolete anyway
+	[[self statementWithSQL:@"DROP VIEW IF EXISTS DueSoonTask"] exec];
+	[[self statementWithSQL:@"DROP VIEW IF EXISTS StartedTask"] exec];
+	[[self statementWithSQL:@"DROP VIEW IF EXISTS NotStartedTask"] exec];
+	
+	[[self statementWithSQL:@"CREATE VIEW CurrentTask AS SELECT * FROM Task LEFT JOIN TaskCoachFile ON Task.fileId=TaskCoachFile.id WHERE TaskCoachFile.visible OR Task.fileId IS NULL"] exec];
+	[[self statementWithSQL:@"CREATE VIEW CurrentCategory AS SELECT * FROM Category LEFT JOIN TaskCoachFile ON Category.fileId=TaskCoachFile.id WHERE TaskCoachFile.visible OR Category.fileId IS NULL"] exec];
+	[[self statementWithSQL:@"CREATE VIEW CurrentEffort AS SELECT * FROM Effort LEFT JOIN TaskCoachFile ON Effort.fileId=TaskCoachFile.id WHERE TaskCoachFile.visible OR Effort.fileId IS NULL"] exec];
+	
+	[[self statementWithSQL:@"CREATE VIEW AllTask AS SELECT * FROM CurrentTask WHERE status != 3"] exec];
+	[[self statementWithSQL:@"CREATE VIEW OverdueTask AS SELECT * FROM CurrentTask WHERE status != 3 AND dueDate < DATETIME('now', 'localtime')"] exec];
+	[[self statementWithSQL:[NSString stringWithFormat:@"CREATE VIEW DueSoonTask AS SELECT * FROM CurrentTask WHERE status != 3 AND (dueDate >= DATETIME('now', 'localtime') AND dueDate < DATETIME('now', 'localtime', '+%d days')) AND startDate < DATETIME('now', 'localtime')", [Configuration configuration].soonDays]] exec];
+	[[self statementWithSQL:[NSString stringWithFormat:@"CREATE VIEW StartedTask AS SELECT * FROM CurrentTask WHERE status != 3 AND startDate IS NOT NULL AND startDate <= DATETIME('now', 'localtime') AND (dueDate >= DATETIME('now', 'localtime', '+%d days') OR dueDate IS NULL)", [Configuration configuration].soonDays]] exec];
+	[[self statementWithSQL:@"CREATE VIEW NotStartedTask AS SELECT * FROM CurrentTask WHERE status != 3 AND (startDate IS NULL OR startDate > DATETIME('now', 'localtime'))"] exec];
 }
 
 - (void)dealloc
