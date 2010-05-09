@@ -3,6 +3,7 @@
 	* misc: start/due/completion dates now include time as well.
 	* misc: Better UI for picking date/time
 	* misc: Fix a bug related to local/GMT time
+	* misc: Fix a small selection bug when showing completed tasks
 
 ==== Release 2.0: 2010-04-05 ====
 
