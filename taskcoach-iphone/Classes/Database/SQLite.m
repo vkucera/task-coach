@@ -187,10 +187,10 @@ static int collation(void *p, int s1, const void *p1, int s2, const void *p2)
 		[[self statementWithSQL:@"CREATE VIEW CurrentEffort AS SELECT * FROM Effort LEFT JOIN TaskCoachFile ON Effort.fileId=TaskCoachFile.id WHERE TaskCoachFile.visible OR Effort.fileId IS NULL"] exec];
 
 		[[self statementWithSQL:@"CREATE VIEW AllTask AS SELECT * FROM CurrentTask WHERE status != 3"] exec];
-		[[self statementWithSQL:@"CREATE VIEW OverdueTask AS SELECT * FROM CurrentTask WHERE status != 3 AND dueDate < DATETIME('now')"] exec];
-		[[self statementWithSQL:[NSString stringWithFormat:@"CREATE VIEW DueSoonTask AS SELECT * FROM CurrentTask WHERE status != 3 AND (dueDate >= DATETIME('now') AND dueDate < DATETIME('now', '+%d days')) AND startDate < DATETIME('now')", [Configuration configuration].soonDays]] exec];
-		[[self statementWithSQL:[NSString stringWithFormat:@"CREATE VIEW StartedTask AS SELECT * FROM CurrentTask WHERE status != 3 AND startDate IS NOT NULL AND startDate <= DATETIME('now') AND (dueDate >= DATETIME('now', '+%d days') OR dueDate IS NULL)", [Configuration configuration].soonDays]] exec];
-		[[self statementWithSQL:@"CREATE VIEW NotStartedTask AS SELECT * FROM CurrentTask WHERE status != 3 AND (startDate IS NULL OR startDate > DATETIME('now'))"] exec];
+		[[self statementWithSQL:@"CREATE VIEW OverdueTask AS SELECT * FROM CurrentTask WHERE status != 3 AND dueDate < DATETIME('now', 'localtime')"] exec];
+		[[self statementWithSQL:[NSString stringWithFormat:@"CREATE VIEW DueSoonTask AS SELECT * FROM CurrentTask WHERE status != 3 AND (dueDate >= DATETIME('now', 'localtime') AND dueDate < DATETIME('now', 'localtime', '+%d days')) AND startDate < DATETIME('now', 'localtime')", [Configuration configuration].soonDays]] exec];
+		[[self statementWithSQL:[NSString stringWithFormat:@"CREATE VIEW StartedTask AS SELECT * FROM CurrentTask WHERE status != 3 AND startDate IS NOT NULL AND startDate <= DATETIME('now', 'localtime') AND (dueDate >= DATETIME('now', 'localtime', '+%d days') OR dueDate IS NULL)", [Configuration configuration].soonDays]] exec];
+		[[self statementWithSQL:@"CREATE VIEW NotStartedTask AS SELECT * FROM CurrentTask WHERE status != 3 AND (startDate IS NULL OR startDate > DATETIME('now', 'localtime'))"] exec];
 	}
 	
 	return self;
