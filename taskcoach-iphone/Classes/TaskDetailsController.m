@@ -206,7 +206,7 @@
 	
 	[UIView beginAnimations:@"DatePickerAnimation" context:nil];
 	[UIView setAnimationDuration:1.0];
-	[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.navigationController.view cache:YES];
+	[UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:self.navigationController.view cache:YES];
 	ctrl.view.hidden = NO;
 	[UIView commitAnimations];
 
@@ -218,7 +218,7 @@
 	self.view.userInteractionEnabled = YES;
 	[UIView beginAnimations:@"DatePickerAnimation" context:nil];
 	[UIView setAnimationDuration:1.0];
-	[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:self.navigationController.view cache:YES];
+	[UIView setAnimationTransition:UIViewAnimationTransitionCurlUp forView:self.navigationController.view cache:YES];
 	datePicker.view.hidden = YES;
 	[UIView commitAnimations];
 }
