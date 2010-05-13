@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -125,6 +125,15 @@ class SettingsIOTest(SettingsTestCase):
         self.fakeFile.seek(0)
         self.settings.readfp(self.fakeFile)
         self.failUnless(self.settings.has_section('testing'))
+        
+    def testIOErrorWhileSaving(self):
+        def file(*args): # pylint: disable-msg=W0613,W0622
+            raise IOError
+        def showerror(*args, **kwargs): # pylint: disable-msg=W0613
+            self.showerror_args = args # pylint: disable-msg=W0201
+        self.settings.setLoadAndSave(True)
+        self.settings.save(showerror=showerror, file=file)
+        self.failUnless(self.showerror_args)
 
 
 class SettingsObservableTest(SettingsTestCase):

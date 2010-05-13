@@ -279,7 +279,7 @@ class EditCommand(BaseCommand, SaveStateMixin): # pylint: disable-msg=W0223
         self.saveStates(self.getItemsToSave())
         
     def getItemsToSave(self):
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
         
     def undo_command(self):
         self.undoStates()

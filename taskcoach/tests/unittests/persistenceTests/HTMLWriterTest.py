@@ -156,6 +156,11 @@ class TaskTestsMixin(CommonTestsMixin):
             self.expectInHTML('<link href="filename.css" rel="stylesheet" type="text/css" media="screen">')
         else:
             self.expectNotInHTML('stylesheet')
+            
+    def testOSErrorWhileWritingCSS(self):
+        def open(*args): # pylint: disable-msg=W0613,W0622
+            raise IOError
+        self.writer._writeCSS(open=open) # pylint: disable-msg=W0212
         
 
 class TaskListTestsMixin(object):

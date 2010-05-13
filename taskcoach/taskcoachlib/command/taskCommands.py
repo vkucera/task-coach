@@ -230,7 +230,7 @@ class ExtremePriorityCommand(base.BaseCommand): # pylint: disable-msg=W0223
         self.oldExtremePriority = self.getOldExtremePriority()
         
     def getOldExtremePriority(self):
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     def setNewExtremePriority(self):
         newExtremePriority = self.oldExtremePriority + self.delta 

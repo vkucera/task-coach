@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 Copyright (C) 2008 Jerome Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -176,7 +176,7 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
     def getint(self, section, option):
         return int(self.get(section, option))
         
-    def save(self, showerror=wx.MessageBox):
+    def save(self, showerror=wx.MessageBox, file=file): # pylint: disable-msg=W0622
         self.set('version', 'python', sys.version)
         self.set('version', 'wxpython', '%s-%s @ %s'%(wx.VERSION_STRING, wx.PlatformInfo[2], wx.PlatformInfo[1]))
         self.set('version', 'pythonfrozen', str(hasattr(sys, 'frozen')))
@@ -253,3 +253,6 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
     def generatedIniFilename(self, forceProgramDir):
         return os.path.join(self.path(forceProgramDir), '%s.ini'%meta.filename)
 
+    def setLoadAndSave(self, loadAndSave=True):
+        ''' Turn saving and loading on and off, for testing purposes. '''
+        self.__loadAndSave = loadAndSave
