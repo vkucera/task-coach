@@ -242,7 +242,7 @@ class TimeCtrl(Panel):
         
 
 class DateTimeCtrl(Panel):
-    def __init__(self, parent, dateTime=None, callback=None, noneAllowed=True,
+    def __init__(self, parent, callback=None, noneAllowed=True,
                  starthour=8, endhour=18, interval=15, showSeconds=False,
                  *args, **kwargs):
         self._noneAllowed = noneAllowed
@@ -251,8 +251,7 @@ class DateTimeCtrl(Panel):
         self._interval = interval
         self._showSeconds = showSeconds
         super(DateTimeCtrl, self).__init__(parent, callback, *args, **kwargs)
-        self._callback = callback or self.__nullCallback
-        self.SetValue(dateTime)            
+        self._callback = callback or self.__nullCallback           
         
     def __nullCallback(self, *args, **kwargs):
         pass
