@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <TapkuLibrary/ODCalendarDayTimelineView.h>
 
 #import "PositionStore.h"
 
@@ -16,7 +17,7 @@
 @class CategoryViewController;
 @class SearchCell;
 
-@interface TaskViewController : UIViewController <UIAlertViewDelegate, RestorableController, UISearchBarDelegate>
+@interface TaskViewController : UIViewController <UIAlertViewDelegate, RestorableController, UISearchBarDelegate, ODCalendarDayTimelineViewDelegate>
 {
 	NSString *title;
 	NSInteger categoryId;
@@ -35,13 +36,19 @@
 
 	SearchCell *searchCell;
 	NSTimer *minuteTimer;
+
+	ODCalendarDayTimelineView *calendarView;
+	UIToolbar *toolbar;
 }
 
 @property (nonatomic, readonly) UITableView *tableView;
 @property (nonatomic, retain) IBOutlet UITableViewController *tableViewController;
+@property (nonatomic, retain) IBOutlet ODCalendarDayTimelineView *calendarView;
+@property (nonatomic, retain) IBOutlet UIToolbar *toolbar;
 
 - (IBAction)onAddTask:(UIBarButtonItem *)button;
 - (IBAction)onSync:(UIBarButtonItem *)button;
+- (IBAction)onSwitch:(UIBarButtonItem *)button;
 
 - initWithTitle:(NSString *)title category:(NSInteger)categoryId categoryController:(CategoryViewController *)controller parentTask:(Task *)parent edit:(BOOL)edit;
 

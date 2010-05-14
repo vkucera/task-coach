@@ -19,6 +19,7 @@ static Configuration *_configuration = NULL;
 @synthesize soonDays;
 @synthesize name;
 @synthesize domain;
+@synthesize viewStyle;
 
 + (Configuration *)configuration
 {
@@ -46,6 +47,8 @@ static Configuration *_configuration = NULL;
 
 		name = [[config stringForKey:@"name"] copy];
 		domain = [[config stringForKey:@"domain"] copy];
+
+		viewStyle = [config integerForKey:@"viewStyle"];
 	}
 	
 	return self;
@@ -68,6 +71,8 @@ static Configuration *_configuration = NULL;
 		[config setObject:name forKey:@"name"];
 	if (domain)
 		[config setObject:domain forKey:@"domain"];
+	
+	[config setInteger:viewStyle forKey:@"viewStyle"];
 
 	[config synchronize];
 }

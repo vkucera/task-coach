@@ -16,4 +16,10 @@
 	return [NSDate dateWithTimeIntervalSinceReferenceDate:60 * floor([[NSDate date] timeIntervalSinceReferenceDate] / 60)];
 }
 
++ (NSDate *)midnightToday
+{
+	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:[NSDate date]];
+	return [[NSCalendar currentCalendar] dateFromComponents:components];
+}
+
 @end
