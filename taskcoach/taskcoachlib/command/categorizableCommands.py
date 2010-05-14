@@ -36,9 +36,9 @@ class ToggleCategoryCommand(base.BaseCommand):
         self.toggle_category()
         
     undo_command = redo_command = do_command
-        
-    def toggle_category(self):
-        event = patterns.Event()
+    
+    @patterns.eventSource    
+    def toggle_category(self, event=None):
         for categorizable in self.items:
             if self.category in categorizable.categories():
                 self.unlink_category(self.category, categorizable, event)
@@ -46,7 +46,6 @@ class ToggleCategoryCommand(base.BaseCommand):
             else:
                 self.link_category(self.category, categorizable, event)
                 self.unlink_previous_categories(categorizable, event)
-        event.send()
         
     def unlink_previous_categories(self, categorizable, event):
         ''' Remove categorizable from any mutual exclusive categories it might

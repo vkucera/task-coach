@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,8 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import singleton
+import functools
 
-# Ignore this pylint messages:
+# Ignore these pylint messages:
 # - W0142: * or ** magic
 # - W0622: Redefining builtin types
 # pylint: disable-msg=W0142,W0622
@@ -90,7 +91,7 @@ class Event(object):
             the specified type, its previous values *for the specified type* 
             are overwritten by the passed values. If no type is specified,
             the source and values are added for a random type, i.e. only omit 
-            the type if the event has is only one type. '''
+            the type if the event has only one type. '''
         type = kwargs.pop('type', self.type())
         self.__sourcesAndValuesByType.setdefault(type, {})[source] = values
 
@@ -152,7 +153,23 @@ class Event(object):
     def send(self):
         ''' Send this event to observers of the type(s) of this event. '''
         Publisher().notifyObservers(self)
-    
+
+
+def eventSource(f):
+    ''' Decorate methods that send events with code to optionally create the
+        event and optionally send it. This allows for sending just one event
+        for chains of multiple methods that each need to send an event. ''' 
+    @functools.wraps(f)
+    def decorator(*args, **kwargs):
+        event = kwargs.pop('event', None)
+        notify = event is None # We only notify if we're the event creator
+        kwargs['event'] = event = event if event else Event()
+        result = f(*args, **kwargs)
+        if notify:
+            event.send()
+        return result
+    return decorator    
+
 
 class MethodProxy(object):
     ''' Wrap methods in a class that allows for comparing methods. Comparison
@@ -288,11 +305,12 @@ class Publisher(object):
                     observers.discard(observer)
         self.notifyObserversOfLastObserverRemoved()
         
-    def notifyObserversOfFirstObserverRegistered(self, eventType):
-        event = Event('publisher.firstObserverRegisteredFor', self, eventType)
+    @eventSource
+    def notifyObserversOfFirstObserverRegistered(self, eventType, event=None):
+        event.addSource(self, eventType, 
+                        type='publisher.firstObserverRegisteredFor')
         event.addSource(self, eventType, 
                         type='publisher.firstObserverRegisteredFor.%s'%eventType)
-        event.send()
                     
     def notifyObserversOfLastObserverRemoved(self):
         for eventType, eventSource in self.__observers.keys():
@@ -387,104 +405,74 @@ class ObservableSet(ObservableCollection, Set):
             result = list(self) == other
         return result
 
+    @eventSource
     def append(self, item, event=None):
-        notify = event is None
-        event = event or Event()
         self.add(item)
         event.addSource(self, item, type=self.addItemEventType())
-        if notify:
-            event.send()
 
+    @eventSource
     def extend(self, items, event=None):
         if not items:
             return
-        notify = event is None
-        event = event or Event()
         self.update(items)
         event.addSource(self, *items, **dict(type=self.addItemEventType()))
-        if notify:
-            event.send()
-    
+
+    @eventSource    
     def remove(self, item, event=None):
-        notify = event is None
-        event = event or Event()
         super(ObservableSet, self).remove(item)
         event.addSource(self, item, type=self.removeItemEventType())
-        if notify:
-            event.send()
-    
+
+    @eventSource    
     def removeItems(self, items, event=None):
         if not items:
             return
-        notify = event is None
-        event = event or Event()
         self.difference_update(items)
         event.addSource(self, *items, **dict(type=self.removeItemEventType()))
-        if notify:
-            event.send()
-    
+
+    @eventSource    
     def clear(self, event=None):
         if not self:
             return
-        notify = event is None
-        event = event or Event()
         items = tuple(self)
         super(ObservableSet, self).clear()
         event.addSource(self, *items, **dict(type=self.removeItemEventType()))
-        if notify:
-            event.send()
     
 
 class ObservableList(ObservableCollection, List):
     ''' ObservableList is a list that notifies observers 
         when items are added to or removed from the list. '''
-        
+    
+    @eventSource    
     def append(self, item, event=None):
-        notify = event is None
-        event = event or Event()
         super(ObservableList, self).append(item)
         event.addSource(self, item, type=self.addItemEventType())
-        if notify:
-            event.send()
-        
+
+    @eventSource        
     def extend(self, items, event=None):
         if not items:
             return
-        notify = event is None
-        event = event or Event()
         super(ObservableList, self).extend(items)
         event.addSource(self, *items, **dict(type=self.addItemEventType()))
-        if notify:
-            event.send()
-            
+
+    @eventSource            
     def remove(self, item, event=None):
-        notify = event is None
-        event = event or Event()
         super(ObservableList, self).remove(item)
         event.addSource(self, item, type=self.removeItemEventType())
-        if notify:
-            event.send()
-    
+
+    @eventSource    
     def removeItems(self, items, event=None): # pylint: disable-msg=W0221
         if not items:
             return
-        notify = event is None
-        event = event or Event()
         super(ObservableList, self).removeItems(items)
         event.addSource(self, *items, **dict(type=self.removeItemEventType()))
-        if notify:
-            event.send()
 
+    @eventSource
     def clear(self, event=None):
         if not self:
             return
-        notify = event is None
-        event = event or Event()
         items = tuple(self)
         del self[:]
         event.addSource(self, *items, **dict(type=self.removeItemEventType()))
-        if notify:
-            event.send()
                
 
 class CollectionDecorator(Decorator, ObservableCollection):
@@ -521,12 +509,12 @@ class CollectionDecorator(Decorator, ObservableCollection):
     def extendSelf(self, items, event=None):
         ''' Provide a method to extend this collection without delegating to
             the observed collection. '''
-        return super(CollectionDecorator, self).extend(items, event)
+        return super(CollectionDecorator, self).extend(items, event=event)
         
     def removeItemsFromSelf(self, items, event=None):
         ''' Provide a method to remove items from this collection without 
             delegating to the observed collection. '''
-        return super(CollectionDecorator, self).removeItems(items, event)
+        return super(CollectionDecorator, self).removeItems(items, event=event)
         
     # Delegate changes to the observed collection
 

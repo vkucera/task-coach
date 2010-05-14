@@ -96,11 +96,10 @@ class SaveStateMixin(object):
         return [objectToBeSaved.__getstate__() for objectToBeSaved in 
                 self.objectsToBeSaved]
 
-    def __setStates(self, states):
-        event = patterns.Event()
+    @patterns.eventSource
+    def __setStates(self, states, event=None):
         for objectToBeSaved, state in zip(self.objectsToBeSaved, states):
-            objectToBeSaved.__setstate__(state, event)
-        event.send()
+            objectToBeSaved.__setstate__(state, event=event)
 
 
 class CompositeMixin(object):

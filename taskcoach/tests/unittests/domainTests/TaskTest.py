@@ -246,7 +246,8 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.registerObserver('task.completionDateTime')
         now = date.Now()
         self.task.setCompletionDateTime(now)
-        self.assertEqual(now, self.events[0].value())
+        self.assertEqual([patterns.Event('task.completionDateTime',
+                                         self.task, now)], self.events)
 
     def testSetCompletionDateTimeUnchangedCausesNoNotification(self):
         self.registerObserver('task.completionDateTime')

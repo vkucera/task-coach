@@ -33,17 +33,16 @@ class Sorter(base.TreeSorter):
         for eventType in ('task.startDateTime', 'task.completionDateTime'):
             patterns.Publisher().registerObserver(self.onAttributeChanged, 
                                                   eventType=eventType)
-            
-    def setTreeMode(self, treeMode=True):
+    
+    @patterns.eventSource       
+    def setTreeMode(self, treeMode=True, event=None):
         self.__treeMode = treeMode
         try:
             self.observable().setTreeMode(treeMode)
         except AttributeError:
             pass
-        event = patterns.Event()
-        self.reset(event)
-        event.addSource(self, type=self.sortEventType()) # force notification
-        event.send() 
+        self.reset(event=event)
+        event.addSource(self, type=self.sortEventType()) # force notification 
 
     def treeMode(self):
         return self.__treeMode
@@ -54,7 +53,7 @@ class Sorter(base.TreeSorter):
         
     def extendSelf(self, items, event=None):
         self._invalidateRootItemCache()
-        return super(Sorter, self).extendSelf(items, event)
+        return super(Sorter, self).extendSelf(items, event=event)
 
     def removeItemsFromSelf(self, itemsToRemove, event=None):
         self._invalidateRootItemCache()
@@ -63,7 +62,7 @@ class Sorter(base.TreeSorter):
             for item in itemsToRemove.copy():
                 itemsToRemove.update(item.children(recursive=True)) 
         itemsToRemove = [item for item in itemsToRemove if item in self]
-        return super(Sorter, self).removeItemsFromSelf(itemsToRemove, event)
+        return super(Sorter, self).removeItemsFromSelf(itemsToRemove, event=event)
 
     def rootItems(self):
         if self.__rootItems is None:
