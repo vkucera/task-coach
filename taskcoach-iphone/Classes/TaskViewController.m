@@ -155,20 +155,34 @@
 	self.navigationItem.title = title;
 	self.navigationItem.rightBarButtonItem = [self editButtonItem];
 	self.editing = shouldEdit;
+}
 
+// Timer instantiation and destruction is done here instead
+// of viewDidLoad/viewDidUnload because in this case the controller
+// is never freed (the timer keeps a ref on it)
+
+- (void)viewDidAppear:(BOOL)animated
+{
 	NSDate *nextUpdate = [NSDate dateRounded];
 	nextUpdate = [nextUpdate addTimeInterval:60];
 	minuteTimer = [[NSTimer alloc] initWithFireDate:nextUpdate interval:60 target:self selector:@selector(onMinuteTimer:) userInfo:nil repeats:YES];
 	[[NSRunLoop currentRunLoop] addTimer:minuteTimer forMode:NSDefaultRunLoopMode];
+
+	[super viewDidAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+	[minuteTimer invalidate];
+	[minuteTimer release];
+	minuteTimer = nil;
+
+	[super viewWillDisappear:animated];
 }
 
 - (void)viewDidUnload
 {
 	self.tableViewController = nil;
-
-	[minuteTimer invalidate];
-	[minuteTimer release];
-	minuteTimer = nil;
 }
 
 - (void)onMinuteTimer:(NSTimer *)theTimer
