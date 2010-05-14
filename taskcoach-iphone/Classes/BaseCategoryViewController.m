@@ -23,6 +23,11 @@
 	[categories addObject:category];
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+	return YES;
+}
+
 - (void)loadCategories
 {
 	[categories removeAllObjects];

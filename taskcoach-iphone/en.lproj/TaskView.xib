@@ -37,12 +37,12 @@
 			</object>
 			<object class="IBUIView" id="1070071579">
 				<reference key="NSNextResponder"/>
-				<int key="NSvFlags">292</int>
+				<int key="NSvFlags">256</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<object class="IBUIView" id="423209180">
 						<reference key="NSNextResponder" ref="1070071579"/>
-						<int key="NSvFlags">-2147483329</int>
+						<int key="NSvFlags">-2147483374</int>
 						<string key="NSFrameSize">{320, 372}</string>
 						<reference key="NSSuperview" ref="1070071579"/>
 						<object class="NSColor" key="IBUIBackgroundColor">

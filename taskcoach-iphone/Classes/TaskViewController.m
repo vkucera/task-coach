@@ -44,6 +44,17 @@
 	return tableViewController.tableView;
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+	return YES;
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+	[self.calendarView reloadDay];
+	[self.calendarView.timelineView setNeedsDisplay];
+}
+
 - (void)willTerminate
 {
 	[[PositionStore instance] push:self indexPath:nil type:TYPE_SUBTASK searchWord:searchCell.searchBar.text];
@@ -167,6 +178,8 @@
 	self.navigationItem.title = title;
 	self.editing = shouldEdit;
 	self.calendarView.delegate = self;
+	self.calendarView.scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+	self.calendarView.timelineView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
 
 	if ([Configuration configuration].viewStyle == STYLE_TABLE)
 	{

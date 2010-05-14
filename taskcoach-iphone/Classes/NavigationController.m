@@ -24,6 +24,11 @@
 		[ctrl performSelector:@selector(childWasPopped)];
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+	return YES;
+}
+
 - (void)willTerminate
 {
 	UIViewController *ctrl = [self topViewController];
