@@ -25,23 +25,52 @@ from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, date, effort
 
 
+class RenderTimeLeftTest(test.TestCase):
+    def testNoTimeLeftWhenActive(self):
+        timeLeft = date.TimeDelta()
+        self.assertEqual('0:00', render.timeLeft(timeLeft, False))
 
-class RenderDaysLeftTest(test.TestCase):
-    def testOneDayLeft(self):
-        self.assertEqual('1', render.daysLeft(date.TimeDelta(days=1), False))
-        
-    def testDueToday(self):
-        self.assertEqual('0', render.daysLeft(date.TimeDelta(days=0), False))
+    def testNoTimeLeftWhenCompleted(self):
+        self.assertEqual('', render.timeLeft(date.TimeDelta(), True))
 
-    def testOneDayLate(self):
-        self.assertEqual('-1', render.daysLeft(date.TimeDelta(days=-1), False))
+    def testInfiniteTimeLeftWhenActive(self):
+        self.assertEqual('Infinite', render.timeLeft(date.TimeDelta.max, False))
 
-    def testInfiniteTimeLeft(self):
-        self.assertEqual('Infinite', render.daysLeft(date.TimeDelta.max, False))
+    def testInfiniteTimeLeftWhenCompleted(self):
+        self.assertEqual('', render.timeLeft(date.TimeDelta.max, True))
 
-    def testCompletedTask(self):
-        self.assertEqual('', render.daysLeft(date.TimeDelta.max, True))
-        
+    def testOneDayLeftWhenActive(self):
+        timeLeft = date.TimeDelta(days=1)
+        self.assertEqual('1 day, 0:00', render.timeLeft(timeLeft, False))
+
+    def testOneDayLeftWhenCompleted(self):
+        timeLeft = date.TimeDelta(days=1)
+        self.assertEqual('', render.timeLeft(timeLeft, True))
+
+    def testTwoDaysLeftWhenActive(self):
+        timeLeft = date.TimeDelta(days=2)
+        self.assertEqual('2 days, 0:00', render.timeLeft(timeLeft, False))
+
+    def testOneDayLeftWhenCompleted(self):
+        timeLeft = date.TimeDelta(days=2)
+        self.assertEqual('', render.timeLeft(timeLeft, True))
+
+    def testOneDayLateWhenActive(self):
+        timeLeft = date.TimeDelta(days=-1)
+        self.assertEqual('-1 day, 0:00', render.timeLeft(timeLeft, False))
+
+    def testOneDayLateWhenCompleted(self):
+        timeLeft = date.TimeDelta(days=-1)
+        self.assertEqual('', render.timeLeft(timeLeft, True))
+
+    def testOneHourLateWhenActive(self):
+        timeLeft = -date.TimeDelta(hours=1)
+        self.assertEqual('-1:00', render.timeLeft(timeLeft, False))
+
+    def testOneDayHourWhenCompleted(self):
+        timeLeft = date.TimeDelta(hours=-1)
+        self.assertEqual('', render.timeLeft(timeLeft, True))
+
 
 class RenderTimeSpentTest(test.TestCase):
     def testZeroTime(self):

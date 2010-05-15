@@ -353,10 +353,11 @@ class CommonTestsMixin(object):
 
     def testOneDayLeft(self):
         self.showColumn('timeLeft')
-        self.task.setDueDateTime(date.Now() + date.oneDay + date.oneHour)
+        timeLeft = date.TimeDelta(hours=25, seconds=30)
         self.taskList.append(self.task)
-        self.assertEqual(render.daysLeft(self.task.timeLeft(), False), 
-            self.getItemText(0, 3))
+        self.task.setDueDateTime(date.Now() + timeLeft)
+        self.assertEqual(render.timeLeft(timeLeft, False), 
+                         self.getItemText(0, 3))
         
     def testReverseSortOrderWithGrandchildren(self):
         self.task.addChild(self.child)

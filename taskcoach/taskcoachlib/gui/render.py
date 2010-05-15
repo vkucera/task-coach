@@ -37,15 +37,21 @@ def date(date):
 def priority(priority):
     ''' Render an (integer) priority '''
     return str(priority)
-   
-def daysLeft(timeLeft, completedTask):
-    ''' Render time left (of type date.TimeDelta) in days. '''
+    
+def timeLeft(timeLeft, completedTask):
     if completedTask:
         return ''
     if timeLeft == datemodule.TimeDelta.max:
-        return _('Infinite') # u'∞' would be nice, but not all fonts have it
+        return _('Infinite')
+    sign = '-' if timeLeft.days < 0 else ''
+    timeLeft = abs(timeLeft)
+    if timeLeft.days > 0:
+        days = _('%d days')%timeLeft.days if timeLeft.days > 1 else _('1 day')
+        days += ', '
     else:
-        return str(timeLeft.days)
+        days = '' 
+    hours_and_minutes = ':'.join(str(timeLeft).split(':')[:-1]).split(', ')[-1]
+    return sign + days + hours_and_minutes
 
 def timeSpent(timeSpent):
     ''' render time spent (of type date.TimeDelta) as
