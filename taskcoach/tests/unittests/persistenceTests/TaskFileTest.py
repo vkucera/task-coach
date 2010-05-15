@@ -59,8 +59,8 @@ class TaskFileTestCase(test.TestCase):
         
     def createTaskFiles(self):
         # pylint: disable-msg=W0201
-        self.taskFile = persistence.TaskFile(self.settings)
-        self.emptyTaskFile = persistence.TaskFile(self.settings)
+        self.taskFile = persistence.TaskFile()
+        self.emptyTaskFile = persistence.TaskFile()
         
     def tearDown(self):
         super(TaskFileTestCase, self).tearDown()
@@ -731,7 +731,7 @@ class TaskFileSaveAndLoadTest(TaskFileTestCase):
 class TaskFileMergeTest(TaskFileTestCase):
     def setUp(self):
         super(TaskFileMergeTest, self).setUp()
-        self.mergeFile = persistence.TaskFile(self.settings)
+        self.mergeFile = persistence.TaskFile()
         self.mergeFile.setFilename('merge.tsk')
     
     def tearDown(self):
@@ -832,8 +832,8 @@ class TaskFileMergeTest(TaskFileTestCase):
 class LockedTaskFileLockTest(TaskFileTestCase):
     def createTaskFiles(self):
         # pylint: disable-msg=W0201
-        self.taskFile = persistence.LockedTaskFile(self.settings)
-        self.emptyTaskFile = persistence.LockedTaskFile(self.settings)
+        self.taskFile = persistence.LockedTaskFile()
+        self.emptyTaskFile = persistence.LockedTaskFile()
         
     def tearDown(self):
         self.taskFile.close()

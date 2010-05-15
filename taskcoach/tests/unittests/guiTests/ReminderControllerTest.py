@@ -32,9 +32,9 @@ class ReminderControllerUnderTest(gui.ReminderController):
 
         
 class DummyWindow(wx.Frame):
-    def __init__(self, settings):
+    def __init__(self):
         super(DummyWindow, self).__init__(None)
-        self.taskFile = persistence.TaskFile(settings)
+        self.taskFile = persistence.TaskFile()
     
     # pylint: disable-msg=W0221
     
@@ -48,9 +48,8 @@ class DummyWindow(wx.Frame):
 class ReminderControllerTestCase(test.TestCase):
     def setUp(self):
         self.taskList = task.TaskList()
-        settings = config.Settings(load=False)
-        self.reminderController = ReminderControllerUnderTest(DummyWindow(settings), 
-            self.taskList, settings)
+        self.reminderController = ReminderControllerUnderTest(DummyWindow(), 
+            self.taskList, config.Settings(load=False))
         self.nowDateTime = date.DateTime.now()
         self.reminderDateTime = self.nowDateTime + date.TimeDelta(hours=1)
 

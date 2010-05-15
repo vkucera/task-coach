@@ -196,7 +196,7 @@ class IOController(object):
                                       TaskFileClass=TaskFileClass) # Try again
             
     def _createSelectionFile(self, tasks, TaskFileClass):
-        selectionFile = TaskFileClass(self.__settings)
+        selectionFile = TaskFileClass()
         selectionFile.tasks().extend(tasks)
         allCategories = set()
         for task in tasks:

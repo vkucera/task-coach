@@ -30,7 +30,7 @@ class VCalTestCase(test.wxTestCase):
         task.Task.settings = self.settings = config.Settings(load=False)
         self.fd = cStringIO.StringIO()
         self.writer = persistence.iCalendarWriter(self.fd)
-        self.taskFile = persistence.TaskFile(self.settings)
+        self.taskFile = persistence.TaskFile()
 
     def writeAndRead(self):
         self.writer.write(self.viewer, self.settings, self.selectionOnly)

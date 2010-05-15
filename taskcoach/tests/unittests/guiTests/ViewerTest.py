@@ -27,7 +27,7 @@ class ViewerTest(test.wxTestCase):
     def setUp(self):
         super(ViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile(self.settings)
+        self.taskFile = persistence.TaskFile()
         self.task = task.Task()
         self.taskFile.tasks().append(self.task)
         self.notebook = widgets.AUINotebook(self.frame)
@@ -260,7 +260,7 @@ class FilterableViewerForTasks(test.TestCase):
     def createViewer(self):
         viewer = FilterableViewerForTasksUnderTest()
         # pylint: disable-msg=W0201
-        viewer.taskFile = persistence.TaskFile(self.settings)
+        viewer.taskFile = persistence.TaskFile()
         viewer.settings = self.settings
         viewer.settingsSection = lambda: 'taskviewer'
         presentation = viewer.createFilter(viewer.taskFile.tasks())
@@ -385,9 +385,8 @@ class FilterableViewerForTasks(test.TestCase):
 
 class ViewerBaseClassTest(test.wxTestCase):
     def testNotImplementedError(self):
-        settings = config.Settings(load=False)
         try:
-            gui.viewer.base.Viewer(self.frame, persistence.TaskFile(settings), 
+            gui.viewer.base.Viewer(self.frame, persistence.TaskFile(), 
                                    None, settingsSection='bla')
             self.fail('Expected NotImplementedError') # pragma: no cover
         except NotImplementedError:
@@ -405,7 +404,7 @@ class ViewerIteratorTestCase(test.wxTestCase):
         super(ViewerIteratorTestCase, self).setUp()
         self.settings = config.Settings(load=False)
         task.Task.settings = self.settings
-        self.taskFile = persistence.TaskFile(self.settings)
+        self.taskFile = persistence.TaskFile()
         self.taskList = self.taskFile.tasks()
         self.notebook = widgets.AUINotebook(self.frame)
         self.viewer = self.createViewer()
@@ -476,7 +475,7 @@ class UpdatePerSecondViewerTestsMixin(object):
         self.settings = config.Settings(load=False)
         task.Task.settings = self.settings
         self.settings.set('taskviewer', 'columns', "['timeSpent']")
-        self.taskFile = persistence.TaskFile(self.settings)
+        self.taskFile = persistence.TaskFile()
         self.taskList = task.sorter.Sorter(self.taskFile.tasks(), sortBy='dueDateTime')
         self.updateViewer = self.createUpdateViewer()
         self.trackedTask = task.Task(subject='tracked')
@@ -543,7 +542,7 @@ class EffortListViewerUpdatePerSecondTest(UpdatePerSecondViewerTestsMixin,
 class ViewerWithColumnsTest(test.wxTestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile(self.settings)
+        self.taskFile = persistence.TaskFile()
         self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile, self.settings)
         
     def testDefaultColumnWidth(self):

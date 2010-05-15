@@ -76,7 +76,7 @@ class DummyTaskFile(persistence.TaskFile):
 class AutoSaverTestCase(test.TestCase):
     def setUp(self):
         self.settings = DummySettings()
-        self.taskFile = DummyTaskFile(self.settings)
+        self.taskFile = DummyTaskFile()
         self.autoSaver = persistence.AutoSaver(self.settings)
         
     def tearDown(self):

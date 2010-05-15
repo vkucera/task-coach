@@ -52,7 +52,7 @@ class MainWindowTestCase(test.wxTestCase):
         super(MainWindowTestCase, self).setUp()
         self.settings = config.Settings(load=False)
         self.setSettings()
-        self.taskFile = persistence.TaskFile(self.settings)
+        self.taskFile = persistence.TaskFile()
         self.mainwindow = MainWindowUnderTest(DummyIOController(),
             self.taskFile, self.settings)
         

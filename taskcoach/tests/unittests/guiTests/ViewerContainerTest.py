@@ -54,7 +54,7 @@ class ViewerContainerTest(test.wxTestCase):
         self.settings = config.Settings(load=False)
         self.settings.set('view', 'viewerwithdummywidgetcount', '2', new=True)
         self.settings.setboolean('view', 'tabbedmainwindow', True)
-        self.taskFile = persistence.TaskFile(self.settings)
+        self.taskFile = persistence.TaskFile()
         self.notebook = widgets.Notebook(self.frame)
         self.container = gui.viewer.ViewerContainer(self.notebook, 
             self.settings, 'mainviewer')

@@ -25,6 +25,39 @@ from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, date, effort
 
 
+class RenderDateTime(test.TestCase):
+    def testSomeRandomDateTime(self):
+        self.assertEqual('04/05/10 12:54',
+                         render.dateTime(date.DateTime(2010,4,5,12,54,43)))
+        
+    def testInfiniteDateTime(self):
+        self.assertEqual('', render.dateTime(date.DateTime()))
+        
+    def testStartOfDay(self):
+        self.assertEqual('04/05/10', render.dateTime(date.DateTime(2010,4,5)))
+
+    def testEndOfDay(self):
+        self.assertEqual('04/05/10', 
+                         render.dateTime(date.DateTime(2010,4,5,23,59,59)))
+
+    def testEndOfDayWithoutSeconds(self):
+        self.assertEqual('04/05/10', 
+                         render.dateTime(date.DateTime(2010,4,5,23,59)))
+
+    def testAlmostStartOfDay(self):
+        self.assertEqual('04/05/10 00:01', 
+                         render.dateTime(date.DateTime(2010,4,5,0,1,0)))
+
+    def testAlmostEndOfDay(self):
+        self.assertEqual('04/05/10 23:58', 
+                         render.dateTime(date.DateTime(2010,4,5,23,58,59)))
+
+    def testElevenOClock(self):
+        self.assertEqual('04/05/10 23:00', 
+                         render.dateTime(date.DateTime(2010,4,5,23,0,0)))
+
+                         
+
 class RenderTimeLeftTest(test.TestCase):
     def testNoTimeLeftWhenActive(self):
         timeLeft = date.TimeDelta()

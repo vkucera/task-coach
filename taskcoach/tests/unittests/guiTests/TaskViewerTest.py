@@ -43,7 +43,7 @@ class TaskViewerTestCase(test.wxTestCase):
         self.task = task.Task(subject='task', startDateTime=date.Now())
         self.child = task.Task(subject='child', startDateTime=date.Now())
         self.child.setParent(self.task)
-        self.taskFile = persistence.TaskFile(self.settings)
+        self.taskFile = persistence.TaskFile()
         self.taskList = self.taskFile.tasks()
         self.viewer = TaskViewerUnderTest(self.frame, self.taskFile, 
                                           self.settings)

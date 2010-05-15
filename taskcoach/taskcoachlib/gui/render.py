@@ -84,12 +84,12 @@ def budget(aBudget):
     return timeSpent(aBudget)
         
 def dateTime(dateTime):
-    # Don't use %+ because it prints seconds as well.
-    if dateTime == datemodule.DateTime():
+    if not dateTime or dateTime == datemodule.DateTime():
         return ''
-    else:
-        return '%s %s' % (date(dateTime), time(dateTime)) if dateTime else ''
-    
+    timeIsMidnight = (dateTime.hour, dateTime.minute) in ((0, 0), (23, 59))
+    format = '%x' if timeIsMidnight else '%x %H:%M' # Alas, %X includes seconds
+    return dateTime.strftime(format)
+
 def dateTimePeriod(start, stop):
     if stop is None:
         return '%s - %s'%(dateTime(start), _('now'))

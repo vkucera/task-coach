@@ -26,7 +26,7 @@ from taskcoachlib.domain import task, note, category
 class IOControllerTest(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
-        self.taskFile = dummy.TaskFile(self.settings)
+        self.taskFile = dummy.TaskFile()
         self.iocontroller = gui.IOController(self.taskFile, 
             lambda *args: None, self.settings)
         self.filename1 = 'whatever.tsk'
@@ -141,7 +141,7 @@ class IOControllerTest(test.TestCase):
             aCategory.addCategorizable(eachTask)
         self.iocontroller.saveselection(tasks=self.taskFile.tasks(), 
                                         filename=self.filename1)
-        taskFile = persistence.TaskFile(self.settings)
+        taskFile = persistence.TaskFile()
         taskFile.setFilename(self.filename1)
         taskFile.load()
         self.assertEqual(1, len(taskFile.categories()))            
@@ -204,12 +204,12 @@ class IOControllerTest(test.TestCase):
         self.assertEqual(self.taskFile.notes(), [myNote])
 
     def testMerge(self):
-        mergeFile = persistence.TaskFile(self.settings)
+        mergeFile = persistence.TaskFile()
         mergeFile.setFilename(self.filename2)
         mergeFile.tasks().append(task.Task(subject='Task to merge'))
         mergeFile.save()
         mergeFile.close()
-        targetFile = persistence.TaskFile(self.settings)
+        targetFile = persistence.TaskFile()
         iocontroller = gui.IOController(targetFile, lambda *args: None, 
                                         self.settings)
         iocontroller.merge(self.filename2)

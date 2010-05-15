@@ -26,7 +26,7 @@ class AttachmentEditorTestCase(test.wxTestCase):
     def setUp(self):
         super(AttachmentEditorTestCase, self).setUp()
         self.settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile(self.settings)
+        self.taskFile = persistence.TaskFile()
         self.attachments = attachment.AttachmentList()
         self.attachments.extend(self.createAttachments())
         self.editor = self.createEditor()

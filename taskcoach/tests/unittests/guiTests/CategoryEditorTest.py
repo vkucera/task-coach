@@ -26,7 +26,7 @@ class CategoryEditorTestCase(test.wxTestCase):
     def setUp(self):
         super(CategoryEditorTestCase, self).setUp()
         self.settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile(self.settings)
+        self.taskFile = persistence.TaskFile()
         self.categories = self.taskFile.categories()
         self.categories.extend(self.createCategories())
         self.editor = self.createEditor()

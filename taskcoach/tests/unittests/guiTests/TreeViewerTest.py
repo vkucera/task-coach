@@ -25,7 +25,7 @@ class TreeViewerTest(test.wxTestCase):
     def setUp(self):
         super(TreeViewerTest, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
-        taskFile = persistence.TaskFile(self.settings)
+        taskFile = persistence.TaskFile()
         self.viewer = gui.viewer.TaskViewer(self.frame, taskFile,
             self.settings)
         self.expansionContext = self.viewer.settingsSection()

@@ -47,12 +47,11 @@ class XMLReaderTooNewException(Exception):
 
 
 class XMLReader(object):
-    def __init__(self, fd, settings):
+    defaultStartTime = (0, 0, 0, 0)
+    defaultEndTime = (23, 59, 59, 999999)
+
+    def __init__(self, fd):
         self.__fd = fd
-        startHour = settings.getint('view', 'efforthourstart')
-        self.__startTime = (startHour, 0, 0, 0) if startHour < 24 else (23, 59, 59, 999999)
-        endHour = settings.getint('view', 'efforthourend')
-        self.__endTime = (endHour, 0, 0, 0) if endHour < 24 else (23, 59, 59, 999999)
         
     def read(self):
         if self._hasBrokenLines():
@@ -169,11 +168,11 @@ class XMLReader(object):
         kwargs = self._parseBaseCompositeAttributes(taskNode, self._parseTaskNodes)
         kwargs.update(dict(
             startDateTime=date.parseDateTime(taskNode.attrib.get('startdate', ''), 
-                                             *self.__startTime),
+                                             *self.defaultStartTime),
             dueDateTime=date.parseDateTime(taskNode.attrib.get('duedate', ''), 
-                                           *self.__endTime),
+                                           *self.defaultEndTime),
             completionDateTime=date.parseDateTime(taskNode.attrib.get('completiondate', ''), 
-                                                  *self.__endTime),
+                                                  *self.defaultEndTime),
             percentageComplete=int(taskNode.attrib.get('percentageComplete','0')),
             budget=date.parseTimeDelta(taskNode.attrib.get('budget', '')),
             priority=int(taskNode.attrib.get('priority', '0')),

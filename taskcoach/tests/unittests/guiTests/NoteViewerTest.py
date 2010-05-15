@@ -23,10 +23,10 @@ from taskcoachlib.domain import note
 
 class NoteViewerTest(test.wxTestCase):
     def testLocalNoteViewerForItemWithoutNotes(self):
-        settings = config.Settings(load=False)
-        taskFile = persistence.TaskFile(settings)
+        taskFile = persistence.TaskFile()
         taskFile.notes().append(note.Note())
-        viewer = gui.viewer.NoteViewer(self.frame, taskFile, settings, 
+        viewer = gui.viewer.NoteViewer(self.frame, taskFile, 
+                                       config.Settings(load=False), 
                                        notesToShow=note.NoteContainer())
         self.failIf(viewer.presentation())
         

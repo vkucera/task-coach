@@ -44,7 +44,7 @@ class EditorTestCase(test.wxTestCase):
     def setUp(self):
         super(EditorTestCase, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
-        self.taskFile = persistence.TaskFile(self.settings)
+        self.taskFile = persistence.TaskFile()
         self.taskList = self.taskFile.tasks()
         self.task = task.Task('task')
         self.taskList.append(self.task)

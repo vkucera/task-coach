@@ -26,8 +26,7 @@ from taskcoachlib.thirdparty import lockfile
 
 
 class TaskFile(patterns.Observer):
-    def __init__(self, settings, *args, **kwargs):
-        self.__settings = settings
+    def __init__(self, *args, **kwargs):
         self.__filename = self.__lastFilename = ''
         self.__needSave = self.__loading = False
         self.__tasks = task.TaskList()
@@ -185,7 +184,7 @@ class TaskFile(patterns.Observer):
         self.__needSave = False
 
     def _read(self, fd):
-        return xml.XMLReader(fd, self.__settings).read()
+        return xml.XMLReader(fd).read()
         
     def exists(self):
         return os.path.isfile(self.__filename)
@@ -237,7 +236,7 @@ class TaskFile(patterns.Observer):
         self.save()
 
     def merge(self, filename):
-        mergeFile = self.__class__(self.__settings)
+        mergeFile = self.__class__()
         mergeFile.load(filename)
         self.__loading = True
         self.tasks().removeItems(self.objectsToOverwrite(self.tasks(), mergeFile.tasks()))

@@ -29,10 +29,10 @@ from taskcoachlib.syncml.config import SyncMLConfigNode
 
 class IntegrationTestCase(test.TestCase):
     def setUp(self):
-        self.settings = task.Task.settings = config.Settings(load=False)
+        task.Task.settings = config.Settings(load=False)
         self.fd = StringIO.StringIO()
         self.fd.name = 'testfile.tsk'
-        self.reader = persistence.XMLReader(self.fd, self.settings)
+        self.reader = persistence.XMLReader(self.fd)
         self.writer = persistence.XMLWriter(self.fd)
         self.taskList = task.TaskList()
         self.categories = category.CategoryList()

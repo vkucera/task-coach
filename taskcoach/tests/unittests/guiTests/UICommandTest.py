@@ -71,7 +71,7 @@ class wxTestCaseWithFrameAsTopLevelWindow(test.wxTestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
         wx.GetApp().SetTopWindow(self.frame)
-        self.taskFile = self.frame.taskFile = persistence.TaskFile(self.settings)
+        self.taskFile = self.frame.taskFile = persistence.TaskFile()
 
 
 class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
