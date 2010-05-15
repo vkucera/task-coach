@@ -233,9 +233,9 @@ class TimeCtrl(Panel):
         value = self._controls[0].GetValue()
         try:
             timeComponents = [int(component) for component in value.split(':')]
+            return date.Time(*timeComponents) # pylint: disable-msg=W0142
         except ValueError:
-            timeComponents = []
-        return date.Time(*timeComponents) # pylint: disable-msg=W0142
+            return date.Time()            
     
     def Enable(self, enable=True): # pylint: disable-msg=W0221
         self._controls[0].Enable(enable)
