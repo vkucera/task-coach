@@ -175,15 +175,13 @@ class Clock(patterns.Observer):
     
     def __init__(self, *args, **kwargs):
         super(Clock, self).__init__(*args, **kwargs)
-        self._lastMidnightNotified = date.Today()
         self._createTimers()
         self._watchForClockObservers()
         
     def _createTimers(self):
         # pylint: disable-msg=W0201
         self._secondTimer = PeriodicTimer(self.notifySecondObservers, 'second')
-        self._midnightTimer = PeriodicTimer(self.notifyMidnightObservers, 'day')
-        self._midnightTimer.Start()
+        self._minuteTimer = PeriodicTimer(self.notifyMinuteObservers, 'minute')
         self._scheduledTimer = ScheduledTimer(self.notifySpecificTimeObservers)
                 
     def _watchForClockObservers(self):
@@ -191,6 +189,10 @@ class Clock(patterns.Observer):
             'publisher.firstObserverRegisteredFor.clock.second')
         self.registerObserver(self.onLastObserverRemovedForSecond, 
             'publisher.lastObserverRemovedFor.clock.second')
+        self.registerObserver(self.onFirstObserverRegisteredForMinute, 
+            'publisher.firstObserverRegisteredFor.clock.minute')
+        self.registerObserver(self.onLastObserverRemovedForMinute, 
+            'publisher.lastObserverRemovedFor.clock.minute')
         self.registerObserver(self.onFirstObserverRegisteredFor,
             'publisher.firstObserverRegisteredFor')
                 
@@ -199,6 +201,12 @@ class Clock(patterns.Observer):
         
     def onLastObserverRemovedForSecond(self, event): # pylint: disable-msg=W0613
         self._secondTimer.Stop()
+
+    def onFirstObserverRegisteredForMinute(self, event): # pylint: disable-msg=W0613
+        self._minuteTimer.Start()
+        
+    def onLastObserverRemovedForMinute(self, event): # pylint: disable-msg=W0613
+        self._minuteTimer.Stop()
     
     def onFirstObserverRegisteredFor(self, event):
         if event.value().startswith('clock.time.'):
@@ -211,19 +219,18 @@ class Clock(patterns.Observer):
         now = now or dateandtime.DateTime.now()
         patterns.Event('clock.second', self, now).send()
 
+    def notifyMinuteObservers(self, now=None):
+        now = now or dateandtime.DateTime.now()
+        patterns.Event('clock.minute', self, now).send()
+
     def notifySpecificTimeObservers(self, now=None):
         now = now or dateandtime.DateTime.now()
         patterns.Event(Clock.eventType(now), self, now).send()
 
-    def notifyMidnightObservers(self, now=None):
-        now = now or dateandtime.DateTime.now()
-        patterns.Event('clock.midnight', self, now).send()        
-
     def reset(self):
-        self._lastMidnightNotified = date.Today()
         self._secondTimer.Stop()
+        self._minuteTimer.Stop()
         self._scheduledTimer.Stop()
-        self._midnightTimer.Stop()
     
     @classmethod    
     def eventType(class_, dateTime):

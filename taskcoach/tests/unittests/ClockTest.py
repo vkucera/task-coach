@@ -62,25 +62,6 @@ class ClockTest(test.wxTestCase):
         self.clock._scheduledTimer._notify(now=realSoonNow) # pylint: disable-msg=W0212
         self.assertEqual(1, len(self.events))
 
-    def testRegisterForDateChange_Midnight(self):
-        patterns.Publisher().registerObserver(self.onEvent,
-            eventType='clock.midnight')
-        self.clock.notifyMidnightObservers(now=date.DateTime(2000,1,1,0,0,0))
-        self.assertEqual(1, len(self.events))
-        
-    def testRegisterForDateChange_BeforeMidnight(self):
-        self.clock.notifyMidnightObservers(now=date.DateTime(2000,1,1,23,59,58))
-        patterns.Publisher().registerObserver(self.onEvent,
-            eventType='clock.midnight')
-        self.clock.notifyMidnightObservers(now=date.DateTime(2000,1,2,0,0,0))
-        self.assertEqual(1, len(self.events))
-
-    def testRegisterForDateChange_ComputerHibernatedAtMidnight(self):
-        patterns.Publisher().registerObserver(self.onEvent,
-            eventType='clock.midnight')
-        self.clock.notifyMidnightObservers(now=date.DateTime(2000,1,1,1,10,15))
-        self.assertEqual(1, len(self.events))
-
     def testStartClockOnFirstObserverRegisteredForSecond(self):
         self.clock._secondTimer = MockTimer()
         patterns.Publisher().registerObserver(self.onEvent,

@@ -60,6 +60,8 @@ class Viewer(wx.Panel):
         self.toolbar = toolbar.ToolBar(self, (16, 16))
         self.initLayout()
         self.registerPresentationObservers()
+        patterns.Publisher().registerObserver(self.onEveryMinute,
+                                              eventType='clock.minute')
         self.refresh()
         
     def domainObjectsToView(self):
@@ -92,6 +94,9 @@ class Viewer(wx.Panel):
     @classmethod
     def selectEventType(class_):
         return '%s.select'%class_
+    
+    def onEveryMinute(self, event): # pylint: disable-msg=W0221,W0613
+        self.refresh()
     
     def title(self):
         return self.settings.get(self.settingsSection(), 'title') or self.defaultTitle
