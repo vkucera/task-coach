@@ -143,9 +143,6 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
     def testTaskIsNotDueSoonByDefault(self):
         self.failIf(self.task.dueSoon())
 
-    def testTaskIsNotDueTomorrowByDefault(self):
-        self.failIf(self.task.dueTomorrow())
-
     def testTaskHasNoDescriptionByDefault(self):
         self.assertEqual('', self.task.description())
 
@@ -637,9 +634,6 @@ class TaskDueTomorrowTest(TaskTestCase, CommonTaskTestsMixin):
         return [{'dueDateTime': self.tomorrow.endOfDay(),
                  'startDateTime': date.Now()}]
         
-    def testIsDueTomorrow(self):
-        self.failUnless(self.task.dueTomorrow())
-
     def testDaysLeft(self):
         self.assertEqual(1, self.task.timeLeft().days)
 
@@ -651,7 +645,7 @@ class TaskDueTomorrowTest(TaskTestCase, CommonTaskTestsMixin):
         self.failIf(self.task.dueSoon())
         
     def testDueSoon_2days(self):
-        self.settings.set('behavior', 'duesoondays', '2')
+        self.settings.set('behavior', 'duesoonhours', '48')
         self.failUnless(self.task.dueSoon())
 
     def testIconNotDueSoon(self):
@@ -661,11 +655,11 @@ class TaskDueTomorrowTest(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual('led_blue_icon', self.task.selectedIcon(recursive=True))
 
     def testIconDueSoon(self):
-        self.settings.set('behavior', 'duesoondays', '2')
+        self.settings.set('behavior', 'duesoonhours', '48')
         self.assertEqual('led_orange_icon', self.task.icon(recursive=True))
 
     def testSelectedIconDueSoon(self):
-        self.settings.set('behavior', 'duesoondays', '2')
+        self.settings.set('behavior', 'duesoonhours', '48')
         self.assertEqual('led_orange_icon', self.task.selectedIcon(recursive=True))
         
 

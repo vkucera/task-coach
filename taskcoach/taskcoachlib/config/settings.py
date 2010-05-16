@@ -112,8 +112,8 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
                 result = self.get(section, option) # recursive call
             else:
                 raise
-        result = self._ensureMinimum(section, option, result)
         result = self._fixValuesFromOldIniFiles(section, option, result)
+        result = self._ensureMinimum(section, option, result)
         return result
     
     def _ensureMinimum(self, section, option, result):

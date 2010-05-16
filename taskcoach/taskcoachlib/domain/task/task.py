@@ -292,15 +292,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return not self.inactive() and not self.completed()
 
     def dueSoon(self):
-        manyDays = self.settings.getint('behavior', 'duesoondays') # pylint: disable-msg=E1101
-        return (0 <= self.timeLeft().days < manyDays and not self.completed())
+        hours = self.settings.getint('behavior', 'duesoonhours') # pylint: disable-msg=E1101
+        return (0 <= self.timeLeft().hours() < hours and not self.completed())
 
-    def dueToday(self):
-        return (self.dueDateTime().date() == date.Today() and not self.completed())
-
-    def dueTomorrow(self):
-        return (self.dueDateTime().date() == date.Tomorrow() and not self.completed())
-    
    # effort related methods:
 
     def efforts(self, recursive=False):

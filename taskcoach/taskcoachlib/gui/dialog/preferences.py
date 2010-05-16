@@ -312,8 +312,8 @@ class TaskBehaviorPage(SettingsPage):
         super(TaskBehaviorPage, self).__init__(*args, **kwargs)
         self.addBooleanSetting('behavior', 'markparentcompletedwhenallchildrencompleted',
             _('Mark parent task completed when all children are completed'))
-        self.addIntegerSetting('behavior', 'duesoondays', 
-            _("Number of days that tasks are considered to be 'due soon'"), 
+        self.addIntegerSetting('behavior', 'duesoonhours', 
+            _("Number of hours that tasks are considered to be 'due soon'"), 
             minimum=0, maximum=90)
         self.addMultipleChoiceSettings('view', 'snoozetimes', 
             _('Snooze times to offer in task reminder dialog'), 

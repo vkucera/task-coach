@@ -144,7 +144,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
     def __registerForAppearanceChanges(self):
         colorSettings = ['color.%s'%setting for setting in 'activetasks',\
             'inactivetasks', 'completedtasks', 'duesoontasks', 'overduetasks'] 
-        colorSettings.append('behavior.duesoondays')
+        colorSettings.append('behavior.duesoonhours')
         for colorSetting in colorSettings:
             patterns.Publisher().registerObserver(self.onColorSettingChange, 
                 eventType=colorSetting)

@@ -286,7 +286,7 @@ defaults = { \
     'notify': 'True' },
 'behavior': { \
     'markparentcompletedwhenallchildrencompleted': 'True',
-    'duesoondays': '1' },
+    'duesoonhours': '24' }, # When a task is considered to be "due soon"
 'feature': { \
     'notes': 'True',
     'effort': 'True',
