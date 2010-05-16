@@ -469,7 +469,7 @@ class State(object):
 # There's a problem that prevents the 2.0 iPhone app to fallback to protocol
 # version 5, so do not set this to 5 before 2.1 is on the AppStore...
 
-_PROTOVERSION = 4
+_PROTOVERSION = 5
 
 class IPhoneAcceptor(Acceptor):
     def __init__(self, window, settings, iocontroller):
@@ -689,6 +689,24 @@ class TaskFileNameState(BaseState):
             filename = os.path.splitext(os.path.split(filename)[1])[0]
         self.disp().log(_('Sending file name: %s'), filename)
         self.pack('z', filename)
+
+    def handleNewObject(self, response):
+        if self.version < 5:
+            self.setState(TwoWayState)
+        else:
+            self.setState(DayHoursState)
+
+    def finished(self):
+        pass
+
+
+class DayHoursState(BaseState):
+    def init(self):
+        super(DayHoursState, self).init('i', 1)
+
+        self.pack('ii',
+                  self.disp().settings.getint('view', 'efforthourstart'),
+                  self.disp().settings.getint('view', 'efforthourend'))
 
     def handleNewObject(self, response):
         self.setState(TwoWayState)

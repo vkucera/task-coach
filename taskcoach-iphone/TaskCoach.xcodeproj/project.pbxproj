@@ -19,6 +19,7 @@
 		A60B6EE510258EB200F9983C /* TaskCategoryPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = A60B6EE410258EB200F9983C /* TaskCategoryPicker.xib */; };
 		A60B70EB1025AF0B00F9983C /* CHANGELOG in Resources */ = {isa = PBXBuildFile; fileRef = A60B70EA1025AF0B00F9983C /* CHANGELOG */; };
 		A6142CD30F35DE61001DD420 /* PositionStore.m in Sources */ = {isa = PBXBuildFile; fileRef = A6142CD20F35DE61001DD420 /* PositionStore.m */; };
+		A61A55F2119FB7840036FC56 /* DayHourState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61A55F1119FB7840036FC56 /* DayHourState.m */; };
 		A61AA5C01114304900AA1E38 /* EffortView.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AA5BE1114304900AA1E38 /* EffortView.m */; };
 		A61AA5C11114304900AA1E38 /* EffortView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A61AA5BF1114304900AA1E38 /* EffortView.xib */; };
 		A61AECFC0F35BA450086ECD6 /* TwoWayState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AECFB0F35BA450086ECD6 /* TwoWayState.m */; };
@@ -184,6 +185,8 @@
 		A60B70EA1025AF0B00F9983C /* CHANGELOG */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG; sourceTree = "<group>"; };
 		A6142CD10F35DE61001DD420 /* PositionStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PositionStore.h; sourceTree = "<group>"; };
 		A6142CD20F35DE61001DD420 /* PositionStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PositionStore.m; sourceTree = "<group>"; };
+		A61A55F0119FB7840036FC56 /* DayHourState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DayHourState.h; path = Synchronization/DayHourState.h; sourceTree = "<group>"; };
+		A61A55F1119FB7840036FC56 /* DayHourState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DayHourState.m; path = Synchronization/DayHourState.m; sourceTree = "<group>"; };
 		A61AA5BD1114304900AA1E38 /* EffortView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EffortView.h; sourceTree = "<group>"; };
 		A61AA5BE1114304900AA1E38 /* EffortView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EffortView.m; sourceTree = "<group>"; };
 		A61AA5BF1114304900AA1E38 /* EffortView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EffortView.xib; sourceTree = "<group>"; };
@@ -673,6 +676,8 @@
 				A6CFB5091109BBC5004DB892 /* TwoWayNewEffortsState.m */,
 				A6CFB5B01109C691004DB892 /* TwoWayModifiedEffortsState.h */,
 				A6CFB5B11109C691004DB892 /* TwoWayModifiedEffortsState.m */,
+				A61A55F0119FB7840036FC56 /* DayHourState.h */,
+				A61A55F1119FB7840036FC56 /* DayHourState.m */,
 			);
 			name = Synchronization;
 			sourceTree = "<group>";
@@ -987,6 +992,7 @@
 				A69F6C2F115E2196003F68F5 /* SearchCell.m in Sources */,
 				A66EE70C1196AEAF006758BB /* NSDate+Utils.m in Sources */,
 				A65D1C47119D460B00F0F5C3 /* CalendarTaskView.m in Sources */,
+				A61A55F2119FB7840036FC56 /* DayHourState.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

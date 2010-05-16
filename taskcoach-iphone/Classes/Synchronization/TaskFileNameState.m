@@ -7,11 +7,12 @@
 //
 
 #import "TaskFileNameState.h"
+#import "TwoWayState.h"
+#import "DayHourState.h"
 #import "Database.h"
 #import "Statement.h"
 #import "Network.h"
 #import "SyncViewController.h"
-#import "TwoWayState.h"
 
 @implementation TaskFileNameState
 
@@ -48,7 +49,11 @@
 
 				[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE TaskCoachFile SET name=NULL WHERE id=%@", [Database connection].currentFile]] exec];
 				[network appendInteger:1];
-				controller.state = [TwoWayState stateWithNetwork:network controller:controller];
+
+				if (controller.protocolVersion < 5)
+					controller.state = [TwoWayState stateWithNetwork:network controller:controller];
+				else
+					controller.state = [DayHourState stateWithNetwork:network controller:controller];
 			}
 
 			break;
@@ -67,7 +72,12 @@
 			[filename release];
 
 			[network appendInteger:1];
-			controller.state = [TwoWayState stateWithNetwork:network controller:controller];
+			
+			if (controller.protocolVersion < 5)
+				controller.state = [TwoWayState stateWithNetwork:network controller:controller];
+			else
+				controller.state = [DayHourState stateWithNetwork:network controller:controller];
+
 			break;
 		}
 	}
