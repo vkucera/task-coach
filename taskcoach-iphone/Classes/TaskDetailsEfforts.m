@@ -89,7 +89,9 @@
 		else
 		{
 			[task startTracking];
-			effortCount = [[task efforts] count];
+			displayedEffortCount = [[task efforts] count];
+			[self.tableView reloadData];
+			effortCount = displayedEffortCount;
 			[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationRight];
 			[self updateTrackButton];
 		}
@@ -127,7 +129,6 @@
 		[effortCell.button setTitle:_("Start tracking") forState:UIControlStateNormal];
 
 	effortCount = [[task efforts] count];
-	[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 - (void)onEffortTotal:(NSDictionary *)dict
@@ -169,9 +170,10 @@
 			// No break; intended
 		case 2: // No, don't stop tracking others
 			[task startTracking];
-			effortCount = [[task efforts] count];
-			[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationRight];
+			displayedEffortCount = [[task efforts] count];
+			[self.tableView reloadData];
 			[self updateTrackButton];
+			[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationRight];
 			break;
 	}
 }

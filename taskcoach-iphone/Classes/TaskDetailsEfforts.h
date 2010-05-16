@@ -18,6 +18,7 @@
 	ButtonCell *effortCell;
 	NSInteger trackedTasksCount;
 	NSInteger effortCount;
+	NSInteger displayedEffortCount;
 	NSInteger effortTotal;
 }
 
