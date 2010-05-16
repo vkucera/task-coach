@@ -8,6 +8,7 @@
 
 #import "FileChooser.h"
 #import "Database.h"
+#import "SQLite.h"
 #import "Statement.h"
 #import "CategoryViewController.h"
 #import "i18n.h"
@@ -70,6 +71,8 @@
 		[req bindInteger:[[file objectAtIndex:0] intValue] atIndex:2];
 		[req exec];
 	}
+
+	[[Database connection] recreateViews];
 }
 
 #pragma mark Table view methods
