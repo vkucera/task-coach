@@ -38,12 +38,14 @@
 	NSTimer *minuteTimer;
 
 	ODCalendarDayTimelineView *calendarView;
+	UISearchBar *calendarSearch;
 	UIToolbar *toolbar;
 }
 
 @property (nonatomic, readonly) UITableView *tableView;
 @property (nonatomic, retain) IBOutlet UITableViewController *tableViewController;
 @property (nonatomic, retain) IBOutlet ODCalendarDayTimelineView *calendarView;
+@property (nonatomic, retain) IBOutlet UISearchBar *calendarSearch;
 @property (nonatomic, retain) IBOutlet UIToolbar *toolbar;
 
 - (IBAction)onAddTask:(UIBarButtonItem *)button;

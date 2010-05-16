@@ -31,12 +31,11 @@
 
 #import "CalendarTaskView.h"
 
-// XXXTODO: Add search bar to calendar
-
 @implementation TaskViewController
 
 @synthesize tableViewController;
 @synthesize calendarView;
+@synthesize calendarSearch;
 @synthesize toolbar;
 
 - (UITableView *)tableView
@@ -111,6 +110,7 @@
 	if (pos.searchWord)
 	{
 		searchCell.searchBar.text = pos.searchWord;
+
 		[self loadData];
 		[self.tableView reloadData];
 		[self.calendarView reloadDay];
@@ -180,12 +180,15 @@
 	self.calendarView.delegate = self;
 	self.calendarView.scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
 	self.calendarView.timelineView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+	self.calendarSearch.placeholder = _("Search tasks...");
+	self.calendarSearch.text = searchCell.searchBar.text;
 
 	if ([Configuration configuration].viewStyle == STYLE_TABLE)
 	{
 		self.navigationItem.rightBarButtonItem = [self editButtonItem];
 		self.tableView.hidden = NO;
 		self.calendarView.hidden = YES;
+		self.calendarSearch.hidden = YES;
 		NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
 		[items replaceObjectAtIndex:0 withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStylePlain target:self action:@selector(onSwitch:)] autorelease]];
 		self.toolbar.items = items;
@@ -195,6 +198,7 @@
 		self.navigationItem.rightBarButtonItem = nil;
 		self.tableView.hidden = YES;
 		self.calendarView.hidden = NO;
+		self.calendarSearch.hidden = NO;
 
 		NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
 		[items replaceObjectAtIndex:0 withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStylePlain target:self action:@selector(onSwitch:)] autorelease]];
@@ -229,6 +233,7 @@
 {
 	self.tableViewController = nil;
 	self.calendarView = nil;
+	self.calendarSearch = nil;
 	self.toolbar = nil;
 }
 
@@ -625,6 +630,7 @@
 		// Switch to table view
 		self.tableView.hidden = NO;
 		self.calendarView.hidden = YES;
+		self.calendarSearch.hidden = YES;
 		[UIView commitAnimations];
 		self.navigationItem.rightBarButtonItem = [self editButtonItem];
 
@@ -637,6 +643,7 @@
 			TaskViewController *ctrl = [self.navigationController.viewControllers objectAtIndex:i];
 			ctrl.tableView.hidden = NO;
 			ctrl.calendarView.hidden = YES;
+			ctrl.calendarSearch.hidden = YES;
 			ctrl.navigationItem.rightBarButtonItem = [ctrl editButtonItem];
 
 			NSMutableArray *items = [NSMutableArray arrayWithArray:ctrl.toolbar.items];
@@ -653,6 +660,7 @@
 		// Switch to calendar view
 		self.tableView.hidden = YES;
 		self.calendarView.hidden = NO;
+		self.calendarSearch.hidden = NO;
 		[UIView commitAnimations];
 		self.navigationItem.rightBarButtonItem = nil;
 		
@@ -665,6 +673,7 @@
 			TaskViewController *ctrl = [self.navigationController.viewControllers objectAtIndex:i];
 			ctrl.tableView.hidden = YES;
 			ctrl.calendarView.hidden = NO;
+			ctrl.calendarSearch.hidden = NO;
 			ctrl.navigationItem.rightBarButtonItem = nil;
 			
 			NSMutableArray *items = [NSMutableArray arrayWithArray:ctrl.toolbar.items];
@@ -715,7 +724,10 @@
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
 	[searchBar resignFirstResponder];
-
+	
+	searchCell.searchBar.text = searchBar.text;
+	calendarSearch.text = searchBar.text;
+	
 	[self loadData];
 	[self.tableView reloadData];
 	[self.calendarView reloadDay];
@@ -723,8 +735,9 @@
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
-	searchBar.text = @"";
-
+	searchCell.searchBar.text = @"";
+	calendarSearch.text = @"";
+	
 	[searchBar resignFirstResponder];
 
 	[self loadData];
