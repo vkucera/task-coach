@@ -390,8 +390,6 @@
 	{
 		[self toggleTaskCompletion];
 	}
-
-	[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 #pragma mark UIAlertViewDelegate protocol
