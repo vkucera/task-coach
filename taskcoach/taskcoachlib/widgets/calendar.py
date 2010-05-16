@@ -125,6 +125,7 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
             self.editCommand(event.schedule.task)
 
     def RefreshAllItems(self, count):
+        x, y = self.GetViewStart()
         selectionId = None
         if self.__selection:
             selectionId = self.__selection[0].id()
@@ -153,6 +154,7 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
 
         self.Add(schedules)
         wx.CallAfter(self.selectCommand)
+        self.Scroll(x, y)
 
     def RefreshItems(self, *args):
         selectionId = None
