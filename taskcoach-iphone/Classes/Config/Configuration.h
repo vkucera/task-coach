@@ -17,6 +17,7 @@
 @interface Configuration : NSObject
 {
 	BOOL showCompleted;
+	BOOL showDisabled;
 	NSInteger iconPosition;
 	BOOL compactTasks;
 	BOOL confirmComplete;
@@ -30,6 +31,7 @@
 }
 
 @property (nonatomic, readonly) BOOL showCompleted;
+@property (nonatomic, readonly) BOOL showDisabled;
 @property (nonatomic, readonly) NSInteger iconPosition;
 @property (nonatomic, readonly) BOOL compactTasks;
 @property (nonatomic, readonly) BOOL confirmComplete;

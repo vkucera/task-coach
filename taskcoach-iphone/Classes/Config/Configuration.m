@@ -13,6 +13,7 @@ static Configuration *_configuration = NULL;
 @implementation Configuration
 
 @synthesize showCompleted;
+@synthesize showDisabled;
 @synthesize iconPosition;
 @synthesize compactTasks;
 @synthesize confirmComplete;
@@ -35,6 +36,10 @@ static Configuration *_configuration = NULL;
 		NSUserDefaults *config = [NSUserDefaults standardUserDefaults];
 
 		showCompleted = [config boolForKey:@"showcompleted"];
+		if ([config objectForKey:@"showdisabled"])
+			showDisabled = [config boolForKey:@"showdisabled"];
+		else
+			showDisabled = YES;
 		iconPosition = [config integerForKey:@"iconposition"];
 		compactTasks = [config boolForKey:@"compacttasks"];
 		confirmComplete = [config boolForKey:@"confirmcomplete"];

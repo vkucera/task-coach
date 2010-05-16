@@ -96,13 +96,16 @@
 		[headers addObject:list];
 	}
 	[list release];
-	
-	list = [[TaskList alloc] initWithView:@"NotStartedTask" category:categoryId title:_("Not started") status:TASKSTATUS_NOTSTARTED parentTask:parentId searchWord:searchWord];
-	if ([list count])
+
+	if ([Configuration configuration].showDisabled)
 	{
-		[headers addObject:list];
+		list = [[TaskList alloc] initWithView:@"NotStartedTask" category:categoryId title:_("Not started") status:TASKSTATUS_NOTSTARTED parentTask:parentId searchWord:searchWord];
+		if ([list count])
+		{
+			[headers addObject:list];
+		}
+		[list release];
 	}
-	[list release];
 }
 
 - (void)restorePosition:(Position *)pos store:(PositionStore *)store
