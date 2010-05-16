@@ -8,13 +8,77 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-16 09:24+0200\n"
+"POT-Creation-Date: 2010-05-16 14:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: Classes/Utils/String+Utils.m:49
+#, objc-format
+msgid "%d sec"
+msgstr ""
+
+#: Classes/Utils/String+Utils.m:53
+#, objc-format
+msgid "%d min"
+msgstr ""
+
+#: Classes/Utils/String+Utils.m:57
+#, objc-format
+msgid "%d hours"
+msgstr ""
+
+#: Classes/Utils/String+Utils.m:61
+#, objc-format
+msgid "%d days"
+msgstr ""
+
+#: Classes/TaskDetailsEfforts.m:84
+msgid "Warning"
+msgstr ""
+
+#: Classes/TaskDetailsEfforts.m:84
+#, objc-format
+msgid "There are %d task(s) currently tracked. Stop tracking them ?"
+msgstr ""
+
+#: Classes/TaskDetailsEfforts.m:85 Classes/TaskCoachAppDelegate.m:24
+#: Classes/Synchronization/AuthentificationState.m:24
+msgid "Cancel"
+msgstr ""
+
+#: Classes/TaskDetailsEfforts.m:85 Classes/TaskViewController.m:385
+msgid "Yes"
+msgstr ""
+
+#: Classes/TaskDetailsEfforts.m:85 Classes/TaskViewController.m:384
+msgid "No"
+msgstr ""
+
+#: Classes/TaskDetailsEfforts.m:125
+msgid "Stop tracking"
+msgstr ""
+
+#: Classes/TaskDetailsEfforts.m:127
+msgid "Start tracking"
+msgstr ""
+
+#: Classes/TaskDetailsEfforts.m:193
+#, objc-format
+msgid "%d effort(s)"
+msgstr ""
+
+#: Classes/TaskDetailsEfforts.m:195
+msgid "No effort."
+msgstr ""
+
+#: Classes/TaskDetailsEfforts.m:247
+#, objc-format
+msgid "Started %@"
+msgstr ""
 
 #: Classes/StringChoiceController.m:67
 #: Classes/Synchronization/AuthentificationState.m:94
@@ -54,31 +118,6 @@ msgstr ""
 msgid "Connecting..."
 msgstr ""
 
-#: Classes/EffortView.m:43
-#, objc-format
-msgid "%d seconds"
-msgstr ""
-
-#: Classes/EffortView.m:50
-#, objc-format
-msgid "%d minutes"
-msgstr ""
-
-#: Classes/EffortView.m:57
-#, objc-format
-msgid "%d hours"
-msgstr ""
-
-#: Classes/EffortView.m:63
-#, objc-format
-msgid "%d days"
-msgstr ""
-
-#: Classes/EffortView.m:102
-#, objc-format
-msgid "Started %@"
-msgstr ""
-
 #: Classes/TaskViewController.m:79
 msgid "Overdue"
 msgstr ""
@@ -108,19 +147,11 @@ msgstr ""
 msgid "Do you really want to mark \"%@\" complete ?"
 msgstr ""
 
-#: Classes/TaskViewController.m:384 Classes/TaskDetailsController.m:371
-msgid "No"
-msgstr ""
-
-#: Classes/TaskViewController.m:385 Classes/TaskDetailsController.m:371
-msgid "Yes"
-msgstr ""
-
-#: Classes/TaskViewController.m:441
+#: Classes/TaskViewController.m:439
 msgid "No tasks."
 msgstr ""
 
-#: Classes/TaskViewController.m:488
+#: Classes/TaskViewController.m:486
 msgid "Add task..."
 msgstr ""
 
@@ -161,22 +192,24 @@ msgstr ""
 msgid "Looking for Task Coach"
 msgstr ""
 
-#: Classes/TaskCoachAppDelegate.m:24
-#: Classes/Synchronization/AuthentificationState.m:24
-#: Classes/TaskDetailsController.m:371
-msgid "Cancel"
-msgstr ""
-
 #: Classes/TaskCoachAppDelegate.m:25
 msgid "Save"
 msgstr ""
 
-#: Classes/TaskCoachAppDelegate.m:26 Classes/TaskDetailsController.m:105
+#: Classes/TaskCoachAppDelegate.m:26 Classes/TaskDetailsGeneral.m:42
 msgid "Categories"
 msgstr ""
 
 #: Classes/TaskCoachAppDelegate.m:27
 msgid "Sync"
+msgstr ""
+
+#: Classes/TaskDetailsGeneral.m:41
+msgid "Description"
+msgstr ""
+
+#: Classes/TaskDetailsGeneral.m:94
+msgid "New task"
 msgstr ""
 
 #: Classes/Synchronization/AuthentificationState.m:24
@@ -235,49 +268,19 @@ msgstr ""
 msgid "Synchronizing..."
 msgstr ""
 
-#: Classes/TaskDetailsController.m:50
-msgid "Stop tracking"
-msgstr ""
-
-#: Classes/TaskDetailsController.m:52
-msgid "Start tracking"
-msgstr ""
-
-#: Classes/TaskDetailsController.m:65 Classes/TaskDetailsController.m:70
-#, objc-format
-msgid "%d effort(s)"
-msgstr ""
-
-#: Classes/TaskDetailsController.m:113
+#: Classes/TaskDetailsDates.m:29
 msgid "Start"
 msgstr ""
 
-#: Classes/TaskDetailsController.m:119
+#: Classes/TaskDetailsDates.m:35
 msgid "Due"
 msgstr ""
 
-#: Classes/TaskDetailsController.m:125
+#: Classes/TaskDetailsDates.m:41
 msgid "Completion"
 msgstr ""
 
-#: Classes/TaskDetailsController.m:169
-msgid "New subtask"
-msgstr ""
-
-#: Classes/TaskDetailsController.m:171 Classes/TaskDetailsController.m:468
-msgid "New task"
-msgstr ""
-
-#: Classes/TaskDetailsController.m:370
-msgid "Warning"
-msgstr ""
-
-#: Classes/TaskDetailsController.m:370
-#, objc-format
-msgid "There are %d task(s) currently tracked. Stop tracking them ?"
-msgstr ""
-
-#: Classes/FileChooser.m:56
+#: Classes/FileChooser.m:57
 msgid "Unnamed file"
 msgstr ""
 
@@ -287,7 +290,7 @@ msgstr ""
 msgid "Show completed"
 msgstr ""
 
-msgid "Show disabled"
+msgid "Show inactive"
 msgstr ""
 
 msgid "Icon position"
