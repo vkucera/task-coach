@@ -4,6 +4,9 @@
 
 "Show completed" = "Erledigte Aufgaben anzeigen";
 
+/* Flag: untranslated */
+"Show disabled" = "Show disabled";
+
 "Icon position" = "Symbol Position";
 
 "Left" = "Links";

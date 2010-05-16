@@ -4,6 +4,9 @@
 
 "Show completed" = "แสดงที่เสร็จแล้ว";
 
+/* Flag: untranslated */
+"Show disabled" = "Show disabled";
+
 "Icon position" = "ตำแหน่งไอคอน";
 
 "Left" = "ซ้าย";

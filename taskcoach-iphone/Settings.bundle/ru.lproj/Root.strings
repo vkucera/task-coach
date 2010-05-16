@@ -4,6 +4,9 @@
 
 "Show completed" = "Показать завершенные";
 
+/* Flag: untranslated */
+"Show disabled" = "Show disabled";
+
 "Icon position" = "Позиция иконки";
 
 "Left" = "Слева";

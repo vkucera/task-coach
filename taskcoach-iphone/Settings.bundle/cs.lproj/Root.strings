@@ -4,6 +4,9 @@
 
 "Show completed" = "Zobrazení kompletní";
 
+/* Flag: untranslated */
+"Show disabled" = "Show disabled";
+
 "Icon position" = "Pozice ikonky";
 
 "Left" = "Nalevo";

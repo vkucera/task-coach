@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-05 11:52+0200\n"
+"POT-Creation-Date: 2010-05-16 09:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,9 +18,9 @@ msgstr ""
 
 #: Classes/StringChoiceController.m:67
 #: Classes/Synchronization/AuthentificationState.m:94
-#: Classes/Synchronization/BaseState.m:34
-#: Classes/Synchronization/BaseState.m:48
-#: Classes/Synchronization/ProtocolNegotiationState.m:61
+#: Classes/Synchronization/BaseState.m:55
+#: Classes/Synchronization/BaseState.m:69
+#: Classes/Synchronization/ProtocolNegotiationState.m:64
 msgid "Error"
 msgstr ""
 
@@ -30,7 +30,7 @@ msgstr ""
 
 #: Classes/StringChoiceController.m:67
 #: Classes/Synchronization/AuthentificationState.m:24
-#: Classes/Synchronization/ProtocolNegotiationState.m:61
+#: Classes/Synchronization/ProtocolNegotiationState.m:64
 msgid "OK"
 msgstr ""
 
@@ -79,48 +79,48 @@ msgstr ""
 msgid "Started %@"
 msgstr ""
 
-#: Classes/TaskViewController.m:59
+#: Classes/TaskViewController.m:79
 msgid "Overdue"
 msgstr ""
 
-#: Classes/TaskViewController.m:66
+#: Classes/TaskViewController.m:86
 msgid "Due soon"
 msgstr ""
 
-#: Classes/TaskViewController.m:73
+#: Classes/TaskViewController.m:93
 msgid "Started"
 msgstr ""
 
-#: Classes/TaskViewController.m:80
+#: Classes/TaskViewController.m:102
 msgid "Not started"
 msgstr ""
 
-#: Classes/TaskViewController.m:142
+#: Classes/TaskViewController.m:170 Classes/TaskViewController.m:186
 msgid "Search tasks..."
 msgstr ""
 
-#: Classes/TaskViewController.m:293
+#: Classes/TaskViewController.m:382
 msgid "Confirmation"
 msgstr ""
 
-#: Classes/TaskViewController.m:294
+#: Classes/TaskViewController.m:383
 #, objc-format
 msgid "Do you really want to mark \"%@\" complete ?"
 msgstr ""
 
-#: Classes/TaskViewController.m:295 Classes/TaskDetailsController.m:335
+#: Classes/TaskViewController.m:384 Classes/TaskDetailsController.m:371
 msgid "No"
 msgstr ""
 
-#: Classes/TaskViewController.m:296 Classes/TaskDetailsController.m:335
+#: Classes/TaskViewController.m:385 Classes/TaskDetailsController.m:371
 msgid "Yes"
 msgstr ""
 
-#: Classes/TaskViewController.m:350
+#: Classes/TaskViewController.m:441
 msgid "No tasks."
 msgstr ""
 
-#: Classes/TaskViewController.m:397
+#: Classes/TaskViewController.m:488
 msgid "Add task..."
 msgstr ""
 
@@ -163,7 +163,7 @@ msgstr ""
 
 #: Classes/TaskCoachAppDelegate.m:24
 #: Classes/Synchronization/AuthentificationState.m:24
-#: Classes/TaskDetailsController.m:335
+#: Classes/TaskDetailsController.m:371
 msgid "Cancel"
 msgstr ""
 
@@ -207,16 +207,16 @@ msgid ""
 msgstr ""
 
 #: Classes/Synchronization/InitialState.m:52
-#: Classes/Synchronization/BaseState.m:36
-#: Classes/Synchronization/BaseState.m:50
+#: Classes/Synchronization/BaseState.m:57
+#: Classes/Synchronization/BaseState.m:71
 msgid "Abort"
 msgstr ""
 
-#: Classes/Synchronization/BaseState.m:35
+#: Classes/Synchronization/BaseState.m:56
 msgid "The connection was unexpectedly closed."
 msgstr ""
 
-#: Classes/Synchronization/BaseState.m:49
+#: Classes/Synchronization/BaseState.m:70
 #, objc-format
 msgid "A network error occurred: %@"
 msgstr ""
@@ -225,7 +225,7 @@ msgstr ""
 msgid "Protocol negotiation..."
 msgstr ""
 
-#: Classes/Synchronization/ProtocolNegotiationState.m:61
+#: Classes/Synchronization/ProtocolNegotiationState.m:64
 msgid ""
 "The version of the desktop Task Coach is too old. Please upgrade it and "
 "retry."
@@ -260,19 +260,19 @@ msgstr ""
 msgid "Completion"
 msgstr ""
 
-#: Classes/TaskDetailsController.m:166
+#: Classes/TaskDetailsController.m:169
 msgid "New subtask"
 msgstr ""
 
-#: Classes/TaskDetailsController.m:168 Classes/TaskDetailsController.m:432
+#: Classes/TaskDetailsController.m:171 Classes/TaskDetailsController.m:468
 msgid "New task"
 msgstr ""
 
-#: Classes/TaskDetailsController.m:334
+#: Classes/TaskDetailsController.m:370
 msgid "Warning"
 msgstr ""
 
-#: Classes/TaskDetailsController.m:334
+#: Classes/TaskDetailsController.m:370
 #, objc-format
 msgid "There are %d task(s) currently tracked. Stop tracking them ?"
 msgstr ""
@@ -285,6 +285,9 @@ msgid "Display"
 msgstr ""
 
 msgid "Show completed"
+msgstr ""
+
+msgid "Show disabled"
 msgstr ""
 
 msgid "Icon position"

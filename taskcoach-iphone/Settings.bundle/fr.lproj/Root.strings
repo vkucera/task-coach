@@ -4,6 +4,9 @@
 
 "Show completed" = "Montrer terminées";
 
+/* Flag: untranslated */
+"Show disabled" = "Show disabled";
+
 "Icon position" = "Position de l'icône";
 
 "Left" = "Gauche";

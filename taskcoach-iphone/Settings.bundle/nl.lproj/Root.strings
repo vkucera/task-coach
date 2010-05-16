@@ -4,6 +4,9 @@
 
 "Show completed" = "Toon afgeronde taken";
 
+/* Flag: untranslated */
+"Show disabled" = "Show disabled";
+
 "Icon position" = "Icoon positie";
 
 "Left" = "Links";
