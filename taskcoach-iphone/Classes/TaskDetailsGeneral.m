@@ -40,6 +40,9 @@
 
 	self.descriptionLabel.text = _("Description");
 	self.categoriesButton.titleLabel.text = _("Categories");
+
+	if (![task.name length])
+		[subject becomeFirstResponder];
 }
 
 - (void)viewDidUnload
