@@ -97,7 +97,7 @@
 	}
 	[list release];
 
-	if ([Configuration configuration].showDisabled)
+	if ([Configuration configuration].showInactive)
 	{
 		list = [[TaskList alloc] initWithView:@"NotStartedTask" category:categoryId title:_("Not started") status:TASKSTATUS_NOTSTARTED parentTask:parentId searchWord:searchWord];
 		if ([list count])

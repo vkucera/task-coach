@@ -28,9 +28,9 @@
 			<key>DefaultValue</key>
 			<true/>
 			<key>Key</key>
-			<string>showdisabled</string>
+			<string>showinactive</string>
 			<key>Title</key>
-			<string>Show disabled</string>
+			<string>Show inactive</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
