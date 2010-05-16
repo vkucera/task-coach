@@ -191,7 +191,7 @@ static int collation(void *p, int s1, const void *p1, int s2, const void *p2)
 	
 	[[self statementWithSQL:@"CREATE VIEW CurrentTask AS SELECT * FROM Task LEFT JOIN TaskCoachFile ON Task.fileId=TaskCoachFile.id WHERE TaskCoachFile.visible OR Task.fileId IS NULL"] exec];
 	[[self statementWithSQL:@"CREATE VIEW CurrentCategory AS SELECT * FROM Category LEFT JOIN TaskCoachFile ON Category.fileId=TaskCoachFile.id WHERE TaskCoachFile.visible OR Category.fileId IS NULL"] exec];
-	[[self statementWithSQL:@"CREATE VIEW CurrentEffort AS SELECT * FROM Effort LEFT JOIN TaskCoachFile ON Effort.fileId=TaskCoachFile.id WHERE TaskCoachFile.visible OR Effort.fileId IS NULL"] exec];
+	[[self statementWithSQL:@"CREATE VIEW CurrentEffort AS SELECT * FROM Effort LEFT JOIN TaskCoachFile ON Effort.fileId=TaskCoachFile.id WHERE (Effort.fileId == TaskCoachFile.id OR (Effort.fileId IS NULL AND TaskCoachFile.id IS NULL)) AND (TaskCoachFile.visible OR TaskCoachFile.id IS NULL)"] exec];
 	
 	[[self statementWithSQL:@"CREATE VIEW AllTask AS SELECT * FROM CurrentTask WHERE status != 3"] exec];
 	[[self statementWithSQL:@"CREATE VIEW OverdueTask AS SELECT * FROM CurrentTask WHERE status != 3 AND dueDate < DATETIME('now', 'localtime')"] exec];

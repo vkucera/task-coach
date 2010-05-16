@@ -12,6 +12,14 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
+		A600A38A119FDBE70018F309 /* taskcoach_small.png in Resources */ = {isa = PBXBuildFile; fileRef = A600A389119FDBE70018F309 /* taskcoach_small.png */; };
+		A600A38C119FDC8B0018F309 /* time.png in Resources */ = {isa = PBXBuildFile; fileRef = A600A38B119FDC8B0018F309 /* time.png */; };
+		A600A3BB119FDD710018F309 /* TaskDetailsGeneral.m in Sources */ = {isa = PBXBuildFile; fileRef = A600A3B9119FDD710018F309 /* TaskDetailsGeneral.m */; };
+		A600A3BC119FDD710018F309 /* TaskDetailsGeneral.xib in Resources */ = {isa = PBXBuildFile; fileRef = A600A3BA119FDD710018F309 /* TaskDetailsGeneral.xib */; };
+		A600A48E119FEA790018F309 /* TaskDetailsDates.m in Sources */ = {isa = PBXBuildFile; fileRef = A600A48C119FEA790018F309 /* TaskDetailsDates.m */; };
+		A600A48F119FEA790018F309 /* TaskDetailsDates.xib in Resources */ = {isa = PBXBuildFile; fileRef = A600A48D119FEA790018F309 /* TaskDetailsDates.xib */; };
+		A600A609119FFB1C0018F309 /* TaskDetailsEfforts.m in Sources */ = {isa = PBXBuildFile; fileRef = A600A607119FFB1C0018F309 /* TaskDetailsEfforts.m */; };
+		A600A60A119FFB1C0018F309 /* TaskDetailsEfforts.xib in Resources */ = {isa = PBXBuildFile; fileRef = A600A608119FFB1C0018F309 /* TaskDetailsEfforts.xib */; };
 		A604D9AB0F31CB6100D3DC79 /* GetGUIDState.m in Sources */ = {isa = PBXBuildFile; fileRef = A604D9AA0F31CB6100D3DC79 /* GetGUIDState.m */; };
 		A60575FF0FA457590054E4C3 /* addtask.png in Resources */ = {isa = PBXBuildFile; fileRef = A60575FE0FA457590054E4C3 /* addtask.png */; };
 		A60B6E30102587FA00F9983C /* BaseCategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A60B6E2F102587FA00F9983C /* BaseCategoryViewController.m */; };
@@ -20,8 +28,6 @@
 		A60B70EB1025AF0B00F9983C /* CHANGELOG in Resources */ = {isa = PBXBuildFile; fileRef = A60B70EA1025AF0B00F9983C /* CHANGELOG */; };
 		A6142CD30F35DE61001DD420 /* PositionStore.m in Sources */ = {isa = PBXBuildFile; fileRef = A6142CD20F35DE61001DD420 /* PositionStore.m */; };
 		A61A55F2119FB7840036FC56 /* DayHourState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61A55F1119FB7840036FC56 /* DayHourState.m */; };
-		A61AA5C01114304900AA1E38 /* EffortView.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AA5BE1114304900AA1E38 /* EffortView.m */; };
-		A61AA5C11114304900AA1E38 /* EffortView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A61AA5BF1114304900AA1E38 /* EffortView.xib */; };
 		A61AECFC0F35BA450086ECD6 /* TwoWayState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AECFB0F35BA450086ECD6 /* TwoWayState.m */; };
 		A61AED000F35BBD20086ECD6 /* TwoWayNewCategoriesState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AECFF0F35BBD20086ECD6 /* TwoWayNewCategoriesState.m */; };
 		A61AED620F35C30F0086ECD6 /* TwoWayNewTasksState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AED610F35C30F0086ECD6 /* TwoWayNewTasksState.m */; };
@@ -174,6 +180,17 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* TaskCoach_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCoach_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A600A389119FDBE70018F309 /* taskcoach_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = taskcoach_small.png; sourceTree = "<group>"; };
+		A600A38B119FDC8B0018F309 /* time.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = time.png; sourceTree = "<group>"; };
+		A600A3B8119FDD710018F309 /* TaskDetailsGeneral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDetailsGeneral.h; sourceTree = "<group>"; };
+		A600A3B9119FDD710018F309 /* TaskDetailsGeneral.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskDetailsGeneral.m; sourceTree = "<group>"; };
+		A600A3BA119FDD710018F309 /* TaskDetailsGeneral.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskDetailsGeneral.xib; sourceTree = "<group>"; };
+		A600A48B119FEA790018F309 /* TaskDetailsDates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDetailsDates.h; sourceTree = "<group>"; };
+		A600A48C119FEA790018F309 /* TaskDetailsDates.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskDetailsDates.m; sourceTree = "<group>"; };
+		A600A48D119FEA790018F309 /* TaskDetailsDates.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskDetailsDates.xib; sourceTree = "<group>"; };
+		A600A606119FFB1C0018F309 /* TaskDetailsEfforts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDetailsEfforts.h; sourceTree = "<group>"; };
+		A600A607119FFB1C0018F309 /* TaskDetailsEfforts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskDetailsEfforts.m; sourceTree = "<group>"; };
+		A600A608119FFB1C0018F309 /* TaskDetailsEfforts.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskDetailsEfforts.xib; sourceTree = "<group>"; };
 		A604D9A90F31CB6100D3DC79 /* GetGUIDState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetGUIDState.h; path = Synchronization/GetGUIDState.h; sourceTree = "<group>"; };
 		A604D9AA0F31CB6100D3DC79 /* GetGUIDState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetGUIDState.m; path = Synchronization/GetGUIDState.m; sourceTree = "<group>"; };
 		A60575FE0FA457590054E4C3 /* addtask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = addtask.png; sourceTree = "<group>"; };
@@ -187,9 +204,6 @@
 		A6142CD20F35DE61001DD420 /* PositionStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PositionStore.m; sourceTree = "<group>"; };
 		A61A55F0119FB7840036FC56 /* DayHourState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DayHourState.h; path = Synchronization/DayHourState.h; sourceTree = "<group>"; };
 		A61A55F1119FB7840036FC56 /* DayHourState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DayHourState.m; path = Synchronization/DayHourState.m; sourceTree = "<group>"; };
-		A61AA5BD1114304900AA1E38 /* EffortView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EffortView.h; sourceTree = "<group>"; };
-		A61AA5BE1114304900AA1E38 /* EffortView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EffortView.m; sourceTree = "<group>"; };
-		A61AA5BF1114304900AA1E38 /* EffortView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EffortView.xib; sourceTree = "<group>"; };
 		A61AECFA0F35BA450086ECD6 /* TwoWayState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwoWayState.h; path = Synchronization/TwoWayState.h; sourceTree = "<group>"; };
 		A61AECFB0F35BA450086ECD6 /* TwoWayState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwoWayState.m; path = Synchronization/TwoWayState.m; sourceTree = "<group>"; };
 		A61AECFE0F35BBD20086ECD6 /* TwoWayNewCategoriesState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwoWayNewCategoriesState.h; path = Synchronization/TwoWayNewCategoriesState.h; sourceTree = "<group>"; };
@@ -373,7 +387,7 @@
 		A6D0E42C1042E169006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/TaskView.xib; sourceTree = "<group>"; };
 		A6D384540F247DDF0097F0F6 /* TaskDetailsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDetailsController.h; sourceTree = "<group>"; };
 		A6D384550F247DDF0097F0F6 /* TaskDetailsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskDetailsController.m; sourceTree = "<group>"; };
-		A6D384600F247E910097F0F6 /* TaskDetails.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskDetails.xib; sourceTree = "<group>"; };
+		A6D384600F247E910097F0F6 /* TaskDetails.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = TaskDetails.xib; path = ../TaskDetails.xib; sourceTree = "<group>"; };
 		A6D3846A0F2481C80097F0F6 /* TextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFieldCell.h; sourceTree = "<group>"; };
 		A6D3846B0F2481C80097F0F6 /* TextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextFieldCell.m; sourceTree = "<group>"; };
 		A6D384770F24830F0097F0F6 /* TextFieldCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = TextFieldCell.xib; path = ../TextFieldCell.xib; sourceTree = "<group>"; };
@@ -448,6 +462,7 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				A600A38E119FDD2A0018F309 /* Task details */,
 				A61F544A108CB56200BDFD6D /* Thirdparty */,
 				A67E47DD0F5A937700000A24 /* Bonjour */,
 				A6664D3B0F2B417B00638C68 /* Synchronization */,
@@ -469,8 +484,6 @@
 				A673ABF50F2203D000E548BB /* NavigationController.m */,
 				A6EA67980F2255E7004108B5 /* CheckView.h */,
 				A6EA67990F2255E7004108B5 /* CheckView.m */,
-				A6D384540F247DDF0097F0F6 /* TaskDetailsController.h */,
-				A6D384550F247DDF0097F0F6 /* TaskDetailsController.m */,
 				A6D3862D0F24B02A0097F0F6 /* DatePickerViewController.h */,
 				A6D3862E0F24B02A0097F0F6 /* DatePickerViewController.m */,
 				A6FA97DA0F2B2E1C00505D87 /* MainViewController.h */,
@@ -489,9 +502,6 @@
 				A6E83C5710E4C9AF00FF3E45 /* FileChooser.h */,
 				A6E83C5810E4C9AF00FF3E45 /* FileChooser.m */,
 				A6E83C5910E4C9AF00FF3E45 /* FileChooser.xib */,
-				A61AA5BD1114304900AA1E38 /* EffortView.h */,
-				A61AA5BE1114304900AA1E38 /* EffortView.m */,
-				A61AA5BF1114304900AA1E38 /* EffortView.xib */,
 				A65D1C45119D460B00F0F5C3 /* CalendarTaskView.h */,
 				A65D1C46119D460B00F0F5C3 /* CalendarTaskView.m */,
 			);
@@ -519,7 +529,6 @@
 				A6831FFC102EB057002A7083 /* TaskView.xib */,
 				A6D386880F24B4450097F0F6 /* DatePickerView.xib */,
 				A6D8AC020F221BFA006894AA /* Settings.bundle */,
-				A6D384600F247E910097F0F6 /* TaskDetails.xib */,
 				A67A0C200F6BA57100F48A82 /* Entitlements.plist */,
 				A6E46385113028A500976293 /* SyncView.xib */,
 				A60B6EE410258EB200F9983C /* TaskCategoryPicker.xib */,
@@ -546,6 +555,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A600A38B119FDC8B0018F309 /* time.png */,
+				A600A389119FDBE70018F309 /* taskcoach_small.png */,
 				A6C3DADE119D55A000D1E36C /* switchcal.png */,
 				A6C3DADF119D55A000D1E36C /* switchtable.png */,
 				A65D1C5D119D4A7600F0F5C3 /* disclosure.png */,
@@ -589,6 +600,25 @@
 				A65D1B80119D383200F0F5C3 /* QuartzCore.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A600A38E119FDD2A0018F309 /* Task details */ = {
+			isa = PBXGroup;
+			children = (
+				A6D384540F247DDF0097F0F6 /* TaskDetailsController.h */,
+				A6D384550F247DDF0097F0F6 /* TaskDetailsController.m */,
+				A6D384600F247E910097F0F6 /* TaskDetails.xib */,
+				A600A3B8119FDD710018F309 /* TaskDetailsGeneral.h */,
+				A600A3B9119FDD710018F309 /* TaskDetailsGeneral.m */,
+				A600A3BA119FDD710018F309 /* TaskDetailsGeneral.xib */,
+				A600A48B119FEA790018F309 /* TaskDetailsDates.h */,
+				A600A48C119FEA790018F309 /* TaskDetailsDates.m */,
+				A600A48D119FEA790018F309 /* TaskDetailsDates.xib */,
+				A600A606119FFB1C0018F309 /* TaskDetailsEfforts.h */,
+				A600A607119FFB1C0018F309 /* TaskDetailsEfforts.m */,
+				A600A608119FFB1C0018F309 /* TaskDetailsEfforts.xib */,
+			);
+			name = "Task details";
 			sourceTree = "<group>";
 		};
 		A61F544A108CB56200BDFD6D /* Thirdparty */ = {
@@ -753,6 +783,8 @@
 				A64603A60F2234B500FC71AD /* CellFactory.m */,
 				A64603A80F2234D900FC71AD /* TaskCell.h */,
 				A64603A90F2234D900FC71AD /* TaskCell.m */,
+				A63CC07F0F5170FC003669FD /* TaskCellBig.h */,
+				A63CC0800F5170FC003669FD /* TaskCellBig.m */,
 				A6D3846A0F2481C80097F0F6 /* TextFieldCell.h */,
 				A6D3846B0F2481C80097F0F6 /* TextFieldCell.m */,
 				A6D384770F24830F0097F0F6 /* TextFieldCell.xib */,
@@ -762,8 +794,6 @@
 				A6DA5C670F3D870900372358 /* DescriptionCell.h */,
 				A6DA5C680F3D870900372358 /* DescriptionCell.m */,
 				A6DA5C770F3D87F300372358 /* DescriptionCell.xib */,
-				A63CC07F0F5170FC003669FD /* TaskCellBig.h */,
-				A63CC0800F5170FC003669FD /* TaskCellBig.m */,
 				A6B264CE0FDBCB9400FF2AD0 /* DateCell.h */,
 				A6B264CF0FDBCB9400FF2AD0 /* DateCell.m */,
 				A6B264DC0FDBCBFE00FF2AD0 /* DateCell.xib */,
@@ -904,7 +934,6 @@
 				A6C3CFB610E782D800483057 /* ledclock.png in Resources */,
 				A6C3CFB710E782D800483057 /* ledclockbig.png in Resources */,
 				A6C3CFE110E7846200483057 /* redButton.png in Resources */,
-				A61AA5C11114304900AA1E38 /* EffortView.xib in Resources */,
 				A6E46386113028A500976293 /* SyncView.xib in Resources */,
 				A69F6C31115E21A5003F68F5 /* SearchCell.xib in Resources */,
 				A655D0D9115F694B00B34DCA /* taskcoach.db in Resources */,
@@ -913,6 +942,11 @@
 				A65D1C5E119D4A7600F0F5C3 /* disclosure.png in Resources */,
 				A6C3DAE0119D55A000D1E36C /* switchcal.png in Resources */,
 				A6C3DAE1119D55A000D1E36C /* switchtable.png in Resources */,
+				A600A38A119FDBE70018F309 /* taskcoach_small.png in Resources */,
+				A600A38C119FDC8B0018F309 /* time.png in Resources */,
+				A600A3BC119FDD710018F309 /* TaskDetailsGeneral.xib in Resources */,
+				A600A48F119FEA790018F309 /* TaskDetailsDates.xib in Resources */,
+				A600A60A119FFB1C0018F309 /* TaskDetailsEfforts.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -986,13 +1020,15 @@
 				A6CFB4D31109A9A8004DB892 /* Effort.m in Sources */,
 				A6CFB50A1109BBC5004DB892 /* TwoWayNewEffortsState.m in Sources */,
 				A6CFB5B21109C691004DB892 /* TwoWayModifiedEffortsState.m in Sources */,
-				A61AA5C01114304900AA1E38 /* EffortView.m in Sources */,
 				A6E7C0801114418D00B230E2 /* AlertPrompt.m in Sources */,
 				A6BD9AB7114CD1B500AC781C /* SubcategoriesSelector.m in Sources */,
 				A69F6C2F115E2196003F68F5 /* SearchCell.m in Sources */,
 				A66EE70C1196AEAF006758BB /* NSDate+Utils.m in Sources */,
 				A65D1C47119D460B00F0F5C3 /* CalendarTaskView.m in Sources */,
 				A61A55F2119FB7840036FC56 /* DayHourState.m in Sources */,
+				A600A3BB119FDD710018F309 /* TaskDetailsGeneral.m in Sources */,
+				A600A48E119FEA790018F309 /* TaskDetailsDates.m in Sources */,
+				A600A609119FFB1C0018F309 /* TaskDetailsEfforts.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1177,7 +1213,7 @@
 				);
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E215CC17-8986-4DBF-86A8-6B47584D0129";
-				SDKROOT = iphoneos3.1.2;
+				SDKROOT = iphoneos3.2;
 			};
 			name = Beta1v2;
 		};
@@ -1209,7 +1245,7 @@
 				);
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "62C3D3F1-227F-4F5F-A667-6B910FE5ABB1";
-				SDKROOT = iphoneos3.1.2;
+				SDKROOT = iphoneos3.2;
 			};
 			name = Distribution;
 		};
@@ -1244,7 +1280,7 @@
 				);
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos3.1.2;
+				SDKROOT = iphoneos3.2;
 			};
 			name = "Release Frank";
 		};
@@ -1278,7 +1314,7 @@
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = NO;
-				SDKROOT = iphoneos3.1.2;
+				SDKROOT = iphoneos3.2;
 			};
 			name = Debug;
 		};
@@ -1297,7 +1333,7 @@
 				);
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos3.1.2;
+				SDKROOT = iphoneos3.2;
 			};
 			name = Release;
 		};

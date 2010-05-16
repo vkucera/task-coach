@@ -11,6 +11,7 @@
 @interface NSString (Utils)
 
 + (NSString *)stringFromUTF8Data:(NSData *)data;
++ (NSString *)formatTimeInterval:(NSInteger)seconds;
 
 // Python's string join-like method
 - (NSString *)stringByJoiningStrings:(NSArray *)strings;

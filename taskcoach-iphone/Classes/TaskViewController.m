@@ -133,7 +133,7 @@
 				[self.tableView selectRowAtIndexPath:pos.indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 				
 				Task *task = [[headers objectAtIndex:pos.indexPath.section] taskAtIndex:pos.indexPath.row];
-				TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:-1];
+				TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task tabIndex:pos.tab];
 				[self.navigationController pushViewController:ctrl animated:NO];
 				[[PositionStore instance] push:self indexPath:pos.indexPath type:TYPE_DETAILS searchWord:searchCell.searchBar.text];
 				[ctrl release];
@@ -564,7 +564,9 @@
 									startDate:[[TimeUtils instance] stringFromDate:[NSDate dateRounded]] dueDate:nil completionDate:nil dateStatus:TASKSTATUS_UNDEFINED
 									 parentId:pid];
 		isCreatingTask = YES;
-		TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:categoryId];
+		[task save];
+		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"INSERT INTO TaskHasCategory (idTask, idCategory) VALUES (%d, %d)", task.objectId, categoryId]] exec];
+		TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task];
 		[self.navigationController pushViewController:ctrl animated:YES];
 		[ctrl release];
 	}
@@ -608,7 +610,9 @@
 								startDate:[[TimeUtils instance] stringFromDate:[NSDate dateRounded]] dueDate:nil completionDate:nil dateStatus:TASKSTATUS_UNDEFINED
 								 parentId:pid];
 	isCreatingTask = YES;
-	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:categoryId];
+	[task save];
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"INSERT INTO TaskHasCategory (idTask, idCategory) VALUES (%d, %d)", task.objectId, categoryId]] exec];
+	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task];
 	[self.navigationController pushViewController:ctrl animated:YES];
 	[ctrl release];
 }
@@ -705,7 +709,7 @@
 	}
 
 	Task *task = [[headers objectAtIndex:indexPath.section - (self.editing ? 2 : 1)] taskAtIndex:indexPath.row];
-	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:-1];
+	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task];
 	[self.navigationController pushViewController:ctrl animated:YES];
 	[[PositionStore instance] push:self indexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - (self.editing ? 2 : 1))] type:TYPE_DETAILS searchWord:searchCell.searchBar.text];
 	[ctrl release];
@@ -820,7 +824,7 @@
 		}
 	}
 
-	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task category:-1];
+	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task];
 	[self.navigationController pushViewController:ctrl animated:YES];
 	[[PositionStore instance] push:self indexPath:indexPath type:TYPE_DETAILS searchWord:searchCell.searchBar.text];
 	[ctrl release];

@@ -26,4 +26,6 @@
 
 - initWithDate:(NSString *)date target:(id)target action:(SEL)action;
 
+- (void)setDate:(NSString *)date target:(id)target action:(SEL)action;
+
 @end

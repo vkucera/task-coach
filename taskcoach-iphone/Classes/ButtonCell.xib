@@ -48,7 +48,7 @@
 							<object class="IBUIButton" id="102808356">
 								<reference key="NSNextResponder" ref="773031434"/>
 								<int key="NSvFlags">274</int>
-								<string key="NSFrame">{{20, 6}, {280, 37}}</string>
+								<string key="NSFrameSize">{320, 43}</string>
 								<reference key="NSSuperview" ref="773031434"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
@@ -179,7 +179,7 @@
 					<string>CellFactory</string>
 					<string>UIResponder</string>
 					<string>ButtonCell</string>
-					<string>{{3009, 1365}, {320, 44}}</string>
+					<string>{{2998, 1371}, {320, 44}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				</object>

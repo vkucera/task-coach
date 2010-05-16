@@ -18,17 +18,7 @@
 {
 	if (self = [super initWithNibName:@"DatePickerView" bundle:[NSBundle mainBundle]])
 	{
-		target = theTarget;
-		action = theAction;
-
-		if (theDate)
-		{
-			date = [[[TimeUtils instance] dateFromString:theDate] retain];
-		}
-		else
-		{
-			date = [[NSDate dateRounded] retain];
-		}
+		[self setDate:theDate target:theTarget action:theAction];
 		
 		dayFormat = [[NSDateFormatter alloc] init];
 		[dayFormat setDateFormat:@"EEEE"];
@@ -37,9 +27,28 @@
 	return self;
 }
 
+- (void)setDate:(NSString *)theDate target:(id)theTarget action:(SEL)theAction
+{
+	target = theTarget;
+	action = theAction;
+
+	[date release];
+
+	if (theDate)
+	{
+		date = [[[TimeUtils instance] dateFromString:theDate] retain];
+	}
+	else
+	{
+		date = [[NSDate dateRounded] retain];
+	}
+
+	[self.picker setDate:date animated:NO];
+}
+
 - (void)viewDidLoad
 {
-	picker.date = date;
+	self.picker.date = date;
 }
 
 - (void)viewDidUnload

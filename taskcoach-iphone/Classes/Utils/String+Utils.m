@@ -7,6 +7,7 @@
 //
 
 #import "String+Utils.h"
+#import "i18n.h"
 
 @implementation NSString (Utils)
 
@@ -39,6 +40,30 @@
 			return result;
 		}
 	}
+}
+
++ (NSString *)formatTimeInterval:(NSInteger)tm
+{
+	NSMutableArray *comp = [[[NSMutableArray alloc] initWithCapacity:4] autorelease];
+	
+	[comp addObject:[NSString stringWithFormat:_("%d sec"), tm % 60]];
+	tm /= 60;
+	if (tm)
+	{
+		[comp insertObject:[NSString stringWithFormat:_("%d min"), tm % 60] atIndex:0];
+		tm /= 60;
+		if (tm)
+		{
+			[comp insertObject:[NSString stringWithFormat:_("%d hours"), tm % 24] atIndex:0];
+			tm /= 24;
+			if (tm)
+			{
+				[comp insertObject:[NSString stringWithFormat:_("%d days"), tm] atIndex:0];
+			}
+		}
+	}
+	
+	return [@", " stringByJoiningStrings:comp];
 }
 
 @end

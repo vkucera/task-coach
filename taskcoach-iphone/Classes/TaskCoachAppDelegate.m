@@ -56,7 +56,7 @@
 		[fileManager createDirectoryAtPath:cachesDir attributes:nil];
 	}
 	
-	NSString *path = [cachesDir stringByAppendingPathComponent:@"positions.store.v3"];
+	NSString *path = [cachesDir stringByAppendingPathComponent:@"positions.store.v4"];
 	[[PositionStore instance] save:path];
 
 	[fileManager release];

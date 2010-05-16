@@ -8,33 +8,22 @@
 
 #import <UIKit/UIKit.h>
 
-#import "SwitchCell.h"
-#import "DateCell.h"
-#import "DescriptionCell.h"
-#import "ButtonCell.h"
-
 @class Task;
 
-@interface TaskDetailsController : UITableViewController <UITextFieldDelegate, SwitchCellDelegate, UITextViewDelegate>
+@interface TaskDetailsController : UIViewController <UITabBarDelegate>
 {
 	Task *task;
-	NSMutableArray *cells;
+	NSInteger tabIndex;
 
-	ButtonCell *effortCell;
-	UITableViewCell *categoriesCell;
-	DateCell *startDateCell;
-	DateCell *dueDateCell;
-	DateCell *completionDateCell;
-	UITableViewCell *effortsCell;
-	
-	DescriptionCell *descriptionCell;
-
-	NSInteger categoryId;
-	NSInteger trackedTasksCount;
-
-	UIViewController *datePicker;
+	UITabBar *tabBar;
+	UIView *containerView;
+	UIViewController *currentCtrl;
 }
 
-- initWithTask:(Task *)task category:(NSInteger)category;
+@property (nonatomic, retain) IBOutlet UITabBar *tabBar;
+@property (nonatomic, retain) IBOutlet UIView *containerView;
+
+- initWithTask:(Task *)task;
+- initWithTask:(Task *)task tabIndex:(NSInteger)index;
 
 @end

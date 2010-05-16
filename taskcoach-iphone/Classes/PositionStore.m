@@ -15,6 +15,7 @@ static PositionStore *_instance = nil;
 @synthesize indexPath;
 @synthesize type;
 @synthesize searchWord;
+@synthesize tab;
 
 - (CGPoint)scrollPosition
 {
@@ -47,6 +48,7 @@ static PositionStore *_instance = nil;
 		indexPath = [[coder decodeObjectForKey:@"indexPath"] retain];
 		type = [coder decodeIntegerForKey:@"type"];
 		searchWord = [[coder decodeObjectForKey:@"searchWord"] copy];
+		tab = [coder decodeIntegerForKey:@"tab"];
 	}
 	
 	return self;
@@ -67,6 +69,7 @@ static PositionStore *_instance = nil;
 	[coder encodeInteger:type forKey:@"type"];
 	if (searchWord)
 		[coder encodeObject:searchWord forKey:@"searchWord"];
+	[coder encodeInteger:tab forKey:@"tab"];
 }
 
 @end
@@ -112,6 +115,10 @@ static PositionStore *_instance = nil;
 	[NSKeyedArchiver archiveRootObject:positions toFile:path];
 }
 
+- (void)setTab:(NSInteger)theTab
+{
+	[[positions lastObject] setTab:theTab];
+}
 
 - (void)dealloc
 {

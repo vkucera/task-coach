@@ -2,6 +2,7 @@
 2010-05-16  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* misc: Add a search bar in the calendar view
 	* misc: Add a setting to hide disabled tasks
+	* misc: Heavy refactoring of the task details UI
 
 2010-05-14  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* misc: Add a calendar view

@@ -226,7 +226,7 @@ static Statement *_saveStatement = NULL;
 		[self stopTracking];
 
 	// And create new effort
-	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"INSERT INTO Effort (fileId, name, taskId, started) VALUES (\"%@\", \"\", %d, \"%@\")", fileId, objectId, [[TimeUtils instance] stringFromDate:[NSDate date]]]] exec];
+	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"INSERT INTO Effort (fileId, name, taskId, started) VALUES (%@, \"\", %d, \"%@\")", fileId, objectId, [[TimeUtils instance] stringFromDate:[NSDate date]]]] exec];
 }
 
 - (void)stopTracking

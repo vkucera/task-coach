@@ -82,11 +82,11 @@
 		[fileManager createDirectoryAtPath:cachesDir attributes:nil];
 	}
 	
-	NSString *path = [cachesDir stringByAppendingPathComponent:@"positions.store.v3"];
+	NSString *path = [cachesDir stringByAppendingPathComponent:@"positions.store.v4"];
 	
 	if ([fileManager fileExistsAtPath:path])
 	{
-		PositionStore *store = [[PositionStore alloc] initWithFile:[cachesDir stringByAppendingPathComponent:@"positions.store.v3"]];
+		PositionStore *store = [[PositionStore alloc] initWithFile:[cachesDir stringByAppendingPathComponent:@"positions.store.v4"]];
 		[store restore:self];
 		[store release];
 	}
