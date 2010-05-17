@@ -23,11 +23,13 @@ from changetypes import *
 
 releases = [
 
-Release('1.0.4', 'May 16, 2010',
+Release('1.0.4', 'May 17, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''When starting iconized on Mac OS X, the application window
 would close.''', '2992764'),
+        Bug('''When exporting tasks with descriptions that contain newlines
+to iCalendar (.ics) format, produce a valid iCalendar file.''', '2975805'),
         Bug('''After deleting multiple efforts for one task in the effort 
 viewer, the effort viewer would still show some of the removed efforts.''')
         ],
