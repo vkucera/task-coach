@@ -159,13 +159,14 @@ class CommonTaskRelationshipManagerTestsMixin(object):
         self.parent.setRecurrence(date.Recurrence('weekly'))
         self.child.addChild(self.grandchild)
         self.grandchild.setParent(self.child)
-        self.grandchild.setCompletionDateTime()
+        now = date.Now()
+        self.grandchild.setCompletionDateTime(now)
         if self.shouldMarkCompletedWhenAllChildrenCompleted(self.parent):
-            expectedStartDateTime = date.Now() + date.TimeDelta(days=7)
+            expectedStartDateTime = now + date.TimeDelta(days=7)
             self.assertAlmostEqual(expectedStartDateTime.toordinal(), 
                                    self.grandchild.startDateTime().toordinal())
         else:
-            self.assertAlmostEqual(date.Now().toordinal(), 
+            self.assertAlmostEqual(now.toordinal(), 
                                    self.grandchild.startDateTime().toordinal())
 
     def testMarkLastChildCompletedMakesParentRecur_AndThusGrandChildIsNotCompleted(self):
