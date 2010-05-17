@@ -463,8 +463,8 @@ def appendThumbnails(name):
             for x in xrange(3):
                 if images:
                     caption, thumbnailFilename, filename = images.pop(0)
-                    pages[name] += '<TD ALIGN="CENTER"><A HREF="%s" REL="lightbox"><IMG SRC="%s" ALT="%s" /></A></TD' % (filename,
-                                                                                                                         thumbnailFilename,
+                    pages[name] += '<TD ALIGN="CENTER"><A HREF="%s" REL="lightbox"><IMG SRC="%s" ALT="%s" /></A></TD' % (filename.replace('\\', '/'),
+                                                                                                                         thumbnailFilename.replace('\\', '/'),
                                                                                                                          caption)
             pages[name] += '</TR>'
 

@@ -38,11 +38,13 @@ and completion date and time. The task file format version number is now 30.''')
         ]
     ),
     
-Release('1.0.4', 'May XX, 2010',
+Release('1.0.4', 'May 16, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-       Bug('''When starting iconized on Mac OS X, the application window
-would close.''', '2992764')
+        Bug('''When starting iconized on Mac OS X, the application window
+would close.''', '2992764'),
+        Bug('''After deleting multiple efforts for one task in the effort 
+viewer, the effort viewer would still show some of the removed efforts.''')
         ],
     ),
 

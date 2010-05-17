@@ -87,14 +87,16 @@ class Event(object):
 
     def addSource(self, source, *values, **kwargs):
         ''' Add a source with optional values to the event. Optionally specify
-            the type as keyword argument. If the source was added previously for 
-            the specified type, its previous values *for the specified type* 
-            are overwritten by the passed values. If no type is specified,
-            the source and values are added for a random type, i.e. only omit 
-            the type if the event has only one type. '''
+            the type as keyword argument. If no type is specified, the source 
+            and values are added for a random type, i.e. only omit the type if 
+            the event has only one type. '''
         type = kwargs.pop('type', self.type())
-        self.__sourcesAndValuesByType.setdefault(type, {})[source] = values
-
+        currentValues = list(self.__sourcesAndValuesByType.setdefault(type, {}).setdefault(source, tuple()))
+        for value in values:
+            if value not in currentValues:
+                currentValues.append(value)
+        self.__sourcesAndValuesByType.setdefault(type, {})[source] = tuple(currentValues)
+        
     def type(self):
         ''' Return the event type. If there are multiple event types, this
             method returns an arbitrary event type. This method is useful if
