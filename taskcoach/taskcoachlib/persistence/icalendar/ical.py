@@ -294,9 +294,17 @@ def fold(components, linewidth=75, eol='\r\n', indent=' '):
     # width includes the indentation or not. We keep on the safe side:
     indentedlinewidth = linewidth - len(indent)
     for component in components:
-        line, remainder = component[:linewidth], component[linewidth:]
-        lines.append(line)
-        while remainder:
-            line, remainder = remainder[:indentedlinewidth], remainder[indentedlinewidth:]
-            lines.append(indent + line)
+        componentLines = component.split('\n')
+        firstLine = componentLines[0]
+        firstLine, remainderFirstLine = firstLine[:linewidth], firstLine[linewidth:]
+        lines.append(firstLine)
+        while remainderFirstLine:
+            nextLine, remainderFirstLine = remainderFirstLine[:indentedlinewidth], remainderFirstLine[indentedlinewidth:]
+            lines.append(indent + nextLine)
+        for line in componentLines[1:]:
+            nextLine, remainder = line[:linewidth], line[linewidth:]
+            lines.append(indent + nextLine)
+            while remainder:
+                nextLine, remainder = remainder[:indentedlinewidth], remainder[indentedlinewidth:]
+                lines.append(indent + nextLine)
     return eol.join(lines) + eol if lines else ''

@@ -34,7 +34,7 @@ class VCalTestCase(test.wxTestCase):
 
     def writeAndRead(self):
         self.writer.write(self.viewer, self.settings, self.selectionOnly)
-        return self.fd.getvalue().split('\r\n')[:-1]
+        return self.fd.getvalue() #.split('\r\n')[:-1]
 
     def selectItems(self, items):
         self.viewer.widget.select(items)
@@ -48,18 +48,18 @@ class VCalTestCase(test.wxTestCase):
     
 class VCalendarCommonTestsMixin(object):        
     def testStart(self):
-        self.assertEqual('BEGIN:VCALENDAR', self.vcalFile[0])
+        self.assertEqual('BEGIN:VCALENDAR', self.vcalFile.split('\r\n')[0])
         
     def testVersion(self):
-        self.assertEqual('VERSION:2.0', self.vcalFile[1])
+        self.assertEqual('VERSION:2.0', self.vcalFile.split('\r\n')[1])
 
     def testProdId(self):
         domain = meta.url[len('http://'):-1]
         self.assertEqual('PRODID:-//%s//NONSGML %s V%s//EN'%(domain,
-            meta.name, meta.version), self.vcalFile[2])
+            meta.name, meta.version), self.vcalFile.split('\r\n')[2])
 
     def testEnd(self):
-        self.assertEqual('END:VCALENDAR', self.vcalFile[-1])
+        self.assertEqual('END:VCALENDAR', self.vcalFile.split('\r\n')[-2])
 
 
 class VCalEffortWriterTestCase(VCalTestCase):
@@ -125,8 +125,8 @@ class VCalTaskWriterTestCase(VCalTestCase):
     
     def setUp(self):
         super(VCalTaskWriterTestCase, self).setUp() 
-        self.task1 = task.Task('Task subject 1')
-        self.task2 = task.Task('Task subject 2')
+        self.task1 = task.Task('Task subject 1', description='Task description 1')
+        self.task2 = task.Task('Task subject 2', description='Task description 2\nwith newline')
         self.taskFile.tasks().extend([self.task1, self.task2])
         self.settings.set('taskviewer', 'treemode', self.treeMode)
         self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile,
@@ -138,6 +138,9 @@ class VCalTaskWriterTestCase(VCalTestCase):
 class VCalTaskCommonTestsMixin(VCalendarCommonTestsMixin):
     def testTaskSubject(self):
         self.failUnless('SUMMARY:Task subject 2' in self.vcalFile)
+        
+    def testTaskDescription(self):
+        self.failUnless('DESCRIPTION:Task description 2\r\n with newline' in self.vcalFile)
 
     def testNumber(self):
         self.assertEqual(self.expectedNumberOfItems(),
@@ -200,4 +203,7 @@ class FoldTest(test.TestCase):
     def testFoldTwoLongLines(self):
         self.assertEqual('Long \r\n line\r\n'*2, self.fold(['Long line']*2, 
                                                          linewidth=5))
-    
+
+    def testFoldALineWithNewLines(self):
+        self.assertEqual('Line 1\r\n Line 2\r\n', self.fold(['Line 1\nLine 2']))
+        
