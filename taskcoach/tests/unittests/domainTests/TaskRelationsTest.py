@@ -113,24 +113,26 @@ class CommonTaskRelationshipManagerTestsMixin(object):
         
     def testMarkLastChildCompletedMakesParentRecur(self):
         self.parent.setRecurrence(date.Recurrence('weekly'))
-        self.child.setCompletionDateTime()
+        now = date.Now()
+        self.child.setCompletionDateTime(now)
         if self.shouldMarkCompletedWhenAllChildrenCompleted(self.parent):
-            expectedStartDateTime = date.Now() + date.TimeDelta(days=7)
+            expectedStartDateTime = now + date.TimeDelta(days=7)
             self.assertAlmostEqual(expectedStartDateTime.toordinal(), 
                                    self.parent.startDateTime().toordinal())
         else:
-            self.assertAlmostEqual(date.Now().toordinal(), 
+            self.assertAlmostEqual(now.toordinal(), 
                                    self.parent.startDateTime().toordinal())
 
     def testMarkLastChildCompletedMakesParentRecur_AndThusChildToo(self):
         self.parent.setRecurrence(date.Recurrence('weekly'))
-        self.child.setCompletionDateTime()
+        now = date.Now()
+        self.child.setCompletionDateTime(now)
         if self.shouldMarkCompletedWhenAllChildrenCompleted(self.parent):
-            expectedStartDateTime = date.Now() + date.TimeDelta(days=7)
+            expectedStartDateTime = now + date.TimeDelta(days=7)
             self.assertAlmostEqual(expectedStartDateTime.toordinal(), 
                                    self.child.startDateTime().toordinal())
         else:
-            self.assertAlmostEqual(date.Now().toordinal(), 
+            self.assertAlmostEqual(now.toordinal(), 
                                    self.child.startDateTime().toordinal())
 
     def testMarkLastChildCompletedMakesParentRecur_AndThusChildIsNotCompleted(self):
