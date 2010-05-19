@@ -7,6 +7,7 @@
 //
 
 #import <TapkuLibrary/ODCalendarDayTimelineView.h>
+#import <TapkuLibrary/NSDate+TKCategory.h>
 
 #import "TaskViewController.h"
 #import "TaskDetailsController.h"
@@ -25,9 +26,8 @@
 #import "Configuration.h"
 
 #import "DateUtils.h"
-#import "i18n.h"
-
 #import "NSDate+Utils.h"
+#import "i18n.h"
 
 #import "CalendarTaskView.h"
 
@@ -830,16 +830,32 @@
 	[ctrl release];
 }
 
+- (void)updateStartHour:(NSDictionary *)dict
+{
+	startHour = [[dict objectForKey:@"startHour"] intValue];
+}
+
+- (void)updateEndHour:(NSDictionary *)dict
+{
+	endHour = [[dict objectForKey:@"endHour"] intValue];
+}
+
 - (NSInteger)calendarDayTimelineViewStartHour:(ODCalendarDayTimelineView*)calendarDayTimeline
 {
-	// XXXTODO
-	return 8;
+	startHour = 8;
+	if ([Database connection].currentFile)
+		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT startHour FROM TaskCoachFile WHERE id=%@", [Database connection].currentFile]] execWithTarget:self action:@selector(updateStartHour:)];
+
+	return startHour;
 }
 
 - (NSInteger)calendarDayTimelineViewEndHour:(ODCalendarDayTimelineView*)calendarDayTimeline
 {
-	// XXXTODO
-	return 18;
+	endHour = 18;
+	if ([Database connection].currentFile)
+		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT endHour FROM TaskCoachFile WHERE id=%@", [Database connection].currentFile]] execWithTarget:self action:@selector(updateEndHour:)];
+	
+	return endHour;
 }
 
 @end

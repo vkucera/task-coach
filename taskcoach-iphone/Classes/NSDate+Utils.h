@@ -14,7 +14,4 @@
 // Current date, rounded to the minute start
 + (NSDate *)dateRounded;
 
-// Midnight, today
-+ (NSDate *)midnightToday;
-
 @end

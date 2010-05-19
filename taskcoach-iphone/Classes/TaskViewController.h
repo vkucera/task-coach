@@ -40,6 +40,9 @@
 	ODCalendarDayTimelineView *calendarView;
 	UISearchBar *calendarSearch;
 	UIToolbar *toolbar;
+
+	NSInteger startHour;
+	NSInteger endHour;
 }
 
 @property (nonatomic, readonly) UITableView *tableView;
