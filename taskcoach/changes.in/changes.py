@@ -36,6 +36,10 @@ for fonts with size zero; use the default font size instead.''',
         Bug('''After deleting multiple efforts for one task in the effort 
 viewer, the effort viewer would still show some of the removed efforts.''')
         ],
+    distributionsChanged=[
+        Distribution('''We no longer build a Task Coach RPM for Fedora 8, 9, and 10. 
+These releases of Fedora are unsupported by the Fedora project.''')
+        ]
     ),
 
 Release('1.0.3', 'April 25, 2010',
