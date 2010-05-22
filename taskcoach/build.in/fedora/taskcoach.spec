@@ -35,12 +35,7 @@ Requires: 	python >= %(pythonversion)s
 Requires:	wxPython >= %(wxpythonversionnumber)s
 
 # Must have setuptools to build the package
-# The build portions moved to a subpackage in F-8
-%%if 0%%{?fedora} >= 8
 BuildRequires: python-setuptools-devel
-%%else
-BuildRequires: python-setuptools
-%%endif
 
 %%description
 %(long_description)s
