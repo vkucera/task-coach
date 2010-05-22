@@ -32,6 +32,7 @@ Release steps:
   Ubuntu 8.04: 'make clean sdist_linux deb; python release.py upload'
   Ubuntu 9.10: 'make clean sdist_linux deb; python release.py upload'
   Fedora 11:   'make clean fedora; python release.py upload'
+               'make clean rpm; python release.py upload'
   OpenSuse:    'make clean opensuse; python release.py upload'
   Windows:     'make clean windists; python release.py upload'
 
