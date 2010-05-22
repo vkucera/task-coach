@@ -133,6 +133,8 @@ static int collation(void *p, int s1, const void *p1, int s2, const void *p2)
 			// Default start and end hours
 			[[self statementWithSQL:@"UPDATE Task SET startDate=startDate || ' 08:00:00'"] exec];
 			[[self statementWithSQL:@"UPDATE Task SET dueDate=dueDate || ' 18:00:00'"] exec];
+			// Reminders
+			[[self statementWithSQL:@"ALTER TABLE Task ADD COLUMN reminder CHAR(19) NULL DEFAULT NULL"] exec];
 		}
 	}
 	

@@ -1,4 +1,7 @@
 
+2010-05-22  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
+	* misc: Add support for reminders
+
 2010-05-16  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* misc: Add a search bar in the calendar view
 	* misc: Add a setting to hide inactive tasks

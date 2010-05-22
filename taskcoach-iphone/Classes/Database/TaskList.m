@@ -116,6 +116,7 @@
 								startDate:[dict objectForKey:@"startDate"]
 								  dueDate:[dict objectForKey:@"dueDate"]
 						   completionDate:[dict objectForKey:@"completionDate"]
+								 reminder:[dict objectForKey:@"reminder"]
 							   dateStatus:status
 								 parentId:[dict objectForKey:@"parentId"]];
 	[tasks addObject:task];

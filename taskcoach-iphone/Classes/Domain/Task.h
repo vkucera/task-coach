@@ -25,6 +25,7 @@
 	NSString *startDate;
 	NSString *dueDate;
 	NSString *completionDate;
+	NSString *reminder;
 	
 	NSInteger taskStatus;
 
@@ -40,11 +41,13 @@
 @property (nonatomic, retain) NSString *startDate;
 @property (nonatomic, retain) NSString *dueDate;
 @property (nonatomic, retain) NSString *completionDate;
+@property (nonatomic, retain) NSString *reminder;
 @property (nonatomic) NSInteger taskStatus;
 @property (nonatomic, retain) NSNumber *parentId;
 
 - initWithId:(NSInteger)ID fileId:(NSNumber *)fileId name:(NSString *)name status:(NSInteger)status taskCoachId:(NSString *)taskCoachId description:(NSString *)description
-   startDate:(NSString *)startDate dueDate:(NSString *)dueDate completionDate:(NSString *)completionDate dateStatus:(NSInteger)dateStatus parentId:(NSNumber *)parentId;
+   startDate:(NSString *)startDate dueDate:(NSString *)dueDate completionDate:(NSString *)completionDate reminder:(NSString *)reminder dateStatus:(NSInteger)dateStatus
+	parentId:(NSNumber *)parentId;
 
 - (void)setCompleted:(BOOL)completed;
 

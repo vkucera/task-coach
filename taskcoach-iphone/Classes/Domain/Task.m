@@ -26,11 +26,13 @@ static Statement *_saveStatement = NULL;
 @synthesize startDate;
 @synthesize dueDate;
 @synthesize completionDate;
+@synthesize reminder;
 @synthesize taskStatus;
 @synthesize parentId;
 
 - initWithId:(NSInteger)theId fileId:(NSNumber *)theFileId name:(NSString *)theName status:(NSInteger)theStatus taskCoachId:(NSString *)tcId description:(NSString *)theDescription
-   startDate:(NSString *)theStartDate dueDate:(NSString *)theDueDate completionDate:(NSString *)theCompletionDate dateStatus:(NSInteger)dateStatus parentId:(NSNumber *)myParent
+   startDate:(NSString *)theStartDate dueDate:(NSString *)theDueDate completionDate:(NSString *)theCompletionDate reminder:(NSString *)theReminder dateStatus:(NSInteger)dateStatus
+	parentId:(NSNumber *)myParent
 {
 	if (self = [super initWithId:theId fileId:theFileId name:theName status:theStatus taskCoachId:tcId])
 	{
@@ -38,6 +40,7 @@ static Statement *_saveStatement = NULL;
 		startDate = [theStartDate retain];
 		dueDate = [theDueDate retain];
 		completionDate = [theCompletionDate retain];
+		reminder = [theReminder retain];
 		parentId = [myParent retain];
 
 		taskStatus = dateStatus;
@@ -52,6 +55,7 @@ static Statement *_saveStatement = NULL;
 	[startDate release];
 	[dueDate release];
 	[completionDate release];
+	[reminder release];
 
 	self.parentId = nil;
 
@@ -61,13 +65,13 @@ static Statement *_saveStatement = NULL;
 - (Statement *)saveStatement
 {
 	if (!_saveStatement)
-		_saveStatement = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE %@ SET fileId=?, name=?, status=?, taskCoachId=?, description=?, startDate=?, dueDate=?, completionDate=?, parentId=? WHERE id=?", [self class]]] retain];
+		_saveStatement = [[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE %@ SET fileId=?, name=?, status=?, taskCoachId=?, description=?, startDate=?, dueDate=?, completionDate=?, reminder=?, parentId=? WHERE id=?", [self class]]] retain];
 	return _saveStatement;
 }
 
 - (void)bindId
 {
-	[[self saveStatement] bindInteger:objectId atIndex:10];
+	[[self saveStatement] bindInteger:objectId atIndex:11];
 }
 
 - (void)bind
@@ -78,11 +82,12 @@ static Statement *_saveStatement = NULL;
 	[[self saveStatement] bindString:startDate atIndex:6];
 	[[self saveStatement] bindString:dueDate atIndex:7];
 	[[self saveStatement] bindString:completionDate atIndex:8];
+	[[self saveStatement] bindString:reminder atIndex:9];
 
 	if (parentId)
-		[[self saveStatement] bindInteger:[parentId intValue] atIndex:9];
+		[[self saveStatement] bindInteger:[parentId intValue] atIndex:10];
 	else
-		[[self saveStatement] bindNullAtIndex:9];
+		[[self saveStatement] bindNullAtIndex:10];
 }
 
 - (void)deleteSubtasks:(NSDictionary *)dict
@@ -266,6 +271,13 @@ static Statement *_saveStatement = NULL;
 {
 	[completionDate release];
 	completionDate = [date retain];
+	[self setStatus:STATUS_MODIFIED];
+}
+
+- (void)setReminder:(NSString *)date
+{
+	[reminder release];
+	reminder = [date retain];
 	[self setStatus:STATUS_MODIFIED];
 }
 

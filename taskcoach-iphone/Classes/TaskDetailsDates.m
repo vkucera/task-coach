@@ -42,6 +42,12 @@
 		[completionDateCell setDate:task.completionDate];
 		[cells addObject:completionDateCell];
 
+		reminderDateCell = [[CellFactory cellFactory] createDateCell];
+		[reminderDateCell setDelegate:self];
+		reminderDateCell.label.text = _("Reminder");
+		[reminderDateCell setDate:task.reminder];
+		[cells addObject:reminderDateCell];
+
 		datePicker = [[DatePickerViewController alloc] initWithDate:nil target:self action:@selector(onPickStartDate:)];
 		datePicker.view.hidden = YES;
 		[parentCtrl.view addSubview:datePicker.view];
@@ -142,6 +148,20 @@
 			[completionDateCell setDate:nil];
 		}
 	}
+	else if (cell == reminderDateCell)
+	{
+		if (cell.switch_.on)
+		{
+			[datePicker setDate:task.reminder target:self action:@selector(onPickReminder:)];
+			[self presentDatePicker];
+		}
+		else
+		{
+			task.reminder = nil;
+			[task save];
+			[reminderDateCell setDate:nil];
+		}
+	}
 }
 
 - (void)onPickStartDate:(NSDate *)date
@@ -216,6 +236,19 @@
 	[completionDateCell setDate:task.completionDate];
 }
 
+- (void)onPickReminder:(NSDate *)date
+{
+	[self dismissDatePicker];
+
+	if (date)
+		task.reminder = [[TimeUtils instance] stringFromDate:date];
+	else
+		task.reminder = nil;
+
+	[task save];
+	[reminderDateCell setDate:task.reminder];
+}
+
 #pragma mark Table view methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -225,7 +258,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 3;
+    return [cells count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -249,6 +282,10 @@
 	else if (cell == completionDateCell)
 	{
 		[datePicker setDate:task.completionDate target:self action:@selector(onPickCompletionDate:)];
+	}
+	else if (cell == reminderDateCell)
+	{
+		[datePicker setDate:task.reminder target:self action:@selector(onPickReminder:)];
 	}
 
 	[self presentDatePicker];

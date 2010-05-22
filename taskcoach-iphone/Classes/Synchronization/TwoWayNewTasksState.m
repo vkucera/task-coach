@@ -59,6 +59,11 @@
 	[self sendDate:[dict objectForKey:@"dueDate"]];
 	[self sendDate:[dict objectForKey:@"completionDate"]];
 
+	if (myController.protocolVersion >= 5)
+	{
+		[self sendDate:[dict objectForKey:@"reminder"]];
+	}
+
 	if ([dict objectForKey:@"parentId"])
 	{
 		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT taskCoachId FROM Task WHERE id=%d", [[dict objectForKey:@"parentId"] intValue]]] execWithTarget:self action:@selector(onParentId:)];

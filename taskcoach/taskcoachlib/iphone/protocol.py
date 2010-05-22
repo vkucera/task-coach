@@ -805,13 +805,14 @@ class FullFromDesktopTaskState(BaseState):
                           task.parent().id() if task.parent() is not None else None,
                           [category.id() for category in task.categories()])
             else:
-                self.pack('sssfffz[s]',
+                self.pack('sssffffz[s]',
                           task.subject(),
                           task.id(),
                           task.description(),
                           task.startDateTime(),
                           task.dueDateTime(),
                           task.completionDateTime(),
+                          task.reminder(),
                           task.parent().id() if task.parent() is not None else None,
                           [category.id() for category in task.categories()])
 
@@ -1102,9 +1103,10 @@ class TwoWayNewTasksState4(BaseState):
 
 class TwoWayNewTasksState5(BaseState):
     def init(self):
-        super(TwoWayNewTasksState5, self).init('ssfffz[s]', self.newTasksCount)
+        super(TwoWayNewTasksState5, self).init('ssffffz[s]', self.newTasksCount)
 
-    def handleNewObject(self, (subject, description, startDateTime, dueDateTime, completionDateTime, parentId, categories)):
+    def handleNewObject(self, (subject, description, startDateTime, dueDateTime, completionDateTime,
+                               reminderDateTime, parentId, categories)):
         parent = self.taskMap[parentId] if parentId else None
 
         task = Task(subject=subject, description=description, 
@@ -1112,6 +1114,9 @@ class TwoWayNewTasksState5(BaseState):
                     dueDateTime=dueDateTime, 
                     completionDateTime=completionDateTime, 
                     parent=parent)
+
+        # Don't start a timer from this thread...
+        wx.CallAfter(task.setReminder, reminderDateTime)
 
         self.disp().window.addIPhoneTask(task, [self.categoryMap[catId] for catId in categories])
         self.disp().log(_('New task %s'), task.id())
@@ -1147,14 +1152,19 @@ class TwoWayModifiedTasks(BaseState):
         elif self.version < 5:
             super(TwoWayModifiedTasks, self).init('sssddd[s]', self.modifiedTasksCount)
         else:
-            super(TwoWayModifiedTasks, self).init('sssfff[s]', self.modifiedTasksCount)
+            super(TwoWayModifiedTasks, self).init('sssffff[s]', self.modifiedTasksCount)
 
     def handleNewObject(self, args):
+        reminderDateTime = None
+
         if self.version < 2:
             subject, taskId, description, startDate, dueDate, completionDate = args
             categories = None
-        else:
+        elif self.version < 5:
             subject, taskId, description, startDate, dueDate, completionDate, categories = args
+            categories = [self.categoryMap[catId] for catId in categories]
+        else:
+            subject, taskId, description, startDate, dueDate, completionDate, reminderDateTime, categories = args
             categories = [self.categoryMap[catId] for catId in categories]
 
         if self.version < 5:
@@ -1177,7 +1187,7 @@ class TwoWayModifiedTasks(BaseState):
             self.disp().log(_('Modify task %s'), task.id())
             self.disp().window.modifyIPhoneTask(task, subject, description, 
                                                 startDateTime, dueDateTime, 
-                                                completionDateTime, categories)
+                                                completionDateTime, reminderDateTime, categories)
 
     def finished(self):
         if self.version < 4:

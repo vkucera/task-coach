@@ -23,6 +23,7 @@
 	DateCell *startDateCell;
 	DateCell *dueDateCell;
 	DateCell *completionDateCell;
+	DateCell *reminderDateCell;
 	DatePickerViewController *datePicker;
 }
 

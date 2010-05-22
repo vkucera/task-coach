@@ -58,6 +58,11 @@
 	[self sendDate:[dict objectForKey:@"dueDate"]];
 	[self sendDate:[dict objectForKey:@"completionDate"]];
 	
+	if (myController.protocolVersion >= 5)
+	{
+		[self sendDate:[dict objectForKey:@"reminder"]];
+	}
+	
 	// Send categories as well, they may have been modified on the device.
 	[taskCategories removeAllObjects];
 

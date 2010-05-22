@@ -62,6 +62,7 @@
 	[taskStart release];
 	[taskDue release];
 	[taskCompleted release];
+	[taskReminder release];
 	[effortId release];
 	[effortSubject release];
 	[effortTaskId release];
@@ -96,25 +97,27 @@
 #define TASK_DATE_1                          16
 #define TASK_DATE_LENGTH_2                   17
 #define TASK_DATE_2                          18
-#define TASK_PARENT_LENGTH                   19
-#define TASK_PARENT                          20
-#define TASK_CATEGORY_COUNT                  21
-#define TASK_CATEGORY_ID_LENGTH              22
-#define TASK_CATEGORY_ID                     23
+#define TASK_REMINDER_LENGTH                 19
+#define TASK_REMINDER                        20
+#define TASK_PARENT_LENGTH                   21
+#define TASK_PARENT                          22
+#define TASK_CATEGORY_COUNT                  23
+#define TASK_CATEGORY_ID_LENGTH              24
+#define TASK_CATEGORY_ID                     25
 
-#define EFFORT_ID_LENGTH                     24
-#define EFFORT_ID                            25
-#define EFFORT_SUBJECT_LENGTH                26
-#define EFFORT_SUBJECT                       27
-#define EFFORT_TASKID_LENGTH                 28
-#define EFFORT_TASKID                        29
-#define EFFORT_STARTED_LENGTH                30
-#define EFFORT_STARTED                       31
-#define EFFORT_ENDED_LENGTH                  32
-#define EFFORT_ENDED                         33
+#define EFFORT_ID_LENGTH                     26
+#define EFFORT_ID                            27
+#define EFFORT_SUBJECT_LENGTH                28
+#define EFFORT_SUBJECT                       29
+#define EFFORT_TASKID_LENGTH                 30
+#define EFFORT_TASKID                        31
+#define EFFORT_STARTED_LENGTH                32
+#define EFFORT_STARTED                       33
+#define EFFORT_ENDED_LENGTH                  34
+#define EFFORT_ENDED                         35
 
-#define GUID_LENGTH                          34
-#define GUID                                 35
+#define GUID_LENGTH                          36
+#define GUID                                 37
 
 - (void)onFoundParent:(NSDictionary *)dict
 {
@@ -263,6 +266,9 @@
 		// Tasks
 			
 		case TASK_SUBJECT_LENGTH:
+			[taskReminder release];
+			taskReminder = nil;
+
 			state = TASK_SUBJECT;
 			[network expect:ntohl(*((int32_t *)[data bytes]))];
 			
@@ -352,11 +358,26 @@
 				
 			NSLog(@"Date: %@", *pStr);
 			
-			state = state + 1;
+			if ((state == TASK_DATE_2) && (controller.protocolVersion < 5))
+			{
+				state = TASK_PARENT_LENGTH;
+			}
+			else
+				state = state + 1;
+
 			[network expect:4];
 
 			break;
 		}
+		case TASK_REMINDER_LENGTH:
+			state = TASK_REMINDER;
+			[network expect:ntohl(*((int32_t *)[data bytes]))];
+			break;
+		case TASK_REMINDER:
+			taskReminder = [[NSString stringFromUTF8Data:data] retain];
+			state = TASK_PARENT_LENGTH;
+			[network expect:4];
+			break;
 		case TASK_PARENT_LENGTH:
 		{
 			NSInteger length = ntohl(*((int32_t *)[data bytes]));
@@ -414,18 +435,18 @@
 				[taskCompleted release];
 				taskCompleted = nil;
 			}
-			
+
 			Task *task;
 			if (parentLocalId > 0)
 			{
 				task = [[Task alloc] initWithId:-1 fileId:[Database connection].currentFile name:taskSubject status:STATUS_NONE taskCoachId:taskId description:taskDescription
-											startDate:taskStart dueDate:taskDue completionDate:taskCompleted dateStatus:TASKSTATUS_UNDEFINED
+									  startDate:taskStart dueDate:taskDue completionDate:taskCompleted reminder:taskReminder dateStatus:TASKSTATUS_UNDEFINED
 											 parentId:[NSNumber numberWithInt:parentLocalId]];
 			}
 			else
 			{
 				task = [[Task alloc] initWithId:-1 fileId:[Database connection].currentFile name:taskSubject status:STATUS_NONE taskCoachId:taskId description:taskDescription
-											startDate:taskStart dueDate:taskDue completionDate:taskCompleted dateStatus:TASKSTATUS_UNDEFINED
+									  startDate:taskStart dueDate:taskDue completionDate:taskCompleted reminder:taskReminder dateStatus:TASKSTATUS_UNDEFINED
 											 parentId:nil];
 			}
 

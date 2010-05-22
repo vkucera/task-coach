@@ -30,6 +30,7 @@
 	NSString *taskStart;
 	NSString *taskDue;
 	NSString *taskCompleted;
+	NSString *taskReminder;
 
 	NSString *effortId;
 	NSString *effortSubject;
