@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.0.4', 'May 19, 2010',
+Release('1.0.4', 'May 25, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''When starting iconized on Mac OS X, the application window
@@ -34,7 +34,9 @@ to iCalendar (.ics) format, produce a valid iCalendar file.''', '2975805'),
 for fonts with size zero; use the default font size instead.''', 
 '2968199'),
         Bug('''After deleting multiple efforts for one task in the effort 
-viewer, the effort viewer would still show some of the removed efforts.''')
+viewer, the effort viewer would still show some of the removed efforts.'''),
+        Bug('''When waking up from standby/sleep, only request user 
+attention when there are reminders to display.''', '2992049')
         ],
     distributionsChanged=[
         Distribution('''We no longer build a Task Coach RPM for Fedora 8, 9, and 10. 
