@@ -57,8 +57,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
         
     def __getstate__(self):
         state = super(Effort, self).__getstate__()
-        state.update(dict(task=self._task, start=self._start,
-            stop=self._stop))
+        state.update(dict(task=self._task, start=self._start, stop=self._stop))
         return state
 
     @patterns.eventSource
@@ -70,15 +69,11 @@ class Effort(baseeffort.BaseEffort, base.Object):
 
     def __getcopystate__(self):
         state = super(Effort, self).__getcopystate__()
-        state.update(dict(task=self._task, start=self._start,
-            stop=self._stop))
+        state.update(dict(task=self._task, start=self._start, stop=self._stop))
         return state
    
     def duration(self, now=date.DateTime.now):
-        if self._stop:
-            stop = self._stop
-        else:
-            stop = now()
+        stop = self._stop if self._stop else now()
         return stop - self._start
      
     @patterns.eventSource   
@@ -90,7 +85,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
         event.addSource(self, self._start, type='effort.start')
         event.addSource(self, self.duration(), type='effort.duration')
         if self.task().hourlyFee():
-            event.addSource(self, self.revenue(), type='effort.revenue')
+            self.revenueEvent(event)
 
     @patterns.eventSource        
     def setStop(self, newStop=None, event=None):
