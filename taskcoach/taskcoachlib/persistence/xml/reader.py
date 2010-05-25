@@ -52,7 +52,8 @@ class XMLReader(object):
 
     def __init__(self, fd):
         self.__fd = fd
-        
+        self.__defaultFontSize = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT).GetPointSize()
+
     def read(self):
         if self._hasBrokenLines():
             self._fixBrokenLines()
@@ -234,7 +235,7 @@ class XMLReader(object):
             description=self._parseDescription(node),
             fgColor=self._parseTuple(node.attrib.get('fgColor', ''), None),
             bgColor=self._parseTuple(node.attrib.get(bgColorAttribute, ''), None),
-            font=self._parseFontDesc(node.attrib.get('font', ''), None),
+            font=self._parseFontDesc(node.attrib.get('font', '')),
             icon=node.attrib.get('icon', ''),
             selectedIcon=node.attrib.get('selectedIcon', ''))
 
@@ -374,10 +375,12 @@ class XMLReader(object):
     def _parseDateTime(self, dateTimeText, *timeDefaults):
         return self._parse(dateTimeText, date.parseDateTime, None, *timeDefaults)
     
-    def _parseFontDesc(self, fontDesc, defaultValue):
+    def _parseFontDesc(self, fontDesc, defaultValue=None):
         if fontDesc:
             font = wx.FontFromNativeInfoString(fontDesc)
             if font.IsOk():
+                if font.GetPointSize() < 4:
+                    font.SetPointSize(self.__defaultFontSize)
                 return font
         return defaultValue
     

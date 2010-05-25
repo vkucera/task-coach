@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.1.0', 'May 18, 2010',
+Release('1.1.0', 'May 25, 2010',
     summary='''This release adds time to start, due and completion dates of 
 tasks.''',
     featuresAdded=[
@@ -38,16 +38,25 @@ and completion date and time. The task file format version number is now 30.''')
         ]
     ),
     
-Release('1.0.4', 'May 17, 2010',
+Release('1.0.4', 'May 25, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''When starting iconized on Mac OS X, the application window
 would close.''', '2992764'),
         Bug('''When exporting tasks with descriptions that contain newlines
 to iCalendar (.ics) format, produce a valid iCalendar file.''', '2975805'),
+        Bug('''When reading a task file saved on another platform, be prepared 
+for fonts with size zero; use the default font size instead.''', 
+'2968199'),
         Bug('''After deleting multiple efforts for one task in the effort 
-viewer, the effort viewer would still show some of the removed efforts.''')
+viewer, the effort viewer would still show some of the removed efforts.'''),
+        Bug('''When waking up from standby/sleep, only request user 
+attention when there are reminders to display.''', '2992049')
         ],
+    distributionsChanged=[
+        Distribution('''We no longer build a Task Coach RPM for Fedora 8, 9, and 10. 
+These releases of Fedora are unsupported by the Fedora project.''')
+        ]
     ),
 
 Release('1.0.3', 'April 25, 2010',

@@ -24,11 +24,15 @@ from taskcoachlib.domain import task, date
 class ReminderControllerUnderTest(gui.ReminderController):
     def __init__(self, *args, **kwargs):
         self.messages = []
+        self.userAttentionRequested = False
         super(ReminderControllerUnderTest, self).__init__(*args, **kwargs)
         
     def showReminderMessage(self, message):
         self.messages.append(message)
         return True
+    
+    def requestUserAttention(self):
+        self.userAttentionRequested = True
 
         
 class DummyWindow(wx.Frame):
@@ -141,7 +145,11 @@ class ReminderControllerTest(ReminderControllerTestCase):
         dialog = self.reminderController.onCloseReminderDialog(\
             self.dummyCloseEvent(openAfterClose=True), show=False)
         self.failUnless(dialog)
-                       
+        
+    def testOnWakeDoesNotRequestUserAttentionWhenThereAreNoReminders(self):
+        self.reminderController.onWake(None)
+        self.failIf(self.reminderController.userAttentionRequested)
+        
 
 class ReminderControllerTest_TwoTasksWithSameReminderDateTime(ReminderControllerTestCase):
     def setUp(self):

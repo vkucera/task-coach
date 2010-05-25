@@ -239,14 +239,6 @@ opensuse = download_table(image='opensuse',
                           prerequisites=prerequisites,
                           installation='double click the package to start the installer')
 
-fedora8 = download_table(image='fedora',
-                         download_url='%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.fc8.noarch.rpm',
-                         package_type='RPM package',
-                         platform='Fedora', platform_lower='fedora',
-                         platform_versions_supported='Fedora 8-10',
-                         prerequisites=prerequisites,
-                         installation='<tt>$ sudo yum install --nogpgcheck %(filename_lower)s-%(version)s-1.fc*.noarch.rpm</tt>')
-
 fedora11 = download_table(image='fedora',
                           download_url='%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.fc11.noarch.rpm',
                           package_type='RPM package',
@@ -276,7 +268,7 @@ linux = download_table(image='linux',
 pages['download_for_linux'] = sep.join([download_header(platform='Linux',
                                                         release='%(version)s'), 
                                         ubuntu_py26, ubuntu_py25, debian,
-                                        fedora11, fedora8, gentoo, opensuse,
+                                        fedora11, gentoo, opensuse,
                                         redhat_el4, linux])
 
 
