@@ -990,7 +990,7 @@ class TwoWayNewCategoriesState(BaseState):
             name, parentId = args
             self.disp().log(_('New category (parent: %s)'), parentId)
 
-        if parentId is None:
+        if parentId is None or not self.categoryMap.has_key(parentId):
             category = Category(name)
         else:
             category = self.categoryMap[parentId].newChild(name)
@@ -1057,7 +1057,8 @@ class TwoWayNewTasksState(BaseState):
                     dueDateTime=DateTime(dueDate.year, dueDate.month, dueDate.day), 
                     completionDateTime=DateTime(completionDate.year, completionDate.month, completionDate.day))
 
-        self.disp().window.addIPhoneTask(task, [self.categoryMap[catId] for catId in categories])
+        self.disp().window.addIPhoneTask(task, [self.categoryMap[catId] for catId in categories \
+                                                    if self.categoryMap.has_key(catId)])
         self.disp().log(_('New task %s'), task.id())
 
         self.taskMap[task.id()] = task
@@ -1072,7 +1073,7 @@ class TwoWayNewTasksState4(BaseState):
         super(TwoWayNewTasksState4, self).init('ssddfz[s]', self.newTasksCount)
 
     def handleNewObject(self, (subject, description, startDate, dueDate, completionDateTime, parentId, categories)):
-        parent = self.taskMap[parentId] if parentId else None
+        parent = self.taskMap[parentId] if parentId and self.taskMap.has_key(parentId) else None
 
         if self.version < 5:
             startDateTime = DateTime() if startDate == Date() else DateTime(year=startDate.year,
@@ -1091,7 +1092,8 @@ class TwoWayNewTasksState4(BaseState):
                     completionDateTime=completionDateTime, 
                     parent=parent)
 
-        self.disp().window.addIPhoneTask(task, [self.categoryMap[catId] for catId in categories])
+        self.disp().window.addIPhoneTask(task, [self.categoryMap[catId] for catId in categories \
+                                                    if self.categoryMap.has_key(catId)])
         self.disp().log(_('New task %s'), task.id())
 
         self.taskMap[task.id()] = task
@@ -1118,7 +1120,8 @@ class TwoWayNewTasksState5(BaseState):
         # Don't start a timer from this thread...
         wx.CallAfter(task.setReminder, reminderDateTime)
 
-        self.disp().window.addIPhoneTask(task, [self.categoryMap[catId] for catId in categories])
+        self.disp().window.addIPhoneTask(task, [self.categoryMap[catId] for catId in categories \
+                                                    if self.categoryMap.has_key(catId)])
         self.disp().log(_('New task %s'), task.id())
 
         self.taskMap[task.id()] = task
