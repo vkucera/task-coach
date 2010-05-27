@@ -36,7 +36,10 @@ for fonts with size zero; use the default font size instead.''',
         Bug('''After deleting multiple efforts for one task in the effort 
 viewer, the effort viewer would still show some of the removed efforts.'''),
         Bug('''When waking up from standby/sleep, only request user 
-attention when there are reminders to display.''', '2992049')
+attention when there are reminders to display.''', '2992049'),
+        Bug('''The synchronization with the iPhone would crash in some
+circumstances, when parent objects have been used on the iPhone and
+deleted on the desktop.''', '3007248')
         ],
     distributionsChanged=[
         Distribution('''We no longer build a Task Coach RPM for Fedora 8, 9, and 10. 
