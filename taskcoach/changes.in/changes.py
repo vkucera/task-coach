@@ -32,7 +32,7 @@ would close.''', '2992764'),
 to iCalendar (.ics) format, produce a valid iCalendar file.''', '2975805'),
         Bug('''When reading a task file saved on another platform, be prepared 
 for fonts with size zero; use the default font size instead.''', 
-'2968199'),
+'2968199', '3002577'),
         Bug('''After deleting multiple efforts for one task in the effort 
 viewer, the effort viewer would still show some of the removed efforts.'''),
         Bug('''When waking up from standby/sleep, only request user 
