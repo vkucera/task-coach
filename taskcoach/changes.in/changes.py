@@ -39,9 +39,12 @@ viewer, the effort viewer would still show some of the removed efforts.'''),
 attention when there are reminders to display.''', '2992049'),
         Bug('''The synchronization with the iPhone would crash in some
 circumstances, when parent objects have been used on the iPhone and
-deleted on the desktop.''', '3007248'),
+are deleted on the desktop.''', '3007248'),
         Bug('''When maximizing or minimizing priority, don't take the priority
-of deleted tasks into account.''', '3008495')
+of deleted tasks into account.''', '3008495'),
+        Bug('''When calculating overall percentage complete of a task, consider
+whether the task will be completed automatically when all of its subtasks
+are completed.''', '2992534')
         ],
     featuresChanged=[
         Feature('''Added some more possible snooze times. Use the preferences
