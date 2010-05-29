@@ -52,7 +52,9 @@ dialog to turn them on.''')
         ],
     distributionsChanged=[
         Distribution('''We no longer build a Task Coach RPM for Fedora 8, 9, 
-and 10. These releases of Fedora are unsupported by the Fedora project.''')
+and 10. These releases of Fedora are unsupported by the Fedora project.'''),
+        Distribution('''The OpenSuse RPM is not "noarch" but "i386".''', 
+                     '2997377')
         ]
     ),
 
