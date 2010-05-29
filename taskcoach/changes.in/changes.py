@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.0.4', 'May 25, 2010',
+Release('1.0.4', 'May 29, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''When starting iconized on Mac OS X, the application window
@@ -39,11 +39,17 @@ viewer, the effort viewer would still show some of the removed efforts.'''),
 attention when there are reminders to display.''', '2992049'),
         Bug('''The synchronization with the iPhone would crash in some
 circumstances, when parent objects have been used on the iPhone and
-deleted on the desktop.''', '3007248')
+deleted on the desktop.''', '3007248'),
+        Bug('''When maximizing or minimizing priority, don't take the priority
+of deleted tasks into account.''', '3008495')
+        ],
+    featuresChanged=[
+        Feature('''Added some more possible snooze times. Use the preferences
+dialog to turn them on.''')
         ],
     distributionsChanged=[
-        Distribution('''We no longer build a Task Coach RPM for Fedora 8, 9, and 10. 
-These releases of Fedora are unsupported by the Fedora project.''')
+        Distribution('''We no longer build a Task Coach RPM for Fedora 8, 9, 
+and 10. These releases of Fedora are unsupported by the Fedora project.''')
         ]
     ),
 

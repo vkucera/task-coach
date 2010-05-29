@@ -119,4 +119,4 @@ class TaskList(categorizable.CategorizableContainer):
         return max(self.__allPriorities())
         
     def __allPriorities(self):
-        return [task.priority() for task in self] or (0,) # pylint: disable-msg=W0621
+        return [task.priority() for task in self if not task.isDeleted()] or (0,) # pylint: disable-msg=W0621

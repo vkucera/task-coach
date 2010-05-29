@@ -25,17 +25,6 @@ from taskcoachlib.gui import render
 
 
 class ReminderDialog(sized_controls.SizedDialog):
-    snoozeChoices = [(0, _("Don't snooze")), (5, _('5 minutes')),
-             (10, _('10 minutes')), (15, _('15 minutes')),
-             (20, _('20 minutes')), (30, _('30 minutes')), 
-             (45, _('45 minutes')), (60, _('1 hour')), (90, _('1.5 hour')), 
-             (120, _('2 hours')), (3*60, _('3 hours')), (4*60, _('4 hours')), 
-             (6*60, _('6 hours')), (8*60, _('8 hours')), (12*60, _('12 hours')), 
-             (18*60, _('18 hours')), (24*60, _('24 hours')),
-             (48*60, _('48 hours')), (72*60, _('72 hours'))] # FIMXE: duplicated in preferences dialog
-    snoozeTimes = [date.TimeDelta(minutes=minutes[0]) for minutes in \
-                   snoozeChoices]
-    
     def __init__(self, task, taskList, settings, *args, **kwargs):
         kwargs['title'] = kwargs.get('title', meta.name + ' ' + _('Reminder'))
         super(ReminderDialog, self).__init__(*args, **kwargs)
@@ -59,9 +48,9 @@ class ReminderDialog(sized_controls.SizedDialog):
             wx.StaticText(pane, label=label)
         self.snoozeOptions = wx.ComboBox(pane)
         snoozeTimesUserWantsToSee = [0] + eval(self.settings.get('view', 'snoozetimes'))
-        for choice, timeDelta in zip(self.snoozeChoices, self.snoozeTimes):
-            if choice[0] in snoozeTimesUserWantsToSee:
-                self.snoozeOptions.Append(choice[1], timeDelta)
+        for minutes, label in date.snoozeChoices:
+            if minutes in snoozeTimesUserWantsToSee:
+                self.snoozeOptions.Append(label, date.TimeDelta(minutes=minutes))
         self.snoozeOptions.SetSelection(0)
         buttonSizer = self.CreateStdDialogButtonSizer(wx.OK)
         self.markCompleted = wx.Button(self, label=_('Mark task completed'))
