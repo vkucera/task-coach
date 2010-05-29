@@ -24,4 +24,5 @@ from timedelta import TimeDelta, zeroHour, oneHour, twoHours, threeHours, \
 from timeclass import Time
 from clock import Clock, ClockObserver
 from recurrence import Recurrence
+from snooze import snoozeChoices
 

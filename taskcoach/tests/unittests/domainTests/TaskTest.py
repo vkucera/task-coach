@@ -264,6 +264,11 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.task.setPercentageComplete(50)
         self.assertEqual(50, self.task.percentageComplete())
         
+    def testSetPercentageCompleteWhenMarkCompletedWhenAllChildrenCompletedIsTrue(self):
+        self.task.setShouldMarkCompletedWhenAllChildrenCompleted(True)
+        self.task.setPercentageComplete(50)
+        self.assertEqual(50, self.task.percentageComplete())
+        
     def testSet100PercentComplete(self):
         self.task.setPercentageComplete(100)
         self.failUnless(self.task.completed())
@@ -1229,6 +1234,11 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
         self.task1_1.setPercentageComplete(50)
         self.assertEqual(25, self.task.percentageComplete(recursive=True))
         
+    def testPercentageCompletedWhenChildIs50ProcentCompleteAndMarkCompletedWhenChildrenAreCompletedIsTurnedOn(self):
+        self.task.setShouldMarkCompletedWhenAllChildrenCompleted(True)
+        self.task1_1.setPercentageComplete(50)
+        self.assertEqual(50, self.task.percentageComplete(recursive=True))
+        
     def testTotalPercentageCompletedNotification(self):
         self.registerObserver('task.totalPercentageComplete', eventSource=self.task)
         self.task1_1.setPercentageComplete(50)
@@ -1257,7 +1267,7 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
         self.assertEqual('books_icon', self.task.icon(recursive=True))
 
 
-class TaskWithChildrenTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
+class TaskWithTwoChildrenTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
     def taskCreationKeywordArguments(self):
         return [{'children': [task.Task(subject='child1'), 
                               task.Task(subject='child2')]}]
@@ -1267,6 +1277,24 @@ class TaskWithChildrenTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.task1_1.setCompletionDateTime()
         self.task.removeChild(self.task1_2)
         self.failUnless(self.task.completed())
+
+    def testPercentageCompletedWhenOneChildIs50ProcentComplete(self):
+        self.task1_1.setPercentageComplete(50)
+        self.assertEqual(int(100/6.), self.task.percentageComplete(recursive=True))
+
+    def testPercentageCompletedWhenOneChildIs50ProcentCompleteAndMarkCompletedWhenChildrenAreCompletedIsTurnedOn(self):
+        self.task.setShouldMarkCompletedWhenAllChildrenCompleted(True)
+        self.task1_1.setPercentageComplete(50)
+        self.assertEqual(25, self.task.percentageComplete(recursive=True))
+
+    def testPercentageCompletedWhenOneChildIsComplete(self):
+        self.task1_1.setPercentageComplete(100)
+        self.assertEqual(33, self.task.percentageComplete(recursive=True))
+    
+    def testPercentageCompletedWhenOneChildCompleteAndMarkCompletedWhenChildrenAreCompletedIsTurnedOn(self):
+        self.task.setShouldMarkCompletedWhenAllChildrenCompleted(True)
+        self.task1_1.setPercentageComplete(100)
+        self.assertEqual(50, self.task.percentageComplete(recursive=True))
 
 
 class CompletedTaskWithChildTest(TaskTestCase):
@@ -1584,7 +1612,8 @@ class TaskReminderTestCase(TaskTestCase, CommonTaskTestsMixin):
 
 
 class TaskSettingTestCase(TaskTestCase, CommonTaskTestsMixin):
-    eventTypes = ['task.setting.shouldMarkCompletedWhenAllChildrenCompleted']
+    eventTypes = ['task.setting.shouldMarkCompletedWhenAllChildrenCompleted',
+                  'task.totalPercentageComplete']
 
     
 class MarkTaskCompletedWhenAllChildrenCompletedSettingIsTrueFixture(TaskSettingTestCase):
@@ -1602,8 +1631,16 @@ class MarkTaskCompletedWhenAllChildrenCompletedSettingIsTrueFixture(TaskSettingT
 
     def testSetSettingCausesNotification(self):
         self.task.setShouldMarkCompletedWhenAllChildrenCompleted(False)
-        self.assertEqual(False, self.events[0].value())
+        event = self.events[0]
+        self.failUnless('task.setting.shouldMarkCompletedWhenAllChildrenCompleted' in event.types())
         
+    def testSetSettingCausesTotalPercentageCompleteNotification(self):
+        # The calculation of the total percentage complete depends on whether
+        # a task is marked completed when all its children are completed        
+         self.task.setShouldMarkCompletedWhenAllChildrenCompleted(False)
+         event = self.events[0]
+         self.failUnless('task.totalPercentageComplete' in event.types())
+                 
 
 class MarkTaskCompletedWhenAllChildrenCompletedSettingIsFalseFixture(TaskTestCase):
     def taskCreationKeywordArguments(self):

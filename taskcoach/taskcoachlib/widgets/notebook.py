@@ -45,10 +45,7 @@ class GridCursor:
 
     def maxRow(self):
         row, column = self.__nextPosition
-        if column == 0:
-            return max(0, row-1)
-        else:
-            return row
+        return max(0, row-1) if column == 0 else row
 
 
 class BookPage(wx.Panel):
@@ -86,26 +83,13 @@ class BookPage(wx.Panel):
             flags with flags passed by the caller. '''
         flagsPassed = flagsPassed or [None] * len(controls)
         defaultFlags = self.__defaultFlags(controls)
-        flags = []
-        for flagPassed, defaultFlag in zip(flagsPassed, defaultFlags):
-            if flagPassed is None:
-                flag = defaultFlag
-            else:
-                flag = flagPassed
-            flags.append(flag)
-        return flags
-        '''
-        # If we drop support for Python 2.4, change above lines to this:
         return [defaultFlag if flagPassed is None else flagPassed 
                 for flagPassed, defaultFlag in zip(flagsPassed, defaultFlags)]
-        '''
+ 
     def __addControl(self, columnIndex, control, flag, lastColumn):
         if type(control) in [type(''), type(u'')]:
             control = wx.StaticText(self, label=control)
-        if lastColumn:
-            colspan = max(self._columns - columnIndex, 1)
-        else:
-            colspan = 1
+        colspan = max(self._columns - columnIndex, 1) if lastColumn else 1
         self._sizer.Add(control, self._position.next(colspan),
             span=(1, colspan), flag=flag, border=self._borderWidth)
             

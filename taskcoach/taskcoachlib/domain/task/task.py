@@ -516,11 +516,18 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # percentage Complete
     
     def percentageComplete(self, recursive=False):
-        percentages = [self.__percentageComplete.get()] 
+        myPercentage = self.__percentageComplete.get()
         if recursive:
+            # We ignore our own percentageComplete when we are marked complete
+            # when all children are completed *and* our percentageComplete is 0
+            percentages = []
+            if myPercentage > 0 or not self.shouldMarkCompletedWhenAllChildrenCompleted():
+                percentages.append(myPercentage)
             percentages.extend([child.percentageComplete(recursive) for child in self.children()])
-        return sum(percentages)/len(percentages)
-    
+            return sum(percentages)/len(percentages) if percentages else 0
+        else:
+            return myPercentage
+        
     @patterns.eventSource
     def setPercentageComplete(self, percentage, event=None):
         if percentage == self.percentageComplete():
@@ -662,6 +669,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self._shouldMarkCompletedWhenAllChildrenCompleted = newValue
         event.addSource(self, newValue, 
                         type='task.setting.shouldMarkCompletedWhenAllChildrenCompleted')
+        event.addSource(self, self.percentageComplete(recursive=True), 
+                        type='task.totalPercentageComplete')
 
     def shouldMarkCompletedWhenAllChildrenCompleted(self):
         return self._shouldMarkCompletedWhenAllChildrenCompleted

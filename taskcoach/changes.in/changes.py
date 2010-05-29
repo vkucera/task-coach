@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.1.0', 'May 25, 2010',
+Release('1.1.0', 'May 29, 2010',
     summary='''This release adds time to start, due and completion dates of 
 tasks.''',
     featuresAdded=[
@@ -38,7 +38,7 @@ and completion date and time. The task file format version number is now 30.''')
         ]
     ),
     
-Release('1.0.4', 'May 25, 2010',
+Release('1.0.4', 'May 29, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''When starting iconized on Mac OS X, the application window
@@ -47,18 +47,29 @@ would close.''', '2992764'),
 to iCalendar (.ics) format, produce a valid iCalendar file.''', '2975805'),
         Bug('''When reading a task file saved on another platform, be prepared 
 for fonts with size zero; use the default font size instead.''', 
-'2968199'),
+'2968199', '3002577'),
         Bug('''After deleting multiple efforts for one task in the effort 
 viewer, the effort viewer would still show some of the removed efforts.'''),
         Bug('''When waking up from standby/sleep, only request user 
 attention when there are reminders to display.''', '2992049'),
         Bug('''The synchronization with the iPhone would crash in some
 circumstances, when parent objects have been used on the iPhone and
-deleted on the desktop.''', '3007248')
+are deleted on the desktop.''', '3007248'),
+        Bug('''When maximizing or minimizing priority, don't take the priority
+of deleted tasks into account.''', '3008495'),
+        Bug('''When calculating overall percentage complete of a task, consider
+whether the task will be completed automatically when all of its subtasks
+are completed.''', '2992534')
+        ],
+    featuresChanged=[
+        Feature('''Added some more possible snooze times. Use the preferences
+dialog to turn them on.''')
         ],
     distributionsChanged=[
-        Distribution('''We no longer build a Task Coach RPM for Fedora 8, 9, and 10. 
-These releases of Fedora are unsupported by the Fedora project.''')
+        Distribution('''We no longer build a Task Coach RPM for Fedora 8, 9, 
+and 10. These releases of Fedora are unsupported by the Fedora project.'''),
+        Distribution('''The OpenSuse RPM is not "noarch" but "i386".''', 
+                     '2997377')
         ]
     ),
 

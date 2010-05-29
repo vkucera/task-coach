@@ -232,7 +232,7 @@ gentoo = download_table(image='gentoo',
                         installation='%(name)s is included in Gentoo Portage. Install with emerge: <tt>$ emerge taskcoach</tt>')
 
 opensuse = download_table(image='opensuse',
-                          download_url='%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.opensuse.noarch.rpm',
+                          download_url='%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.opensuse.i386.rpm',
                           package_type='RPM package',
                           platform='OpenSuse', platform_lower='opensuse',
                           platform_versions_supported='OpenSuse 11.2',

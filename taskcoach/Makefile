@@ -71,7 +71,7 @@ fedora: sdist_linux
 
 opensuse: sdist_linux
 	$(PYTHON) make.py bdist_rpm_opensuse 
-	mv dist/taskcoach-$(TCVERSION)-1.noarch.rpm dist/taskcoach-$(TCVERSION)-1.opensuse.noarch.rpm
+	mv dist/taskcoach-$(TCVERSION)-1.noarch.rpm dist/taskcoach-$(TCVERSION)-1.opensuse.i386.rpm
 	mv dist/taskcoach-$(TCVERSION)-1.src.rpm dist/taskcoach-$(TCVERSION)-1.opensuse.src.rpm
 
 ifeq ("2.5","$(PYTHONVERSION)")
