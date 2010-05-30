@@ -180,6 +180,8 @@ class Clock(patterns.Observer):
         
     def _createTimers(self):
         # pylint: disable-msg=W0201
+        self._midnightTimer = PeriodicTimer(self.notifyMidnightObservers, 'day')
+        self._midnightTimer.Start()
         self._secondTimer = PeriodicTimer(self.notifySecondObservers, 'second')
         self._minuteTimer = PeriodicTimer(self.notifyMinuteObservers, 'minute')
         self._scheduledTimer = ScheduledTimer(self.notifySpecificTimeObservers)
@@ -223,14 +225,20 @@ class Clock(patterns.Observer):
         now = now or dateandtime.DateTime.now()
         patterns.Event('clock.minute', self, now).send()
 
+    def notifyMidnightObservers(self, now=None):
+        now = now or dateandtime.DateTime.now()
+        patterns.Event('clock.midnight', self, now).send()
+
     def notifySpecificTimeObservers(self, now=None):
         now = now or dateandtime.DateTime.now()
         patterns.Event(Clock.eventType(now), self, now).send()
 
     def reset(self):
+        self._lastMidnightNotified = date.Today()
         self._secondTimer.Stop()
         self._minuteTimer.Stop()
         self._scheduledTimer.Stop()
+        self._midnightTimer.Stop()
     
     @classmethod    
     def eventType(class_, dateTime):

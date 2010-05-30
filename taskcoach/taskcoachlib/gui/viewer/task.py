@@ -155,8 +155,13 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
                           task.Task.selectedIconChangedEventType()):
             patterns.Publisher().registerObserver(self.onAttributeChanged,
                                                   eventType=eventType)
+        patterns.Publisher().registerObserver(self.atMidnight,
+            eventType='clock.midnight')
         patterns.Publisher().registerObserver(self.onWake,
             eventType='powermgt.on')
+
+    def atMidnight(self, event): # pylint: disable-msg=W0613
+        pass
 
     def onWake(self, event):
         self.refresh()
@@ -526,11 +531,14 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
     def onEverySecond(self, event): # pylint: disable-msg=W0221,W0613
         pass # Too expensive
 
-    def onWake(self, event):
+    def atMidnight(self, event):
         if not self.settings.get(self.settingsSection(), 'viewdate'):
             # User has selected the "current" date/time; it may have
             # changed now
             self.SetViewType(wxSCHEDULER_TODAY)
+
+    def onWake(self, event):
+        self.atMidnight(event)
 
     def onWorkingHourChanged(self, event):
         self.widget.SetWorkHours(self.settings.getint('view', 'efforthourstart'),
