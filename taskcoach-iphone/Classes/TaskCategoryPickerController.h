@@ -10,14 +10,13 @@
 
 #import "BaseCategoryViewController.h"
 
-@class Task;
+@class CDTask;
 
 @interface TaskCategoryPickerController : BaseCategoryViewController
 {
-	Task *myTask;
-	BOOL isChecked;
+	CDTask *myTask;
 }
 
-- initWithTask:(Task *)task;
+- initWithTask:(CDTask *)task;
 
 @end

@@ -14,6 +14,7 @@
 #import "PositionStore.h"
 
 @class NavigationController;
+@class CDCategory;
 
 @interface CategoryViewController : BaseCategoryViewController <BonjourBrowserDelegate, RestorableController>
 {

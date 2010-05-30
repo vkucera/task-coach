@@ -6,13 +6,21 @@
 //  Copyright 2009 Jérôme Laheurte. See COPYING for details.
 //
 
+#import "TaskCoachAppDelegate.h"
+
 #import "TaskCategoryPickerController.h"
-#import "Task.h"
 #import "BadgedCell.h"
+
+#import "CDDomainObject+Addons.h"
+#import "CDTask.h"
+
+#import "i18n.h"
 
 @implementation TaskCategoryPickerController
 
-- initWithTask:(Task *)task
+#pragma mark Object lifetime
+
+- initWithTask:(CDTask *)task
 {
 	if (self = [super initWithNibName:@"TaskCategoryPicker" bundle:[NSBundle mainBundle]])
 	{
@@ -29,32 +37,47 @@
 	[super dealloc];
 }
 
-- (void)fillCell:(BadgedCell *)cell forCategory:(Category *)category
+#pragma mark Domain methods
+
+- (void)fillCell:(BadgedCell *)cell forCategory:(CDCategory *)category
 {
 	[super fillCell:cell forCategory:category];
-	
-	if ([myTask hasCategory:category])
+
+	// XXXFIXME: I'm not sure this works!
+	if ([[myTask category] containsObject:category])
 	{
 		cell.accessoryType = UITableViewCellAccessoryCheckmark;
 	}
 }
 
+#pragma mark Table view methods
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	Category *category = [categories objectAtIndex:indexPath.row];
+	CDCategory *category = [categories objectAtIndex:indexPath.row];
 	BadgedCell *cell = (BadgedCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-	
-	if ([myTask hasCategory:category])
+
+	// XXXFIXME: same remark as above
+	if ([[myTask category] containsObject:category])
 	{
-		[myTask removeCategory:category];
+		[myTask removeCategoryObject:category];
 		cell.accessoryType = UITableViewCellAccessoryNone;
 	}
 	else
 	{
-		[myTask addCategory:category];
+		[myTask addCategoryObject:category];
 		cell.accessoryType = UITableViewCellAccessoryCheckmark;
 	}
-	
+
+	[myTask markDirty];
+	NSError *error;
+	if (![getManagedObjectContext() save:&error])
+	{
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+		[alert show];
+		[alert release];
+	}
+
 	[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 

@@ -6,6 +6,7 @@
 //  Copyright 2009 Jérôme Laheurte. See COPYING for details.
 //
 
+#import "TaskCoachAppDelegate.h"
 #import "NavigationController.h"
 #import "CategoryViewController.h"
 #import "StringChoiceController.h"
@@ -14,11 +15,11 @@
 #import "FileChooser.h"
 #import "BadgedCell.h"
 #import "CellFactory.h"
+#import "Database.h"
 
-#import "Database/Database.h"
-#import "Database/Statement.h"
-
-#import "Domain/Category.h"
+#import "CDDomainObject+Addons.h"
+#import "CDCategory.h"
+#import "CDTask.h"
 
 #import "Configuration.h"
 #import "i18n.h"
@@ -43,6 +44,8 @@
 
 - (void)restorePosition:(Position *)pos store:(PositionStore *)store
 {
+	// XXXFIXME
+/*
 	[self.tableView setContentOffset:pos.scrollPosition animated:NO];
 	
 	if (pos.indexPath)
@@ -67,12 +70,15 @@
 		
 		[store restore:ctrl];
 	}
+*/
 }
 
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
-	
+
+	// XXXFIXME
+/*
 	NSArray *cachesPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
 	NSString *cachesDir = [cachesPaths objectAtIndex:0];
 	
@@ -92,8 +98,9 @@
 	}
 	
 	[fileManager release];
+*/
 
-	fileButton.enabled = ([Database connection].fileNumber >= 2);
+	fileButton.enabled = ([Database connection].cdFileCount >= 2);
 }
 
 - (void)viewDidUnload
@@ -113,9 +120,6 @@
 	NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
 
 	[[PositionStore instance] pop];
-
-	for (Category *category in categories)
-		[category invalidateCache];
 
 	if (indexPath)
 	{
@@ -160,26 +164,20 @@
 {
 	if (name != nil)
 	{
-		Statement *req;
-		
+		CDCategory *newCat = (CDCategory *)[NSEntityDescription insertNewObjectForEntityForName:@"CDCategory" inManagedObjectContext:getManagedObjectContext()];
 		if (currentCategory >= 0)
+			newCat.parent = [categories objectAtIndex:currentCategory];
+		newCat.file = [Database connection].cdCurrentFile;
+		newCat.name = name;
+
+		NSError *error;
+		if (![getManagedObjectContext() save:&error])
 		{
-			Category *parent = [categories objectAtIndex:currentCategory];
-
-			req = [[Database connection] statementWithSQL:@"INSERT INTO Category (name, fileId, parentId) VALUES (?, ?, ?)"];
-			[req bindInteger:parent.objectId atIndex:3];
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not create new category") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+			[alert show];
+			[alert release];
 		}
-		else
-			req = [[Database connection] statementWithSQL:@"INSERT INTO Category (name, fileId) VALUES (?, ?)"];
 
-		[req bindString:name atIndex:1];
-
-		if ([Database connection].currentFile)
-			[req bindInteger:[[Database connection].currentFile intValue] atIndex:2];
-		else
-			[req bindNullAtIndex:2];
-
-		[req exec];
 		[self loadCategories];
 		[self.tableView reloadData];
 	}
@@ -188,11 +186,12 @@
 	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
 }
 
-- (void)fillCell:(BadgedCell *)cell forCategory:(Category *)category
+- (void)fillCell:(BadgedCell *)cell forCategory:(CDCategory *)category
 {
 	[super fillCell:cell forCategory:category];
 
 	cell.textLabel.text = [category name];
+
 	// XXXFIXME
 	/* cell.badge.text = [NSString stringWithFormat:@"%d", [category countForTable:@"AllTask"]];
 	cell.badge.capsuleColor = [UIColor blackColor];
@@ -243,28 +242,26 @@
 	[self.tableView endUpdates];
 }
 
-- (void)deleteCategory:(Category *)category
+- (void)deleteCategory:(CDCategory *)category
 {
-	[category removeAllTasks];
-
-	for (NSInteger i = 0; i < [categories count]; ++i)
+	for (CDTask *task in category.task)
 	{
-		Category *other = [categories objectAtIndex:i];
-		
-		if ([other.parentId intValue] == category.objectId)
-			[self deleteCategory:other];
+		[task removeCategoryObject:category];
+		[task markDirty];
 	}
 
-	if (category.status == STATUS_NEW)
-	{
-		[category delete];
-	}
-	else
-	{
-		[category setStatus:STATUS_DELETED];
-	}
+	for (CDCategory *child in [category child])
+		[self deleteCategory:child];
 
-	[category save];
+	[category delete];
+
+	NSError *error;
+	if (![getManagedObjectContext() save:&error])
+	{
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not delete category.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+		[alert show];
+		[alert release];
+	}
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -318,28 +315,30 @@
 		{
 			currentCategory = indexPath.row / 2;
 
-			StringChoiceController *ctrl = [[StringChoiceController alloc] initWithPlaceholder:_("Enter category name") text:[(Category *)[categories objectAtIndex:currentCategory] name] target:self action:@selector(onCategoryChanged:)];
+			StringChoiceController *ctrl = [[StringChoiceController alloc] initWithPlaceholder:_("Enter category name") text:[(CDCategory *)[categories objectAtIndex:currentCategory] name] target:self action:@selector(onCategoryChanged:)];
 			[self.navigationController presentModalViewController:ctrl animated:YES];
 			[ctrl release];
 		}
 	}
 	else
 	{
-		TaskViewController *ctrl;
+		// TaskViewController *ctrl;
 	
 		if (indexPath.row)
 		{
-			ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:indexPath.row - 1] name] category:[[categories objectAtIndex:indexPath.row - 1] objectId] categoryController:self parentTask:nil edit:NO];
+			// XXXFIXME
+			// ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:indexPath.row - 1] name] category:[[categories objectAtIndex:indexPath.row - 1] objectId] categoryController:self parentTask:nil edit:NO];
 		}
 		else
 		{
-			ctrl = [[TaskViewController alloc] initWithTitle:_("All") category:-1 categoryController:self parentTask:nil edit:NO];
+			// XXXFIXME
+			//ctrl = [[TaskViewController alloc] initWithTitle:_("All") category:-1 categoryController:self parentTask:nil edit:NO];
 		}
 	
-		[[PositionStore instance] push:self indexPath:indexPath type:TYPE_DETAILS searchWord:nil];
+		//[[PositionStore instance] push:self indexPath:indexPath type:TYPE_DETAILS searchWord:nil];
 	
-		[self.navigationController pushViewController:ctrl animated:YES];
-		[ctrl release];
+		//[self.navigationController pushViewController:ctrl animated:YES];
+		//[ctrl release];
 	}
 }
 
@@ -347,15 +346,24 @@
 {
 	if (name != nil)
 	{
-		Category *category = [categories objectAtIndex:currentCategory];
+		CDCategory *category = [categories objectAtIndex:currentCategory];
 		
 		category.name = name;
-		[category save];
+		[category markDirty];
+
+		NSError *error;
+		if (![getManagedObjectContext() save:&error])
+		{
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save category.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+			[alert show];
+			[alert release];
+		}
+
+		[self.tableView reloadData]; // XXXFIXME: is this necessary ?
 	}
 
-	[self.tableView reloadData];
-	[self.navigationController dismissModalViewControllerAnimated:YES];
 	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
+	[self.navigationController dismissModalViewControllerAnimated:YES];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -364,7 +372,7 @@
 
 	if (self.editing)
 	{
-		Category *category = [categories objectAtIndex:indexPath.row / 2];
+		CDCategory *category = [categories objectAtIndex:indexPath.row / 2];
 		
 		if (indexPath.row % 2)
 		{
@@ -381,7 +389,7 @@
 			cell.badge.text = nil;
 			[cell.badge clearAnnotations];
 
-			cell.indentationLevel = category.level + 1;
+			cell.indentationLevel = [[indentations objectForKey:[category objectID]] intValue];
 		}
 		else
 		{
@@ -464,7 +472,7 @@
 	return (indexPath.row % 2) ? UITableViewCellEditingStyleInsert : UITableViewCellEditingStyleDelete;
 }
 
-// NSNetService delegate
+#pragma mark NSNetService methods
 
 - (void)netService:(NSNetService *)sender didNotResolve:(NSDictionary *)errorDict
 {
