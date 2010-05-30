@@ -488,49 +488,21 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				A6B3073A11B27B41007C0F49 /* Obsolete */,
+				A61F544A108CB56200BDFD6D /* Thirdparty */,
+				A627606E0F221EEC0041D761 /* Utils */,
+				A6B3073B11B27B85007C0F49 /* Widgets */,
 				A6CFAE5B11B2574C00044876 /* CoreData */,
 				A600A38E119FDD2A0018F309 /* Task details */,
-				A61F544A108CB56200BDFD6D /* Thirdparty */,
-				A67E47DD0F5A937700000A24 /* Bonjour */,
-				A6664D3B0F2B417B00638C68 /* Synchronization */,
 				A6D386B40F24C12E0097F0F6 /* Cells */,
-				A627606E0F221EEC0041D761 /* Utils */,
-				A627605B0F221CF20041D761 /* Config */,
+				A627605B0F221CF20041D761 /* Configuration */,
 				A6AEE7750F21CF4A0061CF77 /* Network */,
-				A68EDEF50F1E224300F51FF2 /* Domain */,
-				A68EDEDB0F1E211C00F51FF2 /* Database */,
+				A6B3073C11B27BCF007C0F49 /* Categories */,
+				A6B3073D11B27BE2007C0F49 /* Tasks */,
 				1D3623240D0F684500981E51 /* TaskCoachAppDelegate.h */,
 				1D3623250D0F684500981E51 /* TaskCoachAppDelegate.m */,
-				A68EDED10F1E1F8500F51FF2 /* CategoryViewController.h */,
-				A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */,
-				A68EDF870F1E2A7F00F51FF2 /* StringChoiceController.h */,
-				A68EDF880F1E2A7F00F51FF2 /* StringChoiceController.m */,
-				A6DDF8520F1F988600F35108 /* TaskViewController.h */,
-				A6DDF8530F1F988600F35108 /* TaskViewController.m */,
-				A673ABF40F2203D000E548BB /* NavigationController.h */,
-				A673ABF50F2203D000E548BB /* NavigationController.m */,
-				A6EA67980F2255E7004108B5 /* CheckView.h */,
-				A6EA67990F2255E7004108B5 /* CheckView.m */,
-				A6D3862D0F24B02A0097F0F6 /* DatePickerViewController.h */,
-				A6D3862E0F24B02A0097F0F6 /* DatePickerViewController.m */,
 				A6FA97DA0F2B2E1C00505D87 /* MainViewController.h */,
 				A6FA97DB0F2B2E1C00505D87 /* MainViewController.m */,
-				A6664C210F2B35F300638C68 /* SyncViewController.h */,
-				A6664C220F2B35F300638C68 /* SyncViewController.m */,
-				A6142CD10F35DE61001DD420 /* PositionStore.h */,
-				A6142CD20F35DE61001DD420 /* PositionStore.m */,
-				A6DDECFA0F46C5040047AEF5 /* KeychainWrapper.h */,
-				A6DDECFB0F46C5040047AEF5 /* KeychainWrapper.m */,
-				A60B6E2E102587FA00F9983C /* BaseCategoryViewController.h */,
-				A60B6E2F102587FA00F9983C /* BaseCategoryViewController.m */,
-				A60B6ED510258D9D00F9983C /* TaskCategoryPickerController.h */,
-				A60B6ED610258D9D00F9983C /* TaskCategoryPickerController.m */,
-				A6D5F411104166480098B4D5 /* i18n.h */,
-				A6E83C5710E4C9AF00FF3E45 /* FileChooser.h */,
-				A6E83C5810E4C9AF00FF3E45 /* FileChooser.m */,
-				A6E83C5910E4C9AF00FF3E45 /* FileChooser.xib */,
-				A65D1C45119D460B00F0F5C3 /* CalendarTaskView.h */,
-				A65D1C46119D460B00F0F5C3 /* CalendarTaskView.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -663,13 +635,13 @@
 			name = Thirdparty;
 			sourceTree = "<group>";
 		};
-		A627605B0F221CF20041D761 /* Config */ = {
+		A627605B0F221CF20041D761 /* Configuration */ = {
 			isa = PBXGroup;
 			children = (
 				A62760680F221D0A0041D761 /* Configuration.h */,
 				A62760690F221D0A0041D761 /* Configuration.m */,
 			);
-			name = Config;
+			name = Configuration;
 			sourceTree = "<group>";
 		};
 		A627606E0F221EEC0041D761 /* Utils */ = {
@@ -679,6 +651,11 @@
 				A62760700F221EFC0041D761 /* String+Utils.m */,
 				A66EE70A1196AEAF006758BB /* NSDate+Utils.h */,
 				A66EE70B1196AEAF006758BB /* NSDate+Utils.m */,
+				A6142CD10F35DE61001DD420 /* PositionStore.h */,
+				A6142CD20F35DE61001DD420 /* PositionStore.m */,
+				A6DDECFA0F46C5040047AEF5 /* KeychainWrapper.h */,
+				A6DDECFB0F46C5040047AEF5 /* KeychainWrapper.m */,
+				A6D5F411104166480098B4D5 /* i18n.h */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -695,6 +672,8 @@
 		A6664D3B0F2B417B00638C68 /* Synchronization */ = {
 			isa = PBXGroup;
 			children = (
+				A6664C210F2B35F300638C68 /* SyncViewController.h */,
+				A6664C220F2B35F300638C68 /* SyncViewController.m */,
 				A6664D3D0F2B41A000638C68 /* State.h */,
 				A6664D3E0F2B41A000638C68 /* State.m */,
 				A6664DD70F2B47A000638C68 /* ProtocolNegotiationState.h */,
@@ -795,8 +774,61 @@
 			children = (
 				A6AEE77D0F21CFA00061CF77 /* Network.h */,
 				A6AEE77E0F21CFA00061CF77 /* Network.m */,
+				A67E47DD0F5A937700000A24 /* Bonjour */,
+				A6664D3B0F2B417B00638C68 /* Synchronization */,
 			);
 			name = Network;
+			sourceTree = "<group>";
+		};
+		A6B3073A11B27B41007C0F49 /* Obsolete */ = {
+			isa = PBXGroup;
+			children = (
+				A68EDEF50F1E224300F51FF2 /* Domain */,
+				A68EDEDB0F1E211C00F51FF2 /* Database */,
+			);
+			name = Obsolete;
+			sourceTree = "<group>";
+		};
+		A6B3073B11B27B85007C0F49 /* Widgets */ = {
+			isa = PBXGroup;
+			children = (
+				A68EDF870F1E2A7F00F51FF2 /* StringChoiceController.h */,
+				A68EDF880F1E2A7F00F51FF2 /* StringChoiceController.m */,
+				A673ABF40F2203D000E548BB /* NavigationController.h */,
+				A673ABF50F2203D000E548BB /* NavigationController.m */,
+				A6EA67980F2255E7004108B5 /* CheckView.h */,
+				A6EA67990F2255E7004108B5 /* CheckView.m */,
+				A6D3862D0F24B02A0097F0F6 /* DatePickerViewController.h */,
+				A6D3862E0F24B02A0097F0F6 /* DatePickerViewController.m */,
+				A6E83C5710E4C9AF00FF3E45 /* FileChooser.h */,
+				A6E83C5810E4C9AF00FF3E45 /* FileChooser.m */,
+				A6E83C5910E4C9AF00FF3E45 /* FileChooser.xib */,
+			);
+			name = Widgets;
+			sourceTree = "<group>";
+		};
+		A6B3073C11B27BCF007C0F49 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				A60B6E2E102587FA00F9983C /* BaseCategoryViewController.h */,
+				A60B6E2F102587FA00F9983C /* BaseCategoryViewController.m */,
+				A60B6ED510258D9D00F9983C /* TaskCategoryPickerController.h */,
+				A60B6ED610258D9D00F9983C /* TaskCategoryPickerController.m */,
+				A68EDED10F1E1F8500F51FF2 /* CategoryViewController.h */,
+				A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */,
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
+		A6B3073D11B27BE2007C0F49 /* Tasks */ = {
+			isa = PBXGroup;
+			children = (
+				A6DDF8520F1F988600F35108 /* TaskViewController.h */,
+				A6DDF8530F1F988600F35108 /* TaskViewController.m */,
+				A65D1C45119D460B00F0F5C3 /* CalendarTaskView.h */,
+				A65D1C46119D460B00F0F5C3 /* CalendarTaskView.m */,
+			);
+			name = Tasks;
 			sourceTree = "<group>";
 		};
 		A6CFAE5B11B2574C00044876 /* CoreData */ = {
