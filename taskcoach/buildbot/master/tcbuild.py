@@ -318,16 +318,16 @@ class UploadFedoraBase(UploadBase, FedoraMixin):
     pass
 
 
-class BuildFedora8(BuildFedoraBase):
-    fedoraVersion = 8
+class BuildFedora13(BuildFedoraBase):
+    fedoraVersion = 13
 
 
 class BuildFedora11(BuildFedoraBase):
     fedoraVersion = 11
 
 
-class UploadFedora8(UploadFedoraBase):
-    fedoraVersion = 8
+class UploadFedora13(UploadFedoraBase):
+    fedoraVersion = 13
 
 
 class UploadFedora11(UploadFedoraBase):
