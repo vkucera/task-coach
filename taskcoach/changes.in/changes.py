@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.0.4', 'May 29, 2010',
+Release('1.0.4', 'May 30, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''When starting iconized on Mac OS X, the application window
