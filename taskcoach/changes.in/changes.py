@@ -23,6 +23,16 @@ from changetypes import *
 
 releases = [
 
+Release('1.0.5', 'June 1, 2010',
+    summaru='''This is a bugfix release.''',
+    bugsFixed=[
+        ],
+    featuresChanged=[
+        Feature('''Renamed the Edit->Paste into task menu item to 
+Edit->Paste as subitem and made it work for categories and notes too.''')
+        ]
+    ),
+    
 Release('1.0.4', 'May 30, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[

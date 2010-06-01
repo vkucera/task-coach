@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
         
     def tearDown(self):
         super(TaskCommandTestCase, self).tearDown()
-        task.Clipboard().clear()
+        command.Clipboard().clear()
 
     def delete(self, items=None, shadow=False):
         if items == 'all':
@@ -46,7 +46,7 @@ class TaskCommandTestCase(CommandTestCase, asserts.Mixin):
  
     def paste(self, items=None): # pylint: disable-msg=W0221
         if items:
-            command.PasteIntoTaskCommand(self.taskList, items).do()
+            command.PasteAsSubItemCommand(self.taskList, items).do()
         else:
             super(TaskCommandTestCase, self).paste()
 
