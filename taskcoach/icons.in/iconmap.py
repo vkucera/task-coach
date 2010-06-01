@@ -110,6 +110,8 @@ iconlist = [
 ('folder_grey_open_icon', 'filesystems', 'folder_grey_open', [16]),
 ('folder_red_icon', 'filesystems', 'folder_red', [16]),
 ('folder_red_open_icon', 'filesystems', 'folder_red_open', [16]),
+('folder_purple_icon', 'filesystems', 'folder_violet', [16]),
+('folder_purple_open_icon', 'filesystems', 'folder_violet_open', [16]),
 ('folder_yellow_icon', 'filesystems', 'folder_yellow', [16]),
 ('folder_yellow_open_icon', 'filesystems', 'folder_yellow_open', [16]),
 ('heart_icon', 'actions', 'bookmark', [16]),

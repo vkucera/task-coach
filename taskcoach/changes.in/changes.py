@@ -27,7 +27,8 @@ Release('1.0.5', 'June 1, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Task Coach would fail to save the task file correctly, when 
-it couldn't read temporary files for email attachments.''', '2369711')
+it couldn't read temporary files for email attachments.''', '2369711'),
+        Bug('''Don't crash when using a purple folder or led icon.''', '3009432')
         ],
     featuresChanged=[
         Feature('''Renamed the Edit->Paste into task menu item to 
