@@ -89,6 +89,8 @@ class DistributionTests(Compile):
 
 
 class KillEXE(ShellCommand):
+    haltOnFailure = False
+    flunkOnFailure = False
     name = 'Cleanup'
     command = ['taskkill', '/F', '/IM', 'taskcoach.exe']
     description = ['Killing', 'exe']
