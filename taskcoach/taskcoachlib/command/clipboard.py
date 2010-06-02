@@ -35,6 +35,9 @@ class Clipboard:
         currentSource = self._source
         self.clear()
         return currentContents, currentSource
+    
+    def peek(self):
+        return self._contents
 
     def clear(self):
         self._contents = []

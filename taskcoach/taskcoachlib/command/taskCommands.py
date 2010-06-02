@@ -53,20 +53,6 @@ class EffortCommand(base.BaseCommand): # pylint: disable-msg=W0223
         self.stopTracking()
 
 
-class PasteIntoTaskCommand(base.PasteCommand, base.CompositeMixin):
-    plural_name = _('Paste into task')
-    singular_name = _('Paste into "%s"')
-
-    def setParentOfPastedItems(self): # pylint: disable-msg=W0221
-        newParent = self.items[0]
-        super(PasteIntoTaskCommand, self).setParentOfPastedItems(newParent)
-
-    def getItemsToSave(self):
-        parents = [parent for parent in [self.items[0]] if parent.completed()]
-        return parents + self.getAncestors(parents) + \
-            super(PasteIntoTaskCommand, self).getItemsToSave()
-
-
 class DragAndDropTaskCommand(base.DragAndDropCommand):
     plural_name = _('Drag and drop tasks')
 

@@ -126,6 +126,7 @@ chooseableItemImages = dict( \
     folder_green_icon=_('Green folder'),
     folder_grey_icon=_('Grey folder'),
     folder_orange_icon=_('Orange folder'),
+    folder_purple_icon=_('Purple folder'),
     folder_red_icon=_('Red folder'),
     folder_yellow_icon=_('Yellow folder'),
     folder_blue_arrow_icon=_('Blue folder with arrow'),
@@ -174,7 +175,7 @@ chooseableItemImages = dict( \
 itemImages = chooseableItemImages.keys() + ['folder_blue_open_icon',
     'folder_green_open_icon', 'folder_grey_open_icon',
     'folder_orange_open_icon', 'folder_red_open_icon',
-    'folder_yellow_open_icon', ]
+    'folder_purple_open_icon', 'folder_yellow_open_icon']
 
 chooseableItemImages[''] = _('No icon')
 

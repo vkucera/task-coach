@@ -186,7 +186,10 @@ class MailAttachment(Attachment):
         return self._readMail(self.location())
 
     def data(self):
-        return file(self.location(), 'rb').read()
+        try:
+            return file(self.location(), 'rb').read()
+        except IOError:
+            return None
 
 
 def AttachmentFactory(location, type_=None, *args, **kwargs):

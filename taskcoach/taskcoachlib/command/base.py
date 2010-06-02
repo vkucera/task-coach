@@ -22,7 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import patterns
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, note
-
+from clipboard import Clipboard
+ 
 
 class BaseCommand(patterns.Command):
     def __init__(self, list=None, items=None, *args, **kwargs): # pylint: disable-msg=W0622
@@ -160,13 +161,13 @@ class CopyCommand(BaseCommand):
 
     def do_command(self):
         self.__copies = [item.copy() for item in self.items] # pylint: disable-msg=W0201
-        task.Clipboard().put(self.__copies, self.list)
+        Clipboard().put(self.__copies, self.list)
 
     def undo_command(self):
-        task.Clipboard().clear()
+        Clipboard().clear()
 
     def redo_command(self):
-        task.Clipboard().put(self.__copies, self.list)
+        Clipboard().put(self.__copies, self.list)
 
         
 class DeleteCommand(BaseCommand, SaveStateMixin):
@@ -204,12 +205,12 @@ class CutCommand(DeleteCommand):
     singular_name = _('Cut "%s"')
 
     def __putItemsOnClipboard(self):
-        cb = task.Clipboard()
+        cb = Clipboard()
         self.__previousClipboardContents = cb.get() # pylint: disable-msg=W0201
         cb.put(self.items, self.list)
 
     def __removeItemsFromClipboard(self):
-        cb = task.Clipboard()
+        cb = Clipboard()
         cb.put(*self.__previousClipboardContents)
 
     def do_command(self):
@@ -260,14 +261,27 @@ class PasteCommand(BaseCommand, SaveStateMixin):
     
     # Clipboard interaction:
     def getItemsToPaste(self):
-        return task.Clipboard().get()
+        return Clipboard().get()
 
     def restoreItemsToPasteToSource(self):
-        task.Clipboard().put(self.__itemsToPaste, self.__sourceOfItemsToPaste)
+        Clipboard().put(self.__itemsToPaste, self.__sourceOfItemsToPaste)
         
     def clearSourceOfItemsToPaste(self):
-        task.Clipboard().clear() 
-        
+        Clipboard().clear() 
+
+
+class PasteAsSubItemCommand(PasteCommand, CompositeMixin):
+    plural_name = _('Paste as subitem')
+    singular_name = _('Paste as subitem of "%s"')
+
+    def setParentOfPastedItems(self): # pylint: disable-msg=W0221
+        newParent = self.items[0]
+        super(PasteAsSubItemCommand, self).setParentOfPastedItems(newParent)
+
+    def getItemsToSave(self):
+        return self.getAncestors([self.items[0]]) + \
+            super(PasteAsSubItemCommand, self).getItemsToSave()
+
         
 class EditCommand(BaseCommand, SaveStateMixin): # pylint: disable-msg=W0223
     plural_name = _('Edit')

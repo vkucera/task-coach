@@ -322,7 +322,7 @@ class EditMenu(Menu):
             uicommand.EditCut(viewer=viewerContainer, id=wx.ID_CUT),
             uicommand.EditCopy(viewer=viewerContainer, id=wx.ID_COPY),
             uicommand.EditPaste(),
-            uicommand.EditPasteIntoTask(viewer=viewerContainer),
+            uicommand.EditPasteAsSubItem(viewer=viewerContainer),
             None)
         # Leave sufficient room for command names in the Undo and Redo menu items:
         self.appendMenu(_('&Select')+' '*50,
@@ -713,7 +713,7 @@ class TaskPopupMenu(Menu):
             uicommand.EditCut(viewer=taskViewer),
             uicommand.EditCopy(viewer=taskViewer),
             uicommand.EditPaste(),
-            uicommand.EditPasteIntoTask(viewer=taskViewer),
+            uicommand.EditPasteAsSubItem(viewer=taskViewer),
             None,
             uicommand.TaskNew(taskList=tasks, settings=settings))
         self.appendMenu(_('New task &from template'),
@@ -784,7 +784,8 @@ class CategoryPopupMenu(Menu):
         self.appendUICommands(
             uicommand.EditCut(viewer=categoryViewer),
             uicommand.EditCopy(viewer=categoryViewer),
-            uicommand.EditPaste())
+            uicommand.EditPaste(),
+            uicommand.EditPasteAsSubItem(viewer=categoryViewer))
         if not localOnly:
             self.appendUICommands(
                 None,
@@ -828,6 +829,7 @@ class NotePopupMenu(Menu):
             uicommand.EditCut(viewer=noteViewer),
             uicommand.EditCopy(viewer=noteViewer),
             uicommand.EditPaste(),
+            uicommand.EditPasteAsSubItem(viewer=noteViewer),
             None,
             uicommand.NoteNew(notes=notes, settings=settings),
             uicommand.NoteNewSubNote(viewer=noteViewer, notes=notes),

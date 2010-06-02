@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 from taskcoachlib import patterns, meta, command, help, widgets, persistence # pylint: disable-msg=W0622
 from taskcoachlib.i18n import _
-from taskcoachlib.domain import base, task, attachment, effort
+from taskcoachlib.domain import base, task, note, category, attachment, effort
 from taskcoachlib.mailer import writeMail
 from taskcoachlib.thirdparty.calendar import wxSCHEDULER_DAILY, wxSCHEDULER_WEEKLY, \
      wxSCHEDULER_MONTHLY, wxSCHEDULER_NEXT, wxSCHEDULER_PREV, wxSCHEDULER_TODAY
@@ -412,6 +412,14 @@ class NeedsSelectedAttachmentsMixin(NeedsAttachmentViewerMixin, NeedsSelectionMi
     pass
 
 
+class NeedsSelectedCompositeMixin(NeedsSelectionMixin):
+    def enabled(self, event):
+        return super(NeedsSelectedCompositeMixin, self).enabled(event) and \
+            (self.viewer.curselectionIsInstanceOf(task.Task) or \
+             self.viewer.curselectionIsInstanceOf(note.Note) or \
+             self.viewer.curselectionIsInstanceOf(category.Category))
+    
+    
 class NeedsAtLeastOneTaskMixin(object):
     def enabled(self, event): # pylint: disable-msg=W0613
         return len(self.taskList) > 0
@@ -823,23 +831,29 @@ class EditPaste(UICommand):
         if isinstance(windowWithFocus, wx.TextCtrl):
             return windowWithFocus.CanPaste()
         else:
-            return task.Clipboard() and super(EditPaste, self).enabled(event)
+            return command.Clipboard() and super(EditPaste, self).enabled(event)
 
 
-class EditPasteIntoTask(NeedsSelectedTasksMixin, ViewerCommand):
+class EditPasteAsSubItem(NeedsSelectedCompositeMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(EditPasteIntoTask, self).__init__(
-            menuText=_('P&aste into task\tShift+Ctrl+V'), 
-            helpText=_('Paste item(s) from the clipboard into the selected task'),
+        super(EditPasteAsSubItem, self).__init__(
+            menuText=_('P&aste as subitem\tShift+Ctrl+V'), 
+            helpText=_('Paste item(s) from the clipboard as subitem of the selected item'),
             bitmap='pasteintotask', *args, **kwargs)
 
     def doCommand(self, event):
-        pasteCommand = command.PasteIntoTaskCommand(
+        pasteCommand = command.PasteAsSubItemCommand(
             items=self.viewer.curselection())
         pasteCommand.do()
 
     def enabled(self, event):
-        return super(EditPasteIntoTask, self).enabled(event) and task.Clipboard()
+        if not (super(EditPasteAsSubItem, self).enabled(event) and command.Clipboard()):
+            return False
+        targetClass = self.viewer.curselection()[0].__class__
+        for item in command.Clipboard().peek():
+            if item.__class__ != targetClass:
+                return False
+        return True
 
 
 class EditPreferences(SettingsCommand):

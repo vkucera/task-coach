@@ -322,7 +322,13 @@ class XMLReader(object):
         return guid if guid else generate()
         
     def _parseAttachmentNodes(self, parent):
-        return [self._parseAttachmentNode(node) for node in parent.findall('attachment')]
+        result = []
+        for node in parent.findall('attachment'):
+            try:
+                result.append(self._parseAttachmentNode(node))
+            except IOError:
+                pass
+        return result
 
     def _parseAttachmentNode(self, attachmentNode):
         kwargs = self._parseBaseAttributes(attachmentNode)
