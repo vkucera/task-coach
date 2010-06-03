@@ -665,24 +665,35 @@ class FileExportSelectionAsCSV(NeedsSelectionMixin, IOCommand, ViewerCommand):
         self.iocontroller.exportAsCSV(self.viewer, selectionOnly=True)
 
 
-class FileExportAsICalendar(NeedsTaskOrEffortViewerMixin, IOCommand, ViewerCommand):
+class FileExportAsICalendarBase(IOCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(FileExportAsICalendar, self).__init__(menuText=_('Export as &iCalendar...'),
-            helpText=_('Export the items in the current viewer in iCalendar format'),
-            bitmap='exportasvcal', *args, **kwargs)
+        super(FileExportAsICalendarBase, self).__init__(menuText=self.menuText,
+                                                        helpText=self.helpText,
+                                                        bitmap='exportasvcal', 
+                                                        *args, **kwargs)
 
     def doCommand(self, event):
-        self.iocontroller.exportAsICalendar(self.viewer)
+        self.iocontroller.exportAsICalendar(self.viewer, 
+                                            selectionOnly=self.selectionOnly)
+
+    def enabled(self, event):
+        enabled = super(FileExportAsICalendarBase, self).enabled(event)
+        if enabled:
+            return not (self.viewer.isShowingEffort() and self.viewer.isShowingAggregatedEffort())
+        else:
+            return False
 
 
-class FileExportSelectionAsICalendar(NeedsSelectedTasksOrEffortsMixin, IOCommand, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        super(FileExportSelectionAsICalendar, self).__init__(menuText=_('Export selection as &iCalendar...'),
-            helpText=_('Export the selected items in the current viewer in iCalendar format'),
-            bitmap='exportasvcal', *args, **kwargs)
+class FileExportAsICalendar(NeedsTaskOrEffortViewerMixin, FileExportAsICalendarBase):
+    selectionOnly = False
+    menuText = _('Export as &iCalendar...')
+    helpText = _('Export the items in the current viewer in iCalendar format')
 
-    def doCommand(self, event):
-        self.iocontroller.exportAsICalendar(self.viewer, selectionOnly=True)
+
+class FileExportSelectionAsICalendar(NeedsSelectedTasksOrEffortsMixin, FileExportAsICalendarBase):
+    selectionOnly = True
+    menuText = _('Export selection as &iCalendar...')
+    helpText = _('Export the selected items in the current viewer in iCalendar format')
 
 
 class FileSynchronize(IOCommand, SettingsCommand):
@@ -1169,6 +1180,7 @@ class ViewerHideCompletedTasks(ViewerCommand, UICheckCommand):
             self.viewer.hideCompletedTasks(self._isMenuItemChecked(event))
         finally:
             self.viewer.thaw()
+
 
 class ViewerHideCompositeTasks(ViewerCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):

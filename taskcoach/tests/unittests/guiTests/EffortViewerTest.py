@@ -273,6 +273,10 @@ class CommonTestsMixin(object):
             expectedNrOfTrackedItems = 1
         self.assertEqual(expectedNrOfTrackedItems, 
                          len(self.viewer.currentlyTrackedItems()))
+        
+    def testIsShowingAggregatedEffort(self):
+        isAggregating = self.aggregation != 'details'
+        self.assertEqual(isAggregating, self.viewer.isShowingAggregatedEffort())
     
 
 class EffortViewerWithoutAggregationTest(CommonTestsMixin, 

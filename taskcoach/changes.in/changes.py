@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.1.0', 'June 2, 2010',
+Release('1.1.0', 'June 3, 2010',
     summary='''This release adds time to start, due and completion dates of 
 tasks.''',
     featuresAdded=[
@@ -38,12 +38,14 @@ and completion date and time. The task file format version number is now 30.''')
         ]
     ),
     
-Release('1.0.5', 'June 1, 2010',
+Release('1.0.5', 'June 3, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Task Coach would fail to save the task file correctly, when 
 it couldn't read temporary files for email attachments.''', '2369711'),
-        Bug('''Don't crash when using a purple folder or led icon.''', '3009432')
+        Bug('''Don't crash when using a purple folder or led icon.''', '3009432'),
+        Bug('''Don't allow exporting efforts to iCalendar when effort viewer is
+in aggregate mode, it would result in an empty .ics file.''', '2935616')
         ],
     featuresChanged=[
         Feature('''Renamed the Edit->Paste into task menu item to 
