@@ -116,6 +116,9 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         self._showWeekdayColumns(show=aggregation=='week')
         if autoResizing:
             self.widget.ToggleAutoResizing(True)
+            
+    def isShowingAggregatedEffort(self):
+        return self.aggregation != 'details'
 
     def createFilter(self, taskList):
         ''' Return a class that filters the original list. In this case we

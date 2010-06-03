@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2009 Frank Niessink <frank@niessink.com>
+Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -273,6 +273,10 @@ class CommonTestsMixin(object):
             expectedNrOfTrackedItems = 1
         self.assertEqual(expectedNrOfTrackedItems, 
                          len(self.viewer.currentlyTrackedItems()))
+        
+    def testIsShowingAggregatedEffort(self):
+        isAggregating = self.aggregation != 'details'
+        self.assertEqual(isAggregating, self.viewer.isShowingAggregatedEffort())
     
 
 class EffortViewerWithoutAggregationTest(CommonTestsMixin, 
