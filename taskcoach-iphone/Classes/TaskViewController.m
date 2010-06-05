@@ -268,6 +268,7 @@ static void deleteTask(CDTask *task)
 	NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
 	if (indexPath)
 	{
+		[self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
 		[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 	}
 

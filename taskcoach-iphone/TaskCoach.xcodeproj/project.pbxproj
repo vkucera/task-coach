@@ -87,6 +87,7 @@
 		A680C0DF0F47368E00A8D18B /* StringChoice.strings in Resources */ = {isa = PBXBuildFile; fileRef = A680C0D90F47368E00A8D18B /* StringChoice.strings */; };
 		A6831FFE102EB057002A7083 /* TaskView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6831FFC102EB057002A7083 /* TaskView.xib */; };
 		A6832038102EB499002A7083 /* TaskView.strings in Resources */ = {isa = PBXBuildFile; fileRef = A6832036102EB499002A7083 /* TaskView.strings */; };
+		A68D31A711BA3D31002C6593 /* CDEffort+Addons.m in Sources */ = {isa = PBXBuildFile; fileRef = A68D31A611BA3D31002C6593 /* CDEffort+Addons.m */; };
 		A68EDEC50F1E1F1700F51FF2 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = A68EDEC30F1E1F1700F51FF2 /* MainWindow.xib */; };
 		A68EDED30F1E1F8500F51FF2 /* CategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */; };
 		A68EDEE20F1E212A00F51FF2 /* Database.m in Sources */ = {isa = PBXBuildFile; fileRef = A68EDEDD0F1E212A00F51FF2 /* Database.m */; };
@@ -321,6 +322,8 @@
 		A6831FFD102EB057002A7083 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TaskView.xib; sourceTree = "<group>"; };
 		A6832032102EB42F002A7083 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/TaskView.xib; sourceTree = "<group>"; };
 		A6832037102EB499002A7083 /* fr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/TaskView.strings; sourceTree = "<group>"; };
+		A68D31A511BA3D31002C6593 /* CDEffort+Addons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CDEffort+Addons.h"; path = "CoreData/CDEffort+Addons.h"; sourceTree = "<group>"; };
+		A68D31A611BA3D31002C6593 /* CDEffort+Addons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CDEffort+Addons.m"; path = "CoreData/CDEffort+Addons.m"; sourceTree = "<group>"; };
 		A68EDEC40F1E1F1700F51FF2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		A68EDED10F1E1F8500F51FF2 /* CategoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CategoryViewController.h; sourceTree = "<group>"; };
 		A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoryViewController.m; sourceTree = "<group>"; };
@@ -863,6 +866,8 @@
 				A6CFAE6911B257B600044876 /* CDFile.m */,
 				A6CFAE6A11B257B600044876 /* CDEffort.h */,
 				A6CFAE6B11B257B600044876 /* CDEffort.m */,
+				A68D31A511BA3D31002C6593 /* CDEffort+Addons.h */,
+				A68D31A611BA3D31002C6593 /* CDEffort+Addons.m */,
 			);
 			name = CoreData;
 			sourceTree = "<group>";
@@ -1137,6 +1142,7 @@
 				A63C2FA911B280D3000DE779 /* CategoryTaskViewController.m in Sources */,
 				A62DC84311BA332D0062C0E9 /* ParentTaskViewController.m in Sources */,
 				A6A1013411BA3A450039DEE4 /* CDHierarchicalDomainObject.m in Sources */,
+				A68D31A711BA3D31002C6593 /* CDEffort+Addons.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

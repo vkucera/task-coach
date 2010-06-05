@@ -18,5 +18,10 @@
 @interface CDTask (Addons)
 
 - (void)computeDateStatus;
+- (CDEffort *)currentEffort;
+
+// This does not save the changes
+- (void)startTracking;
+- (void)stopTracking;
 
 @end

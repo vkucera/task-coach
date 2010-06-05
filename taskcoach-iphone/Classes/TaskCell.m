@@ -56,12 +56,11 @@
 
 	titleLabel.text = task.name;
 
-	// XXXFIXME
-	/* if ([task currentEffort])
+	if ([task currentEffort])
 	{
 		leftImage.image = [UIImage imageNamed:[self trackingLedName]];
 	}
-	else */
+	else
 	{
 		switch ([[task dateStatus] intValue])
 		{

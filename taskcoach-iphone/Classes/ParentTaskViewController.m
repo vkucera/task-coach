@@ -10,6 +10,7 @@
 #import "TaskDetailsController.h"
 #import "TaskCoachAppDelegate.h"
 #import "i18n.h"
+#import "CDTask+Addons.h"
 
 @implementation ParentTaskViewController
 
@@ -48,10 +49,11 @@
 	[super onAddTask:button];
 	
 	CDTask *task = (CDTask *)[NSEntityDescription insertNewObjectForEntityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()];
-	task.name = _("New subtask");
+	task.name = @"";
 	task.longDescription = @"";
 	task.parent = parent;
-	
+	[task computeDateStatus];
+
 	NSError *error;
 	if ([getManagedObjectContext() save:&error])
 	{

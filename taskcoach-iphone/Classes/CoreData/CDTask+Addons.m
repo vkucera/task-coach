@@ -7,7 +7,9 @@
 //
 
 #import "CDTask+Addons.h"
+#import "CDEffort.h"
 #import "Configuration.h"
+#import "TaskCoachAppDelegate.h"
 
 @implementation CDTask (Addons)
 
@@ -47,6 +49,34 @@
 	}
 
 	self.dateStatus = [NSNumber numberWithInt:TASKSTATUS_NOTSTARTED];
+}
+
+- (CDEffort *)currentEffort
+{
+	for (CDEffort *effort in self.efforts)
+	{
+		if (!effort.ended)
+		{
+			return effort;
+		}
+	}
+
+	return nil;
+}
+
+- (void)startTracking
+{
+	CDEffort *effort = (CDEffort *)[NSEntityDescription insertNewObjectForEntityForName:@"CDEffort" inManagedObjectContext:getManagedObjectContext()];
+
+	effort.task = self;
+	effort.started = [NSDate date];
+	effort.ended = nil;
+	effort.name = self.name;
+}
+
+- (void)stopTracking
+{
+	[[self currentEffort] setEnded:[NSDate date]];
 }
 
 @end

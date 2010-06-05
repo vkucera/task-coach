@@ -10,18 +10,15 @@
 
 #import "ButtonCell.h"
 
-@class Task;
+@class CDTask;
 
-@interface TaskDetailsEfforts : UITableViewController
+@interface TaskDetailsEfforts : UITableViewController <NSFetchedResultsControllerDelegate>
 {
-	Task *task;
+	CDTask *task;
 	ButtonCell *effortCell;
-	NSInteger trackedTasksCount;
-	NSInteger effortCount;
-	NSInteger displayedEffortCount;
-	NSInteger effortTotal;
+	NSFetchedResultsController *results;
 }
 
-- initWithTask:(Task *)task;
+- initWithTask:(CDTask *)task;
 
 @end

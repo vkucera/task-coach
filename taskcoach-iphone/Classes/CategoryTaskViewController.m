@@ -12,6 +12,7 @@
 #import "String+Utils.h"
 
 #import "CDTask.h"
+#import "CDTask+Addons.h"
 
 #import "i18n.h"
 
@@ -69,10 +70,11 @@ static NSSet *allCategories(CDCategory *category)
 	[super onAddTask:button];
 
 	CDTask *task = (CDTask *)[NSEntityDescription insertNewObjectForEntityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()];
-	task.name = _("New task");
+	task.name = @"";
 	task.longDescription = @"";
 	if (category)
 		[task addCategoriesObject:category];
+	[task computeDateStatus];
 
 	NSError *error;
 	if ([getManagedObjectContext() save:&error])
