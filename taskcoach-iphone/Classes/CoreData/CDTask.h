@@ -22,22 +22,22 @@
 @property (nonatomic, retain) NSNumber * dateStatus;
 @property (nonatomic, retain) NSString * longDescription;
 @property (nonatomic, retain) NSDate * dueDate;
-@property (nonatomic, retain) NSSet* category;
-@property (nonatomic, retain) NSSet* effort;
+@property (nonatomic, retain) NSSet* categories;
+@property (nonatomic, retain) NSSet* efforts;
 
 @end
 
 
 @interface CDTask (CoreDataGeneratedAccessors)
-- (void)addCategoryObject:(CDCategory *)value;
-- (void)removeCategoryObject:(CDCategory *)value;
-- (void)addCategory:(NSSet *)value;
-- (void)removeCategory:(NSSet *)value;
+- (void)addCategoriesObject:(CDCategory *)value;
+- (void)removeCategoriesObject:(CDCategory *)value;
+- (void)addCategories:(NSSet *)value;
+- (void)removeCategories:(NSSet *)value;
 
-- (void)addEffortObject:(CDEffort *)value;
-- (void)removeEffortObject:(CDEffort *)value;
-- (void)addEffort:(NSSet *)value;
-- (void)removeEffort:(NSSet *)value;
+- (void)addEffortsObject:(CDEffort *)value;
+- (void)removeEffortsObject:(CDEffort *)value;
+- (void)addEfforts:(NSSet *)value;
+- (void)removeEfforts:(NSSet *)value;
 
 @end
 

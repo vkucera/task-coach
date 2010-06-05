@@ -59,7 +59,7 @@ static NSSet *allCategories(CDCategory *category)
 - (NSPredicate *)predicate
 {
 	if (category)
-		return [NSPredicate predicateWithFormat:@"parent == NULL AND ANY category IN %@", allCategories(category)];
+		return [NSPredicate predicateWithFormat:@"parent == NULL AND ANY categories IN %@", allCategories(category)];
 	else
 		return [NSPredicate predicateWithFormat:@"parent == NULL"];
 }
@@ -72,7 +72,7 @@ static NSSet *allCategories(CDCategory *category)
 	task.name = _("New task");
 	task.longDescription = @"";
 	if (category)
-		[task addCategoryObject:category];
+		[task addCategoriesObject:category];
 
 	NSError *error;
 	if ([getManagedObjectContext() save:&error])

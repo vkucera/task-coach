@@ -14,15 +14,15 @@
 {
 }
 
-@property (nonatomic, retain) NSManagedObject * parent;
+@property (nonatomic, retain) CDHierarchicalDomainObject * parent;
 @property (nonatomic, retain) NSSet* children;
 
 @end
 
 
 @interface CDHierarchicalDomainObject (CoreDataGeneratedAccessors)
-- (void)addChildrenObject:(NSManagedObject *)value;
-- (void)removeChildrenObject:(NSManagedObject *)value;
+- (void)addChildrenObject:(CDHierarchicalDomainObject *)value;
+- (void)removeChildrenObject:(CDHierarchicalDomainObject *)value;
 - (void)addChildren:(NSSet *)value;
 - (void)removeChildren:(NSSet *)value;
 

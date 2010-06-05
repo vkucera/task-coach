@@ -231,6 +231,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -267,7 +269,6 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateExpansionKey</key>
 							<array>
 								<string>29B97314FDCFA39411CA2CEA</string>
-								<string>080E96DDFE201D6D7F000001</string>
 								<string>1C37FBAC04509CD000000102</string>
 								<string>1C77FABC04509CD000000102</string>
 								<string>1C3E0DCA080725EA00A55177</string>
@@ -312,7 +313,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>TaskViewController.m</string>
+								<string>CategoryTaskViewController.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -320,11 +321,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>TaskViewController.m</string>
+										<string>CategoryTaskViewController.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A6FA0A5011BA3B6C00993C81</string>
+										<string>A6EA766711BA3CA700F8BA40</string>
 										<key>history</key>
 										<array>
 											<string>A68A605910821E7E00D723FE</string>
@@ -454,7 +455,6 @@
 											<string>A647F3C411B26F3A008D0FB0</string>
 											<string>A647F40F11B27475008D0FB0</string>
 											<string>A647F41011B27475008D0FB0</string>
-											<string>A647F41311B27475008D0FB0</string>
 											<string>A647F41511B27475008D0FB0</string>
 											<string>A6B3075911B27C2F007C0F49</string>
 											<string>A6B3075A11B27C2F007C0F49</string>
@@ -485,7 +485,6 @@
 											<string>A62DC5DA11BA1B4C0062C0E9</string>
 											<string>A62DC5DD11BA1B4C0062C0E9</string>
 											<string>A62DC5DE11BA1B4C0062C0E9</string>
-											<string>A62DC5E011BA1B4C0062C0E9</string>
 											<string>A62DC68311BA21680062C0E9</string>
 											<string>A62DC70511BA258E0062C0E9</string>
 											<string>A62DC74311BA2A140062C0E9</string>
@@ -501,13 +500,16 @@
 											<string>A62DC87011BA37450062C0E9</string>
 											<string>A6A1013D11BA3B260039DEE4</string>
 											<string>A6A1013E11BA3B260039DEE4</string>
-											<string>A6A1013F11BA3B260039DEE4</string>
 											<string>A6A1014011BA3B260039DEE4</string>
 											<string>A6A1014111BA3B260039DEE4</string>
 											<string>A6A1014211BA3B260039DEE4</string>
-											<string>A6A1014311BA3B260039DEE4</string>
-											<string>A6A1014411BA3B260039DEE4</string>
-											<string>A6A1014711BA3B260039DEE4</string>
+											<string>A6EA766011BA3CA700F8BA40</string>
+											<string>A6EA766111BA3CA700F8BA40</string>
+											<string>A6EA766211BA3CA700F8BA40</string>
+											<string>A6EA766311BA3CA700F8BA40</string>
+											<string>A6EA766411BA3CA700F8BA40</string>
+											<string>A6EA766511BA3CA700F8BA40</string>
+											<string>A6EA766611BA3CA700F8BA40</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -630,11 +632,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6FA0A4D11BA3B6C00993C81</string>
+				<string>A6EA766811BA3CA700F8BA40</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A6FA0A4E11BA3B6C00993C81</string>
+				<string>A6EA766911BA3CA700F8BA40</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A6FA0A4F11BA3B6C00993C81</string>
+				<string>A6EA766A11BA3CA700F8BA40</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -783,14 +785,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6A1012A11BA381E0039DEE4</string>
+				<string>A6EA766B11BA3CA700F8BA40</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A6A1012B11BA381E0039DEE4</string>
-				<string>A6A1012C11BA381E0039DEE4</string>
-				<string>A6A1012D11BA381E0039DEE4</string>
-				<string>A6A1012E11BA381E0039DEE4</string>
-				<string>A68EDEBA0F1E1EED00F51FF2</string>
+				<string>A6EA766C11BA3CA700F8BA40</string>
+				<string>A6EA766D11BA3CA700F8BA40</string>
+				<string>A6EA766E11BA3CA700F8BA40</string>
+				<string>A6EA766F11BA3CA700F8BA40</string>
+				<string>A6EA767011BA3CA700F8BA40</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
 			<string>2</string>

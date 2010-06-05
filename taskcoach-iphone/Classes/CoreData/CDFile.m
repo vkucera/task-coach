@@ -12,10 +12,10 @@
 
 @implementation CDFile 
 
+@dynamic guid;
 @dynamic endHour;
 @dynamic startHour;
 @dynamic name;
-@dynamic guid;
 @dynamic objects;
 
 @end

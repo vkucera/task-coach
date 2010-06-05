@@ -232,7 +232,7 @@
 {
 	for (CDTask *task in category.task)
 	{
-		[task removeCategoryObject:category];
+		[task removeCategoriesObject:category];
 		[task markDirty];
 	}
 

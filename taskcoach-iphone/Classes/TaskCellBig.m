@@ -61,7 +61,7 @@
 	[super setTask:task target:theTarget action:theAction];
 	
 	NSMutableArray *categories = [[NSMutableArray alloc] init];
-	for (CDCategory *cat in task.category)
+	for (CDCategory *cat in task.categories)
 		[categories addObject:cat.name];
 	categoriesLabel.text = [@", " stringByJoiningStrings:categories];
 	[categories release];

@@ -19,7 +19,7 @@
 @dynamic dateStatus;
 @dynamic longDescription;
 @dynamic dueDate;
-@dynamic category;
-@dynamic effort;
+@dynamic categories;
+@dynamic efforts;
 
 @end
