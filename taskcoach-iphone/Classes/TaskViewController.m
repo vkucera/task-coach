@@ -32,6 +32,13 @@
 
 #import "CalendarTaskView.h"
 
+static void deleteTask(CDTask *task)
+{
+	for (CDTask *child in [task children])
+		deleteTask(child);
+	[task delete];
+}
+
 @interface TaskViewController ()
 
 - (void)populate;
@@ -548,7 +555,7 @@
 	else
 	{
 		CDTask *task = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - (self.editing ? 2 : 1)]];
-		[task delete];
+		deleteTask(task);
 
 		NSError *error;
 		if (![getManagedObjectContext() save:&error])

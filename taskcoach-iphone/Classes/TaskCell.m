@@ -87,7 +87,7 @@
 
 	[leftImage setTarget:self action:@selector(onTapImage)];
 
-	if ([[task child] count])
+	if ([[task children] count])
 	{
 		self.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 	}

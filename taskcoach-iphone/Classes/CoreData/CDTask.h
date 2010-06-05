@@ -2,17 +2,17 @@
 //  CDTask.h
 //  
 //
-//  Created by Jérôme Laheurte on 30/05/10.
+//  Created by Jérôme Laheurte on 05/06/10.
 //  Copyright 2010 __MyCompanyName__. All rights reserved.
 //
 
 #import <CoreData/CoreData.h>
-#import "CDDomainObject.h"
+#import "CDHierarchicalDomainObject.h"
 
 @class CDCategory;
 @class CDEffort;
 
-@interface CDTask :  CDDomainObject  
+@interface CDTask :  CDHierarchicalDomainObject  
 {
 }
 
@@ -22,10 +22,8 @@
 @property (nonatomic, retain) NSNumber * dateStatus;
 @property (nonatomic, retain) NSString * longDescription;
 @property (nonatomic, retain) NSDate * dueDate;
-@property (nonatomic, retain) CDTask * parent;
 @property (nonatomic, retain) NSSet* category;
 @property (nonatomic, retain) NSSet* effort;
-@property (nonatomic, retain) NSSet* child;
 
 @end
 
@@ -40,11 +38,6 @@
 - (void)removeEffortObject:(CDEffort *)value;
 - (void)addEffort:(NSSet *)value;
 - (void)removeEffort:(NSSet *)value;
-
-- (void)addChildObject:(CDTask *)value;
-- (void)removeChildObject:(CDTask *)value;
-- (void)addChild:(NSSet *)value;
-- (void)removeChild:(NSSet *)value;
 
 @end
 

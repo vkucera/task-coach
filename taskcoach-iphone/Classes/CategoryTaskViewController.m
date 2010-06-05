@@ -20,7 +20,7 @@ static NSSet *allCategories(CDCategory *category)
 	NSMutableSet *result = [[[NSMutableSet alloc] init] autorelease];
 	[result addObject:category];
 
-	for (CDCategory *child in category.child)
+	for (CDCategory *child in category.children)
 		[result unionSet:allCategories(child)];
 
 	return result;

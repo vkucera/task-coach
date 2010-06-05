@@ -24,7 +24,7 @@ static NSMutableArray *expandChildren(CDCategory *category, NSMutableDictionary 
 
 	// XXXTODO: sort by name!
 
-	for (CDCategory *child in [category child])
+	for (CDCategory *child in [category children])
 	{
 		[allChildren addObjectsFromArray:expandChildren(child, indentations, indent + 1)];
 	}

@@ -2,7 +2,7 @@
 //  CDDomainObject.m
 //  
 //
-//  Created by Jérôme Laheurte on 30/05/10.
+//  Created by Jérôme Laheurte on 05/06/10.
 //  Copyright 2010 __MyCompanyName__. All rights reserved.
 //
 

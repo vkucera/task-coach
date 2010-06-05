@@ -101,6 +101,7 @@
 		A692198F0F24CDEA0010D2BA /* DateUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A692198E0F24CDEA0010D2BA /* DateUtils.m */; };
 		A69F6C2F115E2196003F68F5 /* SearchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A69F6C2E115E2196003F68F5 /* SearchCell.m */; };
 		A69F6C31115E21A5003F68F5 /* SearchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A69F6C30115E21A5003F68F5 /* SearchCell.xib */; };
+		A6A1013411BA3A450039DEE4 /* CDHierarchicalDomainObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A6A1013311BA3A450039DEE4 /* CDHierarchicalDomainObject.m */; };
 		A6A975390F26572200622396 /* TaskCellLeft.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6A975370F26572200622396 /* TaskCellLeft.xib */; };
 		A6A9753A0F26572200622396 /* TaskCellRight.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6A975380F26572200622396 /* TaskCellRight.xib */; };
 		A6AEE77F0F21CFA00061CF77 /* Network.m in Sources */ = {isa = PBXBuildFile; fileRef = A6AEE77E0F21CFA00061CF77 /* Network.m */; };
@@ -344,6 +345,8 @@
 		A69F6C2D115E2196003F68F5 /* SearchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchCell.h; sourceTree = "<group>"; };
 		A69F6C2E115E2196003F68F5 /* SearchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchCell.m; sourceTree = "<group>"; };
 		A69F6C30115E21A5003F68F5 /* SearchCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchCell.xib; sourceTree = "<group>"; };
+		A6A1013211BA3A450039DEE4 /* CDHierarchicalDomainObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDHierarchicalDomainObject.h; path = CoreData/CDHierarchicalDomainObject.h; sourceTree = "<group>"; };
+		A6A1013311BA3A450039DEE4 /* CDHierarchicalDomainObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDHierarchicalDomainObject.m; path = CoreData/CDHierarchicalDomainObject.m; sourceTree = "<group>"; };
 		A6A975370F26572200622396 /* TaskCellLeft.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCellLeft.xib; sourceTree = SOURCE_ROOT; };
 		A6A975380F26572200622396 /* TaskCellRight.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCellRight.xib; sourceTree = SOURCE_ROOT; };
 		A6AEE77D0F21CFA00061CF77 /* Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Network.h; path = Network/Network.h; sourceTree = "<group>"; };
@@ -850,6 +853,8 @@
 				A6CFAE6511B257B600044876 /* CDDomainObject.m */,
 				A647F38E11B26802008D0FB0 /* CDDomainObject+Addons.h */,
 				A647F38F11B26802008D0FB0 /* CDDomainObject+Addons.m */,
+				A6A1013211BA3A450039DEE4 /* CDHierarchicalDomainObject.h */,
+				A6A1013311BA3A450039DEE4 /* CDHierarchicalDomainObject.m */,
 				A6CFAE6611B257B600044876 /* CDTask.h */,
 				A6CFAE6711B257B600044876 /* CDTask.m */,
 				A6CFAE7411B2580E00044876 /* CDTask+Addons.h */,
@@ -1131,6 +1136,7 @@
 				A647F39011B26802008D0FB0 /* CDDomainObject+Addons.m in Sources */,
 				A63C2FA911B280D3000DE779 /* CategoryTaskViewController.m in Sources */,
 				A62DC84311BA332D0062C0E9 /* ParentTaskViewController.m in Sources */,
+				A6A1013411BA3A450039DEE4 /* CDHierarchicalDomainObject.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

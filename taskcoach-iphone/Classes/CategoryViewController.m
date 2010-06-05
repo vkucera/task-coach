@@ -236,7 +236,7 @@
 		[task markDirty];
 	}
 
-	for (CDCategory *child in [category child])
+	for (CDCategory *child in [category children])
 		[self deleteCategory:child indexPaths:indexPaths];
 
 	[indexPaths addObject:[NSIndexPath indexPathForRow:[categories indexOfObject:category] * 2 inSection:0]];
