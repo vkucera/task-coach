@@ -33,6 +33,7 @@
 		A61AED620F35C30F0086ECD6 /* TwoWayNewTasksState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AED610F35C30F0086ECD6 /* TwoWayNewTasksState.m */; };
 		A61AEE790F35CB610086ECD6 /* TwoWayDeletedTasksState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AEE780F35CB610086ECD6 /* TwoWayDeletedTasksState.m */; };
 		A61AEEFB0F35D35C0086ECD6 /* TwoWayModifiedTasksState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AEEFA0F35D35C0086ECD6 /* TwoWayModifiedTasksState.m */; };
+		A61B45C011BA4B8300300E65 /* DateUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A61B45BF11BA4B8300300E65 /* DateUtils.m */; };
 		A61DE2390F1E3F5B004BC97E /* Task.m in Sources */ = {isa = PBXBuildFile; fileRef = A61DE2380F1E3F5B004BC97E /* Task.m */; };
 		A61F544F108CB57A00BDFD6D /* BadgeItem.m in Sources */ = {isa = PBXBuildFile; fileRef = A61F544C108CB57A00BDFD6D /* BadgeItem.m */; };
 		A61F5450108CB57A00BDFD6D /* BadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = A61F544E108CB57A00BDFD6D /* BadgeView.m */; };
@@ -99,7 +100,6 @@
 		A68EDF450F1E275700F51FF2 /* DomainObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A68EDF430F1E275700F51FF2 /* DomainObject.m */; };
 		A68EDF860F1E2A6D00F51FF2 /* StringChoice.xib in Resources */ = {isa = PBXBuildFile; fileRef = A68EDF840F1E2A6D00F51FF2 /* StringChoice.xib */; };
 		A68EDF890F1E2A7F00F51FF2 /* StringChoiceController.m in Sources */ = {isa = PBXBuildFile; fileRef = A68EDF880F1E2A7F00F51FF2 /* StringChoiceController.m */; };
-		A692198F0F24CDEA0010D2BA /* DateUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A692198E0F24CDEA0010D2BA /* DateUtils.m */; };
 		A69F6C2F115E2196003F68F5 /* SearchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A69F6C2E115E2196003F68F5 /* SearchCell.m */; };
 		A69F6C31115E21A5003F68F5 /* SearchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A69F6C30115E21A5003F68F5 /* SearchCell.xib */; };
 		A6A1013411BA3A450039DEE4 /* CDHierarchicalDomainObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A6A1013311BA3A450039DEE4 /* CDHierarchicalDomainObject.m */; };
@@ -227,6 +227,8 @@
 		A61AEE780F35CB610086ECD6 /* TwoWayDeletedTasksState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwoWayDeletedTasksState.m; path = Synchronization/TwoWayDeletedTasksState.m; sourceTree = "<group>"; };
 		A61AEEF90F35D35C0086ECD6 /* TwoWayModifiedTasksState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwoWayModifiedTasksState.h; path = Synchronization/TwoWayModifiedTasksState.h; sourceTree = "<group>"; };
 		A61AEEFA0F35D35C0086ECD6 /* TwoWayModifiedTasksState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwoWayModifiedTasksState.m; path = Synchronization/TwoWayModifiedTasksState.m; sourceTree = "<group>"; };
+		A61B45BE11BA4B8300300E65 /* DateUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DateUtils.h; path = Utils/DateUtils.h; sourceTree = "<group>"; };
+		A61B45BF11BA4B8300300E65 /* DateUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DateUtils.m; path = Utils/DateUtils.m; sourceTree = "<group>"; };
 		A61DE2370F1E3F5B004BC97E /* Task.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Task.h; path = Domain/Task.h; sourceTree = "<group>"; };
 		A61DE2380F1E3F5B004BC97E /* Task.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Task.m; path = Domain/Task.m; sourceTree = "<group>"; };
 		A61F544B108CB57A00BDFD6D /* BadgeItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BadgeItem.h; path = Thirdparty/Badge/BadgeItem.h; sourceTree = "<group>"; };
@@ -343,8 +345,6 @@
 		A68EDF850F1E2A6D00F51FF2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/StringChoice.xib; sourceTree = "<group>"; };
 		A68EDF870F1E2A7F00F51FF2 /* StringChoiceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringChoiceController.h; sourceTree = "<group>"; };
 		A68EDF880F1E2A7F00F51FF2 /* StringChoiceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringChoiceController.m; sourceTree = "<group>"; };
-		A692198D0F24CDEA0010D2BA /* DateUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DateUtils.h; path = Domain/DateUtils.h; sourceTree = "<group>"; };
-		A692198E0F24CDEA0010D2BA /* DateUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DateUtils.m; path = Domain/DateUtils.m; sourceTree = "<group>"; };
 		A69F6C2D115E2196003F68F5 /* SearchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchCell.h; sourceTree = "<group>"; };
 		A69F6C2E115E2196003F68F5 /* SearchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchCell.m; sourceTree = "<group>"; };
 		A69F6C30115E21A5003F68F5 /* SearchCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchCell.xib; sourceTree = "<group>"; };
@@ -658,6 +658,8 @@
 		A627606E0F221EEC0041D761 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				A61B45BE11BA4B8300300E65 /* DateUtils.h */,
+				A61B45BF11BA4B8300300E65 /* DateUtils.m */,
 				A627606F0F221EFC0041D761 /* String+Utils.h */,
 				A62760700F221EFC0041D761 /* String+Utils.m */,
 				A66EE70A1196AEAF006758BB /* NSDate+Utils.h */,
@@ -772,8 +774,6 @@
 				A68EDF410F1E275700F51FF2 /* Category.m */,
 				A68EDF420F1E275700F51FF2 /* DomainObject.h */,
 				A68EDF430F1E275700F51FF2 /* DomainObject.m */,
-				A692198D0F24CDEA0010D2BA /* DateUtils.h */,
-				A692198E0F24CDEA0010D2BA /* DateUtils.m */,
 				A6CFB4D11109A9A8004DB892 /* Effort.h */,
 				A6CFB4D21109A9A8004DB892 /* Effort.m */,
 			);
@@ -1082,7 +1082,6 @@
 				A6D3846C0F2481C80097F0F6 /* TextFieldCell.m in Sources */,
 				A6D385540F24A0E20097F0F6 /* SwitchCell.m in Sources */,
 				A6D3862F0F24B02A0097F0F6 /* DatePickerViewController.m in Sources */,
-				A692198F0F24CDEA0010D2BA /* DateUtils.m in Sources */,
 				A6FA97DC0F2B2E1C00505D87 /* MainViewController.m in Sources */,
 				A6664C230F2B35F300638C68 /* SyncViewController.m in Sources */,
 				A6664D3F0F2B41A000638C68 /* State.m in Sources */,
@@ -1143,6 +1142,7 @@
 				A62DC84311BA332D0062C0E9 /* ParentTaskViewController.m in Sources */,
 				A6A1013411BA3A450039DEE4 /* CDHierarchicalDomainObject.m in Sources */,
 				A68D31A711BA3D31002C6593 /* CDEffort+Addons.m in Sources */,
+				A61B45C011BA4B8300300E65 /* DateUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
