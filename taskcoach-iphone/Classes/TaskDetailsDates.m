@@ -68,7 +68,7 @@
 	[datePicker release];
 
 	[cells release];
-	[taskID release];
+	[task release];
 
 	[super dealloc];
 }

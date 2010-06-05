@@ -17,16 +17,13 @@
 @interface TaskDetailsDates : UITableViewController <SwitchCellDelegate>
 {
 	CDTask *task;
-	NSManagedObjectID *taskID;
 
 	TaskDetailsController *parentCtrl;
-
 	NSMutableArray *cells;
 	DateCell *startDateCell;
 	DateCell *dueDateCell;
 	DateCell *completionDateCell;
 	DateCell *reminderDateCell;
-
 	DatePickerViewController *datePicker;
 }
 

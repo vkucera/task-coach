@@ -16,9 +16,6 @@
 {
 	switch ([self.status intValue])
 	{
-		case STATUS_NONE:
-			newStatus;
-			break;
 		case STATUS_MODIFIED:
 		case STATUS_NEW:
 			if (newStatus == STATUS_DELETED)

@@ -26,7 +26,7 @@
 - (void)setDate:(NSDate *)theDate
 {
 	[date release];
-	date = theDate;
+	date = [theDate retain];
 
 	if (date)
 	{
