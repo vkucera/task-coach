@@ -8,6 +8,9 @@
 
 #import "TaskCoachAppDelegate.h"
 #import "PositionStore.h"
+#import "CDDomainObject+Addons.h"
+#import "CDTask.h"
+#import "CDTask+Addons.h"
 #import "i18n.h"
 
 NSManagedObjectContext *getManagedObjectContext(void)
@@ -30,10 +33,37 @@ NSManagedObjectContext *getManagedObjectContext(void)
 	_("Save");
 	_("Categories");
 	_("Sync");
-
-	[window addSubview:mainController.view];
 	
+	[window addSubview:mainController.view];
 	[window makeKeyAndVisible];
+	
+	// Update date status for all objects
+	NSFetchRequest *request = [[NSFetchRequest alloc] init];
+	[request setEntity:[NSEntityDescription entityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()]];
+	[request setPredicate:[NSPredicate predicateWithFormat:@"status != %d", STATUS_DELETED]];
+
+	NSError *error;
+	NSArray *tasks = [getManagedObjectContext() executeFetchRequest:request error:&error];
+	if (tasks)
+	{
+		for (CDTask *task in tasks)
+			[task computeDateStatus];
+
+		if (![getManagedObjectContext() save:&error])
+		{
+			NSLog(@"Error saving: %@", [error localizedDescription]);
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save tasks") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+			[alert show];
+			[alert release];
+		}
+	}
+	else
+	{
+		NSLog(@"Error fetching: %@", [error localizedDescription]);
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not load tasks") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+		[alert show];
+		[alert release];
+	}
 }
 
 - (void)dealloc

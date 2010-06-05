@@ -9,12 +9,12 @@
 #import "TaskCell.h"
 #import "CheckView.h"
 
-#import "Task.h"
-#import "TaskList.h"
+#import "CDTask.h"
+#import "CDTask+Addons.h"
 
 @implementation TaskCell
 
-@synthesize taskId;
+@synthesize ID;
 @synthesize leftImage;
 @synthesize titleLabel;
 
@@ -48,21 +48,22 @@
 	return @"ledgrey.png";
 }
 
-- (void)setTask:(Task *)task target:(id)theTarget action:(SEL)theAction
+- (void)setTask:(CDTask *)task target:(id)theTarget action:(SEL)theAction
 {
-	taskId = task.objectId;
+	self.ID = [task objectID];
 	target = theTarget;
 	action = theAction;
 
 	titleLabel.text = task.name;
 
-	if ([task currentEffort])
+	// XXXFIXME
+	/* if ([task currentEffort])
 	{
 		leftImage.image = [UIImage imageNamed:[self trackingLedName]];
 	}
-	else
+	else */
 	{
-		switch ([task taskStatus])
+		switch ([[task dateStatus] intValue])
 		{
 			case TASKSTATUS_COMPLETED:
 				leftImage.image = [UIImage imageNamed:[self completedLedName]];
@@ -86,7 +87,7 @@
 
 	[leftImage setTarget:self action:@selector(onTapImage)];
 
-	if ([task childrenCount])
+	if ([[task child] count])
 	{
 		self.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 	}
@@ -102,6 +103,7 @@
 {
 	[leftImage release];
 	[titleLabel release];
+	[ID release];
 
 	[super dealloc];
 }

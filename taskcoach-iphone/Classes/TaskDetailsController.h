@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@class Task;
+@class CDTask;
 
 @interface TaskDetailsController : UIViewController <UITabBarDelegate>
 {
-	Task *task;
+	CDTask *task;
 	NSInteger tabIndex;
 
 	UITabBar *tabBar;
@@ -23,7 +23,7 @@
 @property (nonatomic, retain) IBOutlet UITabBar *tabBar;
 @property (nonatomic, retain) IBOutlet UIView *containerView;
 
-- initWithTask:(Task *)task;
-- initWithTask:(Task *)task tabIndex:(NSInteger)index;
+- initWithTask:(CDTask *)task;
+- initWithTask:(CDTask *)task tabIndex:(NSInteger)index;
 
 @end

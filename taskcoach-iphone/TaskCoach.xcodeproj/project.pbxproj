@@ -40,6 +40,8 @@
 		A61F5458108CB67800BDFD6D /* BadgedCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A61F5457108CB67800BDFD6D /* BadgedCell.xib */; };
 		A627606A0F221D0A0041D761 /* Configuration.m in Sources */ = {isa = PBXBuildFile; fileRef = A62760690F221D0A0041D761 /* Configuration.m */; };
 		A62760710F221EFC0041D761 /* String+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = A62760700F221EFC0041D761 /* String+Utils.m */; };
+		A62DC84311BA332D0062C0E9 /* ParentTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A62DC84211BA332D0062C0E9 /* ParentTaskViewController.m */; };
+		A63C2FA911B280D3000DE779 /* CategoryTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A63C2FA811B280D3000DE779 /* CategoryTaskViewController.m */; };
 		A63CC07C0F517055003669FD /* TaskCellLeftBig.xib in Resources */ = {isa = PBXBuildFile; fileRef = A63CC07A0F517055003669FD /* TaskCellLeftBig.xib */; };
 		A63CC07D0F517055003669FD /* TaskCellRightBig.xib in Resources */ = {isa = PBXBuildFile; fileRef = A63CC07B0F517055003669FD /* TaskCellRightBig.xib */; };
 		A63CC0810F5170FC003669FD /* TaskCellBig.m in Sources */ = {isa = PBXBuildFile; fileRef = A63CC0800F5170FC003669FD /* TaskCellBig.m */; };
@@ -236,6 +238,10 @@
 		A62760690F221D0A0041D761 /* Configuration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Configuration.m; path = Config/Configuration.m; sourceTree = "<group>"; };
 		A627606F0F221EFC0041D761 /* String+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "String+Utils.h"; path = "Utils/String+Utils.h"; sourceTree = "<group>"; };
 		A62760700F221EFC0041D761 /* String+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "String+Utils.m"; path = "Utils/String+Utils.m"; sourceTree = "<group>"; };
+		A62DC84111BA332D0062C0E9 /* ParentTaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParentTaskViewController.h; sourceTree = "<group>"; };
+		A62DC84211BA332D0062C0E9 /* ParentTaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParentTaskViewController.m; sourceTree = "<group>"; };
+		A63C2FA711B280D3000DE779 /* CategoryTaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CategoryTaskViewController.h; sourceTree = "<group>"; };
+		A63C2FA811B280D3000DE779 /* CategoryTaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoryTaskViewController.m; sourceTree = "<group>"; };
 		A63CC07A0F517055003669FD /* TaskCellLeftBig.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCellLeftBig.xib; sourceTree = SOURCE_ROOT; };
 		A63CC07B0F517055003669FD /* TaskCellRightBig.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCellRightBig.xib; sourceTree = SOURCE_ROOT; };
 		A63CC07F0F5170FC003669FD /* TaskCellBig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCellBig.h; sourceTree = "<group>"; };
@@ -381,7 +387,7 @@
 		A6CF221A1171C7A4005FB445 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/DatePickerView.strings; sourceTree = "<group>"; };
 		A6CF221B1171C7B2005FB445 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/MainWindow.strings; sourceTree = "<group>"; };
 		A6CF221C1171C7BC005FB445 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/StringChoice.strings; sourceTree = "<group>"; };
-		A6CFAE5411B2534100044876 /* TaskCoachCD.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; path = TaskCoachCD.xcdatamodel; sourceTree = "<group>"; };
+		A6CFAE5411B2534100044876 /* TaskCoachCD.xcdatamodel */ = {isa = PBXFileReference; explicitFileType = wrapper.xcdatamodel; fileEncoding = 4; path = TaskCoachCD.xcdatamodel; sourceTree = "<group>"; };
 		A6CFAE6211B257B600044876 /* CDCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDCategory.h; path = CoreData/CDCategory.h; sourceTree = "<group>"; };
 		A6CFAE6311B257B600044876 /* CDCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDCategory.m; path = CoreData/CDCategory.m; sourceTree = "<group>"; };
 		A6CFAE6411B257B600044876 /* CDDomainObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDDomainObject.h; path = CoreData/CDDomainObject.h; sourceTree = "<group>"; };
@@ -493,7 +499,6 @@
 				A627606E0F221EEC0041D761 /* Utils */,
 				A6B3073B11B27B85007C0F49 /* Widgets */,
 				A6CFAE5B11B2574C00044876 /* CoreData */,
-				A600A38E119FDD2A0018F309 /* Task details */,
 				A6D386B40F24C12E0097F0F6 /* Cells */,
 				A627605B0F221CF20041D761 /* Configuration */,
 				A6AEE7750F21CF4A0061CF77 /* Network */,
@@ -825,8 +830,13 @@
 			children = (
 				A6DDF8520F1F988600F35108 /* TaskViewController.h */,
 				A6DDF8530F1F988600F35108 /* TaskViewController.m */,
+				A63C2FA711B280D3000DE779 /* CategoryTaskViewController.h */,
+				A63C2FA811B280D3000DE779 /* CategoryTaskViewController.m */,
+				A62DC84111BA332D0062C0E9 /* ParentTaskViewController.h */,
+				A62DC84211BA332D0062C0E9 /* ParentTaskViewController.m */,
 				A65D1C45119D460B00F0F5C3 /* CalendarTaskView.h */,
 				A65D1C46119D460B00F0F5C3 /* CalendarTaskView.m */,
+				A600A38E119FDD2A0018F309 /* Task details */,
 			);
 			name = Tasks;
 			sourceTree = "<group>";
@@ -842,12 +852,12 @@
 				A647F38F11B26802008D0FB0 /* CDDomainObject+Addons.m */,
 				A6CFAE6611B257B600044876 /* CDTask.h */,
 				A6CFAE6711B257B600044876 /* CDTask.m */,
+				A6CFAE7411B2580E00044876 /* CDTask+Addons.h */,
+				A6CFAE7511B2580E00044876 /* CDTask+Addons.m */,
 				A6CFAE6811B257B600044876 /* CDFile.h */,
 				A6CFAE6911B257B600044876 /* CDFile.m */,
 				A6CFAE6A11B257B600044876 /* CDEffort.h */,
 				A6CFAE6B11B257B600044876 /* CDEffort.m */,
-				A6CFAE7411B2580E00044876 /* CDTask+Addons.h */,
-				A6CFAE7511B2580E00044876 /* CDTask+Addons.m */,
 			);
 			name = CoreData;
 			sourceTree = "<group>";
@@ -857,16 +867,16 @@
 			children = (
 				A69F6C2D115E2196003F68F5 /* SearchCell.h */,
 				A69F6C2E115E2196003F68F5 /* SearchCell.m */,
+				A64603A80F2234D900FC71AD /* TaskCell.h */,
+				A64603A90F2234D900FC71AD /* TaskCell.m */,
+				A63CC07F0F5170FC003669FD /* TaskCellBig.h */,
+				A63CC0800F5170FC003669FD /* TaskCellBig.m */,
 				A63CC07A0F517055003669FD /* TaskCellLeftBig.xib */,
 				A63CC07B0F517055003669FD /* TaskCellRightBig.xib */,
 				A6A975370F26572200622396 /* TaskCellLeft.xib */,
 				A6A975380F26572200622396 /* TaskCellRight.xib */,
 				A64603A50F2234B500FC71AD /* CellFactory.h */,
 				A64603A60F2234B500FC71AD /* CellFactory.m */,
-				A64603A80F2234D900FC71AD /* TaskCell.h */,
-				A64603A90F2234D900FC71AD /* TaskCell.m */,
-				A63CC07F0F5170FC003669FD /* TaskCellBig.h */,
-				A63CC0800F5170FC003669FD /* TaskCellBig.m */,
 				A6D3846A0F2481C80097F0F6 /* TextFieldCell.h */,
 				A6D3846B0F2481C80097F0F6 /* TextFieldCell.m */,
 				A6D384770F24830F0097F0F6 /* TextFieldCell.xib */,
@@ -1119,6 +1129,8 @@
 				A6CFAE7011B257B600044876 /* CDEffort.m in Sources */,
 				A6CFAE7611B2580E00044876 /* CDTask+Addons.m in Sources */,
 				A647F39011B26802008D0FB0 /* CDDomainObject+Addons.m in Sources */,
+				A63C2FA911B280D3000DE779 /* CategoryTaskViewController.m in Sources */,
+				A62DC84311BA332D0062C0E9 /* ParentTaskViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

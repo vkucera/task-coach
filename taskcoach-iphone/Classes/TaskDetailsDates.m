@@ -6,16 +6,22 @@
 //  Copyright 2010 Jérôme Laheurte. All rights reserved.
 //
 
+#import "TaskCoachAppDelegate.h"
+
 #import "TaskDetailsDates.h"
 #import "CellFactory.h"
-#import "Task.h"
 #import "DatePickerViewController.h"
 #import "DateUtils.h"
+
+#import "CDTask.h"
+#import "CDTask+Addons.h"
+#import "CDDomainObject+Addons.h"
+
 #import "i18n.h"
 
 @implementation TaskDetailsDates
 
-- initWithTask:(Task *)theTask parent:(TaskDetailsController *)parent
+- initWithTask:(CDTask *)theTask parent:(TaskDetailsController *)parent
 {
 	if (self = [super initWithNibName:@"TaskDetailsDates" bundle:[NSBundle mainBundle]])
 	{
@@ -27,25 +33,25 @@
 		startDateCell = [[CellFactory cellFactory] createDateCell];
 		[startDateCell setDelegate:self];
 		startDateCell.label.text = _("Start");
-		[startDateCell setDate:task.startDate];
+		[startDateCell setDate:theTask.startDate];
 		[cells addObject:startDateCell];
 		
 		dueDateCell = [[CellFactory cellFactory] createDateCell];
 		[dueDateCell setDelegate:self];
 		dueDateCell.label.text = _("Due");
-		[dueDateCell setDate:task.dueDate];
+		[dueDateCell setDate:theTask.dueDate];
 		[cells addObject:dueDateCell];
 		
 		completionDateCell = [[CellFactory cellFactory] createDateCell];
 		[completionDateCell setDelegate:self];
 		completionDateCell.label.text = _("Completion");
-		[completionDateCell setDate:task.completionDate];
+		[completionDateCell setDate:theTask.completionDate];
 		[cells addObject:completionDateCell];
 
 		reminderDateCell = [[CellFactory cellFactory] createDateCell];
 		[reminderDateCell setDelegate:self];
 		reminderDateCell.label.text = _("Reminder");
-		[reminderDateCell setDate:task.reminder];
+		[reminderDateCell setDate:theTask.reminderDate];
 		[cells addObject:reminderDateCell];
 
 		datePicker = [[DatePickerViewController alloc] initWithDate:nil target:self action:@selector(onPickStartDate:)];
@@ -56,24 +62,14 @@
 	return self;
 }
 
-- (void)viewDidLoad
-{
-	[super viewDidLoad];
-}
-
-- (void)viewDidUnload
-{
-}
-
 - (void)dealloc
 {
-	[self viewDidUnload];
-
 	[datePicker.view removeFromSuperview];
 	[datePicker release];
 
 	[cells release];
-	[task release];
+	[taskID release];
+
 	[super dealloc];
 }
 
@@ -108,16 +104,26 @@
 		}
 		else
 		{
-			task.startDate = nil;
-			[task save];
 			[startDateCell setDate:nil];
+
+			task.startDate = nil;
+			[task computeDateStatus];
+			[task markDirty];
+
+			NSError *error;
+			if (![getManagedObjectContext() save:&error])
+			{
+				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+				[alert show];
+				[alert release];
+			}
 		}
 	}
 	else if (cell == dueDateCell)
 	{
 		if (cell.switch_.on)
 		{
-			NSString *date = nil;
+			NSDate *date = nil;
 			
 			if (task.dueDate)
 				date = task.dueDate;
@@ -129,9 +135,19 @@
 		}
 		else
 		{
-			task.dueDate = nil;
-			[task save];
 			[dueDateCell setDate:nil];
+
+			task.dueDate = nil;
+			[task computeDateStatus];
+			[task markDirty];
+
+			NSError *error;
+			if (![getManagedObjectContext() save:&error])
+			{
+				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+				[alert show];
+				[alert release];
+			}
 		}
 	}
 	else if (cell == completionDateCell)
@@ -143,23 +159,42 @@
 		}
 		else
 		{
-			task.completionDate = nil;
-			[task save];
 			[completionDateCell setDate:nil];
+
+			task.completionDate = nil;
+			[task computeDateStatus];
+			[task markDirty];
+
+			NSError *error;
+			if (![getManagedObjectContext() save:&error])
+			{
+				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+				[alert show];
+				[alert release];
+			}
 		}
 	}
 	else if (cell == reminderDateCell)
 	{
 		if (cell.switch_.on)
 		{
-			[datePicker setDate:task.reminder target:self action:@selector(onPickReminder:)];
+			[datePicker setDate:task.reminderDate target:self action:@selector(onPickReminder:)];
 			[self presentDatePicker];
 		}
 		else
 		{
-			task.reminder = nil;
-			[task save];
 			[reminderDateCell setDate:nil];
+
+			task.reminderDate = nil;
+			[task markDirty];
+
+			NSError *error;
+			if (![getManagedObjectContext() save:&error])
+			{
+				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+				[alert show];
+				[alert release];
+			}
 		}
 	}
 }
@@ -167,19 +202,19 @@
 - (void)onPickStartDate:(NSDate *)date
 {
 	[self dismissDatePicker];
-	
+
 	if (date)
 	{
-		task.startDate = [[TimeUtils instance] stringFromDate:date];
+		task.startDate = date;
 		
 		if (task.dueDate)
 		{
-			NSDate *dueDate = [[TimeUtils instance] dateFromString:task.dueDate];
+			NSDate *dueDate = task.dueDate;
 			if ([dueDate compare:date] == NSOrderedAscending)
 			{
-				NSDate *date = [[TimeUtils instance] dateFromString:task.startDate];
+				NSDate *date = task.startDate;
 				date = [date addTimeInterval:3600];
-				task.dueDate = [[TimeUtils instance] stringFromDate:date];
+				task.dueDate = date;
 			}
 		}
 	}
@@ -188,7 +223,16 @@
 		[startDateCell.switch_ setOn:NO animated:YES];
 	}
 	
-	[task save];
+	[task computeDateStatus];
+	[task markDirty];
+
+	NSError *error;
+	if (![getManagedObjectContext() save:&error])
+	{
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+		[alert show];
+		[alert release];
+	}
 	
 	[startDateCell setDate:task.startDate];
 	[dueDateCell setDate:task.dueDate];
@@ -197,14 +241,14 @@
 - (void)onPickDueDate:(NSDate *)date
 {
 	[self dismissDatePicker];
-	
+
 	if (date)
 	{
-		task.dueDate = [[TimeUtils instance] stringFromDate:date];
+		task.dueDate = date;
 		
 		if (task.startDate)
 		{
-			NSDate *startDate = [[TimeUtils instance] dateFromString:task.startDate];
+			NSDate *startDate = task.startDate;
 			if ([startDate compare:date] == NSOrderedDescending)
 			{
 				// Substract one hour ?
@@ -217,7 +261,16 @@
 		[dueDateCell.switch_ setOn:NO animated:YES];
 	}
 	
-	[task save];
+	[task computeDateStatus];
+	[task markDirty];
+
+	NSError *error;
+	if (![getManagedObjectContext() save:&error])
+	{
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+		[alert show];
+		[alert release];
+	}
 	
 	[startDateCell setDate:task.startDate];
 	[dueDateCell setDate:task.dueDate];
@@ -227,12 +280,18 @@
 {
 	[self dismissDatePicker];
 	
-	if (date)
-		task.completionDate = [[TimeUtils instance] stringFromDate:date];
-	else
-		task.completionDate = nil;
-	
-	[task save];
+	task.completionDate = date;
+	[task computeDateStatus];
+	[task markDirty];
+
+	NSError *error;
+	if (![getManagedObjectContext() save:&error])
+	{
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+		[alert show];
+		[alert release];
+	}
+
 	[completionDateCell setDate:task.completionDate];
 }
 
@@ -240,13 +299,19 @@
 {
 	[self dismissDatePicker];
 
-	if (date)
-		task.reminder = [[TimeUtils instance] stringFromDate:date];
-	else
-		task.reminder = nil;
+	task.reminderDate = date;
+	[task computeDateStatus];
+	[task markDirty];
 
-	[task save];
-	[reminderDateCell setDate:task.reminder];
+	NSError *error;
+	if (![getManagedObjectContext() save:&error])
+	{
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+		[alert show];
+		[alert release];
+	}
+
+	[reminderDateCell setDate:task.reminderDate];
 }
 
 #pragma mark Table view methods
@@ -270,7 +335,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	UITableViewCell *cell = [cells objectAtIndex:indexPath.row];
-	
+
 	if (cell == startDateCell)
 	{
 		[datePicker setDate:task.startDate target:self action:@selector(onPickStartDate:)];
@@ -285,7 +350,7 @@
 	}
 	else if (cell == reminderDateCell)
 	{
-		[datePicker setDate:task.reminder target:self action:@selector(onPickReminder:)];
+		[datePicker setDate:task.reminderDate target:self action:@selector(onPickReminder:)];
 	}
 
 	[self presentDatePicker];

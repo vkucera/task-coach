@@ -24,8 +24,8 @@
 - (IBAction)onConfirm:(UIButton *)button;
 - (IBAction)onCancel:(UIButton *)button;
 
-- initWithDate:(NSString *)date target:(id)target action:(SEL)action;
+- initWithDate:(NSDate *)date target:(id)target action:(SEL)action;
 
-- (void)setDate:(NSString *)date target:(id)target action:(SEL)action;
+- (void)setDate:(NSDate *)date target:(id)target action:(SEL)action;
 
 @end

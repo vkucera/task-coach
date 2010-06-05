@@ -6,10 +6,10 @@
 //  Copyright 2009 Jérôme Laheurte. See COPYING for details.
 //
 
-#import "Task.h"
+#import "CDTask+Addons.h"
+#import "CDTask.h"
+#import "CDCategory.h"
 #import "TaskCellBig.h"
-#import "Database.h"
-#import "Statement.h"
 #import "String+Utils.h"
 #import "i18n.h"
 
@@ -56,21 +56,19 @@
 	[super dealloc];
 }
 
-- (void)setTask:(Task *)task target:(id)theTarget action:(SEL)theAction
+- (void)setTask:(CDTask *)task target:(id)theTarget action:(SEL)theAction
 {
 	[super setTask:task target:theTarget action:theAction];
 	
-	categories = [[NSMutableArray alloc] init];
-	Statement *req = [[Database connection] statementWithSQL:@"SELECT name FROM Category, TaskHasCategory WHERE id=idCategory AND idTask=?"];
-	[req bindInteger:task.objectId atIndex:1];
-	[req execWithTarget:self action:@selector(onCategory:)];
+	NSMutableArray *categories = [[NSMutableArray alloc] init];
+	for (CDCategory *cat in task.category)
+		[categories addObject:cat.name];
 	categoriesLabel.text = [@", " stringByJoiningStrings:categories];
 	[categories release];
-	categories = nil;
 
 	infosLabel.text = @"";
 	
-	switch ([task taskStatus])
+	switch ([[task dateStatus] intValue])
 	{
 		case TASKSTATUS_COMPLETED:
 			infosLabel.text = [NSString stringWithFormat:_("Completed %@"), task.completionDate];
@@ -89,11 +87,6 @@
 				infosLabel.text = [NSString stringWithFormat:_("Start %@"), task.startDate];
 			break;
 	}
-}
-
-- (void)onCategory:(NSDictionary *)dict
-{
-	[categories addObject:[dict objectForKey:@"name"]];
 }
 
 @end

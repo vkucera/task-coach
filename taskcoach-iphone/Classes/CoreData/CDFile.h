@@ -14,10 +14,10 @@
 {
 }
 
+@property (nonatomic, retain) NSString * guid;
 @property (nonatomic, retain) NSNumber * startHour;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSNumber * endHour;
-@property (nonatomic, retain) NSString * guid;
 @property (nonatomic, retain) NSSet* objects;
 
 @end

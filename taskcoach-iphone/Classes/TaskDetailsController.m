@@ -7,11 +7,13 @@
 //
 
 #import "TaskDetailsController.h"
-#import "Task.h"
 #import "TaskDetailsGeneral.h"
 #import "TaskDetailsDates.h"
 #import "TaskDetailsEfforts.h"
 #import "PositionStore.h"
+
+#import "CDTask.h"
+
 #import "i18n.h"
 
 //======================================================================
@@ -21,7 +23,7 @@
 @synthesize tabBar;
 @synthesize containerView;
 
-- initWithTask:(Task *)theTask
+- initWithTask:(CDTask *)theTask
 {
 	if (self = [super initWithNibName:@"TaskDetails" bundle:[NSBundle mainBundle]])
 	{
@@ -31,7 +33,7 @@
 	return self;
 }
 
-- initWithTask:(Task *)theTask tabIndex:(NSInteger)index
+- initWithTask:(CDTask *)theTask tabIndex:(NSInteger)index
 {
 	if (self = [self initWithTask:theTask])
 		tabIndex = index;

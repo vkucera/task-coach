@@ -11,38 +11,33 @@
 
 #import "PositionStore.h"
 
-@class Task;
-@class TaskList;
-@class TaskCell;
 @class CategoryViewController;
 @class SearchCell;
+@class TaskCell;
 
-@interface TaskViewController : UIViewController <UIAlertViewDelegate, RestorableController, UISearchBarDelegate, ODCalendarDayTimelineViewDelegate>
+@interface TaskViewController : UIViewController <UIAlertViewDelegate, RestorableController, UISearchBarDelegate, ODCalendarDayTimelineViewDelegate, NSFetchedResultsControllerDelegate>
 {
-	NSString *title;
-	NSInteger categoryId;
-	Task *parentTask;
 	BOOL shouldEdit;
-
-	NSMutableArray *headers;
-	BOOL isBecomingEditable;
-	NSIndexPath *tapping;
 	BOOL isCreatingTask;
-	
-	TaskCell *currentCell;
-	
+
 	UITableViewController *tableViewController;
 	CategoryViewController *categoryController;
 
 	SearchCell *searchCell;
+	TaskCell *currentCell;
+	NSIndexPath *tapping;
 	NSTimer *minuteTimer;
 
 	ODCalendarDayTimelineView *calendarView;
 	UISearchBar *calendarSearch;
 	UIToolbar *toolbar;
 
+	NSFetchedResultsController *results;
+
+/*
 	NSInteger startHour;
 	NSInteger endHour;
+ */
 }
 
 @property (nonatomic, readonly) UITableView *tableView;
@@ -55,6 +50,9 @@
 - (IBAction)onSync:(UIBarButtonItem *)button;
 - (IBAction)onSwitch:(UIBarButtonItem *)button;
 
-- initWithTitle:(NSString *)title category:(NSInteger)categoryId categoryController:(CategoryViewController *)controller parentTask:(Task *)parent edit:(BOOL)edit;
+- initWithCategoryController:(CategoryViewController *)controller edit:(BOOL)edit;
+
+- (void)populate;
+- (NSPredicate *)predicate;
 
 @end

@@ -9,7 +9,10 @@
 #import <TapkuLibrary/ODCalendarDayTimelineView.h>
 #import <TapkuLibrary/NSDate+TKCategory.h>
 
+#import "TaskCoachAppDelegate.h"
+
 #import "TaskViewController.h"
+#import "ParentTaskViewController.h"
 #import "TaskDetailsController.h"
 #import "CategoryViewController.h"
 
@@ -17,19 +20,23 @@
 #import "SearchCell.h"
 #import "CellFactory.h"
 
-#import "TaskList.h"
-#import "Database.h"
-#import "Statement.h"
-
-#import "Task.h"
-
 #import "Configuration.h"
+
+#import "CDTask.h"
+#import "CDTask+Addons.h"
+#import "CDDomainObject+Addons.h"
 
 #import "DateUtils.h"
 #import "NSDate+Utils.h"
 #import "i18n.h"
 
 #import "CalendarTaskView.h"
+
+@interface TaskViewController ()
+
+- (void)populate;
+
+@end;
 
 @implementation TaskViewController
 
@@ -54,58 +61,14 @@
 	[self.calendarView.timelineView setNeedsDisplay];
 }
 
+- (NSPredicate *)predicate
+{
+	return nil;
+}
+
 - (void)willTerminate
 {
 	[[PositionStore instance] push:self indexPath:nil type:TYPE_SUBTASK searchWord:searchCell.searchBar.text];
-}
-
-- (void)loadData
-{
-	[headers release];
-
-	NSNumber *parentId = nil;
-	if (parentTask)
-		parentId = [NSNumber numberWithInt:parentTask.objectId];
-	
-	TaskList *list;
-	headers = [[NSMutableArray alloc] initWithCapacity:4];
-
-	NSString *searchWord = nil;
-	if ([searchCell.searchBar.text length])
-	{
-		searchWord = searchCell.searchBar.text;
-	}
-
-	list = [[TaskList alloc] initWithView:@"OverdueTask" category:categoryId title:_("Overdue") status:TASKSTATUS_OVERDUE parentTask:parentId searchWord:searchWord];
-	if ([list count])
-	{
-		[headers addObject:list];
-	}
-	[list release];
-	
-	list = [[TaskList alloc] initWithView:@"DueSoonTask" category:categoryId title:_("Due soon") status:TASKSTATUS_DUESOON parentTask:parentId searchWord:searchWord];
-	if ([list count])
-	{
-		[headers addObject:list];
-	}
-	[list release];
-	
-	list = [[TaskList alloc] initWithView:@"StartedTask" category:categoryId title:_("Started") status:TASKSTATUS_STARTED parentTask:parentId searchWord:searchWord];
-	if ([list count])
-	{
-		[headers addObject:list];
-	}
-	[list release];
-
-	if ([Configuration configuration].showInactive)
-	{
-		list = [[TaskList alloc] initWithView:@"NotStartedTask" category:categoryId title:_("Not started") status:TASKSTATUS_NOTSTARTED parentTask:parentId searchWord:searchWord];
-		if ([list count])
-		{
-			[headers addObject:list];
-		}
-		[list release];
-	}
 }
 
 - (void)restorePosition:(Position *)pos store:(PositionStore *)store
@@ -114,8 +77,7 @@
 	{
 		searchCell.searchBar.text = pos.searchWord;
 
-		[self loadData];
-		[self.tableView reloadData];
+		[self populate];
 		[self.calendarView reloadDay];
 	}
 	
@@ -131,8 +93,8 @@
 			case TYPE_DETAILS:
 			{
 				[self.tableView selectRowAtIndexPath:pos.indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-				
-				Task *task = [[headers objectAtIndex:pos.indexPath.section] taskAtIndex:pos.indexPath.row];
+
+				CDTask *task = [results objectAtIndexPath:pos.indexPath];
 				TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task tabIndex:pos.tab];
 				[self.navigationController pushViewController:ctrl animated:NO];
 				[[PositionStore instance] push:self indexPath:pos.indexPath type:TYPE_DETAILS searchWord:searchCell.searchBar.text];
@@ -142,8 +104,8 @@
 			}
 			case TYPE_SUBTASK:
 			{
-				Task *task = [[headers objectAtIndex:pos.indexPath.section] taskAtIndex:pos.indexPath.row];
-				TaskViewController *ctrl = [[TaskViewController alloc] initWithTitle:task.name category:-1 categoryController:categoryController parentTask:task edit:self.editing];
+				CDTask *task = [results objectAtIndexPath:pos.indexPath];
+				ParentTaskViewController *ctrl = [[ParentTaskViewController alloc] initWithCategoryController:categoryController edit:self.editing parent:task];
 				[self.navigationController pushViewController:ctrl animated:NO];
 				[[PositionStore instance] push:self indexPath:pos.indexPath type:TYPE_SUBTASK searchWord:searchCell.searchBar.text];
 				[ctrl release];
@@ -156,29 +118,63 @@
 	}
 }
 
-- initWithTitle:(NSString *)theTitle category:(NSInteger)theId categoryController:(CategoryViewController *)controller parentTask:(Task *)parent edit:(BOOL)edit
+- initWithCategoryController:(CategoryViewController *)controller edit:(BOOL)edit
 {
 	if (self = [super initWithNibName:@"TaskView" bundle:[NSBundle mainBundle]])
 	{
-		parentTask = [parent retain];
 		shouldEdit = edit;
-		title = [theTitle retain];
-		categoryId = theId;
 		categoryController = controller;
 		
 		searchCell = [[CellFactory cellFactory] createSearchCell];
 		searchCell.searchBar.placeholder = _("Search tasks...");
 		searchCell.searchBar.delegate = self;
-		
-		[self loadData];
 	}
-	
+
 	return self;
+}
+
+- (void)populate
+{
+	[results release];
+
+	NSFetchRequest *request = [[NSFetchRequest alloc] init];
+	[request setEntity:[NSEntityDescription entityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()]];
+
+	NSMutableArray *preds = [[NSMutableArray alloc] init];
+	[preds addObject:[self predicate]];
+	[preds addObject:[NSPredicate predicateWithFormat:@"status != %d", STATUS_DELETED]];
+	if (![Configuration configuration].showCompleted)
+		[preds addObject:[NSPredicate predicateWithFormat:@"dateStatus != %d", TASKSTATUS_COMPLETED]];
+	if (![Configuration configuration].showInactive)
+		[preds addObject:[NSPredicate predicateWithFormat:@"dateStatus != %d", TASKSTATUS_NOTSTARTED]];
+	[request setPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:preds]];
+	[preds release];
+
+	NSLog(@"Object count: %d", [getManagedObjectContext() countForFetchRequest:request error:nil]);
+
+	NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@"dateStatus" ascending:YES];
+	NSSortDescriptor *sd2 = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+	[request setSortDescriptors:[NSArray arrayWithObjects:sd1, sd2, nil]];
+	[sd1 release];
+	[sd2 release];
+
+	results = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:getManagedObjectContext() sectionNameKeyPath:@"dateStatus" cacheName:@"TaskCache"];
+	results.delegate = self;
+
+	NSError *error;
+	if (![results performFetch:&error])
+	{
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not fetch tasks") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+		[alert show];
+		[alert release];
+
+		[results release];
+		results = nil;
+	}
 }
 
 - (void)viewDidLoad
 {
-	self.navigationItem.title = title;
 	self.editing = shouldEdit;
 	self.calendarView.delegate = self;
 	self.calendarView.scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
@@ -242,8 +238,9 @@
 
 - (void)onMinuteTimer:(NSTimer *)theTimer
 {
-	[self loadData];
-	[self.tableView reloadData];
+	// XXXTODO: update status
+	// [self loadData];
+	// [self.tableView reloadData];
 	[self.calendarView reloadDay];
 }
 
@@ -251,11 +248,9 @@
 {
 	[self viewDidUnload];
 
-	[parentTask release];
-	[title release];
-	[headers release];
 	[tapping release];
 	[currentCell release];
+
 	[searchCell release];
 	
     [super dealloc];
@@ -269,8 +264,6 @@
 		[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 	}
 
-	[self loadData];
-	[self.tableView reloadData];
 	[self.calendarView reloadDay];
 
 	if (!isCreatingTask)
@@ -279,84 +272,117 @@
 	isCreatingTask = NO;
 }
 
+#pragma mark Fetched results controller stuff
+
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.tableView beginUpdates];
+}
+
+
+- (void)controller:(NSFetchedResultsController *)controller
+  didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
+		   atIndex:(NSUInteger)sectionIndex
+	 forChangeType:(NSFetchedResultsChangeType)type
+{
+	sectionIndex++;
+	if (self.editing)
+		sectionIndex++;
+
+    switch(type)
+	{
+        case NSFetchedResultsChangeInsert:
+            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex]
+						  withRowAnimation:UITableViewRowAnimationRight];
+            break;
+
+        case NSFetchedResultsChangeDelete:
+            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex]
+						  withRowAnimation:UITableViewRowAnimationRight];
+            break;
+    }
+}
+
+- (void)controller:(NSFetchedResultsController *)controller
+   didChangeObject:(id)anObject
+	   atIndexPath:(NSIndexPath *)indexPath
+	 forChangeType:(NSFetchedResultsChangeType)type
+	  newIndexPath:(NSIndexPath *)newIndexPath
+{
+    UITableView *tableView = self.tableView;
+
+	indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section + (self.editing ? 2 : 1)];
+	newIndexPath = [NSIndexPath indexPathForRow:newIndexPath.row inSection:newIndexPath.section + (self.editing ? 2 : 1)];
+	
+    switch(type)
+	{
+        case NSFetchedResultsChangeInsert:
+            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath]
+							 withRowAnimation:UITableViewRowAnimationRight];
+            break;
+			
+        case NSFetchedResultsChangeDelete:
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
+							 withRowAnimation:UITableViewRowAnimationRight];
+            break;
+			
+        case NSFetchedResultsChangeUpdate:
+			[((TaskCell *)[tableView cellForRowAtIndexPath:indexPath]) setTask:(CDTask *)anObject target:self action:@selector(onToggleTaskCompletion:)];
+            break;
+			
+        case NSFetchedResultsChangeMove:
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
+							 withRowAnimation:UITableViewRowAnimationRight];
+            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath]
+							 withRowAnimation:UITableViewRowAnimationRight];
+            break;
+    }
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.tableView endUpdates];
+}
+
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated
 {
-	NSLog(@"Set editing: %d", editing);
+	[self.tableViewController setEditing:editing animated:animated];
+	[super setEditing:editing animated:animated];
 
-	if ([headers count])
+	if (editing)
 	{
-		// See editingStyleForRowAtIndexPath. Without this trick, the first task
-		// gets an Insert editing style as well as the newly-inserted row.
-
-		if (animated)
-			isBecomingEditable = YES;
-
-		[super setEditing:editing animated:animated];
-		[self.tableViewController setEditing:editing animated:animated];
-
-		if (editing)
-		{
-			[self.tableView insertSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationRight];
-		}
-		else
-		{
-			[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationRight];
-		}
+		[self.tableView insertSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationRight];
 	}
 	else
 	{
-		// There's a mess with the pseudo-section used when the data set is empty...
-		[super setEditing:editing animated:animated];
-		[self.tableViewController setEditing:editing animated:animated];
-		[self.tableView reloadData];
-		[self.calendarView reloadDay];
+		[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationRight];
 	}
 }
 
 - (void)toggleTaskCompletion
 {
-	NSIndexPath *indexPath = [self.tableView indexPathForCell:currentCell];
-	NSInteger section, row;
-	
-	section = indexPath.section - 1;
-	row = indexPath.row;
-	if (self.editing)
-		section -= 1;
-	
-	Task *task = [[[headers objectAtIndex:section] taskAtIndex:row] retain];
-	
-	if ([task taskStatus] == TASKSTATUS_COMPLETED)
+	CDTask *task = (CDTask *)[getManagedObjectContext() objectWithID:((TaskCell *)currentCell).ID];
+
+	if (task.completionDate)
 	{
 		task.completionDate = nil;
-		[task save];
 	}
 	else
 	{
-		[task setCompleted:YES];
-		[task save];
-		
-		if (![Configuration configuration].showCompleted)
-		{
-			TaskList *list = [headers objectAtIndex:section];
-			[list reload];
-			
-			if ([list count])
-			{
-				[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationBottom];
-			}
-			else
-			{
-				[headers removeObjectAtIndex:section];
-				if ([headers count])
-					[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationBottom];
-				else
-					[self.tableView reloadData];
-			}
-		}
+		task.completionDate = [NSDate date];
 	}
-	
-	[currentCell setTask:task target:self action:@selector(onToggleTaskCompletion:)];
-	[task release];
+
+	[task computeDateStatus];
+	[task markDirty];
+
+	NSError *error;
+	if (![getManagedObjectContext() save:&error])
+	{
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+		[alert show];
+		[alert release];
+	}
+
 	[currentCell release];
 	currentCell = nil;
 }
@@ -364,18 +390,9 @@
 - (void)onToggleTaskCompletion:(TaskCell *)cell
 {
 	currentCell = [cell retain];
+	CDTask *task = (CDTask *)[getManagedObjectContext() objectWithID:((TaskCell *)currentCell).ID];
 
-	NSIndexPath *indexPath = [self.tableView indexPathForCell:currentCell];
-	NSInteger section, row;
-	
-	section = indexPath.section - 1;
-	row = indexPath.row;
-	if (self.editing)
-		section -= 1;
-	
-	tapping = [indexPath retain];
-
-	Task *task = [[[headers objectAtIndex:section] taskAtIndex:row] retain];
+	tapping = [[self.tableView indexPathForCell:cell] retain];
 
 	if ([Configuration configuration].confirmComplete && ![Configuration configuration].showCompleted)
 	{
@@ -411,16 +428,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-	NSInteger count = [headers count] + 1;
-
-	if (self.editing)
-	{
-		return count + 1;
-	}
-
-	NSLog(@"Sections: %d", count);
-
-    return count;
+	return [[results sections] count] + (self.editing ? 2 : 1);
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -431,36 +439,31 @@
 	if (section == 0)
 		return @"";
 
-	if ([headers count])
+	switch ([[[[results sections] objectAtIndex:section - (self.editing ? 2 : 1)] name] integerValue])
 	{
-		return [[headers objectAtIndex:section - (self.editing ? 2 : 1)] title];
+		case TASKSTATUS_OVERDUE:
+			return _("Overdue");
+		case TASKSTATUS_DUESOON:
+			return _("Due soon");
+		case TASKSTATUS_STARTED:
+			return _("Started");
+		case TASKSTATUS_NOTSTARTED:
+			return _("Not started");
 	}
-	
-	return _("No tasks.");
+
+	return nil;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 	if (self.editing && (section == 1))
-	{
-		NSLog(@"1 row in section %d", section);
-
-		return 1;
-	}
+		return 1; // Add task cell
 
 	if (section == 0)
 		return 1; // Search cell
 
-	if ([headers count])
-	{
-		NSInteger count = [[headers objectAtIndex:section - (self.editing ? 2 : 1)] count];
-		
-		NSLog(@"%d row(s) in section %d", count, section);
-		
-		return count;
-	}
-
-	NSLog(@"No row in section %d", section);
+	if ([[results sections] count])
+		return [[[results sections] objectAtIndex:section - (self.editing ? 2 : 1)] numberOfObjects];
 
 	return 0;
 }
@@ -478,12 +481,7 @@
 			cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"Cell"] autorelease];
 		}
 
-#ifdef __IPHONE_3_0
-		cell.textLabel.text = 
-#else
-		cell.text =
-#endif
-		_("Add task...");
+		cell.textLabel.text = _("Add task...");
 	}
 	else if (indexPath.section == 0)
 	{
@@ -502,9 +500,7 @@
 		// must enforce it...
 		taskCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
-		TaskList *list = [headers objectAtIndex:indexPath.section - (self.editing ? 2 : 1)];
-		Task *task = [list taskAtIndex:indexPath.row];
-
+		CDTask *task = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - (self.editing ? 2 : 1)]];
 		[taskCell setTask:task target:self action:@selector(onToggleTaskCompletion:)];
 
 		cell = (UITableViewCell *)taskCell;
@@ -523,16 +519,6 @@
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (isBecomingEditable)
-	{
-		if ((indexPath.section == 1) && (indexPath.row == 0))
-		{
-			isBecomingEditable = NO;
-		}
-
-		return (indexPath.section == 0) ? UITableViewCellEditingStyleNone : UITableViewCellEditingStyleDelete;
-	}
-
 	if (self.editing)
 		switch (indexPath.section)
 		{
@@ -556,65 +542,28 @@
 {
 	if ((indexPath.section == 1) && self.editing)
 	{
-		NSNumber *pid = nil;
-		if (parentTask)
-			pid = [NSNumber numberWithInt:parentTask.objectId];
-
-		Task *task = [[Task alloc] initWithId:-1 fileId:[Database connection].currentFile name:@"" status:STATUS_NEW taskCoachId:nil description:@""
-									startDate:[[TimeUtils instance] stringFromDate:[NSDate dateRounded]] dueDate:nil completionDate:nil reminder: nil dateStatus:TASKSTATUS_UNDEFINED
-									 parentId:pid];
-		isCreatingTask = YES;
-		[task save];
-		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"INSERT INTO TaskHasCategory (idTask, idCategory) VALUES (%d, %d)", task.objectId, categoryId]] exec];
-		TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task];
-		[self.navigationController pushViewController:ctrl animated:YES];
-		[ctrl release];
+		[self onAddTask:nil];
+		return;
 	}
 	else
 	{
-		Task *task = [[headers objectAtIndex:indexPath.section - (self.editing ? 2 : 1)] taskAtIndex:indexPath.row];
-		
-		if (task.status == STATUS_NEW)
-		{
-			// The desktop never head of this one, get rid of it
-			[task delete];
-		}
-		else
-		{
-			[task setStatus:STATUS_DELETED];
-			[task save];
-		}
+		CDTask *task = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - (self.editing ? 2 : 1)]];
+		[task delete];
 
-		if ([[headers objectAtIndex:indexPath.section - (self.editing ? 2 : 1)] count] == 1)
+		NSError *error;
+		if (![getManagedObjectContext() save:&error])
 		{
-			// The whole section is removed
-			[headers removeObjectAtIndex:indexPath.section - (self.editing ? 2 : 1)];
-			[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationFade];
-		}
-		else
-		{
-			// The section stays, a row disappears
-			[[headers objectAtIndex:indexPath.section - (self.editing ? 2 : 1)] reload];
-			[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+			NSLog(@"Error saving: %@", [error localizedDescription]);
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+			[alert show];
+			[alert release];
 		}
 	}
 }
 
 - (IBAction)onAddTask:(UIBarButtonItem *)button
 {
-	NSNumber *pid = nil;
-	if (parentTask)
-		pid = [NSNumber numberWithInt:parentTask.objectId];
-
-	Task *task = [[Task alloc] initWithId:-1 fileId:[Database connection].currentFile name:@"" status:STATUS_NEW taskCoachId:nil description:@""
-								startDate:[[TimeUtils instance] stringFromDate:[NSDate dateRounded]] dueDate:nil completionDate:nil reminder:nil dateStatus:TASKSTATUS_UNDEFINED
-								 parentId:pid];
 	isCreatingTask = YES;
-	[task save];
-	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"INSERT INTO TaskHasCategory (idTask, idCategory) VALUES (%d, %d)", task.objectId, categoryId]] exec];
-	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task];
-	[self.navigationController pushViewController:ctrl animated:YES];
-	[ctrl release];
 }
 
 - (IBAction)onSync:(UIBarButtonItem *)button
@@ -702,13 +651,13 @@
 		return;
 	}
 
-	if ((self.editing && indexPath.section == 1) || (indexPath.section == 0))
+	if ((self.editing && indexPath.section == 1) || (!self.editing && (indexPath.section == 0)))
 	{
 		[self onAddTask:nil];
 		return;
 	}
 
-	Task *task = [[headers objectAtIndex:indexPath.section - (self.editing ? 2 : 1)] taskAtIndex:indexPath.row];
+	CDTask *task = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - (self.editing ? 2 : 1)]];
 	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task];
 	[self.navigationController pushViewController:ctrl animated:YES];
 	[[PositionStore instance] push:self indexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - (self.editing ? 2 : 1))] type:TYPE_DETAILS searchWord:searchCell.searchBar.text];
@@ -717,8 +666,8 @@
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
 {
-	Task *task = [[headers objectAtIndex:indexPath.section - (self.editing ? 2 : 1)] taskAtIndex:indexPath.row];
-	TaskViewController *ctrl = [[TaskViewController alloc] initWithTitle:task.name category:-1 categoryController:categoryController parentTask:task edit:self.editing];
+	CDTask *task = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - (self.editing ? 2 : 1)]];
+	ParentTaskViewController *ctrl = [[ParentTaskViewController alloc] initWithCategoryController:categoryController edit:self.editing parent:task];
 	[[PositionStore instance] push:self indexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - (self.editing ? 2 : 1))] type:TYPE_SUBTASK searchWord:searchCell.searchBar.text];
 	[self.navigationController pushViewController:ctrl animated:YES];
 	[ctrl release];
@@ -732,8 +681,8 @@
 	
 	searchCell.searchBar.text = searchBar.text;
 	calendarSearch.text = searchBar.text;
-	
-	[self loadData];
+
+	[self populate];
 	[self.tableView reloadData];
 	[self.calendarView reloadDay];
 }
@@ -745,7 +694,7 @@
 	
 	[searchBar resignFirstResponder];
 
-	[self loadData];
+	[self populate];
 	[self.tableView reloadData];
 	[self.calendarView reloadDay];
 }
@@ -754,6 +703,7 @@
 
 - (NSArray *)calendarDayTimelineView:(ODCalendarDayTimelineView*)calendarDayTimeline eventsForDate:(NSDate *)eventDate
 {
+	/*
 	NSMutableArray *events = [[NSMutableArray alloc] init];
 
 	for (TaskList *taskList in headers)
@@ -782,10 +732,14 @@
 	}
 
 	return [events autorelease];
+	 */
+	
+	return nil;
 }
 
 - (void)calendarDayTimelineView:(ODCalendarDayTimelineView*)calendarDayTimeline eventViewWasSelected:(ODCalendarDayEventView *)eventView atPoint:(CGPoint)point
 {
+	/*
 	Task *task = ((CalendarTaskView *)eventView).task;
 
 	NSIndexPath *indexPath = nil;
@@ -828,8 +782,10 @@
 	[self.navigationController pushViewController:ctrl animated:YES];
 	[[PositionStore instance] push:self indexPath:indexPath type:TYPE_DETAILS searchWord:searchCell.searchBar.text];
 	[ctrl release];
+	 */
 }
 
+/*
 - (void)updateStartHour:(NSDictionary *)dict
 {
 	startHour = [[dict objectForKey:@"startHour"] intValue];
@@ -839,23 +795,32 @@
 {
 	endHour = [[dict objectForKey:@"endHour"] intValue];
 }
+*/
 
 - (NSInteger)calendarDayTimelineViewStartHour:(ODCalendarDayTimelineView*)calendarDayTimeline
 {
+	/*
 	startHour = 8;
 	if ([Database connection].currentFile)
 		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT startHour FROM TaskCoachFile WHERE id=%@", [Database connection].currentFile]] execWithTarget:self action:@selector(updateStartHour:)];
 
 	return startHour;
+	 */
+
+	return 8;
 }
 
 - (NSInteger)calendarDayTimelineViewEndHour:(ODCalendarDayTimelineView*)calendarDayTimeline
 {
+	/*
 	endHour = 18;
 	if ([Database connection].currentFile)
 		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT endHour FROM TaskCoachFile WHERE id=%@", [Database connection].currentFile]] execWithTarget:self action:@selector(updateEndHour:)];
 	
 	return endHour;
+	 */
+	
+	return 18;
 }
 
 @end

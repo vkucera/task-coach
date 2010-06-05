@@ -10,11 +10,11 @@
 
 #import "TaskDetailsController.h"
 
-@class Task;
+@class CDTask;
 
 @interface TaskDetailsGeneral : UIViewController <UITextFieldDelegate, UITextViewDelegate>
 {
-	Task *task;
+	CDTask *task;
 	TaskDetailsController *parentCtrl;
 
 	UITextField *subject;
@@ -28,7 +28,7 @@
 @property (nonatomic, retain) IBOutlet UITextView *description;
 @property (nonatomic, retain) IBOutlet UIButton *categoriesButton;
 
-- initWithTask:(Task *)task parent:(TaskDetailsController *)parent;
+- initWithTask:(CDTask *)task parent:(TaskDetailsController *)parent;
 
 - (IBAction)onCategoriesClick:(UIButton *)button;
 

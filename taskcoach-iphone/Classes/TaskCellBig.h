@@ -14,7 +14,6 @@
 {
 	UILabel *infosLabel;
 	UILabel *categoriesLabel;
-	NSMutableArray *categories;
 }
 
 @property (nonatomic, retain) IBOutlet UILabel *infosLabel;

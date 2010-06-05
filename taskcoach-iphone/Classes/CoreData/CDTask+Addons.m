@@ -37,7 +37,9 @@
 
 	if (self.startDate)
 	{
-		if ([self.startDate timeIntervalSinceDate:[NSDate date]] >= 0)
+		NSLog(@"TI: %.2f", [self.startDate timeIntervalSinceDate:[NSDate date]]);
+
+		if ([self.startDate timeIntervalSinceDate:[NSDate date]] < 0)
 		{
 			self.dateStatus = [NSNumber numberWithInt:TASKSTATUS_STARTED];
 			return;
@@ -45,12 +47,6 @@
 	}
 
 	self.dateStatus = [NSNumber numberWithInt:TASKSTATUS_NOTSTARTED];
-}
-
-- (void)awakeFromFetch
-{
-	[super awakeFromFetch];
-	[self computeDateStatus];
 }
 
 @end

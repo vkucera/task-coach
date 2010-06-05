@@ -8,12 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@class Task;
+@class CDTask;
 @class CheckView;
 
 @interface TaskCell : UITableViewCell
 {
-	NSInteger taskId;
+	NSManagedObjectID *ID;
 
 	CheckView *leftImage;
 	UILabel *titleLabel;
@@ -24,10 +24,10 @@
 	BOOL isTapping;
 }
 
-@property (nonatomic, readonly) NSInteger taskId;
+@property (nonatomic, retain) NSManagedObjectID *ID;
 @property (nonatomic, retain) IBOutlet CheckView *leftImage;
 @property (nonatomic, retain) IBOutlet UILabel *titleLabel;
 
-- (void)setTask:(Task *)task target:(id)target action:(SEL)action;
+- (void)setTask:(CDTask *)task target:(id)target action:(SEL)action;
 
 @end

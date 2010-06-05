@@ -7,6 +7,7 @@
 //
 
 #import "DateCell.h"
+#import "DateUtils.h"
 #import "i18n.h"
 
 
@@ -16,16 +17,20 @@
 
 - (void)dealloc
 {
+	[date release];
 	[dateLabel release];
 	
 	[super dealloc];
 }
 
-- (void)setDate:(NSString *)date
+- (void)setDate:(NSDate *)theDate
 {
+	[date release];
+	date = theDate;
+
 	if (date)
 	{
-		dateLabel.text = date;
+		dateLabel.text = [[TimeUtils instance] stringFromDate:date];
 		[switch_ setOn:YES];
 	}
 	else

@@ -7,14 +7,13 @@
 //
 
 #import "DatePickerViewController.h"
-#import "DateUtils.h"
 #import "NSDate+Utils.h"
 
 @implementation DatePickerViewController
 
 @synthesize picker;
 
-- initWithDate:(NSString *)theDate target:(id)theTarget action:(SEL)theAction
+- initWithDate:(NSDate *)theDate target:(id)theTarget action:(SEL)theAction
 {
 	if (self = [super initWithNibName:@"DatePickerView" bundle:[NSBundle mainBundle]])
 	{
@@ -27,7 +26,7 @@
 	return self;
 }
 
-- (void)setDate:(NSString *)theDate target:(id)theTarget action:(SEL)theAction
+- (void)setDate:(NSDate *)theDate target:(id)theTarget action:(SEL)theAction
 {
 	target = theTarget;
 	action = theAction;
@@ -36,7 +35,7 @@
 
 	if (theDate)
 	{
-		date = [[[TimeUtils instance] dateFromString:theDate] retain];
+		date = [theDate retain];
 	}
 	else
 	{

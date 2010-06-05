@@ -10,7 +10,8 @@
 #import "NavigationController.h"
 #import "CategoryViewController.h"
 #import "StringChoiceController.h"
-#import "TaskViewController.h"
+#import "CategoryTaskViewController.h"
+#import "ParentTaskViewController.h"
 #import "SyncViewController.h"
 #import "FileChooser.h"
 #import "BadgedCell.h"
@@ -44,41 +45,33 @@
 
 - (void)restorePosition:(Position *)pos store:(PositionStore *)store
 {
-	// XXXFIXME
-/*
 	[self.tableView setContentOffset:pos.scrollPosition animated:NO];
 	
 	if (pos.indexPath)
 	{
 		[self.tableView selectRowAtIndexPath:pos.indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-		
-		TaskViewController *ctrl;
-		
+
+		CDCategory *category = nil;
+
 		if (pos.indexPath.row)
 		{
-			ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:pos.indexPath.row - 1] name] category:[[categories objectAtIndex:pos.indexPath.row - 1] objectId] categoryController:self parentTask:nil edit:NO];
+			category = [categories objectAtIndex:pos.indexPath.row - 1];
 		}
-		else
-		{
-			ctrl = [[TaskViewController alloc] initWithTitle:_("All") category:-1 categoryController:self parentTask:nil edit:NO];
-		}
-		
+
 		[[PositionStore instance] push:self indexPath:pos.indexPath type:pos.type searchWord:nil];
-		
+
+		CategoryTaskViewController *ctrl = [[CategoryTaskViewController alloc] initWithCategoryController:self edit:self.editing category:category];
 		[self.navigationController pushViewController:ctrl animated:YES];
 		[ctrl release];
 		
 		[store restore:ctrl];
 	}
-*/
 }
 
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
 
-	// XXXFIXME
-/*
 	NSArray *cachesPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
 	NSString *cachesDir = [cachesPaths objectAtIndex:0];
 	
@@ -98,7 +91,6 @@
 	}
 	
 	[fileManager release];
-*/
 
 	fileButton.enabled = ([Database connection].cdFileCount >= 2);
 }
@@ -123,14 +115,8 @@
 
 	if (indexPath)
 	{
+		[self loadCategories];
 		[self.tableView reloadData];
-
-		// XXXFIXME: reloadData is not enough to refresh the task count ?
-		for (NSIndexPath *path in [self.tableView indexPathsForVisibleRows])
-			[self.tableView deselectRowAtIndexPath:path animated:YES];
-
-		// And the above code does not actually deselect the selected cell. Duh...
-		[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 	}
 	
 	if (wantSync)
@@ -242,7 +228,7 @@
 	[self.tableView endUpdates];
 }
 
-- (void)deleteCategory:(CDCategory *)category
+- (void)deleteCategory:(CDCategory *)category indexPaths:(NSMutableArray *)indexPaths;
 {
 	for (CDTask *task in category.task)
 	{
@@ -251,8 +237,10 @@
 	}
 
 	for (CDCategory *child in [category child])
-		[self deleteCategory:child];
+		[self deleteCategory:child indexPaths:indexPaths];
 
+	[indexPaths addObject:[NSIndexPath indexPathForRow:[categories indexOfObject:category] * 2 inSection:0]];
+	[indexPaths addObject:[NSIndexPath indexPathForRow:[categories indexOfObject:category] * 2 + 1 inSection:0]];
 	[category delete];
 
 	NSError *error;
@@ -268,9 +256,11 @@
 {
 	if (editingStyle == UITableViewCellEditingStyleDelete)
 	{
-		[self deleteCategory:[categories objectAtIndex:indexPath.row / 2]];
+		NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+		[self deleteCategory:[categories objectAtIndex:indexPath.row / 2] indexPaths:indexPaths];
 		[self loadCategories];
-		[self.tableView reloadData];
+		[self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationRight];
+		[indexPaths release];
 		
 		if ([categories count] == 0)
 			[self setEditing:NO animated:YES];
@@ -322,23 +312,12 @@
 	}
 	else
 	{
-		// TaskViewController *ctrl;
+		CDCategory *category = (indexPath.row == 0) ? nil : [categories objectAtIndex:indexPath.row - 1];
+		TaskViewController *ctrl = [[CategoryTaskViewController alloc] initWithCategoryController:self edit:NO category:category];;
+		[[PositionStore instance] push:self indexPath:indexPath type:TYPE_DETAILS searchWord:nil];
 	
-		if (indexPath.row)
-		{
-			// XXXFIXME
-			// ctrl = [[TaskViewController alloc] initWithTitle:[[categories objectAtIndex:indexPath.row - 1] name] category:[[categories objectAtIndex:indexPath.row - 1] objectId] categoryController:self parentTask:nil edit:NO];
-		}
-		else
-		{
-			// XXXFIXME
-			//ctrl = [[TaskViewController alloc] initWithTitle:_("All") category:-1 categoryController:self parentTask:nil edit:NO];
-		}
-	
-		//[[PositionStore instance] push:self indexPath:indexPath type:TYPE_DETAILS searchWord:nil];
-	
-		//[self.navigationController pushViewController:ctrl animated:YES];
-		//[ctrl release];
+		[self.navigationController pushViewController:ctrl animated:YES];
+		[ctrl release];
 	}
 }
 

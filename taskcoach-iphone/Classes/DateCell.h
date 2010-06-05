@@ -13,10 +13,11 @@
 @interface DateCell : SwitchCell
 {
 	UILabel *dateLabel;
+	NSDate *date;
 }
 
 @property (nonatomic, retain) IBOutlet UILabel *dateLabel;
 
-- (void)setDate:(NSString *)date;
+- (void)setDate:(NSDate *)date;
 
 @end

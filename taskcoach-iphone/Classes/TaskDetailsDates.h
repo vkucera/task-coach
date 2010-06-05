@@ -11,12 +11,14 @@
 #import "TaskDetailsController.h"
 #import "DateCell.h"
 
-@class Task;
+@class CDTask;
 @class DatePickerViewController;
 
 @interface TaskDetailsDates : UITableViewController <SwitchCellDelegate>
 {
-	Task *task;
+	CDTask *task;
+	NSManagedObjectID *taskID;
+
 	TaskDetailsController *parentCtrl;
 
 	NSMutableArray *cells;
@@ -24,9 +26,10 @@
 	DateCell *dueDateCell;
 	DateCell *completionDateCell;
 	DateCell *reminderDateCell;
+
 	DatePickerViewController *datePicker;
 }
 
-- initWithTask:(Task *)task parent:(TaskDetailsController *)parent;
+- initWithTask:(CDTask *)task parent:(TaskDetailsController *)parent;
 
 @end

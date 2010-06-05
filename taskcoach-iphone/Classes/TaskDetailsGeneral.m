@@ -6,10 +6,21 @@
 //  Copyright 2010 Jérôme Laheurte. All rights reserved.
 //
 
+#import "TaskCoachAppDelegate.h"
+
 #import "TaskDetailsGeneral.h"
 #import "TaskCategoryPickerController.h"
-#import "Task.h"
+
+#import "CDTask.h"
+#import "CDDomainObject+Addons.h"
+
 #import "i18n.h"
+
+@interface TaskDetailsGeneral ()
+
+- (void)onSaveDescription:(UIBarButtonItem *)button;
+
+@end;
 
 @implementation TaskDetailsGeneral
 
@@ -18,7 +29,7 @@
 @synthesize description;
 @synthesize categoriesButton;
 
-- initWithTask:(Task *)theTask parent:(TaskDetailsController *)parent
+- initWithTask:(CDTask *)theTask parent:(TaskDetailsController *)parent
 {
 	if (self = [super initWithNibName:@"TaskDetailsGeneral" bundle:[NSBundle mainBundle]])
 	{
@@ -34,7 +45,7 @@
 	[super viewDidLoad];
 
 	self.subject.text = task.name;
-	self.description.text = task.description;
+	self.description.text = task.longDescription;
 
 	self.navigationItem.title = task.name;
 
@@ -98,7 +109,15 @@
 		textField.text = task.name;
 	}
 
-	[task save];
+	[task markDirty];
+	NSError *error;
+	if (![getManagedObjectContext() save:&error])
+	{
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+		[alert show];
+		[alert release];
+	}
+
 	self.navigationItem.title = task.name;
 }
 
@@ -116,13 +135,22 @@
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
 	self.navigationItem.rightBarButtonItem = nil;
-	task.description = description.text;
-	[task save];
+	[self onSaveDescription:nil];
 }
 
 - (void)onSaveDescription:(UIBarButtonItem *)button
 {
 	[description resignFirstResponder];
+
+	task.longDescription = description.text;
+	[task markDirty];
+	NSError *error;
+	if (![getManagedObjectContext() save:&error])
+	{
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+		[alert show];
+		[alert release];
+	}
 }
 
 @end
