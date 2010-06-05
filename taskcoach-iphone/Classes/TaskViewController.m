@@ -241,6 +241,8 @@ static void deleteTask(CDTask *task)
 	self.calendarView = nil;
 	self.calendarSearch = nil;
 	self.toolbar = nil;
+	[results release];
+	results = nil;
 }
 
 - (void)onMinuteTimer:(NSTimer *)theTimer
