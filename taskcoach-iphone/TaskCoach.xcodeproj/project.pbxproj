@@ -146,7 +146,6 @@
 		A6DA5C780F3D87F300372358 /* DescriptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6DA5C770F3D87F300372358 /* DescriptionCell.xib */; };
 		A6DDECFC0F46C5040047AEF5 /* KeychainWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDECFB0F46C5040047AEF5 /* KeychainWrapper.m */; };
 		A6DDED1B0F46C5D30047AEF5 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6DDED1A0F46C5D30047AEF5 /* Security.framework */; };
-		A6DDF8500F1F974000F35108 /* TaskList.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF84F0F1F974000F35108 /* TaskList.m */; };
 		A6DDF8540F1F988600F35108 /* TaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF8530F1F988600F35108 /* TaskViewController.m */; };
 		A6E46386113028A500976293 /* SyncView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6E46385113028A500976293 /* SyncView.xib */; };
 		A6E7C0801114418D00B230E2 /* AlertPrompt.m in Sources */ = {isa = PBXBuildFile; fileRef = A6E7C07F1114418D00B230E2 /* AlertPrompt.m */; };
@@ -442,8 +441,6 @@
 		A6DDECFA0F46C5040047AEF5 /* KeychainWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainWrapper.h; sourceTree = "<group>"; };
 		A6DDECFB0F46C5040047AEF5 /* KeychainWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainWrapper.m; sourceTree = "<group>"; };
 		A6DDED1A0F46C5D30047AEF5 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		A6DDF84E0F1F974000F35108 /* TaskList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TaskList.h; path = Database/TaskList.h; sourceTree = "<group>"; };
-		A6DDF84F0F1F974000F35108 /* TaskList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TaskList.m; path = Database/TaskList.m; sourceTree = "<group>"; };
 		A6DDF8520F1F988600F35108 /* TaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskViewController.h; sourceTree = "<group>"; };
 		A6DDF8530F1F988600F35108 /* TaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskViewController.m; sourceTree = "<group>"; };
 		A6DFFBB7117B038900A479EC /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = th.lproj/MainWindow.xib; sourceTree = "<group>"; };
@@ -757,8 +754,6 @@
 				A68EDEDF0F1E212A00F51FF2 /* SQLite.m */,
 				A68EDEE00F1E212A00F51FF2 /* Statement.h */,
 				A68EDEE10F1E212A00F51FF2 /* Statement.m */,
-				A6DDF84E0F1F974000F35108 /* TaskList.h */,
-				A6DDF84F0F1F974000F35108 /* TaskList.m */,
 				A6BD9AB5114CD1B500AC781C /* SubcategoriesSelector.h */,
 				A6BD9AB6114CD1B500AC781C /* SubcategoriesSelector.m */,
 			);
@@ -1069,7 +1064,6 @@
 				A68EDF450F1E275700F51FF2 /* DomainObject.m in Sources */,
 				A68EDF890F1E2A7F00F51FF2 /* StringChoiceController.m in Sources */,
 				A61DE2390F1E3F5B004BC97E /* Task.m in Sources */,
-				A6DDF8500F1F974000F35108 /* TaskList.m in Sources */,
 				A6DDF8540F1F988600F35108 /* TaskViewController.m in Sources */,
 				A6AEE77F0F21CFA00061CF77 /* Network.m in Sources */,
 				A673ABF60F2203D000E548BB /* NavigationController.m in Sources */,

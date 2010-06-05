@@ -10,7 +10,6 @@
 #import "Database.h"
 #import "Statement.h"
 #import "Configuration.h"
-#import "TaskList.h"
 #import "String+Utils.h"
 
 static Statement *_saveStatement = nil;
@@ -73,6 +72,7 @@ static Statement *_saveStatement = nil;
 
 - (NSInteger)countForTable:(NSString *)tableName
 {
+	/*
 	NSNumber *count = [countCache objectForKey:tableName];
 	if (count)
 	{
@@ -88,6 +88,9 @@ static Statement *_saveStatement = nil;
 	}
 
 	return taskCount;
+	 */
+	
+	return 0;
 }
 
 - (void)setCount:(NSDictionary *)dict
