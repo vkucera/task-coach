@@ -46,9 +46,9 @@ class Page(object):
             pass # Not a TextCtrl
         theEntry.SetFocus()
 
-    def ok(self):
+    def ok(self, *args, **kwargs):
         pass
-       
+    
         
 class PageWithHeaders(Page, widgets.PanelWithBoxSizer):
     headerForNonRecursiveAttributes = 'Subclass responsibility'
@@ -60,10 +60,7 @@ class PageWithHeaders(Page, widgets.PanelWithBoxSizer):
 
     def addHeaders(self, box):
         headers = ['', self.headerForNonRecursiveAttributes]
-        if self.item.children():
-            headers.append(self.headerForRecursiveAttributes)
-        else:
-            headers.append('')
+        headers.append(self.headerForRecursiveAttributes if self.item.children() else '')
         for header in headers:
             box.add(header)
 
@@ -121,10 +118,10 @@ class SubjectPage(Page, widgets.BookPage):
     def setDescription(self, description):
         self._descriptionEntry.SetValue(description)
 
-    def ok(self):
-        self.item.setSubject(self._subjectEntry.GetValue())
-        self.item.setDescription(self._descriptionEntry.GetValue())
-        super(SubjectPage, self).ok()
+    @patterns.eventSource
+    def ok(self, event=None): # pylint: disable-msg=W0221
+        self.item.setSubject(self._subjectEntry.GetValue(), event=event)
+        self.item.setDescription(self._descriptionEntry.GetValue(), event=event)
                         
     def entries(self):
         return dict(subject=self._subjectEntry, 
@@ -147,9 +144,10 @@ class TaskSubjectPage(SubjectPage):
         self.addEntry(_('Priority'), self._prioritySpinner, 
                       flags=[None, wx.ALL])
     
-    def ok(self):
-        self.item.setPriority(self._prioritySpinner.GetValue())
-        super(TaskSubjectPage, self).ok()
+    @patterns.eventSource
+    def ok(self, event=None):
+        self.item.setPriority(self._prioritySpinner.GetValue(), event=event)
+        super(TaskSubjectPage, self).ok(event=event)
  
     def entries(self):
         entries = super(TaskSubjectPage, self).entries()
@@ -175,9 +173,10 @@ class CategorySubjectPage(SubjectPage):
         self.addEntry(_('Subcategories'), self._exclusiveSubcategoriesCheckBox,
                       flags=[None, wx.ALL])
 
-    def ok(self):
-        self.item.makeSubcategoriesExclusive(self._exclusiveSubcategoriesCheckBox.GetValue())
-        super(CategorySubjectPage, self).ok()
+    @patterns.eventSource
+    def ok(self, event=None):
+        self.item.makeSubcategoriesExclusive(self._exclusiveSubcategoriesCheckBox.GetValue(), event=event)
+        super(CategorySubjectPage, self).ok(event=event)
         
 
 class NoteSubjectPage(SubjectPage):
@@ -212,9 +211,10 @@ class AttachmentSubjectPage(SubjectPage):
         panel.SetSizer(sizer)
         self.addEntry(_('Location'), panel, flags=[None, wx.ALL|wx.EXPAND])
 
-    def ok(self):
-        self.item.setLocation(self._locationEntry.GetValue())
-        super(AttachmentSubjectPage, self).ok()
+    @patterns.eventSource
+    def ok(self, event=None):
+        self.item.setLocation(self._locationEntry.GetValue(), event=event)
+        super(AttachmentSubjectPage, self).ok(event=event)
 
     def onSelectLocation(self, event): # pylint: disable-msg=W0613
         if self.item.type_ == 'file':
@@ -317,21 +317,21 @@ class AppearancePage(Page, widgets.BookPage):
         self._iconEntry.SetSelection(currentSelectionIndex)
         self.addEntry(_('Icon'), self._iconEntry, flags=[None, wx.ALL|wx.EXPAND])
 
-    def ok(self):
+    @patterns.eventSource
+    def ok(self, event=None): # pylint: disable-msg=W0221
         fgColorChecked = self._fgColorCheckBox.IsChecked()
         bgColorChecked = self._bgColorCheckBox.IsChecked()
         fgColor = self._fgColorButton.GetColour() if fgColorChecked else None
         bgColor = self._bgColorButton.GetColour() if bgColorChecked else None
-        self.item.setForegroundColor(fgColor)
-        self.item.setBackgroundColor(bgColor)
+        self.item.setForegroundColor(fgColor, event=event)
+        self.item.setBackgroundColor(bgColor, event=event)
         fontChecked = self._fontCheckBox.IsChecked()
         font = self._fontButton.GetSelectedFont() if fontChecked else None
-        self.item.setFont(font)
+        self.item.setFont(font, event=event)
         icon = self._iconEntry.GetClientData(self._iconEntry.GetSelection())
         selectedIcon = icon[:-len('_icon')] + '_open_icon' if (icon.startswith('folder') and icon.count('_') == 2) else icon
-        self.item.setIcon(icon)
-        self.item.setSelectedIcon(selectedIcon)
-        super(AppearancePage, self).ok()
+        self.item.setIcon(icon, event=event)
+        self.item.setSelectedIcon(selectedIcon, event=event)
 
 
 class DatesPage(TaskHeadersMixin, PageWithHeaders):
@@ -461,14 +461,15 @@ class DatesPage(TaskHeadersMixin, PageWithHeaders):
             self._reminderDateTimeEntry.get() == date.DateTime():
             self.suggestReminder()
 
-    def ok(self):
+    def ok(self, event=None):
         # Funny things happen with the date pickers without this (to
         # reproduce: create a task, enter the start date by hand,
         # click OK; the date is the current date instead of the one
-        # typed in).
+        # typed in). Consequently, _ok() will have do its own event sending.
         wx.CallAfter(self._ok)
 
-    def _ok(self):
+    @patterns.eventSource
+    def _ok(self, event=None): # pylint: disable-msg=W0221
         recurrenceDict = {0: '', 1: 'daily', 2: 'weekly', 3: 'monthly', 4: 'yearly'}
         kwargs = dict(unit=recurrenceDict[self._recurrenceEntry.Selection])
         if self._maxRecurrenceCheckBox.IsChecked():
@@ -476,13 +477,13 @@ class DatesPage(TaskHeadersMixin, PageWithHeaders):
         kwargs['amount'] = self._recurrenceFrequencyEntry.Value
         kwargs['sameWeekday'] = self._recurrenceSameWeekdayCheckBox.IsChecked()
         # pylint: disable-msg=E1101,W0142
-        self.item.setRecurrence(date.Recurrence(**kwargs))
-        self.item.setStartDateTime(self._startDateTimeEntry.get())
-        self.item.setDueDateTime(self._dueDateTimeEntry.get())
+        self.item.setRecurrence(date.Recurrence(**kwargs), event=event)
+        self.item.setStartDateTime(self._startDateTimeEntry.get(), event=event)
+        self.item.setDueDateTime(self._dueDateTimeEntry.get(), event=event)
         newCompletionDateTime = self._completionDateTimeEntry.get()
         if newCompletionDateTime != self._previousCompletionDateTime:
-            self.item.setCompletionDateTime(newCompletionDateTime)
-        self.item.setReminder(self._reminderDateTimeEntry.get())
+            self.item.setCompletionDateTime(newCompletionDateTime, event=event)
+        self.item.setReminder(self._reminderDateTimeEntry.get(), event=event)
 
     def setReminder(self, reminder):
         self._reminderDateTimeEntry.set(reminder)
@@ -556,10 +557,11 @@ class ProgressPage(TaskHeadersMixin, PageWithHeaders):
     def entries(self):
         return dict(percentageComplete=self._percentageCompleteEntry)
         
-    def ok(self):
+    @patterns.eventSource
+    def ok(self, event=None): # pylint: disable-msg=W0221
         newValue = self._percentageCompleteEntry.get()
         if newValue != self._percentageCompleteOldValue:
-            self.item.setPercentageComplete(newValue)
+            self.item.setPercentageComplete(newValue, event=event)
 
 
 class BudgetPage(TaskHeadersMixin, PageWithHeaders):
@@ -614,11 +616,12 @@ class BudgetPage(TaskHeadersMixin, PageWithHeaders):
                     totalFixedFee=self._fixedFeeEntry, 
                     revenue=self._hourlyFeeEntry, 
                     totalRevenue=self._hourlyFeeEntry)
-        
-    def ok(self):
-        self.item.setBudget(self._budgetEntry.get())
-        self.item.setHourlyFee(self._hourlyFeeEntry.get())
-        self.item.setFixedFee(self._fixedFeeEntry.get())
+    
+    @patterns.eventSource    
+    def ok(self, event=None): # pylint: disable-msg=W0221
+        self.item.setBudget(self._budgetEntry.get(), event=event)
+        self.item.setHourlyFee(self._hourlyFeeEntry.get(), event=event)
+        self.item.setFixedFee(self._fixedFeeEntry.get(), event=event)
         
 
 class EffortPage(TaskHeadersMixin, PageWithViewerMixin, PageWithHeaders):
@@ -690,17 +693,18 @@ class CategoriesPage(PageWithViewerMixin, PageWithHeaders):
     def entries(self):
         return dict(categories=self.viewer, totalCategories=self.viewer) 
 
-    def ok(self):
+    @patterns.eventSource
+    def ok(self, event=None): # pylint: disable-msg=W0221
         treeCtrl = self.viewer.widget
         treeCtrl.ExpandAll()
         for categoryNode in treeCtrl.GetItemChildren(recursively=True):
             categoryObject = treeCtrl.GetItemPyData(categoryNode)
             if categoryNode.IsChecked():
-                categoryObject.addCategorizable(self.item)
-                self.item.addCategory(categoryObject)
+                categoryObject.addCategorizable(self.item, event=event)
+                self.item.addCategory(categoryObject, event=event)
             else:
-                categoryObject.removeCategorizable(self.item)
-                self.item.removeCategory(categoryObject)
+                categoryObject.removeCategorizable(self.item, event=event)
+                self.item.removeCategory(categoryObject, event=event)
 
 
 class TaskCategoriesPage(TaskHeadersMixin, CategoriesPage):
@@ -735,9 +739,9 @@ class AttachmentsPage(PageWithViewerMixin, PageWithHeaders):
     def entries(self):
         return dict(attachments=self.viewer)
 
-    def ok(self):
-        self.item.setAttachments(self.attachmentsList)
-        super(AttachmentsPage, self).ok()
+    @patterns.eventSource
+    def ok(self, event=None): # pylint: disable-msg=W0221
+        self.item.setAttachments(self.attachmentsList, event=event)
 
 
 class LocalNoteViewer(LocalDragAndDropFixMixin, viewer.BaseNoteViewer):
@@ -759,9 +763,10 @@ class NotesPage(PageWithViewerMixin, PageWithHeaders):
     
     def entries(self):
         return dict(notes=self.viewer)
-                
-    def ok(self):
-        self.item.setNotes(list(self.notes.rootItems()))
+    
+    @patterns.eventSource        
+    def ok(self, event=None): # pylint: disable-msg=W0221
+        self.item.setNotes(list(self.notes.rootItems()), event=event)
 
 
 class BehaviorPage(TaskHeadersMixin, PageWithHeaders):
@@ -786,10 +791,11 @@ class BehaviorPage(TaskHeadersMixin, PageWithHeaders):
         self.add(behaviorBox, border=5)
         self.fit()
 
-    def ok(self):
+    @patterns.eventSource
+    def ok(self, event=None): # pylint: disable-msg=W0221
         self.item.setShouldMarkCompletedWhenAllChildrenCompleted( \
             self._markTaskCompletedEntry.GetClientData( \
-                self._markTaskCompletedEntry.GetSelection()))
+                self._markTaskCompletedEntry.GetSelection()), event=event)
 
 
 class TaskEditBook(widgets.Listbook):
@@ -877,11 +883,12 @@ class EffortEditBook(Page, widgets.BookPage):
         self.addEntry(_('Description'), self._descriptionEntry,
             flags=[None, wx.ALL|wx.EXPAND], growable=True)
 
-    def ok(self):
-        self._effort.setTask(self._taskEntry.GetSelection())
-        self._effort.setStart(self._startEntry.get())
-        self._effort.setStop(self._stopEntry.get())
-        self._effort.setDescription(self._descriptionEntry.GetValue())
+    @patterns.eventSource
+    def ok(self, event=None): # pylint: disable-msg=W0221
+        self._effort.setTask(self._taskEntry.GetSelection(), event=event)
+        self._effort.setStart(self._startEntry.get(), event=event)
+        self._effort.setStop(self._stopEntry.get(), event=event)
+        self._effort.setDescription(self._descriptionEntry.GetValue(), event=event)
 
     def onPeriodChanged(self, *args, **kwargs): # pylint: disable-msg=W0613
         if not hasattr(self, '_stopEntry'): # Check that both entries exist
@@ -1003,6 +1010,12 @@ class EditorWithCommand(widgets.NotebookDialog):
         patterns.Publisher().removeObserver(self.onItemRemoved)
         super(EditorWithCommand, self).ok(*args, **kwargs)
         self._command.do()
+    
+    @patterns.eventSource    
+    def okPages(self, event=None): # pylint: disable-msg=W0221
+        # Pass the event to NotebookDialog.okPages so that it gets passed to
+        # all the pages
+        super(EditorWithCommand, self).okPages(event=event)
         
     def onItemRemoved(self, event):
         ''' The item we're editing or one of its ancestors has been removed. 

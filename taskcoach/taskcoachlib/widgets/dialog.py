@@ -89,9 +89,12 @@ class BookDialog(Dialog):
                 self._interior.RemovePage(pageIndex)
        
     def ok(self, *args, **kwargs):
-        for page in self._interior:
-            page.ok()
+        self.okPages()
         super(BookDialog, self).ok(*args, **kwargs)
+        
+    def okPages(self, *args, **kwargs):
+        for page in self._interior:
+            page.ok(*args, **kwargs)
 
     def addPages(self):
         raise NotImplementedError 
