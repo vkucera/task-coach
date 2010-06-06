@@ -247,9 +247,26 @@ static void deleteTask(CDTask *task)
 
 - (void)onMinuteTimer:(NSTimer *)theTimer
 {
-	// XXXTODO: update status
-	// [self loadData];
-	// [self.tableView reloadData];
+	NSFetchRequest *request = [[NSFetchRequest alloc] init];
+	[request setEntity:[NSEntityDescription entityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()]];
+	NSError *error;
+	NSArray *tasks = [getManagedObjectContext() executeFetchRequest:request error:&error];
+	[request release];
+	if (tasks)
+	{
+		for (CDTask *task in tasks)
+			[task computeDateStatus];
+		
+		if (![getManagedObjectContext() save:&error])
+		{
+			NSLog(@"Could not save: %@", [error localizedDescription]);
+		}
+	}
+	else
+	{
+		NSLog(@"Could not fetch tasks: %@", [error localizedDescription]);
+	}
+
 	[self.calendarView reloadDay];
 }
 

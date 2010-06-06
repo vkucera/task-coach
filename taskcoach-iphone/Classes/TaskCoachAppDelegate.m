@@ -208,17 +208,12 @@ NSManagedObjectContext *getManagedObjectContext(void)
 	NSString *path = [[self applicationDocumentsDirectory] stringByAppendingPathComponent: @"TaskCoachCD.sqlite"];
     NSURL *storeUrl = [NSURL fileURLWithPath: path];
 
-	BOOL mustMigrate = ![[NSFileManager defaultManager] fileExistsAtPath:path];
-
 	NSError *error;
     persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
     if (![persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeUrl options:nil error:&error])
 	{
 		NSLog(@"Could not create store: %@", [error localizedDescription]);
     }    
-
-	// XXXTODO: migrate existing data
-	(void)mustMigrate;
 
     return persistentStoreCoordinator;
 }
