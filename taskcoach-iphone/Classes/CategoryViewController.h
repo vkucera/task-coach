@@ -24,6 +24,8 @@
 	BOOL wantSync;
 	NSInteger currentCategory;
 	NSInteger totalCount;
+
+	NSTimer *minuteTimer;
 }
 
 @property (nonatomic, assign) IBOutlet NavigationController *navigationController;

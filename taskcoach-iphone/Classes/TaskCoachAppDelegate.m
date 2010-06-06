@@ -14,6 +14,7 @@
 #import "i18n.h"
 #import "CategoryViewController.h"
 #import "Migration.h"
+#import "ReminderController.h"
 
 NSManagedObjectContext *getManagedObjectContext(void)
 {
@@ -104,6 +105,8 @@ NSManagedObjectContext *getManagedObjectContext(void)
 	
 	[window addSubview:mainController.view];
 	[window makeKeyAndVisible];
+
+	[[ReminderController instance] check];
 }
 
 - (void)dealloc

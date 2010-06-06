@@ -70,6 +70,7 @@
 		A65D1B81119D383200F0F5C3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A65D1B80119D383200F0F5C3 /* QuartzCore.framework */; };
 		A65D1C47119D460B00F0F5C3 /* CalendarTaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = A65D1C46119D460B00F0F5C3 /* CalendarTaskView.m */; };
 		A65D1C5E119D4A7600F0F5C3 /* disclosure.png in Resources */ = {isa = PBXBuildFile; fileRef = A65D1C5D119D4A7600F0F5C3 /* disclosure.png */; };
+		A65FF1ED11BBC25B00394E33 /* ReminderController.m in Sources */ = {isa = PBXBuildFile; fileRef = A65FF1EC11BBC25B00394E33 /* ReminderController.m */; };
 		A6664C230F2B35F300638C68 /* SyncViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664C220F2B35F300638C68 /* SyncViewController.m */; };
 		A6664D3F0F2B41A000638C68 /* State.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664D3E0F2B41A000638C68 /* State.m */; };
 		A6664DD90F2B47A000638C68 /* ProtocolNegotiationState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664DD80F2B47A000638C68 /* ProtocolNegotiationState.m */; };
@@ -284,6 +285,8 @@
 		A65D1C45119D460B00F0F5C3 /* CalendarTaskView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarTaskView.h; sourceTree = "<group>"; };
 		A65D1C46119D460B00F0F5C3 /* CalendarTaskView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalendarTaskView.m; sourceTree = "<group>"; };
 		A65D1C5D119D4A7600F0F5C3 /* disclosure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = disclosure.png; sourceTree = SOURCE_ROOT; };
+		A65FF1EB11BBC25B00394E33 /* ReminderController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReminderController.h; sourceTree = "<group>"; };
+		A65FF1EC11BBC25B00394E33 /* ReminderController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReminderController.m; sourceTree = "<group>"; };
 		A6664C210F2B35F300638C68 /* SyncViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncViewController.h; sourceTree = "<group>"; };
 		A6664C220F2B35F300638C68 /* SyncViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncViewController.m; sourceTree = "<group>"; };
 		A6664D3D0F2B41A000638C68 /* State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = State.h; path = Synchronization/State.h; sourceTree = "<group>"; };
@@ -507,6 +510,8 @@
 				1D3623250D0F684500981E51 /* TaskCoachAppDelegate.m */,
 				A6FA97DA0F2B2E1C00505D87 /* MainViewController.h */,
 				A6FA97DB0F2B2E1C00505D87 /* MainViewController.m */,
+				A65FF1EB11BBC25B00394E33 /* ReminderController.h */,
+				A65FF1EC11BBC25B00394E33 /* ReminderController.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -1131,6 +1136,7 @@
 				A62DFB1711BB706100F594AB /* FullFromDesktopCategoryState.m in Sources */,
 				A62DFB2C11BB763300F594AB /* FullFromDesktopEffortState.m in Sources */,
 				A610E6A611BB9913006800AF /* Migration.m in Sources */,
+				A65FF1ED11BBC25B00394E33 /* ReminderController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
