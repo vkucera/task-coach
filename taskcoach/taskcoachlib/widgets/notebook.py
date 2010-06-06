@@ -135,13 +135,14 @@ class BoxedBookPage(BookPage):
         super(BoxedBookPage, self).addEntry(*args, **kwargs)
         
 
-class Book(object):
-    ''' Abstract base class for *book '''
+class BookMixin(object):
+    ''' Mixin class for *book '''
     
     _bitmapSize = (16, 16)
+    pageChangedEvent = 'Subclass responsibility'
     
     def __init__(self, parent, *args, **kwargs):
-        super(Book, self).__init__(parent, -1, *args, **kwargs)
+        super(BookMixin, self).__init__(parent, -1, *args, **kwargs)
         dropTarget = draganddrop.FileDropTarget(onDragOverCallback=self.onDragOver)
         self.SetDropTarget(dropTarget)
         self.Bind(self.pageChangedEvent, self.onPageChanged)
@@ -183,18 +184,18 @@ class Book(object):
             imageId = imageList.GetImageCount()-1
         else:
             imageId = -1
-        super(Book, self).AddPage(page, name, imageId=imageId)
+        super(BookMixin, self).AddPage(page, name, imageId=imageId)
 
     def ok(self, *args, **kwargs):
         for page in self:
             page.ok(*args, **kwargs)
             
 
-class Notebook(Book, wx.Notebook):
+class Notebook(BookMixin, wx.Notebook):
     pageChangedEvent = wx.EVT_NOTEBOOK_PAGE_CHANGED
     
 
-class Choicebook(Book, wx.Choicebook):
+class Choicebook(BookMixin, wx.Choicebook):
     pageChangedEvent = wx.EVT_CHOICEBOOK_PAGE_CHANGED
     
     def createImageList(self):
@@ -207,7 +208,7 @@ class Choicebook(Book, wx.Choicebook):
         return wx.DragNone
 
 
-class Listbook(Book, wx.Listbook):
+class Listbook(BookMixin, wx.Listbook):
     _bitmapSize = (22, 22)
     pageChangedEvent = wx.EVT_LISTBOOK_PAGE_CHANGED
 
@@ -250,7 +251,7 @@ class AdvanceSelectionMixin(object):
         self.SetSelection(newSelection)
 
     
-class AUINotebook(AdvanceSelectionMixin, Book, aui.AuiNotebook):
+class AUINotebook(AdvanceSelectionMixin, BookMixin, aui.AuiNotebook):
     # We don't use aui.AuiNotebook.AdvanceSelection, but our own version from
     # AdvanceSelectionMixin, because aui.AuiNotebook.AdvanceSelection iterates
     # over the pages in the current tab container only, and doesn't move the 
@@ -332,6 +333,9 @@ class AuiManagedFrameWithNotebookAPI(AdvanceSelectionMixin, wx.Frame):
 
     def SetSelection(self, targetIndex, *args):
         for index, paneInfo in enumerate(self.manager.GetAllPanes()):
+            # We can't use the variable paneInfo here. Apparently modifying the
+            # first paneInfo in the list invalidates later ones. So we retrieve
+            # the paneInfo's one by one:
             self.manager.GetAllPanes()[index].SetFlag(aui.AuiPaneInfo.optionActive, index==targetIndex)
         self.manager.Update()
         

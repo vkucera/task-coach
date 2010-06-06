@@ -461,7 +461,7 @@ class DatesPage(TaskHeadersMixin, PageWithHeaders):
             self._reminderDateTimeEntry.get() == date.DateTime():
             self.suggestReminder()
 
-    def ok(self, event=None):
+    def ok(self, event=None): # pylint: disable-msg=W0221,W0613
         # Funny things happen with the date pickers without this (to
         # reproduce: create a task, enter the start date by hand,
         # click OK; the date is the current date instead of the one
@@ -967,8 +967,10 @@ class AttachmentEditBook(widgets.Listbook):
 
 
 class EditorWithCommand(widgets.NotebookDialog):
-    def __init__(self, parent, command, container, *args, **kwargs):
+    def __init__(self, parent, command, settings, container, taskFile, *args, **kwargs):
         self._command = command
+        self._settings = settings
+        self._taskFile = taskFile
         super(EditorWithCommand, self).__init__(parent, command.name(), 
                                                 *args, **kwargs)
         columnName = kwargs.get('columnName', '')
@@ -1037,13 +1039,6 @@ class EditorWithCommand(widgets.NotebookDialog):
 
 
 class TaskEditor(EditorWithCommand):
-    def __init__(self, parent, command, settings, tasks, taskFile, bitmap='edit', 
-                 *args, **kwargs):
-        self._settings = settings
-        self._taskFile = taskFile
-        super(TaskEditor, self).__init__(parent, command, tasks, 
-                                         bitmap, *args, **kwargs)
-
     def addPage(self, theTask):
         page = TaskEditBook(self._interior, theTask, self._taskFile, 
                             self._settings)
@@ -1051,13 +1046,6 @@ class TaskEditor(EditorWithCommand):
         
 
 class EffortEditor(EditorWithCommand):
-    def __init__(self, parent, command, settings, efforts, taskFile, 
-                 *args, **kwargs):
-        self._taskFile = taskFile
-        self._settings = settings
-        super(EffortEditor, self).__init__(parent, command, efforts, 
-                                           *args, **kwargs)
-
     def setFocusOnFirstEntry(self):
         pass
         
@@ -1081,9 +1069,7 @@ class EffortEditor(EditorWithCommand):
 class CategoryEditor(EditorWithCommand):
     def __init__(self, parent, command, settings, categories, taskFile, 
                  *args, **kwargs):
-        self._settings = settings
-        self._taskFile = taskFile
-        super(CategoryEditor, self).__init__(parent, command, categories, 
+        super(CategoryEditor, self).__init__(parent, command, settings, categories, taskFile, 
                                              *args, **kwargs)
 
     def addPage(self, theCategory):
@@ -1093,11 +1079,6 @@ class CategoryEditor(EditorWithCommand):
 
 
 class NoteEditor(EditorWithCommand):
-    def __init__(self, parent, command, settings, notes, taskFile, *args, **kwargs):
-        self._settings = settings
-        self._taskFile = taskFile
-        super(NoteEditor, self).__init__(parent, command, notes, *args, **kwargs)
-
     def addPages(self):
         # Override this method to make sure we use the notes, not the note owner
         for eachNote in self._command.notes:
@@ -1110,11 +1091,6 @@ class NoteEditor(EditorWithCommand):
 
 
 class AttachmentEditor(EditorWithCommand):
-    def __init__(self, parent, command, settings, attachments, taskFile, *args, **kwargs):
-        self._settings = settings
-        self._taskFile = taskFile
-        super(AttachmentEditor, self).__init__(parent, command, attachments, *args, **kwargs)
-
     def addPage(self, theAttachment):
         page = AttachmentEditBook(self._interior, theAttachment, self._settings,
                                   self._taskFile)

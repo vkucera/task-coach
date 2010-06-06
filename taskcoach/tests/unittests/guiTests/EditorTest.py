@@ -51,8 +51,9 @@ class EditorTestCase(test.wxTestCase):
         self.editor = self.createEditor()
         
     def createEditor(self):
-        return EditorWithCommandUnderTest(self.frame, 
-            self.createCommand(), self.taskList, raiseDialog=False)
+        return EditorWithCommandUnderTest(self.frame, self.createCommand(), 
+                                          self.settings, self.taskList, 
+                                          self.taskFile, raiseDialog=False)
         
     def createCommand(self):
         sortedTasks = task.sorter.Sorter(self.taskList)
