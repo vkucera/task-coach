@@ -20,6 +20,7 @@
 #import "CDDomainObject+Addons.h"
 #import "CDCategory.h"
 #import "CDTask.h"
+#import "CDTask+Addons.h"
 
 #import "Configuration.h"
 #import "i18n.h"
@@ -178,17 +179,34 @@
 
 	cell.textLabel.text = [category name];
 
-	// XXXFIXME
-	/* cell.badge.text = [NSString stringWithFormat:@"%d", [category countForTable:@"AllTask"]];
-	cell.badge.capsuleColor = [UIColor blackColor];
-
-	NSInteger count;
-
-	count = [category countForTable:@"DueSoonTask"];
-	if (count)
+	NSInteger total = [[category task] count];
+	NSInteger overdue = 0, dueSoon = 0, started = 0;
+	
+	for (CDTask *task in category.task)
 	{
-		[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", count] capsuleColor:[UIColor orangeColor]];
-	} */
+		switch ([task.dateStatus intValue])
+		{
+			case TASKSTATUS_OVERDUE:
+				overdue++;
+				break;
+			case TASKSTATUS_DUESOON:
+				dueSoon++;
+				break;
+			case TASKSTATUS_STARTED:
+				started++;
+				break;
+		}
+	}
+
+	cell.badge.text = [NSString stringWithFormat:@"%d", total];
+	cell.badge.capsuleColor = [UIColor blackColor];
+	
+	if (dueSoon)
+		[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", dueSoon] capsuleColor:[UIColor orangeColor]];
+	if (overdue)
+		[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", overdue] capsuleColor:[UIColor redColor]];
+	if (started)
+		[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", started] capsuleColor:[UIColor blueColor]];
 }
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated
@@ -393,15 +411,6 @@
 			
 			cell.textLabel.text = _("All");
 			[cell.badge clearAnnotations];
-
-			// XXXFIXME
-			/* [[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM AllTask WHERE completionDate IS NULL AND parentId IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
-			cell.badge.text = [NSString stringWithFormat:@"%d", totalCount];
-			cell.badge.capsuleColor = [UIColor blackColor];
-
-			[[[Database connection] statementWithSQL:@"SELECT COUNT(*) AS total FROM DueSoonTask WHERE completionDate IS NULL AND parentId IS NULL"] execWithTarget:self action:@selector(onGotTotal:)];
-			if (totalCount)
-				[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", totalCount] capsuleColor:[UIColor orangeColor]]; */
 
 			cell.indentationLevel = 0;
 		}
