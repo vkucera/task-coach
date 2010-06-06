@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+@class CategoryViewController;
+
 @interface TaskCoachAppDelegate : NSObject <UIApplicationDelegate>
 {
     NSManagedObjectModel *managedObjectModel;
@@ -16,6 +18,7 @@
 	
     UIWindow *window;
 	UINavigationController *mainController;
+	CategoryViewController *categoryCtrl;
 }
 
 @property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
@@ -26,6 +29,7 @@
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 @property (nonatomic, retain) IBOutlet UINavigationController *mainController;
+@property (nonatomic, retain) IBOutlet CategoryViewController *categoryCtrl;
 
 @end
 

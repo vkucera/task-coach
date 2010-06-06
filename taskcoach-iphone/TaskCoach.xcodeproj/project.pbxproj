@@ -25,6 +25,7 @@
 		A60B6ED710258D9D00F9983C /* TaskCategoryPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = A60B6ED610258D9D00F9983C /* TaskCategoryPickerController.m */; };
 		A60B6EE510258EB200F9983C /* TaskCategoryPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = A60B6EE410258EB200F9983C /* TaskCategoryPicker.xib */; };
 		A60B70EB1025AF0B00F9983C /* CHANGELOG in Resources */ = {isa = PBXBuildFile; fileRef = A60B70EA1025AF0B00F9983C /* CHANGELOG */; };
+		A610E6A611BB9913006800AF /* Migration.m in Sources */ = {isa = PBXBuildFile; fileRef = A610E6A511BB9913006800AF /* Migration.m */; };
 		A6142CD30F35DE61001DD420 /* PositionStore.m in Sources */ = {isa = PBXBuildFile; fileRef = A6142CD20F35DE61001DD420 /* PositionStore.m */; };
 		A61A55F2119FB7840036FC56 /* DayHourState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61A55F1119FB7840036FC56 /* DayHourState.m */; };
 		A61AECFC0F35BA450086ECD6 /* TwoWayState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AECFB0F35BA450086ECD6 /* TwoWayState.m */; };
@@ -216,6 +217,8 @@
 		A60B6ED610258D9D00F9983C /* TaskCategoryPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskCategoryPickerController.m; sourceTree = "<group>"; };
 		A60B6EE410258EB200F9983C /* TaskCategoryPicker.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCategoryPicker.xib; sourceTree = "<group>"; };
 		A60B70EA1025AF0B00F9983C /* CHANGELOG */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG; sourceTree = "<group>"; };
+		A610E6A411BB9913006800AF /* Migration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Migration.h; path = CoreData/Migration.h; sourceTree = "<group>"; };
+		A610E6A511BB9913006800AF /* Migration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Migration.m; path = CoreData/Migration.m; sourceTree = "<group>"; };
 		A6142CD10F35DE61001DD420 /* PositionStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PositionStore.h; sourceTree = "<group>"; };
 		A6142CD20F35DE61001DD420 /* PositionStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PositionStore.m; sourceTree = "<group>"; };
 		A61A55F0119FB7840036FC56 /* DayHourState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DayHourState.h; path = Synchronization/DayHourState.h; sourceTree = "<group>"; };
@@ -917,6 +920,8 @@
 				A6CFAE6B11B257B600044876 /* CDEffort.m */,
 				A68D31A511BA3D31002C6593 /* CDEffort+Addons.h */,
 				A68D31A611BA3D31002C6593 /* CDEffort+Addons.m */,
+				A610E6A411BB9913006800AF /* Migration.h */,
+				A610E6A511BB9913006800AF /* Migration.m */,
 			);
 			name = CoreData;
 			sourceTree = "<group>";
@@ -1197,6 +1202,7 @@
 				A62DFB1011BB6F6C00F594AB /* FullFromDesktopTaskState.m in Sources */,
 				A62DFB1711BB706100F594AB /* FullFromDesktopCategoryState.m in Sources */,
 				A62DFB2C11BB763300F594AB /* FullFromDesktopEffortState.m in Sources */,
+				A610E6A611BB9913006800AF /* Migration.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
