@@ -855,7 +855,16 @@ class FullFromDesktopEffortState(BaseState):
         self.sendObject()
 
     def finished(self):
-        self.setState(SendGUIDState)
+        if self.version < 5:
+            self.setState(SendGUIDState)
+        else:
+            self.disp().log(_('Finished.'))
+            self.disp().close_when_done()
+            self.dlg.Finished()
+
+    def handleClose(self):
+        if self.version < 5:
+            super(FullFromDesktopEffortState, self).handleClose()
 
 
 class FullFromDeviceState(BaseState):
@@ -1016,9 +1025,12 @@ class TwoWayDeletedCategoriesState(BaseState):
             category = self.categoryMap.pop(catId)
         except KeyError:
             # Deleted on desktop
-            pass
+            if self.version >= 5:
+                self.pack('s', '')
         else:
             self.disp().log(_('Delete category %s'), category.id())
+            if self.version >= 5:
+                self.pack('s', category.id())
             self.disp().window.removeIPhoneCategory(category)
 
     def finished(self):
@@ -1033,10 +1045,14 @@ class TwoWayModifiedCategoriesState(BaseState):
         try:
             category = self.categoryMap[catId]
         except KeyError:
-            pass
+            if self.version >= 5:
+                self.pack('s', '')
         else:
             self.disp().log(_('Modify category %s'), category.id())
             self.disp().window.modifyIPhoneCategory(category, name)
+
+            if self.version >= 5:
+                self.pack('s', category.id())
 
     def finished(self):
         if self.version < 4:
@@ -1139,9 +1155,12 @@ class TwoWayDeletedTasksState(BaseState):
         try:
             task = self.taskMap.pop(taskId)
         except KeyError:
-            pass
+            if self.version >= 5:
+                self.pack('s', '')
         else:
             self.disp().log(_('Delete task %s'), task.id())
+            if self.version >= 5:
+                self.pack('s', task.id())
             self.disp().window.removeIPhoneTask(task)
 
     def finished(self):
@@ -1185,12 +1204,15 @@ class TwoWayModifiedTasks(BaseState):
         try:
             task = self.taskMap[taskId]
         except KeyError:
-            pass
+            if self.version >= 5:
+                self.pack('s', '')
         else:
             self.disp().log(_('Modify task %s'), task.id())
             self.disp().window.modifyIPhoneTask(task, subject, description, 
                                                 startDateTime, dueDateTime, 
                                                 completionDateTime, reminderDateTime, categories)
+            if self.version >= 5:
+                self.pack('s', task.id())
 
     def finished(self):
         if self.version < 4:
@@ -1234,10 +1256,13 @@ class TwoWayModifiedEffortsState(BaseState):
         try:
             effort = self.effortMap[id_]
         except KeyError:
-            pass
+            if self.version >= 5:
+                self.pack('s', '')
         else:
             self.disp().log(_('Modify effort %s'), effort.id())
             self.disp().window.modifyIPhoneEffort(effort, subject, started, ended)
+            if self.version >= 5:
+                self.pack('s', effort.id())
 
     def finished(self):
         # Efforts cannot be deleted on the iPhone yet.
