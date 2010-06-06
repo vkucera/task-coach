@@ -427,6 +427,7 @@
 			
 			cell.textLabel.text = _("All");
 			[cell.badge clearAnnotations];
+			cell.badge.text = nil;
 
 			cell.indentationLevel = 0;
 		}
