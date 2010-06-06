@@ -9,11 +9,11 @@
 #import "TaskFileNameState.h"
 #import "TwoWayState.h"
 #import "DayHourState.h"
-#import "Database.h"
-#import "Statement.h"
 #import "Network.h"
 #import "Configuration.h"
 #import "SyncViewController.h"
+
+#import "CDFile.h"
 
 @implementation TaskFileNameState
 

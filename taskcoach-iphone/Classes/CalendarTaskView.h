@@ -9,15 +9,15 @@
 #import <Foundation/Foundation.h>
 #import <TapkuLibrary/ODCalendarDayEventView.h>
 
-@class Task;
+@class CDTask;
 
 @interface CalendarTaskView : ODCalendarDayEventView
 {
-	Task *task;
+	CDTask *task;
 }
 
-@property (nonatomic, readonly) Task *task;
+@property (nonatomic, readonly) CDTask *task;
 
-- initWithTask:(Task *)task;
+- initWithTask:(CDTask *)task;
 
 @end

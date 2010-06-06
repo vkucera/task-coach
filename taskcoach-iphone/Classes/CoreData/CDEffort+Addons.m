@@ -9,7 +9,6 @@
 #import "CDEffort+Addons.h"
 #import "TaskCoachAppDelegate.h"
 #import "CDDomainObject+Addons.h"
-#import "Database.h"
 #import "Configuration.h"
 
 @implementation CDEffort (Addons)

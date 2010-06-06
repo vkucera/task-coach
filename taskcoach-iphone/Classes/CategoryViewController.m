@@ -16,7 +16,6 @@
 #import "FileChooser.h"
 #import "BadgedCell.h"
 #import "CellFactory.h"
-#import "Database.h"
 
 #import "CDDomainObject+Addons.h"
 #import "CDCategory.h"
@@ -479,7 +478,7 @@
 	[self.tableView reloadData];
 	[self.navigationController dismissModalViewControllerAnimated:YES];
 	syncButton.enabled = YES;
-	fileButton.enabled = ([Database connection].fileNumber >= 2);
+	fileButton.enabled = [Configuration configuration].cdFileCount >= 2;
 }
 
 - (void)bonjourBrowser:(BonjourBrowser*)browser didResolveInstance:(NSNetService*)ref

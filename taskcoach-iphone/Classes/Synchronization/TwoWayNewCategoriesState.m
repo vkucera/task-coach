@@ -10,8 +10,6 @@
 #import "TwoWayDeletedCategoriesState.h"
 #import "TwoWayNewTasksState.h"
 #import "Network.h"
-#import "Database.h"
-#import "Statement.h"
 #import "SyncViewController.h"
 #import "CDCategory.h"
 #import "CDDomainObject+Addons.h"

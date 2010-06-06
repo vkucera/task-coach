@@ -10,8 +10,6 @@
 #import "GUIDState.h"
 #import "Network.h"
 #import "SyncViewController.h"
-#import "Database.h"
-#import "Statement.h"
 #import "TaskFileNameState.h"
 #import "CDFile.h"
 #import "Configuration.h"

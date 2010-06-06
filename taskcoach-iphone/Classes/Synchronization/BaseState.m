@@ -9,7 +9,6 @@
 #import "BaseState.h"
 #import "Network.h"
 #import "SyncViewController.h"
-#import "Database.h"
 #import "i18n.h"
 #import "DateUtils.h"
 
@@ -57,7 +56,8 @@
 				delegate:controller cancelButtonTitle:_("Abort") otherButtonTitles:nil];
 	[view show];
 	[view release];
-	[[Database connection] rollback];
+	
+	// XXXTODO: rollback ?
 }
 
 - (void)networkDidEncounterError:(Network *)network error:(NSError *)error controller:(SyncViewController *)controller
@@ -71,14 +71,16 @@
 												  delegate:controller cancelButtonTitle:_("Abort") otherButtonTitles:nil];
 	[view show];
 	[view release];
-	[[Database connection] rollback];
+	
+	// XXXTODO: rollback ?
 }
 
 - (void)cancel
 {
 	myController.state = nil;
 	[myNetwork close];
-	[[Database connection] rollback];
+	
+	// XXXTODO: rollback ?
 }
 
 @end

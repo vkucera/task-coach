@@ -10,7 +10,6 @@
 #import "Network.h"
 #import "SyncViewController.h"
 #import "ProtocolNegotiationState.h"
-#import "Database.h"
 #import "Configuration.h"
 #import "i18n.h"
 

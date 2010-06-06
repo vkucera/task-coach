@@ -13,7 +13,6 @@
 #import "GUIDState.h"
 #import "Network.h"
 #import "SyncViewController.h"
-#import "Database.h"
 #import "AlertPrompt.h"
 #import "i18n.h"
 

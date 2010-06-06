@@ -11,7 +11,6 @@
 #import "Network.h"
 #import "SyncViewController.h"
 
-#import "Database.h"
 #import "i18n.h"
 
 @implementation ProtocolNegotiationState

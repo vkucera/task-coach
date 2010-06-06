@@ -10,9 +10,8 @@
 #import "TwoWayState.h"
 #import "Network.h"
 #import "SyncViewController.h"
-#import "Database.h"
-#import "Statement.h"
 #import "Configuration.h"
+#import "CDFile.h"
 
 @implementation DayHourState
 

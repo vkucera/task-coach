@@ -12,7 +12,7 @@
 
 @interface FileChooser : UITableViewController
 {
-	NSMutableArray *files;
+	NSFetchedResultsController *resultsCtrl;
 	CategoryViewController *catCtrl;
 }
 

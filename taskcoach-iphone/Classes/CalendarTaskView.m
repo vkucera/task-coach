@@ -8,20 +8,22 @@
 
 #import "CalendarTaskView.h"
 
-#import "Domain/Task.h"
 #import "DateUtils.h"
+
+#import "CDTask.h"
+#import "CDTask+Addons.h"
 
 @implementation CalendarTaskView
 
 @synthesize task;
 
-- initWithTask:(Task *)theTask
+- initWithTask:(CDTask *)theTask
 {
 	if (self = [super initWithFrame:CGRectZero])
 	{
 		task = [theTask retain];
 
-		switch (task.taskStatus)
+		switch ([task.dateStatus intValue])
 		{
 			case TASKSTATUS_COMPLETED:
 				self.backgroundColor = [UIColor greenColor];
@@ -53,24 +55,24 @@
 
 - (NSString *)location
 {
-	return task.description;
+	return task.longDescription;
 }
 
 - (NSDate *)startDate
 {
-	return [[TimeUtils instance] dateFromString:task.startDate];
+	return task.startDate;
 }
 
 - (NSDate *)endDate
 {
-	return [[TimeUtils instance] dateFromString:task.dueDate];
+	return task.dueDate;
 }
 
 - (void)drawRect:(CGRect)rect
 {
 	[super drawRect:rect];
 
-	if ([task childrenCount])
+	if ([[task children] count])
 	{
 		CGContextRef context = UIGraphicsGetCurrentContext();
 		CGContextSaveGState(context);

@@ -9,12 +9,10 @@
 #import "TaskCoachAppDelegate.h"
 #import "TwoWayState.h"
 #import "TwoWayNewCategoriesState.h"
-#import "Database.h"
-#import "Statement.h"
 #import "Network.h"
 #import "SyncViewController.h"
-#import "DomainObject.h"
 #import "Configuration.h"
+#import "CDDomainObject+Addons.h"
 
 @implementation TwoWayState
 

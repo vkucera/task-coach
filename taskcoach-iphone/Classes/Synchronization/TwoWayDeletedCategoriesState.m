@@ -8,8 +8,6 @@
 
 #import "TwoWayDeletedCategoriesState.h"
 #import "TwoWayModifiedCategoriesState.h"
-#import "Database.h"
-#import "Statement.h"
 #import "CDCategory.h"
 #import "CDDomainObject+Addons.h"
 #import "SyncViewController.h"

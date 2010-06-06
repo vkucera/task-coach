@@ -8,8 +8,6 @@
 
 #import "TaskCoachAppDelegate.h"
 #import "BaseCategoryViewController.h"
-#import "Database.h"
-#import "Statement.h"
 #import "Configuration.h"
 #import "BadgedCell.h"
 #import "CellFactory.h"
