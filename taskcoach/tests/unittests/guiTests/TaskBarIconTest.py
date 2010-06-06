@@ -35,13 +35,13 @@ class TaskBarIconTestCase(test.TestCase):
             self.settings)
 
     def tearDown(self): # pragma: no cover
-        if '__WXMAC__' in wx.PlatformInfo: 
-            self.icon.RemoveIcon()
-        else:
+        if wx.Platform == '__WXMSW__':
             self.icon.Destroy()
+        else:
+            self.icon.RemoveIcon()
         super(TaskBarIconTestCase, self).tearDown()
             
-            
+
 class TaskBarIconTest(TaskBarIconTestCase):
     def testIcon_NoTasks(self):
         self.failUnless(self.icon.IsIconInstalled())
@@ -141,3 +141,4 @@ class TaskBarIconTooltipWithTrackedTaskTest(TaskBarIconTooltipTestCase):
         self.task.efforts()[0].setStop(date.DateTime(2000,1,1,10,0,0))
         self.task.setSubject('New subject')
         self.assertTooltip('')
+
