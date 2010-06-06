@@ -115,12 +115,6 @@ class BookPage(wx.Panel):
         if kwargs.get('growable', False):
             self._sizer.AddGrowableRow(self._position.maxRow())
 
-    def ok(self):
-        try:
-            super(BookPage, self).ok()
-        except AttributeError:
-            pass
-
 
 class BoxedBookPage(BookPage):
     def __init__(self, *args, **kwargs):
@@ -191,9 +185,9 @@ class Book(object):
             imageId = -1
         super(Book, self).AddPage(page, name, imageId=imageId)
 
-    def ok(self):
+    def ok(self, *args, **kwargs):
         for page in self:
-            page.ok()
+            page.ok(*args, **kwargs)
             
 
 class Notebook(Book, wx.Notebook):
