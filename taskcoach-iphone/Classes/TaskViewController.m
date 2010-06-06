@@ -25,6 +25,7 @@
 #import "CDTask.h"
 #import "CDTask+Addons.h"
 #import "CDDomainObject+Addons.h"
+#import "CDFile.h"
 
 #import "DateUtils.h"
 #import "NSDate+Utils.h"
@@ -744,73 +745,40 @@ static void deleteTask(CDTask *task)
 
 - (NSArray *)calendarDayTimelineView:(ODCalendarDayTimelineView*)calendarDayTimeline eventsForDate:(NSDate *)eventDate
 {
-	/*
 	NSMutableArray *events = [[NSMutableArray alloc] init];
-
-	for (TaskList *taskList in headers)
-	{
-		for (NSInteger i = 0; i < [taskList count]; ++i)
-		{
-			Task *task = [taskList taskAtIndex:i];
-
-			if (task.startDate && task.dueDate)
-			{
-				if (![Configuration configuration].showCompleted && task.completionDate)
-					continue;
-
-				NSDate *date = [[TimeUtils instance] dateFromString:task.startDate];
-				if ([date compare:[[NSDate midnightToday] addTimeInterval:24*60*60]] == NSOrderedDescending)
-					continue;
-				date = [[TimeUtils instance] dateFromString:task.dueDate];
-				if ([date compare:[NSDate midnightToday]] == NSOrderedAscending)
-					continue;
-
-				CalendarTaskView *event = [[CalendarTaskView alloc] initWithTask:task];
-				[events addObject:event];
-				[event release];
-			}
-		}
-	}
-
-	return [events autorelease];
-	 */
 	
-	return nil;
+	for (CDTask *task in results.fetchedObjects)
+	{
+		if (!(task.startDate && task.dueDate))
+			continue;
+		if (![Configuration configuration].showCompleted && task.completionDate)
+			continue;
+		if (![Configuration configuration].showInactive && ([task.dateStatus intValue] == TASKSTATUS_NOTSTARTED))
+			continue;
+		
+		if ([task.startDate compare:[[NSDate midnightToday] addTimeInterval:24*60*60]] == NSOrderedDescending)
+			continue;
+		if ([task.dueDate compare:[NSDate midnightToday]] == NSOrderedAscending)
+			continue;
+		
+		CalendarTaskView *event = [[CalendarTaskView alloc] initWithTask:task];
+		[events addObject:event];
+		[event release];
+	}
+	
+	return [events autorelease];
 }
 
 - (void)calendarDayTimelineView:(ODCalendarDayTimelineView*)calendarDayTimeline eventViewWasSelected:(ODCalendarDayEventView *)eventView atPoint:(CGPoint)point
 {
-	/*
-	Task *task = ((CalendarTaskView *)eventView).task;
+	CDTask *task = ((CalendarTaskView *)eventView).task;
+	NSIndexPath *indexPath = [results indexPathForObject:task];
 
-	NSIndexPath *indexPath = nil;
-	NSInteger section = 0;
-	for (TaskList *taskList in headers)
-	{
-		for (NSInteger row = 0; row < [taskList count]; ++row)
-		{
-			if ([[taskList taskAtIndex:row] objectId] == task.objectId)
-			{
-				indexPath = [NSIndexPath indexPathForRow:row inSection:section];
-				break;
-			}
-		}
-		if (indexPath)
-			break;
-		++section;
-	}
-
-	if (!indexPath)
-	{
-		NSLog(@"WARNING: task %d not found", task.objectId);
-		return;
-	}
-
-	if ([task childrenCount])
+	if ([[task children] count])
 	{
 		if ((point.x >= eventView.bounds.size.width - 36) && (point.y >= eventView.bounds.size.height - 36))
 		{
-			TaskViewController *ctrl = [[TaskViewController alloc] initWithTitle:task.name category:-1 categoryController:categoryController parentTask:task edit:self.editing];
+			ParentTaskViewController *ctrl = [[ParentTaskViewController alloc] initWithCategoryController:categoryController edit:self.editing parent:task];
 			[[PositionStore instance] push:self indexPath:indexPath type:TYPE_SUBTASK searchWord:searchCell.searchBar.text];
 			[self.navigationController pushViewController:ctrl animated:YES];
 			[ctrl release];
@@ -823,44 +791,19 @@ static void deleteTask(CDTask *task)
 	[self.navigationController pushViewController:ctrl animated:YES];
 	[[PositionStore instance] push:self indexPath:indexPath type:TYPE_DETAILS searchWord:searchCell.searchBar.text];
 	[ctrl release];
-	 */
 }
-
-/*
-- (void)updateStartHour:(NSDictionary *)dict
-{
-	startHour = [[dict objectForKey:@"startHour"] intValue];
-}
-
-- (void)updateEndHour:(NSDictionary *)dict
-{
-	endHour = [[dict objectForKey:@"endHour"] intValue];
-}
-*/
 
 - (NSInteger)calendarDayTimelineViewStartHour:(ODCalendarDayTimelineView*)calendarDayTimeline
 {
-	/*
-	startHour = 8;
-	if ([Database connection].currentFile)
-		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT startHour FROM TaskCoachFile WHERE id=%@", [Database connection].currentFile]] execWithTarget:self action:@selector(updateStartHour:)];
-
-	return startHour;
-	 */
-
+	if ([Configuration configuration].cdCurrentFile)
+		return [[Configuration configuration].cdCurrentFile.startHour intValue];
 	return 8;
 }
 
 - (NSInteger)calendarDayTimelineViewEndHour:(ODCalendarDayTimelineView*)calendarDayTimeline
 {
-	/*
-	endHour = 18;
-	if ([Database connection].currentFile)
-		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT endHour FROM TaskCoachFile WHERE id=%@", [Database connection].currentFile]] execWithTarget:self action:@selector(updateEndHour:)];
-	
-	return endHour;
-	 */
-	
+	if ([Configuration configuration].cdCurrentFile)
+		return [[Configuration configuration].cdCurrentFile.endHour intValue];
 	return 18;
 }
 
