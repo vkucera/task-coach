@@ -43,7 +43,6 @@
 {
 	[super fillCell:cell forCategory:category];
 
-	// XXXFIXME: I'm not sure this works!
 	if ([[myTask categories] containsObject:category])
 	{
 		cell.accessoryType = UITableViewCellAccessoryCheckmark;
@@ -57,7 +56,6 @@
 	CDCategory *category = [categories objectAtIndex:indexPath.row];
 	BadgedCell *cell = (BadgedCell *)[self.tableView cellForRowAtIndexPath:indexPath];
 
-	// XXXFIXME: same remark as above
 	if ([[myTask categories] containsObject:category])
 	{
 		[myTask removeCategoriesObject:category];
