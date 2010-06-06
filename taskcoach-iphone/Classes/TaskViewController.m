@@ -267,11 +267,13 @@ static void deleteTask(CDTask *task)
 
 - (void)childWasPopped
 {
-	NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-	if (indexPath)
+	if (selected)
 	{
-		[self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-		[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+		[self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:selected] withRowAnimation:UITableViewRowAnimationFade];
+		[self.tableView deselectRowAtIndexPath:selected animated:YES];
+
+		[selected release];
+		selected = nil;
 	}
 
 	[self.calendarView reloadDay];
@@ -309,6 +311,11 @@ static void deleteTask(CDTask *task)
         case NSFetchedResultsChangeDelete:
             [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex]
 						  withRowAnimation:UITableViewRowAnimationRight];
+			if (selected && (selected.section == sectionIndex))
+			{
+				[selected release];
+				selected = nil;
+			}
             break;
     }
 }
@@ -334,6 +341,11 @@ static void deleteTask(CDTask *task)
         case NSFetchedResultsChangeDelete:
             [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
 							 withRowAnimation:UITableViewRowAnimationRight];
+			if (selected && ((selected.row == indexPath.row) && (selected.section == indexPath.section)))
+			{
+				[selected release];
+				selected = nil;
+			}
             break;
 			
         case NSFetchedResultsChangeUpdate:
@@ -660,6 +672,8 @@ static void deleteTask(CDTask *task)
 
 		return;
 	}
+	
+	selected = [indexPath retain];
 
 	if ((self.editing && indexPath.section == 1) || (!self.editing && (indexPath.section == 0)))
 	{

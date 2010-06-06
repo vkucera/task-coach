@@ -33,11 +33,7 @@
 	UIToolbar *toolbar;
 
 	NSFetchedResultsController *results;
-
-/*
-	NSInteger startHour;
-	NSInteger endHour;
- */
+	NSIndexPath *selected;
 }
 
 @property (nonatomic, readonly) UITableView *tableView;
