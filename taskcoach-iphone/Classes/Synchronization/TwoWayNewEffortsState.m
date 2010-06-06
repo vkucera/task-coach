@@ -9,56 +9,47 @@
 #import "TwoWayNewEffortsState.h"
 #import "TwoWayModifiedEffortsState.h"
 
-#import "DomainObject.h"
-#import "Database.h"
-#import "Statement.h"
 #import "Network.h"
 #import "SyncViewController.h"
 #import "DateUtils.h"
+
+#import "CDDomainObject+Addons.h"
+#import "CDEffort.h"
+#import "CDTask.h"
 
 @implementation TwoWayNewEffortsState
 
 + stateWithNetwork:(Network *)network controller:(SyncViewController *)controller
 {
-	NSObject <State> *next;
-	
-	next = [TwoWayModifiedEffortsState stateWithNetwork:network controller:controller];
-
-	return [[[TwoWayNewEffortsState alloc] initWithNetwork:network controller:controller nextState:next expectIds:YES] autorelease];
+	return [[[TwoWayNewEffortsState alloc] initWithNetwork:network controller:controller] autorelease];
 }
 
-- (void)activated
+- (void)packObject:(CDEffort *)effort
 {
-	[super activated];
-	
-	[self start:[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM CurrentEffort WHERE status=%d", STATUS_NEW]]];
-}
+	[self sendFormat:"s" values:[NSArray arrayWithObject:effort.name]];
 
-- (void)onTaskId:(NSDictionary *)dict
-{
-	[myNetwork appendString:[dict objectForKey:@"taskCoachId"]];
-}
-
-- (void)onObject:(NSDictionary *)dict
-{
-	[super onObject:dict];
-
-	NSLog(@"Sending effort %@/%@", [dict objectForKey:@"started"], [dict objectForKey:@"ended"]);
-
-	[myNetwork appendString:[dict objectForKey:@"name"]];
-
-	if ([dict objectForKey:@"taskId"])
-		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT taskCoachId FROM Task WHERE id=%d", [[dict objectForKey:@"taskId"] intValue]]] execWithTarget:self action:@selector(onTaskId:)];
+	if (effort.task)
+		[self sendFormat:"s" values:[NSArray arrayWithObject:effort.task.taskCoachId]];
 	else
-		[myNetwork appendString:nil];
-	
-	[myNetwork appendString:[dict objectForKey:@"started"]];
-	[myNetwork appendString:[dict objectForKey:@"ended"]];
+		[self sendFormat:"s" values:[NSArray arrayWithObject:[NSNull null]]];
+
+	[self sendDate:effort.started];
+	[self sendDate:effort.ended];
 }
 
-- (NSString *)tableName
+- (void)onFinished
 {
-	return @"Effort";
+	myController.state = [TwoWayModifiedEffortsState stateWithNetwork:myNetwork controller:myController];
+}
+
+- (NSString *)entityName
+{
+	return @"CDEffort";
+}
+
+- (NSInteger)status
+{
+	return STATUS_NEW;
 }
 
 @end

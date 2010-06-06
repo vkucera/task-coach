@@ -6,21 +6,13 @@
 //  Copyright 2009 Jérôme Laheurte. See COPYING for details.
 //
 
-#import <Foundation/Foundation.h>
+#import "OneShotItemState.h"
 
-#import "BaseState.h"
-
-@interface TwoWayState : BaseState <State>
+@interface TwoWayState : OneShotItemState
 {
-	NSInteger newCategoriesCount;
-	NSInteger deletedCategoriesCount;
-	NSInteger modifiedCategoriesCount;
-	NSInteger newTasksCount;
-	NSInteger deletedTasksCount;
-	NSInteger modifiedTasksCount;
-	NSInteger newEffortsCount;
-	NSInteger modifiedEffortsCount;
-	NSInteger deletedEffortsCount;
+	NSInteger totalCount;
 }
+
++ stateWithNetwork:(Network *)network controller:(SyncViewController *)controller;
 
 @end

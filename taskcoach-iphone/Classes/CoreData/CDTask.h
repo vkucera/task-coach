@@ -2,7 +2,7 @@
 //  CDTask.h
 //  
 //
-//  Created by Jérôme Laheurte on 05/06/10.
+//  Created by Jérôme Laheurte on 06/06/10.
 //  Copyright 2010 __MyCompanyName__. All rights reserved.
 //
 
@@ -17,9 +17,9 @@
 }
 
 @property (nonatomic, retain) NSDate * reminderDate;
+@property (nonatomic, retain) NSNumber * dateStatus;
 @property (nonatomic, retain) NSDate * completionDate;
 @property (nonatomic, retain) NSDate * startDate;
-@property (nonatomic, retain) NSNumber * dateStatus;
 @property (nonatomic, retain) NSString * longDescription;
 @property (nonatomic, retain) NSDate * dueDate;
 @property (nonatomic, retain) NSSet* categories;

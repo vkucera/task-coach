@@ -6,12 +6,12 @@
 //  Copyright 2009 __MyCompanyName__. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "EntityUploadState.h"
 
-#import "BaseState.h"
-
-@interface TwoWayDeletedCategoriesState : BaseState <State>
+@interface TwoWayDeletedCategoriesState : EntityUploadState
 {
 }
+
++ stateWithNetwork:(Network *)network controller:(SyncViewController *)controller;
 
 @end

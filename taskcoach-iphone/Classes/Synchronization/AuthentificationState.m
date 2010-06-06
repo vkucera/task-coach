@@ -21,9 +21,18 @@
 
 - (void)askForPassword
 {
-	AlertPrompt *prompt = [[AlertPrompt alloc] initWithTitle:_("Please type your password.") message:@"\n" delegate:self cancelButtonTitle:_("Cancel") okButtonTitle:_("OK")];
+	AlertPrompt *prompt = [[AlertPrompt alloc] initWithTitle:_("Please type your password.")
+													 message:@"\n"
+													delegate:self
+										   cancelButtonTitle:_("Cancel")
+											   okButtonTitle:_("OK")];
 	[prompt show];
 	[prompt release];
+}
+
++ stateWithNetwork:(Network *)network controller:(SyncViewController *)controller
+{
+	return [[[AuthentificationState alloc] initWithNetwork:network controller:controller] autorelease];
 }
 
 - (void)activated
@@ -35,26 +44,20 @@
 #else
 	keychain = [[KeychainWrapper alloc] init];
 	currentPassword = [[keychain objectForKey:(id)kSecValueData] retain];
-
-	if ([currentPassword length] != 0)
-	{
-		[myNetwork expect:512];
-	}
-	else
+	
+	if ([currentPassword length] == 0)
 	{
 		[self askForPassword];
 	}
 #endif
-}
-
-+ stateWithNetwork:(Network *)network controller:(SyncViewController *)controller
-{
-	return [[[AuthentificationState alloc] initWithNetwork:network controller:controller] autorelease];
+	
+	[self startWithFormat:"512b" count:NOCOUNT];
 }
 
 - (void)dealloc
 {
 	[currentPassword release];
+	[currentData release];
 
 #if !TARGET_IPHONE_SIMULATOR
 	[keychain release];
@@ -63,84 +66,129 @@
 	[super dealloc];
 }
 
-- (void)networkDidConnect:(Network *)network controller:(SyncViewController *)controller
+- (void)onNewObject:(NSArray *)value
 {
-	// n/a
-}
-
-- (void)network:(Network *)network didGetData:(NSData *)data controller:(SyncViewController *)controller
-{
-	if ([data length] == 4)
+	if (state == 0)
 	{
-		int32_t status = ntohl(*((int32_t *)[data bytes]));
-	
-		if (status)
+		NSLog(@"Received hash data.");
+		
+		if (currentPassword)
 		{
-			NSLog(@"Password was accepted.");
-
-#if !TARGET_IPHONE_SIMULATOR
-			[keychain setObject:currentPassword forKey:(id)kSecValueData];
-#endif
-
-			// Also send device name
-			UIDevice *dev = [UIDevice currentDevice];
-			NSLog(@"Sending device name: %@", dev.name);
-			[network appendString:dev.name];
-
-			controller.state = [GUIDState stateWithNetwork:network controller:controller];
+			NSLog(@"Sending hashed password.");
+			
+			NSMutableData *hashData = [[NSMutableData alloc] initWithData:[value objectAtIndex:0]];
+			const char *bf = [currentPassword UTF8String];
+			[hashData appendData:[NSData dataWithBytes:bf length:strlen(bf)]];
+			
+			CC_SHA1_CTX context;
+			CC_SHA1_Init(&context);
+			CC_SHA1_Update(&context, [hashData bytes], [hashData length]);
+			unsigned char hash[20];
+			CC_SHA1_Final(hash, &context);
+			
+			[hashData release];
+			
+			state = 1;
+			[self startWithFormat:"i" count:NOCOUNT];
+			[self sendFormat:"20b" values:[NSArray arrayWithObject:[NSData dataWithBytes:hash length:20]]];
 		}
 		else
 		{
-			UIAlertView *view = [[UIAlertView alloc] initWithTitle:_("Error")
-													message:_("Incorrect password.")
-													delegate:self cancelButtonTitle:_("Retry") otherButtonTitles:nil];
-			[view show];
-			[view release];
+			NSLog(@"Storing it.");
+			
+			[currentData release];
+			currentData = [[value objectAtIndex:0] copy];
+			
+			state = 1;
+			[self startWithFormat:"i" count:NOCOUNT];
 		}
 	}
 	else
 	{
-		// Though MacOS (and so the iPhone simulator) do know how to create data from a string
-		// using kCFStringEncodingUTF8, the iPhone itself doesn't. It's able to encode a
-		// string in UTF-8 though. Go figure.
+		NSInteger result = [[value objectAtIndex:0] intValue];
 		
-		NSMutableData *hashData = [[NSMutableData alloc] initWithData:data];
-		const char *bf = [currentPassword UTF8String];
-		[hashData appendData:[NSData dataWithBytes:bf length:strlen(bf)]];
-
-		CC_SHA1_CTX context;
-		CC_SHA1_Init(&context);
-		CC_SHA1_Update(&context, [hashData bytes], [hashData length]);
-		unsigned char hash[20];
-		CC_SHA1_Final(hash, &context);
-		
-		[hashData release];
-		
-		[myNetwork expect:4];
-		[myNetwork append:[NSData dataWithBytes:hash length:20]];
+		if (result)
+		{
+			NSLog(@"Password accepted.");
+			
+#if !TARGET_IPHONE_SIMULATOR
+			[keychain setObject:currentPassword forKey:(id)kSecValueData];
+#endif
+			
+			// Also send device name
+			UIDevice *dev = [UIDevice currentDevice];
+			NSLog(@"Sending device name: %@", dev.name);
+			[self sendFormat:"s" values:[NSArray arrayWithObject:dev.name]];
+			
+			myController.state = [GUIDState stateWithNetwork:myNetwork controller:myController];
+		}
+		else
+		{
+			NSLog(@"Password rejected.");
+			
+			[currentData release];
+			[currentPassword release];
+			
+			currentData = nil;
+			currentPassword = nil;
+			
+			state = 0;
+			[self startWithFormat:"512b" count:NOCOUNT];
+			[self askForPassword];
+		}
 	}
 }
 
-- (void)networkDidClose:(Network *)network controller:(SyncViewController *)controller
+- (void)onFinished
 {
-	[super networkDidClose:network controller:controller];
 }
 
-// UIAlertViewDelegate
+#pragma mark UIAlertViewDelegate.
 
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+	AlertPrompt *pwd = (AlertPrompt *)alertView;
+	
 	switch (buttonIndex)
 	{
-		case 0: // Cancel
-			[myController cancel];
+		case 0:
+			[self cancel];
 			break;
-		case 1: // OK
+		case 1:
+		{
 			[currentPassword release];
-			currentPassword = [((AlertPrompt *)alertView).enteredText retain];
-			[myNetwork expect:512];
-			break;
+			currentPassword = [pwd.enteredText retain];
+			
+			if (state == 1)
+			{
+				assert(currentData);
+				
+				NSLog(@"Sending hashed password.");
+				
+				NSMutableData *hashData = [[NSMutableData alloc] initWithData:currentData];
+				const char *bf = [currentPassword UTF8String];
+				[hashData appendData:[NSData dataWithBytes:bf length:strlen(bf)]];
+				
+				CC_SHA1_CTX context;
+				CC_SHA1_Init(&context);
+				CC_SHA1_Update(&context, [hashData bytes], [hashData length]);
+				unsigned char hash[20];
+				CC_SHA1_Final(hash, &context);
+				
+				[hashData release];
+				
+				state = 1;
+				[self startWithFormat:"i" count:NOCOUNT];
+				[self sendFormat:"20b" values:[NSArray arrayWithObject:[NSData dataWithBytes:hash length:20]]];
+			}
+			else
+			{
+				NSLog(@"Password entered, but no data yet.");
+			}
+		}
 	}
+	
+	[pwd.textField resignFirstResponder];
 }
 
 @end

@@ -2,7 +2,7 @@
 //  CDTask.m
 //  
 //
-//  Created by Jérôme Laheurte on 05/06/10.
+//  Created by Jérôme Laheurte on 06/06/10.
 //  Copyright 2010 __MyCompanyName__. All rights reserved.
 //
 
@@ -14,9 +14,9 @@
 @implementation CDTask 
 
 @dynamic reminderDate;
+@dynamic dateStatus;
 @dynamic completionDate;
 @dynamic startDate;
-@dynamic dateStatus;
 @dynamic longDescription;
 @dynamic dueDate;
 @dynamic categories;

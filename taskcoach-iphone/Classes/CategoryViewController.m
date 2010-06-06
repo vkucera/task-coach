@@ -92,7 +92,7 @@
 	
 	[fileManager release];
 
-	fileButton.enabled = ([Database connection].cdFileCount >= 2);
+	fileButton.enabled = ([Configuration configuration].cdFileCount >= 2);
 }
 
 - (void)viewDidUnload
@@ -153,7 +153,8 @@
 		CDCategory *newCat = (CDCategory *)[NSEntityDescription insertNewObjectForEntityForName:@"CDCategory" inManagedObjectContext:getManagedObjectContext()];
 		if (currentCategory >= 0)
 			newCat.parent = [categories objectAtIndex:currentCategory];
-		newCat.file = [Database connection].cdCurrentFile;
+		newCat.creationDate = [NSDate date];
+		newCat.file = [Configuration configuration].cdCurrentFile;
 		newCat.name = name;
 
 		NSError *error;
@@ -230,7 +231,7 @@
 
 - (void)deleteCategory:(CDCategory *)category indexPaths:(NSMutableArray *)indexPaths;
 {
-	for (CDTask *task in category.task)
+	for (CDTask *task in [category.task allObjects])
 	{
 		[task removeCategoriesObject:category];
 		[task markDirty];

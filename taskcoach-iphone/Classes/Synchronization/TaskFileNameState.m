@@ -12,6 +12,7 @@
 #import "Database.h"
 #import "Statement.h"
 #import "Network.h"
+#import "Configuration.h"
 #import "SyncViewController.h"
 
 @implementation TaskFileNameState
@@ -23,64 +24,24 @@
 
 - (void)activated
 {
-	[myNetwork expect:4];
+	[self startWithFormat:"s" count:NOCOUNT];
 }
 
-- (void)networkDidConnect:(Network *)network controller:(SyncViewController *)controller
+- (void)onNewObject:(NSArray *)value
 {
-	// n/a
+	NSString *filename = [value objectAtIndex:0];
+	
+	NSLog(@"Filename: %@", filename);
+	
+	[Configuration configuration].cdCurrentFile.name = filename;
+	
+	[self sendFormat:"i" values:[NSArray arrayWithObject:[NSNumber numberWithInt:1]]];
+	
+	myController.state = [DayHourState stateWithNetwork:myNetwork controller:myController];
 }
 
-- (void)network:(Network *)network didGetData:(NSData *)data controller:(SyncViewController *)controller
+- (void)finished
 {
-	switch (state)
-	{
-		case 0:
-		{
-			NSInteger length = ntohl(*((int32_t *)[data bytes]));
-			if (length)
-			{
-				state = 1;
-				[network expect:length];
-			}
-			else
-			{
-				NSLog(@"No file name.");
-
-				[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE TaskCoachFile SET name=NULL WHERE id=%@", [Database connection].currentFile]] exec];
-				[network appendInteger:1];
-
-				if (controller.protocolVersion < 5)
-					controller.state = [TwoWayState stateWithNetwork:network controller:controller];
-				else
-					controller.state = [DayHourState stateWithNetwork:network controller:controller];
-			}
-
-			break;
-		}
-		case 1:
-		{
-			NSString *filename = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-
-			NSLog(@"File name: %@", filename);
-
-			Statement *req = [[Database connection] statementWithSQL:@"UPDATE TaskCoachFile SET name=? WHERE id=?"];
-			[req bindString:filename atIndex:1];
-			[req bindInteger:[[Database connection].currentFile intValue] atIndex:2];
-			[req exec];
-			
-			[filename release];
-
-			[network appendInteger:1];
-			
-			if (controller.protocolVersion < 5)
-				controller.state = [TwoWayState stateWithNetwork:network controller:controller];
-			else
-				controller.state = [DayHourState stateWithNetwork:network controller:controller];
-
-			break;
-		}
-	}
 }
 
 @end

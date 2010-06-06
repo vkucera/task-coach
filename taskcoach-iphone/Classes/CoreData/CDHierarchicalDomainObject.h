@@ -2,7 +2,7 @@
 //  CDHierarchicalDomainObject.h
 //  
 //
-//  Created by Jérôme Laheurte on 05/06/10.
+//  Created by Jérôme Laheurte on 06/06/10.
 //  Copyright 2010 __MyCompanyName__. All rights reserved.
 //
 
@@ -14,6 +14,7 @@
 {
 }
 
+@property (nonatomic, retain) NSDate * creationDate;
 @property (nonatomic, retain) CDHierarchicalDomainObject * parent;
 @property (nonatomic, retain) NSSet* children;
 

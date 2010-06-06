@@ -2,7 +2,7 @@
 //  CDHierarchicalDomainObject.m
 //  
 //
-//  Created by Jérôme Laheurte on 05/06/10.
+//  Created by Jérôme Laheurte on 06/06/10.
 //  Copyright 2010 __MyCompanyName__. All rights reserved.
 //
 
@@ -11,6 +11,7 @@
 
 @implementation CDHierarchicalDomainObject 
 
+@dynamic creationDate;
 @dynamic parent;
 @dynamic children;
 

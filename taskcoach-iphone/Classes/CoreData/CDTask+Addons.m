@@ -68,6 +68,7 @@
 {
 	CDEffort *effort = (CDEffort *)[NSEntityDescription insertNewObjectForEntityForName:@"CDEffort" inManagedObjectContext:getManagedObjectContext()];
 
+	effort.file = [Configuration configuration].cdCurrentFile;
 	effort.task = self;
 	effort.started = [NSDate date];
 	effort.ended = nil;

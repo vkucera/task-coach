@@ -2,7 +2,7 @@
 //  CDFile.h
 //  
 //
-//  Created by Jérôme Laheurte on 05/06/10.
+//  Created by Jérôme Laheurte on 06/06/10.
 //  Copyright 2010 __MyCompanyName__. All rights reserved.
 //
 
@@ -14,10 +14,10 @@
 {
 }
 
-@property (nonatomic, retain) NSString * guid;
 @property (nonatomic, retain) NSNumber * endHour;
 @property (nonatomic, retain) NSNumber * startHour;
 @property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSString * guid;
 @property (nonatomic, retain) NSSet* objects;
 
 @end

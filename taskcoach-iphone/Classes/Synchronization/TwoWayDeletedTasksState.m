@@ -11,9 +11,9 @@
 
 #import "Network.h"
 #import "SyncViewController.h"
-#import "Database.h"
-#import "Statement.h"
-#import "DomainObject.h"
+
+#import "CDDomainObject+Addons.h"
+#import "CDTask.h"
 
 @implementation TwoWayDeletedTasksState
 
@@ -22,29 +22,29 @@
 	return [[[TwoWayDeletedTasksState alloc] initWithNetwork:network controller:controller] autorelease];
 }
 
-- (void)activated
+- (void)packObject:(CDTask *)task
 {
-	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT taskCoachId FROM CurrentTask WHERE status=%d", STATUS_DELETED]];
-	[req execWithTarget:self action:@selector(onDeletedTask:)];
-	
+	[self sendFormat:"s" values:[NSArray arrayWithObject:task.taskCoachId]];
+}
+
+- (void)onFinished
+{
 	myController.state = [TwoWayModifiedTasksState stateWithNetwork:myNetwork controller:myController];
 }
 
-- (void)onDeletedTask:(NSDictionary *)dict
+- (NSString *)entityName
 {
-	NSLog(@"Sending deleted task %@", [dict objectForKey:@"taskCoachId"]);
-
-	[myNetwork appendString:[dict objectForKey:@"taskCoachId"]];
+	return @"CDTask";
 }
 
-- (void)networkDidConnect:(Network *)network controller:(SyncViewController *)controller
+- (NSInteger)status
 {
-	// n/a
+	return STATUS_DELETED;
 }
 
-- (void)network:(Network *)network didGetData:(NSData *)data controller:(SyncViewController *)controller
+- (NSString *)ordering
 {
-	// n/a
+	return @"creationDate";
 }
 
 @end

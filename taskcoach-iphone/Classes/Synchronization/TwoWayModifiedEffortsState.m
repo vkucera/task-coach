@@ -8,34 +8,44 @@
 
 #import "TwoWayModifiedEffortsState.h"
 #import "FullFromDesktopState.h"
-#import "Statement.h"
-#import "Database.h"
-#import "DomainObject.h"
+#import "SyncViewController.h"
+
+#import "CDDomainObject+Addons.h"
+#import "CDEffort.h"
 
 @implementation TwoWayModifiedEffortsState
 
 + stateWithNetwork:(Network *)network controller:(SyncViewController *)controller
 {
+	/*
 	NSObject <State> *next = [FullFromDesktopState stateWithNetwork:network controller:controller];
 	
 	return [[[TwoWayModifiedEffortsState alloc] initWithNetwork:network controller:controller nextState:next expectIds:NO] autorelease];
+	 */
+	
+	return [[[TwoWayModifiedEffortsState alloc] initWithNetwork:network controller:controller] autorelease];
 }
 
-- (void)activated
+- (void)packObject:(CDEffort *)effort
 {
-	[super activated];
-	
-	[self start:[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM CurrentEffort WHERE status=%d", STATUS_MODIFIED]]];
+	[self sendFormat:"ss" values:[NSArray arrayWithObjects:effort.taskCoachId, effort.name, nil]];
+	[self sendDate:effort.started];
+	[self sendDate:effort.ended];
 }
 
-- (void)onObject:(NSDictionary *)dict
+- (void)onFinished
 {
-	[super onObject:dict];
-	
-	[myNetwork appendString:[dict objectForKey:@"taskCoachId"]];
-	[myNetwork appendString:[dict objectForKey:@"name"]];
-	[myNetwork appendString:[dict objectForKey:@"started"]];
-	[myNetwork appendString:[dict objectForKey:@"ended"]];
+	myController.state = [FullFromDesktopState stateWithNetwork:myNetwork controller:myController];
+}
+
+- (NSString *)entityName
+{
+	return @"CDEffort";
+}
+
+- (NSInteger)status
+{
+	return STATUS_MODIFIED;
 }
 
 @end

@@ -8,32 +8,40 @@
 
 #import "TwoWayModifiedCategoriesState.h"
 #import "TwoWayNewTasksState.h"
-#import "Database.h"
-#import "Statement.h"
-#import "DomainObject.h"
+#import "SyncViewController.h"
+#import "CDCategory.h"
+#import "CDDomainObject+Addons.h"
 
 @implementation TwoWayModifiedCategoriesState
 
 + stateWithNetwork:(Network *)network controller:(SyncViewController *)controller
 {
-	NSObject <State> *next = [TwoWayNewTasksState stateWithNetwork:network controller:controller];
-
-	return [[[TwoWayModifiedCategoriesState alloc] initWithNetwork:network controller:controller nextState:next expectIds:NO] autorelease];
+	return [[[TwoWayModifiedCategoriesState alloc] initWithNetwork:network controller:controller] autorelease];
 }
 
-- (void)activated
+- (void)packObject:(CDCategory *)category
 {
-	[super activated];
-	
-	[self start:[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM CurrentCategory WHERE status=%d", STATUS_MODIFIED]]];
+	[self sendFormat:"ss" values:[NSArray arrayWithObjects:category.name, category.taskCoachId, nil]];
 }
 
-- (void)onObject:(NSDictionary *)dict
+- (void)onFinished
 {
-	[super onObject:dict];
+	myController.state = [TwoWayNewTasksState stateWithNetwork:myNetwork controller:myController];
+}
 
-	[myNetwork appendString:[dict objectForKey:@"name"]];
-	[myNetwork appendString:[dict objectForKey:@"taskCoachId"]];
+- (NSString *)entityName
+{
+	return @"CDCategory";
+}
+
+- (NSInteger)status
+{
+	return STATUS_MODIFIED;
+}
+
+- (NSString *)ordering
+{
+	return @"creationDate";
 }
 
 @end

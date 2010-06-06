@@ -19,6 +19,10 @@
 @synthesize state;
 @synthesize protocolVersion;
 
+@synthesize categoryCount;
+@synthesize taskCount;
+@synthesize effortCount;
+
 - initWithTarget:(id)theTarget action:(SEL)theAction host:(NSString *)theHost port:(NSInteger)thePort
 {
 	if (self = [super initWithNibName:@"SyncView" bundle:[NSBundle mainBundle]])
@@ -42,6 +46,12 @@
 {
 	[state cancel];
 	[target performSelector:action];
+}
+
+- (void)increment
+{
+	++currentCount;
+	progress.progress = 1.0 * currentCount / (categoryCount + taskCount + effortCount);
 }
 
 - (void)viewDidLoad

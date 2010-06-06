@@ -11,6 +11,7 @@
 #import "TaskCoachAppDelegate.h"
 #import "i18n.h"
 #import "CDTask+Addons.h"
+#import "Configuration.h"
 
 @implementation ParentTaskViewController
 
@@ -49,6 +50,9 @@
 	[super onAddTask:button];
 	
 	CDTask *task = (CDTask *)[NSEntityDescription insertNewObjectForEntityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()];
+	
+	task.creationDate = [NSDate date];
+	task.file = [Configuration configuration].cdCurrentFile;
 	task.name = @"";
 	task.longDescription = @"";
 	task.parent = parent;

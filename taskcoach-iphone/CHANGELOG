@@ -1,4 +1,7 @@
 
+2010-06-05  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
+	* misc: Use CoreData for storage
+
 2010-05-22  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* misc: Add support for reminders
 

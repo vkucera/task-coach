@@ -9,11 +9,13 @@
 #import "TwoWayModifiedTasksState.h"
 #import "TwoWayNewEffortsState.h"
 
+#import "DateUtils.h"
 #import "Network.h"
 #import "SyncViewController.h"
-#import "Database.h"
-#import "Statement.h"
-#import "DomainObject.h"
+
+#import "CDDomainObject+Addons.h"
+#import "CDTask.h"
+#import "CDCategory.h"
 
 @implementation TwoWayModifiedTasksState
 
@@ -22,75 +24,37 @@
 	return [[[TwoWayModifiedTasksState alloc] initWithNetwork:network controller:controller] autorelease];
 }
 
-- initWithNetwork:(Network *)network controller:(SyncViewController *)controller
+- (void)packObject:(CDTask *)task
 {
-	if (self = [super initWithNetwork:network controller:controller])
-	{
-	}
-	
-	return self;
+	[self sendFormat:"sss" values:[NSArray arrayWithObjects:task.name, task.taskCoachId, task.longDescription, nil]];
+	[self sendDate:task.startDate];
+	[self sendDate:task.dueDate];
+	[self sendDate:task.completionDate];
+	[self sendDate:task.reminderDate];
+	[self sendFormat:"i" values:[NSArray arrayWithObject:[NSNumber numberWithInt:[task.categories count]]]];
+
+	for (CDCategory *category in task.categories)
+		[self sendFormat:"s" values:[NSArray arrayWithObject:category.taskCoachId]];
 }
 
-- (void)dealloc
+- (void)onFinished
 {
-	[taskCategories release];
-	
-	[super dealloc];
-}
-
-- (void)activated
-{
-	taskCategories = [[NSMutableArray alloc] initWithCapacity:2];
-
-	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM CurrentTask WHERE status=%d", STATUS_MODIFIED]];
-	[req execWithTarget:self action:@selector(onModifiedTask:)];
-	
 	myController.state = [TwoWayNewEffortsState stateWithNetwork:myNetwork controller:myController];
 }
 
-- (void)onModifiedTask:(NSDictionary *)dict
+- (NSString *)entityName
 {
-	[myNetwork appendString:[dict objectForKey:@"name"]];
-	[myNetwork appendString:[dict objectForKey:@"taskCoachId"]];
-	[myNetwork appendString:[dict objectForKey:@"description"]];
-
-	[self sendDate:[dict objectForKey:@"startDate"]];
-	[self sendDate:[dict objectForKey:@"dueDate"]];
-	[self sendDate:[dict objectForKey:@"completionDate"]];
-	
-	if (myController.protocolVersion >= 5)
-	{
-		[self sendDate:[dict objectForKey:@"reminder"]];
-	}
-	
-	// Send categories as well, they may have been modified on the device.
-	[taskCategories removeAllObjects];
-
-	Statement *req = [[Database connection] statementWithSQL:@"SELECT taskCoachId FROM Category, TaskHasCategory WHERE idCategory=id AND idTask=?"];
-	[req bindInteger:[[dict objectForKey:@"id"] intValue] atIndex:1];
-	[req execWithTarget:self action:@selector(onFoundCategory:)];
-	[myNetwork appendInteger:[taskCategories count]];
-	for (NSString *catId in taskCategories)
-	{
-		NSLog(@"Send category for modified task (v2): %@", catId);
-
-		[myNetwork appendString:catId];
-	}
+	return @"CDTask";
 }
 
-- (void)onFoundCategory:(NSDictionary *)dict
+- (NSInteger) status
 {
-	[taskCategories addObject:[dict objectForKey:@"taskCoachId"]];
+	return STATUS_MODIFIED;
 }
 
-- (void)networkDidConnect:(Network *)network controller:(SyncViewController *)controller
+- (NSString *)ordering
 {
-	// n/a
-}
-
-- (void)network:(Network *)network didGetData:(NSData *)data controller:(SyncViewController *)controller
-{
-	// n/a
+	return @"creationDate";
 }
 
 @end

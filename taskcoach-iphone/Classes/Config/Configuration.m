@@ -6,7 +6,9 @@
 //  Copyright 2009 Jérôme Laheurte. See COPYING for details.
 //
 
+#import "TaskCoachAppDelegate.h"
 #import "Configuration.h"
+#import "CDFile.h"
 
 static Configuration *_configuration = NULL;
 
@@ -21,6 +23,8 @@ static Configuration *_configuration = NULL;
 @synthesize name;
 @synthesize domain;
 @synthesize viewStyle;
+
+@synthesize cdCurrentFile;
 
 + (Configuration *)configuration
 {
@@ -54,6 +58,25 @@ static Configuration *_configuration = NULL;
 		domain = [[config stringForKey:@"domain"] copy];
 
 		viewStyle = [config integerForKey:@"viewStyle"];
+
+		NSString *guid = [config stringForKey:@"currentfile"];
+		if (guid)
+		{
+			NSFetchRequest *request = [[NSFetchRequest alloc] init];
+			[request setEntity:[NSEntityDescription entityForName:@"CDFile" inManagedObjectContext:getManagedObjectContext()]];
+			[request setPredicate:[NSPredicate predicateWithFormat:@"guid == %@", guid]];
+			NSError *error;
+			NSArray *results = [getManagedObjectContext() executeFetchRequest:request error:&error];
+			[request release];
+
+			if (results)
+			{
+				if ([results count] >= 1)
+				{
+					cdCurrentFile = [[results objectAtIndex:0] retain];
+				}
+			}
+		}
 	}
 	
 	return self;
@@ -63,6 +86,7 @@ static Configuration *_configuration = NULL;
 {
 	[name release];
 	[domain release];
+	[cdCurrentFile release];
 
 	[super dealloc];
 }
@@ -79,7 +103,29 @@ static Configuration *_configuration = NULL;
 	
 	[config setInteger:viewStyle forKey:@"viewStyle"];
 
+	if (cdCurrentFile)
+	{
+		[config setObject:cdCurrentFile.guid forKey:@"currentfile"];
+	}
+
 	[config synchronize];
+}
+
+#pragma mark -
+#pragma mark CoreData stuff
+
+- (NSInteger)cdFileCount
+{
+	NSFetchRequest *request = [[NSFetchRequest alloc] init];
+	[request setEntity:[NSEntityDescription entityForName:@"CDFile" inManagedObjectContext:getManagedObjectContext()]];
+	NSError *error;
+	NSInteger count;
+	if ((count = [getManagedObjectContext() countForFetchRequest:request error:&error]) < 0)
+	{
+		NSLog(@"Could not get file count: %@", [error localizedDescription]);
+	}
+	
+	return count;
 }
 
 @end

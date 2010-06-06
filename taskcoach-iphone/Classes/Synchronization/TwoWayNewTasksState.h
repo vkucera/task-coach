@@ -6,14 +6,12 @@
 //  Copyright 2009 Jérôme Laheurte. See COPYING for details.
 //
 
-#import <Foundation/Foundation.h>
+#import "EntityUploadState.h"
 
-#import "UploadObjectsState.h"
-
-@interface TwoWayNewTasksState : UploadObjectsState
+@interface TwoWayNewTasksState : EntityUploadState
 {
-	NSMutableArray *taskCategories;
-	NSString *parentId;
 }
+
++ stateWithNetwork:(Network *)network controller:(SyncViewController *)controller;
 
 @end

@@ -10,7 +10,8 @@
 #import "TwoWayModifiedCategoriesState.h"
 #import "Database.h"
 #import "Statement.h"
-#import "DomainObject.h"
+#import "CDCategory.h"
+#import "CDDomainObject+Addons.h"
 #import "SyncViewController.h"
 
 @implementation TwoWayDeletedCategoriesState
@@ -20,29 +21,29 @@
 	return [[[TwoWayDeletedCategoriesState alloc] initWithNetwork:network controller:controller] autorelease];
 }
 
-- (void)activated
+- (void)packObject:(CDCategory *)category
 {
-	Statement *req = [[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT taskCoachId FROM CurrentCategory WHERE status=%d", STATUS_DELETED]];
-	[req execWithTarget:self action:@selector(onDeletedCategory:)];
-	
+	[self sendFormat:"s" values:[NSArray arrayWithObject:category.taskCoachId]];
+}
+
+- (void)onFinished
+{
 	myController.state = [TwoWayModifiedCategoriesState stateWithNetwork:myNetwork controller:myController];
 }
 
-- (void)onDeletedCategory:(NSDictionary *)dict
+- (NSString *)entityName
 {
-	NSLog(@"Sending deleted category %@", [dict objectForKey:@"taskCoachId"]);
-	
-	[myNetwork appendString:[dict objectForKey:@"taskCoachId"]];
+	return @"CDCategory";
 }
 
-- (void)networkDidConnect:(Network *)network controller:(SyncViewController *)controller
+- (NSInteger)status
 {
-	// n/a
+	return STATUS_DELETED;
 }
 
-- (void)network:(Network *)network didGetData:(NSData *)data controller:(SyncViewController *)controller
+- (NSString *)ordering
 {
-	// n/a
+	return @"creationDate";
 }
 
 @end

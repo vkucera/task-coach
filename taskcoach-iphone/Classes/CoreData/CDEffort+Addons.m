@@ -10,6 +10,7 @@
 #import "TaskCoachAppDelegate.h"
 #import "CDDomainObject+Addons.h"
 #import "Database.h"
+#import "Configuration.h"
 
 @implementation CDEffort (Addons)
 
@@ -18,7 +19,7 @@
 	NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
 	[request setEntity:[NSEntityDescription entityForName:@"CDEffort" inManagedObjectContext:getManagedObjectContext()]];
 	[request setPredicate:[NSPredicate predicateWithFormat:@"status != %d AND ended == NULL AND file=%@",
-						   STATUS_DELETED, [Database connection].cdCurrentFile]];
+						   STATUS_DELETED, [Configuration configuration].cdCurrentFile]];
 
 	NSError *error;
 	NSArray *result = [getManagedObjectContext() executeFetchRequest:request error:&error];

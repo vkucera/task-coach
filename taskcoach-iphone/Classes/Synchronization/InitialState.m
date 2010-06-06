@@ -30,7 +30,6 @@
 
 - (void)networkDidConnect:(Network *)network controller:(SyncViewController *)controller
 {
-	[[Database connection] begin];
 	controller.state = [ProtocolNegotiationState stateWithNetwork:network controller:controller];
 }
 

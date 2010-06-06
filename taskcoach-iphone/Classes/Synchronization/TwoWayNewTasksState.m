@@ -10,101 +10,58 @@
 #import "TwoWayDeletedTasksState.h"
 #import "Network.h"
 #import "SyncViewController.h"
-#import "Database.h"
-#import "Statement.h"
-#import "DomainObject.h"
+#import "DateUtils.h"
+
+#import "CDDomainObject+Addons.h"
+#import "CDTask.h"
+#import "CDCategory.h"
 
 @implementation TwoWayNewTasksState
 
 + stateWithNetwork:(Network *)network controller:(SyncViewController *)controller
 {
-	NSObject <State> *next = [TwoWayDeletedTasksState stateWithNetwork:network controller:controller];
-
-	return [[[TwoWayNewTasksState alloc] initWithNetwork:network controller:controller nextState:next expectIds:YES] autorelease];
+	return [[[TwoWayNewTasksState alloc] initWithNetwork:network controller:controller] autorelease];
 }
 
-- (void)activated
+- (void)packObject:(CDTask *)task
 {
-	[super activated];
-
-	taskCategories = [[NSMutableArray alloc] initWithCapacity:2];
-
-	[self start:[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM CurrentTask WHERE CurrentTask.status=%d", STATUS_NEW]]];
-}
-
-- (void)dealloc
-{
-	[taskCategories release];
-	[parentId release];
+	NSLog(@"Sending task %@", task.name);
 	
-	[super dealloc];
-}
+	[self sendFormat:"ss" values:[NSArray arrayWithObjects:task.name, task.longDescription, nil]];
+	[self sendDate:task.startDate];
+	[self sendDate:task.dueDate];
+	[self sendDate:task.completionDate];
+	[self sendDate:task.reminderDate];
 
-- (void)onParentId:(NSDictionary *)dict
-{
-	[parentId release];
-	parentId = [[dict objectForKey:@"taskCoachId"] retain];
-}
-
-- (void)onObject:(NSDictionary *)dict
-{
-	[super onObject:dict];
-
-	NSLog(@"Sending new task %@", [dict objectForKey:@"name"]);
-	
-	[myNetwork appendString:[dict objectForKey:@"name"]];
-	[myNetwork appendString:[dict objectForKey:@"description"]];
-
-	[self sendDate:[dict objectForKey:@"startDate"]];
-	[self sendDate:[dict objectForKey:@"dueDate"]];
-	[self sendDate:[dict objectForKey:@"completionDate"]];
-
-	if (myController.protocolVersion >= 5)
-	{
-		[self sendDate:[dict objectForKey:@"reminder"]];
-	}
-
-	if ([dict objectForKey:@"parentId"])
-	{
-		[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT taskCoachId FROM Task WHERE id=%d", [[dict objectForKey:@"parentId"] intValue]]] execWithTarget:self action:@selector(onParentId:)];
-		[myNetwork appendString:parentId];
-	}
+	if (task.parent)
+		[self sendFormat:"s" values:[NSArray arrayWithObject:task.parent.taskCoachId]];
 	else
-	{
-		[myNetwork appendInteger:0];
-	}
+		[self sendFormat:"s" values:[NSArray arrayWithObject:[NSNull null]]];
 
+	[self sendFormat:"i" values:[NSArray arrayWithObject:[NSNumber numberWithInt:[task.categories count]]]];
 
-	[taskCategories removeAllObjects];
-
-	Statement *req = [[Database connection] statementWithSQL:@"SELECT taskCoachId FROM Category, TaskHasCategory WHERE idCategory=id AND idTask=?"];
-	[req bindInteger:[[dict objectForKey:@"id"] intValue] atIndex:1];
-	[req execWithTarget:self action:@selector(onFoundCategory:)];
-	[myNetwork appendInteger:[taskCategories count]];
-	for (NSString *catId in taskCategories)
-	{
-		[myNetwork appendString:catId];
-	}
+	for (CDCategory *category in task.categories)
+		[self sendFormat:"s" values:[NSArray arrayWithObject:category.taskCoachId]];
 }
 
-- (void)onFoundCategory:(NSDictionary *)dict
+- (void)onFinished
 {
-	[taskCategories addObject:[dict objectForKey:@"taskCoachId"]];
+	myController.state = [TwoWayDeletedTasksState stateWithNetwork:myNetwork controller:myController];
 }
 
-- (NSString *)categoryWhereClause
+- (NSString *)entityName
 {
-	return [NSString stringWithFormat:@"status = %d", STATUS_NEW];
+	return @"CDTask";
 }
 
-- (NSString *)taskWhereClause
+- (NSInteger)status
 {
-	return [NSString stringWithFormat:@"status = %d", STATUS_NEW];
+	return STATUS_NEW;
 }
 
-- (NSString *)tableName
+- (NSString *)ordering
 {
-	return @"Task";
+	return @"creationDate";
 }
 
 @end

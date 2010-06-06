@@ -6,18 +6,20 @@
 //  Copyright 2009 Jérôme Laheurte. See COPYING for details.
 //
 
-#import <Foundation/Foundation.h>
-
-#import "BaseState.h"
 #import "KeychainWrapper.h"
+#import "OneShotItemState.h"
 
-@interface AuthentificationState : BaseState <State, UITextFieldDelegate>
+@interface AuthentificationState : OneShotItemState <UITextFieldDelegate>
 {
+	NSInteger state;
 	NSString *currentPassword;
-
+	NSData *currentData;
+	
 #if !TARGET_IPHONE_SIMULATOR
 	KeychainWrapper *keychain;
 #endif
 }
+
++ stateWithNetwork:(Network *)network controller:(SyncViewController *)controller;
 
 @end

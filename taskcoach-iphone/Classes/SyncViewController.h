@@ -27,6 +27,11 @@
 	SEL action;
 	
 	NSInteger protocolVersion;
+
+	NSInteger categoryCount;
+	NSInteger taskCount;
+	NSInteger effortCount;
+	NSInteger currentCount;
 }
 
 @property (nonatomic, retain) IBOutlet UILabel *label;
@@ -36,10 +41,15 @@
 @property (nonatomic, retain) NSObject <State> *state;
 @property (nonatomic) NSInteger protocolVersion;
 
+@property (nonatomic) NSInteger categoryCount;
+@property (nonatomic) NSInteger taskCount;
+@property (nonatomic) NSInteger effortCount;
+
 - initWithTarget:(id)target action:(SEL)action host:(NSString *)host port:(NSInteger)port;
 
 - (void)finished:(BOOL)ok;
 
 - (void)cancel;
+- (void)increment;
 
 @end

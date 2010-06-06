@@ -15,7 +15,6 @@ static Database *database = nil;
 @implementation Database
 
 @synthesize currentFile;
-@synthesize cdCurrentFile;
 
 + (Database *)connection
 {
@@ -88,23 +87,6 @@ static Database *database = nil;
 	[currentFile release];
 	currentFile = nil;
 	[[self statementWithSQL:@"SELECT id FROM TaskCoachFile WHERE visible"] execWithTarget:self action:@selector(updateCurrentFile:)];
-}
-
-#pragma mark -
-#pragma mark CoreData stuff
-
-- (NSInteger)cdFileCount
-{
-	NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	[request setEntity:[NSEntityDescription entityForName:@"CDFile" inManagedObjectContext:getManagedObjectContext()]];
-	NSError *error;
-	NSInteger count;
-	if ((count = [getManagedObjectContext() countForFetchRequest:request error:&error]) < 0)
-	{
-		NSLog(@"Could not get file count: %@", [error localizedDescription]);
-	}
-
-	return count;
 }
 
 @end

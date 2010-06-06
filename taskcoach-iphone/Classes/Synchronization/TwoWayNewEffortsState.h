@@ -6,10 +6,12 @@
 //  Copyright 2009 Jérôme Laheurte. All rights reserved.
 //
 
-#import "UploadObjectsState.h"
+#import "EntityUploadState.h"
 
-@interface TwoWayNewEffortsState : UploadObjectsState
+@interface TwoWayNewEffortsState : EntityUploadState
 {
 }
+
++ stateWithNetwork:(Network *)network controller:(SyncViewController *)controller;
 
 @end

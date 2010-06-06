@@ -6,13 +6,12 @@
 //  Copyright 2009 Jérôme Laheurte. See COPYING for details.
 //
 
-#import <Foundation/Foundation.h>
+#import "EntityUploadState.h"
 
-#import "BaseState.h"
-
-@interface TwoWayModifiedTasksState : BaseState <State>
+@interface TwoWayModifiedTasksState : EntityUploadState
 {
-	NSMutableArray *taskCategories;
 }
+
++ stateWithNetwork:(Network *)network controller:(SyncViewController *)controller;
 
 @end

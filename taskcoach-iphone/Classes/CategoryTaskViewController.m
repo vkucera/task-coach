@@ -10,6 +10,7 @@
 #import "CategoryTaskViewController.h"
 #import "TaskDetailsController.h"
 #import "String+Utils.h"
+#import "Configuration.h"
 
 #import "CDTask.h"
 #import "CDTask+Addons.h"
@@ -70,6 +71,8 @@ static NSSet *allCategories(CDCategory *category)
 	[super onAddTask:button];
 
 	CDTask *task = (CDTask *)[NSEntityDescription insertNewObjectForEntityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()];
+	task.creationDate = [NSDate date];
+	task.file = [Configuration configuration].cdCurrentFile;
 	task.name = @"";
 	task.longDescription = @"";
 	if (category)

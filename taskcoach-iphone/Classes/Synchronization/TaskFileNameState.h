@@ -6,13 +6,12 @@
 //  Copyright 2009 Jérôme Laheurte. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "OneShotItemState.h"
 
-#import "BaseState.h"
-
-@interface TaskFileNameState : BaseState <State>
+@interface TaskFileNameState : OneShotItemState
 {
-	NSInteger state;
 }
+
++ stateWithNetwork:(Network *)network controller:(SyncViewController *)controller;
 
 @end

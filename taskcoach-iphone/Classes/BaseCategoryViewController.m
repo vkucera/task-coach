@@ -10,6 +10,7 @@
 #import "BaseCategoryViewController.h"
 #import "Database.h"
 #import "Statement.h"
+#import "Configuration.h"
 #import "BadgedCell.h"
 #import "CellFactory.h"
 
@@ -19,16 +20,20 @@
 static NSMutableArray *expandChildren(CDCategory *category, NSMutableDictionary *indentations, NSInteger indent)
 {
 	NSMutableArray *allChildren = [[[NSMutableArray alloc] init] autorelease];
-	[allChildren addObject:category];
-	[indentations setObject:[NSNumber numberWithInt:indent] forKey:[category objectID]];
-
-	// XXXTODO: sort by name!
-
-	for (CDCategory *child in [category children])
+	
+	if ([category.status intValue] != STATUS_DELETED)
 	{
-		[allChildren addObjectsFromArray:expandChildren(child, indentations, indent + 1)];
+		[allChildren addObject:category];
+		[indentations setObject:[NSNumber numberWithInt:indent] forKey:[category objectID]];
+		
+		// XXXTODO: sort by name!
+		
+		for (CDCategory *child in [category children])
+		{
+			[allChildren addObjectsFromArray:expandChildren(child, indentations, indent + 1)];
+		}
 	}
-
+		
 	return allChildren;
 }
 
@@ -82,7 +87,7 @@ static NSMutableArray *expandChildren(CDCategory *category, NSMutableDictionary 
 	NSFetchRequest *request = [[NSFetchRequest alloc] init];
 	[request setEntity:[NSEntityDescription entityForName:@"CDCategory" inManagedObjectContext:getManagedObjectContext()]];
 	[request setPredicate:[NSPredicate predicateWithFormat:@"status != %d AND file == %@ AND parent == NULL", STATUS_DELETED,
-						   [Database connection].cdCurrentFile]];
+						   [Configuration configuration].cdCurrentFile]];
 	NSSortDescriptor *sd = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
 	[request setSortDescriptors:[NSArray arrayWithObject:sd]];
 	[sd release];

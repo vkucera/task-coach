@@ -6,12 +6,12 @@
 //  Copyright 2009 Jérôme Laheurte. See COPYING for details.
 //
 
-#import <Foundation/Foundation.h>
+#import "OneShotItemState.h"
 
-#import "BaseState.h"
-
-@interface ProtocolNegotiationState : BaseState <State>
+@interface ProtocolNegotiationState : OneShotItemState
 {
 }
+
++ stateWithNetwork:(Network *)network controller:(SyncViewController *)controller;
 
 @end

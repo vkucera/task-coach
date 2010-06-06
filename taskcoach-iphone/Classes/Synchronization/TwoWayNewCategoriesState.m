@@ -13,66 +13,46 @@
 #import "Database.h"
 #import "Statement.h"
 #import "SyncViewController.h"
-#import "DomainObject.h"
+#import "CDCategory.h"
+#import "CDDomainObject+Addons.h"
 
 @implementation TwoWayNewCategoriesState
 
 + stateWithNetwork:(Network *)network controller:(SyncViewController *)controller
 {
-	NSObject <State> *next;
+	return [[[TwoWayNewCategoriesState alloc] initWithNetwork:network controller:controller] autorelease];
+}
+
+- (void)packObject:(CDCategory *)category
+{
+	[self sendFormat:"s" values:[NSArray arrayWithObject:category.name]];
 	
-	next = [TwoWayDeletedCategoriesState stateWithNetwork:network controller:controller];
-
-	return [[[TwoWayNewCategoriesState alloc] initWithNetwork:network controller:controller nextState:next expectIds:YES] autorelease];
-}
-
-- (void)activated
-{
-	[super activated];
-	
-	NSLog(@"New categories: activated.");
-
-	[self start:[[Database connection] statementWithSQL:[NSString stringWithFormat:@"SELECT * FROM CurrentCategory WHERE status=%d", STATUS_NEW]]];
-}
-
-- (void)onCategoryParent:(NSDictionary *)dict
-{
-	[myNetwork appendString:[dict objectForKey:@"taskCoachId"]];
-}
-
-- (void)onObject:(NSDictionary *)dict
-{
-	NSLog(@"Found category.");
-
-	[super onObject:dict];
-
-	[myNetwork appendString:[dict objectForKey:@"name"]];
-
-	if ([dict objectForKey:@"parentId"])
-	{
-		Statement *req = [[Database connection] statementWithSQL:@"SELECT taskCoachId FROM Category WHERE id=?"];
-		[req bindInteger:[(NSNumber *)[dict objectForKey:@"parentId"] intValue] atIndex:1];
-		[req execWithTarget:self action:@selector(onCategoryParent:)];
-	}
+	if (category.parent)
+		[self sendFormat:"s" values:[NSArray arrayWithObject:category.parent.taskCoachId]];
 	else
-	{
-		[myNetwork appendString:nil];
-	}
+		[self sendFormat:"s" values:[NSArray arrayWithObject:[NSNull null]]];
+	
+	NSLog(@"Sent category: %@", category.name);
 }
 
-- (NSString *)categoryWhereClause
+- (void)onFinished
 {
-	return [NSString stringWithFormat:@"status = %d", STATUS_NEW];
+	myController.state = [TwoWayDeletedCategoriesState stateWithNetwork:myNetwork controller:myController];
 }
 
-- (NSString *)taskWhereClause
+- (NSString *)entityName
 {
-	return [NSString stringWithFormat:@"status = %d", STATUS_NEW];
+	return @"CDCategory";
 }
 
-- (NSString *)tableName
+- (NSInteger)status
 {
-	return @"Category";
+	return STATUS_NEW;
+}
+
+- (NSString *)ordering
+{
+	return @"creationDate";
 }
 
 @end

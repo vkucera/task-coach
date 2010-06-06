@@ -26,24 +26,24 @@
 	return self;
 }
 
-- (void)sendDate:(NSString *)date
+- (void)sendDate:(NSDate *)date
 {
 	if (date)
 	{
-		if (myController.protocolVersion >= 5)
-		{
-			// The database is already up to date so the string has the right format
-			[myNetwork appendString:date];
-		}
-		else
-		{
-			[myNetwork appendString:[[DateUtils instance] stringFromDate:[[TimeUtils instance] dateFromString:date]]];
-		}
+		[myNetwork appendString:[[TimeUtils instance] stringFromDate:date]];
 	}
 	else
 	{
 		[myNetwork appendString:nil];
 	}
+}
+
+- (NSDate *)parseDate:(id)date
+{
+	if (date == [NSNull null])
+		return nil;
+
+	return [[TimeUtils instance] dateFromString:date];
 }
 
 - (void)networkDidClose:(Network *)network controller:(SyncViewController *)controller

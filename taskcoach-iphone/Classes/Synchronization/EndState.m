@@ -6,48 +6,22 @@
 //  Copyright 2009 Jérôme Laheurte. See COPYING for details.
 //
 
+#import "TaskCoachAppDelegate.h"
 #import "EndState.h"
-#import "Database.h"
-#import "Statement.h"
 #import "Network.h"
 #import "SyncViewController.h"
-#import "DomainObject.h"
+#import "i18n.h"
 
 @implementation EndState
 
 - (void)activated
 {
-	// Cleanup
-	Statement *req;
-	
-	req = [[Database connection] statementWithSQL:@"DELETE FROM Task WHERE status=? AND fileId=?"];
-	[req bindInteger:STATUS_DELETED atIndex:1];
-	[req bindInteger:[[Database connection].currentFile intValue] atIndex:2];
-	[req exec];
-	
-	req = [[Database connection] statementWithSQL:@"DELETE FROM Category WHERE status=? AND fileId=?"];
-	[req bindInteger:STATUS_DELETED atIndex:1];
-	[req bindInteger:[[Database connection].currentFile intValue] atIndex:2];
-	[req exec];
-
-	// XXXTODO: efforts
-	
-	req = [[Database connection] statementWithSQL:@"UPDATE Category SET STATUS=? WHERE fileId=?"];
-	[req bindInteger:STATUS_NONE atIndex:1];
-	[req bindInteger:[[Database connection].currentFile intValue] atIndex:2];
-	[req exec];
-	
-	req = [[Database connection] statementWithSQL:@"UPDATE Task SET STATUS=? WHERE fileId=?"];
-	[req bindInteger:STATUS_NONE atIndex:1];
-	[req bindInteger:[[Database connection].currentFile intValue] atIndex:2];
-	[req exec];
-	
-	req = [[Database connection] statementWithSQL:@"UPDATE Effort SET STATUS=? WHERE fileId=?"];
-	[req bindInteger:STATUS_NONE atIndex:1];
-	[req bindInteger:[[Database connection].currentFile intValue] atIndex:2];
-	[req exec];
-	
-	[[Database connection] commit];
+	NSError *error;
+	if (![getManagedObjectContext() save:&error])
+	{
+		NSLog(@"Could not save: %@", [error localizedDescription]);
+		assert(0);
+	}
 }
 
 + stateWithNetwork:(Network *)network controller:(SyncViewController *)controller

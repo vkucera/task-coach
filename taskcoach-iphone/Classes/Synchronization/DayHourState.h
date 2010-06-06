@@ -6,12 +6,12 @@
 //  Copyright 2010 Jérôme Laheurte. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "OneShotItemState.h"
 
-#import "BaseState.h"
-
-@interface DayHourState : BaseState <State>
+@interface DayHourState : OneShotItemState
 {
 }
+
++ stateWithNetwork:(Network *)network controller:(SyncViewController *)controller;
 
 @end

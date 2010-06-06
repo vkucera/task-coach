@@ -16,10 +16,13 @@
 {
 	switch ([self.status intValue])
 	{
-		case STATUS_MODIFIED:
 		case STATUS_NEW:
-			if (newStatus == STATUS_DELETED)
-				newStatus = newStatus;
+		case STATUS_MODIFIED:
+			if (newStatus != STATUS_DELETED)
+				newStatus = [self.status intValue];
+			break;
+		case STATUS_DELETED:
+			newStatus = STATUS_DELETED;
 			break;
 	}
 

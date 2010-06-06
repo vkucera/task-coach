@@ -6,10 +6,12 @@
 //  Copyright 2009 __MyCompanyName__. All rights reserved.
 //
 
-#import "UploadObjectsState.h"
+#import "EntityUploadState.h"
 
-@interface TwoWayModifiedCategoriesState : UploadObjectsState
+@interface TwoWayModifiedCategoriesState : EntityUploadState
 {
 }
+
++ stateWithNetwork:(Network *)network controller:(SyncViewController *)controller;
 
 @end

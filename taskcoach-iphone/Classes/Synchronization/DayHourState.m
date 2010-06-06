@@ -12,7 +12,7 @@
 #import "SyncViewController.h"
 #import "Database.h"
 #import "Statement.h"
-
+#import "Configuration.h"
 
 @implementation DayHourState
 
@@ -23,22 +23,21 @@
 
 - (void)activated
 {
-	[myNetwork expect:8];
+	[self startWithFormat:"ii" count:NOCOUNT];
 }
 
-- (void)networkDidConnect:(Network *)network controller:(SyncViewController *)controller
+- (void)onNewObject:(NSArray *)value
 {
-	// n/a
+	[Configuration configuration].cdCurrentFile.startHour = [value objectAtIndex:0];
+	[Configuration configuration].cdCurrentFile.endHour = [value objectAtIndex:1];
+	
+	[self sendFormat:"i" values:[NSArray arrayWithObject:[NSNumber numberWithInt:1]]];
+	
+	myController.state = [TwoWayState stateWithNetwork:myNetwork controller:myController];
 }
 
-- (void)network:(Network *)network didGetData:(NSData *)data controller:(SyncViewController *)controller
+- (void)onFinished
 {
-	NSInteger startHour = ntohl(*((int32_t *)[data bytes]));
-	NSInteger endHour = ntohl(*((int32_t *)[data bytes] + 1));
-
-	[[[Database connection] statementWithSQL:[NSString stringWithFormat:@"UPDATE TaskCoachFile SET startHour=%d, endHour=%d WHERE id=%@", startHour, endHour, [Database connection].currentFile]] exec];
-	[network appendInteger:1];
-	controller.state = [TwoWayState stateWithNetwork:network controller:controller];
 }
 
 @end

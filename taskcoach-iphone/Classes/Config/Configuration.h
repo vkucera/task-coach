@@ -14,6 +14,8 @@
 #define STYLE_TABLE    0
 #define STYLE_CALENDAR 1
 
+@class CDFile;
+
 @interface Configuration : NSObject
 {
 	BOOL showCompleted;
@@ -28,6 +30,8 @@
 	NSString *domain;
 
 	NSInteger viewStyle;
+
+	CDFile *cdCurrentFile;
 }
 
 @property (nonatomic, readonly) BOOL showCompleted;
@@ -39,6 +43,9 @@
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *domain;
 @property (nonatomic) NSInteger viewStyle;
+
+@property (nonatomic, retain) CDFile *cdCurrentFile;
+@property (nonatomic, readonly) NSInteger cdFileCount;
 
 + (Configuration *)configuration;
 - (void)save;
