@@ -868,6 +868,11 @@ class ColumnPopupMenu(Menu):
     # this menu.  This property should be set by the control popping up this 
     # menu (see widgets._CtrlWithColumnPopupMenuMixin).
     columnIndex = property(__getColumn, __setColumn) 
+    
+    def appendUICommands(self, *args, **kwargs):
+        if self:
+            # Prevent PyDeadObjectError, since we're called via CallAfter
+            super(ColumnPopupMenu, self).appendUICommands(*args, **kwargs)
                             
     def getUICommands(self):
         return [uicommand.HideCurrentColumn(viewer=self._window), None] + \
