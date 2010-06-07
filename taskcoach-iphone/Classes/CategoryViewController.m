@@ -23,6 +23,7 @@
 #import "CDCategory.h"
 #import "CDTask.h"
 #import "CDTask+Addons.h"
+#import "CDHierarchicalDomainObject+Addons.h"
 
 #import "Configuration.h"
 #import "i18n.h"
@@ -197,21 +198,35 @@
 
 	NSInteger total = [[category task] count];
 	NSInteger overdue = 0, dueSoon = 0, started = 0;
-	
-	for (CDTask *task in category.task)
+
+	NSFetchRequest *request = [[NSFetchRequest alloc] init];
+	[request setEntity:[NSEntityDescription entityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()]];
+	[request setPredicate:[NSPredicate predicateWithFormat:@"status != %d AND ANY categories IN %@ AND parent == NULL", STATUS_DELETED, [category selfAndChildren]]];
+	NSError *error;
+	NSArray *tasks = [getManagedObjectContext() executeFetchRequest:request error:&error];
+	[request release];
+
+	if (tasks)
 	{
-		switch ([task.dateStatus intValue])
+		for (CDTask *task in tasks)
 		{
-			case TASKSTATUS_OVERDUE:
-				overdue++;
-				break;
-			case TASKSTATUS_DUESOON:
-				dueSoon++;
-				break;
-			case TASKSTATUS_STARTED:
-				started++;
-				break;
+			switch ([task.dateStatus intValue])
+			{
+				case TASKSTATUS_OVERDUE:
+					overdue++;
+					break;
+				case TASKSTATUS_DUESOON:
+					dueSoon++;
+					break;
+				case TASKSTATUS_STARTED:
+					started++;
+					break;
+			}
 		}
+	}
+	else
+	{
+		NSLog(@"Could not fetch tasks: %@", [error localizedDescription]);
 	}
 
 	cell.badge.text = [NSString stringWithFormat:@"%d", total];

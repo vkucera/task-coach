@@ -14,19 +14,9 @@
 
 #import "CDTask.h"
 #import "CDTask+Addons.h"
+#import "CDHierarchicalDomainObject+Addons.h"
 
 #import "i18n.h"
-
-static NSSet *allCategories(CDCategory *category)
-{
-	NSMutableSet *result = [[[NSMutableSet alloc] init] autorelease];
-	[result addObject:category];
-
-	for (CDCategory *child in category.children)
-		[result unionSet:allCategories(child)];
-
-	return result;
-}
 
 @implementation CategoryTaskViewController
 
@@ -61,7 +51,7 @@ static NSSet *allCategories(CDCategory *category)
 - (NSPredicate *)predicate
 {
 	if (category)
-		return [NSPredicate predicateWithFormat:@"parent == NULL AND ANY categories IN %@", allCategories(category)];
+		return [NSPredicate predicateWithFormat:@"parent == NULL AND ANY categories IN %@", [category selfAndChildren]];
 	else
 		return [NSPredicate predicateWithFormat:@"parent == NULL"];
 }

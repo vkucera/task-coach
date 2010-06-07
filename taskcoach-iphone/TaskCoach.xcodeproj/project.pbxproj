@@ -54,6 +54,7 @@
 		A63CC0BC0F5174EC003669FD /* ledorangebig.png in Resources */ = {isa = PBXBuildFile; fileRef = A63CC0B70F5174EC003669FD /* ledorangebig.png */; };
 		A63CC0BD0F5174EC003669FD /* ledredbig.png in Resources */ = {isa = PBXBuildFile; fileRef = A63CC0B80F5174EC003669FD /* ledredbig.png */; };
 		A63E286D10415CCD00A2E672 /* TwoWayDeletedCategoriesState.m in Sources */ = {isa = PBXBuildFile; fileRef = A63E286C10415CCD00A2E672 /* TwoWayDeletedCategoriesState.m */; };
+		A64403B211BD43270029075D /* CDHierarchicalDomainObject+Addons.m in Sources */ = {isa = PBXBuildFile; fileRef = A64403B111BD43270029075D /* CDHierarchicalDomainObject+Addons.m */; };
 		A64603A70F2234B500FC71AD /* CellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = A64603A60F2234B500FC71AD /* CellFactory.m */; };
 		A64603AA0F2234D900FC71AD /* TaskCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A64603A90F2234D900FC71AD /* TaskCell.m */; };
 		A64604950F223FC500FC71AD /* ledblue.png in Resources */ = {isa = PBXBuildFile; fileRef = A64604900F223FC500FC71AD /* ledblue.png */; };
@@ -260,6 +261,8 @@
 		A63CC0B80F5174EC003669FD /* ledredbig.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ledredbig.png; sourceTree = "<group>"; };
 		A63E286B10415CCD00A2E672 /* TwoWayDeletedCategoriesState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwoWayDeletedCategoriesState.h; path = Synchronization/TwoWayDeletedCategoriesState.h; sourceTree = "<group>"; };
 		A63E286C10415CCD00A2E672 /* TwoWayDeletedCategoriesState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwoWayDeletedCategoriesState.m; path = Synchronization/TwoWayDeletedCategoriesState.m; sourceTree = "<group>"; };
+		A64403B011BD43270029075D /* CDHierarchicalDomainObject+Addons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CDHierarchicalDomainObject+Addons.h"; path = "CoreData/CDHierarchicalDomainObject+Addons.h"; sourceTree = "<group>"; };
+		A64403B111BD43270029075D /* CDHierarchicalDomainObject+Addons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CDHierarchicalDomainObject+Addons.m"; path = "CoreData/CDHierarchicalDomainObject+Addons.m"; sourceTree = "<group>"; };
 		A64603A50F2234B500FC71AD /* CellFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellFactory.h; sourceTree = "<group>"; };
 		A64603A60F2234B500FC71AD /* CellFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CellFactory.m; sourceTree = "<group>"; };
 		A64603A80F2234D900FC71AD /* TaskCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCell.h; sourceTree = "<group>"; };
@@ -863,6 +866,8 @@
 				A68D31A611BA3D31002C6593 /* CDEffort+Addons.m */,
 				A610E6A411BB9913006800AF /* Migration.h */,
 				A610E6A511BB9913006800AF /* Migration.m */,
+				A64403B011BD43270029075D /* CDHierarchicalDomainObject+Addons.h */,
+				A64403B111BD43270029075D /* CDHierarchicalDomainObject+Addons.m */,
 			);
 			name = CoreData;
 			sourceTree = "<group>";
@@ -1137,6 +1142,7 @@
 				A62DFB2C11BB763300F594AB /* FullFromDesktopEffortState.m in Sources */,
 				A610E6A611BB9913006800AF /* Migration.m in Sources */,
 				A65FF1ED11BBC25B00394E33 /* ReminderController.m in Sources */,
+				A64403B211BD43270029075D /* CDHierarchicalDomainObject+Addons.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
