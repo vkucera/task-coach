@@ -27,12 +27,15 @@ from taskcoachlib.domain import date
 class RenderDateTime(test.TestCase):
     def assertRenderedDateTime(self, expectedDateTime, *dateTimeArgs):
         renderedDateTime = render.dateTime(date.DateTime(*dateTimeArgs))
-        renderedParts = renderedDateTime.split(' ')
-        if len(renderedParts) > 1:
-            renderedDate, renderedTime = renderedParts
-            expectedDate, expectedTime = expectedDateTime.split(' ')
+        if expectedDateTime:
+            renderedParts = renderedDateTime.split(' ')
+            if len(renderedParts) > 1:
+                renderedDate, renderedTime = renderedParts
+                expectedDate, expectedTime = expectedDateTime.split(' ')
+                self.assertEqual(expectedTime, renderedTime)
+            else:
+                expectedDate, renderedDate = expectedDateTime, renderedDateTime
             self.assertRenderedDate(expectedDate, renderedDate)
-            self.assertEqual(expectedTime, renderedTime)
         else:
             self.assertEqual(expectedDateTime, renderedDateTime)
             
@@ -40,7 +43,7 @@ class RenderDateTime(test.TestCase):
         expectedMonth, expectedDay, expectedYear = expectedDate.split('/')
         renderedMonth, renderedDay, renderedYear = renderedDate.split('/')
         self.assertEqual(expectedDay, renderedDay)
-        self.assertEqual(expectedMonth, expectedMonth)
+        self.assertEqual(expectedMonth, renderedMonth)
         # Year may be two or four digits:
         self.failUnless(renderedYear.endswith(expectedYear))
         
