@@ -19,43 +19,47 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
-from taskcoachlib import config
 from taskcoachlib.gui import render
 from taskcoachlib.i18n import _
-from taskcoachlib.domain import task, date, effort
+from taskcoachlib.domain import date
 
 
 class RenderDateTime(test.TestCase):
+    def assertRenderedDateTime(self, expectedDateTime, *dateTimeArgs):
+        renderedDateTime = render.dateTime(date.DateTime(*dateTimeArgs))
+        renderedParts = renderedDateTime.split(' ')
+        if len(renderedParts) > 1:
+            renderedDate, renderedTime = renderedParts
+            expectedDate, expectedTime = expectedDateTime.split(' ')
+            self.assertEqual(expectedTime, renderedTime)
+            # Don't use assertEqual, because year can be four or two digits.
+            self.failUnless(renderedDate.startswith(expectedDate))
+        else:
+            self.assertEqual(expectedDateTime, renderedDateTime)
+        
     def testSomeRandomDateTime(self):
-        self.assertEqual('04/05/10 12:54',
-                         render.dateTime(date.DateTime(2010,4,5,12,54,43)))
+        self.assertRenderedDateTime('04/05/10 12:54', 2010, 4, 5, 12, 54, 42)
         
     def testInfiniteDateTime(self):
-        self.assertEqual('', render.dateTime(date.DateTime()))
+        self.assertRenderedDateTime('')
         
     def testStartOfDay(self):
-        self.assertEqual('04/05/10', render.dateTime(date.DateTime(2010,4,5)))
+        self.assertRenderedDateTime('04/05/10', 2010, 4, 5)
 
     def testEndOfDay(self):
-        self.assertEqual('04/05/10', 
-                         render.dateTime(date.DateTime(2010,4,5,23,59,59)))
+        self.assertRenderedDateTime('04/05/10', 2010, 4, 5, 23, 59, 59)
 
     def testEndOfDayWithoutSeconds(self):
-        self.assertEqual('04/05/10', 
-                         render.dateTime(date.DateTime(2010,4,5,23,59)))
+        self.assertRenderedDateTime('04/05/10', 2010, 4, 5, 23, 59)
 
     def testAlmostStartOfDay(self):
-        self.assertEqual('04/05/10 00:01', 
-                         render.dateTime(date.DateTime(2010,4,5,0,1,0)))
+        self.assertRenderedDateTime('04/05/10 00:01', 2010, 4, 5, 0, 1, 0)
 
     def testAlmostEndOfDay(self):
-        self.assertEqual('04/05/10 23:58', 
-                         render.dateTime(date.DateTime(2010,4,5,23,58,59)))
+        self.assertRenderedDateTime('04/05/10 23:58', 2010, 4, 5, 23, 58, 59)
 
     def testElevenOClock(self):
-        self.assertEqual('04/05/10 23:00', 
-                         render.dateTime(date.DateTime(2010,4,5,23,0,0)))
-
+        self.assertRenderedDateTime('04/05/10 23:00', 2010, 4, 5, 23, 0, 0)
                          
 
 class RenderTimeLeftTest(test.TestCase):
@@ -84,7 +88,7 @@ class RenderTimeLeftTest(test.TestCase):
         timeLeft = date.TimeDelta(days=2)
         self.assertEqual('2 days, 0:00', render.timeLeft(timeLeft, False))
 
-    def testOneDayLeftWhenCompleted(self):
+    def testTwoDaysLeftWhenCompleted(self):
         timeLeft = date.TimeDelta(days=2)
         self.assertEqual('', render.timeLeft(timeLeft, True))
 
