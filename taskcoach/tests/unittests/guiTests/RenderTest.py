@@ -31,11 +31,18 @@ class RenderDateTime(test.TestCase):
         if len(renderedParts) > 1:
             renderedDate, renderedTime = renderedParts
             expectedDate, expectedTime = expectedDateTime.split(' ')
+            self.assertRenderedDate(expectedDate, renderedDate)
             self.assertEqual(expectedTime, renderedTime)
-            # Don't use assertEqual, because year can be four or two digits.
-            self.failUnless(renderedDate.startswith(expectedDate))
         else:
             self.assertEqual(expectedDateTime, renderedDateTime)
+            
+    def assertRenderedDate(self, expectedDate, renderedDate):
+        expectedMonth, expectedDay, expectedYear = expectedDate.split('/')
+        renderedMonth, renderedDay, renderedYear = renderedDate.split('/')
+        self.assertEqual(expectedDay, renderedDay)
+        self.assertEqual(expectedMonth, expectedMonth)
+        # Year may be two or four digits:
+        self.failUnless(renderedYear.endswith(expectedYear))
         
     def testSomeRandomDateTime(self):
         self.assertRenderedDateTime('04/05/10 12:54', 2010, 4, 5, 12, 54, 42)
