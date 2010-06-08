@@ -577,7 +577,8 @@ class ProgressPage(TaskHeadersMixin, PageWithHeaders):
         self.fit()
         
     def entries(self):
-        return dict(percentageComplete=self._percentageCompleteEntry)
+        return dict(percentageComplete=self._percentageCompleteEntry,
+                    totalPercentageComplete=self._percentageCompleteEntry)
         
     def ok(self, event=None):
         notify = event is None
