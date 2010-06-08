@@ -30,7 +30,8 @@ Release('1.0.5', 'June 3, 2010',
 it couldn't read temporary files for email attachments.''', '2369711'),
         Bug('''Don't crash when using a purple folder or led icon.''', '3009432'),
         Bug('''Don't allow exporting efforts to iCalendar when effort viewer is
-in aggregate mode, it would result in an empty .ics file.''', '2935616')
+in aggregate mode, it would result in an empty .ics file.''', '2935616'),
+        Bug('''SyncML synchronization did not work for tasks.''', '3012234'),
         ],
     featuresChanged=[
         Feature('''Renamed the Edit->Paste into task menu item to 
