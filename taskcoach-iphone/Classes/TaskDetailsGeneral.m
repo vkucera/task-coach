@@ -47,8 +47,6 @@
 	self.subject.text = task.name;
 	self.description.text = task.longDescription;
 
-	self.navigationItem.title = task.name;
-
 	self.descriptionLabel.text = _("Description");
 	self.categoriesButton.titleLabel.text = _("Categories");
 

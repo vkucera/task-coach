@@ -47,6 +47,7 @@
 		[ctrls release];
 
 		self.delegate = self;
+		self.navigationItem.title = task.name;
 	}
 
 	return self;
