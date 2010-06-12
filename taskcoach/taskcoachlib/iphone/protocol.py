@@ -469,7 +469,7 @@ class State(object):
 # There's a problem that prevents the 2.0 iPhone app to fallback to protocol
 # version 5, so do not set this to 5 before 2.1 is on the AppStore...
 
-_PROTOVERSION = 5 # XXXTMP
+_PROTOVERSION = 4
 
 class IPhoneAcceptor(Acceptor):
     def __init__(self, window, settings, iocontroller):
