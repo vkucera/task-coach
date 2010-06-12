@@ -78,6 +78,7 @@
 		A6664DDC0F2B486000638C68 /* BaseState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664DDB0F2B486000638C68 /* BaseState.m */; };
 		A6664DE70F2B498300638C68 /* InitialState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664DE60F2B498300638C68 /* InitialState.m */; };
 		A6664EC50F2B504800638C68 /* AuthentificationState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664EC40F2B504800638C68 /* AuthentificationState.m */; };
+		A668B4E311C3B0820048BB89 /* TaskDetailsRecurrencePeriodPicker.strings in Resources */ = {isa = PBXBuildFile; fileRef = A668B4E111C3B0820048BB89 /* TaskDetailsRecurrencePeriodPicker.strings */; };
 		A66C181E11C37F500081C175 /* RecurrencePeriodCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A66C181D11C37F500081C175 /* RecurrencePeriodCell.m */; };
 		A66C182811C3805E0081C175 /* RecurrencePeriodCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A66C182711C3805E0081C175 /* RecurrencePeriodCell.xib */; };
 		A66C186711C385470081C175 /* TaskDetailsRecurrencePeriodPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = A66C186611C385470081C175 /* TaskDetailsRecurrencePeriodPicker.m */; };
@@ -306,6 +307,19 @@
 		A6664DE60F2B498300638C68 /* InitialState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InitialState.m; path = Synchronization/InitialState.m; sourceTree = "<group>"; };
 		A6664EC30F2B504800638C68 /* AuthentificationState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AuthentificationState.h; path = Synchronization/AuthentificationState.h; sourceTree = "<group>"; };
 		A6664EC40F2B504800638C68 /* AuthentificationState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AuthentificationState.m; path = Synchronization/AuthentificationState.m; sourceTree = "<group>"; };
+		A668B4BA11C3B0310048BB89 /* cs */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = cs; path = cs.lproj/TaskDetailsRecurrencePeriodPicker.xib; sourceTree = "<group>"; };
+		A668B4BB11C3B03D0048BB89 /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/TaskDetailsRecurrencePeriodPicker.xib; sourceTree = "<group>"; };
+		A668B4BC11C3B0490048BB89 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/TaskDetailsRecurrencePeriodPicker.xib; sourceTree = "<group>"; };
+		A668B4BD11C3B0540048BB89 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/TaskDetailsRecurrencePeriodPicker.xib; sourceTree = "<group>"; };
+		A668B4BE11C3B05F0048BB89 /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ru; path = ru.lproj/TaskDetailsRecurrencePeriodPicker.xib; sourceTree = "<group>"; };
+		A668B4E211C3B0820048BB89 /* cs */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/TaskDetailsRecurrencePeriodPicker.strings; sourceTree = "<group>"; };
+		A668B4E411C3B08C0048BB89 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/TaskDetailsRecurrencePeriodPicker.strings; sourceTree = "<group>"; };
+		A668B4E511C3B09A0048BB89 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/TaskDetailsRecurrencePeriodPicker.strings; sourceTree = "<group>"; };
+		A668B4E611C3B0A40048BB89 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/TaskDetailsRecurrencePeriodPicker.strings; sourceTree = "<group>"; };
+		A668B4E711C3B0AE0048BB89 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/TaskDetailsRecurrencePeriodPicker.strings; sourceTree = "<group>"; };
+		A668B4E811C3B0B80048BB89 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/TaskDetailsRecurrencePeriodPicker.strings; sourceTree = "<group>"; };
+		A668B4E911C3B0E90048BB89 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/TaskDetailsRecurrencePeriodPicker.strings; sourceTree = "<group>"; };
+		A668B4EA11C3B0F70048BB89 /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = th.lproj/TaskDetailsRecurrencePeriodPicker.xib; sourceTree = "<group>"; };
 		A66C181C11C37F500081C175 /* RecurrencePeriodCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecurrencePeriodCell.h; sourceTree = "<group>"; };
 		A66C181D11C37F500081C175 /* RecurrencePeriodCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecurrencePeriodCell.m; sourceTree = "<group>"; };
 		A66C182711C3805E0081C175 /* RecurrencePeriodCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecurrencePeriodCell.xib; sourceTree = "<group>"; };
@@ -567,6 +581,7 @@
 				A680C0D50F47368E00A8D18B /* DatePickerView.strings */,
 				A680C0D70F47368E00A8D18B /* MainWindow.strings */,
 				A680C0D90F47368E00A8D18B /* StringChoice.strings */,
+				A668B4E111C3B0820048BB89 /* TaskDetailsRecurrencePeriodPicker.strings */,
 				32CA4F630368D1EE00C91783 /* TaskCoach_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 				A68EDEF60F1E227500F51FF2 /* taskcoach.sql */,
@@ -1067,6 +1082,7 @@
 				A600A60A119FFB1C0018F309 /* TaskDetailsEfforts.xib in Resources */,
 				A66C182811C3805E0081C175 /* RecurrencePeriodCell.xib in Resources */,
 				A66C188A11C386B90081C175 /* TaskDetailsRecurrencePeriodPicker.xib in Resources */,
+				A668B4E311C3B0820048BB89 /* TaskDetailsRecurrencePeriodPicker.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1177,10 +1193,30 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		A668B4E111C3B0820048BB89 /* TaskDetailsRecurrencePeriodPicker.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A668B4E211C3B0820048BB89 /* cs */,
+				A668B4E411C3B08C0048BB89 /* de */,
+				A668B4E511C3B09A0048BB89 /* fr */,
+				A668B4E611C3B0A40048BB89 /* nl */,
+				A668B4E711C3B0AE0048BB89 /* ru */,
+				A668B4E811C3B0B80048BB89 /* en */,
+				A668B4E911C3B0E90048BB89 /* th */,
+			);
+			name = TaskDetailsRecurrencePeriodPicker.strings;
+			sourceTree = "<group>";
+		};
 		A66C188811C386B90081C175 /* TaskDetailsRecurrencePeriodPicker.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				A66C188911C386B90081C175 /* en */,
+				A668B4BA11C3B0310048BB89 /* cs */,
+				A668B4BB11C3B03D0048BB89 /* de */,
+				A668B4BC11C3B0490048BB89 /* fr */,
+				A668B4BD11C3B0540048BB89 /* nl */,
+				A668B4BE11C3B05F0048BB89 /* ru */,
+				A668B4EA11C3B0F70048BB89 /* th */,
 			);
 			name = TaskDetailsRecurrencePeriodPicker.xib;
 			sourceTree = "<group>";
