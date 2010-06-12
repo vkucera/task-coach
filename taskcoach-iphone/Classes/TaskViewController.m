@@ -217,22 +217,27 @@ static void deleteTask(CDTask *task)
 // of viewDidLoad/viewDidUnload because in this case the controller
 // is never freed (the timer keeps a ref on it)
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
 	NSDate *nextUpdate = [NSDate dateRounded];
 	nextUpdate = [nextUpdate addTimeInterval:60];
 	minuteTimer = [[NSTimer alloc] initWithFireDate:nextUpdate interval:60 target:self selector:@selector(onMinuteTimer:) userInfo:nil repeats:YES];
 	[[NSRunLoop currentRunLoop] addTimer:minuteTimer forMode:NSDefaultRunLoopMode];
 
+	[self populate];
+
 	[super viewDidAppear:animated];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
+- (void)viewDidDisappear:(BOOL)animated
 {
 	[minuteTimer invalidate];
 	[minuteTimer release];
 	minuteTimer = nil;
-
+	
+	[results release];
+	results = nil;
+	
 	[super viewWillDisappear:animated];
 }
 
