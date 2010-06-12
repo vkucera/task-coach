@@ -136,6 +136,7 @@ void migrateOldDatabase(NSString *filename)
 		task.status = [NSNumber numberWithInt:sqlite3_column_int(req, 3)];
 		task.taskCoachId = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(req, 4)];
 		task.longDescription = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(req, 5)];
+		task.priority = [NSNumber numberWithInt:0];
 		
 		if (sqlite3_column_type(req, 6) != SQLITE_NULL)
 			task.startDate = [[TimeUtils instance] dateFromString:[[NSString stringWithUTF8String:(const char *)sqlite3_column_text(req, 6)] stringByAppendingString:@" 00:00:00"]];

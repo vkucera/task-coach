@@ -28,6 +28,8 @@
 @synthesize descriptionLabel;
 @synthesize description;
 @synthesize categoriesButton;
+@synthesize priorityLabel;
+@synthesize priorityField;
 
 - initWithTask:(CDTask *)theTask parent:(TaskDetailsController *)parent
 {
@@ -46,9 +48,11 @@
 
 	self.subject.text = task.name;
 	self.description.text = task.longDescription;
+	self.priorityField.text = [NSString stringWithFormat:@"%@", task.priority];
 
 	self.descriptionLabel.text = _("Description");
 	self.categoriesButton.titleLabel.text = _("Categories");
+	self.priorityLabel.text = _("Priority:");
 
 	if (![task.name length])
 		[subject becomeFirstResponder];
@@ -91,32 +95,69 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-	[textField resignFirstResponder];
-	return NO;
+	if (textField == subject)
+	{
+		[textField resignFirstResponder];
+		return NO;
+	}
+	else
+		return YES;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-	if ([textField.text length])
+	if (textField == subject)
 	{
-		task.name = textField.text;
+		if ([textField.text length])
+		{
+			task.name = textField.text;
+		}
+		else
+		{
+			task.name = _("New task");
+			textField.text = task.name;
+		}
+		
+		[task markDirty];
+		NSError *error;
+		if (![getManagedObjectContext() save:&error])
+		{
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+			[alert show];
+			[alert release];
+		}
+		
+		self.navigationItem.title = task.name;
 	}
-	else
-	{
-		task.name = _("New task");
-		textField.text = task.name;
-	}
+}
 
-	[task markDirty];
-	NSError *error;
-	if (![getManagedObjectContext() save:&error])
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+	if (textField == priorityField)
 	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-		[alert show];
-		[alert release];
+		NSString *newValue = [textField.text stringByReplacingCharactersInRange:range withString:string];
+		
+		if ([newValue length])
+		{
+			task.priority = [NSNumber numberWithInt:atoi([newValue UTF8String])];
+		}
+		else
+		{
+			task.priority = [NSNumber numberWithInt:0];
+		}
+		
+		[task markDirty];
+		
+		NSError *error;
+		if (![getManagedObjectContext() save:&error])
+		{
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+			[alert show];
+			[alert release];
+		}
 	}
-
-	self.navigationItem.title = task.name;
+	
+	return YES;
 }
 
 #pragma mark UITextViewDelegate protocol

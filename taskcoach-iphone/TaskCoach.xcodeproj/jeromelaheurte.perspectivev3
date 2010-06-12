@@ -313,7 +313,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>TaskDetailsRecurrencePeriodPicker.m</string>
+								<string>CHANGELOG</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -321,11 +321,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>TaskDetailsRecurrencePeriodPicker.m</string>
+										<string>CHANGELOG</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A66CA8A611C3B284001A08A9</string>
+										<string>A61B862311C3C28A00DC979F</string>
 										<key>history</key>
 										<array>
 											<string>A61F555E108CBD9B00BDFD6D</string>
@@ -392,7 +392,6 @@
 											<string>A62DC5DD11BA1B4C0062C0E9</string>
 											<string>A62DC5DE11BA1B4C0062C0E9</string>
 											<string>A62DC78D11BA2D830062C0E9</string>
-											<string>A62DC86C11BA37450062C0E9</string>
 											<string>A6EA766111BA3CA700F8BA40</string>
 											<string>A6EA766411BA3CA700F8BA40</string>
 											<string>A68D320411BA458D002C6593</string>
@@ -428,7 +427,6 @@
 											<string>A62DFC5111BB848500F594AB</string>
 											<string>A62DFC6A11BB86E300F594AB</string>
 											<string>A62DFC6E11BB86E300F594AB</string>
-											<string>A62DFC7211BB86E300F594AB</string>
 											<string>A62DFC7811BB86E300F594AB</string>
 											<string>A62DFCB511BB882E00F594AB</string>
 											<string>A62DFCB711BB882E00F594AB</string>
@@ -451,7 +449,6 @@
 											<string>A610E6CA11BB9CAB006800AF</string>
 											<string>A610E72411BBA8D4006800AF</string>
 											<string>A610E72611BBA8D4006800AF</string>
-											<string>A618F70111BBB65C00BD4F1E</string>
 											<string>A618F70211BBB65C00BD4F1E</string>
 											<string>A6840FF311BBBC4B006B8921</string>
 											<string>A6840FF511BBBC4B006B8921</string>
@@ -479,27 +476,14 @@
 											<string>A64403D911BD455C0029075D</string>
 											<string>A64403DA11BD455C0029075D</string>
 											<string>A64403DB11BD455C0029075D</string>
-											<string>A64403DC11BD455C0029075D</string>
-											<string>A64403DD11BD455C0029075D</string>
 											<string>A66C17F511C37EA50081C175</string>
 											<string>A66C183311C382250081C175</string>
 											<string>A66C183411C382250081C175</string>
 											<string>A66C185411C383D00081C175</string>
 											<string>A66C185B11C384220081C175</string>
-											<string>A66C18BF11C38CD90081C175</string>
 											<string>A66C18D311C38DBE0081C175</string>
-											<string>A66C191F11C395940081C175</string>
-											<string>A66C192811C396A50081C175</string>
-											<string>A66C194D11C39F930081C175</string>
 											<string>A66C194E11C39F930081C175</string>
-											<string>A66C194F11C39F930081C175</string>
-											<string>A66C195E11C3A1990081C175</string>
-											<string>A6C9B02911C3A274005ABC81</string>
-											<string>A6C9B04811C3A38B005ABC81</string>
-											<string>A6C9B04911C3A38B005ABC81</string>
 											<string>A6C9B04B11C3A38B005ABC81</string>
-											<string>A6C9B04C11C3A38B005ABC81</string>
-											<string>A63854FC11C3A64800F14554</string>
 											<string>A64821CA11C3AB99003BF2AE</string>
 											<string>A64821CB11C3AB99003BF2AE</string>
 											<string>A64821CC11C3AB99003BF2AE</string>
@@ -508,7 +492,6 @@
 											<string>A64821FF11C3AD16003BF2AE</string>
 											<string>A648220D11C3AD67003BF2AE</string>
 											<string>A648220E11C3AD67003BF2AE</string>
-											<string>A648222C11C3AE03003BF2AE</string>
 											<string>A648222D11C3AE03003BF2AE</string>
 											<string>A648222E11C3AE03003BF2AE</string>
 											<string>A668B4F111C3B1DB0048BB89</string>
@@ -525,7 +508,24 @@
 											<string>A668B4FC11C3B1DB0048BB89</string>
 											<string>A66CA88111C3B244001A08A9</string>
 											<string>A66CA88211C3B244001A08A9</string>
-											<string>A66C189F11C389E90081C175</string>
+											<string>A61B85A211C3BAE100DC979F</string>
+											<string>A61B85C411C3BDCB00DC979F</string>
+											<string>A61B85C511C3BDCB00DC979F</string>
+											<string>A61B85F911C3BFB000DC979F</string>
+											<string>A61B85FA11C3BFB000DC979F</string>
+											<string>A61B85FB11C3BFB000DC979F</string>
+											<string>A61B85FC11C3BFB000DC979F</string>
+											<string>A61B85FD11C3BFB000DC979F</string>
+											<string>A61B85FE11C3BFB000DC979F</string>
+											<string>A61B860311C3BFFF00DC979F</string>
+											<string>A61B860411C3BFFF00DC979F</string>
+											<string>A61B860511C3BFFF00DC979F</string>
+											<string>A61B861511C3C03D00DC979F</string>
+											<string>A61B861E11C3C28A00DC979F</string>
+											<string>A61B861F11C3C28A00DC979F</string>
+											<string>A61B862011C3C28A00DC979F</string>
+											<string>A61B862111C3C28A00DC979F</string>
+											<string>A61B862211C3C28A00DC979F</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -648,11 +648,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A66CA88411C3B244001A08A9</string>
+				<string>A61B858411C3B3EA00DC979F</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A66CA88511C3B244001A08A9</string>
+				<string>A61B858511C3B3EA00DC979F</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A66CA88611C3B244001A08A9</string>
+				<string>A61B858611C3B3EA00DC979F</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -801,13 +801,13 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A64821B311C3A9FB003BF2AE</string>
+				<string>A61B858711C3B3EA00DC979F</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A64821B411C3A9FB003BF2AE</string>
-				<string>A64821B511C3A9FB003BF2AE</string>
-				<string>A64821B611C3A9FB003BF2AE</string>
-				<string>A64821B711C3A9FB003BF2AE</string>
+				<string>A61B858811C3B3EA00DC979F</string>
+				<string>A61B858911C3B3EA00DC979F</string>
+				<string>A61B858A11C3B3EA00DC979F</string>
+				<string>A61B858B11C3B3EA00DC979F</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
@@ -840,6 +840,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
+		<string>A61B85A711C3BAE700DC979F</string>
+		<string>A61B85A811C3BAE700DC979F</string>
 		<string>/Users/jeromelaheurte/Dev/taskcoach-trunk/taskcoach-iphone/TaskCoach.xcodeproj</string>
 	</array>
 	<key>WindowString</key>

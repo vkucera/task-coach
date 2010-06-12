@@ -43,7 +43,7 @@
 
 - (void)activated
 {
-	[self startWithFormat:"ssszzzzziiii[s]" count:myController.taskCount];
+	[self startWithFormat:"ssszzzzziiiii[s]" count:myController.taskCount];
 }
 
 - (void)onNewObject:(NSArray *)value
@@ -60,13 +60,14 @@
 	task.dueDate = [self parseDate:[value objectAtIndex:4]];
 	task.completionDate = [self parseDate:[value objectAtIndex:5]];
 	task.reminderDate = [self parseDate:[value objectAtIndex:6]];
+	task.priority = [value objectAtIndex:8];
 
-	if ([[value objectAtIndex:8] intValue])
+	if ([[value objectAtIndex:9] intValue])
 	{
-		task.recPeriod = [value objectAtIndex:9];
+		task.recPeriod = [value objectAtIndex:10];
 	}
-	task.recRepeat = [value objectAtIndex:10];
-	task.recSameWeekday = [value objectAtIndex:11];
+	task.recRepeat = [value objectAtIndex:11];
+	task.recSameWeekday = [value objectAtIndex:12];
 
 	[task computeDateStatus];
 
@@ -89,7 +90,7 @@
 	}
 	
 	[request setEntity:[NSEntityDescription entityForName:@"CDCategory" inManagedObjectContext:getManagedObjectContext()]];
-	for (NSString *catId in [value objectAtIndex:12])
+	for (NSString *catId in [value objectAtIndex:13])
 	{
 		[request setPredicate:[NSPredicate predicateWithFormat:@"taskCoachId == %@", catId]];
 		NSError *error;

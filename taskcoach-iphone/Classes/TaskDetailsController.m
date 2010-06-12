@@ -26,6 +26,8 @@
 	{
 		task = [theTask retain];
 
+		NSLog(@"Task priority: %@", task.priority);
+
 		NSMutableArray *ctrls = [[NSMutableArray alloc] initWithCapacity:3];
 
 		TaskDetailsGeneral *general = [[TaskDetailsGeneral alloc] initWithTask:task parent:self];

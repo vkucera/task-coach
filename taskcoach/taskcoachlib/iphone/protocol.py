@@ -469,7 +469,7 @@ class State(object):
 # There's a problem that prevents the 2.0 iPhone app to fallback to protocol
 # version 5, so do not set this to 5 before 2.1 is on the AppStore...
 
-_PROTOVERSION = 4
+_PROTOVERSION = 5 # XXXTMP
 
 class IPhoneAcceptor(Acceptor):
     def __init__(self, window, settings, iocontroller):
@@ -815,7 +815,7 @@ class FullFromDesktopTaskState(BaseState):
                     recRepeat = 0
                     recSameWeekday = 0
 
-                self.pack('sssffffziiii[s]',
+                self.pack('sssffffziiiii[s]',
                           task.subject(),
                           task.id(),
                           task.description(),
@@ -824,6 +824,7 @@ class FullFromDesktopTaskState(BaseState):
                           task.completionDateTime(),
                           task.reminder(),
                           task.parent().id() if task.parent() is not None else None,
+                          task.priority(),
                           hasRecurrence,
                           recPeriod,
                           recRepeat,
@@ -1135,10 +1136,10 @@ class TwoWayNewTasksState4(BaseState):
 
 class TwoWayNewTasksState5(BaseState):
     def init(self):
-        super(TwoWayNewTasksState5, self).init('ssffffiiiiz[s]', self.newTasksCount)
+        super(TwoWayNewTasksState5, self).init('ssffffiiiiiz[s]', self.newTasksCount)
 
     def handleNewObject(self, (subject, description, startDateTime, dueDateTime, completionDateTime,
-                               reminderDateTime, hasRecurrence, recPeriod, recRepeat,
+                               reminderDateTime, priority, hasRecurrence, recPeriod, recRepeat,
                                recSameWeekday, parentId, categories)):
         parent = self.taskMap[parentId] if parentId else None
 
@@ -1152,7 +1153,8 @@ class TwoWayNewTasksState5(BaseState):
                     dueDateTime=dueDateTime, 
                     completionDateTime=completionDateTime, 
                     parent=parent,
-                    recurrence=recurrence)
+                    recurrence=recurrence,
+                    priority=priority)
 
         # Don't start a timer from this thread...
         wx.CallAfter(task.setReminder, reminderDateTime)
@@ -1195,11 +1197,12 @@ class TwoWayModifiedTasks(BaseState):
         elif self.version < 5:
             super(TwoWayModifiedTasks, self).init('sssddd[s]', self.modifiedTasksCount)
         else:
-            super(TwoWayModifiedTasks, self).init('sssffffiiii[s]', self.modifiedTasksCount)
+            super(TwoWayModifiedTasks, self).init('sssffffiiiii[s]', self.modifiedTasksCount)
 
     def handleNewObject(self, args):
         reminderDateTime = None
         recurrence = None
+        priority = 0
 
         if self.version < 2:
             subject, taskId, description, startDate, dueDate, completionDate = args
@@ -1209,7 +1212,7 @@ class TwoWayModifiedTasks(BaseState):
             categories = [self.categoryMap[catId] for catId in categories]
         else:
             (subject, taskId, description, startDate, dueDate, completionDate, reminderDateTime,
-             hasRecurrence, recPeriod, recRepeat, recSameWeekday, categories) = args
+             priority, hasRecurrence, recPeriod, recRepeat, recSameWeekday, categories) = args
             categories = [self.categoryMap[catId] for catId in categories]
 
             if hasRecurrence:
@@ -1238,7 +1241,7 @@ class TwoWayModifiedTasks(BaseState):
             self.disp().window.modifyIPhoneTask(task, subject, description, 
                                                 startDateTime, dueDateTime, 
                                                 completionDateTime, reminderDateTime,
-                                                recurrence, categories)
+                                                recurrence, priority, categories)
             if self.version >= 5:
                 self.pack('s', task.id())
 

@@ -33,7 +33,8 @@
 	[self sendDate:task.completionDate];
 	[self sendDate:task.reminderDate];
 
-	[self sendFormat:"iiii" values:[NSArray arrayWithObjects:
+	[self sendFormat:"iiiii" values:[NSArray arrayWithObjects:
+									 task.priority,
 									[NSNumber numberWithInt:task.recPeriod != nil],
 									[NSNumber numberWithInt:[task.recPeriod intValue]],
 									[NSNumber numberWithInt:[task.recRepeat intValue]],

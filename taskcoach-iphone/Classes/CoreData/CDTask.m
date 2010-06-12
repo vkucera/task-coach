@@ -13,15 +13,16 @@
 
 @implementation CDTask 
 
-@dynamic reminderDate;
-@dynamic dateStatus;
-@dynamic completionDate;
-@dynamic startDate;
-@dynamic longDescription;
-@dynamic recPeriod;
 @dynamic recRepeat;
-@dynamic recSameWeekday;
 @dynamic dueDate;
+@dynamic reminderDate;
+@dynamic recSameWeekday;
+@dynamic priority;
+@dynamic dateStatus;
+@dynamic recPeriod;
+@dynamic longDescription;
+@dynamic startDate;
+@dynamic completionDate;
 @dynamic categories;
 @dynamic efforts;
 

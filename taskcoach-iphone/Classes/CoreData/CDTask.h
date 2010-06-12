@@ -16,15 +16,16 @@
 {
 }
 
-@property (nonatomic, retain) NSDate * reminderDate;
-@property (nonatomic, retain) NSNumber * dateStatus;
-@property (nonatomic, retain) NSDate * completionDate;
-@property (nonatomic, retain) NSDate * startDate;
-@property (nonatomic, retain) NSString * longDescription;
-@property (nonatomic, retain) NSNumber * recPeriod;
 @property (nonatomic, retain) NSNumber * recRepeat;
-@property (nonatomic, retain) NSNumber * recSameWeekday;
 @property (nonatomic, retain) NSDate * dueDate;
+@property (nonatomic, retain) NSDate * reminderDate;
+@property (nonatomic, retain) NSNumber * recSameWeekday;
+@property (nonatomic, retain) NSNumber * priority;
+@property (nonatomic, retain) NSNumber * dateStatus;
+@property (nonatomic, retain) NSNumber * recPeriod;
+@property (nonatomic, retain) NSString * longDescription;
+@property (nonatomic, retain) NSDate * startDate;
+@property (nonatomic, retain) NSDate * completionDate;
 @property (nonatomic, retain) NSSet* categories;
 @property (nonatomic, retain) NSSet* efforts;
 

@@ -21,12 +21,16 @@
 	UILabel *descriptionLabel;
 	UITextView *description;
 	UIButton *categoriesButton;
+	UILabel *priorityLabel;
+	UITextField *priorityField;
 }
 
 @property (nonatomic, retain) IBOutlet UITextField *subject;
 @property (nonatomic, retain) IBOutlet UILabel *descriptionLabel;
 @property (nonatomic, retain) IBOutlet UITextView *description;
 @property (nonatomic, retain) IBOutlet UIButton *categoriesButton;
+@property (nonatomic, retain) IBOutlet UILabel *priorityLabel;
+@property (nonatomic, retain) IBOutlet UITextField *priorityField;
 
 - initWithTask:(CDTask *)task parent:(TaskDetailsController *)parent;
 
