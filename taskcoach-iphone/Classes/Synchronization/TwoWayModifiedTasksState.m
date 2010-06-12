@@ -31,6 +31,14 @@
 	[self sendDate:task.dueDate];
 	[self sendDate:task.completionDate];
 	[self sendDate:task.reminderDate];
+	
+	[self sendFormat:"iiii" values:[NSArray arrayWithObjects:
+									[NSNumber numberWithInt:task.recPeriod != nil],
+									[NSNumber numberWithInt:[task.recPeriod intValue]],
+									[NSNumber numberWithInt:[task.recRepeat intValue]],
+									[NSNumber numberWithInt:[task.recSameWeekday intValue]],
+									nil]];
+
 	[self sendFormat:"i" values:[NSArray arrayWithObject:[NSNumber numberWithInt:[task.categories count]]]];
 
 	for (CDCategory *category in task.categories)

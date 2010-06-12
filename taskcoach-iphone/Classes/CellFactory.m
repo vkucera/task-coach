@@ -16,6 +16,7 @@
 #import "BadgedCell.h"
 #import "ButtonCell.h"
 #import "SearchCell.h"
+#import "RecurrencePeriodCell.h"
 
 #import "Configuration.h"
 
@@ -31,6 +32,7 @@ static CellFactory *_cellFactory = NULL;
 @synthesize badgedCellTemplate;
 @synthesize buttonCellTemplate;
 @synthesize searchCellTemplate;
+@synthesize recurrencePeriodCellTemplate;
 
 + (CellFactory *)cellFactory
 {
@@ -99,6 +101,12 @@ static CellFactory *_cellFactory = NULL;
 {
 	[[NSBundle mainBundle] loadNibNamed:@"SearchCell" owner:self options:nil];
 	return [searchCellTemplate retain];
+}
+
+- (RecurrencePeriodCell *)createRecurrencePeriodCell
+{
+	[[NSBundle mainBundle] loadNibNamed:@"RecurrencePeriodCell" owner:self options:nil];
+	return [recurrencePeriodCellTemplate retain];
 }
 
 @end

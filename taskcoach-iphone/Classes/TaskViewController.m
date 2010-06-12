@@ -409,7 +409,14 @@ static void deleteTask(CDTask *task)
 	}
 	else
 	{
-		task.completionDate = [NSDate date];
+		if (task.recPeriod == nil)
+			task.completionDate = [NSDate date];
+		if (task.startDate)
+			task.startDate = [task computeNextDate:task.startDate];
+		if (task.dueDate)
+			task.dueDate = [task computeNextDate:task.dueDate];
+		if (task.reminderDate)
+			task.reminderDate = [task computeNextDate:task.reminderDate];
 	}
 
 	[task computeDateStatus];

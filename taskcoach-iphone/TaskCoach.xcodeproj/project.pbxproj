@@ -78,6 +78,10 @@
 		A6664DDC0F2B486000638C68 /* BaseState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664DDB0F2B486000638C68 /* BaseState.m */; };
 		A6664DE70F2B498300638C68 /* InitialState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664DE60F2B498300638C68 /* InitialState.m */; };
 		A6664EC50F2B504800638C68 /* AuthentificationState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664EC40F2B504800638C68 /* AuthentificationState.m */; };
+		A66C181E11C37F500081C175 /* RecurrencePeriodCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A66C181D11C37F500081C175 /* RecurrencePeriodCell.m */; };
+		A66C182811C3805E0081C175 /* RecurrencePeriodCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A66C182711C3805E0081C175 /* RecurrencePeriodCell.xib */; };
+		A66C186711C385470081C175 /* TaskDetailsRecurrencePeriodPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = A66C186611C385470081C175 /* TaskDetailsRecurrencePeriodPicker.m */; };
+		A66C188A11C386B90081C175 /* TaskDetailsRecurrencePeriodPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = A66C188811C386B90081C175 /* TaskDetailsRecurrencePeriodPicker.xib */; };
 		A66EE70C1196AEAF006758BB /* NSDate+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = A66EE70B1196AEAF006758BB /* NSDate+Utils.m */; };
 		A673ABF60F2203D000E548BB /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A673ABF50F2203D000E548BB /* NavigationController.m */; };
 		A67A0C210F6BA57100F48A82 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = A67A0C200F6BA57100F48A82 /* Entitlements.plist */; };
@@ -302,6 +306,12 @@
 		A6664DE60F2B498300638C68 /* InitialState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InitialState.m; path = Synchronization/InitialState.m; sourceTree = "<group>"; };
 		A6664EC30F2B504800638C68 /* AuthentificationState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AuthentificationState.h; path = Synchronization/AuthentificationState.h; sourceTree = "<group>"; };
 		A6664EC40F2B504800638C68 /* AuthentificationState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AuthentificationState.m; path = Synchronization/AuthentificationState.m; sourceTree = "<group>"; };
+		A66C181C11C37F500081C175 /* RecurrencePeriodCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecurrencePeriodCell.h; sourceTree = "<group>"; };
+		A66C181D11C37F500081C175 /* RecurrencePeriodCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecurrencePeriodCell.m; sourceTree = "<group>"; };
+		A66C182711C3805E0081C175 /* RecurrencePeriodCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecurrencePeriodCell.xib; sourceTree = "<group>"; };
+		A66C186511C385470081C175 /* TaskDetailsRecurrencePeriodPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDetailsRecurrencePeriodPicker.h; sourceTree = "<group>"; };
+		A66C186611C385470081C175 /* TaskDetailsRecurrencePeriodPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskDetailsRecurrencePeriodPicker.m; sourceTree = "<group>"; };
+		A66C188911C386B90081C175 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TaskDetailsRecurrencePeriodPicker.xib; sourceTree = "<group>"; };
 		A66EE70A1196AEAF006758BB /* NSDate+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Utils.h"; sourceTree = "<group>"; };
 		A66EE70B1196AEAF006758BB /* NSDate+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Utils.m"; sourceTree = "<group>"; };
 		A673ABF40F2203D000E548BB /* NavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
@@ -543,6 +553,7 @@
 				A67A0C200F6BA57100F48A82 /* Entitlements.plist */,
 				A6E46385113028A500976293 /* SyncView.xib */,
 				A60B6EE410258EB200F9983C /* TaskCategoryPicker.xib */,
+				A66C188811C386B90081C175 /* TaskDetailsRecurrencePeriodPicker.xib */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -799,6 +810,8 @@
 		A6B3073B11B27B85007C0F49 /* Widgets */ = {
 			isa = PBXGroup;
 			children = (
+				A66C186511C385470081C175 /* TaskDetailsRecurrencePeriodPicker.h */,
+				A66C186611C385470081C175 /* TaskDetailsRecurrencePeriodPicker.m */,
 				A68EDF870F1E2A7F00F51FF2 /* StringChoiceController.h */,
 				A68EDF880F1E2A7F00F51FF2 /* StringChoiceController.m */,
 				A673ABF40F2203D000E548BB /* NavigationController.h */,
@@ -875,6 +888,8 @@
 		A6D386B40F24C12E0097F0F6 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				A64603A50F2234B500FC71AD /* CellFactory.h */,
+				A64603A60F2234B500FC71AD /* CellFactory.m */,
 				A69F6C2D115E2196003F68F5 /* SearchCell.h */,
 				A69F6C2E115E2196003F68F5 /* SearchCell.m */,
 				A64603A80F2234D900FC71AD /* TaskCell.h */,
@@ -885,8 +900,6 @@
 				A63CC07B0F517055003669FD /* TaskCellRightBig.xib */,
 				A6A975370F26572200622396 /* TaskCellLeft.xib */,
 				A6A975380F26572200622396 /* TaskCellRight.xib */,
-				A64603A50F2234B500FC71AD /* CellFactory.h */,
-				A64603A60F2234B500FC71AD /* CellFactory.m */,
 				A6D3846A0F2481C80097F0F6 /* TextFieldCell.h */,
 				A6D3846B0F2481C80097F0F6 /* TextFieldCell.m */,
 				A6D384770F24830F0097F0F6 /* TextFieldCell.xib */,
@@ -906,6 +919,9 @@
 				A6C3CEF710E76C8C00483057 /* ButtonCell.m */,
 				A6C3CEF910E76CB600483057 /* ButtonCell.xib */,
 				A69F6C30115E21A5003F68F5 /* SearchCell.xib */,
+				A66C181C11C37F500081C175 /* RecurrencePeriodCell.h */,
+				A66C181D11C37F500081C175 /* RecurrencePeriodCell.m */,
+				A66C182711C3805E0081C175 /* RecurrencePeriodCell.xib */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -1049,6 +1065,8 @@
 				A600A3BC119FDD710018F309 /* TaskDetailsGeneral.xib in Resources */,
 				A600A48F119FEA790018F309 /* TaskDetailsDates.xib in Resources */,
 				A600A60A119FFB1C0018F309 /* TaskDetailsEfforts.xib in Resources */,
+				A66C182811C3805E0081C175 /* RecurrencePeriodCell.xib in Resources */,
+				A66C188A11C386B90081C175 /* TaskDetailsRecurrencePeriodPicker.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1143,6 +1161,8 @@
 				A610E6A611BB9913006800AF /* Migration.m in Sources */,
 				A65FF1ED11BBC25B00394E33 /* ReminderController.m in Sources */,
 				A64403B211BD43270029075D /* CDHierarchicalDomainObject+Addons.m in Sources */,
+				A66C181E11C37F500081C175 /* RecurrencePeriodCell.m in Sources */,
+				A66C186711C385470081C175 /* TaskDetailsRecurrencePeriodPicker.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1157,6 +1177,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		A66C188811C386B90081C175 /* TaskDetailsRecurrencePeriodPicker.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A66C188911C386B90081C175 /* en */,
+			);
+			name = TaskDetailsRecurrencePeriodPicker.xib;
+			sourceTree = "<group>";
+		};
 		A680C0C40F47366900A8D18B /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

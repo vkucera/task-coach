@@ -16,6 +16,7 @@
 @class BadgedCell;
 @class ButtonCell;
 @class SearchCell;
+@class RecurrencePeriodCell;
 
 @interface CellFactory : NSObject
 {
@@ -27,6 +28,7 @@
 	BadgedCell *badgedCellTemplate;
 	ButtonCell *buttonCellTemplate;
 	SearchCell *searchCellTemplate;
+	RecurrencePeriodCell *recurrencePeriodCellTemplate;
 }
 
 @property (nonatomic, assign) IBOutlet TaskCell *taskCellTemplate;
@@ -37,6 +39,7 @@
 @property (nonatomic, assign) IBOutlet BadgedCell *badgedCellTemplate;
 @property (nonatomic, assign) IBOutlet ButtonCell *buttonCellTemplate;
 @property (nonatomic, assign) IBOutlet SearchCell *searchCellTemplate;
+@property (nonatomic, assign) IBOutlet RecurrencePeriodCell *recurrencePeriodCellTemplate;
 
 + (CellFactory *)cellFactory;
 
@@ -48,5 +51,6 @@
 - (BadgedCell *)createBadgedCell;
 - (ButtonCell *)createButtonCell;
 - (SearchCell *)createSearchCell;
+- (RecurrencePeriodCell *)createRecurrencePeriodCell;
 
 @end

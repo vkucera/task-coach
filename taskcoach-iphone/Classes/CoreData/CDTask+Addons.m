@@ -13,6 +13,76 @@
 
 @implementation CDTask (Addons)
 
+- (NSDate *)computeNextDate:(NSDate *)date;
+{
+	NSCalendar *cal = [NSCalendar currentCalendar];
+	NSDate *newDate = date;
+
+	if (self.recPeriod != nil)
+	{
+		switch ([self.recPeriod intValue])
+		{
+			case REC_DAILY:
+			{
+				NSDateComponents *comp = [[NSDateComponents alloc] init];
+				[comp setDay:[self.recRepeat intValue]];
+				newDate = [cal dateByAddingComponents:comp toDate:date options:0];
+				[comp release];
+				break;
+			}
+			case REC_WEEKLY:
+			{
+				NSDateComponents *comp = [[NSDateComponents alloc] init];
+				[comp setWeek:[self.recRepeat intValue]];
+				newDate = [cal dateByAddingComponents:comp toDate:date options:0];
+				break;
+			}
+			case REC_MONTHLY:
+			{
+				NSDateComponents *comp = [[NSDateComponents alloc] init];
+				[comp setMonth:[self.recRepeat intValue]];
+				newDate = [cal dateByAddingComponents:comp toDate:date options:0];
+				break;
+			}
+			case REC_YEARLY:
+			{
+				NSDateComponents *comp = [[NSDateComponents alloc] init];
+				[comp setYear:[self.recRepeat intValue]];
+				newDate = [cal dateByAddingComponents:comp toDate:date options:0];
+				break;
+			}
+		}
+
+		if ([self.recSameWeekday intValue])
+		{
+			switch ([self.recPeriod intValue])
+			{
+				case REC_MONTHLY:
+				case REC_YEARLY:
+				{
+					NSDateComponents *ref = [cal components:NSWeekdayCalendarUnit fromDate:date];
+
+					while (1)
+					{
+						NSDateComponents *comp = [cal components:NSWeekdayCalendarUnit fromDate:newDate];
+						if ([comp weekday] == [ref weekday])
+							break;
+
+						comp = [[NSDateComponents alloc] init];
+						[comp setDay:-1];
+						newDate = [cal dateByAddingComponents:comp toDate:newDate options:0];
+						[comp release];
+					}
+
+					break;
+				}
+			}
+		}
+	}
+
+	return newDate;
+}
+
 - (void)computeDateStatus
 {
 	if (self.completionDate)

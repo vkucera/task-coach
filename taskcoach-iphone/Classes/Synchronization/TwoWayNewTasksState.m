@@ -33,6 +33,13 @@
 	[self sendDate:task.completionDate];
 	[self sendDate:task.reminderDate];
 
+	[self sendFormat:"iiii" values:[NSArray arrayWithObjects:
+									[NSNumber numberWithInt:task.recPeriod != nil],
+									[NSNumber numberWithInt:[task.recPeriod intValue]],
+									[NSNumber numberWithInt:[task.recRepeat intValue]],
+									[NSNumber numberWithInt:[task.recSameWeekday intValue]],
+									nil]];
+
 	if (task.parent)
 		[self sendFormat:"s" values:[NSArray arrayWithObject:task.parent.taskCoachId]];
 	else

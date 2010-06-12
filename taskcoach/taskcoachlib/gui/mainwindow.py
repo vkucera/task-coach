@@ -478,13 +478,15 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, widgets.AuiManagedFrameWith
 
     @synchronized
     def modifyIPhoneTask(self, task, subject, description, startDateTime, 
-                         dueDateTime, completionDateTime, reminderDateTime, categories):
+                         dueDateTime, completionDateTime, reminderDateTime,
+                         recurrence, categories):
         task.setSubject(subject)
         task.setDescription(description)
         task.setStartDateTime(startDateTime)
         task.setDueDateTime(dueDateTime)
         task.setCompletionDateTime(completionDateTime)
         task.setReminder(reminderDateTime)
+        task.setRecurrence(recurrence)
 
         if categories is not None: # Protocol v2
             for category in task.categories():

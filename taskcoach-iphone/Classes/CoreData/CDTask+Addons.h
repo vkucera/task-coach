@@ -15,10 +15,18 @@
 #define TASKSTATUS_NOTSTARTED        4
 #define TASKSTATUS_COMPLETED         5
 
+#define REC_DAILY   0
+#define REC_WEEKLY  1
+#define REC_MONTHLY 2
+#define REC_YEARLY  3
+
 @interface CDTask (Addons)
 
 - (void)computeDateStatus;
 - (CDEffort *)currentEffort;
+
+// For recurrent tasks
+- (NSDate *)computeNextDate:(NSDate *)date;
 
 // This does not save the changes
 - (void)startTracking;

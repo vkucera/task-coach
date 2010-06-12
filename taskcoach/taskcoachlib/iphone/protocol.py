@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # pylint: disable-msg=W0201,E1101
  
 from taskcoachlib.patterns.network import Acceptor
-from taskcoachlib.domain.date import Date, parseDate, DateTime, parseDateTime
+from taskcoachlib.domain.date import Date, parseDate, DateTime, parseDateTime, Recurrence
 
 from taskcoachlib.domain.category import Category
 from taskcoachlib.domain.task import Task
@@ -805,7 +805,17 @@ class FullFromDesktopTaskState(BaseState):
                           task.parent().id() if task.parent() is not None else None,
                           [category.id() for category in task.categories()])
             else:
-                self.pack('sssffffz[s]',
+                hasRecurrence = task.recurrence() is not None and task.recurrence().unit != ''
+                if hasRecurrence:
+                    recPeriod = {'daily': 0, 'weekly': 1, 'monthly': 2, 'yearly': 3}[task.recurrence().unit]
+                    recRepeat = task.recurrence().amount
+                    recSameWeekday = task.recurrence().sameWeekday
+                else:
+                    recPeriod = 0
+                    recRepeat = 0
+                    recSameWeekday = 0
+
+                self.pack('sssffffziiii[s]',
                           task.subject(),
                           task.id(),
                           task.description(),
@@ -814,6 +824,10 @@ class FullFromDesktopTaskState(BaseState):
                           task.completionDateTime(),
                           task.reminder(),
                           task.parent().id() if task.parent() is not None else None,
+                          hasRecurrence,
+                          recPeriod,
+                          recRepeat,
+                          recSameWeekday,
                           [category.id() for category in task.categories()])
 
     def handleNewObject(self, code):
@@ -1121,17 +1135,24 @@ class TwoWayNewTasksState4(BaseState):
 
 class TwoWayNewTasksState5(BaseState):
     def init(self):
-        super(TwoWayNewTasksState5, self).init('ssffffz[s]', self.newTasksCount)
+        super(TwoWayNewTasksState5, self).init('ssffffiiiiz[s]', self.newTasksCount)
 
     def handleNewObject(self, (subject, description, startDateTime, dueDateTime, completionDateTime,
-                               reminderDateTime, parentId, categories)):
+                               reminderDateTime, hasRecurrence, recPeriod, recRepeat,
+                               recSameWeekday, parentId, categories)):
         parent = self.taskMap[parentId] if parentId else None
+
+        recurrence = None
+        if hasRecurrence:
+            recurrence = Recurrence(unit={0: 'daily', 1: 'weekly', 2: 'monthly', 3: 'yearly'}[recPeriod],
+                                    amount=recRepeat, sameWeekday=recSameWeekday)
 
         task = Task(subject=subject, description=description, 
                     startDateTime=startDateTime,
                     dueDateTime=dueDateTime, 
                     completionDateTime=completionDateTime, 
-                    parent=parent)
+                    parent=parent,
+                    recurrence=recurrence)
 
         # Don't start a timer from this thread...
         wx.CallAfter(task.setReminder, reminderDateTime)
@@ -1174,10 +1195,11 @@ class TwoWayModifiedTasks(BaseState):
         elif self.version < 5:
             super(TwoWayModifiedTasks, self).init('sssddd[s]', self.modifiedTasksCount)
         else:
-            super(TwoWayModifiedTasks, self).init('sssffff[s]', self.modifiedTasksCount)
+            super(TwoWayModifiedTasks, self).init('sssffffiiii[s]', self.modifiedTasksCount)
 
     def handleNewObject(self, args):
         reminderDateTime = None
+        recurrence = None
 
         if self.version < 2:
             subject, taskId, description, startDate, dueDate, completionDate = args
@@ -1186,8 +1208,13 @@ class TwoWayModifiedTasks(BaseState):
             subject, taskId, description, startDate, dueDate, completionDate, categories = args
             categories = [self.categoryMap[catId] for catId in categories]
         else:
-            subject, taskId, description, startDate, dueDate, completionDate, reminderDateTime, categories = args
+            (subject, taskId, description, startDate, dueDate, completionDate, reminderDateTime,
+             hasRecurrence, recPeriod, recRepeat, recSameWeekday, categories) = args
             categories = [self.categoryMap[catId] for catId in categories]
+
+            if hasRecurrence:
+                recurrence = Recurrence(unit={0: 'daily', 1: 'weekly', 2: 'monthly', 3: 'yearly'}[recPeriod],
+                                        amount=recRepeat, sameWeekday=recSameWeekday)
 
         if self.version < 5:
             startDateTime = DateTime(startDate.year, startDate.month, startDate.day,
@@ -1210,7 +1237,8 @@ class TwoWayModifiedTasks(BaseState):
             self.disp().log(_('Modify task %s'), task.id())
             self.disp().window.modifyIPhoneTask(task, subject, description, 
                                                 startDateTime, dueDateTime, 
-                                                completionDateTime, reminderDateTime, categories)
+                                                completionDateTime, reminderDateTime,
+                                                recurrence, categories)
             if self.version >= 5:
                 self.pack('s', task.id())
 

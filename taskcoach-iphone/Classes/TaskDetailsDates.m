@@ -19,6 +19,12 @@
 
 #import "i18n.h"
 
+@interface TaskDetailsDates ()
+
+- (void)fillRecurrence;
+
+@end
+
 @implementation TaskDetailsDates
 
 - initWithTask:(CDTask *)theTask parent:(TaskDetailsController *)parent
@@ -53,10 +59,34 @@
 		reminderDateCell.label.text = _("Reminder");
 		[reminderDateCell setDate:theTask.reminderDate];
 		[cells addObject:reminderDateCell];
+		
+		recurrenceCell = [[CellFactory cellFactory] createSwitchCell];
+		recurrenceCell.label.text = _("Recurrence");
+		recurrenceCell.switch_.on = theTask.recPeriod != nil;
+		[recurrenceCell setDelegate:self];
+		[cells addObject:recurrenceCell];
+
+		recCells = [[NSMutableArray alloc] initWithCapacity:3];
+
+		recPeriodCell = [[CellFactory cellFactory] createRecurrencePeriodCell];
+		[recPeriodCell setDelegate:self];
+		[recCells addObject:recPeriodCell];
+		
+		recSameWeekdayCell = [[CellFactory cellFactory] createSwitchCell];
+		recSameWeekdayCell.label.text = _("Same weekday");
+		[recSameWeekdayCell setDelegate:self];
+		[recCells addObject:recSameWeekdayCell];
+
+		[self fillRecurrence];
 
 		datePicker = [[DatePickerViewController alloc] initWithDate:nil target:self action:@selector(onPickStartDate:)];
 		datePicker.view.hidden = YES;
 		[parentCtrl.view addSubview:datePicker.view];
+
+		periodPicker = [[TaskDetailsRecurrencePeriodPicker alloc] init];
+		periodPicker.view.hidden = YES;
+		[periodPicker setDelegate:self];
+		[parentCtrl.view addSubview:periodPicker.view];
 	}
 
 	return self;
@@ -67,10 +97,73 @@
 	[datePicker.view removeFromSuperview];
 	[datePicker release];
 
+	[periodPicker.view removeFromSuperview];
+	[periodPicker release];
+
 	[cells release];
+	[recCells release];
 	[task release];
 
 	[super dealloc];
+}
+
+- (void)fillRecurrence
+{
+	switch ([task.recPeriod intValue])
+	{
+		case REC_DAILY:
+			recPeriodCell.label.text = _("Day(s)");
+			break;
+		case REC_WEEKLY:
+			recPeriodCell.label.text = _("Week(s)");
+			break;
+		case REC_MONTHLY:
+			recPeriodCell.label.text = _("Month(s)");
+			break;
+		case REC_YEARLY:
+			recPeriodCell.label.text = _("Year(s)");
+			break;
+	}
+
+	recPeriodCell.textField.text = [NSString stringWithFormat:@"%@", task.recRepeat];
+	recSameWeekdayCell.switch_.on = [task.recSameWeekday intValue];
+}
+
+- (void)recurrencePeriodCell:(RecurrencePeriodCell *)cell valueDidChange:(NSInteger)newValue;
+{
+	if (newValue == 0)
+		newValue = 1;
+
+	task.recRepeat = [NSNumber numberWithInt:newValue];
+	[task markDirty];
+	
+	NSError *error;
+	if (![getManagedObjectContext() save:&error])
+	{
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+		[alert show];
+		[alert release];
+	}
+}
+
+- (void)presentPeriodPicker
+{
+	[periodPicker setSelection:[task.recPeriod intValue]];
+
+	[UIView beginAnimations:@"PeriodPickerAnimation" context:nil];
+	[UIView setAnimationDuration:1.0];
+	[UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:parentCtrl.view cache:YES];
+	periodPicker.view.hidden = NO;
+	[UIView commitAnimations];
+}
+
+- (void)dismissPeriodPicker
+{
+	[UIView beginAnimations:@"PeriodPickerAnimation" context:nil];
+	[UIView setAnimationDuration:1.0];
+	[UIView setAnimationTransition:UIViewAnimationTransitionCurlUp forView:parentCtrl.view cache:YES];
+	periodPicker.view.hidden = YES;
+	[UIView commitAnimations];
 }
 
 #pragma mark Date stuff
@@ -197,6 +290,44 @@
 			}
 		}
 	}
+	else if (cell == recurrenceCell)
+	{
+		if (cell.switch_.on)
+		{
+			task.recPeriod = [NSNumber numberWithInt:REC_DAILY];
+			task.recRepeat = [NSNumber numberWithInt:1];
+			task.recSameWeekday = [NSNumber numberWithInt:NO];
+			[self fillRecurrence];
+		}
+		else
+		{
+			task.recPeriod = nil;
+		}
+
+		[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationRight];
+		[task markDirty];
+		
+		NSError *error;
+		if (![getManagedObjectContext() save:&error])
+		{
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+			[alert show];
+			[alert release];
+		}
+	}
+	else if (cell = recSameWeekdayCell)
+	{
+		task.recSameWeekday = [NSNumber numberWithInt:cell.switch_.on];
+		[task markDirty];
+		
+		NSError *error;
+		if (![getManagedObjectContext() save:&error])
+		{
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+			[alert show];
+			[alert release];
+		}
+	}
 }
 
 - (void)onPickStartDate:(NSDate *)date
@@ -314,46 +445,108 @@
 	[reminderDateCell setDate:task.reminderDate];
 }
 
+- (void)recurrencePeriodPicker:(TaskDetailsRecurrencePeriodPicker *)picker didConfirm:(NSInteger)value
+{
+	task.recPeriod = [NSNumber numberWithInt:value];
+	[task markDirty];
+	
+	NSError *error;
+	if (![getManagedObjectContext() save:&error])
+	{
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+		[alert show];
+		[alert release];
+	}
+
+	[self fillRecurrence];
+	[self.tableView reloadData];
+	[self dismissPeriodPicker];
+}
+
+- (void)recurrencePeriodPickerdidCancel:(TaskDetailsRecurrencePeriodPicker *)picker
+{
+	[self dismissPeriodPicker];
+}
+
 #pragma mark Table view methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [cells count];
+	switch (section)
+	{
+		case 0:
+			return [cells count];
+		case 1:
+		{
+			if (task.recPeriod == nil)
+				return 0;
+
+			switch ([task.recPeriod intValue])
+			{
+				case REC_DAILY:
+				case REC_WEEKLY:
+					return [recCells count] - 1;
+				case REC_MONTHLY:
+				case REC_YEARLY:
+					return [recCells count];
+			}
+		}
+	}
+
+	return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	return [cells objectAtIndex:indexPath.row];
+	switch (indexPath.section)
+	{
+		case 0:
+			return [cells objectAtIndex:indexPath.row];
+		case 1:
+			return [recCells objectAtIndex:indexPath.row];
+	}
+
+	return nil;
 }
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	UITableViewCell *cell = [cells objectAtIndex:indexPath.row];
+	[recPeriodCell.textField resignFirstResponder];
 
-	if (cell == startDateCell)
+	if (indexPath.section == 0)
 	{
-		[datePicker setDate:task.startDate target:self action:@selector(onPickStartDate:)];
+		UITableViewCell *cell = [cells objectAtIndex:indexPath.row];
+		
+		if (cell == startDateCell)
+		{
+			[datePicker setDate:task.startDate target:self action:@selector(onPickStartDate:)];
+		}
+		else if (cell == dueDateCell)
+		{
+			[datePicker setDate:task.dueDate target:self action:@selector(onPickDueDate:)];
+		}
+		else if (cell == completionDateCell)
+		{
+			[datePicker setDate:task.completionDate target:self action:@selector(onPickCompletionDate:)];
+		}
+		else if (cell == reminderDateCell)
+		{
+			[datePicker setDate:task.reminderDate target:self action:@selector(onPickReminder:)];
+		}
+		
+		[self presentDatePicker];
 	}
-	else if (cell == dueDateCell)
+	else if (indexPath.section == 1)
 	{
-		[datePicker setDate:task.dueDate target:self action:@selector(onPickDueDate:)];
+		if ([recCells objectAtIndex:indexPath.row] == recPeriodCell)
+			[self presentPeriodPicker];
 	}
-	else if (cell == completionDateCell)
-	{
-		[datePicker setDate:task.completionDate target:self action:@selector(onPickCompletionDate:)];
-	}
-	else if (cell == reminderDateCell)
-	{
-		[datePicker setDate:task.reminderDate target:self action:@selector(onPickReminder:)];
-	}
-
-	[self presentDatePicker];
 }
 
 @end
