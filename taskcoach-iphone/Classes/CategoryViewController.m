@@ -96,39 +96,27 @@
 	[fileManager release];
 
 	fileButton.enabled = ([Configuration configuration].cdFileCount >= 2);
+	
+	NSDate *nextUpdate = [NSDate dateRounded];
+	nextUpdate = [nextUpdate addTimeInterval:61];
+	minuteTimer = [[NSTimer alloc] initWithFireDate:nextUpdate interval:60 target:self selector:@selector(onMinuteTimer:) userInfo:nil repeats:YES];
+	[[NSRunLoop currentRunLoop] addTimer:minuteTimer forMode:NSDefaultRunLoopMode];
 }
 
 - (void)viewDidUnload
 {
 	self.navigationController = nil;
 	self.syncButton = nil;
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-
+	
 	[categories release];
 	categories = nil;
-
+	
 	[indentations release];
 	indentations = nil;
 	
 	[minuteTimer invalidate];
 	[minuteTimer release];
 	minuteTimer = nil;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-	[super viewWillAppear:animated];
-
-	[self loadCategories];
-	
-	NSDate *nextUpdate = [NSDate dateRounded];
-	nextUpdate = [nextUpdate addTimeInterval:61];
-	minuteTimer = [[NSTimer alloc] initWithFireDate:nextUpdate interval:60 target:self selector:@selector(onMinuteTimer:) userInfo:nil repeats:YES];
-	[[NSRunLoop currentRunLoop] addTimer:minuteTimer forMode:NSDefaultRunLoopMode];
 }
 
 - (void)dealloc

@@ -29,20 +29,6 @@
 	self.viewController = nil;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-	[super viewWillAppear:animated];
-
-	[viewController viewWillAppear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-
-	[viewController viewDidDisappear:animated];
-}
-
 - (void)dealloc
 {
 	[self viewDidUnload];

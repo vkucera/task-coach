@@ -234,35 +234,16 @@ static void deleteTask(CDTask *task)
 		[items replaceObjectAtIndex:0 withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStylePlain target:self action:@selector(onSwitch:)] autorelease]];
 		self.toolbar.items = items;
 	}
+
+	NSDate *nextUpdate = [NSDate dateRounded];
+	nextUpdate = [nextUpdate addTimeInterval:60];
+	minuteTimer = [[NSTimer alloc] initWithFireDate:nextUpdate interval:60 target:self selector:@selector(onMinuteTimer:) userInfo:nil repeats:YES];
+	[[NSRunLoop currentRunLoop] addTimer:minuteTimer forMode:NSDefaultRunLoopMode];
 }
 
 // Timer instantiation and destruction is done here instead
 // of viewDidLoad/viewDidUnload because in this case the controller
 // is never freed (the timer keeps a ref on it)
-
-- (void)viewWillAppear:(BOOL)animated
-{
-	NSDate *nextUpdate = [NSDate dateRounded];
-	nextUpdate = [nextUpdate addTimeInterval:60];
-	minuteTimer = [[NSTimer alloc] initWithFireDate:nextUpdate interval:60 target:self selector:@selector(onMinuteTimer:) userInfo:nil repeats:YES];
-	[[NSRunLoop currentRunLoop] addTimer:minuteTimer forMode:NSDefaultRunLoopMode];
-
-	[self populate];
-
-	[super viewDidAppear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[minuteTimer invalidate];
-	[minuteTimer release];
-	minuteTimer = nil;
-	
-	[results release];
-	results = nil;
-	
-	[super viewWillDisappear:animated];
-}
 
 - (void)viewDidUnload
 {
@@ -272,6 +253,10 @@ static void deleteTask(CDTask *task)
 	self.toolbar = nil;
 	[results release];
 	results = nil;
+
+	[minuteTimer invalidate];
+	[minuteTimer release];
+	minuteTimer = nil;
 }
 
 - (void)onChangeGrouping:(UIBarButtonItem *)button
