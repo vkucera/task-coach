@@ -231,6 +231,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -267,7 +269,6 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateExpansionKey</key>
 							<array>
 								<string>29B97314FDCFA39411CA2CEA</string>
-								<string>080E96DDFE201D6D7F000001</string>
 								<string>1C37FBAC04509CD000000102</string>
 								<string>1C77FABC04509CD000000102</string>
 								<string>1C3E0DCA080725EA00A55177</string>
@@ -275,7 +276,6 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>17</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -308,14 +308,12 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>TaskDetailsRecurrencePeriodPicker.strings</string>
+								<string>TaskDetailsRecurrencePeriodPicker.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -323,11 +321,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>TaskDetailsRecurrencePeriodPicker.strings</string>
+										<string>TaskDetailsRecurrencePeriodPicker.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A668B4FE11C3B1DB0048BB89</string>
+										<string>A66CA8A611C3B284001A08A9</string>
 										<key>history</key>
 										<array>
 											<string>A61F555E108CBD9B00BDFD6D</string>
@@ -488,8 +486,6 @@
 											<string>A66C183411C382250081C175</string>
 											<string>A66C185411C383D00081C175</string>
 											<string>A66C185B11C384220081C175</string>
-											<string>A66C189F11C389E90081C175</string>
-											<string>A66C18AC11C38AE90081C175</string>
 											<string>A66C18BF11C38CD90081C175</string>
 											<string>A66C18D311C38DBE0081C175</string>
 											<string>A66C191F11C395940081C175</string>
@@ -527,7 +523,9 @@
 											<string>A668B4FA11C3B1DB0048BB89</string>
 											<string>A668B4FB11C3B1DB0048BB89</string>
 											<string>A668B4FC11C3B1DB0048BB89</string>
-											<string>A668B4FD11C3B1DB0048BB89</string>
+											<string>A66CA88111C3B244001A08A9</string>
+											<string>A66CA88211C3B244001A08A9</string>
+											<string>A66C189F11C389E90081C175</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -650,11 +648,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A668B4FF11C3B1DB0048BB89</string>
+				<string>A66CA88411C3B244001A08A9</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A668B50011C3B1DB0048BB89</string>
+				<string>A66CA88511C3B244001A08A9</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A668B50111C3B1DB0048BB89</string>
+				<string>A66CA88611C3B244001A08A9</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
