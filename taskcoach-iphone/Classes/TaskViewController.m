@@ -160,13 +160,36 @@ static void deleteTask(CDTask *task)
 
 	NSLog(@"Object count: %d", [getManagedObjectContext() countForFetchRequest:request error:nil]);
 
-	NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@"dateStatus" ascending:YES];
+	NSString *grouping;
+	NSString *sorting;
+
+	switch ([Configuration configuration].taskGrouping)
+	{
+		case GROUP_STATUS:
+			grouping = @"dateStatus";
+			sorting = @"dateStatus";
+			break;
+		case GROUP_PRIORITY:
+			grouping = @"priority";
+			sorting = @"priority";
+			break;
+		case GROUP_START:
+			grouping = @"startDateOnly";
+			sorting = @"startDate";
+			break;
+		case GROUP_DUE:
+			grouping = @"dueDateOnly";
+			sorting = @"dueDate";
+			break;
+	}
+
+	NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:sorting ascending:YES];
 	NSSortDescriptor *sd2 = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
 	[request setSortDescriptors:[NSArray arrayWithObjects:sd1, sd2, nil]];
 	[sd1 release];
 	[sd2 release];
 
-	results = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:getManagedObjectContext() sectionNameKeyPath:@"dateStatus" cacheName:@"TaskCache"];
+	results = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:getManagedObjectContext() sectionNameKeyPath:grouping cacheName:@"TaskCache"];
 	results.delegate = self;
 
 	NSError *error;
@@ -249,6 +272,18 @@ static void deleteTask(CDTask *task)
 	self.toolbar = nil;
 	[results release];
 	results = nil;
+}
+
+- (void)onChangeGrouping:(UIBarButtonItem *)button
+{
+	UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:_("Grouping") delegate:self cancelButtonTitle:_("Cancel") destructiveButtonTitle:nil otherButtonTitles:nil];
+	[sheet addButtonWithTitle:_("Status")];
+	[sheet addButtonWithTitle:_("Priority")];
+	[sheet addButtonWithTitle:_("Start date")];
+	[sheet addButtonWithTitle:_("Due date")];
+
+	[sheet showFromToolbar:self.toolbar];
+	[sheet release];
 }
 
 - (void)onMinuteTimer:(NSTimer *)theTimer
@@ -491,19 +526,22 @@ static void deleteTask(CDTask *task)
 	if (section == 0)
 		return @"";
 
-	switch ([[[[results sections] objectAtIndex:section - (self.editing ? 2 : 1)] name] integerValue])
+	if ([Configuration configuration].taskGrouping == GROUP_STATUS)
 	{
-		case TASKSTATUS_OVERDUE:
-			return _("Overdue");
-		case TASKSTATUS_DUESOON:
-			return _("Due soon");
-		case TASKSTATUS_STARTED:
-			return _("Started");
-		case TASKSTATUS_NOTSTARTED:
-			return _("Not started");
+		switch ([[[[results sections] objectAtIndex:section - (self.editing ? 2 : 1)] name] integerValue])
+		{
+			case TASKSTATUS_OVERDUE:
+				return _("Overdue");
+			case TASKSTATUS_DUESOON:
+				return _("Due soon");
+			case TASKSTATUS_STARTED:
+				return _("Started");
+			case TASKSTATUS_NOTSTARTED:
+				return _("Not started");
+		}
 	}
 
-	return nil;
+	return [[[results sections] objectAtIndex:section - (self.editing ? 2 : 1)] name];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -817,6 +855,19 @@ static void deleteTask(CDTask *task)
 	if ([Configuration configuration].cdCurrentFile)
 		return [[Configuration configuration].cdCurrentFile.endHour intValue];
 	return 18;
+}
+
+#pragma mark UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+	if (buttonIndex)
+	{
+		[Configuration configuration].taskGrouping = buttonIndex - 1;
+		[[Configuration configuration] save];
+		[self populate];
+		[self.tableView reloadData];
+	}
 }
 
 @end

@@ -15,7 +15,8 @@
 @class SearchCell;
 @class TaskCell;
 
-@interface TaskViewController : UIViewController <UIAlertViewDelegate, RestorableController, UISearchBarDelegate, ODCalendarDayTimelineViewDelegate, NSFetchedResultsControllerDelegate>
+@interface TaskViewController : UIViewController <UIAlertViewDelegate, RestorableController, UISearchBarDelegate,
+	ODCalendarDayTimelineViewDelegate, NSFetchedResultsControllerDelegate, UIActionSheetDelegate>
 {
 	BOOL shouldEdit;
 	BOOL isCreatingTask;
@@ -45,6 +46,7 @@
 - (IBAction)onAddTask:(UIBarButtonItem *)button;
 - (IBAction)onSync:(UIBarButtonItem *)button;
 - (IBAction)onSwitch:(UIBarButtonItem *)button;
+- (IBAction)onChangeGrouping:(UIBarButtonItem *)button;
 
 - initWithCategoryController:(CategoryViewController *)controller edit:(BOOL)edit;
 

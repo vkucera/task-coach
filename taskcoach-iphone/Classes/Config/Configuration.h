@@ -14,6 +14,11 @@
 #define STYLE_TABLE    0
 #define STYLE_CALENDAR 1
 
+#define GROUP_STATUS   0
+#define GROUP_PRIORITY 1
+#define GROUP_START    2
+#define GROUP_DUE      3
+
 @class CDFile;
 
 @interface Configuration : NSObject
@@ -32,6 +37,8 @@
 	NSInteger viewStyle;
 
 	CDFile *cdCurrentFile;
+
+	NSInteger taskGrouping;
 }
 
 @property (nonatomic, readonly) BOOL showCompleted;
@@ -43,6 +50,7 @@
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *domain;
 @property (nonatomic) NSInteger viewStyle;
+@property (nonatomic) NSInteger taskGrouping;
 
 @property (nonatomic, retain) CDFile *cdCurrentFile;
 @property (nonatomic, readonly) NSInteger cdFileCount;

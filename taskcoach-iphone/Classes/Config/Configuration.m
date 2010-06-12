@@ -23,6 +23,7 @@ static Configuration *_configuration = NULL;
 @synthesize name;
 @synthesize domain;
 @synthesize viewStyle;
+@synthesize taskGrouping;
 
 @synthesize cdCurrentFile;
 
@@ -58,6 +59,11 @@ static Configuration *_configuration = NULL;
 		domain = [[config stringForKey:@"domain"] copy];
 
 		viewStyle = [config integerForKey:@"viewStyle"];
+		
+		if ([config objectForKey:@"taskGrouping"])
+			taskGrouping = [config integerForKey:@"taskGrouping"];
+		else
+			taskGrouping = GROUP_STATUS;
 
 		NSString *guid = [config stringForKey:@"currentfile"];
 		if (guid)
@@ -102,6 +108,7 @@ static Configuration *_configuration = NULL;
 		[config setObject:domain forKey:@"domain"];
 	
 	[config setInteger:viewStyle forKey:@"viewStyle"];
+	[config setInteger:taskGrouping forKey:@"taskGrouping"];
 
 	if (cdCurrentFile)
 	{
