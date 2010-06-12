@@ -63,7 +63,6 @@
 		A64604980F223FC500FC71AD /* ledorange.png in Resources */ = {isa = PBXBuildFile; fileRef = A64604930F223FC500FC71AD /* ledorange.png */; };
 		A64604990F223FC500FC71AD /* ledred.png in Resources */ = {isa = PBXBuildFile; fileRef = A64604940F223FC500FC71AD /* ledred.png */; };
 		A647F39011B26802008D0FB0 /* CDDomainObject+Addons.m in Sources */ = {isa = PBXBuildFile; fileRef = A647F38F11B26802008D0FB0 /* CDDomainObject+Addons.m */; };
-		A655D0D9115F694B00B34DCA /* taskcoach.db in Resources */ = {isa = PBXBuildFile; fileRef = A655D0D8115F694B00B34DCA /* taskcoach.db */; };
 		A65D1B1E119D379300F0F5C3 /* BUILD.txt in Resources */ = {isa = PBXBuildFile; fileRef = A65D1B1D119D379300F0F5C3 /* BUILD.txt */; };
 		A65D1B31119D37C300F0F5C3 /* libTapkuLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A65D1B2E119D37B200F0F5C3 /* libTapkuLibrary.a */; };
 		A65D1B46119D382000F0F5C3 /* TapkuLibrary.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A65D1B45119D382000F0F5C3 /* TapkuLibrary.bundle */; };
@@ -284,7 +283,6 @@
 		A64F4144117B01CB00E60105 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/MainWindow.strings; sourceTree = "<group>"; };
 		A64F4145117B01D500E60105 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/StringChoice.strings; sourceTree = "<group>"; };
 		A64F4146117B01E900E60105 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
-		A655D0D8115F694B00B34DCA /* taskcoach.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = taskcoach.db; sourceTree = "<group>"; };
 		A65D1B1D119D379300F0F5C3 /* BUILD.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = BUILD.txt; sourceTree = "<group>"; };
 		A65D1B23119D37B200F0F5C3 /* TapkuLibrary.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TapkuLibrary.xcodeproj; path = Classes/Thirdparty/tapkulibrary/src/TapkuLibrary.xcodeproj; sourceTree = SOURCE_ROOT; };
 		A65D1B45119D382000F0F5C3 /* TapkuLibrary.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = TapkuLibrary.bundle; path = Classes/Thirdparty/tapkulibrary/src/TapkuLibrary.bundle; sourceTree = SOURCE_ROOT; };
@@ -360,7 +358,6 @@
 		A68EDED10F1E1F8500F51FF2 /* CategoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CategoryViewController.h; sourceTree = "<group>"; };
 		A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoryViewController.m; sourceTree = "<group>"; };
 		A68EDEF20F1E222700F51FF2 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
-		A68EDEF60F1E227500F51FF2 /* taskcoach.sql */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = taskcoach.sql; sourceTree = "<group>"; };
 		A68EDEFB0F1E23BF00F51FF2 /* TaskCoach.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TaskCoach.png; sourceTree = "<group>"; };
 		A68EDF850F1E2A6D00F51FF2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/StringChoice.xib; sourceTree = "<group>"; };
 		A68EDF870F1E2A7F00F51FF2 /* StringChoiceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringChoiceController.h; sourceTree = "<group>"; };
@@ -584,7 +581,6 @@
 				A668B4E111C3B0820048BB89 /* TaskDetailsRecurrencePeriodPicker.strings */,
 				32CA4F630368D1EE00C91783 /* TaskCoach_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
-				A68EDEF60F1E227500F51FF2 /* taskcoach.sql */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -598,7 +594,6 @@
 				A6C3DADF119D55A000D1E36C /* switchtable.png */,
 				A65D1C5D119D4A7600F0F5C3 /* disclosure.png */,
 				A65D1B45119D382000F0F5C3 /* TapkuLibrary.bundle */,
-				A655D0D8115F694B00B34DCA /* taskcoach.db */,
 				A6C3CFE010E7846200483057 /* redButton.png */,
 				A6C3CFB410E782D800483057 /* ledclock.png */,
 				A6C3CFB510E782D800483057 /* ledclockbig.png */,
@@ -1069,7 +1064,6 @@
 				A6C3CFE110E7846200483057 /* redButton.png in Resources */,
 				A6E46386113028A500976293 /* SyncView.xib in Resources */,
 				A69F6C31115E21A5003F68F5 /* SearchCell.xib in Resources */,
-				A655D0D9115F694B00B34DCA /* taskcoach.db in Resources */,
 				A65D1B1E119D379300F0F5C3 /* BUILD.txt in Resources */,
 				A65D1B46119D382000F0F5C3 /* TapkuLibrary.bundle in Resources */,
 				A65D1C5E119D4A7600F0F5C3 /* disclosure.png in Resources */,
