@@ -12,10 +12,12 @@
 #import "CellFactory.h"
 #import "DatePickerViewController.h"
 #import "DateUtils.h"
+#import "Configuration.h"
 
 #import "CDTask.h"
 #import "CDTask+Addons.h"
 #import "CDDomainObject+Addons.h"
+#import "CDFile.h"
 
 #import "i18n.h"
 
@@ -192,7 +194,15 @@
 	{
 		if (cell.switch_.on)
 		{
-			[datePicker setDate:task.startDate target:self action:@selector(onPickStartDate:)];
+			NSDateComponents *comp = [[NSCalendar currentCalendar] components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSHourCalendarUnit|NSMinuteCalendarUnit fromDate:[NSDate date]];
+			if ([Configuration configuration].cdCurrentFile)
+				[comp setHour:[[Configuration configuration].cdCurrentFile.startHour intValue]];
+			else
+				[comp setHour:8];
+			
+			[comp setMinute:0];
+
+			[datePicker setDate:[[NSCalendar currentCalendar] dateFromComponents:comp] target:self action:@selector(onPickStartDate:)];
 			[self presentDatePicker];
 		}
 		else
@@ -216,14 +226,15 @@
 	{
 		if (cell.switch_.on)
 		{
-			NSDate *date = nil;
+			NSDateComponents *comp = [[NSCalendar currentCalendar] components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSHourCalendarUnit|NSMinuteCalendarUnit fromDate:[NSDate date]];
+			if ([Configuration configuration].cdCurrentFile)
+				[comp setHour:[[Configuration configuration].cdCurrentFile.endHour intValue]];
+			else
+				[comp setHour:18];
 			
-			if (task.dueDate)
-				date = task.dueDate;
-			else if (task.startDate)
-				date = task.startDate;
+			[comp setMinute:0];
 			
-			[datePicker setDate:date target:self action:@selector(onPickDueDate:)];
+			[datePicker setDate:[[NSCalendar currentCalendar] dateFromComponents:comp] target:self action:@selector(onPickDueDate:)];
 			[self presentDatePicker];
 		}
 		else
@@ -247,7 +258,7 @@
 	{
 		if (cell.switch_.on)
 		{
-			[datePicker setDate:task.completionDate target:self action:@selector(onPickCompletionDate:)];
+			[datePicker setDate:[NSDate date] target:self action:@selector(onPickCompletionDate:)];
 			[self presentDatePicker];
 		}
 		else
@@ -271,7 +282,13 @@
 	{
 		if (cell.switch_.on)
 		{
-			[datePicker setDate:task.reminderDate target:self action:@selector(onPickReminder:)];
+			if (task.dueDate)
+				[datePicker setDate:task.dueDate target:self action:@selector(onPickReminder:)];
+			else if (task.startDate)
+				[datePicker setDate:task.startDate target:self action:@selector(onPickReminder:)];
+			else
+				[datePicker setDate:[[NSDate date] addTimeInterval:60*60] target:self action:@selector(onPickReminder:)];
+
 			[self presentDatePicker];
 		}
 		else
