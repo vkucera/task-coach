@@ -427,8 +427,19 @@
 - (void)onPickCompletionDate:(NSDate *)date
 {
 	[self dismissDatePicker];
-	
-	task.completionDate = date;
+
+	if (task.recPeriod)
+	{
+		if (task.startDate)
+			task.startDate = [task computeNextDate:task.startDate];
+		if (task.dueDate)
+			task.dueDate = [task computeNextDate:task.dueDate];
+		if (task.reminderDate)
+			task.reminderDate = [task computeNextDate:task.reminderDate];
+	}
+	else
+		task.completionDate = date;
+
 	[task computeDateStatus];
 	[task markDirty];
 
@@ -440,6 +451,9 @@
 		[alert release];
 	}
 
+	[startDateCell setDate:task.startDate];
+	[dueDateCell setDate:task.dueDate];
+	[reminderDateCell setDate:task.reminderDate];
 	[completionDateCell setDate:task.completionDate];
 }
 

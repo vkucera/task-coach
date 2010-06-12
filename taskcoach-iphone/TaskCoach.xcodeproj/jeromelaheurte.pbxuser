@@ -149,8 +149,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 298034150;
-			PBXWorkspaceStateSaveDate = 298034150;
+			PBXPerProjectTemplateStateSaveDate = 298034789;
+			PBXWorkspaceStateSaveDate = 298034789;
 		};
 		perUserProjectItems = {
 			A600A3F1119FE5300018F309 /* PBXTextBookmark */ = A600A3F1119FE5300018F309 /* PBXTextBookmark */;
@@ -217,8 +217,6 @@
 			A6322D4111312DD1004FD5FF /* PlistBookmark */ = A6322D4111312DD1004FD5FF /* PlistBookmark */;
 			A632AC69113026AC00CF9F5E /* PBXTextBookmark */ = A632AC69113026AC00CF9F5E /* PBXTextBookmark */;
 			A63854FC11C3A64800F14554 /* PBXTextBookmark */ = A63854FC11C3A64800F14554 /* PBXTextBookmark */;
-			A63854FD11C3A64800F14554 /* XCBuildMessageTextBookmark */ = A63854FD11C3A64800F14554 /* XCBuildMessageTextBookmark */;
-			A63854FE11C3A64800F14554 /* PBXTextBookmark */ = A63854FE11C3A64800F14554 /* PBXTextBookmark */;
 			A63C2FB211B283F9000DE779 /* PBXTextBookmark */ = A63C2FB211B283F9000DE779 /* PBXTextBookmark */;
 			A63C300211B29158000DE779 /* PBXTextBookmark */ = A63C300211B29158000DE779 /* PBXTextBookmark */;
 			A64403D911BD455C0029075D /* PBXTextBookmark */ = A64403D911BD455C0029075D /* PBXTextBookmark */;
@@ -260,6 +258,8 @@
 			A66C194E11C39F930081C175 /* PBXTextBookmark */ = A66C194E11C39F930081C175 /* PBXTextBookmark */;
 			A66C194F11C39F930081C175 /* PBXTextBookmark */ = A66C194F11C39F930081C175 /* PBXTextBookmark */;
 			A66C195E11C3A1990081C175 /* PBXTextBookmark */ = A66C195E11C3A1990081C175 /* PBXTextBookmark */;
+			A678274A11C3A7480010B403 /* PBXTextBookmark */ = A678274A11C3A7480010B403 /* PBXTextBookmark */;
+			A678274B11C3A7480010B403 /* PBXTextBookmark */ = A678274B11C3A7480010B403 /* PBXTextBookmark */;
 			A67CC9851143CACD000708CE /* PBXTextBookmark */ = A67CC9851143CACD000708CE /* PBXTextBookmark */;
 			A6840FF311BBBC4B006B8921 /* PBXTextBookmark */ = A6840FF311BBBC4B006B8921 /* PBXTextBookmark */;
 			A6840FF511BBBC4B006B8921 /* PBXTextBookmark */ = A6840FF511BBBC4B006B8921 /* PBXTextBookmark */;
@@ -402,9 +402,9 @@
 	};
 	A600A48C119FEA790018F309 /* TaskDetailsDates.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1405, 7293}}";
-			sepNavSelRange = "{8396, 0}";
-			sepNavVisRange = "{8052, 1846}";
+			sepNavIntBoundsRect = "{{0, 0}, {1293, 7787}}";
+			sepNavSelRange = "{12389, 0}";
+			sepNavVisRange = "{11186, 1634}";
 		};
 	};
 	A600A606119FFB1C0018F309 /* TaskDetailsEfforts.h */ = {
@@ -1348,25 +1348,6 @@
 		vrLen = 1689;
 		vrLoc = 460;
 	};
-	A63854FD11C3A64800F14554 /* XCBuildMessageTextBookmark */ = {
-		isa = PBXTextBookmark;
-		comments = "Passing argument 1 of 'setHour:' makes integer from pointer without a cast";
-		fRef = A600A48C119FEA790018F309 /* TaskDetailsDates.m */;
-		fallbackIsa = XCBuildMessageTextBookmark;
-		rLen = 1;
-		rLoc = 198;
-		rType = 1;
-	};
-	A63854FE11C3A64800F14554 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A600A48C119FEA790018F309 /* TaskDetailsDates.m */;
-		name = "TaskDetailsDates.m: 292";
-		rLen = 0;
-		rLoc = 8396;
-		rType = 0;
-		vrLen = 1846;
-		vrLoc = 8052;
-	};
 	A63C2FA711B280D3000DE779 /* CategoryTaskViewController.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1293, 761}}";
@@ -2082,6 +2063,26 @@
 			sepNavVisRange = "{0, 2328}";
 		};
 	};
+	A678274A11C3A7480010B403 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = A600A48C119FEA790018F309 /* TaskDetailsDates.m */;
+		name = "TaskDetailsDates.m: 292";
+		rLen = 0;
+		rLoc = 8396;
+		rType = 0;
+		vrLen = 1678;
+		vrLoc = 8052;
+	};
+	A678274B11C3A7480010B403 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = A600A48C119FEA790018F309 /* TaskDetailsDates.m */;
+		name = "TaskDetailsDates.m: 456";
+		rLen = 0;
+		rLoc = 12389;
+		rType = 0;
+		vrLen = 1634;
+		vrLoc = 11186;
+	};
 	A67CC9851143CACD000708CE /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = A61F544E108CB57A00BDFD6D /* BadgeView.m */;
@@ -2505,7 +2506,7 @@
 		ignoreCount = 0;
 		lineNumber = 30;
 		location = TaskCoach;
-		modificationTime = 298034715.838204;
+		modificationTime = 298034990.222539;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
