@@ -313,7 +313,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>TaskViewController.m</string>
+								<string>DatePickerViewController.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -321,11 +321,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>TaskViewController.m</string>
+										<string>DatePickerViewController.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A616E65511C3D6760062CCBE</string>
+										<string>A66D2A5711C3DA08002CC62D</string>
 										<key>history</key>
 										<array>
 											<string>A61F555E108CBD9B00BDFD6D</string>
@@ -386,8 +386,6 @@
 											<string>A63C300211B29158000DE779</string>
 											<string>A6CB3DE911B2A6AF008398A0</string>
 											<string>A6CB3DEB11B2A6AF008398A0</string>
-											<string>A6CB3DEE11B2A6AF008398A0</string>
-											<string>A6CB3DEF11B2A6AF008398A0</string>
 											<string>A62DC5DD11BA1B4C0062C0E9</string>
 											<string>A62DC5DE11BA1B4C0062C0E9</string>
 											<string>A62DC78D11BA2D830062C0E9</string>
@@ -525,7 +523,9 @@
 											<string>A6FBFBAF11C3D14200D74195</string>
 											<string>A616E63A11C3D6410062CCBE</string>
 											<string>A616E63B11C3D6410062CCBE</string>
-											<string>A616E63E11C3D6710062CCBE</string>
+											<string>A66D2A5311C3DA07002CC62D</string>
+											<string>A66D2A5411C3DA07002CC62D</string>
+											<string>A66D2A5511C3DA07002CC62D</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -565,6 +565,8 @@
 									<dict>
 										<key>Frame</key>
 										<string>{{10, 27}, {1354, 317}}</string>
+										<key>RubberWindowFrame</key>
+										<string>50 220 1711 1162 0 0 2560 1418 </string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -619,8 +621,6 @@
 									<dict>
 										<key>Frame</key>
 										<string>{{10, 27}, {1354, 317}}</string>
-										<key>RubberWindowFrame</key>
-										<string>50 220 1711 1162 0 0 2560 1418 </string>
 									</dict>
 									<key>Module</key>
 									<string>PBXBuildResultsModule</string>
@@ -648,11 +648,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A616E61F11C3D3DB0062CCBE</string>
+				<string>A66D2A3911C3D9C9002CC62D</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A616E62011C3D3DB0062CCBE</string>
+				<string>A66D2A3A11C3D9C9002CC62D</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A616E62111C3D3DB0062CCBE</string>
+				<string>A66D2A3B11C3D9C9002CC62D</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -801,13 +801,13 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A616E64E11C3D6760062CCBE</string>
+				<string>A66D2A3C11C3D9C9002CC62D</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A616E64F11C3D6760062CCBE</string>
-				<string>A616E65011C3D6760062CCBE</string>
-				<string>A616E65111C3D6760062CCBE</string>
-				<string>A616E65211C3D6760062CCBE</string>
+				<string>A66D2A3D11C3D9C9002CC62D</string>
+				<string>A66D2A3E11C3D9C9002CC62D</string>
+				<string>A66D2A3F11C3D9C9002CC62D</string>
+				<string>A66D2A4011C3D9C9002CC62D</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
@@ -840,8 +840,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>A616E65311C3D6760062CCBE</string>
-		<string>A616E65411C3D6760062CCBE</string>
+		<string>A66D2A4211C3D9C9002CC62D</string>
+		<string>A66D2A4311C3D9C9002CC62D</string>
 		<string>/Users/jeromelaheurte/Dev/taskcoach-trunk/taskcoach-iphone/TaskCoach.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
