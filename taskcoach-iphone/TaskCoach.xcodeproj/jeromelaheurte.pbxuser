@@ -149,8 +149,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 298048321;
-			PBXWorkspaceStateSaveDate = 298048321;
+			PBXPerProjectTemplateStateSaveDate = 298048692;
+			PBXWorkspaceStateSaveDate = 298048692;
 		};
 		perUserProjectItems = {
 			A600A3F1119FE5300018F309 /* PBXTextBookmark */ = A600A3F1119FE5300018F309 /* PBXTextBookmark */;
@@ -160,6 +160,7 @@
 			A602F81A117B033900232ED1 /* PBXTextBookmark */ = A602F81A117B033900232ED1 /* PBXTextBookmark */;
 			A602F81B117B033900232ED1 /* PBXTextBookmark */ = A602F81B117B033900232ED1 /* PBXTextBookmark */;
 			A603F1E2117B06A400A92C60 /* PBXBookmark */ = A603F1E2117B06A400A92C60 /* PBXBookmark */;
+			A607B5F711C3DCED002A598B /* PBXTextBookmark */ = A607B5F711C3DCED002A598B /* PBXTextBookmark */;
 			A608093B1130158D002A0E0B /* PBXTextBookmark */ = A608093B1130158D002A0E0B /* PBXTextBookmark */;
 			A610E6C411BB9CAB006800AF /* PBXTextBookmark */ = A610E6C411BB9CAB006800AF /* PBXTextBookmark */;
 			A610E6CA11BB9CAB006800AF /* PBXTextBookmark */ = A610E6CA11BB9CAB006800AF /* PBXTextBookmark */;
@@ -189,7 +190,6 @@
 			A620437A11BA6D65000B4E1E /* PBXTextBookmark */ = A620437A11BA6D65000B4E1E /* PBXTextBookmark */;
 			A625D89C11C3C521009870D8 /* PBXTextBookmark */ = A625D89C11C3C521009870D8 /* PBXTextBookmark */;
 			A627F04E10E7558600B856F4 /* PBXTextBookmark */ = A627F04E10E7558600B856F4 /* PBXTextBookmark */;
-			A62856B211C3DB800034F3AF /* PBXTextBookmark */ = A62856B211C3DB800034F3AF /* PBXTextBookmark */;
 			A628C55D11BA6140009923D7 /* PBXTextBookmark */ = A628C55D11BA6140009923D7 /* PBXTextBookmark */;
 			A62DC5DD11BA1B4C0062C0E9 /* PBXTextBookmark */ = A62DC5DD11BA1B4C0062C0E9 /* PBXTextBookmark */;
 			A62DC5DE11BA1B4C0062C0E9 /* PBXTextBookmark */ = A62DC5DE11BA1B4C0062C0E9 /* PBXTextBookmark */;
@@ -331,6 +331,7 @@
 			A6C9B04B11C3A38B005ABC81 /* PBXTextBookmark */ = A6C9B04B11C3A38B005ABC81 /* PBXTextBookmark */;
 			A6CB3DE911B2A6AF008398A0 /* PBXTextBookmark */ = A6CB3DE911B2A6AF008398A0 /* PBXTextBookmark */;
 			A6CB3DEB11B2A6AF008398A0 /* PBXTextBookmark */ = A6CB3DEB11B2A6AF008398A0 /* PBXTextBookmark */;
+			A6E1631E11C3DBF200135452 /* PBXTextBookmark */ = A6E1631E11C3DBF200135452 /* PBXTextBookmark */;
 			A6E1B10E11C3D07700F7A0E5 /* PBXTextBookmark */ = A6E1B10E11C3D07700F7A0E5 /* PBXTextBookmark */;
 			A6E1B10F11C3D07700F7A0E5 /* PBXTextBookmark */ = A6E1B10F11C3D07700F7A0E5 /* PBXTextBookmark */;
 			A6E1B11011C3D07700F7A0E5 /* PBXTextBookmark */ = A6E1B11011C3D07700F7A0E5 /* PBXTextBookmark */;
@@ -344,7 +345,6 @@
 			A6EAE202117B0659001730A0 /* PBXTextBookmark */ = A6EAE202117B0659001730A0 /* PBXTextBookmark */;
 			A6EAE203117B0659001730A0 /* PBXTextBookmark */ = A6EAE203117B0659001730A0 /* PBXTextBookmark */;
 			A6EAE204117B0659001730A0 /* PBXTextBookmark */ = A6EAE204117B0659001730A0 /* PBXTextBookmark */;
-			A6F4864D11C3DB0500CC7499 /* PBXTextBookmark */ = A6F4864D11C3DB0500CC7499 /* PBXTextBookmark */;
 			A6FAA97211BBBD49006CA694 /* PBXTextBookmark */ = A6FAA97211BBBD49006CA694 /* PBXTextBookmark */;
 			A6FAA97311BBBD49006CA694 /* PBXTextBookmark */ = A6FAA97311BBBD49006CA694 /* PBXTextBookmark */;
 			A6FBFBAF11C3D14200D74195 /* PBXTextBookmark */ = A6FBFBAF11C3D14200D74195 /* PBXTextBookmark */;
@@ -489,6 +489,16 @@
 		name = Root.strings;
 		path = "/Users/jeromelaheurte/Dev/taskcoach-trunk/taskcoach-iphone/Settings.bundle/en.lproj/Root.strings";
 		sourceTree = "<absolute>";
+	};
+	A607B5F711C3DCED002A598B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = A6D3862E0F24B02A0097F0F6 /* DatePickerViewController.m */;
+		name = "DatePickerViewController.m: 39";
+		rLen = 0;
+		rLoc = 802;
+		rType = 0;
+		vrLen = 855;
+		vrLoc = 451;
 	};
 	A608093B1130158D002A0E0B /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -1010,16 +1020,6 @@
 		rType = 0;
 		vrLen = 317;
 		vrLoc = 0;
-	};
-	A62856B211C3DB800034F3AF /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A6D3862E0F24B02A0097F0F6 /* DatePickerViewController.m */;
-		name = "DatePickerViewController.m: 39";
-		rLen = 0;
-		rLoc = 802;
-		rType = 0;
-		vrLen = 855;
-		vrLoc = 451;
 	};
 	A628C55D11BA6140009923D7 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -2724,7 +2724,7 @@
 		ignoreCount = 0;
 		lineNumber = 30;
 		location = TaskCoach;
-		modificationTime = 298048230.223544;
+		modificationTime = 298048468.672401;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -3654,6 +3654,16 @@
 		path = "/Users/jeromelaheurte/Dev/taskcoach-trunk/taskcoach-iphone/Settings.bundle/th.lproj/Root.strings";
 		sourceTree = "<absolute>";
 	};
+	A6E1631E11C3DBF200135452 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = A6D3862E0F24B02A0097F0F6 /* DatePickerViewController.m */;
+		name = "DatePickerViewController.m: 39";
+		rLen = 0;
+		rLoc = 802;
+		rType = 0;
+		vrLen = 855;
+		vrLoc = 451;
+	};
 	A6E1B10E11C3D07700F7A0E5 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = A60B70EA1025AF0B00F9983C /* CHANGELOG */;
@@ -3882,16 +3892,6 @@
 		rType = 0;
 		vrLen = 410;
 		vrLoc = 0;
-	};
-	A6F4864D11C3DB0500CC7499 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A6D3862E0F24B02A0097F0F6 /* DatePickerViewController.m */;
-		name = "DatePickerViewController.m: 39";
-		rLen = 0;
-		rLoc = 802;
-		rType = 0;
-		vrLen = 855;
-		vrLoc = 451;
 	};
 	A6F8BE050F46E6A000385F57 /* PBXBookmarkGroup */ = {
 		isa = PBXBookmarkGroup;
