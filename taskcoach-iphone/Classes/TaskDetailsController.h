@@ -10,18 +10,10 @@
 
 @class CDTask;
 
-@interface TaskDetailsController : UIViewController <UITabBarDelegate>
+@interface TaskDetailsController : UITabBarController <UITabBarControllerDelegate>
 {
 	CDTask *task;
-	NSInteger tabIndex;
-
-	UITabBar *tabBar;
-	UIView *containerView;
-	UIViewController *currentCtrl;
 }
-
-@property (nonatomic, retain) IBOutlet UITabBar *tabBar;
-@property (nonatomic, retain) IBOutlet UIView *containerView;
 
 - initWithTask:(CDTask *)task;
 - initWithTask:(CDTask *)task tabIndex:(NSInteger)index;

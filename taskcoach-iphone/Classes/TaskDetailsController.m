@@ -20,14 +20,33 @@
 
 @implementation TaskDetailsController
 
-@synthesize tabBar;
-@synthesize containerView;
-
 - initWithTask:(CDTask *)theTask
 {
 	if (self = [super initWithNibName:@"TaskDetails" bundle:[NSBundle mainBundle]])
 	{
 		task = [theTask retain];
+
+		NSMutableArray *ctrls = [[NSMutableArray alloc] initWithCapacity:3];
+
+		TaskDetailsGeneral *general = [[TaskDetailsGeneral alloc] initWithTask:task parent:self];
+		general.tabBarItem = [[[UITabBarItem alloc] initWithTitle:_("General") image:[UIImage imageNamed:@"taskcoach_small.png"] tag:0] autorelease];
+		[ctrls addObject:general];
+		[general release];
+
+		TaskDetailsDates *dates = [[TaskDetailsDates alloc] initWithTask:task parent:self];
+		dates.tabBarItem = [[[UITabBarItem alloc] initWithTitle:_("Dates") image:[UIImage imageNamed:@"switchcal.png"] tag:0] autorelease];
+		[ctrls addObject:dates];
+		[dates release];
+
+		TaskDetailsEfforts *efforts = [[TaskDetailsEfforts alloc] initWithTask:task];
+		efforts.tabBarItem = [[[UITabBarItem alloc] initWithTitle:_("Efforts") image:[UIImage imageNamed:@"time.png"] tag:0] autorelease];
+		[ctrls addObject:efforts];
+		[efforts release];
+
+		[self setViewControllers:ctrls animated:NO];
+		[ctrls release];
+
+		self.delegate = self;
 	}
 
 	return self;
@@ -36,45 +55,17 @@
 - initWithTask:(CDTask *)theTask tabIndex:(NSInteger)index
 {
 	if (self = [self initWithTask:theTask])
-		tabIndex = index;
-	
-	return self;
-}
-
-- (void)viewDidLoad
-{
-	switch (tabIndex)
 	{
-		case 0:
-			currentCtrl = [[TaskDetailsGeneral alloc] initWithTask:task parent:self];
-			break;
-		case 1:
-			currentCtrl = [[TaskDetailsDates alloc] initWithTask:task parent:self];
-			break;
-		case 2:
-			currentCtrl = [[TaskDetailsEfforts alloc] initWithTask:task];
-			break;
+		self.selectedIndex = index;
 	}
 
-	self.tabBar.selectedItem = [self.tabBar.items objectAtIndex:tabIndex];
-
-	[self.containerView addSubview:currentCtrl.view];
-
-	[super viewDidLoad];
-}
-
-- (void)viewDidUnload
-{
-	self.tabBar = nil;
-	self.containerView = nil;
+	return self;
 }
 
 - (void)dealloc
 {
-	[self viewDidUnload];
-
-	[currentCtrl release];
 	[task release];
+
 	[super dealloc];
 }
 
@@ -83,32 +74,11 @@
 	return YES;
 }
 
-#pragma mark UITabBarDelegate methods
+#pragma mark UITabBarControllerDelegate methods
 
-- (void)tabBar:(UITabBar *)theTabBar didSelectItem:(UITabBarItem *)item
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
 {
-	NSInteger index = [[tabBar items] indexOfObject:item];
-	[[PositionStore instance] setTab:index];
-
-	UIViewController *newController = nil;
-
-	switch (index)
-	{
-		case 0:
-			newController = [[TaskDetailsGeneral alloc] initWithTask:task parent:self];
-			break;
-		case 1:
-			newController = [[TaskDetailsDates alloc] initWithTask:task parent:self];
-			break;
-		case 2:
-			newController = [[TaskDetailsEfforts alloc] initWithTask:task];
-			break;
-	}
-
-	[currentCtrl.view removeFromSuperview];
-	[currentCtrl release];
-	[containerView addSubview:newController.view];
-	currentCtrl = newController;
+	[[PositionStore instance] setTab:[self.viewControllers indexOfObject:viewController]];
 }
 
 @end
