@@ -220,7 +220,7 @@ static void deleteTask(CDTask *task)
 		self.calendarView.hidden = YES;
 		self.calendarSearch.hidden = YES;
 		NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
-		[items replaceObjectAtIndex:0 withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStylePlain target:self action:@selector(onSwitch:)] autorelease]];
+		[items replaceObjectAtIndex:0 withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
 		self.toolbar.items = items;
 	}
 	else
@@ -231,7 +231,7 @@ static void deleteTask(CDTask *task)
 		self.calendarSearch.hidden = NO;
 
 		NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
-		[items replaceObjectAtIndex:0 withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStylePlain target:self action:@selector(onSwitch:)] autorelease]];
+		[items replaceObjectAtIndex:0 withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
 		self.toolbar.items = items;
 	}
 
@@ -664,7 +664,7 @@ static void deleteTask(CDTask *task)
 		self.navigationItem.rightBarButtonItem = [self editButtonItem];
 
 		NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
-		[items replaceObjectAtIndex:0 withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStylePlain target:self action:@selector(onSwitch:)] autorelease]];
+		[items replaceObjectAtIndex:0 withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
 		self.toolbar.items = items;
 		
 		for (NSInteger i = 1; i < [self.navigationController.viewControllers count] - 1; ++i)
@@ -676,7 +676,7 @@ static void deleteTask(CDTask *task)
 			ctrl.navigationItem.rightBarButtonItem = [ctrl editButtonItem];
 
 			NSMutableArray *items = [NSMutableArray arrayWithArray:ctrl.toolbar.items];
-			[items replaceObjectAtIndex:0 withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStylePlain target:ctrl action:@selector(onSwitch:)] autorelease]];
+			[items replaceObjectAtIndex:0 withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStyleBordered target:ctrl action:@selector(onSwitch:)] autorelease]];
 			ctrl.toolbar.items = items;
 		}
 
@@ -694,7 +694,7 @@ static void deleteTask(CDTask *task)
 		self.navigationItem.rightBarButtonItem = nil;
 		
 		NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
-		[items replaceObjectAtIndex:0 withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStylePlain target:self action:@selector(onSwitch:)] autorelease]];
+		[items replaceObjectAtIndex:0 withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
 		self.toolbar.items = items;
 		
 		for (NSInteger i = 1; i < [self.navigationController.viewControllers count] - 1; ++i)
@@ -706,7 +706,7 @@ static void deleteTask(CDTask *task)
 			ctrl.navigationItem.rightBarButtonItem = nil;
 			
 			NSMutableArray *items = [NSMutableArray arrayWithArray:ctrl.toolbar.items];
-			[items replaceObjectAtIndex:0 withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStylePlain target:ctrl action:@selector(onSwitch:)] autorelease]];
+			[items replaceObjectAtIndex:0 withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStyleBordered target:ctrl action:@selector(onSwitch:)] autorelease]];
 			ctrl.toolbar.items = items;
 		}
 		
