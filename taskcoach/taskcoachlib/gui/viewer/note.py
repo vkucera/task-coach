@@ -25,7 +25,7 @@ import wx
 from taskcoachlib import patterns, command, widgets, domain
 from taskcoachlib.domain import note
 from taskcoachlib.i18n import _
-from taskcoachlib.gui import uicommand, menu, dialog, render
+from taskcoachlib.gui import uicommand, menu, dialog
 import base, mixin
 
 class BaseNoteViewer(mixin.AttachmentDropTargetMixin, 
@@ -187,7 +187,10 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
         return command.DeleteNoteCommand(self.presentation(), self.curselection(),
                   shadow=self.settings.getboolean('feature', 'syncml'))
         
-    def editorClass(self):
+    def singleItemEditorClass(self):
+        return dialog.editor.NoteEditor
+
+    def multipleItemEditorClass(self):
         return dialog.editor.NoteEditor
     
     def newItemCommandClass(self):

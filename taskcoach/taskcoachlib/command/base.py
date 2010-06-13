@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.i18n import _
-from taskcoachlib.domain import task, note
+from taskcoachlib.domain import note
 from clipboard import Clipboard
  
 
@@ -42,6 +42,10 @@ class BaseCommand(patterns.Command):
 
     def name_subject(self, item):
         return item.subject()
+    
+    def getItems(self):
+        ''' The items this command operates on. '''
+        return self.items
 
     def canDo(self):
         return bool(self.items)

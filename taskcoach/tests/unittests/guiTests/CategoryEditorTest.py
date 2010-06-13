@@ -48,11 +48,11 @@ class CategoryEditorTestCase(test.wxTestCase):
     def createCategories(self):
         return []
 
-    def setSubject(self, newSubject, index=0):
-        self.editor[index][0].setSubject(newSubject)
+    def setSubject(self, newSubject):
+        self.editor._interior[0].setSubject(newSubject)
 
-    def setDescription(self, newDescription, index=0):
-        self.editor[index][0].setDescription(newDescription)
+    def setDescription(self, newDescription):
+        self.editor._interior[0].setDescription(newDescription)
         
         
 class NewCategoryTest(CategoryEditorTestCase):
@@ -63,7 +63,7 @@ class NewCategoryTest(CategoryEditorTestCase):
 
     def testCreate(self):
         # pylint: disable-msg=W0212
-        self.assertEqual('New category', self.editor[0][0]._subjectEntry.GetValue())
+        self.assertEqual('New category', self.editor._interior[0]._subjectEntry.GetValue())
 
     def testOk(self):
         self.setSubject('Done')
@@ -81,7 +81,7 @@ class NewCategoryTest(CategoryEditorTestCase):
         self.assertEqual('Description', self.category.description())
         
     def testAddNote(self):
-        self.editor[0][1].notes.append(note.Note(subject='New note'))
+        self.editor._interior[1].notes.append(note.Note(subject='New note'))
         self.editor.ok()
         self.assertEqual(1, len(self.category.notes()))
 
@@ -132,12 +132,12 @@ class EditCategoryTest(CategoryEditorTestCase):
         self.assertEqual('Category to edit', self.category.subject())
 
     def testAddAttachment(self):
-        self.editor[0][2].viewer.onDropFiles(None, ['filename'])
+        self.editor._interior[2].viewer.onDropFiles(None, ['filename'])
         self.editor.ok()
         self.failUnless('filename' in [att.location() for att in self.category.attachments()])
         self.failUnless('filename' in [att.subject() for att in self.category.attachments()])
         
     def testRemoveAttachment(self):
-        self.editor[0][2].viewer.presentation().removeItems([self.attachment])
+        self.editor._interior[2].viewer.presentation().removeItems([self.attachment])
         self.editor.ok()
         self.assertEqual([], self.category.attachments())

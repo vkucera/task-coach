@@ -320,7 +320,7 @@ class Viewer(wx.Panel):
         return self.editItemDialog(newItemCommand.items, bitmap)
     
     def editItemDialog(self, items, bitmap, columnName=''):
-        Editor = self.editorClass()
+        Editor = self.multipleItemEditorClass() if len(items) > 1 else self.singleItemEditorClass()
         EditItemCommand = self.editItemCommandClass()
         editItemCommand = EditItemCommand(self.presentation(), items)
         return Editor(wx.GetTopLevelParent(self), editItemCommand, 
@@ -328,7 +328,7 @@ class Viewer(wx.Panel):
                       bitmap=bitmap, columnName=columnName)
         
     def newSubItemDialog(self, bitmap):
-        Editor = self.editorClass()
+        Editor = self.singleItemEditorClass()
         NewSubItemCommand = self.newSubItemCommandClass()
         newSubItemCommand = NewSubItemCommand(self.presentation(), 
                                               self.curselection())
@@ -338,7 +338,10 @@ class Viewer(wx.Panel):
                       self.settings, self.presentation(), self.taskFile, 
                       bitmap=bitmap)
         
-    def editorClass(self):
+    def singleItemEditorClass(self):
+        raise NotImplementedError
+
+    def multipleItemEditorClass(self):
         raise NotImplementedError
 
     def newItemCommandClass(self):

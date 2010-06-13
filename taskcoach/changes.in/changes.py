@@ -23,14 +23,17 @@ from changetypes import *
 
 releases = [
 
-Release('1.1.0', 'June 8, 2010',
+Release('1.1.0', 'June 13, 2010',
     summary='''This release adds time to start, due and completion dates of 
-tasks.''',
+tasks and adds support for mass editing of items.''',
     featuresAdded=[
         Feature('''The start, due and completion dates of tasks now also include
 a time. When reading old task files, Task Coach adds a default time to tasks: 
 start dates get a time of "00:00", due dates and completion dates get a time
-of "23:59".''', 'http://uservoice.com/a/nd3mH')
+of "23:59".''', 'http://uservoice.com/a/nd3mH'),
+        Feature('''Mass editing of items. When editing multiple items (tasks, 
+notes, etc.), the edit dialog allows for selectively changing attributes
+of all edited items.''')
         ],
     implementationChanged=[
         Implementation('''The task file format was changed to support start, due

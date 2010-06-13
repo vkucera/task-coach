@@ -35,14 +35,17 @@ class DateTimeEntry(widgets.PanelWithBoxSizer):
         starthour = settings.getint('view', 'efforthourstart')
         endhour = settings.getint('view', 'efforthourend')
         interval = settings.getint('view', 'effortminuteinterval')
-        self._entry = widgets.DateTimeCtrl(self, callback=callback, 
-                                           noneAllowed=noneAllowed, 
+        self._entry = widgets.DateTimeCtrl(self, noneAllowed=noneAllowed, 
                                            starthour=starthour, endhour=endhour, 
                                            interval=interval, 
                                            showSeconds=showSeconds)
         if readonly:
             self._entry.Disable()
+        # First set the initial value and then set the callback so that the
+        # callback is not triggered for the initial value
         self._entry.SetValue(initialDateTime)
+        if callback:
+            self._entry.setCallback(callback) 
         self.add(self._entry)
         self.fit()
 
@@ -51,6 +54,9 @@ class DateTimeEntry(widgets.PanelWithBoxSizer):
 
     def set(self, newDateTime=defaultDateTime):
         self._entry.SetValue(newDateTime)
+        
+    def setCallback(self, callback):
+        self._entry.setCallback(callback)
 
 
 class TimeDeltaEntry(widgets.PanelWithBoxSizer):
@@ -105,13 +111,14 @@ class AmountEntry(widgets.PanelWithBoxSizer):
         
         
 class PercentageEntry(widgets.PanelWithBoxSizer):
-    def __init__(self, parent, percentage=0, *args, **kwargs):
+    def __init__(self, parent, percentage=0, callback=None, *args, **kwargs):
         kwargs['orientation'] = wx.HORIZONTAL
         super(PercentageEntry, self).__init__(parent, *args, **kwargs)
         self._slider = self._createSlider(percentage)
         self._entry = self._createSpinCtrl(percentage)
-        self.add(self._slider, proportion=2)
-        self.add(self._entry)
+        self._callback = callback
+        self.add(self._slider, flag=wx.ALL, proportion=0)
+        self.add(self._entry, flag=wx.ALL, proportion=0)
         self.fit()
         
     def _createSlider(self, percentage):
@@ -123,7 +130,7 @@ class PercentageEntry(widgets.PanelWithBoxSizer):
         
     def _createSpinCtrl(self, percentage):
         entry = widgets.SpinCtrl(self, value=str(percentage),
-            initial=percentage, size=(20, -1), min=0, max=100)
+            initial=percentage, size=(50, -1), min=0, max=100)
         for eventType in wx.EVT_SPINCTRL, wx.EVT_KILL_FOCUS:
             entry.Bind(eventType, self.onSpin)
         return entry
@@ -147,6 +154,8 @@ class PercentageEntry(widgets.PanelWithBoxSizer):
         # the value:
         if controlToWrite.GetValue() != value:
             controlToWrite.SetValue(value)
+        if self._callback:
+            self._callback()
     
     
 class TaskComboTreeBox(wx.Panel):

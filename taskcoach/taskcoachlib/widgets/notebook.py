@@ -86,13 +86,6 @@ class BookPage(wx.Panel):
         return [defaultFlag if flagPassed is None else flagPassed 
                 for flagPassed, defaultFlag in zip(flagsPassed, defaultFlags)]
  
-    def __addControl(self, columnIndex, control, flag, lastColumn):
-        if type(control) in [type(''), type(u'')]:
-            control = wx.StaticText(self, label=control)
-        colspan = max(self._columns - columnIndex, 1) if lastColumn else 1
-        self._sizer.Add(control, self._position.next(colspan),
-            span=(1, colspan), flag=flag, border=self._borderWidth)
-            
     def addEntry(self, *controls, **kwargs):
         ''' Add a number of controls to the page. All controls are
             placed on one row, and together they form one entry. E.g. a
@@ -106,14 +99,27 @@ class BookPage(wx.Panel):
             So, addEntry(aLabel, aTextCtrl, flags=[None, wx.ALIGN_LEFT]) 
             will place the label with the default flag and will place the 
             textCtrl left aligned. '''
-        controls = [control for control in controls if control is not None]
+        controls = [self.__createStaticTextControlIfNeeded(control) \
+                    for control in controls if control is not None]
         flags = self.__determineFlags(controls, kwargs.get('flags', None))
         lastColumnIndex = len(controls) - 1
         for columnIndex, control in enumerate(controls):
             self.__addControl(columnIndex, control, flags[columnIndex], 
-                lastColumn=columnIndex==lastColumnIndex)
+                              lastColumn=columnIndex==lastColumnIndex)
+            if columnIndex > 0:
+                control.MoveAfterInTabOrder(controls[columnIndex-1])
         if kwargs.get('growable', False):
             self._sizer.AddGrowableRow(self._position.maxRow())
+
+    def __addControl(self, columnIndex, control, flag, lastColumn):
+        colspan = max(self._columns - columnIndex, 1) if lastColumn else 1
+        self._sizer.Add(control, self._position.next(colspan),
+            span=(1, colspan), flag=flag, border=self._borderWidth)
+        
+    def __createStaticTextControlIfNeeded(self, control):
+        if type(control) in [type(''), type(u'')]:
+            control = wx.StaticText(self, label=control)
+        return control
 
 
 class BoxedBookPage(BookPage):
@@ -283,6 +289,9 @@ class AUINotebook(AdvanceSelectionMixin, BookMixin, aui.AuiNotebook):
     def __getPageCount(self):
         return self.GetPageCount()
     PageCount = property(__getPageCount)
+    
+    def ChangeSelection(self, *args, **kwargs):
+        self.SetSelection(*args, **kwargs)
 
 
 class AuiManagedFrameWithNotebookAPI(AdvanceSelectionMixin, wx.Frame):
@@ -314,6 +323,9 @@ class AuiManagedFrameWithNotebookAPI(AdvanceSelectionMixin, wx.Frame):
                 return index
         return wx.NOT_FOUND
     
+    def __getitem__(self, index):
+        return self.manager.GetAllPanes()[index].window
+    
     def AdvanceSelection(self, forward=True):
         super(AuiManagedFrameWithNotebookAPI, self).AdvanceSelection(forward)
         currentPane = self.manager.GetAllPanes()[self.Selection]
@@ -340,5 +352,3 @@ class AuiManagedFrameWithNotebookAPI(AdvanceSelectionMixin, wx.Frame):
         self.manager.Update()
         
     Selection = property(GetSelection, SetSelection)
-    
-    

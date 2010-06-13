@@ -87,7 +87,7 @@ class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
             taskList=self.taskFile.tasks(), viewer=self.viewer, 
             categories=self.categories, settings=self.settings)
         dialog = taskNew.doCommand(None, show=False)
-        tree = dialog[0][3].viewer.widget
+        tree = dialog._interior[3].viewer.widget
         return tree.GetFirstChild(tree.GetRootItem())[0]
 
     def selectFirstCategory(self):
@@ -183,7 +183,7 @@ class TaskNewTest(wxTestCaseWithFrameAsTopLevelWindow):
         taskNew = gui.uicommand.TaskNew(taskList=self.taskFile.tasks(), 
                                         settings=self.settings)
         dialog = taskNew.doCommand(None, show=False)
-        tree = dialog[0][3].viewer.widget
+        tree = dialog._interior[3].viewer.widget
         firstChild = tree.GetFirstChild(tree.GetRootItem())[0]
         self.failUnless(firstChild.IsChecked())
 
@@ -195,7 +195,7 @@ class NoteNewTest(wxTestCaseWithFrameAsTopLevelWindow):
         noteNew = gui.uicommand.NoteNew(notes=self.taskFile.notes(), 
                                         settings=self.settings)
         dialog = noteNew.doCommand(None, show=False)
-        tree = dialog[0][1].viewer.widget
+        tree = dialog._interior[1].viewer.widget
         firstChild = tree.GetFirstChild(tree.GetRootItem())[0]
         self.failUnless(firstChild.IsChecked())
 

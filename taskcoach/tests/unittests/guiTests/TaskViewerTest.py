@@ -461,7 +461,7 @@ class CommonTestsMixin(object):
     def testNewItem(self):
         self.taskFile.categories().append(category.Category('cat', filtered=True))
         dialog = self.viewer.newItemDialog(bitmap='new')
-        tree = dialog[0][3].viewer.widget
+        tree = dialog._interior[3].viewer.widget
         firstChild = tree.GetFirstChild(tree.GetRootItem())[0]
         self.failUnless(firstChild.IsChecked())
         

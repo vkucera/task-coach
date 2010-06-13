@@ -298,3 +298,5 @@ class DateTimeCtrl(Panel):
         else:
             return date.DateTime.combine(dateValue, self._timeCtrl.GetValue())
 
+    def setCallback(self, callback):
+        self._callback = callback

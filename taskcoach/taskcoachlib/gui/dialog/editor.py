@@ -30,7 +30,18 @@ from taskcoachlib.domain import task, category, date, note, attachment
 from taskcoachlib.gui.dialog import entry
 
 
-class Page(object):
+class Page(widgets.BookPage):
+    columns = 2
+    
+    def __init__(self, items, *args, **kwargs):
+        self.items = items
+        super(Page, self).__init__(columns=self.columns, *args, **kwargs)
+        self.addEntries()
+        self.fit()
+        
+    def addEntries(self):
+        raise NotImplementedError
+        
     def entries(self):
         ''' A mapping of names of columns to entries on this editor page. '''
         return dict()
@@ -39,7 +50,7 @@ class Page(object):
         try:
             theEntry = self.entries()[columnName]
         except KeyError:
-            return
+            theEntry = self.entries()['firstEntry']
         try:
             theEntry.SetSelection(-1, -1) # Select all text
         except (AttributeError, TypeError):
@@ -48,145 +59,116 @@ class Page(object):
 
     def ok(self, *args, **kwargs):
         pass
-    
+
+    def label(self, labelText, *entryControlsAndEvents):
+        if len(self.items) > 1:
+            label = wx.CheckBox(self, label=labelText)
+            def onEntryEvent(event):
+                label.SetValue(True)
+                event.Skip()
+            for entryControl, entryEvent in zip(entryControlsAndEvents[0::2], 
+                                                entryControlsAndEvents[1::2]):
+                entryControl.Bind(entryEvent, onEntryEvent)
+        else:
+            label = labelText
+        return label
         
-class PageWithHeaders(Page, widgets.PanelWithBoxSizer):
-    headerForNonRecursiveAttributes = 'Subclass responsibility'
-    headerForRecursiveAttributes = 'Subclass responsibility'
-    
-    def __init__(self, parent, item, *args, **kwargs):
-        super(PageWithHeaders, self).__init__(parent, *args, **kwargs) 
-        self.item = item
 
-    def addHeaders(self, box):
-        headers = ['', self.headerForNonRecursiveAttributes]
-        headers.append(self.headerForRecursiveAttributes if self.item.children() else '')
-        for header in headers:
-            box.add(header)
-
-
-class PageWithViewerMixin(object):
-    def __init__(self, *args, **kwargs):
-        super(PageWithViewerMixin, self).__init__(*args, **kwargs)
-        self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
-        
-    def onClose(self, event):
-        # Don't notify the viewer about any changes anymore, it's about
-        # to be deleted.
-        self.viewer.detach()
-        event.Skip()
-        
-        
-class TaskHeadersMixin(object):
-    headerForNonRecursiveAttributes = _('For this task')
-    headerForRecursiveAttributes = _('For this task including all subtasks')
-    
-
-class NoteHeadersMixin(object):
-    headerForNonRecursiveAttributes = _('For this note')
-    headerForRecursiveAttributes = _('For this note including all subnotes')
-
-
-class SubjectPage(Page, widgets.BookPage):
-    def __init__(self, item, *args, **kwargs):
-        self.item = item
-        super(SubjectPage, self).__init__(columns=2, *args, **kwargs)
-        self.addEntries()
-        self.fit()
-        
+class SubjectPage(Page):        
     def addEntries(self):
         self.addSubjectEntry()
         self.addDescriptionEntry()
         
     def addSubjectEntry(self):
         # pylint: disable-msg=W0201
-        self._subjectEntry = widgets.SingleLineTextCtrl(self, self.item.subject())
-        self.addEntry(_('Subject'), self._subjectEntry, 
-                      flags=[None, wx.ALL|wx.EXPAND])
+        subject = self.items[0].subject() if len(self.items) == 1 else _('Edit to change all subjects')
+        self._subjectEntry = widgets.SingleLineTextCtrl(self, subject)
+        self._subjectLabel = self.label(_('Subject'), self._subjectEntry, wx.EVT_TEXT)
+        self.addEntry(self._subjectLabel, self._subjectEntry)
 
     def addDescriptionEntry(self):
         # pylint: disable-msg=W0201
-        self._descriptionEntry = widgets.MultiLineTextCtrl(self, 
-            self.item.description())
+        description = self.items[0].description() if len(self.items) == 1 else _('Edit to change all descriptions')
+        self._descriptionEntry = widgets.MultiLineTextCtrl(self, description)
         self._descriptionEntry.SetSizeHints(300, 150)
-        self.addEntry(_('Description'), self._descriptionEntry,
-            flags=[None, wx.ALL|wx.EXPAND], growable=True)
+        self._descriptionLabel = self.label(_('Description'), self._descriptionEntry, wx.EVT_TEXT)
+        self.addEntry(self._descriptionLabel, self._descriptionEntry, growable=True)
 
     def setSubject(self, subject):
         self._subjectEntry.SetValue(subject)
 
     def setDescription(self, description):
         self._descriptionEntry.SetValue(description)
-
+        
     @patterns.eventSource
     def ok(self, event=None): # pylint: disable-msg=W0221
-        self.item.setSubject(self._subjectEntry.GetValue(), event=event)
-        self.item.setDescription(self._descriptionEntry.GetValue(), event=event)
+        for item in self.items:
+            if len(self.items) == 1 or self._subjectLabel.IsChecked(): 
+                item.setSubject(self._subjectEntry.GetValue(), event=event)
+            if len(self.items) == 1 or self._descriptionLabel.IsChecked():
+                item.setDescription(self._descriptionEntry.GetValue(), event=event)
                         
     def entries(self):
-        return dict(subject=self._subjectEntry, 
+        return dict(firstEntry=self._subjectEntry,
+                    subject=self._subjectEntry, 
                     description=self._descriptionEntry)
 
     
 class TaskSubjectPage(SubjectPage):
-    def __init__(self, parent, theTask, *args, **kwargs):
-        super(TaskSubjectPage, self).__init__(theTask, parent, *args, **kwargs)
-        
     def addEntries(self):
         super(TaskSubjectPage, self).addEntries()
         self.addPriorityEntry()
          
     def addPriorityEntry(self):
-        priority = self.item.priority()
+        priority = self.items[0].priority() if len(self.items) == 1 else 0
         # pylint: disable-msg=W0201
-        self._prioritySpinner = widgets.SpinCtrl(self, value=str(priority),
+        self._priorityEntry = widgets.SpinCtrl(self, value=str(priority),
             initial=priority, size=(100, -1))
-        self.addEntry(_('Priority'), self._prioritySpinner, 
-                      flags=[None, wx.ALL])
+        self._priorityLabel = self.label(_('Priority'), self._priorityEntry, wx.EVT_SPINCTRL)
+        self.addEntry(self._priorityLabel, self._priorityEntry, flags=[None, wx.ALL])
     
     @patterns.eventSource
     def ok(self, event=None):
-        self.item.setPriority(self._prioritySpinner.GetValue(), event=event)
+        for item in self.items:
+            if len(self.items) == 1 or self._priorityLabel.IsChecked():
+                item.setPriority(self._priorityEntry.GetValue(), event=event)
         super(TaskSubjectPage, self).ok(event=event)
  
     def entries(self):
         entries = super(TaskSubjectPage, self).entries()
-        entries['priority'] = entries['totalPriority'] = self._prioritySpinner
+        entries['priority'] = entries['totalPriority'] = self._priorityEntry
         return entries
             
 
 class CategorySubjectPage(SubjectPage):
-    def __init__(self, parent, theCategory, *args, **kwargs):
-        super(CategorySubjectPage, self).__init__(theCategory, parent, 
-                                                  *args, **kwargs)
-
     def addEntries(self):
         super(CategorySubjectPage, self).addEntries()
         self.addExclusiveSubcategoriesEntry()
        
     def addExclusiveSubcategoriesEntry(self):
-        exclusive = self.item.hasExclusiveSubcategories()
+        exclusive = self.items[0].hasExclusiveSubcategories() if len(self.items) == 0 else False
         # pylint: disable-msg=W0201
         self._exclusiveSubcategoriesCheckBox = \
             wx.CheckBox(self, label=_('Mutually exclusive')) 
         self._exclusiveSubcategoriesCheckBox.SetValue(exclusive)
-        self.addEntry(_('Subcategories'), self._exclusiveSubcategoriesCheckBox,
+        self._exclusiveSubcategoriesLabel = self.label(_('Subcategories'), 
+            self._exclusiveSubcategoriesCheckBox, wx.EVT_CHECKBOX)
+        self.addEntry(self._exclusiveSubcategoriesLabel, 
+                      self._exclusiveSubcategoriesCheckBox,
                       flags=[None, wx.ALL])
 
     @patterns.eventSource
     def ok(self, event=None):
-        self.item.makeSubcategoriesExclusive(self._exclusiveSubcategoriesCheckBox.GetValue(), event=event)
+        for item in self.items:
+            if len(self.items) == 1 or self._exclusiveSubcategoriesLabel.IsChecked():
+                item.makeSubcategoriesExclusive(self._exclusiveSubcategoriesCheckBox.GetValue(), 
+                                                event=event)
         super(CategorySubjectPage, self).ok(event=event)
-        
-
-class NoteSubjectPage(SubjectPage):
-    def __init__(self, parent, theNote, *args, **kwargs):
-        super(NoteSubjectPage, self).__init__(theNote, parent, *args, **kwargs)
-            
+                    
 
 class AttachmentSubjectPage(SubjectPage):
-    def __init__(self, parent, theAttachment, basePath, *args, **kwargs):
-        super(AttachmentSubjectPage, self).__init__(theAttachment, parent, 
+    def __init__(self, attachments, parent, basePath, *args, **kwargs):
+        super(AttachmentSubjectPage, self).__init__(attachments, parent, 
                                                     *args, **kwargs)
         self.basePath = basePath
         
@@ -201,24 +183,27 @@ class AttachmentSubjectPage(SubjectPage):
         panel = wx.Panel(self, wx.ID_ANY)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         # pylint: disable-msg=W0201
-        self._locationEntry = widgets.SingleLineTextCtrl(panel,
-                                                         self.item.location())
+        location = self.items[0].location() if len(self.items) == 1 else _('Edit to change location of all attachments')
+        self._locationEntry = widgets.SingleLineTextCtrl(panel, location)
         sizer.Add(self._locationEntry, 1, wx.ALL, 3)
-        if self.item.type_ == 'file':
+        if all(item.type_ == 'file' for item in self.items):
             button = wx.Button(panel, wx.ID_ANY, _('Browse'))
             sizer.Add(button, 0, wx.ALL, 3)
             wx.EVT_BUTTON(button, wx.ID_ANY, self.onSelectLocation)
         panel.SetSizer(sizer)
-        self.addEntry(_('Location'), panel, flags=[None, wx.ALL|wx.EXPAND])
+        self._locationLabel = self.label(_('Location'), self._locationEntry, wx.EVT_TEXT)
+        self.addEntry(self._locationLabel, panel, flags=[None, wx.ALL|wx.EXPAND])
 
     @patterns.eventSource
     def ok(self, event=None):
-        self.item.setLocation(self._locationEntry.GetValue(), event=event)
+        for item in self.items:
+            if len(self.items) == 1 or self._locationLabel.IsChecked():
+                item.setLocation(self._locationEntry.GetValue(), event=event)
         super(AttachmentSubjectPage, self).ok(event=event)
 
     def onSelectLocation(self, event): # pylint: disable-msg=W0613
-        if self.item.type_ == 'file':
-            basePath = os.path.split(self.item.normalizedLocation())[0]
+        if self.items[0].type_ == 'file':
+            basePath = os.path.split(self.items[0].normalizedLocation())[0]
         else:
             basePath = os.getcwd()
 
@@ -231,24 +216,20 @@ class AttachmentSubjectPage(SubjectPage):
             self._locationEntry.SetValue(filename)
 
 
-class AppearancePage(Page, widgets.BookPage):
-    def __init__(self, item, *args, **kwargs):
-        self.item = item
-        super(AppearancePage, self).__init__(columns=5, *args, **kwargs)
-        self.addEntries()
-        self.fit()
-        
+class AppearancePage(Page):
+    columns = 5
+
     def addEntries(self):
-        self.addColorEntry()
+        self.addColorEntries()
         self.addFontEntry()
         self.addIconEntry()
         
-    def addColorEntry(self):
+    def addColorEntries(self):
         # pylint: disable-msg=W0201,W0142
         self._fgColorCheckBox = wx.CheckBox(self, label=_('Use foreground color:'))
         self._bgColorCheckBox = wx.CheckBox(self, label=_('Use background color:'))
-        currentFgColor = self.item.foregroundColor(recursive=False)
-        currentBgColor = self.item.backgroundColor(recursive=False)
+        currentFgColor = self.items[0].foregroundColor(recursive=False) if len(self.items) == 0 else None
+        currentBgColor = self.items[0].backgroundColor(recursive=False) if len(self.items) == 0 else None
         self._fgColorCheckBox.SetValue(currentFgColor is not None)
         self._fgColorCheckBox.Bind(wx.EVT_CHECKBOX, self.onFgColourCheckBoxChecked)
         self._bgColorCheckBox.SetValue(currentBgColor is not None)
@@ -260,9 +241,14 @@ class AppearancePage(Page, widgets.BookPage):
         self._bgColorButton = wx.ColourPickerCtrl(self, col=currentBgColor)
         self._fgColorButton.Bind(wx.EVT_COLOURPICKER_CHANGED, self.onFgColourPicked)
         self._bgColorButton.Bind(wx.EVT_COLOURPICKER_CHANGED, self.onBgColourPicked)
-        self.addEntry(_('Color'), self._fgColorCheckBox, self._fgColorButton, 
-                      self._bgColorCheckBox, self._bgColorButton,
-                      flags=[None, None, wx.ALL, None, wx.ALL])
+        self._fgColorLabel = self.label(_('Foreground color'), self._fgColorButton, wx.EVT_COLOURPICKER_CHANGED,
+                                        self._fgColorCheckBox, wx.EVT_CHECKBOX)
+        self._bgColorLabel = self.label(_('Background color'), self._bgColorButton, wx.EVT_COLOURPICKER_CHANGED,
+                                        self._bgColorCheckBox, wx.EVT_CHECKBOX)
+        self.addEntry(self._fgColorLabel, self._fgColorCheckBox, self._fgColorButton,
+                      flags=[None, None, wx.ALL])
+        self.addEntry(self._bgColorLabel, self._bgColorCheckBox, self._bgColorButton, 
+                      flags=[None, None, wx.ALL])
 
     def onFgColourCheckBoxChecked(self, event):
         ''' User toggled the foreground colour check box. Update the colour
@@ -284,7 +270,7 @@ class AppearancePage(Page, widgets.BookPage):
     def addFontEntry(self):
         # pylint: disable-msg=W0201
         self._fontCheckBox = wx.CheckBox(self, label=_('Use font:'))
-        currentFont = self.item.font()
+        currentFont = self.items[0].font() if len(self.items) == 1 else None
         currentColor = self._fgColorButton.GetColour()
         self._fontCheckBox.SetValue(currentFont is not None)
         defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
@@ -292,7 +278,9 @@ class AppearancePage(Page, widgets.BookPage):
             font=currentFont or defaultFont, colour=currentColor)
         self._fontButton.Bind(wx.EVT_FONTPICKER_CHANGED,
                               self.onFontPickerChanged)
-        self.addEntry(_('Font'), self._fontCheckBox, self._fontButton,
+        self._fontLabel = self.label(_('Font'), self._fontButton, wx.EVT_FONTPICKER_CHANGED,
+                                     self._fontCheckBox, wx.EVT_CHECKBOX)
+        self.addEntry(self._fontLabel, self._fontCheckBox, self._fontButton,
                       flags=[None, None, wx.ALL])
 
     def onFontPickerChanged(self, event): # pylint: disable-msg=W0613 
@@ -312,10 +300,11 @@ class AppearancePage(Page, widgets.BookPage):
             label = artprovider.chooseableItemImages[imageName]
             bitmap = wx.ArtProvider_GetBitmap(imageName, wx.ART_MENU, size)
             self._iconEntry.Append(label, bitmap, clientData=imageName)
-        icon = self.item.icon()
+        icon = self.items[0].icon() if len(self.items) == 1 else ''
         currentSelectionIndex = imageNames.index(icon)
         self._iconEntry.SetSelection(currentSelectionIndex)
-        self.addEntry(_('Icon'), self._iconEntry, flags=[None, wx.ALL|wx.EXPAND])
+        self._iconLabel = self.label(_('Icon'), self._iconEntry, wx.EVT_COMBOBOX)
+        self.addEntry(self._iconLabel, self._iconEntry, flags=[None, wx.ALL])
 
     @patterns.eventSource
     def ok(self, event=None): # pylint: disable-msg=W0221
@@ -323,112 +312,113 @@ class AppearancePage(Page, widgets.BookPage):
         bgColorChecked = self._bgColorCheckBox.IsChecked()
         fgColor = self._fgColorButton.GetColour() if fgColorChecked else None
         bgColor = self._bgColorButton.GetColour() if bgColorChecked else None
-        self.item.setForegroundColor(fgColor, event=event)
-        self.item.setBackgroundColor(bgColor, event=event)
         fontChecked = self._fontCheckBox.IsChecked()
         font = self._fontButton.GetSelectedFont() if fontChecked else None
-        self.item.setFont(font, event=event)
         icon = self._iconEntry.GetClientData(self._iconEntry.GetSelection())
         selectedIcon = icon[:-len('_icon')] + '_open_icon' if (icon.startswith('folder') and icon.count('_') == 2) else icon
-        self.item.setIcon(icon, event=event)
-        self.item.setSelectedIcon(selectedIcon, event=event)
-
-
-class DatesPage(TaskHeadersMixin, PageWithHeaders):
-    def __init__(self, parent, theTask, settings, *args, **kwargs):
-        super(DatesPage, self).__init__(parent, theTask, *args, **kwargs)
-        self._settings = settings
-        self._previousCompletionDateTime = theTask.completionDateTime()
-        datesBox = self.addDatesBox(theTask)
-        reminderBox = self.addReminderBox(theTask)
-        recurrenceBox = self.addRecurrenceBox(theTask)
-
-        for box in datesBox, reminderBox, recurrenceBox:
-            box.fit()
-            self.add(box, proportion=0, flag=wx.EXPAND|wx.ALL, border=5)
-        self.fit()
+        for item in self.items:
+            if len(self.items) == 1 or self._fgColorLabel.IsChecked():
+                item.setForegroundColor(fgColor, event=event)
+            if len(self.items) == 1 or self._bgColorLabel.IsChecked():
+                item.setBackgroundColor(bgColor, event=event)
+            if len(self.items) == 1 or self._fontLabel.IsChecked():
+                item.setFont(font, event=event)
+            if len(self.items) == 1 or self._iconLabel.IsChecked():
+                item.setIcon(icon, event=event)
+                item.setSelectedIcon(selectedIcon, event=event)
+            
+    def entries(self):
+        return dict(firstEntry=self._fgColorCheckBox)
     
-    def addDatesBox(self, theTask):
-        datesBox = widgets.BoxWithFlexGridSizer(self, label=_('Dates'), cols=3)
-        self.addHeaders(datesBox)
-        for label, taskMethodName in [(_('Start date'), 'startDateTime'),
-                                      (_('Due date'), 'dueDateTime'),
-                                      (_('Completion date'), 'completionDateTime')]:
-            datesBox.add(label)
-            taskMethod = getattr(theTask, taskMethodName)
-            dateTimeEntry = entry.DateTimeEntry(datesBox, self._settings, 
-                                                taskMethod(),
-                                                callback=self.onDateTimeChanged)
-            setattr(self, '_%sEntry'%taskMethodName, dateTimeEntry)
-            datesBox.add(dateTimeEntry)
-            if theTask.children():
-                recursiveDateTimeEntry = entry.DateTimeEntry(datesBox,
-                    self._settings, taskMethod(recursive=True), readonly=True)
-            else:
-                recursiveDateTimeEntry = (0, 0)
-            datesBox.add(recursiveDateTimeEntry)
-        return datesBox
+
+class DatesPage(Page):
+    def __init__(self, theTask, parent, settings, *args, **kwargs):
+        self.__settings = settings
+        super(DatesPage, self).__init__(theTask, parent, *args, **kwargs)
         
-    def addReminderBox(self, theTask):
-        reminderBox = widgets.BoxWithFlexGridSizer(self, label=_('Reminder'), 
-                                                   cols=2)
-        reminderBox.add(_('Reminder'))
+    def addEntries(self):
+        self.addDateEntries()
+        self.addReminderEntry()
+        self.addRecurrenceEntries()
+        
+    def addDateEntries(self):
         # pylint: disable-msg=W0201
-        self._reminderDateTimeEntry = entry.DateTimeEntry(reminderBox,
-            self._settings, theTask.reminder())
+        self._oldCompletionDateTime = dict([(item, item.completionDateTime()) for item in self.items]) 
+        for label, taskMethodName, callback in [(_('Start date'), 'startDateTime', self.onStartDateTimeChanged),
+                                                (_('Due date'), 'dueDateTime', self.onDueDateTimeChanged),
+                                                (_('Completion date'), 'completionDateTime', self.onCompletionDateTimeChanged)]:
+            label = self.label(label)
+            setattr(self, '_%sLabel'%taskMethodName, label)
+            dateTime = getattr(self.items[0], taskMethodName)() if len(self.items) == 1 else date.DateTime()
+            dateTimeEntry = entry.DateTimeEntry(self, self.__settings, dateTime,
+                                                callback=callback)
+            setattr(self, '_%sEntry'%taskMethodName, dateTimeEntry)
+            self.addEntry(label, dateTimeEntry)
+        
+    def addReminderEntry(self):
+        # pylint: disable-msg=W0201
+        reminderDateTime = self.items[0].reminder() if len(self.items) == 1 else date.DateTime()
+        self._reminderDateTimeLabel = self.label(_('Reminder'))
+        self._reminderDateTimeEntry = entry.DateTimeEntry(self, self.__settings, 
+                                                          reminderDateTime)
         # If the user has not set a reminder, make sure that the default 
         # date time in the reminder entry is a reasonable suggestion:
         if self._reminderDateTimeEntry.get() == date.DateTime():
             self.suggestReminder()
-        reminderBox.add(self._reminderDateTimeEntry)
-        return reminderBox
+        self.addEntry(self._reminderDateTimeLabel, self._reminderDateTimeEntry)
+        self._reminderDateTimeEntry.setCallback(self.onReminderChanged)
         
-    def addRecurrenceBox(self, theTask):
+    def addRecurrenceEntries(self):
         # pylint: disable-msg=W0201
-        recurrenceBox = widgets.BoxWithFlexGridSizer(self,
-            label=_('Recurrence'), cols=2)
-        recurrenceBox.add(_('Recurrence'))
-        panel = wx.Panel(recurrenceBox)
+        recurrencePanel = wx.Panel(self)
         panelSizer = wx.BoxSizer(wx.HORIZONTAL)
-        self._recurrenceEntry = wx.Choice(panel, 
+        self._recurrenceEntry = wx.Choice(recurrencePanel, 
             choices=[_('None'), _('Daily'), _('Weekly'), _('Monthly'), _('Yearly')])        
         self._recurrenceEntry.Bind(wx.EVT_CHOICE, self.onRecurrenceChanged)
         panelSizer.Add(self._recurrenceEntry, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3,-1))
-        staticText = wx.StaticText(panel, label=_(', every'))
+        staticText = wx.StaticText(recurrencePanel, label=_(', every'))
         panelSizer.Add(staticText, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3,-1))
-        self._recurrenceFrequencyEntry = widgets.SpinCtrl(panel, size=(50,-1), 
+        self._recurrenceFrequencyEntry = widgets.SpinCtrl(recurrencePanel, 
+                                                          size=(50,-1), 
                                                           initial=1, min=1)
         panelSizer.Add(self._recurrenceFrequencyEntry, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3,-1))
-        self._recurrenceStaticText = wx.StaticText(panel, label='reserve some space')
+        self._recurrenceStaticText = wx.StaticText(recurrencePanel, 
+                                                   label='reserve some space')
         panelSizer.Add(self._recurrenceStaticText, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3, -1))
-        self._recurrenceSameWeekdayCheckBox = wx.CheckBox(panel, 
+        self._recurrenceSameWeekdayCheckBox = wx.CheckBox(recurrencePanel, 
             label=_('keeping dates on the same weekday'))
         panelSizer.Add(self._recurrenceSameWeekdayCheckBox, proportion=1, 
                        flag=wx.ALIGN_CENTER_VERTICAL|wx.EXPAND)
-        panel.SetSizerAndFit(panelSizer)
+        recurrencePanel.SetSizerAndFit(panelSizer)
         self._recurrenceSizer = panelSizer
 
-        recurrenceBox.add(panel)
-        recurrenceBox.add(_('Maximum number\nof recurrences'))
-        panel = wx.Panel(recurrenceBox)
+        maxPanel = wx.Panel(self)
         panelSizer = wx.BoxSizer(wx.HORIZONTAL)
-        self._maxRecurrenceCheckBox = wx.CheckBox(panel)
+        self._maxRecurrenceCheckBox = wx.CheckBox(maxPanel)
         self._maxRecurrenceCheckBox.Bind(wx.EVT_CHECKBOX, self.onMaxRecurrenceChecked)
         panelSizer.Add(self._maxRecurrenceCheckBox, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3,-1))
-        self._maxRecurrenceCountEntry = widgets.SpinCtrl(panel, size=(50,-1), 
+        self._maxRecurrenceCountEntry = widgets.SpinCtrl(maxPanel, size=(50,-1), 
                                                          initial=1, min=1)
         panelSizer.Add(self._maxRecurrenceCountEntry)
-        panel.SetSizerAndFit(panelSizer)
-        recurrenceBox.add(panel)
-
-        self.setRecurrence(theTask.recurrence())
-        return recurrenceBox
-    
+        maxPanel.SetSizerAndFit(panelSizer)
+               
+        self._recurrenceLabel = self.label(_('Recurrence'), 
+                                           self._recurrenceEntry, wx.EVT_CHOICE,
+                                           self._recurrenceFrequencyEntry, wx.EVT_SPINCTRL,
+                                           self._recurrenceSameWeekdayCheckBox, wx.EVT_CHECKBOX,
+                                           self._maxRecurrenceCheckBox, wx.EVT_CHECKBOX,
+                                           self._maxRecurrenceCountEntry, wx.EVT_SPINCTRL)
+        
+        self.addEntry(self._recurrenceLabel, recurrencePanel)
+        self.addEntry(_('Maximum number\nof recurrences'), maxPanel)
+        
+        self.setRecurrence(self.items[0].recurrence() if len(self.items) == 1 else date.Recurrence())
+            
     def entries(self):
         # pylint: disable-msg=E1101
         return dict(startDateTime=self._startDateTimeEntry, 
@@ -451,16 +441,41 @@ class DatesPage(TaskHeadersMixin, PageWithHeaders):
         event.Skip()
         maxRecurrenceOn = event.IsChecked()
         self._maxRecurrenceCountEntry.Enable(maxRecurrenceOn)
+        
+    def onStartDateTimeChanged(self, event):
+        event.Skip()
+        if len(self.items) > 1:
+            self._startDateTimeLabel.SetValue(True) # pylint: disable-msg=E1101
+        else:
+            self.onDateTimeChanged()
 
-    def onDateTimeChanged(self, event):
+    def onDueDateTimeChanged(self, event):
+        event.Skip()
+        if len(self.items) > 1:
+            self._dueDateTimeLabel.SetValue(True) # pylint: disable-msg=E1101
+        else:
+            self.onDateTimeChanged()
+
+    def onCompletionDateTimeChanged(self, event):
+        event.Skip()
+        if len(self.items) > 1:
+            self._completionDateTimeLabel.SetValue(True) # pylint: disable-msg=E1101
+        else:
+            self.onDateTimeChanged()
+
+    def onDateTimeChanged(self):
         ''' Called when one of the DateTimeEntries is changed by the user. 
             Update the suggested reminder if no reminder was set by the user. '''
-        event.Skip()
         # Make sure the reminderDateTimeEntry has been created:
         if hasattr(self, '_reminderDateTimeEntry') and \
             self._reminderDateTimeEntry.get() == date.DateTime():
             self.suggestReminder()
-
+            
+    def onReminderChanged(self, event):
+        if len(self.items) > 1:
+            self._reminderDateTimeLabel.SetValue(True)
+        event.Skip()
+        
     def ok(self, event=None): # pylint: disable-msg=W0221,W0613
         # Funny things happen with the date pickers without this (to
         # reproduce: create a task, enter the start date by hand,
@@ -477,13 +492,19 @@ class DatesPage(TaskHeadersMixin, PageWithHeaders):
         kwargs['amount'] = self._recurrenceFrequencyEntry.Value
         kwargs['sameWeekday'] = self._recurrenceSameWeekdayCheckBox.IsChecked()
         # pylint: disable-msg=E1101,W0142
-        self.item.setRecurrence(date.Recurrence(**kwargs), event=event)
-        self.item.setStartDateTime(self._startDateTimeEntry.get(), event=event)
-        self.item.setDueDateTime(self._dueDateTimeEntry.get(), event=event)
         newCompletionDateTime = self._completionDateTimeEntry.get()
-        if newCompletionDateTime != self._previousCompletionDateTime:
-            self.item.setCompletionDateTime(newCompletionDateTime, event=event)
-        self.item.setReminder(self._reminderDateTimeEntry.get(), event=event)
+        for item in self.items:
+            if len(self.items) == 1 or self._recurrenceLabel.IsChecked():
+                item.setRecurrence(date.Recurrence(**kwargs), event=event)
+            if len(self.items) == 1 or self._startDateTimeLabel.IsChecked():
+                item.setStartDateTime(self._startDateTimeEntry.get(), event=event)
+            if len(self.items) == 1 or self._dueDateTimeLabel.IsChecked():
+                item.setDueDateTime(self._dueDateTimeEntry.get(), event=event)
+            if len(self.items) == 1 or self._completionDateTimeLabel.IsChecked():
+                if newCompletionDateTime != self._oldCompletionDateTime[item]:
+                    item.setCompletionDateTime(newCompletionDateTime, event=event)
+            if len(self.items) == 1 or self._reminderDateTimeLabel.IsChecked():
+                item.setReminder(self._reminderDateTimeEntry.get(), event=event)
 
     def setReminder(self, reminder):
         self._reminderDateTimeEntry.set(reminder)
@@ -534,77 +555,108 @@ class DatesPage(TaskHeadersMixin, PageWithHeaders):
         # control it will show the suggested date time
 
 
-class ProgressPage(TaskHeadersMixin, PageWithHeaders):
-    def __init__(self, parent, theTask, *args, **kwargs):
-        super(ProgressPage, self).__init__(parent, theTask, *args, **kwargs)
-        # Boxes:
-        progressBox = widgets.BoxWithFlexGridSizer(self, label=_('Progress'), cols=2)
-        # Editable entries:
-        self._percentageCompleteOldValue = theTask.percentageComplete()
-        self._percentageCompleteEntry = entry.PercentageEntry(progressBox, 
-                                            self._percentageCompleteOldValue)
-        # Readonly entries:
-        # None
-        # Fill the boxes:
-        for eachEntry in [_('Percentage complete'), self._percentageCompleteEntry]:
-            progressBox.add(eachEntry, flag=wx.ALIGN_RIGHT)
-            
-        for box in progressBox,:
-            box.fit()
-            self.add(box, proportion=0, flag=wx.EXPAND|wx.ALL, border=5)
-        self.fit()
+class ProgressPage(Page):
+    def addEntries(self):
+        self.addProgressEntry()
+        self.addBehaviorEntry()
+        
+    def addProgressEntry(self):
+        # pylint: disable-msg=W0201
+        self._percentageCompleteOldValue = dict([(item, item.percentageComplete()) for item in self.items])
+        self._percentageCompleteEntry = entry.PercentageEntry(self, 
+            self._percentageCompleteOldValue[self.items[0]], 
+            callback=self.onPercentageCompleteChanged)
+        self._percentageCompleteLabel = self.label(_('Percentage complete'))
+        self.addEntry(self._percentageCompleteLabel, self._percentageCompleteEntry)
+        
+    def addBehaviorEntry(self):
+        # pylint: disable-msg=W0201
+        self._markTaskCompletedEntry = choice = wx.Choice(self)
+        shouldMarkCompleted = self.items[0].shouldMarkCompletedWhenAllChildrenCompleted() if len(self.items) == 1 else None
+        for choiceValue, choiceText in \
+                [(None, _('Use application-wide setting')),
+                 (False, _('No')), (True, _('Yes'))]:
+            choice.Append(choiceText, choiceValue)
+            if choiceValue == shouldMarkCompleted:
+                choice.SetSelection(choice.GetCount()-1)
+        if choice.GetSelection() == wx.NOT_FOUND:
+            # Force a selection if necessary:
+            choice.SetSelection(0)
+        self._markTaskCompletedLabel = self.label(_('Mark task completed when\nall children are completed?'),
+                                                  self._markTaskCompletedEntry, 
+                                                  wx.EVT_CHOICE)
+        self.addEntry(self._markTaskCompletedLabel, choice, flags=[None, wx.ALL])
         
     def entries(self):
         return dict(percentageComplete=self._percentageCompleteEntry)
         
     @patterns.eventSource
     def ok(self, event=None): # pylint: disable-msg=W0221
-        newValue = self._percentageCompleteEntry.get()
-        if newValue != self._percentageCompleteOldValue:
-            self.item.setPercentageComplete(newValue, event=event)
+        percentageCompleteNewValue = self._percentageCompleteEntry.get()
+        shouldMarkCompleted = self._markTaskCompletedEntry.GetClientData( \
+            self._markTaskCompletedEntry.GetSelection())
+        for item in self.items:
+            if len(self.items) == 1 or self._percentageCompleteLabel.IsChecked():
+                if percentageCompleteNewValue != self._percentageCompleteOldValue[item]:
+                    item.setPercentageComplete(percentageCompleteNewValue, 
+                                               event=event)
+            if len(self.items) == 1 or self._markTaskCompletedLabel.IsChecked():
+                item.setShouldMarkCompletedWhenAllChildrenCompleted( \
+                    shouldMarkCompleted, event=event)
 
+    def onPercentageCompleteChanged(self):
+        self._percentageCompleteLabel.SetValue(True)
+        
 
-class BudgetPage(TaskHeadersMixin, PageWithHeaders):
-    def __init__(self, parent, theTask, *args, **kwargs):
-        super(BudgetPage, self).__init__(parent, theTask, *args, **kwargs)
-        # Boxes:
-        budgetBox = widgets.BoxWithFlexGridSizer(self, label=_('Budget'), cols=3)
-        revenueBox = widgets.BoxWithFlexGridSizer(self, label=_('Revenue'), cols=3)
-        # Editable entries:
-        self._budgetEntry = entry.TimeDeltaEntry(budgetBox, theTask.budget())
-        self._hourlyFeeEntry = entry.AmountEntry(revenueBox, theTask.hourlyFee())
-        self._fixedFeeEntry = entry.AmountEntry(revenueBox, theTask.fixedFee())
-        # Readonly entries:
-        if theTask.children():
-            recursiveBudget = render.budget(theTask.budget(recursive=True))
-            recursiveTimeSpent = render.timeSpent(theTask.timeSpent(recursive=True))
-            recursiveBudgetLeft = render.budget(theTask.budgetLeft(recursive=True))
-            recursiveFixedFee = render.monetaryAmount(theTask.fixedFee(recursive=True))
-            recursiveRevenue = render.monetaryAmount(theTask.revenue(recursive=True))
-        else:
-            recursiveBudget = recursiveTimeSpent = recursiveBudgetLeft = \
-            recursiveFixedFee = recursiveRevenue = ''
-        # Fill the boxes:
-        self.addHeaders(budgetBox)
-        for eachEntry in [_('Budget'), self._budgetEntry, recursiveBudget,
-                          _('Time spent'), render.budget(theTask.timeSpent()), 
-                          recursiveTimeSpent, _('Budget left'), 
-                          render.budget(theTask.budgetLeft()),
-                          recursiveBudgetLeft]:
-            budgetBox.add(eachEntry, flag=wx.ALIGN_RIGHT)
-
-        self.addHeaders(revenueBox)
-        for eachEntry in [_('Hourly fee'), self._hourlyFeeEntry, '',
-                          _('Fixed fee'), self._fixedFeeEntry, 
-                          recursiveFixedFee, _('Revenue'), 
-                          render.monetaryAmount(theTask.revenue()), 
-                          recursiveRevenue]:
-            revenueBox.add(eachEntry, flag=wx.ALIGN_RIGHT)
-
-        for box in budgetBox, revenueBox:
-            box.fit()
-            self.add(box, proportion=0, flag=wx.EXPAND|wx.ALL, border=5)
-        self.fit()
+class BudgetPage(Page):
+    def addEntries(self):
+        self.addBudgetEntries()
+        self.addRevenueEntries()
+        
+    def addBudgetEntries(self):
+        self.addBudgetEntry()
+        if len(self.items) == 1:
+            self.addTimeSpentEntry()
+            self.addBudgetLeftEntry()
+            
+    def addBudgetEntry(self):
+        # pylint: disable-msg=W0201
+        budget = self.items[0].budget() if len(self.items) == 1 else date.TimeDelta()
+        self._budgetEntry = entry.TimeDeltaEntry(self, budget)
+        self._budgetLabel = self.label(_('Budget'), self._budgetEntry._entry, wx.EVT_TEXT)
+        self.addEntry(self._budgetLabel, self._budgetEntry, flags=[None, wx.ALL])
+        
+    def addTimeSpentEntry(self):
+        timeSpent = self.items[0].timeSpent()
+        self.addEntry(_('Time spent'), render.budget(timeSpent), flags=[None, wx.ALL])
+        
+    def addBudgetLeftEntry(self):
+        budgetLeft = self.items[0].budgetLeft()
+        self.addEntry(_('Budget left'), render.budget(budgetLeft), flags=[None, wx.ALL])
+        
+    def addRevenueEntries(self):
+        self.addHourlyFeeEntry()
+        self.addFixedFeeEntry()
+        if len(self.items) == 1:
+            self.addRevenueEntry()
+            
+    def addHourlyFeeEntry(self):
+        # pylint: disable-msg=W0201
+        hourlyFee = self.items[0].hourlyFee() if len(self.items) == 1 else 0
+        self._hourlyFeeEntry = entry.AmountEntry(self, hourlyFee)
+        self._hourlyFeeLabel = self.label(_('Hourly fee'), self._hourlyFeeEntry._entry, wx.EVT_TEXT)
+        self.addEntry(self._hourlyFeeLabel, self._hourlyFeeEntry, flags=[None, wx.ALL])
+        
+    def addFixedFeeEntry(self):
+        # pylint: disable-msg=W0201
+        fixedFee = self.items[0].fixedFee() if len(self.items) == 1 else 0
+        self._fixedFeeEntry = entry.AmountEntry(self, fixedFee)
+        self._fixedFeeLabel = self.label(_('Fixed fee'), self._fixedFeeEntry._entry, wx.EVT_TEXT)
+        self.addEntry(self._fixedFeeLabel, self._fixedFeeEntry, flags=[None, wx.ALL])
+        
+    def addRevenueEntry(self):
+        revenue = self.items[0].revenue()
+        self.addEntry(_('Revenue'), render.monetaryAmount(revenue), flags=[None, wx.ALL])
         
     def entries(self):
         return dict(budget=self._budgetEntry, 
@@ -619,21 +671,43 @@ class BudgetPage(TaskHeadersMixin, PageWithHeaders):
     
     @patterns.eventSource    
     def ok(self, event=None): # pylint: disable-msg=W0221
-        self.item.setBudget(self._budgetEntry.get(), event=event)
-        self.item.setHourlyFee(self._hourlyFeeEntry.get(), event=event)
-        self.item.setFixedFee(self._fixedFeeEntry.get(), event=event)
-        
+        for item in self.items:
+            item.setBudget(self._budgetEntry.get(), event=event)
+            item.setHourlyFee(self._hourlyFeeEntry.get(), event=event)
+            item.setFixedFee(self._fixedFeeEntry.get(), event=event)
 
-class EffortPage(TaskHeadersMixin, PageWithViewerMixin, PageWithHeaders):
-    def __init__(self, parent, theTask, taskFile, settings, *args, **kwargs):
-        super(EffortPage, self).__init__(parent, theTask, *args, **kwargs)
-        self.viewer = viewer.EffortViewer(self, taskFile,
-            settings, settingsSection='effortviewerintaskeditor',
-            tasksToShowEffortFor=task.TaskList([theTask]))
-        self.add(self.viewer, proportion=1, flag=wx.EXPAND|wx.ALL, 
-                 border=5)
+
+class PageWithViewer(Page):
+    columns = 1
+    
+    def __init__(self, items, parent, taskFile, settings, settingsSection, *args, **kwargs):
+        self.__taskFile = taskFile
+        self.__settings = settings
+        self.__settingsSection = settingsSection
+        super(PageWithViewer, self).__init__(items, parent, *args, **kwargs)
+        self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
         
-        self.fit()
+    def addEntries(self):
+        # pylint: disable-msg=W0201
+        self.viewer = self.createViewer(self.__taskFile, self.__settings,
+                                        self.__settingsSection) 
+        self.addEntry(self.viewer, growable=True)
+        
+    def createViewer(self, taskFile, settings, settingsSection):
+        raise NotImplementedError
+        
+    def onClose(self, event):
+        # Don't notify the viewer about any changes anymore, it's about
+        # to be deleted.
+        self.viewer.detach()
+        event.Skip()        
+
+
+class EffortPage(PageWithViewer):        
+    def createViewer(self, taskFile, settings, settingsSection):
+        return viewer.EffortViewer(self, taskFile, settings, 
+            settingsSection=settingsSection,
+            tasksToShowEffortFor=task.TaskList(self.items))
 
     def entries(self):
         return dict(timeSpent=self.viewer, totalTimeSpent=self.viewer)
@@ -655,14 +729,16 @@ class LocalDragAndDropFixMixin(object):
 
 
 class LocalCategoryViewer(LocalDragAndDropFixMixin, viewer.BaseCategoryViewer):
-    def __init__(self, item, *args, **kwargs):
-        self.item = item
+    def __init__(self, items, *args, **kwargs):
+        self.items = items
         super(LocalCategoryViewer, self).__init__(*args, **kwargs)
         self.widget.ExpandAll()
     
-    def getIsItemChecked(self, item):
-        if isinstance(item, category.Category):
-            return item in self.item.categories()
+    def getIsItemChecked(self, targetItem):
+        if isinstance(targetItem, category.Category):
+            for item in self.items:
+                if targetItem in item.categories():
+                    return True
         return False
 
     def createCategoryPopupMenu(self): # pylint: disable-msg=W0221
@@ -674,21 +750,10 @@ class LocalCategoryViewer(LocalDragAndDropFixMixin, viewer.BaseCategoryViewer):
         pass
 
 
-class CategoriesPage(PageWithViewerMixin, PageWithHeaders):
-    def __init__(self, parent, item, taskFile, settings, *args, **kwargs):
-        super(CategoriesPage, self).__init__(parent, item, *args, **kwargs)
-        self.__categories = category.CategorySorter(taskFile.categories())
-        categoriesBox = widgets.BoxWithBoxSizer(self, label=_('Categories'))
-        self.viewer = LocalCategoryViewer(item, categoriesBox,
-                                          taskFile, settings,
-                                          settingsSection=self.settingsSection())
-        categoriesBox.add(self.viewer, proportion=1, flag=wx.EXPAND|wx.ALL)
-        categoriesBox.fit()
-        self.add(categoriesBox)
-        self.fit()
-    
-    def settingsSection(self):
-        raise NotImplementedError
+class CategoriesPage(PageWithViewer):
+    def createViewer(self, taskFile, settings, settingsSection):
+        return LocalCategoryViewer(self.items, self, taskFile, settings,
+                                   settingsSection=settingsSection)
     
     def entries(self):
         return dict(categories=self.viewer, totalCategories=self.viewer) 
@@ -700,146 +765,122 @@ class CategoriesPage(PageWithViewerMixin, PageWithHeaders):
         for categoryNode in treeCtrl.GetItemChildren(recursively=True):
             categoryObject = treeCtrl.GetItemPyData(categoryNode)
             if categoryNode.IsChecked():
-                categoryObject.addCategorizable(self.item, event=event)
-                self.item.addCategory(categoryObject, event=event)
+                for item in self.items:
+                    categoryObject.addCategorizable(item, event=event)
+                    item.addCategory(categoryObject, event=event)
             else:
-                categoryObject.removeCategorizable(self.item, event=event)
-                self.item.removeCategory(categoryObject, event=event)
-
-
-class TaskCategoriesPage(TaskHeadersMixin, CategoriesPage):
-    def settingsSection(self):
-        return 'categoryviewerintaskeditor'
-
-
-class NoteCategoriesPage(TaskHeadersMixin, CategoriesPage):
-    def settingsSection(self):
-        return 'categoryviewerinnoteeditor'
+                for item in self.items:
+                    categoryObject.removeCategorizable(item, event=event)
+                    item.removeCategory(categoryObject, event=event)
 
 
 class LocalAttachmentViewer(LocalDragAndDropFixMixin, viewer.AttachmentViewer):
     pass
 
 
-class AttachmentsPage(PageWithViewerMixin, PageWithHeaders):
-    def __init__(self, parent, item, settings, taskFile, *args, **kwargs):
-        settingsSection = kwargs.pop('settingsSection')
-        super(AttachmentsPage, self).__init__(parent, item, *args, **kwargs)
-        self.attachmentsList = attachment.AttachmentList(item.attachments())
-        attachmentsBox = widgets.BoxWithBoxSizer(self, label=_('Attachments'))
-        self.viewer = LocalAttachmentViewer(attachmentsBox,
-                                            taskFile, settings,
-                                            settingsSection=settingsSection,
-                                            attachmentsToShow=self.attachmentsList)
-        attachmentsBox.add(self.viewer, proportion=1, flag=wx.EXPAND|wx.ALL)
-        attachmentsBox.fit()
-        self.add(attachmentsBox)
-        self.fit()
+class AttachmentsPage(PageWithViewer):
+    def createViewer(self, taskFile, settings, settingsSection):
+        # pylint: disable-msg=W0201
+        self.attachmentsList = attachment.AttachmentList(self.items[0].attachments())
+        return LocalAttachmentViewer(self, taskFile, settings,
+                                     settingsSection=settingsSection,
+                                     attachmentsToShow=self.attachmentsList)
 
     def entries(self):
         return dict(attachments=self.viewer)
 
     @patterns.eventSource
     def ok(self, event=None): # pylint: disable-msg=W0221
-        self.item.setAttachments(self.attachmentsList, event=event)
+        self.items[0].setAttachments(self.attachmentsList, event=event)
 
 
 class LocalNoteViewer(LocalDragAndDropFixMixin, viewer.BaseNoteViewer):
     pass
 
 
-class NotesPage(PageWithViewerMixin, PageWithHeaders):
-    def __init__(self, parent, item, settings, taskFile, *args, **kwargs):
-        super(NotesPage, self).__init__(parent, item, *args, **kwargs)
-        notesBox = widgets.BoxWithBoxSizer(self, label=_('Notes'))
-        self.notes = note.NoteContainer(item.notes())
-        self.viewer = LocalNoteViewer(notesBox, taskFile, settings, 
-            settingsSection='noteviewerintaskeditor',
-            notesToShow=self.notes)
-        notesBox.add(self.viewer, flag=wx.EXPAND|wx.ALL, proportion=1)
-        notesBox.fit()
-        self.add(notesBox, proportion=1, flag=wx.EXPAND|wx.ALL, border=5)
-        self.fit()
-    
+class NotesPage(PageWithViewer):
+    def createViewer(self, taskFile, settings, settingsSection):
+        # pylint: disable-msg=W0201
+        self.notes = note.NoteContainer(self.items[0].notes())
+        return LocalNoteViewer(self, taskFile, settings, 
+                               settingsSection=settingsSection,
+                               notesToShow=self.notes)
+
     def entries(self):
         return dict(notes=self.viewer)
     
     @patterns.eventSource        
     def ok(self, event=None): # pylint: disable-msg=W0221
-        self.item.setNotes(list(self.notes.rootItems()), event=event)
+        self.items[0].setNotes(list(self.notes.rootItems()), event=event)
 
 
-class BehaviorPage(TaskHeadersMixin, PageWithHeaders):
-    def __init__(self, parent, theTask, *args, **kwargs):
-        super(BehaviorPage, self).__init__(parent, theTask, *args, **kwargs)
-        behaviorBox = widgets.BoxWithFlexGridSizer(self,
-            label=_('Task behavior'), cols=2)
-        choice = self._markTaskCompletedEntry = wx.Choice(behaviorBox)
-        for choiceValue, choiceText in \
-                [(None, _('Use application-wide setting')),
-                 (False, _('No')), (True, _('Yes'))]:
-            choice.Append(choiceText, choiceValue)
-            if choiceValue == theTask.shouldMarkCompletedWhenAllChildrenCompleted():
-                choice.SetSelection(choice.GetCount()-1)
-        if choice.GetSelection() == wx.NOT_FOUND:
-            # Force a selection if necessary:
-            choice.SetSelection(0)
-        behaviorBox.add(_('Mark task completed when all children are'
-                          ' completed?'))
-        behaviorBox.add(choice)
-        behaviorBox.fit()
-        self.add(behaviorBox, border=5)
-        self.fit()
+class EditBook(widgets.Notebook):
+    def __init__(self, items, parent):
+        self.items = items
+        super(EditBook, self).__init__(parent)
+        
+    def setFocus(self, columnName):
+        ''' Select the correct page of the editor and correct control on a page
+            based on the column that the user double clicked. '''
+        page = 0
+        for pageIndex in range(self.GetPageCount()):
+            if columnName in self[pageIndex].entries():
+                page = pageIndex
+                break
+        self.SetSelection(page)
+        self[page].setFocusOnEntry(columnName)
 
-    @patterns.eventSource
-    def ok(self, event=None): # pylint: disable-msg=W0221
-        self.item.setShouldMarkCompletedWhenAllChildrenCompleted( \
-            self._markTaskCompletedEntry.GetClientData( \
-                self._markTaskCompletedEntry.GetSelection()), event=event)
+    def isDisplayingItemOrChildOfItem(self, targetItem):
+        ancestors = []
+        for item in self.items:
+            ancestors.extend(item.ancestors())
+        return targetItem in self.items + ancestors
 
 
-class TaskEditBook(widgets.Listbook):
-    def __init__(self, parent, theTask, taskFile, settings, *args, **kwargs):
-        super(TaskEditBook, self).__init__(parent)
-        self.AddPage(TaskSubjectPage(self, theTask), _('Description'), 'pencil_icon')
-        self.AddPage(DatesPage(self, theTask, settings), _('Dates'), 'calendar_icon')
-        self.AddPage(ProgressPage(self, theTask), _('Progress'), 'progress')
-        self.AddPage(TaskCategoriesPage(self, theTask, taskFile, settings), 
-                     _('Categories'), 'folder_blue_arrow_icon')
+class TaskEditBook(EditBook):
+    def __init__(self, tasks, parent, taskFile, settings):
+        super(TaskEditBook, self).__init__(tasks, parent)
+        self.AddPage(TaskSubjectPage(tasks, self), _('Description'), 'pencil_icon')
+        self.AddPage(DatesPage(tasks, self, settings), _('Dates'), 'calendar_icon')
+        self.AddPage(ProgressPage(tasks, self), _('Progress'), 'progress')
+        if len(tasks) == 1:
+            self.AddPage(CategoriesPage(tasks, self, taskFile, settings, 
+                                        settingsSection='categoryviewerintaskeditor'), 
+                         _('Categories'), 'folder_blue_arrow_icon')
         if settings.getboolean('feature', 'effort'):
-            self.AddPage(BudgetPage(self, theTask),
+            self.AddPage(BudgetPage(tasks, self),
                          _('Budget'), 'calculator_icon')
-            self.AddPage(EffortPage(self, theTask, taskFile, settings), 
-                         _('Effort'), 'clock_icon')
-        if settings.getboolean('feature', 'notes'):
-            self.AddPage(NotesPage(self, theTask, settings, taskFile), 
+            if len(tasks) == 1:
+                self.AddPage(EffortPage(tasks, self, taskFile, settings,
+                                        settingsSection='effortviewerintaskeditor'), 
+                             _('Effort'), 'clock_icon')
+        if settings.getboolean('feature', 'notes') and len(tasks) == 1:
+            self.AddPage(NotesPage(tasks, self, taskFile, settings,
+                                   settingsSection='noteviewerintaskeditor'), 
                          _('Notes'), 'note_icon')
-        self.AddPage(AttachmentsPage(self, theTask, settings, taskFile, 
-                                     settingsSection='attachmentviewerintaskeditor'), 
-                     _('Attachments'), 'paperclip_icon')
-        self.AddPage(AppearancePage(theTask, self), _('Appearance'),
+        if len(tasks) == 1:
+            self.AddPage(AttachmentsPage(tasks, self, taskFile, settings, 
+                                         settingsSection='attachmentviewerintaskeditor'), 
+                         _('Attachments'), 'paperclip_icon')
+        self.AddPage(AppearancePage(tasks, self), _('Appearance'),
                      'palette_icon')
-        self.AddPage(BehaviorPage(self, theTask), _('Behavior'), 'cogwheel_icon')
-        self.item = theTask
-
-
-class EffortEditBook(Page, widgets.BookPage):
-    def __init__(self, parent, effort, editor, effortList, taskList, settings,
-                 *args, **kwargs):
-        super(EffortEditBook, self).__init__(parent, columns=3, *args, **kwargs)
-        self._editor = editor
-        self.item = self._effort = effort
-        self._effortList = effortList
-        if effort.task() in taskList:
-            self._taskList = taskList
-        else:
-            self._taskList = task.TaskList(taskList)
-            self._taskList.append(effort.task())
+        
+        
+class EffortEditBook(Page):
+    columns = 3
+    
+    def __init__(self, efforts, parent, taskFile, settings, *args, **kwargs):
+        self._effortList = taskFile.efforts()
+        taskList = taskFile.tasks()
+        self._taskList = task.TaskList(taskList)
+        self._taskList.extend([effort.task() for effort in efforts if effort.task() not in taskList])
         self._settings = settings
+        super(EffortEditBook, self).__init__(efforts, parent, *args, **kwargs)
+        
+    def addEntries(self):
         self.addTaskEntry()
         self.addStartAndStopEntries()
         self.addDescriptionEntry()
-        self.fit()
 
     def addTaskEntry(self):
         ''' Add an entry for changing the task that this effort record
@@ -847,16 +888,17 @@ class EffortEditBook(Page, widgets.BookPage):
         # pylint: disable-msg=W0201
         self._taskEntry = entry.TaskComboTreeBox(self,
             rootTasks=self._taskList.rootItems(),
-            selectedTask=self._effort.task())
-        self.addEntry(_('Task'), self._taskEntry,
-                      flags=[None, wx.ALL|wx.EXPAND])
+            selectedTask=self.items[0].task())
+        self._taskLabel = self.label(_('Task'), self._taskEntry._comboTreeBox, wx.EVT_COMBOBOX)
+        self.addEntry(self._taskLabel, self._taskEntry, flags=[None, wx.ALL|wx.EXPAND])
 
     def addStartAndStopEntries(self):
         # pylint: disable-msg=W0201,W0142
-        dateTimeEntryKwArgs = dict(callback=self.onPeriodChanged, 
-                                   showSeconds=True)
+        dateTimeEntryKwArgs = dict(showSeconds=True) 
         self._startEntry = entry.DateTimeEntry(self, self._settings,
-            self._effort.getStart(), noneAllowed=False, **dateTimeEntryKwArgs)
+            self.items[0].getStart(), noneAllowed=False, 
+            callback=self.onStartChanged, **dateTimeEntryKwArgs)
+        self._startLabel = self.label(_('Start'))
         startFromLastEffortButton = wx.Button(self,
             label=_('Start tracking from last stop time'))
         self.Bind(wx.EVT_BUTTON, self.onStartFromLastEffort,
@@ -865,11 +907,13 @@ class EffortEditBook(Page, widgets.BookPage):
             startFromLastEffortButton.Disable()
 
         self._stopEntry = entry.DateTimeEntry(self, self._settings, 
-            self._effort.getStop(), noneAllowed=True, **dateTimeEntryKwArgs)
+            self.items[0].getStop(), noneAllowed=True, 
+            callback=self.onStopChanged, **dateTimeEntryKwArgs)
+        self._stopLabel = self.label(_('Stop'))
         flags = [None, wx.ALIGN_RIGHT|wx.ALL, wx.ALIGN_LEFT|wx.ALL, None]
-        self.addEntry(_('Start'), self._startEntry,
+        self.addEntry(self._startLabel, self._startEntry,
             startFromLastEffortButton,  flags=flags)
-        self.addEntry(_('Stop'), self._stopEntry, '', flags=flags)
+        self.addEntry(self._stopLabel, self._stopEntry, '', flags=flags)
 
     def onStartFromLastEffort(self, event): # pylint: disable-msg=W0613
         self._startEntry.set(self._effortList.maxDateTime())
@@ -878,18 +922,35 @@ class EffortEditBook(Page, widgets.BookPage):
     def addDescriptionEntry(self):
         # pylint: disable-msg=W0201
         self._descriptionEntry = widgets.MultiLineTextCtrl(self,
-            self._effort.description())
+            self.items[0].description())
         self._descriptionEntry.SetSizeHints(300, 150)
-        self.addEntry(_('Description'), self._descriptionEntry,
+        self._descriptionLabel = self.label(_('Description'), 
+                                            self._descriptionEntry, wx.EVT_TEXT)
+        self.addEntry(self._descriptionLabel, self._descriptionEntry,
             flags=[None, wx.ALL|wx.EXPAND], growable=True)
 
     @patterns.eventSource
     def ok(self, event=None): # pylint: disable-msg=W0221
-        self._effort.setTask(self._taskEntry.GetSelection(), event=event)
-        self._effort.setStart(self._startEntry.get(), event=event)
-        self._effort.setStop(self._stopEntry.get(), event=event)
-        self._effort.setDescription(self._descriptionEntry.GetValue(), event=event)
+        for item in self.items:
+            if len(self.items) == 1 or self._taskLabel.IsChecked():
+                item.setTask(self._taskEntry.GetSelection(), event=event)
+            if len(self.items) == 1 or self._startLabel.IsChecked():
+                item.setStart(self._startEntry.get(), event=event)
+            if len(self.items) == 1 or self._stopLabel.IsChecked():
+                item.setStop(self._stopEntry.get(), event=event)
+            if len(self.items) == 1 or self._descriptionLabel.IsChecked():
+                item.setDescription(self._descriptionEntry.GetValue(), event=event)
 
+    def onStartChanged(self, *args, **kwargs):
+        if len(self.items) > 1:
+            self._startLabel.SetValue(True)
+        self.onPeriodChanged(*args, **kwargs)
+        
+    def onStopChanged(self, *args, **kwargs):
+        if len(self.items) > 1:
+            self._stopLabel.SetValue(True)
+        self.onPeriodChanged(*args, **kwargs)
+        
     def onPeriodChanged(self, *args, **kwargs): # pylint: disable-msg=W0613
         if not hasattr(self, '_stopEntry'): # Check that both entries exist
             return
@@ -899,74 +960,76 @@ class EffortEditBook(Page, widgets.BookPage):
 
     def preventNegativeEffortDuration(self):
         if self._startEntry.get() > self._stopEntry.get():
-            self._editor.disableOK()
+            self.TopLevelParent.disableOK()
         else:
-            self._editor.enableOK()
+            self.TopLevelParent.enableOK()
 
-    # Fake a Book interface:
-    
-    def GetPageCount(self):
-        return 1 # EffortEditBook has no pages.
-    
-    def ChangeSelection(self, pageIndex):
-        pass
-    
-    def __getitem__(self, index):
-        return self
+    def setFocus(self, columnName):
+        self.setFocusOnEntry(columnName)
+        
+    def isDisplayingItemOrChildOfItem(self, item):
+        if hasattr(item, 'setTask'):
+            return self.items[0] == item # Regular effort
+        else:
+            return item.mayContain(self.items[0]) # Composite effort
     
     def entries(self):
         return dict(period=self._stopEntry, task=self._taskEntry,
+                    firstEntry=self._taskEntry,
                     description=self._descriptionEntry,
                     timeSpent=self._stopEntry, totalTimeSpent=self._stopEntry,
                     revenue=self._taskEntry, totalRevenue=self._taskEntry)
     
     
-class CategoryEditBook(widgets.Listbook):
-    def __init__(self, parent, theCategory, settings, taskFile, *args, **kwargs):
-        self.item = theCategory
-        super(CategoryEditBook, self).__init__(parent, *args, **kwargs)
-        self.AddPage(CategorySubjectPage(self, theCategory), 
+class CategoryEditBook(EditBook):
+    def __init__(self, categories, parent, taskFile, settings):
+        super(CategoryEditBook, self).__init__(categories, parent)
+        self.AddPage(CategorySubjectPage(categories, self), 
                      _('Description'), 'pencil_icon')
-        if settings.getboolean('feature', 'notes'):
-            self.AddPage(NotesPage(self, theCategory, settings, taskFile), 
+        if settings.getboolean('feature', 'notes') and len(categories) == 1:
+            self.AddPage(NotesPage(categories, self, taskFile, settings,
+                                   settingsSection='noteviewerincategoryeditor'), 
                          _('Notes'), 'note_icon')
-        self.AddPage(AttachmentsPage(self, theCategory, settings, taskFile, 
-                                     settingsSection='attachmentviewerincategoryeditor'), 
-                     _('Attachments'), 'paperclip_icon')
-        self.AddPage(AppearancePage(theCategory, self), _('Appearance'),
+        if len(categories) == 1:
+            self.AddPage(AttachmentsPage(categories, self, taskFile, settings, 
+                                         settingsSection='attachmentviewerincategoryeditor'), 
+                         _('Attachments'), 'paperclip_icon')
+        self.AddPage(AppearancePage(categories, self), _('Appearance'),
                      'palette_icon')
 
 
-class NoteEditBook(widgets.Listbook):
-    def __init__(self, parent, theNote, settings, categories, taskFile, *args, **kwargs):
-        self.item = theNote
-        super(NoteEditBook, self).__init__(parent, *args, **kwargs)
-        self.AddPage(NoteSubjectPage(self, theNote), _('Description'), 'pencil_icon')
-        self.AddPage(NoteCategoriesPage(self, theNote, taskFile, settings), 
-                     _('Categories'), 'folder_blue_arrow_icon')
-        self.AddPage(AttachmentsPage(self, theNote, settings, taskFile,
-                                     settingsSection='attachmentviewerinnoteeditor'),
-                     _('Attachments'), 'paperclip_icon')
-        self.AddPage(AppearancePage(theNote, self), _('Appearance'),
+class NoteEditBook(EditBook):
+    def __init__(self, notes, parent, taskFile, settings): 
+        super(NoteEditBook, self).__init__(notes, parent)
+        self.AddPage(SubjectPage(notes, self), _('Description'), 'pencil_icon')
+        if len(notes) == 1:
+            self.AddPage(CategoriesPage(notes, self, taskFile, settings, 
+                                        settingsSection='categoryviewerinnoteeditor'), 
+                         _('Categories'), 'folder_blue_arrow_icon')
+            self.AddPage(AttachmentsPage(notes, self, taskFile, settings,
+                                         settingsSection='attachmentviewerinnoteeditor'),
+                         _('Attachments'), 'paperclip_icon')
+        self.AddPage(AppearancePage(notes, self), _('Appearance'),
                      'palette_icon')
 
 
-class AttachmentEditBook(widgets.Listbook):
-    def __init__(self, parent, theAttachment, settings, taskFile,
-                 *args, **kwargs):
-        self.item = theAttachment
-        super(AttachmentEditBook, self).__init__(parent, *args, **kwargs)
-        self.AddPage(AttachmentSubjectPage(self, theAttachment,
+class AttachmentEditBook(EditBook):
+    def __init__(self, attachments, parent, taskFile, settings):
+        super(AttachmentEditBook, self).__init__(attachments, parent)
+        self.AddPage(AttachmentSubjectPage(attachments, self,
                                            settings.get('file', 'attachmentbase')), 
                      _('Description'), 'pencil_icon')
-        if settings.getboolean('feature', 'notes'):
-            self.AddPage(NotesPage(self, theAttachment, settings, taskFile), 
+        if settings.getboolean('feature', 'notes') and len(self.items) == 1:
+            self.AddPage(NotesPage(attachments, self, taskFile, settings,
+                                   settingsSection='noteviewerinattachmenteditor'), 
                          _('Notes'), 'note_icon')
-        self.AddPage(AppearancePage(theAttachment, self), _('Appearance'),
+        self.AddPage(AppearancePage(attachments, self), _('Appearance'),
                      'palette_icon')
 
 
-class EditorWithCommand(widgets.NotebookDialog):
+class EditorWithCommand(widgets.Dialog):
+    EditBookClass = lambda: 'Subclass responsibility'
+    
     def __init__(self, parent, command, settings, container, taskFile, *args, **kwargs):
         self._command = command
         self._settings = settings
@@ -974,124 +1037,55 @@ class EditorWithCommand(widgets.NotebookDialog):
         super(EditorWithCommand, self).__init__(parent, command.name(), 
                                                 *args, **kwargs)
         columnName = kwargs.get('columnName', '')
-        if columnName:
-            self.setFocus(columnName)
-        else:
-            self.setFocusOnFirstEntry()
+        self._interior.setFocus(columnName)
         patterns.Publisher().registerObserver(self.onItemRemoved, 
             eventType=container.removeItemEventType(), eventSource=container)
-
-    def setFocus(self, columnName):
-        ''' Select the correct page of the editor and correct control on a page
-            based on the column that the user double clicked. '''
-        page = 0
-        for pageIndex in range(self[0].GetPageCount()):
-            if columnName in self[0][pageIndex].entries():
-                page = pageIndex
-                break
-        self[0].ChangeSelection(page)
-        self[0][page].setFocusOnEntry(columnName)
         
-    def setFocusOnFirstEntry(self):
-        firstEntry = self[0][0]._subjectEntry
-        firstEntry.SetSelection(-1, -1) # Select all text
-        firstEntry.SetFocus()
-
-    def addPages(self):
-        for item in self._command.items:
-            self.addPage(item)
-            
-    def addPage(self, item):
-        raise NotImplementedError
-
     def cancel(self, *args, **kwargs): # pylint: disable-msg=W0221
         patterns.Publisher().removeObserver(self.onItemRemoved)
         super(EditorWithCommand, self).cancel(*args, **kwargs)
         
     def ok(self, *args, **kwargs):
         patterns.Publisher().removeObserver(self.onItemRemoved)
-        super(EditorWithCommand, self).ok(*args, **kwargs)
+        self.okInterior()
         self._command.do()
-    
-    @patterns.eventSource    
-    def okPages(self, event=None): # pylint: disable-msg=W0221
-        # Pass the event to NotebookDialog.okPages so that it gets passed to
-        # all the pages
-        super(EditorWithCommand, self).okPages(event=event)
+        super(EditorWithCommand, self).ok(*args, **kwargs)
         
+    def createInterior(self):
+        return self.EditBookClass(self._command.items, self._panel,
+                                  self._taskFile, self._settings)
+        
+    @patterns.eventSource
+    def okInterior(self, event=None):
+        self._interior.ok(event=event)
+                
     def onItemRemoved(self, event):
         ''' The item we're editing or one of its ancestors has been removed. 
             Close the tab of the item involved and close the whole editor if 
             there are no tabs left. '''
         if not self:
             return # Prevent _wxPyDeadObject TypeError
-        pagesToCancel = [] # Collect the pages to cancel so we don't modify the 
-                           # book widget while we iterate over it
         for item in event.values():
-            pagesToCancel.extend([page for page in self \
-                                  if self.isPageDisplayingItemOrChildOfItem(page, item)])
-        self.cancelPages(pagesToCancel)
-        if len(list(self)) == 0:
-            self.cancel()
-            
-    def isPageDisplayingItemOrChildOfItem(self, page, item):
-        return item in [page.item] + page.item.ancestors()
+            if self._interior.isDisplayingItemOrChildOfItem(item):
+                self.cancel()
+                break            
 
 
 class TaskEditor(EditorWithCommand):
-    def addPage(self, theTask):
-        page = TaskEditBook(self._interior, theTask, self._taskFile, 
-                            self._settings)
-        self._interior.AddPage(page, theTask.subject())
-        
-
-class EffortEditor(EditorWithCommand):
-    def setFocusOnFirstEntry(self):
-        pass
-        
-    def addPages(self):
-        # Override this method to make sure we use the efforts, not the task
-        for effort in self._command.efforts:
-            self.addPage(effort)
-
-    def addPage(self, effort):
-        page = EffortEditBook(self._interior, effort, self, self._taskFile.efforts(),
-            self._taskFile.tasks(), self._settings)
-        self._interior.AddPage(page, effort.task().subject())
-
-    def isPageDisplayingItemOrChildOfItem(self, page, item):
-        if hasattr(item, 'setTask'):
-            return page.item == item # Regular effort
-        else:
-            return item.mayContain(page.item) # Composite effort
+    EditBookClass = TaskEditBook
 
 
 class CategoryEditor(EditorWithCommand):
-    def __init__(self, parent, command, settings, categories, taskFile, 
-                 *args, **kwargs):
-        super(CategoryEditor, self).__init__(parent, command, settings, categories, taskFile, 
-                                             *args, **kwargs)
-
-    def addPage(self, theCategory):
-        page = CategoryEditBook(self._interior, theCategory,
-                                self._settings, self._taskFile)
-        self._interior.AddPage(page, theCategory.subject())
+    EditBookClass = CategoryEditBook
 
 
 class NoteEditor(EditorWithCommand):
-    def addPages(self):
-        # Override this method to make sure we use the notes, not the note owner
-        for eachNote in self._command.notes:
-            self.addPage(eachNote)
-
-    def addPage(self, theNote):
-        page = NoteEditBook(self._interior, theNote, self._settings, 
-                            self._taskFile.categories(), self._taskFile)
-        self._interior.AddPage(page, theNote.subject())
+    EditBookClass = NoteEditBook
 
 
 class AttachmentEditor(EditorWithCommand):
-    def addPage(self, theAttachment):
-        page = AttachmentEditBook(self._interior, theAttachment, self._settings,
-                                  self._taskFile)
-        self._interior.AddPage(page, theAttachment.subject())
+    EditBookClass = AttachmentEditBook
+
+
+class EffortEditor(EditorWithCommand):
+    EditBookClass = EffortEditBook

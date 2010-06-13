@@ -666,6 +666,8 @@ class FileExportSelectionAsCSV(NeedsSelectionMixin, IOCommand, ViewerCommand):
 
 
 class FileExportAsICalendarBase(IOCommand, ViewerCommand):
+    selectionOnly = False
+    
     def __init__(self, *args, **kwargs):
         super(FileExportAsICalendarBase, self).__init__(menuText=self.menuText,
                                                         helpText=self.helpText,
@@ -685,7 +687,6 @@ class FileExportAsICalendarBase(IOCommand, ViewerCommand):
 
 
 class FileExportAsICalendar(NeedsTaskOrEffortViewerMixin, FileExportAsICalendarBase):
-    selectionOnly = False
     menuText = _('Export as &iCalendar...')
     helpText = _('Export the items in the current viewer in iCalendar format')
 

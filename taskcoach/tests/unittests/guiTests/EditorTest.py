@@ -27,14 +27,12 @@ class EditorWithCommandUnderTest(gui.dialog.editor.EditorWithCommand):
         super(EditorWithCommandUnderTest, self).__init__(*args, **kwargs)
         self.cancelCalled = False
         
-    def addPage(self, item):
-        page = wx.Panel(self)
-        page.item = item
-        self._interior.AddPage(page, 'Title')
-        
-    def setFocusOnFirstEntry(self):
-        pass
-    
+    def createInterior(self):
+        interior = wx.Panel(self)
+        interior.setFocus = lambda columnName: None
+        interior.isDisplayingItemOrChildOfItem = lambda item: item == self._command.items[0]
+        return interior
+            
     def cancel(self, *args, **kwargs):
         super(EditorWithCommandUnderTest, self).cancel(*args, **kwargs)
         self.cancelCalled = True
@@ -56,7 +54,7 @@ class EditorTestCase(test.wxTestCase):
                                           self.taskFile, raiseDialog=False)
         
     def createCommand(self):
-        sortedTasks = task.sorter.Sorter(self.taskList)
+        sortedTasks = task.sorter.Sorter(self.taskList)[:]
         return command.EditTaskCommand(sortedTasks, sortedTasks)
 
     def testCloseEditorWhenItemIsDeleted(self):
