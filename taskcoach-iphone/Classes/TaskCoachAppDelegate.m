@@ -57,10 +57,8 @@ NSManagedObjectContext *getManagedObjectContext(void)
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-	UIViewController *ctrl = [mainController topViewController];
-	
-	if ([ctrl respondsToSelector:@selector(willTerminate)])
-		[ctrl performSelector:@selector(willTerminate)];
+	if ([mainController respondsToSelector:@selector(willTerminate)])
+		[mainController performSelector:@selector(willTerminate)];
 	
 	
 	NSArray *cachesPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);

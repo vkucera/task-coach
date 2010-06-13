@@ -17,7 +17,7 @@
     NSPersistentStoreCoordinator *persistentStoreCoordinator;
 	
     UIWindow *window;
-	UINavigationController *mainController;
+	UIViewController *mainController;
 }
 
 @property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
@@ -27,7 +27,7 @@
 @property (nonatomic, readonly) NSString *applicationDocumentsDirectory;
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
-@property (nonatomic, retain) IBOutlet UINavigationController *mainController;
+@property (nonatomic, retain) IBOutlet UIViewController *mainController;
 
 @end
 
