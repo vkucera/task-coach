@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TapkuLibrary/ODCalendarDayEventView.h>
+#import "ODCalendarDayEventView.h"
 
 @class CDTask;
 

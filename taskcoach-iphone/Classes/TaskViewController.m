@@ -6,8 +6,8 @@
 //  Copyright 2009 Jérôme Laheurte. See COPYING for details.
 //
 
-#import <TapkuLibrary/ODCalendarDayTimelineView.h>
-#import <TapkuLibrary/NSDate+TKCategory.h>
+#import "ODCalendarDayTimelineView.h"
+#import "NSDate+TKCategory.h"
 
 #import "TaskCoachAppDelegate.h"
 

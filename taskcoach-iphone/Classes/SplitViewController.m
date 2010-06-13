@@ -23,8 +23,6 @@
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
-
-	self.delegate = self;
 }
 
 - (void)viewDidUnload
@@ -38,26 +36,6 @@
 	[self viewDidUnload];
 
 	[super dealloc];
-}
-
-#pragma mark UISplitViewControllerDelegate
-
-- (void)splitViewController:(UISplitViewController*)svc
-	 willHideViewController:(UIViewController *)aViewController
-		  withBarButtonItem:(UIBarButtonItem*)barButtonItem
-	   forPopoverController:(UIPopoverController*)pc
-{
-	barButtonItem.title = @"Categories";
-	// navCtrl.topViewController.navigationItem.rightBarButtonItem = barButtonItem;
-	// catCtrl.popCtrl = pc;
-}
-
-- (void)splitViewController:(UISplitViewController*)svc
-	 willShowViewController:(UIViewController *)aViewController
-  invalidatingBarButtonItem:(UIBarButtonItem *)button
-{
-	// navCtrl.topViewController.navigationItem.rightBarButtonItem = nil;
-	// catCtrl.popCtrl = nil;
 }
 
 @end

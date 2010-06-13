@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <TapkuLibrary/ODCalendarDayTimelineView.h>
+
+#import "ODCalendarDayTimelineView.h"
 
 #import "PositionStore.h"
 

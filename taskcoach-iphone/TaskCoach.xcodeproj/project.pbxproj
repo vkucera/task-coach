@@ -74,7 +74,6 @@
 		A64603AA0F2234D900FC71AD /* TaskCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A64603A90F2234D900FC71AD /* TaskCell.m */; };
 		A647F39011B26802008D0FB0 /* CDDomainObject+Addons.m in Sources */ = {isa = PBXBuildFile; fileRef = A647F38F11B26802008D0FB0 /* CDDomainObject+Addons.m */; };
 		A65D1B1E119D379300F0F5C3 /* BUILD.txt in Resources */ = {isa = PBXBuildFile; fileRef = A65D1B1D119D379300F0F5C3 /* BUILD.txt */; };
-		A65D1B31119D37C300F0F5C3 /* libTapkuLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A65D1B2E119D37B200F0F5C3 /* libTapkuLibrary.a */; };
 		A65D1B46119D382000F0F5C3 /* TapkuLibrary.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A65D1B45119D382000F0F5C3 /* TapkuLibrary.bundle */; };
 		A65D1B7F119D383200F0F5C3 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A65D1B7E119D383200F0F5C3 /* MapKit.framework */; };
 		A65D1B81119D383200F0F5C3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A65D1B80119D383200F0F5C3 /* QuartzCore.framework */; };
@@ -128,6 +127,11 @@
 		A6C3CEFA10E76CB600483057 /* ButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6C3CEF910E76CB600483057 /* ButtonCell.xib */; };
 		A6C858EB11C4B2BE0016C027 /* StringChoiceAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C858EA11C4B2BE0016C027 /* StringChoiceAlert.m */; };
 		A6C9843E0F2B77C40088A73F /* GUIDState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C9843D0F2B77C40088A73F /* GUIDState.m */; };
+		A6CA5D4A11C4F1C7009CA6A9 /* ODCalendarDayTimelineView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CA5D4911C4F1C7009CA6A9 /* ODCalendarDayTimelineView.m */; };
+		A6CA5D4F11C4F1DF009CA6A9 /* ODCalendarDayEventView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CA5D4E11C4F1DF009CA6A9 /* ODCalendarDayEventView.m */; };
+		A6CA5D5411C4F21A009CA6A9 /* ODCalendarDayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CA5D5311C4F21A009CA6A9 /* ODCalendarDayViewController.m */; };
+		A6CA5D6311C4F2AF009CA6A9 /* NSDate+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CA5D6211C4F2AF009CA6A9 /* NSDate+TKCategory.m */; };
+		A6CA5D9611C4F387009CA6A9 /* TapDetectingView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CA5D9511C4F387009CA6A9 /* TapDetectingView.m */; };
 		A6CFAE5511B2534100044876 /* TaskCoachCD.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = A6CFAE5411B2534100044876 /* TaskCoachCD.xcdatamodel */; };
 		A6CFAE6C11B257B600044876 /* CDCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CFAE6311B257B600044876 /* CDCategory.m */; };
 		A6CFAE6D11B257B600044876 /* CDDomainObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CFAE6511B257B600044876 /* CDDomainObject.m */; };
@@ -163,30 +167,6 @@
 		A6F8E4940F2C7574007D929C /* EndState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F8E4930F2C7574007D929C /* EndState.m */; };
 		A6FA97DC0F2B2E1C00505D87 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6FA97DB0F2B2E1C00505D87 /* MainViewController.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		A65D1B2D119D37B200F0F5C3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A65D1B23119D37B200F0F5C3 /* TapkuLibrary.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC07E0554694100DB518D;
-			remoteInfo = TapkuLibrary;
-		};
-		A65D1B2F119D37B200F0F5C3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A65D1B23119D37B200F0F5C3 /* TapkuLibrary.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 3B6EDD521154791900E454DA;
-			remoteInfo = TapkuLibraryExtra;
-		};
-		A65D1B42119D37DC00F0F5C3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A65D1B23119D37B200F0F5C3 /* TapkuLibrary.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC07D0554694100DB518D;
-			remoteInfo = TapkuLibrary;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -294,7 +274,6 @@
 		A64F4144117B01CB00E60105 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/MainWindow.strings; sourceTree = "<group>"; };
 		A64F4146117B01E900E60105 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A65D1B1D119D379300F0F5C3 /* BUILD.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = BUILD.txt; sourceTree = "<group>"; };
-		A65D1B23119D37B200F0F5C3 /* TapkuLibrary.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TapkuLibrary.xcodeproj; path = Classes/Thirdparty/tapkulibrary/src/TapkuLibrary.xcodeproj; sourceTree = SOURCE_ROOT; };
 		A65D1B45119D382000F0F5C3 /* TapkuLibrary.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = TapkuLibrary.bundle; path = Classes/Thirdparty/tapkulibrary/src/TapkuLibrary.bundle; sourceTree = SOURCE_ROOT; };
 		A65D1B7E119D383200F0F5C3 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		A65D1B80119D383200F0F5C3 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -408,6 +387,16 @@
 		A6C858EA11C4B2BE0016C027 /* StringChoiceAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringChoiceAlert.m; sourceTree = "<group>"; };
 		A6C9843C0F2B77C40088A73F /* GUIDState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIDState.h; path = Synchronization/GUIDState.h; sourceTree = "<group>"; };
 		A6C9843D0F2B77C40088A73F /* GUIDState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GUIDState.m; path = Synchronization/GUIDState.m; sourceTree = "<group>"; };
+		A6CA5D4811C4F1C7009CA6A9 /* ODCalendarDayTimelineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODCalendarDayTimelineView.h; path = Thirdparty/tapkulibrary/src/TapkuLibrary/ODCalendarDayTimelineView.h; sourceTree = "<group>"; };
+		A6CA5D4911C4F1C7009CA6A9 /* ODCalendarDayTimelineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ODCalendarDayTimelineView.m; path = Thirdparty/tapkulibrary/src/TapkuLibrary/ODCalendarDayTimelineView.m; sourceTree = "<group>"; };
+		A6CA5D4D11C4F1DF009CA6A9 /* ODCalendarDayEventView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODCalendarDayEventView.h; path = Thirdparty/tapkulibrary/src/TapkuLibrary/ODCalendarDayEventView.h; sourceTree = "<group>"; };
+		A6CA5D4E11C4F1DF009CA6A9 /* ODCalendarDayEventView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ODCalendarDayEventView.m; path = Thirdparty/tapkulibrary/src/TapkuLibrary/ODCalendarDayEventView.m; sourceTree = "<group>"; };
+		A6CA5D5211C4F21A009CA6A9 /* ODCalendarDayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODCalendarDayViewController.h; path = Thirdparty/tapkulibrary/src/TapkuLibrary/ODCalendarDayViewController.h; sourceTree = "<group>"; };
+		A6CA5D5311C4F21A009CA6A9 /* ODCalendarDayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ODCalendarDayViewController.m; path = Thirdparty/tapkulibrary/src/TapkuLibrary/ODCalendarDayViewController.m; sourceTree = "<group>"; };
+		A6CA5D6111C4F2AF009CA6A9 /* NSDate+TKCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+TKCategory.h"; path = "Thirdparty/tapkulibrary/src/TapkuLibrary/NSDate+TKCategory.h"; sourceTree = "<group>"; };
+		A6CA5D6211C4F2AF009CA6A9 /* NSDate+TKCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate+TKCategory.m"; path = "Thirdparty/tapkulibrary/src/TapkuLibrary/NSDate+TKCategory.m"; sourceTree = "<group>"; };
+		A6CA5D9411C4F387009CA6A9 /* TapDetectingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TapDetectingView.h; path = Thirdparty/tapkulibrary/src/TapkuLibrary/TapDetectingView.h; sourceTree = "<group>"; };
+		A6CA5D9511C4F387009CA6A9 /* TapDetectingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TapDetectingView.m; path = Thirdparty/tapkulibrary/src/TapkuLibrary/TapDetectingView.m; sourceTree = "<group>"; };
 		A6CE4A8C11312557003A454F /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A6CE4A991131256F003A454F /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ru; path = ru.lproj/DatePickerView.xib; sourceTree = "<group>"; };
 		A6CE4A9A1131256F003A454F /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ru; path = ru.lproj/MainWindow.xib; sourceTree = "<group>"; };
@@ -511,7 +500,6 @@
 				288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */,
 				A68EDEF30F1E222700F51FF2 /* libsqlite3.0.dylib in Frameworks */,
 				A6DDED1B0F46C5D30047AEF5 /* Security.framework in Frameworks */,
-				A65D1B31119D37C300F0F5C3 /* libTapkuLibrary.a in Frameworks */,
 				A65D1B7F119D383200F0F5C3 /* MapKit.framework in Frameworks */,
 				A65D1B81119D383200F0F5C3 /* QuartzCore.framework in Frameworks */,
 				A6CFAE9511B25A5300044876 /* CoreData.framework in Frameworks */,
@@ -606,7 +594,6 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A65D1B23119D37B200F0F5C3 /* TapkuLibrary.xcodeproj */,
 				A6DDED1A0F46C5D30047AEF5 /* Security.framework */,
 				A68EDEF20F1E222700F51FF2 /* libsqlite3.0.dylib */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
@@ -641,6 +628,7 @@
 		A61F544A108CB56200BDFD6D /* Thirdparty */ = {
 			isa = PBXGroup;
 			children = (
+				A6CA5D4511C4F190009CA6A9 /* TapkuLibrary */,
 				A6E7C07E1114418D00B230E2 /* AlertPrompt.h */,
 				A6E7C07F1114418D00B230E2 /* AlertPrompt.m */,
 				A61F544B108CB57A00BDFD6D /* BadgeItem.h */,
@@ -714,15 +702,6 @@
 				A639811211C3DEE100B43940 /* whiteButton.png */,
 			);
 			name = Images;
-			sourceTree = "<group>";
-		};
-		A65D1B29119D37B200F0F5C3 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				A65D1B2E119D37B200F0F5C3 /* libTapkuLibrary.a */,
-				A65D1B30119D37B200F0F5C3 /* libTapkuLibraryExtra.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		A6664D3B0F2B417B00638C68 /* Synchronization */ = {
@@ -895,6 +874,23 @@
 			name = Tasks;
 			sourceTree = "<group>";
 		};
+		A6CA5D4511C4F190009CA6A9 /* TapkuLibrary */ = {
+			isa = PBXGroup;
+			children = (
+				A6CA5D9411C4F387009CA6A9 /* TapDetectingView.h */,
+				A6CA5D9511C4F387009CA6A9 /* TapDetectingView.m */,
+				A6CA5D6111C4F2AF009CA6A9 /* NSDate+TKCategory.h */,
+				A6CA5D6211C4F2AF009CA6A9 /* NSDate+TKCategory.m */,
+				A6CA5D5211C4F21A009CA6A9 /* ODCalendarDayViewController.h */,
+				A6CA5D5311C4F21A009CA6A9 /* ODCalendarDayViewController.m */,
+				A6CA5D4D11C4F1DF009CA6A9 /* ODCalendarDayEventView.h */,
+				A6CA5D4E11C4F1DF009CA6A9 /* ODCalendarDayEventView.m */,
+				A6CA5D4811C4F1C7009CA6A9 /* ODCalendarDayTimelineView.h */,
+				A6CA5D4911C4F1C7009CA6A9 /* ODCalendarDayTimelineView.m */,
+			);
+			name = TapkuLibrary;
+			sourceTree = "<group>";
+		};
 		A6CFAE5B11B2574C00044876 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
@@ -979,7 +975,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				A65D1B43119D37DC00F0F5C3 /* PBXTargetDependency */,
 			);
 			name = TaskCoach;
 			productName = TaskCoach;
@@ -1012,35 +1007,12 @@
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = A65D1B29119D37B200F0F5C3 /* Products */;
-					ProjectRef = A65D1B23119D37B200F0F5C3 /* TapkuLibrary.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				1D6058900D05DD3D006BFB54 /* TaskCoach */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		A65D1B2E119D37B200F0F5C3 /* libTapkuLibrary.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libTapkuLibrary.a;
-			remoteRef = A65D1B2D119D37B200F0F5C3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		A65D1B30119D37B200F0F5C3 /* libTapkuLibraryExtra.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libTapkuLibraryExtra.a;
-			remoteRef = A65D1B2F119D37B200F0F5C3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		1D60588D0D05DD3D006BFB54 /* Resources */ = {
@@ -1203,18 +1175,15 @@
 				A66C186711C385470081C175 /* TaskDetailsRecurrencePeriodPicker.m in Sources */,
 				A6C858EB11C4B2BE0016C027 /* StringChoiceAlert.m in Sources */,
 				A68B5E1A11C4B7C8009AE2F1 /* SplitViewController.m in Sources */,
+				A6CA5D4A11C4F1C7009CA6A9 /* ODCalendarDayTimelineView.m in Sources */,
+				A6CA5D4F11C4F1DF009CA6A9 /* ODCalendarDayEventView.m in Sources */,
+				A6CA5D5411C4F21A009CA6A9 /* ODCalendarDayViewController.m in Sources */,
+				A6CA5D6311C4F2AF009CA6A9 /* NSDate+TKCategory.m in Sources */,
+				A6CA5D9611C4F387009CA6A9 /* TapDetectingView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		A65D1B43119D37DC00F0F5C3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = TapkuLibrary;
-			targetProxy = A65D1B42119D37DC00F0F5C3 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		A668B4E111C3B0820048BB89 /* TaskDetailsRecurrencePeriodPicker.strings */ = {
@@ -1385,6 +1354,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TaskCoach_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = TaskCoach;
 				SDKROOT = iphoneos3.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1400,6 +1370,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TaskCoach_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = TaskCoach;
 				SDKROOT = iphoneos3.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1409,20 +1380,18 @@
 		A62C520011302175000B83E4 /* Beta1v2 */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jérôme Laheurte";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = Classes/ThirdParty/tapkulibrary/src;
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1.3;
-				OTHER_LDFLAGS = (
-					"-all_load",
-					"-ObjC",
-				);
+				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E215CC17-8986-4DBF-86A8-6B47584D0129";
-				SDKROOT = iphoneos3.1.3;
+				SDKROOT = iphoneos3.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Beta1v2;
 		};
@@ -1436,6 +1405,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TaskCoach_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = TaskCoach;
 				SDKROOT = iphoneos3.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1445,20 +1415,18 @@
 		A634EFF80F88B4D400DFE235 /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jérôme Laheurte";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = Classes/ThirdParty/tapkulibrary/src;
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1.3;
-				OTHER_LDFLAGS = (
-					"-all_load",
-					"-ObjC",
-				);
+				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "62C3D3F1-227F-4F5F-A667-6B910FE5ABB1";
-				SDKROOT = iphoneos3.1.3;
+				SDKROOT = iphoneos3.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Distribution;
 		};
@@ -1473,6 +1441,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TaskCoach_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = TaskCoach;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos3.2;
@@ -1483,21 +1452,19 @@
 		A6C79896102888220029AA87 /* Release Frank */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = Classes/ThirdParty/tapkulibrary/src;
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1.3;
-				OTHER_LDFLAGS = (
-					"-all_load",
-					"-ObjC",
-				);
+				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos3.1.3;
+				SDKROOT = iphoneos3.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Release Frank";
 		};
@@ -1510,6 +1477,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TaskCoach_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = TaskCoach;
 				SDKROOT = iphoneos3.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1519,43 +1487,40 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_VERSION = 4.2;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = Classes/ThirdParty/tapkulibrary/src;
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1.3;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"-all_load",
-					"-ObjC",
-				);
+				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = NO;
-				SDKROOT = iphoneos3.1.3;
+				SDKROOT = iphoneos3.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = Classes/ThirdParty/tapkulibrary/src;
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1.3;
-				OTHER_LDFLAGS = (
-					"-all_load",
-					"-ObjC",
-				);
+				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos3.1.3;
+				SDKROOT = iphoneos3.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
