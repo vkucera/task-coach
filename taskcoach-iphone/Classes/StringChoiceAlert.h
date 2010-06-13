@@ -16,8 +16,6 @@
 	SEL action;
 }
 
-@property (nonatomic, retain) IBOutlet UITextField *textField;
-
 - initWithPlaceholder:(NSString *)placeholder text:(NSString *)text target:(id)target action:(SEL)action;
 
 @end

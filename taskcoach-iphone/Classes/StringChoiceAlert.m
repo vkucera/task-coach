@@ -11,8 +11,6 @@
 
 @implementation StringChoiceAlert
 
-@synthesize textField;
-
 - initWithPlaceholder:(NSString *)thePlaceholder text:(NSString *)theText target:(id)theTarget action:(SEL)theAction
 {
 	if (self = [super initWithTitle:@"" message:@"\n\n" delegate:self cancelButtonTitle:_("Cancel") okButtonTitle:_("OK")])

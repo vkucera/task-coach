@@ -54,7 +54,6 @@
 					<int key="IBUIStatusBarStyle">2</int>
 				</object>
 				<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-				<bool key="IBUIResizesToFullScreen">YES</bool>
 			</object>
 			<object class="IBUISplitViewController" id="515921461">
 				<reference key="IBUIToolbarItems" ref="0"/>
