@@ -25,11 +25,29 @@
 	if (self = [super initWithCategoryController:controller edit:edit])
 	{
 		category = [theCategory retain];
-
-		[self populate];
 	}
 
 	return self;
+}
+
+- (void)setCategory:(CDCategory *)theCategory
+{
+	// This is only used on the iPad
+
+	[self.navigationController popToRootViewControllerAnimated:YES];
+
+	[category release];
+	category = [theCategory retain];
+
+	if (category)
+		self.navigationItem.title = category.name;
+	else
+		self.navigationItem.title = _("All");
+
+	[self populate];
+
+	// WTF? This doesn't work!
+	[self.tableView reloadData];
 }
 
 - (void)dealloc
@@ -46,6 +64,13 @@
 		self.navigationItem.title = category.name;
 	else
 		self.navigationItem.title = _("All");
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+
+	[self populate];
 }
 
 - (NSPredicate *)predicate

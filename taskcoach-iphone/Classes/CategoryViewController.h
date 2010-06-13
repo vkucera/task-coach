@@ -15,6 +15,7 @@
 
 @class NavigationController;
 @class CDCategory;
+@class CategoryTaskViewController;
 
 @interface CategoryViewController : BaseCategoryViewController <BonjourBrowserDelegate, RestorableController>
 {
@@ -26,11 +27,14 @@
 	NSInteger totalCount;
 
 	NSTimer *minuteTimer;
+
+	CategoryTaskViewController *taskCtrl;
 }
 
 @property (nonatomic, assign) IBOutlet NavigationController *navigationController;
 @property (nonatomic, assign) IBOutlet UIBarButtonItem *syncButton;
 @property (nonatomic, assign) IBOutlet UIBarButtonItem *fileButton;
+@property (nonatomic, assign) IBOutlet CategoryTaskViewController *taskCtrl;
 
 - (IBAction)onChooseFile:(UIBarButtonItem *)button;
 - (IBAction)onAddCategory:(UIBarButtonItem *)button;

@@ -11,13 +11,16 @@
 #import <UIKit/UIKit.h>
 
 #import "CategoryViewController.h"
+#import "CategoryTaskViewController.h"
 
 @interface SplitViewController : UISplitViewController <UISplitViewControllerDelegate>
 {
 	CategoryViewController *categoryCtrl;
+	CategoryTaskViewController *taskCtrl;
 }
 
 @property (nonatomic, retain) IBOutlet CategoryViewController *categoryCtrl;
+@property (nonatomic, retain) IBOutlet CategoryTaskViewController *taskCtrl;
 
 @end
 

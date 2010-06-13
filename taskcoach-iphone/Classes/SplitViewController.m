@@ -13,6 +13,7 @@
 @implementation SplitViewController
 
 @synthesize categoryCtrl;
+@synthesize taskCtrl;
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -29,6 +30,7 @@
 - (void)viewDidUnload
 {
 	self.categoryCtrl = nil;
+	self.taskCtrl = nil;
 }
 
 - (void)dealloc

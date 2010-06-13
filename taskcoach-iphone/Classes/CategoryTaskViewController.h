@@ -16,4 +16,6 @@
 
 - initWithCategoryController:(CategoryViewController *)controller edit:(BOOL)edit category:(CDCategory *)category;
 
+- (void)setCategory:(CDCategory *)category;
+
 @end

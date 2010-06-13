@@ -33,6 +33,7 @@
 @synthesize navigationController;
 @synthesize syncButton;
 @synthesize fileButton;
+@synthesize taskCtrl;
 
 - (void)loadCategories
 {
@@ -375,9 +376,10 @@
 	}
 	else
 	{
+		CDCategory *category = (indexPath.row == 0) ? nil : [categories objectAtIndex:indexPath.row - 1];
+
 		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 		{
-			CDCategory *category = (indexPath.row == 0) ? nil : [categories objectAtIndex:indexPath.row - 1];
 			TaskViewController *ctrl = [[CategoryTaskViewController alloc] initWithCategoryController:self edit:NO category:category];;
 			[[PositionStore instance] push:self indexPath:indexPath type:TYPE_DETAILS searchWord:nil];
 	
@@ -386,8 +388,8 @@
 		}
 		else
 		{
-			// XXXTODO: iPad
 			[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+			[taskCtrl setCategory:category];
 		}
 	}
 }
@@ -409,7 +411,7 @@
 			[alert release];
 		}
 
-		[self.tableView reloadData]; // XXXFIXME: is this necessary ?
+		[self.tableView reloadData];
 	}
 
 	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];

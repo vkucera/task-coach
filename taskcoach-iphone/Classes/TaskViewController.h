@@ -42,6 +42,7 @@
 @property (nonatomic, retain) IBOutlet ODCalendarDayTimelineView *calendarView;
 @property (nonatomic, retain) IBOutlet UISearchBar *calendarSearch;
 @property (nonatomic, retain) IBOutlet UIToolbar *toolbar;
+@property (nonatomic, assign) IBOutlet CategoryViewController *categoryController; // for iPad
 
 - (IBAction)onAddTask:(UIBarButtonItem *)button;
 - (IBAction)onSync:(UIBarButtonItem *)button;

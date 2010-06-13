@@ -33,6 +33,8 @@
 
 #import "CalendarTaskView.h"
 
+#define ADJUSTSECTION (self.editing ? 2 : 1)
+
 static void deleteTask(CDTask *task)
 {
 	for (CDTask *child in [task children])
@@ -52,6 +54,7 @@ static void deleteTask(CDTask *task)
 @synthesize calendarView;
 @synthesize calendarSearch;
 @synthesize toolbar;
+@synthesize categoryController;
 
 - (UITableView *)tableView
 {
@@ -124,6 +127,22 @@ static void deleteTask(CDTask *task)
 			}
 		}
 	}
+}
+
+- initWithCoder:(NSCoder *)coder
+{
+	if (self = [super initWithCoder:coder])
+	{
+		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+		{
+			// XXXTMP; on the iPad the search bar should be in the toolbar
+			searchCell = [[CellFactory cellFactory] createSearchCell];
+			searchCell.searchBar.placeholder = _("Search tasks...");
+			searchCell.searchBar.delegate = self;
+		}
+	}
+
+	return self;
 }
 
 - initWithCategoryController:(CategoryViewController *)controller edit:(BOOL)edit
@@ -206,12 +225,18 @@ static void deleteTask(CDTask *task)
 
 - (void)viewDidLoad
 {
-	self.editing = shouldEdit;
+	if (self.editing != shouldEdit)
+		self.editing = shouldEdit;
+
 	self.calendarView.delegate = self;
 	self.calendarView.scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
 	self.calendarView.timelineView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
 	self.calendarSearch.placeholder = _("Search tasks...");
 	self.calendarSearch.text = searchCell.searchBar.text;
+	
+	NSInteger buttonIndex = 0;
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+		buttonIndex = 1;
 
 	if ([Configuration configuration].viewStyle == STYLE_TABLE)
 	{
@@ -220,7 +245,7 @@ static void deleteTask(CDTask *task)
 		self.calendarView.hidden = YES;
 		self.calendarSearch.hidden = YES;
 		NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
-		[items replaceObjectAtIndex:0 withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
+		[items replaceObjectAtIndex:buttonIndex withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
 		self.toolbar.items = items;
 	}
 	else
@@ -231,7 +256,7 @@ static void deleteTask(CDTask *task)
 		self.calendarSearch.hidden = NO;
 
 		NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
-		[items replaceObjectAtIndex:0 withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
+		[items replaceObjectAtIndex:buttonIndex withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
 		self.toolbar.items = items;
 	}
 
@@ -251,6 +276,7 @@ static void deleteTask(CDTask *task)
 	self.calendarView = nil;
 	self.calendarSearch = nil;
 	self.toolbar = nil;
+
 	[results release];
 	results = nil;
 
@@ -261,13 +287,30 @@ static void deleteTask(CDTask *task)
 
 - (void)onChangeGrouping:(UIBarButtonItem *)button
 {
-	UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:_("Grouping") delegate:self cancelButtonTitle:_("Cancel") destructiveButtonTitle:nil otherButtonTitles:nil];
+	UIActionSheet *sheet;
+	
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+		sheet = [[UIActionSheet alloc] initWithTitle:_("Grouping") delegate:self cancelButtonTitle:_("Cancel") destructiveButtonTitle:nil otherButtonTitles:nil];
+	else
+		sheet = [[UIActionSheet alloc] initWithTitle:_("Grouping") delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
+
 	[sheet addButtonWithTitle:_("Status")];
 	[sheet addButtonWithTitle:_("Priority")];
 	[sheet addButtonWithTitle:_("Start date")];
 	[sheet addButtonWithTitle:_("Due date")];
 
-	[sheet showFromToolbar:self.toolbar];
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+		[sheet showFromToolbar:self.toolbar];
+	else
+	{
+		// I don't want to use a popover controller... Isn't there a method for determining
+		// a bar item's rect ?
+		CGRect rect = toolbar.frame;
+		rect.origin.x = rect.origin.x + rect.size.width - 80;
+		rect.size.width = 20;
+		[sheet showFromRect:rect inView:self.view animated:YES];
+	}
+
 	[sheet release];
 }
 
@@ -340,9 +383,7 @@ static void deleteTask(CDTask *task)
 		   atIndex:(NSUInteger)sectionIndex
 	 forChangeType:(NSFetchedResultsChangeType)type
 {
-	sectionIndex++;
-	if (self.editing)
-		sectionIndex++;
+	sectionIndex = sectionIndex + ADJUSTSECTION;
 
     switch(type)
 	{
@@ -371,8 +412,8 @@ static void deleteTask(CDTask *task)
 {
     UITableView *tableView = self.tableView;
 
-	indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section + (self.editing ? 2 : 1)];
-	newIndexPath = [NSIndexPath indexPathForRow:newIndexPath.row inSection:newIndexPath.section + (self.editing ? 2 : 1)];
+	indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section + ADJUSTSECTION];
+	newIndexPath = [NSIndexPath indexPathForRow:newIndexPath.row inSection:newIndexPath.section + ADJUSTSECTION];
 	
     switch(type)
 	{
@@ -500,7 +541,7 @@ static void deleteTask(CDTask *task)
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-	return [[results sections] count] + (self.editing ? 2 : 1);
+	return [[results sections] count] + ADJUSTSECTION;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -513,7 +554,7 @@ static void deleteTask(CDTask *task)
 
 	if ([Configuration configuration].taskGrouping == GROUP_STATUS)
 	{
-		switch ([[[[results sections] objectAtIndex:section - (self.editing ? 2 : 1)] name] integerValue])
+		switch ([[[[results sections] objectAtIndex:section - ADJUSTSECTION] name] integerValue])
 		{
 			case TASKSTATUS_OVERDUE:
 				return _("Overdue");
@@ -526,7 +567,7 @@ static void deleteTask(CDTask *task)
 		}
 	}
 
-	return [[[results sections] objectAtIndex:section - (self.editing ? 2 : 1)] name];
+	return [[[results sections] objectAtIndex:section - ADJUSTSECTION] name];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -538,7 +579,7 @@ static void deleteTask(CDTask *task)
 		return 1; // Search cell
 
 	if ([[results sections] count])
-		return [[[results sections] objectAtIndex:section - (self.editing ? 2 : 1)] numberOfObjects];
+		return [[[results sections] objectAtIndex:section - ADJUSTSECTION] numberOfObjects];
 
 	return 0;
 }
@@ -575,7 +616,7 @@ static void deleteTask(CDTask *task)
 		// must enforce it...
 		taskCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
-		CDTask *task = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - (self.editing ? 2 : 1)]];
+		CDTask *task = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - ADJUSTSECTION]];
 		[taskCell setTask:task target:self action:@selector(onToggleTaskCompletion:)];
 
 		cell = (UITableViewCell *)taskCell;
@@ -622,7 +663,7 @@ static void deleteTask(CDTask *task)
 	}
 	else
 	{
-		CDTask *task = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - (self.editing ? 2 : 1)]];
+		CDTask *task = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - ADJUSTSECTION]];
 		deleteTask(task);
 
 		NSError *error;
@@ -653,6 +694,10 @@ static void deleteTask(CDTask *task)
 	[UIView beginAnimations:@"SwitchStyleAnimation" context:nil];
 	[UIView setAnimationDuration:1.0];
 	
+	NSInteger buttonIndex = 0;
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+		buttonIndex = 1;
+	
 	if (self.tableView.hidden)
 	{
 		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.view cache:YES];
@@ -664,7 +709,7 @@ static void deleteTask(CDTask *task)
 		self.navigationItem.rightBarButtonItem = [self editButtonItem];
 
 		NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
-		[items replaceObjectAtIndex:0 withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
+		[items replaceObjectAtIndex:buttonIndex withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
 		self.toolbar.items = items;
 		
 		for (NSInteger i = 1; i < [self.navigationController.viewControllers count] - 1; ++i)
@@ -676,7 +721,7 @@ static void deleteTask(CDTask *task)
 			ctrl.navigationItem.rightBarButtonItem = [ctrl editButtonItem];
 
 			NSMutableArray *items = [NSMutableArray arrayWithArray:ctrl.toolbar.items];
-			[items replaceObjectAtIndex:0 withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStyleBordered target:ctrl action:@selector(onSwitch:)] autorelease]];
+			[items replaceObjectAtIndex:buttonIndex withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStyleBordered target:ctrl action:@selector(onSwitch:)] autorelease]];
 			ctrl.toolbar.items = items;
 		}
 
@@ -694,7 +739,7 @@ static void deleteTask(CDTask *task)
 		self.navigationItem.rightBarButtonItem = nil;
 		
 		NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
-		[items replaceObjectAtIndex:0 withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
+		[items replaceObjectAtIndex:buttonIndex withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
 		self.toolbar.items = items;
 		
 		for (NSInteger i = 1; i < [self.navigationController.viewControllers count] - 1; ++i)
@@ -706,7 +751,7 @@ static void deleteTask(CDTask *task)
 			ctrl.navigationItem.rightBarButtonItem = nil;
 			
 			NSMutableArray *items = [NSMutableArray arrayWithArray:ctrl.toolbar.items];
-			[items replaceObjectAtIndex:0 withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStyleBordered target:ctrl action:@selector(onSwitch:)] autorelease]];
+			[items replaceObjectAtIndex:buttonIndex withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStyleBordered target:ctrl action:@selector(onSwitch:)] autorelease]];
 			ctrl.toolbar.items = items;
 		}
 		
@@ -734,18 +779,18 @@ static void deleteTask(CDTask *task)
 		return;
 	}
 
-	CDTask *task = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - (self.editing ? 2 : 1)]];
+	CDTask *task = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - ADJUSTSECTION]];
 	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task];
 	[self.navigationController pushViewController:ctrl animated:YES];
-	[[PositionStore instance] push:self indexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - (self.editing ? 2 : 1))] type:TYPE_DETAILS searchWord:searchCell.searchBar.text];
+	[[PositionStore instance] push:self indexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - ADJUSTSECTION)] type:TYPE_DETAILS searchWord:searchCell.searchBar.text];
 	[ctrl release];
 }
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
 {
-	CDTask *task = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - (self.editing ? 2 : 1)]];
+	CDTask *task = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - ADJUSTSECTION]];
 	ParentTaskViewController *ctrl = [[ParentTaskViewController alloc] initWithCategoryController:categoryController edit:self.editing parent:task];
-	[[PositionStore instance] push:self indexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - (self.editing ? 2 : 1))] type:TYPE_SUBTASK searchWord:searchCell.searchBar.text];
+	[[PositionStore instance] push:self indexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - ADJUSTSECTION)] type:TYPE_SUBTASK searchWord:searchCell.searchBar.text];
 	[self.navigationController pushViewController:ctrl animated:YES];
 	[ctrl release];
 }
@@ -846,13 +891,20 @@ static void deleteTask(CDTask *task)
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-	if (buttonIndex)
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 	{
-		[Configuration configuration].taskGrouping = buttonIndex - 1;
-		[[Configuration configuration] save];
-		[self populate];
-		[self.tableView reloadData];
+		if (buttonIndex >= 0)
+			[Configuration configuration].taskGrouping = buttonIndex;
 	}
+	else
+	{
+		if (buttonIndex > 0)
+			[Configuration configuration].taskGrouping = buttonIndex - 1;
+	}
+
+	[[Configuration configuration] save];
+	[self populate];
+	[self.tableView reloadData];
 }
 
 @end
