@@ -25,7 +25,6 @@ NSManagedObjectContext *getManagedObjectContext(void)
 
 @synthesize window;
 @synthesize mainController;
-@synthesize categoryCtrl;
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application
 {
@@ -37,71 +36,6 @@ NSManagedObjectContext *getManagedObjectContext(void)
 	_("Save");
 	_("Categories");
 	_("Sync");
-	
-	// Migrate old sqlite database
-	
-	NSString* filename = @"taskcoach.db";
-	NSArray *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	NSString *documentsDir = [documentPaths objectAtIndex:0];
-	NSString *databasePath = [documentsDir stringByAppendingPathComponent:filename];
-	
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	if ([fileManager fileExistsAtPath:databasePath])
-	{
-		@try
-		{
-			migrateOldDatabase(databasePath);
-			
-			NSError *error;
-			if (![fileManager removeItemAtPath:databasePath error:&error])
-			{
-				@throw [NSException exceptionWithName:@"DatabaseError" reason:[error localizedDescription] userInfo:nil];
-			}
-
-			[categoryCtrl loadCategories];
-		}
-		@catch (NSException * e)
-		{
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error")
-															message:[NSString stringWithFormat:_("Error migrating data: %@"), [e reason]]
-														   delegate:self
-												  cancelButtonTitle:_("OK")
-												  otherButtonTitles:nil];
-			[alert show];
-			[alert release];
-		}
-		
-	}
-	
-	[fileManager release];
-	
-	// Update date status for all objects
-	NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	[request setEntity:[NSEntityDescription entityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()]];
-	[request setPredicate:[NSPredicate predicateWithFormat:@"status != %d", STATUS_DELETED]];
-	
-	NSError *error;
-	NSArray *tasks = [getManagedObjectContext() executeFetchRequest:request error:&error];
-	if (tasks)
-	{
-		for (CDTask *task in tasks)
-			[task computeDateStatus];
-		
-		if (![getManagedObjectContext() save:&error])
-		{
-			NSLog(@"Error saving: %@", [error localizedDescription]);
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save tasks") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-			[alert show];
-			[alert release];
-		}
-	}
-	else
-	{
-		NSLog(@"Error fetching: %@", [error localizedDescription]);
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not load tasks") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-		[alert show];
-		[alert release];
-	}
 	
 	[window addSubview:mainController.view];
 	[window makeKeyAndVisible];
@@ -217,7 +151,69 @@ NSManagedObjectContext *getManagedObjectContext(void)
 	{
 		NSLog(@"Could not create store: %@", [error localizedDescription]);
     }    
-
+	
+	// Migrate old sqlite database
+	
+	NSString* filename = @"taskcoach.db";
+	NSArray *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	NSString *documentsDir = [documentPaths objectAtIndex:0];
+	NSString *databasePath = [documentsDir stringByAppendingPathComponent:filename];
+	
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	if ([fileManager fileExistsAtPath:databasePath])
+	{
+		@try
+		{
+			migrateOldDatabase(databasePath);
+			
+			NSError *error;
+			if (![fileManager removeItemAtPath:databasePath error:&error])
+			{
+				@throw [NSException exceptionWithName:@"DatabaseError" reason:[error localizedDescription] userInfo:nil];
+			}
+		}
+		@catch (NSException * e)
+		{
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error")
+															message:[NSString stringWithFormat:_("Error migrating data: %@"), [e reason]]
+														   delegate:self
+												  cancelButtonTitle:_("OK")
+												  otherButtonTitles:nil];
+			[alert show];
+			[alert release];
+		}
+		
+	}
+	
+	[fileManager release];
+	
+	// Update date status for all objects
+	NSFetchRequest *request = [[NSFetchRequest alloc] init];
+	[request setEntity:[NSEntityDescription entityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()]];
+	[request setPredicate:[NSPredicate predicateWithFormat:@"status != %d", STATUS_DELETED]];
+	
+	NSArray *tasks = [getManagedObjectContext() executeFetchRequest:request error:&error];
+	if (tasks)
+	{
+		for (CDTask *task in tasks)
+			[task computeDateStatus];
+		
+		if (![getManagedObjectContext() save:&error])
+		{
+			NSLog(@"Error saving: %@", [error localizedDescription]);
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save tasks") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+			[alert show];
+			[alert release];
+		}
+	}
+	else
+	{
+		NSLog(@"Error fetching: %@", [error localizedDescription]);
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not load tasks") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+		[alert show];
+		[alert release];
+	}
+	
     return persistentStoreCoordinator;
 }
 
