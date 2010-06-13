@@ -1,5 +1,5 @@
 //
-//  StringChoiceController.h
+//  StringChoiceAlert.h
 //  TaskCoach
 //
 //  Created by Jérôme Laheurte on 14/01/09.
@@ -8,14 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+#import "AlertPrompt.h"
 
-@interface StringChoiceController : UIViewController
+@interface StringChoiceAlert : AlertPrompt
 {
-	UITextField *textField;
-
-	NSString *placeholder;
-	NSString *text;
-
 	id target;
 	SEL action;
 }
@@ -23,7 +19,5 @@
 @property (nonatomic, retain) IBOutlet UITextField *textField;
 
 - initWithPlaceholder:(NSString *)placeholder text:(NSString *)text target:(id)target action:(SEL)action;
-
-- (IBAction)onCancel:(UIButton *)button;
 
 @end

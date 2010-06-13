@@ -9,7 +9,7 @@
 #import "TaskCoachAppDelegate.h"
 #import "NavigationController.h"
 #import "CategoryViewController.h"
-#import "StringChoiceController.h"
+#import "StringChoiceAlert.h"
 #import "CategoryTaskViewController.h"
 #import "ParentTaskViewController.h"
 #import "SyncViewController.h"
@@ -165,9 +165,9 @@
 - (IBAction)onAddCategory:(UIBarButtonItem *)button
 {
 	currentCategory = -1;
-	StringChoiceController *ctrl = [[StringChoiceController alloc] initWithPlaceholder:_("Enter category name") text:nil target:self action:@selector(onCategoryAdded:)];
-	[self.navigationController presentModalViewController:ctrl animated:YES];
-	[ctrl release];
+	StringChoiceAlert *alert = [[StringChoiceAlert alloc] initWithPlaceholder:_("Enter category name") text:nil target:self action:@selector(onCategoryAdded:)];
+	[alert show];
+	[alert release];
 }
 
 - (void)onCategoryAdded:(NSString *)name
@@ -325,9 +325,9 @@
 	{
 		currentCategory = indexPath.row / 2;
 
-		StringChoiceController *ctrl = [[StringChoiceController alloc] initWithPlaceholder:_("Enter category name") text:nil target:self action:@selector(onCategoryAdded:)];
-		[self.navigationController presentModalViewController:ctrl animated:YES];
-		[ctrl release];
+		StringChoiceAlert *alert = [[StringChoiceAlert alloc] initWithPlaceholder:_("Enter category name") text:nil target:self action:@selector(onCategoryAdded:)];
+		[alert release];
+		[alert release];
 	}
 }
 
@@ -353,17 +353,17 @@
 		{
 			currentCategory = indexPath.row / 2;
 			
-			StringChoiceController *ctrl = [[StringChoiceController alloc] initWithPlaceholder:_("Enter category name") text:nil target:self action:@selector(onCategoryAdded:)];
-			[self.navigationController presentModalViewController:ctrl animated:YES];
-			[ctrl release];
+			StringChoiceAlert *alert = [[StringChoiceAlert alloc] initWithPlaceholder:_("Enter category name") text:nil target:self action:@selector(onCategoryAdded:)];
+			[alert show];
+			[alert release];
 		}
 		else
 		{
 			currentCategory = indexPath.row / 2;
 
-			StringChoiceController *ctrl = [[StringChoiceController alloc] initWithPlaceholder:_("Enter category name") text:[(CDCategory *)[categories objectAtIndex:currentCategory] name] target:self action:@selector(onCategoryChanged:)];
-			[self.navigationController presentModalViewController:ctrl animated:YES];
-			[ctrl release];
+			StringChoiceAlert *alert = [[StringChoiceAlert alloc] initWithPlaceholder:_("Enter category name") text:[(CDCategory *)[categories objectAtIndex:currentCategory] name] target:self action:@selector(onCategoryChanged:)];
+			[alert show];
+			[alert release];
 		}
 	}
 	else
