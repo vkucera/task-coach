@@ -75,26 +75,33 @@
 {
 	[super viewDidLoad];
 
-	NSArray *cachesPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-	NSString *cachesDir = [cachesPaths objectAtIndex:0];
-	
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	if (![fileManager fileExistsAtPath:cachesDir])
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 	{
-		[fileManager createDirectoryAtPath:cachesDir attributes:nil];
+		NSArray *cachesPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+		NSString *cachesDir = [cachesPaths objectAtIndex:0];
+		
+		NSFileManager *fileManager = [NSFileManager defaultManager];
+		if (![fileManager fileExistsAtPath:cachesDir])
+		{
+			[fileManager createDirectoryAtPath:cachesDir attributes:nil];
+		}
+		
+		NSString *path = [cachesDir stringByAppendingPathComponent:@"positions.store.v4"];
+		
+		if ([fileManager fileExistsAtPath:path])
+		{
+			PositionStore *store = [[PositionStore alloc] initWithFile:[cachesDir stringByAppendingPathComponent:@"positions.store.v4"]];
+			[store restore:self];
+			[store release];
+		}
+		
+		[fileManager release];
 	}
-	
-	NSString *path = [cachesDir stringByAppendingPathComponent:@"positions.store.v4"];
-	
-	if ([fileManager fileExistsAtPath:path])
+	else
 	{
-		PositionStore *store = [[PositionStore alloc] initWithFile:[cachesDir stringByAppendingPathComponent:@"positions.store.v4"]];
-		[store restore:self];
-		[store release];
+		// XXXTODO: iPad
 	}
-	
-	[fileManager release];
-
+		
 	fileButton.enabled = ([Configuration configuration].cdFileCount >= 2);
 	
 	NSDate *nextUpdate = [NSDate dateRounded];
@@ -326,7 +333,7 @@
 		currentCategory = indexPath.row / 2;
 
 		StringChoiceAlert *alert = [[StringChoiceAlert alloc] initWithPlaceholder:_("Enter category name") text:nil target:self action:@selector(onCategoryAdded:)];
-		[alert release];
+		[alert show];
 		[alert release];
 	}
 }
@@ -368,12 +375,20 @@
 	}
 	else
 	{
-		CDCategory *category = (indexPath.row == 0) ? nil : [categories objectAtIndex:indexPath.row - 1];
-		TaskViewController *ctrl = [[CategoryTaskViewController alloc] initWithCategoryController:self edit:NO category:category];;
-		[[PositionStore instance] push:self indexPath:indexPath type:TYPE_DETAILS searchWord:nil];
+		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+		{
+			CDCategory *category = (indexPath.row == 0) ? nil : [categories objectAtIndex:indexPath.row - 1];
+			TaskViewController *ctrl = [[CategoryTaskViewController alloc] initWithCategoryController:self edit:NO category:category];;
+			[[PositionStore instance] push:self indexPath:indexPath type:TYPE_DETAILS searchWord:nil];
 	
-		[self.navigationController pushViewController:ctrl animated:YES];
-		[ctrl release];
+			[self.navigationController pushViewController:ctrl animated:YES];
+			[ctrl release];
+		}
+		else
+		{
+			// XXXTODO: iPad
+			[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+		}
 	}
 }
 
@@ -457,7 +472,8 @@
 		cell.textLabel.textColor = [UIColor blackColor];
 	}
 
-	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	
 	[cell.badge setNeedsDisplay];
 	

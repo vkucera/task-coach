@@ -37,6 +37,11 @@
 	return self;
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+	return YES;
+}
+
 - (void)finished:(BOOL)ok
 {
 	[target performSelector:action];

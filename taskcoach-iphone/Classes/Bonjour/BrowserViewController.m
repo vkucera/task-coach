@@ -121,6 +121,11 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 	return self;
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+	return YES;
+}
+
 - (NSString *)searchingForServicesString {
 	return _searchingForServicesString;
 }

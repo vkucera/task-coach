@@ -101,15 +101,14 @@
 		A680C0C60F47366900A8D18B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A680C0C40F47366900A8D18B /* Localizable.strings */; };
 		A680C0DD0F47368E00A8D18B /* DatePickerView.strings in Resources */ = {isa = PBXBuildFile; fileRef = A680C0D50F47368E00A8D18B /* DatePickerView.strings */; };
 		A680C0DE0F47368E00A8D18B /* MainWindow.strings in Resources */ = {isa = PBXBuildFile; fileRef = A680C0D70F47368E00A8D18B /* MainWindow.strings */; };
-		A680C0DF0F47368E00A8D18B /* StringChoice.strings in Resources */ = {isa = PBXBuildFile; fileRef = A680C0D90F47368E00A8D18B /* StringChoice.strings */; };
 		A6831FFE102EB057002A7083 /* TaskView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6831FFC102EB057002A7083 /* TaskView.xib */; };
 		A6832038102EB499002A7083 /* TaskView.strings in Resources */ = {isa = PBXBuildFile; fileRef = A6832036102EB499002A7083 /* TaskView.strings */; };
+		A68B5E1711C4B799009AE2F1 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A68B5E0F11C4B799009AE2F1 /* MainWindow-iPad.xib */; };
+		A68B5E1A11C4B7C8009AE2F1 /* SplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A68B5E1911C4B7C8009AE2F1 /* SplitViewController.m */; };
 		A68D31A711BA3D31002C6593 /* CDEffort+Addons.m in Sources */ = {isa = PBXBuildFile; fileRef = A68D31A611BA3D31002C6593 /* CDEffort+Addons.m */; };
 		A68EDEC50F1E1F1700F51FF2 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = A68EDEC30F1E1F1700F51FF2 /* MainWindow.xib */; };
 		A68EDED30F1E1F8500F51FF2 /* CategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */; };
 		A68EDEF30F1E222700F51FF2 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A68EDEF20F1E222700F51FF2 /* libsqlite3.0.dylib */; };
-		A68EDF860F1E2A6D00F51FF2 /* StringChoice.xib in Resources */ = {isa = PBXBuildFile; fileRef = A68EDF840F1E2A6D00F51FF2 /* StringChoice.xib */; };
-		A68EDF890F1E2A7F00F51FF2 /* StringChoiceController.m in Sources */ = {isa = PBXBuildFile; fileRef = A68EDF880F1E2A7F00F51FF2 /* StringChoiceController.m */; };
 		A69DDFD311BA714D007E0D9B /* ItemParser.m in Sources */ = {isa = PBXBuildFile; fileRef = A69DDFD011BA714D007E0D9B /* ItemParser.m */; };
 		A69DDFD411BA714D007E0D9B /* Items.m in Sources */ = {isa = PBXBuildFile; fileRef = A69DDFD211BA714D007E0D9B /* Items.m */; };
 		A69DDFDB11BA719B007E0D9B /* ItemState.m in Sources */ = {isa = PBXBuildFile; fileRef = A69DDFD811BA719B007E0D9B /* ItemState.m */; };
@@ -127,6 +126,7 @@
 		A6B7A5B30FA45E110067B76A /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = A6B7A5B20FA45E110067B76A /* iTunesArtwork */; };
 		A6C3CEF810E76C8C00483057 /* ButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C3CEF710E76C8C00483057 /* ButtonCell.m */; };
 		A6C3CEFA10E76CB600483057 /* ButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6C3CEF910E76CB600483057 /* ButtonCell.xib */; };
+		A6C858EB11C4B2BE0016C027 /* StringChoiceAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C858EA11C4B2BE0016C027 /* StringChoiceAlert.m */; };
 		A6C9843E0F2B77C40088A73F /* GUIDState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C9843D0F2B77C40088A73F /* GUIDState.m */; };
 		A6CFAE5511B2534100044876 /* TaskCoachCD.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = A6CFAE5411B2534100044876 /* TaskCoachCD.xcdatamodel */; };
 		A6CFAE6C11B257B600044876 /* CDCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CFAE6311B257B600044876 /* CDCategory.m */; };
@@ -146,6 +146,7 @@
 		A6D385630F24A2330097F0F6 /* SwitchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6D385620F24A2330097F0F6 /* SwitchCell.xib */; };
 		A6D3862F0F24B02A0097F0F6 /* DatePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6D3862E0F24B02A0097F0F6 /* DatePickerViewController.m */; };
 		A6D3868A0F24B4450097F0F6 /* DatePickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6D386880F24B4450097F0F6 /* DatePickerView.xib */; };
+		A6D5FFBD11C4C43D0030502F /* MainWindow-iPad.strings in Resources */ = {isa = PBXBuildFile; fileRef = A6D5FFBB11C4C43D0030502F /* MainWindow-iPad.strings */; };
 		A6D8AC030F221BFA006894AA /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A6D8AC020F221BFA006894AA /* Settings.bundle */; };
 		A6DA5C690F3D870900372358 /* DescriptionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DA5C680F3D870900372358 /* DescriptionCell.m */; };
 		A6DA5C780F3D87F300372358 /* DescriptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6DA5C770F3D87F300372358 /* DescriptionCell.xib */; };
@@ -291,7 +292,6 @@
 		A64F4142117B01AD00E60105 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/TaskView.strings; sourceTree = "<group>"; };
 		A64F4143117B01BE00E60105 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/DatePickerView.strings; sourceTree = "<group>"; };
 		A64F4144117B01CB00E60105 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/MainWindow.strings; sourceTree = "<group>"; };
-		A64F4145117B01D500E60105 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/StringChoice.strings; sourceTree = "<group>"; };
 		A64F4146117B01E900E60105 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A65D1B1D119D379300F0F5C3 /* BUILD.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = BUILD.txt; sourceTree = "<group>"; };
 		A65D1B23119D37B200F0F5C3 /* TapkuLibrary.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TapkuLibrary.xcodeproj; path = Classes/Thirdparty/tapkulibrary/src/TapkuLibrary.xcodeproj; sourceTree = SOURCE_ROOT; };
@@ -341,7 +341,6 @@
 		A67400781042DF410094E5F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/DatePickerView.strings; sourceTree = "<group>"; };
 		A67400791042DF530094E5F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/TaskView.strings; sourceTree = "<group>"; };
 		A674007A1042DF620094E5F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MainWindow.strings; sourceTree = "<group>"; };
-		A674007B1042DF6C0094E5F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/StringChoice.strings; sourceTree = "<group>"; };
 		A67A0C200F6BA57100F48A82 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		A67E47DE0F5A938F00000A24 /* BonjourBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BonjourBrowser.h; path = Bonjour/BonjourBrowser.h; sourceTree = "<group>"; };
 		A67E47DF0F5A938F00000A24 /* BonjourBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BonjourBrowser.m; path = Bonjour/BonjourBrowser.m; sourceTree = "<group>"; };
@@ -354,22 +353,26 @@
 		A680C0C50F47366900A8D18B /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A680C0D10F47367F00A8D18B /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/DatePickerView.xib; sourceTree = "<group>"; };
 		A680C0D20F47367F00A8D18B /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/MainWindow.xib; sourceTree = "<group>"; };
-		A680C0D30F47367F00A8D18B /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/StringChoice.xib; sourceTree = "<group>"; };
 		A680C0D60F47368E00A8D18B /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/DatePickerView.strings; sourceTree = "<group>"; };
 		A680C0D80F47368E00A8D18B /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/MainWindow.strings; sourceTree = "<group>"; };
-		A680C0DA0F47368E00A8D18B /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/StringChoice.strings; sourceTree = "<group>"; };
 		A6831FFD102EB057002A7083 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TaskView.xib; sourceTree = "<group>"; };
 		A6832032102EB42F002A7083 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/TaskView.xib; sourceTree = "<group>"; };
 		A6832037102EB499002A7083 /* fr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/TaskView.strings; sourceTree = "<group>"; };
+		A68B5E1011C4B799009AE2F1 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "Resources-iPad/en.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		A68B5E1111C4B799009AE2F1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = "Resources-iPad/fr.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		A68B5E1211C4B799009AE2F1 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = "Resources-iPad/nl.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		A68B5E1311C4B799009AE2F1 /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ru; path = "Resources-iPad/ru.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		A68B5E1411C4B799009AE2F1 /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = "Resources-iPad/de.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		A68B5E1511C4B799009AE2F1 /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = "Resources-iPad/th.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		A68B5E1611C4B799009AE2F1 /* cs */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = cs; path = "Resources-iPad/cs.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		A68B5E1811C4B7C8009AE2F1 /* SplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplitViewController.h; sourceTree = "<group>"; };
+		A68B5E1911C4B7C8009AE2F1 /* SplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplitViewController.m; sourceTree = "<group>"; };
 		A68D31A511BA3D31002C6593 /* CDEffort+Addons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CDEffort+Addons.h"; path = "CoreData/CDEffort+Addons.h"; sourceTree = "<group>"; };
 		A68D31A611BA3D31002C6593 /* CDEffort+Addons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CDEffort+Addons.m"; path = "CoreData/CDEffort+Addons.m"; sourceTree = "<group>"; };
 		A68EDEC40F1E1F1700F51FF2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		A68EDED10F1E1F8500F51FF2 /* CategoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CategoryViewController.h; sourceTree = "<group>"; };
 		A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoryViewController.m; sourceTree = "<group>"; };
 		A68EDEF20F1E222700F51FF2 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
-		A68EDF850F1E2A6D00F51FF2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/StringChoice.xib; sourceTree = "<group>"; };
-		A68EDF870F1E2A7F00F51FF2 /* StringChoiceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringChoiceController.h; sourceTree = "<group>"; };
-		A68EDF880F1E2A7F00F51FF2 /* StringChoiceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringChoiceController.m; sourceTree = "<group>"; };
 		A69DDFCF11BA714D007E0D9B /* ItemParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ItemParser.h; path = Synchronization/ItemParser.h; sourceTree = "<group>"; };
 		A69DDFD011BA714D007E0D9B /* ItemParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ItemParser.m; path = Synchronization/ItemParser.m; sourceTree = "<group>"; };
 		A69DDFD111BA714D007E0D9B /* Items.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Items.h; path = Synchronization/Items.h; sourceTree = "<group>"; };
@@ -396,28 +399,26 @@
 		A6B264DC0FDBCBFE00FF2AD0 /* DateCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DateCell.xib; sourceTree = SOURCE_ROOT; };
 		A6B7A5B20FA45E110067B76A /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
 		A6BDE7281171C93200979568 /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/MainWindow.xib; sourceTree = "<group>"; };
-		A6BDE72A1171C94700979568 /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/StringChoice.xib; sourceTree = "<group>"; };
 		A6BDE72C1171C95E00979568 /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/TaskView.xib; sourceTree = "<group>"; };
 		A6BDE72E1171C96F00979568 /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/DatePickerView.xib; sourceTree = "<group>"; };
 		A6C3CEF610E76C8C00483057 /* ButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonCell.h; sourceTree = "<group>"; };
 		A6C3CEF710E76C8C00483057 /* ButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ButtonCell.m; sourceTree = "<group>"; };
 		A6C3CEF910E76CB600483057 /* ButtonCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ButtonCell.xib; sourceTree = "<group>"; };
+		A6C858E911C4B2BE0016C027 /* StringChoiceAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringChoiceAlert.h; sourceTree = "<group>"; };
+		A6C858EA11C4B2BE0016C027 /* StringChoiceAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringChoiceAlert.m; sourceTree = "<group>"; };
 		A6C9843C0F2B77C40088A73F /* GUIDState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUIDState.h; path = Synchronization/GUIDState.h; sourceTree = "<group>"; };
 		A6C9843D0F2B77C40088A73F /* GUIDState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GUIDState.m; path = Synchronization/GUIDState.m; sourceTree = "<group>"; };
 		A6CE4A8C11312557003A454F /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A6CE4A991131256F003A454F /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ru; path = ru.lproj/DatePickerView.xib; sourceTree = "<group>"; };
 		A6CE4A9A1131256F003A454F /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ru; path = ru.lproj/MainWindow.xib; sourceTree = "<group>"; };
-		A6CE4A9B1131256F003A454F /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ru; path = ru.lproj/StringChoice.xib; sourceTree = "<group>"; };
 		A6CE4A9C1131256F003A454F /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ru; path = ru.lproj/TaskView.xib; sourceTree = "<group>"; };
 		A6CF22141171C745005FB445 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/TaskView.strings; sourceTree = "<group>"; };
 		A6CF22151171C755005FB445 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/DatePickerView.strings; sourceTree = "<group>"; };
 		A6CF22161171C763005FB445 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/MainWindow.strings; sourceTree = "<group>"; };
-		A6CF22171171C76E005FB445 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/StringChoice.strings; sourceTree = "<group>"; };
 		A6CF22181171C780005FB445 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A6CF22191171C799005FB445 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/TaskView.strings; sourceTree = "<group>"; };
 		A6CF221A1171C7A4005FB445 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/DatePickerView.strings; sourceTree = "<group>"; };
 		A6CF221B1171C7B2005FB445 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/MainWindow.strings; sourceTree = "<group>"; };
-		A6CF221C1171C7BC005FB445 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/StringChoice.strings; sourceTree = "<group>"; };
 		A6CFAE5411B2534100044876 /* TaskCoachCD.xcdatamodel */ = {isa = PBXFileReference; explicitFileType = wrapper.xcdatamodel; fileEncoding = 4; path = TaskCoachCD.xcdatamodel; sourceTree = "<group>"; };
 		A6CFAE6211B257B600044876 /* CDCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDCategory.h; path = CoreData/CDCategory.h; sourceTree = "<group>"; };
 		A6CFAE6311B257B600044876 /* CDCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDCategory.m; path = CoreData/CDCategory.m; sourceTree = "<group>"; };
@@ -438,12 +439,10 @@
 		A6CFB5B11109C691004DB892 /* TwoWayModifiedEffortsState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwoWayModifiedEffortsState.m; path = Synchronization/TwoWayModifiedEffortsState.m; sourceTree = "<group>"; };
 		A6D0E4171042E13C006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/DatePickerView.strings; sourceTree = "<group>"; };
 		A6D0E4181042E13C006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/MainWindow.strings; sourceTree = "<group>"; };
-		A6D0E4191042E13C006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/StringChoice.strings; sourceTree = "<group>"; };
 		A6D0E41B1042E13C006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/TaskView.strings; sourceTree = "<group>"; };
 		A6D0E41C1042E150006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A6D0E4281042E169006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/DatePickerView.xib; sourceTree = "<group>"; };
 		A6D0E4291042E169006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/MainWindow.xib; sourceTree = "<group>"; };
-		A6D0E42A1042E169006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/StringChoice.xib; sourceTree = "<group>"; };
 		A6D0E42C1042E169006440A3 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/TaskView.xib; sourceTree = "<group>"; };
 		A6D384540F247DDF0097F0F6 /* TaskDetailsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDetailsController.h; sourceTree = "<group>"; };
 		A6D384550F247DDF0097F0F6 /* TaskDetailsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskDetailsController.m; sourceTree = "<group>"; };
@@ -458,6 +457,13 @@
 		A6D3862E0F24B02A0097F0F6 /* DatePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatePickerViewController.m; sourceTree = "<group>"; };
 		A6D386890F24B4450097F0F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DatePickerView.xib; sourceTree = "<group>"; };
 		A6D5F411104166480098B4D5 /* i18n.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = i18n.h; sourceTree = "<group>"; };
+		A6D5FFBC11C4C43D0030502F /* cs */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = cs; path = "Resources-iPad/cs.lproj/MainWindow-iPad.strings"; sourceTree = "<group>"; };
+		A6D5FFBE11C4C4510030502F /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "Resources-iPad/de.lproj/MainWindow-iPad.strings"; sourceTree = "<group>"; };
+		A6D5FFBF11C4C4610030502F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "Resources-iPad/en.lproj/MainWindow-iPad.strings"; sourceTree = "<group>"; };
+		A6D5FFC011C4C46C0030502F /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = "Resources-iPad/fr.lproj/MainWindow-iPad.strings"; sourceTree = "<group>"; };
+		A6D5FFC111C4C4790030502F /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = "Resources-iPad/nl.lproj/MainWindow-iPad.strings"; sourceTree = "<group>"; };
+		A6D5FFC211C4C4860030502F /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = "Resources-iPad/ru.lproj/MainWindow-iPad.strings"; sourceTree = "<group>"; };
+		A6D5FFC311C4C4910030502F /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = "Resources-iPad/th.lproj/MainWindow-iPad.strings"; sourceTree = "<group>"; };
 		A6D8AC020F221BFA006894AA /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		A6DA5C670F3D870900372358 /* DescriptionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescriptionCell.h; sourceTree = "<group>"; };
 		A6DA5C680F3D870900372358 /* DescriptionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DescriptionCell.m; sourceTree = "<group>"; };
@@ -468,7 +474,6 @@
 		A6DDF8520F1F988600F35108 /* TaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskViewController.h; sourceTree = "<group>"; };
 		A6DDF8530F1F988600F35108 /* TaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskViewController.m; sourceTree = "<group>"; };
 		A6DFFBB7117B038900A479EC /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = th.lproj/MainWindow.xib; sourceTree = "<group>"; };
-		A6DFFBB8117B039500A479EC /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = th.lproj/StringChoice.xib; sourceTree = "<group>"; };
 		A6DFFBB9117B03A500A479EC /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = th.lproj/TaskView.xib; sourceTree = "<group>"; };
 		A6DFFBBA117B03B100A479EC /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = th.lproj/DatePickerView.xib; sourceTree = "<group>"; };
 		A6E46385113028A500976293 /* SyncView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SyncView.xib; sourceTree = "<group>"; };
@@ -485,9 +490,7 @@
 		A6EAE1F7117B058C001730A0 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/TaskView.strings; sourceTree = "<group>"; };
 		A6EAE1F8117B05A8001730A0 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/DatePickerView.strings; sourceTree = "<group>"; };
 		A6EAE1F9117B05D3001730A0 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/MainWindow.strings; sourceTree = "<group>"; };
-		A6EAE1FA117B05EB001730A0 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/StringChoice.strings; sourceTree = "<group>"; };
 		A6EAE1FB117B0636001730A0 /* cs */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = cs; path = cs.lproj/MainWindow.xib; sourceTree = "<group>"; };
-		A6EAE1FC117B063E001730A0 /* cs */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = cs; path = cs.lproj/StringChoice.xib; sourceTree = "<group>"; };
 		A6EAE1FD117B0647001730A0 /* cs */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = cs; path = cs.lproj/TaskView.xib; sourceTree = "<group>"; };
 		A6EAE1FE117B0650001730A0 /* cs */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = cs; path = cs.lproj/DatePickerView.xib; sourceTree = "<group>"; };
 		A6F8E3F80F2C6CFD007D929C /* FullFromDesktopState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FullFromDesktopState.h; path = Synchronization/FullFromDesktopState.h; sourceTree = "<group>"; };
@@ -536,6 +539,8 @@
 				A6FA97DB0F2B2E1C00505D87 /* MainViewController.m */,
 				A65FF1EB11BBC25B00394E33 /* ReminderController.h */,
 				A65FF1EC11BBC25B00394E33 /* ReminderController.m */,
+				A68B5E1811C4B7C8009AE2F1 /* SplitViewController.h */,
+				A68B5E1911C4B7C8009AE2F1 /* SplitViewController.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -554,11 +559,11 @@
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
+				A68B5E0E11C4B796009AE2F1 /* Resources-iPad */,
 				A63980FB11C3DECC00B43940 /* Resources-iPhone */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				A68EDEC30F1E1F1700F51FF2 /* MainWindow.xib */,
-				A68EDF840F1E2A6D00F51FF2 /* StringChoice.xib */,
 				A6831FFC102EB057002A7083 /* TaskView.xib */,
 				A6D386880F24B4450097F0F6 /* DatePickerView.xib */,
 				A6D8AC020F221BFA006894AA /* Settings.bundle */,
@@ -578,7 +583,7 @@
 				A6832036102EB499002A7083 /* TaskView.strings */,
 				A680C0D50F47368E00A8D18B /* DatePickerView.strings */,
 				A680C0D70F47368E00A8D18B /* MainWindow.strings */,
-				A680C0D90F47368E00A8D18B /* StringChoice.strings */,
+				A6D5FFBB11C4C43D0030502F /* MainWindow-iPad.strings */,
 				A668B4E111C3B0820048BB89 /* TaskDetailsRecurrencePeriodPicker.strings */,
 				32CA4F630368D1EE00C91783 /* TaskCoach_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
@@ -765,6 +770,14 @@
 			name = Bonjour;
 			sourceTree = "<group>";
 		};
+		A68B5E0E11C4B796009AE2F1 /* Resources-iPad */ = {
+			isa = PBXGroup;
+			children = (
+				A68B5E0F11C4B799009AE2F1 /* MainWindow-iPad.xib */,
+			);
+			name = "Resources-iPad";
+			sourceTree = "<group>";
+		};
 		A69DDF9E11BA6E3B007E0D9B /* SyncItems */ = {
 			isa = PBXGroup;
 			children = (
@@ -836,10 +849,10 @@
 		A6B3073B11B27B85007C0F49 /* Widgets */ = {
 			isa = PBXGroup;
 			children = (
+				A6C858E911C4B2BE0016C027 /* StringChoiceAlert.h */,
+				A6C858EA11C4B2BE0016C027 /* StringChoiceAlert.m */,
 				A66C186511C385470081C175 /* TaskDetailsRecurrencePeriodPicker.h */,
 				A66C186611C385470081C175 /* TaskDetailsRecurrencePeriodPicker.m */,
-				A68EDF870F1E2A7F00F51FF2 /* StringChoiceController.h */,
-				A68EDF880F1E2A7F00F51FF2 /* StringChoiceController.m */,
 				A673ABF40F2203D000E548BB /* NavigationController.h */,
 				A673ABF50F2203D000E548BB /* NavigationController.m */,
 				A6EA67980F2255E7004108B5 /* CheckView.h */,
@@ -1035,7 +1048,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A68EDEC50F1E1F1700F51FF2 /* MainWindow.xib in Resources */,
-				A68EDF860F1E2A6D00F51FF2 /* StringChoice.xib in Resources */,
 				A6D8AC030F221BFA006894AA /* Settings.bundle in Resources */,
 				A6D384610F247E910097F0F6 /* TaskDetails.xib in Resources */,
 				A6D384780F24830F0097F0F6 /* TextFieldCell.xib in Resources */,
@@ -1047,7 +1059,6 @@
 				A680C0C60F47366900A8D18B /* Localizable.strings in Resources */,
 				A680C0DD0F47368E00A8D18B /* DatePickerView.strings in Resources */,
 				A680C0DE0F47368E00A8D18B /* MainWindow.strings in Resources */,
-				A680C0DF0F47368E00A8D18B /* StringChoice.strings in Resources */,
 				A63CC07C0F517055003669FD /* TaskCellLeftBig.xib in Resources */,
 				A63CC07D0F517055003669FD /* TaskCellRightBig.xib in Resources */,
 				A67A0C210F6BA57100F48A82 /* Entitlements.plist in Resources */,
@@ -1093,6 +1104,8 @@
 				A639812711C3DEE100B43940 /* TaskCoach.png in Resources */,
 				A639812811C3DEE100B43940 /* time.png in Resources */,
 				A639812911C3DEE100B43940 /* whiteButton.png in Resources */,
+				A68B5E1711C4B799009AE2F1 /* MainWindow-iPad.xib in Resources */,
+				A6D5FFBD11C4C43D0030502F /* MainWindow-iPad.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1106,7 +1119,6 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* TaskCoachAppDelegate.m in Sources */,
 				A68EDED30F1E1F8500F51FF2 /* CategoryViewController.m in Sources */,
-				A68EDF890F1E2A7F00F51FF2 /* StringChoiceController.m in Sources */,
 				A6DDF8540F1F988600F35108 /* TaskViewController.m in Sources */,
 				A6AEE77F0F21CFA00061CF77 /* Network.m in Sources */,
 				A673ABF60F2203D000E548BB /* NavigationController.m in Sources */,
@@ -1189,6 +1201,8 @@
 				A64403B211BD43270029075D /* CDHierarchicalDomainObject+Addons.m in Sources */,
 				A66C181E11C37F500081C175 /* RecurrencePeriodCell.m in Sources */,
 				A66C186711C385470081C175 /* TaskDetailsRecurrencePeriodPicker.m in Sources */,
+				A6C858EB11C4B2BE0016C027 /* StringChoiceAlert.m in Sources */,
+				A68B5E1A11C4B7C8009AE2F1 /* SplitViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1273,20 +1287,6 @@
 			name = MainWindow.strings;
 			sourceTree = "<group>";
 		};
-		A680C0D90F47368E00A8D18B /* StringChoice.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A680C0DA0F47368E00A8D18B /* fr */,
-				A674007B1042DF6C0094E5F4 /* en */,
-				A6D0E4191042E13C006440A3 /* nl */,
-				A6CF22171171C76E005FB445 /* de */,
-				A6CF221C1171C7BC005FB445 /* ru */,
-				A64F4145117B01D500E60105 /* th */,
-				A6EAE1FA117B05EB001730A0 /* cs */,
-			);
-			name = StringChoice.strings;
-			sourceTree = "<group>";
-		};
 		A6831FFC102EB057002A7083 /* TaskView.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1315,6 +1315,20 @@
 			name = TaskView.strings;
 			sourceTree = "<group>";
 		};
+		A68B5E0F11C4B799009AE2F1 /* MainWindow-iPad.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A68B5E1011C4B799009AE2F1 /* en */,
+				A68B5E1111C4B799009AE2F1 /* fr */,
+				A68B5E1211C4B799009AE2F1 /* nl */,
+				A68B5E1311C4B799009AE2F1 /* ru */,
+				A68B5E1411C4B799009AE2F1 /* de */,
+				A68B5E1511C4B799009AE2F1 /* th */,
+				A68B5E1611C4B799009AE2F1 /* cs */,
+			);
+			name = "MainWindow-iPad.xib";
+			sourceTree = "<group>";
+		};
 		A68EDEC30F1E1F1700F51FF2 /* MainWindow.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1327,20 +1341,6 @@
 				A6EAE1FB117B0636001730A0 /* cs */,
 			);
 			name = MainWindow.xib;
-			sourceTree = "<group>";
-		};
-		A68EDF840F1E2A6D00F51FF2 /* StringChoice.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A68EDF850F1E2A6D00F51FF2 /* en */,
-				A680C0D30F47367F00A8D18B /* fr */,
-				A6D0E42A1042E169006440A3 /* nl */,
-				A6CE4A9B1131256F003A454F /* ru */,
-				A6BDE72A1171C94700979568 /* de */,
-				A6DFFBB8117B039500A479EC /* th */,
-				A6EAE1FC117B063E001730A0 /* cs */,
-			);
-			name = StringChoice.xib;
 			sourceTree = "<group>";
 		};
 		A6D386880F24B4450097F0F6 /* DatePickerView.xib */ = {
@@ -1357,6 +1357,20 @@
 			name = DatePickerView.xib;
 			sourceTree = "<group>";
 		};
+		A6D5FFBB11C4C43D0030502F /* MainWindow-iPad.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A6D5FFBC11C4C43D0030502F /* cs */,
+				A6D5FFBE11C4C4510030502F /* de */,
+				A6D5FFBF11C4C4610030502F /* en */,
+				A6D5FFC011C4C46C0030502F /* fr */,
+				A6D5FFC111C4C4790030502F /* nl */,
+				A6D5FFC211C4C4860030502F /* ru */,
+				A6D5FFC311C4C4910030502F /* th */,
+			);
+			name = "MainWindow-iPad.strings";
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -1364,6 +1378,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1371,6 +1386,8 @@
 				GCC_PREFIX_HEADER = TaskCoach_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				PRODUCT_NAME = TaskCoach;
+				SDKROOT = iphoneos3.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -1378,11 +1395,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TaskCoach_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				PRODUCT_NAME = TaskCoach;
+				SDKROOT = iphoneos3.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -1409,12 +1429,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TaskCoach_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				PRODUCT_NAME = TaskCoach;
+				SDKROOT = iphoneos3.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Beta1v2;
 		};
@@ -1441,6 +1464,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jérôme Laheurte";
 				COPY_PHASE_STRIP = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -1449,6 +1473,8 @@
 				INFOPLIST_FILE = Info.plist;
 				PRODUCT_NAME = TaskCoach;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos3.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Distribution;
 		};
@@ -1476,11 +1502,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = TaskCoach_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				PRODUCT_NAME = TaskCoach;
+				SDKROOT = iphoneos3.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Release Frank";
 		};
