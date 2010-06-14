@@ -211,12 +211,20 @@
 
 	cell.textLabel.text = [category name];
 
-	NSInteger total = [[category task] count];
-	NSInteger overdue = 0, dueSoon = 0, started = 0;
+	NSInteger total = 0, overdue = 0, dueSoon = 0, started = 0;
 
 	NSFetchRequest *request = [[NSFetchRequest alloc] init];
 	[request setEntity:[NSEntityDescription entityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()]];
-	[request setPredicate:[NSPredicate predicateWithFormat:@"status != %d AND ANY categories IN %@ AND parent == NULL", STATUS_DELETED, [category selfAndChildren]]];
+
+	NSMutableArray *preds = [[NSMutableArray alloc] initWithCapacity:3];
+	[preds addObject:[NSPredicate predicateWithFormat:@"status != %d AND ANY categories IN %@ AND parent == NULL", STATUS_DELETED, [category selfAndChildren]]];
+	if (![Configuration configuration].showCompleted)
+		[preds addObject:[NSPredicate predicateWithFormat:@"dateStatus != %d", TASKSTATUS_COMPLETED]];
+	if (![Configuration configuration].showInactive)
+		[preds addObject:[NSPredicate predicateWithFormat:@"dateStatus != %d", TASKSTATUS_NOTSTARTED]];
+	[request setPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:preds]];
+	[preds release];
+
 	NSError *error;
 	NSArray *tasks = [getManagedObjectContext() executeFetchRequest:request error:&error];
 	[request release];
@@ -225,6 +233,8 @@
 	{
 		for (CDTask *task in tasks)
 		{
+			++total;
+
 			switch ([task.dateStatus intValue])
 			{
 				case TASKSTATUS_OVERDUE:
