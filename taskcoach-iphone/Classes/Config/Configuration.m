@@ -25,8 +25,6 @@ static Configuration *_configuration = NULL;
 @synthesize viewStyle;
 @synthesize taskGrouping;
 
-@synthesize cdCurrentFile;
-
 + (Configuration *)configuration
 {
 	if (!_configuration)
@@ -68,20 +66,7 @@ static Configuration *_configuration = NULL;
 		NSString *guid = [config stringForKey:@"currentfile"];
 		if (guid)
 		{
-			NSFetchRequest *request = [[NSFetchRequest alloc] init];
-			[request setEntity:[NSEntityDescription entityForName:@"CDFile" inManagedObjectContext:getManagedObjectContext()]];
-			[request setPredicate:[NSPredicate predicateWithFormat:@"guid == %@", guid]];
-			NSError *error;
-			NSArray *results = [getManagedObjectContext() executeFetchRequest:request error:&error];
-			[request release];
-
-			if (results)
-			{
-				if ([results count] >= 1)
-				{
-					cdCurrentFile = [[results objectAtIndex:0] retain];
-				}
-			}
+			currentFileGuid = [guid copy];
 		}
 	}
 	
@@ -92,7 +77,7 @@ static Configuration *_configuration = NULL;
 {
 	[name release];
 	[domain release];
-	[cdCurrentFile release];
+	[currentFileGuid release];
 
 	[super dealloc];
 }
@@ -110,9 +95,9 @@ static Configuration *_configuration = NULL;
 	[config setInteger:viewStyle forKey:@"viewStyle"];
 	[config setInteger:taskGrouping forKey:@"taskGrouping"];
 
-	if (cdCurrentFile)
+	if (currentFileGuid)
 	{
-		[config setObject:cdCurrentFile.guid forKey:@"currentfile"];
+		[config setObject:currentFileGuid forKey:@"currentfile"];
 	}
 
 	[config synchronize];
@@ -133,6 +118,32 @@ static Configuration *_configuration = NULL;
 	}
 	
 	return count;
+}
+
+- (CDFile *)cdCurrentFile
+{
+	NSFetchRequest *request = [[NSFetchRequest alloc] init];
+	[request setEntity:[NSEntityDescription entityForName:@"CDFile" inManagedObjectContext:getManagedObjectContext()]];
+	[request setPredicate:[NSPredicate predicateWithFormat:@"guid == %@", currentFileGuid]];
+	NSError *error;
+	NSArray *results = [getManagedObjectContext() executeFetchRequest:request error:&error];
+	[request release];
+	
+	if (results)
+	{
+		if ([results count] >= 1)
+		{
+			return [results objectAtIndex:0];
+		}
+	}
+
+	return nil;
+}
+
+- (void)setCdCurrentFile:(CDFile *)file
+{
+	[currentFileGuid release];
+	currentFileGuid = [file.guid copy];
 }
 
 @end

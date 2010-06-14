@@ -36,7 +36,7 @@
 
 	NSInteger viewStyle;
 
-	CDFile *cdCurrentFile;
+	NSString *currentFileGuid;
 
 	NSInteger taskGrouping;
 }
@@ -52,7 +52,7 @@
 @property (nonatomic) NSInteger viewStyle;
 @property (nonatomic) NSInteger taskGrouping;
 
-@property (nonatomic, retain) CDFile *cdCurrentFile;
+@property (nonatomic, assign) CDFile *cdCurrentFile;
 @property (nonatomic, readonly) NSInteger cdFileCount;
 
 + (Configuration *)configuration;
