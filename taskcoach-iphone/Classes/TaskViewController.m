@@ -572,11 +572,11 @@ static void deleteTask(CDTask *task)
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+	if (section == 0)
+		return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 0 : 1; // Search cell
+	
 	if (self.editing && (section == 1))
 		return 1; // Add task cell
-
-	if (section == 0)
-		return 1; // Search cell
 
 	if ([[results sections] count])
 		return [[[results sections] objectAtIndex:section - ADJUSTSECTION] numberOfObjects];
