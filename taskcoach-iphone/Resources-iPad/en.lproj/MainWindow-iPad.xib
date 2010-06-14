@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="130"/>
+			<integer value="129"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -203,8 +203,8 @@
 									<bool key="EncodedWithXMLCoder">YES</bool>
 									<object class="IBUIToolbar" id="25534571">
 										<reference key="NSNextResponder" ref="1064199850"/>
-										<int key="NSvFlags">266</int>
-										<string key="NSFrame">{{0, 660}, {703, 44}}</string>
+										<int key="NSvFlags">290</int>
+										<string key="NSFrameSize">{703, 44}</string>
 										<reference key="NSSuperview" ref="1064199850"/>
 										<bool key="IBUIOpaque">NO</bool>
 										<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
@@ -239,7 +239,7 @@
 									<object class="IBUIView" id="746899623">
 										<reference key="NSNextResponder" ref="1064199850"/>
 										<int key="NSvFlags">-2147483374</int>
-										<string key="NSFrameSize">{703, 660}</string>
+										<string key="NSFrame">{{0, 44}, {703, 660}}</string>
 										<reference key="NSSuperview" ref="1064199850"/>
 										<object class="NSColor" key="IBUIBackgroundColor">
 											<int key="NSColorSpace">3</int>
@@ -253,7 +253,7 @@
 									<object class="IBUITableView" id="643351663">
 										<reference key="NSNextResponder" ref="1064199850"/>
 										<int key="NSvFlags">274</int>
-										<string key="NSFrameSize">{703, 660}</string>
+										<string key="NSFrame">{{0, 44}, {703, 660}}</string>
 										<reference key="NSSuperview" ref="1064199850"/>
 										<reference key="IBUIBackgroundColor" ref="803398117"/>
 										<bool key="IBUIClipsSubviews">YES</bool>
@@ -674,9 +674,9 @@
 						<reference key="object" ref="1064199850"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="25534571"/>
 							<reference ref="746899623"/>
 							<reference ref="643351663"/>
+							<reference ref="25534571"/>
 						</object>
 						<reference key="parent" ref="979134385"/>
 					</object>
@@ -819,7 +819,7 @@
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>TaskCoachAppDelegate</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>{{387, 548}, {1024, 768}}</string>
+					<string>{{383, 522}, {1024, 768}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>NavigationController</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
