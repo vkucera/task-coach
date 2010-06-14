@@ -13,6 +13,7 @@
 #import "CDTask+Addons.h"
 #import "i18n.h"
 #import "CategoryViewController.h"
+#import "CategoryTaskViewController.h"
 #import "Migration.h"
 #import "ReminderController.h"
 
@@ -48,7 +49,7 @@ NSManagedObjectContext *getManagedObjectContext(void)
     [managedObjectContext release];
     [managedObjectModel release];
     [persistentStoreCoordinator release];
-    
+
 	[mainController release];
     [window release];
 

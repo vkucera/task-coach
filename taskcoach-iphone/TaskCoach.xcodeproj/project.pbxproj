@@ -103,7 +103,6 @@
 		A6831FFE102EB057002A7083 /* TaskView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6831FFC102EB057002A7083 /* TaskView.xib */; };
 		A6832038102EB499002A7083 /* TaskView.strings in Resources */ = {isa = PBXBuildFile; fileRef = A6832036102EB499002A7083 /* TaskView.strings */; };
 		A68B5E1711C4B799009AE2F1 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A68B5E0F11C4B799009AE2F1 /* MainWindow-iPad.xib */; };
-		A68B5E1A11C4B7C8009AE2F1 /* SplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A68B5E1911C4B7C8009AE2F1 /* SplitViewController.m */; };
 		A68D31A711BA3D31002C6593 /* CDEffort+Addons.m in Sources */ = {isa = PBXBuildFile; fileRef = A68D31A611BA3D31002C6593 /* CDEffort+Addons.m */; };
 		A68EDEC50F1E1F1700F51FF2 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = A68EDEC30F1E1F1700F51FF2 /* MainWindow.xib */; };
 		A68EDED30F1E1F8500F51FF2 /* CategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */; };
@@ -344,8 +343,6 @@
 		A68B5E1411C4B799009AE2F1 /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = "Resources-iPad/de.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		A68B5E1511C4B799009AE2F1 /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = "Resources-iPad/th.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		A68B5E1611C4B799009AE2F1 /* cs */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = cs; path = "Resources-iPad/cs.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
-		A68B5E1811C4B7C8009AE2F1 /* SplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplitViewController.h; sourceTree = "<group>"; };
-		A68B5E1911C4B7C8009AE2F1 /* SplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplitViewController.m; sourceTree = "<group>"; };
 		A68D31A511BA3D31002C6593 /* CDEffort+Addons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CDEffort+Addons.h"; path = "CoreData/CDEffort+Addons.h"; sourceTree = "<group>"; };
 		A68D31A611BA3D31002C6593 /* CDEffort+Addons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CDEffort+Addons.m"; path = "CoreData/CDEffort+Addons.m"; sourceTree = "<group>"; };
 		A68EDEC40F1E1F1700F51FF2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
@@ -527,8 +524,6 @@
 				A6FA97DB0F2B2E1C00505D87 /* MainViewController.m */,
 				A65FF1EB11BBC25B00394E33 /* ReminderController.h */,
 				A65FF1EC11BBC25B00394E33 /* ReminderController.m */,
-				A68B5E1811C4B7C8009AE2F1 /* SplitViewController.h */,
-				A68B5E1911C4B7C8009AE2F1 /* SplitViewController.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -1174,7 +1169,6 @@
 				A66C181E11C37F500081C175 /* RecurrencePeriodCell.m in Sources */,
 				A66C186711C385470081C175 /* TaskDetailsRecurrencePeriodPicker.m in Sources */,
 				A6C858EB11C4B2BE0016C027 /* StringChoiceAlert.m in Sources */,
-				A68B5E1A11C4B7C8009AE2F1 /* SplitViewController.m in Sources */,
 				A6CA5D4A11C4F1C7009CA6A9 /* ODCalendarDayTimelineView.m in Sources */,
 				A6CA5D4F11C4F1DF009CA6A9 /* ODCalendarDayEventView.m in Sources */,
 				A6CA5D5411C4F21A009CA6A9 /* ODCalendarDayViewController.m in Sources */,

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @class CategoryViewController;
+@class CategoryTaskViewController;
 
 @interface TaskCoachAppDelegate : NSObject <UIApplicationDelegate>
 {
