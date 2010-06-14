@@ -156,6 +156,7 @@
 		A6DDECFC0F46C5040047AEF5 /* KeychainWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDECFB0F46C5040047AEF5 /* KeychainWrapper.m */; };
 		A6DDED1B0F46C5D30047AEF5 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6DDED1A0F46C5D30047AEF5 /* Security.framework */; };
 		A6DDF8540F1F988600F35108 /* TaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDF8530F1F988600F35108 /* TaskViewController.m */; };
+		A6DFB4E711C64BF8007FB4F0 /* TaskCoach-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = A6DFB4E611C64BF8007FB4F0 /* TaskCoach-iPad.png */; };
 		A6E46386113028A500976293 /* SyncView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6E46385113028A500976293 /* SyncView.xib */; };
 		A6E7C0801114418D00B230E2 /* AlertPrompt.m in Sources */ = {isa = PBXBuildFile; fileRef = A6E7C07F1114418D00B230E2 /* AlertPrompt.m */; };
 		A6E83C5A10E4C9AF00FF3E45 /* FileChooser.m in Sources */ = {isa = PBXBuildFile; fileRef = A6E83C5810E4C9AF00FF3E45 /* FileChooser.m */; };
@@ -459,6 +460,7 @@
 		A6DDED1A0F46C5D30047AEF5 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		A6DDF8520F1F988600F35108 /* TaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskViewController.h; sourceTree = "<group>"; };
 		A6DDF8530F1F988600F35108 /* TaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskViewController.m; sourceTree = "<group>"; };
+		A6DFB4E611C64BF8007FB4F0 /* TaskCoach-iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "TaskCoach-iPad.png"; path = "Resources-iPad/TaskCoach-iPad.png"; sourceTree = "<group>"; };
 		A6DFFBB7117B038900A479EC /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = th.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		A6DFFBB9117B03A500A479EC /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = th.lproj/TaskView.xib; sourceTree = "<group>"; };
 		A6DFFBBA117B03B100A479EC /* th */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = th; path = th.lproj/DatePickerView.xib; sourceTree = "<group>"; };
@@ -747,6 +749,7 @@
 		A68B5E0E11C4B796009AE2F1 /* Resources-iPad */ = {
 			isa = PBXGroup;
 			children = (
+				A6DFB4E611C64BF8007FB4F0 /* TaskCoach-iPad.png */,
 				A68B5E0F11C4B799009AE2F1 /* MainWindow-iPad.xib */,
 			);
 			name = "Resources-iPad";
@@ -1073,6 +1076,7 @@
 				A639812911C3DEE100B43940 /* whiteButton.png in Resources */,
 				A68B5E1711C4B799009AE2F1 /* MainWindow-iPad.xib in Resources */,
 				A6D5FFBD11C4C43D0030502F /* MainWindow-iPad.strings in Resources */,
+				A6DFB4E711C64BF8007FB4F0 /* TaskCoach-iPad.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

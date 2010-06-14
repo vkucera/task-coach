@@ -94,7 +94,7 @@
 									<object class="IBUITableView" id="559904084">
 										<reference key="NSNextResponder" ref="701180491"/>
 										<int key="NSvFlags">274</int>
-										<string key="NSFrameSize">{320, 660}</string>
+										<string key="NSFrame">{{0, 44}, {320, 660}}</string>
 										<reference key="NSSuperview" ref="701180491"/>
 										<object class="NSColor" key="IBUIBackgroundColor" id="803398117">
 											<int key="NSColorSpace">3</int>
@@ -113,8 +113,8 @@
 									</object>
 									<object class="IBUIToolbar" id="213027057">
 										<reference key="NSNextResponder" ref="701180491"/>
-										<int key="NSvFlags">266</int>
-										<string key="NSFrame">{{0, 660}, {320, 44}}</string>
+										<int key="NSvFlags">290</int>
+										<string key="NSFrameSize">{320, 44}</string>
 										<reference key="NSSuperview" ref="701180491"/>
 										<bool key="IBUIOpaque">NO</bool>
 										<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
