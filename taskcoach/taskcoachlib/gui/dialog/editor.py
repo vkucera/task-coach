@@ -582,7 +582,7 @@ class ProgressPage(Page):
         if choice.GetSelection() == wx.NOT_FOUND:
             # Force a selection if necessary:
             choice.SetSelection(0)
-        self._markTaskCompletedLabel = self.label(_('Mark task completed when\nall children are completed?'),
+        self._markTaskCompletedLabel = self.label(_('Mark task completed when all children are completed?'),
                                                   self._markTaskCompletedEntry, 
                                                   wx.EVT_CHOICE)
         self.addEntry(self._markTaskCompletedLabel, choice, flags=[None, wx.ALL])
