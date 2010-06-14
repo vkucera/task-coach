@@ -99,9 +99,9 @@ class BookPage(wx.Panel):
             So, addEntry(aLabel, aTextCtrl, flags=[None, wx.ALIGN_LEFT]) 
             will place the label with the default flag and will place the 
             textCtrl left aligned. '''
+        flags = self.__determineFlags(controls, kwargs.get('flags', None))
         controls = [self.__createStaticTextControlIfNeeded(control) \
                     for control in controls if control is not None]
-        flags = self.__determineFlags(controls, kwargs.get('flags', None))
         lastColumnIndex = len(controls) - 1
         for columnIndex, control in enumerate(controls):
             self.__addControl(columnIndex, control, flags[columnIndex], 
