@@ -208,7 +208,7 @@ static void deleteTask(CDTask *task)
 	[sd1 release];
 	[sd2 release];
 
-	results = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:getManagedObjectContext() sectionNameKeyPath:grouping cacheName:@"TaskCache"];
+	results = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:getManagedObjectContext() sectionNameKeyPath:grouping cacheName:nil];
 	results.delegate = self;
 
 	NSError *error;
