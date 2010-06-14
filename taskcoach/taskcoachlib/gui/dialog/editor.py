@@ -226,8 +226,8 @@ class AppearancePage(Page):
         
     def addColorEntries(self):
         # pylint: disable-msg=W0201,W0142
-        self._fgColorCheckBox = wx.CheckBox(self, label=_('Use foreground color:'))
-        self._bgColorCheckBox = wx.CheckBox(self, label=_('Use background color:'))
+        self._fgColorCheckBox = wx.CheckBox(self, label=_('Use color:'))
+        self._bgColorCheckBox = wx.CheckBox(self, label=_('Use color:'))
         currentFgColor = self.items[0].foregroundColor(recursive=False) if len(self.items) == 0 else None
         currentBgColor = self.items[0].backgroundColor(recursive=False) if len(self.items) == 0 else None
         self._fgColorCheckBox.SetValue(currentFgColor is not None)
@@ -338,7 +338,9 @@ class DatesPage(Page):
         
     def addEntries(self):
         self.addDateEntries()
+        self.addLine()
         self.addReminderEntry()
+        self.addLine()
         self.addRecurrenceEntries()
         
     def addDateEntries(self):
@@ -605,12 +607,14 @@ class ProgressPage(Page):
                     shouldMarkCompleted, event=event)
 
     def onPercentageCompleteChanged(self):
-        self._percentageCompleteLabel.SetValue(True)
+        if len(self.items) > 1:
+            self._percentageCompleteLabel.SetValue(True)
         
 
 class BudgetPage(Page):
     def addEntries(self):
         self.addBudgetEntries()
+        self.addLine()
         self.addRevenueEntries()
         
     def addBudgetEntries(self):

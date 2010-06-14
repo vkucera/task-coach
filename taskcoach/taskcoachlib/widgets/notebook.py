@@ -110,6 +110,10 @@ class BookPage(wx.Panel):
                 control.MoveAfterInTabOrder(controls[columnIndex-1])
         if kwargs.get('growable', False):
             self._sizer.AddGrowableRow(self._position.maxRow())
+            
+    def addLine(self):
+        line = wx.StaticLine(self)
+        self.__addControl(0, line, flag=wx.GROW|wx.ALIGN_CENTER_VERTICAL, lastColumn=True)
 
     def __addControl(self, columnIndex, control, flag, lastColumn):
         colspan = max(self._columns - columnIndex, 1) if lastColumn else 1
