@@ -45,8 +45,6 @@
 		self.navigationItem.title = _("All");
 
 	[self populate];
-
-	// WTF? This doesn't work!
 	[self.tableView reloadData];
 }
 

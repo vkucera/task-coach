@@ -14,6 +14,7 @@
 #import "TaskViewController.h"
 #import "ParentTaskViewController.h"
 #import "TaskDetailsController.h"
+#import "TaskDetailsControlleriPad.h"
 #import "CategoryViewController.h"
 
 #import "TaskCell.h"
@@ -127,22 +128,6 @@ static void deleteTask(CDTask *task)
 			}
 		}
 	}
-}
-
-- initWithCoder:(NSCoder *)coder
-{
-	if (self = [super initWithCoder:coder])
-	{
-		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-		{
-			// XXXTMP; on the iPad the search bar should be in the toolbar
-			searchCell = [[CellFactory cellFactory] createSearchCell];
-			searchCell.searchBar.placeholder = _("Search tasks...");
-			searchCell.searchBar.delegate = self;
-		}
-	}
-
-	return self;
 }
 
 - initWithCategoryController:(CategoryViewController *)controller edit:(BOOL)edit
@@ -303,12 +288,15 @@ static void deleteTask(CDTask *task)
 		[sheet showFromToolbar:self.toolbar];
 	else
 	{
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 30200
 		// I don't want to use a popover controller... Isn't there a method for determining
 		// a bar item's rect ?
 		CGRect rect = toolbar.frame;
 		rect.origin.x = rect.origin.x + rect.size.width - 80;
 		rect.size.width = 20;
+
 		[sheet showFromRect:rect inView:self.view animated:YES];
+#endif;
 	}
 
 	[sheet release];
@@ -780,7 +768,17 @@ static void deleteTask(CDTask *task)
 	}
 
 	CDTask *task = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - ADJUSTSECTION]];
-	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task];
+	UIViewController *ctrl;
+
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+	{
+		ctrl = [[TaskDetailsControlleriPad alloc] initWithTask:task];
+	}
+	else
+	{
+		ctrl = [[TaskDetailsController alloc] initWithTask:task];
+	}
+
 	[self.navigationController pushViewController:ctrl animated:YES];
 	[[PositionStore instance] push:self indexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - ADJUSTSECTION)] type:TYPE_DETAILS searchWord:searchCell.searchBar.text];
 	[ctrl release];

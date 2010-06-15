@@ -91,6 +91,8 @@
 		A66C186711C385470081C175 /* TaskDetailsRecurrencePeriodPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = A66C186611C385470081C175 /* TaskDetailsRecurrencePeriodPicker.m */; };
 		A66C188A11C386B90081C175 /* TaskDetailsRecurrencePeriodPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = A66C188811C386B90081C175 /* TaskDetailsRecurrencePeriodPicker.xib */; };
 		A66EE70C1196AEAF006758BB /* NSDate+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = A66EE70B1196AEAF006758BB /* NSDate+Utils.m */; };
+		A672212511C74A5B0046C6CF /* SimpleDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = A672212311C74A5B0046C6CF /* SimpleDatePicker.m */; };
+		A672213511C74B210046C6CF /* SimpleDatePicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = A672213411C74B210046C6CF /* SimpleDatePicker.xib */; };
 		A673ABF60F2203D000E548BB /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A673ABF50F2203D000E548BB /* NavigationController.m */; };
 		A67A0C210F6BA57100F48A82 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = A67A0C200F6BA57100F48A82 /* Entitlements.plist */; };
 		A67E47E60F5A938F00000A24 /* BonjourBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = A67E47DF0F5A938F00000A24 /* BonjourBrowser.m */; };
@@ -121,6 +123,8 @@
 		A6AFD6BC10414E930065D5B7 /* TwoWayModifiedCategoriesState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6AFD6BB10414E930065D5B7 /* TwoWayModifiedCategoriesState.m */; };
 		A6B264D00FDBCB9400FF2AD0 /* DateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6B264CF0FDBCB9400FF2AD0 /* DateCell.m */; };
 		A6B264DD0FDBCBFE00FF2AD0 /* DateCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6B264DC0FDBCBFE00FF2AD0 /* DateCell.xib */; };
+		A6B63B4C11C66615002C9069 /* TaskDetailsControlleriPad.m in Sources */ = {isa = PBXBuildFile; fileRef = A6B63B4A11C66615002C9069 /* TaskDetailsControlleriPad.m */; };
+		A6B63B4D11C66615002C9069 /* TaskDetailsControlleriPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6B63B4B11C66615002C9069 /* TaskDetailsControlleriPad.xib */; };
 		A6B7A5B30FA45E110067B76A /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = A6B7A5B20FA45E110067B76A /* iTunesArtwork */; };
 		A6C3CEF810E76C8C00483057 /* ButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C3CEF710E76C8C00483057 /* ButtonCell.m */; };
 		A6C3CEFA10E76CB600483057 /* ButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6C3CEF910E76CB600483057 /* ButtonCell.xib */; };
@@ -314,6 +318,9 @@
 		A66C188911C386B90081C175 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TaskDetailsRecurrencePeriodPicker.xib; sourceTree = "<group>"; };
 		A66EE70A1196AEAF006758BB /* NSDate+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Utils.h"; sourceTree = "<group>"; };
 		A66EE70B1196AEAF006758BB /* NSDate+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Utils.m"; sourceTree = "<group>"; };
+		A672212211C74A5B0046C6CF /* SimpleDatePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleDatePicker.h; sourceTree = "<group>"; };
+		A672212311C74A5B0046C6CF /* SimpleDatePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleDatePicker.m; sourceTree = "<group>"; };
+		A672213411C74B210046C6CF /* SimpleDatePicker.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SimpleDatePicker.xib; sourceTree = "<group>"; };
 		A673ABF40F2203D000E548BB /* NavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
 		A673ABF50F2203D000E548BB /* NavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		A67400771042DF0D0094E5F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -374,6 +381,9 @@
 		A6B264CE0FDBCB9400FF2AD0 /* DateCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateCell.h; sourceTree = "<group>"; };
 		A6B264CF0FDBCB9400FF2AD0 /* DateCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateCell.m; sourceTree = "<group>"; };
 		A6B264DC0FDBCBFE00FF2AD0 /* DateCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DateCell.xib; sourceTree = SOURCE_ROOT; };
+		A6B63B4911C66615002C9069 /* TaskDetailsControlleriPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDetailsControlleriPad.h; sourceTree = "<group>"; };
+		A6B63B4A11C66615002C9069 /* TaskDetailsControlleriPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskDetailsControlleriPad.m; sourceTree = "<group>"; };
+		A6B63B4B11C66615002C9069 /* TaskDetailsControlleriPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskDetailsControlleriPad.xib; sourceTree = "<group>"; };
 		A6B7A5B20FA45E110067B76A /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
 		A6BDE7281171C93200979568 /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		A6BDE72C1171C95E00979568 /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/TaskView.xib; sourceTree = "<group>"; };
@@ -606,6 +616,9 @@
 		A600A38E119FDD2A0018F309 /* Task details */ = {
 			isa = PBXGroup;
 			children = (
+				A6B63B4911C66615002C9069 /* TaskDetailsControlleriPad.h */,
+				A6B63B4A11C66615002C9069 /* TaskDetailsControlleriPad.m */,
+				A6B63B4B11C66615002C9069 /* TaskDetailsControlleriPad.xib */,
 				A6D384540F247DDF0097F0F6 /* TaskDetailsController.h */,
 				A6D384550F247DDF0097F0F6 /* TaskDetailsController.m */,
 				A6D384600F247E910097F0F6 /* TaskDetails.xib */,
@@ -839,6 +852,9 @@
 				A6E83C5710E4C9AF00FF3E45 /* FileChooser.h */,
 				A6E83C5810E4C9AF00FF3E45 /* FileChooser.m */,
 				A6E83C5910E4C9AF00FF3E45 /* FileChooser.xib */,
+				A672212211C74A5B0046C6CF /* SimpleDatePicker.h */,
+				A672212311C74A5B0046C6CF /* SimpleDatePicker.m */,
+				A672213411C74B210046C6CF /* SimpleDatePicker.xib */,
 			);
 			name = Widgets;
 			sourceTree = "<group>";
@@ -1077,6 +1093,8 @@
 				A68B5E1711C4B799009AE2F1 /* MainWindow-iPad.xib in Resources */,
 				A6D5FFBD11C4C43D0030502F /* MainWindow-iPad.strings in Resources */,
 				A6DFB4E711C64BF8007FB4F0 /* TaskCoach-iPad.png in Resources */,
+				A6B63B4D11C66615002C9069 /* TaskDetailsControlleriPad.xib in Resources */,
+				A672213511C74B210046C6CF /* SimpleDatePicker.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1178,6 +1196,8 @@
 				A6CA5D5411C4F21A009CA6A9 /* ODCalendarDayViewController.m in Sources */,
 				A6CA5D6311C4F2AF009CA6A9 /* NSDate+TKCategory.m in Sources */,
 				A6CA5D9611C4F387009CA6A9 /* TapDetectingView.m in Sources */,
+				A6B63B4C11C66615002C9069 /* TaskDetailsControlleriPad.m in Sources */,
+				A672212511C74A5B0046C6CF /* SimpleDatePicker.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1385,7 +1405,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1.3;
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-weak_framework",
+					UIKit,
+				);
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E215CC17-8986-4DBF-86A8-6B47584D0129";
 				SDKROOT = iphoneos3.2;
@@ -1420,7 +1443,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1.3;
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-weak_framework",
+					UIKit,
+				);
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "62C3D3F1-227F-4F5F-A667-6B910FE5ABB1";
 				SDKROOT = iphoneos3.2;
@@ -1458,7 +1484,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1.3;
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-weak_framework",
+					UIKit,
+				);
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos3.2;
@@ -1495,7 +1524,10 @@
 				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1.3;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-weak_framework",
+					UIKit,
+				);
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = NO;
@@ -1514,7 +1546,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1.3;
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-weak_framework",
+					UIKit,
+				);
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos3.2;

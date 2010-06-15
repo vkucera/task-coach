@@ -15,8 +15,6 @@
 	
 	id target;
 	SEL action;
-	
-	NSDateFormatter *dayFormat;
 }
 
 @property (nonatomic, retain) IBOutlet UIDatePicker *picker;

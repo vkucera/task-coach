@@ -18,9 +18,6 @@
 	if (self = [super initWithNibName:@"DatePickerView" bundle:[NSBundle mainBundle]])
 	{
 		[self setDate:theDate target:theTarget action:theAction];
-		
-		dayFormat = [[NSDateFormatter alloc] init];
-		[dayFormat setDateFormat:@"EEEE"];
 	}
 
 	return self;
@@ -59,7 +56,6 @@
 {
 	[self viewDidUnload];
 
-	[dayFormat release];
 	[date release];
 	
 	[super dealloc];
