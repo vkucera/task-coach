@@ -590,7 +590,8 @@ class ProgressPage(Page):
         self.addEntry(self._markTaskCompletedLabel, choice, flags=[None, wx.ALL])
         
     def entries(self):
-        return dict(percentageComplete=self._percentageCompleteEntry)
+        return dict(percentageComplete=self._percentageCompleteEntry,
+                    totalPercentageComplete=self._percentageCompleteEntry)
         
     @patterns.eventSource
     def ok(self, event=None): # pylint: disable-msg=W0221
