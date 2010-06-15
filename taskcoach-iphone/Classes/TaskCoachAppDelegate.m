@@ -109,6 +109,9 @@ NSManagedObjectContext *getManagedObjectContext(void)
         [managedObjectContext setPersistentStoreCoordinator: coordinator];
     }
 	
+	// We don't use undo, so save memory
+	[[managedObjectContext undoManager] disableUndoRegistration];
+
     return managedObjectContext;
 }
 
