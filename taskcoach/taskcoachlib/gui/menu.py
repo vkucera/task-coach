@@ -850,14 +850,10 @@ class NotePopupMenu(Menu):
             uicommand.ViewExpandSelected(viewer=noteViewer),
             uicommand.ViewCollapseSelected(viewer=noteViewer))
        
-        
-# Column header popup menu
 
-class ColumnPopupMenu(Menu):
-    def __init__(self, window):
-        super(ColumnPopupMenu, self).__init__(window)
-        wx.CallAfter(self.appendUICommands, *self.getUICommands())
-        
+class ColumnPopupMenu(DynamicMenuThatGetsUICommandsFromViewer):
+    ''' Column header popup menu. '''
+    
     def __setColumn(self, columnIndex):
         self.__columnIndex = columnIndex # pylint: disable-msg=W0201
     
@@ -868,28 +864,6 @@ class ColumnPopupMenu(Menu):
     # this menu.  This property should be set by the control popping up this 
     # menu (see widgets._CtrlWithColumnPopupMenuMixin).
     columnIndex = property(__getColumn, __setColumn) 
-    
-    def appendUICommands(self, *args, **kwargs):
-        if self:
-            # Prevent PyDeadObjectError, since we're called via CallAfter
-            super(ColumnPopupMenu, self).appendUICommands(*args, **kwargs)
-                            
-    def getUICommands(self):
-        return [uicommand.HideCurrentColumn(viewer=self._window), None] + \
-            self._window.getColumnUICommands()
-            
-
-class EffortViewerColumnPopupMenu(DynamicMenuThatGetsUICommandsFromViewer):
-    def __setColumn(self, columnIndex):
-        self.__columnIndex = columnIndex # pylint: disable-msg=W0201
-    
-    def __getColumn(self):
-        return self.__columnIndex
-    
-    # columnIndex is the index of the column clicked by the user to popup 
-    # this menu. This property should be set by the control popping up 
-    # this menu (see widgets._CtrlWithColumnPopupMenuMixin).
-    columnIndex = property(__getColumn, __setColumn) 
 
     def registerForMenuUpdate(self):
         self._window.Bind(wx.EVT_UPDATE_UI, self.onUpdateMenu)
@@ -899,7 +873,7 @@ class EffortViewerColumnPopupMenu(DynamicMenuThatGetsUICommandsFromViewer):
             return []
         return [uicommand.HideCurrentColumn(viewer=self._window), None] + \
             self._window.getColumnUICommands()
-
+            
 
 class AttachmentPopupMenu(Menu):
     def __init__(self, mainwindow, settings, attachments, attachmentViewer):
