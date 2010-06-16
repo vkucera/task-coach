@@ -641,11 +641,13 @@ class BudgetPage(Page):
         
     def addTimeSpentEntry(self):
         timeSpent = self.items[0].timeSpent()
-        self.addEntry(_('Time spent'), render.budget(timeSpent), flags=[None, wx.ALL])
+        timeSpentEntry = entry.TimeDeltaEntry(self, timeSpent, readonly=True)
+        self.addEntry(_('Time spent'), timeSpentEntry, flags=[None, wx.ALL])
         
     def addBudgetLeftEntry(self):
         budgetLeft = self.items[0].budgetLeft()
-        self.addEntry(_('Budget left'), render.budget(budgetLeft), flags=[None, wx.ALL])
+        budgetLeftEntry = entry.TimeDeltaEntry(self, budgetLeft, readonly=True)
+        self.addEntry(_('Budget left'), budgetLeftEntry, flags=[None, wx.ALL])
         
     def addRevenueEntries(self):
         self.addHourlyFeeEntry()
@@ -669,7 +671,8 @@ class BudgetPage(Page):
         
     def addRevenueEntry(self):
         revenue = self.items[0].revenue()
-        self.addEntry(_('Revenue'), render.monetaryAmount(revenue), flags=[None, wx.ALL])
+        revenueEntry = entry.AmountEntry(self, revenue, readonly=True)
+        self.addEntry(_('Revenue'), revenueEntry, flags=[None, wx.ALL])
         
     def entries(self):
         return dict(budget=self._budgetEntry, 

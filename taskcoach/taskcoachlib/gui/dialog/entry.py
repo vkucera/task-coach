@@ -62,7 +62,8 @@ class DateTimeEntry(widgets.PanelWithBoxSizer):
 class TimeDeltaEntry(widgets.PanelWithBoxSizer):
     defaultTimeDelta=date.TimeDelta()
 
-    def __init__(self, parent, timeDelta=defaultTimeDelta, *args, **kwargs):
+    def __init__(self, parent, timeDelta=defaultTimeDelta, readonly=False, 
+                 *args, **kwargs):
         super(TimeDeltaEntry, self).__init__(parent, *args, **kwargs)
         hours, minutes, seconds = timeDelta.hoursMinutesSeconds()
         self._entry = widgets.masked.TextCtrl(self, mask='#{6}:##:##',
@@ -70,6 +71,8 @@ class TimeDeltaEntry(widgets.PanelWithBoxSizer):
             fields=[masked.Field(formatcodes='r', defaultValue='%6d'%hours),
                     masked.Field(defaultValue='%02d'%minutes),
                     masked.Field(defaultValue='%02d'%seconds)])
+        if readonly:
+            self._entry.Disable()
         self.add(self._entry, flag=wx.EXPAND|wx.ALL, proportion=1)
         self.fit()
 
@@ -78,10 +81,12 @@ class TimeDeltaEntry(widgets.PanelWithBoxSizer):
 
 
 class AmountEntry(widgets.PanelWithBoxSizer):
-    def __init__(self, parent, amount=0.0, *args, **kwargs):
+    def __init__(self, parent, amount=0.0, readonly=False, *args, **kwargs):
         self.local_conventions = kwargs.pop('localeconv', locale.localeconv())
         super(AmountEntry, self).__init__(parent, *args, **kwargs)
         self._entry = self.createEntry(amount)
+        if readonly:
+            self._entry.Disable()
         self.add(self._entry)
         self.fit()
 
