@@ -189,12 +189,9 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
         status2 = _('Status: %d filtered')%len(filteredCategories)
         return status1, status2
         
-    def singleItemEditorClass(self):
+    def itemEditorClass(self):
         return dialog.editor.CategoryEditor
 
-    def multipleItemEditorClass(self):
-        return dialog.editor.CategoryEditor
-    
     def newItemCommandClass(self):
         return command.NewCategoryCommand
     

@@ -367,10 +367,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
             selectedTasks = [subjectDecoratedTaskList[0][1]]
         return super(EffortViewer, self).newItemDialog(selectedTasks, bitmap=bitmap)
         
-    def singleItemEditorClass(self):
-        return dialog.editor.EffortEditor
-
-    def multipleItemEditorClass(self):
+    def itemEditorClass(self):
         return dialog.editor.EffortEditor
     
     def newItemCommandClass(self):

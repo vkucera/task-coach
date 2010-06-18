@@ -379,16 +379,17 @@ class AddNoteCommand(BaseCommand):
 
     def __init__(self, *args, **kwargs):
         super(AddNoteCommand, self).__init__(*args, **kwargs)
-        self.notes = [note.Note(subject=_('New note')) \
-                      for dummy in self.items]
+        self.owners = self.items
+        self.items = self.notes = [note.Note(subject=_('New note')) \
+                                   for dummy in self.items]
     
     def addNotes(self):
-        for item, note in zip(self.items, self.notes): # pylint: disable-msg=W0621
-            item.addNote(note)
+        for owner, note in zip(self.owners, self.notes): # pylint: disable-msg=W0621
+            owner.addNote(note)
 
     def removeNotes(self):
-        for item, note in zip(self.items, self.notes): # pylint: disable-msg=W0621
-            item.removeNote(note)
+        for owner, note in zip(self.owners, self.notes): # pylint: disable-msg=W0621
+            owner.removeNote(note)
     
     def do_command(self):
         self.addNotes()

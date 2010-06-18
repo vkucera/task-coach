@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, os.path
 from taskcoachlib import widgets, patterns
-from taskcoachlib.gui import render, viewer, artprovider
+from taskcoachlib.gui import viewer, artprovider
 from taskcoachlib.widgets import draganddrop
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, category, date, note, attachment

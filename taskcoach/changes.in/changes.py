@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.1.0', 'June 15, 2010',
+Release('1.1.0', 'June 18, 2010',
     summary='''This release adds time to start, due and completion dates of 
 tasks and adds support for mass editing of items.''',
     featuresAdded=[
@@ -38,6 +38,11 @@ of all edited items.''')
     implementationChanged=[
         Implementation('''The task file format was changed to support start, due
 and completion date and time. The task file format version number is now 30.''')
+        ],
+    bugsFixed=[
+        Bug('''Icons in edit dialogs would be lined up vertically on some 
+versions of Windows XP. Fixed by using a notebook widget instead of the
+listbook widget.''', '2927384')
         ]
     ),
     

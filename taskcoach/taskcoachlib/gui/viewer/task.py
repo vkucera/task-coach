@@ -71,12 +71,9 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
                 self.settings, self.taskFile.efforts(), self.taskFile,  
                 bitmap=bitmap)
             
-    def singleItemEditorClass(self):
+    def itemEditorClass(self):
         return dialog.editor.TaskEditor
     
-    def multipleItemEditorClass(self):
-        return dialog.editor.TaskEditor
-
     def newItemCommandClass(self):
         return command.NewTaskCommand
     

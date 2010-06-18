@@ -120,7 +120,7 @@ class SyncMLNotePage(SyncMLBasePage):
         self.fit()
 
 
-class SyncMLPreferences(widgets.ListbookDialog):
+class SyncMLPreferences(widgets.NotebookDialog):
     def __init__(self, iocontroller=None, *args, **kwargs):
         self.iocontroller = iocontroller
         super(SyncMLPreferences, self).__init__(bitmap='wrench_icon', *args,

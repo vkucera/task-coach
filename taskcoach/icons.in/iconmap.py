@@ -55,7 +55,7 @@ iconlist = [
 ('timelineviewer', 'actions', 'timeline', [16]),
 ('activatenextviewer', 'actions', 'tab_advance_next', [16]),
 ('activatepreviousviewer', 'actions', 'tab_advance_prev', [16]),
-('windows', 'apps', 'window_list', [22]),
+('windows', 'apps', 'window_list', [16, 22]),
 ('maxpriority', 'actions', '2uparrow', [16]),
 ('minpriority', 'actions', '2downarrow', [16]),
 ('incpriority', 'actions', '1uparrow', [16]),

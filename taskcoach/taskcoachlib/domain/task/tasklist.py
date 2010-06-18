@@ -21,42 +21,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from taskcoachlib.i18n import _
-from taskcoachlib.domain import date, categorizable
+from taskcoachlib.domain import categorizable
 import task
 
 
-def newTaskMenuText():
+def accelerator(modifier, key, macKey=None):
     # There is a bug in wxWidget/wxPython on the Mac that causes the 
     # INSERT accelerator to be mapped so some other key sequence ('c' in
     # this case) so that whenever that key sequence is typed, this command
     # is invoked. Hence, we use a different accelarator on the Mac.
-    menuText = _('&New task...')
-    if '__WXMAC__' == wx.Platform:
-        menuText += u'\tCtrl+N'
-    else:
-        menuText += u'\tCtrl+INS'
-    return menuText
-
-def newSubTaskMenuText():
-    # See comments in newTaskMenuText() above
-    menuText = _('New &subtask...')
-    if '__WXMAC__' == wx.Platform:
-        menuText += u'\tShift+Ctrl+N'
-    else:
-        menuText += u'\tShift+Ctrl+INS'
-    return menuText  
+    macKey = macKey if macKey else key
+    return u'\t%s+%s'%(modifier, macKey if '__WXMAC__' == wx.Platform else key)
 
 
 class TaskList(categorizable.CategorizableContainer):
     # FIXME: TaskList should be called TaskCollection or TaskSet
 
-    newItemMenuText = newTaskMenuText()
+    newItemMenuText = _('&New task...') + accelerator('Ctrl', 'INS', 'N')
     newItemHelpText = _('Insert a new task')
     editItemMenuText = _('&Edit task...')
-    editItemHelpText = _('Edit the selected task')
-    deleteItemMenuText = _('&Delete task\tCtrl+DEL')
+    editItemHelpText = _('Edit the selected task(s)')
+    deleteItemMenuText = _('&Delete task') + accelerator('Ctrl', 'DEL')
     deleteItemHelpText = _('Delete the selected task(s)')
-    newSubItemMenuText = newSubTaskMenuText()
+    newSubItemMenuText = _('New &subtask...') + accelerator('Shift+Ctrl', 'INS', 'N')
     newSubItemHelpText = _('Insert a new subtask into the selected task')
     
     def _nrInterestingTasks(self, isInteresting):

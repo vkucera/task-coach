@@ -349,7 +349,7 @@ class EditorPage(SettingsPage):
             self.settings.getboolean('editor', 'maccheckspelling')
 
 
-class Preferences(widgets.ListbookDialog):
+class Preferences(widgets.NotebookDialog):
     def __init__(self, settings=None, *args, **kwargs):
         self.settings = settings
         super(Preferences, self).__init__(bitmap='wrench_icon', *args, **kwargs)

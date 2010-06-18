@@ -333,6 +333,12 @@ class NeedsSelectionMixin(object):
             self.viewer.curselection()
 
 
+class NeedsOneSelectedItemMixin(object):
+    def enabled(self, event):
+        return super(NeedsOneSelectedItemMixin, self).enabled(event) and \
+            len(self.viewer.curselection()) == 1
+
+
 class NeedsTaskViewerMixin(object):
     def enabled(self, event):
         return super(NeedsTaskViewerMixin, self).enabled(event) and \
@@ -382,10 +388,8 @@ class NeedsSelectedTasksOrEffortsMixin(NeedsSelectionMixin):
              self.viewer.curselectionIsInstanceOf(effort.Effort))
 
 
-class NeedsOneSelectedTaskMixin(NeedsSelectedTasksMixin):
-    def enabled(self, event):
-        return super(NeedsOneSelectedTaskMixin, self).enabled(event) and \
-               len(self.viewer.curselection()) == 1
+class NeedsOneSelectedTaskMixin(NeedsSelectedTasksMixin, NeedsOneSelectedItemMixin):
+    pass
 
 
 class NeedsSelectionWithAttachmentsMixin(NeedsSelectionMixin):
@@ -404,11 +408,23 @@ class NeedsSelectedCategoryMixin(NeedsCategoryViewerMixin, NeedsSelectionMixin):
     pass
 
 
+class NeedsOneSelectedCategoryMixin(NeedsCategoryViewerMixin, NeedsOneSelectedItemMixin):
+    pass
+
+
 class NeedsSelectedNoteMixin(NeedsNoteViewerMixin, NeedsSelectionMixin):
     pass
 
 
+class NeedsOneSelectedNoteMixin(NeedsNoteViewerMixin, NeedsOneSelectedItemMixin):
+    pass
+
+
 class NeedsSelectedAttachmentsMixin(NeedsAttachmentViewerMixin, NeedsSelectionMixin):
+    pass
+
+
+class NeedsOneSelectedAttachmentMixin(NeedsAttachmentViewerMixin, NeedsOneSelectedItemMixin):
     pass
 
 
@@ -1324,7 +1340,7 @@ class NewTaskWithSelectedCategories(TaskNew, ViewerCommand):
         return self.viewer.curselection()
     
 
-class TaskNewSubTask(NeedsSelectedTasksMixin,  TaskListCommand, ViewerCommand):
+class TaskNewSubTask(NeedsOneSelectedTaskMixin,  TaskListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         taskList = kwargs['taskList']
         super(TaskNewSubTask, self).__init__(bitmap='newsub',
@@ -1626,53 +1642,39 @@ class NoteMail(NeedsSelectedNoteMixin, MailItem):
         return _('Notes')
 
 
-class TaskAddNote(NeedsSelectedTasksMixin, ViewerCommand, SettingsCommand):
+class ItemAddNote(ViewerCommand, SettingsCommand):
+    menuText=_('Add &note')
+    helpText = 'Subclass responsibility'
+    AddNoteCommand = lambda: 'Subclass responsibility'
+    
     def __init__(self, *args, **kwargs):
-        super(TaskAddNote, self).__init__(menuText=_('Add &note'),
-            helpText=_('Add a note to the selected task(s)'),
-            bitmap='note', *args, **kwargs)
+        super(ItemAddNote, self).__init__(menuText=self.menuText,
+            helpText=self.helpText, bitmap='new', *args, **kwargs)
             
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
-        noteDialog = dialog.editor.NoteEditor(self.mainWindow(), 
-            command.AddTaskNoteCommand(self.viewer.presentation(), 
-                self.viewer.curselection()),
-            self.settings, self.viewer.presentation(),
-            self.mainWindow().taskFile, bitmap=self.bitmap)
-        noteDialog.Show(show)
-        return noteDialog # for testing purposes
-
-
-class CategoryAddNote(NeedsSelectedCategoryMixin, ViewerCommand, SettingsCommand):
-    def __init__(self, *args, **kwargs):
-        super(CategoryAddNote, self).__init__(menuText=_('Add &note'),
-            helpText=_('Add a note to the selected category(ies)'),
-            bitmap='note', *args, **kwargs)
-            
-    def doCommand(self, event, show=True): # pylint: disable-msg=W0221
-        noteDialog = dialog.editor.NoteEditor(self.mainWindow(), 
-            command.AddCategoryNoteCommand(self.viewer.presentation(), 
-                self.viewer.curselection()),
+        editDialog = dialog.editor.NoteEditor(self.mainWindow(), 
+            self.AddNoteCommand(self.viewer.presentation(), 
+                                self.viewer.curselection()),
             self.settings, self.viewer.presentation(),  
             self.mainWindow().taskFile, bitmap=self.bitmap)
-        noteDialog.Show(show)
-        return noteDialog # for testing purposes
+        editDialog.Show(show)
+        return editDialog # for testing purposes
+
+
+class TaskAddNote(NeedsOneSelectedTaskMixin, ItemAddNote):
+    helpText=_('Add a note to the selected task')
+    AddNoteCommand = command.AddTaskNoteCommand 
+
+
+class CategoryAddNote(NeedsOneSelectedCategoryMixin, ItemAddNote):
+    helpText = _('Add a note to the selected category')
+    AddNoteCommand = command.AddCategoryNoteCommand
         
 
-class AttachmentAddNote(NeedsSelectedAttachmentsMixin, ViewerCommand, SettingsCommand):
-    def __init__(self, *args, **kwargs):
-        super(AttachmentAddNote, self).__init__(menuText=_('Add &note'),
-            helpText=_('Add a note to the selected attachment(s)'),
-            bitmap='note', *args, **kwargs)
-
-    def doCommand(self, event, show=True): # pylint: disable-msg=W0221
-        noteDialog = dialog.editor.NoteEditor(self.mainWindow(), 
-            command.AddAttachmentNoteCommand(self.viewer.presentation(), 
-                self.viewer.curselection()),
-            self.settings, self.viewer.presentation(), 
-            self.mainWindow().taskFile, bitmap=self.bitmap)
-        noteDialog.Show(show)
-        return noteDialog # for testing purposes
-
+class AttachmentAddNote(NeedsOneSelectedAttachmentMixin, ItemAddNote):
+    helpText=_('Add a note to the selected attachment')
+    AddNoteCommand = command.AddAttachmentNoteCommand
+        
 
 class AddAttachment(NeedsSelectionMixin, ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
@@ -1888,7 +1890,7 @@ class CategoryNew(CategoriesCommand, SettingsCommand):
         newCategoryDialog.Show(show)
         
 
-class CategoryNewSubCategory(NeedsSelectedCategoryMixin, CategoriesCommand, 
+class CategoryNewSubCategory(NeedsOneSelectedCategoryMixin, CategoriesCommand, 
                              ViewerCommand):
     def __init__(self, *args, **kwargs):
         categories = kwargs['categories']
@@ -1947,7 +1949,7 @@ class NewNoteWithSelectedCategories(NoteNew, ViewerCommand):
         return self.viewer.curselection()
 
 
-class NoteNewSubNote(NeedsSelectedNoteMixin, NotesCommand, ViewerCommand):
+class NoteNewSubNote(NeedsOneSelectedNoteMixin, NotesCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         notes = kwargs['notes']
         super(NoteNewSubNote, self).__init__(bitmap='newsub', 

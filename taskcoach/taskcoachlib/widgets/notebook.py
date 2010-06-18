@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 import draganddrop
 import taskcoachlib.thirdparty.aui as aui
+import taskcoachlib.thirdparty.flatnotebook as fnb
 
 
 class GridCursor:
@@ -190,7 +191,7 @@ class BookMixin(object):
         if bitmap:
             imageList = self.GetImageList()
             imageList.Add(wx.ArtProvider_GetBitmap(bitmap, wx.ART_MENU, 
-                self._bitmapSize))
+                          self._bitmapSize))
             imageId = imageList.GetImageCount()-1
         else:
             imageId = -1
@@ -201,9 +202,17 @@ class BookMixin(object):
             page.ok(*args, **kwargs)
             
 
-class Notebook(BookMixin, wx.Notebook):
+class Notebook(BookMixin, fnb.FlatNotebook):
     pageChangedEvent = wx.EVT_NOTEBOOK_PAGE_CHANGED
     
+    def __init__(self, *args, **kwargs):
+        kwargs['agwStyle'] = fnb.FNB_NO_X_BUTTON | fnb.FNB_VC8 | fnb.FNB_SMART_TABS | fnb.FNB_NO_NAV_BUTTONS | fnb.FNB_DROPDOWN_TABS_LIST
+        super(Notebook, self).__init__(*args, **kwargs)
+        # Despite its name, we need to pass a bitmap to SetNavigatorIcon
+        bitmap = wx.BitmapFromIcon(self.TopLevelParent.GetIcon())
+        if bitmap:
+            self.SetNavigatorIcon(bitmap) 
+
 
 class Choicebook(BookMixin, wx.Choicebook):
     pageChangedEvent = wx.EVT_CHOICEBOOK_PAGE_CHANGED

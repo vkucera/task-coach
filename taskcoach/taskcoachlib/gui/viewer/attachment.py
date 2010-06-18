@@ -142,12 +142,9 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.ViewerWithColumns,
     def deleteItemCommand(self):
         return command.DeleteAttachmentCommand(self.presentation(), self.curselection())
     
-    def singleItemEditorClass(self):
+    def itemEditorClass(self):
         return dialog.editor.AttachmentEditor
 
-    def multipleItemEditorClass(self):
-        return dialog.editor.AttachmentEditor
-    
     def newItemCommandClass(self):
         return command.NewAttachmentCommand
     
