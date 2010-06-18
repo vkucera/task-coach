@@ -34,7 +34,8 @@ _('''You can create any viewer layout you want by dragging and dropping the tabs
 _('''What is actually printed when you select 'File' -> 'Print' depends on the current view. If the current view shows the task list, a list of tasks will be printed, if the current view shows effort grouped by month, that will be printed. The same goes for visible columns, sort order, filtered tasks, etc.'''),
 _('''Left-click a column header to sort by that column. Click the column header again to change the sort order from ascending to descending and back again. Right-click a column header to hide that column or make additional columns visible.'''),
 _('''You can turn off some features, such as notes and effort tracking, in the Preferences dialog. Features turned off are not accessible via the user interface, resulting in a 'smaller' user interface.'''),
-_('''You can create a template from a task in order to reduce typing when repetitive patterns emerge.''')
+_('''You can create a template from a task in order to reduce typing when repetitive patterns emerge.'''),
+_('''Ctrl-Tab switches between tabs in edit dialogs.''')
 ]
 
 
