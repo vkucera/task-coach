@@ -108,11 +108,6 @@ class NotebookDialog(BookDialog):
         return notebook.Notebook(self._panel)
 
         
-class ListbookDialog(BookDialog):
-    def createInterior(self):
-        return notebook.Listbook(self._panel)
-
-
 class HtmlWindowThatUsesWebBrowserForExternalLinks(wx.html.HtmlWindow):
     def OnLinkClicked(self, linkInfo):
         openedLinkInExternalBrowser = False

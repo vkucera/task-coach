@@ -125,25 +125,6 @@ class BookPage(wx.Panel):
         if type(control) in [type(''), type(u'')]:
             control = wx.StaticText(self, label=control)
         return control
-
-
-class BoxedBookPage(BookPage):
-    def __init__(self, *args, **kwargs):
-        super(BoxedBookPage, self).__init__(*args, **kwargs)
-        self.__boxSizers = {}
-
-    def addBox(self, label):
-        box = wx.StaticBox(self, label=label)
-        boxSizer = wx.StaticBoxSizer(box, wx.HORIZONTAL)
-        gridBagSizer = wx.GridBagSizer()
-        boxSizer.Add(gridBagSizer, flag=wx.EXPAND|wx.ALL)
-        self.__boxSizers[label] = gridBagSizer
-        self._sizer.Add(boxSizer, self._position.next(self._columns),
-                        span=(1, self._columns), flag=wx.EXPAND|wx.ALL)
-
-    def addEntry(self, *args, **kwargs):
-        self._sizer = self.__boxSizers[kwargs['box']]
-        super(BoxedBookPage, self).addEntry(*args, **kwargs)
         
 
 class BookMixin(object):
@@ -212,44 +193,6 @@ class Notebook(BookMixin, fnb.FlatNotebook):
         bitmap = wx.BitmapFromIcon(self.TopLevelParent.GetIcon())
         if bitmap:
             self.SetNavigatorIcon(bitmap) 
-
-
-class Choicebook(BookMixin, wx.Choicebook):
-    pageChangedEvent = wx.EVT_CHOICEBOOK_PAGE_CHANGED
-    
-    def createImageList(self):
-        pass # Choicebooks have no icons
-
-    def onDragOver(self, *args, **kwargs):
-        ''' onDragOver cannot work for Choicebooks because the choice control
-            widget that is used to switch between pages has no HitTest 
-            method. '''
-        return wx.DragNone
-
-
-class Listbook(BookMixin, wx.Listbook):
-    _bitmapSize = (22, 22)
-    pageChangedEvent = wx.EVT_LISTBOOK_PAGE_CHANGED
-
-    def __init__(self, *args, **kwargs):
-        kwargs['style'] = wx.LB_TOP
-        super(Listbook, self).__init__(*args, **kwargs)
-        self.Bind(wx.EVT_NAVIGATION_KEY, self.onNavigate)
-        
-    def onNavigate(self, event):
-        if event.GetDirection() and (wx.Window.FindFocus() == self.GetParent()):
-            # Tabbing forward from parent into the listbook
-            self.GetListView().SetFocus()
-        else:
-            event.Skip()
-                        
-    def onDragOver(self, x, y, defaultResult):
-        ''' onDragOver will only work for Listbooks if we query the list 
-            control (instead of the Listbook itself) with HitTest, so we pass
-            the result of self.GetListView() as pageSelectionArea to 
-            super.onDragOver. '''
-        return super(Listbook, self).onDragOver(x, y, defaultResult, 
-            pageSelectionArea=self.GetListView())
 
 
 class AdvanceSelectionMixin(object):
