@@ -175,6 +175,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         self.__dontStartEditingLabelBecauseUserDoubleClicked = False
         self.__defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         super(TreeListCtrl, self).__init__(parent, style=self.getStyle(), 
+            agwStyle=self.getAgwStyle(),
             columns=columns, resizeableColumn=0, itemPopupMenu=itemPopupMenu,
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
         self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand,
@@ -367,8 +368,11 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
     # Extend TreeMixin with TreeListCtrl specific behaviour:
 
     def getStyle(self):
+        return wx.WANTS_CHARS 
+            
+    def getAgwStyle(self):
         return (wx.TR_DEFAULT_STYLE | wx.TR_HIDE_ROOT | wx.TR_MULTIPLE \
-            | wx.TR_EDIT_LABELS | wx.TR_HAS_BUTTONS | wx.TR_FULL_ROW_HIGHLIGHT | wx.WANTS_CHARS \
+            | wx.TR_EDIT_LABELS | wx.TR_HAS_BUTTONS | wx.TR_FULL_ROW_HIGHLIGHT \
             | customtree.TR_HAS_VARIABLE_ROW_HEIGHT) & ~hypertreelist.TR_NO_HEADER 
 
     # pylint: disable-msg=W0221
@@ -401,7 +405,7 @@ class CheckTreeCtrl(TreeListCtrl):
             selectCommand, editCommand, dragAndDropCommand, 
             itemPopupMenu, *args, **kwargs)
         self.checkCommand = checkCommand
-        self.Bind(hypertreelist.EVT_TREE_ITEM_CHECKED, self.onItemChecked)
+        self.Bind(customtree.EVT_TREE_ITEM_CHECKED, self.onItemChecked)
         self.getIsItemChecked = parent.getIsItemChecked
         self.getItemParentHasExclusiveChildren = parent.getItemParentHasExclusiveChildren
         

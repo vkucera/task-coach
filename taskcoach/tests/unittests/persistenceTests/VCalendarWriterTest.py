@@ -34,7 +34,7 @@ class VCalTestCase(test.wxTestCase):
 
     def writeAndRead(self):
         self.writer.write(self.viewer, self.settings, self.selectionOnly)
-        return self.fd.getvalue() #.split('\r\n')[:-1]
+        return self.fd.getvalue()
 
     def selectItems(self, items):
         self.viewer.widget.select(items)
