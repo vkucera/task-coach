@@ -23,7 +23,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.1.0', 'June 18, 2010',
+Release('1.1.0', 'June 19, 2010',
     summary='''This release adds time to start, due and completion dates of 
 tasks and adds support for mass editing of items.''',
     featuresAdded=[
@@ -46,12 +46,14 @@ listbook widget.''', '2927384')
         ]
     ),
     
-Release('1.0.6', 'June 18, 2010',
+Release('1.0.6', 'June 19, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''The right-click column header menu wasn't working in task,
 note and category viewers.'''),
-        Bug('''Don't crash when printing on Jolicloud.''', '3018038')
+        Bug('''Don't crash when printing on Jolicloud.''', '3018038'),
+        Bug('''Don't display long descriptions in an inline text control,
+it's too buggy.''', '2992853', '2992850', '2992848')
         ]
     ),
     
