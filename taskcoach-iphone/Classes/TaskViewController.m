@@ -405,7 +405,7 @@ static void deleteTask(CDTask *task)
 
 	indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section + ADJUSTSECTION];
 	newIndexPath = [NSIndexPath indexPathForRow:newIndexPath.row inSection:newIndexPath.section + ADJUSTSECTION];
-	
+
     switch(type)
 	{
         case NSFetchedResultsChangeInsert:
@@ -427,7 +427,6 @@ static void deleteTask(CDTask *task)
 		{
 			TaskCell *cell = (TaskCell *)[tableView cellForRowAtIndexPath:indexPath];
 			[cell setTask:(CDTask *)anObject target:self action:@selector(onToggleTaskCompletion:)];
-			[cell setNeedsDisplay];
             break;
 		}	
         case NSFetchedResultsChangeMove:

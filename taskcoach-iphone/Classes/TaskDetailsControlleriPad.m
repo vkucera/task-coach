@@ -206,6 +206,7 @@
 {
 	[task setValue:nil forKey:dateName];
 	dateName = nil;
+	[task computeDateStatus];
 	[self saveTask];
 
 	[popoverCtrl dismissPopoverAnimated:YES]; // This doesn't call popoverControllerDidDismissPopover
@@ -255,6 +256,7 @@
 	{
 		[task setValue:datePicker.date forKey:dateName];
 		dateName = nil;
+		[task computeDateStatus];
 		[self saveTask];
 	}
 
