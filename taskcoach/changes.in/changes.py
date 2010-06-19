@@ -30,7 +30,9 @@ Release('1.0.6', 'June 19, 2010',
 note and category viewers.'''),
         Bug('''Don't crash when printing on Jolicloud.''', '3018038'),
         Bug('''Don't display long descriptions in an inline text control,
-it's too buggy.''', '2992853', '2992850', '2992848')
+it's too buggy.''', '2992853', '2992850', '2992848'),
+        Bug('''On Mac OS X, don't cut text in text controls when the user
+types <cmd><shift>X, only when she types <cmd>X.''', '2942288')
         ]
     ),
     
