@@ -10,6 +10,7 @@
 #import "TaskDetailsControlleriPad.h"
 #import "TaskCategoryPickerController.h"
 #import "TaskDetailsEffortsBase.h"
+#import "TaskDetailsRecurrenceControlleriPad.h"
 #import "DateUtils.h"
 #import "i18n.h"
 
@@ -111,10 +112,10 @@
 {
 	if (popoverCtrl)
 	{
+		UIButton *button;
+
 		if (dateName)
 		{
-			UIButton *button;
-
 			if ([dateName isEqualToString:@"startDate"])
 				button = startDateButton;
 			else if ([dateName isEqualToString:@"dueDate"])
@@ -123,9 +124,11 @@
 				button = completionDateButton;
 			else
 				button = reminderDateButton;
-
-			[popoverCtrl presentPopoverFromRect:button.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 		}
+		else
+			button = recurrenceButton;
+
+		[popoverCtrl presentPopoverFromRect:button.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 	}
 }
 
@@ -235,13 +238,25 @@
 	[taskEffortCtrl onTrack:button];
 }
 
+- (IBAction)onClickRecurrence:(UIButton *)button
+{
+	TaskDetailsRecurrenceControlleriPad *ctrl = [[TaskDetailsRecurrenceControlleriPad alloc] initWithTask:task];
+	popoverCtrl = [[UIPopoverController alloc] initWithContentViewController:ctrl];
+	[popoverCtrl setPopoverContentSize:CGSizeMake(284, 141)];
+	[popoverCtrl presentPopoverFromRect:button.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+	[ctrl release];
+}
+
 #pragma mark UIPopoverControllerDelegate
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
 {
-	[task setValue:datePicker.date forKey:dateName];
-	dateName = nil;
-	[self saveTask];
+	if (dateName)
+	{
+		[task setValue:datePicker.date forKey:dateName];
+		dateName = nil;
+		[self saveTask];
+	}
 
 	[popoverCtrl release];
 	popoverCtrl = nil;

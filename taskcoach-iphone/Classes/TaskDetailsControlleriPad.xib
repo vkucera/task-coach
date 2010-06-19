@@ -286,6 +286,7 @@
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<reference key="IBUIFont" ref="524002171"/>
 						<int key="IBUIButtonType">1</int>
+						<string key="IBUINormalTitle">Recurrence</string>
 						<reference key="IBUIHighlightedTitleColor" ref="675182885"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
@@ -677,6 +678,15 @@
 					</object>
 					<int key="connectionID">59</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">onClickRecurrence:</string>
+						<reference key="source" ref="1025686190"/>
+						<reference key="destination" ref="841351856"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">60</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -929,7 +939,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">59</int>
+			<int key="maxID">60</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -961,9 +971,11 @@
 							<string>incPriority:</string>
 							<string>onClickDate:</string>
 							<string>onClickEffort:</string>
+							<string>onClickRecurrence:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>UIButton</string>
 							<string>UIButton</string>
 							<string>UIButton</string>
 							<string>UIButton</string>
@@ -978,6 +990,7 @@
 							<string>incPriority:</string>
 							<string>onClickDate:</string>
 							<string>onClickEffort:</string>
+							<string>onClickRecurrence:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -995,6 +1008,10 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">onClickEffort:</string>
+								<string key="candidateClassName">UIButton</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">onClickRecurrence:</string>
 								<string key="candidateClassName">UIButton</string>
 							</object>
 						</object>

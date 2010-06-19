@@ -55,5 +55,6 @@
 - (IBAction)incPriority:(UIButton *)button;
 - (IBAction)decPriority:(UIButton *)button;
 - (IBAction)onClickEffort:(UIButton *)button;
+- (IBAction)onClickRecurrence:(UIButton *)button;
 
 @end
