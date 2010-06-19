@@ -67,6 +67,9 @@
 		A63CC07C0F517055003669FD /* TaskCellLeftBig.xib in Resources */ = {isa = PBXBuildFile; fileRef = A63CC07A0F517055003669FD /* TaskCellLeftBig.xib */; };
 		A63CC07D0F517055003669FD /* TaskCellRightBig.xib in Resources */ = {isa = PBXBuildFile; fileRef = A63CC07B0F517055003669FD /* TaskCellRightBig.xib */; };
 		A63CC0810F5170FC003669FD /* TaskCellBig.m in Sources */ = {isa = PBXBuildFile; fileRef = A63CC0800F5170FC003669FD /* TaskCellBig.m */; };
+		A63D714111CCF983005B1714 /* TaskCelliPad.m in Sources */ = {isa = PBXBuildFile; fileRef = A63D714011CCF983005B1714 /* TaskCelliPad.m */; };
+		A63D714911CCFB1A005B1714 /* TaskCelliPadRight.xib in Resources */ = {isa = PBXBuildFile; fileRef = A63D714811CCFB1A005B1714 /* TaskCelliPadRight.xib */; };
+		A63D718611CCFEBC005B1714 /* TaskCelliPadLeft.xib in Resources */ = {isa = PBXBuildFile; fileRef = A63D718511CCFEBC005B1714 /* TaskCelliPadLeft.xib */; };
 		A63E286D10415CCD00A2E672 /* TwoWayDeletedCategoriesState.m in Sources */ = {isa = PBXBuildFile; fileRef = A63E286C10415CCD00A2E672 /* TwoWayDeletedCategoriesState.m */; };
 		A64403B211BD43270029075D /* CDHierarchicalDomainObject+Addons.m in Sources */ = {isa = PBXBuildFile; fileRef = A64403B111BD43270029075D /* CDHierarchicalDomainObject+Addons.m */; };
 		A64603A70F2234B500FC71AD /* CellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = A64603A60F2234B500FC71AD /* CellFactory.m */; };
@@ -265,6 +268,10 @@
 		A63CC07B0F517055003669FD /* TaskCellRightBig.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCellRightBig.xib; sourceTree = SOURCE_ROOT; };
 		A63CC07F0F5170FC003669FD /* TaskCellBig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCellBig.h; sourceTree = "<group>"; };
 		A63CC0800F5170FC003669FD /* TaskCellBig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskCellBig.m; sourceTree = "<group>"; };
+		A63D713F11CCF983005B1714 /* TaskCelliPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCelliPad.h; sourceTree = "<group>"; };
+		A63D714011CCF983005B1714 /* TaskCelliPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskCelliPad.m; sourceTree = "<group>"; };
+		A63D714811CCFB1A005B1714 /* TaskCelliPadRight.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCelliPadRight.xib; sourceTree = "<group>"; };
+		A63D718511CCFEBC005B1714 /* TaskCelliPadLeft.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCelliPadLeft.xib; sourceTree = "<group>"; };
 		A63E286B10415CCD00A2E672 /* TwoWayDeletedCategoriesState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwoWayDeletedCategoriesState.h; path = Synchronization/TwoWayDeletedCategoriesState.h; sourceTree = "<group>"; };
 		A63E286C10415CCD00A2E672 /* TwoWayDeletedCategoriesState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwoWayDeletedCategoriesState.m; path = Synchronization/TwoWayDeletedCategoriesState.m; sourceTree = "<group>"; };
 		A64403B011BD43270029075D /* CDHierarchicalDomainObject+Addons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CDHierarchicalDomainObject+Addons.h"; path = "CoreData/CDHierarchicalDomainObject+Addons.h"; sourceTree = "<group>"; };
@@ -958,10 +965,14 @@
 				A64603A90F2234D900FC71AD /* TaskCell.m */,
 				A63CC07F0F5170FC003669FD /* TaskCellBig.h */,
 				A63CC0800F5170FC003669FD /* TaskCellBig.m */,
+				A63D713F11CCF983005B1714 /* TaskCelliPad.h */,
+				A63D714011CCF983005B1714 /* TaskCelliPad.m */,
 				A63CC07A0F517055003669FD /* TaskCellLeftBig.xib */,
 				A63CC07B0F517055003669FD /* TaskCellRightBig.xib */,
 				A6A975370F26572200622396 /* TaskCellLeft.xib */,
 				A6A975380F26572200622396 /* TaskCellRight.xib */,
+				A63D714811CCFB1A005B1714 /* TaskCelliPadRight.xib */,
+				A63D718511CCFEBC005B1714 /* TaskCelliPadLeft.xib */,
 				A6D3846A0F2481C80097F0F6 /* TextFieldCell.h */,
 				A6D3846B0F2481C80097F0F6 /* TextFieldCell.m */,
 				A6D384770F24830F0097F0F6 /* TextFieldCell.xib */,
@@ -1109,6 +1120,8 @@
 				A672213511C74B210046C6CF /* SimpleDatePicker.xib in Resources */,
 				A6782E7C11CCBD35005ADB23 /* TaskDetailsEffortsBase.xib in Resources */,
 				A6EDD13E11CCDB570092BC79 /* TaskDetailsRecurrenceControlleriPad.xib in Resources */,
+				A63D714911CCFB1A005B1714 /* TaskCelliPadRight.xib in Resources */,
+				A63D718611CCFEBC005B1714 /* TaskCelliPadLeft.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1214,6 +1227,7 @@
 				A672212511C74A5B0046C6CF /* SimpleDatePicker.m in Sources */,
 				A6782E7A11CCB85A005ADB23 /* TaskDetailsEffortsBase.m in Sources */,
 				A6EDD13D11CCDB570092BC79 /* TaskDetailsRecurrenceControlleriPad.m in Sources */,
+				A63D714111CCF983005B1714 /* TaskCelliPad.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

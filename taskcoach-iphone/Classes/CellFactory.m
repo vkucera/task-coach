@@ -48,14 +48,24 @@ static CellFactory *_cellFactory = NULL;
 		if ([Configuration configuration].compactTasks)
 			[[NSBundle mainBundle] loadNibNamed:@"TaskCellRight" owner:self options:nil];
 		else
-			[[NSBundle mainBundle] loadNibNamed:@"TaskCellRightBig" owner:self options:nil];
+		{
+			if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+				[[NSBundle mainBundle] loadNibNamed:@"TaskCellRightBig" owner:self options:nil];
+			else
+				[[NSBundle mainBundle] loadNibNamed:@"TaskCelliPadRight" owner:self options:nil];
+		}
 	}
 	else
 	{
 		if ([Configuration configuration].compactTasks)
 			[[NSBundle mainBundle] loadNibNamed:@"TaskCellLeft" owner:self options:nil];
 		else
-			[[NSBundle mainBundle] loadNibNamed:@"TaskCellLeftBig" owner:self options:nil];
+		{
+			if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+				[[NSBundle mainBundle] loadNibNamed:@"TaskCellLeftBig" owner:self options:nil];
+			else
+				[[NSBundle mainBundle] loadNibNamed:@"TaskCelliPadLeft" owner:self options:nil];
+		}
 	}
 	
 	return [taskCellTemplate retain];

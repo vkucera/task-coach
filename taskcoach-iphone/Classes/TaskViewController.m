@@ -623,7 +623,10 @@ static void deleteTask(CDTask *task)
 	if (indexPath.section == 0)
 		return 44;
 
-	return [Configuration configuration].compactTasks ? 44 : 60;
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+		return [Configuration configuration].compactTasks ? 44 : 120;
+	else
+		return [Configuration configuration].compactTasks ? 44 : 60;
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
