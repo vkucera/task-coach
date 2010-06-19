@@ -11,6 +11,7 @@
 @class CDTask;
 @class SimpleDatePicker;
 @class TaskCategoryPickerController;
+@class TaskDetailsEffortsBase;
 
 @interface TaskDetailsControlleriPad : UIViewController <UITextFieldDelegate, UITextViewDelegate, UIPopoverControllerDelegate>
 {
@@ -31,6 +32,7 @@
 	UIPopoverController *popoverCtrl;
 	NSString *dateName;
 	TaskCategoryPickerController *taskCatCtrl;
+	TaskDetailsEffortsBase *taskEffortCtrl;
 }
 
 @property (nonatomic, retain) IBOutlet UITextField *subject;
@@ -45,11 +47,13 @@
 @property (nonatomic, retain) IBOutlet UIButton *effortButton;
 
 @property (nonatomic, retain) IBOutlet TaskCategoryPickerController *taskCatCtrl;
+@property (nonatomic, retain) IBOutlet TaskDetailsEffortsBase *taskEffortCtrl;
 
 - initWithTask:(CDTask *)task;
 
 - (IBAction)onClickDate:(UIButton *)button;
 - (IBAction)incPriority:(UIButton *)button;
 - (IBAction)decPriority:(UIButton *)button;
+- (IBAction)onClickEffort:(UIButton *)button;
 
 @end

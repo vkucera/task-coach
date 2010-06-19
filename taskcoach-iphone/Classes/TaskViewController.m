@@ -341,8 +341,11 @@ static void deleteTask(CDTask *task)
 
 - (void)childWasPopped
 {
+	[self.tableView reloadData];
+
 	if (selected)
 	{
+		[self.tableView selectRowAtIndexPath:selected animated:NO scrollPosition:UITableViewScrollPositionNone];
 		[self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:selected] withRowAnimation:UITableViewRowAnimationFade];
 		[self.tableView deselectRowAtIndexPath:selected animated:YES];
 
@@ -421,9 +424,12 @@ static void deleteTask(CDTask *task)
             break;
 			
         case NSFetchedResultsChangeUpdate:
-			[((TaskCell *)[tableView cellForRowAtIndexPath:indexPath]) setTask:(CDTask *)anObject target:self action:@selector(onToggleTaskCompletion:)];
+		{
+			TaskCell *cell = (TaskCell *)[tableView cellForRowAtIndexPath:indexPath];
+			[cell setTask:(CDTask *)anObject target:self action:@selector(onToggleTaskCompletion:)];
+			[cell setNeedsDisplay];
             break;
-			
+		}	
         case NSFetchedResultsChangeMove:
             [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
 							 withRowAnimation:UITableViewRowAnimationRight];

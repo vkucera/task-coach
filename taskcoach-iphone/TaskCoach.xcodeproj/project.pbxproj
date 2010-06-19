@@ -17,7 +17,6 @@
 		A600A48E119FEA790018F309 /* TaskDetailsDates.m in Sources */ = {isa = PBXBuildFile; fileRef = A600A48C119FEA790018F309 /* TaskDetailsDates.m */; };
 		A600A48F119FEA790018F309 /* TaskDetailsDates.xib in Resources */ = {isa = PBXBuildFile; fileRef = A600A48D119FEA790018F309 /* TaskDetailsDates.xib */; };
 		A600A609119FFB1C0018F309 /* TaskDetailsEfforts.m in Sources */ = {isa = PBXBuildFile; fileRef = A600A607119FFB1C0018F309 /* TaskDetailsEfforts.m */; };
-		A600A60A119FFB1C0018F309 /* TaskDetailsEfforts.xib in Resources */ = {isa = PBXBuildFile; fileRef = A600A608119FFB1C0018F309 /* TaskDetailsEfforts.xib */; };
 		A60B6E30102587FA00F9983C /* BaseCategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A60B6E2F102587FA00F9983C /* BaseCategoryViewController.m */; };
 		A60B6ED710258D9D00F9983C /* TaskCategoryPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = A60B6ED610258D9D00F9983C /* TaskCategoryPickerController.m */; };
 		A60B6EE510258EB200F9983C /* TaskCategoryPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = A60B6EE410258EB200F9983C /* TaskCategoryPicker.xib */; };
@@ -94,6 +93,8 @@
 		A672212511C74A5B0046C6CF /* SimpleDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = A672212311C74A5B0046C6CF /* SimpleDatePicker.m */; };
 		A672213511C74B210046C6CF /* SimpleDatePicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = A672213411C74B210046C6CF /* SimpleDatePicker.xib */; };
 		A673ABF60F2203D000E548BB /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A673ABF50F2203D000E548BB /* NavigationController.m */; };
+		A6782E7A11CCB85A005ADB23 /* TaskDetailsEffortsBase.m in Sources */ = {isa = PBXBuildFile; fileRef = A6782E7911CCB85A005ADB23 /* TaskDetailsEffortsBase.m */; };
+		A6782E7C11CCBD35005ADB23 /* TaskDetailsEffortsBase.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6782E7B11CCBD35005ADB23 /* TaskDetailsEffortsBase.xib */; };
 		A67A0C210F6BA57100F48A82 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = A67A0C200F6BA57100F48A82 /* Entitlements.plist */; };
 		A67E47E60F5A938F00000A24 /* BonjourBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = A67E47DF0F5A938F00000A24 /* BonjourBrowser.m */; };
 		A67E47E70F5A938F00000A24 /* BrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A67E47E10F5A938F00000A24 /* BrowserViewController.m */; };
@@ -190,7 +191,6 @@
 		A600A48D119FEA790018F309 /* TaskDetailsDates.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskDetailsDates.xib; sourceTree = "<group>"; };
 		A600A606119FFB1C0018F309 /* TaskDetailsEfforts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDetailsEfforts.h; sourceTree = "<group>"; };
 		A600A607119FFB1C0018F309 /* TaskDetailsEfforts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskDetailsEfforts.m; sourceTree = "<group>"; };
-		A600A608119FFB1C0018F309 /* TaskDetailsEfforts.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskDetailsEfforts.xib; sourceTree = "<group>"; };
 		A60B6E2E102587FA00F9983C /* BaseCategoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseCategoryViewController.h; sourceTree = "<group>"; };
 		A60B6E2F102587FA00F9983C /* BaseCategoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseCategoryViewController.m; sourceTree = "<group>"; };
 		A60B6ED510258D9D00F9983C /* TaskCategoryPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCategoryPickerController.h; sourceTree = "<group>"; };
@@ -327,6 +327,9 @@
 		A67400781042DF410094E5F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/DatePickerView.strings; sourceTree = "<group>"; };
 		A67400791042DF530094E5F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/TaskView.strings; sourceTree = "<group>"; };
 		A674007A1042DF620094E5F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MainWindow.strings; sourceTree = "<group>"; };
+		A6782E7811CCB85A005ADB23 /* TaskDetailsEffortsBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDetailsEffortsBase.h; sourceTree = "<group>"; };
+		A6782E7911CCB85A005ADB23 /* TaskDetailsEffortsBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskDetailsEffortsBase.m; sourceTree = "<group>"; };
+		A6782E7B11CCBD35005ADB23 /* TaskDetailsEffortsBase.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskDetailsEffortsBase.xib; sourceTree = "<group>"; };
 		A67A0C200F6BA57100F48A82 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		A67E47DE0F5A938F00000A24 /* BonjourBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BonjourBrowser.h; path = Bonjour/BonjourBrowser.h; sourceTree = "<group>"; };
 		A67E47DF0F5A938F00000A24 /* BonjourBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BonjourBrowser.m; path = Bonjour/BonjourBrowser.m; sourceTree = "<group>"; };
@@ -630,7 +633,9 @@
 				A600A48D119FEA790018F309 /* TaskDetailsDates.xib */,
 				A600A606119FFB1C0018F309 /* TaskDetailsEfforts.h */,
 				A600A607119FFB1C0018F309 /* TaskDetailsEfforts.m */,
-				A600A608119FFB1C0018F309 /* TaskDetailsEfforts.xib */,
+				A6782E7811CCB85A005ADB23 /* TaskDetailsEffortsBase.h */,
+				A6782E7911CCB85A005ADB23 /* TaskDetailsEffortsBase.m */,
+				A6782E7B11CCBD35005ADB23 /* TaskDetailsEffortsBase.xib */,
 			);
 			name = "Task details";
 			sourceTree = "<group>";
@@ -1063,7 +1068,6 @@
 				A65D1B46119D382000F0F5C3 /* TapkuLibrary.bundle in Resources */,
 				A600A3BC119FDD710018F309 /* TaskDetailsGeneral.xib in Resources */,
 				A600A48F119FEA790018F309 /* TaskDetailsDates.xib in Resources */,
-				A600A60A119FFB1C0018F309 /* TaskDetailsEfforts.xib in Resources */,
 				A66C182811C3805E0081C175 /* RecurrencePeriodCell.xib in Resources */,
 				A66C188A11C386B90081C175 /* TaskDetailsRecurrencePeriodPicker.xib in Resources */,
 				A668B4E311C3B0820048BB89 /* TaskDetailsRecurrencePeriodPicker.strings in Resources */,
@@ -1095,6 +1099,7 @@
 				A6DFB4E711C64BF8007FB4F0 /* TaskCoach-iPad.png in Resources */,
 				A6B63B4D11C66615002C9069 /* TaskDetailsControlleriPad.xib in Resources */,
 				A672213511C74B210046C6CF /* SimpleDatePicker.xib in Resources */,
+				A6782E7C11CCBD35005ADB23 /* TaskDetailsEffortsBase.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1198,6 +1203,7 @@
 				A6CA5D9611C4F387009CA6A9 /* TapDetectingView.m in Sources */,
 				A6B63B4C11C66615002C9069 /* TaskDetailsControlleriPad.m in Sources */,
 				A672212511C74A5B0046C6CF /* SimpleDatePicker.m in Sources */,
+				A6782E7A11CCB85A005ADB23 /* TaskDetailsEffortsBase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

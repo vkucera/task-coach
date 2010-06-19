@@ -9,6 +9,7 @@
 #import "TaskCoachAppDelegate.h"
 #import "TaskDetailsControlleriPad.h"
 #import "TaskCategoryPickerController.h"
+#import "TaskDetailsEffortsBase.h"
 #import "DateUtils.h"
 #import "i18n.h"
 
@@ -39,6 +40,7 @@
 @synthesize effortButton;
 
 @synthesize taskCatCtrl;
+@synthesize taskEffortCtrl;
 
 - initWithTask:(CDTask *)theTask
 {
@@ -67,6 +69,8 @@
 		[subject becomeFirstResponder];
 
 	[taskCatCtrl setTask:task];
+	[taskEffortCtrl setTask:task];
+	[taskEffortCtrl updateButton:effortButton];
 }
 
 - (void)viewDidUnload
@@ -81,6 +85,7 @@
 	self.recurrenceButton = nil;
 	self.effortButton = nil;
 	self.taskCatCtrl = nil;
+	self.taskEffortCtrl = nil;
 }
 
 - (void)dealloc
@@ -223,6 +228,11 @@
 		[self saveTask];
 		[self refreshButtons];
 	}
+}
+
+- (IBAction)onClickEffort:(UIButton *)button
+{
+	[taskEffortCtrl onTrack:button];
 }
 
 #pragma mark UIPopoverControllerDelegate

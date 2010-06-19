@@ -9,16 +9,11 @@
 #import <UIKit/UIKit.h>
 
 #import "ButtonCell.h"
+#import "TaskDetailsEffortsBase.h"
 
-@class CDTask;
-
-@interface TaskDetailsEfforts : UITableViewController <NSFetchedResultsControllerDelegate>
+@interface TaskDetailsEfforts : TaskDetailsEffortsBase
 {
-	CDTask *task;
 	ButtonCell *effortCell;
-	NSFetchedResultsController *results;
 }
-
-- initWithTask:(CDTask *)task;
 
 @end
