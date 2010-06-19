@@ -15,7 +15,7 @@
 
 @implementation TaskDetailsRecurrenceControlleriPad
 
-@synthesize recurrenceSwitch, amountField, periodButton, sameWeekdayLabel, sameWeekdaySwitch;
+@synthesize mainLabel, recurrenceSwitch, amountField, periodButton, sameWeekdayLabel, sameWeekdaySwitch;
 
 - initWithTask:(CDTask *)theTask
 {
@@ -78,6 +78,9 @@
 {
 	[super viewDidLoad];
 	[self update];
+
+	mainLabel.text = _("Recurrence");
+	sameWeekdayLabel.text = _("Same weekday");
 }
 
 - (void)viewDidUnload

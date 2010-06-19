@@ -40,7 +40,7 @@ translated:
 	# This generates NIB files for all languages. They must then be edited with
 	# Interface Builder to ensure widget sizes are OK.
 	for lang in fr nl ru de th cs; do \
-		for name in DatePickerView MainWindow TaskView TaskDetailsRecurrencePeriodPicker; do \
+		for name in DatePickerView MainWindow TaskView TaskDetailsRecurrencePeriodPicker TaskDetailsControlleriPad; do \
 			ibtool --strings-file $$lang.lproj/$$name.strings \
 				--write $$lang.lproj/$$name.xib en.lproj/$$name.xib; \
 		done; \

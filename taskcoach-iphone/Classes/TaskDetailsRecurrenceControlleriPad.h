@@ -15,6 +15,7 @@
 {
 	CDTask *task;
 
+	UILabel *mainLabel;
 	UISwitch *recurrenceSwitch;
 	UITextField *amountField;
 	UIButton *periodButton;
@@ -22,6 +23,7 @@
 	UISwitch *sameWeekdaySwitch;
 }
 
+@property (nonatomic, retain) IBOutlet UILabel *mainLabel;
 @property (nonatomic, retain) IBOutlet UISwitch *recurrenceSwitch;
 @property (nonatomic, retain) IBOutlet UITextField *amountField;
 @property (nonatomic, retain) IBOutlet UIButton *periodButton;
