@@ -88,7 +88,34 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
+	if (popoverCtrl)
+	{
+		[popoverCtrl dismissPopoverAnimated:YES];
+	}
+
     return YES;
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+	if (popoverCtrl)
+	{
+		if (dateName)
+		{
+			UIButton *button;
+
+			if ([dateName isEqualToString:@"startDate"])
+				button = startDateButton;
+			else if ([dateName isEqualToString:@"dueDate"])
+				button = dueDateButton;
+			else if ([dateName isEqualToString:@"completionDate"])
+				button = completionDateButton;
+			else
+				button = reminderDateButton;
+
+			[popoverCtrl presentPopoverFromRect:button.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+		}
+	}
 }
 
 - (void)refreshButtons
@@ -164,6 +191,7 @@
 - (void)onNullDate
 {
 	[task setValue:nil forKey:dateName];
+	dateName = nil;
 	[self saveTask];
 
 	[popoverCtrl dismissPopoverAnimated:YES]; // This doesn't call popoverControllerDidDismissPopover
@@ -196,6 +224,7 @@
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
 {
 	[task setValue:datePicker.date forKey:dateName];
+	dateName = nil;
 	[self saveTask];
 
 	[popoverCtrl release];
