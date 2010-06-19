@@ -104,11 +104,6 @@
 	}
 		
 	fileButton.enabled = ([Configuration configuration].cdFileCount >= 2);
-	
-	NSDate *nextUpdate = [NSDate dateRounded];
-	nextUpdate = [nextUpdate addTimeInterval:61];
-	minuteTimer = [[NSTimer alloc] initWithFireDate:nextUpdate interval:60 target:self selector:@selector(onMinuteTimer:) userInfo:nil repeats:YES];
-	[[NSRunLoop currentRunLoop] addTimer:minuteTimer forMode:NSDefaultRunLoopMode];
 }
 
 - (void)viewDidUnload
@@ -121,10 +116,6 @@
 	
 	[indentations release];
 	indentations = nil;
-	
-	[minuteTimer invalidate];
-	[minuteTimer release];
-	minuteTimer = nil;
 }
 
 - (void)dealloc
@@ -132,6 +123,21 @@
 	[self viewDidUnload];
 	
 	[super dealloc];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+	NSDate *nextUpdate = [NSDate dateRounded];
+	nextUpdate = [nextUpdate addTimeInterval:61];
+	minuteTimer = [[NSTimer alloc] initWithFireDate:nextUpdate interval:60 target:self selector:@selector(onMinuteTimer:) userInfo:nil repeats:YES];
+	[[NSRunLoop currentRunLoop] addTimer:minuteTimer forMode:NSDefaultRunLoopMode];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+	[minuteTimer invalidate];
+	[minuteTimer release];
+	minuteTimer = nil;
 }
 
 - (void)onMinuteTimer:(NSTimer *)theTimer
