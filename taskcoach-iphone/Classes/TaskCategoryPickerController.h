@@ -18,5 +18,6 @@
 }
 
 - initWithTask:(CDTask *)task;
+- (void)setTask:(CDTask *)task;
 
 @end

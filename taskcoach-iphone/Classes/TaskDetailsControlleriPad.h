@@ -10,6 +10,7 @@
 
 @class CDTask;
 @class SimpleDatePicker;
+@class TaskCategoryPickerController;
 
 @interface TaskDetailsControlleriPad : UIViewController <UITextFieldDelegate, UITextViewDelegate, UIPopoverControllerDelegate>
 {
@@ -29,6 +30,7 @@
 	SimpleDatePicker *datePicker;
 	UIPopoverController *popoverCtrl;
 	NSString *dateName;
+	TaskCategoryPickerController *taskCatCtrl;
 }
 
 @property (nonatomic, retain) IBOutlet UITextField *subject;
@@ -41,6 +43,8 @@
 @property (nonatomic, retain) IBOutlet UILabel *priorityLabel;
 @property (nonatomic, retain) IBOutlet UIButton *recurrenceButton;
 @property (nonatomic, retain) IBOutlet UIButton *effortButton;
+
+@property (nonatomic, retain) IBOutlet TaskCategoryPickerController *taskCatCtrl;
 
 - initWithTask:(CDTask *)task;
 

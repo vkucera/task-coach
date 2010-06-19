@@ -37,6 +37,14 @@
 	[super dealloc];
 }
 
+- (void)setTask:(CDTask *)task
+{
+	[myTask release];
+	myTask = [task retain];
+	[self loadCategories];
+	[self.tableView reloadData];
+}
+
 #pragma mark Domain methods
 
 - (void)fillCell:(BadgedCell *)cell forCategory:(CDCategory *)category

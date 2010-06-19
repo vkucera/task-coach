@@ -8,6 +8,7 @@
 
 #import "TaskCoachAppDelegate.h"
 #import "TaskDetailsControlleriPad.h"
+#import "TaskCategoryPickerController.h"
 #import "DateUtils.h"
 #import "i18n.h"
 
@@ -37,6 +38,8 @@
 @synthesize recurrenceButton;
 @synthesize effortButton;
 
+@synthesize taskCatCtrl;
+
 - initWithTask:(CDTask *)theTask
 {
 	if (self = [super initWithNibName:@"TaskDetailsControlleriPad" bundle:[NSBundle mainBundle]])
@@ -62,6 +65,8 @@
 
 	if (![task.name length])
 		[subject becomeFirstResponder];
+
+	[taskCatCtrl setTask:task];
 }
 
 - (void)viewDidUnload
@@ -75,6 +80,7 @@
 	self.priorityLabel = nil;
 	self.recurrenceButton = nil;
 	self.effortButton = nil;
+	self.taskCatCtrl = nil;
 }
 
 - (void)dealloc
