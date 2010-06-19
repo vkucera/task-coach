@@ -172,6 +172,8 @@
 - (IBAction)onChooseFile:(UIBarButtonItem *)button
 {
 	FileChooser *chooser = [[FileChooser alloc] initWithController:self];
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+		chooser.modalPresentationStyle = UIModalPresentationFormSheet;
 	[self.navigationController presentModalViewController:chooser animated:YES];
 	[chooser release];
 }
@@ -517,6 +519,8 @@
 		BonjourBrowser *browser = [[BonjourBrowser alloc] initForType:@"_taskcoachsync._tcp" inDomain:@"local." customDomains:nil showDisclosureIndicators:NO showCancelButton:YES];
 		browser.delegate = self;
 		browser.searchingForServicesString = _("Looking for Task Coach");
+		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+			browser.modalPresentationStyle = UIModalPresentationFormSheet;
 		[self.navigationController presentModalViewController:browser animated:YES];
 		[browser release];
 	}
@@ -542,6 +546,8 @@
 	BonjourBrowser *browser = [[BonjourBrowser alloc] initForType:@"_taskcoachsync._tcp" inDomain:@"local." customDomains:nil showDisclosureIndicators:NO showCancelButton:YES];
 	browser.delegate = self;
 	browser.searchingForServicesString = _("Looking for Task Coach");
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+		browser.modalPresentationStyle = UIModalPresentationFormSheet;
 	[self.navigationController presentModalViewController:browser animated:YES];
 	[browser release];
 	[sender release];
@@ -550,6 +556,10 @@
 - (void)netServiceDidResolveAddress:(NSNetService *)sender
 {
 	SyncViewController *ctrl = [[SyncViewController alloc] initWithTarget:self action:@selector(onSyncFinished) host:[sender hostName] port:[sender port]];
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+		ctrl.modalPresentationStyle = UIModalPresentationFormSheet;
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+		ctrl.modalPresentationStyle = UIModalPresentationFormSheet;
 	[self.navigationController presentModalViewController:ctrl animated:YES];
 	[ctrl release];
 }
@@ -574,6 +584,8 @@
 		[[Configuration configuration] save];
 
 		SyncViewController *ctrl = [[SyncViewController alloc] initWithTarget:self action:@selector(onSyncFinished) host:[ref hostName] port:[ref port]];
+		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+			ctrl.modalPresentationStyle = UIModalPresentationFormSheet;
 		[self.navigationController.modalViewController presentModalViewController:ctrl animated:YES];
 		[ctrl release];
 	}
