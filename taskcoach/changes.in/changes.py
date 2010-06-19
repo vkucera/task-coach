@@ -42,7 +42,9 @@ and completion date and time. The task file format version number is now 30.''')
     bugsFixed=[
         Bug('''Icons in edit dialogs would be lined up vertically on some 
 versions of Windows XP. Fixed by using a notebook widget instead of the
-listbook widget.''', '2927384')
+listbook widget.''', '2927384'),
+        Bug('''The new edit dialogs better support tabbing through the dialogs.''',
+            '2687959')
         ]
     ),
     
