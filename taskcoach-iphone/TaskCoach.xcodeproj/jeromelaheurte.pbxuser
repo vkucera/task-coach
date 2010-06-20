@@ -24,7 +24,7 @@
 	29B97313FDCFA39411CA2CEA /* Project object */ = {
 		activeBuildConfigurationName = Debug;
 		activeExecutable = A68EDEB00F1E1EDF00F51FF2 /* TaskCoach */;
-		activeSDKPreference = iphonesimulator3.2;
+		activeSDKPreference = iphoneos3.2;
 		activeTarget = 1D6058900D05DD3D006BFB54 /* TaskCoach */;
 		addToTargets = (
 			1D6058900D05DD3D006BFB54 /* TaskCoach */,
@@ -149,8 +149,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 298719539;
-			PBXWorkspaceStateSaveDate = 298719539;
+			PBXPerProjectTemplateStateSaveDate = 298721567;
+			PBXWorkspaceStateSaveDate = 298721567;
 		};
 		perUserProjectItems = {
 			A600A627119FFE410018F309 /* PBXTextBookmark */ = A600A627119FFE410018F309 /* PBXTextBookmark */;
@@ -268,8 +268,6 @@
 			A66ADCF311CE1AA100A0E2C7 /* PBXTextBookmark */ = A66ADCF311CE1AA100A0E2C7 /* PBXTextBookmark */;
 			A66ADCF411CE1AA100A0E2C7 /* PBXTextBookmark */ = A66ADCF411CE1AA100A0E2C7 /* PBXTextBookmark */;
 			A66ADD2511CE1BAE00A0E2C7 /* PBXTextBookmark */ = A66ADD2511CE1BAE00A0E2C7 /* PBXTextBookmark */;
-			A66ADD2C11CE1BD100A0E2C7 /* PBXTextBookmark */ = A66ADD2C11CE1BD100A0E2C7 /* PBXTextBookmark */;
-			A66ADD2E11CE1BD700A0E2C7 /* PBXTextBookmark */ = A66ADD2E11CE1BD700A0E2C7 /* PBXTextBookmark */;
 			A66C17F511C37EA50081C175 /* PBXTextBookmark */ = A66C17F511C37EA50081C175 /* PBXTextBookmark */;
 			A66C185411C383D00081C175 /* PBXTextBookmark */ = A66C185411C383D00081C175 /* PBXTextBookmark */;
 			A66C185B11C384220081C175 /* PBXTextBookmark */ = A66C185B11C384220081C175 /* PBXTextBookmark */;
@@ -304,6 +302,8 @@
 			A68B5EAF11C4BF8B009AE2F1 /* PBXTextBookmark */ = A68B5EAF11C4BF8B009AE2F1 /* PBXTextBookmark */;
 			A68B5EFD11C4C2ED009AE2F1 /* PBXBookmark */ = A68B5EFD11C4C2ED009AE2F1 /* PBXBookmark */;
 			A68D320411BA458D002C6593 /* PBXTextBookmark */ = A68D320411BA458D002C6593 /* PBXTextBookmark */;
+			A696429F11CE21910002F90E /* PBXTextBookmark */ = A696429F11CE21910002F90E /* PBXTextBookmark */;
+			A69642B511CE22420002F90E /* PBXTextBookmark */ = A69642B511CE22420002F90E /* PBXTextBookmark */;
 			A69DE00C11BA770C007E0D9B /* PBXTextBookmark */ = A69DE00C11BA770C007E0D9B /* PBXTextBookmark */;
 			A69DE01011BA770C007E0D9B /* PBXTextBookmark */ = A69DE01011BA770C007E0D9B /* PBXTextBookmark */;
 			A69DE01711BA770C007E0D9B /* PBXTextBookmark */ = A69DE01711BA770C007E0D9B /* PBXTextBookmark */;
@@ -2192,26 +2192,6 @@
 		vrLen = 1266;
 		vrLoc = 947;
 	};
-	A66ADD2C11CE1BD100A0E2C7 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */;
-		name = "CategoryViewController.m: 476";
-		rLen = 0;
-		rLoc = 14371;
-		rType = 0;
-		vrLen = 815;
-		vrLoc = 1002;
-	};
-	A66ADD2E11CE1BD700A0E2C7 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */;
-		name = "CategoryViewController.m: 476";
-		rLen = 0;
-		rLoc = 14371;
-		rType = 0;
-		vrLen = 1512;
-		vrLoc = 393;
-	};
 	A66C17F511C37EA50081C175 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = A6D385520F24A0E20097F0F6 /* SwitchCell.h */;
@@ -2839,9 +2819,9 @@
 	};
 	A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1650, 8762}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1650, 8788}}";
 			sepNavSelRange = "{14371, 0}";
-			sepNavVisRange = "{393, 1512}";
+			sepNavVisRange = "{365, 1544}";
 		};
 	};
 	A68EDFA90F1E2C5900F51FF2 /* TaskCoachAppDelegate.m:30 */ = {
@@ -2858,9 +2838,29 @@
 		ignoreCount = 0;
 		lineNumber = 30;
 		location = TaskCoach;
-		modificationTime = 298720175.416678;
+		modificationTime = 298721727.560374;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
+	};
+	A696429F11CE21910002F90E /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */;
+		name = "CategoryViewController.m: 476";
+		rLen = 0;
+		rLoc = 14371;
+		rType = 0;
+		vrLen = 882;
+		vrLoc = 1027;
+	};
+	A69642B511CE22420002F90E /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */;
+		name = "CategoryViewController.m: 476";
+		rLen = 0;
+		rLoc = 14371;
+		rType = 0;
+		vrLen = 1544;
+		vrLoc = 365;
 	};
 	A69DDFCF11BA714D007E0D9B /* ItemParser.h */ = {
 		uiCtxt = {

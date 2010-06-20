@@ -113,6 +113,8 @@
 		A68EDEC50F1E1F1700F51FF2 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = A68EDEC30F1E1F1700F51FF2 /* MainWindow.xib */; };
 		A68EDED30F1E1F8500F51FF2 /* CategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */; };
 		A68EDEF30F1E222700F51FF2 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A68EDEF20F1E222700F51FF2 /* libsqlite3.0.dylib */; };
+		A696428911CE21550002F90E /* Default-Landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = A696428711CE21550002F90E /* Default-Landscape.png */; };
+		A696428A11CE21550002F90E /* Default-Portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = A696428811CE21550002F90E /* Default-Portrait.png */; };
 		A69DDFD311BA714D007E0D9B /* ItemParser.m in Sources */ = {isa = PBXBuildFile; fileRef = A69DDFD011BA714D007E0D9B /* ItemParser.m */; };
 		A69DDFD411BA714D007E0D9B /* Items.m in Sources */ = {isa = PBXBuildFile; fileRef = A69DDFD211BA714D007E0D9B /* Items.m */; };
 		A69DDFDB11BA719B007E0D9B /* ItemState.m in Sources */ = {isa = PBXBuildFile; fileRef = A69DDFD811BA719B007E0D9B /* ItemState.m */; };
@@ -373,6 +375,8 @@
 		A68EDED10F1E1F8500F51FF2 /* CategoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CategoryViewController.h; sourceTree = "<group>"; };
 		A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoryViewController.m; sourceTree = "<group>"; };
 		A68EDEF20F1E222700F51FF2 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
+		A696428711CE21550002F90E /* Default-Landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Landscape.png"; path = "Resources-iPad/Default-Landscape.png"; sourceTree = "<group>"; };
+		A696428811CE21550002F90E /* Default-Portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Portrait.png"; path = "Resources-iPad/Default-Portrait.png"; sourceTree = "<group>"; };
 		A69DDFCF11BA714D007E0D9B /* ItemParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ItemParser.h; path = Synchronization/ItemParser.h; sourceTree = "<group>"; };
 		A69DDFD011BA714D007E0D9B /* ItemParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ItemParser.m; path = Synchronization/ItemParser.m; sourceTree = "<group>"; };
 		A69DDFD111BA714D007E0D9B /* Items.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Items.h; path = Synchronization/Items.h; sourceTree = "<group>"; };
@@ -807,6 +811,8 @@
 		A68B5E0E11C4B796009AE2F1 /* Resources-iPad */ = {
 			isa = PBXGroup;
 			children = (
+				A696428711CE21550002F90E /* Default-Landscape.png */,
+				A696428811CE21550002F90E /* Default-Portrait.png */,
 				A6DFB4E611C64BF8007FB4F0 /* TaskCoach-iPad.png */,
 				A68B5E0F11C4B799009AE2F1 /* MainWindow-iPad.xib */,
 			);
@@ -1152,6 +1158,8 @@
 				A6E8F66311CD02670087DDF3 /* TaskDetailsControlleriPad.xib in Resources */,
 				A6E8F66611CD02800087DDF3 /* TaskDetailsControlleriPad.strings in Resources */,
 				A6C00BD511CDEF0D0028385F /* NewCategoryiPad.xib in Resources */,
+				A696428911CE21550002F90E /* Default-Landscape.png in Resources */,
+				A696428A11CE21550002F90E /* Default-Portrait.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
