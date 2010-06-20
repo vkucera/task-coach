@@ -28,6 +28,13 @@
     return YES;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+	if (date)
+		[picker setDate:date animated:NO];
+	[super viewWillAppear:animated];
+}
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];
@@ -52,12 +59,10 @@
 	return picker.date;
 }
 
-- (void)setDate:(NSDate *)date
+- (void)setDate:(NSDate *)aDate
 {
-	if (date)
-	{
-		picker.date = date;
-	}
+	[date release];
+	date = [aDate retain];
 }
 
 @end

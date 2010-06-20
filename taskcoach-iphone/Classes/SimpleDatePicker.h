@@ -12,8 +12,11 @@
 @interface SimpleDatePicker : UIViewController
 {
 	UIDatePicker *picker;
+
 	id target;
 	SEL action;
+
+	NSDate *date;
 }
 
 @property (nonatomic, retain) IBOutlet UIDatePicker *picker;

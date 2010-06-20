@@ -13,12 +13,14 @@
 #import "TaskDetailsRecurrenceControlleriPad.h"
 #import "DateUtils.h"
 #import "i18n.h"
+#import "Configuration.h"
 
 #import "SimpleDatePicker.h"
 
 #import "CDTask.h"
 #import "CDTask+Addons.h"
 #import "CDDomainObject+Addons.h"
+#import "CDFile.h"
 
 @interface TaskDetailsControlleriPad ()
 
@@ -173,28 +175,57 @@
 
 - (IBAction)onClickDate:(UIButton *)button
 {
+	NSDateComponents *comp = [[NSCalendar currentCalendar] components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:[NSDate date]];
+	[comp setHour:0];
+	[comp setMinute:0];
+	[comp setSecond:0];
+
 	if (button == startDateButton)
 	{
 		dateName = @"startDate";
+
+		if ([Configuration configuration].cdCurrentFile)
+			[comp setHour:[[Configuration configuration].cdCurrentFile.startHour intValue]];
+		else
+			[comp setHour:8];
 	}
 	else if (button == dueDateButton)
 	{
 		dateName = @"dueDate";
+		if ([Configuration configuration].cdCurrentFile)
+			[comp setHour:[[Configuration configuration].cdCurrentFile.endHour intValue]];
+		else
+			[comp setHour:18];
 	}
 	else if (button == completionDateButton)
 	{
 		dateName = @"completionDate";
+		comp = [[NSCalendar currentCalendar] components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSHourCalendarUnit|NSMinuteCalendarUnit fromDate:[NSDate date]];
 	}
 	else if (button == reminderDateButton)
 	{
 		dateName = @"reminderDate";
+		if (task.dueDate)
+			comp = [[NSCalendar currentCalendar] components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSHourCalendarUnit|NSMinuteCalendarUnit fromDate:task.dueDate];
+		else if (task.startDate)
+			comp = [[NSCalendar currentCalendar] components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSHourCalendarUnit|NSMinuteCalendarUnit fromDate:task.startDate];
+		else
+		{
+			if ([Configuration configuration].cdCurrentFile)
+				[comp setHour:[[Configuration configuration].cdCurrentFile.endHour intValue]];
+			else
+				[comp setHour:18];
+		}
 	}
 	else
 	{
 		assert(0);
 	}
 
-	datePicker.date = [task valueForKey:dateName];
+	NSDate *theDate = [task valueForKey:dateName];
+	if (!theDate)
+		theDate = [[NSCalendar currentCalendar] dateFromComponents:comp];
+	datePicker.date = theDate;
 
 	popoverCtrl = [[UIPopoverController alloc] initWithContentViewController:datePicker];
 	[popoverCtrl setPopoverContentSize:CGSizeMake(320, 281) animated:NO];
