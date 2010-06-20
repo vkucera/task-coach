@@ -178,7 +178,7 @@ class XMLWriter(object):
         if item.backgroundColor(recursive=False):
             node.setAttribute('bgColor', str(item.backgroundColor(recursive=False)))
         if item.font(recursive=False):
-            node.setAttribute('font', str(item.font(recursive=False).GetNativeFontInfoDesc()))
+            node.setAttribute('font', unicode(item.font(recursive=False).GetNativeFontInfoDesc()))
         if item.icon(recursive=False):
             node.setAttribute('icon', str(item.icon(recursive=False)))
         if item.selectedIcon(recursive=False):
