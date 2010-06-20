@@ -63,13 +63,23 @@
 			category = [categories objectAtIndex:pos.indexPath.row - 1];
 		}
 
-		[[PositionStore instance] push:self indexPath:pos.indexPath type:pos.type searchWord:nil];
+		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+		{
+			[[PositionStore instance] push:self indexPath:pos.indexPath type:pos.type searchWord:nil];
 
-		CategoryTaskViewController *ctrl = [[CategoryTaskViewController alloc] initWithCategoryController:self edit:self.editing category:category];
-		[self.navigationController pushViewController:ctrl animated:YES];
-		[ctrl release];
-		
-		[store restore:ctrl];
+			CategoryTaskViewController *ctrl = [[CategoryTaskViewController alloc] initWithCategoryController:self edit:self.editing category:category];
+			[self.navigationController pushViewController:ctrl animated:YES];
+			[ctrl release];
+			
+			[store restore:ctrl];
+		}
+		else
+		{
+			[[PositionStore instance] setRoot:self indexPath:pos.indexPath type:pos.type searchWord:nil];
+
+			[taskCtrl setCategory:category];
+			[store restore:taskCtrl];
+		}
 	}
 }
 
@@ -77,32 +87,25 @@
 {
 	[super viewDidLoad];
 
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+	NSArray *cachesPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+	NSString *cachesDir = [cachesPaths objectAtIndex:0];
+	
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	if (![fileManager fileExistsAtPath:cachesDir])
 	{
-		NSArray *cachesPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-		NSString *cachesDir = [cachesPaths objectAtIndex:0];
-		
-		NSFileManager *fileManager = [NSFileManager defaultManager];
-		if (![fileManager fileExistsAtPath:cachesDir])
-		{
-			[fileManager createDirectoryAtPath:cachesDir attributes:nil];
-		}
-		
-		NSString *path = [cachesDir stringByAppendingPathComponent:@"positions.store.v4"];
-		
-		if ([fileManager fileExistsAtPath:path])
-		{
-			PositionStore *store = [[PositionStore alloc] initWithFile:[cachesDir stringByAppendingPathComponent:@"positions.store.v4"]];
-			[store restore:self];
-			[store release];
-		}
-		
-		[fileManager release];
+		[fileManager createDirectoryAtPath:cachesDir attributes:nil];
 	}
-	else
+	
+	NSString *path = [cachesDir stringByAppendingPathComponent:@"positions.store.v4"];
+	
+	if ([fileManager fileExistsAtPath:path])
 	{
-		// XXXTODO iPad
+		PositionStore *store = [[PositionStore alloc] initWithFile:[cachesDir stringByAppendingPathComponent:@"positions.store.v4"]];
+		[store restore:self];
+		[store release];
 	}
+	
+	[fileManager release];
 		
 	fileButton.enabled = ([Configuration configuration].cdFileCount >= 2);
 }
@@ -460,15 +463,18 @@
 		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 		{
 			TaskViewController *ctrl = [[CategoryTaskViewController alloc] initWithCategoryController:self edit:NO category:category];;
-			[[PositionStore instance] push:self indexPath:indexPath type:TYPE_DETAILS searchWord:nil];
 	
 			[self.navigationController pushViewController:ctrl animated:YES];
 			[ctrl release];
+
+			[[PositionStore instance] push:self indexPath:indexPath type:TYPE_DETAILS searchWord:nil];
 		}
 		else
 		{
 			[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 			[taskCtrl setCategory:category];
+
+			[[PositionStore instance] setRoot:self indexPath:indexPath type:TYPE_DETAILS searchWord:nil];
 		}
 	}
 }

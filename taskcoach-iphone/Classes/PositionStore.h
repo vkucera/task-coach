@@ -53,6 +53,7 @@
 
 - (void)setTab:(NSInteger)tab;
 
+- (void)setRoot:(id <RestorableController>)controler indexPath:(NSIndexPath *)indexPath type:(NSInteger)type searchWord:(NSString *)searchWord;
 - (void)push:(id <RestorableController>)controller indexPath:(NSIndexPath *)indexPath type:(NSInteger)type searchWord:(NSString *)searchWord;
 - (void)pop;
 

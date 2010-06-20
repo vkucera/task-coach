@@ -127,6 +127,12 @@ static PositionStore *_instance = nil;
 	[super dealloc];
 }
 
+- (void)setRoot:(id <RestorableController>)controller indexPath:(NSIndexPath *)indexPath type:(NSInteger)theType searchWord:(NSString *)word
+{
+	[positions removeAllObjects];
+	[self push:controller indexPath:indexPath type:theType searchWord:word];
+}
+
 - (void)push:(id <RestorableController>)controller indexPath:(NSIndexPath *)indexPath type:(NSInteger)theType searchWord:(NSString *)word
 {
 	Position *pos = [[Position alloc] initWithController:controller indexPath:indexPath type:theType searchWord:word];

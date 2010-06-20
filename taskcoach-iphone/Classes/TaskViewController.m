@@ -107,7 +107,13 @@ static void deleteTask(CDTask *task)
 				[self.tableView selectRowAtIndexPath:pos.indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 
 				CDTask *task = [results objectAtIndexPath:pos.indexPath];
-				TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task tabIndex:pos.tab];
+
+				UIViewController *ctrl;
+				if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+					ctrl = [[TaskDetailsController alloc] initWithTask:task tabIndex:pos.tab];
+				else
+					ctrl = [[TaskDetailsControlleriPad alloc] initWithTask:task];
+
 				[self.navigationController pushViewController:ctrl animated:NO];
 				[[PositionStore instance] push:self indexPath:pos.indexPath type:TYPE_DETAILS searchWord:searchCell.searchBar.text];
 				[ctrl release];
@@ -873,7 +879,12 @@ static void deleteTask(CDTask *task)
 		}
 	}
 
-	TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task];
+	UIViewController *ctrl;
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+		ctrl = [[TaskDetailsController alloc] initWithTask:task];
+	else
+		ctrl = [[TaskDetailsControlleriPad alloc] initWithTask:task];
+
 	[self.navigationController pushViewController:ctrl animated:YES];
 	[[PositionStore instance] push:self indexPath:indexPath type:TYPE_DETAILS searchWord:searchCell.searchBar.text];
 	[ctrl release];
