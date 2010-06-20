@@ -12,6 +12,7 @@
 #import "StringChoiceAlert.h"
 #import "CategoryTaskViewController.h"
 #import "ParentTaskViewController.h"
+#import "NewCategoryiPad.h"
 #import "SyncViewController.h"
 #import "FileChooser.h"
 #import "BadgedCell.h"
@@ -100,7 +101,7 @@
 	}
 	else
 	{
-		// XXXTODO: iPad
+		// XXXTODO iPad
 	}
 		
 	fileButton.enabled = ([Configuration configuration].cdFileCount >= 2);
@@ -123,6 +124,16 @@
 	[self viewDidUnload];
 	
 	[super dealloc];
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+	if (popoverCtrl)
+	{
+		[popoverCtrl dismissPopoverAnimated:NO];
+		[popoverCtrl release];
+		popoverCtrl = nil;
+	}
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -181,9 +192,27 @@
 - (IBAction)onAddCategory:(UIBarButtonItem *)button
 {
 	currentCategory = -1;
-	StringChoiceAlert *alert = [[StringChoiceAlert alloc] initWithPlaceholder:_("Enter category name") text:nil target:self action:@selector(onCategoryAdded:)];
-	[alert show];
-	[alert release];
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+	{
+		StringChoiceAlert *alert = [[StringChoiceAlert alloc] initWithPlaceholder:_("Enter category name") text:nil target:self action:@selector(onCategoryAdded:)];
+		[alert show];
+		[alert release];
+	}
+	else
+	{
+		NewCategoryiPad *ctrl = [[NewCategoryiPad alloc] initWithString:nil target:self action:@selector(onCategoryAdded:)];
+		popoverCtrl = [[UIPopoverController alloc] initWithContentViewController:ctrl];
+		[ctrl release];
+		popoverCtrl.delegate = self;
+		[popoverCtrl setPopoverContentSize:CGSizeMake(259, 116)];
+		[popoverCtrl presentPopoverFromBarButtonItem:button permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+	}
+}
+
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
+{
+	[popoverCtrl release];
+	popoverCtrl = nil;
 }
 
 - (void)onCategoryAdded:(NSString *)name
@@ -209,7 +238,15 @@
 		[self.tableView reloadData];
 	}
 
-	[self.navigationController dismissModalViewControllerAnimated:YES];
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+		[self.navigationController dismissModalViewControllerAnimated:YES];
+	else
+	{
+		[popoverCtrl dismissPopoverAnimated:YES];
+		[popoverCtrl release];
+		popoverCtrl = nil;
+	}
+
 	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
 }
 
@@ -379,17 +416,41 @@
 		{
 			currentCategory = indexPath.row / 2;
 			
-			StringChoiceAlert *alert = [[StringChoiceAlert alloc] initWithPlaceholder:_("Enter category name") text:nil target:self action:@selector(onCategoryAdded:)];
-			[alert show];
-			[alert release];
+			if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+			{
+				StringChoiceAlert *alert = [[StringChoiceAlert alloc] initWithPlaceholder:_("Enter category name") text:nil target:self action:@selector(onCategoryAdded:)];
+				[alert show];
+				[alert release];
+			}
+			else
+			{
+				NewCategoryiPad *ctrl = [[NewCategoryiPad alloc] initWithString:nil target:self action:@selector(onCategoryAdded:)];
+				popoverCtrl = [[UIPopoverController alloc] initWithContentViewController:ctrl];
+				[ctrl release];
+				popoverCtrl.delegate = self;
+				[popoverCtrl setPopoverContentSize:CGSizeMake(259, 116)];
+				[popoverCtrl presentPopoverFromRect:[self.tableView cellForRowAtIndexPath:indexPath].frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+			}
 		}
 		else
 		{
 			currentCategory = indexPath.row / 2;
 
-			StringChoiceAlert *alert = [[StringChoiceAlert alloc] initWithPlaceholder:_("Enter category name") text:[(CDCategory *)[categories objectAtIndex:currentCategory] name] target:self action:@selector(onCategoryChanged:)];
-			[alert show];
-			[alert release];
+			if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+			{
+				StringChoiceAlert *alert = [[StringChoiceAlert alloc] initWithPlaceholder:_("Enter category name") text:[(CDCategory *)[categories objectAtIndex:currentCategory] name] target:self action:@selector(onCategoryChanged:)];
+				[alert show];
+				[alert release];
+			}
+			else
+			{
+				NewCategoryiPad *ctrl = [[NewCategoryiPad alloc] initWithString:[(CDCategory *)[categories objectAtIndex:currentCategory] name] target:self action:@selector(onCategoryChanged:)];
+				popoverCtrl = [[UIPopoverController alloc] initWithContentViewController:ctrl];
+				[ctrl release];
+				popoverCtrl.delegate = self;
+				[popoverCtrl setPopoverContentSize:CGSizeMake(259, 116)];
+				[popoverCtrl presentPopoverFromRect:[self.tableView cellForRowAtIndexPath:indexPath].frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+			}
 		}
 	}
 	else
@@ -433,7 +494,15 @@
 	}
 
 	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
-	[self.navigationController dismissModalViewControllerAnimated:YES];
+
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+		[self.navigationController dismissModalViewControllerAnimated:YES];
+	else
+	{
+		[popoverCtrl dismissPopoverAnimated:YES];
+		[popoverCtrl release];
+		popoverCtrl = nil;
+	}
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

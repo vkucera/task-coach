@@ -129,6 +129,9 @@
 		A6B264DD0FDBCBFE00FF2AD0 /* DateCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6B264DC0FDBCBFE00FF2AD0 /* DateCell.xib */; };
 		A6B63B4C11C66615002C9069 /* TaskDetailsControlleriPad.m in Sources */ = {isa = PBXBuildFile; fileRef = A6B63B4A11C66615002C9069 /* TaskDetailsControlleriPad.m */; };
 		A6B7A5B30FA45E110067B76A /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = A6B7A5B20FA45E110067B76A /* iTunesArtwork */; };
+		A6C00BD411CDEF0D0028385F /* NewCategoryiPad.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C00BD211CDEF0D0028385F /* NewCategoryiPad.m */; };
+		A6C00BD511CDEF0D0028385F /* NewCategoryiPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6C00BD311CDEF0D0028385F /* NewCategoryiPad.xib */; };
+		A6C00C1911CDF6660028385F /* SplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C00C1811CDF6660028385F /* SplitView.m */; };
 		A6C3CEF810E76C8C00483057 /* ButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C3CEF710E76C8C00483057 /* ButtonCell.m */; };
 		A6C3CEFA10E76CB600483057 /* ButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6C3CEF910E76CB600483057 /* ButtonCell.xib */; };
 		A6C858EB11C4B2BE0016C027 /* StringChoiceAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C858EA11C4B2BE0016C027 /* StringChoiceAlert.m */; };
@@ -400,6 +403,11 @@
 		A6BDE7281171C93200979568 /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		A6BDE72C1171C95E00979568 /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/TaskView.xib; sourceTree = "<group>"; };
 		A6BDE72E1171C96F00979568 /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/DatePickerView.xib; sourceTree = "<group>"; };
+		A6C00BD111CDEF0D0028385F /* NewCategoryiPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewCategoryiPad.h; sourceTree = "<group>"; };
+		A6C00BD211CDEF0D0028385F /* NewCategoryiPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewCategoryiPad.m; sourceTree = "<group>"; };
+		A6C00BD311CDEF0D0028385F /* NewCategoryiPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewCategoryiPad.xib; sourceTree = "<group>"; };
+		A6C00C1711CDF6660028385F /* SplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplitView.h; sourceTree = "<group>"; };
+		A6C00C1811CDF6660028385F /* SplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplitView.m; sourceTree = "<group>"; };
 		A6C3CEF610E76C8C00483057 /* ButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonCell.h; sourceTree = "<group>"; };
 		A6C3CEF710E76C8C00483057 /* ButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ButtonCell.m; sourceTree = "<group>"; };
 		A6C3CEF910E76CB600483057 /* ButtonCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ButtonCell.xib; sourceTree = "<group>"; };
@@ -565,6 +573,8 @@
 				A6FA97DB0F2B2E1C00505D87 /* MainViewController.m */,
 				A65FF1EB11BBC25B00394E33 /* ReminderController.h */,
 				A65FF1EC11BBC25B00394E33 /* ReminderController.m */,
+				A6C00C1711CDF6660028385F /* SplitView.h */,
+				A6C00C1811CDF6660028385F /* SplitView.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -903,6 +913,9 @@
 				A60B6ED610258D9D00F9983C /* TaskCategoryPickerController.m */,
 				A68EDED10F1E1F8500F51FF2 /* CategoryViewController.h */,
 				A68EDED20F1E1F8500F51FF2 /* CategoryViewController.m */,
+				A6C00BD111CDEF0D0028385F /* NewCategoryiPad.h */,
+				A6C00BD211CDEF0D0028385F /* NewCategoryiPad.m */,
+				A6C00BD311CDEF0D0028385F /* NewCategoryiPad.xib */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -1138,6 +1151,7 @@
 				A63D718611CCFEBC005B1714 /* TaskCelliPadLeft.xib in Resources */,
 				A6E8F66311CD02670087DDF3 /* TaskDetailsControlleriPad.xib in Resources */,
 				A6E8F66611CD02800087DDF3 /* TaskDetailsControlleriPad.strings in Resources */,
+				A6C00BD511CDEF0D0028385F /* NewCategoryiPad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1244,6 +1258,8 @@
 				A6782E7A11CCB85A005ADB23 /* TaskDetailsEffortsBase.m in Sources */,
 				A6EDD13D11CCDB570092BC79 /* TaskDetailsRecurrenceControlleriPad.m in Sources */,
 				A63D714111CCF983005B1714 /* TaskCelliPad.m in Sources */,
+				A6C00BD411CDEF0D0028385F /* NewCategoryiPad.m in Sources */,
+				A6C00C1911CDF6660028385F /* SplitView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

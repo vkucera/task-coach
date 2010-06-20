@@ -17,7 +17,7 @@
 @class CDCategory;
 @class CategoryTaskViewController;
 
-@interface CategoryViewController : BaseCategoryViewController <BonjourBrowserDelegate, RestorableController>
+@interface CategoryViewController : BaseCategoryViewController <BonjourBrowserDelegate, RestorableController, UIPopoverControllerDelegate>
 {
 	NavigationController *navigationController;
 	UIBarButtonItem *syncButton;
@@ -29,6 +29,8 @@
 	NSTimer *minuteTimer;
 
 	CategoryTaskViewController *taskCtrl;
+
+	UIPopoverController *popoverCtrl;
 }
 
 @property (nonatomic, assign) IBOutlet NavigationController *navigationController;
