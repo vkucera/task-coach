@@ -8,6 +8,7 @@
 
 #import "TaskCoachAppDelegate.h"
 #import "CategoryTaskViewController.h"
+#import "TaskDetailsControlleriPad.h"
 #import "TaskDetailsController.h"
 #import "String+Utils.h"
 #import "Configuration.h"
@@ -15,6 +16,7 @@
 #import "CDTask.h"
 #import "CDTask+Addons.h"
 #import "CDHierarchicalDomainObject+Addons.h"
+#import "CDFile.h"
 
 #import "i18n.h"
 
@@ -90,12 +92,26 @@
 	task.longDescription = @"";
 	if (category)
 		[task addCategoriesObject:category];
+
+	// Current date, day start hour
+	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:[NSDate date]];
+	[components setHour:[[Configuration configuration].cdCurrentFile.startHour intValue]];
+	[components setMinute:0];
+	[components setSecond:0];
+	task.startDate = [[NSCalendar currentCalendar] dateFromComponents:components];
+
 	[task computeDateStatus];
 
 	NSError *error;
 	if ([getManagedObjectContext() save:&error])
 	{
-		TaskDetailsController *ctrl = [[TaskDetailsController alloc] initWithTask:task];
+		UIViewController *ctrl;
+
+		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+			ctrl = [[TaskDetailsController alloc] initWithTask:task];
+		else
+			ctrl = [[TaskDetailsControlleriPad alloc] initWithTask:task];
+
 		[self.navigationController pushViewController:ctrl animated:YES];
 		[ctrl release];
 	}
