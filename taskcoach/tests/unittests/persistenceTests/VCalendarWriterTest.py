@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2008 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2007-2008 Jérôme Laheurte <fraca7@free.fr>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, cStringIO
+import test, StringIO
 from taskcoachlib import persistence, gui, config, meta
 from taskcoachlib.domain import task, effort, date
 
@@ -28,7 +30,7 @@ class VCalTestCase(test.wxTestCase):
     def setUp(self):
         super(VCalTestCase, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
-        self.fd = cStringIO.StringIO()
+        self.fd = StringIO.StringIO()
         self.writer = persistence.iCalendarWriter(self.fd)
         self.taskFile = persistence.TaskFile()
 
@@ -126,7 +128,7 @@ class VCalTaskWriterTestCase(VCalTestCase):
     def setUp(self):
         super(VCalTaskWriterTestCase, self).setUp() 
         self.task1 = task.Task('Task subject 1', description='Task description 1')
-        self.task2 = task.Task('Task subject 2', description='Task description 2\nwith newline')
+        self.task2 = task.Task('Task subject 2', description=u'Task description 2\nwith newline\n微软雅黑')
         self.taskFile.tasks().extend([self.task1, self.task2])
         self.settings.set('taskviewer', 'treemode', self.treeMode)
         self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile,
@@ -140,7 +142,7 @@ class VCalTaskCommonTestsMixin(VCalendarCommonTestsMixin):
         self.failUnless('SUMMARY:Task subject 2' in self.vcalFile)
         
     def testTaskDescription(self):
-        self.failUnless('DESCRIPTION:Task description 2\r\n with newline' in self.vcalFile)
+        self.failUnless(u'DESCRIPTION:Task description 2\r\n with newline\r\n 微软雅黑'.encode('utf-8') in self.vcalFile, self.vcalFile)
 
     def testNumber(self):
         self.assertEqual(self.expectedNumberOfItems(),
