@@ -17,12 +17,6 @@
 
 + stateWithNetwork:(Network *)network controller:(SyncViewController *)controller
 {
-	/*
-	NSObject <State> *next = [FullFromDesktopState stateWithNetwork:network controller:controller];
-	
-	return [[[TwoWayModifiedEffortsState alloc] initWithNetwork:network controller:controller nextState:next expectIds:NO] autorelease];
-	 */
-	
 	return [[[TwoWayModifiedEffortsState alloc] initWithNetwork:network controller:controller] autorelease];
 }
 

@@ -69,6 +69,7 @@ static void deleteTask(CDTask *task)
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
+	self.calendarView.scrollView.frame = self.view.frame;
 	[self.calendarView reloadDay];
 	[self.calendarView.timelineView setNeedsDisplay];
 }
@@ -222,6 +223,7 @@ static void deleteTask(CDTask *task)
 	self.calendarView.delegate = self;
 	self.calendarView.scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
 	self.calendarView.timelineView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+	self.calendarView.scrollView.frame = self.view.frame;
 	self.calendarSearch.placeholder = _("Search tasks...");
 	self.calendarSearch.text = searchCell.searchBar.text;
 	

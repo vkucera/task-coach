@@ -473,6 +473,7 @@
 		{
 			[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 			[taskCtrl setCategory:category];
+			[taskCtrl.calendarView reloadDay];
 
 			[[PositionStore instance] setRoot:self indexPath:indexPath type:TYPE_DETAILS searchWord:nil];
 		}
