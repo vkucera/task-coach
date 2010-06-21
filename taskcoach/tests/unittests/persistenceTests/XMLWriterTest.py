@@ -540,6 +540,14 @@ class XMLWriterTest(test.TestCase):
                          'location="whatever.txt" status="1" '
                          'subject="whatever.txt" type="file"/>'%wx.SWISS_FONT.GetNativeFontInfoDesc())
 
+    def testNonAsciiFontName(self):
+        class FakeFont(object):
+            def GetNativeFontInfoDesc(self):
+                return u'微软雅黑'
+        font = FakeFont()
+        self.task.setFont(font)
+        self.expectInXML(u'font="微软雅黑"')
+        
     def testTaskIcon(self):
         self.task.setIcon('icon')
         self.expectInXML('icon="icon"')

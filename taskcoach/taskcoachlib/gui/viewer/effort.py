@@ -146,7 +146,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         self._columns = self._createColumns()
         itemPopupMenu = menu.EffortPopupMenu(self.parent, self.taskFile.tasks(),
             self.settings, self.presentation(), self)
-        columnPopupMenu = menu.ColumnPopupMenu(self)
+        columnPopupMenu = menu.EffortViewerColumnPopupMenu(self)
         self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         widget = widgets.ListCtrl(self, self.columns(), self.onSelect,
             uicommand.EffortEdit(viewer=self, effortList=self.presentation()),

@@ -366,9 +366,13 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         return wx.WANTS_CHARS 
             
     def getAgwStyle(self):
-        return (wx.TR_DEFAULT_STYLE | wx.TR_HIDE_ROOT | wx.TR_MULTIPLE \
+        agwStyle = wx.TR_DEFAULT_STYLE | wx.TR_HIDE_ROOT | wx.TR_MULTIPLE \
             | wx.TR_EDIT_LABELS | wx.TR_HAS_BUTTONS | wx.TR_FULL_ROW_HIGHLIGHT \
-            | customtree.TR_HAS_VARIABLE_ROW_HEIGHT) & ~hypertreelist.TR_NO_HEADER 
+            | customtree.TR_HAS_VARIABLE_ROW_HEIGHT
+        if wx.Platform == '__WXMAC__':
+            agwStyle |= wx.TR_NO_LINES
+        agwStyle &= ~hypertreelist.TR_NO_HEADER
+        return agwStyle
 
     # pylint: disable-msg=W0221
     
