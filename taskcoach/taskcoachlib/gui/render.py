@@ -21,18 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ''' render.py - functions to render various objects, like date, time, 
 etc. ''' # pylint: disable-msg=W0105
 
-import locale
+import locale, codecs
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import date as datemodule
  
 # pylint: disable-msg=W0621
 
-def date(date): 
-    ''' render a date (of type date.Date) '''
-    if str(date) == '':
-        return ''
-    return date.strftime('%x')
-    
 def priority(priority):
     ''' Render an (integer) priority '''
     return str(priority)
@@ -81,12 +75,26 @@ def budget(aBudget):
     ''' render budget (of type date.TimeDelta) as
     "<hours>:<minutes>:<seconds>". '''
     return timeSpent(aBudget)
+
+try:
+    dateFormat = '%x' # Apparently, this may produce invalid utf-8 so test
+    codecs.utf_8_decode(datemodule.Now().strftime(dateFormat))
+except UnicodeDecodeError:
+    dateFormat = '%Y-%m-%d'
+timeFormat = '%H:%M' # Alas, %X includes seconds
+dateTimeFormat = ' '.join([dateFormat, timeFormat])
+
+def date(date): 
+    ''' render a date (of type date.Date) '''
+    if str(date) == '':
+        return ''
+    return date.strftime(dateFormat)   
         
 def dateTime(dateTime):
     if not dateTime or dateTime == datemodule.DateTime():
         return ''
     timeIsMidnight = (dateTime.hour, dateTime.minute) in ((0, 0), (23, 59))
-    format = '%x' if timeIsMidnight else '%x %H:%M' # Alas, %X includes seconds
+    format = dateFormat if timeIsMidnight else dateTimeFormat
     return dateTime.strftime(format)
 
 def dateTimePeriod(start, stop):
@@ -98,7 +106,7 @@ def dateTimePeriod(start, stop):
         return '%s - %s'%(dateTime(start), dateTime(stop))
             
 def time(dateTime):
-    return dateTime.strftime('%H:%M')
+    return dateTime.strftime(timeFormat)
     
 def month(dateTime):
     return dateTime.strftime('%Y %B')
