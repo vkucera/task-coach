@@ -3,8 +3,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2008-2009 Jerome Laheurte <fraca7@free.fr>
+Copyright (C) 2004-2010 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -41,7 +40,7 @@ u'''        <P><IMG SRC="images/banner.png" ALT="Banner image"></P>
         %(name)s is designed to deal with composite tasks. In addition, it offers
         effort tracking, categories, and notes. %(name)s is available for Windows,
         Mac OS X, Linux, and iPhone and iPod Touch.</P>
-        <P>%(name)s is developed by Frank Niessink and Jérôme Laheurte, with
+        <P>%(name)s is developed by %(author_unicode)s, with
         help of different people providing translations. Currently, %(name)s 
         is at version %(version)s. Many people use it on a daily basis, but 
         there are still a lot of features missing. If there's anything you'd

@@ -2,8 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2010 Frank Niessink <frank@niessink.com>
-Copyright (C) 2007-2010 Jérôme Laheurte <fraca7@free.fr>
+Copyright (C) 2004-2010 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -1463,12 +1462,12 @@ by default.''', '1721166')],
     featuresAdded=[
         Feature('''Added Breton translation thanks to Ronan Le DÃ©roff'''),
         Feature('''Show a tooltip with a task's description when the mouse
-is hovering over a task. Patch provided by Jerome Laheurte.''', '1642608',
+is hovering over a task. Patch provided by Jérôme Laheurte.''', '1642608',
 '1619521', '1578623'),
         Feature('''Allow for dragging emails from Thunderbird and Outlook to 
 the attachment pane of tasks to create email attachments. Opening an attached 
 email will open it in the user's default mail program. Patch provided by 
-Jerome Laheurte.''')]),
+Jérôme Laheurte.''')]),
 
 Release('0.63.2', 'April 20, 2007',
     bugsFixed=[
@@ -1986,7 +1985,7 @@ Release('0.36', 'May 5, 2005',
     bugsFixed=[
         Bug('Descriptions loose newlines after reload.', '1194259')],
     featuresAdded=[
-        Feature('French user interface added, thanks to Jerome Laheurte.')]),
+        Feature('French user interface added, thanks to Jérôme Laheurte.')]),
 
 Release('0.35', 'May 2, 2005',
     bugsFixed=[
@@ -2128,7 +2127,7 @@ that task is still being tracked. Requested by Bob Hossley.''')]),
 Release('0.23', 'February 20, 2005',
     bugsFixed=[
         Bug('''Fixed a couple of bugs in the unit tests, discovered by
-Stephen Boulet and Jerome Laheurte on the Linux platform.''')]),
+Stephen Boulet and Jérôme Laheurte on the Linux platform.''')]),
 
 Release('0.22', 'February 17, 2005',
     bugsFixed=[
@@ -2160,7 +2159,7 @@ wxPython2.5-gtk2-unicode-2.5.3.1-fc2_py2.3 and
 wxPython-common-gtk2-unicode-2.5.3.1-fc2_py2.3. Reported by Stephen
 Boulet.'''),
         Bug('''After iconizing the main window for a second time, the icon
-in the task bar wouldn't be hidden anymore. Reported and fixed by Jerome
+in the task bar wouldn't be hidden anymore. Reported and fixed by Jérôme
 Laheurte.''')]),
 
 Release('0.20', 'February 6, 2005',
