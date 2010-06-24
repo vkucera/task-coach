@@ -106,7 +106,7 @@ elif sys.argv[1] == 'py2app':
     setupOptions.update(dict(app=['taskcoach.py'], 
         setup_requires=['py2app'],
         options=dict(py2app=dict(argv_emulation=True, compressed=True,
-            dist_dir=builddir, optimize=2, iconfile='icons.in/taskcoach.icns', 
+            dist_dir=os.path.join(builddir, 'Task Coach'), optimize=2, iconfile='icons.in/taskcoach.icns', 
             # We need to explicitly include i18n modules because they 
             # are imported implicitly via __import__:
             includes=[filename[:-3].replace('/', '.') for filename \
