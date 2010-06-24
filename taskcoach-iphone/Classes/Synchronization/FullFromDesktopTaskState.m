@@ -61,6 +61,8 @@
 	task.completionDate = [self parseDate:[value objectAtIndex:5]];
 	task.reminderDate = [self parseDate:[value objectAtIndex:6]];
 	task.priority = [value objectAtIndex:8];
+	
+	NSLog(@"New task from desktop: %@", task.name);
 
 	if ([[value objectAtIndex:9] intValue])
 	{
@@ -89,6 +91,7 @@
 		}
 	}
 	
+	/*
 	[request setEntity:[NSEntityDescription entityForName:@"CDCategory" inManagedObjectContext:getManagedObjectContext()]];
 	for (NSString *catId in [value objectAtIndex:13])
 	{
@@ -99,19 +102,21 @@
 		{
 			assert([results count] == 1);
 			[task addCategoriesObject:[results objectAtIndex:0]];
+			NSLog(@"Category: %@", [[results objectAtIndex:0] name]);
 		}
 		else
 		{
 			NSLog(@"Could not find category: %@", [error localizedDescription]);
 		}
 	}
+	*/
 	
-	
-/*
-	if ([[value objectAtIndex:8] count])
+	if ([[value objectAtIndex:13] count])
 	{
+		NSLog(@"Category count: %d", [[value objectAtIndex:13] count]);
+
 		[request setEntity:[NSEntityDescription entityForName:@"CDCategory" inManagedObjectContext:getManagedObjectContext()]];
-		[request setPredicate:[NSPredicate predicateWithFormat:@"taskCoachId IN %@", [NSSet setWithArray:[value objectAtIndex:8]]]];
+		[request setPredicate:[NSPredicate predicateWithFormat:@"taskCoachId IN %@", [NSSet setWithArray:[value objectAtIndex:13]]]];
 		NSError *error;
 		NSArray *results = [getManagedObjectContext() executeFetchRequest:request error:&error];
 
@@ -124,7 +129,7 @@
 			NSLog(@"Could not find task categories: %@", [error localizedDescription]);
 		}
 	}
-*/
+
 	[myController increment];
 	[self sendFormat:"i" values:[NSArray arrayWithObject:[NSNumber numberWithInt:1]]];
 }

@@ -448,14 +448,6 @@
 	[super dealloc];
 }
 
-- (NSObject *)value
-{
-	NSArray *v = (NSArray *)[super value];
-	if ([v count])
-		return [v objectAtIndex:0];
-	return v;
-}
-
 - (void)append:(BaseItem *)item
 {
 	assert([myItem respondsToSelector:@selector(append:)]);
@@ -487,7 +479,7 @@
 			{
 				if (myItem.value)
 				{
-					[(NSMutableArray *)myValue addObject:myItem.value];
+					[(NSMutableArray *)myValue addObject:[(NSArray *)myItem.value objectAtIndex:0]];
 				}
 				else
 				{
