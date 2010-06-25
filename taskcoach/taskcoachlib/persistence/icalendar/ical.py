@@ -237,7 +237,7 @@ def VCalFromTask(task, encoding=True):
         iCalendar format. '''
 
     encoding = ';CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE' if encoding else ''
-    quote = quoteString if encoding else lambda s: s.encode('UTF-8')
+    quote = quoteString if encoding else lambda s: s
 
     components = []
     components.append('BEGIN:VTODO') # pylint: disable-msg=W0511
@@ -274,7 +274,7 @@ def VCalFromTask(task, encoding=True):
 
 def VCalFromEffort(effort, encoding=True):
     encoding = ';CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE' if encoding else ''
-    quote = quoteString if encoding else lambda s: s.encode('UTF-8')
+    quote = quoteString if encoding else lambda s: s
     components = []
     components.append('BEGIN:VEVENT')
     components.append('UID:%s' % effort.id().encode('UTF-8'))
