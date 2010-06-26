@@ -51,7 +51,7 @@
 	{
 		task = [theTask retain];
 
-		datePicker = [[SimpleDatePicker alloc] initWithTarget:self action:@selector(onNullDate)];
+		datePicker = [[SimpleDatePicker alloc] initWithTarget:self action:@selector(onPickedDate)];
 	}
 
 	return self;
@@ -233,9 +233,9 @@
 	popoverCtrl.delegate = self;
 }
 
-- (void)onNullDate
+- (void)onPickedDate
 {
-	[task setValue:nil forKey:dateName];
+	[task setValue:datePicker.date forKey:dateName];
 	dateName = nil;
 	[task computeDateStatus];
 	[self saveTask];
@@ -285,7 +285,7 @@
 {
 	if (dateName)
 	{
-		[task setValue:datePicker.date forKey:dateName];
+		[task setValue:nil forKey:dateName];
 		dateName = nil;
 		[task computeDateStatus];
 		[self saveTask];

@@ -17,10 +17,12 @@
 	SEL action;
 
 	NSDate *date;
+	UIButton *okButton;
 }
 
 @property (nonatomic, retain) IBOutlet UIDatePicker *picker;
 @property (nonatomic, retain) NSDate *date;
+@property (nonatomic, retain) IBOutlet UIButton *okButton;
 
 - initWithTarget:(id)target action:(SEL)action;
 

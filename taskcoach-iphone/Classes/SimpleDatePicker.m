@@ -7,10 +7,12 @@
 //
 
 #import "SimpleDatePicker.h"
+#import "i18n.h"
 
 @implementation SimpleDatePicker
 
 @synthesize picker;
+@synthesize okButton;
 
 - initWithTarget:(id)theTarget action:(SEL)theAction
 {
@@ -32,6 +34,8 @@
 {
 	if (date)
 		[picker setDate:date animated:NO];
+	[okButton setTitle:_("OK") forState:UIControlStateNormal];
+
 	[super viewWillAppear:animated];
 }
 
@@ -40,11 +44,14 @@
     [super viewDidUnload];
 
 	self.picker = nil;
+	self.okButton = nil;
 }
 
 - (void)dealloc
 {
 	[self viewDidUnload];
+	
+	[date release];
 
     [super dealloc];
 }
