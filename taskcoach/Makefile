@@ -43,10 +43,10 @@ windists: windist winpenpack portableapps sdist_windows
 
 windist: py2exe
 	$(INNOSETUP) build/taskcoach.iss
-	
+
 py2exe: prepare
 	$(PYTHON) make.py py2exe
-	
+
 sdist_windows: prepare changes templates dist/TaskCoach-$(TCVERSION).zip
 
 dist/TaskCoach-$(TCVERSION).zip:
@@ -86,12 +86,16 @@ deb: sdist_linux
 
 dmg: prepare
 	$(PYTHON) make.py py2app
-	hdiutil create -ov -imagekey zlib-level=9 -srcfolder build/TaskCoach.app dist/TaskCoach-$(TCVERSION).dmg
+	mkdir "build/Task Coach/.Resources"
+	cp -f dist.in/macos/dmg-background.png "build/Task Coach/.Resources/"
+	cp -f dist.in/macos/config "build/Task Coach/.DS_Store"
+	ln -s /Applications "build/Task Coach/Applications"
+	hdiutil create -ov -imagekey zlib-level=9 -fs "HFS+" -srcfolder "build/Task Coach" dist/TaskCoach-$(TCVERSION).dmg
 
 winpenpack: py2exe 
 	$(PYTHON) make.py bdist_winpenpack
 
-	
+
 portableapps: py2exe
 	$(PYTHON) make.py bdist_portableapps
 	$(PORTABLEAPPSINSTALLER) $(TCPORTABLE)
