@@ -18,4 +18,6 @@
 
 - (void)setCategory:(CDCategory *)category;
 
+- (BOOL)compareCategory:(CDCategory *)category;
+
 @end

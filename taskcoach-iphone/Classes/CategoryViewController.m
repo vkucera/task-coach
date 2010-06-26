@@ -198,6 +198,7 @@
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 	{
 		StringChoiceAlert *alert = [[StringChoiceAlert alloc] initWithPlaceholder:_("Enter category name") text:nil target:self action:@selector(onCategoryAdded:)];
+		alert.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
 		[alert show];
 		[alert release];
 	}
@@ -378,6 +379,13 @@
 {
 	if (editingStyle == UITableViewCellEditingStyleDelete)
 	{
+		if ([taskCtrl compareCategory:[categories objectAtIndex:indexPath.row / 2]])
+		{
+			[taskCtrl.navigationController popToRootViewControllerAnimated:YES];
+			[taskCtrl setCategory:nil];
+			[[PositionStore instance] setRoot:self indexPath:[NSIndexPath indexPathForRow:0 inSection:0] type:TYPE_DETAILS searchWord:nil];
+		}
+
 		NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
 		[self deleteCategory:[categories objectAtIndex:indexPath.row / 2] indexPaths:indexPaths];
 		[self loadCategories];
@@ -392,6 +400,7 @@
 		currentCategory = indexPath.row / 2;
 
 		StringChoiceAlert *alert = [[StringChoiceAlert alloc] initWithPlaceholder:_("Enter category name") text:nil target:self action:@selector(onCategoryAdded:)];
+		alert.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
 		[alert show];
 		[alert release];
 	}
@@ -422,6 +431,7 @@
 			if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 			{
 				StringChoiceAlert *alert = [[StringChoiceAlert alloc] initWithPlaceholder:_("Enter category name") text:nil target:self action:@selector(onCategoryAdded:)];
+				alert.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
 				[alert show];
 				[alert release];
 			}
@@ -442,6 +452,7 @@
 			if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 			{
 				StringChoiceAlert *alert = [[StringChoiceAlert alloc] initWithPlaceholder:_("Enter category name") text:[(CDCategory *)[categories objectAtIndex:currentCategory] name] target:self action:@selector(onCategoryChanged:)];
+				alert.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
 				[alert show];
 				[alert release];
 			}

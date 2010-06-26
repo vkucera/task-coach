@@ -417,6 +417,12 @@ static void deleteTask(CDTask *task)
 		[[PositionStore instance] pop];
 
 	isCreatingTask = NO;
+
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+	{
+		[categoryController loadCategories];
+		[categoryController.tableView reloadData];
+	}
 }
 
 #pragma mark Fetched results controller stuff

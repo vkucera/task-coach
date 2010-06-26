@@ -50,6 +50,11 @@
 	[self.tableView reloadData];
 }
 
+- (BOOL)compareCategory:(CDCategory *)aCategory
+{
+	return [[[aCategory objectID] URIRepresentation] isEqual:[[category objectID] URIRepresentation]];
+}
+
 - (void)dealloc
 {
 	[category release];
