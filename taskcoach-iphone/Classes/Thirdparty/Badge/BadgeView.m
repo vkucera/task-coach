@@ -27,7 +27,7 @@
 
 @synthesize margin;
 
-const float kBadgeViewDefaultMargin = 0.0f;
+const float kBadgeViewDefaultMargin = 3.0f;
 
 const float kBadgeCapsulePadding = 2.0f;
 const float kBadgeConcaveCapsuleClippingOffset = 1.0f;
