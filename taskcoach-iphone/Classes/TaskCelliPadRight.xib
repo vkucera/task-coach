@@ -79,15 +79,15 @@
 							<object class="IBUIImageView" id="31361487">
 								<reference key="NSNextResponder" ref="738261389"/>
 								<int key="NSvFlags">257</int>
-								<string key="NSFrame">{{677, 36}, {48, 48}}</string>
+								<string key="NSFrame">{{645, 20}, {80, 80}}</string>
 								<reference key="NSSuperview" ref="738261389"/>
-								<bool key="IBUIUserInteractionEnabled">NO</bool>
+								<int key="IBUIContentMode">4</int>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 							</object>
 							<object class="IBUITextView" id="822801357">
 								<reference key="NSNextResponder" ref="738261389"/>
 								<int key="NSvFlags">258</int>
-								<string key="NSFrame">{{304, 49}, {365, 51}}</string>
+								<string key="NSFrame">{{304, 49}, {333, 51}}</string>
 								<reference key="NSSuperview" ref="738261389"/>
 								<object class="NSColor" key="IBUIBackgroundColor" id="514092937">
 									<int key="NSColorSpace">1</int>
@@ -272,11 +272,11 @@
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="930477990"/>
-							<reference ref="31361487"/>
-							<reference ref="822801357"/>
 							<reference ref="242599721"/>
 							<reference ref="622931821"/>
 							<reference ref="640860216"/>
+							<reference ref="31361487"/>
+							<reference ref="822801357"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -336,7 +336,7 @@
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>TaskCelliPad</string>
-					<string>{{631, 1085}, {745, 120}}</string>
+					<string>{{860, 1060}, {745, 120}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>CheckView</string>
