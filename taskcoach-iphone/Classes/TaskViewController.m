@@ -191,7 +191,27 @@ static void deleteTask(CDTask *task)
 	[request setPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:preds]];
 	[preds release];
 
-	NSLog(@"Object count: %d", [getManagedObjectContext() countForFetchRequest:request error:nil]);
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+	{
+		// All of this for nothing. CoreData bug: if the underlying SQL query matches several times the same object,
+		// NSFetchedResultsController uniques them but gets confused because countForFetchRequest does not! This leads
+		// to NSRangeExceptions though the logic is perfectly valid... This happens only on the iPhone...
+		
+		NSArray *tasks;
+		NSError *error;
+		tasks = [getManagedObjectContext() executeFetchRequest:request error:&error];
+		if (!tasks)
+		{
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not fetch tasks") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+			[alert show];
+			[alert release];
+		
+			results = nil;
+			return;
+		}
+
+		[request setPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", tasks]];
+	}
 
 	NSString *grouping;
 	NSString *sorting;
@@ -221,6 +241,8 @@ static void deleteTask(CDTask *task)
 	[request setSortDescriptors:[NSArray arrayWithObjects:sd1, sd2, nil]];
 	[sd1 release];
 	[sd2 release];
+	
+	NSLog(@"Object count: %d", [getManagedObjectContext() countForFetchRequest:request error:nil]);
 
 	results = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:getManagedObjectContext() sectionNameKeyPath:grouping cacheName:nil];
 	results.delegate = self;
@@ -608,7 +630,10 @@ static void deleteTask(CDTask *task)
 		return 1; // Add task cell
 
 	if ([[results sections] count])
+	{
+		NSLog(@"%d objects for section %d", [[[results sections] objectAtIndex:section - ADJUSTSECTION] numberOfObjects], section);
 		return [[[results sections] objectAtIndex:section - ADJUSTSECTION] numberOfObjects];
+	}
 
 	return 0;
 }
@@ -644,7 +669,7 @@ static void deleteTask(CDTask *task)
 		// This is already done in the NIB but when switching to non-editing mode, we
 		// must enforce it...
 		taskCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-
+		
 		CDTask *task = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - ADJUSTSECTION]];
 		[taskCell setTask:task target:self action:@selector(onToggleTaskCompletion:)];
 
