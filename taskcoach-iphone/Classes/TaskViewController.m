@@ -152,6 +152,21 @@ static void deleteTask(CDTask *task)
 	return self;
 }
 
+- initWithCoder:(NSCoder *)coder
+{
+	if (self = [super initWithCoder:coder])
+	{
+		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+		{
+			searchCell = [[CellFactory cellFactory] createSearchCell];
+			searchCell.searchBar.placeholder = _("Search tasks...");
+			searchCell.searchBar.delegate = self;
+		}
+	}
+
+	return self;
+}
+
 - (void)populate
 {
 	[results release];
@@ -166,6 +181,13 @@ static void deleteTask(CDTask *task)
 		[preds addObject:[NSPredicate predicateWithFormat:@"dateStatus != %d", TASKSTATUS_COMPLETED]];
 	if (![Configuration configuration].showInactive)
 		[preds addObject:[NSPredicate predicateWithFormat:@"dateStatus != %d", TASKSTATUS_NOTSTARTED]];
+
+	if ([searchCell.searchBar.text length])
+	{
+		[preds addObject:[NSPredicate predicateWithFormat:@"name CONTAINS[cd] %@ OR longDescription CONTAINS[cd] %@",
+						  searchCell.searchBar.text, searchCell.searchBar.text]];
+	}
+
 	[request setPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:preds]];
 	[preds release];
 
@@ -580,7 +602,7 @@ static void deleteTask(CDTask *task)
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 	if (section == 0)
-		return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 0 : 1; // Search cell
+		return 1; // Search cell
 	
 	if (self.editing && (section == 1))
 		return 1; // Add task cell
