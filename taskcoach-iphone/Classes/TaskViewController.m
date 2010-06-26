@@ -194,7 +194,7 @@ static void deleteTask(CDTask *task)
 			break;
 	}
 
-	NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:sorting ascending:YES];
+	NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:sorting ascending:![Configuration configuration].reverseGrouping];
 	NSSortDescriptor *sd2 = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
 	[request setSortDescriptors:[NSArray arrayWithObjects:sd1, sd2, nil]];
 	[sd1 release];
@@ -910,15 +910,29 @@ static void deleteTask(CDTask *task)
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
+	NSInteger selection;
+
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 	{
-		if (buttonIndex >= 0)
-			[Configuration configuration].taskGrouping = buttonIndex;
+		if (buttonIndex < 0)
+			return;
+		selection = buttonIndex;
 	}
 	else
 	{
-		if (buttonIndex > 0)
-			[Configuration configuration].taskGrouping = buttonIndex - 1;
+		if (buttonIndex <= 0)
+			return;
+		selection = buttonIndex - 1;
+	}
+
+	if (selection == [Configuration configuration].taskGrouping)
+	{
+		[Configuration configuration].reverseGrouping = ![Configuration configuration].reverseGrouping;
+	}
+	else
+	{
+		[Configuration configuration].taskGrouping = selection;
+		[Configuration configuration].reverseGrouping = NO;
 	}
 
 	[[Configuration configuration] save];

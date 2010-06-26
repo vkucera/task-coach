@@ -24,6 +24,7 @@ static Configuration *_configuration = NULL;
 @synthesize domain;
 @synthesize viewStyle;
 @synthesize taskGrouping;
+@synthesize reverseGrouping;
 
 + (Configuration *)configuration
 {
@@ -59,9 +60,15 @@ static Configuration *_configuration = NULL;
 		viewStyle = [config integerForKey:@"viewStyle"];
 		
 		if ([config objectForKey:@"taskGrouping"])
+		{
 			taskGrouping = [config integerForKey:@"taskGrouping"];
+			reverseGrouping = [config integerForKey:@"reverseGrouping"];
+		}
 		else
+		{
 			taskGrouping = GROUP_STATUS;
+			reverseGrouping = NO;
+		}
 
 		NSString *guid = [config stringForKey:@"currentfile"];
 		if (guid)
@@ -94,6 +101,7 @@ static Configuration *_configuration = NULL;
 	
 	[config setInteger:viewStyle forKey:@"viewStyle"];
 	[config setInteger:taskGrouping forKey:@"taskGrouping"];
+	[config setInteger:reverseGrouping forKey:@"reverseGrouping"];
 
 	if (currentFileGuid)
 	{

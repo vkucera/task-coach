@@ -39,6 +39,7 @@
 	NSString *currentFileGuid;
 
 	NSInteger taskGrouping;
+	BOOL reverseGrouping;
 }
 
 @property (nonatomic, readonly) BOOL showCompleted;
@@ -51,6 +52,7 @@
 @property (nonatomic, copy) NSString *domain;
 @property (nonatomic) NSInteger viewStyle;
 @property (nonatomic) NSInteger taskGrouping;
+@property (nonatomic) BOOL reverseGrouping;
 
 @property (nonatomic, assign) CDFile *cdCurrentFile;
 @property (nonatomic, readonly) NSInteger cdFileCount;
