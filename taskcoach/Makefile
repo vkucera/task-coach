@@ -86,9 +86,9 @@ deb: sdist_linux
 
 dmg: prepare
 	$(PYTHON) make.py py2app
-	mkdir "build/Task Coach/.bg"
-	cp dist.in/macos/bg.png "build/Task Coach/.bg/"
-	cp dist.in/macos/config "build/Task Coach/.DS_Store"
+	mkdir "build/Task Coach/.Resources"
+	cp -f dist.in/macos/dmg-background.png "build/Task Coach/.Resources/"
+	cp -f dist.in/macos/config "build/Task Coach/.DS_Store"
 	ln -s /Applications "build/Task Coach/Applications"
 	hdiutil create -ov -imagekey zlib-level=9 -fs "HFS+" -srcfolder "build/Task Coach" dist/TaskCoach-$(TCVERSION).dmg
 
