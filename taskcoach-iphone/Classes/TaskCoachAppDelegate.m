@@ -40,7 +40,10 @@ NSManagedObjectContext *getManagedObjectContext(void)
 	
 	[window addSubview:mainController.view];
 	[window makeKeyAndVisible];
+}
 
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
 	[[ReminderController instance] check];
 }
 
