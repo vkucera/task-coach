@@ -226,10 +226,16 @@ static void deleteTask(CDTask *task)
 	self.calendarView.scrollView.frame = self.view.frame;
 	self.calendarSearch.placeholder = _("Search tasks...");
 	self.calendarSearch.text = searchCell.searchBar.text;
-	
-	NSInteger buttonIndex = 0;
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-		buttonIndex = 1;
+
+	calendarButtonIndex = 0;
+	while (calendarButtonIndex < [self.toolbar.items count])
+	{
+		NSLog(@"Item: %d", [[self.toolbar.items objectAtIndex:calendarButtonIndex] tag]); // XXXTMP
+
+		if ([[self.toolbar.items objectAtIndex:calendarButtonIndex] tag] == 1)
+			break;
+		++calendarButtonIndex;
+	}
 
 	if ([Configuration configuration].viewStyle == STYLE_TABLE)
 	{
@@ -238,7 +244,7 @@ static void deleteTask(CDTask *task)
 		self.calendarView.hidden = YES;
 		self.calendarSearch.hidden = YES;
 		NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
-		[items replaceObjectAtIndex:buttonIndex withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
+		[items replaceObjectAtIndex:calendarButtonIndex withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
 		self.toolbar.items = items;
 	}
 	else
@@ -249,7 +255,7 @@ static void deleteTask(CDTask *task)
 		self.calendarSearch.hidden = NO;
 
 		NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
-		[items replaceObjectAtIndex:buttonIndex withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
+		[items replaceObjectAtIndex:calendarButtonIndex withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
 		self.toolbar.items = items;
 	}
 
@@ -697,11 +703,7 @@ static void deleteTask(CDTask *task)
 {
 	[UIView beginAnimations:@"SwitchStyleAnimation" context:nil];
 	[UIView setAnimationDuration:1.0];
-	
-	NSInteger buttonIndex = 0;
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-		buttonIndex = 1;
-	
+
 	if (self.tableView.hidden)
 	{
 		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.view cache:YES];
@@ -713,7 +715,7 @@ static void deleteTask(CDTask *task)
 		self.navigationItem.rightBarButtonItem = [self editButtonItem];
 
 		NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
-		[items replaceObjectAtIndex:buttonIndex withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
+		[items replaceObjectAtIndex:calendarButtonIndex withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
 		self.toolbar.items = items;
 		
 		for (NSInteger i = 1; i < [self.navigationController.viewControllers count] - 1; ++i)
@@ -725,7 +727,7 @@ static void deleteTask(CDTask *task)
 			ctrl.navigationItem.rightBarButtonItem = [ctrl editButtonItem];
 
 			NSMutableArray *items = [NSMutableArray arrayWithArray:ctrl.toolbar.items];
-			[items replaceObjectAtIndex:buttonIndex withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStyleBordered target:ctrl action:@selector(onSwitch:)] autorelease]];
+			[items replaceObjectAtIndex:calendarButtonIndex withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStyleBordered target:ctrl action:@selector(onSwitch:)] autorelease]];
 			ctrl.toolbar.items = items;
 		}
 
@@ -743,7 +745,7 @@ static void deleteTask(CDTask *task)
 		self.navigationItem.rightBarButtonItem = nil;
 		
 		NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
-		[items replaceObjectAtIndex:buttonIndex withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
+		[items replaceObjectAtIndex:calendarButtonIndex withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
 		self.toolbar.items = items;
 		
 		for (NSInteger i = 1; i < [self.navigationController.viewControllers count] - 1; ++i)
@@ -755,7 +757,7 @@ static void deleteTask(CDTask *task)
 			ctrl.navigationItem.rightBarButtonItem = nil;
 			
 			NSMutableArray *items = [NSMutableArray arrayWithArray:ctrl.toolbar.items];
-			[items replaceObjectAtIndex:buttonIndex withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStyleBordered target:ctrl action:@selector(onSwitch:)] autorelease]];
+			[items replaceObjectAtIndex:calendarButtonIndex withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStyleBordered target:ctrl action:@selector(onSwitch:)] autorelease]];
 			ctrl.toolbar.items = items;
 		}
 		

@@ -36,6 +36,8 @@
 
 	NSFetchedResultsController *results;
 	NSIndexPath *selected;
+
+	NSInteger calendarButtonIndex;
 }
 
 @property (nonatomic, readonly) UITableView *tableView;
