@@ -368,8 +368,8 @@ Task Coach development team
     session = smtplib.SMTP(server, port)
     session.set_debuglevel(1)
     session.helo()
-    session.starttls()
     session.ehlo()
+    session.starttls()
     session.login(username, password)
     smtpresult = session.sendmail(username, recipients, msg)
 
