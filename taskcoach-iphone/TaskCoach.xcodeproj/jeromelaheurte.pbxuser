@@ -32,6 +32,7 @@
 		breakpoints = (
 			A68EDFA90F1E2C5900F51FF2 /* TaskCoachAppDelegate.m:30 */,
 			A618F1E211D74B880069C490 /* objc_exception_throw */,
+			A6D152B811D7662800E0CA7E /* TaskViewController.m:102 */,
 		);
 		codeSenseManager = A68EDEC10F1E1EED00F51FF2 /* Code sense */;
 		executables = (
@@ -150,8 +151,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 299323353;
-			PBXWorkspaceStateSaveDate = 299323353;
+			PBXPerProjectTemplateStateSaveDate = 299328800;
+			PBXWorkspaceStateSaveDate = 299328800;
 		};
 		perUserProjectItems = {
 			A600A627119FFE410018F309 /* PBXTextBookmark */ = A600A627119FFE410018F309 /* PBXTextBookmark */;
@@ -272,10 +273,7 @@
 			A671552C11D764860031017F /* PBXTextBookmark */ = A671552C11D764860031017F /* PBXTextBookmark */;
 			A671552D11D764860031017F /* PBXTextBookmark */ = A671552D11D764860031017F /* PBXTextBookmark */;
 			A671552E11D764860031017F /* PBXTextBookmark */ = A671552E11D764860031017F /* PBXTextBookmark */;
-			A671552F11D764860031017F /* PBXTextBookmark */ = A671552F11D764860031017F /* PBXTextBookmark */;
 			A671553011D764860031017F /* PBXTextBookmark */ = A671553011D764860031017F /* PBXTextBookmark */;
-			A671553111D764860031017F /* PBXTextBookmark */ = A671553111D764860031017F /* PBXTextBookmark */;
-			A671553211D764860031017F /* PBXTextBookmark */ = A671553211D764860031017F /* PBXTextBookmark */;
 			A67220F211C748AB0046C6CF /* PBXTextBookmark */ = A67220F211C748AB0046C6CF /* PBXTextBookmark */;
 			A6782EC911CCBF54005ADB23 /* PBXTextBookmark */ = A6782EC911CCBF54005ADB23 /* PBXTextBookmark */;
 			A6782F8411CCC58B005ADB23 /* PBXTextBookmark */ = A6782F8411CCC58B005ADB23 /* PBXTextBookmark */;
@@ -341,6 +339,9 @@
 			A6C82E5911A01A2D0064EA7E /* PBXTextBookmark */ = A6C82E5911A01A2D0064EA7E /* PBXTextBookmark */;
 			A6C82E5A11A01A2D0064EA7E /* PlistBookmark */ = A6C82E5A11A01A2D0064EA7E /* PlistBookmark */;
 			A6CB3DEB11B2A6AF008398A0 /* PBXTextBookmark */ = A6CB3DEB11B2A6AF008398A0 /* PBXTextBookmark */;
+			A6D152A511D765A500E0CA7E /* PBXTextBookmark */ = A6D152A511D765A500E0CA7E /* PBXTextBookmark */;
+			A6D152CE11D766BC00E0CA7E /* PBXTextBookmark */ = A6D152CE11D766BC00E0CA7E /* PBXTextBookmark */;
+			A6D152D011D766C000E0CA7E /* PBXTextBookmark */ = A6D152D011D766C000E0CA7E /* PBXTextBookmark */;
 			A6D5FFCD11C4C5560030502F /* PBXTextBookmark */ = A6D5FFCD11C4C5560030502F /* PBXTextBookmark */;
 			A6D5FFCE11C4C5560030502F /* PBXTextBookmark */ = A6D5FFCE11C4C5560030502F /* PBXTextBookmark */;
 			A6D5FFCF11C4C5560030502F /* PBXTextBookmark */ = A6D5FFCF11C4C5560030502F /* PBXTextBookmark */;
@@ -619,7 +620,7 @@
 		hitCount = 0;
 		ignoreCount = 0;
 		location = libobjc.A.dylib;
-		modificationTime = 299328624.551255;
+		modificationTime = 299329177.632358;
 		originalNumberOfMultipleMatches = 1;
 		state = 1;
 		symbolName = objc_exception_throw;
@@ -1344,9 +1345,9 @@
 	};
 	A63CC0800F5170FC003669FD /* TaskCellBig.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1110, 1508}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1467, 1443}}";
 			sepNavSelRange = "{285, 0}";
-			sepNavVisRange = "{3, 1089}";
+			sepNavVisRange = "{0, 481}";
 		};
 	};
 	A63D712611CCF7F2005B1714 /* PBXTextBookmark */ = {
@@ -2301,16 +2302,6 @@
 		vrLen = 659;
 		vrLoc = 0;
 	};
-	A671552F11D764860031017F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A6DDF8530F1F988600F35108 /* TaskViewController.m */;
-		name = "TaskViewController.m: 689";
-		rLen = 8;
-		rLoc = 19768;
-		rType = 0;
-		vrLen = 1885;
-		vrLoc = 18534;
-	};
 	A671553011D764860031017F /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = A64603A90F2234D900FC71AD /* TaskCell.m */;
@@ -2320,26 +2311,6 @@
 		rType = 0;
 		vrLen = 1279;
 		vrLoc = 1010;
-	};
-	A671553111D764860031017F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A63CC0800F5170FC003669FD /* TaskCellBig.m */;
-		name = "TaskCellBig.m: 62";
-		rLen = 0;
-		rLoc = 988;
-		rType = 0;
-		vrLen = 1409;
-		vrLoc = 489;
-	};
-	A671553211D764860031017F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A63CC0800F5170FC003669FD /* TaskCellBig.m */;
-		name = "TaskCellBig.m: 14";
-		rLen = 0;
-		rLoc = 285;
-		rType = 0;
-		vrLen = 1089;
-		vrLoc = 3;
 	};
 	A67220F211C748AB0046C6CF /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -2899,7 +2870,7 @@
 		ignoreCount = 0;
 		lineNumber = 30;
 		location = TaskCoach;
-		modificationTime = 299328624.550761;
+		modificationTime = 299329177.631069;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -3806,6 +3777,54 @@
 			sepNavWindowFrame = "{{1773, 123}, {675, 1148}}";
 		};
 	};
+	A6D152A511D765A500E0CA7E /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = A63CC0800F5170FC003669FD /* TaskCellBig.m */;
+		name = "TaskCellBig.m: 14";
+		rLen = 0;
+		rLoc = 285;
+		rType = 0;
+		vrLen = 1127;
+		vrLoc = 0;
+	};
+	A6D152B811D7662800E0CA7E /* TaskViewController.m:102 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = A6DDF8530F1F988600F35108 /* TaskViewController.m */;
+		functionName = "-restorePosition:store:";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 102;
+		location = TaskCoach;
+		modificationTime = 299329177.631679;
+		originalNumberOfMultipleMatches = 1;
+		state = 1;
+	};
+	A6D152CE11D766BC00E0CA7E /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = A6DDF8530F1F988600F35108 /* TaskViewController.m */;
+		name = "TaskViewController.m: 324";
+		rLen = 0;
+		rLoc = 9776;
+		rType = 0;
+		vrLen = 914;
+		vrLoc = 7390;
+	};
+	A6D152D011D766C000E0CA7E /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = A6DDF8530F1F988600F35108 /* TaskViewController.m */;
+		name = "TaskViewController.m: 324";
+		rLen = 0;
+		rLoc = 9776;
+		rType = 0;
+		vrLen = 2415;
+		vrLoc = 6626;
+	};
 	A6D384540F247DDF0097F0F6 /* TaskDetailsController.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1060, 762}}";
@@ -4116,9 +4135,9 @@
 	};
 	A6DDF8530F1F988600F35108 /* TaskViewController.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1467, 13637}}";
-			sepNavSelRange = "{2675, 0}";
-			sepNavVisRange = "{2730, 810}";
+			sepNavIntBoundsRect = "{{0, 0}, {1314, 13598}}";
+			sepNavSelRange = "{9776, 0}";
+			sepNavVisRange = "{6626, 2415}";
 		};
 	};
 	A6DFB4F611C64CC5007FB4F0 /* PBXBookmark */ = {
