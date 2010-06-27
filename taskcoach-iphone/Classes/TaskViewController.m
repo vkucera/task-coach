@@ -414,7 +414,6 @@ static void deleteTask(CDTask *task)
 	if (selected)
 	{
 		[self.tableView selectRowAtIndexPath:selected animated:NO scrollPosition:UITableViewScrollPositionNone];
-		[self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:selected] withRowAnimation:UITableViewRowAnimationFade];
 		[self.tableView deselectRowAtIndexPath:selected animated:YES];
 
 		[selected release];
