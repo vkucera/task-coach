@@ -196,7 +196,13 @@
 
 - (void)setWantSync
 {
-	wantSync = YES;
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+	{
+		[taskCtrl setCategory:nil];
+		[self onSynchronize:syncButton];
+	}
+	else
+		wantSync = YES;
 }
 
 - (IBAction)onChooseFile:(UIBarButtonItem *)button
@@ -738,7 +744,7 @@
 		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 		{
 			ctrl.modalPresentationStyle = UIModalPresentationFormSheet;
-			[splitCtrl presentModalViewController:ctrl animated:YES];
+			[browser presentModalViewController:ctrl animated:YES];
 		}
 		else
 		{
