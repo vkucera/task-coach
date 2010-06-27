@@ -23,3 +23,11 @@
 + (TimeUtils *)instance;
 
 @end
+
+@interface UserTimeUtils : NSDateFormatter
+{
+}
+
++ (UserTimeUtils *)instance;
+
+@end

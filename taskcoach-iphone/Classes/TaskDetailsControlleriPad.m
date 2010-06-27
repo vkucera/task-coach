@@ -12,6 +12,7 @@
 #import "TaskDetailsEffortsBase.h"
 #import "TaskDetailsRecurrenceControlleriPad.h"
 #import "DateUtils.h"
+#import "String+Utils.h"
 #import "i18n.h"
 #import "Configuration.h"
 
@@ -21,6 +22,7 @@
 #import "CDTask+Addons.h"
 #import "CDDomainObject+Addons.h"
 #import "CDFile.h"
+#import "CDCategory.h"
 
 @interface TaskDetailsControlleriPad ()
 
@@ -41,6 +43,8 @@
 @synthesize priorityLabel;
 @synthesize recurrenceButton;
 @synthesize effortButton;
+@synthesize categoryButton;
+@synthesize prioritySlider;
 
 @synthesize taskCatCtrl;
 @synthesize taskEffortCtrl;
@@ -74,6 +78,8 @@
 	[taskCatCtrl setTask:task];
 	[taskEffortCtrl setTask:task];
 	[taskEffortCtrl updateButton:effortButton];
+
+	self.prioritySlider.value = (float)[task.priority intValue];
 }
 
 - (void)viewDidUnload
@@ -89,6 +95,8 @@
 	self.effortButton = nil;
 	self.taskCatCtrl = nil;
 	self.taskEffortCtrl = nil;
+	self.categoryButton = nil;
+	self.prioritySlider = nil;
 }
 
 - (void)dealloc
@@ -116,20 +124,25 @@
 	{
 		UIButton *button;
 
-		if (dateName)
-		{
-			if ([dateName isEqualToString:@"startDate"])
-				button = startDateButton;
-			else if ([dateName isEqualToString:@"dueDate"])
-				button = dueDateButton;
-			else if ([dateName isEqualToString:@"completionDate"])
-				button = completionDateButton;
-			else
-				button = reminderDateButton;
-		}
+		if (popoverCtrl.contentViewController == taskCatCtrl)
+			button = categoryButton;
 		else
-			button = recurrenceButton;
-
+		{
+			if (dateName)
+			{
+				if ([dateName isEqualToString:@"startDate"])
+					button = startDateButton;
+				else if ([dateName isEqualToString:@"dueDate"])
+					button = dueDateButton;
+				else if ([dateName isEqualToString:@"completionDate"])
+					button = completionDateButton;
+				else
+					button = reminderDateButton;
+			}
+			else
+				button = recurrenceButton;
+		}
+			
 		[popoverCtrl presentPopoverFromRect:button.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 	}
 }
@@ -137,26 +150,38 @@
 - (void)refreshButtons
 {
 	if (task.startDate)
-		[self.startDateButton setTitle:[[TimeUtils instance] stringFromDate:task.startDate] forState:UIControlStateNormal];
+		[self.startDateButton setTitle:[NSString stringWithFormat:_("Started %@"), [[UserTimeUtils instance] stringFromDate:task.startDate]] forState:UIControlStateNormal];
 	else
-		[self.startDateButton setTitle:_("None") forState:UIControlStateNormal];
+		[self.startDateButton setTitle:_("No start date") forState:UIControlStateNormal];
 	
 	if (task.dueDate)
-		[self.dueDateButton setTitle:[[TimeUtils instance] stringFromDate:task.dueDate] forState:UIControlStateNormal];
+		[self.dueDateButton setTitle:[NSString stringWithFormat:_("Due %@"), [[UserTimeUtils instance] stringFromDate:task.dueDate]] forState:UIControlStateNormal];
 	else
-		[self.dueDateButton setTitle:_("None") forState:UIControlStateNormal];
+		[self.dueDateButton setTitle:_("No due date") forState:UIControlStateNormal];
 	
 	if (task.completionDate)
-		[self.completionDateButton setTitle:[[TimeUtils instance] stringFromDate:task.completionDate] forState:UIControlStateNormal];
+		[self.completionDateButton setTitle:[NSString stringWithFormat:_("Completed %@"), [[UserTimeUtils instance] stringFromDate:task.completionDate]] forState:UIControlStateNormal];
 	else
-		[self.completionDateButton setTitle:_("None") forState:UIControlStateNormal];
+		[self.completionDateButton setTitle:_("No completion date") forState:UIControlStateNormal];
 	
 	if (task.reminderDate)
-		[self.reminderDateButton setTitle:[[TimeUtils instance] stringFromDate:task.reminderDate] forState:UIControlStateNormal];
+		[self.reminderDateButton setTitle:[NSString stringWithFormat:_("Reminder %@"), [[UserTimeUtils instance] stringFromDate:task.reminderDate]] forState:UIControlStateNormal];
 	else
-		[self.reminderDateButton setTitle:_("None") forState:UIControlStateNormal];
+		[self.reminderDateButton setTitle:_("No reminder") forState:UIControlStateNormal];
 
-	priorityLabel.text = [NSString stringWithFormat:_("Priority: %@"), task.priority];
+	priorityLabel.text = [NSString stringWithFormat:_("%@"), task.priority];
+
+	if ([task.categories count])
+	{
+		NSMutableArray *cats = [[NSMutableArray alloc] init];
+		for (CDCategory *cat in task.categories)
+			[cats addObject:cat.name];
+		[categoryButton setTitle:[@", " stringByJoiningStrings:cats] forState:UIControlStateNormal];
+	}
+	else
+	{
+		[categoryButton setTitle:_("No category.") forState:UIControlStateNormal];
+	}
 }
 
 - (void)saveTask
@@ -175,6 +200,8 @@
 
 - (IBAction)onClickDate:(UIButton *)button
 {
+	[description resignFirstResponder];
+
 	NSDateComponents *comp = [[NSCalendar currentCalendar] components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:[NSDate date]];
 	[comp setHour:0];
 	[comp setMinute:0];
@@ -247,52 +274,61 @@
 	[self refreshButtons];
 }
 
-- (IBAction)incPriority:(UIButton *)button
+- (IBAction)onPriorityChanged:(UISlider *)slider
 {
-	task.priority = [NSNumber numberWithInt:[task.priority intValue] + 1];
+	[description resignFirstResponder];
+	
+	task.priority = [NSNumber numberWithInt:(int)slider.value];
 	[self saveTask];
 	[self refreshButtons];
 }
 
-- (IBAction)decPriority:(UIButton *)button
-{
-	NSInteger p =[task.priority intValue];
-	if (p > 0)
-	{
-		task.priority = [NSNumber numberWithInt:p - 1];
-		[self saveTask];
-		[self refreshButtons];
-	}
-}
-
 - (IBAction)onClickEffort:(UIButton *)button
 {
+	[description resignFirstResponder];
+	
 	[taskEffortCtrl onTrack:button];
 }
 
 - (IBAction)onClickRecurrence:(UIButton *)button
 {
+	[description resignFirstResponder];
+	
 	TaskDetailsRecurrenceControlleriPad *ctrl = [[TaskDetailsRecurrenceControlleriPad alloc] initWithTask:task];
 	popoverCtrl = [[UIPopoverController alloc] initWithContentViewController:ctrl];
+	popoverCtrl.delegate = self;
 	[popoverCtrl setPopoverContentSize:CGSizeMake(284, 141)];
 	[popoverCtrl presentPopoverFromRect:button.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 	[ctrl release];
+}
+
+- (IBAction)onPickCategories:(UIButton *)button
+{
+	[description resignFirstResponder];
+	
+	popoverCtrl = [[UIPopoverController alloc] initWithContentViewController:taskCatCtrl];
+	popoverCtrl.delegate = self;
+	[popoverCtrl setPopoverContentSize:CGSizeMake(300, 400)];
+	[popoverCtrl presentPopoverFromRect:button.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
 
 #pragma mark UIPopoverControllerDelegate
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
 {
-	if (dateName)
+	if (popoverController.contentViewController != taskCatCtrl)
 	{
-		[task setValue:nil forKey:dateName];
-		dateName = nil;
-		[task computeDateStatus];
-		[self saveTask];
-	}
+		if (dateName)
+		{
+			[task setValue:nil forKey:dateName];
+			dateName = nil;
+			[task computeDateStatus];
+			[self saveTask];
+		}
 
-	[popoverCtrl release];
-	popoverCtrl = nil;
+		[popoverCtrl release];
+		popoverCtrl = nil;
+	}
 
 	[self refreshButtons];
 }

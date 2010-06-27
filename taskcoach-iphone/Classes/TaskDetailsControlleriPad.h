@@ -27,6 +27,8 @@
 	UILabel *priorityLabel;
 	UIButton *recurrenceButton;
 	UIButton *effortButton;
+	UIButton *categoryButton;
+	UISlider *prioritySlider;
 
 	SimpleDatePicker *datePicker;
 	UIPopoverController *popoverCtrl;
@@ -45,6 +47,8 @@
 @property (nonatomic, retain) IBOutlet UILabel *priorityLabel;
 @property (nonatomic, retain) IBOutlet UIButton *recurrenceButton;
 @property (nonatomic, retain) IBOutlet UIButton *effortButton;
+@property (nonatomic, retain) IBOutlet UIButton *categoryButton;
+@property (nonatomic, retain) IBOutlet UISlider *prioritySlider;
 
 @property (nonatomic, retain) IBOutlet TaskCategoryPickerController *taskCatCtrl;
 @property (nonatomic, retain) IBOutlet TaskDetailsEffortsBase *taskEffortCtrl;
@@ -52,9 +56,9 @@
 - initWithTask:(CDTask *)task;
 
 - (IBAction)onClickDate:(UIButton *)button;
-- (IBAction)incPriority:(UIButton *)button;
-- (IBAction)decPriority:(UIButton *)button;
 - (IBAction)onClickEffort:(UIButton *)button;
 - (IBAction)onClickRecurrence:(UIButton *)button;
+- (IBAction)onPriorityChanged:(UISlider *)slider;
+- (IBAction)onPickCategories:(UIButton *)button;
 
 @end

@@ -11,6 +11,7 @@
 #import "CDCategory.h"
 #import "TaskCellBig.h"
 #import "String+Utils.h"
+#import "DateUtils.h"
 #import "i18n.h"
 
 @implementation TaskCellBig
@@ -71,20 +72,20 @@
 	switch ([[task dateStatus] intValue])
 	{
 		case TASKSTATUS_COMPLETED:
-			infosLabel.text = [NSString stringWithFormat:_("Completed %@"), task.completionDate];
+			infosLabel.text = [NSString stringWithFormat:_("Completed %@"), [[UserTimeUtils instance] stringFromDate:task.completionDate]];
 			break;
 		case TASKSTATUS_OVERDUE:
-			infosLabel.text = [NSString stringWithFormat:_("Due %@"), task.dueDate];
+			infosLabel.text = [NSString stringWithFormat:_("Due %@"), [[UserTimeUtils instance] stringFromDate:task.dueDate]];
 			break;
 		case TASKSTATUS_DUESOON:
-			infosLabel.text = [NSString stringWithFormat:_("Due %@"), task.dueDate];
+			infosLabel.text = [NSString stringWithFormat:_("Due %@"), [[UserTimeUtils instance] stringFromDate:task.dueDate]];
 			break;
 		case TASKSTATUS_STARTED:
 			if (task.dueDate)
-				infosLabel.text = [NSString stringWithFormat:_("Due %@"), task.dueDate];
+				infosLabel.text = [NSString stringWithFormat:_("Due %@"), [[UserTimeUtils instance] stringFromDate:task.dueDate]];
 		case TASKSTATUS_NOTSTARTED:
 			if (task.startDate)
-				infosLabel.text = [NSString stringWithFormat:_("Start %@"), task.startDate];
+				infosLabel.text = [NSString stringWithFormat:_("Start %@"), [[UserTimeUtils instance] stringFromDate:task.startDate]];
 			break;
 	}
 }

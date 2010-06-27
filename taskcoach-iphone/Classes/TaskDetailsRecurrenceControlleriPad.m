@@ -132,6 +132,9 @@
 	else
 	{
 		task.recPeriod = nil;
+
+		if ([amountField isFirstResponder])
+			[amountField resignFirstResponder];
 	}
 
 	[self save];
