@@ -8,6 +8,8 @@
 
 #import "SplitView.h"
 #import "CategoryViewController.h"
+#import "CategoryTaskViewController.h"
+#import "i18n.h"
 
 @implementation SplitView
 
@@ -32,6 +34,12 @@
 	self.categoryCtrl = nil;
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+	[super viewDidAppear:animated];
+
+	[categoryCtrl viewDidAppear:animated];
+}
 
 - (void)dealloc
 {
@@ -39,6 +47,5 @@
 
     [super dealloc];
 }
-
 
 @end

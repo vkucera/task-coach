@@ -9,7 +9,7 @@
 #import "TaskViewController.h"
 #import "CDCategory.h"
 
-@interface CategoryTaskViewController : TaskViewController
+@interface CategoryTaskViewController : TaskViewController <UISplitViewControllerDelegate>
 {
 	CDCategory *category;
 }

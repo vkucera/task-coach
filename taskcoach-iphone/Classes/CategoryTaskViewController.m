@@ -7,6 +7,7 @@
 //
 
 #import "TaskCoachAppDelegate.h"
+#import "CategoryViewController.h"
 #import "CategoryTaskViewController.h"
 #import "TaskDetailsControlleriPad.h"
 #import "TaskDetailsController.h"
@@ -127,6 +128,49 @@
 		[alert release];
 		NSLog(@"Error: %@", [error localizedDescription]);
 	}
+}
+
+#pragma mark UISplitViewControllerDelegate methods
+
+- (void)splitViewController:(UISplitViewController*)svc
+	 willHideViewController:(UIViewController *)aViewController
+		  withBarButtonItem:(UIBarButtonItem*)barButtonItem
+	   forPopoverController:(UIPopoverController*)pc
+{
+	[barButtonItem setTitle:_("Categories")];
+	NSMutableArray *items = [[NSMutableArray alloc] init];
+	[items addObject:barButtonItem];
+	[items addObjectsFromArray:[self.toolbar items]];
+	[self.toolbar setItems:items animated:YES];
+	[pc setPopoverContentSize:CGSizeMake(400, 920)];
+	popCtrl = pc;
+}
+
+- (void)splitViewController:(UISplitViewController*)svc
+	 willShowViewController:(UIViewController *)aViewController
+  invalidatingBarButtonItem:(UIBarButtonItem *)button
+{
+	NSMutableArray *items = [[NSMutableArray alloc] init];
+	for (UIBarItem *item in [self.toolbar items])
+	{
+		if (item != button)
+			[items addObject:item];
+	}
+	[self.toolbar setItems:items animated:YES];
+	popCtrl = nil;
+}
+
+- (void)splitViewController:(UISplitViewController*)svc
+		  popoverController:(UIPopoverController*)pc
+  willPresentViewController:(UIViewController *)aViewController
+{
+	if (groupSheet)
+	{
+		[groupSheet dismissWithClickedButtonIndex:-1 animated:YES];
+		groupSheet = nil;
+	}
+
+	[categoryController fixContent];
 }
 
 @end

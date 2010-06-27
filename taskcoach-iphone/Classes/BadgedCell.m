@@ -21,6 +21,8 @@
 - (void)layoutSubviews
 {
 	[self.badge sizeToFit];
+	
+	/*
 	CGSize badgeSize = [self.badge sizeThatFits:self.badge.bounds.size];
 
 	CGRect labelRect;
@@ -36,6 +38,7 @@
 	badgeRect.size.width = badgeSize.width;
 	badgeRect.size.height = self.contentView.bounds.size.height - 22;
 	self.badge.frame = badgeRect;
+	 */
 
 	[super layoutSubviews];
 }

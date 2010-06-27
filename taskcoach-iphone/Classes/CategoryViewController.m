@@ -155,6 +155,8 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
+	[super viewDidAppear:animated];
+
 	NSDate *nextUpdate = [NSDate dateRounded];
 	nextUpdate = [nextUpdate addTimeInterval:61];
 	minuteTimer = [[NSTimer alloc] initWithFireDate:nextUpdate interval:60 target:self selector:@selector(onMinuteTimer:) userInfo:nil repeats:YES];
@@ -171,6 +173,15 @@
 - (void)onMinuteTimer:(NSTimer *)theTimer
 {
 	[[ReminderController instance] check];
+}
+
+- (void)fixContent
+{
+	for (BadgedCell *cell in [self.tableView visibleCells])
+	{
+		[cell setNeedsLayout];
+		[cell layoutSubviews];
+	}
 }
 
 - (void)childWasPopped
@@ -446,6 +457,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+	if (taskCtrl.popCtrl)
+	{
+		[taskCtrl.popCtrl dismissPopoverAnimated:YES];
+	}
+
 	if (self.editing)
 	{
 		if (indexPath.row % 2)

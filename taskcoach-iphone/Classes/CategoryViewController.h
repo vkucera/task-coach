@@ -50,4 +50,6 @@
 
 - (void)setWantSync;
 
+- (void)fixContent;
+
 @end

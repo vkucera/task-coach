@@ -37,8 +37,9 @@
 	NSFetchedResultsController *results;
 	NSIndexPath *selected;
 
-	NSInteger calendarButtonIndex;
 	UIActionSheet *groupSheet;
+	UIBarButtonItem *groupButton;
+	UIPopoverController *popCtrl;
 }
 
 @property (nonatomic, readonly) UITableView *tableView;
@@ -47,6 +48,8 @@
 @property (nonatomic, retain) IBOutlet UISearchBar *calendarSearch;
 @property (nonatomic, retain) IBOutlet UIToolbar *toolbar;
 @property (nonatomic, assign) IBOutlet CategoryViewController *categoryController; // for iPad
+@property (nonatomic, assign) IBOutlet UIBarButtonItem *groupButton;
+@property (nonatomic, assign) UIPopoverController *popCtrl;
 
 - (IBAction)onAddTask:(UIBarButtonItem *)button;
 - (IBAction)onSync:(UIBarButtonItem *)button;
