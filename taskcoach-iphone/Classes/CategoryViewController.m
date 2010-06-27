@@ -175,15 +175,6 @@
 	[[ReminderController instance] check];
 }
 
-- (void)fixContent
-{
-	for (BadgedCell *cell in [self.tableView visibleCells])
-	{
-		[cell setNeedsLayout];
-		[cell layoutSubviews];
-	}
-}
-
 - (void)childWasPopped
 {
 	NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];

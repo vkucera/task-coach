@@ -169,8 +169,6 @@
 		[groupSheet dismissWithClickedButtonIndex:-1 animated:YES];
 		groupSheet = nil;
 	}
-
-	[categoryController fixContent];
 }
 
 @end
