@@ -14,7 +14,7 @@
 
 - initWithTask:(CDTask *)theTask
 {
-	if (self = [super initWithTask:theTask])
+	if ((self = [super initWithTask:theTask]))
 	{
 		effortCell = [[[CellFactory cellFactory] createButtonCell] retain];
 		[effortCell.button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];

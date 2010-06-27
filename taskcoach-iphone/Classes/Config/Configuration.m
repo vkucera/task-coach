@@ -35,7 +35,7 @@ static Configuration *_configuration = NULL;
 
 - init
 {
-	if (self = [super init])
+	if ((self = [super init]))
 	{
 		NSUserDefaults *config = [NSUserDefaults standardUserDefaults];
 

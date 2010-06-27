@@ -22,7 +22,7 @@
 
 - initWithTask:(CDTask *)theTask
 {
-	if (self = [super initWithNibName:@"TaskDetails" bundle:[NSBundle mainBundle]])
+	if ((self = [super initWithNibName:@"TaskDetails" bundle:[NSBundle mainBundle]]))
 	{
 		task = [theTask retain];
 
@@ -57,7 +57,7 @@
 
 - initWithTask:(CDTask *)theTask tabIndex:(NSInteger)index
 {
-	if (self = [self initWithTask:theTask])
+	if ((self = [self initWithTask:theTask]))
 	{
 		self.selectedIndex = index;
 	}

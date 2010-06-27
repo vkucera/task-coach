@@ -28,7 +28,7 @@ static ReminderController *_instance = NULL;
 
 - initWithTask:(CDTask *)theTask
 {
-	if (self = [super init])
+	if ((self = [super init]))
 	{
 		task = [theTask retain];
 	}

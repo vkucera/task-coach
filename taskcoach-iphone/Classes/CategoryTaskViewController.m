@@ -25,7 +25,7 @@
 
 - initWithCategoryController:(CategoryViewController *)controller edit:(BOOL)edit category:(CDCategory *)theCategory
 {
-	if (self = [super initWithCategoryController:controller edit:edit])
+	if ((self = [super initWithCategoryController:controller edit:edit]))
 	{
 		category = [theCategory retain];
 	}

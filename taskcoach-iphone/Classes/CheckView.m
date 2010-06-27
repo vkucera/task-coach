@@ -12,7 +12,7 @@
 
 - initWithCoder:(NSCoder *)coder
 {
-	if (self = [super initWithCoder:coder])
+	if ((self = [super initWithCoder:coder]))
 	{
 		self.exclusiveTouch = YES;
 	}

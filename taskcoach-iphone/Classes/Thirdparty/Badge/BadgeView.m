@@ -53,7 +53,7 @@ const float kBadgeConcaveCapsuleClippingTrim = 3.0f;
 
 - initWithCoder:(NSCoder *)encoder
 {
-	if (self = [super initWithCoder:encoder]) {
+	if ((self = [super initWithCoder:encoder])) {
 		[self initialize];
 	}
 	
@@ -61,7 +61,7 @@ const float kBadgeConcaveCapsuleClippingTrim = 3.0f;
 }
 
 - (id)initWithFrame:(CGRect)frame {
-	if (self = [super initWithFrame:frame]) {
+	if ((self = [super initWithFrame:frame])) {
 		[self initialize];
 	}
 	

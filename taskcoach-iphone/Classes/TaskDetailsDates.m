@@ -31,7 +31,7 @@
 
 - initWithTask:(CDTask *)theTask parent:(TaskDetailsController *)parent
 {
-	if (self = [super initWithNibName:@"TaskDetailsDates" bundle:[NSBundle mainBundle]])
+	if ((self = [super initWithNibName:@"TaskDetailsDates" bundle:[NSBundle mainBundle]]))
 	{
 		task = [theTask retain];
 		parentCtrl = parent;
@@ -332,7 +332,7 @@
 			[alert release];
 		}
 	}
-	else if (cell = recSameWeekdayCell)
+	else if (cell == recSameWeekdayCell)
 	{
 		task.recSameWeekday = [NSNumber numberWithInt:cell.switch_.on];
 		[task markDirty];

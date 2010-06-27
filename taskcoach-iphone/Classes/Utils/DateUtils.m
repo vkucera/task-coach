@@ -23,7 +23,7 @@ static UserTimeUtils *_uinstance = NULL;
 
 - init
 {
-	if (self = [super init])
+	if ((self = [super init]))
 	{
 		[self setDateFormat:@"yyyy-MM-dd"];
 	}
@@ -44,7 +44,7 @@ static UserTimeUtils *_uinstance = NULL;
 
 - init
 {
-	if (self = [super init])
+	if ((self = [super init]))
 	{
 		[self setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
 	}
@@ -65,7 +65,7 @@ static UserTimeUtils *_uinstance = NULL;
 
 - init
 {
-	if (self = [super init])
+	if ((self = [super init]))
 	{
 		[self setDateStyle:NSDateFormatterShortStyle];
 		[self setTimeStyle:NSDateFormatterShortStyle];

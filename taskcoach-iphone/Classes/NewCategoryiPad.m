@@ -16,7 +16,7 @@
 
 - initWithString:(NSString *)string target:(id)theTarget action:(SEL)theAction
 {
-	if (self = [super initWithNibName:@"NewCategoryiPad" bundle:[NSBundle mainBundle]])
+	if ((self = [super initWithNibName:@"NewCategoryiPad" bundle:[NSBundle mainBundle]]))
 	{
 		target = theTarget;
 		action = theAction;

@@ -26,7 +26,7 @@ static PositionStore *_instance = nil;
 
 - initWithController:(id <RestorableController>)controller indexPath:(NSIndexPath *)path type:(NSInteger)theType searchWord:(NSString *)word
 {
-	if (self = [super init])
+	if ((self = [super init]))
 	{
 		CGPoint p = [controller tableView].contentOffset;
 
@@ -42,7 +42,7 @@ static PositionStore *_instance = nil;
 
 - initWithCoder:(NSCoder *)coder
 {
-	if (self = [super init])
+	if ((self = [super init]))
 	{
 		_scrollPosition = [coder decodeIntegerForKey:@"scrollPosition"];
 		indexPath = [[coder decodeObjectForKey:@"indexPath"] retain];
@@ -90,7 +90,7 @@ static PositionStore *_instance = nil;
 
 - init
 {
-	if (self = [super init])
+	if ((self = [super init]))
 	{
 		positions = [[NSMutableArray alloc] initWithCapacity:3];
 	}
@@ -100,7 +100,7 @@ static PositionStore *_instance = nil;
 
 - initWithFile:(NSString *)path
 {
-	if (self = [super init])
+	if ((self = [super init]))
 	{
 		NSData *data = [[NSData alloc] initWithContentsOfFile:path];
 		positions = [[NSKeyedUnarchiver unarchiveObjectWithData:data] retain];

@@ -34,7 +34,7 @@
 
 - initWithTask:(CDTask *)theTask parent:(TaskDetailsController *)parent
 {
-	if (self = [super initWithNibName:@"TaskDetailsGeneral" bundle:[NSBundle mainBundle]])
+	if ((self = [super initWithNibName:@"TaskDetailsGeneral" bundle:[NSBundle mainBundle]]))
 	{
 		task = [theTask retain];
 		parentCtrl = parent;

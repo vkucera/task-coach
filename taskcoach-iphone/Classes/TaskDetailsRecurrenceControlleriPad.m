@@ -19,7 +19,7 @@
 
 - initWithTask:(CDTask *)theTask
 {
-	if (self = [super initWithNibName:@"TaskDetailsRecurrenceControlleriPad" bundle:[NSBundle mainBundle]])
+	if ((self = [super initWithNibName:@"TaskDetailsRecurrenceControlleriPad" bundle:[NSBundle mainBundle]]))
 	{
 		task = [theTask retain];
 	}

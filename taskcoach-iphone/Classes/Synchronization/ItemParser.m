@@ -12,7 +12,7 @@
 
 - init
 {
-	if (self = [super init])
+	if ((self = [super init]))
 	{
 		stack = [[NSMutableArray alloc] init];
 	}

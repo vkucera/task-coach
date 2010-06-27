@@ -29,7 +29,7 @@
 
 - initWithTask:(CDTask *)theTask
 {
-	if (self = [super initWithNibName:@"TaskDetailsEffortsBase" bundle:[NSBundle mainBundle]])
+	if ((self = [super initWithNibName:@"TaskDetailsEffortsBase" bundle:[NSBundle mainBundle]]))
 	{
 		task = [theTask retain];
 	}

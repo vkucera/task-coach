@@ -19,7 +19,7 @@
 
 - initWithTask:(CDTask *)theTask
 {
-	if (self = [super initWithFrame:CGRectZero])
+	if ((self = [super initWithFrame:CGRectZero]))
 	{
 		task = [theTask retain];
 

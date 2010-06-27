@@ -19,7 +19,7 @@
 
 - initWithCategoryController:(CategoryViewController *)controller edit:(BOOL)edit parent:(CDTask *)theParent
 {
-	if (self = [super initWithCategoryController:controller edit:edit])
+	if ((self = [super initWithCategoryController:controller edit:edit]))
 	{
 		parent = [theParent retain];
 

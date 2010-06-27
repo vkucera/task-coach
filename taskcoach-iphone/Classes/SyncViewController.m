@@ -25,7 +25,7 @@
 
 - initWithTarget:(id)theTarget action:(SEL)theAction host:(NSString *)theHost port:(NSInteger)thePort
 {
-	if (self = [super initWithNibName:@"SyncView" bundle:[NSBundle mainBundle]])
+	if ((self = [super initWithNibName:@"SyncView" bundle:[NSBundle mainBundle]]))
 	{
 		target = theTarget;
 		action = theAction;

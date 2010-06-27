@@ -22,7 +22,7 @@
 
 - initWithTask:(CDTask *)task
 {
-	if (self = [super initWithNibName:@"TaskCategoryPicker" bundle:[NSBundle mainBundle]])
+	if ((self = [super initWithNibName:@"TaskCategoryPicker" bundle:[NSBundle mainBundle]]))
 	{
 		myTask = [task retain];
 	}

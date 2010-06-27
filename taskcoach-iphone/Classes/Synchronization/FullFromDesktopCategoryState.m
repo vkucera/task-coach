@@ -23,7 +23,7 @@
 
 - initWithNetwork:(Network *)network controller:(SyncViewController *)controller
 {
-	if (self = [super initWithNetwork:network controller:controller])
+	if ((self = [super initWithNetwork:network controller:controller]))
 	{
 		parentReq = [[NSFetchRequest alloc] init];
 		[parentReq setEntity:[NSEntityDescription entityForName:@"CDCategory" inManagedObjectContext:getManagedObjectContext()]];

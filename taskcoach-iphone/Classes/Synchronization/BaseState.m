@@ -16,7 +16,7 @@
 
 - initWithNetwork:(Network *)network controller:(SyncViewController *)controller
 {
-	if (self = [super init])
+	if ((self = [super init]))
 	{
 		myNetwork = network;
 		myController = controller;

@@ -26,7 +26,7 @@
 
 - initWithNetwork:(Network *)network controller:(SyncViewController *)controller
 {
-	if (self = [super initWithNetwork:network controller:controller])
+	if ((self = [super initWithNetwork:network controller:controller]))
 	{
 		request = [[NSFetchRequest alloc] init];
 	}

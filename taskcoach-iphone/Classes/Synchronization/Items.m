@@ -12,7 +12,7 @@
 
 - init
 {
-	if (self = [super init])
+	if ((self = [super init]))
 	{
 		[self start];
 	}
@@ -158,7 +158,7 @@
 
 - initWithCount:(NSInteger)theCount
 {
-	if (self = [super init])
+	if ((self = [super init]))
 	{
 		count = theCount;
 	}
@@ -289,7 +289,7 @@
 
 - init
 {
-	if (self = [super init])
+	if ((self = [super init]))
 	{
 		fmt = [[NSDateFormatter alloc] init];
 		[fmt setDateFormat:@"yyyy-MM-dd"];
@@ -342,7 +342,7 @@
 
 - initWithItems:(NSArray *)items
 {
-	if (self = [super init])
+	if ((self = [super init]))
 	{
 		myItems = [[NSMutableArray alloc] initWithArray:items];
 	}
@@ -433,7 +433,7 @@
 
 - initWithItem:(BaseItem *)item
 {
-	if (self = [super init])
+	if ((self = [super init]))
 	{
 		myItem = [item retain];
 	}

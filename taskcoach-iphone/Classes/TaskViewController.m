@@ -156,7 +156,7 @@ static void deleteTask(CDTask *task)
 
 - initWithCategoryController:(CategoryViewController *)controller edit:(BOOL)edit
 {
-	if (self = [super initWithNibName:@"TaskView" bundle:[NSBundle mainBundle]])
+	if ((self = [super initWithNibName:@"TaskView" bundle:[NSBundle mainBundle]]))
 	{
 		shouldEdit = edit;
 		categoryController = controller;
@@ -171,7 +171,7 @@ static void deleteTask(CDTask *task)
 
 - initWithCoder:(NSCoder *)coder
 {
-	if (self = [super initWithCoder:coder])
+	if ((self = [super initWithCoder:coder]))
 	{
 		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 		{

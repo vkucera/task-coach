@@ -19,7 +19,7 @@
 
 - initWithController:(CategoryViewController *)ctrl
 {
-	if (self = [super initWithNibName:@"FileChooser" bundle:[NSBundle mainBundle]])
+	if ((self = [super initWithNibName:@"FileChooser" bundle:[NSBundle mainBundle]]))
 	{
 		catCtrl = ctrl;
 

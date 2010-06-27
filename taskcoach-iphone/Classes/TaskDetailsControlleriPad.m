@@ -51,7 +51,7 @@
 
 - initWithTask:(CDTask *)theTask
 {
-	if (self = [super initWithNibName:@"TaskDetailsControlleriPad" bundle:[NSBundle mainBundle]])
+	if ((self = [super initWithNibName:@"TaskDetailsControlleriPad" bundle:[NSBundle mainBundle]]))
 	{
 		task = [theTask retain];
 

@@ -15,7 +15,7 @@
 
 - initWithDate:(NSDate *)theDate target:(id)theTarget action:(SEL)theAction
 {
-	if (self = [super initWithNibName:@"DatePickerView" bundle:[NSBundle mainBundle]])
+	if ((self = [super initWithNibName:@"DatePickerView" bundle:[NSBundle mainBundle]]))
 	{
 		[self setDate:theDate target:theTarget action:theAction];
 	}

@@ -16,7 +16,7 @@
 
 - init
 {
-	if (self = [super initWithNibName:@"TaskDetailsRecurrencePeriodPicker" bundle:[NSBundle mainBundle]])
+	if ((self = [super initWithNibName:@"TaskDetailsRecurrencePeriodPicker" bundle:[NSBundle mainBundle]]))
 	{
 	}
 

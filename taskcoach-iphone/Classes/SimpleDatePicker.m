@@ -16,7 +16,7 @@
 
 - initWithTarget:(id)theTarget action:(SEL)theAction
 {
-	if (self = [super initWithNibName:@"SimpleDatePicker" bundle:[NSBundle mainBundle]])
+	if ((self = [super initWithNibName:@"SimpleDatePicker" bundle:[NSBundle mainBundle]]))
 	{
 		target = theTarget;
 		action = theAction;

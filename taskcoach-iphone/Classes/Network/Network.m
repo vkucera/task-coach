@@ -25,7 +25,7 @@
 
 - initWithAddress:(NSString *)address port:(NSInteger)port delegate:(id <NetworkDelegate>)theDelegate
 {
-	if (self = [super init])
+	if ((self = [super init]))
 	{
 		delegate = theDelegate;
 		
@@ -218,7 +218,7 @@
 
 - initWithData:(NSData *)theData
 {
-	if (self = [super init])
+	if ((self = [super init]))
 	{
 		data = [theData retain];
 	}
