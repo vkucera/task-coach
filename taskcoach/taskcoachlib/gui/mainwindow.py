@@ -330,11 +330,11 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, widgets.AuiManagedFrameWith
             self.quit()
 
     def restore(self, event): # pylint: disable-msg=W0613
+        self.Iconize(False)
         self.Show()
         self.Raise()
         self.Refresh() # This is not necessary on Windows/Linux Ubuntu/Mac but
                        # might help to fix bug 1429540 (Linux Mandrake)
-        self.Iconize(False)
 
     def onIconify(self, event):
         if event.Iconized() and self.settings.getboolean('window', 

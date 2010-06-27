@@ -22,6 +22,14 @@ from changetypes import *
 
 releases = [
 
+Release('1.0.7', 'June 27, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''On some Linux platforms, when using KDE, Task Coach would 
+not properly restore after being minimized to the system tray.''', '2988693')
+        ]
+    ),
+
 Release('1.0.6', 'June 26, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
