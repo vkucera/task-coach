@@ -38,6 +38,7 @@
 	NSIndexPath *selected;
 
 	NSInteger calendarButtonIndex;
+	UIActionSheet *groupSheet;
 }
 
 @property (nonatomic, readonly) UITableView *tableView;

@@ -14,12 +14,15 @@
 #import "PositionStore.h"
 
 @class NavigationController;
+@class SplitView;
 @class CDCategory;
 @class CategoryTaskViewController;
 
 @interface CategoryViewController : BaseCategoryViewController <BonjourBrowserDelegate, RestorableController, UIPopoverControllerDelegate>
 {
 	NavigationController *navigationController;
+	SplitView *splitCtrl;
+
 	UIBarButtonItem *syncButton;
 	UIBarButtonItem *fileButton;
 	BOOL wantSync;
@@ -31,12 +34,15 @@
 	CategoryTaskViewController *taskCtrl;
 
 	UIPopoverController *popoverCtrl;
+	UIToolbar *theToolbar;
 }
 
 @property (nonatomic, assign) IBOutlet NavigationController *navigationController;
+@property (nonatomic, assign) IBOutlet SplitView *splitCtrl;
 @property (nonatomic, assign) IBOutlet UIBarButtonItem *syncButton;
 @property (nonatomic, assign) IBOutlet UIBarButtonItem *fileButton;
 @property (nonatomic, assign) IBOutlet CategoryTaskViewController *taskCtrl;
+@property (nonatomic, assign) IBOutlet UIToolbar *theToolbar;
 
 - (IBAction)onChooseFile:(UIBarButtonItem *)button;
 - (IBAction)onAddCategory:(UIBarButtonItem *)button;

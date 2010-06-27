@@ -32,9 +32,11 @@
 @implementation CategoryViewController
 
 @synthesize navigationController;
+@synthesize splitCtrl;
 @synthesize syncButton;
 @synthesize fileButton;
 @synthesize taskCtrl;
+@synthesize theToolbar;
 
 - (void)loadCategories
 {
@@ -108,11 +110,23 @@
 	[fileManager release];
 		
 	fileButton.enabled = ([Configuration configuration].cdFileCount >= 2);
+
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+	{
+		NSMutableArray *items = [[NSMutableArray alloc] init];
+		[items addObjectsFromArray:self.theToolbar.items];
+		[items addObject:[self editButtonItem]];
+		[self.theToolbar setItems:items animated:NO];
+		[items release];
+	}
 }
 
 - (void)viewDidUnload
 {
 	self.navigationController = nil;
+	self.splitCtrl = nil;
+	self.theToolbar = nil;
+
 	self.syncButton = nil;
 	
 	[categories release];
@@ -186,9 +200,17 @@
 - (IBAction)onChooseFile:(UIBarButtonItem *)button
 {
 	FileChooser *chooser = [[FileChooser alloc] initWithController:self];
+
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+	{
 		chooser.modalPresentationStyle = UIModalPresentationFormSheet;
-	[self.navigationController presentModalViewController:chooser animated:YES];
+		[splitCtrl presentModalViewController:chooser animated:YES];
+	}
+	else
+	{
+		[self.navigationController presentModalViewController:chooser animated:YES];
+	}
+
 	[chooser release];
 }
 
@@ -243,7 +265,9 @@
 	}
 
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+	{
 		[self.navigationController dismissModalViewControllerAnimated:YES];
+	}
 	else
 	{
 		[popoverCtrl dismissPopoverAnimated:YES];
@@ -514,7 +538,9 @@
 	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
 
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+	{
 		[self.navigationController dismissModalViewControllerAnimated:YES];
+	}
 	else
 	{
 		[popoverCtrl dismissPopoverAnimated:YES];
@@ -606,9 +632,17 @@
 		BonjourBrowser *browser = [[BonjourBrowser alloc] initForType:@"_taskcoachsync._tcp" inDomain:@"local." customDomains:nil showDisclosureIndicators:NO showCancelButton:YES];
 		browser.delegate = self;
 		browser.searchingForServicesString = _("Looking for Task Coach");
+
 		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+		{
 			browser.modalPresentationStyle = UIModalPresentationFormSheet;
-		[self.navigationController presentModalViewController:browser animated:YES];
+			[splitCtrl presentModalViewController:browser animated:YES];
+		}
+		else
+		{
+			[self.navigationController presentModalViewController:browser animated:YES];
+		}
+
 		[browser release];
 	}
 	else
@@ -633,9 +667,17 @@
 	BonjourBrowser *browser = [[BonjourBrowser alloc] initForType:@"_taskcoachsync._tcp" inDomain:@"local." customDomains:nil showDisclosureIndicators:NO showCancelButton:YES];
 	browser.delegate = self;
 	browser.searchingForServicesString = _("Looking for Task Coach");
+
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+	{
 		browser.modalPresentationStyle = UIModalPresentationFormSheet;
-	[self.navigationController presentModalViewController:browser animated:YES];
+		[splitCtrl presentModalViewController:browser animated:YES];
+	}
+	else
+	{
+		[self.navigationController presentModalViewController:browser animated:YES];
+	}
+
 	[browser release];
 	[sender release];
 }
@@ -643,11 +685,17 @@
 - (void)netServiceDidResolveAddress:(NSNetService *)sender
 {
 	SyncViewController *ctrl = [[SyncViewController alloc] initWithTarget:self action:@selector(onSyncFinished) host:[sender hostName] port:[sender port]];
+
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+	{
 		ctrl.modalPresentationStyle = UIModalPresentationFormSheet;
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-		ctrl.modalPresentationStyle = UIModalPresentationFormSheet;
-	[self.navigationController presentModalViewController:ctrl animated:YES];
+		[splitCtrl presentModalViewController:ctrl animated:YES];
+	}
+	else
+	{
+		[self.navigationController presentModalViewController:ctrl animated:YES];
+	}
+
 	[ctrl release];
 }
 
@@ -655,7 +703,15 @@
 {
 	[self loadCategories];
 	[self.tableView reloadData];
-	[self.navigationController dismissModalViewControllerAnimated:YES];
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+	{
+		[self.navigationController dismissModalViewControllerAnimated:YES];
+	}
+	else
+	{
+		[splitCtrl dismissModalViewControllerAnimated:YES];
+	}
+
 	syncButton.enabled = YES;
 	fileButton.enabled = [Configuration configuration].cdFileCount >= 2;
 }
@@ -671,15 +727,27 @@
 		[[Configuration configuration] save];
 
 		SyncViewController *ctrl = [[SyncViewController alloc] initWithTarget:self action:@selector(onSyncFinished) host:[ref hostName] port:[ref port]];
+
 		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+		{
 			ctrl.modalPresentationStyle = UIModalPresentationFormSheet;
-		[self.navigationController.modalViewController presentModalViewController:ctrl animated:YES];
+			[splitCtrl presentModalViewController:ctrl animated:YES];
+		}
+		else
+		{
+			[self.navigationController.modalViewController presentModalViewController:ctrl animated:YES];
+		}
+
 		[ctrl release];
 	}
 	else
 	{
 		syncButton.enabled = YES;
-		[self.navigationController dismissModalViewControllerAnimated:YES];
+		
+		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+			[self.navigationController dismissModalViewControllerAnimated:YES];
+		else
+			[splitCtrl dismissModalViewControllerAnimated:YES];
 	}
 }
 

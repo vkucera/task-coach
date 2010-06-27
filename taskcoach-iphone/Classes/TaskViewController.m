@@ -64,6 +64,9 @@ static void deleteTask(CDTask *task)
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
+	if (groupSheet)
+		groupSheet.hidden = YES;
+
 	return YES;
 }
 
@@ -72,6 +75,8 @@ static void deleteTask(CDTask *task)
 	self.calendarView.scrollView.frame = self.view.frame;
 	[self.calendarView reloadDay];
 	[self.calendarView.timelineView setNeedsDisplay];
+
+	[groupSheet showFromBarButtonItem:[[toolbar items] objectAtIndex:calendarButtonIndex + 1] animated:NO];
 }
 
 - (NSPredicate *)predicate
@@ -287,9 +292,6 @@ static void deleteTask(CDTask *task)
 		self.tableView.hidden = NO;
 		self.calendarView.hidden = YES;
 		self.calendarSearch.hidden = YES;
-		NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
-		[items replaceObjectAtIndex:calendarButtonIndex withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
-		self.toolbar.items = items;
 	}
 	else
 	{
@@ -297,16 +299,31 @@ static void deleteTask(CDTask *task)
 		self.tableView.hidden = YES;
 		self.calendarView.hidden = NO;
 		self.calendarSearch.hidden = NO;
-
-		NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
-		[items replaceObjectAtIndex:calendarButtonIndex withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
-		self.toolbar.items = items;
 	}
 
 	NSDate *nextUpdate = [NSDate dateRounded];
 	nextUpdate = [nextUpdate addTimeInterval:60];
 	minuteTimer = [[NSTimer alloc] initWithFireDate:nextUpdate interval:60 target:self selector:@selector(onMinuteTimer:) userInfo:nil repeats:YES];
 	[[NSRunLoop currentRunLoop] addTimer:minuteTimer forMode:NSDefaultRunLoopMode];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+	// This goes here instead of viewDidLoad because the toolbar does not have its items yet there
+	// (it belongs to the parent's controller)
+
+	if ([Configuration configuration].viewStyle == STYLE_TABLE)
+	{
+		NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
+		[items replaceObjectAtIndex:calendarButtonIndex withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
+		self.toolbar.items = items;
+	}
+	else
+	{
+		NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
+		[items replaceObjectAtIndex:calendarButtonIndex withObject:[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)] autorelease]];
+		self.toolbar.items = items;
+	}
 }
 
 // Timer instantiation and destruction is done here instead
@@ -346,15 +363,8 @@ static void deleteTask(CDTask *task)
 		[sheet showFromToolbar:self.toolbar];
 	else
 	{
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 30200
-		// I don't want to use a popover controller... Isn't there a method for determining
-		// a bar item's rect ?
-		CGRect rect = toolbar.frame;
-		rect.origin.x = rect.origin.x + rect.size.width - 80;
-		rect.size.width = 20;
-
-		[sheet showFromRect:rect inView:self.view animated:YES];
-#endif;
+		[sheet showFromBarButtonItem:[[toolbar items] objectAtIndex:calendarButtonIndex + 1] animated:YES];
+		groupSheet = sheet;
 	}
 
 	[sheet release];
@@ -969,6 +979,8 @@ static void deleteTask(CDTask *task)
 
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 	{
+		groupSheet = nil;
+
 		if (buttonIndex < 0)
 			return;
 		selection = buttonIndex;
