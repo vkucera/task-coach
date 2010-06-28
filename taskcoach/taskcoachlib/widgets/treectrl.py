@@ -233,9 +233,10 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             self._refreshTargetObjects(childItem, *targetObjects)
             childItem, cookie = self.GetNextChild(parentItem, cookie)
             
-    def _refreshObjectCompletely(self, *args):
+    def _refreshObjectCompletely(self, item, *args):
         self._refreshAspects(('ItemType', 'Columns', 'Font', 'Colors',
-                              'Selection'), *args)
+                              'Selection'), item, check=True, *args)
+        self.GetMainWindow().RefreshLine(item)
         
     def _addObjectRecursively(self, parentItem, parentObject=None):
         for childObject in self.__adapter.children(parentObject):
@@ -250,48 +251,57 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
                 # (EVT_TREE_ITEM_EXPANDING/EXPANDED) being sent
                 childItem.Expand()
 
-    def _refreshObjectMinimally(self, *args):
-        self._refreshAspects(('Columns', 'Colors', 'Font', 'Selection'), *args)
+    def _refreshObjectMinimally(self, *args, **kwargs):
+        self._refreshAspects(('Columns', 'Colors', 'Font', 'Selection'), *args, **kwargs)
 
-    def _refreshAspects(self, aspects, *args):
+    def _refreshAspects(self, aspects, *args, **kwargs):
         for aspect in aspects:
             refreshAspect = getattr(self, '_refresh%s'%aspect)
-            refreshAspect(*args)
+            refreshAspect(*args, **kwargs)
         
-    def _refreshItemType(self, item, domainObject):
-        self.SetItemType(item, self.getItemCTType(domainObject))
+    def _refreshItemType(self, item, domainObject, check=False):
+        ctType = self.getItemCTType(domainObject)
+        if not check or (check and ctType != self.GetItemType(item)):
+            self.SetItemType(item, ctType)
         
-    def _refreshColumns(self, item, domainObject):
+    def _refreshColumns(self, item, domainObject, check=False):
         for columnIndex in range(self.GetColumnCount()):
-            self._refreshColumn(item, domainObject, columnIndex)
+            self._refreshColumn(item, domainObject, columnIndex, check=check)
                 
-    def _refreshColumn(self, *args):
-        self._refreshAspects(('Text', 'Image'), *args)
+    def _refreshColumn(self, *args, **kwargs):
+        self._refreshAspects(('Text', 'Image'), *args, **kwargs)
             
-    def _refreshText(self, item, domainObject, columnIndex):
+    def _refreshText(self, item, domainObject, columnIndex, check=False):
         text = self.__adapter.getItemText(domainObject, columnIndex)
         if text.count('\n') > 3:
             text = '\n'.join(text.split('\n')[:4]) + u' ...'
-        item.SetText(columnIndex, text)
+        if not check or (check and text != item.GetText(columnIndex)):
+            item.SetText(columnIndex, text)
                 
-    def _refreshImage(self, item, domainObject, columnIndex):
+    def _refreshImage(self, item, domainObject, columnIndex, check=False):
         for which in (wx.TreeItemIcon_Expanded, wx.TreeItemIcon_Normal):
             image = self.__adapter.getItemImage(domainObject, which, columnIndex)
             image = image if image >= 0 else -1
-            item.SetImage(columnIndex, image, which)
+            if not check or (check and image != item.GetImage(which, columnIndex)):
+                item.SetImage(columnIndex, image, which)
 
-    def _refreshColors(self, item, domainObject):
+    def _refreshColors(self, item, domainObject, check=False):
         bgColor = domainObject.backgroundColor(recursive=True) or wx.NullColour
-        self.SetItemBackgroundColour(item, bgColor)
+        if not check or (check and bgColor != self.GetItemBackgroundColour(item)):
+            self.SetItemBackgroundColour(item, bgColor)
         fgColor = domainObject.foregroundColor(recursive=True) or wx.NullColour
-        self.SetItemTextColour(item, fgColor)
+        if not check or (check and fgColor != self.GetItemTextColour(item)):
+            self.SetItemTextColour(item, fgColor)
         
-    def _refreshFont(self, item, domainObject):
+    def _refreshFont(self, item, domainObject, check=False):
         font = domainObject.font(recursive=True) or self.__defaultFont
-        self.SetItemFont(item, font)
+        if not check or (check and font != self.GetItemFont(item)):
+            self.SetItemFont(item, font)
         
-    def _refreshSelection(self, item, domainObject):
-        item.SetHilight(domainObject in self.__selection)
+    def _refreshSelection(self, item, domainObject, check=False):
+        select = domainObject in self.__selection
+        if not check or (check and select != item.IsSelected()):
+            item.SetHilight(select)
 
     # Event handlers
     
