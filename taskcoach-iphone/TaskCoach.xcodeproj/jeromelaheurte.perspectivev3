@@ -306,14 +306,12 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>NewCategoryiPad.m</string>
+								<string>KeychainWrapper.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -321,11 +319,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>NewCategoryiPad.m</string>
+										<string>KeychainWrapper.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A62993A211D7707E00C748CF</string>
+										<string>A605A45111D9B26900A155D5</string>
 										<key>history</key>
 										<array>
 											<string>A61F555F108CBD9B00BDFD6D</string>
@@ -473,7 +471,6 @@
 											<string>A6B6F4A911CCF2F500EEBA7A</string>
 											<string>A6B1CD1C11CCF5C5005CCCE9</string>
 											<string>A63D712611CCF7F2005B1714</string>
-											<string>A63D713411CCF805005B1714</string>
 											<string>A63D714B11CCFB21005B1714</string>
 											<string>A63D716F11CCFE1D005B1714</string>
 											<string>A63D717011CCFE1D005B1714</string>
@@ -557,7 +554,8 @@
 											<string>A629939411D7707E00C748CF</string>
 											<string>A629939511D7707E00C748CF</string>
 											<string>A629939611D7707E00C748CF</string>
-											<string>A629939711D7707E00C748CF</string>
+											<string>A605A44F11D9B26900A155D5</string>
+											<string>A605A45011D9B26900A155D5</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -680,11 +678,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A629939911D7707E00C748CF</string>
+				<string>A605A45211D9B26900A155D5</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A629939A11D7707E00C748CF</string>
+				<string>A605A45311D9B26900A155D5</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A629939B11D7707E00C748CF</string>
+				<string>A605A45411D9B26900A155D5</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
