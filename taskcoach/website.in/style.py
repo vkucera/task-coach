@@ -26,7 +26,7 @@ header = '''
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <style type="text/css" media="screen">@import "default.css";</style>
+        <style type="text/css" media="screen">@import "css/default.css";</style>
         <script type="text/javascript" src="js/prototype.js"></script>
         <script type="text/javascript" src="js/scriptaculous.js?load=effects,builder"></script>
         <script type="text/javascript" src="js/lightbox.js"></script>
