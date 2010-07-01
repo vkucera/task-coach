@@ -194,7 +194,7 @@ debian = download_table(image='debian',
                         package_type='Debian package (deb)',
                         platform='Debian', platform_lower='debian',
                         platform_versions_supported='Debian GNU/Linux 4.0 ("etch") and later',
-                        prerequisites=prerequisites + ''' If your Debian 
+                        prerequisites=prerequisites + '''. If your Debian 
               installation does not have the minimally required wxPython version 
               you will need to install it yourself following 
               <a href="http://wiki.wxpython.org/InstallingOnUbuntuOrDebian">these 
@@ -205,8 +205,8 @@ ubuntu_py25 = download_table(image='ubuntu',
                         download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_py25.deb',
                         package_type='Debian package (deb)',
                         platform='Ubuntu', platform_lower='ubuntu',
-                        platform_versions_supported='Ubuntu 8.04 LTS ("Hardy Heron") and Ubuntu 9.04 ("Jaunty Jackalope")',
-                        prerequisites=prerequisites + ''' If your Ubuntu 
+                        platform_versions_supported='Ubuntu 8.04 LTS ("Hardy Heron")',
+                        prerequisites=prerequisites + '''. If your Ubuntu 
               installation does not have the minimally required wxPython version 
               you will need to install it yourself following 
               <a href="http://wiki.wxpython.org/InstallingOnUbuntuOrDebian">these 
@@ -217,7 +217,7 @@ ubuntu_py26 = download_table(image='ubuntu',
                         download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_py26.deb',
                         package_type='Debian package (deb)',
                         platform='Ubuntu', platform_lower='ubuntu',
-                        platform_versions_supported='Ubuntu 9.10 ("Karmic Koala"), Ubuntu 10.04 LTS ("Lucid Lynx") and newer',
+                        platform_versions_supported='Ubuntu 9.04 ("Jaunty Jackalope"), Ubuntu 9.10 ("Karmic Koala"), Ubuntu 10.04 LTS ("Lucid Lynx") and newer',
                         prerequisites=prerequisites26,
                         installation='''double click the package to start the 
 installer.''')
@@ -777,7 +777,7 @@ websiteFolder = os.path.join('..', 'website.out')
 createHTMLPages(websiteFolder, pages)
 createPAD(websiteFolder)
 createVersionFile(websiteFolder)
-copyFiles(websiteFolder, 'robots.txt', '*.ico', '*.css')
+copyFiles(websiteFolder, 'robots.txt', '*.ico')
 for subFolder in 'images', 'js', 'css':
     copyDir(websiteFolder, subFolder)
 for subFolder in os.listdir('screenshots'):

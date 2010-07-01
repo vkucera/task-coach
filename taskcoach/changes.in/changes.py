@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.1.0', 'June 28, 2010',
+Release('1.1.0', 'July 1, 2010',
     summary='''This release adds time to start, due and completion dates of 
 tasks and adds support for mass editing of items.''',
     featuresAdded=[
@@ -47,12 +47,14 @@ listbook widget.''', '2927384'),
         ]
     ),
     
-Release('1.0.7', 'June 28, 2010',
+Release('1.0.7', 'June 30, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''On some Linux platforms, when using KDE, Task Coach would 
-not properly restore after being minimized to the system tray.''', '2988693'),
-        Bug('''Reduce flickering when tracking effort.''', '2819141')
+not properly restore after being minimized to the system tray.''', '2988693',
+        '3011539'),
+        Bug('''Reduce flickering when tracking effort.''', '2819141', '2995374'),
+        Bug('''Task Coach wasn't installing on Ubuntu 9.04.''', '3022926')
         ]
     ),
 
