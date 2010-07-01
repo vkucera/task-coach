@@ -121,7 +121,6 @@ class _CtrlWithColumnPopupMenuMixin(_CtrlWithPopupMenuMixin):
         except AttributeError:
             window = event.GetEventObject()
         window.SetFocus()
-        print 'Popup'
         self.PopupMenu(self.__popupMenu, event.GetPosition())
         event.Skip()
         
