@@ -16,6 +16,7 @@
 #import "BadgedCell.h"
 #import "ButtonCell.h"
 #import "SearchCell.h"
+#import "TaskCelliPad.h"
 #import "RecurrencePeriodCell.h"
 
 #import "Configuration.h"
@@ -33,6 +34,7 @@ static CellFactory *_cellFactory = NULL;
 @synthesize buttonCellTemplate;
 @synthesize searchCellTemplate;
 @synthesize recurrencePeriodCellTemplate;
+@synthesize taskCelliPadTemplate;
 
 + (CellFactory *)cellFactory
 {
@@ -49,10 +51,7 @@ static CellFactory *_cellFactory = NULL;
 			[[NSBundle mainBundle] loadNibNamed:@"TaskCellRight" owner:self options:nil];
 		else
 		{
-			if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-				[[NSBundle mainBundle] loadNibNamed:@"TaskCellRightBig" owner:self options:nil];
-			else
-				[[NSBundle mainBundle] loadNibNamed:@"TaskCelliPadRight" owner:self options:nil];
+			[[NSBundle mainBundle] loadNibNamed:@"TaskCellRightBig" owner:self options:nil];
 		}
 	}
 	else
@@ -61,14 +60,17 @@ static CellFactory *_cellFactory = NULL;
 			[[NSBundle mainBundle] loadNibNamed:@"TaskCellLeft" owner:self options:nil];
 		else
 		{
-			if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-				[[NSBundle mainBundle] loadNibNamed:@"TaskCellLeftBig" owner:self options:nil];
-			else
-				[[NSBundle mainBundle] loadNibNamed:@"TaskCelliPadLeft" owner:self options:nil];
+			[[NSBundle mainBundle] loadNibNamed:@"TaskCellLeftBig" owner:self options:nil];
 		}
 	}
 	
 	return [taskCellTemplate retain];
+}
+
+- (TaskCelliPad *)createTaskCelliPad
+{
+	[[NSBundle mainBundle] loadNibNamed:@"TaskCelliPad" owner:self options:nil];
+	return [taskCelliPadTemplate retain];
 }
 
 - (TextFieldCell *)createTextFieldCell

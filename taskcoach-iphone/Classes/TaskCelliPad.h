@@ -8,15 +8,33 @@
 
 #import <Foundation/Foundation.h>
 
-#import "TaskCellBig.h"
+@class CDTask;
+@class CheckView;
 
-@interface TaskCelliPad : TaskCellBig
+@interface TaskCelliPad : UITableViewCell
 {
-	UILabel *priorityLabel;
-	UITextView *descriptionView;
+	UIImage *bgImage;
+
+	NSManagedObjectID *ID;
+
+	id target;
+	SEL action;
+
+	UILabel *subject;
+	UILabel *priority;
+	UILabel *infos;
+	UITextView *description;
+	UIImageView *tracking;
+	CheckView *check;
 }
 
-@property (nonatomic, retain) IBOutlet UILabel *priorityLabel;
-@property (nonatomic, retain) IBOutlet UITextView *descriptionView;
+@property (nonatomic, retain) IBOutlet UILabel *subject;
+@property (nonatomic, retain) IBOutlet UILabel *priority;
+@property (nonatomic, retain) IBOutlet UILabel *infos;
+@property (nonatomic, retain) IBOutlet UITextView *description;
+@property (nonatomic, retain) IBOutlet UIImageView *tracking;
+@property (nonatomic, retain) IBOutlet CheckView *check;
+
+- (void)setTask:(CDTask *)task target:(id)theTarget action:(SEL)theAction;
 
 @end

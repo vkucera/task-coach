@@ -15,6 +15,7 @@
 @class CategoryViewController;
 @class SearchCell;
 @class TaskCell;
+@class PaperHeaderView;
 
 @interface TaskViewController : UIViewController <UIAlertViewDelegate, RestorableController, UISearchBarDelegate,
 	ODCalendarDayTimelineViewDelegate, NSFetchedResultsControllerDelegate, UIActionSheetDelegate>
@@ -40,6 +41,8 @@
 	UIActionSheet *groupSheet;
 	UIBarButtonItem *groupButton;
 	UIPopoverController *popCtrl;
+
+	PaperHeaderView *headerView;
 }
 
 @property (nonatomic, readonly) UITableView *tableView;
@@ -50,6 +53,8 @@
 @property (nonatomic, assign) IBOutlet CategoryViewController *categoryController; // for iPad
 @property (nonatomic, assign) IBOutlet UIBarButtonItem *groupButton;
 @property (nonatomic, assign) UIPopoverController *popCtrl;
+
+@property (nonatomic, retain) IBOutlet PaperHeaderView *headerView;
 
 - (IBAction)onAddTask:(UIBarButtonItem *)button;
 - (IBAction)onSync:(UIBarButtonItem *)button;

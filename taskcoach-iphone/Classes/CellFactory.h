@@ -17,6 +17,7 @@
 @class ButtonCell;
 @class SearchCell;
 @class RecurrencePeriodCell;
+@class TaskCelliPad;
 
 @interface CellFactory : NSObject
 {
@@ -29,6 +30,7 @@
 	ButtonCell *buttonCellTemplate;
 	SearchCell *searchCellTemplate;
 	RecurrencePeriodCell *recurrencePeriodCellTemplate;
+	TaskCelliPad *taskCelliPadTemplate;
 }
 
 @property (nonatomic, assign) IBOutlet TaskCell *taskCellTemplate;
@@ -40,6 +42,7 @@
 @property (nonatomic, assign) IBOutlet ButtonCell *buttonCellTemplate;
 @property (nonatomic, assign) IBOutlet SearchCell *searchCellTemplate;
 @property (nonatomic, assign) IBOutlet RecurrencePeriodCell *recurrencePeriodCellTemplate;
+@property (nonatomic, assign) IBOutlet TaskCelliPad *taskCelliPadTemplate;
 
 + (CellFactory *)cellFactory;
 
@@ -52,5 +55,6 @@
 - (ButtonCell *)createButtonCell;
 - (SearchCell *)createSearchCell;
 - (RecurrencePeriodCell *)createRecurrencePeriodCell;
+- (TaskCelliPad *)createTaskCelliPad;
 
 @end

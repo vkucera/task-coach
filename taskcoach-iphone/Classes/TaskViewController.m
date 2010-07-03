@@ -16,8 +16,10 @@
 #import "TaskDetailsController.h"
 #import "TaskDetailsControlleriPad.h"
 #import "CategoryViewController.h"
+#import "PaperHeaderView.h"
 
 #import "TaskCell.h"
+#import "TaskCelliPad.h"
 #import "SearchCell.h"
 #import "CellFactory.h"
 
@@ -58,6 +60,8 @@ static void deleteTask(CDTask *task)
 @synthesize categoryController;
 @synthesize groupButton;
 @synthesize popCtrl;
+
+@synthesize headerView;
 
 - (UITableView *)tableView
 {
@@ -321,6 +325,9 @@ static void deleteTask(CDTask *task)
 	nextUpdate = [nextUpdate addTimeInterval:60];
 	minuteTimer = [[NSTimer alloc] initWithFireDate:nextUpdate interval:60 target:self selector:@selector(onMinuteTimer:) userInfo:nil repeats:YES];
 	[[NSRunLoop currentRunLoop] addTimer:minuteTimer forMode:NSDefaultRunLoopMode];
+
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+		self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 }
 
 // Timer instantiation and destruction is done here instead
@@ -500,10 +507,19 @@ static void deleteTask(CDTask *task)
 			
         case NSFetchedResultsChangeUpdate:
 		{
-			TaskCell *cell = (TaskCell *)[tableView cellForRowAtIndexPath:indexPath];
-			[cell setTask:(CDTask *)anObject target:self action:@selector(onToggleTaskCompletion:)];
+			if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+			{
+				TaskCelliPad *cell = (TaskCelliPad *)[tableView cellForRowAtIndexPath:indexPath];
+				[cell setTask:(CDTask *)anObject target:self action:@selector(onToggleTaskCompletion:)];
+			}
+			else
+			{
+				TaskCell *cell = (TaskCell *)[tableView cellForRowAtIndexPath:indexPath];
+				[cell setTask:(CDTask *)anObject target:self action:@selector(onToggleTaskCompletion:)];
+			}
+
             break;
-		}	
+		}
         case NSFetchedResultsChangeMove:
             [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
 							 withRowAnimation:UITableViewRowAnimationRight];
@@ -568,7 +584,7 @@ static void deleteTask(CDTask *task)
 	currentCell = nil;
 }
 
-- (void)onToggleTaskCompletion:(TaskCell *)cell
+- (void)onToggleTaskCompletion:(UITableViewCell *)cell
 {
 	currentCell = [cell retain];
 	CDTask *task = (CDTask *)[getManagedObjectContext() objectWithID:((TaskCell *)currentCell).ID];
@@ -632,10 +648,39 @@ static void deleteTask(CDTask *task)
 				return _("Started");
 			case TASKSTATUS_NOTSTARTED:
 				return _("Not started");
+			case TASKSTATUS_COMPLETED:
+				return _("Completed");
 		}
 	}
 
 	return [[[results sections] objectAtIndex:section - ADJUSTSECTION] name];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+	return 48;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+	{
+		if (self.editing && (section <= 1))
+			return nil;
+		
+		if (section == 0)
+			return nil;
+
+		[[NSBundle mainBundle] loadNibNamed:@"PaperHeaderView" owner:self options:nil];
+		headerView.label.text = [self tableView:tableView titleForHeaderInSection:section];
+		
+		// XXXFIXME: there may be a leak here. I don't quite understand who releases this
+		// object.
+
+		return [headerView retain];
+	}
+
+	return nil;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -676,21 +721,36 @@ static void deleteTask(CDTask *task)
 	}
 	else
 	{
-		TaskCell *taskCell = (TaskCell *)[tableView dequeueReusableCellWithIdentifier:@"TaskCell"];
-
-		if (taskCell == nil)
+		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 		{
-			taskCell = [[[CellFactory cellFactory] createTaskCell] autorelease];
+			TaskCell *taskCell = (TaskCell *)[tableView dequeueReusableCellWithIdentifier:@"TaskCell"];
+			
+			if (taskCell == nil)
+			{
+				taskCell = [[[CellFactory cellFactory] createTaskCell] autorelease];
+			}
+			
+			// This is already done in the NIB but when switching to non-editing mode, we
+			// must enforce it...
+			taskCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			
+			CDTask *task = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - ADJUSTSECTION]];
+			[taskCell setTask:task target:self action:@selector(onToggleTaskCompletion:)];
+			
+			cell = (UITableViewCell *)taskCell;
 		}
+		else
+		{
+			// Don't dequeue here, it causes trouble with variable-height cells
+			TaskCelliPad *taskCell = [[[CellFactory cellFactory] createTaskCelliPad] autorelease];
+			
+			taskCell.accessoryType = UITableViewCellAccessoryNone;
 
-		// This is already done in the NIB but when switching to non-editing mode, we
-		// must enforce it...
-		taskCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-		
-		CDTask *task = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - ADJUSTSECTION]];
-		[taskCell setTask:task target:self action:@selector(onToggleTaskCompletion:)];
-
-		cell = (UITableViewCell *)taskCell;
+			CDTask *task = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - ADJUSTSECTION]];
+			[taskCell setTask:task target:self action:@selector(onToggleTaskCompletion:)];
+			
+			cell = (UITableViewCell *)taskCell;
+		}
 	}
 
     return cell;
@@ -702,7 +762,19 @@ static void deleteTask(CDTask *task)
 		return 44;
 
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-		return [Configuration configuration].compactTasks ? 44 : 120;
+	{
+		// XXXFIXME: editing mode
+		TaskCelliPad *cell = (TaskCelliPad *)[self tableView:self.tableView cellForRowAtIndexPath:indexPath];
+		if ([cell.description.text length])
+		{
+			NSInteger h = 88 + cell.description.contentSize.height;
+			if (h > 210)
+				return 211;
+			return h + (30 - (h % 30));
+		}
+		else
+			return 61;
+	}
 	else
 		return [Configuration configuration].compactTasks ? 44 : 60;
 }

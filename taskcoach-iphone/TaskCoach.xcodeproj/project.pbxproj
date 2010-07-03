@@ -12,6 +12,8 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
+		A600012A11DF7425003DD3D5 /* paper.png in Resources */ = {isa = PBXBuildFile; fileRef = A600012911DF7425003DD3D5 /* paper.png */; };
+		A600012C11DF74A9003DD3D5 /* TaskCelliPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A600012B11DF74A9003DD3D5 /* TaskCelliPad.xib */; };
 		A600A3BB119FDD710018F309 /* TaskDetailsGeneral.m in Sources */ = {isa = PBXBuildFile; fileRef = A600A3B9119FDD710018F309 /* TaskDetailsGeneral.m */; };
 		A600A3BC119FDD710018F309 /* TaskDetailsGeneral.xib in Resources */ = {isa = PBXBuildFile; fileRef = A600A3BA119FDD710018F309 /* TaskDetailsGeneral.xib */; };
 		A600A48E119FEA790018F309 /* TaskDetailsDates.m in Sources */ = {isa = PBXBuildFile; fileRef = A600A48C119FEA790018F309 /* TaskDetailsDates.m */; };
@@ -68,8 +70,6 @@
 		A63CC07D0F517055003669FD /* TaskCellRightBig.xib in Resources */ = {isa = PBXBuildFile; fileRef = A63CC07B0F517055003669FD /* TaskCellRightBig.xib */; };
 		A63CC0810F5170FC003669FD /* TaskCellBig.m in Sources */ = {isa = PBXBuildFile; fileRef = A63CC0800F5170FC003669FD /* TaskCellBig.m */; };
 		A63D714111CCF983005B1714 /* TaskCelliPad.m in Sources */ = {isa = PBXBuildFile; fileRef = A63D714011CCF983005B1714 /* TaskCelliPad.m */; };
-		A63D714911CCFB1A005B1714 /* TaskCelliPadRight.xib in Resources */ = {isa = PBXBuildFile; fileRef = A63D714811CCFB1A005B1714 /* TaskCelliPadRight.xib */; };
-		A63D718611CCFEBC005B1714 /* TaskCelliPadLeft.xib in Resources */ = {isa = PBXBuildFile; fileRef = A63D718511CCFEBC005B1714 /* TaskCelliPadLeft.xib */; };
 		A63E286D10415CCD00A2E672 /* TwoWayDeletedCategoriesState.m in Sources */ = {isa = PBXBuildFile; fileRef = A63E286C10415CCD00A2E672 /* TwoWayDeletedCategoriesState.m */; };
 		A64403B211BD43270029075D /* CDHierarchicalDomainObject+Addons.m in Sources */ = {isa = PBXBuildFile; fileRef = A64403B111BD43270029075D /* CDHierarchicalDomainObject+Addons.m */; };
 		A64603A70F2234B500FC71AD /* CellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = A64603A60F2234B500FC71AD /* CellFactory.m */; };
@@ -120,6 +120,11 @@
 		A69DDFDB11BA719B007E0D9B /* ItemState.m in Sources */ = {isa = PBXBuildFile; fileRef = A69DDFD811BA719B007E0D9B /* ItemState.m */; };
 		A69DDFDC11BA719B007E0D9B /* OneShotItemState.m in Sources */ = {isa = PBXBuildFile; fileRef = A69DDFDA11BA719B007E0D9B /* OneShotItemState.m */; };
 		A69DE0AE11BA8C1D007E0D9B /* EntityUploadState.m in Sources */ = {isa = PBXBuildFile; fileRef = A69DE0AD11BA8C1D007E0D9B /* EntityUploadState.m */; };
+		A69E217911DF90D5003CC658 /* PaperHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = A69E217711DF90D5003CC658 /* PaperHeaderView.m */; };
+		A69E217A11DF90D5003CC658 /* PaperHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A69E217811DF90D5003CC658 /* PaperHeaderView.xib */; };
+		A69E227111DF9779003CC658 /* headerbg.png in Resources */ = {isa = PBXBuildFile; fileRef = A69E227011DF9779003CC658 /* headerbg.png */; };
+		A69E228D11DF9A00003CC658 /* checked.png in Resources */ = {isa = PBXBuildFile; fileRef = A69E228B11DF9A00003CC658 /* checked.png */; };
+		A69E228E11DF9A00003CC658 /* unchecked.png in Resources */ = {isa = PBXBuildFile; fileRef = A69E228C11DF9A00003CC658 /* unchecked.png */; };
 		A69F6C2F115E2196003F68F5 /* SearchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A69F6C2E115E2196003F68F5 /* SearchCell.m */; };
 		A69F6C31115E21A5003F68F5 /* SearchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A69F6C30115E21A5003F68F5 /* SearchCell.xib */; };
 		A6A1013411BA3A450039DEE4 /* CDHierarchicalDomainObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A6A1013311BA3A450039DEE4 /* CDHierarchicalDomainObject.m */; };
@@ -194,6 +199,8 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* TaskCoach_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCoach_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; plistStructureDefinitionIdentifier = "<none>"; sourceTree = "<group>"; };
+		A600012911DF7425003DD3D5 /* paper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = paper.png; path = "Resources-iPad/paper.png"; sourceTree = "<group>"; };
+		A600012B11DF74A9003DD3D5 /* TaskCelliPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCelliPad.xib; sourceTree = "<group>"; };
 		A600A3B8119FDD710018F309 /* TaskDetailsGeneral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDetailsGeneral.h; sourceTree = "<group>"; };
 		A600A3B9119FDD710018F309 /* TaskDetailsGeneral.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskDetailsGeneral.m; sourceTree = "<group>"; };
 		A600A3BA119FDD710018F309 /* TaskDetailsGeneral.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskDetailsGeneral.xib; sourceTree = "<group>"; };
@@ -276,8 +283,6 @@
 		A63CC0800F5170FC003669FD /* TaskCellBig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskCellBig.m; sourceTree = "<group>"; };
 		A63D713F11CCF983005B1714 /* TaskCelliPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCelliPad.h; sourceTree = "<group>"; };
 		A63D714011CCF983005B1714 /* TaskCelliPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskCelliPad.m; sourceTree = "<group>"; };
-		A63D714811CCFB1A005B1714 /* TaskCelliPadRight.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCelliPadRight.xib; sourceTree = "<group>"; };
-		A63D718511CCFEBC005B1714 /* TaskCelliPadLeft.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCelliPadLeft.xib; sourceTree = "<group>"; };
 		A63E286B10415CCD00A2E672 /* TwoWayDeletedCategoriesState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwoWayDeletedCategoriesState.h; path = Synchronization/TwoWayDeletedCategoriesState.h; sourceTree = "<group>"; };
 		A63E286C10415CCD00A2E672 /* TwoWayDeletedCategoriesState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwoWayDeletedCategoriesState.m; path = Synchronization/TwoWayDeletedCategoriesState.m; sourceTree = "<group>"; };
 		A64403B011BD43270029075D /* CDHierarchicalDomainObject+Addons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CDHierarchicalDomainObject+Addons.h"; path = "CoreData/CDHierarchicalDomainObject+Addons.h"; sourceTree = "<group>"; };
@@ -387,6 +392,12 @@
 		A69DDFDA11BA719B007E0D9B /* OneShotItemState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OneShotItemState.m; path = Synchronization/OneShotItemState.m; sourceTree = "<group>"; };
 		A69DE0AC11BA8C1D007E0D9B /* EntityUploadState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntityUploadState.h; sourceTree = "<group>"; };
 		A69DE0AD11BA8C1D007E0D9B /* EntityUploadState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntityUploadState.m; sourceTree = "<group>"; };
+		A69E217611DF90D5003CC658 /* PaperHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaperHeaderView.h; sourceTree = "<group>"; };
+		A69E217711DF90D5003CC658 /* PaperHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaperHeaderView.m; sourceTree = "<group>"; };
+		A69E217811DF90D5003CC658 /* PaperHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaperHeaderView.xib; sourceTree = "<group>"; };
+		A69E227011DF9779003CC658 /* headerbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = headerbg.png; path = "Resources-iPad/headerbg.png"; sourceTree = "<group>"; };
+		A69E228B11DF9A00003CC658 /* checked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = checked.png; path = "Resources-iPad/checked.png"; sourceTree = "<group>"; };
+		A69E228C11DF9A00003CC658 /* unchecked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = unchecked.png; path = "Resources-iPad/unchecked.png"; sourceTree = "<group>"; };
 		A69F6C2D115E2196003F68F5 /* SearchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchCell.h; sourceTree = "<group>"; };
 		A69F6C2E115E2196003F68F5 /* SearchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchCell.m; sourceTree = "<group>"; };
 		A69F6C30115E21A5003F68F5 /* SearchCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchCell.xib; sourceTree = "<group>"; };
@@ -811,6 +822,10 @@
 		A68B5E0E11C4B796009AE2F1 /* Resources-iPad */ = {
 			isa = PBXGroup;
 			children = (
+				A69E228B11DF9A00003CC658 /* checked.png */,
+				A69E228C11DF9A00003CC658 /* unchecked.png */,
+				A69E227011DF9779003CC658 /* headerbg.png */,
+				A600012911DF7425003DD3D5 /* paper.png */,
 				A696428711CE21550002F90E /* Default-Landscape.png */,
 				A696428811CE21550002F90E /* Default-Portrait.png */,
 				A6DFB4E611C64BF8007FB4F0 /* TaskCoach-iPad.png */,
@@ -929,6 +944,9 @@
 		A6B3073D11B27BE2007C0F49 /* Tasks */ = {
 			isa = PBXGroup;
 			children = (
+				A69E217611DF90D5003CC658 /* PaperHeaderView.h */,
+				A69E217711DF90D5003CC658 /* PaperHeaderView.m */,
+				A69E217811DF90D5003CC658 /* PaperHeaderView.xib */,
 				A6DDF8520F1F988600F35108 /* TaskViewController.h */,
 				A6DDF8530F1F988600F35108 /* TaskViewController.m */,
 				A63C2FA711B280D3000DE779 /* CategoryTaskViewController.h */,
@@ -1001,12 +1019,11 @@
 				A63CC0800F5170FC003669FD /* TaskCellBig.m */,
 				A63D713F11CCF983005B1714 /* TaskCelliPad.h */,
 				A63D714011CCF983005B1714 /* TaskCelliPad.m */,
+				A600012B11DF74A9003DD3D5 /* TaskCelliPad.xib */,
 				A63CC07A0F517055003669FD /* TaskCellLeftBig.xib */,
 				A63CC07B0F517055003669FD /* TaskCellRightBig.xib */,
 				A6A975370F26572200622396 /* TaskCellLeft.xib */,
 				A6A975380F26572200622396 /* TaskCellRight.xib */,
-				A63D714811CCFB1A005B1714 /* TaskCelliPadRight.xib */,
-				A63D718511CCFEBC005B1714 /* TaskCelliPadLeft.xib */,
 				A6D3846A0F2481C80097F0F6 /* TextFieldCell.h */,
 				A6D3846B0F2481C80097F0F6 /* TextFieldCell.m */,
 				A6D384770F24830F0097F0F6 /* TextFieldCell.xib */,
@@ -1153,13 +1170,17 @@
 				A672213511C74B210046C6CF /* SimpleDatePicker.xib in Resources */,
 				A6782E7C11CCBD35005ADB23 /* TaskDetailsEffortsBase.xib in Resources */,
 				A6EDD13E11CCDB570092BC79 /* TaskDetailsRecurrenceControlleriPad.xib in Resources */,
-				A63D714911CCFB1A005B1714 /* TaskCelliPadRight.xib in Resources */,
-				A63D718611CCFEBC005B1714 /* TaskCelliPadLeft.xib in Resources */,
 				A6E8F66311CD02670087DDF3 /* TaskDetailsControlleriPad.xib in Resources */,
 				A6E8F66611CD02800087DDF3 /* TaskDetailsControlleriPad.strings in Resources */,
 				A6C00BD511CDEF0D0028385F /* NewCategoryiPad.xib in Resources */,
 				A696428911CE21550002F90E /* Default-Landscape.png in Resources */,
 				A696428A11CE21550002F90E /* Default-Portrait.png in Resources */,
+				A600012A11DF7425003DD3D5 /* paper.png in Resources */,
+				A600012C11DF74A9003DD3D5 /* TaskCelliPad.xib in Resources */,
+				A69E217A11DF90D5003CC658 /* PaperHeaderView.xib in Resources */,
+				A69E227111DF9779003CC658 /* headerbg.png in Resources */,
+				A69E228D11DF9A00003CC658 /* checked.png in Resources */,
+				A69E228E11DF9A00003CC658 /* unchecked.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1268,6 +1289,7 @@
 				A63D714111CCF983005B1714 /* TaskCelliPad.m in Sources */,
 				A6C00BD411CDEF0D0028385F /* NewCategoryiPad.m in Sources */,
 				A6C00C1911CDF6660028385F /* SplitView.m in Sources */,
+				A69E217911DF90D5003CC658 /* PaperHeaderView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
