@@ -42,7 +42,7 @@ Release('1.0.6', 'June 26, 2010',
 note and category viewers.'''),
         Bug('''On Jolicloud, don't crash when printing.''', '3018038'),
         Bug('''On Ubuntu 10.4, don't crash when clicking the font button in 
-the appearance tab of edit dialogs.''', '3021759'),
+the appearance tab of edit dialogs.''', '2992006', '3021759'),
         Bug('''Don't display long descriptions in an inline text control,
 it's too buggy.''', '2992853', '2992850', '2992848'),
         Bug('''On Mac OS X, don't cut text in text controls when the user
