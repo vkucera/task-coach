@@ -145,11 +145,15 @@
 - (void)drawRect:(CGRect)rect
 {
 	CGContextRef context = UIGraphicsGetCurrentContext();
+	CGContextSaveGState(context);
+	CGContextClipToRect(context, rect);
 	CGContextDrawTiledImage(context, CGRectMake(0, 0, 30, 30), bgImage.CGImage);
+	CGContextRestoreGState(context);
 	
 	[super drawRect:rect];
 
 	CGContextSaveGState(context);
+	CGContextClipToRect(context, rect);
 	CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
 	CGFloat sizes[2] = { 2.0, 2.0 };
 	CGContextSetLineDash(context, 0, sizes, 2);

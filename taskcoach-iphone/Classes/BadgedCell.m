@@ -80,6 +80,7 @@
 	{
 		CGContextRef context = UIGraphicsGetCurrentContext();
 		CGContextSaveGState(context);
+		CGContextClipToRect(context, rect);
 
 		CGContextDrawTiledImage(context, CGRectMake(0, 0, 64, 64), bgImage.CGImage);
 
@@ -105,6 +106,7 @@
 	{
 		CGContextRef context = UIGraphicsGetCurrentContext();
 		CGContextSaveGState(context);
+		CGContextClipToRect(context, rect);
 
 		// WTF?
 		CGContextTranslateCTM(context, x + w - 30 + 11, y + h / 2);

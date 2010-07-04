@@ -31,8 +31,11 @@
 - (void)drawRect:(CGRect)rect
 {
 	CGContextRef context = UIGraphicsGetCurrentContext();
+	CGContextSaveGState(context);
+	CGContextClipToRect(context, rect);
 	CGContextDrawTiledImage(context, CGRectMake(0, 0, 40, 40), bgImage.CGImage);
-	
+	CGContextRestoreGState(context);
+
 	[super drawRect:rect];
 }
 

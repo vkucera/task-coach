@@ -29,14 +29,4 @@
     [super dealloc];
 }
 
-/*
-- (void)drawRect:(CGRect)rect
-{
-	CGContextRef context = UIGraphicsGetCurrentContext();
-	CGContextDrawTiledImage(context, CGRectMake(0, 0, 1, 60), bgImage.CGImage);
-	
-	[super drawRect:rect];
-}
-*/
-
 @end
