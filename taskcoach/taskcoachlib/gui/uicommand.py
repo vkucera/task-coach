@@ -2197,45 +2197,39 @@ class CalendarViewerTypeChoice(ToolbarChoiceCommandMixin, ViewerCommand):
             self.viewer.thaw()
 
 
-class CalendarViewerNextPeriod(ViewerCommand):
+class CalendarViewerNavigationCommand(ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(CalendarViewerNextPeriod, self).__init__( \
-            menuText=_('&Next period'),
-            helpText=_('Show next period'), bitmap='next', *args, **kwargs)
+        super(CalendarViewerNavigationCommand, self).__init__( \
+            menuText=self.menuText, helpText=self.helpText, bitmap=self.bitmap, 
+            *args, **kwargs)
 
     def doCommand(self, event):
         self.viewer.freeze()
         try:
-            self.viewer.SetViewType(wxSCHEDULER_NEXT)
+            self.viewer.SetViewType(self.calendarViewType)
         finally:
             self.viewer.thaw()
 
 
-class CalendarViewerPreviousPeriod(ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        super(CalendarViewerPreviousPeriod, self).__init__( \
-            menuText=_('&Previous period'),
-            helpText=_('Show previous period'), bitmap='prev', *args, **kwargs)
-            
-    def doCommand(self, event):
-        self.viewer.freeze()
-        try:
-            self.viewer.SetViewType(wxSCHEDULER_PREV)
-        finally:
-            self.viewer.thaw()
+class CalendarViewerNextPeriod(CalendarViewerNavigationCommand):
+    menuText = _('&Next period')
+    helpText = _('Show next period')
+    bitmap = 'next'
+    calendarViewType = wxSCHEDULER_NEXT
+    
 
+class CalendarViewerPreviousPeriod(CalendarViewerNavigationCommand):
+    menuText = _('&Previous period')
+    helpText = _('Show previous period')
+    bitmap = 'prev'
+    calendarViewType = wxSCHEDULER_PREV
+    
 
-class CalendarViewerToday(ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        super(CalendarViewerToday, self).__init__(menuText=_('&Today'),
-            helpText=_('Show today'), bitmap='calendar_icon', *args, **kwargs)
-            
-    def doCommand(self, event):
-        self.viewer.freeze()
-        try:
-            self.viewer.SetViewType(wxSCHEDULER_TODAY)
-        finally:
-            self.viewer.thaw()
+class CalendarViewerToday(CalendarViewerNavigationCommand):
+    menuText = _('&Today')
+    helpText = _('Show today')
+    bitmap = 'calendar_icon'
+    calendarViewType = wxSCHEDULER_TODAY
 
 
 class CalendarViewerTaskFilterChoice(ToolbarChoiceCommandMixin, ViewerCommand):
