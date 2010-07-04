@@ -15,9 +15,15 @@
 	BadgeView *badge;
 	UILabel *textLabel;
 	UIImage *bgImage;
+	
+	BOOL isChecked;
+	UIImage *checkImage;
 }
 
 @property (nonatomic, retain) IBOutlet BadgeView *badge;
 @property (nonatomic, retain) IBOutlet UILabel *textLabel;
+
+- (void)resize;
+- (void)setChecked:(BOOL)checked;
 
 @end

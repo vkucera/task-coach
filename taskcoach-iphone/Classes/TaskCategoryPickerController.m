@@ -53,7 +53,8 @@
 
 	if ([[myTask categories] containsObject:category])
 	{
-		cell.accessoryType = UITableViewCellAccessoryCheckmark;
+		[cell setChecked:YES];
+		[cell setNeedsDisplay];
 	}
 }
 
@@ -67,13 +68,15 @@
 	if ([[myTask categories] containsObject:category])
 	{
 		[myTask removeCategoriesObject:category];
-		cell.accessoryType = UITableViewCellAccessoryNone;
+		[cell setChecked:NO];
 	}
 	else
 	{
 		[myTask addCategoriesObject:category];
-		cell.accessoryType = UITableViewCellAccessoryCheckmark;
+		[cell setChecked:YES];
 	}
+
+	[cell setNeedsDisplay];
 
 	[myTask markDirty];
 	NSError *error;

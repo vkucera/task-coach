@@ -658,7 +658,7 @@ static void deleteTask(CDTask *task)
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-	return 48;
+	return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 48 : 26;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section

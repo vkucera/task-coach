@@ -121,6 +121,14 @@ const float kBadgeConcaveCapsuleClippingTrim = 3.0f;
 	[annotations removeAllObjects];
 }
 
+- (BOOL)isEmpty
+{
+	if (self.text)
+		return NO;
+
+	return ([annotations count] == 0);
+}
+
 #pragma mark Drawing
 
 - (CGRect)getBoundsForItem:(BadgeItem*)badgeItem withFont:(UIFont*)font facing:(NSInteger)facing {

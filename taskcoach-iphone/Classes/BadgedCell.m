@@ -18,7 +18,10 @@
 	if ((self = [super initWithCoder:coder]))
 	{
 		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+		{
 			bgImage = [[UIImage imageNamed:@"leather.png"] retain];
+			checkImage = [[UIImage imageNamed:@"check.png"] retain];
+		}
 	}
 
 	return self;
@@ -27,10 +30,20 @@
 - (void)dealloc
 {
 	[bgImage release];
+	[checkImage release];
+
 	self.badge = nil;
 	self.textLabel = nil;
 
 	[super dealloc];
+}
+
+- (void)setChecked:(BOOL)checked
+{
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+		isChecked = checked;
+	else
+		self.accessoryType = checked ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
 }
 
 - (CGSize)sizeThatFits:(CGSize)size
@@ -61,6 +74,8 @@
 
 - (void)drawRect:(CGRect)rect
 {
+	CGFloat x, y, w, h;
+
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 	{
 		CGContextRef context = UIGraphicsGetCurrentContext();
@@ -71,7 +86,6 @@
 		CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
 		CGContextSetRGBFillColor(context, 1, 1, 1, 1);
 
-		CGFloat x, y, w, h;
 		x = self.textLabel.frame.origin.x;
 		y = self.textLabel.frame.origin.y;
 		w = self.textLabel.frame.size.width;
@@ -86,6 +100,46 @@
 	}
 	
 	[super drawRect:rect];
+	
+	if (isChecked && (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad))
+	{
+		CGContextRef context = UIGraphicsGetCurrentContext();
+		CGContextSaveGState(context);
+
+		// WTF?
+		CGContextTranslateCTM(context, x + w - 30 + 11, y + h / 2);
+		CGContextRotateCTM(context, M_PI);
+		CGContextScaleCTM(context, -1, 1);
+
+		CGRect imgRect = CGRectMake(-11, -11, 22, 22);
+		CGContextDrawImage(context, imgRect, checkImage.CGImage);
+
+		CGContextRestoreGState(context);
+	}
+}
+
+- (void)resize
+{
+	
+	CGRect rect = self.contentView.frame;
+	
+	rect.origin.x += 20 + self.indentationLevel * self.indentationWidth;
+	rect.size.width -= 20 + self.indentationLevel * self.indentationWidth;
+	rect.origin.y = 6;
+	rect.size.height -= 12;
+	rect.size.width -= 40;
+	
+	if (![self.badge isEmpty])
+		rect.size.width -= 60;
+	
+	self.textLabel.frame = rect;
+}
+
+- (void)setIndentationLevel:(NSInteger)level
+{
+	[super setIndentationLevel:level];
+
+	[self resize];
 }
 
 @end

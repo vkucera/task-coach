@@ -325,11 +325,11 @@
 			[task computeDateStatus];
 			[self saveTask];
 		}
-
-		[popoverCtrl release];
-		popoverCtrl = nil;
 	}
-
+	
+	[popoverCtrl release];
+	popoverCtrl = nil;
+	
 	[self refreshButtons];
 }
 

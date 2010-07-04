@@ -42,6 +42,6 @@
 - (void)addAnnotation:(NSString *)itemText capsuleColor:(UIColor*)itemCapsuleColor;
 - (void)addAnnotation:(NSString *)itemText capsuleColor:(UIColor*)itemCapsuleColor textColor:(UIColor*)itemTextColor;
 - (void)clearAnnotations;
-//- (void)resize;
+- (BOOL)isEmpty;
 
 @end

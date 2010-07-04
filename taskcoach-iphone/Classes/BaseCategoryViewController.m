@@ -121,6 +121,7 @@ static NSMutableArray *expandChildren(CDCategory *category, NSMutableDictionary 
 	cell.textLabel.textColor = [UIColor blackColor];
 
 	cell.indentationLevel = [[indentations objectForKey:[category objectID]] intValue];
+	cell.indentationWidth = 15;
 	cell.accessoryType = UITableViewCellAccessoryNone;
 }
 
@@ -138,13 +139,17 @@ static NSMutableArray *expandChildren(CDCategory *category, NSMutableDictionary 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"BadgedCell";
+	BadgedCell * cell = nil;
+
+	static NSString *CellIdentifier = @"BadgedCell";
+
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+		cell = (BadgedCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
 	
-    BadgedCell *cell = (BadgedCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
+	if (cell == nil)
 	{
-        cell = [[[CellFactory cellFactory] createBadgedCell] autorelease];
-    }
+		cell = [[[CellFactory cellFactory] createBadgedCell] autorelease];
+	}
 
 	CDCategory *category = [categories objectAtIndex:indexPath.row];
 	[self fillCell:cell forCategory:category];

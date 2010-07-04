@@ -344,6 +344,8 @@
 		[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", overdue] capsuleColor:[UIColor redColor]];
 	if (started)
 		[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", started] capsuleColor:[UIColor blueColor]];
+
+	[cell resize];
 }
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated

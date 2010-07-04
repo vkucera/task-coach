@@ -129,6 +129,7 @@
 		A69F6C2F115E2196003F68F5 /* SearchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A69F6C2E115E2196003F68F5 /* SearchCell.m */; };
 		A69F6C31115E21A5003F68F5 /* SearchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A69F6C30115E21A5003F68F5 /* SearchCell.xib */; };
 		A6A1013411BA3A450039DEE4 /* CDHierarchicalDomainObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A6A1013311BA3A450039DEE4 /* CDHierarchicalDomainObject.m */; };
+		A6A4F31D11E0983B00FDDDD5 /* check.png in Resources */ = {isa = PBXBuildFile; fileRef = A6A4F31C11E0983B00FDDDD5 /* check.png */; };
 		A6A975390F26572200622396 /* TaskCellLeft.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6A975370F26572200622396 /* TaskCellLeft.xib */; };
 		A6A9753A0F26572200622396 /* TaskCellRight.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6A975380F26572200622396 /* TaskCellRight.xib */; };
 		A6AEE77F0F21CFA00061CF77 /* Network.m in Sources */ = {isa = PBXBuildFile; fileRef = A6AEE77E0F21CFA00061CF77 /* Network.m */; };
@@ -405,6 +406,7 @@
 		A69F6C30115E21A5003F68F5 /* SearchCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchCell.xib; sourceTree = "<group>"; };
 		A6A1013211BA3A450039DEE4 /* CDHierarchicalDomainObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDHierarchicalDomainObject.h; path = CoreData/CDHierarchicalDomainObject.h; sourceTree = "<group>"; };
 		A6A1013311BA3A450039DEE4 /* CDHierarchicalDomainObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDHierarchicalDomainObject.m; path = CoreData/CDHierarchicalDomainObject.m; sourceTree = "<group>"; };
+		A6A4F31C11E0983B00FDDDD5 /* check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = check.png; path = "Resources-iPad/check.png"; sourceTree = "<group>"; };
 		A6A975370F26572200622396 /* TaskCellLeft.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCellLeft.xib; sourceTree = SOURCE_ROOT; };
 		A6A975380F26572200622396 /* TaskCellRight.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCellRight.xib; sourceTree = SOURCE_ROOT; };
 		A6AEE77D0F21CFA00061CF77 /* Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Network.h; path = Network/Network.h; sourceTree = "<group>"; };
@@ -824,6 +826,7 @@
 		A68B5E0E11C4B796009AE2F1 /* Resources-iPad */ = {
 			isa = PBXGroup;
 			children = (
+				A6A4F31C11E0983B00FDDDD5 /* check.png */,
 				A645E84711E0828100E1DD82 /* leather.png */,
 				A69E228B11DF9A00003CC658 /* checked.png */,
 				A69E228C11DF9A00003CC658 /* unchecked.png */,
@@ -1185,6 +1188,7 @@
 				A69E228D11DF9A00003CC658 /* checked.png in Resources */,
 				A69E228E11DF9A00003CC658 /* unchecked.png in Resources */,
 				A645E84811E0828100E1DD82 /* leather.png in Resources */,
+				A6A4F31D11E0983B00FDDDD5 /* check.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
