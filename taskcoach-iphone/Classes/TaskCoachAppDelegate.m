@@ -37,6 +37,7 @@ NSManagedObjectContext *getManagedObjectContext(void)
 	_("Save");
 	_("Categories");
 	_("Sync");
+	_("Activity log");
 	
 	[window addSubview:mainController.view];
 	[window makeKeyAndVisible];
