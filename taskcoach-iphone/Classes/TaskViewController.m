@@ -968,6 +968,7 @@ static void deleteTask(CDTask *task)
 	}
 
 	[self.navigationController pushViewController:ctrl animated:YES];
+
 	[[PositionStore instance] push:self indexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - ADJUSTSECTION)] type:TYPE_DETAILS searchWord:searchCell.searchBar.text];
 	[ctrl release];
 }

@@ -45,4 +45,42 @@
 		[ctrl performSelector:@selector(restorePosition:store:) withObject:pos withObject:store];
 }
 
+// Change default animation on the iPad
+
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+		[super pushViewController:viewController animated:animated];
+	else
+	{
+		if (animated)
+		{
+			[UIView beginAnimations:@"NavigationControlleriPad" context:nil];
+			[UIView setAnimationDuration:1.0];
+			[UIView setAnimationTransition:UIViewAnimationTransitionCurlUp forView:self.view cache:YES];
+		}
+
+		[super pushViewController:viewController animated:NO];
+
+		if (animated)
+			[UIView commitAnimations];
+	}
+}
+
+- (UIViewController *)popViewControllerAnimated:(BOOL)animated
+{
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+		return [super popViewControllerAnimated:animated];
+
+	[UIView beginAnimations:@"NavigationControlleriPad" context:nil];
+	[UIView setAnimationDuration:1.0];
+	[UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:self.view cache:YES];
+
+	UIViewController *ret = [super popViewControllerAnimated:NO];
+
+	[UIView commitAnimations];
+
+	return ret;
+}
+
 @end
