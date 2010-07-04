@@ -13,7 +13,7 @@
 
 @interface TaskCell : UITableViewCell
 {
-	NSManagedObjectID *ID;
+	CDTask *task;
 
 	CheckView *leftImage;
 	UILabel *titleLabel;
@@ -24,9 +24,9 @@
 	BOOL isTapping;
 }
 
-@property (nonatomic, retain) NSManagedObjectID *ID;
 @property (nonatomic, retain) IBOutlet CheckView *leftImage;
 @property (nonatomic, retain) IBOutlet UILabel *titleLabel;
+@property (nonatomic, retain) CDTask *task;
 
 - (void)setTask:(CDTask *)task target:(id)target action:(SEL)action;
 

@@ -15,7 +15,7 @@
 {
 	UIImage *bgImage;
 
-	NSManagedObjectID *ID;
+	CDTask *task;
 
 	id target;
 	SEL action;
@@ -27,6 +27,8 @@
 	UIImageView *tracking;
 	CheckView *check;
 }
+
+@property (nonatomic, retain) CDTask *task;
 
 @property (nonatomic, retain) IBOutlet UILabel *subject;
 @property (nonatomic, retain) IBOutlet UILabel *priority;

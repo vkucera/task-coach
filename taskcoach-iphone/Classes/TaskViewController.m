@@ -551,8 +551,13 @@ static void deleteTask(CDTask *task)
 
 - (void)toggleTaskCompletion
 {
-	CDTask *task = (CDTask *)[getManagedObjectContext() objectWithID:((TaskCell *)currentCell).ID];
-
+	CDTask *task;
+	
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+		task = ((TaskCell *)currentCell).task;
+	else
+		task = ((TaskCelliPad *)currentCell).task;
+	
 	if (task.completionDate)
 	{
 		task.completionDate = nil;
@@ -587,8 +592,13 @@ static void deleteTask(CDTask *task)
 - (void)onToggleTaskCompletion:(UITableViewCell *)cell
 {
 	currentCell = [cell retain];
-	CDTask *task = (CDTask *)[getManagedObjectContext() objectWithID:((TaskCell *)currentCell).ID];
-
+	CDTask *task;
+	
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+		task = ((TaskCell *)currentCell).task;
+	else
+		task = ((TaskCelliPad *)currentCell).task;
+	
 	tapping = [[self.tableView indexPathForCell:cell] retain];
 
 	if ([Configuration configuration].confirmComplete && ![Configuration configuration].showCompleted)

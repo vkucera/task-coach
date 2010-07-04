@@ -57,9 +57,9 @@
 	[super dealloc];
 }
 
-- (void)setTask:(CDTask *)task target:(id)theTarget action:(SEL)theAction
+- (void)setTask:(CDTask *)theTask target:(id)theTarget action:(SEL)theAction
 {
-	[super setTask:task target:theTarget action:theAction];
+	[super setTask:theTask target:theTarget action:theAction];
 	
 	NSMutableArray *categories = [[NSMutableArray alloc] init];
 	for (CDCategory *cat in task.categories)

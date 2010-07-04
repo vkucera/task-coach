@@ -14,7 +14,7 @@
 
 @implementation TaskCell
 
-@synthesize ID;
+@synthesize task;
 @synthesize leftImage;
 @synthesize titleLabel;
 
@@ -48,9 +48,10 @@
 	return @"ledgrey.png";
 }
 
-- (void)setTask:(CDTask *)task target:(id)theTarget action:(SEL)theAction
+- (void)setTask:(CDTask *)theTask target:(id)theTarget action:(SEL)theAction
 {
-	self.ID = [task objectID];
+	self.task = theTask;
+
 	target = theTarget;
 	action = theAction;
 
@@ -102,7 +103,7 @@
 {
 	[leftImage release];
 	[titleLabel release];
-	[ID release];
+	[task release];
 
 	[super dealloc];
 }

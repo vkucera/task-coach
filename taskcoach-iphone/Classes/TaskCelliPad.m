@@ -17,6 +17,8 @@
 
 @implementation TaskCelliPad
 
+@synthesize task;
+
 @synthesize subject;
 @synthesize priority;
 @synthesize infos;
@@ -37,7 +39,7 @@
 - (void)dealloc
 {
 	[bgImage release];
-	[ID release];
+	[task release];
 
 	self.subject = nil;
 	self.priority = nil;
@@ -49,15 +51,9 @@
 	[super dealloc];
 }
 
-- (NSManagedObjectID *)ID
+- (void)setTask:(CDTask *)theTask target:(id)theTarget action:(SEL)theAction
 {
-	return ID;
-}
-
-- (void)setTask:(CDTask *)task target:(id)theTarget action:(SEL)theAction
-{
-	[ID release];
-	ID = [[task objectID] retain];
+	self.task = theTask;
 	
 	target = theTarget;
 	action = theAction;
