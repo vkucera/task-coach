@@ -43,9 +43,14 @@ static NSMutableArray *expandChildren(CDCategory *category, NSMutableDictionary 
 {
 	categories = [[NSMutableArray alloc] init];
 	indentations = [[NSMutableDictionary alloc] init];
-	
+
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+	{
+		self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+	}
+
 	[self loadCategories];
-	
+
 	[super viewDidLoad];
 }
 

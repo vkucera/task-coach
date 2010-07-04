@@ -13,6 +13,26 @@
 @synthesize badge;
 @synthesize textLabel;
 
+- initWithCoder:(NSCoder *)coder
+{
+	if ((self = [super initWithCoder:coder]))
+	{
+		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+			bgImage = [[UIImage imageNamed:@"leather.png"] retain];
+	}
+
+	return self;
+}
+
+- (void)dealloc
+{
+	[bgImage release];
+	self.badge = nil;
+	self.textLabel = nil;
+
+	[super dealloc];
+}
+
 - (CGSize)sizeThatFits:(CGSize)size
 {
 	return size;
@@ -21,24 +41,6 @@
 - (void)layoutSubviews
 {
 	[self.badge sizeToFit];
-	
-	/*
-	CGSize badgeSize = [self.badge sizeThatFits:self.badge.bounds.size];
-
-	CGRect labelRect;
-	labelRect.origin.x = 20 + 10 * self.indentationLevel;
-	labelRect.origin.y = 11;
-	labelRect.size.width = self.contentView.bounds.size.width - badgeSize.width - 60 - 10 * self.indentationLevel;
-	labelRect.size.height = self.contentView.bounds.size.height - 22;
-	self.textLabel.frame = labelRect;
-
-	CGRect badgeRect;
-	badgeRect.origin.x = labelRect.origin.x + labelRect.size.width + 10;
-	badgeRect.origin.y = 11;
-	badgeRect.size.width = badgeSize.width;
-	badgeRect.size.height = self.contentView.bounds.size.height - 22;
-	self.badge.frame = badgeRect;
-	 */
 
 	[super layoutSubviews];
 }
@@ -49,6 +51,41 @@
 
 	[super willTransitionToState:state];
 
+}
+
+- (void)didTransitionToState:(UITableViewCellStateMask)state
+{
+	[super didTransitionToState:state];
+	[self setNeedsDisplay];
+}
+
+- (void)drawRect:(CGRect)rect
+{
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+	{
+		CGContextRef context = UIGraphicsGetCurrentContext();
+		CGContextSaveGState(context);
+
+		CGContextDrawTiledImage(context, CGRectMake(0, 0, 64, 64), bgImage.CGImage);
+
+		CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
+		CGContextSetRGBFillColor(context, 1, 1, 1, 1);
+
+		CGFloat x, y, w, h;
+		x = self.textLabel.frame.origin.x;
+		y = self.textLabel.frame.origin.y;
+		w = self.textLabel.frame.size.width;
+		h = self.textLabel.frame.size.height;
+
+		CGContextAddArc(context, x, y + h / 2, h / 2, M_PI / 2, 3 * M_PI / 2, 0);
+		CGContextAddArc(context, x + w, y + h / 2, h / 2, 3 * M_PI / 2, M_PI / 2, 0);
+		CGContextClosePath(context);
+		CGContextFillPath(context);
+
+		CGContextRestoreGState(context);
+	}
+	
+	[super drawRect:rect];
 }
 
 @end

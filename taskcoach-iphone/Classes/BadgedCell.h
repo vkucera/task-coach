@@ -14,6 +14,7 @@
 {
 	BadgeView *badge;
 	UILabel *textLabel;
+	UIImage *bgImage;
 }
 
 @property (nonatomic, retain) IBOutlet BadgeView *badge;

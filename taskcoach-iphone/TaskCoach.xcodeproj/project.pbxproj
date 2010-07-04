@@ -72,6 +72,7 @@
 		A63D714111CCF983005B1714 /* TaskCelliPad.m in Sources */ = {isa = PBXBuildFile; fileRef = A63D714011CCF983005B1714 /* TaskCelliPad.m */; };
 		A63E286D10415CCD00A2E672 /* TwoWayDeletedCategoriesState.m in Sources */ = {isa = PBXBuildFile; fileRef = A63E286C10415CCD00A2E672 /* TwoWayDeletedCategoriesState.m */; };
 		A64403B211BD43270029075D /* CDHierarchicalDomainObject+Addons.m in Sources */ = {isa = PBXBuildFile; fileRef = A64403B111BD43270029075D /* CDHierarchicalDomainObject+Addons.m */; };
+		A645E84811E0828100E1DD82 /* leather.png in Resources */ = {isa = PBXBuildFile; fileRef = A645E84711E0828100E1DD82 /* leather.png */; };
 		A64603A70F2234B500FC71AD /* CellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = A64603A60F2234B500FC71AD /* CellFactory.m */; };
 		A64603AA0F2234D900FC71AD /* TaskCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A64603A90F2234D900FC71AD /* TaskCell.m */; };
 		A647F39011B26802008D0FB0 /* CDDomainObject+Addons.m in Sources */ = {isa = PBXBuildFile; fileRef = A647F38F11B26802008D0FB0 /* CDDomainObject+Addons.m */; };
@@ -287,6 +288,7 @@
 		A63E286C10415CCD00A2E672 /* TwoWayDeletedCategoriesState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwoWayDeletedCategoriesState.m; path = Synchronization/TwoWayDeletedCategoriesState.m; sourceTree = "<group>"; };
 		A64403B011BD43270029075D /* CDHierarchicalDomainObject+Addons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CDHierarchicalDomainObject+Addons.h"; path = "CoreData/CDHierarchicalDomainObject+Addons.h"; sourceTree = "<group>"; };
 		A64403B111BD43270029075D /* CDHierarchicalDomainObject+Addons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CDHierarchicalDomainObject+Addons.m"; path = "CoreData/CDHierarchicalDomainObject+Addons.m"; sourceTree = "<group>"; };
+		A645E84711E0828100E1DD82 /* leather.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = leather.png; path = "Resources-iPad/leather.png"; sourceTree = "<group>"; };
 		A64603A50F2234B500FC71AD /* CellFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellFactory.h; sourceTree = "<group>"; };
 		A64603A60F2234B500FC71AD /* CellFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CellFactory.m; sourceTree = "<group>"; };
 		A64603A80F2234D900FC71AD /* TaskCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCell.h; sourceTree = "<group>"; };
@@ -822,6 +824,7 @@
 		A68B5E0E11C4B796009AE2F1 /* Resources-iPad */ = {
 			isa = PBXGroup;
 			children = (
+				A645E84711E0828100E1DD82 /* leather.png */,
 				A69E228B11DF9A00003CC658 /* checked.png */,
 				A69E228C11DF9A00003CC658 /* unchecked.png */,
 				A69E227011DF9779003CC658 /* headerbg.png */,
@@ -1181,6 +1184,7 @@
 				A69E227111DF9779003CC658 /* headerbg.png in Resources */,
 				A69E228D11DF9A00003CC658 /* checked.png in Resources */,
 				A69E228E11DF9A00003CC658 /* unchecked.png in Resources */,
+				A645E84811E0828100E1DD82 /* leather.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
