@@ -651,7 +651,6 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>calendarButton</string>
 							<string>calendarSearch</string>
 							<string>calendarView</string>
 							<string>categoryController</string>
@@ -661,7 +660,6 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>UIBarButtonItem</string>
 							<string>UISearchBar</string>
 							<string>ODCalendarDayTimelineView</string>
 							<string>CategoryViewController</string>
@@ -674,7 +672,6 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>calendarButton</string>
 							<string>calendarSearch</string>
 							<string>calendarView</string>
 							<string>categoryController</string>
@@ -684,10 +681,6 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBToOneOutletInfo">
-								<string key="name">calendarButton</string>
-								<string key="candidateClassName">UIBarButtonItem</string>
-							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">calendarSearch</string>
 								<string key="candidateClassName">UISearchBar</string>

@@ -47,3 +47,12 @@ translated:
 		ibtool --strings-file Resources-iPad/$$lang.lproj/MainWindow-iPad.strings \
 			--write Resources-iPad/$$lang.lproj/MainWindow-iPad.xib Resources-iPad/en.lproj/MainWindow-iPad.xib; \
 	done
+
+xibstrings:
+	# Extract translatable strings from XIB files.
+	for lang in en fr nl ru de th cs; do \
+		for name in DatePickerView MainWindow TaskView TaskDetailsRecurrencePeriodPicker TaskDetailsControlleriPad; do \
+			ibtool --generate-strings-file $$lang.lproj/$$name.strings en.lproj/$$name.xib; \
+		done; \
+		ibtool --generate-strings-file Resources-iPad/$$lang.lproj/MainWindow-iPad.strings Resources-iPad/$$lang.lproj/MainWindow-iPad.xib; \
+	done
