@@ -14,7 +14,7 @@
 - initWithCoder:(NSCoder *)coder
 {
 	if ((self = [super initWithCoder:coder]))
-		bgImage = [[UIImage imageNamed:@"paper.png"] retain];
+		bgImage = [[UIImage imageNamed:@"paper_big.png"] retain];
 
 	return self;
 }
@@ -31,7 +31,7 @@
 - (void)drawRect:(CGRect)rect
 {
 	CGContextRef context = UIGraphicsGetCurrentContext();
-	CGContextDrawTiledImage(context, CGRectMake(0, 0, 30, 30), bgImage.CGImage);
+	CGContextDrawTiledImage(context, CGRectMake(0, 0, 40, 40), bgImage.CGImage);
 	
 	[super drawRect:rect];
 }

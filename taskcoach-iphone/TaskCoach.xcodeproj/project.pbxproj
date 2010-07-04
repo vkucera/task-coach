@@ -133,6 +133,7 @@
 		A6A4F31D11E0983B00FDDDD5 /* check.png in Resources */ = {isa = PBXBuildFile; fileRef = A6A4F31C11E0983B00FDDDD5 /* check.png */; };
 		A6A975390F26572200622396 /* TaskCellLeft.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6A975370F26572200622396 /* TaskCellLeft.xib */; };
 		A6A9753A0F26572200622396 /* TaskCellRight.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6A975380F26572200622396 /* TaskCellRight.xib */; };
+		A6AA589B11E0AFC600F5689E /* paper_big.png in Resources */ = {isa = PBXBuildFile; fileRef = A6AA589A11E0AFC600F5689E /* paper_big.png */; };
 		A6AEE77F0F21CFA00061CF77 /* Network.m in Sources */ = {isa = PBXBuildFile; fileRef = A6AEE77E0F21CFA00061CF77 /* Network.m */; };
 		A6AFD6BC10414E930065D5B7 /* TwoWayModifiedCategoriesState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6AFD6BB10414E930065D5B7 /* TwoWayModifiedCategoriesState.m */; };
 		A6B264D00FDBCB9400FF2AD0 /* DateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6B264CF0FDBCB9400FF2AD0 /* DateCell.m */; };
@@ -412,6 +413,7 @@
 		A6A4F31C11E0983B00FDDDD5 /* check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = check.png; path = "Resources-iPad/check.png"; sourceTree = "<group>"; };
 		A6A975370F26572200622396 /* TaskCellLeft.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCellLeft.xib; sourceTree = SOURCE_ROOT; };
 		A6A975380F26572200622396 /* TaskCellRight.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCellRight.xib; sourceTree = SOURCE_ROOT; };
+		A6AA589A11E0AFC600F5689E /* paper_big.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = paper_big.png; path = "Resources-iPad/paper_big.png"; sourceTree = "<group>"; };
 		A6AEE77D0F21CFA00061CF77 /* Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Network.h; path = Network/Network.h; sourceTree = "<group>"; };
 		A6AEE77E0F21CFA00061CF77 /* Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Network.m; path = Network/Network.m; sourceTree = "<group>"; };
 		A6AFD6BA10414E930065D5B7 /* TwoWayModifiedCategoriesState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwoWayModifiedCategoriesState.h; path = Synchronization/TwoWayModifiedCategoriesState.h; sourceTree = "<group>"; };
@@ -680,9 +682,9 @@
 			children = (
 				A6B63B4911C66615002C9069 /* TaskDetailsControlleriPad.h */,
 				A6B63B4A11C66615002C9069 /* TaskDetailsControlleriPad.m */,
+				A6E8F66111CD02670087DDF3 /* TaskDetailsControlleriPad.xib */,
 				A611CC6711E0A1C8006B4571 /* TaskDetailsViewiPad.h */,
 				A611CC6811E0A1C8006B4571 /* TaskDetailsViewiPad.m */,
-				A6E8F66111CD02670087DDF3 /* TaskDetailsControlleriPad.xib */,
 				A6EDD13A11CCDB570092BC79 /* TaskDetailsRecurrenceControlleriPad.h */,
 				A6EDD13B11CCDB570092BC79 /* TaskDetailsRecurrenceControlleriPad.m */,
 				A6EDD13C11CCDB570092BC79 /* TaskDetailsRecurrenceControlleriPad.xib */,
@@ -831,6 +833,7 @@
 		A68B5E0E11C4B796009AE2F1 /* Resources-iPad */ = {
 			isa = PBXGroup;
 			children = (
+				A6AA589A11E0AFC600F5689E /* paper_big.png */,
 				A6A4F31C11E0983B00FDDDD5 /* check.png */,
 				A645E84711E0828100E1DD82 /* leather.png */,
 				A69E228B11DF9A00003CC658 /* checked.png */,
@@ -1194,6 +1197,7 @@
 				A69E228E11DF9A00003CC658 /* unchecked.png in Resources */,
 				A645E84811E0828100E1DD82 /* leather.png in Resources */,
 				A6A4F31D11E0983B00FDDDD5 /* check.png in Resources */,
+				A6AA589B11E0AFC600F5689E /* paper_big.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

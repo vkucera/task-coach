@@ -14,6 +14,7 @@
 #import "CDEffort.h"
 #import "CDEffort+Addons.h"
 #import "String+Utils.h"
+#import "DateUtils.h"
 #import "i18n.h"
 
 @interface TaskDetailsEffortsBase ()
@@ -49,7 +50,9 @@
 - (void)populate
 {
 	[results release];
-	
+
+	[self refreshTotal];
+
 	NSFetchRequest *request = [[NSFetchRequest alloc] init];
 	[request setEntity:[NSEntityDescription entityForName:@"CDEffort" inManagedObjectContext:getManagedObjectContext()]];
 	[request setPredicate:[NSPredicate predicateWithFormat:@"status != %d AND task=%@", STATUS_DELETED, task]];
@@ -79,12 +82,17 @@
 {
 	[super viewDidLoad];
 	[self populate];
+
+	updater = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(onUpdateTotal:) userInfo:nil repeats:YES];
 }
 
 - (void)viewDidUnload
 {
 	[results release];
 	results = nil;
+
+	[updater invalidate];
+	updater = nil;
 }
 
 - (void)dealloc
@@ -97,6 +105,11 @@
 }
 
 #pragma mark Actions
+
+- (void)onUpdateTotal:(NSTimer *)timer
+{
+	[self refreshTotal];
+}
 
 - (void)updateButton:(UIButton *)button
 {
@@ -121,7 +134,10 @@
 	if (isTracking)
 		[button setTitle:_("Stop tracking") forState:UIControlStateNormal];
 	else
+	{
 		[button setTitle:_("Start tracking") forState:UIControlStateNormal];
+		[self refreshTotal];
+	}
 }
 
 - (void)onTrack:(UIButton *)button
@@ -160,6 +176,31 @@
 	}
 }
 
+- (void)refreshTotal
+{
+	NSFetchRequest *request = [[NSFetchRequest alloc] init];
+	[request setEntity:[NSEntityDescription entityForName:@"CDEffort" inManagedObjectContext:getManagedObjectContext()]];
+	[request setPredicate:[NSPredicate predicateWithFormat:@"status != %d AND task=%@", STATUS_DELETED, task]];
+	NSError *error;
+	NSArray *efforts = [getManagedObjectContext() executeFetchRequest:request error:&error];
+	[request release];
+
+	if (efforts)
+	{
+		totalSpent = 0;
+
+		for (CDEffort *effort in efforts)
+		{
+			if (effort.ended)
+				totalSpent += [effort.ended timeIntervalSinceDate:effort.started];
+			else
+				totalSpent += [[NSDate date] timeIntervalSinceDate:effort.started];
+		}
+	}
+
+	[self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+}
+
 #pragma mark Fetched results controller stuff
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
@@ -175,12 +216,12 @@
     switch(type)
 	{
         case NSFetchedResultsChangeInsert:
-            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex]
+            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex + 1]
 						  withRowAnimation:UITableViewRowAnimationRight];
             break;
 			
         case NSFetchedResultsChangeDelete:
-            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex]
+            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex + 1]
 						  withRowAnimation:UITableViewRowAnimationRight];
             break;
     }
@@ -193,6 +234,9 @@
 	  newIndexPath:(NSIndexPath *)newIndexPath
 {
     UITableView *tableView = self.tableView;
+
+	indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section + 1];
+	newIndexPath = [NSIndexPath indexPathForRow:newIndexPath.row inSection:newIndexPath.section + 1];
 	
     switch(type)
 	{
@@ -274,18 +318,20 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [[results sections] count];
+    return [[results sections] count] + 1;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	return [[[results sections] objectAtIndex:section] name];
+	return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 40 : 44;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	NSLog(@"%d objects in section %d", [[[results sections] objectAtIndex:section] numberOfObjects], section);
-	return [[[results sections] objectAtIndex:section] numberOfObjects];
+	if (section == 0)
+		return 1;
+
+	return [[[results sections] objectAtIndex:section - 1] numberOfObjects];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -297,20 +343,43 @@
 	{
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
 	}
-	
-	CDEffort *effort = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section]];
-	
-	if (effort.ended)
+
+	if (indexPath.section == 0)
 	{
-		NSTimeInterval duration = [effort.ended timeIntervalSinceDate:effort.started];
-		cell.textLabel.text = [NSString formatTimeInterval:(NSInteger)duration];
+		cell.textLabel.text = [NSString stringWithFormat:_("Total spent: %@"), [NSString formatTimeInterval:totalSpent]];
 	}
 	else
 	{
-		cell.textLabel.text = [NSString stringWithFormat:_("Started %@"), effort.started];
+		CDEffort *effort = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - 1]];
+		
+		if (effort.ended)
+		{
+			NSTimeInterval duration = [effort.ended timeIntervalSinceDate:effort.started];
+
+			if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+			{
+				cell.textLabel.text = [NSString stringWithFormat:_("From %@ to %@ (%@)"),
+									   [[UserTimeUtils instance] stringFromDate:effort.started],
+									   [[UserTimeUtils instance] stringFromDate:effort.ended],
+									   [NSString formatTimeInterval:(NSInteger)duration]];
+			}
+			else
+			{
+				cell.textLabel.text = [NSString stringWithFormat:_("%@ on %@"), [NSString formatTimeInterval:(NSInteger)duration], [[DateUtils instance] stringFromDate:effort.started]];
+			}
+		}
+		else
+		{
+			cell.textLabel.text = [NSString stringWithFormat:_("Started %@"), [[UserTimeUtils instance] stringFromDate:effort.started]];
+		}
 	}
 	
 	cell.selectionStyle = UITableViewCellSelectionStyleNone;
+	
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+	{
+		cell.textLabel.font = [UIFont fontWithName:@"MarkerFelt-Thin" size:18];
+	}
 	
 	return cell;
 }

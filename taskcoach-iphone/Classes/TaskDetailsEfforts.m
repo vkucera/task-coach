@@ -27,13 +27,22 @@
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
+
 	[self updateButton:effortCell.button];
 }
 
 - (void)dealloc
 {
 	[effortCell release];
+
 	[super dealloc];
+}
+
+- (void)refreshTotal
+{
+	[super refreshTotal];
+
+	[self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
@@ -71,26 +80,6 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
 	return [super numberOfSectionsInTableView:tableView] + 1;
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-	switch (section)
-	{
-		case 0:
-		{
-			// XXXTODO
-			/*
-			 if (effortCount)
-			 return [NSString stringWithFormat:_("%d effort(s)"), effortCount];
-			 else
-			 return _("No effort.");
-			 */
-			return nil;
-		}
-	}
-	
-	return [super tableView:tableView titleForHeaderInSection:section - 1];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

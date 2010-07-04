@@ -69,6 +69,7 @@
 
 	self.subject.text = task.name;
 	self.description.text = task.longDescription;
+	self.description.font = [UIFont fontWithName:@"MarkerFelt-Thin" size:18]; 
 
 	[self refreshButtons];
 
@@ -145,6 +146,9 @@
 			
 		[popoverCtrl presentPopoverFromRect:button.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 	}
+
+	// Redraw background
+	[self.view setNeedsDisplay];
 }
 
 - (void)refreshButtons

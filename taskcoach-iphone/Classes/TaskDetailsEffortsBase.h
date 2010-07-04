@@ -15,6 +15,8 @@
 	CDTask *task;
 	UIButton *myButton;
 	NSFetchedResultsController *results;
+	NSTimeInterval totalSpent;
+	NSTimer *updater;
 }
 
 - initWithTask:(CDTask *)task;
@@ -22,5 +24,7 @@
 
 - (void)updateButton:(UIButton *)button;
 - (void)onTrack:(UIButton *)button;
+
+- (void)refreshTotal;
 
 @end
