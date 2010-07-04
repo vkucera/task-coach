@@ -12,6 +12,7 @@
 #import "CDCategory.h"
 #import "String+Utils.h"
 #import "CheckView.h"
+#import "Configuration.h"
 #import "i18n.h"
 
 @implementation TaskCelliPad
@@ -63,7 +64,7 @@
 
 	subject.text = task.name;
 
-	if ([task.longDescription length])
+	if ([task.longDescription length] && ![Configuration configuration].compactTasks)
 	{
 		description.text = task.longDescription;
 		description.hidden = NO;

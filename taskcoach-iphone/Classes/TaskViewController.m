@@ -769,16 +769,7 @@ static void deleteTask(CDTask *task)
 			return 60;
 		}
 
-		TaskCelliPad *cell = (TaskCelliPad *)[self tableView:self.tableView cellForRowAtIndexPath:indexPath];
-		if ([cell.description.text length])
-		{
-			NSInteger h = 88 + cell.description.contentSize.height;
-			if (h > 210)
-				return 211;
-			return h + (30 - (h % 30));
-		}
-		else
-			return 61;
+		return [Configuration configuration].compactTasks ? 61 : 161;
 	}
 	else
 		return [Configuration configuration].compactTasks ? 44 : 60;
