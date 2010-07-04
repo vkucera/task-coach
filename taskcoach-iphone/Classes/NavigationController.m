@@ -72,15 +72,41 @@
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 		return [super popViewControllerAnimated:animated];
 
-	[UIView beginAnimations:@"NavigationControlleriPad" context:nil];
-	[UIView setAnimationDuration:1.0];
-	[UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:self.view cache:YES];
+	if (animated)
+	{
+		[UIView beginAnimations:@"NavigationControlleriPad" context:nil];
+		[UIView setAnimationDuration:1.0];
+		[UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:self.view cache:YES];
 
-	UIViewController *ret = [super popViewControllerAnimated:NO];
+		UIViewController *ret = [super popViewControllerAnimated:NO];
 
-	[UIView commitAnimations];
+		[UIView commitAnimations];
 
-	return ret;
+		return ret;
+	}
+
+	return [super popViewControllerAnimated:NO];
+}
+
+- (NSArray *)popToRootViewControllerAnimated:(BOOL)animated
+{
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+		return [super popToRootViewControllerAnimated:animated];
+
+	if (animated && ([self.viewControllers count] != 1))
+	{
+		[UIView beginAnimations:@"NavigationControlleriPad" context:nil];
+		[UIView setAnimationDuration:1.0];
+		[UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:self.view cache:YES];
+	
+		NSArray *ret = [super popToRootViewControllerAnimated:NO];
+
+		[UIView commitAnimations];
+
+		return ret;
+	}
+
+	return [super popToRootViewControllerAnimated:NO];
 }
 
 @end

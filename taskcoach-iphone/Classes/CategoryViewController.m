@@ -566,7 +566,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	BadgedCell *cell;
+	BadgedCell *cell = nil;
 
 	if (self.editing)
 	{
@@ -576,7 +576,9 @@
 		{
 			static NSString *CellIdentifier = @"BadgedCell";
 
-			cell = (BadgedCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+			if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+				cell = (BadgedCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
 			if (cell == nil)
 			{
 				cell = [[[CellFactory cellFactory] createBadgedCell] autorelease];
@@ -604,7 +606,9 @@
 		{
 			static NSString *CellIdentifier = @"BadgedCell";
 			
-			cell = (BadgedCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+			if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+				cell = (BadgedCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
 			if (cell == nil)
 			{
 				cell = [[[CellFactory cellFactory] createBadgedCell] autorelease];
@@ -613,7 +617,6 @@
 			cell.textLabel.text = _("All");
 			[cell.badge clearAnnotations];
 			cell.badge.text = nil;
-
 			cell.indentationLevel = 0;
 		}
 
