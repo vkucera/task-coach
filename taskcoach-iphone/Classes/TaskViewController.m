@@ -743,13 +743,14 @@ static void deleteTask(CDTask *task)
 		{
 			// Don't dequeue here, it causes trouble with variable-height cells
 			TaskCelliPad *taskCell = [[[CellFactory cellFactory] createTaskCelliPad] autorelease];
-			
-			taskCell.accessoryType = UITableViewCellAccessoryNone;
 
 			CDTask *task = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - ADJUSTSECTION]];
 			[taskCell setTask:task target:self action:@selector(onToggleTaskCompletion:)];
 			
 			cell = (UITableViewCell *)taskCell;
+
+			if (self.editing)
+				cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 		}
 	}
 
@@ -763,7 +764,11 @@ static void deleteTask(CDTask *task)
 
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 	{
-		// XXXFIXME: editing mode
+		if (self.editing && (indexPath.section == 1))
+		{
+			return 60;
+		}
+
 		TaskCelliPad *cell = (TaskCelliPad *)[self tableView:self.tableView cellForRowAtIndexPath:indexPath];
 		if ([cell.description.text length])
 		{

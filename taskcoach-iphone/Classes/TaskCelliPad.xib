@@ -39,7 +39,7 @@
 			</object>
 			<object class="IBUITableViewCell" id="75988202">
 				<reference key="NSNextResponder"/>
-				<int key="NSvFlags">303</int>
+				<int key="NSvFlags">298</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<object class="IBUIView" id="1070766518">
@@ -182,7 +182,9 @@
 				<bool key="IBUIOpaque">NO</bool>
 				<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+				<int key="IBUISelectionStyle">2</int>
 				<reference key="IBUIContentView" ref="1070766518"/>
+				<bool key="IBUIShouldIndentWhileEditing">NO</bool>
 				<string key="IBUIReuseIdentifier">TaskCelliPad</string>
 			</object>
 		</object>

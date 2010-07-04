@@ -130,6 +130,11 @@
 	}
 
 	[check setTarget:self action:@selector(onTapImage)];
+
+	if ([task.children count])
+		self.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+	else
+		self.accessoryType = UITableViewCellAccessoryNone;
 }
 
 - (void)onTapImage
