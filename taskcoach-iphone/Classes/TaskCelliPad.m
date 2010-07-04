@@ -84,7 +84,7 @@
 	NSInteger prio = [task.priority intValue];
 
 	priority.text = [NSString stringWithFormat:@"%d", prio];
-	priority.textColor = [UIColor colorWithRed:(int)(255.0 * prio / 15) green:(int)(255 - 255.0 * prio / 15) blue:0 alpha:1.0];
+	priority.textColor = [UIColor colorWithRed:1.0 * prio / 15 green:1.0 - 1.0 * prio / 15 blue:0 alpha:1.0];
 
 	UIColor *textColor = nil;
 

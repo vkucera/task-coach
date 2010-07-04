@@ -182,6 +182,8 @@
 	{
 		[categoryButton setTitle:_("No category.") forState:UIControlStateNormal];
 	}
+
+	priorityLabel.textColor = [UIColor colorWithRed:1.0 * [task.priority intValue] / 15 green:1.0 - 1.0 * [task.priority intValue] / 15 blue:0 alpha:1];
 }
 
 - (void)saveTask

@@ -24,6 +24,7 @@
 		A60B6EE510258EB200F9983C /* TaskCategoryPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = A60B6EE410258EB200F9983C /* TaskCategoryPicker.xib */; };
 		A60B70EB1025AF0B00F9983C /* CHANGELOG in Resources */ = {isa = PBXBuildFile; fileRef = A60B70EA1025AF0B00F9983C /* CHANGELOG */; };
 		A610E6A611BB9913006800AF /* Migration.m in Sources */ = {isa = PBXBuildFile; fileRef = A610E6A511BB9913006800AF /* Migration.m */; };
+		A611CC6911E0A1C8006B4571 /* TaskDetailsViewiPad.m in Sources */ = {isa = PBXBuildFile; fileRef = A611CC6811E0A1C8006B4571 /* TaskDetailsViewiPad.m */; };
 		A6142CD30F35DE61001DD420 /* PositionStore.m in Sources */ = {isa = PBXBuildFile; fileRef = A6142CD20F35DE61001DD420 /* PositionStore.m */; };
 		A61A55F2119FB7840036FC56 /* DayHourState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61A55F1119FB7840036FC56 /* DayHourState.m */; };
 		A61AECFC0F35BA450086ECD6 /* TwoWayState.m in Sources */ = {isa = PBXBuildFile; fileRef = A61AECFB0F35BA450086ECD6 /* TwoWayState.m */; };
@@ -219,6 +220,8 @@
 		A60B70EA1025AF0B00F9983C /* CHANGELOG */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG; sourceTree = "<group>"; };
 		A610E6A411BB9913006800AF /* Migration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Migration.h; path = CoreData/Migration.h; sourceTree = "<group>"; };
 		A610E6A511BB9913006800AF /* Migration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Migration.m; path = CoreData/Migration.m; sourceTree = "<group>"; };
+		A611CC6711E0A1C8006B4571 /* TaskDetailsViewiPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDetailsViewiPad.h; sourceTree = "<group>"; };
+		A611CC6811E0A1C8006B4571 /* TaskDetailsViewiPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskDetailsViewiPad.m; sourceTree = "<group>"; };
 		A6142CD10F35DE61001DD420 /* PositionStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PositionStore.h; sourceTree = "<group>"; };
 		A6142CD20F35DE61001DD420 /* PositionStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PositionStore.m; sourceTree = "<group>"; };
 		A61A55F0119FB7840036FC56 /* DayHourState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DayHourState.h; path = Synchronization/DayHourState.h; sourceTree = "<group>"; };
@@ -677,6 +680,8 @@
 			children = (
 				A6B63B4911C66615002C9069 /* TaskDetailsControlleriPad.h */,
 				A6B63B4A11C66615002C9069 /* TaskDetailsControlleriPad.m */,
+				A611CC6711E0A1C8006B4571 /* TaskDetailsViewiPad.h */,
+				A611CC6811E0A1C8006B4571 /* TaskDetailsViewiPad.m */,
 				A6E8F66111CD02670087DDF3 /* TaskDetailsControlleriPad.xib */,
 				A6EDD13A11CCDB570092BC79 /* TaskDetailsRecurrenceControlleriPad.h */,
 				A6EDD13B11CCDB570092BC79 /* TaskDetailsRecurrenceControlleriPad.m */,
@@ -1298,6 +1303,7 @@
 				A6C00BD411CDEF0D0028385F /* NewCategoryiPad.m in Sources */,
 				A6C00C1911CDF6660028385F /* SplitView.m in Sources */,
 				A69E217911DF90D5003CC658 /* PaperHeaderView.m in Sources */,
+				A611CC6911E0A1C8006B4571 /* TaskDetailsViewiPad.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
