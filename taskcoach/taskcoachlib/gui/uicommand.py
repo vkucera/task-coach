@@ -85,21 +85,21 @@ class UICommand(object):
         menuItem = wx.MenuItem(menu, self.id, self.menuText, self.helpText, 
             self.kind)
         self.menuItems.append(menuItem)
-        if self.bitmap2 and self.kind == wx.ITEM_CHECK and not '__WXGTK__' in wx.PlatformInfo:
-            bitmap1 = wx.ArtProvider_GetBitmap(self.bitmap, wx.ART_MENU, 
-                (16, 16))
-            bitmap2 = wx.ArtProvider_GetBitmap(self.bitmap2, wx.ART_MENU, 
-                (16, 16))
-            menuItem.SetBitmaps(bitmap1, bitmap2)
-        elif self.bitmap and self.kind == wx.ITEM_NORMAL:
-            menuItem.SetBitmap(wx.ArtProvider_GetBitmap(self.bitmap, wx.ART_MENU, 
-                (16, 16)))
+        self.__addBitmapToMenuItem(menuItem)
         if position is None:
             menu.AppendItem(menuItem)
         else:
             menu.InsertItem(position, menuItem)
         self.bind(window, self.id)
         return self.id
+    
+    def __addBitmapToMenuItem(self, menuItem):
+        if self.bitmap2 and self.kind == wx.ITEM_CHECK and '__WXGTK__' != wx.Platform:
+            bitmap1 = self.__getBitmap(self.bitmap) 
+            bitmap2 = self.__getBitmap(self.bitmap2)
+            menuItem.SetBitmaps(bitmap1, bitmap2)
+        elif self.bitmap and self.kind == wx.ITEM_NORMAL:
+            menuItem.SetBitmap(self.__getBitmap(self.bitmap))
     
     def removeFromMenu(self, menu, window):
         for menuItem in self.menuItems:
@@ -112,8 +112,8 @@ class UICommand(object):
         
     def appendToToolBar(self, toolbar):
         self.toolbar = toolbar
-        bitmap = wx.ArtProvider_GetBitmap(self.bitmap, wx.ART_TOOLBAR, 
-            toolbar.GetToolBitmapSize())
+        bitmap = self.__getBitmap(self.bitmap, wx.ART_TOOLBAR, 
+                                  toolbar.GetToolBitmapSize())
         toolbar.AddLabelTool(self.id, '',
             bitmap, wx.NullBitmap, self.kind, 
             shortHelp=wx.MenuItem.GetLabelFromText(self.menuText),
@@ -172,6 +172,10 @@ class UICommand(object):
     
     def getHelpText(self):
         return self.helpText
+
+    def __getBitmap(self, bitmap, type=wx.ART_MENU, size=(16, 16)):
+        return wx.ArtProvider_GetBitmap(bitmap, type, size)
+    
 
 
 class SettingsCommand(UICommand): # pylint: disable-msg=W0223

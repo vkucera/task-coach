@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.0.9', 'July ??, 2010',
+Release('1.0.8', 'July 6, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Drop support for SyncML on Debian; too many architectures/versions
