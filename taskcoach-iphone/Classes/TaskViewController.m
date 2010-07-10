@@ -223,7 +223,7 @@ static void deleteTask(CDTask *task)
 		tasks = [getManagedObjectContext() executeFetchRequest:request error:&error];
 		if (!tasks)
 		{
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not fetch tasks") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not fetch tasks" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 			[alert show];
 			[alert release];
 		
@@ -271,7 +271,7 @@ static void deleteTask(CDTask *task)
 	NSError *error;
 	if (![results performFetch:&error])
 	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not fetch tasks") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not fetch tasks"@ delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
 		[alert release];
 
@@ -576,14 +576,7 @@ static void deleteTask(CDTask *task)
 
 	[task computeDateStatus];
 	[task markDirty];
-
-	NSError *error;
-	if (![getManagedObjectContext() save:&error])
-	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-		[alert show];
-		[alert release];
-	}
+	[task save];
 
 	[currentCell release];
 	currentCell = nil;
@@ -817,15 +810,7 @@ static void deleteTask(CDTask *task)
 	{
 		CDTask *task = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - ADJUSTSECTION]];
 		deleteTask(task);
-
-		NSError *error;
-		if (![getManagedObjectContext() save:&error])
-		{
-			NSLog(@"Error saving: %@", [error localizedDescription]);
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-			[alert show];
-			[alert release];
-		}
+		[task save];
 	}
 }
 

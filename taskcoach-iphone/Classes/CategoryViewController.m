@@ -259,14 +259,7 @@
 		newCat.creationDate = [NSDate date];
 		newCat.file = [Configuration configuration].cdCurrentFile;
 		newCat.name = name;
-
-		NSError *error;
-		if (![getManagedObjectContext() save:&error])
-		{
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not create new category") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-			[alert show];
-			[alert release];
-		}
+		[newCat save];
 
 		[self loadCategories];
 		[self.tableView reloadData];
@@ -399,14 +392,7 @@
 	[indexPaths addObject:[NSIndexPath indexPathForRow:[categories indexOfObject:category] * 2 inSection:0]];
 	[indexPaths addObject:[NSIndexPath indexPathForRow:[categories indexOfObject:category] * 2 + 1 inSection:0]];
 	[category delete];
-
-	NSError *error;
-	if (![getManagedObjectContext() save:&error])
-	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not delete category.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-		[alert show];
-		[alert release];
-	}
+	[category save];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -538,14 +524,7 @@
 		
 		category.name = name;
 		[category markDirty];
-
-		NSError *error;
-		if (![getManagedObjectContext() save:&error])
-		{
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save category.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-			[alert show];
-			[alert release];
-		}
+		[category save];
 
 		[self.tableView reloadData];
 	}

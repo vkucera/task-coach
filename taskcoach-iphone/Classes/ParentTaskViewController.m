@@ -12,6 +12,7 @@
 #import "TaskCoachAppDelegate.h"
 #import "i18n.h"
 #import "CDTask+Addons.h"
+#import "CDDomainObject+Addons.h"
 #import "CDFile.h"
 #import "Configuration.h"
 
@@ -68,8 +69,7 @@
 
 	[task computeDateStatus];
 
-	NSError *error;
-	if ([getManagedObjectContext() save:&error])
+	if ([task save])
 	{
 		UIViewController *ctrl;
 		
@@ -80,13 +80,6 @@
 
 		[self.navigationController pushViewController:ctrl animated:YES];
 		[ctrl release];
-	}
-	else
-	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-		[alert show];
-		[alert release];
-		NSLog(@"Error: %@", [error localizedDescription]);
 	}
 }
 

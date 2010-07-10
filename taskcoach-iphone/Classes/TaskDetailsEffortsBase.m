@@ -69,7 +69,7 @@
 	{
 		NSLog(@"Error fetching efforts: %@", [error localizedDescription]);
 		
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not fetch efforts") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not fetch efforts" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
 		[alert release];
 	}
@@ -161,15 +161,7 @@
 		else
 		{
 			[task startTracking];
-			
-			NSError *error;
-			if (![getManagedObjectContext() save:&error])
-			{
-				NSLog(@"Could not save efforts: %@", [error localizedDescription]);
-				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Error saving effort") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-				[alert show];
-				[alert release];
-			}
+			[task save];
 			
 			[self updateButton:button];
 		}
@@ -286,31 +278,23 @@
 				effort.ended = now;
 				[effort markDirty];
 			}
-			
-			NSError *error;
-			if (![getManagedObjectContext() save:&error])
-			{
-				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save efforts") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-				[alert show];
-				[alert release];
-			}
 		}
 			// No break; intended
 		case 2: // No, don't stop tracking others
 			[task startTracking];
 			
-			NSError *error;
-			if (![getManagedObjectContext() save:&error])
-			{
-				NSLog(@"Could not save efforts: %@", [error localizedDescription]);
-				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Error saving effort") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-				[alert show];
-				[alert release];
-			}
-			
 			[self updateButton:myButton];
 			myButton = nil;
 			break;
+	}
+	
+	NSError *error;
+	if (![getManagedObjectContext() save:&error])
+	{
+		NSLog(@"Could not save efforts: %@", [error localizedDescription]);
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error saving effort" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+		[alert release];
 	}
 }
 

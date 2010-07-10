@@ -138,14 +138,7 @@
 
 	task.recRepeat = [NSNumber numberWithInt:newValue];
 	[task markDirty];
-	
-	NSError *error;
-	if (![getManagedObjectContext() save:&error])
-	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-		[alert show];
-		[alert release];
-	}
+	[task save];
 }
 
 - (void)presentPeriodPicker
@@ -212,14 +205,7 @@
 			task.startDate = nil;
 			[task computeDateStatus];
 			[task markDirty];
-
-			NSError *error;
-			if (![getManagedObjectContext() save:&error])
-			{
-				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-				[alert show];
-				[alert release];
-			}
+			[task save];
 		}
 	}
 	else if (cell == dueDateCell)
@@ -244,14 +230,7 @@
 			task.dueDate = nil;
 			[task computeDateStatus];
 			[task markDirty];
-
-			NSError *error;
-			if (![getManagedObjectContext() save:&error])
-			{
-				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-				[alert show];
-				[alert release];
-			}
+			[task save];
 		}
 	}
 	else if (cell == completionDateCell)
@@ -268,14 +247,7 @@
 			task.completionDate = nil;
 			[task computeDateStatus];
 			[task markDirty];
-
-			NSError *error;
-			if (![getManagedObjectContext() save:&error])
-			{
-				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-				[alert show];
-				[alert release];
-			}
+			[task save];
 		}
 	}
 	else if (cell == reminderDateCell)
@@ -297,14 +269,7 @@
 
 			task.reminderDate = nil;
 			[task markDirty];
-
-			NSError *error;
-			if (![getManagedObjectContext() save:&error])
-			{
-				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-				[alert show];
-				[alert release];
-			}
+			[task save];
 		}
 	}
 	else if (cell == recurrenceCell)
@@ -323,27 +288,13 @@
 
 		[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationRight];
 		[task markDirty];
-		
-		NSError *error;
-		if (![getManagedObjectContext() save:&error])
-		{
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-			[alert show];
-			[alert release];
-		}
+		[task save];
 	}
 	else if (cell == recSameWeekdayCell)
 	{
 		task.recSameWeekday = [NSNumber numberWithInt:cell.switch_.on];
 		[task markDirty];
-		
-		NSError *error;
-		if (![getManagedObjectContext() save:&error])
-		{
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-			[alert show];
-			[alert release];
-		}
+		[task save];
 	}
 }
 
@@ -373,14 +324,7 @@
 	
 	[task computeDateStatus];
 	[task markDirty];
-
-	NSError *error;
-	if (![getManagedObjectContext() save:&error])
-	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-		[alert show];
-		[alert release];
-	}
+	[task save];
 	
 	[startDateCell setDate:task.startDate];
 	[dueDateCell setDate:task.dueDate];
@@ -411,14 +355,7 @@
 	
 	[task computeDateStatus];
 	[task markDirty];
-
-	NSError *error;
-	if (![getManagedObjectContext() save:&error])
-	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-		[alert show];
-		[alert release];
-	}
+	[task save];
 	
 	[startDateCell setDate:task.startDate];
 	[dueDateCell setDate:task.dueDate];
@@ -442,14 +379,7 @@
 
 	[task computeDateStatus];
 	[task markDirty];
-
-	NSError *error;
-	if (![getManagedObjectContext() save:&error])
-	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-		[alert show];
-		[alert release];
-	}
+	[task save];
 
 	[startDateCell setDate:task.startDate];
 	[dueDateCell setDate:task.dueDate];
@@ -464,14 +394,7 @@
 	task.reminderDate = date;
 	[task computeDateStatus];
 	[task markDirty];
-
-	NSError *error;
-	if (![getManagedObjectContext() save:&error])
-	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-		[alert show];
-		[alert release];
-	}
+	[task save];
 
 	[reminderDateCell setDate:task.reminderDate];
 }
@@ -480,14 +403,7 @@
 {
 	task.recPeriod = [NSNumber numberWithInt:value];
 	[task markDirty];
-	
-	NSError *error;
-	if (![getManagedObjectContext() save:&error])
-	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-		[alert show];
-		[alert release];
-	}
+	[task save];
 
 	[self fillRecurrence];
 	[self.tableView reloadData];

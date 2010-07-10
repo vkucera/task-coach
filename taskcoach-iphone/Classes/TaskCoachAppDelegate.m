@@ -180,10 +180,10 @@ NSManagedObjectContext *getManagedObjectContext(void)
 		}
 		@catch (NSException * e)
 		{
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error")
-															message:[NSString stringWithFormat:_("Error migrating data: %@"), [e reason]]
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+															message:[NSString stringWithFormat:@"Error migrating data: %@", [e reason]]
 														   delegate:self
-												  cancelButtonTitle:_("OK")
+												  cancelButtonTitle:@"OK"
 												  otherButtonTitles:nil];
 			[alert show];
 			[alert release];
@@ -207,7 +207,7 @@ NSManagedObjectContext *getManagedObjectContext(void)
 		if (![getManagedObjectContext() save:&error])
 		{
 			NSLog(@"Error saving: %@", [error localizedDescription]);
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save tasks") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not save tasks" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 			[alert show];
 			[alert release];
 		}
@@ -215,7 +215,7 @@ NSManagedObjectContext *getManagedObjectContext(void)
 	else
 	{
 		NSLog(@"Error fetching: %@", [error localizedDescription]);
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not load tasks") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not load tasks" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
 		[alert release];
 	}

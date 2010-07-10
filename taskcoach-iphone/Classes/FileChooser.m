@@ -14,6 +14,7 @@
 
 #import "CDFile.h"
 #import "CDDomainObject.h"
+#import "CDDomainObject+Addons.h"
 
 @implementation FileChooser
 
@@ -35,7 +36,7 @@
 		NSError *error;
 		if (![resultsCtrl performFetch:&error])
 		{
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not load files") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not load files" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 			[alert show];
 			[alert release];
 		}
@@ -120,10 +121,11 @@
 			for (CDDomainObject *object in results)
 				[getManagedObjectContext() deleteObject:object];
 			[getManagedObjectContext() deleteObject:file];
-			
+
+			NSError *error;
 			if (![getManagedObjectContext() save:&error])
 			{
-				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save data") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not save data" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 				[alert show];
 				[alert release];
 			}

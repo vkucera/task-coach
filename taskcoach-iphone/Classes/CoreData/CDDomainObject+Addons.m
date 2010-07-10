@@ -12,6 +12,21 @@
 
 @implementation CDDomainObject (Addons)
 
+- (BOOL)save
+{
+	NSError *error;
+	if (![getManagedObjectContext() save:&error])
+	{
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[NSString stringWithFormat:@"Could not save %@: %@", [[self entity] name], [error localizedDescription]] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+		[alert release];
+
+		return NO;
+	}
+
+	return YES;
+}
+
 - (void)updateStatus:(NSInteger)newStatus
 {
 	switch ([self.status intValue])

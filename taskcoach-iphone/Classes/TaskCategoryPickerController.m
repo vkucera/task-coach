@@ -79,13 +79,7 @@
 	[cell setNeedsDisplay];
 
 	[myTask markDirty];
-	NSError *error;
-	if (![getManagedObjectContext() save:&error])
-	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-		[alert show];
-		[alert release];
-	}
+	[myTask save];
 
 	[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }

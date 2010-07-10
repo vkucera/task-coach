@@ -15,6 +15,8 @@
 
 @interface CDDomainObject (Addons)
 
+- (BOOL)save;
+
 - (void)updateStatus:(NSInteger)status;
 - (void)markDirty;
 - (void)delete;

@@ -94,14 +94,7 @@
 	self.priorityLabel.text = [NSString stringWithFormat:_("Priority: %@"), task.priority];
 	
 	[task markDirty];
-
-	NSError *error;
-	if (![getManagedObjectContext() save:&error])
-	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-		[alert show];
-		[alert release];
-	}
+	[task save];
 }
 
 - (UINavigationItem *)navigationItem
@@ -137,14 +130,7 @@
 	}
 	
 	[task markDirty];
-
-	NSError *error;
-	if (![getManagedObjectContext() save:&error])
-	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-		[alert show];
-		[alert release];
-	}
+	[task save];
 	
 	self.navigationItem.title = task.name;
 }
@@ -172,13 +158,7 @@
 
 	task.longDescription = description.text;
 	[task markDirty];
-	NSError *error;
-	if (![getManagedObjectContext() save:&error])
-	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Could not save task.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-		[alert show];
-		[alert release];
-	}
+	[task save];
 }
 
 @end
