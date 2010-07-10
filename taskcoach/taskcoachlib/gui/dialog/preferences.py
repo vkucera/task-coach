@@ -290,8 +290,13 @@ class FeaturesPage(SettingsPage):
         self.addChoiceSetting('feature', 'notifier', _('Notification system'), names,
                               helpText=_('Notification system to use for reminders (Growl, Snarl, etc)'))
 
-        self.addBooleanSetting('feature', 'syncml', _('Enable SyncML'),
-            helpText='restart')
+        try:
+            import taskcoachlib.syncml.core
+        except ImportError:
+            pass
+        else:
+            self.addBooleanSetting('feature', 'syncml', _('Enable SyncML'),
+                helpText='restart')
         self.addBooleanSetting('feature', 'iphone', _('Enable iPhone synchronization'),
             helpText='restart')
         self.addIntegerSetting('view', 'efforthourstart',

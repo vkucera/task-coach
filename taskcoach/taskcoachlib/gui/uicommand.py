@@ -85,21 +85,21 @@ class UICommand(object):
         menuItem = wx.MenuItem(menu, self.id, self.menuText, self.helpText, 
             self.kind)
         self.menuItems.append(menuItem)
-        if self.bitmap2 and self.kind == wx.ITEM_CHECK and not '__WXGTK__' in wx.PlatformInfo:
-            bitmap1 = wx.ArtProvider_GetBitmap(self.bitmap, wx.ART_MENU, 
-                (16, 16))
-            bitmap2 = wx.ArtProvider_GetBitmap(self.bitmap2, wx.ART_MENU, 
-                (16, 16))
-            menuItem.SetBitmaps(bitmap1, bitmap2)
-        elif self.bitmap and self.kind == wx.ITEM_NORMAL:
-            menuItem.SetBitmap(wx.ArtProvider_GetBitmap(self.bitmap, wx.ART_MENU, 
-                (16, 16)))
+        self.__addBitmapToMenuItem(menuItem)
         if position is None:
             menu.AppendItem(menuItem)
         else:
             menu.InsertItem(position, menuItem)
         self.bind(window, self.id)
         return self.id
+    
+    def __addBitmapToMenuItem(self, menuItem):
+        if self.bitmap2 and self.kind == wx.ITEM_CHECK and '__WXGTK__' != wx.Platform:
+            bitmap1 = self.__getBitmap(self.bitmap) 
+            bitmap2 = self.__getBitmap(self.bitmap2)
+            menuItem.SetBitmaps(bitmap1, bitmap2)
+        elif self.bitmap and self.kind == wx.ITEM_NORMAL:
+            menuItem.SetBitmap(self.__getBitmap(self.bitmap))
     
     def removeFromMenu(self, menu, window):
         for menuItem in self.menuItems:
@@ -112,8 +112,8 @@ class UICommand(object):
         
     def appendToToolBar(self, toolbar):
         self.toolbar = toolbar
-        bitmap = wx.ArtProvider_GetBitmap(self.bitmap, wx.ART_TOOLBAR, 
-            toolbar.GetToolBitmapSize())
+        bitmap = self.__getBitmap(self.bitmap, wx.ART_TOOLBAR, 
+                                  toolbar.GetToolBitmapSize())
         toolbar.AddLabelTool(self.id, '',
             bitmap, wx.NullBitmap, self.kind, 
             shortHelp=wx.MenuItem.GetLabelFromText(self.menuText),
@@ -172,6 +172,10 @@ class UICommand(object):
     
     def getHelpText(self):
         return self.helpText
+
+    def __getBitmap(self, bitmap, type=wx.ART_MENU, size=(16, 16)):
+        return wx.ArtProvider_GetBitmap(bitmap, type, size)
+    
 
 
 class SettingsCommand(UICommand): # pylint: disable-msg=W0223
@@ -2200,45 +2204,39 @@ class CalendarViewerTypeChoice(ToolbarChoiceCommandMixin, ViewerCommand):
             self.viewer.thaw()
 
 
-class CalendarViewerNextPeriod(ViewerCommand):
+class CalendarViewerNavigationCommand(ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(CalendarViewerNextPeriod, self).__init__( \
-            menuText=_('&Next period'),
-            helpText=_('Show next period'), bitmap='next', *args, **kwargs)
+        super(CalendarViewerNavigationCommand, self).__init__( \
+            menuText=self.menuText, helpText=self.helpText, bitmap=self.bitmap, 
+            *args, **kwargs)
 
     def doCommand(self, event):
         self.viewer.freeze()
         try:
-            self.viewer.SetViewType(wxSCHEDULER_NEXT)
+            self.viewer.SetViewType(self.calendarViewType)
         finally:
             self.viewer.thaw()
 
 
-class CalendarViewerPreviousPeriod(ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        super(CalendarViewerPreviousPeriod, self).__init__( \
-            menuText=_('&Previous period'),
-            helpText=_('Show previous period'), bitmap='prev', *args, **kwargs)
-            
-    def doCommand(self, event):
-        self.viewer.freeze()
-        try:
-            self.viewer.SetViewType(wxSCHEDULER_PREV)
-        finally:
-            self.viewer.thaw()
+class CalendarViewerNextPeriod(CalendarViewerNavigationCommand):
+    menuText = _('&Next period')
+    helpText = _('Show next period')
+    bitmap = 'next'
+    calendarViewType = wxSCHEDULER_NEXT
+    
 
+class CalendarViewerPreviousPeriod(CalendarViewerNavigationCommand):
+    menuText = _('&Previous period')
+    helpText = _('Show previous period')
+    bitmap = 'prev'
+    calendarViewType = wxSCHEDULER_PREV
+    
 
-class CalendarViewerToday(ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        super(CalendarViewerToday, self).__init__(menuText=_('&Today'),
-            helpText=_('Show today'), bitmap='calendar_icon', *args, **kwargs)
-            
-    def doCommand(self, event):
-        self.viewer.freeze()
-        try:
-            self.viewer.SetViewType(wxSCHEDULER_TODAY)
-        finally:
-            self.viewer.thaw()
+class CalendarViewerToday(CalendarViewerNavigationCommand):
+    menuText = _('&Today')
+    helpText = _('Show today')
+    bitmap = 'calendar_icon'
+    calendarViewType = wxSCHEDULER_TODAY
 
 
 class CalendarViewerTaskFilterChoice(ToolbarChoiceCommandMixin, ViewerCommand):
