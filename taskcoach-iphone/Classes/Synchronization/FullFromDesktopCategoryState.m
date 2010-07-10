@@ -13,6 +13,7 @@
 #import "FullFromDesktopTaskState.h"
 #import "CDCategory.h"
 #import "CDDomainObject+Addons.h"
+#import "LogUtils.h"
 
 @implementation FullFromDesktopCategoryState
 
@@ -41,6 +42,8 @@
 
 - (void)activated
 {
+	JLDEBUG("=== Full from desktop categories");
+
 	[self startWithFormat:"ssz" count:myController.categoryCount];
 }
 
@@ -66,9 +69,11 @@
 		}
 		else
 		{
-			NSLog(@"Could not find parent: %@", [error localizedDescription]);
+			JLERROR("Could not find parent: %s", [[error localizedDescription] UTF8String]);
 		}
 	}
+
+	JLDEBUG("Got category \"%s\"", [category.name UTF8String]);
 
 	[myController increment];
 	[self sendFormat:"i" values:[NSArray arrayWithObject:[NSNumber numberWithInt:1]]];
@@ -76,6 +81,8 @@
 
 - (void)onFinished
 {
+	JLDEBUG("=== Finished");
+
 	myController.state = [FullFromDesktopTaskState stateWithNetwork:myNetwork controller:myController];
 }
 

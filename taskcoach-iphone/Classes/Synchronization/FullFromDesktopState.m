@@ -13,6 +13,7 @@
 #import "Configuration.h"
 #import "i18n.h"
 #import "CDDomainObject.h"
+#import "LogUtils.h"
 
 @implementation FullFromDesktopState
 
@@ -23,6 +24,8 @@
 
 - (void)activated
 {
+	JLDEBUG("=== Full from desktop");
+
 	myController.label.text = _("Synchronizing...");
 	[myController.activity stopAnimating];
 	myController.progress.hidden = NO;
@@ -44,7 +47,7 @@
 	}
 	else
 	{
-		NSLog(@"Could not fetch objects: %@", [error localizedDescription]);
+		JLERROR("Could not fetch objects: %s", [[error localizedDescription] UTF8String]);
 		[self cancel];
 	}
 }
@@ -54,10 +57,14 @@
 	myController.categoryCount = [[value objectAtIndex:0] intValue];
 	myController.taskCount = [[value objectAtIndex:1] intValue];
 	myController.effortCount = [[value objectAtIndex:2] intValue];
+
+	JLDEBUG("Got count; %d categories, %d tasks, %d efforts", myController.categoryCount, myController.taskCount, myController.effortCount);
 }
 
 - (void)onFinished
 {
+	JLDEBUG("=== Finished");
+
 	myController.state = [FullFromDesktopCategoryState stateWithNetwork:myNetwork controller:myController];
 }
 

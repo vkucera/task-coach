@@ -13,6 +13,7 @@
 #import "SyncViewController.h"
 #import "Configuration.h"
 #import "CDDomainObject+Addons.h"
+#import "LogUtils.h"
 
 @implementation TwoWayState
 
@@ -25,11 +26,16 @@
 {
 	NSNumber *result = [super countForEntityName:entityName status:status];
 	totalCount += [result intValue];
+
+	JLDEBUG("Entity: %s count: %d", [entityName UTF8String], [result intValue]);
+
 	return result;
 }
 
 - (void)activated
 {
+	JLDEBUG("=== Two way state");
+
 	[self sendFormat:"iiiiiiiii"
 			  values:[NSArray arrayWithObjects:
 					  [self countForEntityName:@"CDCategory" status:STATUS_NEW],

@@ -11,6 +11,7 @@
 #import "SyncViewController.h"
 #import "i18n.h"
 #import "DateUtils.h"
+#import "LogUtils.h"
 
 @implementation BaseState
 
@@ -47,7 +48,7 @@
 
 - (void)networkDidClose:(Network *)network controller:(SyncViewController *)controller
 {
-	NSLog(@"Connection closed.");
+	JLERROR("Connection closed.");
 
 	controller.state = nil;
 	
@@ -62,7 +63,7 @@
 
 - (void)networkDidEncounterError:(Network *)network error:(NSError *)error controller:(SyncViewController *)controller
 {
-	NSLog(@"Network error.");
+	JLERROR("Network error: %s", [[error description] UTF8String]);
 
 	controller.state = nil;
 
@@ -77,6 +78,8 @@
 
 - (void)cancel
 {
+	JLDEBUG("Cancelling");
+
 	myController.state = nil;
 	[myNetwork close];
 	

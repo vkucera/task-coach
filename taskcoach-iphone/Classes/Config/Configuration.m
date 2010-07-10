@@ -9,6 +9,7 @@
 #import "TaskCoachAppDelegate.h"
 #import "Configuration.h"
 #import "CDFile.h"
+#import "LogUtils.h"
 
 static Configuration *_configuration = NULL;
 

@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MFMailComposeViewController.h>
 
 #import "Network.h"
 #import "State.h"
 
-@interface SyncViewController : UIViewController <NetworkDelegate>
+@interface SyncViewController : UIViewController <NetworkDelegate, UIAccelerometerDelegate, MFMailComposeViewControllerDelegate>
 {
 	UILabel *label;
 	UIActivityIndicatorView *activity;
@@ -32,6 +33,9 @@
 	NSInteger taskCount;
 	NSInteger effortCount;
 	NSInteger currentCount;
+
+	UIAcceleration *lastAccel;
+	NSInteger alertState;
 }
 
 @property (nonatomic, retain) IBOutlet UILabel *label;

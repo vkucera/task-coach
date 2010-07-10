@@ -12,6 +12,7 @@
 #import "SyncViewController.h"
 #import "Configuration.h"
 #import "CDFile.h"
+#import "LogUtils.h"
 
 @implementation DayHourState
 
@@ -22,6 +23,8 @@
 
 - (void)activated
 {
+	JLDEBUG("=== Day hours state.");
+
 	[self startWithFormat:"ii" count:NOCOUNT];
 }
 
@@ -29,7 +32,9 @@
 {
 	[Configuration configuration].cdCurrentFile.startHour = [value objectAtIndex:0];
 	[Configuration configuration].cdCurrentFile.endHour = [value objectAtIndex:1];
-	
+
+	JLDEBUG("Got hours: %d/%d", [[value objectAtIndex:0] intValue], [[value objectAtIndex:1] intValue]);
+
 	[self sendFormat:"i" values:[NSArray arrayWithObject:[NSNumber numberWithInt:1]]];
 	
 	myController.state = [TwoWayState stateWithNetwork:myNetwork controller:myController];

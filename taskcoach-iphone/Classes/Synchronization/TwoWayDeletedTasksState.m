@@ -8,6 +8,7 @@
 
 #import "TwoWayDeletedTasksState.h"
 #import "TwoWayModifiedTasksState.h"
+#import "LogUtils.h"
 
 #import "Network.h"
 #import "SyncViewController.h"
@@ -22,13 +23,24 @@
 	return [[[TwoWayDeletedTasksState alloc] initWithNetwork:network controller:controller] autorelease];
 }
 
+- (void)activated
+{
+	JLDEBUG("=== Two way deleted tasks");
+
+	[super activated];
+}
+
 - (void)packObject:(CDTask *)task
 {
+	JLDEBUG("Packing task \"%s\"", [task.name UTF8String]);
+
 	[self sendFormat:"s" values:[NSArray arrayWithObject:task.taskCoachId]];
 }
 
 - (void)onFinished
 {
+	JLDEBUG("=== Finished");
+
 	myController.state = [TwoWayModifiedTasksState stateWithNetwork:myNetwork controller:myController];
 }
 

@@ -12,6 +12,7 @@
 #import "Network.h"
 #import "SyncViewController.h"
 #import "DateUtils.h"
+#import "LogUtils.h"
 
 #import "CDDomainObject+Addons.h"
 #import "CDEffort.h"
@@ -24,8 +25,17 @@
 	return [[[TwoWayNewEffortsState alloc] initWithNetwork:network controller:controller] autorelease];
 }
 
+- (void)activated
+{
+	JLDEBUG("=== Two way new efforts");
+
+	[super activated];
+}
+
 - (void)packObject:(CDEffort *)effort
 {
+	JLDEBUG("Packing effort \"%s\"", [effort.name UTF8String]);
+
 	[self sendFormat:"s" values:[NSArray arrayWithObject:effort.name]];
 
 	if (effort.task)
@@ -39,6 +49,8 @@
 
 - (void)onFinished
 {
+	JLDEBUG("=== Finished");
+
 	myController.state = [TwoWayModifiedEffortsState stateWithNetwork:myNetwork controller:myController];
 }
 

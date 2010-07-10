@@ -13,6 +13,7 @@
 #import "SyncViewController.h"
 #import "CDCategory.h"
 #import "CDDomainObject+Addons.h"
+#import "LogUtils.h"
 
 @implementation TwoWayNewCategoriesState
 
@@ -21,20 +22,29 @@
 	return [[[TwoWayNewCategoriesState alloc] initWithNetwork:network controller:controller] autorelease];
 }
 
+- (void)activated
+{
+	JLDEBUG("=== Two way: new categories");
+
+	[super activated];
+}
+
 - (void)packObject:(CDCategory *)category
 {
+	JLDEBUG("Packing category \"%s\"", [category.name UTF8String]);
+
 	[self sendFormat:"s" values:[NSArray arrayWithObject:category.name]];
 	
 	if (category.parent)
 		[self sendFormat:"s" values:[NSArray arrayWithObject:category.parent.taskCoachId]];
 	else
 		[self sendFormat:"s" values:[NSArray arrayWithObject:[NSNull null]]];
-	
-	NSLog(@"Sent category: %@", category.name);
 }
 
 - (void)onFinished
 {
+	JLDEBUG("=== Finished");
+
 	myController.state = [TwoWayDeletedCategoriesState stateWithNetwork:myNetwork controller:myController];
 }
 

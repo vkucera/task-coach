@@ -12,6 +12,7 @@
 #import "SyncViewController.h"
 #import "Configuration.h"
 #import "DateUtils.h"
+#import "LogUtils.h"
 
 #import "CDTask.h"
 #import "CDTask+Addons.h"
@@ -43,6 +44,8 @@
 
 - (void)activated
 {
+	JLDEBUG("=== Full from desktop task");
+
 	[self startWithFormat:"ssszzzzziiiii[s]" count:myController.taskCount];
 }
 
@@ -62,7 +65,7 @@
 	task.reminderDate = [self parseDate:[value objectAtIndex:6]];
 	task.priority = [value objectAtIndex:8];
 	
-	NSLog(@"New task from desktop: %@", task.name);
+	JLDEBUG("New task from desktop: \"%s\"", [task.name UTF8String]);
 
 	if ([[value objectAtIndex:9] intValue])
 	{
@@ -87,33 +90,13 @@
 		}
 		else
 		{
-			NSLog(@"Could not find parent task: %@", [error localizedDescription]);
+			JLERROR("Could not find parent task: %s", [[error localizedDescription] UTF8String]);
 		}
 	}
-	
-	/*
-	[request setEntity:[NSEntityDescription entityForName:@"CDCategory" inManagedObjectContext:getManagedObjectContext()]];
-	for (NSString *catId in [value objectAtIndex:13])
-	{
-		[request setPredicate:[NSPredicate predicateWithFormat:@"taskCoachId == %@", catId]];
-		NSError *error;
-		NSArray *results = [getManagedObjectContext() executeFetchRequest:request error:&error];
-		if (results)
-		{
-			assert([results count] == 1);
-			[task addCategoriesObject:[results objectAtIndex:0]];
-			NSLog(@"Category: %@", [[results objectAtIndex:0] name]);
-		}
-		else
-		{
-			NSLog(@"Could not find category: %@", [error localizedDescription]);
-		}
-	}
-	*/
-	
+
 	if ([[value objectAtIndex:13] count])
 	{
-		NSLog(@"Category count: %d", [[value objectAtIndex:13] count]);
+		JLDEBUG("Category count: %d", [[value objectAtIndex:13] count]);
 
 		[request setEntity:[NSEntityDescription entityForName:@"CDCategory" inManagedObjectContext:getManagedObjectContext()]];
 		[request setPredicate:[NSPredicate predicateWithFormat:@"taskCoachId IN %@", [NSSet setWithArray:[value objectAtIndex:13]]]];
@@ -126,7 +109,7 @@
 		}
 		else
 		{
-			NSLog(@"Could not find task categories: %@", [error localizedDescription]);
+			JLERROR("Could not find task categories: %s", [[error localizedDescription] UTF8String]);
 		}
 	}
 
@@ -136,6 +119,8 @@
 
 - (void)onFinished
 {
+	JLDEBUG("=== Finished");
+
 	myController.state = [FullFromDesktopEffortState stateWithNetwork:myNetwork controller:myController];
 }
 

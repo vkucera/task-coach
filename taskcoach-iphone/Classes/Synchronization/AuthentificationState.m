@@ -14,12 +14,15 @@
 #import "Network.h"
 #import "SyncViewController.h"
 #import "AlertPrompt.h"
+#import "LogUtils.h"
 #import "i18n.h"
 
 @implementation AuthentificationState
 
 - (void)askForPassword
 {
+	JLDEBUG("Asking for password.");
+
 	AlertPrompt *prompt = [[AlertPrompt alloc] initWithTitle:_("Please type your password.")
 													 message:@"\n"
 													delegate:self
@@ -36,6 +39,8 @@
 
 - (void)activated
 {
+	JLDEBUG("=== Authentication state.");
+
 	myController.label.text = _("Authentication");
 	
 #if TARGET_IPHONE_SIMULATOR
@@ -69,11 +74,11 @@
 {
 	if (state == 0)
 	{
-		NSLog(@"Received hash data.");
+		JLDEBUG("Received hash data.");
 		
 		if (currentPassword)
 		{
-			NSLog(@"Sending hashed password.");
+			JLDEBUG("Sending hashed password (1).");
 			
 			NSMutableData *hashData = [[NSMutableData alloc] initWithData:[value objectAtIndex:0]];
 			const char *bf = [currentPassword UTF8String];
@@ -93,7 +98,7 @@
 		}
 		else
 		{
-			NSLog(@"Storing it.");
+			JLDEBUG("Storing it.");
 			
 			[currentData release];
 			currentData = [[value objectAtIndex:0] copy];
@@ -108,7 +113,7 @@
 		
 		if (result)
 		{
-			NSLog(@"Password accepted.");
+			JLDEBUG("Password accepted.");
 			
 #if !TARGET_IPHONE_SIMULATOR
 			[keychain setObject:currentPassword forKey:(id)kSecValueData];
@@ -116,14 +121,14 @@
 			
 			// Also send device name
 			UIDevice *dev = [UIDevice currentDevice];
-			NSLog(@"Sending device name: %@", dev.name);
+			JLDEBUG("Sending device name: %@", dev.name);
 			[self sendFormat:"s" values:[NSArray arrayWithObject:dev.name]];
 			
 			myController.state = [GUIDState stateWithNetwork:myNetwork controller:myController];
 		}
 		else
 		{
-			NSLog(@"Password rejected.");
+			JLDEBUG("Password rejected.");
 			
 			[currentData release];
 			[currentPassword release];
@@ -162,7 +167,7 @@
 			{
 				assert(currentData);
 				
-				NSLog(@"Sending hashed password.");
+				JLDEBUG("Sending hashed password (2).");
 				
 				NSMutableData *hashData = [[NSMutableData alloc] initWithData:currentData];
 				const char *bf = [currentPassword UTF8String];
@@ -182,7 +187,7 @@
 			}
 			else
 			{
-				NSLog(@"Password entered, but no data yet.");
+				JLDEBUG("Password entered, but no data yet.");
 			}
 		}
 	}

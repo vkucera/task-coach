@@ -12,6 +12,7 @@
 #import "ProtocolNegotiationState.h"
 #import "Configuration.h"
 #import "i18n.h"
+#import "LogUtils.h"
 
 // Initial state just waits for the connection to be established.
 
@@ -19,6 +20,11 @@
 
 - (void)activated
 {
+	LogCreateFile();
+	LogSetLevel(LOGLEVEL_INFO);
+
+	JLDEBUG("=== Initial state.");
+
 	myController.label.text = _("Connecting...");
 }
 
@@ -29,12 +35,14 @@
 
 - (void)networkDidConnect:(Network *)network controller:(SyncViewController *)controller
 {
+	JLDEBUG("Connected.");
+
 	controller.state = [ProtocolNegotiationState stateWithNetwork:network controller:controller];
 }
 
 - (void)networkDidClose:(Network *)network controller:(SyncViewController *)controller
 {
-	// n/a
+	JLERROR("Connection closed in initial state!");
 }
 
 - (void)networkDidEncounterError:(Network *)network error:(NSError *)error controller:(SyncViewController *)controller
@@ -50,6 +58,8 @@
 												  delegate:controller cancelButtonTitle:_("Abort") otherButtonTitles:nil];
 	[view show];
 	[view release];
+
+	JLERROR("Connection error: %s", [[error description] UTF8String]);
 }
 
 - (void)network:(Network *)network didGetData:(NSData *)data controller:(SyncViewController *)controller

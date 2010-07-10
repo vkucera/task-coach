@@ -11,6 +11,7 @@
 #import "CDCategory.h"
 #import "CDDomainObject+Addons.h"
 #import "SyncViewController.h"
+#import "LogUtils.h"
 
 @implementation TwoWayDeletedCategoriesState
 
@@ -19,13 +20,24 @@
 	return [[[TwoWayDeletedCategoriesState alloc] initWithNetwork:network controller:controller] autorelease];
 }
 
+- (void)activated
+{
+	JLDEBUG("=== Two way deleted categories");
+
+	[super activated];
+}
+
 - (void)packObject:(CDCategory *)category
 {
+	JLDEBUG("Packing category \"%s\"", [category.name UTF8String]);
+
 	[self sendFormat:"s" values:[NSArray arrayWithObject:category.taskCoachId]];
 }
 
 - (void)onFinished
 {
+	JLDEBUG("=== Finished");
+
 	myController.state = [TwoWayModifiedCategoriesState stateWithNetwork:myNetwork controller:myController];
 }
 

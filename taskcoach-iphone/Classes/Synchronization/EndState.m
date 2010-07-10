@@ -11,15 +11,18 @@
 #import "Network.h"
 #import "SyncViewController.h"
 #import "i18n.h"
+#import "LogUtils.h"
 
 @implementation EndState
 
 - (void)activated
 {
+	JLDEBUG("=== End state.");
+
 	NSError *error;
 	if (![getManagedObjectContext() save:&error])
 	{
-		NSLog(@"Could not save: %@", [error localizedDescription]);
+		JLERROR("Could not save: %s", [[error localizedDescription] UTF8String]);
 		assert(0);
 	}
 }
@@ -36,6 +39,8 @@
 
 - (void)networkDidClose:(Network *)network controller:(SyncViewController *)controller
 {
+	JLDEBUG("Connection closed.");
+
 	controller.state = nil;
 	[controller finished:isOK];
 }

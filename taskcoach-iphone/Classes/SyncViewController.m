@@ -9,6 +9,7 @@
 #import "SyncViewController.h"
 #import "Configuration.h"
 #import "InitialState.h"
+#import "LogUtils.h"
 #import "i18n.h"
 
 @implementation SyncViewController
@@ -66,6 +67,9 @@
 	NSLog(@"Starting synchronization");
 	myNetwork = [[Network alloc] initWithAddress:host port:port delegate:self];
 	self.state = [InitialState stateWithNetwork:myNetwork controller:self];
+
+	[[UIAccelerometer sharedAccelerometer] setUpdateInterval:1.0 / 60];
+	[[UIAccelerometer sharedAccelerometer] setDelegate:self];
 }
 
 - (void)viewDidUnload
@@ -73,6 +77,10 @@
 	self.label = nil;
 	self.activity = nil;
 	self.progress = nil;
+	
+	[UIAccelerometer sharedAccelerometer].delegate = nil;
+	[lastAccel release];
+	lastAccel = nil;
 }
 
 - (void)dealloc
@@ -125,7 +133,70 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-	[target performSelector:action];
+	if (alertState == 0)
+	{
+		[target performSelector:action];
+	}
+	else
+	{
+		alertState = 0;
+
+		if (buttonIndex == 1)
+		{
+			MFMailComposeViewController *ctrl = [[MFMailComposeViewController alloc] init];
+			[ctrl setMailComposeDelegate:self];
+			[ctrl setSubject:_("Task Coach sync log")];
+			[ctrl setMessageBody:[NSString stringWithContentsOfFile:[NSString stringWithUTF8String:LogFilename()] encoding:NSUTF8StringEncoding error:nil] isHTML:NO];
+			[ctrl setToRecipients:[NSArray arrayWithObject:@"fraca7@gmail.com"]];
+			[self presentModalViewController:ctrl animated:YES];
+			[ctrl release];
+		}
+		else
+		{
+			[[UIAccelerometer sharedAccelerometer] setUpdateInterval:1.0 / 60];
+			[[UIAccelerometer sharedAccelerometer] setDelegate:self];
+		}
+	}
+}
+
+#pragma mark UIAccelerometerDelegate
+
+- (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration
+{
+	if (lastAccel)
+	{
+		double deltaX = fabs(lastAccel.x - acceleration.x);
+		double deltaY = fabs(lastAccel.y - acceleration.y);
+		double deltaZ = fabs(lastAccel.z - acceleration.z);
+		double threshold = 2.0;
+		
+		if ((deltaX > threshold && deltaY > threshold) ||
+			(deltaX > threshold && deltaZ > threshold) ||
+			(deltaY > threshold && deltaZ > threshold))
+		{
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Debug") message:_("Do you want to send the sync log by e-mail ?") delegate:self cancelButtonTitle:_("No") otherButtonTitles:nil];
+			[alert addButtonWithTitle:_("Yes")];
+			[alert show];
+			[alert release];
+
+			alertState = 1;
+			[[UIAccelerometer sharedAccelerometer] setDelegate:nil];
+
+			acceleration = nil;
+		}
+	}
+
+	[lastAccel release];
+	lastAccel = [acceleration retain];
+}
+
+#pragma mark MFMailComposeViewControllerDelegate
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
+{
+	[self dismissModalViewControllerAnimated:YES];
+	[[UIAccelerometer sharedAccelerometer] setUpdateInterval:1.0 / 60];
+	[[UIAccelerometer sharedAccelerometer] setDelegate:self];
 }
 
 @end

@@ -14,6 +14,7 @@
 #import "CDFile.h"
 #import "Configuration.h"
 #import "CDDomainObject.h"
+#import "LogUtils.h"
 
 @implementation GUIDState
 
@@ -24,6 +25,8 @@
 
 - (void)activated
 {
+	JLDEBUG("=== GUID state.");
+
 	[self startWithFormat:"s" count:NOCOUNT];
 }
 
@@ -31,7 +34,7 @@
 {
 	NSString *guid = [value objectAtIndex:0];
 
-	NSLog(@"Got GUID: %@", guid);
+	JLDEBUG("Got GUID: %s", [guid UTF8String]);
 
 	NSFetchRequest *request = [[NSFetchRequest alloc] init];
 	[request setEntity:[NSEntityDescription entityForName:@"CDFile" inManagedObjectContext:getManagedObjectContext()]];
@@ -47,6 +50,8 @@
 			case 0:
 			{
 				// Create it.
+				JLDEBUG("New file; creating it");
+
 				theFile = (CDFile *)[NSEntityDescription insertNewObjectForEntityForName:@"CDFile" inManagedObjectContext:getManagedObjectContext()];
 				theFile.guid = guid;
 
@@ -60,17 +65,21 @@
 				
 				if (results)
 				{
+					JLDEBUG("File created.");
+
 					for (CDDomainObject *object in results)
 						object.file = theFile;
 				}
 				else
 				{
-					NSLog(@"Could not fetch objects: %@", [error localizedDescription]);
+					JLERROR("Could not fetch objects: %s", [[error localizedDescription] UTF8String]);
 				}
 				
 				break;
 			}
 			case 1:
+				JLDEBUG("File exists.");
+
 				theFile = [results objectAtIndex:0];
 				break;
 			default:
@@ -82,13 +91,13 @@
 	}
 	else
 	{
-		NSLog(@"Could not fetch files: %@", [error localizedDescription]);
+		JLERROR("Could not fetch files: %s", [[error localizedDescription] UTF8String]);
 		[self cancel];
 		return;
 	}
-	
+
 	[request release];
-	
+
 	[self sendFormat:"i" values:[NSArray arrayWithObject:[NSNumber numberWithInt:1]]];
 	myController.state = [TaskFileNameState stateWithNetwork:myNetwork controller:myController];
 }

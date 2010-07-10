@@ -12,6 +12,7 @@
 #import "Network.h"
 #import "Configuration.h"
 #import "SyncViewController.h"
+#import "LogUtils.h"
 
 #import "CDFile.h"
 
@@ -24,6 +25,8 @@
 
 - (void)activated
 {
+	JLDEBUG("=== Task filename state.");
+
 	[self startWithFormat:"s" count:NOCOUNT];
 }
 
@@ -31,7 +34,7 @@
 {
 	NSString *filename = [value objectAtIndex:0];
 	
-	NSLog(@"Filename: %@", filename);
+	JLDEBUG("Filename: %s", [filename UTF8String]);
 	
 	[Configuration configuration].cdCurrentFile.name = filename;
 	

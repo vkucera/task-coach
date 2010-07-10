@@ -12,6 +12,7 @@
 #import "DateUtils.h"
 #import "Network.h"
 #import "SyncViewController.h"
+#import "LogUtils.h"
 
 #import "CDDomainObject+Addons.h"
 #import "CDTask.h"
@@ -24,8 +25,17 @@
 	return [[[TwoWayModifiedTasksState alloc] initWithNetwork:network controller:controller] autorelease];
 }
 
+- (void)activated
+{
+	JLDEBUG("=== Two way modified tasks");
+
+	[super activated];
+}
+
 - (void)packObject:(CDTask *)task
 {
+	JLDEBUG("Packing task \"%s\"", [task.name UTF8String]);
+
 	[self sendFormat:"sss" values:[NSArray arrayWithObjects:task.name, task.taskCoachId, task.longDescription, nil]];
 	[self sendDate:task.startDate];
 	[self sendDate:task.dueDate];
@@ -43,11 +53,17 @@
 	[self sendFormat:"i" values:[NSArray arrayWithObject:[NSNumber numberWithInt:[task.categories count]]]];
 
 	for (CDCategory *category in task.categories)
+	{
+		JLDEBUG("Sending task category \"%s\"", [category.name UTF8String]);
+
 		[self sendFormat:"s" values:[NSArray arrayWithObject:category.taskCoachId]];
+	}
 }
 
 - (void)onFinished
 {
+	JLDEBUG("=== Finished");
+
 	myController.state = [TwoWayNewEffortsState stateWithNetwork:myNetwork controller:myController];
 }
 

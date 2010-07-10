@@ -14,6 +14,7 @@
 #import "CDEffort.h"
 #import "CDTask.h"
 #import "CDDomainObject+Addons.h"
+#import "LogUtils.h"
 
 @implementation FullFromDesktopEffortState
 
@@ -42,6 +43,8 @@
 
 - (void)activated
 {
+	JLDEBUG("=== Full from desktop efforts");
+
 	[self startWithFormat:"ssszz" count:myController.effortCount];
 }
 
@@ -69,9 +72,11 @@
 		}
 		else
 		{
-			NSLog(@"Could not fetch effort task: %@", [error localizedDescription]);
+			JLERROR("Could not fetch effort task: %s", [[error localizedDescription] UTF8String]);
 		}
 	}
+
+	JLDEBUG("Got effort: \"%s\"", [effort.name UTF8String]);
 
 	[myController increment];
 	[self sendFormat:"i" values:[NSArray arrayWithObject:[NSNumber numberWithInt:1]]];
@@ -79,6 +84,8 @@
 
 - (void)onFinished
 {
+	JLDEBUG("=== Finished");
+
 	myController.state = [EndState stateWithNetwork:myNetwork controller:myController];
 }
 

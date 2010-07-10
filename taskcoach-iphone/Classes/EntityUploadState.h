@@ -16,6 +16,8 @@
 
 - (void)packObject:(NSManagedObject *)object;
 
+- (void)activated;
+
 - (NSString *)entityName;
 - (NSInteger)status;
 

@@ -11,6 +11,7 @@
 #import "Network.h"
 #import "SyncViewController.h"
 #import "DateUtils.h"
+#import "LogUtils.h"
 
 #import "CDDomainObject+Addons.h"
 #import "CDTask.h"
@@ -23,9 +24,16 @@
 	return [[[TwoWayNewTasksState alloc] initWithNetwork:network controller:controller] autorelease];
 }
 
+- (void)activated
+{
+	JLDEBUG("=== Two way new tasks");
+
+	[super activated];
+}
+
 - (void)packObject:(CDTask *)task
 {
-	NSLog(@"Sending task %@", task.name);
+	JLDEBUG("Packing task \"%s\"", [task.name UTF8String]);
 	
 	[self sendFormat:"ss" values:[NSArray arrayWithObjects:task.name, task.longDescription, nil]];
 	[self sendDate:task.startDate];
@@ -49,11 +57,17 @@
 	[self sendFormat:"i" values:[NSArray arrayWithObject:[NSNumber numberWithInt:[task.categories count]]]];
 
 	for (CDCategory *category in task.categories)
+	{
+		JLDEBUG("Sending task category \"%s\"", [category.name UTF8String]);
+
 		[self sendFormat:"s" values:[NSArray arrayWithObject:category.taskCoachId]];
+	}
 }
 
 - (void)onFinished
 {
+	JLDEBUG("=== Finished");
+
 	myController.state = [TwoWayDeletedTasksState stateWithNetwork:myNetwork controller:myController];
 }
 
