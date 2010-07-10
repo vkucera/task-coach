@@ -100,6 +100,8 @@
 		A673ABF60F2203D000E548BB /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A673ABF50F2203D000E548BB /* NavigationController.m */; };
 		A6782E7A11CCB85A005ADB23 /* TaskDetailsEffortsBase.m in Sources */ = {isa = PBXBuildFile; fileRef = A6782E7911CCB85A005ADB23 /* TaskDetailsEffortsBase.m */; };
 		A6782E7C11CCBD35005ADB23 /* TaskDetailsEffortsBase.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6782E7B11CCBD35005ADB23 /* TaskDetailsEffortsBase.xib */; };
+		A6796F1F11E8467A00C38043 /* LogUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A6796F1E11E8467A00C38043 /* LogUtils.m */; };
+		A679701D11E85A0700C38043 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A679701C11E85A0700C38043 /* MessageUI.framework */; };
 		A67A0C210F6BA57100F48A82 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = A67A0C200F6BA57100F48A82 /* Entitlements.plist */; };
 		A67E47E60F5A938F00000A24 /* BonjourBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = A67E47DF0F5A938F00000A24 /* BonjourBrowser.m */; };
 		A67E47E70F5A938F00000A24 /* BrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A67E47E10F5A938F00000A24 /* BrowserViewController.m */; };
@@ -357,6 +359,9 @@
 		A6782E7811CCB85A005ADB23 /* TaskDetailsEffortsBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDetailsEffortsBase.h; sourceTree = "<group>"; };
 		A6782E7911CCB85A005ADB23 /* TaskDetailsEffortsBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskDetailsEffortsBase.m; sourceTree = "<group>"; };
 		A6782E7B11CCBD35005ADB23 /* TaskDetailsEffortsBase.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskDetailsEffortsBase.xib; sourceTree = "<group>"; };
+		A6796F1B11E8452B00C38043 /* LogUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogUtils.h; sourceTree = "<group>"; };
+		A6796F1E11E8467A00C38043 /* LogUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogUtils.m; sourceTree = "<group>"; };
+		A679701C11E85A0700C38043 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		A67A0C200F6BA57100F48A82 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		A67E47DE0F5A938F00000A24 /* BonjourBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BonjourBrowser.h; path = Bonjour/BonjourBrowser.h; sourceTree = "<group>"; };
 		A67E47DF0F5A938F00000A24 /* BonjourBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BonjourBrowser.m; path = Bonjour/BonjourBrowser.m; sourceTree = "<group>"; };
@@ -573,6 +578,7 @@
 				A65D1B7F119D383200F0F5C3 /* MapKit.framework in Frameworks */,
 				A65D1B81119D383200F0F5C3 /* QuartzCore.framework in Frameworks */,
 				A6CFAE9511B25A5300044876 /* CoreData.framework in Frameworks */,
+				A679701D11E85A0700C38043 /* MessageUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -673,6 +679,7 @@
 				A65D1B7E119D383200F0F5C3 /* MapKit.framework */,
 				A65D1B80119D383200F0F5C3 /* QuartzCore.framework */,
 				A6CFAE9411B25A5300044876 /* CoreData.framework */,
+				A679701C11E85A0700C38043 /* MessageUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -743,6 +750,8 @@
 				A6DDECFA0F46C5040047AEF5 /* KeychainWrapper.h */,
 				A6DDECFB0F46C5040047AEF5 /* KeychainWrapper.m */,
 				A6D5F411104166480098B4D5 /* i18n.h */,
+				A6796F1B11E8452B00C38043 /* LogUtils.h */,
+				A6796F1E11E8467A00C38043 /* LogUtils.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -1308,6 +1317,7 @@
 				A6C00C1911CDF6660028385F /* SplitView.m in Sources */,
 				A69E217911DF90D5003CC658 /* PaperHeaderView.m in Sources */,
 				A611CC6911E0A1C8006B4571 /* TaskDetailsViewiPad.m in Sources */,
+				A6796F1F11E8467A00C38043 /* LogUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

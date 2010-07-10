@@ -56,7 +56,7 @@
 		if (animated)
 		{
 			[UIView beginAnimations:@"NavigationControlleriPad" context:nil];
-			[UIView setAnimationDuration:1.0];
+			[UIView setAnimationDuration:0.5];
 			[UIView setAnimationTransition:UIViewAnimationTransitionCurlUp forView:self.view cache:YES];
 		}
 
@@ -75,7 +75,7 @@
 	if (animated)
 	{
 		[UIView beginAnimations:@"NavigationControlleriPad" context:nil];
-		[UIView setAnimationDuration:1.0];
+		[UIView setAnimationDuration:0.5];
 		[UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:self.view cache:YES];
 
 		UIViewController *ret = [super popViewControllerAnimated:NO];
@@ -96,7 +96,7 @@
 	if (animated && ([self.viewControllers count] != 1))
 	{
 		[UIView beginAnimations:@"NavigationControlleriPad" context:nil];
-		[UIView setAnimationDuration:1.0];
+		[UIView setAnimationDuration:0.5];
 		[UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:self.view cache:YES];
 	
 		NSArray *ret = [super popToRootViewControllerAnimated:NO];
