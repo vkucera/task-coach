@@ -26,5 +26,5 @@ elif '__WXMAC__' in wx.PlatformInfo:
 else:
     from notifier_libnotify import *
 
-
+from notifier_universal import *
 from notifier import *
