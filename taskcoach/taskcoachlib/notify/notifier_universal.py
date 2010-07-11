@@ -101,8 +101,18 @@ class AnimatedMove(wx.Timer):
 #==============================================================================
 # Notifications
 
+if '__WXMSW__' in wx.PlatformInfo:
+    class _NotifyBase(wx.MiniFrame):
+        pass
+elif '__WXGTK__' in wx.PlatformInfo:
+    class _NotifyBase(wx.PopupWindow):
+        def __init__(self, parent, id_, title, style=0):
+            super(_NotifyBase, self).__init__(parent, id_) # No style
+else:
+    class _NotifyBase(wx.Frame):
+        """FIXME: steals focus..."""
 
-class NotificationFrameBase(wx.MiniFrame):
+class NotificationFrameBase(_NotifyBase):
     """
     Base class for a notification frame.
 
@@ -119,8 +129,9 @@ class NotificationFrameBase(wx.MiniFrame):
         else:
             style |= wx.FRAME_FLOAT_ON_PARENT
 
-        super(NotificationFrameBase, self).__init__(parent, wx.ID_ANY, u'',
-                                                    style=style)
+        super(NotificationFrameBase, self).__init__(parent, wx.ID_ANY, u'', style=style)
+
+        self.SetExtraStyle(wx.WS_EX_TRANSIENT)
 
         self.Populate(title, icon=icon)
 
@@ -185,13 +196,6 @@ class NotificationFrameBase(wx.MiniFrame):
         @param sizer: A vertical sizer to which you should add
             your UI elements.
         @param panel: Your parent panel.
-        """
-
-    def Layout(self):
-        """
-        Override this if you need to do something knowing what the
-        final size of the frame will be. When this is called, the
-        frame has its final size set.
         """
 
     def Style(self):
