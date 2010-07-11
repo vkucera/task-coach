@@ -102,7 +102,7 @@ class AnimatedMove(wx.Timer):
 # Notifications
 
 
-class NotificationFrameBase(wx.Frame):
+class NotificationFrameBase(wx.MiniFrame):
     """
     Base class for a notification frame.
 
