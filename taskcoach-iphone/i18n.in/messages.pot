@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-04 15:56+0200\n"
+"POT-Creation-Date: 2010-07-11 10:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: Classes/TaskDetailsControlleriPad.m:157
-#: Classes/TaskDetailsEffortsBase.m:373
+#: Classes/TaskDetailsEffortsBase.m:357
 #, objc-format
 msgid "Started %@"
 msgstr ""
@@ -63,72 +63,7 @@ msgstr ""
 msgid "No category."
 msgstr ""
 
-#: Classes/TaskDetailsControlleriPad.m:199
-#: Classes/CategoryTaskViewController.m:126 Classes/TaskViewController.m:226
-#: Classes/TaskViewController.m:274 Classes/TaskViewController.m:578
-#: Classes/TaskViewController.m:815 Classes/ParentTaskViewController.m:86
-#: Classes/CategoryViewController.m:266 Classes/CategoryViewController.m:406
-#: Classes/CategoryViewController.m:545 Classes/TaskCoachAppDelegate.m:183
-#: Classes/TaskCoachAppDelegate.m:210 Classes/TaskCoachAppDelegate.m:218
-#: Classes/TaskDetailsGeneral.m:101 Classes/TaskDetailsGeneral.m:144
-#: Classes/TaskDetailsGeneral.m:178 Classes/Synchronization/BaseState.m:54
-#: Classes/Synchronization/BaseState.m:69
-#: Classes/Synchronization/ProtocolNegotiationState.m:63
-#: Classes/TaskCategoryPickerController.m:85
-#: Classes/TaskDetailsEffortsBase.m:72 Classes/TaskDetailsEffortsBase.m:169
-#: Classes/TaskDetailsEffortsBase.m:293 Classes/TaskDetailsEffortsBase.m:306
-#: Classes/TaskDetailsDates.m:145 Classes/TaskDetailsDates.m:219
-#: Classes/TaskDetailsDates.m:251 Classes/TaskDetailsDates.m:275
-#: Classes/TaskDetailsDates.m:304 Classes/TaskDetailsDates.m:330
-#: Classes/TaskDetailsDates.m:343 Classes/TaskDetailsDates.m:380
-#: Classes/TaskDetailsDates.m:418 Classes/TaskDetailsDates.m:449
-#: Classes/TaskDetailsDates.m:471 Classes/TaskDetailsDates.m:487
-#: Classes/FileChooser.m:38 Classes/FileChooser.m:126
-#: Classes/TaskDetailsRecurrenceControlleriPad.m:118
-msgid "Error"
-msgstr ""
-
-#: Classes/TaskDetailsControlleriPad.m:199
-#: Classes/CategoryTaskViewController.m:126
-#: Classes/ParentTaskViewController.m:86 Classes/TaskDetailsGeneral.m:101
-#: Classes/TaskDetailsGeneral.m:144 Classes/TaskDetailsGeneral.m:178
-#: Classes/TaskCategoryPickerController.m:85 Classes/TaskDetailsDates.m:145
-#: Classes/TaskDetailsDates.m:219 Classes/TaskDetailsDates.m:251
-#: Classes/TaskDetailsDates.m:275 Classes/TaskDetailsDates.m:304
-#: Classes/TaskDetailsDates.m:330 Classes/TaskDetailsDates.m:343
-#: Classes/TaskDetailsDates.m:380 Classes/TaskDetailsDates.m:418
-#: Classes/TaskDetailsDates.m:449 Classes/TaskDetailsDates.m:471
-#: Classes/TaskDetailsDates.m:487
-msgid "Could not save task."
-msgstr ""
-
-#: Classes/TaskDetailsControlleriPad.m:199
-#: Classes/CategoryTaskViewController.m:126 Classes/SimpleDatePicker.m:37
-#: Classes/StringChoiceAlert.m:16 Classes/TaskViewController.m:226
-#: Classes/TaskViewController.m:274 Classes/TaskViewController.m:578
-#: Classes/TaskViewController.m:815 Classes/ParentTaskViewController.m:86
-#: Classes/CategoryViewController.m:266 Classes/CategoryViewController.m:406
-#: Classes/CategoryViewController.m:545 Classes/TaskCoachAppDelegate.m:186
-#: Classes/TaskCoachAppDelegate.m:210 Classes/TaskCoachAppDelegate.m:218
-#: Classes/NewCategoryiPad.m:41 Classes/TaskDetailsGeneral.m:101
-#: Classes/TaskDetailsGeneral.m:144 Classes/TaskDetailsGeneral.m:178
-#: Classes/Synchronization/AuthentificationState.m:27
-#: Classes/Synchronization/ProtocolNegotiationState.m:66
-#: Classes/TaskCategoryPickerController.m:85
-#: Classes/TaskDetailsEffortsBase.m:72 Classes/TaskDetailsEffortsBase.m:169
-#: Classes/TaskDetailsEffortsBase.m:293 Classes/TaskDetailsEffortsBase.m:306
-#: Classes/ReminderController.m:88 Classes/TaskDetailsDates.m:145
-#: Classes/TaskDetailsDates.m:219 Classes/TaskDetailsDates.m:251
-#: Classes/TaskDetailsDates.m:275 Classes/TaskDetailsDates.m:304
-#: Classes/TaskDetailsDates.m:330 Classes/TaskDetailsDates.m:343
-#: Classes/TaskDetailsDates.m:380 Classes/TaskDetailsDates.m:418
-#: Classes/TaskDetailsDates.m:449 Classes/TaskDetailsDates.m:471
-#: Classes/TaskDetailsDates.m:487 Classes/FileChooser.m:38
-#: Classes/FileChooser.m:126 Classes/TaskDetailsRecurrenceControlleriPad.m:118
-msgid "OK"
-msgstr ""
-
-#: Classes/TaskDetailsControlleriPad.m:358 Classes/TaskDetailsGeneral.m:135
+#: Classes/TaskDetailsControlleriPad.m:352 Classes/TaskDetailsGeneral.m:128
 msgid "New task"
 msgstr ""
 
@@ -172,24 +107,54 @@ msgstr ""
 msgid "Searching for services"
 msgstr ""
 
-#: Classes/CategoryTaskViewController.m:48
-#: Classes/CategoryTaskViewController.m:72
-#: Classes/CategoryViewController.m:617
+#: Classes/CategoryTaskViewController.m:49
+#: Classes/CategoryTaskViewController.m:73
+#: Classes/CategoryViewController.m:596
 msgid "All"
 msgstr ""
 
-#: Classes/CategoryTaskViewController.m:140 Classes/TaskCoachAppDelegate.m:38
+#: Classes/CategoryTaskViewController.m:133 Classes/TaskCoachAppDelegate.m:38
 #: Classes/TaskDetailsGeneral.m:55
 msgid "Categories"
 msgstr ""
 
-#: Classes/SyncViewController.m:64 Classes/Synchronization/InitialState.m:22
+#: Classes/SyncViewController.m:65 Classes/Synchronization/InitialState.m:28
 msgid "Connecting..."
+msgstr ""
+
+#: Classes/SyncViewController.m:148
+msgid "Task Coach sync log"
+msgstr ""
+
+#: Classes/SyncViewController.m:177
+msgid "Debug"
+msgstr ""
+
+#: Classes/SyncViewController.m:177
+msgid "Do you want to send the sync log by e-mail ?"
+msgstr ""
+
+#: Classes/SyncViewController.m:177 Classes/TaskViewController.m:601
+#: Classes/TaskDetailsEffortsBase.m:157
+msgid "No"
+msgstr ""
+
+#: Classes/SyncViewController.m:178 Classes/TaskViewController.m:602
+#: Classes/TaskDetailsEffortsBase.m:157
+msgid "Yes"
+msgstr ""
+
+#: Classes/SimpleDatePicker.m:37 Classes/StringChoiceAlert.m:16
+#: Classes/NewCategoryiPad.m:41
+#: Classes/Synchronization/AuthentificationState.m:30
+#: Classes/Synchronization/ProtocolNegotiationState.m:71
+#: Classes/ReminderController.m:88
+msgid "OK"
 msgstr ""
 
 #: Classes/StringChoiceAlert.m:16 Classes/TaskViewController.m:362
 #: Classes/TaskCoachAppDelegate.m:36
-#: Classes/Synchronization/AuthentificationState.m:26
+#: Classes/Synchronization/AuthentificationState.m:29
 #: Classes/TaskDetailsEffortsBase.m:157
 msgid "Cancel"
 msgstr ""
@@ -215,10 +180,6 @@ msgstr ""
 msgid "Search tasks..."
 msgstr ""
 
-#: Classes/TaskViewController.m:226 Classes/TaskViewController.m:274
-msgid "Could not fetch tasks"
-msgstr ""
-
 #: Classes/TaskViewController.m:362 Classes/TaskViewController.m:364
 msgid "Grouping"
 msgstr ""
@@ -239,49 +200,36 @@ msgstr ""
 msgid "Due date"
 msgstr ""
 
-#: Classes/TaskViewController.m:578 Classes/TaskViewController.m:815
-#: Classes/TaskDetailsRecurrenceControlleriPad.m:118
-msgid "Could not save task"
-msgstr ""
-
-#: Classes/TaskViewController.m:596
+#: Classes/TaskViewController.m:599
 msgid "Confirmation"
 msgstr ""
 
-#: Classes/TaskViewController.m:597
+#: Classes/TaskViewController.m:600
 #, objc-format
 msgid "Do you really want to mark \"%@\" complete ?"
 msgstr ""
 
-#: Classes/TaskViewController.m:598 Classes/TaskDetailsEffortsBase.m:157
-msgid "No"
-msgstr ""
-
-#: Classes/TaskViewController.m:599 Classes/TaskDetailsEffortsBase.m:157
-msgid "Yes"
-msgstr ""
-
-#: Classes/TaskViewController.m:644
+#: Classes/TaskViewController.m:647
 msgid "Overdue"
 msgstr ""
 
-#: Classes/TaskViewController.m:646
+#: Classes/TaskViewController.m:649
 msgid "Due soon"
 msgstr ""
 
-#: Classes/TaskViewController.m:648
+#: Classes/TaskViewController.m:651
 msgid "Started"
 msgstr ""
 
-#: Classes/TaskViewController.m:650
+#: Classes/TaskViewController.m:653
 msgid "Not started"
 msgstr ""
 
-#: Classes/TaskViewController.m:652 Classes/ReminderController.m:89
+#: Classes/TaskViewController.m:655 Classes/ReminderController.m:89
 msgid "Completed"
 msgstr ""
 
-#: Classes/TaskViewController.m:716
+#: Classes/TaskViewController.m:719
 msgid "Add task..."
 msgstr ""
 
@@ -294,28 +242,16 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-#: Classes/CategoryViewController.m:230 Classes/CategoryViewController.m:436
-#: Classes/CategoryViewController.m:472 Classes/CategoryViewController.m:493
+#: Classes/CategoryViewController.m:230 Classes/CategoryViewController.m:422
+#: Classes/CategoryViewController.m:458 Classes/CategoryViewController.m:479
 msgid "Enter category name"
 msgstr ""
 
-#: Classes/CategoryViewController.m:266
-msgid "Could not create new category"
-msgstr ""
-
-#: Classes/CategoryViewController.m:406
-msgid "Could not delete category."
-msgstr ""
-
-#: Classes/CategoryViewController.m:545
-msgid "Could not save category."
-msgstr ""
-
-#: Classes/CategoryViewController.m:587
+#: Classes/CategoryViewController.m:566
 msgid "Add subcategory"
 msgstr ""
 
-#: Classes/CategoryViewController.m:652 Classes/CategoryViewController.m:687
+#: Classes/CategoryViewController.m:631 Classes/CategoryViewController.m:666
 msgid "Looking for Task Coach"
 msgstr ""
 
@@ -331,19 +267,6 @@ msgstr ""
 msgid "Activity log"
 msgstr ""
 
-#: Classes/TaskCoachAppDelegate.m:184
-#, objc-format
-msgid "Error migrating data: %@"
-msgstr ""
-
-#: Classes/TaskCoachAppDelegate.m:210
-msgid "Could not save tasks"
-msgstr ""
-
-#: Classes/TaskCoachAppDelegate.m:218
-msgid "Could not load tasks"
-msgstr ""
-
 #: Classes/NewCategoryiPad.m:39
 msgid "Category name"
 msgstr ""
@@ -357,51 +280,57 @@ msgstr ""
 msgid "Priority: %@"
 msgstr ""
 
-#: Classes/Synchronization/AuthentificationState.m:23
+#: Classes/Synchronization/AuthentificationState.m:26
 msgid "Please type your password."
 msgstr ""
 
-#: Classes/Synchronization/AuthentificationState.m:39
+#: Classes/Synchronization/AuthentificationState.m:44
 msgid "Authentication"
 msgstr ""
 
-#: Classes/Synchronization/InitialState.m:48
+#: Classes/Synchronization/InitialState.m:56
 msgid "Connection error"
 msgstr ""
 
-#: Classes/Synchronization/InitialState.m:49
+#: Classes/Synchronization/InitialState.m:57
 msgid ""
 "An error occurred while connecting to the remote host. Please check your "
 "settings. Also check that Task Coach is running on the remote host. Last, "
 "check your firewall settings."
 msgstr ""
 
-#: Classes/Synchronization/InitialState.m:50
-#: Classes/Synchronization/BaseState.m:56
-#: Classes/Synchronization/BaseState.m:71
+#: Classes/Synchronization/InitialState.m:58
+#: Classes/Synchronization/BaseState.m:57
+#: Classes/Synchronization/BaseState.m:72
 msgid "Abort"
 msgstr ""
 
 #: Classes/Synchronization/BaseState.m:55
+#: Classes/Synchronization/BaseState.m:70
+#: Classes/Synchronization/ProtocolNegotiationState.m:68
+msgid "Error"
+msgstr ""
+
+#: Classes/Synchronization/BaseState.m:56
 msgid "The connection was unexpectedly closed."
 msgstr ""
 
-#: Classes/Synchronization/BaseState.m:70
+#: Classes/Synchronization/BaseState.m:71
 #, objc-format
 msgid "A network error occurred: %@"
 msgstr ""
 
-#: Classes/Synchronization/ProtocolNegotiationState.m:25
+#: Classes/Synchronization/ProtocolNegotiationState.m:28
 msgid "Protocol negotiation..."
 msgstr ""
 
-#: Classes/Synchronization/ProtocolNegotiationState.m:64
+#: Classes/Synchronization/ProtocolNegotiationState.m:69
 msgid ""
 "The version of the desktop Task Coach is too old. Please upgrade it and "
 "retry."
 msgstr ""
 
-#: Classes/Synchronization/FullFromDesktopState.m:26
+#: Classes/Synchronization/FullFromDesktopState.m:29
 msgid "Synchronizing..."
 msgstr ""
 
@@ -415,10 +344,6 @@ msgstr ""
 
 #: Classes/TaskDetailsController.m:44
 msgid "Efforts"
-msgstr ""
-
-#: Classes/TaskDetailsEffortsBase.m:72
-msgid "Could not fetch efforts"
 msgstr ""
 
 #: Classes/TaskDetailsEffortsBase.m:135
@@ -438,25 +363,17 @@ msgstr ""
 msgid "There are %d task(s) currently tracked. Stop tracking them ?"
 msgstr ""
 
-#: Classes/TaskDetailsEffortsBase.m:169 Classes/TaskDetailsEffortsBase.m:306
-msgid "Error saving effort"
-msgstr ""
-
-#: Classes/TaskDetailsEffortsBase.m:293
-msgid "Could not save efforts"
-msgstr ""
-
-#: Classes/TaskDetailsEffortsBase.m:349
+#: Classes/TaskDetailsEffortsBase.m:333
 #, objc-format
 msgid "Total spent: %@"
 msgstr ""
 
-#: Classes/TaskDetailsEffortsBase.m:361
+#: Classes/TaskDetailsEffortsBase.m:345
 #, objc-format
 msgid "From %@ to %@ (%@)"
 msgstr ""
 
-#: Classes/TaskDetailsEffortsBase.m:368
+#: Classes/TaskDetailsEffortsBase.m:352
 #, objc-format
 msgid "%@ on %@"
 msgstr ""
@@ -505,14 +422,6 @@ msgstr ""
 #: Classes/TaskDetailsDates.m:126
 #: Classes/TaskDetailsRecurrenceControlleriPad.m:49
 msgid "Year(s)"
-msgstr ""
-
-#: Classes/FileChooser.m:38
-msgid "Could not load files"
-msgstr ""
-
-#: Classes/FileChooser.m:126
-msgid "Could not save data"
 msgstr ""
 
 msgid "Display"
