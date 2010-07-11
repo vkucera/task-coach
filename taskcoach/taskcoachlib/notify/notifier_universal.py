@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
+from notifier import AbstractNotifier
 
 
 
@@ -351,6 +352,20 @@ class NotificationCenter(object):
         if NotificationCenter._instance is None:
             NotificationCenter._instance = _NotificationCenter()
         return NotificationCenter._instance
+
+
+class UniversalNotifier(AbstractNotifier):
+    def getName(self):
+        return 'Task Coach'
+
+    def isAvailable(self):
+        return True
+
+    def notify(self, title, summary, bitmap):
+        NotificationCenter().Notify(title, summary, icon=bitmap)
+
+
+AbstractNotifier.register(UniversalNotifier())
 
 
 if __name__ == '__main__':

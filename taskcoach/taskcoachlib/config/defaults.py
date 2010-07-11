@@ -315,7 +315,7 @@ defaults = { \
     'effort': 'True',
     'syncml': 'False',
     'iphone': 'False',
-    'notifier': 'Native' },
+    'notifier': 'Task Coach' },
 'syncml': { \
     'url': '',
     'username': '',

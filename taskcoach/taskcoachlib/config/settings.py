@@ -113,6 +113,10 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
                 raise
         result = self._fixValuesFromOldIniFiles(section, option, result)
         result = self._ensureMinimum(section, option, result)
+
+        if section == 'feature' and option == 'notifier' and result == 'Native':
+            result = 'Task Coach'
+
         return result
     
     def _ensureMinimum(self, section, option, result):

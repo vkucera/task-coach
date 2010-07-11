@@ -70,7 +70,7 @@ class ReminderController(object):
         
     def showReminderMessage(self, task):
         notifier = self.settings.get('feature', 'notifier')
-        if notifier != 'Native' and notify.AbstractNotifier.get(notifier) is not None:
+        if notifier != 'Task Coach' and notify.AbstractNotifier.get(notifier) is not None:
             notify.AbstractNotifier.get(notifier).notify(_('%s Reminder') % meta.name, task.subject(),
                                                          wx.ArtProvider.GetBitmap('taskcoach', size=wx.Size(32, 32)),
                                                          windowId=self.__mainWindow.GetHandle())

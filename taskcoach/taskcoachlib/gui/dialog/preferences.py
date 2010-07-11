@@ -283,7 +283,7 @@ class FeaturesPage(SettingsPage):
         self.addBooleanSetting('feature', 'notes', _('Allow for taking notes'),
             helpText='restart')
 
-        names = [('Native', _('Native'))]
+        names = [] # There's at least one, the universal one
         for name in notify.AbstractNotifier.names():
             names.append((name, name))
 
