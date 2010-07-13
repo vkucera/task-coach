@@ -108,6 +108,11 @@ elif '__WXGTK__' in wx.PlatformInfo:
     class _NotifyBase(wx.PopupWindow):
         def __init__(self, parent, id_, title, style=0):
             super(_NotifyBase, self).__init__(parent, id_) # No style
+
+        def Close(self):
+            # Strange...
+            super(_NotifyBase, self).Close()
+            self.Destroy()
 else:
     class _NotifyBase(wx.Frame):
         """FIXME: steals focus..."""
