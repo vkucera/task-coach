@@ -145,6 +145,7 @@
 	if ([task currentEffort])
 	{
 		[task stopTracking];
+		[task save];
 		[self updateButton:button];
 	}
 	else

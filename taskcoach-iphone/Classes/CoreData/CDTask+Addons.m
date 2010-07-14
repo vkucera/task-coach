@@ -11,6 +11,7 @@
 #import "Configuration.h"
 #import "TaskCoachAppDelegate.h"
 #import "DateUtils.h"
+#import "CDDomainObject+Addons.h"
 
 @implementation CDTask (Addons)
 
@@ -148,7 +149,10 @@
 
 - (void)stopTracking
 {
-	[[self currentEffort] setEnded:[NSDate date]];
+	CDEffort *effort = [self currentEffort];
+	[effort setEnded:[NSDate date]];
+	[effort markDirty];
+	[effort save];
 }
 
 - (NSString *)startDateOnly
