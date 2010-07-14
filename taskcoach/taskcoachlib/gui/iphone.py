@@ -29,7 +29,8 @@ class IPhoneSyncFrame(DeferredCallMixin, NotificationFrameBase):
         super(IPhoneSyncFrame, self).__init__(*args, **kwargs)
 
     def AddInnerContent(self, sizer, panel):
-        sizer.Add(wx.StaticText(panel, wx.ID_ANY, _('Synchronizing...')),
+        self.text = wx.StaticText(panel, wx.ID_ANY, _('Synchronizing...'))
+        sizer.Add(self.text,
                   0, wx.ALL, 3)
 
         self.gauge = wx.Gauge(panel, wx.ID_ANY)
@@ -50,7 +51,7 @@ class IPhoneSyncFrame(DeferredCallMixin, NotificationFrameBase):
 
     @synchronized
     def SetDeviceName(self, name):
-        self.SetTitle(_('Synchronizing with %s...') % name)
+        self.text.SetLabel(_('Synchronizing with %s...') % name)
 
     @synchronized
     def SetProgress(self, value, total):
