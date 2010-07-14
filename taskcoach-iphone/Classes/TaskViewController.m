@@ -209,6 +209,8 @@ static void deleteTask(CDTask *task)
 						  searchCell.searchBar.text, searchCell.searchBar.text]];
 	}
 
+	[preds addObject:[NSPredicate predicateWithFormat:@"file = %@", [Configuration configuration].cdCurrentFile]];
+
 	[request setPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:preds]];
 	[preds release];
 

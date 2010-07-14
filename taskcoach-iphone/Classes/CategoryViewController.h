@@ -49,5 +49,6 @@
 - (IBAction)onSynchronize:(UIBarButtonItem *)button;
 
 - (void)setWantSync;
+- (void)selectAll;
 
 @end

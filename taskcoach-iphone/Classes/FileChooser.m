@@ -54,11 +54,22 @@
 
 - (void)dealloc
 {
-	// Hack: if we do that before the animation is finished, the first row is not actually updated...
-	[catCtrl.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+	[catCtrl loadCategories];
+	[catCtrl.tableView reloadData];
+
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+	{
+		[catCtrl selectAll];
+	}
+
 	[resultsCtrl release];
 
 	[super dealloc];
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+	return YES;
 }
 
 #pragma mark Table view methods
@@ -99,9 +110,11 @@
 	[[Configuration configuration] save];
 
 	[self.tableView reloadData];
-	
-	[catCtrl loadCategories];
-	[catCtrl.navigationController dismissModalViewControllerAnimated:YES];
+
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+		[catCtrl.splitCtrl dismissModalViewControllerAnimated:YES];
+	else
+		[catCtrl.navigationController dismissModalViewControllerAnimated:YES];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -109,51 +122,61 @@
 	if (editingStyle == UITableViewCellEditingStyleDelete)
 	{
 		CDFile *file = [resultsCtrl objectAtIndexPath:indexPath];
+		NSMutableArray *results = [[NSMutableArray alloc] init];
+
+		for (NSString *name in [NSArray arrayWithObjects:@"CDTask", @"CDCategory", @"CDEffort", nil])
+		{
+			NSFetchRequest *request = [[NSFetchRequest alloc] init];
+			[request setEntity:[NSEntityDescription entityForName:name inManagedObjectContext:getManagedObjectContext()]];
+			[request setPredicate:[NSPredicate predicateWithFormat:@"file == %@", file]];
+			NSError *error;
+			NSArray *objs = [getManagedObjectContext() executeFetchRequest:request error:&error];
+
+			if (objs)
+			{
+				[results addObjectsFromArray:objs];
+			}
+			else
+			{
+				NSLog(@"Could not fetch objects: %@", [error localizedDescription]);
+				assert(0);
+			}
+
+			[request release];
+		}
+
+		for (CDDomainObject *object in results)
+			[getManagedObjectContext() deleteObject:object];
+		[getManagedObjectContext() deleteObject:file];
+		
+		NSError *error;
+		if (![getManagedObjectContext() save:&error])
+		{
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not save data" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+			[alert show];
+			[alert release];
+		}
 
 		NSFetchRequest *request = [[NSFetchRequest alloc] init];
-		[request setEntity:[NSEntityDescription entityForName:@"DomainObject" inManagedObjectContext:getManagedObjectContext()]];
-		[request setPredicate:[NSPredicate predicateWithFormat:@"file == %@", file]];
-		NSError *error;
-		NSArray *results = [getManagedObjectContext() executeFetchRequest:request error:&error];
-		
-		if (results)
-		{
-			for (CDDomainObject *object in results)
-				[getManagedObjectContext() deleteObject:object];
-			[getManagedObjectContext() deleteObject:file];
-
-			NSError *error;
-			if (![getManagedObjectContext() save:&error])
-			{
-				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not save data" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-				[alert show];
-				[alert release];
-			}
-		}
-		else
-		{
-			NSLog(@"Could not fetch objects: %@", [error localizedDescription]);
-			assert(0);
-		}
-
 		[request setEntity:[NSEntityDescription entityForName:@"CDFile" inManagedObjectContext:getManagedObjectContext()]];
-		[request setPredicate:[NSPredicate predicateWithFormat:@"TRUE"]];
-		results = [getManagedObjectContext() executeFetchRequest:request error:&error];
+		NSArray *files = [getManagedObjectContext() executeFetchRequest:request error:&error];
 		[request release];
 
-		if (results)
+		if (files)
 		{
-			if ([results count] <= 1)
+			if ([files count] <= 1)
 			{
-				if ([results count])
-					[Configuration configuration].cdCurrentFile = [results objectAtIndex:0];
+				if ([files count])
+					[Configuration configuration].cdCurrentFile = [files objectAtIndex:0];
 				else
 					[Configuration configuration].cdCurrentFile = nil;
 				
 				[[Configuration configuration] save];
 				
-				[catCtrl loadCategories];
-				[catCtrl.navigationController dismissModalViewControllerAnimated:YES];
+				if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+					[catCtrl.splitCtrl dismissModalViewControllerAnimated:YES];
+				else
+					[catCtrl.navigationController dismissModalViewControllerAnimated:YES];
 			}
 		}
 		else

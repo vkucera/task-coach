@@ -43,6 +43,7 @@
 	[super loadCategories];
 	
 	[self editButtonItem].enabled = ([categories count] != 0);
+	fileButton.enabled = ([Configuration configuration].cdFileCount >= 2);
 }
 
 - (void)willTerminate
@@ -108,8 +109,6 @@
 	}
 	
 	[fileManager release];
-		
-	fileButton.enabled = ([Configuration configuration].cdFileCount >= 2);
 
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 	{
@@ -516,6 +515,12 @@
 	}
 }
 
+- (void)selectAll
+{
+	[taskCtrl setCategory:nil];
+	[taskCtrl.calendarView reloadDay];
+}
+
 - (void)onCategoryChanged:(NSString *)name
 {
 	if (name != nil)
@@ -693,17 +698,19 @@
 {
 	[self loadCategories];
 	[self.tableView reloadData];
+
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 	{
 		[self.navigationController dismissModalViewControllerAnimated:YES];
 	}
 	else
 	{
+		[self selectAll];
+
 		[splitCtrl dismissModalViewControllerAnimated:YES];
 	}
 
 	syncButton.enabled = YES;
-	fileButton.enabled = [Configuration configuration].cdFileCount >= 2;
 }
 
 - (void)bonjourBrowser:(BonjourBrowser*)browser didResolveInstance:(NSNetService*)ref
