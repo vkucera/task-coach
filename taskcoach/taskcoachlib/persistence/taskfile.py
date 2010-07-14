@@ -16,12 +16,26 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, codecs, xml
+import os, codecs, xml, tempfile
 from taskcoachlib import patterns
 from taskcoachlib.domain import base, task, category, note, effort, attachment
 from taskcoachlib.syncml.config import createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
 from taskcoachlib.thirdparty import lockfile
+
+
+class NamedTemporaryFileWrapper(object):
+    def __init__(self, fd):
+        self.__fd = fd
+
+    def write(self, bf):
+        self.__fd.write(bf.encode('utf-8'))
+
+    def close(self):
+        self.__fd.close()
+
+    def name(self):
+        return self.__fd.name
 
 
 class TaskFile(patterns.Observer):
@@ -192,8 +206,9 @@ class TaskFile(patterns.Observer):
         return file(self.__filename, 'rU')
 
     def _openForWrite(self):
-        wfilename = os.tempnam(os.path.split(self.__filename)[0])
-        return wfilename, codecs.open(wfilename, 'w', 'utf-8')
+        fd = tempfile.NamedTemporaryFile('w', dir=os.path.split(self.__filename)[0],
+                                         delete=False)
+        return NamedTemporaryFileWrapper(fd)
     
     def load(self, filename=None):
         self.__loading = True
@@ -229,12 +244,12 @@ class TaskFile(patterns.Observer):
         # computer on fire), if we were writing directly to the file,
         # it's lost. So write to a temporary file and rename it if
         # everything went OK.
-        wfilename, fd = self._openForWrite()
+        fd = self._openForWrite()
         xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
                                 self.syncMLConfig(), self.guid())
         fd.close()
         os.remove(self.__filename)
-        os.rename(wfilename, self.__filename)
+        os.rename(fd.name(), self.__filename)
         self.__needSave = False
         
     def saveas(self, filename):
