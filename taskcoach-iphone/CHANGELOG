@@ -1,4 +1,9 @@
 
+==== Beta 3.0b1: 2010-07-14 ====
+
+2010-07-14  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
+	* misc: Ability to remember several passwords; enhance multiple files support
+
 2010-06-12  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* misc: Recurrence
 	* misc: Priority
