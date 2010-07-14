@@ -128,23 +128,23 @@ class ReminderControllerTest(ReminderControllerTestCase):
     
     def testOnCloseReminderResetsReminder(self):
         self.task.setReminder(self.reminderDateTime)
-        self.reminderController.onCloseReminderDialog(self.dummyCloseEvent(), 
-                                                      show=False)
+        self.reminderController.onCloseReminderFrame(self.dummyCloseEvent(), 
+                                                     show=False)
         self.assertEqual(None, self.task.reminder())
 
     def testOnCloseReminderSetsReminder(self):
         self.task.setReminder(self.reminderDateTime)
         oneHour = date.TimeDelta(hours=1)
-        self.reminderController.onCloseReminderDialog(\
+        self.reminderController.onCloseReminderFrame(\
             self.dummyCloseEvent(oneHour), show=False)
         self.failUnless(abs(self.nowDateTime + oneHour - self.task.reminder()) \
                         < date.TimeDelta(seconds=5))
 
     def testOnCloseMayOpenTask(self):
         self.task.setReminder(self.reminderDateTime)
-        dialog = self.reminderController.onCloseReminderDialog(\
+        frame = self.reminderController.onCloseReminderFrame(\
             self.dummyCloseEvent(openAfterClose=True), show=False)
-        self.failUnless(dialog)
+        self.failUnless(frame)
         
     def testOnWakeDoesNotRequestUserAttentionWhenThereAreNoReminders(self):
         self.reminderController.onWake(None)
