@@ -45,6 +45,7 @@
 	myController.label.text = _("Authentication");
 	
 #if TARGET_IPHONE_SIMULATOR
+	currentPasswords = [[NSMutableDictionary alloc] init];
 	[self askForPassword];
 #else
 	keychain = [[KeychainWrapper alloc] init];
