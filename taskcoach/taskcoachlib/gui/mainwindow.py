@@ -22,7 +22,8 @@ import wx
 from taskcoachlib import meta, patterns, widgets, help # pylint: disable-msg=W0622
 from taskcoachlib.i18n import _
 from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
-from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog, IPhoneSyncDialog
+from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog
+from taskcoachlib.gui.iphone import IPhoneSyncFrame
 from taskcoachlib.powermgt import PowerStateMixin
 import taskcoachlib.thirdparty.aui as aui
 import viewer, toolbar, uicommand, remindercontroller, artprovider
@@ -405,8 +406,10 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, widgets.AuiManagedFrameWith
     # iPhone-related methods. These are called from the asyncore thread so they're deferred.
 
     @synchronized
-    def createIPhoneProgressDialog(self):
-        return IPhoneSyncDialog(self.settings, self, wx.ID_ANY, _('iPhone/iPod'), size=wx.Size(400, 300))
+    def createIPhoneProgressFrame(self):
+        return IPhoneSyncFrame(self.settings, _('iPhone/iPod'),
+                               icon=wx.ArtProvider.GetBitmap('taskcoach', wx.ART_FRAME_ICON, (16, 16)),
+                               parent=self)
 
     @synchronized
     def getIPhoneSyncType(self, guid):

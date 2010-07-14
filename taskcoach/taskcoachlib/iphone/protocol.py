@@ -504,8 +504,8 @@ class IPhoneHandler(asynchat.async_chat):
         random.seed(time.time())
 
     def log(self, msg, *args):
-        if self.state.dlg is not None:
-            self.state.dlg.AddLogLine(msg % args)
+        if self.state.ui is not None:
+            self.state.ui.AddLogLine(msg % args)
 
     def collect_incoming_data(self, data):
         self.state.collect_incoming_data(data)
@@ -518,12 +518,12 @@ class IPhoneHandler(asynchat.async_chat):
         self.close()
 
     def handle_error(self):
-        if self.state.dlg is not None:
+        if self.state.ui is not None:
             import traceback, StringIO
             bf = StringIO.StringIO()
             traceback.print_exc(file=bf)
 
-            self.state.dlg.AddLogLine(bf.getvalue())
+            self.state.ui.AddLogLine(bf.getvalue())
 
         asynchat.async_chat.handle_error(self)
         self.close()
@@ -535,7 +535,7 @@ class BaseState(State):
         self.oldTasks = disp.window.taskFile.tasks().copy()
         self.oldCategories = disp.window.taskFile.categories().copy()
 
-        self.dlg = None
+        self.ui = None
 
         self.syncCompleted = disp.settings.getboolean('iphone', 'synccompleted')
 
@@ -574,8 +574,8 @@ class BaseState(State):
         return False
 
     def handleClose(self):
-        if self.dlg is not None:
-            self.dlg.Finished()
+        if self.ui is not None:
+            self.ui.Finished()
 
         # Rollback
         self.disp().window.restoreTasks(self.oldCategories, self.oldTasks)
@@ -588,8 +588,8 @@ class InitialState(BaseState):
         super(InitialState, self).init('i', 1)
 
         if self.version == _PROTOVERSION:
-            self.dlg = self.disp().window.createIPhoneProgressDialog()
-            self.dlg.Started()
+            self.ui = self.disp().window.createIPhoneProgressFrame()
+            self.ui.Started()
 
         self.pack('i', version)
 
@@ -641,7 +641,7 @@ class DeviceNameState(BaseState):
     def handleNewObject(self, name):
         self.disp().log(_('Device name: %s'), name)
         self.deviceName = name
-        self.dlg.SetDeviceName(name)
+        self.ui.SetDeviceName(name)
         self.setState(GUIDState)
 
 
@@ -761,7 +761,7 @@ class FullFromDesktopCategoryState(BaseState):
     def handleNewObject(self, code):
         self.disp().log(_('Response: %d'), code)
         self.count += 1
-        self.dlg.SetProgress(self.count, self.total)
+        self.ui.SetProgress(self.count, self.total)
         self.sendObject()
 
     def finished(self):
@@ -830,7 +830,7 @@ class FullFromDesktopTaskState(BaseState):
     def handleNewObject(self, code):
         self.disp().log(_('Response: %d'), code)
         self.count += 1
-        self.dlg.SetProgress(self.count, self.total)
+        self.ui.SetProgress(self.count, self.total)
         self.sendObject()
 
     def finished(self):
@@ -862,7 +862,7 @@ class FullFromDesktopEffortState(BaseState):
 
     def handleNewObject(self, code):
         self.count += 1
-        self.dlg.SetProgress(self.count, self.total)
+        self.ui.SetProgress(self.count, self.total)
         self.sendObject()
 
     def finished(self):
@@ -871,7 +871,7 @@ class FullFromDesktopEffortState(BaseState):
         else:
             self.disp().log(_('Finished.'))
             self.disp().close_when_done()
-            self.dlg.Finished()
+            self.ui.Finished()
 
     def handleClose(self):
         if self.version < 5:
@@ -921,7 +921,7 @@ class FullFromDeviceCategoryState(BaseState):
         self.categoryMap[category.id()] = category
 
         self.count += 1
-        self.dlg.SetProgress(self.count, self.total)
+        self.ui.SetProgress(self.count, self.total)
 
     def finished(self):
         self.setState(FullFromDeviceTaskState)
@@ -940,7 +940,7 @@ class FullFromDeviceTaskState(BaseState):
         self.disp().window.addIPhoneTask(task, [self.categoryMap[id_] for id_ in categories])
 
         self.count += 1
-        self.dlg.SetProgress(self.count, self.total)
+        self.ui.SetProgress(self.count, self.total)
 
         self.pack('s', task.id())
 
@@ -1309,7 +1309,7 @@ class SendGUIDState(BaseState):
     def finished(self):
         self.disp().log(_('Finished.'))
         self.disp().close_when_done()
-        self.dlg.Finished()
+        self.ui.Finished()
 
     def handleClose(self):
         pass
