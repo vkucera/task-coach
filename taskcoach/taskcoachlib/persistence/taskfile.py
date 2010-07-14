@@ -192,7 +192,8 @@ class TaskFile(patterns.Observer):
         return file(self.__filename, 'rU')
 
     def _openForWrite(self):
-        return codecs.open(self.__filename, 'w', 'utf-8')
+        wfilename = os.tempnam(os.path.split(self.__filename)[0])
+        return wfilename, codecs.open(wfilename, 'w', 'utf-8')
     
     def load(self, filename=None):
         self.__loading = True
@@ -224,10 +225,16 @@ class TaskFile(patterns.Observer):
         
     def save(self):
         patterns.Event('taskfile.aboutToSave', self).send()
-        fd = self._openForWrite()
+        # Whene encountering a problem while saving (disk full,
+        # computer on fire), if we were writing directly to the file,
+        # it's lost. So write to a temporary file and rename it if
+        # everything went OK.
+        wfilename, fd = self._openForWrite()
         xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
                                 self.syncMLConfig(), self.guid())
         fd.close()
+        os.remove(self.__filename)
+        os.rename(wfilename, self.__filename)
         self.__needSave = False
         
     def saveas(self, filename):
