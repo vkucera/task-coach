@@ -249,7 +249,7 @@ class TaskFile(patterns.Observer):
             xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
                                     self.syncMLConfig(), self.guid())
             fd.close()
-            if self.exists():
+            if os.path.exists(self.__filename): # Not using self.exists() because DummyFile.exists returns True
                 os.remove(self.__filename)
             if name is not None: # Unit tests (AutoSaver)
                 os.rename(name, self.__filename)
