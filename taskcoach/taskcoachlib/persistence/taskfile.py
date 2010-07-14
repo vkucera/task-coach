@@ -240,7 +240,7 @@ class TaskFile(patterns.Observer):
         
     def save(self):
         patterns.Event('taskfile.aboutToSave', self).send()
-        # Whene encountering a problem while saving (disk full,
+        # When encountering a problem while saving (disk full,
         # computer on fire), if we were writing directly to the file,
         # it's lost. So write to a temporary file and rename it if
         # everything went OK.
@@ -249,11 +249,14 @@ class TaskFile(patterns.Observer):
             xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
                                     self.syncMLConfig(), self.guid())
             fd.close()
-            os.remove(self.__filename)
-            os.rename(name, self.__filename)
+            if self.exists():
+                os.remove(self.__filename)
+            if name is not None: # Unit tests (AutoSaver)
+                os.rename(name, self.__filename)
             self.__needSave = False
         except:
-            os.remove(name)
+            if name is not None: # Same remark as above
+                os.remove(name)
             raise
 
     def saveas(self, filename):
