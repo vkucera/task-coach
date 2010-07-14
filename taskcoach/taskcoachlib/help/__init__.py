@@ -375,27 +375,17 @@ _iPhoneAboutSubsection = _('''<h4><a name="taskcoachiphone">%(name)s on the iPho
 <a href="http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=311403563&mt=8"
 target="_blank">Apple's AppStore</a>. 
 (If you don't have iTunes installed on your computer, you'll be presented
-a page where you can download iTunes).
-This app has few features right now, but allows you to take
-your tasks away and modify them:</p>
+a page where you can download iTunes). I supports the following features:
 
 <ul>
-  <li>Two-way synchronization with %(name)s on the desktop (only one task file
-      supported, but a later version will support multiple files)</li>
-  <li>Edit subject, description and dates</li>
-  <li>Hierarchical categories</li>
-  <li>Create new tasks and categories</li>
-  <li>Mark a task complete by tapping its status LED</li>
+  <li>Basic task attributes: subject, description, dates (with recurrence)...</li>
+  <li>Hierarchical tasks and categories</li>
+  <li>Time tracking</li>
+  <li>Multiple task files</li>
+  <li>Two-way synchronization with %(name)s on the desktop</li>
 </ul>
 
-<p>Features planned for the next version are:</p>
-
-<ul>
-  <li>Effort tracking</li>
-  <li>Editing of budget</li>
-  <li>Multiple task files</li>
-  <li>Multiple categories for a task</li>
-</ul>''')%meta.metaDict
+The application is universal and has a custom iPad UI.''')%meta.metaDict
 
 _iPhoneConfigurationSubsection = _('''<h4><a name="iphoneconf">Configuration</a></h4>
 
@@ -403,10 +393,14 @@ _iPhoneConfigurationSubsection = _('''<h4><a name="iphoneconf">Configuration</a>
 
 <ul>
   <li>Show completed: whether to show completed tasks.</li>
+  <li>Show inactive: whether to show inactive tasks (start date in the future).</li>
   <li>Icon position: the LED icon may show up either on the left side or the right side of the screen.</li>
   <li>Compact mode: if this is enabled, the task list has smaller LEDs and don't show categories or dates.</li>
   <li>Confirm complete: if enabled, a message box will pop up for confirmation when you mark a task complete by tapping its LED.</li>
+  <li># days due soon: How much days in the future is considered "soon".</li>
 </ul>
+
+<h5>Configuration, all platforms</h5>
 
 <p>Before synchronizing, you must also configure %(name)s on the desktop; in
 the preferences, in the "Features" tab, check "Enable iPhone synchronization".
@@ -421,8 +415,15 @@ on the same computer). The name displayed is, by default, some string
 identifying the computer it's running on. To customize this, you may
 change the "Bonjour service name" in the configuration.</p>
 
-<p>%(name)s will remember the choosen instance and try it next time
-you synchronize; if it's not running, it will prompt you again.</p>
+<h5>Windows configuration</h5>
+
+<p>On Windows, you must install <a
+href="http://support.apple.com/kb/dl999">Bonjour for Windows</a> and
+unblock it when asked by the firewall.</p>
+
+<h5>Linux configuration</h5>
+
+<p>On Linux, you must have the <a href="http://avahi.org/">Avahi</a> daemon installed and running. Most modern distributions already have it. You must also install the dnscompat package; its name depends on your distribution (libavahi-compat-libdnssd1 on Ubuntu for instance).</p>
 
 <p>Note that this synchronization happens through the network; there is
 no need for the device to be connected through USB nor for iTunes to
