@@ -20,6 +20,7 @@
 
 	NSString *host;
 	NSInteger port;
+	NSString *name;
 
 	NSObject <State> *state;
 	Network *myNetwork;
@@ -49,7 +50,9 @@
 @property (nonatomic) NSInteger taskCount;
 @property (nonatomic) NSInteger effortCount;
 
-- initWithTarget:(id)target action:(SEL)action host:(NSString *)host port:(NSInteger)port;
+@property (nonatomic, readonly) NSString *name;
+
+- initWithTarget:(id)target action:(SEL)action host:(NSString *)host port:(NSInteger)port name:(NSString *)name;
 
 - (void)finished:(BOOL)ok;
 

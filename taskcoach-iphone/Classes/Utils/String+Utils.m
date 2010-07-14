@@ -22,6 +22,44 @@
 	return [NSString stringWithUTF8String:[mdata bytes]];
 }
 
+// This is *ugly* but I have trouble with Keyed(Un)Archiver
+
++ (NSString *)decodeData:(NSData *)data
+{
+	const char *bf = [data bytes];
+	NSMutableArray *parts = [[[NSMutableArray alloc] init] autorelease];
+
+	for (NSInteger i = 0; i < [data length]; ++i)
+	{
+		[parts addObject:[NSString stringWithFormat:@"%02x", (int)((unsigned char *)bf)[i]]];
+	}
+
+	return [@"" stringByJoiningStrings:parts];
+}
+
+- (NSData *)encoded
+{
+	NSMutableData *data = [[[NSMutableData alloc] init] autorelease];
+	const char *bf = [self UTF8String];
+
+	if (strlen(bf) % 2)
+		return nil;
+
+	while (*bf)
+	{
+		int v;
+		if (sscanf((const char*)bf, "%02x", &v) != 1)
+			return nil;
+
+		unsigned char c = v;
+		[data appendBytes:&c length:1];
+		
+		bf += 2;
+	}
+
+	return data;
+}
+
 - (NSString *)stringByJoiningStrings:(NSArray *)strings
 {
 	switch ([strings count])

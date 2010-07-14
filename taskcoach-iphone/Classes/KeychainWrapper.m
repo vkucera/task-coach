@@ -140,6 +140,14 @@ Keychain API expects as a validly constructed container class.
             self.keychainData = [self secItemFormatToDictionary:outDictionary];
         }
         [outDictionary release];
+
+		if (![(NSString *)[self objectForKey:(id)kSecAttrDescription] isEqualToString:@"Task Coach password (v2)"])
+		{
+			NSLog(@"Converting keychain to v2");
+
+			[self setObject:@"" forKey:(id)kSecValueData];
+			[self setObject:@"Task Coach password (v2)" forKey:(id)kSecAttrDescription];
+		}
     }
     return self;
 }
@@ -183,7 +191,7 @@ Keychain API expects as a validly constructed container class.
     
     // Default generic data for Keychain Item.
     [keychainData setObject:@"Task Coach" forKey:(id)kSecAttrLabel];
-    [keychainData setObject:@"Task Coach password" forKey:(id)kSecAttrDescription];
+    [keychainData setObject:@"Task Coach password (v2)" forKey:(id)kSecAttrDescription];
     //[keychainData setObject:@"taskcoach" forKey:(id)kSecAttrAccount];
     //[keychainData setObject:@"HomeDir" forKey:(id)kSecAttrService];
     //[keychainData setObject:@"This is my Keychain for home mount." forKey:(id)kSecAttrComment];

@@ -15,6 +15,7 @@
 #import "SyncViewController.h"
 #import "AlertPrompt.h"
 #import "LogUtils.h"
+#import "String+Utils.h"
 #import "i18n.h"
 
 @implementation AuthentificationState
@@ -47,9 +48,23 @@
 	[self askForPassword];
 #else
 	keychain = [[KeychainWrapper alloc] init];
-	currentPassword = [[keychain objectForKey:(id)kSecValueData] retain];
-	
-	if ([currentPassword length] == 0)
+	NSData *data = [(NSString *)[keychain objectForKey:(id)kSecValueData] encoded];
+
+	if ([data length])
+	{
+		@try {
+			currentPasswords = [[NSKeyedUnarchiver unarchiveObjectWithData:data] retain];
+		}
+		@catch (NSException * e) {
+			currentPasswords = [[NSMutableDictionary alloc] init];
+		}
+	}
+	else
+	{
+		currentPasswords = [[NSMutableDictionary alloc] init];
+	}
+
+	if ([[currentPasswords objectForKey:myController.name] length] == 0)
 	{
 		[self askForPassword];
 	}
@@ -60,7 +75,7 @@
 
 - (void)dealloc
 {
-	[currentPassword release];
+	[currentPasswords release];
 	[currentData release];
 
 #if !TARGET_IPHONE_SIMULATOR
@@ -76,12 +91,12 @@
 	{
 		JLDEBUG("Received hash data.");
 		
-		if (currentPassword)
+		if ([[currentPasswords objectForKey:myController.name] length] != 0)
 		{
 			JLDEBUG("Sending hashed password (1).");
 			
 			NSMutableData *hashData = [[NSMutableData alloc] initWithData:[value objectAtIndex:0]];
-			const char *bf = [currentPassword UTF8String];
+			const char *bf = [[currentPasswords objectForKey:myController.name] UTF8String];
 			[hashData appendData:[NSData dataWithBytes:bf length:strlen(bf)]];
 			
 			CC_SHA1_CTX context;
@@ -116,7 +131,8 @@
 			JLDEBUG("Password accepted.");
 			
 #if !TARGET_IPHONE_SIMULATOR
-			[keychain setObject:currentPassword forKey:(id)kSecValueData];
+			NSData *data = [NSKeyedArchiver archivedDataWithRootObject:currentPasswords];
+			[keychain setObject:[NSString decodeData:data] forKey:(id)kSecValueData];
 #endif
 			
 			// Also send device name
@@ -131,10 +147,9 @@
 			JLDEBUG("Password rejected.");
 			
 			[currentData release];
-			[currentPassword release];
-			
 			currentData = nil;
-			currentPassword = nil;
+			
+			[currentPasswords removeObjectForKey:myController.name];
 			
 			state = 0;
 			[self startWithFormat:"512b" count:NOCOUNT];
@@ -160,8 +175,7 @@
 			break;
 		case 1:
 		{
-			[currentPassword release];
-			currentPassword = [pwd.enteredText retain];
+			[currentPasswords setObject:pwd.enteredText forKey:myController.name];
 			
 			if (state == 1)
 			{
@@ -170,7 +184,7 @@
 				JLDEBUG("Sending hashed password (2).");
 				
 				NSMutableData *hashData = [[NSMutableData alloc] initWithData:currentData];
-				const char *bf = [currentPassword UTF8String];
+				const char *bf = [[currentPasswords objectForKey:myController.name] UTF8String];
 				[hashData appendData:[NSData dataWithBytes:bf length:strlen(bf)]];
 				
 				CC_SHA1_CTX context;

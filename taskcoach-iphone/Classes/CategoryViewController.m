@@ -623,31 +623,22 @@
 {
 	button.enabled = NO;
 
-	if (![Configuration configuration].name)
+	// Always browse; there may be several Task Coach instances on the network
+	BonjourBrowser *browser = [[BonjourBrowser alloc] initForType:@"_taskcoachsync._tcp" inDomain:@"local." customDomains:nil showDisclosureIndicators:NO showCancelButton:YES];
+	browser.delegate = self;
+	browser.searchingForServicesString = _("Looking for Task Coach");
+	
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 	{
-		// Name/domain not defined, browse
-		BonjourBrowser *browser = [[BonjourBrowser alloc] initForType:@"_taskcoachsync._tcp" inDomain:@"local." customDomains:nil showDisclosureIndicators:NO showCancelButton:YES];
-		browser.delegate = self;
-		browser.searchingForServicesString = _("Looking for Task Coach");
-
-		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-		{
-			browser.modalPresentationStyle = UIModalPresentationFormSheet;
-			[splitCtrl presentModalViewController:browser animated:YES];
-		}
-		else
-		{
-			[self.navigationController presentModalViewController:browser animated:YES];
-		}
-
-		[browser release];
+		browser.modalPresentationStyle = UIModalPresentationFormSheet;
+		[splitCtrl presentModalViewController:browser animated:YES];
 	}
 	else
 	{
-		NSNetService *srv = [[NSNetService alloc] initWithDomain:[Configuration configuration].domain type:@"_taskcoachsync._tcp" name:[Configuration configuration].name];
-		srv.delegate = self;
-		[srv resolveWithTimeout:5];
+		[self.navigationController presentModalViewController:browser animated:YES];
 	}
+	
+	[browser release];
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -681,7 +672,9 @@
 
 - (void)netServiceDidResolveAddress:(NSNetService *)sender
 {
-	SyncViewController *ctrl = [[SyncViewController alloc] initWithTarget:self action:@selector(onSyncFinished) host:[sender hostName] port:[sender port]];
+	SyncViewController *ctrl = [[SyncViewController alloc] initWithTarget:self action:@selector(onSyncFinished) host:[sender hostName] port:[sender port] name:[sender name]];
+
+	NSLog(@"Service name: %@", [sender name]);
 
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 	{
@@ -723,7 +716,9 @@
 		[Configuration configuration].name = [ref name];
 		[[Configuration configuration] save];
 
-		SyncViewController *ctrl = [[SyncViewController alloc] initWithTarget:self action:@selector(onSyncFinished) host:[ref hostName] port:[ref port]];
+		SyncViewController *ctrl = [[SyncViewController alloc] initWithTarget:self action:@selector(onSyncFinished) host:[ref hostName] port:[ref port] name:[ref name]];
+
+		NSLog(@"Service name: %@", [ref name]);
 
 		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 		{

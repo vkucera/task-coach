@@ -24,12 +24,15 @@
 @synthesize taskCount;
 @synthesize effortCount;
 
-- initWithTarget:(id)theTarget action:(SEL)theAction host:(NSString *)theHost port:(NSInteger)thePort
+@synthesize name;
+
+- initWithTarget:(id)theTarget action:(SEL)theAction host:(NSString *)theHost port:(NSInteger)thePort name:(NSString *)theName
 {
 	if ((self = [super initWithNibName:@"SyncView" bundle:[NSBundle mainBundle]]))
 	{
 		target = theTarget;
 		action = theAction;
+		name = [theName copy];
 
 		host = [theHost copy];
 		port = thePort;
@@ -89,6 +92,7 @@
 
 	[host release];
 	[myNetwork release];
+	[name release];
 	
 	[super dealloc];
 }

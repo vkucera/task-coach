@@ -13,6 +13,9 @@
 + (NSString *)stringFromUTF8Data:(NSData *)data;
 + (NSString *)formatTimeInterval:(NSInteger)seconds;
 
++ (NSString *)decodeData:(NSData *)data;
+- (NSData *)encoded;
+
 // Python's string join-like method
 - (NSString *)stringByJoiningStrings:(NSArray *)strings;
 

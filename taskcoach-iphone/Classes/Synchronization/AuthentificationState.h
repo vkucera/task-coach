@@ -12,7 +12,7 @@
 @interface AuthentificationState : OneShotItemState <UITextFieldDelegate>
 {
 	NSInteger state;
-	NSString *currentPassword;
+	NSMutableDictionary *currentPasswords;
 	NSData *currentData;
 	
 #if !TARGET_IPHONE_SIMULATOR
