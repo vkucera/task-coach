@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, codecs, xml, tempfile
+import os, codecs, xml
 from taskcoachlib import patterns
 from taskcoachlib.domain import base, task, category, note, effort, attachment
 from taskcoachlib.syncml.config import createDefaultSyncConfig
@@ -24,18 +24,19 @@ from taskcoachlib.thirdparty.guid import generate
 from taskcoachlib.thirdparty import lockfile
 
 
-class NamedTemporaryFileWrapper(object):
-    def __init__(self, fd):
-        self.__fd = fd
+def getTemporaryFileName(path):
+    """All functions/classes in the standard library that can generate
+    a temporary file, visible on the file system, without deleting it
+    when closed are deprecated (there is tempfile.NamedTemporaryFile
+    but its 'delete' argument is new in Python 2.6). This is not
+    secure, not thread-safe, but it works."""
 
-    def write(self, bf):
-        self.__fd.write(bf.encode('utf-8'))
-
-    def close(self):
-        self.__fd.close()
-
-    def name(self):
-        return self.__fd.name
+    idx = 0
+    while True:
+        name = os.path.join(path, 'tmp-%d' % idx)
+        if not os.path.exists(name):
+            return name
+        idx += 1
 
 
 class TaskFile(patterns.Observer):
@@ -206,9 +207,8 @@ class TaskFile(patterns.Observer):
         return file(self.__filename, 'rU')
 
     def _openForWrite(self):
-        fd = tempfile.NamedTemporaryFile('w', dir=os.path.split(self.__filename)[0],
-                                         delete=False)
-        return NamedTemporaryFileWrapper(fd)
+        name = getTemporaryFileName(os.path.split(self.__filename)[0])
+        return name, codecs.open(name, 'w', 'utf-8')
     
     def load(self, filename=None):
         self.__loading = True
@@ -244,14 +244,18 @@ class TaskFile(patterns.Observer):
         # computer on fire), if we were writing directly to the file,
         # it's lost. So write to a temporary file and rename it if
         # everything went OK.
-        fd = self._openForWrite()
-        xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
-                                self.syncMLConfig(), self.guid())
-        fd.close()
-        os.remove(self.__filename)
-        os.rename(fd.name(), self.__filename)
-        self.__needSave = False
-        
+        name, fd = self._openForWrite()
+        try:
+            xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
+                                    self.syncMLConfig(), self.guid())
+            fd.close()
+            os.remove(self.__filename)
+            os.rename(name, self.__filename)
+            self.__needSave = False
+        except:
+            os.remove(name)
+            raise
+
     def saveas(self, filename):
         self.setFilename(filename)
         self.save()
