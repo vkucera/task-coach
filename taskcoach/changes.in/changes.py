@@ -24,7 +24,8 @@ releases = [
 
 Release('1.1.0', 'July 10, 2010',
     summary='''This release adds time to start, due and completion dates of 
-tasks and adds support for mass editing of items.''',
+tasks and adds support for mass editing of items. It also adds upport for the
+upcoming version 3.0 for the iPhone/iPod/iPad.''',
     featuresAdded=[
         Feature('''The start, due and completion dates of tasks now also include
 a time. When reading old task files, Task Coach adds a default time to tasks: 
