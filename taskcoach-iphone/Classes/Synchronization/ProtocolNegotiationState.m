@@ -85,8 +85,6 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
 	[myController finished:NO];
-	[myNetwork close];
-	[self cancel];
 }
 
 @end
