@@ -21,7 +21,7 @@
 
 @end
 
-@interface Network : NSObject
+@interface Network : NSObject <NSStreamDelegate>
 {
 	NSInputStream *inputStream;
 	NSOutputStream *outputStream;

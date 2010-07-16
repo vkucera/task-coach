@@ -53,7 +53,7 @@
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	if (![fileManager fileExistsAtPath:cachesDir])
 	{
-		[fileManager createDirectoryAtPath:cachesDir attributes:nil];
+		[fileManager createDirectoryAtPath:cachesDir withIntermediateDirectories:YES attributes:nil error:nil];
 	}
 	
 	NSString *path = [cachesDir stringByAppendingPathComponent:@"positions.store.v3"];

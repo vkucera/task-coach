@@ -15,7 +15,7 @@
 
 @class NavigationController;
 
-@interface CategoryViewController : BaseCategoryViewController <BonjourBrowserDelegate, RestorableController>
+@interface CategoryViewController : BaseCategoryViewController <BonjourBrowserDelegate, RestorableController, NSNetServiceDelegate>
 {
 	NavigationController *navigationController;
 	UIBarButtonItem *syncButton;

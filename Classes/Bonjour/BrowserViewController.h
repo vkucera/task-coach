@@ -70,7 +70,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 - (void) browserViewController:(BrowserViewController*)bvc didResolveInstance:(NSNetService*)ref;
 @end
 
-@interface BrowserViewController : UITableViewController {
+@interface BrowserViewController : UITableViewController <NSNetServiceBrowserDelegate, NSNetServiceDelegate> {
 
 @private
 	id<BrowserViewControllerDelegate> _delegate;
