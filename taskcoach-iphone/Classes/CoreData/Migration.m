@@ -100,7 +100,10 @@ void migrateOldDatabase(NSString *filename)
 
 		category.name = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(req, 2)];
 		category.status = [NSNumber numberWithInt:sqlite3_column_int(req, 3)];
-		category.taskCoachId = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(req, 4)];
+		
+		const char *catTCId = (const char *)sqlite3_column_text(req, 4);
+		if (catTCId)
+			category.taskCoachId = [NSString stringWithUTF8String:catTCId];
 
 		if (sqlite3_column_type(req, 5) != SQLITE_NULL)
 		{
@@ -134,7 +137,11 @@ void migrateOldDatabase(NSString *filename)
 		
 		task.name = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(req, 2)];
 		task.status = [NSNumber numberWithInt:sqlite3_column_int(req, 3)];
-		task.taskCoachId = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(req, 4)];
+		
+		const char *taskTCId = (const char *)sqlite3_column_text(req, 4);
+		if (taskTCId)
+			task.taskCoachId = [NSString stringWithUTF8String:taskTCId];
+
 		task.longDescription = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(req, 5)];
 		task.priority = [NSNumber numberWithInt:0];
 		
@@ -175,7 +182,10 @@ void migrateOldDatabase(NSString *filename)
 		
 		effort.name = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(req, 2)];
 		effort.status = [NSNumber numberWithInt:sqlite3_column_int(req, 3)];
-		effort.taskCoachId = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(req, 4)];
+		
+		const char *effortTCId = (const char *)sqlite3_column_text(req, 4);
+		if (effortTCId)
+			effort.taskCoachId = [NSString stringWithUTF8String:effortTCId];
 
 		if (sqlite3_column_type(req, 5) != SQLITE_NULL)
 			effort.task = (CDTask *)[getManagedObjectContext() objectWithID:[mapTasks objectForKey:[NSNumber numberWithInt:sqlite3_column_int(req, 5)]]];
