@@ -17,6 +17,7 @@
 
 #if !TARGET_IPHONE_SIMULATOR
 	KeychainWrapper *keychain;
+	NSInteger alertState;
 #endif
 }
 

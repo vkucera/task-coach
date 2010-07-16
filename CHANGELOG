@@ -1,4 +1,9 @@
 
+==== Release 2.2: 2010-07-16 ====
+
+2010-07-16  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
+	* misc: fix major bug when the sync password is wrong. iOS 4 fixes.
+
 ==== Release 2.0: 2010-04-05 ====
 
 2010-04-10  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>

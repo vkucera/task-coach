@@ -21,6 +21,7 @@
 
 - (void)askForPassword
 {
+	alertState = 0;
 	AlertPrompt *prompt = [[AlertPrompt alloc] initWithTitle:_("Please type your password.") message:@"\n" delegate:self cancelButtonTitle:_("Cancel") okButtonTitle:_("OK")];
 	[prompt show];
 	[prompt release];
@@ -94,6 +95,7 @@
 			UIAlertView *view = [[UIAlertView alloc] initWithTitle:_("Error")
 													message:_("Incorrect password.")
 													delegate:self cancelButtonTitle:_("Retry") otherButtonTitles:nil];
+			alertState = 1;
 			[view show];
 			[view release];
 		}
@@ -130,15 +132,23 @@
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-	switch (buttonIndex)
+	switch (alertState)
 	{
-		case 0: // Cancel
-			[myController cancel];
+		case 0:
+			switch (buttonIndex)
+			{
+				case 0: // Cancel
+					[myController cancel];
+					break;
+				case 1: // OK
+					[currentPassword release];
+					currentPassword = [((AlertPrompt *)alertView).enteredText retain];
+					[myNetwork expect:512];
+					break;
+			}
 			break;
-		case 1: // OK
-			[currentPassword release];
-			currentPassword = [((AlertPrompt *)alertView).enteredText retain];
-			[myNetwork expect:512];
+		case 1:
+			[self askForPassword];
 			break;
 	}
 }
