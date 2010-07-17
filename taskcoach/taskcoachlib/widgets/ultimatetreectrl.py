@@ -116,18 +116,13 @@ class Row(object):
 
         self.SetDimensions(x, y, w, h)
 
-        self.cells = []
+        self.cells = dict()
 
     def AddCell(self, indexPath, cell):
-        self.cells.append((indexPath, cell))
-
-    def _getCell(self, path): # XXXFIXME
-        for p,c in self.cells:
-            if p == path:
-                return c
+        self.cells[indexPath] = cell
 
     def Layout(self, tree):
-        allPaths = [indexPath for indexPath, cell in self.cells]
+        allPaths = self.cells.keys()
         heights = []
 
         count = tree.GetRootHeadersCount()
@@ -162,7 +157,7 @@ class Row(object):
                         else:
                             w = int(math.ceil(ccw))
 
-                        _layout(indexPath + (i,), self._getCell(indexPath + (i,)),
+                        _layout(indexPath + (i,), self.cells[indexPath + (i,)],
                                 cx + xx, cy + h, w, ch - h)
 
                         remain -= w
@@ -173,21 +168,21 @@ class Row(object):
             else:
                 w = int(math.ceil(cw))
 
-            _layout((idx,), self._getCell((idx,)), x, self.y, w, self.h)
+            _layout((idx,), self.cells[(idx,)], x, self.y, w, self.h)
 
             remain -= w
             x += w
 
     def Refresh(self):
-        for indexPath, cell in self.cells:
+        for cell in self.cells.values():
             cell.Refresh()
 
     def Show(self, doShow=True):
-        for indexPath, cell in self.cells:
+        for cell in self.cells.values():
             cell.Show(doShow)
 
     def SetBackgroundColour(self, colour):
-        for indexPath, cell in self.cells:
+        for cell in self.cells.values():
             cell.SetBackgroundColour(colour)
 
     def SetDimensions(self, x, y, w, h):
@@ -284,7 +279,7 @@ class UltimateTreeCtrl(wx.Panel):
     def _Queue(self, row):
         # Mark a cell as unused and put it back in its queue.
 
-        for indexPath, cell in row.cells:
+        for cell in row.cells.values():
             queue = self._queues.get(cell.GetIdentifier(), [])
             queue.append(cell)
             self._queues[cell.GetIdentifier()] = queue
