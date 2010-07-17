@@ -402,6 +402,13 @@ class UltimateTreeCtrl(wx.Panel):
         wx.EVT_LEFT_UP(self._headerView, self._OnLeftUpHeader)
         wx.EVT_RIGHT_UP(self._headerView, self._OnRightUpHeader)
 
+    def SetTreeStyle(self, style):
+        self.__style = style
+        self.Refresh()
+
+    def GetTreeStyle(self):
+        return self.__style
+
     def Refresh(self):
         self._Relayout()
         super(UltimateTreeCtrl, self).Refresh()
@@ -920,8 +927,6 @@ class Test(UltimateTreeCtrl):
                               ('Scat 3.2.2', [])])])])
 
     def __init__(self, *args, **kwargs):
-        kwargs['treeStyle'] = ULTTREE_STRIPE
-
         super(Test, self).__init__(*args, **kwargs)
 
         EVT_ROW_SELECTED(self, self.OnCellSelected)
@@ -951,6 +956,8 @@ class Test(UltimateTreeCtrl):
         return len(self._Get(indexPath, self.cells)[1])
 
     def GetRowHeight(self, indexPath):
+        if indexPath == (1, 1):
+            return 300
         return 150
 
     def GetRowBackgroundColour(self, indexPath):
@@ -1011,9 +1018,31 @@ class Frame(wx.Frame):
 
         self.tree = Test(self, wx.ID_ANY)
 
+        stripeCheck = wx.CheckBox(self, wx.ID_ANY, 'UTTREE_STRIPE')
+        wx.EVT_CHECKBOX(stripeCheck, wx.ID_ANY, self.OnToggleStripe)
+
+        selCheck = wx.CheckBox(self, wx.ID_ANY, 'SINGLE_SELECTION')
+        wx.EVT_CHECKBOX(selCheck, wx.ID_ANY, self.OnToggleSel)
+
         sizer = wx.BoxSizer(wx.VERTICAL)
+        vsz = wx.BoxSizer(wx.HORIZONTAL)
+        vsz.Add(stripeCheck, 0)
+        vsz.Add(selCheck, 0)
+        sizer.Add(vsz, 0, wx.EXPAND)
         sizer.Add(self.tree, 1, wx.EXPAND)
         self.SetSizer(sizer)
+
+    def OnToggleStripe(self, evt):
+        if evt.IsChecked():
+            self.tree.SetTreeStyle(self.tree.GetTreeStyle() | ULTTREE_STRIPE)
+        else:
+            self.tree.SetTreeStyle(self.tree.GetTreeStyle() & ~ULTTREE_STRIPE)
+
+    def OnToggleSel(self, evt):
+        if evt.IsChecked():
+            self.tree.SetTreeStyle(self.tree.GetTreeStyle() | ULTTREE_SINGLE_SELECTION)
+        else:
+            self.tree.SetTreeStyle(self.tree.GetTreeStyle() & ~ULTTREE_SINGLE_SELECTION)
 
 
 class App(wx.App):
