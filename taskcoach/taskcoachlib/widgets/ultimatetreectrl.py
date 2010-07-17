@@ -110,9 +110,9 @@ def _shortenString(dc, s, w, margin=3):
         right = right[1:]
 
 
-class Row(object):
+class RowBase(object):
     def __init__(self, x, y, w, h):
-        super(Row, self).__init__()
+        super(RowBase, self).__init__()
 
         self.SetDimensions(x, y, w, h)
 
@@ -121,8 +121,44 @@ class Row(object):
     def AddCell(self, indexPath, cell):
         self.cells[indexPath] = cell
 
+    def SetDimensions(self, x, y, w, h):
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+
+    def Refresh(self):
+        for cell in self.cells.values():
+            cell.Refresh()
+
+    def Show(self, doShow=True):
+        for cell in self.cells.values():
+            cell.Show(doShow)
+
+    def SetBackgroundColour(self, colour):
+        for cell in self.cells.values():
+            cell.SetBackgroundColour(colour)
+
+
+class Row(RowBase):
+    def __init__(self, *args, **kwargs):
+        super(Row, self).__init__(*args, **kwargs)
+
+        self.columnCells = dict()
+
+    def AddColumnCell(self, columnIndex, span, cell):
+        self.cells[(columnIndex,)] = cell
+        self.columnCells[columnIndex] = span
+
     def Layout(self, tree):
-        allPaths = self.cells.keys()
+        allPaths = list()
+        def addPath(p):
+            allPaths.append(p)
+            for idx in xrange(tree.GetHeaderChildrenCount(p)):
+                addPath(p + (idx,))
+        for idx in xrange(tree.GetRootHeadersCount()):
+            addPath((idx,))
+
         heights = []
 
         count = tree.GetRootHeadersCount()
@@ -133,6 +169,11 @@ class Row(object):
         x = 0
         remain = self.w + self.x
         cw = 1.0 * (self.w + self.x) / count
+        state = 0
+        startX = None
+        totalW = None
+        span = None
+        columnCell = None
 
         for idx in xrange(count):
             def _layout(indexPath, cell, cx, cy, cw, ch):
@@ -168,28 +209,44 @@ class Row(object):
             else:
                 w = int(math.ceil(cw))
 
-            _layout((idx,), self.cells[(idx,)], x, self.y, w, self.h)
-
             remain -= w
+
+            if state == 0:
+                if idx in self.columnCells:
+                    startX = x
+                    totalW = w
+                    state = 1
+                    columnCell = self.cells[(idx,)]
+                    span = self.columnCells[idx]
+                else:
+                    _layout((idx,), self.cells[(idx,)], x, self.y, w, self.h)
+            else:
+                span -= 1
+                totalW += w
+
+                if span == 0:
+                    if self.x > startX:
+                        rect = (self.x, self.y, totalW - (self.x - startX), self.h)
+                    else:
+                        rect = (startX, self.y, totalW, self.h)
+
+                    columnCell.SetDimensions(*rect)
+                    columnCell.Layout()
+
+                    _layout((idx,), self.cells[(idx,)], x, self.y, w, self.h)
+
+                    state = 0
+
             x += w
 
-    def Refresh(self):
-        for cell in self.cells.values():
-            cell.Refresh()
+        if state == 1:
+            if self.x > startX:
+                rect = (self.x, self.y, totalW - (self.x - startX), self.h)
+            else:
+                rect = (startX, self.y, totalW, self.h)
 
-    def Show(self, doShow=True):
-        for cell in self.cells.values():
-            cell.Show(doShow)
-
-    def SetBackgroundColour(self, colour):
-        for cell in self.cells.values():
-            cell.SetBackgroundColour(colour)
-
-    def SetDimensions(self, x, y, w, h):
-        self.x = x
-        self.y = y
-        self.w = w
-        self.h = h
+            columnCell.SetDimensions(*rect)
+            columnCell.Layout()
 
 #=======================================
 #{ Tree control
@@ -230,8 +287,14 @@ class UltimateTreeCtrl(wx.Panel):
         return 30
 
     def GetCell(self, indexPath, headerPath):
-        """Return an actual cell; see L{DequeueCell} for usage pattern."""
+        """Return an actual cell; see L{DequeueCell} for usage
+        pattern. If this returns None for a 0-length header path,
+        L{GetColumnCell} will be called instead."""
         raise NotImplementedError
+
+    def GetColumnCell(self, indexPath, columnIndex):
+        """Return a cell that fills the whole column. This is only
+        called if L{GetCell} returned None for a 0-length header path."""
 
     def GetRowBackgroundColour(self, indexPath):
         """Return the background colour of a row. Default is white."""
@@ -441,12 +504,24 @@ class UltimateTreeCtrl(wx.Panel):
                     row = Row(0, 0, 0, 0)
 
                     def queryCell(headerPath):
-                        row.AddCell(headerPath, self.GetCell(indexPath, headerPath))
-                        for i in xrange(self.GetHeaderChildrenCount(headerPath)):
-                            queryCell(headerPath + (i,))
+                        cell = self.GetCell(indexPath, headerPath)
+                        if cell is None:
+                            if len(headerPath) != 1:
+                                raise ValueError('You can only set column cells at header root.')
+                            cell, span = self.GetColumnCell(indexPath, headerPath[0])
+                            row.AddColumnCell(headerPath[0], span, cell)
+                            return span
+                        else:
+                            row.AddCell(headerPath, cell)
 
-                    for idx in xrange(self.GetRootHeadersCount()):
-                        queryCell((idx,))
+                            for i in xrange(self.GetHeaderChildrenCount(headerPath)):
+                                queryCell(headerPath + (i,))
+
+                            return 1
+
+                    idx = 0
+                    while idx < self.GetRootHeadersCount():
+                        idx += queryCell((idx,))
 
                     self._visibleRows[indexPath] = row
 
@@ -725,6 +800,22 @@ class TestCell(CellBase):
         return 'StaticText'
 
 
+class HtmlCell(CellBase):
+    def __init__(self, *args, **kwargs):
+        super(HtmlCell, self).__init__(*args, **kwargs)
+
+        from wx.html import HtmlWindow
+        self.__html = HtmlWindow(self, wx.ID_ANY)
+        self.__html.SetPage('<html><head></head><body>And span several columns.<br /><font size="5">Any widget can play.</font><br /><b>This is a wx.HtmlWindow</b></body></html>')
+
+        sizer = wx.BoxSizer(wx.HORIZONTAL)
+        sizer.Add(self.__html, 1, wx.EXPAND)
+        self.SetSizer(sizer)
+
+    def GetIdentifier(self):
+        return 'HtmlCell'
+
+
 class Test(UltimateTreeCtrl):
     cells = ('Root', [('Cell #1', [('Subcell #1.1', [])]),
                       ('Cell #2', [('Subcell #2.1', [('Subsubcell #2.1.1', [])]),
@@ -800,12 +891,28 @@ class Test(UltimateTreeCtrl):
         return wx.WHITE
 
     def GetCell(self, indexPath, headerPath):
+        if indexPath == (1, 0) and headerPath == (1,):
+            return None
+
+        if indexPath == (1, 1) and headerPath in [(1,), (2,), (3,)]:
+            return None
+
         cell = self.DequeueCell('StaticText', self.CreateCell)
         text = self._Get(indexPath, self.cells)[0]
         cat = self._Get(headerPath, self._headers)[0]
         cell.SetLabel('%s (%s)' % (text, cat))
 
         return cell
+
+    def GetColumnCell(self, indexPath, columnIndex):
+        if indexPath == (1, 0):
+            cell = self.DequeueCell('StaticText', self.CreateCell)
+            cell.SetLabel('You can override headers')
+
+            return cell, 1
+        else:
+            cell = self.DequeueCell('HtmlCell', self.CreateHtmlCell)
+            return cell, 3
 
     def OnCellSelected(self, evt):
         print 'Select', self._Get(evt.indexPath, self.cells)[0]
@@ -827,6 +934,9 @@ class Test(UltimateTreeCtrl):
 
     def CreateCell(self, parent):
         return TestCell(parent, wx.ID_ANY)
+
+    def CreateHtmlCell(self, parent):
+        return HtmlCell(parent, wx.ID_ANY)
 
 
 class Frame(wx.Frame):
