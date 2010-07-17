@@ -714,7 +714,7 @@ class TestCell(CellBase):
 
         dc = wx.PaintDC(self)
         w, h = self.GetSizeTuple()
-        dc.SetPen(wx.GREEN_PEN)
+        dc.SetPen(wx.Pen(wx.Colour(150, 150, 150)))
         dc.SetBrush(wx.TRANSPARENT_BRUSH)
         dc.DrawRectangle(0, 0, w, h)
 
@@ -797,7 +797,7 @@ class Test(UltimateTreeCtrl):
         return 150
 
     def GetRowBackgroundColour(self, indexPath):
-        return wx.Colour(200, 100, 0)
+        return wx.WHITE
 
     def GetCell(self, indexPath, headerPath):
         cell = self.DequeueCell('StaticText', self.CreateCell)
