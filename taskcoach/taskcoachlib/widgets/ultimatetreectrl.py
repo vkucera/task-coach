@@ -38,7 +38,7 @@ import wx, math
 
 class CellBase(wx.Panel):
     """
-    Base class for rows.
+    Base class for cells.
     """
 
     def __init__(self, *args, **kwargs):
@@ -52,7 +52,7 @@ class CellBase(wx.Panel):
     def GetIdentifier(self):
         """
         This method should return a string identifier for the cell's
-        type. See L{DequeueRow}.
+        type. See L{DequeueCell}.
         """
 
         raise NotImplementedError
@@ -109,6 +109,93 @@ def _shortenString(dc, s, w, margin=3):
         left = left[:-1]
         right = right[1:]
 
+
+class Row(object):
+    def __init__(self, x, y, w, h):
+        super(Row, self).__init__()
+
+        self.SetDimensions(x, y, w, h)
+
+        self.cells = []
+
+    def AddCell(self, indexPath, cell):
+        self.cells.append((indexPath, cell))
+
+    def _getCell(self, path): # XXXFIXME
+        for p,c in self.cells:
+            if p == path:
+                return c
+
+    def Layout(self, tree):
+        allPaths = [indexPath for indexPath, cell in self.cells]
+        heights = []
+
+        count = tree.GetRootHeadersCount()
+
+        for idx in xrange(count):
+            heights.append(1.0 / max([len(p) for p in allPaths if p[0] == idx]))
+
+        x = 0
+        remain = self.w + self.x
+        cw = 1.0 * (self.w + self.x) / count
+
+        for idx in xrange(count):
+            def _layout(indexPath, cell, cx, cy, cw, ch):
+                h = int(math.ceil(self.h * heights[indexPath[0]]))
+                if self.x > cx:
+                    rect = (self.x, cy, cw - (self.x - cx), h)
+                else:
+                    rect = (cx, cy, cw, h)
+
+                cell.SetDimensions(*rect)
+                cell.Layout()
+
+                xx = 0
+                remain = cw
+                count = tree.GetHeaderChildrenCount(indexPath)
+
+                if count:
+                    ccw = 1.0 * cw / count
+                    for i in xrange(count):
+                        if i == count -1:
+                            w = remain
+                        else:
+                            w = int(math.ceil(ccw))
+
+                        _layout(indexPath + (i,), self._getCell(indexPath + (i,)),
+                                cx + xx, cy + h, w, ch - h)
+
+                        remain -= w
+                        xx += w
+
+            if idx == count - 1:
+                w = remain
+            else:
+                w = int(math.ceil(cw))
+
+            _layout((idx,), self._getCell((idx,)), x, self.y, w, self.h)
+
+            remain -= w
+            x += w
+
+    def Refresh(self):
+        for indexPath, cell in self.cells:
+            cell.Refresh()
+
+    def Show(self, doShow=True):
+        for indexPath, cell in self.cells:
+            cell.Show(doShow)
+
+    def SetBackgroundColour(self, colour):
+        for indexPath, cell in self.cells:
+            cell.SetBackgroundColour(colour)
+
+    def SetDimensions(self, x, y, w, h):
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+
 #=======================================
 #{ Tree control
 
@@ -147,8 +234,8 @@ class UltimateTreeCtrl(wx.Panel):
         """Return the height of a row. Variable height is supported."""
         return 30
 
-    def GetRow(self, indexPath):
-        """Return an actual row; see L{DequeueRow} for usage pattern."""
+    def GetCell(self, indexPath, headerPath):
+        """Return an actual cell; see L{DequeueCell} for usage pattern."""
         raise NotImplementedError
 
     def GetRowBackgroundColour(self, indexPath):
@@ -170,9 +257,9 @@ class UltimateTreeCtrl(wx.Panel):
     #====================
     #{ Reusable cells
 
-    def DequeueRow(self, identifier, factory):
+    def DequeueCell(self, identifier, factory):
         """
-        In order to avoid creating a new widget for each row, those
+        In order to avoid creating a new widget for each cell, those
         widgets (subclasses of L{CellBase}) should be designed to be
         reusable. Each type of widget should have a unique identifier
         (see L{GetIdentifier}); for each identifier a queue of unused
@@ -194,13 +281,14 @@ class UltimateTreeCtrl(wx.Panel):
 
         return cell
 
-    def _Queue(self, cell):
+    def _Queue(self, row):
         # Mark a cell as unused and put it back in its queue.
 
-        queue = self._queues.get(cell.GetIdentifier(), [])
-        queue.append(cell)
-        self._queues[cell.GetIdentifier()] = queue
-        cell.Show(False)
+        for indexPath, cell in row.cells:
+            queue = self._queues.get(cell.GetIdentifier(), [])
+            queue.append(cell)
+            self._queues[cell.GetIdentifier()] = queue
+            cell.Show(False)
 
     #}
 
@@ -215,7 +303,7 @@ class UltimateTreeCtrl(wx.Panel):
 
         self._queues = dict()
         self._expanded = set()
-        self._visibleCells = dict()
+        self._visibleRows = dict()
         self._buttons = list()
         self._selection = set()
 
@@ -253,7 +341,7 @@ class UltimateTreeCtrl(wx.Panel):
         self._Relayout()
         super(UltimateTreeCtrl, self).Refresh()
 
-        for cell in self._visibleCells.values():
+        for cell in self._visibleRows.values():
             cell.Refresh()
 
     def Collapse(self, indexPath):
@@ -264,11 +352,11 @@ class UltimateTreeCtrl(wx.Panel):
 
         try:
             for path in self._ExpandedNode(indexPath):
-                if path != indexPath and path in self._visibleCells:
+                if path != indexPath and path in self._visibleRows:
                     if path in self._selection:
                         self._Deselect(path)
-                    self._Queue(self._visibleCells[path])
-                    del self._visibleCells[path]
+                    self._Queue(self._visibleRows[path])
+                    del self._visibleRows[path]
             self._expanded.remove(indexPath)
         except KeyError:
             pass
@@ -341,31 +429,41 @@ class UltimateTreeCtrl(wx.Panel):
                 if currentPosition + height < y0 or currentPosition >= y0 + h:
                     currentPosition += height + self.GetVerticalMargin()
 
-                    if indexPath in self._visibleCells:
-                        cell = self._visibleCells[indexPath]
+                    if indexPath in self._visibleRows:
+                        cell = self._visibleRows[indexPath]
                         self._Queue(cell)
-                        del self._visibleCells[indexPath]
+                        del self._visibleRows[indexPath]
 
                     continue
 
-                # At least partially visible cell. Move it and show it.
-
-                if indexPath in self._visibleCells:
-                    cell = self._visibleCells[indexPath]
-                else:
-                    cell = self.GetRow(indexPath)
-                    self._visibleCells[indexPath] = cell
-
-                    if indexPath in self._selection:
-                        cell.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
-                    else:
-                        cell.SetBackgroundColour(self.GetRowBackgroundColour(indexPath))
+                # At least partially visible row. Move it and show it.
 
                 offset = 24 * len(indexPath)
-                cell.SetDimensions(offset, currentPosition - y0, w - offset, height)
-                cell.Layout()
-                cell.Show()
-                cell.Refresh()
+
+                if indexPath in self._visibleRows:
+                    row = self._visibleRows[indexPath]
+                else:
+                    row = Row(0, 0, 0, 0)
+
+                    def queryCell(headerPath):
+                        row.AddCell(headerPath, self.GetCell(indexPath, headerPath))
+                        for i in xrange(self.GetHeaderChildrenCount(headerPath)):
+                            queryCell(headerPath + (i,))
+
+                    for idx in xrange(self.GetRootHeadersCount()):
+                        queryCell((idx,))
+
+                    self._visibleRows[indexPath] = row
+
+                if indexPath in self._selection:
+                    row.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
+                else:
+                    row.SetBackgroundColour(self.GetRowBackgroundColour(indexPath))
+
+                row.SetDimensions(offset, currentPosition - y0, w - offset, height)
+                row.Layout(self)
+                row.Show()
+                row.Refresh()
 
                 currentPosition += height + self.GetVerticalMargin()
         finally:
@@ -379,8 +477,8 @@ class UltimateTreeCtrl(wx.Panel):
         evt.SetEventObject(self)
         self.ProcessEvent(evt)
 
-        if indexPath in self._visibleCells:
-            cell = self._visibleCells[indexPath]
+        if indexPath in self._visibleRows:
+            cell = self._visibleRows[indexPath]
             cell.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
 
     def _Deselect(self, indexPath):
@@ -394,8 +492,8 @@ class UltimateTreeCtrl(wx.Panel):
         except KeyError:
             pass
         else:
-            if indexPath in self._visibleCells:
-                cell = self._visibleCells[indexPath]
+            if indexPath in self._visibleRows:
+                cell = self._visibleRows[indexPath]
                 cell.SetBackgroundColour(self.GetRowBackgroundColour(indexPath))
 
     def _Expanded(self):
@@ -511,9 +609,7 @@ class UltimateTreeCtrl(wx.Panel):
         try:
             render = wx.RendererNative.Get()
 
-            for indexPath, cell in self._visibleCells.items():
-                cx, cy = cell.GetPositionTuple()
-                cw, ch = cell.GetClientSizeTuple()
+            for indexPath, row in self._visibleRows.items():
                 w, h = self._contentView.GetClientSizeTuple()
 
                 if indexPath in self._selection:
@@ -523,11 +619,11 @@ class UltimateTreeCtrl(wx.Panel):
 
                 dc.SetBrush(wx.Brush(col))
                 dc.SetPen(wx.Pen(col))
-                dc.DrawRectangle(0, cy, w, ch)
+                dc.DrawRectangle(0, row.y, w, row.h)
 
                 if self.GetRowChildrenCount(indexPath):
                     rect = (24 * (len(indexPath) - 1) + 4,
-                            cy + (ch - 16) / 2,
+                            row.y + (row.h - 16) / 2,
                             16,
                             16)
 
@@ -538,7 +634,7 @@ class UltimateTreeCtrl(wx.Panel):
                         render.DrawTreeItemButton(self, dc, rect)
 
                 dc.SetPen(wx.BLACK_PEN)
-                dc.DrawLine(0, cy + ch, w, cy + ch)
+                dc.DrawLine(0, row.y + row.h, w, row.y + row.h)
         finally:
             dc.EndDrawing()
 
@@ -562,13 +658,10 @@ class UltimateTreeCtrl(wx.Panel):
         self._ProcessLeftUpContent(x + evt.GetX(), y + evt.GetY(), evt.CmdDown())
 
     def _ProcessLeftUpContent(self, xc, yc, ctrl):
-        for indexPath, cell in self._visibleCells.items():
+        for indexPath, row in self._visibleRows.items():
             if self.GetRowChildrenCount(indexPath):
-                x, y = cell.GetPositionTuple()
-                w, h = cell.GetClientSizeTuple()
-
                 x, y, w, h = (24 * (len(indexPath) - 1) + 4,
-                              y + (h - 16) / 2,
+                              row.y + (row.h - 16) / 2,
                               16,
                               16)
 
@@ -577,11 +670,8 @@ class UltimateTreeCtrl(wx.Panel):
                     self.Toggle(indexPath)
                     break
         else:
-            for indexPath, cell in self._visibleCells.items():
-                x, y = cell.GetPositionTuple()
-                w, h = cell.GetClientSizeTuple()
-
-                if yc >= y and yc < y + h:
+            for indexPath, row in self._visibleRows.items():
+                if yc >= row.y and yc < row.y + row.h:
                     if ctrl:
                         if indexPath in self._selection:
                             self._Deselect(indexPath)
@@ -621,6 +711,17 @@ class TestCell(CellBase):
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self.__text, 0, wx.ALL, 3)
         self.SetSizer(sizer)
+
+        wx.EVT_PAINT(self, self.OnPaint)
+
+    def OnPaint(self, evt):
+        evt.Skip()
+
+        dc = wx.PaintDC(self)
+        w, h = self.GetSizeTuple()
+        dc.SetPen(wx.GREEN_PEN)
+        dc.SetBrush(wx.TRANSPARENT_BRUSH)
+        dc.DrawRectangle(0, 0, w, h)
 
     def SetLabel(self, label):
         self.__text.SetLabel(label)
@@ -698,15 +799,16 @@ class Test(UltimateTreeCtrl):
         return len(self._Get(indexPath, self.cells)[1])
 
     def GetRowHeight(self, indexPath):
-        return 50
+        return 150
 
     def GetRowBackgroundColour(self, indexPath):
         return wx.Colour(200, 100, 0)
 
-    def GetRow(self, indexPath):
-        cell = self.DequeueRow('StaticText', self.CreateCell)
+    def GetCell(self, indexPath, headerPath):
+        cell = self.DequeueCell('StaticText', self.CreateCell)
         text = self._Get(indexPath, self.cells)[0]
-        cell.SetLabel(text)
+        cat = self._Get(headerPath, self._headers)[0]
+        cell.SetLabel('%s (%s)' % (text, cat))
 
         return cell
 
