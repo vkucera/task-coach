@@ -30,7 +30,7 @@ The design is inspired from UIKit's UITableView.
 
 """
 
-import wx
+import wx, math
 
 
 #=======================================
@@ -68,6 +68,12 @@ EVT_ROW_SELECTED = wx.PyEventBinder(wxEVT_COMMAND_ROW_SELECTED)
 wxEVT_COMMAND_ROW_DESELECTED = wx.NewEventType()
 EVT_ROW_DESELECTED = wx.PyEventBinder(wxEVT_COMMAND_ROW_DESELECTED)
 
+wxEVT_COMMAND_HEADER_LCLICKED = wx.NewEventType()
+EVT_HEADER_LCLICKED = wx.PyEventBinder(wxEVT_COMMAND_HEADER_LCLICKED)
+
+wxEVT_COMMAND_HEADER_RCLICKED = wx.NewEventType()
+EVT_HEADER_RCLICKED = wx.PyEventBinder(wxEVT_COMMAND_HEADER_RCLICKED)
+
 #}
 
 #=======================================
@@ -76,6 +82,32 @@ EVT_ROW_DESELECTED = wx.PyEventBinder(wxEVT_COMMAND_ROW_DESELECTED)
 ULTTREE_SINGLE_SELECTION        = 0x01
 
 #}
+
+def _shortenString(dc, s, w, margin=3):
+    """
+    Returns a shortened version of s that fits into w pixels (in
+    width), adding an ellipsis in the middle of the string.
+    """
+
+    tw, th = dc.GetTextExtent(s)
+    if tw + margin * 2 <= w:
+        return s
+
+    tw, th = dc.GetTextExtent('...')
+    if tw + margin * 2 >= w:
+        return ''
+
+    m = int(len(s)/2)
+    left = s[:m - 1]
+    right = s[m + 1:]
+
+    while True:
+        r = left + '...' + right
+        tw, th = dc.GetTextExtent(r)
+        if tw + 2 * margin <= w:
+            return r
+        left = left[:-1]
+        right = right[1:]
 
 #=======================================
 #{ Tree control
@@ -90,6 +122,18 @@ class UltimateTreeCtrl(wx.Panel):
 
     #====================
     #{ Data source
+
+    def GetRootHeadersCount(self):
+        """Return the number of root headers."""
+        raise NotImplementedError
+
+    def GetHeaderText(self, indexPath):
+        """Return the title for the header."""
+        raise NotImplementedError
+
+    def GetHeaderChildrenCount(self, indexPath):
+        """Return the number of children of the header."""
+        raise NotImplementedError
 
     def GetRootCellsCount(self):
         """Return the number of root cells"""
@@ -183,7 +227,7 @@ class UltimateTreeCtrl(wx.Panel):
             def CalcMin(self):
                 return (-1, self.__callback())
 
-        self._headerView = wx.Panel(self)
+        self._headerView = wx.Panel(self, style=wx.FULL_REPAINT_ON_RESIZE)
         self._contentView = wx.ScrolledWindow(self)
 
         self._contentView.SetScrollRate(10, 10)
@@ -194,12 +238,16 @@ class UltimateTreeCtrl(wx.Panel):
         sizer.Add(self._contentView, 1, wx.EXPAND)
         self.SetSizer(sizer)
 
-        self._headerView.SetSize((-1, 20)) # TMP
+        self.FitHeader()
 
         wx.EVT_SCROLLWIN(self._contentView, self._OnScrollContent)
         wx.EVT_PAINT(self._contentView, self._OnPaintContent)
         wx.EVT_LEFT_UP(self._contentView, self._OnLeftUpContent)
         wx.EVT_SIZE(self._contentView, self._OnSizeContent)
+
+        wx.EVT_PAINT(self._headerView, self._OnPaintHeader)
+        wx.EVT_LEFT_UP(self._headerView, self._OnLeftUpHeader)
+        wx.EVT_RIGHT_UP(self._headerView, self._OnRightUpHeader)
 
     def Refresh(self):
         self._Relayout()
@@ -246,6 +294,31 @@ class UltimateTreeCtrl(wx.Panel):
             self.Collapse(indexPath)
         else:
             self.Expand(indexPath)
+
+    def FitHeader(self):
+        count = self.GetRootHeadersCount()
+        h = 0
+        for idx in xrange(count):
+            h = max(h, self._ComputeHeaderHeight((idx,)))
+
+        self._headerView.SetSize((-1, h))
+
+    def HeaderHitTest(self, x, y):
+        for indexPath, xx, yy, w, h in self._bounds:
+            if x >= xx and y >= yy and x < xx + w and y < yy + h:
+                return indexPath
+        return None
+
+    def _headerHeight(self):
+        if '__WXMAC__' in wx.PlatformInfo:
+            return 16
+        return 20
+
+    def _ComputeHeaderHeight(self, indexPath):
+        h = 0
+        for idx in xrange(self.GetHeaderChildrenCount(indexPath)):
+            h = max(h, self._ComputeHeaderHeight(indexPath + (idx,)))
+        return h + self._headerHeight()
 
     def _Relayout(self):
         # Recompute visible rows
@@ -369,6 +442,64 @@ class UltimateTreeCtrl(wx.Panel):
 
         evt.Skip()
 
+    def _OnPaintHeader(self, evt):
+        dc = wx.PaintDC(self._headerView)
+        dc.BeginDrawing()
+        try:
+            w, h = self._headerView.GetClientSizeTuple()
+
+            self._bounds = []
+
+            count = self.GetRootHeadersCount()
+
+            if count:
+                x = 0
+                remain = w
+                cw = 1.0 * w / count
+
+                for idx in xrange(count):
+                    if idx == count - 1:
+                        w = remain
+                    else:
+                        w = int(math.ceil(cw))
+                        remain -= w
+
+                    self._DrawHeader(dc, (idx,), x, w)
+
+                    x += w
+        finally:
+            dc.EndDrawing()
+
+    def _DrawHeader(self, dc, indexPath, x, w):
+        y = (len(indexPath) - 1) * self._headerHeight()
+
+        self._bounds.append((indexPath, x, y, w, self._headerHeight()))
+
+        txt = _shortenString(dc, self.GetHeaderText(indexPath), w)
+        render = wx.RendererNative.Get()
+        opts = wx.HeaderButtonParams()
+        opts.m_labelText = txt
+        render.DrawHeaderButton(self._headerView, dc, (int(x), y, int(w), self._headerHeight()),
+                                wx.CONTROL_CURRENT, params=opts)
+
+        count = self.GetHeaderChildrenCount(indexPath)
+
+        if count:
+            xx = 0
+            remain = w
+            cw = 1.0 * w / count
+
+            for idx in xrange(count):
+                if idx == count - 1:
+                    w = remain
+                else:
+                    w = int(math.ceil(cw))
+                    remain -= w
+
+                self._DrawHeader(dc, indexPath + (idx,), x + xx, w)
+
+                xx += w
+
     def _OnPaintContent(self, evt):
         # Draw lines between rows and expand buttons
 
@@ -413,6 +544,18 @@ class UltimateTreeCtrl(wx.Panel):
 
     def _OnLeftUpContent(self, evt):
         self._ProcessLeftUpContent(evt.GetX(), evt.GetY(), evt.CmdDown())
+
+    def _OnLeftUpHeader(self, event):
+        evt = wx.PyCommandEvent(wxEVT_COMMAND_HEADER_LCLICKED)
+        evt.indexPath = self.HeaderHitTest(event.GetX(), event.GetY())
+        evt.SetEventObject(self)
+        self.ProcessEvent(evt)
+
+    def _OnRightUpHeader(self, event):
+        evt = wx.PyCommandEvent(wxEVT_COMMAND_HEADER_RCLICKED)
+        evt.indexPath = self.HeaderHitTest(event.GetX(), event.GetY())
+        evt.SetEventObject(self)
+        self.ProcessEvent(evt)
 
     def _OnCellClicked(self, cell, evt):
         x, y = cell.GetPositionTuple()
@@ -476,7 +619,7 @@ class TestCell(CellBase):
         self.__text = wx.StaticText(self, wx.ID_ANY, '')
 
         sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(self.__text, 0, wx.ALL|wx.ALIGN_CENTRE, 3)
+        sizer.Add(self.__text, 0, wx.ALL, 3)
         self.SetSizer(sizer)
 
     def SetLabel(self, label):
@@ -513,17 +656,40 @@ class Test(UltimateTreeCtrl):
                       ('Dummy cell', []),
                       ('Dummy cell', [])])
 
+    _headers = ('Root', [ ('Task', []),
+                          ('Cat1',
+                           [('SCat 1.1', []),
+                            ('SCat 1.2', [])]),
+                          ('Cat2',
+                           []),
+                          ('Cat3',
+                           [('Scat 3.1', []),
+                            ('SCat 3.2',
+                             [('Scat 3.2.1', []),
+                              ('Scat 3.2.2', [])])])])
+
     def __init__(self, *args, **kwargs):
         super(Test, self).__init__(*args, **kwargs)
 
         EVT_ROW_SELECTED(self, self.OnCellSelected)
         EVT_ROW_DESELECTED(self, self.OnCellDeselected)
+        EVT_HEADER_LCLICKED(self, self.OnHeaderLeftClicked)
+        EVT_HEADER_RCLICKED(self, self.OnHeaderRightClicked)
 
     def _Get(self, indexPath, data):
         obj = data
         for idx in indexPath:
             obj = obj[1][idx]
         return obj
+
+    def GetRootHeadersCount(self):
+        return len(self._headers[1])
+
+    def GetHeaderText(self, indexPath):
+        return self._Get(indexPath, self._headers)[0]
+
+    def GetHeaderChildrenCount(self, indexPath):
+        return len(self._Get(indexPath, self._headers)[1])
 
     def GetRootCellsCount(self):
         return len(self.cells[1])
@@ -549,6 +715,18 @@ class Test(UltimateTreeCtrl):
 
     def OnCellDeselected(self, evt):
         print 'Deselect', self._Get(evt.indexPath, self.cells)[0]
+
+    def OnHeaderLeftClicked(self, evt):
+        if evt.indexPath:
+            print 'Click header', self._Get(evt.indexPath, self._headers)[0]
+        else:
+            print 'Click headers'
+
+    def OnHeaderRightClicked(self, evt):
+        if evt.indexPath:
+            print 'Right click header', self._Get(evt.indexPath, self._headers)[0]
+        else:
+            print 'Right click headers'
 
     def CreateCell(self, parent):
         return TestCell(parent, wx.ID_ANY)
