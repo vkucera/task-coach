@@ -80,7 +80,7 @@ ULTTREE_SINGLE_SELECTION        = 0x01
 #=======================================
 #{ Tree control
 
-class UltimateTreeCtrlContent(wx.ScrolledWindow):
+class UltimateTreeCtrl(wx.ScrolledWindow):
     """
     Rows are identified by their index path. This is a tuple holding
     the path to the cell relative to the tree's top cells. For
