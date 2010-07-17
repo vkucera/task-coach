@@ -80,6 +80,7 @@ EVT_HEADER_RCLICKED = wx.PyEventBinder(wxEVT_COMMAND_HEADER_RCLICKED)
 #{ Style constants
 
 ULTTREE_SINGLE_SELECTION        = 0x01
+ULTTREE_STRIPE                  = 0x02
 
 #}
 
@@ -476,6 +477,7 @@ class UltimateTreeCtrl(wx.Panel):
             x0 *= xu
             y0 *= yu
             w, h = self._contentView.GetClientSizeTuple()
+            currentIndex = 0
 
             # XXXFIXME this should be optimized to avoid looping over
             # the whole mess
@@ -528,7 +530,20 @@ class UltimateTreeCtrl(wx.Panel):
                 if indexPath in self._selection:
                     row.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
                 else:
-                    row.SetBackgroundColour(self.GetRowBackgroundColour(indexPath))
+                    col = self.GetRowBackgroundColour(indexPath)
+                    r, g, b = col.Red(), col.Green(), col.Blue()
+
+                    if (currentIndex % 2) and (self.__style & ULTTREE_STRIPE):
+                        if r + g + b < 128 * 3:
+                            r = min(255, r + 30)
+                            g = min(255, g + 30)
+                            b = min(255, b + 30)
+                        else:
+                            r = max(0, r - 30)
+                            g = max(0, g - 30)
+                            b = max(0, b - 30)
+
+                    row.SetBackgroundColour(wx.Colour(r, g, b))
 
                 row.SetDimensions(offset, currentPosition - y0, w - offset, height)
                 row.Layout(self)
@@ -536,6 +551,7 @@ class UltimateTreeCtrl(wx.Panel):
                 row.Refresh()
 
                 currentPosition += height + self.GetVerticalMargin()
+                currentIndex += 1
         finally:
             self.Thaw()
 
@@ -856,6 +872,8 @@ class Test(UltimateTreeCtrl):
                               ('Scat 3.2.2', [])])])])
 
     def __init__(self, *args, **kwargs):
+        kwargs['treeStyle'] = ULTTREE_STRIPE
+
         super(Test, self).__init__(*args, **kwargs)
 
         EVT_ROW_SELECTED(self, self.OnCellSelected)
