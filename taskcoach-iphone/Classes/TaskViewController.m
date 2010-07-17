@@ -757,9 +757,7 @@ static void deleteTask(CDTask *task)
 			[taskCell setTask:task target:self action:@selector(onToggleTaskCompletion:)];
 			
 			cell = (UITableViewCell *)taskCell;
-
-			if (self.editing)
-				cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+			cell.editingAccessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 		}
 	}
 
