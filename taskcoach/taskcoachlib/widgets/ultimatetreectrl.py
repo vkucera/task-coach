@@ -111,6 +111,12 @@ def _shortenString(dc, s, w, margin=3):
         right = right[1:]
 
 
+def _tupleStartsWith(tpl, otherTpl):
+    """Returns True if otherTpl is a prefix of tpl"""
+
+    return otherTpl == tpl[:len(otherTpl)]
+
+
 class RowBase(object):
     def __init__(self, x, y, w, h):
         super(RowBase, self).__init__()
@@ -441,6 +447,48 @@ class UltimateTreeCtrl(wx.Panel):
             self.Collapse(indexPath)
         else:
             self.Expand(indexPath)
+
+    def InsertRow(self, indexPath):
+        """
+        Inserts a new row.
+        """
+
+        for path, row in self._visibleRows.items():
+            if _tupleStartsWith(path, indexPath[:-1]) and len(path) >= len(indexPath):
+                if path[len(indexPath) - 1] >= indexPath[-1]:
+                    newPath = path[:len(indexPath) - 1] + (path[len(indexPath) - 1] + 1,) + path[len(indexPath) + 1:]
+                    del self._visibleRows[path]
+                    self._visibleRows[newPath] = row
+
+        for path in set(self._selection):
+            if _tupleStartsWith(path, indexPath[:-1]) and len(path) >= len(indexPath):
+                if path[len(indexPath) - 1] >= indexPath[-1]:
+                    newPath = path[:len(indexPath) - 1] + (path[len(indexPath) - 1] + 1,) + path[len(indexPath) + 1:]
+                    self._selection.remove(path)
+                    self._selection.add(newPath)
+
+        self.Refresh()
+
+    def DeleteRow(self, indexPath):
+        """
+        Removes a row.
+        """
+
+        for path, row in self._visibleRows.items():
+            if _tupleStartsWith(path, indexPath[:-1]) and len(path) >= len(indexPath):
+                if path[len(indexPath) - 1] > indexPath[-1]:
+                    newPath = path[:len(indexPath) - 1] + (path[len(indexPath) - 1] - 1,) + path[len(indexPath) + 1:]
+                    del self._visibleRows[path]
+                    self._visibleRows[newPath] = row
+
+        for path in set(self._selection):
+            if _tupleStartsWith(path, indexPath[:-1]) and len(path) >= len(indexPath):
+                if path[len(indexPath) - 1] > indexPath[-1]:
+                    newPath = path[:len(indexPath) - 1] + (path[len(indexPath) - 1] - 1,) + path[len(indexPath) + 1:]
+                    self._selection.remove(path)
+                    self._selection.add(newPath)
+
+        self.Refresh()
 
     def FitHeader(self):
         count = self.GetRootHeadersCount()
@@ -918,7 +966,7 @@ class Test(UltimateTreeCtrl):
         cell = self.DequeueCell('StaticText', self.CreateCell)
         text = self._Get(indexPath, self.cells)[0]
         cat = self._Get(headerPath, self._headers)[0]
-        cell.SetLabel('%s (%s)' % (text, cat))
+        cell.SetLabel('%s (%s) at %s' % (text, cat, str(indexPath)))
 
         return cell
 
