@@ -1024,12 +1024,21 @@ class Frame(wx.Frame):
         selCheck = wx.CheckBox(self, wx.ID_ANY, 'SINGLE_SELECTION')
         wx.EVT_CHECKBOX(selCheck, wx.ID_ANY, self.OnToggleSel)
 
+        log = wx.TextCtrl(self, wx.ID_ANY, '', style=wx.TE_MULTILINE)
+
+        class Out(object):
+            def write(self, bf):
+                log.AppendText(bf)
+        import sys
+        sys.stdout = Out()
+
         sizer = wx.BoxSizer(wx.VERTICAL)
         vsz = wx.BoxSizer(wx.HORIZONTAL)
         vsz.Add(stripeCheck, 0)
         vsz.Add(selCheck, 0)
         sizer.Add(vsz, 0, wx.EXPAND)
         sizer.Add(self.tree, 1, wx.EXPAND)
+        sizer.Add(log, 0, wx.EXPAND)
         self.SetSizer(sizer)
 
     def OnToggleStripe(self, evt):
