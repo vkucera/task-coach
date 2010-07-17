@@ -43,6 +43,12 @@
 	self.navigationItem.title = parent.name;
 }
 
+- (void)childWasPopped
+{
+	[self populate];
+	[super childWasPopped];
+}
+
 - (NSPredicate *)predicate
 {
 	return [NSPredicate predicateWithFormat:@"parent == %@", parent];
