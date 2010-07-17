@@ -1,4 +1,6 @@
 
+==== Beta 3.0b2: 2010-07-17 ====
+
 2010-07-17  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* misc: Better search; all matching tasks are displayed, not just visible ones.
 	* misc: When creating a subtask, it would not appear immediately
