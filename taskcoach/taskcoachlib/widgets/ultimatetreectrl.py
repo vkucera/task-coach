@@ -47,7 +47,7 @@ class CellBase(wx.Panel):
         wx.EVT_LEFT_UP(self, self._OnLeftUp)
 
     def _OnLeftUp(self, evt):
-        self.GetParent()._OnCellClicked(self, evt)
+        self.GetParent().GetParent()._OnCellClicked(self, evt)
 
     def GetIdentifier(self):
         """
@@ -80,7 +80,7 @@ ULTTREE_SINGLE_SELECTION        = 0x01
 #=======================================
 #{ Tree control
 
-class UltimateTreeCtrl(wx.ScrolledWindow):
+class UltimateTreeCtrl(wx.Panel):
     """
     Rows are identified by their index path. This is a tuple holding
     the path to the cell relative to the tree's top cells. For
@@ -137,7 +137,8 @@ class UltimateTreeCtrl(wx.ScrolledWindow):
         to the actual underlying data.
 
         The second argument is a factory used to create a new widget
-        in case there is no unused one for this identifier.
+        in case there is no unused one for this identifier. It will be
+        passed the new widget's parent as first argument.
         """
         if identifier in self._queues:
             queue = self._queues[identifier]
@@ -145,7 +146,7 @@ class UltimateTreeCtrl(wx.ScrolledWindow):
                 cell = queue.pop()
                 return cell
 
-        cell = factory()
+        cell = factory(self._contentView)
 
         return cell
 
@@ -182,18 +183,28 @@ class UltimateTreeCtrl(wx.ScrolledWindow):
             def CalcMin(self):
                 return (-1, self.__callback())
 
-        self.SetScrollRate(10, 10)
-        self.SetSizer(_Sizer(self._ComputeHeight))
+        self._headerView = wx.Panel(self)
+        self._contentView = wx.ScrolledWindow(self)
 
-        wx.EVT_SCROLLWIN(self, self._OnScroll)
-        wx.EVT_SIZE(self, self._OnSize)
-        wx.EVT_PAINT(self, self._OnPaint)
+        self._contentView.SetScrollRate(10, 10)
+        self._contentView.SetSizer(_Sizer(self._ComputeHeight))
 
-        wx.EVT_LEFT_UP(self, self._OnLeftUp)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        sizer.Add(self._headerView, 0, wx.EXPAND)
+        sizer.Add(self._contentView, 1, wx.EXPAND)
+        self.SetSizer(sizer)
+
+        self._headerView.SetSize((-1, 20)) # TMP
+
+        wx.EVT_SCROLLWIN(self._contentView, self._OnScrollContent)
+        wx.EVT_PAINT(self._contentView, self._OnPaintContent)
+        wx.EVT_LEFT_UP(self._contentView, self._OnLeftUpContent)
+        wx.EVT_SIZE(self._contentView, self._OnSizeContent)
 
     def Refresh(self):
         self._Relayout()
         super(UltimateTreeCtrl, self).Refresh()
+
         for cell in self._visibleCells.values():
             cell.Refresh()
 
@@ -241,11 +252,11 @@ class UltimateTreeCtrl(wx.ScrolledWindow):
 
         self.Freeze()
         try:
-            x0, y0 = self.GetViewStart()
-            xu, yu = self.GetScrollPixelsPerUnit()
+            x0, y0 = self._contentView.GetViewStart()
+            xu, yu = self._contentView.GetScrollPixelsPerUnit()
             x0 *= xu
             y0 *= yu
-            w, h = self.GetClientSizeTuple()
+            w, h = self._contentView.GetClientSizeTuple()
 
             # XXXFIXME this should be optimized to avoid looping over
             # the whole mess
@@ -347,25 +358,24 @@ class UltimateTreeCtrl(wx.ScrolledWindow):
 
         return 0
 
-    def _OnScroll(self, evt):
+    def _OnScrollContent(self, evt):
         self._Relayout()
         self.Refresh()
 
         evt.Skip()
 
-    def _OnSize(self, evt):
+    def _OnSizeContent(self, evt):
         self._Relayout()
 
         evt.Skip()
 
-    def _OnPaint(self, evt):
+    def _OnPaintContent(self, evt):
         # Draw lines between rows and expand buttons
 
-        dc = wx.PaintDC(self)
+        dc = wx.PaintDC(self._contentView)
         dc.SetBackground(wx.WHITE_BRUSH)
         dc.Clear()
 
-        gc = wx.GraphicsContext.Create(dc)
         dc.BeginDrawing()
         try:
             render = wx.RendererNative.Get()
@@ -373,7 +383,7 @@ class UltimateTreeCtrl(wx.ScrolledWindow):
             for indexPath, cell in self._visibleCells.items():
                 cx, cy = cell.GetPositionTuple()
                 cw, ch = cell.GetClientSizeTuple()
-                w, h = self.GetClientSizeTuple()
+                w, h = self._contentView.GetClientSizeTuple()
 
                 if indexPath in self._selection:
                     col = wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)
@@ -401,14 +411,14 @@ class UltimateTreeCtrl(wx.ScrolledWindow):
         finally:
             dc.EndDrawing()
 
-    def _OnLeftUp(self, evt):
-        self._ProcessLeftUp(evt.GetX(), evt.GetY(), evt.CmdDown())
+    def _OnLeftUpContent(self, evt):
+        self._ProcessLeftUpContent(evt.GetX(), evt.GetY(), evt.CmdDown())
 
     def _OnCellClicked(self, cell, evt):
         x, y = cell.GetPositionTuple()
-        self._ProcessLeftUp(x + evt.GetX(), y + evt.GetY(), evt.CmdDown())
+        self._ProcessLeftUpContent(x + evt.GetX(), y + evt.GetY(), evt.CmdDown())
 
-    def _ProcessLeftUp(self, xc, yc, ctrl):
+    def _ProcessLeftUpContent(self, xc, yc, ctrl):
         for indexPath, cell in self._visibleCells.items():
             if self.GetRowChildrenCount(indexPath):
                 x, y = cell.GetPositionTuple()
@@ -540,8 +550,8 @@ class Test(UltimateTreeCtrl):
     def OnCellDeselected(self, evt):
         print 'Deselect', self._Get(evt.indexPath, self.cells)[0]
 
-    def CreateCell(self):
-        return TestCell(self, wx.ID_ANY)
+    def CreateCell(self, parent):
+        return TestCell(parent, wx.ID_ANY)
 
 
 class Frame(wx.Frame):
