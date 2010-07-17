@@ -196,17 +196,21 @@ static void deleteTask(CDTask *task)
 	[request setEntity:[NSEntityDescription entityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()]];
 
 	NSMutableArray *preds = [[NSMutableArray alloc] init];
-	[preds addObject:[self predicate]];
 	[preds addObject:[NSPredicate predicateWithFormat:@"status != %d", STATUS_DELETED]];
-	if (![Configuration configuration].showCompleted)
-		[preds addObject:[NSPredicate predicateWithFormat:@"dateStatus != %d", TASKSTATUS_COMPLETED]];
-	if (![Configuration configuration].showInactive)
-		[preds addObject:[NSPredicate predicateWithFormat:@"dateStatus != %d", TASKSTATUS_NOTSTARTED]];
 
 	if ([searchCell.searchBar.text length])
 	{
 		[preds addObject:[NSPredicate predicateWithFormat:@"name CONTAINS[cd] %@ OR longDescription CONTAINS[cd] %@",
 						  searchCell.searchBar.text, searchCell.searchBar.text]];
+	}
+	else
+	{
+		if (![Configuration configuration].showCompleted)
+			[preds addObject:[NSPredicate predicateWithFormat:@"dateStatus != %d", TASKSTATUS_COMPLETED]];
+		if (![Configuration configuration].showInactive)
+			[preds addObject:[NSPredicate predicateWithFormat:@"dateStatus != %d", TASKSTATUS_NOTSTARTED]];
+
+		[preds addObject:[self predicate]];
 	}
 
 	[preds addObject:[NSPredicate predicateWithFormat:@"file = %@", [Configuration configuration].cdCurrentFile]];
@@ -970,7 +974,7 @@ static void deleteTask(CDTask *task)
 	[ctrl release];
 }
 
-// UISearchBarDelegate
+#pragma mark UISearchBarDelegate
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
@@ -978,7 +982,7 @@ static void deleteTask(CDTask *task)
 	
 	searchCell.searchBar.text = searchBar.text;
 	calendarSearch.text = searchBar.text;
-
+	
 	[self populate];
 	[self.tableView reloadData];
 	[self.calendarView reloadDay];

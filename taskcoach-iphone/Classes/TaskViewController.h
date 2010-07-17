@@ -43,6 +43,7 @@
 	UIPopoverController *popCtrl;
 
 	PaperHeaderView *headerView;
+	BOOL incrementalSearch;
 }
 
 @property (nonatomic, readonly) UITableView *tableView;
