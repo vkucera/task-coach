@@ -34,7 +34,8 @@ of "23:59".''', 'http://uservoice.com/a/nd3mH'),
         Feature('''Mass editing of items. When editing multiple items (tasks, 
 notes, etc.), the edit dialog allows for selectively changing attributes
 of all edited items.''', 'http://uservoice.com/a/ahxq8'),
-        Feature('''Less intrusive notifications (reminders).''')
+        Feature('''Less intrusive notifications (reminders).'''),
+        Feature('''The calendar orientation can be changed.'''),
         ],
     implementationChanged=[
         Implementation('''The task file format was changed to support start, due
