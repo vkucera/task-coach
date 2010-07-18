@@ -45,9 +45,13 @@ class CellBase(wx.Panel):
         super(CellBase, self).__init__(*args, **kwargs)
 
         wx.EVT_LEFT_UP(self, self._OnLeftUp)
+        wx.EVT_LEFT_DCLICK(self, self._OnDClick)
 
     def _OnLeftUp(self, evt):
         self.GetParent().GetParent()._OnCellClicked(self, evt)
+
+    def _OnDClick(self, evt):
+        self.GetParent().GetParent()._OnCellDClicked(self, evt)
 
     def GetIdentifier(self):
         """
@@ -73,6 +77,9 @@ EVT_HEADER_LCLICKED = wx.PyEventBinder(wxEVT_COMMAND_HEADER_LCLICKED)
 
 wxEVT_COMMAND_HEADER_RCLICKED = wx.NewEventType()
 EVT_HEADER_RCLICKED = wx.PyEventBinder(wxEVT_COMMAND_HEADER_RCLICKED)
+
+wxEVT_COMMAND_ROW_LEFT_DCLICK = wx.NewEventType()
+EVT_ROW_LEFT_DCLICK = wx.PyEventBinder(wxEVT_COMMAND_ROW_LEFT_DCLICK)
 
 #}
 
@@ -407,6 +414,7 @@ class UltimateTreeCtrl(wx.Panel):
         wx.EVT_SCROLLWIN(self._contentView, self._OnScrollContent)
         wx.EVT_PAINT(self._contentView, self._OnPaintContent)
         wx.EVT_LEFT_UP(self._contentView, self._OnLeftUpContent)
+        wx.EVT_LEFT_DCLICK(self._contentView, self._OnLeftDClickContent)
         wx.EVT_SIZE(self._contentView, self._OnSizeContent)
 
         wx.EVT_PAINT(self._headerView, self._OnPaintHeader)
@@ -869,6 +877,9 @@ class UltimateTreeCtrl(wx.Panel):
     def _OnLeftUpContent(self, evt):
         self._ProcessLeftUpContent(evt.GetX(), evt.GetY(), evt.CmdDown())
 
+    def _OnLeftDClickContent(self, evt):
+        self._ProcessLeftDClickContent(evt.GetX(), evt.GetY())
+
     def _OnLeftDownHeader(self, evt):
         if self._headerMouseState == 1:
             self._headerView.CaptureMouse()
@@ -952,6 +963,25 @@ class UltimateTreeCtrl(wx.Panel):
         x, y = cell.GetPositionTuple()
         self._ProcessLeftUpContent(x + evt.GetX(), y + evt.GetY(), evt.CmdDown())
 
+    def _OnCellDClicked(self, cell, evt):
+        x, y = cell.GetPositionTuple()
+        self._ProcessLeftDClickContent(x + evt.GetX(), y + evt.GetY())
+
+    def HitTestContent(self, xc, yc):
+        """
+        Returns the index path for the row at (xc, yc) or None.
+        """
+        for indexPath, row in self._visibleRows.items():
+            if yc >= row.y and yc < row.y + row.h:
+                return indexPath
+        return None
+
+    def _ProcessLeftDClickContent(self, x, y):
+        evt = wx.PyCommandEvent(wxEVT_COMMAND_ROW_LEFT_DCLICK)
+        evt.indexPath = self.HitTestContent(x, y)
+        evt.SetEventObject(self)
+        self.ProcessEvent(evt)
+
     def _ProcessLeftUpContent(self, xc, yc, ctrl):
         for indexPath, row in self._visibleRows.items():
             if self.GetRowChildrenCount(indexPath):
@@ -965,31 +995,30 @@ class UltimateTreeCtrl(wx.Panel):
                     self.Toggle(indexPath)
                     break
         else:
-            for indexPath, row in self._visibleRows.items():
-                if yc >= row.y and yc < row.y + row.h:
-                    if ctrl:
-                        if indexPath in self._selection:
-                            self._Deselect(indexPath)
-                        else:
-                            if self.__style & ULTTREE_SINGLE_SELECTION:
-                                for path in set(self._selection):
-                                    self._Deselect(path)
-                            self._Select(indexPath)
-                    else:
-                        already = False
-                        for path in set(self._selection):
-                            if path == indexPath:
-                                already = True
-                            else:
-                                self._Deselect(path)
-                        if not already:
-                            self._Select(indexPath)
-
-                    self.Refresh()
-                    break
-            else:
+            indexPath = self.HitTestContent(xc, yc)
+            if indexPath is None:
                 for indexPath in set(self._selection):
                     self._Deselect(indexPath)
+            else:
+                if ctrl:
+                    if indexPath in self._selection:
+                        self._Deselect(indexPath)
+                    else:
+                        if self.__style & ULTTREE_SINGLE_SELECTION:
+                            for path in set(self._selection):
+                                self._Deselect(path)
+                        self._Select(indexPath)
+                else:
+                    already = False
+                    for path in set(self._selection):
+                        if path == indexPath:
+                            already = True
+                        else:
+                            self._Deselect(path)
+                    if not already:
+                        self._Select(indexPath)
+
+                self.Refresh()
 
 #}
 
@@ -1088,6 +1117,7 @@ class Test(UltimateTreeCtrl):
         EVT_ROW_DESELECTED(self, self.OnCellDeselected)
         EVT_HEADER_LCLICKED(self, self.OnHeaderLeftClicked)
         EVT_HEADER_RCLICKED(self, self.OnHeaderRightClicked)
+        EVT_ROW_LEFT_DCLICK(self, self.OnRowDClick)
 
     def _Get(self, indexPath, data):
         obj = data
@@ -1151,6 +1181,12 @@ class Test(UltimateTreeCtrl):
 
     def OnCellDeselected(self, evt):
         print 'Deselect', self._Get(evt.indexPath, self.cells)[0]
+
+    def OnRowDClick(self, evt):
+        if evt.indexPath:
+            print 'Double-click', self._Get(evt.indexPath, self.cells)[0]
+        else:
+            print 'Double-click'
 
     def OnHeaderLeftClicked(self, evt):
         if evt.indexPath:
