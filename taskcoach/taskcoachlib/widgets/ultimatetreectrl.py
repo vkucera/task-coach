@@ -934,8 +934,8 @@ class UltimateTreeCtrl(wx.Panel):
 
             if x < lx + 20:
                 x = lx + 20
-            if x > rx + w - 20:
-                x = rx + w - 20
+            if x > rx + rw - 20:
+                x = rx + rw - 20
 
             totalWeight = self._headerSizes[left] + self._headerSizes[right]
             self._headerSizes[left] = 1.0 * (x - lx) / (lw + rw) * totalWeight
