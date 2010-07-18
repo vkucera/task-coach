@@ -175,7 +175,7 @@ class Row(RowBase):
 
         x = 0
         remain = self.w + self.x
-        cw = 1.0 * (self.w + self.x) / count
+        cw = self.w + self.x
         state = 0
         startX = None
         totalW = None
@@ -198,12 +198,11 @@ class Row(RowBase):
                 count = tree.GetHeaderChildrenCount(indexPath)
 
                 if count:
-                    ccw = 1.0 * cw / count
                     for i in xrange(count):
                         if i == count -1:
                             w = remain
                         else:
-                            w = int(math.ceil(ccw))
+                            w = int(math.ceil(tree._headerSizes.get(indexPath + (i,), 1.0 / count) * cw))
 
                         _layout(indexPath + (i,), self.cells[indexPath + (i,)],
                                 cx + xx, cy + h, w, ch - h)
@@ -214,7 +213,7 @@ class Row(RowBase):
             if idx == count - 1:
                 w = remain
             else:
-                w = int(math.ceil(cw))
+                w = int(math.ceil(tree._headerSizes.get((idx,), 1.0 / count) * cw))
 
             remain -= w + 1
 
@@ -371,6 +370,13 @@ class UltimateTreeCtrl(wx.Panel):
         self._visibleRows = dict()
         self._buttons = list()
         self._selection = set()
+        self._headerSizes = dict()
+
+        # 0: normal
+        # 1: pointer on header boundary
+        # 2: resizing
+
+        self._headerMouseState = 0
 
         class _Sizer(wx.PySizer):
             def __init__(self, callback):
@@ -399,8 +405,12 @@ class UltimateTreeCtrl(wx.Panel):
         wx.EVT_SIZE(self._contentView, self._OnSizeContent)
 
         wx.EVT_PAINT(self._headerView, self._OnPaintHeader)
+        wx.EVT_LEFT_DOWN(self._headerView, self._OnLeftDownHeader)
         wx.EVT_LEFT_UP(self._headerView, self._OnLeftUpHeader)
         wx.EVT_RIGHT_UP(self._headerView, self._OnRightUpHeader)
+
+        wx.EVT_MOTION(self._headerView, self._OnMotionHeader)
+        wx.EVT_LEAVE_WINDOW(self._headerView, self._OnLeaveHeader)
 
     def SetTreeStyle(self, style):
         self.__style = style
@@ -685,14 +695,13 @@ class UltimateTreeCtrl(wx.Panel):
         dc = wx.PaintDC(self._headerView)
         dc.BeginDrawing()
         try:
-            w, h = self._headerView.GetClientSizeTuple()
+            totalW, h = self._headerView.GetClientSizeTuple()
 
             # Respect alignment if the scrollbar is visible
             cw1, _ = self._contentView.GetClientSizeTuple()
             cw2, _ = self._contentView.GetSizeTuple()
 
             wOffset = cw2 - cw1
-            print wOffset
 
             self._bounds = []
 
@@ -700,52 +709,57 @@ class UltimateTreeCtrl(wx.Panel):
 
             if count:
                 x = 0
-                remain = w
-                cw = 1.0 * (w - wOffset) / count
+                remain = totalW
+                cw = totalW - wOffset
 
                 for idx in xrange(count):
+                    if not (idx,) in self._headerSizes:
+                        self._headerSizes[(idx,)] = 1.0 / count
+
                     if idx == count - 1:
                         w = remain
                     else:
-                        w = int(math.ceil(cw))
+                        w = int(math.ceil(self._headerSizes[(idx,)] * cw))
                         remain -= w + 1
 
                     self._DrawHeader(dc, (idx,), x, w)
 
                     x += w + 1
 
-                    dc.SetPen(wx.BLACK_PEN)
-                    dc.DrawLine(x - 1, 0, x - 1, h)
+            self._bounds.sort(lambda x, y: cmp(len(x[0]), len(y[0])))
         finally:
             dc.EndDrawing()
 
-    def _DrawHeader(self, dc, indexPath, x, w):
+    def _DrawHeader(self, dc, indexPath, x, totalW):
         y = (len(indexPath) - 1) * self._headerHeight()
 
-        self._bounds.append((indexPath, x, y, w, self._headerHeight()))
+        self._bounds.append((indexPath, x, y, totalW, self._headerHeight()))
 
-        txt = _shortenString(dc, self.GetHeaderText(indexPath), w)
+        txt = _shortenString(dc, self.GetHeaderText(indexPath), totalW)
         render = wx.RendererNative.Get()
         opts = wx.HeaderButtonParams()
         opts.m_labelText = txt
-        render.DrawHeaderButton(self._headerView, dc, (int(x), y, int(w), self._headerHeight()),
+        render.DrawHeaderButton(self._headerView, dc, (int(x), y, int(totalW), self._headerHeight()),
                                 wx.CONTROL_CURRENT, params=opts)
 
         count = self.GetHeaderChildrenCount(indexPath)
 
         if count:
             xx = 0
-            remain = w
-            cw = 1.0 * w / count
+            remain = totalW
 
             for idx in xrange(count):
+                newIndexPath = indexPath + (idx,)
+                if newIndexPath not in self._headerSizes:
+                    self._headerSizes[newIndexPath] = 1.0 / count
+
                 if idx == count - 1:
                     w = remain
                 else:
-                    w = int(math.ceil(cw))
+                    w = int(math.ceil(self._headerSizes[newIndexPath] * totalW))
                     remain -= w
 
-                self._DrawHeader(dc, indexPath + (idx,), x + xx, w)
+                self._DrawHeader(dc, newIndexPath, x + xx, w)
 
                 xx += w
 
@@ -792,17 +806,84 @@ class UltimateTreeCtrl(wx.Panel):
     def _OnLeftUpContent(self, evt):
         self._ProcessLeftUpContent(evt.GetX(), evt.GetY(), evt.CmdDown())
 
+    def _OnLeftDownHeader(self, evt):
+        if self._headerMouseState == 1:
+            self._headerView.CaptureMouse()
+            self._headerMouseState = 2
+            self._resizingOrigin = evt.GetX()
+        else:
+            evt.Skip()
+
     def _OnLeftUpHeader(self, event):
-        evt = wx.PyCommandEvent(wxEVT_COMMAND_HEADER_LCLICKED)
-        evt.indexPath = self.HeaderHitTest(event.GetX(), event.GetY())
-        evt.SetEventObject(self)
-        self.ProcessEvent(evt)
+        if self._headerMouseState == 2:
+            self._headerView.ReleaseMouse()
+            wx.SetCursor(wx.STANDARD_CURSOR)
+            self._headerMouseState = 0
+        else:
+            evt = wx.PyCommandEvent(wxEVT_COMMAND_HEADER_LCLICKED)
+            evt.indexPath = self.HeaderHitTest(event.GetX(), event.GetY())
+            evt.SetEventObject(self)
+            self.ProcessEvent(evt)
 
     def _OnRightUpHeader(self, event):
         evt = wx.PyCommandEvent(wxEVT_COMMAND_HEADER_RCLICKED)
         evt.indexPath = self.HeaderHitTest(event.GetX(), event.GetY())
         evt.SetEventObject(self)
         self.ProcessEvent(evt)
+
+    def _OnMotionHeader(self, evt):
+        x, y = evt.GetX(), evt.GetY()
+        w, h = self.GetClientSizeTuple()
+
+        if self._headerMouseState in [0, 1]:
+            # This assumes that _bounds contains the headers from the
+            # top down; see the sort in header drawing code.
+
+            for indexPath, xx, yy, ww, hh in self._bounds:
+                if x >= xx and x < xx + ww:
+                    if min(x - xx, xx + ww - x) <= 4:
+                        if x > 4 and x < w - 4:
+                            if self._headerMouseState == 0:
+                                if x - xx > xx + ww - x:
+                                    left, right = (indexPath, indexPath[:-1] + (indexPath[-1] + 1,))
+                                    for tpl in self._bounds:
+                                        if tpl[0] == right:
+                                            rx, _, rw, _ = tpl[1:]
+                                            break
+                                    self._resizingHeaders = (left, xx, ww, right, rx, rw)
+                                else:
+                                    left, right = (indexPath[:-1] + (indexPath[-1] - 1,), indexPath)
+                                    for tpl in self._bounds:
+                                        if tpl[0] == left:
+                                            lx, _, lw, _ = tpl[1:]
+                                            break
+                                    self._resizingHeaders = (left, lx, lw, right, xx, ww)
+
+                                self._headerMouseState = 1
+                                wx.SetCursor(wx.StockCursor(wx.CURSOR_SIZEWE))
+                            return
+
+            if self._headerMouseState == 1:
+                self._headerMouseState = 0
+                wx.SetCursor(wx.STANDARD_CURSOR)
+        elif self._headerMouseState == 2:
+            left, lx, lw, right, rx, rw = self._resizingHeaders
+
+            if x < lx + 20:
+                x = lx + 20
+            if x > rx + w - 20:
+                x = rx + w - 20
+
+            totalWeight = self._headerSizes[left] + self._headerSizes[right]
+            self._headerSizes[left] = 1.0 * (x - lx) / (lw + rw) * totalWeight
+            self._headerSizes[right] = totalWeight - self._headerSizes[left]
+
+            self.Refresh()
+
+    def _OnLeaveHeader(self, evt):
+        if self._headerMouseState == 1:
+            self._headerMouseState = 0
+            wx.SetCursor(wx.STANDARD_CURSOR)
 
     def _OnCellClicked(self, cell, evt):
         x, y = cell.GetPositionTuple()
