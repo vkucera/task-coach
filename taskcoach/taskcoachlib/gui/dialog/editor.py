@@ -1055,6 +1055,13 @@ class EditorWithCommand(widgets.Dialog):
         self._interior.setFocus(columnName)
         patterns.Publisher().registerObserver(self.onItemRemoved, 
             eventType=container.removeItemEventType(), eventSource=container)
+
+        if '__WXMAC__' in wx.PlatformInfo:
+            # The window manager does this automatically on other
+            # platforms but on Mac OS X it opens by default in the
+            # top-left corner of the first display. This gets annoying
+            # on a 2560x1440 27" + 1920x1200 24" dual screen...
+            self.CentreOnParent()
         
     def cancel(self, *args, **kwargs): # pylint: disable-msg=W0221
         patterns.Publisher().removeObserver(self.onItemRemoved)
