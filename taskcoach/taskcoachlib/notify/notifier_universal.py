@@ -129,14 +129,13 @@ class NotificationFrameBase(_NotifyBase):
 
     def __init__(self, title, icon=None, parent=None):
         style = self.Style()
+
         if parent is None:
             style |= wx.STAY_ON_TOP
         else:
             style |= wx.FRAME_FLOAT_ON_PARENT
 
         super(NotificationFrameBase, self).__init__(parent, wx.ID_ANY, u'', style=style)
-
-        self.SetExtraStyle(wx.WS_EX_TRANSIENT)
 
         self.Populate(title, icon=icon)
 
@@ -206,7 +205,12 @@ class NotificationFrameBase(_NotifyBase):
     def Style(self):
         """Return the frame's style"""
 
-        return wx.FRAME_NO_TASKBAR|wx.TAB_TRAVERSAL
+        style = wx.FRAME_NO_TASKBAR|wx.TAB_TRAVERSAL
+
+        if '__WXMAC__' in wx.PlatformInfo:
+            style |= wx.NO_BORDER|wx.POPUP_WINDOW
+
+        return style
 
     def DoClose(self, evt=None):
         """Use this method instead of Close. Never use Close directly."""

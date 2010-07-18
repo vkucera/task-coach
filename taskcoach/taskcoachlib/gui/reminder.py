@@ -51,7 +51,7 @@ class ReminderPanel(wx.Panel):
         for label in _('Reminder date/time') + ':', \
             render.dateTime(self.frame.task.reminder()), _('Snooze') + ':':
             wx.StaticText(self.mainPanel, label=label)
-        self.snoozeOptions = wx.ComboBox(self.mainPanel)
+        self.snoozeOptions = wx.Choice(self.mainPanel)
         snoozeTimesUserWantsToSee = [0] + eval(self.frame.settings.get('view', 'snoozetimes'))
         for minutes, label in date.snoozeChoices:
             if minutes in snoozeTimesUserWantsToSee:
