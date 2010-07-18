@@ -25,7 +25,8 @@ from taskcoachlib.i18n import _
 from taskcoachlib.domain import base, task, note, category, attachment, effort
 from taskcoachlib.mailer import writeMail
 from taskcoachlib.thirdparty.calendar import wxSCHEDULER_DAILY, wxSCHEDULER_WEEKLY, \
-     wxSCHEDULER_MONTHLY, wxSCHEDULER_NEXT, wxSCHEDULER_PREV, wxSCHEDULER_TODAY
+     wxSCHEDULER_MONTHLY, wxSCHEDULER_NEXT, wxSCHEDULER_PREV, wxSCHEDULER_TODAY, \
+     wxSCHEDULER_HORIZONTAL, wxSCHEDULER_VERTICAL
 import dialog, render, viewer, printer
 
 
@@ -2200,6 +2201,18 @@ class CalendarViewerTypeChoice(ToolbarChoiceCommandMixin, ViewerCommand):
         self.viewer.freeze()
         try:
             self.viewer.SetViewType(choice)
+        finally:
+            self.viewer.thaw()
+
+
+class CalendarViewerOrientationChoice(ToolbarChoiceCommandMixin, ViewerCommand):
+    choiceLabels = [_('Horizontal'), _('Vertical')]
+    choiceData = [wxSCHEDULER_HORIZONTAL, wxSCHEDULER_VERTICAL]
+
+    def doChoice(self, choice):
+        self.viewer.freeze()
+        try:
+            self.viewer.SetViewOrientation(choice)
         finally:
             self.viewer.thaw()
 
