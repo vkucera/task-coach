@@ -208,15 +208,15 @@ class Row(RowBase):
                         _layout(indexPath + (i,), self.cells[indexPath + (i,)],
                                 cx + xx, cy + h, w, ch - h)
 
-                        remain -= w
-                        xx += w
+                        remain -= w + 1
+                        xx += w + 1
 
             if idx == count - 1:
                 w = remain
             else:
                 w = int(math.ceil(cw))
 
-            remain -= w
+            remain -= w + 1
 
             if state == 0:
                 if idx in self.columnCells:
@@ -244,7 +244,7 @@ class Row(RowBase):
 
                     state = 0
 
-            x += w
+            x += w + 1
 
         if state == 1:
             if self.x > startX:
@@ -687,6 +687,13 @@ class UltimateTreeCtrl(wx.Panel):
         try:
             w, h = self._headerView.GetClientSizeTuple()
 
+            # Respect alignment if the scrollbar is visible
+            cw1, _ = self._contentView.GetClientSizeTuple()
+            cw2, _ = self._contentView.GetSizeTuple()
+
+            wOffset = cw2 - cw1
+            print wOffset
+
             self._bounds = []
 
             count = self.GetRootHeadersCount()
@@ -694,18 +701,21 @@ class UltimateTreeCtrl(wx.Panel):
             if count:
                 x = 0
                 remain = w
-                cw = 1.0 * w / count
+                cw = 1.0 * (w - wOffset) / count
 
                 for idx in xrange(count):
                     if idx == count - 1:
                         w = remain
                     else:
                         w = int(math.ceil(cw))
-                        remain -= w
+                        remain -= w + 1
 
                     self._DrawHeader(dc, (idx,), x, w)
 
-                    x += w
+                    x += w + 1
+
+                    dc.SetPen(wx.BLACK_PEN)
+                    dc.DrawLine(x - 1, 0, x - 1, h)
         finally:
             dc.EndDrawing()
 
@@ -892,27 +902,28 @@ class Test(UltimateTreeCtrl):
                       ('Cell #2', [('Subcell #2.1', [('Subsubcell #2.1.1', [])]),
                                    ('Subcell #2.2', [])]),
                       ('Dummy cell', []),
-                      ('Dummy cell', []),
-                      ('Dummy cell', []),
-                      ('Dummy cell', []),
-                      ('Dummy cell', []),
-                      ('Dummy cell', []),
-                      ('Dummy cell', []),
-                      ('Dummy cell', []),
-                      ('Dummy cell', []),
-                      ('Dummy cell', []),
-                      ('Dummy cell', []),
-                      ('Dummy cell', []),
-                      ('Dummy cell', []),
-                      ('Dummy cell', []),
-                      ('Dummy cell', []),
-                      ('Dummy cell', []),
-                      ('Dummy cell', []),
-                      ('Dummy cell', []),
-                      ('Dummy cell', []),
-                      ('Dummy cell', []),
-                      ('Dummy cell', []),
                       ('Dummy cell', [])])
+
+                      ## ('Dummy cell', []),
+                      ## ('Dummy cell', []),
+                      ## ('Dummy cell', []),
+                      ## ('Dummy cell', []),
+                      ## ('Dummy cell', []),
+                      ## ('Dummy cell', []),
+                      ## ('Dummy cell', []),
+                      ## ('Dummy cell', []),
+                      ## ('Dummy cell', []),
+                      ## ('Dummy cell', []),
+                      ## ('Dummy cell', []),
+                      ## ('Dummy cell', []),
+                      ## ('Dummy cell', []),
+                      ## ('Dummy cell', []),
+                      ## ('Dummy cell', []),
+                      ## ('Dummy cell', []),
+                      ## ('Dummy cell', []),
+                      ## ('Dummy cell', []),
+                      ## ('Dummy cell', []),
+                      ## ('Dummy cell', [])])
 
     _headers = ('Root', [ ('Task', []),
                           ('Cat1',
@@ -961,6 +972,10 @@ class Test(UltimateTreeCtrl):
         return 150
 
     def GetRowBackgroundColour(self, indexPath):
+        if indexPath == (4,):
+            return wx.Colour(200, 255, 200)
+        if indexPath == (3,):
+            return wx.Colour(255, 200, 200)
         return wx.WHITE
 
     def GetCell(self, indexPath, headerPath):
@@ -1018,7 +1033,7 @@ class Frame(wx.Frame):
 
         self.tree = Test(self, wx.ID_ANY)
 
-        stripeCheck = wx.CheckBox(self, wx.ID_ANY, 'UTTREE_STRIPE')
+        stripeCheck = wx.CheckBox(self, wx.ID_ANY, 'STRIPE')
         wx.EVT_CHECKBOX(stripeCheck, wx.ID_ANY, self.OnToggleStripe)
 
         selCheck = wx.CheckBox(self, wx.ID_ANY, 'SINGLE_SELECTION')
@@ -1034,11 +1049,11 @@ class Frame(wx.Frame):
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         vsz = wx.BoxSizer(wx.HORIZONTAL)
-        vsz.Add(stripeCheck, 0)
-        vsz.Add(selCheck, 0)
+        vsz.Add(stripeCheck, 0, wx.ALL, 3)
+        vsz.Add(selCheck, 0, wx.ALL, 3)
         sizer.Add(vsz, 0, wx.EXPAND)
-        sizer.Add(self.tree, 1, wx.EXPAND)
-        sizer.Add(log, 0, wx.EXPAND)
+        sizer.Add(self.tree, 1, wx.EXPAND|wx.ALL, 3)
+        sizer.Add(log, 0, wx.EXPAND|wx.ALL, 3)
         self.SetSizer(sizer)
 
     def OnToggleStripe(self, evt):
