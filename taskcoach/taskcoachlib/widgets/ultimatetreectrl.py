@@ -118,6 +118,11 @@ def _tupleStartsWith(tpl, otherTpl):
 
 
 class RowBase(object):
+    """
+    Base class for row. A row may hold several cells, up to one for
+    each header.
+    """
+
     def __init__(self, x, y, w, h):
         super(RowBase, self).__init__()
 
@@ -412,25 +417,56 @@ class UltimateTreeCtrl(wx.Panel):
         wx.EVT_MOTION(self._headerView, self._OnMotionHeader)
         wx.EVT_LEAVE_WINDOW(self._headerView, self._OnLeaveHeader)
 
+    #{ Persistence
+
     def SavePerspective(self):
+        """
+        Returns a string representing the current state of the
+        tree. This includes expanded rows and header sizes. See also
+        L{LoadPerspective}.
+        """
         return '~'.join(['%s=%f' % (indexPath, sz) for indexPath, sz in self._headerSizes.items()]) + ':' + \
                '~'.join(map(str, self._expanded))
 
     def LoadPerspective(self, per):
+        """
+        Restore a tree state that was retrieved by L{SavePerspective}.
+        """
         sizes, expanded = per.split(':')
         for pair in sizes.split('~'):
             indexPath, sz = pair.split('=')
             self._headerSizes[eval(indexPath)] = float(sz)
         self._expanded = set([eval(path) for path in expanded.split('~')])
 
+    #}
+
+    #{ Style
+
     def SetTreeStyle(self, style):
+        """
+        Set the current style. The following module-level constants
+        are supported:
+
+         - ULTTREE_SINGLE_SELECTION: Allows at most one row to be selected
+             at once.
+         - ULTTREE_STRIPE: Draw a darker background for odd rows.
+        """
         self.__style = style
         self.Refresh()
 
     def GetTreeStyle(self):
+        """
+        Returns the current style; see L{SetTreeStyle}.
+        """
         return self.__style
 
+    #}
+
     def Refresh(self):
+        """
+        Refresh the whole tree. This recomputes the visible cells and
+        refreshes them as well.
+        """
         self._Relayout()
         super(UltimateTreeCtrl, self).Refresh()
 
@@ -521,6 +557,9 @@ class UltimateTreeCtrl(wx.Panel):
         self.Refresh()
 
     def FitHeader(self):
+        """
+        Sets the header view height to what it should be.
+        """
         count = self.GetRootHeadersCount()
         h = 0
         for idx in xrange(count):
@@ -529,12 +568,21 @@ class UltimateTreeCtrl(wx.Panel):
         self._headerView.SetSize((-1, h))
 
     def HeaderHitTest(self, x, y):
+        """
+        Returns the index path of the header at position (x, y)
+        (relative to the header view), or None.
+        """
         for indexPath, xx, yy, w, h in self._bounds:
             if x >= xx and y >= yy and x < xx + w and y < yy + h:
                 return indexPath
         return None
 
     def _headerHeight(self):
+        """
+        Return the height of a standard header. On Windows and Linux,
+        it isn't fixed and this returns 20. On Mac OS X though wx
+        can't draw a header with a custom height, it needs to be 16.
+        """
         if '__WXMAC__' in wx.PlatformInfo:
             return 16
         return 20
