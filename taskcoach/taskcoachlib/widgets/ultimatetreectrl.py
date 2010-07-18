@@ -426,6 +426,10 @@ class UltimateTreeCtrl(wx.Panel):
         for cell in self._visibleRows.values():
             cell.Refresh()
 
+    def _Check(self):
+        """Resets the scrollwindow virtual size"""
+        self._contentView.SetVirtualSize((-1, self._ComputeHeight()))
+
     def Collapse(self, indexPath):
         """
         Collapse a row. Selected children will be deselected. Their
@@ -444,7 +448,6 @@ class UltimateTreeCtrl(wx.Panel):
             pass
 
         self.Refresh()
-        self.SetSize(self.GetSize())
 
     def Expand(self, indexPath):
         """
@@ -453,7 +456,6 @@ class UltimateTreeCtrl(wx.Panel):
 
         self._expanded.add(indexPath)
         self.Refresh()
-        self.SetSize(self.GetSize())
 
     def Toggle(self, indexPath):
         """
@@ -537,6 +539,8 @@ class UltimateTreeCtrl(wx.Panel):
 
         self.Freeze()
         try:
+            self._Check()
+
             x0, y0 = self._contentView.GetViewStart()
             xu, yu = self._contentView.GetScrollPixelsPerUnit()
             x0 *= xu
