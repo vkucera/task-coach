@@ -505,7 +505,8 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         self.typeUICommand.setChoice(self.settings.getint(self.settingsSection(), 'viewtype'))
         self.orientationUICommand.setChoice(self.settings.getint(self.settingsSection(), 'vieworientation'))
         self.filterChoiceUICommand.setChoice((self.settings.getboolean(self.settingsSection(), 'shownostart'),
-                                              self.settings.getboolean(self.settingsSection(), 'shownodue')))
+                                              self.settings.getboolean(self.settingsSection(), 'shownodue'),
+                                              self.settings.getboolean(self.settingsSection(), 'showunplanned')))
 
         start = self.settings.get(self.settingsSection(), 'viewdate')
         if start:
@@ -518,6 +519,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
 
         self.widget.SetShowNoStartDate(self.settings.getboolean(self.settingsSection(), 'shownostart'))
         self.widget.SetShowNoDueDate(self.settings.getboolean(self.settingsSection(), 'shownodue'))
+        self.widget.SetShowUnplanned(self.settings.getboolean(self.settingsSection(), 'showunplanned'))
 
         for eventType in ('view.efforthourstart', 'view.efforthourend'):
             self.registerObserver(self.onWorkingHourChanged, eventType)
@@ -607,6 +609,10 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
     def SetShowNoDueDate(self, doShow):
         self.settings.setboolean(self.settingsSection(), 'shownodue', doShow)
         self.widget.SetShowNoDueDate(doShow)
+
+    def SetShowUnplanned(self, doShow):
+        self.settings.setboolean(self.settingsSection(), 'showunplanned', doShow)
+        self.widget.SetShowUnplanned(doShow)
 
     # We need to override these because BaseTaskViewer is a tree viewer, but
     # CalendarViewer is not. There is probably a better solution...

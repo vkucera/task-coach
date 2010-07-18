@@ -36,6 +36,8 @@ notes, etc.), the edit dialog allows for selectively changing attributes
 of all edited items.''', 'http://uservoice.com/a/ahxq8'),
         Feature('''Less intrusive notifications (reminders).'''),
         Feature('''The calendar orientation can be changed.'''),
+        Feature('''Add an option to the calendar viewer to show all tasks but
+those which have no start nor due date''', '3008517'),
         ],
     implementationChanged=[
         Implementation('''The task file format was changed to support start, due

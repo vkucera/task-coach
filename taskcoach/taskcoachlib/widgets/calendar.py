@@ -54,6 +54,7 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
 
         self.__showNoStartDate = False
         self.__showNoDueDate = False
+        self.__showUnplanned = False
 
         self.SetShowWorkHour(False)
         self.SetResizable(True)
@@ -91,6 +92,10 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
 
     def SetShowNoDueDate(self, doShow):
         self.__showNoDueDate = doShow
+        self.RefreshAllItems(0)
+
+    def SetShowUnplanned(self, doShow):
+        self.__showUnplanned = doShow
         self.RefreshAllItems(0)
 
     def OnActivation(self, event):
@@ -143,6 +148,10 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
 
                 if task.dueDateTime() == date.DateTime() and not self.__showNoDueDate:
                     continue
+
+                if not self.__showUnplanned:
+                    if task.startDateTime() == date.DateTime() and task.dueDateTime() == date.DateTime():
+                        continue
 
                 schedule = TaskSchedule(task, self.iconProvider)
                 schedules.append(schedule)

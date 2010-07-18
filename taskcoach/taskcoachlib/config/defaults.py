@@ -96,6 +96,7 @@ defaults = { \
     'gradient': 'False',
     'shownostart': 'False',
     'shownodue': 'False',
+    'showunplanned': 'False',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',

@@ -2253,14 +2253,15 @@ class CalendarViewerToday(CalendarViewerNavigationCommand):
 
 
 class CalendarViewerTaskFilterChoice(ToolbarChoiceCommandMixin, ViewerCommand):
-    choiceLabels = [_('Start and due date'), _('Start date'), _('Due date'), _('All')]
-    choiceData = [(False, False), (False, True), (True, False), (True, True)]
+    choiceLabels = [_('Start and due date'), _('Start date'), _('Due date'), _('All but unplanned'), _('All')]
+    choiceData = [(False, False, False), (False, True, False), (True, False, False), (True, True, False), (True, True, True)]
 
-    def doChoice(self, (showStart, showDue)):
+    def doChoice(self, (showStart, showDue, showUnplanned)):
         self.viewer.freeze()
         try:
             self.viewer.SetShowNoStartDate(showStart)
             self.viewer.SetShowNoDueDate(showDue)
+            self.viewer.SetShowUnplanned(showUnplanned)
         finally:
             self.viewer.thaw()
 
