@@ -46,12 +46,16 @@ class CellBase(wx.Panel):
 
         wx.EVT_LEFT_UP(self, self._OnLeftUp)
         wx.EVT_LEFT_DCLICK(self, self._OnDClick)
+        wx.EVT_RIGHT_UP(self, self._OnRightUp)
 
     def _OnLeftUp(self, evt):
         self.GetParent().GetParent()._OnCellClicked(self, evt)
 
     def _OnDClick(self, evt):
         self.GetParent().GetParent()._OnCellDClicked(self, evt)
+
+    def _OnRightUp(self, evt):
+        self.GetParent().GetParent()._OnCellRightClicked(self, evt)
 
     def GetIdentifier(self):
         """
@@ -80,6 +84,9 @@ EVT_HEADER_RCLICKED = wx.PyEventBinder(wxEVT_COMMAND_HEADER_RCLICKED)
 
 wxEVT_COMMAND_ROW_LEFT_DCLICK = wx.NewEventType()
 EVT_ROW_LEFT_DCLICK = wx.PyEventBinder(wxEVT_COMMAND_ROW_LEFT_DCLICK)
+
+wxEVT_COMMAND_ROW_RCLICKED = wx.NewEventType()
+EVT_ROW_RCLICKED = wx.PyEventBinder(wxEVT_COMMAND_ROW_RCLICKED)
 
 #}
 
@@ -415,6 +422,7 @@ class UltimateTreeCtrl(wx.Panel):
         wx.EVT_PAINT(self._contentView, self._OnPaintContent)
         wx.EVT_LEFT_UP(self._contentView, self._OnLeftUpContent)
         wx.EVT_LEFT_DCLICK(self._contentView, self._OnLeftDClickContent)
+        wx.EVT_RIGHT_UP(self._contentView, self._OnRightUpContent)
         wx.EVT_SIZE(self._contentView, self._OnSizeContent)
 
         wx.EVT_PAINT(self._headerView, self._OnPaintHeader)
@@ -877,6 +885,9 @@ class UltimateTreeCtrl(wx.Panel):
     def _OnLeftUpContent(self, evt):
         self._ProcessLeftUpContent(evt.GetX(), evt.GetY(), evt.CmdDown())
 
+    def _OnRightUpContent(self, evt):
+        self._ProcessRightUpContent(evt.GetX(), evt.GetY())
+
     def _OnLeftDClickContent(self, evt):
         self._ProcessLeftDClickContent(evt.GetX(), evt.GetY())
 
@@ -967,6 +978,10 @@ class UltimateTreeCtrl(wx.Panel):
         x, y = cell.GetPositionTuple()
         self._ProcessLeftDClickContent(x + evt.GetX(), y + evt.GetY())
 
+    def _OnCellRightClicked(self, cell, evt):
+        x, y = cell.GetPositionTuple()
+        self._ProcessRightUpContent(x + evt.GetX(), y + evt.GetY())
+
     def HitTestContent(self, xc, yc):
         """
         Returns the index path for the row at (xc, yc) or None.
@@ -978,6 +993,12 @@ class UltimateTreeCtrl(wx.Panel):
 
     def _ProcessLeftDClickContent(self, x, y):
         evt = wx.PyCommandEvent(wxEVT_COMMAND_ROW_LEFT_DCLICK)
+        evt.indexPath = self.HitTestContent(x, y)
+        evt.SetEventObject(self)
+        self.ProcessEvent(evt)
+
+    def _ProcessRightUpContent(self, x, y):
+        evt = wx.PyCommandEvent(wxEVT_COMMAND_ROW_RCLICKED)
         evt.indexPath = self.HitTestContent(x, y)
         evt.SetEventObject(self)
         self.ProcessEvent(evt)
@@ -1118,6 +1139,7 @@ class Test(UltimateTreeCtrl):
         EVT_HEADER_LCLICKED(self, self.OnHeaderLeftClicked)
         EVT_HEADER_RCLICKED(self, self.OnHeaderRightClicked)
         EVT_ROW_LEFT_DCLICK(self, self.OnRowDClick)
+        EVT_ROW_RCLICKED(self, self.OnRowRightClick)
 
     def _Get(self, indexPath, data):
         obj = data
@@ -1187,6 +1209,12 @@ class Test(UltimateTreeCtrl):
             print 'Double-click', self._Get(evt.indexPath, self.cells)[0]
         else:
             print 'Double-click'
+
+    def OnRowRightClick(self, evt):
+        if evt.indexPath:
+            print 'Right click', self._Get(evt.indexPath, self.cells)[0]
+        else:
+            print 'Right click'
 
     def OnHeaderLeftClicked(self, evt):
         if evt.indexPath:
