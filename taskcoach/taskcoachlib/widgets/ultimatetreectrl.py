@@ -412,6 +412,17 @@ class UltimateTreeCtrl(wx.Panel):
         wx.EVT_MOTION(self._headerView, self._OnMotionHeader)
         wx.EVT_LEAVE_WINDOW(self._headerView, self._OnLeaveHeader)
 
+    def SavePerspective(self):
+        return '~'.join(['%s=%f' % (indexPath, sz) for indexPath, sz in self._headerSizes.items()]) + ':' + \
+               '~'.join(map(str, self._expanded))
+
+    def LoadPerspective(self, per):
+        sizes, expanded = per.split(':')
+        for pair in sizes.split('~'):
+            indexPath, sz = pair.split('=')
+            self._headerSizes[eval(indexPath)] = float(sz)
+        self._expanded = set([eval(path) for path in expanded.split('~')])
+
     def SetTreeStyle(self, style):
         self.__style = style
         self.Refresh()
@@ -1140,6 +1151,16 @@ class Frame(wx.Frame):
         sizer.Add(self.tree, 1, wx.EXPAND|wx.ALL, 3)
         sizer.Add(log, 0, wx.EXPAND|wx.ALL, 3)
         self.SetSizer(sizer)
+
+        import os
+        if os.path.exists('perspective.data'):
+            self.tree.LoadPerspective(file('perspective.data', 'rb').read())
+
+        wx.EVT_CLOSE(self, self.OnClose)
+
+    def OnClose(self, evt):
+        file('perspective.data', 'wb').write(self.tree.SavePerspective())
+        evt.Skip()
 
     def OnToggleStripe(self, evt):
         if evt.IsChecked():
