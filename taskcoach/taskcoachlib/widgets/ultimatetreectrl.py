@@ -295,6 +295,10 @@ class UltimateTreeCtrl(wx.Panel):
         """Return the title for the header."""
         raise NotImplementedError
 
+    def GetHeaderBitmap(self, indexPath):
+        """Return a wx.Bitmap to show on the header, or None."""
+        return None
+
     def GetHeaderChildrenCount(self, indexPath):
         """Return the number of children of the header."""
         raise NotImplementedError
@@ -821,6 +825,13 @@ class UltimateTreeCtrl(wx.Panel):
         render.DrawHeaderButton(self._headerView, dc, (int(x), y, int(totalW), self._headerHeight()),
                                 wx.CONTROL_CURRENT, params=opts)
 
+        bitmap = self.GetHeaderBitmap(indexPath)
+        if bitmap is not None:
+            dc.DrawBitmap(bitmap,
+                          x + totalW - 4 - bitmap.GetWidth(),
+                          y + int((self._headerHeight() - bitmap.GetHeight()) / 2),
+                          True)
+
         count = self.GetHeaderChildrenCount(indexPath)
 
         if count:
@@ -1152,6 +1163,10 @@ class Test(UltimateTreeCtrl):
 
     def GetHeaderText(self, indexPath):
         return self._Get(indexPath, self._headers)[0]
+
+    def GetHeaderBitmap(self, indexPath):
+        if indexPath == (0,):
+            return wx.ArtProvider.GetBitmap(wx.ART_TICK_MARK, size=(16, 16))
 
     def GetHeaderChildrenCount(self, indexPath):
         return len(self._Get(indexPath, self._headers)[1])
