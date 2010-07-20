@@ -54,7 +54,6 @@
 	CDTask *task = [NSEntityDescription insertNewObjectForEntityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()];
 
 	task.creationDate = [NSDate date];
-	task.file = [Configuration configuration].cdCurrentFile;
 	task.name = [value objectAtIndex:0];
 	task.status = [NSNumber numberWithInt:STATUS_NONE];
 	task.taskCoachId = [value objectAtIndex:1];
@@ -75,6 +74,7 @@
 	task.recSameWeekday = [value objectAtIndex:12];
 
 	[task computeDateStatus];
+	task.file = [Configuration configuration].cdCurrentFile;
 
 	if ([value objectAtIndex:7] != [NSNull null])
 	{

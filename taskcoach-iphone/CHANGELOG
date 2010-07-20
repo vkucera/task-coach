@@ -1,4 +1,7 @@
 
+2010-07-20  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
+	* misc: Fix an assertion error that would compromise synchronization
+
 ==== Beta 3.0b2: 2010-07-17 ====
 
 2010-07-17  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
