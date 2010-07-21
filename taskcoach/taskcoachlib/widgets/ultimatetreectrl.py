@@ -632,6 +632,7 @@ class UltimateTreeCtrl(wx.Panel):
 
             currentPosition = 0
             for indexPath in self._Expanded():
+                currentIndex += 1
                 height = self.GetRowHeight(indexPath)
 
                 if currentPosition + height < y0 or currentPosition >= y0 + h:
@@ -699,7 +700,6 @@ class UltimateTreeCtrl(wx.Panel):
                 row.Refresh()
 
                 currentPosition += height + self.GetVerticalMargin()
-                currentIndex += 1
         finally:
             self.Thaw()
 
