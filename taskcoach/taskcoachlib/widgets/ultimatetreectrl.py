@@ -453,10 +453,12 @@ class UltimateTreeCtrl(wx.Panel):
         Restore a tree state that was retrieved by L{SavePerspective}.
         """
         sizes, expanded = per.split(':')
-        for pair in sizes.split('~'):
-            indexPath, sz = pair.split('=')
-            self._headerSizes[eval(indexPath)] = float(sz)
-        self._expanded = set([eval(path) for path in expanded.split('~')])
+        if sizes:
+            for pair in sizes.split('~'):
+                indexPath, sz = pair.split('=')
+                self._headerSizes[eval(indexPath)] = float(sz)
+        if expanded:
+            self._expanded = set([eval(path) for path in expanded.split('~')])
 
     #}
 
