@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
+from taskcoachlib import patterns
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import categorizable
 import task

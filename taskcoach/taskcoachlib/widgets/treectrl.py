@@ -415,6 +415,7 @@ class CheckTreeCtrl(TreeListCtrl):
             itemPopupMenu, *args, **kwargs)
         self.checkCommand = checkCommand
         self.Bind(customtree.EVT_TREE_ITEM_CHECKED, self.onItemChecked)
+        self.getIsItemCheckable = parent.getIsItemCheckable if hasattr(parent, 'getIsItemCheckable') else lambda item: True
         self.getIsItemChecked = parent.getIsItemChecked
         self.getItemParentHasExclusiveChildren = parent.getItemParentHasExclusiveChildren
         
@@ -422,7 +423,10 @@ class CheckTreeCtrl(TreeListCtrl):
         ''' Use radio buttons (ct_type == 2) when the object has "exclusive" 
             children, meaning that only one child can be checked at a time. Use
             check boxes (ct_type == 1) otherwise. '''
-        return 2 if self.getItemParentHasExclusiveChildren(domainObject) else 1
+        if self.getIsItemCheckable(domainObject):
+            return 2 if self.getItemParentHasExclusiveChildren(domainObject) else 1
+        else:
+            return 0
     
     def CheckItem(self, item, checked=True):
         if self.GetItemType(item) == 2:

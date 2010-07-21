@@ -690,15 +690,30 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                                                            value='categories'),
                 width=self.getColumnWidth('categories'),
-                renderCallback=self.renderCategory, **kwargs)] + \
-            [widgets.Column('totalCategories', _('Overall categories'),
+                renderCallback=self.renderCategory, **kwargs),
+             widgets.Column('totalCategories', _('Overall categories'),
                 task.Task.totalCategoryAddedEventType(),
                 task.Task.totalCategoryRemovedEventType(),
                 task.Task.totalCategorySubjectChangedEventType(),
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                                                            value='totalCategories'),
                 renderCallback=lambda task: self.renderCategory(task, recursive=True),
-                width=self.getColumnWidth('totalCategories'), **kwargs)])
+                width=self.getColumnWidth('totalCategories'), **kwargs),
+             widgets.Column('prerequisites', _('Prerequisites'),
+                'task.prerequisite.add', 'task.prerequisite.remove',
+                'task.prerequisite.subject',
+                sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                                                           value='prerequisites'),
+                renderCallback=lambda task: self.renderSubjects(task.prerequisites()),
+                width=self.getColumnWidth('prerequisites'), **kwargs),
+             widgets.Column('dependencies', _('Dependencies'),
+                'task.dependency.add', 'task.dependency.remove',
+                'task.dependency.subject',
+                sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+                                                           value='dependencies'),
+                renderCallback=lambda task: self.renderSubjects(task.dependencies()),
+                width=self.getColumnWidth('dependencies'), **kwargs)])
+        
         effortOn = self.settings.getboolean('feature', 'effort')
         dependsOnEffortFeature = ['budget', 'totalBudget', 
                                   'timeSpent', 'totalTimeSpent', 
@@ -822,6 +837,12 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
             uicommand.ViewColumn(menuText=_('&Description'),
                 helpText=_('Show/hide description column'),
                 setting='description', viewer=self),
+            uicommand.ViewColumn(menuText=_('&Prerequisites'),
+                 helpText=_('Show/hide prerequisites column'),
+                 setting='prerequisites', viewer=self),
+            uicommand.ViewColumn(menuText=_('&Dependencies'),
+                 helpText=_('Show/hide dependencies column'),
+                 setting='dependencies', viewer=self),
             uicommand.ViewColumn(menuText=_('&Attachments'),
                 helpText=_('Show/hide attachment column'),
                 setting='attachments', viewer=self)])
@@ -893,6 +914,10 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
     def renderSubject(self, task):
         return task.subject(recursive=not self.isTreeViewer())
     
+    def renderSubjects(self, tasks):
+        subjects = [task.subject(recursive=True) for task in tasks]
+        return ', '.join(sorted(subjects))
+        
     def onEverySecond(self, event):
         # Only update when a column is visible that changes every second 
         if any([self.isVisibleColumnByName(column) for column in 'timeSpent', 
@@ -913,3 +938,30 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
     def children(self, item=None):
         return super(TaskViewer, self).children(item) if \
             (self.isTreeViewer() or item is None) else []
+
+
+class CheckableTaskViewer(TaskViewer):
+    def createWidget(self):
+        imageList = self.createImageList() # Has side-effects
+        self._columns = self._createColumns()
+        itemPopupMenu = self.createTaskPopupMenu()
+        columnPopupMenu = self.createColumnPopupMenu()
+        self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
+        widget = widgets.CheckTreeCtrl(self, self.columns(), self.onSelect,
+            self.onCheck, 
+            uicommand.TaskEdit(taskList=self.presentation(), viewer=self),
+            uicommand.TaskDragAndDrop(taskList=self.presentation(), viewer=self),
+            uicommand.EditSubject(viewer=self),
+            itemPopupMenu, columnPopupMenu,
+            **self.widgetCreationKeywordArguments())
+        widget.AssignImageList(imageList) # pylint: disable-msg=E1101
+        return widget    
+    
+    def onCheck(self, *args, **kwargs):
+        pass
+    
+    def getIsItemChecked(self, task):
+        return False
+    
+    def getItemParentHasExclusiveChildren(self, task):
+        return False

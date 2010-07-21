@@ -184,6 +184,34 @@ class TaskSorterSettingsTest(test.TestCase):
             date.DateTime(2005,1,1,10,0,0), date.DateTime(2005,1,1,11,0,0)))
         self.assertEqual([self.task1, self.task2], list(self.sorter))
 
+    def testSortByPrerequisiteAscending(self):
+        self.sorter.sortAscending(True)
+        self.sorter.sortBy('prerequisites')
+        self.task1.addPrerequisites([self.task2])
+        self.task2.addPrerequisites([self.task1])
+        self.assertEqual([self.task2, self.task1], list(self.sorter))
+
+    def testSortByPrerequisiteDescending(self):
+        self.sorter.sortAscending(False)
+        self.sorter.sortBy('prerequisites')
+        self.task1.addPrerequisites([self.task2])
+        self.task2.addPrerequisites([self.task1])
+        self.assertEqual([self.task1, self.task2], list(self.sorter))
+
+    def testSortByDependencyAscending(self):
+        self.sorter.sortAscending(True)
+        self.sorter.sortBy('dependencies')
+        self.task1.addDependencies([self.task2])
+        self.task2.addDependencies([self.task1])
+        self.assertEqual([self.task2, self.task1], list(self.sorter))
+
+    def testSortByDependencyDescending(self):
+        self.sorter.sortAscending(False)
+        self.sorter.sortBy('dependencies')
+        self.task1.addDependencies([self.task2])
+        self.task2.addDependencies([self.task1])
+        self.assertEqual([self.task1, self.task2], list(self.sorter))
+        
     def testAlwaysKeepSubscriptionToCompletionDateTime(self):
         ''' TaskSorter should keep a subscription to task.completionDateTime 
             even when the completion date is not the sort key, because sorting

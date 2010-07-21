@@ -32,7 +32,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                  budget=None, priority=0, id=None, hourlyFee=0, # pylint: disable-msg=W0622
                  fixedFee=0, reminder=None, categories=None,
                  efforts=None, shouldMarkCompletedWhenAllChildrenCompleted=None, 
-                 recurrence=None, percentageComplete=0, *args, **kwargs):
+                 recurrence=None, percentageComplete=0, prerequisites=None,
+                 dependencies=None, *args, **kwargs):
         kwargs['id'] = id
         kwargs['subject'] = subject
         kwargs['description'] = description
@@ -55,6 +56,12 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__fixedFee = base.Attribute(fixedFee, self, self.fixedFeeEvent)
         self.__reminder = base.Attribute(reminder, self, self.reminderEvent)
         self._recurrence = date.Recurrence() if recurrence is None else recurrence
+        self.__prerequisites = base.SetAttribute(prerequisites or [], self, 
+                                                 self.addPrerequisiteEvent,
+                                                 self.removePrerequisiteEvent)
+        self.__dependencies = base.SetAttribute(dependencies or [], self, 
+                                                 self.addDependencyEvent,
+                                                 self.removeDependencyEvent)
         self._shouldMarkCompletedWhenAllChildrenCompleted = \
             shouldMarkCompletedWhenAllChildrenCompleted
         for effort in self._efforts:
@@ -74,6 +81,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.setPriority(state['priority'], event=event)
         self.setHourlyFee(state['hourlyFee'], event=event)
         self.setFixedFee(state['fixedFee'], event=event)
+        self.setPrerequisites(state['prerequisites'], event=event)
+        self.setDependencies(state['dependencies'], event=event)
         self.setShouldMarkCompletedWhenAllChildrenCompleted( \
             state['shouldMarkCompletedWhenAllChildrenCompleted'], event=event)
         
@@ -89,6 +98,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             hourlyFee=self.__hourlyFee.get(), fixedFee=self.__fixedFee.get(), 
             recurrence=self._recurrence.copy(),
             reminder=self.__reminder.get(),
+            prerequisites=self.__prerequisites.get(),
+            dependencies=self.__dependencies.get(),
             shouldMarkCompletedWhenAllChildrenCompleted=\
                 self._shouldMarkCompletedWhenAllChildrenCompleted))
         return state
@@ -169,6 +180,16 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 self.startTrackingEvent(event, *activeEfforts) # pylint: disable-msg=W0142
             else:
                 self.stopTrackingEvent(event, *activeEfforts) # pylint: disable-msg=W0142
+    
+    @patterns.eventSource    
+    def setSubject(self, subject, event=None):
+        super(Task, self).setSubject(subject, event=event)
+        # The subject of a dependency of our prerequisites has changed, notify:
+        for prerequisite in self.prerequisites():
+            event.addSource(prerequisite, subject, type='task.dependency.subject')
+        # The subject of a prerequisite of our dependencies has changed, notify:
+        for dependency in self.dependencies():
+            event.addSource(dependency, subject, type='task.prerequisite.subject')
         
     def dueDateTime(self, recursive=False):
         if recursive:
@@ -285,7 +306,16 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return self.dueDateTime() < date.Now() and not self.completed()
 
     def inactive(self):
-        return self.startDateTime() > date.Now() and not self.completed()
+        if self.completed():
+            return False # Completed tasks are never inactive
+        if date.Now() < self.startDateTime() < date.DateTime():
+            return True # Start at a specific future datetime, so inactive now
+        if self.prerequisites():
+            # We're inactive as long as not all prerequisites are completed
+            return any([not prerequisite.completed() for prerequisite in self.prerequisites()])
+        else:
+            # We're inactive only if we have no startDateTime at all 
+            return self.startDateTime() == date.DateTime()
         
     def active(self):
         return not self.inactive() and not self.completed()
@@ -658,7 +688,63 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             if not child.recurrence():
                 child.recur(event=event)
         self.recurrence()(next=True)
-                        
+        
+    # Prerequisites
+    
+    def prerequisites(self, recursive=False):
+        return self.__prerequisites.get()
+    
+    def setPrerequisites(self, prerequisites, event=None):
+        self.__prerequisites.set(set(prerequisites), event=event)
+        
+    def addPrerequisites(self, prerequisites, event=None):
+        self.__prerequisites.add(set(prerequisites), event=event)
+        
+    def removePrerequisites(self, prerequisites, event=None):
+        self.__prerequisites.remove(set(prerequisites), event=event)
+
+    def addTaskAsDependencyOf(self, prerequisites):
+        for prerequisite in prerequisites:
+            prerequisite.addDependencies([self])
+            
+    def removeTaskAsDependencyOf(self, prerequisites):
+        for prerequisite in prerequisites:
+            prerequisite.removeDependencies([self])
+            
+    def addPrerequisiteEvent(self, event, *prerequisites):
+        event.addSource(self, *prerequisites, **dict(type='task.prerequisite.add'))
+    
+    def removePrerequisiteEvent(self, event, *prerequisites):
+        event.addSource(self, *prerequisites, **dict(type='task.prerequisite.remove'))
+    
+    # Dependencies
+    
+    def dependencies(self, recursive=False):
+        return self.__dependencies.get()
+
+    def setDependencies(self, dependencies, event=None):
+        self.__dependencies.set(set(dependencies), event=event)
+    
+    def addDependencies(self, dependencies, event=None):
+        self.__dependencies.add(set(dependencies), event=event)
+                
+    def removeDependencies(self, dependencies, event=None):
+        self.__dependencies.remove(set(dependencies), event=event)
+        
+    def addTaskAsPrerequisiteOf(self, dependencies):
+        for dependency in dependencies:
+            dependency.addPrerequisites([self])
+            
+    def removeTaskAsPrerequisiteOf(self, dependencies):
+        for dependency in dependencies:
+            dependency.removePrerequisites([self])        
+
+    def addDependencyEvent(self, event, *dependencies):
+        event.addSource(self, *dependencies, **dict(type='task.dependency.add'))
+    
+    def removeDependencyEvent(self, event, *dependencies):
+        event.addSource(self, *dependencies, **dict(type='task.dependency.remove'))
+            
     # behavior
     
     @patterns.eventSource
@@ -685,4 +771,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                              class_.hourlyFeeChangedEventType(), 
                              'task.fixedFee',
                              'task.reminder', 'task.recurrence',
+                             'task.prerequisite.add', 'task.prerequisite.remove',
+                             'task.dependency.add', 'task.dependency.remove',
                              'task.setting.shouldMarkCompletedWhenAllChildrenCompleted']

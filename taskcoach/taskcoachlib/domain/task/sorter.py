@@ -24,15 +24,22 @@ import task
 class Sorter(base.TreeSorter):
     DomainObjectClass = task.Task # What are we sorting
     EventTypePrefix = 'task'
-    
+    TaskStatusAttributes = ('startDateTime', 'completionDateTime',
+                            'prerequisite')
     def __init__(self, *args, **kwargs):
         self.__rootItems = None
         self.__treeMode = kwargs.pop('treeMode', False)
         self.__sortByTaskStatusFirst = kwargs.pop('sortByTaskStatusFirst', True)
         super(Sorter, self).__init__(*args, **kwargs)
-        for eventType in ('task.startDateTime', 'task.completionDateTime'):
-            patterns.Publisher().registerObserver(self.onAttributeChanged, 
-                                                  eventType=eventType)
+        for attribute in self.TaskStatusAttributes:
+            if attribute == 'prerequisite':
+                eventTypes = ['.'.join([self.EventTypePrefix, attribute, delta]) 
+                              for delta in ['add', 'remove']]
+            else:
+                eventTypes = ['.'.join([self.EventTypePrefix, attribute])]
+            for eventType in eventTypes:
+                patterns.Publisher().registerObserver(self.onAttributeChanged, 
+                                                      eventType=eventType)
     
     @patterns.eventSource       
     def setTreeMode(self, treeMode=True, event=None):
@@ -98,6 +105,10 @@ class Sorter(base.TreeSorter):
             prepareSortValue = lambda subject: subject.lower()
         elif sortKeyName in ('categories', 'totalCategories'):
             prepareSortValue = lambda categories: sorted([category.subject(recursive=True) for category in categories])
+        elif sortKeyName == 'prerequisites':
+            prepareSortValue = lambda prerequisites: sorted([prerequisite.subject(recursive=True) for prerequisite in prerequisites])
+        elif sortKeyName == 'dependencies':
+            prepareSortValue = lambda dependencies: sorted([dependency.subject(recursive=True) for dependency in dependencies])    
         elif sortKeyName == 'reminder':
             prepareSortValue = lambda reminder: reminder or date.DateTime.max
         else:
@@ -112,16 +123,26 @@ class Sorter(base.TreeSorter):
             sortKeyName)(**kwargs))]
     
     def _registerObserverForAttribute(self, attribute):
-        # Sorter is always observing completion date and start date because
-        # sorting by status depends on those two attributes, hence we don't
-        # need to subscribe to these two attributes when they become the sort
-        # key.
-        if attribute not in ('completionDateTime', 'startDateTime'):
+        # Sorter is always observing completion date, start date and 
+        # prerequisites because sorting by status depends on those attributes. 
+        # Hence we don't need to subscribe to these attributes when they become 
+        # the sort key.
+        if attribute in self.TaskStatusAttributes:
+            return
+        if attribute == 'dependencies':
+            for delta in 'add', 'remove':
+                super(Sorter, self)._registerObserverForAttribute('dependency.' + delta)
+        else:
             super(Sorter, self)._registerObserverForAttribute(attribute)
             
     def _removeObserverForAttribute(self, attribute):
          # See comment at _registerObserverForAttribute.
-        if attribute not in ('completionDateTime', 'startDateTime'):
+        if attribute in self.TaskStatusAttributes:
+            return
+        if attribute == 'dependencies':
+            for delta in 'add', 'remove':
+                super(Sorter, self)._removeObserverForAttribute('dependency.' + delta)
+        else:
             super(Sorter, self)._removeObserverForAttribute(attribute)
         
     def _createEventTypeFromAttribute(self, attribute):

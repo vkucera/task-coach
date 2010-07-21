@@ -1312,3 +1312,69 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         self.assertEqual(date.DateTime(2005,1,1,23,59,59,999999), 
                          tasks[0].completionDateTime())
         self.failUnless(tasks[0].completed())
+
+
+class XMLReaderVersion31Test(XMLReaderTestCase):
+    tskversion = 31 # New in release 1.2.0.
+    
+    def writeAndReadTasks(self, *args, **kwargs):
+        tasks = super(XMLReaderVersion31Test, self).writeAndReadTasks(*args, **kwargs)
+        tasksById = dict()
+        def collectIds(tasks):
+            for task in tasks:
+                tasksById[task.id()] = task
+                collectIds(task.children())
+        collectIds(tasks)
+        return tasksById
+    
+    def assertDepends(self, prerequisite, dependency):
+        self.failUnless(prerequisite in dependency.prerequisites())
+        self.failUnless(dependency in prerequisite.dependencies())
+        
+    def testOnePrerequisite(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task id="1"/>
+            <task id="2" prerequisites="1"/>
+        </tasks>\n''')
+        self.assertDepends(tasks['1'], tasks['2'])
+        
+    def testTwoPrerequisites(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task id="1"/>
+            <task id="2" prerequisites="1 3"/>
+            <task id="3"/>
+        </tasks>\n''')
+        self.assertDepends(tasks['1'], tasks['2'])
+        self.assertDepends(tasks['3'], tasks['2'])
+        
+    def testChainOfPrerequisites(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task id="1"/>
+            <task id="2" prerequisites="1"/>
+            <task id="3" prerequisites="2"/>
+        </tasks>\n''')
+        self.assertDepends(tasks['1'], tasks['2'])
+        self.assertDepends(tasks['2'], tasks['3'])
+
+    def testSubTaskPrerequisite(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task id="1">
+                <task id="1.1"/>
+            </task>
+            <task id="2" prerequisites="1.1"/>
+        </tasks>\n''')
+        self.assertDepends(tasks['1.1'], tasks['2'])
+        
+    def testInterSubTaskPrerequisite(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task id="1">
+                <task id="1.1"/>
+                <task id="1.2" prerequisites="1.1"/>
+            </task>
+        </tasks>\n''')
+        self.assertDepends(tasks['1.1'], tasks['1.2'])

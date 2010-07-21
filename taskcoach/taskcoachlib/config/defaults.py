@@ -65,6 +65,26 @@ defaults = { \
     'hideinactivetasks': 'False',
     'hideactivetasks': 'False',
     'hidecompositetasks': 'False' },
+'prerequisiteviewerintaskeditor': { \
+    'title': '',                     # User supplied viewer title 
+    'treemode': 'True',              # True = tree mode, False = list mode
+    'sortby': 'subject',
+    'sortascending': 'True',
+    'sortbystatusfirst': 'True',
+    'sortcasesensitive': 'True',
+    'searchfilterstring': '',
+    'searchfiltermatchcase': 'False',
+    'searchfilterincludesubitems': 'False',
+    'searchdescription': 'False',
+    'columns': "['prerequisites', 'dependencies', 'startDateTime', 'dueDateTime']",
+    'columnsalwaysvisible': "['subject']",
+    'columnwidths': "{'attachments': 28, 'notes': 28}",
+    'columnautoresizing': 'True',
+    'tasksdue': 'Unlimited',
+    'hidecompletedtasks': 'True',
+    'hideinactivetasks': 'False',
+    'hideactivetasks': 'False',
+    'hidecompositetasks': 'False' },
 'squaretaskviewer': { \
     'title': '',
     'sortby': 'budget',

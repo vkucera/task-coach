@@ -562,7 +562,7 @@ class DatesPage(Page):
         self.setReminder(None)
         # Now, when the user clicks the check box to enable the
         # control it will show the suggested date time
-
+        
 
 class ProgressPage(Page):
     def addEntries(self):
@@ -715,6 +715,7 @@ class PageWithViewer(Page):
         # Don't notify the viewer about any changes anymore, it's about
         # to be deleted.
         self.viewer.detach()
+        del self.viewer
         event.Skip()        
 
 
@@ -727,79 +728,78 @@ class EffortPage(PageWithViewer):
     def entries(self):
         return dict(timeSpent=self.viewer, totalTimeSpent=self.viewer)
         
-
-class LocalDragAndDropFixMixin(object):
+        
+class CheckableViewerMixin(object):
+    ''' Keep track of items checked by the user in a checkable viewer. '''
     def __init__(self, *args, **kwargs):
-        super(LocalDragAndDropFixMixin, self).__init__(*args, **kwargs)
-
-        # For  a reason  that completely  escapes me,  under  MSW, the
-        # viewers don't act  as drop targets in the  notebook. So make
-        # the containing panel do.
-
-        if '__WXMSW__' in wx.PlatformInfo:
-            dropTarget = draganddrop.DropTarget(self.onDropURL,
-                                                self.onDropFiles,
-                                                self.onDropMail)
-            self.SetDropTarget(dropTarget)
-
-
-class LocalCategoryViewer(LocalDragAndDropFixMixin, viewer.BaseCategoryViewer):
-    def __init__(self, items, *args, **kwargs):
-        self.items = items
-        super(LocalCategoryViewer, self).__init__(*args, **kwargs)
-        self.widget.ExpandAll()
+        self.__checked = dict()
+        super(CheckableViewerMixin, self).__init__(*args, **kwargs)
+        for item in self.domainObjectsToView():
+            item.expand(context=self.settingsSection())
+            
+    def checkedItems(self):
+        return dict([(item, self.getIsItemChecked(item)) for item in self.presentation()])
     
-    def getIsItemChecked(self, targetItem):
-        if isinstance(targetItem, category.Category):
-            for item in self.items:
-                if targetItem in item.categories():
-                    return True
+    def getIsItemChecked(self, item):
+        ''' Return our knowledge about the item if we have it, otherwise
+            return whether the item was checked originally. '''
+        return self.__checked.get(item, 
+            super(CheckableViewerMixin, self).getIsItemChecked(item))
+    
+    def onCheck(self, event):
+        ''' Here we keep track of the items checked by the user so that these 
+            items remain checked when refreshing the viewer. ''' 
+        item = self.widget.GetItemPyData(event.GetItem())
+        self.__checked[item] = event.GetItem().IsChecked()
+
+
+class CategoryViewer(viewer.BaseCategoryViewer):
+    def __init__(self, items, *args, **kwargs):
+        self.__items = items
+        super(CategoryViewer, self).__init__(*args, **kwargs)
+
+    def getIsItemChecked(self, category):
+        for item in self.__items:
+            if category in item.categories():
+                return True
         return False
 
     def createCategoryPopupMenu(self): # pylint: disable-msg=W0221
-        return super(LocalCategoryViewer, self).createCategoryPopupMenu(True)
+        return super(CategoryViewer, self).createCategoryPopupMenu(True)
+        
 
-    def onCheck(self, event):
-        # We don't want the 'main' category viewer to be affected by
-        # what's happening here.
-        pass
+class LocalCategoryViewer(CheckableViewerMixin, CategoryViewer):
+    pass
 
 
 class CategoriesPage(PageWithViewer):
     def createViewer(self, taskFile, settings, settingsSection):
         return LocalCategoryViewer(self.items, self, taskFile, settings,
                                    settingsSection=settingsSection)
-    
+        
     def entries(self):
         return dict(categories=self.viewer, totalCategories=self.viewer) 
 
     @patterns.eventSource
     def ok(self, event=None): # pylint: disable-msg=W0221
-        treeCtrl = self.viewer.widget
-        treeCtrl.ExpandAll()
-        for categoryNode in treeCtrl.GetItemChildren(recursively=True):
-            categoryObject = treeCtrl.GetItemPyData(categoryNode)
-            if categoryNode.IsChecked():
+        for category, checked in self.viewer.checkedItems().items():
+            if checked:
                 for item in self.items:
-                    categoryObject.addCategorizable(item, event=event)
-                    item.addCategory(categoryObject, event=event)
+                    category.addCategorizable(item, event=event)
+                    item.addCategory(category, event=event)
             else:
                 for item in self.items:
-                    categoryObject.removeCategorizable(item, event=event)
-                    item.removeCategory(categoryObject, event=event)
-
-
-class LocalAttachmentViewer(LocalDragAndDropFixMixin, viewer.AttachmentViewer):
-    pass
-
+                    category.removeCategorizable(item, event=event)
+                    item.removeCategory(category, event=event)
+        
 
 class AttachmentsPage(PageWithViewer):
     def createViewer(self, taskFile, settings, settingsSection):
         # pylint: disable-msg=W0201
         self.attachmentsList = attachment.AttachmentList(self.items[0].attachments())
-        return LocalAttachmentViewer(self, taskFile, settings,
-                                     settingsSection=settingsSection,
-                                     attachmentsToShow=self.attachmentsList)
+        return viewer.AttachmentViewer(self, taskFile, settings,
+                                       settingsSection=settingsSection,
+                                       attachmentsToShow=self.attachmentsList)
 
     def entries(self):
         return dict(attachments=self.viewer)
@@ -809,17 +809,13 @@ class AttachmentsPage(PageWithViewer):
         self.items[0].setAttachments(self.attachmentsList, event=event)
 
 
-class LocalNoteViewer(LocalDragAndDropFixMixin, viewer.BaseNoteViewer):
-    pass
-
-
 class NotesPage(PageWithViewer):
     def createViewer(self, taskFile, settings, settingsSection):
         # pylint: disable-msg=W0201
         self.notes = note.NoteContainer(self.items[0].notes())
-        return LocalNoteViewer(self, taskFile, settings, 
-                               settingsSection=settingsSection,
-                               notesToShow=self.notes)
+        return viewer.BaseNoteViewer(self, taskFile, settings, 
+                                     settingsSection=settingsSection,
+                                     notesToShow=self.notes)
 
     def entries(self):
         return dict(notes=self.viewer)
@@ -827,6 +823,40 @@ class NotesPage(PageWithViewer):
     @patterns.eventSource        
     def ok(self, event=None): # pylint: disable-msg=W0221
         self.items[0].setNotes(list(self.notes.rootItems()), event=event)
+
+
+class PrerequisiteViewer(viewer.CheckableTaskViewer):
+    def __init__(self, items, *args, **kwargs):
+        self.__items = items
+        super(PrerequisiteViewer, self).__init__(*args, **kwargs)
+
+    def getIsItemChecked(self, task):
+        return task in self.__items[0].prerequisites()
+
+    def getIsItemCheckable(self, task):
+        return task not in self.__items
+    
+
+class LocalPrerequisiteViewer(CheckableViewerMixin, PrerequisiteViewer):
+    pass        
+    
+    
+class PrerequisitesPage(PageWithViewer):
+    def createViewer(self, taskFile, settings, settingsSection):
+        return LocalPrerequisiteViewer(self.items, self, taskFile, settings,
+                                       settingsSection=settingsSection)
+    
+    def entries(self):
+        return dict(prerequisites=self.viewer, dependencies=self.viewer)
+
+    @patterns.eventSource
+    def ok(self, event=None): # pylint: disable-msg=W0221
+        treeCtrl = self.viewer.widget
+        prerequisites = []
+        for taskNode in treeCtrl.GetItemChildren(recursively=True):
+            if taskNode.IsChecked():
+                prerequisites.append(treeCtrl.GetItemPyData(taskNode))
+        self.items[0].setPrerequisites(prerequisites, event=event)
 
 
 class EditBook(widgets.Notebook):
@@ -857,6 +887,10 @@ class TaskEditBook(EditBook):
         super(TaskEditBook, self).__init__(tasks, parent)
         self.AddPage(TaskSubjectPage(tasks, self), _('Description'), 'pencil_icon')
         self.AddPage(DatesPage(tasks, self, settings), _('Dates'), 'calendar_icon')
+        if len(tasks) == 1:
+            self.AddPage(PrerequisitesPage(tasks, self, taskFile, settings, 
+                                           settingsSection='prerequisiteviewerintaskeditor'), 
+                         _('Prerequisites'), 'trafficlight_icon')
         self.AddPage(ProgressPage(tasks, self), _('Progress'), 'progress')
         if len(tasks) == 1:
             self.AddPage(CategoriesPage(tasks, self, taskFile, settings, 

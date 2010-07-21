@@ -243,16 +243,10 @@ class CommonTestsMixin(object):
         patterns.CommandHistory().undo()
         self.assertEqual(4, self.viewer.size())
             
-    def testSubjectColumnIsVisible(self):
-        self.assertEqual(_('Subject'), self.viewer.widget.GetColumn(0).GetText())
-    
-    def testStartDateColumnIsVisibleByDefault(self):
-        self.assertEqual(_('Start date'), self.viewer.widget.GetColumn(1).GetText())
-        
-    def testDueDateColumnIsVisibleByDefault(self):
+    def testDefaultVisibleColumns(self):
+        self.assertEqual(_('Subject'), self.viewer.widget.GetColumn(0).GetText())    
+        self.assertEqual(_('Start date'), self.viewer.widget.GetColumn(1).GetText())    
         self.assertEqual(_('Due date'), self.viewer.widget.GetColumn(2).GetText())
-
-    def testThreeColumnsByDefault(self):
         self.assertEqual(3, self.viewer.widget.GetColumnCount())
     
     def testTurnOffStartDateColumn(self):
@@ -270,59 +264,33 @@ class CommonTestsMixin(object):
         newColor = self.task.statusColor()
         newColor = wx.Colour(newColor.Red(), newColor.Green(), newColor.Blue())
         self.assertColor(newColor)
-
-    def testTurnOnHourlyFeeColumn(self):
-        self.showColumn('hourlyFee')
-        self.assertEqual(_('Hourly fee'), 
-                         self.viewer.widget.GetColumn(3).GetText())
-
-    def testTurnOnFixedFeeColumn(self):
-        self.showColumn('fixedFee')
-        self.assertEqual(_('Fixed fee'), 
-                         self.viewer.widget.GetColumn(3).GetText())
-
-    def testTurnOnTotalFixedFeeColumn(self):
-        self.showColumn('totalFixedFee')
-        self.assertEqual(_('Total fixed fee'), 
-                         self.viewer.widget.GetColumn(3).GetText())
-
-    def testTurnOnFixedFeeColumnWithItemsInTheList(self):
+        
+    def testTurnColumnsOnAndOff(self):
+        columns = dict(hourlyFee=(3, _('Hourly fee')), 
+                       fixedFee=(3, _('Fixed fee')),
+                       totalFixedFee=(3, _('Total fixed fee')),
+                       priority=(3, _('Priority')),
+                       prerequisites=(1, _('Prerequisites')),
+                       dependencies=(1, _('Dependencies')),
+                       percentageComplete=(3, _('% complete')),
+                       totalPercentageComplete=(3, _('Overall % complete')),
+                       recurrence=(3, _('Recurrence')))
+        for column in columns:
+            columnIndex, expectedHeader = columns[column] 
+            self.showColumn(column)
+            actualHeader = self.viewer.widget.GetColumn(columnIndex).GetText()
+            self.assertEqual(expectedHeader, actualHeader)
+            self.showColumn(column, False)
+            self.assertEqual(3, self.viewer.widget.GetColumnCount())
+            
+    def testRenderFixedFee(self):
         taskWithFixedFee = task.Task(fixedFee=100)
         self.taskList.append(taskWithFixedFee)
         self.showColumn('fixedFee')
+        self.assertEqual('100.00', self.getItemText(0,3))
         self.assertEqual(_('Fixed fee'), 
                          self.viewer.widget.GetColumn(3).GetText())
-
-    def testTurnOnPriorityColumn(self):
-        self.showColumn('priority')
-        self.assertEqual(_('Priority'), 
-                         self.viewer.widget.GetColumn(3).GetText())
-        
-    def testTurnOffPriorityColumn(self):
-        self.showColumn('priority')
-        self.showColumn('priority', False)
-        self.assertEqual(3, self.viewer.widget.GetColumnCount())
-        
-    def testTurnOnPercentageCompleteColumn(self):
-        self.showColumn('percentageComplete')
-        self.assertEqual(_('% complete'), 
-                         self.viewer.widget.GetColumn(3).GetText())
-        
-    def testTurnOffPercentageCompleteColumn(self):
-        self.showColumn('percentageComplete')
-        self.showColumn('percentageComplete', False)
-        self.assertEqual(3, self.viewer.widget.GetColumnCount())
-
-    def testTurnOnAveragePercentageCompleteColumn(self):
-        self.showColumn('totalPercentageComplete')
-        self.assertEqual(_('Overall % complete'), 
-                         self.viewer.widget.GetColumn(3).GetText())
-
-    def testTurnOffAveragePercentageCompleteColumn(self):
-        self.showColumn('totalPercentageComplete')
-        self.showColumn('totalPercentageComplete', False)
-        self.assertEqual(3, self.viewer.widget.GetColumnCount())
-        
+                        
     def testRenderPercentageComplete_0(self):
         uncompletedTask = task.Task()
         self.taskList.append(uncompletedTask)
@@ -334,17 +302,7 @@ class CommonTestsMixin(object):
         self.taskList.append(completedTask)
         self.showColumn('percentageComplete')
         self.assertEqual('100%', self.getItemText(0,3))
-        
-    def testTurnOnRecurrenceColumn(self):
-        self.showColumn('recurrence')
-        self.assertEqual(_('Recurrence'), 
-                         self.viewer.widget.GetColumn(3).GetText())
-
-    def testTurnOffRecurrenceColumn(self):
-        self.showColumn('recurrence')
-        self.showColumn('recurrence', False)
-        self.assertEqual(3, self.viewer.widget.GetColumnCount())
-        
+                
     def testRenderRecurrence(self):
         taskWithRecurrence = task.Task(recurrence=date.Recurrence('weekly', amount=2))
         self.showColumn('recurrence')
@@ -398,6 +356,44 @@ class CommonTestsMixin(object):
             self.assertItems((task2, 1), child2, (self.task, 1), self.child)
         else:    
             self.assertItems(child2, self.child, self.task, task2)
+            
+    def testSortByPrerequisite_OnePrerequisite(self):
+        self.viewer.sortBy('prerequisites')
+        prerequisite = task.Task()
+        self.task.addPrerequisites([prerequisite])
+        self.taskList.extend([prerequisite, self.task])
+        self.assertItems(prerequisite, self.task)
+
+    def testSortByPrerequisite_TwoPrerequisites(self):
+        self.viewer.sortBy('prerequisites')
+        prerequisite1 = task.Task(subject='1')
+        prerequisite2 = task.Task(subject='2')
+        self.task.addPrerequisites([prerequisite1, prerequisite2])
+        self.taskList.extend([prerequisite1, prerequisite2, self.task])
+        try:
+            self.assertItems(prerequisite1, prerequisite2, self.task)
+        except AssertionError:
+            self.assertItems(prerequisite2, prerequisite1, self.task)
+
+    def testSortByPrerequisite_ChainedPrerequisites(self):
+        self.viewer.sortBy('prerequisites')
+        task0 = task.Task(subject='0')
+        task1 = task.Task(subject='1')
+        task2 = task.Task(subject='2')
+        task2.addPrerequisites([task1])
+        task1.addPrerequisites([task0])
+        self.taskList.extend([task0, task1, task2])
+        self.assertItems(task0, task1, task2) # Prerequisites = '', '0', '1'
+        self.viewer.setSortOrderAscending(False)
+        self.assertItems(task2, task1, task0) # Prerequisites = '1', '0', ''
+
+    def testSortBySubject_AddPrerequisite(self):
+        task0 = task.Task(subject='0', startDateTime=date.DateTime(2000,1,1))
+        task1 = task.Task(subject='1', startDateTime=date.DateTime(2000,1,1))
+        self.taskList.extend([task0, task1])
+        self.assertItems(task0, task1)
+        task0.addPrerequisites([task1])
+        self.assertItems(task1, task0)
     
     def testChangeActiveTaskForegroundColor(self):
         self.taskList.append(task.Task(subject='test', startDateTime=date.Now()))
@@ -461,7 +457,7 @@ class CommonTestsMixin(object):
     def testNewItem(self):
         self.taskFile.categories().append(category.Category('cat', filtered=True))
         dialog = self.viewer.newItemDialog(bitmap='new')
-        tree = dialog._interior[3].viewer.widget
+        tree = dialog._interior[4].viewer.widget
         firstChild = tree.GetFirstChild(tree.GetRootItem())[0]
         self.failUnless(firstChild.IsChecked())
         
@@ -625,7 +621,29 @@ class ColumnsTestsMixin(object):
         self.child.setFixedFee(200)
         self.viewer.setSortOrderAscending(False)
         self.assertEqual(render.monetaryAmount(300.), self.getItemText(0, 3))
-        
+
+    def testChangePrerequisiteSubject(self):
+        self.showColumn('prerequisites')
+        self.viewer.setSortOrderAscending(False)
+        prerequisite = task.Task(subject='prerequisite')
+        self.taskList.extend([self.task, prerequisite])
+        self.task.addPrerequisites([prerequisite])
+        prerequisite.addDependencies([self.task])
+        self.assertEqual('prerequisite', self.getItemText(0,1))
+        prerequisite.setSubject('new')
+        self.assertEqual('new', self.getItemText(0,1))
+
+    def testChangeDependencySubject(self):
+        self.showColumn('dependencies')
+        self.viewer.setSortOrderAscending(False)
+        dependency = task.Task(subject='dependency')
+        self.taskList.extend([self.task, dependency])
+        dependency.addPrerequisites([self.task])
+        self.task.addDependencies([dependency])
+        self.assertEqual('dependency', self.getItemText(0,1))
+        dependency.setSubject('new')
+        self.assertEqual('new', self.getItemText(0,1))
+  
     # Test all attributes...
 
 

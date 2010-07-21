@@ -219,5 +219,3 @@ class CategoryViewer(BaseCategoryViewer):
             uicommand.CategoryViewerFilterChoice(settings=self.settings)
         toolBarUICommands.insert(-2, self.filterUICommand)
         return toolBarUICommands
-
-

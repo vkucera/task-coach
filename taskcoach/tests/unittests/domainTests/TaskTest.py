@@ -98,6 +98,8 @@ class CommonTaskTestsMixin(asserts.TaskAsserts):
               'task.percentageComplete', 'task.priority', 
               task.Task.hourlyFeeChangedEventType(), 
               'task.fixedFee', 'task.reminder', 'task.recurrence',
+              'task.prerequisite.add', 'task.prerequisite.remove',
+              'task.dependency.add', 'task.dependency.remove',
               'task.setting.shouldMarkCompletedWhenAllChildrenCompleted'],
              self.task.modificationEventTypes())
         
@@ -202,7 +204,19 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
 
     def testDefaultRecursiveSelectedIcon(self):
         self.assertEqual('led_grey_icon', self.task.selectedIcon(recursive=True))
-
+        
+    def testDefaultPrerequisites(self):
+        self.failIf(self.task.prerequisites())
+        
+    def testDefaultRecursivePrerequisites(self):
+        self.failIf(self.task.prerequisites(recursive=True))
+        
+    def testDefaultDependencies(self):
+        self.failIf(self.task.dependencies())
+        
+    def testDefaultRecursiveDependencies(self):
+        self.failIf(self.task.dependencies(recursive=True))
+        
     # Setters
 
     def testSetStartDateTime(self):
@@ -555,6 +569,56 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.assertEqual([patterns.Event(eventType, self.task, aNote)], 
                          self.events)
         
+    # Prerequisites
+    
+    def testAddOnePrerequisite(self):
+        prerequisites = set([task.Task()])
+        self.task.addPrerequisites(prerequisites)
+        self.assertEqual(prerequisites, self.task.prerequisites())
+
+    def testAddTwoPrerequisites(self):
+        prerequisites = set([task.Task(), task.Task()])
+        self.task.addPrerequisites(prerequisites)
+        self.assertEqual(prerequisites, self.task.prerequisites())
+        
+    def testAddPrerequisiteCausesNotification(self):
+        eventType = 'task.prerequisite.add'
+        self.registerObserver(eventType)
+        prerequisite = task.Task()
+        self.task.addPrerequisites([prerequisite])
+        self.assertEqual([patterns.Event(eventType, self.task, prerequisite)], 
+                         self.events)
+        
+    def testRemovePrerequisiteThatHasNotBeenAdded(self):
+        prerequisite = task.Task()
+        self.task.removePrerequisites([prerequisite])
+        self.failIf(self.task.prerequisites())
+
+    # Dependencies
+
+    def testAddOneDependency(self):
+        dependencies = set([task.Task()])
+        self.task.addDependencies(dependencies)
+        self.assertEqual(dependencies, self.task.dependencies())
+
+    def testAddTwoDependencies(self):
+        dependencies = set([task.Task(), task.Task()])
+        self.task.addDependencies(dependencies)
+        self.assertEqual(dependencies, self.task.dependencies())
+        
+    def testAddDependencyCausesNotification(self):
+        eventType = 'task.dependency.add'
+        self.registerObserver(eventType)
+        dependency = task.Task()
+        self.task.addDependencies([dependency])
+        self.assertEqual([patterns.Event(eventType, self.task, dependency)], 
+                         self.events)
+        
+    def testRemoveDependencyThatHasNotBeenAdded(self):
+        dependency = task.Task()
+        self.task.removeDependencies([dependency])
+        self.failIf(self.task.dependencies())
+        
     # State (FIXME: need to test other attributes too)
  
     def testTaskStateIncludesPriority(self):
@@ -601,6 +665,22 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.task.setCompletionDateTime(self.yesterday) 
         self.task.__setstate__(state)
         self.assertEqual(previousCompletionDateTime, self.task.completionDateTime())                    
+
+    def testTaskStateIncludesPrerequisites(self):
+        self.task.addPrerequisites([task.Task(subject='prerequisite1')])
+        previousPrerequisites = self.task.prerequisites()
+        state = self.task.__getstate__()
+        self.task.addPrerequisites([task.Task(subject='prerequisite2')]) 
+        self.task.__setstate__(state)
+        self.assertEqual(previousPrerequisites, self.task.prerequisites())                    
+
+    def testTaskStateIncludesDependencies(self):
+        self.task.addDependencies([task.Task(subject='dependency1')])
+        previousDependencies = self.task.dependencies()
+        state = self.task.__getstate__()
+        self.task.addDependencies([task.Task(subject='dependency2')]) 
+        self.task.__setstate__(state)
+        self.assertEqual(previousDependencies, self.task.dependencies())                    
 
 
 class TaskDueTodayTest(TaskTestCase, CommonTaskTestsMixin):
@@ -753,13 +833,20 @@ class TaskCompletedInTheFutureTest(TaskTestCase, CommonTaskTestsMixin):
         self.failUnless(self.task.completed())
 
 
-class InactiveTaskTest(TaskTestCase, CommonTaskTestsMixin):
+class TaskWithStartDateInTheFutureTest(TaskTestCase, CommonTaskTestsMixin):
     def taskCreationKeywordArguments(self):
-        return [{'startDateTime': self.tomorrow}]
+        return [{'startDateTime': self.tomorrow},
+                {'subject': 'prerequisite'}]
 
     def testTaskWithStartDateInTheFutureIsInactive(self):
         self.failUnless(self.task.inactive())
         
+    def testTaskWithStartDateInTheFutureIsInactiveEvenWhenAllPrerequisitesAreCompleted(self):
+        self.task.addPrerequisites([self.task2])
+        self.task2.addDependencies([self.task])
+        self.task2.setCompletionDateTime()
+        self.failUnless(self.task.inactive())
+                
     def testACompletedTaskWithStartDateTimeInTheFutureIsNotInactive(self):
         self.task.setCompletionDateTime()
         self.failIf(self.task.inactive())
@@ -788,6 +875,54 @@ class InactiveTaskTest(TaskTestCase, CommonTaskTestsMixin):
 
     def testSelectedIcon(self):
         self.assertEqual('led_grey_icon',
+                         self.task.selectedIcon(recursive=True))
+
+
+class TaskWithStartDateInThePastTest(TaskTestCase, CommonTaskTestsMixin):
+    def taskCreationKeywordArguments(self):
+        return [{'startDateTime': date.DateTime(2000,1,1)}, 
+                {'subject': 'prerequisite'}]
+
+    def testTaskWithStartDateTimeInThePastIsActive(self):
+        self.failIf(self.task.inactive())
+
+    def testTaskBecomesInactiveWhenAddingAnUncompletedPrerequisite(self):
+        self.task.addPrerequisites([self.task2])
+        self.task2.addDependencies([self.task])
+        self.failUnless(self.task.inactive())
+
+    def testTaskBecomesActiveWhenUncompletedPrerequisiteIsCompleted(self):
+        self.task.addPrerequisites([self.task2])
+        self.task2.addDependencies([self.task])
+        self.task2.setCompletionDateTime()
+        self.failIf(self.task.inactive())
+
+
+class TaskWithoutStartDateTime(TaskTestCase, CommonTaskTestsMixin):
+    def taskCreationKeywordArguments(self):
+        return [{'startDateTime': date.DateTime()}, 
+                {'subject': 'prerequisite'}]
+
+    def testTaskWithoutStartDateTimeIsInactive(self):
+        self.failUnless(self.task.inactive())
+
+    def testTaskBecomesActiveWhenUncompletedPrerequisiteIsCompleted(self):
+        self.task.addPrerequisites([self.task2])
+        self.task2.addDependencies([self.task])
+        self.task2.setCompletionDateTime()
+        self.failIf(self.task.inactive())
+
+        
+class InactiveTaskWithChildTest(TaskTestCase):
+    def taskCreationKeywordArguments(self):
+        return [{'startDateTime': self.tomorrow,
+                 'children': [task.Task(subject='child')]}]
+
+    def testIcon(self):
+        self.assertEqual('folder_grey_icon', self.task.icon(recursive=True))
+
+    def testSelectedIcon(self):
+        self.assertEqual('folder_grey_open_icon',
                          self.task.selectedIcon(recursive=True))
 
 
@@ -1332,19 +1467,6 @@ class DuesoonTaskWithChildTest(TaskTestCase):
 
     def testSelectedIcon(self):
         self.assertEqual('folder_orange_open_icon',
-                         self.task.selectedIcon(recursive=True))
-
-
-class InactiveTaskWithChildTest(TaskTestCase):
-    def taskCreationKeywordArguments(self):
-        return [{'startDateTime': self.tomorrow,
-                 'children': [task.Task(subject='child')]}]
-
-    def testIcon(self):
-        self.assertEqual('folder_grey_icon', self.task.icon(recursive=True))
-
-    def testSelectedIcon(self):
-        self.assertEqual('folder_grey_open_icon',
                          self.task.selectedIcon(recursive=True))
 
 
@@ -2051,3 +2173,88 @@ class TaskColorTest(test.TestCase):
         activeTask.addCategory(redCategory)
         redCategory.addCategorizable(activeTask)
         self.assertEqual(wx.RED, activeTask.foregroundColor(recursive=True))
+
+
+class TaskWithPrerequisite(TaskTestCase):
+    def taskCreationKeywordArguments(self):
+        self.prerequisite = task.Task(subject='prerequisite')
+        return [dict(subject='task', prerequisites=[self.prerequisite])]
+    
+    def testTaskHasPrerequisite(self):
+        self.failUnless(self.prerequisite in self.task.prerequisites())
+
+    def testDependencyHasNotBeenSetAutomatically(self):
+        self.failIf(self.task in self.prerequisite.dependencies())
+        
+    def testRemovePrerequisite(self):
+        self.task.removePrerequisites([self.prerequisite])
+        self.failIf(self.task.prerequisites())
+                
+    def testRemovePrerequisiteNotInPrerequisites(self):
+        self.task.removePrerequisites([task.Task()])
+        self.failUnless(self.prerequisite in self.task.prerequisites())
+        
+    def testRemovePrerequisiteNotification(self):
+        self.registerObserver('task.prerequisite.remove')
+        self.task.removePrerequisites([self.prerequisite])
+        self.assertEqual([patterns.Event('task.prerequisite.remove', self.task, 
+                                         self.prerequisite)],
+                         self.events)
+        
+    def testSetPrerequisitesRemovesOldPrerequisites(self):
+        newPrerequisites = set([task.Task()])
+        self.task.setPrerequisites(newPrerequisites)
+        self.assertEqual(newPrerequisites, self.task.prerequisites())
+        
+    def testDontCopyPrerequisites(self):
+        self.failIf(self.prerequisite in self.task.copy().prerequisites())
+
+    def testPrerequisiteSubjectChangedNotification(self):
+        self.prerequisite.addDependencies([self.task])
+        self.registerObserver('task.prerequisite.subject', eventSource=self.task)
+        self.prerequisite.setSubject('New subject')
+        self.assertEqual([patterns.Event('task.prerequisite.subject', self.task,
+                                         'New subject')], self.events)
+
+
+class TaskWithDependency(TaskTestCase):
+    def taskCreationKeywordArguments(self):
+        self.dependency = task.Task(subject='dependency')
+        return [dict(subject='task', dependencies=[self.dependency])]
+    
+    def testTaskHasDependency(self):
+        self.failUnless(self.dependency in self.task.dependencies())
+
+    def testPrerequisiteHasNotBeenSetAutomatically(self):
+        self.failIf(self.task in self.dependency.prerequisites())
+        
+    def testRemoveDependency(self):
+        self.task.removeDependencies([self.dependency])
+        self.failIf(self.task.dependencies())
+                
+    def testRemoveDependencyNotInDependencies(self):
+        self.task.removeDependencies([task.Task()])
+        self.failUnless(self.dependency in self.task.dependencies())
+        
+    def testRemoveDependencyNotification(self):
+        self.registerObserver('task.dependency.remove')
+        self.task.removeDependencies([self.dependency])
+        self.assertEqual([patterns.Event('task.dependency.remove', self.task, 
+                                         self.dependency)],
+                         self.events)
+        
+    def testSetDependenciesRemovesOldDependencies(self):
+        newDependencies = set([task.Task()])
+        self.task.setDependencies(newDependencies)
+        self.assertEqual(newDependencies, self.task.dependencies())
+        
+    def testDontCopyDependencies(self):
+        self.failIf(self.dependency in self.task.copy().dependencies())
+
+    def testDependencySubjectChangedNotification(self):
+        self.dependency.addPrerequisites([self.task])
+        self.registerObserver('task.dependency.subject', eventSource=self.task)
+        self.dependency.setSubject('New subject')
+        self.assertEqual([patterns.Event('task.dependency.subject', self.task,
+                                         'New subject')], self.events)
+        

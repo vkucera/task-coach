@@ -22,6 +22,25 @@ from changetypes import *
 
 releases = [
 
+Release('1.2.0', 'July 21, 2010',
+    summary='''This release adds task dependencies.''',
+    featuresAdded=[
+        Feature(''''Tasks can have one or more prerequisite tasks. As long as 
+a task has one or more prerequisite tasks that are not completed, the 
+dependent task is inactive. The task tree viewer has two extra columns,
+one for showing prerequisite tasks and one for showing dependent tasks. 
+Prerequisite tasks can be selected in the Prerequisites tab of the task edit 
+dialog. Dependent tasks cannot be selected explicitly but are simply derived
+from the prerequisite tasks. For example, if task B can be started only after 
+task A has been completed, task A is called a prerequisite for task B and 
+task B is called a dependency of task A.''')
+        ],
+    implementationChanged=[
+        Implementation('''The task file format was changed to support task 
+dependencies. The task file format version number is now 31.''')
+        ],
+    ),
+    
 Release('1.1.0', 'July 10, 2010',
     summary='''This release adds time to start, due and completion dates of 
 tasks and adds support for mass editing of items.''',

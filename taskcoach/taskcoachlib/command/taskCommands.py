@@ -63,21 +63,33 @@ class DeleteTaskCommand(base.DeleteCommand, EffortCommand):
     def tasksToStopTracking(self):
         return self.items
 
-    # Mmmh,  these 3  methods  are copied  from EffortCommand  because
-    # DeleteCommand does not call  super(). There is probably a better
-    # way to do this.
-
     def do_command(self):
         super(DeleteTaskCommand, self).do_command()
         self.stopTracking()
-    
+        self.removePrerequisites()
+        
     def undo_command(self):
         super(DeleteTaskCommand, self).undo_command()
         self.startTracking()
+        self.restorePrerequisites()
         
     def redo_command(self):
         super(DeleteTaskCommand, self).redo_command()
         self.stopTracking()
+        self.removePrerequisites()
+        
+    def removePrerequisites(self):
+        self.__relationsToRestore = dict()
+        for task in self.items:
+            prerequisites, dependencies = task.prerequisites(), task.dependencies()
+            self.__relationsToRestore[task] = prerequisites, dependencies
+            task.removeTaskAsDependencyOf(prerequisites)
+            task.removeTaskAsPrerequisiteOf(dependencies) 
+                            
+    def restorePrerequisites(self):
+        for task, (prerequisites, dependencies) in self.__relationsToRestore.items():
+            task.addTaskAsDependencyOf(prerequisites)
+            task.addTaskAsPrerequisiteOf(dependencies)
 
 
 class NewTaskCommand(base.NewItemCommand):
@@ -126,20 +138,26 @@ class EditTaskCommand(base.EditCommand):
     def __init__(self, *args, **kwargs):
         super(EditTaskCommand, self).__init__(*args, **kwargs)
         self.oldCategories = [item.categories() for item in self.items]
+        self.oldPrerequisites = [item.prerequisites() for item in self.items]
         
     def do_command(self):
         super(EditTaskCommand, self).do_command()
-        self.newCategories = [item.categories() for item in self.items] # pylint: disable-msg=W0201
+        # pylint: disable-msg=W0201
+        self.newCategories = [item.categories() for item in self.items] 
         self.updateCategories(self.oldCategories, self.newCategories)
+        self.newPrerequisites = [item.prerequisites() for item in self.items]
+        self.updatePrerequisites(self.oldPrerequisites, self.newPrerequisites)
         
     def undo_command(self):
         super(EditTaskCommand, self).undo_command()
         self.updateCategories(self.newCategories, self.oldCategories)
+        self.updatePrerequisites(self.newPrerequisites, self.oldPrerequisites)
         
     def redo_command(self):
         super(EditTaskCommand, self).redo_command()
         self.updateCategories(self.oldCategories, self.newCategories)
-
+        self.updatePrerequisites(self.oldPrerequisites, self.newPrerequisites)
+        
     def getItemsToSave(self):
         return set([relative for item in self.items for relative in item.family()])
         
@@ -151,7 +169,15 @@ class EditTaskCommand(base.EditCommand):
             for category in categories:
                 category.addCategorizable(item)
 
-
+    def updatePrerequisites(self, oldPrerequisites, newPrerequisites):
+        for item, prerequisites in zip(self.items, oldPrerequisites):
+            for prerequisite in prerequisites:
+                prerequisite.removeDependencies([item])
+        for item, prerequisites in zip(self.items, newPrerequisites):
+            for prerequisite in prerequisites:
+                prerequisite.addDependencies([item])
+                
+                
 class MarkCompletedCommand(EditTaskCommand, EffortCommand):
     plural_name = _('Mark tasks completed')
     singular_name = _('Mark "%s" completed')
