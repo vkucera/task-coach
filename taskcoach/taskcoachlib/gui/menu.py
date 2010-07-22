@@ -426,9 +426,6 @@ class ViewTreeOptionsMenu(Menu):
     def __init__(self, mainwindow, viewerContainer):
         super(ViewTreeOptionsMenu, self).__init__(mainwindow)
         self.appendUICommands(
-            uicommand.ViewExpandSelected(viewer=viewerContainer),
-            uicommand.ViewCollapseSelected(viewer=viewerContainer),
-            None,
             uicommand.ViewExpandAll(viewer=viewerContainer),
             uicommand.ViewCollapseAll(viewer=viewerContainer))
 
@@ -479,21 +476,15 @@ class TaskMenu(Menu):
         super(TaskMenu, self).__init__(mainwindow)
         tasks = taskFile.tasks()
         categories = taskFile.categories()
+        self.appendMenu(_('&New task'),
+            NewTaskMenu(mainwindow, tasks, viewerContainer, settings), 'new')
         self.appendUICommands(
-            uicommand.TaskNew(taskList=tasks, settings=settings))
-        self.appendMenu(_('New task &from template'),
-                        TaskTemplateMenu(mainwindow, taskList=tasks, 
-                                         settings=settings),
-                        'newtmpl')
-        self.appendUICommands(uicommand.TaskNewSubTask(taskList=tasks,
-                                     viewer=viewerContainer),
             None,
             uicommand.TaskEdit(taskList=tasks, viewer=viewerContainer),
-            uicommand.TaskToggleCompletion(viewer=viewerContainer),
-            uicommand.TaskIncPriority(taskList=tasks, viewer=viewerContainer),
-            uicommand.TaskDecPriority(taskList=tasks, viewer=viewerContainer),
-            uicommand.TaskMaxPriority(taskList=tasks, viewer=viewerContainer),
-            uicommand.TaskMinPriority(taskList=tasks, viewer=viewerContainer),
+            uicommand.TaskToggleCompletion(viewer=viewerContainer))
+        self.appendMenu(_('&Priority'), 
+                        TaskPriorityMenu(mainwindow, tasks, viewerContainer))
+        self.appendUICommands(
             None,
             uicommand.TaskDelete(taskList=tasks, viewer=viewerContainer),
             None,
@@ -512,7 +503,33 @@ class TaskMenu(Menu):
                         ToggleCategoryMenu(mainwindow, categories=categories,
                                            viewer=viewerContainer),
                         'folder_blue_arrow_icon')
-            
+
+
+class NewTaskMenu(Menu):
+    def __init__(self, mainwindow, taskList, viewerContainer, settings):
+        super(NewTaskMenu, self).__init__(mainwindow)
+        self.appendUICommands(
+            uicommand.TaskNew(taskList=taskList, settings=settings),
+            uicommand.TaskNewSubTask(taskList=taskList, viewer=viewerContainer),
+            uicommand.NewTaskWithSelectedTasksAsPrerequisites(taskList=taskList, 
+                viewer=viewerContainer, settings=settings),
+            uicommand.NewTaskWithSelectedTasksAsDependencies(taskList=taskList, 
+                viewer=viewerContainer, settings=settings))
+        self.appendMenu(_('New task from &template'),
+            TaskTemplateMenu(mainwindow, taskList=taskList, settings=settings),
+            'newtmpl')
+
+
+class TaskPriorityMenu(Menu):
+    def __init__(self, mainwindow, taskList, viewerContainer):
+        super(TaskPriorityMenu, self).__init__(mainwindow)
+        kwargs = dict(taskList=taskList, viewer=viewerContainer)
+        self.appendUICommands(
+            uicommand.TaskIncPriority(**kwargs),
+            uicommand.TaskDecPriority(**kwargs),
+            uicommand.TaskMaxPriority(**kwargs),
+            uicommand.TaskMinPriority(**kwargs))
+        
             
 class EffortMenu(Menu):
     def __init__(self, mainwindow, settings, taskFile, viewerContainer):
@@ -714,21 +731,16 @@ class TaskPopupMenu(Menu):
             uicommand.EditCopy(viewer=taskViewer),
             uicommand.EditPaste(),
             uicommand.EditPasteAsSubItem(viewer=taskViewer),
-            None,
-            uicommand.TaskNew(taskList=tasks, settings=settings))
-        self.appendMenu(_('New task &from template'),
-                        TaskTemplateMenu(mainwindow, taskList=tasks, 
-                                         settings=settings),
-                        'newtmpl')
+            None)
+        self.appendMenu(_('&New task'),
+            NewTaskMenu(mainwindow, tasks, taskViewer, settings), 'new')
         self.appendUICommands(
-            uicommand.TaskNewSubTask(taskList=tasks, viewer=taskViewer),
             None,
             uicommand.TaskEdit(taskList=tasks, viewer=taskViewer),
-            uicommand.TaskToggleCompletion(viewer=taskViewer),
-            uicommand.TaskIncPriority(taskList=tasks, viewer=taskViewer),
-            uicommand.TaskDecPriority(taskList=tasks, viewer=taskViewer),
-            uicommand.TaskMaxPriority(taskList=tasks, viewer=taskViewer),
-            uicommand.TaskMinPriority(taskList=tasks, viewer=taskViewer),
+            uicommand.TaskToggleCompletion(viewer=taskViewer))
+        self.appendMenu(_('&Priority'), 
+                        TaskPriorityMenu(mainwindow, tasks, taskViewer))
+        self.appendUICommands(
             None,
             uicommand.TaskDelete(taskList=tasks, viewer=taskViewer),
             None,
@@ -753,10 +765,6 @@ class TaskPopupMenu(Menu):
                                     taskList=tasks, settings=settings),
                 uicommand.EffortStart(viewer=taskViewer, taskList=tasks),
                 uicommand.EffortStop(taskList=tasks))
-        if taskViewer.isTreeViewer():
-            self.appendUICommands(None,
-                uicommand.ViewExpandSelected(viewer=taskViewer),
-                uicommand.ViewCollapseSelected(viewer=taskViewer))
 
 
 class EffortPopupMenu(Menu):
@@ -816,10 +824,6 @@ class CategoryPopupMenu(Menu):
             self.appendUICommands(
                 uicommand.CategoryAddNote(viewer=categoryViewer,
                                           settings=settings))
-        self.appendUICommands(
-            None,
-            uicommand.ViewExpandSelected(viewer=categoryViewer),
-            uicommand.ViewCollapseSelected(viewer=categoryViewer))
 
 
 class NotePopupMenu(Menu):
@@ -845,10 +849,6 @@ class NotePopupMenu(Menu):
                         ToggleCategoryMenu(mainwindow, categories=categories,
                                            viewer=noteViewer),
                         'folder_blue_arrow_icon')
-        self.appendUICommands(
-            None,
-            uicommand.ViewExpandSelected(viewer=noteViewer),
-            uicommand.ViewCollapseSelected(viewer=noteViewer))
 
 
 class ColumnPopupMenuMixin(object):

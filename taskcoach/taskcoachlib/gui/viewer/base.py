@@ -405,19 +405,7 @@ class TreeViewer(Viewer): # pylint: disable-msg=W0223
 
     def collapseAll(self):
         self.widget.collapseAllItems()
-        
-    def expandSelected(self):
-        self.widget.expandSelectedItems()
-
-    def collapseSelected(self):
-        self.widget.collapseSelectedItems()
-        
-    def isSelectionExpandable(self):
-        return self.widget.isSelectionExpandable()
-    
-    def isSelectionCollapsable(self):
-        return self.widget.isSelectionCollapsable()
-        
+                
     def isAnyItemExpandable(self):
         return self.widget.isAnyItemExpandable()
 

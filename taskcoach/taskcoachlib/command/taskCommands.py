@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 
+from taskcoachlib import patterns
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, effort, date
 import base
@@ -97,16 +98,40 @@ class NewTaskCommand(base.NewItemCommand):
     
     def __init__(self, *args, **kwargs):
         subject = kwargs.pop('subject', _('New task'))
-        description = kwargs.pop('description', '')
-        attachments = kwargs.pop('attachments', [])
-        categories = kwargs.pop('categories', [])
         startDateTime = kwargs.pop('startDateTime', date.Now())
         super(NewTaskCommand, self).__init__(*args, **kwargs)
-        self.items = [task.Task(subject=subject, description=description, 
-                                attachments=attachments, categories=categories,
+        self.items = [task.Task(subject=subject, 
                                 startDateTime=startDateTime, **kwargs)]
 
+    def do_command(self):
+        super(NewTaskCommand, self).do_command()
+        self.addDependenciesAndPrerequisites()
+        
+    def undo_command(self):
+        super(NewTaskCommand, self).undo_command()
+        self.removeDependenciesAndPrerequisites()
+        
+    def redo_command(self):
+        super(NewTaskCommand, self).redo_command()
+        self.addDependenciesAndPrerequisites()
+        
+    @patterns.eventSource
+    def addDependenciesAndPrerequisites(self, event=None):
+        for task in self.items:
+            for prerequisite in task.prerequisites():
+                prerequisite.addDependencies([task], event=event)
+            for dependency in task.dependencies():
+                dependency.addPrerequisites([task], event=event)
 
+    @patterns.eventSource
+    def removeDependenciesAndPrerequisites(self, event=None):
+        for task in self.items:
+            for prerequisite in task.prerequisites():
+                prerequisite.removeDependencies([task], event=event)                                
+            for dependency in task.dependencies():
+                dependency.removePrerequisites([task], event=event)
+                
+                
 class NewSubTaskCommand(base.NewSubItemCommand, SaveTaskStateMixin):
     plural_name = _('New subtasks')
     singular_name = _('New subtask of "%s"')

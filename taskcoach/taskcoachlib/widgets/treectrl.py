@@ -88,14 +88,6 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
         for item in self.GetItemChildren():
             self.Collapse(item)
             
-    def expandSelectedItems(self):
-        for item in self.GetSelections():
-            self.Expand(item)
-                
-    def collapseSelectedItems(self):
-        for item in self.GetSelections():
-            self.Collapse(item)
-
     def select(self, selection):
         for item in self.GetItemChildren(recursively=True):
             self.SelectItem(item, self.GetItemPyData(item) in selection)
@@ -108,19 +100,7 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
         if self.GetItemCount() > 0:
             self.SelectAll()
         self.selectCommand()
-        
-    def isSelectionCollapsable(self):
-        for item in self.GetSelections():
-            if self.isItemCollapsable(item):
-                return True
-        return False
-        
-    def isSelectionExpandable(self):
-        for item in self.GetSelections():
-            if self.isItemExpandable(item):
-                return True
-        return False
-        
+                
     def isAnyItemCollapsable(self):
         for item in self.GetItemChildren():
             if self.isItemCollapsable(item): 

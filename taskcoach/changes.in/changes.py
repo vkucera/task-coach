@@ -22,10 +22,10 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.0', 'July 21, 2010',
+Release('1.2.0', 'July 22, 2010',
     summary='''This release adds task dependencies.''',
     featuresAdded=[
-        Feature(''''Tasks can have one or more prerequisite tasks. As long as 
+        Feature('''Tasks can have one or more prerequisite tasks. As long as 
 a task has one or more prerequisite tasks that are not completed, the 
 dependent task is inactive. The task tree viewer has two extra columns,
 one for showing prerequisite tasks and one for showing dependent tasks. 
@@ -34,6 +34,10 @@ dialog. Dependent tasks cannot be selected explicitly but are simply derived
 from the prerequisite tasks. For example, if task B can be started only after 
 task A has been completed, task A is called a prerequisite for task B and 
 task B is called a dependency of task A.''')
+        ],
+    featuresChanged=[
+        Feature('''Reorganized some menu items differently and added
+mnemonics to all menu items.''')
         ],
     implementationChanged=[
         Implementation('''The task file format was changed to support task 

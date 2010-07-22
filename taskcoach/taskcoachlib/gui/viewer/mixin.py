@@ -384,6 +384,8 @@ class SortableViewerForTasksMixin(SortableViewerForCategorizablesMixin):
             (_('&Start date'), _('Sort tasks by start date'), 'startDateTime'),
             (_('&Due date'), _('Sort tasks by due date'), 'dueDateTime'),
             (_('&Completion date'), _('Sort tasks by completion date'), 'completionDateTime'),
+            (_('&Prerequisites'), _('Sort tasks by prerequisite tasks'), 'prerequisites'),
+            (_('&Dependencies'), _('Sort tasks by dependent tasks'), 'dependencies'),
             (_('&Time left'), _('Sort tasks by time left'), 'timeLeft'),
             (_('&Percentage complete'), _('Sort tasks by percentage complete'), 'percentageComplete'),
             (_('&Overall percentage complete'), _('Sort tasks by overall percentage complete'), 'totalPercentageComplete'),

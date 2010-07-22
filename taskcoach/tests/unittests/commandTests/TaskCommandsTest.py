@@ -239,9 +239,8 @@ class DeleteCommandWithTasksWithEffortTest(CommandWithEffortTestCase):
 
 
 class NewTaskCommandTest(TaskCommandTestCase):
-    def new(self, categories=None, **kwargs):
-        newTaskCommand = command.NewTaskCommand(self.taskList, categories=categories or [],
-                                                **kwargs)
+    def new(self, **kwargs):
+        newTaskCommand = command.NewTaskCommand(self.taskList, **kwargs)
         newTask = newTaskCommand.items[0]
         newTaskCommand.do()
         return newTask
@@ -259,6 +258,44 @@ class NewTaskCommandTest(TaskCommandTestCase):
             lambda: self.assertEqual(set([cat]), newTask.categories()),
             lambda: self.assertTaskList(self.originalList))
 
+    def testNewTaskWithCategory_AddsTaskToCategory(self):
+        cat = category.Category('cat')
+        newTask = self.new(categories=[cat])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(set([newTask]), cat.categorizables()),
+            lambda: self.failIf(cat.categorizables()))
+
+    def testNewTaskWithPrerequisite(self):
+        newTask = self.new(prerequisites=[self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(set([self.task1]), newTask.prerequisites()),
+            lambda: self.assertTaskList(self.originalList))
+        
+    def testNewTaskWithPrerequisite_AddsDependency(self):
+        newTask = self.new(prerequisites=[self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(set([newTask]), self.task1.dependencies()),
+            lambda: self.failIf(self.task1.dependencies()))
+
+    def testNewTaskWithDependency(self):
+        newTask = self.new(dependencies=[self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(set([self.task1]), newTask.dependencies()),
+            lambda: self.assertTaskList(self.originalList))
+
+    def testNewTaskWithDependency_AddsPrerequisite(self):
+        newTask = self.new(dependencies=[self.task1])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(set([newTask]), self.task1.prerequisites()),
+            lambda: self.failIf(self.task1.prerequisites()))
+        
+    def testNewTaskWithAttachment(self):
+        att = attachment.FileAttachment('filename')
+        newTask = self.new(attachments=[att])
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual([att], newTask.attachments()),
+            lambda: self.assertTaskList(self.originalList))
+        
     def testNewTaskWithKeywords(self):
         dateTime = date.DateTime(2042, 2, 3)
         newTask = self.new(startDateTime=dateTime)
