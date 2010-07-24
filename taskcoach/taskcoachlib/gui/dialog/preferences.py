@@ -357,7 +357,10 @@ class Preferences(widgets.NotebookDialog):
     def __init__(self, settings=None, *args, **kwargs):
         self.settings = settings
         super(Preferences, self).__init__(bitmap='wrench_icon', *args, **kwargs)
-                   
+
+        if '__WXMAC__' in wx.PlatformInfo:
+            self.CentreOnParent()
+
     def addPages(self):
         self.SetMinSize((300, 430))
         pages = [\
