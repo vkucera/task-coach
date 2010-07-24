@@ -145,7 +145,7 @@ static NSMutableArray *expandChildren(CDCategory *category, NSMutableDictionary 
 
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 		cell = (BadgedCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-	
+
 	if (cell == nil)
 	{
 		cell = [[[CellFactory cellFactory] createBadgedCell] autorelease];

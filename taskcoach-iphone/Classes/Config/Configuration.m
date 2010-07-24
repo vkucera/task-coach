@@ -121,11 +121,14 @@ static Configuration *_configuration = NULL;
 	[request setEntity:[NSEntityDescription entityForName:@"CDFile" inManagedObjectContext:getManagedObjectContext()]];
 	NSError *error;
 	NSInteger count;
+
 	if ((count = [getManagedObjectContext() countForFetchRequest:request error:&error]) < 0)
 	{
 		NSLog(@"Could not get file count: %@", [error localizedDescription]);
 	}
-	
+
+	[request release];
+
 	return count;
 }
 

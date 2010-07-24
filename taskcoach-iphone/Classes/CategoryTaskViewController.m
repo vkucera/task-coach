@@ -135,7 +135,9 @@
 	[items addObject:barButtonItem];
 	[items addObjectsFromArray:[self.toolbar items]];
 	[self.toolbar setItems:items animated:YES];
+	[items release];
 	[pc setPopoverContentSize:CGSizeMake(400, 920)];
+
 	popCtrl = pc;
 }
 
@@ -150,6 +152,8 @@
 			[items addObject:item];
 	}
 	[self.toolbar setItems:items animated:YES];
+	[items release];
+
 	popCtrl = nil;
 }
 

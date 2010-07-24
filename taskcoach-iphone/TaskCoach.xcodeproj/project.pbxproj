@@ -1011,6 +1011,8 @@
 				A647F38F11B26802008D0FB0 /* CDDomainObject+Addons.m */,
 				A6A1013211BA3A450039DEE4 /* CDHierarchicalDomainObject.h */,
 				A6A1013311BA3A450039DEE4 /* CDHierarchicalDomainObject.m */,
+				A64403B011BD43270029075D /* CDHierarchicalDomainObject+Addons.h */,
+				A64403B111BD43270029075D /* CDHierarchicalDomainObject+Addons.m */,
 				A6CFAE6611B257B600044876 /* CDTask.h */,
 				A6CFAE6711B257B600044876 /* CDTask.m */,
 				A6CFAE7411B2580E00044876 /* CDTask+Addons.h */,
@@ -1023,8 +1025,6 @@
 				A68D31A611BA3D31002C6593 /* CDEffort+Addons.m */,
 				A610E6A411BB9913006800AF /* Migration.h */,
 				A610E6A511BB9913006800AF /* Migration.m */,
-				A64403B011BD43270029075D /* CDHierarchicalDomainObject+Addons.h */,
-				A64403B111BD43270029075D /* CDHierarchicalDomainObject+Addons.m */,
 			);
 			name = CoreData;
 			sourceTree = "<group>";

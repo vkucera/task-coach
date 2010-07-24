@@ -219,7 +219,9 @@ NSManagedObjectContext *getManagedObjectContext(void)
 		[alert show];
 		[alert release];
 	}
-	
+
+	[request release];
+
     return persistentStoreCoordinator;
 }
 

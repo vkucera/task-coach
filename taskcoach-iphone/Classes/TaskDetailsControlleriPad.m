@@ -181,6 +181,7 @@
 		for (CDCategory *cat in task.categories)
 			[cats addObject:cat.name];
 		[categoryButton setTitle:[@", " stringByJoiningStrings:cats] forState:UIControlStateNormal];
+		[cats release];
 	}
 	else
 	{

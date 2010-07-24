@@ -75,7 +75,7 @@
 			for (NSInteger i = 1; i < [strings count]; ++i)
 				[result appendFormat:@"%@%@", self, [strings objectAtIndex:i]];
 			
-			return result;
+			return [result autorelease];
 		}
 	}
 }

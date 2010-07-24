@@ -185,7 +185,6 @@
 				<int key="IBUISelectionStyle">2</int>
 				<reference key="IBUIContentView" ref="1070766518"/>
 				<bool key="IBUIShouldIndentWhileEditing">NO</bool>
-				<string key="IBUIReuseIdentifier">TaskCelliPad</string>
 			</object>
 		</object>
 		<object class="IBObjectContainer" key="IBDocument.Objects">

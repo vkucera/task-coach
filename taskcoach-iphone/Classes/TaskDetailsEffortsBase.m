@@ -73,6 +73,8 @@
 		[alert show];
 		[alert release];
 	}
+
+	[request release];
 }
 
 #pragma mark -

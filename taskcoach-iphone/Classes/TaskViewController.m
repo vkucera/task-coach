@@ -284,6 +284,8 @@ static void deleteTask(CDTask *task)
 		[results release];
 		results = nil;
 	}
+
+	[request release];
 }
 
 - (void)viewDidLoad
