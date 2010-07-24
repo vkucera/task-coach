@@ -16,14 +16,14 @@
 	{
 		[self start];
 	}
-	
+
 	return self;
 }
 
 - (void)dealloc
 {
 	[myValue release];
-	
+
 	[super dealloc];
 }
 
@@ -35,6 +35,7 @@
 - (void)start
 {
 	state = 0;
+
 	[myValue release];
 	myValue = nil;
 }
@@ -230,7 +231,7 @@
 		{
 			[myValue release];
 			myValue = [data copy];
-			
+
 			state = 2;
 			break;
 		}

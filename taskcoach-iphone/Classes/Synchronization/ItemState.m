@@ -63,6 +63,7 @@
 	{
 		NSObject *value = [item.value retain];
 		[self onNewObject:(NSArray *)value];
+		[value release];
 
 		// XXXFIXME: there are many interlaced calls that may occur here...
 

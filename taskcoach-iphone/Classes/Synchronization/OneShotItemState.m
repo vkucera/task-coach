@@ -25,6 +25,8 @@
 		NSObject *value = [item.value retain];
 		
 		[self onNewObject:(NSArray *)value];
+
+		[value release];
 	}
 }
 

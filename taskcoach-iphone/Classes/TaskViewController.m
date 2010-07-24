@@ -348,6 +348,7 @@ static void deleteTask(CDTask *task)
 	self.calendarView = nil;
 	self.calendarSearch = nil;
 	self.toolbar = nil;
+	self.headerView = nil;
 
 	[results release];
 	results = nil;
