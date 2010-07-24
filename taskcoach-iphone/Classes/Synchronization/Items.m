@@ -345,6 +345,7 @@
 	if ((self = [super init]))
 	{
 		myItems = [[NSMutableArray alloc] initWithArray:items];
+		[self start];
 	}
 	
 	return self;
@@ -384,7 +385,9 @@
 			NSObject *value = [(BaseItem *)[myItems objectAtIndex:state] value];
 
 			if (value)
+			{
 				[(NSMutableArray *)myValue addObject:value];
+			}
 			else
 				[(NSMutableArray *)myValue addObject:[NSNull null]];
 
@@ -436,6 +439,7 @@
 	if ((self = [super init]))
 	{
 		myItem = [item retain];
+		[self start];
 	}
 	
 	return self;
