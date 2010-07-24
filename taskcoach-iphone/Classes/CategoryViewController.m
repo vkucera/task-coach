@@ -330,13 +330,10 @@
 	cell.badge.text = [NSString stringWithFormat:@"%d", total];
 	cell.badge.capsuleColor = [UIColor blackColor];
 	
-	if (dueSoon)
-		[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", dueSoon] capsuleColor:[UIColor orangeColor]];
-	if (overdue)
-		[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", overdue] capsuleColor:[UIColor redColor]];
-	if (started)
-		[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", started] capsuleColor:[UIColor blueColor]];
-
+	[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", dueSoon] capsuleColor:[UIColor orangeColor]];
+	[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", overdue] capsuleColor:[UIColor redColor]];
+	[cell.badge addAnnotation:[NSString stringWithFormat:@"%d", started] capsuleColor:[UIColor blueColor]];
+	
 	[cell resize];
 }
 
