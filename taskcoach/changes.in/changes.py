@@ -48,7 +48,9 @@ and completion date and time. The task file format version number is now 30.''')
 versions of Windows XP. Fixed by using a notebook widget instead of the
 listbook widget.''', '2927384'),
         Bug('''The new edit dialogs better support tabbing through the dialogs.''',
-            '2687959')
+            '2687959'),
+        Bug('''On Mac OS X, the tabs in the editor and preferences dialogs were
+too small.'''),
         ]
     ),
     
