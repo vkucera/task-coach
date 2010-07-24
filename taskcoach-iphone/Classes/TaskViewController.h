@@ -67,4 +67,6 @@
 - (void)populate;
 - (NSPredicate *)predicate;
 
+- (void)childWasPopped;
+
 @end

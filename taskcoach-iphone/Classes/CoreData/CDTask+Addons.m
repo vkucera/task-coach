@@ -111,8 +111,6 @@
 
 	if (self.startDate)
 	{
-		NSLog(@"TI: %.2f", [self.startDate timeIntervalSinceDate:[NSDate date]]);
-
 		if ([self.startDate timeIntervalSinceDate:[NSDate date]] < 0)
 		{
 			self.dateStatus = [NSNumber numberWithInt:TASKSTATUS_STARTED];

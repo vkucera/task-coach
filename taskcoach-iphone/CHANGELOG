@@ -1,4 +1,7 @@
 
+2010-07-24  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
+	* misc: Don't crash at startup if the position store is corrupt
+
 2010-07-20  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* misc: Fix an assertion error that would compromise synchronization
 

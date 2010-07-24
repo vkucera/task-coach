@@ -298,7 +298,7 @@
 							<real>335</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>39 158 1528 1248 0 0 2560 1418 </string>
+						<string>31 157 1528 1248 0 0 2560 1418 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -326,7 +326,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A6C8B65911F5FB7D0053C094</string>
+										<string>A63120F311FABFD00083DDAA</string>
 										<key>history</key>
 										<array>
 											<string>A61F555F108CBD9B00BDFD6D</string>
@@ -436,7 +436,6 @@
 											<string>A6D9484711D605770003CBBF</string>
 											<string>A6D9484811D605770003CBBF</string>
 											<string>A685DBBB11D60E55002B6435</string>
-											<string>A685DBE411D6202A002B6435</string>
 											<string>A69D457E11D728C8001920ED</string>
 											<string>A68E82FF11D72E7300EF0943</string>
 											<string>A6FD728E11D745F100F32FD5</string>
@@ -500,7 +499,6 @@
 											<string>A6796F6A11E84EF500C38043</string>
 											<string>A6796FC211E8548700C38043</string>
 											<string>A6796FC311E8548700C38043</string>
-											<string>A6796FE111E8560600C38043</string>
 											<string>A679700311E857DA00C38043</string>
 											<string>A679700411E857DA00C38043</string>
 											<string>A679705011E85E1700C38043</string>
@@ -508,7 +506,6 @@
 											<string>A679705211E85E1700C38043</string>
 											<string>A679705311E85E1700C38043</string>
 											<string>A679705411E85E1700C38043</string>
-											<string>A679705511E85E1700C38043</string>
 											<string>A679705611E85E1700C38043</string>
 											<string>A679705711E85E1700C38043</string>
 											<string>A679707311E8626A00C38043</string>
@@ -530,7 +527,6 @@
 											<string>A68AC00D11EDBCDF00D69BD3</string>
 											<string>A6342F0011EDCC7A001C7EC7</string>
 											<string>A6342F4911EDD1B1001C7EC7</string>
-											<string>A6342F4A11EDD1B1001C7EC7</string>
 											<string>A6342F7A11EDD6B7001C7EC7</string>
 											<string>A6342FBC11EDD9F6001C7EC7</string>
 											<string>A67E96BE11EDDD0600E7ACCD</string>
@@ -549,18 +545,22 @@
 											<string>A6FA11CD11EE0777003C7ACB</string>
 											<string>A6FA11E111EE07F1003C7ACB</string>
 											<string>A6FA11E211EE07F1003C7ACB</string>
-											<string>A6F2F84611F0BD5D00A46990</string>
 											<string>A6F2F84711F0BD5D00A46990</string>
-											<string>A6A1D65911F0C9310071FF8E</string>
 											<string>A60E7E9811F0CA0400233E83</string>
 											<string>A6615A3311F190EF005AFDE9</string>
 											<string>A6615A4F11F191F7005AFDE9</string>
-											<string>A6615A7511F192EF005AFDE9</string>
-											<string>A60F3CF411F193EA008B0C28</string>
 											<string>A6F8511111F1944000774637</string>
-											<string>A67E064B11F1F02C00ABB1A6</string>
 											<string>A6C8B65611F5FB7D0053C094</string>
-											<string>A6C8B65711F5FB7D0053C094</string>
+											<string>A636ABD711F5FC23006F6A8F</string>
+											<string>A618A0F211FABDE600127B95</string>
+											<string>A618A0F311FABDE600127B95</string>
+											<string>A618A0F411FABDE600127B95</string>
+											<string>A618A0F511FABDE600127B95</string>
+											<string>A618A0F611FABDE600127B95</string>
+											<string>A618A0FC11FABE4000127B95</string>
+											<string>A618A0FD11FABE4000127B95</string>
+											<string>A63120F211FABFD00083DDAA</string>
+											<string>A6A9F58E11F5FBC600F740EE</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -576,7 +576,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {1171, 879}}</string>
 								<key>RubberWindowFrame</key>
-								<string>39 158 1528 1248 0 0 2560 1418 </string>
+								<string>31 157 1528 1248 0 0 2560 1418 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
@@ -601,7 +601,7 @@
 										<key>Frame</key>
 										<string>{{10, 27}, {1171, 317}}</string>
 										<key>RubberWindowFrame</key>
-										<string>39 158 1528 1248 0 0 2560 1418 </string>
+										<string>31 157 1528 1248 0 0 2560 1418 </string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -683,11 +683,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6C8B62A11F5F9B60053C094</string>
+				<string>A63120F411FABFD00083DDAA</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A6C8B62B11F5F9B60053C094</string>
+				<string>A63120F511FABFD00083DDAA</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A6C8B62C11F5F9B60053C094</string>
+				<string>A63120F611FABFD00083DDAA</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -836,13 +836,13 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6C8B62D11F5F9B60053C094</string>
+				<string>A618A10211FABE4C00127B95</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A6C8B62E11F5F9B60053C094</string>
-				<string>A6C8B62F11F5F9B60053C094</string>
-				<string>A6C8B63011F5F9B60053C094</string>
-				<string>A6C8B63111F5F9B60053C094</string>
+				<string>A618A10311FABE4C00127B95</string>
+				<string>A618A10411FABE4C00127B95</string>
+				<string>A618A10511FABE4C00127B95</string>
+				<string>A618A10611FABE4C00127B95</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
@@ -875,12 +875,10 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>A6C8B64511F5F9C10053C094</string>
-		<string>A6C8B63311F5F9B60053C094</string>
 		<string>/Users/jeromelaheurte/Dev/TaskCoach/taskcoach-trunk/taskcoach-iphone/TaskCoach.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>39 158 1528 1248 0 0 2560 1418 </string>
+	<string>31 157 1528 1248 0 0 2560 1418 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>

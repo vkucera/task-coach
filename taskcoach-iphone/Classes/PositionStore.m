@@ -103,7 +103,14 @@ static PositionStore *_instance = nil;
 	if ((self = [super init]))
 	{
 		NSData *data = [[NSData alloc] initWithContentsOfFile:path];
-		positions = [[NSKeyedUnarchiver unarchiveObjectWithData:data] retain];
+		@try {
+			positions = [[NSKeyedUnarchiver unarchiveObjectWithData:data] retain];
+		}
+		@catch (NSException * e) {
+			NSLog(@"Could not load position store file: %@", [e reason]);
+			positions = [[NSMutableArray alloc] initWithCapacity:3];
+		}
+
 		[data release];
 	}
 	
