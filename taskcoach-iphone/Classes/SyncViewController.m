@@ -181,7 +181,6 @@
 			[[UIAccelerometer sharedAccelerometer] setUpdateInterval:1.0 / 60];
 			[[UIAccelerometer sharedAccelerometer] setDelegate:self];
 
-			[self dismissModalViewControllerAnimated:YES];
 			[target performSelector:action];
 		}
 	}
@@ -222,11 +221,6 @@
 
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
 {
-	[self dismissModalViewControllerAnimated:YES];
-
-	[[UIAccelerometer sharedAccelerometer] setUpdateInterval:1.0 / 60];
-	[[UIAccelerometer sharedAccelerometer] setDelegate:self];
-
 	[target performSelector:action];
 }
 
