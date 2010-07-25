@@ -314,7 +314,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>BaseCategoryViewController.m</string>
+								<string>CHANGELOG</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -322,11 +322,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>BaseCategoryViewController.m</string>
+										<string>CHANGELOG</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A694F29F11FC39EB008BC150</string>
+										<string>A61710BD11FC3A4B000777D9</string>
 										<key>history</key>
 										<array>
 											<string>A627F04E10E7558600B856F4</string>
@@ -502,7 +502,6 @@
 											<string>A6F2F84711F0BD5D00A46990</string>
 											<string>A6615A3311F190EF005AFDE9</string>
 											<string>A636ABD711F5FC23006F6A8F</string>
-											<string>A618A0F211FABDE600127B95</string>
 											<string>A618A0F311FABDE600127B95</string>
 											<string>A618A0F511FABDE600127B95</string>
 											<string>A6AD18F811FAC1C000E24A11</string>
@@ -528,7 +527,6 @@
 											<string>A6A8022311FC1BC8006968E4</string>
 											<string>A6A8025011FC1E40006968E4</string>
 											<string>A6A8025111FC1E40006968E4</string>
-											<string>A660210811FC24B100A799BE</string>
 											<string>A660210911FC24B100A799BE</string>
 											<string>A660210A11FC24B100A799BE</string>
 											<string>A660210B11FC24B100A799BE</string>
@@ -562,7 +560,9 @@
 											<string>A65FFD4A11FC37BF0064AC44</string>
 											<string>A65FFD4B11FC37BF0064AC44</string>
 											<string>A694F29D11FC39EB008BC150</string>
-											<string>A694F29E11FC39EB008BC150</string>
+											<string>A61710B011FC3A4B000777D9</string>
+											<string>A61710B111FC3A4B000777D9</string>
+											<string>A61710B211FC3A4B000777D9</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -685,11 +685,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A694F2A011FC39EB008BC150</string>
+				<string>A61710B411FC3A4B000777D9</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A694F2A111FC39EB008BC150</string>
+				<string>A61710B511FC3A4B000777D9</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A694F2A211FC39EB008BC150</string>
+				<string>A61710B611FC3A4B000777D9</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -838,14 +838,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A65FFC9C11FC2BEE0064AC44</string>
+				<string>A61710B711FC3A4B000777D9</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A65FFC9D11FC2BEE0064AC44</string>
-				<string>A65FFC9E11FC2BEE0064AC44</string>
-				<string>A65FFC9F11FC2BEE0064AC44</string>
-				<string>A65FFCA011FC2BEE0064AC44</string>
-				<string>A65FFCA111FC2BEE0064AC44</string>
+				<string>A61710B811FC3A4B000777D9</string>
+				<string>A61710B911FC3A4B000777D9</string>
+				<string>A61710BA11FC3A4B000777D9</string>
+				<string>A61710BB11FC3A4B000777D9</string>
+				<string>A61710BC11FC3A4B000777D9</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
 			<string>2</string>
