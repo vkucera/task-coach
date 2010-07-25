@@ -352,7 +352,7 @@
 			}
 			else
 			{
-				cell.textLabel.text = [NSString stringWithFormat:_("%@ on %@"), [NSString formatTimeInterval:(NSInteger)duration], [[DateUtils instance] stringFromDate:effort.started]];
+				cell.textLabel.text = [NSString stringWithFormat:_("%@ on %@"), [NSString formatTimeInterval:(NSInteger)duration], [[UserTimeUtils instance] stringFromDate:effort.started]];
 			}
 		}
 		else

@@ -156,14 +156,14 @@
 - (NSString *)startDateOnly
 {
 	if (self.startDate)
-		return [[DateUtils instance] stringFromDate:self.startDate];
+		return [[UserDateUtils instance] stringFromDate:self.startDate];
 	return @"";
 }
 
 - (NSString *)dueDateOnly
 {
 	if (self.dueDate)
-		return [[DateUtils instance] stringFromDate:self.dueDate];
+		return [[UserDateUtils instance] stringFromDate:self.dueDate];
 	return @"";
 }
 

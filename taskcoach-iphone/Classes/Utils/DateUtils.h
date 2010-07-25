@@ -24,6 +24,14 @@
 
 @end
 
+@interface UserDateUtils : NSDateFormatter
+{
+}
+
++ (UserDateUtils *)instance;
+
+@end
+
 @interface UserTimeUtils : NSDateFormatter
 {
 }

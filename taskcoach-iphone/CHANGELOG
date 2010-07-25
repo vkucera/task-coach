@@ -1,4 +1,7 @@
 
+2010-07-25  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
+	* misc: Use localized dates everywhere
+
 2010-07-24  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* misc: Don't crash at startup if the position store is corrupt
 	* misc: Fix a bunch of memory leaks

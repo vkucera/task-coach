@@ -10,6 +10,7 @@
 
 static DateUtils *_dinstance = NULL;
 static TimeUtils *_tinstance = NULL;
+static UserDateUtils *_udinstance = NULL;
 static UserTimeUtils *_uinstance = NULL;
 
 @implementation DateUtils
@@ -49,6 +50,27 @@ static UserTimeUtils *_uinstance = NULL;
 		[self setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
 	}
 
+	return self;
+}
+
+@end
+
+@implementation UserDateUtils
+
++ (UserDateUtils *)instance
+{
+	if (!_udinstance)
+		_udinstance = [[UserDateUtils alloc] init];
+	return _udinstance;
+}
+
+- init
+{
+	if ((self = [super init]))
+	{
+		[self setDateStyle:NSDateFormatterShortStyle];
+	}
+	
 	return self;
 }
 
