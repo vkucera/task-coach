@@ -180,6 +180,9 @@
 		{
 			[[UIAccelerometer sharedAccelerometer] setUpdateInterval:1.0 / 60];
 			[[UIAccelerometer sharedAccelerometer] setDelegate:self];
+
+			[self dismissModalViewControllerAnimated:YES];
+			[target performSelector:action];
 		}
 	}
 }
