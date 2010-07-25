@@ -59,6 +59,8 @@ Release('1.0.8', 'July 6, 2010',
     bugsFixed=[
         Bug('''Drop support for SyncML on Debian; too many architectures/versions
 to support.'''),
+        Bug('''File attachments would not open on Lubuntu'''),
+        Bug('''Task Coach would crash on start on Ubuntu 10.10'''),
         ]
     ),
 

@@ -19,6 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import sys, os
+# Workaround for a bug in Ubuntu 10.10
+os.environ['XLIB_SKIP_ARGB_VISUALS'] = '1'
+
 if not hasattr(sys, "frozen"):
     # These checks are only necessary in a non-frozen environment, i.e. we
     # skip these checks when run from a py2exe-fied application
