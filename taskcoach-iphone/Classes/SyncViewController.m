@@ -71,8 +71,11 @@
 	myNetwork = [[Network alloc] initWithAddress:host port:port delegate:self];
 	self.state = [InitialState stateWithNetwork:myNetwork controller:self];
 
-	[[UIAccelerometer sharedAccelerometer] setUpdateInterval:1.0 / 60];
-	[[UIAccelerometer sharedAccelerometer] setDelegate:self];
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+	{
+		[[UIAccelerometer sharedAccelerometer] setUpdateInterval:1.0 / 60];
+		[[UIAccelerometer sharedAccelerometer] setDelegate:self];
+	}
 }
 
 - (void)viewDidUnload
@@ -81,9 +84,12 @@
 	self.activity = nil;
 	self.progress = nil;
 	
-	[UIAccelerometer sharedAccelerometer].delegate = nil;
-	[lastAccel release];
-	lastAccel = nil;
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+	{
+		[UIAccelerometer sharedAccelerometer].delegate = nil;
+		[lastAccel release];
+		lastAccel = nil;
+	}
 }
 
 - (void)dealloc
