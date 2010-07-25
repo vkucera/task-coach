@@ -20,9 +20,6 @@
 
 - (void)activated
 {
-	LogCreateFile();
-	LogSetLevel(LOGLEVEL_INFO);
-
 	JLDEBUG("=== Initial state.");
 
 	myController.label.text = _("Connecting...");

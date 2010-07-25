@@ -11,6 +11,7 @@
 #import "CategoryViewController.h"
 #import "Configuration.h"
 #import "i18n.h"
+#import "LogUtils.h"
 
 #import "CDFile.h"
 #import "CDDomainObject.h"
@@ -138,7 +139,7 @@
 			}
 			else
 			{
-				NSLog(@"Could not fetch objects: %@", [error localizedDescription]);
+				JLERROR("Could not fetch objects: %s", [[error localizedDescription] UTF8String]);
 				assert(0);
 			}
 
@@ -181,7 +182,7 @@
 		}
 		else
 		{
-			NSLog(@"Could not fetch files: %@", [error localizedDescription]);
+			JLERROR("Could not fetch files: %s", [[error localizedDescription] UTF8String]);
 			assert(0);
 		}
 	}

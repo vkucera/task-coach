@@ -11,6 +11,7 @@
 #import "CDDomainObject+Addons.h"
 #import "CDTask.h"
 #import "CDTask+Addons.h"
+#import "LogUtils.h"
 #import "i18n.h"
 
 static ReminderController *_instance = NULL;
@@ -53,7 +54,7 @@ static ReminderController *_instance = NULL;
 		NSError *error;
 		if (![getManagedObjectContext() save:&error])
 		{
-			NSLog(@"Could not save: %@", [error localizedDescription]);
+			JLERROR("Could not save: %s", [[error localizedDescription] UTF8String]);
 		}
 	}
 
@@ -96,7 +97,7 @@ static ReminderController *_instance = NULL;
 		
 		if (![getManagedObjectContext() save:&error])
 		{
-			NSLog(@"Could not save (reminders): %@", [error localizedDescription]);
+			JLERROR("Could not save (reminders): %s", [[error localizedDescription] UTF8String]);
 		}
 	}
 }

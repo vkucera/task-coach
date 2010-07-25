@@ -12,6 +12,7 @@
 #import "CDDomainObject+Addons.h"
 #import "SyncViewController.h"
 #import "Configuration.h"
+#import "LogUtils.h"
 
 @implementation EntityUploadState
 
@@ -53,7 +54,8 @@
 	}
 	else
 	{
-		NSLog(@"Could not fetch %@: %@", [self entityName], [error localizedDescription]);
+		JLERROR("Could not fetch %s: %s", [[self entityName] UTF8String], [[error localizedDescription] UTF8String]);
+
 		[self cancel];
 	}
 }

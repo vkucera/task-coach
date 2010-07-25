@@ -124,7 +124,7 @@ static Configuration *_configuration = NULL;
 
 	if ((count = [getManagedObjectContext() countForFetchRequest:request error:&error]) < 0)
 	{
-		NSLog(@"Could not get file count: %@", [error localizedDescription]);
+		JLERROR("Could not get file count: %s", [[error localizedDescription] UTF8String]);
 	}
 
 	[request release];

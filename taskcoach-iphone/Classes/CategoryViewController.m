@@ -19,6 +19,7 @@
 #import "CellFactory.h"
 #import "NSDate+Utils.h"
 #import "ReminderController.h"
+#import "LogUtils.h"
 
 #import "CDDomainObject+Addons.h"
 #import "CDCategory.h"
@@ -324,7 +325,7 @@
 	}
 	else
 	{
-		NSLog(@"Could not fetch tasks: %@", [error localizedDescription]);
+		JLERROR("Could not fetch tasks: %s", [[error localizedDescription] UTF8String]);
 	}
 
 	cell.badge.text = [NSString stringWithFormat:@"%d", total];

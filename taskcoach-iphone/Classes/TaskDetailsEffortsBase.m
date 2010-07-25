@@ -15,6 +15,7 @@
 #import "CDEffort+Addons.h"
 #import "String+Utils.h"
 #import "DateUtils.h"
+#import "LogUtils.h"
 #import "i18n.h"
 
 @interface TaskDetailsEffortsBase ()
@@ -67,7 +68,7 @@
 	NSError *error;
 	if (![results performFetch:&error])
 	{
-		NSLog(@"Error fetching efforts: %@", [error localizedDescription]);
+		JLERROR("Error fetching efforts: %s", [[error localizedDescription] UTF8String]);
 		
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not fetch efforts" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
@@ -294,7 +295,8 @@
 	NSError *error;
 	if (![getManagedObjectContext() save:&error])
 	{
-		NSLog(@"Could not save efforts: %@", [error localizedDescription]);
+		JLERROR("Could not save efforts: %s", [[error localizedDescription] UTF8String]);
+
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error saving effort" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
 		[alert release];

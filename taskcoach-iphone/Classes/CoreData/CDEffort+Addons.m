@@ -10,6 +10,7 @@
 #import "TaskCoachAppDelegate.h"
 #import "CDDomainObject+Addons.h"
 #import "Configuration.h"
+#import "LogUtils.h"
 
 @implementation CDEffort (Addons)
 
@@ -24,7 +25,7 @@
 	NSArray *result = [getManagedObjectContext() executeFetchRequest:request error:&error];
 	if (!result)
 	{
-		NSLog(@"Error fetching efforts: %@", [error localizedDescription]);
+		JLERROR("Error fetching efforts: %s", [[error localizedDescription] UTF8String]);
 		return nil;
 	}
 

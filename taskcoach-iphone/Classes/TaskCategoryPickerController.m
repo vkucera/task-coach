@@ -13,6 +13,8 @@
 
 #import "CDDomainObject+Addons.h"
 #import "CDTask.h"
+#import "CDCategory.h"
+#import "LogUtils.h"
 
 #import "i18n.h"
 
@@ -67,11 +69,15 @@
 
 	if ([[myTask categories] containsObject:category])
 	{
+		JLDEBUG("Category \"%s\" deselected", [category.name UTF8String]);
+
 		[myTask removeCategoriesObject:category];
 		[cell setChecked:NO];
 	}
 	else
 	{
+		JLDEBUG("Category \"%s\" selected", [category.name UTF8String]);
+
 		[myTask addCategoriesObject:category];
 		[cell setChecked:YES];
 	}

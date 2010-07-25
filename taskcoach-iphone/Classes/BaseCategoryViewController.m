@@ -11,6 +11,7 @@
 #import "Configuration.h"
 #import "BadgedCell.h"
 #import "CellFactory.h"
+#import "LogUtils.h"
 
 #import "CDCategory.h"
 #import "CDDomainObject+Addons.h"
@@ -101,7 +102,7 @@ static NSMutableArray *expandChildren(CDCategory *category, NSMutableDictionary 
 
 	if (!rootItems)
 	{
-		NSLog(@"Could not fetch categories: %@", [error localizedDescription]);
+		JLERROR("Could not fetch categories: %s", [[error localizedDescription] UTF8String]);
 		return;
 	}
 

@@ -16,6 +16,7 @@
 #import "CategoryTaskViewController.h"
 #import "Migration.h"
 #import "ReminderController.h"
+#import "LogUtils.h"
 
 NSManagedObjectContext *getManagedObjectContext(void)
 {
@@ -38,7 +39,12 @@ NSManagedObjectContext *getManagedObjectContext(void)
 	_("Categories");
 	_("Sync");
 	_("Activity log");
-	
+
+	LogCreateFile();
+	LogSetLevel(LOGLEVEL_INFO); // XXXFIXME: set this to error before releasing
+
+	JLINFO("Started.");
+
 	[window addSubview:mainController.view];
 	[window makeKeyAndVisible];
 }
@@ -206,7 +212,7 @@ NSManagedObjectContext *getManagedObjectContext(void)
 		
 		if (![getManagedObjectContext() save:&error])
 		{
-			NSLog(@"Error saving: %@", [error localizedDescription]);
+			JLERROR("Error saving: %s", [[error localizedDescription] UTF8String]);
 			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not save tasks" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 			[alert show];
 			[alert release];
@@ -214,7 +220,7 @@ NSManagedObjectContext *getManagedObjectContext(void)
 	}
 	else
 	{
-		NSLog(@"Error fetching: %@", [error localizedDescription]);
+		JLERROR("Error fetching: %s", [[error localizedDescription] UTF8String]);
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not load tasks" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
 		[alert release];

@@ -10,6 +10,7 @@
 #import "ItemState.h"
 #import "Network.h"
 #import "Configuration.h"
+#import "LogUtils.h"
 
 @implementation ItemState
 
@@ -108,7 +109,8 @@
 	NSInteger eCount = [getManagedObjectContext() countForFetchRequest:req error:&error];
 	if (eCount < 0)
 	{
-		NSLog(@"Error counting %@: %@", entityName, [error localizedDescription]);
+		JLERROR("Error counting %s: %s", [entityName UTF8String], [[error localizedDescription] UTF8String]);
+
 		eCount = 0;
 	}
 	[req release];

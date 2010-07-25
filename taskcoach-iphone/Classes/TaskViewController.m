@@ -33,6 +33,7 @@
 #import "DateUtils.h"
 #import "NSDate+Utils.h"
 #import "i18n.h"
+#import "LogUtils.h"
 
 #import "CalendarTaskView.h"
 
@@ -402,12 +403,12 @@ static void deleteTask(CDTask *task)
 		
 		if (![getManagedObjectContext() save:&error])
 		{
-			NSLog(@"Could not save: %@", [error localizedDescription]);
+			JLERROR("Could not save: %s", [[error localizedDescription] UTF8String]);
 		}
 	}
 	else
 	{
-		NSLog(@"Could not fetch tasks: %@", [error localizedDescription]);
+		JLERROR("Could not fetch tasks: %s", [[error localizedDescription] UTF8String]);
 	}
 
 	[self.calendarView reloadDay];

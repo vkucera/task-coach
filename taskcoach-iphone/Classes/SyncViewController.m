@@ -48,7 +48,14 @@
 
 - (void)finished:(BOOL)ok
 {
-	[target performSelector:action];
+	// XXXFIXME: remove this before releasing
+	// [target performSelector:action];
+
+	alertState = 1;
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Message") message:_("Sync finished.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+	[alert addButtonWithTitle:_("Send log")];
+	[alert show];
+	[alert release];
 }
 
 - (void)cancel
@@ -71,11 +78,8 @@
 	myNetwork = [[Network alloc] initWithAddress:host port:port delegate:self];
 	self.state = [InitialState stateWithNetwork:myNetwork controller:self];
 
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-	{
-		[[UIAccelerometer sharedAccelerometer] setUpdateInterval:1.0 / 60];
-		[[UIAccelerometer sharedAccelerometer] setDelegate:self];
-	}
+	[[UIAccelerometer sharedAccelerometer] setUpdateInterval:1.0 / 60];
+	[[UIAccelerometer sharedAccelerometer] setDelegate:self];
 }
 
 - (void)viewDidUnload
@@ -84,12 +88,9 @@
 	self.activity = nil;
 	self.progress = nil;
 	
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-	{
-		[UIAccelerometer sharedAccelerometer].delegate = nil;
-		[lastAccel release];
-		lastAccel = nil;
-	}
+	[UIAccelerometer sharedAccelerometer].delegate = nil;
+	[lastAccel release];
+	lastAccel = nil;
 }
 
 - (void)dealloc
@@ -129,7 +130,7 @@
 
 - (void)networkDidEncounterError:(Network *)network error:(NSError *)error
 {
-	NSLog(@"Network error (%@)", [error description]);
+	JLERROR("Network error (%s)", [[error description] UTF8String]);
 	
 	[state networkDidEncounterError:network error:error controller:self];
 }
@@ -154,12 +155,22 @@
 		if (buttonIndex == 1)
 		{
 			MFMailComposeViewController *ctrl = [[MFMailComposeViewController alloc] init];
-			[ctrl setMailComposeDelegate:self];
-			[ctrl setSubject:_("Task Coach sync log")];
-			[ctrl setMessageBody:[NSString stringWithContentsOfFile:[NSString stringWithUTF8String:LogFilename()] encoding:NSUTF8StringEncoding error:nil] isHTML:NO];
-			[ctrl setToRecipients:[NSArray arrayWithObject:@"fraca7@gmail.com"]];
-			[self presentModalViewController:ctrl animated:YES];
-			[ctrl release];
+			
+			if (!ctrl)
+			{
+				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Error") message:_("Your e-mail settings are not set.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
+				[alert show];
+				[alert release];
+			}
+			else
+			{
+				[ctrl setMailComposeDelegate:self];
+				[ctrl setSubject:_("Task Coach sync log")];
+				[ctrl setMessageBody:[NSString stringWithContentsOfFile:[NSString stringWithUTF8String:LogFilename()] encoding:NSUTF8StringEncoding error:nil] isHTML:NO];
+				[ctrl setToRecipients:[NSArray arrayWithObject:@"fraca7@gmail.com"]];
+				[self presentModalViewController:ctrl animated:YES];
+				[ctrl release];
+			}
 		}
 		else
 		{
@@ -205,8 +216,11 @@
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
 {
 	[self dismissModalViewControllerAnimated:YES];
+
 	[[UIAccelerometer sharedAccelerometer] setUpdateInterval:1.0 / 60];
 	[[UIAccelerometer sharedAccelerometer] setDelegate:self];
+
+	[target performSelector:action];
 }
 
 @end

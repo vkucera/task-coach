@@ -7,6 +7,7 @@
 //
 
 #import "PositionStore.h"
+#import "LogUtils.h"
 
 static PositionStore *_instance = nil;
 
@@ -107,7 +108,7 @@ static PositionStore *_instance = nil;
 			positions = [[NSKeyedUnarchiver unarchiveObjectWithData:data] retain];
 		}
 		@catch (NSException * e) {
-			NSLog(@"Could not load position store file: %@", [e reason]);
+			JLERROR("Could not load position store file: %s", [[e reason] UTF8String]);
 			positions = [[NSMutableArray alloc] initWithCapacity:3];
 		}
 

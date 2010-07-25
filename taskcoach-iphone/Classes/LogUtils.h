@@ -10,6 +10,8 @@
 #ifndef _LOGUTILS_H_
 #define _LOGUTILS_H_
 
+#import "DateUtils.h"
+
 #define LOGLEVEL_INFO         0
 #define LOGLEVEL_DEBUG        1
 #define LOGLEVEL_WARN         2
@@ -21,9 +23,14 @@ const char *LogFilename(void);
 void LogSetLevel(unsigned int level);
 void LogMessage(unsigned int level, const char *fmt, ...);
 
-#define JLINFO(fmt, args...) LogMessage(LOGLEVEL_INFO, fmt "\n", ## args)
-#define JLDEBUG(fmt, args...) LogMessage(LOGLEVEL_DEBUG, fmt "\n", ## args)
-#define JLWARN(fmt, args...) LogMessage(LOGLEVEL_WARN, fmt "\n", ## args)
-#define JLERROR(fmt, args...) LogMessage(LOGLEVEL_ERROR, fmt "\n", ## args)
+#define JLMSG(level, fmt, args...) do { \
+  NSLog([NSString stringWithUTF8String:"%s: " fmt], __FUNCTION__, ## args); \
+  LogMessage(level, "%s [%s]: " fmt "\n", [[[TimeUtils instance] stringFromDate:[NSDate date]] UTF8String], __FUNCTION__, ## args); \
+} while (0)
+
+#define JLINFO(fmt, args...) JLMSG(LOGLEVEL_INFO, fmt, ## args)
+#define JLDEBUG(fmt, args...) JLMSG(LOGLEVEL_DEBUG, fmt, ## args)
+#define JLWARN(fmt, args...) JLMSG(LOGLEVEL_WARN, fmt, ## args)
+#define JLERROR(fmt, args...) JLMSG(LOGLEVEL_ERROR, fmt, ## args)
 
 #endif
