@@ -50,7 +50,10 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                           category.Category.exclusiveSubcategoriesChangedEventType()):
             patterns.Publisher().registerObserver(self.onAttributeChanged, 
                 eventType)
-            
+
+    def onEveryMinute(self, event):
+        pass
+
     def domainObjectsToView(self):
         return self.taskFile.categories()
     

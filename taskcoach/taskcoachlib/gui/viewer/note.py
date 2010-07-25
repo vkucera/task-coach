@@ -48,7 +48,10 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
                           note.Note.selectedIconChangedEventType()):
             patterns.Publisher().registerObserver(self.onAttributeChanged, 
                                                   eventType)
-        
+
+    def onEveryMinute(self, event):
+        pass
+
     def domainObjectsToView(self):
         if self.notesToShow is None:
             return self.taskFile.notes()
