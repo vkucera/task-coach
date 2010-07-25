@@ -231,6 +231,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -307,14 +309,12 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>LogUtils.h</string>
+								<string>BaseCategoryViewController.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -322,11 +322,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>LogUtils.h</string>
+										<string>BaseCategoryViewController.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A674DD5C11FC380C00ACBD2B</string>
+										<string>A694F29F11FC39EB008BC150</string>
 										<key>history</key>
 										<array>
 											<string>A627F04E10E7558600B856F4</string>
@@ -559,10 +559,10 @@
 											<string>A65FFD3411FC37350064AC44</string>
 											<string>A65FFD3511FC37350064AC44</string>
 											<string>A65FFD3611FC37350064AC44</string>
-											<string>A65FFD3711FC37350064AC44</string>
 											<string>A65FFD4A11FC37BF0064AC44</string>
 											<string>A65FFD4B11FC37BF0064AC44</string>
-											<string>A65FFD6411FC37F80064AC44</string>
+											<string>A694F29D11FC39EB008BC150</string>
+											<string>A694F29E11FC39EB008BC150</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -685,11 +685,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A674DD5911FC380C00ACBD2B</string>
+				<string>A694F2A011FC39EB008BC150</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A674DD5A11FC380C00ACBD2B</string>
+				<string>A694F2A111FC39EB008BC150</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A674DD5B11FC380C00ACBD2B</string>
+				<string>A694F2A211FC39EB008BC150</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>

@@ -108,6 +108,8 @@ static NSMutableArray *expandChildren(CDCategory *category, NSMutableDictionary 
 
 	for (CDCategory *category in rootItems)
 	{
+		JLDEBUG("Root category: \"%s\"", [category.name UTF8String]);
+
 		[categories addObjectsFromArray:expandChildren(category, indentations, 0)];
 	}
 }
