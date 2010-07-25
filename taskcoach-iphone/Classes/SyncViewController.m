@@ -80,6 +80,8 @@
 
 	[[UIAccelerometer sharedAccelerometer] setUpdateInterval:1.0 / 60];
 	[[UIAccelerometer sharedAccelerometer] setDelegate:self];
+
+	[UIApplication sharedApplication].idleTimerDisabled = YES;
 }
 
 - (void)viewDidUnload
@@ -91,6 +93,8 @@
 	[UIAccelerometer sharedAccelerometer].delegate = nil;
 	[lastAccel release];
 	lastAccel = nil;
+
+	[UIApplication sharedApplication].idleTimerDisabled = NO;
 }
 
 - (void)dealloc
