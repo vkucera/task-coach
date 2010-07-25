@@ -208,7 +208,15 @@ class NotificationFrameBase(_NotifyBase):
         style = wx.FRAME_NO_TASKBAR|wx.TAB_TRAVERSAL
 
         if '__WXMAC__' in wx.PlatformInfo:
-            style |= wx.NO_BORDER|wx.POPUP_WINDOW
+            # style |= wx.NO_BORDER|wx.POPUP_WINDOW
+
+            # XXXFIXME: without the POPUP_WINDOW style, the frame
+            # steals the focus. But with it, when the frame is created
+            # while the user is on another Space that the main
+            # window's, it cannot receive user events any more, so
+            # cannot be dismissed...
+
+            style |= wx.NO_BORDER
 
         return style
 
