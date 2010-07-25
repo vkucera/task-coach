@@ -268,12 +268,12 @@ class CommonTestsMixin(object):
     def testTurnColumnsOnAndOff(self):
         columns = dict(hourlyFee=(3, _('Hourly fee')), 
                        fixedFee=(3, _('Fixed fee')),
-                       totalFixedFee=(3, _('Total fixed fee')),
+                       revenue=(3, _('Revenue')),
                        priority=(3, _('Priority')),
                        prerequisites=(1, _('Prerequisites')),
                        dependencies=(1, _('Dependencies')),
+                       categories=(1, _('Categories')),
                        percentageComplete=(3, _('% complete')),
-                       totalPercentageComplete=(3, _('Overall % complete')),
                        recurrence=(3, _('Recurrence')))
         for column in columns:
             columnIndex, expectedHeader = columns[column] 
@@ -302,6 +302,12 @@ class CommonTestsMixin(object):
         self.taskList.append(completedTask)
         self.showColumn('percentageComplete')
         self.assertEqual('100%', self.getItemText(0,3))
+
+    def testRenderCategories(self):
+        cat = category.Category(subject='Category')
+        self.task.addCategory(cat)
+        cat.addCategorizable(self.task)
+        self.assertEqual('Category', self.viewer.renderCategory(self.task))
                 
     def testRenderRecurrence(self):
         taskWithRecurrence = task.Task(recurrence=date.Recurrence('weekly', amount=2))
@@ -465,8 +471,6 @@ class CommonTestsMixin(object):
         self.taskList.append(task.Task(font=wx.SWISS_FONT))
         self.assertEqual(wx.SWISS_FONT, self.getFirstItemFont())
         
-
-class TreeOrListModeTestsMixin(object):        
     def testModeIsSavedInSettings(self):
         self.assertEqual(self.treeMode, 
             self.settings.getboolean(self.viewer.settingsSection(), 'treemode'))
@@ -475,7 +479,7 @@ class TreeOrListModeTestsMixin(object):
         self.task.addChild(self.child)
         expectedSubject = 'child' if self.treeMode else 'task -> child'
         self.assertEqual(expectedSubject, self.viewer.renderSubject(self.child))
-                         
+
     def testItemOrder(self):
         self.task.addChild(self.child)
         self.taskList.append(self.task)        
@@ -503,8 +507,6 @@ class TreeOrListModeTestsMixin(object):
         else:
             self.assertItems((self.task, 1), self.child)
             
-
-class ColumnsTestsMixin(object):        
     def testGetTimeSpent(self):
         self.taskList.append(self.task)
         self.task.addEffort(effort.Effort(self.task, date.DateTime(2000,1,1),
@@ -514,12 +516,17 @@ class ColumnsTestsMixin(object):
         self.assertEqual("24:00:00", timeSpent)
 
     def testGetTotalTimeSpent(self):
+        self.task.addChild(self.child)
         self.taskList.append(self.task)
+        self.task.expand(False, context=self.viewer.settingsSection())
         self.task.addEffort(effort.Effort(self.task, date.DateTime(2000,1,1),
                                                      date.DateTime(2000,1,2)))
-        self.showColumn('totalTimeSpent')
-        totalTimeSpent = self.getItemText(0, 3)
-        self.assertEqual("24:00:00", totalTimeSpent)
+        self.child.addEffort(effort.Effort(self.child, date.DateTime(2000,1,1),
+                                                     date.DateTime(2000,1,2)))
+        self.showColumn('timeSpent')
+        timeSpent = self.getItemText(0, 3)
+        expectedTimeSpent = "48:00:00" if self.treeMode else "24:00:00"
+        self.assertEqual(expectedTimeSpent, timeSpent)
         
     def testGetSelection(self):
         taskA = task.Task('a')
@@ -587,18 +594,12 @@ class ColumnsTestsMixin(object):
         self.task.setPriority(10)
         self.assertEqual('task.priority', self.viewer.events[0].type())
 
-    def testChangeTotalPriorityWhileColumnNotShown(self):
-        self.taskList.append(self.task)
-        self.task.addChild(self.child)
-        self.child.setPriority(10)
-        self.failIf(self.viewer.events)
-
-    def testChangeTotalPriorityWhileColumnShown(self):
-        self.showColumn('totalPriority')
+    def testChangePriorityOfSubtask(self):
+        self.showColumn('priority')
         self.task.addChild(self.child)
         self.taskList.append(self.task)
         self.child.setPriority(10)
-        self.assertEqual('task.totalPriority', self.viewer.events[0].type())
+        self.assertEqual('task.priority', self.viewer.events[0].type())
         
     def testChangeHourlyFeeWhileColumnShown(self):
         self.showColumn('hourlyFee')
@@ -612,15 +613,17 @@ class ColumnsTestsMixin(object):
         self.task.setFixedFee(200)
         self.assertEqual(render.monetaryAmount(200.), self.getItemText(0, 3))
 
-    def testChangeTotalFixedFeeWhileColumnShown(self):
-        self.showColumn('totalFixedFee')
-        self.taskList.append(self.task)
-        self.taskList.append(self.child)
+    def testCollapsedCompositeTaskShowsRecursiveFixedFee(self):
+        self.showColumn('fixedFee')
+        self.taskList.extend([self.task, self.child])
         self.task.addChild(self.child)
         self.task.setFixedFee(100)
         self.child.setFixedFee(200)
         self.viewer.setSortOrderAscending(False)
-        self.assertEqual(render.monetaryAmount(300.), self.getItemText(0, 3))
+        expectedAmount = 300. if self.treeMode else 100.
+        self.task.expand(False, context=self.viewer.settingsSection())
+        self.assertEqual(render.monetaryAmount(expectedAmount), 
+            self.getItemText(0, 3))
 
     def testChangePrerequisiteSubject(self):
         self.showColumn('prerequisites')
@@ -647,13 +650,11 @@ class ColumnsTestsMixin(object):
     # Test all attributes...
 
 
-class TaskViewerInTreeModeTest(CommonTestsMixin, ColumnsTestsMixin, 
-                               TreeOrListModeTestsMixin, TaskViewerTestCase):
+class TaskViewerInTreeModeTest(CommonTestsMixin, TaskViewerTestCase):
     treeMode = True
 
 
-class TaskViewerInListModeTest(CommonTestsMixin, ColumnsTestsMixin, 
-                               TreeOrListModeTestsMixin, TaskViewerTestCase):
+class TaskViewerInListModeTest(CommonTestsMixin, TaskViewerTestCase):
     treeMode = False
         
 

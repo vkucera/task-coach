@@ -103,7 +103,7 @@ class Sorter(base.TreeSorter):
         sortKeyName = self._sortKey
         if not self._sortCaseSensitive and sortKeyName == 'subject':
             prepareSortValue = lambda subject: subject.lower()
-        elif sortKeyName in ('categories', 'totalCategories'):
+        elif sortKeyName == 'categories':
             prepareSortValue = lambda categories: sorted([category.subject(recursive=True) for category in categories])
         elif sortKeyName == 'prerequisites':
             prepareSortValue = lambda prerequisites: sorted([prerequisite.subject(recursive=True) for prerequisite in prerequisites])
@@ -114,10 +114,8 @@ class Sorter(base.TreeSorter):
         else:
             prepareSortValue = lambda value: value
         kwargs = {}
-        if sortKeyName.startswith('total') or (self.__treeMode and sortKeyName != 'priority'):
+        if self.__treeMode and sortKeyName != 'priority': # FIXME: what's special about priority?
             kwargs['recursive'] = True
-            sortKeyName = sortKeyName.replace('total', '')
-            sortKeyName = sortKeyName[0].lower() + sortKeyName[1:]
         # pylint: disable-msg=W0142
         return lambda task: [prepareSortValue(getattr(task,  
             sortKeyName)(**kwargs))]
@@ -144,16 +142,4 @@ class Sorter(base.TreeSorter):
                 super(Sorter, self)._removeObserverForAttribute('dependency.' + delta)
         else:
             super(Sorter, self)._removeObserverForAttribute(attribute)
-        
-    def _createEventTypeFromAttribute(self, attribute):
-        attribute = self.__capitalize(attribute)
-        return super(Sorter, self)._createEventTypeFromAttribute(attribute)
-
-    def __capitalize(self, attribute):
-        # eventTypes for task attributes are capitalized if they start with
-        # 'total', but sort keys are not (FIXME)
-        if attribute.startswith('total'):
-            return 'total' + attribute[len('total'):].capitalize()
-        else:
-            return attribute
         

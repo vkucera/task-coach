@@ -154,9 +154,11 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         self.__selection = []
         self.__dontStartEditingLabelBecauseUserDoubleClicked = False
         self.__defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        kwargs.setdefault('resizeableColumn', 0)
         super(TreeListCtrl, self).__init__(parent, style=self.getStyle(), 
             agwStyle=self.getAgwStyle(),
-            columns=columns, resizeableColumn=0, itemPopupMenu=itemPopupMenu,
+            columns=columns,  
+            itemPopupMenu=itemPopupMenu,
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
         self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand,
                                editSubjectCommand)

@@ -157,23 +157,23 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             self.setCompletionDateTime(date.Now(), event=event)
                     
     def childChangeEvent(self, child, event):
-        childHasTotalTimeSpent = child.timeSpent(recursive=True)
-        childHasTotalBudget = child.budget(recursive=True)
-        childHasTotalBudgetLeft = child.budgetLeft(recursive=True)
-        childHasTotalRevenue = child.revenue(recursive=True)
-        childTotalPriority = child.priority(recursive=True)
+        childHasTimeSpent = child.timeSpent(recursive=True)
+        childHasBudget = child.budget(recursive=True)
+        childHasBudgetLeft = child.budgetLeft(recursive=True)
+        childHasRevenue = child.revenue(recursive=True)
+        childPriority = child.priority(recursive=True)
         # Determine what changes due to the child being added or removed:
-        if childHasTotalTimeSpent:
-            self.totalTimeSpentEvent(event)
-        if childHasTotalRevenue:
-            self.totalRevenueEvent(event)
-        if childHasTotalBudget:
-            self.totalBudgetEvent(event)
-        if childHasTotalBudgetLeft or (childHasTotalTimeSpent and \
-                                       (childHasTotalBudget or self.budget())):
-            self.totalBudgetLeftEvent(event)
-        if childTotalPriority > self.priority():
-            self.totalPriorityEvent(event)
+        if childHasTimeSpent:
+            self.timeSpentEvent(event, *child.efforts())
+        if childHasRevenue:
+            self.revenueEvent(event)
+        if childHasBudget:
+            self.budgetEvent(event)
+        if childHasBudgetLeft or (childHasTimeSpent and \
+                                  (childHasBudget or self.budget())):
+            self.budgetLeftEvent(event)
+        if childPriority > self.priority():
+            self.priorityEvent(event)
         if child.isBeingTracked(recursive=True):
             activeEfforts = child.activeEfforts(recursive=True)
             if self.isBeingTracked(recursive=True):
@@ -256,11 +256,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         else:
             parent = self.parent()
             if parent:
-                oldParentTotalPriority = parent.priority(recursive=True) 
+                oldParentPriority = parent.priority(recursive=True) 
             self.__completionDateTime.set(completionDateTime, event=event)
-            if parent and parent.priority(recursive=True) != \
-                          oldParentTotalPriority:
-                self.totalPriorityEvent(event)              
+            if parent and parent.priority(recursive=True) != oldParentPriority:
+                self.priorityEvent(event)              
             if completionDateTime != date.DateTime():
                 self.setReminder(None, event)
             self.setPercentageComplete(100 if completionDateTime != date.DateTime() else 0, 
@@ -377,30 +376,15 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             event.addSource(ancestor, *efforts, 
                             **dict(type=ancestor.trackStopEventType()))
             
-    def timeSpentEvent(self, event, effort):
-        event.addSource(self, self.timeSpent(), type='task.timeSpent')
-        self.totalTimeSpentEvent(event, effort)
-        if self.budget():
+    def timeSpentEvent(self, event, *efforts):
+        event.addSource(self, *efforts, **dict(type='task.timeSpent'))
+        for ancestor in self.ancestors():
+            event.addSource(ancestor, *efforts, **dict(type='task.timeSpent'))
+        if self.budget(recursive=True):
             self.budgetLeftEvent(event)
-        elif self.budget(recursive=True):
-            self.totalBudgetLeftEvent(event)
         if self.hourlyFee() > 0:
             self.revenueEvent(event)
-    
-    def totalTimeSpentEvent(self, event, *efforts):
-        for ancestor in [self] + self.ancestors():
-            event.addSource(ancestor, *efforts, 
-                            **dict(type=ancestor.totalTimeSpentChangedEventType()))
-    
-    def revenueEvent(self, event):
-        event.addSource(self, self.revenue(), type='task.revenue')
-        self.totalRevenueEvent(event)
-    
-    def totalRevenueEvent(self, event):
-        for ancestor in [self] + self.ancestors():
-            event.addSource(ancestor, ancestor.revenue(recursive=True), 
-                            type='task.totalRevenue')
-    
+        
     @patterns.eventSource
     def setEfforts(self, efforts, event=None):
         if efforts == self._efforts:
@@ -431,23 +415,17 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         
     def budgetEvent(self, event):
         event.addSource(self, self.budget(), type='task.budget')
-        self.totalBudgetEvent(event)
-        self.budgetLeftEvent(event)
-    
-    def totalBudgetEvent(self, event):
-        for ancestor in [self] + self.ancestors():
+        for ancestor in self.ancestors():
             event.addSource(ancestor, ancestor.budget(recursive=True), 
-                            type='task.totalBudget')
-        
+                            type='task.budget')
+        self.budgetLeftEvent(event)
+            
     def budgetLeftEvent(self, event):
         event.addSource(self, self.budgetLeft(), type='task.budgetLeft')
-        self.totalBudgetLeftEvent(event)
-    
-    def totalBudgetLeftEvent(self, event):
-        for ancestor in [self] + self.ancestors():
+        for ancestor in self.ancestors():
             event.addSource(ancestor, ancestor.budgetLeft(recursive=True), 
-                            type='task.totalBudgetLeft')
-    
+                            type='task.budgetLeft')
+        
     def budgetLeft(self, recursive=False):
         budget = self.budget(recursive)
         return budget - self.timeSpent(recursive) if budget else budget
@@ -531,10 +509,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return taskIcon + '_icon'
     
     @classmethod
-    def totalTimeSpentChangedEventType(class_):
-        return 'task.totalTimeSpent'
-
-    @classmethod
     def trackStartEventType(class_):
         return '%s.track.start'%class_
 
@@ -571,13 +545,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def percentageCompleteEvent(self, event):
         event.addSource(self, self.percentageComplete(), 
                         type='task.percentageComplete')
-        self.totalPercentageCompleteEvent(event)
-        
-    def totalPercentageCompleteEvent(self, event):
-        for ancestor in [self] + self.ancestors():
+        for ancestor in self.ancestors():
             event.addSource(ancestor, ancestor.percentageComplete(recursive=True), 
-                            **dict(type='task.totalPercentageComplete'))
-
+                            type='task.percentageComplete')
         
     # priority
     
@@ -595,12 +565,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         
     def priorityEvent(self, event):
         event.addSource(self, self.priority(), type='task.priority')
-        self.totalPriorityEvent(event)
-    
-    def totalPriorityEvent(self, event):
-        for ancestor in [self] + self.ancestors():
+        for ancestor in self.ancestors():
             event.addSource(ancestor, ancestor.priority(recursive=True),
-                            type='task.totalPriority')
+                            type='task.priority')
                 
     # revenue
     
@@ -621,12 +588,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def hourlyFeeChangedEventType(class_):
         return '%s.hourlyFee'%class_
                 
-    def revenue(self, recursive=False):
-        childRevenues = sum(child.revenue(recursive) for child in 
-                            self.children()) if recursive else 0
-        return self.timeSpent().hours() * self.hourlyFee() + self.fixedFee() + \
-               childRevenues
-    
     def fixedFee(self, recursive=False):
         childFixedFees = sum(child.fixedFee(recursive) for child in 
                              self.children()) if recursive else 0
@@ -637,14 +598,23 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         
     def fixedFeeEvent(self, event):
         event.addSource(self, self.fixedFee(), type='task.fixedFee')
-        self.totalFixedFeeEvent(event)
-        self.revenueEvent(event)
-    
-    def totalFixedFeeEvent(self, event):
-        for ancestor in [self] + self.ancestors():
+        for ancestor in self.ancestors():
             event.addSource(ancestor, ancestor.fixedFee(recursive=True),
-                            type='task.totalFixedFee')
-        
+                            type='task.fixedFee')
+        self.revenueEvent(event)
+
+    def revenue(self, recursive=False):
+        childRevenues = sum(child.revenue(recursive) for child in 
+                            self.children()) if recursive else 0
+        return self.timeSpent().hours() * self.hourlyFee() + self.fixedFee() + \
+               childRevenues
+
+    def revenueEvent(self, event):
+        event.addSource(self, self.revenue(), type='task.revenue')
+        for ancestor in self.ancestors():
+            event.addSource(ancestor, ancestor.revenue(recursive=True), 
+                            type='task.revenue')
+            
     # reminder
     
     def reminder(self, recursive=False): # pylint: disable-msg=W0613
@@ -755,7 +725,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         event.addSource(self, newValue, 
                         type='task.setting.shouldMarkCompletedWhenAllChildrenCompleted')
         event.addSource(self, self.percentageComplete(recursive=True), 
-                        type='task.totalPercentageComplete')
+                        type='task.percentageComplete')
 
     def shouldMarkCompletedWhenAllChildrenCompleted(self):
         return self._shouldMarkCompletedWhenAllChildrenCompleted

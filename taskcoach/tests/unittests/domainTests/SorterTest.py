@@ -148,14 +148,14 @@ class TaskSorterSettingsTest(test.TestCase):
         self.taskList.append(task3)
         self.assertEqual([self.task1, task3, self.task2], list(self.sorter))
     
-    def testSortByTotalTimeLeftAscending(self):
+    def testSortByTimeLeftAscending(self):
         self.sorter.sortAscending(True)
-        self.sorter.sortBy('totaltimeLeft')
+        self.sorter.sortBy('timeLeft')
         self.assertEqual([self.task2, self.task1], list(self.sorter))
 
-    def testSortByTotalTimeLeftDescending(self):
+    def testSortByTimeLeftDescending(self):
         self.sorter.sortAscending(False)
-        self.sorter.sortBy('totaltimeLeft')
+        self.sorter.sortBy('timeLeft')
         self.assertEqual([self.task1, self.task2], list(self.sorter))
 
     def testSortByBudgetAscending(self):
@@ -264,14 +264,6 @@ class TaskSorterTreeModeTest(test.TestCase):
         self.failUnless(list(self.sorter).index(self.parent1) < \
             list(self.sorter).index(self.parent2))
 
-    def testSortByTotalPriority(self):
-        self.sorter.sortBy('totalpriority')
-        self.sorter.sortAscending(False)
-        self.parent1.setPriority(5)
-        self.child2.setPriority(10)
-        self.failUnless(list(self.sorter).index(self.parent2) < \
-            list(self.sorter).index(self.parent1))
-        
     def testSetSorterToListMode(self):
         self.sorter.setTreeMode(False)
         self.assertEqual([self.child1, self.child2, self.parent1, self.parent2],

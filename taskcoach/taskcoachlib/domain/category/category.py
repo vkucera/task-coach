@@ -93,8 +93,7 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
     def categorySubjectChangedEvent(self, event):
         subject = self.subject()
         for eachCategorizable in self.categorizables(recursive=True):
-            eachCategorizable.categorySubjectChangedEvent(event, subject)
-            eachCategorizable.totalCategorySubjectChangedEvent(event, subject)      
+            eachCategorizable.categorySubjectChangedEvent(event, subject)      
                     
     def categorizables(self, recursive=False):
         result = self.__categorizables.get()

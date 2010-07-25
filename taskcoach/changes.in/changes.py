@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.0', 'July 22, 2010',
+Release('1.2.0', 'July 25, 2010',
     summary='''This release adds task dependencies.''',
     featuresAdded=[
         Feature('''Tasks can have one or more prerequisite tasks. As long as 
@@ -37,7 +37,17 @@ task B is called a dependency of task A.''')
         ],
     featuresChanged=[
         Feature('''Reorganized some menu items differently and added
-mnemonics to all menu items.''')
+mnemonics to all menu items.'''),
+        Feature('''To simplify the application and reduce the number of 
+columns all "total" and "overall" columns have been removed. For composite 
+items that have children, the tree viewers show the "total" or "overall" value 
+when the item is collapsed and the individual value when the item is not 
+collapsed. An example may help: suppose task A has a budget of 20 hours and 
+subtask A1 has a budget of 10 hours. In the task viewer in tree mode, the 
+budget column shows 20 hours for task A when it is expanded and 30 hours when 
+it is collapsed. For task A1 the budget shown is always 10 hour. In list mode,
+the task viewer shows the individual values, so a budget of 20 hours for task A
+and 10 hours for task A1.''')
         ],
     implementationChanged=[
         Implementation('''The task file format was changed to support task 

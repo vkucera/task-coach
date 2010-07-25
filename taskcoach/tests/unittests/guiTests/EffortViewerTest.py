@@ -34,6 +34,7 @@ class EffortViewerForSpecificTasksTest(test.wxTestCase):
     def setUp(self):
         super(EffortViewerForSpecificTasksTest, self).setUp()
         self.settings = config.Settings(load=False)
+        task.Task.settings = self.settings
         taskFile = persistence.TaskFile()
         self.task1 = task.Task('Task 1')
         self.task2 = task.Task('Task 2')
@@ -223,12 +224,7 @@ class CommonTestsMixin(object):
             self.assertEqual(self.task2, effort.task())
         
     def testColumnUICommands(self):
-        if self.aggregation == 'details':
-            expectedLength = 7
-        elif self.aggregation == 'week':
-            expectedLength= 10
-        else:
-            expectedLength = 9
+        expectedLength = 7 if self.aggregation == 'week' else 6
         self.assertEqual(expectedLength,
                          len(self.viewer.getColumnUICommands()))
     
@@ -242,22 +238,7 @@ class CommonTestsMixin(object):
     def testHideRevenueColumn(self):
         self.viewer.showColumnByName('revenue', False)
         self.assertEqual(3, self.viewer.widget.GetColumnCount())
-
-    def testHideTotalColumnsWhenSwitchingToDetailView(self):
-        self.viewer.showColumnByName('totalTimeSpent')
-        self.viewer.showEffortAggregation('details')
-        self.assertEqual(4, self.viewer.widget.GetColumnCount())
-        
-    def testShowTotalColumnsWhenSwitchingToAggregatedView(self):
-        self.viewer.showColumnByName('totalTimeSpent')
-        self.viewer.showEffortAggregation(self.aggregation)
-        if self.aggregation == 'details':
-            expectedColumnCount = 4
-        else:
-            expectedColumnCount = 5
-        self.assertEqual(expectedColumnCount, 
-                         self.viewer.widget.GetColumnCount())
-        
+                
     def testActiveEffort(self):
         self.task2.efforts()[0].setStop(date.DateTime.max) # Make active
         self.viewer.onEverySecond(None) # Simulate clock firing

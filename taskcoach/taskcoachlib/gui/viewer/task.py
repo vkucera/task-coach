@@ -681,18 +681,11 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
                 task.Task.categoryAddedEventType(), 
                 task.Task.categoryRemovedEventType(), 
                 task.Task.categorySubjectChangedEventType(),
+                task.Task.expansionChangedEventType(),
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                                                            value='categories'),
                 width=self.getColumnWidth('categories'),
                 renderCallback=self.renderCategory, **kwargs),
-             widgets.Column('totalCategories', _('Overall categories'),
-                task.Task.totalCategoryAddedEventType(),
-                task.Task.totalCategoryRemovedEventType(),
-                task.Task.totalCategorySubjectChangedEventType(),
-                sortCallback=uicommand.ViewerSortByCommand(viewer=self,
-                                                           value='totalCategories'),
-                renderCallback=lambda task: self.renderCategory(task, recursive=True),
-                width=self.getColumnWidth('totalCategories'), **kwargs),
              widgets.Column('prerequisites', _('Prerequisites'),
                 'task.prerequisite.add', 'task.prerequisite.remove',
                 'task.prerequisite.subject',
@@ -709,39 +702,30 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
                 width=self.getColumnWidth('dependencies'), **kwargs)])
         
         effortOn = self.settings.getboolean('feature', 'effort')
-        dependsOnEffortFeature = ['budget', 'totalBudget', 
-                                  'timeSpent', 'totalTimeSpent', 
-                                  'budgetLeft', 'totalBudgetLeft',
-                                  'hourlyFee', 'fixedFee', 'totalFixedFee',
-                                  'revenue', 'totalRevenue']
-        for name, columnHeader, renderCallback, eventType in [
-            ('startDateTime', _('Start date'), lambda task: render.dateTime(task.startDateTime()), None),
-            ('dueDateTime', _('Due date'), lambda task: render.dateTime(task.dueDateTime()), None),
-            ('completionDateTime', _('Completion date'), lambda task: render.dateTime(task.completionDateTime()), None),
-            ('percentageComplete', _('% complete'), lambda task: render.percentage(task.percentageComplete()), None),
-            ('totalPercentageComplete', _('Overall % complete'), lambda task: render.percentage(task.percentageComplete(recursive=True)), None),
-            ('timeLeft', _('Time left'), lambda task: render.timeLeft(task.timeLeft(), task.completed()), None),
-            ('recurrence', _('Recurrence'), lambda task: render.recurrence(task.recurrence()), None),
-            ('budget', _('Budget'), lambda task: render.budget(task.budget()), None),
-            ('totalBudget', _('Total budget'), lambda task: render.budget(task.budget(recursive=True)), None),
-            ('timeSpent', _('Time spent'), lambda task: render.timeSpent(task.timeSpent()), None),
-            ('totalTimeSpent', _('Total time spent'), lambda task: render.timeSpent(task.timeSpent(recursive=True)), None),
-            ('budgetLeft', _('Budget left'), lambda task: render.budget(task.budgetLeft()), None),
-            ('totalBudgetLeft', _('Total budget left'), lambda task: render.budget(task.budgetLeft(recursive=True)), None),
-            ('priority', _('Priority'), lambda task: render.priority(task.priority()), None),
-            ('totalPriority', _('Overall priority'), lambda task: render.priority(task.priority(recursive=True)), None),
-            ('hourlyFee', _('Hourly fee'), lambda task: render.monetaryAmount(task.hourlyFee()), task.Task.hourlyFeeChangedEventType()),
-            ('fixedFee', _('Fixed fee'), lambda task: render.monetaryAmount(task.fixedFee()), None),
-            ('totalFixedFee', _('Total fixed fee'), lambda task: render.monetaryAmount(task.fixedFee(recursive=True)), None),
-            ('revenue', _('Revenue'), lambda task: render.monetaryAmount(task.revenue()), None),
-            ('totalRevenue', _('Total revenue'), lambda task: render.monetaryAmount(task.revenue(recursive=True)), None),
-            ('reminder', _('Reminder'), lambda task: render.dateTime(task.reminder()), None)]:
-            eventType = eventType or 'task.'+name
+        dependsOnEffortFeature = ['budget',  'timeSpent', 'budgetLeft',
+                                  'hourlyFee', 'fixedFee', 'revenue']
+        for name, columnHeader, renderCallback, eventTypes in [
+            ('startDateTime', _('Start date'), lambda task: render.dateTime(task.startDateTime()), []),
+            ('dueDateTime', _('Due date'), lambda task: render.dateTime(task.dueDateTime()), []),
+            ('completionDateTime', _('Completion date'), lambda task: render.dateTime(task.completionDateTime()), []),
+            ('percentageComplete', _('% complete'), self.renderPercentageComplete, [task.Task.expansionChangedEventType(), 'task.percentageComplete']),
+            ('timeLeft', _('Time left'), lambda task: render.timeLeft(task.timeLeft(), task.completed()), []),
+            ('recurrence', _('Recurrence'), lambda task: render.recurrence(task.recurrence()), []),
+            ('budget', _('Budget'), self.renderBudget, [task.Task.expansionChangedEventType(), 'task.budget']),            
+            ('timeSpent', _('Time spent'), self.renderTimeSpent, [task.Task.expansionChangedEventType(), 'task.timeSpent']),
+            ('budgetLeft', _('Budget left'), self.renderBudgetLeft, [task.Task.expansionChangedEventType(), 'task.budgetLeft']),            
+            ('priority', _('Priority'), self.renderPriority, [task.Task.expansionChangedEventType(), 'task.priority']),
+            ('hourlyFee', _('Hourly fee'), lambda task: render.monetaryAmount(task.hourlyFee()), [task.Task.hourlyFeeChangedEventType(), 'task.hourlyFee']),
+            ('fixedFee', _('Fixed fee'), self.renderFixedFee, [task.Task.expansionChangedEventType(), 'task.fixedFee']),            
+            ('revenue', _('Revenue'), self.renderRevenue, [task.Task.expansionChangedEventType(), 'task.revenue']),
+            ('reminder', _('Reminder'), lambda task: render.dateTime(task.reminder()), [])]:
+            if not eventTypes:
+                eventTypes = ['task.' + name]
             if (name in dependsOnEffortFeature and effortOn) or name not in dependsOnEffortFeature:
-                columns.append(widgets.Column(name, columnHeader, eventType, 
+                columns.append(widgets.Column(name, columnHeader,  
                     sortCallback=uicommand.ViewerSortByCommand(viewer=self, value=name),
                     renderCallback=renderCallback, width=self.getColumnWidth(name),
-                    alignment=wx.LIST_FORMAT_RIGHT, **kwargs))
+                    alignment=wx.LIST_FORMAT_RIGHT, *eventTypes, **kwargs))
         return columns
     
     def createColumnUICommands(self):
@@ -777,33 +761,23 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
                  uicommand.ViewColumns(menuText=_('&All budget columns'),
                      helpText=_('Show/hide all budget-related columns'),
                      setting=['budget', 'totalBudget', 'timeSpent',
-                              'totalTimeSpent', 'budgetLeft','totalBudgetLeft'],
+                              'budgetLeft','totalBudgetLeft'],
                      viewer=self),
                  None,
                  uicommand.ViewColumn(menuText=_('&Budget'),
                      helpText=_('Show/hide budget column'),
                      setting='budget', viewer=self),
-                 uicommand.ViewColumn(menuText=_('Total &budget'),
-                     helpText=_('Show/hide total budget column (total budget includes budget for subtasks)'),
-                     setting='totalBudget', viewer=self),
                  uicommand.ViewColumn(menuText=_('&Time spent'),
                      helpText=_('Show/hide time spent column'),
                      setting='timeSpent', viewer=self),
-                 uicommand.ViewColumn(menuText=_('Total &time spent'),
-                     helpText=_('Show/hide total time spent column (total time includes time spent on subtasks)'),
-                     setting='totalTimeSpent', viewer=self),
                  uicommand.ViewColumn(menuText=_('&Budget left'),
                      helpText=_('Show/hide budget left column'),
                      setting='budgetLeft', viewer=self),
-                 uicommand.ViewColumn(menuText=_('Total &budget left'),
-                     helpText=_('Show/hide total budget left column (total budget left includes budget left for subtasks)'),
-                     setting='totalBudgetLeft', viewer=self)
                 ),
                 (_('&Financial'),
                  uicommand.ViewColumns(menuText=_('&All financial columns'),
                      helpText=_('Show/hide all finance-related columns'),
-                     setting=['hourlyFee', 'fixedFee', 'totalFixedFee',
-                              'revenue', 'totalRevenue'],
+                     setting=['hourlyFee', 'fixedFee', 'revenue'],
                      viewer=self),
                  None,
                  uicommand.ViewColumn(menuText=_('&Hourly fee'),
@@ -812,15 +786,9 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
                  uicommand.ViewColumn(menuText=_('&Fixed fee'),
                      helpText=_('Show/hide fixed fee column'),
                      setting='fixedFee', viewer=self),
-                 uicommand.ViewColumn(menuText=_('Total &fixed fee'),
-                     helpText=_('Show/hide total fixed fee column'),
-                     setting='totalFixedFee', viewer=self),
                  uicommand.ViewColumn(menuText=_('&Revenue'),
                      helpText=_('Show/hide revenue column'),
-                     setting='revenue', viewer=self),
-                 uicommand.ViewColumn(menuText=_('Total &revenue'),
-                     helpText=_('Show/hide total revenue column'),
-                     setting='totalRevenue', viewer=self))])
+                     setting='revenue', viewer=self))])
         commands.extend([
             uicommand.ViewColumn(menuText=_('&Description'),
                 helpText=_('Show/hide description column'),
@@ -834,9 +802,6 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
              uicommand.ViewColumn(menuText=_('&Percentage complete'),
                  helpText=_('Show/hide percentage complete column'),
                  setting='percentageComplete', viewer=self),
-             uicommand.ViewColumn(menuText=_('Overall &percentage complete'),
-                 helpText=_('Show/hide overall percentage complete column'),
-                 setting='totalPercentageComplete', viewer=self),
             uicommand.ViewColumn(menuText=_('&Attachments'),
                 helpText=_('Show/hide attachment column'),
                 setting='attachments', viewer=self)])
@@ -849,15 +814,9 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
             uicommand.ViewColumn(menuText=_('&Categories'),
                 helpText=_('Show/hide categories column'),
                 setting='categories', viewer=self),
-            uicommand.ViewColumn(menuText=_('Overall &categories'),
-                helpText=_('Show/hide overall categories column'),
-                setting='totalCategories', viewer=self),
             uicommand.ViewColumn(menuText=_('&Priority'),
                 helpText=_('Show/hide priority column'),
                 setting='priority', viewer=self),
-            uicommand.ViewColumn(menuText=_('Overall &priority'),
-                helpText=_('Show/hide overall priority column (overall priority is the maximum priority of a task and all its subtasks'),
-                setting='totalPriority', viewer=self),
             uicommand.ViewColumn(menuText=_('&Reminder'),
                 helpText=_('Show/hide reminder column'),
                 setting='reminder', viewer=self)])
@@ -911,12 +870,32 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
     def renderSubjects(self, tasks):
         subjects = [task.subject(recursive=True) for task in tasks]
         return ', '.join(sorted(subjects))
-        
+    
+    def renderTimeSpent(self, task):
+        return render.timeSpent(task.timeSpent(recursive=self.isItemCollapsed(task)))
+
+    def renderBudget(self, task):
+        return render.budget(task.budget(recursive=self.isItemCollapsed(task)))
+
+    def renderBudgetLeft(self, task):
+        return render.budget(task.budgetLeft(recursive=self.isItemCollapsed(task)))
+
+    def renderRevenue(self, task):
+        return render.monetaryAmount(task.revenue(recursive=self.isItemCollapsed(task)))
+    
+    def renderFixedFee(self, task):
+        return render.monetaryAmount(task.fixedFee(recursive=self.isItemCollapsed(task)))
+
+    def renderPercentageComplete(self, task):
+        return render.percentage(task.percentageComplete(recursive=self.isItemCollapsed(task)))
+
+    def renderPriority(self, task):
+        return render.priority(task.priority(recursive=self.isItemCollapsed(task)))
+                                
     def onEverySecond(self, event):
         # Only update when a column is visible that changes every second 
         if any([self.isVisibleColumnByName(column) for column in 'timeSpent', 
-               'totalTimeSpent', 'budgetLeft', 'totalBudgetLeft',
-               'revenue', 'totalRevenue']):
+               'budgetLeft', 'revenue']):
             super(TaskViewer, self).onEverySecond(event)
 
     def getRootItems(self):

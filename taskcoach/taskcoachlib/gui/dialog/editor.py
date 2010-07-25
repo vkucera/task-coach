@@ -726,7 +726,7 @@ class EffortPage(PageWithViewer):
             tasksToShowEffortFor=task.TaskList(self.items))
 
     def entries(self):
-        return dict(timeSpent=self.viewer, totalTimeSpent=self.viewer)
+        return dict(timeSpent=self.viewer)
         
         
 class CheckableViewerMixin(object):
@@ -1026,7 +1026,7 @@ class EffortEditBook(Page):
         return dict(period=self._stopEntry, task=self._taskEntry,
                     firstEntry=self._taskEntry,
                     description=self._descriptionEntry,
-                    timeSpent=self._stopEntry, totalTimeSpent=self._stopEntry,
+                    timeSpent=self._stopEntry,
                     revenue=self._taskEntry, totalRevenue=self._taskEntry)
     
     

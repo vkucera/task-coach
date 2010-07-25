@@ -65,7 +65,7 @@ class CategorizableCompositeObject(base.CompositeObject):
         event.addSource(self, *categories, **dict(type=self.categoryAddedEventType()))
         for child in self.children(recursive=True):
             event.addSource(child, *categories, 
-                            **dict(type=child.totalCategoryAddedEventType()))
+                            **dict(type=child.categoryAddedEventType()))
         if not self.foregroundColor(recursive=False) and any(category.foregroundColor(recursive=True) for category in categories):
             self.foregroundColorChangedEvent(event)
         if not self.backgroundColor(recursive=False) and any(category.backgroundColor(recursive=True) for category in categories):
@@ -86,7 +86,7 @@ class CategorizableCompositeObject(base.CompositeObject):
         event.addSource(self, *categories, **dict(type=self.categoryRemovedEventType()))
         for child in self.children(recursive=True):
             event.addSource(child, *categories, 
-                            **dict(type=child.totalCategoryRemovedEventType()))
+                            **dict(type=child.categoryRemovedEventType()))
         if not self.foregroundColor(recursive=False) and any(category.foregroundColor(recursive=True) for category in categories):
             self.foregroundColorChangedEvent(event)
         if not self.backgroundColor(recursive=False) and any(category.backgroundColor(recursive=True) for category in categories):
@@ -185,30 +185,14 @@ class CategorizableCompositeObject(base.CompositeObject):
         return ''
         
     @classmethod
-    def totalCategoryAddedEventType(class_):
-        return 'categorizable.totalCategory.add'
-
-    @classmethod
-    def totalCategoryRemovedEventType(class_):
-        return 'categorizable.totalCategory.remove'
-            
-    @classmethod
     def categorySubjectChangedEventType(class_):
         return 'categorizable.category.subject'
     
     def categorySubjectChangedEvent(self, event, subject):
-        event.addSource(self, subject, 
-                        type=self.categorySubjectChangedEventType())
-    
-    @classmethod
-    def totalCategorySubjectChangedEventType(class_):
-        return 'categorizable.totalCategory.subject'
-    
-    def totalCategorySubjectChangedEvent(self, event, subject):
         for categorizable in [self] + self.children(recursive=True):
             event.addSource(categorizable, subject,
-                            type=categorizable.totalCategorySubjectChangedEventType())
-            
+                            type=categorizable.categorySubjectChangedEventType())
+                    
     @classmethod
     def modificationEventTypes(class_):
         eventTypes = super(CategorizableCompositeObject, class_).modificationEventTypes()
