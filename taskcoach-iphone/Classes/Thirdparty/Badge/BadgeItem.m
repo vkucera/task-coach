@@ -28,4 +28,13 @@
 @synthesize textColor;
 @synthesize capsuleColor;
 
+- (void)dealloc
+{
+	self.text = nil;
+	self.textColor = nil;
+	self.capsuleColor = nil;
+
+	[super dealloc];
+}
+
 @end

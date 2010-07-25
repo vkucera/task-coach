@@ -37,6 +37,7 @@
 				NSDateComponents *comp = [[NSDateComponents alloc] init];
 				[comp setWeek:[self.recRepeat intValue]];
 				newDate = [cal dateByAddingComponents:comp toDate:date options:0];
+				[comp release];
 				break;
 			}
 			case REC_MONTHLY:
@@ -44,6 +45,7 @@
 				NSDateComponents *comp = [[NSDateComponents alloc] init];
 				[comp setMonth:[self.recRepeat intValue]];
 				newDate = [cal dateByAddingComponents:comp toDate:date options:0];
+				[comp release];
 				break;
 			}
 			case REC_YEARLY:
@@ -51,6 +53,7 @@
 				NSDateComponents *comp = [[NSDateComponents alloc] init];
 				[comp setYear:[self.recRepeat intValue]];
 				newDate = [cal dateByAddingComponents:comp toDate:date options:0];
+				[comp release];
 				break;
 			}
 		}
