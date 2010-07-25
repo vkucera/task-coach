@@ -532,7 +532,7 @@ class CompositeEffortWithSubTasksRevenueTest(test.TestCase):
         patterns.Publisher().registerObserver(self.onEvent, 
             eventType='effort.revenue')
         self.child.setHourlyFee(100)
-        self.assertEqual(patterns.Event('effort.revenue', self.composite,
-            100.0), self.events[0])
+        self.failUnless(patterns.Event('effort.revenue', self.composite,
+            100.0) in self.events)
         
         
