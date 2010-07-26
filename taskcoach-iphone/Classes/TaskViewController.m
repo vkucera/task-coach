@@ -107,7 +107,11 @@ static void deleteTask(CDTask *task)
 - (void)restorePosition:(Position *)pos store:(PositionStore *)store
 {
 	[self populate];
-
+	
+	if ((pos.indexPath.section >= [self.tableViewController numberOfSectionsInTableView:self.tableView]) ||
+		(pos.indexPath.row >= [self.tableViewController tableView:self.tableView numberOfRowsInSection:pos.indexPath.section]))
+		return;
+	
 	if (pos.searchWord)
 	{
 		searchCell.searchBar.text = pos.searchWord;

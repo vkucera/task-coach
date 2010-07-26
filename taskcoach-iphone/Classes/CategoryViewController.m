@@ -55,7 +55,11 @@
 - (void)restorePosition:(Position *)pos store:(PositionStore *)store
 {
 	[self.tableView setContentOffset:pos.scrollPosition animated:NO];
-	
+
+	if ((pos.indexPath.section >= [self numberOfSectionsInTableView:self.tableView]) ||
+		(pos.indexPath.row >= [self tableView:self.tableView numberOfRowsInSection:pos.indexPath.section]))
+		return;
+
 	if (pos.indexPath)
 	{
 		[self.tableView selectRowAtIndexPath:pos.indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
