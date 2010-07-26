@@ -231,8 +231,6 @@
 			<key>Layout</key>
 			<array>
 				<dict>
-					<key>BecomeActive</key>
-					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -277,6 +275,8 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
+									<integer>8</integer>
+									<integer>7</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -326,7 +326,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A6733A0A11FDE01E00599BD9</string>
+										<string>A65C087011FDE09900C655E6</string>
 										<key>history</key>
 										<array>
 											<string>A627F04E10E7558600B856F4</string>
@@ -562,7 +562,7 @@
 											<string>A67339DB11FDDF4900599BD9</string>
 											<string>A67339FD11FDDFF700599BD9</string>
 											<string>A6733A0811FDE01E00599BD9</string>
-											<string>A6733A0711FDE01A00599BD9</string>
+											<string>A6733A0A11FDE01E00599BD9</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -685,11 +685,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A67339B211FDDEC100599BD9</string>
+				<string>A65C087111FDE09900C655E6</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A67339B311FDDEC100599BD9</string>
+				<string>A65C087211FDE09900C655E6</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A67339B411FDDEC100599BD9</string>
+				<string>A65C087311FDE09900C655E6</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -877,8 +877,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>A67339E011FDDF4A00599BD9</string>
-		<string>A67339BC11FDDEC100599BD9</string>
 		<string>/Users/jeromelaheurte/Dev/TaskCoach/taskcoach-trunk/taskcoach-iphone/TaskCoach.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
