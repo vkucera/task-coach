@@ -49,6 +49,8 @@ static void deleteTask(CDTask *task)
 @interface TaskViewController ()
 
 - (void)populate;
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
 
 @end;
 
@@ -108,8 +110,8 @@ static void deleteTask(CDTask *task)
 {
 	[self populate];
 	
-	if ((pos.indexPath.section >= [self.tableViewController numberOfSectionsInTableView:self.tableView]) ||
-		(pos.indexPath.row >= [self.tableViewController tableView:self.tableView numberOfRowsInSection:pos.indexPath.section]))
+	if ((pos.indexPath.section >= [self numberOfSectionsInTableView:self.tableView]) ||
+		(pos.indexPath.row >= [self tableView:self.tableView numberOfRowsInSection:pos.indexPath.section]))
 		return;
 	
 	if (pos.searchWord)
