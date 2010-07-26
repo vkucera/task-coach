@@ -61,7 +61,7 @@ class DummyTaskFile(persistence.TaskFile):
         return DummyFile()
         
     def _openForWrite(self, *args, **kwargs): # pylint: disable-msg=W0613
-        return DummyFile()
+        return None, DummyFile()
     
     def save(self, *args, **kwargs):
         self.saveCalled += 1

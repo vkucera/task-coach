@@ -25,7 +25,8 @@ from taskcoachlib.i18n import _
 from taskcoachlib.domain import base, task, note, category, attachment, effort
 from taskcoachlib.mailer import writeMail
 from taskcoachlib.thirdparty.calendar import wxSCHEDULER_DAILY, wxSCHEDULER_WEEKLY, \
-     wxSCHEDULER_MONTHLY, wxSCHEDULER_NEXT, wxSCHEDULER_PREV, wxSCHEDULER_TODAY
+     wxSCHEDULER_MONTHLY, wxSCHEDULER_NEXT, wxSCHEDULER_PREV, wxSCHEDULER_TODAY, \
+     wxSCHEDULER_HORIZONTAL, wxSCHEDULER_VERTICAL
 import dialog, render, viewer, printer
 
 
@@ -2209,6 +2210,18 @@ class CalendarViewerTypeChoice(ToolbarChoiceCommandMixin, ViewerCommand):
             self.viewer.thaw()
 
 
+class CalendarViewerOrientationChoice(ToolbarChoiceCommandMixin, ViewerCommand):
+    choiceLabels = [_('Horizontal'), _('Vertical')]
+    choiceData = [wxSCHEDULER_HORIZONTAL, wxSCHEDULER_VERTICAL]
+
+    def doChoice(self, choice):
+        self.viewer.freeze()
+        try:
+            self.viewer.SetViewOrientation(choice)
+        finally:
+            self.viewer.thaw()
+
+
 class CalendarViewerNavigationCommand(ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(CalendarViewerNavigationCommand, self).__init__( \
@@ -2245,14 +2258,15 @@ class CalendarViewerToday(CalendarViewerNavigationCommand):
 
 
 class CalendarViewerTaskFilterChoice(ToolbarChoiceCommandMixin, ViewerCommand):
-    choiceLabels = [_('Start and due date'), _('Start date'), _('Due date'), _('All')]
-    choiceData = [(False, False), (False, True), (True, False), (True, True)]
+    choiceLabels = [_('Start and due date'), _('Start date'), _('Due date'), _('All but unplanned'), _('All')]
+    choiceData = [(False, False, False), (False, True, False), (True, False, False), (True, True, False), (True, True, True)]
 
-    def doChoice(self, (showStart, showDue)):
+    def doChoice(self, (showStart, showDue, showUnplanned)):
         self.viewer.freeze()
         try:
             self.viewer.SetShowNoStartDate(showStart)
             self.viewer.SetShowNoDueDate(showDue)
+            self.viewer.SetShowUnplanned(showUnplanned)
         finally:
             self.viewer.thaw()
 

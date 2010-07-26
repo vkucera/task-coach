@@ -24,6 +24,21 @@ from taskcoachlib.thirdparty.guid import generate
 from taskcoachlib.thirdparty import lockfile
 
 
+def getTemporaryFileName(path):
+    """All functions/classes in the standard library that can generate
+    a temporary file, visible on the file system, without deleting it
+    when closed are deprecated (there is tempfile.NamedTemporaryFile
+    but its 'delete' argument is new in Python 2.6). This is not
+    secure, not thread-safe, but it works."""
+
+    idx = 0
+    while True:
+        name = os.path.join(path, 'tmp-%d' % idx)
+        if not os.path.exists(name):
+            return name
+        idx += 1
+
+
 class TaskFile(patterns.Observer):
     def __init__(self, *args, **kwargs):
         self.__filename = self.__lastFilename = ''
@@ -192,7 +207,8 @@ class TaskFile(patterns.Observer):
         return file(self.__filename, 'rU')
 
     def _openForWrite(self):
-        return codecs.open(self.__filename, 'w', 'utf-8')
+        name = getTemporaryFileName(os.path.split(self.__filename)[0])
+        return name, codecs.open(name, 'w', 'utf-8')
     
     def load(self, filename=None):
         self.__loading = True
@@ -224,12 +240,25 @@ class TaskFile(patterns.Observer):
         
     def save(self):
         patterns.Event('taskfile.aboutToSave', self).send()
-        fd = self._openForWrite()
-        xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
-                                self.syncMLConfig(), self.guid())
-        fd.close()
-        self.__needSave = False
-        
+        # When encountering a problem while saving (disk full,
+        # computer on fire), if we were writing directly to the file,
+        # it's lost. So write to a temporary file and rename it if
+        # everything went OK.
+        name, fd = self._openForWrite()
+        try:
+            xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
+                                    self.syncMLConfig(), self.guid())
+            fd.close()
+            if os.path.exists(self.__filename): # Not using self.exists() because DummyFile.exists returns True
+                os.remove(self.__filename)
+            if name is not None: # Unit tests (AutoSaver)
+                os.rename(name, self.__filename)
+            self.__needSave = False
+        except:
+            if name is not None: # Same remark as above
+                os.remove(name)
+            raise
+
     def saveas(self, filename):
         self.setFilename(filename)
         self.save()

@@ -111,10 +111,12 @@ defaults = { \
 'calendarviewer': { \
     'title': '',
     'viewtype': '1',
+    'vieworientation': '1',
     'viewdate': '',
     'gradient': 'False',
     'shownostart': 'False',
     'shownodue': 'False',
+    'showunplanned': 'False',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',
     'searchfilterincludesubitems': 'False',
@@ -335,7 +337,7 @@ defaults = { \
     'effort': 'True',
     'syncml': 'False',
     'iphone': 'False',
-    'notifier': 'Native' },
+    'notifier': 'Task Coach' },
 'syncml': { \
     'url': '',
     'username': '',

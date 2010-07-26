@@ -357,8 +357,15 @@ class IOController(object):
         return True
     
     def __askBreakLock(self, filename):
-        result = wx.MessageBox(_('Cannot open %s because it is locked.\n'
-            'Break the lock?')%filename, _('%s: file locked')%meta.name,
+        result = wx.MessageBox(_('''Cannot open %s because it is locked.
+
+This means either that another instance of TaskCoach
+is running and has this file opened, or that a previous
+instance of Task Coach crashed. If no other instance is
+running, you can safely break the lock.
+
+Break the lock?''') % filename,
+            _('%s: file locked')%meta.name,
             style=wx.YES_NO|wx.ICON_QUESTION|wx.NO_DEFAULT)
         return result == wx.YES
     

@@ -57,7 +57,8 @@ dependencies. The task file format version number is now 31.''')
     
 Release('1.1.0', 'July 10, 2010',
     summary='''This release adds time to start, due and completion dates of 
-tasks and adds support for mass editing of items.''',
+tasks and adds support for mass editing of items. It also adds upport for the
+upcoming version 3.0 for the iPhone/iPod/iPad.''',
     featuresAdded=[
         Feature('''The start, due and completion dates of tasks now also include
 a time. When reading old task files, Task Coach adds a default time to tasks: 
@@ -65,7 +66,11 @@ start dates get a time of "00:00", due dates and completion dates get a time
 of "23:59".''', 'http://uservoice.com/a/nd3mH'),
         Feature('''Mass editing of items. When editing multiple items (tasks, 
 notes, etc.), the edit dialog allows for selectively changing attributes
-of all edited items.''', 'http://uservoice.com/a/ahxq8')
+of all edited items.''', 'http://uservoice.com/a/ahxq8'),
+        Feature('''Less intrusive notifications (reminders).'''),
+        Feature('''The calendar orientation can be changed.'''),
+        Feature('''Add an option to the calendar viewer to show all tasks but
+those which have no start nor due date''', '3008517'),
         ],
     implementationChanged=[
         Implementation('''The task file format was changed to support start, due
@@ -76,7 +81,9 @@ and completion date and time. The task file format version number is now 30.''')
 versions of Windows XP. Fixed by using a notebook widget instead of the
 listbook widget.''', '2927384'),
         Bug('''The new edit dialogs better support tabbing through the dialogs.''',
-            '2687959')
+            '2687959'),
+        Bug('''On Mac OS X, the tabs in the editor and preferences dialogs were
+too small.'''),
         ]
     ),
     
@@ -85,6 +92,8 @@ Release('1.0.8', 'July 6, 2010',
     bugsFixed=[
         Bug('''Drop support for SyncML on Debian; too many architectures/versions
 to support.'''),
+        Bug('''File attachments would not open on Lubuntu'''),
+        Bug('''Task Coach would crash on start on Ubuntu 10.10'''),
         ]
     ),
 
