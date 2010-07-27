@@ -73,6 +73,11 @@ _TOC = sequence(
                 li(a_href(_('About categories'), 'aboutcategories')),
                 li(a_href(_('Category properties'), 'categoryproperties')))),
         li(
+            a_href(_('Notes'), 'notes'),
+            ul(
+                li(a_href(_('About notes'), 'aboutnotes')),
+                li(a_href(_('Note properties'), 'noteproperties')))),
+        li(
             a_href(_('E-mail (Outlook &amp; Thunderbird) integration'), 'email'),
             ul(
                 li(a_href(_('About e-mail integration'), 'aboutemail')),
@@ -139,18 +144,9 @@ regardless of the time spent.''')))),
             li(_('Days left: the number of days left until the due date.')),
             li(_('''Dependencies: other tasks that can be started when the 
 prerequisite task has been completed.''')),
-            li(_('''Total budget: sum of task budget and the budgets of all 
-subtasks of the task, recursively.''')),
             li(_('Time spent: effort spent on the task.')),
-            li(_('''Total time spent: effort spent on the task and all subtasks, 
-recursively.''')),
             li(_('Budget left: task budget minus time spent on the task.')),
-            li(_('Total budget left: total task budget minus total time spent.')),
-            li(_('''Total fixed fee: sum of fixed fee of the task and the 
-fixed fees of all subtasks of the task, recursively.''')),
-            li(_('Revenue: hourly fee times hours spent plus fixed fee.')),
-            li(_('''Total revenue: sum of task revenue and revenue of all 
-subtasks, recursively.''')))),
+            li(_('Revenue: hourly fee times hours spent plus fixed fee.')))),
     h4(
         a_name(_('Task states'), 'taskstates')),
     p(
@@ -210,10 +206,7 @@ button.''')),
         _('The following properties are calculated from the properties above:'),
         ul(
             li(_('Time spent: how much time you have spent working on the task.')),
-            li(_('''Total time spent: sum of time spent on the task and all 
-subtasks, recursively.''')),
-            li(_('Revenue: money earned with the time spent.')),
-            li(_('Total revenue: money earned with the total time spent.')))))   
+            li(_('Revenue: money earned with the time spent.')))))   
 
 _categorySection = sequence(
     h3(
@@ -221,27 +214,54 @@ _categorySection = sequence(
     h4(
         a_name(_('About categories'), 'aboutcategories')),
     p(
-        _('''Tasks may belong to one or more categories. First, you need to 
-create the category that you want to use via the 'Category' menu. Then, you can 
-add a task to one or more categories by editing the task and checking the 
-relevant categories for that task in the category pane of the task editor.''')),
+        _('''Tasks and notes may belong to one or more categories. First, you 
+need to create the category that you want to use via the 'Category' menu. Then, 
+you can add items to one or more categories by editing the item and checking the 
+relevant categories for that item in the category pane of the edit dialog.''')),
     p(
-        _('''You can limit the tasks shown in the task viewers to one or more 
-categories by checking a category in the category viewer. For example, if you 
-have a category 'phone calls' and you check that category, the task viewers will 
-only show tasks belonging to that category; in other words the phone calls 
-you need to make.''')),
+        _('''You can limit the items shown in the task and notes viewers to one 
+or more categories by checking a category in the category viewer. For example, 
+if you have a category 'phone calls' and you check that category, the task 
+viewers will only show tasks belonging to that category; in other words the 
+phone calls you need to make.''')),
     h4(
         a_name(_('Category properties'), 'categoryproperties')),
     p(
-        _('''Categories have a subject, a description, and a color. The color 
-is used to render the background of the category and the background of tasks 
-that belong to that category. If a category has no color of its own, but it has
-a parent category with a color, the parent's color will be used.  
-If a task belongs to multiple categories that each have a color associated with
-them, a mixture of the colors will be used to render the background of that
-task.''')))
+        _('Categories have the following properties you can change:'),
+        ul(
+            li(_('Subject: a single line that summarizes the category.')),
+            li(_('Description: a multi-line description of the category.')),
+            li(_('''Mutually exclusive subcategories: a check box indicating
+whether the subcategories of the category are mutual exclusive. If they are,
+items can only belong to one of the subcategories. When filtering, you can only
+filter by one of the subcategories at a time.''')),
+            li(_('''Appearance properties such as icon, font and colors: 
+the appearance properties are used to render the category, but also the items
+that belong to that category. If a category has no color, font or icon of its 
+own, but it has a parent category with such a property, the parent's property 
+will be used. If an item belongs to multiple categories that each have a color 
+associated with it, a mixture of those colors will be used to render that 
+item.''')))))
 
+_noteSection = sequence(
+    h3(
+        a_name(_('Notes'), 'notes')),
+    h4(
+        a_name(_('About notes'), 'aboutnotes')),
+    p(
+        _('''Notes can be used to capture random information that you want
+to keep in your task file. Notes can be stand-alone or be part of other items,
+such as tasks and categories. Stand-alone notes are displayed in the notes
+viewer. Notes that are part of other items are not displayed in the notes
+viewer.''')),
+    h4(
+        a_name(_('Note properties'), 'noteproperties')),
+    p(
+        _('Notes have the following properties you can change:'),
+        ul(
+            li(_('Subject: a single line that summarizes the note.')),
+            li(_('Description: a multi-line description of the note.')),
+            li(_('Appearance properties such as icon, font and colors.')))))
 
 _emailSection = sequence(
     h3(

@@ -891,7 +891,7 @@ class EditPasteAsSubItem(NeedsSelectedCompositeMixin, ViewerCommand):
 
 class EditPreferences(SettingsCommand):
     def __init__(self, *args, **kwargs):
-        super(EditPreferences, self).__init__(menuText=_('&Preferences...'),
+        super(EditPreferences, self).__init__(menuText=_('&Preferences...\tAlt+P'),
             helpText=_('Edit preferences'), bitmap='wrench_icon',
             id=wx.ID_PREFERENCES, *args, **kwargs)
             

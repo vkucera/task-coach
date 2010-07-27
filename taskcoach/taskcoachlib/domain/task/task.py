@@ -618,7 +618,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # reminder
     
     def reminder(self, recursive=False): # pylint: disable-msg=W0613
-        return self.__reminder.get()
+        if recursive:
+            reminders = [child.reminder(recursive=True) for child in \
+                         self.children()] + [self.__reminder.get()]
+            reminders = [reminder for reminder in reminders if reminder]
+            return min(reminders) if reminders else None
+        else:
+            return self.__reminder.get()
 
     def setReminder(self, reminderDateTime=None, event=None):
         if reminderDateTime == date.DateTime.max:

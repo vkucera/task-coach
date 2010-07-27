@@ -1683,7 +1683,26 @@ class TaskReminderTestCase(TaskTestCase, CommonTaskTestsMixin):
         self.task.setCompletionDateTime()
         self.assertReminder(None)
 
+    def testRecursiveReminder(self):
+        self.assertEqual(self.initialReminder(), 
+                         self.task.reminder(recursive=True))
 
+    def testRecursiveReminderWithChildWithoutReminder(self):
+        self.task.addChild(task.Task())
+        self.assertEqual(self.initialReminder(), 
+                         self.task.reminder(recursive=True))
+    
+    def testRecursiveReminderWithChildWithLaterReminder(self):
+        self.task.addChild(task.Task(reminder=date.DateTime(3000,1,1)))
+        self.assertEqual(self.initialReminder(), 
+                         self.task.reminder(recursive=True))
+    
+    def testRecursiveReminderWithChildWithEarlierReminder(self):
+        self.task.addChild(task.Task(reminder=date.DateTime(2000,1,1)))
+        self.assertEqual(date.DateTime(2000,1,1), 
+                         self.task.reminder(recursive=True))
+        
+        
 class TaskSettingTestCase(TaskTestCase, CommonTaskTestsMixin):
     eventTypes = ['task.setting.shouldMarkCompletedWhenAllChildrenCompleted',
                   'task.percentageComplete']

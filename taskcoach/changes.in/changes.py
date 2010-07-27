@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.0', 'July 25, 2010',
+Release('1.2.0', 'July 27, 2010',
     summary='''This release adds task dependencies.''',
     featuresAdded=[
         Feature('''Tasks can have one or more prerequisite tasks. As long as 
@@ -36,8 +36,6 @@ task A has been completed, task A is called a prerequisite for task B and
 task B is called a dependency of task A.''')
         ],
     featuresChanged=[
-        Feature('''Reorganized some menu items differently and added
-mnemonics to all menu items.'''),
         Feature('''To simplify the application and reduce the number of 
 columns all "total" and "overall" columns have been removed. For composite 
 items that have children, the tree viewers show the "total" or "overall" value 
@@ -47,12 +45,24 @@ subtask A1 has a budget of 10 hours. In the task viewer in tree mode, the
 budget column shows 20 hours for task A when it is expanded and 30 hours when 
 it is collapsed. For task A1 the budget shown is always 10 hour. In list mode,
 the task viewer shows the individual values, so a budget of 20 hours for task A
-and 10 hours for task A1.''')
+and 10 hours for task A1.'''),
+        Feature('''The order of tabs in tabbed dialogs can be changed. 
+Task Coach now remembers the order of the tabs in the item edit dialogs and 
+the preferences dialog.'''),
+        Feature('''When printing, show the sorted column by underlining the
+column header.'''),
+        Feature('''Reorganized some menu items differently and added
+mnemonics to all menu items.'''),
         ],
     implementationChanged=[
         Implementation('''The task file format was changed to support task 
 dependencies. The task file format version number is now 31.''')
         ],
+    bugsFixed=[
+        Bug('''An exception would be thrown if search strings contained a 
+'%' symbol.'''),
+        Bug('''When printing, correctly align columns.'''),
+        ]
     ),
     
 Release('1.1.0', 'July 10, 2010',

@@ -321,6 +321,11 @@ defaults = { \
     'inactivetasks': '(192, 192, 192, 255)',
     'duesoontasks': '(255, 128, 0, 255)' },
 'editor': { \
+    'taskpages': '[]',        # Order of tabs in the task editor
+    'categorypages': '[]',    # Order of tabs in the category editor
+    'notepages': '[]',        # Order of tabs in the note editor
+    'attachmentpages': '[]',  # Order of tabs in the attachment editor
+    'preferencespages': '[]', # Order of tabs in the preferences dialog
     'maccheckspelling': 'True' },
 'version': { \
     'python': '', # Filled in by the Settings class when saving the settings

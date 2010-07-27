@@ -74,6 +74,10 @@ class Page(widgets.BookPage):
         
 
 class SubjectPage(Page):        
+    pageName = 'subject'
+    pageTitle = _('Description')
+    pageIcon = 'pencil_icon'
+    
     def addEntries(self):
         self.addSubjectEntry()
         self.addDescriptionEntry()
@@ -135,7 +139,7 @@ class TaskSubjectPage(SubjectPage):
  
     def entries(self):
         entries = super(TaskSubjectPage, self).entries()
-        entries['priority'] = entries['totalPriority'] = self._priorityEntry
+        entries['priority'] = self._priorityEntry
         return entries
             
 
@@ -216,6 +220,9 @@ class AttachmentSubjectPage(SubjectPage):
 
 
 class AppearancePage(Page):
+    pageName = 'appearance'
+    pageTitle = _('Appearance')
+    pageIcon = 'palette_icon'
     columns = 5
     
     def addEntries(self):
@@ -339,6 +346,10 @@ class AppearancePage(Page):
     
 
 class DatesPage(Page):
+    pageName = 'dates'
+    pageTitle = _('Dates') 
+    pageIcon = 'calendar_icon'
+    
     def __init__(self, theTask, parent, settings, *args, **kwargs):
         self.__settings = settings
         super(DatesPage, self).__init__(theTask, parent, *args, **kwargs)
@@ -565,6 +576,10 @@ class DatesPage(Page):
         
 
 class ProgressPage(Page):
+    pageName = 'progress'
+    pageTitle = _('Progress')
+    pageIcon = 'progress'
+    
     def addEntries(self):
         self.addProgressEntry()
         self.addBehaviorEntry()
@@ -597,8 +612,7 @@ class ProgressPage(Page):
         self.addEntry(self._markTaskCompletedLabel, choice, flags=[None, wx.ALL])
         
     def entries(self):
-        return dict(percentageComplete=self._percentageCompleteEntry,
-                    totalPercentageComplete=self._percentageCompleteEntry)
+        return dict(percentageComplete=self._percentageCompleteEntry)
         
     @patterns.eventSource
     def ok(self, event=None): # pylint: disable-msg=W0221
@@ -620,6 +634,10 @@ class ProgressPage(Page):
         
 
 class BudgetPage(Page):
+    pageName = 'budget'
+    pageTitle = _('Budget')
+    pageIcon = 'calculator_icon'
+    
     def addEntries(self):
         self.addBudgetEntries()
         self.addLine()
@@ -675,14 +693,10 @@ class BudgetPage(Page):
         
     def entries(self):
         return dict(budget=self._budgetEntry, 
-                    totalBudget=self._budgetEntry,
-                    budgetLeft=self._budgetEntry, 
-                    totalBudgetLeft=self._budgetEntry, 
+                    budgetLeft=self._budgetEntry,  
                     hourlyFee=self._hourlyFeeEntry, 
-                    fixedFee=self._fixedFeeEntry, 
-                    totalFixedFee=self._fixedFeeEntry, 
-                    revenue=self._hourlyFeeEntry, 
-                    totalRevenue=self._hourlyFeeEntry)
+                    fixedFee=self._fixedFeeEntry,  
+                    revenue=self._hourlyFeeEntry)
     
     @patterns.eventSource    
     def ok(self, event=None): # pylint: disable-msg=W0221
@@ -719,7 +733,11 @@ class PageWithViewer(Page):
         event.Skip()        
 
 
-class EffortPage(PageWithViewer):        
+class EffortPage(PageWithViewer):
+    pageName = 'effort'
+    pageTitle = _('Effort')
+    pageIcon = 'clock_icon'
+            
     def createViewer(self, taskFile, settings, settingsSection):
         return viewer.EffortViewer(self, taskFile, settings, 
             settingsSection=settingsSection,
@@ -773,6 +791,10 @@ class LocalCategoryViewer(CheckableViewerMixin, CategoryViewer):
 
 
 class CategoriesPage(PageWithViewer):
+    pageName = 'categories'
+    pageTitle = _('Categories')
+    pageIcon = 'folder_blue_arrow_icon'
+    
     def createViewer(self, taskFile, settings, settingsSection):
         return LocalCategoryViewer(self.items, self, taskFile, settings,
                                    settingsSection=settingsSection)
@@ -794,6 +816,10 @@ class CategoriesPage(PageWithViewer):
         
 
 class AttachmentsPage(PageWithViewer):
+    pageName = 'attachments'
+    pageTitle = _('Attachments')
+    pageIcon = 'paperclip_icon'
+    
     def createViewer(self, taskFile, settings, settingsSection):
         # pylint: disable-msg=W0201
         self.attachmentsList = attachment.AttachmentList(self.items[0].attachments())
@@ -810,6 +836,10 @@ class AttachmentsPage(PageWithViewer):
 
 
 class NotesPage(PageWithViewer):
+    pageName = 'notes'
+    pageTitle = _('Notes')
+    pageIcon = 'note_icon'
+    
     def createViewer(self, taskFile, settings, settingsSection):
         # pylint: disable-msg=W0201
         self.notes = note.NoteContainer(self.items[0].notes())
@@ -842,6 +872,10 @@ class LocalPrerequisiteViewer(CheckableViewerMixin, PrerequisiteViewer):
     
     
 class PrerequisitesPage(PageWithViewer):
+    pageName = 'prerequisites'
+    pageTitle = _('Prerequisites')
+    pageIcon = 'trafficlight_icon'
+    
     def createViewer(self, taskFile, settings, settingsSection):
         return LocalPrerequisiteViewer(self.items, self, taskFile, settings,
                                        settingsSection=settingsSection)
@@ -860,10 +894,77 @@ class PrerequisitesPage(PageWithViewer):
 
 
 class EditBook(widgets.Notebook):
-    def __init__(self, items, parent):
+    allPageNames = ['subclass responsibility']
+    object = 'subclass responsibility'
+    
+    def __init__(self, parent, items, taskFile, settings):
         self.items = items
+        self.settings = settings
         super(EditBook, self).__init__(parent)
+        self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
+        self.addPages(taskFile)
         
+    def addPages(self, taskFile):
+        for pageName in self.allPageNamesInUserOrder():
+            if self.shouldCreatePage(pageName):
+                page = self.createPage(pageName, taskFile)
+                self.AddPage(page, page.pageTitle, page.pageIcon)
+
+    def allPageNamesInUserOrder(self):
+        ''' Return all pages names in the order stored in the settings. The
+            settings may not contain all pages (e.g. because a feature was
+            turned off by the user) so we add the missing pages if necessary. '''
+        pageNamesInUserOrder = self.settings.getlist('editor', '%spages'%self.object)
+        remainingPageNames = self.allPageNames[:]
+        for pageName in pageNamesInUserOrder:
+            remainingPageNames.remove(pageName)
+        return pageNamesInUserOrder + remainingPageNames
+                    
+    def shouldCreatePage(self, pageName):
+        if self.pageFeatureDisabled(pageName):
+            return False
+        return self.pageSupportsMassEditing(pageName) if len(self.items) > 1 else True
+
+    def pageFeatureDisabled(self, pageName):
+        if pageName in ('budget', 'effort', 'notes'):
+            feature = 'effort' if pageName == 'budget' else pageName
+            return not self.settings.getboolean('feature', feature)
+        else:
+            return False
+        
+    def pageSupportsMassEditing(self, pageName):
+        return pageName in ('subject', 'dates', 'progress', 'budget', 'appearance')
+
+    def createPage(self, pageName, taskFile):
+        if pageName == 'subject':
+            return self.createSubjectPage()
+        elif pageName == 'dates':
+            return DatesPage(self.items, self, self.settings) 
+        elif pageName == 'prerequisites':
+            return PrerequisitesPage(self.items, self, taskFile, self.settings, 
+                                     settingsSection='prerequisiteviewerin%seditor'%self.object)
+        elif pageName == 'progress':    
+            return ProgressPage(self.items, self)
+        elif pageName == 'categories':
+            return CategoriesPage(self.items, self, taskFile, self.settings, 
+                                  settingsSection='categoryviewerin%seditor'%self.object)
+        elif pageName == 'budget':                 
+            return BudgetPage(self.items, self)
+        elif pageName == 'effort':        
+            return EffortPage(self.items, self, taskFile, self.settings,
+                              settingsSection='effortviewerin%seditor'%self.object)
+        elif pageName == 'notes':
+            return NotesPage(self.items, self, taskFile, self.settings,
+                             settingsSection='noteviewerin%seditor'%self.object)
+        elif pageName == 'attachments':
+            return AttachmentsPage(self.items, self, taskFile, self.settings, 
+                                   settingsSection='attachmentviewerin%seditor'%self.object)
+        elif pageName == 'appearance':
+            return AppearancePage(self.items, self)
+        
+    def createSubjectPage(self):
+        return SubjectPage(self.items, self)
+    
     def setFocus(self, columnName):
         ''' Select the correct page of the editor and correct control on a page
             based on the column that the user double clicked. '''
@@ -880,45 +981,49 @@ class EditBook(widgets.Notebook):
         for item in self.items:
             ancestors.extend(item.ancestors())
         return targetItem in self.items + ancestors
+    
+    def onClose(self, event):
+        event.Skip()
+        pageNames = [self[index].pageName for index in range(self.GetPageCount())]
+        self.settings.setlist('editor', '%spages'%self.object, pageNames)
 
 
 class TaskEditBook(EditBook):
-    def __init__(self, tasks, parent, taskFile, settings):
-        super(TaskEditBook, self).__init__(tasks, parent)
-        self.AddPage(TaskSubjectPage(tasks, self), _('Description'), 'pencil_icon')
-        self.AddPage(DatesPage(tasks, self, settings), _('Dates'), 'calendar_icon')
-        if len(tasks) == 1:
-            self.AddPage(PrerequisitesPage(tasks, self, taskFile, settings, 
-                                           settingsSection='prerequisiteviewerintaskeditor'), 
-                         _('Prerequisites'), 'trafficlight_icon')
-        self.AddPage(ProgressPage(tasks, self), _('Progress'), 'progress')
-        if len(tasks) == 1:
-            self.AddPage(CategoriesPage(tasks, self, taskFile, settings, 
-                                        settingsSection='categoryviewerintaskeditor'), 
-                         _('Categories'), 'folder_blue_arrow_icon')
-        if settings.getboolean('feature', 'effort'):
-            self.AddPage(BudgetPage(tasks, self),
-                         _('Budget'), 'calculator_icon')
-            if len(tasks) == 1:
-                self.AddPage(EffortPage(tasks, self, taskFile, settings,
-                                        settingsSection='effortviewerintaskeditor'), 
-                             _('Effort'), 'clock_icon')
-        if settings.getboolean('feature', 'notes') and len(tasks) == 1:
-            self.AddPage(NotesPage(tasks, self, taskFile, settings,
-                                   settingsSection='noteviewerintaskeditor'), 
-                         _('Notes'), 'note_icon')
-        if len(tasks) == 1:
-            self.AddPage(AttachmentsPage(tasks, self, taskFile, settings, 
-                                         settingsSection='attachmentviewerintaskeditor'), 
-                         _('Attachments'), 'paperclip_icon')
-        self.AddPage(AppearancePage(tasks, self), _('Appearance'),
-                     'palette_icon')
-        
+    allPageNames = ['subject', 'dates', 'prerequisites', 'progress', 
+                    'categories', 'budget', 'effort', 'notes', 'attachments', 
+                    'appearance']
+    object = 'task'
+
+    def createSubjectPage(self):    
+        return TaskSubjectPage(self.items, self)
+
+
+class CategoryEditBook(EditBook):
+    allPageNames = ['subject', 'notes', 'attachments', 'appearance']
+    object = 'category'
+
+    def createSubjectPage(self):
+        return CategorySubjectPage(self.items, self)
+
+
+class NoteEditBook(EditBook):
+    allPageNames = ['subject', 'categories', 'attachments', 'appearance']
+    object = 'note'
+    
+
+class AttachmentEditBook(EditBook):
+    allPageNames = ['subject', 'notes', 'appearance']
+    object = 'attachment'
+            
+    def createSubjectPage(self):
+        return AttachmentSubjectPage(self.items, self,
+                                     self.settings.get('file', 'attachmentbase'))
+    
         
 class EffortEditBook(Page):
     columns = 3
     
-    def __init__(self, efforts, parent, taskFile, settings, *args, **kwargs):
+    def __init__(self, parent, efforts, taskFile, settings, *args, **kwargs):
         self._effortList = taskFile.efforts()
         taskList = taskFile.tasks()
         self._taskList = task.TaskList(taskList)
@@ -1027,55 +1132,9 @@ class EffortEditBook(Page):
                     firstEntry=self._taskEntry,
                     description=self._descriptionEntry,
                     timeSpent=self._stopEntry,
-                    revenue=self._taskEntry, totalRevenue=self._taskEntry)
+                    revenue=self._taskEntry)
     
     
-class CategoryEditBook(EditBook):
-    def __init__(self, categories, parent, taskFile, settings):
-        super(CategoryEditBook, self).__init__(categories, parent)
-        self.AddPage(CategorySubjectPage(categories, self), 
-                     _('Description'), 'pencil_icon')
-        if settings.getboolean('feature', 'notes') and len(categories) == 1:
-            self.AddPage(NotesPage(categories, self, taskFile, settings,
-                                   settingsSection='noteviewerincategoryeditor'), 
-                         _('Notes'), 'note_icon')
-        if len(categories) == 1:
-            self.AddPage(AttachmentsPage(categories, self, taskFile, settings, 
-                                         settingsSection='attachmentviewerincategoryeditor'), 
-                         _('Attachments'), 'paperclip_icon')
-        self.AddPage(AppearancePage(categories, self), _('Appearance'),
-                     'palette_icon')
-
-
-class NoteEditBook(EditBook):
-    def __init__(self, notes, parent, taskFile, settings): 
-        super(NoteEditBook, self).__init__(notes, parent)
-        self.AddPage(SubjectPage(notes, self), _('Description'), 'pencil_icon')
-        if len(notes) == 1:
-            self.AddPage(CategoriesPage(notes, self, taskFile, settings, 
-                                        settingsSection='categoryviewerinnoteeditor'), 
-                         _('Categories'), 'folder_blue_arrow_icon')
-            self.AddPage(AttachmentsPage(notes, self, taskFile, settings,
-                                         settingsSection='attachmentviewerinnoteeditor'),
-                         _('Attachments'), 'paperclip_icon')
-        self.AddPage(AppearancePage(notes, self), _('Appearance'),
-                     'palette_icon')
-
-
-class AttachmentEditBook(EditBook):
-    def __init__(self, attachments, parent, taskFile, settings):
-        super(AttachmentEditBook, self).__init__(attachments, parent)
-        self.AddPage(AttachmentSubjectPage(attachments, self,
-                                           settings.get('file', 'attachmentbase')), 
-                     _('Description'), 'pencil_icon')
-        if settings.getboolean('feature', 'notes') and len(self.items) == 1:
-            self.AddPage(NotesPage(attachments, self, taskFile, settings,
-                                   settingsSection='noteviewerinattachmenteditor'), 
-                         _('Notes'), 'note_icon')
-        self.AddPage(AppearancePage(attachments, self), _('Appearance'),
-                     'palette_icon')
-
-
 class EditorWithCommand(widgets.Dialog):
     EditBookClass = lambda: 'Subclass responsibility'
     
@@ -1108,7 +1167,7 @@ class EditorWithCommand(widgets.Dialog):
         super(EditorWithCommand, self).ok(*args, **kwargs)
         
     def createInterior(self):
-        return self.EditBookClass(self._command.items, self._panel,
+        return self.EditBookClass(self._panel, self._command.items, 
                                   self._taskFile, self._settings)
         
     @patterns.eventSource
