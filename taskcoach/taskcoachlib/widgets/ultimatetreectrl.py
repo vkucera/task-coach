@@ -373,7 +373,6 @@ class UltimateTreeCtrl(wx.Panel):
         self._queues = dict()
         self._expanded = set()
         self._visibleRows = dict()
-        self._buttons = list()
         self._selection = set()
         self._headerSizes = dict()
 
@@ -604,7 +603,6 @@ class UltimateTreeCtrl(wx.Panel):
 
         self._expanded = set()
         self._visibleRows = dict()
-        self._buttons = list()
         self._selection = set()
         self._headerSizes = dict()
 
@@ -1045,15 +1043,17 @@ class UltimateTreeCtrl(wx.Panel):
         self.ProcessEvent(evt)
 
     def _ProcessLeftUpContent(self, xc, yc, ctrl):
+        xs, ys = self._contentView.CalcUnscrolledPosition(xc, yc)
+
         for indexPath, row in self._visibleRows.items():
             if self.GetRowChildrenCount(indexPath):
-                x, y, w, h = (24 * (len(indexPath) - 1) + 4,
-                              row.y + (row.h - 16) / 2,
-                              16,
-                              16)
+                x, y, w, h = (24 * (len(indexPath) - 1),
+                              row.y + (row.h - 24) / 2,
+                              24,
+                              24)
 
-                if xc >= x and xc < x + w and \
-                   yc >= y and yc < y + h:
+                if xs >= x and xs < x + w and \
+                   ys >= y and ys < y + h:
                     self.Toggle(indexPath)
                     break
         else:
