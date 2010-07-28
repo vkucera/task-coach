@@ -778,7 +778,10 @@ class UltimateTreeCtrl(wx.Panel):
         width = 0
         for indexPath, (own, children) in self._headerSizes.items():
             if len(indexPath) == 1:
-                width += max(own, children)
+                if self.__style & ULTTREE_FLAT:
+                    width += own + children
+                else:
+                    width += max(own, children)
 
         return width, height
 
