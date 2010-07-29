@@ -57,11 +57,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__reminder = base.Attribute(reminder, self, self.reminderEvent)
         self._recurrence = date.Recurrence() if recurrence is None else recurrence
         self.__prerequisites = base.SetAttribute(prerequisites or [], self, 
-                                                 self.addPrerequisiteEvent,
-                                                 self.removePrerequisiteEvent)
+                                                 changeEvent=self.prerequisitesEvent)
         self.__dependencies = base.SetAttribute(dependencies or [], self, 
-                                                 self.addDependencyEvent,
-                                                 self.removeDependencyEvent)
+                                                changeEvent=self.dependenciesEvent)
         self._shouldMarkCompletedWhenAllChildrenCompleted = \
             shouldMarkCompletedWhenAllChildrenCompleted
         for effort in self._efforts:
@@ -190,7 +188,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         # The subject of a prerequisite of our dependencies has changed, notify:
         for dependency in self.dependencies():
             event.addSource(dependency, subject, type='task.prerequisite.subject')
-        
+
+    # Due date
+            
     def dueDateTime(self, recursive=False):
         if recursive:
             childrenDueDateTimes = [child.dueDateTime(recursive=True) for child in \
@@ -212,7 +212,14 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             parent = self.parent()
             if dueDateTime > parent.dueDateTime():
                 parent.setDueDateTime(dueDateTime, event)
-
+    
+    @staticmethod
+    def dueDateTimeSortFunction(**kwargs):
+        recursive = kwargs.get('treeMode', False)
+        return lambda task: task.dueDateTime(recursive=recursive)
+    
+    # Start date
+    
     def startDateTime(self, recursive=False):
         if recursive:
             childrenStartDateTimes = [child.startDateTime(recursive=True) for child in \
@@ -227,17 +234,29 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def startDateTimeEvent(self, event):
         startDateTime = self.startDateTime()
         event.addSource(self, startDateTime, type='task.startDateTime')
-        if not self.recurrence(True):
+        if not self.recurrence(recursive=True, upwards=True):
             for child in self.children():
                 if startDateTime > child.startDateTime():
                     child.setStartDateTime(startDateTime, event)
             parent = self.parent()
             if parent and startDateTime < parent.startDateTime():
                 parent.setStartDateTime(startDateTime, event)
-                
+
+    @staticmethod
+    def startDateTimeSortFunction(**kwargs):
+        recursive = kwargs.get('treeMode', False)
+        return lambda task: task.startDateTime(recursive=recursive)
+
     def timeLeft(self, recursive=False):
         return self.dueDateTime(recursive) - date.Now()
-        
+
+    @staticmethod
+    def timeLeftSortFunction(**kwargs):
+        recursive = kwargs.get('treeMode', False)
+        return lambda task: task.timeLeft(recursive=recursive)
+                    
+    # Completion date
+            
     def completionDateTime(self, recursive=False):
         if recursive:
             childrenCompletionDateTimes = [child.completionDateTime(recursive=True) \
@@ -298,6 +317,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                   shouldMarkCompletedAccordingToSetting)) and \
                (not self.completed()) and self.allChildrenCompleted()
       
+    @staticmethod  
+    def completionDateTimeSortFunction(**kwargs):
+        recursive = kwargs.get('treeMode', False)
+        return lambda task: task.completionDateTime(recursive=recursive)
+
+    # Task state
+    
     def completed(self):
         return self.completionDateTime() != date.DateTime()
 
@@ -332,12 +358,12 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 childEfforts.extend(child.efforts(recursive=True))
         return self._efforts + childEfforts
 
+    def isBeingTracked(self, recursive=False):
+        return self.activeEfforts(recursive)
+
     def activeEfforts(self, recursive=False):
         return [effort for effort in self.efforts(recursive) \
             if effort.isBeingTracked()]
-
-    def isBeingTracked(self, recursive=False):
-        return self.activeEfforts(recursive)
     
     @patterns.eventSource    
     def addEffort(self, effort, event=None):
@@ -370,20 +396,16 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         
     def removeEffortEvent(self, event, *efforts):
         event.addSource(self, *efforts, **dict(type='task.effort.remove'))
-        
+
+    @patterns.eventSource
+    def stopTracking(self, event=None):
+        for effort in self.activeEfforts():
+            effort.setStop(event=event)
+                        
     def stopTrackingEvent(self, event, *efforts):
         for ancestor in [self] + self.ancestors():
             event.addSource(ancestor, *efforts, 
                             **dict(type=ancestor.trackStopEventType()))
-            
-    def timeSpentEvent(self, event, *efforts):
-        event.addSource(self, *efforts, **dict(type='task.timeSpent'))
-        for ancestor in self.ancestors():
-            event.addSource(ancestor, *efforts, **dict(type='task.timeSpent'))
-        if self.budget(recursive=True):
-            self.budgetLeftEvent(event)
-        if self.hourlyFee() > 0:
-            self.revenueEvent(event)
         
     @patterns.eventSource
     def setEfforts(self, efforts, event=None):
@@ -394,15 +416,36 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.removeEffortEvent(event, oldEfforts)
         self.addEffortEvent(event, efforts)
 
+    @classmethod
+    def trackStartEventType(class_):
+        return '%s.track.start'%class_
+
+    @classmethod
+    def trackStopEventType(class_):
+        return '%s.track.stop'%class_
+
+    # Time spent
+    
     def timeSpent(self, recursive=False):
         return sum((effort.duration() for effort in self.efforts(recursive)), 
                    date.TimeDelta())
 
-    @patterns.eventSource
-    def stopTracking(self, event=None):
-        for effort in self.activeEfforts():
-            effort.setStop(event=event)
-                
+    def timeSpentEvent(self, event, *efforts):
+        event.addSource(self, *efforts, **dict(type='task.timeSpent'))
+        for ancestor in self.ancestors():
+            event.addSource(ancestor, *efforts, **dict(type='task.timeSpent'))
+        if self.budget(recursive=True):
+            self.budgetLeftEvent(event)
+        if self.hourlyFee() > 0:
+            self.revenueEvent(event)
+
+    @staticmethod
+    def timeSpentSortFunction(**kwargs):
+        recursive = kwargs.get('treeMode', False)
+        return lambda task: task.timeSpent(recursive=recursive)
+    
+    # Budget
+    
     def budget(self, recursive=False):
         result = self.__budget.get()
         if recursive:
@@ -419,17 +462,31 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             event.addSource(ancestor, ancestor.budget(recursive=True), 
                             type='task.budget')
         self.budgetLeftEvent(event)
+        
+    @staticmethod
+    def budgetSortFunction(**kwargs):
+        recursive = kwargs.get('treeMode', False)
+        return lambda task: task.budget(recursive=recursive)
             
+    # Budget left
+    
+    def budgetLeft(self, recursive=False):
+        budget = self.budget(recursive)
+        return budget - self.timeSpent(recursive) if budget else budget
+
     def budgetLeftEvent(self, event):
         event.addSource(self, self.budgetLeft(), type='task.budgetLeft')
         for ancestor in self.ancestors():
             event.addSource(ancestor, ancestor.budgetLeft(recursive=True), 
                             type='task.budgetLeft')
-        
-    def budgetLeft(self, recursive=False):
-        budget = self.budget(recursive)
-        return budget - self.timeSpent(recursive) if budget else budget
 
+    @staticmethod
+    def budgetLeftSortFunction(**kwargs):
+        recursive = kwargs.get('treeMode', False)
+        return lambda task: task.budgetLeft(recursive=recursive)
+
+    # Foreground color
+    
     def foregroundColor(self, recursive=False):
         fgColor = super(Task, self).foregroundColor(recursive)
         if not recursive:
@@ -469,6 +526,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 event.addSource(eachEffort, fgColor, 
                                 type=eachEffort.foregroundColorChangedEventType())
     
+    # Background color
+    
     def backgroundColorChangedEvent(self, event):
         super(Task, self).backgroundColorChangedEvent(event)
         bgColor = self.backgroundColor()
@@ -477,6 +536,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 event.addSource(eachEffort, bgColor, 
                                 type=eachEffort.backgroundColorChangedEventType())
 
+    # Icon
+    
     def icon(self, recursive=False):
         myIcon = super(Task, self).icon(recursive=False)
         if not myIcon and recursive:
@@ -507,15 +568,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             hasChildren = any(child for child in self.children() if not child.isDeleted())
             taskIcon += '_open' if selected and hasChildren else ''
         return taskIcon + '_icon'
-    
-    @classmethod
-    def trackStartEventType(class_):
-        return '%s.track.start'%class_
-
-    @classmethod
-    def trackStopEventType(class_):
-        return '%s.track.stop'%class_
-    
+        
     # percentage Complete
     
     def percentageComplete(self, recursive=False):
@@ -548,6 +601,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         for ancestor in self.ancestors():
             event.addSource(ancestor, ancestor.percentageComplete(recursive=True), 
                             type='task.percentageComplete')
+    
+    @staticmethod
+    def percentageCompleteSortFunction(**kwargs):
+        recursive = kwargs.get('treeMode', False)
+        return lambda task: task.percentageComplete(recursive=recursive)
         
     # priority
     
@@ -568,8 +626,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         for ancestor in self.ancestors():
             event.addSource(ancestor, ancestor.priority(recursive=True),
                             type='task.priority')
-                
-    # revenue
+    
+    @staticmethod
+    def prioritySortFunction(**kwargs):
+        recursive = kwargs.get('treeMode', False)
+        return lambda task: task.priority(recursive=recursive)
+    
+    # Hourly fee
     
     def hourlyFee(self, recursive=False): # pylint: disable-msg=W0613
         return self.__hourlyFee.get()
@@ -587,7 +650,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def hourlyFeeChangedEventType(class_):
         return '%s.hourlyFee'%class_
-                
+    
+    @staticmethod
+    def hourlyFeeSortFunction(**kwargs):
+        return lambda task: task.hourlyFee()
+    
+    # Fixed fee
+                 
     def fixedFee(self, recursive=False):
         childFixedFees = sum(child.fixedFee(recursive) for child in 
                              self.children()) if recursive else 0
@@ -603,6 +672,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                             type='task.fixedFee')
         self.revenueEvent(event)
 
+    @staticmethod
+    def fixedFeeSortFunction(**kwargs):
+        recursive = kwargs.get('treeMode', False)
+        return lambda task: task.fixedFee(recursive=recursive)
+    
+    # Reveneu        
+        
     def revenue(self, recursive=False):
         childRevenues = sum(child.revenue(recursive) for child in 
                             self.children()) if recursive else 0
@@ -614,7 +690,12 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         for ancestor in self.ancestors():
             event.addSource(ancestor, ancestor.revenue(recursive=True), 
                             type='task.revenue')
-            
+
+    @staticmethod
+    def revenueSortFunction(**kwargs):            
+        recursive = kwargs.get('treeMode', False)
+        return lambda task: task.revenue(recursive=recursive)
+    
     # reminder
     
     def reminder(self, recursive=False): # pylint: disable-msg=W0613
@@ -633,12 +714,22 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             
     def reminderEvent(self, event):
         event.addSource(self, self.reminder(), type='task.reminder')
-                    
+    
+    @staticmethod
+    def reminderSortFunction(**kwargs):
+        recursive = kwargs.get('treeMode', False)
+        return lambda task: task.reminder(recursive=recursive) or date.DateTime.max
+
     # Recurrence
     
-    def recurrence(self, recursive=False):
-        if not self._recurrence and recursive and self.parent():
-            return self.parent().recurrence(recursive)
+    def recurrence(self, recursive=False, upwards=False):
+        if not self._recurrence and recursive and upwards and self.parent():
+            return self.parent().recurrence(recursive, upwards)
+        elif recursive and not upwards:
+            recurrences = [child.recurrence() for child in self.children(recursive)]
+            recurrences.append(self._recurrence)
+            recurrences = [r for r in recurrences if r]
+            return min(recurrences) if recurrences else self._recurrence
         else:
             return self._recurrence
 
@@ -653,22 +744,32 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @patterns.eventSource
     def recur(self, event=None):
         self.setCompletionDateTime(date.DateTime(), event=event)
-        nextStartDateTime = self.recurrence(recursive=True)(self.startDateTime(), next=False)
+        recur = self.recurrence(recursive=True, upwards=True)
+        nextStartDateTime = recur(self.startDateTime(), next=False)
         self.setStartDateTime(nextStartDateTime, event=event)
-        nextDueDateTime = self.recurrence(recursive=True)(self.dueDateTime(), next=False)
+        nextDueDateTime = recur(self.dueDateTime(), next=False)
         self.setDueDateTime(nextDueDateTime, event=event)
         if self.reminder():
-            nextReminder = self.recurrence(recursive=True)(self.reminder(), next=False)
+            nextReminder = recur(self.reminder(), next=False)
             self.setReminder(nextReminder, event=event)
         for child in self.children():
             if not child.recurrence():
                 child.recur(event=event)
         self.recurrence()(next=True)
+
+    @staticmethod
+    def recurrenceSortFunction(**kwargs):
+        recursive = kwargs.get('treeMode', False)
+        return lambda task: task.recurrence(recursive=recursive)
         
     # Prerequisites
     
     def prerequisites(self, recursive=False):
-        return self.__prerequisites.get()
+        prerequisites = self.__prerequisites.get() 
+        if recursive:
+            for child in self.children():
+                prerequisites |= child.prerequisites(recursive)
+        return prerequisites
     
     def setPrerequisites(self, prerequisites, event=None):
         self.__prerequisites.set(set(prerequisites), event=event)
@@ -687,16 +788,35 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         for prerequisite in prerequisites:
             prerequisite.removeDependencies([self])
             
-    def addPrerequisiteEvent(self, event, *prerequisites):
-        event.addSource(self, *prerequisites, **dict(type='task.prerequisite.add'))
-    
-    def removePrerequisiteEvent(self, event, *prerequisites):
-        event.addSource(self, *prerequisites, **dict(type='task.prerequisite.remove'))
-    
+    def prerequisitesEvent(self, event, *prerequisites):
+        event.addSource(self, *prerequisites, **dict(type='task.prerequisites'))
+
+    @staticmethod
+    def prerequisitesSortFunction(**kwargs):
+        ''' Return a sort key for sorting by prerequisites. Since a task can 
+            have multiple prerequisites we first sort the prerequisites by their
+            subjects. If the sorter is in tree mode, we also take the 
+            prerequisites of the children of the task into account, after the 
+            prerequisites of the task itself. '''
+        def sortKeyFunction(task):
+            def sortedSubjects(items):
+                return sorted([item.subject(recursive=True) for item in items])
+            prerequisites = task.prerequisites()
+            sortedPrerequisiteSubjects = sortedSubjects(prerequisites)
+            if kwargs.get('treeMode', False):
+                childPrerequisites = task.prerequisites(recursive=True) - prerequisites
+                sortedPrerequisiteSubjects.extend(sortedSubjects(childPrerequisites)) 
+            return sortedPrerequisiteSubjects
+        return sortKeyFunction
+
     # Dependencies
     
     def dependencies(self, recursive=False):
-        return self.__dependencies.get()
+        dependencies = self.__dependencies.get()
+        if recursive:
+            for child in self.children():
+                dependencies |= child.dependencies(recursive)
+        return dependencies
 
     def setDependencies(self, dependencies, event=None):
         self.__dependencies.set(set(dependencies), event=event)
@@ -715,12 +835,28 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         for dependency in dependencies:
             dependency.removePrerequisites([self])        
 
-    def addDependencyEvent(self, event, *dependencies):
-        event.addSource(self, *dependencies, **dict(type='task.dependency.add'))
-    
-    def removeDependencyEvent(self, event, *dependencies):
-        event.addSource(self, *dependencies, **dict(type='task.dependency.remove'))
-            
+    def dependenciesEvent(self, event, *dependencies):
+        event.addSource(self, *dependencies, **dict(type='task.dependencies'))
+
+    @staticmethod
+    def dependenciesSortFunction(**kwargs):
+        ''' Return a sort key for sorting by dependencies. Since a task can 
+            have multiple dependencies we first sort the dependencies by their
+            subjects. If the sorter is in tree mode, we also take the 
+            dependencies of the children of the task into account, after the 
+            dependencies of the task itself. '''
+        def sortKeyFunction(task):
+            def sortedSubjects(items):
+                return sorted([item.subject(recursive=True) for item in items])
+            dependencies = task.dependencies()
+            sortedDependencySubjects = sortedSubjects(dependencies)
+            if kwargs.get('treeMode', False):
+                childDependencies = task.dependencies(recursive=True) - dependencies
+                sortedDependencySubjects.extend(sortedSubjects(childDependencies)) 
+            return sortedDependencySubjects
+        return sortKeyFunction
+
+                
     # behavior
     
     @patterns.eventSource
@@ -747,6 +883,5 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                              class_.hourlyFeeChangedEventType(), 
                              'task.fixedFee',
                              'task.reminder', 'task.recurrence',
-                             'task.prerequisite.add', 'task.prerequisite.remove',
-                             'task.dependency.add', 'task.dependency.remove',
+                             'task.prerequisites', 'task.dependencies',
                              'task.setting.shouldMarkCompletedWhenAllChildrenCompleted']

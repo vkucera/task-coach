@@ -28,7 +28,7 @@ from taskcoachlib.gui import uicommand, menu, dialog
 import base, mixin
 
 
-class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.ViewerWithColumns,
+class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.SortableViewerWithColumns,
                        mixin.SortableViewerForAttachmentsMixin, 
                        mixin.SearchableViewerMixin, mixin.NoteColumnMixin,
                        base.ListViewer):

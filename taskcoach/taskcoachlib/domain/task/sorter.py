@@ -25,21 +25,15 @@ class Sorter(base.TreeSorter):
     DomainObjectClass = task.Task # What are we sorting
     EventTypePrefix = 'task'
     TaskStatusAttributes = ('startDateTime', 'completionDateTime',
-                            'prerequisite')
+                            'prerequisites')
     def __init__(self, *args, **kwargs):
-        self.__rootItems = None
         self.__treeMode = kwargs.pop('treeMode', False)
         self.__sortByTaskStatusFirst = kwargs.pop('sortByTaskStatusFirst', True)
         super(Sorter, self).__init__(*args, **kwargs)
         for attribute in self.TaskStatusAttributes:
-            if attribute == 'prerequisite':
-                eventTypes = ['.'.join([self.EventTypePrefix, attribute, delta]) 
-                              for delta in ['add', 'remove']]
-            else:
-                eventTypes = ['.'.join([self.EventTypePrefix, attribute])]
-            for eventType in eventTypes:
-                patterns.Publisher().registerObserver(self.onAttributeChanged, 
-                                                      eventType=eventType)
+            eventType = '.'.join([self.EventTypePrefix, attribute])
+            patterns.Publisher().registerObserver(self.onAttributeChanged, 
+                                                  eventType=eventType)
     
     @patterns.eventSource       
     def setTreeMode(self, treeMode=True, event=None):
@@ -53,32 +47,7 @@ class Sorter(base.TreeSorter):
 
     def treeMode(self):
         return self.__treeMode
-        
-    def reset(self, *args, **kwargs): # pylint: disable-msg=W0221
-        self._invalidateRootItemCache()
-        return super(Sorter, self).reset(*args, **kwargs)
-        
-    def extendSelf(self, items, event=None):
-        self._invalidateRootItemCache()
-        return super(Sorter, self).extendSelf(items, event=event)
-
-    def removeItemsFromSelf(self, itemsToRemove, event=None):
-        self._invalidateRootItemCache()
-        itemsToRemove = set(itemsToRemove)
-        if self.treeMode():
-            for item in itemsToRemove.copy():
-                itemsToRemove.update(item.children(recursive=True)) 
-        itemsToRemove = [item for item in itemsToRemove if item in self]
-        return super(Sorter, self).removeItemsFromSelf(itemsToRemove, event=event)
-
-    def rootItems(self):
-        if self.__rootItems is None:
-            self.__rootItems = super(Sorter, self).rootItems()
-        return self.__rootItems
-
-    def _invalidateRootItemCache(self):
-        self.__rootItems = None
-        
+                
     def sortByTaskStatusFirst(self, sortByTaskStatusFirst):
         self.__sortByTaskStatusFirst = sortByTaskStatusFirst
         # We don't need to invoke self.reset() here since when this property is
@@ -87,8 +56,8 @@ class Sorter(base.TreeSorter):
                                 
     def createSortKeyFunction(self):
         statusSortKey = self.__createStatusSortKey()
-        regularSortKey = self.__createRegularSortKey()
-        return lambda task: statusSortKey(task) + regularSortKey(task)
+        regularSortKey = super(Sorter, self).createSortKeyFunction()
+        return lambda task: statusSortKey(task) + [regularSortKey(task)]
 
     def __createStatusSortKey(self):
         if self.__sortByTaskStatusFirst:
@@ -99,27 +68,6 @@ class Sorter(base.TreeSorter):
         else:
             return lambda task: []
 
-    def __createRegularSortKey(self):
-        sortKeyName = self._sortKey
-        if not self._sortCaseSensitive and sortKeyName == 'subject':
-            prepareSortValue = lambda subject: subject.lower()
-        elif sortKeyName == 'categories':
-            prepareSortValue = lambda categories: sorted([category.subject(recursive=True) for category in categories])
-        elif sortKeyName == 'prerequisites':
-            prepareSortValue = lambda prerequisites: sorted([prerequisite.subject(recursive=True) for prerequisite in prerequisites])
-        elif sortKeyName == 'dependencies':
-            prepareSortValue = lambda dependencies: sorted([dependency.subject(recursive=True) for dependency in dependencies])    
-        elif sortKeyName == 'reminder':
-            prepareSortValue = lambda reminder: reminder or date.DateTime.max
-        else:
-            prepareSortValue = lambda value: value
-        kwargs = {}
-        if self.__treeMode and sortKeyName != 'priority': # FIXME: what's special about priority?
-            kwargs['recursive'] = True
-        # pylint: disable-msg=W0142
-        return lambda task: [prepareSortValue(getattr(task,  
-            sortKeyName)(**kwargs))]
-    
     def _registerObserverForAttribute(self, attribute):
         # Sorter is always observing completion date, start date and 
         # prerequisites because sorting by status depends on those attributes. 
@@ -127,19 +75,11 @@ class Sorter(base.TreeSorter):
         # the sort key.
         if attribute in self.TaskStatusAttributes:
             return
-        if attribute == 'dependencies':
-            for delta in 'add', 'remove':
-                super(Sorter, self)._registerObserverForAttribute('dependency.' + delta)
-        else:
-            super(Sorter, self)._registerObserverForAttribute(attribute)
+        super(Sorter, self)._registerObserverForAttribute(attribute)
             
     def _removeObserverForAttribute(self, attribute):
          # See comment at _registerObserverForAttribute.
         if attribute in self.TaskStatusAttributes:
             return
-        if attribute == 'dependencies':
-            for delta in 'add', 'remove':
-                super(Sorter, self)._removeObserverForAttribute('dependency.' + delta)
-        else:
-            super(Sorter, self)._removeObserverForAttribute(attribute)
+        super(Sorter, self)._removeObserverForAttribute(attribute)
         

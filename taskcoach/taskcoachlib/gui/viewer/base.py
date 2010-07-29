@@ -59,8 +59,7 @@ class Viewer(wx.Panel):
         self.toolbar = toolbar.ToolBar(self, (16, 16))
         self.initLayout()
         self.registerPresentationObservers()
-        patterns.Publisher().registerObserver(self.onEveryMinute,
-                                              eventType='clock.minute')
+        self.registerClockObservers()
         self.refresh()
         
     def domainObjectsToView(self):
@@ -79,6 +78,10 @@ class Viewer(wx.Panel):
         registerObserver(self.onPresentationChanged, 
                          eventType=self.presentation().removeItemEventType(),
                          eventSource=self.presentation())
+        
+    def registerClockObservers(self):
+        patterns.Publisher().registerObserver(self.onEveryMinute,
+                                              eventType='clock.minute')
         
     def detach(self):
         ''' Should be called by viewer.container before closing the viewer '''
@@ -677,24 +680,28 @@ class ViewerWithColumns(Viewer): # pylint: disable-msg=W0223
             patterns.Publisher().removeObserver(self.onAttributeChanged, 
                 eventType=eventType)
 
-    def renderCategory(self, item):
-        recursive = self.isItemCollapsed(item)
-        # Can't use item.categories(recursive=True) since that gets us the 
-        # categories of the ancestors. Here, we are interested in the categories
-        # of the descendants.
-        def collectCategories(categorizable):
-            categories = categorizable.categories()
-            for child in categorizable.children():
-                categories |= collectCategories(child) 
-            return categories
-        
-        categories = collectCategories(item) if recursive else item.categories()   
-        return ', '.join(sorted([category.subject(recursive=True) for category in \
-                                 categories]))
-
+    def renderCategories(self, item):
+        return self.renderSubjectsOfRelatedItems(item, item.categories)        
+    
+    def renderSubjectsOfRelatedItems(self, item, getItems):
+        subjects = []
+        ownItems = getItems(recursive=False)
+        if ownItems:
+            subjects.append(self.renderSubjects(ownItems))
+        if self.isItemCollapsed(item):
+            childItems = getItems(recursive=True) - ownItems
+            if childItems:
+                subjects.append('(%s)'%self.renderSubjects(childItems))
+        return ' '.join(subjects)
+    
+    @staticmethod
+    def renderSubjects(items):
+        subjects = [item.subject(recursive=True) for item in items]
+        return ', '.join(sorted(subjects))
+            
     def isItemCollapsed(self, item):
-        return not (self.children(item) and self.getItemExpanded(item)) if \
-            self.isTreeViewer() else False
+        return not self.getItemExpanded(item) \
+            if self.isTreeViewer() and self.children(item) else False
 
 
 class SortableViewerWithColumns(mixin.SortableViewerMixin, ViewerWithColumns): # pylint: disable-msg=W0223

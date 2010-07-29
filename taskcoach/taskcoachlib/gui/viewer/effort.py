@@ -54,6 +54,10 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
             patterns.Publisher().registerObserver(self.onAttributeChanged,
                                                   eventType=eventType)
         
+    def registerClockObservers(self):
+        pass # Don't register for the update per minute since the effort viewer
+        # either updates every second or not at all.
+    
     def domainObjectsToView(self):
         if self.__domainObjectsToView is None:
             if self.displayingNewTasks():
@@ -165,7 +169,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
             ('description', _('Description'), effort.Effort.descriptionChangedEventType(), lambda effort: effort.description())] + \
             [widgets.Column('categories', _('Categories'),
              width=self.getColumnWidth('categories'),
-             renderCallback=self.renderCategory, **kwargs)] + \
+             renderCallback=self.renderCategories, **kwargs)] + \
             [widgets.Column(name, columnHeader, eventType, 
              width=self.getColumnWidth(name),
              renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT,

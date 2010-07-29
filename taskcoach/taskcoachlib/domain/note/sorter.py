@@ -23,16 +23,6 @@ import note
 class NoteSorter(base.TreeSorter):
     DomainObjectClass = note.Note
     EventTypePrefix = 'note'
-                        
-    def createSortKeyFunction(self):
-        sortKeyName = self._sortKey
-        if not self._sortCaseSensitive and sortKeyName in ('subject', 'description'):
-            prepareSortValue = lambda stringOrUnicode: stringOrUnicode.lower()
-        elif sortKeyName == 'categories':
-            prepareSortValue = lambda categories: sorted([category.subject(recursive=True) for category in categories])
-        else:
-            prepareSortValue = lambda value: value
-        return lambda note: [prepareSortValue(getattr(note, sortKeyName)())]
     
 
 

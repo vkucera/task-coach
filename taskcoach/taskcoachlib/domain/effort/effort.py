@@ -124,6 +124,13 @@ class Effort(baseeffort.BaseEffort, base.Object):
     
     def revenueEvent(self, event):
         event.addSource(self, self.revenue(), type='effort.revenue')
+
+    @staticmethod
+    def effortSortFunction(**kwargs):
+        # Sort by start of effort first, then make sure the Total entry comes
+        # first and finally sort by task subject:
+        return lambda effort: (effort.getStart(), effort.isTotal(),
+                               effort.task().subject(recursive=True))
             
     @classmethod    
     def modificationEventTypes(class_):

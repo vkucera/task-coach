@@ -101,8 +101,7 @@ class CommonTaskTestsMixin(asserts.TaskAsserts):
               'task.percentageComplete', 'task.priority', 
               task.Task.hourlyFeeChangedEventType(), 
               'task.fixedFee', 'task.reminder', 'task.recurrence',
-              'task.prerequisite.add', 'task.prerequisite.remove',
-              'task.dependency.add', 'task.dependency.remove',
+              'task.prerequisites', 'task.dependencies', 
               'task.setting.shouldMarkCompletedWhenAllChildrenCompleted'],
              self.task.modificationEventTypes())
         
@@ -555,7 +554,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.assertEqual(prerequisites, self.task.prerequisites())
         
     def testAddPrerequisiteCausesNotification(self):
-        eventType = 'task.prerequisite.add'
+        eventType = 'task.prerequisites'
         self.registerObserver(eventType)
         prerequisite = task.Task()
         self.task.addPrerequisites([prerequisite])
@@ -579,7 +578,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.assertEqual(dependencies, self.task.dependencies())
         
     def testAddDependencyCausesNotification(self):
-        eventType = 'task.dependency.add'
+        eventType = 'task.dependencies'
         self.registerObserver(eventType)
         dependency = task.Task()
         self.task.addDependencies([dependency])
@@ -2064,9 +2063,15 @@ class CommonRecurrenceTestsMixinWithRecurringChild(CommonRecurrenceTestsMixin):
         self.assertEqual(origStartDateTime, 
                          self.task.children()[0].startDateTime())
         
+    def testDownwardsRecursiveRecurrence(self):
+        expectedRecurrence = min([self.task.recurrence(), 
+                                  self.task.children()[0].recurrence()]) 
+        self.assertEqual(expectedRecurrence, 
+                         self.task.recurrence(recursive=True, upwards=False))
+        
         
 class TaskWithWeeklyRecurrenceWithChildFixture(RecurringTaskWithChildTestCase,
-                                              CommonRecurrenceTestsMixinWithChild):
+                                               CommonRecurrenceTestsMixinWithChild):
     def createRecurrence(self):
         return date.Recurrence('weekly')
     
@@ -2154,10 +2159,10 @@ class TaskWithPrerequisite(TaskTestCase):
         self.failUnless(self.prerequisite in self.task.prerequisites())
         
     def testRemovePrerequisiteNotification(self):
-        eventType = 'task.prerequisite.remove'
+        eventType = 'task.prerequisites'
         self.registerObserver(eventType)
         self.task.removePrerequisites([self.prerequisite])
-        self.assertEvent(eventType, self.task, self.prerequisite)
+        self.assertEvent(eventType, self.task)
         
     def testSetPrerequisitesRemovesOldPrerequisites(self):
         newPrerequisites = set([task.Task()])
@@ -2195,9 +2200,9 @@ class TaskWithDependency(TaskTestCase):
         self.failUnless(self.dependency in self.task.dependencies())
         
     def testRemoveDependencyNotification(self):
-        self.registerObserver('task.dependency.remove')
+        self.registerObserver('task.dependencies')
         self.task.removeDependencies([self.dependency])
-        self.assertEvent('task.dependency.remove', self.task, self.dependency)
+        self.assertEvent('task.dependencies', self.task)
         
     def testSetDependenciesRemovesOldDependencies(self):
         newDependencies = set([task.Task()])

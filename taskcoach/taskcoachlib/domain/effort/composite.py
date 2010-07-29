@@ -218,7 +218,7 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
     def revenue(self, recursive=False): # pylint: disable-msg=W0613
         return sum(effort.revenue() for effort in self._getEfforts())
     
-    def categories(self, recursive=False):
+    def categories(self, *args, **kwargs):
         return [] 
         
     def isBeingTracked(self, recursive=False): # pylint: disable-msg=W0613

@@ -41,7 +41,9 @@ class CategorizableCompositeObjectTest(test.TestCase):
         
     def testCategorizableDoesNotBelongToAnyCategoryByDefault(self):
         for recursive in False, True:
-            self.failIf(self.categorizable.categories(recursive=recursive))
+            for upwards in False, True:
+                self.failIf(self.categorizable.categories(recursive=recursive,
+                                                          upwards=upwards))
 
     def testCategorizableHasNoForegroundColorByDefault(self):
         self.assertEqual(None, self.categorizable.foregroundColor())
@@ -621,28 +623,51 @@ class CategorizableCompositeObjectTest(test.TestCase):
         child.addCategory(self.category)
         self.assertEqual('categoryIcon', child.selectedIcon(recursive=True))
     
-    def testParentCategoryIncludedInChildRecursiveCategories(self):
+    def testParentCategoryIncludedInChildUpwardRecursiveCategories(self):
         self.categorizable.addCategory(self.category)
         child = categorizable.CategorizableCompositeObject()
         self.categorizable.addChild(child)
-        self.assertEqual(set([self.category]), child.categories(recursive=True))
+        self.assertEqual(set([self.category]), 
+                         child.categories(recursive=True, upwards=True))
 
-    def testParentCategoryNotIncludedInChildCategories(self):
+    def testChildCategoryIncludedInParentDownwardRecursiveCategories(self):
+        child = categorizable.CategorizableCompositeObject()
+        child.addCategory(self.category)
+        self.categorizable.addChild(child)
+        self.assertEqual(set([self.category]), 
+            self.categorizable.categories(recursive=True, upwards=False))
+
+    def testParentCategoriesNotIncludedInNonRecursiveCategories(self):
         self.categorizable.addCategory(self.category)
         child = categorizable.CategorizableCompositeObject()
         self.categorizable.addChild(child)
         self.assertEqual(set(), child.categories(recursive=False))
+
+    def testChildCategoriesNotIncludedInNonRecursiveCategories(self):
+        child = categorizable.CategorizableCompositeObject()
+        child.addCategory(self.category)
+        self.categorizable.addChild(child)
+        self.assertEqual(set(), self.categorizable.categories(recursive=False))
         
-    def testGrandParentCategoryIncludedInGrandChildRecursiveCategories(self):
+    def testGrandParentCategoryIncludedInGrandChildUpwardRecursiveCategories(self):
         self.categorizable.addCategory(self.category)
         child = categorizable.CategorizableCompositeObject()
         self.categorizable.addChild(child)
         grandchild = categorizable.CategorizableCompositeObject()
         child.addChild(grandchild)
         self.assertEqual(set([self.category]), 
-                         grandchild.categories(recursive=True))
+                         grandchild.categories(recursive=True, upwards=True))
+
+    def testGrandChildCategoryIncludedInGrandParentDownwardRecursiveCategories(self):
+        child = categorizable.CategorizableCompositeObject()
+        self.categorizable.addChild(child)
+        grandchild = categorizable.CategorizableCompositeObject()
+        child.addChild(grandchild)
+        grandchild.addCategory(self.category)
+        self.assertEqual(set([self.category]), 
+                         self.categorizable.categories(recursive=True))
         
-    def testGrandParentAndParentCategoriesIncludedInGrandChildRecursiveCategories(self):
+    def testGrandParentAndParentCategoriesIncludedInGrandChildUpwardRecursiveCategories(self):
         self.categorizable.addCategory(self.category)
         child = categorizable.CategorizableCompositeObject()
         self.categorizable.addChild(child)
@@ -651,7 +676,18 @@ class CategorizableCompositeObjectTest(test.TestCase):
         childCategory = category.Category('Child category')
         child.addCategory(childCategory)
         self.assertEqual(set([self.category, childCategory]), 
-            grandchild.categories(recursive=True))
+            grandchild.categories(recursive=True, upwards=True))
+
+    def testGrandChildAndChildCategoriesIncludedInGrandParentDownwardRecursiveCategories(self):
+        child = categorizable.CategorizableCompositeObject()
+        self.categorizable.addChild(child)
+        grandchild = categorizable.CategorizableCompositeObject()
+        child.addChild(grandchild)
+        childCategory = category.Category('Child category')
+        child.addCategory(childCategory)
+        grandchild.addCategory(self.category)
+        self.assertEqual(set([self.category, childCategory]), 
+            self.categorizable.categories(recursive=True))
         
     def testRemoveCategoryCausesChildNotification(self):
         self.categorizable.addCategory(self.category)

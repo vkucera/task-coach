@@ -698,43 +698,42 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                                                            value='categories'),
                 width=self.getColumnWidth('categories'),
-                renderCallback=self.renderCategory, **kwargs),
+                renderCallback=self.renderCategories, **kwargs),
              widgets.Column('prerequisites', _('Prerequisites'),
-                'task.prerequisite.add', 'task.prerequisite.remove',
-                'task.prerequisite.subject',
+                'task.prerequisites', 'task.prerequisite.subject',
+                task.Task.expansionChangedEventType(),
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                                                            value='prerequisites'),
-                renderCallback=lambda task: self.renderSubjects(task.prerequisites()),
+                renderCallback=self.renderPrerequisites,
                 width=self.getColumnWidth('prerequisites'), **kwargs),
              widgets.Column('dependencies', _('Dependencies'),
-                'task.dependency.add', 'task.dependency.remove',
-                'task.dependency.subject',
+                'task.dependencies', 'task.dependency.subject',
+                task.Task.expansionChangedEventType(),
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                                                            value='dependencies'),
-                renderCallback=lambda task: self.renderSubjects(task.dependencies()),
+                renderCallback=self.renderDependencies,
                 width=self.getColumnWidth('dependencies'), **kwargs)])
         
         effortOn = self.settings.getboolean('feature', 'effort')
         dependsOnEffortFeature = ['budget',  'timeSpent', 'budgetLeft',
                                   'hourlyFee', 'fixedFee', 'revenue']
-        for name, columnHeader, renderCallback, eventTypes in [
-            ('startDateTime', _('Start date'), self.renderStartDateTime, []),
-            ('dueDateTime', _('Due date'), self.renderDueDateTime, [task.Task.expansionChangedEventType()]),
-            ('completionDateTime', _('Completion date'), self.renderCompletionDateTime, [task.Task.expansionChangedEventType()]),
-            ('percentageComplete', _('% complete'), self.renderPercentageComplete, [task.Task.expansionChangedEventType(), 'task.percentageComplete']),
-            ('timeLeft', _('Time left'), self.renderTimeLeft, [task.Task.expansionChangedEventType(), 'task.timeLeft']),
-            ('recurrence', _('Recurrence'), lambda task: render.recurrence(task.recurrence()), []),
-            ('budget', _('Budget'), self.renderBudget, [task.Task.expansionChangedEventType(), 'task.budget']),            
-            ('timeSpent', _('Time spent'), self.renderTimeSpent, [task.Task.expansionChangedEventType(), 'task.timeSpent']),
-            ('budgetLeft', _('Budget left'), self.renderBudgetLeft, [task.Task.expansionChangedEventType(), 'task.budgetLeft']),            
-            ('priority', _('Priority'), self.renderPriority, [task.Task.expansionChangedEventType(), 'task.priority']),
-            ('hourlyFee', _('Hourly fee'), lambda task: render.monetaryAmount(task.hourlyFee()), [task.Task.hourlyFeeChangedEventType()]),
-            ('fixedFee', _('Fixed fee'), self.renderFixedFee, [task.Task.expansionChangedEventType(), 'task.fixedFee']),            
-            ('revenue', _('Revenue'), self.renderRevenue, [task.Task.expansionChangedEventType(), 'task.revenue']),
-            ('reminder', _('Reminder'), self.renderReminder, [task.Task.expansionChangedEventType(), 'task.reminder'])]:
-            if not eventTypes:
-                eventTypes = ['task.' + name]
+        for name, columnHeader, eventTypes in [
+            ('startDateTime', _('Start date'), []),
+            ('dueDateTime', _('Due date'), [task.Task.expansionChangedEventType()]),
+            ('completionDateTime', _('Completion date'), [task.Task.expansionChangedEventType()]),
+            ('percentageComplete', _('% complete'), [task.Task.expansionChangedEventType(), 'task.percentageComplete']),
+            ('timeLeft', _('Time left'), [task.Task.expansionChangedEventType(), 'task.timeLeft']),
+            ('recurrence', _('Recurrence'), [task.Task.expansionChangedEventType(), 'task.recurrence']),
+            ('budget', _('Budget'), [task.Task.expansionChangedEventType(), 'task.budget']),            
+            ('timeSpent', _('Time spent'), [task.Task.expansionChangedEventType(), 'task.timeSpent']),
+            ('budgetLeft', _('Budget left'), [task.Task.expansionChangedEventType(), 'task.budgetLeft']),            
+            ('priority', _('Priority'), [task.Task.expansionChangedEventType(), 'task.priority']),
+            ('hourlyFee', _('Hourly fee'), [task.Task.hourlyFeeChangedEventType()]),
+            ('fixedFee', _('Fixed fee'), [task.Task.expansionChangedEventType(), 'task.fixedFee']),            
+            ('revenue', _('Revenue'), [task.Task.expansionChangedEventType(), 'task.revenue']),
+            ('reminder', _('Reminder'), [task.Task.expansionChangedEventType(), 'task.reminder'])]:
             if (name in dependsOnEffortFeature and effortOn) or name not in dependsOnEffortFeature:
+                renderCallback = getattr(self, 'render%s'%(name[0].capitalize()+name[1:]))
                 columns.append(widgets.Column(name, columnHeader,  
                     sortCallback=uicommand.ViewerSortByCommand(viewer=self, value=name),
                     renderCallback=renderCallback, width=self.getColumnWidth(name),
@@ -880,11 +879,6 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
         return task.subject(recursive=not self.isTreeViewer())
     
     @staticmethod
-    def renderSubjects(tasks):
-        subjects = [task.subject(recursive=True) for task in tasks]
-        return ', '.join(sorted(subjects))
-    
-    @staticmethod
     def renderStartDateTime(task):
         # The rendering of the start date time doesn't depend on whether the
         # task is collapsed since the start date time is a parent is always <=
@@ -892,38 +886,59 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
         return render.dateTime(task.startDateTime())
     
     def renderDueDateTime(self, task):
-        return render.dateTime(task.dueDateTime(recursive=self.isItemCollapsed(task)))
+        return self.renderedValue(task, task.dueDateTime, render.dateTime)
 
     def renderCompletionDateTime(self, task):
-        return render.dateTime(task.completionDateTime(recursive=self.isItemCollapsed(task)))
+        return self.renderedValue(task, task.completionDateTime, render.dateTime)
 
+    def renderRecurrence(self, task):
+        return self.renderedValue(task, task.recurrence, render.recurrence)
+    
+    def renderPrerequisites(self, task):
+        return self.renderSubjectsOfRelatedItems(task, task.prerequisites)
+    
+    def renderDependencies(self, task):
+        return self.renderSubjectsOfRelatedItems(task, task.dependencies)
+    
     def renderTimeLeft(self, task):
-        return render.timeLeft(task.timeLeft(recursive=self.isItemCollapsed(task)), 
-                               task.completed())
+        return self.renderedValue(task, task.timeLeft, render.timeLeft, task.completed())
         
     def renderTimeSpent(self, task):
-        return render.timeSpent(task.timeSpent(recursive=self.isItemCollapsed(task)))
+        return self.renderedValue(task, task.timeSpent, render.timeSpent)
 
     def renderBudget(self, task):
-        return render.budget(task.budget(recursive=self.isItemCollapsed(task)))
+        return self.renderedValue(task, task.budget, render.budget)
 
     def renderBudgetLeft(self, task):
-        return render.budget(task.budgetLeft(recursive=self.isItemCollapsed(task)))
+        return self.renderedValue(task, task.budgetLeft, render.budget)
 
     def renderRevenue(self, task):
-        return render.monetaryAmount(task.revenue(recursive=self.isItemCollapsed(task)))
+        return self.renderedValue(task, task.revenue, render.monetaryAmount)
+    
+    def renderHourlyFee(self, task):
+        return render.monetaryAmount(task.hourlyFee()) # hourlyFee has no recursive value
     
     def renderFixedFee(self, task):
-        return render.monetaryAmount(task.fixedFee(recursive=self.isItemCollapsed(task)))
+        return self.renderedValue(task, task.fixedFee, render.monetaryAmount)
 
     def renderPercentageComplete(self, task):
-        return render.percentage(task.percentageComplete(recursive=self.isItemCollapsed(task)))
+        return self.renderedValue(task, task.percentageComplete, render.percentage)
 
     def renderPriority(self, task):
-        return render.priority(task.priority(recursive=self.isItemCollapsed(task)))
+        return self.renderedValue(task, task.priority, render.priority)
     
     def renderReminder(self, task):
-        return render.dateTime(task.reminder(recursive=self.isItemCollapsed(task)))
+        return self.renderedValue(task, task.reminder, render.dateTime)
+    
+    def renderedValue(self, item, getValue, renderValue, *extraRenderArgs):
+        value = getValue(recursive=False)
+        template = '%s'
+        if self.isItemCollapsed(item):
+            recursiveValue = getValue(recursive=True)
+            if value != recursiveValue:
+                value = recursiveValue
+                template = '(%s)'
+        return template%renderValue(value, *extraRenderArgs)
                                 
     def onEverySecond(self, event):
         # Only update when a column is visible that changes every second 

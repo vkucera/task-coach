@@ -48,12 +48,20 @@ class CategorizableCompositeObject(base.CompositeObject):
         state.update(dict(categories=self.categories()))
         return state
         
-    def categories(self, recursive=False):
+    def categories(self, recursive=False, upwards=False):
         result = self.__categories.get()
-        if recursive and self.parent() is not None:
-            result |= self.parent().categories(recursive=True)
+        if recursive and upwards and self.parent() is not None:
+            result |= self.parent().categories(recursive=True, upwards=True)
+        elif recursive and not upwards:
+            for child in self.children(recursive=True):
+                result |= child.categories()
         return result
-    
+
+
+    @classmethod
+    def categoriesChangedEventType(class_): # called categories to match with sort key
+        return 'categorizable.categories'
+        
     @classmethod
     def categoryAddedEventType(class_):
         return 'categorizable.category.add'
@@ -62,6 +70,7 @@ class CategorizableCompositeObject(base.CompositeObject):
         self.__categories.add(set(categories), event=kwargs.pop('event', None))
             
     def addCategoryEvent(self, event, *categories):
+        event.addSource(self, self.categories(), type=self.categoriesChangedEventType())
         event.addSource(self, *categories, **dict(type=self.categoryAddedEventType()))
         for child in self.children(recursive=True):
             event.addSource(child, *categories, 
@@ -83,6 +92,7 @@ class CategorizableCompositeObject(base.CompositeObject):
         self.__categories.remove(set(categories), event=kwargs.pop('event', None))
             
     def removeCategoryEvent(self, event, *categories):
+        event.addSource(self, self.categories(), type=self.categoriesChangedEventType())
         event.addSource(self, *categories, **dict(type=self.categoryRemovedEventType()))
         for child in self.children(recursive=True):
             event.addSource(child, *categories, 
@@ -98,6 +108,24 @@ class CategorizableCompositeObject(base.CompositeObject):
             
     def setCategories(self, categories, event=None):
         self.__categories.set(set(categories), event=event)
+
+    @staticmethod
+    def categoriesSortFunction(**kwargs):
+        ''' Return a sort key for sorting by categories. Since a categorizable
+            can have multiple categories we first sort the categories by their
+            subjects. If the sorter is in tree mode, we also take the categories
+            of the children of the categorizable into account, after the 
+            categories of the categorizable itself. '''
+        def sortKeyFunction(categorizable):
+            def sortedSubjects(items):
+                return sorted([item.subject(recursive=True) for item in items])
+            categories = categorizable.categories()
+            sortedCategorySubjects = sortedSubjects(categories)
+            if kwargs.get('treeMode', False):
+                childCategories = categorizable.categories(recursive=True) - categories
+                sortedCategorySubjects.extend(sortedSubjects(childCategories)) 
+            return sortedCategorySubjects
+        return sortKeyFunction
 
     def foregroundColor(self, recursive=True):
         myOwnFgColor = super(CategorizableCompositeObject, self).foregroundColor(False)

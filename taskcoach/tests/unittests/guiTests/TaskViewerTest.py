@@ -303,12 +303,58 @@ class CommonTestsMixin(object):
         self.showColumn('percentageComplete')
         self.assertEqual('100%', self.getItemText(0,3))
 
-    def testRenderCategories(self):
+    def testRenderSingleCategory(self):
         cat = category.Category(subject='Category')
         self.task.addCategory(cat)
         cat.addCategorizable(self.task)
-        self.assertEqual('Category', self.viewer.renderCategory(self.task))
+        self.assertEqual('Category', self.viewer.renderCategories(self.task))
                 
+    def testRenderMultipleCategories(self):
+        for index in range(1, 3):
+            cat = category.Category(subject='Category %d'%index)
+            self.task.addCategory(cat)
+            cat.addCategorizable(self.task)
+        self.assertEqual('Category 1, Category 2', self.viewer.renderCategories(self.task))
+        
+    def testRenderSingleChildCategory(self):
+        self.task.addChild(self.child)
+        self.taskList.append(self.task)
+        cat = category.Category(subject='Category')
+        self.child.addCategory(cat)
+        cat.addCategorizable(self.child)
+        expectedCategory = '(Category)' if self.viewer.isTreeViewer() else ''
+        self.assertEqual(expectedCategory, self.viewer.renderCategories(self.task))
+
+    def testRenderMultipleChildCategories(self):
+        self.task.addChild(self.child)
+        self.taskList.append(self.task)
+        for index in range(1, 3):
+            cat = category.Category(subject='Category %d'%index)
+            self.child.addCategory(cat)
+            cat.addCategorizable(self.child)
+        expectedCategory = '(Category 1, Category 2)' if self.viewer.isTreeViewer() else ''
+        self.assertEqual(expectedCategory, self.viewer.renderCategories(self.task))
+        
+    def testRenderDifferentParentAndChildCategories(self):
+        self.task.addChild(self.child)
+        self.taskList.append(self.task)
+        for index, task in enumerate([self.task, self.child]):
+            cat = category.Category(subject='Category %d'%index)
+            task.addCategory(cat)
+            cat.addCategorizable(task)
+        expectedCategory = 'Category 0 (Category 1)' if self.viewer.isTreeViewer() else 'Category 0'
+        self.assertEqual(expectedCategory, self.viewer.renderCategories(self.task))
+
+    def testRenderSameParentAndChildCategory(self):
+        self.task.addChild(self.child)
+        self.taskList.append(self.task)
+        cat = category.Category(subject='Category')
+        for task in (self.task, self.child):
+            task.addCategory(cat)
+            cat.addCategorizable(task)
+        expectedCategory = 'Category'
+        self.assertEqual(expectedCategory, self.viewer.renderCategories(self.task))
+
     def testRenderRecurrence(self):
         taskWithRecurrence = task.Task(recurrence=date.Recurrence('weekly', amount=2))
         self.showColumn('recurrence')
@@ -400,7 +446,43 @@ class CommonTestsMixin(object):
         self.assertItems(task0, task1)
         task0.addPrerequisites([task1])
         self.assertItems(task1, task0)
-    
+        
+    def testSortByCategories(self):
+        cat0 = category.Category(subject='Category 0')
+        cat1 = category.Category(subject='Category 1')
+        task0 = task.Task(subject='0')
+        task1 = task.Task(subject='1')
+        task0.addCategory(cat1)
+        cat1.addCategorizable(task0)
+        task1.addCategory(cat0)
+        cat0.addCategorizable(task1)
+        self.taskList.extend([task0, task1])
+        self.assertItems(task0, task1)
+        self.viewer.sortBy('categories')
+        self.assertItems(task1, task0)
+
+    def testSortByChildCategories(self):
+        cat0 = category.Category(subject='Category 0')
+        cat1 = category.Category(subject='Category 1')
+        task0 = task.Task(subject='0')
+        task1 = task.Task(subject='1')
+        task1_1 = task.Task(subject='1.1')
+        task1.addChild(task1_1)
+        task0.addCategory(cat1)
+        cat1.addCategorizable(task0)
+        task1_1.addCategory(cat0)
+        cat0.addCategorizable(task1_1)
+        self.taskList.extend([task0, task1])
+        if self.viewer.isTreeViewer():
+            self.assertItems(task0, (task1, 1), task1_1)
+        else:
+            self.assertItems(task0, task1, task1_1)
+        self.viewer.sortBy('categories')
+        if self.viewer.isTreeViewer():
+            self.assertItems((task1, 1), task1_1, task0)
+        else:
+            self.assertItems(task1, task1_1, task0)
+        
     def testChangeActiveTaskForegroundColor(self):
         self.taskList.append(task.Task(subject='test', startDateTime=date.Now()))
         self.setColor('activetasks')
@@ -525,7 +607,7 @@ class CommonTestsMixin(object):
                                                      date.DateTime(2000,1,2)))
         self.showColumn('timeSpent')
         timeSpent = self.getItemText(0, 3)
-        expectedTimeSpent = "48:00:00" if self.treeMode else "24:00:00"
+        expectedTimeSpent = "(48:00:00)" if self.treeMode else "24:00:00"
         self.assertEqual(expectedTimeSpent, timeSpent)
         
     def testGetSelection(self):
@@ -620,10 +702,9 @@ class CommonTestsMixin(object):
         self.task.setFixedFee(100)
         self.child.setFixedFee(200)
         self.viewer.setSortOrderAscending(False)
-        expectedAmount = 300. if self.treeMode else 100.
+        expectedAmount = "(300.00)" if self.treeMode else "100.00"
         self.task.expand(False, context=self.viewer.settingsSection())
-        self.assertEqual(render.monetaryAmount(expectedAmount), 
-            self.getItemText(0, 3))
+        self.assertEqual(expectedAmount, self.getItemText(0, 3))
 
     def testChangePrerequisiteSubject(self):
         self.showColumn('prerequisites')
