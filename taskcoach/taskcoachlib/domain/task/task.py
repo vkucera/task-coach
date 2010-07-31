@@ -218,6 +218,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         recursive = kwargs.get('treeMode', False)
         return lambda task: task.dueDateTime(recursive=recursive)
     
+    @classmethod
+    def dueDateTimeSortEventTypes(class_):
+        ''' The event types that influence the due date time sort order. '''
+        return ('task.dueDateTime',)
+    
     # Start date
     
     def startDateTime(self, recursive=False):
@@ -246,6 +251,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def startDateTimeSortFunction(**kwargs):
         recursive = kwargs.get('treeMode', False)
         return lambda task: task.startDateTime(recursive=recursive)
+    
+    @classmethod
+    def startDateTimeSortEventTypes(class_):
+        ''' The event types that influence the start date time sort order. '''
+        return ('task.startDateTime',)
 
     def timeLeft(self, recursive=False):
         return self.dueDateTime(recursive) - date.Now()
@@ -254,6 +264,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def timeLeftSortFunction(**kwargs):
         recursive = kwargs.get('treeMode', False)
         return lambda task: task.timeLeft(recursive=recursive)
+    
+    @classmethod
+    def timeLeftSortEventTypes(class_):
+        ''' The event types that influence the time left sort order. '''
+        return ('task.dueDateTime',)
                     
     # Completion date
             
@@ -321,6 +336,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def completionDateTimeSortFunction(**kwargs):
         recursive = kwargs.get('treeMode', False)
         return lambda task: task.completionDateTime(recursive=recursive)
+
+    @classmethod
+    def completionDateTimeSortEventTypes(class_):
+        ''' The event types that influence the completion date time sort order. '''
+        return ('task.completionDateTime',)
 
     # Task state
     
@@ -444,6 +464,12 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         recursive = kwargs.get('treeMode', False)
         return lambda task: task.timeSpent(recursive=recursive)
     
+    @classmethod
+    def timeSpentSortEventTypes(class_):
+        ''' The event types that influence the time spent sort order. '''
+        return ('task.timeSpent',)
+
+    
     # Budget
     
     def budget(self, recursive=False):
@@ -467,7 +493,12 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def budgetSortFunction(**kwargs):
         recursive = kwargs.get('treeMode', False)
         return lambda task: task.budget(recursive=recursive)
-            
+    
+    @classmethod
+    def budgetSortEventTypes(class_):
+        ''' The event types that influence the budget sort order. '''
+        return ('task.budget',)
+
     # Budget left
     
     def budgetLeft(self, recursive=False):
@@ -484,6 +515,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def budgetLeftSortFunction(**kwargs):
         recursive = kwargs.get('treeMode', False)
         return lambda task: task.budgetLeft(recursive=recursive)
+
+    @classmethod
+    def budgetLeftSortEventTypes(class_):
+        ''' The event types that influence the budget left sort order. '''
+        return ('task.budgetLeft',)
 
     # Foreground color
     
@@ -606,6 +642,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def percentageCompleteSortFunction(**kwargs):
         recursive = kwargs.get('treeMode', False)
         return lambda task: task.percentageComplete(recursive=recursive)
+
+    @classmethod
+    def percentageCompleteSortEventTypes(class_):
+        ''' The event types that influence the percentage complete sort order. '''
+        return ('task.percentageComplete',)
         
     # priority
     
@@ -631,6 +672,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def prioritySortFunction(**kwargs):
         recursive = kwargs.get('treeMode', False)
         return lambda task: task.priority(recursive=recursive)
+
+    @classmethod
+    def prioritySortEventTypes(class_):
+        ''' The event types that influence the priority sort order. '''
+        return ('task.priority',)
     
     # Hourly fee
     
@@ -654,6 +700,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @staticmethod
     def hourlyFeeSortFunction(**kwargs):
         return lambda task: task.hourlyFee()
+
+    @classmethod
+    def hourlyFeeSortEventTypes(class_):
+        ''' The event types that influence the hourly fee sort order. '''
+        return (class_hourlyFeeChangedEventType(),)
     
     # Fixed fee
                  
@@ -676,8 +727,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def fixedFeeSortFunction(**kwargs):
         recursive = kwargs.get('treeMode', False)
         return lambda task: task.fixedFee(recursive=recursive)
-    
-    # Reveneu        
+
+    @classmethod
+    def fixedFeeSortEventTypes(class_):
+        ''' The event types that influence the fixed fee sort order. '''
+        return ('task.fixedFee',)
+
+    # Revenue        
         
     def revenue(self, recursive=False):
         childRevenues = sum(child.revenue(recursive) for child in 
@@ -695,6 +751,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def revenueSortFunction(**kwargs):            
         recursive = kwargs.get('treeMode', False)
         return lambda task: task.revenue(recursive=recursive)
+
+    @classmethod
+    def revenueSortEventTypes(class_):
+        ''' The event types that influence the revenue sort order. '''
+        return ('task.revenue',)
     
     # reminder
     
@@ -719,6 +780,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def reminderSortFunction(**kwargs):
         recursive = kwargs.get('treeMode', False)
         return lambda task: task.reminder(recursive=recursive) or date.DateTime.max
+
+    @classmethod
+    def reminderSortEventTypes(class_):
+        ''' The event types that influence the reminder sort order. '''
+        return ('task.reminder',)
 
     # Recurrence
     
@@ -761,7 +827,12 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def recurrenceSortFunction(**kwargs):
         recursive = kwargs.get('treeMode', False)
         return lambda task: task.recurrence(recursive=recursive)
-        
+
+    @classmethod
+    def recurrenceSortEventTypes(class_):
+        ''' The event types that influence the recurrence sort order. '''
+        return ('task.recurrence',)
+    
     # Prerequisites
     
     def prerequisites(self, recursive=False):
@@ -808,6 +879,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 sortedPrerequisiteSubjects.extend(sortedSubjects(childPrerequisites)) 
             return sortedPrerequisiteSubjects
         return sortKeyFunction
+
+    @classmethod
+    def prerequisitesSortEventTypes(class_):
+        ''' The event types that influence the prerequisites sort order. '''
+        return ('task.prerequisites')
 
     # Dependencies
     
@@ -856,6 +932,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return sortedDependencySubjects
         return sortKeyFunction
 
+    @classmethod
+    def dependenciesSortEventTypes(class_):
+        ''' The event types that influence the dependencies sort order. '''
+        return ('task.dependencies',)
                 
     # behavior
     

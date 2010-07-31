@@ -232,6 +232,11 @@ class Object(SynchronizedObject):
             return lambda item: item.subject()
         else:
             return lambda item: item.subject().lower()
+        
+    @classmethod
+    def subjectSortEventTypes(class_):
+        ''' The event types that influence the subject sort order. '''
+        return (class_.subjectChangedEventType(),)
     
     # Description:
     
@@ -256,6 +261,11 @@ class Object(SynchronizedObject):
             return lambda item: item.description()
         else:
             return lambda item: item.description().lower()
+    
+    @classmethod
+    def descriptionSortEventTypes(class_):
+        ''' The event types that influence the description sort order. '''
+        return (class_.descriptionChangedEventType(),)
     
     # Color:
     

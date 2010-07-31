@@ -22,7 +22,3 @@ import note
 
 class NoteSorter(base.TreeSorter):
     DomainObjectClass = note.Note
-    EventTypePrefix = 'note'
-    
-
-

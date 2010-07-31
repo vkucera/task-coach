@@ -56,11 +56,6 @@ class CategorizableCompositeObject(base.CompositeObject):
             for child in self.children(recursive=True):
                 result |= child.categories()
         return result
-
-
-    @classmethod
-    def categoriesChangedEventType(class_): # called categories to match with sort key
-        return 'categorizable.categories'
         
     @classmethod
     def categoryAddedEventType(class_):
@@ -70,7 +65,6 @@ class CategorizableCompositeObject(base.CompositeObject):
         self.__categories.add(set(categories), event=kwargs.pop('event', None))
             
     def addCategoryEvent(self, event, *categories):
-        event.addSource(self, self.categories(), type=self.categoriesChangedEventType())
         event.addSource(self, *categories, **dict(type=self.categoryAddedEventType()))
         for child in self.children(recursive=True):
             event.addSource(child, *categories, 
@@ -92,7 +86,6 @@ class CategorizableCompositeObject(base.CompositeObject):
         self.__categories.remove(set(categories), event=kwargs.pop('event', None))
             
     def removeCategoryEvent(self, event, *categories):
-        event.addSource(self, self.categories(), type=self.categoriesChangedEventType())
         event.addSource(self, *categories, **dict(type=self.categoryRemovedEventType()))
         for child in self.children(recursive=True):
             event.addSource(child, *categories, 
@@ -127,6 +120,12 @@ class CategorizableCompositeObject(base.CompositeObject):
             return sortedCategorySubjects
         return sortKeyFunction
 
+    @classmethod
+    def categoriesSortEventTypes(class_):
+        ''' The event types that influence the categories sort order. '''
+        return (class_.categoryAddedEventType(), 
+                class_.categoryRemovedEventType())
+        
     def foregroundColor(self, recursive=True):
         myOwnFgColor = super(CategorizableCompositeObject, self).foregroundColor(False)
         if myOwnFgColor or not recursive:

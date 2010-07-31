@@ -79,29 +79,20 @@ class Sorter(patterns.ListDecorator):
             (caseSensitive=self._sortCaseSensitive)
 
     def _registerObserverForAttribute(self, attribute):
-        eventType = self._createEventTypeFromAttribute(attribute)
-        patterns.Publisher().registerObserver(self.onAttributeChanged, 
-                                              eventType=eventType)
+        for eventType in self._getSortEventTypes(attribute):
+            patterns.Publisher().registerObserver(self.onAttributeChanged, 
+                                                  eventType=eventType)
             
     def _removeObserverForAttribute(self, attribute):
-        eventType = self._createEventTypeFromAttribute(attribute)
-        patterns.Publisher().removeObserver(self.onAttributeChanged, 
-                                            eventType=eventType)
+        for eventType in self._getSortEventTypes(attribute):
+            patterns.Publisher().removeObserver(self.onAttributeChanged, 
+                                                eventType=eventType)
         
     def onAttributeChanged(self, event): # pylint: disable-msg=W0613
         self.reset()
 
-    def _createEventTypeFromAttribute(self, attribute):
-        ''' At the moment, there are two ways event types are specified: 
-            1) by means of a simple, dot-separated, string. For example 
-            "task.subject", or 
-            2) by means of a method that returns an event type string. For
-            example task.Task.subjectChangedEventType(). This method tries both
-            options to get the event type. '''
-        try:
-            return getattr(self.DomainObjectClass, '%sChangedEventType'%attribute)()
-        except AttributeError:
-            return '%s.%s'%(self.EventTypePrefix, attribute) # FIXME: to be removed when no event type strings are used anymore.
+    def _getSortEventTypes(self, attribute):
+        return getattr(self.DomainObjectClass, '%sSortEventTypes'%attribute)()
 
 
 class TreeSorter(Sorter):
