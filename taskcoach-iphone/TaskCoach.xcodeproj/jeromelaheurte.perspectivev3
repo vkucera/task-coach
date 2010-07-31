@@ -231,6 +231,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -275,8 +277,6 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>8</integer>
-									<integer>7</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -314,7 +314,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>TaskViewController.m</string>
+								<string>CHANGELOG</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -322,11 +322,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>TaskViewController.m</string>
+										<string>CHANGELOG</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A65C087011FDE09900C655E6</string>
+										<string>A6B7330C120406AD00949A9B</string>
 										<key>history</key>
 										<array>
 											<string>A627F04E10E7558600B856F4</string>
@@ -390,8 +390,6 @@
 											<string>A639814011C3DF9300B43940</string>
 											<string>A68B5E5B11C4BBE5009AE2F1</string>
 											<string>A68B5EAD11C4BF8B009AE2F1</string>
-											<string>A68B5EAE11C4BF8B009AE2F1</string>
-											<string>A68B5EAF11C4BF8B009AE2F1</string>
 											<string>A68B5EFD11C4C2ED009AE2F1</string>
 											<string>A6D5FFCD11C4C5560030502F</string>
 											<string>A6D5FFCE11C4C5560030502F</string>
@@ -485,7 +483,6 @@
 											<string>A68BC70711EB8DC6003275D6</string>
 											<string>A67B06B711EDAB4C00CDEC45</string>
 											<string>A68ABFEC11EDB8E300D69BD3</string>
-											<string>A68AC00C11EDBCDF00D69BD3</string>
 											<string>A68AC00D11EDBCDF00D69BD3</string>
 											<string>A6342F0011EDCC7A001C7EC7</string>
 											<string>A6342F4911EDD1B1001C7EC7</string>
@@ -535,7 +532,6 @@
 											<string>A6CA5D6111FC2AA5007CDCF1</string>
 											<string>A65FFD2511FC37350064AC44</string>
 											<string>A65FFD2611FC37350064AC44</string>
-											<string>A65FFD2711FC37350064AC44</string>
 											<string>A65FFD2911FC37350064AC44</string>
 											<string>A65FFD2A11FC37350064AC44</string>
 											<string>A65FFD2C11FC37350064AC44</string>
@@ -547,12 +543,9 @@
 											<string>A65FFD3311FC37350064AC44</string>
 											<string>A65FFD3411FC37350064AC44</string>
 											<string>A65FFD3511FC37350064AC44</string>
-											<string>A6507ED211FC3F5D0089DAD7</string>
-											<string>A6507ED311FC3F5D0089DAD7</string>
 											<string>A6D8B50311FC45C0003C1F66</string>
 											<string>A6D8B50411FC45C0003C1F66</string>
 											<string>A680E99211FC4A68000CE7A1</string>
-											<string>A6574F6C11FDDE2900D89B8F</string>
 											<string>A6574F6D11FDDE2900D89B8F</string>
 											<string>A6574F6E11FDDE2900D89B8F</string>
 											<string>A6574F6F11FDDE2900D89B8F</string>
@@ -561,8 +554,16 @@
 											<string>A6574F7211FDDE2900D89B8F</string>
 											<string>A67339DB11FDDF4900599BD9</string>
 											<string>A67339FD11FDDFF700599BD9</string>
-											<string>A6733A0811FDE01E00599BD9</string>
-											<string>A6733A0A11FDE01E00599BD9</string>
+											<string>A68B7F44120404DF00601661</string>
+											<string>A68B7F45120404DF00601661</string>
+											<string>A68B7F46120404DF00601661</string>
+											<string>A68B7F47120404DF00601661</string>
+											<string>A68B7F48120404DF00601661</string>
+											<string>A68B7F49120404DF00601661</string>
+											<string>A68B7F4A120404DF00601661</string>
+											<string>A68B7F4B120404DF00601661</string>
+											<string>A6B7330A120406AD00949A9B</string>
+											<string>A6B7330B120406AD00949A9B</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -602,6 +603,8 @@
 									<dict>
 										<key>Frame</key>
 										<string>{{10, 27}, {1171, 317}}</string>
+										<key>RubberWindowFrame</key>
+										<string>57 149 1528 1248 0 0 2560 1418 </string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -656,8 +659,6 @@
 									<dict>
 										<key>Frame</key>
 										<string>{{10, 27}, {1171, 317}}</string>
-										<key>RubberWindowFrame</key>
-										<string>57 149 1528 1248 0 0 2560 1418 </string>
 									</dict>
 									<key>Module</key>
 									<string>PBXBuildResultsModule</string>
@@ -685,11 +686,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A65C087111FDE09900C655E6</string>
+				<string>A6B7330D120406AD00949A9B</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A65C087211FDE09900C655E6</string>
+				<string>A6B7330E120406AD00949A9B</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A65C087311FDE09900C655E6</string>
+				<string>A6B7330F120406AD00949A9B</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -838,14 +839,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A67339B511FDDEC100599BD9</string>
+				<string>A68B7F541204054700601661</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A67339B611FDDEC100599BD9</string>
-				<string>A67339B711FDDEC100599BD9</string>
-				<string>A67339B811FDDEC100599BD9</string>
-				<string>A67339B911FDDEC100599BD9</string>
-				<string>A67339BA11FDDEC100599BD9</string>
+				<string>A68B7F551204054700601661</string>
+				<string>A68B7F561204054700601661</string>
+				<string>A68B7F571204054700601661</string>
+				<string>A68B7F581204054700601661</string>
+				<string>A68B7F591204054700601661</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
 			<string>2</string>

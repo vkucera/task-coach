@@ -1,4 +1,9 @@
 
+2010-07-31  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
+	* misc: The Snow Leopard firewall does not accept incoming TCP connections
+	  if the MDNS lookup is still running, so stop it before attempting to
+	  connect; see SF bug report #3026101.
+
 ==== Beta 3.0b4: 2010-07-25 ====
 
 2010-07-25  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>

@@ -89,5 +89,6 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 
 - (id)initWithTitle:(NSString *)title showDisclosureIndicators:(BOOL)showDisclosureIndicators showCancelButton:(BOOL)showCancelButton;
 - (BOOL)searchForServicesOfType:(NSString *)type inDomain:(NSString *)domain;
+- (void)stopCurrentResolve;
 
 @end

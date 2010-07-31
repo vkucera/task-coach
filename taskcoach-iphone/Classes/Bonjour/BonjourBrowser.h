@@ -87,5 +87,8 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 																  // e.g. if you want to push a view controller onto this navigation controller
 	   showCancelButton:(BOOL)showCancelButton;                // Whether to show a cancel button as the right navigation item
 																  // Pass YES if you are modally showing this BonjourBrowser
+
+- (void)stopCurrentResolve;
+
 @end
 

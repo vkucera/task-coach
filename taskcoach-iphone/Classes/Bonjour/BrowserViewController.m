@@ -83,7 +83,6 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 @property (nonatomic, assign, readwrite) BOOL needsActivityIndicator;
 @property (nonatomic, assign, readwrite) BOOL initialWaitOver;
 
-- (void)stopCurrentResolve;
 - (void)initialWaitOver:(NSTimer*)timer;
 @end
 

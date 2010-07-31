@@ -720,6 +720,8 @@
 	if (ref)
 	{
 		NSLog(@"Found Task Coach: %@:%d", [ref hostName], [ref port]);
+	
+		[browser stopCurrentResolve];
 
 		[Configuration configuration].domain = [ref domain];
 		[Configuration configuration].name = [ref name];

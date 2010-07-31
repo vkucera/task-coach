@@ -113,6 +113,11 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 	return self;
 }
 
+- (void)stopCurrentResolve
+{
+	[_bvc stopCurrentResolve];
+}
+
 - (NSString*) searchingForServicesString {
 	return _searchingForServicesString;
 }
