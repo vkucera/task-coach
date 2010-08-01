@@ -30,7 +30,7 @@ to support.'''),
         Bug('''File attachments would not open on Lubuntu'''),
         Bug('''Task Coach would crash on start on Ubuntu 10.10'''),
         Bug('''Fix an exception that would prevent Task Coach from closing.''',
-            '3031709')
+            '3031709', '3031711')
         ]
     ),
 
