@@ -19,10 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, locale
-from wx.lib import masked, combotreebox
+from wx.lib import masked #, combotreebox
 from taskcoachlib import widgets
 from taskcoachlib.domain import date
-
+from taskcoachlib.thirdparty import combotreebox
+ 
 
 class DateEntry(widgets.PanelWithBoxSizer):
     defaultDate = date.Date()
@@ -173,7 +174,7 @@ class TaskComboTreeBox(wx.Panel):
         boxSizer = wx.BoxSizer()
         boxSizer.Add(self._comboTreeBox, flag=wx.EXPAND, proportion=1)
         self.SetSizerAndFit(boxSizer)
-
+        
     def _addTasks(self, rootTasks):
         ''' Add the root tasks to the ComboTreeBox, including all their
             subtasks. '''
