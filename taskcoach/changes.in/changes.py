@@ -54,13 +54,15 @@ too small.'''),
         ]
     ),
     
-Release('1.0.8', 'July 6, 2010',
+Release('1.0.8', 'August 1, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Drop support for SyncML on Debian; too many architectures/versions
 to support.'''),
         Bug('''File attachments would not open on Lubuntu'''),
         Bug('''Task Coach would crash on start on Ubuntu 10.10'''),
+        Bug('''Fix an exception that would prevent Task Coach from closing.''',
+            '3031709')
         ]
     ),
 

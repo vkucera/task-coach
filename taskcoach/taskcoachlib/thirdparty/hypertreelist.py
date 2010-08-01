@@ -1975,6 +1975,8 @@ class TreeListMainWindow(CustomTreeCtrl):
         :param `name`: window name.
         """
 
+        self._buffered = False
+        
         CustomTreeCtrl.__init__(self, parent, id, pos, size, style, agwStyle, validator, name)
         
         self._shiftItem = None
