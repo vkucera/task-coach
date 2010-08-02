@@ -116,7 +116,7 @@ class UICommand(object):
         bitmap = self.__getBitmap(self.bitmap, wx.ART_TOOLBAR, 
                                   toolbar.GetToolBitmapSize())
         toolbar.AddLabelTool(self.id, '',
-            bitmap, wx.NullBitmap, self.kind, 
+            bitmap, bitmap, self.kind, 
             shortHelp=wx.MenuItem.GetLabelFromText(self.menuText),
             longHelp=self.helpText)
         self.bind(toolbar, self.id)
