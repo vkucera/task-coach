@@ -342,13 +342,13 @@ class BuildFedora13(BuildFedoraBase):
     fedoraVersion = 13
 
 
-class BuildFedora11(BuildFedoraBase):
-    fedoraVersion = 11
+class BuildFedora12(BuildFedoraBase):
+    fedoraVersion = 12
 
 
 class UploadFedora13(UploadFedoraBase):
     fedoraVersion = 13
 
 
-class UploadFedora11(UploadFedoraBase):
-    fedoraVersion = 11
+class UploadFedora12(UploadFedoraBase):
+    fedoraVersion = 12
