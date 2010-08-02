@@ -34,7 +34,7 @@ to support.'''),
         Bug('''Close task tree popup (in the effort dialog) when clicking
 the dropdown button twice.''', '3032835'),
         Bug('''On Windows, toolbar buttons in dialogs would stop working after 
-a while.''', '3032834')
+a while.''', '3032834', '2560895')
         ]
     ),
 

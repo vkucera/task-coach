@@ -19,7 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, uicommand
 from taskcoachlib.thirdparty import aui
 
+
 if '__WXMSW__' in wx.PlatformInfo:
+    # Use a non-native toolbar on Windows to work around a bug where toolbar
+    # buttons in dialogs stop working after a while. See:
+    # http://sourceforge.net/tracker/?func=detail&aid=2560895&group_id=130831&atid=719134
     class _Toolbar(aui.AuiToolBar):
         def __init__(self, parent, style):
             super(_Toolbar, self).__init__(parent)
