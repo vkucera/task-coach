@@ -45,7 +45,7 @@ if '__WXMSW__' in wx.PlatformInfo:
             else:
                 super(_Toolbar, self).SetMargins(*args)
 else:
-    class _Toolbar(wx.Toolbar):
+    class _Toolbar(wx.ToolBar):
         pass
         
     
