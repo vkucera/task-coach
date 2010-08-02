@@ -19,32 +19,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, uicommand
 from taskcoachlib.thirdparty import aui
 
-
-class _Toolbar(aui.AuiToolBar):
-    def __init__(self, parent, style):
-        super(_Toolbar, self).__init__(parent)
-
-    def AddLabelTool(self, id, label, bitmap1, bitmap2, kind, **kwargs):
-        long_help_string = kwargs.pop('longHelp', '')
-        short_help_string = kwargs.pop('shortHelp', '')
-        super(_Toolbar, self).AddTool(id, label, bitmap1, bitmap2, kind, 
-                                      short_help_string, long_help_string, None)
+if '__WXMSW__' in wx.PlatformInfo:
+    class _Toolbar(aui.AuiToolBar):
+        def __init__(self, parent, style):
+            super(_Toolbar, self).__init__(parent)
+    
+        def AddLabelTool(self, id, label, bitmap1, bitmap2, kind, **kwargs):
+            long_help_string = kwargs.pop('longHelp', '')
+            short_help_string = kwargs.pop('shortHelp', '')
+            super(_Toolbar, self).AddTool(id, label, bitmap1, bitmap2, kind, 
+                                          short_help_string, long_help_string, None)
+            
+        def GetToolState(self, toolid):
+            return self.GetToolToggled(toolid)
         
-    def GetToolState(self, toolid):
-        return self.GetToolToggled(toolid)
-    
-    def SetToolBitmapSize(self, size):
-        self.__size = size
-    
-    def GetToolBitmapSize(self):
-        return self.__size
-    
-    def SetMargins(self, *args):
-        if len(args) == 2:
-            super(_Toolbar, self).SetMarginsXY(args[0], args[1])
-        else:
-            super(_Toolbar, self).SetMargins(*args)
-    
+        def SetToolBitmapSize(self, size):
+            self.__size = size
+        
+        def GetToolBitmapSize(self):
+            return self.__size
+        
+        def SetMargins(self, *args):
+            if len(args) == 2:
+                super(_Toolbar, self).SetMarginsXY(args[0], args[1])
+            else:
+                super(_Toolbar, self).SetMargins(*args)
+else:
+    class _Toolbar(wx.Toolbar):
+        pass
+        
     
 class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
     def __init__(self, window, size=(32, 32)):
