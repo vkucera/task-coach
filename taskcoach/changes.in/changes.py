@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.0.8', 'August 1, 2010',
+Release('1.0.8', 'August 2, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Drop support for SyncML on Debian; too many architectures/versions
@@ -32,7 +32,9 @@ to support.'''),
         Bug('''Fix an exception that would prevent Task Coach from closing.''',
             '3031709', '3031711'),
         Bug('''Close task tree popup (in the effort dialog) when clicking
-the dropdown button twice.''', '3032835')
+the dropdown button twice.''', '3032835'),
+        Bug('''On Windows, toolbar buttons in dialogs would stop working after 
+a while.''', '3032834')
         ]
     ),
 
