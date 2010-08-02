@@ -68,6 +68,7 @@ desktop-file-install --vendor fedora \
 #python_sitelib definition should be used instead of
 #%%dir %%{python_sitelib}/taskcoachlib
 %%{_libdir}/python*/site-packages/taskcoachlib/*
+%%{_libdir}/python*/site-packages/TaskCoach-*-py2.*.egg-info
 %%{_datadir}/applications/fedora-taskcoach.desktop
 %%{_datadir}/pixmaps/taskcoach.png
 %%doc CHANGES.txt LICENSE.txt PUBLICITY.txt README.txt TODO.tsk
@@ -75,6 +76,9 @@ desktop-file-install --vendor fedora \
 %%exclude %%{_libdir}/python*/site-packages/buildlib/*.py*
 
 %%changelog
+* Mon May 02 2010 Jerome Laheurte <fraca7 AT free DOTT fr> - 1.0.8-1
+- add the egginfo to __files to build on Fedora 12
+
 * Wed Mar 24 2010 Frank Niessink <frank ATT niessink DOTT com> - 1.0.1-1
 - no need to exclude pysyncml library here for Fedora 11
 
