@@ -38,7 +38,10 @@ import wx, math
 
 class CellBase(wx.Panel):
     """
-    Base class for cells.
+    Base class for cells that use wx controls. Use when the default
+    standard cell is not enough. Note that the drawback is that the
+    row won't be selected when the user clicks on one of those
+    controls.
     """
 
     def __init__(self, *args, **kwargs):
@@ -65,6 +68,133 @@ class CellBase(wx.Panel):
 
         raise NotImplementedError
 
+    def DoPaint(self, dc):
+        pass
+
+
+class StandardCell(object):
+    """
+    Standard cell with owner-drawn controls
+    """
+
+    def __init__(self, win, attrs, indexPath, headerPath):
+        super(StandardCell, self).__init__()
+
+        self.window = win
+        self.attributes = attrs
+        self.indexPath = indexPath
+        self.headerPath = headerPath
+        self.SetDimensions(0, 0, 0, 0)
+        self.bgcolour = wx.WHITE
+        self.bounds = None
+        self.state = 0
+
+        if attrs.style & ULTCELL_CHECKBOX:
+            wx.EVT_LEFT_UP(win, self.OnLeftUp)
+            wx.EVT_MOTION(win, self.OnMotion)
+
+    def OnLeftUp(self, evt):
+        if self.bounds is not None:
+            x, y, w, h = self.bounds
+            x, y = self.window.CalcScrolledPosition(x, y)
+            if evt.GetX() >= x and evt.GetX() < x + w and evt.GetY() >= y and evt.GetY() < y + h:
+                evt = wx.PyCommandEvent(wxEVT_COMMAND_CELL_CHECKBOX)
+                evt.indexPath = self.indexPath
+                evt.headerPath = self.headerPath
+                if self.attributes.style & ULTCELL_CHECKED:
+                    self.attributes.style &= ~ULTCELL_CHECKED
+                    evt.checked = False
+                else:
+                    self.attributes.style |= ULTCELL_CHECKED
+                    evt.checked = True
+                evt.SetEventObject(self.window)
+                self.window.ProcessEvent(evt)
+                self.window.RefreshRect(wx.Rect(x, y, w, h))
+                return
+
+        evt.Skip()
+
+    def OnMotion(self, evt):
+        if self.bounds is not None:
+            x, y, w, h = self.bounds
+            x, y = self.window.CalcScrolledPosition(x, y)
+            if evt.GetX() >= x and evt.GetX() < x + w and evt.GetY() >= y and evt.GetY() < y + h:
+                if self.state == 0:
+                    self.state = 1
+                    self.window.RefreshRect(wx.Rect(x, y, w, h))
+                return
+
+            if self.state == 1:
+                self.state = 0
+                self.window.RefreshRect(wx.Rect(x, y, w, h))
+
+        evt.Skip()
+
+    def GetIdentifier(self):
+        return None
+
+    def SetBackgroundColour(self, colour):
+        self.bgcolour = colour
+
+    def Show(self, doShow=True):
+        pass
+
+    def Refresh(self):
+        pass
+
+    def SetDimensions(self, x, y, w, h):
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+
+    def Layout(self):
+        pass
+
+    def DoPaint(self, dc):
+        self.bounds = None
+
+        x, y = self.window.CalcUnscrolledPosition(self.x, self.y)
+
+        dc.SetClippingRegion(x, y, self.w, self.h)
+        dc.SetBackground(wx.Brush(self.bgcolour))
+        dc.Clear()
+
+        if self.attributes.style & ULTCELL_BORDER:
+            dc.SetPen(wx.BLACK_PEN)
+            dc.SetBrush(wx.TRANSPARENT_BRUSH)
+            dc.DrawRectangle(x, y, self.w, self.h)
+
+        # Bitmaps
+
+        x += 4
+
+        for bitmap in self.attributes.bitmaps:
+            dc.DrawBitmap(bitmap, x,
+                          y + int((self.h - bitmap.GetHeight()) / 2),
+                          True)
+            x += bitmap.GetWidth() + 4
+
+        if self.attributes.style & ULTCELL_CHECKBOX:
+            render = wx.RendererNative.Get()
+            dc.SetBrush(wx.Brush(self.bgcolour))
+            if self.attributes.style & ULTCELL_CHECKED:
+                style = wx.CONTROL_CHECKED
+            else:
+                style = wx.CONTROL_CHECKABLE
+            if self.state == 1:
+                style |= wx.CONTROL_CURRENT
+            render.DrawCheckBox(self.window, dc,
+                                wx.Rect(x, y + int((self.h - 16) / 2), 16, 16),
+                                style)
+            self.bounds = (x, y + int((self.h - 16) / 2), 16, 16)
+            x += 24
+
+        tw, th = dc.GetTextExtent(self.attributes.text)
+        dc.DrawText(self.attributes.text, x, y + int((self.h - 16) / 2))
+
+        dc.DestroyClippingRegion()
+
 #}
 
 #=======================================
@@ -88,6 +218,9 @@ EVT_ROW_LEFT_DCLICK = wx.PyEventBinder(wxEVT_COMMAND_ROW_LEFT_DCLICK)
 wxEVT_COMMAND_ROW_RCLICKED = wx.NewEventType()
 EVT_ROW_RCLICKED = wx.PyEventBinder(wxEVT_COMMAND_ROW_RCLICKED)
 
+wxEVT_COMMAND_CELL_CHECKBOX = wx.NewEventType()
+EVT_CELL_CHECKBOX = wx.PyEventBinder(wxEVT_COMMAND_CELL_CHECKBOX)
+
 #}
 
 #=======================================
@@ -96,6 +229,10 @@ EVT_ROW_RCLICKED = wx.PyEventBinder(wxEVT_COMMAND_ROW_RCLICKED)
 ULTTREE_SINGLE_SELECTION        = 0x01
 ULTTREE_STRIPE                  = 0x02
 ULTTREE_FLAT                    = 0x04
+
+ULTCELL_CHECKBOX                = 0x01
+ULTCELL_CHECKED                 = 0x02
+ULTCELL_BORDER                  = 0x04
 
 #}
 
@@ -270,6 +407,23 @@ class Row(RowBase):
 #=======================================
 #{ Tree control
 
+class UltimateTreeCellAttributes(object):
+    """This object holds information about a standard cell; see
+    L{GetCellAttributes}."""
+
+    def __init__(self, text, bitmaps=[], style=0):
+        """
+        @param text: The cell text
+        @param bitmaps: A list of wx.Bitmap instances
+        @param style: Combination of style flags
+        """
+
+        super(UltimateTreeCellAttributes, self).__init__()
+
+        self.text = text
+        self.bitmaps = bitmaps
+        self.style = style
+
 class UltimateTreeCtrl(wx.Panel):
     """
     Rows are identified by their index path. This is a tuple holding
@@ -309,11 +463,16 @@ class UltimateTreeCtrl(wx.Panel):
         """Return the height of a row. Variable height is supported."""
         return 30
 
+    def GetCellAttributes(self, indexPath, headerPath):
+        """This should return a L{UltimateTreeCellAttributes} for the
+        given cell. If it returns None, fallback to L{GetCell}."""
+        return None
+
     def GetCell(self, indexPath, headerPath):
         """Return an actual cell; see L{DequeueCell} for usage
         pattern. If this returns None for a 0-length header path,
         L{GetColumnCell} will be called instead."""
-        raise NotImplementedError
+        return None
 
     def GetColumnCell(self, indexPath, columnIndex):
         """Return a cell that fills the whole column. This is only
@@ -367,9 +526,10 @@ class UltimateTreeCtrl(wx.Panel):
         # Mark a cell as unused and put it back in its queue.
 
         for cell in row.cells.values():
-            queue = self._queues.get(cell.GetIdentifier(), [])
-            queue.append(cell)
-            self._queues[cell.GetIdentifier()] = queue
+            if cell.GetIdentifier() is not None:
+                queue = self._queues.get(cell.GetIdentifier(), [])
+                queue.append(cell)
+                self._queues[cell.GetIdentifier()] = queue
             cell.Show(False)
 
     #}
@@ -625,6 +785,7 @@ class UltimateTreeCtrl(wx.Panel):
         wx.Yield()
 
         self._Relayout()
+        self._contentView.Refresh()
 
     def _Relayout(self):
         # Recompute visible rows
@@ -669,20 +830,25 @@ class UltimateTreeCtrl(wx.Panel):
                     row = Row(0, 0, 0, 0)
 
                     def queryCell(headerPath):
-                        cell = self.GetCell(indexPath, headerPath)
-                        if cell is None:
-                            if len(headerPath) != 1:
-                                raise ValueError('You can only set column cells at header root.')
-                            cell, span = self.GetColumnCell(indexPath, headerPath[0])
-                            row.AddColumnCell(headerPath[0], span, cell)
-                            return span
+                        attrs = self.GetCellAttributes(indexPath, headerPath)
+                        if attrs is None:
+                            cell = self.GetCell(indexPath, headerPath)
+                            if cell is None:
+                                if len(headerPath) != 1:
+                                    raise ValueError('You can only set column cells at header root.')
+                                cell, span = self.GetColumnCell(indexPath, headerPath[0])
+                                row.AddColumnCell(headerPath[0], span, cell)
+                                return span
+                            else:
+                                row.AddCell(headerPath, cell)
                         else:
-                            row.AddCell(headerPath, cell)
+                            row.AddCell(headerPath, StandardCell(self._contentView, attrs,
+                                                                 indexPath, headerPath))
 
-                            for i in xrange(self.GetHeaderChildrenCount(headerPath)):
-                                queryCell(headerPath + (i,))
+                        for i in xrange(self.GetHeaderChildrenCount(headerPath)):
+                            queryCell(headerPath + (i,))
 
-                            return 1
+                        return 1
 
                     idx = 0
                     while idx < self.GetRootHeadersCount():
@@ -838,8 +1004,6 @@ class UltimateTreeCtrl(wx.Panel):
             cw1, _ = self._contentView.GetClientSizeTuple()
             cw2, _ = self._contentView.GetSizeTuple()
 
-            wOffset = cw2 - cw1
-
             # Take horizontal scrolling into account
             x0, y0 = self._contentView.GetViewStart()
             xu, yu = self._contentView.GetScrollPixelsPerUnit()
@@ -869,13 +1033,6 @@ class UltimateTreeCtrl(wx.Panel):
                     self._DrawHeader(dc, (idx,), x, w)
 
                     x += w
-
-                """if wOffset:
-                    render = wx.RendererNative.Get()
-                    opts = wx.HeaderButtonParams()
-                    opts.m_labelText = ''
-                    render.DrawHeaderButton(self._headerView, dc, (cw2 - wOffset, 0, wOffset, h),
-                                            wx.CONTROL_CURRENT, params=opts)"""
         finally:
             dc.EndDrawing()
 
@@ -966,6 +1123,10 @@ class UltimateTreeCtrl(wx.Panel):
 
                 dc.SetPen(wx.BLACK_PEN)
                 dc.DrawLine(0, row.y + row.h, w, row.y + row.h)
+
+            for row in self._visibleRows.values():
+                for cell in row.cells.values():
+                    cell.DoPaint(dc)
         finally:
             dc.EndDrawing()
 
@@ -1256,6 +1417,7 @@ class Test(UltimateTreeCtrl):
         EVT_HEADER_RCLICKED(self, self.OnHeaderRightClicked)
         EVT_ROW_LEFT_DCLICK(self, self.OnRowDClick)
         EVT_ROW_RCLICKED(self, self.OnRowRightClick)
+        EVT_CELL_CHECKBOX(self, self.OnCellCheck)
 
     def _Get(self, indexPath, data):
         obj = data
@@ -1288,11 +1450,20 @@ class Test(UltimateTreeCtrl):
         return 150
 
     def GetRowBackgroundColour(self, indexPath):
+        if indexPath == (0,):
+            return wx.Colour(200, 0, 200)
         if indexPath == (4,):
             return wx.Colour(200, 255, 200)
         if indexPath == (3,):
             return wx.Colour(255, 200, 200)
         return wx.WHITE
+
+    def GetCellAttributes(self, indexPath, headerPath):
+        if indexPath == (0,):
+            return UltimateTreeCellAttributes(self._Get(headerPath, self._headers)[0],
+                                              bitmaps=[wx.ArtProvider.GetBitmap(wx.ART_TICK_MARK, size=(16, 16)),
+                                                       wx.ArtProvider.GetBitmap(wx.ART_QUESTION, size=(16, 16))],
+                                              style=ULTCELL_CHECKBOX|ULTCELL_BORDER|ULTCELL_CHECKED)
 
     def GetCell(self, indexPath, headerPath):
         if indexPath == (1, 0) and headerPath == (1,):
@@ -1317,6 +1488,9 @@ class Test(UltimateTreeCtrl):
         else:
             cell = self.DequeueCell('HtmlCell', self.CreateHtmlCell)
             return cell, 3
+
+    def OnCellCheck(self, evt):
+        print 'Check state changed at (%s/%s): %d' % (evt.indexPath, evt.headerPath, evt.checked)
 
     def OnCellSelected(self, evt):
         print 'Select', self._Get(evt.indexPath, self.cells)[0]
