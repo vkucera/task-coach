@@ -53,7 +53,7 @@ class ViewFilter(base.Filter):
     def setFilteredByDueDateTime(self, dueDateTimeString):
         self.__dueDateTimeFilter = self.stringToDueDateTime(dueDateTimeString)
         publisher = patterns.Publisher()
-        if dueDateString == 'Unlimited':
+        if dueDateTimeString == 'Unlimited':
             publisher.removeObserver(self.onMidnight, eventType='clock.midnight')
         else:
             publisher.registerObserver(self.onMidnight, eventType='clock.midnight')
