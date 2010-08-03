@@ -46,9 +46,17 @@ class ViewFilter(base.Filter):
                       and task in self.observable() and task not in self]
         self.extendSelf(tasksToAdd, newEvent)
         newEvent.send()
+        
+    def onMidnight(self, event):
+        self.reset()
             
     def setFilteredByDueDateTime(self, dueDateTimeString):
         self.__dueDateTimeFilter = self.stringToDueDateTime(dueDateTimeString)
+        publisher = patterns.Publisher()
+        if dueDateString == 'Unlimited':
+            publisher.removeObserver(self.onMidnight, eventType='clock.midnight')
+        else:
+            publisher.registerObserver(self.onMidnight, eventType='clock.midnight')
         self.reset()
     
     def hideInactiveTasks(self, hide=True):
