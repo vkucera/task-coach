@@ -273,11 +273,16 @@ class _NotificationCenter(wx.EvtHandler):
             hiding it; in seconds.
         """
 
-        dx, dy, dw, dh = wx.ClientDisplayRect()
+        if frm.GetParent():
+            dx, dy = frm.GetParent().GetPosition()
+            dw, dh = frm.GetParent().GetSizeTuple()
+        else:
+            dx, dy, dw, dh = wx.ClientDisplayRect()
+
         w, h = frm.GetSizeTuple()
         w = w if w > self.notificationWidth else self.notificationWidth
 
-        bottom = dh - self.notificationMargin
+        bottom = dy + dh - self.notificationMargin
 
         for otherFrame, height, tmo in self.displayedFrames:
             bottom -= height + self.notificationMargin
@@ -285,7 +290,7 @@ class _NotificationCenter(wx.EvtHandler):
                 self.waitingFrames.append((frm, timeout))
                 return
 
-        frm.SetDimensions(dw - w - self.notificationMargin,
+        frm.SetDimensions(dx + dw - w - self.notificationMargin,
                           bottom - h - self.notificationMargin,
                           w, h)
         self.displayedFrames.append((frm, h, timeout))
@@ -337,14 +342,18 @@ class _NotificationCenter(wx.EvtHandler):
         self.waitingFrames = []
 
     def __OnTick(self, evt):
-        dx, dy, dw, dh = wx.ClientDisplayRect()
-
-        bottom = dh - self.notificationMargin
-
         s = 0
         newList = []
 
         for frame, height, tmo in self.displayedFrames:
+            if frame.GetParent():
+                dx, dy = frame.GetParent().GetPosition()
+                dw, dh = frame.GetParent().GetSizeTuple()
+            else:
+                dx, dy, dw, dh = wx.ClientDisplayRect()
+
+            bottom = dy + dh - self.notificationMargin
+
             if s == 0:
                 if tmo == 1:
                     frame.Close()
