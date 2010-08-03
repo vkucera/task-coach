@@ -46,8 +46,16 @@ class ViewFilter(base.Filter):
                       and task in self.observable() and task not in self]
         self.extendSelf(tasksToAdd, newEvent)
         newEvent.send()
+        
+    def onMidnight(self, event):
+        self.reset()
             
     def setFilteredByDueDate(self, dueDateString):
+        publisher = patterns.Publisher()
+        if dueDateString == 'Unlimited':
+            publisher.removeObserver(self.onMidnight, eventType='clock.midnight')
+        else:
+            publisher.registerObserver(self.onMidnight, eventType='clock.midnight')
         self.__dueDateFilter = self.stringToDueDate(dueDateString)
         self.reset()
     
