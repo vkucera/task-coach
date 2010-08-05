@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.0.8', 'August 3, 2010',
+Release('1.0.8', 'August 5, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Drop support for SyncML on Debian; too many architectures/versions
@@ -36,7 +36,9 @@ the dropdown button twice.''', '3032835'),
         Bug('''On Windows, toolbar buttons in dialogs would stop working after 
 a while.''', '3032834', '2560895'),
         Bug('''Refresh filter for tasks due today/tomorrow/etc. at midnight.''',
-            '3035384')
+            '3035384'),
+        Bug('''On Linux, when selecting an effort in the effort viewer with
+the mouse also give keyboard focus to the effort viewer.''', '3039519')
         ]
     ),
 
