@@ -47,8 +47,16 @@ class wxSchedulerPaint( object ):
 		self._drawerClass = wxBaseDrawer
 		#self._drawerClass = wxFancyDrawer
 
+		self._schedulesCoords = list()
+		self._schedulesPages = dict()
+
+		self._datetimeCoords = []
+
 		self._bitmap = None
 		self._minSize = None
+
+		self.pageNumber = None
+		self.pageCount = 1
 
 		if isinstance(self, wx.ScrolledWindow):
 			self.SetSizer(wxSchedulerSizer(self.CalcMinSize))
@@ -122,13 +130,13 @@ class wxSchedulerPaint( object ):
 		current = []
 
 		schedules = schedules[:] # Don't alter original list
-## 		def compare(a, b):
-## 			if a.start.IsEqualTo(b.start):
-## 				return cmp(a.description, b.description)
-## 			if a.start.IsEarlierThan(b.start):
-## 				return -1
-## 			return 1
-## 		schedules.sort(compare)
+		def compare(a, b):
+			if a.start.IsEqualTo(b.start):
+				return cmp(a.description, b.description)
+			if a.start.IsEarlierThan(b.start):
+				return -1
+			return 1
+		schedules.sort(compare)
 
 		def findNext(schedule):
 			# Among schedules that start after this one ends, find the "nearest".
@@ -160,31 +168,59 @@ class wxSchedulerPaint( object ):
 		blocks = self._splitSchedules(self._getSchedInPeriod(self._schedules, start, end))
 		offsetY = 0
 
+		if self._showOnlyWorkHour:
+			workingHours = [(self._startingHour, self._startingPauseHour),
+					(self._endingPauseHour, self._endingHour)]
+		else:
+			workingHours = [(self._startingHour, self._endingHour)]
+
+		if not self.pageNumber:
+			self.pageCount = 1
+			self.pageLimits = [0]
+
+			pageHeight = self.GetSize().GetHeight()
+			currentPageHeight = y
+
 		if blocks:
 			dayWidth = width / len(blocks)
-
-			if self._showOnlyWorkHour:
-				workingHours = [(self._startingHour, self._startingPauseHour),
-						(self._endingPauseHour, self._endingHour)]
-			else:
-				workingHours = [(self._startingHour, self._endingHour)]
 
 			for idx, block in enumerate(blocks):
 				maxDY = 0
 
 				for schedule in block:
-					if self._style == wxSCHEDULER_VERTICAL:
-						xx, yy, w, h = drawer.DrawScheduleVertical(schedule, start, workingHours,
-											   x + dayWidth * idx, y,
-											   dayWidth, height)
-					elif self._style == wxSCHEDULER_HORIZONTAL:
-						xx, yy, w, h = drawer.DrawScheduleHorizontal(schedule, start, daysCount, workingHours,
-											     x, y + offsetY, width, height)
-						maxDY = max(maxDY, h)
+					show = True
+					if self.pageNumber is not None:
+						if self._schedulesPages.get(schedule.GetId(), None) != self.pageNumber:
+							show = False
 
-					self._schedulesCoords.append((schedule, wx.Point(xx, yy), wx.Point(xx + w, yy + h)))
+					if show:
+						if self._style == wxSCHEDULER_VERTICAL:
+							xx, yy, w, h = drawer.DrawScheduleVertical(schedule, start, workingHours,
+												   x + dayWidth * idx, y,
+												   dayWidth, height)
+						elif self._style == wxSCHEDULER_HORIZONTAL:
+							xx, yy, w, h = drawer.DrawScheduleHorizontal(schedule, start, daysCount, workingHours,
+												     x, y + offsetY, width, height)
+							maxDY = max(maxDY, h)
+
+						if self.pageNumber is None:
+							if currentPageHeight + h >= pageHeight:
+								pageNo = self.pageCount + 1
+							else:
+								pageNo = self.pageCount
+
+							self._schedulesPages[schedule.GetId()] = pageNo
+
+						self._schedulesCoords.append((schedule, wx.Point(xx, yy), wx.Point(xx + w, yy + h)))
 
 				offsetY += maxDY
+
+				if not self.pageNumber:
+					currentPageHeight += maxDY
+					if currentPageHeight >= pageHeight:
+						self.pageLimits.append(currentPageHeight - maxDY)
+						currentPageHeight = maxDY
+						self.pageCount += 1
 
 		for dayN in xrange(daysCount):
 			theDay = utils.copyDateTime(start)

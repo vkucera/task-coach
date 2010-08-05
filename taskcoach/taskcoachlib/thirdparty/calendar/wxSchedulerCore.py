@@ -327,7 +327,11 @@ class wxSchedulerCore( wxSchedulerPaint ):
 		self._weekstart = weekstart
 		self.InvalidateMinSize()
 		self.Refresh()
-			
+
+	def GetWeekStart( self ):
+		"""Returns the day the week starts."""
+		return self._weekstart
+
 	def SetWorkHours( self, start, stop ):
 		"""
 		Set start and end work hours
