@@ -370,6 +370,7 @@ Task Coach development team
     session.helo()
     session.ehlo()
     session.starttls()
+    session.esmtp_features["auth"] = "LOGIN"
     session.login(username, password)
     smtpresult = session.sendmail(username, recipients, msg)
 

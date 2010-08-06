@@ -152,7 +152,7 @@ releasetests: icons i18n sdist_linux
 disttests:
 	cd tests; $(PYTHON) test.py --disttests
 
-alltests: icons templates i18n sdist
+alltests: prepare sdist_linux
 	cd tests; $(PYTHON) test.py --alltests
 
 coverage:

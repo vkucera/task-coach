@@ -3,6 +3,7 @@
 
 import warnings
 import wx
+import time
 
 from wxScheduleUtils import copyDateTime
 
@@ -51,6 +52,8 @@ class wxSchedule( wx.EvtHandler ):
 		self._done			= False
 		self._clientdata	= None
 		self._icons			= []
+		self._complete = None
+		self._id = '%.f-%s' % (time.time(), id(self))
 		
 		# Need for freeze the event notification
 		self._freeze = False
@@ -93,6 +96,8 @@ class wxSchedule( wx.EvtHandler ):
 			"start", 
 			"clientdata",
 			"icons",
+			"complete",
+			"id",
 		]
 		data = dict()
 					 
@@ -132,6 +137,7 @@ class wxSchedule( wx.EvtHandler ):
 		evt.notes		= self._notes
 		evt.start		= self._start
 		evt.icons		= self._icons
+		evt.complete            = self._complete
 		evt.schedule	= self
 		evt.layoutNeeded = layoutNeeded
 
@@ -304,12 +310,27 @@ class wxSchedule( wx.EvtHandler ):
 		
 		self._eventNotification( layoutNeeded )
 
+	def GetComplete(self):
+		return self._complete
+
+	def SetComplete(self, complete):
+		layoutNeeded = (self._complete is None and complete is not None) or \
+			       (self._complete is not None and complete is None)
+		self._complete = complete
+		self._eventNotification( layoutNeeded )
+
 	def SetClientData( self, clientdata ):
 		self._clientdata = clientdata
 	
 	def GetClientData( self ):
 		return self._clientdata
-	
+
+	def SetId( self, id_ ):
+		self._id = id_
+
+	def GetId( self ):
+		return self._id
+
 	category = property( GetCategory, SetCategory )
 	color = property( GetColor, SetColor )
 	font = property( GetFont, SetFont )
@@ -321,3 +342,5 @@ class wxSchedule( wx.EvtHandler ):
 	notes = property( GetNotes, SetNotes )
 	clientdata = property( GetClientData, SetClientData )
 	icons = property( GetIcons, SetIcons )
+	complete = property( GetComplete, SetComplete )
+	id = property( GetId, SetId )

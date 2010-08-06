@@ -67,6 +67,22 @@ class wxDrawer(object):
 			self.context.DrawRoundedRectangle(x, y, w, h, SCHEDULE_INSIDE_MARGIN)
 
 			offsetY = SCHEDULE_INSIDE_MARGIN
+
+			if schedule.complete is not None:
+				self.context.SetPen(self.context.CreatePen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_SCROLLBAR))))
+				self.context.SetBrush(self.context.CreateBrush(wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_SCROLLBAR))))
+				self.context.DrawRoundedRectangle(x + 5, y + offsetY, w - 10, 10, 5)
+
+				if schedule.complete:
+					self.context.SetBrush(self.context.CreateLinearGradientBrush(x + 5, y + offsetY,
+												     x + (w - 10) * schedule.complete,
+												     y + offsetY + 10,
+												     wx.Colour(0, 0, 255),
+												     wx.Colour(0, 255, 255)))
+					self.context.DrawRoundedRectangle(x + 5, y + offsetY, (w - 10) * schedule.complete, 10, 5)
+
+				offsetY += 10 + 2 * SCHEDULE_INSIDE_MARGIN
+
 			if schedule.icons:
 				offsetX = 5
 				for icon in schedule.icons:
@@ -94,6 +110,18 @@ class wxDrawer(object):
 			self.context.DrawRectangle(x, y, w, h)
 
 			offsetY = SCHEDULE_INSIDE_MARGIN
+
+			if schedule.complete is not None:
+				self.context.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_SCROLLBAR)))
+				self.context.SetBrush(wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_SCROLLBAR)))
+				self.context.DrawRectangle(x + 5, y + offsetY, w - 10, 10)
+				if schedule.complete:
+					self.context.SetPen(wx.Pen(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)))
+					self.context.SetBrush(wx.Brush(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT)))
+					self.context.DrawRectangle(x + 5, y + offsetY, int((w - 10) * schedule.complete), 10)
+
+				offsetY += 10 + 2 * SCHEDULE_INSIDE_MARGIN
+
 			if schedule.icons:
 				offsetX = 5
 				for icon in schedule.icons:
@@ -171,6 +199,10 @@ class wxDrawer(object):
 		# Height is variable
 
 		actualHeight = SCHEDULE_INSIDE_MARGIN * 2
+
+		if schedule.complete is not None:
+			actualHeight += 10 + 2 * SCHEDULE_INSIDE_MARGIN
+
 		if schedule.icons:
 			actualHeight += 20
 

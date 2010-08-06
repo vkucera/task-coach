@@ -298,5 +298,10 @@ class TaskSchedule(wxSchedule):
                 icons.append('note_icon')
 
             self.icons = icons
+
+            if self.task.percentageComplete(True):
+                # If 0, just let the default None value so the progress bar isn't drawn
+                # at all
+                self.complete = 1.0 * self.task.percentageComplete(True) / 100
         finally:
             self.Thaw()

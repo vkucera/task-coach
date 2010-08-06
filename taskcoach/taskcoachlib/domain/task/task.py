@@ -633,7 +633,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     
     def percentageCompleteEvent(self, event):
         event.addSource(self, self.percentageComplete(), 
-                        type='task.percentageComplete')
+                        type=self.percentageCompleteChangedEventType())
         for ancestor in self.ancestors():
             event.addSource(ancestor, ancestor.percentageComplete(recursive=True), 
                             type='task.percentageComplete')
@@ -647,7 +647,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def percentageCompleteSortEventTypes(class_):
         ''' The event types that influence the percentage complete sort order. '''
         return ('task.percentageComplete',)
-        
+
+    @classmethod
+    def percentageCompleteChangedEventType(class_):
+        return 'task.percentageComplete'
+       
     # priority
     
     def priority(self, recursive=False):
