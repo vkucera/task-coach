@@ -78,6 +78,13 @@ _TOC = sequence(
                 li(a_href(_('About notes'), 'aboutnotes')),
                 li(a_href(_('Note properties'), 'noteproperties')))),
         li(
+            a_href(_('Printing and exporting'), 'printingandexporting'),
+            ul(
+                li(a_href(_('About printing and exporting'), 
+                          'aboutprintingandexporting')),
+                li(a_href(_('Printing'), 'printing')),
+                li(a_href(_('Exporting'), 'exporting')))),
+        li(
             a_href(_('E-mail (Outlook &amp; Thunderbird) integration'), 'email'),
             ul(
                 li(a_href(_('About e-mail integration'), 'aboutemail')),
@@ -262,6 +269,46 @@ viewer.''')),
             li(_('Subject: a single line that summarizes the note.')),
             li(_('Description: a multi-line description of the note.')),
             li(_('Appearance properties such as icon, font and colors.')))))
+
+
+_printingAndExportingSection = sequence(
+    h3(
+        a_name(_('Printing and exporting'), 'printingandexporting')),
+    h4(
+        a_name(_('About printing and exporting'), 'aboutprintingandexporting')),
+    p(
+        _('''Both printing and exporting work in the same way: when you print
+or export data, the data from the active viewer is printed or exported.
+Moreover, the data is printed or exported in the same way as the viewer is 
+displaying it. The data is printed or exported in the same order as the
+viewer is displaying it. The columns that are visible determine what 
+details get printed or exported. When you filter items, for example hide
+completed tasks, those items don't get printed or exported.''')),
+    h4(
+        a_name(_('Printing'), 'printing')),
+    p(
+        _('''Prepare the contents of a viewer, by putting the items in the 
+right order, show or hide the appropriate columns and apply the relevant 
+filters.''')),
+    p(
+        _('''You can preview how the print will look
+using the File -> Print preview menu item. You can edit the page settings
+using File -> Page setup. When printing and the platform supports it, you can 
+choose to print all visible items in the active viewer, or just the 
+selected items.''')),
+    h4(
+        a_name(_('Exporting'), 'exporting')),
+    p(
+        _('''Prepare the contents of a viewer, by putting the items in the 
+right order, show or hide the appropriate columns and apply the relevant 
+filters.''')),
+    p(
+        _('''Next, choose the format you want to export to and whether you
+want to export all visible items or just the selected ones. Available formats
+to export to include CSV (comma separated format), HTML and iCalendar. When
+you export to HTML, a CSS file is created that you can edit to change
+the appearance of the HTML.''')))
+
 
 _emailSection = sequence(
     h3(
@@ -511,7 +558,8 @@ due date by the current date plus one day.''')))
 
 
 helpHTML = _TOC + _taskSection + _effortSection + _categorySection + \
-    _emailSection + _syncmlSection + _iPhoneSection + _templatesSection
+    _printingAndExportingSection + _emailSection + _syncmlSection + \
+    _iPhoneSection + _templatesSection
 
 
 aboutHTML = _('''<h4>%(name)s - %(description)s</h4>
