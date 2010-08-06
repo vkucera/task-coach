@@ -20,6 +20,11 @@ import wx, test
 from taskcoachlib import gui, config, persistence, meta
 
 
+class MockWidget(object):
+    def Bind(*args, **kwargs):
+        pass
+
+
 class MockViewer(wx.Frame):
     def title(self):
         return ''
@@ -32,6 +37,8 @@ class MockViewer(wx.Frame):
     
     def selectEventType(self):
         return ''
+
+    widget = MockWidget()
 
 
 class MainWindowUnderTest(gui.MainWindow):

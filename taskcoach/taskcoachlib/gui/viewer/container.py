@@ -61,6 +61,7 @@ class ViewerContainer(object):
     def addViewer(self, viewer):
         self.containerWidget.AddPage(viewer, viewer.title(), viewer.bitmap())
         self.viewers.append(viewer)
+        viewer.widget.Bind(wx.EVT_SET_FOCUS, self.onViewerReceivesFocus)
         if len(self.viewers) - 1 == self.__desiredPageNumber:
             # We need to use CallAfter because the AuiNotebook doesn't allow
             # PAGE_CHANGING events while the window is not active. See 
@@ -69,6 +70,13 @@ class ViewerContainer(object):
                          self.__desiredPageNumber)
         patterns.Publisher().registerObserver(self.onSelect, 
             eventType=viewer.selectEventType(), eventSource=viewer)
+
+    def onViewerReceivesFocus(self, event):
+        event.Skip()
+        for viewer in self.viewers:
+            if event.EventObject == viewer.widget:
+                self.activateViewer(viewer)
+                break
 
     @classmethod
     def selectEventType(class_):
@@ -101,6 +109,13 @@ class ViewerContainer(object):
                 if info.HasFlag(info.optionActive):
                     return viewer
         return self.viewers[self.__currentPageNumber]
+
+    def activateViewer(self, viewerToActivate):
+        if not self.__tabbedMainWindow:
+            for viewer in self.viewers:
+	        info = self.containerWidget.manager.GetPane(viewer)
+	        info.SetFlag(info.optionActive, viewer==viewerToActivate)
+            self.containerWidget.manager.Update()
 
     def __del__(self):
         pass # Don't forward del to one of the viewers.
