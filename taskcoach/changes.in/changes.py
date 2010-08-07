@@ -28,7 +28,8 @@ Release('1.0.9', 'August 7, 2010',
         Bug('''On Windows, Task Coach wouldn't start when the user interface
 was in "tabbed" mode.''', '3041123'),
         Bug('''On Windows, toolbar items that should trigger a popup menu 
-(e.g. templates) wouldn't.''')
+(e.g. templates) wouldn't.'''),
+        Bug('''On Windows, disabled toolbar buttons wouldn't be greyed out.''')
         ],
     featuresRemoved=[
         Feature('''The "tabbed" user interface mode has been removed. 
