@@ -182,12 +182,6 @@ class WindowBehaviorPage(SettingsPage):
             _('Make clock in the task bar tick when tracking effort'))
         self.addBooleanSetting('view', 'descriptionpopups',
             _('Show a popup with the description of an item\nwhen hovering over it'))
-        self.addBooleanSetting('view', 'tabbedmainwindow',
-            _('''Use a tabbed user interface for the main window
-(Note: the layout you create by dragging and
-dropping tabs cannot be saved. This is a limitation
-of the underlying toolkit).'''), 
-            helpText='restart')
         self.fit()
 
 

@@ -171,11 +171,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, widgets.AuiManagedFrameWith
         self.createReminderController()
         
     def createViewerContainer(self):
-        tabbed = self.__usingTabbedMainWindow = self.settings.getboolean('view', 
-            'tabbedmainwindow') 
-        containerWidget = widgets.AUINotebook(self) if tabbed else self
-        self.viewer = viewer.ViewerContainer(containerWidget,
-            self.settings, 'mainviewer') 
+        self.viewer = viewer.ViewerContainer(self, self.settings, 'mainviewer') 
         
     def createStatusBar(self):
         import status
@@ -207,8 +203,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, widgets.AuiManagedFrameWith
         # We use CallAfter because otherwise the statusbar will appear at the 
         # top of the window when it is initially hidden and later shown.
         wx.CallAfter(self.onShowStatusBar)
-        if not self.__usingTabbedMainWindow:
-            self.restorePerspective()
+        self.restorePerspective()
             
     def restorePerspective(self):
         perspective = self.settings.get('view', 'perspective')
@@ -318,7 +313,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, widgets.AuiManagedFrameWith
             self.settings.set('view', key, str(value))
             
     def savePerspective(self):
-        perspective = '' if self.__usingTabbedMainWindow else self.manager.SavePerspective()
+        perspective = self.manager.SavePerspective()
         self.settings.set('view', 'perspective', perspective)
         
     def onClose(self, event):
@@ -373,7 +368,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, widgets.AuiManagedFrameWith
         # controls. Immediately after you click on a text control the focus
         # is removed. We work around it by not having AUI manage the toolbar
         # on Mac OS X:
-        if '__WXMAC__' in wx.PlatformInfo or self.__usingTabbedMainWindow:
+        if '__WXMAC__' in wx.PlatformInfo:
             if self.GetToolBar():
                 self.GetToolBar().Destroy()
             if size is not None:
