@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.0', 'August 6, 2010',
+Release('1.2.0', 'August 7, 2010',
     summary='''This release adds task dependencies.''',
     featuresAdded=[
         Feature('''Tasks can have one or more prerequisite tasks. As long as 
@@ -82,6 +82,8 @@ of all edited items.''', 'http://uservoice.com/a/ahxq8'),
         Feature('''The calendar orientation can be changed.'''),
         Feature('''Add an option to the calendar viewer to show all tasks but
 those which have no start nor due date''', '3008517'),
+        Feature('''The headers in the calendar view are now always visible.''',
+                'http://uservoice.com/a/irtQs'),
         ],
     implementationChanged=[
         Implementation('''The task file format was changed to support start, due

@@ -589,6 +589,10 @@ class CommonTestsMixin(object):
         else:
             self.assertItems((self.task, 1), self.child)
             
+    def assertEventFired(self, type_):
+        self.failUnless(type_ in self.viewer.events[0].types(),
+                        '"%s" not in %s' % (type_, self.viewer.events))
+
     def testGetTimeSpent(self):
         self.taskList.append(self.task)
         self.task.addEffort(effort.Effort(self.task, date.DateTime(2000,1,1),
@@ -669,6 +673,17 @@ class CommonTestsMixin(object):
         expectedEvent.addSource(self.task, self.task.percentageComplete(), type=self.task.percentageCompleteChangedEventType())
         self.assertEqual([expectedEvent], self.viewer.events)
 
+    def testChangePercentageCompleteWhileColumnNotShown(self):
+        self.taskList.append(self.task)
+        self.task.setPercentageComplete(50)
+        self.assertEventFired('task.percentageComplete')
+
+    def testChangePercentageCompleteWhileColumnShown(self):
+        self.taskList.append(self.task)
+        self.showColumn('percentageComplete')
+        self.task.setPercentageComplete(50)
+        self.assertEventFired('task.percentageComplete')
+
     def testChangePriorityWhileColumnNotShown(self):
         self.taskList.append(self.task)
         self.task.setPriority(10)
@@ -678,14 +693,14 @@ class CommonTestsMixin(object):
         self.taskList.append(self.task)
         self.showColumn('priority')
         self.task.setPriority(10)
-        self.assertEqual('task.priority', self.viewer.events[0].type())
+        self.assertEventFired('task.priority')
 
     def testChangePriorityOfSubtask(self):
         self.showColumn('priority')
         self.task.addChild(self.child)
         self.taskList.append(self.task)
         self.child.setPriority(10)
-        self.assertEqual('task.priority', self.viewer.events[0].type())
+        self.assertEventFired('task.priority')
         
     def testChangeHourlyFeeWhileColumnShown(self):
         self.showColumn('hourlyFee')
