@@ -26,7 +26,7 @@ from taskcoachlib.widgets import draganddrop
 import tooltip
 
 
-class Calendar(tooltip.ToolTipMixin, wxScheduler):
+class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
     def __init__(self, parent, taskList, iconProvider, onSelect, onEdit,
                  onCreate, popupMenu, *args, **kwargs):
         self.getItemTooltipData = parent.getItemTooltipData
@@ -39,7 +39,7 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
                                                  self.OnDropFiles,
                                                  self.OnDropMail)
 
-        super(Calendar, self).__init__(parent, wx.ID_ANY, *args, **kwargs)
+        super(_CalendarContent, self).__init__(parent, wx.ID_ANY, *args, **kwargs)
 
         self.SetDropTarget(self.dropTarget)
 
@@ -236,8 +236,52 @@ class Calendar(tooltip.ToolTipMixin, wxScheduler):
     def curselection(self):
         return self.__selection
 
+
+class Calendar(wx.Panel):
+    def __init__(self, parent, taskList, iconProvider, onSelect, onEdit,
+                 onCreate, popupMenu, *args, **kwargs):
+        self.getItemTooltipData = parent.getItemTooltipData
+
+        super(Calendar, self).__init__(parent)
+
+        self._headers = wx.Panel(self)
+        self._content = _CalendarContent(self, taskList, iconProvider, onSelect, onEdit,
+                                         onCreate, popupMenu, *args, **kwargs)
+
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        sizer.Add(self._headers, 0, wx.EXPAND)
+        sizer.Add(self._content, 1, wx.EXPAND)
+        self.SetSizer(sizer)
+
+        # Must wx.CallAfter because SetDrawerClass is called this way.
+        wx.CallAfter(self._content.SetHeaderPanel, self._headers)
+
+    def SetShowNoStartDate(self, doShow):
+        self._content.SetShowNoStartDate(doShow)
+
+    def SetShowNoDueDate(self, doShow):
+        self._content.SetShowNoDueDate(doShow)
+
+    def SetShowUnplanned(self, doShow):
+        self._content.SetShowUnplanned(doShow)
+
+    def RefreshAllItems(self, count):
+        self._content.RefreshAllItems(count)
+
+    def RefreshItems(self, *args):
+        self._content.RefreshItems(*args)
+
+    def GetItemCount(self):
+        return self._content.GetItemCount()
+
+    def curselection(self):
+        return self._content.curselection()
+
     def isAnyItemCollapsable(self):
         return False
+
+    def __getattr__(self, name):
+        return getattr(self._content, name)
 
 
 class TaskSchedule(wxSchedule):
