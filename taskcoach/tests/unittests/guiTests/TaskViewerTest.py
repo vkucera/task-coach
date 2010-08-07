@@ -509,6 +509,10 @@ class TreeOrListModeTestsMixin(object):
             
 
 class ColumnsTestsMixin(object):        
+    def assertEventFired(self, type_):
+        self.failUnless(type_ in self.viewer.events[0].types(),
+                        '"%s" not in %s' % (type_, self.viewer.events))
+
     def testGetTimeSpent(self):
         self.taskList.append(self.task)
         self.task.addEffort(effort.Effort(self.task, date.DateTime(2000,1,1),
@@ -572,13 +576,30 @@ class ColumnsTestsMixin(object):
         self.taskList.append(self.task)
         self.task.setCompletionDateTime(date.Now())
         # We still get an event for the subject column:
-        self.assertEqual('task.completionDateTime', self.viewer.events[0].type())
+        self.assertEventFired('task.completionDateTime')
+        self.assertEventFired('task.percentageComplete')
+        self.assertEventFired('task.totalPercentageComplete')
 
     def testChangeCompletionDateWhileColumnShown(self):
         self.taskList.append(self.task)
         self.showColumn('completionDate')
         self.task.setCompletionDateTime(date.Now())
-        self.assertEqual('task.completionDateTime', self.viewer.events[0].type())
+        self.assertEventFired('task.completionDateTime')
+        self.assertEventFired('task.percentageComplete')
+        self.assertEventFired('task.totalPercentageComplete')
+
+    def testChangePercentageCompleteWhileColumnNotShown(self):
+        self.taskList.append(self.task)
+        self.task.setPercentageComplete(50)
+        self.assertEventFired('task.percentageComplete')
+        self.assertEventFired('task.totalPercentageComplete')
+
+    def testChangePercentageCompleteWhileColumnShown(self):
+        self.taskList.append(self.task)
+        self.showColumn('percentageComplete')
+        self.task.setPercentageComplete(50)
+        self.assertEventFired('task.percentageComplete')
+        self.assertEventFired('task.totalPercentageComplete')
 
     def testChangePriorityWhileColumnNotShown(self):
         self.taskList.append(self.task)
