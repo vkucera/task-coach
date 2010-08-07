@@ -22,6 +22,14 @@ from changetypes import *
 
 releases = [
 
+Release('1.0.9', 'August ??, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Toolbar items that should trigger a popup menu (e.g. templates)
+wouldn't.'''),
+        ]
+    ),
+
 Release('1.0.8', 'August 6, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
