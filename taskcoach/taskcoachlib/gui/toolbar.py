@@ -42,6 +42,9 @@ if '__WXMSW__' in wx.PlatformInfo:
         
         def GetToolBitmapSize(self):
             return self.__size
+
+        def GetToolSize(self):
+            return self.__size
         
         def SetMargins(self, *args):
             if len(args) == 2:
