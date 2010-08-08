@@ -2164,6 +2164,39 @@ class ToolbarChoiceCommandMixin(object):
         self.currentChoice = index
 
 
+class ToolbarCountCommandMixin(object):
+    def appendToToolBar(self, toolbar):
+        self.spinCtrl = wx.SpinCtrl(toolbar, wx.ID_ANY, '1')
+        self.currentValue = 1
+        self.spinCtrl.SetRange(self.minValue, self.maxValue)
+        self.spinCtrl.Bind(wx.EVT_SPINCTRL, self.onValue)
+        self.spinCtrl.Bind(wx.EVT_TEXT, self.onValue)
+        toolbar.AddControl(self.spinCtrl)
+
+    def enable(self, enabled):
+        self.spinCtrl.Enable(enabled)
+
+    def onValue(self, event):
+        try:
+            value = int(self.spinCtrl.GetValue())
+        except ValueError:
+            pass
+        else:
+            if value != self.currentValue:
+                self.currentValue = value
+                self.doValue(value)
+
+    def doValue(self, value):
+        raise NotImplementedError
+
+    def doCommand(self, event):
+        pass
+
+    def setValue(self, value):
+        self.spinCtrl.SetValue(value)
+        self.currentValue = value
+
+
 class EffortViewerAggregationChoice(ToolbarChoiceCommandMixin, ViewerCommand):
     choiceLabels = [_('Effort details'), _('Effort per day'), 
                     _('Effort per week'), _('Effort per month')]
@@ -2198,8 +2231,16 @@ class SquareTaskViewerOrderChoice(ToolbarChoiceCommandMixin, ViewerCommand):
         self.viewer.orderBy(choice)
 
 
+class CalendarViewerPeriodCount(ToolbarCountCommandMixin, ViewerCommand):
+    minValue = 1
+    maxValue = 100
+
+    def doValue(self, value):
+        self.viewer.SetPeriodCount(value)
+
+
 class CalendarViewerTypeChoice(ToolbarChoiceCommandMixin, ViewerCommand):
-    choiceLabels = [_('Day'), _('Week'), _('Month')]
+    choiceLabels = [_('Day(s)'), _('Week(s)'), _('Month')]
     choiceData = [wxSCHEDULER_DAILY, wxSCHEDULER_WEEKLY, wxSCHEDULER_MONTHLY]
 
     def doChoice(self, choice):

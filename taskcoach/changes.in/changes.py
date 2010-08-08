@@ -84,6 +84,8 @@ of all edited items.''', 'http://uservoice.com/a/ahxq8'),
 those which have no start nor due date''', '3008517'),
         Feature('''The headers in the calendar view are now always visible.''',
                 'http://uservoice.com/a/irtQs'),
+        Feature('''The calendar view can show an arbitrary number of periods
+(except months).''', 'http://uservoice.com/a/5F5Ka'),
         ],
     implementationChanged=[
         Implementation('''The task file format was changed to support start, due

@@ -33,6 +33,7 @@ class wxSchedulerCore( wxSchedulerPaint ):
 		
 		self._schedules = []
 		self._schBind = []
+		self._periodCount = 1
 		
 		#Internal (extenal?) init values
 		self._startingHour = wx.DateTime().Now()
@@ -341,3 +342,14 @@ class wxSchedulerCore( wxSchedulerPaint ):
 		self._calculateWorkHour()
 		self.InvalidateMinSize()
 		self.Refresh()
+
+	def SetPeriodCount( self, count ):
+		"""
+		Set the number of periods to display
+		"""
+		self._periodCount = count
+		self.InvalidateMinSize()
+		self.Refresh()
+
+	def GetPeriodCount( self ):
+		return self._periodCount
