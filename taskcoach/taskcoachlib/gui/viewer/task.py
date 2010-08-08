@@ -26,7 +26,8 @@ from taskcoachlib.domain import task, date
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, render, dialog
 from taskcoachlib.thirdparty.calendar import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, \
-    wxSCHEDULER_TODAY, wxSCHEDULER_HORIZONTAL, wxSCHEDULER_TODAY, wxFancyDrawer
+    wxSCHEDULER_TODAY, wxSCHEDULER_HORIZONTAL, wxSCHEDULER_TODAY, wxSCHEDULER_MONTHLY, \
+    wxFancyDrawer
 import base, mixin
 
 
@@ -504,6 +505,8 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         self.widget.SetViewType(self.settings.getint(self.settingsSection(), 'viewtype'))
         self.widget.SetStyle(self.settings.getint(self.settingsSection(), 'vieworientation'))
 
+        self.periodCountUICommand.setValue(self.settings.getint(self.settingsSection(), 'periodcount'))
+        self.periodCountUICommand.enable(self.widget.GetViewType() != wxSCHEDULER_MONTHLY)
         self.typeUICommand.setChoice(self.settings.getint(self.settingsSection(), 'viewtype'))
         self.orientationUICommand.setChoice(self.settings.getint(self.settingsSection(), 'vieworientation'))
         self.filterChoiceUICommand.setChoice((self.settings.getboolean(self.settingsSection(), 'shownostart'),
@@ -576,8 +579,10 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         ''' UI commands to put on the toolbar of this viewer. '''
         toolBarUICommands = super(CalendarViewer, self).getToolBarUICommands()
         toolBarUICommands.insert(-2, None) # Separator
+        self.periodCountUICommand = uicommand.CalendarViewerPeriodCount(viewer=self)
         self.typeUICommand = uicommand.CalendarViewerTypeChoice(viewer=self)
         self.orientationUICommand = uicommand.CalendarViewerOrientationChoice(viewer=self)
+        toolBarUICommands.insert(-2, self.periodCountUICommand)
         toolBarUICommands.insert(-2, self.typeUICommand)
         toolBarUICommands.insert(-2, self.orientationUICommand)
         toolBarUICommands.insert(-2, uicommand.CalendarViewerPreviousPeriod(viewer=self))
@@ -586,6 +591,10 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         self.filterChoiceUICommand = uicommand.CalendarViewerTaskFilterChoice(viewer=self)
         toolBarUICommands.insert(-2, self.filterChoiceUICommand)
         return toolBarUICommands
+
+    def SetPeriodCount(self, count):
+        self.settings.set(self.settingsSection(), 'periodcount', str(count))
+        self.widget.SetPeriodCount(count)
 
     def SetViewType(self, type_):
         if type_ not in [wxSCHEDULER_NEXT, wxSCHEDULER_TODAY, wxSCHEDULER_PREV]:
@@ -599,6 +608,11 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
             else:
                 toSave = dt.Format()
             self.settings.set(self.settingsSection(), 'viewdate', toSave)
+
+        # Overriding enabled() does not seem to work on controls,
+        # neither does EnableTool
+
+        self.periodCountUICommand.enable(type_ != wxSCHEDULER_MONTHLY)
 
     def SetViewOrientation(self, orientation):
         self.settings.set(self.settingsSection(), 'vieworientation', str(orientation))

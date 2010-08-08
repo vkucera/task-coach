@@ -91,6 +91,7 @@ defaults = { \
 'calendarviewer': { \
     'title': '',
     'viewtype': '1',
+    'periodcount': '1',
     'vieworientation': '1',
     'viewdate': '',
     'gradient': 'False',
