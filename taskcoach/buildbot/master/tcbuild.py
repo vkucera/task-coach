@@ -114,6 +114,9 @@ class KillEXE(ShellCommand):
     description = ['Killing', 'exe']
     descriptionDone = ['Exe', 'killed']
 
+    def evaluateCommand(self, cmd):
+        return SUCCESS
+
 
 class Coverage(Compile):
     name = 'coverage'
