@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-
-Release('1.1.0', 'August 6, 2010',
+            
+Release('1.1.0', 'August 8, 2010',
     summary='''This release adds time to start, due and completion dates of 
 tasks and adds support for mass editing of items. It also adds support for the
 upcoming version 3.0 for the iPhone/iPod/iPad.''',
@@ -57,7 +57,22 @@ listbook widget.''', '2927384'),
 too small.'''),
         ]
     ),
-    
+
+Release('1.0.9', 'August 8, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''On Windows, Task Coach wouldn't start when the user interface
+was in "tabbed" mode.''', '3041123'),
+        Bug('''On Windows, toolbar items that should trigger a popup menu 
+(e.g. templates) wouldn't.'''),
+        Bug('''On Windows, disabled toolbar buttons wouldn't be greyed out.''')
+        ],
+    featuresRemoved=[
+        Feature('''The "tabbed" user interface mode has been removed. 
+Having two different user interfaces makes it harder to test changes that
+affect the user interface, as evidenced by a bug in the previous release.''')]
+    ),
+
 Release('1.0.8', 'August 6, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[

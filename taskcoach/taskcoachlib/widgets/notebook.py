@@ -155,7 +155,6 @@ class BookMixin(object):
         ''' When the user drags something (currently limited to files because
             the DropTarget created in __init__ is a FileDropTarget) over a tab
             raise the appropriate page. '''
-        # FIXME: HitTest doesn't seem to work with aui.AuiNotebook
         pageSelectionArea = pageSelectionArea or self
         pageIndex = pageSelectionArea.HitTest((x, y))
         if type(pageIndex) == type((),):
@@ -195,62 +194,7 @@ class Notebook(BookMixin, fnb.FlatNotebook):
             self.SetNavigatorIcon(bitmap) 
 
 
-class AdvanceSelectionMixin(object):
-    ''' A mixin class for the AdvanceSelection method that is part of the 
-        Notebook API but missing from the AuiNotebook API. This method is 
-        in its own mixin class because both AUINotebook as well as 
-        AuiManagedFrameWithNotebookAPI need it. '''
-        
-    def AdvanceSelection(self, forward=True):
-        if self.PageCount <= 1:
-            return # Not enough pages to advance selection
-        curSelection = self.GetSelection()
-        minSelection, maxSelection = 0, self.PageCount - 1
-        if forward:
-            newSelection = curSelection + 1 if minSelection <= curSelection < maxSelection else minSelection
-        else:
-            newSelection = curSelection - 1 if minSelection < curSelection <= maxSelection else maxSelection
-        self.SetSelection(newSelection)
-
-    
-class AUINotebook(AdvanceSelectionMixin, BookMixin, aui.AuiNotebook):
-    # We don't use aui.AuiNotebook.AdvanceSelection, but our own version from
-    # AdvanceSelectionMixin, because aui.AuiNotebook.AdvanceSelection iterates
-    # over the pages in the current tab container only, and doesn't move the 
-    # selection to other tab containers.
-      
-    pageChangedEvent = aui.EVT_AUINOTEBOOK_PAGE_CHANGED
-    pageClosedEvent = aui.EVT_AUINOTEBOOK_PAGE_CLOSE
-    
-    def __init__(self, *args, **kwargs):
-        kwargs['style'] = kwargs.get('style', aui.AUI_NB_DEFAULT_STYLE) & ~aui.AUI_NB_CLOSE_ON_ACTIVE_TAB
-        super(AUINotebook, self).__init__(*args, **kwargs)
-        self.Bind(aui.EVT_AUINOTEBOOK_PAGE_CLOSE, self.onClosePage)
-                 
-    def onClosePage(self, event):
-        event.Skip()
-        if self.GetPageCount() <= 2:
-            # Prevent last tab from being closed
-            self.SetWindowStyleFlag(self.GetWindowStyleFlag() & ~aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)
-            
-    def createImageList(self):
-        pass
-    
-    def AddPage(self, page, name, bitmap=''):
-        bitmap = wx.ArtProvider_GetBitmap(bitmap, wx.ART_MENU, self._bitmapSize)
-        aui.AuiNotebook.AddPage(self, page, name, bitmap=bitmap)
-        if self.GetPageCount() > 1:
-            self.SetWindowStyleFlag(self.GetWindowStyleFlag() | aui.AUI_NB_CLOSE_ON_ACTIVE_TAB)
-
-    def __getPageCount(self):
-        return self.GetPageCount()
-    PageCount = property(__getPageCount)
-    
-    def ChangeSelection(self, *args, **kwargs):
-        self.SetSelection(*args, **kwargs)
-
-
-class AuiManagedFrameWithNotebookAPI(AdvanceSelectionMixin, wx.Frame):
+class AuiManagedFrameWithNotebookAPI(wx.Frame):
     ''' An AUI managed frame that provides (part of) the notebook API. '''
 
     def __init__(self, *args, **kwargs):
@@ -272,6 +216,9 @@ class AuiManagedFrameWithNotebookAPI(AdvanceSelectionMixin, wx.Frame):
     def SetPageText(self, index, title):
         self.manager.GetAllPanes()[index].Caption(title)
         self.manager.Update()
+        
+    def GetPageText(self, index):
+        return self.manager.GetAllPanes()[index].caption
 
     def GetPageIndex(self, window):
         for index, paneInfo in enumerate(self.manager.GetAllPanes()):
@@ -283,9 +230,17 @@ class AuiManagedFrameWithNotebookAPI(AdvanceSelectionMixin, wx.Frame):
         return self.manager.GetAllPanes()[index].window
     
     def AdvanceSelection(self, forward=True):
-        super(AuiManagedFrameWithNotebookAPI, self).AdvanceSelection(forward)
-        currentPane = self.manager.GetAllPanes()[self.Selection]
-        if currentPane.IsToolbar() and self.PageCount > 1:
+        if self.PageCount <= 1:
+            return # Not enough pages to advance selection
+        curSelection = self.GetSelection()
+        minSelection, maxSelection = 0, self.PageCount - 1
+        if forward:
+            newSelection = curSelection + 1 if minSelection <= curSelection < maxSelection else minSelection
+        else:
+            newSelection = curSelection - 1 if minSelection < curSelection <= maxSelection else maxSelection
+        self.SetSelection(newSelection)
+        selectedPane = self.manager.GetAllPanes()[newSelection]
+        if selectedPane.IsToolbar() and self.PageCount > 1:
             self.AdvanceSelection(forward)
 
     def GetPageCount(self):

@@ -31,6 +31,7 @@ if '__WXMSW__' in wx.PlatformInfo:
         def AddLabelTool(self, id, label, bitmap1, bitmap2, kind, **kwargs):
             long_help_string = kwargs.pop('longHelp', '')
             short_help_string = kwargs.pop('shortHelp', '')
+            bitmap2 = self.MakeDisabledBitmap(bitmap1)
             super(_Toolbar, self).AddTool(id, label, bitmap1, bitmap2, kind, 
                                           short_help_string, long_help_string, None)
             
@@ -42,12 +43,19 @@ if '__WXMSW__' in wx.PlatformInfo:
         
         def GetToolBitmapSize(self):
             return self.__size
+
+        def GetToolSize(self):
+            return self.__size
         
         def SetMargins(self, *args):
             if len(args) == 2:
                 super(_Toolbar, self).SetMarginsXY(args[0], args[1])
             else:
                 super(_Toolbar, self).SetMargins(*args)
+                
+        def MakeDisabledBitmap(self, bitmap):
+            return bitmap.ConvertToImage().ConvertToGreyscale().ConvertToBitmap()
+        
 else:
     class _Toolbar(wx.ToolBar):
         pass

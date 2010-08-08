@@ -114,14 +114,7 @@ class AuiDefaultTabArt(object):
         self._tab_ctrl_height = 0
         self._buttonRect = wx.Rect()
 
-        base_colour = GetBaseColour()
-    
-        self._base_colour = base_colour
-        border_colour = StepColour(base_colour, 75)
-
-        self._border_pen = wx.Pen(border_colour)
-        self._base_colour_pen = wx.Pen(self._base_colour)
-        self._base_colour_brush = wx.Brush(self._base_colour)
+        self.SetDefaultColours()
 
         if wx.Platform == "__WXMAC__":
             bmp_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DDKSHADOW)
@@ -158,6 +151,35 @@ class AuiDefaultTabArt(object):
             self._focusPen = wx.Pen(wx.BLACK, 1, wx.USER_DASH)
             self._focusPen.SetDashes([1, 1])
             self._focusPen.SetCap(wx.CAP_BUTT)
+            
+            
+    def SetBaseColour(self, base_colour):
+        """ Sets a new base colour. """
+        self._base_colour = base_colour
+        self._base_colour_pen = wx.Pen(self._base_colour)
+        self._base_colour_brush = wx.Brush(self._base_colour)
+
+
+    def SetDefaultColours(self, base_colour = None):
+        """ Sets the default colours, which are calculated from the given base colour. """
+        if base_colour is None:
+            base_colour = GetBaseColour()
+        self.SetBaseColour( base_colour )
+        self._border_colour = StepColour(base_colour, 75)
+        self._border_pen = wx.Pen(self._border_colour)
+
+        self._background_top_colour = StepColour(self._base_colour, 90)
+        self._background_bottom_colour = StepColour(self._base_colour, 170)
+        
+        self._tab_top_colour = self._base_colour
+        self._tab_bottom_colour = wx.WHITE
+        self._tab_gradient_highlight_colour = wx.WHITE
+
+        self._tab_inactive_top_colour = self._base_colour
+        self._tab_inactive_bottom_colour = StepColour(self._tab_inactive_top_colour, 160)
+        
+        self._tab_text_colour = lambda page: page.text_colour
+        self._tab_disabled_text_colour = wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT)
 
 
     def Clone(self):
@@ -281,10 +303,7 @@ class AuiDefaultTabArt(object):
         else: #for AUI_NB_TOP
             r = wx.Rect(rect.x, rect.y, rect.width+2, rect.height-3)
 
-        top_colour = StepColour(self._base_colour, 90)
-        bottom_colour = StepColour(self._base_colour, 170)
-
-        dc.GradientFillLinear(r, top_colour, bottom_colour, wx.SOUTH)
+        dc.GradientFillLinear(r, self._background_top_colour, self._background_bottom_colour, wx.SOUTH)
 
         # draw base lines
 
@@ -293,7 +312,7 @@ class AuiDefaultTabArt(object):
         w = rect.GetWidth()
 
         if agwFlags & AUI_NB_BOTTOM:
-            dc.SetBrush(wx.Brush(bottom_colour))
+            dc.SetBrush(wx.Brush(self._background_bottom_colour))
             dc.DrawRectangle(-1, 0, w+2, 4)
 
         # TODO: else if (agwFlags & AUI_NB_LEFT) 
@@ -353,10 +372,10 @@ class AuiDefaultTabArt(object):
             textx, texty = normal_textx, normal_texty
 
         if not page.enabled:
-            dc.SetTextForeground(wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT))
+            dc.SetTextForeground(self._tab_disabled_text_colour)
             pagebitmap = page.dis_bitmap
         else:
-            dc.SetTextForeground(page.text_colour)
+            dc.SetTextForeground(self._tab_text_colour(page))
             pagebitmap = page.bitmap
             
         # create points that will make the tab outline
@@ -407,8 +426,8 @@ class AuiDefaultTabArt(object):
             dc.DrawRectangle(r.x+1, r.y+1, r.width-1, r.height-4)
 
             # this white helps fill out the gradient at the top of the tab
-            dc.SetPen(wx.WHITE_PEN)
-            dc.SetBrush(wx.WHITE_BRUSH)
+            dc.SetPen( wx.Pen(self._tab_gradient_highlight_colour) )
+            dc.SetBrush( wx.Brush(self._tab_gradient_highlight_colour) )
             dc.DrawRectangle(r.x+2, r.y+1, r.width-3, r.height-4)
 
             # these two points help the rounded corners appear more antialiased
@@ -424,8 +443,8 @@ class AuiDefaultTabArt(object):
             r.y -= 2
 
             # draw gradient background
-            top_colour = wx.WHITE
-            bottom_colour = self._base_colour
+            top_colour = self._tab_bottom_colour
+            bottom_colour = self._tab_top_colour
             dc.GradientFillLinear(r, bottom_colour, top_colour, wx.NORTH)
         
         else:
@@ -444,16 +463,16 @@ class AuiDefaultTabArt(object):
             r.height -= 1
 
             # -- draw top gradient fill for glossy look
-            top_colour = self._base_colour
-            bottom_colour = StepColour(top_colour, 160)
+            top_colour = self._tab_inactive_top_colour
+            bottom_colour = self._tab_inactive_bottom_colour
             dc.GradientFillLinear(r, bottom_colour, top_colour, wx.NORTH)
 
             r.y += r.height
             r.y -= 1
 
             # -- draw bottom fill for glossy look
-            top_colour = self._base_colour
-            bottom_colour = self._base_colour
+            top_colour = self._tab_inactive_bottom_colour
+            bottom_colour = self._tab_inactive_bottom_colour
             dc.GradientFillLinear(r, top_colour, bottom_colour, wx.SOUTH)
         
         # draw tab outline
@@ -466,7 +485,7 @@ class AuiDefaultTabArt(object):
         if page.active:
         
             if agwFlags & AUI_NB_BOTTOM:
-                dc.SetPen(wx.Pen(StepColour(self._base_colour, 170)))
+                dc.SetPen(wx.Pen(self._background_bottom_colour))
                 
             # TODO: else if (agwFlags & AUI_NB_LEFT) 
             # TODO: else if (agwFlags & AUI_NB_RIGHT) 
