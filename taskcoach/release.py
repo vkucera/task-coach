@@ -326,6 +326,7 @@ def releasing(settings, options):
     generating_website(settings, options)
     uploading_website(settings, options)
     announcing(settings, options)
+    tagging_release_in_Subversion(settings, options)
 
 
 def latest_release(metadata, summaryOnly=False):
