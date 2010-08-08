@@ -22,9 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 helpText = '''
 Release steps:
   - Get latest translations from Launchpad.
-  - Run 'make clean all'.
-  - Run 'make alltests'.
   - Run 'make reallyclean' to remove old packages.
+  - Run 'make alltests'.
   - For each platform, create and upload the packages:
     * Mac OS X 10.4:       'make dmg; release.py upload'
     * Ubuntu 8.04 (py2.5): 'make sdist_linux deb; release.py upload'
