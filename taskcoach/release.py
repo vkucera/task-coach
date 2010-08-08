@@ -28,13 +28,13 @@ Release steps:
 - Run 'make alltests'.
 
 - For each platform, create and upload the packages:
-  MaC OS X 10.4:       'make clean dmg; python release.py upload'
-  Ubuntu 8.04 (py2.5): 'make clean sdist_linux deb; python release.py upload'
-  Ubuntu 9.04 (py2.6): 'make clean sdist_linux deb; python release.py upload'
-  Fedora 11:           'make clean fedora; python release.py upload'
-                       'make clean rpm; python release.py upload'
-  OpenSuse:            'make clean opensuse; python release.py upload'
-  Windows:             'make clean windists; python release.py upload'
+  Mac OS X 10.4:       'make reallyclean dmg; python release.py upload'
+  Ubuntu 8.04 (py2.5): 'make reallyclean sdist_linux deb; python release.py upload'
+  Ubuntu 9.04 (py2.6): 'make reallyclean sdist_linux deb; python release.py upload'
+  Fedora 11:           'make reallyclean fedora; python release.py upload'
+                       'make reallyclean rpm; python release.py upload'
+  OpenSuse:            'make reallyclean opensuse; python release.py upload'
+  Windows:             'make reallyclean windists; python release.py upload'
 
 - Mark the Windows and Mac OS X distributions as defaults for their platform:
   https://sourceforge.net/project/admin/explorer.php?group_id=130831#
@@ -64,6 +64,17 @@ Release steps:
 
 import ftplib, smtplib, httplib, urllib, os, glob, sys, getpass, hashlib, \
     base64, ConfigParser, simplejson, codecs, taskcoachlib.meta
+
+
+def progress(func):
+    ''' Decorator to print out a message when a release step starts and print
+        a message when the release step is finished. '''
+    def inner(*args, **kwargs):
+        step = func.__name__.replace('_', ' ')
+        print step[0].upper() + step[1:] + '...'
+        func(*args, **kwargs)
+        print 'Done %s.'%step
+    return inner
 
 
 class Settings(ConfigParser.SafeConfigParser, object):
@@ -112,22 +123,20 @@ def sourceForgeLocation(settings):
     return '%s@frs.sourceforge.net:%s'%(username, folder)
 
 
-def uploadDistributionsToSourceForge(settings):
-    print 'Uploading distributions to SourceForge...'
+@progress
+def uploading_distributions_to_SourceForge(settings):
     location = sourceForgeLocation(settings)
     os.system('rsync -avP -e ssh dist/* %s'%location)
-    print 'Done uploading distributions to SourceForge.'
 
 
-def downloadDistributionsFromSourceForge(settings):
-    print 'Downloading distributions from SourceForge...'
+@progress
+def downloading_distributions_from_SourceForge(settings):
     location = sourceForgeLocation(settings)
     os.system('rsync -avP -e ssh %s dist/'%location)
-    print 'Done downloading distributions from SourceForge.'
 
 
-def generateMD5Digests(settings):
-    print 'Generating MD5 digests...'
+@progress
+def generating_MD5_digests(settings):
     contents = '''md5digests = {\n'''
     for filename in glob.glob(os.path.join('dist', '*')):
         
@@ -135,22 +144,19 @@ def generateMD5Digests(settings):
         filename = os.path.basename(filename)
         hexdigest = md5digest.hexdigest()
         contents += '''    "%s": "%s",\n'''%(filename, hexdigest)
-        print 'MD5 digest for %s is %s'%(filename, hexdigest)
+        print '%40s -> %s'%(filename, hexdigest)
     contents += '}\n'
     
-    print 'Writing MD5 digests...'
     md5digestsFile = file(os.path.join('website.in', 'md5digests.py'), 'w')
     md5digestsFile.write(contents)
     md5digestsFile.close()
-    print 'Done generating MD5 digests.'
 
 
-def generateWebsite(settings):
-    print 'Generating website...'
+@progress
+def generating_website(settings):
     os.chdir('website.in')
     os.system('python make.py')
     os.chdir('..')
-    print 'Done generating website...'
 
 
 class SimpleFTP(ftplib.FTP, object):
@@ -189,35 +195,35 @@ class SimpleFTP(ftplib.FTP, object):
         self.retrbinary('RETR %s'%filename, open(filename, 'wb').write)
 
 
-def uploadWebsiteToWebsiteHost(settings, websiteName):
-    settingsSection = websiteName.lower()
+def uploading_website_to_website_host(settings, websiteHost):
+    settingsSection = websiteHost.lower()
     hostname = settings.get(settingsSection, 'hostname')
     username = settings.get(settingsSection, 'username')
     password = settings.get(settingsSection, 'password')
     folder = settings.get(settingsSection, 'folder')
     
     if hostname and username and password and folder:
-        print 'Uploading website to %s...'%websiteName
         ftp = SimpleFTP(hostname, username, password, folder)
         os.chdir('website.out')
         ftp.put('.')
         ftp.quit()
         os.chdir('..')
-        print 'Done uploading website to %s.'%websiteName
     else:
-        print 'Warning: cannot upload website to %s; missing credentials'%websiteName
+        print 'Warning: cannot upload website to %s; missing credentials'%websiteHost
 
 
-def uploadWebsiteToChello(settings):
-    uploadWebsiteToWebsiteHost(settings, 'Chello')
+@progress
+def uploading_website_to_Chello(settings):
+    uploading_website_to_website_host(settings, 'Chello')
 
 
-def uploadWebsiteToHypernation(settings):
-    uploadWebsiteToWebsiteHost(settings, 'Hypernation')
+@progress
+def uploading_website_to_Hypernation(settings):
+    uploading_website_to_website_host(settings, 'Hypernation')
 
  
-def registerWithPyPI(settings):
-    print 'Registering with PyPI...'
+@progress
+def registering_with_PyPI(settings):
     username = settings.get('pypi', 'username')
     password = settings.get('pypi', 'password')
     pypirc = file('.pypirc', 'w')
@@ -236,7 +242,6 @@ def registerWithPyPI(settings):
     sys.argv.append('register')
     setup(**setupOptions)
     os.remove('.pypirc')
-    print 'Done registering with PyPI.'
 
 
 def httpPostRequest(host, api_call, body, contentType, ok=200, **headers):
@@ -248,8 +253,8 @@ def httpPostRequest(host, api_call, body, contentType, ok=200, **headers):
         print 'Request failed: %d %s'%(response.status, response.reason)
 
 
-def announceOnFreshmeat(settings):
-    print 'Announcing on Freshmeat...'
+@progress
+def announcing_on_Freshmeat(settings):
     auth_code = settings.get('freshmeat', 'auth_code')
     metadata = taskcoachlib.meta.data.metaDict
     version = '%(version)s'%metadata
@@ -260,11 +265,9 @@ def announceOnFreshmeat(settings):
                                                release=release)))
     path = '/projects/taskcoach/releases.json'
     httpPostRequest('freshmeat.net', path, body, 'application/json', ok=201)
-    print 'Done announcing on Freshmeat.'
 
 
-def announceViaTwitterApi(settings, section, host, api_prefix=''):
-    print 'Announcing on %s...'%host
+def announcing_via_Twitter_Api(settings, section, host, api_prefix=''):
     credentials = ':'.join(settings.get(section, credential) \
                            for credential in ('username', 'password'))
     basic_auth = base64.encodestring(credentials)[:-1]
@@ -277,36 +280,37 @@ def announceViaTwitterApi(settings, section, host, api_prefix=''):
     httpPostRequest(host, api_call, body, 
                     'application/x-www-form-urlencoded; charset=utf-8',
                     Authorization='Basic %s'%basic_auth)
-    print 'Done announcing on %s.'%host
 
 
-def announceOnTwitter(settings):
-    announceViaTwitterApi(settings, 'twitter', 'twitter.com')
+@progress
+def announcing_on_Twitter(settings):
+    announcing_via_Twitter_Api(settings, 'twitter', 'twitter.com')
     
 
-def announceOnIdentica(settings):
-    announceViaTwitterApi(settings, 'identica', 'identi.ca', '/api')
+@progress
+def announcing_on_Identica(settings):
+    announcing_via_Twitter_Api(settings, 'identica', 'identi.ca', '/api')
 
 
-def uploadWebsite(settings):
-    uploadWebsiteToChello(settings)
-    uploadWebsiteToHypernation(settings)
+def uploading_website(settings):
+    uploading_website_to_Chello(settings)
+    uploading_website_to_Hypernation(settings)
     
 
-def announce(settings):
-    registerWithPyPI(settings)
-    announceOnTwitter(settings)
-    announceOnIdentica(settings)
-    announceOnFreshmeat(settings)
-    mailAnnouncement(settings)
+def announcing(settings):
+    registering_with_PyPI(settings)
+    announcing_on_Twitter(settings)
+    announcing_on_Identica(settings)
+    announcing_on_Freshmeat(settings)
+    mailing_announcement(settings)
 
 
-def release(settings):
-    downloadDistributionsFromSourceForge(settings)
-    generateMD5Digests(settings)
-    generateWebsite(settings)
-    uploadWebsite(settings)
-    announce(settings)
+def releasing(settings):
+    downloading_distributions_from_SourceForge(settings)
+    generating_MD5_digests(settings)
+    generating_website(settings)
+    uploading_website(settings)
+    announcing(settings)
 
 
 def latest_release(metadata, summaryOnly=False):
@@ -323,7 +327,8 @@ def latest_release(metadata, summaryOnly=False):
     return convert(changes.releases[0], greeting)
 
 
-def mailAnnouncement(settings):
+@progress
+def mailing_announcement(settings):
     metadata = taskcoachlib.meta.data.metaDict
     for sender_info in 'sender_name', 'sender_email_address':
         metadata[sender_info] = settings.get('smtp', sender_info)
@@ -366,11 +371,11 @@ Task Coach development team
     password = settings.get('smtp', 'password')
 
     session = smtplib.SMTP(server, port)
-    session.set_debuglevel(1)
+    #session.set_debuglevel(1)
     session.helo()
     session.ehlo()
     session.starttls()
-    session.esmtp_features["auth"] = "LOGIN"
+    session.esmtp_features["auth"] = "LOGIN" # Needed for Gmail SMTP.
     session.login(username, password)
     smtpresult = session.sendmail(username, recipients, msg)
 
@@ -384,26 +389,43 @@ Server said: %s
         raise smtplib.SMTPException, errstr
 
 
+@progress
+def tagging_release_in_Subversion(settings):
+    metadata = taskcoachlib.meta.data.metaDict
+    version = metadata['version']
+    releaseTag = 'Release' + version.replace('.', '_')
+    targetUrl =  'https://taskcoach.svn.sourceforge.net/svnroot/taskcoach/tags/' + releaseTag
+    commitMessage = 'Tag for release %s.'%version
+    svnCopy = 'svn copy -m "%s" . %s'%(commitMessage, targetUrl)
+    os.system(svnCopy)
+     
+
 def help(settings):
     print helpText
+    
+    
+def usage(settings):
+    print 'Usage: release.py [%s]'%'|'.join(sorted(commands.keys()))
 
 
-commands = dict(release=release,
-                upload=uploadDistributionsToSourceForge, 
-                download=downloadDistributionsFromSourceForge, 
-                md5=generateMD5Digests,
-                website=uploadWebsite, 
-                websiteChello=uploadWebsiteToChello, 
-                websiteHN=uploadWebsiteToHypernation,
-                twitter=announceOnTwitter,
-                identica=announceOnIdentica,
-                freshmeat=announceOnFreshmeat,
-                pypi=registerWithPyPI, 
-                mail=mailAnnouncement,
-                announce=announce,
-                help=help)
+commands = dict(release=releasing,
+                upload=uploading_distributions_to_SourceForge, 
+                download=downloading_distributions_from_SourceForge, 
+                md5=generating_MD5_digests,
+                website=uploading_website, 
+                websiteChello=uploading_website_to_Chello, 
+                websiteHN=uploading_website_to_Hypernation,
+                twitter=announcing_on_Twitter,
+                identica=announcing_on_Identica,
+                freshmeat=announcing_on_Freshmeat,
+                pypi=registering_with_PyPI, 
+                mail=mailing_announcement,
+                announce=announcing,
+                tag=tagging_release_in_Subversion,
+                help=help,
+                usage=usage)
 settings = Settings()
 try:
     commands[sys.argv[1]](settings)
 except (KeyError, IndexError):
-    print 'Usage: release.py [%s]'%'|'.join(sorted(commands.keys()))
+    usage(settings)
