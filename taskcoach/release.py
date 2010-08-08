@@ -18,52 +18,41 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+
 helpText = '''
 Release steps:
-
-- Get latest translations from Launchpad.
-
-- Run 'make clean all'.
-
-- Run 'make alltests'.
-
-- For each platform, create and upload the packages:
-  Mac OS X 10.4:       'make reallyclean dmg; python release.py upload'
-  Ubuntu 8.04 (py2.5): 'make reallyclean sdist_linux deb; python release.py upload'
-  Ubuntu 9.04 (py2.6): 'make reallyclean sdist_linux deb; python release.py upload'
-  Fedora 11:           'make reallyclean fedora; python release.py upload'
-                       'make reallyclean rpm; python release.py upload'
-  OpenSuse:            'make reallyclean opensuse; python release.py upload'
-  Windows:             'make reallyclean windists; python release.py upload'
-
-- Mark the Windows and Mac OS X distributions as defaults for their platform:
-  https://sourceforge.net/project/admin/explorer.php?group_id=130831#
-  Navigate into the folder of the latest release and click on the Windows
-  and Mac OS X distributions to set them as default download.
-
-- Run 'python release.py release' to download the distributions from
-  Sourceforge, generate MD5 digests, generate the website, upload the 
-  website to the Hypernation.net website and to Chello (Frank's ISP), 
-  announce the release on Twitter, Identi.ca, Freshmeat and PyPI (Python 
-  Package Index) and to send the announcement email.
-
-- Tag source code with tag ReleaseX_Y_Z.
-
-- Create branch if feature release.
-
-- Merge recent changes to the trunk.
-
-- Add release to Sourceforge bug tracker and support request groups.
-
-- Set bug reports on Sourceforge to Pending state.
-
-- Mark feature requests on Uservoice completed.
-
-- If new release branch, update the buildbot masters configuration.
+  - Get latest translations from Launchpad.
+  - Run 'make clean all'.
+  - Run 'make alltests'.
+  - Run 'make reallyclean' to remove old packages.
+  - For each platform, create and upload the packages:
+    * Mac OS X 10.4:       'make dmg; release.py upload'
+    * Ubuntu 8.04 (py2.5): 'make sdist_linux deb; release.py upload'
+    * Ubuntu 9.04 (py2.6): 'make sdist_linux deb; release.py upload'
+    * Fedora 11:           'make fedora; release.py upload'
+                           'make rpm; release.py upload'
+    * OpenSuse:            'make opensuse; release.py upload'
+    * Windows:             'make windists; release.py upload'
+  - Mark the Windows and Mac OS X distributions as defaults for their platform:
+    https://sourceforge.net/project/admin/explorer.php?group_id=130831#
+    Navigate into the folder of the latest release and click on the Windows
+    and Mac OS X distributions to set them as default download.
+  - Run 'python release.py release' to download the distributions from
+    Sourceforge, generate MD5 digests, generate the website, upload the 
+    website to the Hypernation.net website and to Chello (Frank's ISP), 
+    announce the release on Twitter, Identi.ca, Freshmeat and PyPI (Python 
+    Package Index), send the announcement email, and to tag the release in
+    Subversion.
+  - Create branch if feature release.
+  - Merge recent changes to the trunk.
+  - Add release to Sourceforge bug tracker and support request groups.
+  - Set bug reports on Sourceforge to Pending state.
+  - Mark feature requests on Uservoice completed.
+  - If new release branch, update the buildbot masters configuration.
 '''
 
 import ftplib, smtplib, httplib, urllib, os, glob, sys, getpass, hashlib, \
-    base64, ConfigParser, simplejson, codecs, taskcoachlib.meta
+    base64, ConfigParser, simplejson, codecs, optparse, taskcoachlib.meta
 
 
 def progress(func):
@@ -112,6 +101,12 @@ class Settings(ConfigParser.SafeConfigParser, object):
         return value
 
 
+class HelpFormatter(optparse.IndentedHelpFormatter):
+    ''' Don't mess up the help text formatting. '''
+    def format_epilog(self, epilog):
+        return epilog
+    
+
 def sourceForgeLocation(settings):
     metadata = taskcoachlib.meta.data.metaDict
     project = metadata['filename_lower']
@@ -123,20 +118,27 @@ def sourceForgeLocation(settings):
     return '%s@frs.sourceforge.net:%s'%(username, folder)
 
 
-@progress
-def uploading_distributions_to_SourceForge(settings):
+def rsync(settings, options, rsyncCommand):
     location = sourceForgeLocation(settings)
-    os.system('rsync -avP -e ssh dist/* %s'%location)
+    rsyncCommand = rsyncCommand%location
+    if options.dry_run:
+        print 'Skipping %s.'%rsyncCommand
+    else:
+        os.system(rsyncCommand)
 
 
 @progress
-def downloading_distributions_from_SourceForge(settings):
-    location = sourceForgeLocation(settings)
-    os.system('rsync -avP -e ssh %s dist/'%location)
+def uploading_distributions_to_SourceForge(settings, options):
+    rsync(settings, options, 'rsync -avP -e ssh dist/* %s')
 
 
 @progress
-def generating_MD5_digests(settings):
+def downloading_distributions_from_SourceForge(settings, options):
+    rsync(settings, options, 'rsync -avP -e ssh %s dist/')
+
+
+@progress
+def generating_MD5_digests(settings, options):
     contents = '''md5digests = {\n'''
     for filename in glob.glob(os.path.join('dist', '*')):
         
@@ -144,7 +146,8 @@ def generating_MD5_digests(settings):
         filename = os.path.basename(filename)
         hexdigest = md5digest.hexdigest()
         contents += '''    "%s": "%s",\n'''%(filename, hexdigest)
-        print '%40s -> %s'%(filename, hexdigest)
+        if options.verbose:
+            print '%40s -> %s'%(filename, hexdigest)
     contents += '}\n'
     
     md5digestsFile = file(os.path.join('website.in', 'md5digests.py'), 'w')
@@ -153,7 +156,7 @@ def generating_MD5_digests(settings):
 
 
 @progress
-def generating_website(settings):
+def generating_website(settings, options):
     os.chdir('website.in')
     os.system('python make.py')
     os.chdir('..')
@@ -195,7 +198,7 @@ class SimpleFTP(ftplib.FTP, object):
         self.retrbinary('RETR %s'%filename, open(filename, 'wb').write)
 
 
-def uploading_website_to_website_host(settings, websiteHost):
+def uploading_website_to_website_host(settings, options, websiteHost):
     settingsSection = websiteHost.lower()
     hostname = settings.get(settingsSection, 'hostname')
     username = settings.get(settingsSection, 'username')
@@ -205,7 +208,10 @@ def uploading_website_to_website_host(settings, websiteHost):
     if hostname and username and password and folder:
         ftp = SimpleFTP(hostname, username, password, folder)
         os.chdir('website.out')
-        ftp.put('.')
+        if options.dry_run:
+            print 'Skipping ftp.put(website.out).'
+        else:
+            ftp.put('.')
         ftp.quit()
         os.chdir('..')
     else:
@@ -213,17 +219,17 @@ def uploading_website_to_website_host(settings, websiteHost):
 
 
 @progress
-def uploading_website_to_Chello(settings):
-    uploading_website_to_website_host(settings, 'Chello')
+def uploading_website_to_Chello(settings, options):
+    uploading_website_to_website_host(settings, options, 'Chello')
 
 
 @progress
-def uploading_website_to_Hypernation(settings):
-    uploading_website_to_website_host(settings, 'Hypernation')
+def uploading_website_to_Hypernation(settings, options):
+    uploading_website_to_website_host(settings, options, 'Hypernation')
 
  
 @progress
-def registering_with_PyPI(settings):
+def registering_with_PyPI(settings, options):
     username = settings.get('pypi', 'username')
     password = settings.get('pypi', 'password')
     pypirc = file('.pypirc', 'w')
@@ -240,7 +246,10 @@ def registering_with_PyPI(settings):
     del sys.argv[1:]
     os.environ['HOME'] = '.'
     sys.argv.append('register')
-    setup(**setupOptions)
+    if options.dry_run:
+        print 'Skipping PyPI registration.'
+    else:
+        setup(**setupOptions)
     os.remove('.pypirc')
 
 
@@ -254,7 +263,7 @@ def httpPostRequest(host, api_call, body, contentType, ok=200, **headers):
 
 
 @progress
-def announcing_on_Freshmeat(settings):
+def announcing_on_Freshmeat(settings, options):
     auth_code = settings.get('freshmeat', 'auth_code')
     metadata = taskcoachlib.meta.data.metaDict
     version = '%(version)s'%metadata
@@ -264,10 +273,14 @@ def announcing_on_Freshmeat(settings):
     body = codecs.encode(simplejson.dumps(dict(auth_code=auth_code, 
                                                release=release)))
     path = '/projects/taskcoach/releases.json'
-    httpPostRequest('freshmeat.net', path, body, 'application/json', ok=201)
+    host = 'freshmeat.net'
+    if options.dry_run:
+        print 'Skipping announcing "%s" on %s.'%(release, host)
+    else:
+        httpPostRequest(host, path, body, 'application/json', ok=201)
 
 
-def announcing_via_Twitter_Api(settings, section, host, api_prefix=''):
+def announcing_via_Twitter_Api(settings, options, section, host, api_prefix=''):
     credentials = ':'.join(settings.get(section, credential) \
                            for credential in ('username', 'password'))
     basic_auth = base64.encodestring(credentials)[:-1]
@@ -277,40 +290,43 @@ def announcing_via_Twitter_Api(settings, section, host, api_prefix=''):
     api_call = api_prefix + '/statuses/update.json'
     body = '='.join((urllib.quote(body_part.encode('utf-8')) \
                      for body_part in ('status', status)))
-    httpPostRequest(host, api_call, body, 
-                    'application/x-www-form-urlencoded; charset=utf-8',
-                    Authorization='Basic %s'%basic_auth)
+    if options.dry_run:
+        print 'Skipping announcing "%s" on %s.'%(status, host)
+    else:
+        httpPostRequest(host, api_call, body, 
+                        'application/x-www-form-urlencoded; charset=utf-8',
+                        Authorization='Basic %s'%basic_auth)
 
 
 @progress
-def announcing_on_Twitter(settings):
-    announcing_via_Twitter_Api(settings, 'twitter', 'twitter.com')
+def announcing_on_Twitter(settings, options):
+    announcing_via_Twitter_Api(settings, options, 'twitter', 'twitter.com')
     
 
 @progress
-def announcing_on_Identica(settings):
-    announcing_via_Twitter_Api(settings, 'identica', 'identi.ca', '/api')
+def announcing_on_Identica(settings, options):
+    announcing_via_Twitter_Api(settings, options, 'identica', 'identi.ca', '/api')
 
 
-def uploading_website(settings):
-    uploading_website_to_Chello(settings)
-    uploading_website_to_Hypernation(settings)
+def uploading_website(settings, options):
+    uploading_website_to_Chello(settings, options)
+    uploading_website_to_Hypernation(settings, options)
     
 
-def announcing(settings):
-    registering_with_PyPI(settings)
-    announcing_on_Twitter(settings)
-    announcing_on_Identica(settings)
-    announcing_on_Freshmeat(settings)
-    mailing_announcement(settings)
+def announcing(settings, options):
+    registering_with_PyPI(settings, options)
+    announcing_on_Twitter(settings, options)
+    announcing_on_Identica(settings, options)
+    announcing_on_Freshmeat(settings, options)
+    mailing_announcement(settings, options)
 
 
-def releasing(settings):
-    downloading_distributions_from_SourceForge(settings)
-    generating_MD5_digests(settings)
-    generating_website(settings)
-    uploading_website(settings)
-    announcing(settings)
+def releasing(settings, options):
+    downloading_distributions_from_SourceForge(settings, options)
+    generating_MD5_digests(settings, options)
+    generating_website(settings, options)
+    uploading_website(settings, options)
+    announcing(settings, options)
 
 
 def latest_release(metadata, summaryOnly=False):
@@ -319,7 +335,7 @@ def latest_release(metadata, summaryOnly=False):
     del sys.path[0]
     greeting = 'release %(version)s of %(name)s.'%metadata
     if summaryOnly:
-        greeting = greeting.capitalize() 
+        greeting = greeting[0].upper() + greeting[1:] 
     else:
         greeting = "We're happy to announce " + greeting
     textConverter = converter.ReleaseToTextConverter()
@@ -328,7 +344,7 @@ def latest_release(metadata, summaryOnly=False):
 
 
 @progress
-def mailing_announcement(settings):
+def mailing_announcement(settings, options):
     metadata = taskcoachlib.meta.data.metaDict
     for sender_info in 'sender_name', 'sender_email_address':
         metadata[sender_info] = settings.get('smtp', sender_info)
@@ -371,13 +387,18 @@ Task Coach development team
     password = settings.get('smtp', 'password')
 
     session = smtplib.SMTP(server, port)
-    #session.set_debuglevel(1)
+    if options.verbose:
+        session.set_debuglevel(1)
     session.helo()
     session.ehlo()
     session.starttls()
     session.esmtp_features["auth"] = "LOGIN" # Needed for Gmail SMTP.
     session.login(username, password)
-    smtpresult = session.sendmail(username, recipients, msg)
+    if options.dry_run:
+        print 'Skipping sending mail.'
+        smtpresult = None
+    else:
+        smtpresult = session.sendmail(username, recipients, msg)
 
     if smtpresult:
         errstr = ""
@@ -390,24 +411,19 @@ Server said: %s
 
 
 @progress
-def tagging_release_in_Subversion(settings):
+def tagging_release_in_Subversion(settings, options):
     metadata = taskcoachlib.meta.data.metaDict
     version = metadata['version']
     releaseTag = 'Release' + version.replace('.', '_')
     targetUrl =  'https://taskcoach.svn.sourceforge.net/svnroot/taskcoach/tags/' + releaseTag
     commitMessage = 'Tag for release %s.'%version
     svnCopy = 'svn copy -m "%s" . %s'%(commitMessage, targetUrl)
-    os.system(svnCopy)
+    if options.dry_run:
+        print 'Skipping %s.'%svnCopy
+    else:
+        os.system(svnCopy)
      
-
-def help(settings):
-    print helpText
-    
-    
-def usage(settings):
-    print 'Usage: release.py [%s]'%'|'.join(sorted(commands.keys()))
-
-
+   
 commands = dict(release=releasing,
                 upload=uploading_distributions_to_SourceForge, 
                 download=downloading_distributions_from_SourceForge, 
@@ -421,11 +437,21 @@ commands = dict(release=releasing,
                 pypi=registering_with_PyPI, 
                 mail=mailing_announcement,
                 announce=announcing,
-                tag=tagging_release_in_Subversion,
-                help=help,
-                usage=usage)
+                tag=tagging_release_in_Subversion)
+
+usage = 'Usage: %%prog [options] [%s]'%'|'.join(sorted(commands.keys()))
+
 settings = Settings()
+
+parser = optparse.OptionParser(usage=usage, epilog=helpText, 
+                               formatter=HelpFormatter())
+parser.add_option('-n', '--dry-run', action='store_true', dest='dry_run', 
+                  help="don't make permanent changes")
+parser.add_option('-v', '--verbose', action='store_true', dest='verbose',
+                  help='provide more detailed progress information')
+options, args = parser.parse_args()
+
 try:
-    commands[sys.argv[1]](settings)
+    commands[args[0]](settings, options)
 except (KeyError, IndexError):
-    usage(settings)
+    parser.print_help()
