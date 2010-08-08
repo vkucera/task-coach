@@ -97,8 +97,8 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         assert aggregation in ('details', 'day', 'week', 'month')
         self.aggregation = aggregation
         self.settings.set(self.settingsSection(), 'aggregation', aggregation)
-        self.setPresentation(self.createSorter(self.createAggregator(\
-                             self.domainObjectsToView(), aggregation)))
+        self.setPresentation(self.createSorter(self.createFilter(\
+                             self.domainObjectsToView())))
         self.registerPresentationObservers()
         # Invalidate the UICommands used for the column popup menu:
         self.__columnUICommands = None
