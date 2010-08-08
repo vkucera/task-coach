@@ -34,7 +34,6 @@ class ViewerContainer(object):
         self.bindContainerWidgetEvents()
         self._settings = settings
         self.__setting = setting
-        self.__tabbedMainWindow = settings.getboolean('view', 'tabbedmainwindow')
         self.viewers = []
         self.__currentPageNumber = 0
         # Prepare for an exception, because this setting used to be a string
@@ -103,19 +102,17 @@ class ViewerContainer(object):
         ''' Return the active viewer, i.e. the viewer that has the focus. '''
         # There is no pageChanged event for the AuiManager, so we have
         # to check which pane is active.
-        if not self.__tabbedMainWindow:
-            for viewer in self.viewers:
-                info = self.containerWidget.manager.GetPane(viewer)
-                if info.HasFlag(info.optionActive):
-                    return viewer
+        for viewer in self.viewers:
+            info = self.containerWidget.manager.GetPane(viewer)
+            if info.HasFlag(info.optionActive):
+                return viewer
         return self.viewers[self.__currentPageNumber]
 
     def activateViewer(self, viewerToActivate):
-        if not self.__tabbedMainWindow:
-            for viewer in self.viewers:
-	        info = self.containerWidget.manager.GetPane(viewer)
-	        info.SetFlag(info.optionActive, viewer==viewerToActivate)
-            self.containerWidget.manager.Update()
+        for viewer in self.viewers:
+            info = self.containerWidget.manager.GetPane(viewer)
+            info.SetFlag(info.optionActive, viewer==viewerToActivate)
+        self.containerWidget.manager.Update()
 
     def __del__(self):
         pass # Don't forward del to one of the viewers.

@@ -30,7 +30,7 @@ class ViewerTest(test.wxTestCase):
         self.taskFile = persistence.TaskFile()
         self.task = task.Task()
         self.taskFile.tasks().append(self.task)
-        self.notebook = widgets.AUINotebook(self.frame)
+        self.notebook = widgets.AuiManagedFrameWithNotebookAPI(self.frame)
         self.viewerContainer = gui.viewer.ViewerContainer(self.notebook, 
             self.settings, 'mainviewer')
         self.viewer = self.createViewer()
@@ -406,7 +406,7 @@ class ViewerIteratorTestCase(test.wxTestCase):
         task.Task.settings = self.settings
         self.taskFile = persistence.TaskFile()
         self.taskList = self.taskFile.tasks()
-        self.notebook = widgets.AUINotebook(self.frame)
+        self.notebook = widgets.AuiManagedFrameWithNotebookAPI(self.frame)
         self.viewer = self.createViewer()
         self.viewer.showTree(self.treeMode == 'True')
         self.viewer.sortBy('subject')

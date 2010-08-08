@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 28 Apr 2010, 14.00 GMT
+# Latest Revision: 02 Aug 2010, 09.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -4546,7 +4546,8 @@ class AuiManager(wx.EvtHandler):
         :param `arg1`: a L{AuiPaneInfo} or an integer value (direction);
         :param `arg2`: a L{AuiPaneInfo} or a `wx.Point` (drop position);
         :param `target`: a L{AuiPaneInfo} to be turned into a notebook
-         and new pane added to it as a page.
+         and new pane added to it as a page. (additionally, target can be any pane in 
+         an existing notebook)
          """
  
         if target in self._panes:
@@ -4705,32 +4706,20 @@ class AuiManager(wx.EvtHandler):
                
         paneInfo = self.GetPane(window)
         
-        if not target.IsNotebookDockable():
+        if not paneInfo.IsNotebookDockable():
             return self.AddPane1(window, pane_info)
-        if not paneInfo.IsNotebookDockable() and not paneInfo.IsNotebookControl():
+        if not target.IsNotebookDockable() and not target.IsNotebookControl():
             return self.AddPane1(window, pane_info)
 
-        if not paneInfo.HasNotebook():
-            # Add a new notebook pane ...
-            id = len(self._notebooks)
-            
-            bookBasePaneInfo = AuiPaneInfo()
-            bookBasePaneInfo.SetDockPos(target).NotebookControl(id). \
-                CloseButton(False).SetNameFromNotebookId(). \
-                NotebookDockable(False)
-            bookBasePaneInfo.best_size = paneInfo.best_size
-            self._panes.append(bookBasePaneInfo)
-
-            # add original pane as tab ...
-            paneInfo.NotebookPage(id)
+        if not target.HasNotebook():
+            self.CreateNotebookBase(self._panes, target)
         
         # Add new item to notebook
-        target.NotebookPage(paneInfo.notebook_id)
+        paneInfo.NotebookPage(target.notebook_id)
 
         # we also want to remove our captions sometimes
-        if not self.RemoveAutoNBCaption(target):
-            # Update for position and _notebooks in case we have another target
-            self.Update()
+        self.RemoveAutoNBCaption(paneInfo)
+        self.UpdateNotebook()
         
         return True
 
@@ -6203,8 +6192,9 @@ class AuiManager(wx.EvtHandler):
             if isinstance(p.window, auibar.AuiToolBar):
                 p.window.SetAuiManager(self)
 
-            p.frame.SetSizer(None)
-            p.frame.Destroy()
+            if p.frame:
+                p.frame.SetSizer(None)
+                p.frame.Destroy()
             p.frame = None
 
         # Only the master manager should create/destroy notebooks...
@@ -7569,18 +7559,8 @@ class AuiManager(wx.EvtHandler):
 
                 if not paneInfo.HasNotebook():
                 
-                    # Add a new notebook pane ...
-                    id = len(self._notebooks)
-
-                    bookBasePaneInfo = AuiPaneInfo()
-                    bookBasePaneInfo.SetDockPos(paneInfo).NotebookControl(id). \
-                        CloseButton(False).SetNameFromNotebookId(). \
-                        NotebookDockable(False).Floatable(paneInfo.IsFloatable())
-                    bookBasePaneInfo.best_size = paneInfo.best_size
-                    panes.append(bookBasePaneInfo)
-
-                    # add original pane as tab ...
-                    paneInfo.NotebookPage(id)
+                    # Add a new notebook pane with the original as a tab...
+                    self.CreateNotebookBase(panes, paneInfo)
                 
                 # Add new item to notebook
                 target.NotebookPage(paneInfo.notebook_id)
@@ -9892,6 +9872,27 @@ class AuiManager(wx.EvtHandler):
         self.RemoveAutoNBCaption(event.GetPane())        
     
 
+    def CreateNotebookBase(self, panes, paneInfo):
+        """
+        Creates an auto-notebook base from a pane, and then add that pane as a page.
+
+        :param `panes`: Set of panes to append new notebook base pane to
+        :param `paneInfo`: L{AuiPaneInfo} instance to convert to new notebook.
+        """
+
+        # Create base notebook pane ...
+        nbid = len(self._notebooks)
+
+        baseInfo = AuiPaneInfo()
+        baseInfo.SetDockPos(paneInfo).NotebookControl(nbid). \
+            CloseButton(False).SetNameFromNotebookId(). \
+            NotebookDockable(False).Floatable(paneInfo.IsFloatable())
+        baseInfo.best_size = paneInfo.best_size
+        panes.append(baseInfo)
+
+        # add original pane as tab ...
+        paneInfo.NotebookPage(nbid)
+
     def RemoveAutoNBCaption(self, pane):
         """
         Removes the caption on newly created automatic notebooks.
@@ -10269,4 +10270,70 @@ class AuiManager(wx.EvtHandler):
         self._sliding_frame = None
         self._sliding_pane = None
         
+
+class AuiManager_DCP(AuiManager):
+    """
+    A class similar to L{AuiManager} but with a Dummy Center Pane (**DCP**).
+    The code for this class is still flickery due to the call to `wx.CallAfter`
+    and the double-update call.
+    """
+    
+    def __init__(self, *args, **keys):
+
+        aui.AuiManager.__init__(self, *args, **keys)
+        self.hasDummyPane = False
         
+
+    def _createDummyPane(self):
+        """ Creates a Dummy Center Pane (**DCP**). """
+
+        if self.hasDummyPane:
+            return
+
+        self.hasDummyPane = True
+        dummy = wx.Panel(self.GetManagedWindow())
+        info = aui.AuiPaneInfo().CenterPane().NotebookDockable(True).Name('dummyCenterPane').DestroyOnClose(True)
+        self.AddPane(dummy, info)
+
+
+    def _destroyDummyPane(self):
+        """ Destroys the Dummy Center Pane (**DCP**). """
+
+        if not self.hasDummyPane:
+            return
+        
+        self.hasDummyPane = False
+        self.ClosePane(self.GetPane('dummyCenterPane'))
+
+        
+    def Update(self):
+        """
+        This method is called after any number of changes are made to any of the
+        managed panes. L{Update} must be invoked after L{AuiManager.AddPane} or L{AuiManager.InsertPane} are
+        called in order to "realize" or "commit" the changes.
+
+        In addition, any number of changes may be made to L{AuiPaneInfo} structures
+        (retrieved with L{AuiManager.GetPane}), but to realize the changes, L{Update}
+        must be called. This construction allows pane flicker to be avoided by updating
+        the whole layout at one time.
+        """
+        
+        aui.AuiManager.Update(self)
+
+        # check if there's already a center pane (except our dummy pane)
+        dummyCenterPane = self.GetPane('dummyCenterPane')
+        haveCenterPane = any((pane != dummyCenterPane) and (pane.dock_direction == aui.AUI_DOCK_CENTER) and
+                             not pane.IsFloating() and pane.IsShown() for pane in self.GetAllPanes())
+        if haveCenterPane:
+            if self.hasDummyPane:
+                # there's our dummy pane and also another center pane, therefor let's remove our dummy
+                def do():
+                    self._destroyDummyPane()
+                    self.Update()
+                wx.CallAfter(do)
+        else:
+            # if we get here, there's no center pane, create our dummy
+            if not self.hasDummyPane:
+                self._createDummyPane()
+
+                
