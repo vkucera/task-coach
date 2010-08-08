@@ -21,7 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-            
+
+Release('1.0.10', 'August 8, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''When SyncML is on, don't show effort for deleted tasks in the
+effort viewer.''')
+        ]
+    ),
+    
 Release('1.0.9', 'August 8, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
