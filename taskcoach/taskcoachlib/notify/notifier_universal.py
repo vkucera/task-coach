@@ -290,7 +290,13 @@ class _NotificationCenter(wx.EvtHandler):
                 self.waitingFrames.append((frm, timeout))
                 return
 
-        frm.SetDimensions(dx + dw - w - self.notificationMargin,
+        if frm.GetParent():
+            x = min(wx.ClientDisplayRect()[2] - self.notificationMargin - w,
+                    dx + dw + self.notificationMargin)
+        else:
+            x = dx + dw - w - self.notificationMargin
+
+        frm.SetDimensions(x,
                           bottom - h - self.notificationMargin,
                           w, h)
         self.displayedFrames.append((frm, h, timeout))
