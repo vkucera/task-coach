@@ -102,6 +102,14 @@ too small.'''),
         ]
     ),
 
+Release('1.0.10', 'August 8, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''When SyncML was on, the effort viewer would show effort for 
+deleted tasks.''')
+        ]
+    ),
+
 Release('1.0.9', 'August 8, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
