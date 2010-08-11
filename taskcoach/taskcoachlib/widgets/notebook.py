@@ -201,15 +201,36 @@ class AuiManagedFrameWithNotebookAPI(wx.Frame):
         super(AuiManagedFrameWithNotebookAPI, self).__init__(*args, **kwargs)
         self.manager = aui.AuiManager(self, 
             aui.AUI_MGR_DEFAULT|aui.AUI_MGR_ALLOW_ACTIVE_PANE)
+        self.manager.Bind(aui.EVT_AUI_PANE_CLOSE, self.onPaneClosingOrFloating)
+        self.manager.Bind(aui.EVT_AUI_PANE_FLOATING, self.onPaneClosingOrFloating)
+        
+    def onPaneClosingOrFloating(self, event):
+        thePane = event.GetPane()
+        if thePane.IsFloating() or thePane.IsNotebookPage():
+            event.Skip()
+            return
+        dockedPanes = self.dockedPanes()
+        if len(dockedPanes) == 1:
+            event.Veto()
+        else:
+            event.Skip()
+            if self.isCenterPane(thePane):
+                newCenter = [pane for pane in dockedPanes if pane != event.GetPane()][0]
+                newCenter.Center()
+                
+    @staticmethod
+    def isCenterPane(pane):
+        return pane.dock_direction_get() == aui.AUI_DOCK_CENTER
+    
+    def dockedPanes(self):
+        return [pane for pane in self.manager.GetAllPanes() if not pane.IsToolbar() and not pane.IsFloating() and not pane.IsNotebookPage()]
 
     def AddPage(self, page, caption, name): 
         paneInfo = aui.AuiPaneInfo()
-        # To ensure we have a center pane we make the first pane the center pane:
-        if self.manager.GetAllPanes():
-            paneInfo = paneInfo.CloseButton(True).Floatable(True).Right().FloatingSize((300,200)).BestSize((200,200))
-        else:
-            paneInfo = paneInfo.CenterPane().CloseButton(False).Floatable(False)
+        paneInfo = paneInfo.CloseButton(True).Floatable(True).Right().FloatingSize((300,200)).BestSize((200,200))
         paneInfo = paneInfo.Name(name).Caption(caption).CaptionVisible().MaximizeButton().DestroyOnClose()
+        if not self.dockedPanes():
+            paneInfo.Center()
         self.manager.AddPane(page, paneInfo)
         self.manager.Update()
 
