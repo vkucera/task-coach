@@ -275,6 +275,8 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
+									<integer>8</integer>
+									<integer>7</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -312,7 +314,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>TaskCelliPad.h</string>
+								<string>Info.plist</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -320,11 +322,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>TaskCelliPad.h</string>
+										<string>Info.plist</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A6EE2CA2120EA2F3003AB52B</string>
+										<string>A61BD8E312130EA1009A6BE6</string>
 										<key>history</key>
 										<array>
 											<string>A627F04E10E7558600B856F4</string>
@@ -545,7 +547,6 @@
 											<string>A6574F7011FDDE2900D89B8F</string>
 											<string>A6574F7111FDDE2900D89B8F</string>
 											<string>A6574F7211FDDE2900D89B8F</string>
-											<string>A67339DB11FDDF4900599BD9</string>
 											<string>A67339FD11FDDFF700599BD9</string>
 											<string>A68B7F45120404DF00601661</string>
 											<string>A68B7F46120404DF00601661</string>
@@ -561,7 +562,8 @@
 											<string>A6EE2C9E120EA2F3003AB52B</string>
 											<string>A6EE2C9F120EA2F3003AB52B</string>
 											<string>A6EE2CA0120EA2F3003AB52B</string>
-											<string>A6EE2CA1120EA2F3003AB52B</string>
+											<string>A6A57B051211CE670025EF63</string>
+											<string>A6A57B061211CE670025EF63</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -684,11 +686,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6EE2C78120EA028003AB52B</string>
+				<string>A61BD8DF12130E61009A6BE6</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A6EE2C79120EA028003AB52B</string>
+				<string>A61BD8E012130E61009A6BE6</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A6EE2C7A120EA028003AB52B</string>
+				<string>A61BD8E112130E61009A6BE6</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -876,8 +878,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>A6EE2CA9120EA2F3003AB52B</string>
-		<string>A6EE2CAA120EA2F3003AB52B</string>
 		<string>/Users/jeromelaheurte/Dev/TaskCoach/taskcoach-trunk/taskcoach-iphone/TaskCoach.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
