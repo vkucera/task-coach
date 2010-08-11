@@ -1257,6 +1257,12 @@ class UltimateTreeCtrl(wx.Panel):
 
                 self._headerSizes[indexPath] = (newOwn, children)
 
+                path = list(indexPath[:-1])
+                while path:
+                    o, c = self._resizingOrigins[tuple(path)]
+                    self._headerSizes[tuple(path)] = (o + actualDelta, c + actualDelta)
+                    path.pop()
+
             self.Refresh()
 
     def _OnLeaveHeader(self, evt):
