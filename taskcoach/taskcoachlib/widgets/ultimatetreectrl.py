@@ -547,6 +547,7 @@ class UltimateTreeCtrl(wx.Panel):
         self._expanded = set()
         self._visibleRows = dict()
         self._selection = set()
+        self._lastSelection = None
         self._headerSizes = dict()
 
         # 0: normal
@@ -1131,7 +1132,7 @@ class UltimateTreeCtrl(wx.Panel):
             dc.EndDrawing()
 
     def _OnLeftUpContent(self, evt):
-        self._ProcessLeftUpContent(evt.GetX(), evt.GetY(), evt.CmdDown())
+        self._ProcessLeftUpContent(evt.GetX(), evt.GetY(), evt.CmdDown(), evt.ShiftDown())
 
     def _OnRightUpContent(self, evt):
         self._ProcessRightUpContent(evt.GetX(), evt.GetY())
@@ -1272,7 +1273,7 @@ class UltimateTreeCtrl(wx.Panel):
 
     def _OnCellClicked(self, cell, evt):
         x, y = cell.GetPositionTuple()
-        self._ProcessLeftUpContent(x + evt.GetX(), y + evt.GetY(), evt.CmdDown())
+        self._ProcessLeftUpContent(x + evt.GetX(), y + evt.GetY(), evt.CmdDown(), evt.ShiftDown())
 
     def _OnCellDClicked(self, cell, evt):
         x, y = cell.GetPositionTuple()
@@ -1305,7 +1306,7 @@ class UltimateTreeCtrl(wx.Panel):
         evt.SetEventObject(self)
         self.ProcessEvent(evt)
 
-    def _ProcessLeftUpContent(self, xc, yc, ctrl):
+    def _ProcessLeftUpContent(self, xc, yc, ctrl, shift):
         xs, ys = self._contentView.CalcUnscrolledPosition(xc, yc)
 
         for indexPath, row in self._visibleRows.items():
@@ -1324,15 +1325,60 @@ class UltimateTreeCtrl(wx.Panel):
             if indexPath is None:
                 for indexPath in set(self._selection):
                     self._Deselect(indexPath)
+                self._lastSelection = None
             else:
                 if ctrl:
                     if indexPath in self._selection:
                         self._Deselect(indexPath)
+                        self._lastSelection = None
                     else:
                         if self.__style & ULTTREE_SINGLE_SELECTION:
                             for path in set(self._selection):
                                 self._Deselect(path)
                         self._Select(indexPath)
+                        self._lastSelection = indexPath
+                elif shift:
+                    if self._lastSelection is None:
+                        already = False
+                        for path in set(self._selection):
+                            if path == indexPath:
+                                already = True
+                            else:
+                                self._Deselect(path)
+                        if not already:
+                            self._Select(indexPath)
+                            self._lastSelection = indexPath
+                    else:
+                        startPath = self._lastSelection
+                        endPath = indexPath
+
+                        if startPath[0] > endPath[0]:
+                            startPath, endPath = endPath, startPath
+
+                        def nextRow(path):
+                            if self.GetRowChildrenCount(path) and path in self._expanded:
+                                # First child
+                                return path + (0,)
+                            elif len(path) == 1:
+                                # Next toplevel sibling
+                                return (path[0] + 1,)
+                            elif path[-1] < self.GetRowChildrenCount(path[:-1]) - 1:
+                                # Next sibling
+                                return path[:-1] + (path[-1] + 1,)
+                            else:
+                                while True:
+                                    path = path[:-1]
+                                    if len(path) == 1:
+                                        return (path[0] + 1,)
+                                    if path[-1] < self.GetRowChildrenCount(path[:-1]) - 1:
+                                        return path[:-1] + (path[-1] + 1,)
+
+                        while startPath != endPath:
+                            if startPath not in self._selection:
+                                self._Select(startPath)
+                            startPath = nextRow(startPath)
+                        if startPath not in self._selection:
+                            self._Select(startPath)
                 else:
                     already = False
                     for path in set(self._selection):
@@ -1342,6 +1388,7 @@ class UltimateTreeCtrl(wx.Panel):
                             self._Deselect(path)
                     if not already:
                         self._Select(indexPath)
+                        self._lastSelection = indexPath
 
                 self.Refresh()
 
