@@ -504,6 +504,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
 
         self.widget.SetViewType(self.settings.getint(self.settingsSection(), 'viewtype'))
         self.widget.SetStyle(self.settings.getint(self.settingsSection(), 'vieworientation'))
+        self.widget.SetPeriodCount(self.settings.getint(self.settingsSection(), 'periodcount'))
 
         self.periodCountUICommand.setValue(self.settings.getint(self.settingsSection(), 'periodcount'))
         self.periodCountUICommand.enable(self.widget.GetViewType() != wxSCHEDULER_MONTHLY)
