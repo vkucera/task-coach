@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 02 Aug 2010, 09.00 GMT
+# Latest Revision: 12 Aug 2010, 09.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -2867,7 +2867,8 @@ class AuiFloatingFrame(wx.MiniFrame):
         self._mgr = AuiManager()
         self._mgr.SetManagedWindow(self)
         self._mgr.SetArtProvider(owner_mgr.GetArtProvider())
-        
+        self._mgr.SetAGWFlags(owner_mgr.GetAGWFlags())
+
 
     def CopyAttributes(self, pane):
         """
@@ -3044,7 +3045,7 @@ class AuiFloatingFrame(wx.MiniFrame):
             self._mgr.DetachPane(self._pane_window)
 
             if isinstance(self._pane_window, auibar.AuiToolBar):
-                pane.window.SetAuiManager(self._owner_mgr)
+                self._pane_window.SetAuiManager(self._owner_mgr)
 
             # if we do not do this, then we can crash...
             if self._owner_mgr and self._owner_mgr._action_window == self:
@@ -3062,7 +3063,7 @@ class AuiFloatingFrame(wx.MiniFrame):
 
         if self._owner_mgr and event.GetActive():
             self._owner_mgr.OnFloatingPaneActivated(self._pane_window)
-            
+
 
     def OnMove(self, event):
         """
@@ -7989,7 +7990,11 @@ class AuiManager(wx.EvtHandler):
         state = AUI_BUTTON_STATE_NORMAL
 
         if part.rect.Contains(pt):
-            if wx.GetMouseState().LeftDown():
+            if wx.VERSION < (2,9):
+                leftDown = wx.GetMouseState().LeftDown()
+            else:
+                leftDown = wx.GetMouseState().LeftIsDown()
+            if leftDown:
                 state = AUI_BUTTON_STATE_PRESSED
             else:
                 state = AUI_BUTTON_STATE_HOVER

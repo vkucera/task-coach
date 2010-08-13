@@ -144,7 +144,7 @@ class wxSchedulerPaint( object ):
 			candidateSchedule = None
 			minDelta = None
 			for sched in schedules:
-				if sched.start.IsLaterThan(schedule.end):
+				if sched.start.IsLaterThan(schedule.end) or sched.start.IsEqualTo(schedule.end):
 					delta = sched.start.Subtract(schedule.end)
 					if minDelta is None or minDelta > delta:
 						minDelta = delta
