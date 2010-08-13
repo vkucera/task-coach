@@ -74,7 +74,10 @@ class ViewerContainer(object):
         event.Skip()
         for viewer in self.viewers:
             if event.EventObject == viewer.widget:
-                self.activateViewer(viewer)
+                # Don't activate the viewer immediately, it may cause another
+                # AuiManager.Update call which could undock a viewer that is 
+                # in the process of being docked to an automatic notebook. 
+                wx.CallAfter(self.activateViewer, viewer)
                 break
 
     @classmethod

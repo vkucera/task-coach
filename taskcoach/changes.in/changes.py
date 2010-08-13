@@ -22,11 +22,14 @@ from changetypes import *
 
 releases = [
 
-Release('1.0.10', 'August 9, 2010',
+Release('1.0.10', 'August 13, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''When SyncML was on, the effort viewer would show effort for 
-deleted tasks.''')
+deleted tasks.'''),
+        Bug('''When dragging panes and dropping them onto each other to create
+an automatic notebook, make sure dropped viewers are properly contained in 
+the notebook.''')
         ],
     featuresAdded=[
         Feature('''Allow automatic creation of a notebook of viewers on top
