@@ -33,9 +33,6 @@ class AuiManagedFrameWithDynamicCenterPane(wx.Frame):
            self.manager.Bind(eventType, self.onPaneClosingOrFloating)
 
     def onPaneClosingOrFloating(self, event):
-        import wx.lib.inspection
-        wx.lib.inspection.InspectionTool().Show()
-
         pane = event.GetPane()
         dockedPanes = self.dockedPanes()
         if self.isCenterPane(pane) and len(dockedPanes) == 1:
