@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-import draganddrop
+import draganddrop, frame
 import taskcoachlib.thirdparty.aui as aui
 import taskcoachlib.thirdparty.flatnotebook as fnb
 
@@ -194,45 +194,11 @@ class Notebook(BookMixin, fnb.FlatNotebook):
             self.SetNavigatorIcon(bitmap) 
 
 
-class AuiManagedFrameWithNotebookAPI(wx.Frame):
+class AuiManagedFrameWithNotebookAPI(frame.AuiManagedFrameWithDynamicCenterPane):
     ''' An AUI managed frame that provides (part of) the notebook API. '''
 
-    def __init__(self, *args, **kwargs):
-        super(AuiManagedFrameWithNotebookAPI, self).__init__(*args, **kwargs)
-        self.manager = aui.AuiManager(self, 
-            aui.AUI_MGR_DEFAULT|aui.AUI_MGR_ALLOW_ACTIVE_PANE)
-        self.manager.Bind(aui.EVT_AUI_PANE_CLOSE, self.onPaneClosingOrFloating)
-        self.manager.Bind(aui.EVT_AUI_PANE_FLOATING, self.onPaneClosingOrFloating)
-        
-    def onPaneClosingOrFloating(self, event):
-        thePane = event.GetPane()
-        if thePane.IsFloating() or thePane.IsNotebookPage():
-            event.Skip()
-            return
-        dockedPanes = self.dockedPanes()
-        if len(dockedPanes) == 1:
-            event.Veto()
-        else:
-            event.Skip()
-            if self.isCenterPane(thePane):
-                newCenter = [pane for pane in dockedPanes if pane != event.GetPane()][0]
-                newCenter.Center()
-                
-    @staticmethod
-    def isCenterPane(pane):
-        return pane.dock_direction_get() == aui.AUI_DOCK_CENTER
-    
-    def dockedPanes(self):
-        return [pane for pane in self.manager.GetAllPanes() if not pane.IsToolbar() and not pane.IsFloating() and not pane.IsNotebookPage()]
-
-    def AddPage(self, page, caption, name): 
-        paneInfo = aui.AuiPaneInfo()
-        paneInfo = paneInfo.CloseButton(True).Floatable(True).Right().FloatingSize((300,200)).BestSize((200,200))
-        paneInfo = paneInfo.Name(name).Caption(caption).CaptionVisible().MaximizeButton().DestroyOnClose()
-        if not self.dockedPanes():
-            paneInfo.Center()
-        self.manager.AddPane(page, paneInfo)
-        self.manager.Update()
+    def AddPage(self, page, caption, name):
+        super(AuiManagedFrameWithNotebookAPI, self).addPane(page, caption, name) 
 
     def SetPageText(self, index, title):
         self.manager.GetAllPanes()[index].Caption(title)
