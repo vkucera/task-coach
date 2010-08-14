@@ -963,11 +963,12 @@ class RenameViewer(ViewerCommand):
             helpText=_('Rename the selected viewer'), *args, **kwargs)
         
     def doCommand(self, event):
+        activeViewer = self.viewer.activeViewer()
         viewerNameDialog = wx.TextEntryDialog(self.mainWindow(), 
             _('New title for the viewer:'), _('Rename viewer'), 
-            self.viewer.title())
+            activeViewer.title())
         if viewerNameDialog.ShowModal() == wx.ID_OK:
-            self.viewer.setTitle(viewerNameDialog.GetValue())
+            activeViewer.setTitle(viewerNameDialog.GetValue())
         viewerNameDialog.Destroy()
         
         
