@@ -20,15 +20,13 @@ import sys, os, struct
 
 _BINBASE = os.path.join(os.path.split(__file__)[0], '..', 'bin.in')
 
-pyver = 'py%s' % ''.join(map(str, sys.version_info[:2]))
-
 if len(struct.pack('L', 0)) == 8:
     arch = 'IA64'
 else:
     arch = 'IA32'
 
 if sys.platform == 'linux2':
-    sys.path.insert(0, os.path.join(_BINBASE, 'linux', '%s_%s' % (pyver, arch)))
+    sys.path.insert(0, os.path.join(_BINBASE, 'linux', arch))
 elif sys.platform == 'darwin':
     sys.path.insert(0, os.path.join(_BINBASE, 'macos'))
 else:
