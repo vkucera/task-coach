@@ -651,4 +651,24 @@ class TaskViewerInListModeTest(CommonTestsMixin, ColumnsTestsMixin,
                                TreeOrListModeTestsMixin, TaskViewerTestCase):
     treeMode = False
         
+        
+        
+class TaskCalendarViewerTest(test.wxTestCase):
+    def testCreate(self):
+        task.Task.settings = self.settings = config.Settings(load=False)
+        self.taskFile = persistence.TaskFile()
+        gui.viewer.task.CalendarViewer(self.frame, self.taskFile, self.settings)
 
+
+class TaskSquareMapViewerTest(test.wxTestCase):
+    def testCreate(self):
+        task.Task.settings = self.settings = config.Settings(load=False)
+        self.taskFile = persistence.TaskFile()
+        gui.viewer.task.SquareTaskViewer(self.frame, self.taskFile, self.settings)
+        
+        
+class TaskTimelineViewerTest(test.wxTestCase):
+    def testCreate(self):
+        task.Task.settings = self.settings = config.Settings(load=False)
+        self.taskFile = persistence.TaskFile()
+        gui.viewer.task.TimelineViewer(self.frame, self.taskFile, self.settings)

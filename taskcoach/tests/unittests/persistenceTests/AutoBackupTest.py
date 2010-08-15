@@ -56,33 +56,10 @@ class AutoBackupTest(test.TestCase):
         
     def onCopyFile(self, *args):
         self.copyCalled = True
-        
-    def globNone(self, pattern):
-        return []
-        
-    def glob(self, pattern):
-        self.pattern = pattern
-        return self.oneBackupFile()
-    
+          
     def oneBackupFile(self):
         return [self.backup.backupFilename(self.taskFile)]
 
-    def glob2(self, pattern):
-        return self.twoBackupFiles()
-        
-    def twoBackupFiles(self):
-        files = [self.backup.backupFilename(self.taskFile),
-                 self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2000,1,1,1,1,1))]
-        files.sort()
-        return files
-
-    def threeBackupFiles(self):
-        files = [self.backup.backupFilename(self.taskFile),
-                 self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2005,1,1,1,1,1)),
-                 self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2000,1,1,1,1,1))]
-        files.sort()
-        return files
-        
     def fourBackupFiles(self):
         files = [self.backup.backupFilename(self.taskFile),
                  self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2001,1,1,1,1,1)),
@@ -132,7 +109,7 @@ class AutoBackupTest(test.TestCase):
     def testRemoveExtraneousBackFiles_OSError(self):
         def remove(filename):
             raise OSError
-        self.backup.removeExtraneousBackupFiles(self.taskFile, remove=remove, glob=self.glob2)
+        self.backup.removeExtraneousBackupFiles(self.taskFile, remove=remove, glob=self.globMany)
 
     def testBackupFilename(self):
         now = date.DateTime(2004,1,1)

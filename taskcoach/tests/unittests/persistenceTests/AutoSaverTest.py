@@ -31,9 +31,6 @@ class DummySettings(dict):
         
     def getboolean(self, section, setting): # pylint: disable-msg=W0613
         return self.get(setting, 'False') == 'True'
-    
-    def getint(self, section, settings):
-        return self.maxnrofbackups
 
 
 class DummyFile(object):

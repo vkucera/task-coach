@@ -133,13 +133,13 @@ class IPhoneBonjourDialog(wx.Dialog):
                                  _('You have enabled the iPhone synchronization feature, which\n'
                                    'needs Bonjour. Bonjour does not seem to be installed on\n'
                                    'your system.')), 0, wx.ALL, 3)
-        if '__WXMSW__' in wx.PlatformInfo:
+        if '__WXMSW__' in wx.PlatformInfo: # pragma: no cover
             vsizer.Add(wx.StaticText(self, wx.ID_ANY,
                                      _('Please download and install Bonjour for Windows from\n')), 0, wx.ALL, 3)
             vsizer.Add(hl.HyperLinkCtrl(self, wx.ID_ANY,
                                         _('Apple\'s web site'),
                                         URL='http://support.apple.com/downloads/Bonjour_for_Windows'), 0, wx.ALL, 3)
-        else:
+        else: # pragma: no cover
             # MacOS does support Bonjour in all cases, so we're probably running Linux.
             vsizer.Add(wx.StaticText(self, wx.ID_ANY,
                                      _('Bonjour support for Linux is generally provided by\n'

@@ -47,6 +47,10 @@ class BaseCompositeEffort(base.BaseEffort): # pylint: disable-msg=W0223
 
     def markDirty(self):
         pass # CompositeEfforts cannot be dirty
+    
+    def duration(self, recursive=False):
+        return sum((effort.duration() for effort in \
+                    self._getEfforts(recursive)), date.TimeDelta())
 
     def durationDay(self, dayOffset):
         ''' Return the duration of this composite effort on a specific day. '''
@@ -117,10 +121,6 @@ class CompositeEffort(BaseCompositeEffort):
         return 'CompositeEffort(task=%s, start=%s, stop=%s, efforts=%s)'%\
             (self.task(), self.getStart(), self.getStop(),
             str([e for e in self._getEfforts()]))
-
-    def duration(self, recursive=False):
-        return sum((effort.duration() for effort in \
-                    self._getEfforts(recursive)), date.TimeDelta())
 
     def revenue(self, recursive=False):
         return sum(effort.revenue() for effort in self._getEfforts(recursive))
@@ -215,10 +215,6 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
 
     def description(self, *args, **kwargs): # pylint: disable-msg=W0613
         return _('Total for %s')%render.dateTimePeriod(self.getStart(), self.getStop())
-
-    def duration(self, recursive=False):
-        return sum((effort.duration() for effort in self._getEfforts(recursive)),
-                   date.TimeDelta())
 
     def revenue(self, recursive=False): # pylint: disable-msg=W0613
         return sum(effort.revenue() for effort in self._getEfforts())
