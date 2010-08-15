@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.0', 'August 14, 2010',
+Release('1.2.0', 'August 15, 2010',
     summary='''This release adds task dependencies.''',
     featuresAdded=[
         Feature('''Tasks can have one or more prerequisite tasks. As long as 
@@ -66,7 +66,7 @@ dependencies. The task file format version number is now 31.''')
         ]
     ),
     
-Release('1.1.0', 'August 14, 2010',
+Release('1.1.0', 'August 15, 2010',
     summary='''This release adds time to start, due and completion dates of 
 tasks and adds support for mass editing of items. It also adds support for the
 upcoming version 3.0 for the iPhone/iPod/iPad.''',
@@ -102,7 +102,7 @@ too small.'''),
         ]
     ),
 
-Release('1.0.10', 'August 14, 2010',
+Release('1.0.10', 'August 15, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''When SyncML was on, the effort viewer would show effort for 
@@ -115,7 +115,8 @@ viewer.''', '3042037')
         ],
     featuresAdded=[
         Feature('''Allow automatic creation of a notebook of viewers on top
-of the initial task viewer.''')
+of the initial task viewer. This makes the user interface functionally 
+equivalent to the previously removed "tabbed" mode.''')
         ]
     ),
 
