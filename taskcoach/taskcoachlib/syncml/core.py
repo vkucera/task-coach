@@ -26,7 +26,8 @@ else:
     arch = 'IA32'
 
 if sys.platform == 'linux2':
-    sys.path.insert(0, os.path.join(_BINBASE, 'linux', arch))
+    # The user should install the binary packages
+    pass
 elif sys.platform == 'darwin':
     sys.path.insert(0, os.path.join(_BINBASE, 'macos'))
 else:
