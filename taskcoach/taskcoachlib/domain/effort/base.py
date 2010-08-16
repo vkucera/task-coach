@@ -35,10 +35,10 @@ class BaseEffort(object):
         return self._stop
 
     def subject(self, *args, **kwargs):
-        return self._task.subject(*args, **kwargs)
+        return self.task().subject(*args, **kwargs)
 
     def categories(self, recursive=False):
-        return self._task.categories(recursive)
+        return self.task().categories(recursive)
 
     def foregroundColor(self, recursive=False):
         return self.task().foregroundColor(recursive)
