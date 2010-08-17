@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.0', 'August 15, 2010',
+Release('1.2.0', 'August 17, 2010',
     summary='''This release adds task dependencies.''',
     featuresAdded=[
         Feature('''Tasks can have one or more prerequisite tasks. As long as 

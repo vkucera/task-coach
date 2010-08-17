@@ -37,8 +37,8 @@ class ViewFilter(base.Filter):
                 eventType=eventType)
         super(ViewFilter, self).__init__(*args, **kwargs)
 
-    def onTaskChange(self, event):
-        tasks = event.sources()
+    def onTaskChange(self, event): # pylint: disable-msg=W0613
+        tasks = self.observable()
         newEvent = patterns.Event()
         tasksToRemove = [task for task in tasks if not self.filterTask(task)] # pylint: disable-msg=W0621
         self.removeItemsFromSelf(tasksToRemove, newEvent)
@@ -47,7 +47,7 @@ class ViewFilter(base.Filter):
         self.extendSelf(tasksToAdd, newEvent)
         newEvent.send()
         
-    def onMidnight(self, event):
+    def onMidnight(self, event): # pylint: disable-msg=W0613
         self.reset()
             
     def setFilteredByDueDateTime(self, dueDateTimeString):
@@ -94,6 +94,7 @@ class ViewFilter(base.Filter):
 
     @staticmethod
     def stringToDueDateTime(dueDateTimeString):
+        # pylint: disable-msg=W0108
         dateTimeFactory = {'Today' : lambda: date.Now().endOfDay(), 
                            'Tomorrow' : lambda: date.Now().endOfTomorrow(),
                            'Workweek' : lambda: date.Now().endOfWorkWeek(), 
