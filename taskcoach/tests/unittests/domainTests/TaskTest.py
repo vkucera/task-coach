@@ -659,7 +659,7 @@ class TaskDueTodayTest(TaskTestCase, CommonTaskTestsMixin):
     
     def testIsDueSoon(self):
         self.failUnless(self.task.dueSoon())
-
+        
     def testDaysLeft(self):
         self.assertEqual(0, self.task.timeLeft().days)
 

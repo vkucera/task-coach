@@ -102,17 +102,14 @@ class CommandAsserts(object):
         self.assertEqual(expectedHistory, commands.getHistory())
         self.assertEqual(expectedFuture, commands.getFuture())
 
-    def assertDoUndoRedo(self, assertDone, assertUndone=None, 
-            assertRedone=None):
+    def assertDoUndoRedo(self, assertDone, assertUndone=None):
         if not assertUndone:
             assertUndone = assertDone
-        if not assertRedone:
-            assertRedone = assertDone
         assertDone()
         self.undo()
         assertUndone()
         self.redo()
-        assertRedone()
+        assertDone()
 
 class Mixin(CommandAsserts, TaskAsserts, EffortAsserts, TaskListAsserts, 
             EffortListAsserts, NoteContainerAsserts):

@@ -66,9 +66,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
                 tasks = selectedItemsFilter = domain.base.SelectedItemsFilter(self.taskFile.tasks(), 
                                                                               selectedItems=self.tasksToShowEffortFor)
                 self.__observersToDetach.append(selectedItemsFilter)
-            searchFilter = domain.base.SearchFilter(tasks)
-            self.__domainObjectsToView = searchFilter
-            self.__observersToDetach.append(searchFilter)
+            self.__domainObjectsToView = tasks
         return self.__domainObjectsToView
     
     def displayingNewTasks(self):
@@ -127,7 +125,10 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
             the taskList, either individually (i.e. no aggregation), per day,
             per week, or per month. '''
         aggregation = self.settings.get(self.settingsSection(), 'aggregation')
-        return self.createAggregator(filter.DeletedFilter(taskList), aggregation)
+        deletedFilter = filter.DeletedFilter(taskList)
+        searchFilter = filter.SearchFilter(self.createAggregator(deletedFilter, aggregation))
+        self.__observersToDetach.extend([deletedFilter, searchFilter])
+        return searchFilter
     
     def createAggregator(self, taskList, aggregation):
         ''' Return an instance of a class that aggregates the effort records 
@@ -137,11 +138,11 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
             - per week ('week'), or 
             - per month ('month'). '''
         if aggregation == 'details':
-            result = effort.EffortList(taskList)
+            aggregator = effort.EffortList(taskList)
         else:
-            result = effort.EffortAggregator(taskList, aggregation=aggregation)
-        self.__observersToDetach.append(result)
-        return result
+            aggregator = effort.EffortAggregator(taskList, aggregation=aggregation)
+        self.__observersToDetach.append(aggregator)
+        return aggregator
             
     def createWidget(self):
         self._columns = self._createColumns()

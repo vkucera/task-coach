@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import test, wx
 from taskcoachlib.gui import splash, icons
 
 
@@ -30,17 +30,21 @@ class SplashTest(test.wxTestCase):
         self.splashScreen.Destroy()
         super(SplashTest, self).tearDown()
 
-    def bitmapData(self, bitmap):
-        return bitmap.ConvertToImage().GetData()
-
-    def assertEqualBitmaps(self, expectedBitmap, actualBitmap):
-        self.assertEqual(self.bitmapData(expectedBitmap), 
-                         self.bitmapData(actualBitmap))
+    def assertCorrectBitmap(self):
+        expectedBitmap = icons.catalog['splash'].getBitmap()
+        actualBitmap = self.splashScreen.GetSplashWindow().GetBitmap()
+        bitmapData = lambda bitmap: bitmap.ConvertToImage().GetData()
+        self.assertEqual(bitmapData(expectedBitmap), bitmapData(actualBitmap))
 
     def testTimeout(self):
         self.assertEqual(4000, self.splashScreen.GetTimeout())
 
     def testBitmap(self):
-        expectedBitmap = icons.catalog['splash'].getBitmap()
-        actualBitmap = self.splashScreen.GetSplashWindow().GetBitmap()
-        self.assertEqualBitmaps(expectedBitmap, actualBitmap)
+        self.assertCorrectBitmap()
+
+    def testMirrorBitmapBackWhenLanguageIsRTL(self):
+        class FakeModule(object):
+            def currentLanguageIsRightToLeft(self):
+                return True
+        splash.i18n = FakeModule()
+        self.assertCorrectBitmap()

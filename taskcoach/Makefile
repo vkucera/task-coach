@@ -155,9 +155,13 @@ disttests:
 alltests: prepare sdist_linux
 	cd tests; $(PYTHON) test.py --alltests
 
-coverage:
-	cd tests; coverage -x test.py; coverage -b -d coverage.out -o /usr
+coverage: coverage_run coverage_report
 
+coverage_run:
+	cd tests; coverage run test.py
+	
+coverage_report:
+	cd tests; coverage html -d coverage.out --omit "test.py,../taskcoachlib/meta/debug.py,../taskcoachlib/thirdparty,../taskcoachlib/i18n/po2dict" 
 
 CLEANFILES=build website.out dot.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile tests/.coverage tests/coverage.out
 REALLYCLEANFILES=dist taskcoachlib/gui/icons.py taskcoachlib/persistence/templates.py \

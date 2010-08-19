@@ -31,7 +31,7 @@ class DummySettings(dict):
         
     def getboolean(self, section, setting): # pylint: disable-msg=W0613
         return self.get(setting, 'False') == 'True'
-    
+
 
 class DummyFile(object):
     name = 'testfile.tsk'

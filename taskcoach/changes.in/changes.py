@@ -20,9 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from changetypes import *
 
-releases = [
-
-Release('1.2.0', 'August 17, 2010',
+Release('1.2.0', 'August 19, 2010',
     summary='''This release adds task dependencies.''',
     featuresAdded=[
         Feature('''Tasks can have one or more prerequisite tasks. As long as 
@@ -66,7 +64,7 @@ dependencies. The task file format version number is now 31.''')
         ]
     ),
     
-Release('1.1.0', 'August 15, 2010',
+Release('1.1.0', 'August 19, 2010',
     summary='''This release adds time to start, due and completion dates of 
 tasks and adds support for mass editing of items. It also adds support for the
 upcoming version 3.0 for the iPhone/iPod/iPad.''',
@@ -102,6 +100,14 @@ too small.'''),
         ]
     ),
 
+Release('1.0.11', 'August 16, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Searching descriptions wasn't working in the effort viewer.''',
+            '3031411')
+        ]
+    ),
+    
 Release('1.0.10', 'August 15, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[

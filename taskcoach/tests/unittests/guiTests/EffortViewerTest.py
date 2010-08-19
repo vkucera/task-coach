@@ -196,19 +196,17 @@ class CommonTestsMixin(object):
         
     def testSearch(self):
         self.viewer.setSearchFilter('Task2')
-        if self.aggregation == 'details':
-            expectedNumberOfItems = 1
-        else:
-            expectedNumberOfItems = 2
-        self.assertEqual(expectedNumberOfItems, self.viewer.size())
-
+        self.assertEqual(1, self.viewer.size())
+        
+    def testSearchDescription(self):
+        self.task.efforts()[0].setDescription('Description')
+        self.viewer.setSearchFilter('Description', searchDescription=True)
+        self.assertEqual(1, self.viewer.size())
+        
     def testDelete(self):
         self.viewer.widget.select([self.task.efforts()[-1]])
         self.viewer.deleteUICommand.doCommand(None)
-        if self.aggregation == 'details':
-            expectedNumberOfItems = self.expectedNumberOfItems - 1
-        else:
-            expectedNumberOfItems = self.expectedNumberOfItems - 3
+        expectedNumberOfItems = self.expectedNumberOfItems - (1 if self.aggregation == 'details' else 3)
         self.assertEqual(expectedNumberOfItems, self.viewer.size())
     
     def testDeleteTask(self):
@@ -238,7 +236,7 @@ class CommonTestsMixin(object):
     def testHideRevenueColumn(self):
         self.viewer.showColumnByName('revenue', False)
         self.assertEqual(3, self.viewer.widget.GetColumnCount())
-                
+
     def testActiveEffort(self):
         self.task2.efforts()[0].setStop(date.DateTime.max) # Make active
         self.viewer.onEverySecond(None) # Simulate clock firing
@@ -248,10 +246,7 @@ class CommonTestsMixin(object):
         self.task2.efforts()[0].setStop(date.DateTime.max) # Make active
         self.switchAggregation()    
         self.viewer.onEverySecond(None) # Simulate clock firing
-        if self.aggregation == 'details': # Before the switch
-            expectedNrOfTrackedItems = 2
-        else:
-            expectedNrOfTrackedItems = 1
+        expectedNrOfTrackedItems = 2 if self.aggregation == 'details' else 1
         self.assertEqual(expectedNrOfTrackedItems, 
                          len(self.viewer.currentlyTrackedItems()))
         
