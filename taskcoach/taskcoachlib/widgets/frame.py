@@ -24,7 +24,7 @@ class AuiManagedFrameWithDynamicCenterPane(wx.Frame):
     def __init__(self, *args, **kwargs):
         super(AuiManagedFrameWithDynamicCenterPane, self).__init__(*args, **kwargs)
         self.manager = aui.AuiManager(self, 
-            aui.AUI_MGR_DEFAULT|aui.AUI_MGR_ALLOW_ACTIVE_PANE|aui.AUI_MGR_SMOOTH_DOCKING)
+            aui.AUI_MGR_DEFAULT|aui.AUI_MGR_ALLOW_ACTIVE_PANE)
         self.manager.SetAutoNotebookStyle(aui.AUI_NB_BOTTOM|aui.AUI_NB_CLOSE_ON_ACTIVE_TAB|aui.AUI_NB_SUB_NOTEBOOK)
         self.bindEvents()
 

@@ -26,7 +26,7 @@ from taskcoachlib.thirdparty import lockfile
 try:
     from taskcoachlib.syncml import sync
     from taskcoachlib.widgets import conflict
-except ImportError:
+except ImportError: # pragma: no cover
     # Unsupported platform.
     pass
 

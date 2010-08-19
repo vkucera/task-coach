@@ -56,16 +56,10 @@ class AutoBackupTest(test.TestCase):
         
     def onCopyFile(self, *args):
         self.copyCalled = True
-    
+
     def oneBackupFile(self):
         return [self.backup.backupFilename(self.taskFile)]
 
-    def twoBackupFiles(self):
-        files = [self.backup.backupFilename(self.taskFile),
-                 self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2000,1,1,1,1,1))]
-        files.sort()
-        return files
-        
     def fourBackupFiles(self):
         files = [self.backup.backupFilename(self.taskFile),
                  self.backup.backupFilename(self.taskFile, now=lambda: date.DateTime(2001,1,1,1,1,1)),
@@ -83,9 +77,6 @@ class AutoBackupTest(test.TestCase):
         files.sort()
         return files
 
-    def glob(self, pattern):
-        return self.twoBackupFiles()
-        
     def globMany(self, pattern):
         return self.manyBackupFiles()
     

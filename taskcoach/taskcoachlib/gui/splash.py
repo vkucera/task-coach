@@ -20,7 +20,7 @@ import wx
 from taskcoachlib import i18n
 try:
     import icons
-except ImportError:    
+except ImportError: # pragma: no cover   
     print "ERROR: couldn't import icons.py."
     print 'You need to generate the icons file.'
     print 'Run "make prepare" in the Task Coach root folder.'

@@ -40,14 +40,6 @@ class DummyWindow(wx.Frame):
         super(DummyWindow, self).__init__(None)
         self.taskFile = persistence.TaskFile()
     
-    # pylint: disable-msg=W0221
-    
-    def IsShown(self):
-        return True
-    
-    def IsActive(self):
-        return True
-
 
 class ReminderControllerTestCase(test.TestCase):
     def setUp(self):

@@ -59,7 +59,7 @@ class AutoBackup(patterns.Observer):
                 remove(self.leastUniqueBackupFile(backupFiles))
             except OSError:
                 pass # Ignore errors
-
+                
     def numberOfExtraneousBackupFiles(self, backupFiles):
         return max(0, len(backupFiles) - self.maxNrOfBackupFiles(backupFiles))
 
