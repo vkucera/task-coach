@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from changetypes import *
 
+releases = [
+
 Release('1.2.0', 'August 19, 2010',
     summary='''This release adds task dependencies.''',
     featuresAdded=[
@@ -96,7 +98,7 @@ listbook widget.''', '2927384'),
         Bug('''The new edit dialogs better support tabbing through the dialogs.''',
             '2687959'),
         Bug('''On Mac OS X, the tabs in the editor and preferences dialogs were
-too small.'''),
+too small.''')
         ]
     ),
 
