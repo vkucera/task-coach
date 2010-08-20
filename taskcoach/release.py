@@ -26,8 +26,8 @@ Release steps:
   - Run 'make alltests'.
   - For each platform, create and upload the packages:
     * Mac OS X 10.4:       'make dmg; release.py upload'
-    * Ubuntu 8.04 (py2.5): 'make sdist_linux deb; release.py upload'
-    * Ubuntu 9.04 (py2.6): 'make sdist_linux deb; release.py upload'
+    * Ubuntu 8.04 (py2.5): 'make deb; release.py upload'
+    * Ubuntu 9.04 (py2.6): 'make deb; release.py upload'
     * Fedora 12:           'make fedora; release.py upload'
                            'make rpm; release.py upload'
     * OpenSuse:            'make opensuse; release.py upload'
