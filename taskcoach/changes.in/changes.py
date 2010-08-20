@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.1.0', 'August 19, 2010',
+Release('1.1.0', 'August 20, 2010',
     summary='''This release adds time to start, due and completion dates of 
 tasks and adds support for mass editing of items. It also adds support for the
 upcoming version 3.0 for the iPhone/iPod/iPad.''',
@@ -55,12 +55,6 @@ listbook widget.''', '2927384'),
             '2687959'),
         Bug('''On Mac OS X, the tabs in the editor and preferences dialogs were
 too small.'''),
-        ]
-    ),
-
-Release('1.0.11', 'August 16, 2010',
-    summary='''This is a bugfix release.''',
-    bugsFixed=[
         Bug('''Searching descriptions wasn't working in the effort viewer.''',
             '3031411')
         ]
