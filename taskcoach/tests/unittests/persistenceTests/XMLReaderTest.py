@@ -1325,7 +1325,10 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         <tasks>
             <task font="0;11;70;90;90;0;Helvetica Neue Light;0"/>
         </tasks>\n''')
-        self.assertEqual(11, tasks[0].font().GetPointSize())
+        if '__WXGTK__' == wx.Platform:
+            self.assertEqual(10, tasks[0].font().GetPointSize())
+        else:
+            self.assertEqual(11, tasks[0].font().GetPointSize())
         
     def testSans9LinuxFont(self):
         tasks = self.writeAndReadTasks('''
