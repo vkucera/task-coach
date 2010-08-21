@@ -1313,6 +1313,33 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
                          tasks[0].completionDateTime())
         self.failUnless(tasks[0].completed())
 
+    def testEmptyFontDescription(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task font=""/>
+        </tasks>\n''')
+        self.assertEqual(None, tasks[0].font())
+        
+    def testHelveticaMacFont(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task font="0;11;70;90;90;0;Helvetica Neue Light;0"/>
+        </tasks>\n''')
+        expectedFontSize = dict(__WXGTK__=10, __WXMSW__=8, 
+                                __WXMAC__=11)[wx.Platform]
+        self.assertEqual(expectedFontSize, tasks[0].font().GetPointSize())
+        
+    def testSans9LinuxFont(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task font="Sans 9"/>
+        </tasks>\n''')
+        if '__WXMAC__' == wx.Platform: # pragma: no cover
+            self.assertEqual(None, tasks[0].font())
+        else: # pragma: no cover
+            expectedFontSize = 9 if '__WXGTK__' == wx.Platform else 8
+            self.assertEqual(expectedFontSize, tasks[0].font().GetPointSize())
+
 
 class XMLReaderVersion31Test(XMLReaderTestCase):
     tskversion = 31 # New in release 1.2.0.
@@ -1378,3 +1405,4 @@ class XMLReaderVersion31Test(XMLReaderTestCase):
             </task>
         </tasks>\n''')
         self.assertDepends(tasks['1.1'], tasks['1.2'])
+

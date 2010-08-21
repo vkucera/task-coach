@@ -414,7 +414,10 @@ class XMLReader(object):
     
     def _parseFontDesc(self, fontDesc, defaultValue=None):
         if fontDesc:
-            font = wx.FontFromNativeInfoString(fontDesc)
+            try:
+                font = wx.FontFromNativeInfoString(fontDesc)
+            except wx.PyAssertionError:
+                return defaultValue
             if font.IsOk():
                 if font.GetPointSize() < 4:
                     font.SetPointSize(self.__defaultFontSize)
