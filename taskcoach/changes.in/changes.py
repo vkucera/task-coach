@@ -21,6 +21,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+            
+Release('1.1.1', 'August 21, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''On Mac OS X, properly read task files when the font description
+cannot be parsed. This may happen when reading a task file that was last
+saved on a different platform. Unfortunately, font specifications are platform
+specific.''', '3047183')
+        ]
+    ),
 
 Release('1.1.0', 'August 20, 2010',
     summary='''This release adds time to start, due and completion dates of 

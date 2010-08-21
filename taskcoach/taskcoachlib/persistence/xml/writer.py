@@ -161,7 +161,7 @@ class XMLWriter(object):
         if item.backgroundColor():
             node.setAttribute('bgColor', str(item.backgroundColor()))
         if item.font():
-            node.setAttribute('font', str(item.font().GetNativeFontInfoDesc()))
+            node.setAttribute('font', unicode(item.font().GetNativeFontInfoDesc()))
         if item.icon():
             node.setAttribute('icon', str(item.icon()))
         if item.selectedIcon():

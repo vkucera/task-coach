@@ -1312,3 +1312,27 @@ class XMLReaderVersion30Test(XMLReaderTestCase):
         self.assertEqual(date.DateTime(2005,1,1,23,59,59,999999), 
                          tasks[0].completionDateTime())
         self.failUnless(tasks[0].completed())
+
+    def testEmptyFontDescription(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task font=""/>
+        </tasks>\n''')
+        self.assertEqual(None, tasks[0].font())
+        
+    def testHelveticaMacFont(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task font="0;11;70;90;90;0;Helvetica Neue Light;0"/>
+        </tasks>\n''')
+        self.assertEqual(11, tasks[0].font().GetPointSize())
+        
+    def testSans9LinuxFont(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task font="Sans 9"/>
+        </tasks>\n''')
+        if '__WXGTK__' == wx.Platform: 
+            self.assertEqual(9, tasks[0].font().GetPointSize())
+        else:
+            self.assertEqual(None, tasks[0].font())
