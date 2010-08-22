@@ -30,6 +30,10 @@ class BaseCompositeEffort(base.BaseEffort): # pylint: disable-msg=W0223
         patterns.Publisher().registerObserver(self.onTimeSpentChanged,
             eventType=task.Task.totalTimeSpentChangedEventType(), eventSource=theTask)
         
+    def parent(self):
+        # Composite efforts don't have a parent.
+        return None
+        
     def _inPeriod(self, effort):
         return self.getStart() <= effort.getStart() <= self.getStop()
 
