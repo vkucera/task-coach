@@ -35,18 +35,10 @@ class RenderDateTime(test.TestCase):
                 self.assertEqual(expectedTime, renderedTime)
             else:
                 expectedDate, renderedDate = expectedDateTime, renderedDateTime
-            self.assertRenderedDate(expectedDate, renderedDate)
+            self.assertEqual(expectedDate, renderedDate)
         else:
             self.assertEqual(expectedDateTime, renderedDateTime)
             
-    def assertRenderedDate(self, expectedDate, renderedDate):
-        expectedMonth, expectedDay, expectedYear = expectedDate.split('/')
-        renderedMonth, renderedDay, renderedYear = renderedDate.split('/')
-        self.assertEqual(expectedDay, renderedDay)
-        self.assertEqual(expectedMonth, renderedMonth)
-        # Year may be two or four digits:
-        self.failUnless(renderedYear.endswith(expectedYear))
-
     @staticmethod
     def expectedDateTime(*dateTimeArgs):
         return date.DateTime(*dateTimeArgs).strftime(render.dateTimeFormat)
