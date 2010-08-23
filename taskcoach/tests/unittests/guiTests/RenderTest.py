@@ -46,30 +46,45 @@ class RenderDateTime(test.TestCase):
         self.assertEqual(expectedMonth, renderedMonth)
         # Year may be two or four digits:
         self.failUnless(renderedYear.endswith(expectedYear))
+
+    @staticmethod
+    def expectedDateTime(*dateTimeArgs):
+        return date.DateTime(*dateTimeArgs).strftime(render.dateTimeFormat)
+
+    @staticmethod
+    def expectedDate(*dateTimeArgs):
+        return date.DateTime(*dateTimeArgs).strftime(render.dateFormat)
         
     def testSomeRandomDateTime(self):
-        self.assertRenderedDateTime('04/05/10 12:54', 2010, 4, 5, 12, 54, 42)
+        expectedDateTime = self.expectedDateTime(2010, 4, 5, 12, 54)
+        self.assertRenderedDateTime(expectedDateTime, 2010, 4, 5, 12, 54, 42)
         
     def testInfiniteDateTime(self):
         self.assertRenderedDateTime('')
         
     def testStartOfDay(self):
-        self.assertRenderedDateTime('04/05/10', 2010, 4, 5)
+        expectedDateTime = self.expectedDate(2010, 4, 5)
+        self.assertRenderedDateTime(expectedDateTime, 2010, 4, 5)
 
     def testEndOfDay(self):
-        self.assertRenderedDateTime('04/05/10', 2010, 4, 5, 23, 59, 59)
+        expectedDateTime = self.expectedDate(2010, 4, 5)
+        self.assertRenderedDateTime(expectedDateTime, 2010, 4, 5, 23, 59, 59)
 
     def testEndOfDayWithoutSeconds(self):
-        self.assertRenderedDateTime('04/05/10', 2010, 4, 5, 23, 59)
+        expectedDateTime = self.expectedDate(2010, 4, 5)
+        self.assertRenderedDateTime(expectedDateTime, 2010, 4, 5, 23, 59)
 
     def testAlmostStartOfDay(self):
-        self.assertRenderedDateTime('04/05/10 00:01', 2010, 4, 5, 0, 1, 0)
+        expectedDateTime = self.expectedDateTime(2010, 4, 5, 0, 1)
+        self.assertRenderedDateTime(expectedDateTime, 2010, 4, 5, 0, 1, 0)
 
     def testAlmostEndOfDay(self):
-        self.assertRenderedDateTime('04/05/10 23:58', 2010, 4, 5, 23, 58, 59)
+        expectedDateTime = self.expectedDateTime(2010, 4, 5, 23, 58)
+        self.assertRenderedDateTime(expectedDateTime, 2010, 4, 5, 23, 58, 59)
 
     def testElevenOClock(self):
-        self.assertRenderedDateTime('04/05/10 23:00', 2010, 4, 5, 23, 0, 0)
+        expectedDateTime = self.expectedDateTime(2010, 4, 5, 23, 0)
+        self.assertRenderedDateTime(expectedDateTime, 2010, 4, 5, 23, 0, 0)
                          
 
 class RenderTimeLeftTest(test.TestCase):
