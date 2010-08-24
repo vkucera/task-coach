@@ -22,17 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.1.1', 'August 21, 2010',
-    summary='''This is a bugfix release.''',
-    bugsFixed=[
-        Bug('''On Mac OS X, properly read task files when the font description
-cannot be parsed. This may happen when reading a task file that was last
-saved on a different platform. Unfortunately, font specifications are platform
-specific.''', '3047183')
-        ]
-    ),
-
-Release('1.2.0', 'August 20, 2010',
+Release('1.2.0', 'August 24, 2010',
     summary='''This release adds task dependencies.''',
     featuresAdded=[
         Feature('''Tasks can have one or more prerequisite tasks. As long as 
@@ -75,7 +65,18 @@ dependencies. The task file format version number is now 31.''')
         Bug('''Show sort indicator in attachment viewers.''')
         ]
     ),
-    
+
+Release('1.1.1', 'August 24, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''On Mac OS X, properly read task files when the font description
+cannot be parsed. This may happen when reading a task file that was last
+saved on a different platform. Unfortunately, font specifications are platform
+specific.''', '3047183'),
+        Bug('''Prevent exception when reading old task files.''')
+        ]
+    ),
+
 Release('1.1.0', 'August 20, 2010',
     summary='''This release adds time to start, due and completion dates of 
 tasks and adds support for mass editing of items. It also adds support for the
