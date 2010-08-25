@@ -31,7 +31,8 @@ saved on a different platform. Unfortunately, font specifications are platform
 specific.''', '3047183'),
         Bug('''Prevent exception when reading old task files.'''),
         Bug('''Saving of templates didn't work, resulting in invalid template
-files that would in turn prevent Task Coach from starting properly.''')
+files that would in turn prevent Task Coach from starting properly.''',
+            '3052090')
         ]
     ),
 
