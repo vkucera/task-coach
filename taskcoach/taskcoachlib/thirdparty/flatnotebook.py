@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 21 Apr 2010, 21.00 GMT
+# Latest Revision: 02 Aug 2010, 09.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -116,9 +116,9 @@ License And Version
 
 FlatNotebook is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 21 Apr 2010, 21.00 GMT
+Latest Revision: Andrea Gavana @ 02 Aug 2010, 09.00 GMT
 
-Version 3.0
+Version 3.1
 """
 
 __docformat__ = "epytext"
@@ -129,10 +129,7 @@ __docformat__ = "epytext"
 #----------------------------------------------------------------------
 
 import wx
-try:
-    import wx.lib.colourutils as colourutils
-except ImportError:
-    import colourutils
+import wx.lib.colourutils as colourutils
 import random
 import math
 import weakref
@@ -245,9 +242,9 @@ FNB_BTN_NONE = 0
 FNB_TAB = 1             # On a tab
 """Indicates mouse coordinates inside a tab"""
 FNB_X = 2               # On the X button
-"""Indicates mouse coordinates inside the I{X} region"""
+"""Indicates mouse coordinates inside the X region"""
 FNB_TAB_X = 3           # On the 'X' button (tab's X button)
-"""Indicates mouse coordinates inside the I{X} region in a tab"""
+"""Indicates mouse coordinates inside the X region in a tab"""
 FNB_LEFT_ARROW = 4      # On the rotate left arrow button
 """Indicates mouse coordinates inside the left arrow region"""
 FNB_RIGHT_ARROW = 5     # On the rotate right arrow button
@@ -967,8 +964,9 @@ class FNBDropTarget(wx.DropTarget):
 
     def OnData(self, x, y, dragres):
         """
-        Called after `OnDrop` returns ``True``. By default this will usually call
-        `GetData` and will return the suggested default value `dragres`.
+        Called after `OnDrop` returns ``True``.
+
+        By default this will usually call `GetData` and will return the suggested default value `dragres`.
 
         :param `x`: the current x position of the mouse while dragging and dropping;
         :param `y`: the current y position of the mouse while dragging and dropping;
@@ -1588,8 +1586,8 @@ class TabNavigatorWindow(wx.Dialog):
 
 class FNBRenderer(object):
     """
-    Parent class for the 4 renderers defined: `Standard`, `VC71`, `Fancy`
-    and `VC8`. This class implements the common methods of all 4 renderers.
+    Parent class for the 6 renderers defined: `Standard`, `VC71`, `Fancy`, `Firefox 2`,
+    `VC8` and `Ribbon`. This class implements the common methods of all 6 renderers.
     """
 
     def __init__(self):
@@ -2084,8 +2082,8 @@ class FNBRenderer(object):
         height = dc.GetCharHeight()
         
         tabHeight = height + FNB_HEIGHT_SPACER # We use 8 pixels as padding
-        if "__WXGTK__" in wx.PlatformInfo or "__WXMAC__" in wx.PlatformInfo:
-            # On GTK and Mac OS X the tabs are should be larger
+        if "__WXGTK__" in wx.PlatformInfo:
+            # On GTK the tabs are should be larger
             tabHeight += 6
 
         self._tabHeight = tabHeight
@@ -2355,7 +2353,7 @@ class FNBRenderer(object):
 
 class FNBRendererMgr(object):
     """
-    This class represents a manager that handles all the 4 renderers defined
+    This class represents a manager that handles all the 6 renderers defined
     and calls the appropriate one when drawing is needed.
     """
 
@@ -2377,7 +2375,7 @@ class FNBRendererMgr(object):
         """
         Returns the current renderer based on the style selected.
 
-        :param `style`: represents one of the 4 implemented styles for L{FlatNotebook},
+        :param `style`: represents one of the 6 implemented styles for L{FlatNotebook},
          namely one of these bits:
 
          ===================== ========= ======================
@@ -2417,7 +2415,7 @@ class FNBRendererMgr(object):
 
 class FNBRendererDefault(FNBRenderer):
     """
-    This class handles the drawing of tabs using the I{Standard} renderer.
+    This class handles the drawing of tabs using the standard renderer.
     """
     
     def __init__(self):
@@ -2920,12 +2918,10 @@ class FNBRendererVC8(FNBRenderer):
         
     def DrawTabs(self, pageContainer, dc):
         """
-        Draws all the tabs using VC8 style.
+        Draws all the tabs using `VC8` style.
 
         :param `pageContainer`: an instance of L{FlatNotebook};
         :param `dc`: an instance of `wx.DC`.
-
-        :note: This method overloads The `DrawTabs` method in the parent class.
         """
 
         pc = pageContainer
@@ -3315,7 +3311,7 @@ class FNBRendererVC8(FNBRenderer):
 
     def GetStartX(self, tabPoints, y, style):
         """
-        Returns the x start position of a tab.
+        Returns the `x` start position of a tab.
 
         :param `tabPoints`: a Python list of `wx.Points` representing the tab outline;
         :param `y`: the y start position of the tab;
@@ -3380,7 +3376,7 @@ class FNBRendererVC8(FNBRenderer):
 
     def GetEndX(self, tabPoints, y, style):
         """
-        Returns the x end position of a tab.
+        Returns the `x` end position of a tab.
 
         :param `tabPoints`: a Python list of `wx.Points` representing the tab outline;
         :param `y`: the y end position of the tab;
@@ -3485,7 +3481,7 @@ class FNBRendererVC8(FNBRenderer):
 #------------------------------------------------------------------
 class FNBRendererRibbonTabs(FNBRenderer):    
     """
-    This class handles the drawing of tabs using the 'Ribbon Tabs' renderer.
+    This class handles the drawing of tabs using the `Ribbon Tabs` renderer.
     """
 
     def __init__(self):
@@ -3494,10 +3490,66 @@ class FNBRendererRibbonTabs(FNBRenderer):
         FNBRenderer.__init__(self)
         self._first = True
         self._factor = 1
+       
+    # definte this because we don't want to use the bold font 
+    def CalcTabWidth(self, pageContainer, tabIdx, tabHeight):
+        """
+        Calculates the width of the input tab.
+
+        :param `pageContainer`: an instance of L{FlatNotebook};
+        :param `tabIdx`: the index of the input tab;
+        :param `tabHeight`: the height of the tab.
+        """
+
+        pc = pageContainer
+        dc = wx.MemoryDC()
+        dc.SelectObject(wx.EmptyBitmap(1,1))
+
+        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+
+        if pc.IsDefaultTabs():
+            shapePoints = int(tabHeight*math.tan(float(pc._pagesInfoVec[tabIdx].GetTabAngle())/180.0*math.pi))
+
+        dc.SetFont(font)
+        width, pom = dc.GetTextExtent(pc.GetPageText(tabIdx))
+
+        # Set a minimum size to a tab
+        if width < 20:
+            width = 20
+
+        tabWidth = 2*pc._pParent.GetPadding() + width
+
+        # Style to add a small 'x' button on the top right
+        # of the tab
+        if pc.HasAGWFlag(FNB_X_ON_TAB) and tabIdx == pc.GetSelection():
+            # The xpm image that contains the 'x' button is 9 pixels
+            spacer = 9
+            if pc.HasAGWFlag(FNB_VC8):
+                spacer = 4
+
+            tabWidth += pc._pParent.GetPadding() + spacer
+        
+        if pc.IsDefaultTabs():
+            # Default style
+            tabWidth += 2*shapePoints
+
+        hasImage = pc._ImageList != None and pc._pagesInfoVec[tabIdx].GetImageIndex() != -1
+
+        # For VC71 style, we only add the icon size (16 pixels)
+        if hasImage:
+        
+            if not pc.IsDefaultTabs():
+                tabWidth += 16 + pc._pParent.GetPadding()
+            else:
+                # Default style
+                tabWidth += 16 + pc._pParent.GetPadding() + shapePoints/2
+        
+        return tabWidth
+
         
     def DrawTab(self, pageContainer, dc, posx, tabIdx, tabWidth, tabHeight, btnStatus):
         """
-        Draws a tab using the `Standard` style.
+        Draws a tab using the `Ribbon Tabs` style.
 
         :param `pageContainer`: an instance of L{FlatNotebook};
         :param `dc`: an instance of `wx.DC`;
@@ -3621,10 +3673,8 @@ class FNBRendererRibbonTabs(FNBRenderer):
         dc.DrawRectangle(0, 0, size.x, size.y)
 
         # Draw labels
-        normalFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        boldFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        boldFont.SetWeight(wx.FONTWEIGHT_BOLD)
-        dc.SetFont(boldFont)
+        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        dc.SetFont(font)
 
         posx = pc._pParent.GetPadding()
 
@@ -3648,9 +3698,6 @@ class FNBRendererRibbonTabs(FNBRenderer):
             highlight = (i==pc.GetSelection()) or pc.IsMouseHovering(i)
             dc.SetPen((highlight and [selPen] or [noselPen])[0])
             dc.SetBrush((highlight and [selBrush] or [noselBrush])[0])
-
-            # Now set the font to the correct font
-            dc.SetFont((i==pc.GetSelection() and [boldFont] or [normalFont])[0])
 
             # Add the padding to the tab width
             # Tab width:
@@ -3748,6 +3795,7 @@ class FlatNotebook(wx.PyPanel):
          ``FNB_DEFAULT_STYLE``                0x10020 FlatNotebook default style.
          ``FNB_FF2``                          0x20000 Use Firefox 2 style for tabs.
          ``FNB_NO_TAB_FOCUS``                 0x40000 Does not allow tabs to have focus.
+         ``FNB_RIBBON_TABS``                  0x80000 Use the Ribbon Tabs style.
          ================================ =========== ==================================================
         
         :param `name`: the window name. 
@@ -4408,6 +4456,7 @@ class FlatNotebook(wx.PyPanel):
          ``FNB_DEFAULT_STYLE``                0x10020 FlatNotebook default style.
          ``FNB_FF2``                          0x20000 Use Firefox 2 style for tabs.
          ``FNB_NO_TAB_FOCUS``                 0x40000 Does not allow tabs to have focus.
+         ``FNB_RIBBON_TABS``                  0x80000 Use the Ribbon Tabs style.
          ================================ =========== ==================================================
 
         """
@@ -4429,6 +4478,8 @@ class FlatNotebook(wx.PyPanel):
     def GetAGWWindowStyleFlag(self):
         """
         Returns the L{FlatNotebook} window style.
+
+        :see: L{SetAGWWindowStyleFlag} for a list of valid window styles.        
         """
 
         return self._agwStyle
@@ -5474,7 +5525,8 @@ class PageContainer(wx.Panel):
                     
             if self._nHoveringOverTabIndex != self._nHoveringOverLastTabIndex:
                 self._nHoveringOverLastTabIndex = self._nHoveringOverTabIndex
-                bRedrawTabs = True
+                if self._nHoveringOverTabIndex >= 0:
+                    bRedrawTabs = True
                     
             bRedrawX = self._nXButtonStatus != xButtonStatus
             bRedrawRight = self._nRightButtonStatus != rightButtonStatus
@@ -5587,16 +5639,7 @@ class PageContainer(wx.Panel):
         self._nHoveringOverTabIndex = -1
         self._nHoveringOverLastTabIndex = -1
 
-        agwStyle = self.GetParent().GetAGWWindowStyleFlag()        
-        render = self._mgr.GetRenderer(agwStyle)
-        
-        dc = wx.ClientDC(self)
-
-        render.DrawX(self, dc)
-        render.DrawLeftArrow(self, dc)
-        render.DrawRightArrow(self, dc)
-        render.DrawTabs(self,dc)
-
+        self.Refresh()
         selection = self.GetSelection()
 
         if selection == -1:
@@ -5611,7 +5654,10 @@ class PageContainer(wx.Panel):
             else:
                 event.Skip()
                 return
-                    
+
+        agwStyle = self.GetParent().GetAGWWindowStyleFlag()        
+        render = self._mgr.GetRenderer(agwStyle)
+        dc = wx.ClientDC(self)                    
         render.DrawTabX(self, dc, self._pagesInfoVec[selection].GetXRect(), selection, self._nTabXButtonStatus)
         if not agwStyle & FNB_RIBBON_TABS:
             render.DrawFocusRectangle(dc, self, self._pagesInfoVec[selection])
@@ -6261,6 +6307,7 @@ class FlatNotebookCompatible(FlatNotebook):
          ``FNB_DEFAULT_STYLE``                0x10020 FlatNotebook default style.
          ``FNB_FF2``                          0x20000 Use Firefox 2 style for tabs.
          ``FNB_NO_TAB_FOCUS``                 0x40000 Does not allow tabs to have focus.
+         ``FNB_RIBBON_TABS``                  0x80000 Use the Ribbon Tabs style.
          ================================ =========== ==================================================
         
         :param `name`: the window name. 
