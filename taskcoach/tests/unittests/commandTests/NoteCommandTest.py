@@ -22,7 +22,7 @@ from taskcoachlib import command, patterns
 from taskcoachlib.domain import note, category, task
 
 
-class NoteCommandTestCase(CommandTestCase, asserts.CommandAsserts):
+class NoteCommandTestCase(CommandTestCase, asserts.CommandAssertsMixin):
     def setUp(self):
         self.notes = note.NoteContainer()
         self.taskList = task.TaskList()

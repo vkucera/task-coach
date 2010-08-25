@@ -21,7 +21,7 @@ from unittests import asserts
 from taskcoachlib import patterns, command
 
 
-class CommandTestCase(test.wxTestCase, asserts.CommandAsserts):
+class CommandTestCase(test.wxTestCase, asserts.CommandAssertsMixin):
     list = []
     
     def tearDown(self):

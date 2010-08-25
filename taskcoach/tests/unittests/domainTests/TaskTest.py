@@ -76,7 +76,7 @@ class TaskTestCase(test.TestCase):
         self.assertEqual(expectedReminder, taskWithReminder.reminder())
         
         
-class CommonTaskTestsMixin(asserts.TaskAsserts):
+class CommonTaskTestsMixin(asserts.TaskAssertsMixin):
     ''' These tests should succeed for all tasks, regardless of state. '''
     def testCopy(self):
         copy = self.task.copy()

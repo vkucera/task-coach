@@ -21,7 +21,7 @@ from unittests import asserts
 from taskcoachlib import patterns
 
 
-class HistoryTest(test.TestCase, asserts.CommandAsserts):
+class HistoryTest(test.TestCase, asserts.CommandAssertsMixin):
     def setUp(self):
         self.commands = patterns.CommandHistory()
         self.command = patterns.Command()

@@ -22,7 +22,7 @@ from taskcoachlib import patterns, command
 from taskcoachlib.domain import category, task
 
 
-class CategoryCommandTestCase(CommandTestCase, asserts.CommandAsserts):
+class CategoryCommandTestCase(CommandTestCase, asserts.CommandAssertsMixin):
     def setUp(self):
         self.categories = category.CategoryList()
         

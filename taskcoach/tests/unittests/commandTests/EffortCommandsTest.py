@@ -22,7 +22,7 @@ from taskcoachlib import command, patterns
 from taskcoachlib.domain import task, effort, date
 
 
-class EffortCommandTestCase(CommandTestCase, asserts.CommandAsserts):
+class EffortCommandTestCase(CommandTestCase, asserts.CommandAssertsMixin):
     def setUp(self):
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
