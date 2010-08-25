@@ -22,14 +22,16 @@ from changetypes import *
 
 releases = [
             
-Release('1.1.1', 'August 24, 2010',
+Release('1.1.1', 'August 25, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''On Mac OS X, properly read task files when the font description
 cannot be parsed. This may happen when reading a task file that was last
 saved on a different platform. Unfortunately, font specifications are platform
 specific.''', '3047183'),
-        Bug('''Prevent exception when reading old task files.''')
+        Bug('''Prevent exception when reading old task files.'''),
+        Bug('''Saving of templates didn't work, resulting in invalid template
+files that would in turn prevent Task Coach from starting properly.''')
         ]
     ),
 

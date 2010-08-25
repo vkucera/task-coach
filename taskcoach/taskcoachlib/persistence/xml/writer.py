@@ -248,7 +248,7 @@ class TemplateXMLWriter(XMLWriter):
                              ('completiondate', 'completionDateTime'),
                              ('reminder', 'reminder')]:
             dateTime = getattr(task, getter)()
-            if dateTime != date.DateTime():
+            if dateTime not in (None, date.DateTime()):
                 node.removeAttribute(name)
                 delta = dateTime - date.Now()
                 node.setAttribute(name + 'tmpl', 'Now() + %s' % repr(delta))
