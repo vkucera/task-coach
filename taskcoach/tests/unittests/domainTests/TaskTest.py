@@ -77,9 +77,9 @@ class TaskTestCase(test.TestCase):
         
     def assertEvent(self, *expectedEventArgs):
         self.assertEqual([patterns.Event(*expectedEventArgs)], self.events)
+
         
-        
-class CommonTaskTestsMixin(asserts.TaskAsserts):
+class CommonTaskTestsMixin(asserts.TaskAssertsMixin):
     ''' These tests should succeed for all tasks, regardless of state. '''
     def testCopy(self):
         copy = self.task.copy()

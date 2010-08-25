@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-class TaskListAsserts(object):
+class TaskListAssertsMixin(object):
     def assertTaskList(self, expected):
         self.assertEqualLists(expected, self.taskList)
         self.assertAllChildrenInTaskList()
@@ -30,12 +30,12 @@ class TaskListAsserts(object):
         self.failIf(self.taskList)
 
 
-class EffortListAsserts(object):
+class EffortListAssertsMixin(object):
     def assertEffortList(self, expected):
         self.assertEqualLists(expected, self.effortList)
         
         
-class NoteContainerAsserts(object):
+class NoteContainerAssertsMixin(object):
     def assertNoteContainer(self, expected):
         for note in expected:
             self.failUnless(note in self.noteContainer)
@@ -43,7 +43,7 @@ class NoteContainerAsserts(object):
             self.failUnless(note in expected)
 
                 
-class EffortAsserts(object):
+class EffortAssertsMixin(object):
     def assertEqualEfforts(self, effort1, effort2):
         self.assertEqual(effort1.task(), effort2.task())
         self.assertEqual(effort1.getStart(), effort2.getStart())
@@ -51,7 +51,7 @@ class EffortAsserts(object):
         self.assertEqual(effort1.description(), effort2.description())
         
                 
-class TaskAsserts(object):
+class TaskAssertsMixin(object):
     def failIfParentAndChild(self, parent, child):
         self.failIf(child in parent.children())
         if child.parent():
@@ -95,7 +95,7 @@ class TaskAsserts(object):
         self.assertEqual(orig.description(), copy.description())
 
 
-class CommandAsserts(object):
+class CommandAssertsMixin(object):
     def assertHistoryAndFuture(self, expectedHistory, expectedFuture):
         from taskcoachlib import patterns
         commands = patterns.CommandHistory()
@@ -111,6 +111,7 @@ class CommandAsserts(object):
         self.redo()
         assertDone()
 
-class Mixin(CommandAsserts, TaskAsserts, EffortAsserts, TaskListAsserts, 
-            EffortListAsserts, NoteContainerAsserts):
+class Mixin(CommandAssertsMixin, TaskAssertsMixin, EffortAssertsMixin, 
+            TaskListAssertsMixin, EffortListAssertsMixin, 
+            NoteContainerAssertsMixin):
     pass
