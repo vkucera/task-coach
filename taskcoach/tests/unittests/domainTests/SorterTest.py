@@ -184,6 +184,20 @@ class TaskSorterSettingsTest(test.TestCase):
             date.DateTime(2005,1,1,10,0,0), date.DateTime(2005,1,1,11,0,0)))
         self.assertEqual([self.task1, self.task2], list(self.sorter))
 
+    def testSortByHourlyFeeAscending(self):
+        self.sorter.sortAscending(True)
+        self.sorter.sortBy('hourlyFee')
+        self.task1.setHourlyFee(100)
+        self.task2.setHourlyFee(200)
+        self.assertEqual([self.task1, self.task2], list(self.sorter))
+
+    def testSortByHourlyFeeDescending(self):
+        self.sorter.sortAscending(False)
+        self.sorter.sortBy('hourlyFee')
+        self.task1.setHourlyFee(100)
+        self.task2.setHourlyFee(200)
+        self.assertEqual([self.task2, self.task1], list(self.sorter))
+        
     def testSortByPrerequisiteAscending(self):
         self.sorter.sortAscending(True)
         self.sorter.sortBy('prerequisites')

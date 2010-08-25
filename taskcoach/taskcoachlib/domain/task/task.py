@@ -708,7 +708,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def hourlyFeeSortEventTypes(class_):
         ''' The event types that influence the hourly fee sort order. '''
-        return (class_hourlyFeeChangedEventType(),)
+        return (class_.hourlyFeeChangedEventType(),)
     
     # Fixed fee
                  
