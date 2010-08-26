@@ -78,7 +78,8 @@ specific.''', '3047183'),
 files that would in turn prevent Task Coach from starting properly.''',
             '3052090'),
         Bug('''On Windows, the tabs of the dialogs would flicker when moving
-the mouse over the tabs.''')
+the mouse over the tabs.'''),
+        Bug('''Use dialogs for reminders.''', '3050445')
         ]
     ),
 

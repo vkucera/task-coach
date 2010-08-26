@@ -120,21 +120,21 @@ class ReminderControllerTest(ReminderControllerTestCase):
     
     def testOnCloseReminderResetsReminder(self):
         self.task.setReminder(self.reminderDateTime)
-        self.reminderController.onCloseReminderFrame(self.dummyCloseEvent(), 
+        self.reminderController.onCloseReminderDialog(self.dummyCloseEvent(), 
                                                      show=False)
         self.assertEqual(None, self.task.reminder())
 
     def testOnCloseReminderSetsReminder(self):
         self.task.setReminder(self.reminderDateTime)
         oneHour = date.TimeDelta(hours=1)
-        self.reminderController.onCloseReminderFrame(\
+        self.reminderController.onCloseReminderDialog(\
             self.dummyCloseEvent(oneHour), show=False)
         self.failUnless(abs(self.nowDateTime + oneHour - self.task.reminder()) \
                         < date.TimeDelta(seconds=5))
 
     def testOnCloseMayOpenTask(self):
         self.task.setReminder(self.reminderDateTime)
-        frame = self.reminderController.onCloseReminderFrame(\
+        frame = self.reminderController.onCloseReminderDialog(\
             self.dummyCloseEvent(openAfterClose=True), show=False)
         self.failUnless(frame)
         

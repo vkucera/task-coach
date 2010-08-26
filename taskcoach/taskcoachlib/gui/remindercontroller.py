@@ -19,9 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 from taskcoachlib import patterns, command, meta, notify
 from taskcoachlib.domain import date
-from taskcoachlib.gui.dialog import editor
-from taskcoachlib.gui.reminder import ReminderFrame
-from taskcoachlib.notify import NotificationCenter
+from taskcoachlib.gui.dialog import reminder, editor
 from taskcoachlib.i18n import _
 
 
@@ -63,10 +61,14 @@ class ReminderController(object):
         
     def showReminderMessages(self, now):
         now += date.TimeDelta(seconds=5) # Be sure not to miss reminders 
+        requestUserAttention = False
         for task, reminderDateTime in self.__tasksWithReminders.items():
             if reminderDateTime <= now:
+                requestUserAttention = True
                 if self.showReminderMessage(task):
                     self.__removeReminder(task)
+        if requestUserAttention:
+            self.requestUserAttention()        
         
     def showReminderMessage(self, task):
         notifier = self.settings.get('feature', 'notifier')
@@ -78,17 +80,17 @@ class ReminderController(object):
             task.setReminder(None)
             return False
 
-        reminderFrame = ReminderFrame(self.__mainWindow, task, self.taskList, self.settings)
-        reminderFrame.Bind(wx.EVT_CLOSE, self.onCloseReminderFrame)
-        NotificationCenter().NotifyFrame(reminderFrame)
+        reminderDialog = reminder.ReminderDialog(task, self.taskList, self.settings, self.__mainWindow)
+        reminderDialog.Bind(wx.EVT_CLOSE, self.onCloseReminderDialog)        
+        reminderDialog.Show()
         return True
-
-    def onCloseReminderFrame(self, event, show=True):
+        
+    def onCloseReminderDialog(self, event, show=True):
         event.Skip()
-        frame = event.EventObject
-        task = frame.task
-        if not frame.ignoreSnoozeOption:
-            snoozeOptions = frame.snoozeOptions
+        dialog = event.EventObject
+        task = dialog.task
+        if not dialog.ignoreSnoozeOption:
+            snoozeOptions = dialog.snoozeOptions
             snoozeTimeDelta = snoozeOptions.GetClientData(snoozeOptions.Selection)
             if snoozeTimeDelta:
                 newReminder = date.DateTime.now() + snoozeTimeDelta
@@ -97,7 +99,7 @@ class ReminderController(object):
             task.setReminder(newReminder) # Note that this is not undoable
             # Undoing the snoozing makes little sense, because it would set the 
             # reminder back to its original date-time, which is now in the past.
-        if frame.openTaskAfterClose:
+        if dialog.openTaskAfterClose:
             editTask = editor.TaskEditor(self.__mainWindow,
                 command.EditTaskCommand(self.taskList, [task]), 
                 self.settings, self.taskList, self.__mainWindow.taskFile, 
@@ -105,9 +107,22 @@ class ReminderController(object):
             editTask.Show(show)
         else:
             editTask = None
+        dialog.Destroy()
         if self.__mainWindowWasHidden:
             self.__mainWindow.Hide()
         return editTask # For unit testing purposes
+
+    def requestUserAttention(self):
+        notifier = self.settings.get('feature', 'notifier')
+        if notifier != 'Native' and notify.AbstractNotifier.get(notifier) is not None:
+            # When using Growl/Snarl, this is not necessary. Even when not using Growl, it's
+            # annoying as hell. Anyway.
+            return
+        self.__mainWindowWasHidden = not self.__mainWindow.IsShown()
+        if self.__mainWindowWasHidden:
+            self.__mainWindow.Show()
+        if not self.__mainWindow.IsActive():
+            self.__mainWindow.RequestUserAttention()
             
     def __registerRemindersForTasks(self, tasks):
         for task in tasks:
