@@ -28,6 +28,7 @@ class ReminderDialog(sized_controls.SizedDialog):
     def __init__(self, task, taskList, settings, *args, **kwargs):
         kwargs['title'] = kwargs.get('title', meta.name + ' ' + _('Reminder'))
         super(ReminderDialog, self).__init__(*args, **kwargs)
+        self.SetIcon(wx.ArtProvider_GetIcon('taskcoach', wx.ART_FRAME_ICON, (16,16)))
         self.task = task
         self.taskList = taskList
         self.settings = settings
@@ -62,6 +63,7 @@ class ReminderDialog(sized_controls.SizedDialog):
         self.Bind(wx.EVT_CLOSE, self.onClose)
         self.Bind(wx.EVT_BUTTON, self.onOK, id=self.GetAffirmativeId())
         self.Fit()
+        self.RequestUserAttention()
 
     def onOpenTask(self, event): # pylint: disable-msg=W0613
         self.openTaskAfterClose = True
