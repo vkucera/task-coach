@@ -16,11 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import test, os
 from taskcoachlib.thirdparty import flatnotebook
 
 
 class FlatNotebookImportTest(test.TestCase):
     def testThatFlatNotebookImportsColourUtilsFromThirdpartyPackageSoThatItWorksOnWxPython2_8_9_1(self):
-        filename = flatnotebook.__file__[:-1]
+        filename = os.path.splitext(flatnotebook.__file__)[0] + '.py' 
         self.failUnless('import colourutils\n' in file(filename).readlines())
