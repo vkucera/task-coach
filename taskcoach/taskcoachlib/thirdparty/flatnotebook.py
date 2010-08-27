@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 02 Aug 2010, 09.00 GMT
+# Latest Revision: 27 Aug 2010, 22.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -55,7 +55,7 @@ Some features:
 - Colours for active/inactive tabs, and captions;
 - Background of tab area can be painted in gradient (VC8 style only);
 - Colourful tabs - a random gentle colour is generated for each new tab (very cool, VC8 style only);
-- Try setting the tab area color for the Ribbon Style
+- Try setting the tab area colour for the Ribbon Style.
 
 
 And much more.
@@ -116,7 +116,7 @@ License And Version
 
 FlatNotebook is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 02 Aug 2010, 09.00 GMT
+Latest Revision: Andrea Gavana @ 27 Aug 2010, 22.00 GMT
 
 Version 3.1
 """
@@ -129,7 +129,6 @@ __docformat__ = "epytext"
 #----------------------------------------------------------------------
 
 import wx
-import colourutils
 import random
 import math
 import weakref
@@ -786,6 +785,36 @@ def PaintStraightGradientBox(dc, rect, startColour, endColour, vertical=True):
     dc.SetPen(savedPen)
     dc.SetBrush(savedBrush)
 
+
+def AdjustColour(colour, percent, alpha=wx.ALPHA_OPAQUE):
+    """
+    Brighten/darken input colour by `percent` and adjust `alpha` channel if needed. 
+
+    :param `colour`: colour object to adjust, an instance of `wx.Colour`;
+    :param `percent`: percent to adjust ``+`` (brighten) or ``-`` (darken);
+    :param `alpha`: amount to adjust the alpha channel.
+
+    :return: The modified colour.    
+
+    """
+    
+    radj, gadj, badj = [int(val * (abs(percent) / 100.)) for val in colour.Get()]
+
+    if percent < 0:
+        radj, gadj, badj = [val * -1 for val in [radj, gadj, badj]]
+    else:
+        radj, gadj, badj = [val or 255 for val in [radj, gadj, badj]]
+
+    red = min(colour.Red() + radj, 255)
+    green = min(colour.Green() + gadj, 255)
+    blue = min(colour.Blue() + badj, 255)
+    return wx.Colour(red, green, blue, alpha)
+
+
+if wx.VERSION_STRING < "2.8.9.2":
+    adjust_colour = AdjustColour
+else:
+    from wx.lib.colourutils import AdjustColour as adjust_colour
 
 
 # -----------------------------------------------------------------------------
@@ -3687,7 +3716,7 @@ class FNBRendererRibbonTabs(FNBRenderer):
         #----------------------------------------------------------
         # Go over and draw the visible tabs
         #----------------------------------------------------------
-        selPen = wx.Pen(colourutils.AdjustColour(pc._tabAreaColour,-20))
+        selPen = wx.Pen(adjust_colour(pc._tabAreaColour, -20))
         noselPen = wx.Pen(pc._tabAreaColour)
         noselBrush = wx.Brush(pc._tabAreaColour)
         selBrush = wx.Brush(LightColour(pc._tabAreaColour,60))
@@ -5654,7 +5683,7 @@ class PageContainer(wx.Panel):
             else:
                 event.Skip()
                 return
-
+                    
         agwStyle = self.GetParent().GetAGWWindowStyleFlag()        
         render = self._mgr.GetRenderer(agwStyle)
         dc = wx.ClientDC(self)                    
