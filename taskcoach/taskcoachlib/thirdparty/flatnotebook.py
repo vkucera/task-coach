@@ -129,7 +129,7 @@ __docformat__ = "epytext"
 #----------------------------------------------------------------------
 
 import wx
-import wx.lib.colourutils as colourutils
+import colourutils
 import random
 import math
 import weakref
