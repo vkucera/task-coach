@@ -23,4 +23,4 @@ from taskcoachlib.thirdparty import flatnotebook
 class FlatNotebookImportTest(test.TestCase):
     def testThatFlatNotebookImportsColourUtilsFromThirdpartyPackageSoThatItWorksOnWxPython2_8_9_1(self):
         filename = os.path.splitext(flatnotebook.__file__)[0] + '.py' 
-        self.failUnless('import colourutils\n' in file(filename).readlines())
+        self.failUnless('import colourutils' in file(filename).read())
