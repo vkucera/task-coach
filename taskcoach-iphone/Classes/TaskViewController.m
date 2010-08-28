@@ -825,6 +825,13 @@ static void deleteTask(CDTask *task)
 		CDTask *task = [results objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section - ADJUSTSECTION]];
 		deleteTask(task);
 		[task save];
+
+		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+		{
+			// Seems like a bug in iOS4.
+			[self populate];
+			[self.tableView reloadData];
+		}
 	}
 }
 
