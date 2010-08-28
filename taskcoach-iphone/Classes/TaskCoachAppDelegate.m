@@ -33,12 +33,35 @@ NSManagedObjectContext *getManagedObjectContext(void)
 	// These lines are just there so that gettext can retrieve strings
 	// in the NIB. Remember to add a line here each time a translatable
 	// string appears in a NIB.
+	
+	// TaskDetailsControlleriPad
+	_("Start date");
+	_("Due date");
+	_("Completion date");
+	_("Reminder");
+	_("Recurrence");
+	_("Start tracking");
+	_("Categories");
+	_("Activity log");
 
-	_("Cancel");
+	// TaskView
+	_("Sync");
+
+	// DatePickerView
 	_("Save");
+	_("Cancel");
+	
+	// MainWindow
 	_("Categories");
 	_("Sync");
-	_("Activity log");
+	
+	// MainWindow-iPad
+	_("Categories");
+	_("Sync");
+
+	// TaskDetailsRecurrencePeriodPicker
+	_("Save");
+	_("Cancel");
 
 	LogCreateFile();
 	LogSetLevel(LOGLEVEL_ERROR);
