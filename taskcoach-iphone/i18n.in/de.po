@@ -7,33 +7,90 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach-iphone\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-04-05 11:52+0200\n"
-"PO-Revision-Date: 2010-04-10 15:25+0000\n"
-"Last-Translator: Frank Niessink <frank@niessink.com>\n"
+"POT-Creation-Date: 2010-07-11 10:17+0200\n"
+"PO-Revision-Date: 2010-08-15 17:39+0000\n"
+"Last-Translator: Ralf Scherer <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-11 08:52+0000\n"
+"X-Launchpad-Export-Date: 2010-08-28 08:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#: Classes/StringChoiceController.m:67
-#: Classes/Synchronization/AuthentificationState.m:94
-#: Classes/Synchronization/BaseState.m:34
-#: Classes/Synchronization/BaseState.m:48
-#: Classes/Synchronization/ProtocolNegotiationState.m:61
-msgid "Error"
-msgstr "Fehler"
+#: Classes/TaskDetailsControlleriPad.m:157
+#: Classes/TaskDetailsEffortsBase.m:357
+#, objc-format
+msgid "Started %@"
+msgstr "%@ gestartet"
 
-#: Classes/StringChoiceController.m:67
-msgid "Empty text."
-msgstr "Keine Text."
+#: Classes/TaskDetailsControlleriPad.m:159
+msgid "No start date"
+msgstr "Kein Startdatum"
 
-#: Classes/StringChoiceController.m:67
-#: Classes/Synchronization/AuthentificationState.m:24
-#: Classes/Synchronization/ProtocolNegotiationState.m:61
-msgid "OK"
-msgstr "OK"
+#: Classes/TaskDetailsControlleriPad.m:162 Classes/TaskCellBig.m:78
+#: Classes/TaskCellBig.m:81 Classes/TaskCellBig.m:85
+#, objc-format
+msgid "Due %@"
+msgstr "%@ fällig"
+
+#: Classes/TaskDetailsControlleriPad.m:164
+msgid "No due date"
+msgstr "Kein Fälligkeitsdatum"
+
+#: Classes/TaskDetailsControlleriPad.m:167 Classes/TaskCellBig.m:75
+#, objc-format
+msgid "Completed %@"
+msgstr "%@ als erledigt markieren"
+
+#: Classes/TaskDetailsControlleriPad.m:169
+msgid "No completion date"
+msgstr "Kein Fertigstellungsdatum"
+
+#: Classes/TaskDetailsControlleriPad.m:172
+#, objc-format
+msgid "Reminder %@"
+msgstr "Erinnerung %@"
+
+#: Classes/TaskDetailsControlleriPad.m:174
+msgid "No reminder"
+msgstr "Keine Erinnerung"
+
+#: Classes/TaskDetailsControlleriPad.m:176
+#, objc-format
+msgid "%@"
+msgstr "%@"
+
+#: Classes/TaskDetailsControlleriPad.m:187
+msgid "No category."
+msgstr "Keine Kategorie."
+
+#: Classes/TaskDetailsControlleriPad.m:352 Classes/TaskDetailsGeneral.m:128
+msgid "New task"
+msgstr "Neue Aufgabe"
+
+#: Classes/Utils/String+Utils.m:49
+#, objc-format
+msgid "%d sec"
+msgstr "%d Sek."
+
+#: Classes/Utils/String+Utils.m:53
+#, objc-format
+msgid "%d min"
+msgstr "%d Min."
+
+#: Classes/Utils/String+Utils.m:57
+#, objc-format
+msgid "%d hours"
+msgstr "%d Stunden"
+
+#: Classes/Utils/String+Utils.m:61
+#, objc-format
+msgid "%d days"
+msgstr "%d Tage"
+
+#: Classes/CoreData/Migration.m:50
+msgid "Database version too old"
+msgstr "Die Version der Datenbank ist zu alt."
 
 #: Classes/Bonjour/BonjourBrowser.m:87
 msgid "Domains"
@@ -51,242 +108,331 @@ msgstr "Domäne hinzufügen"
 msgid "Searching for services"
 msgstr "Services suchen"
 
-#: Classes/SyncViewController.m:49 Classes/Synchronization/InitialState.m:23
+#: Classes/CategoryTaskViewController.m:49
+#: Classes/CategoryTaskViewController.m:73
+#: Classes/CategoryViewController.m:596
+msgid "All"
+msgstr "Alle"
+
+#: Classes/CategoryTaskViewController.m:133 Classes/TaskCoachAppDelegate.m:38
+#: Classes/TaskDetailsGeneral.m:55
+msgid "Categories"
+msgstr "Kategorien"
+
+#: Classes/SyncViewController.m:65 Classes/Synchronization/InitialState.m:28
 msgid "Connecting..."
 msgstr "Verbinde..."
 
-#: Classes/EffortView.m:43
-#, objc-format
-msgid "%d seconds"
-msgstr "%d Sekunden"
+#: Classes/SyncViewController.m:148
+msgid "Task Coach sync log"
+msgstr "Synchronisierungsprotokoll des Aufgaben-Assistenten"
 
-#: Classes/EffortView.m:50
-#, objc-format
-msgid "%d minutes"
-msgstr "%d Minuten"
+#: Classes/SyncViewController.m:177
+msgid "Debug"
+msgstr "Fehlerdiagnose"
 
-#: Classes/EffortView.m:57
-#, objc-format
-msgid "%d hours"
-msgstr "%d Stunden"
+#: Classes/SyncViewController.m:177
+msgid "Do you want to send the sync log by e-mail ?"
+msgstr "Möchten Sie das Synchronisierungsprotokoll per Mail versenden?"
 
-#: Classes/EffortView.m:63
-#, objc-format
-msgid "%d days"
-msgstr "%d Tage"
+#: Classes/SyncViewController.m:177 Classes/TaskViewController.m:601
+#: Classes/TaskDetailsEffortsBase.m:157
+msgid "No"
+msgstr "Nein"
 
-#: Classes/EffortView.m:102
-#, objc-format
-msgid "Started %@"
-msgstr "%@ gestartet"
+#: Classes/SyncViewController.m:178 Classes/TaskViewController.m:602
+#: Classes/TaskDetailsEffortsBase.m:157
+msgid "Yes"
+msgstr "Ja"
 
-#: Classes/TaskViewController.m:59
-msgid "Overdue"
-msgstr "Überfällig"
+#: Classes/SimpleDatePicker.m:37 Classes/StringChoiceAlert.m:16
+#: Classes/NewCategoryiPad.m:41
+#: Classes/Synchronization/AuthentificationState.m:30
+#: Classes/Synchronization/ProtocolNegotiationState.m:71
+#: Classes/ReminderController.m:88
+msgid "OK"
+msgstr "OK"
 
-#: Classes/TaskViewController.m:66
-msgid "Due soon"
-msgstr "Bald fällig"
+#: Classes/StringChoiceAlert.m:16 Classes/TaskViewController.m:362
+#: Classes/TaskCoachAppDelegate.m:36
+#: Classes/Synchronization/AuthentificationState.m:29
+#: Classes/TaskDetailsEffortsBase.m:157
+msgid "Cancel"
+msgstr "Abbrechen"
 
-#: Classes/TaskViewController.m:73
-msgid "Started"
-msgstr "Gestartet"
+#: Classes/TaskDetailsRecurrencePeriodPicker.m:70
+msgid "Daily"
+msgstr "Täglich"
 
-#: Classes/TaskViewController.m:80
-msgid "Not started"
-msgstr "Nicht gestartet"
+#: Classes/TaskDetailsRecurrencePeriodPicker.m:72
+msgid "Weekly"
+msgstr "Wöchentlich"
 
-#: Classes/TaskViewController.m:142
+#: Classes/TaskDetailsRecurrencePeriodPicker.m:74
+msgid "Monthly"
+msgstr "Monatlich"
+
+#: Classes/TaskDetailsRecurrencePeriodPicker.m:76
+msgid "Yearly"
+msgstr "Jährlich"
+
+#: Classes/TaskViewController.m:169 Classes/TaskViewController.m:183
+#: Classes/TaskViewController.m:292
 msgid "Search tasks..."
 msgstr "Aufgaben suchen..."
 
-#: Classes/TaskViewController.m:293
+#: Classes/TaskViewController.m:362 Classes/TaskViewController.m:364
+msgid "Grouping"
+msgstr "Gruppierung"
+
+#: Classes/TaskViewController.m:366
+msgid "Status"
+msgstr "Status"
+
+#: Classes/TaskViewController.m:367
+msgid "Priority"
+msgstr "Priorität"
+
+#: Classes/TaskViewController.m:368
+msgid "Start date"
+msgstr "Starttermin"
+
+#: Classes/TaskViewController.m:369
+msgid "Due date"
+msgstr "Stichtag"
+
+#: Classes/TaskViewController.m:599
 msgid "Confirmation"
 msgstr "Bestätigung"
 
-#: Classes/TaskViewController.m:294
+#: Classes/TaskViewController.m:600
 #, objc-format
 msgid "Do you really want to mark \"%@\" complete ?"
 msgstr "Wollen Sie \"%@\" wirklich als erledigt markieren?"
 
-#: Classes/TaskViewController.m:295 Classes/TaskDetailsController.m:335
-msgid "No"
-msgstr "Nein"
+#: Classes/TaskViewController.m:647
+msgid "Overdue"
+msgstr "Überfällig"
 
-#: Classes/TaskViewController.m:296 Classes/TaskDetailsController.m:335
-msgid "Yes"
-msgstr "Ja"
+#: Classes/TaskViewController.m:649
+msgid "Due soon"
+msgstr "Bald fällig"
 
-#: Classes/TaskViewController.m:350
-msgid "No tasks."
-msgstr "Keine Aufgaben."
+#: Classes/TaskViewController.m:651
+msgid "Started"
+msgstr "Gestartet"
 
-#: Classes/TaskViewController.m:397
+#: Classes/TaskViewController.m:653
+msgid "Not started"
+msgstr "Nicht gestartet"
+
+#: Classes/TaskViewController.m:655 Classes/ReminderController.m:89
+msgid "Completed"
+msgstr "Erledigt"
+
+#: Classes/TaskViewController.m:719
 msgid "Add task..."
 msgstr "Aufgabe einfügen..."
 
-#: Classes/TaskCellBig.m:76
-#, objc-format
-msgid "Completed %@"
-msgstr "%@ als erledigt markieren"
-
-#: Classes/TaskCellBig.m:79 Classes/TaskCellBig.m:82 Classes/TaskCellBig.m:86
-#, objc-format
-msgid "Due %@"
-msgstr "%@ fällig"
-
-#: Classes/TaskCellBig.m:89
+#: Classes/TaskCellBig.m:88
 #, objc-format
 msgid "Start %@"
 msgstr "%@ starten"
 
-#: Classes/DateCell.m:33
+#: Classes/DateCell.m:38
 msgid "None"
 msgstr "Keine"
 
-#: Classes/CategoryViewController.m:60 Classes/CategoryViewController.m:336
-#: Classes/CategoryViewController.m:407
-msgid "All"
-msgstr "Alle"
-
-#: Classes/CategoryViewController.m:154 Classes/CategoryViewController.m:285
-#: Classes/CategoryViewController.m:313 Classes/CategoryViewController.m:321
+#: Classes/CategoryViewController.m:230 Classes/CategoryViewController.m:422
+#: Classes/CategoryViewController.m:458 Classes/CategoryViewController.m:479
 msgid "Enter category name"
 msgstr "Kategoriename eingeben"
 
-#: Classes/CategoryViewController.m:379
+#: Classes/CategoryViewController.m:566
 msgid "Add subcategory"
 msgstr "Unterkategorie hinzufügen"
 
-#: Classes/CategoryViewController.m:450 Classes/CategoryViewController.m:475
+#: Classes/CategoryViewController.m:631 Classes/CategoryViewController.m:666
 msgid "Looking for Task Coach"
 msgstr "Task Coach suchen"
 
-#: Classes/TaskCoachAppDelegate.m:24
-#: Classes/Synchronization/AuthentificationState.m:24
-#: Classes/TaskDetailsController.m:335
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#: Classes/TaskCoachAppDelegate.m:25
+#: Classes/TaskCoachAppDelegate.m:37
 msgid "Save"
 msgstr "Speichern"
 
-#: Classes/TaskCoachAppDelegate.m:26 Classes/TaskDetailsController.m:105
-msgid "Categories"
-msgstr "Kategorien"
-
-#: Classes/TaskCoachAppDelegate.m:27
+#: Classes/TaskCoachAppDelegate.m:39
 msgid "Sync"
 msgstr "Sync"
 
-#: Classes/Synchronization/AuthentificationState.m:24
+#: Classes/TaskCoachAppDelegate.m:40
+msgid "Activity log"
+msgstr "Aktivitätslog"
+
+#: Classes/NewCategoryiPad.m:39
+msgid "Category name"
+msgstr "Kategoriename"
+
+#: Classes/TaskDetailsGeneral.m:54
+msgid "Description"
+msgstr "Beschreibung"
+
+#: Classes/TaskDetailsGeneral.m:56 Classes/TaskDetailsGeneral.m:94
+#, objc-format
+msgid "Priority: %@"
+msgstr "Priorität: %@"
+
+#: Classes/Synchronization/AuthentificationState.m:26
 msgid "Please type your password."
 msgstr "Bitte Passwort eingeben."
 
-#: Classes/Synchronization/AuthentificationState.m:31
+#: Classes/Synchronization/AuthentificationState.m:44
 msgid "Authentication"
 msgstr "Authentifizierung"
 
-#: Classes/Synchronization/AuthentificationState.m:95
-msgid "Incorrect password."
-msgstr "Falsches Passwort."
-
-#: Classes/Synchronization/AuthentificationState.m:96
-msgid "Retry"
-msgstr "Erneut versuchen"
-
-#: Classes/Synchronization/InitialState.m:50
+#: Classes/Synchronization/InitialState.m:56
 msgid "Connection error"
 msgstr "Verbindungsfehler"
 
-#: Classes/Synchronization/InitialState.m:51
+#: Classes/Synchronization/InitialState.m:57
 msgid ""
 "An error occurred while connecting to the remote host. Please check your "
 "settings. Also check that Task Coach is running on the remote host. Last, "
 "check your firewall settings."
 msgstr ""
 
-#: Classes/Synchronization/InitialState.m:52
-#: Classes/Synchronization/BaseState.m:36
-#: Classes/Synchronization/BaseState.m:50
+#: Classes/Synchronization/InitialState.m:58
+#: Classes/Synchronization/BaseState.m:57
+#: Classes/Synchronization/BaseState.m:72
 msgid "Abort"
 msgstr "Abbrechen"
 
-#: Classes/Synchronization/BaseState.m:35
-msgid "The connection was unexpectedly closed."
-msgstr ""
+#: Classes/Synchronization/BaseState.m:55
+#: Classes/Synchronization/BaseState.m:70
+#: Classes/Synchronization/ProtocolNegotiationState.m:68
+msgid "Error"
+msgstr "Fehler"
 
-#: Classes/Synchronization/BaseState.m:49
+#: Classes/Synchronization/BaseState.m:56
+msgid "The connection was unexpectedly closed."
+msgstr "Die Verbindung wurde unerwartet beendet."
+
+#: Classes/Synchronization/BaseState.m:71
 #, objc-format
 msgid "A network error occurred: %@"
-msgstr ""
+msgstr "Es ist ein Problem mit dem Netzwerk aufgetreten: %@"
 
-#: Classes/Synchronization/ProtocolNegotiationState.m:21
+#: Classes/Synchronization/ProtocolNegotiationState.m:28
 msgid "Protocol negotiation..."
 msgstr "Protokoll negoziieren..."
 
-#: Classes/Synchronization/ProtocolNegotiationState.m:61
+#: Classes/Synchronization/ProtocolNegotiationState.m:69
 msgid ""
 "The version of the desktop Task Coach is too old. Please upgrade it and "
 "retry."
 msgstr ""
 
-#: Classes/Synchronization/FullFromDesktopState.m:36
+#: Classes/Synchronization/FullFromDesktopState.m:29
 msgid "Synchronizing..."
 msgstr "Synchronisieren…"
 
-#: Classes/TaskDetailsController.m:50
+#: Classes/TaskDetailsController.m:34
+msgid "General"
+msgstr ""
+
+#: Classes/TaskDetailsController.m:39
+msgid "Dates"
+msgstr "Zeitpunkte"
+
+#: Classes/TaskDetailsController.m:44
+msgid "Efforts"
+msgstr "Anstrengungen"
+
+#: Classes/TaskDetailsEffortsBase.m:135
 msgid "Stop tracking"
 msgstr "Stoppuhr anhalten"
 
-#: Classes/TaskDetailsController.m:52
+#: Classes/TaskDetailsEffortsBase.m:138
 msgid "Start tracking"
 msgstr "Stoppuhr starten"
 
-#: Classes/TaskDetailsController.m:65 Classes/TaskDetailsController.m:70
-#, objc-format
-msgid "%d effort(s)"
-msgstr "%d Aufwände"
-
-#: Classes/TaskDetailsController.m:113
-msgid "Start"
-msgstr "Starten"
-
-#: Classes/TaskDetailsController.m:119
-msgid "Due"
-msgstr "Fällig"
-
-#: Classes/TaskDetailsController.m:125
-msgid "Completion"
-msgstr "Erledigung"
-
-#: Classes/TaskDetailsController.m:166
-msgid "New subtask"
-msgstr "Neue Teilaufgabe"
-
-#: Classes/TaskDetailsController.m:168 Classes/TaskDetailsController.m:432
-msgid "New task"
-msgstr "Neue Aufgabe"
-
-#: Classes/TaskDetailsController.m:334
+#: Classes/TaskDetailsEffortsBase.m:156
 msgid "Warning"
 msgstr "Warnung"
 
-#: Classes/TaskDetailsController.m:334
+#: Classes/TaskDetailsEffortsBase.m:156
 #, objc-format
 msgid "There are %d task(s) currently tracked. Stop tracking them ?"
 msgstr "%d Aufwände wurden aufgezeichnet.  Aufzeichnung benden?"
 
-#: Classes/FileChooser.m:56
-msgid "Unnamed file"
-msgstr "Datei ohne Name"
+#: Classes/TaskDetailsEffortsBase.m:333
+#, objc-format
+msgid "Total spent: %@"
+msgstr ""
+
+#: Classes/TaskDetailsEffortsBase.m:345
+#, objc-format
+msgid "From %@ to %@ (%@)"
+msgstr ""
+
+#: Classes/TaskDetailsEffortsBase.m:352
+#, objc-format
+msgid "%@ on %@"
+msgstr ""
+
+#: Classes/ReminderController.m:88 Classes/TaskDetailsDates.m:61
+msgid "Reminder"
+msgstr "Erinnerung"
+
+#: Classes/TaskDetailsDates.m:43
+msgid "Start"
+msgstr "Starten"
+
+#: Classes/TaskDetailsDates.m:49
+msgid "Due"
+msgstr "Fällig"
+
+#: Classes/TaskDetailsDates.m:55
+msgid "Completion"
+msgstr "Erledigung"
+
+#: Classes/TaskDetailsDates.m:66
+#: Classes/TaskDetailsRecurrenceControlleriPad.m:82
+msgid "Recurrence"
+msgstr ""
+
+#: Classes/TaskDetailsDates.m:78
+#: Classes/TaskDetailsRecurrenceControlleriPad.m:83
+msgid "Same weekday"
+msgstr "Gleicher Wochentag"
+
+#: Classes/TaskDetailsDates.m:117
+#: Classes/TaskDetailsRecurrenceControlleriPad.m:40
+msgid "Day(s)"
+msgstr "Tag(e)"
+
+#: Classes/TaskDetailsDates.m:120
+#: Classes/TaskDetailsRecurrenceControlleriPad.m:43
+msgid "Week(s)"
+msgstr "Woche(n)"
+
+#: Classes/TaskDetailsDates.m:123
+#: Classes/TaskDetailsRecurrenceControlleriPad.m:46
+msgid "Month(s)"
+msgstr "Monat(e)"
+
+#: Classes/TaskDetailsDates.m:126
+#: Classes/TaskDetailsRecurrenceControlleriPad.m:49
+msgid "Year(s)"
+msgstr "Jahr(e)"
 
 msgid "Display"
 msgstr "Bildschirm"
 
 msgid "Show completed"
 msgstr "Erledigte Aufgaben anzeigen"
+
+msgid "Show inactive"
+msgstr "Inaktive zeigen"
 
 msgid "Icon position"
 msgstr "Symbol Position"
@@ -308,3 +454,33 @@ msgstr "Erledigt bestätigen"
 
 msgid "Due soon # of days     "
 msgstr "Bald fällig # Tage     "
+
+#, objc-format
+#~ msgid "%d seconds"
+#~ msgstr "%d Sekunden"
+
+#, objc-format
+#~ msgid "%d minutes"
+#~ msgstr "%d Minuten"
+
+#~ msgid "No tasks."
+#~ msgstr "Keine Aufgaben."
+
+#~ msgid "Incorrect password."
+#~ msgstr "Falsches Passwort."
+
+#~ msgid "Retry"
+#~ msgstr "Erneut versuchen"
+
+#, objc-format
+#~ msgid "%d effort(s)"
+#~ msgstr "%d Aufwände"
+
+#~ msgid "New subtask"
+#~ msgstr "Neue Teilaufgabe"
+
+#~ msgid "Unnamed file"
+#~ msgstr "Datei ohne Name"
+
+#~ msgid "Empty text."
+#~ msgstr "Keine Text."
