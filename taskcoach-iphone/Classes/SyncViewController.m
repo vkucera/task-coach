@@ -48,14 +48,7 @@
 
 - (void)finished:(BOOL)ok
 {
-	// XXXFIXME: remove this before releasing
-	// [target performSelector:action];
-
-	alertState = 1;
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_("Message") message:_("Sync finished.") delegate:self cancelButtonTitle:_("OK") otherButtonTitles:nil];
-	[alert addButtonWithTitle:_("Send log")];
-	[alert show];
-	[alert release];
+	[target performSelector:action];
 }
 
 - (void)cancel

@@ -41,7 +41,7 @@ NSManagedObjectContext *getManagedObjectContext(void)
 	_("Activity log");
 
 	LogCreateFile();
-	LogSetLevel(LOGLEVEL_INFO); // XXXFIXME: set this to error before releasing
+	LogSetLevel(LOGLEVEL_ERROR);
 
 	JLINFO("Started.");
 
