@@ -16,6 +16,11 @@
 #import "CDCategory.h"
 #import "CDDomainObject+Addons.h"
 
+static NSInteger compareCategories(id a, id b, void *ctx)
+{
+	return [[a name] localizedCaseInsensitiveCompare:[b name]];
+}
+
 static NSMutableArray *expandChildren(CDCategory *category, NSMutableDictionary *indentations, NSInteger indent)
 {
 	NSMutableArray *allChildren = [[[NSMutableArray alloc] init] autorelease];
@@ -25,9 +30,10 @@ static NSMutableArray *expandChildren(CDCategory *category, NSMutableDictionary 
 		[allChildren addObject:category];
 		[indentations setObject:[NSNumber numberWithInt:indent] forKey:[category objectID]];
 		
-		// XXXTODO: sort by name!
-		
-		for (CDCategory *child in [category children])
+		NSMutableArray *children = [NSMutableArray arrayWithArray:[[category children] allObjects]];
+		[children sortUsingFunction:&compareCategories context:NULL];
+
+		for (CDCategory *child in children)
 		{
 			[allChildren addObjectsFromArray:expandChildren(child, indentations, indent + 1)];
 		}

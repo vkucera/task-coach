@@ -1,6 +1,7 @@
 
 2010-08-28  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
-	* Remove calendar view; it's useless
+	* misc: Remove calendar view; it's useless
+	* misc: Sort subcategories by name
 
 2010-07-31  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* misc: The Snow Leopard firewall does not accept incoming TCP connections
