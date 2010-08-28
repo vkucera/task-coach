@@ -2111,8 +2111,8 @@ class FNBRenderer(object):
         height = dc.GetCharHeight()
         
         tabHeight = height + FNB_HEIGHT_SPACER # We use 8 pixels as padding
-        if "__WXGTK__" in wx.PlatformInfo:
-            # On GTK the tabs are should be larger
+        if "__WXGTK__" in wx.PlatformInfo or "__WXMAC__" in wx.PlatformInfo:
+            # On GTK and Mac OS X the tabs are should be larger
             tabHeight += 6
 
         self._tabHeight = tabHeight
@@ -3875,7 +3875,7 @@ class FlatNotebook(wx.PyPanel):
 
         tabHeight = height + FNB_HEIGHT_SPACER         # We use 8 pixels as padding
         
-        if "__WXGTK__" in wx.PlatformInfo:
+        if "__WXGTK__" in wx.PlatformInfo or "__WXMAC__" in wx.PlatformInfo:
             tabHeight += 6
             
         self._pages.SetSizeHints(-1, tabHeight)
