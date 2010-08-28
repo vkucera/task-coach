@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-08-26 22:31+West-Europa (zomertijd)\n"
+"POT-Creation-Date: 2010-08-28 21:24+West-Europa (zomertijd)\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3350,7 +3350,7 @@ msgid "Limitations"
 msgstr ""
 
 #: taskcoachlib\help\__init__.py:99 taskcoachlib\help\__init__.py:106
-#: taskcoachlib\help\__init__.py:399 taskcoachlib\help\__init__.py:510
+#: taskcoachlib\help\__init__.py:399 taskcoachlib\help\__init__.py:504
 msgid "Troubleshooting"
 msgstr ""
 
@@ -3366,19 +3366,19 @@ msgstr ""
 msgid "Task Coach on the iPhone"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:105 taskcoachlib\help\__init__.py:456
+#: taskcoachlib\help\__init__.py:105 taskcoachlib\help\__init__.py:450
 msgid "Configuration"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:108 taskcoachlib\help\__init__.py:531
+#: taskcoachlib\help\__init__.py:108 taskcoachlib\help\__init__.py:525
 msgid "Task templates"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:110 taskcoachlib\help\__init__.py:533
+#: taskcoachlib\help\__init__.py:110 taskcoachlib\help\__init__.py:527
 msgid "About templates"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:111 taskcoachlib\help\__init__.py:540
+#: taskcoachlib\help\__init__.py:111 taskcoachlib\help\__init__.py:534
 msgid "Using templates"
 msgstr ""
 
@@ -3857,24 +3857,15 @@ msgid ""
 "doesn't know they're deleted."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:427
-msgid ""
-"In addition, prior to version 0.71.4 of %(name)s, these deleted\n"
-"tasks and notes were kept around even with the SyncML feature\n"
-"disabled, so tasks and notes were never actually deleted. the \"Purge\n"
-"deleted items\" menu item can be used when upgrading to 0.71.4 to clear\n"
-"all these unwanted items."
-msgstr ""
-
-#: taskcoachlib\help\__init__.py:436
+#: taskcoachlib\help\__init__.py:430
 msgid "iPhone, iPod Touch and iPad"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:438
+#: taskcoachlib\help\__init__.py:432
 msgid "%(name)s on the iPhone/iPod Touch/iPad"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:440
+#: taskcoachlib\help\__init__.py:434
 msgid ""
 "There is an iPhone/iPod Touch/iPad companion app for %(name)s, \n"
 "available on <a \n"
@@ -3884,81 +3875,81 @@ msgid ""
 "It supports the following features:"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:447
+#: taskcoachlib\help\__init__.py:441
 msgid ""
 "Basic task attributes: subject, description, dates (with \n"
 "recurrence)..."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:449
+#: taskcoachlib\help\__init__.py:443
 msgid "Hierarchical tasks and categories"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:450
+#: taskcoachlib\help\__init__.py:444
 msgid "Time tracking"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:451
+#: taskcoachlib\help\__init__.py:445
 msgid "Multiple task files"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:452
+#: taskcoachlib\help\__init__.py:446
 msgid "Two-way synchronization with %(name)s on the desktop"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:454
+#: taskcoachlib\help\__init__.py:448
 msgid "The application is universal and has a custom iPad UI."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:458
+#: taskcoachlib\help\__init__.py:452
 msgid "Configuration on the iPhone/iPod Touch/iPad"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:460
+#: taskcoachlib\help\__init__.py:454
 msgid ""
 "There are some settings for the iPhone/iPod Touch/iPad app in the \n"
 "Settings application:"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:463
+#: taskcoachlib\help\__init__.py:457
 msgid "Show completed: whether to show completed tasks."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:464
+#: taskcoachlib\help\__init__.py:458
 msgid ""
 "Show inactive: whether to show inactive tasks (start date \n"
 "in the future)."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:466
+#: taskcoachlib\help\__init__.py:460
 msgid ""
 "Icon position: the LED icon may show up either on the \n"
 "left side or the right side of the screen."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:468
+#: taskcoachlib\help\__init__.py:462
 msgid ""
 "Compact mode: if this is enabled, the task list has smaller \n"
 "LEDs and doesn't show categories or dates."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:470
+#: taskcoachlib\help\__init__.py:464
 msgid ""
 "Confirm complete: if enabled, a message box will pop up for \n"
 "confirmation when you mark a task complete by tapping its LED."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:472
+#: taskcoachlib\help\__init__.py:466
 msgid ""
 "# days due soon: How many days in the future is \n"
 "considered \"soon\"."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:475
+#: taskcoachlib\help\__init__.py:469
 msgid "Configuration on the desktop, all platforms"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:477
+#: taskcoachlib\help\__init__.py:471
 msgid ""
 "Before synchronizing, you must also configure %(name)s on the \n"
 "desktop; in the preferences, in the \"Features\" tab, check \"Enable iPhone\n"
@@ -3966,7 +3957,7 @@ msgid ""
 "\"iPhone\" tab and fill in at least the password."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:482
+#: taskcoachlib\help\__init__.py:476
 msgid ""
 "When you tap the \"Sync\" button in the category view, %(name)s\n"
 "will automatically detect running instances of %(name)s on your\n"
@@ -3977,35 +3968,35 @@ msgid ""
 "change the \"Bonjour service name\" in the configuration."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:490
+#: taskcoachlib\help\__init__.py:484
 msgid ""
 "%(name)s will remember the chosen instance and try it next time\n"
 "you synchronize; if it's not running, it will prompt you again."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:493
+#: taskcoachlib\help\__init__.py:487
 msgid ""
 "Note that this synchronization happens through the network; there \n"
 "is no need for the device to be connected through USB nor for iTunes to\n"
 "be running."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:497
+#: taskcoachlib\help\__init__.py:491
 msgid "Configuration on Windows"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:499
+#: taskcoachlib\help\__init__.py:493
 msgid ""
 "On Windows, you must install <a\n"
 "href=\"http://support.apple.com/kb/dl999\">Bonjour for Windows</a> and\n"
 "unblock it when asked by the firewall."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:503
+#: taskcoachlib\help\__init__.py:497
 msgid "Configuration on Linux"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:505
+#: taskcoachlib\help\__init__.py:499
 msgid ""
 "On Linux, you must have the <a href=\"http://avahi.org/\">Avahi</a> \n"
 "daemon installed and running. Most modern distributions already have it. You \n"
@@ -4013,38 +4004,38 @@ msgid ""
 "(libavahi-compat-libdnssd1 on Ubuntu for instance)."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:512
+#: taskcoachlib\help\__init__.py:506
 msgid ""
 "I can't seem to find the iPhone/iPod Touch app on Apple's \n"
 "website"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:515
+#: taskcoachlib\help\__init__.py:509
 msgid ""
 "You need to have iTunes installed on your computer to browse \n"
 "Apple's App Store. <a href=\"http://www.apple.com/itunes/\" target=\"_blank\">Get \n"
 "iTunes</a>."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:519
+#: taskcoachlib\help\__init__.py:513
 msgid "My computer doesn't appear in the list when trying to sync"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:521
+#: taskcoachlib\help\__init__.py:515
 msgid ""
 "Check that your iPhone/iPod Touch is connected to the same network \n"
 "your computer is through WiFi."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:524
+#: taskcoachlib\help\__init__.py:518
 msgid "The iPhone can't connect to my computer"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:526
+#: taskcoachlib\help\__init__.py:520
 msgid "If you have a firewall, check that ports 4096-4100 are open."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:535
+#: taskcoachlib\help\__init__.py:529
 msgid ""
 "Templates are blueprints for new tasks. Right now, the only task \n"
 "properties that can be \"parameterized\" are the dates. When instantiating a \n"
@@ -4052,14 +4043,14 @@ msgid ""
 "current date."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:542
+#: taskcoachlib\help\__init__.py:536
 msgid ""
 "One can create a template by selecting a task (only one) and click \n"
 "on the \"Save task as template\" item in the File menu. All subtasks, notes and \n"
 "attachments are part of the template. Only categories are not saved."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:546
+#: taskcoachlib\help\__init__.py:540
 msgid ""
 "You can also create a new template from a pre-made template file \n"
 "(.tsktmpl); just select \"Add template\" in the File menu and select the file. \n"
@@ -4067,7 +4058,7 @@ msgid ""
 "is."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:551
+#: taskcoachlib\help\__init__.py:545
 msgid ""
 "In order to instantiate a task template, use the \"New task from \n"
 "template\" menu in the Task menu, or the equivalent toolbar button. When the \n"
@@ -4078,7 +4069,7 @@ msgid ""
 "due date by the current date plus one day."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:565
+#: taskcoachlib\help\__init__.py:559
 msgid ""
 "<h4>%(name)s - %(description)s</h4>\n"
 "<h5>Version %(version)s, Revision %(revision)s, %(date)s</h5>\n"
@@ -4088,7 +4079,7 @@ msgid ""
 "<p>%(license_notice_html)s</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:577
+#: taskcoachlib\help\__init__.py:571
 msgid ""
 "\n"
 "Version %(version)s, Revision %(revision)s, %(date)s\n"
