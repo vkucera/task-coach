@@ -60,8 +60,6 @@
 		A639812111C3DEE100B43940 /* ledred.png in Resources */ = {isa = PBXBuildFile; fileRef = A639810A11C3DEE100B43940 /* ledred.png */; };
 		A639812211C3DEE100B43940 /* ledredbig.png in Resources */ = {isa = PBXBuildFile; fileRef = A639810B11C3DEE100B43940 /* ledredbig.png */; };
 		A639812311C3DEE100B43940 /* redButton.png in Resources */ = {isa = PBXBuildFile; fileRef = A639810C11C3DEE100B43940 /* redButton.png */; };
-		A639812411C3DEE100B43940 /* switchcal.png in Resources */ = {isa = PBXBuildFile; fileRef = A639810D11C3DEE100B43940 /* switchcal.png */; };
-		A639812511C3DEE100B43940 /* switchtable.png in Resources */ = {isa = PBXBuildFile; fileRef = A639810E11C3DEE100B43940 /* switchtable.png */; };
 		A639812611C3DEE100B43940 /* taskcoach_small.png in Resources */ = {isa = PBXBuildFile; fileRef = A639810F11C3DEE100B43940 /* taskcoach_small.png */; };
 		A639812711C3DEE100B43940 /* TaskCoach.png in Resources */ = {isa = PBXBuildFile; fileRef = A639811011C3DEE100B43940 /* TaskCoach.png */; };
 		A639812811C3DEE100B43940 /* time.png in Resources */ = {isa = PBXBuildFile; fileRef = A639811111C3DEE100B43940 /* time.png */; };
@@ -76,12 +74,12 @@
 		A645E84811E0828100E1DD82 /* leather.png in Resources */ = {isa = PBXBuildFile; fileRef = A645E84711E0828100E1DD82 /* leather.png */; };
 		A64603A70F2234B500FC71AD /* CellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = A64603A60F2234B500FC71AD /* CellFactory.m */; };
 		A64603AA0F2234D900FC71AD /* TaskCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A64603A90F2234D900FC71AD /* TaskCell.m */; };
+		A646183C1228EFFB005D9651 /* switchcal.png in Resources */ = {isa = PBXBuildFile; fileRef = A646183B1228EFFB005D9651 /* switchcal.png */; };
 		A647F39011B26802008D0FB0 /* CDDomainObject+Addons.m in Sources */ = {isa = PBXBuildFile; fileRef = A647F38F11B26802008D0FB0 /* CDDomainObject+Addons.m */; };
 		A65D1B1E119D379300F0F5C3 /* BUILD.txt in Resources */ = {isa = PBXBuildFile; fileRef = A65D1B1D119D379300F0F5C3 /* BUILD.txt */; };
 		A65D1B46119D382000F0F5C3 /* TapkuLibrary.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A65D1B45119D382000F0F5C3 /* TapkuLibrary.bundle */; };
 		A65D1B7F119D383200F0F5C3 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A65D1B7E119D383200F0F5C3 /* MapKit.framework */; };
 		A65D1B81119D383200F0F5C3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A65D1B80119D383200F0F5C3 /* QuartzCore.framework */; };
-		A65D1C47119D460B00F0F5C3 /* CalendarTaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = A65D1C46119D460B00F0F5C3 /* CalendarTaskView.m */; };
 		A65FF1ED11BBC25B00394E33 /* ReminderController.m in Sources */ = {isa = PBXBuildFile; fileRef = A65FF1EC11BBC25B00394E33 /* ReminderController.m */; };
 		A6664C230F2B35F300638C68 /* SyncViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664C220F2B35F300638C68 /* SyncViewController.m */; };
 		A6664D3F0F2B41A000638C68 /* State.m in Sources */ = {isa = PBXBuildFile; fileRef = A6664D3E0F2B41A000638C68 /* State.m */; };
@@ -277,8 +275,6 @@
 		A639810A11C3DEE100B43940 /* ledred.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ledred.png; path = "Resources-iPhone/ledred.png"; sourceTree = "<group>"; };
 		A639810B11C3DEE100B43940 /* ledredbig.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ledredbig.png; path = "Resources-iPhone/ledredbig.png"; sourceTree = "<group>"; };
 		A639810C11C3DEE100B43940 /* redButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = redButton.png; path = "Resources-iPhone/redButton.png"; sourceTree = "<group>"; };
-		A639810D11C3DEE100B43940 /* switchcal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = switchcal.png; path = "Resources-iPhone/switchcal.png"; sourceTree = "<group>"; };
-		A639810E11C3DEE100B43940 /* switchtable.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = switchtable.png; path = "Resources-iPhone/switchtable.png"; sourceTree = "<group>"; };
 		A639810F11C3DEE100B43940 /* taskcoach_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = taskcoach_small.png; path = "Resources-iPhone/taskcoach_small.png"; sourceTree = "<group>"; };
 		A639811011C3DEE100B43940 /* TaskCoach.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TaskCoach.png; path = "Resources-iPhone/TaskCoach.png"; sourceTree = "<group>"; };
 		A639811111C3DEE100B43940 /* time.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = time.png; path = "Resources-iPhone/time.png"; sourceTree = "<group>"; };
@@ -300,6 +296,7 @@
 		A64603A60F2234B500FC71AD /* CellFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CellFactory.m; sourceTree = "<group>"; };
 		A64603A80F2234D900FC71AD /* TaskCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCell.h; sourceTree = "<group>"; };
 		A64603A90F2234D900FC71AD /* TaskCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskCell.m; sourceTree = "<group>"; };
+		A646183B1228EFFB005D9651 /* switchcal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = switchcal.png; path = "Resources-iPhone/switchcal.png"; sourceTree = "<group>"; };
 		A647F38E11B26802008D0FB0 /* CDDomainObject+Addons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CDDomainObject+Addons.h"; path = "CoreData/CDDomainObject+Addons.h"; sourceTree = "<group>"; };
 		A647F38F11B26802008D0FB0 /* CDDomainObject+Addons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CDDomainObject+Addons.m"; path = "CoreData/CDDomainObject+Addons.m"; sourceTree = "<group>"; };
 		A64F4142117B01AD00E60105 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/TaskView.strings; sourceTree = "<group>"; };
@@ -310,8 +307,6 @@
 		A65D1B45119D382000F0F5C3 /* TapkuLibrary.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = TapkuLibrary.bundle; path = Classes/Thirdparty/tapkulibrary/src/TapkuLibrary.bundle; sourceTree = SOURCE_ROOT; };
 		A65D1B7E119D383200F0F5C3 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		A65D1B80119D383200F0F5C3 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		A65D1C45119D460B00F0F5C3 /* CalendarTaskView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarTaskView.h; sourceTree = "<group>"; };
-		A65D1C46119D460B00F0F5C3 /* CalendarTaskView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalendarTaskView.m; sourceTree = "<group>"; };
 		A65FF1EB11BBC25B00394E33 /* ReminderController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReminderController.h; sourceTree = "<group>"; };
 		A65FF1EC11BBC25B00394E33 /* ReminderController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReminderController.m; sourceTree = "<group>"; };
 		A6664C210F2B35F300638C68 /* SyncViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncViewController.h; sourceTree = "<group>"; };
@@ -767,6 +762,7 @@
 		A639813611C3DF5E00B43940 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				A646183B1228EFFB005D9651 /* switchcal.png */,
 				A63980FC11C3DEE100B43940 /* addtask.png */,
 				A63980FD11C3DEE100B43940 /* blueButton.png */,
 				A63980FE11C3DEE100B43940 /* Default.png */,
@@ -784,8 +780,6 @@
 				A639810A11C3DEE100B43940 /* ledred.png */,
 				A639810B11C3DEE100B43940 /* ledredbig.png */,
 				A639810C11C3DEE100B43940 /* redButton.png */,
-				A639810D11C3DEE100B43940 /* switchcal.png */,
-				A639810E11C3DEE100B43940 /* switchtable.png */,
 				A639810F11C3DEE100B43940 /* taskcoach_small.png */,
 				A639811011C3DEE100B43940 /* TaskCoach.png */,
 				A639811111C3DEE100B43940 /* time.png */,
@@ -976,8 +970,6 @@
 				A63C2FA811B280D3000DE779 /* CategoryTaskViewController.m */,
 				A62DC84111BA332D0062C0E9 /* ParentTaskViewController.h */,
 				A62DC84211BA332D0062C0E9 /* ParentTaskViewController.m */,
-				A65D1C45119D460B00F0F5C3 /* CalendarTaskView.h */,
-				A65D1C46119D460B00F0F5C3 /* CalendarTaskView.m */,
 				A600A38E119FDD2A0018F309 /* Task details */,
 			);
 			name = Tasks;
@@ -1181,8 +1173,6 @@
 				A639812111C3DEE100B43940 /* ledred.png in Resources */,
 				A639812211C3DEE100B43940 /* ledredbig.png in Resources */,
 				A639812311C3DEE100B43940 /* redButton.png in Resources */,
-				A639812411C3DEE100B43940 /* switchcal.png in Resources */,
-				A639812511C3DEE100B43940 /* switchtable.png in Resources */,
 				A639812611C3DEE100B43940 /* taskcoach_small.png in Resources */,
 				A639812711C3DEE100B43940 /* TaskCoach.png in Resources */,
 				A639812811C3DEE100B43940 /* time.png in Resources */,
@@ -1207,6 +1197,7 @@
 				A645E84811E0828100E1DD82 /* leather.png in Resources */,
 				A6A4F31D11E0983B00FDDDD5 /* check.png in Resources */,
 				A6AA589B11E0AFC600F5689E /* paper_big.png in Resources */,
+				A646183C1228EFFB005D9651 /* switchcal.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1271,7 +1262,6 @@
 				A6E7C0801114418D00B230E2 /* AlertPrompt.m in Sources */,
 				A69F6C2F115E2196003F68F5 /* SearchCell.m in Sources */,
 				A66EE70C1196AEAF006758BB /* NSDate+Utils.m in Sources */,
-				A65D1C47119D460B00F0F5C3 /* CalendarTaskView.m in Sources */,
 				A61A55F2119FB7840036FC56 /* DayHourState.m in Sources */,
 				A600A3BB119FDD710018F309 /* TaskDetailsGeneral.m in Sources */,
 				A600A48E119FEA790018F309 /* TaskDetailsDates.m in Sources */,

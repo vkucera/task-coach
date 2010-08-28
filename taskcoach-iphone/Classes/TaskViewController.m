@@ -6,7 +6,6 @@
 //  Copyright 2009 Jérôme Laheurte. See COPYING for details.
 //
 
-#import "ODCalendarDayTimelineView.h"
 #import "NSDate+TKCategory.h"
 
 #import "TaskCoachAppDelegate.h"
@@ -35,8 +34,6 @@
 #import "i18n.h"
 #import "LogUtils.h"
 
-#import "CalendarTaskView.h"
-
 #define ADJUSTSECTION (self.editing ? 2 : 1)
 
 static void deleteTask(CDTask *task)
@@ -57,8 +54,6 @@ static void deleteTask(CDTask *task)
 @implementation TaskViewController
 
 @synthesize tableViewController;
-@synthesize calendarView;
-@synthesize calendarSearch;
 @synthesize toolbar;
 @synthesize categoryController;
 @synthesize groupButton;
@@ -81,10 +76,6 @@ static void deleteTask(CDTask *task)
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-	self.calendarView.scrollView.frame = self.view.frame;
-	[self.calendarView reloadDay];
-	[self.calendarView.timelineView setNeedsDisplay];
-	
 	[groupSheet showFromBarButtonItem:self.groupButton animated:NO];
 }
 
@@ -96,14 +87,6 @@ static void deleteTask(CDTask *task)
 - (void)willTerminate
 {
 	[[PositionStore instance] push:self indexPath:nil type:TYPE_SUBTASK searchWord:searchCell.searchBar.text];
-}
-
-- (NSInteger)calendarButtonIndex
-{
-	for (NSInteger idx = 0; idx < [self.toolbar.items count]; ++idx)
-		if ([[self.toolbar.items objectAtIndex:idx] tag] == 1)
-			return idx;
-	assert(0);
 }
 
 - (void)restorePosition:(Position *)pos store:(PositionStore *)store
@@ -119,13 +102,9 @@ static void deleteTask(CDTask *task)
 		searchCell.searchBar.text = pos.searchWord;
 
 		[self populate];
-		[self.calendarView reloadDay];
 	}
 	
-	if ([Configuration configuration].viewStyle == STYLE_TABLE)
-		[self.tableView setContentOffset:pos.scrollPosition animated:NO];
-	else
-		[self.calendarView.scrollView setContentOffset:pos.scrollPosition animated:NO];
+	[self.tableView setContentOffset:pos.scrollPosition animated:NO];
 
 	if (pos.indexPath)
 	{
@@ -300,41 +279,7 @@ static void deleteTask(CDTask *task)
 	if (self.editing != shouldEdit)
 		self.editing = shouldEdit;
 
-	self.calendarView.delegate = self;
-	self.calendarView.scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-	self.calendarView.timelineView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-	self.calendarView.scrollView.frame = self.view.frame;
-	self.calendarSearch.placeholder = _("Search tasks...");
-	self.calendarSearch.text = searchCell.searchBar.text;
-
-	if ([Configuration configuration].viewStyle == STYLE_TABLE)
-	{
-		self.navigationItem.rightBarButtonItem = [self editButtonItem];
-		self.tableView.hidden = NO;
-		self.calendarView.hidden = YES;
-		self.calendarSearch.hidden = YES;
-
-		NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
-		UIBarButtonItem *btn = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)];
-		btn.tag = 1;
-		[items replaceObjectAtIndex:[self calendarButtonIndex] withObject:btn];
-		[btn release];
-		[self.toolbar setItems:items animated:NO];
-	}
-	else
-	{
-		self.navigationItem.rightBarButtonItem = nil;
-		self.tableView.hidden = YES;
-		self.calendarView.hidden = NO;
-		self.calendarSearch.hidden = NO;
-		
-		NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
-		UIBarButtonItem *btn = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)];
-		btn.tag = 1;
-		[items replaceObjectAtIndex:[self calendarButtonIndex] withObject:btn];
-		[btn release];
-		[self.toolbar setItems:items animated:NO];
-	}
+	self.navigationItem.rightBarButtonItem = [self editButtonItem];
 
 	NSDate *nextUpdate = [NSDate dateRounded];
 	nextUpdate = [nextUpdate addTimeInterval:60];
@@ -352,8 +297,6 @@ static void deleteTask(CDTask *task)
 - (void)viewDidUnload
 {
 	self.tableViewController = nil;
-	self.calendarView = nil;
-	self.calendarSearch = nil;
 	self.toolbar = nil;
 	self.headerView = nil;
 
@@ -416,8 +359,6 @@ static void deleteTask(CDTask *task)
 	{
 		JLERROR("Could not fetch tasks: %s", [[error localizedDescription] UTF8String]);
 	}
-
-	[self.calendarView reloadDay];
 }
 
 - (void)dealloc
@@ -444,8 +385,6 @@ static void deleteTask(CDTask *task)
 		[selected release];
 		selected = nil;
 	}
-
-	[self.calendarView reloadDay];
 
 	if (!isCreatingTask)
 		[[PositionStore instance] pop];
@@ -858,91 +797,6 @@ static void deleteTask(CDTask *task)
 	[self.navigationController popToRootViewControllerAnimated:YES];
 }
 
-- (IBAction)onSwitch:(UIBarButtonItem *)button
-{
-	if (groupSheet)
-		[groupSheet dismissWithClickedButtonIndex:-1 animated:YES];
-	
-	if (popCtrl)
-		[popCtrl dismissPopoverAnimated:YES];
-
-	[UIView beginAnimations:@"SwitchStyleAnimation" context:nil];
-	[UIView setAnimationDuration:1.0];
-
-	if (self.tableView.hidden)
-	{
-		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.view cache:YES];
-		// Switch to table view
-		self.tableView.hidden = NO;
-		self.calendarView.hidden = YES;
-		self.calendarSearch.hidden = YES;
-		[UIView commitAnimations];
-		self.navigationItem.rightBarButtonItem = [self editButtonItem];
-		
-		NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
-		UIBarButtonItem *btn = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)];
-		btn.tag = 1;
-		[items replaceObjectAtIndex:[self calendarButtonIndex] withObject:btn];
-		[btn release];
-		[self.toolbar setItems:items animated:NO];
-
-		for (NSInteger i = 1; i < [self.navigationController.viewControllers count] - 1; ++i)
-		{
-			TaskViewController *ctrl = [self.navigationController.viewControllers objectAtIndex:i];
-			ctrl.tableView.hidden = NO;
-			ctrl.calendarView.hidden = YES;
-			ctrl.calendarSearch.hidden = YES;
-			ctrl.navigationItem.rightBarButtonItem = [ctrl editButtonItem];
-			
-			NSMutableArray *items = [NSMutableArray arrayWithArray:ctrl.toolbar.items];
-			btn = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchcal.png"] style:UIBarButtonItemStyleBordered target:ctrl action:@selector(onSwitch:)];
-			btn.tag = 1;
-			[items replaceObjectAtIndex:[ctrl calendarButtonIndex] withObject:btn];
-			[btn release];
-			[ctrl.toolbar setItems:items animated:NO];
-		}
-
-		[Configuration configuration].viewStyle = STYLE_TABLE;
-		[[Configuration configuration] save];
-	}
-	else
-	{
-		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:self.view cache:YES];
-		// Switch to calendar view
-		self.tableView.hidden = YES;
-		self.calendarView.hidden = NO;
-		self.calendarSearch.hidden = NO;
-		[UIView commitAnimations];
-		self.navigationItem.rightBarButtonItem = nil;
-		
-		NSMutableArray *items = [NSMutableArray arrayWithArray:self.toolbar.items];
-		UIBarButtonItem *btn = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(onSwitch:)];
-		btn.tag = 1;
-		[items replaceObjectAtIndex:[self calendarButtonIndex] withObject:btn];
-		[btn release];
-		[self.toolbar setItems:items animated:NO];
-
-		for (NSInteger i = 1; i < [self.navigationController.viewControllers count] - 1; ++i)
-		{
-			TaskViewController *ctrl = [self.navigationController.viewControllers objectAtIndex:i];
-			ctrl.tableView.hidden = YES;
-			ctrl.calendarView.hidden = NO;
-			ctrl.calendarSearch.hidden = NO;
-			ctrl.navigationItem.rightBarButtonItem = nil;
-			
-			NSMutableArray *items = [NSMutableArray arrayWithArray:ctrl.toolbar.items];
-			btn = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"switchtable.png"] style:UIBarButtonItemStyleBordered target:ctrl action:@selector(onSwitch:)];
-			btn.tag = 1;
-			[items replaceObjectAtIndex:[ctrl calendarButtonIndex] withObject:btn];
-			[btn release];
-			[ctrl.toolbar setItems:items animated:NO];
-		}
-		
-		[Configuration configuration].viewStyle = STYLE_CALENDAR;
-		[[Configuration configuration] save];
-	}
-}
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	if (tapping && ([tapping compare:indexPath] == NSOrderedSame))
@@ -995,95 +849,18 @@ static void deleteTask(CDTask *task)
 {
 	[searchBar resignFirstResponder];
 	
-	searchCell.searchBar.text = searchBar.text;
-	calendarSearch.text = searchBar.text;
-	
 	[self populate];
 	[self.tableView reloadData];
-	[self.calendarView reloadDay];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
 	searchCell.searchBar.text = @"";
-	calendarSearch.text = @"";
 	
 	[searchBar resignFirstResponder];
 
 	[self populate];
 	[self.tableView reloadData];
-	[self.calendarView reloadDay];
-}
-
-// Calendar delegate
-
-- (NSArray *)calendarDayTimelineView:(ODCalendarDayTimelineView*)calendarDayTimeline eventsForDate:(NSDate *)eventDate
-{
-	NSMutableArray *events = [[NSMutableArray alloc] init];
-	
-	for (CDTask *task in results.fetchedObjects)
-	{
-		if (!(task.startDate && task.dueDate))
-			continue;
-		if (![Configuration configuration].showCompleted && task.completionDate)
-			continue;
-		if (![Configuration configuration].showInactive && ([task.dateStatus intValue] == TASKSTATUS_NOTSTARTED))
-			continue;
-		
-		if ([task.startDate compare:[[NSDate midnightToday] addTimeInterval:24*60*60]] == NSOrderedDescending)
-			continue;
-		if ([task.dueDate compare:[NSDate midnightToday]] == NSOrderedAscending)
-			continue;
-		
-		CalendarTaskView *event = [[CalendarTaskView alloc] initWithTask:task];
-		[events addObject:event];
-		[event release];
-	}
-	
-	return [events autorelease];
-}
-
-- (void)calendarDayTimelineView:(ODCalendarDayTimelineView*)calendarDayTimeline eventViewWasSelected:(ODCalendarDayEventView *)eventView atPoint:(CGPoint)point
-{
-	CDTask *task = ((CalendarTaskView *)eventView).task;
-	NSIndexPath *indexPath = [results indexPathForObject:task];
-
-	if ([[task children] count])
-	{
-		if ((point.x >= eventView.bounds.size.width - 36) && (point.y >= eventView.bounds.size.height - 36))
-		{
-			ParentTaskViewController *ctrl = [[ParentTaskViewController alloc] initWithCategoryController:categoryController edit:self.editing parent:task];
-			[[PositionStore instance] push:self indexPath:indexPath type:TYPE_SUBTASK searchWord:searchCell.searchBar.text];
-			[self.navigationController pushViewController:ctrl animated:YES];
-			[ctrl release];
-			
-			return;
-		}
-	}
-
-	UIViewController *ctrl;
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-		ctrl = [[TaskDetailsController alloc] initWithTask:task];
-	else
-		ctrl = [[TaskDetailsControlleriPad alloc] initWithTask:task];
-
-	[self.navigationController pushViewController:ctrl animated:YES];
-	[[PositionStore instance] push:self indexPath:indexPath type:TYPE_DETAILS searchWord:searchCell.searchBar.text];
-	[ctrl release];
-}
-
-- (NSInteger)calendarDayTimelineViewStartHour:(ODCalendarDayTimelineView*)calendarDayTimeline
-{
-	if ([Configuration configuration].cdCurrentFile)
-		return [[Configuration configuration].cdCurrentFile.startHour intValue];
-	return 8;
-}
-
-- (NSInteger)calendarDayTimelineViewEndHour:(ODCalendarDayTimelineView*)calendarDayTimeline
-{
-	if ([Configuration configuration].cdCurrentFile)
-		return [[Configuration configuration].cdCurrentFile.endHour intValue];
-	return 18;
 }
 
 #pragma mark UIActionSheetDelegate

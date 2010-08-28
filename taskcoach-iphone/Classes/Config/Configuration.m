@@ -23,7 +23,6 @@ static Configuration *_configuration = NULL;
 @synthesize soonDays;
 @synthesize name;
 @synthesize domain;
-@synthesize viewStyle;
 @synthesize taskGrouping;
 @synthesize reverseGrouping;
 
@@ -57,8 +56,6 @@ static Configuration *_configuration = NULL;
 
 		name = [[config stringForKey:@"name"] copy];
 		domain = [[config stringForKey:@"domain"] copy];
-
-		viewStyle = [config integerForKey:@"viewStyle"];
 		
 		if ([config objectForKey:@"taskGrouping"])
 		{
@@ -100,7 +97,6 @@ static Configuration *_configuration = NULL;
 	if (domain)
 		[config setObject:domain forKey:@"domain"];
 	
-	[config setInteger:viewStyle forKey:@"viewStyle"];
 	[config setInteger:taskGrouping forKey:@"taskGrouping"];
 	[config setInteger:reverseGrouping forKey:@"reverseGrouping"];
 

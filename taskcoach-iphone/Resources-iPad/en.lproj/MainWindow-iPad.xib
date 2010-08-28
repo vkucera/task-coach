@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="161"/>
+			<integer value="129"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -188,20 +188,6 @@
 								<int key="NSvFlags">274</int>
 								<object class="NSMutableArray" key="NSSubviews">
 									<bool key="EncodedWithXMLCoder">YES</bool>
-									<object class="IBUIView" id="746899623">
-										<reference key="NSNextResponder" ref="1064199850"/>
-										<int key="NSvFlags">-2147483374</int>
-										<string key="NSFrameSize">{703, 660}</string>
-										<reference key="NSSuperview" ref="1064199850"/>
-										<object class="NSColor" key="IBUIBackgroundColor">
-											<int key="NSColorSpace">3</int>
-											<bytes key="NSWhite">MQA</bytes>
-											<object class="NSColorSpace" key="NSCustomColorSpace" id="1050760211">
-												<int key="NSID">2</int>
-											</object>
-										</object>
-										<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-									</object>
 									<object class="IBUITableView" id="643351663">
 										<reference key="NSNextResponder" ref="1064199850"/>
 										<int key="NSvFlags">274</int>
@@ -229,16 +215,6 @@
 										<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 										<object class="NSMutableArray" key="IBUIItems">
 											<bool key="EncodedWithXMLCoder">YES</bool>
-											<object class="IBUIBarButtonItem" id="1070866814">
-												<int key="IBUITag">1</int>
-												<object class="NSCustomResource" key="IBUIImage">
-													<string key="NSClassName">NSImage</string>
-													<string key="NSResourceName">switchcal.png</string>
-												</object>
-												<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-												<int key="IBUIStyle">1</int>
-												<reference key="IBUIToolbar" ref="743516695"/>
-											</object>
 											<object class="IBUIBarButtonItem" id="366994888">
 												<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 												<int key="IBUIStyle">1</int>
@@ -274,7 +250,9 @@
 								<object class="NSColor" key="IBUIBackgroundColor">
 									<int key="NSColorSpace">3</int>
 									<bytes key="NSWhite">MQA</bytes>
-									<reference key="NSCustomColorSpace" ref="1050760211"/>
+									<object class="NSColorSpace" key="NSCustomColorSpace">
+										<int key="NSID">2</int>
+									</object>
 								</object>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 							</object>
@@ -414,14 +392,6 @@
 						<reference key="destination" ref="1007759363"/>
 					</object>
 					<int key="connectionID">90</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">calendarView</string>
-						<reference key="source" ref="979134385"/>
-						<reference key="destination" ref="746899623"/>
-					</object>
-					<int key="connectionID">135</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -628,19 +598,10 @@
 						<reference key="object" ref="1064199850"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="746899623"/>
 							<reference ref="643351663"/>
 							<reference ref="743516695"/>
 						</object>
 						<reference key="parent" ref="979134385"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">134</int>
-						<reference key="object" ref="746899623"/>
-						<object class="NSMutableArray" key="children">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<reference key="parent" ref="1064199850"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">136</int>
@@ -737,15 +698,9 @@
 							<reference ref="511985687"/>
 							<reference ref="181235536"/>
 							<reference ref="692336382"/>
-							<reference ref="1070866814"/>
 							<reference ref="1048961783"/>
 						</object>
 						<reference key="parent" ref="1064199850"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">131</int>
-						<reference key="object" ref="1070866814"/>
-						<reference key="parent" ref="743516695"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">145</int>
@@ -787,9 +742,6 @@
 					<string>127.IBPluginDependency</string>
 					<string>128.IBPluginDependency</string>
 					<string>129.IBPluginDependency</string>
-					<string>131.IBPluginDependency</string>
-					<string>134.CustomClassName</string>
-					<string>134.IBPluginDependency</string>
 					<string>136.IBEditorWindowLastContentRect</string>
 					<string>136.IBPluginDependency</string>
 					<string>141.IBPluginDependency</string>
@@ -832,9 +784,6 @@
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>ODCalendarDayTimelineView</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>{{21, 338}, {768, 1024}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -1050,14 +999,6 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">ODCalendarDayTimelineView</string>
-					<string key="superclassName">UIView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/Thirdparty/tapkulibrary/src/TapkuLibrary/ODCalendarDayTimelineView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
 					<string key="className">PaperHeaderView</string>
 					<string key="superclassName">UIView</string>
 					<object class="NSMutableDictionary" key="outlets">
@@ -1152,12 +1093,10 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>onAddTask:</string>
 							<string>onChangeGrouping:</string>
-							<string>onSwitch:</string>
 							<string>onSync:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>UIBarButtonItem</string>
 							<string>UIBarButtonItem</string>
 							<string>UIBarButtonItem</string>
 							<string>UIBarButtonItem</string>
@@ -1169,7 +1108,6 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>onAddTask:</string>
 							<string>onChangeGrouping:</string>
-							<string>onSwitch:</string>
 							<string>onSync:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -1183,10 +1121,6 @@
 								<string key="candidateClassName">UIBarButtonItem</string>
 							</object>
 							<object class="IBActionInfo">
-								<string key="name">onSwitch:</string>
-								<string key="candidateClassName">UIBarButtonItem</string>
-							</object>
-							<object class="IBActionInfo">
 								<string key="name">onSync:</string>
 								<string key="candidateClassName">UIBarButtonItem</string>
 							</object>
@@ -1196,8 +1130,6 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>calendarSearch</string>
-							<string>calendarView</string>
 							<string>categoryController</string>
 							<string>groupButton</string>
 							<string>headerView</string>
@@ -1206,8 +1138,6 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>UISearchBar</string>
-							<string>ODCalendarDayTimelineView</string>
 							<string>CategoryViewController</string>
 							<string>UIBarButtonItem</string>
 							<string>PaperHeaderView</string>
@@ -1219,8 +1149,6 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>calendarSearch</string>
-							<string>calendarView</string>
 							<string>categoryController</string>
 							<string>groupButton</string>
 							<string>headerView</string>
@@ -1229,14 +1157,6 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBToOneOutletInfo">
-								<string key="name">calendarSearch</string>
-								<string key="candidateClassName">UISearchBar</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">calendarView</string>
-								<string key="candidateClassName">ODCalendarDayTimelineView</string>
-							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">categoryController</string>
 								<string key="candidateClassName">CategoryViewController</string>
@@ -1596,10 +1516,6 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<string key="IBDocument.LastKnownRelativeProjectPath">../../TaskCoach.xcodeproj</string>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
-		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="NS.key.0">switchcal.png</string>
-			<string key="NS.object.0">{22, 22}</string>
-		</object>
 		<string key="IBCocoaTouchPluginVersion">117</string>
 	</data>
 </archive>

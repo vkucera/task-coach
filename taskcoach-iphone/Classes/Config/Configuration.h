@@ -11,9 +11,6 @@
 #define ICONPOSITION_RIGHT 0
 #define ICONPOSITION_LEFT  1
 
-#define STYLE_TABLE    0
-#define STYLE_CALENDAR 1
-
 #define GROUP_STATUS   0
 #define GROUP_PRIORITY 1
 #define GROUP_START    2
@@ -34,8 +31,6 @@
 	NSString *name;
 	NSString *domain;
 
-	NSInteger viewStyle;
-
 	NSString *currentFileGuid;
 
 	NSInteger taskGrouping;
@@ -50,7 +45,6 @@
 @property (nonatomic, readonly) NSInteger soonDays;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *domain;
-@property (nonatomic) NSInteger viewStyle;
 @property (nonatomic) NSInteger taskGrouping;
 @property (nonatomic) BOOL reverseGrouping;
 

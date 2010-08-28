@@ -510,7 +510,6 @@
 		{
 			[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 			[taskCtrl setCategory:category];
-			[taskCtrl.calendarView reloadDay];
 
 			[[PositionStore instance] setRoot:self indexPath:indexPath type:TYPE_DETAILS searchWord:nil];
 		}
@@ -520,7 +519,6 @@
 - (void)selectAll
 {
 	[taskCtrl setCategory:nil];
-	[taskCtrl.calendarView reloadDay];
 }
 
 - (void)onCategoryChanged:(NSString *)name
