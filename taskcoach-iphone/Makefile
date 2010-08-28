@@ -1,4 +1,7 @@
 
+# LANGS=fr nl ru de th cs
+LANGS=fr nl de
+
 all: help
 
 help:
@@ -24,14 +27,14 @@ messages:
 
 stringfiles:
 	msgcat -o en.lproj/Localizable.strings --stringtable-output i18n.in/messages.pot
-	for lang in fr nl ru de th cs; do \
+	for lang in $(LANGS); do \
 		msgcat -o $$lang.lproj/Localizable.strings --stringtable-output i18n.in/$$lang.po; \
 	done
 
 settings:
 	# Settings bundle
 	msgcat --stringtable-input -o Settings.po Settings.strings
-	for lang in fr nl ru de th cs; do \
+	for lang in $(LANGS); do \
 		msgmerge -N -o - i18n.in/$$lang.po Settings.po | egrep -v "^#" | \
 			msgcat --stringtable-output -o Settings.bundle/$$lang.lproj/Root.strings -; \
 	done
@@ -39,7 +42,7 @@ settings:
 translated:
 	# This generates NIB files for all languages. They must then be edited with
 	# Interface Builder to ensure widget sizes are OK.
-	for lang in fr nl ru de th cs; do \
+	for lang in $(LANGS); do \
 		for name in DatePickerView MainWindow TaskView TaskDetailsRecurrencePeriodPicker TaskDetailsControlleriPad; do \
 			ibtool --strings-file $$lang.lproj/$$name.strings \
 				--write $$lang.lproj/$$name.xib en.lproj/$$name.xib; \
@@ -50,7 +53,7 @@ translated:
 
 xibstrings:
 	# Extract translatable strings from XIB files.
-	for lang in en fr nl ru de th cs; do \
+	for lang in en $(LANGS); do \
 		for name in DatePickerView MainWindow TaskView TaskDetailsRecurrencePeriodPicker TaskDetailsControlleriPad; do \
 			ibtool --generate-strings-file $$lang.lproj/$$name.strings en.lproj/$$name.xib; \
 		done; \
