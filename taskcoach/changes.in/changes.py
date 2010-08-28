@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.0', 'August 26, 2010',
+Release('1.2.0', 'August 28, 2010',
     summary='''This release adds task dependencies.''',
     featuresAdded=[
         Feature('''Tasks can have one or more prerequisite tasks. As long as 
@@ -66,6 +66,15 @@ dependencies. The task file format version number is now 31.''')
         ]
     ),
 
+Release('1.1.2', 'August 27, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Task Coach wouldn't run on Ubuntu 9.04. This is because Task
+Coach tried to use a feature from wxPython 2.8.9.2 while Ubuntu 9.04 ships with
+wxPython 2.8.9.1.''', '3054431')
+        ]
+    ),
+            
 Release('1.1.1', 'August 26, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
