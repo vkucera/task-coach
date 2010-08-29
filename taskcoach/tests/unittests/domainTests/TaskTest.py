@@ -810,6 +810,7 @@ class TaskWithStartDateInTheFutureTest(TaskTestCase, CommonTaskTestsMixin):
         self.failUnless(self.task.inactive())
         
     def testTaskWithStartDateInTheFutureIsInactiveEvenWhenAllPrerequisitesAreCompleted(self):
+        # pylint: disable-msg=E1101
         self.task.addPrerequisites([self.task2])
         self.task2.addDependencies([self.task])
         self.task2.setCompletionDateTime()
@@ -855,11 +856,13 @@ class TaskWithStartDateInThePastTest(TaskTestCase, CommonTaskTestsMixin):
         self.failIf(self.task.inactive())
 
     def testTaskBecomesInactiveWhenAddingAnUncompletedPrerequisite(self):
+        # pylint: disable-msg=E1101
         self.task.addPrerequisites([self.task2])
         self.task2.addDependencies([self.task])
         self.failUnless(self.task.inactive())
 
     def testTaskBecomesActiveWhenUncompletedPrerequisiteIsCompleted(self):
+        # pylint: disable-msg=E1101
         self.task.addPrerequisites([self.task2])
         self.task2.addDependencies([self.task])
         self.task2.setCompletionDateTime()
@@ -875,6 +878,7 @@ class TaskWithoutStartDateTime(TaskTestCase, CommonTaskTestsMixin):
         self.failUnless(self.task.inactive())
 
     def testTaskBecomesActiveWhenUncompletedPrerequisiteIsCompleted(self):
+        # pylint: disable-msg=E1101
         self.task.addPrerequisites([self.task2])
         self.task2.addDependencies([self.task])
         self.task2.setCompletionDateTime()
@@ -1467,7 +1471,7 @@ class TaskWithOneEffortTest(TaskTestCase, CommonTaskTestsMixin):
 
     def testStopTrackingEffort(self):
         self.task1effort1.setStop(date.DateTime.max)
-        self.events = []
+        self.events = [] # pylint: disable-msg=W0201
         self.task1effort1.setStop()
         self.assertEvent(self.task.trackStopEventType(), 
                          self.task, self.task1effort1)
@@ -1728,9 +1732,9 @@ class MarkTaskCompletedWhenAllChildrenCompletedSettingIsTrueFixture(TaskSettingT
     def testSetSettingCausesPercentageCompleteNotification(self):
         # The calculation of the total percentage complete depends on whether
         # a task is marked completed when all its children are completed        
-         self.task.setShouldMarkCompletedWhenAllChildrenCompleted(False)
-         event = self.events[0]
-         self.failUnless('task.percentageComplete' in event.types())
+        self.task.setShouldMarkCompletedWhenAllChildrenCompleted(False)
+        event = self.events[0]
+        self.failUnless('task.percentageComplete' in event.types())
                  
 
 class MarkTaskCompletedWhenAllChildrenCompletedSettingIsFalseFixture(TaskTestCase):
@@ -1903,7 +1907,7 @@ class TaskWithHourlyFeeFixture(TaskTestCase, CommonTaskTestsMixin):
 
 class TaskWithCategoryTestCase(TaskTestCase):
     def taskCreationKeywordArguments(self):
-        self.category = category.Category('category')
+        self.category = category.Category('category') # pylint: disable-msg=W0201
         return [dict(categories=set([self.category]))]
 
     def testCategory(self):
@@ -1917,186 +1921,6 @@ class TaskWithCategoryTestCase(TaskTestCase):
         self.category.setSelectedIcon('icon')
         self.assertEqual('icon', self.task.selectedIcon(recursive=True))
         
-
-class RecurringTaskTestCase(TaskTestCase):
-    def taskCreationKeywordArguments(self):
-        return [dict(recurrence=self.createRecurrence())]
-    
-
-class RecurringTaskWithChildTestCase(TaskTestCase):
-    def taskCreationKeywordArguments(self):
-        return [dict(recurrence=self.createRecurrence(),
-                     children=[task.Task(subject='child')])]
-
-
-class RecurringTaskWithRecurringChildTestCase(TaskTestCase):
-    def taskCreationKeywordArguments(self):
-        return [dict(recurrence=self.createRecurrence(),
-                     children=[task.Task(subject='child', 
-                               recurrence=self.createRecurrence())])]
-
-
-class CommonRecurrenceTestsMixin(CommonTaskTestsMixin):        
-    def testSetRecurrenceViaConstructor(self):
-        self.assertEqual(self.createRecurrence(), self.task.recurrence())
-
-    def testMarkCompletedSetsNewStartDateIfItWasSetPreviously(self):
-        startDateTime = self.task.startDateTime()
-        self.task.setCompletionDateTime()
-        self.assertEqual(self.createRecurrence()(startDateTime), self.task.startDateTime())
-
-    def testMarkCompletedSetsNewDueDateIfItWasSetPreviously(self):
-        self.task.setDueDateTime(self.tomorrow)
-        self.task.setCompletionDateTime()
-        self.assertEqual(self.createRecurrence()(self.tomorrow), self.task.dueDateTime())
-
-    def testMarkCompletedDoesNotSetStartDateIfItWasNotSetPreviously(self):
-        self.task.setStartDateTime(date.DateTime())
-        self.task.setCompletionDateTime()
-        self.assertEqual(date.DateTime(), self.task.startDateTime())
-
-    def testMarkCompletedDoesNotSetDueDateIfItWasNotSetPreviously(self):
-        self.task.setCompletionDateTime()
-        self.assertEqual(date.DateTime(), self.task.dueDateTime())
-                
-    def testRecurringTaskIsNotCompletedWhenMarkedCompleted(self):
-        self.task.setCompletionDateTime()
-        self.failIf(self.task.completed())
-
-    def testMarkCompletedDoesNotSetReminderIfItWasNotSetPreviously(self):
-        self.task.setCompletionDateTime()
-        self.assertEqual(None, self.task.reminder())
-    
-    def testMarkCompletedSetsNewReminderIfItWasSetPreviously(self):
-        reminder = date.Now() + date.TimeDelta(seconds=10)
-        self.task.setReminder(reminder)
-        self.task.setCompletionDateTime()
-        self.assertEqual(self.createRecurrence()(reminder), self.task.reminder())
-        
-    def testCopyRecurrence(self):
-        self.assertEqual(self.task.copy().recurrence(), self.task.recurrence())
-                
-        
-class TaskWithWeeklyRecurrenceFixture(RecurringTaskTestCase,  
-                                      CommonRecurrenceTestsMixin):
-    def createRecurrence(self):
-        return date.Recurrence('weekly')
-        
-        
-class TaskWithDailyRecurrenceFixture(RecurringTaskTestCase, 
-                                     CommonRecurrenceTestsMixin):
-    def createRecurrence(self):
-        return date.Recurrence('daily')
-
-
-class TaskWithMonthlyRecurrenceFixture(RecurringTaskTestCase,
-                                       CommonRecurrenceTestsMixin):
-    def createRecurrence(self):
-        return date.Recurrence('monthly')
-
-
-class TaskWithYearlyRecurrenceFixture(RecurringTaskTestCase,
-                                      CommonRecurrenceTestsMixin):
-    def createRecurrence(self):
-        return date.Recurrence('yearly')
-       
-
-class TaskWithDailyRecurrenceThatHasRecurredFixture( \
-        RecurringTaskTestCase, CommonRecurrenceTestsMixin):
-    initialRecurrenceCount = 3
-    
-    def createRecurrence(self):
-        return date.Recurrence('daily', count=self.initialRecurrenceCount)
-    
-
-
-class TaskWithDailyRecurrenceThatHasMaxRecurrenceCountFixture( \
-        RecurringTaskTestCase, CommonRecurrenceTestsMixin):
-    maxRecurrenceCount = 2
-    
-    def createRecurrence(self):
-        return date.Recurrence('daily', max=self.maxRecurrenceCount)
-
-    def testRecurLessThanMaxRecurrenceCount(self):
-        for _ in range(self.maxRecurrenceCount):
-            self.task.setCompletionDateTime()
-        self.failIf(self.task.completed())
-          
-    def testRecurExactlyMaxRecurrenceCount(self):
-        for _ in range(self.maxRecurrenceCount + 1):
-            self.task.setCompletionDateTime()
-        self.failUnless(self.task.completed())
-
-
-class CommonRecurrenceTestsMixinWithChild(CommonRecurrenceTestsMixin):
-    def testChildStartDateRecursToo(self):
-        self.task.setCompletionDateTime()
-        self.assertAlmostEqual(self.task.startDateTime().toordinal(), 
-                               self.task.children()[0].startDateTime().toordinal())
-
-    def testChildDueDateRecursToo_ParentAndChildHaveNoDueDate(self):
-        self.task.setCompletionDateTime()
-        self.assertAlmostEqual(self.task.dueDateTime().toordinal(), 
-                               self.task.children()[0].dueDateTime().toordinal())
-
-    def testChildDueDateRecursToo_ParentAndChildHaveSameDueDate(self):
-        child = self.task.children()[0]
-        self.task.setDueDateTime(self.tomorrow)
-        child.setDueDateTime(self.tomorrow)
-        self.task.setCompletionDateTime()
-        self.assertAlmostEqual(self.task.dueDateTime().toordinal(), 
-                               self.task.children()[0].dueDateTime().toordinal())
-
-    def testChildDueDateRecursToo_ChildHasEarlierDueDate(self):
-        child = self.task.children()[0]
-        self.task.setDueDateTime(self.tomorrow)
-        child.setDueDateTime(date.Now())
-        self.task.setCompletionDateTime()
-        self.assertEqual(self.createRecurrence()(date.Today()),
-                         self.task.children()[0].dueDateTime())
-
-
-class CommonRecurrenceTestsMixinWithRecurringChild(CommonRecurrenceTestsMixin):
-    def testChildDoesNotRecurWhenParentDoes(self):
-        origStartDateTime = self.task.children()[0].startDateTime()
-        self.task.setCompletionDateTime()
-        self.assertEqual(origStartDateTime, 
-                         self.task.children()[0].startDateTime())
-        
-    def testDownwardsRecursiveRecurrence(self):
-        expectedRecurrence = min([self.task.recurrence(), 
-                                  self.task.children()[0].recurrence()]) 
-        self.assertEqual(expectedRecurrence, 
-                         self.task.recurrence(recursive=True, upwards=False))
-        
-        
-class TaskWithWeeklyRecurrenceWithChildFixture(RecurringTaskWithChildTestCase,
-                                               CommonRecurrenceTestsMixinWithChild):
-    def createRecurrence(self):
-        return date.Recurrence('weekly')
-    
-
-class TaskWithDailyRecurrenceWithChildFixture(RecurringTaskWithChildTestCase,
-                                             CommonRecurrenceTestsMixinWithChild):
-    def createRecurrence(self):
-        return date.Recurrence('daily')
-    
-    
-class TaskWithWeeklyRecurrenceWithRecurringChildFixture(\
-    RecurringTaskWithRecurringChildTestCase, 
-    CommonRecurrenceTestsMixinWithRecurringChild):
-    
-    def createRecurrence(self):
-        return date.Recurrence('weekly')
-
-    
-class TaskWithDailyRecurrenceWithRecurringChildFixture(\
-    RecurringTaskWithRecurringChildTestCase, 
-    CommonRecurrenceTestsMixinWithRecurringChild):
-    
-    def createRecurrence(self):
-        return date.Recurrence('daily')
-
 
 class TaskColorTest(test.TestCase):
     def setUp(self):
@@ -2141,7 +1965,7 @@ class TaskColorTest(test.TestCase):
 
 class TaskWithPrerequisite(TaskTestCase):
     def taskCreationKeywordArguments(self):
-        self.prerequisite = task.Task(subject='prerequisite')
+        self.prerequisite = task.Task(subject='prerequisite') # pylint: disable-msg=W0201
         return [dict(subject='task', prerequisites=[self.prerequisite])]
     
     def testTaskHasPrerequisite(self):
@@ -2182,7 +2006,7 @@ class TaskWithPrerequisite(TaskTestCase):
 
 class TaskWithDependency(TaskTestCase):
     def taskCreationKeywordArguments(self):
-        self.dependency = task.Task(subject='dependency')
+        self.dependency = task.Task(subject='dependency') # pylint: disable-msg=W0201
         return [dict(subject='task', dependencies=[self.dependency])]
     
     def testTaskHasDependency(self):
