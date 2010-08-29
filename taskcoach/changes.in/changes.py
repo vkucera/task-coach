@@ -22,12 +22,14 @@ from changetypes import *
 
 releases = [
             
-Release('1.1.2', 'August 27, 2010',
+Release('1.1.2', 'August 29, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Task Coach wouldn't run on Ubuntu 9.04. This is because Task
 Coach tried to use a feature from wxPython 2.8.9.2 while Ubuntu 9.04 ships with
-wxPython 2.8.9.1.''', '3054431')
+wxPython 2.8.9.1.''', '3054431'),
+        Bug('''Only close edit dialogs when the edited item is really deleted,
+not when the item is hidden by a filter.''', '3042880')
         ]
     ),
             
