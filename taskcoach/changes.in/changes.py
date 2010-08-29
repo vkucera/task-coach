@@ -21,7 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-            
+
+Release('1.3.0', 'August 29, 2010',
+    summary='''This release ...''',
+    featuresAdded=[
+        ]
+    ),
+    
 Release('1.2.0', 'August 29, 2010',
     summary='''This release adds task dependencies.''',
     featuresAdded=[
