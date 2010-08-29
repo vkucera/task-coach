@@ -29,7 +29,9 @@ Release('1.1.2', 'August 29, 2010',
 Coach tried to use a feature from wxPython 2.8.9.2 while Ubuntu 9.04 ships with
 wxPython 2.8.9.1.''', '3054431'),
         Bug('''Only close edit dialogs when the edited item is really deleted,
-not when the item is hidden by a filter.''', '3042880')
+not when the item is hidden by a filter.''', '3042880'),
+        Bug('''Refresh filtered task viewers at midnight to properly show 
+tasks that become active.''', '3035384')
         ]
     ),
             
