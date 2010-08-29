@@ -29,14 +29,18 @@ class ViewFilter(base.Filter):
         self.__hideInactiveTasks = kwargs.pop('hideInactiveTasks', False)
         self.__hideActiveTasks = kwargs.pop('hideActiveTasks', False)
         self.__hideCompositeTasks = kwargs.pop('hideCompositeTasks', False)
+        self.registerObservers()
+        super(ViewFilter, self).__init__(*args, **kwargs)
+        
+    def registerObservers(self):
+        publisher = patterns.Publisher()
         for eventType in ('task.dueDateTime', 'task.startDateTime', 
-                          'task.completionDateTime', 
-                          'task.prerequisites',
+                          'task.completionDateTime', 'task.prerequisites',
                           task.Task.addChildEventType(),
                           task.Task.removeChildEventType()):
-            patterns.Publisher().registerObserver(self.onTaskChange,
+            publisher.registerObserver(self.onTaskChange,
                 eventType=eventType)
-        super(ViewFilter, self).__init__(*args, **kwargs)
+        publisher.registerObserver(self.onMidnight, eventType='clock.midnight')
 
     def onTaskChange(self, event): # pylint: disable-msg=W0613
         tasks = self.observable()
@@ -53,11 +57,6 @@ class ViewFilter(base.Filter):
             
     def setFilteredByDueDateTime(self, dueDateTimeString):
         self.__dueDateTimeFilter = self.stringToDueDateTime(dueDateTimeString)
-        publisher = patterns.Publisher()
-        if dueDateTimeString == 'Unlimited':
-            publisher.removeObserver(self.onMidnight, eventType='clock.midnight')
-        else:
-            publisher.registerObserver(self.onMidnight, eventType='clock.midnight')
         self.reset()
     
     def hideInactiveTasks(self, hide=True):
