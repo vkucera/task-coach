@@ -701,8 +701,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def hourlyFeeChangedEventType(class_):
         return '%s.hourlyFee'%class_
     
-    @staticmethod
-    def hourlyFeeSortFunction(**kwargs):
+    @staticmethod # pylint: disable-msg=W0613
+    def hourlyFeeSortFunction(**kwargs): 
         return lambda task: task.hourlyFee()
 
     @classmethod

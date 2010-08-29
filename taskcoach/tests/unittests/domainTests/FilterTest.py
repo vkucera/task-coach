@@ -189,6 +189,14 @@ class ViewFilterTestsMixin(object):
         self.dueToday.setCompletionDateTime()
         self.assertEqual(self.task, list(self.filter)[0])
         
+    def testAddPrerequisiteToActiveTaskWhileFilteringInactiveTasksShouldHideTask(self):
+        for eachTask in (self.task, self.dueToday):
+            eachTask.setStartDateTime(date.Now())
+        self.filter.extend([self.dueToday, self.task])
+        self.filter.hideInactiveTasks()
+        self.task.addPrerequisites([self.dueToday])
+        self.assertEqual([self.dueToday], list(self.filter))
+        
 
 class ViewFilterInListModeTest(ViewFilterTestsMixin, ViewFilterTestCase):
     treeMode = False

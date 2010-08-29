@@ -31,6 +31,7 @@ class ViewFilter(base.Filter):
         self.__hideCompositeTasks = kwargs.pop('hideCompositeTasks', False)
         for eventType in ('task.dueDateTime', 'task.startDateTime', 
                           'task.completionDateTime', 
+                          'task.prerequisites',
                           task.Task.addChildEventType(),
                           task.Task.removeChildEventType()):
             patterns.Publisher().registerObserver(self.onTaskChange,
