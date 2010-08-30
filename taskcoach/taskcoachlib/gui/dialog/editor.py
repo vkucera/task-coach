@@ -714,7 +714,9 @@ class PageWithViewer(Page):
     def onClose(self, event):
         # Don't notify the viewer about any changes anymore, it's about
         # to be deleted.
-        self.viewer.detach()
+        if hasattr(self, 'viewer'):
+            self.viewer.detach()
+            del self.viewer
         event.Skip()        
 
 
