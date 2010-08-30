@@ -42,11 +42,14 @@ class AttachmentEditorTestCase(test.wxTestCase):
         return []
 
     def setSubject(self, newSubject):
+        self.editor._interior[0]._subjectEntry.SetFocus()
         self.editor._interior[0].setSubject(newSubject)
-
-    def setDescription(self, newDescription):
-        self.editor._interior[0].setDescription(newDescription)
+        self.editor._interior[0]._descriptionEntry.SetFocus()
         
+    def setDescription(self, newDescription):
+        self.editor._interior[0]._descriptionEntry.SetFocus()
+        self.editor._interior[0].setDescription(newDescription)
+        self.editor._interior[0]._subjectEntry.SetFocus()
         
 class NewAttachmentTest(AttachmentEditorTestCase):
     def createCommand(self):
@@ -58,19 +61,12 @@ class NewAttachmentTest(AttachmentEditorTestCase):
         # pylint: disable-msg=W0212
         self.assertEqual('New attachment', self.editor._interior[0]._subjectEntry.GetValue())
 
-    def testOk(self):
+    def testEditSubject(self):
         self.setSubject('Done')
-        self.editor.ok()
         self.assertEqual('Done', self.attachment.subject())
 
-    def testCancel(self):
-        self.setSubject('Done')
-        self.editor.cancel()
-        self.assertEqual('New attachment', self.attachment.subject())
-
-    def testSetDescription(self):
+    def testEditDescription(self):
         self.setDescription('Description')
-        self.editor.ok()
         self.assertEqual('Description', self.attachment.description())
         
     def testAddNote(self):

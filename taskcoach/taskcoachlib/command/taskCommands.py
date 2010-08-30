@@ -343,6 +343,24 @@ class DecPriorityCommand(ChangePriorityCommand):
 
     delta = -1
     
+
+class EditPriorityCommand(base.BaseCommand):
+    def __init__(self, *args, **kwargs):
+        self.__newPriority = kwargs.pop('priority')
+        super(EditPriorityCommand, self).__init__(*args, **kwargs)
+        self.__oldPriorities = [item.priority() for item in self.items]
+
+    def do_command(self):
+        for item in self.items:
+            item.setPriority(self.__newPriority)
+
+    def undo_command(self):
+        for item, oldPriority in zip(self.items, self.__oldPriorities):
+            item.setPriority(oldPriority)
+
+    def redo_command(self):
+        self.do_command()
+    
     
 class AddTaskNoteCommand(base.AddNoteCommand):
     plural_name = _('Add note to tasks')

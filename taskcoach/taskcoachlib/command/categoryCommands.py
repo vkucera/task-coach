@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+from taskcoachlib import patterns
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import category
 import base
@@ -58,6 +59,29 @@ class EditCategoryCommand(base.EditCommand):
     
     def getItemsToSave(self):
         return self.items
+    
+
+class EditExclusiveSubcategoriesCommand(base.BaseCommand):
+    plural_name = _('Edit exclusive subcategories')
+    singular_name = _('Edit exclusive subcategories of "%s"')
+
+    def __init__(self, *args, **kwargs):
+        self.__newExclusivity = kwargs.pop('exclusivity')
+        super(EditExclusiveSubcategoriesCommand, self).__init__(*args, **kwargs)
+        self.__oldExclusivities = [item.hasExclusiveSubcategories() for item in self.items]
+        
+    @patterns.eventSource
+    def do_command(self, event=None):
+        for item in self.items:
+            item.makeSubcategoriesExclusive(self.__newExclusivity, event=event)
+
+    @patterns.eventSource
+    def undo_command(self, event=None):
+        for item, oldExclusivity in zip(self.items, self.__oldExclusivities):
+            item.makeSubcategoriesExclusive(oldExclusivity, event=event)
+
+    def redo_command(self):
+        self.do_command()
 
 
 class DeleteCategoryCommand(base.DeleteCommand):

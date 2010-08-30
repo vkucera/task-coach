@@ -55,11 +55,15 @@ class TaskEditorTestCase(test.wxTestCase):
         raise NotImplementedError # pragma: no cover
 
     def setSubject(self, newSubject):
+        self.editor._interior[0]._subjectEntry.SetFocus()
         self.editor._interior[0].setSubject(newSubject)
-
+        self.editor._interior[0]._descriptionEntry.SetFocus()
+        
     def setDescription(self, newDescription):
+        self.editor._interior[0]._descriptionEntry.SetFocus()
         self.editor._interior[0].setDescription(newDescription)
-
+        self.editor._interior[0]._subjectEntry.SetFocus()
+        
     def setReminder(self, newReminderDateTime):
         self.editor._interior[1].setReminder(newReminderDateTime)
         
@@ -110,15 +114,9 @@ class NewTaskTest(TaskEditorTestCase):
         self.task = newTaskCommand.items[0] # pylint: disable-msg=W0201
         return newTaskCommand
 
-    def testOk(self):
+    def testEditSubject(self):
         self.setSubject('Done')
-        self.editor.ok()
         self.assertEqual('Done', self.task.subject())
-
-    def testCancel(self):
-        self.setSubject('Done')
-        self.editor.cancel()
-        self.assertEqual('New task', self.task.subject())
 
     def testDueDate(self):
         now = date.Now()
@@ -143,9 +141,8 @@ class NewTaskTest(TaskEditorTestCase):
         self.editor.ok()
         self.assertEqual(date.DateTime(), self.task.completionDateTime())
 
-    def testSetDescription(self):
+    def testEditDescription(self):
         self.setDescription('Description')
-        self.editor.ok()
         self.assertEqual('Description', self.task.description())
         
     def testPriority(self):
@@ -250,7 +247,6 @@ class NewSubTaskTest(TaskEditorTestCase):
 class EditTaskTest(TaskEditorTestCase):
     def setUp(self):
         super(EditTaskTest, self).setUp()
-        self.setSubject('Done')
 
         # We  need  to  replace  wx.CallAfter  because  it's  used  in
         # ok(). wx.Yield() does not seem to be enough.
@@ -272,13 +268,9 @@ class EditTaskTest(TaskEditorTestCase):
         self.task.addAttachments(self.attachment) # pylint: disable-msg=E1101
         return [self.task]
 
-    def testOk(self):
-        self.editor.ok()
+    def testEditSubject(self):
+        self.setSubject('Done')        
         self.assertEqual('Done', self.task.subject())
-
-    def testCancel(self):
-        self.editor.cancel()
-        self.assertEqual('Task to edit', self.task.subject())
 
     # pylint: disable-msg=W0212
     
@@ -305,7 +297,10 @@ class EditTaskTest(TaskEditorTestCase):
         
     def testSetNegativePriority(self):
         self.editor._interior[0]._priorityEntry.SetValue(-1)
-        self.editor.ok()
+        class DummyEvent(object):
+            def Skip(self):
+                pass
+        self.editor._interior[0].onPriorityChanged(DummyEvent())
         self.assertEqual(-1, self.task.priority())
         
     def testSetHourlyFee(self):
@@ -340,7 +335,7 @@ class EditTaskTest(TaskEditorTestCase):
 class EditTaskWithChildrenTest(TaskEditorTestCase):
     def setUp(self):
         super(EditTaskWithChildrenTest, self).setUp()
-        self.setSubject('New Parent Subject')
+        #self.setSubject('New Parent Subject')
 
     def createCommand(self):
         return command.EditTaskCommand(self.taskList, [self.parent])
@@ -352,13 +347,9 @@ class EditTaskWithChildrenTest(TaskEditorTestCase):
         self.parent.addChild(self.child)
         return [self.parent] # self.child is added to tasklist automatically
 
-    def testOk(self):
-        self.editor.ok()
+    def testEditSubject(self):
+        self.setSubject('New Parent Subject')
         self.assertEqual('New Parent Subject', self.parent.subject())
-
-    def testCancel(self):
-        self.editor.cancel()
-        self.assertEqual('Parent', self.parent.subject())
 
     # pylint: disable-msg=W0212
     

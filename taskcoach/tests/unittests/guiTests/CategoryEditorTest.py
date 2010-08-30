@@ -49,10 +49,14 @@ class CategoryEditorTestCase(test.wxTestCase):
         return []
 
     def setSubject(self, newSubject):
+        self.editor._interior[0]._subjectEntry.SetFocus()
         self.editor._interior[0].setSubject(newSubject)
+        self.editor._interior[0]._descriptionEntry.SetFocus()
 
     def setDescription(self, newDescription):
+        self.editor._interior[0]._descriptionEntry.SetFocus()
         self.editor._interior[0].setDescription(newDescription)
+        self.editor._interior[0]._subjectEntry.SetFocus()
         
         
 class NewCategoryTest(CategoryEditorTestCase):
@@ -65,20 +69,21 @@ class NewCategoryTest(CategoryEditorTestCase):
         # pylint: disable-msg=W0212
         self.assertEqual('New category', self.editor._interior[0]._subjectEntry.GetValue())
 
-    def testOk(self):
+    def testEditsubject(self):
         self.setSubject('Done')
-        self.editor.ok()
         self.assertEqual('Done', self.category.subject())
 
-    def testCancel(self):
-        self.setSubject('Done')
-        self.editor.cancel()
-        self.assertEqual('New category', self.category.subject())
-
-    def testSetDescription(self):
+    def testEditDescription(self):
         self.setDescription('Description')
-        self.editor.ok()
         self.assertEqual('Description', self.category.description())
+        
+    def testEditMutualExclusiveSubcategories(self):
+        self.editor._interior[0]._exclusiveSubcategoriesCheckBox.SetValue(True)
+        class DummyEvent(object):
+            def Skip(self):
+                pass
+        self.editor._interior[0].onExclusivityChanged(DummyEvent())
+        self.failUnless(self.category.hasExclusiveSubcategories())
         
     def testAddNote(self):
         self.editor._interior[1].notes.append(note.Note(subject='New note'))
@@ -107,10 +112,6 @@ class NewSubCategoryTest(CategoryEditorTestCase):
 
 
 class EditCategoryTest(CategoryEditorTestCase):
-    def setUp(self):
-        super(EditCategoryTest, self).setUp()
-        self.setSubject('Done')
-
     def createCommand(self):
         return command.EditCategoryCommand(self.categories, [self.category])
 
@@ -123,13 +124,9 @@ class EditCategoryTest(CategoryEditorTestCase):
         self.category.addAttachments(self.attachment)
         return [self.category]
 
-    def testOk(self):
-        self.editor.ok()
+    def testEditSubject(self):
+        self.setSubject('Done')
         self.assertEqual('Done', self.category.subject())
-
-    def testCancel(self):
-        self.editor.cancel()
-        self.assertEqual('Category to edit', self.category.subject())
 
     def testAddAttachment(self):
         self.editor._interior[2].viewer.onDropFiles(None, ['filename'])

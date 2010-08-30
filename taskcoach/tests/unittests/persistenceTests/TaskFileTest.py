@@ -70,7 +70,10 @@ class TaskFileTestCase(test.TestCase):
     def remove(self, *filenames):
         for filename in filenames:
             if os.path.isfile(filename):
-                os.remove(filename)
+                try:
+                    os.remove(filename)
+                except WindowsError:
+                    pass
 
 
 class TaskFileTest(TaskFileTestCase):

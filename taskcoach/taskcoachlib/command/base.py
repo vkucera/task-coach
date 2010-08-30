@@ -419,3 +419,24 @@ class EditSubjectCommand(BaseCommand):
             
     def redo_command(self):
         self.do_command()
+
+
+class EditDescriptionCommand(BaseCommand):
+    plural_name = _('Edit descriptions')
+    singular_name = _('Edit description "%s"')
+
+    def __init__(self, *args, **kwargs):
+        self.__newDescription = kwargs.pop('description')
+        super(EditDescriptionCommand, self).__init__(*args, **kwargs)
+        self.__oldDescriptions = [item.description() for item in self.items]
+    
+    def do_command(self):
+        for item in self.items:
+            item.setDescription(self.__newDescription)
+            
+    def undo_command(self):
+        for item, oldDescription in zip(self.items, self.__oldDescriptions):
+            item.setDescription(oldDescription)
+            
+    def redo_command(self):
+        self.do_command()

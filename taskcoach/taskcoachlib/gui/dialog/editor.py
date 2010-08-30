@@ -21,11 +21,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, os.path
-from taskcoachlib import widgets, patterns
+from taskcoachlib import widgets, patterns, command
 from taskcoachlib.gui import viewer, artprovider
-from taskcoachlib.widgets import draganddrop
 from taskcoachlib.i18n import _
-from taskcoachlib.domain import task, category, date, note, attachment
+from taskcoachlib.domain import task, date, note, attachment
 from taskcoachlib.gui.dialog import entry
 
 
@@ -71,7 +70,11 @@ class Page(widgets.BookPage):
         else:
             label = labelText
         return label
-        
+
+    def isAttributeChanged(self, currentValue, originalValue, label):
+        return (len(self.items) == 1 or label.IsChecked()) and \
+               currentValue != originalValue
+
 
 class SubjectPage(Page):        
     pageName = 'subject'
@@ -84,33 +87,50 @@ class SubjectPage(Page):
         
     def addSubjectEntry(self):
         # pylint: disable-msg=W0201
-        subject = self.items[0].subject() if len(self.items) == 1 else _('Edit to change all subjects')
-        self._subjectEntry = widgets.SingleLineTextCtrl(self, subject)
+        self._originalSubject = self.items[0].subject() if len(self.items) == 1 else _('Edit to change all subjects')
+        self._subjectEntry = widgets.SingleLineTextCtrl(self, self._originalSubject)
+        self._subjectEntry.Bind(wx.EVT_KILL_FOCUS, self.onLeavingSubjectEntry)
         self._subjectLabel = self.label(_('Subject'), self._subjectEntry, wx.EVT_TEXT)
         self.addEntry(self._subjectLabel, self._subjectEntry)
 
+    def onLeavingSubjectEntry(self, event):
+        event.Skip()
+        currentSubject = self._subjectEntry.GetValue()
+        if self.isSubjectChanged(currentSubject):
+            command.EditSubjectCommand(None, self.items, subject=currentSubject).do()
+            self._originalSubject = currentSubject
+            
     def addDescriptionEntry(self):
         # pylint: disable-msg=W0201
-        description = self.items[0].description() if len(self.items) == 1 else _('Edit to change all descriptions')
-        self._descriptionEntry = widgets.MultiLineTextCtrl(self, description)
+        self._originalDescription = self.items[0].description() if len(self.items) == 1 else _('Edit to change all descriptions')
+        self._descriptionEntry = widgets.MultiLineTextCtrl(self, self._originalDescription)
+        self._descriptionEntry.Bind(wx.EVT_KILL_FOCUS, self.onLeavingDescriptionEntry)
         self._descriptionEntry.SetSizeHints(450, 150)
         self._descriptionLabel = self.label(_('Description'), self._descriptionEntry, wx.EVT_TEXT)
         self.addEntry(self._descriptionLabel, self._descriptionEntry, growable=True)
-
+        
+    def onLeavingDescriptionEntry(self, event):
+        event.Skip()
+        currentDescription = self._descriptionEntry.GetValue()
+        if self.isDescriptionChanged(currentDescription):
+            command.EditDescriptionCommand(None, self.items, description=currentDescription).do()
+            self._originalDescription = currentDescription
+            
     def setSubject(self, subject):
         self._subjectEntry.SetValue(subject)
 
     def setDescription(self, description):
         self._descriptionEntry.SetValue(description)
         
-    @patterns.eventSource
-    def ok(self, event=None): # pylint: disable-msg=W0221
-        for item in self.items:
-            if len(self.items) == 1 or self._subjectLabel.IsChecked(): 
-                item.setSubject(self._subjectEntry.GetValue(), event=event)
-            if len(self.items) == 1 or self._descriptionLabel.IsChecked():
-                item.setDescription(self._descriptionEntry.GetValue(), event=event)
-                        
+    def isSubjectChanged(self, currentSubject):
+        return self.isAttributeChanged(currentSubject, self._originalSubject, 
+                                       self._subjectLabel)
+
+    def isDescriptionChanged(self, currentDescription):
+        return self.isAttributeChanged(currentDescription, 
+                                       self._originalDescription, 
+                                       self._descriptionLabel)
+        
     def entries(self):
         return dict(firstEntry=self._subjectEntry,
                     subject=self._subjectEntry, 
@@ -123,20 +143,25 @@ class TaskSubjectPage(SubjectPage):
         self.addPriorityEntry()
          
     def addPriorityEntry(self):
-        priority = self.items[0].priority() if len(self.items) == 1 else 0
         # pylint: disable-msg=W0201
-        self._priorityEntry = widgets.SpinCtrl(self, value=str(priority),
-            initial=priority, size=(100, -1))
+        self._originalPriority = self.items[0].priority() if len(self.items) == 1 else 0
+        self._priorityEntry = widgets.SpinCtrl(self, size=(100, -1),
+            value=str(self._originalPriority), initial=self._originalPriority)
+        self._priorityEntry.Bind(wx.EVT_SPINCTRL, self.onPriorityChanged)
         self._priorityLabel = self.label(_('Priority'), self._priorityEntry, wx.EVT_SPINCTRL)
         self.addEntry(self._priorityLabel, self._priorityEntry, flags=[None, wx.ALL])
     
-    @patterns.eventSource
-    def ok(self, event=None):
-        for item in self.items:
-            if len(self.items) == 1 or self._priorityLabel.IsChecked():
-                item.setPriority(self._priorityEntry.GetValue(), event=event)
-        super(TaskSubjectPage, self).ok(event=event)
- 
+    def onPriorityChanged(self, event):
+        event.Skip()
+        currentPriority = self._priorityEntry.GetValue()
+        if self.isPriorityChanged(currentPriority):
+            command.EditPriorityCommand(None, self.items, priority=currentPriority).do()
+            self._originalPriority = currentPriority
+            
+    def isPriorityChanged(self, currentPriority):
+        return self.isAttributeChanged(currentPriority, self._originalPriority, 
+                                       self._priorityLabel)
+        
     def entries(self):
         entries = super(TaskSubjectPage, self).entries()
         entries['priority'] = self._priorityEntry
@@ -149,24 +174,30 @@ class CategorySubjectPage(SubjectPage):
         self.addExclusiveSubcategoriesEntry()
        
     def addExclusiveSubcategoriesEntry(self):
-        exclusive = self.items[0].hasExclusiveSubcategories() if len(self.items) == 0 else False
         # pylint: disable-msg=W0201
+        self._originalExclusivity = self.items[0].hasExclusiveSubcategories() if len(self.items) == 1 else False
         self._exclusiveSubcategoriesCheckBox = \
             wx.CheckBox(self, label=_('Mutually exclusive')) 
-        self._exclusiveSubcategoriesCheckBox.SetValue(exclusive)
+        self._exclusiveSubcategoriesCheckBox.SetValue(self._originalExclusivity)
+        self._exclusiveSubcategoriesCheckBox.Bind(wx.EVT_CHECKBOX, 
+                                                  self.onExclusivityChanged)
         self._exclusiveSubcategoriesLabel = self.label(_('Subcategories'), 
             self._exclusiveSubcategoriesCheckBox, wx.EVT_CHECKBOX)
         self.addEntry(self._exclusiveSubcategoriesLabel, 
                       self._exclusiveSubcategoriesCheckBox,
                       flags=[None, wx.ALL])
-
-    @patterns.eventSource
-    def ok(self, event=None):
-        for item in self.items:
-            if len(self.items) == 1 or self._exclusiveSubcategoriesLabel.IsChecked():
-                item.makeSubcategoriesExclusive(self._exclusiveSubcategoriesCheckBox.GetValue(), 
-                                                event=event)
-        super(CategorySubjectPage, self).ok(event=event)
+        
+    def onExclusivityChanged(self, event):
+        event.Skip()
+        currentExclusivity = self._exclusiveSubcategoriesCheckBox.GetValue()
+        if self.isExclusivityChanged(currentExclusivity):
+            command.EditExclusiveSubcategoriesCommand(None, self.items, 
+                                                      exclusivity=currentExclusivity).do()
+            self._originalExclusivity = currentExclusivity
+            
+    def isExclusivityChanged(self, currentExclusivity):
+        return self.isAttributeChanged(currentExclusivity, self._originalExclusivity, 
+                                       self._exclusiveSubcategoriesLabel)        
                     
 
 class AttachmentSubjectPage(SubjectPage):
@@ -728,8 +759,9 @@ class PageWithViewer(Page):
     def onClose(self, event):
         # Don't notify the viewer about any changes anymore, it's about
         # to be deleted.
-        self.viewer.detach()
-        del self.viewer
+        if hasattr(self, 'viewer'):
+            self.viewer.detach()
+            del self.viewer
         event.Skip()        
 
 
