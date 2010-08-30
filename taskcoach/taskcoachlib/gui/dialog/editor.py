@@ -145,7 +145,7 @@ class CategorySubjectPage(SubjectPage):
         self.addExclusiveSubcategoriesEntry()
        
     def addExclusiveSubcategoriesEntry(self):
-        exclusive = self.items[0].hasExclusiveSubcategories() if len(self.items) == 0 else False
+        exclusive = self.items[0].hasExclusiveSubcategories() if len(self.items) == 1 else False
         # pylint: disable-msg=W0201
         self._exclusiveSubcategoriesCheckBox = \
             wx.CheckBox(self, label=_('Mutually exclusive')) 

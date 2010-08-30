@@ -31,7 +31,10 @@ wxPython 2.8.9.1.''', '3054431'),
         Bug('''Only close edit dialogs when the edited item is really deleted,
 not when the item is hidden by a filter.''', '3042880'),
         Bug('''Refresh filtered task viewers at midnight to properly show 
-tasks that become active.''', '3035384')
+tasks that become active.''', '3035384'),
+        Bug('''The checkbox for mutual exclusive subcategories in the 
+category editor would be unchecked even if a category had exclusive 
+subcategories.''')
         ]
     ),
             
