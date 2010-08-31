@@ -79,18 +79,20 @@ class DeleteTaskCommand(base.DeleteCommand, EffortCommand):
         self.stopTracking()
         self.removePrerequisites()
         
-    def removePrerequisites(self):
-        self.__relationsToRestore = dict()
-        for task in self.items:
-            prerequisites, dependencies = task.prerequisites(), task.dependencies()
-            self.__relationsToRestore[task] = prerequisites, dependencies
-            task.removeTaskAsDependencyOf(prerequisites)
-            task.removeTaskAsPrerequisiteOf(dependencies) 
+    @patterns.eventSource
+    def removePrerequisites(self, event=None):
+        self.__relationsToRestore = dict() # pylint: disable-msg=W0201
+        for item in self.items:
+            prerequisites, dependencies = item.prerequisites(), item.dependencies()
+            self.__relationsToRestore[item] = prerequisites, dependencies
+            item.removeTaskAsDependencyOf(prerequisites, event=event)
+            item.removeTaskAsPrerequisiteOf(dependencies, event=event) 
                             
-    def restorePrerequisites(self):
-        for task, (prerequisites, dependencies) in self.__relationsToRestore.items():
-            task.addTaskAsDependencyOf(prerequisites)
-            task.addTaskAsPrerequisiteOf(dependencies)
+    @patterns.eventSource
+    def restorePrerequisites(self, event=None):
+        for item, (prerequisites, dependencies) in self.__relationsToRestore.items():
+            item.addTaskAsDependencyOf(prerequisites, event=event)
+            item.addTaskAsPrerequisiteOf(dependencies, event=event)
 
 
 class NewTaskCommand(base.NewItemCommand):
@@ -117,19 +119,19 @@ class NewTaskCommand(base.NewItemCommand):
         
     @patterns.eventSource
     def addDependenciesAndPrerequisites(self, event=None):
-        for task in self.items:
-            for prerequisite in task.prerequisites():
-                prerequisite.addDependencies([task], event=event)
-            for dependency in task.dependencies():
-                dependency.addPrerequisites([task], event=event)
+        for eachTask in self.items:
+            for prerequisite in eachTask.prerequisites():
+                prerequisite.addDependencies([eachTask], event=event)
+            for dependency in eachTask.dependencies():
+                dependency.addPrerequisites([eachTask], event=event)
 
     @patterns.eventSource
     def removeDependenciesAndPrerequisites(self, event=None):
-        for task in self.items:
-            for prerequisite in task.prerequisites():
-                prerequisite.removeDependencies([task], event=event)                                
-            for dependency in task.dependencies():
-                dependency.removePrerequisites([task], event=event)
+        for eachTask in self.items:
+            for prerequisite in eachTask.prerequisites():
+                prerequisite.removeDependencies([eachTask], event=event)                                
+            for dependency in eachTask.dependencies():
+                dependency.removePrerequisites([eachTask], event=event)
                 
                 
 class NewSubTaskCommand(base.NewSubItemCommand, SaveTaskStateMixin):
@@ -186,34 +188,37 @@ class EditTaskCommand(base.EditCommand):
     def getItemsToSave(self):
         return set([relative for item in self.items for relative in item.family()])
         
-    def updateCategories(self, oldCategories, newCategories):
+    @patterns.eventSource
+    def updateCategories(self, oldCategories, newCategories, event=None):
         for item, categories in zip(self.items, oldCategories):
             for category in categories:
-                category.removeCategorizable(item)
+                category.removeCategorizable(item, event=event)
         for item, categories in zip(self.items, newCategories):
             for category in categories:
-                category.addCategorizable(item)
+                category.addCategorizable(item, event=event)
 
-    def updatePrerequisites(self, oldPrerequisites, newPrerequisites):
+    @patterns.eventSource
+    def updatePrerequisites(self, oldPrerequisites, newPrerequisites, event=None):
         for item, prerequisites in zip(self.items, oldPrerequisites):
             for prerequisite in prerequisites:
-                prerequisite.removeDependencies([item])
+                prerequisite.removeDependencies([item], event=event)
         for item, prerequisites in zip(self.items, newPrerequisites):
             for prerequisite in prerequisites:
-                prerequisite.addDependencies([item])
+                prerequisite.addDependencies([item], event=event)
                 
                 
 class MarkCompletedCommand(EditTaskCommand, EffortCommand):
     plural_name = _('Mark tasks completed')
     singular_name = _('Mark "%s" completed')
 
-    def do_command(self):
+    @patterns.eventSource
+    def do_command(self, event=None):
         super(MarkCompletedCommand, self).do_command()
         for item in self.items:
             if item.completed():
-                item.setCompletionDateTime(date.DateTime())
+                item.setCompletionDateTime(date.DateTime(), event=event)
             else:
-                item.setCompletionDateTime()
+                item.setCompletionDateTime(event=event)
 
     def tasksToStopTracking(self):
         return self.items
@@ -240,13 +245,15 @@ class StartEffortCommand(EffortCommand):
         super(StartEffortCommand, self).redo_command()
         self.addEfforts()
 
-    def addEfforts(self):
+    @patterns.eventSource
+    def addEfforts(self, event=None):
         for item, newEffort in zip(self.items, self.efforts):
-            item.addEffort(newEffort)
+            item.addEffort(newEffort, event=event)
 
-    def removeEfforts(self):
+    @patterns.eventSource
+    def removeEfforts(self, event=None):
         for item, newEffort in zip(self.items, self.efforts):
-            item.removeEffort(newEffort)
+            item.removeEffort(newEffort, event=event)
             
         
 class StopEffortCommand(EffortCommand):
@@ -268,14 +275,16 @@ class ExtremePriorityCommand(base.BaseCommand): # pylint: disable-msg=W0223
     def getOldExtremePriority(self):
         raise NotImplementedError # pragma: no cover
 
-    def setNewExtremePriority(self):
+    @patterns.eventSource
+    def setNewExtremePriority(self, event=None):
         newExtremePriority = self.oldExtremePriority + self.delta 
         for item in self.items:
-            item.setPriority(newExtremePriority)
+            item.setPriority(newExtremePriority, event=event)
 
-    def restorePriorities(self):
+    @patterns.eventSource
+    def restorePriorities(self, event=None):
         for item, oldPriority in zip(self.items, self.oldPriorities):
-            item.setPriority(oldPriority)
+            item.setPriority(oldPriority, event=event)
 
     def do_command(self):
         super(ExtremePriorityCommand, self).do_command()
@@ -313,9 +322,10 @@ class MinPriorityCommand(ExtremePriorityCommand):
 class ChangePriorityCommand(base.BaseCommand): # pylint: disable-msg=W0223
     delta = 'Subclass responsibility'
     
-    def changePriorities(self, delta):
+    @patterns.eventSource
+    def changePriorities(self, delta, event=None):
         for item in self.items:
-            item.setPriority(item.priority() + delta)
+            item.setPriority(item.priority() + delta, event=event)
 
     def do_command(self):
         super(ChangePriorityCommand, self).do_command()
@@ -350,13 +360,15 @@ class EditPriorityCommand(base.BaseCommand):
         super(EditPriorityCommand, self).__init__(*args, **kwargs)
         self.__oldPriorities = [item.priority() for item in self.items]
 
-    def do_command(self):
+    @patterns.eventSource
+    def do_command(self, event=None):
         for item in self.items:
-            item.setPriority(self.__newPriority)
+            item.setPriority(self.__newPriority, event=event)
 
-    def undo_command(self):
+    @patterns.eventSource
+    def undo_command(self, event=None):
         for item, oldPriority in zip(self.items, self.__oldPriorities):
-            item.setPriority(oldPriority)
+            item.setPriority(oldPriority, event=event)
 
     def redo_command(self):
         self.do_command()

@@ -75,7 +75,9 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.SortableViewerWithC
                                renderCallback=lambda item: '',
                                resizeCallback=self.onResizeColumn),
                 widgets.Column('subject', _('Subject'), 
-                               attachment.Attachment.subjectChangedEventType(), 
+                               attachment.FileAttachment.subjectChangedEventType(),
+                               attachment.URIAttachment.subjectChangedEventType(),
+                               attachment.MailAttachment.subjectChangedEventType(), 
                                sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                                    value='subject',
                                    menuText=_('Sub&ject'), helpText=_('Sort by subject')),
@@ -83,7 +85,9 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.SortableViewerWithC
                                renderCallback=lambda item: item.subject(),
                                resizeCallback=self.onResizeColumn),
                 widgets.Column('description', _('Description'),
-                               attachment.Attachment.subjectChangedEventType(),
+                               attachment.FileAttachment.descriptionChangedEventType(),
+                               attachment.URIAttachment.descriptionChangedEventType(),
+                               attachment.MailAttachment.descriptionChangedEventType(),
                                sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                                    value='description',
                                    menuText=_('&Description'), helpText=_('Sort by description')),
@@ -91,7 +95,9 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.SortableViewerWithC
                                renderCallback=lambda item: item.description(),
                                resizeCallback=self.onResizeColumn),
                 widgets.Column('notes', '', 
-                               attachment.Attachment.notesChangedEventType(), # pylint: disable-msg=E1101
+                               attachment.FileAttachment.notesChangedEventType(), # pylint: disable-msg=E1101
+                               attachment.URIAttachment.notesChangedEventType(), # pylint: disable-msg=E1101
+                               attachment.MailAttachment.notesChangedEventType(), # pylint: disable-msg=E1101
                                width=self.getColumnWidth('notes'),
                                alignment=wx.LIST_FORMAT_LEFT,
                                imageIndexCallback=self.noteImageIndex,

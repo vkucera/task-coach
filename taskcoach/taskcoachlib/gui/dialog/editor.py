@@ -217,8 +217,9 @@ class AttachmentSubjectPage(SubjectPage):
         panel = wx.Panel(self, wx.ID_ANY)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         # pylint: disable-msg=W0201
-        location = self.items[0].location() if len(self.items) == 1 else _('Edit to change location of all attachments')
-        self._locationEntry = widgets.SingleLineTextCtrl(panel, location)
+        self._originalLocation = self.items[0].location() if len(self.items) == 1 else _('Edit to change location of all attachments')
+        self._locationEntry = widgets.SingleLineTextCtrl(panel, self._originalLocation)
+        self._locationEntry.Bind(wx.EVT_KILL_FOCUS, self.onLeavingLocationEntry)
         sizer.Add(self._locationEntry, 1, wx.ALL, 3)
         if all(item.type_ == 'file' for item in self.items):
             button = wx.Button(panel, wx.ID_ANY, _('Browse'))
@@ -227,13 +228,17 @@ class AttachmentSubjectPage(SubjectPage):
         panel.SetSizer(sizer)
         self._locationLabel = self.label(_('Location'), self._locationEntry, wx.EVT_TEXT)
         self.addEntry(self._locationLabel, panel, flags=[None, wx.ALL|wx.EXPAND])
+        
+    def onLeavingLocationEntry(self, event):
+        event.Skip()
+        currentLocation = self._locationEntry.GetValue()
+        if self.isLocationChanged(currentLocation):
+            command.EditAttachmentLocationCommand(None, self.items, location=currentLocation).do()
+            self._originalLocation = currentLocation
 
-    @patterns.eventSource
-    def ok(self, event=None):
-        for item in self.items:
-            if len(self.items) == 1 or self._locationLabel.IsChecked():
-                item.setLocation(self._locationEntry.GetValue(), event=event)
-        super(AttachmentSubjectPage, self).ok(event=event)
+    def isLocationChanged(self, currentLocation):
+        return self.isAttributeChanged(currentLocation, self._originalLocation, 
+                                       self._locationLabel)
 
     def onSelectLocation(self, event): # pylint: disable-msg=W0613
         if self.items[0].type_ == 'file':
@@ -248,6 +253,8 @@ class AttachmentSubjectPage(SubjectPage):
                 filename = attachment.getRelativePath(filename, self.basePath)
             self._subjectEntry.SetValue(os.path.split(filename)[-1])
             self._locationEntry.SetValue(filename)
+            self.onLeavingSubjectEntry(event)
+            self.onLeavingLocationEntry(event)
 
 
 class AppearancePage(Page):

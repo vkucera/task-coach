@@ -26,8 +26,7 @@ from taskcoachlib.domain import task, date
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, render, dialog
 from taskcoachlib.thirdparty.calendar import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, \
-    wxSCHEDULER_TODAY, wxSCHEDULER_HORIZONTAL, wxSCHEDULER_TODAY, wxSCHEDULER_MONTHLY, \
-    wxFancyDrawer
+    wxSCHEDULER_TODAY, wxSCHEDULER_TODAY, wxSCHEDULER_MONTHLY, wxFancyDrawer
 import base, mixin
 
 
@@ -529,6 +528,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         for eventType in ('view.efforthourstart', 'view.efforthourend'):
             self.registerObserver(self.onWorkingHourChanged, eventType)
 
+        # pylint: disable-msg=E1101
         for eventType in (task.Task.subjectChangedEventType(), 'task.startDateTime',
                           'task.dueDateTime', 'task.completionDateTime',
                           task.Task.attachmentsChangedEventType(),

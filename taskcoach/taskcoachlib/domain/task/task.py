@@ -855,13 +855,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def removePrerequisites(self, prerequisites, event=None):
         self.__prerequisites.remove(set(prerequisites), event=event)
 
-    def addTaskAsDependencyOf(self, prerequisites):
+    def addTaskAsDependencyOf(self, prerequisites, event=None):
         for prerequisite in prerequisites:
-            prerequisite.addDependencies([self])
+            prerequisite.addDependencies([self], event=event)
             
-    def removeTaskAsDependencyOf(self, prerequisites):
+    def removeTaskAsDependencyOf(self, prerequisites, event=None):
         for prerequisite in prerequisites:
-            prerequisite.removeDependencies([self])
+            prerequisite.removeDependencies([self], event=event)
             
     def prerequisitesEvent(self, event, *prerequisites):
         event.addSource(self, *prerequisites, **dict(type='task.prerequisites'))
@@ -907,13 +907,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def removeDependencies(self, dependencies, event=None):
         self.__dependencies.remove(set(dependencies), event=event)
         
-    def addTaskAsPrerequisiteOf(self, dependencies):
+    def addTaskAsPrerequisiteOf(self, dependencies, event=None):
         for dependency in dependencies:
-            dependency.addPrerequisites([self])
+            dependency.addPrerequisites([self], event=event)
             
-    def removeTaskAsPrerequisiteOf(self, dependencies):
+    def removeTaskAsPrerequisiteOf(self, dependencies, event=None):
         for dependency in dependencies:
-            dependency.removePrerequisites([self])        
+            dependency.removePrerequisites([self], event=event)      
 
     def dependenciesEvent(self, event, *dependencies):
         event.addSource(self, *dependencies, **dict(type='task.dependencies'))

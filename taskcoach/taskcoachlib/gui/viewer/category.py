@@ -114,13 +114,14 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                        renderCallback=lambda category: '', **kwargs))
         return columns
 
-    def getImageIndices(self, category):
-        bitmap = category.icon(recursive=True)
-        bitmap_selected = category.selectedIcon(recursive=True) or bitmap
-        return self.imageIndex[bitmap] if bitmap else -1, self.imageIndex[bitmap_selected] if bitmap_selected else -1
+    def getImageIndices(self, aCategory):
+        bitmap = aCategory.icon(recursive=True)
+        bitmap_selected = aCategory.selectedIcon(recursive=True) or bitmap
+        return (self.imageIndex[bitmap] if bitmap else -1, 
+                self.imageIndex[bitmap_selected] if bitmap_selected else -1)
 
-    def subjectImageIndex(self, category, which):
-        normalImageIndex, expandedImageIndex = self.getImageIndices(category)
+    def subjectImageIndex(self, aCategory, which):
+        normalImageIndex, expandedImageIndex = self.getImageIndices(aCategory)
         expanded = which in [wx.TreeItemIcon_Expanded,
                              wx.TreeItemIcon_SelectedExpanded]
         return expandedImageIndex if expanded else normalImageIndex
@@ -163,7 +164,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
             items = event.sources()
             for item in items.copy():
                 items |= set(item.children())
-            self.widget.RefreshItems(*items) 
+            self.widget.RefreshItems(*items)  # pylint: disable-msg=W0142
         else:
             super(BaseCategoryViewer, self).onAttributeChanged(event)
         

@@ -91,7 +91,7 @@ class Viewer(wx.Panel):
             try:
                 popupMenu.Destroy()
             except:
-                pass # Ignore PyDeadError
+                pass # Ignore PyDeadObjectError
 
     @classmethod
     def selectEventType(class_):

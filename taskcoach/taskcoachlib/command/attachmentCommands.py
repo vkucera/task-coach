@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+from taskcoachlib import patterns
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import attachment
 import base
@@ -57,3 +58,26 @@ class DeleteAttachmentCommand(base.DeleteCommand):
 
 class AddAttachmentNoteCommand(base.AddNoteCommand):
     plural_name = _('Add note to attachments')
+    
+    
+class EditAttachmentLocationCommand(base.BaseCommand):
+    plural_name = _('Edit location of attachments')
+    singular_name = _('Edit attachment "%s" location')
+
+    def __init__(self, *args, **kwargs):
+        self.__newLocation = kwargs.pop('location')
+        super(EditAttachmentLocationCommand, self).__init__(*args, **kwargs)
+        self.__oldLocations = [item.location() for item in self.items]
+    
+    @patterns.eventSource
+    def do_command(self, event=None):
+        for item in self.items:
+            item.setLocation(self.__newLocation, event=event)
+            
+    @patterns.eventSource
+    def undo_command(self, event=None):
+        for item, oldLocation in zip(self.items, self.__oldLocations):
+            item.setLocation(oldLocation, event=event)
+            
+    def redo_command(self):
+        self.do_command()
