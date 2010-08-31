@@ -16,9 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import test, wx
 from taskcoachlib import gui, command, config, persistence
 from taskcoachlib.domain import note, attachment
+
+
+class DummyEvent(object):
+    def Skip(self):
+        pass
 
 
 class AttachmentEditorTestCase(test.wxTestCase):
@@ -42,14 +47,23 @@ class AttachmentEditorTestCase(test.wxTestCase):
         return []
 
     def setSubject(self, newSubject):
-        self.editor._interior[0]._subjectEntry.SetFocus()
-        self.editor._interior[0].setSubject(newSubject)
-        self.editor._interior[0]._descriptionEntry.SetFocus()
+        page = self.editor._interior[0]
+        page._subjectEntry.SetFocus()
+        page.setSubject(newSubject)
+        if '__WXGTK__' == wx.Platform:
+            page.onLeavingSubjectEntry(DummyEvent())
+        else:
+            page._descriptionEntry.SetFocus()
         
     def setDescription(self, newDescription):
-        self.editor._interior[0]._descriptionEntry.SetFocus()
-        self.editor._interior[0].setDescription(newDescription)
-        self.editor._interior[0]._subjectEntry.SetFocus()
+        page = self.editor._interior[0]
+        page._descriptionEntry.SetFocus()
+        page.setDescription(newDescription)
+        if '__WXGTK__' == wx.Platform:
+            page.onLeavingDescriptionEntry(DummyEvent())
+        else:
+            page._subjectEntry.SetFocus()
+
         
 class NewAttachmentTest(AttachmentEditorTestCase):
     def createCommand(self):

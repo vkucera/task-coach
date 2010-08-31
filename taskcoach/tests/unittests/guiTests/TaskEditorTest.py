@@ -25,6 +25,11 @@ from taskcoachlib.domain import task, effort, date, note, attachment
 from taskcoachlib.gui import uicommand
 
 
+class DummyEvent(object):
+    def Skip(self):
+        pass
+
+
 class TaskEditorTestCase(test.wxTestCase):
     def setUp(self):
         super(TaskEditorTestCase, self).setUp()
@@ -55,15 +60,23 @@ class TaskEditorTestCase(test.wxTestCase):
         raise NotImplementedError # pragma: no cover
 
     def setSubject(self, newSubject):
-        self.editor._interior[0]._subjectEntry.SetFocus()
-        self.editor._interior[0].setSubject(newSubject)
-        self.editor._interior[0]._descriptionEntry.SetFocus()
+        page = self.editor._interior[0]
+        page._subjectEntry.SetFocus()
+        page.setSubject(newSubject)
+        if '__WXGTK__' == wx.Platform: 
+            page.onLeavingSubjectEntry(DummyEvent()) # pragma: no cover
+        else:
+            page._descriptionEntry.SetFocus() # pragma: no cover
         
     def setDescription(self, newDescription):
-        self.editor._interior[0]._descriptionEntry.SetFocus()
-        self.editor._interior[0].setDescription(newDescription)
-        self.editor._interior[0]._subjectEntry.SetFocus()
-        
+        page = self.editor._interior[0]
+        page._descriptionEntry.SetFocus()
+        page.setDescription(newDescription)
+        if '__WXGTK__' == wx.Platform:
+            page.onLeavingDescriptionEntry(DummyEvent()) # pragma: no cover
+        else:
+            page._subjectEntry.SetFocus() # pragma: no cover
+
     def setReminder(self, newReminderDateTime):
         self.editor._interior[1].setReminder(newReminderDateTime)
         
@@ -84,10 +97,12 @@ class EditorDisplayTest(TaskEditorTestCase):
         return [self.task]
     
     def testSubject(self):
-        self.assertEqual('Task to edit', self.editor._interior[0]._subjectEntry.GetValue())
+        self.assertEqual('Task to edit',
+			 self.editor._interior[0]._subjectEntry.GetValue())
 
     def testDueDateTime(self):
-        self.assertEqual(date.DateTime(), self.editor._interior[1]._dueDateTimeEntry.get())
+        self.assertEqual(date.DateTime(),
+                         self.editor._interior[1]._dueDateTimeEntry.get())
         
     def testRecurrenceUnit(self):
         choice = self.editor._interior[1]._recurrenceEntry
