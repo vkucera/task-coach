@@ -70,7 +70,10 @@ class TaskFileTestCase(test.TestCase):
     def remove(self, *filenames):
         for filename in filenames:
             if os.path.isfile(filename):
-                os.remove(filename)
+                try:
+                    os.remove(filename)
+                except WindowsError:
+                    pass # Don't fail on random 'Access denied' errors.
 
 
 class TaskFileTest(TaskFileTestCase):
@@ -161,7 +164,37 @@ class TaskFileTest(TaskFileTestCase):
         self.taskFile.saveas(self.filename2)
         self.assertEqual(self.filename2, self.taskFile.lastFilename())
         
+    def testTaskFileContainsTask(self):
+        self.failUnless(self.task in self.taskFile)
+        
+    def testTaskFileDoesNotContainTask(self):
+        self.failIf(task.Task() in self.taskFile)
+        
+    def testTaskFileContainsNote(self):
+        newNote = note.Note()
+        self.taskFile.notes().append(newNote)
+        self.failUnless(newNote in self.taskFile)
+        
+    def testTaskFileDoesNotContainNote(self):
+        self.failIf(note.Note() in self.taskFile)
+        
+    def testTaskFileContainsCategory(self):
+        newCategory = category.Category('Category')
+        self.taskFile.categories().append(newCategory)
+        self.failUnless(newCategory in self.taskFile)
 
+    def testTaskFileDoesNotContainCategory(self):
+        self.failIf(category.Category('Category') in self.taskFile)
+
+    def testTaskFileContainsEffort(self):
+        newEffort = effort.Effort(self.task)
+        self.task.addEffort(newEffort)
+        self.failUnless(newEffort in self.taskFile)
+
+    def testTaskFileDoesNotContainEffort(self):
+        self.failIf(effort.Effort(self.task) in self.taskFile)
+        
+        
 class DirtyTaskFileTest(TaskFileTestCase):
     def setUp(self):
         super(DirtyTaskFileTest, self).setUp()

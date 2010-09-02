@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.0', 'August 29, 2010',
+Release('1.2.0', 'September 2, 2010',
     summary='''This release adds task dependencies.''',
     featuresAdded=[
         Feature('''Tasks can have one or more prerequisite tasks. As long as 
@@ -66,12 +66,19 @@ dependencies. The task file format version number is now 31.''')
         ]
     ),
 
-Release('1.1.2', 'August 27, 2010',
+Release('1.1.2', 'September 2, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Task Coach wouldn't run on Ubuntu 9.04. This is because Task
 Coach tried to use a feature from wxPython 2.8.9.2 while Ubuntu 9.04 ships with
-wxPython 2.8.9.1.''', '3054431')
+wxPython 2.8.9.1.''', '3054431'),
+        Bug('''Only close edit dialogs when the edited item is really deleted,
+not when the item is hidden by a filter.''', '3042880'),
+        Bug('''Refresh filtered task viewers at midnight to properly show 
+tasks that become active.''', '3035384'),
+        Bug('''The checkbox for mutual exclusive subcategories in the 
+category editor would be unchecked even if a category had exclusive 
+subcategories.''')
         ]
     ),
             

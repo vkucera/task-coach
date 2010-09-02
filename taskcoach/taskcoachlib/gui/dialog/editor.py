@@ -149,7 +149,7 @@ class CategorySubjectPage(SubjectPage):
         self.addExclusiveSubcategoriesEntry()
        
     def addExclusiveSubcategoriesEntry(self):
-        exclusive = self.items[0].hasExclusiveSubcategories() if len(self.items) == 0 else False
+        exclusive = self.items[0].hasExclusiveSubcategories() if len(self.items) == 1 else False
         # pylint: disable-msg=W0201
         self._exclusiveSubcategoriesCheckBox = \
             wx.CheckBox(self, label=_('Mutually exclusive')) 
@@ -728,7 +728,9 @@ class PageWithViewer(Page):
     def onClose(self, event):
         # Don't notify the viewer about any changes anymore, it's about
         # to be deleted.
-        self.viewer.detach()
+        if hasattr(self, 'viewer'):
+            self.viewer.detach()
+            del self.viewer
         del self.viewer
         event.Skip()        
 
@@ -1175,13 +1177,14 @@ class EditorWithCommand(widgets.Dialog):
         self._interior.ok(event=event)
                 
     def onItemRemoved(self, event):
-        ''' The item we're editing or one of its ancestors has been removed. 
-            Close the tab of the item involved and close the whole editor if 
-            there are no tabs left. '''
+        ''' The item we're editing or one of its ancestors has been removed or 
+            is hidden by a filter. If the item is really removed, close the tab 
+            of the item involved and close the whole editor if there are no 
+            tabs left. '''
         if not self:
             return # Prevent _wxPyDeadObject TypeError
         for item in event.values():
-            if self._interior.isDisplayingItemOrChildOfItem(item):
+            if self._interior.isDisplayingItemOrChildOfItem(item) and not item in self._taskFile:
                 self.cancel()
                 break            
 

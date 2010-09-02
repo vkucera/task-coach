@@ -76,6 +76,10 @@ class TaskFile(patterns.Observer):
 
     def __str__(self):
         return self.filename()
+    
+    def __contains__(self, item):
+        return item in self.tasks() or item in self.notes() or \
+               item in self.categories() or item in self.efforts()
 
     def categories(self):
         return self.__categories
