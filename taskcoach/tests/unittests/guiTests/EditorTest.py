@@ -43,7 +43,7 @@ class EditorTestCase(test.wxTestCase):
         super(EditorTestCase, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
         self.taskFile = persistence.TaskFile()
-        self.taskList = self.taskFile.tasks()
+        self.taskList = task.filter.ViewFilter(self.taskFile.tasks())
         self.task = task.Task('task')
         self.taskList.append(self.task)
         self.editor = self.createEditor()
@@ -62,3 +62,8 @@ class EditorTestCase(test.wxTestCase):
         self.taskList.remove(self.task)
         self.failUnless(self.editor.cancelCalled)
         
+    def testDontCloseEditorWhenItemIsFiltered(self):
+        self.failIf(self.editor.cancelCalled)
+        self.task.setCompletionDateTime()
+        self.taskList.hideCompletedTasks()
+        self.failIf(self.editor.cancelCalled)

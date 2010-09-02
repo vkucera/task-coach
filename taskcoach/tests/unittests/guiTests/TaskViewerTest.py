@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, os
+import wx, os, locale
 import test
 from taskcoachlib import gui, config, persistence, command, patterns
 from taskcoachlib.gui import render
@@ -54,6 +54,9 @@ class TaskViewerTestCase(test.wxTestCase):
         self.newColor = (100, 200, 100, 255)
         attachment.Attachment.attdir = os.getcwd()
 
+        if 'LC_ALL' in os.environ:
+            locale.setlocale(locale.LC_ALL, os.environ['LC_ALL'])
+
     def tearDown(self):
         super(TaskViewerTestCase, self).tearDown()
         attachment.Attachment.attdir = None
@@ -63,7 +66,7 @@ class TaskViewerTestCase(test.wxTestCase):
                 os.rmdir(name) # pragma: no cover
         if os.path.isfile('test.mail'):
             os.remove('test.mail')
-        
+
     def assertItems(self, *tasks):
         self.viewer.widget.expandAllItems()
         self.assertEqual(self.viewer.size(), len(tasks))
@@ -287,7 +290,7 @@ class CommonTestsMixin(object):
         taskWithFixedFee = task.Task(fixedFee=100)
         self.taskList.append(taskWithFixedFee)
         self.showColumn('fixedFee')
-        self.assertEqual('100.00', self.getItemText(0,3))
+        self.assertEqual(locale.currency(100, False), self.getItemText(0,3))
         self.assertEqual(_('Fixed fee'), 
                          self.viewer.widget.GetColumn(3).GetText())
                         
@@ -721,7 +724,7 @@ class CommonTestsMixin(object):
         self.task.setFixedFee(100)
         self.child.setFixedFee(200)
         self.viewer.setSortOrderAscending(False)
-        expectedAmount = "(300.00)" if self.treeMode else "100.00"
+        expectedAmount = "(%s)" % locale.currency(300, False) if self.treeMode else locale.currency(100, False)
         self.task.expand(False, context=self.viewer.settingsSection())
         self.assertEqual(expectedAmount, self.getItemText(0, 3))
 
