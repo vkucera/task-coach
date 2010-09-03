@@ -731,7 +731,6 @@ class PageWithViewer(Page):
         if hasattr(self, 'viewer'):
             self.viewer.detach()
             del self.viewer
-        del self.viewer
         event.Skip()        
 
 
