@@ -27,7 +27,16 @@ Release('1.1.3', 'September 4, 2010',
     bugsFixed=[
         Bug('''When closing a edit dialog, don't delete the category, note,
 and attachment viewers in the dialog before the data has been processed.''', 
-            '3059143')
+            '3059143'),
+        Bug('''The PortableApps platform would override the language selected
+by the user in Task Coach.''', '2965342', '3059429')
+        ],
+    featuresAdded=[
+        Feature('''When selecting the language in the preferences dialog, you
+can select 'Let the system determine the language'. If you're using the 
+PortableApps version of Task Coach and the PortableApps platform, the 
+PortableApps platform language will be used. Otherwise, Task Coach
+will let your system's locale determine the language.''')
         ]
     ),
             
