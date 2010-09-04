@@ -22,6 +22,15 @@ from changetypes import *
 
 releases = [
             
+Release('1.1.3', 'September 4, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''When closing a edit dialog, don't delete the category, note,
+and attachment viewers in the dialog before the data has been processed.''', 
+            '3059143')
+        ]
+    ),
+            
 Release('1.1.2', 'September 2, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
