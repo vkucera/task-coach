@@ -281,16 +281,16 @@ class AppearancePage(Page):
     def addColorEntry(self, labelText, colorType, defaultColor):
         checkBox = wx.CheckBox(self, label=_('Use color:'))
         setattr(self, '_%sColorCheckBox'%colorType, checkBox)
-        currentColor = getattr(self.items[0], '%sColor'%colorType)(recursive=False) if len(self.items) == 1 else None
-        checkBox.SetValue(currentColor is not None)
+        originalColor = getattr(self.items[0], '%sColor'%colorType)(recursive=False) if len(self.items) == 1 else None
+        setattr(self, '_original%sColor'%colorType.capitalize(), originalColor)
+        checkBox.SetValue(originalColor is not None)
         checkBoxHandlerName = 'on%sColourCheckBoxChecked'%colorType.capitalize()
-        if hasattr(self, checkBoxHandlerName):
-            checkBoxHandler = getattr(self, checkBoxHandlerName)
-            checkBox.Bind(wx.EVT_CHECKBOX, checkBoxHandler)
+        checkBoxHandler = getattr(self, checkBoxHandlerName)
+        checkBox.Bind(wx.EVT_CHECKBOX, checkBoxHandler)
         # wx.ColourPickerCtrl on Mac OS X expects a wx.Color and fails on tuples
         # so convert the tuples to a wx.Color:
-        currentColor = wx.Color(*currentColor) if currentColor else defaultColor # pylint: disable-msg=W0142
-        button = wx.ColourPickerCtrl(self, col=currentColor)
+        originalColor = wx.Color(*originalColor) if originalColor else defaultColor # pylint: disable-msg=W0142
+        button = wx.ColourPickerCtrl(self, col=originalColor)
         setattr(self, '_%sColorButton'%colorType, button)
         buttonHandler = getattr(self, 'on%sColourPicked'%colorType.capitalize())
         button.Bind(wx.EVT_COLOURPICKER_CHANGED, buttonHandler)
@@ -306,27 +306,59 @@ class AppearancePage(Page):
             of the font colour button. '''
         self._fontButton.SetColour(self._foregroundColorButton.GetColour() if \
                                    event.IsChecked() else wx.NullColour)
-
+        self.onForegroundColorChanged(event)
+        
     def onForegroundColourPicked(self, event): # pylint: disable-msg=W0613 
         ''' User picked a foreground colour. Check the foreground colour check
             box and update the font colour button. '''
         self._foregroundColorCheckBox.SetValue(True)
         self._fontButton.SetColour(self._foregroundColorButton.GetColour())
+        self.onForegroundColorChanged(event)
+        
+    def onForegroundColorChanged(self, event):
+        event.Skip()
+        checked = self._foregroundColorCheckBox.GetValue()
+        color = self._foregroundColorButton.GetColour() if checked else None
+        if self.isForegroundColorChanged(color):
+            command.EditForegroundColorCommand(None, self.items, color=color).do()
+            self._originalForegroundColor = color # pylint: disable-msg=W0201
 
+    def isForegroundColorChanged(self, currentColor):
+        return self.isAttributeChanged(currentColor, self._originalForegroundColor, 
+                                       self._foregroundColorLabel)
+
+    def onBackgroundColourCheckBoxChecked(self, event):
+        ''' User toggled the background colour check box. '''
+        self.onBackgroundColorChanged(event)
+        
     def onBackgroundColourPicked(self, event): # pylint: disable-msg=W0613 
         ''' User picked a background colour. Check the background colour check
             box. '''
         self._backgroundColorCheckBox.SetValue(True)
+        self.onBackgroundColorChanged(event)
+        
+    def onBackgroundColorChanged(self, event):
+        event.Skip()
+        checked = self._backgroundColorCheckBox.GetValue()
+        color = self._backgroundColorButton.GetColour() if checked else None
+        if self.isBackgroundColorChanged(color):
+            command.EditBackgroundColorCommand(None, self.items, color=color).do()
+            self._originalBackgroundColor = color # pylint: disable-msg=W0201
+
+    def isBackgroundColorChanged(self, currentColor):
+        return self.isAttributeChanged(currentColor, self._originalBackgroundColor, 
+                                       self._backgroundColorLabel)
 
     def addFontEntry(self):
         # pylint: disable-msg=W0201
         self._fontCheckBox = wx.CheckBox(self, label=_('Use font:'))
-        currentFont = self.items[0].font() if len(self.items) == 1 else None
+        self._originalFont = self.items[0].font() if len(self.items) == 1 else None
         currentColor = self._foregroundColorButton.GetColour()
-        self._fontCheckBox.SetValue(currentFont is not None)
-        defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        self._fontCheckBox.SetValue(self._originalFont is not None)
+        self._fontCheckBox.Bind(wx.EVT_CHECKBOX, self.onFontChanged)
+        self._defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._fontButton = widgets.FontPickerCtrl(self,
-            font=currentFont or defaultFont, colour=currentColor)
+            font=self._originalFont or self._defaultFont, colour=currentColor)
         self._fontButton.Bind(wx.EVT_FONTPICKER_CHANGED,
                               self.onFontPickerChanged)
         self._fontLabel = self.label(_('Font'), 
@@ -342,43 +374,50 @@ class AppearancePage(Page):
         if self._fontButton.GetSelectedColour() != self._foregroundColorButton.GetColour():
             self._foregroundColorCheckBox.SetValue(True)
             self._foregroundColorButton.SetColour(self._fontButton.GetSelectedColour())
-
+        self.onFontChanged(event)
+        
+    def onFontChanged(self, event):
+        event.Skip()
+        checked = self._fontCheckBox.GetValue()
+        font = self._fontButton.GetSelectedFont() if checked else self._defaultFont        
+        if self.isFontChanged(font):
+            command.EditFontCommand(None, self.items, font=font).do()
+            self._originalFont = font
+        
+    def isFontChanged(self, currentFont):
+        return self.isAttributeChanged(currentFont, self._originalFont, 
+                                       self._fontLabel)
+        
     def addIconEntry(self):
         # pylint: disable-msg=W0201
         self._iconEntry = wx.combo.BitmapComboBox(self, style=wx.CB_READONLY)
+        self._iconEntry.Bind(wx.EVT_COMBOBOX, self.onIconChanged)
         size = (16, 16)
         imageNames = sorted(artprovider.chooseableItemImages.keys())
         for imageName in imageNames:
             label = artprovider.chooseableItemImages[imageName]
             bitmap = wx.ArtProvider_GetBitmap(imageName, wx.ART_MENU, size)
             self._iconEntry.Append(label, bitmap, clientData=imageName)
-        icon = self.items[0].icon() if len(self.items) == 1 else ''
-        currentSelectionIndex = imageNames.index(icon)
+        self._originalIcon = self.items[0].icon() if len(self.items) == 1 else ''
+        currentSelectionIndex = imageNames.index(self._originalIcon)
         self._iconEntry.SetSelection(currentSelectionIndex)
         self._iconLabel = self.label(_('Icon'), self._iconEntry, wx.EVT_COMBOBOX)
         self.addEntry(self._iconLabel, self._iconEntry, flags=[None, wx.ALL])
-
-    @patterns.eventSource
-    def ok(self, event=None): # pylint: disable-msg=W0221
-        fgColorChecked = self._foregroundColorCheckBox.IsChecked()
-        bgColorChecked = self._backgroundColorCheckBox.IsChecked()
-        fgColor = self._foregroundColorButton.GetColour() if fgColorChecked else None
-        bgColor = self._backgroundColorButton.GetColour() if bgColorChecked else None
-        fontChecked = self._fontCheckBox.IsChecked()
-        font = self._fontButton.GetSelectedFont() if fontChecked else None
+        
+    def onIconChanged(self, event):
+        event.Skip()
         icon = self._iconEntry.GetClientData(self._iconEntry.GetSelection())
-        selectedIcon = icon[:-len('_icon')] + '_open_icon' if (icon.startswith('folder') and icon.count('_') == 2) else icon
-        for item in self.items:
-            if len(self.items) == 1 or self._foregroundColorLabel.IsChecked():
-                item.setForegroundColor(fgColor, event=event)
-            if len(self.items) == 1 or self._backgroundColorLabel.IsChecked():
-                item.setBackgroundColor(bgColor, event=event)
-            if len(self.items) == 1 or self._fontLabel.IsChecked():
-                item.setFont(font, event=event)
-            if len(self.items) == 1 or self._iconLabel.IsChecked():
-                item.setIcon(icon, event=event)
-                item.setSelectedIcon(selectedIcon, event=event)
-            
+        if self.isIconChanged(icon):
+            selectedIcon = icon[:-len('_icon')] + '_open_icon' \
+                if (icon.startswith('folder') and icon.count('_') == 2) \
+                else icon
+            command.EditIconCommand(None, self.items, icon=icon, selectedIcon=selectedIcon).do()
+            self._originalIcon = icon
+    
+    def isIconChanged(self, currentIcon):
+        return self.isAttributeChanged(currentIcon, self._originalIcon, 
+                                       self._iconLabel)
+                
     def entries(self):
         return dict(firstEntry=self._foregroundColorCheckBox)
     
@@ -408,6 +447,7 @@ class DatesPage(Page):
             label = self.label(label)
             setattr(self, '_%sLabel'%taskMethodName, label)
             dateTime = getattr(self.items[0], taskMethodName)() if len(self.items) == 1 else date.DateTime()
+            setattr(self, '_original%s'%(taskMethodName[0].capitalize()+taskMethodName[1:]), dateTime)
             dateTimeEntry = entry.DateTimeEntry(self, self.__settings, dateTime,
                                                 callback=callback)
             setattr(self, '_%sEntry'%taskMethodName, dateTimeEntry)
@@ -415,10 +455,10 @@ class DatesPage(Page):
         
     def addReminderEntry(self):
         # pylint: disable-msg=W0201
-        reminderDateTime = self.items[0].reminder() if len(self.items) == 1 else date.DateTime()
+        self._originalReminderDateTime = self.items[0].reminder() if len(self.items) == 1 else date.DateTime()
         self._reminderDateTimeLabel = self.label(_('Reminder'))
         self._reminderDateTimeEntry = entry.DateTimeEntry(self, self.__settings, 
-                                                          reminderDateTime)
+                                                          self._originalReminderDateTime)
         # If the user has not set a reminder, make sure that the default 
         # date time in the reminder entry is a reasonable suggestion:
         if self._reminderDateTimeEntry.get() == date.DateTime():
@@ -432,7 +472,7 @@ class DatesPage(Page):
         panelSizer = wx.BoxSizer(wx.HORIZONTAL)
         self._recurrenceEntry = wx.Choice(recurrencePanel, 
             choices=[_('None'), _('Daily'), _('Weekly'), _('Monthly'), _('Yearly')])        
-        self._recurrenceEntry.Bind(wx.EVT_CHOICE, self.onRecurrenceChanged)
+        self._recurrenceEntry.Bind(wx.EVT_CHOICE, self.onRecurrencePeriodChanged)
         panelSizer.Add(self._recurrenceEntry, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3,-1))
         staticText = wx.StaticText(recurrencePanel, label=_(', every'))
@@ -441,6 +481,7 @@ class DatesPage(Page):
         self._recurrenceFrequencyEntry = widgets.SpinCtrl(recurrencePanel, 
                                                           size=(50,-1), 
                                                           initial=1, min=1)
+        self._recurrenceFrequencyEntry.Bind(wx.EVT_SPINCTRL, self.onRecurrenceChanged)
         panelSizer.Add(self._recurrenceFrequencyEntry, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3,-1))
         self._recurrenceStaticText = wx.StaticText(recurrencePanel, 
@@ -449,6 +490,7 @@ class DatesPage(Page):
         panelSizer.Add((3, -1))
         self._recurrenceSameWeekdayCheckBox = wx.CheckBox(recurrencePanel, 
             label=_('keeping dates on the same weekday'))
+        self._recurrenceSameWeekdayCheckBox.Bind(wx.EVT_CHECKBOX, self.onRecurrenceChanged)
         panelSizer.Add(self._recurrenceSameWeekdayCheckBox, proportion=1, 
                        flag=wx.ALIGN_CENTER_VERTICAL|wx.EXPAND)
         recurrencePanel.SetSizerAndFit(panelSizer)
@@ -462,6 +504,7 @@ class DatesPage(Page):
         panelSizer.Add((3,-1))
         self._maxRecurrenceCountEntry = widgets.SpinCtrl(maxPanel, size=(50,-1), 
                                                          initial=1, min=1)
+        self._maxRecurrenceCountEntry.Bind(wx.EVT_SPINCTRL, self.onRecurrenceChanged)
         panelSizer.Add(self._maxRecurrenceCountEntry)
         maxPanel.SetSizerAndFit(panelSizer)
                
@@ -475,7 +518,8 @@ class DatesPage(Page):
         self.addEntry(self._recurrenceLabel, recurrencePanel)
         self.addEntry(_('Maximum number\nof recurrences'), maxPanel)
         
-        self.setRecurrence(self.items[0].recurrence() if len(self.items) == 1 else date.Recurrence())
+        self._originalRecurrence = self.items[0].recurrence() if len(self.items) == 1 else date.Recurrence()
+        self.setRecurrence(self._originalRecurrence)
             
     def entries(self):
         # pylint: disable-msg=E1101
@@ -486,38 +530,69 @@ class DatesPage(Page):
                     reminder=self._reminderDateTimeEntry, 
                     recurrence=self._recurrenceEntry)
     
-    def onRecurrenceChanged(self, event):
-        event.Skip()
+    def onRecurrencePeriodChanged(self, event):
         recurrenceOn = event.String != _('None')
         self._maxRecurrenceCheckBox.Enable(recurrenceOn)
         self._recurrenceFrequencyEntry.Enable(recurrenceOn)
         self._maxRecurrenceCountEntry.Enable(recurrenceOn and \
             self._maxRecurrenceCheckBox.IsChecked())
         self.updateRecurrenceLabel()
+        self.onRecurrenceChanged(event)
 
     def onMaxRecurrenceChecked(self, event):
-        event.Skip()
         maxRecurrenceOn = event.IsChecked()
         self._maxRecurrenceCountEntry.Enable(maxRecurrenceOn)
+        self.onRecurrenceChanged(event)
         
-    def onStartDateTimeChanged(self, event):
+    def onRecurrenceChanged(self, event):
         event.Skip()
+        currentRecurrence = self.getRecurrence()
+        if currentRecurrence != self._originalRecurrence:
+            command.EditRecurrenceCommand(None, self.items, recurrence=currentRecurrence).do()
+            self._originalRecurrence = currentRecurrence
+            
+    def getRecurrence(self):
+        recurrenceDict = {0: '', 1: 'daily', 2: 'weekly', 3: 'monthly', 4: 'yearly'}
+        kwargs = dict(unit=recurrenceDict[self._recurrenceEntry.Selection])
+        if self._maxRecurrenceCheckBox.IsChecked():
+            kwargs['max'] = self._maxRecurrenceCountEntry.Value
+        kwargs['amount'] = self._recurrenceFrequencyEntry.Value
+        kwargs['sameWeekday'] = self._recurrenceSameWeekdayCheckBox.IsChecked()
+        return date.Recurrence(**kwargs) # pylint: disable-msg=W0142
+    
+    def onStartDateTimeChanged(self, event):
+        # pylint: disable-msg=E1101,E0203,W0201
+        event.Skip()
+        currentStartDateTime = self._startDateTimeEntry.get()
+        if currentStartDateTime != self._originalStartDateTime:
+            command.EditStartDateTimeCommand(None, self.items, datetime=currentStartDateTime).do()
+            self._originalStartDateTime = currentStartDateTime
         if len(self.items) > 1:
-            self._startDateTimeLabel.SetValue(True) # pylint: disable-msg=E1101
+            self._startDateTimeLabel.SetValue(True) 
         else:
             self.onDateTimeChanged()
-
+                    
     def onDueDateTimeChanged(self, event):
+        # pylint: disable-msg=E1101,E0203,W0201
         event.Skip()
+        currentDueDateTime = self._dueDateTimeEntry.get()
+        if currentDueDateTime != self._originalDueDateTime:
+            command.EditDueDateTimeCommand(None, self.items, datetime=currentDueDateTime).do()
+            self._originalDueDateTime = currentDueDateTime
         if len(self.items) > 1:
-            self._dueDateTimeLabel.SetValue(True) # pylint: disable-msg=E1101
+            self._dueDateTimeLabel.SetValue(True)
         else:
             self.onDateTimeChanged()
 
     def onCompletionDateTimeChanged(self, event):
+        # pylint: disable-msg=E1101,E0203,W0201
         event.Skip()
+        currentCompletionDateTime = self._completionDateTimeEntry.get()
+        if currentCompletionDateTime != self._originalCompletionDateTime:
+            command.EditCompletionDateTimeCommand(None, self.items, datetime=currentCompletionDateTime).do()
+            self._originalCompletionDateTime = currentCompletionDateTime
         if len(self.items) > 1:
-            self._completionDateTimeLabel.SetValue(True) # pylint: disable-msg=E1101
+            self._completionDateTimeLabel.SetValue(True)
         else:
             self.onDateTimeChanged()
 
@@ -530,40 +605,14 @@ class DatesPage(Page):
             self.suggestReminder()
             
     def onReminderChanged(self, event):
+        event.Skip()
+        currentReminderDatetime = self._reminderDateTimeEntry.get()
+        if currentReminderDatetime != self._originalReminderDateTime:
+            command.EditReminderDateTimeCommand(None, self.items, datetime=currentReminderDatetime).do()
+            self._originalReminderDateTime = currentReminderDatetime
         if len(self.items) > 1:
             self._reminderDateTimeLabel.SetValue(True)
-        event.Skip()
         
-    def ok(self, event=None): # pylint: disable-msg=W0221,W0613
-        # Funny things happen with the date pickers without this (to
-        # reproduce: create a task, enter the start date by hand,
-        # click OK; the date is the current date instead of the one
-        # typed in). Consequently, _ok() will have do its own event sending.
-        wx.CallAfter(self._ok)
-
-    @patterns.eventSource
-    def _ok(self, event=None): # pylint: disable-msg=W0221
-        recurrenceDict = {0: '', 1: 'daily', 2: 'weekly', 3: 'monthly', 4: 'yearly'}
-        kwargs = dict(unit=recurrenceDict[self._recurrenceEntry.Selection])
-        if self._maxRecurrenceCheckBox.IsChecked():
-            kwargs['max'] =self._maxRecurrenceCountEntry.Value
-        kwargs['amount'] = self._recurrenceFrequencyEntry.Value
-        kwargs['sameWeekday'] = self._recurrenceSameWeekdayCheckBox.IsChecked()
-        # pylint: disable-msg=E1101,W0142
-        newCompletionDateTime = self._completionDateTimeEntry.get()
-        for item in self.items:
-            if len(self.items) == 1 or self._recurrenceLabel.IsChecked():
-                item.setRecurrence(date.Recurrence(**kwargs), event=event)
-            if len(self.items) == 1 or self._startDateTimeLabel.IsChecked():
-                item.setStartDateTime(self._startDateTimeEntry.get(), event=event)
-            if len(self.items) == 1 or self._dueDateTimeLabel.IsChecked():
-                item.setDueDateTime(self._dueDateTimeEntry.get(), event=event)
-            if len(self.items) == 1 or self._completionDateTimeLabel.IsChecked():
-                if newCompletionDateTime != self._oldCompletionDateTime[item]:
-                    item.setCompletionDateTime(newCompletionDateTime, event=event)
-            if len(self.items) == 1 or self._reminderDateTimeLabel.IsChecked():
-                item.setReminder(self._reminderDateTimeEntry.get(), event=event)
-
     def setReminder(self, reminder):
         self._reminderDateTimeEntry.set(reminder)
 
@@ -624,22 +673,36 @@ class ProgressPage(Page):
         
     def addProgressEntry(self):
         # pylint: disable-msg=W0201
-        self._percentageCompleteOldValue = dict([(item, item.percentageComplete()) for item in self.items])
+        self._originalPercentageComplete = self.items[0].percentageComplete() if len(self.items) == 1 else self.averagePercentageComplete(self.items)
         self._percentageCompleteEntry = entry.PercentageEntry(self, 
-            self._percentageCompleteOldValue[self.items[0]], 
+            self._originalPercentageComplete, 
             callback=self.onPercentageCompleteChanged)
         self._percentageCompleteLabel = self.label(_('Percentage complete'))
         self.addEntry(self._percentageCompleteLabel, self._percentageCompleteEntry)
+
+    def averagePercentageComplete(self, items):
+        return sum([item.percentageComplete() for item in items]) \
+                    / float(len(items)) if items else 0
+
+    def onPercentageCompleteChanged(self):
+        currentPercentageComplete = self._percentageCompleteEntry.get()
+        if currentPercentageComplete != self._originalPercentageComplete:
+            command.EditPercentageCompleteCommand(None, self.items, 
+                                                  percentage=currentPercentageComplete).do()
+            self._originalPercentageComplete = currentPercentageComplete
+        if len(self.items) > 1:
+            self._percentageCompleteLabel.SetValue(True)
         
     def addBehaviorEntry(self):
         # pylint: disable-msg=W0201
         self._markTaskCompletedEntry = choice = wx.Choice(self)
-        shouldMarkCompleted = self.items[0].shouldMarkCompletedWhenAllChildrenCompleted() if len(self.items) == 1 else None
+        self._markTaskCompletedEntry.Bind(wx.EVT_CHOICE, self.onShouldMarkCompletedChanged)
+        self._originalShouldMarkCompleted = self.items[0].shouldMarkCompletedWhenAllChildrenCompleted() if len(self.items) == 1 else None
         for choiceValue, choiceText in \
                 [(None, _('Use application-wide setting')),
                  (False, _('No')), (True, _('Yes'))]:
             choice.Append(choiceText, choiceValue)
-            if choiceValue == shouldMarkCompleted:
+            if choiceValue == self._originalShouldMarkCompleted:
                 choice.SetSelection(choice.GetCount()-1)
         if choice.GetSelection() == wx.NOT_FOUND:
             # Force a selection if necessary:
@@ -649,26 +712,17 @@ class ProgressPage(Page):
                                                   wx.EVT_CHOICE)
         self.addEntry(self._markTaskCompletedLabel, choice, flags=[None, wx.ALL])
         
+    def onShouldMarkCompletedChanged(self, event):
+        event.Skip()
+        currentShouldMarkCompleted = self._markTaskCompletedEntry.GetClientData( \
+            self._markTaskCompletedEntry.GetSelection())
+        if currentShouldMarkCompleted != self._originalShouldMarkCompleted:
+            command.EditShouldMarkCompletedCommand(None, self.items, 
+                                                   shouldMarkCompleted=currentShouldMarkCompleted).do()
+            self._originalShouldMarkCompleted = currentShouldMarkCompleted
+        
     def entries(self):
         return dict(percentageComplete=self._percentageCompleteEntry)
-        
-    @patterns.eventSource
-    def ok(self, event=None): # pylint: disable-msg=W0221
-        percentageCompleteNewValue = self._percentageCompleteEntry.get()
-        shouldMarkCompleted = self._markTaskCompletedEntry.GetClientData( \
-            self._markTaskCompletedEntry.GetSelection())
-        for item in self.items:
-            if len(self.items) == 1 or self._percentageCompleteLabel.IsChecked():
-                if percentageCompleteNewValue != self._percentageCompleteOldValue[item]:
-                    item.setPercentageComplete(percentageCompleteNewValue, 
-                                               event=event)
-            if len(self.items) == 1 or self._markTaskCompletedLabel.IsChecked():
-                item.setShouldMarkCompletedWhenAllChildrenCompleted( \
-                    shouldMarkCompleted, event=event)
-
-    def onPercentageCompleteChanged(self):
-        if len(self.items) > 1:
-            self._percentageCompleteLabel.SetValue(True)
         
 
 class BudgetPage(Page):
@@ -689,10 +743,18 @@ class BudgetPage(Page):
             
     def addBudgetEntry(self):
         # pylint: disable-msg=W0201
-        budget = self.items[0].budget() if len(self.items) == 1 else date.TimeDelta()
-        self._budgetEntry = entry.TimeDeltaEntry(self, budget)
+        self._originalBudget = self.items[0].budget() if len(self.items) == 1 else date.TimeDelta()
+        self._budgetEntry = entry.TimeDeltaEntry(self, self._originalBudget)
+        self._budgetEntry.Bind(wx.EVT_KILL_FOCUS, self.onLeavingBudgetEntry)
         self._budgetLabel = self.label(_('Budget'), self._budgetEntry._entry, wx.EVT_TEXT)
         self.addEntry(self._budgetLabel, self._budgetEntry, flags=[None, wx.ALL])
+        
+    def onLeavingBudgetEntry(self, event):
+        event.Skip()
+        currentBudget = self._budgetEntry.get()
+        if self._originalBudget != currentBudget:
+            command.EditBudgetCommand(None, self.items, budget=currentBudget).do()
+            self._originalBudget = currentBudget
         
     def addTimeSpentEntry(self):
         timeSpent = self.items[0].timeSpent()
@@ -712,17 +774,33 @@ class BudgetPage(Page):
             
     def addHourlyFeeEntry(self):
         # pylint: disable-msg=W0201
-        hourlyFee = self.items[0].hourlyFee() if len(self.items) == 1 else 0
-        self._hourlyFeeEntry = entry.AmountEntry(self, hourlyFee)
+        self._originalHourlyFee = self.items[0].hourlyFee() if len(self.items) == 1 else 0
+        self._hourlyFeeEntry = entry.AmountEntry(self, self._originalHourlyFee)
+        self._hourlyFeeEntry.Bind(wx.EVT_KILL_FOCUS, self.onLeavingHourlyFeeEntry)
         self._hourlyFeeLabel = self.label(_('Hourly fee'), self._hourlyFeeEntry._entry, wx.EVT_TEXT)
         self.addEntry(self._hourlyFeeLabel, self._hourlyFeeEntry, flags=[None, wx.ALL])
         
+    def onLeavingHourlyFeeEntry(self, event):
+        event.Skip()
+        currentHourlyFee = self._hourlyFeeEntry.get()
+        if currentHourlyFee != self._originalHourlyFee:
+            command.EditHourlyFeeCommand(None, self.items, hourlyFee=currentHourlyFee).do()
+            self._originalHourlyFee = currentHourlyFee
+        
     def addFixedFeeEntry(self):
         # pylint: disable-msg=W0201
-        fixedFee = self.items[0].fixedFee() if len(self.items) == 1 else 0
-        self._fixedFeeEntry = entry.AmountEntry(self, fixedFee)
+        self._originalFixedFee = self.items[0].fixedFee() if len(self.items) == 1 else 0
+        self._fixedFeeEntry = entry.AmountEntry(self, self._originalFixedFee)
+        self._fixedFeeEntry.Bind(wx.EVT_KILL_FOCUS, self.onLeavingFixedFeeEntry)
         self._fixedFeeLabel = self.label(_('Fixed fee'), self._fixedFeeEntry._entry, wx.EVT_TEXT)
         self.addEntry(self._fixedFeeLabel, self._fixedFeeEntry, flags=[None, wx.ALL])
+
+    def onLeavingFixedFeeEntry(self, event):
+        event.Skip()
+        currentFixedFee = self._fixedFeeEntry.get()
+        if currentFixedFee != self._originalFixedFee:
+            command.EditFixedFeeCommand(None, self.items, fixedFee=currentFixedFee).do()
+            self._originalFixedFee = currentFixedFee
         
     def addRevenueEntry(self):
         revenue = self.items[0].revenue()
@@ -735,13 +813,6 @@ class BudgetPage(Page):
                     hourlyFee=self._hourlyFeeEntry, 
                     fixedFee=self._fixedFeeEntry,  
                     revenue=self._hourlyFeeEntry)
-    
-    @patterns.eventSource    
-    def ok(self, event=None): # pylint: disable-msg=W0221
-        for item in self.items:
-            item.setBudget(self._budgetEntry.get(), event=event)
-            item.setHourlyFee(self._hourlyFeeEntry.get(), event=event)
-            item.setFixedFee(self._fixedFeeEntry.get(), event=event)
 
 
 class PageWithViewer(Page):
@@ -810,10 +881,12 @@ class CheckableViewerMixin(object):
         self.__checked[item] = event.GetItem().IsChecked()
 
 
-class CategoryViewer(viewer.BaseCategoryViewer):
+class LocalCategoryViewer(viewer.BaseCategoryViewer):
     def __init__(self, items, *args, **kwargs):
         self.__items = items
-        super(CategoryViewer, self).__init__(*args, **kwargs)
+        super(LocalCategoryViewer, self).__init__(*args, **kwargs)
+        for item in self.domainObjectsToView():
+            item.expand(context=self.settingsSection())
 
     def getIsItemChecked(self, category):
         for item in self.__items:
@@ -821,12 +894,14 @@ class CategoryViewer(viewer.BaseCategoryViewer):
                 return True
         return False
 
-    def createCategoryPopupMenu(self): # pylint: disable-msg=W0221
-        return super(CategoryViewer, self).createCategoryPopupMenu(True)
-        
+    def onCheck(self, event):
+        ''' Here we keep track of the items checked by the user so that these 
+            items remain checked when refreshing the viewer. ''' 
+        category = self.widget.GetItemPyData(event.GetItem())
+        command.ToggleCategoryCommand(None, self.__items, category=category).do()
 
-class LocalCategoryViewer(CheckableViewerMixin, CategoryViewer):
-    pass
+    def createCategoryPopupMenu(self): # pylint: disable-msg=W0221
+        return super(LocalCategoryViewer, self).createCategoryPopupMenu(True)            
 
 
 class CategoriesPage(PageWithViewer):
@@ -840,18 +915,6 @@ class CategoriesPage(PageWithViewer):
         
     def entries(self):
         return dict(categories=self.viewer, totalCategories=self.viewer) 
-
-    @patterns.eventSource
-    def ok(self, event=None): # pylint: disable-msg=W0221
-        for category, checked in self.viewer.checkedItems().items():
-            if checked:
-                for item in self.items:
-                    category.addCategorizable(item, event=event)
-                    item.addCategory(category, event=event)
-            else:
-                for item in self.items:
-                    category.removeCategorizable(item, event=event)
-                    item.removeCategory(category, event=event)
         
 
 class AttachmentsPage(PageWithViewer):

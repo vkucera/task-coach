@@ -78,6 +78,9 @@ class TimeDeltaEntry(widgets.PanelWithBoxSizer):
 
     def get(self):
         return date.parseTimeDelta(self._entry.GetValue())
+    
+    def Bind(self, *args, **kwargs): # pylint: disable-msg=W0221
+        self._entry.Bind(*args, **kwargs)
 
 
 class AmountEntry(widgets.PanelWithBoxSizer):
@@ -113,6 +116,9 @@ class AmountEntry(widgets.PanelWithBoxSizer):
 
     def set(self, value):
         self._entry.SetValue(value)
+
+    def Bind(self, *args, **kwargs): # pylint: disable-msg=W0221
+        self._entry.Bind(*args, **kwargs)
         
         
 class PercentageEntry(widgets.PanelWithBoxSizer):

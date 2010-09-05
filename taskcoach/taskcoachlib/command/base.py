@@ -409,13 +409,15 @@ class EditSubjectCommand(BaseCommand):
         super(EditSubjectCommand, self).__init__(*args, **kwargs)
         self.__oldSubjects = [item.subject() for item in self.items]
     
-    def do_command(self):
+    @patterns.eventSource
+    def do_command(self, event=None):
         for item in self.items:
-            item.setSubject(self.__newSubject)
+            item.setSubject(self.__newSubject, event=event)
             
-    def undo_command(self):
+    @patterns.eventSource
+    def undo_command(self, event=None):
         for item, oldSubject in zip(self.items, self.__oldSubjects):
-            item.setSubject(oldSubject)
+            item.setSubject(oldSubject, event=event)
             
     def redo_command(self):
         self.do_command()
@@ -430,13 +432,120 @@ class EditDescriptionCommand(BaseCommand):
         super(EditDescriptionCommand, self).__init__(*args, **kwargs)
         self.__oldDescriptions = [item.description() for item in self.items]
     
-    def do_command(self):
+    @patterns.eventSource
+    def do_command(self, event=None):
         for item in self.items:
-            item.setDescription(self.__newDescription)
-            
-    def undo_command(self):
+            item.setDescription(self.__newDescription, event=event)
+    
+    @patterns.eventSource
+    def undo_command(self, event=None):
         for item, oldDescription in zip(self.items, self.__oldDescriptions):
-            item.setDescription(oldDescription)
+            item.setDescription(oldDescription, event=event)
             
     def redo_command(self):
         self.do_command()
+
+
+class EditIconCommand(BaseCommand):
+    plural_name = _('Change icons')
+    singular_name = _('Change icon "%s"')
+    
+    def __init__(self, *args, **kwargs):
+        self.__newIcon = kwargs.pop('icon')
+        self.__newSelectedIcon = kwargs.pop('selectedIcon')
+        super(EditIconCommand, self).__init__(*args, **kwargs)
+        self.__oldIcons = [(item.icon(), item.selectedIcon()) for item in self.items]
+    
+    @patterns.eventSource
+    def do_command(self, event=None):
+        for item in self.items:
+            item.setIcon(self.__newIcon, event=event)
+            item.setSelectedIcon(self.__newSelectedIcon, event=event)
+    
+    @patterns.eventSource
+    def undo_command(self, event=None):
+        for item, (oldIcon, oldSelectedIcon) in zip(self.items, self.__oldIcons):
+            item.setIcon(oldIcon, event=event)
+            item.setSelectedIcon(oldSelectedIcon, event=event)
+            
+    def redo_command(self):
+        self.do_command()
+
+
+class EditFontCommand(BaseCommand):
+    plural_name = _('Change fonts')
+    singular_name = _('Change font "%s"')
+    
+    def __init__(self, *args, **kwargs):
+        self.__newFont = kwargs.pop('font')
+        super(EditFontCommand, self).__init__(*args, **kwargs)
+        self.__oldFonts = [item.font() for item in self.items]
+    
+    @patterns.eventSource
+    def do_command(self, event=None):
+        for item in self.items:
+            item.setFont(self.__newFont, event=event)
+    
+    @patterns.eventSource
+    def undo_command(self, event=None):
+        for item, oldFont in zip(self.items, self.__oldFonts):
+            item.setFont(oldFont, event=event)
+            
+    def redo_command(self):
+        self.do_command()
+
+
+class EditColorCommand(BaseCommand):
+    def redo_command(self):
+        self.do_command()
+
+    def __init__(self, *args, **kwargs):
+        self.__newColor = kwargs.pop('color')
+        super(EditColorCommand, self).__init__(*args, **kwargs)
+        self.__oldColors = [self.getItemColor(item) for item in self.items]
+        
+    @staticmethod
+    def getItemColor(item):
+        raise NotImplementedError
+
+    @staticmethod
+    def setItemColor(item, color, event):
+        raise NotImplementedError
+    
+    @patterns.eventSource
+    def do_command(self, event=None):
+        for item in self.items:
+            self.setItemColor(item, self.__newColor, event)
+
+    @patterns.eventSource
+    def undo_command(self, event=None):
+        for item, oldColor in zip(self.items, self.__oldColors):
+            self.setItemColor(item, oldColor, event)
+
+  
+class EditForegroundColorCommand(EditColorCommand):
+    plural_name = _('Change foreground colors')
+    singular_name = _('Change foreground color "%s"')
+
+    @staticmethod
+    def getItemColor(item):
+        return item.foregroundColor()
+    
+    @staticmethod
+    def setItemColor(item, color, event):
+        item.setForegroundColor(color, event=event)
+                  
+
+class EditBackgroundColorCommand(EditColorCommand):
+    plural_name = _('Change background colors')
+    singular_name = _('Change background color "%s"')
+
+    @staticmethod
+    def getItemColor(item):
+        return item.backgroundColor()
+
+    @staticmethod
+    def setItemColor(item, color, event):
+        item.setBackgroundColor(color, event=event)
+    
+    

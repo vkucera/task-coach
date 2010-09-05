@@ -81,7 +81,9 @@ class TaskEditorTestCase(test.wxTestCase):
         self.editor._interior[1].setReminder(newReminderDateTime)
         
     def setRecurrence(self, newRecurrence):
-        self.editor._interior[1].setRecurrence(newRecurrence)
+        page = self.editor._interior[1]
+        page.setRecurrence(newRecurrence)
+        page.onRecurrenceChanged(DummyEvent())
         
         
 class EditorDisplayTest(TaskEditorTestCase):
@@ -171,33 +173,27 @@ class NewTaskTest(TaskEditorTestCase):
         
     def testSetRecurrence(self):
         self.setRecurrence(date.Recurrence('weekly'))
-        self.editor.ok()
         self.assertEqual('weekly', self.task.recurrence().unit)
         
     def testSetDailyRecurrence(self):
         self.setRecurrence(date.Recurrence('daily', amount=1))
-        self.editor.ok()
         self.assertEqual('daily', self.task.recurrence().unit)
         self.assertEqual(1, self.task.recurrence().amount)
         
     def testSetYearlyRecurrence(self):
         self.setRecurrence(date.Recurrence('yearly'))
-        self.editor.ok()
         self.assertEqual('yearly', self.task.recurrence().unit)
         
     def testSetMaxRecurrence(self):
         self.setRecurrence(date.Recurrence('weekly', max=10))
-        self.editor.ok()
         self.assertEqual(10, self.task.recurrence().max)
         
     def testSetRecurrenceFrequency(self):
         self.setRecurrence(date.Recurrence('weekly', amount=3))
-        self.editor.ok()
         self.assertEqual(3, self.task.recurrence().amount)
         
     def testSetRecurrenceSameWeekday(self):
         self.setRecurrence(date.Recurrence('monthly', sameWeekday=True))
-        self.editor.ok()
         self.failUnless(self.task.recurrence().sameWeekday)
     
     def testOpenAttachmentWithNonAsciiFileNameThrowsException(self): # pragma: no cover
@@ -312,25 +308,23 @@ class EditTaskTest(TaskEditorTestCase):
         
     def testSetNegativePriority(self):
         self.editor._interior[0]._priorityEntry.SetValue(-1)
-        class DummyEvent(object):
-            def Skip(self):
-                pass
         self.editor._interior[0].onPriorityChanged(DummyEvent())
         self.assertEqual(-1, self.task.priority())
         
     def testSetHourlyFee(self):
         self.editor._interior[5]._hourlyFeeEntry.set(100)
-        self.editor.ok()
+        self.editor._interior[5].onLeavingHourlyFeeEntry(DummyEvent())
         self.assertEqual(100, self.task.hourlyFee())
 
     def testSetFixedFee(self):
         self.editor._interior[5]._fixedFeeEntry.set(100.5)
-        self.editor.ok()
+        self.editor._interior[5].onLeavingFixedFeeEntry(DummyEvent())
         self.assertEqual(100.5, self.task.fixedFee())
 
     def testBehaviorMarkCompleted(self):
-        self.editor._interior[3]._markTaskCompletedEntry.SetStringSelection('Yes')
-        self.editor.ok()
+        page = self.editor._interior[3]
+        page._markTaskCompletedEntry.SetStringSelection('Yes')
+        page.onShouldMarkCompletedChanged(DummyEvent())
         self.assertEqual(True, 
                          self.task.shouldMarkCompletedWhenAllChildrenCompleted())
 
@@ -368,15 +362,14 @@ class EditTaskWithChildrenTest(TaskEditorTestCase):
 
     # pylint: disable-msg=W0212
     
-    def testChangeDueDateTimeOfParentHasNoEffectOnChild(self):
+    def testChangeDueDateTimeOfParentAffectsChildToo(self):
         self.editor._interior[1]._dueDateTimeEntry.set(self.yesterday)
-        self.editor.ok()
-        self.assertEqual(date.DateTime(), self.child.dueDateTime())
+        self.assertAlmostEqual(self.yesterday.toordinal(), 
+                               self.child.dueDateTime().toordinal(), places=2)
 
     def testChangeStartDateTimeOfParentHasNoEffectOnChild(self):
         self.editor._interior[1]._startDateTimeEntry.set(self.tomorrow)
-        self.editor.ok()
-        self.assertAlmostEqual(date.Now().toordinal(), 
+        self.assertAlmostEqual(self.tomorrow.toordinal(), 
                                self.child.startDateTime().toordinal(),
                                places=2)
 

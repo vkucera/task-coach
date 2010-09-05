@@ -376,3 +376,235 @@ class EditPriorityCommand(base.BaseCommand):
     
 class AddTaskNoteCommand(base.AddNoteCommand):
     plural_name = _('Add note to tasks')
+
+
+class EditDateTimeCommand(base.BaseCommand):
+    def __init__(self, *args, **kwargs):
+        self.__newDateTime = kwargs.pop('datetime')
+        super(EditDateTimeCommand, self).__init__(*args, **kwargs)
+        self.__oldDateTimes = [self.getDateTime(item) for item in self.items]
+        familyMembers = set()
+        for item in self.items:
+            for familyMember in item.family():
+                if familyMember not in self.items:
+                    familyMembers.add(familyMember)
+        self.__oldFamilyMemberDateTimes = [(familyMember, self.getDateTime(familyMember)) for familyMember in familyMembers]                
+
+    @staticmethod
+    def getDateTime(item):
+        raise NotImplementedError # pragma: no cover
+
+    @staticmethod
+    def setDateTime(item, newDateTime, event):
+        raise NotImplementedError # pragma: no cover
+    
+    @patterns.eventSource
+    def do_command(self, event=None):
+        super(EditDateTimeCommand, self).do_command()
+        for item in self.items:
+            self.setDateTime(item, self.__newDateTime, event=event)
+
+    @patterns.eventSource
+    def undo_command(self, event=None):
+        super(EditDateTimeCommand, self).undo_command()
+        for item, oldDateTime in zip(self.items, self.__oldDateTimes):
+            self.setDateTime(item, oldDateTime, event=event)
+        for familyMember, oldDateTime in self.__oldFamilyMemberDateTimes:
+            self.setDateTime(familyMember, oldDateTime, event=event)
+    
+    def redo_command(self):
+        self.do_command()
+
+    
+class EditStartDateTimeCommand(EditDateTimeCommand):
+    plural_name = _('Change start date')
+    singular_name = _('Change start date of "%s"')
+    
+    @staticmethod
+    def getDateTime(item):
+        return item.startDateTime()
+    
+    @staticmethod
+    def setDateTime(item, dateTime, event):
+        item.setStartDateTime(dateTime, event=event)
+                
+
+class EditDueDateTimeCommand(EditDateTimeCommand):
+    plural_name = _('Change due date')
+    singular_name = _('Change due date of "%s"')
+    
+    @staticmethod
+    def getDateTime(item):
+        return item.dueDateTime()
+    
+    @staticmethod
+    def setDateTime(item, dateTime, event):
+        item.setDueDateTime(dateTime, event=event)
+
+
+class EditCompletionDateTimeCommand(EditDateTimeCommand, EffortCommand):
+    plural_name = _('Change completion date')
+    singular_name = _('Change completion date of "%s"')
+                    
+    @staticmethod
+    def getDateTime(item):
+        return item.completionDateTime()
+    
+    @staticmethod
+    def setDateTime(item, dateTime, event):
+        item.setCompletionDateTime(dateTime, event=event)
+
+    def tasksToStopTracking(self):
+        return self.items
+    
+    
+class EditReminderDateTimeCommand(EditDateTimeCommand):
+    plural_name = _('Change reminder dates/times')
+    singular_name = _('Change reminder date/time of "%s"')
+    
+    @staticmethod
+    def getDateTime(item):
+        return item.reminder()
+    
+    @staticmethod
+    def setDateTime(item, dateTime, event):
+        item.setReminder(dateTime, event=event)
+        
+        
+class EditRecurrenceCommand(base.BaseCommand):
+    plural_name = _('Change recurrences')
+    singular_name = _('Change recurrence of "%s"')
+    
+    def __init__(self, *args, **kwargs):
+        self.__newRecurrence = kwargs.pop('recurrence')
+        super(EditRecurrenceCommand, self).__init__(*args, **kwargs)
+        self.__oldRecurrences = [item.recurrence() for item in self.items]
+
+    @patterns.eventSource
+    def do_command(self, event=None):
+        for item in self.items:
+            item.setRecurrence(self.__newRecurrence, event=event)
+
+    @patterns.eventSource
+    def undo_command(self, event=None):
+        for item, oldRecurrence in zip(self.items, self.__oldRecurrences):
+            item.setRecurrence(oldRecurrence, event=event)
+
+    def redo_command(self):
+        self.do_command()
+    
+    
+class EditPercentageCompleteCommand(base.BaseCommand):
+    plurar_name = ('Change percentages complete')
+    singular_name = _('Change percentage complete of "%s"')
+    
+    def __init__(self, *args, **kwargs):
+        self.__newPercentage = kwargs.pop('percentage')
+        super(EditPercentageCompleteCommand, self).__init__(*args, **kwargs)
+        self.__oldPercentages = [item.percentageComplete() for item in self.items]
+        
+    @patterns.eventSource
+    def do_command(self, event=None):
+        for item in self.items:
+            item.setPercentageComplete(self.__newPercentage, event=event)
+            
+    @patterns.eventSource
+    def undo_command(self, event=None):
+        for item, oldPercentage in zip(self.items, self.__oldPercentages):
+            item.setPercentageComplete(oldPercentage, event=event)
+            
+    def redo_command(self):
+        self.do_command()
+        
+        
+class EditShouldMarkCompletedCommand(base.BaseCommand):
+    plural_name = _('Change when tasks are marked completed')
+    singular_name = _('Change when "%s" is marked completed')
+    
+    def __init__(self, *args, **kwargs):
+        self.__newShouldMarkCompleted = kwargs.pop('shouldMarkCompleted')
+        super(EditShouldMarkCompletedCommand, self).__init__(*args, **kwargs)
+        self.__oldShouldMarkCompleted = [item.shouldMarkCompletedWhenAllChildrenCompleted() for item in self.items]
+        
+    @patterns.eventSource
+    def do_command(self, event=None):
+        for item in self.items:
+            item.setShouldMarkCompletedWhenAllChildrenCompleted(self.__newShouldMarkCompleted, event=event)
+            
+    @patterns.eventSource
+    def undo_command(self, event=None):
+        for item, oldShouldMarkCompleted in zip(self.items, self.__oldShouldMarkCompleted):
+            item.setShouldMarkCompletedWhenAllChildrenCompleted(oldShouldMarkCompleted, event=event)
+            
+    def redo_command(self):
+        self.do_command()
+        
+
+class EditBudgetCommand(base.BaseCommand):
+    plural_name = _('Change budgets')
+    singular_name = _('Change budget of "%s"')
+    
+    def __init__(self, *args, **kwargs):
+        self.__newBudget = kwargs.pop('budget')
+        super(EditBudgetCommand, self).__init__(*args, **kwargs)
+        self.__oldBudgets = [item.budget() for item in self.items]
+        
+    @patterns.eventSource
+    def do_command(self, event=None):
+        for item in self.items:
+            item.setBudget(self.__newBudget, event=event)
+            
+    @patterns.eventSource
+    def undo_command(self, event=None):
+        for item, oldBudget in zip(self.items, self.__oldBudgets):
+            item.setBudget(oldBudget, event=event)
+            
+    def redo_command(self):
+        self.do_command()
+            
+            
+class EditHourlyFeeCommand(base.BaseCommand):
+    plural_name = _('Change hourly fees')
+    singular_name = _('Change hourly fee of "%s"')
+    
+    def __init__(self, *args, **kwargs):
+        self.__newHourlyFee = kwargs.pop('hourlyFee')
+        super(EditHourlyFeeCommand, self).__init__(*args, **kwargs)
+        self.__oldHourlyFees = [item.hourlyFee() for item in self.items]
+        
+    @patterns.eventSource
+    def do_command(self, event=None):
+        for item in self.items:
+            item.setHourlyFee(self.__newHourlyFee, event=event)
+            
+    @patterns.eventSource
+    def undo_command(self, event=None):
+        for item, oldHourlyFee in zip(self.items, self.__oldHourlyFees):
+            item.setHourlyFee(oldHourlyFee, event=event)
+            
+    def redo_command(self):
+        self.do_command()
+
+
+class EditFixedFeeCommand(base.BaseCommand):
+    plural_name = _('Change fixed fees')
+    singular_name = _('Change fixed fee of "%s"')
+    
+    def __init__(self, *args, **kwargs):
+        self.__newFixedFee = kwargs.pop('fixedFee')
+        super(EditFixedFeeCommand, self).__init__(*args, **kwargs)
+        self.__oldFixedFees = [item.fixedFee() for item in self.items]
+        
+    @patterns.eventSource
+    def do_command(self, event=None):
+        for item in self.items:
+            item.setFixedFee(self.__newFixedFee, event=event)
+            
+    @patterns.eventSource
+    def undo_command(self, event=None):
+        for item, oldFixedFee in zip(self.items, self.__oldFixedFees):
+            item.setFixedFee(oldFixedFee, event=event)
+            
+    def redo_command(self):
+        self.do_command()
+            

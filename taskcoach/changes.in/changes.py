@@ -22,13 +22,17 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.0', 'August 31, 2010',
+Release('1.3.0', 'September 4, 2010',
     summary='''This release ...''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
 for OK and Cancel buttons anymore. This currently works for subject,
-description, task priority, attachment location and mutual exclusive subcategories. 
-All other attributes remain to be done.''')
+description, task priority, attachment location, mutual exclusive subcategories,
+font, icon, colors, start date, due date, completion date, reminder, recurrence,
+should mark completed, percentage complete, budget, hourly fee, fixed fee, 
+categories. 
+All other attributes remain to be done.
+Updating of data in dialog when attributes change remains to be done.''')
         ]
     ),
     

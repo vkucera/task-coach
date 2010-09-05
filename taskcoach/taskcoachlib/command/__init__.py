@@ -24,5 +24,6 @@ from noteCommands import *
 from attachmentCommands import *
 from base import CopyCommand, DeleteCommand, CutCommand, PasteCommand, \
     PasteAsSubItemCommand, AddAttachmentCommand, AddNoteCommand, \
-    EditSubjectCommand, EditDescriptionCommand
+    EditSubjectCommand, EditDescriptionCommand, EditIconCommand, \
+    EditFontCommand, EditForegroundColorCommand, EditBackgroundColorCommand
 from clipboard import Clipboard
