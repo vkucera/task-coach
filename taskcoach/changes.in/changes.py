@@ -48,7 +48,7 @@ the task viewer shows the individual values, so a budget of 20 hours for task A
 and 10 hours for task A1.'''),
         Feature('''The order of tabs in tabbed dialogs can be changed. 
 Task Coach now remembers the order of the tabs in the item edit dialogs and 
-the preferences dialog.'''),
+the preferences dialog.''', 'http://uservoice.com/a/oa7jx'),
         Feature('''When printing, show the sorted column by underlining the
 column header.'''),
         Feature('''Reorganized some menu items differently and added
