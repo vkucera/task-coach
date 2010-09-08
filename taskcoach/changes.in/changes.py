@@ -66,6 +66,28 @@ dependencies. The task file format version number is now 31.''')
         ]
     ),
 
+Release('1.1.3', 'September 8, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''When closing a edit dialog, don't delete the category, note,
+and attachment viewers in the dialog before the data has been processed.''', 
+            '3059143'),
+        Bug('''The PortableApps platform would override the language selected
+by the user in Task Coach.''', '2965342', '3059429'),
+        Bug('''When retrieving the latest available Task Coach version number
+from the Task Coach website doesn't work, simply ignore that.'''),
+        Bug('''Don't crash when searching efforts with "Include subitems" turned
+on.''')
+        ],
+    featuresAdded=[
+        Feature('''When selecting the language in the preferences dialog, you
+can select 'Let the system determine the language'. If you're using the 
+PortableApps version of Task Coach and the PortableApps platform, the 
+PortableApps platform language will be used. Otherwise, Task Coach
+will let your system's locale determine the language.''')
+        ]
+    ),
+            
 Release('1.1.2', 'September 2, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
