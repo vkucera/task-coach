@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.1.3', 'September 7, 2010',
+Release('1.1.3', 'September 8, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''When closing a edit dialog, don't delete the category, note,
@@ -31,7 +31,9 @@ and attachment viewers in the dialog before the data has been processed.''',
         Bug('''The PortableApps platform would override the language selected
 by the user in Task Coach.''', '2965342', '3059429'),
         Bug('''When retrieving the latest available Task Coach version number
-from the Task Coach website doesn't work, simply ignore that.''')
+from the Task Coach website doesn't work, simply ignore that.'''),
+        Bug('''Don't crash when searching efforts with "Include subitems" turned
+on.''')
         ],
     featuresAdded=[
         Feature('''When selecting the language in the preferences dialog, you
