@@ -896,7 +896,7 @@ class AttachmentPopupMenu(Menu):
             uicommand.EditCopy(viewer=attachmentViewer),
             uicommand.EditPaste(),
             None,
-            uicommand.AttachmentNew(attachments=attachments, settings=settings),
+            uicommand.AttachmentNew(viewer=attachmentViewer, attachments=attachments, settings=settings),
             uicommand.AttachmentEdit(viewer=attachmentViewer, attachments=attachments),
             uicommand.AttachmentDelete(viewer=attachmentViewer, attachments=attachments),
             uicommand.AttachmentOpen(viewer=attachmentViewer, attachments=attachments),

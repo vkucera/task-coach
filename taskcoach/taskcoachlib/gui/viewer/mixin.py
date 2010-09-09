@@ -404,8 +404,8 @@ class AttachmentDropTargetMixin(object):
         return kwargs
         
     def _addAttachments(self, attachments, item, **itemDialogKwargs):
-        ''' Add attachments. If index refers to an existing domain object, 
-            add the attachments to that object. If index is None, use the 
+        ''' Add attachments. If item refers to an existing domain object, 
+            add the attachments to that object. If item is None, use the 
             newItemDialog to create a new domain object and add the attachments
             to that new object. '''
         if item is None:

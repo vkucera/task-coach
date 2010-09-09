@@ -316,8 +316,7 @@ class Viewer(wx.Panel):
     
     def newItemDialog(self, *args, **kwargs):
         bitmap = kwargs.pop('bitmap')
-        NewItemCommand = self.newItemCommandClass()
-        newItemCommand = NewItemCommand(self.presentation(), *args, **kwargs)
+        newItemCommand = self.newItemCommand(*args, **kwargs)
         newItemCommand.do()
         return self.editItemDialog(newItemCommand.items, bitmap)
     
@@ -342,6 +341,9 @@ class Viewer(wx.Panel):
         
     def itemEditorClass(self):
         raise NotImplementedError
+    
+    def newItemCommand(self, *args, **kwargs):
+        return self.newItemCommandClass()(self.presentation(), *args, **kwargs)
 
     def newItemCommandClass(self):
         raise NotImplementedError

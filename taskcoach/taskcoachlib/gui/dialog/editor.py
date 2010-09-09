@@ -836,11 +836,14 @@ class PageWithViewer(Page):
         
     def onClose(self, event):
         # Don't notify the viewer about any changes anymore, it's about
-        # to be deleted.
+        # to be deleted, but don't delete it soo soon.
+        wx.CallAfter(self.detachAndDeleteViewer)
+        event.Skip()        
+        
+    def detachAndDeleteViewer(self):
         if hasattr(self, 'viewer'):
             self.viewer.detach()
             del self.viewer
-        event.Skip()        
 
 
 class EffortPage(PageWithViewer):
@@ -914,8 +917,28 @@ class CategoriesPage(PageWithViewer):
                                    settingsSection=settingsSection)
         
     def entries(self):
-        return dict(categories=self.viewer, totalCategories=self.viewer) 
+        return dict(categories=self.viewer) 
+
+
+class LocalAttachmentViewer(viewer.AttachmentViewer):
+    def __init__(self, *args, **kwargs):
+        self.attachmentOwner = kwargs.pop('owner')
+        attachments = attachment.AttachmentList(self.attachmentOwner.attachments())
+        super(LocalAttachmentViewer, self).__init__(attachmentsToShow=attachments, *args, **kwargs)
+        patterns.Publisher().registerObserver(self.onOriginalAttachmentsChanged, 
+            eventType=self.attachmentOwner.attachmentsChangedEventType(), 
+            eventSource=self.attachmentOwner)
+
+    def onOriginalAttachmentsChanged(self, event): # pylint: disable-msg=W0613
+        self.domainObjectsToView().clear()
+        self.domainObjectsToView().extend(self.attachmentOwner.attachments())
         
+    def newItemCommand(self, *args, **kwargs):
+        return command.AddAttachmentCommand(None, [self.attachmentOwner])
+    
+    def deleteItemCommand(self):
+        return command.RemoveAttachmentCommand(None, [self.attachmentOwner], attachments=self.curselection())
+
 
 class AttachmentsPage(PageWithViewer):
     pageName = 'attachments'
@@ -923,18 +946,11 @@ class AttachmentsPage(PageWithViewer):
     pageIcon = 'paperclip_icon'
     
     def createViewer(self, taskFile, settings, settingsSection):
-        # pylint: disable-msg=W0201
-        self.attachmentsList = attachment.AttachmentList(self.items[0].attachments())
-        return viewer.AttachmentViewer(self, taskFile, settings,
-                                       settingsSection=settingsSection,
-                                       attachmentsToShow=self.attachmentsList)
-
+        return LocalAttachmentViewer(self, taskFile, settings,
+            settingsSection=settingsSection, owner=self.items[0])
+        
     def entries(self):
         return dict(attachments=self.viewer)
-
-    @patterns.eventSource
-    def ok(self, event=None): # pylint: disable-msg=W0221
-        self.items[0].setAttachments(self.attachmentsList, event=event)
 
 
 class NotesPage(PageWithViewer):
@@ -1120,6 +1136,9 @@ class AttachmentEditBook(EditBook):
     def createSubjectPage(self):
         return AttachmentSubjectPage(self.items, self,
                                      self.settings.get('file', 'attachmentbase'))
+    
+    def isDisplayingItemOrChildOfItem(self, targetItem):
+        return targetItem in self.items
     
         
 class EffortEditBook(Page):

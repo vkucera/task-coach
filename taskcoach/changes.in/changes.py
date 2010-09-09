@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.0', 'September 4, 2010',
+Release('1.3.0', 'September 9, 2010',
     summary='''This release ...''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -30,7 +30,7 @@ for OK and Cancel buttons anymore. This currently works for subject,
 description, task priority, attachment location, mutual exclusive subcategories,
 font, icon, colors, start date, due date, completion date, reminder, recurrence,
 should mark completed, percentage complete, budget, hourly fee, fixed fee, 
-categories. 
+categories, attachments. 
 All other attributes remain to be done.
 Updating of data in dialog when attributes change remains to be done.''')
         ]
@@ -62,7 +62,7 @@ the task viewer shows the individual values, so a budget of 20 hours for task A
 and 10 hours for task A1.'''),
         Feature('''The order of tabs in tabbed dialogs can be changed. 
 Task Coach now remembers the order of the tabs in the item edit dialogs and 
-the preferences dialog.'''),
+the preferences dialog.''', 'http://uservoice.com/a/oa7jx'),
         Feature('''When printing, show the sorted column by underlining the
 column header.'''),
         Feature('''Reorganized some menu items differently and added
@@ -80,6 +80,28 @@ dependencies. The task file format version number is now 31.''')
         ]
     ),
 
+Release('1.1.3', 'September 8, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''When closing a edit dialog, don't delete the category, note,
+and attachment viewers in the dialog before the data has been processed.''', 
+            '3059143'),
+        Bug('''The PortableApps platform would override the language selected
+by the user in Task Coach.''', '2965342', '3059429'),
+        Bug('''When retrieving the latest available Task Coach version number
+from the Task Coach website doesn't work, simply ignore that.'''),
+        Bug('''Don't crash when searching efforts with "Include subitems" turned
+on.''')
+        ],
+    featuresAdded=[
+        Feature('''When selecting the language in the preferences dialog, you
+can select 'Let the system determine the language'. If you're using the 
+PortableApps version of Task Coach and the PortableApps platform, the 
+PortableApps platform language will be used. Otherwise, Task Coach
+will let your system's locale determine the language.''')
+        ]
+    ),
+            
 Release('1.1.2', 'September 2, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[

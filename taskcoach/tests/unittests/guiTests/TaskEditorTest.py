@@ -329,23 +329,18 @@ class EditTaskTest(TaskEditorTestCase):
                          self.task.shouldMarkCompletedWhenAllChildrenCompleted())
 
     def testAddAttachment(self):
-        self.editor._interior[8].viewer.onDropFiles(None, ['filename'])
-        self.editor.ok()
+        self.editor._interior[8].viewer.onDropFiles(self.task, ['filename'])
         # pylint: disable-msg=E1101
         self.failUnless('filename' in [att.location() for att in self.task.attachments()])
         self.failUnless('filename' in [att.subject() for att in self.task.attachments()])
         
     def testRemoveAttachment(self):
-        self.editor._interior[8].viewer.presentation().removeItems([self.attachment])
-        self.editor.ok()
+        self.editor._interior[8].viewer.selectall()
+        self.editor._interior[8].viewer.deleteItemCommand().do()
         self.assertEqual([], self.task.attachments()) # pylint: disable-msg=E1101
 
 
 class EditTaskWithChildrenTest(TaskEditorTestCase):
-    def setUp(self):
-        super(EditTaskWithChildrenTest, self).setUp()
-        #self.setSubject('New Parent Subject')
-
     def createCommand(self):
         return command.EditTaskCommand(self.taskList, [self.parent])
 

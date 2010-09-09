@@ -48,10 +48,7 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.SortableViewerWithC
     
     def curselectionIsInstanceOf(self, class_):
         return class_ == attachment.Attachment
-
-    def _addAttachments(self, attachments, index, **itemDialogKwargs):
-        self.presentation().extend(attachments)
-
+    
     def createWidget(self):
         imageList = self.createImageList()
         itemPopupMenu = menu.AttachmentPopupMenu(self.parent, self.settings,
@@ -122,7 +119,8 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.SortableViewerWithC
         commands = super(AttachmentViewer, self).createToolBarUICommands()
         commands[-2:-2] = [None,
                            uicommand.AttachmentNew(attachments=self.presentation(),
-                                                   settings=self.settings),
+                                                   settings=self.settings,
+                                                   viewer=self),
                            uicommand.AttachmentEdit(attachments=self.presentation(),
                                                     viewer=self),
                            uicommand.AttachmentDelete(attachments=self.presentation(),
@@ -143,10 +141,7 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.SortableViewerWithC
                                      'mail': 'email'}[anAttachment.type_]]
         except KeyError:
             return -1
-    
-    def deleteItemCommand(self):
-        return command.DeleteAttachmentCommand(self.presentation(), self.curselection())
-    
+
     def itemEditorClass(self):
         return dialog.editor.AttachmentEditor
 

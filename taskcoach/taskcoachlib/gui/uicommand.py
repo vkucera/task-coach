@@ -1985,7 +1985,7 @@ class NoteDragAndDrop(DragAndDropCommand, NotesCommand):
                                               drop=[dropItem])
  
                                                         
-class AttachmentNew(AttachmentsCommand, SettingsCommand):
+class AttachmentNew(AttachmentsCommand, ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         attachments = kwargs['attachments']
         if 'menuText' not in kwargs:
@@ -1994,10 +1994,7 @@ class AttachmentNew(AttachmentsCommand, SettingsCommand):
         super(AttachmentNew, self).__init__(bitmap='new', *args, **kwargs)
 
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
-        attachmentDialog = dialog.editor.AttachmentEditor(self.mainWindow(), 
-            command.NewAttachmentCommand(self.attachments),
-            self.settings, self.attachments, self.mainWindow().taskFile, 
-            bitmap=self.bitmap)
+        attachmentDialog = self.viewer.newItemDialog(bitmap=self.bitmap)
         attachmentDialog.Show(show)
         return attachmentDialog # for testing purposes
 

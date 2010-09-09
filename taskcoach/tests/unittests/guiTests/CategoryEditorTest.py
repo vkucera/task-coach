@@ -141,12 +141,11 @@ class EditCategoryTest(CategoryEditorTestCase):
         self.assertEqual('Done', self.category.subject())
 
     def testAddAttachment(self):
-        self.editor._interior[2].viewer.onDropFiles(None, ['filename'])
-        self.editor.ok()
+        self.editor._interior[2].viewer.onDropFiles(self.category, ['filename'])
         self.failUnless('filename' in [att.location() for att in self.category.attachments()])
         self.failUnless('filename' in [att.subject() for att in self.category.attachments()])
         
     def testRemoveAttachment(self):
-        self.editor._interior[2].viewer.presentation().removeItems([self.attachment])
-        self.editor.ok()
+        self.editor._interior[2].viewer.selectall()
+        self.editor._interior[2].viewer.deleteItemCommand().do()
         self.assertEqual([], self.category.attachments())
