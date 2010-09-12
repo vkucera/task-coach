@@ -169,7 +169,10 @@ def img2py(image_file, python_file,
         data = "\n".join(lines)
     finally:
         if os.path.exists(tfname):
-            os.remove(tfname)
+            try:
+                os.remove(tfname)
+            except WindowsError:
+                pass
 
     old_index = []
     if catalog and append and python_file != '-':
