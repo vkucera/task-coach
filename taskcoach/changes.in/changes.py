@@ -22,6 +22,15 @@ from changetypes import *
 
 releases = [
             
+Release('1.1.4', 'September 12, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Task Coach would not properly use the system's locale to select
+the language if the language was set to 'Let the system determine the 
+language', resulting in the wrong language being used.''', '3064566')
+        ]
+    ),
+            
 Release('1.1.3', 'September 10, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
