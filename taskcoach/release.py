@@ -314,7 +314,8 @@ def uploading_website(settings, options):
 
 def announcing(settings, options):
     registering_with_PyPI(settings, options)
-    announcing_on_Twitter(settings, options)
+    #announcing_on_Twitter(settings, options) Doesn't work
+    print 'WARNING: you need to announce on Twitter manually'
     announcing_on_Identica(settings, options)
     announcing_on_Freshmeat(settings, options)
     mailing_announcement(settings, options)

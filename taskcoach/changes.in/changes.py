@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.0', 'September 9, 2010',
+Release('1.3.0', 'September 12, 2010',
     summary='''This release ...''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -36,7 +36,7 @@ Updating of data in dialog when attributes change remains to be done.''')
         ]
     ),
     
-Release('1.2.0', 'September 2, 2010',
+Release('1.2.0', 'September 12, 2010',
     summary='''This release adds task dependencies.''',
     featuresAdded=[
         Feature('''Tasks can have one or more prerequisite tasks. As long as 
@@ -80,7 +80,16 @@ dependencies. The task file format version number is now 31.''')
         ]
     ),
 
-Release('1.1.3', 'September 8, 2010',
+Release('1.1.4', 'September 12, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Task Coach would not properly use the system's locale to select
+the language if the language was set to 'Let the system determine the 
+language', resulting in the wrong language being used.''', '3064566')
+        ]
+    ),
+            
+Release('1.1.3', 'September 10, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''When closing a edit dialog, don't delete the category, note,
