@@ -535,6 +535,9 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
                           task.Task.notesChangedEventType()):
             self.registerObserver(self.onAttributeChanged, eventType)
 
+    def isTreeViewer(self):
+        return False
+
     def onEverySecond(self, event): # pylint: disable-msg=W0221,W0613
         pass # Too expensive
 
