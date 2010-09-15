@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.1.4', 'September 14, 2010',
+Release('1.1.4', 'September 15, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Task Coach would not properly use the system's locale to select
@@ -30,6 +30,10 @@ the language if the language was set to 'Let the system determine the
 language', resulting in the wrong language being used.''', '3064566'),
         Bug('''Don't switch top/bottom and left/right margins in the print
 preview.''')
+        ],
+    featuresAdded=[
+        Feature('''Allow hiding composite tasks in calendar view.''',
+                'http://uservoice.com/a/aul3S')
         ]
     ),
             
@@ -51,9 +55,7 @@ on.'''),
 can select 'Let the system determine the language'. If you're using the 
 PortableApps version of Task Coach and the PortableApps platform, the 
 PortableApps platform language will be used. Otherwise, Task Coach
-will let your system's locale determine the language.'''),
-        Feature('''Allow hiding composite tasks in calendar view.''',
-                'http://uservoice.com/a/aul3S')
+will let your system's locale determine the language.''')
         ]
     ),
             
