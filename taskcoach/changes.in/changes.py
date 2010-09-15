@@ -44,14 +44,16 @@ by the user in Task Coach.''', '2965342', '3059429'),
         Bug('''When retrieving the latest available Task Coach version number
 from the Task Coach website doesn't work, simply ignore that.'''),
         Bug('''Don't crash when searching efforts with "Include subitems" turned
-on.''')
+on.'''),
         ],
     featuresAdded=[
         Feature('''When selecting the language in the preferences dialog, you
 can select 'Let the system determine the language'. If you're using the 
 PortableApps version of Task Coach and the PortableApps platform, the 
 PortableApps platform language will be used. Otherwise, Task Coach
-will let your system's locale determine the language.''')
+will let your system's locale determine the language.'''),
+        Feature('''Allow hiding composite tasks in calendar view.''',
+                'http://uservoice.com/a/aul3S')
         ]
     ),
             
