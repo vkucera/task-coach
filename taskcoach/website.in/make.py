@@ -152,19 +152,19 @@ windowsOptions = dict(platform='Microsoft Windows',
 
 windowsInstaller = download_table(image='windows',
                                   download_url='%(dist_download_prefix)s/%(filename)s-%(version)s-win32.exe',
-                                  package_type='Installer',
+                                  package_type='%(name)s Installer',
                                   installation='run the installer; it will guide you through the installation process',
                                   **windowsOptions)
  
 windowsPortableApp = download_table(image='portableApps',
                                     download_url='%(dist_download_prefix)s/%(filename)sPortable_%(version)s.paf.exe',
-                                    package_type='TaskCoachPortable portable app',
+                                    package_type='%(name)s Portable (PortableApps.com Format)',
                                     installation='run the installer; it will guide you through the installation process',
                                     **windowsOptions)
 
 windowsPenPack = download_table(image='winPenPack',
                                 download_url='%(dist_download_prefix)s/X-%(filename)s_%(version)s_rev1.zip',
-                                package_type='winPenPack portable app',
+                                package_type='%(name)s Portable (winPenPack Format)',
                                 installation='unzip the archive contents in the location where you want %(name)s to be installed',
                                 **windowsOptions) 
   
