@@ -369,8 +369,8 @@
 		A680C0C50F47366900A8D18B /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A680C0D10F47367F00A8D18B /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/DatePickerView.xib; sourceTree = "<group>"; };
 		A680C0D20F47367F00A8D18B /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/MainWindow.xib; sourceTree = "<group>"; };
-		A680C0D60F47368E00A8D18B /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/DatePickerView.strings; sourceTree = "<group>"; };
-		A680C0D80F47368E00A8D18B /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/MainWindow.strings; sourceTree = "<group>"; };
+		A680C0D60F47368E00A8D18B /* fr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/DatePickerView.strings; sourceTree = "<group>"; };
+		A680C0D80F47368E00A8D18B /* fr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/MainWindow.strings; sourceTree = "<group>"; };
 		A6831FFD102EB057002A7083 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TaskView.xib; sourceTree = "<group>"; };
 		A6832032102EB42F002A7083 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/TaskView.xib; sourceTree = "<group>"; };
 		A6832037102EB499002A7083 /* fr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/TaskView.strings; sourceTree = "<group>"; };
@@ -625,11 +625,11 @@
 				A68EDEC30F1E1F1700F51FF2 /* MainWindow.xib */,
 				A6831FFC102EB057002A7083 /* TaskView.xib */,
 				A6D386880F24B4450097F0F6 /* DatePickerView.xib */,
+				A66C188811C386B90081C175 /* TaskDetailsRecurrencePeriodPicker.xib */,
 				A6D8AC020F221BFA006894AA /* Settings.bundle */,
 				A67A0C200F6BA57100F48A82 /* Entitlements.plist */,
 				A6E46385113028A500976293 /* SyncView.xib */,
 				A60B6EE410258EB200F9983C /* TaskCategoryPicker.xib */,
-				A66C188811C386B90081C175 /* TaskDetailsRecurrencePeriodPicker.xib */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
