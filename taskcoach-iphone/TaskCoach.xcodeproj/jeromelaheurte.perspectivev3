@@ -277,6 +277,8 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
+									<integer>8</integer>
+									<integer>7</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -326,7 +328,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A63FF6D4124621B30077D45C</string>
+										<string>A6F05CE8124623AD00393C44</string>
 										<key>history</key>
 										<array>
 											<string>A627F04E10E7558600B856F4</string>
@@ -565,7 +567,7 @@
 											<string>A63FF69B124620B90077D45C</string>
 											<string>A63FF69C124620B90077D45C</string>
 											<string>A63FF69D124620B90077D45C</string>
-											<string>A63FF69F124620B90077D45C</string>
+											<string>A6F05CD41246234700393C44</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -605,8 +607,6 @@
 									<dict>
 										<key>Frame</key>
 										<string>{{10, 27}, {1171, 317}}</string>
-										<key>RubberWindowFrame</key>
-										<string>45 154 1528 1248 0 0 2560 1418 </string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -661,6 +661,8 @@
 									<dict>
 										<key>Frame</key>
 										<string>{{10, 27}, {1171, 317}}</string>
+										<key>RubberWindowFrame</key>
+										<string>45 154 1528 1248 0 0 2560 1418 </string>
 									</dict>
 									<key>Module</key>
 									<string>PBXBuildResultsModule</string>
@@ -688,11 +690,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A63FF6C8124620E70077D45C</string>
+				<string>A6F05CE9124623AD00393C44</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A63FF6C9124620E70077D45C</string>
+				<string>A6F05CEA124623AD00393C44</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A63FF6CA124620E70077D45C</string>
+				<string>A6F05CEB124623AD00393C44</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -841,13 +843,13 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A638CAD012461ABA006A664F</string>
+				<string>A6F05CEC124623AD00393C44</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A638CAD112461ABA006A664F</string>
-				<string>A638CAD212461ABA006A664F</string>
-				<string>A638CAD312461ABA006A664F</string>
-				<string>A638CAD412461ABA006A664F</string>
+				<string>A6F05CED124623AD00393C44</string>
+				<string>A6F05CEE124623AD00393C44</string>
+				<string>A6F05CEF124623AD00393C44</string>
+				<string>A6F05CF0124623AD00393C44</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
