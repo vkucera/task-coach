@@ -33,7 +33,9 @@ preview.''')
         ],
     featuresAdded=[
         Feature('''Allow hiding composite tasks in calendar view.''',
-                'http://uservoice.com/a/aul3S')
+                'http://uservoice.com/a/aul3S'),
+        Feature('''In the tree/list task viewer, allow additional selection
+with Cmd-click on Mac OS X.'''),
         ]
     ),
             
