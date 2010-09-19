@@ -1,7 +1,7 @@
-﻿"" = "Project-Id-Version: Task Coach\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2010-07-11 10:17+0200\nPO-Revision-Date: 2010-08-14 08:23+0000\nLast-Translator: Jérôme Laheurte <fraca7@free.fr>\nLanguage-Team: Jérôme Laheurte <fraca7@free.fr>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Launchpad-Export-Date: 2010-08-28 08:04+0000\nX-Generator: Launchpad (build Unknown)\nX-Poedit-Country: France\nX-Poedit-Language: fr\nX-Poedit-SourceCharset: utf-8\n";
+﻿"" = "Project-Id-Version: Task Coach\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2010-08-28 10:51+0200\nPO-Revision-Date: 2010-08-28 14:23+0000\nLast-Translator: Jérôme Laheurte <fraca7@free.fr>\nLanguage-Team: Jérôme Laheurte <fraca7@free.fr>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Launchpad-Export-Date: 2010-09-19 10:20+0000\nX-Generator: Launchpad (build Unknown)\nX-Poedit-Country: France\nX-Poedit-Language: fr\nX-Poedit-SourceCharset: utf-8\n";
 
 /* File: Classes/TaskDetailsControlleriPad.m:157 */
-/* File: Classes/TaskDetailsEffortsBase.m:357 */
+/* File: Classes/TaskDetailsEffortsBase.m:362 */
 /* Flag: objc-format */
 "Started %@" = "Démarrée %@";
 
@@ -37,26 +37,26 @@
 /* Flag: objc-format */
 "%@" = "%@";
 
-/* File: Classes/TaskDetailsControlleriPad.m:187 */
+/* File: Classes/TaskDetailsControlleriPad.m:188 */
 "No category." = "Pas de catégories.";
 
-/* File: Classes/TaskDetailsControlleriPad.m:352 */
+/* File: Classes/TaskDetailsControlleriPad.m:353 */
 /* File: Classes/TaskDetailsGeneral.m:128 */
 "New task" = "Nouvelle tâche";
 
-/* File: Classes/Utils/String+Utils.m:49 */
+/* File: Classes/Utils/String+Utils.m:87 */
 /* Flag: objc-format */
 "%d sec" = "%d secondes";
 
-/* File: Classes/Utils/String+Utils.m:53 */
+/* File: Classes/Utils/String+Utils.m:91 */
 /* Flag: objc-format */
 "%d min" = "%d minutes";
 
-/* File: Classes/Utils/String+Utils.m:57 */
+/* File: Classes/Utils/String+Utils.m:95 */
 /* Flag: objc-format */
 "%d hours" = "%d heures";
 
-/* File: Classes/Utils/String+Utils.m:61 */
+/* File: Classes/Utils/String+Utils.m:99 */
 /* Flag: objc-format */
 "%d days" = "%d jours";
 
@@ -77,50 +77,63 @@
 
 /* File: Classes/CategoryTaskViewController.m:49 */
 /* File: Classes/CategoryTaskViewController.m:73 */
-/* File: Classes/CategoryViewController.m:596 */
+/* File: Classes/CategoryViewController.m:601 */
 "All" = "Toutes";
 
 /* File: Classes/CategoryTaskViewController.m:133 */
-/* File: Classes/TaskCoachAppDelegate.m:38 */
+/* File: Classes/TaskCoachAppDelegate.m:44 */
+/* File: Classes/TaskCoachAppDelegate.m:55 */
+/* File: Classes/TaskCoachAppDelegate.m:59 */
 /* File: Classes/TaskDetailsGeneral.m:55 */
 "Categories" = "Catégories";
 
-/* File: Classes/SyncViewController.m:65 */
-/* File: Classes/Synchronization/InitialState.m:28 */
+/* File: Classes/SyncViewController.m:68 */
+/* File: Classes/Synchronization/InitialState.m:25 */
 "Connecting..." = "Connexion...";
 
-/* File: Classes/SyncViewController.m:148 */
-"Task Coach sync log" = "Journal de syncronisation Task Coach";
+/* File: Classes/SyncViewController.m:158 */
+/* File: Classes/Synchronization/BaseState.m:55 */
+/* File: Classes/Synchronization/BaseState.m:70 */
+/* File: Classes/Synchronization/ProtocolNegotiationState.m:68 */
+"Error" = "Erreur";
 
-/* File: Classes/SyncViewController.m:177 */
-"Debug" = "Débogage";
+/* File: Classes/SyncViewController.m:158 */
+"Your e-mail settings are not set." = "Vous n'avez pas configuré votre e-mail.";
 
-/* File: Classes/SyncViewController.m:177 */
-"Do you want to send the sync log by e-mail ?" = "Voulez-vous envoyer le journal de syncronisation par courriel ?";
-
-/* File: Classes/SyncViewController.m:177 */
-/* File: Classes/TaskViewController.m:601 */
-/* File: Classes/TaskDetailsEffortsBase.m:157 */
-"No" = "Non";
-
-/* File: Classes/SyncViewController.m:178 */
-/* File: Classes/TaskViewController.m:602 */
-/* File: Classes/TaskDetailsEffortsBase.m:157 */
-"Yes" = "Oui";
-
+/* File: Classes/SyncViewController.m:158 */
 /* File: Classes/SimpleDatePicker.m:37 */
 /* File: Classes/StringChoiceAlert.m:16 */
 /* File: Classes/NewCategoryiPad.m:41 */
-/* File: Classes/Synchronization/AuthentificationState.m:30 */
+/* File: Classes/Synchronization/AuthentificationState.m:31 */
 /* File: Classes/Synchronization/ProtocolNegotiationState.m:71 */
-/* File: Classes/ReminderController.m:88 */
+/* File: Classes/ReminderController.m:89 */
 "OK" = "OK";
 
+/* File: Classes/SyncViewController.m:165 */
+"Task Coach sync log" = "Journal de syncronisation Task Coach";
+
+/* File: Classes/SyncViewController.m:197 */
+"Debug" = "Débogage";
+
+/* File: Classes/SyncViewController.m:197 */
+"Do you want to send the sync log by e-mail ?" = "Voulez-vous envoyer le journal de syncronisation par courriel ?";
+
+/* File: Classes/SyncViewController.m:197 */
+/* File: Classes/TaskViewController.m:556 */
+/* File: Classes/TaskDetailsEffortsBase.m:161 */
+"No" = "Non";
+
+/* File: Classes/SyncViewController.m:198 */
+/* File: Classes/TaskViewController.m:557 */
+/* File: Classes/TaskDetailsEffortsBase.m:161 */
+"Yes" = "Oui";
+
 /* File: Classes/StringChoiceAlert.m:16 */
-/* File: Classes/TaskViewController.m:362 */
-/* File: Classes/TaskCoachAppDelegate.m:36 */
-/* File: Classes/Synchronization/AuthentificationState.m:29 */
-/* File: Classes/TaskDetailsEffortsBase.m:157 */
+/* File: Classes/TaskViewController.m:321 */
+/* File: Classes/TaskCoachAppDelegate.m:52 */
+/* File: Classes/TaskCoachAppDelegate.m:64 */
+/* File: Classes/Synchronization/AuthentificationState.m:30 */
+/* File: Classes/TaskDetailsEffortsBase.m:161 */
 "Cancel" = "Annuler";
 
 /* File: Classes/TaskDetailsRecurrencePeriodPicker.m:70 */
@@ -135,51 +148,52 @@
 /* File: Classes/TaskDetailsRecurrencePeriodPicker.m:76 */
 "Yearly" = "Annuel";
 
+/* File: Classes/TaskViewController.m:155 */
 /* File: Classes/TaskViewController.m:169 */
-/* File: Classes/TaskViewController.m:183 */
-/* File: Classes/TaskViewController.m:292 */
 "Search tasks..." = "Rechercher des tâches...";
 
-/* File: Classes/TaskViewController.m:362 */
-/* File: Classes/TaskViewController.m:364 */
+/* File: Classes/TaskViewController.m:321 */
+/* File: Classes/TaskViewController.m:323 */
 "Grouping" = "Regroupement";
 
-/* File: Classes/TaskViewController.m:366 */
+/* File: Classes/TaskViewController.m:325 */
 "Status" = "État";
 
-/* File: Classes/TaskViewController.m:367 */
+/* File: Classes/TaskViewController.m:326 */
 "Priority" = "Priorité";
 
-/* File: Classes/TaskViewController.m:368 */
+/* File: Classes/TaskViewController.m:327 */
+/* File: Classes/TaskCoachAppDelegate.m:38 */
 "Start date" = "Date de départ";
 
-/* File: Classes/TaskViewController.m:369 */
+/* File: Classes/TaskViewController.m:328 */
+/* File: Classes/TaskCoachAppDelegate.m:39 */
 "Due date" = "Date dûe";
 
-/* File: Classes/TaskViewController.m:599 */
+/* File: Classes/TaskViewController.m:554 */
 "Confirmation" = "Confirmation";
 
-/* File: Classes/TaskViewController.m:600 */
+/* File: Classes/TaskViewController.m:555 */
 /* Flag: objc-format */
 "Do you really want to mark \"%@\" complete ?" = "Voulez-vous vraiment marquer \"%@\" terminée ?";
 
-/* File: Classes/TaskViewController.m:647 */
+/* File: Classes/TaskViewController.m:602 */
 "Overdue" = "En dépassement";
 
-/* File: Classes/TaskViewController.m:649 */
+/* File: Classes/TaskViewController.m:604 */
 "Due soon" = "Dûe(s) bientôt";
 
-/* File: Classes/TaskViewController.m:651 */
+/* File: Classes/TaskViewController.m:606 */
 "Started" = "Démarrée(s)";
 
-/* File: Classes/TaskViewController.m:653 */
+/* File: Classes/TaskViewController.m:608 */
 "Not started" = "Pas démarrée(s)";
 
-/* File: Classes/TaskViewController.m:655 */
-/* File: Classes/ReminderController.m:89 */
+/* File: Classes/TaskViewController.m:610 */
+/* File: Classes/ReminderController.m:90 */
 "Completed" = "Terminée";
 
-/* File: Classes/TaskViewController.m:719 */
+/* File: Classes/TaskViewController.m:674 */
 "Add task..." = "Ajouter une tâche...";
 
 /* File: Classes/TaskCellBig.m:88 */
@@ -189,27 +203,47 @@
 /* File: Classes/DateCell.m:38 */
 "None" = "Aucune";
 
-/* File: Classes/CategoryViewController.m:230 */
-/* File: Classes/CategoryViewController.m:422 */
-/* File: Classes/CategoryViewController.m:458 */
-/* File: Classes/CategoryViewController.m:479 */
+/* File: Classes/CategoryViewController.m:234 */
+/* File: Classes/CategoryViewController.m:423 */
+/* File: Classes/CategoryViewController.m:459 */
+/* File: Classes/CategoryViewController.m:480 */
 "Enter category name" = "Entrez le nom de la catégorie";
 
-/* File: Classes/CategoryViewController.m:566 */
+/* File: Classes/CategoryViewController.m:571 */
 "Add subcategory" = "Ajouter une sous-catégorie";
 
-/* File: Classes/CategoryViewController.m:631 */
-/* File: Classes/CategoryViewController.m:666 */
+/* File: Classes/CategoryViewController.m:634 */
+/* File: Classes/CategoryViewController.m:662 */
 "Looking for Task Coach" = "Recherche de Task Coach";
 
-/* File: Classes/TaskCoachAppDelegate.m:37 */
-"Save" = "Sauver";
+/* File: Classes/TaskCoachAppDelegate.m:40 */
+"Completion date" = "Date de complétion";
 
-/* File: Classes/TaskCoachAppDelegate.m:39 */
+/* File: Classes/TaskCoachAppDelegate.m:41 */
+/* File: Classes/ReminderController.m:89 */
+/* File: Classes/TaskDetailsDates.m:61 */
+"Reminder" = "Rappel";
+
+/* File: Classes/TaskCoachAppDelegate.m:42 */
+/* File: Classes/TaskDetailsDates.m:66 */
+/* File: Classes/TaskDetailsRecurrenceControlleriPad.m:82 */
+"Recurrence" = "Récurrence";
+
+/* File: Classes/TaskCoachAppDelegate.m:43 */
+/* File: Classes/TaskDetailsEffortsBase.m:141 */
+"Start tracking" = "Démarrer le suivi";
+
+/* File: Classes/TaskCoachAppDelegate.m:45 */
+"Activity log" = "Journal d'activité";
+
+/* File: Classes/TaskCoachAppDelegate.m:48 */
+/* File: Classes/TaskCoachAppDelegate.m:56 */
+/* File: Classes/TaskCoachAppDelegate.m:60 */
 "Sync" = "Sync";
 
-/* File: Classes/TaskCoachAppDelegate.m:40 */
-"Activity log" = "Journal d'activité";
+/* File: Classes/TaskCoachAppDelegate.m:51 */
+/* File: Classes/TaskCoachAppDelegate.m:63 */
+"Save" = "Sauver";
 
 /* File: Classes/NewCategoryiPad.m:39 */
 "Category name" = "Nom de la catégorie";
@@ -222,27 +256,22 @@
 /* Flag: objc-format */
 "Priority: %@" = "Priorité: %@";
 
-/* File: Classes/Synchronization/AuthentificationState.m:26 */
+/* File: Classes/Synchronization/AuthentificationState.m:27 */
 "Please type your password." = "Veuillez entrer votre mot de passe.";
 
-/* File: Classes/Synchronization/AuthentificationState.m:44 */
+/* File: Classes/Synchronization/AuthentificationState.m:45 */
 "Authentication" = "Authentification";
 
-/* File: Classes/Synchronization/InitialState.m:56 */
+/* File: Classes/Synchronization/InitialState.m:53 */
 "Connection error" = "Erreur de connexion";
 
-/* File: Classes/Synchronization/InitialState.m:57 */
+/* File: Classes/Synchronization/InitialState.m:54 */
 "An error occurred while connecting to the remote host. Please check your settings. Also check that Task Coach is running on the remote host. Last, check your firewall settings." = "Une erreur est survenue lors de la connexion à l'hôte distant. Veuillez vérifier vos paramètres. Vérifier également que Task Coach tourne sur l'hôte distant. Enfin, vérifiez la configuration de votre pare-feu.";
 
-/* File: Classes/Synchronization/InitialState.m:58 */
+/* File: Classes/Synchronization/InitialState.m:55 */
 /* File: Classes/Synchronization/BaseState.m:57 */
 /* File: Classes/Synchronization/BaseState.m:72 */
 "Abort" = "Abandonner";
-
-/* File: Classes/Synchronization/BaseState.m:55 */
-/* File: Classes/Synchronization/BaseState.m:70 */
-/* File: Classes/Synchronization/ProtocolNegotiationState.m:68 */
-"Error" = "Erreur";
 
 /* File: Classes/Synchronization/BaseState.m:56 */
 "The connection was unexpectedly closed." = "La connexion a été fermée de manière innatendue.";
@@ -269,34 +298,27 @@
 /* File: Classes/TaskDetailsController.m:44 */
 "Efforts" = "Efforts";
 
-/* File: Classes/TaskDetailsEffortsBase.m:135 */
+/* File: Classes/TaskDetailsEffortsBase.m:138 */
 "Stop tracking" = "Arrêter le suivi";
 
-/* File: Classes/TaskDetailsEffortsBase.m:138 */
-"Start tracking" = "Démarrer le suivi";
-
-/* File: Classes/TaskDetailsEffortsBase.m:156 */
+/* File: Classes/TaskDetailsEffortsBase.m:160 */
 "Warning" = "Avertissement";
 
-/* File: Classes/TaskDetailsEffortsBase.m:156 */
+/* File: Classes/TaskDetailsEffortsBase.m:160 */
 /* Flag: objc-format */
 "There are %d task(s) currently tracked. Stop tracking them ?" = "Il y a %d tâche(s) suivies. Voulez-vous stopper leur suivi ?";
 
-/* File: Classes/TaskDetailsEffortsBase.m:333 */
+/* File: Classes/TaskDetailsEffortsBase.m:338 */
 /* Flag: objc-format */
 "Total spent: %@" = "Temps total: %@";
 
-/* File: Classes/TaskDetailsEffortsBase.m:345 */
+/* File: Classes/TaskDetailsEffortsBase.m:350 */
 /* Flag: objc-format */
 "From %@ to %@ (%@)" = "De %@ à %@ (%@)";
 
-/* File: Classes/TaskDetailsEffortsBase.m:352 */
+/* File: Classes/TaskDetailsEffortsBase.m:357 */
 /* Flag: objc-format */
 "%@ on %@" = "%@ le %@";
-
-/* File: Classes/ReminderController.m:88 */
-/* File: Classes/TaskDetailsDates.m:61 */
-"Reminder" = "Rappel";
 
 /* File: Classes/TaskDetailsDates.m:43 */
 "Start" = "Démarrer";
@@ -306,10 +328,6 @@
 
 /* File: Classes/TaskDetailsDates.m:55 */
 "Completion" = "Terminée";
-
-/* File: Classes/TaskDetailsDates.m:66 */
-/* File: Classes/TaskDetailsRecurrenceControlleriPad.m:82 */
-"Recurrence" = "Récurrence";
 
 /* File: Classes/TaskDetailsDates.m:78 */
 /* File: Classes/TaskDetailsRecurrenceControlleriPad.m:83 */
