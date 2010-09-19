@@ -1,4 +1,6 @@
 
+==== 3.0: 2010-09-19 ====
+
 2010-08-28  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* misc: Remove calendar view; it's useless
 	* misc: Sort subcategories by name

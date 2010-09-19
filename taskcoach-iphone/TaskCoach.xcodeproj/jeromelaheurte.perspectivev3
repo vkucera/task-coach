@@ -298,7 +298,7 @@
 							<real>335</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>57 149 1528 1248 0 0 2560 1418 </string>
+						<string>46 148 1528 1248 0 0 2560 1418 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -314,7 +314,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>TaskCoachAppDelegate.m</string>
+								<string>CHANGELOG</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -322,11 +322,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>TaskCoachAppDelegate.m</string>
+										<string>CHANGELOG</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A6AC97331228FE900059DF65</string>
+										<string>A638CAD712461ABA006A664F</string>
 										<key>history</key>
 										<array>
 											<string>A627F04E10E7558600B856F4</string>
@@ -542,7 +542,6 @@
 											<string>A6EE2C9F120EA2F3003AB52B</string>
 											<string>A6EE2CA0120EA2F3003AB52B</string>
 											<string>A6A57B051211CE670025EF63</string>
-											<string>A65575091216B60A005A21F0</string>
 											<string>A61A5D0E1216BAD900BE3AA0</string>
 											<string>A6FC3CF41216E9600054B289</string>
 											<string>A69CF08C1228ECC500686DFE</string>
@@ -562,8 +561,9 @@
 											<string>A69678B61228F43F0075A284</string>
 											<string>A6FF3EC61228F7BE004629E7</string>
 											<string>A6FF3EC71228F7BE004629E7</string>
-											<string>A6AC972E1228FE900059DF65</string>
-											<string>A69678B71228F43F0075A284</string>
+											<string>A638CAAF12461A89006A664F</string>
+											<string>A638CAB012461A89006A664F</string>
+											<string>A638CAB312461AB5006A664F</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -579,7 +579,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {1171, 879}}</string>
 								<key>RubberWindowFrame</key>
-								<string>57 149 1528 1248 0 0 2560 1418 </string>
+								<string>46 148 1528 1248 0 0 2560 1418 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
@@ -603,8 +603,6 @@
 									<dict>
 										<key>Frame</key>
 										<string>{{10, 27}, {1171, 317}}</string>
-										<key>RubberWindowFrame</key>
-										<string>57 149 1528 1248 0 0 2560 1418 </string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -659,6 +657,8 @@
 									<dict>
 										<key>Frame</key>
 										<string>{{10, 27}, {1171, 317}}</string>
+										<key>RubberWindowFrame</key>
+										<string>46 148 1528 1248 0 0 2560 1418 </string>
 									</dict>
 									<key>Module</key>
 									<string>PBXBuildResultsModule</string>
@@ -686,11 +686,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6AC97301228FE900059DF65</string>
+				<string>A638CACD12461ABA006A664F</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A6AC97311228FE900059DF65</string>
+				<string>A638CACE12461ABA006A664F</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A6AC97321228FE900059DF65</string>
+				<string>A638CACF12461ABA006A664F</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -839,13 +839,13 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6FF3ECD1228F7BE004629E7</string>
+				<string>A638CAD012461ABA006A664F</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A6FF3ECE1228F7BE004629E7</string>
-				<string>A6FF3ECF1228F7BE004629E7</string>
-				<string>A6FF3ED01228F7BE004629E7</string>
-				<string>A6FF3ED11228F7BE004629E7</string>
+				<string>A638CAD112461ABA006A664F</string>
+				<string>A638CAD212461ABA006A664F</string>
+				<string>A638CAD312461ABA006A664F</string>
+				<string>A638CAD412461ABA006A664F</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
@@ -878,10 +878,12 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
+		<string>A638CAD512461ABA006A664F</string>
+		<string>A638CAD612461ABA006A664F</string>
 		<string>/Users/jeromelaheurte/Dev/TaskCoach/taskcoach-trunk/taskcoach-iphone/TaskCoach.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>57 149 1528 1248 0 0 2560 1418 </string>
+	<string>46 148 1528 1248 0 0 2560 1418 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>
