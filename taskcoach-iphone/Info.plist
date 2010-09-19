@@ -15,10 +15,11 @@
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
-	<key>CFBundleIconFile</key>
-	<string>TaskCoach.png</string>
-	<key>Icon file~ipad</key>
-	<string>TaskCoach-iPad.png</string>
+	<key>CFBundleIconFiles</key>
+	<array>
+		<string>TaskCoach-iPad.png</string>
+		<string>TaskCoach.png</string>
+	</array>
 	<key>CFBundleIdentifier</key>
 	<string>org.taskcoach.iphone</string>
 	<key>CFBundleInfoDictionaryVersion</key>
