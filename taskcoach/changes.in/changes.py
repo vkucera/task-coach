@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.0', 'September 12, 2010',
+Release('1.2.0', 'September 21, 2010',
     summary='''This release adds task dependencies.''',
     featuresAdded=[
         Feature('''Tasks can have one or more prerequisite tasks. As long as 
@@ -66,14 +66,17 @@ dependencies. The task file format version number is now 31.''')
         ]
     ),
 
-Release('1.1.4', 'September 15, 2010',
+Release('1.1.4', 'September 21, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Task Coach would not properly use the system's locale to select
 the language if the language was set to 'Let the system determine the 
 language', resulting in the wrong language being used.''', '3064566'),
         Bug('''Don't switch top/bottom and left/right margins in the print
-preview.''')
+preview.'''),
+        Bug('''Refresh task viewer filters every minute so that
+when the task viewer is hiding inactive tasks, inactive tasks that become
+active also become visible.''', '3072013')
         ],
     featuresAdded=[
         Feature('''Allow hiding composite tasks in calendar view.''',

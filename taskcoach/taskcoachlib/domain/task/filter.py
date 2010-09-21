@@ -38,7 +38,7 @@ class ViewFilter(base.Filter):
                           'task.completionDateTime', 'task.prerequisites',
                           task.Task.addChildEventType(),
                           task.Task.removeChildEventType(),
-                          'clock.midnight'):
+                          'clock.minute'):
             publisher.registerObserver(self.onTaskStatusChange,
                 eventType=eventType)
 
