@@ -84,6 +84,6 @@ class NewAttachmentTest(AttachmentEditorTestCase):
         self.assertEqual('Description', self.attachment.description())
         
     def testAddNote(self):
-        self.editor._interior[1].notes.append(note.Note(subject='New note'))
-        self.editor.ok()
+        viewer = self.editor._interior[1].viewer
+        viewer.newItemCommand(viewer.presentation()).do()
         self.assertEqual(1, len(self.attachment.notes()))

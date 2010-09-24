@@ -953,25 +953,42 @@ class AttachmentsPage(PageWithViewer):
         return dict(attachments=self.viewer)
 
 
+class LocalNoteViewer(viewer.BaseNoteViewer):
+    def __init__(self, *args, **kwargs):
+        self.noteOwner = kwargs.pop('owner')
+        notes = note.NoteContainer(self.noteOwner.notes())
+        super(LocalNoteViewer, self).__init__(notesToShow=notes, *args, **kwargs)
+        patterns.Publisher().registerObserver(self.onOriginalNotesChanged,
+            eventType=self.noteOwner.notesChangedEventType(),
+            eventSource=self.noteOwner)
+        
+    def onOriginalNotesChanged(self, event): # pylint: disable-msg=W0613
+        self.domainObjectsToView().clear()
+        self.domainObjectsToView().extend(self.noteOwner.notes())
+        
+    def newItemCommand(self, *args, **kwargs):
+        return command.AddNoteCommand(None, [self.noteOwner])
+    
+    def newSubItemCommand(self):
+        return command.AddSubNoteCommand(None, self.curselection(), owner=self.noteOwner)
+    
+    def deleteItemCommand(self):
+        return command.RemoveNoteCommand(None, [self.noteOwner], notes=self.curselection())
+
+
 class NotesPage(PageWithViewer):
     pageName = 'notes'
     pageTitle = _('Notes')
     pageIcon = 'note_icon'
     
     def createViewer(self, taskFile, settings, settingsSection):
-        # pylint: disable-msg=W0201
-        self.notes = note.NoteContainer(self.items[0].notes())
-        return viewer.BaseNoteViewer(self, taskFile, settings, 
+        return LocalNoteViewer(self, taskFile, settings, 
                                      settingsSection=settingsSection,
-                                     notesToShow=self.notes)
+                                     owner=self.items[0])
 
     def entries(self):
         return dict(notes=self.viewer)
     
-    @patterns.eventSource        
-    def ok(self, event=None): # pylint: disable-msg=W0221
-        self.items[0].setNotes(list(self.notes.rootItems()), event=event)
-
 
 class PrerequisiteViewer(viewer.CheckableTaskViewer):
     def __init__(self, items, *args, **kwargs):

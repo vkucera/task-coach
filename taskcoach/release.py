@@ -52,6 +52,7 @@ Release steps:
 
 import ftplib, smtplib, httplib, urllib, os, glob, sys, getpass, hashlib, \
     base64, ConfigParser, simplejson, codecs, optparse, taskcoachlib.meta
+import oauth2 as oauth
 
 
 def progress(func):
@@ -79,7 +80,8 @@ class Settings(ConfigParser.SafeConfigParser, object):
                         chello=['hostname', 'username', 'password', 'folder'],
                         hypernation=['hostname', 'username', 'password', 'folder'],
                         pypi=['username', 'password'],
-                        twitter=['username', 'password'],
+                        twitter=['consumer_key', 'consumer_secret',
+                                 'oauth_token', 'oauth_token_secret'],
                         identica=['username', 'password'],
                         freshmeat=['auth_code'])
         for section in defaults:
@@ -279,7 +281,7 @@ def announcing_on_Freshmeat(settings, options):
         httpPostRequest(host, path, body, 'application/json', ok=201)
 
 
-def announcing_via_Twitter_Api(settings, options, section, host, api_prefix=''):
+def announcing_via_Basic_Auth_Api(settings, options, section, host, api_prefix=''):
     credentials = ':'.join(settings.get(section, credential) \
                            for credential in ('username', 'password'))
     basic_auth = base64.encodestring(credentials)[:-1]
@@ -297,14 +299,33 @@ def announcing_via_Twitter_Api(settings, options, section, host, api_prefix=''):
                         Authorization='Basic %s'%basic_auth)
 
 
+def announcing_via_OAuth_Api(settings, options, section, host):
+    consumer_key = settings.get(section, 'consumer_key')
+    consumer_secret = settings.get(section, 'consumer_secret')
+    consumer = oauth.Consumer(key=consumer_key, secret=consumer_secret)
+    oauth_token = settings.get(section, 'oauth_token')
+    oauth_token_secret = settings.get(section, 'oauth_token_secret')
+    token = oauth.Token(key=oauth_token, secret=oauth_token_secret)
+    client = oauth.Client(consumer, token)
+    metadata = taskcoachlib.meta.data.metaDict
+    status = 'Release %(version)s of %(name)s is available from %(url)s'%metadata
+    if options.dry_run:
+        print 'Skipping announcing "%s" on %s.'%(status, host)
+    else: 
+        response, content = client.request('http://api.%s/1/statuses/update.json'%host,
+            method='POST', body='status=%s'%status, headers=None)
+        if response.status != 200:
+            print 'Request failed: %d %s'%(response.status, response.reason)
+
+
 @progress
 def announcing_on_Twitter(settings, options):
-    announcing_via_Twitter_Api(settings, options, 'twitter', 'twitter.com')
-    
+    announcing_via_OAuth_Api(settings, options, 'twitter', 'twitter.com')
+
 
 @progress
 def announcing_on_Identica(settings, options):
-    announcing_via_Twitter_Api(settings, options, 'identica', 'identi.ca', '/api')
+    announcing_via_Basic_Auth_Api(settings, options, 'identica', 'identi.ca', '/api')
 
 
 def uploading_website(settings, options):
@@ -314,8 +335,7 @@ def uploading_website(settings, options):
 
 def announcing(settings, options):
     registering_with_PyPI(settings, options)
-    #announcing_on_Twitter(settings, options) Doesn't work
-    print 'WARNING: you need to announce on Twitter manually'
+    announcing_on_Twitter(settings, options)
     announcing_on_Identica(settings, options)
     announcing_on_Freshmeat(settings, options)
     mailing_announcement(settings, options)

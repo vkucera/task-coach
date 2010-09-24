@@ -115,12 +115,9 @@ class SearchFilter(Filter):
         # pylint: disable-msg=W0201
         self.__includeSubItems = includeSubItems
         self.__searchDescription = searchDescription
-
-        try:
-            if matchCase:
-                rx = re.compile(searchString)
-            else:
-                rx = re.compile(searchString, re.IGNORECASE)
+        flag = 0 if matchCase else re.IGNORECASE
+        try:    
+            rx = re.compile(searchString, flag)
         except sre_constants.error:
             if matchCase:
                 self.__searchPredicate = lambda x: x.find(searchString) != -1
@@ -165,12 +162,7 @@ class DeletedFilter(Filter):
                           eventType=eventType)
 
     def onObjectMarkedDeletedOrNot(self, event):
-        items = event.sources()
-        newEvent = patterns.Event()
-        self.removeItemsFromSelf([item for item in items if item.isDeleted()], newEvent)
-        self.extendSelf([item for item in items if not item.isDeleted() \
-            and item in self.observable() and not item in self], newEvent)
-        newEvent.send()
+        self.reset()
 
     def filter(self, items):
         return [item for item in items if not item.isDeleted()]

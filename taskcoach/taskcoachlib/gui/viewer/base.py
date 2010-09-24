@@ -319,6 +319,14 @@ class Viewer(wx.Panel):
         newItemCommand = self.newItemCommand(*args, **kwargs)
         newItemCommand.do()
         return self.editItemDialog(newItemCommand.items, bitmap)
+
+    def newSubItemDialog(self, bitmap):
+        newSubItemCommand = self.newSubItemCommand()
+        newSubItemCommand.do()
+        for item in newSubItemCommand.items:
+            item.parent().expand(True, context=self.settingsSection())
+        return self.editItemDialog(newSubItemCommand.items, bitmap)
+                
     
     def editItemDialog(self, items, bitmap, columnName=''):
         Editor = self.itemEditorClass()
@@ -328,17 +336,6 @@ class Viewer(wx.Panel):
                       self.settings, self.presentation(), self.taskFile, 
                       bitmap=bitmap, columnName=columnName)
         
-    def newSubItemDialog(self, bitmap):
-        Editor = self.itemEditorClass()
-        NewSubItemCommand = self.newSubItemCommandClass()
-        newSubItemCommand = NewSubItemCommand(self.presentation(), 
-                                              self.curselection())
-        for item in newSubItemCommand.items:
-            item.parent().expand(True, context=self.settingsSection())
-        return Editor(wx.GetTopLevelParent(self), newSubItemCommand,
-                      self.settings, self.presentation(), self.taskFile, 
-                      bitmap=bitmap)
-        
     def itemEditorClass(self):
         raise NotImplementedError
     
@@ -347,6 +344,10 @@ class Viewer(wx.Panel):
 
     def newItemCommandClass(self):
         raise NotImplementedError
+    
+    def newSubItemCommand(self):
+        return self.newSubItemCommandClass()(self.presentation(), 
+                                             self.curselection())
 
     def newSubItemCommandClass(self):
         raise NotImplementedError

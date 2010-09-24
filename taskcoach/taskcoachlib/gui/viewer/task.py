@@ -31,7 +31,7 @@ import base, mixin
 
 
 class BaseTaskViewer(mixin.SearchableViewerMixin, 
-                     mixin.FilterableViewerForTasksMixin, 
+                     mixin.FilterableViewerForTasksMixin,
                      base.UpdatePerSecondViewer, base.TreeViewer, 
                      patterns.Observer):
     defaultTitle = _('Tasks')
@@ -48,8 +48,8 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
         return True
 
     def createFilter(self, taskList):
-        tasks = super(BaseTaskViewer, self).createFilter(taskList)
-        return domain.base.DeletedFilter(tasks)
+        tasks = domain.base.DeletedFilter(taskList)
+        return super(BaseTaskViewer, self).createFilter(tasks)
 
     def trackStartEventType(self):
         return task.Task.trackStartEventType()
@@ -534,6 +534,9 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
                           task.Task.attachmentsChangedEventType(),
                           task.Task.notesChangedEventType()):
             self.registerObserver(self.onAttributeChanged, eventType)
+
+    def isTreeViewer(self):
+        return False
 
     def onEverySecond(self, event): # pylint: disable-msg=W0221,W0613
         pass # Too expensive

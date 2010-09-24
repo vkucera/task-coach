@@ -412,20 +412,23 @@ class RemoveAttachmentCommand(BaseCommand):
 class AddNoteCommand(BaseCommand):
     plural_name = _('Add note')
     singular_name = _('Add note to "%s"')
-
+    
     def __init__(self, *args, **kwargs):
         super(AddNoteCommand, self).__init__(*args, **kwargs)
         self.owners = self.items
-        self.items = self.notes = [note.Note(subject=_('New note')) \
-                                   for dummy in self.items]
+        self.__notes = kwargs.get('notes', [note.Note(subject=_('New note')) \
+                                            for dummy in self.owners])
+        self.items = self.__notes
     
-    def addNotes(self):
-        for owner, note in zip(self.owners, self.notes): # pylint: disable-msg=W0621
-            owner.addNote(note)
+    @patterns.eventSource
+    def addNotes(self, event=None):
+        for owner, note in zip(self.owners, self.__notes): # pylint: disable-msg=W0621
+            owner.addNote(note, event=event)
 
-    def removeNotes(self):
-        for owner, note in zip(self.owners, self.notes): # pylint: disable-msg=W0621
-            owner.removeNote(note)
+    @patterns.eventSource
+    def removeNotes(self, event=None):
+        for owner, note in zip(self.owners, self.__notes): # pylint: disable-msg=W0621
+            owner.removeNote(note, event=event)
     
     def do_command(self):
         self.addNotes()
@@ -434,7 +437,76 @@ class AddNoteCommand(BaseCommand):
         self.removeNotes()
         
     def redo_command(self):
-        self.addNotes()    
+        self.addNotes()
+
+
+class AddSubNoteCommand(BaseCommand):
+    plural_name = _('Add subnote')
+    singular_name = _('Add subnote to "%s"')
+    
+    def __init__(self, *args, **kwargs):
+        self.__owner = kwargs.pop('owner')
+        super(AddSubNoteCommand, self).__init__(*args, **kwargs)
+        self.__parents = self.items
+        self.__notes = kwargs.get('notes', [note.Note(subject=_('New subnote'),
+                                                      parent=parent) \
+                                            for parent in self.__parents])
+        self.items = self.__notes
+    
+    @patterns.eventSource
+    def addNotes(self, event=None):
+        for parent, subnote in zip(self.__parents, self.__notes):
+            parent.addChild(subnote, event=event)
+            self.__owner.addNote(subnote, event=event)
+
+    @patterns.eventSource
+    def removeNotes(self, event=None):
+        for parent, subnote in zip(self.__parents, self.__notes):
+            parent.removeChild(subnote, event=event)
+            self.__owner.removeNote(subnote, event=event)
+    
+    def do_command(self):
+        self.addNotes()
+        
+    def undo_command(self):
+        self.removeNotes()
+        
+    def redo_command(self):
+        self.addNotes()
+
+
+class RemoveNoteCommand(BaseCommand):
+    plural_name = _('Remove note')
+    singular_name = _('Remove note from "%s"')
+    
+    def __init__(self, *args, **kwargs):
+        self.__notes = kwargs.pop('notes')
+        super(RemoveNoteCommand, self).__init__(*args, **kwargs)
+
+    @patterns.eventSource
+    def addNotes(self, event=None):
+        kwargs = dict(event=event)
+        for item in self.items:
+            item.addNotes(*self.__notes, **kwargs) # pylint: disable-msg=W0142
+        
+    @patterns.eventSource
+    def removeNotes(self, event=None):
+        # pylint: disable-msg=W0142
+        kwargs = dict(event=event)
+        for item in self.items:
+            for eachNote in self.__notes:
+                if eachNote.parent():
+                    eachNote.parent().removeChild(eachNote, **kwargs)
+            item.removeNotes(*self.__notes, **kwargs) 
+                
+    def do_command(self):
+        self.removeNotes()
+        
+    def undo_command(self):
+        self.addNotes()
+
+    def redo_command(self):
+        self.removeNotes()
 
 
 class EditSubjectCommand(BaseCommand):

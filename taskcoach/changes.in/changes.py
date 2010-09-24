@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.0', 'September 12, 2010',
+Release('1.3.0', 'September 24, 2010',
     summary='''This release ...''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -30,13 +30,13 @@ for OK and Cancel buttons anymore. This currently works for subject,
 description, task priority, attachment location, mutual exclusive subcategories,
 font, icon, colors, start date, due date, completion date, reminder, recurrence,
 should mark completed, percentage complete, budget, hourly fee, fixed fee, 
-categories, attachments. 
+categories, attachments, notes. 
 All other attributes remain to be done.
 Updating of data in dialog when attributes change remains to be done.''')
         ]
     ),
     
-Release('1.2.0', 'September 12, 2010',
+Release('1.2.0', 'September 21, 2010',
     summary='''This release adds task dependencies.''',
     featuresAdded=[
         Feature('''Tasks can have one or more prerequisite tasks. As long as 
@@ -80,12 +80,23 @@ dependencies. The task file format version number is now 31.''')
         ]
     ),
 
-Release('1.1.4', 'September 12, 2010',
+Release('1.1.4', 'September 21, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Task Coach would not properly use the system's locale to select
 the language if the language was set to 'Let the system determine the 
-language', resulting in the wrong language being used.''', '3064566')
+language', resulting in the wrong language being used.''', '3064566'),
+        Bug('''Don't switch top/bottom and left/right margins in the print
+preview.'''),
+        Bug('''Refresh task viewer filters every minute so that
+when the task viewer is hiding inactive tasks, inactive tasks that become
+active also become visible.''', '3072013')
+        ],
+    featuresAdded=[
+        Feature('''Allow hiding composite tasks in calendar view.''',
+                'http://uservoice.com/a/aul3S'),
+        Feature('''In the tree/list task viewer, allow additional selection
+with Cmd-click on Mac OS X.'''),
         ]
     ),
             
@@ -100,7 +111,7 @@ by the user in Task Coach.''', '2965342', '3059429'),
         Bug('''When retrieving the latest available Task Coach version number
 from the Task Coach website doesn't work, simply ignore that.'''),
         Bug('''Don't crash when searching efforts with "Include subitems" turned
-on.''')
+on.'''),
         ],
     featuresAdded=[
         Feature('''When selecting the language in the preferences dialog, you

@@ -37,24 +37,14 @@ class ViewFilter(base.Filter):
         for eventType in ('task.dueDateTime', 'task.startDateTime', 
                           'task.completionDateTime', 'task.prerequisites',
                           task.Task.addChildEventType(),
-                          task.Task.removeChildEventType()):
-            publisher.registerObserver(self.onTaskChange,
+                          task.Task.removeChildEventType(),
+                          'clock.minute'):
+            publisher.registerObserver(self.onTaskStatusChange,
                 eventType=eventType)
-        publisher.registerObserver(self.onMidnight, eventType='clock.midnight')
 
-    def onTaskChange(self, event): # pylint: disable-msg=W0613
-        tasks = self.observable()
-        newEvent = patterns.Event()
-        tasksToRemove = [task for task in tasks if not self.filterTask(task)] # pylint: disable-msg=W0621
-        self.removeItemsFromSelf(tasksToRemove, newEvent)
-        tasksToAdd = [task for task in tasks if self.filterTask(task) \
-                      and task in self.observable() and task not in self]
-        self.extendSelf(tasksToAdd, newEvent)
-        newEvent.send()
-        
-    def onMidnight(self, event): # pylint: disable-msg=W0613
+    def onTaskStatusChange(self, event): # pylint: disable-msg=W0613
         self.reset()
-            
+        
     def setFilteredByDueDateTime(self, dueDateTimeString):
         self.__dueDateTimeFilter = self.stringToDueDateTime(dueDateTimeString)
         self.reset()

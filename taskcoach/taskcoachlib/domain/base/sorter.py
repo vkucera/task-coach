@@ -111,15 +111,18 @@ class TreeSorter(Sorter):
             returns the sortKeyFunction for the sortKey. '''
         return getattr(self.DomainObjectClass, '%sSortFunction'%self._sortKey)\
             (caseSensitive=self._sortCaseSensitive, treeMode=self.treeMode())
-    
+
+    @patterns.eventSource
     def reset(self, *args, **kwargs): # pylint: disable-msg=W0221
         self.__invalidateRootItemCache()
         return super(TreeSorter, self).reset(*args, **kwargs)
 
+    @patterns.eventSource
     def extendSelf(self, items, event=None):
         self.__invalidateRootItemCache()
         return super(TreeSorter, self).extendSelf(items, event=event)
 
+    @patterns.eventSource
     def removeItemsFromSelf(self, itemsToRemove, event=None):
         self.__invalidateRootItemCache()
         # FIXME: Why is it necessary to remove all children explicitly?

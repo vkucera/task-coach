@@ -221,8 +221,8 @@ class NewTaskTest(TaskEditorTestCase):
         self.failUnless(self.errorMessage.startswith(errorMessageStart))
 
     def testAddNote(self):
-        self.editor._interior[7].notes.append(note.Note(subject='New note'))
-        self.editor.ok()
+        viewer = self.editor._interior[7].viewer
+        viewer.newItemCommand(viewer.presentation()).do()
         self.assertEqual(1, len(self.task.notes()))
         
     def testAddNoteWithSubnote(self):
@@ -230,8 +230,10 @@ class NewTaskTest(TaskEditorTestCase):
         child = note.Note(subject='Child')
         parent.addChild(child)
         child.setParent(parent)
-        self.editor._interior[7].notes.extend([parent, child])
-        self.editor.ok()
+        viewer = self.editor._interior[7].viewer
+        viewer.newItemCommand(viewer.presentation()).do()
+        viewer.newSubItemCommandClass()(list=viewer.presentation(), 
+                                        items=viewer.presentation()).do()
         # Only the parent note should be added to the notes list:
         self.assertEqual(1, len(self.task.notes())) 
         

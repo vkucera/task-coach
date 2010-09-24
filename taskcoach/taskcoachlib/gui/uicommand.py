@@ -1927,7 +1927,7 @@ class CategoryDragAndDrop(DragAndDropCommand, CategoriesCommand):
                                                   drop=[dropItem])
 
 
-class NoteNew(NotesCommand, SettingsCommand):
+class NoteNew(NotesCommand, SettingsCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         notes = kwargs['notes']
         if 'menuText' not in kwargs:
@@ -1936,11 +1936,14 @@ class NoteNew(NotesCommand, SettingsCommand):
         super(NoteNew, self).__init__(bitmap='new', *args, **kwargs)
 
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
-        noteDialog = dialog.editor.NoteEditor(self.mainWindow(), 
-            command.NewNoteCommand(self.notes,
-                  categories=self.categoriesForTheNewNote()),
-            self.settings, self.notes, self.mainWindow().taskFile,
-            bitmap=self.bitmap)
+        if self.viewer:
+            noteDialog = self.viewer.newItemDialog(bitmap=self.bitmap)
+        else: 
+            noteDialog = dialog.editor.NoteEditor(self.mainWindow(), 
+                command.NewNoteCommand(self.notes,
+                      categories=self.categoriesForTheNewNote()),
+                self.settings, self.notes, self.mainWindow().taskFile,
+                bitmap=self.bitmap)
         noteDialog.Show(show)
         return noteDialog # for testing purposes
 

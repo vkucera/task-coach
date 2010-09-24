@@ -98,8 +98,8 @@ class NewCategoryTest(CategoryEditorTestCase):
         self.failUnless(self.category.hasExclusiveSubcategories())
         
     def testAddNote(self):
-        self.editor._interior[1].notes.append(note.Note(subject='New note'))
-        self.editor.ok()
+        viewer = self.editor._interior[1].viewer
+        viewer.newItemCommand(viewer.presentation()).do() 
         self.assertEqual(1, len(self.category.notes()))
 
 
