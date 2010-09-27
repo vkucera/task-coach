@@ -859,30 +859,6 @@ class EffortPage(PageWithViewer):
     def entries(self):
         return dict(timeSpent=self.viewer)
         
-        
-class CheckableViewerMixin(object):
-    ''' Keep track of items checked by the user in a checkable viewer. '''
-    def __init__(self, *args, **kwargs):
-        self.__checked = dict()
-        super(CheckableViewerMixin, self).__init__(*args, **kwargs)
-        for item in self.domainObjectsToView():
-            item.expand(context=self.settingsSection())
-            
-    def checkedItems(self):
-        return dict([(item, self.getIsItemChecked(item)) for item in self.presentation()])
-    
-    def getIsItemChecked(self, item):
-        ''' Return our knowledge about the item if we have it, otherwise
-            return whether the item was checked originally. '''
-        return self.__checked.get(item, 
-            super(CheckableViewerMixin, self).getIsItemChecked(item))
-    
-    def onCheck(self, event):
-        ''' Here we keep track of the items checked by the user so that these 
-            items remain checked when refreshing the viewer. ''' 
-        item = self.widget.GetItemPyData(event.GetItem())
-        self.__checked[item] = event.GetItem().IsChecked()
-
 
 class LocalCategoryViewer(viewer.BaseCategoryViewer):
     def __init__(self, items, *args, **kwargs):
@@ -990,20 +966,25 @@ class NotesPage(PageWithViewer):
         return dict(notes=self.viewer)
     
 
-class PrerequisiteViewer(viewer.CheckableTaskViewer):
+class LocalPrerequisiteViewer(viewer.CheckableTaskViewer):
     def __init__(self, items, *args, **kwargs):
         self.__items = items
-        super(PrerequisiteViewer, self).__init__(*args, **kwargs)
+        super(LocalPrerequisiteViewer, self).__init__(*args, **kwargs)
+        for item in self.domainObjectsToView():
+            item.expand(context=self.settingsSection())
 
-    def getIsItemChecked(self, task):
-        return task in self.__items[0].prerequisites()
+    def getIsItemChecked(self, item):
+        return item in self.__items[0].prerequisites()
 
-    def getIsItemCheckable(self, task):
-        return task not in self.__items
+    def getIsItemCheckable(self, item):
+        return item not in self.__items
     
-
-class LocalPrerequisiteViewer(CheckableViewerMixin, PrerequisiteViewer):
-    pass        
+    def onCheck(self, event):
+        item = self.widget.GetItemPyData(event.GetItem())
+        isChecked = event.GetItem().IsChecked()
+        if isChecked != self.getIsItemChecked(item):
+            command.TogglePrerequisiteCommand(None, self.__items, checkedPrerequisites=[item],
+                                              uncheckedPrerequisites=[]).do()
     
     
 class PrerequisitesPage(PageWithViewer):
@@ -1017,15 +998,6 @@ class PrerequisitesPage(PageWithViewer):
     
     def entries(self):
         return dict(prerequisites=self.viewer, dependencies=self.viewer)
-
-    @patterns.eventSource
-    def ok(self, event=None): # pylint: disable-msg=W0221
-        treeCtrl = self.viewer.widget
-        prerequisites = []
-        for taskNode in treeCtrl.GetItemChildren(recursively=True):
-            if taskNode.IsChecked():
-                prerequisites.append(treeCtrl.GetItemPyData(taskNode))
-        self.items[0].setPrerequisites(prerequisites, event=event)
 
 
 class EditBook(widgets.Notebook):

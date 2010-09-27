@@ -608,3 +608,31 @@ class EditFixedFeeCommand(base.BaseCommand):
     def redo_command(self):
         self.do_command()
             
+            
+class TogglePrerequisiteCommand(base.BaseCommand):
+    plural_name = _('Toggle prerequisite')
+    singular_name = _('Toggle prerequisite of "%s"')
+    
+    def __init__(self, *args, **kwargs):
+        self.__checkedPrerequisites = set(kwargs.pop('checkedPrerequisites'))
+        self.__uncheckedPrerequisites = set(kwargs.pop('uncheckedPrerequisites'))
+        super(TogglePrerequisiteCommand, self).__init__(*args, **kwargs)
+    
+    @patterns.eventSource
+    def do_command(self, event=None):
+        for item in self.items:
+            item.addPrerequisites(self.__checkedPrerequisites, event=event)
+            item.addTaskAsDependencyOf(self.__checkedPrerequisites, event=event)
+            item.removePrerequisites(self.__uncheckedPrerequisites, event=event)
+            item.removeTaskAsDependencyOf(self.__uncheckedPrerequisites, event=event)
+
+    @patterns.eventSource
+    def undo_command(self, event=None):
+        for item in self.items:
+            item.removePrerequisites(self.__checkedPrerequisites, event=event)
+            item.removeTaskAsDependencyOf(self.__checkedPrerequisites, event=event)
+            item.addPrerequisites(self.__uncheckedPrerequisites, event=event)
+            item.addTaskAsDependencyOf(self.__uncheckedPrerequisites, event=event)
+
+    def redo_command(self):
+        self.do_command()
