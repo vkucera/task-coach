@@ -17,7 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskCommands import *
-from effortCommands import *
+from effortCommands import NewEffortCommand, EditEffortCommand, \
+    DeleteEffortCommand, ChangeTaskCommand, ChangeEffortStartDateTimeCommand, \
+    ChangeEffortStopDateTimeCommand
 from categoryCommands import *
 from categorizableCommands import *
 from noteCommands import *

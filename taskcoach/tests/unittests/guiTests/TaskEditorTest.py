@@ -420,7 +420,7 @@ class EffortEditorTest(TaskEditorTestCase):
     def testCreate(self):
         # pylint: disable-msg=W0212
         self.assertEqual(self.effort.getStart().date(), 
-            self.editor._interior._startEntry.get().date())
+            self.editor._interior._startDateTimeEntry.get().date())
         self.assertEqual(self.effort.task().subject(), 
             self.editor._interior._taskEntry.GetValue())
 
@@ -430,14 +430,13 @@ class EffortEditorTest(TaskEditorTestCase):
         self.assertEqual(stop, self.effort.getStop())
         
     def testInvalidEffort(self):
-        self.effort.setStop(date.DateTime(1900, 1, 1))
         self.editor = self.createEditor()
         # pylint: disable-msg=W0212
-        self.editor._interior.preventNegativeEffortDuration()
-        self.failIf(self.editor._buttonBox['OK'].IsEnabled())
+        self.editor._interior._stopDateTimeEntry.set(date.DateTime(1900, 1, 1))
+        self.failUnless(self.editor._interior.invalidPeriodMessage.GetLabel())
         
     def testChangeTask(self):
         self.editor._interior._taskEntry.SetStringSelection('task2') # pylint: disable-msg=W0212
-        self.editor.ok()
+        self.editor._interior.onTaskChanged(DummyEvent())
         self.assertEqual(self.task2, self.effort.task())
         self.failIf(self.effort in self.task1.efforts())

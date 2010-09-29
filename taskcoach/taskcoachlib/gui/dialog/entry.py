@@ -57,7 +57,7 @@ class DateTimeEntry(widgets.PanelWithBoxSizer):
         
     def setCallback(self, callback):
         self._entry.setCallback(callback)
-
+        
 
 class TimeDeltaEntry(widgets.PanelWithBoxSizer):
     defaultTimeDelta=date.TimeDelta()
