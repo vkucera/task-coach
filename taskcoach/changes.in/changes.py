@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.1.4', 'September 22, 2010',
+Release('1.1.4', 'September 29, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Task Coach would not properly use the system's locale to select
@@ -41,7 +41,10 @@ task earned with this effort record. So if a task had a fixed fee of 1000,- and
 you had spent 10 hours on the task, an effort record of one hour would have
 a revenue of 100,-. However, calculating all this would get slow for larger 
 amounts of effort records, so the effort revenue now only shows the variable
-part, i.e. fee per hour times effort duration.''', '3056540')
+part, i.e. fee per hour times effort duration.''', '3056540'),
+        Bug('''In the situation where Task Coach was started minimized in the
+system tray and with the setting "Hide window when minimizing" turned on,
+the main window would not be hidden when minimizing it.''', '3077271')
         ],
     featuresAdded=[
         Feature('''Allow hiding composite tasks in calendar view.''',
