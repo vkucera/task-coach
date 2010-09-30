@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.1.4', 'September 29, 2010',
+Release('1.1.4', 'September 30, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Task Coach would not properly use the system's locale to select
