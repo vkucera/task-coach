@@ -33,7 +33,7 @@ TODO:
         ]
     ),
     
-Release('1.2.0', 'September 21, 2010',
+Release('1.2.0', 'September 30, 2010',
     summary='''This release adds task dependencies.''',
     featuresAdded=[
         Feature('''Tasks can have one or more prerequisite tasks. As long as 
@@ -77,7 +77,7 @@ dependencies. The task file format version number is now 31.''')
         ]
     ),
 
-Release('1.1.4', 'September 21, 2010',
+Release('1.1.4', 'September 30, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Task Coach would not properly use the system's locale to select
@@ -87,14 +87,26 @@ language', resulting in the wrong language being used.''', '3064566'),
 preview.'''),
         Bug('''Refresh task viewer filters every minute so that
 when the task viewer is hiding inactive tasks, inactive tasks that become
-active also become visible.''', '3072013')
+active also become visible.''', '3072013'),
+        Bug('''Displaying revenue in effort viewers was slow. 
+The effort viewer has a revenue column that shows the
+revenue earned per effort record. Until now, this would be the task fee per hour
+times the duration of the effort record plus the part of the fixed fee of the 
+task earned with this effort record. So if a task had a fixed fee of 1000,- and
+you had spent 10 hours on the task, an effort record of one hour would have
+a revenue of 100,-. However, calculating all this would get slow for larger 
+amounts of effort records, so the effort revenue now only shows the variable
+part, i.e. fee per hour times effort duration.''', '3056540'),
+        Bug('''In the situation where Task Coach was started minimized in the
+system tray and with the setting "Hide window when minimizing" turned on,
+the main window would not be hidden when minimizing it.''', '3077271')
         ],
     featuresAdded=[
         Feature('''Allow hiding composite tasks in calendar view.''',
                 'http://uservoice.com/a/aul3S'),
         Feature('''In the tree/list task viewer, allow additional selection
 with Cmd-click on Mac OS X.'''),
-        ]
+        ],
     ),
             
 Release('1.1.3', 'September 10, 2010',
