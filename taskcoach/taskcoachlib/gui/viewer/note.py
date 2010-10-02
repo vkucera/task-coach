@@ -189,9 +189,6 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
     def newSubItemCommandClass(self):
         return command.NewSubNoteCommand
 
-    def editItemCommandClass(self):
-        return command.EditNoteCommand
-
 
 class NoteViewer(mixin.FilterableViewerForNotesMixin, BaseNoteViewer): 
     pass

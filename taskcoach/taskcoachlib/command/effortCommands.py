@@ -42,29 +42,6 @@ class NewEffortCommand(base.BaseCommand):
             effort.task().removeEffort(effort)
             
     redo_command = do_command
-
-
-class EditEffortCommand(base.BaseCommand, base.SaveStateMixin):
-    plural_name = _('Edit efforts')
-    singular_name = _('Edit effort "%s"')
-    
-    def __init__(self, *args, **kwargs):
-        super(EditEffortCommand, self).__init__(*args, **kwargs)
-        self.saveStates(self.getEffortsToSave())
-        self.efforts = self.items # FIXME: hack
-        # FIXME: EditEffortCommand doesn't need the (effort)list argument
-
-    def getEffortsToSave(self):
-        return self.items
-
-    def do_command(self):
-        pass
-
-    def undo_command(self):
-        self.undoStates()
-
-    def redo_command(self):
-        self.redoStates()
     
 
 class DeleteEffortCommand(base.DeleteCommand):

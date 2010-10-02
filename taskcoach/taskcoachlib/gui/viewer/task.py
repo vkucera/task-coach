@@ -66,8 +66,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
             return super(BaseTaskViewer, self).editItemDialog(items, bitmap, columnName)
         else:
             return dialog.editor.EffortEditor(wx.GetTopLevelParent(self),
-                command.EditEffortCommand(self.taskFile.efforts(), items),
-                self.settings, self.taskFile.efforts(), self.taskFile,  
+                items, self.settings, self.taskFile.efforts(), self.taskFile,  
                 bitmap=bitmap)
             
     def itemEditorClass(self):
@@ -79,9 +78,6 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
     def newSubItemCommandClass(self):
         return command.NewSubTaskCommand
     
-    def editItemCommandClass(self):
-        return command.EditTaskCommand
-
     def deleteItemCommand(self):
         return command.DeleteTaskCommand(self.presentation(), self.curselection(),
                   shadow=self.settings.getboolean('feature', 'syncml'))    

@@ -342,9 +342,6 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
     def newItemCommandClass(self):
         return command.NewEffortCommand
     
-    def editItemCommandClass(self):
-        return command.EditEffortCommand
-
     def newSubItemCommandClass(self):
         pass # efforts are not composite.
 

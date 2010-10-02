@@ -80,30 +80,6 @@ class NewSubNoteCommandTest(NoteCommandTestCase):
             lambda: self.assertEqual([self.note], self.notes))
 
 
-class EditNoteCommandTest(NoteCommandTestCase):
-    def setUp(self):
-        super(EditNoteCommandTest, self).setUp()
-        self.note = note.Note(subject='Note')
-        self.notes.append(self.note)
-        
-    def editNote(self, notes=None):
-        notesToEdit = notes or []
-        editNote = command.EditNoteCommand(self.notes, notesToEdit)
-        for noteToEdit in notesToEdit:
-            noteToEdit.setSubject('new')
-        editNote.do()
-        
-    def testEditNote_WithoutSelection(self):
-        self.editNote()
-        self.assertDoUndoRedo(lambda: self.assertEqual([self.note], 
-                                                       self.notes))
-        
-    def testEditNote_Subject(self):
-        self.editNote([self.note])
-        self.assertDoUndoRedo(lambda: self.assertEqual('new', self.note.subject()),
-            lambda: self.assertEqual('Note', self.note.subject()))
-
-
 class DragAndDropNoteCommand(NoteCommandTestCase):
     def setUp(self):
         super(DragAndDropNoteCommand, self).setUp()

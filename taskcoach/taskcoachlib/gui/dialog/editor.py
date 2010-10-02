@@ -91,7 +91,7 @@ class SubjectPage(Page):
         self._subjectEntry = widgets.SingleLineTextCtrl(self, self._originalSubject)
         self._subjectEntry.Bind(wx.EVT_KILL_FOCUS, self.onLeavingSubjectEntry)
         self._subjectLabel = self.label(_('Subject'), self._subjectEntry, wx.EVT_TEXT)
-        self.addEntry(self._subjectLabel, self._subjectEntry)
+        self.addEntry(_('Subject'), self._subjectEntry)
 
     def onLeavingSubjectEntry(self, event):
         event.Skip()
@@ -1261,19 +1261,22 @@ class EffortEditBook(Page):
                     revenue=self._taskEntry)
     
     
-class EditorWithCommand(widgets.Dialog):
+class Editor(widgets.ButtonLessDialog):
     EditBookClass = lambda: 'Subclass responsibility'
+    singular_title = _('Edit %s')
+    plural_title = _('Edit multiple items')
     
-    def __init__(self, parent, command, settings, container, taskFile, *args, **kwargs):
-        self._command = command
+    def __init__(self, parent, items, settings, container, taskFile, *args, **kwargs):
+        self._items = items
         self._settings = settings
         self._taskFile = taskFile
-        super(EditorWithCommand, self).__init__(parent, command.name(), 
-                                                *args, **kwargs)
+        title = self.plural_title if len(items) > 1 else self.singular_title%items[0].subject()
+        super(Editor, self).__init__(parent, title, *args, **kwargs)
         columnName = kwargs.get('columnName', '')
         self._interior.setFocus(columnName)
         patterns.Publisher().registerObserver(self.onItemRemoved, 
             eventType=container.removeItemEventType(), eventSource=container)
+        self.Bind(wx.EVT_CLOSE, self.onClose)
 
         if '__WXMAC__' in wx.PlatformInfo:
             # The window manager does this automatically on other
@@ -1281,25 +1284,15 @@ class EditorWithCommand(widgets.Dialog):
             # top-left corner of the first display. This gets annoying
             # on a 2560x1440 27" + 1920x1200 24" dual screen...
             self.CentreOnParent()
-        
-    def cancel(self, *args, **kwargs): # pylint: disable-msg=W0221
-        patterns.Publisher().removeObserver(self.onItemRemoved)
-        super(EditorWithCommand, self).cancel(*args, **kwargs)
-        
-    def ok(self, *args, **kwargs):
-        patterns.Publisher().removeObserver(self.onItemRemoved)
-        self.okInterior()
-        self._command.do()
-        super(EditorWithCommand, self).ok(*args, **kwargs)
-        
-    def createInterior(self):
-        return self.EditBookClass(self._panel, self._command.items, 
-                                  self._taskFile, self._settings)
-        
-    @patterns.eventSource
-    def okInterior(self, event=None):
-        self._interior.ok(event=event)
                 
+    def createInterior(self):
+        return self.EditBookClass(self._panel, self._items, 
+                                  self._taskFile, self._settings)
+
+    def onClose(self, event):
+        event.Skip()
+        patterns.Publisher().removeObserver(self.onItemRemoved)
+                        
     def onItemRemoved(self, event):
         ''' The item we're editing or one of its ancestors has been removed or 
             is hidden by a filter. If the item is really removed, close the tab 
@@ -1309,25 +1302,30 @@ class EditorWithCommand(widgets.Dialog):
             return # Prevent _wxPyDeadObject TypeError
         for item in event.values():
             if self._interior.isDisplayingItemOrChildOfItem(item) and not item in self._taskFile:
-                self.cancel()
+                self.Close()
                 break            
 
 
-class TaskEditor(EditorWithCommand):
+class TaskEditor(Editor):
+    plural_title = _('Edit multiple tasks')
     EditBookClass = TaskEditBook
 
 
-class CategoryEditor(EditorWithCommand):
+class CategoryEditor(Editor):
+    plural_title = _('Edit multiple categories')
     EditBookClass = CategoryEditBook
 
 
-class NoteEditor(EditorWithCommand):
+class NoteEditor(Editor):
+    plural_title = _('Edit multiple notes')
     EditBookClass = NoteEditBook
 
 
-class AttachmentEditor(EditorWithCommand):
+class AttachmentEditor(Editor):
+    plural_title = _('Edit multiple attachmentss')
     EditBookClass = AttachmentEditBook
 
 
-class EffortEditor(EditorWithCommand):
+class EffortEditor(Editor):
+    plural_title = _('Edit multiple efforts')
     EditBookClass = EffortEditBook

@@ -100,8 +100,7 @@ class ReminderController(object):
             # Undoing the snoozing makes little sense, because it would set the 
             # reminder back to its original date-time, which is now in the past.
         if dialog.openTaskAfterClose:
-            editTask = editor.TaskEditor(self.__mainWindow,
-                command.EditTaskCommand(self.taskList, [task]), 
+            editTask = editor.TaskEditor(self.__mainWindow, [task], 
                 self.settings, self.taskList, self.__mainWindow.taskFile, 
                 bitmap='edit')
             editTask.Show(show)

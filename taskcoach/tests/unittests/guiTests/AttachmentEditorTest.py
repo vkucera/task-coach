@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test, wx
-from taskcoachlib import gui, command, config, persistence
-from taskcoachlib.domain import note, attachment
+from taskcoachlib import gui, config, persistence
+from taskcoachlib.domain import attachment
 
 
 class DummyEvent(object):
@@ -26,25 +26,17 @@ class DummyEvent(object):
         pass
 
 
-class AttachmentEditorTestCase(test.wxTestCase):
+class AttachmentEditorTest(test.wxTestCase):
     def setUp(self):
-        super(AttachmentEditorTestCase, self).setUp()
+        super(AttachmentEditorTest, self).setUp()
         self.settings = config.Settings(load=False)
         self.taskFile = persistence.TaskFile()
+        self.attachment = attachment.FileAttachment('Attachment')
         self.attachments = attachment.AttachmentList()
-        self.attachments.extend(self.createAttachments())
-        self.editor = self.createEditor()
-        
-    def createEditor(self):
-        return gui.dialog.editor.AttachmentEditor(self.frame, self.createCommand(),
-            self.settings, self.attachments, self.taskFile, raiseDialog=False)
-
-
-    def createCommand(self):
-        raise NotImplementedError # pragma: no cover
-    
-    def createAttachments(self):
-        return []
+        self.attachments.append(self.attachment)
+        self.editor = gui.dialog.editor.AttachmentEditor(self.frame, 
+            self.attachments, self.settings, self.attachments, self.taskFile, 
+            raiseDialog=False)
 
     def setSubject(self, newSubject):
         page = self.editor._interior[0]
@@ -63,17 +55,10 @@ class AttachmentEditorTestCase(test.wxTestCase):
             page.onLeavingDescriptionEntry(DummyEvent())
         else:
             page._subjectEntry.SetFocus()
-
         
-class NewAttachmentTest(AttachmentEditorTestCase):
-    def createCommand(self):
-        newAttachmentCommand = command.NewAttachmentCommand(self.attachments)
-        self.attachment = newAttachmentCommand.items[0] # pylint: disable-msg=W0201
-        return newAttachmentCommand
-
     def testCreate(self):
         # pylint: disable-msg=W0212
-        self.assertEqual('New attachment', self.editor._interior[0]._subjectEntry.GetValue())
+        self.assertEqual('Attachment', self.editor._interior[0]._subjectEntry.GetValue())
 
     def testEditSubject(self):
         self.setSubject('Done')
@@ -86,4 +71,4 @@ class NewAttachmentTest(AttachmentEditorTestCase):
     def testAddNote(self):
         viewer = self.editor._interior[1].viewer
         viewer.newItemCommand(viewer.presentation()).do()
-        self.assertEqual(1, len(self.attachment.notes()))
+        self.assertEqual(1, len(self.attachment.notes())) # pylint: disable-msg=E1101

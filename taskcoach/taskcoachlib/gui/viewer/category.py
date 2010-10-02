@@ -198,9 +198,6 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
     def newItemCommandClass(self):
         return command.NewCategoryCommand
     
-    def editItemCommandClass(self):
-        return command.EditCategoryCommand
-    
     def newSubItemCommandClass(self):
         return command.NewSubCategoryCommand
 

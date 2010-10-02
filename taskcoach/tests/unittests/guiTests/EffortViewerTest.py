@@ -222,7 +222,7 @@ class CommonTestsMixin(object):
         self.viewer.widget.select([self.task2.efforts()[-1]])
         dialog = self.viewer.newItemDialog(selectedTasks=[self.task2], 
                                            bitmap='new')
-        for effort in dialog._command.efforts:
+        for effort in dialog._items:
             self.assertEqual(self.task2, effort.task())
         
     def testColumnUICommands(self):

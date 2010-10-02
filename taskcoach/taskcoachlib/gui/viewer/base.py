@@ -330,9 +330,7 @@ class Viewer(wx.Panel):
     
     def editItemDialog(self, items, bitmap, columnName=''):
         Editor = self.itemEditorClass()
-        EditItemCommand = self.editItemCommandClass()
-        editItemCommand = EditItemCommand(self.presentation(), items)
-        return Editor(wx.GetTopLevelParent(self), editItemCommand, 
+        return Editor(wx.GetTopLevelParent(self), items, 
                       self.settings, self.presentation(), self.taskFile, 
                       bitmap=bitmap, columnName=columnName)
         
@@ -350,9 +348,6 @@ class Viewer(wx.Panel):
                                              self.curselection())
 
     def newSubItemCommandClass(self):
-        raise NotImplementedError
-
-    def editItemCommandClass(self):
         raise NotImplementedError
 
     def deleteItemCommand(self):

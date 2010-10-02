@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, sys
 import test
 from taskcoachlib import gui, command, config, persistence
-from taskcoachlib.domain import category, note, attachment
+from taskcoachlib.domain import category, attachment
 
 
 class DummyEvent(object):
@@ -27,31 +27,37 @@ class DummyEvent(object):
         pass
 
 
-class CategoryEditorTestCase(test.wxTestCase):
+class CategoryEditorTest(test.wxTestCase):
     def setUp(self):
-        super(CategoryEditorTestCase, self).setUp()
+        super(CategoryEditorTest, self).setUp()
         self.settings = config.Settings(load=False)
         self.taskFile = persistence.TaskFile()
         self.categories = self.taskFile.categories()
         self.categories.extend(self.createCategories())
-        self.editor = self.createEditor()
-        
-    def createEditor(self):
-        return gui.dialog.editor.CategoryEditor(self.frame, self.createCommand(),
-            self.settings, self.categories, self.taskFile, raiseDialog=False)
+        self.editor = gui.dialog.editor.CategoryEditor(self.frame, 
+            list(self.categories), self.settings, self.categories, 
+            self.taskFile, raiseDialog=False)
 
     def tearDown(self):
         # CategoryEditor uses CallAfter for setting the focus, make sure those 
         # calls are dealt with, otherwise they'll turn up in other tests
         if '__WXMAC__' not in wx.PlatformInfo and ('__WXMSW__' not in wx.PlatformInfo or sys.version_info < (2, 5)):
             wx.Yield() # pragma: no cover 
-        super(CategoryEditorTestCase, self).tearDown()
+        super(CategoryEditorTest, self).tearDown()
         
     def createCommand(self):
-        raise NotImplementedError # pragma: no cover
+        newCategoryCommand = command.NewCategoryCommand(self.categories)
+        self.category = newCategoryCommand.items[0] # pylint: disable-msg=W0201
+        return newCategoryCommand
+
+    # pylint: disable-msg=E1101,E1103,W0212
     
     def createCategories(self):
-        return []
+        # pylint: disable-msg=W0201
+        self.category = category.Category('Category to edit')
+        self.attachment = attachment.FileAttachment('some attachment')
+        self.category.addAttachments(self.attachment)
+        return [self.category]
 
     def setSubject(self, newSubject):
         page = self.editor._interior[0]
@@ -71,74 +77,16 @@ class CategoryEditorTestCase(test.wxTestCase):
         else: 
             page._subjectEntry.SetFocus()
         
-class NewCategoryTest(CategoryEditorTestCase):
-    def createCommand(self):
-        newCategoryCommand = command.NewCategoryCommand(self.categories)
-        self.category = newCategoryCommand.items[0] # pylint: disable-msg=W0201
-        return newCategoryCommand
-
     def testCreate(self):
-        # pylint: disable-msg=W0212
-        self.assertEqual('New category', self.editor._interior[0]._subjectEntry.GetValue())
-
-    def testEditsubject(self):
+        self.assertEqual('Category to edit', self.editor._interior[0]._subjectEntry.GetValue())
+    
+    def testEditSubject(self):
         self.setSubject('Done')
         self.assertEqual('Done', self.category.subject())
 
     def testEditDescription(self):
         self.setDescription('Description')
-        self.assertEqual('Description', self.category.description())
-        
-    def testEditMutualExclusiveSubcategories(self):
-        self.editor._interior[0]._exclusiveSubcategoriesCheckBox.SetValue(True)
-        class DummyEvent(object):
-            def Skip(self):
-                pass
-        self.editor._interior[0].onExclusivityChanged(DummyEvent())
-        self.failUnless(self.category.hasExclusiveSubcategories())
-        
-    def testAddNote(self):
-        viewer = self.editor._interior[1].viewer
-        viewer.newItemCommand(viewer.presentation()).do() 
-        self.assertEqual(1, len(self.category.notes()))
-
-
-class NewSubCategoryTest(CategoryEditorTestCase):
-    def createCommand(self):
-        newSubCategoryCommand = command.NewSubCategoryCommand(self.categories, 
-                                                              [self.category])
-        self.subCategory = newSubCategoryCommand.items[0] # pylint: disable-msg=W0201
-        return newSubCategoryCommand
-
-    def createCategories(self):
-        self.category = category.Category('Category') # pylint: disable-msg=W0201
-        return [self.category]
-
-    def testOk(self):
-        self.editor.ok()
-        self.assertEqual([self.subCategory], self.category.children())
-
-    def testCancel(self):
-        self.editor.cancel()
-        self.assertEqual([], self.category.children())
-
-
-class EditCategoryTest(CategoryEditorTestCase):
-    def createCommand(self):
-        return command.EditCategoryCommand(self.categories, [self.category])
-
-    # pylint: disable-msg=E1101
-    
-    def createCategories(self):
-        # pylint: disable-msg=W0201
-        self.category = category.Category('Category to edit')
-        self.attachment = attachment.FileAttachment('some attachment')
-        self.category.addAttachments(self.attachment)
-        return [self.category]
-
-    def testEditSubject(self):
-        self.setSubject('Done')
-        self.assertEqual('Done', self.category.subject())
+        self.assertEqual('Description', self.category.description())        
 
     def testAddAttachment(self):
         self.editor._interior[2].viewer.onDropFiles(self.category, ['filename'])
@@ -149,3 +97,13 @@ class EditCategoryTest(CategoryEditorTestCase):
         self.editor._interior[2].viewer.selectall()
         self.editor._interior[2].viewer.deleteItemCommand().do()
         self.assertEqual([], self.category.attachments())
+
+    def testEditMutualExclusiveSubcategories(self):
+        self.editor._interior[0]._exclusiveSubcategoriesCheckBox.SetValue(True)
+        self.editor._interior[0].onExclusivityChanged(DummyEvent())
+        self.failUnless(self.category.hasExclusiveSubcategories())
+        
+    def testAddNote(self):
+        viewer = self.editor._interior[1].viewer
+        viewer.newItemCommand(viewer.presentation()).do() 
+        self.assertEqual(1, len(self.category.notes()))

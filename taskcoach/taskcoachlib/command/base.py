@@ -284,26 +284,6 @@ class PasteAsSubItemCommand(PasteCommand, CompositeMixin):
     def getItemsToSave(self):
         return self.getAncestors([self.items[0]]) + \
             super(PasteAsSubItemCommand, self).getItemsToSave()
-
-        
-class EditCommand(BaseCommand, SaveStateMixin): # pylint: disable-msg=W0223
-    plural_name = _('Edit')
-    singular_name = _('Edit "%s"')
-
-    def __init__(self, *args, **kwargs):
-        super(EditCommand, self).__init__(*args, **kwargs)
-        self.saveStates(self.getItemsToSave())
-        
-    def getItemsToSave(self):
-        raise NotImplementedError # pragma: no cover
-        
-    def undo_command(self):
-        self.undoStates()
-        super(EditCommand, self).undo_command()
-
-    def redo_command(self):
-        self.redoStates()
-        super(EditCommand, self).redo_command()
         
 
 class DragAndDropCommand(BaseCommand, SaveStateMixin, CompositeMixin):

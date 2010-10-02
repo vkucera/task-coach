@@ -69,7 +69,7 @@ class UICommandTest(test.wxTestCase):
 
 class wxTestCaseWithFrameAsTopLevelWindow(test.wxTestCase):
     def setUp(self):
-        self.settings = config.Settings(load=False)
+        self.settings = task.Task.settings = config.Settings(load=False)
         wx.GetApp().SetTopWindow(self.frame)
         self.taskFile = self.frame.taskFile = persistence.TaskFile()
 
@@ -214,7 +214,7 @@ class EffortNewTest(wxTestCaseWithFrameAsTopLevelWindow):
                                             viewer=viewer, 
                                             settings=self.settings)
         dialog = effortNew.doCommand(None, show=False)
-        for eachEffort in dialog._command.efforts:
+        for eachEffort in dialog._items:
             self.assertEqual(task2, eachEffort.task())
         
 

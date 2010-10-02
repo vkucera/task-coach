@@ -50,18 +50,6 @@ class NewSubNoteCommand(base.NewSubItemCommand):
             attachments=attachments) for parent in self.items]
         
 
-class EditNoteCommand(base.EditCommand):
-    plural_name = _('Edit notes')
-    singular_name = _('Edit note "%s"')
-
-    def __init__(self, *args, **kwargs):
-        super(EditNoteCommand, self).__init__(*args, **kwargs)
-        self.notes = self.items
-            
-    def getItemsToSave(self):
-        return self.items
-
-
 class DeleteNoteCommand(base.DeleteCommand):
     plural_name = _('Delete notes')
     singular_name = _('Delete note "%s"')

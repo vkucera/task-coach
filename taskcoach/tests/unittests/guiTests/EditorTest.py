@@ -18,25 +18,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 import test
-from taskcoachlib import gui, command, config, persistence
+from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import task
 
 
-class EditorWithCommandUnderTest(gui.dialog.editor.EditorWithCommand):
+class EditorUnderTest(gui.dialog.editor.Editor):
     def __init__(self, *args, **kwargs):
-        super(EditorWithCommandUnderTest, self).__init__(*args, **kwargs)
-        self.cancelCalled = False
-        
+        super(EditorUnderTest, self).__init__(*args, **kwargs)
+        self.editorClosed = False
+                
     def createInterior(self):
         interior = wx.Panel(self)
         interior.setFocus = lambda columnName: None
-        interior.isDisplayingItemOrChildOfItem = lambda item: item == self._command.items[0]
+        interior.isDisplayingItemOrChildOfItem = lambda item: item == self._items[0]
         return interior
-            
-    def cancel(self, *args, **kwargs):
-        super(EditorWithCommandUnderTest, self).cancel(*args, **kwargs)
-        self.cancelCalled = True
-    
+
+    def onClose(self, event):
+        self.editorClosed = True
+        super(EditorUnderTest, self).onClose(event)
+
 
 class EditorTestCase(test.wxTestCase):
     def setUp(self):
@@ -46,24 +46,15 @@ class EditorTestCase(test.wxTestCase):
         self.taskList = task.filter.ViewFilter(self.taskFile.tasks())
         self.task = task.Task('task')
         self.taskList.append(self.task)
-        self.editor = self.createEditor()
-        
-    def createEditor(self):
-        return EditorWithCommandUnderTest(self.frame, self.createCommand(), 
-                                          self.settings, self.taskList, 
-                                          self.taskFile, raiseDialog=False)
-        
-    def createCommand(self):
-        sortedTasks = task.sorter.Sorter(self.taskList)[:]
-        return command.EditTaskCommand(sortedTasks, sortedTasks)
+        self.editor = EditorUnderTest(self.frame, [self.task], 
+                                      self.settings, self.taskList, 
+                                      self.taskFile, raiseDialog=False)
 
     def testCloseEditorWhenItemIsDeleted(self):
-        self.failIf(self.editor.cancelCalled)
         self.taskList.remove(self.task)
-        self.failUnless(self.editor.cancelCalled)
+        self.failUnless(self.editor.editorClosed)
         
     def testDontCloseEditorWhenItemIsFiltered(self):
-        self.failIf(self.editor.cancelCalled)
         self.task.setCompletionDateTime()
         self.taskList.hideCompletedTasks()
-        self.failIf(self.editor.cancelCalled)
+        self.failIf(self.editor.editorClosed)

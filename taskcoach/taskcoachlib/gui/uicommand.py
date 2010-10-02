@@ -1254,14 +1254,15 @@ class TaskNew(TaskListCommand, SettingsCommand):
         super(TaskNew, self).__init__(bitmap='new', *args, **kwargs)
 
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
-        newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
-            command.NewTaskCommand(self.taskList, 
-                categories=self.categoriesForTheNewTask(), 
-                prerequisites=self.prerequisitesForTheNewTask(),
-                dependencies=self.dependenciesForTheNewTask(), 
-                **self.taskKeywords), 
-            self.settings, self.taskList, self.mainWindow().taskFile, 
-            bitmap=self.bitmap)
+        newTaskCommand = command.NewTaskCommand(self.taskList, 
+            categories=self.categoriesForTheNewTask(), 
+            prerequisites=self.prerequisitesForTheNewTask(),
+            dependencies=self.dependenciesForTheNewTask(), 
+            **self.taskKeywords)
+        newTaskCommand.do() 
+        newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(),
+            newTaskCommand.items, self.settings, self.taskList, 
+            self.mainWindow().taskFile, bitmap=self.bitmap)
         newTaskDialog.Show(show)
         return newTaskDialog # for testing purposes
 
@@ -1293,11 +1294,12 @@ class TaskNewFromTemplate(TaskNew):
         templateTask = self.__readTemplate()
         kwargs = templateTask.__getcopystate__()
         kwargs['categories'] = self.categoriesForTheNewTask()
+        newTaskCommand = command.NewTaskCommand(self.taskList, **kwargs)
+        newTaskCommand.do()
         # pylint: disable-msg=W0142
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
-            command.NewTaskCommand(self.taskList, **kwargs),
-            self.settings, self.taskList, self.mainWindow().taskFile, 
-            bitmap=self.bitmap)
+            newTaskCommand.items, self.settings, self.taskList, 
+            self.mainWindow().taskFile, bitmap=self.bitmap)
         newTaskDialog.Show(show)
         return newTaskDialog # for testing purposes
    
@@ -1662,10 +1664,11 @@ class ItemAddNote(ViewerCommand, SettingsCommand):
             helpText=self.helpText, bitmap='new', *args, **kwargs)
             
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
+        addNoteCommand = self.AddNoteCommand(self.viewer.presentation(), 
+                                self.viewer.curselection())
+        addNoteCommand.do()
         editDialog = dialog.editor.NoteEditor(self.mainWindow(), 
-            self.AddNoteCommand(self.viewer.presentation(), 
-                                self.viewer.curselection()),
-            self.settings, self.viewer.presentation(),  
+            addNoteCommand.items, self.settings, self.viewer.presentation(),  
             self.mainWindow().taskFile, bitmap=self.bitmap)
         editDialog.Show(show)
         return editDialog # for testing purposes
@@ -1789,10 +1792,11 @@ class EffortNew(NeedsAtLeastOneTaskMixin, ViewerCommand, EffortListCommand,
         else:
             selectedTasks = [self.firstTask(self.taskList)]
 
+        newEffortCommand = command.NewEffortCommand(self.effortList, selectedTasks)
+        newEffortCommand.do()
         newEffortDialog = dialog.editor.EffortEditor(self.mainWindow(), 
-            command.NewEffortCommand(self.effortList, selectedTasks),
-            self.settings, self.effortList, self.mainWindow().taskFile, 
-            bitmap=self.bitmap)
+            newEffortCommand.items, self.settings, self.effortList, 
+            self.mainWindow().taskFile, bitmap=self.bitmap)
         if show:
             newEffortDialog.Show()
         return newEffortDialog
@@ -1893,10 +1897,12 @@ class CategoryNew(CategoriesCommand, SettingsCommand):
             helpText=categories.newItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
+        newCategoryCommand = command.NewCategoryCommand(self.categories)
+        newCategoryCommand.do()
         taskFile = self.mainWindow().taskFile
         newCategoryDialog = dialog.editor.CategoryEditor(self.mainWindow(), 
-            command.NewCategoryCommand(self.categories),
-            self.settings, taskFile.categories(), taskFile, bitmap=self.bitmap)
+            newCategoryCommand.items, self.settings, taskFile.categories(), 
+            taskFile, bitmap=self.bitmap)
         newCategoryDialog.Show(show)
         
 
@@ -1939,11 +1945,12 @@ class NoteNew(NotesCommand, SettingsCommand, ViewerCommand):
         if self.viewer:
             noteDialog = self.viewer.newItemDialog(bitmap=self.bitmap)
         else: 
-            noteDialog = dialog.editor.NoteEditor(self.mainWindow(), 
-                command.NewNoteCommand(self.notes,
-                      categories=self.categoriesForTheNewNote()),
-                self.settings, self.notes, self.mainWindow().taskFile,
-                bitmap=self.bitmap)
+            newNoteCommand = command.NewNoteCommand(self.notes,
+                categories=self.categoriesForTheNewNote())
+            newNoteCommand.do()
+            noteDialog = dialog.editor.NoteEditor(self.mainWindow(),
+                newNoteCommand.items, self.settings, self.notes, 
+                self.mainWindow().taskFile, bitmap=self.bitmap)
         noteDialog.Show(show)
         return noteDialog # for testing purposes
 

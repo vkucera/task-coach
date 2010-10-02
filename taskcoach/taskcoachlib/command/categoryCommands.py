@@ -51,14 +51,6 @@ class NewSubCategoryCommand(base.NewSubItemCommand):
 
     def createNewCategories(self, **kwargs):
         return [parent.newChild(**kwargs) for parent in self.items]
-
-
-class EditCategoryCommand(base.EditCommand):
-    plural_name = _('Edit categories')
-    singular_name = _('Edit category "%s"')
-    
-    def getItemsToSave(self):
-        return self.items
     
 
 class EditExclusiveSubcategoriesCommand(base.BaseCommand):

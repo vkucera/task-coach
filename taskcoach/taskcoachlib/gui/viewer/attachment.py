@@ -148,8 +148,5 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.SortableViewerWithC
     def newItemCommandClass(self):
         return command.NewAttachmentCommand
     
-    def editItemCommandClass(self):
-        return command.EditAttachmentCommand
-
     def deleteItemCommandClass(self):
         return command.DeleteAttachmentCommand

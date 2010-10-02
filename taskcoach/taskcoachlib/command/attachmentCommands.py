@@ -39,18 +39,6 @@ class NewAttachmentCommand(base.NewItemCommand):
         return [attachment.FileAttachment(**kwargs)]
 
 
-class EditAttachmentCommand(base.EditCommand):
-    plural_name = _('Edit attachments')
-    singular_name = _('Edit attachment "%s"')
-    
-    def __init__(self, *args, **kwargs):
-        super(EditAttachmentCommand, self).__init__(*args, **kwargs)
-        self.attachments = self.items
-
-    def getItemsToSave(self):
-        return self.items
-
-
 class DeleteAttachmentCommand(base.DeleteCommand):
     plural_name = _('Delete attachments')
     singular_name = _('Delete attachment "%s"')
