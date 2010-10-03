@@ -30,6 +30,14 @@ for OK and Cancel buttons anymore.
 TODO:
 - Update dialog title when user edits subject
 - Updating of data in dialog when attributes change.''')
+        ],
+    bugsFixed=[
+        Bug('''It was and is possible to open multiple edit dialogs for the same
+item. With earlier releases of Task Coach, the last edit dialog closed would 
+overwrite changes made with edit dialogs that were closed earlier. With the new 
+edit dialog functionality introduced in this release, changes are propagated 
+immediately to all open dialogs. This will prevent accidently overwriting
+changes made in other dialogs.''', '1152561')
         ]
     ),
     

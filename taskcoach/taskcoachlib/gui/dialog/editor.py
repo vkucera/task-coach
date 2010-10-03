@@ -67,36 +67,56 @@ class SubjectPage(Page):
         
     def addSubjectEntry(self):
         # pylint: disable-msg=W0201
-        self._originalSubject = self.items[0].subject() if len(self.items) == 1 else _('Edit to change all subjects')
-        self._subjectEntry = widgets.SingleLineTextCtrl(self, self._originalSubject)
-        self._subjectEntry.Bind(wx.EVT_KILL_FOCUS, self.onLeavingSubjectEntry)
+        self._currentSubject = self.items[0].subject() if len(self.items) == 1 else _('Edit to change all subjects')
+        self._subjectEntry = widgets.SingleLineTextCtrl(self, self._currentSubject)
+        self._subjectEntry.Bind(wx.EVT_KILL_FOCUS, self.onSubjectEdited)
         self.addEntry(_('Subject'), self._subjectEntry)
+        if len(self.items) == 1:
+            patterns.Publisher().registerObserver(self.onSubjectChanged, 
+                                                  eventType=self.items[0].subjectChangedEventType(),
+                                                  eventSource=self.items[0])
 
-    def onLeavingSubjectEntry(self, event):
+    def onSubjectEdited(self, event):
         event.Skip()
-        currentSubject = self._subjectEntry.GetValue()
-        if currentSubject != self._originalSubject:
-            command.EditSubjectCommand(None, self.items, subject=currentSubject).do()
-            self._originalSubject = currentSubject
+        newSubject = self._subjectEntry.GetValue()
+        if newSubject != self._currentSubject:
+            command.EditSubjectCommand(None, self.items, subject=newSubject).do()
+            self._currentSubject = newSubject
+            
+    def onSubjectChanged(self, event):
+        newSubject = event.value()
+        if newSubject != self._currentSubject:
+            self._currentSubject = newSubject 
+            self.setSubject(newSubject)
+
+    def setSubject(self, subject):
+        self._subjectEntry.SetValue(subject)
             
     def addDescriptionEntry(self):
         # pylint: disable-msg=W0201
-        self._originalDescription = self.items[0].description() if len(self.items) == 1 else _('Edit to change all descriptions')
-        self._descriptionEntry = widgets.MultiLineTextCtrl(self, self._originalDescription)
-        self._descriptionEntry.Bind(wx.EVT_KILL_FOCUS, self.onLeavingDescriptionEntry)
+        self._currentDescription = self.items[0].description() if len(self.items) == 1 else _('Edit to change all descriptions')
+        self._descriptionEntry = widgets.MultiLineTextCtrl(self, self._currentDescription)
+        self._descriptionEntry.Bind(wx.EVT_KILL_FOCUS, self.onDescriptionEdited)
         self._descriptionEntry.SetSizeHints(450, 150)
         self.addEntry(_('Description'), self._descriptionEntry, growable=True)
+        if len(self.items) == 1:
+            patterns.Publisher().registerObserver(self.onDescriptionChanged,
+                                                  eventType=self.items[0].descriptionChangedEventType(),
+                                                  eventSource=self.items[0])
         
-    def onLeavingDescriptionEntry(self, event):
+    def onDescriptionEdited(self, event):
         event.Skip()
-        currentDescription = self._descriptionEntry.GetValue()
-        if currentDescription != self._originalDescription:
-            command.EditDescriptionCommand(None, self.items, description=currentDescription).do()
-            self._originalDescription = currentDescription
+        newDescription = self._descriptionEntry.GetValue()
+        if newDescription != self._currentDescription:
+            command.EditDescriptionCommand(None, self.items, description=newDescription).do()
+            self._currentDescription = newDescription
             
-    def setSubject(self, subject):
-        self._subjectEntry.SetValue(subject)
-
+    def onDescriptionChanged(self, event):
+        newDescription = event.value()
+        if newDescription != self._currentDescription:
+            self._currentDescription = newDescription
+            self.setDescription(newDescription)
+        
     def setDescription(self, description):
         self._descriptionEntry.SetValue(description)
                 
@@ -113,18 +133,28 @@ class TaskSubjectPage(SubjectPage):
          
     def addPriorityEntry(self):
         # pylint: disable-msg=W0201
-        self._originalPriority = self.items[0].priority() if len(self.items) == 1 else 0
+        self._currentPriority = self.items[0].priority() if len(self.items) == 1 else 0
         self._priorityEntry = widgets.SpinCtrl(self, size=(100, -1),
-            value=str(self._originalPriority), initial=self._originalPriority)
-        self._priorityEntry.Bind(wx.EVT_SPINCTRL, self.onPriorityChanged)
+            value=str(self._currentPriority), initial=self._currentPriority)
+        self._priorityEntry.Bind(wx.EVT_SPINCTRL, self.onPriorityEdited)
         self.addEntry(_('Priority'), self._priorityEntry, flags=[None, wx.ALL])
+        if len(self.items) == 1:
+            patterns.Publisher().registerObserver(self.onPriorityChanged,
+                                                  eventType='task.priority',
+                                                  eventSource=self.items[0])
     
-    def onPriorityChanged(self, event):
+    def onPriorityEdited(self, event):
         event.Skip()
-        currentPriority = self._priorityEntry.GetValue()
-        if currentPriority != self._originalPriority:
-            command.EditPriorityCommand(None, self.items, priority=currentPriority).do()
-            self._originalPriority = currentPriority
+        newPriority = self._priorityEntry.GetValue()
+        if newPriority != self._currentPriority:
+            command.EditPriorityCommand(None, self.items, priority=newPriority).do()
+            self._currentPriority = newPriority
+            
+    def onPriorityChanged(self, event):
+        newPriority = event.value()
+        if newPriority != self._currentPriority:
+            self._currentPriority = newPriority
+            self._priorityEntry.SetValue(newPriority)
             
     def entries(self):
         entries = super(TaskSubjectPage, self).entries()
@@ -139,23 +169,33 @@ class CategorySubjectPage(SubjectPage):
        
     def addExclusiveSubcategoriesEntry(self):
         # pylint: disable-msg=W0201
-        self._originalExclusivity = self.items[0].hasExclusiveSubcategories() if len(self.items) == 1 else False
+        self._currentExclusivity = self.items[0].hasExclusiveSubcategories() if len(self.items) == 1 else False
         self._exclusiveSubcategoriesCheckBox = \
             wx.CheckBox(self, label=_('Mutually exclusive')) 
-        self._exclusiveSubcategoriesCheckBox.SetValue(self._originalExclusivity)
+        self._exclusiveSubcategoriesCheckBox.SetValue(self._currentExclusivity)
         self._exclusiveSubcategoriesCheckBox.Bind(wx.EVT_CHECKBOX, 
-                                                  self.onExclusivityChanged)
+                                                  self.onExclusivityEdited)
         self.addEntry(_('Subcategories'), self._exclusiveSubcategoriesCheckBox,
                       flags=[None, wx.ALL])
+        if len(self.items) == 1:
+            patterns.Publisher().registerObserver(self.onExclusivityChanged, 
+                                                  eventType=self.items[0].exclusiveSubcategoriesChangedEventType(), 
+                                                  eventSource=self.items[0])
         
-    def onExclusivityChanged(self, event):
+    def onExclusivityEdited(self, event):
         event.Skip()
-        currentExclusivity = self._exclusiveSubcategoriesCheckBox.GetValue()
-        if currentExclusivity != self._originalExclusivity:
+        newExclusivity = self._exclusiveSubcategoriesCheckBox.GetValue()
+        if newExclusivity != self._currentExclusivity:
+            self._currentExclusivity = newExclusivity
             command.EditExclusiveSubcategoriesCommand(None, self.items, 
-                                                      exclusivity=currentExclusivity).do()
-            self._originalExclusivity = currentExclusivity        
+                                                      exclusivity=newExclusivity).do()
                     
+    def onExclusivityChanged(self, event):
+        newExclusivity = event.value()
+        if newExclusivity != self._currentExclusivity:
+            self._currentExclusivity = newExclusivity
+            self._exclusiveSubcategoriesCheckBox.SetValue(newExclusivity)
+            
 
 class AttachmentSubjectPage(SubjectPage):
     def __init__(self, attachments, parent, basePath, *args, **kwargs):
@@ -171,12 +211,12 @@ class AttachmentSubjectPage(SubjectPage):
         self.addDescriptionEntry()
 
     def addLocationEntry(self):
-        panel = wx.Panel(self, wx.ID_ANY)
+        panel = wx.Panel(self)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         # pylint: disable-msg=W0201
-        self._originalLocation = self.items[0].location() if len(self.items) == 1 else _('Edit to change location of all attachments')
-        self._locationEntry = widgets.SingleLineTextCtrl(panel, self._originalLocation)
-        self._locationEntry.Bind(wx.EVT_KILL_FOCUS, self.onLeavingLocationEntry)
+        self._currentLocation = self.items[0].location() if len(self.items) == 1 else _('Edit to change location of all attachments')
+        self._locationEntry = widgets.SingleLineTextCtrl(panel, self._currentLocation)
+        self._locationEntry.Bind(wx.EVT_KILL_FOCUS, self.onLocationEdited)
         sizer.Add(self._locationEntry, 1, wx.ALL, 3)
         if all(item.type_ == 'file' for item in self.items):
             button = wx.Button(panel, wx.ID_ANY, _('Browse'))
@@ -184,14 +224,24 @@ class AttachmentSubjectPage(SubjectPage):
             wx.EVT_BUTTON(button, wx.ID_ANY, self.onSelectLocation)
         panel.SetSizer(sizer)
         self.addEntry(_('Location'), panel, flags=[None, wx.ALL|wx.EXPAND])
+        if len(self.items) == 1:
+            patterns.Publisher().registerObserver(self.onLocationChanged,
+                                                  eventType=self.items[0].locationChangedEventType(),
+                                                  eventSource=self.items[0])
         
-    def onLeavingLocationEntry(self, event):
+    def onLocationEdited(self, event):
         event.Skip()
-        currentLocation = self._locationEntry.GetValue()
-        if currentLocation != self._originalLocation:
-            command.EditAttachmentLocationCommand(None, self.items, location=currentLocation).do()
-            self._originalLocation = currentLocation
+        newLocation = self._locationEntry.GetValue()
+        if newLocation != self._currentLocation:
+            self._currentLocation = newLocation
+            command.EditAttachmentLocationCommand(None, self.items, location=newLocation).do()
 
+    def onLocationChanged(self, event):
+        newLocation = event.value()
+        if newLocation != self._currentLocation:
+            self._currentLocation = newLocation
+            self._locationEntry.SetValue(newLocation)
+            
     def onSelectLocation(self, event): # pylint: disable-msg=W0613
         if self.items[0].type_ == 'file':
             basePath = os.path.split(self.items[0].normalizedLocation())[0]
@@ -205,9 +255,9 @@ class AttachmentSubjectPage(SubjectPage):
                 filename = attachment.getRelativePath(filename, self.basePath)
             self._subjectEntry.SetValue(os.path.split(filename)[-1])
             self._locationEntry.SetValue(filename)
-            self.onLeavingSubjectEntry(event)
-            self.onLeavingLocationEntry(event)
-
+            self.onSubjectEdited(event)
+            self.onLocationEdited(event)
+        
 
 class AppearancePage(Page):
     pageName = 'appearance'
@@ -233,21 +283,26 @@ class AppearancePage(Page):
     def addColorEntry(self, labelText, colorType, defaultColor):
         checkBox = wx.CheckBox(self, label=_('Use color:'))
         setattr(self, '_%sColorCheckBox'%colorType, checkBox)
-        originalColor = getattr(self.items[0], '%sColor'%colorType)(recursive=False) if len(self.items) == 1 else None
-        setattr(self, '_original%sColor'%colorType.capitalize(), originalColor)
-        checkBox.SetValue(originalColor is not None)
+        currentColor = getattr(self.items[0], '%sColor'%colorType)(recursive=False) if len(self.items) == 1 else None
+        setattr(self, '_current%sColor'%colorType.capitalize(), currentColor)
+        checkBox.SetValue(currentColor is not None)
         checkBoxHandlerName = 'on%sColourCheckBoxChecked'%colorType.capitalize()
         checkBoxHandler = getattr(self, checkBoxHandlerName)
         checkBox.Bind(wx.EVT_CHECKBOX, checkBoxHandler)
         # wx.ColourPickerCtrl on Mac OS X expects a wx.Color and fails on tuples
         # so convert the tuples to a wx.Color:
-        originalColor = wx.Color(*originalColor) if originalColor else defaultColor # pylint: disable-msg=W0142
-        button = wx.ColourPickerCtrl(self, col=originalColor)
+        currentColor = wx.Color(*currentColor) if currentColor else defaultColor # pylint: disable-msg=W0142
+        button = wx.ColourPickerCtrl(self, col=currentColor)
         setattr(self, '_%sColorButton'%colorType, button)
         buttonHandler = getattr(self, 'on%sColourPicked'%colorType.capitalize())
         button.Bind(wx.EVT_COLOURPICKER_CHANGED, buttonHandler)
         self.addEntry(labelText, checkBox, button, flags=[None, None, wx.ALL])
-
+        if len(self.items) == 1:
+            handler = getattr(self, 'on%sColourChanged'%colorType.capitalize())
+            eventType = getattr(self.items[0], '%sColorChangedEventType'%colorType)()
+            patterns.Publisher().registerObserver(handler, eventType=eventType,
+                                                  eventSource=self.items[0])
+            
     # pylint: disable-msg=E1101
     
     def onForegroundColourCheckBoxChecked(self, event):
@@ -255,97 +310,135 @@ class AppearancePage(Page):
             of the font colour button. '''
         self._fontButton.SetColour(self._foregroundColorButton.GetColour() if \
                                    event.IsChecked() else wx.NullColour)
-        self.onForegroundColorChanged(event)
+        self.onForegroundColorEdited(event)
         
     def onForegroundColourPicked(self, event): # pylint: disable-msg=W0613 
         ''' User picked a foreground colour. Check the foreground colour check
             box and update the font colour button. '''
         self._foregroundColorCheckBox.SetValue(True)
         self._fontButton.SetColour(self._foregroundColorButton.GetColour())
-        self.onForegroundColorChanged(event)
+        self.onForegroundColorEdited(event)
         
-    def onForegroundColorChanged(self, event):
+    def onForegroundColorEdited(self, event):
         event.Skip()
         checked = self._foregroundColorCheckBox.GetValue()
-        currentColor = self._foregroundColorButton.GetColour() if checked else None
-        if currentColor != self._originalForegroundColor: # pylint: disable-msg=E0203
-            command.EditForegroundColorCommand(None, self.items, color=currentColor).do()
-            self._originalForegroundColor = currentColor # pylint: disable-msg=W0201
+        newColor = self._foregroundColorButton.GetColour() if checked else None
+        if newColor != self._currentForegroundColor: # pylint: disable-msg=E0203
+            self._currentForegroundColor = newColor # pylint: disable-msg=W0201
+            command.EditForegroundColorCommand(None, self.items, color=newColor).do()
+            
+    def onForegroundColourChanged(self, event):
+        newColor = event.value()
+        if newColor != self._currentForegroundColor:
+            self._currentForegroundColor = newColor
+            self._foregroundColorCheckBox.SetValue(newColor is not None)
+            self._foregroundColorButton.SetColour(newColor)
 
     def onBackgroundColourCheckBoxChecked(self, event):
         ''' User toggled the background colour check box. '''
-        self.onBackgroundColorChanged(event)
+        self.onBackgroundColorEdited(event)
         
     def onBackgroundColourPicked(self, event): # pylint: disable-msg=W0613 
         ''' User picked a background colour. Check the background colour check
             box. '''
         self._backgroundColorCheckBox.SetValue(True)
-        self.onBackgroundColorChanged(event)
+        self.onBackgroundColorEdited(event)
         
-    def onBackgroundColorChanged(self, event):
+    def onBackgroundColorEdited(self, event):
         event.Skip()
         checked = self._backgroundColorCheckBox.GetValue()
-        currentColor = self._backgroundColorButton.GetColour() if checked else None
-        if currentColor != self._originalBackgroundColor: # pylint: disable-msg=E0203
-            command.EditBackgroundColorCommand(None, self.items, color=currentColor).do()
-            self._originalBackgroundColor = currentColor # pylint: disable-msg=W0201
+        newColor = self._backgroundColorButton.GetColour() if checked else None
+        if newColor != self._currentBackgroundColor: # pylint: disable-msg=E0203
+            self._currentBackgroundColor = newColor # pylint: disable-msg=W0201
+            command.EditBackgroundColorCommand(None, self.items, color=newColor).do()
+
+    def onBackgroundColourChanged(self, event):
+        newColor = event.value()
+        if newColor != self._currentBackgroundColor:
+            self._currentBackgroundColor = newColor
+            self._backgroundColorCheckBox.SetValue(newColor is not None)
+            self._backgroundColorButton.SetColour(newColor)
 
     def addFontEntry(self):
         # pylint: disable-msg=W0201
         self._fontCheckBox = wx.CheckBox(self, label=_('Use font:'))
-        self._originalFont = self.items[0].font() if len(self.items) == 1 else None
+        self._currentFont = self.items[0].font() if len(self.items) == 1 else None
         currentColor = self._foregroundColorButton.GetColour()
-        self._fontCheckBox.SetValue(self._originalFont is not None)
-        self._fontCheckBox.Bind(wx.EVT_CHECKBOX, self.onFontChanged)
+        self._fontCheckBox.SetValue(self._currentFont is not None)
+        self._fontCheckBox.Bind(wx.EVT_CHECKBOX, self.onFontEdited)
         self._defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._fontButton = widgets.FontPickerCtrl(self,
-            font=self._originalFont or self._defaultFont, colour=currentColor)
-        self._fontButton.Bind(wx.EVT_FONTPICKER_CHANGED,
-                              self.onFontPickerChanged)
+            font=self._currentFont or self._defaultFont, colour=currentColor)
+        self._fontButton.Bind(wx.EVT_FONTPICKER_CHANGED, self.onFontPicked)
         self.addEntry(_('Font'), self._fontCheckBox, self._fontButton,
                       flags=[None, None, wx.ALL])
+        if len(self.items) == 1:
+            patterns.Publisher().registerObserver(self.onFontChanged, 
+                                                  eventType=self.items[0].fontChangedEventType(), 
+                                                  eventSource=self.items[0])
 
-    def onFontPickerChanged(self, event): # pylint: disable-msg=W0613 
+    def onFontPicked(self, event): # pylint: disable-msg=W0613 
         ''' User picked a font. Check the font check box and change the
             foreground color if needed. '''
         self._fontCheckBox.SetValue(True)
         if self._fontButton.GetSelectedColour() != self._foregroundColorButton.GetColour():
             self._foregroundColorCheckBox.SetValue(True)
             self._foregroundColorButton.SetColour(self._fontButton.GetSelectedColour())
-        self.onFontChanged(event)
+        self.onFontEdited(event)
         
-    def onFontChanged(self, event):
+    def onFontEdited(self, event):
         event.Skip()
         checked = self._fontCheckBox.GetValue()
-        currentFont = self._fontButton.GetSelectedFont() if checked else self._defaultFont        
-        if currentFont != self._originalFont:
-            command.EditFontCommand(None, self.items, font=currentFont).do()
-            self._originalFont = currentFont
+        newFont = self._fontButton.GetSelectedFont() if checked else None        
+        if newFont != self._currentFont:
+            self._currentFont = newFont
+            command.EditFontCommand(None, self.items, font=newFont).do()
+            
+    def onFontChanged(self, event):
+        newFont = event.value()
+        if newFont != self._currentFont:
+            self._currentFont = newFont
+            checked = newFont is not None
+            self._fontCheckBox.SetValue(checked)
+            if checked:
+                self._fontButton.SetFont(newFont or self._defaultFont)
         
     def addIconEntry(self):
         # pylint: disable-msg=W0201
         self._iconEntry = wx.combo.BitmapComboBox(self, style=wx.CB_READONLY)
-        self._iconEntry.Bind(wx.EVT_COMBOBOX, self.onIconChanged)
+        self._iconEntry.Bind(wx.EVT_COMBOBOX, self.onIconEdited)
         size = (16, 16)
         imageNames = sorted(artprovider.chooseableItemImages.keys())
         for imageName in imageNames:
             label = artprovider.chooseableItemImages[imageName]
             bitmap = wx.ArtProvider_GetBitmap(imageName, wx.ART_MENU, size)
             self._iconEntry.Append(label, bitmap, clientData=imageName)
-        self._originalIcon = self.items[0].icon() if len(self.items) == 1 else ''
-        currentSelectionIndex = imageNames.index(self._originalIcon)
+        self._currentIcon = self.items[0].icon() if len(self.items) == 1 else ''
+        currentSelectionIndex = imageNames.index(self._currentIcon)
         self._iconEntry.SetSelection(currentSelectionIndex)
         self.addEntry(_('Icon'), self._iconEntry, flags=[None, wx.ALL])
+        if len(self.items) == 1:
+            patterns.Publisher().registerObserver(self.onIconChanged, 
+                                                  eventType=self.items[0].iconChangedEventType(), 
+                                                  eventSource=self.items[0])
         
-    def onIconChanged(self, event):
+    def onIconEdited(self, event):
         event.Skip()
-        currentIcon = self._iconEntry.GetClientData(self._iconEntry.GetSelection())
-        if currentIcon != self._originalIcon:
-            selectedIcon = currentIcon[:-len('_icon')] + '_open_icon' \
-                if (currentIcon.startswith('folder') and currentIcon.count('_') == 2) \
-                else currentIcon
-            command.EditIconCommand(None, self.items, icon=currentIcon, selectedIcon=selectedIcon).do()
-            self._originalIcon = currentIcon
+        newIcon = self._iconEntry.GetClientData(self._iconEntry.GetSelection())
+        if newIcon != self._currentIcon:
+            selectedIcon = newIcon[:-len('_icon')] + '_open_icon' \
+                if (newIcon.startswith('folder') and newIcon.count('_') == 2) \
+                else newIcon
+            self._currentIcon = newIcon
+            command.EditIconCommand(None, self.items, icon=newIcon, selectedIcon=selectedIcon).do()
+            
+    def onIconChanged(self, event):
+        newIcon = event.value()
+        if newIcon != self._currentIcon:
+            self._currentIcon = newIcon
+            imageNames = sorted(artprovider.chooseableItemImages.keys())
+            newSelectionIndex = imageNames.index(newIcon)
+            self._iconEntry.SetSelection(newSelectionIndex)
     
     def entries(self):
         return dict(firstEntry=self._foregroundColorCheckBox)
@@ -1118,18 +1211,18 @@ class EffortEditBook(Page):
         
     def addDescriptionEntry(self):
         # pylint: disable-msg=W0201
-        self._originalDescription = self.items[0].description() if len(self.items) == 1 else _('Edit to change all descriptions')
-        self._descriptionEntry = widgets.MultiLineTextCtrl(self, self._originalDescription)
+        self._currentDescription = self.items[0].description() if len(self.items) == 1 else _('Edit to change all descriptions')
+        self._descriptionEntry = widgets.MultiLineTextCtrl(self, self._currentDescription)
         self._descriptionEntry.Bind(wx.EVT_KILL_FOCUS, self.onLeavingDescriptionEntry)
         self._descriptionEntry.SetSizeHints(300, 150)
         self.addEntry(_('Description'), self._descriptionEntry, growable=True)
         
     def onLeavingDescriptionEntry(self, event):
         event.Skip()
-        currentDescription = self._descriptionEntry.GetValue()
-        if currentDescription != self._originalDescription:
-            command.EditDescriptionCommand(None, self.items, description=currentDescription).do()
-            self._originalDescription = currentDescription
+        newDescription = self._descriptionEntry.GetValue()
+        if newDescription != self._currentDescription:
+            command.EditDescriptionCommand(None, self.items, description=newDescription).do()
+            self._currentDescription = newDescription
 
     def setFocus(self, columnName):
         self.setFocusOnEntry(columnName)
@@ -1178,7 +1271,7 @@ class Editor(widgets.ButtonLessDialog):
 
     def onClose(self, event):
         event.Skip()
-        patterns.Publisher().removeObserver(self.onItemRemoved)
+        patterns.Publisher().removeInstance(self)
                         
     def onItemRemoved(self, event):
         ''' The item we're editing or one of its ancestors has been removed or 

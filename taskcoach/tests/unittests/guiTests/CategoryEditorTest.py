@@ -25,7 +25,7 @@ from taskcoachlib.domain import category, attachment
 class DummyEvent(object):
     def Skip(self):
         pass
-
+    
 
 class CategoryEditorTest(test.wxTestCase):
     def setUp(self):
@@ -100,7 +100,7 @@ class CategoryEditorTest(test.wxTestCase):
 
     def testEditMutualExclusiveSubcategories(self):
         self.editor._interior[0]._exclusiveSubcategoriesCheckBox.SetValue(True)
-        self.editor._interior[0].onExclusivityChanged(DummyEvent())
+        self.editor._interior[0].onExclusivityEdited(DummyEvent())
         self.failUnless(self.category.hasExclusiveSubcategories())
         
     def testAddNote(self):

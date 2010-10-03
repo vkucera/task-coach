@@ -195,7 +195,7 @@ class EditTaskTest(TaskEditorTestCase):
         
     def testSetNegativePriority(self):
         self.editor._interior[0]._priorityEntry.SetValue(-1)
-        self.editor._interior[0].onPriorityChanged(DummyEvent())
+        self.editor._interior[0].onPriorityEdited(DummyEvent())
         self.assertEqual(-1, self.task.priority())
         
     def testSetHourlyFee(self):
