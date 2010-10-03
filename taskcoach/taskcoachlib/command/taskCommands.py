@@ -307,18 +307,19 @@ class ChangePriorityCommand(base.BaseCommand): # pylint: disable-msg=W0223
 class IncPriorityCommand(ChangePriorityCommand):
     plural_name = _('Increase priority')
     singular_name = _('Increase priority of "%s"')
-    
     delta = +1
 
 
 class DecPriorityCommand(ChangePriorityCommand):
     plural_name = _('Decrease priority')
     singular_name = _('Decrease priority of "%s"')
-
     delta = -1
     
 
 class EditPriorityCommand(base.BaseCommand):
+    plural_name = _('Change priority')
+    singular_name = _('Change priority of "%s"')
+    
     def __init__(self, *args, **kwargs):
         self.__newPriority = kwargs.pop('priority')
         super(EditPriorityCommand, self).__init__(*args, **kwargs)

@@ -29,7 +29,6 @@ Release('1.3.0', 'October 3, 2010',
 for OK and Cancel buttons anymore. 
 TODO:
 - Update dialog title when user edits subject
-- Remove multiple item editing check marks.
 - Updating of data in dialog when attributes change.''')
         ]
     ),
