@@ -211,7 +211,7 @@ class EditTaskTest(TaskEditorTestCase):
     def testBehaviorMarkCompleted(self):
         page = self.editor._interior[3]
         page._markTaskCompletedEntry.SetStringSelection('Yes')
-        page.onShouldMarkCompletedChanged(DummyEvent())
+        page.onShouldMarkCompletedEdited(DummyEvent())
         self.assertEqual(True, 
                          self.task.shouldMarkCompletedWhenAllChildrenCompleted())
 

@@ -721,48 +721,69 @@ class ProgressPage(Page):
         
     def addProgressEntry(self):
         # pylint: disable-msg=W0201
-        self._originalPercentageComplete = self.items[0].percentageComplete() if len(self.items) == 1 else self.averagePercentageComplete(self.items)
+        self._currentPercentageComplete = self.items[0].percentageComplete() if len(self.items) == 1 else self.averagePercentageComplete(self.items)
         self._percentageCompleteEntry = entry.PercentageEntry(self, 
-            self._originalPercentageComplete, 
-            callback=self.onPercentageCompleteChanged)
+            self._currentPercentageComplete, 
+            callback=self.onPercentageCompleteEdited)
         self.addEntry(_('Percentage complete'), self._percentageCompleteEntry)
-
+        if len(self.items) == 1:
+            patterns.Publisher().registerObserver(self.onPercentageCompleteChanged, 
+                                                  eventType=self.items[0].percentageCompleteChangedEventType(), 
+                                                  eventSource=self.items[0])
+            
     def averagePercentageComplete(self, items):
         return sum([item.percentageComplete() for item in items]) \
                     / float(len(items)) if items else 0
 
-    def onPercentageCompleteChanged(self):
-        currentPercentageComplete = self._percentageCompleteEntry.get()
-        if currentPercentageComplete != self._originalPercentageComplete:
+    def onPercentageCompleteEdited(self):
+        newPercentageComplete = self._percentageCompleteEntry.get()
+        if newPercentageComplete != self._currentPercentageComplete:
             command.EditPercentageCompleteCommand(None, self.items, 
-                                                  percentage=currentPercentageComplete).do()
-            self._originalPercentageComplete = currentPercentageComplete
+                                                  percentage=newPercentageComplete).do()
+            self._currentPercentageComplete = newPercentageComplete
+            
+    def onPercentageCompleteChanged(self, event):
+        newPercentageComplete = event.value()
+        if newPercentageComplete != self._currentPercentageComplete:
+            self._currentPercentageComplete = newPercentageComplete
+            self._percentageCompleteEntry.set(newPercentageComplete)
         
     def addBehaviorEntry(self):
         # pylint: disable-msg=W0201
         self._markTaskCompletedEntry = choice = wx.Choice(self)
-        self._markTaskCompletedEntry.Bind(wx.EVT_CHOICE, self.onShouldMarkCompletedChanged)
-        self._originalShouldMarkCompleted = self.items[0].shouldMarkCompletedWhenAllChildrenCompleted() if len(self.items) == 1 else None
+        self._markTaskCompletedEntry.Bind(wx.EVT_CHOICE, self.onShouldMarkCompletedEdited)
+        self._currentShouldMarkCompleted = self.items[0].shouldMarkCompletedWhenAllChildrenCompleted() if len(self.items) == 1 else None
         for choiceValue, choiceText in \
                 [(None, _('Use application-wide setting')),
                  (False, _('No')), (True, _('Yes'))]:
             choice.Append(choiceText, choiceValue)
-            if choiceValue == self._originalShouldMarkCompleted:
+            if choiceValue == self._currentShouldMarkCompleted:
                 choice.SetSelection(choice.GetCount()-1)
         if choice.GetSelection() == wx.NOT_FOUND:
             # Force a selection if necessary:
             choice.SetSelection(0)
         self.addEntry(_('Mark task completed when all children are completed?'), 
                       choice, flags=[None, wx.ALL])
+        if len(self.items) == 1:
+            patterns.Publisher().registerObserver(self.onShouldMarkCompletedChanged,
+                                                  eventType='task.setting.shouldMarkCompletedWhenAllChildrenCompleted', 
+                                                  eventSource=self.items[0])
         
-    def onShouldMarkCompletedChanged(self, event):
+    def onShouldMarkCompletedEdited(self, event):
         event.Skip()
-        currentShouldMarkCompleted = self._markTaskCompletedEntry.GetClientData( \
+        newShouldMarkCompleted = self._markTaskCompletedEntry.GetClientData( \
             self._markTaskCompletedEntry.GetSelection())
-        if currentShouldMarkCompleted != self._originalShouldMarkCompleted:
+        if newShouldMarkCompleted != self._currentShouldMarkCompleted:
             command.EditShouldMarkCompletedCommand(None, self.items, 
-                                                   shouldMarkCompleted=currentShouldMarkCompleted).do()
-            self._originalShouldMarkCompleted = currentShouldMarkCompleted
+                                                   shouldMarkCompleted=newShouldMarkCompleted).do()
+            self._currentShouldMarkCompleted = newShouldMarkCompleted
+            
+    def onShouldMarkCompletedChanged(self, event):
+        newShouldMarkCompleted = event.value()
+        if newShouldMarkCompleted != self._currentShouldMarkCompleted:
+            self._currentShouldMarkCompleted = newShouldMarkCompleted
+            index = [None, False, True].index(newShouldMarkCompleted)
+            self._markTaskCompletedEntry.SetSelection(index)
         
     def entries(self):
         return dict(percentageComplete=self._percentageCompleteEntry)
