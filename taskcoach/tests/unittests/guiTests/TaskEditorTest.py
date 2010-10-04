@@ -83,7 +83,7 @@ class TaskEditorTestCase(test.wxTestCase):
     def setRecurrence(self, newRecurrence):
         page = self.editor._interior[1]
         page.setRecurrence(newRecurrence)
-        page.onRecurrenceChanged(DummyEvent())
+        page.onRecurrenceEdited(DummyEvent())
         
         
 class EditorDisplayTest(TaskEditorTestCase):

@@ -461,29 +461,44 @@ class DatesPage(Page):
         self.addRecurrenceEntries()
         
     def addDateEntries(self):
-        # pylint: disable-msg=W0201
-        self._oldCompletionDateTime = dict([(item, item.completionDateTime()) for item in self.items]) 
-        for label, taskMethodName, callback in [(_('Start date'), 'startDateTime', self.onStartDateTimeChanged),
-                                                (_('Due date'), 'dueDateTime', self.onDueDateTimeChanged),
-                                                (_('Completion date'), 'completionDateTime', self.onCompletionDateTimeChanged)]:
-            dateTime = getattr(self.items[0], taskMethodName)() if len(self.items) == 1 else date.DateTime()
-            setattr(self, '_original%s'%(taskMethodName[0].capitalize()+taskMethodName[1:]), dateTime)
-            dateTimeEntry = entry.DateTimeEntry(self, self.__settings, dateTime,
-                                                callback=callback)
-            setattr(self, '_%sEntry'%taskMethodName, dateTimeEntry)
-            self.addEntry(label, dateTimeEntry)
+        for label, taskMethodName in [(_('Start date'), 'startDateTime'),
+                                      (_('Due date'), 'dueDateTime'),
+                                      (_('Completion date'), 'completionDateTime')]:
+            self.addDateEntry(label, taskMethodName)
+            
+    def addDateEntry(self, label, taskMethodName):
+        def capitalize(string):
+            return string[0].capitalize()+string[1:]
+
+        dateTime = getattr(self.items[0], taskMethodName)() if len(self.items) == 1 else date.DateTime()
+        setattr(self, '_current%s'%capitalize(taskMethodName), dateTime)
+        callback = getattr(self, 'on%sEdited'%capitalize(taskMethodName))
+        dateTimeEntry = entry.DateTimeEntry(self, self.__settings, dateTime,
+                                            callback=callback)
+        setattr(self, '_%sEntry'%taskMethodName, dateTimeEntry)
+        self.addEntry(label, dateTimeEntry)
+        if len(self.items) == 1:
+            eventHandler = getattr(self, 'on%sChanged'%capitalize(taskMethodName))
+            eventType = 'task.%s'%taskMethodName
+            patterns.Publisher().registerObserver(eventHandler, 
+                                                  eventType=eventType, 
+                                                  eventSource=self.items[0])
         
     def addReminderEntry(self):
         # pylint: disable-msg=W0201
-        self._originalReminderDateTime = self.items[0].reminder() if len(self.items) == 1 else date.DateTime()
+        self._currentReminderDateTime = self.items[0].reminder() if len(self.items) == 1 else date.DateTime()
         self._reminderDateTimeEntry = entry.DateTimeEntry(self, self.__settings, 
-                                                          self._originalReminderDateTime)
+                                                          self._currentReminderDateTime)
         # If the user has not set a reminder, make sure that the default 
         # date time in the reminder entry is a reasonable suggestion:
         if self._reminderDateTimeEntry.get() == date.DateTime():
             self.suggestReminder()
         self.addEntry(_('Reminder'), self._reminderDateTimeEntry)
-        self._reminderDateTimeEntry.setCallback(self.onReminderChanged)
+        self._reminderDateTimeEntry.setCallback(self.onReminderEdited)
+        if len(self.items) == 1:
+            patterns.Publisher().registerObserver(self.onReminderChanged, 
+                                                  eventType='task.reminder', 
+                                                  eventSource=self.items[0])
         
     def addRecurrenceEntries(self):
         # pylint: disable-msg=W0201
@@ -491,7 +506,7 @@ class DatesPage(Page):
         panelSizer = wx.BoxSizer(wx.HORIZONTAL)
         self._recurrenceEntry = wx.Choice(recurrencePanel, 
             choices=[_('None'), _('Daily'), _('Weekly'), _('Monthly'), _('Yearly')])        
-        self._recurrenceEntry.Bind(wx.EVT_CHOICE, self.onRecurrencePeriodChanged)
+        self._recurrenceEntry.Bind(wx.EVT_CHOICE, self.onRecurrencePeriodEdited)
         panelSizer.Add(self._recurrenceEntry, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3,-1))
         staticText = wx.StaticText(recurrencePanel, label=_(', every'))
@@ -500,7 +515,7 @@ class DatesPage(Page):
         self._recurrenceFrequencyEntry = widgets.SpinCtrl(recurrencePanel, 
                                                           size=(50,-1), 
                                                           initial=1, min=1)
-        self._recurrenceFrequencyEntry.Bind(wx.EVT_SPINCTRL, self.onRecurrenceChanged)
+        self._recurrenceFrequencyEntry.Bind(wx.EVT_SPINCTRL, self.onRecurrenceEdited)
         panelSizer.Add(self._recurrenceFrequencyEntry, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3,-1))
         self._recurrenceStaticText = wx.StaticText(recurrencePanel, 
@@ -509,7 +524,7 @@ class DatesPage(Page):
         panelSizer.Add((3, -1))
         self._recurrenceSameWeekdayCheckBox = wx.CheckBox(recurrencePanel, 
             label=_('keeping dates on the same weekday'))
-        self._recurrenceSameWeekdayCheckBox.Bind(wx.EVT_CHECKBOX, self.onRecurrenceChanged)
+        self._recurrenceSameWeekdayCheckBox.Bind(wx.EVT_CHECKBOX, self.onRecurrenceEdited)
         panelSizer.Add(self._recurrenceSameWeekdayCheckBox, proportion=1, 
                        flag=wx.ALIGN_CENTER_VERTICAL|wx.EXPAND)
         recurrencePanel.SetSizerAndFit(panelSizer)
@@ -523,13 +538,17 @@ class DatesPage(Page):
         panelSizer.Add((3,-1))
         self._maxRecurrenceCountEntry = widgets.SpinCtrl(maxPanel, size=(50,-1), 
                                                          initial=1, min=1)
-        self._maxRecurrenceCountEntry.Bind(wx.EVT_SPINCTRL, self.onRecurrenceChanged)
+        self._maxRecurrenceCountEntry.Bind(wx.EVT_SPINCTRL, self.onRecurrenceEdited)
         panelSizer.Add(self._maxRecurrenceCountEntry)
         maxPanel.SetSizerAndFit(panelSizer)
         self.addEntry(_('Recurrence'), recurrencePanel)
         self.addEntry(_('Maximum number\nof recurrences'), maxPanel)
-        self._originalRecurrence = self.items[0].recurrence() if len(self.items) == 1 else date.Recurrence()
-        self.setRecurrence(self._originalRecurrence)
+        self._currentRecurrence = self.items[0].recurrence() if len(self.items) == 1 else date.Recurrence()
+        self.setRecurrence(self._currentRecurrence)
+        if len(self.items) == 1:
+            patterns.Publisher().registerObserver(self.onRecurrenceChanged, 
+                                                  eventType='task.recurrence', 
+                                                  eventSource=self.items[0])
             
     def entries(self):
         # pylint: disable-msg=E1101
@@ -540,26 +559,32 @@ class DatesPage(Page):
                     reminder=self._reminderDateTimeEntry, 
                     recurrence=self._recurrenceEntry)
     
-    def onRecurrencePeriodChanged(self, event):
+    def onRecurrencePeriodEdited(self, event):
         recurrenceOn = event.String != _('None')
         self._maxRecurrenceCheckBox.Enable(recurrenceOn)
         self._recurrenceFrequencyEntry.Enable(recurrenceOn)
         self._maxRecurrenceCountEntry.Enable(recurrenceOn and \
             self._maxRecurrenceCheckBox.IsChecked())
         self.updateRecurrenceLabel()
-        self.onRecurrenceChanged(event)
+        self.onRecurrenceEdited(event)
 
     def onMaxRecurrenceChecked(self, event):
         maxRecurrenceOn = event.IsChecked()
         self._maxRecurrenceCountEntry.Enable(maxRecurrenceOn)
-        self.onRecurrenceChanged(event)
+        self.onRecurrenceEdited(event)
         
-    def onRecurrenceChanged(self, event):
+    def onRecurrenceEdited(self, event):
         event.Skip()
-        currentRecurrence = self.getRecurrence()
-        if currentRecurrence != self._originalRecurrence:
-            command.EditRecurrenceCommand(None, self.items, recurrence=currentRecurrence).do()
-            self._originalRecurrence = currentRecurrence
+        newRecurrence = self.getRecurrence()
+        if newRecurrence != self._currentRecurrence:
+            command.EditRecurrenceCommand(None, self.items, recurrence=newRecurrence).do()
+            self._currentRecurrence = newRecurrence
+            
+    def onRecurrenceChanged(self, event):
+        newRecurrence = event.value()
+        if newRecurrence != self._currentRecurrence:
+            self._currentRecurrence = newRecurrence
+            self.setRecurrence(newRecurrence)
             
     def getRecurrence(self):
         recurrenceDict = {0: '', 1: 'daily', 2: 'weekly', 3: 'monthly', 4: 'yearly'}
@@ -570,34 +595,52 @@ class DatesPage(Page):
         kwargs['sameWeekday'] = self._recurrenceSameWeekdayCheckBox.IsChecked()
         return date.Recurrence(**kwargs) # pylint: disable-msg=W0142
     
+    def onStartDateTimeEdited(self, event):
+        # pylint: disable-msg=E1101,E0203,W0201
+        event.Skip()
+        newStartDateTime = self._startDateTimeEntry.get()
+        if newStartDateTime != self._currentStartDateTime:
+            command.EditStartDateTimeCommand(None, self.items, datetime=newStartDateTime).do()
+            self._currentStartDateTime = newStartDateTime
+            self.onDateTimeEdited()
+            
     def onStartDateTimeChanged(self, event):
-        # pylint: disable-msg=E1101,E0203,W0201
-        event.Skip()
-        currentStartDateTime = self._startDateTimeEntry.get()
-        if currentStartDateTime != self._originalStartDateTime:
-            command.EditStartDateTimeCommand(None, self.items, datetime=currentStartDateTime).do()
-            self._originalStartDateTime = currentStartDateTime
-            self.onDateTimeChanged()
+        newStartDateTime = event.value()
+        if newStartDateTime != self._currentStartDateTime:
+            self._currentStartDateTime = newStartDateTime
+            self._startDateTimeEntry.set(newStartDateTime) # pylint: disable-msg=E1101
                     
-    def onDueDateTimeChanged(self, event):
+    def onDueDateTimeEdited(self, event):
         # pylint: disable-msg=E1101,E0203,W0201
         event.Skip()
-        currentDueDateTime = self._dueDateTimeEntry.get()
-        if currentDueDateTime != self._originalDueDateTime:
-            command.EditDueDateTimeCommand(None, self.items, datetime=currentDueDateTime).do()
-            self._originalDueDateTime = currentDueDateTime
-            self.onDateTimeChanged()
+        newDueDateTime = self._dueDateTimeEntry.get()
+        if newDueDateTime != self._currentDueDateTime:
+            command.EditDueDateTimeCommand(None, self.items, datetime=newDueDateTime).do()
+            self._currentDueDateTime = newDueDateTime
+            self.onDateTimeEdited()
+
+    def onDueDateTimeChanged(self, event):
+        newDueDateTime = event.value()
+        if newDueDateTime != self._currentDueDateTime:
+            self._currentDueDateTime = newDueDateTime
+            self._dueDateTimeEntry.set(newDueDateTime) # pylint: disable-msg=E1101
+
+    def onCompletionDateTimeEdited(self, event):
+        # pylint: disable-msg=E1101,E0203,W0201
+        event.Skip()
+        newCompletionDateTime = self._completionDateTimeEntry.get()
+        if newCompletionDateTime != self._currentCompletionDateTime:
+            command.EditCompletionDateTimeCommand(None, self.items, datetime=newCompletionDateTime).do()
+            self._currentCompletionDateTime = newCompletionDateTime
+            self.onDateTimeEdited()
 
     def onCompletionDateTimeChanged(self, event):
-        # pylint: disable-msg=E1101,E0203,W0201
-        event.Skip()
-        currentCompletionDateTime = self._completionDateTimeEntry.get()
-        if currentCompletionDateTime != self._originalCompletionDateTime:
-            command.EditCompletionDateTimeCommand(None, self.items, datetime=currentCompletionDateTime).do()
-            self._originalCompletionDateTime = currentCompletionDateTime
-            self.onDateTimeChanged()
+        newCompletionDateTime = event.value()
+        if newCompletionDateTime != self._currentCompletionDateTime:
+            self._currentCompletionDateTime = newCompletionDateTime
+            self._completionDateTimeEntry.set(newCompletionDateTime) # pylint: disable-msg=E1101
 
-    def onDateTimeChanged(self):
+    def onDateTimeEdited(self):
         ''' Called when one of the DateTimeEntries is changed by the user. 
             Update the suggested reminder if no reminder was set by the user. '''
         # Make sure the reminderDateTimeEntry has been created:
@@ -605,12 +648,18 @@ class DatesPage(Page):
             self._reminderDateTimeEntry.get() == date.DateTime():
             self.suggestReminder()
             
-    def onReminderChanged(self, event):
+    def onReminderEdited(self, event):
         event.Skip()
-        currentReminderDatetime = self._reminderDateTimeEntry.get()
-        if currentReminderDatetime != self._originalReminderDateTime:
-            command.EditReminderDateTimeCommand(None, self.items, datetime=currentReminderDatetime).do()
-            self._originalReminderDateTime = currentReminderDatetime
+        newReminderDatetime = self._reminderDateTimeEntry.get()
+        if newReminderDatetime != self._currentReminderDateTime:
+            command.EditReminderDateTimeCommand(None, self.items, datetime=newReminderDatetime).do()
+            self._currentReminderDateTime = newReminderDatetime
+            
+    def onReminderChanged(self, event):
+        newReminderDateTime = event.value()
+        if newReminderDateTime != self._currentReminderDateTime:
+            self._currentReminderDateTime = newReminderDateTime
+            self.setReminder(newReminderDateTime)
         
     def setReminder(self, reminder):
         self._reminderDateTimeEntry.set(reminder)
