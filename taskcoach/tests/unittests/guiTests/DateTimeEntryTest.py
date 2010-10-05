@@ -56,3 +56,33 @@ class DateEntryConstructorTest(test.wxTestCase):
         self.assertAlmostEqual(tomorrow.toordinal(), 
                                dateTimeEntry.get().toordinal(),
                                places=2)
+
+
+class TimeDeltaEntryTest(test.wxTestCase):
+    def setUp(self):
+        super(TimeDeltaEntryTest, self).setUp()
+        self.timeDeltaEntry = entry.TimeDeltaEntry(self.frame)
+        
+    def testDefaultValue(self):
+        self.assertEqual(date.TimeDelta(), self.timeDeltaEntry.get())
+        
+    def testDefaultDisplayedValue(self):    
+        self.assertEqual('       0:00:00', self.timeDeltaEntry._entry.GetValue())
+        
+    def testSetValue(self):
+        self.timeDeltaEntry.set(date.TimeDelta(hours=10, seconds=5))
+        self.assertEqual('      10:00:05', self.timeDeltaEntry._entry.GetValue())
+    
+    def testOverflow(self):
+        self.timeDeltaEntry.set(date.TimeDelta(hours=1000000000))
+        self.assertEqual('       0:00:00', self.timeDeltaEntry._entry.GetValue())
+    
+    
+class ReadOnlyTimeDeltaEntryTest(test.wxTestCase):
+    def setUp(self):
+        super(ReadOnlyTimeDeltaEntryTest, self).setUp()
+        self.timeDeltaEntry = entry.TimeDeltaEntry(self.frame, readonly=True)
+
+    def testSetNegativeValue(self):
+        self.timeDeltaEntry.set(date.TimeDelta(hours=-10, minutes=-20))
+        self.assertEqual('     -10:20:00', self.timeDeltaEntry._entry.GetValue())

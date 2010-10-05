@@ -66,9 +66,12 @@ class TimeDeltaEntry(widgets.PanelWithBoxSizer):
                  *args, **kwargs):
         super(TimeDeltaEntry, self).__init__(parent, *args, **kwargs)
         hours, minutes, seconds = timeDelta.hoursMinutesSeconds()
-        self._entry = widgets.masked.TextCtrl(self, mask='#{6}:##:##',
+        if timeDelta < self.defaultTimeDelta:
+            hours = -hours
+        mask = 'X{8}:XX:XX' if readonly else '#{8}:##:##' # X is needed to allow for negative values 
+        self._entry = widgets.masked.TextCtrl(self, mask=mask,
             formatcodes='FS',
-            fields=[masked.Field(formatcodes='r', defaultValue='%6d'%hours),
+            fields=[masked.Field(formatcodes='r', defaultValue='%8d'%hours),
                     masked.Field(defaultValue='%02d'%minutes),
                     masked.Field(defaultValue='%02d'%seconds)])
         if readonly:
@@ -79,6 +82,15 @@ class TimeDeltaEntry(widgets.PanelWithBoxSizer):
     def get(self):
         return date.parseTimeDelta(self._entry.GetValue())
     
+    def set(self, newTimeDelta):
+        hours, minutes, seconds = newTimeDelta.hoursMinutesSeconds()
+        if newTimeDelta < self.defaultTimeDelta:
+            hours = -hours
+        try:
+            self._entry.SetValue('%8d:%02d:%02d'%(hours, minutes, seconds))
+        except ValueError:            
+            self._entry.SetValue('%8d:%02d:%02d'%(0, 0, 0))
+            
     def Bind(self, *args, **kwargs): # pylint: disable-msg=W0221
         self._entry.Bind(*args, **kwargs)
 

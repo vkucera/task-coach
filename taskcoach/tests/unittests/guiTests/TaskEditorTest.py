@@ -200,12 +200,12 @@ class EditTaskTest(TaskEditorTestCase):
         
     def testSetHourlyFee(self):
         self.editor._interior[5]._hourlyFeeEntry.set(100)
-        self.editor._interior[5].onLeavingHourlyFeeEntry(DummyEvent())
+        self.editor._interior[5].onHourlyFeeEdited(DummyEvent())
         self.assertEqual(100, self.task.hourlyFee())
 
     def testSetFixedFee(self):
         self.editor._interior[5]._fixedFeeEntry.set(100.5)
-        self.editor._interior[5].onLeavingFixedFeeEntry(DummyEvent())
+        self.editor._interior[5].onFixedFeeEdited(DummyEvent())
         self.assertEqual(100.5, self.task.fixedFee())
 
     def testBehaviorMarkCompleted(self):

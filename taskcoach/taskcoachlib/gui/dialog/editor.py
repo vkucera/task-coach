@@ -798,6 +798,7 @@ class BudgetPage(Page):
         self.addBudgetEntries()
         self.addLine()
         self.addRevenueEntries()
+        self.observeTracking()
         
     def addBudgetEntries(self):
         self.addBudgetEntry()
@@ -807,28 +808,62 @@ class BudgetPage(Page):
             
     def addBudgetEntry(self):
         # pylint: disable-msg=W0201
-        self._originalBudget = self.items[0].budget() if len(self.items) == 1 else date.TimeDelta()
-        self._budgetEntry = entry.TimeDeltaEntry(self, self._originalBudget)
-        self._budgetEntry.Bind(wx.EVT_KILL_FOCUS, self.onLeavingBudgetEntry)
+        self._currentBudget = self.items[0].budget() if len(self.items) == 1 else date.TimeDelta()
+        self._budgetEntry = entry.TimeDeltaEntry(self, self._currentBudget)
+        self._budgetEntry.Bind(wx.EVT_KILL_FOCUS, self.onBudgetEdited)
         self.addEntry(_('Budget'), self._budgetEntry, flags=[None, wx.ALL])
+        if len(self.items) == 1:
+            patterns.Publisher().registerObserver(self.onBudgetChanged, 
+                                                  eventType='task.budget', 
+                                                  eventSource=self.items[0])
         
-    def onLeavingBudgetEntry(self, event):
+    def onBudgetEdited(self, event):
         event.Skip()
-        currentBudget = self._budgetEntry.get()
-        if self._originalBudget != currentBudget:
-            command.EditBudgetCommand(None, self.items, budget=currentBudget).do()
-            self._originalBudget = currentBudget
-        
+        newBudget = self._budgetEntry.get()
+        if newBudget != self._currentBudget:
+            self._currentBudget = newBudget
+            command.EditBudgetCommand(None, self.items, budget=newBudget).do()
+            
+    def onBudgetChanged(self, event):
+        newBudget = event.value()
+        if newBudget != self._currentBudget:
+            self._currentBudget = newBudget
+            self._budgetEntry.set(newBudget)
+            
     def addTimeSpentEntry(self):
-        timeSpent = self.items[0].timeSpent()
-        timeSpentEntry = entry.TimeDeltaEntry(self, timeSpent, readonly=True)
-        self.addEntry(_('Time spent'), timeSpentEntry, flags=[None, wx.ALL])
+        assert len(self.items) == 1
+        # pylint: disable-msg=W0201 
+        self._timeSpentEntry = entry.TimeDeltaEntry(self, 
+                                                    self.items[0].timeSpent(), 
+                                                    readonly=True)
+        self.addEntry(_('Time spent'), self._timeSpentEntry, 
+                      flags=[None, wx.ALL])
+        patterns.Publisher().registerObserver(self.onTimeSpentChanged, 
+                                              eventType='task.timeSpent', 
+                                              eventSource=self.items[0])
         
+    def onTimeSpentChanged(self, event): # pylint: disable-msg=W0613
+        newTimeSpent = self.items[0].timeSpent()
+        if newTimeSpent != self._timeSpentEntry.get():
+            self._timeSpentEntry.set(newTimeSpent)
+            
     def addBudgetLeftEntry(self):
-        budgetLeft = self.items[0].budgetLeft()
-        budgetLeftEntry = entry.TimeDeltaEntry(self, budgetLeft, readonly=True)
-        self.addEntry(_('Budget left'), budgetLeftEntry, flags=[None, wx.ALL])
+        assert len(self.items) == 1
+        # pylint: disable-msg=W0201
+        self._budgetLeftEntry = entry.TimeDeltaEntry(self, 
+                                                     self.items[0].budgetLeft(), 
+                                                     readonly=True)
+        self.addEntry(_('Budget left'), self._budgetLeftEntry, 
+                      flags=[None, wx.ALL])
+        patterns.Publisher().registerObserver(self.onBudgetLeftChanged,
+                                              eventType='task.budgetLeft',
+                                              eventSource=self.items[0])
         
+    def onBudgetLeftChanged(self, event): # pylint: disable-msg=W0613
+        newBudgetLeft = self.items[0].budgetLeft()
+        if newBudgetLeft != self._budgetLeftEntry.get():
+            self._budgetLeftEntry.set(newBudgetLeft)
+            
     def addRevenueEntries(self):
         self.addHourlyFeeEntry()
         self.addFixedFeeEntry()
@@ -837,36 +872,96 @@ class BudgetPage(Page):
             
     def addHourlyFeeEntry(self):
         # pylint: disable-msg=W0201
-        self._originalHourlyFee = self.items[0].hourlyFee() if len(self.items) == 1 else 0
-        self._hourlyFeeEntry = entry.AmountEntry(self, self._originalHourlyFee)
-        self._hourlyFeeEntry.Bind(wx.EVT_KILL_FOCUS, self.onLeavingHourlyFeeEntry)
+        self._currentHourlyFee = self.items[0].hourlyFee() if len(self.items) == 1 else 0
+        self._hourlyFeeEntry = entry.AmountEntry(self, self._currentHourlyFee)
+        self._hourlyFeeEntry.Bind(wx.EVT_KILL_FOCUS, self.onHourlyFeeEdited)
         self.addEntry(_('Hourly fee'), self._hourlyFeeEntry, flags=[None, wx.ALL])
-        
-    def onLeavingHourlyFeeEntry(self, event):
+        if len(self.items) == 1:
+            patterns.Publisher().registerObserver(self.onHourlyFeeChanged, 
+                                                  eventType=self.items[0].hourlyFeeChangedEventType(), 
+                                                  eventSource=self.items[0])
+            
+    def onHourlyFeeEdited(self, event):
         event.Skip()
-        currentHourlyFee = self._hourlyFeeEntry.get()
-        if currentHourlyFee != self._originalHourlyFee:
-            command.EditHourlyFeeCommand(None, self.items, hourlyFee=currentHourlyFee).do()
-            self._originalHourlyFee = currentHourlyFee
+        newHourlyFee = self._hourlyFeeEntry.get()
+        if newHourlyFee != self._currentHourlyFee:
+            self._currentHourlyFee = newHourlyFee
+            command.EditHourlyFeeCommand(None, self.items, hourlyFee=newHourlyFee).do()
+            
+    def onHourlyFeeChanged(self, event):
+        newHourlyFee = event.value()
+        if newHourlyFee != self._currentHourlyFee:
+            self._currentHourlyFee = newHourlyFee
+            self._hourlyFeeEntry.set(newHourlyFee)
         
     def addFixedFeeEntry(self):
         # pylint: disable-msg=W0201
-        self._originalFixedFee = self.items[0].fixedFee() if len(self.items) == 1 else 0
-        self._fixedFeeEntry = entry.AmountEntry(self, self._originalFixedFee)
-        self._fixedFeeEntry.Bind(wx.EVT_KILL_FOCUS, self.onLeavingFixedFeeEntry)
+        self._currentFixedFee = self.items[0].fixedFee() if len(self.items) == 1 else 0
+        self._fixedFeeEntry = entry.AmountEntry(self, self._currentFixedFee)
+        self._fixedFeeEntry.Bind(wx.EVT_KILL_FOCUS, self.onFixedFeeEdited)
         self.addEntry(_('Fixed fee'), self._fixedFeeEntry, flags=[None, wx.ALL])
+        if len(self.items) == 1:
+            patterns.Publisher().registerObserver(self.onFixedFeeChanged, 
+                                                  eventType='task.fixedFee', 
+                                                  eventSource=self.items[0])
 
-    def onLeavingFixedFeeEntry(self, event):
+    def onFixedFeeEdited(self, event):
         event.Skip()
-        currentFixedFee = self._fixedFeeEntry.get()
-        if currentFixedFee != self._originalFixedFee:
-            command.EditFixedFeeCommand(None, self.items, fixedFee=currentFixedFee).do()
-            self._originalFixedFee = currentFixedFee
+        newFixedFee = self._fixedFeeEntry.get()
+        if newFixedFee != self._currentFixedFee:
+            self._currentFixedFee = newFixedFee
+            command.EditFixedFeeCommand(None, self.items, fixedFee=newFixedFee).do()
+            
+    def onFixedFeeChanged(self, event):
+        newFixedFee = event.value()
+        if newFixedFee != self._currentFixedFee:
+            self._currentFixedFee = newFixedFee
+            self._fixedFeeEntry.set(newFixedFee)
         
     def addRevenueEntry(self):
+        assert len(self.items) == 1
         revenue = self.items[0].revenue()
-        revenueEntry = entry.AmountEntry(self, revenue, readonly=True)
-        self.addEntry(_('Revenue'), revenueEntry, flags=[None, wx.ALL])
+        self._revenueEntry = entry.AmountEntry(self, revenue, readonly=True) # pylint: disable-msg=W0201
+        self.addEntry(_('Revenue'), self._revenueEntry, flags=[None, wx.ALL])
+        patterns.Publisher().registerObserver(self.onRevenueChanged,
+                                              eventType='task.revenue',
+                                              eventSource=self.items[0])
+
+    def onRevenueChanged(self, event): # pylint: disable-msg=W0613
+        newRevenue = self.items[0].revenue()
+        if newRevenue != self._revenueEntry.get():
+            self._revenueEntry.set(newRevenue)
+            
+    def observeTracking(self):
+        if len(self.items) != 1:
+            return
+        registerObserver = patterns.Publisher().registerObserver
+        item = self.items[0]
+        registerObserver(self.onStartTracking, 
+                         eventType=item.trackStartEventType(), 
+                         eventSource=item)
+        registerObserver(self.onStopTracking, 
+                         eventType=item.trackStopEventType(), 
+                         eventSource=item)
+        if item.isBeingTracked():
+            self.onStartTracking(None)
+        
+    def onStartTracking(self, event): # pylint: disable-msg=W0613
+        # We might already be observing the clock if the user is tracking this
+        # task with multiple effort records simultaneously
+        if self.onEverySecond not in patterns.Publisher().observers('clock.second'):
+            patterns.Publisher().registerObserver(self.onEverySecond, eventType='clock.second')
+        
+    def onStopTracking(self, event): # pylint: disable-msg=W0613
+        # We might need to keep tracking the clock if the user was tracking this
+        # task with multiple effort records simultaneously
+        if not self.items[0].isBeingTracked():
+            patterns.Publisher().removeObserver(self.onEverySecond, eventType='clock.second')
+    
+    def onEverySecond(self, event):
+        self.onTimeSpentChanged(event)
+        self.onBudgetLeftChanged(event)
+        self.onRevenueChanged(event)
         
     def entries(self):
         return dict(budget=self._budgetEntry, 
@@ -1152,6 +1247,9 @@ class EditBook(widgets.Notebook):
     
     def onClose(self, event):
         event.Skip()
+        removeInstance = patterns.Publisher().removeInstance
+        for page in self:
+            removeInstance(page)
         pageNames = [self[index].pageName for index in range(self.GetPageCount())]
         self.settings.setlist('editor', '%spages'%self.object, pageNames)
 
