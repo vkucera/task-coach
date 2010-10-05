@@ -21,7 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-            
+
+Release('1.1.5', 'October 5, 2010',
+    summary='''This is a bugfix release.''',
+    bugsfixed=[
+        Bug('''Task Coach would always change budget, hourly fee, and fixed fee
+to zero when mass editing tasks.''', '3081666')
+        ]
+    ),
+    
 Release('1.1.4', 'September 30, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
