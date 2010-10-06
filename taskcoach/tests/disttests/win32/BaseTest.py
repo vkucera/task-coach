@@ -58,7 +58,7 @@ class TestWithTaskFile(base.Win32TestCase):
         # Increase priority so the task is "dirty":
         editor.findChildren('msctls_updown32', '')[0].clickAt(2, 2) 
         # Close the task edit dialog:
-        editor.findChildren('Button', 'OK')[0].clickAt(5, 5)
+        editor.close()
 
         mainwindow.waitFocus()
         mainwindow.clickAt(58, 15) # Save button

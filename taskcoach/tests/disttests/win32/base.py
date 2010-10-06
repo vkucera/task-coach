@@ -145,7 +145,7 @@ class Win32TestCase(unittest.TestCase):
         if win32event.WaitForInputIdle(hProcess, 120000) == win32event.WAIT_TIMEOUT:
             self.fail('Could not launch Task Coach.')
 
-        window = self.findWindow(r'^Errors occurred')
+        window = self.findWindow(r'^Errors occurred', tries=3)
         if window is not None:
             window.close()
             self.fail("Errors occurred. The log content was:\n" + file(self.logfilename, 'rb').read())
@@ -155,7 +155,7 @@ class Win32TestCase(unittest.TestCase):
             self.fail("Tip window didn't appear")
         window.close()
         
-        window = self.findWindow(r'^New version of Task Coach available$')
+        window = self.findWindow(r'^New version of Task Coach available$', tries=3)
         if window:
             window.close()
 
@@ -169,7 +169,7 @@ class Win32TestCase(unittest.TestCase):
         if os.path.exists(self.logfilename):
             os.remove(self.logfilename)
 
-    def findWindow(self, title, tries=10):
+    def findWindow(self, title, tries=5):
         """ Waits for a window to appear, and return a Window instance,
         or None if not found.
 
