@@ -28,6 +28,8 @@ Release('1.1.5', 'October 5, 2010',
         Bug('''Task Coach would always change budget, hourly fee, and fixed fee
 to zero when mass editing tasks.''', '3081666'),
         Bug('''Better contrast in the calendar view''', '3072138'),
+        Bug('''Tasks started at 00:00 would be displayed twice in the monthly
+vertical calendar view', '3062501'),
         ]
     ),
     
