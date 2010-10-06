@@ -52,7 +52,7 @@ class wxDrawer(object):
 		"""
 		raise NotImplementedError
 
-	def DrawSchedulesCompact(self, day, schedules, x, y, width, height):
+	def DrawSchedulesCompact(self, day, schedules, x, y, width, height, highlightColor):
 		"""
 		Draws a set of schedules in compact form (vertical
 		month). Returns a list of (schedule, point, point).
@@ -376,7 +376,7 @@ class HeaderDrawerDCMixin(object):
 
 		return w, textH * 1.5
 
-	def DrawSchedulesCompact(self, day, schedules, x, y, width, height):
+	def DrawSchedulesCompact(self, day, schedules, x, y, width, height, highlightColor):
 		if day is None:
 			self.context.SetBrush(wx.LIGHT_GREY_BRUSH)
 		else:
@@ -387,8 +387,12 @@ class HeaderDrawerDCMixin(object):
 		results = []
 
 		if day is not None:
+			if day.IsSameDate(wx.DateTime.Now()):
+				color = highlightColor
+			else:
+				color = None
 			headerW, headerH = self.DrawSimpleDayHeader(day, x, y, width, height,
-								    day.IsSameDate(wx.DateTime.Now()))
+								    highlight=color)
 			y += headerH
 			height -= headerH
 
@@ -482,7 +486,7 @@ class HeaderDrawerGCMixin(object):
 			font.SetPointSize(fsize)
 			font.SetWeight(fweight)
 
-	def DrawSchedulesCompact(self, day, schedules, x, y, width, height):
+	def DrawSchedulesCompact(self, day, schedules, x, y, width, height, highlightColor):
 		if day is None:
 			brush = self.context.CreateLinearGradientBrush(x, y, x + width, y + height, wx.BLACK, SCHEDULER_BACKGROUND_BRUSH)
 		else:
@@ -502,8 +506,12 @@ class HeaderDrawerGCMixin(object):
 			results = []
 
 			if day is not None:
+				if day.IsSameDate(wx.DateTime.Now()):
+					color = highlightColor
+				else:
+					color = None
 				headerW, headerH = self.DrawSimpleDayHeader(day, x, y, width, height,
-									    highlight=day.IsSameDate(wx.DateTime.Now()))
+									    highlight=color)
 				y += headerH
 				height -= headerH
 

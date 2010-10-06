@@ -137,13 +137,13 @@ class wxSchedulerPaint( object ):
 		current = []
 
 		schedules = schedules[:] # Don't alter original list
-## 		def compare(a, b):
-## 			if a.start.IsEqualTo(b.start):
-## 				return cmp(a.description, b.description)
-## 			if a.start.IsEarlierThan(b.start):
-## 				return -1
-## 			return 1
-## 		schedules.sort(compare)
+		## def compare(a, b):
+		## 	if a.start.IsEqualTo(b.start):
+		## 		return cmp(a.description, b.description)
+		## 	if a.start.IsEarlierThan(b.start):
+		## 		return -1
+		## 	return 1
+		## schedules.sort(compare)
 
 		def findNext(schedule):
 			# Among schedules that start after this one ends, find the "nearest".
@@ -508,7 +508,8 @@ class wxSchedulerPaint( object ):
 									     wx.Point(d * cellW + cellW, w * cellH + cellH)))
 
 					self._schedulesCoords.extend(drawer.DrawSchedulesCompact(theDay, schedules, d * cellW,
-												 w * cellH + y, cellW, cellH))
+												 w * cellH + y, cellW, cellH,
+												 self._highlightColor))
 
 			return (max(MONTH_CELL_SIZE_MIN.width * 7, width),
 				max(MONTH_CELL_SIZE_MIN.height * (w + 1), height))
