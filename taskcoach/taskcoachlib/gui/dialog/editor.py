@@ -1330,27 +1330,37 @@ class EffortEditBook(Page):
         ''' Add an entry for changing the task that this effort record
             belongs to. '''
         # pylint: disable-msg=W0201
-        self._originalTask = self.items[0].task()
+        self._currentTask = self.items[0].task()
         self._taskEntry = entry.TaskComboTreeBox(self,
             rootTasks=self._taskList.rootItems(),
-            selectedTask=self._originalTask)
-        self._taskEntry._comboTreeBox.Bind(wx.EVT_COMBOBOX, self.onTaskChanged)
+            selectedTask=self._currentTask)
+        self._taskEntry._comboTreeBox.Bind(wx.EVT_COMBOBOX, self.onTaskEdited)
         self.addEntry(_('Task'), self._taskEntry, flags=[None, wx.ALL|wx.EXPAND])
-        
-    def onTaskChanged(self, event): # pylint: disable-msg=W0613
+        if len(self.items) == 1:
+            patterns.Publisher().registerObserver(self.onTaskChanged,
+                                                  eventType=self.items[0].taskChangedEventType(),
+                                                  eventSource=self.items[0])
+            
+    def onTaskEdited(self, event): # pylint: disable-msg=W0613
         event.Skip()
         newTask = self._taskEntry.GetSelection()
-        if newTask != self._originalTask:
+        if newTask != self._currentTask:
+            self._currentTask = newTask
             command.ChangeTaskCommand(None, self.items, task=newTask).do()
-            self._originalTask = newTask
-
+            
+    def onTaskChanged(self, event):
+        newTask = event.value()
+        if newTask != self._currentTask:
+            self._currentTask = newTask
+            self._taskEntry.SetSelection(newTask)
+            
     def addStartAndStopEntries(self):
         # pylint: disable-msg=W0201,W0142
         dateTimeEntryKwArgs = dict(showSeconds=True)
-        self._originalStartDateTime = self.items[0].getStart() 
+        self._currentStartDateTime = self.items[0].getStart() 
         self._startDateTimeEntry = entry.DateTimeEntry(self, self._settings,
-            self._originalStartDateTime, noneAllowed=False, 
-            callback=self.onStartDateTimeChanged, **dateTimeEntryKwArgs)
+            self._currentStartDateTime, noneAllowed=False, 
+            callback=self.onStartDateTimeEdited, **dateTimeEntryKwArgs)
         startFromLastEffortButton = wx.Button(self,
             label=_('Start tracking from last stop time'))
         self.Bind(wx.EVT_BUTTON, self.onStartFromLastEffort,
@@ -1358,10 +1368,10 @@ class EffortEditBook(Page):
         if self._effortList.maxDateTime() is None:
             startFromLastEffortButton.Disable()
 
-        self._originalStopDateTime = self.items[0].getStop()
+        self._currentStopDateTime = self.items[0].getStop()
         self._stopDateTimeEntry = entry.DateTimeEntry(self, self._settings, 
-            self._originalStopDateTime, noneAllowed=True, 
-            callback=self.onStopDateTimeChanged, **dateTimeEntryKwArgs)
+            self._currentStopDateTime, noneAllowed=True, 
+            callback=self.onStopDateTimeEdited, **dateTimeEntryKwArgs)
         self.invalidPeriodMessage = wx.StaticText(self, label='')
         font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         font.SetWeight(wx.FONTWEIGHT_BOLD )
@@ -1371,23 +1381,42 @@ class EffortEditBook(Page):
         self.addEntry(_('Start'), self._startDateTimeEntry,
             startFromLastEffortButton, flags=flags)
         self.addEntry(_('Stop'), self._stopDateTimeEntry, self.invalidPeriodMessage, flags=flags)
-
-    def onStartDateTimeChanged(self, *args, **kwargs):
-        currentStartDateTime = self._startDateTimeEntry.get()
-        if currentStartDateTime != self._originalStartDateTime and self.validPeriod():
-            command.ChangeEffortStartDateTimeCommand(None, self.items, datetime=currentStartDateTime).do()
-            self._originalStartDateTime = currentStartDateTime
+        if len(self.items) == 1:
+            registerObserver = patterns.Publisher().registerObserver
+            registerObserver(self.onStartDateTimeChanged, 
+                             eventType='effort.start', eventSource=self.items[0])
+            registerObserver(self.onStopDateTimeChanged, 
+                             eventType='effort.stop', eventSource=self.items[0])
+            
+    def onStartDateTimeEdited(self, *args, **kwargs):
+        newStartDateTime = self._startDateTimeEntry.get()
+        if newStartDateTime != self._currentStartDateTime and self.validPeriod():
+            self._currentStartDateTime = newStartDateTime
+            command.ChangeEffortStartDateTimeCommand(None, self.items, datetime=newStartDateTime).do()
         self.updateInvalidPeriodMessage()
         
-    def onStopDateTimeChanged(self, *args, **kwargs): 
-        currentStopDateTime = self._stopDateTimeEntry.get()
-        if currentStopDateTime != self._originalStopDateTime and self.validPeriod():
-            command.ChangeEffortStopDateTimeCommand(None, self.items, datetime=currentStopDateTime).do()
-            self._originalStopDateTime = currentStopDateTime
+    def onStartDateTimeChanged(self, event):
+        newStartDateTime = event.value()
+        if newStartDateTime != self._currentStartDateTime:
+            self._currentStartDateTime = newStartDateTime
+            self._startDateTimeEntry.set(newStartDateTime)
+        
+    def onStopDateTimeEdited(self, *args, **kwargs): 
+        newStopDateTime = self._stopDateTimeEntry.get()
+        if newStopDateTime != self._currentStopDateTime and self.validPeriod():
+            self._currentStopDateTime = newStopDateTime
+            command.ChangeEffortStopDateTimeCommand(None, self.items, datetime=newStopDateTime).do()
         self.updateInvalidPeriodMessage()
+
+    def onStopDateTimeChanged(self, event):
+        newStopDateTime = event.value()
+        if newStopDateTime != self._currentStopDateTime:
+            self._currentStopDateTime = newStopDateTime
+            self._stopDateTimeEntry.set(newStopDateTime)
         
     def updateInvalidPeriodMessage(self):
-        self.invalidPeriodMessage.SetLabel('' if self.validPeriod() else _('Warning: start must be earlier than stop'))
+        self.invalidPeriodMessage.SetLabel('' if self.validPeriod() else \
+                                           _('Warning: start must be earlier than stop'))
                 
     def onStartFromLastEffort(self, event): # pylint: disable-msg=W0613
         self._startDateTimeEntry.set(self._effortList.maxDateTime())
@@ -1405,13 +1434,23 @@ class EffortEditBook(Page):
         self._descriptionEntry.Bind(wx.EVT_KILL_FOCUS, self.onDescriptionEdited)
         self._descriptionEntry.SetSizeHints(300, 150)
         self.addEntry(_('Description'), self._descriptionEntry, growable=True)
+        if len(self.items) == 1:
+            patterns.Publisher().registerObserver(self.onDescriptionChanged, 
+                                                  eventType=self.items[0].descriptionChangedEventType(), 
+                                                  eventSource=self.items[0])
         
     def onDescriptionEdited(self, event):
         event.Skip()
         newDescription = self._descriptionEntry.GetValue()
         if newDescription != self._currentDescription:
-            command.EditDescriptionCommand(None, self.items, description=newDescription).do()
             self._currentDescription = newDescription
+            command.EditDescriptionCommand(None, self.items, description=newDescription).do()
+
+    def onDescriptionChanged(self, event):
+        newDescription = event.value()
+        if newDescription != self._currentDescription:
+            self._currentDescription = newDescription
+            self._descriptionEntry.SetValue(newDescription)
 
     def setFocus(self, columnName):
         self.setFocusOnEntry(columnName)

@@ -59,6 +59,6 @@ class EffortEditorTest(test.wxTestCase):
         
     def testChangeTask(self):
         self.editor._interior._taskEntry.SetStringSelection('task2')
-        self.editor._interior.onTaskChanged(DummyEvent())
+        self.editor._interior.onTaskEdited(DummyEvent())
         self.assertEqual(self.task2, self.effort.task())
         self.failIf(self.effort in self.task1.efforts())

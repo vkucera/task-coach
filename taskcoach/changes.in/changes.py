@@ -28,8 +28,8 @@ Release('1.3.0', 'October 6, 2010',
         Feature('''Item edit dialogs make changes immediately, thus no need
 for OK and Cancel buttons anymore. 
 TODO:
-- Update dialog title when user edits subject
-- Updating of data in dialog when attributes change.''')
+- Put subject between " in dialog title.
+- Update dialog title when user edits subject.''')
         ],
     bugsFixed=[
         Bug('''It was and is possible to open multiple edit dialogs for the same
