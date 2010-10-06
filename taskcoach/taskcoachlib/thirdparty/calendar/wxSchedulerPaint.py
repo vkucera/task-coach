@@ -56,6 +56,12 @@ class wxSchedulerPaint( object ):
 		self._minSize = None
 		self._drawHeaders = True
 
+		# The highlight colour is too dark
+		color = wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHT )
+		self._highlightColor = wx.Colour(int((color.Red() + 255) / 2),
+						 int((color.Green() + 255) / 2),
+						 int((color.Blue() + 255) / 2))
+
 		self.pageNumber = None
 		self.pageCount = 1
 
@@ -102,9 +108,9 @@ class wxSchedulerPaint( object ):
 		for schedule in schedules:
 			schedule.bounds = None
 
-			if schedule.start.IsLaterThan(end):
+			if schedule.start.IsLaterThan(end) or schedule.start.IsEqualTo(end):
 				continue
-                        if start.IsLaterThan(schedule.end):
+                        if start.IsLaterThan(schedule.end) or start.IsEqualTo(schedule.end):
 				continue
 
 			newSchedule = schedule.Clone()
@@ -186,8 +192,12 @@ class wxSchedulerPaint( object ):
 			theDay = utils.copyDateTime(start)
 			theDay.AddDS(wx.DateSpan(days=dayN))
 			theDay.SetSecond(0)
+			if theDay.IsSameDate( wx.DateTime.Now() ) and self._viewType != wxSCHEDULER_DAILY:
+				color = self._highlightColor
+			else:
+				color = None
 			drawer.DrawDayBackground( x + 1.0 * width / daysCount * dayN, y, 1.0 * width / daysCount, height,
-						  highlight=theDay.IsSameDate( wx.DateTime.Now() ) and self._viewType != wxSCHEDULER_DAILY )
+						  highlight=color )
 
 		if blocks:
 			dayWidth = width / len(blocks)
@@ -364,8 +374,12 @@ class wxSchedulerPaint( object ):
 
 		for weekday in xrange(7):
 			theDay = utils.setToWeekDayInSameWeek(utils.copyDateTime(firstDay), weekday, self._weekstart)
+			if theDay.IsSameDate( wx.DateTime.Now() ):
+				color = self._highlightColor
+			else:
+				color = None
 			w, h = drawer.DrawDayHeader(theDay, x + weekday * 1.0 * width / 7, y, 1.0 * width / 7, height,
-						    highlight=theDay.IsSameDate(wx.DateTime.Now()))
+						    highlight=color)
 			maxDY = max(maxDY, h)
 
 		return maxDY
@@ -441,9 +455,13 @@ class wxSchedulerPaint( object ):
 			for idx in xrange(daysCount):
 				theDay = utils.copyDateTime(day)
 				theDay.AddDS(wx.DateSpan(days=idx))
+				if theDay.IsSameDate( wx.DateTime.Now() ):
+					color = self._highlightColor
+				else:
+					color = None
 				w, h = drawer.DrawSimpleDayHeader(theDay, x + 1.0 * idx * width / daysCount,
 								  y + h, 1.0 * width / daysCount, height,
-								  theDay.IsSameDate(wx.DateTime.Now()))
+								  highlight=color)
 				maxDY = max(maxDY, h)
 
 			h += maxDY
@@ -490,7 +508,8 @@ class wxSchedulerPaint( object ):
 									     wx.Point(d * cellW + cellW, w * cellH + cellH)))
 
 					self._schedulesCoords.extend(drawer.DrawSchedulesCompact(theDay, schedules, d * cellW,
-												 w * cellH + y, cellW, cellH))
+												 w * cellH + y, cellW, cellH,
+												 self._highlightColor))
 
 			return (max(MONTH_CELL_SIZE_MIN.width * 7, width),
 				max(MONTH_CELL_SIZE_MIN.height * (w + 1), height))
@@ -704,6 +723,21 @@ class wxSchedulerPaint( object ):
 		Returns the current drawing style.
 		"""
 		return self._style
+
+	def SetHighlightColor( self, color ):
+		"""
+		Sets the highlight color, i.e. the color used to draw
+		today's background.
+		"""
+
+		self._highlightColor = color
+
+	def GetHighlightColor( self ):
+		"""
+		Returns the current highlight color.
+		"""
+
+		return self._highlightColor
 
 	def SetDrawer(self, drawerClass):
 		"""

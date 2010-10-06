@@ -21,7 +21,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-            
+
+Release('1.1.5', 'October 5, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Task Coach would always change budget, hourly fee, and fixed fee
+to zero when mass editing tasks.''', '3081666'),
+        Bug('''Better contrast in the calendar view''', '3072138'),
+        Bug('''Tasks started at 00:00 would be displayed twice in the monthly
+vertical calendar view', '3062501'),
+        ]
+    ),
+    
 Release('1.2.0', 'September 30, 2010',
     summary='''This release adds task dependencies.''',
     featuresAdded=[
