@@ -26,7 +26,8 @@ Release('1.1.5', 'October 5, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Task Coach would always change budget, hourly fee, and fixed fee
-to zero when mass editing tasks.''', '3081666')
+to zero when mass editing tasks.''', '3081666'),
+        Bug('''Better contrast in the calendar view''', '3072138'),
         ]
     ),
     
