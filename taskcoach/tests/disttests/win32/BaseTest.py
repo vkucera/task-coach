@@ -51,7 +51,7 @@ class TestWithTaskFile(base.Win32TestCase):
         for _ in range(2):
             w[1].clickAt(5, 30)
 
-        editor = self.findWindow(r'^Edit task')
+        editor = self.findWindow(r'^Edit')
         self.failIf(editor is None, 'Task editor not found')
         editor.waitFocus()
 
