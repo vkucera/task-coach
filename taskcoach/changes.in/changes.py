@@ -24,7 +24,7 @@ releases = [
 
 Release('1.1.5', 'October 5, 2010',
     summary='''This is a bugfix release.''',
-    bugsfixed=[
+    bugsFixed=[
         Bug('''Task Coach would always change budget, hourly fee, and fixed fee
 to zero when mass editing tasks.''', '3081666')
         ]
