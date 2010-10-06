@@ -970,19 +970,6 @@ class BudgetPage(Page):
                     fixedFee=self._fixedFeeEntry,  
                     revenue=self._hourlyFeeEntry)
 
-    # XXXFIXME: ok() was removed from Trunk but modified in release-1.x. There's
-    # probably something to do :)
-
-    ## @patterns.eventSource    
-    ## def ok(self, event=None): # pylint: disable-msg=W0221
-    ##     for item in self.items:
-    ##         if len(self.items) == 1 or self._budgetLabel.IsChecked():
-    ##             item.setBudget(self._budgetEntry.get(), event=event)
-    ##         if len(self.items) == 1 or self._hourlyFeeLabel.IsChecked():
-    ##             item.setHourlyFee(self._hourlyFeeEntry.get(), event=event)
-    ##         if len(self.items) == 1 or self._fixedFeeLabel.IsChecked():
-    ##             item.setFixedFee(self._fixedFeeEntry.get(), event=event)
-
 
 class PageWithViewer(Page):
     columns = 1
