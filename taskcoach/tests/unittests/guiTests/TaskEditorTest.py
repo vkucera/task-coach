@@ -64,7 +64,7 @@ class TaskEditorTestCase(test.wxTestCase):
         page._subjectEntry.SetFocus()
         page.setSubject(newSubject)
         if '__WXGTK__' == wx.Platform: 
-            page.onLeavingSubjectEntry(DummyEvent()) # pragma: no cover
+            page.onSubjectEdited(DummyEvent()) # pragma: no cover
         else:
             page._descriptionEntry.SetFocus() # pragma: no cover
         
@@ -73,7 +73,7 @@ class TaskEditorTestCase(test.wxTestCase):
         page._descriptionEntry.SetFocus()
         page.setDescription(newDescription)
         if '__WXGTK__' == wx.Platform:
-            page.onLeavingDescriptionEntry(DummyEvent()) # pragma: no cover
+            page.onDescriptionEdited(DummyEvent()) # pragma: no cover
         else:
             page._subjectEntry.SetFocus() # pragma: no cover
 

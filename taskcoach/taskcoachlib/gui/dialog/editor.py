@@ -1045,8 +1045,18 @@ class CategoriesPage(PageWithViewer):
     pageIcon = 'folder_blue_arrow_icon'
     
     def createViewer(self, taskFile, settings, settingsSection):
+        assert len(self.items) == 1
+        item = self.items[0]
+        registerObserver = patterns.Publisher().registerObserver
+        for eventType in (item.categoryAddedEventType(), 
+                         item.categoryRemovedEventType()):
+            registerObserver(self.onCategoryChanged, eventType=eventType,
+                            eventSource=item)
         return LocalCategoryViewer(self.items, self, taskFile, settings,
                                    settingsSection=settingsSection)
+        
+    def onCategoryChanged(self, event):
+        self.viewer.refreshItems(*event.values())
         
     def entries(self):
         return dict(categories=self.viewer) 
@@ -1057,14 +1067,7 @@ class LocalAttachmentViewer(viewer.AttachmentViewer):
         self.attachmentOwner = kwargs.pop('owner')
         attachments = attachment.AttachmentList(self.attachmentOwner.attachments())
         super(LocalAttachmentViewer, self).__init__(attachmentsToShow=attachments, *args, **kwargs)
-        patterns.Publisher().registerObserver(self.onOriginalAttachmentsChanged, 
-            eventType=self.attachmentOwner.attachmentsChangedEventType(), 
-            eventSource=self.attachmentOwner)
 
-    def onOriginalAttachmentsChanged(self, event): # pylint: disable-msg=W0613
-        self.domainObjectsToView().clear()
-        self.domainObjectsToView().extend(self.attachmentOwner.attachments())
-        
     def newItemCommand(self, *args, **kwargs):
         return command.AddAttachmentCommand(None, [self.attachmentOwner])
     
@@ -1078,8 +1081,17 @@ class AttachmentsPage(PageWithViewer):
     pageIcon = 'paperclip_icon'
     
     def createViewer(self, taskFile, settings, settingsSection):
+        assert len(self.items) == 1
+        item = self.items[0]
+        patterns.Publisher().registerObserver(self.onAttachmentsChanged, 
+            eventType=item.attachmentsChangedEventType(), 
+            eventSource=item)    
         return LocalAttachmentViewer(self, taskFile, settings,
-            settingsSection=settingsSection, owner=self.items[0])
+            settingsSection=settingsSection, owner=item)
+
+    def onAttachmentsChanged(self, event): # pylint: disable-msg=W0613
+        self.viewer.domainObjectsToView().clear()
+        self.viewer.domainObjectsToView().extend(self.items[0].attachments())
         
     def entries(self):
         return dict(attachments=self.viewer)
@@ -1090,14 +1102,7 @@ class LocalNoteViewer(viewer.BaseNoteViewer):
         self.noteOwner = kwargs.pop('owner')
         notes = note.NoteContainer(self.noteOwner.notes())
         super(LocalNoteViewer, self).__init__(notesToShow=notes, *args, **kwargs)
-        patterns.Publisher().registerObserver(self.onOriginalNotesChanged,
-            eventType=self.noteOwner.notesChangedEventType(),
-            eventSource=self.noteOwner)
-        
-    def onOriginalNotesChanged(self, event): # pylint: disable-msg=W0613
-        self.domainObjectsToView().clear()
-        self.domainObjectsToView().extend(self.noteOwner.notes())
-        
+
     def newItemCommand(self, *args, **kwargs):
         return command.AddNoteCommand(None, [self.noteOwner])
     
@@ -1114,9 +1119,17 @@ class NotesPage(PageWithViewer):
     pageIcon = 'note_icon'
     
     def createViewer(self, taskFile, settings, settingsSection):
+        assert len(self.items) == 1
+        item = self.items[0]
+        patterns.Publisher().registerObserver(self.onNotesChanged,
+                                              eventType=item.notesChangedEventType(),
+                                              eventSource=item)
         return LocalNoteViewer(self, taskFile, settings, 
-                                     settingsSection=settingsSection,
-                                     owner=self.items[0])
+                               settingsSection=settingsSection, owner=item)
+
+    def onNotesChanged(self, event): # pylint: disable-msg=W0613
+        self.viewer.domainObjectsToView().clear()
+        self.viewer.domainObjectsToView().extend(self.items[0].notes())
 
     def entries(self):
         return dict(notes=self.viewer)
@@ -1139,8 +1152,9 @@ class LocalPrerequisiteViewer(viewer.CheckableTaskViewer):
         item = self.widget.GetItemPyData(event.GetItem())
         isChecked = event.GetItem().IsChecked()
         if isChecked != self.getIsItemChecked(item):
-            command.TogglePrerequisiteCommand(None, self.__items, checkedPrerequisites=[item],
-                                              uncheckedPrerequisites=[]).do()
+            checked, unchecked = ([item], []) if isChecked else ([], [item])            
+            command.TogglePrerequisiteCommand(None, self.__items, 
+                checkedPrerequisites=checked, uncheckedPrerequisites=unchecked).do()
     
     
 class PrerequisitesPage(PageWithViewer):
@@ -1149,8 +1163,15 @@ class PrerequisitesPage(PageWithViewer):
     pageIcon = 'trafficlight_icon'
     
     def createViewer(self, taskFile, settings, settingsSection):
+        assert len(self.items) == 1
+        patterns.Publisher().registerObserver(self.onPrerequisitesChanged, 
+                                              eventType='task.prerequisites', 
+                                              eventSource=self.items[0])
         return LocalPrerequisiteViewer(self.items, self, taskFile, settings,
                                        settingsSection=settingsSection)
+        
+    def onPrerequisitesChanged(self, event):
+        self.viewer.refreshItems(*event.values())
     
     def entries(self):
         return dict(prerequisites=self.viewer, dependencies=self.viewer)
@@ -1381,11 +1402,11 @@ class EffortEditBook(Page):
         # pylint: disable-msg=W0201
         self._currentDescription = self.items[0].description() if len(self.items) == 1 else _('Edit to change all descriptions')
         self._descriptionEntry = widgets.MultiLineTextCtrl(self, self._currentDescription)
-        self._descriptionEntry.Bind(wx.EVT_KILL_FOCUS, self.onLeavingDescriptionEntry)
+        self._descriptionEntry.Bind(wx.EVT_KILL_FOCUS, self.onDescriptionEdited)
         self._descriptionEntry.SetSizeHints(300, 150)
         self.addEntry(_('Description'), self._descriptionEntry, growable=True)
         
-    def onLeavingDescriptionEntry(self, event):
+    def onDescriptionEdited(self, event):
         event.Skip()
         newDescription = self._descriptionEntry.GetValue()
         if newDescription != self._currentDescription:

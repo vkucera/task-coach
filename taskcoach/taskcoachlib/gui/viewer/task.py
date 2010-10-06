@@ -148,7 +148,8 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
                           task.Task.fontChangedEventType(),
                           task.Task.iconChangedEventType(),
                           task.Task.selectedIconChangedEventType(),
-                          task.Task.percentageCompleteChangedEventType()):
+                          task.Task.percentageCompleteChangedEventType(),
+                          'task.prerequisites'):
             patterns.Publisher().registerObserver(self.onAttributeChanged,
                                                   eventType=eventType)
         patterns.Publisher().registerObserver(self.atMidnight,

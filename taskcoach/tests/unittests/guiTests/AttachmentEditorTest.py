@@ -43,7 +43,7 @@ class AttachmentEditorTest(test.wxTestCase):
         page._subjectEntry.SetFocus()
         page.setSubject(newSubject)
         if '__WXGTK__' == wx.Platform:
-            page.onLeavingSubjectEntry(DummyEvent())
+            page.onSubjectEdited(DummyEvent())
         else:
             page._descriptionEntry.SetFocus()
         
@@ -52,7 +52,7 @@ class AttachmentEditorTest(test.wxTestCase):
         page._descriptionEntry.SetFocus()
         page.setDescription(newDescription)
         if '__WXGTK__' == wx.Platform:
-            page.onLeavingDescriptionEntry(DummyEvent())
+            page.onDescriptionEdited(DummyEvent())
         else:
             page._subjectEntry.SetFocus()
         
