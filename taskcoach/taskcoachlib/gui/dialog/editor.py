@@ -1139,8 +1139,6 @@ class LocalPrerequisiteViewer(viewer.CheckableTaskViewer):
     def __init__(self, items, *args, **kwargs):
         self.__items = items
         super(LocalPrerequisiteViewer, self).__init__(*args, **kwargs)
-        for item in self.domainObjectsToView():
-            item.expand(context=self.settingsSection())
 
     def getIsItemChecked(self, item):
         return item in self.__items[0].prerequisites()
