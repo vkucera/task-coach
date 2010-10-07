@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-10-06 22:53+West-Europa (zomertijd)\n"
+"POT-Creation-Date: 2010-10-07 21:08+West-Europa (zomertijd)\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1333,32 +1333,44 @@ msgstr ""
 msgid "Warning: start must be earlier than stop"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\editor.py:1474
-msgid "Edit %s"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\editor.py:1475
-msgid "Edit multiple items"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\editor.py:1518
-msgid "Edit multiple tasks"
-msgstr ""
-
-#: taskcoachlib\gui\dialog\editor.py:1523
-msgid "Edit multiple categories"
-msgstr ""
-
 #: taskcoachlib\gui\dialog\editor.py:1528
-msgid "Edit multiple notes"
+msgid "Multiple tasks"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\editor.py:1533
-msgid "Edit multiple attachmentss"
+#: taskcoachlib\gui\dialog\editor.py:1529
+msgid "%s (task)"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\editor.py:1538
-msgid "Edit multiple efforts"
+#: taskcoachlib\gui\dialog\editor.py:1534
+msgid "Multiple categories"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\editor.py:1535
+msgid "%s (category)"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\editor.py:1540
+msgid "Multiple notes"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\editor.py:1541
+msgid "%s (note)"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\editor.py:1546
+msgid "Multiple attachments"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\editor.py:1547
+msgid "%s (attachment)"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\editor.py:1552
+msgid "Multiple efforts"
+msgstr ""
+
+#: taskcoachlib\gui\dialog\editor.py:1553
+msgid "%s (effort)"
 msgstr ""
 
 #: taskcoachlib\gui\dialog\iphone.py:32
