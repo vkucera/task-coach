@@ -1471,19 +1471,22 @@ class EffortEditBook(Page):
     
 class Editor(widgets.ButtonLessDialog):
     EditBookClass = lambda: 'Subclass responsibility'
-    singular_title = _('Edit %s')
-    plural_title = _('Edit multiple items')
+    singular_title = 'Subclass responsibility %s'
+    plural_title = 'Subclass responsibility'
     
     def __init__(self, parent, items, settings, container, taskFile, *args, **kwargs):
         self._items = items
         self._settings = settings
         self._taskFile = taskFile
-        title = self.plural_title if len(items) > 1 else self.singular_title%items[0].subject()
-        super(Editor, self).__init__(parent, title, *args, **kwargs)
+        super(Editor, self).__init__(parent, self.title(), *args, **kwargs)
         columnName = kwargs.get('columnName', '')
         self._interior.setFocus(columnName)
         patterns.Publisher().registerObserver(self.onItemRemoved, 
             eventType=container.removeItemEventType(), eventSource=container)
+        if len(self._items) == 1:
+            patterns.Publisher().registerObserver(self.onSubjectChanged,
+                                                  eventType=self._items[0].subjectChangedEventType(),
+                                                  eventSource=self._items[0])
         self.Bind(wx.EVT_CLOSE, self.onClose)
 
         if '__WXMAC__' in wx.PlatformInfo:
@@ -1513,27 +1516,39 @@ class Editor(widgets.ButtonLessDialog):
                 self.Close()
                 break            
 
-
+    def onSubjectChanged(self, event): # pylint: disable-msg=W0613
+        self.SetTitle(self.title())
+        
+    def title(self):
+        return self.plural_title if len(self._items) > 1 else \
+               self.singular_title%self._items[0].subject()
+    
+    
 class TaskEditor(Editor):
-    plural_title = _('Edit multiple tasks')
+    plural_title = _('Multiple tasks')
+    singular_title = _('%s (task)')
     EditBookClass = TaskEditBook
 
 
 class CategoryEditor(Editor):
-    plural_title = _('Edit multiple categories')
+    plural_title = _('Multiple categories')
+    singular_title = _('%s (category)')
     EditBookClass = CategoryEditBook
 
 
 class NoteEditor(Editor):
-    plural_title = _('Edit multiple notes')
+    plural_title = _('Multiple notes')
+    singular_title = _('%s (note)')
     EditBookClass = NoteEditBook
 
 
 class AttachmentEditor(Editor):
-    plural_title = _('Edit multiple attachmentss')
+    plural_title = _('Multiple attachments')
+    singular_title = _('%s (attachment)')
     EditBookClass = AttachmentEditBook
 
 
 class EffortEditor(Editor):
-    plural_title = _('Edit multiple efforts')
+    plural_title = _('Multiple efforts')
+    singular_title = _('%s (effort)')
     EditBookClass = EffortEditBook

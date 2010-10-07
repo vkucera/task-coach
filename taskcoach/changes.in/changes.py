@@ -22,14 +22,14 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.0', 'October 6, 2010',
+Release('1.3.0', 'October 7, 2010',
     summary='''This release ...''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
-for OK and Cancel buttons anymore. 
+for OK and Cancel buttons anymore.
 TODO:
-- Put subject between " in dialog title.
-- Update dialog title when user edits subject.''')
+- Performance
+- Refactor editor.py''')
         ],
     bugsFixed=[
         Bug('''It was and is possible to open multiple edit dialogs for the same
