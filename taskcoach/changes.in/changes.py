@@ -60,7 +60,7 @@ dependencies. The task file format version number is now 31.''')
         ],
     bugsFixed=[
         Bug('''An exception would be thrown if search strings contained a 
-'%' symbol.'''),
+percentage symbol.'''),
         Bug('''When printing, correctly align columns.'''),
         Bug('''Show sort indicator in attachment viewers.'''),
         Bug('''Task Coach would always change budget, hourly fee, and fixed fee
