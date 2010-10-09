@@ -235,6 +235,11 @@ def uploading_website_to_Dreamhost(settings, options):
  
 
 @progress
+def uploading_website_to_Hostland(settings, options):
+    uploading_website_to_website_host(settings, options, 'Hostland')
+
+
+@progress
 def registering_with_PyPI(settings, options):
     username = settings.get('pypi', 'username')
     password = settings.get('pypi', 'password')
@@ -337,6 +342,7 @@ def uploading_website(settings, options):
     uploading_website_to_Chello(settings, options)
     uploading_website_to_Hypernation(settings, options)
     uploading_website_to_Dreamhost(settings, options)
+    uploading_website_to_Hostland(settings, options)
     
 
 def announcing(settings, options):
@@ -459,6 +465,7 @@ commands = dict(release=releasing,
                 websiteChello=uploading_website_to_Chello, 
                 websiteHN=uploading_website_to_Hypernation,
                 websiteDH=uploading_website_to_Dreamhost,
+                websiteHL=uploading_website_to_Hostland,
                 twitter=announcing_on_Twitter,
                 identica=announcing_on_Identica,
                 freshmeat=announcing_on_Freshmeat,
