@@ -21,19 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-
-Release('1.1.5', 'October 5, 2010',
-    summary='''This is a bugfix release.''',
-    bugsFixed=[
-        Bug('''Task Coach would always change budget, hourly fee, and fixed fee
-to zero when mass editing tasks.''', '3081666'),
-        Bug('''Better contrast in the calendar view''', '3072138'),
-        Bug('''Tasks started at 00:00 would be displayed twice in the monthly
-vertical calendar view''', '3062501'),
-        ]
-    ),
-
-Release('1.2.0', 'September 30, 2010',
+            
+Release('1.2.0', 'October 9, 2010',
     summary='''This release adds task dependencies.''',
     featuresAdded=[
         Feature('''Tasks can have one or more prerequisite tasks. As long as 
@@ -73,7 +62,12 @@ dependencies. The task file format version number is now 31.''')
         Bug('''An exception would be thrown if search strings contained a 
 '%' symbol.'''),
         Bug('''When printing, correctly align columns.'''),
-        Bug('''Show sort indicator in attachment viewers.''')
+        Bug('''Show sort indicator in attachment viewers.'''),
+        Bug('''Task Coach would always change budget, hourly fee, and fixed fee
+to zero when mass editing tasks.''', '3081666'),
+        Bug('''Better contrast in the calendar view''', '3072138'),
+        Bug('''Tasks started at 00:00 would be displayed twice in the monthly
+vertical calendar view''', '3062501')
         ]
     ),
 
