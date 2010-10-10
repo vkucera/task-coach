@@ -41,18 +41,18 @@ class AttachmentEditorTest(test.wxTestCase):
     def setSubject(self, newSubject):
         page = self.editor._interior[0]
         page._subjectEntry.SetFocus()
-        page.setSubject(newSubject)
+        page._subjectEntry.SetValue(newSubject)
         if '__WXGTK__' == wx.Platform:
-            page.onSubjectEdited(DummyEvent())
+            page._subjectSync.onSubjectEdited(DummyEvent())
         else:
             page._descriptionEntry.SetFocus()
         
     def setDescription(self, newDescription):
         page = self.editor._interior[0]
         page._descriptionEntry.SetFocus()
-        page.setDescription(newDescription)
+        page._descriptionEntry.SetValue(newDescription)
         if '__WXGTK__' == wx.Platform:
-            page.onDescriptionEdited(DummyEvent())
+            page._descriptionSync.onDescriptionEdited(DummyEvent())
         else:
             page._subjectEntry.SetFocus()
         
