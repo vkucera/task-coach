@@ -272,7 +272,11 @@ class TaskSorterSettingsTest(test.TestCase):
         self.task2.addCategory(category.Category('Category 1'))
         self.assertEqual([self.task2, self.task1], list(self.sorter))
         
-        
+    def testSortByInvalidSortKey(self):
+        self.sorter.sortBy('invalidKey')
+        self.assertEqual([self.task1, self.task2], list(self.sorter))
+
+
 class TaskSorterTreeModeTest(test.TestCase):
     def setUp(self):
         task.Task.settings = config.Settings(load=False)
@@ -335,6 +339,10 @@ class TaskSorterTreeModeTest(test.TestCase):
         self.sorter.setTreeMode(False)
         self.assertEqual(False, self.taskList.treeMode)
 
+    def testSortByInvalidSortKey(self):
+        self.sorter.sortBy('invalidKey')
+        self.assertEqual([self.parent1, self.child1, self.parent2, self.child2], 
+                         list(self.sorter))
         
             
 class EffortSorterTest(test.TestCase):

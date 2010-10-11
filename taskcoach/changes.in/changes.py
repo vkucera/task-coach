@@ -22,6 +22,14 @@ from changetypes import *
 
 releases = [
             
+Release('1.2.1', 'October 11, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+       Bug('''Don't refuse to open a task file when it is sorted on a "total"
+column.''', '3085056')
+        ]
+    ),
+            
 Release('1.2.0', 'October 9, 2010',
     summary='''This release adds task dependencies.''',
     featuresAdded=[
