@@ -22,11 +22,13 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.1', 'October 11, 2010',
+Release('1.2.1', 'October 12, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-       Bug('''Don't refuse to open a task file when it is sorted on a "total"
-column.''', '3085056')
+        Bug('''Don't refuse to open a task file when it is sorted on a "total"
+column.''', '3085056'),
+        Bug('''Don't expand tasks in the prerequisite tab when opening a task
+dialog, it's really slow.''', '3085358')
         ]
     ),
             

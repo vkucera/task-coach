@@ -759,8 +759,6 @@ class CheckableViewerMixin(object):
     def __init__(self, *args, **kwargs):
         self.__checked = dict()
         super(CheckableViewerMixin, self).__init__(*args, **kwargs)
-        for item in self.domainObjectsToView():
-            item.expand(context=self.settingsSection())
             
     def checkedItems(self):
         return dict([(item, self.getIsItemChecked(item)) for item in self.presentation()])
