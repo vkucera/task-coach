@@ -137,13 +137,13 @@ class wxSchedulerPaint( object ):
 		current = []
 
 		schedules = schedules[:] # Don't alter original list
-		## def compare(a, b):
-		## 	if a.start.IsEqualTo(b.start):
-		## 		return cmp(a.description, b.description)
-		## 	if a.start.IsEarlierThan(b.start):
-		## 		return -1
-		## 	return 1
-		## schedules.sort(compare)
+## 		def compare(a, b):
+## 			if a.start.IsEqualTo(b.start):
+## 				return cmp(a.description, b.description)
+## 			if a.start.IsEarlierThan(b.start):
+## 				return -1
+## 			return 1
+## 		schedules.sort(compare)
 
 		def findNext(schedule):
 			# Among schedules that start after this one ends, find the "nearest".
@@ -441,7 +441,11 @@ class wxSchedulerPaint( object ):
 			return max(WEEK_SIZE_MIN.width * self._periodCount + LEFT_COLUMN_SIZE, minWidth), minHeight
 
 	def _paintMonthlyHeaders( self, drawer, day, x, y, width, height ):
-		w, h = drawer.DrawMonthHeader(day, x, y, width, height)
+		if isinstance(self, wx.ScrolledWindow):
+			_, h = drawer.DrawMonthHeader(day, 0, 0, self.GetSizeTuple()[0], height)
+			w = width
+		else:
+			w, h = drawer.DrawMonthHeader(day, x, y, width, height)
 
 		if self._style == wxSCHEDULER_HORIZONTAL:
 			day.SetDay(1)
