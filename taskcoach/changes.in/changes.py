@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.1', 'October 12, 2010',
+Release('1.2.1', 'October 13, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Don't refuse to open a task file when it is sorted on a "total"

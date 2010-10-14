@@ -37,7 +37,7 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
         # On Ubuntu, when the user has scrolled to the bottom of the tree
         # and collapses an item, the tree is not redrawn correctly. Refreshing
         # solves this. See http://trac.wxwidgets.org/ticket/11704
-        wx.CallAfter(self.MainWindow.Refresh)
+        wx.CallAfter(self.MainWindow.Refresh) 
 
     def GetSelections(self):
         ''' If the root item is hidden, it should never be selected, 
@@ -80,9 +80,6 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
     def isCheckBoxClicked(self, event):
         flags = self.HitTest(event.GetPosition())[1]
         return flags & customtree.TREE_HITTEST_ONITEMCHECKICON
-      
-    def expandAllItems(self):
-        self.ExpandAll()
 
     def collapseAllItems(self):
         for item in self.GetItemChildren():
@@ -178,6 +175,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         self.GetMainWindow().Bind(wx.EVT_LEFT_DCLICK, self.onDoubleClick)
         self.Bind(wx.EVT_TREE_BEGIN_LABEL_EDIT, self.onBeginEdit)
         self.Bind(wx.EVT_TREE_END_LABEL_EDIT, self.onEndEdit)
+        self.Bind(wx.EVT_TREE_ITEM_EXPANDING, self.onItemExpanding)
         
     def getItemTooltipData(self, item, column):
         return self.__adapter.getItemTooltipData(item, column)
@@ -226,12 +224,16 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
                                         self.getItemCTType(childObject), 
                                         data=childObject)
             self._refreshObjectMinimally(childItem, childObject)
-            self._addObjectRecursively(childItem, childObject)  
-            if self.__adapter.getItemExpanded(childObject):
+            expanded = self.__adapter.getItemExpanded(childObject)
+            if expanded:
+                self._addObjectRecursively(childItem, childObject)
                 # Call Expand on the item instead of on the tree
                 # (self.Expand(childItem)) to prevent lots of events
                 # (EVT_TREE_ITEM_EXPANDING/EXPANDED) being sent
                 childItem.Expand()
+            else:
+                self.SetItemHasChildren(childItem,
+                                        self.__adapter.children(childObject))
 
     def _refreshObjectMinimally(self, *args, **kwargs):
         self._refreshAspects(('Columns', 'Colors', 'Font', 'Selection'), *args, **kwargs)
@@ -306,6 +308,13 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
                    self.GetItemPyData(dropItem)
         dragItem = self.GetItemPyData(dragItem)
         self.dragAndDropCommand(dropItem, dragItem)
+        
+    def onItemExpanding(self, event):
+        event.Skip()
+        item = event.GetItem()
+        if self.GetChildrenCount(item, recursively=False) == 0:
+            domainObject = self.GetItemPyData(item)
+            self._addObjectRecursively(item, domainObject)
                 
     def onDoubleClick(self, event):
         self.__dontStartEditingLabelBecauseUserDoubleClicked = True

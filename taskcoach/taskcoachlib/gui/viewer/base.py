@@ -398,12 +398,12 @@ class TreeViewer(Viewer): # pylint: disable-msg=W0223
         item.expand(expanded, context=self.settingsSection())
     
     def expandAll(self):
-        self.widget.expandAllItems()
         # Since the widget does not send EVT_TREE_ITEM_EXPANDED when expanding
         # all items, we have to do the bookkeeping ourselves:
         event = patterns.Event()
         for item in self.visibleItems():
             item.expand(True, context=self.settingsSection(), event=event)
+        self.refresh()
         # Don't send the event, since the viewer has already been updated. 
 
     def collapseAll(self):
