@@ -113,6 +113,7 @@ defaults = { \
     'title': '',
     'viewtype': '1',
     'periodcount': '1',
+    'periodwidth': '150',
     'vieworientation': '1',
     'viewdate': '',
     'gradient': 'False',

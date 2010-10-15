@@ -504,6 +504,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         self.widget.SetViewType(self.settings.getint(self.settingsSection(), 'viewtype'))
         self.widget.SetStyle(self.settings.getint(self.settingsSection(), 'vieworientation'))
         self.widget.SetPeriodCount(self.settings.getint(self.settingsSection(), 'periodcount'))
+        self.widget.SetPeriodWidth(self.settings.getint(self.settingsSection(), 'periodwidth'))
 
         self.periodCountUICommand.setValue(self.settings.getint(self.settingsSection(), 'periodcount'))
         self.periodCountUICommand.enable(self.widget.GetViewType() != wxSCHEDULER_MONTHLY)
@@ -558,7 +559,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         itemPopupMenu = self.createTaskPopupMenu()
         self._popupMenus.append(itemPopupMenu)
         widget = widgets.Calendar(self, self.presentation(), self.iconName, self.onSelect,
-                                  self.onEdit, self.onCreate, itemPopupMenu,
+                                  self.onEdit, self.onCreate, self.onChangeConfig, itemPopupMenu,
                                   **self.widgetCreationKeywordArguments())
 
         if self.settings.getboolean('calendarviewer', 'gradient'):
@@ -566,6 +567,9 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
             wx.CallAfter(widget.SetDrawer, wxFancyDrawer)
 
         return widget
+
+    def onChangeConfig(self):
+        self.settings.set(self.settingsSection(), 'periodwidth', str(self.widget.GetPeriodWidth()))
 
     def onEdit(self, item):
         edit = uicommand.TaskEdit(taskList=self.presentation(), viewer=self)

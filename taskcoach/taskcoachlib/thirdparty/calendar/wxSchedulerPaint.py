@@ -24,6 +24,8 @@ EVT_SCHEDULE_RIGHT_CLICK = wx.PyEventBinder( wxEVT_COMMAND_SCHEDULE_RIGHT_CLICK 
 wxEVT_COMMAND_SCHEDULE_DCLICK = wx.NewEventType()
 EVT_SCHEDULE_DCLICK = wx.PyEventBinder( wxEVT_COMMAND_SCHEDULE_DCLICK )
 
+wxEVT_COMMAND_PERIODWIDTH_CHANGED = wx.NewEventType()
+EVT_PERIODWIDTH_CHANGED = wx.PyEventBinder( wxEVT_COMMAND_PERIODWIDTH_CHANGED )
 
 class wxSchedulerSizer(wx.PySizer):
 	def __init__(self, minSizeCallback):
@@ -55,6 +57,12 @@ class wxSchedulerPaint( object ):
 		self._bitmap = None
 		self._minSize = None
 		self._drawHeaders = True
+
+		self._periodWidth = 150
+		self._headerBounds = []
+		self._headerCursorState = 0
+		self._headerDragOrigin = None
+		self._headerDragBase = None
 
 		# The highlight colour is too dark
 		color = wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHT )
@@ -380,6 +388,7 @@ class wxSchedulerPaint( object ):
 				color = None
 			w, h = drawer.DrawDayHeader(theDay, x + weekday * 1.0 * width / 7, y, 1.0 * width / 7, height,
 						    highlight=color)
+			self._headerBounds.append((int(x + (weekday + 1) * 1.0 * width / 7), y, height))
 			maxDY = max(maxDY, h)
 
 		return maxDY
@@ -466,6 +475,7 @@ class wxSchedulerPaint( object ):
 				w, h = drawer.DrawSimpleDayHeader(theDay, x + 1.0 * idx * width / daysCount,
 								  y + h, 1.0 * width / daysCount, height,
 								  highlight=color)
+				self._headerBounds.append((x + 1.0 * (idx + 1) * width / daysCount, y + h, height))
 				maxDY = max(maxDY, h)
 
 			h += maxDY
@@ -606,9 +616,9 @@ class wxSchedulerPaint( object ):
 
 				if self._style == wxSCHEDULER_HORIZONTAL:
 					if self._viewType == wxSCHEDULER_WEEKLY:
-						minW = 200 * 7
+						minW = self._periodWidth * 7
 					elif self._viewType == wxSCHEDULER_MONTHLY:
-						return wx.Size(200 * wx.DateTime.GetNumberOfDaysInMonth(self.GetDate().GetMonth()), minH)
+						return wx.Size(self._periodWidth * wx.DateTime.GetNumberOfDaysInMonth(self.GetDate().GetMonth()), minH)
 				elif self._viewType == wxSCHEDULER_MONTHLY:
 					return wx.Size(minW, minH)
 			finally:
@@ -754,6 +764,14 @@ class wxSchedulerPaint( object ):
 	def GetDrawer(self):
 		return self._drawerClass
 
+	def SetPeriodWidth( self, width ):
+		"""Sets the width of a day in horizontal mode."""
+
+		self._periodWidth = width
+
+	def GetPeriodWidth( self ):
+		return self._periodWidth
+
 	def Refresh( self ):
 		self.DrawBuffer()
 		super( wxSchedulerPaint, self ).Refresh()
@@ -772,6 +790,10 @@ class wxSchedulerPaint( object ):
 		self._headerPanel = panel
 
 		panel.Bind( wx.EVT_PAINT, self._OnPaintHeaders )
+		panel.Bind( wx.EVT_MOTION, self._OnMoveHeaders )
+		panel.Bind( wx.EVT_LEAVE_WINDOW, self._OnLeaveHeaders )
+		panel.Bind( wx.EVT_LEFT_DOWN, self._OnLeftDownHeaders )
+		panel.Bind( wx.EVT_LEFT_UP, self._OnLeftUpHeaders )
 		panel.SetSize(wx.Size(-1, 1))
 		self.Bind(wx.EVT_SCROLLWIN, self._OnScroll)
 
@@ -810,6 +832,8 @@ class wxSchedulerPaint( object ):
 			x0 *= xu
 			x -= x0
 
+			self._headerBounds = []
+
 			if self._viewType == wxSCHEDULER_DAILY:
 				if self._style == wxSCHEDULER_VERTICAL:
 					x += LEFT_COLUMN_SIZE
@@ -839,8 +863,55 @@ class wxSchedulerPaint( object ):
 			if minH != h:
 				self._headerPanel.SetMinSize(wx.Size(-1, h))
 				self._headerPanel.GetParent().Layout()
+
+			# Mmmmh, maybe we'll support this later, but not right now
+			if self._style == wxSCHEDULER_VERTICAL:
+				self._headerBounds = []
 		finally:
 			dc.EndDrawing()
+
+	def _OnMoveHeaders( self, evt ):
+		if self._headerDragOrigin is None:
+			for x, y, h in self._headerBounds:
+				if abs(evt.GetX() - x) < 5 and evt.GetY() >= y and evt.GetY() < y + h:
+					if self._headerCursorState == 0:
+						self._headerCursorState = 1
+						self._headerPanel.SetCursor( wx.StockCursor( wx.CURSOR_SIZEWE ) )
+					break
+			else:
+				if self._headerCursorState == 1:
+					self._headerPanel.SetCursor( wx.STANDARD_CURSOR )
+					self._headerCursorState = 0
+		else:
+			deltaX = evt.GetX() - self._headerDragOrigin
+			self.SetPeriodWidth( max(50, self._headerDragBase + deltaX) )
+
+			evt = wx.PyCommandEvent( wxEVT_COMMAND_PERIODWIDTH_CHANGED )
+			evt.SetEventObject( self )
+			self.ProcessEvent( evt ) 
+
+			self.InvalidateMinSize()
+			self.Refresh()
+
+	def _OnLeaveHeaders( self, evt ):
+		if self._headerCursorState == 1 and self._headerDragOrigin is None:
+			self._headerPanel.SetCursor( wx.STANDARD_CURSOR )
+			self._headerCursorState = 0
+
+	def _OnLeftDownHeaders( self, evt ):
+		if self._headerCursorState == 1:
+			self._headerDragOrigin = evt.GetX()
+			self._headerDragBase = self._periodWidth
+			self._headerPanel.CaptureMouse()
+		else:
+			evt.Skip()
+
+	def _OnLeftUpHeaders( self, evt ):
+		if self._headerCursorState == 1:
+			self._headerPanel.ReleaseMouse()
+			self._headerDragOrigin = None
+		else:
+			evt.Skip()
 
 	def _OnScroll( self, evt ):
 		self._headerPanel.Refresh()
