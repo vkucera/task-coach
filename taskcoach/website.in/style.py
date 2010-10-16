@@ -119,9 +119,6 @@ footer = '''
                     <li><a href="i18n.html">Help translate</a></li>
                     <li><a href="devinfo.html">Help develop</a></li>
                     <li><a href="donations.html">Donate</a></li>
-                    <li><a href="http://www.cafepress.com/taskcoach/" 
-                           onClick="javascript: pageTracker._trackPageview('/outgoing/cafepress.com/taskcoach');">Buy the mug</a>
-                    </li>
                 </p>
             </div>
             <div class="navbox">
