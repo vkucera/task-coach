@@ -54,7 +54,7 @@ class TaskEditorTestCase(test.wxTestCase):
         super(TaskEditorTestCase, self).tearDown()
         
     def createTasks(self):
-        return []
+        raise NotImplementedError # pragma: no cover
     
     def getItems(self):
         raise NotImplementedError # pragma: no cover
@@ -62,18 +62,18 @@ class TaskEditorTestCase(test.wxTestCase):
     def setSubject(self, newSubject):
         page = self.editor._interior[0]
         page._subjectEntry.SetFocus()
-        page.setSubject(newSubject)
+        page._subjectEntry.SetValue(newSubject)
         if '__WXGTK__' == wx.Platform: 
-            page.onSubjectEdited(DummyEvent()) # pragma: no cover
+            page._subjectSync.onAttributeEdited(DummyEvent()) # pragma: no cover
         else:
             page._descriptionEntry.SetFocus() # pragma: no cover
         
     def setDescription(self, newDescription):
         page = self.editor._interior[0]
         page._descriptionEntry.SetFocus()
-        page.setDescription(newDescription)
+        page._descriptionEntry.SetValue(newDescription)
         if '__WXGTK__' == wx.Platform:
-            page.onDescriptionEdited(DummyEvent()) # pragma: no cover
+            page._descriptionSync.onAttributeEdited(DummyEvent()) # pragma: no cover
         else:
             page._subjectEntry.SetFocus() # pragma: no cover
 
@@ -195,7 +195,7 @@ class EditTaskTest(TaskEditorTestCase):
         
     def testSetNegativePriority(self):
         self.editor._interior[0]._priorityEntry.SetValue(-1)
-        self.editor._interior[0].onPriorityEdited(DummyEvent())
+        self.editor._interior[0]._prioritySync.onAttributeEdited(DummyEvent())
         self.assertEqual(-1, self.task.priority())
         
     def testSetHourlyFee(self):

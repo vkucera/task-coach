@@ -56,6 +56,62 @@ class Page(widgets.BookPage):
         theEntry.SetFocus()
 
 
+class AttributeSync(object):
+    def __init__(self, attributeName, entry, currentValue, items, commandClass, 
+                 editedEventType, changedEventType):
+        self._attributeName = attributeName
+        self._entry = entry
+        self._currentValue = currentValue
+        self._items = items
+        self._commandClass = commandClass
+        entry.Bind(editedEventType, self.onAttributeEdited)
+        if len(items) == 1:
+            patterns.Publisher().registerObserver(self.onAttributeChanged,
+                                                  eventType=changedEventType,
+                                                  eventSource=items[0])
+        
+    def onAttributeEdited(self, event):
+        event.Skip()
+        newValue = self.getValue()
+        if newValue != self._currentValue:
+            self._currentValue = newValue
+            commandKwArgs = self.commandKwArgs(newValue)
+            self._commandClass(None, self._items, **commandKwArgs).do()
+            
+    def onAttributeChanged(self, event):
+        newValue = event.value()
+        if newValue != self._currentValue:
+            self._currentValue = newValue
+            self.setValue(newValue)
+
+    def commandKwArgs(self, newValue):
+        return {self._attributeName: newValue}
+                        
+    def getValue(self):
+        return self._entry.GetValue()
+    
+    def setValue(self, newValue):
+        self._entry.SetValue(newValue)
+            
+            
+class IconSync(AttributeSync):
+    def commandKwArgs(self, newIcon):
+        commandKwArgs = super(IconSync, self).commandKwArgs(newIcon)
+        selectedIcon = newIcon[:-len('_icon')] + '_open_icon' \
+            if (newIcon.startswith('folder') and newIcon.count('_') == 2) \
+            else newIcon
+        commandKwArgs['selectedIcon'] = selectedIcon
+        return commandKwArgs
+    
+    def setValue(self, newIcon):
+        imageNames = sorted(artprovider.chooseableItemImages.keys())
+        newSelectionIndex = imageNames.index(newIcon)
+        self._entry.SetSelection(newSelectionIndex)
+        
+    def getValue(self):
+        return self._entry.GetClientData(self._entry.GetSelection())
+
+            
 class SubjectPage(Page):        
     pageName = 'subject'
     pageTitle = _('Description')
@@ -67,59 +123,27 @@ class SubjectPage(Page):
         
     def addSubjectEntry(self):
         # pylint: disable-msg=W0201
-        self._currentSubject = self.items[0].subject() if len(self.items) == 1 else _('Edit to change all subjects')
-        self._subjectEntry = widgets.SingleLineTextCtrl(self, self._currentSubject)
-        self._subjectEntry.Bind(wx.EVT_KILL_FOCUS, self.onSubjectEdited)
+        currentSubject = self.items[0].subject() if len(self.items) == 1 else _('Edit to change all subjects')
+        self._subjectEntry = widgets.SingleLineTextCtrl(self, currentSubject)
+        self._subjectSync = AttributeSync('subject', self._subjectEntry, 
+                                          currentSubject, self.items,
+                                          command.EditSubjectCommand, 
+                                          wx.EVT_KILL_FOCUS,
+                                          self.items[0].subjectChangedEventType())
         self.addEntry(_('Subject'), self._subjectEntry)
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onSubjectChanged, 
-                                                  eventType=self.items[0].subjectChangedEventType(),
-                                                  eventSource=self.items[0])
 
-    def onSubjectEdited(self, event):
-        event.Skip()
-        newSubject = self._subjectEntry.GetValue()
-        if newSubject != self._currentSubject:
-            command.EditSubjectCommand(None, self.items, subject=newSubject).do()
-            self._currentSubject = newSubject
-            
-    def onSubjectChanged(self, event):
-        newSubject = event.value()
-        if newSubject != self._currentSubject:
-            self._currentSubject = newSubject 
-            self.setSubject(newSubject)
-
-    def setSubject(self, subject):
-        self._subjectEntry.SetValue(subject)
-            
     def addDescriptionEntry(self):
         # pylint: disable-msg=W0201
-        self._currentDescription = self.items[0].description() if len(self.items) == 1 else _('Edit to change all descriptions')
-        self._descriptionEntry = widgets.MultiLineTextCtrl(self, self._currentDescription)
-        self._descriptionEntry.Bind(wx.EVT_KILL_FOCUS, self.onDescriptionEdited)
+        currentDescription = self.items[0].description() if len(self.items) == 1 else _('Edit to change all descriptions')
+        self._descriptionEntry = widgets.MultiLineTextCtrl(self, currentDescription)
         self._descriptionEntry.SetSizeHints(450, 150)
+        self._descriptionSync = AttributeSync('description', self._descriptionEntry,
+                                              currentDescription, self.items,
+                                              command.EditDescriptionCommand,
+                                              wx.EVT_KILL_FOCUS,
+                                              self.items[0].descriptionChangedEventType())
         self.addEntry(_('Description'), self._descriptionEntry, growable=True)
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onDescriptionChanged,
-                                                  eventType=self.items[0].descriptionChangedEventType(),
-                                                  eventSource=self.items[0])
-        
-    def onDescriptionEdited(self, event):
-        event.Skip()
-        newDescription = self._descriptionEntry.GetValue()
-        if newDescription != self._currentDescription:
-            command.EditDescriptionCommand(None, self.items, description=newDescription).do()
-            self._currentDescription = newDescription
-            
-    def onDescriptionChanged(self, event):
-        newDescription = event.value()
-        if newDescription != self._currentDescription:
-            self._currentDescription = newDescription
-            self.setDescription(newDescription)
-        
-    def setDescription(self, description):
-        self._descriptionEntry.SetValue(description)
-                
+                        
     def entries(self):
         return dict(firstEntry=self._subjectEntry,
                     subject=self._subjectEntry, 
@@ -133,28 +157,14 @@ class TaskSubjectPage(SubjectPage):
          
     def addPriorityEntry(self):
         # pylint: disable-msg=W0201
-        self._currentPriority = self.items[0].priority() if len(self.items) == 1 else 0
+        currentPriority = self.items[0].priority() if len(self.items) == 1 else 0
         self._priorityEntry = widgets.SpinCtrl(self, size=(100, -1),
-            value=str(self._currentPriority), initial=self._currentPriority)
-        self._priorityEntry.Bind(wx.EVT_SPINCTRL, self.onPriorityEdited)
+            value=str(currentPriority), initial=currentPriority)
+        self._prioritySync = AttributeSync('priority', self._priorityEntry,
+                                           currentPriority, self.items,
+                                           command.EditPriorityCommand,
+                                           wx.EVT_SPINCTRL, 'task.priority')
         self.addEntry(_('Priority'), self._priorityEntry, flags=[None, wx.ALL])
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onPriorityChanged,
-                                                  eventType='task.priority',
-                                                  eventSource=self.items[0])
-    
-    def onPriorityEdited(self, event):
-        event.Skip()
-        newPriority = self._priorityEntry.GetValue()
-        if newPriority != self._currentPriority:
-            command.EditPriorityCommand(None, self.items, priority=newPriority).do()
-            self._currentPriority = newPriority
-            
-    def onPriorityChanged(self, event):
-        newPriority = event.value()
-        if newPriority != self._currentPriority:
-            self._currentPriority = newPriority
-            self._priorityEntry.SetValue(newPriority)
             
     def entries(self):
         entries = super(TaskSubjectPage, self).entries()
@@ -169,32 +179,18 @@ class CategorySubjectPage(SubjectPage):
        
     def addExclusiveSubcategoriesEntry(self):
         # pylint: disable-msg=W0201
-        self._currentExclusivity = self.items[0].hasExclusiveSubcategories() if len(self.items) == 1 else False
-        self._exclusiveSubcategoriesCheckBox = \
-            wx.CheckBox(self, label=_('Mutually exclusive')) 
-        self._exclusiveSubcategoriesCheckBox.SetValue(self._currentExclusivity)
-        self._exclusiveSubcategoriesCheckBox.Bind(wx.EVT_CHECKBOX, 
-                                                  self.onExclusivityEdited)
+        currentExclusivity = self.items[0].hasExclusiveSubcategories() if len(self.items) == 1 else False
+        self._exclusiveSubcategoriesCheckBox = wx.CheckBox(self, label=_('Mutually exclusive')) 
+        self._exclusiveSubcategoriesCheckBox.SetValue(currentExclusivity)
+        self._exclusiveSubcategoriesSync = AttributeSync('exclusivity',
+                                                         self._exclusiveSubcategoriesCheckBox,
+                                                         currentExclusivity,
+                                                         self.items,
+                                                         command.EditExclusiveSubcategoriesCommand,
+                                                         wx.EVT_CHECKBOX,
+                                                         self.items[0].exclusiveSubcategoriesChangedEventType())
         self.addEntry(_('Subcategories'), self._exclusiveSubcategoriesCheckBox,
                       flags=[None, wx.ALL])
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onExclusivityChanged, 
-                                                  eventType=self.items[0].exclusiveSubcategoriesChangedEventType(), 
-                                                  eventSource=self.items[0])
-        
-    def onExclusivityEdited(self, event):
-        event.Skip()
-        newExclusivity = self._exclusiveSubcategoriesCheckBox.GetValue()
-        if newExclusivity != self._currentExclusivity:
-            self._currentExclusivity = newExclusivity
-            command.EditExclusiveSubcategoriesCommand(None, self.items, 
-                                                      exclusivity=newExclusivity).do()
-                    
-    def onExclusivityChanged(self, event):
-        newExclusivity = event.value()
-        if newExclusivity != self._currentExclusivity:
-            self._currentExclusivity = newExclusivity
-            self._exclusiveSubcategoriesCheckBox.SetValue(newExclusivity)
             
 
 class AttachmentSubjectPage(SubjectPage):
@@ -214,9 +210,13 @@ class AttachmentSubjectPage(SubjectPage):
         panel = wx.Panel(self)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         # pylint: disable-msg=W0201
-        self._currentLocation = self.items[0].location() if len(self.items) == 1 else _('Edit to change location of all attachments')
-        self._locationEntry = widgets.SingleLineTextCtrl(panel, self._currentLocation)
-        self._locationEntry.Bind(wx.EVT_KILL_FOCUS, self.onLocationEdited)
+        currentLocation = self.items[0].location() if len(self.items) == 1 else _('Edit to change location of all attachments')
+        self._locationEntry = widgets.SingleLineTextCtrl(panel, currentLocation)
+        self._locationSync = AttributeSync('location', self._locationEntry,
+                                           currentLocation, self.items,
+                                           command.EditAttachmentLocationCommand,
+                                           wx.EVT_KILL_FOCUS, 
+                                           self.items[0].locationChangedEventType())
         sizer.Add(self._locationEntry, 1, wx.ALL, 3)
         if all(item.type_ == 'file' for item in self.items):
             button = wx.Button(panel, wx.ID_ANY, _('Browse'))
@@ -224,24 +224,7 @@ class AttachmentSubjectPage(SubjectPage):
             wx.EVT_BUTTON(button, wx.ID_ANY, self.onSelectLocation)
         panel.SetSizer(sizer)
         self.addEntry(_('Location'), panel, flags=[None, wx.ALL|wx.EXPAND])
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onLocationChanged,
-                                                  eventType=self.items[0].locationChangedEventType(),
-                                                  eventSource=self.items[0])
-        
-    def onLocationEdited(self, event):
-        event.Skip()
-        newLocation = self._locationEntry.GetValue()
-        if newLocation != self._currentLocation:
-            self._currentLocation = newLocation
-            command.EditAttachmentLocationCommand(None, self.items, location=newLocation).do()
 
-    def onLocationChanged(self, event):
-        newLocation = event.value()
-        if newLocation != self._currentLocation:
-            self._currentLocation = newLocation
-            self._locationEntry.SetValue(newLocation)
-            
     def onSelectLocation(self, event): # pylint: disable-msg=W0613
         if self.items[0].type_ == 'file':
             basePath = os.path.split(self.items[0].normalizedLocation())[0]
@@ -255,8 +238,8 @@ class AttachmentSubjectPage(SubjectPage):
                 filename = attachment.getRelativePath(filename, self.basePath)
             self._subjectEntry.SetValue(os.path.split(filename)[-1])
             self._locationEntry.SetValue(filename)
-            self.onSubjectEdited(event)
-            self.onLocationEdited(event)
+            self._subjectSync.onAttributeEdited(event)
+            self._locationSync.onAttributeEdited(event)
         
 
 class AppearancePage(Page):
@@ -406,39 +389,21 @@ class AppearancePage(Page):
     def addIconEntry(self):
         # pylint: disable-msg=W0201
         self._iconEntry = wx.combo.BitmapComboBox(self, style=wx.CB_READONLY)
-        self._iconEntry.Bind(wx.EVT_COMBOBOX, self.onIconEdited)
+        #self._iconEntry.Bind(wx.EVT_COMBOBOX, self.onIconEdited)
         size = (16, 16)
         imageNames = sorted(artprovider.chooseableItemImages.keys())
         for imageName in imageNames:
             label = artprovider.chooseableItemImages[imageName]
             bitmap = wx.ArtProvider_GetBitmap(imageName, wx.ART_MENU, size)
             self._iconEntry.Append(label, bitmap, clientData=imageName)
-        self._currentIcon = self.items[0].icon() if len(self.items) == 1 else ''
-        currentSelectionIndex = imageNames.index(self._currentIcon)
+        currentIcon = self.items[0].icon() if len(self.items) == 1 else ''
+        currentSelectionIndex = imageNames.index(currentIcon)
         self._iconEntry.SetSelection(currentSelectionIndex)
+        self._iconSync = IconSync('icon', self._iconEntry, currentIcon, 
+                                  self.items, command.EditIconCommand,
+                                  wx.EVT_COMBOBOX, 
+                                  self.items[0].iconChangedEventType())
         self.addEntry(_('Icon'), self._iconEntry, flags=[None, wx.ALL])
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onIconChanged, 
-                                                  eventType=self.items[0].iconChangedEventType(), 
-                                                  eventSource=self.items[0])
-        
-    def onIconEdited(self, event):
-        event.Skip()
-        newIcon = self._iconEntry.GetClientData(self._iconEntry.GetSelection())
-        if newIcon != self._currentIcon:
-            selectedIcon = newIcon[:-len('_icon')] + '_open_icon' \
-                if (newIcon.startswith('folder') and newIcon.count('_') == 2) \
-                else newIcon
-            self._currentIcon = newIcon
-            command.EditIconCommand(None, self.items, icon=newIcon, selectedIcon=selectedIcon).do()
-            
-    def onIconChanged(self, event):
-        newIcon = event.value()
-        if newIcon != self._currentIcon:
-            self._currentIcon = newIcon
-            imageNames = sorted(artprovider.chooseableItemImages.keys())
-            newSelectionIndex = imageNames.index(newIcon)
-            self._iconEntry.SetSelection(newSelectionIndex)
     
     def entries(self):
         return dict(firstEntry=self._foregroundColorCheckBox)
@@ -552,7 +517,8 @@ class DatesPage(Page):
             
     def entries(self):
         # pylint: disable-msg=E1101
-        return dict(startDateTime=self._startDateTimeEntry, 
+        return dict(firstEntry=self._startDateTimeEntry,
+                    startDateTime=self._startDateTimeEntry, 
                     dueDateTime=self._dueDateTimeEntry,
                     completionDateTime=self._completionDateTimeEntry, 
                     timeLeft=self._dueDateTimeEntry, 
@@ -786,7 +752,8 @@ class ProgressPage(Page):
             self._markTaskCompletedEntry.SetSelection(index)
         
     def entries(self):
-        return dict(percentageComplete=self._percentageCompleteEntry)
+        return dict(firstEntry=self._percentageCompleteEntry,
+                    percentageComplete=self._percentageCompleteEntry)
         
 
 class BudgetPage(Page):
@@ -964,7 +931,8 @@ class BudgetPage(Page):
         self.onRevenueChanged(event)
         
     def entries(self):
-        return dict(budget=self._budgetEntry, 
+        return dict(firstEntry=self._budgetEntry,
+                    budget=self._budgetEntry, 
                     budgetLeft=self._budgetEntry,  
                     hourlyFee=self._hourlyFeeEntry, 
                     fixedFee=self._fixedFeeEntry,  
@@ -1013,7 +981,8 @@ class EffortPage(PageWithViewer):
             tasksToShowEffortFor=task.TaskList(self.items))
 
     def entries(self):
-        return dict(timeSpent=self.viewer)
+        return dict(firstEntry=self.viewer,
+                    timeSpent=self.viewer)
         
 
 class LocalCategoryViewer(viewer.BaseCategoryViewer):
@@ -1059,7 +1028,7 @@ class CategoriesPage(PageWithViewer):
         self.viewer.refreshItems(*event.values())
         
     def entries(self):
-        return dict(categories=self.viewer) 
+        return dict(firstEntry=self.viewer, categories=self.viewer) 
 
 
 class LocalAttachmentViewer(viewer.AttachmentViewer):
@@ -1094,7 +1063,7 @@ class AttachmentsPage(PageWithViewer):
         self.viewer.domainObjectsToView().extend(self.items[0].attachments())
         
     def entries(self):
-        return dict(attachments=self.viewer)
+        return dict(firstEntry=self.viewer, attachments=self.viewer)
 
 
 class LocalNoteViewer(viewer.BaseNoteViewer):
@@ -1132,7 +1101,7 @@ class NotesPage(PageWithViewer):
         self.viewer.domainObjectsToView().extend(self.items[0].notes())
 
     def entries(self):
-        return dict(notes=self.viewer)
+        return dict(firstEntry=self.viewer, notes=self.viewer)
     
 
 class LocalPrerequisiteViewer(viewer.CheckableTaskViewer):
@@ -1172,7 +1141,8 @@ class PrerequisitesPage(PageWithViewer):
         self.viewer.refreshItems(*event.values())
     
     def entries(self):
-        return dict(prerequisites=self.viewer, dependencies=self.viewer)
+        return dict(firstEntry=self.viewer, prerequisites=self.viewer, 
+                    dependencies=self.viewer)
 
 
 class EditBook(widgets.Notebook):
@@ -1460,8 +1430,8 @@ class EffortEditBook(Page):
             return item.mayContain(self.items[0]) # Composite effort
     
     def entries(self):
-        return dict(period=self._stopDateTimeEntry, task=self._taskEntry,
-                    firstEntry=self._taskEntry,
+        return dict(firstEntry=self._taskEntry, task=self._taskEntry,
+                    period=self._stopDateTimeEntry,
                     description=self._descriptionEntry,
                     timeSpent=self._stopDateTimeEntry,
                     revenue=self._taskEntry)

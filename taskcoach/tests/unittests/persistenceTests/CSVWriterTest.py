@@ -68,6 +68,7 @@ class TaskTestsMixin(object):
     def testWriteSelectionOnly_SelectedChild(self):
         child = task.Task('Child', parent=self.task)
         self.taskFile.tasks().append(child)
+        self.viewer.expandAll()
         self.selectItem([child])
         self.expectInCSV('Child,', selectionOnly=True)
 

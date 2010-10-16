@@ -565,7 +565,7 @@ class HeaderDrawerMixin(object):
 					x, y, w, h)
 
 	def DrawSimpleDayHeader(self, day, x, y, w, h, highlight=None):
-		return self._DrawHeader('%d' % day.GetDay(), x, y, w, h,
+		return self._DrawHeader(day.Format('%a %d'), x, y, w, h,
 					weight=wx.FONTWEIGHT_NORMAL, alignRight=True,
 					highlight=highlight)
 
