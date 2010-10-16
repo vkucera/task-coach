@@ -72,18 +72,45 @@ class AttributeSync(object):
         
     def onAttributeEdited(self, event):
         event.Skip()
-        newValue = self._entry.GetValue()
+        newValue = self.getValue()
         if newValue != self._currentValue:
             self._currentValue = newValue
-            commandKwArgs = {self._attributeName: newValue}
+            commandKwArgs = self.commandKwArgs(newValue)
             self._commandClass(None, self._items, **commandKwArgs).do()
+            
+    def commandKwArgs(self, newValue):
+        return {self._attributeName: newValue}
             
     def onAttributeChanged(self, event):
         newValue = event.value()
         if newValue != self._currentValue:
             self._currentValue = newValue
-            self._entry.SetValue(newValue)
+            self.setValue(newValue)
             
+    def getValue(self):
+        return self._entry.GetValue()
+    
+    def setValue(self, newValue):
+        self._entry.SetValue(newValue)
+            
+            
+class IconSync(AttributeSync):
+    def commandKwArgs(self, newIcon):
+        commandKwArgs = super(IconSync, self).commandKwArgs(newIcon)
+        selectedIcon = newIcon[:-len('_icon')] + '_open_icon' \
+            if (newIcon.startswith('folder') and newIcon.count('_') == 2) \
+            else newIcon
+        commandKwArgs['selectedIcon'] = selectedIcon
+        return commandKwArgs
+    
+    def setValue(self, newIcon):
+        imageNames = sorted(artprovider.chooseableItemImages.keys())
+        newSelectionIndex = imageNames.index(newIcon)
+        self._entry.SetSelection(newSelectionIndex)
+        
+    def getValue(self):
+        return self._entry.GetClientData(self._entry.GetSelection())
+
             
 class SubjectPage(Page):        
     pageName = 'subject'
@@ -362,39 +389,21 @@ class AppearancePage(Page):
     def addIconEntry(self):
         # pylint: disable-msg=W0201
         self._iconEntry = wx.combo.BitmapComboBox(self, style=wx.CB_READONLY)
-        self._iconEntry.Bind(wx.EVT_COMBOBOX, self.onIconEdited)
+        #self._iconEntry.Bind(wx.EVT_COMBOBOX, self.onIconEdited)
         size = (16, 16)
         imageNames = sorted(artprovider.chooseableItemImages.keys())
         for imageName in imageNames:
             label = artprovider.chooseableItemImages[imageName]
             bitmap = wx.ArtProvider_GetBitmap(imageName, wx.ART_MENU, size)
             self._iconEntry.Append(label, bitmap, clientData=imageName)
-        self._currentIcon = self.items[0].icon() if len(self.items) == 1 else ''
-        currentSelectionIndex = imageNames.index(self._currentIcon)
+        currentIcon = self.items[0].icon() if len(self.items) == 1 else ''
+        currentSelectionIndex = imageNames.index(currentIcon)
         self._iconEntry.SetSelection(currentSelectionIndex)
+        self._iconSync = IconSync('icon', self._iconEntry, currentIcon, 
+                                  self.items, command.EditIconCommand,
+                                  wx.EVT_COMBOBOX, 
+                                  self.items[0].iconChangedEventType())
         self.addEntry(_('Icon'), self._iconEntry, flags=[None, wx.ALL])
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onIconChanged, 
-                                                  eventType=self.items[0].iconChangedEventType(), 
-                                                  eventSource=self.items[0])
-        
-    def onIconEdited(self, event):
-        event.Skip()
-        newIcon = self._iconEntry.GetClientData(self._iconEntry.GetSelection())
-        if newIcon != self._currentIcon:
-            selectedIcon = newIcon[:-len('_icon')] + '_open_icon' \
-                if (newIcon.startswith('folder') and newIcon.count('_') == 2) \
-                else newIcon
-            self._currentIcon = newIcon
-            command.EditIconCommand(None, self.items, icon=newIcon, selectedIcon=selectedIcon).do()
-            
-    def onIconChanged(self, event):
-        newIcon = event.value()
-        if newIcon != self._currentIcon:
-            self._currentIcon = newIcon
-            imageNames = sorted(artprovider.chooseableItemImages.keys())
-            newSelectionIndex = imageNames.index(newIcon)
-            self._iconEntry.SetSelection(newSelectionIndex)
     
     def entries(self):
         return dict(firstEntry=self._foregroundColorCheckBox)

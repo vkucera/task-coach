@@ -22,13 +22,13 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.0', 'October 9, 2010',
+Release('1.3.0', 'October 16, 2010',
     summary='''This release ...''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
 for OK and Cancel buttons anymore.
 TODO:
-- Performance
+- Use AUI for edit dialogs?
 - Refactor editor.py''')
         ],
     bugsFixed=[
