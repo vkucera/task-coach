@@ -98,6 +98,11 @@ class CommonRecurrenceTestsMixin(object):
         self.task.setCompletionDateTime()
         self.assertEqual(self.createRecurrence()(reminder), self.task.reminder())
         
+    def testMarkCompletedResetPercentageComplete(self):
+        self.task.setPercentageComplete(50)
+        self.task.setCompletionDateTime()
+        self.assertEqual(0, self.task.percentageComplete())
+        
     def testCopyRecurrence(self):
         self.assertEqual(self.task.copy().recurrence(), self.task.recurrence())
                 

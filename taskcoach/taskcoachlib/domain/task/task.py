@@ -819,6 +819,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.setStartDateTime(nextStartDateTime, event=event)
         nextDueDateTime = recur(self.dueDateTime(), next=False)
         self.setDueDateTime(nextDueDateTime, event=event)
+        self.setPercentageComplete(0, event=event)
         if self.reminder():
             nextReminder = recur(self.reminder(), next=False)
             self.setReminder(nextReminder, event=event)

@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.1', 'October 13, 2010',
+Release('1.2.1', 'October 16, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Don't refuse to open a task file when it is sorted on a "total"
@@ -32,7 +32,8 @@ dialog, it's really slow.''', '3085358'),
         Bug('''Always display the month name in the horizontal monthly
 calendar view.''', '3062505'),
         Bug('''Allow the user to resize columns in horizontal calendar view''',
-        '3062505')
+        '3062505'),
+        Bug('''Reset percentage complete when recurring a task.''')
         ]
     ),
             
