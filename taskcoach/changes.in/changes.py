@@ -31,8 +31,8 @@ column.''', '3085056'),
 dialog, it's really slow.''', '3085358'),
         Bug('''Always display the month name in the horizontal monthly
 calendar view.''', '3062505'),
-        Bug('''Allow the user to resize columns in monthly and weekly
-horizontal calendar view''', '3062505')
+        Bug('''Allow the user to resize columns in horizontal calendar view''',
+        '3062505')
         ]
     ),
             
