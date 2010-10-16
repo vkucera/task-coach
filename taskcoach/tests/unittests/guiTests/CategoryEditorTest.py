@@ -64,7 +64,7 @@ class CategoryEditorTest(test.wxTestCase):
         page._subjectEntry.SetFocus()
         page._subjectEntry.SetValue(newSubject)
         if '__WXGTK__' == wx.Platform:
-            page._subjectSync.onSubjectEdited(DummyEvent())
+            page._subjectSync.onAttributeEdited(DummyEvent())
         else:
             page._descriptionEntry.SetFocus()
 
@@ -73,7 +73,7 @@ class CategoryEditorTest(test.wxTestCase):
         page._descriptionEntry.SetFocus()
         page._descriptionEntry.SetValue(newDescription)
         if '__WXGTK__' == wx.Platform:
-            page._descriptionSync.onDescriptionEdited(DummyEvent())
+            page._descriptionSync.onAttributeEdited(DummyEvent())
         else: 
             page._subjectEntry.SetFocus()
         

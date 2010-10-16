@@ -78,15 +78,15 @@ class AttributeSync(object):
             commandKwArgs = self.commandKwArgs(newValue)
             self._commandClass(None, self._items, **commandKwArgs).do()
             
-    def commandKwArgs(self, newValue):
-        return {self._attributeName: newValue}
-            
     def onAttributeChanged(self, event):
         newValue = event.value()
         if newValue != self._currentValue:
             self._currentValue = newValue
             self.setValue(newValue)
-            
+
+    def commandKwArgs(self, newValue):
+        return {self._attributeName: newValue}
+                        
     def getValue(self):
         return self._entry.GetValue()
     
