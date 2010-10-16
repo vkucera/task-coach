@@ -123,12 +123,13 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.SortableViewerWithC
                                                       viewer=self),
                            None,
                            uicommand.AttachmentOpen(attachments=attachment.AttachmentList(),
-                                                    viewer=self)]
+                                                    viewer=self, settings=self.settings)]
         return commands
 
     def typeImageIndex(self, anAttachment, which): # pylint: disable-msg=W0613
         if anAttachment.type_ == 'file':
-            if os.path.exists(anAttachment.normalizedLocation()):
+            attachmentBase = settings.get('file', 'attachmentbase')
+            if os.path.exists(anAttachment.normalizedLocation(attachmentBase)):
                 return self.imageIndex['fileopen']
             return self.imageIndex['fileopen_red']
 

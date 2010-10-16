@@ -33,7 +33,9 @@ dialog, it's really slow.''', '3085358'),
 calendar view.''', '3062505'),
         Bug('''Allow the user to resize columns in horizontal calendar view''',
         '3062505'),
-        Bug('''Reset percentage complete when recurring a task.''')
+        Bug('''Reset percentage complete when recurring a task.'''),
+        Bug('''When using relative paths for attachments, attachments couldn't
+be opened from the attachments tab in the edit dialog.''', '3087177')
         ]
     ),
             

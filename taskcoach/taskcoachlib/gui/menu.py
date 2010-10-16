@@ -899,7 +899,8 @@ class AttachmentPopupMenu(Menu):
             uicommand.AttachmentNew(attachments=attachments, settings=settings),
             uicommand.AttachmentEdit(viewer=attachmentViewer, attachments=attachments),
             uicommand.AttachmentDelete(viewer=attachmentViewer, attachments=attachments),
-            uicommand.AttachmentOpen(viewer=attachmentViewer, attachments=attachments),
+            uicommand.AttachmentOpen(viewer=attachmentViewer, attachments=attachments, 
+                                     settings=settings),
             )
 
         if settings.getboolean('feature', 'notes'):

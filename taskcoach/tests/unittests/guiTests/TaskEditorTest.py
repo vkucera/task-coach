@@ -197,7 +197,8 @@ class NewTaskTest(TaskEditorTestCase):
         att = attachment.FileAttachment(u'tÃƒÂ©st.ÃƒÂ©')
         openAttachment = uicommand.AttachmentOpen(\
             viewer=self.editor._interior[6].viewer,
-            attachments=attachment.AttachmentList([att]))
+            attachments=attachment.AttachmentList([att]),
+            settings=self.settings)
         openAttachment.doCommand(None, showerror=onError)
         if '__WXMSW__' in wx.PlatformInfo: # pragma: no cover
             if sys.version_info < (2,5):
