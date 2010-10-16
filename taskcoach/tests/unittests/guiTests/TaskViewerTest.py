@@ -69,7 +69,7 @@ class TaskViewerTestCase(test.wxTestCase):
             os.remove('test.mail')
 
     def assertItems(self, *tasks):
-        self.viewer.widget.expandAllItems()
+        self.viewer.expandAll()
         self.assertEqual(self.viewer.size(), len(tasks))
         for index, eachTask in enumerate(tasks):
             self.assertItem(index, eachTask)
@@ -239,6 +239,7 @@ class CommonTestsMixin(object):
         self.task.addChild(child2)
         child2.addChild(grandChild)
         self.taskList.append(self.task)
+        self.viewer.expandAll()
         self.assertEqual(4, self.viewer.size())
         markCompletedCommand = command.MarkCompletedCommand(self.taskList, 
                                                             [grandChild])

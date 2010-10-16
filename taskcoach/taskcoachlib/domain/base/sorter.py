@@ -75,8 +75,14 @@ class Sorter(patterns.ListDecorator):
             in the list. We expect the domain object class to provide a
             <sortKey>SortFunction(sortCaseSensitive) method that returns the
             sortKeyFunction for the sortKey. '''
-        return getattr(self.DomainObjectClass, '%sSortFunction'%self._sortKey)\
-            (caseSensitive=self._sortCaseSensitive)
+        return self._getSortKeyFunction()(caseSensitive=self._sortCaseSensitive)
+            
+    def _getSortKeyFunction(self):
+        try:
+            return getattr(self.DomainObjectClass, '%sSortFunction'%self._sortKey)
+        except AttributeError:
+            self._sortKey = 'subject'
+            return self._getSortKeyFunction()
 
     def _registerObserverForAttribute(self, attribute):
         for eventType in self._getSortEventTypes(attribute):
@@ -92,7 +98,10 @@ class Sorter(patterns.ListDecorator):
         self.reset()
 
     def _getSortEventTypes(self, attribute):
-        return getattr(self.DomainObjectClass, '%sSortEventTypes'%attribute)()
+        try:
+            return getattr(self.DomainObjectClass, '%sSortEventTypes'%attribute)()
+        except AttributeError:
+            return []
 
 
 class TreeSorter(Sorter):
@@ -108,9 +117,9 @@ class TreeSorter(Sorter):
             builtin list.sort method to extract the sort key from each element
             in the list. We expect the domain object class to provide a
             <sortKey>SortFunction(sortCaseSensitive, treeMode) method that 
-            returns the sortKeyFunction for the sortKey. '''
-        return getattr(self.DomainObjectClass, '%sSortFunction'%self._sortKey)\
-            (caseSensitive=self._sortCaseSensitive, treeMode=self.treeMode())
+            returns the sortKeyFunction for the sortKey. '''            
+        return self._getSortKeyFunction()(caseSensitive=self._sortCaseSensitive, 
+                                          treeMode=self.treeMode())
 
     @patterns.eventSource
     def reset(self, *args, **kwargs): # pylint: disable-msg=W0221

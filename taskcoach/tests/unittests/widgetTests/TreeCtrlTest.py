@@ -32,11 +32,12 @@ class TreeCtrlTestCase(test.wxTestCase):
     def setUp(self):
         super(TreeCtrlTestCase, self).setUp()
         self.children = dict()
+        self.collapsedItems = []
         self.frame.children = lambda item: self.children.get(item, [])
         self.frame.getItemText = lambda item, column: item.subject()
         self.frame.getItemImage = lambda item, which, column: -1
         self.frame.getIsItemChecked = lambda item: False
-        self.frame.getItemExpanded = lambda item: False
+        self.frame.getItemExpanded = lambda item: item not in self.collapsedItems
         self.item0 = DummyDomainObject('item 0')
         self.item1 = DummyDomainObject('item 1')
         self.item0_0 = DummyDomainObject('item 0.0')
@@ -230,12 +231,14 @@ class CommonTestsMixin(object):
     def testIsAnyItemCollapsable_OneCollapsedParent(self):
         self.children[None] = [self.item0]
         self.children[self.item0] = [self.item0_0]
+        self.collapsedItems.append(self.item0)
         self.treeCtrl.RefreshAllItems(2)
         self.failIf(self.treeCtrl.isAnyItemCollapsable())
        
     def testIsAnyItemExpandable_OneCollapsedParent(self):
         self.children[None] = [self.item0]
         self.children[self.item0] = [self.item0_0]
+        self.collapsedItems.append(self.item0)
         self.treeCtrl.RefreshAllItems(2)
         self.failUnless(self.treeCtrl.isAnyItemExpandable())
     

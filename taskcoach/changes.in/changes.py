@@ -41,6 +41,21 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
                 
+Release('1.2.1', 'October 16, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Don't refuse to open a task file when it is sorted on a "total"
+column.''', '3085056'),
+        Bug('''Don't expand tasks in the prerequisite tab when opening a task
+dialog, it's really slow.''', '3085358'),
+        Bug('''Always display the month name in the horizontal monthly
+calendar view.''', '3062505'),
+        Bug('''Allow the user to resize columns in horizontal calendar view''',
+        '3062505'),
+        Bug('''Reset percentage complete when recurring a task.''')
+        ]
+    ),
+            
 Release('1.2.0', 'October 9, 2010',
     summary='''This release adds task dependencies.''',
     featuresAdded=[

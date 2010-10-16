@@ -517,7 +517,8 @@ class DatesPage(Page):
             
     def entries(self):
         # pylint: disable-msg=E1101
-        return dict(startDateTime=self._startDateTimeEntry, 
+        return dict(firstEntry=self._startDateTimeEntry,
+                    startDateTime=self._startDateTimeEntry, 
                     dueDateTime=self._dueDateTimeEntry,
                     completionDateTime=self._completionDateTimeEntry, 
                     timeLeft=self._dueDateTimeEntry, 
@@ -751,7 +752,8 @@ class ProgressPage(Page):
             self._markTaskCompletedEntry.SetSelection(index)
         
     def entries(self):
-        return dict(percentageComplete=self._percentageCompleteEntry)
+        return dict(firstEntry=self._percentageCompleteEntry,
+                    percentageComplete=self._percentageCompleteEntry)
         
 
 class BudgetPage(Page):
@@ -929,7 +931,8 @@ class BudgetPage(Page):
         self.onRevenueChanged(event)
         
     def entries(self):
-        return dict(budget=self._budgetEntry, 
+        return dict(firstEntry=self._budgetEntry,
+                    budget=self._budgetEntry, 
                     budgetLeft=self._budgetEntry,  
                     hourlyFee=self._hourlyFeeEntry, 
                     fixedFee=self._fixedFeeEntry,  
@@ -978,7 +981,8 @@ class EffortPage(PageWithViewer):
             tasksToShowEffortFor=task.TaskList(self.items))
 
     def entries(self):
-        return dict(timeSpent=self.viewer)
+        return dict(firstEntry=self.viewer,
+                    timeSpent=self.viewer)
         
 
 class LocalCategoryViewer(viewer.BaseCategoryViewer):
@@ -1024,7 +1028,7 @@ class CategoriesPage(PageWithViewer):
         self.viewer.refreshItems(*event.values())
         
     def entries(self):
-        return dict(categories=self.viewer) 
+        return dict(firstEntry=self.viewer, categories=self.viewer) 
 
 
 class LocalAttachmentViewer(viewer.AttachmentViewer):
@@ -1059,7 +1063,7 @@ class AttachmentsPage(PageWithViewer):
         self.viewer.domainObjectsToView().extend(self.items[0].attachments())
         
     def entries(self):
-        return dict(attachments=self.viewer)
+        return dict(firstEntry=self.viewer, attachments=self.viewer)
 
 
 class LocalNoteViewer(viewer.BaseNoteViewer):
@@ -1097,7 +1101,7 @@ class NotesPage(PageWithViewer):
         self.viewer.domainObjectsToView().extend(self.items[0].notes())
 
     def entries(self):
-        return dict(notes=self.viewer)
+        return dict(firstEntry=self.viewer, notes=self.viewer)
     
 
 class LocalPrerequisiteViewer(viewer.CheckableTaskViewer):
@@ -1137,7 +1141,8 @@ class PrerequisitesPage(PageWithViewer):
         self.viewer.refreshItems(*event.values())
     
     def entries(self):
-        return dict(prerequisites=self.viewer, dependencies=self.viewer)
+        return dict(firstEntry=self.viewer, prerequisites=self.viewer, 
+                    dependencies=self.viewer)
 
 
 class EditBook(widgets.Notebook):
@@ -1425,8 +1430,8 @@ class EffortEditBook(Page):
             return item.mayContain(self.items[0]) # Composite effort
     
     def entries(self):
-        return dict(period=self._stopDateTimeEntry, task=self._taskEntry,
-                    firstEntry=self._taskEntry,
+        return dict(firstEntry=self._taskEntry, task=self._taskEntry,
+                    period=self._stopDateTimeEntry,
                     description=self._descriptionEntry,
                     timeSpent=self._stopDateTimeEntry,
                     revenue=self._taskEntry)
