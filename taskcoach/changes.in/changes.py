@@ -22,12 +22,16 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.2', 'October ??, 2010',
-    summary='''This release adds a template edition dialog.''',
+Release('1.2.2', 'October 17, 2010',
+    summary='''This release adds a template edit dialog and fixes some bugs.''',
     featuresAdded=[
         Feature('''Don't ask for a name when creating a new template. There
-is now a template edition dialog; one can only delete templates though.''',
+is now a template edit dialog; one can only delete templates though.''',
                 'http://uservoice.com/a/4Ntz6'),
+        ],
+    bugsFixed=[
+        Bug('''Type indicator of attachments in the attachment tab of edit
+dialogs was missing.''', '3087177')
         ]
     ),
 

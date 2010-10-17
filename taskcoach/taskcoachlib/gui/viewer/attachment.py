@@ -126,16 +126,16 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.SortableViewerWithC
                                                     viewer=self, settings=self.settings)]
         return commands
 
-    def typeImageIndex(self, anAttachment, which): # pylint: disable-msg=W0613
+    def typeImageIndex(self, anAttachment, which, exists=os.path.exists): # pylint: disable-msg=W0613
         if anAttachment.type_ == 'file':
-            attachmentBase = settings.get('file', 'attachmentbase')
-            if os.path.exists(anAttachment.normalizedLocation(attachmentBase)):
+            attachmentBase = self.settings.get('file', 'attachmentbase')
+            if exists(anAttachment.normalizedLocation(attachmentBase)):
                 return self.imageIndex['fileopen']
             return self.imageIndex['fileopen_red']
 
         try:
             return self.imageIndex[{ 'uri': 'earth_blue_icon',
-                                     'mail': 'email'}[anAttachment.type_]]
+                                     'mail': 'envelope_icon'}[anAttachment.type_]]
         except KeyError:
             return -1
     
