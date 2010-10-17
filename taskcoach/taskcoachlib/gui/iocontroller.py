@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, os, sys, codecs, traceback, shutil
+import wx, os, sys, codecs, traceback, shutil, tempfile
 from taskcoachlib import meta, persistence
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty import lockfile
@@ -225,13 +225,10 @@ class IOController(object):
             return False
         
     def saveastemplate(self, task):
-        name = wx.GetTextFromUser(_('Please enter the template name.'),
-                                  _('Save as template'))
-        if name:
-            filename = os.path.join(self.__settings.pathToTemplatesDir(),
-                                    name + '.tsktmpl')
-            writer = persistence.TemplateXMLWriter(codecs.open(filename, 'w', 'utf-8'))
-            writer.write(task.copy())
+        handle, filename = tempfile.mkstemp('.tsktmpl', dir=self.__settings.pathToTemplatesDir())
+        os.close(handle)
+        writer = persistence.TemplateXMLWriter(codecs.open(filename, 'w', 'utf-8'))
+        writer.write(task.copy())
 
     def addtemplate(self):
         filename = self.__askUserForFile(_('Open template...'),
