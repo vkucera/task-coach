@@ -21,7 +21,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-            
+
+Release('1.2.2', 'October ??, 2010',
+    summary='''This release adds a template edition dialog.''',
+    featuresAdded=[
+        Feature('''Don't ask for a name when creating a new template. There
+is now a template edition dialog; one can only delete templates though.''',
+                'http://uservoice.com/a/4Ntz6'),
+        ]
+    ),
+
 Release('1.2.1', 'October 16, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[

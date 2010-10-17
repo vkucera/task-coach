@@ -567,6 +567,16 @@ class FileAddTemplate(IOCommand):
         self.iocontroller.addtemplate()
 
 
+class FileEditTemplates(SettingsCommand, UICommand):
+    def __init__(self, *args, **kwargs):
+        super(FileEditTemplates, self).__init__(\
+            menuText=_('Edit templates...'),
+            helpText=_('Edit existing templates'), *args, **kwargs)
+
+    def doCommand(self, event):
+        dlg = dialog.templates.TemplatesDialog(self.settings, self.mainWindow(), _('Edit templates'))
+        dlg.Show()
+
 class FilePurgeDeletedItems(NeedsDeletedItemsMixin, IOCommand):
     def __init__(self, *args, **kwargs):
         super(FilePurgeDeletedItems, self).__init__(\

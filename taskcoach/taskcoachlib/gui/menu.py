@@ -215,6 +215,7 @@ class FileMenu(Menu):
             uicommand.FileSaveSelectedTaskAsTemplate(iocontroller=iocontroller,
                                                      viewer=viewerContainer),
             uicommand.FileAddTemplate(iocontroller=iocontroller),
+            uicommand.FileEditTemplates(settings=settings),
             None,
             uicommand.PrintPageSetup(settings=settings),
             uicommand.PrintPreview(viewer=viewerContainer, settings=settings),
