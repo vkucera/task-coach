@@ -1910,6 +1910,10 @@ class TaskWithCategoryTestCase(TaskTestCase):
         self.category = category.Category('category') # pylint: disable-msg=W0201
         return [dict(categories=set([self.category]))]
 
+    def setUp(self):
+        super(TaskWithCategoryTestCase, self).setUp()
+        self.category.addCategorizable(self.task)
+
     def testCategory(self):
         self.assertEqual(set([self.category]), self.task.categories())
 
