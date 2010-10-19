@@ -402,6 +402,16 @@ class CompositeObjectTest(test.TestCase):
         self.compositeObject.setSubject('parent')
         self.addChild(subject='child')
         self.assertEqual(u'parent -> child', self.child.subject(recursive=True))
+        
+    def testSubjectNotification(self):
+        self.addChild(subject='child')
+        patterns.Publisher().registerObserver(self.onEvent,
+            eventType=self.compositeObject.subjectChangedEventType(),
+            eventSource=self.child)
+        self.compositeObject.setSubject('parent')
+        self.assertEqual([patterns.Event(self.compositeObject.subjectChangedEventType(),
+                                         self.child, 'child')],
+                         self.eventsReceived)
 
     def testSubItemUsesParentForegroundColor(self):
         self.addChild()

@@ -387,6 +387,11 @@ class CompositeObject(Object, patterns.ObservableComposite):
             subject = u'%s -> %s'%(self.parent().subject(recursive=True), subject)
         return subject
 
+    def subjectChangedEvent(self, event):
+        super(CompositeObject, self).subjectChangedEvent(event)
+        for child in self.children():
+            child.subjectChangedEvent(event)
+
     @staticmethod
     def subjectSortFunction(**kwargs):
         ''' Function to pass to list.sort when sorting by subject. '''

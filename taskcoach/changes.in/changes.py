@@ -31,7 +31,11 @@ is now a template edit dialog; one can only delete templates though.''',
         ],
     bugsFixed=[
         Bug('''Type indicator of attachments in the attachment tab of edit
-dialogs was missing.''', '3087177')
+dialogs was missing.''', '3087177'),
+        Bug('''After editing the subject of a composite task in the task list
+viewer (e.g. changing 'Project A' into 'Project B'), also update the subjects
+of the subtasks (e.g. 'Project A -> Task 1' should update to 'Project B -> 
+Task 1').''')
         ]
     ),
 
