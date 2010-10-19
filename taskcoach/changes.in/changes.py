@@ -35,7 +35,9 @@ dialogs was missing.''', '3087177'),
         Bug('''After editing the subject of a composite task in the task list
 viewer (e.g. changing 'Project A' into 'Project B'), also update the subjects
 of the subtasks (e.g. 'Project A -> Task 1' should update to 'Project B -> 
-Task 1').''')
+Task 1').'''),
+        Bug('''When editing a subject of a subtask in the task list viewer
+inline, don't include the subjects of its ancestors in the text control.''')
         ]
     ),
 
