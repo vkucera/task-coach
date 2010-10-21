@@ -489,8 +489,8 @@ class CommonTestsMixin(object):
             self.assertItems(task1, task1_1, task0)
         
     def testChangeActiveTaskForegroundColor(self):
-        self.taskList.append(task.Task(subject='test', startDateTime=date.Now()))
         self.setColor('activetasks')
+        self.taskList.append(task.Task(subject='test', startDateTime=date.Now()))
         self.assertColor()
     
     def testChangeInactiveTaskForegroundColor(self):
