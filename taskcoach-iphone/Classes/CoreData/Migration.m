@@ -64,8 +64,17 @@ void migrateOldDatabase(NSString *filename)
 	{
 		CDFile *file = [NSEntityDescription insertNewObjectForEntityForName:@"CDFile" inManagedObjectContext:getManagedObjectContext()];
 
-		file.name = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(req, 1)];
-		file.guid = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(req, 2)];
+		const char *s = (const char *)sqlite3_column_text(req, 1);
+		if (s)
+			file.name = [NSString stringWithUTF8String:s];
+		else
+			file.name = @"";
+
+		s = (const char *)sqlite3_column_text(req, 2);
+		if (s)
+			file.guid = [NSString stringWithUTF8String:s];
+		else
+			file.guid = @""; // Hum
 
 		if (sqlite3_column_int(req, 3))
 		{
@@ -96,9 +105,18 @@ void migrateOldDatabase(NSString *filename)
 		CDCategory *category = [NSEntityDescription insertNewObjectForEntityForName:@"CDCategory" inManagedObjectContext:getManagedObjectContext()];
 
 		if (sqlite3_column_type(req, 1) != SQLITE_NULL)
-			category.file = (CDFile *)[getManagedObjectContext() objectWithID:[mapFiles objectForKey:[NSNumber numberWithInt:sqlite3_column_int(req, 1)]]];
+		{
+			NSManagedObjectID *theId = [mapFiles objectForKey:[NSNumber numberWithInt:sqlite3_column_int(req, 1)]];
+			if (theId)
+				category.file = (CDFile *)[getManagedObjectContext() objectWithID:theId];
+		}
+		
+		const char *s = (const char *)sqlite3_column_text(req, 2);
+		if (s)
+			category.name = [NSString stringWithUTF8String:s];
+		else
+			category.name = @"";
 
-		category.name = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(req, 2)];
 		category.status = [NSNumber numberWithInt:sqlite3_column_int(req, 3)];
 		
 		const char *catTCId = (const char *)sqlite3_column_text(req, 4);
@@ -107,7 +125,9 @@ void migrateOldDatabase(NSString *filename)
 
 		if (sqlite3_column_type(req, 5) != SQLITE_NULL)
 		{
-			category.parent = (CDCategory *)[getManagedObjectContext() objectWithID:[mapCategories objectForKey:[NSNumber numberWithInt:sqlite3_column_int(req, 5)]]];
+			NSManagedObjectID *theId = [mapCategories objectForKey:[NSNumber numberWithInt:sqlite3_column_int(req, 5)]];
+			if (theId)
+				category.parent = (CDCategory *)[getManagedObjectContext() objectWithID:theId];
 		}
 
 		category.creationDate = [NSDate date];
@@ -133,16 +153,30 @@ void migrateOldDatabase(NSString *filename)
 		CDTask *task = [NSEntityDescription insertNewObjectForEntityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()];
 		
 		if (sqlite3_column_type(req, 1) != SQLITE_NULL)
-			task.file = (CDFile *)[getManagedObjectContext() objectWithID:[mapFiles objectForKey:[NSNumber numberWithInt:sqlite3_column_int(req, 1)]]];
-		
-		task.name = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(req, 2)];
+		{
+			NSManagedObjectID *theId = [mapFiles objectForKey:[NSNumber numberWithInt:sqlite3_column_int(req, 1)]];
+			if (theId)
+				task.file = (CDFile *)[getManagedObjectContext() objectWithID:theId];
+		}
+
+		const char *s = (const char *)sqlite3_column_text(req, 2);
+		if (s)
+			task.name = [NSString stringWithUTF8String:s];
+		else
+			task.name = @"";
+
 		task.status = [NSNumber numberWithInt:sqlite3_column_int(req, 3)];
 		
 		const char *taskTCId = (const char *)sqlite3_column_text(req, 4);
 		if (taskTCId)
 			task.taskCoachId = [NSString stringWithUTF8String:taskTCId];
 
-		task.longDescription = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(req, 5)];
+		s = (const char *)sqlite3_column_text(req, 5);
+		if (s)
+			task.longDescription = [NSString stringWithUTF8String:s];
+		else
+			task.longDescription = @"";
+
 		task.priority = [NSNumber numberWithInt:0];
 		
 		if (sqlite3_column_type(req, 6) != SQLITE_NULL)
@@ -156,7 +190,9 @@ void migrateOldDatabase(NSString *filename)
 		
 		if (sqlite3_column_type(req, 9) != SQLITE_NULL)
 		{
-			task.parent = (CDTask *)[getManagedObjectContext() objectWithID:[mapTasks objectForKey:[NSNumber numberWithInt:sqlite3_column_int(req, 9)]]];
+			NSManagedObjectID *theId = [mapTasks objectForKey:[NSNumber numberWithInt:sqlite3_column_int(req, 9)]];
+			if (theId)
+				task.parent = (CDTask *)[getManagedObjectContext() objectWithID:theId];
 		}
 
 		task.creationDate = [NSDate date];
@@ -178,9 +214,18 @@ void migrateOldDatabase(NSString *filename)
 		CDEffort *effort = [NSEntityDescription insertNewObjectForEntityForName:@"CDEffort" inManagedObjectContext:getManagedObjectContext()];
 		
 		if (sqlite3_column_type(req, 1) != SQLITE_NULL)
-			effort.file = (CDFile *)[getManagedObjectContext() objectWithID:[mapFiles objectForKey:[NSNumber numberWithInt:sqlite3_column_int(req, 1)]]];
-		
-		effort.name = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(req, 2)];
+		{
+			NSManagedObjectID *theId = [mapFiles objectForKey:[NSNumber numberWithInt:sqlite3_column_int(req, 1)]];
+			if (theId)
+				effort.file = (CDFile *)[getManagedObjectContext() objectWithID:theId];
+		}
+
+		const char *s = (const char *)sqlite3_column_text(req, 2);
+		if (s)
+			effort.name = [NSString stringWithUTF8String:s];
+		else
+			effort.name = @"";
+
 		effort.status = [NSNumber numberWithInt:sqlite3_column_int(req, 3)];
 		
 		const char *effortTCId = (const char *)sqlite3_column_text(req, 4);
@@ -188,8 +233,12 @@ void migrateOldDatabase(NSString *filename)
 			effort.taskCoachId = [NSString stringWithUTF8String:effortTCId];
 
 		if (sqlite3_column_type(req, 5) != SQLITE_NULL)
-			effort.task = (CDTask *)[getManagedObjectContext() objectWithID:[mapTasks objectForKey:[NSNumber numberWithInt:sqlite3_column_int(req, 5)]]];
-		
+		{
+			NSManagedObjectID *theId = [mapTasks objectForKey:[NSNumber numberWithInt:sqlite3_column_int(req, 5)]];
+			if (theId)
+				effort.task = (CDTask *)[getManagedObjectContext() objectWithID:theId];
+		}
+
 		effort.started = [[TimeUtils instance] dateFromString:[NSString stringWithUTF8String:(const char *)sqlite3_column_text(req, 6)]];
 		if (sqlite3_column_type(req, 7) != SQLITE_NULL)
 			effort.ended = [[TimeUtils instance] dateFromString:[NSString stringWithUTF8String:(const char *)sqlite3_column_text(req, 7)]];
@@ -208,9 +257,15 @@ void migrateOldDatabase(NSString *filename)
 	
 	while ((rc = sqlite3_step(req)) == SQLITE_ROW)
 	{
-		CDTask *task = (CDTask *)[getManagedObjectContext() objectWithID:[mapTasks objectForKey:[NSNumber numberWithInt:sqlite3_column_int(req, 0)]]];
-		CDCategory *category = (CDCategory *)[getManagedObjectContext() objectWithID:[mapCategories objectForKey:[NSNumber numberWithInt:sqlite3_column_int(req, 1)]]];
-		[task addCategoriesObject:category];
+		NSManagedObjectID *taskId = [mapTasks objectForKey:[NSNumber numberWithInt:sqlite3_column_int(req, 0)]];
+		NSManagedObjectID *categoryId = [mapCategories objectForKey:[NSNumber numberWithInt:sqlite3_column_int(req, 1)]];
+		
+		if (taskId && categoryId)
+		{
+			CDTask *task = (CDTask *)[getManagedObjectContext() objectWithID:taskId];
+			CDCategory *category = (CDCategory *)[getManagedObjectContext() objectWithID:categoryId];
+			[task addCategoriesObject:category];
+		}
 	}
 
 	sqlite3_finalize(req);
