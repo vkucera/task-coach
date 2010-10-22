@@ -7,6 +7,8 @@
  *
  */
 
+#import <unistd.h>
+
 #import "LogUtils.h"
 #import "TaskCoachAppDelegate.h"
 

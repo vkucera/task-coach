@@ -71,7 +71,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 - (void) domainViewController:(DomainViewController*)dvc didSelectDomain:(NSString*)domain;
 @end
 
-@interface DomainViewController : UITableViewController <SimpleEditViewControllerDelegate> {
+@interface DomainViewController : UITableViewController <SimpleEditViewControllerDelegate, NSNetServiceBrowserDelegate> {
 	id<DomainViewControllerDelegate> _delegate;
 	BOOL _showDisclosureIndicators;
 	NSMutableArray* _domains;
