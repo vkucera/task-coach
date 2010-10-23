@@ -654,16 +654,9 @@
 
 - (IBAction)onConfigure:(UIBarButtonItem *)button
 {
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-	{
-		// XXXTODO
-	}
-	else
-	{
-		ConfigurationView *cfg = [[ConfigurationView alloc] init];
-		[self.navigationController presentModalViewController:cfg animated:YES];
-		[cfg release];
-	}
+	ConfigurationView *cfg = [[ConfigurationView alloc] init];
+	[self.navigationController presentModalViewController:cfg animated:YES];
+	[cfg release];
 }
 
 #pragma mark NSNetService methods
