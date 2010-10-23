@@ -6,8 +6,6 @@
 //  Copyright 2009 Jérôme Laheurte. See COPYING for details.
 //
 
-#import "NSDate+TKCategory.h"
-
 #import "TaskCoachAppDelegate.h"
 
 #import "TaskViewController.h"
