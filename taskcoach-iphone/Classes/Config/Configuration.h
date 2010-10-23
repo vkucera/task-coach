@@ -37,11 +37,11 @@
 	BOOL reverseGrouping;
 }
 
-@property (nonatomic, readonly) BOOL showCompleted;
-@property (nonatomic, readonly) BOOL showInactive;
+@property (nonatomic) BOOL showCompleted;
+@property (nonatomic) BOOL showInactive;
 @property (nonatomic, readonly) NSInteger iconPosition;
-@property (nonatomic, readonly) BOOL compactTasks;
-@property (nonatomic, readonly) BOOL confirmComplete;
+@property (nonatomic) BOOL compactTasks;
+@property (nonatomic) BOOL confirmComplete;
 @property (nonatomic, readonly) NSInteger soonDays;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *domain;

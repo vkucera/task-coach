@@ -36,6 +36,7 @@
 
 	UIActionSheet *groupSheet;
 	UIBarButtonItem *groupButton;
+	UIBarButtonItem *configButton;
 	UIPopoverController *popCtrl;
 
 	PaperHeaderView *headerView;
@@ -47,6 +48,7 @@
 @property (nonatomic, retain) IBOutlet UIToolbar *toolbar;
 @property (nonatomic, assign) IBOutlet CategoryViewController *categoryController; // for iPad
 @property (nonatomic, assign) IBOutlet UIBarButtonItem *groupButton;
+@property (nonatomic, assign) IBOutlet UIBarButtonItem *configButton;
 @property (nonatomic, assign) UIPopoverController *popCtrl;
 
 @property (nonatomic, retain) IBOutlet PaperHeaderView *headerView;
@@ -54,6 +56,7 @@
 - (IBAction)onAddTask:(UIBarButtonItem *)button;
 - (IBAction)onSync:(UIBarButtonItem *)button;
 - (IBAction)onChangeGrouping:(UIBarButtonItem *)button;
+- (IBAction)onConfigure:(UIBarButtonItem *)button;
 
 - initWithCategoryController:(CategoryViewController *)controller edit:(BOOL)edit;
 

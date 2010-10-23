@@ -47,6 +47,7 @@
 - (IBAction)onChooseFile:(UIBarButtonItem *)button;
 - (IBAction)onAddCategory:(UIBarButtonItem *)button;
 - (IBAction)onSynchronize:(UIBarButtonItem *)button;
+- (IBAction)onConfigure:(UIBarButtonItem *)button;
 
 - (void)setWantSync;
 - (void)selectAll;

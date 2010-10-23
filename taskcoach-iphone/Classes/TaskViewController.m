@@ -14,6 +14,7 @@
 #import "TaskDetailsControlleriPad.h"
 #import "CategoryViewController.h"
 #import "PaperHeaderView.h"
+#import "ConfigurationView.h"
 
 #import "TaskCell.h"
 #import "TaskCelliPad.h"
@@ -55,6 +56,7 @@ static void deleteTask(CDTask *task)
 @synthesize toolbar;
 @synthesize categoryController;
 @synthesize groupButton;
+@synthesize configButton;
 @synthesize popCtrl;
 
 @synthesize headerView;
@@ -679,12 +681,7 @@ static void deleteTask(CDTask *task)
 	{
 		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 		{
-			TaskCell *taskCell = (TaskCell *)[tableView dequeueReusableCellWithIdentifier:@"TaskCell"];
-			
-			if (taskCell == nil)
-			{
-				taskCell = [[[CellFactory cellFactory] createTaskCell] autorelease];
-			}
+			TaskCell *taskCell = [[[CellFactory cellFactory] createTaskCell] autorelease];
 			
 			// This is already done in the NIB but when switching to non-editing mode, we
 			// must enforce it...
@@ -793,6 +790,36 @@ static void deleteTask(CDTask *task)
 	[categoryController setWantSync];
 
 	[self.navigationController popToRootViewControllerAnimated:YES];
+}
+
+- (void)onConfigure:(UIBarButtonItem *)button
+{
+	ConfigurationView *cfg = [[ConfigurationView alloc] init];
+	[cfg setTarget:self action:@selector(onConfigurationChanged)];
+
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+	{
+		[self.navigationController presentModalViewController:cfg animated:YES];
+	}
+	else
+	{
+		if (popCtrl)
+		{
+			[popCtrl dismissPopoverAnimated:YES];
+		}
+
+		popCtrl = [[UIPopoverController alloc] initWithContentViewController:cfg];
+		[popCtrl setPopoverContentSize:CGSizeMake(350, 250)];
+		[popCtrl presentPopoverFromBarButtonItem:configButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+	}
+
+	[cfg release];
+}
+
+- (void)onConfigurationChanged
+{
+	[self populate];
+	[self.tableView reloadData];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

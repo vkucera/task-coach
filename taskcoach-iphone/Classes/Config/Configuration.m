@@ -105,6 +105,11 @@ static Configuration *_configuration = NULL;
 		[config setObject:currentFileGuid forKey:@"currentfile"];
 	}
 
+	[config setBool:showCompleted forKey:@"showcompleted"];
+	[config setBool:showInactive forKey:@"showinactive"];
+	[config setBool:compactTasks forKey:@"compacttasks"];
+	[config setBool:confirmComplete forKey:@"confirmcomplete"];
+
 	[config synchronize];
 }
 

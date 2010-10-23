@@ -20,6 +20,7 @@
 #import "NSDate+Utils.h"
 #import "ReminderController.h"
 #import "LogUtils.h"
+#import "ConfigurationView.h"
 
 #import "CDDomainObject+Addons.h"
 #import "CDCategory.h"
@@ -649,6 +650,20 @@
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	return (indexPath.row % 2) ? UITableViewCellEditingStyleInsert : UITableViewCellEditingStyleDelete;
+}
+
+- (IBAction)onConfigure:(UIBarButtonItem *)button
+{
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+	{
+		// XXXTODO
+	}
+	else
+	{
+		ConfigurationView *cfg = [[ConfigurationView alloc] init];
+		[self.navigationController presentModalViewController:cfg animated:YES];
+		[cfg release];
+	}
 }
 
 #pragma mark NSNetService methods

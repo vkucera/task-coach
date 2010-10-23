@@ -139,6 +139,9 @@
 		A6B264DD0FDBCBFE00FF2AD0 /* DateCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6B264DC0FDBCBFE00FF2AD0 /* DateCell.xib */; };
 		A6B63B4C11C66615002C9069 /* TaskDetailsControlleriPad.m in Sources */ = {isa = PBXBuildFile; fileRef = A6B63B4A11C66615002C9069 /* TaskDetailsControlleriPad.m */; };
 		A6B7A5B30FA45E110067B76A /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = A6B7A5B20FA45E110067B76A /* iTunesArtwork */; };
+		A6BF52FE1272DEFD00CC5D3C /* ConfigurationView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6BF52FC1272DEFD00CC5D3C /* ConfigurationView.m */; };
+		A6BF52FF1272DEFD00CC5D3C /* ConfigurationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6BF52FD1272DEFD00CC5D3C /* ConfigurationView.xib */; };
+		A6BF530B1272E1E800CC5D3C /* configure.png in Resources */ = {isa = PBXBuildFile; fileRef = A6BF530A1272E1E800CC5D3C /* configure.png */; };
 		A6C00BD411CDEF0D0028385F /* NewCategoryiPad.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C00BD211CDEF0D0028385F /* NewCategoryiPad.m */; };
 		A6C00BD511CDEF0D0028385F /* NewCategoryiPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6C00BD311CDEF0D0028385F /* NewCategoryiPad.xib */; };
 		A6C00C1911CDF6660028385F /* SplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C00C1811CDF6660028385F /* SplitView.m */; };
@@ -420,6 +423,10 @@
 		A6BDE7281171C93200979568 /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		A6BDE72C1171C95E00979568 /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/TaskView.xib; sourceTree = "<group>"; };
 		A6BDE72E1171C96F00979568 /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/DatePickerView.xib; sourceTree = "<group>"; };
+		A6BF52FB1272DEFD00CC5D3C /* ConfigurationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigurationView.h; sourceTree = "<group>"; };
+		A6BF52FC1272DEFD00CC5D3C /* ConfigurationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigurationView.m; sourceTree = "<group>"; };
+		A6BF52FD1272DEFD00CC5D3C /* ConfigurationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConfigurationView.xib; sourceTree = "<group>"; };
+		A6BF530A1272E1E800CC5D3C /* configure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = configure.png; sourceTree = "<group>"; };
 		A6C00BD111CDEF0D0028385F /* NewCategoryiPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewCategoryiPad.h; sourceTree = "<group>"; };
 		A6C00BD211CDEF0D0028385F /* NewCategoryiPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewCategoryiPad.m; sourceTree = "<group>"; };
 		A6C00BD311CDEF0D0028385F /* NewCategoryiPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewCategoryiPad.xib; sourceTree = "<group>"; };
@@ -637,6 +644,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A6BF530A1272E1E800CC5D3C /* configure.png */,
 				A6B7A5B20FA45E110067B76A /* iTunesArtwork */,
 				A680C0C40F47366900A8D18B /* Localizable.strings */,
 				A6CFAE5411B2534100044876 /* TaskCoachCD.xcdatamodel */,
@@ -708,6 +716,9 @@
 			children = (
 				A62760680F221D0A0041D761 /* Configuration.h */,
 				A62760690F221D0A0041D761 /* Configuration.m */,
+				A6BF52FB1272DEFD00CC5D3C /* ConfigurationView.h */,
+				A6BF52FC1272DEFD00CC5D3C /* ConfigurationView.m */,
+				A6BF52FD1272DEFD00CC5D3C /* ConfigurationView.xib */,
 			);
 			name = Configuration;
 			sourceTree = "<group>";
@@ -1163,6 +1174,8 @@
 				A6A4F31D11E0983B00FDDDD5 /* check.png in Resources */,
 				A6AA589B11E0AFC600F5689E /* paper_big.png in Resources */,
 				A646183C1228EFFB005D9651 /* switchcal.png in Resources */,
+				A6BF52FF1272DEFD00CC5D3C /* ConfigurationView.xib in Resources */,
+				A6BF530B1272E1E800CC5D3C /* configure.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1268,6 +1281,7 @@
 				A69E217911DF90D5003CC658 /* PaperHeaderView.m in Sources */,
 				A611CC6911E0A1C8006B4571 /* TaskDetailsViewiPad.m in Sources */,
 				A6796F1F11E8467A00C38043 /* LogUtils.m in Sources */,
+				A6BF52FE1272DEFD00CC5D3C /* ConfigurationView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
