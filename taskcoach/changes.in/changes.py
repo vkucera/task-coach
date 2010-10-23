@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.2', 'October 17, 2010',
+Release('1.2.2', 'October 23, 2010',
     summary='''This release adds a template edit dialog and fixes some bugs.''',
     featuresAdded=[
         Feature('''Don't ask for a name when creating a new template. There
@@ -37,7 +37,9 @@ viewer (e.g. changing 'Project A' into 'Project B'), also update the subjects
 of the subtasks (e.g. 'Project A -> Task 1' should update to 'Project B -> 
 Task 1').'''),
         Bug('''When editing a subject of a subtask in the task list viewer
-inline, don't include the subjects of its ancestors in the text control.''')
+inline, don't include the subjects of its ancestors in the text control.'''),
+        Bug('''When filtering on categories, don't show tasks whose subtasks
+(that belong to the filtered categories) are all hidden by another filter.''')
         ]
     ),
 

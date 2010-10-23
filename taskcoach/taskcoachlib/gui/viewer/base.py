@@ -701,7 +701,7 @@ class ViewerWithColumns(Viewer): # pylint: disable-msg=W0223
             
     def isItemCollapsed(self, item):
         return not self.getItemExpanded(item) \
-            if self.isTreeViewer() and self.children(item) else False
+            if self.isTreeViewer() and item.children() else False
 
 
 class SortableViewerWithColumns(mixin.SortableViewerMixin, ViewerWithColumns): # pylint: disable-msg=W0223
