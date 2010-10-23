@@ -6,6 +6,10 @@
 //  Copyright 2009 Jérôme Laheurte. See COPYING for details.
 //
 
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <sys/socket.h>
+
 #import "Network.h"
 
 @interface Buffer : NSObject
@@ -169,7 +173,18 @@
 		case NSStreamEventOpenCompleted:
 			connectionCount += 1;
 			if (connectionCount == 2)
+			{
 				[delegate networkDidConnect:self];
+
+				CFDataRef sock = CFWriteStreamCopyProperty((CFWriteStreamRef)outputStream, kCFStreamPropertySocketNativeHandle);
+				if (sock)
+				{
+					CFSocketNativeHandle fd;
+					CFDataGetBytes(sock, CFRangeMake(0, CFDataGetLength(sock)), (UInt8 *)&fd);
+					int v = 1;
+					setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &v, sizeof(v));
+				}
+			}
 			break;
 		case NSStreamEventEndEncountered:
 			[delegate networkDidClose:self];
