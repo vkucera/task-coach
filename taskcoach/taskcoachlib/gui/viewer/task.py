@@ -658,8 +658,15 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
         self.treeOrListUICommand.setChoice(self.isTreeViewer())
     
     def isTreeViewer(self):
-        return self.settings.getboolean(self.settingsSection(), 'treemode')
-
+        # We first ask our presentation what the mode is because 
+        # ConfigParser.getboolean is a relatively expensive method. However,
+        # when initializing, the presentation might not be created yet. So in
+        # that case we get an AttributeError and we use the settings.
+        try:
+            return self.presentation().treeMode()
+        except AttributeError:
+            return self.settings.getboolean(self.settingsSection(), 'treemode')
+    
     def curselectionIsInstanceOf(self, class_):
         return class_ == task.Task
     
