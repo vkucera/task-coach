@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2010 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2010 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -47,8 +47,11 @@ class TemplatesDialog(widgets.Dialog):
             if name.endswith('.tsktmpl'):
                 filename = os.path.join(self.settings.pathToTemplatesDir(), name)
                 task = persistence.TemplateXMLReader(file(filename, 'rU')).read()
-                idx = self._templateList.InsertStringItem(self._templateList.GetItemCount(), task.subject())
                 self.tasks.append((task, filename))
+
+        self.tasks.sort(key=lambda item: item[0].subject())
+        for task, filename in self.tasks:
+            self._templateList.InsertStringItem(self._templateList.GetItemCount(), task.subject())
 
         self._templateList.SetColumnWidth(0, -1)
 

@@ -548,7 +548,7 @@ class FileSaveSelection(NeedsSelectedTasksMixin, IOCommand, ViewerCommand):
 class FileSaveSelectedTaskAsTemplate(NeedsOneSelectedTaskMixin, IOCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(FileSaveSelectedTaskAsTemplate, self).__init__(\
-            menuText=_('Save selected task as &template...'),
+            menuText=_('Save selected task as &template'),
             helpText=_('Save the selected task as a task template'),
             bitmap='saveselection', *args, **kwargs)
 
