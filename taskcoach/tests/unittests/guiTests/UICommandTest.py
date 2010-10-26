@@ -91,8 +91,7 @@ class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
         return tree.GetFirstChild(tree.GetRootItem())[0]
 
     def selectFirstCategory(self):
-        tree = self.viewer.widget
-        tree.SelectItem(tree.GetFirstChild(tree.GetRootItem())[0])
+        self.viewer.select([list(self.categories)[0]])
 
     def testNewTaskWithSelectedCategory(self):
         self.selectFirstCategory()

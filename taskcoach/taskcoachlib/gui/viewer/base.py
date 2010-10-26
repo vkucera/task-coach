@@ -46,6 +46,8 @@ class Viewer(wx.Panel):
         self.__settingsSection = kwargs.pop('settingsSection')
         # The how maniest of this viewer type are we? Used for settings
         self.__instanceNumber = kwargs.pop('instanceNumber')
+        # Selection cache:
+        self.__curselection = [] 
         # Flag so that we don't notify observers while we're selecting all items
         self.__selectingAllItems = False
         self.__toolbarUICommands = None
@@ -158,8 +160,9 @@ class Viewer(wx.Panel):
             # Some widgets change the selection and send selection events when 
             # deleting all items as part of the Destroy process. Ignore.
             return
+        self.__curselection = self.widget.curselection()
         # Be sure all wx events are handled before we notify our observers:
-        event = patterns.Event(self.selectEventType(), self, self.curselection())
+        event = patterns.Event(self.selectEventType(), self, self.__curselection)
         wx.CallAfter(event.send)
 
     def freeze(self):
@@ -175,10 +178,14 @@ class Viewer(wx.Panel):
         items = [item for item in items if item in self.presentation()]
         self.widget.RefreshItems(*items) # pylint: disable-msg=W0142
         
+    def select(self, items):
+        self.__curselection = items
+        self.widget.select(items)
+        
     def curselection(self):
         ''' Return a list of items (domain objects) currently selected in our
             widget. '''
-        return self.widget.curselection()
+        return self.__curselection
         
     def curselectionIsInstanceOf(self, class_):
         ''' Return whether all items in the current selection are instances of
@@ -187,10 +194,9 @@ class Viewer(wx.Panel):
         return all(isinstance(item, class_) for item in self.curselection())
 
     def isselected(self, item):
-        """Returns True if the given item is selected. See
-        L{EffortViewer} for an explanation of why this may be
-        different than 'if item in viewer.curselection()'."""
-
+        ''' Returns True if the given item is selected. See
+            L{EffortViewer} for an explanation of why this may be
+            different than 'if item in viewer.curselection()'. '''
         return item in self.curselection()
 
     def selectall(self):
