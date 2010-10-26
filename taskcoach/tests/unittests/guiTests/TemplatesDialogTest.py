@@ -21,16 +21,18 @@ from taskcoachlib import gui, command, config, persistence
 from taskcoachlib.domain import note, attachment
 
 
+class TemplatesDialogUnderTest(gui.dialog.templates.TemplatesDialog):
+    def _loadTemplates(self):
+        return []
+    
+
 class TemplatesDialogTestCase(test.wxTestCase):
     def setUp(self):
         super(TemplatesDialogTestCase, self).setUp()
         self.settings = config.Settings(load=False)
         self.taskFile = persistence.TaskFile()
-        self.editor = self.createEditor()
-        
-    def createEditor(self):
-        return gui.dialog.templates.TemplatesDialog(self.settings, self.frame, 
+        self.editor = TemplatesDialogUnderTest(self.settings, self.frame, 
             'title', raiseDialog=False)
 
     def testTwoDefaultTemplates(self):
-        self.assertEqual(2, len(self.editor.tasks))
+        self.assertEqual(0, len(self.editor.tasks))

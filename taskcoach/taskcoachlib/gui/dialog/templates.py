@@ -43,12 +43,8 @@ class TemplatesDialog(widgets.Dialog):
         self._templateList.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnSelectionChanged)
         self._templateList.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.OnSelectionChanged)
 
-        for name in os.listdir(self.settings.pathToTemplatesDir()):
-            if name.endswith('.tsktmpl'):
-                filename = os.path.join(self.settings.pathToTemplatesDir(), name)
-                task = persistence.TemplateXMLReader(file(filename, 'rU')).read()
-                self.tasks.append((task, filename))
-
+        self._loadTemplates()
+        
         self.tasks.sort(key=lambda item: item[0].subject())
         for task, filename in self.tasks:
             self._templateList.InsertStringItem(self._templateList.GetItemCount(), task.subject())
@@ -63,6 +59,13 @@ class TemplatesDialog(widgets.Dialog):
         hsz.Add(self._templateList, 1, wx.EXPAND|wx.ALL, 3)
         hsz.Add(self._btnDelete, 0, wx.ALL, 3)
         self._interior.SetSizer(hsz)
+        
+    def _loadTemplates(self):
+        for name in os.listdir(self.settings.pathToTemplatesDir()):
+            if name.endswith('.tsktmpl'):
+                filename = os.path.join(self.settings.pathToTemplatesDir(), name)
+                task = persistence.TemplateXMLReader(file(filename, 'rU')).read()
+                self.tasks.append((task, filename))
 
     def _GetSelection(self):
         selection = []
