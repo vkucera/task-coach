@@ -60,7 +60,7 @@ author_email = 'developers@taskcoach.org'
 filename = name.replace(' ', '')
 filename_lower = filename.lower()
 
-url = 'http://www.taskcoach.org/' # Don't remove the trailing slash, other code is assuming it will be there
+url = 'http://taskcoach.org/' # Don't remove the trailing slash, other code is assuming it will be there
 screenshot = url + 'screenshots/Windows/0.71.2-Windows_XP-Tasks_categories_and_effort.png'
 icon = url + 'taskcoach.png'
 pad = url + 'pad.xml'
