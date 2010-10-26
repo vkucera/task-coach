@@ -99,6 +99,7 @@ footer = '''
                 <ul>
                     <li><a href="mailinglist.html">Join mailinglist</a></li>
                     <li><a href="https://answers.launchpad.net/taskcoach/+faqs">Frequently asked questions</a></li>
+                    <li><a href="http://taskcoach.wikispaces.com">User manual</a></li>
                     <li><a href="https://sourceforge.net/tracker/?group_id=130831&atid=719135" 
                            onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/request_support');">Request support</a>
                     </li>
@@ -117,6 +118,7 @@ footer = '''
                 <h2>Give support</h2>
                 <ul>                    
                     <li><a href="i18n.html">Help translate</a></li>
+                    <li><a href="http://taskcoach.wikispaces.com">Help write the manual</a></li>
                     <li><a href="devinfo.html">Help develop</a></li>
                     <li><a href="donations.html">Donate</a></li>
                 </p>
