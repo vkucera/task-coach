@@ -119,25 +119,6 @@ footer = '''
                     <li><a href="donations.html">Donate</a></li>
                 </p>
             </div>
-            <div class="navbox">
-                <h2>Credits</h2>
-                <p>
-                    <a href="http://www.python.org"><img src="images/python-powered-w-70x28.png" alt="Python"
-                       width="70" height="28" border="0"></a><br>
-                    <a href="http://www.wxpython.org"><img
-                       src="images/powered-by-wxpython-80x15.png"
-                       alt="wxPython" width="80" height="15" border="0"></a><br>
-                    <a href="http://www.icon-king.com">Nuvola icon set</a><br>
-                    <a href="http://www.jrsoftware.org">Inno Setup</a><br>
-                    <a href="http://www.bluerobot.com">Bluerobot.com</a><br>
-                    <a href="http://sourceforge.net/projects/taskcoach">
-                        <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=130831&type=8" 
-                             width="80" height="15" border="0" alt="Task Coach at SourceForge.net"/>
-                    </a><br>
-                    <SCRIPT type='text/javascript' language='JavaScript' 
-                            src='http://www.ohloh.net/projects/5109;badge_js'></SCRIPT>
-                </p>
-            </div>
         </div>
         <div id="navBeta">
             <div class="navbox">
@@ -164,6 +145,26 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
                 </div>
                 <script type="text/javascript" src="http://twitter.com/javascripts/blogger.js"></script>
                 <script type="text/javascript" src="http://twitter.com/statuses/user_timeline/taskcoach.json?callback=twitterCallback2&amp;count=3"></script>
+            </div>
+            <div class="navbox">
+                <h2>Credits</h2>
+                <ul>
+                    <li>Web hosting courtesy of <a href="http://www.hostland.com">Hostland</a> and
+                        <a href="http://henry.olders.ca">Henry Olders</a></li>
+                    <li><a href="http://www.python.org"><img src="images/python-powered-w-70x28.png" alt="Python"
+                           align=middle width="70" height="28" border="0"></a></li>
+                    <li><a href="http://www.wxpython.org"><img
+                           src="images/powered-by-wxpython-80x15.png"
+                           alt="wxPython" width="80" height="15" border="0"></a></li>
+                    <li><a href="http://www.icon-king.com">Nuvola icon set</a></li>
+                    <li><a href="http://www.jrsoftware.org">Inno Setup</a></li>
+                    <li><a href="http://www.bluerobot.com">Bluerobot.com</a></li>
+                    <li><a href="http://sourceforge.net/projects/taskcoach"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=130831&type=8" 
+                           width="80" height="15" border="0" alt="Task Coach at SourceForge.net"/>
+                        </a></li>
+                    <li><SCRIPT type='text/javascript' language='JavaScript' 
+                                src='http://www.ohloh.net/projects/5109;badge_js'></SCRIPT></li>
+                </ul>
             </div>
         </div>
     </body>
