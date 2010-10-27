@@ -100,17 +100,13 @@ footer = '''
                     <li><a href="mailinglist.html">Join mailinglist</a></li>
                     <li><a href="https://answers.launchpad.net/taskcoach/+faqs">Frequently asked questions</a></li>
                     <li><a href="http://taskcoach.wikispaces.com">User manual</a></li>
-                    <li><a href="https://sourceforge.net/tracker/?group_id=130831&atid=719135" 
-                           onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/request_support');">Request support</a>
+                    <li><a href="https://sourceforge.net/tracker/?group_id=130831&atid=719135">Request support</a>
                     </li>
-                    <li><a href="https://sourceforge.net/tracker/?group_id=130831&atid=719134" 
-                           onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/browse_bugs');">Browse known bugs</a>
+                    <li><a href="https://sourceforge.net/tracker/?group_id=130831&atid=719134">Browse known bugs</a>
                     </li>
-                    <li><a href="https://sourceforge.net/tracker/?func=add&group_id=130831&atid=719134" 
-                           onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/tracker/submit_bug');">Report a bug</a>
+                    <li><a href="https://sourceforge.net/tracker/?func=add&group_id=130831&atid=719134">Report a bug</a>
                     </li>
-                    <li><a href="http://taskcoach.uservoice.com/" 
-                           onClick="javascript: pageTracker._trackPageview('/outgoing/uservoice.com/');">Request a feature</a>
+                    <li><a href="http://taskcoach.uservoice.com/">Request a feature</a>
                     </li>
                 </ul>
             </div>
@@ -126,21 +122,15 @@ footer = '''
             <div class="navbox">
                 <h2>Credits</h2>
                 <p>
-                    <a href="http://www.python.org" 
-                       onClick="javascript: pageTracker._trackPageview('/outgoing/python.org');"><img src="images/python-powered-w-70x28.png" alt="Python"
+                    <a href="http://www.python.org"><img src="images/python-powered-w-70x28.png" alt="Python"
                        width="70" height="28" border="0"></a><br>
-                    <a href="http://www.wxpython.org" 
-                       onClick="javascript: pageTracker._trackPageview('/outgoing/wxpython.org');"><img
+                    <a href="http://www.wxpython.org"><img
                        src="images/powered-by-wxpython-80x15.png"
                        alt="wxPython" width="80" height="15" border="0"></a><br>
-                    <a href="http://www.icon-king.com" 
-                       onClick="javascript: pageTracker._trackPageview('/outgoing/icon-king.com');">Nuvola icon set</a><br>
-                    <a href="http://www.jrsoftware.org" 
-                       onClick="javascript: pageTracker._trackPageview('/outgoing/jrsoftware.org');">Inno Setup</a><br>
-                    <a href="http://www.bluerobot.com" 
-                       onClick="javascript: pageTracker._trackPageview('/outgoing/bluerobot.com');">Bluerobot.com</a><br>
-                    <a href="http://sourceforge.net/projects/taskcoach" 
-                       onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/projects/taskcoach');">
+                    <a href="http://www.icon-king.com">Nuvola icon set</a><br>
+                    <a href="http://www.jrsoftware.org">Inno Setup</a><br>
+                    <a href="http://www.bluerobot.com">Bluerobot.com</a><br>
+                    <a href="http://sourceforge.net/projects/taskcoach">
                         <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=130831&type=8" 
                              width="80" height="15" border="0" alt="Task Coach at SourceForge.net"/>
                     </a><br>
