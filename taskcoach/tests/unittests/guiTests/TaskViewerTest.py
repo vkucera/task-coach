@@ -575,6 +575,21 @@ class CommonTestsMixin(object):
         self.taskList.append(self.task)
         self.task.setCompletionDateTime(date.Now())
         self.assertEqual(self.viewer.imageIndex['led_green_icon'], self.getFirstItemIcon())
+
+    def testIconUpdatesWhenPrerequisiteIsAdded(self):
+        prerequisite = task.Task('zzz')
+        self.taskList.extend([prerequisite, self.task])
+        self.task.addPrerequisites([prerequisite])
+        prerequisite.addDependencies([self.task])
+        self.assertEqual(self.viewer.imageIndex['led_blue_icon'], self.getFirstItemIcon())
+
+    def testIconUpdatesWhenPrerequisiteIsCompleted(self):
+        prerequisite = task.Task(subject='zzz')
+        self.taskList.extend([prerequisite, self.task])
+        self.task.addPrerequisites([prerequisite])
+        prerequisite.addDependencies([self.task]) 
+        prerequisite.setCompletionDateTime(date.Now())
+        self.assertEqual(self.viewer.imageIndex['led_blue_icon'], self.getFirstItemIcon())
         
     def testModeIsSavedInSettings(self):
         self.assertEqual(self.treeMode, 

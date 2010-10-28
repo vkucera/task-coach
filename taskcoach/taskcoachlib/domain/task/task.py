@@ -214,9 +214,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             parent = self.parent()
             if dueDateTime > parent.dueDateTime():
                 parent.setDueDateTime(dueDateTime, event)
-        self.__computeRecursiveForegroundColor()
-        self.__computeRecursiveIcon()
-        self.__computeRecursiveSelectedIcon()
+        self.recomputeAppearance()
     
     @staticmethod
     def dueDateTimeSortFunction(**kwargs):
@@ -251,9 +249,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             parent = self.parent()
             if parent and startDateTime < parent.startDateTime():
                 parent.setStartDateTime(startDateTime, event)
-        self.__computeRecursiveForegroundColor()
-        self.__computeRecursiveIcon()
-        self.__computeRecursiveSelectedIcon()
+        self.recomputeAppearance()
         
     @staticmethod
     def startDateTimeSortFunction(**kwargs):
@@ -324,9 +320,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def completionDateTimeEvent(self, event):
         completionDateTime = self.completionDateTime()
         event.addSource(self, completionDateTime, type='task.completionDateTime')
-        self.__computeRecursiveForegroundColor()
-        self.__computeRecursiveIcon()
-        self.__computeRecursiveSelectedIcon()
+        for task in [self] + list(self.dependencies()):
+            task.recomputeAppearance()
         
     def shouldBeMarkedCompleted(self):
         ''' Return whether this task should be marked completed. It should be
@@ -646,6 +641,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             hasChildren = any(child for child in self.children() if not child.isDeleted())
             taskIcon += '_open' if selected and hasChildren else ''
         return taskIcon + '_icon'
+
+    def recomputeAppearance(self):
+        self.__computeRecursiveForegroundColor()
+        self.__computeRecursiveIcon()
+        self.__computeRecursiveSelectedIcon()
         
     # percentage Complete
     
@@ -908,6 +908,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             
     def prerequisitesEvent(self, event, *prerequisites):
         event.addSource(self, *prerequisites, **dict(type='task.prerequisites'))
+        self.recomputeAppearance()
 
     @staticmethod
     def prerequisitesSortFunction(**kwargs):
