@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.2', 'October 27, 2010',
+Release('1.2.2', 'October 28, 2010',
     summary='''This release adds a template edit dialog and fixes some bugs.''',
     featuresAdded=[
         Feature('''Don't ask for a name when creating a new template. There

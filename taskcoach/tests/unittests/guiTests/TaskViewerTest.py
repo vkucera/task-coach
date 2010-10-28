@@ -101,6 +101,9 @@ class TaskViewerTestCase(test.wxTestCase):
 
     def getFirstItemFont(self):
         return self.viewer.widget.GetItemFont(self.firstItem())
+    
+    def getFirstItemIcon(self):
+        return self.viewer.widget.GetItemImage(self.firstItem())
 
     def showColumn(self, columnName, show=True):
         self.viewer.showColumnByName(columnName, show)
@@ -557,6 +560,21 @@ class CommonTestsMixin(object):
     def testFont(self):
         self.taskList.append(task.Task(font=wx.SWISS_FONT))
         self.assertEqual(wx.SWISS_FONT, self.getFirstItemFont())
+        
+    def testIconUpdatesWhenStartDateTimeChanges(self):
+        self.taskList.append(self.task)
+        self.task.setStartDateTime(date.Now() + date.oneDay)
+        self.assertEqual(self.viewer.imageIndex['led_grey_icon'], self.getFirstItemIcon())
+
+    def testIconUpdatesWhenDueDateTimeChanges(self):
+        self.taskList.append(self.task)
+        self.task.setDueDateTime(date.Now()+ date.oneHour)
+        self.assertEqual(self.viewer.imageIndex['led_orange_icon'], self.getFirstItemIcon())
+
+    def testIconUpdatesWhenCompletionDateTimeChanges(self):
+        self.taskList.append(self.task)
+        self.task.setCompletionDateTime(date.Now())
+        self.assertEqual(self.viewer.imageIndex['led_green_icon'], self.getFirstItemIcon())
         
     def testModeIsSavedInSettings(self):
         self.assertEqual(self.treeMode, 

@@ -234,6 +234,10 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.registerObserver('task.startDateTime')
         self.task.setStartDateTime(self.task.startDateTime())
         self.failIf(self.events)
+        
+    def testSetFutureStartDateTimeChangesIcon(self):
+        self.task.setStartDateTime(self.tomorrow)
+        self.assertEqual('led_grey_icon', self.task.icon(recursive=True))
 
     def testSetDueDate(self):
         self.task.setDueDateTime(self.tomorrow)

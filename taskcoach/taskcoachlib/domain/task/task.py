@@ -215,6 +215,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             if dueDateTime > parent.dueDateTime():
                 parent.setDueDateTime(dueDateTime, event)
         self.__computeRecursiveForegroundColor()
+        self.__computeRecursiveIcon()
+        self.__computeRecursiveSelectedIcon()
     
     @staticmethod
     def dueDateTimeSortFunction(**kwargs):
@@ -250,6 +252,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             if parent and startDateTime < parent.startDateTime():
                 parent.setStartDateTime(startDateTime, event)
         self.__computeRecursiveForegroundColor()
+        self.__computeRecursiveIcon()
+        self.__computeRecursiveSelectedIcon()
         
     @staticmethod
     def startDateTimeSortFunction(**kwargs):
@@ -321,6 +325,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         completionDateTime = self.completionDateTime()
         event.addSource(self, completionDateTime, type='task.completionDateTime')
         self.__computeRecursiveForegroundColor()
+        self.__computeRecursiveIcon()
+        self.__computeRecursiveSelectedIcon()
         
     def shouldBeMarkedCompleted(self):
         ''' Return whether this task should be marked completed. It should be
@@ -594,15 +600,16 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             try:
                 myIcon = self.__recursiveIcon
             except AttributeError:
-                myIcon = self.__recursiveIcon = self.__computeRecursiveIcon()
+                myIcon = self.__computeRecursiveIcon()
         return self.pluralOrSingularIcon(myIcon)
     
     def iconChangedEvent(self, *args, **kwargs):
         super(Task, self).iconChangedEvent(*args, **kwargs)
-        self.__recursiveIcon = self.__computeRecursiveIcon()
+        self.__computeRecursiveIcon()
 
     def __computeRecursiveIcon(self):
-        return self.categoryIcon() or self.__stateBasedIcon(False)
+        self.__recursiveIcon =  self.categoryIcon() or self.__stateBasedIcon(False)
+        return self.__recursiveIcon
 
     def selectedIcon(self, recursive=False):
         myIcon = super(Task, self).selectedIcon(recursive=False)
@@ -610,15 +617,16 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             try:
                 myIcon = self.__recursiveSelectedIcon
             except AttributeError:
-                myIcon = self.__recursiveSelectedIcon = self.__computeRecursiveSelectedIcon() 
+                myIcon = self.__computeRecursiveSelectedIcon() 
         return self.pluralOrSingularIcon(myIcon)
 
     def selectedIconChangedEvent(self, *args, **kwargs):
         super(Task, self).selectedIconChangedEvent(*args, **kwargs)
-        self.__recursiveSelectedIcon = self.__computeRecursiveSelectedIcon()
+        self.__computeRecursiveSelectedIcon()
 
     def __computeRecursiveSelectedIcon(self):
-        return self.categorySelectedIcon() or self.__stateBasedIcon(selected=True)
+        self.__recursiveSelectedIcon = self.categorySelectedIcon() or self.__stateBasedIcon(selected=True)
+        return self.__recursiveSelectedIcon
 
     stateColorMap = (('completed', '_green'), ('overdue', '_red'),
                      ('dueSoon', '_orange'), ('inactive', '_grey'))
