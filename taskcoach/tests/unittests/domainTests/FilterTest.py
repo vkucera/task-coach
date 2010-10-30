@@ -505,7 +505,36 @@ class CategoryFilterFixtureAndCommonTestsMixin(CategoryFilterHelpersMixin):
         self.parentCategory.setFiltered()
         patterns.Event('view.categoryfiltermatchall', 'dummy_source', 'False').send()
         self.assertEqual(2, len(self.filter))
+
+    # Contains:
         
+    def testContains_NoCategorizables(self):
+        self.failIf(self.filter.categoryContains(self.unusedCategory, self.parent))
+        
+    def testContains_CategorizablesInCategory(self):
+        self.parentCategory.addCategorizable(self.parent)
+        self.failUnless(self.filter.categoryContains(self.parentCategory, self.parent))
+        
+    def testContains_CategorizableInSubCategory(self):
+        self.childCategory.addCategorizable(self.parent)
+        self.failUnless(self.filter.categoryContains(self.parentCategory, self.parent))
+        
+    def testContains_ParentInCategory(self):
+        self.parentCategory.addCategorizable(self.parent)
+        self.failUnless(self.filter.categoryContains(self.parentCategory, self.child))
+        
+    def testContains_ParentInSubCategory(self):
+        self.childCategory.addCategorizable(self.parent)
+        self.failUnless(self.filter.categoryContains(self.parentCategory, self.child))
+    
+    def testContains_ChildInCategory(self):
+        self.parentCategory.addCategorizable(self.child)
+        self.failUnless(self.filter.categoryContains(self.parentCategory, self.parent))
+        
+    def testContains_ChildInSubCategory(self):
+        self.childCategory.addCategorizable(self.child)
+        self.failUnless(self.filter.categoryContains(self.parentCategory, self.parent))
+                           
 
 class CategoryFilterInListModeTest(CategoryFilterFixtureAndCommonTestsMixin, 
                                    test.TestCase):
@@ -537,7 +566,7 @@ class CategoryFilterInTreeModeTest(CategoryFilterFixtureAndCommonTestsMixin,
         self.parentCategory.setFiltered()
         self.childCategory.setFiltered()
         self.assertEqual(2, len(self.filter))
-
+        
                 
 class OriginalLengthTest(test.TestCase, CategoryFilterHelpersMixin):
     def setUp(self):
@@ -622,3 +651,36 @@ class SelectedItemsFilterTest(test.TestCase):
         self.list.append(otherTask)
         self.list.remove(self.task)
         self.assertEqual([otherTask], list(self.filter))
+
+
+class CategoryFilterAndViewFilterFixtureAndCommonTestsMixin(CategoryFilterHelpersMixin):
+    def setUp(self):
+        task.Task.settings = config.Settings(load=False)
+        self.parent = task.Task('parent')
+        self.child = task.Task()
+        self.childCategory = category.Category('child')
+        self.childCategory.addCategorizable(self.child)
+        self.parent.addChild(self.child)
+        self.list = task.TaskList([self.parent, self.child])
+        self.categories = category.CategoryList([self.childCategory])
+        self.viewFilter = task.filter.ViewFilter(self.list, treeMode=self.treeMode) 
+        self.categoryFilter = category.filter.CategoryFilter(self.viewFilter, 
+            categories=self.categories, treeMode=self.treeMode)
+
+    def testThatParentIsHidden(self):
+        self.parent.setShouldMarkCompletedWhenAllChildrenCompleted(False)
+        self.viewFilter.hideCompletedTasks(True)
+        self.child.setCompletionDateTime()
+        self.assertEqual(1, len(self.viewFilter))
+        self.childCategory.setFiltered(True)
+        self.assertEqual(0, len(self.categoryFilter))
+        
+        
+class CategoryFilterAndViewFilterInListModeTest(CategoryFilterAndViewFilterFixtureAndCommonTestsMixin, 
+                                                test.TestCase):
+    treeMode = False   
+
+
+class CategoryFilterAndViewFilterInTreeModeTest(CategoryFilterAndViewFilterFixtureAndCommonTestsMixin, 
+                                                test.TestCase):
+    treeMode = True

@@ -64,8 +64,8 @@ iconlist = [
 ('next', 'actions', '1rightarrow', [16, 22]),
 
 # These icons are named after what they display:
-('arrow_up_icon', 'actions', 'up', [16]),
-('arrow_down_icon', 'actions', 'down', [16]),
+('arrow_up_icon', 'actions', 'up', [16, 32]),
+('arrow_down_icon', 'actions', 'down', [16, 32]),
 ('arrow_up_with_status_icon', 'actions', 'sort_ascending_with_status', [16]),
 ('arrow_down_with_status_icon', 'actions', 'sort_descending_with_status', [16]),
 ('arrows_looped_blue_icon', 'actions', 'kaboodleloop', [16, 22]),

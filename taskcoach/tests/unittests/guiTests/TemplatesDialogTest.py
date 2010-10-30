@@ -16,5 +16,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from version import VersionDialog
-import preferences, syncpreferences, entry, templates
+import test
+from taskcoachlib import gui, command, config, persistence
+from taskcoachlib.domain import note, attachment
+
+
+class TemplatesDialogUnderTest(gui.dialog.templates.TemplatesDialog):
+    def _loadTemplates(self):
+        return []
+    
+
+class TemplatesDialogTestCase(test.wxTestCase):
+    def setUp(self):
+        super(TemplatesDialogTestCase, self).setUp()
+        self.settings = config.Settings(load=False)
+        self.taskFile = persistence.TaskFile()
+        self.editor = TemplatesDialogUnderTest(self.settings, self.frame, 
+            'title', raiseDialog=False)
+
+    def testTwoDefaultTemplates(self):
+        self.assertEqual(0, len(self.editor.tasks))

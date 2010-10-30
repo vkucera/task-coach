@@ -64,7 +64,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             shouldMarkCompletedWhenAllChildrenCompleted
         for effort in self._efforts:
             effort.setTask(self)
-
+        for eventType in 'active', 'inactive', 'completed', 'duesoon', 'overdue':
+            patterns.Publisher().registerObserver(self.__computeRecursiveForegroundColor, 'color.%stasks')
+            
     @patterns.eventSource
     def __setstate__(self, state, event=None):
         super(Task, self).__setstate__(state, event=event)
@@ -212,6 +214,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             parent = self.parent()
             if dueDateTime > parent.dueDateTime():
                 parent.setDueDateTime(dueDateTime, event)
+        self.recomputeAppearance()
     
     @staticmethod
     def dueDateTimeSortFunction(**kwargs):
@@ -246,7 +249,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             parent = self.parent()
             if parent and startDateTime < parent.startDateTime():
                 parent.setStartDateTime(startDateTime, event)
-
+        self.recomputeAppearance()
+        
     @staticmethod
     def startDateTimeSortFunction(**kwargs):
         recursive = kwargs.get('treeMode', False)
@@ -316,7 +320,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def completionDateTimeEvent(self, event):
         completionDateTime = self.completionDateTime()
         event.addSource(self, completionDateTime, type='task.completionDateTime')
-
+        for task in [self] + list(self.dependencies()):
+            task.recomputeAppearance()
+        
     def shouldBeMarkedCompleted(self):
         ''' Return whether this task should be marked completed. It should be
             marked completed when 1) it's not completed, 2) all of its children
@@ -524,16 +530,24 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # Foreground color
     
     def foregroundColor(self, recursive=False):
-        fgColor = super(Task, self).foregroundColor(recursive)
         if not recursive:
-            return fgColor
+            return super(Task, self).foregroundColor(recursive)
+        try:
+            return self.__recursiveForegroundColor
+        except AttributeError:
+            return self.__computeRecursiveForegroundColor()
+        
+    def __computeRecursiveForegroundColor(self, *args, **kwargs):
+        fgColor = super(Task, self).foregroundColor(recursive=True)
         statusColor = self.statusColor()
         if statusColor == wx.BLACK:
-            return fgColor
+            recursiveColor = fgColor
         elif fgColor == None:
-            return statusColor
+            recursiveColor = statusColor
         else:
-            return color.ColorMixer.mix((fgColor, statusColor))
+            recursiveColor = color.ColorMixer.mix((fgColor, statusColor))
+        self.__recursiveForegroundColor = recursiveColor 
+        return recursiveColor
     
     def statusColor(self):
         ''' Return the current color of task, based on its status (completed,
@@ -561,6 +575,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             for eachEffort in task.efforts():
                 event.addSource(eachEffort, fgColor, 
                                 type=eachEffort.foregroundColorChangedEventType())
+        self.__computeRecursiveForegroundColor()
     
     # Background color
     
@@ -577,14 +592,36 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def icon(self, recursive=False):
         myIcon = super(Task, self).icon(recursive=False)
         if not myIcon and recursive:
-            myIcon = self.categoryIcon() or self.__stateBasedIcon(selected=False)
+            try:
+                myIcon = self.__recursiveIcon
+            except AttributeError:
+                myIcon = self.__computeRecursiveIcon()
         return self.pluralOrSingularIcon(myIcon)
+    
+    def iconChangedEvent(self, *args, **kwargs):
+        super(Task, self).iconChangedEvent(*args, **kwargs)
+        self.__computeRecursiveIcon()
+
+    def __computeRecursiveIcon(self):
+        self.__recursiveIcon =  self.categoryIcon() or self.__stateBasedIcon(False)
+        return self.__recursiveIcon
 
     def selectedIcon(self, recursive=False):
         myIcon = super(Task, self).selectedIcon(recursive=False)
         if not myIcon and recursive:
-            myIcon = self.categorySelectedIcon() or self.__stateBasedIcon(selected=True)
+            try:
+                myIcon = self.__recursiveSelectedIcon
+            except AttributeError:
+                myIcon = self.__computeRecursiveSelectedIcon() 
         return self.pluralOrSingularIcon(myIcon)
+
+    def selectedIconChangedEvent(self, *args, **kwargs):
+        super(Task, self).selectedIconChangedEvent(*args, **kwargs)
+        self.__computeRecursiveSelectedIcon()
+
+    def __computeRecursiveSelectedIcon(self):
+        self.__recursiveSelectedIcon = self.categorySelectedIcon() or self.__stateBasedIcon(selected=True)
+        return self.__recursiveSelectedIcon
 
     stateColorMap = (('completed', '_green'), ('overdue', '_red'),
                      ('dueSoon', '_orange'), ('inactive', '_grey'))
@@ -604,6 +641,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             hasChildren = any(child for child in self.children() if not child.isDeleted())
             taskIcon += '_open' if selected and hasChildren else ''
         return taskIcon + '_icon'
+
+    def recomputeAppearance(self):
+        self.__computeRecursiveForegroundColor()
+        self.__computeRecursiveIcon()
+        self.__computeRecursiveSelectedIcon()
         
     # percentage Complete
     
@@ -866,6 +908,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             
     def prerequisitesEvent(self, event, *prerequisites):
         event.addSource(self, *prerequisites, **dict(type='task.prerequisites'))
+        self.recomputeAppearance()
 
     @staticmethod
     def prerequisitesSortFunction(**kwargs):

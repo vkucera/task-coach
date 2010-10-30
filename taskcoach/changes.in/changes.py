@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.0', 'October 16, 2010',
+Release('1.3.0', 'October 30, 2010',
     summary='''This release ...''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -36,11 +36,33 @@ TODO:
 item. With earlier releases of Task Coach, the last edit dialog closed would 
 overwrite changes made with edit dialogs that were closed earlier. With the new 
 edit dialog functionality introduced in this release, changes are propagated 
-immediately to all open dialogs. This will prevent accidently overwriting
+immediately to all open dialogs. This will prevent overwriting
 changes made in other dialogs.''', '1152561')
         ]
     ),
-                
+
+Release('1.2.2', 'October 30, 2010',
+    summary='''This release adds a template edit dialog and fixes some bugs.''',
+    featuresAdded=[
+        Feature('''Don't ask for a name when creating a new template. There
+is now a template edit dialog; one can only delete templates though.''',
+                'http://uservoice.com/a/4Ntz6'),
+        Feature('''Allow the user to change the ordering of templates'''),
+        ],
+    bugsFixed=[
+        Bug('''Type indicator of attachments in the attachment tab of edit
+dialogs was missing.''', '3087177'),
+        Bug('''After editing the subject of a composite task in the task list
+viewer (e.g. changing 'Project A' into 'Project B'), also update the subjects
+of the subtasks (e.g. 'Project A -> Task 1' should update to 'Project B -> 
+Task 1').'''),
+        Bug('''When editing a subject of a subtask in the task list viewer
+inline, don't include the subjects of its ancestors in the text control.'''),
+        Bug('''When filtering on categories, don't show tasks whose subtasks
+(that belong to the filtered categories) are all hidden by another filter.'''),
+        ]
+    ),
+
 Release('1.2.1', 'October 16, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
@@ -52,7 +74,9 @@ dialog, it's really slow.''', '3085358'),
 calendar view.''', '3062505'),
         Bug('''Allow the user to resize columns in horizontal calendar view''',
         '3062505'),
-        Bug('''Reset percentage complete when recurring a task.''')
+        Bug('''Reset percentage complete when recurring a task.'''),
+        Bug('''When using relative paths for attachments, attachments couldn't
+be opened from the attachments tab in the edit dialog.''', '3087177')
         ]
     ),
             

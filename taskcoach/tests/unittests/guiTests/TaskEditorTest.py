@@ -222,7 +222,7 @@ class EditTaskTest(TaskEditorTestCase):
         self.failUnless('filename' in [att.subject() for att in self.task.attachments()])
         
     def testRemoveAttachment(self):
-        self.editor._interior[8].viewer.selectall()
+        self.editor._interior[8].viewer.select(self.task.attachments())
         self.editor._interior[8].viewer.deleteItemCommand().do()
         self.assertEqual([], self.task.attachments()) # pylint: disable-msg=E1101
 
@@ -235,7 +235,8 @@ class EditTaskTest(TaskEditorTestCase):
         att = attachment.FileAttachment(u'tÃƒÂ©st.ÃƒÂ©')
         openAttachment = uicommand.AttachmentOpen(\
             viewer=self.editor._interior[6].viewer,
-            attachments=attachment.AttachmentList([att]))
+            attachments=attachment.AttachmentList([att]),
+            settings=self.settings)
         openAttachment.doCommand(None, showerror=onError)
         if '__WXMSW__' in wx.PlatformInfo: # pragma: no cover
             if sys.version_info < (2,5):
