@@ -255,10 +255,13 @@ class IOController(object):
         self.__closeUnconditionally()
         return True
     
-    def export(self, title, fileDialogOpts, writerClass, viewer, selectionOnly):
-        filename = self.__askUserForFile(title, fileDialogOpts, flags=wx.SAVE)
+    def export(self, title, fileDialogOpts, writerClass, viewer, selectionOnly, 
+               openfile=codecs.open, showerror=wx.MessageBox, filename=None):
+        filename = filename or self.__askUserForFile(title, fileDialogOpts, flags=wx.SAVE)
         if filename:
-            fd = self.__openFileForWriting(filename)
+            fd = self.__openFileForWriting(filename, openfile, showerror)
+            if fd is None:
+                return False
             count = writerClass(fd, filename).write(viewer, self.__settings, selectionOnly)
             fd.close()
             self.__messageCallback(_('Exported %(count)d items to %(filename)s')%\
@@ -267,9 +270,11 @@ class IOController(object):
         else:
             return False
 
-    def exportAsHTML(self, viewer, selectionOnly=False):
+    def exportAsHTML(self, viewer, selectionOnly=False, openfile=codecs.open, 
+                     showerror=wx.MessageBox, filename=None):
         return self.export(_('Export as HTML...'), self.__htmlFileDialogOpts, 
-            persistence.HTMLWriter, viewer, selectionOnly)
+            persistence.HTMLWriter, viewer, selectionOnly, openfile, showerror, 
+            filename)
 
     def exportAsCSV(self, viewer, selectionOnly=False):
         return self.export(_('Export as CSV...'), self.__csvFileDialogOpts, 
@@ -313,8 +318,14 @@ class IOController(object):
     def __syncReport(self, msg):
         wx.MessageBox(msg, _('Synchronization status'), style=wx.OK|wx.ICON_ERROR)
 
-    def __openFileForWriting(self, filename, mode='w', encoding='utf-8'):
-        return codecs.open(filename, mode, encoding)
+    def __openFileForWriting(self, filename, openfile, showerror, mode='w', 
+                             encoding='utf-8',):
+        try:
+            return openfile(filename, mode, encoding)
+        except IOError, reason:
+            errorMessage = _('Cannot open %s\n%s')%(filename, reason)
+            showerror(errorMessage, **self.__errorMessageOptions)
+            return None
         
     def __addRecentFile(self, fileName):
         recentFiles = self.__settings.getlist('file', 'recentfiles')
