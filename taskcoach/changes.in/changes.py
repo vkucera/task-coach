@@ -28,6 +28,7 @@ Release('1.2.2', 'October 30, 2010',
         Feature('''Don't ask for a name when creating a new template. There
 is now a template edit dialog; one can only delete templates though.''',
                 'http://uservoice.com/a/4Ntz6'),
+        Feature('''Allow the user to change the ordering of templates'''),
         ],
     bugsFixed=[
         Bug('''Type indicator of attachments in the attachment tab of edit
