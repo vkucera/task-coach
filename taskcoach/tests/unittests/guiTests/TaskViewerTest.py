@@ -101,6 +101,9 @@ class TaskViewerTestCase(test.wxTestCase):
 
     def getFirstItemFont(self):
         return self.viewer.widget.GetItemFont(self.firstItem())
+    
+    def getFirstItemIcon(self):
+        return self.viewer.widget.GetItemImage(self.firstItem())
 
     def showColumn(self, columnName, show=True):
         self.viewer.showColumnByName(columnName, show)
@@ -133,7 +136,7 @@ class CommonTestsMixin(object):
     def testUndoRemoveTaskWithSubtask(self):
         self.task.addChild(self.child)
         self.taskList.append(self.task)
-        self.viewer.widget.select([self.task])
+        self.viewer.select([self.task])
         deleteItem = self.viewer.deleteItemCommand()
         deleteItem.do()
         deleteItem.undo()
@@ -144,7 +147,7 @@ class CommonTestsMixin(object):
 
     def testCurrent(self):
         self.taskList.append(self.task)
-        self.viewer.widget.select([self.task])
+        self.viewer.select([self.task])
         self.assertEqual([self.task], self.viewer.curselection())
 
     def testDeleteSelectedTask(self):
@@ -155,7 +158,7 @@ class CommonTestsMixin(object):
 
     def testSelectedTaskStaysSelectedWhenStartingEffortTracking(self):
         self.taskList.append(self.task)
-        self.viewer.widget.select([self.task])
+        self.viewer.select([self.task])
         self.assertEqual([self.task], self.viewer.curselection())
         self.task.addEffort(effort.Effort(self.task))
         self.assertEqual([self.task], self.viewer.curselection())
@@ -489,8 +492,8 @@ class CommonTestsMixin(object):
             self.assertItems(task1, task1_1, task0)
         
     def testChangeActiveTaskForegroundColor(self):
-        self.taskList.append(task.Task(subject='test', startDateTime=date.Now()))
         self.setColor('activetasks')
+        self.taskList.append(task.Task(subject='test', startDateTime=date.Now()))
         self.assertColor()
     
     def testChangeInactiveTaskForegroundColor(self):
@@ -558,6 +561,36 @@ class CommonTestsMixin(object):
         self.taskList.append(task.Task(font=wx.SWISS_FONT))
         self.assertEqual(wx.SWISS_FONT, self.getFirstItemFont())
         
+    def testIconUpdatesWhenStartDateTimeChanges(self):
+        self.taskList.append(self.task)
+        self.task.setStartDateTime(date.Now() + date.oneDay)
+        self.assertEqual(self.viewer.imageIndex['led_grey_icon'], self.getFirstItemIcon())
+
+    def testIconUpdatesWhenDueDateTimeChanges(self):
+        self.taskList.append(self.task)
+        self.task.setDueDateTime(date.Now()+ date.oneHour)
+        self.assertEqual(self.viewer.imageIndex['led_orange_icon'], self.getFirstItemIcon())
+
+    def testIconUpdatesWhenCompletionDateTimeChanges(self):
+        self.taskList.append(self.task)
+        self.task.setCompletionDateTime(date.Now())
+        self.assertEqual(self.viewer.imageIndex['led_green_icon'], self.getFirstItemIcon())
+
+    def testIconUpdatesWhenPrerequisiteIsAdded(self):
+        prerequisite = task.Task('zzz')
+        self.taskList.extend([prerequisite, self.task])
+        self.task.addPrerequisites([prerequisite])
+        prerequisite.addDependencies([self.task])
+        self.assertEqual(self.viewer.imageIndex['led_grey_icon'], self.getFirstItemIcon())
+
+    def testIconUpdatesWhenPrerequisiteIsCompleted(self):
+        prerequisite = task.Task(subject='zzz')
+        self.taskList.extend([prerequisite, self.task])
+        self.task.addPrerequisites([prerequisite])
+        prerequisite.addDependencies([self.task]) 
+        prerequisite.setCompletionDateTime(date.Now())
+        self.assertEqual(self.viewer.imageIndex['led_grey_icon'], self.getFirstItemIcon())
+        
     def testModeIsSavedInSettings(self):
         self.assertEqual(self.treeMode, 
             self.settings.getboolean(self.viewer.settingsSection(), 'treemode'))
@@ -623,7 +656,7 @@ class CommonTestsMixin(object):
         taskA = task.Task('a')
         taskB = task.Task('b')
         self.viewer.presentation().extend([taskA, taskB])
-        self.viewer.widget.select([taskA])
+        self.viewer.select([taskA])
         self.assertEqual([taskA], self.viewer.curselection())
 
     def testGetSelection_AfterResort(self):

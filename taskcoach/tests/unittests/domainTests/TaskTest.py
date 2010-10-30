@@ -234,6 +234,10 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.registerObserver('task.startDateTime')
         self.task.setStartDateTime(self.task.startDateTime())
         self.failIf(self.events)
+        
+    def testSetFutureStartDateTimeChangesIcon(self):
+        self.task.setStartDateTime(self.tomorrow)
+        self.assertEqual('led_grey_icon', self.task.icon(recursive=True))
 
     def testSetDueDate(self):
         self.task.setDueDateTime(self.tomorrow)
@@ -655,7 +659,8 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
 
 class TaskDueTodayTest(TaskTestCase, CommonTaskTestsMixin):
     def taskCreationKeywordArguments(self):
-        return [{'dueDateTime': date.Now() + date.oneHour}]
+        self.dueDateTime = date.Now() + date.oneHour
+        return [{'dueDateTime': self.dueDateTime}]
     
     def testIsDueSoon(self):
         self.failUnless(self.task.dueSoon())
@@ -664,8 +669,8 @@ class TaskDueTodayTest(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual(0, self.task.timeLeft().days)
 
     def testDueDateTime(self):
-        self.assertAlmostEqual(self.taskCreationKeywordArguments()[0]['dueDateTime'].toordinal(), 
-            self.task.dueDateTime().toordinal())
+        self.assertAlmostEqual(self.dueDateTime.toordinal(), 
+                               self.task.dueDateTime().toordinal())
         
     def testDefaultDueSoonColor(self):
         expectedColor = wx.Colour(*eval(self.settings.get('color', 'duesoontasks')))
@@ -984,7 +989,7 @@ class NewChildOfActiveTask(NewChildTestCase):
 
     def testNewChildHasStartDateTimeNow(self):
         self.assertAlmostEqual(date.Now().toordinal(), 
-                               self.child.startDateTime().toordinal())
+                               self.child.startDateTime().toordinal(), places=2)
         
 
 class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
@@ -1909,6 +1914,10 @@ class TaskWithCategoryTestCase(TaskTestCase):
     def taskCreationKeywordArguments(self):
         self.category = category.Category('category') # pylint: disable-msg=W0201
         return [dict(categories=set([self.category]))]
+
+    def setUp(self):
+        super(TaskWithCategoryTestCase, self).setUp()
+        self.category.addCategorizable(self.task)
 
     def testCategory(self):
         self.assertEqual(set([self.category]), self.task.categories())

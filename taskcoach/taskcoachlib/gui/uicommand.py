@@ -548,7 +548,7 @@ class FileSaveSelection(NeedsSelectedTasksMixin, IOCommand, ViewerCommand):
 class FileSaveSelectedTaskAsTemplate(NeedsOneSelectedTaskMixin, IOCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(FileSaveSelectedTaskAsTemplate, self).__init__(\
-            menuText=_('Save selected task as &template...'),
+            menuText=_('Save selected task as &template'),
             helpText=_('Save the selected task as a task template'),
             bitmap='saveselection', *args, **kwargs)
 
@@ -566,6 +566,16 @@ class FileAddTemplate(IOCommand):
     def doCommand(self, event):
         self.iocontroller.addtemplate()
 
+
+class FileEditTemplates(SettingsCommand, UICommand):
+    def __init__(self, *args, **kwargs):
+        super(FileEditTemplates, self).__init__(\
+            menuText=_('Edit templates...'),
+            helpText=_('Edit existing templates'), *args, **kwargs)
+
+    def doCommand(self, event):
+        dlg = dialog.templates.TemplatesDialog(self.settings, self.mainWindow(), _('Edit templates'))
+        dlg.Show()
 
 class FilePurgeDeletedItems(NeedsDeletedItemsMixin, IOCommand):
     def __init__(self, *args, **kwargs):
@@ -1689,89 +1699,6 @@ class AttachmentAddNote(NeedsOneSelectedAttachmentMixin, ItemAddNote):
     AddNoteCommand = command.AddAttachmentNoteCommand
         
 
-class AddAttachment(NeedsSelectionMixin, ViewerCommand, SettingsCommand):
-    def __init__(self, *args, **kwargs):
-        super(AddAttachment, self).__init__(menuText=_('&Add attachment'),          
-            bitmap='paperclip_icon', *args, **kwargs)
-        
-    def doCommand(self, event):
-        filename = widgets.AttachmentSelector()
-        if not filename:
-            return
-        attachmentBase = self.settings.get('file', 'attachmentbase')
-        if attachmentBase:
-            filename = attachment.getRelativePath(filename, attachmentBase)
-        addAttachmentCommand = command.AddAttachmentCommand( \
-            self.viewer.presentation(), self.viewer.curselection(), 
-            attachments=[attachment.FileAttachment(filename)])
-        addAttachmentCommand.do()
-        
-    def enabled(self, event):
-        return super(AddAttachment, self).enabled(event) and \
-            not any(isinstance(item, effort.Effort) for item in self.viewer.curselection())
-
-
-class AddTaskAttachment(NeedsTaskViewerMixin, AddAttachment):
-    def __init__(self, *args, **kwargs):
-        super(AddTaskAttachment, self).__init__(\
-            helpText=_('Browse for files to add as attachment to the selected task(s)'),
-            *args, **kwargs)
-
-
-class AddCategoryAttachment(NeedsCategoryViewerMixin, AddAttachment):
-    def __init__(self, *args, **kwargs):
-        super(AddCategoryAttachment, self).__init__(\
-            helpText=_('Browse for files to add as attachment to the selected categories'),
-            *args, **kwargs)
-
-
-class AddNoteAttachment(NeedsNoteViewerMixin, AddAttachment):
-    def __init__(self, *args, **kwargs):
-        super(AddNoteAttachment, self).__init__(\
-            helpText=_('Browse for files to add as attachment to the selected note(s)'),
-            *args, **kwargs)
-            
-
-class OpenAllAttachments(NeedsSelectionWithAttachmentsMixin, ViewerCommand, 
-                         SettingsCommand):
-    def __init__(self, *args, **kwargs):
-        super(OpenAllAttachments, self).__init__(\
-           menuText=_('&Open all attachments'), 
-           bitmap='paperclip_icon', *args, **kwargs)
-        
-    def doCommand(self, event, showerror=wx.MessageBox): # pylint: disable-msg=W0221
-        attachmentBase = self.settings.get('file', 'attachmentbase')
-        for item in self.viewer.curselection():
-            for itemAttachment in item.attachments():
-                try:    
-                    itemAttachment.open(attachmentBase)
-                except Exception, instance: # pylint: disable-msg=W0703
-                    showerror(str(instance), 
-                        caption=_('Error opening attachment'), 
-                        style=wx.ICON_ERROR)
-
-
-class OpenAllTaskAttachments(NeedsTaskViewerMixin, OpenAllAttachments):
-    def __init__(self, *args, **kwargs):
-        super(OpenAllTaskAttachments, self).__init__(\
-            helpText=_('Open all attachments of the selected task(s)'),
-            *args, **kwargs)
-
-
-class OpenAllCategoryAttachments(NeedsCategoryViewerMixin, OpenAllAttachments):
-    def __init__(self, *args, **kwargs):
-        super(OpenAllCategoryAttachments, self).__init__(\
-            helpText=_('Open all attachments of the selected categories'),
-            *args, **kwargs)
-
-
-class OpenAllNoteAttachments(NeedsNoteViewerMixin, OpenAllAttachments):
-    def __init__(self, *args, **kwargs):
-        super(OpenAllNoteAttachments, self).__init__(\
-            helpText=_('Open all attachments of the selected note(s)'),
-            *args, **kwargs)
-            
-
 class EffortNew(NeedsAtLeastOneTaskMixin, ViewerCommand, EffortListCommand, 
                 TaskListCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
@@ -2017,7 +1944,62 @@ class AttachmentEdit(ObjectEdit, NeedsSelectedAttachmentsMixin, AttachmentsComma
     __containerName__ = 'attachments'
 
 
-class AttachmentOpen(NeedsSelectedAttachmentsMixin, ViewerCommand, AttachmentsCommand):
+class AddAttachment(NeedsSelectionMixin, ViewerCommand, SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        super(AddAttachment, self).__init__(menuText=_('&Add attachment'),          
+            bitmap='paperclip_icon', *args, **kwargs)
+        
+    def doCommand(self, event):
+        filename = widgets.AttachmentSelector()
+        if not filename:
+            return
+        attachmentBase = self.settings.get('file', 'attachmentbase')
+        if attachmentBase:
+            filename = attachment.getRelativePath(filename, attachmentBase)
+        addAttachmentCommand = command.AddAttachmentCommand( \
+            self.viewer.presentation(), self.viewer.curselection(), 
+            attachments=[attachment.FileAttachment(filename)])
+        addAttachmentCommand.do()
+        
+    def enabled(self, event):
+        return super(AddAttachment, self).enabled(event) and \
+            not any(isinstance(item, effort.Effort) for item in self.viewer.curselection())
+
+
+class AddTaskAttachment(NeedsTaskViewerMixin, AddAttachment):
+    def __init__(self, *args, **kwargs):
+        super(AddTaskAttachment, self).__init__(\
+            helpText=_('Browse for files to add as attachment to the selected task(s)'),
+            *args, **kwargs)
+
+
+class AddCategoryAttachment(NeedsCategoryViewerMixin, AddAttachment):
+    def __init__(self, *args, **kwargs):
+        super(AddCategoryAttachment, self).__init__(\
+            helpText=_('Browse for files to add as attachment to the selected categories'),
+            *args, **kwargs)
+
+
+class AddNoteAttachment(NeedsNoteViewerMixin, AddAttachment):
+    def __init__(self, *args, **kwargs):
+        super(AddNoteAttachment, self).__init__(\
+            helpText=_('Browse for files to add as attachment to the selected note(s)'),
+            *args, **kwargs)
+
+
+def openAttachments(attachments, settings, showerror):
+    attachmentBase = settings.get('file', 'attachmentbase')
+    for eachAttachment in attachments:
+        try:
+            eachAttachment.open(attachmentBase)
+        except Exception, instance: # pylint: disable-msg=W0703
+            showerror(render.exception(Exception, instance), 
+                      caption=_('Error opening attachment'), 
+                      style=wx.ICON_ERROR)
+
+
+class AttachmentOpen(NeedsSelectedAttachmentsMixin, ViewerCommand, AttachmentsCommand,
+                     SettingsCommand):
     def __init__(self, *args, **kwargs):
         attachments = kwargs['attachments']
         super(AttachmentOpen, self).__init__(bitmap='fileopen',
@@ -2025,14 +2007,43 @@ class AttachmentOpen(NeedsSelectedAttachmentsMixin, ViewerCommand, AttachmentsCo
             helpText=attachments.openItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, showerror=wx.MessageBox): # pylint: disable-msg=W0221
-        for selectedAttachment in self.viewer.curselection():
-            try:
-                selectedAttachment.open()
-            except Exception, instance: # pylint: disable-msg=W0703
-                showerror(render.exception(Exception, instance), 
-                          caption=_('Error opening attachment'), 
-                          style=wx.ICON_ERROR)
+        openAttachments(self.viewer.curselection(), self.settings, showerror)
 
+
+class OpenAllAttachments(NeedsSelectionWithAttachmentsMixin, ViewerCommand, 
+                         SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        super(OpenAllAttachments, self).__init__(\
+           menuText=_('&Open all attachments'), 
+           bitmap='paperclip_icon', *args, **kwargs)
+        
+    def doCommand(self, event, showerror=wx.MessageBox): # pylint: disable-msg=W0221
+        allAttachments = []
+        for item in self.viewer.curselection():
+            allAttachments.extend(item.attachments())
+        openAttachments(allAttachments, self.settings, showerror)
+
+
+class OpenAllTaskAttachments(NeedsTaskViewerMixin, OpenAllAttachments):
+    def __init__(self, *args, **kwargs):
+        super(OpenAllTaskAttachments, self).__init__(\
+            helpText=_('Open all attachments of the selected task(s)'),
+            *args, **kwargs)
+
+
+class OpenAllCategoryAttachments(NeedsCategoryViewerMixin, OpenAllAttachments):
+    def __init__(self, *args, **kwargs):
+        super(OpenAllCategoryAttachments, self).__init__(\
+            helpText=_('Open all attachments of the selected categories'),
+            *args, **kwargs)
+
+
+class OpenAllNoteAttachments(NeedsNoteViewerMixin, OpenAllAttachments):
+    def __init__(self, *args, **kwargs):
+        super(OpenAllNoteAttachments, self).__init__(\
+            helpText=_('Open all attachments of the selected note(s)'),
+            *args, **kwargs)
+            
 
 class DialogCommand(UICommand):
     def __init__(self, *args, **kwargs):

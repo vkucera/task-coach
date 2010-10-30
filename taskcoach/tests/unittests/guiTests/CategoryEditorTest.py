@@ -94,7 +94,7 @@ class CategoryEditorTest(test.wxTestCase):
         self.failUnless('filename' in [att.subject() for att in self.category.attachments()])
         
     def testRemoveAttachment(self):
-        self.editor._interior[2].viewer.selectall()
+        self.editor._interior[2].viewer.select(self.category.attachments())
         self.editor._interior[2].viewer.deleteItemCommand().do()
         self.assertEqual([], self.category.attachments())
 

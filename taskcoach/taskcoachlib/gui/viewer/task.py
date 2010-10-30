@@ -655,8 +655,15 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
         self.treeOrListUICommand.setChoice(self.isTreeViewer())
     
     def isTreeViewer(self):
-        return self.settings.getboolean(self.settingsSection(), 'treemode')
-
+        # We first ask our presentation what the mode is because 
+        # ConfigParser.getboolean is a relatively expensive method. However,
+        # when initializing, the presentation might not be created yet. So in
+        # that case we get an AttributeError and we use the settings.
+        try:
+            return self.presentation().treeMode()
+        except AttributeError:
+            return self.settings.getboolean(self.settingsSection(), 'treemode')
+    
     def curselectionIsInstanceOf(self, class_):
         return class_ == task.Task
     
@@ -673,7 +680,34 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
             itemPopupMenu, columnPopupMenu,
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(imageList) # pylint: disable-msg=E1101
-        return widget    
+        widget.Bind(wx.EVT_TREE_BEGIN_LABEL_EDIT, self.onBeginEdit)
+        widget.Bind(wx.EVT_TREE_END_LABEL_EDIT, self.onEndEdit)
+        return widget
+    
+    def onBeginEdit(self, event):
+        ''' Make sure only the non-recursive part of the subject can be
+            edited inline. '''
+        event.Skip()
+        if not self.isTreeViewer():
+            # Make sure the text control only shows the non-recursive subject
+            # by temporarily changing the item text into the non-recursive
+            # subject. When the editing ends, we change the item text back into
+            # the recursive subject. See onEndEdit.
+            treeItem = event.GetItem()
+            task = self.widget.GetItemPyData(treeItem)
+            self.widget.SetItemText(treeItem, task.subject())
+            
+    def onEndEdit(self, event):
+        ''' Make sure only the non-recursive part of the subject can be
+            edited inline. '''
+        event.Skip()
+        if not self.isTreeViewer():
+            # Restore the recursive subject. Here we don't care whether the user
+            # actually changed the subject. If she did, the subject will updated
+            # via the regular notification mechanism.
+            treeItem = event.GetItem()
+            task = self.widget.GetItemPyData(treeItem)
+            self.widget.SetItemText(treeItem, task.subject(recursive=True))
     
     def _createColumns(self):
         kwargs = dict(renderDescriptionCallback=lambda task: task.description(),

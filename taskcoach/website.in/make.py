@@ -40,24 +40,17 @@ u'''        <P><IMG SRC="images/banner.png" ALT="Banner image"></P>
         %(name)s is designed to deal with composite tasks. In addition, it offers
         effort tracking, categories, and notes. %(name)s is available for Windows,
         Mac OS X, Linux, and iPhone and iPod Touch.</P>
-        <P>%(name)s is developed by %(author_unicode)s, with
-        help of different people providing translations. Currently, %(name)s 
-        is at version %(version)s. Many people use it on a daily basis, but 
-        there are still a lot of features missing. If there's anything you'd
-        like to see included, <a href="http://taskcoach.uservoice.com/"
-        onClick="javascript: pageTracker._trackPageview('/outgoing/uservoice.com/desktop');">please 
-        let us know</a>.</P>
         <P>%(name)s is licensed under the <A HREF="license.html">%(license)s</A> 
-        and free to use for both 
-        individuals and companies. If %(name)s is a useful product for you, 
+        and free to use for both individuals and companies. 
+        <P>%(name)s is developed by %(author_unicode)s, with
+        help of different people providing translations. 
+        If %(name)s is a useful product for you, 
         please consider supporting the development of %(name)s. You can support 
         further development by spreading the word, <A HREF="i18n.html">help 
         translate</A> %(name)s in your language, 
         <A HREF="devinfo.html">help develop</A> new features and/or 
         <A HREF="donations.html">donate some money</A> (to help recover 
         costs; any amount is appreciated).</P>
-        <P>%(name)s is developed using a number of products, see 
-        credits at the left.</P>
         <P>Enjoy, <a href="mailto:%(author_email)s">%(author_unicode)s</a></P>
         <!-- AppStoreHQ:claim_code:258f8973d401112a215d79afdb82fef934ee56c9 -->
         <!-- AppStoreHQ:developer_claim_code:d28c5a79965194fd06870ec80ab83114356b664d -->
@@ -68,10 +61,10 @@ pages['donations'] = \
         <P>Donations for the development of %(name)s are very much appreciated.
         Options for donating are:
         <UL>
-            <LI><A HREF="https://sourceforge.net/donate/index.php?group_id=130831" onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/donate');">Donate
+            <LI><A HREF="https://sourceforge.net/donate/index.php?group_id=130831">Donate
             via SourceForge</A>. Fees are deducted for PayPal and 
             SourceForge. This gets you <A
-        HREF="https://sourceforge.net/project/project_donations.php?group_id=130831" onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/donaters');">listed</A> as donator.
+        HREF="https://sourceforge.net/project/project_donations.php?group_id=130831">listed</A> as donator.
             <LI><form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 <input type="hidden" name="cmd" value="_s-xclick">
 <input type="image" src="https://www.paypal.com/en_US/i/btn/x-click-but04.gif" border="0" name="submit" alt="Betalingen verrichten met PayPal is snel, gratis en veilig!">
@@ -90,11 +83,9 @@ pages['all_changes'] = file('all_changes.html').read().decode('UTF-8')
 
 
 prerequisites = '''
-              <a href="http://www.python.org/download/" 
-                 onClick="javascript: pageTracker._trackPageview('/outgoing/python.org/download');">Python</a> 
+              <a href="http://www.python.org/download/">Python</a> 
               <strong>%(pythonversion)s</strong> and 
-              <a href="http://www.wxpython.org/download.php" 
-                 onClick="javascript: pageTracker._trackPageview('/outgoing/wxpython.org/download');">wxPython</a>
+              <a href="http://www.wxpython.org/download.php">wxPython</a>
               <strong>%(wxpythonversion)s</strong> (or newer)'''
 
 prerequisites26 = prerequisites%dict(pythonversion='2.6', 
@@ -133,8 +124,7 @@ def download_table(**kwargs):
               </td>
               <td>
                 <b>
-                  <a href="%(download_url)s" 
-                     onClick="javascript: pageTracker._trackPageview('/outgoing/download/%(platform_lower)s');">%(package_type)s</a> for %(platform)s
+                  <a href="%(download_url)s">%(package_type)s</a> for %(platform)s
                 </b>
               </td>
             </tr>
@@ -486,25 +476,20 @@ pages['i18n'] = \
         versions of %(name)s are released.</P>
         <P>A Yahoo!Groups mailinglist is available for discussing the development
         and translation of %(name)s. You can join by sending mail to <tt><a 
-        href="mailto:taskcoach-dev-subscribe@yahoogroups.com" 
-        onClick="javascript: pageTracker._trackPageview('/outgoing/yahoogroups.com/join/taskcoach-dev');">taskcoach-dev-subscribe@yahoogroups.com</a></tt>
+        href="mailto:taskcoach-dev-subscribe@yahoogroups.com">taskcoach-dev-subscribe@yahoogroups.com</a></tt>
         or alternatively, if you have a Yahoo id (or don't mind creating one), 
-        join via the <a href="http://groups.yahoo.com/group/taskcoach-dev/join"
-        onClick="javascript: pageTracker._trackPageview('/outgoing/yahoogroups.com/join/taskcoach-dev');">webinterface</a>.</P>
+        join via the <a href="http://groups.yahoo.com/group/taskcoach-dev/join">webinterface</a>.</P>
 
         <P>To create a new translation or update an existing translation, 
         please follow these steps and guidelines:
         <OL>
-            <LI>Register at <A HREF="http://launchpad.net" 
-            onClick="javascript: pageTracker._trackPageview('/outgoing/launchpad.net');">Launchpad</A> and
+            <LI>Register at <A HREF="http://launchpad.net">Launchpad</A> and
             don't forget to set your preferred languages, i.e. the language(s)
             you want to translate to.
             <LI>Learn more about 
-            <A HREF="http://translations.launchpad.net/+about" 
-            onClick="javascript: pageTracker._trackPageview('/outgoing/launchpad.net/translations');">translation 
+            <A HREF="http://translations.launchpad.net/+about">translation 
             support by Launchpad</A>.
-            <LI>Go to <A HREF="https://launchpad.net/taskcoach" 
-            onClick="javascript: pageTracker._trackPageview('/outgoing/launchpad.net/taskcoach');">%(name)s at 
+            <LI>Go to <A HREF="https://launchpad.net/taskcoach">%(name)s at 
             Launchpad</A> and click "Help translate".
             <LI>Start contributing to an existing translation or create a new
             one.
@@ -538,21 +523,16 @@ pages['mailinglist'] = \
 '''       <H3>Mailinglist</H3>         
         <P>A Yahoo!Groups mailinglist is available for discussing
         %(name)s. You can join by sending mail to <tt><a 
-        href="mailto:taskcoach-subscribe@yahoogroups.com" 
-        onClick="javascript: pageTracker._trackPageview('/outgoing/yahoogroups.com/join/taskcoach-users');">taskcoach-subscribe@yahoogroups.com</a></tt>
+        href="mailto:taskcoach-subscribe@yahoogroups.com">taskcoach-subscribe@yahoogroups.com</a></tt>
         or alternatively, if you have a Yahoo id (or don't mind creating
         one), join via the <a
-        href="http://groups.yahoo.com/group/taskcoach/join" 
-        onClick="javascript: pageTracker._trackPageview('/outgoing/yahoogroups.com/join/taskcoach-users');">webinterface</a>.</P>
+        href="http://groups.yahoo.com/group/taskcoach/join">webinterface</a>.</P>
         <P>You can browse the <a
-        href="http://groups.yahoo.com/group/taskcoach/messages" 
-        onClick="javascript: pageTracker._trackPageview('/outgoing/yahoogroups.com/archive/taskcoach-users');">archive
+        href="http://groups.yahoo.com/group/taskcoach/messages">archive
         of messages</a> without subscribing to the mailinglist.</P>
         <p>The mailinglist is also available as the newsgroup 
-        <a href="http://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach" 
-        onClick="javascript: pageTracker._trackPageview('/outgoing/gmane.org/taskcoach');">gmane.comp.sysutils.pim.taskcoach</a>
-        on <a href="http://gmane.org" 
-        onClick="javascript: pageTracker._trackPageview('/outgoing/gmane.org');">Gmane</a>.</p>
+        <a href="http://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach">gmane.comp.sysutils.pim.taskcoach</a>
+        on <a href="http://gmane.org">Gmane</a>.</p>
 '''
         
 
@@ -563,51 +543,38 @@ pages['devinfo'] = \
     
     <h4>Project hosting</h4>
     <P>%(name)s source code, file downloads and bug/patch/support trackers are hosted at 
-    <a href="https://sourceforge.net/projects/taskcoach/"
-       onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/taskcoach');" 
+    <a href="https://sourceforge.net/projects/taskcoach/" 
        title="%(name)s @ Sourceforge">Sourceforge</a>. Translations are hosted
     at 
     <a href="http://launchpad.net/taskcoach/"
-       onClick="javascript: pageTracker._trackPageview('/outgoing/launchpad.net/taskcoach');"
        title="%(name)s @Launchpad">Launchpad</a>. Feature requests are hosted at
-    <a href="http://taskcoach.uservoice.com/"
-       onClick="javascript: pageTracker._trackPageview('/outgoing/uservoice.com');">Uservoice</a>.
+    <a href="http://taskcoach.uservoice.com/">Uservoice</a>.
     </P>
     
     <h4>Mailinglist</h4>
     <P>A Yahoo!Groups mailinglist is available for discussing the development
     of %(name)s. You can join by sending mail to <tt><a 
-    href="mailto:taskcoach-dev-subscribe@yahoogroups.com"
-    onClick="javascript: pageTracker._trackPageview('/outgoing/yahoogroups.com/join/taskcoach-dev');">taskcoach-dev-subscribe@yahoogroups.com</a></tt>
+    href="mailto:taskcoach-dev-subscribe@yahoogroups.com">taskcoach-dev-subscribe@yahoogroups.com</a></tt>
     or alternatively, if you have a Yahoo id (or don't mind creating one), 
-    join via the <a href="http://groups.yahoo.com/group/taskcoach-dev/join"
-    onClick="javascript: pageTracker._trackPageview('/outgoing/yahoogroups.com/join/taskcoach-dev');">webinterface</a>.</P>
-    <P>You can browse the <a href="http://groups.yahoo.com/group/taskcoach-dev/messages"
-    onClick="javascript: pageTracker._trackPageview('/outgoing/yahoogroups.com/archive/taskcoach-dev');">archive
+    join via the <a href="http://groups.yahoo.com/group/taskcoach-dev/join">webinterface</a>.</P>
+    <P>You can browse the <a href="http://groups.yahoo.com/group/taskcoach-dev/messages">archive
     of messages</a> without subscribing to the mailinglist.</P>
     <p>The mailinglist is also available as the newsgroup 
-    <a href="http://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach.devel"
-    onClick="javascript: pageTracker._trackPageview('/outgoing/gmane.org/taskcoach-dev');">gmane.comp.sysutils.pim.taskcoach.devel</a>
-    on <a href="http://gmane.org"
-    onClick="javascript: pageTracker._trackPageview('/outgoing/gmane.org');">Gmane</a>.</p>
+    <a href="http://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach.devel">gmane.comp.sysutils.pim.taskcoach.devel</a>
+    on <a href="http://gmane.org">Gmane</a>.</p>
     <P>A Sourceforge mailinglist is available for receiving commit messages.
-    If you are a %(name)s developer you can <a href="http://lists.sourceforge.net/lists/listinfo/taskcoach-commits"
-    onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/join/taskcoach-commits');">join this mailinglist</a>.
+    If you are a %(name)s developer you can <a href="http://lists.sourceforge.net/lists/listinfo/taskcoach-commits">join 
+    this mailinglist</a>.
     
     <h4>Dependencies</h4>
-    <p>%(name)s is developed in <A HREF="http://www.python.org"
-    onClick="javascript: pageTracker._trackPageview('/outgoing/python.org');">Python</A>,
-    using <A HREF="http://www.wxpython.org" 
-    onClick="javascript: pageTracker._trackPageview('/outgoing/wxpython.org');">wxPython</A> for the
+    <p>%(name)s is developed in <A HREF="http://www.python.org">Python</A>,
+    using <A HREF="http://www.wxpython.org">wxPython</A> for the
     graphical user interface. On Windows, 
-    <A HREF="http://sourceforge.net/projects/pywin32/"
-    onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/pywin32');">Pywin32</A> 
+    <A HREF="http://sourceforge.net/projects/pywin32/">Pywin32</A> 
     is used as well. For generating the API documentation you need to have
-    <A HREF="http://epydoc.sourceforge.net/"
-    onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/epydoc');">Epydoc</A> installed. For
+    <A HREF="http://epydoc.sourceforge.net/">Epydoc</A> installed. For
     generating inheritance diagrams you need to have <A
-    HREF="http://www.graphviz.org"
-    onClick="javascript: pageTracker._trackPageview('/outgoing/graphviz.org');">Graphviz</A> installed.</p>
+    HREF="http://www.graphviz.org">Graphviz</A> installed.</p>
     <p>The few other libraries (other than those
     provided by Python, wxPython and Pywin32) that are used are put into the
     taskcoachlib/thirdparty package and included in the source code
@@ -618,19 +585,16 @@ pages['devinfo'] = \
     You are free to use whatever IDE you want. To make use of the Makefile you
     need to have <tt>make</tt> installed. It is installed on Linux and Mac OS X 
     by default. On Windows we recommend you to install
-    <A HREF="http://www.cygwin.com"
-    onClick="javascript: pageTracker._trackPageview('/outgoing/cygwin.com');">Cygwin</A> 
+    <A HREF="http://www.cygwin.com">Cygwin</A> 
     which provides a shell (bash) and a whole range of useful utilities. 
     Make sure to explicitly include <tt>make</tt> in the Cygwin setup program 
     because the standard install doesn't contain <tt>make</tt>.</p>
     
     <h4>Getting the source</h4>
     <p>%(name)s source code is hosted in a <A
-    HREF="http://sourceforge.net/svn/?group_id=130831"
-    onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/svn');">Subversion repository 
+    HREF="http://sourceforge.net/svn/?group_id=130831">Subversion repository 
     at SourceForge</A>. You can check out the code from the repository 
-    directly or <A HREF="http://taskcoach.svn.sourceforge.net/" 
-    onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/svn');">browse the
+    directly or <A HREF="http://taskcoach.svn.sourceforge.net/">browse the
     repository</A>. Please read the file <tt>HACKING.txt</tt> after checking
     out the sources. You can generate documentation with Epydoc and Graphviz
     from the Makefile: <tt>make dot epydoc</tt>.</p>
@@ -706,8 +670,7 @@ pages['devinfo'] = \
     </p>
     <h4>Blog</h4>
     <p>Frank keeps a not very frequent 
-    <a href="http://taskcoach.blogspot.com"
-    onClick="javascript: pageTracker._trackPageview('/outgoing/blogspot.com/taskcoach');">blog</a> about
+    <a href="http://taskcoach.blogspot.com">blog</a> about
     lessons learned from developing %(name)s.</p>
 '''
 
