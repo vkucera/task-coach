@@ -65,9 +65,18 @@ class DummyFilter(base.Filter):
         self.testcalled = 1 # pylint: disable-msg=W0201
 
 
+class DummyItem(str):
+    def ancestors(self):
+        return []
+    
+    def children(self, *args, **kwargs):
+        return []
+
+
 class StackedFilterTest(test.TestCase):
     def setUp(self):
-        self.list = patterns.ObservableList(['a', 'b', 'c', 'd'])
+        self.list = patterns.ObservableList([DummyItem('a'), DummyItem('b'), 
+                                             DummyItem('c'), DummyItem('d')])
         self.filter1 = DummyFilter(self.list)
         self.filter2 = TestFilter(self.filter1)
 
@@ -398,7 +407,7 @@ class CategoryFilterHelpersMixin(object):
     def setFilterOnAllCategories(self):
         self.filter.setFilterOnlyWhenAllCategoriesMatch(True)
     
-    
+
 class CategoryFilterFixtureAndCommonTestsMixin(CategoryFilterHelpersMixin):
     def setUp(self):
         task.Task.settings = config.Settings(load=False)
@@ -656,9 +665,11 @@ class SelectedItemsFilterTest(test.TestCase):
 class CategoryFilterAndViewFilterFixtureAndCommonTestsMixin(CategoryFilterHelpersMixin):
     def setUp(self):
         task.Task.settings = config.Settings(load=False)
-        self.parent = task.Task('parent')
-        self.child = task.Task()
-        self.childCategory = category.Category('child')
+        self.parent = task.Task('parent task')
+        self.parent.setShouldMarkCompletedWhenAllChildrenCompleted(False)
+        self.child = task.Task('child task')
+        self.child.setCompletionDateTime()
+        self.childCategory = category.Category('child category')
         self.childCategory.addCategorizable(self.child)
         self.parent.addChild(self.child)
         self.list = task.TaskList([self.parent, self.child])
@@ -667,15 +678,33 @@ class CategoryFilterAndViewFilterFixtureAndCommonTestsMixin(CategoryFilterHelper
         self.categoryFilter = category.filter.CategoryFilter(self.viewFilter, 
             categories=self.categories, treeMode=self.treeMode)
 
-    def testThatParentIsHidden(self):
-        self.parent.setShouldMarkCompletedWhenAllChildrenCompleted(False)
+    def testThatParentIsHiddenWhenHiddenCompletedChildIsFiltered(self):
         self.viewFilter.hideCompletedTasks(True)
-        self.child.setCompletionDateTime()
         self.assertEqual(1, len(self.viewFilter))
         self.childCategory.setFiltered(True)
         self.assertEqual(0, len(self.categoryFilter))
         
+    def testThatParentIsShownWhenHiddenCompletedChildIsUnfiltered(self):
+        self.viewFilter.hideCompletedTasks(True)
+        self.childCategory.setFiltered(True)
+        self.assertEqual(0, len(self.categoryFilter))
+        self.childCategory.setFiltered(False)
+        self.assertEqual(1, len(self.categoryFilter))
         
+    def testThatParentIsHiddenWhenFilteredCompletedChildIsHidden(self):
+        self.childCategory.setFiltered(True)
+        self.assertEqual(2, len(self.viewFilter))
+        self.viewFilter.hideCompletedTasks(True)
+        self.assertEqual(0, len(self.categoryFilter))        
+        
+    def testThatParentIsShownWhenFilteredCompletedChildIsUnhidden(self):
+        self.childCategory.setFiltered(True)
+        self.viewFilter.hideCompletedTasks(True)
+        self.assertEqual(0, len(self.categoryFilter))
+        self.viewFilter.hideCompletedTasks(False)
+        self.assertEqual(2 if self.treeMode else 1, len(self.categoryFilter))
+
+
 class CategoryFilterAndViewFilterInListModeTest(CategoryFilterAndViewFilterFixtureAndCommonTestsMixin, 
                                                 test.TestCase):
     treeMode = False   
