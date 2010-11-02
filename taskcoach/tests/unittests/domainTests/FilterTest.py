@@ -277,8 +277,8 @@ class HideCompositeTasksTestsMixin(object):
         if self.filter.treeMode():
             self.assertEqual(4, len(self.filter))
         else:
-            self.assertEqual([self.grandChild1, self.grandChild2], 
-                list(self.filter))
+            self.assertEqual(set([self.grandChild1, self.grandChild2]), 
+                set(self.filter))
 
     def testRemoveTwoChildren(self):
         self._addTwoGrandChildren()
@@ -583,7 +583,7 @@ class OriginalLengthTest(test.TestCase, CategoryFilterHelpersMixin):
         self.settings = config.Settings(load=False)
         self.categories = category.CategoryList()
         self.filter = category.filter.CategoryFilter(self.list,
-            categories=self.categories, settings=self.settings)
+            categories=self.categories)
         
     def testEmptyList(self):
         self.assertEqual(0, self.filter.originalLength())
