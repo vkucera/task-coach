@@ -91,6 +91,9 @@ prerequisites = '''
 prerequisites26 = prerequisites%dict(pythonversion='2.6', 
                                      wxpythonversion='%(wxpythonversion)s')
 
+prerequisites27 = prerequisites%dict(pythonversion='2.7', 
+                                     wxpythonversion='%(wxpythonversion)s')
+
 def download_header(platform=None, release=None, warning=None):
     title = 'Download %(name)s'
     if release:
@@ -232,8 +235,16 @@ fedora12 = download_table(image='fedora',
                           download_url='%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.fc12.noarch.rpm',
                           package_type='RPM package',
                           platform='Fedora', platform_lower='fedora',
-                          platform_versions_supported='Fedora 12 and later',
+                          platform_versions_supported='Fedora 12 and 13',
                           prerequisites=prerequisites26,
+                          installation='<tt>$ sudo yum install --nogpgcheck %(filename_lower)s-%(version)s-1.fc*.noarch.rpm</tt>')
+
+fedora14 = download_table(image='fedora',
+                          download_url='%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.fc14.noarch.rpm',
+                          package_type='RPM package',
+                          platform='Fedora', platform_lower='fedora',
+                          platform_versions_supported='Fedora 14 and later',
+                          prerequisites=prerequisites27,
                           installation='<tt>$ sudo yum install --nogpgcheck %(filename_lower)s-%(version)s-1.fc*.noarch.rpm</tt>')
 
 redhat_el4 = download_table(image='redhat',
@@ -257,7 +268,7 @@ linux = download_table(image='linux',
 pages['download_for_linux'] = sep.join([download_header(platform='Linux',
                                                         release='%(version)s'), 
                                         ubuntu_py26, ubuntu_py25, debian,
-                                        fedora12, gentoo, opensuse,
+                                        fedora14, fedora12, gentoo, opensuse,
                                         redhat_el4, linux])
 
 
