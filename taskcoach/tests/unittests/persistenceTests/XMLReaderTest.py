@@ -20,12 +20,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import xml.parsers.expat, wx, StringIO, os, tempfile
 import test
-from taskcoachlib import persistence
-from taskcoachlib.domain import date
+from taskcoachlib import persistence, config
+from taskcoachlib.domain import date, task
 
 
 class XMLReaderTestCase(test.TestCase):
     tskversion = 'Subclass responsibility'
+
+    def setUp(self):
+        super(XMLReaderTestCase, self).setUp()
+        task.Task.settings = config.Settings(load=False)
             
     def writeAndRead(self, xmlContents):
         # pylint: disable-msg=W0201
@@ -344,9 +348,11 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
         reader = persistence.XMLReader(StringIO.StringIO())
         try:
             reader.read()
-            self.fail('Expected ExpatError') # pragma: no cover
+            self.fail('Expected ExpatError or ParseError') # pragma: no cover
         except xml.parsers.expat.ExpatError:
-            pass
+            pass # pragma: no cover
+        except xml.etree.ElementTree.ParseError:
+            pass # pragma: no cover
         
     def testNoTasksAndNoCategories(self):
         tasks, categories, notes = self.writeAndReadTasksAndCategoriesAndNotes('<tasks/>\n')
