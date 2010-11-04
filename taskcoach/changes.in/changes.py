@@ -22,14 +22,14 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.0', 'November 3, 2010',
+Release('1.3.0', 'November 4, 2010',
     summary='''This release ...''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
 for OK and Cancel buttons anymore.
 TODO:
 - Use AUI for edit dialogs?
-- Refactor editor.py''')
+- Refactor editor.py''', 'http://uservoice.com/a/oNbcq')
         ],
     bugsFixed=[
         Bug('''It was and is possible to open multiple edit dialogs for the same
