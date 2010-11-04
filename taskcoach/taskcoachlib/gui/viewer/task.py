@@ -575,12 +575,14 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         edit = uicommand.TaskEdit(taskList=self.presentation(), viewer=self)
         edit(item)
 
-    def onCreate(self, dateTime):
+    def onCreate(self, dateTime, show=True):
+        startDateTime = dateTime
+        dueDateTime = dateTime.endOfDay() if dateTime == dateTime.startOfDay() else dateTime
         create = uicommand.TaskNew(taskList=self.presentation(), 
                                    settings=self.settings,
-                                   taskKeywords=dict(startDateTime=dateTime, 
-                                                     dueDateTime=dateTime))
-        create(None)
+                                   taskKeywords=dict(startDateTime=startDateTime, 
+                                                     dueDateTime=dueDateTime))
+        return create(event=None, show=show)
 
     def getToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
