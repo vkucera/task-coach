@@ -44,7 +44,9 @@ inline, don't include the subjects of its ancestors in the text control.'''),
         Bug('''When double clicking in the calendar viewer (when it is in 
 vertical month mode) to create a new task, set the due date of the new task 
 to the end of the day. This makes sure the new task is visible in the calendar 
-after closing the task edit dialog.''', '3103011')
+after closing the task edit dialog.''', '3103011'),
+        Bug('''Include end of work day as option when selecting a time
+in the effort edit dialog.''', 'http://uservoice.com/a/380R8')
         ],
     distributionsChanged=[
         Distribution('''Added support for Fedora 14.''', '3101814')
