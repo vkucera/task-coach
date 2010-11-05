@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.2', 'November 4, 2010',
+Release('1.2.2', 'November 5, 2010',
     summary='''This release adds a template edit dialog and fixes some bugs.''',
     featuresAdded=[
         Feature('''Don't ask for a name when creating a new template. There
@@ -46,7 +46,9 @@ vertical month mode) to create a new task, set the due date of the new task
 to the end of the day. This makes sure the new task is visible in the calendar 
 after closing the task edit dialog.''', '3103011'),
         Bug('''Include end of work day as option when selecting a time
-in the effort edit dialog.''', 'http://uservoice.com/a/380R8')
+in the effort edit dialog.''', 'http://uservoice.com/a/380R8'),
+        Bug('''Remember column widths in the category viewer across 
+sessions.''')
         ],
     distributionsChanged=[
         Distribution('''Added support for Fedora 14.''', '3101814')
