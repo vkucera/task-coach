@@ -21,6 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+            
+Release('1.2.3', 'November 7, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Show clock icon for tracked tasks in the task viewer.''')
+        ]
+    ),
 
 Release('1.2.2', 'November 6, 2010',
     summary='''This release adds a template edit dialog and fixes some bugs.''',

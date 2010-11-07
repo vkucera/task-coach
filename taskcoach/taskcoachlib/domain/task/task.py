@@ -405,7 +405,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def addEffortEvent(self, event, *efforts):
         event.addSource(self, *efforts, **dict(type='task.effort.add'))
           
-    def startTrackingEvent(self, event, *efforts):    
+    def startTrackingEvent(self, event, *efforts):
+        self.recomputeAppearance()    
         for ancestor in [self] + self.ancestors():
             event.addSource(ancestor, *efforts, 
                             **dict(type=ancestor.trackStartEventType()))
@@ -429,6 +430,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             effort.setStop(event=event)
                         
     def stopTrackingEvent(self, event, *efforts):
+        self.recomputeAppearance()    
         for ancestor in [self] + self.ancestors():
             event.addSource(ancestor, *efforts, 
                             **dict(type=ancestor.trackStopEventType()))

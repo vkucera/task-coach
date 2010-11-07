@@ -591,6 +591,17 @@ class CommonTestsMixin(object):
         prerequisite.setCompletionDateTime(date.Now())
         self.assertEqual(self.viewer.imageIndex['led_blue_icon'], self.getFirstItemIcon())
         
+    def testIconUpdatesWhenEffortTrackingStarts(self):
+        self.taskList.append(self.task)
+        self.task.addEffort(effort.Effort(self.task))
+        self.assertEqual(self.viewer.imageIndex['clock_icon'], self.getFirstItemIcon())
+        
+    def testIconUpdatesWhenEffortTrackingStops(self):
+        self.taskList.append(self.task)
+        self.task.addEffort(effort.Effort(self.task))
+        self.task.stopTracking()
+        self.assertEqual(self.viewer.imageIndex['led_blue_icon'], self.getFirstItemIcon())
+        
     def testModeIsSavedInSettings(self):
         self.assertEqual(self.treeMode, 
             self.settings.getboolean(self.viewer.settingsSection(), 'treemode'))
