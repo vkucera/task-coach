@@ -22,11 +22,14 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.3', 'November 7, 2010',
+Release('1.2.3', 'November 9, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Show clock icon for tracked tasks in the task viewer.'''),
-        Bug('''File => Save task as template didn't work any more'''),
+        Bug('''File => Save task as template didn't work any more.'''),
+        Bug('''Hide parent task when all of its subtasks are hidden by
+filtered categories and the parent task itself doesn't belong to the
+filtered categories.''')
         ]
     ),
 

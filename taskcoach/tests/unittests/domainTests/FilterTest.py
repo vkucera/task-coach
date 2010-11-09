@@ -414,9 +414,11 @@ class CategoryFilterFixtureAndCommonTestsMixin(CategoryFilterHelpersMixin):
         self.parent = task.Task('parent')
         self.parentCategory = category.Category('parent')
         self.parentCategory.addCategorizable(self.parent)
-        self.child = task.Task()
+        self.parent.addCategory(self.parentCategory)
+        self.child = task.Task('child')
         self.childCategory = category.Category('child')
         self.childCategory.addCategorizable(self.child)
+        self.child.addCategory(self.childCategory)
         self.parent.addChild(self.child)
         self.unusedCategory = category.Category('unused')
         self.list = task.TaskList([self.parent, self.child])
@@ -487,6 +489,17 @@ class CategoryFilterFixtureAndCommonTestsMixin(CategoryFilterHelpersMixin):
     def testFilterOnAllCategories_NoCategoriesSelected(self):
         self.setFilterOnAllCategories()
         self.assertEqual(2, len(self.filter))
+        
+    def testFilterOnAllCategories_TwoChildrenWithADifferentCategoryEachShouldHideParent(self):
+        secondChild = task.Task('second child')
+        self.parent.addChild(secondChild)
+        self.list.append(secondChild)
+        secondChild.addCategory(self.unusedCategory)
+        self.unusedCategory.addCategorizable(secondChild)
+        self.setFilterOnAllCategories()
+        self.unusedCategory.setFiltered()
+        self.childCategory.setFiltered()
+        self.assertEqual(0, len(self.filter))
         
     def testAddTaskWithFilteredCategory(self):
         self.unusedCategory.setFiltered()

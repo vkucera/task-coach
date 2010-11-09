@@ -48,12 +48,15 @@ class CategoryFilter(base.Filter):
     def filter(self, categorizables):
         filteredCategories = self.__categories.filteredCategories()
         if filteredCategories:
-            return [categorizable for categorizable in categorizables if \
-                    self.filterCategorizable(categorizable, filteredCategories)]
+            return self.filteredCategorizables(categorizables, filteredCategories)
         else:
             return categorizables
         
-    def filterCategorizable(self, categorizable, filteredCategories):
+    def filteredCategorizables(self, categorizables, filteredCategories):
+        return [categorizable for categorizable in categorizables if \
+                self.categorizableIsFiltered(categorizable, filteredCategories)]
+        
+    def categorizableIsFiltered(self, categorizable, filteredCategories):
         matches = [self.categoryContains(category, categorizable) 
                    for category in filteredCategories]
         if self.__filterOnlyWhenAllCategoriesMatch:
@@ -68,7 +71,7 @@ class CategoryFilter(base.Filter):
         containedCategorizables = category.categorizables(recursive=True)
         categorizablesToInvestigate = [categorizable] + categorizable.ancestors()
         if self.treeMode():
-            categorizablesToInvestigate.extend([child for child in categorizable.children(recursive=True) if child in self.observable()])
+            categorizablesToInvestigate.extend([child for child in categorizable.children(recursive=True) if child in self.observable() and self.categorizableIsFiltered(child, self.__categories.filteredCategories())])
         for categorizableToInvestigate in categorizablesToInvestigate:
             if categorizableToInvestigate in containedCategorizables:
                 return True
