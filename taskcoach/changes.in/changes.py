@@ -25,7 +25,8 @@ releases = [
 Release('1.2.3', 'November 7, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''Show clock icon for tracked tasks in the task viewer.''')
+        Bug('''Show clock icon for tracked tasks in the task viewer.'''),
+        Bug('''File => Save task as template didn't work any more'''),
         ]
     ),
 
