@@ -531,32 +531,45 @@ class CategoryFilterFixtureAndCommonTestsMixin(CategoryFilterHelpersMixin):
     # Contains:
         
     def testContains_NoCategorizables(self):
-        self.failIf(self.filter.categoryContains(self.unusedCategory, self.parent))
+        self.assertEqual([False], self.filter.categoriesContain([self.unusedCategory], self.parent))
         
     def testContains_CategorizablesInCategory(self):
         self.parentCategory.addCategorizable(self.parent)
-        self.failUnless(self.filter.categoryContains(self.parentCategory, self.parent))
+        self.assertEqual([True], self.filter.categoriesContain([self.parentCategory], self.parent))
         
     def testContains_CategorizableInSubCategory(self):
         self.childCategory.addCategorizable(self.parent)
-        self.failUnless(self.filter.categoryContains(self.parentCategory, self.parent))
+        self.assertEqual([True], self.filter.categoriesContain([self.parentCategory], self.parent))
         
     def testContains_ParentInCategory(self):
         self.parentCategory.addCategorizable(self.parent)
-        self.failUnless(self.filter.categoryContains(self.parentCategory, self.child))
+        self.assertEqual([True], self.filter.categoriesContain([self.parentCategory], self.child))
         
     def testContains_ParentInSubCategory(self):
         self.childCategory.addCategorizable(self.parent)
-        self.failUnless(self.filter.categoryContains(self.parentCategory, self.child))
+        self.assertEqual([True], self.filter.categoriesContain([self.parentCategory], self.child))
     
     def testContains_ChildInCategory(self):
         self.parentCategory.addCategorizable(self.child)
-        self.failUnless(self.filter.categoryContains(self.parentCategory, self.parent))
+        self.assertEqual([True], self.filter.categoriesContain([self.parentCategory], self.parent))
         
     def testContains_ChildInSubCategory(self):
         self.childCategory.addCategorizable(self.child)
-        self.failUnless(self.filter.categoryContains(self.parentCategory, self.parent))
-                           
+        self.assertEqual([True], self.filter.categoriesContain([self.parentCategory], self.parent))
+        
+    def testOneCategoryContainsCategorizable(self):
+        self.parentCategory.addCategorizable(self.parent)
+        self.assertEqual([True, False], 
+            self.filter.categoriesContain([self.parentCategory, 
+                                           self.unusedCategory], self.parent))
+
+    def testBothCategoriesContainCategorizable(self):
+        self.parentCategory.addCategorizable(self.parent)
+        self.unusedCategory.addCategorizable(self.parent)
+        self.assertEqual([True, True], 
+            self.filter.categoriesContain([self.parentCategory, 
+                                           self.unusedCategory], self.parent))
+
 
 class CategoryFilterInListModeTest(CategoryFilterFixtureAndCommonTestsMixin, 
                                    test.TestCase):
