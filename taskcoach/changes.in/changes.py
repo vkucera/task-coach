@@ -29,7 +29,9 @@ Release('1.2.3', 'November 9, 2010',
         Bug('''File => Save task as template didn't work any more.'''),
         Bug('''Hide parent task when all of its subtasks are hidden by
 filtered categories and the parent task itself doesn't belong to the
-filtered categories.''')
+filtered categories.'''),
+        Bug('''Don't throw exception when end of working day is 24.''',
+            '3105496')
         ]
     ),
 
