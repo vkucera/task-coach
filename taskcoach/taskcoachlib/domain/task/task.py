@@ -3,6 +3,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2010 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2010 Svetoslav <sal_electronics@hotmail.com>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -405,7 +406,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def addEffortEvent(self, event, *efforts):
         event.addSource(self, *efforts, **dict(type='task.effort.add'))
           
-    def startTrackingEvent(self, event, *efforts):    
+    def startTrackingEvent(self, event, *efforts):
+        self.recomputeAppearance()    
         for ancestor in [self] + self.ancestors():
             event.addSource(ancestor, *efforts, 
                             **dict(type=ancestor.trackStartEventType()))
@@ -429,6 +431,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             effort.setStop(event=event)
                         
     def stopTrackingEvent(self, event, *efforts):
+        self.recomputeAppearance()    
         for ancestor in [self] + self.ancestors():
             event.addSource(ancestor, *efforts, 
                             **dict(type=ancestor.trackStopEventType()))
@@ -857,9 +860,18 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def recur(self, event=None):
         self.setCompletionDateTime(date.DateTime(), event=event)
         recur = self.recurrence(recursive=True, upwards=True)
-        nextStartDateTime = recur(self.startDateTime(), next=False)
+        currentStartDateTime = self.startDateTime()
+        currentDueDateTime = self.dueDateTime()
+        if currentStartDateTime < currentStartDateTime.max and currentDueDateTime < currentDueDateTime.max:
+            taskDurationDateTime = currentDueDateTime - currentStartDateTime
+        else:
+            taskDurationDateTime = currentStartDateTime.max
+        nextStartDateTime = recur(currentStartDateTime, next=False)
         self.setStartDateTime(nextStartDateTime, event=event)
-        nextDueDateTime = recur(self.dueDateTime(), next=False)
+        if taskDurationDateTime < taskDurationDateTime.max:
+            nextDueDateTime = self.startDateTime() + taskDurationDateTime
+        else:
+            nextDueDateTime = recur(currentDueDateTime, next=False)
         self.setDueDateTime(nextDueDateTime, event=event)
         self.setPercentageComplete(0, event=event)
         if self.reminder():

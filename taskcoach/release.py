@@ -292,12 +292,17 @@ def announcing_on_Freshmeat(settings, options):
         httpPostRequest(host, path, body, 'application/json', ok=201)
 
 
+def status_message():
+    metadata = taskcoachlib.meta.data.metaDict
+    return "Release %(version)s of %(name)s is available from %(url)s. " \
+           "See what's new at %(url)schanges.html."%metadata
+
+
 def announcing_via_Basic_Auth_Api(settings, options, section, host, api_prefix=''):
     credentials = ':'.join(settings.get(section, credential) \
                            for credential in ('username', 'password'))
     basic_auth = base64.encodestring(credentials)[:-1]
-    metadata = taskcoachlib.meta.data.metaDict
-    status = 'Release %(version)s of %(name)s is available from %(url)s'%metadata
+    status = status_message()
     connection = httplib.HTTPConnection('%s:80'%host)
     api_call = api_prefix + '/statuses/update.json'
     body = '='.join((urllib.quote(body_part.encode('utf-8')) \
@@ -318,8 +323,7 @@ def announcing_via_OAuth_Api(settings, options, section, host):
     oauth_token_secret = settings.get(section, 'oauth_token_secret')
     token = oauth.Token(key=oauth_token, secret=oauth_token_secret)
     client = oauth.Client(consumer, token)
-    metadata = taskcoachlib.meta.data.metaDict
-    status = 'Release %(version)s of %(name)s is available from %(url)s'%metadata
+    status = status_message()
     if options.dry_run:
         print 'Skipping announcing "%s" on %s.'%(status, host)
     else: 
