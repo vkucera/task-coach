@@ -131,7 +131,7 @@ class UICommand(object):
         for eventType in [wx.EVT_MENU, wx.EVT_UPDATE_UI]:
             window.Unbind(eventType, id=itemId)
         
-    def onCommandActivate(self, event):
+    def onCommandActivate(self, event, *args, **kwargs):
         ''' For Menu's and ToolBars, activating the command is not
             possible when not enabled, because menu items and toolbar
             buttons are disabled through onUpdateUI. For other controls such 
@@ -140,7 +140,7 @@ class UICommand(object):
             on an empty selection in the ListCtrl would bring up the 
             TaskEditor. '''
         if self.enabled(event):
-            self.doCommand(event)
+            return self.doCommand(event, *args, **kwargs)
             
     def __call__(self, *args, **kwargs):
         return self.onCommandActivate(*args, **kwargs)

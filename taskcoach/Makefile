@@ -63,9 +63,11 @@ endif
 dist/TaskCoach-$(TCVERSION).tar.gz:
 	$(PYTHON) make.py sdist --formats=gztar --no-prune --template=$(template)
 
-rpm: sdist_linux
+rpm: prepare changes templates
+	cp build.in/debian/MANIFEST.in .
 	$(PYTHON) make.py bdist_rpm --requires "python2.5,python-wxgtk2.8" --group "Applications/Productivity"
-
+	rm MANIFEST.in
+	
 fedora: prepare changes templates
 	cp build.in/debian/MANIFEST.in .
 	$(PYTHON) make.py bdist_rpm_fedora

@@ -118,7 +118,7 @@ class wxSchedulerPaint( object ):
 
 			if schedule.start.IsLaterThan(end) or schedule.start.IsEqualTo(end):
 				continue
-                        if start.IsLaterThan(schedule.end) or start.IsEqualTo(schedule.end):
+			if start.IsLaterThan(schedule.end):
 				continue
 
 			newSchedule = schedule.Clone()

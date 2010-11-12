@@ -221,6 +221,8 @@ class TimeCtrl(Panel):
         for hour in range(self._starthour, self._endhour):
             for minute in range(0, 60, self._interval):
                 choices.append(self._formatTime(date.Time(hour, minute)))
+        if self._endhour < 24:
+            choices.append(self._formatTime(date.Time(self._endhour, 0)))
         return choices
     
     def _formatTime(self, time):

@@ -255,7 +255,7 @@ redhat_el4 = download_table(image='redhat',
                             prerequisites=prerequisites,
                             installation='''follow the instructions on
 <a href='http://warped.org/blog/2010/04/02/ch0wned-installing-taskcoach-and-all-its-depenencies-in-home-for-el4/'>
-Max Baker's blog</a>.''')
+Max Baker's blog</a>''')
                             
 linux = download_table(image='linux',
                        download_url='%(dist_download_prefix)s/%(filename)s-%(version)s-1.noarch.rpm',

@@ -591,6 +591,17 @@ class CommonTestsMixin(object):
         prerequisite.setCompletionDateTime(date.Now())
         self.assertEqual(self.viewer.imageIndex['led_grey_icon'], self.getFirstItemIcon())
         
+    def testIconUpdatesWhenEffortTrackingStarts(self):
+        self.taskList.append(self.task)
+        self.task.addEffort(effort.Effort(self.task))
+        self.assertEqual(self.viewer.imageIndex['clock_icon'], self.getFirstItemIcon())
+        
+    def testIconUpdatesWhenEffortTrackingStops(self):
+        self.taskList.append(self.task)
+        self.task.addEffort(effort.Effort(self.task))
+        self.task.stopTracking()
+        self.assertEqual(self.viewer.imageIndex['led_blue_icon'], self.getFirstItemIcon())
+        
     def testModeIsSavedInSettings(self):
         self.assertEqual(self.treeMode, 
             self.settings.getboolean(self.viewer.settingsSection(), 'treemode'))
@@ -798,12 +809,36 @@ class TaskViewerInListModeTest(CommonTestsMixin, TaskViewerTestCase):
         
         
 class TaskCalendarViewerTest(test.wxTestCase):
-    def testCreate(self):
+    def setUp(self):
+        super(TaskCalendarViewerTest, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
         self.taskFile = persistence.TaskFile()
-        gui.viewer.task.CalendarViewer(self.frame, self.taskFile, self.settings)
+        self.frame.taskFile = self.taskFile
+        self.viewer = gui.viewer.task.CalendarViewer(self.frame, self.taskFile, 
+                                                     self.settings)
+        self.originalTopWindow = wx.GetApp().TopWindow
+        wx.GetApp().TopWindow = self.frame # uiCommands use TopWindow to get the main window
+        
+    def tearDown(self):
+        super(TaskCalendarViewerTest, self).tearDown()
+        wx.GetApp().TopWindow = self.originalTopWindow
+        
+    def openDialogAndAssertDateTimes(self, dateTime, expectedStartDateTime, 
+                                     expectedDueDateTime):
+        dialog = self.viewer.onCreate(dateTime, show=False)
+        newTask = list(self.taskFile.tasks())[0]
+        self.assertEqual(expectedStartDateTime, newTask.startDateTime())
+        self.assertEqual(expectedDueDateTime, newTask.dueDateTime())
+        
+    def testOnCreateSetsStartandDueDateTime(self):
+        dateTime = date.DateTime(2010,10,10,16,0,0)
+        self.openDialogAndAssertDateTimes(dateTime, dateTime, dateTime)
 
+    def testOnCreateKeepsStartDateTimeAndMakesDueDateTimeEndOfDayWhenDateTimeIsStartOfDay(self):
+        dateTime = date.DateTime(2010,10,1,0,0,0)
+        self.openDialogAndAssertDateTimes(dateTime, dateTime, dateTime.endOfDay())
 
+        
 class TaskSquareMapViewerTest(test.wxTestCase):
     def testCreate(self):
         task.Task.settings = self.settings = config.Settings(load=False)

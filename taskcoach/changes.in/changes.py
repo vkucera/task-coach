@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-
-Release('1.3.0', 'November 4, 2010',
+            
+Release('1.3.0', 'November 12, 2010',
     summary='''This release ...''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -40,8 +40,24 @@ immediately to all open dialogs. This will prevent overwriting
 changes made in other dialogs.''', '1152561')
         ]
     ),
+    
+Release('1.2.3', 'November 12, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Show clock icon for tracked tasks in the task viewer.''', 
+            '3106158'),
+        Bug('''File => Save task as template didn't work any more.'''),
+        Bug('''Hide parent task when all of its subtasks are hidden by
+filtered categories and the parent task itself doesn't belong to the
+filtered categories.'''),
+        Bug('''Don't throw exception when end of working day is 24.''',
+            '3105496'),
+        Bug('''When recurring a task, make sure its start date stays 
+before its due date.''')
+        ]
+    ),
 
-Release('1.2.2', 'November 2, 2010',
+Release('1.2.2', 'November 6, 2010',
     summary='''This release adds a template edit dialog and fixes some bugs.''',
     featuresAdded=[
         Feature('''Don't ask for a name when creating a new template. There
@@ -60,6 +76,14 @@ Task 1').'''),
 inline, don't include the subjects of its ancestors in the text control.'''),
         Bug('''When filtering on categories, don't show tasks whose subtasks
 (that belong to the filtered categories) are all hidden by another filter.'''),
+        Bug('''When double clicking in the calendar viewer (when it is in 
+vertical month mode) to create a new task, set the due date of the new task 
+to the end of the day. This makes sure the new task is visible in the calendar 
+after closing the task edit dialog.''', '3103011'),
+        Bug('''Include end of work day as option when selecting a time
+in the effort edit dialog.''', 'http://uservoice.com/a/380R8'),
+        Bug('''Remember column widths in the category viewer across 
+sessions.''')
         ],
     distributionsChanged=[
         Distribution('''Added support for Fedora 14.''', '3101814')
