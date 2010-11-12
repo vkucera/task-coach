@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.3', 'November 9, 2010',
+Release('1.2.3', 'November 12, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Show clock icon for tracked tasks in the task viewer.''', 
@@ -32,7 +32,9 @@ Release('1.2.3', 'November 9, 2010',
 filtered categories and the parent task itself doesn't belong to the
 filtered categories.'''),
         Bug('''Don't throw exception when end of working day is 24.''',
-            '3105496')
+            '3105496'),
+        Bug('''When recurring a task, make sure its start date stays 
+before its due date.''')
         ]
     ),
 
