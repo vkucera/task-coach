@@ -207,8 +207,8 @@ class SimpleToolTip(ToolTipBase):
             
     def _setFontBrushAndPen(self, dc):
         dc.SetFont(wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT))
-        dc.SetBrush(wx.Brush(wx.Colour(0xff, 0xff, 0xe1)))
-        dc.SetPen(wx.BLACK_PEN)
+        dc.SetBrush(wx.Brush(wx.SystemSettings_GetColour(wx.SYS_COLOUR_INFOBK)))
+        dc.SetPen(wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_INFOTEXT)))
         
     def _drawBorder(self, dc):
         width, height = self.GetClientSizeTuple()
