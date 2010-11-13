@@ -41,7 +41,16 @@
     [super viewDidLoad];
 
 	cells = [[NSMutableArray alloc] initWithCapacity:2];
-
+	
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+	{
+		ButtonCell *btnCell = [[CellFactory cellFactory] createButtonCell];
+		[btnCell.button setTitle:_("Done") forState:UIControlStateNormal];
+		[btnCell setTarget:self action:@selector(onSave:)];
+		[cells addObject:[NSArray arrayWithObject:btnCell]];
+		firstSec = 1;
+	}
+	
 	NSMutableArray *dpyCells = [[NSMutableArray alloc] initWithCapacity:4];
 
 	SwitchCell *switchCell = [[CellFactory cellFactory] createSwitchCell];
@@ -78,16 +87,15 @@
 	[switchCell setDelegate:self];
 	[dpyCells addObject:switchCell];
 
+	RecurrencePeriodCell *dueCell = [[CellFactory cellFactory] createRecurrencePeriodCell];
+	[dueCell setDelegate:self];
+	dueCell.textField.text = [NSString stringWithFormat:@"%d", [Configuration configuration].soonDays];
+	dueCell.label.text = _("Due soon # of days");
+	[dpyCells addObject:dueCell];
+	[dueCell release];
+
 	[cells addObject:dpyCells];
 	[dpyCells release];
-
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-	{
-		ButtonCell *btnCell = [[CellFactory cellFactory] createButtonCell];
-		[btnCell.button setTitle:_("Done") forState:UIControlStateNormal];
-		[btnCell setTarget:self action:@selector(onSave:)];
-		[cells addObject:[NSArray arrayWithObject:btnCell]];
-	}
 }
 
 - (void)viewDidUnload
@@ -134,7 +142,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if ((indexPath.section == 0) && (indexPath.row == 3))
+	if ((indexPath.section == firstSec) && (indexPath.row == 3))
 	{
 		[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 		ChoiceViewController *ctrl = [[ChoiceViewController alloc] initWithChoices:[NSArray arrayWithObjects:_("Right"), _("Left"), nil] current:[Configuration configuration].iconPosition target:self action:@selector(onSetIconDirection:)];
@@ -160,20 +168,20 @@
 
 - (void)onSwitchValueChanged:(SwitchCell *)cell
 {
-	if (cell == [[cells objectAtIndex:0] objectAtIndex:0])
+	if (cell == [[cells objectAtIndex:firstSec] objectAtIndex:0])
 	{
 		[[Configuration configuration] setShowCompleted:cell.switch_.on];
 	}
-	else if (cell == [[cells objectAtIndex:0] objectAtIndex:1])
+	else if (cell == [[cells objectAtIndex:firstSec] objectAtIndex:1])
 	{
 		[[Configuration configuration] setShowInactive:cell.switch_.on];
 	}
-	else if (cell == [[cells objectAtIndex:0] objectAtIndex:2])
+	else if (cell == [[cells objectAtIndex:firstSec] objectAtIndex:2])
 	{
 		[[Configuration configuration] setCompactTasks:cell.switch_.on];
 	}
 
-	if (cell == [[cells objectAtIndex:1] objectAtIndex:0])
+	if (cell == [[cells objectAtIndex:firstSec + 1] objectAtIndex:0])
 	{
 		[[Configuration configuration] setConfirmComplete:cell.switch_.on];
 	}
@@ -187,12 +195,16 @@
 - (void)onSetIconDirection:(NSNumber *)position
 {
 	[Configuration configuration].iconPosition = [position intValue];
-	[[Configuration configuration] save];
 
-	UITableViewCell *cell = [[cells objectAtIndex:0] objectAtIndex:3];
+	UITableViewCell *cell = [[cells objectAtIndex:firstSec] objectAtIndex:3];
 	cell.textLabel.text = [NSString stringWithFormat:_("Position: %@"), ([Configuration configuration].iconPosition == ICONPOSITION_RIGHT) ? _("Right") : _("Left")];
 
 	[self dismissModalViewControllerAnimated:YES];
+}
+
+- (void)recurrencePeriodCell:(RecurrencePeriodCell *)cell valueDidChange:(NSInteger)newValue
+{
+	[Configuration configuration].soonDays = newValue;
 }
 
 @end

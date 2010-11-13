@@ -110,6 +110,7 @@ static Configuration *_configuration = NULL;
 	[config setBool:compactTasks forKey:@"compacttasks"];
 	[config setBool:confirmComplete forKey:@"confirmcomplete"];
 	[config setInteger:iconPosition forKey:@"iconposition"];
+	[config setInteger:soonDays forKey:@"soondays"];
 
 	[config synchronize];
 }

@@ -9,12 +9,14 @@
 #import <UIKit/UIKit.h>
 
 #import "SwitchCell.h"
+#import "RecurrencePeriodCell.h"
 
-@interface ConfigurationView : UITableViewController <SwitchCellDelegate>
+@interface ConfigurationView : UITableViewController <SwitchCellDelegate, RecurrencePeriodCellDelegate>
 {
 	NSMutableArray *cells;
 	id target;
 	SEL action;
+	NSInteger firstSec;
 }
 
 - init;

@@ -42,7 +42,7 @@
 @property (nonatomic) NSInteger iconPosition;
 @property (nonatomic) BOOL compactTasks;
 @property (nonatomic) BOOL confirmComplete;
-@property (nonatomic, readonly) NSInteger soonDays;
+@property (nonatomic) NSInteger soonDays;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *domain;
 @property (nonatomic) NSInteger taskGrouping;
