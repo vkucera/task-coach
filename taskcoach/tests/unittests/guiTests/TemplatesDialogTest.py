@@ -16,23 +16,29 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import test, os, shutil
 from taskcoachlib import gui, command, config, persistence
 from taskcoachlib.domain import note, attachment
 
-
-class TemplatesDialogUnderTest(gui.dialog.templates.TemplatesDialog):
-    def _loadTemplates(self):
-        return []
-    
-
+ 
 class TemplatesDialogTestCase(test.wxTestCase):
     def setUp(self):
         super(TemplatesDialogTestCase, self).setUp()
         self.settings = config.Settings(load=False)
+
+        # Monkey-patching
+        path = os.path.join(os.path.split(__file__)[0], 'tmpl')
+        try:
+            shutil.rmtree(path)
+        except OSError:
+            pass
+        os.mkdir(path)
+
+        self.settings.pathToTemplatesDir = lambda: path
+
         self.taskFile = persistence.TaskFile()
-        self.editor = TemplatesDialogUnderTest(self.settings, self.frame, 
+        self.editor = gui.dialog.templates.TemplatesDialog(self.settings, self.frame, 
             'title', raiseDialog=False)
 
     def testTwoDefaultTemplates(self):
-        self.assertEqual(0, len(self.editor.tasks))
+        self.assertEqual(0, len(self.editor._templates.tasks()))
