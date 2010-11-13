@@ -35,6 +35,7 @@ static CellFactory *_cellFactory = NULL;
 @synthesize searchCellTemplate;
 @synthesize recurrencePeriodCellTemplate;
 @synthesize taskCelliPadTemplate;
+@synthesize regularCellTemplate;
 
 + (CellFactory *)cellFactory
 {
@@ -119,6 +120,18 @@ static CellFactory *_cellFactory = NULL;
 {
 	[[NSBundle mainBundle] loadNibNamed:@"RecurrencePeriodCell" owner:self options:nil];
 	return [recurrencePeriodCellTemplate retain];
+}
+
+- (UITableViewCell *)createRegularCell
+{
+	[[NSBundle mainBundle] loadNibNamed:@"RegularCell" owner:self options:nil];
+	UITableViewCell *cell = [regularCellTemplate retain];
+
+	cell.textLabel.font = [UIFont fontWithName:@"Verdana" size:16.0];
+	cell.textLabel.shadowColor = [UIColor lightGrayColor];
+	cell.textLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+
+	return cell;
 }
 
 @end

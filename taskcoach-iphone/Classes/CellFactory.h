@@ -31,6 +31,7 @@
 	SearchCell *searchCellTemplate;
 	RecurrencePeriodCell *recurrencePeriodCellTemplate;
 	TaskCelliPad *taskCelliPadTemplate;
+	UITableViewCell *regularCellTemplate;
 }
 
 @property (nonatomic, assign) IBOutlet TaskCell *taskCellTemplate;
@@ -43,6 +44,7 @@
 @property (nonatomic, assign) IBOutlet SearchCell *searchCellTemplate;
 @property (nonatomic, assign) IBOutlet RecurrencePeriodCell *recurrencePeriodCellTemplate;
 @property (nonatomic, assign) IBOutlet TaskCelliPad *taskCelliPadTemplate;
+@property (nonatomic, assign) IBOutlet UITableViewCell *regularCellTemplate;
 
 + (CellFactory *)cellFactory;
 
@@ -56,5 +58,6 @@
 - (SearchCell *)createSearchCell;
 - (RecurrencePeriodCell *)createRecurrencePeriodCell;
 - (TaskCelliPad *)createTaskCelliPad;
+- (UITableViewCell *)createRegularCell;
 
 @end

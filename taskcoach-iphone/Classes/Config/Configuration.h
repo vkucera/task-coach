@@ -39,7 +39,7 @@
 
 @property (nonatomic) BOOL showCompleted;
 @property (nonatomic) BOOL showInactive;
-@property (nonatomic, readonly) NSInteger iconPosition;
+@property (nonatomic) NSInteger iconPosition;
 @property (nonatomic) BOOL compactTasks;
 @property (nonatomic) BOOL confirmComplete;
 @property (nonatomic, readonly) NSInteger soonDays;

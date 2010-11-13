@@ -145,6 +145,9 @@
 		A6C00BD411CDEF0D0028385F /* NewCategoryiPad.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C00BD211CDEF0D0028385F /* NewCategoryiPad.m */; };
 		A6C00BD511CDEF0D0028385F /* NewCategoryiPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6C00BD311CDEF0D0028385F /* NewCategoryiPad.xib */; };
 		A6C00C1911CDF6660028385F /* SplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C00C1811CDF6660028385F /* SplitView.m */; };
+		A6C1F898128E9CE000718C86 /* ChoiceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C1F896128E9CE000718C86 /* ChoiceViewController.m */; };
+		A6C1F899128E9CE000718C86 /* ChoiceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6C1F897128E9CE000718C86 /* ChoiceViewController.xib */; };
+		A6C1F8A3128E9FB000718C86 /* RegularCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6C1F8A2128E9FB000718C86 /* RegularCell.xib */; };
 		A6C3CEF810E76C8C00483057 /* ButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C3CEF710E76C8C00483057 /* ButtonCell.m */; };
 		A6C3CEFA10E76CB600483057 /* ButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6C3CEF910E76CB600483057 /* ButtonCell.xib */; };
 		A6C858EB11C4B2BE0016C027 /* StringChoiceAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C858EA11C4B2BE0016C027 /* StringChoiceAlert.m */; };
@@ -432,6 +435,10 @@
 		A6C00BD311CDEF0D0028385F /* NewCategoryiPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewCategoryiPad.xib; sourceTree = "<group>"; };
 		A6C00C1711CDF6660028385F /* SplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplitView.h; sourceTree = "<group>"; };
 		A6C00C1811CDF6660028385F /* SplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplitView.m; sourceTree = "<group>"; };
+		A6C1F895128E9CE000718C86 /* ChoiceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChoiceViewController.h; sourceTree = "<group>"; };
+		A6C1F896128E9CE000718C86 /* ChoiceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChoiceViewController.m; sourceTree = "<group>"; };
+		A6C1F897128E9CE000718C86 /* ChoiceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChoiceViewController.xib; sourceTree = "<group>"; };
+		A6C1F8A2128E9FB000718C86 /* RegularCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RegularCell.xib; sourceTree = "<group>"; };
 		A6C3CEF610E76C8C00483057 /* ButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonCell.h; sourceTree = "<group>"; };
 		A6C3CEF710E76C8C00483057 /* ButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ButtonCell.m; sourceTree = "<group>"; };
 		A6C3CEF910E76CB600483057 /* ButtonCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ButtonCell.xib; sourceTree = "<group>"; };
@@ -719,6 +726,9 @@
 				A6BF52FB1272DEFD00CC5D3C /* ConfigurationView.h */,
 				A6BF52FC1272DEFD00CC5D3C /* ConfigurationView.m */,
 				A6BF52FD1272DEFD00CC5D3C /* ConfigurationView.xib */,
+				A6C1F895128E9CE000718C86 /* ChoiceViewController.h */,
+				A6C1F896128E9CE000718C86 /* ChoiceViewController.m */,
+				A6C1F897128E9CE000718C86 /* ChoiceViewController.xib */,
 			);
 			name = Configuration;
 			sourceTree = "<group>";
@@ -1036,6 +1046,7 @@
 				A66C181C11C37F500081C175 /* RecurrencePeriodCell.h */,
 				A66C181D11C37F500081C175 /* RecurrencePeriodCell.m */,
 				A66C182711C3805E0081C175 /* RecurrencePeriodCell.xib */,
+				A6C1F8A2128E9FB000718C86 /* RegularCell.xib */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -1176,6 +1187,8 @@
 				A646183C1228EFFB005D9651 /* switchcal.png in Resources */,
 				A6BF52FF1272DEFD00CC5D3C /* ConfigurationView.xib in Resources */,
 				A6BF530B1272E1E800CC5D3C /* configure.png in Resources */,
+				A6C1F899128E9CE000718C86 /* ChoiceViewController.xib in Resources */,
+				A6C1F8A3128E9FB000718C86 /* RegularCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1282,6 +1295,7 @@
 				A611CC6911E0A1C8006B4571 /* TaskDetailsViewiPad.m in Sources */,
 				A6796F1F11E8467A00C38043 /* LogUtils.m in Sources */,
 				A6BF52FE1272DEFD00CC5D3C /* ConfigurationView.m in Sources */,
+				A6C1F898128E9CE000718C86 /* ChoiceViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

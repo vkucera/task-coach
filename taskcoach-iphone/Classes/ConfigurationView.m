@@ -10,6 +10,7 @@
 #import "Configuration.h"
 #import "CellFactory.h"
 #import "ButtonCell.h"
+#import "ChoiceViewController.h"
 #import "i18n.h"
 
 
@@ -60,6 +61,11 @@
 	switchCell.switch_.on = [[Configuration configuration] compactTasks];
 	[switchCell setDelegate:self];
 	[dpyCells addObject:switchCell];
+
+	UITableViewCell *cell = [[CellFactory cellFactory] createRegularCell];
+	cell.textLabel.text = [NSString stringWithFormat:_("Position: %@"), ([Configuration configuration].iconPosition == ICONPOSITION_RIGHT) ? _("Right") : _("Left")];
+	cell.accessoryType = UITableViewCellAccessoryNone;
+	[dpyCells addObject:cell];
 
 	[cells addObject:dpyCells];
 	[dpyCells release];
@@ -128,7 +134,13 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	// XXXTODO
+	if ((indexPath.section == 0) && (indexPath.row == 3))
+	{
+		[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+		ChoiceViewController *ctrl = [[ChoiceViewController alloc] initWithChoices:[NSArray arrayWithObjects:_("Right"), _("Left"), nil] current:[Configuration configuration].iconPosition target:self action:@selector(onSetIconDirection:)];
+		[self presentModalViewController:ctrl animated:YES];
+		[ctrl release];
+	}
 }
 
 #pragma mark -
@@ -170,6 +182,17 @@
 	{
 		[target performSelector:action];
 	}
+}
+
+- (void)onSetIconDirection:(NSNumber *)position
+{
+	[Configuration configuration].iconPosition = [position intValue];
+	[[Configuration configuration] save];
+
+	UITableViewCell *cell = [[cells objectAtIndex:0] objectAtIndex:3];
+	cell.textLabel.text = [NSString stringWithFormat:_("Position: %@"), ([Configuration configuration].iconPosition == ICONPOSITION_RIGHT) ? _("Right") : _("Left")];
+
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 @end
