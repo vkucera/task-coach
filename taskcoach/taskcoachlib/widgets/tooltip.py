@@ -18,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, textwrap
 
-
 class ToolTipMixin(object):
     """Subclass this and override OnBeforeShowToolTip to provide
     dynamic tooltip over a control."""
@@ -141,7 +140,7 @@ elif '__WXMAC__' in wx.PlatformInfo:
 else:
     class ToolTipBase(wx.PopupWindow):
         def __init__(self, parent):
-            super(ToolTipBase, self).__init__(parent, wx.ID_ANY)
+            super(ToolTipBase, self).__init__(parent) 
 
         def Show(self, x, y, width, height):
             self.SetDimensions(x, y, width, height)
@@ -206,9 +205,13 @@ class SimpleToolTip(ToolTipBase):
             dc.EndDrawing()
             
     def _setFontBrushAndPen(self, dc):
-        dc.SetFont(wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT))
-        dc.SetBrush(wx.Brush(wx.SystemSettings_GetColour(wx.SYS_COLOUR_INFOBK)))
-        dc.SetPen(wx.Pen(wx.SystemSettings_GetColour(wx.SYS_COLOUR_INFOTEXT)))
+        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        textColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_INFOTEXT)
+        backgroundColour = wx.SystemSettings_GetColour(wx.SYS_COLOUR_INFOBK)
+        dc.SetFont(font)
+        dc.SetTextForeground(textColour)
+        dc.SetBrush(wx.Brush(backgroundColour))
+        dc.SetPen(wx.Pen(textColour))
         
     def _drawBorder(self, dc):
         width, height = self.GetClientSizeTuple()
@@ -258,3 +261,4 @@ class SimpleToolTip(ToolTipBase):
     def _drawIconSeparator(self, dc, x, top, bottom):
         ''' Draw a vertical line between the icon and the text. '''
         dc.DrawLine(x, top, x, bottom)
+
