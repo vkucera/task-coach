@@ -36,7 +36,10 @@ filtered categories.'''),
         Bug('''When recurring a task, make sure its start date stays 
 before its due date.'''),
         Bug('''The edit templates dialog was unresponsive under MS Windows.''',
-            '3106221')
+            '3106221'),
+        Bug('''When setting the column width to the minimum in horizontal
+monthly view, switching to weekly view would hang Task Coach and prevent
+it from launching again.''', '3091151')
         ]
     ),
 
