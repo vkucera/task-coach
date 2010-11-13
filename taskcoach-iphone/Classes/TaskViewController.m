@@ -204,28 +204,6 @@ static void deleteTask(CDTask *task)
 	[request setPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:preds]];
 	[preds release];
 
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-	{
-		// All of this for nothing. CoreData bug: if the underlying SQL query matches several times the same object,
-		// NSFetchedResultsController uniques them but gets confused because countForFetchRequest does not! This leads
-		// to NSRangeExceptions though the logic is perfectly valid... This happens only on the iPhone...
-		
-		NSArray *tasks;
-		NSError *error;
-		tasks = [getManagedObjectContext() executeFetchRequest:request error:&error];
-		if (!tasks)
-		{
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not fetch tasks" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-			[alert show];
-			[alert release];
-		
-			results = nil;
-			return;
-		}
-
-		[request setPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", tasks]];
-	}
-
 	NSString *grouping;
 	NSString *sorting;
 
