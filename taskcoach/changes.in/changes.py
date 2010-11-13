@@ -34,7 +34,9 @@ filtered categories.'''),
         Bug('''Don't throw exception when end of working day is 24.''',
             '3105496'),
         Bug('''When recurring a task, make sure its start date stays 
-before its due date.''')
+before its due date.'''),
+        Bug('''The edit templates dialog was unresponsive under MS Windows.''',
+            '3106221')
         ]
     ),
 

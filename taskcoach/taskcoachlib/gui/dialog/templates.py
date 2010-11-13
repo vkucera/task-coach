@@ -35,7 +35,7 @@ class TemplatesDialog(widgets.Dialog):
         self.CentreOnParent()
 
     def createInterior(self):
-        return wx.Panel(self, wx.ID_ANY)
+        return wx.Panel(self._panel, wx.ID_ANY)
 
     def fillInterior(self):
         self._templateList = wx.ListCtrl(self._interior, wx.ID_ANY, style=wx.LC_REPORT)
