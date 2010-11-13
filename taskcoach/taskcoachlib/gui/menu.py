@@ -16,8 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, os, pickle
-from taskcoachlib import patterns
+import wx, os
+from taskcoachlib import patterns, persistence
 from taskcoachlib.domain import task, base, category
 from taskcoachlib.i18n import _
 import uicommand, viewer
@@ -303,22 +303,10 @@ class TaskTemplateMenu(DynamicMenu):
 
     def getUICommands(self):
         path = self.settings.pathToTemplatesDir()
-        commands = []
 
-        fileList = [name for name in os.listdir(path) if name.endswith('.tsktmpl')]
-        pickleName = os.path.join(path, 'list.pickle')
-        if os.path.exists(pickleName):
-            try:
-                fileList = pickle.load(file(pickleName, 'rb'))
-            except:
-                pass
-
-        for name in fileList:
-            fullname = os.path.join(path, name)
-            if os.path.exists(fullname):
-                commands.append(uicommand.TaskNewFromTemplate(fullname,
-                                  taskList=self.taskList, 
-                                  settings=self.settings))
+        commands = [uicommand.TaskNewFromTemplate(os.path.join(path, name),
+                                                  taskList=self.taskList,
+                                                  settings=self.settings) for name in persistence.TemplateList(path).names()]
         return commands
 
 
