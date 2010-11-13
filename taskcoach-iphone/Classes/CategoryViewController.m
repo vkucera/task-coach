@@ -162,8 +162,7 @@
 {
 	[super viewDidAppear:animated];
 
-	NSDate *nextUpdate = [NSDate dateRounded];
-	nextUpdate = [nextUpdate addTimeInterval:61];
+	NSDate *nextUpdate = [[NSDate dateRounded] dateByAddingTimeInterval:61];
 	minuteTimer = [[NSTimer alloc] initWithFireDate:nextUpdate interval:60 target:self selector:@selector(onMinuteTimer:) userInfo:nil repeats:YES];
 	[[NSRunLoop currentRunLoop] addTimer:minuteTimer forMode:NSDefaultRunLoopMode];
 }

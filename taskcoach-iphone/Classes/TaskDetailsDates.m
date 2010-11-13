@@ -311,9 +311,7 @@
 			NSDate *dueDate = task.dueDate;
 			if ([dueDate compare:date] == NSOrderedAscending)
 			{
-				NSDate *date = task.startDate;
-				date = [date addTimeInterval:3600];
-				task.dueDate = date;
+				task.dueDate = [task.startDate dateByAddingTimeInterval:3600];
 			}
 		}
 	}

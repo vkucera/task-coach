@@ -259,8 +259,7 @@ static void deleteTask(CDTask *task)
 
 	self.navigationItem.rightBarButtonItem = [self editButtonItem];
 
-	NSDate *nextUpdate = [NSDate dateRounded];
-	nextUpdate = [nextUpdate addTimeInterval:60];
+	NSDate *nextUpdate = [[NSDate dateRounded] dateByAddingTimeInterval:60];
 	minuteTimer = [[NSTimer alloc] initWithFireDate:nextUpdate interval:60 target:self selector:@selector(onMinuteTimer:) userInfo:nil repeats:YES];
 	[[NSRunLoop currentRunLoop] addTimer:minuteTimer forMode:NSDefaultRunLoopMode];
 
