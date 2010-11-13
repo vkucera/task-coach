@@ -605,7 +605,6 @@ class TwoCategoriesAndParentAndGrandChildTaskInTreeModeTest(TwoCategoriesAndPare
     treeMode = True
 
     
-    
 class TwoCategoriesAndParentWithTwoChildTasksFixture(Fixture):
     def createCategories(self):
         self.category1 = category.Category('category1')

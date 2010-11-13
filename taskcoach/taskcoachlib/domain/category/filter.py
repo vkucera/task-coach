@@ -47,27 +47,31 @@ class CategoryFilter(base.Filter):
         if not filteredCategories:
             return categorizables
         
-        result = set()
+        filteredCategorizables = set()
         if self.__filterOnlyWhenAllCategoriesMatch:
             allowedCategorizables = set(categorizables)
             for category in filteredCategories:
-                allowed = category.categorizables(recursive=True)
-                for categorizable in allowed.copy():
-                    allowed |= set(categorizable.children(recursive=True))
-                allowedCategorizables &= allowed
+                allowedCategorizables &= self.__categorizablesBelongingToCategory(category)
         else:
             allowedCategorizables = set()
             for category in filteredCategories: 
-                allowedCategorizables |= category.categorizables(recursive=True)
+                allowedCategorizables |= self.__categorizablesBelongingToCategory(category)
 
         for categorizable in categorizables:
-            categorizablesToInvestigate = set([categorizable] + categorizable.ancestors()) 
+            categorizablesToInvestigate = set([categorizable]) 
             if self.treeMode():
                 categorizablesToInvestigate.update(child for child in categorizable.children(recursive=True) \
                                                    if child in self.observable())
             if allowedCategorizables & categorizablesToInvestigate:
-                result.add(categorizable)
-        return result
+                filteredCategorizables.add(categorizable)
+        return filteredCategorizables
+
+    @staticmethod
+    def __categorizablesBelongingToCategory(category):
+        categorizables = category.categorizables(recursive=True)
+        for categorizable in categorizables.copy():
+            categorizables |= set(categorizable.children(recursive=True))            
+        return categorizables
         
     def onFilterMatchingChanged(self, event):
         self.__filterOnlyWhenAllCategoriesMatch = eval(event.value())
