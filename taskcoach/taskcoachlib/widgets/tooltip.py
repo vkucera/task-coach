@@ -139,9 +139,6 @@ elif '__WXMAC__' in wx.PlatformInfo:
 
 else:
     class ToolTipBase(wx.PopupWindow):
-        def __init__(self, parent):
-            super(ToolTipBase, self).__init__(parent) 
-
         def Show(self, x, y, width, height):
             self.SetDimensions(x, y, width, height)
             super(ToolTipBase, self).Show()
