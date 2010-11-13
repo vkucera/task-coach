@@ -171,7 +171,6 @@
 		A6D3862F0F24B02A0097F0F6 /* DatePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6D3862E0F24B02A0097F0F6 /* DatePickerViewController.m */; };
 		A6D3868A0F24B4450097F0F6 /* DatePickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6D386880F24B4450097F0F6 /* DatePickerView.xib */; };
 		A6D5FFBD11C4C43D0030502F /* MainWindow-iPad.strings in Resources */ = {isa = PBXBuildFile; fileRef = A6D5FFBB11C4C43D0030502F /* MainWindow-iPad.strings */; };
-		A6D8AC030F221BFA006894AA /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A6D8AC020F221BFA006894AA /* Settings.bundle */; };
 		A6DA5C690F3D870900372358 /* DescriptionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DA5C680F3D870900372358 /* DescriptionCell.m */; };
 		A6DA5C780F3D87F300372358 /* DescriptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6DA5C770F3D87F300372358 /* DescriptionCell.xib */; };
 		A6DDECFC0F46C5040047AEF5 /* KeychainWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A6DDECFB0F46C5040047AEF5 /* KeychainWrapper.m */; };
@@ -502,7 +501,6 @@
 		A6D5FFC111C4C4790030502F /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = "Resources-iPad/nl.lproj/MainWindow-iPad.strings"; sourceTree = "<group>"; };
 		A6D5FFC211C4C4860030502F /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = "Resources-iPad/ru.lproj/MainWindow-iPad.strings"; sourceTree = "<group>"; };
 		A6D5FFC311C4C4910030502F /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = "Resources-iPad/th.lproj/MainWindow-iPad.strings"; sourceTree = "<group>"; };
-		A6D8AC020F221BFA006894AA /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		A6DA5C670F3D870900372358 /* DescriptionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescriptionCell.h; sourceTree = "<group>"; };
 		A6DA5C680F3D870900372358 /* DescriptionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DescriptionCell.m; sourceTree = "<group>"; };
 		A6DA5C770F3D87F300372358 /* DescriptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DescriptionCell.xib; sourceTree = SOURCE_ROOT; };
@@ -623,7 +621,6 @@
 				A6831FFC102EB057002A7083 /* TaskView.xib */,
 				A6D386880F24B4450097F0F6 /* DatePickerView.xib */,
 				A66C188811C386B90081C175 /* TaskDetailsRecurrencePeriodPicker.xib */,
-				A6D8AC020F221BFA006894AA /* Settings.bundle */,
 				A67A0C200F6BA57100F48A82 /* Entitlements.plist */,
 				A6E46385113028A500976293 /* SyncView.xib */,
 				A60B6EE410258EB200F9983C /* TaskCategoryPicker.xib */,
@@ -1112,7 +1109,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A68EDEC50F1E1F1700F51FF2 /* MainWindow.xib in Resources */,
-				A6D8AC030F221BFA006894AA /* Settings.bundle in Resources */,
 				A6D384610F247E910097F0F6 /* TaskDetails.xib in Resources */,
 				A6D384780F24830F0097F0F6 /* TextFieldCell.xib in Resources */,
 				A6D385630F24A2330097F0F6 /* SwitchCell.xib in Resources */,
