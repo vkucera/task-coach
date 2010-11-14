@@ -25,27 +25,27 @@
 
 - (NSString *)completedLedName
 {
-	return @"ledgreen.png";
+	return @"green.png";
 }
 
 - (NSString *)overdueLedName
 {
-	return @"ledred.png";
+	return @"red.png";
 }
 
 - (NSString *)dueSoonLedName
 {
-	return @"ledorange.png";
+	return @"orange.png";
 }
 
 - (NSString *)startedLedName
 {
-	return @"ledblue.png";
+	return @"blue.png";
 }
 
 - (NSString *)notStartedLedName
 {
-	return @"ledgrey.png";
+	return @"grey.png";
 }
 
 - (void)setTask:(CDTask *)theTask target:(id)theTarget action:(SEL)theAction
@@ -63,26 +63,34 @@
 	}
 	else
 	{
+		NSString *suffix = nil;
+
 		switch ([[task dateStatus] intValue])
 		{
 			case TASKSTATUS_COMPLETED:
-				leftImage.image = [UIImage imageNamed:[self completedLedName]];
+				suffix = [self completedLedName];
 				break;
 			case TASKSTATUS_OVERDUE:
-				leftImage.image = [UIImage imageNamed:[self overdueLedName]];
+				suffix = [self overdueLedName];
 				break;
 			case TASKSTATUS_DUESOON:
-				leftImage.image = [UIImage imageNamed:[self dueSoonLedName]];
+				suffix = [self dueSoonLedName];
 				break;
 			case TASKSTATUS_STARTED:
-				leftImage.image = [UIImage imageNamed:[self startedLedName]];
+				suffix = [self startedLedName];
 				break;
 			case TASKSTATUS_NOTSTARTED:
-				leftImage.image = [UIImage imageNamed:[self notStartedLedName]];
+				suffix = [self notStartedLedName];
+				//leftImage.image = [UIImage imageNamed:[self notStartedLedName]];
 				break;
 			default:
 				break;
 		}
+
+		if ([theTask.children count])
+			leftImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"folder%@", suffix]];
+		else
+			leftImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"led%@", suffix]];
 	}
 
 	[leftImage setTarget:self action:@selector(onTapImage)];

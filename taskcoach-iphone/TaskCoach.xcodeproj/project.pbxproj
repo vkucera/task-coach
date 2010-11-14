@@ -76,6 +76,16 @@
 		A64603AA0F2234D900FC71AD /* TaskCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A64603A90F2234D900FC71AD /* TaskCell.m */; };
 		A646183C1228EFFB005D9651 /* switchcal.png in Resources */ = {isa = PBXBuildFile; fileRef = A646183B1228EFFB005D9651 /* switchcal.png */; };
 		A647F39011B26802008D0FB0 /* CDDomainObject+Addons.m in Sources */ = {isa = PBXBuildFile; fileRef = A647F38F11B26802008D0FB0 /* CDDomainObject+Addons.m */; };
+		A64C0E2F128FED8C00E8A126 /* folderblue.png in Resources */ = {isa = PBXBuildFile; fileRef = A64C0E25128FED8C00E8A126 /* folderblue.png */; };
+		A64C0E30128FED8C00E8A126 /* folderbluebig.png in Resources */ = {isa = PBXBuildFile; fileRef = A64C0E26128FED8C00E8A126 /* folderbluebig.png */; };
+		A64C0E31128FED8C00E8A126 /* foldergreen.png in Resources */ = {isa = PBXBuildFile; fileRef = A64C0E27128FED8C00E8A126 /* foldergreen.png */; };
+		A64C0E32128FED8C00E8A126 /* foldergreenbig.png in Resources */ = {isa = PBXBuildFile; fileRef = A64C0E28128FED8C00E8A126 /* foldergreenbig.png */; };
+		A64C0E33128FED8C00E8A126 /* foldergrey.png in Resources */ = {isa = PBXBuildFile; fileRef = A64C0E29128FED8C00E8A126 /* foldergrey.png */; };
+		A64C0E34128FED8C00E8A126 /* foldergreybig.png in Resources */ = {isa = PBXBuildFile; fileRef = A64C0E2A128FED8C00E8A126 /* foldergreybig.png */; };
+		A64C0E35128FED8C00E8A126 /* folderorange.png in Resources */ = {isa = PBXBuildFile; fileRef = A64C0E2B128FED8C00E8A126 /* folderorange.png */; };
+		A64C0E36128FED8C00E8A126 /* folderorangebig.png in Resources */ = {isa = PBXBuildFile; fileRef = A64C0E2C128FED8C00E8A126 /* folderorangebig.png */; };
+		A64C0E37128FED8C00E8A126 /* folderred.png in Resources */ = {isa = PBXBuildFile; fileRef = A64C0E2D128FED8C00E8A126 /* folderred.png */; };
+		A64C0E38128FED8C00E8A126 /* folderredbig.png in Resources */ = {isa = PBXBuildFile; fileRef = A64C0E2E128FED8C00E8A126 /* folderredbig.png */; };
 		A65D1B1E119D379300F0F5C3 /* BUILD.txt in Resources */ = {isa = PBXBuildFile; fileRef = A65D1B1D119D379300F0F5C3 /* BUILD.txt */; };
 		A65D1B7F119D383200F0F5C3 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A65D1B7E119D383200F0F5C3 /* MapKit.framework */; };
 		A65D1B81119D383200F0F5C3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A65D1B80119D383200F0F5C3 /* QuartzCore.framework */; };
@@ -298,6 +308,16 @@
 		A646183B1228EFFB005D9651 /* switchcal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = switchcal.png; path = "Resources-iPhone/switchcal.png"; sourceTree = "<group>"; };
 		A647F38E11B26802008D0FB0 /* CDDomainObject+Addons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CDDomainObject+Addons.h"; path = "CoreData/CDDomainObject+Addons.h"; sourceTree = "<group>"; };
 		A647F38F11B26802008D0FB0 /* CDDomainObject+Addons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CDDomainObject+Addons.m"; path = "CoreData/CDDomainObject+Addons.m"; sourceTree = "<group>"; };
+		A64C0E25128FED8C00E8A126 /* folderblue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = folderblue.png; path = "Resources-iPhone/folderblue.png"; sourceTree = "<group>"; };
+		A64C0E26128FED8C00E8A126 /* folderbluebig.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = folderbluebig.png; path = "Resources-iPhone/folderbluebig.png"; sourceTree = "<group>"; };
+		A64C0E27128FED8C00E8A126 /* foldergreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = foldergreen.png; path = "Resources-iPhone/foldergreen.png"; sourceTree = "<group>"; };
+		A64C0E28128FED8C00E8A126 /* foldergreenbig.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = foldergreenbig.png; path = "Resources-iPhone/foldergreenbig.png"; sourceTree = "<group>"; };
+		A64C0E29128FED8C00E8A126 /* foldergrey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = foldergrey.png; path = "Resources-iPhone/foldergrey.png"; sourceTree = "<group>"; };
+		A64C0E2A128FED8C00E8A126 /* foldergreybig.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = foldergreybig.png; path = "Resources-iPhone/foldergreybig.png"; sourceTree = "<group>"; };
+		A64C0E2B128FED8C00E8A126 /* folderorange.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = folderorange.png; path = "Resources-iPhone/folderorange.png"; sourceTree = "<group>"; };
+		A64C0E2C128FED8C00E8A126 /* folderorangebig.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = folderorangebig.png; path = "Resources-iPhone/folderorangebig.png"; sourceTree = "<group>"; };
+		A64C0E2D128FED8C00E8A126 /* folderred.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = folderred.png; path = "Resources-iPhone/folderred.png"; sourceTree = "<group>"; };
+		A64C0E2E128FED8C00E8A126 /* folderredbig.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = folderredbig.png; path = "Resources-iPhone/folderredbig.png"; sourceTree = "<group>"; };
 		A64F4142117B01AD00E60105 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/TaskView.strings; sourceTree = "<group>"; };
 		A64F4143117B01BE00E60105 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/DatePickerView.strings; sourceTree = "<group>"; };
 		A64F4144117B01CB00E60105 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/MainWindow.strings; sourceTree = "<group>"; };
@@ -761,6 +781,16 @@
 		A639813611C3DF5E00B43940 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				A64C0E25128FED8C00E8A126 /* folderblue.png */,
+				A64C0E26128FED8C00E8A126 /* folderbluebig.png */,
+				A64C0E27128FED8C00E8A126 /* foldergreen.png */,
+				A64C0E28128FED8C00E8A126 /* foldergreenbig.png */,
+				A64C0E29128FED8C00E8A126 /* foldergrey.png */,
+				A64C0E2A128FED8C00E8A126 /* foldergreybig.png */,
+				A64C0E2B128FED8C00E8A126 /* folderorange.png */,
+				A64C0E2C128FED8C00E8A126 /* folderorangebig.png */,
+				A64C0E2D128FED8C00E8A126 /* folderred.png */,
+				A64C0E2E128FED8C00E8A126 /* folderredbig.png */,
 				A646183B1228EFFB005D9651 /* switchcal.png */,
 				A63980FC11C3DEE100B43940 /* addtask.png */,
 				A63980FD11C3DEE100B43940 /* blueButton.png */,
@@ -1185,6 +1215,16 @@
 				A6BF530B1272E1E800CC5D3C /* configure.png in Resources */,
 				A6C1F899128E9CE000718C86 /* ChoiceViewController.xib in Resources */,
 				A6C1F8A3128E9FB000718C86 /* RegularCell.xib in Resources */,
+				A64C0E2F128FED8C00E8A126 /* folderblue.png in Resources */,
+				A64C0E30128FED8C00E8A126 /* folderbluebig.png in Resources */,
+				A64C0E31128FED8C00E8A126 /* foldergreen.png in Resources */,
+				A64C0E32128FED8C00E8A126 /* foldergreenbig.png in Resources */,
+				A64C0E33128FED8C00E8A126 /* foldergrey.png in Resources */,
+				A64C0E34128FED8C00E8A126 /* foldergreybig.png in Resources */,
+				A64C0E35128FED8C00E8A126 /* folderorange.png in Resources */,
+				A64C0E36128FED8C00E8A126 /* folderorangebig.png in Resources */,
+				A64C0E37128FED8C00E8A126 /* folderred.png in Resources */,
+				A64C0E38128FED8C00E8A126 /* folderredbig.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

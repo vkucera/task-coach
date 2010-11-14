@@ -26,27 +26,27 @@
 
 - (NSString *)completedLedName
 {
-	return @"ledgreenbig.png";
+	return @"greenbig.png";
 }
 
 - (NSString *)overdueLedName
 {
-	return @"ledredbig.png";
+	return @"redbig.png";
 }
 
 - (NSString *)dueSoonLedName
 {
-	return @"ledorangebig.png";
+	return @"orangebig.png";
 }
 
 - (NSString *)startedLedName
 {
-	return @"ledbluebig.png";
+	return @"bluebig.png";
 }
 
 - (NSString *)notStartedLedName
 {
-	return @"ledgreybig.png";
+	return @"greybig.png";
 }
 
 - (void)dealloc
