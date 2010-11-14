@@ -173,6 +173,11 @@
 				break;
 		}
 
+		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+		{
+			ctrl.modalPresentationStyle = UIModalPresentationFormSheet;
+		}
+
 		[self presentModalViewController:ctrl animated:YES];
 		[ctrl release];
 	}
