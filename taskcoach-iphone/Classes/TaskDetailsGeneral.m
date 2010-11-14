@@ -49,7 +49,6 @@
 
 	self.subject.text = task.name;
 	self.description.text = task.longDescription;
-	self.decPriorityButton.enabled = [task.priority intValue] != 0;
 
 	self.descriptionLabel.text = _("Description");
 	self.categoriesButton.titleLabel.text = _("Categories");
@@ -90,7 +89,6 @@
 	else
 		task.priority = [NSNumber numberWithInt:[task.priority intValue] - 1];
 
-	self.decPriorityButton.enabled = [task.priority intValue] != 0;
 	self.priorityLabel.text = [NSString stringWithFormat:_("Priority: %@"), task.priority];
 	
 	[task markDirty];

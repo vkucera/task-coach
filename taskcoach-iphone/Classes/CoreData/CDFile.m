@@ -2,7 +2,7 @@
 //  CDFile.m
 //  
 //
-//  Created by Jérôme Laheurte on 06/06/10.
+//  Created by Jérôme Laheurte on 14/11/10.
 //  Copyright 2010 __MyCompanyName__. All rights reserved.
 //
 
@@ -13,8 +13,8 @@
 @implementation CDFile 
 
 @dynamic endHour;
-@dynamic startHour;
 @dynamic name;
+@dynamic startHour;
 @dynamic guid;
 @dynamic objects;
 

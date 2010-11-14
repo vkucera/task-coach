@@ -160,7 +160,9 @@ NSManagedObjectContext *getManagedObjectContext(void)
         return managedObjectModel;
     }
 	
-	managedObjectModel = [[NSManagedObjectModel mergedModelFromBundles:nil] retain];    
+	NSString *path = [[NSBundle mainBundle] pathForResource:@"TaskCoachCD" ofType:@"momd"];
+    NSURL *momURL = [NSURL fileURLWithPath:path];
+    managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:momURL];
 	
     return managedObjectModel;
 }
@@ -182,7 +184,10 @@ NSManagedObjectContext *getManagedObjectContext(void)
 
 	NSError *error;
     persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
-    if (![persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeUrl options:nil error:&error])
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
+							 [NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
+							 [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
+    if (![persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeUrl options:options error:&error])
 	{
 		NSLog(@"Could not create store: %@", [error localizedDescription]);
     }    

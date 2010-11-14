@@ -86,6 +86,7 @@
 		A64C0E36128FED8C00E8A126 /* folderorangebig.png in Resources */ = {isa = PBXBuildFile; fileRef = A64C0E2C128FED8C00E8A126 /* folderorangebig.png */; };
 		A64C0E37128FED8C00E8A126 /* folderred.png in Resources */ = {isa = PBXBuildFile; fileRef = A64C0E2D128FED8C00E8A126 /* folderred.png */; };
 		A64C0E38128FED8C00E8A126 /* folderredbig.png in Resources */ = {isa = PBXBuildFile; fileRef = A64C0E2E128FED8C00E8A126 /* folderredbig.png */; };
+		A65C688A128FFE7900FAEC4B /* TaskCoachCD.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A65C6889128FFE7900FAEC4B /* TaskCoachCD.xcdatamodeld */; };
 		A65D1B1E119D379300F0F5C3 /* BUILD.txt in Resources */ = {isa = PBXBuildFile; fileRef = A65D1B1D119D379300F0F5C3 /* BUILD.txt */; };
 		A65D1B7F119D383200F0F5C3 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A65D1B7E119D383200F0F5C3 /* MapKit.framework */; };
 		A65D1B81119D383200F0F5C3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A65D1B80119D383200F0F5C3 /* QuartzCore.framework */; };
@@ -162,7 +163,6 @@
 		A6C3CEFA10E76CB600483057 /* ButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6C3CEF910E76CB600483057 /* ButtonCell.xib */; };
 		A6C858EB11C4B2BE0016C027 /* StringChoiceAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C858EA11C4B2BE0016C027 /* StringChoiceAlert.m */; };
 		A6C9843E0F2B77C40088A73F /* GUIDState.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C9843D0F2B77C40088A73F /* GUIDState.m */; };
-		A6CFAE5511B2534100044876 /* TaskCoachCD.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = A6CFAE5411B2534100044876 /* TaskCoachCD.xcdatamodel */; };
 		A6CFAE6C11B257B600044876 /* CDCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CFAE6311B257B600044876 /* CDCategory.m */; };
 		A6CFAE6D11B257B600044876 /* CDDomainObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CFAE6511B257B600044876 /* CDDomainObject.m */; };
 		A6CFAE6E11B257B600044876 /* CDTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CFAE6711B257B600044876 /* CDTask.m */; };
@@ -322,6 +322,7 @@
 		A64F4143117B01BE00E60105 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/DatePickerView.strings; sourceTree = "<group>"; };
 		A64F4144117B01CB00E60105 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/MainWindow.strings; sourceTree = "<group>"; };
 		A64F4146117B01E900E60105 /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A65C688B128FFE7900FAEC4B /* TaskCoachCD 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TaskCoachCD 2.xcdatamodel"; sourceTree = "<group>"; };
 		A65D1B1D119D379300F0F5C3 /* BUILD.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = BUILD.txt; sourceTree = "<group>"; };
 		A65D1B7E119D383200F0F5C3 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		A65D1B80119D383200F0F5C3 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -671,7 +672,7 @@
 				A6BF530A1272E1E800CC5D3C /* configure.png */,
 				A6B7A5B20FA45E110067B76A /* iTunesArtwork */,
 				A680C0C40F47366900A8D18B /* Localizable.strings */,
-				A6CFAE5411B2534100044876 /* TaskCoachCD.xcdatamodel */,
+				A65C6889128FFE7900FAEC4B /* TaskCoachCD.xcdatamodeld */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 			);
 			name = Resources;
@@ -1293,7 +1294,7 @@
 				A600A3BB119FDD710018F309 /* TaskDetailsGeneral.m in Sources */,
 				A600A48E119FEA790018F309 /* TaskDetailsDates.m in Sources */,
 				A600A609119FFB1C0018F309 /* TaskDetailsEfforts.m in Sources */,
-				A6CFAE5511B2534100044876 /* TaskCoachCD.xcdatamodel in Sources */,
+				A65C688A128FFE7900FAEC4B /* TaskCoachCD.xcdatamodeld in Sources */,
 				A6CFAE6C11B257B600044876 /* CDCategory.m in Sources */,
 				A6CFAE6D11B257B600044876 /* CDDomainObject.m in Sources */,
 				A6CFAE6E11B257B600044876 /* CDTask.m in Sources */,
@@ -1839,6 +1840,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		A65C6889128FFE7900FAEC4B /* TaskCoachCD.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				A6CFAE5411B2534100044876 /* TaskCoachCD.xcdatamodel */,
+				A65C688B128FFE7900FAEC4B /* TaskCoachCD 2.xcdatamodel */,
+			);
+			currentVersion = A65C688B128FFE7900FAEC4B /* TaskCoachCD 2.xcdatamodel */;
+			path = TaskCoachCD.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
 }
