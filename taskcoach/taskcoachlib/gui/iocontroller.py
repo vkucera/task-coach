@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, os, sys, codecs, traceback, shutil, tempfile, pickle
+import wx, os, sys, codecs, traceback, shutil
 from taskcoachlib import meta, persistence
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty import lockfile
@@ -225,17 +225,8 @@ class IOController(object):
             return False
         
     def saveastemplate(self, task):
-        handle, filename = tempfile.mkstemp('.tsktmpl', dir=self.__settings.pathToTemplatesDir())
-        os.close(handle)
-        writer = persistence.TemplateXMLWriter(codecs.open(filename, 'w', 'utf-8'))
-        writer.write(task.copy())
-
-        listName = os.path.join(self.__settings.pathToTemplatesDir(),
-                                'list.pickle')
-        if os.path.exists(listName):
-            tmplList = pickle.load(file(listName, 'rb'))
-            tmplList.append(os.path.split(filename)[-1])
-            pickle.dump(tmplList, file(listName, 'wb'))
+        templates = persistence.TemplateList(self.__settings.pathToTemplatesDir())
+        templates.addTemplate(task)
 
     def addtemplate(self):
         filename = self.__askUserForFile(_('Open template...'),

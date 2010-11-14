@@ -450,7 +450,7 @@ class wxSchedulerPaint( object ):
 			minWidth += w
 			minHeight += h
 
-			return max(WEEK_SIZE_MIN.width * self._periodCount + LEFT_COLUMN_SIZE, minWidth), minHeight
+			return max(self._periodWidth * self._periodCount + LEFT_COLUMN_SIZE, minWidth), minHeight
 
 	def _paintMonthlyHeaders( self, drawer, day, x, y, width, height ):
 		if isinstance(self, wx.ScrolledWindow):
