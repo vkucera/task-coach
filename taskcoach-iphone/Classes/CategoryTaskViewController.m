@@ -82,10 +82,30 @@
 
 - (NSPredicate *)predicate
 {
-	if (category)
-		return [NSPredicate predicateWithFormat:@"parent == NULL AND ANY categories IN %@", [category selfAndChildren]];
+	if ([Configuration configuration].dpyStyle == DPY_TREE)
+	{
+		if (category)
+			return [NSPredicate predicateWithFormat:@"parent == NULL AND ANY categories IN %@", [category selfAndChildren]];
+		else
+			return [NSPredicate predicateWithFormat:@"parent == NULL"];
+	}
 	else
-		return [NSPredicate predicateWithFormat:@"parent == NULL"];
+	{
+		if ([Configuration configuration].showComposite)
+		{
+			if (category)
+				return [NSPredicate predicateWithFormat:@"ANY categories IN %@", [category selfAndChildren]];
+			else
+				return [NSPredicate predicateWithValue:YES];
+		}
+		else
+		{
+			if (category)
+				return [NSPredicate predicateWithFormat:@"children.@count == 0 AND ANY categories IN %@", [category selfAndChildren]];
+			else
+				return [NSPredicate predicateWithFormat:@"children.@count == 0"];
+		}
+	}
 }
 
 - (IBAction)onAddTask:(UIBarButtonItem *)button

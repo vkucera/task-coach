@@ -16,6 +16,9 @@
 #define GROUP_START    2
 #define GROUP_DUE      3
 
+#define DPY_TREE       0
+#define DPY_LIST       1
+
 @class CDFile;
 
 @interface Configuration : NSObject
@@ -35,6 +38,9 @@
 
 	NSInteger taskGrouping;
 	BOOL reverseGrouping;
+
+	NSInteger dpyStyle;
+	BOOL showComposite;
 }
 
 @property (nonatomic) BOOL showCompleted;
@@ -47,6 +53,8 @@
 @property (nonatomic, copy) NSString *domain;
 @property (nonatomic) NSInteger taskGrouping;
 @property (nonatomic) BOOL reverseGrouping;
+@property (nonatomic) NSInteger dpyStyle;
+@property (nonatomic) BOOL showComposite;
 
 @property (nonatomic, assign) CDFile *cdCurrentFile;
 @property (nonatomic, readonly) NSInteger cdFileCount;

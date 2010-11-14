@@ -326,7 +326,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A64C0E5B128FEEE100E8A126</string>
+										<string>A6C06575128FF6A900BD32C7</string>
 										<key>history</key>
 										<array>
 											<string>A6BD9AC2114CD4AD00AC781C</string>
@@ -543,29 +543,29 @@
 											<string>A6C1F8D5128EA30000718C86</string>
 											<string>A6C1F8F6128EA3A800718C86</string>
 											<string>A6736D0B128EA58500EEFEEA</string>
-											<string>A6736D0C128EA58500EEFEEA</string>
 											<string>A6736D0F128EA58500EEFEEA</string>
 											<string>A6736D10128EA58500EEFEEA</string>
-											<string>A6736D20128EA65900EEFEEA</string>
-											<string>A6736D21128EA65900EEFEEA</string>
 											<string>A65A65E0128EA9E7002E7E7B</string>
-											<string>A65A65E1128EA9E7002E7E7B</string>
 											<string>A608987A128EADE000E0038E</string>
-											<string>A608987B128EADE000E0038E</string>
 											<string>A608987C128EADE000E0038E</string>
-											<string>A608987D128EADE000E0038E</string>
 											<string>A608987E128EADE000E0038E</string>
 											<string>A6766CCC128EB11E00187A40</string>
 											<string>A6A9B529128EB1910095B397</string>
 											<string>A6A9B52A128EB1910095B397</string>
-											<string>A6A9B52B128EB1910095B397</string>
 											<string>A65A16B9128EB431007979E2</string>
 											<string>A64C0E55128FEEE100E8A126</string>
 											<string>A64C0E56128FEEE100E8A126</string>
 											<string>A64C0E57128FEEE100E8A126</string>
 											<string>A64C0E58128FEEE100E8A126</string>
-											<string>A64C0E59128FEEE100E8A126</string>
-											<string>A64C0E5A128FEEE100E8A126</string>
+											<string>A6C06506128FF37800BD32C7</string>
+											<string>A6C06507128FF37800BD32C7</string>
+											<string>A6C06509128FF37800BD32C7</string>
+											<string>A6C0650A128FF37800BD32C7</string>
+											<string>A6C0650B128FF37800BD32C7</string>
+											<string>A6C0650C128FF37800BD32C7</string>
+											<string>A6C06532128FF53A00BD32C7</string>
+											<string>A6C0656F128FF67F00BD32C7</string>
+											<string>A6C06570128FF67F00BD32C7</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -604,7 +604,7 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {1171, 194}}</string>
+										<string>{{10, 27}, {1171, 242}}</string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -688,11 +688,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A64C0E5C128FEEE100E8A126</string>
+				<string>A6C06518128FF38700BD32C7</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A64C0E5D128FEEE100E8A126</string>
+				<string>A6C06519128FF38700BD32C7</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A64C0E5E128FEEE100E8A126</string>
+				<string>A6C0651A128FF38700BD32C7</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -841,14 +841,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A64C0E5F128FEEE100E8A126</string>
+				<string>A6C0651B128FF38700BD32C7</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A64C0E60128FEEE100E8A126</string>
-				<string>A64C0E61128FEEE100E8A126</string>
-				<string>A64C0E62128FEEE100E8A126</string>
-				<string>A64C0E63128FEEE100E8A126</string>
-				<string>A64C0E64128FEEE100E8A126</string>
+				<string>A6C0651C128FF38700BD32C7</string>
+				<string>A6C0651D128FF38700BD32C7</string>
+				<string>A6C0651E128FF38700BD32C7</string>
+				<string>A6C0651F128FF38700BD32C7</string>
+				<string>A68EDEBA0F1E1EED00F51FF2</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
 			<string>2</string>
@@ -880,8 +880,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>A64C0E65128FEEE100E8A126</string>
-		<string>A64C0E66128FEEE100E8A126</string>
+		<string>A6C06521128FF38700BD32C7</string>
+		<string>A6C06522128FF38700BD32C7</string>
 		<string>/Users/jeromelaheurte/Dev/TaskCoach/taskcoach-trunk/taskcoach-iphone/TaskCoach.xcodeproj</string>
 	</array>
 	<key>WindowString</key>

@@ -75,7 +75,18 @@
 	cell.textLabel.text = [NSString stringWithFormat:_("Position: %@"), ([Configuration configuration].iconPosition == ICONPOSITION_RIGHT) ? _("Right") : _("Left")];
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	[dpyCells addObject:cell];
-
+	
+	cell = [[CellFactory cellFactory] createRegularCell];
+	cell.textLabel.text = [NSString stringWithFormat:_("Display: %@"), ([Configuration configuration].dpyStyle == DPY_TREE) ? _("Tree") : _("List")];
+	cell.accessoryType = UITableViewCellAccessoryNone;
+	[dpyCells addObject:cell];
+	
+	switchCell = [[CellFactory cellFactory] createSwitchCell];
+	switchCell.label.text = _("Show composite");
+	switchCell.switch_.on = [Configuration configuration].showComposite;
+	[switchCell setDelegate:self];
+	[dpyCells addObject:switchCell];
+	
 	[cells addObject:dpyCells];
 	[dpyCells release];
 	
@@ -129,6 +140,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+	if ((section == firstSec) && ([Configuration configuration].dpyStyle == DPY_TREE))
+		return [[cells objectAtIndex:section] count] - 1;
 	return [[cells objectAtIndex:section] count];
 }
 
@@ -142,10 +155,22 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if ((indexPath.section == firstSec) && (indexPath.row == 3))
+	[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+	if (indexPath.section == firstSec)
 	{
-		[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-		ChoiceViewController *ctrl = [[ChoiceViewController alloc] initWithChoices:[NSArray arrayWithObjects:_("Right"), _("Left"), nil] current:[Configuration configuration].iconPosition target:self action:@selector(onSetIconDirection:)];
+		UIViewController *ctrl = nil;
+
+		switch (indexPath.row)
+		{
+			case 3:
+				ctrl = [[ChoiceViewController alloc] initWithChoices:[NSArray arrayWithObjects:_("Right"), _("Left"), nil] current:[Configuration configuration].iconPosition target:self action:@selector(onSetIconDirection:)];
+			case 4:
+				ctrl = [[ChoiceViewController alloc] initWithChoices:[NSArray arrayWithObjects:_("Tree"), _("List"), nil] current:[Configuration configuration].dpyStyle target:self action:@selector(onSetDisplayStyle:)];
+			default:
+				break;
+		}
+
 		[self presentModalViewController:ctrl animated:YES];
 		[ctrl release];
 	}
@@ -180,6 +205,10 @@
 	{
 		[[Configuration configuration] setCompactTasks:cell.switch_.on];
 	}
+	else if (cell == [[cells objectAtIndex:firstSec] objectAtIndex:5])
+	{
+		[[Configuration configuration] setShowComposite:cell.switch_.on];
+	}
 
 	if (cell == [[cells objectAtIndex:firstSec + 1] objectAtIndex:0])
 	{
@@ -199,6 +228,29 @@
 	UITableViewCell *cell = [[cells objectAtIndex:firstSec] objectAtIndex:3];
 	cell.textLabel.text = [NSString stringWithFormat:_("Position: %@"), ([Configuration configuration].iconPosition == ICONPOSITION_RIGHT) ? _("Right") : _("Left")];
 
+	[self dismissModalViewControllerAnimated:YES];
+}
+
+- (void)onSetDisplayStyle:(NSNumber *)style
+{
+	if ([style intValue] != [Configuration configuration].dpyStyle)
+	{
+		[Configuration configuration].dpyStyle = [style intValue];
+
+		switch ([style intValue])
+		{
+			case DPY_TREE:
+				[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:5 inSection:firstSec]] withRowAnimation:UITableViewRowAnimationRight];
+				break;
+			case DPY_LIST:
+				[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:5 inSection:firstSec]] withRowAnimation:UITableViewRowAnimationRight];
+				break;
+		}
+	}
+
+	UITableViewCell *cell = [[cells objectAtIndex:firstSec] objectAtIndex:4];
+	cell.textLabel.text = [NSString stringWithFormat:_("Display: %@"), ([Configuration configuration].dpyStyle == DPY_TREE) ? _("Tree") : _("List")];
+	
 	[self dismissModalViewControllerAnimated:YES];
 }
 

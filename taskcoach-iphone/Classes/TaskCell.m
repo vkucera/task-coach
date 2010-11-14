@@ -8,6 +8,7 @@
 
 #import "TaskCell.h"
 #import "CheckView.h"
+#import "Configuration.h"
 
 #import "CDTask.h"
 #import "CDTask+Addons.h"
@@ -95,7 +96,7 @@
 
 	[leftImage setTarget:self action:@selector(onTapImage)];
 
-	if ([[task children] count])
+	if (([[task children] count]) && ([Configuration configuration].dpyStyle == DPY_TREE))
 	{
 		self.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 	}

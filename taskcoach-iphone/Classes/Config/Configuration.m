@@ -25,6 +25,8 @@ static Configuration *_configuration = NULL;
 @synthesize domain;
 @synthesize taskGrouping;
 @synthesize reverseGrouping;
+@synthesize dpyStyle;
+@synthesize showComposite;
 
 + (Configuration *)configuration
 {
@@ -67,6 +69,13 @@ static Configuration *_configuration = NULL;
 			taskGrouping = GROUP_STATUS;
 			reverseGrouping = NO;
 		}
+
+		dpyStyle = [config integerForKey:@"dpystyle"];
+		
+		if ([config objectForKey:@"showcomposite"])
+			showComposite = [config boolForKey:@"showcomposite"];
+		else
+			showComposite = YES;
 
 		NSString *guid = [config stringForKey:@"currentfile"];
 		if (guid)
@@ -111,6 +120,8 @@ static Configuration *_configuration = NULL;
 	[config setBool:confirmComplete forKey:@"confirmcomplete"];
 	[config setInteger:iconPosition forKey:@"iconposition"];
 	[config setInteger:soonDays forKey:@"soondays"];
+	[config setInteger:dpyStyle forKey:@"dpystyle"];
+	[config setBool:showComposite forKey:@"showcomposite"];
 
 	[config synchronize];
 }
