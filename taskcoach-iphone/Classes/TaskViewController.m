@@ -786,7 +786,7 @@ static void deleteTask(CDTask *task)
 		}
 
 		popCtrl = [[UIPopoverController alloc] initWithContentViewController:cfg];
-		[popCtrl setPopoverContentSize:CGSizeMake(350, 330)];
+		[popCtrl setPopoverContentSize:CGSizeMake(350, 400)];
 		[popCtrl presentPopoverFromBarButtonItem:configButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 	}
 

@@ -165,8 +165,10 @@
 		{
 			case 3:
 				ctrl = [[ChoiceViewController alloc] initWithChoices:[NSArray arrayWithObjects:_("Right"), _("Left"), nil] current:[Configuration configuration].iconPosition target:self action:@selector(onSetIconDirection:)];
+				break;
 			case 4:
 				ctrl = [[ChoiceViewController alloc] initWithChoices:[NSArray arrayWithObjects:_("Tree"), _("List"), nil] current:[Configuration configuration].dpyStyle target:self action:@selector(onSetDisplayStyle:)];
+				break;
 			default:
 				break;
 		}
