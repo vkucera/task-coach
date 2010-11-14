@@ -482,7 +482,7 @@ class IPhoneAcceptor(Acceptor):
 
         Acceptor.__init__(self, factory, '', None)
 
-        thread = threading.Thread(target=asyncore.loop)
+        thread = threading.Thread(target=asyncore.loop, args=(2,))
         thread.setDaemon(True)
         thread.start()
 

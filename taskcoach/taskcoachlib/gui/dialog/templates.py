@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, os, pickle
+import wx
 from taskcoachlib import widgets, persistence
 from taskcoachlib.i18n import _
 
@@ -24,8 +24,6 @@ from taskcoachlib.i18n import _
 class TemplatesDialog(widgets.Dialog):
     def __init__(self, settings, *args, **kwargs):
         self.settings = settings
-        self.tasks = list()
-        self.toDelete = list()
 
         super(TemplatesDialog, self).__init__(*args, **kwargs)
 
@@ -35,7 +33,7 @@ class TemplatesDialog(widgets.Dialog):
         self.CentreOnParent()
 
     def createInterior(self):
-        return wx.Panel(self, wx.ID_ANY)
+        return wx.Panel(self._panel, wx.ID_ANY)
 
     def fillInterior(self):
         self._templateList = wx.ListCtrl(self._interior, wx.ID_ANY, style=wx.LC_REPORT)
@@ -43,9 +41,9 @@ class TemplatesDialog(widgets.Dialog):
         self._templateList.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnSelectionChanged)
         self._templateList.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.OnSelectionChanged)
 
-        self._loadTemplates()
+        self._templates = persistence.TemplateList(self.settings.pathToTemplatesDir())
 
-        for task, name in self.tasks:
+        for task in self._templates.tasks():
             self._templateList.InsertStringItem(self._templateList.GetItemCount(), task.subject())
 
         self._templateList.SetColumnWidth(0, -1)
@@ -73,22 +71,6 @@ class TemplatesDialog(widgets.Dialog):
         hsz.Add(vsz, 0, wx.ALL, 3)
         self._interior.SetSizer(hsz)
 
-    def _loadTemplates(self):
-        fileList = [name for name in os.listdir(self.settings.pathToTemplatesDir()) if name.endswith('.tsktmpl')]
-
-        pickleName = os.path.join(self.settings.pathToTemplatesDir(), 'list.pickle')
-        if os.path.exists(pickleName):
-            try:
-                fileList = pickle.load(file(pickleName, 'rb'))
-            except:
-                pass
-
-        for name in fileList:
-            filename = os.path.join(self.settings.pathToTemplatesDir(), name)
-            if os.path.exists(filename):
-                task = persistence.TemplateXMLReader(file(filename, 'rU')).read()
-                self.tasks.append((task, name))
-
     def _GetSelection(self):
         selection = []
         idx = -1
@@ -103,24 +85,23 @@ class TemplatesDialog(widgets.Dialog):
         selection = self._GetSelection()
         self._btnDelete.Enable(bool(selection))
         self._btnUp.Enable(len(selection) == 1 and selection != [0])
-        self._btnDown.Enable(len(selection) == 1 and selection != [len(self.tasks) - 1])
+        self._btnDown.Enable(len(selection) == 1 and selection != [len(self._templates) - 1])
 
     def OnDelete(self, event):
         selection = self._GetSelection()
         selection.sort(lambda x, y: -cmp(x, y))
 
         for idx in selection:
+            self._templates.deleteTemplate(idx)
             self._templateList.DeleteItem(idx)
-            self.toDelete.append(self.tasks[idx])
-            del self.tasks[idx]
 
         self.enableOK()
 
     def OnUp(self, event):
         selection = self._GetSelection()[0]
-        self.tasks[selection - 1], self.tasks[selection] = self.tasks[selection], self.tasks[selection - 1]
-        self._templateList.SetStringItem(selection, 0, self.tasks[selection][0].subject())
-        self._templateList.SetStringItem(selection - 1, 0, self.tasks[selection - 1][0].subject())
+        self._templates.swapTemplates(selection - 1, selection)
+        self._templateList.SetStringItem(selection, 0, self._templates.tasks()[selection].subject())
+        self._templateList.SetStringItem(selection - 1, 0, self._templates.tasks()[selection - 1].subject())
         self._templateList.SetItemState(selection, 0, wx.LIST_STATE_SELECTED|wx.LIST_STATE_FOCUSED)
         self._templateList.SetItemState(selection - 1, wx.LIST_STATE_SELECTED|wx.LIST_STATE_FOCUSED, wx.LIST_STATE_SELECTED|wx.LIST_STATE_FOCUSED)
 
@@ -128,16 +109,14 @@ class TemplatesDialog(widgets.Dialog):
 
     def OnDown(self, event):
         selection = self._GetSelection()[0]
-        self.tasks[selection + 1], self.tasks[selection] = self.tasks[selection], self.tasks[selection + 1]
-        self._templateList.SetStringItem(selection, 0, self.tasks[selection][0].subject())
-        self._templateList.SetStringItem(selection + 1, 0, self.tasks[selection + 1][0].subject())
+        self._templates.swapTemplates(selection, selection + 1)
+        self._templateList.SetStringItem(selection, 0, self._templates.tasks()[selection].subject())
+        self._templateList.SetStringItem(selection + 1, 0, self._templates.tasks()[selection + 1].subject())
         self._templateList.SetItemState(selection, 0, wx.LIST_STATE_SELECTED|wx.LIST_STATE_FOCUSED)
         self._templateList.SetItemState(selection + 1, wx.LIST_STATE_SELECTED|wx.LIST_STATE_FOCUSED, wx.LIST_STATE_SELECTED|wx.LIST_STATE_FOCUSED)
 
         self.enableOK()
 
     def ok(self, event=None):
-        for task, name in self.toDelete:
-            os.remove(os.path.join(self.settings.pathToTemplatesDir(), name))
-        pickle.dump([filename for task, filename in self.tasks], file(os.path.join(self.settings.pathToTemplatesDir(), 'list.pickle'), 'wb'))
+        self._templates.save()
         super(TemplatesDialog, self).ok(event=event)
