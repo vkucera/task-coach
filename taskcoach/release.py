@@ -39,7 +39,7 @@ Release steps:
     and Mac OS X distributions to set them as default download.
   - Run 'python release.py release' to download the distributions from
     Sourceforge, generate MD5 digests, generate the website, upload the 
-    website to the Hypernation.net website and to Chello (Frank's ISP), 
+    website to the Dreamhost, Hostland and Hypernation.net websites, 
     announce the release on Twitter, Identi.ca, Freshmeat and PyPI (Python 
     Package Index), send the announcement email, and to tag the release in
     Subversion.
@@ -78,7 +78,6 @@ class Settings(ConfigParser.SafeConfigParser, object):
         defaults = dict(sourceforge=['username', 'password'],
                         smtp=['hostname', 'port', 'username', 'password',
                               'sender_name', 'sender_email_address'],
-                        chello=['hostname', 'username', 'password', 'folder'],
                         hypernation=['hostname', 'username', 'password', 'folder'],
                         pypi=['username', 'password'],
                         twitter=['consumer_key', 'consumer_secret',
@@ -221,11 +220,6 @@ def uploading_website_to_website_host(settings, options, websiteHost):
 
 
 @progress
-def uploading_website_to_Chello(settings, options):
-    uploading_website_to_website_host(settings, options, 'Chello')
-
-
-@progress
 def uploading_website_to_Hypernation(settings, options):
     uploading_website_to_website_host(settings, options, 'Hypernation')
 
@@ -251,7 +245,7 @@ def registering_with_PyPI(settings, options):
     from setup import setupOptions
     languagesThatPyPIDoesNotRecognize = ['Basque', 'Breton', 'Estonian', 
         'Galician', 'Lithuanian', 'Norwegian (Bokmal)', 'Norwegian (Nynorsk)', 
-        'Slovene', 'German (Low)', 'Mongolian']
+        'Occitan', 'Papiamento', 'Slovene', 'German (Low)', 'Mongolian']
     for language in languagesThatPyPIDoesNotRecognize:
         setupOptions['classifiers'].remove('Natural Language :: %s'%language)
     from distutils.core import setup
@@ -344,7 +338,6 @@ def announcing_on_Identica(settings, options):
 
 
 def uploading_website(settings, options):
-    uploading_website_to_Chello(settings, options)
     uploading_website_to_Hypernation(settings, options)
     uploading_website_to_Dreamhost(settings, options)
     uploading_website_to_Hostland(settings, options)
@@ -466,8 +459,7 @@ commands = dict(release=releasing,
                 upload=uploading_distributions_to_SourceForge, 
                 download=downloading_distributions_from_SourceForge, 
                 md5=generating_MD5_digests,
-                website=uploading_website, 
-                websiteChello=uploading_website_to_Chello, 
+                website=uploading_website,
                 websiteHN=uploading_website_to_Hypernation,
                 websiteDH=uploading_website_to_Dreamhost,
                 websiteHL=uploading_website_to_Hostland,
