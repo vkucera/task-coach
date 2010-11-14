@@ -27,18 +27,25 @@ class TemplatesDialogTestCase(test.wxTestCase):
         self.settings = config.Settings(load=False)
 
         # Monkey-patching
-        path = os.path.join(os.path.split(__file__)[0], 'tmpl')
+        self.path = os.path.join(os.path.split(__file__)[0], 'tmpl')
         try:
-            shutil.rmtree(path)
+            shutil.rmtree(self.path)
         except OSError:
             pass
-        os.mkdir(path)
+        os.mkdir(self.path)
 
-        self.settings.pathToTemplatesDir = lambda: path
+        self.settings.pathToTemplatesDir = lambda: self.path
 
         self.taskFile = persistence.TaskFile()
         self.editor = gui.dialog.templates.TemplatesDialog(self.settings, self.frame, 
             'title', raiseDialog=False)
+        
+    def tearDown(self):
+        super(TemplatesDialogTestCase, self).tearDown()
+        try:
+            shutil.rmtree(self.path)
+        except OSError:
+            pass
 
     def testTwoDefaultTemplates(self):
         self.assertEqual(0, len(self.editor._templates.tasks()))

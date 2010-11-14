@@ -239,6 +239,8 @@ class LanguagePage(SettingsPage):
              ('mn_CN', u'Монгол бичиг (Mongolian)'),
              ('nb_NO', u'Bokmål (Norwegian Bokmal)'),
              ('nn_NO', u'Nynorsk (Norwegian Nynorsk)'),
+             ('oc_FR', u"Lenga d'òc (Occitan)"),
+             ('pap', 'Papiamentu (Papiamento)'),
              ('fa_IR', u'فارسی (Persian)'),
              ('pl_PL', u'Język polski (Polish)'),
              ('pt_PT', u'Português (Portuguese)'),

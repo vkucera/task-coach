@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.0', 'November 12, 2010',
+Release('1.3.0', 'November 14, 2010',
     summary='''This release ...''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -41,7 +41,7 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
     
-Release('1.2.3', 'November 12, 2010',
+Release('1.2.3', 'November 14, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Show clock icon for tracked tasks in the task viewer.''', 
@@ -53,12 +53,16 @@ filtered categories.'''),
         Bug('''Don't throw exception when end of working day is 24.''',
             '3105496'),
         Bug('''When recurring a task, make sure its start date stays 
-before its due date.'''),
+before its due date. Patch provided by Svetoslav Trochev.'''),
         Bug('''The edit templates dialog was unresponsive under MS Windows.''',
             '3106221'),
         Bug('''When setting the column width to the minimum in horizontal
 monthly view, switching to weekly view would hang Task Coach and prevent
 it from launching again.''', '3091151')
+        ],
+    featuresAdded=[
+        Feature('''Updated translations and added partial Occitan and 
+Papiamento translations.''')
         ]
     ),
 
