@@ -574,7 +574,8 @@ class FileEditTemplates(SettingsCommand, UICommand):
             helpText=_('Edit existing templates'), *args, **kwargs)
 
     def doCommand(self, event):
-        dlg = dialog.templates.TemplatesDialog(self.settings, self.mainWindow(), _('Edit templates'))
+        dlg = dialog.templates.TemplatesDialog(self.settings, self.mainWindow(), 
+                                               _('Edit templates'))
         dlg.Show()
 
 class FilePurgeDeletedItems(NeedsDeletedItemsMixin, IOCommand):

@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.3', 'November 12, 2010',
+Release('1.2.3', 'November 14, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Show clock icon for tracked tasks in the task viewer.''', 
@@ -40,6 +40,10 @@ before its due date.'''),
         Bug('''When setting the column width to the minimum in horizontal
 monthly view, switching to weekly view would hang Task Coach and prevent
 it from launching again.''', '3091151')
+        ],
+    featuresAdded=[
+        Feature('''Updated translations and added partial Occitan and 
+Papiamento translations.''')
         ]
     ),
 
