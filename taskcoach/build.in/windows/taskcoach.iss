@@ -19,6 +19,7 @@
 [Setup]
 AppName=%(name)s
 AppVerName=%(name)s %(version)s
+AppMutex=%(filename)s
 AppPublisher=%(author)s
 AppPublisherURL=%(url)s
 AppSupportURL=%(url)s

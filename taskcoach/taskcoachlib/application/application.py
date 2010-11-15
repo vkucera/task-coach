@@ -85,6 +85,7 @@ class Application(object):
         wx.SystemOptions.SetOptionInt("mac.textcontrol-use-spell-checker",
             self.settings.getboolean('editor', 'maccheckspelling'))
         self.registerSignalHandlers()
+        self.registerMutex()
         
     def initConfig(self, loadSettings):
         from taskcoachlib import config
@@ -154,6 +155,12 @@ class Application(object):
             typically when the user logs out. '''
         # No time to pop up dialogs, force quit:
         self.mainwindow.quit(force=True)
+        
+    def registerMutex(self):
+        if '__WXMSW__' == wx.Platform:
+            import ctypes
+            from taskcoachlib import meta
+            ctypes.windll.kernel32.CreateMutexA(None, False, meta.filename)
 
     def warnUserThatIniFileWasNotLoaded(self):
         from taskcoachlib import meta

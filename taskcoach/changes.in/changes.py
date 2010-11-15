@@ -21,7 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-            
+
+Release('1.2.4', 'November 15, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''On Windows, make the installer check for running
+instances of Task Coach before installing a new version.''', '3109658')
+        ]
+    ),
+                
 Release('1.2.3', 'November 14, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
