@@ -26,7 +26,9 @@ Release('1.2.4', 'November 15, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''On Windows, make the installer check for running
-instances of Task Coach before installing a new version.''', '3109658')
+instances of Task Coach before installing a new version.''', '3109658'),
+        Bug('''Mass editing of items wouldn't work after selecting items
+with Ctrl-A (select all).''', '3108176')
         ]
     ),
                 

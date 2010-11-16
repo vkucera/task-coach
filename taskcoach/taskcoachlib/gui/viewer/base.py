@@ -212,6 +212,7 @@ class Viewer(wx.Panel):
         self.onSelect()
         
     def endOfSelectAll(self):
+        self.__curselection = self.presentation()
         self.__selectingAllItems = False
 
     def clearselection(self):
