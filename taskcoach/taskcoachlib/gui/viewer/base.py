@@ -216,6 +216,7 @@ class Viewer(wx.Panel):
         self.__selectingAllItems = False
 
     def clearselection(self):
+        self.__curselection = []
         self.widget.clearselection()
         
     def size(self):

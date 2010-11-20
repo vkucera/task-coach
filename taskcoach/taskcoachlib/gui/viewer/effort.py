@@ -104,6 +104,8 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         self.registerPresentationObservers()
         # Invalidate the UICommands used for the column popup menu:
         self.__columnUICommands = None
+        # Clear the selection to remove the cached selection
+        self.clearselection()
         # If the widget is auto-resizing columns, turn it off temporarily to 
         # make removing/adding columns faster
         autoResizing = self.widget.IsAutoResizing()

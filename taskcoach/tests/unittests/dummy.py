@@ -27,6 +27,9 @@ class DummyWidget(wx.Frame):
 
     def curselection(self):
         return []
+    
+    def clearselection(self):
+        pass
 
     def GetItemCount(self):
         return len(self.viewer.presentation())

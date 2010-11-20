@@ -114,17 +114,20 @@ class EffortAggregator(patterns.SetDecorator,
     def createComposites(self, task, efforts): # pylint: disable-msg=W0621
         newComposites = []
         for effort in efforts:
-            newComposites.extend(self.createComposite(effort, task))
+            newComposites.extend(self.createCompositesForTask(effort, task))
             newComposites.extend(self.createCompositeForPeriod(effort))
         return newComposites
 
-    def createComposite(self, anEffort, task): # pylint: disable-msg=W0621
-        key = self.keyForEffort(anEffort, task)
-        if key in self.__composites:
-            return []
-        newComposite = composite.CompositeEffort(*key) # pylint: disable-msg=W0142
-        self.__composites[key] = newComposite
-        return [newComposite]
+    def createCompositesForTask(self, anEffort, task): # pylint: disable-msg=W0621
+        newComposites = []
+        for eachTask in [task] + task.ancestors():
+            key = self.keyForEffort(anEffort, eachTask)
+            if key in self.__composites:
+                continue
+            newComposite = composite.CompositeEffort(*key) # pylint: disable-msg=W0142
+            self.__composites[key] = newComposite
+            newComposites.append(newComposite)
+        return newComposites
     
     def createCompositeForPeriod(self, anEffort):
         key = self.keyForPeriod(anEffort)
@@ -153,11 +156,8 @@ class EffortAggregator(patterns.SetDecorator,
 
     def maxDateTime(self):
         stopTimes = [effort.getStop() for compositeEffort in self for effort
-            in compositeEffort if effort.getStop() is not None]
-        if stopTimes:
-            return max(stopTimes)
-        else:
-            return None
+                     in compositeEffort if effort.getStop() is not None]
+        return max(stopTimes) if stopTimes else None
 
     @staticmethod
     def keyForComposite(compositeEffort):
