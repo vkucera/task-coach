@@ -149,6 +149,7 @@ class wxSchedulerCore( wxSchedulerPaint ):
 		#Remove from our bind list and unbind the event
 		self._schBind.remove( schedule )
 		schedule.Unbind( EVT_SCHEDULE_CHANGE )
+		schedule.Destroy()
 
 		self.InvalidateMinSize()
 		self.Refresh()
