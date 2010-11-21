@@ -210,11 +210,13 @@ class Viewer(wx.Panel):
         wx.CallAfter(self.endOfSelectAll)
         
     def endOfSelectAll(self):
+        self.__curselection = self.presentation()
         self.__selectingAllItems = False
         # Pretend we received one selection event for the selectall() call:
         self.onSelect()
 
     def clearselection(self):
+        self.__curselection = []
         self.widget.clearselection()
         
     def size(self):

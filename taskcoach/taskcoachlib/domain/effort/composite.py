@@ -24,12 +24,7 @@ from taskcoachlib.gui import render
 import base
 
 
-class BaseCompositeEffort(base.BaseEffort): # pylint: disable-msg=W0223
-    def __init__(self, theTask, *args, **kwargs):
-        super(BaseCompositeEffort, self).__init__(theTask, *args, **kwargs)
-        patterns.Publisher().registerObserver(self.onTimeSpentChanged,
-            eventType='task.timeSpent', eventSource=theTask)
-        
+class BaseCompositeEffort(base.BaseEffort): # pylint: disable-msg=W0223        
     def parent(self):
         # Composite efforts don't have a parent.
         return None
@@ -83,7 +78,10 @@ class BaseCompositeEffort(base.BaseEffort): # pylint: disable-msg=W0223
                                     self._inCache(changedEffort):
             self._invalidateCache()
             self.notifyObserversOfDurationOrEmpty()
-            
+
+    def onRevenueChanged(self, event): # pylint: disable-msg=W0613
+        patterns.Event('effort.revenue', self, self.revenue(recursive=True)).send()
+        
     def _invalidateCache(self):
         raise NotImplementedError
     
@@ -106,6 +104,8 @@ class CompositeEffort(BaseCompositeEffort):
             eventType=task.trackStartEventType(), eventSource=task)
         patterns.Publisher().registerObserver(self.onStopTracking,
             eventType=task.trackStopEventType(), eventSource=task)
+        patterns.Publisher().registerObserver(self.onTimeSpentChanged,
+            eventType='task.timeSpent', eventSource=task)
         patterns.Publisher().registerObserver(self.onRevenueChanged,
             eventType='task.revenue', eventSource=task)
         '''
@@ -163,9 +163,6 @@ class CompositeEffort(BaseCompositeEffort):
             self._invalidateCache()
             patterns.Event(self.trackStopEventType(), self, stoppedEffort).send()
 
-    def onRevenueChanged(self, event): # pylint: disable-msg=W0613
-        patterns.Event('effort.revenue', self, self.revenue(recursive=True)).send()
-        
     def description(self):
         effortDescriptions = [effort.description() for effort in \
                               self._getEfforts(False) if effort.description()]
@@ -187,6 +184,8 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
         self._invalidateCache()
         patterns.Publisher().registerObserver(self.onTimeSpentChanged,
             eventType='task.timeSpent')
+        patterns.Publisher().registerObserver(self.onRevenueChanged,
+            eventType='task.revenue')
         for eventType in self.taskList.modificationEventTypes():
             patterns.Publisher().registerObserver(self.onTaskAddedOrRemoved, eventType,
                                                   eventSource=self.taskList)

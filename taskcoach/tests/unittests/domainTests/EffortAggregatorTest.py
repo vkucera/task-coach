@@ -39,6 +39,7 @@ class EffortAggregatorTestCase(test.TestCase):
         self.task2 = task.Task(subject='task 2')
         self.task3 = task.Task(subject='child')
         self.task1.addChild(self.task3)
+        self.task3.setParent(self.task1)
         self.effort1period1a = effort.Effort(self.task1, 
             date.DateTime(2004,1,1,11,0,0), date.DateTime(2004,1,1,12,0,0))
         self.effort2period1a = effort.Effort(self.task2, 
@@ -109,7 +110,7 @@ class CommonTestsMixin(object):
         self.taskList.extend([self.task1, self.task2])
         self.task1.addChild(self.task2)
         self.task2.addEffort(self.effort2period1a)
-        self.assertEqual(2, len(self.effortAggregator))
+        self.assertEqual(3, len(self.effortAggregator))
 
     def testAddChildWithEffort(self):
         self.taskList.extend([self.task1, self.task2])
@@ -120,19 +121,19 @@ class CommonTestsMixin(object):
     def testAddParentAndChildWithEffortToTaskList(self):
         self.task3.addEffort(self.effort3period1a)
         self.taskList.append(self.task1)
-        self.assertEqual(2, len(self.effortAggregator))
+        self.assertEqual(3, len(self.effortAggregator))
 
     def testAddEffortToGrandChild(self):
         self.taskList.extend([self.task1, self.task2])
         self.task3.addChild(self.task2)
         self.task2.addEffort(self.effort2period1a)
-        self.assertEqual(2, len(self.effortAggregator))
+        self.assertEqual(4, len(self.effortAggregator))
 
     def testAddGrandChildWithEffort(self):
         self.taskList.extend([self.task1, self.task2])
         self.task2.addEffort(self.effort2period1a)
         self.task3.addChild(self.task2)
-        self.assertEqual(3, len(self.effortAggregator))
+        self.assertEqual(4, len(self.effortAggregator))
 
     def testRemoveChildWithEffortFromParent(self):
         self.taskList.extend([self.task1, self.task2])

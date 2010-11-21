@@ -23,6 +23,7 @@ from taskcoachlib.domain import task, effort, date
 
 class CompositeEffortTest(test.TestCase):
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.task = task.Task(subject='task')
         self.effort1 = effort.Effort(self.task, 
             date.DateTime(2004,1,1,11,0,0), date.DateTime(2004,1,1,12,0,0))
@@ -241,7 +242,6 @@ class CompositeEffortTest(test.TestCase):
         self.effort1.setStop(self.effort1.getStop() + date.TimeDelta(hours=1))
         expectedEvent = patterns.Event('effort.duration', self.composite, 
             self.composite.duration())
-        #expectedEvent.addSource(self.effort1, self.effort1.duration(), type='effort.duration')
         self.failUnless(expectedEvent in self.events)
 
     def testChangeStartTimeOfEffort_MoveInsidePeriod(self):
@@ -534,5 +534,3 @@ class CompositeEffortWithSubTasksRevenueTest(test.TestCase):
         self.child.setHourlyFee(100)
         self.failUnless(patterns.Event('effort.revenue', self.composite,
             100.0) in self.events)
-        
-        

@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import test, wx
 from taskcoachlib import gui, config, patterns, widgets, persistence
 from taskcoachlib.domain import task, effort, date
 from taskcoachlib.thirdparty import hypertreelist
@@ -28,7 +28,7 @@ class ViewerTest(test.wxTestCase):
         super(ViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
         self.taskFile = persistence.TaskFile()
-        self.task = task.Task()
+        self.task = task.Task('task')
         self.taskFile.tasks().append(self.task)
         self.notebook = widgets.AuiManagedFrameWithNotebookAPI(self.frame)
         self.viewerContainer = gui.viewer.ViewerContainer(self.notebook, 
@@ -39,10 +39,26 @@ class ViewerTest(test.wxTestCase):
     def createViewer(self):
         return gui.viewer.TaskViewer(self.notebook, self.taskFile,
             self.settings)
-        
-    def testSelectAll(self):
+
+    def testSelectAllViaWidget(self):
         self.viewer.widget.selectall()
         self.assertEqual([self.task], self.viewer.curselection())
+        
+    def testSelectAllViaWidgetWithMultipleItems(self):
+        self.taskFile.tasks().append(task.Task('second'))
+        self.viewer.widget.selectall()
+        self.assertEqual(2, len(self.viewer.curselection()))
+        
+    def testSelectAll(self):
+        self.viewer.selectall()
+        self.viewer.endOfSelectAll()
+        self.assertEqual([self.task], self.viewer.curselection())
+        
+    def testSelectAllWithMultipleItems(self):
+        self.taskFile.tasks().append(task.Task('second'))
+        self.viewer.selectall()
+        self.viewer.endOfSelectAll()
+        self.assertEqual(2, len(self.viewer.curselection()))
         
     def testFirstViewerInstanceSettingsSection(self):
         self.assertEqual(self.viewer.__class__.__name__.lower(), 

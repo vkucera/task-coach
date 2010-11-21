@@ -52,8 +52,10 @@ class TemplateList(object):
     def addTemplate(self, task):
         handle, filename = tempfile.mkstemp('.tsktmpl', dir=self._path)
         os.close(handle)
-        writer = TemplateXMLWriter(codecs.open(filename, 'w', 'utf-8'))
+        templateFile = codecs.open(filename, 'w', 'utf-8')
+        writer = TemplateXMLWriter(templateFile)
         writer.write(task.copy())
+        templateFile.close()
         self._tasks.append((TemplateXMLReader(file(filename, 'rU')).read(), os.path.split(filename)[-1]))
         self.save()
 
