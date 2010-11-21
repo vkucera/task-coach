@@ -22,11 +22,13 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.4', 'November 20, 2010',
+Release('1.2.4', 'November 21, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''On Windows, make the installer check for running
-instances of Task Coach before installing a new version.''', '3109658'),
+instances of Task Coach before installing a new version. The installer is
+able to detect running instances of Task Coach release 1.2.4 or newer.''', 
+            '3109658'),
         Bug('''Mass editing of items wouldn't work after selecting items
 with Ctrl-A (select all).''', '3108176'),
         Bug('''Bring back total time spent and total revenue columns in the 
