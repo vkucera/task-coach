@@ -35,31 +35,34 @@ class TaskEditorSetterBase(object):
         page = self.editor._interior[0]
         page._subjectEntry.SetFocus()
         page._subjectEntry.SetValue(newSubject)
+        return page
 
     def setDescription(self, newDescription):
         page = self.editor._interior[0]
         page._descriptionEntry.SetFocus()
         page._descriptionEntry.SetValue(newDescription)
+        return page
 
     def setReminder(self, newReminderDateTime):
         self.editor._interior[1].setReminder(newReminderDateTime)
-        
+
     def setRecurrence(self, newRecurrence):
         page = self.editor._interior[1]
         page.setRecurrence(newRecurrence)
         page.onRecurrenceEdited(DummyEvent())
+        return page
 
 
 class TaskEditorBySettingFocusMixin(TaskEditorSetterBase):
     def setSubject(self, newSubject):
-        super(TaskEditorBySettingFocusMixin, self).setSubject(newSubject)
+        page = super(TaskEditorBySettingFocusMixin, self).setSubject(newSubject)
         if '__WXGTK__' == wx.Platform: 
             page._subjectSync.onAttributeEdited(DummyEvent()) # pragma: no cover
         else:
             page._descriptionEntry.SetFocus() # pragma: no cover
         
     def setDescription(self, newDescription):
-        super(TaskEditorBySettingFocusMixin, self).setDescription(newDescription)
+        page = super(TaskEditorBySettingFocusMixin, self).setDescription(newDescription)
         if '__WXGTK__' == wx.Platform:
             page._descriptionSync.onAttributeEdited(DummyEvent()) # pragma: no cover
         else:
@@ -68,11 +71,11 @@ class TaskEditorBySettingFocusMixin(TaskEditorSetterBase):
 
 class TaskEditorByClosingMixin(TaskEditorSetterBase):
     def setSubject(self, newSubject):
-        super(TaskEditorBySettingFocusMixin, self).setSubject(newSubject)
+        super(TaskEditorByClosingMixin, self).setSubject(newSubject)
         self.editor.Close()
 
     def setDescription(self, newDescription):
-        super(TaskEditorBySettingFocusMixin, self).setDescription(newDescription)
+        super(TaskEditorByClosingMixin, self).setDescription(newDescription)
         self.editor.Close()
 
 
