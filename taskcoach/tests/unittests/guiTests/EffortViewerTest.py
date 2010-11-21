@@ -226,9 +226,19 @@ class CommonTestsMixin(object):
             self.assertEqual(self.task2, effort.task())
         
     def testColumnUICommands(self):
-        expectedLength = 7 if self.aggregation == 'week' else 6
+        expectedLength = dict(details=6, day=8, week=9, month=8)[self.aggregation]
         self.assertEqual(expectedLength,
                          len(self.viewer.getColumnUICommands()))
+        
+    def testTotalTimeSpentColumnNotInDetailsMode(self):
+        columns = [command.setting for command in self.viewer.getColumnUICommands() if command]
+        self.assertEqual(self.aggregation != 'details', 
+                         'totalTimeSpent' in columns)
+
+    def testTotalRevenueColumnNotInDetailsMode(self):
+        columns = [command.setting for command in self.viewer.getColumnUICommands() if command]
+        self.assertEqual(self.aggregation != 'details', 
+                         'totalRevenue' in columns)
     
     def testDefaultNrOfColumns(self):
         self.assertEqual(4, self.viewer.widget.GetColumnCount())
@@ -240,6 +250,26 @@ class CommonTestsMixin(object):
     def testHideRevenueColumn(self):
         self.viewer.showColumnByName('revenue', False)
         self.assertEqual(3, self.viewer.widget.GetColumnCount())
+        
+    def testShowTotalTimeSpentColumn(self):
+        self.viewer.showColumnByName('totalTimeSpent', True)
+        self.assertEqual(5, self.viewer.widget.GetColumnCount())
+
+    def testShowTotalRevenueColumn(self):
+        self.viewer.showColumnByName('totalRevenue', True)
+        self.assertEqual(5, self.viewer.widget.GetColumnCount())
+        
+    def testTotalTimeSpentColumnIsHiddenWhenSwitchingToDetails(self):
+        self.viewer.showColumnByName('totalTimeSpent', True)
+        self.switchAggregation()
+        self.assertEqual(self.viewer.isShowingAggregatedEffort(),
+                         self.viewer.isVisibleColumnByName('totalTimeSpent'))
+
+    def testTotalRevenueColumnIsHiddenWhenSwitchingToDetails(self):
+        self.viewer.showColumnByName('totalRevenue', True)
+        self.switchAggregation()
+        self.assertEqual(self.viewer.isShowingAggregatedEffort(),
+                         self.viewer.isVisibleColumnByName('totalRevenue'))
 
     def testActiveEffort(self):
         self.task2.efforts()[0].setStop(date.DateTime.max) # Make active

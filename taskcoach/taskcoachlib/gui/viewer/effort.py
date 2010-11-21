@@ -41,6 +41,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         self.tasksToShowEffortFor = kwargs.pop('tasksToShowEffortFor', [])
         kwargs.setdefault('settingsSection', 'effortviewer')
         self.__hiddenWeekdayColumns = []
+        self.__hiddenTotalColumns = []
         self.__columnUICommands = None
         self.__domainObjectsToView = None
         self.__observersToDetach = []
@@ -103,6 +104,8 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         self.registerPresentationObservers()
         # Invalidate the UICommands used for the column popup menu:
         self.__columnUICommands = None
+        # Clear the selection to remove the cached selection
+        self.clearselection()
         # If the widget is auto-resizing columns, turn it off temporarily to 
         # make removing/adding columns faster
         autoResizing = self.widget.IsAutoResizing()
@@ -113,6 +116,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         # detail mode.
         self.refresh()
         self._showWeekdayColumns(show=aggregation=='week')
+        self._showTotalColumns(show=aggregation!='details')
         if autoResizing:
             self.widget.ToggleAutoResizing(True)
             
@@ -178,8 +182,12 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
             for name, columnHeader, eventType, renderCallback in \
             ('timeSpent', _('Time spent'), 'effort.duration', 
                 lambda effort: render.timeSpent(effort.duration())),
+            ('totalTimeSpent', _('Total time spent'), 'effort.duration',
+                lambda effort: render.timeSpent(effort.duration(recursive=True))),
             ('revenue', _('Revenue'), 'effort.revenue', 
-                lambda effort: render.monetaryAmount(effort.revenue()))] + \
+                lambda effort: render.monetaryAmount(effort.revenue())),
+            ('totalRevenue', _('Total revenue'), 'effort.revenue',
+                lambda effort: render.monetaryAmount(effort.revenue(recursive=True)))] + \
              [widgets.Column(name, columnHeader, eventType, 
               renderCallback=renderCallback, alignment=wx.LIST_FORMAT_RIGHT,
               width=self.getColumnWidth(name), **kwargs) \
@@ -212,6 +220,17 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         for column in columnsToShow:
             self.showColumn(column, show, refresh=False)
 
+    def _showTotalColumns(self, show=True):
+        if show:
+            columnsToShow = self.__hiddenTotalColumns[:]
+            self.__hiddenTotalColumns = []
+        else:
+            self.__hiddenTotalColumns = columnsToShow = \
+                [column for column in self.visibleColumns() \
+                 if column.name().startswith('total')]
+        for column in columnsToShow:
+            self.showColumn(column, show, refresh=False)
+            
     def getColumnUICommands(self):
         if not self.__columnUICommands:
             self.createColumnUICommands()
@@ -234,6 +253,15 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
              uicommand.ViewColumn(menuText=_('&Revenue'),
                                   helpText=_('Show/hide revenue column'),
                                   setting='revenue', viewer=self),]
+        if self.aggregation != 'details':
+            self.__columnUICommands.insert(5,
+                uicommand.ViewColumn(menuText=_('&Total time spent'),
+                                     helpText=_('Show/hide total time spent column'),
+                                     setting='totalTimeSpent', viewer=self))
+            self.__columnUICommands.insert(7,
+                uicommand.ViewColumn(menuText=_('&Total revenue'),
+                                     helpText=_('Show/hide total revenue column'),
+                                     setting='totalRevenue', viewer=self))
         if self.aggregation == 'week':
             self.__columnUICommands.append(\
                 uicommand.ViewColumns(menuText=_('Effort per weekday'),

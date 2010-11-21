@@ -30,6 +30,57 @@ class DummyEvent(object):
         pass
 
 
+class TaskEditorSetterBase(object):
+    def setSubject(self, newSubject):
+        page = self.editor._interior[0]
+        page._subjectEntry.SetFocus()
+        page._subjectEntry.SetValue(newSubject)
+        return page
+
+    def setDescription(self, newDescription):
+        page = self.editor._interior[0]
+        page._descriptionEntry.SetFocus()
+        page._descriptionEntry.SetValue(newDescription)
+        return page
+
+    def setReminder(self, newReminderDateTime):
+        self.editor._interior[1].setReminder(newReminderDateTime)
+
+    def setRecurrence(self, newRecurrence):
+        page = self.editor._interior[1]
+        page.setRecurrence(newRecurrence)
+        page.onRecurrenceEdited(DummyEvent())
+        return page
+
+
+class TaskEditorBySettingFocusMixin(TaskEditorSetterBase):
+    def setSubject(self, newSubject):
+        page = super(TaskEditorBySettingFocusMixin, self).setSubject(newSubject)
+        if '__WXGTK__' == wx.Platform: 
+            page._subjectSync.onAttributeEdited(DummyEvent()) # pragma: no cover
+        else:
+            page._descriptionEntry.SetFocus() # pragma: no cover
+        
+    def setDescription(self, newDescription):
+        page = super(TaskEditorBySettingFocusMixin, self).setDescription(newDescription)
+        if '__WXGTK__' == wx.Platform:
+            page._descriptionSync.onAttributeEdited(DummyEvent()) # pragma: no cover
+        else:
+            page._subjectEntry.SetFocus() # pragma: no cover
+
+
+class TaskEditorByClosingMixin(TaskEditorSetterBase):
+    def setSubject(self, newSubject):
+        page = super(TaskEditorByClosingMixin, self).setSubject(newSubject)
+        self.editor.Close()
+        page._subjectSync.onAttributeEdited(DummyEvent())
+        
+    def setDescription(self, newDescription):
+        page = super(TaskEditorByClosingMixin, self).setDescription(newDescription)
+        self.editor.Close()
+        page._descriptionSync.onAttributeEdited(DummyEvent())
+        
+
 class TaskEditorTestCase(test.wxTestCase):
     def setUp(self):
         super(TaskEditorTestCase, self).setUp()
@@ -59,33 +110,7 @@ class TaskEditorTestCase(test.wxTestCase):
     def getItems(self):
         raise NotImplementedError # pragma: no cover
 
-    def setSubject(self, newSubject):
-        page = self.editor._interior[0]
-        page._subjectEntry.SetFocus()
-        page._subjectEntry.SetValue(newSubject)
-        if '__WXGTK__' == wx.Platform: 
-            page._subjectSync.onAttributeEdited(DummyEvent()) # pragma: no cover
-        else:
-            page._descriptionEntry.SetFocus() # pragma: no cover
-        
-    def setDescription(self, newDescription):
-        page = self.editor._interior[0]
-        page._descriptionEntry.SetFocus()
-        page._descriptionEntry.SetValue(newDescription)
-        if '__WXGTK__' == wx.Platform:
-            page._descriptionSync.onAttributeEdited(DummyEvent()) # pragma: no cover
-        else:
-            page._subjectEntry.SetFocus() # pragma: no cover
 
-    def setReminder(self, newReminderDateTime):
-        self.editor._interior[1].setReminder(newReminderDateTime)
-        
-    def setRecurrence(self, newRecurrence):
-        page = self.editor._interior[1]
-        page.setRecurrence(newRecurrence)
-        page.onRecurrenceEdited(DummyEvent())
-        
-        
 class EditorDisplayTest(TaskEditorTestCase):
     ''' Does the editor display the task data correctly when opened? '''
     
@@ -115,7 +140,7 @@ class EditorDisplayTest(TaskEditorTestCase):
         self.assertEqual(1, freq.GetValue())    
         
 
-class EditTaskTest(TaskEditorTestCase):
+class EditTaskTestBase(object):
     def getItems(self):
         return [self.task]
 
@@ -127,7 +152,7 @@ class EditTaskTest(TaskEditorTestCase):
         return [self.task]
 
     def testEditSubject(self):
-        self.setSubject('Done')        
+        self.setSubject('Done')
         self.assertEqual('Done', self.task.subject())
 
     def testEditDescription(self):
@@ -269,7 +294,15 @@ class EditTaskTest(TaskEditorTestCase):
         self.assertEqual(1, len(self.task.notes())) 
 
 
-class EditTaskWithChildrenTest(TaskEditorTestCase):
+class EditTaskTestBySettingFocus(TaskEditorBySettingFocusMixin, EditTaskTestBase, TaskEditorTestCase):
+    pass
+
+
+class EditTaskTestByClosing(TaskEditorByClosingMixin, EditTaskTestBase, TaskEditorTestCase):
+    pass
+
+
+class EditTaskWithChildrenTestBase(object):
     def getItems(self):
         return [self.parent]
 
@@ -296,6 +329,14 @@ class EditTaskWithChildrenTest(TaskEditorTestCase):
         self.assertAlmostEqual(self.tomorrow.toordinal(), 
                                self.child.startDateTime().toordinal(),
                                places=2)
+
+
+class EditTaskWithChildrenTestBySettingFocus(TaskEditorBySettingFocusMixin, EditTaskWithChildrenTestBase, TaskEditorTestCase):
+    pass
+
+
+class EditTaskWithChildrenTestByClosing(TaskEditorByClosingMixin, EditTaskWithChildrenTestBase, TaskEditorTestCase):
+    pass
 
 
 class EditTaskWithEffortTest(TaskEditorTestCase):    
