@@ -37,6 +37,7 @@ from dirchooser import DirectoryChooser
 from fontpicker import FontPickerCtrl
 from syncmlwarning import SyncMLWarningDialog
 from calendar import Calendar
+from catgrid import CategoryGrid
 import masked
 try:
     from wx.lib import sized_controls

@@ -34,6 +34,7 @@ defaults = { \
     'squaretaskviewercount': '0',
     'timelineviewercount': '0',
     'calendarviewercount': '0',
+    'categorygridviewercount': '0',
     'language': '',                  # Language and locale, maybe set externally (e.g. by PortableApps)
     'language_set_by_user': '',      # Language and locale as set by user via preferences, overrides language
     'categoryfiltermatchall': 'False',
@@ -133,6 +134,18 @@ defaults = { \
     'sortascending': 'True',
     'sortcasesensitive': 'False',
     'sortbystatusfirst': 'True' },
+'categorygridviewer': { \
+    'title': '',
+    'searchfilterstring': '',
+    'searchfiltermatchcase': 'False',
+    'searchfilterincludesubitems': 'False',
+    'searchdescription': 'False',
+    'tasksdue': 'Unlimited',
+    'hidecompletedtasks': 'False',
+    'hideinactivetasks': 'False',
+    'hideactivetasks': 'False',
+    'hidecompositetasks': 'False',
+    },
 'categoryviewer': { \
     'title': '',
     'sortby': 'subject',

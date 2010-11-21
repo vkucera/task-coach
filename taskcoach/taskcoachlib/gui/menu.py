@@ -400,6 +400,9 @@ class ViewViewerMenu(Menu):
             ViewViewer(menuText=_('&Calendar'),
                        helpText=_('Open a new tab with a viewer that displays tasks in a calendar'),
                        viewerClass=viewer.CalendarViewer, **kwargs),
+            ViewViewer(menuText=_('Category &grid'),
+                       helpText=_('Open a new tab with a viewer that displays tasks and categories in a grid'),
+                       viewerClass=viewer.CategoryGridViewer, **kwargs),
             ViewViewer(menuText=_('&Category'),
                        helpText=_('Open a new tab with a viewer that displays categories'),
                        viewerClass=viewer.CategoryViewer, **kwargs)]

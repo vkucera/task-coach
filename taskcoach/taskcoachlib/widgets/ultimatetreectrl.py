@@ -411,7 +411,7 @@ class UltimateTreeCellAttributes(object):
     """This object holds information about a standard cell; see
     L{GetCellAttributes}."""
 
-    def __init__(self, text, bitmaps=[], style=0):
+    def __init__(self, text, bitmaps=[], style=0, bgcolour=None):
         """
         @param text: The cell text
         @param bitmaps: A list of wx.Bitmap instances
@@ -423,6 +423,8 @@ class UltimateTreeCellAttributes(object):
         self.text = text
         self.bitmaps = bitmaps
         self.style = style
+        self.bgcolour = bgcolour
+
 
 class UltimateTreeCtrl(wx.Panel):
     """
@@ -744,7 +746,8 @@ class UltimateTreeCtrl(wx.Panel):
         for idx in xrange(count):
             h = max(h, self._ComputeHeaderHeight((idx,)))
 
-        self._headerView.SetSize((-1, h))
+        self._headerView.SetMinSize((-1, h))
+        self.GetSizer().Layout()
 
     def HeaderHitTest(self, x, y):
         """
@@ -1069,6 +1072,7 @@ class UltimateTreeCtrl(wx.Panel):
 
             for idx in xrange(count):
                 newIndexPath = indexPath + (idx,)
+
                 if newIndexPath not in self._headerSizes:
                     own, children = self._ComputeHeaderMinWidth(dc, newIndexPath)
                     if self.__style & ULTTREE_FLAT:
@@ -1394,13 +1398,9 @@ class UltimateTreeCtrl(wx.Panel):
 
 #}
 
-
-#==============================================================================
-# Test
-
-class TestCell(CellBase):
+class TextCell(CellBase):
     def __init__(self, *args, **kwargs):
-        super(TestCell, self).__init__(*args, **kwargs)
+        super(TextCell, self).__init__(*args, **kwargs)
 
         self.__text = wx.StaticText(self, wx.ID_ANY, '')
 
@@ -1425,6 +1425,9 @@ class TestCell(CellBase):
     def GetIdentifier(self):
         return 'StaticText'
 
+
+#==============================================================================
+# Test
 
 class HtmlCell(CellBase):
     def __init__(self, *args, **kwargs):
@@ -1576,7 +1579,7 @@ class Test(UltimateTreeCtrl):
             print 'Right click headers'
 
     def CreateCell(self, parent):
-        return TestCell(parent, wx.ID_ANY)
+        return TextCell(parent, wx.ID_ANY)
 
     def CreateHtmlCell(self, parent):
         return HtmlCell(parent, wx.ID_ANY)

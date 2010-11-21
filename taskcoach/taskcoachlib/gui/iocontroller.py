@@ -121,7 +121,8 @@ class IOController(object):
                     ''.join(traceback.format_exception(*sys.exc_info())) + \
                     _('Are you sure it is a %s-file?')%meta.name, 
                     **self.__errorMessageOptions)
-                return
+                raise # XXXTMP
+                #return
             self.__messageCallback(_('Loaded %(nrtasks)d tasks from %(filename)s')%\
                 {'nrtasks': len(self.__taskFile.tasks()), 
                  'filename': self.__taskFile.filename()})

@@ -485,7 +485,32 @@ class SquareTaskViewer(BaseTaskViewer):
     def render(self, value):
         return self.renderer[self.__orderBy](value)
 
-    
+
+class CategoryGridViewer(BaseTaskViewer):
+    defaultTitle = _('Category grid')
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('settingsSection', 'categorygridviewer')
+        super(CategoryGridViewer, self).__init__(*args, **kwargs)
+
+        for eventType in self.taskFile.categories().modificationEventTypes():
+            patterns.Publisher().registerObserver(self.onCategoryChanged, 
+                eventType)
+
+    def onCategoryChanged(self, event):
+        self.widget.RefreshAllItems(0)
+
+    def createWidget(self):
+        return widgets.CategoryGrid(self, self.taskFile.categories(),
+                                    self.presentation(),
+                                    self.iconName)
+
+    def isAnyItemCollapsable(self):
+        return False # XXXFIXME
+
+    def isAnyItemExpandable(self):
+        return False # XXXFIXME
+
 
 class CalendarViewer(mixin.AttachmentDropTargetMixin,
                      mixin.SortableViewerForTasksMixin,
