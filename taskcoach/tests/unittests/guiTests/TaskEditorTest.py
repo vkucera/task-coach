@@ -71,13 +71,15 @@ class TaskEditorBySettingFocusMixin(TaskEditorSetterBase):
 
 class TaskEditorByClosingMixin(TaskEditorSetterBase):
     def setSubject(self, newSubject):
-        super(TaskEditorByClosingMixin, self).setSubject(newSubject)
+        page = super(TaskEditorByClosingMixin, self).setSubject(newSubject)
         self.editor.Close()
-
+        page._subjectSync.onAttributeEdited(DummyEvent())
+        
     def setDescription(self, newDescription):
-        super(TaskEditorByClosingMixin, self).setDescription(newDescription)
+        page = super(TaskEditorByClosingMixin, self).setDescription(newDescription)
         self.editor.Close()
-
+        page._descriptionSync.onAttributeEdited(DummyEvent())
+        
 
 class TaskEditorTestCase(test.wxTestCase):
     def setUp(self):
@@ -150,7 +152,7 @@ class EditTaskTestBase(object):
         return [self.task]
 
     def testEditSubject(self):
-        self.setSubject('Done')        
+        self.setSubject('Done')
         self.assertEqual('Done', self.task.subject())
 
     def testEditDescription(self):
