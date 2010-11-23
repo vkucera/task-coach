@@ -20,7 +20,6 @@ import test
 from taskcoachlib import patterns
 
 
-
 class EventTest(test.TestCase):
     def setUp(self):
         self.event = patterns.Event('eventtype', self, 'some value')
@@ -78,11 +77,11 @@ class EventTest(test.TestCase):
 
     def testAddSourceAndValues(self):
         self.event.addSource('source', 'value1', 'value2')
-        self.assertEqual(('value1', 'value2'), self.event.values('source'))
+        self.assertEqual(set(['value1', 'value2']), set(self.event.values('source')))
         
     def testExistingSourceAndValue(self):
         self.event.addSource(self, 'new value')
-        self.assertEqual(('some value', 'new value'), self.event.values())
+        self.assertEqual(set(['some value', 'new value']), set(self.event.values()))
 
     def testEventTypes(self):
         self.assertEqual(set(['eventtype']), self.event.types())
@@ -113,7 +112,7 @@ class EventTest(test.TestCase):
     def testAddSourceAndValuesForSpecificType(self):
         self.event.addSource('source', 'value1', 'value2', 
                              type='another eventtype')
-        self.assertEqual(('value1', 'value2'), self.event.values('source'))
+        self.assertEqual(set(['value1', 'value2']), set(self.event.values('source')))
         
     def testAddExistingSourceToAnotherType(self):
         self.event.addSource(self, type='another eventtype')

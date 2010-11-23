@@ -91,10 +91,8 @@ class Event(object):
             and values are added for a random type, i.e. only omit the type if 
             the event has only one type. '''
         type = kwargs.pop('type', self.type())
-        currentValues = list(self.__sourcesAndValuesByType.setdefault(type, {}).setdefault(source, tuple()))
-        for value in values:
-            if value not in currentValues:
-                currentValues.append(value)
+        currentValues = set(self.__sourcesAndValuesByType.setdefault(type, {}).setdefault(source, tuple()))
+        currentValues |= set(values)
         self.__sourcesAndValuesByType.setdefault(type, {})[source] = tuple(currentValues)
         
     def type(self):
