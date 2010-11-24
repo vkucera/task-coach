@@ -162,7 +162,7 @@ class Viewer(wx.Panel):
             return
         self.__curselection = self.widget.curselection()
         # Be sure all wx events are handled before we notify our observers:
-        event = patterns.Event(self.selectEventType(), self, self.__curselection)
+        event = patterns.Event(self.selectEventType(), self, *self.__curselection)
         wx.CallAfter(event.send)
 
     def freeze(self):
