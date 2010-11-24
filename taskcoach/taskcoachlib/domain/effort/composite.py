@@ -178,10 +178,14 @@ class CompositeEffort(BaseCompositeEffort):
 
 
 class CompositeEffortPerPeriod(BaseCompositeEffort):
-    def __init__(self, start, stop, taskList):
+    def __init__(self, start, stop, taskList, initialEffort=None):
         self.taskList = taskList
         super(CompositeEffortPerPeriod, self).__init__(None, start, stop)
-        self._invalidateCache()
+        if initialEffort:
+            assert self._inPeriod(initialEffort)
+            self.__effortCache = [initialEffort]
+        else:
+            self._invalidateCache()
         patterns.Publisher().registerObserver(self.onTimeSpentChanged,
             eventType='task.timeSpent')
         patterns.Publisher().registerObserver(self.onRevenueChanged,
@@ -189,6 +193,10 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
         for eventType in self.taskList.modificationEventTypes():
             patterns.Publisher().registerObserver(self.onTaskAddedOrRemoved, eventType,
                                                   eventSource=self.taskList)
+            
+    def addEffort(self, anEffort):
+        assert self._inPeriod(anEffort)
+        self.__effortCache.append(anEffort)
 
     def onTaskAddedOrRemoved(self, event):
         if any(task.efforts() for task in event.values()):

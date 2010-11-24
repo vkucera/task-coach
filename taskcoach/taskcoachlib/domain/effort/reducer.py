@@ -135,8 +135,9 @@ class EffortAggregator(patterns.SetDecorator,
     def createCompositeForPeriod(self, anEffort):
         key = self.keyForPeriod(anEffort)
         if key in self.__composites:
+            self.__composites[key].addEffort(anEffort)
             return []
-        newCompositePerPeriod = composite.CompositeEffortPerPeriod(key[0], key[1], self.observable())
+        newCompositePerPeriod = composite.CompositeEffortPerPeriod(key[0], key[1], self.observable(), anEffort)
         self.__composites[key] = newCompositePerPeriod
         return [newCompositePerPeriod]
 
