@@ -40,33 +40,35 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         kwargs['description'] = description
         kwargs['categories'] = categories
         super(Task, self).__init__(*args, **kwargs)
-        self.__dueDateTime = base.Attribute(dueDateTime or date.DateTime(), self, 
-                                            self.dueDateTimeEvent)
-        self.__startDateTime = base.Attribute(startDateTime or date.DateTime(), self, 
-                                              self.startDateTimeEvent)
-        self.__completionDateTime = base.Attribute(completionDateTime or date.DateTime(), 
-                                                   self, self.completionDateTimeEvent)
+        Attribute, SetAttribute = base.Attribute, base.SetAttribute
+        self.__dueDateTime = Attribute(dueDateTime or date.DateTime(), self, 
+                                       self.dueDateTimeEvent)
+        self.__startDateTime = Attribute(startDateTime or date.DateTime(), self, 
+                                         self.startDateTimeEvent)
+        self.__completionDateTime = Attribute(completionDateTime or date.DateTime(), 
+                                              self, self.completionDateTimeEvent)
         percentageComplete = 100 if self.__completionDateTime.get() != date.DateTime() else percentageComplete
-        self.__percentageComplete = base.Attribute(percentageComplete, 
-                                                   self, self.percentageCompleteEvent)
-        self.__budget = base.Attribute(budget or date.TimeDelta(), self, 
-                                       self.budgetEvent)
+        self.__percentageComplete = Attribute(percentageComplete, 
+                                              self, self.percentageCompleteEvent)
+        self.__budget = Attribute(budget or date.TimeDelta(), self, 
+                                  self.budgetEvent)
         self._efforts = efforts or []
-        self.__priority = base.Attribute(priority, self, self.priorityEvent)
-        self.__hourlyFee = base.Attribute(hourlyFee, self, self.hourlyFeeEvent)
-        self.__fixedFee = base.Attribute(fixedFee, self, self.fixedFeeEvent)
-        self.__reminder = base.Attribute(reminder, self, self.reminderEvent)
+        self.__priority = Attribute(priority, self, self.priorityEvent)
+        self.__hourlyFee = Attribute(hourlyFee, self, self.hourlyFeeEvent)
+        self.__fixedFee = Attribute(fixedFee, self, self.fixedFeeEvent)
+        self.__reminder = Attribute(reminder, self, self.reminderEvent)
         self._recurrence = date.Recurrence() if recurrence is None else recurrence
-        self.__prerequisites = base.SetAttribute(prerequisites or [], self, 
-                                                 changeEvent=self.prerequisitesEvent)
-        self.__dependencies = base.SetAttribute(dependencies or [], self, 
-                                                changeEvent=self.dependenciesEvent)
+        self.__prerequisites = SetAttribute(prerequisites or [], self, 
+                                            changeEvent=self.prerequisitesEvent)
+        self.__dependencies = SetAttribute(dependencies or [], self, 
+                                           changeEvent=self.dependenciesEvent)
         self._shouldMarkCompletedWhenAllChildrenCompleted = \
             shouldMarkCompletedWhenAllChildrenCompleted
         for effort in self._efforts:
             effort.setTask(self)
+        registerObserver = patterns.Publisher().registerObserver
         for eventType in 'active', 'inactive', 'completed', 'duesoon', 'overdue':
-            patterns.Publisher().registerObserver(self.__computeRecursiveForegroundColor, 'color.%stasks')
+            registerObserver(self.__computeRecursiveForegroundColor, 'color.%stasks')
             
     @patterns.eventSource
     def __setstate__(self, state, event=None):
