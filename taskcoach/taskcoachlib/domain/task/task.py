@@ -40,14 +40,16 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         kwargs['description'] = description
         kwargs['categories'] = categories
         super(Task, self).__init__(*args, **kwargs)
+        self.__dueSoonHours = self.settings.getint('behavior', 'duesoonhours') # pylint: disable-msg=E1101
         Attribute, SetAttribute = base.Attribute, base.SetAttribute
-        self.__dueDateTime = Attribute(dueDateTime or date.DateTime(), self, 
+        maxDateTime = date.DateTime()
+        self.__dueDateTime = Attribute(dueDateTime or maxDateTime, self, 
                                        self.dueDateTimeEvent)
-        self.__startDateTime = Attribute(startDateTime or date.DateTime(), self, 
+        self.__startDateTime = Attribute(startDateTime or maxDateTime, self, 
                                          self.startDateTimeEvent)
-        self.__completionDateTime = Attribute(completionDateTime or date.DateTime(), 
+        self.__completionDateTime = Attribute(completionDateTime or maxDateTime, 
                                               self, self.completionDateTimeEvent)
-        percentageComplete = 100 if self.__completionDateTime.get() != date.DateTime() else percentageComplete
+        percentageComplete = 100 if self.__completionDateTime.get() != maxDateTime else percentageComplete
         self.__percentageComplete = Attribute(percentageComplete, 
                                               self, self.percentageCompleteEvent)
         self.__budget = Attribute(budget or date.TimeDelta(), self, 
@@ -69,7 +71,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         registerObserver = patterns.Publisher().registerObserver
         for eventType in 'active', 'inactive', 'completed', 'duesoon', 'overdue':
             registerObserver(self.__computeRecursiveForegroundColor, 'color.%stasks')
-            
+        registerObserver(self.onDueSoonHoursChanged, 'behavior.duesoonhours')
+                
     @patterns.eventSource
     def __setstate__(self, state, event=None):
         super(Task, self).__setstate__(state, event=event)
@@ -375,9 +378,16 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return not self.inactive() and not self.completed()
 
     def dueSoon(self):
-        hours = self.settings.getint('behavior', 'duesoonhours') # pylint: disable-msg=E1101
-        return (0 <= self.timeLeft().hours() < hours and not self.completed())
-
+        return (0 <= self.timeLeft().hours() < self.__dueSoonHours and not self.completed())
+    
+    def onDueSoonHoursChanged(self, event):
+        oldDueSoon = self.dueSoon()
+        self.__dueSoonHours = self.settings.getint('behavior', 'duesoonhours') # pylint: disable-msg=E1101
+        newDueSoon = self.dueSoon()
+        if oldDueSoon != newDueSoon:
+            self.recomputeAppearance()
+            patterns.Event(self.iconChangedEventType(), self, self.icon()).send()
+            
    # effort related methods:
 
     def efforts(self, recursive=False):
