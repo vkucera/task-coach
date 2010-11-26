@@ -51,6 +51,12 @@ class BaseCompositeEffort(base.BaseEffort): # pylint: disable-msg=W0223
         return sum((effort.duration() for effort in \
                     self._getEfforts(recursive)), date.TimeDelta())
 
+    def isBeingTracked(self, recursive=False): # pylint: disable-msg=W0613
+        for effort in self._getEfforts():
+            if effort.isBeingTracked():
+                return True
+        return False
+
     def durationDay(self, dayOffset):
         ''' Return the duration of this composite effort on a specific day. '''
         startOfDay = self.getStart() + date.TimeDelta(days=dayOffset)
@@ -139,13 +145,6 @@ class CompositeEffort(BaseCompositeEffort):
     def _getEfforts(self, recursive=True): # pylint: disable-msg=W0221
         return self.__effortCache[recursive]
         
-    def isBeingTracked(self, recursive=False): # pylint: disable-msg=W0613
-        return self.nrBeingTracked() > 0
-
-    def nrBeingTracked(self):
-        return len([effort for effort in self._getEfforts() \
-            if effort.isBeingTracked()])
-        
     def mayContain(self, effort):
         ''' Return whether effort would be contained in this composite effort 
             if it existed. '''
@@ -228,12 +227,6 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
     def categories(self, *args, **kwargs):
         return [] 
         
-    def isBeingTracked(self, recursive=False): # pylint: disable-msg=W0613
-        for effort in self._getEfforts():
-            if effort.isBeingTracked():
-                return True
-        return False
-
     def __repr__(self):
         return 'CompositeEffortPerPeriod(start=%s, stop=%s, efforts=%s)'%\
             (self.getStart(), self.getStop(),

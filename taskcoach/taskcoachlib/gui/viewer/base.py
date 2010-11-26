@@ -474,10 +474,14 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):  # pylint: disable-msg=
     def __init__(self, *args, **kwargs):
         self.__trackedItems = set()
         super(UpdatePerSecondViewer, self).__init__(*args, **kwargs)
-        patterns.Publisher().registerObserver(self.onStartTracking,
-            eventType=self.trackStartEventType())
-        patterns.Publisher().registerObserver(self.onStopTracking,
-            eventType=self.trackStopEventType())
+        self.registerObserver(self.onStartTracking,
+                              eventType=self.trackStartEventType())
+        self.registerObserver(self.onStopTracking,
+                              eventType=self.trackStopEventType())
+        self.registerObserver(self.onItemAdded, 
+                              eventType=self.presentation().addItemEventType())
+        self.registerObserver(self.onItemRemoved, 
+                              eventType=self.presentation().removeItemEventType())
         self.setTrackedItems(self.trackedItems(self.presentation()))
         
     def setPresentation(self, presentation):
@@ -489,10 +493,16 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):  # pylint: disable-msg=
     
     def trackStopEventType(self):
         raise NotImplementedError
-
-    def onPresentationChanged(self, event):
-        self.setTrackedItems(self.trackedItems(self.presentation()))
-        super(UpdatePerSecondViewer, self).onPresentationChanged(event)
+    
+    def onItemAdded(self, event):
+        startedItems = self.trackedItems(event.values())
+        self.addTrackedItems(startedItems)
+        self.refreshItems(*startedItems)
+        
+    def onItemRemoved(self, event): 
+        stoppedItems = self.trackedItems(event.values())
+        self.removeTrackedItems(stoppedItems)
+        self.refreshItems(*stoppedItems)
 
     def onStartTracking(self, event):
         startedItems = [item for item in event.sources() \
