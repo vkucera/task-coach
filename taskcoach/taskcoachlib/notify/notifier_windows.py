@@ -25,7 +25,10 @@ class SnarlNotifier(AbstractNotifier):
         return u'Snarl'
 
     def isAvailable(self):
-        return bool(snarl.snGetVersion())
+        try:
+            return bool(snarl.snGetVersion())
+        except:
+            return False
 
     def notify(self, title, summary, bitmap, **kwargs):
         # Hum. Snarl needs a file.

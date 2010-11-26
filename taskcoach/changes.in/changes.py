@@ -22,12 +22,13 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.5', 'November 24, 2010',
+Release('1.2.5', 'November 26, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Fixed another memory leak in the calendar view.''',
             '3108959'),
-        Bug('''Small performance improvements.''', '3117375')
+        Bug('''Small performance improvements.''', '3117375').
+        Bug('''Don't throw exception when Snarl is not available.''', '3119740')
         ]
     ),
 
