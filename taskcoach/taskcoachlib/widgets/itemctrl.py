@@ -206,6 +206,7 @@ class Column(object):
             self.defaultDescriptionRenderer)
         self.__resizeCallback = kwargs.pop('resizeCallback', None)
         self.__alignment = kwargs.pop('alignment', wx.LIST_FORMAT_LEFT)
+        self.__hasImages = 'imageIndicesCallback' in kwargs
         self.__imageIndicesCallback = kwargs.pop('imageIndicesCallback',
             self.defaultImageIndices)
         # NB: because the header image is needed for sorting a fixed header
@@ -253,6 +254,9 @@ class Column(object):
         
     def imageIndices(self, *args, **kwargs):
         return self.__imageIndicesCallback(*args, **kwargs)
+    
+    def hasImages(self):
+        return self.__hasImages
         
     def __eq__(self, other):
         return self.name() == other.name()

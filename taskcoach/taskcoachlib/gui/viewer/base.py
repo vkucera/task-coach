@@ -681,6 +681,9 @@ class ViewerWithColumns(Viewer): # pylint: disable-msg=W0223
         column = self.visibleColumns()[column]
         return column.imageIndices(item)
     
+    def hasColumnImages(self, column):
+        return self.visibleColumns()[column].hasImages()
+    
     def subjectImageIndices(self, item):
         normalIcon = item.icon(recursive=True)
         selectedIcon = item.selectedIcon(recursive=True) or normalIcon

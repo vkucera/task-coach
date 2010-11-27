@@ -191,6 +191,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         self.StopEditing()
         self.__selection = self.curselection()
         self.DeleteAllItems()
+        self.__columnsWithImages = [index for index in range(self.GetColumnCount()) if self.__adapter.hasColumnImages(index)]
         rootItem = self.GetRootItem()
         if not rootItem:
             rootItem = self.AddRoot('Hidden root')
@@ -252,8 +253,9 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         for columnIndex in range(self.GetColumnCount()):
             self._refreshColumn(item, domainObject, columnIndex, check=check)
                 
-    def _refreshColumn(self, *args, **kwargs):
-        self._refreshAspects(('Text', 'Image'), *args, **kwargs)
+    def _refreshColumn(self, item, domainObject, columnIndex, check=False):
+        aspects = ('Text', 'Image') if columnIndex in self.__columnsWithImages else ('Text',)
+        self._refreshAspects(aspects, item, domainObject, columnIndex, check=check)
             
     def _refreshText(self, item, domainObject, columnIndex, check=False):
         text = self.__adapter.getItemText(domainObject, columnIndex)

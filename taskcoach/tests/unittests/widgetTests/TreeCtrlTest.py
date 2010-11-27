@@ -35,6 +35,7 @@ class TreeCtrlTestCase(test.wxTestCase):
         self.collapsedItems = []
         self.frame.children = lambda item: self.children.get(item, [])
         self.frame.getItemText = lambda item, column: item.subject()
+        self.frame.hasColumnImages = lambda column: False
         self.frame.getItemImages = lambda item, column: {wx.TreeItemIcon_Normal: -1}
         self.frame.getIsItemChecked = lambda item: False
         self.frame.getItemExpanded = lambda item: item not in self.collapsedItems

@@ -129,21 +129,21 @@ class SynchronizedObject(object):
         
 class Object(SynchronizedObject):
     def __init__(self, *args, **kwargs):
-        self.__subject = attribute.Attribute(kwargs.pop('subject', ''), self, 
-                                             self.subjectChangedEvent)
-        self.__description = attribute.Attribute(kwargs.pop('description', ''), 
-                                                 self,
-                                                 self.descriptionChangedEvent)
-        self.__fgColor = attribute.Attribute(kwargs.pop('fgColor', None), self, 
-                                             self.foregroundColorChangedEvent)
-        self.__bgColor = attribute.Attribute(kwargs.pop('bgColor', None), self,
-                                             self.backgroundColorChangedEvent)
-        self.__font = attribute.Attribute(kwargs.pop('font', None), self,
-                                          self.fontChangedEvent)
-        self.__icon = attribute.Attribute(kwargs.pop('icon', ''), self,
-                                          self.iconChangedEvent)
-        self.__selectedIcon = attribute.Attribute(kwargs.pop('selectedIcon', ''), self,
-                                                  self.selectedIconChangedEvent)
+        Attribute = attribute.Attribute
+        self.__subject = Attribute(kwargs.pop('subject', ''), self, 
+                                   self.subjectChangedEvent)
+        self.__description = Attribute(kwargs.pop('description', ''), self,
+                                       self.descriptionChangedEvent)
+        self.__fgColor = Attribute(kwargs.pop('fgColor', None), self, 
+                                   self.foregroundColorChangedEvent)
+        self.__bgColor = Attribute(kwargs.pop('bgColor', None), self,
+                                   self.backgroundColorChangedEvent)
+        self.__font = Attribute(kwargs.pop('font', None), self,
+                                self.fontChangedEvent)
+        self.__icon = Attribute(kwargs.pop('icon', ''), self,
+                                self.iconChangedEvent)
+        self.__selectedIcon = Attribute(kwargs.pop('selectedIcon', ''), self,
+                                        self.selectedIconChangedEvent)
         self.__id = kwargs.pop('id', None) or '%s:%s'%(id(self), time.time())
         # FIXME: Not a valid XML id
         # FIXME: When dropping support for python 2.4, use the uuid module
@@ -369,9 +369,7 @@ class Object(SynchronizedObject):
 
 class CompositeObject(Object, patterns.ObservableComposite):
     def __init__(self, *args, **kwargs):
-        self.__expandedContexts = set()
-        for context in kwargs.pop('expandedContexts', []):
-            self.__expandedContexts.add(context)
+        self.__expandedContexts = set(kwargs.pop('expandedContexts', []))
         super(CompositeObject, self).__init__(*args, **kwargs)
 
     def __getcopystate__(self):
