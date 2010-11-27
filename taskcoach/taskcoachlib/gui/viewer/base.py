@@ -676,10 +676,18 @@ class ViewerWithColumns(Viewer): # pylint: disable-msg=W0223
         except AttributeError:
             pass
         return result
-
-    def getItemImage(self, item, which, column=0): 
+    
+    def getItemImages(self, item, column=0):
         column = self.visibleColumns()[column]
-        return column.imageIndex(item, which) 
+        return column.imageIndices(item)
+    
+    def subjectImageIndices(self, item):
+        normalIcon = item.icon(recursive=True)
+        selectedIcon = item.selectedIcon(recursive=True) or normalIcon
+        normalImageIndex = self.imageIndex[normalIcon] if normalIcon else -1
+        selectedImageIndex = self.imageIndex[selectedIcon] if selectedIcon else -1
+        return {wx.TreeItemIcon_Normal: normalImageIndex,
+                wx.TreeItemIcon_Expanded: selectedImageIndex} 
             
     def __startObserving(self, eventTypes):
         for eventType in eventTypes:
@@ -692,11 +700,10 @@ class ViewerWithColumns(Viewer): # pylint: disable-msg=W0223
         eventTypesOfVisibleColumns = []
         for column in self.visibleColumns():
             eventTypesOfVisibleColumns.extend(column.eventTypes())
+        removeObserver = patterns.Publisher().removeObserver
         for eventType in eventTypes:
-            if eventType in eventTypesOfVisibleColumns:
-                continue
-            patterns.Publisher().removeObserver(self.onAttributeChanged, 
-                eventType=eventType)
+            if eventType not in eventTypesOfVisibleColumns:
+                removeObserver(self.onAttributeChanged, eventType=eventType)
 
     def renderCategories(self, item):
         return self.renderSubjectsOfRelatedItems(item, item.categories)        

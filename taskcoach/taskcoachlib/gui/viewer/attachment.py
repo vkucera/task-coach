@@ -71,7 +71,7 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.SortableViewerWithC
         return [widgets.Column('type', _('Type'), 
                                '',
                                width=self.getColumnWidth('type'),
-                               imageIndexCallback=self.typeImageIndex,
+                               imageIndicesCallback=self.typeImageIndices,
                                renderCallback=lambda item: '',
                                resizeCallback=self.onResizeColumn),
                 widgets.Column('subject', _('Subject'), 
@@ -94,7 +94,7 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.SortableViewerWithC
                                attachment.Attachment.notesChangedEventType(), # pylint: disable-msg=E1101
                                width=self.getColumnWidth('notes'),
                                alignment=wx.LIST_FORMAT_LEFT,
-                               imageIndexCallback=self.noteImageIndex,
+                               imageIndicesCallback=self.noteImageIndices,
                                headerImageIndex=self.imageIndex['note_icon'],
                                renderCallback=lambda item: '',
                                resizeCallback=self.onResizeColumn),
@@ -126,18 +126,20 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.SortableViewerWithC
                                                     viewer=self, settings=self.settings)]
         return commands
 
-    def typeImageIndex(self, anAttachment, which, exists=os.path.exists): # pylint: disable-msg=W0613
+    def typeImageIndices(self, anAttachment, exists=os.path.exists): # pylint: disable-msg=W0613
         if anAttachment.type_ == 'file':
             attachmentBase = self.settings.get('file', 'attachmentbase')
             if exists(anAttachment.normalizedLocation(attachmentBase)):
-                return self.imageIndex['fileopen']
-            return self.imageIndex['fileopen_red']
-
-        try:
-            return self.imageIndex[{ 'uri': 'earth_blue_icon',
-                                     'mail': 'envelope_icon'}[anAttachment.type_]]
-        except KeyError:
-            return -1
+                index = self.imageIndex['fileopen']
+            else:
+                index = self.imageIndex['fileopen_red']
+        else:
+            try:
+                index = self.imageIndex[{'uri': 'earth_blue_icon',
+                                         'mail': 'envelope_icon'}[anAttachment.type_]]
+            except KeyError:
+                index = -1
+        return {wx.TreeItemIcon_Normal: index}
     
     def deleteItemCommand(self):
         return command.DeleteAttachmentCommand(self.presentation(), self.curselection())

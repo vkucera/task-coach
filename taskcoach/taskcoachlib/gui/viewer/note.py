@@ -114,13 +114,13 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self, 
                     value=name.lower(), menuText=sortMenuText, 
                     helpText=sortHelpText),
-                imageIndexCallback=imageIndexCallback,
+                imageIndicesCallback=imageIndicesCallback,
                 *eventTypes) \
-            for name, columnHeader, sortMenuText, sortHelpText, eventTypes, renderCallback, imageIndexCallback in \
+            for name, columnHeader, sortMenuText, sortHelpText, eventTypes, renderCallback, imageIndicesCallback in \
             ('subject', _('Subject'), _('&Subject'), _('Sort notes by subject'), 
                 (note.Note.subjectChangedEventType(),), 
                 lambda note: note.subject(recursive=False), 
-                self.subjectImageIndex),
+                self.subjectImageIndices),
             ('description', _('Description'), _('&Description'), 
                 _('Sort notes by description'), 
                 (note.Note.descriptionChangedEventType(),), 
@@ -136,23 +136,12 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
             note.Note.attachmentsChangedEventType(), # pylint: disable-msg=E1101
             width=self.getColumnWidth('attachments'),
             alignment=wx.LIST_FORMAT_LEFT,
-            imageIndexCallback=self.attachmentImageIndex,
+            imageIndicesCallback=self.attachmentImageIndices,
             headerImageIndex=self.imageIndex['paperclip_icon'],
             renderCallback=lambda note: '')
         columns.insert(2, attachmentsColumn)
         return columns
 
-    def getImageIndices(self, note):
-        bitmap = note.icon(recursive=True)
-        bitmap_selected = note.selectedIcon(recursive=True) or bitmap
-        return self.imageIndex[bitmap] if bitmap else -1, self.imageIndex[bitmap_selected] if bitmap_selected else -1
-
-    def subjectImageIndex(self, note, which):
-        normalImageIndex, expandedImageIndex = self.getImageIndices(note)
-        expanded = which in [wx.TreeItemIcon_Expanded,
-                             wx.TreeItemIcon_SelectedExpanded]
-        return expandedImageIndex if expanded else normalImageIndex
-    
     def getItemTooltipData(self, item, column=0):
         if self.settings.getboolean('view', 'descriptionpopups'):
             lines = [line.rstrip('\r') for line in item.description().split('\n')] 

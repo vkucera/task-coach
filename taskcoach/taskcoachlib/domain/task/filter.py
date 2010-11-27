@@ -33,14 +33,13 @@ class ViewFilter(base.Filter):
         super(ViewFilter, self).__init__(*args, **kwargs)
         
     def registerObservers(self):
-        publisher = patterns.Publisher()
+        registerObserver = patterns.Publisher().registerObserver
         for eventType in ('task.dueDateTime', 'task.startDateTime', 
                           'task.completionDateTime', 'task.prerequisites',
                           task.Task.addChildEventType(),
                           task.Task.removeChildEventType(),
                           'clock.minute'):
-            publisher.registerObserver(self.onTaskStatusChange,
-                eventType=eventType)
+            registerObserver(self.onTaskStatusChange, eventType=eventType)
 
     def onTaskStatusChange(self, event): # pylint: disable-msg=W0613
         self.reset()

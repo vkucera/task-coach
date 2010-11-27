@@ -102,8 +102,8 @@ class TaskViewerTestCase(test.wxTestCase):
     def getFirstItemFont(self):
         return self.viewer.widget.GetItemFont(self.firstItem())
     
-    def getFirstItemIcon(self):
-        return self.viewer.widget.GetItemImage(self.firstItem())
+    def getFirstItemIcon(self, column=0):
+        return self.viewer.widget.GetItemImage(self.firstItem(), column=column)
 
     def showColumn(self, columnName, show=True):
         self.viewer.showColumnByName(columnName, show)
@@ -282,7 +282,9 @@ class CommonTestsMixin(object):
                        dependencies=(1, _('Dependencies')),
                        categories=(1, _('Categories')),
                        percentageComplete=(3, _('% complete')),
-                       recurrence=(3, _('Recurrence')))
+                       recurrence=(3, _('Recurrence')),
+                       notes=(1, ''),
+                       attachments=(1, ''))
         for column in columns:
             columnIndex, expectedHeader = columns[column] 
             self.showColumn(column)
@@ -368,7 +370,15 @@ class CommonTestsMixin(object):
         self.showColumn('recurrence')
         self.taskList.append(taskWithRecurrence)
         self.assertEqual('Every other week', self.getItemText(0,3))
-
+        
+    def testRenderAttachment(self):
+        att = attachment.FileAttachment('whatever')
+        self.task.addAttachment(att)
+        self.taskList.append(self.task)
+        self.showColumn('attachments')
+        self.assertEqual(self.viewer.imageIndex['paperclip_icon'], 
+                         self.getFirstItemIcon(1))
+        
     def testOneDayLeft(self):
         self.showColumn('timeLeft')
         timeLeft = date.TimeDelta(hours=25, seconds=30)

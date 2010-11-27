@@ -206,8 +206,8 @@ class Column(object):
             self.defaultDescriptionRenderer)
         self.__resizeCallback = kwargs.pop('resizeCallback', None)
         self.__alignment = kwargs.pop('alignment', wx.LIST_FORMAT_LEFT)
-        self.__imageIndexCallback = kwargs.pop('imageIndexCallback', 
-            self.defaultImageIndex)
+        self.__imageIndicesCallback = kwargs.pop('imageIndicesCallback',
+            self.defaultImageIndices)
         # NB: because the header image is needed for sorting a fixed header
         # image cannot be combined with a sortable column
         self.__headerImageIndex = kwargs.pop('headerImageIndex', -1)
@@ -248,11 +248,11 @@ class Column(object):
     def alignment(self):
         return self.__alignment
     
-    def defaultImageIndex(self, *args, **kwargs): # pylint: disable-msg=W0613
-        return -1
-    
-    def imageIndex(self, *args, **kwargs):
-        return self.__imageIndexCallback(*args, **kwargs)
+    def defaultImageIndices(self, *args, **kwargs): # pylint: disable-msg=W0613
+        return {wx.TreeItemIcon_Normal: -1}
+        
+    def imageIndices(self, *args, **kwargs):
+        return self.__imageIndicesCallback(*args, **kwargs)
         
     def __eq__(self, other):
         return self.name() == other.name()

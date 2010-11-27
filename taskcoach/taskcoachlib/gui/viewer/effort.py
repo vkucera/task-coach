@@ -292,8 +292,8 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
             commands.insert(-2, uiCommand)
         return commands
 
-    def getItemImage(self, index, which, column=0): # pylint: disable-msg=W0613
-        return -1
+    def getItemImages(self, index, column=0): # pylint: disable-msg=W0613
+        return {wx.TreeItemIcon_Normal: -1}
     
     def curselection(self):
         selection = super(EffortViewer, self).curselection()
