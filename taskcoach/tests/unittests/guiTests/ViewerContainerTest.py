@@ -16,19 +16,24 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import test, wx
 from unittests import dummy
 from taskcoachlib import gui, config, widgets, patterns, persistence
 from taskcoachlib.domain import task
 
 
 class DummyPane(object):
+    optionActive = False
+
     def __init__(self, window):
         self.window = window
         
     def IsToolbar(self):
         return False
         
+    def HasFlag(self, *args):
+        return False
+
         
 class DummyEvent(object):
     def __init__(self, selection=0, window=None):
@@ -47,10 +52,20 @@ class DummyEvent(object):
         pass
 
 
-class MainWindow(gui.MainWindow):
-    def canCreateTaskBarIcon(self):
-        return False
-    
+class DummyManager(object):
+    def GetPane(self, *args):
+        return DummyPane(None)
+
+
+class DummyMainWindow(wx.Frame):
+    manager = DummyManager()
+
+    def AddPage(self, *args):
+        pass
+
+    def SetSelection(self, *args):
+        pass
+
     
 class ViewerContainerTest(test.wxTestCase):
     def setUp(self):
@@ -59,8 +74,8 @@ class ViewerContainerTest(test.wxTestCase):
         task.Task.settings = self.settings = config.Settings(load=False)
         self.settings.set('view', 'viewerwithdummywidgetcount', '2', new=True)
         self.taskFile = persistence.TaskFile()
-        self.mainWindow = MainWindow(None, self.taskFile, self.settings)
-        self.container = gui.viewer.ViewerContainer(self.mainWindow, 
+        self.mainWindow = DummyMainWindow(None)
+        self.container = gui.viewer.ViewerContainer(self.mainWindow,
             self.settings, 'mainviewer')
         self.viewer1 = self.createViewer('taskviewer1')
         self.container.addViewer(self.viewer1)

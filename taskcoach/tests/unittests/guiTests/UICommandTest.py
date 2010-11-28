@@ -69,7 +69,7 @@ class UICommandTest(test.wxTestCase):
 
 class wxTestCaseWithFrameAsTopLevelWindow(test.wxTestCase):
     def setUp(self):
-        self.settings = config.Settings(load=False)
+        task.Task.settings = self.settings = config.Settings(load=False)
         wx.GetApp().SetTopWindow(self.frame)
         self.taskFile = self.frame.taskFile = persistence.TaskFile()
 
@@ -295,6 +295,7 @@ class OpenAllAttachmentsTest(test.TestCase):
     def testNoAttachments(self):
         self.openAll.doCommand(None)
         
+    @test.skipOnPlatform('__WXMAC__')
     def testNonexistingAttachment(self): # pragma: no cover
         self.viewer.selection[0].addAttachment(attachment.FileAttachment('Attachment'))
         result = self.openAll.doCommand(None, showerror=self.showerror)

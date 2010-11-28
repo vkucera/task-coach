@@ -18,11 +18,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test
 from unittests import asserts
-from taskcoachlib import patterns, command
+from taskcoachlib import patterns, command, config
+from taskcoachlib.domain import task
 
 
 class CommandTestCase(test.wxTestCase, asserts.CommandAssertsMixin):
     list = []
+    
+    def setUp(self):
+        super(CommandTestCase, self).setUp()
+        task.Task.settings = config.Settings(load=False)
     
     def tearDown(self):
         super(CommandTestCase, self).tearDown()

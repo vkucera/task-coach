@@ -67,6 +67,8 @@ class MainWindowTestCase(test.wxTestCase):
         pass
 
     def tearDown(self):
+        if '__WXMAC__' == wx.Platform:
+            self.mainwindow.OnQuit() # Stop power monitoring thread
         del self.mainwindow
         super(MainWindowTestCase, self).tearDown()
         
@@ -152,10 +154,10 @@ class MainWindowIconizedTest(MainWindowTestCase):
     def testWindowSizeShouldnotChangeWhenReceivingChangeSizeEvent(self):
         event = wx.SizeEvent((100, 20))
         process = self.mainwindow.ProcessEvent
-        if '__WXGTK__' == wx.Platform:
-            wx.CallAfter(process, event) # pragma: no cover
-        else:
+        if '__WXMSW__' == wx.Platform:
             process(event) # pragma: no cover
+        else:
+            wx.CallAfter(process, event) # pragma: no cover
         self.assertEqual((700, self.expectedHeight()),
                          eval(self.settings.get('window', 'size')))
 
