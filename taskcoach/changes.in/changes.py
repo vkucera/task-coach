@@ -22,15 +22,21 @@ from changetypes import *
 
 releases = [
 
+Release('1.2.6', 'November 28, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Avoid the "Pas de sujet" bug when dropping a mail from Outlook on
+a French Windows OS.''')
+        ]
+    ),
+    
 Release('1.2.5', 'November 28, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Fixed another memory leak in the calendar view.''',
             '3108959'),
         Bug('''Some performance improvements.''', '3117375'),
-        Bug('''Don't throw exception when Snarl is not available.''', '3119740'),
-        Bug('''Avoid the "Pas de sujet" bug when dropping a mail from Outlook on
-a French Windows OS.'''),
+        Bug('''Don't throw exception when Snarl is not available.''', '3119740')
         ]
     ),
 
