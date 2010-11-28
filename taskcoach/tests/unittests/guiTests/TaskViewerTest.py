@@ -54,7 +54,7 @@ class TaskViewerTestCase(test.wxTestCase):
         self.newColor = (100, 200, 100, 255)
         attachment.Attachment.attdir = os.getcwd()
         self.originalLocale = locale.getlocale(locale.LC_ALL)
-        tmpLocale = os.environ['LC_ALL'] if 'LC_ALL' in os.environ else 'en_US'
+        tmpLocale = os.environ['LC_ALL'] if 'LC_ALL' in os.environ else ('en_US' if '__WXMAC__' == wx.Platform else '')
         locale.setlocale(locale.LC_ALL, tmpLocale)
 
     def tearDown(self):
