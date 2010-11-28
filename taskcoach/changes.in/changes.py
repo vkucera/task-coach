@@ -28,7 +28,9 @@ Release('1.2.5', 'November 28, 2010',
         Bug('''Fixed another memory leak in the calendar view.''',
             '3108959'),
         Bug('''Some performance improvements.''', '3117375'),
-        Bug('''Don't throw exception when Snarl is not available.''', '3119740')
+        Bug('''Don't throw exception when Snarl is not available.''', '3119740'),
+        Bug('''Avoid the "Pas de sujet" bug when dropping a mail from Outlook on
+a French Windows OS.'''),
         ]
     ),
 
