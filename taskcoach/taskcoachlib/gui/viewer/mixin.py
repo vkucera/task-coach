@@ -20,6 +20,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import wx
 from taskcoachlib import command, patterns
 from taskcoachlib.domain import base, task, category, attachment
 from taskcoachlib.i18n import _
@@ -443,11 +444,13 @@ class AttachmentDropTargetMixin(object):
 
 
 class NoteColumnMixin(object):
-    def noteImageIndex(self, item, which): # pylint: disable-msg=W0613
-        return self.imageIndex['note_icon'] if item.notes() else -1
+    def noteImageIndices(self, item):
+        index = self.imageIndex['note_icon'] if item.notes() else -1
+        return {wx.TreeItemIcon_Normal: index}
     
 
 class AttachmentColumnMixin(object):    
-    def attachmentImageIndex(self, item, which): # pylint: disable-msg=W0613
-        return self.imageIndex['paperclip_icon'] if item.attachments() else -1
+    def attachmentImageIndices(self, item): # pylint: disable-msg=W0613
+        index = self.imageIndex['paperclip_icon'] if item.attachments() else -1
+        return {wx.TreeItemIcon_Normal: index}
 

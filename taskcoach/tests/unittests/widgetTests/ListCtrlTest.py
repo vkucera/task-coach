@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import test, wx
 from unittests import dummy
 from taskcoachlib import widgets
 
@@ -30,7 +30,7 @@ class VirtualListCtrlTestCase(test.wxTestCase):
         self.frame.getIndexOfItem = lambda item: item if type(item) == type(0) else 0
         self.frame.getItemText = lambda item, column: ''
         self.frame.getItemTooltipData = lambda item: []
-        self.frame.getItemImage = lambda item, which, column: None
+        self.frame.getItemImages = lambda item, column: {wx.TreeItemIcon_Normal: -1}
         return widgets.ListCtrl(self.frame, self.columns, self.onSelect, 
             dummy.DummyUICommand())
 

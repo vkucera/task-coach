@@ -122,23 +122,29 @@ class SearchFilter(Filter):
         # pylint: disable-msg=W0201
         self.__includeSubItems = includeSubItems
         self.__searchDescription = searchDescription
+        self.__searchPredicate = self.__compileSearchPredicate(searchString, matchCase)
+        if doReset:
+            self.reset()
+
+    @staticmethod
+    def __compileSearchPredicate(searchString, matchCase):
+        if not searchString:
+            return ''
         flag = 0 if matchCase else re.IGNORECASE
         try:    
             rx = re.compile(searchString, flag)
         except sre_constants.error:
             if matchCase:
-                self.__searchPredicate = lambda x: x.find(searchString) != -1
+                return lambda x: x.find(searchString) != -1
             else:
-                self.__searchPredicate = lambda x: x.lower().find(searchString.lower()) != -1
+                return lambda x: x.lower().find(searchString.lower()) != -1
         else:
-            self.__searchPredicate = lambda x: bool(rx.search(x))
-
-        if doReset:
-            self.reset()
+            return lambda x: bool(rx.search(x))
 
     def filter(self, items):
         return [item for item in items if \
-                self.__searchPredicate(self.__itemText(item))]
+                self.__searchPredicate(self.__itemText(item))] \
+                if self.__searchPredicate else items
         
     def __itemText(self, item):
         text = self.__itemOwnText(item)

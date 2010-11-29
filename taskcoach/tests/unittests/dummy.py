@@ -36,6 +36,9 @@ class DummyWidget(wx.Frame):
 
     def RefreshAllItems(self, *args, **kwargs):
         pass
+    
+    def RefreshItems(self, *args, **kwargs):
+        pass
 
     def IsAutoResizing(self):
         return False

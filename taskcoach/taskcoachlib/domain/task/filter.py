@@ -23,8 +23,8 @@ import task
 
 class ViewFilter(base.Filter):
     def __init__(self, *args, **kwargs):
-        self.__dueDateTimeFilter = self.stringToDueDateTime(kwargs.pop('dueDateTimeFilter', 
-                                                                       'Unlimited'))
+        self.__dueDateTimeFilter = self.__stringToDueDateTime(kwargs.pop('dueDateTimeFilter', 
+                                                                         'Unlimited'))
         self.__hideCompletedTasks = kwargs.pop('hideCompletedTasks', False)
         self.__hideInactiveTasks = kwargs.pop('hideInactiveTasks', False)
         self.__hideActiveTasks = kwargs.pop('hideActiveTasks', False)
@@ -33,20 +33,19 @@ class ViewFilter(base.Filter):
         super(ViewFilter, self).__init__(*args, **kwargs)
         
     def registerObservers(self):
-        publisher = patterns.Publisher()
+        registerObserver = patterns.Publisher().registerObserver
         for eventType in ('task.dueDateTime', 'task.startDateTime', 
                           'task.completionDateTime', 'task.prerequisites',
                           task.Task.addChildEventType(),
                           task.Task.removeChildEventType(),
                           'clock.minute'):
-            publisher.registerObserver(self.onTaskStatusChange,
-                eventType=eventType)
+            registerObserver(self.onTaskStatusChange, eventType=eventType)
 
     def onTaskStatusChange(self, event): # pylint: disable-msg=W0613
         self.reset()
         
     def setFilteredByDueDateTime(self, dueDateTimeString):
-        self.__dueDateTimeFilter = self.stringToDueDateTime(dueDateTimeString)
+        self.__dueDateTimeFilter = self.__stringToDueDateTime(dueDateTimeString)
         self.reset()
     
     def hideInactiveTasks(self, hide=True):
@@ -78,12 +77,18 @@ class ViewFilter(base.Filter):
             result = False
         elif self.__hideCompositeTasks and not self.treeMode() and task.children():
             result = False
-        elif task.dueDateTime(recursive=self.treeMode()) > self.__dueDateTimeFilter():
+        elif self.__taskDueLaterThanDueDateTimeFilter(task):
             result = False
         return result
+    
+    def __taskDueLaterThanDueDateTimeFilter(self, task):
+        if self.__dueDateTimeFilter:
+            return task.dueDateTime(recursive=self.treeMode()) > self.__dueDateTimeFilter()
+        else:
+            return False
 
     @staticmethod
-    def stringToDueDateTime(dueDateTimeString):
+    def __stringToDueDateTime(dueDateTimeString):
         # pylint: disable-msg=W0108
         dateTimeFactory = {'Today' : lambda: date.Now().endOfDay(), 
                            'Tomorrow' : lambda: date.Now().endOfTomorrow(),
@@ -91,5 +96,5 @@ class ViewFilter(base.Filter):
                            'Week' : lambda: date.Now().endOfWeek(), 
                            'Month' : lambda: date.Now().endOfMonth(), 
                            'Year' : lambda: date.Now().endOfYear(), 
-                           'Unlimited' : date.DateTime }        
+                           'Unlimited' : None }        
         return dateTimeFactory[dueDateTimeString]

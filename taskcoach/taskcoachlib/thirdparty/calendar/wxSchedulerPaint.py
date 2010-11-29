@@ -238,6 +238,8 @@ class wxSchedulerPaint( object ):
 							self._schedulesPages[schedule.GetId()] = pageNo
 
 						self._schedulesCoords.append((schedule, wx.Point(xx, yy), wx.Point(xx + w, yy + h)))
+					else:
+						schedule.Destroy()
 
 				offsetY += maxDY
 
@@ -524,9 +526,13 @@ class wxSchedulerPaint( object ):
 									     wx.Point(d * cellW, w * cellH),
 									     wx.Point(d * cellW + cellW, w * cellH + cellH)))
 
-					self._schedulesCoords.extend(drawer.DrawSchedulesCompact(theDay, schedules, d * cellW,
-												 w * cellH + y, cellW, cellH,
-												 self._highlightColor))
+					displayed = drawer.DrawSchedulesCompact(theDay, schedules, d * cellW,
+										w * cellH + y, cellW, cellH,
+										self._highlightColor)
+					self._schedulesCoords.extend( displayed )
+
+					for schedule in set(schedules) - set([sched for sched, _, _ in displayed]):
+						schedule.Destroy()
 
 			return (max(MONTH_CELL_SIZE_MIN.width * 7, width),
 				max(MONTH_CELL_SIZE_MIN.height * (w + 1), height))
@@ -564,6 +570,9 @@ class wxSchedulerPaint( object ):
 		self.ProcessEvent( evt ) 
 
 	def DoPaint(self, drawer, x, y, width, height):
+		for schedule, _, _ in self._schedulesCoords:
+			schedule.Destroy()
+
 		self._schedulesCoords = list()
 		self._datetimeCoords = list()
 

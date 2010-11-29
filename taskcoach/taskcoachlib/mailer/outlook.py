@@ -33,6 +33,7 @@ if os.name == 'nt':
             src = tempfile.NamedTemporaryFile(suffix='.eml') # Will be deleted automagically
             src.close()
             sel.Item(n).SaveAs(src.name, 0)
+            file(r'C:\tclog.txt', 'a+').write('============== CUT\n' + file(src.name, 'rb').read())
             src = file(src.name, 'rb')
 
             # Okay. In the case of HTML mails, Outlook doesn't put
@@ -53,7 +54,9 @@ if os.name == 'nt':
                 for line in src:
                     if s == 0:
                         dst.write(line)
-                        if line.lower().startswith('subject:'):
+                        # XXXFIXME: Outlook seems, in some cases, to localize the header names. We should handle this
+                        # for other languages than French, but I don't know how right now.
+                        if line.lower().startswith('subject:') or line.lower().startswith('objet:'):
                             dst.write('X-Outlook-ID: %s\r\n' % str(sel.Item(n).EntryID))
                             s = 1
                     elif s == 1:

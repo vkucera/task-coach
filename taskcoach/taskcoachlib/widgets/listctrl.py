@@ -72,8 +72,8 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
         return self.__parent.getItemTooltipData(domainObject, columnIndex)
     
     def getItemImage(self, domainObject, columnIndex=0):
-        return self.__parent.getItemImage(domainObject, wx.TreeItemIcon_Normal, 
-                                          columnIndex)
+        return self.__parent.getItemImages(domainObject, 
+                                           columnIndex)[wx.TreeItemIcon_Normal]
     
     def OnGetItemText(self, rowIndex, columnIndex):
         item = self.getItemWithIndex(rowIndex)

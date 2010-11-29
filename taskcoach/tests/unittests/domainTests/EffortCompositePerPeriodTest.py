@@ -17,11 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
+from taskcoachlib import config
 from taskcoachlib.domain import task, effort, date
 
 
 class CompositeEffortPerPeriodTest(test.TestCase):
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
         self.task = task.Task(subject='task')
@@ -51,7 +53,7 @@ class CompositeEffortPerPeriodTest(test.TestCase):
         self.task.addEffort(self.trackedEffort)
         composite = effort.CompositeEffortPerPeriod( 
             self.composite.getStart(), self.composite.getStop(),
-            self.taskList)
+            self.taskList, self.trackedEffort)
         self.failUnless(composite.isBeingTracked())
 
     def testDurationForSingleEffort(self):

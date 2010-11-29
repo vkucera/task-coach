@@ -49,7 +49,7 @@ class DummyTaskFile(persistence.TaskFile):
 class AutoBackupTest(test.TestCase):
     def setUp(self):
         super(AutoBackupTest, self).setUp()
-        self.settings = config.Settings(load=False)
+        task.Task.settings = self.settings = config.Settings(load=False)
         self.taskFile = DummyTaskFile()
         self.backup = persistence.AutoBackup(self.settings, copyfile=self.onCopyFile)
         self.copyCalled = False

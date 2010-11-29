@@ -22,22 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.4', 'November 21, 2010',
-    summary='''This is a bugfix release.''',
-    bugsFixed=[
-        Bug('''On Windows, make the installer check for running
-instances of Task Coach before installing a new version. The installer is
-able to detect running instances of Task Coach release 1.2.4 or newer.''', 
-            '3109658'),
-        Bug('''Mass editing of items wouldn't work after selecting items
-with Ctrl-A (select all).''', '3108176'),
-        Bug('''Bring back total time spent and total revenue columns in the 
-effort viewer.''', '3112807'),
-        Bug('''Fixed a memory leak in the calendar viewer.''', '3108959'),
-        ]
-    ),
-                
-Release('1.3.0', 'November 14, 2010',
+Release('1.3.0', 'November 29, 2010',
     summary='''This release ...''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -55,7 +40,41 @@ immediately to all open dialogs. This will prevent overwriting
 changes made in other dialogs.''', '1152561')
         ]
     ),
+
+Release('1.2.6', 'November 29, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Avoid the "Pas de sujet" bug when dropping a mail from Outlook on
+a French Windows OS.'''),
+        Bug('''Don't crash when the note viewer is open.''', '3122115')
+        ]
+    ),
     
+Release('1.2.5', 'November 28, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Fixed another memory leak in the calendar view.''',
+            '3108959'),
+        Bug('''Some performance improvements.''', '3117375'),
+        Bug('''Don't throw exception when Snarl is not available.''', '3119740')
+        ]
+    ),
+
+Release('1.2.4', 'November 21, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''On Windows, make the installer check for running
+instances of Task Coach before installing a new version. The installer is
+able to detect running instances of Task Coach release 1.2.4 or newer.''', 
+            '3109658'),
+        Bug('''Mass editing of items wouldn't work after selecting items
+with Ctrl-A (select all).''', '3108176'),
+        Bug('''Bring back total time spent and total revenue columns in the 
+effort viewer.''', '3112807'),
+        Bug('''Fixed a memory leak in the calendar viewer.''', '3108959'),
+        ]
+    ),
+
 Release('1.2.3', 'November 14, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[

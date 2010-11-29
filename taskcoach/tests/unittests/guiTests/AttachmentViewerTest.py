@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import test, wx
 from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import attachment
 
@@ -32,7 +32,7 @@ class AttachmentViewerTest(test.wxTestCase):
         
     def assertIcon(self, expectedIcon, anAttachment, **kwargs):
         self.assertEqual(self.viewer.imageIndex[expectedIcon], 
-                         self.viewer.typeImageIndex(anAttachment, None, **kwargs))
+                         self.viewer.typeImageIndices(anAttachment, **kwargs)[wx.TreeItemIcon_Normal])
         
     def testTypeImageIndex_WhenFileDoesNotExist(self):
         fileAttachment = attachment.FileAttachment('whatever')

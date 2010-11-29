@@ -17,11 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test
+from taskcoachlib import config
 from taskcoachlib.domain import category, task
 
 
 class CategoryContainerTest(test.TestCase):
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.categories = category.CategoryList()
         self.category = category.Category('category 1')
                 
