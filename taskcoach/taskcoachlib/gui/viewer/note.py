@@ -124,14 +124,14 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
             ('description', _('Description'), _('&Description'), 
                 _('Sort notes by description'), 
                 (note.Note.descriptionChangedEventType(),), 
-                lambda note: note.description(), lambda *args: -1),
+                lambda note: note.description(), None),
             ('categories', _('Categories'), _('&Categories'), 
                 _('Sort notes by categories'), 
                 (note.Note.categoryAddedEventType(), 
                  note.Note.categoryRemovedEventType(), 
                  note.Note.categorySubjectChangedEventType(),
                  note.Note.expansionChangedEventType()), 
-                self.renderCategories, lambda *args: -1)]
+                self.renderCategories, None)]
         attachmentsColumn = widgets.Column('attachments', '', 
             note.Note.attachmentsChangedEventType(), # pylint: disable-msg=E1101
             width=self.getColumnWidth('attachments'),

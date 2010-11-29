@@ -208,7 +208,7 @@ class Column(object):
         self.__alignment = kwargs.pop('alignment', wx.LIST_FORMAT_LEFT)
         self.__hasImages = 'imageIndicesCallback' in kwargs
         self.__imageIndicesCallback = kwargs.pop('imageIndicesCallback',
-            self.defaultImageIndices)
+            self.defaultImageIndices) or self.defaultImageIndices
         # NB: because the header image is needed for sorting a fixed header
         # image cannot be combined with a sortable column
         self.__headerImageIndex = kwargs.pop('headerImageIndex', -1)

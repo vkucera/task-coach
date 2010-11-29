@@ -22,11 +22,12 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.6', 'November 28, 2010',
+Release('1.2.6', 'November 29, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Avoid the "Pas de sujet" bug when dropping a mail from Outlook on
-a French Windows OS.''')
+a French Windows OS.'''),
+        Bug('''Don't crash when the note viewer is open.''', '3122115')
         ]
     ),
     
