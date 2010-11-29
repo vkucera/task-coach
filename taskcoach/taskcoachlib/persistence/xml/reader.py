@@ -24,7 +24,7 @@ from taskcoachlib.domain import date, effort, task, category, note, attachment
 from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
 from taskcoachlib.i18n import translate
-from taskcoachlib import meta
+from taskcoachlib import meta, patterns
 from .. import sessiontempfile # pylint: disable-msg=F0401
 
 
@@ -116,19 +116,20 @@ class XMLReader(object):
                 tasksById[task.id()] = task
                 collectIds(task.children())
         
-        def addPrerequisitesAndDependencies(tasks):            
+        def addPrerequisitesAndDependencies(tasks, event):
             for task in tasks:
                 dummyPrerequisites = task.prerequisites()
                 prerequisites = set()
                 for dummyPrerequisite in dummyPrerequisites:
                     prerequisites.add(tasksById[dummyPrerequisite.id])
-                task.setPrerequisites(prerequisites)
+                task.setPrerequisites(prerequisites, event=event)
                 for prerequisite in prerequisites:
-                    prerequisite.addDependencies([task])
-                addPrerequisitesAndDependencies(task.children())
+                    prerequisite.addDependencies([task], event=event)
+                addPrerequisitesAndDependencies(task.children(), event)
                 
-        collectIds(tasks)                
-        addPrerequisitesAndDependencies(tasks)
+        collectIds(tasks)
+        event = patterns.Event() # Create an event, but don't send it                
+        addPrerequisitesAndDependencies(tasks, event)
                 
     def _parseCategoryNodes(self, node, categorizablesById):
         return [self._parseCategoryNode(child, categorizablesById) \
@@ -318,7 +319,10 @@ class XMLReader(object):
         start = effortNode.attrib.get('start', '')
         stop = effortNode.attrib.get('stop', '')
         description = self._parseDescription(effortNode)
-        # pylint: disable-msg=W0142
+        # task=None because it is set when the effort is actually added to the
+        # task by the task itself. This way no events are sent for changing the
+        # effort owner, which is good.
+        # pylint: disable-msg=W0142 
         return effort.Effort(task=None, start=date.parseDateTime(start),
             stop=date.parseDateTime(stop), description=description, **kwargs)
 

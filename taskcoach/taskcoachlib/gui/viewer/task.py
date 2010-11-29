@@ -139,7 +139,6 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
     def __registerForAppearanceChanges(self):
         colorSettings = ['color.%s'%setting for setting in 'activetasks',\
             'inactivetasks', 'completedtasks', 'duesoontasks', 'overduetasks'] 
-        colorSettings.append('behavior.duesoonhours')
         for colorSetting in colorSettings:
             patterns.Publisher().registerObserver(self.onColorSettingChange, 
                 eventType=colorSetting)
@@ -722,7 +721,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                     value='subject'),
                 width=self.getColumnWidth('subject'), 
-                imageIndexCallback=self.subjectImageIndex,
+                imageIndicesCallback=self.subjectImageIndices,
                 renderCallback=self.renderSubject, **kwargs)] + \
             [widgets.Column('description', _('Description'), 
                 task.Task.descriptionChangedEventType(), 
@@ -734,7 +733,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
                 task.Task.attachmentsChangedEventType(), # pylint: disable-msg=E1101
                 width=self.getColumnWidth('attachments'),
                 alignment=wx.LIST_FORMAT_LEFT,
-                imageIndexCallback=self.attachmentImageIndex,
+                imageIndicesCallback=self.attachmentImageIndices,
                 headerImageIndex=self.imageIndex['paperclip_icon'],
                 renderCallback=lambda task: '', **kwargs)]
         if self.settings.getboolean('feature', 'notes'):
@@ -742,7 +741,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
                 task.Task.notesChangedEventType(), # pylint: disable-msg=E1101
                 width=self.getColumnWidth('notes'),
                 alignment=wx.LIST_FORMAT_LEFT,
-                imageIndexCallback=self.noteImageIndex,
+                imageIndicesCallback=self.noteImageIndices,
                 headerImageIndex=self.imageIndex['note_icon'],
                 renderCallback=lambda task: '', **kwargs))
         columns.extend(
@@ -900,17 +899,6 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
 
     def createColumnPopupMenu(self):
         return menu.ColumnPopupMenu(self)
-        
-    def getImageIndices(self, task):
-        bitmap = task.icon(recursive=True)
-        bitmap_selected = task.selectedIcon(recursive=True) or bitmap 
-        return self.imageIndex[bitmap], self.imageIndex[bitmap_selected]
-
-    def subjectImageIndex(self, task, which):
-        normalImageIndex, expandedImageIndex = self.getImageIndices(task) 
-        expanded = which in [wx.TreeItemIcon_Expanded, 
-                             wx.TreeItemIcon_SelectedExpanded]
-        return expandedImageIndex if expanded else normalImageIndex
                     
     def setSortByTaskStatusFirst(self, *args, **kwargs): # pylint: disable-msg=W0221
         super(TaskViewer, self).setSortByTaskStatusFirst(*args, **kwargs)

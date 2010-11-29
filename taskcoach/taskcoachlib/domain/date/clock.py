@@ -136,7 +136,6 @@ class OnceTimer(LargeIntervalTimer):
         self.__callback(now)
 
 
-
 class ScheduledTimer(OnceTimer):
     def __init__(self, callback):
         self._schedule = []
@@ -162,10 +161,7 @@ class ScheduledTimer(OnceTimer):
             self.Start(self._earliestDateTimeScheduled(), now)
 
     def _earliestDateTimeScheduled(self):
-        if self._schedule:
-            return min(self._schedule)
-        else:
-            return dateandtime.DateTime.max
+        return min(self._schedule) if self._schedule else dateandtime.DateTime.max
 
 
 class Clock(patterns.Observer):

@@ -70,9 +70,12 @@ class EffortAggregator(patterns.SetDecorator,
             remove the item from the observing list (i.e. this list)
             unchanged. We override the default behavior to remove the 
             tasks' efforts from the CompositeEfforts they are part of. '''
+        compositesToRemove = []
         for task in tasks: # pylint: disable-msg=W0621
-            self.removeComposites(task, task.efforts(), event=event)
-
+            compositesToRemove.extend(self.compositesToRemove(task))
+        super(EffortAggregator, self).removeItemsFromSelf(compositesToRemove, 
+                                                          event=event)
+        
     def onEffortAddedToTask(self, event):
         newComposites = []
         for task in event.sources(): # pylint: disable-msg=W0621
@@ -132,27 +135,26 @@ class EffortAggregator(patterns.SetDecorator,
     def createCompositeForPeriod(self, anEffort):
         key = self.keyForPeriod(anEffort)
         if key in self.__composites:
+            self.__composites[key].addEffort(anEffort)
             return []
-        newCompositePerPeriod = composite.CompositeEffortPerPeriod(key[0], key[1], self.observable())
+        newCompositePerPeriod = composite.CompositeEffortPerPeriod(key[0], key[1], self.observable(), anEffort)
         self.__composites[key] = newCompositePerPeriod
         return [newCompositePerPeriod]
 
-    def removeComposites(self, task, efforts, event): # pylint: disable-msg=W0621
+    def compositesToRemove(self, task): # pylint: disable-msg=W0621
+        efforts = task.efforts()
         taskAndAncestors = [task] + task.ancestors()
+        compositesToRemove = []
         for effort in efforts:
             for task in taskAndAncestors:
-                self.removeComposite(effort, task, event)
-
-    def removeComposite(self, anEffort, task, event): # pylint: disable-msg=W0613,W0621
+                compositesToRemove.extend(self.compositeToRemove(effort, task))
+        return compositesToRemove
+        
+    def compositeToRemove(self, anEffort, task): # pylint: disable-msg=W0613,W0621
         key = self.keyForEffort(anEffort, task)
-        if key not in self.__composites:
-            # A composite may already have been removed, e.g. when a
-            # parent and child task have effort in the same period
-            return
-        compositeToRemove = self.__composites.pop(key)
-        # FIXME: Can't pass event to removeItemsFromSelf, because 
-        # otherwise 
-        super(EffortAggregator, self).removeItemsFromSelf([compositeToRemove])#, event)
+        # A composite may already have been removed, e.g. when a
+        # parent and child task have effort in the same period
+        return [self.__composites.pop(key)] if key in self.__composites else []
 
     def maxDateTime(self):
         stopTimes = [effort.getStop() for compositeEffort in self for effort

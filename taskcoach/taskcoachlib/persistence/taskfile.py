@@ -187,10 +187,11 @@ class TaskFile(patterns.Observer):
             self.__needSave = False
             patterns.Event('taskfile.dirty', self, False).send()
             
-    def clear(self, regenerate=True):
-        self.tasks().clear()
-        self.categories().clear()
-        self.notes().clear()
+    @patterns.eventSource
+    def clear(self, regenerate=True, event=None):
+        self.tasks().clear(event=event)
+        self.categories().clear(event=event)
+        self.notes().clear(event=event)
         if regenerate:
             self.__guid = generate()
             self.__syncMLConfig = createDefaultSyncConfig(self.__guid)

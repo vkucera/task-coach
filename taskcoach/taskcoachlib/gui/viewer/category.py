@@ -88,7 +88,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                        category.Category.subjectChangedEventType(),  
                        sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                            value='subject'),
-                       imageIndexCallback=self.subjectImageIndex,
+                       imageIndicesCallback=self.subjectImageIndices,
                        width=self.getColumnWidth('subject'), 
                        **kwargs),
                    widgets.Column('description', _('Description'), 
@@ -102,7 +102,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                        category.Category.attachmentsChangedEventType(), # pylint: disable-msg=E1101
                        width=self.getColumnWidth('attachments'),
                        alignment=wx.LIST_FORMAT_LEFT,
-                       imageIndexCallback=self.attachmentImageIndex,
+                       imageIndicesCallback=self.attachmentImageIndices,
                        headerImageIndex=self.imageIndex['paperclip_icon'],
                        renderCallback=lambda category: '', **kwargs)]
         if self.settings.getboolean('feature', 'notes'):
@@ -110,23 +110,11 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                        category.Category.notesChangedEventType(), # pylint: disable-msg=E1101
                        width=self.getColumnWidth('notes'),
                        alignment=wx.LIST_FORMAT_LEFT,
-                       imageIndexCallback=self.noteImageIndex,
+                       imageIndicesCallback=self.noteImageIndices,
                        headerImageIndex=self.imageIndex['note_icon'],
                        renderCallback=lambda category: '', **kwargs))
         return columns
 
-    def getImageIndices(self, aCategory):
-        bitmap = aCategory.icon(recursive=True)
-        bitmap_selected = aCategory.selectedIcon(recursive=True) or bitmap
-        return (self.imageIndex[bitmap] if bitmap else -1, 
-                self.imageIndex[bitmap_selected] if bitmap_selected else -1)
-
-    def subjectImageIndex(self, aCategory, which):
-        normalImageIndex, expandedImageIndex = self.getImageIndices(aCategory)
-        expanded = which in [wx.TreeItemIcon_Expanded,
-                             wx.TreeItemIcon_SelectedExpanded]
-        return expandedImageIndex if expanded else normalImageIndex
-    
     def createToolBarUICommands(self):
         commands = super(BaseCategoryViewer, self).createToolBarUICommands()
         commands[-2:-2] = [None,

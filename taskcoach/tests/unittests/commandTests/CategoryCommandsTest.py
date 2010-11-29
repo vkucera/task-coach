@@ -18,12 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from unittests import asserts
 from CommandTestCase import CommandTestCase
-from taskcoachlib import patterns, command
+from taskcoachlib import patterns, command, config
 from taskcoachlib.domain import category, task
 
 
 class CategoryCommandTestCase(CommandTestCase, asserts.CommandAssertsMixin):
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.categories = category.CategoryList()
         
 

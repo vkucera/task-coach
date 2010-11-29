@@ -130,9 +130,8 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, widgets.AuiManagedFrameWith
         self.initWindowComponents()
         self.initWindow()
         self.registerForWindowComponentChanges()
-        wx.CallAfter(self.closeSplash)
-        wx.CallAfter(self.showTips)
-
+        self.closeSplashAndShowTips()
+        
         if settings.getboolean('feature', 'syncml'):
             try:
                 import taskcoachlib.syncml.core # pylint: disable-msg=W0612
@@ -162,7 +161,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, widgets.AuiManagedFrameWith
                     dlg.ShowModal()
                 finally:
                     dlg.Destroy()
-
+                    
     def createWindowComponents(self):
         self.createViewerContainer()
         viewer.addViewers(self.viewer, self.taskFile, self.settings)
@@ -241,6 +240,10 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, widgets.AuiManagedFrameWith
         patterns.Publisher().registerObserver(self.onShowToolBar, 
             eventType='view.toolbar')
         self.Bind(self.pageClosedEvent, self.onCloseToolBar)
+
+    def closeSplashAndShowTips(self):
+        wx.CallAfter(self.closeSplash)
+        wx.CallAfter(self.showTips)
 
     def showTips(self):
         if self.settings.getboolean('window', 'tips'):

@@ -25,7 +25,7 @@ from taskcoachlib.domain import task, note, category
 
 class IOControllerTest(test.TestCase):
     def setUp(self):
-        self.settings = config.Settings(load=False)
+        task.Task.settings = self.settings = config.Settings(load=False)
         self.taskFile = dummy.TaskFile()
         self.iocontroller = gui.IOController(self.taskFile, 
             lambda *args: None, self.settings)

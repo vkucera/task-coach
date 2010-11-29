@@ -21,18 +21,6 @@ from taskcoachlib import persistence, config
 from taskcoachlib.domain import task, category, date
 
 
-class DummySettings(dict):
-    def __init__(self):
-        super(DummySettings, self).__init__()
-        self.maxnrofbackups = 5
-        
-    def set(self, section, setting, value): # pylint: disable-msg=W0613
-        self[setting] = value
-        
-    def getboolean(self, section, setting): # pylint: disable-msg=W0613
-        return self.get(setting, 'False') == 'True'
-
-
 class DummyFile(object):
     name = 'testfile.tsk'
 
@@ -74,7 +62,7 @@ class DummyTaskFile(persistence.TaskFile):
 
 class AutoSaverTestCase(test.TestCase):
     def setUp(self):
-        self.settings = DummySettings()
+        task.Task.settings = self.settings = config.Settings(load=False)
         self.taskFile = DummyTaskFile()
         self.autoSaver = persistence.AutoSaver(self.settings)
         

@@ -51,6 +51,12 @@ class BaseCompositeEffort(base.BaseEffort): # pylint: disable-msg=W0223
         return sum((effort.duration() for effort in \
                     self._getEfforts(recursive)), date.TimeDelta())
 
+    def isBeingTracked(self, recursive=False): # pylint: disable-msg=W0613
+        for effort in self._getEfforts():
+            if effort.isBeingTracked():
+                return True
+        return False
+
     def durationDay(self, dayOffset):
         ''' Return the duration of this composite effort on a specific day. '''
         startOfDay = self.getStart() + date.TimeDelta(days=dayOffset)
@@ -139,13 +145,6 @@ class CompositeEffort(BaseCompositeEffort):
     def _getEfforts(self, recursive=True): # pylint: disable-msg=W0221
         return self.__effortCache[recursive]
         
-    def isBeingTracked(self, recursive=False): # pylint: disable-msg=W0613
-        return self.nrBeingTracked() > 0
-
-    def nrBeingTracked(self):
-        return len([effort for effort in self._getEfforts() \
-            if effort.isBeingTracked()])
-        
     def mayContain(self, effort):
         ''' Return whether effort would be contained in this composite effort 
             if it existed. '''
@@ -178,10 +177,14 @@ class CompositeEffort(BaseCompositeEffort):
 
 
 class CompositeEffortPerPeriod(BaseCompositeEffort):
-    def __init__(self, start, stop, taskList):
+    def __init__(self, start, stop, taskList, initialEffort=None):
         self.taskList = taskList
         super(CompositeEffortPerPeriod, self).__init__(None, start, stop)
-        self._invalidateCache()
+        if initialEffort:
+            assert self._inPeriod(initialEffort)
+            self.__effortCache = [initialEffort]
+        else:
+            self._invalidateCache()
         patterns.Publisher().registerObserver(self.onTimeSpentChanged,
             eventType='task.timeSpent')
         patterns.Publisher().registerObserver(self.onRevenueChanged,
@@ -189,6 +192,10 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
         for eventType in self.taskList.modificationEventTypes():
             patterns.Publisher().registerObserver(self.onTaskAddedOrRemoved, eventType,
                                                   eventSource=self.taskList)
+            
+    def addEffort(self, anEffort):
+        assert self._inPeriod(anEffort)
+        self.__effortCache.append(anEffort)
 
     def onTaskAddedOrRemoved(self, event):
         if any(task.efforts() for task in event.values()):
@@ -220,12 +227,6 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
     def categories(self, *args, **kwargs):
         return [] 
         
-    def isBeingTracked(self, recursive=False): # pylint: disable-msg=W0613
-        for effort in self._getEfforts():
-            if effort.isBeingTracked():
-                return True
-        return False
-
     def __repr__(self):
         return 'CompositeEffortPerPeriod(start=%s, stop=%s, efforts=%s)'%\
             (self.getStart(), self.getStop(),

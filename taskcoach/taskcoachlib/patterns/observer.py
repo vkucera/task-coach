@@ -90,12 +90,10 @@ class Event(object):
             the type as keyword argument. If no type is specified, the source 
             and values are added for a random type, i.e. only omit the type if 
             the event has only one type. '''
-        type = kwargs.pop('type', self.type())
-        currentValues = list(self.__sourcesAndValuesByType.setdefault(type, {}).setdefault(source, tuple()))
-        for value in values:
-            if value not in currentValues:
-                currentValues.append(value)
-        self.__sourcesAndValuesByType.setdefault(type, {})[source] = tuple(currentValues)
+        eventType = kwargs.pop('type', self.type())
+        currentValues = set(self.__sourcesAndValuesByType.setdefault(eventType, {}).setdefault(source, tuple()))
+        currentValues |= set(values)
+        self.__sourcesAndValuesByType.setdefault(eventType, {})[source] = tuple(currentValues)
         
     def type(self):
         ''' Return the event type. If there are multiple event types, this
