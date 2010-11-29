@@ -20,7 +20,10 @@ from taskcoachlib import patterns
 
 
 class Attribute(object):
+    __slots__ = ('__value', '__owner', '__setEvent')
+    
     def __init__(self, value, owner, setEvent):
+        super(Attribute, self).__init__()
         self.__value = value
         self.__owner = owner
         self.__setEvent = setEvent
@@ -37,6 +40,9 @@ class Attribute(object):
            
 
 class SetAttribute(object):
+    __slots__ = ('__set', '__owner', '__addEvent', '__removeEvent', 
+                 '__changeEvent')
+    
     def __init__(self, values, owner, addEvent=None, removeEvent=None, changeEvent=None):
         self.__set = set(values) if values else set()
         self.__owner = owner
