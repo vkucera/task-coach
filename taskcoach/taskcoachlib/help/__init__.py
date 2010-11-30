@@ -356,11 +356,16 @@ iPod, iPhone, Evolution, etc...), as well as so-called "connectors"
 which allow the server to synchronize with Exchange, Google Calendar,
 etc.''')),
     p(
-        _('''%(name)s has built-in SyncML client support. This means you can
+        _('''%(name)s has built-in SyncML client support on Windows and Mac OS X
+(provided that you use the supplied binaries). This means you can
 setup %(name)s to synchronize with the same SyncML server you
 synchronize Outlook with and have all Outlook tasks and notes in
 your %(name)s file, as well as %(name)s tasks and notes in Outlook. Or
 your Pocket PC.''')%meta.metaDict),
+    p(
+        _('''On Linux, you must install the SyncML client binding for
+Python yourself. Debian packages for 32 and 64 bits, Python 2.5 and 2.6
+are available on the <a target="_blank" href="https://pysyncml.forge.funambol.org/">pysyncml home page</a>.'''))
     h4(
         a_name(_('Setup'), 'syncmlsetup')),
     p(
