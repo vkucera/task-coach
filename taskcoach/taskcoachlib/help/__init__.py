@@ -365,7 +365,7 @@ your Pocket PC.''')%meta.metaDict),
     p(
         _('''On Linux, you must install the SyncML client binding for
 Python yourself. Debian packages for 32 and 64 bits, Python 2.5 and 2.6
-are available on the <a target="_blank" href="https://pysyncml.forge.funambol.org/">pysyncml home page</a>.'''))
+are available on the <a target="_blank" href="https://pysyncml.forge.funambol.org/">pysyncml home page</a>.''')),
     h4(
         a_name(_('Setup'), 'syncmlsetup')),
     p(
