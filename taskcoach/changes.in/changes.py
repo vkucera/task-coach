@@ -28,7 +28,9 @@ Release('1.2.6', 'December 1, 2010',
         Bug('''Avoid the "Pas de sujet" bug when dropping a mail from Outlook on
 a French Windows OS.'''),
         Bug('''Don't crash when the note viewer is open.''', '3122115'),
-        Bug('''Don't crash when the square task viewer is open.''')
+        Bug('''Don't crash when the square task viewer is open.'''),
+        Bug('''When double clicking the latest effort, don't open the previous
+one, but the one double clicked.''', '3121403')
         ]
     ),
     

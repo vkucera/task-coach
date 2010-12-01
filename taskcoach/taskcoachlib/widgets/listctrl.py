@@ -127,6 +127,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
         else:
             # The VirtualListCtrl makes sure only visible items are updated
             super(VirtualListCtrl, self).RefreshItems(0, count-1)
+        self.selectCommand()
 
     def RefreshItems(self, *items):
         ''' Refresh specific items. '''

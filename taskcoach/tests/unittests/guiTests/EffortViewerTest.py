@@ -131,6 +131,17 @@ class EffortViewerTest(test.wxTestCase):
     def testIsSelected(self):
         self.failIf(self.viewer.isselected(self.effort1))
 
+    def testSelect(self):
+        self.task.addEffort(self.effort1)
+        self.viewer.widget.ToggleItemSelection(0)
+        self.failUnless(self.viewer.isselected(self.effort1))
+
+    def testSelectAfterNewEffortWasAdded(self):
+        self.task.addEffort(self.effort1)
+        self.viewer.widget.ToggleItemSelection(0)
+        self.task.addEffort(self.effort2)
+        self.failUnless(self.viewer.isselected(self.effort2))
+
 
 class EffortViewerAggregationTestCase(test.wxTestCase):
     aggregation = 'Subclass responsibility'
