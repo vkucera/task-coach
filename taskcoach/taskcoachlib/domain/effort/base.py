@@ -29,7 +29,10 @@ class BaseEffort(object):
         return self._task
     
     def parent(self):
-        return None # Efforts don't have parents
+        # Efforts don't have real parents since they are not composite. 
+        # However, we present the parent of an effort is its task for the 
+        # benefit of the search filter.
+        return self._task 
 
     def getStart(self):
         return self._start

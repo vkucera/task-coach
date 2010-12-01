@@ -30,7 +30,10 @@ a French Windows OS.'''),
         Bug('''Don't crash when the note viewer is open.''', '3122115'),
         Bug('''Don't crash when the square task viewer is open.'''),
         Bug('''When double clicking the latest effort, don't open the previous
-one, but the one double clicked.''', '3121403')
+one, but the one double clicked.''', '3121403'),
+        Bug('''When searching in the effort viewer with "Include subitems"
+turned on, actually include effort for subtasks in the search results.''', 
+'3124833')
         ]
     ),
     
