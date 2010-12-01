@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test, wx
 from taskcoachlib import gui, config, patterns, widgets, persistence
-from taskcoachlib.domain import task, effort, date
+from taskcoachlib.domain import task, effort, date, base, category
 from taskcoachlib.thirdparty import hypertreelist
 
 
@@ -488,8 +488,8 @@ class MockWidget(object):
 
 class UpdatePerSecondViewerTestsMixin(object):
     def setUp(self):
-        self.settings = config.Settings(load=False)
-        task.Task.settings = self.settings
+        super(UpdatePerSecondViewerTestsMixin, self).setUp()
+        task.Task.settings = self.settings = config.Settings(load=False)
         self.settings.set('taskviewer', 'columns', "['timeSpent']")
         self.taskFile = persistence.TaskFile()
         self.taskList = task.sorter.Sorter(self.taskFile.tasks(), sortBy='dueDateTime')
@@ -510,7 +510,7 @@ class UpdatePerSecondViewerTestsMixin(object):
         self.updateViewer.widget = MockWidget()
         self.updateViewer.onEverySecond(patterns.Event('clock.second', 
             date.Clock()))
-        usingTaskViewer = self.ListViewerClass == gui.viewer.TaskViewer
+        usingTaskViewer = self.ListViewerClass != gui.viewer.EffortViewer
         expected = self.trackedTask if usingTaskViewer else self.trackedEffort
         self.assertEqual([expected], self.updateViewer.widget.refreshedItems)
 
@@ -529,7 +529,9 @@ class UpdatePerSecondViewerTestsMixin(object):
     def testStopTrackingRefreshesTrackedItems(self):
         self.updateViewer.widget = MockWidget()
         self.trackedTask.stopTracking()
-        self.assertEqual(2, len(self.updateViewer.widget.refreshedItems))
+        usingSquareTaskViewer = self.ListViewerClass == gui.viewer.SquareTaskViewer
+        self.assertEqual(1 if usingSquareTaskViewer else 2, 
+                         len(self.updateViewer.widget.refreshedItems))
             
     def testRemoveTrackedChildAndParentRemovesViewerFromClockObservers(self):
         parent = task.Task()
@@ -543,11 +545,31 @@ class UpdatePerSecondViewerTestsMixin(object):
         viewer = self.createUpdateViewer()
         self.failUnless(viewer.onEverySecond in
             patterns.Publisher().observers(eventType='clock.second'))
+        
+    def testViewerDoesNotReactToAddEventsFromOtherContainers(self):
+        categories = base.filter.SearchFilter(category.CategoryList())
+        try:
+            categories.append(category.Category('Test'))
+        except AttributeError:
+            self.fail("Adding a category shouldn't affect the UpdatePerSecondViewer.")
 
+    def testViewerDoesNotReactToRemoveEventsFromOtherContainers(self):
+        categories = base.filter.SearchFilter(category.CategoryList())
+        categories.append(category.Category('Test'))
+        try:
+            categories.clear()
+        except AttributeError:
+            self.fail("Removing a category shouldn't affect the UpdatePerSecondViewer.")
+            
 
 class TaskListViewerUpdatePerSecondViewerTest(UpdatePerSecondViewerTestsMixin, 
         test.wxTestCase):
     ListViewerClass = gui.viewer.TaskViewer
+
+
+class SquareTaskViewerUpdatePerSecondViewerTest(UpdatePerSecondViewerTestsMixin, 
+        test.wxTestCase):
+    ListViewerClass = gui.viewer.SquareTaskViewer
 
 
 class EffortListViewerUpdatePerSecondTest(UpdatePerSecondViewerTestsMixin, 

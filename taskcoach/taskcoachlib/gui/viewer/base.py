@@ -479,9 +479,11 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):  # pylint: disable-msg=
         self.registerObserver(self.onStopTracking,
                               eventType=self.trackStopEventType())
         self.registerObserver(self.onItemAdded, 
-                              eventType=self.presentation().addItemEventType())
+                              eventType=self.presentation().addItemEventType(),
+                              eventSource=self.presentation())
         self.registerObserver(self.onItemRemoved, 
-                              eventType=self.presentation().removeItemEventType())
+                              eventType=self.presentation().removeItemEventType(),
+                              eventSource=self.presentation())
         self.setTrackedItems(self.trackedItems(self.presentation()))
         
     def setPresentation(self, presentation):
