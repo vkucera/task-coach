@@ -73,12 +73,10 @@ class TaskEditorByClosingMixin(TaskEditorSetterBase):
     def setSubject(self, newSubject):
         page = super(TaskEditorByClosingMixin, self).setSubject(newSubject)
         self.editor.Close()
-        page._subjectSync.onAttributeEdited(DummyEvent())
         
     def setDescription(self, newDescription):
         page = super(TaskEditorByClosingMixin, self).setDescription(newDescription)
         self.editor.Close()
-        page._descriptionSync.onAttributeEdited(DummyEvent())
         
 
 class TaskEditorTestCase(test.wxTestCase):
@@ -298,8 +296,9 @@ class EditTaskTestBySettingFocus(TaskEditorBySettingFocusMixin, EditTaskTestBase
     pass
 
 
-class EditTaskTestByClosing(TaskEditorByClosingMixin, EditTaskTestBase, TaskEditorTestCase):
-    pass
+if '__WXMSW__' not in wx.PlatformInfo:
+    class EditTaskTestByClosing(TaskEditorByClosingMixin, EditTaskTestBase, TaskEditorTestCase):
+        pass
 
 
 class EditTaskWithChildrenTestBase(object):
@@ -335,8 +334,9 @@ class EditTaskWithChildrenTestBySettingFocus(TaskEditorBySettingFocusMixin, Edit
     pass
 
 
-class EditTaskWithChildrenTestByClosing(TaskEditorByClosingMixin, EditTaskWithChildrenTestBase, TaskEditorTestCase):
-    pass
+if '__WXMSW__' not in wx.PlatformInfo:
+    class EditTaskWithChildrenTestByClosing(TaskEditorByClosingMixin, EditTaskWithChildrenTestBase, TaskEditorTestCase):
+        pass
 
 
 class EditTaskWithEffortTest(TaskEditorTestCase):    
