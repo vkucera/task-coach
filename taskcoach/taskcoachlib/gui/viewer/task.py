@@ -121,7 +121,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
                 None,
                 uicommand.EffortStart(viewer=self, 
                                       taskList=self.taskFile.tasks()),
-                uicommand.EffortStop(taskList=self.presentation())])
+                uicommand.EffortStop(effortList=self.taskFile.efforts())])
         
         baseUICommands = super(BaseTaskViewer, self).createToolBarUICommands()    
         # Insert the task viewer UI commands before the search box:

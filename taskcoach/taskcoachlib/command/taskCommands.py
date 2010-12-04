@@ -30,15 +30,17 @@ class SaveTaskStateMixin(base.SaveStateMixin, base.CompositeMixin):
 
 
 class EffortCommand(base.BaseCommand): # pylint: disable-msg=W0223
-    def stopTracking(self):
+    @patterns.eventSource
+    def stopTracking(self, event=None):
         self.stoppedEfforts = [] # pylint: disable-msg=W0201
         for taskToStop in self.tasksToStopTracking():
             self.stoppedEfforts.extend(taskToStop.activeEfforts())
-            taskToStop.stopTracking()
+            taskToStop.stopTracking(event=event)
 
-    def startTracking(self):
+    @patterns.eventSource
+    def startTracking(self, event=None):
         for stoppedEffort in self.stoppedEfforts:
-            stoppedEffort.setStop(date.DateTime.max)
+            stoppedEffort.setStop(date.DateTime.max, event=event)
     
     def tasksToStopTracking(self):
         return self.list
@@ -255,6 +257,12 @@ class StopEffortCommand(EffortCommand):
                   
     def canDo(self):
         return True # No selected items needed.
+
+    @patterns.eventSource
+    def stopTracking(self, event=None):
+        self.stoppedEfforts = [effort for effort in self.list if effort.isBeingTracked()] # pylint: disable-msg=W0201
+        for effort in self.stoppedEfforts:
+            effort.setStop(event=event)
 
 
 class ExtremePriorityCommand(base.BaseCommand): # pylint: disable-msg=W0223

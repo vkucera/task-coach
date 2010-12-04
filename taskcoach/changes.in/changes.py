@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.6', 'December 1, 2010',
+Release('1.2.6', 'December 5, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Avoid the "Pas de sujet" bug when dropping a mail from Outlook on
@@ -33,7 +33,8 @@ a French Windows OS.'''),
 one, but the one double clicked.''', '3121403'),
         Bug('''When searching in the effort viewer with "Include subitems"
 turned on, actually include effort for subtasks in the search results.''', 
-'3124833')
+'3124833'),
+        Bug('''Some more performance improvements.''')
         ]
     ),
     

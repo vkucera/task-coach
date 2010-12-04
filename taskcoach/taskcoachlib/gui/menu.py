@@ -541,7 +541,7 @@ class EffortMenu(Menu):
             uicommand.EffortDelete(viewer=viewerContainer, effortList=efforts),
             None,
             uicommand.EffortStart(viewer=viewerContainer, taskList=tasks),
-            uicommand.EffortStop(taskList=tasks))
+            uicommand.EffortStop(effortList=efforts))
        
 
 class CategoryMenu(Menu):
@@ -621,7 +621,7 @@ class TaskBarMenu(Menu):
                 StartEffortForTaskMenu(taskBarIcon, 
                                        base.filter.DeletedFilter(tasks), 
                                        self, label), 'clock_icon')
-            self.appendUICommands(uicommand.EffortStop(taskList=tasks))
+            self.appendUICommands(uicommand.EffortStop(effortList=efforts))
         self.appendUICommands(
             None,
             uicommand.MainWindowRestore(),
@@ -762,11 +762,11 @@ class TaskPopupMenu(Menu):
                 uicommand.EffortNew(viewer=taskViewer, effortList=efforts,
                                     taskList=tasks, settings=settings),
                 uicommand.EffortStart(viewer=taskViewer, taskList=tasks),
-                uicommand.EffortStop(taskList=tasks))
+                uicommand.EffortStop(effortList=efforts))
 
 
 class EffortPopupMenu(Menu):
-    def __init__(self, mainwindow, tasks, settings, efforts, effortViewer):
+    def __init__(self, mainwindow, tasks, efforts, settings, effortViewer):
         super(EffortPopupMenu, self).__init__(mainwindow)
         self.appendUICommands(
             uicommand.EditCut(viewer=effortViewer),
@@ -778,7 +778,7 @@ class EffortPopupMenu(Menu):
             uicommand.EffortEdit(viewer=effortViewer, effortList=efforts),
             uicommand.EffortDelete(viewer=effortViewer, effortList=efforts),
             None,
-            uicommand.EffortStop(taskList=tasks))
+            uicommand.EffortStop(effortList=efforts))
 
 
 class CategoryPopupMenu(Menu):

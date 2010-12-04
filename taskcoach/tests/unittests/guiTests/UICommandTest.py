@@ -338,3 +338,104 @@ class ToggleCategoryTest(test.TestCase):
         uiCommand = gui.uicommand.ToggleCategory(viewer=viewer,
                                                  category=self.category)
         self.failIf(uiCommand.enabled(None))
+
+
+class EffortStopTest(test.TestCase):
+    def setUp(self):
+        super(EffortStopTest, self).setUp()
+        task.Task.settings = config.Settings(load=False)
+        self.taskList = task.TaskList()
+        self.task = task.Task('Task')
+        self.task2 = task.Task('Task 2')
+        self.effort1 = effort.Effort(self.task)
+        self.effort2 = effort.Effort(self.task)
+        self.taskList.append(self.task)
+        self.effortStop = gui.uicommand.EffortStop(effortList=effort.EffortList(self.taskList))
+    
+    # Tests of EffortStop.enabled()
+        
+    def testStopIsNotEnabledByDefault(self):
+        self.failIf(self.effortStop.enabled())
+        
+    def testStopIsEnabledWhenEffortIsTracked(self):
+        self.task.addEffort(self.effort1)
+        self.failUnless(self.effortStop.enabled())
+
+    def testStopIsDisabledWhenEffortIsTracked(self):
+        self.task.addEffort(self.effort1)
+        self.effort1.setStop(date.Now())
+        self.failIf(self.effortStop.enabled())
+
+    def testStopIsDisabledWhenEffortsIsDeleted(self):
+        self.task.addEffort(self.effort1)
+        self.task.removeEffort(self.effort1)
+        self.failIf(self.effortStop.enabled())
+        
+    def testStopIsEnabledWhenTwoEffortsAreTracked(self):
+        self.task.addEffort(self.effort1)
+        self.task.addEffort(self.effort2)
+        self.failUnless(self.effortStop.enabled())
+        
+    def testStopIsEnabledWhenOneOfTwoEffortsIsStopped(self):
+        self.task.addEffort(self.effort1)
+        self.task.addEffort(self.effort2)
+        self.effort1.setStop(date.Now())
+        self.failUnless(self.effortStop.enabled())
+
+    def testStopIsEnabledWhenOneOfTwoEffortsIsDeleted(self):
+        self.task.addEffort(self.effort1)
+        self.task.addEffort(self.effort2)
+        self.task.removeEffort(self.effort1)
+        self.failUnless(self.effortStop.enabled())
+        
+    def testStopIsDisabledWhenBothEffortsAreStopped(self):
+        self.task.addEffort(self.effort1)
+        self.task.addEffort(self.effort2)
+        self.effort1.setStop(date.Now())
+        self.effort2.setStop(date.Now())
+        self.failIf(self.effortStop.enabled())
+
+    def testStopIsDisabledWhenBothEffortsAreDeleted(self):
+        self.task.addEffort(self.effort1)
+        self.task.addEffort(self.effort2)
+        self.task.removeEffort(self.effort1)
+        self.task.removeEffort(self.effort2)
+        self.failIf(self.effortStop.enabled())
+        
+    def testStopIsDisabledWhenTaskIsDeleted(self):
+        self.task.addEffort(self.effort1)
+        self.taskList.remove(self.task)
+        self.failIf(self.effortStop.enabled())
+
+    def testStopIsEnabledWhenOneOfTwoTasksWithTrackedEffortIsDeleted(self):
+        self.task.addEffort(self.effort1)
+        self.task2.addEffort(effort.Effort(self.task2))
+        self.taskList.append(self.task2)
+        self.taskList.remove(self.task)
+        self.failUnless(self.effortStop.enabled())
+        
+    def testStopIsEnabledWhenATaskWithTrackedEffortIsAdded(self):
+        self.task2.addEffort(effort.Effort(self.task2))
+        self.taskList.append(self.task2)
+        self.failUnless(self.effortStop.enabled())
+        
+    def testStopIsEnabledWhenATrackedEffortIsMoved(self):
+        self.task.addEffort(self.effort1)
+        self.taskList.append(self.task2)
+        self.effort1.setTask(self.task2)
+        if not self.effortStop.enabled():
+            print self.effortStop.log
+        self.failUnless(self.effortStop.enabled())
+        
+    # Tests of EffortStop.doCommand()
+
+    def testDoCommandStopsTrackedEffort(self):
+        self.task.addEffort(self.effort1)
+        self.effortStop.doCommand()
+        self.failIf(self.effort1.isBeingTracked())
+        
+    def testDoCommandStopsAllTrackedEffort(self):
+        self.task.addEffort(self.effort1)
+        self.task.addEffort(self.effort2)
+        self.effortStop.doCommand()
+        self.failIf(self.task.isBeingTracked())

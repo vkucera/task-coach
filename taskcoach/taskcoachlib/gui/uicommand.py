@@ -1798,19 +1798,55 @@ class EffortStartButton(PopupButtonMixin, TaskListCommand):
         return any(task.active() for task in self.taskList)
     
 
-class EffortStop(TaskListCommand):
+class EffortStop(EffortListCommand, patterns.Observer):
     def __init__(self, *args, **kwargs):
         super(EffortStop, self).__init__(bitmap='clock_stop_icon',
             menuText=_('St&op tracking effort'),
             helpText=_('Stop tracking effort for the active task(s)'), 
             *args, **kwargs)
+        # __trackedEfforts is a list and not a set because when an effort is
+        # moved from one task to another task we might get the event that the
+        # effort is (re)added to the effortList before the event that the effort
+        # was removed from the effortList. If we would use a set, the effort
+        # would be missing from the set after the removal event.    
+        self.__trackedEfforts = self.__filterTrackedEfforts(self.effortList)
+        self.registerObserver(self.onEffortAdded, 
+                              eventType=self.effortList.addItemEventType(),
+                              eventSource=self.effortList)
+        self.registerObserver(self.onEffortRemoved, 
+                              eventType=self.effortList.removeItemEventType(),
+                              eventSource=self.effortList)
+        self.registerObserver(self.onStartTracking,  
+                              eventType=effort.Effort.trackStartEventType())
+        self.registerObserver(self.onStopTracking, 
+                              eventType=effort.Effort.trackStopEventType())
+                
+    def onEffortAdded(self, event):
+        self.__trackedEfforts.extend(self.__filterTrackedEfforts(event.values()))
+        
+    def onEffortRemoved(self, event):
+        for effort in event.values():
+            if effort in self.__trackedEfforts:
+                self.__trackedEfforts.remove(effort)
+        
+    def onStartTracking(self, event):
+        self.__trackedEfforts.extend(event.sources())
 
-    def doCommand(self, event):
-        stop = command.StopEffortCommand(self.taskList)
+    def onStopTracking(self, event):
+        for effort in event.sources():
+            if effort in self.__trackedEfforts:
+                self.__trackedEfforts.remove(effort)
+                        
+    def doCommand(self, event=None):
+        stop = command.StopEffortCommand(self.effortList)
         stop.do()
 
-    def enabled(self, event):
-        return any(task.isBeingTracked() for task in self.taskList)
+    def enabled(self, event=None):
+        return bool(self.__trackedEfforts)
+    
+    @staticmethod
+    def __filterTrackedEfforts(efforts):
+        return [effort for effort in efforts if effort.isBeingTracked()]
 
 
 class CategoryNew(CategoriesCommand, SettingsCommand):
