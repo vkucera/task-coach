@@ -166,43 +166,55 @@ class EditTaskCommand(base.EditCommand):
         super(EditTaskCommand, self).__init__(*args, **kwargs)
         self.oldCategories = [item.categories() for item in self.items]
         self.oldPrerequisites = [item.prerequisites() for item in self.items]
-        
-    def do_command(self):
+    
+    @patterns.eventSource    
+    def do_command(self, event=None):
         super(EditTaskCommand, self).do_command()
         # pylint: disable-msg=W0201
         self.newCategories = [item.categories() for item in self.items] 
-        self.updateCategories(self.oldCategories, self.newCategories)
+        if self.newCategories != self.oldCategories:
+            self.updateCategories(self.oldCategories, self.newCategories, event)
         self.newPrerequisites = [item.prerequisites() for item in self.items]
-        self.updatePrerequisites(self.oldPrerequisites, self.newPrerequisites)
+        if self.newPrerequisites != self.oldCategories:
+            self.updatePrerequisites(self.oldPrerequisites, self.newPrerequisites, 
+                                     event)
         
-    def undo_command(self):
+    @patterns.eventSource
+    def undo_command(self, event=None):
         super(EditTaskCommand, self).undo_command()
-        self.updateCategories(self.newCategories, self.oldCategories)
-        self.updatePrerequisites(self.newPrerequisites, self.oldPrerequisites)
+        if self.newCategories != self.oldCategories:
+            self.updateCategories(self.newCategories, self.oldCategories, event)
+        if self.newPrerequisites != self.oldPrerequisites:
+            self.updatePrerequisites(self.newPrerequisites, self.oldPrerequisites,
+                                     event)
         
-    def redo_command(self):
+    @patterns.eventSource
+    def redo_command(self, event=None):
         super(EditTaskCommand, self).redo_command()
-        self.updateCategories(self.oldCategories, self.newCategories)
-        self.updatePrerequisites(self.oldPrerequisites, self.newPrerequisites)
+        if self.newCategories != self.oldCategories:
+            self.updateCategories(self.oldCategories, self.newCategories, event)
+        if self.newPrerequisites != self.oldPrerequisites:
+            self.updatePrerequisites(self.oldPrerequisites, self.newPrerequisites,
+                                     event)
         
     def getItemsToSave(self):
         return set([relative for item in self.items for relative in item.family()])
-        
-    def updateCategories(self, oldCategories, newCategories):
+
+    def updateCategories(self, oldCategories, newCategories, event):
         for item, categories in zip(self.items, oldCategories):
             for category in categories:
-                category.removeCategorizable(item)
+                category.removeCategorizable(item, event=event)
         for item, categories in zip(self.items, newCategories):
             for category in categories:
-                category.addCategorizable(item)
+                category.addCategorizable(item, event=event)
 
-    def updatePrerequisites(self, oldPrerequisites, newPrerequisites):
+    def updatePrerequisites(self, oldPrerequisites, newPrerequisites, event):
         for item, prerequisites in zip(self.items, oldPrerequisites):
             for prerequisite in prerequisites:
-                prerequisite.removeDependencies([item])
+                prerequisite.removeDependencies([item], event=event)
         for item, prerequisites in zip(self.items, newPrerequisites):
             for prerequisite in prerequisites:
-                prerequisite.addDependencies([item])
+                prerequisite.addDependencies([item], event=event)
                 
                 
 class MarkCompletedCommand(EditTaskCommand, EffortCommand):
