@@ -508,8 +508,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         child.addEffort(effort.Effort(child))
         self.registerObserver(self.task.trackStartEventType())
         self.task.addChild(child)
-        self.assertEvent(self.task.trackStartEventType(),
-                         self.task, *child.efforts())
+        self.assertEqual(self.task.trackStartEventType(), self.events[0].type())
 
     # Constructor
 
