@@ -26,6 +26,8 @@ class StatusBar(wx.StatusBar):
         self.SetFieldsCount(2)
         self.parent = parent
         self.viewer = viewer
+        self.__numberOfSelectedItems = 0
+        self.__viewerName = ''
         self.viewerEventTypes = (viewer.selectEventType(), 
                                  viewer.viewerChangeEventType())
         register = patterns.Publisher().registerObserver
@@ -50,8 +52,16 @@ class StatusBar(wx.StatusBar):
         event.Skip()
 
     def onSelect(self, event): # pylint: disable-msg=W0613
-        # Give viewer a chance to update first:
-        wx.CallAfter(self._displayStatus)
+        try:
+            numberOfSelectedItems = len(self.viewer.curselection())
+            viewerName = self.viewer.settingsSection()
+        except AttributeError:
+            return # Viewer container contains no viewers
+        if numberOfSelectedItems != self.__numberOfSelectedItems or viewerName != self.__viewerName:
+            self.__numberOfSelectedItems = numberOfSelectedItems
+            self.__viewerName = viewerName
+            # Give viewer a chance to update first:
+            wx.CallAfter(self._displayStatus)
 
     def _displayStatus(self):
         try:
