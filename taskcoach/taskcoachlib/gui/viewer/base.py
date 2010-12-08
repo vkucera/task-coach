@@ -497,14 +497,10 @@ class UpdatePerSecondViewer(Viewer, date.ClockObserver):  # pylint: disable-msg=
         raise NotImplementedError
     
     def onItemAdded(self, event):
-        startedItems = self.trackedItems(event.values())
-        self.addTrackedItems(startedItems)
-        self.refreshItems(*startedItems)
+        self.addTrackedItems(self.trackedItems(event.values()))
         
     def onItemRemoved(self, event): 
-        stoppedItems = self.trackedItems(event.values())
-        self.removeTrackedItems(stoppedItems)
-        self.refreshItems(*stoppedItems)
+        self.removeTrackedItems(self.trackedItems(event.values()))
 
     def onStartTracking(self, event):
         startedItems = [item for item in event.sources() \
