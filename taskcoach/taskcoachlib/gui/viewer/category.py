@@ -41,7 +41,6 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
         kwargs.setdefault('settingsSection', 'categoryviewer')
         super(BaseCategoryViewer, self).__init__(*args, **kwargs)
         for eventType in (category.Category.subjectChangedEventType(),
-                          category.Category.filterChangedEventType(),
                           category.Category.foregroundColorChangedEventType(),
                           category.Category.backgroundColorChangedEventType(),
                           category.Category.fontChangedEventType(),
