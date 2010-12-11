@@ -22,7 +22,6 @@ from taskcoachlib.domain import task, effort, date, base, category
 from taskcoachlib.thirdparty import hypertreelist
 
 
-
 class ViewerTest(test.wxTestCase):
     def setUp(self):
         super(ViewerTest, self).setUp()
@@ -477,104 +476,6 @@ class TreeViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTestsMixin):
 class ListViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTestsMixin):
     treeMode = 'False'
 
-
-class MockWidget(object):
-    def __init__(self):
-        self.refreshedItems = []
-        
-    def RefreshItems(self, *items):
-        self.refreshedItems.extend(items)
-    
-
-class UpdatePerSecondViewerTestsMixin(object):
-    def setUp(self):
-        super(UpdatePerSecondViewerTestsMixin, self).setUp()
-        task.Task.settings = self.settings = config.Settings(load=False)
-        self.settings.set('taskviewer', 'columns', "['timeSpent']")
-        self.taskFile = persistence.TaskFile()
-        self.taskList = task.sorter.Sorter(self.taskFile.tasks(), sortBy='dueDateTime')
-        self.updateViewer = self.createUpdateViewer()
-        self.trackedTask = task.Task(subject='tracked')
-        self.trackedEffort = effort.Effort(self.trackedTask)
-        self.trackedTask.addEffort(self.trackedEffort)
-        self.taskList.append(self.trackedTask)
-        
-    def createUpdateViewer(self):
-        return self.ListViewerClass(self.frame, self.taskFile, self.settings)
-        
-    def testViewerHasRegisteredWithClock(self):
-        self.failUnless(self.updateViewer.onEverySecond in
-            patterns.Publisher().observers(eventType='clock.second'))
-
-    def testClockNotificationResultsInRefreshedItem(self):
-        self.updateViewer.widget = MockWidget()
-        self.updateViewer.onEverySecond(patterns.Event('clock.second', 
-            date.Clock()))
-        usingTaskViewer = self.ListViewerClass != gui.viewer.EffortViewer
-        expected = self.trackedTask if usingTaskViewer else self.trackedEffort
-        self.assertEqual([expected], self.updateViewer.widget.refreshedItems)
-
-    def testClockNotificationResultsInRefreshedItem_OnlyForTrackedItems(self):
-        self.taskList.append(task.Task('not tracked'))
-        self.updateViewer.widget = MockWidget()
-        self.updateViewer.onEverySecond(patterns.Event('clock.second',
-            date.Clock()))
-        self.assertEqual(1, len(self.updateViewer.widget.refreshedItems))
-
-    def testStopTrackingRemovesViewerFromClockObservers(self):
-        self.trackedTask.stopTracking()
-        self.failIf(self.updateViewer.onEverySecond in
-            patterns.Publisher().observers(eventType='clock.second'))
-        
-    def testStopTrackingRefreshesTrackedItems(self):
-        self.updateViewer.widget = MockWidget()
-        self.trackedTask.stopTracking()
-        usingSquareTaskViewer = self.ListViewerClass == gui.viewer.SquareTaskViewer
-        self.assertEqual(1 if usingSquareTaskViewer else 2, 
-                         len(self.updateViewer.widget.refreshedItems))
-            
-    def testRemoveTrackedChildAndParentRemovesViewerFromClockObservers(self):
-        parent = task.Task()
-        self.taskList.append(parent)
-        parent.addChild(self.trackedTask)
-        self.taskList.remove(parent)
-        self.failIf(self.updateViewer.onEverySecond in
-            patterns.Publisher().observers(eventType='clock.second'))
-        
-    def testCreateViewerWithTrackedItemsStartsTheClock(self):
-        viewer = self.createUpdateViewer()
-        self.failUnless(viewer.onEverySecond in
-            patterns.Publisher().observers(eventType='clock.second'))
-        
-    def testViewerDoesNotReactToAddEventsFromOtherContainers(self):
-        categories = base.filter.SearchFilter(category.CategoryList())
-        try:
-            categories.append(category.Category('Test'))
-        except AttributeError:
-            self.fail("Adding a category shouldn't affect the UpdatePerSecondViewer.")
-
-    def testViewerDoesNotReactToRemoveEventsFromOtherContainers(self):
-        categories = base.filter.SearchFilter(category.CategoryList())
-        categories.append(category.Category('Test'))
-        try:
-            categories.clear()
-        except AttributeError:
-            self.fail("Removing a category shouldn't affect the UpdatePerSecondViewer.")
-            
-
-class TaskListViewerUpdatePerSecondViewerTest(UpdatePerSecondViewerTestsMixin, 
-        test.wxTestCase):
-    ListViewerClass = gui.viewer.TaskViewer
-
-
-class SquareTaskViewerUpdatePerSecondViewerTest(UpdatePerSecondViewerTestsMixin, 
-        test.wxTestCase):
-    ListViewerClass = gui.viewer.SquareTaskViewer
-
-
-class EffortListViewerUpdatePerSecondTest(UpdatePerSecondViewerTestsMixin, 
-        test.wxTestCase):
-    ListViewerClass = gui.viewer.EffortViewer
 
 
 class ViewerWithColumnsTest(test.wxTestCase):
