@@ -26,12 +26,11 @@ from taskcoachlib.domain import effort, date
 from taskcoachlib.domain.base import filter # pylint: disable-msg=W0622
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, render, dialog
-import base, mixin
+import base, mixin, refresher
 
 
 class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin, 
-                   mixin.SearchableViewerMixin, base.UpdatePerSecondViewer, 
-                   base.ViewerWithColumns): 
+                   mixin.SearchableViewerMixin, base.ViewerWithColumns): 
     defaultTitle = _('Effort')
     defaultBitmap = 'clock_icon'
     SorterClass = effort.EffortSorter
@@ -46,6 +45,9 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         self.__domainObjectsToView = None
         self.__observersToDetach = []
         super(EffortViewer, self).__init__(*args, **kwargs)
+        self.refresher = refresher.SecondRefresher(self,
+                                                  effort.Effort.trackStartEventType(),
+                                                  effort.Effort.trackStopEventType())
         self.aggregation = self.settings.get(self.settingsSection(), 'aggregation')
         self.aggregationUICommand.setChoice(self.aggregation)
         self.createColumnUICommands()
@@ -87,12 +89,6 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
     def curselectionIsInstanceOf(self, class_):
         return class_ == effort.Effort
     
-    def trackStartEventType(self):
-        return effort.Effort.trackStartEventType()
-    
-    def trackStopEventType(self):
-        return effort.Effort.trackStopEventType()
-        
     def showEffortAggregation(self, aggregation):
         ''' Change the aggregation mode. Can be one of 'details', 'day', 'week'
             and 'month'. '''
@@ -101,6 +97,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         self.settings.set(self.settingsSection(), 'aggregation', aggregation)
         self.setPresentation(self.createSorter(self.createFilter(\
                              self.domainObjectsToView())))
+        self.refresher.updatePresentation()
         self.registerPresentationObservers()
         # Invalidate the UICommands used for the column popup menu:
         self.__columnUICommands = None

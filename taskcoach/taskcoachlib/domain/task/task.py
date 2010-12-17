@@ -28,6 +28,8 @@ from taskcoachlib.domain.attribute import color
 class Task(note.NoteOwner, attachment.AttachmentOwner, 
            categorizable.CategorizableCompositeObject):
     
+    maxDateTime = date.DateTime()
+    
     def __init__(self, subject='', description='', 
                  dueDateTime=None, startDateTime=None, completionDateTime=None,
                  budget=None, priority=0, id=None, hourlyFee=0, # pylint: disable-msg=W0622
@@ -42,7 +44,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         super(Task, self).__init__(*args, **kwargs)
         self.__dueSoonHours = self.settings.getint('behavior', 'duesoonhours') # pylint: disable-msg=E1101
         Attribute, SetAttribute = base.Attribute, base.SetAttribute
-        maxDateTime = date.DateTime()
+        maxDateTime = self.maxDateTime    
         self.__dueDateTime = Attribute(dueDateTime or maxDateTime, self, 
                                        self.dueDateTimeEvent)
         self.__startDateTime = Attribute(startDateTime or maxDateTime, self, 
@@ -68,11 +70,18 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             shouldMarkCompletedWhenAllChildrenCompleted
         for effort in self._efforts:
             effort.setTask(self)
-        registerObserver = patterns.Publisher().registerObserver
+        self.registerObserver = registerObserver = patterns.Publisher().registerObserver
+        self.removeObserver = patterns.Publisher().removeObserver
         for eventType in 'active', 'inactive', 'completed', 'duesoon', 'overdue':
             registerObserver(self.__computeRecursiveForegroundColor, 'color.%stasks')
         registerObserver(self.onDueSoonHoursChanged, 'behavior.duesoonhours')
-                
+        if self.__dueDateTime.get() != maxDateTime:
+            registerObserver(self.onOverDue, 
+                             date.Clock.eventType(self.__dueDateTime.get() + date.oneSecond))
+        if self.__startDateTime.get() != maxDateTime:
+            registerObserver(self.onStarted,
+                             date.Clock.eventType(self.__startDateTime.get() + date.oneSecond))
+            
     @patterns.eventSource
     def __setstate__(self, state, event=None):
         super(Task, self).__setstate__(state, event=event)
@@ -146,7 +155,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if self.shouldBeMarkedCompleted():
             self.setCompletionDateTime(child.completionDateTime(), event=event)
         elif self.completed() and not child.completed():
-            self.setCompletionDateTime(date.DateTime(), event=event)
+            self.setCompletionDateTime(self.maxDateTime, event=event)
         if child.dueDateTime() > self.dueDateTime():
             self.setDueDateTime(child.dueDateTime(), event=event)           
         if child.startDateTime() < self.startDateTime():
@@ -207,21 +216,36 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         else:
             return self.__dueDateTime.get()
 
-    def setDueDateTime(self, dueDate, event=None):
-        self.__dueDateTime.set(dueDate, event=event)
+    @patterns.eventSource
+    def setDueDateTime(self, dueDateTime, event=None):
+        self.removeObserver(self.onOverDue)
+        self.removeObserver(self.onDueSoon)
+        self.__dueDateTime.set(dueDateTime, event=event)
+        if dueDateTime != self.maxDateTime:
+            self.registerObserver(self.onOverDue, date.Clock.eventType(dueDateTime + date.oneSecond))
+            if self.__dueSoonHours > 0:
+                dueSoonDateTime = dueDateTime + date.oneSecond - date.TimeDelta(hours=self.__dueSoonHours)
+                if dueSoonDateTime > date.Now():
+                    self.registerObserver(self.onDueSoon, date.Clock.eventType(dueSoonDateTime))
             
     def dueDateTimeEvent(self, event):
         dueDateTime = self.dueDateTime()
         event.addSource(self, dueDateTime, type='task.dueDateTime')
         for child in self.children():
             if child.dueDateTime() > dueDateTime:
-                child.setDueDateTime(dueDateTime, event)
+                child.setDueDateTime(dueDateTime, event=event)
         if self.parent():
             parent = self.parent()
             if dueDateTime > parent.dueDateTime():
-                parent.setDueDateTime(dueDateTime, event)
-        self.recomputeAppearance()
+                parent.setDueDateTime(dueDateTime, event=event)
+        self.recomputeAppearance(event=event)
     
+    def onOverDue(self, event):
+        self.recomputeAppearance()
+        
+    def onDueSoon(self, event):
+        self.recomputeAppearance()
+        
     @staticmethod
     def dueDateTimeSortFunction(**kwargs):
         recursive = kwargs.get('treeMode', False)
@@ -242,8 +266,12 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         else:
             return self.__startDateTime.get()
 
+    @patterns.eventSource
     def setStartDateTime(self, startDateTime, event=None):
+        self.removeObserver(self.onStarted)
         self.__startDateTime.set(startDateTime, event=event)
+        if startDateTime != self.maxDateTime:
+            self.registerObserver(self.onStarted, date.Clock.eventType(startDateTime + date.oneSecond))
             
     def startDateTimeEvent(self, event):
         startDateTime = self.startDateTime()
@@ -251,10 +279,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if not self.recurrence(recursive=True, upwards=True):
             for child in self.children():
                 if startDateTime > child.startDateTime():
-                    child.setStartDateTime(startDateTime, event)
+                    child.setStartDateTime(startDateTime, event=event)
             parent = self.parent()
             if parent and startDateTime < parent.startDateTime():
-                parent.setStartDateTime(startDateTime, event)
+                parent.setStartDateTime(startDateTime, event=event)
+        self.recomputeAppearance(event=event)
+        
+    def onStarted(self, event):
         self.recomputeAppearance()
         
     @staticmethod
@@ -295,18 +326,18 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         completionDateTime = completionDateTime or date.Now()
         if completionDateTime == self.__completionDateTime.get():
             return
-        if completionDateTime != date.DateTime() and self.recurrence():
+        if completionDateTime != self.maxDateTime and self.recurrence():
             self.recur(event=event)
         else:
             parent = self.parent()
             if parent:
-                oldParentPriority = parent.priority(recursive=True) 
+                oldParentPriority = parent.priority(recursive=True)
             self.__completionDateTime.set(completionDateTime, event=event)
             if parent and parent.priority(recursive=True) != oldParentPriority:
                 self.priorityEvent(event)              
-            if completionDateTime != date.DateTime():
+            if completionDateTime != self.maxDateTime:
                 self.setReminder(None, event)
-            self.setPercentageComplete(100 if completionDateTime != date.DateTime() else 0, 
+            self.setPercentageComplete(100 if completionDateTime != self.maxDateTime else 0, 
                                        event=event)
             if parent:
                 if self.completed():
@@ -314,7 +345,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                         parent.setCompletionDateTime(completionDateTime, event=event)
                 else:
                     if parent.completed():
-                        parent.setCompletionDateTime(date.DateTime(), event=event)
+                        parent.setCompletionDateTime(self.maxDateTime, event=event)
             if self.completed():
                 for child in self.children():
                     if not child.completed():
@@ -324,10 +355,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                     self.stopTracking(event=event)                    
         
     def completionDateTimeEvent(self, event):
-        completionDateTime = self.completionDateTime()
-        event.addSource(self, completionDateTime, type='task.completionDateTime')
-        for task in [self] + list(self.dependencies()):
-            task.recomputeAppearance()
+        event.addSource(self, self.completionDateTime(), type='task.completionDateTime')
+        self.recomputeAppearance(event=event)
+        for dependency in self.dependencies():
+            dependency.recomputeAppearance(event=event)
         
     def shouldBeMarkedCompleted(self):
         ''' Return whether this task should be marked completed. It should be
@@ -357,7 +388,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # Task state
     
     def completed(self):
-        return self.completionDateTime() != date.DateTime()
+        return self.completionDateTime() != self.maxDateTime
 
     def overdue(self):
         return self.dueDateTime() < date.Now() and not self.completed()
@@ -365,14 +396,14 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def inactive(self):
         if self.completed():
             return False # Completed tasks are never inactive
-        if date.Now() < self.startDateTime() < date.DateTime():
+        if date.Now() < self.startDateTime() < self.maxDateTime:
             return True # Start at a specific future datetime, so inactive now
         if self.prerequisites():
             # We're inactive as long as not all prerequisites are completed
             return any([not prerequisite.completed() for prerequisite in self.prerequisites()])
         else:
             # We're inactive only if we have no startDateTime at all 
-            return self.startDateTime() == date.DateTime()
+            return self.startDateTime() == self.maxDateTime
         
     def active(self):
         return not self.inactive() and not self.completed()
@@ -381,12 +412,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return (0 <= self.timeLeft().hours() < self.__dueSoonHours and not self.completed())
     
     def onDueSoonHoursChanged(self, event):
-        oldDueSoon = self.dueSoon()
-        self.__dueSoonHours = self.settings.getint('behavior', 'duesoonhours') # pylint: disable-msg=E1101
-        newDueSoon = self.dueSoon()
-        if oldDueSoon != newDueSoon:
-            self.recomputeAppearance()
-            patterns.Event(self.iconChangedEventType(), self, self.icon()).send()
+        self.removeObserver(self.onDueSoon)
+        self.__dueSoonHours = int(event.value())
+        dueDateTime = self.dueDateTime()
+        if dueDateTime != self.maxDateTime:
+            newDueSoonDateTime = dueDateTime + date.oneSecond - date.TimeDelta(hours=self.__dueSoonHours)
+            self.registerObserver(self.onDueSoon, date.Clock.eventType(newDueSoonDateTime))    
+        self.recomputeAppearance()
             
    # effort related methods:
 
@@ -419,7 +451,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         event.addSource(self, *efforts, **dict(type='task.effort.add'))
           
     def startTrackingEvent(self, event, *efforts):
-        self.recomputeAppearance()    
+        self.recomputeAppearance(event=event)    
         for ancestor in [self] + self.ancestors():
             event.addSource(ancestor, *efforts, 
                             **dict(type=ancestor.trackStartEventType()))
@@ -443,7 +475,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             effort.setStop(event=event)
                         
     def stopTrackingEvent(self, event, *efforts):
-        self.recomputeAppearance()    
+        self.recomputeAppearance(event=event)    
         for ancestor in [self] + self.ancestors():
             event.addSource(ancestor, *efforts, 
                             **dict(type=ancestor.trackStopEventType()))
@@ -618,7 +650,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__computeRecursiveIcon()
 
     def __computeRecursiveIcon(self):
-        self.__recursiveIcon =  self.categoryIcon() or self.__stateBasedIcon(False)
+        self.__recursiveIcon = self.categoryIcon() or self.__stateBasedIcon(False)
         return self.__recursiveIcon
 
     def selectedIcon(self, recursive=False):
@@ -657,10 +689,27 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             taskIcon += '_open' if selected and hasChildren else ''
         return taskIcon + '_icon'
 
-    def recomputeAppearance(self):
+    @patterns.eventSource
+    def recomputeAppearance(self, event=None):
+        # Need to prepare for AttributeError because the cached recursive values
+        # are not set in __init__ for performance reasons
+        try:
+            previousForegroundColor = self.__recursiveForegroundColor
+            previousRecursiveIcon = self.__recursiveIcon
+            previousRecursiveSelectedIcon = self.__recursiveSelectedIcon
+        except AttributeError:
+            previousForegroundColor = None
+            previousRecursiveIcon = None
+            previousRecursiveSelectedIcon = None
         self.__computeRecursiveForegroundColor()
         self.__computeRecursiveIcon()
         self.__computeRecursiveSelectedIcon()
+        if self.__recursiveIcon != previousRecursiveIcon:
+             event.addSource(self, self.icon(), type=self.iconChangedEventType())
+        if self.__recursiveSelectedIcon != previousRecursiveSelectedIcon:
+            event.addSource(self, self.selectedIcon(), type=self.selectedIconChangedEventType())
+        if self.__recursiveForegroundColor != previousForegroundColor:
+            event.addSource(self, self.foregroundColor(), type=self.foregroundColorChangedEventType())
         
     # percentage Complete
     
@@ -683,10 +732,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return
         oldPercentage = self.percentageComplete()
         self.__percentageComplete.set(percentage, event=event)
-        if percentage == 100 and oldPercentage != 100 and self.completionDateTime() == date.DateTime():
+        if percentage == 100 and oldPercentage != 100 and self.completionDateTime() == self.maxDateTime:
             self.setCompletionDateTime(date.Now(), event=event)
-        elif oldPercentage == 100 and percentage != 100 and self.completionDateTime() != date.DateTime():
-            self.setCompletionDateTime(date.DateTime(), event=event)
+        elif oldPercentage == 100 and percentage != 100 and self.completionDateTime() != self.maxDateTime:
+            self.setCompletionDateTime(self.maxDateTime, event=event)
     
     def percentageCompleteEvent(self, event):
         event.addSource(self, self.percentageComplete(), 
@@ -830,7 +879,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return self.__reminder.get()
 
     def setReminder(self, reminderDateTime=None, event=None):
-        if reminderDateTime == date.DateTime.max:
+        if reminderDateTime == self.maxDateTime:
             reminderDateTime = None
         self.__reminder.set(reminderDateTime, event=event)
             
@@ -840,7 +889,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @staticmethod
     def reminderSortFunction(**kwargs):
         recursive = kwargs.get('treeMode', False)
-        return lambda task: task.reminder(recursive=recursive) or date.DateTime.max
+        return lambda task: task.reminder(recursive=recursive) or self.maxDateTime
 
     @classmethod
     def reminderSortEventTypes(class_):
@@ -870,7 +919,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     @patterns.eventSource
     def recur(self, event=None):
-        self.setCompletionDateTime(date.DateTime(), event=event)
+        self.setCompletionDateTime(self.maxDateTime, event=event)
         recur = self.recurrence(recursive=True, upwards=True)
         currentStartDateTime = self.startDateTime()
         currentDueDateTime = self.dueDateTime()
@@ -916,8 +965,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def setPrerequisites(self, prerequisites, event=None):
         self.__prerequisites.set(set(prerequisites), event=event)
         
+    @patterns.eventSource
     def addPrerequisites(self, prerequisites, event=None):
         self.__prerequisites.add(set(prerequisites), event=event)
+        self.recomputeAppearance(event=event)
         
     def removePrerequisites(self, prerequisites, event=None):
         self.__prerequisites.remove(set(prerequisites), event=event)
@@ -932,7 +983,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             
     def prerequisitesEvent(self, event, *prerequisites):
         event.addSource(self, *prerequisites, **dict(type='task.prerequisites'))
-        self.recomputeAppearance()
+        self.recomputeAppearance(event=event)
 
     @staticmethod
     def prerequisitesSortFunction(**kwargs):

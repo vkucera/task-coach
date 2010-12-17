@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test, wx
-from taskcoachlib import gui, config, patterns, widgets, persistence
-from taskcoachlib.domain import task, effort, date, base, category
+from taskcoachlib import gui, config, widgets, persistence
+from taskcoachlib.domain import task, date, base
 from taskcoachlib.thirdparty import hypertreelist
 
 

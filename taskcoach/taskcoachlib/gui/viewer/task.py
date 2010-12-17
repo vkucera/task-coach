@@ -28,7 +28,7 @@ from taskcoachlib.gui import uicommand, menu, render, dialog
 from taskcoachlib.thirdparty.calendar import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, \
     wxSCHEDULER_TODAY, wxSCHEDULER_HORIZONTAL, wxSCHEDULER_TODAY, wxSCHEDULER_MONTHLY, \
     wxFancyDrawer
-import base, mixin
+import base, mixin, refresher
 
 
 class TaskViewerStatusMessages(patterns.Observer):
@@ -51,14 +51,16 @@ class TaskViewerStatusMessages(patterns.Observer):
 
 class BaseTaskViewer(mixin.SearchableViewerMixin, 
                      mixin.FilterableViewerForTasksMixin,
-                     base.UpdatePerSecondViewer, base.TreeViewer, 
-                     patterns.Observer):
+                     base.TreeViewer, patterns.Observer):
     defaultTitle = _('Tasks')
     defaultBitmap = 'led_blue_icon'
     
     def __init__(self, *args, **kwargs):
         super(BaseTaskViewer, self).__init__(*args, **kwargs)
         self.statusMessages = TaskViewerStatusMessages(self)
+        self.refresher = refresher.SecondRefresher(self,
+                                                  task.Task.trackStartEventType(),
+                                                  task.Task.trackStopEventType())
         self.__registerForAppearanceChanges()
         
     def domainObjectsToView(self):
@@ -70,12 +72,6 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
     def createFilter(self, taskList):
         tasks = domain.base.DeletedFilter(taskList)
         return super(BaseTaskViewer, self).createFilter(tasks)
-
-    def trackStartEventType(self):
-        return task.Task.trackStartEventType()
-    
-    def trackStopEventType(self):
-        return task.Task.trackStopEventType()
 
     def newItemDialog(self, *args, **kwargs):
         kwargs['categories'] = self.taskFile.categories().filteredCategories()
