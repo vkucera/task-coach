@@ -116,6 +116,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         self._showTotalColumns(show=aggregation!='details')
         if autoResizing:
             self.widget.ToggleAutoResizing(True)
+        patterns.Event('effortviewer.aggregation').send()
             
     def isShowingAggregatedEffort(self):
         return self.aggregation != 'details'

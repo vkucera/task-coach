@@ -308,10 +308,14 @@ class ViewerCommand(UICommand): # pylint: disable-msg=W0223
 # Mixins: 
 
 class PopupButtonMixin(object):
-    """ Mix this with a UICommand for a toolbar pop-up menu. """
+    ''' Mix this with a UICommand for a toolbar pop-up menu. '''
 
     def doCommand(self, event): # pylint: disable-msg=W0613
-        args = [self.createPopupMenu()]
+        try:
+            args = [self.__menu]
+        except AttributeError:
+            self.__menu = self.createPopupMenu()
+            args = [self.__menu]
         if self.toolbar:
             args.append(self.menuXY())
         self.mainWindow().PopupMenu(*args) # pylint: disable-msg=W0142
@@ -577,6 +581,7 @@ class FileEditTemplates(SettingsCommand, UICommand):
         dlg = dialog.templates.TemplatesDialog(self.settings, self.mainWindow(), 
                                                _('Edit templates'))
         dlg.Show()
+
 
 class FilePurgeDeletedItems(NeedsDeletedItemsMixin, IOCommand):
     def __init__(self, *args, **kwargs):

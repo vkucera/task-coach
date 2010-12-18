@@ -75,10 +75,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         for eventType in 'active', 'inactive', 'completed', 'duesoon', 'overdue':
             registerObserver(self.__computeRecursiveForegroundColor, 'color.%stasks')
         registerObserver(self.onDueSoonHoursChanged, 'behavior.duesoonhours')
-        if self.__dueDateTime.get() != maxDateTime:
+        now = date.Now()
+        if now < self.__dueDateTime.get() < maxDateTime:
             registerObserver(self.onOverDue, 
                              date.Clock.eventType(self.__dueDateTime.get() + date.oneSecond))
-        if self.__startDateTime.get() != maxDateTime:
+        if now < self.__startDateTime.get() < maxDateTime:
             registerObserver(self.onStarted,
                              date.Clock.eventType(self.__startDateTime.get() + date.oneSecond))
             

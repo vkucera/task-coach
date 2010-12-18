@@ -22,11 +22,11 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.7', 'December 17, 2010',
+Release('1.2.7', 'December 19, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Performance improvements: faster closing of task dialogs, 
-faster item selection.''')
+faster item selection, no redraw of task viewers every minute.''')
         ]
     ),
 

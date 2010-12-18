@@ -283,20 +283,17 @@ class ExportMenu(Menu):
 
 class TaskTemplateMenu(DynamicMenu):
     def __init__(self, mainwindow, taskList, settings):
-        self._uiCommands = None
         self.settings = settings
         self.taskList = taskList
         super(TaskTemplateMenu, self).__init__(mainwindow)
 
     def registerForMenuUpdate(self):
-        self._window.Bind(wx.EVT_MENU_OPEN, self.onUpdateMenu)
+        patterns.Publisher().registerObserver(self.onUpdateMenu, 
+                                              eventType='templates.saved')
         
     def updateMenuItems(self):
-        newCommands = self.getUICommands()
-        if newCommands != self._uiCommands:
-            self.clearMenu()
-            self.fillMenu(newCommands)
-            self._uiCommands = newCommands
+        self.clearMenu()
+        self.fillMenu(self.getUICommands())
      
     def fillMenu(self, uiCommands):
         self.appendUICommands(*uiCommands) # pylint: disable-msg=W0142
@@ -883,7 +880,8 @@ class EffortViewerColumnPopupMenu(ColumnPopupMenuMixin,
     ''' Column header popup menu. '''
     
     def registerForMenuUpdate(self):
-        self._window.Bind(wx.EVT_UPDATE_UI, self.onUpdateMenu)
+        patterns.Publisher().registerObserver(self.onUpdateMenu, 
+                                              'effortviewer.aggregation')
             
 
 class AttachmentPopupMenu(Menu):
