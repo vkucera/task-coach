@@ -107,7 +107,10 @@ class TaskViewerTestCase(test.wxTestCase):
 
     def showColumn(self, columnName, show=True):
         self.viewer.showColumnByName(columnName, show)
-    
+
+    def setColor(self, setting):
+        self.settings.set('color', setting, str(self.newColor))        
+         
     def assertColor(self, expectedColor=None):
         expectedColor = expectedColor or wx.Colour(*self.newColor)
         self.assertEqual(expectedColor, self.getFirstItemTextColor())
@@ -116,8 +119,9 @@ class TaskViewerTestCase(test.wxTestCase):
         self.assertEqual(wx.Colour(*self.newColor), 
                          self.getFirstItemBackgroundColor())
                          
-    def setColor(self, setting):
-        self.settings.set('color', setting, str(self.newColor))        
+    def assertIcon(self, icon, column=0):
+        self.assertEqual(self.viewer.imageIndex[icon], 
+                         self.getFirstItemIcon(column))
         
 
 class CommonTestsMixin(object):
@@ -376,8 +380,7 @@ class CommonTestsMixin(object):
         self.task.addAttachment(att)
         self.taskList.append(self.task)
         self.showColumn('attachments')
-        self.assertEqual(self.viewer.imageIndex['paperclip_icon'], 
-                         self.getFirstItemIcon(1))
+        self.assertIcon('paperclip_icon', column=1)
         
     def testOneDayLeft(self):
         self.showColumn('timeLeft')
@@ -574,24 +577,24 @@ class CommonTestsMixin(object):
     def testIconUpdatesWhenStartDateTimeChanges(self):
         self.taskList.append(self.task)
         self.task.setStartDateTime(date.Now() + date.oneDay)
-        self.assertEqual(self.viewer.imageIndex['led_grey_icon'], self.getFirstItemIcon())
+        self.assertIcon('led_grey_icon')
 
     def testIconUpdatesWhenDueDateTimeChanges(self):
         self.taskList.append(self.task)
         self.task.setDueDateTime(date.Now()+ date.oneHour)
-        self.assertEqual(self.viewer.imageIndex['led_orange_icon'], self.getFirstItemIcon())
+        self.assertIcon('led_orange_icon')
 
     def testIconUpdatesWhenCompletionDateTimeChanges(self):
         self.taskList.append(self.task)
         self.task.setCompletionDateTime(date.Now())
-        self.assertEqual(self.viewer.imageIndex['led_green_icon'], self.getFirstItemIcon())
+        self.assertIcon('led_green_icon')
 
     def testIconUpdatesWhenPrerequisiteIsAdded(self):
         prerequisite = task.Task('zzz')
         self.taskList.extend([prerequisite, self.task])
         self.task.addPrerequisites([prerequisite])
         prerequisite.addDependencies([self.task])
-        self.assertEqual(self.viewer.imageIndex['led_grey_icon'], self.getFirstItemIcon())
+        self.assertIcon('led_grey_icon')
 
     def testIconUpdatesWhenPrerequisiteIsCompleted(self):
         prerequisite = task.Task(subject='zzz')
@@ -599,18 +602,31 @@ class CommonTestsMixin(object):
         self.task.addPrerequisites([prerequisite])
         prerequisite.addDependencies([self.task]) 
         prerequisite.setCompletionDateTime(date.Now())
-        self.assertEqual(self.viewer.imageIndex['led_grey_icon'], self.getFirstItemIcon())
+        self.assertIcon('led_blue_icon') # Should be grey?
         
     def testIconUpdatesWhenEffortTrackingStarts(self):
         self.taskList.append(self.task)
         self.task.addEffort(effort.Effort(self.task))
-        self.assertEqual(self.viewer.imageIndex['clock_icon'], self.getFirstItemIcon())
+        self.assertIcon('clock_icon')
         
     def testIconUpdatesWhenEffortTrackingStops(self):
         self.taskList.append(self.task)
         self.task.addEffort(effort.Effort(self.task))
         self.task.stopTracking()
-        self.assertEqual(self.viewer.imageIndex['led_blue_icon'], self.getFirstItemIcon())
+        self.assertIcon('led_blue_icon')
+        
+    def testIconUpdatesWhenTaskBecomesOverdue(self):
+        dueDateTime = date.Now() + date.TimeDelta(seconds=10)
+        dueDateTime = dueDateTime.replace(microsecond=0)
+        self.task.setDueDateTime(dueDateTime)
+        self.taskList.append(self.task)
+        self.assertIcon('led_orange_icon')
+        now = dueDateTime + date.oneSecond
+        oldNow = date.Now
+        date.Now = lambda: now
+        date.Clock().notifySpecificTimeObservers(now)
+        self.assertIcon('led_red_icon')
+        date.Now = oldNow
         
     def testModeIsSavedInSettings(self):
         self.assertEqual(self.treeMode, 
@@ -714,7 +730,7 @@ class CommonTestsMixin(object):
     def testChangeDueDate(self):
         self.taskList.append(self.task)
         self.task.setDueDateTime(date.Now().endOfDay())
-        self.assertEqual('task.dueDateTime', self.viewer.events[0].type())
+        self.failUnless('task.dueDateTime' in self.viewer.events[0].types())
 
     def testChangeCompletionDateWhileColumnNotShown(self):
         self.taskList.append(self.task)
@@ -722,6 +738,9 @@ class CommonTestsMixin(object):
         # We still get an event for the subject column:
         expectedEvent = patterns.Event('task.completionDateTime', self.task, self.task.completionDateTime())
         expectedEvent.addSource(self.task, self.task.percentageComplete(), type=self.task.percentageCompleteChangedEventType())
+        expectedEvent.addSource(self.task, self.task.icon(), type=self.task.iconChangedEventType())
+        expectedEvent.addSource(self.task, self.task.selectedIcon(), type=self.task.selectedIconChangedEventType())
+        expectedEvent.addSource(self.task, self.task.foregroundColor(), type=self.task.foregroundColorChangedEventType())
         self.assertEqual([expectedEvent], self.viewer.events)
 
     def testChangeCompletionDateWhileColumnShown(self):
@@ -730,6 +749,9 @@ class CommonTestsMixin(object):
         self.task.setCompletionDateTime(date.Now())
         expectedEvent = patterns.Event('task.completionDateTime', self.task, self.task.completionDateTime())
         expectedEvent.addSource(self.task, self.task.percentageComplete(), type=self.task.percentageCompleteChangedEventType())
+        expectedEvent.addSource(self.task, self.task.icon(), type=self.task.iconChangedEventType())
+        expectedEvent.addSource(self.task, self.task.selectedIcon(), type=self.task.selectedIconChangedEventType())
+        expectedEvent.addSource(self.task, self.task.foregroundColor(), type=self.task.foregroundColorChangedEventType())
         self.assertEqual([expectedEvent], self.viewer.events)
 
     def testChangePercentageCompleteWhileColumnNotShown(self):

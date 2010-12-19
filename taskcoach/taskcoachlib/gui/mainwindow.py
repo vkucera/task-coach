@@ -362,7 +362,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, widgets.AuiManagedFrameWith
             uiCommands.extend([ 
                 None, 
                 uicommand.EffortStartButton(taskList=self.taskFile.tasks()), 
-                uicommand.EffortStop(taskList=self.taskFile.tasks())])
+                uicommand.EffortStop(effortList=self.taskFile.efforts())])
         return uiCommands
         
     def showToolBar(self, size):

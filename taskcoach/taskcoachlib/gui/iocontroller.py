@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, os, sys, codecs, traceback, shutil
-from taskcoachlib import meta, persistence
+from taskcoachlib import meta, persistence, patterns
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty import lockfile
 
@@ -228,16 +228,19 @@ class IOController(object):
         templates = persistence.TemplateList(self.__settings.pathToTemplatesDir())
         templates.addTemplate(task)
 
-    def addtemplate(self):
+    def addtemplate(self, showerror=wx.MessageBox):
         filename = self.__askUserForFile(_('Open template...'),
             fileDialogOpts={'default_extension': 'tsktmpl',
                             'wildcard': _('%s template files (*.tsktmpl)|*.tsktmpl')%meta.name},
             flags=wx.OPEN)
         if filename:
-            shutil.copyfile(filename,
-                            os.path.join(self.__settings.pathToTemplatesDir(),
-                                         os.path.split(filename)[-1]))
-
+            templates = persistence.TemplateList(self.__settings.pathToTemplatesDir())
+            try:
+                templates.copyTemplate(filename)
+            except Exception, reason:
+                errorMessage = _('Cannot add template %s\n%s')%(filename, reason)
+                showerror(errorMessage, **self.__errorMessageOptions)
+            
     def close(self, force=False):
         if self.__taskFile.needSave():
             if force:
@@ -385,7 +388,6 @@ Break the lock?''') % filename,
     def __closeUnconditionally(self):
         self.__messageCallback(_('Closed %s')%self.__taskFile.filename())
         self.__taskFile.close()
-        from taskcoachlib import patterns
         patterns.CommandHistory().clear()
     
     def __showSaveMessage(self, savedFile):    

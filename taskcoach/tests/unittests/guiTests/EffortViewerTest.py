@@ -107,14 +107,15 @@ class EffortViewerTest(test.wxTestCase):
     def setUp(self):
         super(EffortViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
-        taskFile = persistence.TaskFile()
-        self.task = task.Task()
-        taskFile.tasks().append(self.task)
+        self.taskFile = persistence.TaskFile()
+        self.task = task.Task('task')
+        self.taskFile.tasks().append(self.task)
         self.effort1 = effort.Effort(self.task, date.DateTime(2006,1,1),
             date.DateTime(2006,1,2))
         self.effort2 = effort.Effort(self.task, date.DateTime(2006,1,2),
             date.DateTime(2006,1,3))
-        self.viewer = gui.viewer.EffortViewer(self.frame, taskFile, self.settings)
+        self.viewer = gui.viewer.EffortViewer(self.frame, self.taskFile, 
+                                              self.settings)
         
     @test.skipOnPlatform('__WXMSW__') # GetItemBackgroundColour doesn't work on Windows
     def testEffortBackgroundColor(self): # pragma: no cover
@@ -131,7 +132,39 @@ class EffortViewerTest(test.wxTestCase):
     def testIsSelected(self):
         self.failIf(self.viewer.isselected(self.effort1))
 
+    def testSelect(self):
+        self.task.addEffort(self.effort1)
+        self.viewer.widget.ToggleItemSelection(0)
+        self.failUnless(self.viewer.isselected(self.effort1))
 
+    def testSelectAfterNewEffortWasAdded(self):
+        self.task.addEffort(self.effort1)
+        self.viewer.widget.ToggleItemSelection(0)
+        self.task.addEffort(self.effort2)
+        self.failUnless(self.viewer.isselected(self.effort2))
+
+    def testSearch(self):
+        self.task.addEffort(self.effort1)
+        self.viewer.presentation().setSearchFilter('no such task')
+        self.assertEqual(0, len(self.viewer.presentation()))
+        self.viewer.presentation().setSearchFilter(self.task.subject())
+        self.assertEqual(1, len(self.viewer.presentation()))
+        
+    def testSearchIncludeSubitems(self):
+        self.task.addEffort(self.effort1)
+        child = task.Task('child')
+        self.task.addChild(child)
+        child.setParent(self.task)
+        self.taskFile.tasks().append(child)
+        child.addEffort(effort.Effort(child))
+        self.assertEqual(2, len(self.viewer.presentation()))
+        self.viewer.presentation().setSearchFilter(self.task.subject())
+        self.assertEqual(1, len(self.viewer.presentation()))
+        self.viewer.presentation().setSearchFilter(self.task.subject(), 
+                                                   includeSubItems=True)
+        self.assertEqual(2, len(self.viewer.presentation()))
+        
+        
 class EffortViewerAggregationTestCase(test.wxTestCase):
     aggregation = 'Subclass responsibility'
     
@@ -273,16 +306,16 @@ class CommonTestsMixin(object):
 
     def testActiveEffort(self):
         self.task2.efforts()[0].setStop(date.DateTime.max) # Make active
-        self.viewer.onEverySecond(None) # Simulate clock firing
-        self.assertEqual(1, len(self.viewer.currentlyTrackedItems()))
+        self.viewer.refresher.onEverySecond(None) # Simulate clock firing
+        self.assertEqual(1, len(self.viewer.refresher.currentlyTrackedItems()))
         
     def testActiveEffortAfterSwitch(self):
         self.task2.efforts()[0].setStop(date.DateTime.max) # Make active
         self.switchAggregation()    
-        self.viewer.onEverySecond(None) # Simulate clock firing
+        self.viewer.refresher.onEverySecond(None) # Simulate clock firing
         expectedNrOfTrackedItems = 2 if self.aggregation == 'details' else 1
         self.assertEqual(expectedNrOfTrackedItems, 
-                         len(self.viewer.currentlyTrackedItems()))
+                         len(self.viewer.refresher.currentlyTrackedItems()))
         
     def testIsShowingAggregatedEffort(self):
         isAggregating = self.aggregation != 'details'

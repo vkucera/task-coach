@@ -36,9 +36,10 @@ class ViewFilter(base.Filter):
         registerObserver = patterns.Publisher().registerObserver
         for eventType in ('task.dueDateTime', 'task.startDateTime', 
                           'task.completionDateTime', 'task.prerequisites',
+                          task.Task.iconChangedEventType(), # Proxy for status changes
                           task.Task.addChildEventType(),
                           task.Task.removeChildEventType(),
-                          'clock.minute'):
+                          'clock.midnight'):
             registerObserver(self.onTaskStatusChange, eventType=eventType)
 
     def onTaskStatusChange(self, event): # pylint: disable-msg=W0613

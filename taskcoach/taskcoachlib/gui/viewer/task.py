@@ -27,18 +27,39 @@ from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, render, dialog
 from taskcoachlib.thirdparty.calendar import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, \
     wxSCHEDULER_TODAY, wxSCHEDULER_TODAY, wxSCHEDULER_MONTHLY, wxFancyDrawer
-import base, mixin
+import base, mixin, refresher
 
+
+class TaskViewerStatusMessages(patterns.Observer):
+    template1 = 'Tasks: %d selected, %d visible, %d total'
+    template2 = 'Status: %d over due, %d inactive, %d completed'
+    
+    def __init__(self, viewer):
+        super(TaskViewerStatusMessages, self).__init__()
+        self.__viewer = viewer
+        self.__presentation = viewer.presentation()
+    
+    def __call__(self):
+        return self.template1%(len(self.__viewer.curselection()), 
+                               self.__viewer.nrOfVisibleTasks(), 
+                               self.__presentation.originalLength()), \
+               self.template2%(self.__presentation.nrOverdue(), 
+                               self.__presentation.nrInactive(), 
+                               self.__presentation.nrCompleted())
+        
 
 class BaseTaskViewer(mixin.SearchableViewerMixin, 
                      mixin.FilterableViewerForTasksMixin,
-                     base.UpdatePerSecondViewer, base.TreeViewer, 
-                     patterns.Observer):
+                     base.TreeViewer, patterns.Observer):
     defaultTitle = _('Tasks')
     defaultBitmap = 'led_blue_icon'
     
     def __init__(self, *args, **kwargs):
         super(BaseTaskViewer, self).__init__(*args, **kwargs)
+        self.statusMessages = TaskViewerStatusMessages(self)
+        self.refresher = refresher.SecondRefresher(self,
+                                                  task.Task.trackStartEventType(),
+                                                  task.Task.trackStopEventType())
         self.__registerForAppearanceChanges()
         
     def domainObjectsToView(self):
@@ -50,12 +71,6 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
     def createFilter(self, taskList):
         tasks = domain.base.DeletedFilter(taskList)
         return super(BaseTaskViewer, self).createFilter(tasks)
-
-    def trackStartEventType(self):
-        return task.Task.trackStartEventType()
-    
-    def trackStopEventType(self):
-        return task.Task.trackStopEventType()
 
     def newItemDialog(self, *args, **kwargs):
         kwargs['categories'] = self.taskFile.categories().filteredCategories()
@@ -116,21 +131,12 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
                 None,
                 uicommand.EffortStart(viewer=self, 
                                       taskList=self.taskFile.tasks()),
-                uicommand.EffortStop(taskList=self.presentation())])
+                uicommand.EffortStop(effortList=self.taskFile.efforts())])
         
         baseUICommands = super(BaseTaskViewer, self).createToolBarUICommands()    
         # Insert the task viewer UI commands before the search box:
         return baseUICommands[:-2] + taskUICommands + baseUICommands[-2:]
- 
-    def statusMessages(self):
-        status1 = _('Tasks: %d selected, %d visible, %d total')%\
-            (len(self.curselection()), self.nrOfVisibleTasks(), 
-             self.presentation().originalLength())         
-        status2 = _('Status: %d over due, %d inactive, %d completed')% \
-            (self.presentation().nrOverdue(), self.presentation().nrInactive(),
-             self.presentation().nrCompleted())
-        return status1, status2
-    
+     
     def nrOfVisibleTasks(self):
         # Make this overridable for viewers where the widget does not show all
         # items in the presentation, i.e. the widget does filtering on its own.
@@ -295,10 +301,7 @@ class TimelineViewer(BaseTaskViewer):
         for child in self.parallel_children(item) + self.sequential_children(item):
             times.extend(self.bounds(child))
         times = [time for time in times if time is not None]
-        if times:
-            return min(times), max(times)
-        else:
-            return []
+        return (min(times), max(times)) if times else []
  
     def start(self, item, recursive=False):
         try:

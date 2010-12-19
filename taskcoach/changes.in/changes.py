@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-
-Release('1.3.0', 'November 29, 2010',
+            
+Release('1.3.0', 'December 19, 2010',
     summary='''This release ...''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -41,12 +41,27 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.6', 'November 29, 2010',
+Release('1.2.7', 'December 19, 2010',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Performance improvements: faster closing of task dialogs, 
+faster item selection, no redraw of task viewers every minute.''')
+        ]
+    ),
+
+Release('1.2.6', 'December 5, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Avoid the "Pas de sujet" bug when dropping a mail from Outlook on
 a French Windows OS.'''),
-        Bug('''Don't crash when the note viewer is open.''', '3122115')
+        Bug('''Don't crash when the note viewer is open.''', '3122115'),
+        Bug('''Don't crash when the square task viewer is open.'''),
+        Bug('''When double clicking the latest effort, don't open the previous
+one, but the one double clicked.''', '3121403'),
+        Bug('''When searching in the effort viewer with "Include subitems"
+turned on, actually include effort for subtasks in the search results.''', 
+'3124833'),
+        Bug('''Some more performance improvements.''')
         ]
     ),
     

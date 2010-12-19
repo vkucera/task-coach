@@ -16,9 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, pickle, tempfile, codecs
+import os, pickle, tempfile, codecs, shutil
 
 from taskcoachlib.persistence import TemplateXMLWriter, TemplateXMLReader
+from taskcoachlib import patterns
 
 
 class TemplateList(object):
@@ -41,13 +42,14 @@ class TemplateList(object):
         self._toDelete = []
 
     def save(self):
-        """Right now only the order is saved."""
+        ''' Right now only the order is saved. '''
 
         pickle.dump([name for task, name in self._tasks], file(os.path.join(self._path, 'list.pickle'), 'w'))
 
         for task, name in self._toDelete:
             os.remove(os.path.join(self._path, name))
         self._toDelete = []
+        patterns.Event('templates.saved', self).send()
 
     def addTemplate(self, task):
         handle, filename = tempfile.mkstemp('.tsktmpl', dir=self._path)
@@ -63,6 +65,11 @@ class TemplateList(object):
         self._toDelete.append(self._tasks[idx])
         del self._tasks[idx]
 
+    def copyTemplate(self, filename):
+        shutil.copyfile(filename,
+                        os.path.join(self._path, os.path.split(filename)[-1]))
+        patterns.Event('templates.saved', self).send()
+        
     def swapTemplates(self, i, j):
         self._tasks[i], self._tasks[j] = self._tasks[j], self._tasks[i]
 

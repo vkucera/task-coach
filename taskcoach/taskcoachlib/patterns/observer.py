@@ -356,6 +356,9 @@ class Observer(object):
         
     def removeObserver(self, *args, **kwargs):
         Publisher().removeObserver(*args, **kwargs)
+        
+    def removeInstance(self):
+        Publisher().removeInstance(self)
 
 
 class Decorator(Observer):
