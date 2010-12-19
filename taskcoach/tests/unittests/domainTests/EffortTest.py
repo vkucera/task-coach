@@ -18,12 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test, wx
 from unittests import asserts 
-from taskcoachlib import patterns
+from taskcoachlib import patterns, config
 from taskcoachlib.domain import task, effort, date, category
 
 
 class EffortTest(test.TestCase, asserts.Mixin):
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.task = task.Task()
         self.effort = effort.Effort(self.task, start=date.DateTime(2004, 1, 1),
             stop=date.DateTime(2004,1,2))

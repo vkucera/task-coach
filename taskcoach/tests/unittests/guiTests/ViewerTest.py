@@ -17,10 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test, wx
-from taskcoachlib import gui, config, patterns, widgets, persistence
-from taskcoachlib.domain import task, effort, date
+from taskcoachlib import gui, config, widgets, persistence
+from taskcoachlib.domain import task, date, base
 from taskcoachlib.thirdparty import hypertreelist
-
 
 
 class ViewerTest(test.wxTestCase):
@@ -477,82 +476,6 @@ class TreeViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTestsMixin):
 class ListViewerIteratorTest(ViewerIteratorTestCase, ViewerIteratorTestsMixin):
     treeMode = 'False'
 
-
-class MockWidget(object):
-    def __init__(self):
-        self.refreshedItems = []
-        
-    def RefreshItems(self, *items):
-        self.refreshedItems.extend(items)
-    
-
-class UpdatePerSecondViewerTestsMixin(object):
-    def setUp(self):
-        self.settings = config.Settings(load=False)
-        task.Task.settings = self.settings
-        self.settings.set('taskviewer', 'columns', "['timeSpent']")
-        self.taskFile = persistence.TaskFile()
-        self.taskList = task.sorter.Sorter(self.taskFile.tasks(), sortBy='dueDateTime')
-        self.updateViewer = self.createUpdateViewer()
-        self.trackedTask = task.Task(subject='tracked')
-        self.trackedEffort = effort.Effort(self.trackedTask)
-        self.trackedTask.addEffort(self.trackedEffort)
-        self.taskList.append(self.trackedTask)
-        
-    def createUpdateViewer(self):
-        return self.ListViewerClass(self.frame, self.taskFile, self.settings)
-        
-    def testViewerHasRegisteredWithClock(self):
-        self.failUnless(self.updateViewer.onEverySecond in
-            patterns.Publisher().observers(eventType='clock.second'))
-
-    def testClockNotificationResultsInRefreshedItem(self):
-        self.updateViewer.widget = MockWidget()
-        self.updateViewer.onEverySecond(patterns.Event('clock.second', 
-            date.Clock()))
-        usingTaskViewer = self.ListViewerClass == gui.viewer.TaskViewer
-        expected = self.trackedTask if usingTaskViewer else self.trackedEffort
-        self.assertEqual([expected], self.updateViewer.widget.refreshedItems)
-
-    def testClockNotificationResultsInRefreshedItem_OnlyForTrackedItems(self):
-        self.taskList.append(task.Task('not tracked'))
-        self.updateViewer.widget = MockWidget()
-        self.updateViewer.onEverySecond(patterns.Event('clock.second',
-            date.Clock()))
-        self.assertEqual(1, len(self.updateViewer.widget.refreshedItems))
-
-    def testStopTrackingRemovesViewerFromClockObservers(self):
-        self.trackedTask.stopTracking()
-        self.failIf(self.updateViewer.onEverySecond in
-            patterns.Publisher().observers(eventType='clock.second'))
-        
-    def testStopTrackingRefreshesTrackedItems(self):
-        self.updateViewer.widget = MockWidget()
-        self.trackedTask.stopTracking()
-        self.assertEqual(2, len(self.updateViewer.widget.refreshedItems))
-            
-    def testRemoveTrackedChildAndParentRemovesViewerFromClockObservers(self):
-        parent = task.Task()
-        self.taskList.append(parent)
-        parent.addChild(self.trackedTask)
-        self.taskList.remove(parent)
-        self.failIf(self.updateViewer.onEverySecond in
-            patterns.Publisher().observers(eventType='clock.second'))
-        
-    def testCreateViewerWithTrackedItemsStartsTheClock(self):
-        viewer = self.createUpdateViewer()
-        self.failUnless(viewer.onEverySecond in
-            patterns.Publisher().observers(eventType='clock.second'))
-
-
-class TaskListViewerUpdatePerSecondViewerTest(UpdatePerSecondViewerTestsMixin, 
-        test.wxTestCase):
-    ListViewerClass = gui.viewer.TaskViewer
-
-
-class EffortListViewerUpdatePerSecondTest(UpdatePerSecondViewerTestsMixin, 
-        test.wxTestCase):
-    ListViewerClass = gui.viewer.EffortViewer
 
 
 class ViewerWithColumnsTest(test.wxTestCase):

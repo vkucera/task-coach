@@ -29,7 +29,10 @@ class BaseEffort(object):
         return self._task
     
     def parent(self):
-        return None # Efforts don't have parents
+        # Efforts don't have real parents since they are not composite. 
+        # However, we present the parent of an effort is its task for the 
+        # benefit of the search filter.
+        return self._task 
 
     def getStart(self):
         return self._start
@@ -63,8 +66,8 @@ class BaseEffort(object):
         return 'effort.track.start' 
         # We don't use '%s.effort...'%class_ because we need Effort and 
         # CompositeEffort to use the same event types. This is needed to make
-        # UpdatePerSecondViewer work regardless whether EffortViewer is in
-        # aggregate mode or not.
+        # SecondRefresher work regardless whether EffortViewer is in aggregate 
+        # mode or not.
     
     @classmethod
     def trackStopEventType(class_):

@@ -18,12 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from unittests import asserts
 from CommandTestCase import CommandTestCase
-from taskcoachlib import command, patterns
+from taskcoachlib import command, patterns, config
 from taskcoachlib.domain import task, effort, date
 
 
 class EffortCommandTestCase(CommandTestCase, asserts.CommandAssertsMixin):
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
         self.originalTask = task.Task()
@@ -72,7 +73,7 @@ class StartAndStopEffortCommandTest(EffortCommandTestCase):
             lambda: self.failIf(self.originalTask.isBeingTracked()))
                         
     def testStop(self):
-        stop = command.StopEffortCommand(self.taskList)
+        stop = command.StopEffortCommand(self.effortList)
         stop.do()
         self.assertDoUndoRedo(
             lambda: self.failIf(self.originalTask.isBeingTracked()),

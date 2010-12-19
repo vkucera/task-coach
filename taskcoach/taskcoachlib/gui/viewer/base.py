@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from taskcoachlib import patterns, widgets, command
-from taskcoachlib.domain import date
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, toolbar, artprovider
 from taskcoachlib.thirdparty import hypertreelist
@@ -61,7 +60,6 @@ class Viewer(wx.Panel):
         self.toolbar = toolbar.ToolBar(self, (16, 16))
         self.initLayout()
         self.registerPresentationObservers()
-        self.registerClockObservers()
         self.refresh()
         
     def domainObjectsToView(self):
@@ -80,11 +78,7 @@ class Viewer(wx.Panel):
         registerObserver(self.onPresentationChanged, 
                          eventType=self.presentation().removeItemEventType(),
                          eventSource=self.presentation())
-        
-    def registerClockObservers(self):
-        patterns.Publisher().registerObserver(self.onEveryMinute,
-                                              eventType='clock.minute')
-        
+               
     def detach(self):
         ''' Should be called by viewer.container before closing the viewer '''
         patterns.Publisher().removeInstance(self.presentation())
@@ -98,9 +92,6 @@ class Viewer(wx.Panel):
     @classmethod
     def selectEventType(class_):
         return '%s.select'%class_
-    
-    def onEveryMinute(self, event): # pylint: disable-msg=W0221,W0613
-        self.refresh()
     
     def title(self):
         return self.settings.get(self.settingsSection(), 'title') or self.defaultTitle
@@ -466,88 +457,8 @@ class TreeViewer(Viewer): # pylint: disable-msg=W0223
         
     def getItemText(self, item):
         return item.subject()
-    
-    
-class UpdatePerSecondViewer(Viewer, date.ClockObserver):  # pylint: disable-msg=W0223
-    def __init__(self, *args, **kwargs):
-        self.__trackedItems = set()
-        super(UpdatePerSecondViewer, self).__init__(*args, **kwargs)
-        self.registerObserver(self.onStartTracking,
-                              eventType=self.trackStartEventType())
-        self.registerObserver(self.onStopTracking,
-                              eventType=self.trackStopEventType())
-        self.registerObserver(self.onItemAdded, 
-                              eventType=self.presentation().addItemEventType())
-        self.registerObserver(self.onItemRemoved, 
-                              eventType=self.presentation().removeItemEventType())
-        self.setTrackedItems(self.trackedItems(self.presentation()))
-        
-    def setPresentation(self, presentation):
-        super(UpdatePerSecondViewer, self).setPresentation(presentation)
-        self.setTrackedItems(self.trackedItems(self.presentation()))
-                        
-    def trackStartEventType(self):
-        raise NotImplementedError
-    
-    def trackStopEventType(self):
-        raise NotImplementedError
-    
-    def onItemAdded(self, event):
-        startedItems = self.trackedItems(event.values())
-        self.addTrackedItems(startedItems)
-        self.refreshItems(*startedItems)
-        
-    def onItemRemoved(self, event): 
-        stoppedItems = self.trackedItems(event.values())
-        self.removeTrackedItems(stoppedItems)
-        self.refreshItems(*stoppedItems)
 
-    def onStartTracking(self, event):
-        startedItems = [item for item in event.sources() \
-                        if item in self.presentation()]
-        self.addTrackedItems(startedItems)
-        self.refreshItems(*startedItems)
-
-    def onStopTracking(self, event):
-        stoppedItems = [item for item in event.sources() \
-                        if item in self.presentation()]
-        self.removeTrackedItems(stoppedItems)
-        self.refreshItems(*stoppedItems)
             
-    def currentlyTrackedItems(self):
-        return list(self.__trackedItems)
-
-    def onEverySecond(self, event): # pylint: disable-msg=W0221,W0613
-        self.refreshItems(*self.__trackedItems)
-        
-    def setTrackedItems(self, items):
-        self.__trackedItems = set(items)
-        self.startClockIfNecessary()
-        self.stopClockIfNecessary()
-            
-    def addTrackedItems(self, items):
-        if items:
-            self.__trackedItems.update(items)
-            self.startClockIfNecessary()
-
-    def removeTrackedItems(self, items):
-        if items:
-            self.__trackedItems.difference_update(items)
-            self.stopClockIfNecessary()
-
-    def startClockIfNecessary(self):
-        if self.__trackedItems and not self.isClockStarted():
-            self.startClock()
-
-    def stopClockIfNecessary(self):
-        if not self.__trackedItems and self.isClockStarted():
-            self.stopClock()
-
-    @staticmethod
-    def trackedItems(items):
-        return [item for item in items if item.isBeingTracked(recursive=True)]
-
-        
 class ViewerWithColumns(Viewer): # pylint: disable-msg=W0223
     def __init__(self, *args, **kwargs):
         self.__initDone = False

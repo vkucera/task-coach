@@ -24,6 +24,8 @@ from taskcoachlib.domain import date, task, note, category
 
 
 class XMLWriter(object):
+    maxDateTime = date.DateTime()
+    
     def __init__(self, fd, versionnr=meta.data.tskversion):
         self.__fd = fd
         self.__versionnr = versionnr
@@ -49,13 +51,14 @@ class XMLWriter(object):
         self.document.writexml(self.__fd, newl='\n')
 
     def taskNode(self, task): # pylint: disable-msg=W0621
+        maxDateTime = self.maxDateTime
         node = self.baseCompositeNode(task, 'task', self.taskNode)
         node.setAttribute('status', str(task.getStatus()))
-        if task.startDateTime() != date.DateTime():
+        if task.startDateTime() != maxDateTime:
             node.setAttribute('startdate', str(task.startDateTime()))
-        if task.dueDateTime() != date.DateTime():
+        if task.dueDateTime() != maxDateTime:
             node.setAttribute('duedate', str(task.dueDateTime()))
-        if task.completionDateTime() != date.DateTime():
+        if task.completionDateTime() != maxDateTime:
             node.setAttribute('completiondate', str(task.completionDateTime()))
         if task.percentageComplete() != 0:
             node.setAttribute('percentageComplete', str(task.percentageComplete()))

@@ -63,6 +63,7 @@ class TimeDelta(datetime.timedelta):
                               timeDelta.seconds, 
                               timeDelta.microseconds)
 
+oneSecond = TimeDelta(seconds=1)
 zeroHour = TimeDelta(hours=0)
 oneHour = TimeDelta(hours=1)
 twoHours = TimeDelta(hours=2)
