@@ -141,6 +141,12 @@
 	self.navigationItem.rightBarButtonItem = button;
 	[button release];
 	
+	CGPoint p = description.frame.origin;
+	p.x = 0;
+	p.y -= 5;
+
+	[(UIScrollView *)self.view setContentOffset:p animated:YES];
+	
 	return YES;
 }
 
@@ -157,6 +163,8 @@
 	task.longDescription = description.text;
 	[task markDirty];
 	[task save];
+
+	[(UIScrollView *)self.view setContentOffset:CGPointMake(0, 0) animated:YES];
 }
 
 @end
