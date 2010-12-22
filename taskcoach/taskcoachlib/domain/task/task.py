@@ -487,9 +487,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return
         oldEfforts = self._efforts
         self._efforts = efforts
-        self.removeEffortEvent(event, oldEfforts)
-        self.addEffortEvent(event, efforts)
-
+        self.removeEffortEvent(event, *oldEfforts)
+        self.addEffortEvent(event, *efforts)
+        self.timeSpentEvent(event, *(oldEfforts + efforts))
+        
     @classmethod
     def trackStartEventType(class_):
         return '%s.track.start'%class_

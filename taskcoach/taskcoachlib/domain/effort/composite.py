@@ -79,11 +79,8 @@ class BaseCompositeEffort(base.BaseEffort): # pylint: disable-msg=W0223
         # are determined by the contained efforts.
 
     def onTimeSpentChanged(self, event):
-        changedEffort = event.values()[0] if event.values() else None
-        if changedEffort is None or self._inPeriod(changedEffort) or \
-                                    self._inCache(changedEffort):
-            self._invalidateCache()
-            self.notifyObserversOfDurationOrEmpty()
+        self._invalidateCache()
+        self.notifyObserversOfDurationOrEmpty()
 
     def onRevenueChanged(self, event): # pylint: disable-msg=W0613
         patterns.Event('effort.revenue', self, self.revenue(recursive=True)).send()

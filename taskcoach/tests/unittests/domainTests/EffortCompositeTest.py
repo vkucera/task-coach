@@ -237,8 +237,7 @@ class CompositeEffortTest(test.TestCase):
 
     def testChangeStartTimeOfEffort_Notification(self):
         self.task.addEffort(self.effort1)
-        patterns.Publisher().registerObserver(self.onEvent,
-            eventType='effort.duration')
+        self.registerObserver('effort.duration')
         self.effort1.setStop(self.effort1.getStop() + date.TimeDelta(hours=1))
         expectedEvent = patterns.Event('effort.duration', self.composite, 
             self.composite.duration())
@@ -250,21 +249,19 @@ class CompositeEffortTest(test.TestCase):
         self.assertEqual(self.effort3.duration(), self.composite.duration())
 
     def testEmptyNotification(self):
-        patterns.Publisher().registerObserver(self.onEvent, 
-            eventType='effort.composite.empty')
+        self.registerObserver('effort.composite.empty')
         self.task.addEffort(self.effort1)
         self.task.removeEffort(self.effort1)
         self.assertEqual([patterns.Event('effort.composite.empty',
             self.composite)], self.events)
-        
+                
     def testChangeTask(self):
         self.task.addEffort(self.effort1)
         self.effort1.setTask(task.Task())
         self.assertEqual(date.TimeDelta(), self.composite.duration())
 
     def testChangeTask_EmptyNotification(self):
-        patterns.Publisher().registerObserver(self.onEvent,
-            eventType='effort.composite.empty')
+        self.registerObserver('effort.composite.empty')
         self.task.addEffort(self.effort1)
         self.effort1.setTask(task.Task())
         self.assertEqual([patterns.Event('effort.composite.empty', 

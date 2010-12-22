@@ -28,7 +28,7 @@ class BaseCommand(patterns.Command):
     def __init__(self, list=None, items=None, *args, **kwargs): # pylint: disable-msg=W0622
         super(BaseCommand, self).__init__(*args, **kwargs)
         self.list = list
-        self.items = items or []
+        self.items = [item for item in items] if items else []
 
     def __str__(self):
         return self.name()
