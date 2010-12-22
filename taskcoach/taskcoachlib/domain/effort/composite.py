@@ -110,7 +110,7 @@ class CompositeEffort(BaseCompositeEffort):
         patterns.Publisher().registerObserver(self.onTimeSpentChanged,
             eventType='task.timeSpent', eventSource=task)
         patterns.Publisher().registerObserver(self.onRevenueChanged,
-            eventType='task.revenue', eventSource=task)
+            eventType=task.hourlyFeeChangedEventType(), eventSource=task)
         '''
         FIMXE! CompositeEffort does not derive from base.Object
         patterns.Publisher().registerObserver(self.onBackgroundColorChanged,
@@ -185,7 +185,7 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
         patterns.Publisher().registerObserver(self.onTimeSpentChanged,
             eventType='task.timeSpent')
         patterns.Publisher().registerObserver(self.onRevenueChanged,
-            eventType='task.revenue')
+            eventType=task.Task.hourlyFeeChangedEventType())
         for eventType in self.taskList.modificationEventTypes():
             patterns.Publisher().registerObserver(self.onTaskAddedOrRemoved, eventType,
                                                   eventSource=self.taskList)

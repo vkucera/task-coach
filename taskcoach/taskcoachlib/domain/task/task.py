@@ -856,7 +856,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def revenueEvent(self, event):
         event.addSource(self, self.revenue(), type='task.revenue')
         for ancestor in self.ancestors():
-            event.addSource(ancestor, ancestor.revenue(recursive=True), 
+            event.addSource(ancestor, ancestor.revenue(recursive=False), 
                             type='task.revenue')
 
     @staticmethod

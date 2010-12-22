@@ -1421,7 +1421,7 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
         self.task1_1.setHourlyFee(100)
         self.task1_1.addEffort(effort.Effort(self.task1_1,
             date.DateTime(2005,1,1,10,0,0), date.DateTime(2005,1,1,12,0,0)))
-        self.assertEvent('task.revenue', self.task1, 200)
+        self.assertEvent('task.revenue', self.task1, 0)
 
     def testIsBeingTrackedRecursiveWhenChildIsNotTracked(self):
         self.failIf(self.task1.isBeingTracked(recursive=True))
@@ -2072,7 +2072,7 @@ class TaskWithHourlyFeeFixture(TaskTestCase, CommonTaskTestsMixin):
         self.registerObserver('task.revenue', eventSource=self.task)
         child.addEffort(effort.Effort(child, date.DateTime(2005,1,1,10,0,0),
                                       date.DateTime(2005,1,1,11,0,0)))
-        self.assertEvent('task.revenue', self.task, 100)
+        self.assertEvent('task.revenue', self.task, 0)
 
     def testAddingEffortDoesNotTriggerRevenueNotificationForEffort(self):
         self.registerObserver('effort.revenue')

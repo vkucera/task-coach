@@ -161,7 +161,7 @@ class CompositeEffortTest(test.TestCase):
     def testThatAnHourlyFeeChangeCausesARevenueNotification(self):
         self.task.addEffort(self.effort1)
         patterns.Publisher().registerObserver(self.onEvent, 
-            eventType='effort.revenue')
+            eventType='effort.revenue', eventSource=self.composite)
         self.task.setHourlyFee(100)
         self.failUnless(patterns.Event('effort.revenue', self.composite,
             100.0) in self.events)
