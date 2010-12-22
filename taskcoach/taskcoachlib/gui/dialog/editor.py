@@ -896,10 +896,13 @@ class PrerequisitesPage(PageWithViewer):
     @patterns.eventSource
     def ok(self, event=None): # pylint: disable-msg=W0221
         treeCtrl = self.viewer.widget
-        prerequisites = []
+        prerequisites = set(self.items[0].prerequisites())
         for taskNode in treeCtrl.GetItemChildren(recursively=True):
+            prerequisite = treeCtrl.GetItemPyData(taskNode)
             if taskNode.IsChecked():
-                prerequisites.append(treeCtrl.GetItemPyData(taskNode))
+                prerequisites.add(prerequisite)
+            else:
+                prerequisites.discard(prerequisite)
         self.items[0].setPrerequisites(prerequisites, event=event)
 
 

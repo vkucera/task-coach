@@ -28,7 +28,9 @@ Release('1.2.7', 'December 22, 2010',
         Bug('''Performance improvements: faster closing of task dialogs, 
 faster item selection, no redraw of task viewers every minute.'''),
         Bug('''When removing all efforts, correctly update the effort viewer.''', 
-            '3125553')
+            '3125553'),
+        Bug('''When editing a task that already has prerequisite tasks, don't 
+reset the prerequisites.''', '3137055')
         ]
     ),
 
