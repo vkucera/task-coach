@@ -250,6 +250,8 @@ class wxSchedulerPaint( object ):
 						currentPageHeight = maxDY
 						self.pageCount += 1
 
+		now = wx.DateTime.Now()
+
 		for dayN in xrange(daysCount):
 			theDay = utils.copyDateTime(start)
 			theDay.AddDS(wx.DateSpan(days=dayN))
@@ -273,6 +275,33 @@ class wxSchedulerPaint( object ):
 									      y),
 								     wx.Point(x + 1.0 * width * (nbHours * dayN + idx + 1) / (nbHours * daysCount),
 									      y + height)))
+
+		now = wx.DateTime.Now()
+		# This assumes self._lstDisplayedHours is sorted of course
+		for dayN in xrange(daysCount):
+			theDay = utils.copyDateTime(start)
+			theDay.AddDS(wx.DateSpan(days=dayN))
+			if theDay.IsSameDate(now):
+				theDay.SetSecond(0)
+				previous = None
+				for idx, hour in enumerate(self._lstDisplayedHours):
+					theDay.SetHour(hour.GetHour())
+					theDay.SetMinute(hour.GetMinute())
+					if theDay.IsLaterThan(now):
+						if idx != 0:
+							if self._style == wxSCHEDULER_VERTICAL:
+								yPrev = y + 1.0 * height * (idx - 1) / nbHours
+								delta = 1.0 * height / nbHours * now.Subtract(previous).GetSeconds() \
+									/ theDay.Subtract(previous).GetSeconds()
+								drawer.DrawNowHorizontal(x, yPrev + delta, width)
+							else:
+								xPrev = x + 1.0 * width * (nbHours * dayN + idx - 1) / (nbHours * daysCount)
+								delta = 1.0 * width / (nbHours * daysCount) * now.Subtract(previous).GetSeconds() \
+									/ theDay.Subtract(previous).GetSeconds()
+								drawer.DrawNowVertical(xPrev + delta, y, height)
+						break
+					previous = utils.copyDateTime( theDay )
+				break
 
 		if self._style == wxSCHEDULER_VERTICAL:
 			return max(width, DAY_SIZE_MIN.width), max(height, DAY_SIZE_MIN.height)

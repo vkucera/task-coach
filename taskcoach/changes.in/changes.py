@@ -34,6 +34,7 @@ reset the prerequisites.''', '3137055')
         ],
     featuresAdded=[
         Feature('''Always highlight the current day in the calendar view.'''),
+        Feature('''Show current time in calendar view.'''),
         ]
     ),
 
