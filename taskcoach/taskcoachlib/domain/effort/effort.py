@@ -27,7 +27,7 @@ class Effort(baseeffort.BaseEffort, base.Object):
         super(Effort, self).__init__(task, start or date.DateTime.now(), stop, 
             *args, **kwargs)
         self.__updateDurationCache()
-
+        
     @patterns.eventSource
     def setTask(self, task, event=None):
         if self._task is None: 

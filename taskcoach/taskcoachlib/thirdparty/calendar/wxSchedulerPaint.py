@@ -176,7 +176,7 @@ class wxSchedulerPaint( object ):
 
 		return results
 
-	def _paintPeriod(self, drawer, start, daysCount, x, y, width, height):
+	def _paintPeriod(self, drawer, start, daysCount, x, y, width, height, highlight=None):
 		end = utils.copyDateTime(start)
 		end.AddDS(wx.DateSpan(days=daysCount))
 
@@ -200,10 +200,10 @@ class wxSchedulerPaint( object ):
 			theDay = utils.copyDateTime(start)
 			theDay.AddDS(wx.DateSpan(days=dayN))
 			theDay.SetSecond(0)
-			if theDay.IsSameDate( wx.DateTime.Now() ) and self._viewType != wxSCHEDULER_DAILY:
-				color = self._highlightColor
-			else:
-				color = None
+			color = highlight
+			if theDay.IsSameDate( wx.DateTime.Now() ):
+				if self._viewType != wxSCHEDULER_DAILY or daysCount >= 2:
+					color = self._highlightColor
 			drawer.DrawDayBackground( x + 1.0 * width / daysCount * dayN, y, 1.0 * width / daysCount, height,
 						  highlight=color )
 
@@ -250,6 +250,8 @@ class wxSchedulerPaint( object ):
 						currentPageHeight = maxDY
 						self.pageCount += 1
 
+		now = wx.DateTime.Now()
+
 		for dayN in xrange(daysCount):
 			theDay = utils.copyDateTime(start)
 			theDay.AddDS(wx.DateSpan(days=dayN))
@@ -274,6 +276,33 @@ class wxSchedulerPaint( object ):
 								     wx.Point(x + 1.0 * width * (nbHours * dayN + idx + 1) / (nbHours * daysCount),
 									      y + height)))
 
+		now = wx.DateTime.Now()
+		# This assumes self._lstDisplayedHours is sorted of course
+		for dayN in xrange(daysCount):
+			theDay = utils.copyDateTime(start)
+			theDay.AddDS(wx.DateSpan(days=dayN))
+			if theDay.IsSameDate(now):
+				theDay.SetSecond(0)
+				previous = None
+				for idx, hour in enumerate(self._lstDisplayedHours):
+					theDay.SetHour(hour.GetHour())
+					theDay.SetMinute(hour.GetMinute())
+					if theDay.IsLaterThan(now):
+						if idx != 0:
+							if self._style == wxSCHEDULER_VERTICAL:
+								yPrev = y + 1.0 * height * (idx - 1) / nbHours
+								delta = 1.0 * height / nbHours * now.Subtract(previous).GetSeconds() \
+									/ theDay.Subtract(previous).GetSeconds()
+								drawer.DrawNowHorizontal(x, yPrev + delta, width)
+							else:
+								xPrev = x + 1.0 * width * (nbHours * dayN + idx - 1) / (nbHours * daysCount)
+								delta = 1.0 * width / (nbHours * daysCount) * now.Subtract(previous).GetSeconds() \
+									/ theDay.Subtract(previous).GetSeconds()
+								drawer.DrawNowVertical(xPrev + delta, y, height)
+						break
+					previous = utils.copyDateTime( theDay )
+				break
+
 		if self._style == wxSCHEDULER_VERTICAL:
 			return max(width, DAY_SIZE_MIN.width), max(height, DAY_SIZE_MIN.height)
 		else:
@@ -289,14 +318,22 @@ class wxSchedulerPaint( object ):
 		start.SetMinute(0)
 		start.SetSecond(0)
 
-		return self._paintPeriod(drawer, start, 1, x, y, width, height)
+		color = None
+		if day.IsSameDate(wx.DateTime.Now()) and self._periodCount >= 2:
+			color = self._highlightColor
+
+		return self._paintPeriod(drawer, start, 1, x, y, width, height, highlight=color)
 
 	def _paintDailyHeaders( self, drawer, day, x, y, width, height, includeText=True ):
 		if self._style == wxSCHEDULER_HORIZONTAL:
 			self._headerBounds.append((x, y, height))
 
 		if includeText:
-			w, h = drawer.DrawDayHeader(day, x, y, width, height)
+			color = None
+			if day.IsSameDate( wx.DateTime.Now() ):
+				if self._viewType != wxSCHEDULER_DAILY or self._periodCount >= 2:
+					color = self._highlightColor
+			w, h = drawer.DrawDayHeader(day, x, y, width, height, highlight=color)
 		else:
 			w, h = width, 0
 

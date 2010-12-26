@@ -46,8 +46,8 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         self.__observersToDetach = []
         super(EffortViewer, self).__init__(*args, **kwargs)
         self.refresher = refresher.SecondRefresher(self,
-                                                  effort.Effort.trackStartEventType(),
-                                                  effort.Effort.trackStopEventType())
+            effort.Effort.trackStartEventType(), 
+            effort.Effort.trackStopEventType())
         self.aggregation = self.settings.get(self.settingsSection(), 'aggregation')
         self.aggregationUICommand.setChoice(self.aggregation)
         self.createColumnUICommands()
@@ -57,10 +57,6 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
             patterns.Publisher().registerObserver(self.onAttributeChanged,
                                                   eventType=eventType)
         
-    def registerClockObservers(self):
-        pass # Don't register for the update per minute since the effort viewer
-        # either updates every second or not at all.
-    
     def domainObjectsToView(self):
         if self.__domainObjectsToView is None:
             if self.displayingNewTasks():
@@ -309,12 +305,12 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         return -1
 
     def isselected(self, item):
-        """When this viewer is in aggregation mode, L{curselection}
-        returns the actual underlying L{Effort} objects instead of
-        aggregates. This is a problem e.g. when exporting only a
-        selection, since items we're iterating over (aggregates) are
-        never in curselection(). This method is used instead. It just
-        ignores the overriden version of curselection."""
+        ''' When this viewer is in aggregation mode, L{curselection}
+            returns the actual underlying L{Effort} objects instead of
+            aggregates. This is a problem e.g. when exporting only a
+            selection, since items we're iterating over (aggregates) are
+            never in curselection(). This method is used instead. It just
+            ignores the overriden version of curselection. '''
 
         return item in super(EffortViewer, self).curselection()
 
@@ -324,20 +320,15 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
              self.presentation().originalLength())         
         status2 = _('Status: %d tracking')% self.presentation().nrBeingTracked()
         return status1, status2
+    
+    renderers = dict(details=lambda anEffort: render.dateTimePeriod(anEffort.getStart(), anEffort.getStop()),
+                     day=lambda anEffort: render.date(anEffort.getStart().date()),
+                     week=lambda anEffort: render.weekNumber(anEffort.getStart()),
+                     month=lambda anEffort: render.month(anEffort.getStart()))
 
     def renderPeriod(self, anEffort):
-        if self._hasRepeatedPeriod(anEffort):
-            return ''
-        start = anEffort.getStart()
-        if self.aggregation == 'details':
-            return render.dateTimePeriod(start, anEffort.getStop())
-        elif self.aggregation == 'day':
-            return render.date(start.date())
-        elif self.aggregation == 'week':
-            return render.weekNumber(start)
-        elif self.aggregation == 'month':
-            return render.month(start)
-            
+        return '' if self._hasRepeatedPeriod(anEffort) else self.renderers[self.aggregation](anEffort)
+                    
     def _hasRepeatedPeriod(self, anEffort):
         ''' Return whether the effort has the same period as the previous 
             effort record. '''
@@ -346,10 +337,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         return previousEffort and anEffort.getStart() == previousEffort.getStart()
 
     def renderTimeSpentOnDay(self, anEffort, dayOffset):
-        if self.aggregation == 'week':
-            duration = anEffort.durationDay(dayOffset)
-        else:
-            duration = date.TimeDelta()
+        duration = anEffort.durationDay(dayOffset) if self.aggregation == 'week' else date.TimeDelta()
         return render.timeSpent(duration)
     
     def newItemDialog(self, *args, **kwargs):

@@ -1593,7 +1593,6 @@ class ToggleCategory(NeedsSelectionMixin, ViewerCommand):
             return False # Either viewer is not showing categories or no selection
 
 
-
 class TaskToggleCategory(ToggleCategory):
     def enabled(self, event):
         return super(TaskToggleCategory, self).enabled(event) and \

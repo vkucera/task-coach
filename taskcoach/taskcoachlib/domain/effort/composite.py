@@ -79,11 +79,8 @@ class BaseCompositeEffort(base.BaseEffort): # pylint: disable-msg=W0223
         # are determined by the contained efforts.
 
     def onTimeSpentChanged(self, event):
-        changedEffort = event.values()[0] if event.values() else None
-        if changedEffort is None or self._inPeriod(changedEffort) or \
-                                    self._inCache(changedEffort):
-            self._invalidateCache()
-            self.notifyObserversOfDurationOrEmpty()
+        self._invalidateCache()
+        self.notifyObserversOfDurationOrEmpty()
 
     def onRevenueChanged(self, event): # pylint: disable-msg=W0613
         patterns.Event('effort.revenue', self, self.revenue(recursive=True)).send()
@@ -113,7 +110,7 @@ class CompositeEffort(BaseCompositeEffort):
         patterns.Publisher().registerObserver(self.onTimeSpentChanged,
             eventType='task.timeSpent', eventSource=task)
         patterns.Publisher().registerObserver(self.onRevenueChanged,
-            eventType='task.revenue', eventSource=task)
+            eventType=task.hourlyFeeChangedEventType(), eventSource=task)
         '''
         FIMXE! CompositeEffort does not derive from base.Object
         patterns.Publisher().registerObserver(self.onBackgroundColorChanged,
@@ -188,7 +185,7 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
         patterns.Publisher().registerObserver(self.onTimeSpentChanged,
             eventType='task.timeSpent')
         patterns.Publisher().registerObserver(self.onRevenueChanged,
-            eventType='task.revenue')
+            eventType=task.Task.hourlyFeeChangedEventType())
         for eventType in self.taskList.modificationEventTypes():
             patterns.Publisher().registerObserver(self.onTaskAddedOrRemoved, eventType,
                                                   eventSource=self.taskList)

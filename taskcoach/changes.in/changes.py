@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.0', 'December 19, 2010',
+Release('1.3.0', 'December 26, 2010',
     summary='''This release ...''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -41,11 +41,19 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.7', 'December 19, 2010',
+Release('1.2.7', 'December 26, 2010',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Performance improvements: faster closing of task dialogs, 
-faster item selection, no redraw of task viewers every minute.''')
+faster item selection, no redraw of task viewers every minute.'''),
+        Bug('''When removing all efforts, correctly update the effort viewer.''', 
+            '3125553'),
+        Bug('''When editing a task that already has prerequisite tasks, don't 
+reset the prerequisites.''', '3137055')
+        ],
+    featuresAdded=[
+        Feature('''Always highlight the current day in the calendar view.'''),
+        Feature('''Show current time in calendar view.'''),
         ]
     ),
 
