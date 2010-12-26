@@ -704,7 +704,7 @@ class StartEffortForTaskMenu(DynamicMenu):
         activeChildren = [child for child in task.children() if \
                           child in self.tasks and child.active()]
         if activeChildren:
-            activeChildren.sort(key=lambda task: task.subject())
+            activeChildren.sort(key=lambda child: child.subject())
             subMenu = wx.Menu()
             for child in activeChildren:
                 self.addMenuItemForTask(child, subMenu)
