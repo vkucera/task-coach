@@ -4,7 +4,7 @@
 from wxSchedulerConstants import *
 from wxScheduleUtils import copyDateTime
 
-import wx
+import wx, math
 
 
 class wxDrawer(object):
@@ -56,6 +56,18 @@ class wxDrawer(object):
 		"""
 		Draws a set of schedules in compact form (vertical
 		month). Returns a list of (schedule, point, point).
+		"""
+		raise NotImplementedError
+
+	def DrawNowHorizontal(self, x, y, w):
+		"""
+		Draws a horizontal line showing when is now
+		"""
+		raise NotImplementedError
+
+	def DrawNowVertical(self, x, y, h):
+		"""
+		Draws a vertical line showing when is now
 		"""
 		raise NotImplementedError
 
@@ -619,6 +631,18 @@ class wxBaseDrawer(BackgroundDrawerDCMixin, HeaderDrawerDCMixin, HeaderDrawerMix
 			self.context.DrawLine(x, y + hourH * 1.5 - 1, x + w, y + hourH * 1.5 - 1)
 			return max(w, DAY_SIZE_MIN.width), hourH * 1.5
 
+	def DrawNowHorizontal(self, x, y, w):
+		self.context.SetBrush( wx.Brush( wx.Colour( 0, 128, 0 ) ) )
+		self.context.SetPen( wx.Pen( wx.Colour( 0, 128, 0 ) ) )
+		self.context.DrawArc( x, y + 5, x, y - 5, x, y )
+		self.context.DrawRectangle( x, y - 1, w, 3 )
+
+	def DrawNowVertical(self, x, y, h):
+		self.context.SetBrush( wx.Brush( wx.Colour( 0, 128, 0 ) ) )
+		self.context.SetPen( wx.Pen( wx.Colour( 0, 128, 0 ) ) )
+		self.context.DrawArc( x - 5, y, x + 5, y, x, y )
+		self.context.DrawRectangle( x - 1, y, 3, h )
+
 
 class wxFancyDrawer(BackgroundDrawerGCMixin, HeaderDrawerGCMixin, HeaderDrawerMixin, wxDrawer):
 	"""
@@ -682,3 +706,27 @@ class wxFancyDrawer(BackgroundDrawerGCMixin, HeaderDrawerGCMixin, HeaderDrawerMi
 		finally:
 			font.SetPointSize(fsize)
 			font.SetWeight(fweight)
+
+	def DrawNowHorizontal(self, x, y, w):
+		brush = self.context.CreateLinearGradientBrush( x + 4, y - 1, x + w, y + 1, wx.Colour( 0, 128, 0, 128 ), wx.Colour( 0, 255, 0, 128 ) )
+		self.context.SetBrush( brush )
+		self.context.DrawRectangle( x + 4, y - 2, w - 4, 3 )
+
+		brush = self.context.CreateRadialGradientBrush( x, y - 5, x, y, 5, wx.Colour( 0, 128, 0, 128 ), wx.Colour( 0, 255, 0, 128 ) )
+		self.context.SetBrush( brush )
+
+		path = self.context.CreatePath()
+		path.AddArc( x, y, 5, -math.pi / 2, math.pi / 2, True )
+		self.context.FillPath( path )
+
+	def DrawNowVertical(self, x, y, h):
+		brush = self.context.CreateLinearGradientBrush( x - 1, y + 4, x + 1, y + h, wx.Colour( 0, 128, 0, 128 ), wx.Colour( 0, 255, 0, 128 ) )
+		self.context.SetBrush( brush )
+		self.context.DrawRectangle( x - 2, y + 4, 3, h - 4 )
+
+		brush = self.context.CreateRadialGradientBrush( x - 5, y, x, y, 5, wx.Colour( 0, 128, 0, 128 ), wx.Colour( 0, 255, 0, 128 ) )
+		self.context.SetBrush(brush)
+
+		path = self.context.CreatePath()
+		path.AddArc( x, y, 5, 0.0, math.pi, True )
+		self.context.FillPath( path )

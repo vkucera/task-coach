@@ -112,11 +112,18 @@ footer = '''
             </div>
             <div class="navbox">
                 <h2>Give support</h2>
-                <ul>                    
+                <ul valign=top>                    
                     <li><a href="i18n.html">Help translate</a></li>
                     <li><a href="http://taskcoach.wikispaces.com">Help write the manual</a></li>
                     <li><a href="devinfo.html">Help develop</a></li>
                     <li><a href="donations.html">Donate</a></li>
+                    <li><a href="http://twitter.com/share" class="twitter-share-button" data-url="http://taskcoach.org" data-text="Check out Task Coach: a free and open source todo app for Windows, Mac, Linux and iPhone." data-count="horizontal" data-via="taskcoach">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script><br>
+                        <iframe src="http://www.facebook.com/plugins/like.php?href=http%%3A%%2F%%2Ftaskcoach.org&amp;layout=button_count&amp;show_faces=true&amp;width=190&amp;action=like&amp;colorscheme=light&amp;height=21" 
+                                scrolling="no" frameborder="0" 
+                                style="border:none; overflow:hidden; width:190px; height:21px;" 
+                                allowTransparency="true">
+                        </iframe>
+                    </li>
                 </p>
             </div>
         </div>

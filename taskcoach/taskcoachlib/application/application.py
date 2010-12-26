@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, os, signal, locale
+import wx, os, locale
 
         
 class wxApp(wx.App):
@@ -141,20 +141,16 @@ class Application(object):
         self.wxApp.SetVendorName(meta.author)
                 
     def registerSignalHandlers(self):
-        signal.signal(signal.SIGTERM, self.onSIGTERM)
-        if hasattr(signal, 'SIGHUP'):
-            signal.signal(signal.SIGHUP, self.onSIGHUP) # pylint: disable-msg=E1101
-
-    def onSIGTERM(self, *args): # pylint: disable-msg=W0613
-        ''' onSIGTERM is called when the process receives a TERM signal. '''
-        # Give the user time to save the file:
-        self.mainwindow.quit()
-
-    def onSIGHUP(self, *args): # pylint: disable-msg=W0613
-        ''' onSIGHUP is called when the process receives a HUP signal, 
-            typically when the user logs out. '''
-        # No time to pop up dialogs, force quit:
-        self.mainwindow.quit(force=True)
+        quit = lambda *args: self.mainwindow.quit()
+        if '__WXMSW__' == wx.Platform:
+            import win32api
+            win32api.SetConsoleCtrlHandler(quit, True)
+        else:
+            import signal
+            signal.signal(signal.SIGTERM, quit)
+            if hasattr(signal, 'SIGHUP'):
+                forcedQuit = lambda *args: self.mainwindow.quit(force=True)
+                signal.signal(signal.SIGHUP, forcedQuit) # pylint: disable-msg=E1101
         
     def createMutex(self):
         ''' On Windows, create a mutex so that InnoSetup can check whether the

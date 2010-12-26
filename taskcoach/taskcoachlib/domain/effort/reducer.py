@@ -24,7 +24,11 @@ import effortlist, composite
 class EffortAggregator(patterns.SetDecorator, 
                        effortlist.EffortUICommandNamesMixin):
     ''' This class observes an TaskList and aggregates the individual effort
-        records to CompositeEfforts, e.g. per day or per week. '''
+        records to CompositeEfforts, e.g. per day or per week. Whenever a 
+        CompositeEffort becomes empty, for example because effort is deleted,
+        it sends an 'empty' event so that the aggregator can remove the
+        (now empty) CompositeEffort from itself. '''
+        
     def __init__(self, *args, **kwargs):
         self.__composites = {}
         aggregation = kwargs.pop('aggregation')
