@@ -31,6 +31,9 @@ faster item selection, no redraw of task viewers every minute.'''),
             '3125553'),
         Bug('''When editing a task that already has prerequisite tasks, don't 
 reset the prerequisites.''', '3137055')
+        ],
+    featuresAdded=[
+        Feature('''Always highlight the current day in the calendar view.'''),
         ]
     ),
 
