@@ -57,6 +57,12 @@ class Page(widgets.BookPage):
 
 
 class AttributeSync(object):
+    ''' Class used for keeping an attribute of a domain object synchronized with
+        a control in a dialog. If the user edits the value using the control, 
+        the domain object is changed, using the appropriate command. If the 
+        attribute of the domain object is changed (e.g. in another dialog) the 
+        value of the control is updated. '''
+        
     def __init__(self, attributeName, entry, currentValue, items, commandClass, 
                  editedEventType, changedEventType):
         self._attributeName = attributeName
@@ -65,7 +71,7 @@ class AttributeSync(object):
         self._items = items
         self._commandClass = commandClass
         entry.Bind(editedEventType, self.onAttributeEdited)
-        if '__WXMAC__' in wx.PlatformInfo or '__WXGTK__' in wx.PlatformInfo:
+        if wx.Platform in ('__WXMAC__', '__WXGTK__'):
             # On some platforms, the focused control does not receive
             # EVT_KILL_FOCUS when the containing window is closed.
             entry.TopLevelParent.Bind(wx.EVT_CLOSE, self.onAttributeEdited)
@@ -90,11 +96,17 @@ class AttributeSync(object):
 
     def commandKwArgs(self, newValue):
         return {self._attributeName: newValue}
-                        
+    
     def getValue(self):
+        return self.getValueFromEntry()
+     
+    def getValueFromEntry(self):
         return self._entry.GetValue()
     
     def setValue(self, newValue):
+        self.setValueToEntry(newValue)
+        
+    def setValueToEntry(self, newValue):
         self._entry.SetValue(newValue)
             
             
@@ -107,16 +119,69 @@ class IconSync(AttributeSync):
         commandKwArgs['selectedIcon'] = selectedIcon
         return commandKwArgs
     
-    def setValue(self, newIcon):
+    def setValueInEntry(self, newIcon):
         imageNames = sorted(artprovider.chooseableItemImages.keys())
         newSelectionIndex = imageNames.index(newIcon)
         self._entry.SetSelection(newSelectionIndex)
         
-    def getValue(self):
+    def getValueFromEntry(self):
         return self._entry.GetClientData(self._entry.GetSelection())
 
+
+class OptionalAttributeSync(AttributeSync):
+    ''' For attributes that can have no value, in which case a default value
+        is shown in the control. The control has an accompanying checkbox that 
+        indicates whether the value of the control is actually used. '''
+
+    def __init__(self, *args, **kwargs):
+        self._defaultValue = kwargs.pop('defaultValue')
+        self._defaultCheckbox = kwargs.pop('defaultCheckbox')
+        super(OptionalAttributeSync, self).__init__(*args, **kwargs)
+        self._defaultCheckbox.Bind(wx.EVT_CHECKBOX, self.onAttributeChecked)
+
+    def onAttributeChecked(self, event):
+        super(OptionalAttributeSync, self).onAttributeEdited(event)
+
+    def onAttributeEdited(self, event):
+        self._defaultCheckbox.SetValue(True)
+        super(OptionalAttributeSync, self).onAttributeEdited(event)
+
+    def setValue(self, newValue):
+        checked = newValue is not None
+        self._defaultCheckbox.SetValue(checked)
+        if checked:
+            self.setValueToEntry(newValue)
+
+    def getValue(self):
+        return self.getValueFromEntry() if self._defaultCheckbox.IsChecked() \
+            else None
+        
+
+class FontSync(OptionalAttributeSync):        
+    def setValueToEntry(self, newValue):
+        self._entry.SetFont(newValue)
+        
+    def getValueFromEntry(self):
+        return self._entry.GetSelectedFont()
             
-class SubjectPage(Page):        
+            
+class FontColorSync(AttributeSync):
+    def setValueToEntry(self, newValue):
+        self._entry.SetColour(newValue)
+
+    def getValueFromEntry(self):
+        return self._entry.GetSelectedColour()
+    
+    
+class ColorSync(OptionalAttributeSync):
+    def setValueToEntry(self, newValue):
+        self._entry.SetColour(newValue)
+        
+    def getValueFromEntry(self):
+        return self._entry.GetColour()
+    
+                        
+class SubjectPage(Page):
     pageName = 'subject'
     pageTitle = _('Description')
     pageIcon = 'pencil_icon'
@@ -271,129 +336,46 @@ class AppearancePage(Page):
         checkBox = wx.CheckBox(self, label=_('Use color:'))
         setattr(self, '_%sColorCheckBox'%colorType, checkBox)
         currentColor = getattr(self.items[0], '%sColor'%colorType)(recursive=False) if len(self.items) == 1 else None
-        setattr(self, '_current%sColor'%colorType.capitalize(), currentColor)
         checkBox.SetValue(currentColor is not None)
-        checkBoxHandlerName = 'on%sColourCheckBoxChecked'%colorType.capitalize()
-        checkBoxHandler = getattr(self, checkBoxHandlerName)
-        checkBox.Bind(wx.EVT_CHECKBOX, checkBoxHandler)
         # wx.ColourPickerCtrl on Mac OS X expects a wx.Color and fails on tuples
         # so convert the tuples to a wx.Color:
         currentColor = wx.Color(*currentColor) if currentColor else defaultColor # pylint: disable-msg=W0142
         button = wx.ColourPickerCtrl(self, col=currentColor)
         setattr(self, '_%sColorButton'%colorType, button)
-        buttonHandler = getattr(self, 'on%sColourPicked'%colorType.capitalize())
-        button.Bind(wx.EVT_COLOURPICKER_CHANGED, buttonHandler)
+        commandClass = getattr(command, 'Edit%sColorCommand'%colorType.capitalize())
+        eventType = getattr(self.items[0], '%sColorChangedEventType'%colorType)()
+        colorSync = ColorSync('color', button, currentColor, self.items, 
+                              commandClass, wx.EVT_COLOURPICKER_CHANGED, 
+                              eventType, defaultValue=defaultColor, 
+                              defaultCheckbox=checkBox)
+        setattr(self, '_%sColorSync'%colorType, colorSync)
         self.addEntry(labelText, checkBox, button, flags=[None, None, wx.ALL])
-        if len(self.items) == 1:
-            handler = getattr(self, 'on%sColourChanged'%colorType.capitalize())
-            eventType = getattr(self.items[0], '%sColorChangedEventType'%colorType)()
-            patterns.Publisher().registerObserver(handler, eventType=eventType,
-                                                  eventSource=self.items[0])
             
-    # pylint: disable-msg=E1101
-    
-    def onForegroundColourCheckBoxChecked(self, event):
-        ''' User toggled the foreground colour check box. Update the colour
-            of the font colour button. '''
-        self._fontButton.SetColour(self._foregroundColorButton.GetColour() if \
-                                   event.IsChecked() else wx.NullColour)
-        self.onForegroundColorEdited(event)
-        
-    def onForegroundColourPicked(self, event): # pylint: disable-msg=W0613 
-        ''' User picked a foreground colour. Check the foreground colour check
-            box and update the font colour button. '''
-        self._foregroundColorCheckBox.SetValue(True)
-        self._fontButton.SetColour(self._foregroundColorButton.GetColour())
-        self.onForegroundColorEdited(event)
-        
-    def onForegroundColorEdited(self, event):
-        event.Skip()
-        checked = self._foregroundColorCheckBox.GetValue()
-        newColor = self._foregroundColorButton.GetColour() if checked else None
-        if newColor != self._currentForegroundColor: # pylint: disable-msg=E0203
-            self._currentForegroundColor = newColor # pylint: disable-msg=W0201
-            command.EditForegroundColorCommand(None, self.items, color=newColor).do()
-            
-    def onForegroundColourChanged(self, event):
-        newColor = event.value()
-        if newColor != self._currentForegroundColor:
-            self._currentForegroundColor = newColor
-            self._foregroundColorCheckBox.SetValue(newColor is not None)
-            self._foregroundColorButton.SetColour(newColor)
-
-    def onBackgroundColourCheckBoxChecked(self, event):
-        ''' User toggled the background colour check box. '''
-        self.onBackgroundColorEdited(event)
-        
-    def onBackgroundColourPicked(self, event): # pylint: disable-msg=W0613 
-        ''' User picked a background colour. Check the background colour check
-            box. '''
-        self._backgroundColorCheckBox.SetValue(True)
-        self.onBackgroundColorEdited(event)
-        
-    def onBackgroundColorEdited(self, event):
-        event.Skip()
-        checked = self._backgroundColorCheckBox.GetValue()
-        newColor = self._backgroundColorButton.GetColour() if checked else None
-        if newColor != self._currentBackgroundColor: # pylint: disable-msg=E0203
-            self._currentBackgroundColor = newColor # pylint: disable-msg=W0201
-            command.EditBackgroundColorCommand(None, self.items, color=newColor).do()
-
-    def onBackgroundColourChanged(self, event):
-        newColor = event.value()
-        if newColor != self._currentBackgroundColor:
-            self._currentBackgroundColor = newColor
-            self._backgroundColorCheckBox.SetValue(newColor is not None)
-            self._backgroundColorButton.SetColour(newColor)
-
     def addFontEntry(self):
         # pylint: disable-msg=W0201
-        self._fontCheckBox = wx.CheckBox(self, label=_('Use font:'))
-        self._currentFont = self.items[0].font() if len(self.items) == 1 else None
+        fontCheckBox = wx.CheckBox(self, label=_('Use font:'))
+        currentFont = self.items[0].font() if len(self.items) == 1 else None
         currentColor = self._foregroundColorButton.GetColour()
-        self._fontCheckBox.SetValue(self._currentFont is not None)
-        self._fontCheckBox.Bind(wx.EVT_CHECKBOX, self.onFontEdited)
-        self._defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        fontCheckBox.SetValue(currentFont is not None)
+        defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._fontButton = widgets.FontPickerCtrl(self,
-            font=self._currentFont or self._defaultFont, colour=currentColor)
-        self._fontButton.Bind(wx.EVT_FONTPICKER_CHANGED, self.onFontPicked)
-        self.addEntry(_('Font'), self._fontCheckBox, self._fontButton,
+            font=currentFont or defaultFont, colour=currentColor)
+        self._fontSync = FontSync('font', self._fontButton, currentFont,
+                                  self.items, command.EditFontCommand,
+                                  wx.EVT_FONTPICKER_CHANGED, 
+                                  self.items[0].fontChangedEventType(),
+                                  defaultValue=defaultFont,
+                                  defaultCheckbox=fontCheckBox)
+        self._fontColorSync = FontColorSync('color', self._fontButton, currentColor,
+                                            self.items, command.EditForegroundColorCommand,
+                                            wx.EVT_FONTPICKER_CHANGED,
+                                            self.items[0].foregroundColorChangedEventType())
+        self.addEntry(_('Font'), fontCheckBox, self._fontButton,
                       flags=[None, None, wx.ALL])
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onFontChanged, 
-                                                  eventType=self.items[0].fontChangedEventType(), 
-                                                  eventSource=self.items[0])
-
-    def onFontPicked(self, event): # pylint: disable-msg=W0613 
-        ''' User picked a font. Check the font check box and change the
-            foreground color if needed. '''
-        self._fontCheckBox.SetValue(True)
-        if self._fontButton.GetSelectedColour() != self._foregroundColorButton.GetColour():
-            self._foregroundColorCheckBox.SetValue(True)
-            self._foregroundColorButton.SetColour(self._fontButton.GetSelectedColour())
-        self.onFontEdited(event)
-        
-    def onFontEdited(self, event):
-        event.Skip()
-        checked = self._fontCheckBox.GetValue()
-        newFont = self._fontButton.GetSelectedFont() if checked else None        
-        if newFont != self._currentFont:
-            self._currentFont = newFont
-            command.EditFontCommand(None, self.items, font=newFont).do()
-            
-    def onFontChanged(self, event):
-        newFont = event.value()
-        if newFont != self._currentFont:
-            self._currentFont = newFont
-            checked = newFont is not None
-            self._fontCheckBox.SetValue(checked)
-            if checked:
-                self._fontButton.SetFont(newFont or self._defaultFont)
-        
+                    
     def addIconEntry(self):
         # pylint: disable-msg=W0201
         self._iconEntry = wx.combo.BitmapComboBox(self, style=wx.CB_READONLY)
-        #self._iconEntry.Bind(wx.EVT_COMBOBOX, self.onIconEdited)
         size = (16, 16)
         imageNames = sorted(artprovider.chooseableItemImages.keys())
         for imageName in imageNames:
