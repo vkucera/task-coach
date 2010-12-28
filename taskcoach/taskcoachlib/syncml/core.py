@@ -31,6 +31,6 @@ if sys.platform == 'linux2':
 elif sys.platform == 'darwin':
     sys.path.insert(0, os.path.join(_BINBASE, 'macos'))
 else:
-    sys.path.insert(0, os.path.join(_BINBASE, 'windows'))
+    sys.path.insert(0, os.path.join(_BINBASE, 'windows', 'py%s' % ''.join(map(str, sys.version_info[:2]))))
 
 from _pysyncml import *
