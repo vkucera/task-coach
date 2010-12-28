@@ -3,6 +3,7 @@
 
 from wxSchedulerCore import *
 import wx.lib.scrolledpanel as scrolled
+import time
 
 
 class wxScheduler( wxSchedulerCore, scrolled.ScrolledPanel ):
@@ -18,12 +19,17 @@ class wxScheduler( wxSchedulerCore, scrolled.ScrolledPanel ):
 		self._frozen = False
 		self._dirty = False
 
+		self._showNow = True
+		self._refreshTimer = wx.Timer(self, wx.NewId() )
+		self._refreshTimer.Start( int(1000 * (60 - (time.time() % 60))), True )
+
 		self.Bind( wx.EVT_PAINT, self.OnPaint )
 		self.Bind( wx.EVT_LEFT_DOWN, self.OnClick )
 		self.Bind( wx.EVT_RIGHT_DOWN, self.OnRightClick )
 		self.Bind( wx.EVT_LEFT_DCLICK, self.OnDClick )
 		self.Bind( wx.EVT_SIZE, self.OnSize )
 		self.Bind( wx.EVT_TIMER, self.OnSizeTimer, id=timerId )
+		self.Bind( wx.EVT_TIMER, self.OnRefreshTimer, id=self._refreshTimer.GetId() )
 
 		self.SetScrollRate(10, 10)
 
@@ -44,6 +50,10 @@ class wxScheduler( wxSchedulerCore, scrolled.ScrolledPanel ):
 	def OnSizeTimer( self, evt ):
 		self.InvalidateMinSize()
 		self.Refresh()
+
+	def OnRefreshTimer( self, evt ):
+		self.Refresh()
+		self._refreshTimer.Start( 60000, True )
 
 	def Add( self, *args, **kwds ):
 		wxSchedulerCore.Add( self, *args, **kwds )
@@ -117,3 +127,16 @@ class wxScheduler( wxSchedulerCore, scrolled.ScrolledPanel ):
 		super(wxScheduler, self).SetViewType(view)
 		self.InvalidateMinSize()
 		self.Refresh()
+
+	def SetShowNow( self, show=True ):
+		self._showNow = show
+
+		if show:
+			self._refreshTimer.Start( int(1000 * (60 - (time.time() % 60))), True )
+		else:
+			self._refreshTimer.Stop()
+
+		self.Refresh()
+
+	def GetShowNow( self ):
+		return self._showNow
