@@ -86,7 +86,7 @@ if sys.argv[1] == 'py2exe':
         mo_rel_dir = os.path.join('locale', language_dir, 'LC_MESSAGES')
         mo_files.append((mo_rel_dir, [mo_abs_filename]))
     # DLL's we redistribute so people don't have to download them:
-    dll_files = [('', ['dist.in/gdiplus.dll', 'dist.in/MSVCP71.dll.DLL'])]
+    dll_files = [('', ['dist.in/gdiplus.dll', 'dist.in/MSVCP71.dll'])]
     setupOptions.update({
         'windows' : [{ 'script' : 'taskcoach.pyw', 
             'other_resources' : [(24, 1, manifest)],
