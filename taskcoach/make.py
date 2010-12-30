@@ -106,6 +106,7 @@ if sys.argv[1] == 'py2exe':
             'dist_dir' : os.path.join(builddir, py2exeDistdir),
             'dll_excludes': ['MSVCR80.dll', 'UxTheme.dll']}},
         'data_files': dll_files + mo_files})
+    os.environ['PATH'] = 'dist.in;' + os.environ['PATH']
  
 elif sys.argv[1] == 'py2app':
     from setuptools import setup
