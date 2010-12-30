@@ -49,12 +49,13 @@ class EffortEditorTest(test.wxTestCase):
         
     def testCreate(self):
         self.assertEqual(self.effort.getStart().date(), 
-            self.editor._interior._startDateTimeEntry.get().date())
+            self.editor._interior._startDateTimeEntry.GetValue().date())
         self.assertEqual(self.effort.task().subject(), 
             self.editor._interior._taskEntry.GetValue())
         
     def testInvalidEffort(self):    
-        self.editor._interior._stopDateTimeEntry.set(date.DateTime(1900, 1, 1))
+        self.editor._interior._stopDateTimeEntry.SetValue(date.DateTime(1900, 1, 1))
+        self.editor._interior.onStopDateTimeEdited()
         self.failUnless(self.editor._interior.invalidPeriodMessage.GetLabel())
         
     def testChangeTask(self):

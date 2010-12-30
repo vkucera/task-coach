@@ -30,21 +30,21 @@ class DateTimeEntryTest(test.wxTestCase):
         self.dateTime = date.DateTime(2004, 1, 1)
 
     def testCreate(self):
-        self.assertEqual(date.DateTime(), self.dateTimeEntry.get())
+        self.assertEqual(date.DateTime(), self.dateTimeEntry.GetValue())
 
     def testSet(self):
         now = date.Now()
-        self.dateTimeEntry.set(now)
+        self.dateTimeEntry.SetValue(now)
         self.assertAlmostEqual(now.toordinal(), 
-                               self.dateTimeEntry.get().toordinal(), places=2)
+                               self.dateTimeEntry.GetValue().toordinal(), places=2)
 
     def testReset(self):
-        self.dateTimeEntry.set()
-        self.assertEqual(date.DateTime(), self.dateTimeEntry.get())
+        self.dateTimeEntry.SetValue()
+        self.assertEqual(date.DateTime(), self.dateTimeEntry.GetValue())
 
     def testValidDateTime(self):
-        self.dateTimeEntry.set(self.dateTime)
-        self.assertEqual(self.dateTime, self.dateTimeEntry.get())
+        self.dateTimeEntry.SetValue(self.dateTime)
+        self.assertEqual(self.dateTime, self.dateTimeEntry.GetValue())
 
 
 class DateEntryConstructorTest(test.wxTestCase):
@@ -54,7 +54,7 @@ class DateEntryConstructorTest(test.wxTestCase):
                                             config.Settings(load=False), 
                                             tomorrow)
         self.assertAlmostEqual(tomorrow.toordinal(), 
-                               dateTimeEntry.get().toordinal(),
+                               dateTimeEntry.GetValue().toordinal(),
                                places=2)
 
 

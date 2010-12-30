@@ -20,6 +20,11 @@ import wx
 from taskcoachlib import widgets, patterns, persistence, gui
 
 
+class Event(object):
+    def Skip(self):
+        pass
+
+
 class DummyWidget(wx.Frame):
     def __init__(self, viewer):
         super(DummyWidget, self).__init__(viewer)

@@ -119,7 +119,7 @@ class IconSync(AttributeSync):
         commandKwArgs['selectedIcon'] = selectedIcon
         return commandKwArgs
     
-    def setValueInEntry(self, newIcon):
+    def setValueToEntry(self, newIcon):
         imageNames = sorted(artprovider.chooseableItemImages.keys())
         newSelectionIndex = imageNames.index(newIcon)
         self._entry.SetSelection(newSelectionIndex)
@@ -159,7 +159,7 @@ class OptionalAttributeSync(AttributeSync):
 
 class FontSync(OptionalAttributeSync):        
     def setValueToEntry(self, newValue):
-        self._entry.SetFont(newValue)
+        self._entry.SetSelectedFont(newValue)
         
     def getValueFromEntry(self):
         return self._entry.GetSelectedFont()
@@ -167,7 +167,7 @@ class FontSync(OptionalAttributeSync):
             
 class FontColorSync(AttributeSync):
     def setValueToEntry(self, newValue):
-        self._entry.SetColour(newValue)
+        self._entry.SetSelectedColour(newValue)
 
     def getValueFromEntry(self):
         return self._entry.GetSelectedColour()
@@ -418,38 +418,36 @@ class DatesPage(Page):
             self.addDateEntry(label, taskMethodName)
             
     def addDateEntry(self, label, taskMethodName):
-        def capitalize(string):
-            return string[0].capitalize()+string[1:]
-
+        TaskMethodName = taskMethodName[0].capitalize() + taskMethodName[1:]
         dateTime = getattr(self.items[0], taskMethodName)() if len(self.items) == 1 else date.DateTime()
-        setattr(self, '_current%s'%capitalize(taskMethodName), dateTime)
-        callback = getattr(self, 'on%sEdited'%capitalize(taskMethodName))
-        dateTimeEntry = entry.DateTimeEntry(self, self.__settings, dateTime,
-                                            callback=callback)
+        setattr(self, '_current%s'%TaskMethodName, dateTime)
+        dateTimeEntry = entry.DateTimeEntry(self, self.__settings, dateTime)
         setattr(self, '_%sEntry'%taskMethodName, dateTimeEntry)
+        commandClass = getattr(command, 'Edit%sCommand'%TaskMethodName)
+        eventType = 'task.%s'%taskMethodName
+        datetimeSync = AttributeSync('datetime', dateTimeEntry, dateTime,
+                                     self.items, commandClass, 
+                                     entry.EVT_DATETIMEENTRY, eventType)
+        setattr(self, '_%sSync'%taskMethodName, datetimeSync) 
         self.addEntry(label, dateTimeEntry)
-        if len(self.items) == 1:
-            eventHandler = getattr(self, 'on%sChanged'%capitalize(taskMethodName))
-            eventType = 'task.%s'%taskMethodName
-            patterns.Publisher().registerObserver(eventHandler, 
-                                                  eventType=eventType, 
-                                                  eventSource=self.items[0])
+        dateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeEdited)
         
     def addReminderEntry(self):
         # pylint: disable-msg=W0201
-        self._currentReminderDateTime = self.items[0].reminder() if len(self.items) == 1 else date.DateTime()
+        currentReminderDateTime = self.items[0].reminder() if len(self.items) == 1 else date.DateTime()
         self._reminderDateTimeEntry = entry.DateTimeEntry(self, self.__settings, 
-                                                          self._currentReminderDateTime)
+                                                          currentReminderDateTime)
         # If the user has not set a reminder, make sure that the default 
         # date time in the reminder entry is a reasonable suggestion:
-        if self._reminderDateTimeEntry.get() == date.DateTime():
+        if self._reminderDateTimeEntry.GetValue() == date.DateTime():
             self.suggestReminder()
+        self._reminderDateTimeSync = AttributeSync('datetime', 
+                                                   self._reminderDateTimeEntry,
+                                                   currentReminderDateTime,
+                                                   self.items, 
+                                                   command.EditReminderDateTimeCommand,
+                                                   entry.EVT_DATETIMEENTRY, 'task.reminder')
         self.addEntry(_('Reminder'), self._reminderDateTimeEntry)
-        self._reminderDateTimeEntry.setCallback(self.onReminderEdited)
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onReminderChanged, 
-                                                  eventType='task.reminder', 
-                                                  eventSource=self.items[0])
         
     def addRecurrenceEntries(self):
         # pylint: disable-msg=W0201
@@ -547,75 +545,15 @@ class DatesPage(Page):
         kwargs['sameWeekday'] = self._recurrenceSameWeekdayCheckBox.IsChecked()
         return date.Recurrence(**kwargs) # pylint: disable-msg=W0142
     
-    def onStartDateTimeEdited(self, event):
-        # pylint: disable-msg=E1101,E0203,W0201
-        event.Skip()
-        newStartDateTime = self._startDateTimeEntry.get()
-        if newStartDateTime != self._currentStartDateTime:
-            command.EditStartDateTimeCommand(None, self.items, datetime=newStartDateTime).do()
-            self._currentStartDateTime = newStartDateTime
-            self.onDateTimeEdited()
-            
-    def onStartDateTimeChanged(self, event):
-        newStartDateTime = event.value()
-        if newStartDateTime != self._currentStartDateTime:
-            self._currentStartDateTime = newStartDateTime
-            self._startDateTimeEntry.set(newStartDateTime) # pylint: disable-msg=E1101
-                    
-    def onDueDateTimeEdited(self, event):
-        # pylint: disable-msg=E1101,E0203,W0201
-        event.Skip()
-        newDueDateTime = self._dueDateTimeEntry.get()
-        if newDueDateTime != self._currentDueDateTime:
-            command.EditDueDateTimeCommand(None, self.items, datetime=newDueDateTime).do()
-            self._currentDueDateTime = newDueDateTime
-            self.onDateTimeEdited()
-
-    def onDueDateTimeChanged(self, event):
-        newDueDateTime = event.value()
-        if newDueDateTime != self._currentDueDateTime:
-            self._currentDueDateTime = newDueDateTime
-            self._dueDateTimeEntry.set(newDueDateTime) # pylint: disable-msg=E1101
-
-    def onCompletionDateTimeEdited(self, event):
-        # pylint: disable-msg=E1101,E0203,W0201
-        event.Skip()
-        newCompletionDateTime = self._completionDateTimeEntry.get()
-        if newCompletionDateTime != self._currentCompletionDateTime:
-            command.EditCompletionDateTimeCommand(None, self.items, datetime=newCompletionDateTime).do()
-            self._currentCompletionDateTime = newCompletionDateTime
-            self.onDateTimeEdited()
-
-    def onCompletionDateTimeChanged(self, event):
-        newCompletionDateTime = event.value()
-        if newCompletionDateTime != self._currentCompletionDateTime:
-            self._currentCompletionDateTime = newCompletionDateTime
-            self._completionDateTimeEntry.set(newCompletionDateTime) # pylint: disable-msg=E1101
-
-    def onDateTimeEdited(self):
+    def onDateTimeEdited(self, event):
         ''' Called when one of the DateTimeEntries is changed by the user. 
             Update the suggested reminder if no reminder was set by the user. '''
         # Make sure the reminderDateTimeEntry has been created:
+        event.Skip()
         if hasattr(self, '_reminderDateTimeEntry') and \
-            self._reminderDateTimeEntry.get() == date.DateTime():
+            self._reminderDateTimeEntry.GetValue() == date.DateTime():
             self.suggestReminder()
             
-    def onReminderEdited(self, event):
-        event.Skip()
-        newReminderDatetime = self._reminderDateTimeEntry.get()
-        if newReminderDatetime != self._currentReminderDateTime:
-            command.EditReminderDateTimeCommand(None, self.items, datetime=newReminderDatetime).do()
-            self._currentReminderDateTime = newReminderDatetime
-            
-    def onReminderChanged(self, event):
-        newReminderDateTime = event.value()
-        if newReminderDateTime != self._currentReminderDateTime:
-            self._currentReminderDateTime = newReminderDateTime
-            self.setReminder(newReminderDateTime)
-        
-    def setReminder(self, reminder):
-        self._reminderDateTimeEntry.set(reminder)
-
     def setRecurrence(self, recurrence):
         index = {'': 0, 'daily': 1, 'weekly': 2, 'monthly': 3, 'yearly': 4}[recurrence.unit]
         self._recurrenceEntry.Selection = index
@@ -649,15 +587,15 @@ class DatesPage(Page):
         # The suggested date for the reminder is the first date from the
         # list of candidates that is a real date:
         # pylint: disable-msg=E1101
-        candidates = [self._dueDateTimeEntry.get(), self._startDateTimeEntry.get(),
+        candidates = [self._dueDateTimeEntry.GetValue(), self._startDateTimeEntry.GetValue(),
                       date.Now() + date.oneDay]
         suggestedDateTime = [candidate for candidate in candidates \
                             if date.Now() <= candidate < date.DateTime()][0]
         # Now, make sure the suggested date time is set in the control
-        self.setReminder(suggestedDateTime)
+        self._reminderDateTimeEntry.SetValue(suggestedDateTime)
         # And then disable the control (because the SetValue in the
         # previous statement enables the control)
-        self.setReminder(None)
+        self._reminderDateTimeEntry.SetValue(None)
         # Now, when the user clicks the check box to enable the
         # control it will show the suggested date time
         
@@ -1313,8 +1251,8 @@ class EffortEditBook(Page):
         dateTimeEntryKwArgs = dict(showSeconds=True)
         self._currentStartDateTime = self.items[0].getStart() 
         self._startDateTimeEntry = entry.DateTimeEntry(self, self._settings,
-            self._currentStartDateTime, noneAllowed=False, 
-            callback=self.onStartDateTimeEdited, **dateTimeEntryKwArgs)
+            self._currentStartDateTime, noneAllowed=False, **dateTimeEntryKwArgs)
+        self._startDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onStartDateTimeEdited)
         startFromLastEffortButton = wx.Button(self,
             label=_('Start tracking from last stop time'))
         self.Bind(wx.EVT_BUTTON, self.onStartFromLastEffort,
@@ -1324,8 +1262,8 @@ class EffortEditBook(Page):
 
         self._currentStopDateTime = self.items[0].getStop()
         self._stopDateTimeEntry = entry.DateTimeEntry(self, self._settings, 
-            self._currentStopDateTime, noneAllowed=True, 
-            callback=self.onStopDateTimeEdited, **dateTimeEntryKwArgs)
+            self._currentStopDateTime, noneAllowed=True, **dateTimeEntryKwArgs)
+        self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onStopDateTimeEdited)
         self.invalidPeriodMessage = wx.StaticText(self, label='')
         font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         font.SetWeight(wx.FONTWEIGHT_BOLD )
@@ -1343,7 +1281,7 @@ class EffortEditBook(Page):
                              eventType='effort.stop', eventSource=self.items[0])
             
     def onStartDateTimeEdited(self, *args, **kwargs):
-        newStartDateTime = self._startDateTimeEntry.get()
+        newStartDateTime = self._startDateTimeEntry.GetValue()
         if newStartDateTime != self._currentStartDateTime and self.validPeriod():
             self._currentStartDateTime = newStartDateTime
             command.ChangeEffortStartDateTimeCommand(None, self.items, datetime=newStartDateTime).do()
@@ -1353,10 +1291,10 @@ class EffortEditBook(Page):
         newStartDateTime = event.value()
         if newStartDateTime != self._currentStartDateTime:
             self._currentStartDateTime = newStartDateTime
-            self._startDateTimeEntry.set(newStartDateTime)
+            self._startDateTimeEntry.SetValue(newStartDateTime)
         
     def onStopDateTimeEdited(self, *args, **kwargs): 
-        newStopDateTime = self._stopDateTimeEntry.get()
+        newStopDateTime = self._stopDateTimeEntry.GetValue()
         if newStopDateTime != self._currentStopDateTime and self.validPeriod():
             self._currentStopDateTime = newStopDateTime
             command.ChangeEffortStopDateTimeCommand(None, self.items, datetime=newStopDateTime).do()
@@ -1366,20 +1304,20 @@ class EffortEditBook(Page):
         newStopDateTime = event.value()
         if newStopDateTime != self._currentStopDateTime:
             self._currentStopDateTime = newStopDateTime
-            self._stopDateTimeEntry.set(newStopDateTime)
+            self._stopDateTimeEntry.SetValue(newStopDateTime)
         
     def updateInvalidPeriodMessage(self):
         self.invalidPeriodMessage.SetLabel('' if self.validPeriod() else \
                                            _('Warning: start must be earlier than stop'))
                 
     def onStartFromLastEffort(self, event): # pylint: disable-msg=W0613
-        self._startDateTimeEntry.set(self._effortList.maxDateTime())
+        self._startDateTimeEntry.SetValue(self._effortList.maxDateTime())
         
     def validPeriod(self):
         if not hasattr(self, '_stopDateTimeEntry'):
             return True
         else:
-            return self._startDateTimeEntry.get() < self._stopDateTimeEntry.get()
+            return self._startDateTimeEntry.GetValue() < self._stopDateTimeEntry.GetValue()
         
     def addDescriptionEntry(self):
         # pylint: disable-msg=W0201
