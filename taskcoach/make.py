@@ -48,6 +48,12 @@ manifest = """
             language="*"/>
         </dependentAssembly>
     </dependency>
+    <dependency>
+        <dependentAssembly>
+            <assemblyIdentity type="win32" name="Microsoft.VC90.CRT" version="9.0.21022.8"
+	    processorArchitecture="x86" publicKeyToken="1fc8b3b9a1e18e3b" />
+        </dependentAssembly>
+    </dependency>
 </assembly>
 """%meta.name
 
@@ -86,7 +92,10 @@ if sys.argv[1] == 'py2exe':
         mo_rel_dir = os.path.join('locale', language_dir, 'LC_MESSAGES')
         mo_files.append((mo_rel_dir, [mo_abs_filename]))
     # DLL's we redistribute so people don't have to download them:
-    dll_files = [('', ['dist.in/gdiplus.dll', 'dist.in/MSVCP71.DLL'])]
+    dll_files = [('', ['dist.in/gdiplus.dll']), ('Microsoft.VC90.CRT',
+                                                 ['dist.in/msvcp90.dll',
+                                                  'dist.in/msvcr90.dll',
+                                                  'dist.in/Microsoft.VC90.CRT.manifest'])]
     setupOptions.update({
         'windows' : [{ 'script' : 'taskcoach.pyw', 
             'other_resources' : [(24, 1, manifest)],
@@ -100,6 +109,7 @@ if sys.argv[1] == 'py2exe':
             'dist_dir' : os.path.join(builddir, py2exeDistdir),
             'dll_excludes': ['MSVCR80.dll', 'UxTheme.dll']}},
         'data_files': dll_files + mo_files})
+    os.environ['PATH'] = 'dist.in;' + os.environ['PATH']
  
 elif sys.argv[1] == 'py2app':
     from setuptools import setup
