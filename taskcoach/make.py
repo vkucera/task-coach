@@ -93,9 +93,9 @@ if sys.argv[1] == 'py2exe':
         mo_files.append((mo_rel_dir, [mo_abs_filename]))
     # DLL's we redistribute so people don't have to download them:
     dll_files = [('', ['dist.in/gdiplus.dll']), ('Microsoft.VC90.CRT',
-                                                 ['dist/msvcp90.dll',
-                                                  'dist/msvcr90.dll',
-                                                  'dist/Microsoft.VC90.CRT.manifest'])]
+                                                 ['dist.in/msvcp90.dll',
+                                                  'dist.in/msvcr90.dll',
+                                                  'dist.in/Microsoft.VC90.CRT.manifest'])]
     setupOptions.update({
         'windows' : [{ 'script' : 'taskcoach.pyw', 
             'other_resources' : [(24, 1, manifest)],
