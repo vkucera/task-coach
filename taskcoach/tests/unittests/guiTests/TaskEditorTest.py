@@ -23,11 +23,7 @@ import test
 from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import task, effort, date, note, attachment
 from taskcoachlib.gui import uicommand
-
-
-class DummyEvent(object):
-    def Skip(self):
-        pass
+from unittests import dummy
 
 
 class TaskEditorSetterBase(object):
@@ -42,14 +38,28 @@ class TaskEditorSetterBase(object):
         page._descriptionEntry.SetFocus()
         page._descriptionEntry.SetValue(newDescription)
         return page
+    
+    def setStartDateTime(self, dateTime):
+        self.setDateTime(self.editor._interior[1]._startDateTimeEntry, dateTime)
+        
+    def setDueDateTime(self, dateTime):
+        self.setDateTime(self.editor._interior[1]._dueDateTimeEntry, dateTime)
 
-    def setReminder(self, newReminderDateTime):
-        self.editor._interior[1].setReminder(newReminderDateTime)
+    def setCompletionDateTime(self, dateTime):
+        self.setDateTime(self.editor._interior[1]._completionDateTimeEntry, dateTime)
 
+    def setReminder(self, dateTime):
+        self.setDateTime(self.editor._interior[1]._reminderDateTimeEntry, dateTime)
+        
+    def setDateTime(self, entry, dateTime):
+        entry.SetValue(dateTime)
+        entry.onDateTimeCtrlEdited()
+        wx.YieldIfNeeded()
+        
     def setRecurrence(self, newRecurrence):
         page = self.editor._interior[1]
         page.setRecurrence(newRecurrence)
-        page.onRecurrenceEdited(DummyEvent())
+        page.onRecurrenceEdited(dummy.Event())
         return page
 
 
@@ -57,14 +67,14 @@ class TaskEditorBySettingFocusMixin(TaskEditorSetterBase):
     def setSubject(self, newSubject):
         page = super(TaskEditorBySettingFocusMixin, self).setSubject(newSubject)
         if '__WXGTK__' == wx.Platform: 
-            page._subjectSync.onAttributeEdited(DummyEvent()) # pragma: no cover
+            page._subjectSync.onAttributeEdited(dummy.Event()) # pragma: no cover
         else:
             page._descriptionEntry.SetFocus() # pragma: no cover
         
     def setDescription(self, newDescription):
         page = super(TaskEditorBySettingFocusMixin, self).setDescription(newDescription)
         if '__WXGTK__' == wx.Platform:
-            page._descriptionSync.onAttributeEdited(DummyEvent()) # pragma: no cover
+            page._descriptionSync.onAttributeEdited(dummy.Event()) # pragma: no cover
         else:
             page._subjectEntry.SetFocus() # pragma: no cover
 
@@ -87,12 +97,8 @@ class TaskEditorTestCase(test.wxTestCase):
         self.yesterday = date.Now() - date.oneDay
         self.taskFile = persistence.TaskFile()
         self.taskList = self.taskFile.tasks()
-        self.effortList = self.taskFile.efforts()
         self.taskList.extend(self.createTasks())
-        self.editor = self.createEditor()
-        
-    def createEditor(self):
-        return gui.dialog.editor.TaskEditor(self.frame, self.getItems(),
+        self.editor = gui.dialog.editor.TaskEditor(self.frame, self.getItems(),
             self.settings, self.taskList, self.taskFile, raiseDialog=False)
 
     def tearDown(self):
@@ -127,7 +133,7 @@ class EditorDisplayTest(TaskEditorTestCase):
 
     def testDueDateTime(self):
         self.assertEqual(date.DateTime(),
-                         self.editor._interior[1]._dueDateTimeEntry.get())
+                         self.editor._interior[1]._dueDateTimeEntry.GetValue())
         
     def testRecurrenceUnit(self):
         choice = self.editor._interior[1]._recurrenceEntry
@@ -136,7 +142,7 @@ class EditorDisplayTest(TaskEditorTestCase):
     def testRecurrenceFrequency(self):
         freq = self.editor._interior[1]._recurrenceFrequencyEntry
         self.assertEqual(1, freq.GetValue())    
-        
+
 
 class EditTaskTestBase(object):
     def getItems(self):
@@ -158,28 +164,28 @@ class EditTaskTestBase(object):
         self.assertEqual('Description', self.task.description())
 
     # pylint: disable-msg=W0212
-    
+
     def testSetDueDateTime(self):
-        self.editor._interior[1]._dueDateTimeEntry.set(self.tomorrow)
+        self.setDueDateTime(self.tomorrow)
         self.assertAlmostEqual(self.tomorrow.toordinal(), 
                                self.task.dueDateTime().toordinal(),
                                places=2)
-
+    
     def testSetStartDateTime(self):
-        self.editor._interior[1]._startDateTimeEntry.set(self.tomorrow)
+        self.setStartDateTime(self.tomorrow)
         self.assertAlmostEqual(self.tomorrow.toordinal(), 
                                self.task.startDateTime().toordinal(),
                                places=2)
 
     def testSetCompletionDateTime(self):
-        self.editor._interior[1]._completionDateTimeEntry.set(self.tomorrow)
+        self.setCompletionDateTime(self.tomorrow)
         self.assertAlmostEqual(self.tomorrow.toordinal(), 
                                self.task.completionDateTime().toordinal(),
                                places=2)
 
     def testSetUncompleted(self):
-        self.editor._interior[1]._completionDateTimeEntry.set(date.Now())
-        self.editor._interior[1]._completionDateTimeEntry.set(date.DateTime())
+        self.setCompletionDateTime(date.Now())
+        self.setCompletionDateTime(date.DateTime())
         self.assertEqual(date.DateTime(), self.task.completionDateTime())
 
     def testSetReminder(self):
@@ -218,23 +224,23 @@ class EditTaskTestBase(object):
         
     def testSetNegativePriority(self):
         self.editor._interior[0]._priorityEntry.SetValue(-1)
-        self.editor._interior[0]._prioritySync.onAttributeEdited(DummyEvent())
+        self.editor._interior[0]._prioritySync.onAttributeEdited(dummy.Event())
         self.assertEqual(-1, self.task.priority())
         
     def testSetHourlyFee(self):
         self.editor._interior[5]._hourlyFeeEntry.set(100)
-        self.editor._interior[5].onHourlyFeeEdited(DummyEvent())
+        self.editor._interior[5].onHourlyFeeEdited(dummy.Event())
         self.assertEqual(100, self.task.hourlyFee())
 
     def testSetFixedFee(self):
         self.editor._interior[5]._fixedFeeEntry.set(100.5)
-        self.editor._interior[5].onFixedFeeEdited(DummyEvent())
+        self.editor._interior[5].onFixedFeeEdited(dummy.Event())
         self.assertEqual(100.5, self.task.fixedFee())
 
     def testBehaviorMarkCompleted(self):
         page = self.editor._interior[3]
         page._markTaskCompletedEntry.SetStringSelection('Yes')
-        page.onShouldMarkCompletedEdited(DummyEvent())
+        page.onShouldMarkCompletedEdited(dummy.Event())
         self.assertEqual(True, 
                          self.task.shouldMarkCompletedWhenAllChildrenCompleted())
 
@@ -317,14 +323,14 @@ class EditTaskWithChildrenTestBase(object):
         self.assertEqual('New Parent Subject', self.parent.subject())
 
     # pylint: disable-msg=W0212
-    
+
     def testChangeDueDateTimeOfParentAffectsChildToo(self):
-        self.editor._interior[1]._dueDateTimeEntry.set(self.yesterday)
+        self.setDueDateTime(self.yesterday)
         self.assertAlmostEqual(self.yesterday.toordinal(), 
                                self.child.dueDateTime().toordinal(), places=2)
 
     def testChangeStartDateTimeOfParentHasNoEffectOnChild(self):
-        self.editor._interior[1]._startDateTimeEntry.set(self.tomorrow)
+        self.setStartDateTime(self.tomorrow)
         self.assertAlmostEqual(self.tomorrow.toordinal(), 
                                self.child.startDateTime().toordinal(),
                                places=2)
@@ -350,7 +356,7 @@ class EditTaskWithEffortTest(TaskEditorTestCase):
     
     def testEffortIsShown(self):
         self.assertEqual(1, self.editor._interior[6].viewer.widget.GetItemCount())
-                                  
+                           
         
 class FocusTest(TaskEditorTestCase):
     def createTasks(self):

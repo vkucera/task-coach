@@ -29,11 +29,15 @@ class FontPickerCtrl(wx.Button):
 
     def GetSelectedFont(self):
         return self.__font
+    
+    def SetSelectedFont(self, font):
+        self.__font = font
+        self.__updateButton()
 
     def GetSelectedColour(self):
         return self.__colour
 
-    def SetColour(self, colour):
+    def SetSelectedColour(self, colour):
         self.__colour = colour
         self.__updateButton()
 

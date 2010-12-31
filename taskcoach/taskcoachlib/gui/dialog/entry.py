@@ -19,18 +19,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, locale
-from wx.lib import masked #, combotreebox
+from wx.lib import masked, newevent
 from taskcoachlib import widgets
 from taskcoachlib.domain import date
 from taskcoachlib.thirdparty import combotreebox
  
+ 
+DateTimeEntryEvent, EVT_DATETIMEENTRY = newevent.NewEvent()
+
 
 class DateTimeEntry(widgets.PanelWithBoxSizer):
     defaultDateTime = date.DateTime()
 
     def __init__(self, parent, settings, initialDateTime=defaultDateTime, 
-                 readonly=False, callback=None, noneAllowed=True, 
-                 showSeconds=False, *args, **kwargs):
+                 readonly=False, noneAllowed=True, showSeconds=False, 
+                 *args, **kwargs):
         super(DateTimeEntry, self).__init__(parent, *args, **kwargs)
         starthour = settings.getint('view', 'efforthourstart')
         endhour = settings.getint('view', 'efforthourend')
@@ -44,20 +47,19 @@ class DateTimeEntry(widgets.PanelWithBoxSizer):
         # First set the initial value and then set the callback so that the
         # callback is not triggered for the initial value
         self._entry.SetValue(initialDateTime)
-        if callback:
-            self._entry.setCallback(callback) 
+        self._entry.setCallback(self.onDateTimeCtrlEdited)        
         self.add(self._entry)
         self.fit()
 
-    def get(self):
+    def GetValue(self):
         return self._entry.GetValue()
 
-    def set(self, newDateTime=defaultDateTime):
-        self._entry.SetValue(newDateTime)
+    def SetValue(self, newValue=defaultDateTime):
+        self._entry.SetValue(newValue)
         
-    def setCallback(self, callback):
-        self._entry.setCallback(callback)
-        
+    def onDateTimeCtrlEdited(self, *args, **kwargs):
+        wx.PostEvent(self, DateTimeEntryEvent())            
+
 
 class TimeDeltaEntry(widgets.PanelWithBoxSizer):
     defaultTimeDelta=date.TimeDelta()
