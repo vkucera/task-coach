@@ -37,8 +37,8 @@ release_status = 'stable' # One of 'alpha', 'beta', 'stable'
 
 # No editing needed below this line for doing a release.
 
-months = ('January', 'February', 'March', 'April', 'May', 'June', 
-          'July', 'August', 'September', 'October', 'November', 'December')
+months = ['January', 'February', 'March', 'April', 'May', 'June', 
+          'July', 'August', 'September', 'October', 'November', 'December']
 assert release_month in months # Try to prevent typo's
 release_month_nr = '%02d'%(months.index(release_month) + 1)
 release_day_nr = '%02d'%int(release_day)
