@@ -62,7 +62,7 @@ class DateTimeEntry(widgets.PanelWithBoxSizer):
 
 
 class TimeDeltaEntry(widgets.PanelWithBoxSizer):
-    defaultTimeDelta=date.TimeDelta()
+    defaultTimeDelta = date.TimeDelta()
 
     def __init__(self, parent, timeDelta=defaultTimeDelta, readonly=False, 
                  *args, **kwargs):
@@ -81,10 +81,10 @@ class TimeDeltaEntry(widgets.PanelWithBoxSizer):
         self.add(self._entry, flag=wx.EXPAND|wx.ALL, proportion=1)
         self.fit()
 
-    def get(self):
+    def GetValue(self):
         return date.parseTimeDelta(self._entry.GetValue())
     
-    def set(self, newTimeDelta):
+    def SetValue(self, newTimeDelta):
         hours, minutes, seconds = newTimeDelta.hoursMinutesSeconds()
         if newTimeDelta < self.defaultTimeDelta:
             hours = -hours
@@ -133,15 +133,17 @@ class AmountEntry(widgets.PanelWithBoxSizer):
 
     def Bind(self, *args, **kwargs): # pylint: disable-msg=W0221
         self._entry.Bind(*args, **kwargs)
+
+
+PercentageEntryEvent, EVT_PERCENTAGEENTRY = newevent.NewEvent()
         
         
 class PercentageEntry(widgets.PanelWithBoxSizer):
-    def __init__(self, parent, percentage=0, callback=None, *args, **kwargs):
+    def __init__(self, parent, percentage=0, *args, **kwargs):
         kwargs['orientation'] = wx.HORIZONTAL
         super(PercentageEntry, self).__init__(parent, *args, **kwargs)
         self._slider = self._createSlider(percentage)
         self._entry = self._createSpinCtrl(percentage)
-        self._callback = callback
         self.add(self._slider, flag=wx.ALL, proportion=0)
         self.add(self._entry, flag=wx.ALL, proportion=0)
         self.fit()
@@ -160,10 +162,10 @@ class PercentageEntry(widgets.PanelWithBoxSizer):
             entry.Bind(eventType, self.onSpin)
         return entry
 
-    def get(self):
+    def GetValue(self):
         return self._entry.GetValue()
 
-    def set(self, value):
+    def SetValue(self, value):
         self._entry.SetValue(value)
         self._slider.SetValue(value)
         
@@ -179,9 +181,8 @@ class PercentageEntry(widgets.PanelWithBoxSizer):
         # the value:
         if controlToWrite.GetValue() != value:
             controlToWrite.SetValue(value)
-        if self._callback:
-            self._callback()
-    
+        wx.PostEvent(self, PercentageEntryEvent())
+        
     
 class TaskComboTreeBox(wx.Panel):
     ''' A ComboTreeBox with tasks. This class does not inherit from the

@@ -84,7 +84,7 @@ class Event(object):
     def __eq__(self, other):
         ''' Events compare equal when all their data is equal. '''
         return self.sourcesAndValuesByType() == other.sourcesAndValuesByType()
-
+    
     def addSource(self, source, *values, **kwargs):
         ''' Add a source with optional values to the event. Optionally specify
             the type as keyword argument. If no type is specified, the source 
@@ -335,7 +335,9 @@ class Publisher(object):
             for observer in self.__observers.get(eventTypeAndSource, set()):
                 observers.setdefault(observer, set()).add(eventTypeAndSource)
         for observer, eventTypesAndSources in observers.iteritems():
-            observer(event.subEvent(*eventTypesAndSources))
+            subEvent = event.subEvent(*eventTypesAndSources)
+            if subEvent.types():
+                observer(subEvent)
      
     @unwrapObservers           
     def observers(self, eventType=None):

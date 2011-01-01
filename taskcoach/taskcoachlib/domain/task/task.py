@@ -707,7 +707,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__computeRecursiveIcon()
         self.__computeRecursiveSelectedIcon()
         if self.__recursiveIcon != previousRecursiveIcon:
-             event.addSource(self, self.icon(), type=self.iconChangedEventType())
+            event.addSource(self, self.icon(), type=self.iconChangedEventType())
         if self.__recursiveSelectedIcon != previousRecursiveSelectedIcon:
             event.addSource(self, self.selectedIcon(), type=self.selectedIconChangedEventType())
         if self.__recursiveForegroundColor != previousForegroundColor:

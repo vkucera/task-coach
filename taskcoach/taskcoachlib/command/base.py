@@ -37,8 +37,6 @@ class BaseCommand(patterns.Command):
     plural_name = 'Do something'           # Override in subclass
     
     def name(self):
-        if self.singular_name.startswith('Do something'):
-            print self
         return self.singular_name%self.name_subject(self.items[0]) if len(self.items) == 1 else self.plural_name
 
     def name_subject(self, item):

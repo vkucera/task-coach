@@ -64,17 +64,17 @@ class TimeDeltaEntryTest(test.wxTestCase):
         self.timeDeltaEntry = entry.TimeDeltaEntry(self.frame)
         
     def testDefaultValue(self):
-        self.assertEqual(date.TimeDelta(), self.timeDeltaEntry.get())
+        self.assertEqual(date.TimeDelta(), self.timeDeltaEntry.GetValue())
         
     def testDefaultDisplayedValue(self):    
         self.assertEqual('       0:00:00', self.timeDeltaEntry._entry.GetValue())
         
     def testSetValue(self):
-        self.timeDeltaEntry.set(date.TimeDelta(hours=10, seconds=5))
+        self.timeDeltaEntry.SetValue(date.TimeDelta(hours=10, seconds=5))
         self.assertEqual('      10:00:05', self.timeDeltaEntry._entry.GetValue())
     
     def testOverflow(self):
-        self.timeDeltaEntry.set(date.TimeDelta(hours=1000000000))
+        self.timeDeltaEntry.SetValue(date.TimeDelta(hours=1000000000))
         self.assertEqual('       0:00:00', self.timeDeltaEntry._entry.GetValue())
     
     
@@ -84,5 +84,5 @@ class ReadOnlyTimeDeltaEntryTest(test.wxTestCase):
         self.timeDeltaEntry = entry.TimeDeltaEntry(self.frame, readonly=True)
 
     def testSetNegativeValue(self):
-        self.timeDeltaEntry.set(date.TimeDelta(hours=-10, minutes=-20))
+        self.timeDeltaEntry.SetValue(date.TimeDelta(hours=-10, minutes=-20))
         self.assertEqual('     -10:20:00', self.timeDeltaEntry._entry.GetValue())

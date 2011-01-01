@@ -239,8 +239,8 @@ class EditTaskTestBase(object):
 
     def testBehaviorMarkCompleted(self):
         page = self.editor._interior[3]
-        page._markTaskCompletedEntry.SetStringSelection('Yes')
-        page.onShouldMarkCompletedEdited(dummy.Event())
+        page._shouldMarkCompletedEntry.SetStringSelection('Yes')
+        page._shouldMarkCompletedSync.onAttributeEdited(dummy.Event())
         self.assertEqual(True, 
                          self.task.shouldMarkCompletedWhenAllChildrenCompleted())
 

@@ -25,7 +25,7 @@ from taskcoachlib import widgets, patterns, command
 from taskcoachlib.gui import viewer, artprovider
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, date, note, attachment
-from taskcoachlib.gui.dialog import entry
+from taskcoachlib.gui.dialog import entry, attributesync
 
 
 class Page(widgets.BookPage):
@@ -55,131 +55,6 @@ class Page(widgets.BookPage):
             pass # Not a TextCtrl
         theEntry.SetFocus()
 
-
-class AttributeSync(object):
-    ''' Class used for keeping an attribute of a domain object synchronized with
-        a control in a dialog. If the user edits the value using the control, 
-        the domain object is changed, using the appropriate command. If the 
-        attribute of the domain object is changed (e.g. in another dialog) the 
-        value of the control is updated. '''
-        
-    def __init__(self, attributeName, entry, currentValue, items, commandClass, 
-                 editedEventType, changedEventType):
-        self._attributeName = attributeName
-        self._entry = entry
-        self._currentValue = currentValue
-        self._items = items
-        self._commandClass = commandClass
-        entry.Bind(editedEventType, self.onAttributeEdited)
-        if wx.Platform in ('__WXMAC__', '__WXGTK__'):
-            # On some platforms, the focused control does not receive
-            # EVT_KILL_FOCUS when the containing window is closed.
-            entry.TopLevelParent.Bind(wx.EVT_CLOSE, self.onAttributeEdited)
-        if len(items) == 1:
-            patterns.Publisher().registerObserver(self.onAttributeChanged,
-                                                  eventType=changedEventType,
-                                                  eventSource=items[0])
-        
-    def onAttributeEdited(self, event):
-        event.Skip()
-        newValue = self.getValue()
-        if newValue != self._currentValue:
-            self._currentValue = newValue
-            commandKwArgs = self.commandKwArgs(newValue)
-            self._commandClass(None, self._items, **commandKwArgs).do()
-            
-    def onAttributeChanged(self, event):
-        newValue = event.value()
-        if newValue != self._currentValue:
-            self._currentValue = newValue
-            self.setValue(newValue)
-
-    def commandKwArgs(self, newValue):
-        return {self._attributeName: newValue}
-    
-    def getValue(self):
-        return self.getValueFromEntry()
-     
-    def getValueFromEntry(self):
-        return self._entry.GetValue()
-    
-    def setValue(self, newValue):
-        self.setValueToEntry(newValue)
-        
-    def setValueToEntry(self, newValue):
-        self._entry.SetValue(newValue)
-            
-            
-class IconSync(AttributeSync):
-    def commandKwArgs(self, newIcon):
-        commandKwArgs = super(IconSync, self).commandKwArgs(newIcon)
-        selectedIcon = newIcon[:-len('_icon')] + '_open_icon' \
-            if (newIcon.startswith('folder') and newIcon.count('_') == 2) \
-            else newIcon
-        commandKwArgs['selectedIcon'] = selectedIcon
-        return commandKwArgs
-    
-    def setValueToEntry(self, newIcon):
-        imageNames = sorted(artprovider.chooseableItemImages.keys())
-        newSelectionIndex = imageNames.index(newIcon)
-        self._entry.SetSelection(newSelectionIndex)
-        
-    def getValueFromEntry(self):
-        return self._entry.GetClientData(self._entry.GetSelection())
-
-
-class OptionalAttributeSync(AttributeSync):
-    ''' For attributes that can have no value, in which case a default value
-        is shown in the control. The control has an accompanying checkbox that 
-        indicates whether the value of the control is actually used. '''
-
-    def __init__(self, *args, **kwargs):
-        self._defaultValue = kwargs.pop('defaultValue')
-        self._defaultCheckbox = kwargs.pop('defaultCheckbox')
-        super(OptionalAttributeSync, self).__init__(*args, **kwargs)
-        self._defaultCheckbox.Bind(wx.EVT_CHECKBOX, self.onAttributeChecked)
-
-    def onAttributeChecked(self, event):
-        super(OptionalAttributeSync, self).onAttributeEdited(event)
-
-    def onAttributeEdited(self, event):
-        self._defaultCheckbox.SetValue(True)
-        super(OptionalAttributeSync, self).onAttributeEdited(event)
-
-    def setValue(self, newValue):
-        checked = newValue is not None
-        self._defaultCheckbox.SetValue(checked)
-        if checked:
-            self.setValueToEntry(newValue)
-
-    def getValue(self):
-        return self.getValueFromEntry() if self._defaultCheckbox.IsChecked() \
-            else None
-        
-
-class FontSync(OptionalAttributeSync):        
-    def setValueToEntry(self, newValue):
-        self._entry.SetSelectedFont(newValue)
-        
-    def getValueFromEntry(self):
-        return self._entry.GetSelectedFont()
-            
-            
-class FontColorSync(AttributeSync):
-    def setValueToEntry(self, newValue):
-        self._entry.SetSelectedColour(newValue)
-
-    def getValueFromEntry(self):
-        return self._entry.GetSelectedColour()
-    
-    
-class ColorSync(OptionalAttributeSync):
-    def setValueToEntry(self, newValue):
-        self._entry.SetColour(newValue)
-        
-    def getValueFromEntry(self):
-        return self._entry.GetColour()
-    
                         
 class SubjectPage(Page):
     pageName = 'subject'
@@ -194,11 +69,10 @@ class SubjectPage(Page):
         # pylint: disable-msg=W0201
         currentSubject = self.items[0].subject() if len(self.items) == 1 else _('Edit to change all subjects')
         self._subjectEntry = widgets.SingleLineTextCtrl(self, currentSubject)
-        self._subjectSync = AttributeSync('subject', self._subjectEntry, 
-                                          currentSubject, self.items,
-                                          command.EditSubjectCommand, 
-                                          wx.EVT_KILL_FOCUS,
-                                          self.items[0].subjectChangedEventType())
+        self._subjectSync = attributesync.AttributeSync('subject', 
+            self._subjectEntry, currentSubject, self.items,
+            command.EditSubjectCommand, wx.EVT_KILL_FOCUS,
+            self.items[0].subjectChangedEventType())
         self.addEntry(_('Subject'), self._subjectEntry)
 
     def addDescriptionEntry(self):
@@ -206,11 +80,10 @@ class SubjectPage(Page):
         currentDescription = self.items[0].description() if len(self.items) == 1 else _('Edit to change all descriptions')
         self._descriptionEntry = widgets.MultiLineTextCtrl(self, currentDescription)
         self._descriptionEntry.SetSizeHints(450, 150)
-        self._descriptionSync = AttributeSync('description', self._descriptionEntry,
-                                              currentDescription, self.items,
-                                              command.EditDescriptionCommand,
-                                              wx.EVT_KILL_FOCUS,
-                                              self.items[0].descriptionChangedEventType())
+        self._descriptionSync = attributesync.AttributeSync('description', 
+            self._descriptionEntry, currentDescription, self.items,
+            command.EditDescriptionCommand, wx.EVT_KILL_FOCUS,
+            self.items[0].descriptionChangedEventType())
         self.addEntry(_('Description'), self._descriptionEntry, growable=True)
                         
     def entries(self):
@@ -229,10 +102,9 @@ class TaskSubjectPage(SubjectPage):
         currentPriority = self.items[0].priority() if len(self.items) == 1 else 0
         self._priorityEntry = widgets.SpinCtrl(self, size=(100, -1),
             value=str(currentPriority), initial=currentPriority)
-        self._prioritySync = AttributeSync('priority', self._priorityEntry,
-                                           currentPriority, self.items,
-                                           command.EditPriorityCommand,
-                                           wx.EVT_SPINCTRL, 'task.priority')
+        self._prioritySync = attributesync.AttributeSync('priority', 
+            self._priorityEntry, currentPriority, self.items,
+            command.EditPriorityCommand, wx.EVT_SPINCTRL, 'task.priority')
         self.addEntry(_('Priority'), self._priorityEntry, flags=[None, wx.ALL])
             
     def entries(self):
@@ -251,13 +123,11 @@ class CategorySubjectPage(SubjectPage):
         currentExclusivity = self.items[0].hasExclusiveSubcategories() if len(self.items) == 1 else False
         self._exclusiveSubcategoriesCheckBox = wx.CheckBox(self, label=_('Mutually exclusive')) 
         self._exclusiveSubcategoriesCheckBox.SetValue(currentExclusivity)
-        self._exclusiveSubcategoriesSync = AttributeSync('exclusivity',
-                                                         self._exclusiveSubcategoriesCheckBox,
-                                                         currentExclusivity,
-                                                         self.items,
-                                                         command.EditExclusiveSubcategoriesCommand,
-                                                         wx.EVT_CHECKBOX,
-                                                         self.items[0].exclusiveSubcategoriesChangedEventType())
+        self._exclusiveSubcategoriesSync = attributesync.AttributeSync( \
+            'exclusivity', self._exclusiveSubcategoriesCheckBox, 
+            currentExclusivity, self.items, 
+            command.EditExclusiveSubcategoriesCommand, wx.EVT_CHECKBOX,
+            self.items[0].exclusiveSubcategoriesChangedEventType())
         self.addEntry(_('Subcategories'), self._exclusiveSubcategoriesCheckBox,
                       flags=[None, wx.ALL])
             
@@ -281,11 +151,10 @@ class AttachmentSubjectPage(SubjectPage):
         # pylint: disable-msg=W0201
         currentLocation = self.items[0].location() if len(self.items) == 1 else _('Edit to change location of all attachments')
         self._locationEntry = widgets.SingleLineTextCtrl(panel, currentLocation)
-        self._locationSync = AttributeSync('location', self._locationEntry,
-                                           currentLocation, self.items,
-                                           command.EditAttachmentLocationCommand,
-                                           wx.EVT_KILL_FOCUS, 
-                                           self.items[0].locationChangedEventType())
+        self._locationSync = attributesync.AttributeSync('location', 
+            self._locationEntry, currentLocation, self.items,
+            command.EditAttachmentLocationCommand, wx.EVT_KILL_FOCUS, 
+            self.items[0].locationChangedEventType())
         sizer.Add(self._locationEntry, 1, wx.ALL, 3)
         if all(item.type_ == 'file' for item in self.items):
             button = wx.Button(panel, wx.ID_ANY, _('Browse'))
@@ -344,10 +213,9 @@ class AppearancePage(Page):
         setattr(self, '_%sColorButton'%colorType, button)
         commandClass = getattr(command, 'Edit%sColorCommand'%colorType.capitalize())
         eventType = getattr(self.items[0], '%sColorChangedEventType'%colorType)()
-        colorSync = ColorSync('color', button, currentColor, self.items, 
-                              commandClass, wx.EVT_COLOURPICKER_CHANGED, 
-                              eventType, defaultValue=defaultColor, 
-                              defaultCheckbox=checkBox)
+        colorSync = attributesync.ColorSync('color', button, currentColor, 
+            self.items, commandClass, wx.EVT_COLOURPICKER_CHANGED, eventType, 
+            defaultValue=defaultColor, defaultCheckbox=checkBox)
         setattr(self, '_%sColorSync'%colorType, colorSync)
         self.addEntry(labelText, checkBox, button, flags=[None, None, wx.ALL])
             
@@ -360,16 +228,14 @@ class AppearancePage(Page):
         defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self._fontButton = widgets.FontPickerCtrl(self,
             font=currentFont or defaultFont, colour=currentColor)
-        self._fontSync = FontSync('font', self._fontButton, currentFont,
-                                  self.items, command.EditFontCommand,
-                                  wx.EVT_FONTPICKER_CHANGED, 
-                                  self.items[0].fontChangedEventType(),
-                                  defaultValue=defaultFont,
-                                  defaultCheckbox=fontCheckBox)
-        self._fontColorSync = FontColorSync('color', self._fontButton, currentColor,
-                                            self.items, command.EditForegroundColorCommand,
-                                            wx.EVT_FONTPICKER_CHANGED,
-                                            self.items[0].foregroundColorChangedEventType())
+        self._fontSync = attributesync.FontSync('font', self._fontButton, 
+            currentFont, self.items, command.EditFontCommand, 
+            wx.EVT_FONTPICKER_CHANGED, self.items[0].fontChangedEventType(),
+            defaultValue=defaultFont, defaultCheckbox=fontCheckBox)
+        self._fontColorSync = attributesync.FontColorSync('color', 
+            self._fontButton, currentColor, self.items, 
+            command.EditForegroundColorCommand, wx.EVT_FONTPICKER_CHANGED,
+            self.items[0].foregroundColorChangedEventType())
         self.addEntry(_('Font'), fontCheckBox, self._fontButton,
                       flags=[None, None, wx.ALL])
                     
@@ -385,10 +251,9 @@ class AppearancePage(Page):
         currentIcon = self.items[0].icon() if len(self.items) == 1 else ''
         currentSelectionIndex = imageNames.index(currentIcon)
         self._iconEntry.SetSelection(currentSelectionIndex)
-        self._iconSync = IconSync('icon', self._iconEntry, currentIcon, 
-                                  self.items, command.EditIconCommand,
-                                  wx.EVT_COMBOBOX, 
-                                  self.items[0].iconChangedEventType())
+        self._iconSync = attributesync.IconSync('icon', self._iconEntry, 
+            currentIcon, self.items, command.EditIconCommand, wx.EVT_COMBOBOX, 
+            self.items[0].iconChangedEventType())
         self.addEntry(_('Icon'), self._iconEntry, flags=[None, wx.ALL])
     
     def entries(self):
@@ -425,9 +290,9 @@ class DatesPage(Page):
         setattr(self, '_%sEntry'%taskMethodName, dateTimeEntry)
         commandClass = getattr(command, 'Edit%sCommand'%TaskMethodName)
         eventType = 'task.%s'%taskMethodName
-        datetimeSync = AttributeSync('datetime', dateTimeEntry, dateTime,
-                                     self.items, commandClass, 
-                                     entry.EVT_DATETIMEENTRY, eventType)
+        datetimeSync = attributesync.AttributeSync('datetime', dateTimeEntry, 
+            dateTime, self.items, commandClass, entry.EVT_DATETIMEENTRY, 
+            eventType)
         setattr(self, '_%sSync'%taskMethodName, datetimeSync) 
         self.addEntry(label, dateTimeEntry)
         dateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeEdited)
@@ -441,12 +306,10 @@ class DatesPage(Page):
         # date time in the reminder entry is a reasonable suggestion:
         if self._reminderDateTimeEntry.GetValue() == date.DateTime():
             self.suggestReminder()
-        self._reminderDateTimeSync = AttributeSync('datetime', 
-                                                   self._reminderDateTimeEntry,
-                                                   currentReminderDateTime,
-                                                   self.items, 
-                                                   command.EditReminderDateTimeCommand,
-                                                   entry.EVT_DATETIMEENTRY, 'task.reminder')
+        self._reminderDateTimeSync = attributesync.AttributeSync('datetime', 
+            self._reminderDateTimeEntry, currentReminderDateTime, self.items, 
+            command.EditReminderDateTimeCommand, entry.EVT_DATETIMEENTRY, 
+            'task.reminder')
         self.addEntry(_('Reminder'), self._reminderDateTimeEntry)
         
     def addRecurrenceEntries(self):
@@ -611,69 +474,40 @@ class ProgressPage(Page):
         
     def addProgressEntry(self):
         # pylint: disable-msg=W0201
-        self._currentPercentageComplete = self.items[0].percentageComplete() if len(self.items) == 1 else self.averagePercentageComplete(self.items)
+        currentPercentageComplete = self.items[0].percentageComplete() if len(self.items) == 1 else self.averagePercentageComplete(self.items)
         self._percentageCompleteEntry = entry.PercentageEntry(self, 
-            self._currentPercentageComplete, 
-            callback=self.onPercentageCompleteEdited)
+            currentPercentageComplete)
+        self._percentageCompleteSync = attributesync.AttributeSync('percentage', 
+            self._percentageCompleteEntry, currentPercentageComplete, 
+            self.items, command.EditPercentageCompleteCommand, 
+            entry.EVT_PERCENTAGEENTRY, 
+            self.items[0].percentageCompleteChangedEventType())
         self.addEntry(_('Percentage complete'), self._percentageCompleteEntry)
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onPercentageCompleteChanged, 
-                                                  eventType=self.items[0].percentageCompleteChangedEventType(), 
-                                                  eventSource=self.items[0])
-            
-    def averagePercentageComplete(self, items):
+
+    @staticmethod
+    def averagePercentageComplete(items):
         return sum([item.percentageComplete() for item in items]) \
                     / float(len(items)) if items else 0
-
-    def onPercentageCompleteEdited(self):
-        newPercentageComplete = self._percentageCompleteEntry.get()
-        if newPercentageComplete != self._currentPercentageComplete:
-            command.EditPercentageCompleteCommand(None, self.items, 
-                                                  percentage=newPercentageComplete).do()
-            self._currentPercentageComplete = newPercentageComplete
-            
-    def onPercentageCompleteChanged(self, event):
-        newPercentageComplete = event.value()
-        if newPercentageComplete != self._currentPercentageComplete:
-            self._currentPercentageComplete = newPercentageComplete
-            self._percentageCompleteEntry.set(newPercentageComplete)
         
     def addBehaviorEntry(self):
         # pylint: disable-msg=W0201
-        self._markTaskCompletedEntry = choice = wx.Choice(self)
-        self._markTaskCompletedEntry.Bind(wx.EVT_CHOICE, self.onShouldMarkCompletedEdited)
-        self._currentShouldMarkCompleted = self.items[0].shouldMarkCompletedWhenAllChildrenCompleted() if len(self.items) == 1 else None
+        self._shouldMarkCompletedEntry = choice = wx.Choice(self)
+        currentShouldMarkCompleted = self.items[0].shouldMarkCompletedWhenAllChildrenCompleted() if len(self.items) == 1 else None
         for choiceValue, choiceText in \
                 [(None, _('Use application-wide setting')),
                  (False, _('No')), (True, _('Yes'))]:
             choice.Append(choiceText, choiceValue)
-            if choiceValue == self._currentShouldMarkCompleted:
+            if choiceValue == currentShouldMarkCompleted:
                 choice.SetSelection(choice.GetCount()-1)
         if choice.GetSelection() == wx.NOT_FOUND:
             # Force a selection if necessary:
             choice.SetSelection(0)
+        self._shouldMarkCompletedSync = attributesync.ChoiceSync( \
+            'shouldMarkCompleted', choice, currentShouldMarkCompleted, 
+            self.items, command.EditShouldMarkCompletedCommand, wx.EVT_CHOICE,
+            'task.setting.shouldMarkCompletedWhenAllChildrenCompleted')                                                       
         self.addEntry(_('Mark task completed when all children are completed?'), 
                       choice, flags=[None, wx.ALL])
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onShouldMarkCompletedChanged,
-                                                  eventType='task.setting.shouldMarkCompletedWhenAllChildrenCompleted', 
-                                                  eventSource=self.items[0])
-        
-    def onShouldMarkCompletedEdited(self, event):
-        event.Skip()
-        newShouldMarkCompleted = self._markTaskCompletedEntry.GetClientData( \
-            self._markTaskCompletedEntry.GetSelection())
-        if newShouldMarkCompleted != self._currentShouldMarkCompleted:
-            command.EditShouldMarkCompletedCommand(None, self.items, 
-                                                   shouldMarkCompleted=newShouldMarkCompleted).do()
-            self._currentShouldMarkCompleted = newShouldMarkCompleted
-            
-    def onShouldMarkCompletedChanged(self, event):
-        newShouldMarkCompleted = event.value()
-        if newShouldMarkCompleted != self._currentShouldMarkCompleted:
-            self._currentShouldMarkCompleted = newShouldMarkCompleted
-            index = [None, False, True].index(newShouldMarkCompleted)
-            self._markTaskCompletedEntry.SetSelection(index)
         
     def entries(self):
         return dict(firstEntry=self._percentageCompleteEntry,
@@ -699,28 +533,13 @@ class BudgetPage(Page):
             
     def addBudgetEntry(self):
         # pylint: disable-msg=W0201
-        self._currentBudget = self.items[0].budget() if len(self.items) == 1 else date.TimeDelta()
-        self._budgetEntry = entry.TimeDeltaEntry(self, self._currentBudget)
-        self._budgetEntry.Bind(wx.EVT_KILL_FOCUS, self.onBudgetEdited)
+        currentBudget = self.items[0].budget() if len(self.items) == 1 else date.TimeDelta()
+        self._budgetEntry = entry.TimeDeltaEntry(self, currentBudget)
+        self._budgetSync = attributesync.AttributeSync('budget', 
+            self._budgetEntry, currentBudget, self.items,                                         
+            command.EditBudgetCommand, wx.EVT_KILL_FOCUS, 'task.budget')
         self.addEntry(_('Budget'), self._budgetEntry, flags=[None, wx.ALL])
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onBudgetChanged, 
-                                                  eventType='task.budget', 
-                                                  eventSource=self.items[0])
-        
-    def onBudgetEdited(self, event):
-        event.Skip()
-        newBudget = self._budgetEntry.get()
-        if newBudget != self._currentBudget:
-            self._currentBudget = newBudget
-            command.EditBudgetCommand(None, self.items, budget=newBudget).do()
-            
-    def onBudgetChanged(self, event):
-        newBudget = event.value()
-        if newBudget != self._currentBudget:
-            self._currentBudget = newBudget
-            self._budgetEntry.set(newBudget)
-            
+                    
     def addTimeSpentEntry(self):
         assert len(self.items) == 1
         # pylint: disable-msg=W0201 
@@ -735,8 +554,8 @@ class BudgetPage(Page):
         
     def onTimeSpentChanged(self, event): # pylint: disable-msg=W0613
         newTimeSpent = self.items[0].timeSpent()
-        if newTimeSpent != self._timeSpentEntry.get():
-            self._timeSpentEntry.set(newTimeSpent)
+        if newTimeSpent != self._timeSpentEntry.GetValue():
+            self._timeSpentEntry.SetValue(newTimeSpent)
             
     def addBudgetLeftEntry(self):
         assert len(self.items) == 1
@@ -752,8 +571,8 @@ class BudgetPage(Page):
         
     def onBudgetLeftChanged(self, event): # pylint: disable-msg=W0613
         newBudgetLeft = self.items[0].budgetLeft()
-        if newBudgetLeft != self._budgetLeftEntry.get():
-            self._budgetLeftEntry.set(newBudgetLeft)
+        if newBudgetLeft != self._budgetLeftEntry.GetValue():
+            self._budgetLeftEntry.SetValue(newBudgetLeft)
             
     def addRevenueEntries(self):
         self.addHourlyFeeEntry()
