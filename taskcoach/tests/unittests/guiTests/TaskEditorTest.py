@@ -228,13 +228,13 @@ class EditTaskTestBase(object):
         self.assertEqual(-1, self.task.priority())
         
     def testSetHourlyFee(self):
-        self.editor._interior[5]._hourlyFeeEntry.set(100)
-        self.editor._interior[5].onHourlyFeeEdited(dummy.Event())
+        self.editor._interior[5]._hourlyFeeEntry.SetValue(100)
+        self.editor._interior[5]._hourlyFeeSync.onAttributeEdited(dummy.Event())
         self.assertEqual(100, self.task.hourlyFee())
 
     def testSetFixedFee(self):
-        self.editor._interior[5]._fixedFeeEntry.set(100.5)
-        self.editor._interior[5].onFixedFeeEdited(dummy.Event())
+        self.editor._interior[5]._fixedFeeEntry.SetValue(100.5)
+        self.editor._interior[5]._fixedFeeSync.onAttributeEdited(dummy.Event())
         self.assertEqual(100.5, self.task.fixedFee())
 
     def testBehaviorMarkCompleted(self):

@@ -582,52 +582,23 @@ class BudgetPage(Page):
             
     def addHourlyFeeEntry(self):
         # pylint: disable-msg=W0201
-        self._currentHourlyFee = self.items[0].hourlyFee() if len(self.items) == 1 else 0
-        self._hourlyFeeEntry = entry.AmountEntry(self, self._currentHourlyFee)
-        self._hourlyFeeEntry.Bind(wx.EVT_KILL_FOCUS, self.onHourlyFeeEdited)
+        currentHourlyFee = self.items[0].hourlyFee() if len(self.items) == 1 else 0
+        self._hourlyFeeEntry = entry.AmountEntry(self, currentHourlyFee)
+        self._hourlyFeeSync = attributesync.AttributeSync('hourlyFee',
+            self._hourlyFeeEntry, currentHourlyFee, self.items,
+            command.EditHourlyFeeCommand, wx.EVT_KILL_FOCUS, 
+            self.items[0].hourlyFeeChangedEventType())
         self.addEntry(_('Hourly fee'), self._hourlyFeeEntry, flags=[None, wx.ALL])
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onHourlyFeeChanged, 
-                                                  eventType=self.items[0].hourlyFeeChangedEventType(), 
-                                                  eventSource=self.items[0])
-            
-    def onHourlyFeeEdited(self, event):
-        event.Skip()
-        newHourlyFee = self._hourlyFeeEntry.get()
-        if newHourlyFee != self._currentHourlyFee:
-            self._currentHourlyFee = newHourlyFee
-            command.EditHourlyFeeCommand(None, self.items, hourlyFee=newHourlyFee).do()
-            
-    def onHourlyFeeChanged(self, event):
-        newHourlyFee = event.value()
-        if newHourlyFee != self._currentHourlyFee:
-            self._currentHourlyFee = newHourlyFee
-            self._hourlyFeeEntry.set(newHourlyFee)
         
     def addFixedFeeEntry(self):
         # pylint: disable-msg=W0201
-        self._currentFixedFee = self.items[0].fixedFee() if len(self.items) == 1 else 0
-        self._fixedFeeEntry = entry.AmountEntry(self, self._currentFixedFee)
-        self._fixedFeeEntry.Bind(wx.EVT_KILL_FOCUS, self.onFixedFeeEdited)
+        currentFixedFee = self.items[0].fixedFee() if len(self.items) == 1 else 0
+        self._fixedFeeEntry = entry.AmountEntry(self, currentFixedFee)
+        self._fixedFeeSync = attributesync.AttributeSync('fixedFee',
+            self._fixedFeeEntry, currentFixedFee, self.items,
+            command.EditFixedFeeCommand, wx.EVT_KILL_FOCUS, 'task.fixedFee')
         self.addEntry(_('Fixed fee'), self._fixedFeeEntry, flags=[None, wx.ALL])
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onFixedFeeChanged, 
-                                                  eventType='task.fixedFee', 
-                                                  eventSource=self.items[0])
 
-    def onFixedFeeEdited(self, event):
-        event.Skip()
-        newFixedFee = self._fixedFeeEntry.get()
-        if newFixedFee != self._currentFixedFee:
-            self._currentFixedFee = newFixedFee
-            command.EditFixedFeeCommand(None, self.items, fixedFee=newFixedFee).do()
-            
-    def onFixedFeeChanged(self, event):
-        newFixedFee = event.value()
-        if newFixedFee != self._currentFixedFee:
-            self._currentFixedFee = newFixedFee
-            self._fixedFeeEntry.set(newFixedFee)
-        
     def addRevenueEntry(self):
         assert len(self.items) == 1
         revenue = self.items[0].revenue()
@@ -639,8 +610,8 @@ class BudgetPage(Page):
 
     def onRevenueChanged(self, event): # pylint: disable-msg=W0613
         newRevenue = self.items[0].revenue()
-        if newRevenue != self._revenueEntry.get():
-            self._revenueEntry.set(newRevenue)
+        if newRevenue != self._revenueEntry.GetValue():
+            self._revenueEntry.SetValue(newRevenue)
             
     def observeTracking(self):
         if len(self.items) != 1:

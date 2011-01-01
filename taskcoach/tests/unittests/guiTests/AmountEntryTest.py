@@ -35,11 +35,11 @@ class AmountEntryTest(test.wxTestCase):
         self.amountEntry = entry.AmountEntry(self.frame)
 
     def testCreate(self):
-        self.assertEqual(0.0, self.amountEntry.get())
+        self.assertEqual(0.0, self.amountEntry.GetValue())
 
     def testSetValue(self):
-        self.amountEntry.set(1.0)
-        self.assertEqual(1.0, self.amountEntry.get())
+        self.amountEntry.SetValue(1.0)
+        self.assertEqual(1.0, self.amountEntry.GetValue())
 
     def testDefaultLocalConventions(self):
         entry.AmountEntry(self.frame, localeconv=LocalConv())

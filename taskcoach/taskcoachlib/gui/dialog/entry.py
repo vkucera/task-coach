@@ -125,10 +125,10 @@ class AmountEntry(widgets.PanelWithBoxSizer):
             groupDigits=groupDigits, 
             selectOnEntry=True, allowNegative=False, value=amount)
   
-    def get(self):
+    def GetValue(self):
         return self._entry.GetValue()
 
-    def set(self, value):
+    def SetValue(self, value):
         self._entry.SetValue(value)
 
     def Bind(self, *args, **kwargs): # pylint: disable-msg=W0221
