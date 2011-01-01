@@ -57,10 +57,10 @@ class TaskEditorSetterBase(object):
         wx.YieldIfNeeded()
         
     def setRecurrence(self, newRecurrence):
-        page = self.editor._interior[1]
-        page.setRecurrence(newRecurrence)
-        page.onRecurrenceEdited(dummy.Event())
-        return page
+        recurrenceEntry = self.editor._interior[1]._recurrenceEntry
+        recurrenceEntry.SetValue(newRecurrence)
+        recurrenceEntry.onRecurrenceEdited()
+        wx.YieldIfNeeded()
 
 
 class TaskEditorBySettingFocusMixin(TaskEditorSetterBase):
@@ -136,11 +136,11 @@ class EditorDisplayTest(TaskEditorTestCase):
                          self.editor._interior[1]._dueDateTimeEntry.GetValue())
         
     def testRecurrenceUnit(self):
-        choice = self.editor._interior[1]._recurrenceEntry
+        choice = self.editor._interior[1]._recurrenceEntry._recurrencePeriodEntry
         self.assertEqual('Daily', choice.GetString(choice.GetSelection()))
 
     def testRecurrenceFrequency(self):
-        freq = self.editor._interior[1]._recurrenceFrequencyEntry
+        freq = self.editor._interior[1]._recurrenceEntry._recurrenceFrequencyEntry
         self.assertEqual(1, freq.GetValue())    
 
 

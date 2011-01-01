@@ -23,7 +23,8 @@ from wx.lib import masked, newevent
 from taskcoachlib import widgets
 from taskcoachlib.domain import date
 from taskcoachlib.thirdparty import combotreebox
- 
+from taskcoachlib.i18n import _
+
  
 DateTimeEntryEvent, EVT_DATETIMEENTRY = newevent.NewEvent()
 
@@ -237,3 +238,115 @@ class TaskComboTreeBox(wx.Panel):
         selection = self._comboTreeBox.GetSelection()
         return self._comboTreeBox.GetClientData(selection)
 
+
+RecurrenceEntryEvent, EVT_RECURRENCEENTRY = newevent.NewEvent()
+
+
+class RecurrenceEntry(wx.Panel):
+    horizontalSpace = (3, -1)
+    verticalSpace = (-1, 3)
+
+    def __init__(self, parent, recurrence, *args, **kwargs):
+        super(RecurrenceEntry, self).__init__(parent, *args, **kwargs)
+        recurrenceFrequencyPanel = wx.Panel(self)
+        self._recurrencePeriodEntry = wx.Choice(recurrenceFrequencyPanel, 
+            choices=[_('None'), _('Daily'), _('Weekly'), _('Monthly'), _('Yearly')])        
+        self._recurrencePeriodEntry.Bind(wx.EVT_CHOICE, self.onRecurrencePeriodEdited)
+        self._recurrenceFrequencyEntry = widgets.SpinCtrl(recurrenceFrequencyPanel, 
+                                                          size=(50,-1), 
+                                                          initial=1, min=1)
+        self._recurrenceFrequencyEntry.Bind(wx.EVT_SPINCTRL, self.onRecurrenceEdited)
+        self._recurrenceStaticText = wx.StaticText(recurrenceFrequencyPanel, 
+                                                   label='reserve some space')
+        self._recurrenceSameWeekdayCheckBox = wx.CheckBox(recurrenceFrequencyPanel, 
+            label=_('keeping dates on the same weekday'))
+        self._recurrenceSameWeekdayCheckBox.Bind(wx.EVT_CHECKBOX, self.onRecurrenceEdited)
+        panelSizer = wx.BoxSizer(wx.HORIZONTAL)
+        panelSizer.Add(self._recurrencePeriodEntry, flag=wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add(self.horizontalSpace)
+        panelSizer.Add(wx.StaticText(recurrenceFrequencyPanel, label=_(', every')), 
+                       flag=wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add(self.horizontalSpace)
+        panelSizer.Add(self._recurrenceFrequencyEntry, flag=wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add(self.horizontalSpace)
+        panelSizer.Add(self._recurrenceStaticText, flag=wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add(self.horizontalSpace)
+        panelSizer.Add(self._recurrenceSameWeekdayCheckBox, proportion=1, 
+                       flag=wx.ALIGN_CENTER_VERTICAL|wx.EXPAND)
+        recurrenceFrequencyPanel.SetSizerAndFit(panelSizer)
+        self._recurrenceSizer = panelSizer
+
+        maxPanel = wx.Panel(self)
+        panelSizer = wx.BoxSizer(wx.HORIZONTAL)
+        
+        self._maxRecurrenceCheckBox = wx.CheckBox(maxPanel)
+        self._maxRecurrenceCheckBox.Bind(wx.EVT_CHECKBOX, self.onMaxRecurrenceChecked)
+        self._maxRecurrenceCountEntry = widgets.SpinCtrl(maxPanel, size=(50,-1), 
+                                                         initial=1, min=1)
+        self._maxRecurrenceCountEntry.Bind(wx.EVT_SPINCTRL, self.onRecurrenceEdited)
+        panelSizer.Add(self._maxRecurrenceCheckBox, flag=wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add(self.horizontalSpace)
+        panelSizer.Add(wx.StaticText(maxPanel, label=_('Stop after')),
+                       flag=wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add(self.horizontalSpace)
+        panelSizer.Add(self._maxRecurrenceCountEntry,
+                       flag=wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add(self.horizontalSpace)
+        panelSizer.Add(wx.StaticText(maxPanel, label=_('recurrences')),
+                       flag=wx.ALIGN_CENTER_VERTICAL)
+        maxPanel.SetSizerAndFit(panelSizer)
+        
+        panelSizer = wx.BoxSizer(wx.VERTICAL)
+        panelSizer.Add(recurrenceFrequencyPanel)
+        panelSizer.Add(self.verticalSpace)
+        panelSizer.Add(maxPanel)
+        self.SetSizerAndFit(panelSizer)
+        self.SetValue(recurrence)
+
+    def updateRecurrenceLabel(self):
+        recurrenceDict = {0: _('period,'), 1: _('day(s),'), 2: _('week(s),'),
+                          3: _('month(s),'), 4: _('year(s),')}
+        recurrenceLabel = recurrenceDict[self._recurrencePeriodEntry.Selection]
+        self._recurrenceStaticText.SetLabel(recurrenceLabel)
+        self._recurrenceSameWeekdayCheckBox.Enable(self._recurrencePeriodEntry.Selection in (3,4))
+        self._recurrenceSizer.Layout()
+
+    def onRecurrencePeriodEdited(self, event):
+        recurrenceOn = event.String != _('None')
+        self._maxRecurrenceCheckBox.Enable(recurrenceOn)
+        self._recurrenceFrequencyEntry.Enable(recurrenceOn)
+        self._maxRecurrenceCountEntry.Enable(recurrenceOn and \
+            self._maxRecurrenceCheckBox.IsChecked())
+        self.updateRecurrenceLabel()
+        self.onRecurrenceEdited()
+
+    def onMaxRecurrenceChecked(self, event):
+        maxRecurrenceOn = event.IsChecked()
+        self._maxRecurrenceCountEntry.Enable(maxRecurrenceOn)
+        self.onRecurrenceEdited()
+
+    def onRecurrenceEdited(self, event=None):
+        wx.PostEvent(self, RecurrenceEntryEvent())
+        
+    def SetValue(self, recurrence):
+        index = {'': 0, 'daily': 1, 'weekly': 2, 'monthly': 3, 'yearly': 4}[recurrence.unit]
+        self._recurrencePeriodEntry.Selection = index
+        self._maxRecurrenceCheckBox.Enable(bool(recurrence))
+        self._maxRecurrenceCheckBox.SetValue(recurrence.max > 0)
+        self._maxRecurrenceCountEntry.Enable(recurrence.max > 0)
+        if recurrence.max > 0:
+            self._maxRecurrenceCountEntry.Value = recurrence.max
+        self._recurrenceFrequencyEntry.Enable(bool(recurrence))
+        self._recurrenceFrequencyEntry.Value = recurrence.amount
+        self._recurrenceSameWeekdayCheckBox.Value = recurrence.sameWeekday \
+            if recurrence.unit in ('monthly', 'yearly') else False
+        self.updateRecurrenceLabel()
+
+    def GetValue(self):
+        recurrenceDict = {0: '', 1: 'daily', 2: 'weekly', 3: 'monthly', 4: 'yearly'}
+        kwargs = dict(unit=recurrenceDict[self._recurrencePeriodEntry.Selection])
+        if self._maxRecurrenceCheckBox.IsChecked():
+            kwargs['max'] = self._maxRecurrenceCountEntry.Value
+        kwargs['amount'] = self._recurrenceFrequencyEntry.Value
+        kwargs['sameWeekday'] = self._recurrenceSameWeekdayCheckBox.IsChecked()
+        return date.Recurrence(**kwargs) # pylint: disable-msg=W0142

@@ -274,7 +274,7 @@ class DatesPage(Page):
         self.addLine()
         self.addReminderEntry()
         self.addLine()
-        self.addRecurrenceEntries()
+        self.addRecurrenceEntry()
         
     def addDateEntries(self):
         for label, taskMethodName in [(_('Start date'), 'startDateTime'),
@@ -312,55 +312,14 @@ class DatesPage(Page):
             'task.reminder')
         self.addEntry(_('Reminder'), self._reminderDateTimeEntry)
         
-    def addRecurrenceEntries(self):
-        # pylint: disable-msg=W0201
-        recurrencePanel = wx.Panel(self)
-        panelSizer = wx.BoxSizer(wx.HORIZONTAL)
-        self._recurrenceEntry = wx.Choice(recurrencePanel, 
-            choices=[_('None'), _('Daily'), _('Weekly'), _('Monthly'), _('Yearly')])        
-        self._recurrenceEntry.Bind(wx.EVT_CHOICE, self.onRecurrencePeriodEdited)
-        panelSizer.Add(self._recurrenceEntry, flag=wx.ALIGN_CENTER_VERTICAL)
-        panelSizer.Add((3,-1))
-        staticText = wx.StaticText(recurrencePanel, label=_(', every'))
-        panelSizer.Add(staticText, flag=wx.ALIGN_CENTER_VERTICAL)
-        panelSizer.Add((3,-1))
-        self._recurrenceFrequencyEntry = widgets.SpinCtrl(recurrencePanel, 
-                                                          size=(50,-1), 
-                                                          initial=1, min=1)
-        self._recurrenceFrequencyEntry.Bind(wx.EVT_SPINCTRL, self.onRecurrenceEdited)
-        panelSizer.Add(self._recurrenceFrequencyEntry, flag=wx.ALIGN_CENTER_VERTICAL)
-        panelSizer.Add((3,-1))
-        self._recurrenceStaticText = wx.StaticText(recurrencePanel, 
-                                                   label='reserve some space')
-        panelSizer.Add(self._recurrenceStaticText, flag=wx.ALIGN_CENTER_VERTICAL)
-        panelSizer.Add((3, -1))
-        self._recurrenceSameWeekdayCheckBox = wx.CheckBox(recurrencePanel, 
-            label=_('keeping dates on the same weekday'))
-        self._recurrenceSameWeekdayCheckBox.Bind(wx.EVT_CHECKBOX, self.onRecurrenceEdited)
-        panelSizer.Add(self._recurrenceSameWeekdayCheckBox, proportion=1, 
-                       flag=wx.ALIGN_CENTER_VERTICAL|wx.EXPAND)
-        recurrencePanel.SetSizerAndFit(panelSizer)
-        self._recurrenceSizer = panelSizer
-
-        maxPanel = wx.Panel(self)
-        panelSizer = wx.BoxSizer(wx.HORIZONTAL)
-        self._maxRecurrenceCheckBox = wx.CheckBox(maxPanel)
-        self._maxRecurrenceCheckBox.Bind(wx.EVT_CHECKBOX, self.onMaxRecurrenceChecked)
-        panelSizer.Add(self._maxRecurrenceCheckBox, flag=wx.ALIGN_CENTER_VERTICAL)
-        panelSizer.Add((3,-1))
-        self._maxRecurrenceCountEntry = widgets.SpinCtrl(maxPanel, size=(50,-1), 
-                                                         initial=1, min=1)
-        self._maxRecurrenceCountEntry.Bind(wx.EVT_SPINCTRL, self.onRecurrenceEdited)
-        panelSizer.Add(self._maxRecurrenceCountEntry)
-        maxPanel.SetSizerAndFit(panelSizer)
-        self.addEntry(_('Recurrence'), recurrencePanel)
-        self.addEntry(_('Maximum number\nof recurrences'), maxPanel)
-        self._currentRecurrence = self.items[0].recurrence() if len(self.items) == 1 else date.Recurrence()
-        self.setRecurrence(self._currentRecurrence)
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onRecurrenceChanged, 
-                                                  eventType='task.recurrence', 
-                                                  eventSource=self.items[0])
+    def addRecurrenceEntry(self):
+        currentRecurrence = self.items[0].recurrence() if len(self.items) == 1 else date.Recurrence()
+        self._recurrenceEntry = entry.RecurrenceEntry(self, currentRecurrence)
+        self._recurrenceSync = attributesync.AttributeSync('recurrence',
+            self._recurrenceEntry, currentRecurrence, self.items,
+            command.EditRecurrenceCommand, entry.EVT_RECURRENCEENTRY,
+            'task.recurrence')
+        self.addEntry(_('Recurrence'), self._recurrenceEntry)
             
     def entries(self):
         # pylint: disable-msg=E1101
@@ -371,43 +330,7 @@ class DatesPage(Page):
                     timeLeft=self._dueDateTimeEntry, 
                     reminder=self._reminderDateTimeEntry, 
                     recurrence=self._recurrenceEntry)
-    
-    def onRecurrencePeriodEdited(self, event):
-        recurrenceOn = event.String != _('None')
-        self._maxRecurrenceCheckBox.Enable(recurrenceOn)
-        self._recurrenceFrequencyEntry.Enable(recurrenceOn)
-        self._maxRecurrenceCountEntry.Enable(recurrenceOn and \
-            self._maxRecurrenceCheckBox.IsChecked())
-        self.updateRecurrenceLabel()
-        self.onRecurrenceEdited(event)
-
-    def onMaxRecurrenceChecked(self, event):
-        maxRecurrenceOn = event.IsChecked()
-        self._maxRecurrenceCountEntry.Enable(maxRecurrenceOn)
-        self.onRecurrenceEdited(event)
-        
-    def onRecurrenceEdited(self, event):
-        event.Skip()
-        newRecurrence = self.getRecurrence()
-        if newRecurrence != self._currentRecurrence:
-            command.EditRecurrenceCommand(None, self.items, recurrence=newRecurrence).do()
-            self._currentRecurrence = newRecurrence
-            
-    def onRecurrenceChanged(self, event):
-        newRecurrence = event.value()
-        if newRecurrence != self._currentRecurrence:
-            self._currentRecurrence = newRecurrence
-            self.setRecurrence(newRecurrence)
-            
-    def getRecurrence(self):
-        recurrenceDict = {0: '', 1: 'daily', 2: 'weekly', 3: 'monthly', 4: 'yearly'}
-        kwargs = dict(unit=recurrenceDict[self._recurrenceEntry.Selection])
-        if self._maxRecurrenceCheckBox.IsChecked():
-            kwargs['max'] = self._maxRecurrenceCountEntry.Value
-        kwargs['amount'] = self._recurrenceFrequencyEntry.Value
-        kwargs['sameWeekday'] = self._recurrenceSameWeekdayCheckBox.IsChecked()
-        return date.Recurrence(**kwargs) # pylint: disable-msg=W0142
-    
+                
     def onDateTimeEdited(self, event):
         ''' Called when one of the DateTimeEntries is changed by the user. 
             Update the suggested reminder if no reminder was set by the user. '''
@@ -417,32 +340,6 @@ class DatesPage(Page):
             self._reminderDateTimeEntry.GetValue() == date.DateTime():
             self.suggestReminder()
             
-    def setRecurrence(self, recurrence):
-        index = {'': 0, 'daily': 1, 'weekly': 2, 'monthly': 3, 'yearly': 4}[recurrence.unit]
-        self._recurrenceEntry.Selection = index
-        self._maxRecurrenceCheckBox.Enable(bool(recurrence))
-        self._maxRecurrenceCheckBox.SetValue(recurrence.max > 0)
-        self._maxRecurrenceCountEntry.Enable(recurrence.max > 0)
-        if recurrence.max > 0:
-            self._maxRecurrenceCountEntry.Value = recurrence.max
-        self._recurrenceFrequencyEntry.Enable(bool(recurrence))
-        if recurrence.amount > 1:
-            self._recurrenceFrequencyEntry.Value = recurrence.amount
-        if recurrence.unit in ('monthly', 'yearly'):
-            self._recurrenceSameWeekdayCheckBox.Value = recurrence.sameWeekday
-        else:
-            # If recurrence is not monthly or yearly, set same week day to False
-            self._recurrenceSameWeekdayCheckBox.Value = False
-        self.updateRecurrenceLabel()
-
-    def updateRecurrenceLabel(self):
-        recurrenceDict = {0: _('period,'), 1: _('day(s),'), 2: _('week(s),'),
-                          3: _('month(s),'), 4: _('year(s),')}
-        recurrenceLabel = recurrenceDict[self._recurrenceEntry.Selection]
-        self._recurrenceStaticText.SetLabel(recurrenceLabel)
-        self._recurrenceSameWeekdayCheckBox.Enable(self._recurrenceEntry.Selection in (3,4))
-        self._recurrenceSizer.Layout()
-
     def suggestReminder(self):
         ''' suggestReminder populates the reminder entry with a reasonable
             suggestion for a reminder date and time, but does not enable the
