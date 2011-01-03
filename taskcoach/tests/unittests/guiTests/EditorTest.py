@@ -55,27 +55,27 @@ class EditorTestCase(test.wxTestCase):
         self.failIf(self.editor.editorClosed)
 
     def testThatPickingAForegroundColorChangesTheItemForegroundColor(self):
-        self.appearance._foregroundColorButton.SetColour(wx.RED)
+        self.appearance._foregroundColorEntry.SetValue(wx.RED)
         self.appearance._foregroundColorSync.onAttributeEdited(dummy.Event())
         self.assertEqual(wx.RED, self.item.foregroundColor())
         
     def testThatChangingTheItemForegroundColorAffectsTheForegroundColorButton(self):
         self.item.setForegroundColor(wx.RED)
-        self.assertEqual(wx.RED, self.appearance._foregroundColorButton.GetColour())
+        self.assertEqual(wx.RED, self.appearance._foregroundColorEntry.GetValue())
         
     def testThatPickingABackgroundColorChangesTheItemBackgroundColor(self):
-        self.appearance._backgroundColorButton.SetColour(wx.RED)
+        self.appearance._backgroundColorEntry.SetValue(wx.RED)
         self.appearance._backgroundColorSync.onAttributeEdited(dummy.Event())
         self.assertEqual(wx.RED, self.item.backgroundColor())
 
     def testThatChangingTheItemBackgroundColorAffectsTheBackgroundColorButton(self):
         self.item.setBackgroundColor(wx.RED)
-        self.assertEqual(wx.RED, self.appearance._backgroundColorButton.GetColour())
+        self.assertEqual(wx.RED, self.appearance._backgroundColorEntry.GetValue())
         
     def testThatPickingAFontChangesTheItemFont(self):
-        font = self.appearance._fontButton.GetSelectedFont()
+        font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         font.SetPointSize(font.GetPointSize() + 1)
-        self.appearance._fontButton.SelectedFont = font
+        self.appearance._fontEntry.SetValue(font)
         self.appearance._fontSync.onAttributeEdited(dummy.Event())
         self.assertEqual(font, self.item.font())
 
@@ -83,31 +83,31 @@ class EditorTestCase(test.wxTestCase):
         font = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         font.SetPointSize(font.GetPointSize() + 1)
         self.item.setFont(font)
-        self.assertEqual(font, self.appearance._fontButton.GetSelectedFont())
+        self.assertEqual(font, self.appearance._fontEntry.GetValue())
         
     def testThatPickingAColoredFontChangesTheItemColor(self):
-        self.appearance._fontButton.SetSelectedColour(wx.RED)
+        self.appearance._fontEntry.SetColor(wx.RED)
         self.appearance._fontColorSync.onAttributeEdited(dummy.Event())
         self.assertEqual(wx.RED, self.item.foregroundColor())
 
     def testThatChangingTheItemColorAffectsTheFontButton(self):
         self.item.setForegroundColor(wx.RED)
-        self.assertEqual(wx.RED, self.appearance._fontButton.GetSelectedColour())
+        self.assertEqual(wx.RED, self.appearance._fontEntry.GetColor())
 
     def testThatPickingAColoredFontChangesTheColorButton(self):
-        self.appearance._fontButton.SetSelectedColour(wx.RED)
+        self.appearance._fontEntry.SetColor(wx.RED)
         self.appearance._fontColorSync.onAttributeEdited(dummy.Event())
-        self.assertEqual(wx.RED, self.appearance._foregroundColorButton.GetColour())
+        self.assertEqual(wx.RED, self.appearance._foregroundColorEntry.GetValue())
         
     def testThatPickingAColorChangesTheFontButtonColor(self):
-        self.appearance._foregroundColorButton.SetColour(wx.RED)
+        self.appearance._foregroundColorEntry.SetValue(wx.RED)
         self.appearance._foregroundColorSync.onAttributeEdited(dummy.Event())
-        self.assertEqual(wx.RED, self.appearance._fontButton.GetSelectedColour())
+        self.assertEqual(wx.RED, self.appearance._fontEntry.GetColor())
         
     def testThatPickingAnIconChangesTheItemIcon(self):
-        self.appearance._iconEntry.SetSelection(1)
+        self.appearance._iconEntry.SetValue('bomb_icon')
         self.appearance._iconSync.onAttributeEdited(dummy.Event())
-        self.failUnless(self.item.icon())
+        self.assertEqual('bomb_icon', self.item.icon())
         
     def testThatChangingTheItemIconAffectsTheIconEntry(self):
         imageNames = sorted(gui.artprovider.chooseableItemImages.keys())

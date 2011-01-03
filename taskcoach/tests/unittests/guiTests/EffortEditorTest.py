@@ -19,11 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import test
 from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import task, effort, date
-
-
-class DummyEvent(object):
-    def Skip(self):
-        pass
+from unittests import dummy
 
 
 class EffortEditorTest(test.wxTestCase):      
@@ -50,7 +46,7 @@ class EffortEditorTest(test.wxTestCase):
     def testCreate(self):
         self.assertEqual(self.effort.getStart().date(), 
             self.editor._interior._startDateTimeEntry.GetValue().date())
-        self.assertEqual(self.effort.task().subject(), 
+        self.assertEqual(self.effort.task(), 
             self.editor._interior._taskEntry.GetValue())
         
     def testInvalidEffort(self):    
@@ -59,7 +55,7 @@ class EffortEditorTest(test.wxTestCase):
         self.failUnless(self.editor._interior.invalidPeriodMessage.GetLabel())
         
     def testChangeTask(self):
-        self.editor._interior._taskEntry.SetStringSelection('task2')
-        self.editor._interior.onTaskEdited(DummyEvent())
+        self.editor._interior._taskEntry.SetValue(self.task2)
+        self.editor._interior._taskSync.onAttributeEdited(dummy.Event())
         self.assertEqual(self.task2, self.effort.task())
         self.failIf(self.effort in self.task1.efforts())

@@ -63,94 +63,15 @@ class AttributeSync(object):
         return {self._attributeName: newValue}
     
     def getValue(self):
-        return self.getValueFromEntry()
-     
-    def getValueFromEntry(self):
         return self._entry.GetValue()
-    
+     
     def setValue(self, newValue):
-        self.setValueToEntry(newValue)
-        
-    def setValueToEntry(self, newValue):
         self._entry.SetValue(newValue)
-            
-            
-class IconSync(AttributeSync):
-    def commandKwArgs(self, newIcon):
-        commandKwArgs = super(IconSync, self).commandKwArgs(newIcon)
-        selectedIcon = newIcon[:-len('_icon')] + '_open_icon' \
-            if (newIcon.startswith('folder') and newIcon.count('_') == 2) \
-            else newIcon
-        commandKwArgs['selectedIcon'] = selectedIcon
-        return commandKwArgs
-    
-    def setValueToEntry(self, newIcon):
-        imageNames = sorted(artprovider.chooseableItemImages.keys())
-        self._entry.SetSelection(imageNames.index(newIcon))
-        
-    def getValueFromEntry(self):
-        return self._entry.GetClientData(self._entry.GetSelection())
 
 
-class OptionalAttributeSync(AttributeSync):
-    ''' For attributes that can have no value, in which case a default value
-        is shown in the control. The control has an accompanying checkbox that 
-        indicates whether the value of the control is actually used. '''
-
-    def __init__(self, *args, **kwargs):
-        self._defaultValue = kwargs.pop('defaultValue')
-        self._defaultCheckbox = kwargs.pop('defaultCheckbox')
-        super(OptionalAttributeSync, self).__init__(*args, **kwargs)
-        self._defaultCheckbox.Bind(wx.EVT_CHECKBOX, self.onAttributeChecked)
-
-    def onAttributeChecked(self, event):
-        super(OptionalAttributeSync, self).onAttributeEdited(event)
-
-    def onAttributeEdited(self, event):
-        self._defaultCheckbox.SetValue(True)
-        super(OptionalAttributeSync, self).onAttributeEdited(event)
-
+class FontColorSync(AttributeSync):
     def setValue(self, newValue):
-        checked = newValue is not None
-        self._defaultCheckbox.SetValue(checked)
-        if checked:
-            self.setValueToEntry(newValue)
+        self._entry.SetColor(newValue)
 
     def getValue(self):
-        return self.getValueFromEntry() if self._defaultCheckbox.IsChecked() \
-            else None
-        
-
-class FontSync(OptionalAttributeSync):        
-    def setValueToEntry(self, newValue):
-        self._entry.SetSelectedFont(newValue)
-        
-    def getValueFromEntry(self):
-        return self._entry.GetSelectedFont()
-            
-            
-class FontColorSync(AttributeSync):
-    def setValueToEntry(self, newValue):
-        self._entry.SetSelectedColour(newValue)
-
-    def getValueFromEntry(self):
-        return self._entry.GetSelectedColour()
-    
-    
-class ColorSync(OptionalAttributeSync):
-    def setValueToEntry(self, newValue):
-        self._entry.SetColour(newValue)
-        
-    def getValueFromEntry(self):
-        return self._entry.GetColour()
-    
-    
-class ChoiceSync(AttributeSync):
-    def setValueToEntry(self, newValue):        
-        for index in range(self._entry.GetCount()):
-            if newValue == self._entry.GetClientData(index):
-                self._entry.SetSelection(index)
-                break
-        
-    def getValueFromEntry(self):
-        return self._entry.GetClientData(self._entry.GetSelection())
+        return self._entry.GetColor()

@@ -540,8 +540,10 @@ class EditIconCommand(BaseCommand):
     singular_name = _('Change icon "%s"')
     
     def __init__(self, *args, **kwargs):
-        self.__newIcon = kwargs.pop('icon')
-        self.__newSelectedIcon = kwargs.pop('selectedIcon')
+        self.__newIcon = icon = kwargs.pop('icon')
+        self.__newSelectedIcon = icon[:-len('_icon')] + '_open_icon' \
+            if (icon.startswith('folder') and icon.count('_') == 2) \
+            else icon
         super(EditIconCommand, self).__init__(*args, **kwargs)
         self.__oldIcons = [(item.icon(), item.selectedIcon()) for item in self.items]
     

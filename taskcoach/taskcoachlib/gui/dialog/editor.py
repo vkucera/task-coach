@@ -192,72 +192,45 @@ class AppearancePage(Page):
         self.addIconEntry()
         
     def addColorEntries(self):
-        self.addFgColorEntry()
-        self.addBgColorEntry()
-        
-    def addFgColorEntry(self):
         self.addColorEntry(_('Foreground color'), 'foreground', wx.BLACK)
-
-    def addBgColorEntry(self):
         self.addColorEntry(_('Background color'), 'background', wx.WHITE)
         
     def addColorEntry(self, labelText, colorType, defaultColor):
-        checkBox = wx.CheckBox(self, label=_('Use color:'))
-        setattr(self, '_%sColorCheckBox'%colorType, checkBox)
         currentColor = getattr(self.items[0], '%sColor'%colorType)(recursive=False) if len(self.items) == 1 else None
-        checkBox.SetValue(currentColor is not None)
-        # wx.ColourPickerCtrl on Mac OS X expects a wx.Color and fails on tuples
-        # so convert the tuples to a wx.Color:
-        currentColor = wx.Color(*currentColor) if currentColor else defaultColor # pylint: disable-msg=W0142
-        button = wx.ColourPickerCtrl(self, col=currentColor)
-        setattr(self, '_%sColorButton'%colorType, button)
+        colorEntry = entry.ColorEntry(self, currentColor, defaultColor)
+        setattr(self, '_%sColorEntry'%colorType, colorEntry)        
         commandClass = getattr(command, 'Edit%sColorCommand'%colorType.capitalize())
         eventType = getattr(self.items[0], '%sColorChangedEventType'%colorType)()
-        colorSync = attributesync.ColorSync('color', button, currentColor, 
-            self.items, commandClass, wx.EVT_COLOURPICKER_CHANGED, eventType, 
-            defaultValue=defaultColor, defaultCheckbox=checkBox)
+        colorSync = attributesync.AttributeSync('color', colorEntry, currentColor, 
+            self.items, commandClass, entry.EVT_COLORENTRY, eventType)
         setattr(self, '_%sColorSync'%colorType, colorSync)
-        self.addEntry(labelText, checkBox, button, flags=[None, None, wx.ALL])
+        self.addEntry(labelText, colorEntry, flags=[None, wx.ALL])
             
     def addFontEntry(self):
         # pylint: disable-msg=W0201
-        fontCheckBox = wx.CheckBox(self, label=_('Use font:'))
         currentFont = self.items[0].font() if len(self.items) == 1 else None
-        currentColor = self._foregroundColorButton.GetColour()
-        fontCheckBox.SetValue(currentFont is not None)
-        defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        self._fontButton = widgets.FontPickerCtrl(self,
-            font=currentFont or defaultFont, colour=currentColor)
-        self._fontSync = attributesync.FontSync('font', self._fontButton, 
+        currentColor = self._foregroundColorEntry.GetValue()
+        self._fontEntry = entry.FontEntry(self, currentFont, currentColor)
+        self._fontSync = attributesync.AttributeSync('font', self._fontEntry, 
             currentFont, self.items, command.EditFontCommand, 
-            wx.EVT_FONTPICKER_CHANGED, self.items[0].fontChangedEventType(),
-            defaultValue=defaultFont, defaultCheckbox=fontCheckBox)
+            entry.EVT_FONTENTRY, self.items[0].fontChangedEventType())
         self._fontColorSync = attributesync.FontColorSync('color', 
-            self._fontButton, currentColor, self.items, 
-            command.EditForegroundColorCommand, wx.EVT_FONTPICKER_CHANGED,
+            self._fontEntry, currentColor, self.items, 
+            command.EditForegroundColorCommand, entry.EVT_FONTENTRY,
             self.items[0].foregroundColorChangedEventType())
-        self.addEntry(_('Font'), fontCheckBox, self._fontButton,
-                      flags=[None, None, wx.ALL])
+        self.addEntry(_('Font'), self._fontEntry, flags=[None, wx.ALL])
                     
     def addIconEntry(self):
         # pylint: disable-msg=W0201
-        self._iconEntry = wx.combo.BitmapComboBox(self, style=wx.CB_READONLY)
-        size = (16, 16)
-        imageNames = sorted(artprovider.chooseableItemImages.keys())
-        for imageName in imageNames:
-            label = artprovider.chooseableItemImages[imageName]
-            bitmap = wx.ArtProvider_GetBitmap(imageName, wx.ART_MENU, size)
-            self._iconEntry.Append(label, bitmap, clientData=imageName)
         currentIcon = self.items[0].icon() if len(self.items) == 1 else ''
-        currentSelectionIndex = imageNames.index(currentIcon)
-        self._iconEntry.SetSelection(currentSelectionIndex)
-        self._iconSync = attributesync.IconSync('icon', self._iconEntry, 
-            currentIcon, self.items, command.EditIconCommand, wx.EVT_COMBOBOX, 
-            self.items[0].iconChangedEventType())
+        self._iconEntry = entry.IconEntry(self, currentIcon)
+        self._iconSync = attributesync.AttributeSync('icon', self._iconEntry, 
+            currentIcon, self.items, command.EditIconCommand, 
+            entry.EVT_ICONENTRY, self.items[0].iconChangedEventType())
         self.addEntry(_('Icon'), self._iconEntry, flags=[None, wx.ALL])
     
     def entries(self):
-        return dict(firstEntry=self._foregroundColorCheckBox)
+        return dict(firstEntry=self._foregroundColorEntry)
     
 
 class DatesPage(Page):
@@ -388,23 +361,19 @@ class ProgressPage(Page):
         
     def addBehaviorEntry(self):
         # pylint: disable-msg=W0201
-        self._shouldMarkCompletedEntry = choice = wx.Choice(self)
-        currentShouldMarkCompleted = self.items[0].shouldMarkCompletedWhenAllChildrenCompleted() if len(self.items) == 1 else None
-        for choiceValue, choiceText in \
-                [(None, _('Use application-wide setting')),
-                 (False, _('No')), (True, _('Yes'))]:
-            choice.Append(choiceText, choiceValue)
-            if choiceValue == currentShouldMarkCompleted:
-                choice.SetSelection(choice.GetCount()-1)
-        if choice.GetSelection() == wx.NOT_FOUND:
-            # Force a selection if necessary:
-            choice.SetSelection(0)
-        self._shouldMarkCompletedSync = attributesync.ChoiceSync( \
-            'shouldMarkCompleted', choice, currentShouldMarkCompleted, 
-            self.items, command.EditShouldMarkCompletedCommand, wx.EVT_CHOICE,
+        choices = [(None, _('Use application-wide setting')),
+                   (False, _('No')), (True, _('Yes'))]
+        currentChoice = self.items[0].shouldMarkCompletedWhenAllChildrenCompleted() \
+            if len(self.items) == 1 else None
+        self._shouldMarkCompletedEntry = entry.ChoiceEntry(self, choices,
+                                                           currentChoice)
+        self._shouldMarkCompletedSync = attributesync.AttributeSync( \
+            'shouldMarkCompleted', self._shouldMarkCompletedEntry, 
+            currentChoice, self.items, command.EditShouldMarkCompletedCommand, 
+            entry.EVT_CHOICEENTRY,
             'task.setting.shouldMarkCompletedWhenAllChildrenCompleted')                                                       
         self.addEntry(_('Mark task completed when all children are completed?'), 
-                      choice, flags=[None, wx.ALL])
+                      self._shouldMarkCompletedEntry, flags=[None, wx.ALL])
         
     def entries(self):
         return dict(firstEntry=self._percentageCompleteEntry,
@@ -909,29 +878,13 @@ class EffortEditBook(Page):
         ''' Add an entry for changing the task that this effort record
             belongs to. '''
         # pylint: disable-msg=W0201
-        self._currentTask = self.items[0].task()
-        self._taskEntry = entry.TaskComboTreeBox(self,
-            rootTasks=self._taskList.rootItems(),
-            selectedTask=self._currentTask)
-        self._taskEntry._comboTreeBox.Bind(wx.EVT_COMBOBOX, self.onTaskEdited)
+        currentTask = self.items[0].task()
+        self._taskEntry = entry.TaskEntry(self, 
+            rootTasks=self._taskList.rootItems(), selectedTask=currentTask)
+        self._taskSync = attributesync.AttributeSync('task', self._taskEntry,
+            currentTask, self.items, command.ChangeTaskCommand,
+            entry.EVT_TASKENTRY, self.items[0].taskChangedEventType())
         self.addEntry(_('Task'), self._taskEntry, flags=[None, wx.ALL|wx.EXPAND])
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onTaskChanged,
-                                                  eventType=self.items[0].taskChangedEventType(),
-                                                  eventSource=self.items[0])
-            
-    def onTaskEdited(self, event): # pylint: disable-msg=W0613
-        event.Skip()
-        newTask = self._taskEntry.GetSelection()
-        if newTask != self._currentTask:
-            self._currentTask = newTask
-            command.ChangeTaskCommand(None, self.items, task=newTask).do()
-            
-    def onTaskChanged(self, event):
-        newTask = event.value()
-        if newTask != self._currentTask:
-            self._currentTask = newTask
-            self._taskEntry.SetSelection(newTask)
             
     def addStartAndStopEntries(self):
         # pylint: disable-msg=W0201,W0142

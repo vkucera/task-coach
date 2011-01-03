@@ -21,13 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, locale
 from wx.lib import masked, newevent
 from taskcoachlib import widgets
+from taskcoachlib.gui import artprovider
 from taskcoachlib.domain import date
 from taskcoachlib.thirdparty import combotreebox
 from taskcoachlib.i18n import _
 
  
 DateTimeEntryEvent, EVT_DATETIMEENTRY = newevent.NewEvent()
-
 
 class DateTimeEntry(widgets.PanelWithBoxSizer):
     defaultDateTime = date.DateTime()
@@ -138,7 +138,6 @@ class AmountEntry(widgets.PanelWithBoxSizer):
 
 PercentageEntryEvent, EVT_PERCENTAGEENTRY = newevent.NewEvent()
         
-        
 class PercentageEntry(widgets.PanelWithBoxSizer):
     def __init__(self, parent, percentage=0, *args, **kwargs):
         kwargs['orientation'] = wx.HORIZONTAL
@@ -183,9 +182,165 @@ class PercentageEntry(widgets.PanelWithBoxSizer):
         if controlToWrite.GetValue() != value:
             controlToWrite.SetValue(value)
         wx.PostEvent(self, PercentageEntryEvent())
+
+
+FontEntryEvent, EVT_FONTENTRY = newevent.NewEvent()
         
+class FontEntry(widgets.PanelWithBoxSizer):
+    def __init__(self, parent, currentFont, currentColor, *args, **kwargs):
+        kwargs['orientation'] = wx.HORIZONTAL
+        super(FontEntry, self).__init__(parent, *args, **kwargs)
+        self._fontCheckBox = self._createCheckBox(currentFont)
+        self._fontPicker = self._createFontPicker(currentFont, currentColor)
+        self.add(self._fontCheckBox, flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL, proportion=0)
+        self.add(self._fontPicker, flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL, proportion=1)
+        self.fit()
+        
+    def _createCheckBox(self, currentFont):
+        checkBox = wx.CheckBox(self, label=_('Use font:'))
+        checkBox.SetValue(currentFont is not None)
+        checkBox.Bind(wx.EVT_CHECKBOX, self.onChecked)
+        return checkBox
     
-class TaskComboTreeBox(wx.Panel):
+    def _createFontPicker(self, currentFont, currentColor):
+        defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        picker = widgets.FontPickerCtrl(self,
+            font=currentFont or defaultFont, colour=currentColor)
+        picker.Bind(wx.EVT_FONTPICKER_CHANGED, self.onFontPicked)
+        return picker
+    
+    def onChecked(self, event):
+        event.Skip()
+        wx.PostEvent(self, FontEntryEvent())
+        
+    def onFontPicked(self, event):
+        event.Skip()
+        self._fontCheckBox.SetValue(True)
+        wx.PostEvent(self, FontEntryEvent())
+    
+    def GetValue(self):
+        return self._fontPicker.GetSelectedFont() if self._fontCheckBox.IsChecked() \
+            else None
+            
+    def SetValue(self, newFont):
+        checked = newFont is not None
+        self._fontCheckBox.SetValue(checked)
+        if checked:
+            self._fontPicker.SetSelectedFont(newFont)
+
+    def GetColor(self):
+        return self._fontPicker.GetSelectedColour()
+            
+    def SetColor(self, newColor):
+        self._fontPicker.SetSelectedColour(newColor)
+
+
+ColorEntryEvent, EVT_COLORENTRY = newevent.NewEvent()
+
+class ColorEntry(widgets.PanelWithBoxSizer):
+    def __init__(self, parent, currentColor, defaultColor, *args, **kwargs):
+        kwargs['orientation'] = wx.HORIZONTAL
+        super(ColorEntry, self).__init__(parent, *args, **kwargs)
+        self._colorCheckBox = self._createCheckBox(currentColor)
+        self._colorPicker = self._createColorPicker(currentColor, defaultColor)
+        self.add(self._colorCheckBox, flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL, proportion=0)
+        self.add(self._colorPicker, flag=wx.ALL|wx.ALIGN_CENTER_VERTICAL, proportion=1)
+        self.fit()
+
+    def _createCheckBox(self, currentColor):
+        checkBox = wx.CheckBox(self, label=_('Use color:'))
+        checkBox.SetValue(currentColor is not None)
+        checkBox.Bind(wx.EVT_CHECKBOX, self.onChecked)
+        return checkBox
+    
+    def _createColorPicker(self, currentColor, defaultColor):
+        # wx.ColourPickerCtrl on Mac OS X expects a wx.Color and fails on tuples
+        # so convert the tuples to a wx.Color:
+        currentColor = wx.Color(*currentColor) if currentColor else defaultColor # pylint: disable-msg=W0142
+        picker = wx.ColourPickerCtrl(self, col=currentColor)
+        picker.Bind(wx.EVT_COLOURPICKER_CHANGED, self.onColorPicked)
+        return picker
+    
+    def onChecked(self, event):
+        event.Skip()
+        wx.PostEvent(self, ColorEntryEvent())
+        
+    def onColorPicked(self, event):
+        event.Skip()
+        self._colorCheckBox.SetValue(True)
+        wx.PostEvent(self, ColorEntryEvent())
+
+    def GetValue(self):
+        return self._colorPicker.GetColour() if self._colorCheckBox.IsChecked() \
+            else None
+            
+    def SetValue(self, newColor):
+        checked = newColor is not None
+        self._colorCheckBox.SetValue(checked)
+        if checked:
+            self._colorPicker.SetColour(newColor)
+
+
+IconEntryEvent, EVT_ICONENTRY = newevent.NewEvent()
+
+class IconEntry(wx.combo.BitmapComboBox):
+    def __init__(self, parent, currentIcon, *args, **kwargs):
+        kwargs['style'] = wx.CB_READONLY
+        super(IconEntry, self).__init__(parent, *args, **kwargs)
+        imageNames = sorted(artprovider.chooseableItemImages.keys())
+        size = (16, 16)
+        for imageName in imageNames:
+            label = artprovider.chooseableItemImages[imageName]
+            bitmap = wx.ArtProvider_GetBitmap(imageName, wx.ART_MENU, size)
+            self.Append(label, bitmap, clientData=imageName)
+        self.SetSelection(imageNames.index(currentIcon))
+        self.Bind(wx.EVT_COMBOBOX, self.onIconPicked)
+        
+    def onIconPicked(self, event):
+        event.Skip()
+        wx.PostEvent(self, IconEntryEvent())
+
+    def GetValue(self):
+        return self.GetClientData(self.GetSelection())
+    
+    def SetValue(self, newValue):
+        for index in range(self.GetCount()):
+            if newValue == self.GetClientData(index):
+                self.SetSelection(index)
+                break
+
+
+ChoiceEntryEvent, EVT_CHOICEENTRY = newevent.NewEvent()
+
+class ChoiceEntry(wx.Choice):
+    def __init__(self, parent, choices, currentChoiceValue, *args, **kwargs):
+        super(ChoiceEntry, self).__init__(parent, *args, **kwargs)
+        for choiceValue, choiceText in choices:
+            self.Append(choiceText, choiceValue)
+            if choiceValue == currentChoiceValue:
+                self.SetSelection(self.GetCount()-1)
+        if self.GetSelection() == wx.NOT_FOUND:
+            # Force a selection if necessary:
+            self.SetSelection(0)
+        self.Bind(wx.EVT_CHOICE, self.onChoice)
+
+    def onChoice(self, event):
+        event.Skip()
+        wx.PostEvent(self, ChoiceEntryEvent())
+
+    def GetValue(self):
+        return self.GetClientData(self.GetSelection())
+
+    def SetValue(self, newValue):
+        for index in range(self.GetCount()):
+            if newValue == self.GetClientData(index):
+                self.SetSelection(index)
+                break
+
+
+TaskEntryEvent, EVT_TASKENTRY = newevent.NewEvent()
+
+class TaskEntry(wx.Panel):
     ''' A ComboTreeBox with tasks. This class does not inherit from the
         ComboTreeBox widget, because that widget is created using a
         factory function. '''
@@ -193,10 +348,10 @@ class TaskComboTreeBox(wx.Panel):
     def __init__(self, parent, rootTasks, selectedTask):
         ''' Initialize the ComboTreeBox, add the root tasks recursively and
             set the selection. '''
-        super(TaskComboTreeBox, self).__init__(parent)
+        super(TaskEntry, self).__init__(parent)
         self._createInterior()
         self._addTasks(rootTasks)
-        self.SetSelection(selectedTask)
+        self.SetValue(selectedTask)
 
     def __getattr__(self, attr):
         ''' Delegate unknown attributes to the ComboTreeBox. This is needed
@@ -209,6 +364,7 @@ class TaskComboTreeBox(wx.Panel):
         # pylint: disable-msg=W0201
         self._comboTreeBox = combotreebox.ComboTreeBox(self,
             style=wx.CB_READONLY|wx.CB_SORT|wx.TAB_TRAVERSAL)
+        self._comboTreeBox.Bind(wx.EVT_COMBOBOX, self.onTaskSelected)
         boxSizer = wx.BoxSizer()
         boxSizer.Add(self._comboTreeBox, flag=wx.EXPAND, proportion=1)
         self.SetSizerAndFit(boxSizer)
@@ -229,18 +385,20 @@ class TaskComboTreeBox(wx.Panel):
             if not child.isDeleted():
                 self._addTaskRecursively(child, item)
 
-    def SetSelection(self, task):
+    def onTaskSelected(self, event):
+        wx.PostEvent(self, TaskEntryEvent())
+        
+    def SetValue(self, task):
         ''' Select the given task. '''
         self._comboTreeBox.SetClientDataSelection(task)
 
-    def GetSelection(self):
+    def GetValue(self):
         ''' Return the selected task. '''
         selection = self._comboTreeBox.GetSelection()
         return self._comboTreeBox.GetClientData(selection)
 
 
 RecurrenceEntryEvent, EVT_RECURRENCEENTRY = newevent.NewEvent()
-
 
 class RecurrenceEntry(wx.Panel):
     horizontalSpace = (3, -1)
