@@ -51,8 +51,8 @@ class EffortEditorTest(test.wxTestCase):
         
     def testInvalidEffort(self):    
         self.editor._interior._stopDateTimeEntry.SetValue(date.DateTime(1900, 1, 1))
-        self.editor._interior.onStopDateTimeEdited()
-        self.failUnless(self.editor._interior.invalidPeriodMessage.GetLabel())
+        self.editor._interior.onDateTimeEdited(dummy.Event())
+        self.failUnless(self.editor._interior._invalidPeriodMessage.GetLabel())
         
     def testChangeTask(self):
         self.editor._interior._taskEntry.SetValue(self.task2)

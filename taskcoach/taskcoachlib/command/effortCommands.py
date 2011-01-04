@@ -81,6 +81,10 @@ class ChangeEffortStartDateTimeCommand(base.BaseCommand):
         super(ChangeEffortStartDateTimeCommand, self).__init__(*args, **kwargs)
         self.__oldDateTimes = [item.getStart() for item in self.items]
         
+    def canDo(self):
+        return super(ChangeEffortStartDateTimeCommand, self).canDo() and \
+            all(self.__datetime < item.getStop() for item in self.items)
+        
     @patterns.eventSource
     def do_command(self, event=None):
         for item in self.items:
@@ -103,7 +107,11 @@ class ChangeEffortStopDateTimeCommand(base.BaseCommand):
         self.__datetime = kwargs.pop('datetime')
         super(ChangeEffortStopDateTimeCommand, self).__init__(*args, **kwargs)
         self.__oldDateTimes = [item.getStop() for item in self.items]
-        
+
+    def canDo(self):
+        return super(ChangeEffortStopDateTimeCommand, self).canDo() and \
+            all(self.__datetime > item.getStart() for item in self.items)
+                
     @patterns.eventSource
     def do_command(self, event=None):
         for item in self.items:

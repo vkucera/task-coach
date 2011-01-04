@@ -889,101 +889,75 @@ class EffortEditBook(Page):
     def addStartAndStopEntries(self):
         # pylint: disable-msg=W0201,W0142
         dateTimeEntryKwArgs = dict(showSeconds=True)
-        self._currentStartDateTime = self.items[0].getStart() 
-        self._startDateTimeEntry = entry.DateTimeEntry(self, self._settings,
-            self._currentStartDateTime, noneAllowed=False, **dateTimeEntryKwArgs)
-        self._startDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onStartDateTimeEdited)
-        startFromLastEffortButton = wx.Button(self,
-            label=_('Start tracking from last stop time'))
-        self.Bind(wx.EVT_BUTTON, self.onStartFromLastEffort,
-            startFromLastEffortButton)
-        if self._effortList.maxDateTime() is None:
-            startFromLastEffortButton.Disable()
-
-        self._currentStopDateTime = self.items[0].getStop()
-        self._stopDateTimeEntry = entry.DateTimeEntry(self, self._settings, 
-            self._currentStopDateTime, noneAllowed=True, **dateTimeEntryKwArgs)
-        self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onStopDateTimeEdited)
-        self.invalidPeriodMessage = wx.StaticText(self, label='')
-        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        font.SetWeight(wx.FONTWEIGHT_BOLD )
-        self.invalidPeriodMessage.SetFont(font)
-        
         flags = [None, wx.ALIGN_RIGHT|wx.ALL, wx.ALIGN_LEFT|wx.ALL, None]
+        
+        currentStartDateTime = self.items[0].getStart()
+        self._startDateTimeEntry = entry.DateTimeEntry(self, self._settings,
+            currentStartDateTime, noneAllowed=False, **dateTimeEntryKwArgs)
+        self._startDateTimeSync = attributesync.AttributeSync('datetime',
+            self._startDateTimeEntry, currentStartDateTime, self.items,
+            command.ChangeEffortStartDateTimeCommand, entry.EVT_DATETIMEENTRY,
+            'effort.start')
+        self._startDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeEdited)        
+        startFromLastEffortButton = self._createStartFromLastEffortButton()
         self.addEntry(_('Start'), self._startDateTimeEntry,
             startFromLastEffortButton, flags=flags)
-        self.addEntry(_('Stop'), self._stopDateTimeEntry, self.invalidPeriodMessage, flags=flags)
-        if len(self.items) == 1:
-            registerObserver = patterns.Publisher().registerObserver
-            registerObserver(self.onStartDateTimeChanged, 
-                             eventType='effort.start', eventSource=self.items[0])
-            registerObserver(self.onStopDateTimeChanged, 
-                             eventType='effort.stop', eventSource=self.items[0])
-            
-    def onStartDateTimeEdited(self, *args, **kwargs):
-        newStartDateTime = self._startDateTimeEntry.GetValue()
-        if newStartDateTime != self._currentStartDateTime and self.validPeriod():
-            self._currentStartDateTime = newStartDateTime
-            command.ChangeEffortStartDateTimeCommand(None, self.items, datetime=newStartDateTime).do()
-        self.updateInvalidPeriodMessage()
-        
-    def onStartDateTimeChanged(self, event):
-        newStartDateTime = event.value()
-        if newStartDateTime != self._currentStartDateTime:
-            self._currentStartDateTime = newStartDateTime
-            self._startDateTimeEntry.SetValue(newStartDateTime)
-        
-    def onStopDateTimeEdited(self, *args, **kwargs): 
-        newStopDateTime = self._stopDateTimeEntry.GetValue()
-        if newStopDateTime != self._currentStopDateTime and self.validPeriod():
-            self._currentStopDateTime = newStopDateTime
-            command.ChangeEffortStopDateTimeCommand(None, self.items, datetime=newStopDateTime).do()
-        self.updateInvalidPeriodMessage()
 
-    def onStopDateTimeChanged(self, event):
-        newStopDateTime = event.value()
-        if newStopDateTime != self._currentStopDateTime:
-            self._currentStopDateTime = newStopDateTime
-            self._stopDateTimeEntry.SetValue(newStopDateTime)
-        
-    def updateInvalidPeriodMessage(self):
-        self.invalidPeriodMessage.SetLabel('' if self.validPeriod() else \
-                                           _('Warning: start must be earlier than stop'))
-                
+        currentStopDateTime = self.items[0].getStop()
+        self._stopDateTimeEntry = entry.DateTimeEntry(self, self._settings, 
+            currentStopDateTime, noneAllowed=True, **dateTimeEntryKwArgs)
+        self._stopDateTimeSync = attributesync.AttributeSync('datetime',
+            self._stopDateTimeEntry, currentStopDateTime, self.items,
+            command.ChangeEffortStopDateTimeCommand, entry.EVT_DATETIMEENTRY,
+            'effort.stop')
+        self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeEdited)
+        self._invalidPeriodMessage = self._createInvalidPeriodMessage()
+        self.addEntry(_('Stop'), self._stopDateTimeEntry, 
+                      self._invalidPeriodMessage, flags=flags)
+            
+    def _createStartFromLastEffortButton(self):
+        button = wx.Button(self, label=_('Start tracking from last stop time'))
+        self.Bind(wx.EVT_BUTTON, self.onStartFromLastEffort, button)
+        if self._effortList.maxDateTime() is None:
+            button.Disable()
+        return button
+            
+    def _createInvalidPeriodMessage(self):
+        text = wx.StaticText(self, label='')
+        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
+        text.SetFont(font)
+        return text
+
     def onStartFromLastEffort(self, event): # pylint: disable-msg=W0613
+        event.Skip()
         self._startDateTimeEntry.SetValue(self._effortList.maxDateTime())
         
+    def onDateTimeEdited(self, event):
+        event.Skip()
+        self.updateInvalidPeriodMessage()
+                    
+    def updateInvalidPeriodMessage(self):
+        message = '' if self.validPeriod() else _('Warning: start must be earlier than stop')
+        self._invalidPeriodMessage.SetLabel(message)
+                
     def validPeriod(self):
-        if not hasattr(self, '_stopDateTimeEntry'):
-            return True
-        else:
+        try:
             return self._startDateTimeEntry.GetValue() < self._stopDateTimeEntry.GetValue()
-        
+        except AttributeError:
+            return True # Entries not created yet
+
     def addDescriptionEntry(self):
         # pylint: disable-msg=W0201
-        self._currentDescription = self.items[0].description() if len(self.items) == 1 else _('Edit to change all descriptions')
-        self._descriptionEntry = widgets.MultiLineTextCtrl(self, self._currentDescription)
-        self._descriptionEntry.Bind(wx.EVT_KILL_FOCUS, self.onDescriptionEdited)
+        currentDescription = self.items[0].description() if len(self.items) == 1 else _('Edit to change all descriptions')
+        self._descriptionEntry = widgets.MultiLineTextCtrl(self, currentDescription)
         self._descriptionEntry.SetSizeHints(300, 150)
+        self._descriptionSync = attributesync.AttributeSync('description', 
+            self._descriptionEntry, currentDescription, self.items,
+            command.EditDescriptionCommand, wx.EVT_KILL_FOCUS,
+            self.items[0].descriptionChangedEventType())
         self.addEntry(_('Description'), self._descriptionEntry, growable=True)
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onDescriptionChanged, 
-                                                  eventType=self.items[0].descriptionChangedEventType(), 
-                                                  eventSource=self.items[0])
         
-    def onDescriptionEdited(self, event):
-        event.Skip()
-        newDescription = self._descriptionEntry.GetValue()
-        if newDescription != self._currentDescription:
-            self._currentDescription = newDescription
-            command.EditDescriptionCommand(None, self.items, description=newDescription).do()
-
-    def onDescriptionChanged(self, event):
-        newDescription = event.value()
-        if newDescription != self._currentDescription:
-            self._currentDescription = newDescription
-            self._descriptionEntry.SetValue(newDescription)
-
     def setFocus(self, columnName):
         self.setFocusOnEntry(columnName)
         

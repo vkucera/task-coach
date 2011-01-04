@@ -18,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from taskcoachlib import patterns
-from taskcoachlib.gui import artprovider
 
 
 class AttributeSync(object):
@@ -62,11 +61,11 @@ class AttributeSync(object):
     def commandKwArgs(self, newValue):
         return {self._attributeName: newValue}
     
-    def getValue(self):
-        return self._entry.GetValue()
-     
     def setValue(self, newValue):
         self._entry.SetValue(newValue)
+
+    def getValue(self):
+        return self._entry.GetValue()     
 
 
 class FontColorSync(AttributeSync):

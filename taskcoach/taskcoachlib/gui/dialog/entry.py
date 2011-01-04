@@ -29,40 +29,37 @@ from taskcoachlib.i18n import _
  
 DateTimeEntryEvent, EVT_DATETIMEENTRY = newevent.NewEvent()
 
-class DateTimeEntry(widgets.PanelWithBoxSizer):
+class DateTimeEntry(widgets.DateTimeCtrl):
     defaultDateTime = date.DateTime()
 
     def __init__(self, parent, settings, initialDateTime=defaultDateTime, 
                  readonly=False, noneAllowed=True, showSeconds=False, 
                  *args, **kwargs):
-        super(DateTimeEntry, self).__init__(parent, *args, **kwargs)
         starthour = settings.getint('view', 'efforthourstart')
         endhour = settings.getint('view', 'efforthourend')
         interval = settings.getint('view', 'effortminuteinterval')
-        self._entry = widgets.DateTimeCtrl(self, noneAllowed=noneAllowed, 
-                                           starthour=starthour, endhour=endhour, 
-                                           interval=interval, 
-                                           showSeconds=showSeconds)
+        super(DateTimeEntry, self).__init__(parent, noneAllowed=noneAllowed, 
+                                            starthour=starthour, endhour=endhour, 
+                                            interval=interval, 
+                                            showSeconds=showSeconds)
         if readonly:
-            self._entry.Disable()
+            self.Disable()
         # First set the initial value and then set the callback so that the
         # callback is not triggered for the initial value
-        self._entry.SetValue(initialDateTime)
-        self._entry.setCallback(self.onDateTimeCtrlEdited)        
-        self.add(self._entry)
-        self.fit()
-
-    def GetValue(self):
-        return self._entry.GetValue()
-
-    def SetValue(self, newValue=defaultDateTime):
-        self._entry.SetValue(newValue)
+        self.SetValue(initialDateTime)
+        self.setCallback(self.onDateTimeCtrlEdited)
         
+    def SetValue(self, newValue=None):
+        super(DateTimeEntry, self).SetValue(newValue or self.defaultDateTime)
+
     def onDateTimeCtrlEdited(self, *args, **kwargs):
         wx.PostEvent(self, DateTimeEntryEvent())            
 
 
 class TimeDeltaEntry(widgets.PanelWithBoxSizer):
+    # We can't inherit from widgets.masked.TextCtrl because that class expects
+    # GetValue to return a string and we want to return a TimeDelta.
+    
     defaultTimeDelta = date.TimeDelta()
 
     def __init__(self, parent, timeDelta=defaultTimeDelta, readonly=False, 
