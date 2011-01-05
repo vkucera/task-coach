@@ -34,7 +34,7 @@ reset the prerequisites.''', '3137055'),
         Bug('''Huge performance fix in the calendar viewer.'''),
         Bug('''When double clicking a column header border don't set the column
 width to zero.'''),
-        Bug('''Process drag-and-drops from Thunderbird.''', '2916405')
+        Bug('''Process drag-and-drops from Thunderbird.''', '2916405', '3058781')
         ],
     featuresAdded=[
         Feature('''Always highlight the current day in the calendar view.'''),
