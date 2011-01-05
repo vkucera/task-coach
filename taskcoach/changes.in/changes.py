@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.7', 'December 26, 2010',
+Release('1.2.7', 'January 5, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Performance improvements: faster closing of task dialogs, 
@@ -31,7 +31,9 @@ faster item selection, no redraw of task viewers every minute.'''),
             '3125553'),
         Bug('''When editing a task that already has prerequisite tasks, don't 
 reset the prerequisites.''', '3137055'),
-        Bug('''Huge performance fix in the calendar viewer.''')
+        Bug('''Huge performance fix in the calendar viewer.'''),
+        Bug('''When double clicking a column header border don't set the column
+width to zero.''')
         ],
     featuresAdded=[
         Feature('''Always highlight the current day in the calendar view.'''),
