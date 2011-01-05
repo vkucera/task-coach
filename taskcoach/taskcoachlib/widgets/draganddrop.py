@@ -69,6 +69,7 @@ class DropTarget(wx.DropTarget):
         self.__outlookDataObject = wx.CustomDataObject('Object Descriptor')
         # Starting with Snow Leopard, mail.app supports the message: protocol
         self.__macMailObject = wx.CustomDataObject('public.url')
+        '''
         for dataObject in self.__fileDataObject, \
                           self.__thunderbirdMailDataObject, \
                           self.__outlookDataObject, \
@@ -79,7 +80,9 @@ class DropTarget(wx.DropTarget):
             # We add urlData as last so that Outlook messages are not 
             # interpreted as text objects.
             self.__compositeDataObject.Add(dataObject)
-        self.SetDataObject(self.__compositeDataObject)
+        '''
+        self.SetDataObject(self.__thunderbirdMailDataObject)
+        #self.SetDataObject(self.__compositeDataObject)
 
     def OnDragOver(self, x, y, result): # pylint: disable-msg=W0221
         if self.__onDragOverCallback is None:
@@ -102,15 +105,7 @@ class DropTarget(wx.DropTarget):
             if self.__onDropFileCallback:
                 self.__onDropFileCallback(x, y, self.__fileDataObject.GetFilenames())
         elif format.GetId() == 'text/x-moz-message':
-            if self.__onDropMailCallback:
-                data = self.__thunderbirdMailDataObject.GetData()
-                # We expect the data to be encoded with 'unicode_internal',
-                # but on Fedora it can also be 'utf-16', be prepared:
-                try:
-                    data = data.decode('unicode_internal')
-                except UnicodeDecodeError:
-                    data = data.decode('utf-16')
-                self.__onDropMailCallback(x, y, thunderbird.getMail(data))
+            self.processThunderbirdDrop()
         elif self.__macThunderbirdMailDataObject.GetData():
             if self.__onDropMailCallback:
                 self.__onDropMailCallback(x, y,
@@ -123,9 +118,26 @@ class DropTarget(wx.DropTarget):
             url = self.__macMailObject.GetData()
             if url.startswith('message:') and self.__onDropURLCallback:
                 self.__onDropURLCallback(x, y, url)
-
+        elif format.GetId() == '' and format.GetType() == 0:
+            # Thunderbird?
+            try:
+                self.processThunderbirdDrop()
+            except:
+                pass
+            
         self.reinit()
         return wx.DragCopy
+    
+    def processThunderbirdDrop(self):
+        if self.__onDropMailCallback:
+            data = self.__thunderbirdMailDataObject.GetData()
+            # We expect the data to be encoded with 'unicode_internal',
+            # but on Fedora it can also be 'utf-16', be prepared:
+            try:
+                data = data.decode('unicode_internal')
+            except UnicodeDecodeError:
+                data = data.decode('utf-16')
+            self.__onDropMailCallback(x, y, thunderbird.getMail(data))
 
 
 class TreeHelperMixin(object):
