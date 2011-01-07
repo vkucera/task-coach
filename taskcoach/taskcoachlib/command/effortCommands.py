@@ -82,8 +82,9 @@ class ChangeEffortStartDateTimeCommand(base.BaseCommand):
         self.__oldDateTimes = [item.getStart() for item in self.items]
         
     def canDo(self):
+        maxDateTime = date.DateTime()
         return super(ChangeEffortStartDateTimeCommand, self).canDo() and \
-            all(self.__datetime < item.getStop() for item in self.items)
+            all(self.__datetime < (item.getStop() or maxDateTime) for item in self.items)
         
     @patterns.eventSource
     def do_command(self, event=None):
