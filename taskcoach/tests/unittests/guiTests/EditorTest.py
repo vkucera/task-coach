@@ -55,7 +55,7 @@ class EditorTestCase(test.wxTestCase):
         self.failIf(self.editor.editorClosed)
         
     def testVeryLongSubject(self):
-        longSubject = 'Subject'*10000
+        longSubject = 'Subject'*1000
         self.item.setSubject(longSubject)
         self.assertEqual(longSubject, self.editor._interior[0]._subjectEntry.GetValue())
 
