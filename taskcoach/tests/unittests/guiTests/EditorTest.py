@@ -53,6 +53,11 @@ class EditorTestCase(test.wxTestCase):
     def testDontCloseEditorWhenItemIsFiltered(self):
         self.items.setSearchFilter('abc')
         self.failIf(self.editor.editorClosed)
+        
+    def testVeryLongSubject(self):
+        longSubject = 'Subject'*10000
+        self.item.setSubject(longSubject)
+        self.assertEqual(longSubject, self.editor._interior[0]._subjectEntry.GetValue())
 
     def testThatPickingAForegroundColorChangesTheItemForegroundColor(self):
         self.appearance._foregroundColorEntry.SetValue(wx.RED)
