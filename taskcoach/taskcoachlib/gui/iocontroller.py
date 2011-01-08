@@ -173,7 +173,7 @@ class IOController(object):
 
     def saveas(self, filename=None, showerror=wx.MessageBox):
         if not filename:
-            filename = self.__askUserForFile(_('Save as...'), flags=wx.SAVE)
+            filename = self.__askUserForFile(_('Save as...'), flag=wx.SAVE)
             if not filename:
                 return False # User didn't enter a filename, cancel save
         if self._saveSave(self.__taskFile, showerror, filename):
@@ -184,7 +184,7 @@ class IOController(object):
     def saveselection(self, tasks, filename=None, showerror=wx.MessageBox,
                       TaskFileClass=persistence.TaskFile):
         if not filename:
-            filename = self.__askUserForFile(_('Save as...'), flags=wx.SAVE)
+            filename = self.__askUserForFile(_('Save as...'), flag=wx.SAVE)
             if not filename:
                 return False # User didn't enter a filename, cancel save
         selectionFile = self._createSelectionFile(tasks, TaskFileClass)
@@ -258,7 +258,7 @@ class IOController(object):
     
     def export(self, title, fileDialogOpts, writerClass, viewer, selectionOnly, 
                openfile=codecs.open, showerror=wx.MessageBox, filename=None):
-        filename = filename or self.__askUserForFile(title, fileDialogOpts, flags=wx.SAVE)
+        filename = filename or self.__askUserForFile(title, fileDialogOpts, flag=wx.SAVE)
         if filename:
             fd = self.__openFileForWriting(filename, openfile, showerror)
             if fd is None:
@@ -343,16 +343,15 @@ class IOController(object):
             recentFiles.remove(fileName)
             self.__settings.setlist('file', 'recentfiles', recentFiles)
         
-    def __askUserForFile(self, title, fileDialogOpts=None, flags=wx.OPEN):
+    def __askUserForFile(self, title, fileDialogOpts=None, flag=wx.OPEN):
         fileDialogOpts = fileDialogOpts or self.__tskFileDialogOpts
-        filename = wx.FileSelector(title, flags=flags, **fileDialogOpts) # pylint: disable-msg=W0142
-        if filename:
-            if flags == wx.SAVE:
-                # On Ubuntu, the default extension is not added automatically to
-                # a filename typed by the user. Add the extension if necessary.
-                extension = os.path.extsep + fileDialogOpts['default_extension']
-                if not filename.endswith(extension):
-                    filename += extension
+        filename = wx.FileSelector(title, flags=flag, **fileDialogOpts) # pylint: disable-msg=W0142
+        if filename and flag == wx.SAVE:
+            # On Ubuntu, the default extension is not added automatically to
+            # a filename typed by the user. Add the extension if necessary.
+            extension = os.path.extsep + fileDialogOpts['default_extension']
+            if not filename.endswith(extension):
+                filename += extension
         return filename
 
     def __saveUnsavedChanges(self):
