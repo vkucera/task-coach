@@ -39,10 +39,9 @@ Release steps:
     and Mac OS X distributions to set them as default download.
   - Run 'python release.py release' to download the distributions from
     Sourceforge, generate MD5 digests, generate the website, upload the 
-    website to the Dreamhost, Hostland and Hypernation.net websites, 
-    announce the release on Twitter, Identi.ca, Freshmeat and PyPI (Python 
-    Package Index), send the announcement email, and to tag the release in
-    Subversion.
+    website to the Dreamhost and Hostland websites, announce the release on 
+    Twitter, Identi.ca, Freshmeat and PyPI (Python Package Index), send the 
+    announcement email, and to tag the release in Subversion.
   - Create branch if feature release.
   - Merge recent changes to the trunk.
   - Add release to Sourceforge bug tracker and support request groups.
@@ -78,7 +77,8 @@ class Settings(ConfigParser.SafeConfigParser, object):
         defaults = dict(sourceforge=['username', 'password'],
                         smtp=['hostname', 'port', 'username', 'password',
                               'sender_name', 'sender_email_address'],
-                        hypernation=['hostname', 'username', 'password', 'folder'],
+                        dreamhost=['hostname', 'username', 'password', 'folder'],
+                        hostland=['hostname', 'username', 'password', 'folder'],
                         pypi=['username', 'password'],
                         twitter=['consumer_key', 'consumer_secret',
                                  'oauth_token', 'oauth_token_secret'],
@@ -220,11 +220,6 @@ def uploading_website_to_website_host(settings, options, websiteHost):
 
 
 @progress
-def uploading_website_to_Hypernation(settings, options):
-    uploading_website_to_website_host(settings, options, 'Hypernation')
-
-
-@progress
 def uploading_website_to_Dreamhost(settings, options):
     uploading_website_to_website_host(settings, options, 'Dreamhost')
  
@@ -338,7 +333,6 @@ def announcing_on_Identica(settings, options):
 
 
 def uploading_website(settings, options):
-    uploading_website_to_Hypernation(settings, options)
     uploading_website_to_Dreamhost(settings, options)
     uploading_website_to_Hostland(settings, options)
     
@@ -460,7 +454,6 @@ commands = dict(release=releasing,
                 download=downloading_distributions_from_SourceForge, 
                 md5=generating_MD5_digests,
                 website=uploading_website,
-                websiteHN=uploading_website_to_Hypernation,
                 websiteDH=uploading_website_to_Dreamhost,
                 websiteHL=uploading_website_to_Hostland,
                 twitter=announcing_on_Twitter,
