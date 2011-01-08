@@ -392,11 +392,11 @@ using Python and wxPython. You can download %(name)s from:
 %(url)s
 
 In addition to the source distribution, packaged distributions are available 
-for Windows XP/Vista, Mac OS X, and Linux (Debian and RPM format).
+for Windows, Mac OS X, and Linux.
 
-Note that %(name)s is %(release_status)s software. We do our best to prevent bugs, 
-but it is always wise to back up your task file regularly, and especially 
-when upgrading to a new release.
+Note that although we consider %(name)s to be %(release_status)s software,
+and we do our best to prevent bugs, it is always wise to back up your task 
+file regularly, and especially when upgrading to a new release.
 
 Regards, 
 
