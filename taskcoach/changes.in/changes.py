@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.7', 'January 5, 2011',
+Release('1.2.7', 'January 8, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Performance improvements: faster closing of task dialogs, 
@@ -35,7 +35,7 @@ reset the prerequisites.''', '3137055'),
         Bug('''When double clicking a column header border don't set the column
 width to zero.'''),
         Bug('''Process drag-and-drops from Thunderbird.''', '2916405', '3058781'),
-        Bug('''When cancelling the save dialog, the task file would be saved with
+        Bug('''When canceling the save dialog, the task file would be saved with
 an empty filename.''', '3152160')
         ],
     featuresAdded=[
