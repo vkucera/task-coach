@@ -21,7 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-            
+
+Release('1.2.8', 'January 9, 2011',
+    summary='''This is a bugfix release.''',
+    bugsfixed=[
+        Bug('''Task Coach wouldn't open task files when a task viewer was
+sorted by reminder date/time.''', '3153541')
+        ]
+    ),
+                
 Release('1.2.7', 'January 8, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[

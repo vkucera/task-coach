@@ -891,7 +891,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @staticmethod
     def reminderSortFunction(**kwargs):
         recursive = kwargs.get('treeMode', False)
-        return lambda task: task.reminder(recursive=recursive) or self.maxDateTime
+        maxDateTime = date.DateTime()
+        return lambda task: task.reminder(recursive=recursive) or maxDateTime
 
     @classmethod
     def reminderSortEventTypes(class_):
