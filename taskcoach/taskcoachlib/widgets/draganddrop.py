@@ -65,12 +65,10 @@ class DropTarget(wx.DropTarget):
         self.__urlDataObject = wx.TextDataObject()
         self.__fileDataObject = wx.FileDataObject()
         self.__thunderbirdMailDataObject = wx.CustomDataObject('text/x-moz-message')
-        self.__macThunderbirdMailDataObject = wx.CustomDataObject('MZ\x00\x00') # Doesn't work any more...
         self.__outlookDataObject = wx.CustomDataObject('Object Descriptor')
         # Starting with Snow Leopard, mail.app supports the message: protocol
         self.__macMailObject = wx.CustomDataObject('public.url')
         for dataObject in (self.__thunderbirdMailDataObject, 
-                           self.__macThunderbirdMailDataObject,
                            self.__macMailObject, self.__outlookDataObject,
                            self.__urlDataObject, self.__fileDataObject): 
             # Note: The first data object added is the preferred data object.
@@ -108,16 +106,15 @@ class DropTarget(wx.DropTarget):
             url = self.__macMailObject.GetData()
             if url.startswith('message:') and self.__onDropURLCallback:
                 self.__onDropURLCallback(x, y, url)
+            elif url.startswith('imap:') and self.__onDropMailCallback:
+                self.__onDropMailCallback(x, y, thunderbird.getMail(url))
         elif formatType in (wx.DF_TEXT, wx.DF_UNICODETEXT):
             if self.__onDropURLCallback:
                 self.__onDropURLCallback(x, y, self.__urlDataObject.GetText())
         elif formatType == wx.DF_FILENAME:
             if self.__onDropFileCallback:
                 self.__onDropFileCallback(x, y, self.__fileDataObject.GetFilenames())
-        elif self.__macThunderbirdMailDataObject.GetData():
-            if self.__onDropMailCallback:
-                self.__onDropMailCallback(x, y,
-                     thunderbird.getMail(self.__macThunderbirdMailDataObject.GetData().decode('unicode_internal')))
+
         self.reinit()
         return wx.DragCopy
     

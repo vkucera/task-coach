@@ -22,7 +22,8 @@ from taskcoachlib import persistence
 
 
 _RX_MAILBOX = re.compile('mailbox-message://(.*)@(.*)/(.*)#(\d+)')
-_RX_IMAP    = re.compile('imap-message://([^@]+)@([^/]+)/(.*)#(\d+)')
+_RX_IMAP_MESSAGE = re.compile('imap-message://([^@]+)@([^/]+)/(.*)#(\d+)')
+_RX_IMAP = re.compile('imap://([^@]+)@([^/]+)/fetch%3EUID%3E/(.*)%3E(\d+)')
 
 
 def unquote(s):
@@ -211,37 +212,44 @@ class ThunderbirdImapReader(object):
 
     def __init__(self, url):
         mt = _RX_IMAP.search(url)
+        if mt is None:
+            mt = _RX_IMAP_MESSAGE.search(url)
 
         self.url = url
 
         self.user = unquote(mt.group(1))
         self.server = mt.group(2) 
+        port = None
+        if ':' in self.server:
+            self.server, port = self.server.split(':')
+            port = int(port)
+        self.ssl = port == 993
         self.box = mt.group(3)
         self.uid = int(mt.group(4))
 
         config = loadPreferences()
 
-        port = None
-        stype = None
-        isSecure = False
-        # We iterate over a maximum of 100 mailservers. You'd think that
-        # mailservers would be numbered consecutively, but apparently
-        # that is not always the case, so we cannot assume that because
-        # serverX does not exist, serverX+1 won't either. 
-        for serverIndex in range(100): 
-            name = 'mail.server.server%d' % serverIndex
-            if config.has_key(name + '.hostname') and \
-               config[name + '.hostname'] == self.server and \
-               config[name + '.type'] == 'imap':
-                if config.has_key(name + '.port'):
-                    port = int(config[name + '.port'])
-                if config.has_key(name + '.socketType'):
-                    stype = config[name + '.socketType']
-                if config.has_key(name + '.isSecure'):
-                    isSecure = int(config[name + '.isSecure'])
-                break
+        if not self.ssl:
+            stype = None
+            isSecure = False
+            # We iterate over a maximum of 100 mailservers. You'd think that
+            # mailservers would be numbered consecutively, but apparently
+            # that is not always the case, so we cannot assume that because
+            # serverX does not exist, serverX+1 won't either. 
+            for serverIndex in range(100): 
+                name = 'mail.server.server%d' % serverIndex
+                if config.has_key(name + '.hostname') and \
+                   config[name + '.hostname'] == self.server and \
+                   config[name + '.type'] == 'imap':
+                    if config.has_key(name + '.port'):
+                        port = int(config[name + '.port'])
+                    if config.has_key(name + '.socketType'):
+                        stype = config[name + '.socketType']
+                    if config.has_key(name + '.isSecure'):
+                        isSecure = int(config[name + '.isSecure'])
+                    break
+            self.ssl = bool(stype == 3 or isSecure)
 
-        self.ssl = bool(stype == 3 or isSecure)
         # When dragging mail from Thunderbird that uses Gmail via IMAP the
         # server reported is imap.google.com, but for a direct connection we
         # need to connect with imap.gmail.com:
@@ -299,7 +307,7 @@ class ThunderbirdImapReader(object):
 def getMail(id_):
     if id_.startswith('mailbox-message://'):
         reader = ThunderbirdMailboxReader(id_)
-    elif id_.startswith('imap-message://'):
+    elif id_.startswith('imap'):
         reader = ThunderbirdImapReader(id_)
     else:
         raise TypeError('Not supported: %s' % id_)
