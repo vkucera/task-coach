@@ -116,7 +116,7 @@ def getDefaultProfileDir():
             return parser.get(section, 'Path')
 
     for section in parser.sections():
-        if parser.get(section, 'Name') == 'default':
+        if parser.has_option(section, 'Name') and parser.get(section, 'Name') == 'default':
             if int(parser.get(section, 'IsRelative')):
                 return os.path.join(path, parser.get(section, 'Path'))
             return parser.get(section, 'Path')

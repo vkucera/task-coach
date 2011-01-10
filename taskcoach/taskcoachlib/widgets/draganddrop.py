@@ -69,12 +69,10 @@ class DropTarget(wx.DropTarget):
         self.__outlookDataObject = wx.CustomDataObject('Object Descriptor')
         # Starting with Snow Leopard, mail.app supports the message: protocol
         self.__macMailObject = wx.CustomDataObject('public.url')
-        for dataObject in self.__fileDataObject, \
-                          self.__thunderbirdMailDataObject, \
-                          self.__outlookDataObject, \
-                          self.__macThunderbirdMailDataObject, \
-                          self.__urlDataObject, \
-                          self.__macMailObject:
+        for dataObject in (self.__thunderbirdMailDataObject, 
+                           self.__macThunderbirdMailDataObject,
+                           self.__macMailObject, self.__outlookDataObject,
+                           self.__urlDataObject, self.__fileDataObject): 
             # Note: The first data object added is the preferred data object.
             # We add urlData as last so that Outlook messages are not 
             # interpreted as text objects.
@@ -94,34 +92,32 @@ class DropTarget(wx.DropTarget):
         self.GetData()
 
         format = self.__compositeDataObject.GetReceivedFormat()
+        try:
+            formatId = format.GetId() 
+        except:
+            formatId = None
+        formatType = format.GetType()
 
-        if format.GetType() in [ wx.DF_TEXT, wx.DF_UNICODETEXT ]:
+        if formatId == 'text/x-moz-message':
+            self.processThunderbirdDrop(x, y)
+        elif formatId == 'Object Descriptor':
+            if self.__onDropMailCallback:
+                for mail in outlook.getCurrentSelection():
+                    self.__onDropMailCallback(x, y, mail)
+        elif formatId == 'public.url':
+            url = self.__macMailObject.GetData()
+            if url.startswith('message:') and self.__onDropURLCallback:
+                self.__onDropURLCallback(x, y, url)
+        elif formatType in (wx.DF_TEXT, wx.DF_UNICODETEXT):
             if self.__onDropURLCallback:
                 self.__onDropURLCallback(x, y, self.__urlDataObject.GetText())
-        elif format.GetType() == wx.DF_FILENAME:
+        elif formatType == wx.DF_FILENAME:
             if self.__onDropFileCallback:
                 self.__onDropFileCallback(x, y, self.__fileDataObject.GetFilenames())
-        elif format.GetId() == 'text/x-moz-message':
-            self.processThunderbirdDrop(x, y)
         elif self.__macThunderbirdMailDataObject.GetData():
             if self.__onDropMailCallback:
                 self.__onDropMailCallback(x, y,
                      thunderbird.getMail(self.__macThunderbirdMailDataObject.GetData().decode('unicode_internal')))
-        elif format.GetId() == 'Object Descriptor':
-            if self.__onDropMailCallback:
-                for mail in outlook.getCurrentSelection():
-                    self.__onDropMailCallback(x, y, mail)
-        elif format.GetId() == 'public.url':
-            url = self.__macMailObject.GetData()
-            if url.startswith('message:') and self.__onDropURLCallback:
-                self.__onDropURLCallback(x, y, url)
-        elif format.GetId() == '' and format.GetType() == 0:
-            # Thunderbird?
-            try:
-                self.processThunderbirdDrop(x, y)
-            except:
-                pass
-            
         self.reinit()
         return wx.DragCopy
     
