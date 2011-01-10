@@ -24,7 +24,7 @@ releases = [
 
 Release('1.2.8', 'January 10, 2011',
     summary='''This is a bugfix release.''',
-    bugsfixed=[
+    bugsFixed=[
         Bug('''Task Coach wouldn't open task files when a task viewer was
 sorted by reminder date/time.''', '3153541'),
         Bug('''Correctly fix drag-and-drop from Thunderbird.''')
