@@ -135,11 +135,13 @@ class EffortViewerTest(test.wxTestCase):
     def testSelect(self):
         self.task.addEffort(self.effort1)
         self.viewer.widget.ToggleItemSelection(0)
+        self.viewer.updateSelection()
         self.failUnless(self.viewer.isselected(self.effort1))
 
     def testSelectAfterNewEffortWasAdded(self):
         self.task.addEffort(self.effort1)
         self.viewer.widget.ToggleItemSelection(0)
+        self.viewer.updateSelection()
         self.task.addEffort(self.effort2)
         self.failUnless(self.viewer.isselected(self.effort2))
 
@@ -242,6 +244,7 @@ class CommonTestsMixin(object):
         
     def testDelete(self):
         self.viewer.widget.select([self.task.efforts()[-1]])
+        self.viewer.updateSelection()
         self.viewer.deleteUICommand.doCommand(None)
         expectedNumberOfItems = self.expectedNumberOfItems - (1 if self.aggregation == 'details' else 3)
         self.assertEqual(expectedNumberOfItems, self.viewer.size())
@@ -253,6 +256,7 @@ class CommonTestsMixin(object):
         
     def testNewEffortUsesSameTaskAsSelectedEffort(self):
         self.viewer.widget.select([self.task2.efforts()[-1]])
+        self.viewer.updateSelection()
         dialog = self.viewer.newItemDialog(selectedTasks=[self.task2], 
                                            bitmap='new')
         for effort in dialog._command.efforts:

@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import test, wx
 from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import category
  
@@ -56,4 +56,5 @@ class CategoryViewerTest(test.wxTestCase):
     def testSelectAll(self):
         self.addTwoCategories()
         self.viewer.widget.selectall()
+        self.viewer.updateSelection()
         self.assertEqual(2, len(self.viewer.curselection()))

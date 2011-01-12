@@ -105,6 +105,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
         return self.__itemAttribute
         
     def onSelect(self, event):
+        event.Skip()
         self.selectCommand(event)
         
     def onItemActivated(self, event):

@@ -151,10 +151,14 @@ class Viewer(wx.Panel):
             # Some widgets change the selection and send selection events when 
             # deleting all items as part of the Destroy process. Ignore.
             return
+        # Be sure all wx events are handled before we update our selection 
+        # cache and notify our observers:
+        wx.CallAfter(self.updateSelection)
+
+    def updateSelection(self):
         self.__curselection = self.widget.curselection()
-        # Be sure all wx events are handled before we notify our observers:
-        event = patterns.Event(self.selectEventType(), self, *self.__curselection)
-        wx.CallAfter(event.send)
+        patterns.Event(self.selectEventType(), self, 
+                       *self.__curselection).send()
 
     def freeze(self):
         self.widget.Freeze()
