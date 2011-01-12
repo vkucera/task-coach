@@ -706,7 +706,7 @@ class CommonTestsMixin(object):
         taskB = task.Task('b')
         self.viewer.presentation().extend([taskA, taskB])
         self.viewer.widget.select([taskA])
-        self.viewer.onSelect([taskA])
+        self.viewer.updateSelection()
         self.viewer.setSortOrderAscending(False)
         self.assertEqual([taskA], self.viewer.curselection())
         
