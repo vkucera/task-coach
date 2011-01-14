@@ -30,7 +30,9 @@ sorted by reminder date/time.''', '3153541'),
         Bug('''Correctly fix drag-and-drop from Thunderbird.'''),
         Bug('''Correctly keep track of selected items when using 
 shift-click to select a range of items so that the right items are exported
-when the user exports a selection.''', '3154036')
+when the user exports a selection.''', '3154036'),
+        Bug('''Task Coach would crash at launch if TaskCoach.ini could not
+be loaded.''')
         ]
     ),
                 

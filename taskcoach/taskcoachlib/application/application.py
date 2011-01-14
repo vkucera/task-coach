@@ -166,7 +166,7 @@ class Application(object):
         reason = self.settings.get('file', 'inifileloaderror')
         wx.MessageBox(\
             _("Couldn't load settings from TaskCoach.ini:\n%s")%reason,
-            _('%s file error')%meta.name, style=wx.ICON_ERROR)
+            _('%s file error')%meta.name, style=wx.OK|wx.ICON_ERROR)
         self.settings.setboolean('file', 'inifileloaded', True) # Reset
 
     def displayMessage(self, message):
