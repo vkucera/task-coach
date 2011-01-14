@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, os.path
-from taskcoachlib import widgets, patterns
+from taskcoachlib import widgets, patterns, command
 from taskcoachlib.gui import viewer, artprovider
 from taskcoachlib.widgets import draganddrop
 from taskcoachlib.i18n import _
@@ -1042,6 +1042,7 @@ class EffortEditBook(Page):
         self._taskList = task.TaskList(taskList)
         self._taskList.extend([effort.task() for effort in efforts if effort.task() not in taskList])
         self._settings = settings
+        self._taskFile = taskFile
         super(EffortEditBook, self).__init__(efforts, parent, *args, **kwargs)
         
     def addEntries(self):
@@ -1053,11 +1054,22 @@ class EffortEditBook(Page):
         ''' Add an entry for changing the task that this effort record
             belongs to. '''
         # pylint: disable-msg=W0201
-        self._taskEntry = entry.TaskComboTreeBox(self,
+        panel = wx.Panel(self)
+        self._taskEntry = entry.TaskComboTreeBox(panel,
             rootTasks=self._taskList.rootItems(),
             selectedTask=self.items[0].task())
-        self._taskLabel = self.label(_('Task'), self._taskEntry._comboTreeBox, wx.EVT_COMBOBOX)
-        self.addEntry(self._taskLabel, self._taskEntry, flags=[None, wx.ALL|wx.EXPAND])
+        self._taskLabel = self.label(_('Task'), self._taskEntry._comboTreeBox, 
+                                     wx.EVT_COMBOBOX)
+        editTaskButton = wx.Button(panel, label=_('Edit task'))
+        editTaskButton.Bind(wx.EVT_BUTTON, self.onEditTask)
+        panelSizer = wx.BoxSizer(wx.HORIZONTAL)
+        panelSizer.Add(self._taskEntry, proportion=1, 
+                       flag=wx.EXPAND|wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add((3,-1))
+        panelSizer.Add(editTaskButton, proportion=0, 
+                       flag=wx.ALIGN_CENTER_VERTICAL)
+        panel.SetSizerAndFit(panelSizer)
+        self.addEntry(self._taskLabel, panel, flags=[None, wx.ALL|wx.EXPAND])
 
     def addStartAndStopEntries(self):
         # pylint: disable-msg=W0201,W0142
@@ -1085,6 +1097,12 @@ class EffortEditBook(Page):
     def onStartFromLastEffort(self, event): # pylint: disable-msg=W0613
         self._startEntry.set(self._effortList.maxDateTime())
         self.preventNegativeEffortDuration()
+
+    def onEditTask(self, event):
+        taskToEdit = self._taskEntry.GetSelection()
+        TaskEditor(None, command.EditTaskCommand(self._taskFile.tasks(),
+            [taskToEdit]), self._settings, self._taskFile.tasks(), 
+            self._taskFile).Show()
 
     def addDescriptionEntry(self):
         # pylint: disable-msg=W0201

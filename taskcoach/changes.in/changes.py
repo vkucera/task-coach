@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.8', 'January 12, 2011',
+Release('1.2.8', 'January 14, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Task Coach wouldn't open task files when a task viewer was
@@ -33,7 +33,11 @@ shift-click to select a range of items so that the right items are exported
 when the user exports a selection.''', '3154036'),
         Bug('''Task Coach would crash at launch if TaskCoach.ini could not
 be loaded.''')
-        ]
+        ],
+    featuresAdded=[
+        Feature('''The effort edit dialog now has a "Edit task" button next to
+the task selection drop down to quickly open the effort's task.''')
+        ],
     ),
                 
 Release('1.2.7', 'January 8, 2011',
