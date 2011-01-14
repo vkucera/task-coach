@@ -36,7 +36,14 @@ be loaded.''')
         ],
     featuresAdded=[
         Feature('''The effort edit dialog now has a "Edit task" button next to
-the task selection drop down to quickly open the effort's task.''')
+the task selection drop down to quickly open the effort's task.'''),
+        Feature('''The effort viewer now has "Start tracking effort" and "Stop 
+tracking effort" buttons on the toolbar. The "Start tracking effort" starts 
+tracking effort for the task(s) of the selected effort(s). This enables you to 
+quickly resume tracking the most recent task by selecting the topmost effort 
+record and hit the "Start tracking effort" button. The "Stop tracking effort" 
+button simply does what it says and was added for consistencies sake.''', 
+'http://uservoice.com/a/fHSAX')
         ],
     ),
                 

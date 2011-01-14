@@ -1765,6 +1765,29 @@ class EffortStart(NeedsSelectedTasksMixin, ViewerCommand, TaskListCommand):
                 for task in self.viewer.curselection())
 
 
+class EffortStartForEffort(NeedsSelectedEffortMixin, ViewerCommand, 
+                           TaskListCommand):
+    ''' UICommand to start tracking for the task(s) of selected effort(s). '''
+
+    def __init__(self, *args, **kwargs): 
+        super(EffortStartForEffort, self).__init__(bitmap='clock_icon',
+            menuText=_('&Start tracking effort'),
+            helpText=_('Start tracking effort for the task(s) of the selected effort(s)'), *args, **kwargs)
+        
+    def doCommand(self, event):
+        start = command.StartEffortCommand(self.taskList, self.trackableTasks())
+        start.do()
+
+    def enabled(self, event):
+        return super(EffortStartForEffort, self).enabled(event) and \
+            self.trackableTasks()
+
+    def trackableTasks(self):
+        tasks = set([effort.task() for effort in self.viewer.curselection()])
+        return [task for task in tasks if task.active() \
+                and not task.isBeingTracked()]
+
+
 class EffortStartForTask(TaskListCommand):
     ''' UICommand to start tracking for a specific task. This command can
         be used to build a menu with separate menu items for all tasks. 
