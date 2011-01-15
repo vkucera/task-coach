@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.8', 'January 14, 2011',
+Release('1.2.8', 'January 15, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Task Coach wouldn't open task files when a task viewer was
@@ -32,7 +32,9 @@ sorted by reminder date/time.''', '3153541'),
 shift-click to select a range of items so that the right items are exported
 when the user exports a selection.''', '3154036'),
         Bug('''Task Coach would crash at launch if TaskCoach.ini could not
-be loaded.''')
+be loaded.'''),
+        Bug('''When marking the only subtask of a task uncompleted, the 
+subtask would stay green.''', '3151018')
         ],
     featuresAdded=[
         Feature('''The effort edit dialog now has a "Edit task" button next to

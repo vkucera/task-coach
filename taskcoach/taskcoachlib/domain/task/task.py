@@ -354,10 +354,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                         child.setCompletionDateTime(completionDateTime, event=event)
                 if self.isBeingTracked():
                     self.stopTracking(event=event)                    
-        
+            self.recomputeAppearance(event=event)
+            
     def completionDateTimeEvent(self, event):
         event.addSource(self, self.completionDateTime(), type='task.completionDateTime')
-        self.recomputeAppearance(event=event)
         for dependency in self.dependencies():
             dependency.recomputeAppearance(event=event)
         
