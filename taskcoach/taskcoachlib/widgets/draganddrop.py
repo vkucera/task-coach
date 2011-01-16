@@ -108,7 +108,12 @@ class DropTarget(wx.DropTarget):
             if url.startswith('message:') and self.__onDropURLCallback:
                 self.__onDropURLCallback(x, y, url)
             elif url.startswith('imap:') and self.__onDropMailCallback:
-                self.__onDropMailCallback(x, y, thunderbird.getMail(url))
+                try:
+                    self.__onDropMailCallback(x, y, thunderbird.getMail(url))
+                except thunderbird.ThunderbirdCancelled:
+                    pass
+                except thunderbird.ThunderbirdError, e:
+                    wx.MessageBox(unicode(e), _('Error'), wx.OK)
             elif self.__onDropURLCallback:
                 wx.MessageBox(_('Unrecognized URL scheme:\n"%s"') % url, _('Error'), wx.OK)
         elif formatType in (wx.DF_TEXT, wx.DF_UNICODETEXT):

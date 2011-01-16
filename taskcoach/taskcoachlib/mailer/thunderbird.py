@@ -26,6 +26,12 @@ _RX_IMAP_MESSAGE = re.compile('imap-message://([^@]+)@([^/]+)/(.*)#(\d+)')
 _RX_IMAP = re.compile('imap://([^@]+)@([^/]+)/fetch%3EUID%3E/(.*)%3E(\d+)')
 
 
+class ThunderbirdError(Exception):
+    pass
+
+class ThunderbirdCancelled(ThunderbirdError):
+    pass
+
 def unquote(s):
     """Converts %nn sequences into corresponding characters. I
     couldn't find anything in the standard library to do this, but I
@@ -122,7 +128,7 @@ def getDefaultProfileDir():
                 return os.path.join(path, parser.get(section, 'Path'))
             return parser.get(section, 'Path')
 
-    raise ValueError('No default section in profiles.ini')
+    raise ThunderbirdError('No default section in profiles.ini')
 
 
 class ThunderbirdMailboxReader(object):
@@ -268,7 +274,7 @@ class ThunderbirdImapReader(object):
             pwd = wx.GetPasswordFromUser(_('Please enter password for user %(user)s on %(server)s:%(port)d') % \
                                          dict(user=self.user, server=self.server, port=self.port))
             if pwd == '':
-                raise ValueError('User canceled')
+                raise ThunderbirdCancelled('User canceled')
 
         while True:
             try:
@@ -282,19 +288,19 @@ class ThunderbirdImapReader(object):
 
             pwd = wx.GetPasswordFromUser(_('Login failed (%s). Please try again.') % errmsg)
             if pwd == '':
-                raise ValueError('User canceled')
+                raise ThunderbirdCancelled('User canceled')
 
         self._PASSWORDS[(self.server, self.user, self.port)] = pwd
 
         response, params = cn.select(self.box)
 
         if response != 'OK':
-            raise ValueError('Could not select inbox %s' % self.box)
+            raise ThunderbirdError('Could not select inbox %s' % self.box)
 
         response, params = cn.uid('FETCH', str(self.uid), '(RFC822)')
 
         if response != 'OK':
-            raise ValueError('No such mail: %d' % self.uid)
+            raise ThunderbirdError('No such mail: %d' % self.uid)
 
         return params[0][1]
 
