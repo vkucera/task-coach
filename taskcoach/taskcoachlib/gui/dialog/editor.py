@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2010 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Carl Zmola <zmola@acm.org>
 
@@ -25,7 +25,7 @@ from taskcoachlib import widgets, patterns, command
 from taskcoachlib.gui import viewer, artprovider
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, date, note, attachment
-from taskcoachlib.gui.dialog import entry
+from taskcoachlib.gui.dialog import entry, attributesync
 
 
 class Page(widgets.BookPage):
@@ -55,131 +55,6 @@ class Page(widgets.BookPage):
             pass # Not a TextCtrl
         theEntry.SetFocus()
 
-
-class AttributeSync(object):
-    ''' Class used for keeping an attribute of a domain object synchronized with
-        a control in a dialog. If the user edits the value using the control, 
-        the domain object is changed, using the appropriate command. If the 
-        attribute of the domain object is changed (e.g. in another dialog) the 
-        value of the control is updated. '''
-        
-    def __init__(self, attributeName, entry, currentValue, items, commandClass, 
-                 editedEventType, changedEventType):
-        self._attributeName = attributeName
-        self._entry = entry
-        self._currentValue = currentValue
-        self._items = items
-        self._commandClass = commandClass
-        entry.Bind(editedEventType, self.onAttributeEdited)
-        if wx.Platform in ('__WXMAC__', '__WXGTK__'):
-            # On some platforms, the focused control does not receive
-            # EVT_KILL_FOCUS when the containing window is closed.
-            entry.TopLevelParent.Bind(wx.EVT_CLOSE, self.onAttributeEdited)
-        if len(items) == 1:
-            patterns.Publisher().registerObserver(self.onAttributeChanged,
-                                                  eventType=changedEventType,
-                                                  eventSource=items[0])
-        
-    def onAttributeEdited(self, event):
-        event.Skip()
-        newValue = self.getValue()
-        if newValue != self._currentValue:
-            self._currentValue = newValue
-            commandKwArgs = self.commandKwArgs(newValue)
-            self._commandClass(None, self._items, **commandKwArgs).do()
-            
-    def onAttributeChanged(self, event):
-        newValue = event.value()
-        if newValue != self._currentValue:
-            self._currentValue = newValue
-            self.setValue(newValue)
-
-    def commandKwArgs(self, newValue):
-        return {self._attributeName: newValue}
-    
-    def getValue(self):
-        return self.getValueFromEntry()
-     
-    def getValueFromEntry(self):
-        return self._entry.GetValue()
-    
-    def setValue(self, newValue):
-        self.setValueToEntry(newValue)
-        
-    def setValueToEntry(self, newValue):
-        self._entry.SetValue(newValue)
-            
-            
-class IconSync(AttributeSync):
-    def commandKwArgs(self, newIcon):
-        commandKwArgs = super(IconSync, self).commandKwArgs(newIcon)
-        selectedIcon = newIcon[:-len('_icon')] + '_open_icon' \
-            if (newIcon.startswith('folder') and newIcon.count('_') == 2) \
-            else newIcon
-        commandKwArgs['selectedIcon'] = selectedIcon
-        return commandKwArgs
-    
-    def setValueToEntry(self, newIcon):
-        imageNames = sorted(artprovider.chooseableItemImages.keys())
-        newSelectionIndex = imageNames.index(newIcon)
-        self._entry.SetSelection(newSelectionIndex)
-        
-    def getValueFromEntry(self):
-        return self._entry.GetClientData(self._entry.GetSelection())
-
-
-class OptionalAttributeSync(AttributeSync):
-    ''' For attributes that can have no value, in which case a default value
-        is shown in the control. The control has an accompanying checkbox that 
-        indicates whether the value of the control is actually used. '''
-
-    def __init__(self, *args, **kwargs):
-        self._defaultValue = kwargs.pop('defaultValue')
-        self._defaultCheckbox = kwargs.pop('defaultCheckbox')
-        super(OptionalAttributeSync, self).__init__(*args, **kwargs)
-        self._defaultCheckbox.Bind(wx.EVT_CHECKBOX, self.onAttributeChecked)
-
-    def onAttributeChecked(self, event):
-        super(OptionalAttributeSync, self).onAttributeEdited(event)
-
-    def onAttributeEdited(self, event):
-        self._defaultCheckbox.SetValue(True)
-        super(OptionalAttributeSync, self).onAttributeEdited(event)
-
-    def setValue(self, newValue):
-        checked = newValue is not None
-        self._defaultCheckbox.SetValue(checked)
-        if checked:
-            self.setValueToEntry(newValue)
-
-    def getValue(self):
-        return self.getValueFromEntry() if self._defaultCheckbox.IsChecked() \
-            else None
-        
-
-class FontSync(OptionalAttributeSync):        
-    def setValueToEntry(self, newValue):
-        self._entry.SetSelectedFont(newValue)
-        
-    def getValueFromEntry(self):
-        return self._entry.GetSelectedFont()
-            
-            
-class FontColorSync(AttributeSync):
-    def setValueToEntry(self, newValue):
-        self._entry.SetSelectedColour(newValue)
-
-    def getValueFromEntry(self):
-        return self._entry.GetSelectedColour()
-    
-    
-class ColorSync(OptionalAttributeSync):
-    def setValueToEntry(self, newValue):
-        self._entry.SetColour(newValue)
-        
-    def getValueFromEntry(self):
-        return self._entry.GetColour()
-    
                         
 class SubjectPage(Page):
     pageName = 'subject'
@@ -194,11 +69,10 @@ class SubjectPage(Page):
         # pylint: disable-msg=W0201
         currentSubject = self.items[0].subject() if len(self.items) == 1 else _('Edit to change all subjects')
         self._subjectEntry = widgets.SingleLineTextCtrl(self, currentSubject)
-        self._subjectSync = AttributeSync('subject', self._subjectEntry, 
-                                          currentSubject, self.items,
-                                          command.EditSubjectCommand, 
-                                          wx.EVT_KILL_FOCUS,
-                                          self.items[0].subjectChangedEventType())
+        self._subjectSync = attributesync.AttributeSync('subject', 
+            self._subjectEntry, currentSubject, self.items,
+            command.EditSubjectCommand, wx.EVT_KILL_FOCUS,
+            self.items[0].subjectChangedEventType())
         self.addEntry(_('Subject'), self._subjectEntry)
 
     def addDescriptionEntry(self):
@@ -206,11 +80,10 @@ class SubjectPage(Page):
         currentDescription = self.items[0].description() if len(self.items) == 1 else _('Edit to change all descriptions')
         self._descriptionEntry = widgets.MultiLineTextCtrl(self, currentDescription)
         self._descriptionEntry.SetSizeHints(450, 150)
-        self._descriptionSync = AttributeSync('description', self._descriptionEntry,
-                                              currentDescription, self.items,
-                                              command.EditDescriptionCommand,
-                                              wx.EVT_KILL_FOCUS,
-                                              self.items[0].descriptionChangedEventType())
+        self._descriptionSync = attributesync.AttributeSync('description', 
+            self._descriptionEntry, currentDescription, self.items,
+            command.EditDescriptionCommand, wx.EVT_KILL_FOCUS,
+            self.items[0].descriptionChangedEventType())
         self.addEntry(_('Description'), self._descriptionEntry, growable=True)
                         
     def entries(self):
@@ -229,10 +102,9 @@ class TaskSubjectPage(SubjectPage):
         currentPriority = self.items[0].priority() if len(self.items) == 1 else 0
         self._priorityEntry = widgets.SpinCtrl(self, size=(100, -1),
             value=str(currentPriority), initial=currentPriority)
-        self._prioritySync = AttributeSync('priority', self._priorityEntry,
-                                           currentPriority, self.items,
-                                           command.EditPriorityCommand,
-                                           wx.EVT_SPINCTRL, 'task.priority')
+        self._prioritySync = attributesync.AttributeSync('priority', 
+            self._priorityEntry, currentPriority, self.items,
+            command.EditPriorityCommand, wx.EVT_SPINCTRL, 'task.priority')
         self.addEntry(_('Priority'), self._priorityEntry, flags=[None, wx.ALL])
             
     def entries(self):
@@ -251,13 +123,11 @@ class CategorySubjectPage(SubjectPage):
         currentExclusivity = self.items[0].hasExclusiveSubcategories() if len(self.items) == 1 else False
         self._exclusiveSubcategoriesCheckBox = wx.CheckBox(self, label=_('Mutually exclusive')) 
         self._exclusiveSubcategoriesCheckBox.SetValue(currentExclusivity)
-        self._exclusiveSubcategoriesSync = AttributeSync('exclusivity',
-                                                         self._exclusiveSubcategoriesCheckBox,
-                                                         currentExclusivity,
-                                                         self.items,
-                                                         command.EditExclusiveSubcategoriesCommand,
-                                                         wx.EVT_CHECKBOX,
-                                                         self.items[0].exclusiveSubcategoriesChangedEventType())
+        self._exclusiveSubcategoriesSync = attributesync.AttributeSync( \
+            'exclusivity', self._exclusiveSubcategoriesCheckBox, 
+            currentExclusivity, self.items, 
+            command.EditExclusiveSubcategoriesCommand, wx.EVT_CHECKBOX,
+            self.items[0].exclusiveSubcategoriesChangedEventType())
         self.addEntry(_('Subcategories'), self._exclusiveSubcategoriesCheckBox,
                       flags=[None, wx.ALL])
             
@@ -281,11 +151,10 @@ class AttachmentSubjectPage(SubjectPage):
         # pylint: disable-msg=W0201
         currentLocation = self.items[0].location() if len(self.items) == 1 else _('Edit to change location of all attachments')
         self._locationEntry = widgets.SingleLineTextCtrl(panel, currentLocation)
-        self._locationSync = AttributeSync('location', self._locationEntry,
-                                           currentLocation, self.items,
-                                           command.EditAttachmentLocationCommand,
-                                           wx.EVT_KILL_FOCUS, 
-                                           self.items[0].locationChangedEventType())
+        self._locationSync = attributesync.AttributeSync('location', 
+            self._locationEntry, currentLocation, self.items,
+            command.EditAttachmentLocationCommand, wx.EVT_KILL_FOCUS, 
+            self.items[0].locationChangedEventType())
         sizer.Add(self._locationEntry, 1, wx.ALL, 3)
         if all(item.type_ == 'file' for item in self.items):
             button = wx.Button(panel, wx.ID_ANY, _('Browse'))
@@ -323,76 +192,45 @@ class AppearancePage(Page):
         self.addIconEntry()
         
     def addColorEntries(self):
-        self.addFgColorEntry()
-        self.addBgColorEntry()
-        
-    def addFgColorEntry(self):
         self.addColorEntry(_('Foreground color'), 'foreground', wx.BLACK)
-
-    def addBgColorEntry(self):
         self.addColorEntry(_('Background color'), 'background', wx.WHITE)
         
     def addColorEntry(self, labelText, colorType, defaultColor):
-        checkBox = wx.CheckBox(self, label=_('Use color:'))
-        setattr(self, '_%sColorCheckBox'%colorType, checkBox)
         currentColor = getattr(self.items[0], '%sColor'%colorType)(recursive=False) if len(self.items) == 1 else None
-        checkBox.SetValue(currentColor is not None)
-        # wx.ColourPickerCtrl on Mac OS X expects a wx.Color and fails on tuples
-        # so convert the tuples to a wx.Color:
-        currentColor = wx.Color(*currentColor) if currentColor else defaultColor # pylint: disable-msg=W0142
-        button = wx.ColourPickerCtrl(self, col=currentColor)
-        setattr(self, '_%sColorButton'%colorType, button)
+        colorEntry = entry.ColorEntry(self, currentColor, defaultColor)
+        setattr(self, '_%sColorEntry'%colorType, colorEntry)        
         commandClass = getattr(command, 'Edit%sColorCommand'%colorType.capitalize())
         eventType = getattr(self.items[0], '%sColorChangedEventType'%colorType)()
-        colorSync = ColorSync('color', button, currentColor, self.items, 
-                              commandClass, wx.EVT_COLOURPICKER_CHANGED, 
-                              eventType, defaultValue=defaultColor, 
-                              defaultCheckbox=checkBox)
+        colorSync = attributesync.AttributeSync('color', colorEntry, currentColor, 
+            self.items, commandClass, entry.EVT_COLORENTRY, eventType)
         setattr(self, '_%sColorSync'%colorType, colorSync)
-        self.addEntry(labelText, checkBox, button, flags=[None, None, wx.ALL])
+        self.addEntry(labelText, colorEntry, flags=[None, wx.ALL])
             
     def addFontEntry(self):
         # pylint: disable-msg=W0201
-        fontCheckBox = wx.CheckBox(self, label=_('Use font:'))
         currentFont = self.items[0].font() if len(self.items) == 1 else None
-        currentColor = self._foregroundColorButton.GetColour()
-        fontCheckBox.SetValue(currentFont is not None)
-        defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        self._fontButton = widgets.FontPickerCtrl(self,
-            font=currentFont or defaultFont, colour=currentColor)
-        self._fontSync = FontSync('font', self._fontButton, currentFont,
-                                  self.items, command.EditFontCommand,
-                                  wx.EVT_FONTPICKER_CHANGED, 
-                                  self.items[0].fontChangedEventType(),
-                                  defaultValue=defaultFont,
-                                  defaultCheckbox=fontCheckBox)
-        self._fontColorSync = FontColorSync('color', self._fontButton, currentColor,
-                                            self.items, command.EditForegroundColorCommand,
-                                            wx.EVT_FONTPICKER_CHANGED,
-                                            self.items[0].foregroundColorChangedEventType())
-        self.addEntry(_('Font'), fontCheckBox, self._fontButton,
-                      flags=[None, None, wx.ALL])
+        currentColor = self._foregroundColorEntry.GetValue()
+        self._fontEntry = entry.FontEntry(self, currentFont, currentColor)
+        self._fontSync = attributesync.AttributeSync('font', self._fontEntry, 
+            currentFont, self.items, command.EditFontCommand, 
+            entry.EVT_FONTENTRY, self.items[0].fontChangedEventType())
+        self._fontColorSync = attributesync.FontColorSync('color', 
+            self._fontEntry, currentColor, self.items, 
+            command.EditForegroundColorCommand, entry.EVT_FONTENTRY,
+            self.items[0].foregroundColorChangedEventType())
+        self.addEntry(_('Font'), self._fontEntry, flags=[None, wx.ALL])
                     
     def addIconEntry(self):
         # pylint: disable-msg=W0201
-        self._iconEntry = wx.combo.BitmapComboBox(self, style=wx.CB_READONLY)
-        size = (16, 16)
-        imageNames = sorted(artprovider.chooseableItemImages.keys())
-        for imageName in imageNames:
-            label = artprovider.chooseableItemImages[imageName]
-            bitmap = wx.ArtProvider_GetBitmap(imageName, wx.ART_MENU, size)
-            self._iconEntry.Append(label, bitmap, clientData=imageName)
         currentIcon = self.items[0].icon() if len(self.items) == 1 else ''
-        currentSelectionIndex = imageNames.index(currentIcon)
-        self._iconEntry.SetSelection(currentSelectionIndex)
-        self._iconSync = IconSync('icon', self._iconEntry, currentIcon, 
-                                  self.items, command.EditIconCommand,
-                                  wx.EVT_COMBOBOX, 
-                                  self.items[0].iconChangedEventType())
+        self._iconEntry = entry.IconEntry(self, currentIcon)
+        self._iconSync = attributesync.AttributeSync('icon', self._iconEntry, 
+            currentIcon, self.items, command.EditIconCommand, 
+            entry.EVT_ICONENTRY, self.items[0].iconChangedEventType())
         self.addEntry(_('Icon'), self._iconEntry, flags=[None, wx.ALL])
     
     def entries(self):
-        return dict(firstEntry=self._foregroundColorCheckBox)
+        return dict(firstEntry=self._foregroundColorEntry)
     
 
 class DatesPage(Page):
@@ -409,7 +247,7 @@ class DatesPage(Page):
         self.addLine()
         self.addReminderEntry()
         self.addLine()
-        self.addRecurrenceEntries()
+        self.addRecurrenceEntry()
         
     def addDateEntries(self):
         for label, taskMethodName in [(_('Start date'), 'startDateTime'),
@@ -425,9 +263,9 @@ class DatesPage(Page):
         setattr(self, '_%sEntry'%taskMethodName, dateTimeEntry)
         commandClass = getattr(command, 'Edit%sCommand'%TaskMethodName)
         eventType = 'task.%s'%taskMethodName
-        datetimeSync = AttributeSync('datetime', dateTimeEntry, dateTime,
-                                     self.items, commandClass, 
-                                     entry.EVT_DATETIMEENTRY, eventType)
+        datetimeSync = attributesync.AttributeSync('datetime', dateTimeEntry, 
+            dateTime, self.items, commandClass, entry.EVT_DATETIMEENTRY, 
+            eventType)
         setattr(self, '_%sSync'%taskMethodName, datetimeSync) 
         self.addEntry(label, dateTimeEntry)
         dateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeEdited)
@@ -441,63 +279,20 @@ class DatesPage(Page):
         # date time in the reminder entry is a reasonable suggestion:
         if self._reminderDateTimeEntry.GetValue() == date.DateTime():
             self.suggestReminder()
-        self._reminderDateTimeSync = AttributeSync('datetime', 
-                                                   self._reminderDateTimeEntry,
-                                                   currentReminderDateTime,
-                                                   self.items, 
-                                                   command.EditReminderDateTimeCommand,
-                                                   entry.EVT_DATETIMEENTRY, 'task.reminder')
+        self._reminderDateTimeSync = attributesync.AttributeSync('datetime', 
+            self._reminderDateTimeEntry, currentReminderDateTime, self.items, 
+            command.EditReminderDateTimeCommand, entry.EVT_DATETIMEENTRY, 
+            'task.reminder')
         self.addEntry(_('Reminder'), self._reminderDateTimeEntry)
         
-    def addRecurrenceEntries(self):
-        # pylint: disable-msg=W0201
-        recurrencePanel = wx.Panel(self)
-        panelSizer = wx.BoxSizer(wx.HORIZONTAL)
-        self._recurrenceEntry = wx.Choice(recurrencePanel, 
-            choices=[_('None'), _('Daily'), _('Weekly'), _('Monthly'), _('Yearly')])        
-        self._recurrenceEntry.Bind(wx.EVT_CHOICE, self.onRecurrencePeriodEdited)
-        panelSizer.Add(self._recurrenceEntry, flag=wx.ALIGN_CENTER_VERTICAL)
-        panelSizer.Add((3,-1))
-        staticText = wx.StaticText(recurrencePanel, label=_(', every'))
-        panelSizer.Add(staticText, flag=wx.ALIGN_CENTER_VERTICAL)
-        panelSizer.Add((3,-1))
-        self._recurrenceFrequencyEntry = widgets.SpinCtrl(recurrencePanel, 
-                                                          size=(50,-1), 
-                                                          initial=1, min=1)
-        self._recurrenceFrequencyEntry.Bind(wx.EVT_SPINCTRL, self.onRecurrenceEdited)
-        panelSizer.Add(self._recurrenceFrequencyEntry, flag=wx.ALIGN_CENTER_VERTICAL)
-        panelSizer.Add((3,-1))
-        self._recurrenceStaticText = wx.StaticText(recurrencePanel, 
-                                                   label='reserve some space')
-        panelSizer.Add(self._recurrenceStaticText, flag=wx.ALIGN_CENTER_VERTICAL)
-        panelSizer.Add((3, -1))
-        self._recurrenceSameWeekdayCheckBox = wx.CheckBox(recurrencePanel, 
-            label=_('keeping dates on the same weekday'))
-        self._recurrenceSameWeekdayCheckBox.Bind(wx.EVT_CHECKBOX, self.onRecurrenceEdited)
-        panelSizer.Add(self._recurrenceSameWeekdayCheckBox, proportion=1, 
-                       flag=wx.ALIGN_CENTER_VERTICAL|wx.EXPAND)
-        recurrencePanel.SetSizerAndFit(panelSizer)
-        self._recurrenceSizer = panelSizer
-
-        maxPanel = wx.Panel(self)
-        panelSizer = wx.BoxSizer(wx.HORIZONTAL)
-        self._maxRecurrenceCheckBox = wx.CheckBox(maxPanel)
-        self._maxRecurrenceCheckBox.Bind(wx.EVT_CHECKBOX, self.onMaxRecurrenceChecked)
-        panelSizer.Add(self._maxRecurrenceCheckBox, flag=wx.ALIGN_CENTER_VERTICAL)
-        panelSizer.Add((3,-1))
-        self._maxRecurrenceCountEntry = widgets.SpinCtrl(maxPanel, size=(50,-1), 
-                                                         initial=1, min=1)
-        self._maxRecurrenceCountEntry.Bind(wx.EVT_SPINCTRL, self.onRecurrenceEdited)
-        panelSizer.Add(self._maxRecurrenceCountEntry)
-        maxPanel.SetSizerAndFit(panelSizer)
-        self.addEntry(_('Recurrence'), recurrencePanel)
-        self.addEntry(_('Maximum number\nof recurrences'), maxPanel)
-        self._currentRecurrence = self.items[0].recurrence() if len(self.items) == 1 else date.Recurrence()
-        self.setRecurrence(self._currentRecurrence)
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onRecurrenceChanged, 
-                                                  eventType='task.recurrence', 
-                                                  eventSource=self.items[0])
+    def addRecurrenceEntry(self):
+        currentRecurrence = self.items[0].recurrence() if len(self.items) == 1 else date.Recurrence()
+        self._recurrenceEntry = entry.RecurrenceEntry(self, currentRecurrence)
+        self._recurrenceSync = attributesync.AttributeSync('recurrence',
+            self._recurrenceEntry, currentRecurrence, self.items,
+            command.EditRecurrenceCommand, entry.EVT_RECURRENCEENTRY,
+            'task.recurrence')
+        self.addEntry(_('Recurrence'), self._recurrenceEntry)
             
     def entries(self):
         # pylint: disable-msg=E1101
@@ -508,43 +303,7 @@ class DatesPage(Page):
                     timeLeft=self._dueDateTimeEntry, 
                     reminder=self._reminderDateTimeEntry, 
                     recurrence=self._recurrenceEntry)
-    
-    def onRecurrencePeriodEdited(self, event):
-        recurrenceOn = event.String != _('None')
-        self._maxRecurrenceCheckBox.Enable(recurrenceOn)
-        self._recurrenceFrequencyEntry.Enable(recurrenceOn)
-        self._maxRecurrenceCountEntry.Enable(recurrenceOn and \
-            self._maxRecurrenceCheckBox.IsChecked())
-        self.updateRecurrenceLabel()
-        self.onRecurrenceEdited(event)
-
-    def onMaxRecurrenceChecked(self, event):
-        maxRecurrenceOn = event.IsChecked()
-        self._maxRecurrenceCountEntry.Enable(maxRecurrenceOn)
-        self.onRecurrenceEdited(event)
-        
-    def onRecurrenceEdited(self, event):
-        event.Skip()
-        newRecurrence = self.getRecurrence()
-        if newRecurrence != self._currentRecurrence:
-            command.EditRecurrenceCommand(None, self.items, recurrence=newRecurrence).do()
-            self._currentRecurrence = newRecurrence
-            
-    def onRecurrenceChanged(self, event):
-        newRecurrence = event.value()
-        if newRecurrence != self._currentRecurrence:
-            self._currentRecurrence = newRecurrence
-            self.setRecurrence(newRecurrence)
-            
-    def getRecurrence(self):
-        recurrenceDict = {0: '', 1: 'daily', 2: 'weekly', 3: 'monthly', 4: 'yearly'}
-        kwargs = dict(unit=recurrenceDict[self._recurrenceEntry.Selection])
-        if self._maxRecurrenceCheckBox.IsChecked():
-            kwargs['max'] = self._maxRecurrenceCountEntry.Value
-        kwargs['amount'] = self._recurrenceFrequencyEntry.Value
-        kwargs['sameWeekday'] = self._recurrenceSameWeekdayCheckBox.IsChecked()
-        return date.Recurrence(**kwargs) # pylint: disable-msg=W0142
-    
+                
     def onDateTimeEdited(self, event):
         ''' Called when one of the DateTimeEntries is changed by the user. 
             Update the suggested reminder if no reminder was set by the user. '''
@@ -554,32 +313,6 @@ class DatesPage(Page):
             self._reminderDateTimeEntry.GetValue() == date.DateTime():
             self.suggestReminder()
             
-    def setRecurrence(self, recurrence):
-        index = {'': 0, 'daily': 1, 'weekly': 2, 'monthly': 3, 'yearly': 4}[recurrence.unit]
-        self._recurrenceEntry.Selection = index
-        self._maxRecurrenceCheckBox.Enable(bool(recurrence))
-        self._maxRecurrenceCheckBox.SetValue(recurrence.max > 0)
-        self._maxRecurrenceCountEntry.Enable(recurrence.max > 0)
-        if recurrence.max > 0:
-            self._maxRecurrenceCountEntry.Value = recurrence.max
-        self._recurrenceFrequencyEntry.Enable(bool(recurrence))
-        if recurrence.amount > 1:
-            self._recurrenceFrequencyEntry.Value = recurrence.amount
-        if recurrence.unit in ('monthly', 'yearly'):
-            self._recurrenceSameWeekdayCheckBox.Value = recurrence.sameWeekday
-        else:
-            # If recurrence is not monthly or yearly, set same week day to False
-            self._recurrenceSameWeekdayCheckBox.Value = False
-        self.updateRecurrenceLabel()
-
-    def updateRecurrenceLabel(self):
-        recurrenceDict = {0: _('period,'), 1: _('day(s),'), 2: _('week(s),'),
-                          3: _('month(s),'), 4: _('year(s),')}
-        recurrenceLabel = recurrenceDict[self._recurrenceEntry.Selection]
-        self._recurrenceStaticText.SetLabel(recurrenceLabel)
-        self._recurrenceSameWeekdayCheckBox.Enable(self._recurrenceEntry.Selection in (3,4))
-        self._recurrenceSizer.Layout()
-
     def suggestReminder(self):
         ''' suggestReminder populates the reminder entry with a reasonable
             suggestion for a reminder date and time, but does not enable the
@@ -611,69 +344,36 @@ class ProgressPage(Page):
         
     def addProgressEntry(self):
         # pylint: disable-msg=W0201
-        self._currentPercentageComplete = self.items[0].percentageComplete() if len(self.items) == 1 else self.averagePercentageComplete(self.items)
+        currentPercentageComplete = self.items[0].percentageComplete() if len(self.items) == 1 else self.averagePercentageComplete(self.items)
         self._percentageCompleteEntry = entry.PercentageEntry(self, 
-            self._currentPercentageComplete, 
-            callback=self.onPercentageCompleteEdited)
+            currentPercentageComplete)
+        self._percentageCompleteSync = attributesync.AttributeSync('percentage', 
+            self._percentageCompleteEntry, currentPercentageComplete, 
+            self.items, command.EditPercentageCompleteCommand, 
+            entry.EVT_PERCENTAGEENTRY, 
+            self.items[0].percentageCompleteChangedEventType())
         self.addEntry(_('Percentage complete'), self._percentageCompleteEntry)
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onPercentageCompleteChanged, 
-                                                  eventType=self.items[0].percentageCompleteChangedEventType(), 
-                                                  eventSource=self.items[0])
-            
-    def averagePercentageComplete(self, items):
+
+    @staticmethod
+    def averagePercentageComplete(items):
         return sum([item.percentageComplete() for item in items]) \
                     / float(len(items)) if items else 0
-
-    def onPercentageCompleteEdited(self):
-        newPercentageComplete = self._percentageCompleteEntry.get()
-        if newPercentageComplete != self._currentPercentageComplete:
-            command.EditPercentageCompleteCommand(None, self.items, 
-                                                  percentage=newPercentageComplete).do()
-            self._currentPercentageComplete = newPercentageComplete
-            
-    def onPercentageCompleteChanged(self, event):
-        newPercentageComplete = event.value()
-        if newPercentageComplete != self._currentPercentageComplete:
-            self._currentPercentageComplete = newPercentageComplete
-            self._percentageCompleteEntry.set(newPercentageComplete)
         
     def addBehaviorEntry(self):
         # pylint: disable-msg=W0201
-        self._markTaskCompletedEntry = choice = wx.Choice(self)
-        self._markTaskCompletedEntry.Bind(wx.EVT_CHOICE, self.onShouldMarkCompletedEdited)
-        self._currentShouldMarkCompleted = self.items[0].shouldMarkCompletedWhenAllChildrenCompleted() if len(self.items) == 1 else None
-        for choiceValue, choiceText in \
-                [(None, _('Use application-wide setting')),
-                 (False, _('No')), (True, _('Yes'))]:
-            choice.Append(choiceText, choiceValue)
-            if choiceValue == self._currentShouldMarkCompleted:
-                choice.SetSelection(choice.GetCount()-1)
-        if choice.GetSelection() == wx.NOT_FOUND:
-            # Force a selection if necessary:
-            choice.SetSelection(0)
+        choices = [(None, _('Use application-wide setting')),
+                   (False, _('No')), (True, _('Yes'))]
+        currentChoice = self.items[0].shouldMarkCompletedWhenAllChildrenCompleted() \
+            if len(self.items) == 1 else None
+        self._shouldMarkCompletedEntry = entry.ChoiceEntry(self, choices,
+                                                           currentChoice)
+        self._shouldMarkCompletedSync = attributesync.AttributeSync( \
+            'shouldMarkCompleted', self._shouldMarkCompletedEntry, 
+            currentChoice, self.items, command.EditShouldMarkCompletedCommand, 
+            entry.EVT_CHOICEENTRY,
+            'task.setting.shouldMarkCompletedWhenAllChildrenCompleted')                                                       
         self.addEntry(_('Mark task completed when all children are completed?'), 
-                      choice, flags=[None, wx.ALL])
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onShouldMarkCompletedChanged,
-                                                  eventType='task.setting.shouldMarkCompletedWhenAllChildrenCompleted', 
-                                                  eventSource=self.items[0])
-        
-    def onShouldMarkCompletedEdited(self, event):
-        event.Skip()
-        newShouldMarkCompleted = self._markTaskCompletedEntry.GetClientData( \
-            self._markTaskCompletedEntry.GetSelection())
-        if newShouldMarkCompleted != self._currentShouldMarkCompleted:
-            command.EditShouldMarkCompletedCommand(None, self.items, 
-                                                   shouldMarkCompleted=newShouldMarkCompleted).do()
-            self._currentShouldMarkCompleted = newShouldMarkCompleted
-            
-    def onShouldMarkCompletedChanged(self, event):
-        newShouldMarkCompleted = event.value()
-        if newShouldMarkCompleted != self._currentShouldMarkCompleted:
-            self._currentShouldMarkCompleted = newShouldMarkCompleted
-            index = [None, False, True].index(newShouldMarkCompleted)
-            self._markTaskCompletedEntry.SetSelection(index)
+                      self._shouldMarkCompletedEntry, flags=[None, wx.ALL])
         
     def entries(self):
         return dict(firstEntry=self._percentageCompleteEntry,
@@ -699,28 +399,13 @@ class BudgetPage(Page):
             
     def addBudgetEntry(self):
         # pylint: disable-msg=W0201
-        self._currentBudget = self.items[0].budget() if len(self.items) == 1 else date.TimeDelta()
-        self._budgetEntry = entry.TimeDeltaEntry(self, self._currentBudget)
-        self._budgetEntry.Bind(wx.EVT_KILL_FOCUS, self.onBudgetEdited)
+        currentBudget = self.items[0].budget() if len(self.items) == 1 else date.TimeDelta()
+        self._budgetEntry = entry.TimeDeltaEntry(self, currentBudget)
+        self._budgetSync = attributesync.AttributeSync('budget', 
+            self._budgetEntry, currentBudget, self.items,                                         
+            command.EditBudgetCommand, wx.EVT_KILL_FOCUS, 'task.budget')
         self.addEntry(_('Budget'), self._budgetEntry, flags=[None, wx.ALL])
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onBudgetChanged, 
-                                                  eventType='task.budget', 
-                                                  eventSource=self.items[0])
-        
-    def onBudgetEdited(self, event):
-        event.Skip()
-        newBudget = self._budgetEntry.get()
-        if newBudget != self._currentBudget:
-            self._currentBudget = newBudget
-            command.EditBudgetCommand(None, self.items, budget=newBudget).do()
-            
-    def onBudgetChanged(self, event):
-        newBudget = event.value()
-        if newBudget != self._currentBudget:
-            self._currentBudget = newBudget
-            self._budgetEntry.set(newBudget)
-            
+                    
     def addTimeSpentEntry(self):
         assert len(self.items) == 1
         # pylint: disable-msg=W0201 
@@ -735,8 +420,8 @@ class BudgetPage(Page):
         
     def onTimeSpentChanged(self, event): # pylint: disable-msg=W0613
         newTimeSpent = self.items[0].timeSpent()
-        if newTimeSpent != self._timeSpentEntry.get():
-            self._timeSpentEntry.set(newTimeSpent)
+        if newTimeSpent != self._timeSpentEntry.GetValue():
+            self._timeSpentEntry.SetValue(newTimeSpent)
             
     def addBudgetLeftEntry(self):
         assert len(self.items) == 1
@@ -752,8 +437,8 @@ class BudgetPage(Page):
         
     def onBudgetLeftChanged(self, event): # pylint: disable-msg=W0613
         newBudgetLeft = self.items[0].budgetLeft()
-        if newBudgetLeft != self._budgetLeftEntry.get():
-            self._budgetLeftEntry.set(newBudgetLeft)
+        if newBudgetLeft != self._budgetLeftEntry.GetValue():
+            self._budgetLeftEntry.SetValue(newBudgetLeft)
             
     def addRevenueEntries(self):
         self.addHourlyFeeEntry()
@@ -763,52 +448,23 @@ class BudgetPage(Page):
             
     def addHourlyFeeEntry(self):
         # pylint: disable-msg=W0201
-        self._currentHourlyFee = self.items[0].hourlyFee() if len(self.items) == 1 else 0
-        self._hourlyFeeEntry = entry.AmountEntry(self, self._currentHourlyFee)
-        self._hourlyFeeEntry.Bind(wx.EVT_KILL_FOCUS, self.onHourlyFeeEdited)
+        currentHourlyFee = self.items[0].hourlyFee() if len(self.items) == 1 else 0
+        self._hourlyFeeEntry = entry.AmountEntry(self, currentHourlyFee)
+        self._hourlyFeeSync = attributesync.AttributeSync('hourlyFee',
+            self._hourlyFeeEntry, currentHourlyFee, self.items,
+            command.EditHourlyFeeCommand, wx.EVT_KILL_FOCUS, 
+            self.items[0].hourlyFeeChangedEventType())
         self.addEntry(_('Hourly fee'), self._hourlyFeeEntry, flags=[None, wx.ALL])
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onHourlyFeeChanged, 
-                                                  eventType=self.items[0].hourlyFeeChangedEventType(), 
-                                                  eventSource=self.items[0])
-            
-    def onHourlyFeeEdited(self, event):
-        event.Skip()
-        newHourlyFee = self._hourlyFeeEntry.get()
-        if newHourlyFee != self._currentHourlyFee:
-            self._currentHourlyFee = newHourlyFee
-            command.EditHourlyFeeCommand(None, self.items, hourlyFee=newHourlyFee).do()
-            
-    def onHourlyFeeChanged(self, event):
-        newHourlyFee = event.value()
-        if newHourlyFee != self._currentHourlyFee:
-            self._currentHourlyFee = newHourlyFee
-            self._hourlyFeeEntry.set(newHourlyFee)
         
     def addFixedFeeEntry(self):
         # pylint: disable-msg=W0201
-        self._currentFixedFee = self.items[0].fixedFee() if len(self.items) == 1 else 0
-        self._fixedFeeEntry = entry.AmountEntry(self, self._currentFixedFee)
-        self._fixedFeeEntry.Bind(wx.EVT_KILL_FOCUS, self.onFixedFeeEdited)
+        currentFixedFee = self.items[0].fixedFee() if len(self.items) == 1 else 0
+        self._fixedFeeEntry = entry.AmountEntry(self, currentFixedFee)
+        self._fixedFeeSync = attributesync.AttributeSync('fixedFee',
+            self._fixedFeeEntry, currentFixedFee, self.items,
+            command.EditFixedFeeCommand, wx.EVT_KILL_FOCUS, 'task.fixedFee')
         self.addEntry(_('Fixed fee'), self._fixedFeeEntry, flags=[None, wx.ALL])
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onFixedFeeChanged, 
-                                                  eventType='task.fixedFee', 
-                                                  eventSource=self.items[0])
 
-    def onFixedFeeEdited(self, event):
-        event.Skip()
-        newFixedFee = self._fixedFeeEntry.get()
-        if newFixedFee != self._currentFixedFee:
-            self._currentFixedFee = newFixedFee
-            command.EditFixedFeeCommand(None, self.items, fixedFee=newFixedFee).do()
-            
-    def onFixedFeeChanged(self, event):
-        newFixedFee = event.value()
-        if newFixedFee != self._currentFixedFee:
-            self._currentFixedFee = newFixedFee
-            self._fixedFeeEntry.set(newFixedFee)
-        
     def addRevenueEntry(self):
         assert len(self.items) == 1
         revenue = self.items[0].revenue()
@@ -820,8 +476,8 @@ class BudgetPage(Page):
 
     def onRevenueChanged(self, event): # pylint: disable-msg=W0613
         newRevenue = self.items[0].revenue()
-        if newRevenue != self._revenueEntry.get():
-            self._revenueEntry.set(newRevenue)
+        if newRevenue != self._revenueEntry.GetValue():
+            self._revenueEntry.SetValue(newRevenue)
             
     def observeTracking(self):
         if len(self.items) != 1:
@@ -1211,6 +867,7 @@ class EffortEditBook(Page):
         self._taskList = task.TaskList(taskList)
         self._taskList.extend([effort.task() for effort in efforts if effort.task() not in taskList])
         self._settings = settings
+        self._taskFile = taskFile
         super(EffortEditBook, self).__init__(efforts, parent, *args, **kwargs)
         
     def addEntries(self):
@@ -1222,128 +879,102 @@ class EffortEditBook(Page):
         ''' Add an entry for changing the task that this effort record
             belongs to. '''
         # pylint: disable-msg=W0201
-        self._currentTask = self.items[0].task()
-        self._taskEntry = entry.TaskComboTreeBox(self,
-            rootTasks=self._taskList.rootItems(),
-            selectedTask=self._currentTask)
-        self._taskEntry._comboTreeBox.Bind(wx.EVT_COMBOBOX, self.onTaskEdited)
-        self.addEntry(_('Task'), self._taskEntry, flags=[None, wx.ALL|wx.EXPAND])
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onTaskChanged,
-                                                  eventType=self.items[0].taskChangedEventType(),
-                                                  eventSource=self.items[0])
-            
-    def onTaskEdited(self, event): # pylint: disable-msg=W0613
-        event.Skip()
-        newTask = self._taskEntry.GetSelection()
-        if newTask != self._currentTask:
-            self._currentTask = newTask
-            command.ChangeTaskCommand(None, self.items, task=newTask).do()
-            
-    def onTaskChanged(self, event):
-        newTask = event.value()
-        if newTask != self._currentTask:
-            self._currentTask = newTask
-            self._taskEntry.SetSelection(newTask)
-            
+        panel = wx.Panel(self)
+        currentTask = self.items[0].task()
+        self._taskEntry = entry.TaskEntry(self, 
+            rootTasks=self._taskList.rootItems(), selectedTask=currentTask)
+        self._taskSync = attributesync.AttributeSync('task', self._taskEntry,
+            currentTask, self.items, command.ChangeTaskCommand,
+            entry.EVT_TASKENTRY, self.items[0].taskChangedEventType())
+        editTaskButton = wx.Button(panel, label=_('Edit task'))
+        editTaskButton.Bind(wx.EVT_BUTTON, self.onEditTask)
+        panelSizer = wx.BoxSizer(wx.HORIZONTAL)
+        panelSizer.Add(self._taskEntry, proportion=1, 
+                       flag=wx.EXPAND|wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add((3,-1))
+        panelSizer.Add(editTaskButton, proportion=0, 
+                       flag=wx.ALIGN_CENTER_VERTICAL)
+        panel.SetSizerAndFit(panelSizer)
+        self.addEntry(_('Task'), panel, flags=[None, wx.ALL|wx.EXPAND])
+
     def addStartAndStopEntries(self):
         # pylint: disable-msg=W0201,W0142
         dateTimeEntryKwArgs = dict(showSeconds=True)
-        self._currentStartDateTime = self.items[0].getStart() 
-        self._startDateTimeEntry = entry.DateTimeEntry(self, self._settings,
-            self._currentStartDateTime, noneAllowed=False, **dateTimeEntryKwArgs)
-        self._startDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onStartDateTimeEdited)
-        startFromLastEffortButton = wx.Button(self,
-            label=_('Start tracking from last stop time'))
-        self.Bind(wx.EVT_BUTTON, self.onStartFromLastEffort,
-            startFromLastEffortButton)
-        if self._effortList.maxDateTime() is None:
-            startFromLastEffortButton.Disable()
-
-        self._currentStopDateTime = self.items[0].getStop()
-        self._stopDateTimeEntry = entry.DateTimeEntry(self, self._settings, 
-            self._currentStopDateTime, noneAllowed=True, **dateTimeEntryKwArgs)
-        self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onStopDateTimeEdited)
-        self.invalidPeriodMessage = wx.StaticText(self, label='')
-        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        font.SetWeight(wx.FONTWEIGHT_BOLD )
-        self.invalidPeriodMessage.SetFont(font)
-        
         flags = [None, wx.ALIGN_RIGHT|wx.ALL, wx.ALIGN_LEFT|wx.ALL, None]
+        
+        currentStartDateTime = self.items[0].getStart()
+        self._startDateTimeEntry = entry.DateTimeEntry(self, self._settings,
+            currentStartDateTime, noneAllowed=False, **dateTimeEntryKwArgs)
+        self._startDateTimeSync = attributesync.AttributeSync('datetime',
+            self._startDateTimeEntry, currentStartDateTime, self.items,
+            command.ChangeEffortStartDateTimeCommand, entry.EVT_DATETIMEENTRY,
+            'effort.start')
+        self._startDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeEdited)        
+        startFromLastEffortButton = self._createStartFromLastEffortButton()
         self.addEntry(_('Start'), self._startDateTimeEntry,
             startFromLastEffortButton, flags=flags)
-        self.addEntry(_('Stop'), self._stopDateTimeEntry, self.invalidPeriodMessage, flags=flags)
-        if len(self.items) == 1:
-            registerObserver = patterns.Publisher().registerObserver
-            registerObserver(self.onStartDateTimeChanged, 
-                             eventType='effort.start', eventSource=self.items[0])
-            registerObserver(self.onStopDateTimeChanged, 
-                             eventType='effort.stop', eventSource=self.items[0])
-            
-    def onStartDateTimeEdited(self, *args, **kwargs):
-        newStartDateTime = self._startDateTimeEntry.GetValue()
-        if newStartDateTime != self._currentStartDateTime and self.validPeriod():
-            self._currentStartDateTime = newStartDateTime
-            command.ChangeEffortStartDateTimeCommand(None, self.items, datetime=newStartDateTime).do()
-        self.updateInvalidPeriodMessage()
-        
-    def onStartDateTimeChanged(self, event):
-        newStartDateTime = event.value()
-        if newStartDateTime != self._currentStartDateTime:
-            self._currentStartDateTime = newStartDateTime
-            self._startDateTimeEntry.SetValue(newStartDateTime)
-        
-    def onStopDateTimeEdited(self, *args, **kwargs): 
-        newStopDateTime = self._stopDateTimeEntry.GetValue()
-        if newStopDateTime != self._currentStopDateTime and self.validPeriod():
-            self._currentStopDateTime = newStopDateTime
-            command.ChangeEffortStopDateTimeCommand(None, self.items, datetime=newStopDateTime).do()
-        self.updateInvalidPeriodMessage()
 
-    def onStopDateTimeChanged(self, event):
-        newStopDateTime = event.value()
-        if newStopDateTime != self._currentStopDateTime:
-            self._currentStopDateTime = newStopDateTime
-            self._stopDateTimeEntry.SetValue(newStopDateTime)
-        
-    def updateInvalidPeriodMessage(self):
-        self.invalidPeriodMessage.SetLabel('' if self.validPeriod() else \
-                                           _('Warning: start must be earlier than stop'))
-                
+        currentStopDateTime = self.items[0].getStop()
+        self._stopDateTimeEntry = entry.DateTimeEntry(self, self._settings, 
+            currentStopDateTime, noneAllowed=True, **dateTimeEntryKwArgs)
+        self._stopDateTimeSync = attributesync.AttributeSync('datetime',
+            self._stopDateTimeEntry, currentStopDateTime, self.items,
+            command.ChangeEffortStopDateTimeCommand, entry.EVT_DATETIMEENTRY,
+            'effort.stop')
+        self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeEdited)
+        self._invalidPeriodMessage = self._createInvalidPeriodMessage()
+        self.addEntry(_('Stop'), self._stopDateTimeEntry, 
+                      self._invalidPeriodMessage, flags=flags)
+            
+    def _createStartFromLastEffortButton(self):
+        button = wx.Button(self, label=_('Start tracking from last stop time'))
+        self.Bind(wx.EVT_BUTTON, self.onStartFromLastEffort, button)
+        if self._effortList.maxDateTime() is None:
+            button.Disable()
+        return button
+            
+    def _createInvalidPeriodMessage(self):
+        text = wx.StaticText(self, label='')
+        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
+        text.SetFont(font)
+        return text
+
     def onStartFromLastEffort(self, event): # pylint: disable-msg=W0613
+        event.Skip()
         self._startDateTimeEntry.SetValue(self._effortList.maxDateTime())
         
+    def onDateTimeEdited(self, event):
+        event.Skip()
+        self.updateInvalidPeriodMessage()
+                    
+    def updateInvalidPeriodMessage(self):
+        message = '' if self.validPeriod() else _('Warning: start must be earlier than stop')
+        self._invalidPeriodMessage.SetLabel(message)
+                
     def validPeriod(self):
-        if not hasattr(self, '_stopDateTimeEntry'):
-            return True
-        else:
+        try:
             return self._startDateTimeEntry.GetValue() < self._stopDateTimeEntry.GetValue()
-        
+        except AttributeError:
+            return True # Entries not created yet
+
+    def onEditTask(self, event):
+        taskToEdit = self._taskEntry.GetSelection()
+        TaskEditor(None, command.EditTaskCommand(self._taskFile.tasks(),
+            [taskToEdit]), self._settings, self._taskFile.tasks(), 
+            self._taskFile).Show()
+
     def addDescriptionEntry(self):
         # pylint: disable-msg=W0201
-        self._currentDescription = self.items[0].description() if len(self.items) == 1 else _('Edit to change all descriptions')
-        self._descriptionEntry = widgets.MultiLineTextCtrl(self, self._currentDescription)
-        self._descriptionEntry.Bind(wx.EVT_KILL_FOCUS, self.onDescriptionEdited)
+        currentDescription = self.items[0].description() if len(self.items) == 1 else _('Edit to change all descriptions')
+        self._descriptionEntry = widgets.MultiLineTextCtrl(self, currentDescription)
         self._descriptionEntry.SetSizeHints(300, 150)
+        self._descriptionSync = attributesync.AttributeSync('description', 
+            self._descriptionEntry, currentDescription, self.items,
+            command.EditDescriptionCommand, wx.EVT_KILL_FOCUS,
+            self.items[0].descriptionChangedEventType())
         self.addEntry(_('Description'), self._descriptionEntry, growable=True)
-        if len(self.items) == 1:
-            patterns.Publisher().registerObserver(self.onDescriptionChanged, 
-                                                  eventType=self.items[0].descriptionChangedEventType(), 
-                                                  eventSource=self.items[0])
         
-    def onDescriptionEdited(self, event):
-        event.Skip()
-        newDescription = self._descriptionEntry.GetValue()
-        if newDescription != self._currentDescription:
-            self._currentDescription = newDescription
-            command.EditDescriptionCommand(None, self.items, description=newDescription).do()
-
-    def onDescriptionChanged(self, event):
-        newDescription = event.value()
-        if newDescription != self._currentDescription:
-            self._currentDescription = newDescription
-            self._descriptionEntry.SetValue(newDescription)
-
     def setFocus(self, columnName):
         self.setFocusOnEntry(columnName)
         

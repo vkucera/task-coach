@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2010 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -37,8 +37,6 @@ class BaseCommand(patterns.Command):
     plural_name = 'Do something'           # Override in subclass
     
     def name(self):
-        if self.singular_name.startswith('Do something'):
-            print self
         return self.singular_name%self.name_subject(self.items[0]) if len(self.items) == 1 else self.plural_name
 
     def name_subject(self, item):
@@ -542,8 +540,10 @@ class EditIconCommand(BaseCommand):
     singular_name = _('Change icon "%s"')
     
     def __init__(self, *args, **kwargs):
-        self.__newIcon = kwargs.pop('icon')
-        self.__newSelectedIcon = kwargs.pop('selectedIcon')
+        self.__newIcon = icon = kwargs.pop('icon')
+        self.__newSelectedIcon = icon[:-len('_icon')] + '_open_icon' \
+            if (icon.startswith('folder') and icon.count('_') == 2) \
+            else icon
         super(EditIconCommand, self).__init__(*args, **kwargs)
         self.__oldIcons = [(item.icon(), item.selectedIcon()) for item in self.items]
     

@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2010 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -50,8 +50,9 @@ manifest = """
     </dependency>
     <dependency>
         <dependentAssembly>
-            <assemblyIdentity type="win32" name="Microsoft.VC90.CRT" version="9.0.21022.8"
-	    processorArchitecture="x86" publicKeyToken="1fc8b3b9a1e18e3b" />
+            <assemblyIdentity type="win32" 
+            name="Microsoft.VC90.CRT" version="9.0.21022.8"
+	        processorArchitecture="x86" publicKeyToken="1fc8b3b9a1e18e3b" />
         </dependentAssembly>
     </dependency>
 </assembly>

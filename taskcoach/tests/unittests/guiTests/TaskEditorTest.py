@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2010 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -57,10 +57,10 @@ class TaskEditorSetterBase(object):
         wx.YieldIfNeeded()
         
     def setRecurrence(self, newRecurrence):
-        page = self.editor._interior[1]
-        page.setRecurrence(newRecurrence)
-        page.onRecurrenceEdited(dummy.Event())
-        return page
+        recurrenceEntry = self.editor._interior[1]._recurrenceEntry
+        recurrenceEntry.SetValue(newRecurrence)
+        recurrenceEntry.onRecurrenceEdited()
+        wx.YieldIfNeeded()
 
 
 class TaskEditorBySettingFocusMixin(TaskEditorSetterBase):
@@ -136,11 +136,11 @@ class EditorDisplayTest(TaskEditorTestCase):
                          self.editor._interior[1]._dueDateTimeEntry.GetValue())
         
     def testRecurrenceUnit(self):
-        choice = self.editor._interior[1]._recurrenceEntry
+        choice = self.editor._interior[1]._recurrenceEntry._recurrencePeriodEntry
         self.assertEqual('Daily', choice.GetString(choice.GetSelection()))
 
     def testRecurrenceFrequency(self):
-        freq = self.editor._interior[1]._recurrenceFrequencyEntry
+        freq = self.editor._interior[1]._recurrenceEntry._recurrenceFrequencyEntry
         self.assertEqual(1, freq.GetValue())    
 
 
@@ -228,19 +228,19 @@ class EditTaskTestBase(object):
         self.assertEqual(-1, self.task.priority())
         
     def testSetHourlyFee(self):
-        self.editor._interior[5]._hourlyFeeEntry.set(100)
-        self.editor._interior[5].onHourlyFeeEdited(dummy.Event())
+        self.editor._interior[5]._hourlyFeeEntry.SetValue(100)
+        self.editor._interior[5]._hourlyFeeSync.onAttributeEdited(dummy.Event())
         self.assertEqual(100, self.task.hourlyFee())
 
     def testSetFixedFee(self):
-        self.editor._interior[5]._fixedFeeEntry.set(100.5)
-        self.editor._interior[5].onFixedFeeEdited(dummy.Event())
+        self.editor._interior[5]._fixedFeeEntry.SetValue(100.5)
+        self.editor._interior[5]._fixedFeeSync.onAttributeEdited(dummy.Event())
         self.assertEqual(100.5, self.task.fixedFee())
 
     def testBehaviorMarkCompleted(self):
         page = self.editor._interior[3]
-        page._markTaskCompletedEntry.SetStringSelection('Yes')
-        page.onShouldMarkCompletedEdited(dummy.Event())
+        page._shouldMarkCompletedEntry.SetStringSelection('Yes')
+        page._shouldMarkCompletedSync.onAttributeEdited(dummy.Event())
         self.assertEqual(True, 
                          self.task.shouldMarkCompletedWhenAllChildrenCompleted())
 

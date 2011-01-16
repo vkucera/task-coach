@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2010 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -110,7 +110,7 @@ class TaskSorterSettingsTest(test.TestCase):
         self.task2.setStartDateTime(date.Now() - date.oneDay)
         self.assertEqual([self.task2, self.task1], list(self.sorter))
         
-    def testDescending(self):
+    def testSortByDueDateTimeDescending(self):
         self.sorter.sortBy('dueDateTime')
         self.sorter.sortAscending(False)
         self.assertEqual([self.task1, self.task2], list(self.sorter))
@@ -120,6 +120,18 @@ class TaskSorterSettingsTest(test.TestCase):
         self.sorter.sortByTaskStatusFirst(False)
         self.task2.setCompletionDateTime(date.Now())
         self.assertEqual([self.task2, self.task1], list(self.sorter))
+
+    def testSortByReminderAscending(self):
+        self.sorter.sortBy('reminder')
+        self.sorter.sortAscending(True)
+        self.task2.setReminder(date.Now())
+        self.assertEqual([self.task2, self.task1], list(self.sorter))
+     
+    def testSortByReminderDescending(self):
+        self.sorter.sortBy('reminder')
+        self.sorter.sortAscending(False)
+        self.task2.setReminder(date.Now())
+        self.assertEqual([self.task1, self.task2], list(self.sorter))
 
     def testSortBySubjectWithFirstSortingByStatus(self):
         self.sorter.sortByTaskStatusFirst(True)
@@ -275,7 +287,7 @@ class TaskSorterSettingsTest(test.TestCase):
     def testSortByInvalidSortKey(self):
         self.sorter.sortBy('invalidKey')
         self.assertEqual([self.task1, self.task2], list(self.sorter))
-
+        
 
 class TaskSorterTreeModeTest(test.TestCase):
     def setUp(self):

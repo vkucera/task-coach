@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2010 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.0', 'December 30, 2010',
+Release('1.3.0', 'January 16, 2011',
     summary='''This release ...''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -41,7 +41,36 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.7', 'December 26, 2010',
+Release('1.2.8', 'January 15, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Task Coach wouldn't open task files when a task viewer was
+sorted by reminder date/time.''', '3153541'),
+        Bug('''Correctly fix drag-and-drop from Thunderbird.'''),
+        Bug('''Correctly keep track of selected items when using 
+shift-click to select a range of items so that the right items are exported
+when the user exports a selection.''', '3154036'),
+        Bug('''Task Coach would crash at launch if TaskCoach.ini could not
+be loaded.'''),
+        Bug('''When marking the only subtask of a task uncompleted, the 
+subtask would stay green.''', '3151018'),
+        Bug('''On Windows 7 and Vista, the application icon wouldn't show up
+correctly.''', '3158445')
+        ],
+    featuresAdded=[
+        Feature('''The effort edit dialog now has a "Edit task" button next to
+the task selection drop down to quickly open the effort's task.'''),
+        Feature('''The effort viewer now has "Start tracking effort" and "Stop 
+tracking effort" buttons on the toolbar. The "Start tracking effort" starts 
+tracking effort for the task(s) of the selected effort(s). This enables you to 
+quickly resume tracking the most recent task by selecting the topmost effort 
+record and hit the "Start tracking effort" button. The "Stop tracking effort" 
+button simply does what it says and was added for consistencies sake.''', 
+'http://uservoice.com/a/fHSAX')
+        ],
+    ),
+                
+Release('1.2.7', 'January 8, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Performance improvements: faster closing of task dialogs, 
@@ -49,7 +78,13 @@ faster item selection, no redraw of task viewers every minute.'''),
         Bug('''When removing all efforts, correctly update the effort viewer.''', 
             '3125553'),
         Bug('''When editing a task that already has prerequisite tasks, don't 
-reset the prerequisites.''', '3137055')
+reset the prerequisites.''', '3137055'),
+        Bug('''Huge performance fix in the calendar viewer.'''),
+        Bug('''When double clicking a column header border don't set the column
+width to zero.'''),
+        Bug('''Process drag-and-drops from Thunderbird.''', '2916405', '3058781'),
+        Bug('''When canceling the save dialog, the task file would be saved with
+an empty filename.''', '3152160')
         ],
     featuresAdded=[
         Feature('''Always highlight the current day in the calendar view.'''),

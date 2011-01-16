@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2010 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
@@ -266,21 +266,26 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
 
     def createToolBarUICommands(self):
         commands = super(EffortViewer, self).createToolBarUICommands()
+        efforts = self.presentation()
+        tasks = self.taskFile.tasks()
         # This is an instance variable for use in unit tests
         # pylint: disable-msg=W0201
         self.deleteUICommand = uicommand.EffortDelete(viewer=self,
-                                                      effortList=self.presentation())
-        # This is an instance variable so that the choice can be changed programmatically
+                                                      effortList=efforts)
+        # This is an instance variable so that the choice can be changed 
+        # programmatically
         self.aggregationUICommand = \
             uicommand.EffortViewerAggregationChoice(viewer=self)
         for uiCommand in [None, 
-                          uicommand.EffortNew(viewer=self,
-                                              effortList=self.presentation(),
-                                              taskList=self.taskFile.tasks(),
+                          uicommand.EffortNew(viewer=self, effortList=efforts,
+                                              taskList=tasks,
                                               settings=self.settings),
-                          uicommand.EffortEdit(viewer=self,
-                                               effortList=self.presentation()),
+                          uicommand.EffortEdit(viewer=self, effortList=efforts),
                           self.deleteUICommand, 
+                          None,
+                          uicommand.EffortStartForEffort(viewer=self,
+                                                         taskList=tasks),
+                          uicommand.EffortStop(effortList=efforts),
                           None,
                           self.aggregationUICommand]:
             commands.insert(-2, uiCommand)

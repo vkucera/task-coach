@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2010 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2008 Thomas Sonne Olesen <tpo@sonnet.dk>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -110,7 +110,7 @@ class CompositeEffort(BaseCompositeEffort):
         patterns.Publisher().registerObserver(self.onTimeSpentChanged,
             eventType='task.timeSpent', eventSource=task)
         patterns.Publisher().registerObserver(self.onRevenueChanged,
-            eventType=task.hourlyFeeChangedEventType(), eventSource=task)
+            eventType=task.hourlyFeeChangedEventType())
         '''
         FIMXE! CompositeEffort does not derive from base.Object
         patterns.Publisher().registerObserver(self.onBackgroundColorChanged,

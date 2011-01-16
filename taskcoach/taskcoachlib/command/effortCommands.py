@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2010 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.i18n import _
-from taskcoachlib.domain import effort
+from taskcoachlib.domain import effort, date
 import base
 
 
@@ -81,6 +81,11 @@ class ChangeEffortStartDateTimeCommand(base.BaseCommand):
         super(ChangeEffortStartDateTimeCommand, self).__init__(*args, **kwargs)
         self.__oldDateTimes = [item.getStart() for item in self.items]
         
+    def canDo(self):
+        maxDateTime = date.DateTime()
+        return super(ChangeEffortStartDateTimeCommand, self).canDo() and \
+            all(self.__datetime < (item.getStop() or maxDateTime) for item in self.items)
+        
     @patterns.eventSource
     def do_command(self, event=None):
         for item in self.items:
@@ -103,7 +108,11 @@ class ChangeEffortStopDateTimeCommand(base.BaseCommand):
         self.__datetime = kwargs.pop('datetime')
         super(ChangeEffortStopDateTimeCommand, self).__init__(*args, **kwargs)
         self.__oldDateTimes = [item.getStop() for item in self.items]
-        
+
+    def canDo(self):
+        return super(ChangeEffortStopDateTimeCommand, self).canDo() and \
+            all(self.__datetime > item.getStart() for item in self.items)
+                
     @patterns.eventSource
     def do_command(self, event=None):
         for item in self.items:

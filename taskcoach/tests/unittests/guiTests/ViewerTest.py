@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2010 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -41,11 +41,13 @@ class ViewerTest(test.wxTestCase):
 
     def testSelectAllViaWidget(self):
         self.viewer.widget.selectall()
+        self.viewer.updateSelection()
         self.assertEqual([self.task], self.viewer.curselection())
         
     def testSelectAllViaWidgetWithMultipleItems(self):
         self.taskFile.tasks().append(task.Task('second'))
         self.viewer.widget.selectall()
+        self.viewer.updateSelection()
         self.assertEqual(2, len(self.viewer.curselection()))
         
     def testSelectAll(self):

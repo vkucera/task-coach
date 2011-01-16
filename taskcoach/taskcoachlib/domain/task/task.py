@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2010 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
 Copyright (C) 2010 Svetoslav Trochev <sal_electronics@hotmail.com>
 
 Task Coach is free software: you can redistribute it and/or modify
@@ -354,10 +354,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                         child.setCompletionDateTime(completionDateTime, event=event)
                 if self.isBeingTracked():
                     self.stopTracking(event=event)                    
-        
+            self.recomputeAppearance(event=event)
+            
     def completionDateTimeEvent(self, event):
         event.addSource(self, self.completionDateTime(), type='task.completionDateTime')
-        self.recomputeAppearance(event=event)
         for dependency in self.dependencies():
             dependency.recomputeAppearance(event=event)
         
@@ -707,7 +707,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__computeRecursiveIcon()
         self.__computeRecursiveSelectedIcon()
         if self.__recursiveIcon != previousRecursiveIcon:
-             event.addSource(self, self.icon(), type=self.iconChangedEventType())
+            event.addSource(self, self.icon(), type=self.iconChangedEventType())
         if self.__recursiveSelectedIcon != previousRecursiveSelectedIcon:
             event.addSource(self, self.selectedIcon(), type=self.selectedIconChangedEventType())
         if self.__recursiveForegroundColor != previousForegroundColor:
@@ -891,7 +891,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @staticmethod
     def reminderSortFunction(**kwargs):
         recursive = kwargs.get('treeMode', False)
-        return lambda task: task.reminder(recursive=recursive) or self.maxDateTime
+        maxDateTime = date.DateTime()
+        return lambda task: task.reminder(recursive=recursive) or maxDateTime
 
     @classmethod
     def reminderSortEventTypes(class_):

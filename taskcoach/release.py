@@ -2,7 +2,7 @@
 
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2010 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -39,10 +39,9 @@ Release steps:
     and Mac OS X distributions to set them as default download.
   - Run 'python release.py release' to download the distributions from
     Sourceforge, generate MD5 digests, generate the website, upload the 
-    website to the Dreamhost, Hostland and Hypernation.net websites, 
-    announce the release on Twitter, Identi.ca, Freshmeat and PyPI (Python 
-    Package Index), send the announcement email, and to tag the release in
-    Subversion.
+    website to the Dreamhost and Hostland websites, announce the release on 
+    Twitter, Identi.ca, Freshmeat and PyPI (Python Package Index), send the 
+    announcement email, and to tag the release in Subversion.
   - Create branch if feature release.
   - Merge recent changes to the trunk.
   - Add release to Sourceforge bug tracker and support request groups.
@@ -78,7 +77,8 @@ class Settings(ConfigParser.SafeConfigParser, object):
         defaults = dict(sourceforge=['username', 'password'],
                         smtp=['hostname', 'port', 'username', 'password',
                               'sender_name', 'sender_email_address'],
-                        hypernation=['hostname', 'username', 'password', 'folder'],
+                        dreamhost=['hostname', 'username', 'password', 'folder'],
+                        hostland=['hostname', 'username', 'password', 'folder'],
                         pypi=['username', 'password'],
                         twitter=['consumer_key', 'consumer_secret',
                                  'oauth_token', 'oauth_token_secret'],
@@ -220,11 +220,6 @@ def uploading_website_to_website_host(settings, options, websiteHost):
 
 
 @progress
-def uploading_website_to_Hypernation(settings, options):
-    uploading_website_to_website_host(settings, options, 'Hypernation')
-
-
-@progress
 def uploading_website_to_Dreamhost(settings, options):
     uploading_website_to_website_host(settings, options, 'Dreamhost')
  
@@ -338,7 +333,6 @@ def announcing_on_Identica(settings, options):
 
 
 def uploading_website(settings, options):
-    uploading_website_to_Hypernation(settings, options)
     uploading_website_to_Dreamhost(settings, options)
     uploading_website_to_Hostland(settings, options)
     
@@ -398,11 +392,11 @@ using Python and wxPython. You can download %(name)s from:
 %(url)s
 
 In addition to the source distribution, packaged distributions are available 
-for Windows XP/Vista, Mac OS X, and Linux (Debian and RPM format).
+for Windows, Mac OS X, and Linux.
 
-Note that %(name)s is %(release_status)s software. We do our best to prevent bugs, 
-but it is always wise to back up your task file regularly, and especially 
-when upgrading to a new release.
+Note that although we consider %(name)s to be %(release_status)s software,
+and we do our best to prevent bugs, it is always wise to back up your task 
+file regularly, and especially when upgrading to a new release.
 
 Regards, 
 
@@ -460,7 +454,6 @@ commands = dict(release=releasing,
                 download=downloading_distributions_from_SourceForge, 
                 md5=generating_MD5_digests,
                 website=uploading_website,
-                websiteHN=uploading_website_to_Hypernation,
                 websiteDH=uploading_website_to_Dreamhost,
                 websiteHL=uploading_website_to_Hostland,
                 twitter=announcing_on_Twitter,

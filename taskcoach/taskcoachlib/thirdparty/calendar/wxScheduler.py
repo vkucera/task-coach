@@ -18,6 +18,7 @@ class wxScheduler( wxSchedulerCore, scrolled.ScrolledPanel ):
 
 		self._frozen = False
 		self._dirty = False
+		self._refreshing = False
 
 		self._showNow = True
 		self._refreshTimer = wx.Timer(self, wx.NewId() )
@@ -44,12 +45,18 @@ class wxScheduler( wxSchedulerCore, scrolled.ScrolledPanel ):
 		self._doDClickControl( self._getEventCoordinates( evt ) )
 
 	def OnSize( self, evt ):
-		self._sizeTimer.Start(250, True)
+		if not self._refreshing:
+			self._sizeTimer.Start(250, True)
 		evt.Skip()
 
 	def OnSizeTimer( self, evt ):
-		self.InvalidateMinSize()
-		self.Refresh()
+		self._refreshing = True
+		try:
+			self.InvalidateMinSize()
+			self.Refresh()
+			wx.Yield()
+		finally:
+			self._refreshing = False
 
 	def OnRefreshTimer( self, evt ):
 		self.Refresh()

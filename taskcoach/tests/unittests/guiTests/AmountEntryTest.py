@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2010 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -35,11 +35,11 @@ class AmountEntryTest(test.wxTestCase):
         self.amountEntry = entry.AmountEntry(self.frame)
 
     def testCreate(self):
-        self.assertEqual(0.0, self.amountEntry.get())
+        self.assertEqual(0.0, self.amountEntry.GetValue())
 
     def testSetValue(self):
-        self.amountEntry.set(1.0)
-        self.assertEqual(1.0, self.amountEntry.get())
+        self.amountEntry.SetValue(1.0)
+        self.assertEqual(1.0, self.amountEntry.GetValue())
 
     def testDefaultLocalConventions(self):
         entry.AmountEntry(self.frame, localeconv=LocalConv())
