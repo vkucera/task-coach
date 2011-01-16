@@ -34,7 +34,9 @@ when the user exports a selection.''', '3154036'),
         Bug('''Task Coach would crash at launch if TaskCoach.ini could not
 be loaded.'''),
         Bug('''When marking the only subtask of a task uncompleted, the 
-subtask would stay green.''', '3151018')
+subtask would stay green.''', '3151018'),
+        Bug('''On Windows 7 and Vista, the application icon wouldn't show up
+correctly.''', '3158445')
         ],
     featuresAdded=[
         Feature('''The effort edit dialog now has a "Edit task" button next to
