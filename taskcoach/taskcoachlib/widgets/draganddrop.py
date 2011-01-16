@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from taskcoachlib.mailer import thunderbird, outlook
+from taskcoachlib.i18n import _
 
 
 class FileDropTarget(wx.FileDropTarget):
@@ -108,6 +109,8 @@ class DropTarget(wx.DropTarget):
                 self.__onDropURLCallback(x, y, url)
             elif url.startswith('imap:') and self.__onDropMailCallback:
                 self.__onDropMailCallback(x, y, thunderbird.getMail(url))
+            elif self.__onDropURLCallback:
+                wx.MessageBox(_('Unrecognized URL scheme:\n"%s"') % url, _('Error'), wx.OK)
         elif formatType in (wx.DF_TEXT, wx.DF_UNICODETEXT):
             if self.__onDropURLCallback:
                 self.__onDropURLCallback(x, y, self.__urlDataObject.GetText())
