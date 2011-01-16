@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, stat, tempfile
+import os, stat
 from taskcoachlib import persistence
 
 
@@ -24,52 +24,25 @@ if os.name == 'nt':
     from win32com.client import GetActiveObject
 
     def getCurrentSelection():
-        obj = GetActiveObject('Outlook.Application')
-        exp = obj.ActiveExplorer()
-        sel = exp.Selection
+        selection = GetActiveObject('Outlook.Application').ActiveExplorer().Selection
+        filenames = []
+        for n in xrange(1, selection.Count + 1):
+            filename = persistence.get_temp_file(suffix='.eml')
+            saveItem(selection.Item(n), filename)
+            filenames.append(filename)
+        return filenames
 
-        ret = []
-        for n in xrange(1, sel.Count + 1):
-            src = tempfile.NamedTemporaryFile(suffix='.eml') # Will be deleted automagically
-            src.close()
-            sel.Item(n).SaveAs(src.name, 0)
-            file(r'C:\tclog.txt', 'a+').write('============== CUT\n' + file(src.name, 'rb').read())
-            src = file(src.name, 'rb')
+    def saveItem(item, filename):
+        mailFile = file(filename, 'wb')
+        try:
+            mailFile.write(headers(item) + item.Body)
+        finally:
+            mailFile.close()
+            os.chmod(filename, stat.S_IREAD)
 
-            # Okay. In the case of HTML mails, Outlook doesn't put
-            # a blank line between the last header line and the
-            # body. This assumes that the last header is
-            # Subject:. Hope it's true.
-
-            # States:
-            # 0       still in headers
-            # 1       subject: header seen, blank line not written
-            # 2       all headers seen, blank line written
-            # 2       in body
-
-            name = persistence.get_temp_file(suffix='.eml')
-            dst = file(name, 'wb')
-            try:
-                s = 0
-                for line in src:
-                    if s == 0:
-                        dst.write(line)
-                        # XXXFIXME: Outlook seems, in some cases, to localize the header names. We should handle this
-                        # for other languages than French, but I don't know how right now.
-                        if line.lower().startswith('subject:') or line.lower().startswith('objet:'):
-                            dst.write('X-Outlook-ID: %s\r\n' % str(sel.Item(n).EntryID))
-                            s = 1
-                    elif s == 1:
-                        dst.write('\r\n')
-                        if line.strip() != '':
-                            dst.write(line)
-                        s = 2
-                    else:
-                        dst.write(line)
-            finally:
-                dst.close()
-                if os.name == 'nt':
-                    os.chmod(name, stat.S_IREAD)
-            ret.append(name)
-
-        return ret
+    def headers(item, lineSep='\r\n'):
+        headers = []
+        headers.append(u'subject: %s'%item.Subject)
+        headers.append(u'X-Outlook-ID: %s'%item.EntryID)
+        headers.append(lineSep)
+        return lineSep.join(headers)

@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.8', 'January 15, 2011',
+Release('1.2.8', 'January 16, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Task Coach wouldn't open task files when a task viewer was
@@ -36,7 +36,9 @@ be loaded.'''),
         Bug('''When marking the only subtask of a task uncompleted, the 
 subtask would stay green.''', '3151018'),
         Bug('''On Windows 7 and Vista, the application icon wouldn't show up
-correctly.''', '3158445')
+correctly.''', '3158445'),
+        Bug('''Correctly use mail message subject when dropping a mail message from
+Outlook.''', '2806617')
         ],
     featuresAdded=[
         Feature('''The effort edit dialog now has a "Edit task" button next to

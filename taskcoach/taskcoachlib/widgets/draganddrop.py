@@ -89,20 +89,12 @@ class DropTarget(wx.DropTarget):
     
     def OnData(self, x, y, result): # pylint: disable-msg=W0613
         self.GetData()
-
-        format = self.__compositeDataObject.GetReceivedFormat()
-        try:
-            formatId = format.GetId() 
-        except:
-            formatId = None
-        formatType = format.GetType()
+        formatType, formatId = self.getReceivedFormatTypeAndId()
 
         if formatId == 'text/x-moz-message':
-            self.processThunderbirdDrop(x, y)
+            self.onThunderbirdDrop(x, y)
         elif formatId == 'Object Descriptor':
-            if self.__onDropMailCallback:
-                for mail in outlook.getCurrentSelection():
-                    self.__onDropMailCallback(x, y, mail)
+            self.onOutlookDrop(x, y)
         elif formatId == 'public.url':
             url = self.__macMailObject.GetData()
             if url.startswith('message:') and self.__onDropURLCallback:
@@ -117,16 +109,23 @@ class DropTarget(wx.DropTarget):
             elif self.__onDropURLCallback:
                 wx.MessageBox(_('Unrecognized URL scheme:\n"%s"') % url, _('Error'), wx.OK)
         elif formatType in (wx.DF_TEXT, wx.DF_UNICODETEXT):
-            if self.__onDropURLCallback:
-                self.__onDropURLCallback(x, y, self.__urlDataObject.GetText())
+            self.onUrlDrop(x, y)
         elif formatType == wx.DF_FILENAME:
-            if self.__onDropFileCallback:
-                self.__onDropFileCallback(x, y, self.__fileDataObject.GetFilenames())
-
+            self.onFileDrop(x, y)
+            
         self.reinit()
         return wx.DragCopy
     
-    def processThunderbirdDrop(self, x, y):
+    def getReceivedFormatTypeAndId(self):
+        format = self.__compositeDataObject.GetReceivedFormat()
+        formatType = format.GetType()
+        try:
+            formatId = format.GetId() 
+        except:
+            formatId = None
+        return formatType, formatId
+    
+    def onThunderbirdDrop(self, x, y):
         if self.__onDropMailCallback:
             data = self.__thunderbirdMailDataObject.GetData()
             # We expect the data to be encoded with 'unicode_internal',
@@ -136,6 +135,19 @@ class DropTarget(wx.DropTarget):
             except UnicodeDecodeError:
                 data = data.decode('utf-16')
             self.__onDropMailCallback(x, y, thunderbird.getMail(data))
+
+    def onOutlookDrop(self, x, y):
+        if self.__onDropMailCallback:
+            for mail in outlook.getCurrentSelection():
+                self.__onDropMailCallback(x, y, mail)
+
+    def onUrlDrop(self, x, y):
+        if self.__onDropURLCallback:
+            self.__onDropURLCallback(x, y, self.__urlDataObject.GetText())
+
+    def onFileDrop(self, x, y):
+        if self.__onDropFileCallback:
+            self.__onDropFileCallback(x, y, self.__fileDataObject.GetFilenames())
 
 
 class TreeHelperMixin(object):
