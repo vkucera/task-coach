@@ -354,10 +354,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                         child.setCompletionDateTime(completionDateTime, event=event)
                 if self.isBeingTracked():
                     self.stopTracking(event=event)                    
-        
+            self.recomputeAppearance(event=event)
+            
     def completionDateTimeEvent(self, event):
         event.addSource(self, self.completionDateTime(), type='task.completionDateTime')
-        self.recomputeAppearance(event=event)
         for dependency in self.dependencies():
             dependency.recomputeAppearance(event=event)
         
@@ -891,7 +891,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @staticmethod
     def reminderSortFunction(**kwargs):
         recursive = kwargs.get('treeMode', False)
-        return lambda task: task.reminder(recursive=recursive) or self.maxDateTime
+        maxDateTime = date.DateTime()
+        return lambda task: task.reminder(recursive=recursive) or maxDateTime
 
     @classmethod
     def reminderSortEventTypes(class_):

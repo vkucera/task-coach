@@ -867,6 +867,7 @@ class EffortEditBook(Page):
         self._taskList = task.TaskList(taskList)
         self._taskList.extend([effort.task() for effort in efforts if effort.task() not in taskList])
         self._settings = settings
+        self._taskFile = taskFile
         super(EffortEditBook, self).__init__(efforts, parent, *args, **kwargs)
         
     def addEntries(self):
@@ -878,14 +879,24 @@ class EffortEditBook(Page):
         ''' Add an entry for changing the task that this effort record
             belongs to. '''
         # pylint: disable-msg=W0201
+        panel = wx.Panel(self)
         currentTask = self.items[0].task()
         self._taskEntry = entry.TaskEntry(self, 
             rootTasks=self._taskList.rootItems(), selectedTask=currentTask)
         self._taskSync = attributesync.AttributeSync('task', self._taskEntry,
             currentTask, self.items, command.ChangeTaskCommand,
             entry.EVT_TASKENTRY, self.items[0].taskChangedEventType())
-        self.addEntry(_('Task'), self._taskEntry, flags=[None, wx.ALL|wx.EXPAND])
-            
+        editTaskButton = wx.Button(panel, label=_('Edit task'))
+        editTaskButton.Bind(wx.EVT_BUTTON, self.onEditTask)
+        panelSizer = wx.BoxSizer(wx.HORIZONTAL)
+        panelSizer.Add(self._taskEntry, proportion=1, 
+                       flag=wx.EXPAND|wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add((3,-1))
+        panelSizer.Add(editTaskButton, proportion=0, 
+                       flag=wx.ALIGN_CENTER_VERTICAL)
+        panel.SetSizerAndFit(panelSizer)
+        self.addEntry(_('Task'), panel, flags=[None, wx.ALL|wx.EXPAND])
+
     def addStartAndStopEntries(self):
         # pylint: disable-msg=W0201,W0142
         dateTimeEntryKwArgs = dict(showSeconds=True)
@@ -946,6 +957,12 @@ class EffortEditBook(Page):
             return self._startDateTimeEntry.GetValue() < self._stopDateTimeEntry.GetValue()
         except AttributeError:
             return True # Entries not created yet
+
+    def onEditTask(self, event):
+        taskToEdit = self._taskEntry.GetSelection()
+        TaskEditor(None, command.EditTaskCommand(self._taskFile.tasks(),
+            [taskToEdit]), self._settings, self._taskFile.tasks(), 
+            self._taskFile).Show()
 
     def addDescriptionEntry(self):
         # pylint: disable-msg=W0201
