@@ -27,7 +27,8 @@ Release('1.2.8', 'January 16, 2011',
     bugsFixed=[
         Bug('''Task Coach wouldn't open task files when a task viewer was
 sorted by reminder date/time.''', '3153541'),
-        Bug('''Correctly fix drag-and-drop from Thunderbird.'''),
+        Bug('''Correctly fix drag-and-drop from Thunderbird.''', '2916405', 
+'3058781'),
         Bug('''Correctly keep track of selected items when using 
 shift-click to select a range of items so that the right items are exported
 when the user exports a selection.''', '3154036'),
