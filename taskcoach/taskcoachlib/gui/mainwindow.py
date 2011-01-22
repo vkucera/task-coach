@@ -116,6 +116,7 @@ class WindowDimensionsTracker(object):
 
 class MainWindow(DeferredCallMixin, PowerStateMixin, widgets.AuiManagedFrameWithNotebookAPI):
     pageClosedEvent = aui.EVT_AUI_PANE_CLOSE
+    pageChangedEvent = aui.EVT_AUI_PANE_ACTIVATED
     
     def __init__(self, iocontroller, taskFile, settings,
                  splash=None, *args, **kwargs):

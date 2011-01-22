@@ -33,7 +33,6 @@ class DummyPane(object):
         
     def HasFlag(self, *args):
         return False
-
         
 class DummyEvent(object):
     def __init__(self, selection=0, window=None):
@@ -51,21 +50,6 @@ class DummyEvent(object):
     def Skip(self):
         pass
 
-
-class DummyManager(object):
-    def GetPane(self, *args):
-        return DummyPane(None)
-
-
-class DummyMainWindow(wx.Frame):
-    manager = DummyManager()
-
-    def AddPage(self, *args):
-        pass
-
-    def SetSelection(self, *args):
-        pass
-
     
 class ViewerContainerTest(test.wxTestCase):
     def setUp(self):
@@ -74,7 +58,7 @@ class ViewerContainerTest(test.wxTestCase):
         task.Task.settings = self.settings = config.Settings(load=False)
         self.settings.set('view', 'viewerwithdummywidgetcount', '2', new=True)
         self.taskFile = persistence.TaskFile()
-        self.mainWindow = DummyMainWindow(None)
+        self.mainWindow = gui.mainwindow.MainWindow(None, self.taskFile, self.settings)
         self.container = gui.viewer.ViewerContainer(self.mainWindow,
             self.settings, 'mainviewer')
         self.viewer1 = self.createViewer('taskviewer1')
@@ -101,7 +85,7 @@ class ViewerContainerTest(test.wxTestCase):
         self.assertEqual(self.viewer1, self.container.activeViewer())
         
     def testChangePage_ChangesActiveViewer(self):
-        self.container.onPageChanged(DummyEvent(1))
+        self.container.activateViewer(self.viewer2)
         self.assertEqual(self.viewer2, self.container.activeViewer())
 
     def testChangePage_SavesActiveViewerInSettings(self):

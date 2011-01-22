@@ -62,11 +62,7 @@ class ViewerContainer(object):
         self.viewers.append(viewer)
         viewer.widget.Bind(wx.EVT_SET_FOCUS, self.onViewerReceivesFocus)
         if len(self.viewers) - 1 == self.__desiredPageNumber:
-            # We need to use CallAfter because the AuiNotebook doesn't allow
-            # PAGE_CHANGING events while the window is not active. See 
-            # widgets/notebook.py
-            wx.CallAfter(self.containerWidget.SetSelection, 
-                         self.__desiredPageNumber)
+            self.activateViewer(viewer)
         patterns.Publisher().registerObserver(self.onSelect, 
             eventType=viewer.selectEventType(), eventSource=viewer)
 
@@ -102,20 +98,15 @@ class ViewerContainer(object):
         return findFirstViewer
 
     def activeViewer(self):
-        ''' Return the active viewer, i.e. the viewer that has the focus. '''
-        # There is no pageChanged event for the AuiManager, so we have
-        # to check which pane is active.
+        ''' Return the active viewer. '''
         for viewer in self.viewers:
             info = self.containerWidget.manager.GetPane(viewer)
             if info.HasFlag(info.optionActive):
                 return viewer
-        return self.viewers[self.__currentPageNumber]
+        return None
 
     def activateViewer(self, viewerToActivate):
-        for viewer in self.viewers:
-            info = self.containerWidget.manager.GetPane(viewer)
-            info.SetFlag(info.optionActive, viewer==viewerToActivate)
-        self.containerWidget.manager.Update()
+        self.containerWidget.manager.ActivatePane(viewerToActivate)
 
     def __del__(self):
         pass # Don't forward del to one of the viewers.
@@ -125,6 +116,8 @@ class ViewerContainer(object):
 
     def onPageChanged(self, event):
         self._changePage(event.GetSelection())
+        if self.activeViewer() and wx.Window.FindFocus() != self.activeViewer():
+            wx.CallAfter(self.activeViewer().SetFocus)
         event.Skip()
 
     def onPageClosed(self, event):
@@ -158,6 +151,8 @@ class ViewerContainer(object):
         self._settings.set('view', setting, str(viewerCount-1))        
         
     def _changePage(self, pageNumber):
+        if not self.viewers:
+            return
         self.__currentPageNumber = pageNumber        
         self._settings.set('view', self.__setting, str(pageNumber))
         patterns.Event(self.viewerChangeEventType(), self, pageNumber).send()

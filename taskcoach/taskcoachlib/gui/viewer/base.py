@@ -125,6 +125,9 @@ class Viewer(wx.Panel):
 
     def getWidget(self):
         return self.widget
+    
+    def SetFocus(self):
+        self.widget.SetFocus()
             
     def createSorter(self, collection):
         ''' This method can be overridden to decorate the presentation with a 

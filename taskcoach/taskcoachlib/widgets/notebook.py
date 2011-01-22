@@ -242,11 +242,7 @@ class AuiManagedFrameWithNotebookAPI(frame.AuiManagedFrameWithDynamicCenterPane)
         return wx.NOT_FOUND
 
     def SetSelection(self, targetIndex, *args):
-        for index, paneInfo in enumerate(self.manager.GetAllPanes()):
-            # We can't use the variable paneInfo here. Apparently modifying the
-            # first paneInfo in the list invalidates later ones. So we retrieve
-            # the paneInfo's one by one:
-            self.manager.GetAllPanes()[index].SetFlag(aui.AuiPaneInfo.optionActive, index==targetIndex)
-        self.manager.Update()
+        targetPane = self.manager.GetAllPanes()[targetIndex]
+        self.manager.ActivatePane(targetPane.window)
         
     Selection = property(GetSelection, SetSelection)
