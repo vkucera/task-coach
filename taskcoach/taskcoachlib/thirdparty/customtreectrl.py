@@ -6222,8 +6222,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
         if self._current is None or self._key_current is None:
         
-            event.Skip()
-            return
+            self._current = self._key_current = self.GetFirstVisibleItem()
         
         # how should the selection work for this event?
         is_multiple, extended_select, unselect_others = EventFlagsToSelType(self.GetAGWWindowStyleFlag(),
