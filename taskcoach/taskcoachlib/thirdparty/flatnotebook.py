@@ -11,7 +11,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 02 Oct 2006
-# Latest Revision: 27 Aug 2010, 22.00 GMT
+# Latest Revision: 12 Sep 2010, 10.00 GMT
 #
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
@@ -90,6 +90,7 @@ Window Styles                    Hex Value   Description
 ``FNB_FF2``                          0x20000 Use Firefox 2 style for tabs.
 ``FNB_NO_TAB_FOCUS``                 0x40000 Does not allow tabs to have focus.
 ``FNB_RIBBON_TABS``                  0x80000 Use the Ribbon Tabs style 
+``FNB_HIDE_TABS``                   0x100000 Hides the Page Container allowing only keyboard navigation
 ================================ =========== ==================================================
 
 
@@ -116,7 +117,7 @@ License And Version
 
 FlatNotebook is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 27 Aug 2010, 22.00 GMT
+Latest Revision: Andrea Gavana @ 12 Sep 2010, 10.00 GMT
 
 Version 3.1
 """
@@ -214,9 +215,11 @@ FNB_HIDE_ON_SINGLE_TAB = 65536
 FNB_NO_TAB_FOCUS = 262144
 """ Does not allow tabs to have focus"""
 
-# Use the Ribbon style for tabs
 FNB_RIBBON_TABS = 0x80000
 """Use Ribbon style for tabs"""
+
+FNB_HIDE_TABS = 0x100000
+"""Hides the tabs allowing only keyboard navigation between pages"""
 
 VERTICAL_BORDER_PADDING = 4
 
@@ -2111,8 +2114,8 @@ class FNBRenderer(object):
         height = dc.GetCharHeight()
         
         tabHeight = height + FNB_HEIGHT_SPACER # We use 8 pixels as padding
-        if "__WXGTK__" in wx.PlatformInfo or "__WXMAC__" in wx.PlatformInfo:
-            # On GTK and Mac OS X the tabs are should be larger
+        if "__WXGTK__" in wx.PlatformInfo:
+            # On GTK the tabs are should be larger
             tabHeight += 6
 
         self._tabHeight = tabHeight
@@ -3875,7 +3878,7 @@ class FlatNotebook(wx.PyPanel):
 
         tabHeight = height + FNB_HEIGHT_SPACER         # We use 8 pixels as padding
         
-        if "__WXGTK__" in wx.PlatformInfo or "__WXMAC__" in wx.PlatformInfo:
+        if "__WXGTK__" in wx.PlatformInfo:
             tabHeight += 6
             
         self._pages.SetSizeHints(-1, tabHeight)
@@ -4490,6 +4493,7 @@ class FlatNotebook(wx.PyPanel):
 
         """
 
+        oldStyle = self._agwStyle
         self._agwStyle = agwStyle            
         renderer = self._pages._mgr.GetRenderer(agwStyle)
         renderer._tabHeight = None
@@ -4499,7 +4503,13 @@ class FlatNotebook(wx.PyPanel):
             # refreshing the tab container is not enough
             self.SetSelection(self._pages._iActivePage)
 
-        if not self._pages.HasAGWFlag(FNB_HIDE_ON_SINGLE_TAB):
+        # If we just hid the tabs we must Refresh()
+        if (not (oldStyle & FNB_HIDE_TABS) and agwStyle & FNB_HIDE_TABS) or \
+           (not (oldStyle & FNB_HIDE_ON_SINGLE_TAB) and agwStyle & FNB_HIDE_ON_SINGLE_TAB):
+            self.Refresh()
+            
+        if (oldStyle & FNB_HIDE_TABS and not (agwStyle & FNB_HIDE_TABS)) or \
+           (oldStyle & FNB_HIDE_ON_SINGLE_TAB and not self.HasAGWFlag(FNB_HIDE_ON_SINGLE_TAB)):
             #For Redrawing the Tabs once you remove the Hide tyle
             self._pages._ReShow()
 
@@ -4526,6 +4536,22 @@ class FlatNotebook(wx.PyPanel):
         agwStyle = self.GetAGWWindowStyleFlag()
         res = (agwStyle & flag and [True] or [False])[0]
         return res
+
+
+    def HideTabs(self):
+        """ Hides the tabs. """
+        
+        agwStyle = self.GetAGWWindowStyleFlag()
+        agwStyle |= FNB_HIDE_TABS
+        self.SetAGWWindowStyleFlag( agwStyle )
+
+        
+    def ShowTabs(self):
+        """ Shows the tabs if hidden previously. """
+        
+        agwStyle = self.GetAGWWindowStyleFlag()
+        agwStyle &= ~FNB_HIDE_TABS
+        self.SetAGWWindowStyleFlag( agwStyle )
 
 
     def RemovePage(self, page):
@@ -4913,7 +4939,8 @@ class PageContainer(wx.Panel):
         renderer = self._mgr.GetRenderer(self.GetParent().GetAGWWindowStyleFlag())
         renderer.DrawTabs(self, dc)
 
-        if self.HasAGWFlag(FNB_HIDE_ON_SINGLE_TAB) and len(self._pagesInfoVec) <= 1:
+        if self.HasAGWFlag(FNB_HIDE_ON_SINGLE_TAB) and len(self._pagesInfoVec) <= 1 or\
+           self.HasAGWFlag(FNB_HIDE_TABS):
             self.Hide()
             self.GetParent()._mainSizer.Layout()
             self.Refresh()
