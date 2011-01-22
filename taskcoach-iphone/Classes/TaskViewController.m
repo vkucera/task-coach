@@ -15,6 +15,7 @@
 #import "CategoryViewController.h"
 #import "PaperHeaderView.h"
 #import "ConfigurationView.h"
+#import "ReminderController.h"
 
 #import "TaskCell.h"
 #import "TaskCelliPad.h"
@@ -336,6 +337,8 @@ static void deleteTask(CDTask *task)
 	{
 		JLERROR("Could not fetch tasks: %s", [[error localizedDescription] UTF8String]);
 	}
+
+	[[ReminderController instance] check:NO];
 }
 
 - (void)dealloc

@@ -14,6 +14,9 @@
 
 + (ReminderController *)instance;
 
-- (void)check;
+- (void)check:(BOOL)silent;
+
+- (void)scheduleLocalNotifications;
+- (void)unscheduleLocalNotifications;
 
 @end

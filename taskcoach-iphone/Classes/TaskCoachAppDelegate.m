@@ -72,9 +72,31 @@ NSManagedObjectContext *getManagedObjectContext(void)
 	[window makeKeyAndVisible];
 }
 
+/*
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+	[self applicationDidFinishLaunching:application];
+
+	[[ReminderController instance] check:launchOptions != nil];
+
+	return YES;
+}
+*/
+
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-	[[ReminderController instance] check];
+	[[ReminderController instance] unscheduleLocalNotifications];
+	[[ReminderController instance] check:NO];
+}
+
+- (void)applicationWillResignActive:(UIApplication *)application
+{
+	[[ReminderController instance] scheduleLocalNotifications];
+}
+
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
+{
+	[[ReminderController instance] check:YES];
 }
 
 - (void)dealloc

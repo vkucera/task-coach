@@ -1,4 +1,7 @@
 
+2011-01-22  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
+	* misc: Use local notifications for reminders when not in foreground
+
 2010-11-14  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* misc: Folder icons for composite tasks
 	* misc: Choose between tree and list display; show composite tasks or not

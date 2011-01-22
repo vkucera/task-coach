@@ -176,7 +176,7 @@
 
 - (void)onMinuteTimer:(NSTimer *)theTimer
 {
-	[[ReminderController instance] check];
+	[[ReminderController instance] check:NO];
 }
 
 - (void)childWasPopped
