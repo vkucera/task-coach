@@ -92,6 +92,31 @@ NSManagedObjectContext *getManagedObjectContext(void)
 - (void)applicationWillResignActive:(UIApplication *)application
 {
 	[[ReminderController instance] scheduleLocalNotifications];
+
+	NSArray *cachesPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+	NSString *cachesDir = [cachesPaths objectAtIndex:0];
+	
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	if (![fileManager fileExistsAtPath:cachesDir])
+	{
+		[fileManager createDirectoryAtPath:cachesDir withIntermediateDirectories:YES attributes:nil error:nil];
+	}
+	
+	NSString *path = [cachesDir stringByAppendingPathComponent:@"positions.store.v4"];
+	[[PositionStore instance] save:path];
+	
+	[fileManager release];
+	
+	NSError *error;
+	
+	if (managedObjectContext != nil)
+	{
+        if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error])
+		{
+			NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+			exit(-1);  // Fail
+        } 
+    }
 }
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
@@ -115,32 +140,6 @@ NSManagedObjectContext *getManagedObjectContext(void)
 {
 	if ([mainController respondsToSelector:@selector(willTerminate)])
 		[mainController performSelector:@selector(willTerminate)];
-	
-	
-	NSArray *cachesPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-	NSString *cachesDir = [cachesPaths objectAtIndex:0];
-	
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	if (![fileManager fileExistsAtPath:cachesDir])
-	{
-		[fileManager createDirectoryAtPath:cachesDir withIntermediateDirectories:YES attributes:nil error:nil];
-	}
-	
-	NSString *path = [cachesDir stringByAppendingPathComponent:@"positions.store.v4"];
-	[[PositionStore instance] save:path];
-
-	[fileManager release];
-	
-	NSError *error;
-	
-	if (managedObjectContext != nil)
-	{
-        if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error])
-		{
-			NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-			exit(-1);  // Fail
-        } 
-    }
 }
 
 #pragma mark -
