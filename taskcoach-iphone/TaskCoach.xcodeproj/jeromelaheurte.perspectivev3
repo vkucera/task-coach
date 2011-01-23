@@ -314,7 +314,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>TaskDetailsRecurrencePeriodPicker.strings</string>
+								<string>Info.plist</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -322,11 +322,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>TaskDetailsRecurrencePeriodPicker.strings</string>
+										<string>Info.plist</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A660574012EC398300B64EAD</string>
+										<string>A6BC69F712EC400F00F38A7F</string>
 										<key>history</key>
 										<array>
 											<string>A69F6C5F115E278D003F68F5</string>
@@ -503,7 +503,6 @@
 											<string>A608987E128EADE000E0038E</string>
 											<string>A6766CCC128EB11E00187A40</string>
 											<string>A6A9B529128EB1910095B397</string>
-											<string>A64C0E55128FEEE100E8A126</string>
 											<string>A64C0E56128FEEE100E8A126</string>
 											<string>A64C0E57128FEEE100E8A126</string>
 											<string>A64C0E58128FEEE100E8A126</string>
@@ -575,7 +574,8 @@
 											<string>A620AC3812EC386700CE46DB</string>
 											<string>A620AC3912EC386700CE46DB</string>
 											<string>A620AC3A12EC386700CE46DB</string>
-											<string>A620AC3C12EC386700CE46DB</string>
+											<string>A6E2D73112EC3B3500B2F7E2</string>
+											<string>A64BD7C612EC3F1A0038E718</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -615,8 +615,6 @@
 									<dict>
 										<key>Frame</key>
 										<string>{{10, 27}, {1171, 262}}</string>
-										<key>RubberWindowFrame</key>
-										<string>135 285 1528 1071 0 0 2560 1418 </string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -671,6 +669,8 @@
 									<dict>
 										<key>Frame</key>
 										<string>{{10, 27}, {1171, 262}}</string>
+										<key>RubberWindowFrame</key>
+										<string>135 285 1528 1071 0 0 2560 1418 </string>
 									</dict>
 									<key>Module</key>
 									<string>PBXBuildResultsModule</string>
@@ -698,11 +698,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A660572912EC389700B64EAD</string>
+				<string>A6BC69F812EC400F00F38A7F</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A660572A12EC389700B64EAD</string>
+				<string>A6BC69F912EC400F00F38A7F</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A660572B12EC389700B64EAD</string>
+				<string>A6BC69FA12EC400F00F38A7F</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -851,14 +851,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A685A70912EC3432008682F9</string>
+				<string>A6BC69FB12EC400F00F38A7F</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A685A70A12EC3432008682F9</string>
-				<string>A685A70B12EC3432008682F9</string>
-				<string>A685A70C12EC3432008682F9</string>
-				<string>A685A70D12EC3432008682F9</string>
-				<string>A685A70E12EC3432008682F9</string>
+				<string>A6BC69FC12EC400F00F38A7F</string>
+				<string>A6BC69FD12EC400F00F38A7F</string>
+				<string>A6BC69FE12EC400F00F38A7F</string>
+				<string>A6BC69FF12EC400F00F38A7F</string>
+				<string>A6BC6A0012EC400F00F38A7F</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
 			<string>2</string>
