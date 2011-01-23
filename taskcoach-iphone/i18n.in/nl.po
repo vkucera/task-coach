@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach-iphone\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-08-28 10:51+0200\n"
-"PO-Revision-Date: 2010-08-28 14:27+0000\n"
-"Last-Translator: Steven Avonds <steven.avonds@gmail.com>\n"
+"POT-Creation-Date: 2010-12-07 07:26+0100\n"
+"PO-Revision-Date: 2011-01-22 14:16+0000\n"
+"Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-19 10:20+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-23 09:32+0000\n"
+"X-Generator: Launchpad (build 12214)\n"
 
 #: Classes/TaskDetailsControlleriPad.m:157
 #: Classes/TaskDetailsEffortsBase.m:362
@@ -64,7 +64,7 @@ msgstr "%@"
 msgid "No category."
 msgstr "Geen categorie"
 
-#: Classes/TaskDetailsControlleriPad.m:353 Classes/TaskDetailsGeneral.m:128
+#: Classes/TaskDetailsControlleriPad.m:353 Classes/TaskDetailsGeneral.m:126
 msgid "New task"
 msgstr "Nieuwe taak"
 
@@ -87,6 +87,64 @@ msgstr "%d uren"
 #, objc-format
 msgid "%d days"
 msgstr "%d dagen"
+
+#: Classes/ConfigurationView.m:48
+msgid "Done"
+msgstr "Gereed"
+
+#: Classes/ConfigurationView.m:57
+msgid "Show completed"
+msgstr "Toon afgeronde taken"
+
+#: Classes/ConfigurationView.m:63
+msgid "Show inactive"
+msgstr "Toon inactieve"
+
+#: Classes/ConfigurationView.m:69
+msgid "Compact tasks"
+msgstr "Taken compact weergeven"
+
+#: Classes/ConfigurationView.m:75 Classes/ConfigurationView.m:236
+#, objc-format
+msgid "Position: %@"
+msgstr "Positie: %@"
+
+#: Classes/ConfigurationView.m:75 Classes/ConfigurationView.m:167
+#: Classes/ConfigurationView.m:236
+msgid "Right"
+msgstr "Rechts"
+
+#: Classes/ConfigurationView.m:75 Classes/ConfigurationView.m:167
+#: Classes/ConfigurationView.m:236
+msgid "Left"
+msgstr "Links"
+
+#: Classes/ConfigurationView.m:80 Classes/ConfigurationView.m:259
+#, objc-format
+msgid "Display: %@"
+msgstr "Weergave: %@"
+
+#: Classes/ConfigurationView.m:80 Classes/ConfigurationView.m:170
+#: Classes/ConfigurationView.m:259
+msgid "Tree"
+msgstr "Boom"
+
+#: Classes/ConfigurationView.m:80 Classes/ConfigurationView.m:170
+#: Classes/ConfigurationView.m:259
+msgid "List"
+msgstr "Lijst"
+
+#: Classes/ConfigurationView.m:85
+msgid "Show composite"
+msgstr "Toon samengesteld"
+
+#: Classes/ConfigurationView.m:96
+msgid "Confirm complete"
+msgstr "Bevestig afronding"
+
+#: Classes/ConfigurationView.m:104
+msgid "Due soon # of days"
+msgstr "Binnenkort af te ronden # dagen"
 
 #: Classes/CoreData/Migration.m:50
 msgid "Database version too old"
@@ -114,9 +172,9 @@ msgstr "Services zoeken"
 msgid "All"
 msgstr "Alle"
 
-#: Classes/CategoryTaskViewController.m:133 Classes/TaskCoachAppDelegate.m:44
+#: Classes/CategoryTaskViewController.m:153 Classes/TaskCoachAppDelegate.m:44
 #: Classes/TaskCoachAppDelegate.m:55 Classes/TaskCoachAppDelegate.m:59
-#: Classes/TaskDetailsGeneral.m:55
+#: Classes/TaskDetailsGeneral.m:54
 msgid "Categories"
 msgstr "Categorieën"
 
@@ -132,7 +190,7 @@ msgstr "Fout"
 
 #: Classes/SyncViewController.m:158
 msgid "Your e-mail settings are not set."
-msgstr ""
+msgstr "Uw e-mail instellingen zijn niet bekend."
 
 #: Classes/SyncViewController.m:158 Classes/SimpleDatePicker.m:37
 #: Classes/StringChoiceAlert.m:16 Classes/NewCategoryiPad.m:41
@@ -154,17 +212,17 @@ msgstr "Debug"
 msgid "Do you want to send the sync log by e-mail ?"
 msgstr "Wilt u het synchronisatielogboek via e-mail verzenden?"
 
-#: Classes/SyncViewController.m:197 Classes/TaskViewController.m:556
+#: Classes/SyncViewController.m:197 Classes/TaskViewController.m:533
 #: Classes/TaskDetailsEffortsBase.m:161
 msgid "No"
 msgstr "Nee"
 
-#: Classes/SyncViewController.m:198 Classes/TaskViewController.m:557
+#: Classes/SyncViewController.m:198 Classes/TaskViewController.m:534
 #: Classes/TaskDetailsEffortsBase.m:161
 msgid "Yes"
 msgstr "Ja"
 
-#: Classes/StringChoiceAlert.m:16 Classes/TaskViewController.m:321
+#: Classes/StringChoiceAlert.m:16 Classes/TaskViewController.m:298
 #: Classes/TaskCoachAppDelegate.m:52 Classes/TaskCoachAppDelegate.m:64
 #: Classes/Synchronization/AuthentificationState.m:30
 #: Classes/TaskDetailsEffortsBase.m:161
@@ -191,56 +249,56 @@ msgstr "Jaarlijks"
 msgid "Search tasks..."
 msgstr "Zoek taken..."
 
-#: Classes/TaskViewController.m:321 Classes/TaskViewController.m:323
+#: Classes/TaskViewController.m:298 Classes/TaskViewController.m:300
 msgid "Grouping"
 msgstr "Groepering"
 
-#: Classes/TaskViewController.m:325
+#: Classes/TaskViewController.m:302
 msgid "Status"
 msgstr "Status"
 
-#: Classes/TaskViewController.m:326
+#: Classes/TaskViewController.m:303
 msgid "Priority"
 msgstr "Prioriteit"
 
-#: Classes/TaskViewController.m:327 Classes/TaskCoachAppDelegate.m:38
+#: Classes/TaskViewController.m:304 Classes/TaskCoachAppDelegate.m:38
 msgid "Start date"
 msgstr "Startdatum"
 
-#: Classes/TaskViewController.m:328 Classes/TaskCoachAppDelegate.m:39
+#: Classes/TaskViewController.m:305 Classes/TaskCoachAppDelegate.m:39
 msgid "Due date"
 msgstr "Geplande einddatum"
 
-#: Classes/TaskViewController.m:554
+#: Classes/TaskViewController.m:531
 msgid "Confirmation"
 msgstr "Bevestiging"
 
-#: Classes/TaskViewController.m:555
+#: Classes/TaskViewController.m:532
 #, objc-format
 msgid "Do you really want to mark \"%@\" complete ?"
 msgstr "Wilt u \"%@\" echt als afgerond markeren?"
 
-#: Classes/TaskViewController.m:602
+#: Classes/TaskViewController.m:579
 msgid "Overdue"
 msgstr "Te laat"
 
-#: Classes/TaskViewController.m:604
+#: Classes/TaskViewController.m:581
 msgid "Due soon"
 msgstr "Binnenkort af te ronden"
 
-#: Classes/TaskViewController.m:606
+#: Classes/TaskViewController.m:583
 msgid "Started"
 msgstr "Gestart"
 
-#: Classes/TaskViewController.m:608
+#: Classes/TaskViewController.m:585
 msgid "Not started"
 msgstr "Niet gestart"
 
-#: Classes/TaskViewController.m:610 Classes/ReminderController.m:90
+#: Classes/TaskViewController.m:587 Classes/ReminderController.m:90
 msgid "Completed"
 msgstr "Voltooid"
 
-#: Classes/TaskViewController.m:674
+#: Classes/TaskViewController.m:651
 msgid "Add task..."
 msgstr "Taak toevoegen..."
 
@@ -262,13 +320,13 @@ msgstr "Voer categorienaam in"
 msgid "Add subcategory"
 msgstr "Subcategorie toevoegen"
 
-#: Classes/CategoryViewController.m:634 Classes/CategoryViewController.m:662
+#: Classes/CategoryViewController.m:634 Classes/CategoryViewController.m:669
 msgid "Looking for Task Coach"
 msgstr "Task Coach aan het zoeken"
 
 #: Classes/TaskCoachAppDelegate.m:40
 msgid "Completion date"
-msgstr ""
+msgstr "Werkelijke einddatum"
 
 #: Classes/TaskCoachAppDelegate.m:41 Classes/ReminderController.m:89
 #: Classes/TaskDetailsDates.m:61
@@ -301,11 +359,11 @@ msgstr "Opslaan"
 msgid "Category name"
 msgstr "Categorienaam"
 
-#: Classes/TaskDetailsGeneral.m:54
+#: Classes/TaskDetailsGeneral.m:53
 msgid "Description"
 msgstr "Beschrijving"
 
-#: Classes/TaskDetailsGeneral.m:56 Classes/TaskDetailsGeneral.m:94
+#: Classes/TaskDetailsGeneral.m:55 Classes/TaskDetailsGeneral.m:92
 #, objc-format
 msgid "Priority: %@"
 msgstr "Prioriteit: %@"
@@ -440,36 +498,6 @@ msgstr "Maand(en)"
 msgid "Year(s)"
 msgstr "Jaar/jaren"
 
-msgid "Display"
-msgstr "Weergave"
-
-msgid "Show completed"
-msgstr "Toon afgeronde taken"
-
-msgid "Show inactive"
-msgstr "Toon inactieve"
-
-msgid "Icon position"
-msgstr "Icoon positie"
-
-msgid "Left"
-msgstr "Links"
-
-msgid "Right"
-msgstr "Rechts"
-
-msgid "Compact tasks"
-msgstr "Taken compact weergeven"
-
-msgid "Misc"
-msgstr "Diversen"
-
-msgid "Confirm complete"
-msgstr "Bevestig afronding"
-
-msgid "Due soon # of days     "
-msgstr "Spoedig af te ronden # dagen     "
-
 #~ msgid "No tasks."
 #~ msgstr "Geen taken."
 
@@ -484,6 +512,18 @@ msgstr "Spoedig af te ronden # dagen     "
 
 #~ msgid "Go on"
 #~ msgstr "Ga door"
+
+#~ msgid "Display"
+#~ msgstr "Weergave"
+
+#~ msgid "Due soon # of days     "
+#~ msgstr "Spoedig af te ronden # dagen     "
+
+#~ msgid "Misc"
+#~ msgstr "Diversen"
+
+#~ msgid "Icon position"
+#~ msgstr "Icoon positie"
 
 #, objc-format
 #~ msgid ""
@@ -514,3 +554,6 @@ msgstr "Spoedig af te ronden # dagen     "
 
 #~ msgid "New subtask"
 #~ msgstr "Nieuwe subtaak"
+
+#~ msgid "No effort."
+#~ msgstr "Geen inspanning."

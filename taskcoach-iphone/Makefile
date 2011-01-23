@@ -1,6 +1,6 @@
 
 # LANGS=fr nl ru de th cs
-LANGS=fr nl de
+LANGS=fr nl de fi ru tr
 
 all: help
 

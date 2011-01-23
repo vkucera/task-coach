@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-28 10:51+0200\n"
-"PO-Revision-Date: 2010-08-28 14:23+0000\n"
+"POT-Creation-Date: 2010-12-07 07:26+0100\n"
+"PO-Revision-Date: 2011-01-22 10:14+0000\n"
 "Last-Translator: Jérôme Laheurte <fraca7@free.fr>\n"
 "Language-Team: Jérôme Laheurte <fraca7@free.fr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-19 10:20+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-23 09:32+0000\n"
+"X-Generator: Launchpad (build 12214)\n"
 "X-Poedit-Country: France\n"
 "X-Poedit-Language: fr\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -62,7 +62,7 @@ msgstr "%@"
 msgid "No category."
 msgstr "Pas de catégories."
 
-#: Classes/TaskDetailsControlleriPad.m:353 Classes/TaskDetailsGeneral.m:128
+#: Classes/TaskDetailsControlleriPad.m:353 Classes/TaskDetailsGeneral.m:126
 msgid "New task"
 msgstr "Nouvelle tâche"
 
@@ -85,6 +85,64 @@ msgstr "%d heures"
 #, objc-format
 msgid "%d days"
 msgstr "%d jours"
+
+#: Classes/ConfigurationView.m:48
+msgid "Done"
+msgstr "Terminé"
+
+#: Classes/ConfigurationView.m:57
+msgid "Show completed"
+msgstr "Montrer terminées"
+
+#: Classes/ConfigurationView.m:63
+msgid "Show inactive"
+msgstr "Montrer inactives"
+
+#: Classes/ConfigurationView.m:69
+msgid "Compact tasks"
+msgstr "Tâches compactes"
+
+#: Classes/ConfigurationView.m:75 Classes/ConfigurationView.m:236
+#, objc-format
+msgid "Position: %@"
+msgstr "Position: %@"
+
+#: Classes/ConfigurationView.m:75 Classes/ConfigurationView.m:167
+#: Classes/ConfigurationView.m:236
+msgid "Right"
+msgstr "Droite"
+
+#: Classes/ConfigurationView.m:75 Classes/ConfigurationView.m:167
+#: Classes/ConfigurationView.m:236
+msgid "Left"
+msgstr "Gauche"
+
+#: Classes/ConfigurationView.m:80 Classes/ConfigurationView.m:259
+#, objc-format
+msgid "Display: %@"
+msgstr "Affichage: %@"
+
+#: Classes/ConfigurationView.m:80 Classes/ConfigurationView.m:170
+#: Classes/ConfigurationView.m:259
+msgid "Tree"
+msgstr "Arbre"
+
+#: Classes/ConfigurationView.m:80 Classes/ConfigurationView.m:170
+#: Classes/ConfigurationView.m:259
+msgid "List"
+msgstr "Liste"
+
+#: Classes/ConfigurationView.m:85
+msgid "Show composite"
+msgstr "Montrer composites"
+
+#: Classes/ConfigurationView.m:96
+msgid "Confirm complete"
+msgstr "Confirmer terminée"
+
+#: Classes/ConfigurationView.m:104
+msgid "Due soon # of days"
+msgstr "# jours date dûe"
 
 #: Classes/CoreData/Migration.m:50
 msgid "Database version too old"
@@ -112,9 +170,9 @@ msgstr "Recherche des services"
 msgid "All"
 msgstr "Toutes"
 
-#: Classes/CategoryTaskViewController.m:133 Classes/TaskCoachAppDelegate.m:44
+#: Classes/CategoryTaskViewController.m:153 Classes/TaskCoachAppDelegate.m:44
 #: Classes/TaskCoachAppDelegate.m:55 Classes/TaskCoachAppDelegate.m:59
-#: Classes/TaskDetailsGeneral.m:55
+#: Classes/TaskDetailsGeneral.m:54
 msgid "Categories"
 msgstr "Catégories"
 
@@ -152,17 +210,17 @@ msgstr "Débogage"
 msgid "Do you want to send the sync log by e-mail ?"
 msgstr "Voulez-vous envoyer le journal de syncronisation par courriel ?"
 
-#: Classes/SyncViewController.m:197 Classes/TaskViewController.m:556
+#: Classes/SyncViewController.m:197 Classes/TaskViewController.m:533
 #: Classes/TaskDetailsEffortsBase.m:161
 msgid "No"
 msgstr "Non"
 
-#: Classes/SyncViewController.m:198 Classes/TaskViewController.m:557
+#: Classes/SyncViewController.m:198 Classes/TaskViewController.m:534
 #: Classes/TaskDetailsEffortsBase.m:161
 msgid "Yes"
 msgstr "Oui"
 
-#: Classes/StringChoiceAlert.m:16 Classes/TaskViewController.m:321
+#: Classes/StringChoiceAlert.m:16 Classes/TaskViewController.m:298
 #: Classes/TaskCoachAppDelegate.m:52 Classes/TaskCoachAppDelegate.m:64
 #: Classes/Synchronization/AuthentificationState.m:30
 #: Classes/TaskDetailsEffortsBase.m:161
@@ -189,56 +247,56 @@ msgstr "Annuel"
 msgid "Search tasks..."
 msgstr "Rechercher des tâches..."
 
-#: Classes/TaskViewController.m:321 Classes/TaskViewController.m:323
+#: Classes/TaskViewController.m:298 Classes/TaskViewController.m:300
 msgid "Grouping"
 msgstr "Regroupement"
 
-#: Classes/TaskViewController.m:325
+#: Classes/TaskViewController.m:302
 msgid "Status"
 msgstr "État"
 
-#: Classes/TaskViewController.m:326
+#: Classes/TaskViewController.m:303
 msgid "Priority"
 msgstr "Priorité"
 
-#: Classes/TaskViewController.m:327 Classes/TaskCoachAppDelegate.m:38
+#: Classes/TaskViewController.m:304 Classes/TaskCoachAppDelegate.m:38
 msgid "Start date"
 msgstr "Date de départ"
 
-#: Classes/TaskViewController.m:328 Classes/TaskCoachAppDelegate.m:39
+#: Classes/TaskViewController.m:305 Classes/TaskCoachAppDelegate.m:39
 msgid "Due date"
 msgstr "Date dûe"
 
-#: Classes/TaskViewController.m:554
+#: Classes/TaskViewController.m:531
 msgid "Confirmation"
 msgstr "Confirmation"
 
-#: Classes/TaskViewController.m:555
+#: Classes/TaskViewController.m:532
 #, objc-format
 msgid "Do you really want to mark \"%@\" complete ?"
 msgstr "Voulez-vous vraiment marquer \"%@\" terminée ?"
 
-#: Classes/TaskViewController.m:602
+#: Classes/TaskViewController.m:579
 msgid "Overdue"
 msgstr "En dépassement"
 
-#: Classes/TaskViewController.m:604
+#: Classes/TaskViewController.m:581
 msgid "Due soon"
 msgstr "Dûe(s) bientôt"
 
-#: Classes/TaskViewController.m:606
+#: Classes/TaskViewController.m:583
 msgid "Started"
 msgstr "Démarrée(s)"
 
-#: Classes/TaskViewController.m:608
+#: Classes/TaskViewController.m:585
 msgid "Not started"
 msgstr "Pas démarrée(s)"
 
-#: Classes/TaskViewController.m:610 Classes/ReminderController.m:90
+#: Classes/TaskViewController.m:587 Classes/ReminderController.m:90
 msgid "Completed"
 msgstr "Terminée"
 
-#: Classes/TaskViewController.m:674
+#: Classes/TaskViewController.m:651
 msgid "Add task..."
 msgstr "Ajouter une tâche..."
 
@@ -260,7 +318,7 @@ msgstr "Entrez le nom de la catégorie"
 msgid "Add subcategory"
 msgstr "Ajouter une sous-catégorie"
 
-#: Classes/CategoryViewController.m:634 Classes/CategoryViewController.m:662
+#: Classes/CategoryViewController.m:634 Classes/CategoryViewController.m:669
 msgid "Looking for Task Coach"
 msgstr "Recherche de Task Coach"
 
@@ -299,11 +357,11 @@ msgstr "Sauver"
 msgid "Category name"
 msgstr "Nom de la catégorie"
 
-#: Classes/TaskDetailsGeneral.m:54
+#: Classes/TaskDetailsGeneral.m:53
 msgid "Description"
 msgstr "Description"
 
-#: Classes/TaskDetailsGeneral.m:56 Classes/TaskDetailsGeneral.m:94
+#: Classes/TaskDetailsGeneral.m:55 Classes/TaskDetailsGeneral.m:92
 #, objc-format
 msgid "Priority: %@"
 msgstr "Priorité: %@"
@@ -438,36 +496,6 @@ msgstr "Mois"
 msgid "Year(s)"
 msgstr "Année(s)"
 
-msgid "Display"
-msgstr "Affichage"
-
-msgid "Show completed"
-msgstr "Montrer terminées"
-
-msgid "Show inactive"
-msgstr "Montrer inactives"
-
-msgid "Icon position"
-msgstr "Position de l'icône"
-
-msgid "Left"
-msgstr "Gauche"
-
-msgid "Right"
-msgstr "Droite"
-
-msgid "Compact tasks"
-msgstr "Tâches compactes"
-
-msgid "Misc"
-msgstr "Divers"
-
-msgid "Confirm complete"
-msgstr "Confirmer terminée"
-
-msgid "Due soon # of days     "
-msgstr "# jours dûe bientôt     "
-
 #~ msgid "No tasks."
 #~ msgstr "Pas de tâches."
 
@@ -489,14 +517,44 @@ msgstr "# jours dûe bientôt     "
 #~ msgid "Go on"
 #~ msgstr "Continuer"
 
+#~ msgid "Complete"
+#~ msgstr "Terminée"
+
+#~ msgid "Display"
+#~ msgstr "Affichage"
+
+#~ msgid "Misc"
+#~ msgstr "Divers"
+
+#~ msgid "Icon position"
+#~ msgstr "Position de l'icône"
+
+#~ msgid "Due soon # of days     "
+#~ msgstr "# jours dûe bientôt     "
+
 #~ msgid "Empty text."
 #~ msgstr "Texte vide."
+
+#, objc-format
+#~ msgid "%d seconds"
+#~ msgstr "%d secondes"
+
+#, objc-format
+#~ msgid "%d minutes"
+#~ msgstr "%d minutes"
+
+#, objc-format
+#~ msgid "%d effort(s)"
+#~ msgstr "%d effort(s)"
 
 #~ msgid "Unnamed file"
 #~ msgstr "Fichier anonyme"
 
 #~ msgid "New subtask"
 #~ msgstr "Nouvelle sous-tâche"
+
+#~ msgid "No effort."
+#~ msgstr "Aucun effort."
 
 #~ msgid "Could not save task."
 #~ msgstr "Impossible de sauver la tâche."
