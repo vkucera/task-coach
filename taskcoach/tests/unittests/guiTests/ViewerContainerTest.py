@@ -51,7 +51,6 @@ class DummyChangeEvent(DummyEvent):
 class DummyCloseEvent(DummyEvent):
     def __init__(self, window):
         self._pane = DummyPane(window)
-        
 
     
 class ViewerContainerTest(test.wxTestCase):

@@ -55,7 +55,7 @@ class ViewerContainer(object):
         return self.viewers[index]
 
     def addViewer(self, viewer):
-        self.containerWidget.AddPage(viewer, viewer.title(), viewer.bitmap())
+        self.containerWidget.addPane(viewer, viewer.title(), viewer.bitmap())
         self.viewers.append(viewer)
         if len(self.viewers) - 1 == self.__desiredPageNumber:
             self.activateViewer(viewer)
@@ -117,12 +117,9 @@ class ViewerContainer(object):
             wx.CallAfter(self.activeViewer().SetFocus)
 
     def onPageClosed(self, event):
-        if hasattr(event, 'GetPane'):
-            if event.GetPane().IsToolbar():
-                return
-            window = event.GetPane().window
-        else:
-            window = self.containerWidget.GetPage(event.GetSelection())
+        if event.GetPane().IsToolbar():
+            return
+        window = event.GetPane().window
         if hasattr(window, 'GetPage'):
             # Window is a notebook, close each of its pages
             for pageIndex in range(window.GetPageCount()):
@@ -146,10 +143,10 @@ class ViewerContainer(object):
         viewerCount = self._settings.getint('view', setting)
         self._settings.set('view', setting, str(viewerCount-1))        
         
-    def _changePage(self, page):
-        if page not in self.viewers:
+    def _changePage(self, viewer):
+        if viewer not in self.viewers:
             return
-        self.__currentPageNumber = self.viewers.index(page)        
+        self.__currentPageNumber = self.viewers.index(viewer)        
         self._settings.set('view', self.__setting, str(self.__currentPageNumber))
         patterns.Event(self.viewerChangeEventType(), self, self.__currentPageNumber).send()
 
