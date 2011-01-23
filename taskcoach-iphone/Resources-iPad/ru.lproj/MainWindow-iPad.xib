@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="7.10">
 	<data>
 		<int key="IBDocument.SystemTarget">528</int>
-		<string key="IBDocument.SystemVersion">10F569</string>
-		<string key="IBDocument.InterfaceBuilderVersion">788</string>
-		<string key="IBDocument.AppKitVersion">1038.29</string>
-		<string key="IBDocument.HIToolboxVersion">461.00</string>
+		<string key="IBDocument.SystemVersion">10J567</string>
+		<string key="IBDocument.InterfaceBuilderVersion">823</string>
+		<string key="IBDocument.AppKitVersion">1038.35</string>
+		<string key="IBDocument.HIToolboxVersion">462.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">117</string>
+			<string key="NS.object.0">132</string>
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -219,6 +219,15 @@
 												<reference key="IBUIToolbar" ref="743516695"/>
 												<int key="IBUISystemItemIdentifier">10</int>
 											</object>
+											<object class="IBUIBarButtonItem" id="702207331">
+												<object class="NSCustomResource" key="IBUIImage">
+													<string key="NSClassName">NSImage</string>
+													<string key="NSResourceName">configure.png</string>
+												</object>
+												<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+												<int key="IBUIStyle">1</int>
+												<reference key="IBUIToolbar" ref="743516695"/>
+											</object>
 											<object class="IBUIBarButtonItem" id="511985687">
 												<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 												<reference key="IBUIToolbar" ref="743516695"/>
@@ -235,7 +244,7 @@
 												<int key="IBUISystemItemIdentifier">5</int>
 											</object>
 											<object class="IBUIBarButtonItem" id="1048961783">
-												<string key="IBUITitle">Sync</string>
+												<string key="IBUITitle">Синхр.</string>
 												<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 												<int key="IBUIStyle">1</int>
 												<reference key="IBUIToolbar" ref="743516695"/>
@@ -509,6 +518,22 @@
 					</object>
 					<int key="connectionID">168</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">onConfigure:</string>
+						<reference key="source" ref="702207331"/>
+						<reference key="destination" ref="979134385"/>
+					</object>
+					<int key="connectionID">171</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">configButton</string>
+						<reference key="source" ref="979134385"/>
+						<reference key="destination" ref="702207331"/>
+					</object>
+					<int key="connectionID">172</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -695,6 +720,7 @@
 							<reference ref="181235536"/>
 							<reference ref="692336382"/>
 							<reference ref="1048961783"/>
+							<reference ref="702207331"/>
 						</object>
 						<reference key="parent" ref="1064199850"/>
 					</object>
@@ -723,6 +749,11 @@
 						<reference key="object" ref="1048961783"/>
 						<reference key="parent" ref="743516695"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">169</int>
+						<reference key="object" ref="702207331"/>
+						<reference key="parent" ref="743516695"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -747,6 +778,7 @@
 					<string>159.IBPluginDependency</string>
 					<string>161.IBPluginDependency</string>
 					<string>167.IBPluginDependency</string>
+					<string>169.IBPluginDependency</string>
 					<string>2.IBAttributePlaceholdersKey</string>
 					<string>2.IBEditorWindowLastContentRect</string>
 					<string>2.IBLastUsedUIStatusBarStylesToTargetRuntimesMap</string>
@@ -790,6 +822,7 @@
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<object class="NSMutableDictionary">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<reference key="dict.sortedKeys" ref="0"/>
@@ -806,7 +839,7 @@
 					<string>TaskCoachAppDelegate</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>SplitView</string>
-					<string>{{106, 592}, {1024, 768}}</string>
+					<string>{{203, 339}, {1024, 768}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>MainViewController</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -839,7 +872,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">168</int>
+			<int key="maxID">172</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -869,10 +902,12 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>onAddCategory:</string>
 							<string>onChooseFile:</string>
+							<string>onConfigure:</string>
 							<string>onSynchronize:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>UIBarButtonItem</string>
 							<string>UIBarButtonItem</string>
 							<string>UIBarButtonItem</string>
 							<string>UIBarButtonItem</string>
@@ -884,6 +919,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>onAddCategory:</string>
 							<string>onChooseFile:</string>
+							<string>onConfigure:</string>
 							<string>onSynchronize:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -894,6 +930,10 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">onChooseFile:</string>
+								<string key="candidateClassName">UIBarButtonItem</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">onConfigure:</string>
 								<string key="candidateClassName">UIBarButtonItem</string>
 							</object>
 							<object class="IBActionInfo">
@@ -1089,10 +1129,12 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>onAddTask:</string>
 							<string>onChangeGrouping:</string>
+							<string>onConfigure:</string>
 							<string>onSync:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>UIBarButtonItem</string>
 							<string>UIBarButtonItem</string>
 							<string>UIBarButtonItem</string>
 							<string>UIBarButtonItem</string>
@@ -1104,6 +1146,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>onAddTask:</string>
 							<string>onChangeGrouping:</string>
+							<string>onConfigure:</string>
 							<string>onSync:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -1117,6 +1160,10 @@
 								<string key="candidateClassName">UIBarButtonItem</string>
 							</object>
 							<object class="IBActionInfo">
+								<string key="name">onConfigure:</string>
+								<string key="candidateClassName">UIBarButtonItem</string>
+							</object>
+							<object class="IBActionInfo">
 								<string key="name">onSync:</string>
 								<string key="candidateClassName">UIBarButtonItem</string>
 							</object>
@@ -1127,6 +1174,7 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>categoryController</string>
+							<string>configButton</string>
 							<string>groupButton</string>
 							<string>headerView</string>
 							<string>tableViewController</string>
@@ -1135,6 +1183,7 @@
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>CategoryViewController</string>
+							<string>UIBarButtonItem</string>
 							<string>UIBarButtonItem</string>
 							<string>PaperHeaderView</string>
 							<string>UITableViewController</string>
@@ -1146,6 +1195,7 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>categoryController</string>
+							<string>configButton</string>
 							<string>groupButton</string>
 							<string>headerView</string>
 							<string>tableViewController</string>
@@ -1156,6 +1206,10 @@
 							<object class="IBToOneOutletInfo">
 								<string key="name">categoryController</string>
 								<string key="candidateClassName">CategoryViewController</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">configButton</string>
+								<string key="candidateClassName">UIBarButtonItem</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">groupButton</string>
@@ -1178,16 +1232,6 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/TaskViewController.h</string>
-					</object>
-				</object>
-			</object>
-			<object class="NSMutableArray" key="referencedPartialClassDescriptionsV3.1+">
-				<bool key="EncodedWithXMLCoder">YES</bool>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBDocumentRelativeSource</string>
-						<string key="minorKey">../../Classes/Thirdparty/tapkulibrary/src/TapkuLibrary/UIView+TKCategory.h</string>
 					</object>
 				</object>
 			</object>
@@ -1232,13 +1276,6 @@
 					<string key="className">NSObject</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">Foundation.framework/Headers/NSNetServices.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">Foundation.framework/Headers/NSObject.h</string>
 					</object>
 				</object>
@@ -1246,21 +1283,7 @@
 					<string key="className">NSObject</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">Foundation.framework/Headers/NSPort.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">Foundation.framework/Headers/NSRunLoop.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">Foundation.framework/Headers/NSStream.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -1282,13 +1305,6 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">Foundation.framework/Headers/NSURLConnection.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">Foundation.framework/Headers/NSXMLParser.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -1444,6 +1460,13 @@
 					<string key="className">UIView</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">UIKit.framework/Headers/UIPrintFormatter.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">UIView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">UIKit.framework/Headers/UITextField.h</string>
 					</object>
 				</object>
@@ -1503,7 +1526,7 @@
 		</object>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.iPhoneOS</string>
-			<integer value="800" key="NS.object.0"/>
+			<integer value="1056" key="NS.object.0"/>
 		</object>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDevelopmentDependencies">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.InterfaceBuilder3</string>
@@ -1512,6 +1535,10 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<string key="IBDocument.LastKnownRelativeProjectPath">../../TaskCoach.xcodeproj</string>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
-		<string key="IBCocoaTouchPluginVersion">117</string>
+		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="NS.key.0">configure.png</string>
+			<string key="NS.object.0">{22, 22}</string>
+		</object>
+		<string key="IBCocoaTouchPluginVersion">132</string>
 	</data>
 </archive>

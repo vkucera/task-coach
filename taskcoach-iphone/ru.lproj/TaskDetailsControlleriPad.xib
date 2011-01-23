@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="7.10">
 	<data>
 		<int key="IBDocument.SystemTarget">800</int>
-		<string key="IBDocument.SystemVersion">10F569</string>
-		<string key="IBDocument.InterfaceBuilderVersion">788</string>
-		<string key="IBDocument.AppKitVersion">1038.29</string>
-		<string key="IBDocument.HIToolboxVersion">461.00</string>
+		<string key="IBDocument.SystemVersion">10J567</string>
+		<string key="IBDocument.InterfaceBuilderVersion">823</string>
+		<string key="IBDocument.AppKitVersion">1038.35</string>
+		<string key="IBDocument.HIToolboxVersion">462.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">117</string>
+			<string key="NS.object.0">132</string>
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -120,8 +120,8 @@
 							<int key="NSfFlags">16</int>
 						</object>
 						<string key="IBUITitleShadowOffset">{1, 1}</string>
-						<string key="IBUIHighlightedTitle">Start date</string>
-						<string key="IBUINormalTitle">Start date</string>
+						<string key="IBUIHighlightedTitle">Дата начала</string>
+						<string key="IBUINormalTitle">Дата начала</string>
 						<object class="NSColor" key="IBUIHighlightedTitleColor" id="95075987">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>
@@ -144,7 +144,7 @@
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<reference key="IBUIFont" ref="790542157"/>
 						<string key="IBUITitleShadowOffset">{1, 1}</string>
-						<string key="IBUINormalTitle">Due date</string>
+						<string key="IBUINormalTitle">Выполнить до</string>
 						<reference key="IBUIHighlightedTitleColor" ref="95075987"/>
 						<reference key="IBUINormalTitleColor" ref="183637560"/>
 						<reference key="IBUIHighlightedTitleShadowColor" ref="183637560"/>
@@ -161,7 +161,7 @@
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<reference key="IBUIFont" ref="790542157"/>
 						<string key="IBUITitleShadowOffset">{1, 1}</string>
-						<string key="IBUINormalTitle">Completion date</string>
+						<string key="IBUINormalTitle">Дата выполнения</string>
 						<reference key="IBUIHighlightedTitleColor" ref="95075987"/>
 						<reference key="IBUINormalTitleColor" ref="183637560"/>
 						<reference key="IBUIHighlightedTitleShadowColor" ref="183637560"/>
@@ -178,7 +178,7 @@
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<reference key="IBUIFont" ref="790542157"/>
 						<string key="IBUITitleShadowOffset">{1, 1}</string>
-						<string key="IBUINormalTitle">Reminder</string>
+						<string key="IBUINormalTitle">Напоминание</string>
 						<reference key="IBUIHighlightedTitleColor" ref="95075987"/>
 						<reference key="IBUINormalTitleColor" ref="183637560"/>
 						<reference key="IBUIHighlightedTitleShadowColor" ref="183637560"/>
@@ -195,7 +195,7 @@
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<reference key="IBUIFont" ref="790542157"/>
 						<string key="IBUITitleShadowOffset">{1, 1}</string>
-						<string key="IBUINormalTitle">Recurrence</string>
+						<string key="IBUINormalTitle">Повторение</string>
 						<object class="NSColor" key="IBUIHighlightedTitleColor" id="675182885">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MQA</bytes>
@@ -218,7 +218,7 @@
 							<int key="NSfFlags">16</int>
 						</object>
 						<int key="IBUIButtonType">1</int>
-						<string key="IBUINormalTitle">Start tracking</string>
+						<string key="IBUINormalTitle">Начать учет</string>
 						<reference key="IBUIHighlightedTitleColor" ref="675182885"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
@@ -240,7 +240,7 @@
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<reference key="IBUIFont" ref="790542157"/>
 						<string key="IBUITitleShadowOffset">{1, 1}</string>
-						<string key="IBUINormalTitle">Categories</string>
+						<string key="IBUINormalTitle">Категории</string>
 						<reference key="IBUIHighlightedTitleColor" ref="183637560"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
@@ -309,7 +309,7 @@
 						<int key="IBUIContentMode">7</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-						<string key="IBUIText">Activity log</string>
+						<string key="IBUIText">Журнал активности</string>
 						<object class="NSFont" key="IBUIFont">
 							<string key="NSName">MarkerFelt-Thin</string>
 							<double key="NSSize">14</double>
@@ -1337,6 +1337,6 @@
 			<string key="NS.key.0">headerbg.png</string>
 			<string key="NS.object.0">{1, 60}</string>
 		</object>
-		<string key="IBCocoaTouchPluginVersion">117</string>
+		<string key="IBCocoaTouchPluginVersion">132</string>
 	</data>
 </archive>

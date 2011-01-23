@@ -2,10 +2,10 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="7.10">
 	<data>
 		<int key="IBDocument.SystemTarget">528</int>
-		<string key="IBDocument.SystemVersion">10F569</string>
+		<string key="IBDocument.SystemVersion">10J567</string>
 		<string key="IBDocument.InterfaceBuilderVersion">823</string>
-		<string key="IBDocument.AppKitVersion">1038.29</string>
-		<string key="IBDocument.HIToolboxVersion">461.00</string>
+		<string key="IBDocument.AppKitVersion">1038.35</string>
+		<string key="IBDocument.HIToolboxVersion">462.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			<string key="NS.object.0">132</string>
@@ -108,7 +108,7 @@
 										<int key="IBUISystemItemIdentifier">11</int>
 									</object>
 									<object class="IBUIBarButtonItem" id="273666341">
-										<string key="IBUITitle">Sync</string>
+										<string key="IBUITitle">Eşleştir</string>
 										<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 										<int key="IBUIStyle">1</int>
 										<reference key="IBUIToolbar" ref="213027057"/>
@@ -137,7 +137,7 @@
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 					</object>
 					<object class="IBUINavigationItem" key="IBUINavigationItem" id="422248649">
-						<string key="IBUITitle">Catégories</string>
+						<string key="IBUITitle">Gruplar</string>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 					</object>
 					<reference key="IBUIParentViewController" ref="515921461"/>
@@ -244,7 +244,7 @@
 												<int key="IBUISystemItemIdentifier">5</int>
 											</object>
 											<object class="IBUIBarButtonItem" id="1048961783">
-												<string key="IBUITitle">Sync</string>
+												<string key="IBUITitle">Eşleştir</string>
 												<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 												<int key="IBUIStyle">1</int>
 												<reference key="IBUIToolbar" ref="743516695"/>
