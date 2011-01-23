@@ -1,4 +1,4 @@
-﻿"" = "Project-Id-Version: Task Coach\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2010-08-28 10:51+0200\nPO-Revision-Date: 2010-08-28 14:23+0000\nLast-Translator: Jérôme Laheurte <fraca7@free.fr>\nLanguage-Team: Jérôme Laheurte <fraca7@free.fr>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Launchpad-Export-Date: 2010-09-19 10:20+0000\nX-Generator: Launchpad (build Unknown)\nX-Poedit-Country: France\nX-Poedit-Language: fr\nX-Poedit-SourceCharset: utf-8\n";
+﻿"" = "Project-Id-Version: Task Coach\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2010-12-07 07:26+0100\nPO-Revision-Date: 2011-01-22 10:14+0000\nLast-Translator: Jérôme Laheurte <fraca7@free.fr>\nLanguage-Team: Jérôme Laheurte <fraca7@free.fr>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Launchpad-Export-Date: 2011-01-23 09:32+0000\nX-Generator: Launchpad (build 12214)\nX-Poedit-Country: France\nX-Poedit-Language: fr\nX-Poedit-SourceCharset: utf-8\n";
 
 /* File: Classes/TaskDetailsControlleriPad.m:157 */
 /* File: Classes/TaskDetailsEffortsBase.m:362 */
@@ -41,7 +41,7 @@
 "No category." = "Pas de catégories.";
 
 /* File: Classes/TaskDetailsControlleriPad.m:353 */
-/* File: Classes/TaskDetailsGeneral.m:128 */
+/* File: Classes/TaskDetailsGeneral.m:126 */
 "New task" = "Nouvelle tâche";
 
 /* File: Classes/Utils/String+Utils.m:87 */
@@ -59,6 +59,57 @@
 /* File: Classes/Utils/String+Utils.m:99 */
 /* Flag: objc-format */
 "%d days" = "%d jours";
+
+/* File: Classes/ConfigurationView.m:48 */
+"Done" = "Terminé";
+
+/* File: Classes/ConfigurationView.m:57 */
+"Show completed" = "Montrer terminées";
+
+/* File: Classes/ConfigurationView.m:63 */
+"Show inactive" = "Montrer inactives";
+
+/* File: Classes/ConfigurationView.m:69 */
+"Compact tasks" = "Tâches compactes";
+
+/* File: Classes/ConfigurationView.m:75 */
+/* File: Classes/ConfigurationView.m:236 */
+/* Flag: objc-format */
+"Position: %@" = "Position: %@";
+
+/* File: Classes/ConfigurationView.m:75 */
+/* File: Classes/ConfigurationView.m:167 */
+/* File: Classes/ConfigurationView.m:236 */
+"Right" = "Droite";
+
+/* File: Classes/ConfigurationView.m:75 */
+/* File: Classes/ConfigurationView.m:167 */
+/* File: Classes/ConfigurationView.m:236 */
+"Left" = "Gauche";
+
+/* File: Classes/ConfigurationView.m:80 */
+/* File: Classes/ConfigurationView.m:259 */
+/* Flag: objc-format */
+"Display: %@" = "Affichage: %@";
+
+/* File: Classes/ConfigurationView.m:80 */
+/* File: Classes/ConfigurationView.m:170 */
+/* File: Classes/ConfigurationView.m:259 */
+"Tree" = "Arbre";
+
+/* File: Classes/ConfigurationView.m:80 */
+/* File: Classes/ConfigurationView.m:170 */
+/* File: Classes/ConfigurationView.m:259 */
+"List" = "Liste";
+
+/* File: Classes/ConfigurationView.m:85 */
+"Show composite" = "Montrer composites";
+
+/* File: Classes/ConfigurationView.m:96 */
+"Confirm complete" = "Confirmer terminée";
+
+/* File: Classes/ConfigurationView.m:104 */
+"Due soon # of days" = "# jours date dûe";
 
 /* File: Classes/CoreData/Migration.m:50 */
 "Database version too old" = "Version de base de données trop vieille";
@@ -80,11 +131,11 @@
 /* File: Classes/CategoryViewController.m:601 */
 "All" = "Toutes";
 
-/* File: Classes/CategoryTaskViewController.m:133 */
+/* File: Classes/CategoryTaskViewController.m:153 */
 /* File: Classes/TaskCoachAppDelegate.m:44 */
 /* File: Classes/TaskCoachAppDelegate.m:55 */
 /* File: Classes/TaskCoachAppDelegate.m:59 */
-/* File: Classes/TaskDetailsGeneral.m:55 */
+/* File: Classes/TaskDetailsGeneral.m:54 */
 "Categories" = "Catégories";
 
 /* File: Classes/SyncViewController.m:68 */
@@ -119,17 +170,17 @@
 "Do you want to send the sync log by e-mail ?" = "Voulez-vous envoyer le journal de syncronisation par courriel ?";
 
 /* File: Classes/SyncViewController.m:197 */
-/* File: Classes/TaskViewController.m:556 */
+/* File: Classes/TaskViewController.m:533 */
 /* File: Classes/TaskDetailsEffortsBase.m:161 */
 "No" = "Non";
 
 /* File: Classes/SyncViewController.m:198 */
-/* File: Classes/TaskViewController.m:557 */
+/* File: Classes/TaskViewController.m:534 */
 /* File: Classes/TaskDetailsEffortsBase.m:161 */
 "Yes" = "Oui";
 
 /* File: Classes/StringChoiceAlert.m:16 */
-/* File: Classes/TaskViewController.m:321 */
+/* File: Classes/TaskViewController.m:298 */
 /* File: Classes/TaskCoachAppDelegate.m:52 */
 /* File: Classes/TaskCoachAppDelegate.m:64 */
 /* File: Classes/Synchronization/AuthentificationState.m:30 */
@@ -152,48 +203,48 @@
 /* File: Classes/TaskViewController.m:169 */
 "Search tasks..." = "Rechercher des tâches...";
 
-/* File: Classes/TaskViewController.m:321 */
-/* File: Classes/TaskViewController.m:323 */
+/* File: Classes/TaskViewController.m:298 */
+/* File: Classes/TaskViewController.m:300 */
 "Grouping" = "Regroupement";
 
-/* File: Classes/TaskViewController.m:325 */
+/* File: Classes/TaskViewController.m:302 */
 "Status" = "État";
 
-/* File: Classes/TaskViewController.m:326 */
+/* File: Classes/TaskViewController.m:303 */
 "Priority" = "Priorité";
 
-/* File: Classes/TaskViewController.m:327 */
+/* File: Classes/TaskViewController.m:304 */
 /* File: Classes/TaskCoachAppDelegate.m:38 */
 "Start date" = "Date de départ";
 
-/* File: Classes/TaskViewController.m:328 */
+/* File: Classes/TaskViewController.m:305 */
 /* File: Classes/TaskCoachAppDelegate.m:39 */
 "Due date" = "Date dûe";
 
-/* File: Classes/TaskViewController.m:554 */
+/* File: Classes/TaskViewController.m:531 */
 "Confirmation" = "Confirmation";
 
-/* File: Classes/TaskViewController.m:555 */
+/* File: Classes/TaskViewController.m:532 */
 /* Flag: objc-format */
 "Do you really want to mark \"%@\" complete ?" = "Voulez-vous vraiment marquer \"%@\" terminée ?";
 
-/* File: Classes/TaskViewController.m:602 */
+/* File: Classes/TaskViewController.m:579 */
 "Overdue" = "En dépassement";
 
-/* File: Classes/TaskViewController.m:604 */
+/* File: Classes/TaskViewController.m:581 */
 "Due soon" = "Dûe(s) bientôt";
 
-/* File: Classes/TaskViewController.m:606 */
+/* File: Classes/TaskViewController.m:583 */
 "Started" = "Démarrée(s)";
 
-/* File: Classes/TaskViewController.m:608 */
+/* File: Classes/TaskViewController.m:585 */
 "Not started" = "Pas démarrée(s)";
 
-/* File: Classes/TaskViewController.m:610 */
+/* File: Classes/TaskViewController.m:587 */
 /* File: Classes/ReminderController.m:90 */
 "Completed" = "Terminée";
 
-/* File: Classes/TaskViewController.m:674 */
+/* File: Classes/TaskViewController.m:651 */
 "Add task..." = "Ajouter une tâche...";
 
 /* File: Classes/TaskCellBig.m:88 */
@@ -213,7 +264,7 @@
 "Add subcategory" = "Ajouter une sous-catégorie";
 
 /* File: Classes/CategoryViewController.m:634 */
-/* File: Classes/CategoryViewController.m:662 */
+/* File: Classes/CategoryViewController.m:669 */
 "Looking for Task Coach" = "Recherche de Task Coach";
 
 /* File: Classes/TaskCoachAppDelegate.m:40 */
@@ -248,11 +299,11 @@
 /* File: Classes/NewCategoryiPad.m:39 */
 "Category name" = "Nom de la catégorie";
 
-/* File: Classes/TaskDetailsGeneral.m:54 */
+/* File: Classes/TaskDetailsGeneral.m:53 */
 "Description" = "Description";
 
-/* File: Classes/TaskDetailsGeneral.m:56 */
-/* File: Classes/TaskDetailsGeneral.m:94 */
+/* File: Classes/TaskDetailsGeneral.m:55 */
+/* File: Classes/TaskDetailsGeneral.m:92 */
 /* Flag: objc-format */
 "Priority: %@" = "Priorité: %@";
 
@@ -349,26 +400,6 @@
 /* File: Classes/TaskDetailsRecurrenceControlleriPad.m:49 */
 "Year(s)" = "Année(s)";
 
-"Display" = "Affichage";
-
-"Show completed" = "Montrer terminées";
-
-"Show inactive" = "Montrer inactives";
-
-"Icon position" = "Position de l'icône";
-
-"Left" = "Gauche";
-
-"Right" = "Droite";
-
-"Compact tasks" = "Tâches compactes";
-
-"Misc" = "Divers";
-
-"Confirm complete" = "Confirmer terminée";
-
-"Due soon # of days     " = "# jours dûe bientôt     ";
-
 /* Flag: unmatched */
 "No tasks." = "Pas de tâches.";
 
@@ -386,13 +417,43 @@
 "Go on" = "Continuer";
 
 /* Flag: unmatched */
+"Complete" = "Terminée";
+
+/* Flag: unmatched */
+"Display" = "Affichage";
+
+/* Flag: unmatched */
+"Misc" = "Divers";
+
+/* Flag: unmatched */
+"Icon position" = "Position de l'icône";
+
+/* Flag: unmatched */
+"Due soon # of days     " = "# jours dûe bientôt     ";
+
+/* Flag: unmatched */
 "Empty text." = "Texte vide.";
+
+/* Flag: unmatched */
+/* Flag: objc-format */
+"%d seconds" = "%d secondes";
+
+/* Flag: unmatched */
+/* Flag: objc-format */
+"%d minutes" = "%d minutes";
+
+/* Flag: unmatched */
+/* Flag: objc-format */
+"%d effort(s)" = "%d effort(s)";
 
 /* Flag: unmatched */
 "Unnamed file" = "Fichier anonyme";
 
 /* Flag: unmatched */
 "New subtask" = "Nouvelle sous-tâche";
+
+/* Flag: unmatched */
+"No effort." = "Aucun effort.";
 
 /* Flag: unmatched */
 "Could not save task." = "Impossible de sauver la tâche.";

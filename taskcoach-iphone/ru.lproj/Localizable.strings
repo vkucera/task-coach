@@ -1,458 +1,458 @@
-/* SOME DESCRIPTIVE TITLE. */
-/* Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER */
-/* This file is distributed under the same license as the PACKAGE package. */
-/* FIRST AUTHOR <EMAIL@ADDRESS>, YEAR. */
+﻿/* Russian translation for taskcoach-iphone */
+/* Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009 */
+/* This file is distributed under the same license as the taskcoach-iphone package. */
+/* FIRST AUTHOR <EMAIL@ADDRESS>, 2009. */
 /* */
-/* Flag: untranslated */
-"" = "" /* = "Project-Id-Version: PACKAGE VERSION\nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2010-07-11 10:17+0200\nPO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\nLast-Translator: FULL NAME <EMAIL@ADDRESS>\nLanguage-Team: LANGUAGE <LL@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\n" */;
+"" = "Project-Id-Version: taskcoach-iphone\nReport-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\nPOT-Creation-Date: 2010-12-07 07:26+0100\nPO-Revision-Date: 2011-01-08 06:56+0000\nLast-Translator: Nkolay Parukhin <parukhin@gmail.com>\nLanguage-Team: Russian <ru@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Launchpad-Export-Date: 2011-01-23 09:32+0000\nX-Generator: Launchpad (build 12214)\n";
 
 /* File: Classes/TaskDetailsControlleriPad.m:157 */
-/* File: Classes/TaskDetailsEffortsBase.m:357 */
-/* Flag: untranslated */
+/* File: Classes/TaskDetailsEffortsBase.m:362 */
 /* Flag: objc-format */
-"Started %@" = "Started %@";
+"Started %@" = "Начата %@";
 
 /* File: Classes/TaskDetailsControlleriPad.m:159 */
-/* Flag: untranslated */
-"No start date" = "No start date";
+"No start date" = "Нет начальной даты";
 
 /* File: Classes/TaskDetailsControlleriPad.m:162 */
 /* File: Classes/TaskCellBig.m:78 */
 /* File: Classes/TaskCellBig.m:81 */
 /* File: Classes/TaskCellBig.m:85 */
-/* Flag: untranslated */
 /* Flag: objc-format */
-"Due %@" = "Due %@";
+"Due %@" = "Истекает %@";
 
 /* File: Classes/TaskDetailsControlleriPad.m:164 */
-/* Flag: untranslated */
-"No due date" = "No due date";
+"No due date" = "Нет ожидаемой даты";
 
 /* File: Classes/TaskDetailsControlleriPad.m:167 */
 /* File: Classes/TaskCellBig.m:75 */
-/* Flag: untranslated */
 /* Flag: objc-format */
-"Completed %@" = "Completed %@";
+"Completed %@" = "Выполнена %@";
 
 /* File: Classes/TaskDetailsControlleriPad.m:169 */
-/* Flag: untranslated */
-"No completion date" = "No completion date";
+"No completion date" = "Нет даты завершения";
 
 /* File: Classes/TaskDetailsControlleriPad.m:172 */
-/* Flag: untranslated */
 /* Flag: objc-format */
-"Reminder %@" = "Reminder %@";
+"Reminder %@" = "Напоминание %@";
 
 /* File: Classes/TaskDetailsControlleriPad.m:174 */
-/* Flag: untranslated */
-"No reminder" = "No reminder";
+"No reminder" = "Нет напоминаний";
 
 /* File: Classes/TaskDetailsControlleriPad.m:176 */
-/* Flag: untranslated */
 /* Flag: objc-format */
 "%@" = "%@";
 
-/* File: Classes/TaskDetailsControlleriPad.m:187 */
-/* Flag: untranslated */
-"No category." = "No category.";
+/* File: Classes/TaskDetailsControlleriPad.m:188 */
+"No category." = "Нет категорий.";
 
-/* File: Classes/TaskDetailsControlleriPad.m:352 */
-/* File: Classes/TaskDetailsGeneral.m:128 */
-/* Flag: untranslated */
-"New task" = "New task";
+/* File: Classes/TaskDetailsControlleriPad.m:353 */
+/* File: Classes/TaskDetailsGeneral.m:126 */
+"New task" = "Новая задача";
 
-/* File: Classes/Utils/String+Utils.m:49 */
-/* Flag: untranslated */
+/* File: Classes/Utils/String+Utils.m:87 */
 /* Flag: objc-format */
-"%d sec" = "%d sec";
+"%d sec" = "%d сек";
 
-/* File: Classes/Utils/String+Utils.m:53 */
-/* Flag: untranslated */
+/* File: Classes/Utils/String+Utils.m:91 */
 /* Flag: objc-format */
-"%d min" = "%d min";
+"%d min" = "%d мин";
 
-/* File: Classes/Utils/String+Utils.m:57 */
-/* Flag: untranslated */
+/* File: Classes/Utils/String+Utils.m:95 */
 /* Flag: objc-format */
-"%d hours" = "%d hours";
+"%d hours" = "%d часа(ов)";
 
-/* File: Classes/Utils/String+Utils.m:61 */
-/* Flag: untranslated */
+/* File: Classes/Utils/String+Utils.m:99 */
 /* Flag: objc-format */
-"%d days" = "%d days";
+"%d days" = "%d дня(ей)";
+
+/* File: Classes/ConfigurationView.m:48 */
+"Done" = "Выполнено";
+
+/* File: Classes/ConfigurationView.m:57 */
+"Show completed" = "Показать завершенные";
+
+/* File: Classes/ConfigurationView.m:63 */
+"Show inactive" = "Показать неактивные";
+
+/* File: Classes/ConfigurationView.m:69 */
+"Compact tasks" = "Соединить задачи";
+
+/* File: Classes/ConfigurationView.m:75 */
+/* File: Classes/ConfigurationView.m:236 */
+/* Flag: objc-format */
+"Position: %@" = "Положение: %@";
+
+/* File: Classes/ConfigurationView.m:75 */
+/* File: Classes/ConfigurationView.m:167 */
+/* File: Classes/ConfigurationView.m:236 */
+"Right" = "Справа";
+
+/* File: Classes/ConfigurationView.m:75 */
+/* File: Classes/ConfigurationView.m:167 */
+/* File: Classes/ConfigurationView.m:236 */
+"Left" = "Слева";
+
+/* File: Classes/ConfigurationView.m:80 */
+/* File: Classes/ConfigurationView.m:259 */
+/* Flag: objc-format */
+"Display: %@" = "Представление: %@";
+
+/* File: Classes/ConfigurationView.m:80 */
+/* File: Classes/ConfigurationView.m:170 */
+/* File: Classes/ConfigurationView.m:259 */
+"Tree" = "Дерево";
+
+/* File: Classes/ConfigurationView.m:80 */
+/* File: Classes/ConfigurationView.m:170 */
+/* File: Classes/ConfigurationView.m:259 */
+"List" = "Список";
+
+/* File: Classes/ConfigurationView.m:85 */
+"Show composite" = "Показывать составные";
+
+/* File: Classes/ConfigurationView.m:96 */
+"Confirm complete" = "Подтвердить завершение";
+
+/* File: Classes/ConfigurationView.m:104 */
+"Due soon # of days" = "Скоро завершатся # дней";
 
 /* File: Classes/CoreData/Migration.m:50 */
-/* Flag: untranslated */
-"Database version too old" = "Database version too old";
+"Database version too old" = "Версия БД слишком старая";
 
 /* File: Classes/Bonjour/BonjourBrowser.m:87 */
-/* Flag: untranslated */
-"Domains" = "Domains";
+"Domains" = "Домены";
 
 /* File: Classes/Bonjour/BonjourBrowser.m:88 */
-/* Flag: untranslated */
-"Added Domains" = "Added Domains";
+"Added Domains" = "Добавленные домены";
 
 /* File: Classes/Bonjour/BonjourBrowser.m:89 */
-/* Flag: untranslated */
-"Add Domain" = "Add Domain";
+"Add Domain" = "Добавить домен";
 
 /* File: Classes/Bonjour/BonjourBrowser.m:90 */
-/* Flag: untranslated */
-"Searching for services" = "Searching for services";
+"Searching for services" = "Поиск сервисов";
 
 /* File: Classes/CategoryTaskViewController.m:49 */
 /* File: Classes/CategoryTaskViewController.m:73 */
-/* File: Classes/CategoryViewController.m:596 */
-/* Flag: untranslated */
-"All" = "All";
+/* File: Classes/CategoryViewController.m:601 */
+"All" = "Все";
 
-/* File: Classes/CategoryTaskViewController.m:133 */
-/* File: Classes/TaskCoachAppDelegate.m:38 */
-/* File: Classes/TaskDetailsGeneral.m:55 */
-/* Flag: untranslated */
-"Categories" = "Categories";
-
-/* File: Classes/SyncViewController.m:65 */
-/* File: Classes/Synchronization/InitialState.m:28 */
-/* Flag: untranslated */
-"Connecting..." = "Connecting...";
-
-/* File: Classes/SyncViewController.m:148 */
-/* Flag: untranslated */
-"Task Coach sync log" = "Task Coach sync log";
-
-/* File: Classes/SyncViewController.m:177 */
-/* Flag: untranslated */
-"Debug" = "Debug";
-
-/* File: Classes/SyncViewController.m:177 */
-/* Flag: untranslated */
-"Do you want to send the sync log by e-mail ?" = "Do you want to send the sync log by e-mail ?";
-
-/* File: Classes/SyncViewController.m:177 */
-/* File: Classes/TaskViewController.m:601 */
-/* File: Classes/TaskDetailsEffortsBase.m:157 */
-/* Flag: untranslated */
-"No" = "No";
-
-/* File: Classes/SyncViewController.m:178 */
-/* File: Classes/TaskViewController.m:602 */
-/* File: Classes/TaskDetailsEffortsBase.m:157 */
-/* Flag: untranslated */
-"Yes" = "Yes";
-
-/* File: Classes/SimpleDatePicker.m:37 */
-/* File: Classes/StringChoiceAlert.m:16 */
-/* File: Classes/NewCategoryiPad.m:41 */
-/* File: Classes/Synchronization/AuthentificationState.m:30 */
-/* File: Classes/Synchronization/ProtocolNegotiationState.m:71 */
-/* File: Classes/ReminderController.m:88 */
-/* Flag: untranslated */
-"OK" = "OK";
-
-/* File: Classes/StringChoiceAlert.m:16 */
-/* File: Classes/TaskViewController.m:362 */
-/* File: Classes/TaskCoachAppDelegate.m:36 */
-/* File: Classes/Synchronization/AuthentificationState.m:29 */
-/* File: Classes/TaskDetailsEffortsBase.m:157 */
-/* Flag: untranslated */
-"Cancel" = "Cancel";
-
-/* File: Classes/TaskDetailsRecurrencePeriodPicker.m:70 */
-/* Flag: untranslated */
-"Daily" = "Daily";
-
-/* File: Classes/TaskDetailsRecurrencePeriodPicker.m:72 */
-/* Flag: untranslated */
-"Weekly" = "Weekly";
-
-/* File: Classes/TaskDetailsRecurrencePeriodPicker.m:74 */
-/* Flag: untranslated */
-"Monthly" = "Monthly";
-
-/* File: Classes/TaskDetailsRecurrencePeriodPicker.m:76 */
-/* Flag: untranslated */
-"Yearly" = "Yearly";
-
-/* File: Classes/TaskViewController.m:169 */
-/* File: Classes/TaskViewController.m:183 */
-/* File: Classes/TaskViewController.m:292 */
-/* Flag: untranslated */
-"Search tasks..." = "Search tasks...";
-
-/* File: Classes/TaskViewController.m:362 */
-/* File: Classes/TaskViewController.m:364 */
-/* Flag: untranslated */
-"Grouping" = "Grouping";
-
-/* File: Classes/TaskViewController.m:366 */
-/* Flag: untranslated */
-"Status" = "Status";
-
-/* File: Classes/TaskViewController.m:367 */
-/* Flag: untranslated */
-"Priority" = "Priority";
-
-/* File: Classes/TaskViewController.m:368 */
-/* Flag: untranslated */
-"Start date" = "Start date";
-
-/* File: Classes/TaskViewController.m:369 */
-/* Flag: untranslated */
-"Due date" = "Due date";
-
-/* File: Classes/TaskViewController.m:599 */
-/* Flag: untranslated */
-"Confirmation" = "Confirmation";
-
-/* File: Classes/TaskViewController.m:600 */
-/* Flag: untranslated */
-/* Flag: objc-format */
-"Do you really want to mark \"%@\" complete ?" = "Do you really want to mark \"%@\" complete ?";
-
-/* File: Classes/TaskViewController.m:647 */
-/* Flag: untranslated */
-"Overdue" = "Overdue";
-
-/* File: Classes/TaskViewController.m:649 */
-/* Flag: untranslated */
-"Due soon" = "Due soon";
-
-/* File: Classes/TaskViewController.m:651 */
-/* Flag: untranslated */
-"Started" = "Started";
-
-/* File: Classes/TaskViewController.m:653 */
-/* Flag: untranslated */
-"Not started" = "Not started";
-
-/* File: Classes/TaskViewController.m:655 */
-/* File: Classes/ReminderController.m:89 */
-/* Flag: untranslated */
-"Completed" = "Completed";
-
-/* File: Classes/TaskViewController.m:719 */
-/* Flag: untranslated */
-"Add task..." = "Add task...";
-
-/* File: Classes/TaskCellBig.m:88 */
-/* Flag: untranslated */
-/* Flag: objc-format */
-"Start %@" = "Start %@";
-
-/* File: Classes/DateCell.m:38 */
-/* Flag: untranslated */
-"None" = "None";
-
-/* File: Classes/CategoryViewController.m:230 */
-/* File: Classes/CategoryViewController.m:422 */
-/* File: Classes/CategoryViewController.m:458 */
-/* File: Classes/CategoryViewController.m:479 */
-/* Flag: untranslated */
-"Enter category name" = "Enter category name";
-
-/* File: Classes/CategoryViewController.m:566 */
-/* Flag: untranslated */
-"Add subcategory" = "Add subcategory";
-
-/* File: Classes/CategoryViewController.m:631 */
-/* File: Classes/CategoryViewController.m:666 */
-/* Flag: untranslated */
-"Looking for Task Coach" = "Looking for Task Coach";
-
-/* File: Classes/TaskCoachAppDelegate.m:37 */
-/* Flag: untranslated */
-"Save" = "Save";
-
-/* File: Classes/TaskCoachAppDelegate.m:39 */
-/* Flag: untranslated */
-"Sync" = "Sync";
-
-/* File: Classes/TaskCoachAppDelegate.m:40 */
-/* Flag: untranslated */
-"Activity log" = "Activity log";
-
-/* File: Classes/NewCategoryiPad.m:39 */
-/* Flag: untranslated */
-"Category name" = "Category name";
-
+/* File: Classes/CategoryTaskViewController.m:153 */
+/* File: Classes/TaskCoachAppDelegate.m:44 */
+/* File: Classes/TaskCoachAppDelegate.m:55 */
+/* File: Classes/TaskCoachAppDelegate.m:59 */
 /* File: Classes/TaskDetailsGeneral.m:54 */
-/* Flag: untranslated */
-"Description" = "Description";
+"Categories" = "Категории";
 
-/* File: Classes/TaskDetailsGeneral.m:56 */
-/* File: Classes/TaskDetailsGeneral.m:94 */
-/* Flag: untranslated */
-/* Flag: objc-format */
-"Priority: %@" = "Priority: %@";
+/* File: Classes/SyncViewController.m:68 */
+/* File: Classes/Synchronization/InitialState.m:25 */
+"Connecting..." = "Подключение...";
 
-/* File: Classes/Synchronization/AuthentificationState.m:26 */
-/* Flag: untranslated */
-"Please type your password." = "Please type your password.";
-
-/* File: Classes/Synchronization/AuthentificationState.m:44 */
-/* Flag: untranslated */
-"Authentication" = "Authentication";
-
-/* File: Classes/Synchronization/InitialState.m:56 */
-/* Flag: untranslated */
-"Connection error" = "Connection error";
-
-/* File: Classes/Synchronization/InitialState.m:57 */
-/* Flag: untranslated */
-"An error occurred while connecting to the remote host. Please check your settings. Also check that Task Coach is running on the remote host. Last, check your firewall settings." = "An error occurred while connecting to the remote host. Please check your settings. Also check that Task Coach is running on the remote host. Last, check your firewall settings.";
-
-/* File: Classes/Synchronization/InitialState.m:58 */
-/* File: Classes/Synchronization/BaseState.m:57 */
-/* File: Classes/Synchronization/BaseState.m:72 */
-/* Flag: untranslated */
-"Abort" = "Abort";
-
+/* File: Classes/SyncViewController.m:158 */
 /* File: Classes/Synchronization/BaseState.m:55 */
 /* File: Classes/Synchronization/BaseState.m:70 */
 /* File: Classes/Synchronization/ProtocolNegotiationState.m:68 */
-/* Flag: untranslated */
-"Error" = "Error";
+"Error" = "Ошибка";
 
-/* File: Classes/Synchronization/BaseState.m:56 */
-/* Flag: untranslated */
-"The connection was unexpectedly closed." = "The connection was unexpectedly closed.";
+/* File: Classes/SyncViewController.m:158 */
+"Your e-mail settings are not set." = "Ваш адрес эл. почты не установлен.";
 
-/* File: Classes/Synchronization/BaseState.m:71 */
-/* Flag: untranslated */
+/* File: Classes/SyncViewController.m:158 */
+/* File: Classes/SimpleDatePicker.m:37 */
+/* File: Classes/StringChoiceAlert.m:16 */
+/* File: Classes/NewCategoryiPad.m:41 */
+/* File: Classes/Synchronization/AuthentificationState.m:31 */
+/* File: Classes/Synchronization/ProtocolNegotiationState.m:71 */
+/* File: Classes/ReminderController.m:89 */
+"OK" = "OK";
+
+/* File: Classes/SyncViewController.m:165 */
+"Task Coach sync log" = "Журнал синхронизации Task Coach";
+
+/* File: Classes/SyncViewController.m:197 */
+"Debug" = "Отладка";
+
+/* File: Classes/SyncViewController.m:197 */
+"Do you want to send the sync log by e-mail ?" = "Желаете отправить журнал синхронизации Task Coach по эл.почте?";
+
+/* File: Classes/SyncViewController.m:197 */
+/* File: Classes/TaskViewController.m:533 */
+/* File: Classes/TaskDetailsEffortsBase.m:161 */
+"No" = "Нет";
+
+/* File: Classes/SyncViewController.m:198 */
+/* File: Classes/TaskViewController.m:534 */
+/* File: Classes/TaskDetailsEffortsBase.m:161 */
+"Yes" = "Да";
+
+/* File: Classes/StringChoiceAlert.m:16 */
+/* File: Classes/TaskViewController.m:298 */
+/* File: Classes/TaskCoachAppDelegate.m:52 */
+/* File: Classes/TaskCoachAppDelegate.m:64 */
+/* File: Classes/Synchronization/AuthentificationState.m:30 */
+/* File: Classes/TaskDetailsEffortsBase.m:161 */
+"Cancel" = "Отмена";
+
+/* File: Classes/TaskDetailsRecurrencePeriodPicker.m:70 */
+"Daily" = "Ежедневно";
+
+/* File: Classes/TaskDetailsRecurrencePeriodPicker.m:72 */
+"Weekly" = "Еженедельно";
+
+/* File: Classes/TaskDetailsRecurrencePeriodPicker.m:74 */
+"Monthly" = "Ежемесячно";
+
+/* File: Classes/TaskDetailsRecurrencePeriodPicker.m:76 */
+"Yearly" = "Ежегодно";
+
+/* File: Classes/TaskViewController.m:155 */
+/* File: Classes/TaskViewController.m:169 */
+"Search tasks..." = "Поиск задач...";
+
+/* File: Classes/TaskViewController.m:298 */
+/* File: Classes/TaskViewController.m:300 */
+"Grouping" = "Группирование";
+
+/* File: Classes/TaskViewController.m:302 */
+"Status" = "Статус";
+
+/* File: Classes/TaskViewController.m:303 */
+"Priority" = "Приоритет";
+
+/* File: Classes/TaskViewController.m:304 */
+/* File: Classes/TaskCoachAppDelegate.m:38 */
+"Start date" = "Дата начала";
+
+/* File: Classes/TaskViewController.m:305 */
+/* File: Classes/TaskCoachAppDelegate.m:39 */
+"Due date" = "Выполнить до";
+
+/* File: Classes/TaskViewController.m:531 */
+"Confirmation" = "Подтверждение";
+
+/* File: Classes/TaskViewController.m:532 */
 /* Flag: objc-format */
-"A network error occurred: %@" = "A network error occurred: %@";
+"Do you really want to mark \"%@\" complete ?" = "Вы действительно хотите пометить \"%@\" завершенной?";
 
-/* File: Classes/Synchronization/ProtocolNegotiationState.m:28 */
-/* Flag: untranslated */
-"Protocol negotiation..." = "Protocol negotiation...";
+/* File: Classes/TaskViewController.m:579 */
+"Overdue" = "Просрочено";
 
-/* File: Classes/Synchronization/ProtocolNegotiationState.m:69 */
-/* Flag: untranslated */
-"The version of the desktop Task Coach is too old. Please upgrade it and retry." = "The version of the desktop Task Coach is too old. Please upgrade it and retry.";
+/* File: Classes/TaskViewController.m:581 */
+"Due soon" = "Скоро истекает";
 
-/* File: Classes/Synchronization/FullFromDesktopState.m:29 */
-/* Flag: untranslated */
-"Synchronizing..." = "Synchronizing...";
+/* File: Classes/TaskViewController.m:583 */
+"Started" = "Начато";
 
-/* File: Classes/TaskDetailsController.m:34 */
-/* Flag: untranslated */
-"General" = "General";
+/* File: Classes/TaskViewController.m:585 */
+"Not started" = "Не начато";
 
-/* File: Classes/TaskDetailsController.m:39 */
-/* Flag: untranslated */
-"Dates" = "Dates";
+/* File: Classes/TaskViewController.m:587 */
+/* File: Classes/ReminderController.m:90 */
+"Completed" = "Завершено";
 
-/* File: Classes/TaskDetailsController.m:44 */
-/* Flag: untranslated */
-"Efforts" = "Efforts";
+/* File: Classes/TaskViewController.m:651 */
+"Add task..." = "Добавить задачу...";
 
-/* File: Classes/TaskDetailsEffortsBase.m:135 */
-/* Flag: untranslated */
-"Stop tracking" = "Stop tracking";
-
-/* File: Classes/TaskDetailsEffortsBase.m:138 */
-/* Flag: untranslated */
-"Start tracking" = "Start tracking";
-
-/* File: Classes/TaskDetailsEffortsBase.m:156 */
-/* Flag: untranslated */
-"Warning" = "Warning";
-
-/* File: Classes/TaskDetailsEffortsBase.m:156 */
-/* Flag: untranslated */
+/* File: Classes/TaskCellBig.m:88 */
 /* Flag: objc-format */
-"There are %d task(s) currently tracked. Stop tracking them ?" = "There are %d task(s) currently tracked. Stop tracking them ?";
+"Start %@" = "Начать %@";
 
-/* File: Classes/TaskDetailsEffortsBase.m:333 */
-/* Flag: untranslated */
-/* Flag: objc-format */
-"Total spent: %@" = "Total spent: %@";
+/* File: Classes/DateCell.m:38 */
+"None" = "Нет";
 
-/* File: Classes/TaskDetailsEffortsBase.m:345 */
-/* Flag: untranslated */
-/* Flag: objc-format */
-"From %@ to %@ (%@)" = "From %@ to %@ (%@)";
+/* File: Classes/CategoryViewController.m:234 */
+/* File: Classes/CategoryViewController.m:423 */
+/* File: Classes/CategoryViewController.m:459 */
+/* File: Classes/CategoryViewController.m:480 */
+"Enter category name" = "Введите название категории";
 
-/* File: Classes/TaskDetailsEffortsBase.m:352 */
-/* Flag: untranslated */
-/* Flag: objc-format */
-"%@ on %@" = "%@ on %@";
+/* File: Classes/CategoryViewController.m:571 */
+"Add subcategory" = "Добавить подкатегорию";
 
-/* File: Classes/ReminderController.m:88 */
+/* File: Classes/CategoryViewController.m:634 */
+/* File: Classes/CategoryViewController.m:669 */
+"Looking for Task Coach" = "Поиск Task Coach";
+
+/* File: Classes/TaskCoachAppDelegate.m:40 */
+"Completion date" = "Дата выполнения";
+
+/* File: Classes/TaskCoachAppDelegate.m:41 */
+/* File: Classes/ReminderController.m:89 */
 /* File: Classes/TaskDetailsDates.m:61 */
-/* Flag: untranslated */
-"Reminder" = "Reminder";
+"Reminder" = "Напоминание";
 
-/* File: Classes/TaskDetailsDates.m:43 */
-/* Flag: untranslated */
-"Start" = "Start";
-
-/* File: Classes/TaskDetailsDates.m:49 */
-/* Flag: untranslated */
-"Due" = "Due";
-
-/* File: Classes/TaskDetailsDates.m:55 */
-/* Flag: untranslated */
-"Completion" = "Completion";
-
+/* File: Classes/TaskCoachAppDelegate.m:42 */
 /* File: Classes/TaskDetailsDates.m:66 */
 /* File: Classes/TaskDetailsRecurrenceControlleriPad.m:82 */
-/* Flag: untranslated */
-"Recurrence" = "Recurrence";
+"Recurrence" = "Повторение";
+
+/* File: Classes/TaskCoachAppDelegate.m:43 */
+/* File: Classes/TaskDetailsEffortsBase.m:141 */
+"Start tracking" = "Начать учет";
+
+/* File: Classes/TaskCoachAppDelegate.m:45 */
+"Activity log" = "Журнал активности";
+
+/* File: Classes/TaskCoachAppDelegate.m:48 */
+/* File: Classes/TaskCoachAppDelegate.m:56 */
+/* File: Classes/TaskCoachAppDelegate.m:60 */
+"Sync" = "Синхр.";
+
+/* File: Classes/TaskCoachAppDelegate.m:51 */
+/* File: Classes/TaskCoachAppDelegate.m:63 */
+"Save" = "Сохранить";
+
+/* File: Classes/NewCategoryiPad.m:39 */
+"Category name" = "Название категории";
+
+/* File: Classes/TaskDetailsGeneral.m:53 */
+"Description" = "Описание";
+
+/* File: Classes/TaskDetailsGeneral.m:55 */
+/* File: Classes/TaskDetailsGeneral.m:92 */
+/* Flag: objc-format */
+"Priority: %@" = "Приоритет: %@";
+
+/* File: Classes/Synchronization/AuthentificationState.m:27 */
+"Please type your password." = "Введите ваш пароль";
+
+/* File: Classes/Synchronization/AuthentificationState.m:45 */
+"Authentication" = "Авторизация";
+
+/* File: Classes/Synchronization/InitialState.m:53 */
+"Connection error" = "Ошибка подключения";
+
+/* File: Classes/Synchronization/InitialState.m:54 */
+"An error occurred while connecting to the remote host. Please check your settings. Also check that Task Coach is running on the remote host. Last, check your firewall settings." = "Произошла ошибка при подключении к удаленному хосту. Пожалуйста, проверьте настройки. Также проверьте, что Task Coach работает на удаленном хосте. И последнее, проверьте настройки брандмауэра.";
+
+/* File: Classes/Synchronization/InitialState.m:55 */
+/* File: Classes/Synchronization/BaseState.m:57 */
+/* File: Classes/Synchronization/BaseState.m:72 */
+"Abort" = "Отменить";
+
+/* File: Classes/Synchronization/BaseState.m:56 */
+"The connection was unexpectedly closed." = "Соединение было неожиданно закрыто.";
+
+/* File: Classes/Synchronization/BaseState.m:71 */
+/* Flag: objc-format */
+"A network error occurred: %@" = "Произошла сетевая ошибка: %@";
+
+/* File: Classes/Synchronization/ProtocolNegotiationState.m:28 */
+"Protocol negotiation..." = "Согласование протокола...";
+
+/* File: Classes/Synchronization/ProtocolNegotiationState.m:69 */
+"The version of the desktop Task Coach is too old. Please upgrade it and retry." = "Версия Task Coach на компьютере устарела. Пожалуйста, обновите её и повторите.";
+
+/* File: Classes/Synchronization/FullFromDesktopState.m:29 */
+"Synchronizing..." = "Синхронизация...";
+
+/* File: Classes/TaskDetailsController.m:34 */
+"General" = "Основные";
+
+/* File: Classes/TaskDetailsController.m:39 */
+"Dates" = "Даты";
+
+/* File: Classes/TaskDetailsController.m:44 */
+"Efforts" = "Работы";
+
+/* File: Classes/TaskDetailsEffortsBase.m:138 */
+"Stop tracking" = "Остановить учет";
+
+/* File: Classes/TaskDetailsEffortsBase.m:160 */
+"Warning" = "Предупреждение";
+
+/* File: Classes/TaskDetailsEffortsBase.m:160 */
+/* Flag: objc-format */
+"There are %d task(s) currently tracked. Stop tracking them ?" = "Существует %d задач(а) отслеживаемая(ые) сейчас. Остановить слежение за ними?";
+
+/* File: Classes/TaskDetailsEffortsBase.m:338 */
+/* Flag: objc-format */
+"Total spent: %@" = "Всего затрачено: %@";
+
+/* File: Classes/TaskDetailsEffortsBase.m:350 */
+/* Flag: objc-format */
+"From %@ to %@ (%@)" = "Из %@ к %@ (%@)";
+
+/* File: Classes/TaskDetailsEffortsBase.m:357 */
+/* Flag: objc-format */
+"%@ on %@" = "%@ на %@";
+
+/* File: Classes/TaskDetailsDates.m:43 */
+"Start" = "Начало";
+
+/* File: Classes/TaskDetailsDates.m:49 */
+"Due" = "Срок";
+
+/* File: Classes/TaskDetailsDates.m:55 */
+"Completion" = "Завершение";
 
 /* File: Classes/TaskDetailsDates.m:78 */
 /* File: Classes/TaskDetailsRecurrenceControlleriPad.m:83 */
-/* Flag: untranslated */
-"Same weekday" = "Same weekday";
+"Same weekday" = "Тот же день недели";
 
 /* File: Classes/TaskDetailsDates.m:117 */
 /* File: Classes/TaskDetailsRecurrenceControlleriPad.m:40 */
-/* Flag: untranslated */
-"Day(s)" = "Day(s)";
+"Day(s)" = "День (Дней)";
 
 /* File: Classes/TaskDetailsDates.m:120 */
 /* File: Classes/TaskDetailsRecurrenceControlleriPad.m:43 */
-/* Flag: untranslated */
-"Week(s)" = "Week(s)";
+"Week(s)" = "Неделя(ль)";
 
 /* File: Classes/TaskDetailsDates.m:123 */
 /* File: Classes/TaskDetailsRecurrenceControlleriPad.m:46 */
-/* Flag: untranslated */
-"Month(s)" = "Month(s)";
+"Month(s)" = "Месяц(ев)";
 
 /* File: Classes/TaskDetailsDates.m:126 */
 /* File: Classes/TaskDetailsRecurrenceControlleriPad.m:49 */
-/* Flag: untranslated */
-"Year(s)" = "Year(s)";
+"Year(s)" = "Год(а)";
 
-/* Flag: untranslated */
-"Display" = "Display";
+/* Flag: unmatched */
+"No tasks." = "Нет задач.";
 
-/* Flag: untranslated */
-"Show completed" = "Show completed";
+/* Flag: unmatched */
+"Incorrect password." = "Неверный пароль.";
 
-/* Flag: untranslated */
-"Show inactive" = "Show inactive";
+/* Flag: unmatched */
+"Retry" = "Повтор";
 
-/* Flag: untranslated */
-"Icon position" = "Icon position";
+/* Flag: unmatched */
+"Display" = "Показать";
 
-/* Flag: untranslated */
-"Left" = "Left";
+/* Flag: unmatched */
+"Icon position" = "Позиция иконки";
 
-/* Flag: untranslated */
-"Right" = "Right";
+/* Flag: unmatched */
+"Complete" = "Выполнено";
 
-/* Flag: untranslated */
-"Compact tasks" = "Compact tasks";
+/* Flag: unmatched */
+"Misc" = "Разное";
 
-/* Flag: untranslated */
-"Misc" = "Misc";
+/* Flag: unmatched */
+"Go on" = "Продолжить";
 
-/* Flag: untranslated */
-"Confirm complete" = "Confirm complete";
+/* Flag: unmatched */
+/* Flag: objc-format */
+"It seems that the desktop Task Coach version is too old. Please consider upgrading (you may loose some data if you go on anyway)." = "Кажется, что настольная версия Task Coach слишком устарела. Пожалуйста, рассмотрите возможность обновления (вы можете потерять часть данных, если всё равно продолжите).";
 
-/* Flag: untranslated */
-"Due soon # of days     " = "Due soon # of days     ";
+/* Flag: unmatched */
+"Due soon # of days     " = "Скоро истекает № дней     ";
+
+/* Flag: unmatched */
+/* Flag: objc-format */
+"%d seconds" = "%d секунд(ы)";
+
+/* Flag: unmatched */
+/* Flag: objc-format */
+"%d minutes" = "%d минут(ы)";
+
+/* Flag: unmatched */
+"Unnamed file" = "Файл без имени";
+
+/* Flag: unmatched */
+"Empty text." = "Пустой текст.";
+
+/* Flag: unmatched */
+/* Flag: objc-format */
+"%d effort(s)" = "%d выполнение(я)";
+
+/* Flag: unmatched */
+"New subtask" = "Новая подзадача";
