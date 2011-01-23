@@ -115,9 +115,6 @@ class WindowDimensionsTracker(object):
         
 
 class MainWindow(DeferredCallMixin, PowerStateMixin, widgets.AuiManagedFrameWithNotebookAPI):
-    pageClosedEvent = aui.EVT_AUI_PANE_CLOSE
-    pageChangedEvent = aui.EVT_AUI_PANE_ACTIVATED
-    
     def __init__(self, iocontroller, taskFile, settings,
                  splash=None, *args, **kwargs):
         super(MainWindow, self).__init__(None, -1, '', *args, **kwargs)
@@ -240,7 +237,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, widgets.AuiManagedFrameWith
             eventType='view.statusbar')
         patterns.Publisher().registerObserver(self.onShowToolBar, 
             eventType='view.toolbar')
-        self.Bind(self.pageClosedEvent, self.onCloseToolBar)
+        self.Bind(aui.EVT_AUI_PANE_CLOSE, self.onCloseToolBar)
 
     def closeSplashAndShowTips(self):
         wx.CallAfter(self.closeSplash)
