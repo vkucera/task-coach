@@ -42,6 +42,10 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
         
     def GetMainWindow(self):
         return self
+    
+    def getTextCtrl(self):
+        textCtrl = [child for child in self.GetChildren() if isinstance(child, wx.TextCtrl)]
+        return textCtrl[0] if textCtrl else self
 
     def getBitmap(self, bitmap):
         return wx.ArtProvider_GetBitmap(bitmap, wx.ART_TOOLBAR,
@@ -61,6 +65,11 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
             _('Search both subject and description'))
         self.__searchDescriptionMenuItem.Check(self.__searchDescription)
         self.SetMenu(menu)
+        
+    def PopupMenu(self):
+        rect = self.GetClientRect()
+        x, y = rect[0], rect[1] + rect[3] + 3
+        self.PopupMenuXY(self.GetMenu(), x, y)
         
     def bindEventHandlers(self):
         for args in [(wx.EVT_TIMER, self.onFind),

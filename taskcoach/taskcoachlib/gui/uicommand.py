@@ -2205,7 +2205,38 @@ class Search(ViewerCommand, SettingsCommand):
             includeSubItems=includeSubItems, searchDescription=searchDescription,
             callback=self.onFind)
         toolbar.AddControl(self.searchControl)
+        self.bindKeyDownInViewer()
+        self.bindKeyDownInSearchCtrl()
+        
+    def bindKeyDownInViewer(self):
+        ''' Bind wx.EVT_KEY_DOWN to self.onViewerKeyDown so we can catch
+            Ctrl-F. '''
+        self.viewer.getWidget().GetMainWindow().Bind(wx.EVT_KEY_DOWN, 
+                                                     self.onViewerKeyDown)
+        
+    def bindKeyDownInSearchCtrl(self):
+        ''' Bind wx.EVT_KEY_DOWN to self.onSearchCtrlKeyDown so we can catch 
+            the Escape key and drop down the menu on Ctrl-Down. '''
+        self.searchControl.getTextCtrl().Bind(wx.EVT_KEY_DOWN, 
+                                              self.onSearchCtrlKeyDown)
 
+    def onViewerKeyDown(self, event):
+        ''' On Ctrl-F, move focus to the search control. '''
+        if event.KeyCode == ord('F') and event.CmdDown() and not event.AltDown():
+            self.searchControl.SetFocus()
+        else:
+            event.Skip()
+            
+    def onSearchCtrlKeyDown(self, event):
+        ''' On Escape, move focus to the viewer, on Ctrl-Down popup the 
+            menu. '''
+        if event.KeyCode == wx.WXK_ESCAPE:
+            self.viewer.SetFocus()
+        elif event.KeyCode == wx.WXK_DOWN and event.AltDown():
+            self.searchControl.PopupMenu()
+        else:
+            event.Skip()
+            
     def doCommand(self, event):
         pass # Not used
     
