@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.9', 'January 24, 2011',
+Release('1.2.9', 'January 25, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Improve keyboard navigation between viewers.''')
@@ -32,7 +32,9 @@ Release('1.2.9', 'January 24, 2011',
 keyboard focus to the toolbar search control. Hitting Escape when the toolbar
 search control has keyboard focus moves the focus back to the viewer. Hitting
 Ctrl-Down when the toolbar search control has keyboard focus pops up the
-search control menu.''', 'http://uservoice.com/a/6fW73')
+search control menu.''', 'http://uservoice.com/a/6fW73'),
+        Feature('''Added overview of keyboard shortcuts to help 
+information.''')
         ]
     ),
 

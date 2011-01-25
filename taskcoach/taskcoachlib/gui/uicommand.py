@@ -478,8 +478,8 @@ class NeedsDeletedItemsMixin(object):
 class FileOpen(IOCommand):
     def __init__(self, *args, **kwargs):
         super(FileOpen, self).__init__(menuText=_('&Open...\tCtrl+O'),
-            helpText=_('Open a %s file')%meta.name, bitmap='fileopen',
-            id=wx.ID_OPEN, *args, **kwargs)
+            helpText=help.fileOpen, bitmap='fileopen', id=wx.ID_OPEN, 
+            *args, **kwargs)
 
     def doCommand(self, event):
         self.iocontroller.open()
@@ -509,8 +509,8 @@ class FileMerge(IOCommand):
 class FileClose(IOCommand):
     def __init__(self, *args, **kwargs):
         super(FileClose, self).__init__(menuText=_('&Close\tCtrl+W'),
-            helpText=_('Close the current file'), bitmap='close',
-            id=wx.ID_CLOSE, *args, **kwargs)
+            helpText=help.fileClose, bitmap='close', id=wx.ID_CLOSE, 
+            *args, **kwargs)
 
     def doCommand(self, event):
         self.iocontroller.close()
@@ -519,8 +519,8 @@ class FileClose(IOCommand):
 class FileSave(IOCommand):
     def __init__(self, *args, **kwargs):
         super(FileSave, self).__init__(menuText=_('&Save\tCtrl+S'),
-            helpText=_('Save the current file'), bitmap='save',
-            id=wx.ID_SAVE, *args, **kwargs)
+            helpText=help.fileSave, bitmap='save', id=wx.ID_SAVE, 
+            *args, **kwargs)
 
     def doCommand(self, event):
         self.iocontroller.save()
@@ -532,8 +532,8 @@ class FileSave(IOCommand):
 class FileSaveAs(IOCommand):
     def __init__(self, *args, **kwargs):
         super(FileSaveAs, self).__init__(menuText=_('S&ave as...\tShift+Ctrl+S'),
-            helpText=_('Save the current file under a new name'), 
-            bitmap='saveas', id=wx.ID_SAVEAS, *args, **kwargs)
+            helpText=help.fileSaveAs, bitmap='saveas', id=wx.ID_SAVEAS, 
+            *args, **kwargs)
 
     def doCommand(self, event):
         self.iocontroller.saveas()
@@ -605,9 +605,9 @@ Do you still want to purge?'''),
 class PrintPageSetup(SettingsCommand, UICommand):
     def __init__(self, *args, **kwargs):
         super(PrintPageSetup, self).__init__(\
-            menuText=_('&Page setup...\tShift+Ctrl+P'), 
-            helpText=_('Setup the characteristics of the printer page'), 
-            bitmap='pagesetup', id=wx.ID_PRINT_SETUP, *args, **kwargs)
+            menuText=_('&Page setup...\tShift+Ctrl+P'),
+            helpText=help.printPageSetup, bitmap='pagesetup', 
+            id=wx.ID_PRINT_SETUP, *args, **kwargs)
 
     def doCommand(self, event):
         printerSettings = printer.PrinterSettings(self.settings)
@@ -640,10 +640,9 @@ class PrintPreview(ViewerCommand, SettingsCommand):
 
 class Print(ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
-        super(Print, self).__init__(\
-            menuText=_('&Print...\tCtrl+P'), 
-            helpText=_('Print the current file'), 
-            bitmap='print', id=wx.ID_PRINT, *args, **kwargs)
+        super(Print, self).__init__(menuText=_('&Print...\tCtrl+P'), 
+            helpText=help.print_, bitmap='print', id=wx.ID_PRINT, 
+            *args, **kwargs)
 
     def doCommand(self, event): 
         printerSettings = printer.PrinterSettings(self.settings)
@@ -750,8 +749,8 @@ class FileSynchronize(IOCommand, SettingsCommand):
 class FileQuit(UICommand):
     def __init__(self, *args, **kwargs):
         super(FileQuit, self).__init__(menuText=_('&Quit\tCtrl+Q'), 
-            helpText=_('Exit %s')%meta.name, bitmap='exit', 
-            id=wx.ID_EXIT, *args, **kwargs)
+            helpText=help.fileQuit, bitmap='exit', id=wx.ID_EXIT, 
+            *args, **kwargs)
 
     def doCommand(self, event):
         self.mainWindow().Close(force=True)
@@ -763,8 +762,8 @@ def getUndoMenuText():
 class EditUndo(UICommand):
     def __init__(self, *args, **kwargs):
         super(EditUndo, self).__init__(menuText=getUndoMenuText(),
-            helpText=_('Undo the last command'), bitmap='undo',
-            id=wx.ID_UNDO, *args, **kwargs)
+            helpText=help.editUndo, bitmap='undo', id=wx.ID_UNDO, 
+            *args, **kwargs)
             
     def doCommand(self, event):
         windowWithFocus = wx.Window.FindFocus()
@@ -792,8 +791,8 @@ def getRedoMenuText():
 class EditRedo(UICommand):
     def __init__(self, *args, **kwargs):
         super(EditRedo, self).__init__(menuText=getRedoMenuText(),
-            helpText=_('Redo the last command that was undone'), bitmap='redo',
-            id=wx.ID_REDO, *args, **kwargs)
+            helpText=help.editRedo, bitmap='redo', id=wx.ID_REDO, 
+            *args, **kwargs)
 
     def doCommand(self, event):
         windowWithFocus = wx.Window.FindFocus()
@@ -815,11 +814,10 @@ class EditRedo(UICommand):
                 super(EditRedo, self).enabled(event)
 
 
-class EditCut(NeedsSelectionMixin, ViewerCommand):
+class EditCut(NeedsSelectionMixin, ViewerCommand):    
     def __init__(self, *args, **kwargs):     
         super(EditCut, self).__init__(menuText=_('Cu&t\tCtrl+X'), 
-            helpText=_('Cut the selected item(s) to the clipboard'), 
-            bitmap='cut', *args, **kwargs)
+            helpText=help.editCut, bitmap='cut', *args, **kwargs)
 
     def doCommand(self, event):
         windowWithFocus = wx.Window.FindFocus()
@@ -841,8 +839,7 @@ class EditCut(NeedsSelectionMixin, ViewerCommand):
 class EditCopy(NeedsSelectionMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(EditCopy, self).__init__(menuText=_('&Copy\tCtrl+C'), 
-            helpText=_('Copy the selected item(s) to the clipboard'), 
-            bitmap='copy', *args, **kwargs)
+            helpText=help.editCopy, bitmap='copy', *args, **kwargs)
 
     def doCommand(self, event):
         windowWithFocus = wx.Window.FindFocus()
@@ -864,8 +861,8 @@ class EditCopy(NeedsSelectionMixin, ViewerCommand):
 class EditPaste(UICommand):
     def __init__(self, *args, **kwargs):
         super(EditPaste, self).__init__(menuText=_('&Paste\tCtrl+V'), 
-            helpText=_('Paste item(s) from the clipboard'), bitmap='paste', 
-            id=wx.ID_PASTE, *args, **kwargs)
+            helpText=help.editPaste, bitmap='paste', id=wx.ID_PASTE, 
+            *args, **kwargs)
 
     def doCommand(self, event):
         windowWithFocus = wx.Window.FindFocus()
@@ -887,8 +884,8 @@ class EditPasteAsSubItem(NeedsSelectedCompositeMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(EditPasteAsSubItem, self).__init__(
             menuText=_('P&aste as subitem\tShift+Ctrl+V'), 
-            helpText=_('Paste item(s) from the clipboard as subitem of the selected item'),
-            bitmap='pasteintotask', *args, **kwargs)
+            helpText=help.editPasteAsSubitem, bitmap='pasteintotask', 
+            *args, **kwargs)
 
     def doCommand(self, event):
         pasteCommand = command.PasteAsSubItemCommand(
@@ -908,7 +905,7 @@ class EditPasteAsSubItem(NeedsSelectedCompositeMixin, ViewerCommand):
 class EditPreferences(SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(EditPreferences, self).__init__(menuText=_('&Preferences...\tAlt+P'),
-            helpText=_('Edit preferences'), bitmap='wrench_icon',
+            helpText=help.editPreferences, bitmap='wrench_icon',
             id=wx.ID_PREFERENCES, *args, **kwargs)
             
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
@@ -933,8 +930,8 @@ class EditSyncPreferences(IOCommand):
 class SelectAll(NeedsItemsMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(SelectAll, self).__init__(menuText=_('&All\tCtrl+A'),
-            helpText=_('Select all items in the current view'), 
-            bitmap='selectall', id=wx.ID_SELECTALL, *args, **kwargs)
+            helpText=help.editSelectAll, bitmap='selectall', id=wx.ID_SELECTALL, 
+            *args, **kwargs)
         
     def doCommand(self, event):
         windowWithFocus = wx.Window.FindFocus()
@@ -1069,7 +1066,7 @@ class ViewExpandAll(NeedsTreeViewerMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(ViewExpandAll, self).__init__( \
             menuText=_('&Expand all items\tShift+Ctrl+E'),
-            helpText=_('Expand all items with subitems'), *args, **kwargs)
+            helpText=help.viewExpandAll, *args, **kwargs)
 
     def enabled(self, event):
         return super(ViewExpandAll, self).enabled(event) and \
@@ -1083,7 +1080,7 @@ class ViewCollapseAll(NeedsTreeViewerMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(ViewCollapseAll, self).__init__( \
             menuText=_('&Collapse all items\tShift+Ctrl+C'),
-            helpText=_('Collapse all items with subitems'), *args, **kwargs)
+            helpText=help.viewCollapseAll, *args, **kwargs)
     
     def enabled(self, event):
         return super(ViewCollapseAll, self).enabled(event) and \
@@ -1467,8 +1464,8 @@ class TaskMaxPriority(NeedsSelectedTasksMixin, TaskListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(TaskMaxPriority, self).__init__(
             menuText=_('&Maximize priority\tShift+Ctrl+I'),
-            helpText=_('Make the selected task(s) the highest priority task(s)'), 
-            bitmap='maxpriority', *args, **kwargs)
+            helpText=help.taskMaxPriority, bitmap='maxpriority', 
+            *args, **kwargs)
         
     def doCommand(self, event):
         maxPriority = command.MaxPriorityCommand(self.taskList, 
@@ -1480,8 +1477,8 @@ class TaskMinPriority(NeedsSelectedTasksMixin, TaskListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(TaskMinPriority, self).__init__(
             menuText=_('&Minimize priority\tShift+Ctrl+D'),
-            helpText=_('Make the selected task(s) the lowest priority task(s)'), 
-            bitmap='minpriority', *args, **kwargs)
+            helpText=help.taskMinPriority, bitmap='minpriority', 
+            *args, **kwargs)
         
     def doCommand(self, event):
         minPriority = command.MinPriorityCommand(self.taskList, 
@@ -1493,8 +1490,8 @@ class TaskIncPriority(NeedsSelectedTasksMixin, TaskListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(TaskIncPriority, self).__init__(
             menuText=_('&Increase priority\tCtrl+I'),
-            helpText=_('Increase the priority of the selected task(s)'), 
-            bitmap='incpriority', *args, **kwargs)
+            helpText=help.taskIncreasePriority, bitmap='incpriority', 
+            *args, **kwargs)
         
     def doCommand(self, event):
         incPriority = command.IncPriorityCommand(self.taskList, 
@@ -1506,8 +1503,8 @@ class TaskDecPriority(NeedsSelectedTasksMixin, TaskListCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(TaskDecPriority, self).__init__(
             menuText=_('&Decrease priority\tCtrl+D'),
-            helpText=_('Decrease the priority of the selected task(s)'), 
-            bitmap='decpriority', *args, **kwargs)
+            helpText=help.taskDecreasePriority, bitmap='decpriority',
+            *args, **kwargs)
         
     def doCommand(self, event):
         decPriority = command.DecPriorityCommand(self.taskList, 
@@ -2137,8 +2134,7 @@ class Help(DialogCommand):
         else:
             # Use a letter, because 'Ctrl-?' doesn't work on Windows:
             menuText = _('&Help contents\tCtrl+H')
-        super(Help, self).__init__(menuText=menuText,
-            helpText=_('Help about the program'),
+        super(Help, self).__init__(menuText=menuText, helpText=help.help,
             bitmap='led_blue_questionmark_icon', dialogTitle=_('Help'),
             dialogText=help.helpHTML, id=wx.ID_HELP, *args, **kwargs)
 

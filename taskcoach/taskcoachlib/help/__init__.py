@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import meta
 from taskcoachlib.i18n import _
 from tips import showTips
+from uicommand import *
 
 _MSURL = "http://www.microsoft.com/downloadS/details.aspx?familyid=200B2FD9-AE1A-4A14-984D-389C36F85647&displaylang=en"
 
@@ -51,6 +52,14 @@ def ul(*li):
 
 def li(*text):
     return '<li>%s</li>'%'\n'.join(text)
+
+def table(*tr):
+    return '<table border=1>%s</table>'%'\n'.join(tr)
+
+def tr(*td):
+    td = '\n'.join(['<td>%s</td>'%td for td in td]) 
+    return '<tr>%s</tr>\n'%td
+
 
 _TOC = sequence(
     h3(_('Table of contents')),
@@ -108,7 +117,9 @@ _TOC = sequence(
             a_href(_('Task templates'), 'templates'),
             ul(
                 li(a_href(_('About templates'), 'abouttemplates')),
-                li(a_href(_('Using templates'), 'usingtemplates'))))))
+                li(a_href(_('Using templates'), 'usingtemplates')))),
+        li(
+            a_href(_('Keyboard shortcuts'), 'shortcuts'))))
   
 
 _taskSection = sequence(
@@ -555,10 +566,53 @@ template from a task starting today and due tomorrow, every time the template
 is instantiated, the start date will be replaced by the current date and the 
 due date by the current date plus one day.''')))
 
+_shortcutSection = sequence(
+    h3(
+        a_name(_('Keyboard shortcuts'), 'shortcuts')),
+    p(
+        _('''%(name)s has several keyboard shortcuts, listed below. Keyboard 
+shortcuts are not configurable at the moment.''')%meta.metaDict),
+    p(
+        table(
+            tr(_('Ctrl-A'), editSelectAll),
+            tr(_('Ctrl-C'), editCopy),
+            tr(_('Shift-Ctrl-C'), viewCollapseAll),
+            tr(_('Ctrl-D'), taskDecreasePriority),
+            tr(_('Shift-Ctrl-D'), taskMinPriority),
+            tr(_('Shift-Ctrl-E'), viewExpandAll),
+            tr(_('Ctrl-F'), search),
+            tr(_('Ctrl-H'), help),
+            tr(_('Ctrl-I'), taskIncreasePriority),
+            tr(_('Shift-Ctrl-I'), taskMaxPriority),
+            tr(_('Ctrl-O'), fileOpen),
+            tr(_('Alt-P'), editPreferences),
+            tr(_('Ctrl-P'), print_),
+            tr(_('Shift-Ctrl-P'), printPageSetup),
+            tr(_('Ctrl-Q'), fileQuit),
+            tr(_('Ctrl-S'), fileSave),
+            tr(_('Shift-Ctrl-S'), fileSaveAs),
+            tr(_('Ctrl-V'), editPaste),
+            tr(_('Shift-Ctrl-V'), editPasteAsSubitem),
+            tr(_('Ctrl-W'), fileClose),
+            tr(_('Ctrl-X'), editCut),
+            tr(_('Ctrl-Y'), editRedo),
+            tr(_('Ctrl-Z'), editUndo),
+            tr(_('Enter'), _('Edit the selected item(s) or close a dialog')),
+            tr(_('Ctrl-Enter'), _('Mark the selected task(s) (un)completed')),
+            tr(_('Escape'), _('Cancel a dialog or move keyboard focus from search control back to viewer')),
+            tr(_('Tab'), _('Move keyboard focus to the next field in the dialog')),
+            tr(_('Shift-Tab'), _('Move keyboard focus to the previous field in the dialog')),
+            tr(_('Ctrl-DELETE'), taskDelete),
+            tr(_('Ctrl-INSERT'), taskNew),
+            tr(_('Shift-Ctrl-INSERT'), taskNewSubtask),
+            tr(_('Ctrl-PgDn'), viewNextViewer),
+            tr(_('Ctrl-PgUp'), viewPreviousViewer),
+            tr(_('Alt-Down'), _('Pop up menu or drop down box')))))
+
 
 helpHTML = _TOC + _taskSection + _effortSection + _categorySection + \
     _printingAndExportingSection + _emailSection + _syncmlSection + \
-    _iPhoneSection + _templatesSection
+    _iPhoneSection + _templatesSection + _shortcutSection
 
 
 aboutHTML = _('''<h4>%(name)s - %(description)s</h4>
