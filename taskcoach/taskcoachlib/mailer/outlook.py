@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, stat
+import os, stat, codecs
 from taskcoachlib import persistence
 
 
@@ -33,14 +33,14 @@ if os.name == 'nt':
         return filenames
 
     def saveItem(item, filename):
-        mailFile = file(filename, 'wb')
+        mailFile = codecs.open(filename, 'wb', 'utf8')
         try:
             mailFile.write(headers(item) + item.Body)
         finally:
             mailFile.close()
             os.chmod(filename, stat.S_IREAD)
 
-    def headers(item, lineSep='\r\n'):
+    def headers(item, lineSep=u'\r\n'):
         headers = []
         headers.append(u'subject: %s'%item.Subject)
         headers.append(u'X-Outlook-ID: %s'%item.EntryID)

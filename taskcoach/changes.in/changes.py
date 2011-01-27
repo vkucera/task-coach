@@ -22,10 +22,11 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.9', 'January 25, 2011',
+Release('1.2.9', 'January 27, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''Improve keyboard navigation between viewers.''')
+        Bug('''Improve keyboard navigation between viewers.'''),
+        Bug('''Accept dropped mail messages from Outlook with non-ascii characters.''')
         ],
     featuresAdded=[
         Feature('''Hitting Ctrl-F when a viewer has keyboard focus moves 
