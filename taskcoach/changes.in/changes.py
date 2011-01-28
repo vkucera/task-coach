@@ -26,7 +26,9 @@ Release('1.2.9', 'January 27, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Improve keyboard navigation between viewers.'''),
-        Bug('''Accept dropped mail messages from Outlook with non-ascii characters.''')
+        Bug('''Accept dropped mail messages from Outlook with non-ascii characters.'''),
+        Bug('''Open editor on the same display as the main window on multi-monitor
+setups.''', '3166563')
         ],
     featuresAdded=[
         Feature('''Hitting Ctrl-F when a viewer has keyboard focus moves 
