@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 28 Nov 2010, 16.00 GMT
+# Latest Revision: 17 Jan 2011, 15.00 GMT
 #
 #
 # TODO List
@@ -214,7 +214,7 @@ License And Version
 
 HyperTreeList is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 28 Nov 2010, 16.00 GMT
+Latest Revision: Andrea Gavana @ 17 Jan 2011, 15.00 GMT
 
 Version 1.2
 
@@ -914,6 +914,7 @@ class TreeListHeaderWindow(wx.Window):
         while idx <= col:
             
             if not self.IsColumnShown(idx):
+                idx += 1
                 continue 
 
             column = self.GetColumn(idx)
@@ -3068,7 +3069,9 @@ class TreeListMainWindow(CustomTreeCtrl):
                         button[2].x = button[0].x + (self._btnWidth2+1)
                         button[2].y = y_mid
                     
+                    dc.SetClippingRegion(x_maincol + _MARGIN, y_top, clip_width, h)
                     dc.DrawPolygon(button)
+                    dc.DestroyClippingRegion()
 
                 else: # if (HasAGWFlag(wxTR_HAS_BUTTONS))
 
@@ -3296,6 +3299,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         self._textCtrl = EditTextCtrl(self, -1, self._editItem, column,
                                       self, self._editItem.GetText(column),
                                       style=style|wx.TE_PROCESS_ENTER)
+        self._textCtrl.SelectAll()
         self._textCtrl.SetFocus()
 
 
@@ -3318,6 +3322,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         le.SetItem(self._editItem)
         le.SetEventObject(self._owner)
         le.SetLabel(value)
+        le.SetInt(self._curColumn if self._curColumn >= 0 else 0)
         le._editCancelled = False
         self._owner.GetEventHandler().ProcessEvent(le)
 
@@ -3397,7 +3402,7 @@ class TreeListMainWindow(CustomTreeCtrl):
 
         if (event.LeftDown() or event.LeftUp() or event.RightDown() or \
             event.RightUp() or event.LeftDClick() or event.Dragging()):
-            if self._textCtrl != None and item != self._textCtrl.item():
+            if self._textCtrl != None and (item != self._textCtrl.item() or column != self._textCtrl.column()):
                 self._textCtrl.StopEditing()
 
         # We do not want a tooltip if we are dragging, or if the rename timer is running
@@ -3542,7 +3547,7 @@ class TreeListMainWindow(CustomTreeCtrl):
             self._dragCount = 0
 
         # we process only the messages which happen on tree items
-        if item == None or not self.IsItemEnabled(item):
+        if (item == None or not self.IsItemEnabled(item)) and not event.GetWheelRotation():
             self._owner.GetEventHandler().ProcessEvent(event)
             return
         
@@ -3955,7 +3960,7 @@ class TreeListMainWindow(CustomTreeCtrl):
             # next sibling
             item, cookie = self.GetNextChild(parent, cookie)
         
-        return max(10, width)
+        return max(10, width) # Prevent zero column width
 
 
     def HideItem(self, item, hide=True):

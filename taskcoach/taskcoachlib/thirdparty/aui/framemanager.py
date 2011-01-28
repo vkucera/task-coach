@@ -132,6 +132,7 @@ wxEVT_AUI_PANE_FLOATING = wx.NewEventType()
 wxEVT_AUI_PANE_FLOATED = wx.NewEventType()
 wxEVT_AUI_PANE_DOCKING = wx.NewEventType()
 wxEVT_AUI_PANE_DOCKED = wx.NewEventType()
+wxEVT_AUI_PANE_ACTIVATED = wx.NewEventType()
 wxEVT_AUI_PERSPECTIVE_CHANGED = wx.NewEventType()
 
 EVT_AUI_PANE_BUTTON = wx.PyEventBinder(wxEVT_AUI_PANE_BUTTON, 0)
@@ -158,6 +159,8 @@ EVT_AUI_PANE_DOCKING = wx.PyEventBinder(wxEVT_AUI_PANE_DOCKING, 0)
 """ A pane in `AuiManager` is about to be docked. """
 EVT_AUI_PANE_DOCKED = wx.PyEventBinder(wxEVT_AUI_PANE_DOCKED, 0)
 """ A pane in `AuiManager` has been docked. """
+EVT_AUI_PANE_ACTIVATED = wx.PyEventBinder(wxEVT_AUI_PANE_ACTIVATED, 0)
+""" A pane in `AuiManager` has been activated. """
 EVT_AUI_PERSPECTIVE_CHANGED = wx.PyEventBinder(wxEVT_AUI_PERSPECTIVE_CHANGED, 0)
 """ The layout in `AuiManager` has been changed. """
 
@@ -4474,7 +4477,7 @@ class AuiManager(wx.EvtHandler):
 
     def FireEvent(self, evtType, pane, canVeto=False):
         """
-        Fires one of the ``EVT_AUI_PANE_FLOATED``/``FLOATING``/``DOCKING``/``DOCKED`` event. 
+        Fires one of the ``EVT_AUI_PANE_FLOATED``/``FLOATING``/``DOCKING``/``DOCKED``/``ACTIVATED`` event. 
 
         :param `evtType`: one of the aforementioned events;
         :param `pane`: the `AuiPaneInfo` instance;
@@ -4994,6 +4997,7 @@ class AuiManager(wx.EvtHandler):
                 window = window.GetParent()
 
             self.RefreshCaptions()
+            self.FireEvent(wxEVT_AUI_PANE_ACTIVATED, window, canVeto=False)
             
 
     def CreateNotebook(self):
@@ -8282,6 +8286,7 @@ class AuiManager(wx.EvtHandler):
         if self.GetAGWFlags() & AUI_MGR_ALLOW_ACTIVE_PANE:
             ret, self._panes = SetActivePane(self._panes, wnd)
             self.RefreshCaptions()
+            self.FireEvent(wxEVT_AUI_PANE_ACTIVATED, wnd, canVeto=False)
 
 
     def OnFloatingPaneMoved(self, wnd, eventOrPt):
@@ -8407,6 +8412,7 @@ class AuiManager(wx.EvtHandler):
             # set the caption as active
             ret, self._panes = SetActivePane(self._panes, pane_window)
             self.RefreshCaptions()
+            self.FireEvent(wxEVT_AUI_PANE_ACTIVATED, pane_window, canVeto=False)
         
         self._action_part = None
         self._action_pane = paneInfo

@@ -114,9 +114,55 @@ class WindowDimensionsTracker(object):
             self.setSetting('position', self._window.GetPosition())
         
 
-class MainWindow(DeferredCallMixin, PowerStateMixin, widgets.AuiManagedFrameWithNotebookAPI):
-    pageClosedEvent = aui.EVT_AUI_PANE_CLOSE
+class AuiManagedFrame(widgets.AuiManagedFrameWithDynamicCenterPane):
+    ''' Add some utility methods. '''
     
+    def setPaneTitle(self, window, title):
+        index = self.getPaneIndex(window)
+        if index != wx.NOT_FOUND:
+            self.manager.GetAllPanes()[index].Caption(title)
+            self.manager.Update()
+            
+    def getPaneTitle(self, index):
+        return self.manager.GetAllPanes()[index].caption
+
+    def getPaneIndex(self, window):
+        for index, paneInfo in enumerate(self.manager.GetAllPanes()):
+            if paneInfo.window == window:
+                return index
+        return wx.NOT_FOUND
+        
+    def getPaneCount(self):
+        return len(self.manager.GetAllPanes())
+    
+    paneCount = property(getPaneCount)
+
+    def advanceSelection(self, forward=True):
+        if self.paneCount <= 1:
+            return # Not enough pages to advance selection
+        curSelection = self.getActivePane()
+        minSelection, maxSelection = 0, self.paneCount - 1
+        if forward:
+            newSelection = curSelection + 1 if minSelection <= curSelection < maxSelection else minSelection
+        else:
+            newSelection = curSelection - 1 if minSelection < curSelection <= maxSelection else maxSelection
+        self.setActivePane(newSelection)
+        activePane = self.manager.GetAllPanes()[newSelection]
+        if activePane.IsToolbar() and self.paneCount > 1:
+            self.advanceSelection(forward)
+
+    def getActivePane(self):
+        for index, paneInfo in enumerate(self.manager.GetAllPanes()):
+            if paneInfo.HasFlag(aui.AuiPaneInfo.optionActive):
+                return index
+        return wx.NOT_FOUND
+
+    def setActivePane(self, targetIndex, *args):
+        targetPane = self.manager.GetAllPanes()[targetIndex]
+        self.manager.ActivatePane(targetPane.window)
+        
+    
+class MainWindow(DeferredCallMixin, PowerStateMixin, AuiManagedFrame):
     def __init__(self, iocontroller, taskFile, settings,
                  splash=None, *args, **kwargs):
         super(MainWindow, self).__init__(None, -1, '', *args, **kwargs)
@@ -187,10 +233,10 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, widgets.AuiManagedFrameWith
             remindercontroller.ReminderController(self, self.taskFile.tasks(), 
                 self.settings)
         
-    def AddPage(self, page, caption, *args):
+    def addPane(self, page, caption, *args):
         name = page.settingsSection()
-        super(MainWindow, self).AddPage(page, caption, name)
-
+        super(MainWindow, self).addPane(page, caption, name)
+        
     def initWindow(self):
         wx.GetApp().SetTopWindow(self)
         self.setTitle(self.taskFile.filename())
@@ -239,7 +285,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin, widgets.AuiManagedFrameWith
             eventType='view.statusbar')
         patterns.Publisher().registerObserver(self.onShowToolBar, 
             eventType='view.toolbar')
-        self.Bind(self.pageClosedEvent, self.onCloseToolBar)
+        self.Bind(aui.EVT_AUI_PANE_CLOSE, self.onCloseToolBar)
 
     def closeSplashAndShowTips(self):
         wx.CallAfter(self.closeSplash)

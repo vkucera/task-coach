@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, os
-from taskcoachlib import patterns, persistence
+from taskcoachlib import patterns, persistence, help
 from taskcoachlib.domain import task, base, category
 from taskcoachlib.i18n import _
 import uicommand, viewer
@@ -350,11 +350,11 @@ class ViewMenu(Menu):
                 'viewnewviewer')
         activateNextViewer = uicommand.ActivateViewer(viewer=viewerContainer,
             menuText=_('&Activate next viewer\tCtrl+PgDn'),
-            helpText=_('Activate the next open viewer'), forward=True,
+            helpText=help.viewNextViewer, forward=True,
             bitmap='activatenextviewer')
         activatePreviousViewer = uicommand.ActivateViewer(viewer=viewerContainer,
             menuText=_('Activate &previous viewer\tCtrl+PgUp'),
-            helpText=_('Activate the previous open viewer'), forward=False,
+            helpText=help.viewPreviousViewer, forward=False,
             bitmap='activatepreviousviewer')
         self.appendUICommands(
             activateNextViewer,

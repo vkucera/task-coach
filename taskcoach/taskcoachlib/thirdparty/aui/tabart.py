@@ -206,7 +206,7 @@ class AuiDefaultTabArt(object):
          ``AUI_NB_TOP``                       With this style, tabs are drawn along the top of the notebook
          ``AUI_NB_LEFT``                      With this style, tabs are drawn along the left of the notebook. Not implemented yet.
          ``AUI_NB_RIGHT``                     With this style, tabs are drawn along the right of the notebook. Not implemented yet.
-         ``AUI_NB_BOTTOM``                    With this style, tabs are drawn along the bottom of the notebook.
+         ``AUI_NB_BOTTOM``                    With this style, tabs are drawn along the bottom of the notebook
          ``AUI_NB_TAB_SPLIT``                 Allows the tab control to be split by dragging a tab
          ``AUI_NB_TAB_MOVE``                  Allows a tab to be moved horizontally by dragging
          ``AUI_NB_TAB_EXTERNAL_MOVE``         Allows a tab to be moved to another tab control
@@ -216,10 +216,10 @@ class AuiDefaultTabArt(object):
          ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
-         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close AuiNotebook tabs by mouse middle button click
-         ``AUI_NB_SUB_NOTEBOOK``              This style is used by AuiManager to create automatic AuiNotebooks
+         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close L{AuiNotebook} tabs by mouse middle button click
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by L{AuiManager} to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
-         ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt``+``Tab`` on Windows
+         ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
          ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
          ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
@@ -247,8 +247,8 @@ class AuiDefaultTabArt(object):
         
         :param `tab_ctrl_size`: the size of the tab control area;
         :param `tab_count`: the number of tabs;
-        :param `minMaxTabWidth`: the minimum and maximum tab widths to be used
-         when the ``AUI_NB_TAB_FIXED_WIDTH`` style is active.
+        :param `minMaxTabWidth`: a tuple containing the minimum and maximum tab widths
+         to be used when the ``AUI_NB_TAB_FIXED_WIDTH`` style is active.
         """
         
         self._fixed_tab_width = 100
@@ -1029,7 +1029,7 @@ class AuiSimpleTabArt(object):
          ``AUI_NB_TOP``                       With this style, tabs are drawn along the top of the notebook
          ``AUI_NB_LEFT``                      With this style, tabs are drawn along the left of the notebook. Not implemented yet.
          ``AUI_NB_RIGHT``                     With this style, tabs are drawn along the right of the notebook. Not implemented yet.
-         ``AUI_NB_BOTTOM``                    With this style, tabs are drawn along the bottom of the notebook.
+         ``AUI_NB_BOTTOM``                    With this style, tabs are drawn along the bottom of the notebook
          ``AUI_NB_TAB_SPLIT``                 Allows the tab control to be split by dragging a tab
          ``AUI_NB_TAB_MOVE``                  Allows a tab to be moved horizontally by dragging
          ``AUI_NB_TAB_EXTERNAL_MOVE``         Allows a tab to be moved to another tab control
@@ -1039,10 +1039,10 @@ class AuiSimpleTabArt(object):
          ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
-         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close AuiNotebook tabs by mouse middle button click
-         ``AUI_NB_SUB_NOTEBOOK``              This style is used by AuiManager to create automatic AuiNotebooks
+         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close L{AuiNotebook} tabs by mouse middle button click
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by L{AuiManager} to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
-         ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt``+``Tab`` on Windows
+         ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
          ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
          ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
@@ -1070,8 +1070,8 @@ class AuiSimpleTabArt(object):
         
         :param `tab_ctrl_size`: the size of the tab control area;
         :param `tab_count`: the number of tabs;
-        :param `minMaxTabWidth`: the minimum and maximum tab widths to be used
-         when the ``AUI_NB_TAB_FIXED_WIDTH`` style is active.
+        :param `minMaxTabWidth`: a tuple containing the minimum and maximum tab widths
+         to be used when the ``AUI_NB_TAB_FIXED_WIDTH`` style is active.
         """
         
         self._fixed_tab_width = 100
@@ -2152,8 +2152,8 @@ class VC8TabArt(AuiDefaultTabArt):
         
         :param `tab_ctrl_size`: the size of the tab control area;
         :param `tab_count`: the number of tabs;
-        :param `minMaxTabWidth`: the minimum and maximum tab widths to be used
-         when the ``AUI_NB_TAB_FIXED_WIDTH`` style is active.
+        :param `minMaxTabWidth`: a tuple containing the minimum and maximum tab widths
+         to be used when the ``AUI_NB_TAB_FIXED_WIDTH`` style is active.
         """
         
         AuiDefaultTabArt.SetSizingInfo(self, tab_ctrl_size, tab_count, minMaxTabWidth)
@@ -2470,7 +2470,7 @@ class ChromeTabArt(AuiDefaultTabArt):
          ``AUI_NB_TOP``                       With this style, tabs are drawn along the top of the notebook
          ``AUI_NB_LEFT``                      With this style, tabs are drawn along the left of the notebook. Not implemented yet.
          ``AUI_NB_RIGHT``                     With this style, tabs are drawn along the right of the notebook. Not implemented yet.
-         ``AUI_NB_BOTTOM``                    With this style, tabs are drawn along the bottom of the notebook.
+         ``AUI_NB_BOTTOM``                    With this style, tabs are drawn along the bottom of the notebook
          ``AUI_NB_TAB_SPLIT``                 Allows the tab control to be split by dragging a tab
          ``AUI_NB_TAB_MOVE``                  Allows a tab to be moved horizontally by dragging
          ``AUI_NB_TAB_EXTERNAL_MOVE``         Allows a tab to be moved to another tab control
@@ -2480,10 +2480,10 @@ class ChromeTabArt(AuiDefaultTabArt):
          ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
-         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close AuiNotebook tabs by mouse middle button click
-         ``AUI_NB_SUB_NOTEBOOK``              This style is used by AuiManager to create automatic AuiNotebooks
+         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close L{AuiNotebook} tabs by mouse middle button click
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by L{AuiManager} to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
-         ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt``+``Tab`` on Windows
+         ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
          ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
          ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
@@ -2544,8 +2544,8 @@ class ChromeTabArt(AuiDefaultTabArt):
         
         :param `tab_ctrl_size`: the size of the tab control area;
         :param `tab_count`: the number of tabs;
-        :param `minMaxTabWidth`: the minimum and maximum tab widths to be used
-         when the ``AUI_NB_TAB_FIXED_WIDTH`` style is active.
+        :param `minMaxTabWidth`: a tuple containing the minimum and maximum tab widths
+         to be used when the ``AUI_NB_TAB_FIXED_WIDTH`` style is active.
         """
         
         AuiDefaultTabArt.SetSizingInfo(self, tab_ctrl_size, tab_count, minMaxTabWidth)

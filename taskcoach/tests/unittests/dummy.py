@@ -47,6 +47,12 @@ class DummyWidget(wx.Frame):
 
     def IsAutoResizing(self):
         return False
+    
+    def GetMainWindow(self):
+        return self
+    
+    def Bind(self, *args, **kwargs):
+        pass
         
 
 class DummyUICommand(gui.uicommand.UICommand):

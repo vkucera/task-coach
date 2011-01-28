@@ -34,37 +34,23 @@ class DummyPane(object):
     def HasFlag(self, *args):
         return False
 
-        
-class DummyEvent(object):
-    def __init__(self, selection=0, window=None):
-        self.__selection = selection
-        self.__pane = DummyPane(window)
-    
-    def GetSelection(self):
-        return self.__selection
-        
-    Selection = property(GetSelection)
-    
-    def GetPane(self):
-        return self.__pane
 
+class DummyEvent(object):
     def Skip(self):
         pass
 
-
-class DummyManager(object):
-    def GetPane(self, *args):
-        return DummyPane(None)
+    def GetPane(self):
+        return self._pane
 
 
-class DummyMainWindow(wx.Frame):
-    manager = DummyManager()
+class DummyChangeEvent(DummyEvent):
+    def __init__(self, window):
+        self._pane = window
+        
 
-    def AddPage(self, *args):
-        pass
-
-    def SetSelection(self, *args):
-        pass
+class DummyCloseEvent(DummyEvent):
+    def __init__(self, window):
+        self._pane = DummyPane(window)
 
     
 class ViewerContainerTest(test.wxTestCase):
@@ -74,7 +60,7 @@ class ViewerContainerTest(test.wxTestCase):
         task.Task.settings = self.settings = config.Settings(load=False)
         self.settings.set('view', 'viewerwithdummywidgetcount', '2', new=True)
         self.taskFile = persistence.TaskFile()
-        self.mainWindow = DummyMainWindow(None)
+        self.mainWindow = gui.mainwindow.MainWindow(None, self.taskFile, self.settings)
         self.container = gui.viewer.ViewerContainer(self.mainWindow,
             self.settings, 'mainviewer')
         self.viewer1 = self.createViewer('taskviewer1')
@@ -101,44 +87,44 @@ class ViewerContainerTest(test.wxTestCase):
         self.assertEqual(self.viewer1, self.container.activeViewer())
         
     def testChangePage_ChangesActiveViewer(self):
-        self.container.onPageChanged(DummyEvent(1))
+        self.container.activateViewer(self.viewer2)
         self.assertEqual(self.viewer2, self.container.activeViewer())
 
     def testChangePage_SavesActiveViewerInSettings(self):
-        self.container.onPageChanged(DummyEvent(1))
+        self.container.onPageChanged(DummyChangeEvent(self.viewer2))
         self.assertEqual(1, self.settings.getint('view', 'mainviewer'))
 
     def testChangePage_NotifiesObserversAboutNewActiveViewer(self):
         patterns.Publisher().registerObserver(self.onEvent, 
             eventType=self.container.viewerChangeEventType(), 
             eventSource=self.container)
-        self.container.onPageChanged(DummyEvent(1))
+        self.container.onPageChanged(DummyChangeEvent(self.viewer2))
         self.failUnless(self.events)
         
     def testCloseViewer_RemovesViewerFromContainer(self):
-        self.container.onPageClosed(DummyEvent(window=self.viewer1))
+        self.container.onPageClosed(DummyCloseEvent(self.viewer1))
         self.assertEqual([self.viewer2], self.container.viewers)
         
     def testCloseViewer_RemovesViewerFromSettings(self):
-        self.container.onPageClosed(DummyEvent(window=self.viewer1))
+        self.container.onPageClosed(DummyCloseEvent(self.viewer1))
         self.assertEqual(1, self.settings.getint('view', 
             'viewerwithdummywidgetcount'))
         
     def testCloseViewer_ChangesActiveViewer(self):
-        self.container.onPageChanged(DummyEvent(1))
-        self.container.onPageClosed(DummyEvent(window=self.viewer2))
+        self.container.onPageChanged(DummyChangeEvent(self.viewer2))
+        self.container.onPageClosed(DummyCloseEvent(self.viewer2))
         self.assertEqual(self.viewer1, self.container.activeViewer())
         
     def testCloseViewer_SavesActiveViewerInSettings(self):
-        self.container.onPageChanged(DummyEvent(1))
-        self.container.onPageClosed(DummyEvent(window=self.viewer2))
+        self.container.onPageChanged(DummyChangeEvent(self.viewer2))
+        self.container.onPageClosed(DummyCloseEvent(self.viewer2))
         self.assertEqual(0, self.settings.getint('view', 'mainviewer'))
 
     def testCloseViewer_NotifiesObserversAboutNewActiveViewer(self):
-        self.container.onPageChanged(DummyEvent(1))
+        self.container.onPageChanged(DummyChangeEvent(self.viewer2))
         patterns.Publisher().registerObserver(self.onEvent, 
             eventType=self.container.viewerChangeEventType(), 
             eventSource=self.container)
-        self.container.onPageClosed(DummyEvent(window=self.viewer2))
+        self.container.onPageClosed(DummyCloseEvent(self.viewer2))
         self.failUnless(self.events)
 
