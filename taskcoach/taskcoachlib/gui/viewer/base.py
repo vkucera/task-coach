@@ -99,7 +99,7 @@ class Viewer(wx.Panel):
     def setTitle(self, title):
         titleToSaveInSettings = '' if title == self.defaultTitle else title
         self.settings.set(self.settingsSection(), 'title', titleToSaveInSettings)
-        self.parent.SetPageText(self.parent.GetPageIndex(self), title)
+        self.parent.setPaneTitle(self, title)
 
     def initLayout(self):
         self._sizer = wx.BoxSizer(wx.VERTICAL) # pylint: disable-msg=W0201
@@ -125,6 +125,9 @@ class Viewer(wx.Panel):
 
     def getWidget(self):
         return self.widget
+    
+    def SetFocus(self):
+        self.widget.SetFocus()
             
     def createSorter(self, collection):
         ''' This method can be overridden to decorate the presentation with a 

@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns 
 from taskcoachlib.i18n import _                   
+from taskcoachlib import help
 
 
 class MaxDateTimeMixin(object):
@@ -28,11 +29,11 @@ class MaxDateTimeMixin(object):
 
 class EffortUICommandNamesMixin(object):
     newItemMenuText = _('&New effort...\tCtrl+E')
-    newItemHelpText =  _('Add an effort period to the selected task(s)')
+    newItemHelpText =  help.effortNew
     editItemMenuText = _('&Edit effort...')
-    editItemHelpText = _('Edit the selected effort period(s)')
+    editItemHelpText = help.effortEdit
     deleteItemMenuText = _('&Delete effort')
-    deleteItemHelpText = _('Delete the selected effort period(s)')
+    deleteItemHelpText = help.effortDelete 
     newSubItemMenuText = ''
     newSubItemHelpText = '' 
     

@@ -16,7 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from notebook import Notebook, BookPage, AuiManagedFrameWithNotebookAPI
+from notebook import Notebook, BookPage
+from frame import AuiManagedFrameWithDynamicCenterPane
 from dialog import ButtonLessDialog, Dialog, NotebookDialog, HTMLDialog, \
     AttachmentSelector
 from buttonbox import ButtonBox
