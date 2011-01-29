@@ -733,7 +733,7 @@ class PageWithViewer(Page):
         
     def onClose(self, event):
         # Don't notify the viewer about any changes anymore, it's about
-        # to be deleted, but don't delete it soo soon.
+        # to be deleted, but don't delete it too soon.
         wx.CallAfter(self.detachAndDeleteViewer)
         event.Skip()        
         
