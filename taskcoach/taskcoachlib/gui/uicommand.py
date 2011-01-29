@@ -24,9 +24,7 @@ from taskcoachlib import patterns, meta, command, help, widgets, persistence # p
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import base, task, note, category, attachment, effort
 from taskcoachlib.mailer import writeMail
-from taskcoachlib.thirdparty.calendar import wxSCHEDULER_DAILY, wxSCHEDULER_WEEKLY, \
-     wxSCHEDULER_MONTHLY, wxSCHEDULER_NEXT, wxSCHEDULER_PREV, wxSCHEDULER_TODAY, \
-     wxSCHEDULER_HORIZONTAL, wxSCHEDULER_VERTICAL
+from taskcoachlib.thirdparty.calendar import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, wxSCHEDULER_TODAY
 import dialog, render, viewer, printer
 
 
@@ -2267,39 +2265,6 @@ class ToolbarChoiceCommandMixin(object):
         self.currentChoice = index
 
 
-class ToolbarCountCommandMixin(object):
-    def appendToToolBar(self, toolbar):
-        self.spinCtrl = wx.SpinCtrl(toolbar, wx.ID_ANY, '1')
-        self.currentValue = 1
-        self.spinCtrl.SetRange(self.minValue, self.maxValue)
-        self.spinCtrl.Bind(wx.EVT_SPINCTRL, self.onValue)
-        self.spinCtrl.Bind(wx.EVT_TEXT, self.onValue)
-        toolbar.AddControl(self.spinCtrl)
-
-    def enable(self, enabled):
-        self.spinCtrl.Enable(enabled)
-
-    def onValue(self, event):
-        try:
-            value = int(self.spinCtrl.GetValue())
-        except ValueError:
-            pass
-        else:
-            if value != self.currentValue:
-                self.currentValue = value
-                self.doValue(value)
-
-    def doValue(self, value):
-        raise NotImplementedError
-
-    def doCommand(self, event):
-        pass
-
-    def setValue(self, value):
-        self.spinCtrl.SetValue(value)
-        self.currentValue = value
-
-
 class EffortViewerAggregationChoice(ToolbarChoiceCommandMixin, ViewerCommand):
     choiceLabels = [_('Effort details'), _('Effort per day'), 
                     _('Effort per week'), _('Effort per month')]
@@ -2334,36 +2299,18 @@ class SquareTaskViewerOrderChoice(ToolbarChoiceCommandMixin, ViewerCommand):
         self.viewer.orderBy(choice)
 
 
-class CalendarViewerPeriodCount(ToolbarCountCommandMixin, ViewerCommand):
-    minValue = 1
-    maxValue = 100
+class CalendarViewerConfigure(ViewerCommand):
+    menuText = _('&Configure')
+    helpText = _('Configure the calendar viewer')
+    bitmap = 'wrench_icon'
 
-    def doValue(self, value):
-        self.viewer.SetPeriodCount(value)
+    def __init__(self, *args, **kwargs):
+        super(CalendarViewerConfigure, self).__init__( \
+            menuText=self.menuText, helpText=self.helpText, bitmap=self.bitmap, 
+            *args, **kwargs)
 
-
-class CalendarViewerTypeChoice(ToolbarChoiceCommandMixin, ViewerCommand):
-    choiceLabels = [_('Day(s)'), _('Week(s)'), _('Month')]
-    choiceData = [wxSCHEDULER_DAILY, wxSCHEDULER_WEEKLY, wxSCHEDULER_MONTHLY]
-
-    def doChoice(self, choice):
-        self.viewer.freeze()
-        try:
-            self.viewer.SetViewType(choice)
-        finally:
-            self.viewer.thaw()
-
-
-class CalendarViewerOrientationChoice(ToolbarChoiceCommandMixin, ViewerCommand):
-    choiceLabels = [_('Horizontal'), _('Vertical')]
-    choiceData = [wxSCHEDULER_HORIZONTAL, wxSCHEDULER_VERTICAL]
-
-    def doChoice(self, choice):
-        self.viewer.freeze()
-        try:
-            self.viewer.SetViewOrientation(choice)
-        finally:
-            self.viewer.thaw()
+    def doCommand(self, event):
+        self.viewer.configure()
 
 
 class CalendarViewerNavigationCommand(ViewerCommand):
@@ -2399,20 +2346,6 @@ class CalendarViewerToday(CalendarViewerNavigationCommand):
     helpText = _('Show today')
     bitmap = 'calendar_icon'
     calendarViewType = wxSCHEDULER_TODAY
-
-
-class CalendarViewerTaskFilterChoice(ToolbarChoiceCommandMixin, ViewerCommand):
-    choiceLabels = [_('Start and due date'), _('Start date'), _('Due date'), _('All but unplanned'), _('All')]
-    choiceData = [(False, False, False), (False, True, False), (True, False, False), (True, True, False), (True, True, True)]
-
-    def doChoice(self, (showStart, showDue, showUnplanned)):
-        self.viewer.freeze()
-        try:
-            self.viewer.SetShowNoStartDate(showStart)
-            self.viewer.SetShowNoDueDate(showDue)
-            self.viewer.SetShowUnplanned(showUnplanned)
-        finally:
-            self.viewer.thaw()
 
 
 class ToggleAutoColumnResizing(UICheckCommand, ViewerCommand, SettingsCommand):

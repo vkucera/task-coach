@@ -69,6 +69,7 @@ class wxSchedulerPaint( object ):
 		self._highlightColor = wx.Colour(int((color.Red() + 255) / 2),
 						 int((color.Green() + 255) / 2),
 						 int((color.Blue() + 255) / 2))
+		self._fontSize = 10
 
 		self.pageNumber = None
 		self.pageCount = 1
@@ -659,7 +660,7 @@ class wxSchedulerPaint( object ):
 				tmpCoords = self._datetimeCoords[:]
 
 				# Actually, only the min height may vary...
-				_, minH = self.DoPaint(self._drawerClass(context, self._lstDisplayedHours),
+				_, minH = self.DoPaint(self._drawerClass(context, self._lstDisplayedHours, self._fontSize),
 						       0, 0, size.GetWidth(), 0)
 
 				self._datetimeCoords = tmpCoords
@@ -713,7 +714,7 @@ class wxSchedulerPaint( object ):
 				else:
 					context = memDC
 
-				width, height = self.DoPaint(self._drawerClass(context, self._lstDisplayedHours),
+				width, height = self.DoPaint(self._drawerClass(context, self._lstDisplayedHours, self._fontSize),
 							     0, 0, size.GetWidth(), size.GetHeight())
 			finally:
 				memDC.EndDrawing()
@@ -742,7 +743,7 @@ class wxSchedulerPaint( object ):
 				else:
 					context = memDC
 
-				self._drawerClass(context, self._lstDisplayedHours)._DrawSchedule(schedule, *schedule.bounds)
+				self._drawerClass(context, self._lstDisplayedHours, self._fontSize)._DrawSchedule(schedule, *schedule.bounds)
 			finally:
 				memDC.SelectObject(wx.NullBitmap)
 
@@ -804,6 +805,20 @@ class wxSchedulerPaint( object ):
 		"""
 
 		return self._highlightColor
+
+	def SetFontSize( self, size ):
+		"""
+		Sets the schedule font size in points
+		"""
+
+		self._fontSize = size
+
+	def GetFontSize( self ):
+		"""
+		Returns the schedule font size in points
+		"""
+
+		return self._fontSize
 
 	def SetDrawer(self, drawerClass):
 		"""
@@ -867,7 +882,7 @@ class wxSchedulerPaint( object ):
 			else:
 				context = dc
 
-			drawer = self._drawerClass(context, self._lstDisplayedHours)
+			drawer = self._drawerClass(context, self._lstDisplayedHours, self._fontSize)
 
 			if self._resizable:
 				width, _ = self.GetVirtualSize()

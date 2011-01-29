@@ -39,7 +39,10 @@ search control has keyboard focus moves the focus back to the viewer. Hitting
 Ctrl-Down when the toolbar search control has keyboard focus pops up the
 search control menu.''', 'http://uservoice.com/a/6fW73'),
         Feature('''Added overview of keyboard shortcuts to help 
-information.''')
+information.'''),
+        Feature('''The calendar viewer configuration has been moved to its
+own dialog. Add more configurable attributes: highlight color, show now,
+font size.''')
         ]
     ),
 

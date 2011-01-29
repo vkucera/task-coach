@@ -263,6 +263,9 @@ class ThunderbirdImapReader(object):
         self.port = port or {True: 993, False: 143}[self.ssl]
 
     def _getMail(self):
+        print 'Connecting to %s:%d' % (self.server, self.port)
+        print 'Profile dir:', getDefaultProfileDir()
+
         if self.ssl:
             cn = imaplib.IMAP4_SSL(self.server, self.port)
         else:
