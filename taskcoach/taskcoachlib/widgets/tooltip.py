@@ -30,29 +30,36 @@ class ToolTipMixin(object):
         self.__tip = None
         self.__position = (0, 0)
         self.__text = None
+        self.__enabled = True
 
         self.GetMainWindow().Bind(wx.EVT_MOTION, self.__OnMotion)
         self.GetMainWindow().Bind(wx.EVT_LEAVE_WINDOW, self.__OnLeave)
         self.Bind(wx.EVT_TIMER, self.__OnTimer, id=self.__timer.GetId())        
-        
+
+    def PopupMenu(self, menu):
+        self.__enabled = False
+        super(ToolTipMixin, self).PopupMenu(menu)
+        self.__enabled = True
+
     def ShowTip(self, x, y):
         # Ensure we're not too big (in the Y direction anyway) for the
         # desktop display area. This doesn't work on Linux because
         # ClientDisplayRect() returns the whole display size, not
         # taking the taskbar into account...
 
-        _, displayY, _, displayHeight = wx.ClientDisplayRect()
-        tipWidth, tipHeight = self.__tip.GetSizeTuple()
+        if self.__enabled:
+            _, displayY, _, displayHeight = wx.ClientDisplayRect()
+            tipWidth, tipHeight = self.__tip.GetSizeTuple()
 
-        if tipHeight > displayHeight:
-            # Too big. Take as much space as possible.
-            y = 5
-            tipHeight = displayHeight - 10
-        elif y + tipHeight > displayY + displayHeight:
-            # Adjust y so that the whole tip is visible.
-            y = displayY + displayHeight - tipHeight - 5
+            if tipHeight > displayHeight:
+                # Too big. Take as much space as possible.
+                y = 5
+                tipHeight = displayHeight - 10
+            elif y + tipHeight > displayY + displayHeight:
+                # Adjust y so that the whole tip is visible.
+                y = displayY + displayHeight - tipHeight - 5
 
-        self.__tip.Show(x, y, tipWidth, tipHeight)
+            self.__tip.Show(x, y, tipWidth, tipHeight)
 
     def DoShowTip(self, x, y, tip):
         self.__tip = tip

@@ -20,8 +20,9 @@ import test, wx
 from taskcoachlib.widgets import tooltip
 
 
-class ToolTipUnderTest(wx.Frame, tooltip.ToolTipMixin): # pylint: disable-msg=W0223
-    pass
+class ToolTipUnderTest(tooltip.ToolTipMixin, wx.Frame): # pylint: disable-msg=W0223
+    def GetMainWindow(self):
+        return self
 
 
 class DummyToolTipWindow(object):
