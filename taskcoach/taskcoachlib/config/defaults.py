@@ -132,7 +132,10 @@ defaults = { \
     'sortby': 'subject',
     'sortascending': 'True',
     'sortcasesensitive': 'False',
-    'sortbystatusfirst': 'True' },
+    'sortbystatusfirst': 'True',
+    'highlightcolor': '',
+    'shownow': 'True',
+    'fontsize': '10' },
 'categoryviewer': { \
     'title': '',
     'sortby': 'subject',

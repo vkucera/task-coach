@@ -27,6 +27,7 @@ from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, render, dialog
 from taskcoachlib.thirdparty.calendar import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, \
     wxSCHEDULER_TODAY, wxSCHEDULER_TODAY, wxSCHEDULER_MONTHLY, wxFancyDrawer
+from taskcoachlib.widgets import CalendarConfigDialog
 import base, mixin, refresher
 
 
@@ -499,19 +500,6 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         kwargs.setdefault('settingsSection', 'calendarviewer')
         super(CalendarViewer, self).__init__(*args, **kwargs)
 
-        self.widget.SetViewType(self.settings.getint(self.settingsSection(), 'viewtype'))
-        self.widget.SetStyle(self.settings.getint(self.settingsSection(), 'vieworientation'))
-        self.widget.SetPeriodCount(self.settings.getint(self.settingsSection(), 'periodcount'))
-        self.widget.SetPeriodWidth(self.settings.getint(self.settingsSection(), 'periodwidth'))
-
-        self.periodCountUICommand.setValue(self.settings.getint(self.settingsSection(), 'periodcount'))
-        self.periodCountUICommand.enable(self.widget.GetViewType() != wxSCHEDULER_MONTHLY)
-        self.typeUICommand.setChoice(self.settings.getint(self.settingsSection(), 'viewtype'))
-        self.orientationUICommand.setChoice(self.settings.getint(self.settingsSection(), 'vieworientation'))
-        self.filterChoiceUICommand.setChoice((self.settings.getboolean(self.settingsSection(), 'shownostart'),
-                                              self.settings.getboolean(self.settingsSection(), 'shownodue'),
-                                              self.settings.getboolean(self.settingsSection(), 'showunplanned')))
-
         start = self.settings.get(self.settingsSection(), 'viewdate')
         if start:
             dt = wx.DateTime.Now()
@@ -521,9 +509,8 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         self.widget.SetWorkHours(self.settings.getint('view', 'efforthourstart'),
                                  self.settings.getint('view', 'efforthourend'))
 
-        self.widget.SetShowNoStartDate(self.settings.getboolean(self.settingsSection(), 'shownostart'))
-        self.widget.SetShowNoDueDate(self.settings.getboolean(self.settingsSection(), 'shownodue'))
-        self.widget.SetShowUnplanned(self.settings.getboolean(self.settingsSection(), 'showunplanned'))
+        self.reconfig()
+        self.widget.SetPeriodWidth(self.settings.getint(self.settingsSection(), 'periodwidth'))
 
         for eventType in ('view.efforthourstart', 'view.efforthourend'):
             self.registerObserver(self.onWorkingHourChanged, eventType)
@@ -587,56 +574,21 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         ''' UI commands to put on the toolbar of this viewer. '''
         toolBarUICommands = super(CalendarViewer, self).getToolBarUICommands()
         toolBarUICommands.insert(-2, None) # Separator
-        self.periodCountUICommand = uicommand.CalendarViewerPeriodCount(viewer=self)
-        self.typeUICommand = uicommand.CalendarViewerTypeChoice(viewer=self)
-        self.orientationUICommand = uicommand.CalendarViewerOrientationChoice(viewer=self)
-        toolBarUICommands.insert(-2, self.periodCountUICommand)
-        toolBarUICommands.insert(-2, self.typeUICommand)
-        toolBarUICommands.insert(-2, self.orientationUICommand)
+        toolBarUICommands.insert(-2, uicommand.CalendarViewerConfigure(viewer=self))
         toolBarUICommands.insert(-2, uicommand.CalendarViewerPreviousPeriod(viewer=self))
         toolBarUICommands.insert(-2, uicommand.CalendarViewerToday(viewer=self))
         toolBarUICommands.insert(-2, uicommand.CalendarViewerNextPeriod(viewer=self))
-        self.filterChoiceUICommand = uicommand.CalendarViewerTaskFilterChoice(viewer=self)
-        toolBarUICommands.insert(-2, self.filterChoiceUICommand)
         return toolBarUICommands
 
-    def SetPeriodCount(self, count):
-        self.settings.set(self.settingsSection(), 'periodcount', str(count))
-        self.widget.SetPeriodCount(count)
-
     def SetViewType(self, type_):
-        if type_ not in [wxSCHEDULER_NEXT, wxSCHEDULER_TODAY, wxSCHEDULER_PREV]:
-            self.settings.set(self.settingsSection(), 'viewtype', str(type_))
         self.widget.SetViewType(type_)
-        if type_ in [wxSCHEDULER_NEXT, wxSCHEDULER_TODAY, wxSCHEDULER_PREV]:
-            dt = self.widget.GetDate()
-            now = wx.DateTime.Today()
-            if (dt.GetYear(), dt.GetMonth(), dt.GetDay()) == (now.GetYear(), now.GetMonth(), now.GetDay()):
-                toSave = ''
-            else:
-                toSave = dt.Format()
-            self.settings.set(self.settingsSection(), 'viewdate', toSave)
-
-        # Overriding enabled() does not seem to work on controls,
-        # neither does EnableTool
-
-        self.periodCountUICommand.enable(type_ != wxSCHEDULER_MONTHLY)
-
-    def SetViewOrientation(self, orientation):
-        self.settings.set(self.settingsSection(), 'vieworientation', str(orientation))
-        self.widget.SetStyle(orientation)
-
-    def SetShowNoStartDate(self, doShow):
-        self.settings.setboolean(self.settingsSection(), 'shownostart', doShow)
-        self.widget.SetShowNoStartDate(doShow)
-
-    def SetShowNoDueDate(self, doShow):
-        self.settings.setboolean(self.settingsSection(), 'shownodue', doShow)
-        self.widget.SetShowNoDueDate(doShow)
-
-    def SetShowUnplanned(self, doShow):
-        self.settings.setboolean(self.settingsSection(), 'showunplanned', doShow)
-        self.widget.SetShowUnplanned(doShow)
+        dt = self.widget.GetDate()
+        now = wx.DateTime.Today()
+        if (dt.GetYear(), dt.GetMonth(), dt.GetDay()) == (now.GetYear(), now.GetMonth(), now.GetDay()):
+            toSave = ''
+        else:
+            toSave = dt.Format()
+        self.settings.set(self.settingsSection(), 'viewdate', toSave)
 
     # We need to override these because BaseTaskViewer is a tree viewer, but
     # CalendarViewer is not. There is probably a better solution...
@@ -646,6 +598,31 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
 
     def isAnyItemCollapsable(self):
         return False
+
+    def reconfig(self):
+        self.widget.Freeze()
+        try:
+            self.widget.SetPeriodCount(self.settings.getint(self.settingsSection(), 'periodcount'))
+            self.widget.SetViewType(self.settings.getint(self.settingsSection(), 'viewtype'))
+            self.widget.SetStyle(self.settings.getint(self.settingsSection(), 'vieworientation'))
+            self.widget.SetShowNoStartDate(self.settings.getboolean(self.settingsSection(), 'shownostart'))
+            self.widget.SetShowNoDueDate(self.settings.getboolean(self.settingsSection(), 'shownodue'))
+            self.widget.SetShowUnplanned(self.settings.getboolean(self.settingsSection(), 'showunplanned'))
+            self.widget.SetShowNow(self.settings.getboolean(self.settingsSection(), 'shownow'))
+            self.widget.SetFontSize(self.settings.getint(self.settingsSection(), 'fontsize'))
+
+            hcolor = self.settings.get(self.settingsSection(), 'highlightcolor')
+            if hcolor:
+                self.widget.SetHighlightColor(wx.Colour(*tuple(map(int, hcolor.split(',')))))
+            self.widget.RefreshAllItems(0)
+        finally:
+            self.widget.Thaw()
+
+    def configure(self):
+        dlg = CalendarConfigDialog(self.settings, self.settingsSection(), self, _('Calendar viewer configuration'))
+        dlg.CentreOnParent()
+        if dlg.ShowModal() == wx.ID_OK:
+            self.reconfig()
 
 
 class TaskViewer(mixin.AttachmentDropTargetMixin, 
