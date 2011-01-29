@@ -30,7 +30,8 @@ Release('1.2.9', 'January 28, 2011',
         Bug('''Open editor on the same display as the main window on multi-monitor
 setups.''', '3166563'),
         Bug('''The shortcut for "Decrease priority" (Ctrl-D) wasn't working
-in the Spanish translation.''', '3165234')
+in the Spanish translation.''', '3165234'),
+        Bug('''Prevent the tooltip overlapping popup menus on Linux.''', '2989198')
         ],
     featuresAdded=[
         Feature('''Hitting Ctrl-F when a viewer has keyboard focus moves 
