@@ -154,16 +154,28 @@ class AuiDefaultTabArt(object):
             
             
     def SetBaseColour(self, base_colour):
-        """ Sets a new base colour. """
+        """
+        Sets a new base colour.
+
+        :param `base_colour`: an instance of `wx.Colour`.
+        """
+        
         self._base_colour = base_colour
         self._base_colour_pen = wx.Pen(self._base_colour)
         self._base_colour_brush = wx.Brush(self._base_colour)
 
 
-    def SetDefaultColours(self, base_colour = None):
-        """ Sets the default colours, which are calculated from the given base colour. """
+    def SetDefaultColours(self, base_colour=None):
+        """
+        Sets the default colours, which are calculated from the given base colour.
+
+        :param `base_colour`: an instance of `wx.Colour`. If defaulted to ``None``, a colour
+         is generated accordingly to the platform and theme.
+        """
+
         if base_colour is None:
             base_colour = GetBaseColour()
+
         self.SetBaseColour( base_colour )
         self._border_colour = StepColour(base_colour, 75)
         self._border_pen = wx.Pen(self._border_colour)
@@ -224,6 +236,8 @@ class AuiDefaultTabArt(object):
          ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
          ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
          ``AUI_NB_DRAW_DND_TAB``              Draws an image representation of a tab while dragging (on by default)
+         ``AUI_NB_ORDER_BY_ACCESS``           Tab navigation order by last access time for the tabs
+         ``AUI_NB_NO_TAB_FOCUS``              Don't draw tab focus rectangle
          ==================================== ==================================
         
         """
@@ -553,7 +567,8 @@ class AuiDefaultTabArt(object):
         dc.DrawLabel(draw_text, wx.Rect(text_offset, ypos, rectx, recty))
 
         # draw focus rectangle
-        self.DrawFocusRectangle(dc, page, wnd, draw_text, offset_focus, bitmap_offset, drawn_tab_yoff, drawn_tab_height, textx, texty)
+        if (agwFlags & AUI_NB_NO_TAB_FOCUS) == 0:
+            self.DrawFocusRectangle(dc, page, wnd, draw_text, offset_focus, bitmap_offset, drawn_tab_yoff, drawn_tab_height, rectx, recty)
         
         out_button_rect = wx.Rect()
         
@@ -776,6 +791,9 @@ class AuiDefaultTabArt(object):
         :param `texty`: the y text extent.
         """
 
+        if self.GetAGWFlags() & AUI_NB_NO_TAB_FOCUS:
+            return
+        
         if page.active and wx.Window.FindFocus() == wnd:
         
             focusRectText = wx.Rect(text_offset, (drawn_tab_yoff + (drawn_tab_height)/2 - (texty/2)),
@@ -1047,6 +1065,8 @@ class AuiSimpleTabArt(object):
          ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
          ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
          ``AUI_NB_DRAW_DND_TAB``              Draws an image representation of a tab while dragging (on by default)
+         ``AUI_NB_ORDER_BY_ACCESS``           Tab navigation order by last access time for the tabs
+         ``AUI_NB_NO_TAB_FOCUS``              Don't draw tab focus rectangle
          ==================================== ==================================
         
         """
@@ -1242,7 +1262,6 @@ class AuiSimpleTabArt(object):
             draw_text = ChopText(dc, caption,
                                  tab_width - (text_offset-tab_x) - close_button_width)
 
-
         ypos = (tab_y + tab_height)/2 - (texty/2) + 1
 
         if control is not None:
@@ -1264,7 +1283,7 @@ class AuiSimpleTabArt(object):
         dc.DrawLabel(draw_text, wx.Rect(text_offset, ypos, rectx, recty))
 
         # draw focus rectangle
-        if page.active and wx.Window.FindFocus() == wnd:
+        if page.active and wx.Window.FindFocus() == wnd and (agwFlags & AUI_NB_NO_TAB_FOCUS) == 0:
         
             focusRect = wx.Rect(text_offset, ((tab_y + tab_height)/2 - (texty/2) + 1),
                                 selected_textx, selected_texty)
@@ -1796,8 +1815,9 @@ class VC71TabArt(AuiDefaultTabArt):
         out_button_rect = wx.Rect()
 
         # draw focus rectangle
-        self.DrawFocusRectangle(dc, page, wnd, draw_text, offset_focus, bitmap_offset, drawn_tab_yoff+shift,
-                                drawn_tab_height+shift, textx, texty)
+        if (agwFlags & AUI_NB_NO_TAB_FOCUS) == 0:
+            self.DrawFocusRectangle(dc, page, wnd, draw_text, offset_focus, bitmap_offset, drawn_tab_yoff+shift,
+                                    drawn_tab_height+shift, rectx, recty)
                 
         # draw 'x' on tab (if enabled)
         if close_button_state != AUI_BUTTON_STATE_HIDDEN:
@@ -2031,8 +2051,9 @@ class FF2TabArt(AuiDefaultTabArt):
         dc.DrawLabel(draw_text, wx.Rect(text_offset, ypos, rectx, recty))
 
         # draw focus rectangle
-        self.DrawFocusRectangle(dc, page, wnd, draw_text, offset_focus, bitmap_offset, drawn_tab_yoff+shift,
-                                drawn_tab_height, textx, texty)
+        if (agwFlags & AUI_NB_NO_TAB_FOCUS) == 0:
+            self.DrawFocusRectangle(dc, page, wnd, draw_text, offset_focus, bitmap_offset, drawn_tab_yoff+shift,
+                                    drawn_tab_height, rectx, recty)
         
         out_button_rect = wx.Rect()
         # draw 'x' on tab (if enabled)
@@ -2361,8 +2382,9 @@ class VC8TabArt(AuiDefaultTabArt):
         dc.DrawLabel(draw_text, wx.Rect(text_offset, ypos, rectx, recty))
         
         # draw focus rectangle
-        self.DrawFocusRectangle(dc, page, wnd, draw_text, offset_focus, bitmap_offset, drawn_tab_yoff+shift,
-                                drawn_tab_height+shift, textx, texty)
+        if (agwFlags & AUI_NB_NO_TAB_FOCUS) == 0:
+            self.DrawFocusRectangle(dc, page, wnd, draw_text, offset_focus, bitmap_offset, drawn_tab_yoff+shift,
+                                    drawn_tab_height+shift, rectx, recty)
         
         out_button_rect = wx.Rect()
         # draw 'x' on tab (if enabled)
@@ -2488,6 +2510,8 @@ class ChromeTabArt(AuiDefaultTabArt):
          ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
          ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
          ``AUI_NB_DRAW_DND_TAB``              Draws an image representation of a tab while dragging (on by default)
+         ``AUI_NB_ORDER_BY_ACCESS``           Tab navigation order by last access time for the tabs
+         ``AUI_NB_NO_TAB_FOCUS``              Don't draw tab focus rectangle
          ==================================== ==================================
 
         :note: Overridden from L{AuiDefaultTabArt}.

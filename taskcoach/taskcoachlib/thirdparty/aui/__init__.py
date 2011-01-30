@@ -209,7 +209,11 @@ Plus the following features:
       method of `AuiNotebook`;
   (p) Tab labels can be edited by calling the `SetRenamable` method on a `AuiNotebook` page;
   (q) Support for multi-lines tab labels in `AuiNotebook`;
-  (r) Support for setting minimum and maximum tab widths for fixed width tabs.
+  (r) Support for setting minimum and maximum tab widths for fixed width tabs;
+  (s) Implementation of the style ``AUI_NB_ORDER_BY_ACCESS``, which orders the tabs by last access time
+      inside the Tab Navigator dialog;
+  (t) Implementation of the style ``AUI_NB_NO_TAB_FOCUS``, allowing the developer not to draw the tab
+      focus rectangle on tne `AuiNotebook` tabs.
 
 |
 
@@ -266,7 +270,7 @@ License And Version
 
 AUI library is distributed under the wxPython license. 
 
-Latest revision: Andrea Gavana @ 17 Jan 2011, 15.00 GMT
+Latest revision: Andrea Gavana @ 26 Jan 2011, 15.00 GMT
 
 Version 1.3. 
 

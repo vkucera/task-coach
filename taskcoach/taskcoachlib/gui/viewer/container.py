@@ -64,10 +64,14 @@ class ViewerContainer(object):
 
     @classmethod
     def selectEventType(class_):
+        ''' Events of this type are fired by the viewer container whenever the
+            current selection of the active viewer changes. '''
         return '%s.select'%class_
     
     @classmethod
     def viewerChangeEventType(class_):
+        ''' Events of this type are fired by the viewer container whenever the
+            active viewer changes. '''
         return '%s.viewerChange'%class_
     
     def __getattr__(self, method):
