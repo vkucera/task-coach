@@ -116,15 +116,15 @@ class ViewerContainerTest(test.wxTestCase):
         self.assertEqual(self.viewer1, self.container.activeViewer())
         
     def testCloseViewer_SavesActiveViewerInSettings(self):
-        self.container.onPageChanged(DummyChangeEvent(self.viewer2))
-        self.container.onPageClosed(DummyCloseEvent(self.viewer2))
+        self.container.activateViewer(self.viewer2)
+        self.container.closeViewer(self.viewer2)
         self.assertEqual(0, self.settings.getint('view', 'mainviewer'))
 
     def testCloseViewer_NotifiesObserversAboutNewActiveViewer(self):
-        self.container.onPageChanged(DummyChangeEvent(self.viewer2))
+        self.container.activateViewer(self.viewer2)
         patterns.Publisher().registerObserver(self.onEvent, 
             eventType=self.container.viewerChangeEventType(), 
             eventSource=self.container)
-        self.container.onPageClosed(DummyCloseEvent(self.viewer2))
+        self.container.closeViewer(self.viewer2)
         self.failUnless(self.events)
 
