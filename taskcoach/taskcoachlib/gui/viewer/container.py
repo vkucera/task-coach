@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from taskcoachlib import patterns
+from taskcoachlib.gui import menu
 import taskcoachlib.thirdparty.aui as aui
 
 
@@ -61,6 +62,7 @@ class ViewerContainer(object):
     def registerEventHandlers(self):
         self.containerWidget.Bind(aui.EVT_AUI_PANE_CLOSE, self.onPageClosed)
         self.containerWidget.Bind(aui.EVT_AUI_PANE_ACTIVATED, self.onPageChanged)
+        self.containerWidget.Bind(aui.EVT_AUI_PANE_FLOATED, self.onPageFloated)
     
     def __getitem__(self, index):
         return self.viewers[index]
@@ -186,3 +188,10 @@ class ViewerContainer(object):
         self._settings.set('view', self.__setting, str(currentPageNumber))
         patterns.Event(self.viewerChangeEventType(), self, currentPageNumber).send()
 
+    def onPageFloated(self, event):
+        ''' Give floating pane accelerator keys for activating next and previous
+            viewer. '''
+        viewer = event.GetPane().window
+        table = wx.AcceleratorTable([(wx.ACCEL_CTRL, wx.WXK_PAGEDOWN, menu.activateNextViewerId),
+                                     (wx.ACCEL_CTRL, wx.WXK_PAGEUP, menu.activatePreviousViewerId)])
+        viewer.widget.SetAcceleratorTable(table)
