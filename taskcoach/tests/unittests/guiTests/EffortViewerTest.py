@@ -166,6 +166,18 @@ class EffortViewerTest(test.wxTestCase):
                                                    includeSubItems=True)
         self.assertEqual(2, len(self.viewer.presentation()))
         
+    def testAscendingSortOrder(self):
+        self.task.addEffort(self.effort1)
+        self.task.addEffort(self.effort2)
+        self.viewer.presentation().sortAscending(True)
+        self.assertEqual([self.effort1, self.effort2], list(self.viewer.presentation()))
+
+    def testDescendingSortOrder(self):
+        self.task.addEffort(self.effort1)
+        self.task.addEffort(self.effort2)
+        self.viewer.presentation().sortAscending(False)
+        self.assertEqual([self.effort2, self.effort1], list(self.viewer.presentation()))
+        
         
 class EffortViewerAggregationTestCase(test.wxTestCase):
     aggregation = 'Subclass responsibility'

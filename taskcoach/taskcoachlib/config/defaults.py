@@ -227,6 +227,9 @@ defaults = { \
 'effortviewer': { \
     'title': '',
     'aggregation': 'details', # 'details' (default), 'day', 'week', or 'month'
+    'sortby': 'period',
+    'sortascending': 'False',
+    'sortcasesensitive': 'True',
     'columns': "['timeSpent', 'revenue']",
     'columnsalwaysvisible': "['period', 'task']",
     'columnwidths': "{'monday': 70, 'tuesday': 70, 'wednesday': 70, 'thursday': 70, 'friday': 70, 'saturday': 70, 'sunday': 70}",
@@ -237,6 +240,9 @@ defaults = { \
     'searchdescription': 'False' },
 'effortviewerintaskeditor': { \
     'aggregation': 'details', # 'details' (default), 'day', 'week', or 'month'
+    'sortby': 'period',
+    'sortascending': 'False',
+    'sortcasesensitive': 'True',
     'columns': "['timeSpent', 'revenue']",
     'columnsalwaysvisible': "['period', 'task']",
     'columnwidths': "{}",

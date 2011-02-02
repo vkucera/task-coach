@@ -30,7 +30,7 @@ import base, mixin, refresher
 
 
 class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin, 
-                   mixin.SearchableViewerMixin, base.ViewerWithColumns): 
+                   mixin.SearchableViewerMixin, base.SortableViewerWithColumns): 
     defaultTitle = _('Effort')
     defaultBitmap = 'clock_icon'
     SorterClass = effort.EffortSorter
@@ -76,9 +76,6 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         for observer in self.__observersToDetach:
             patterns.Publisher().removeInstance(observer)    
             
-    def isSortable(self):
-        return False # Effort viewers are currently not sortable
-    
     def isShowingEffort(self):
         return True
     
@@ -143,6 +140,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
         return aggregator
             
     def createWidget(self):
+        imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
         itemPopupMenu = menu.EffortPopupMenu(self.parent, self.taskFile.tasks(),
             self.taskFile.efforts(), self.settings, self)
@@ -153,6 +151,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
             itemPopupMenu, columnPopupMenu,
             resizeableColumn=1, **self.widgetCreationKeywordArguments())
         widget.SetColumnWidth(0, 150)
+        widget.AssignImageList(imageList, wx.IMAGE_LIST_SMALL) # pylint: disable-msg=E1101
         return widget
     
     def _createColumns(self):
@@ -161,11 +160,13 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
                       resizeCallback=self.onResizeColumn)
         return [widgets.Column(name, columnHeader, eventType, 
                 renderCallback=renderCallback,
+                sortCallback=sortCallback,
                 width=self.getColumnWidth(name), **kwargs) \
-            for name, columnHeader, eventType, renderCallback in \
-            ('period', _('Period'), 'effort.duration', self.renderPeriod),
-            ('task', _('Task'), effort.Effort.taskChangedEventType(), lambda effort: effort.task().subject(recursive=True)),
-            ('description', _('Description'), effort.Effort.descriptionChangedEventType(), lambda effort: effort.description())] + \
+            for name, columnHeader, eventType, renderCallback, sortCallback in \
+            ('period', _('Period'), 'effort.duration', self.renderPeriod, 
+             uicommand.ViewerSortByCommand(viewer=self, value='period')),
+            ('task', _('Task'), effort.Effort.taskChangedEventType(), lambda effort: effort.task().subject(recursive=True), None),
+            ('description', _('Description'), effort.Effort.descriptionChangedEventType(), lambda effort: effort.description(), None)] + \
             [widgets.Column('categories', _('Categories'),
              width=self.getColumnWidth('categories'),
              renderCallback=self.renderCategories, **kwargs)] + \

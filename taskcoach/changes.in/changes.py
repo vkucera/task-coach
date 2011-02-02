@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.9', 'February 1, 2011',
+Release('1.2.9', 'February 2, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Improve keyboard navigation between viewers.'''),
@@ -43,7 +43,8 @@ search control menu.''', 'http://uservoice.com/a/6fW73'),
 information.'''),
         Feature('''The calendar viewer configuration has been moved to its
 own dialog. Add more configurable attributes: highlight color, show now,
-font size.''')
+font size.'''),
+        Feature('''Effort viewers can be sorted ascending and descending.''')
         ]
     ),
 
