@@ -1011,7 +1011,7 @@ class ActivateViewer(ViewerCommand):
         self.viewer.containerWidget.advanceSelection(self.direction)
         
     def enabled(self, event):
-        return self.viewer.containerWidget.paneCount > 1
+        return self.viewer.containerWidget.viewerCount() > 1
         
 
 class HideCurrentColumn(ViewerCommand):

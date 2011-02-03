@@ -24,6 +24,6 @@ class EffortSorter(base.Sorter):
     DomainObjectClass = effort.Effort
 
     def __init__(self, *args, **kwargs):
-        kwargs['sortAscending'] = False
-        kwargs['sortBy'] = 'effort'
+        kwargs['sortAscending'] = kwargs.get('sortAscending', False)
+        kwargs['sortBy'] = 'period'
         super(EffortSorter, self).__init__(*args, **kwargs)

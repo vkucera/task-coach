@@ -1024,6 +1024,11 @@ class ModernDockArt(AuiDefaultDockArt):
 
             rc = RECT(rectangle.x, rectangle.y, rectangle.width, rectangle.height)
 
+            # If rect x/y values are negative rc.right/bottom values will overflow and winxptheme.DrawThemeBackground
+            # will raise a TypeError. Ensure they are never negative.
+            rect.x = max(0, rect.x)
+            rect.y = max(0, rect.y)
+
             rc.top = rect.x
             rc.left = rect.y
             rc.right = rect.x + rect.width

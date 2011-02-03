@@ -53,7 +53,10 @@ class AuiManagedFrameWithDynamicCenterPane(wx.Frame):
             paneInfo = paneInfo.Center()
         self.manager.AddPane(window, paneInfo)
         self.manager.Update()
-   
+        
+    def setPaneTitle(self, window, title):
+        self.manager.GetPane(window).Caption(title)
+       
     def dockedPanes(self):
         return [pane for pane in self.manager.GetAllPanes() \
                 if not pane.IsToolbar() and not pane.IsFloating() \
