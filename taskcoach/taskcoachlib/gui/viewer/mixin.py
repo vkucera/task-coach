@@ -286,14 +286,19 @@ class SortableViewerMixin(object):
 
 
 class SortableViewerForEffortMixin(SortableViewerMixin):
-    def sorterOptions(self):
-        return dict()
+    def createSortOrderUICommands(self):
+        ''' Create the UICommands for changing sort order. The only
+            option for efforts is ascending/descending at the moment. '''
+        return [uicommand.ViewerSortOrderCommand(viewer=self)]
 
-    def createSortUICommands(self):
-        ''' Override because no sort uiCommmands are needed for effort viewers. 
-            Although they are sorted, the sort order cannot be changed at the 
-            moment. '''
-        self._sortUICommands = []
+    def createSortByUICommands(self):
+        ''' Create the UICommands for changing what the items are sorted by,
+            i.e. the columns. Currently, effort is always sorted by period. '''
+        return []
+
+    def sortKey(self):
+        ''' Efforts are always sorted by period at the moment. '''
+        return 'period'
         
 
 class SortableViewerForCategoriesMixin(SortableViewerMixin):

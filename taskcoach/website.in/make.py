@@ -247,13 +247,13 @@ fedora14 = download_table(image='fedora',
                           prerequisites=prerequisites27,
                           installation='<tt>$ sudo yum install --nogpgcheck %(filename_lower)s-%(version)s-1.fc*.noarch.rpm</tt>')
 
-redhat_el4 = download_table(image='redhat',
-                            download_url='%(dist_download_prefix)s/%(filename)s-%(version)s.tar.gz',
-                            package_type='Source tar archive',
-                            platform='Red hat Enterprise Linux 4', platform_lower='redhat',
-                            platform_versions_supported='Red Hat Enterprise Linux 4',
-                            prerequisites=prerequisites,
-                            installation='''follow the instructions on
+redhat_el4and5 = download_table(image='redhat',
+                                download_url='%(dist_download_prefix)s/%(filename)s-%(version)s.tar.gz',
+                                package_type='Source tar archive',
+                                platform='Red Hat Enterprise Linux', platform_lower='redhat',
+                                platform_versions_supported='Red Hat Enterprise Linux 4 and 5',
+                                prerequisites=prerequisites,
+                                installation='''follow the instructions on
 <a href='http://warped.org/blog/2010/04/02/ch0wned-installing-taskcoach-and-all-its-depenencies-in-home-for-el4/'>
 Max Baker's blog</a>''')
                             
@@ -269,7 +269,7 @@ pages['download_for_linux'] = sep.join([download_header(platform='Linux',
                                                         release='%(version)s'), 
                                         ubuntu_py26, ubuntu_py25, debian,
                                         fedora14, fedora12, gentoo, opensuse,
-                                        redhat_el4, linux])
+                                        redhat_el4and5, linux])
 
 
 iphone = download_table(image='appstore',

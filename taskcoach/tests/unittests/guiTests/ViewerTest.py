@@ -29,7 +29,7 @@ class ViewerTest(test.wxTestCase):
         self.taskFile = persistence.TaskFile()
         self.task = task.Task('task')
         self.taskFile.tasks().append(self.task)
-        self.window = gui.mainwindow.AuiManagedFrame(self.frame)
+        self.window = widgets.AuiManagedFrameWithDynamicCenterPane(self.frame)
         self.viewerContainer = gui.viewer.ViewerContainer(self.window, 
             self.settings, 'mainviewer')
         self.viewer = self.createViewer()
@@ -87,7 +87,7 @@ class ViewerTest(test.wxTestCase):
 
     def testSetTitleChangesTabTitle(self):
         self.viewer.setTitle('New title')
-        self.assertEqual('New title', self.window.getPaneTitle(0))
+        self.assertEqual('New title', self.window.manager.GetPane(self.viewer).caption)
 
     def testGetItemTooltipData(self):
         self.task.setDescription('Description')
@@ -423,7 +423,7 @@ class ViewerIteratorTestCase(test.wxTestCase):
         task.Task.settings = self.settings
         self.taskFile = persistence.TaskFile()
         self.taskList = self.taskFile.tasks()
-        self.window = gui.mainwindow.AuiManagedFrame(self.frame)
+        self.window = widgets.AuiManagedFrameWithDynamicCenterPane(self.frame)
         self.viewer = self.createViewer()
         self.viewer.showTree(self.treeMode == 'True')
         self.viewer.sortBy('subject')

@@ -715,9 +715,12 @@ class TabNavigatorWindow(wx.Dialog):
         self._selectedItem = self._listBox.GetSelection()
         self.EndModal(wx.ID_OK)
 
+
     def GetSelectedPage(self):
-        """ Gets the page index that was selected when the dialog was closed """
+        """ Gets the page index that was selected when the dialog was closed. """
+
         return self._indexMap[self._selectedItem]
+
 
     def OnPanelPaint(self, event):
         """
@@ -791,6 +794,8 @@ class AuiTabContainer(object):
         """
         Default class constructor.
         Used internally, do not call it in your code!
+
+        :param `auiNotebook`: the parent L{AuiNotebook} window.        
         """
 
         self._tab_offset = 0
@@ -863,6 +868,8 @@ class AuiTabContainer(object):
          ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
          ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
          ``AUI_NB_DRAW_DND_TAB``              Draws an image representation of a tab while dragging (on by default)
+         ``AUI_NB_ORDER_BY_ACCESS``           Tab navigation order by last access time for the tabs
+         ``AUI_NB_NO_TAB_FOCUS``              Don't draw tab focus rectangle
          ==================================== ==================================
 
         :todo: Implementation of flags ``AUI_NB_RIGHT`` and ``AUI_NB_LEFT``.
@@ -1070,7 +1077,7 @@ class AuiTabContainer(object):
 
 
     def SetNoneActive(self):
-        """ Sets all the tabs as incative (non-selected). """
+        """ Sets all the tabs as inactive (non-selected). """
 
         for page in self._pages:
             page.active = False
@@ -1227,7 +1234,7 @@ class AuiTabContainer(object):
 
         self._tab_offset = offset
 
-        
+
     def MinimizeTabOffset(self, dc, wnd, max_width):
         """
         Minimize `self._tab_offset` to fit as many tabs as possible in the available space.
@@ -1238,7 +1245,7 @@ class AuiTabContainer(object):
         """
 
         total_width = 0
-        
+
         for i, page in reversed(list(enumerate(self._pages))):
 
             tab_button = self._tab_close_buttons[i]
@@ -1426,7 +1433,7 @@ class AuiTabContainer(object):
                 if self._pages[i].control.IsShown():
                     self._pages[i].control.Hide()
 
-        self.MinimizeTabOffset(dc, wnd, self._rect.GetWidth())
+        self.MinimizeTabOffset(dc, wnd, self._rect.GetWidth() - right_buttons_width - offset - 2)
 
         # draw the tabs
         active = 999
@@ -1907,7 +1914,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
             return
 
         self.GetParent()._mgr.HideHint()
-        
+
         if self.HasCapture():
             self.ReleaseMouse()
 
@@ -1936,7 +1943,7 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
                 evt.SetInt(self._pressed_button.id)
                 evt.SetEventObject(self)
                 eventHandler = self.GetEventHandler()
-                
+
                 if eventHandler is not None:
                     eventHandler.ProcessEvent(evt)
 
@@ -2646,6 +2653,8 @@ class AuiNotebook(wx.PyPanel):
          ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
          ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
          ``AUI_NB_DRAW_DND_TAB``              Draws an image representation of a tab while dragging (on by default)
+         ``AUI_NB_ORDER_BY_ACCESS``           Tab navigation order by last access time for the tabs
+         ``AUI_NB_NO_TAB_FOCUS``              Don't draw tab focus rectangle
          ==================================== ==================================
 
          Default value for `agwStyle` is:
@@ -3082,6 +3091,8 @@ class AuiNotebook(wx.PyPanel):
          ``AUI_NB_CLOSE_ON_TAB_LEFT``         Draws the tab close button on the left instead of on the right (a la Camino browser)
          ``AUI_NB_TAB_FLOAT``                 Allows the floating of single tabs. Known limitation: when the notebook is more or less full screen, tabs cannot be dragged far enough outside of the notebook to become floating pages
          ``AUI_NB_DRAW_DND_TAB``              Draws an image representation of a tab while dragging (on by default)
+         ``AUI_NB_ORDER_BY_ACCESS``           Tab navigation order by last access time for the tabs
+         ``AUI_NB_NO_TAB_FOCUS``              Don't draw tab focus rectangle
          ==================================== ==================================
 
         :note: Please note that some styles cannot be changed after the window
@@ -3525,7 +3536,7 @@ class AuiNotebook(wx.PyPanel):
         if page_idx >= self._tabs.GetPageCount():
             return wx.NullBitmap
 
-        # update our own tab catalog            
+        # update our own tab catalog
         page_info = self._tabs.GetPage(page_idx)
         return page_info.bitmap
 
@@ -4638,7 +4649,7 @@ class AuiNotebook(wx.PyPanel):
                     e3.SetOldSelection(insert_idx)
                     e3.SetEventObject(nb)
                     nb.GetEventHandler().ProcessEvent(e3)
-                    
+
                     return
 
         if self._agwFlags & AUI_NB_TAB_FLOAT:
@@ -5649,6 +5660,9 @@ class AuiNotebook(wx.PyPanel):
         """
         Called by L{TabTextCtrl}, to accept the changes and to send the
         `EVT_AUINOTEBOOK_END_LABEL_EDIT` event.
+
+        :param `page_index`: the page index in the notebook;
+        :param `value`: the new label for the tab.
         """
 
         evt = AuiNotebookEvent(wxEVT_COMMAND_AUINOTEBOOK_END_LABEL_EDIT, self.GetId())

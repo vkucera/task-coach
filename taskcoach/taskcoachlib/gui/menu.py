@@ -342,6 +342,9 @@ class SelectMenu(Menu):
                               uicommand.ClearSelection(**kwargs))
 
 
+activateNextViewerId = wx.NewId()
+activatePreviousViewerId = wx.NewId()
+
 class ViewMenu(Menu):
     def __init__(self, mainwindow, settings, viewerContainer, taskFile):
         super(ViewMenu, self).__init__(mainwindow)
@@ -351,11 +354,11 @@ class ViewMenu(Menu):
         activateNextViewer = uicommand.ActivateViewer(viewer=viewerContainer,
             menuText=_('&Activate next viewer\tCtrl+PgDn'),
             helpText=help.viewNextViewer, forward=True,
-            bitmap='activatenextviewer')
+            bitmap='activatenextviewer', id=activateNextViewerId)
         activatePreviousViewer = uicommand.ActivateViewer(viewer=viewerContainer,
             menuText=_('Activate &previous viewer\tCtrl+PgUp'),
             helpText=help.viewPreviousViewer, forward=False,
-            bitmap='activatepreviousviewer')
+            bitmap='activatepreviousviewer', id=activatePreviousViewerId)
         self.appendUICommands(
             activateNextViewer,
             activatePreviousViewer,

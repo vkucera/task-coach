@@ -13,7 +13,7 @@
 # Python Code By:
 #
 # Andrea Gavana, @ 23 Dec 2005
-# Latest Revision: 12 Aug 2010, 09.00 GMT
+# Latest Revision: 26 Jan 2011, 15.00 GMT
 #
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
@@ -118,6 +118,9 @@ if wx.Platform == "__WXMSW__":
         _winxptheme = True
     except ImportError:
         pass
+
+# wxPython version string
+_VERSION_STRING = wx.VERSION_STRING
 
 # AUI Events
 wxEVT_AUI_PANE_BUTTON = wx.NewEventType()
@@ -362,28 +365,6 @@ class AuiManagerEvent(wx.PyCommandEvent):
         self.veto_flag = False
         self.canveto_flag = True
         self.dc = None
-
-
-    def Clone(self):
-        """
-        Returns a copy of the event.
-
-        Any event that is posted to the wxPython event system for later action (via
-        `wx.EvtHandler.AddPendingEvent` or `wx.PostEvent`) must implement this method.
-        All wxPython events fully implement this method, but any derived events
-        implemented by the user should also implement this method just in case they
-        (or some event derived from them) are ever posted.
-
-        All wxPython events implement a copy constructor, so the easiest way of
-        implementing the L{Clone} function is to implement a copy constructor for a new
-        event (call it `MyEvent`) and then define the L{Clone} function like this::
-
-            def Clone(self):
-                return MyEvent(self)
-
-        """
-
-        return AuiManagerEvent(self)
 
 
     def SetManager(self, mgr):
@@ -1957,7 +1938,7 @@ class AuiDockingGuideWindow(wx.Window):
 
         :param `event`: a `wx.EraseEvent` to be processed.
 
-        :note: This is intentiobnally empty to reduce flickering while drawing.
+        :note: This is intentionally empty to reduce flickering while drawing.
         """
 
         pass
@@ -2620,7 +2601,7 @@ class AuiCenterDockingGuide(AuiDockingGuide):
 
         :param `event`: `wx.EraseEvent` to be processed.
 
-        :note: This is intentiobnally empty to reduce flickering while drawing.
+        :note: This is intentionally empty to reduce flickering while drawing.
         """
         
         pass
@@ -2758,7 +2739,7 @@ class AuiDockingHintWindow(wx.Frame):
         outside of the region. To reset the window to the normal rectangular shape simply call
         L{SetShape} again with an empty region. 
 
-        :param `region`: the shape of the frame.
+        :param `region`: the shape of the frame (an instance of `wx.Region`).
 
         :note: Overridden for wxMac.        
         """
@@ -2774,7 +2755,7 @@ class AuiDockingHintWindow(wx.Frame):
         """
         Show the hint window.
 
-        :param `show`: whether to show or hide the frame.
+        :param `show`: whether to show or hide the hint docking window.
         """
         
         super(AuiDockingHintWindow, self).Show(show)
@@ -3121,7 +3102,12 @@ class AuiFloatingFrame(wx.MiniFrame):
         self._last2_rect = wx.Rect(*self._last_rect)
         self._last_rect = wx.Rect(*win_rect)
 
-        if not wx.GetMouseState().LeftDown():
+        if _VERSION_STRING < "2.9":
+            leftDown = wx.GetMouseState().LeftDown()
+        else:
+            leftDown = wx.GetMouseState().LeftIsDown()
+
+        if not leftDown:
             return
 
         if not self._moving:        
@@ -3145,7 +3131,12 @@ class AuiFloatingFrame(wx.MiniFrame):
         """
 
         if self._moving:        
-            if not wx.GetMouseState().LeftDown():            
+            if _VERSION_STRING < "2.9":
+                leftDown = wx.GetMouseState().LeftDown()
+            else:
+                leftDown = wx.GetMouseState().LeftIsDown()
+
+            if not leftDown:
                 self._moving = False
                 self.OnMoveFinished()
             else:            
@@ -3244,7 +3235,12 @@ class AuiFloatingFrame(wx.MiniFrame):
         if self._fly_timer.IsRunning():
             return
 
-        if wx.GetMouseState().LeftDown():
+        if _VERSION_STRING < "2.9":
+            leftDown = wx.GetMouseState().LeftDown()
+        else:
+            leftDown = wx.GetMouseState().LeftIsDown()
+
+        if leftDown:
             return
         
         rect = wx.Rect(*self.GetScreenRect())
@@ -3819,7 +3815,7 @@ def GetNotebookRoot(panes, notebook_id):
 
 def EscapeDelimiters(s):
     """
-    Changes "" into "\" and "|" into "\|" in the input string.  
+    Changes ``;`` into ``\`` and ``|`` into ``\|`` in the input string.  
 
     :param `s`: the string to be analyzed.
 
@@ -4168,7 +4164,7 @@ class AuiManager(wx.EvtHandler):
         by calling L{AuiPaneInfo.IsOk}.
 
         The pane info's structure may then be modified. Once a pane's
-        info is modified, L{AuiManager.Update} must be called to
+        info is modified, L{Update} must be called to
         realize the changes in the UI.
 
         :param `item`: either a pane name or a `wx.Window`.        
@@ -4464,7 +4460,7 @@ class AuiManager(wx.EvtHandler):
         """
         Process the AUI events sent to the manager.
 
-        :param `event`: the event to process.
+        :param `event`: the event to process, an instance of L{AuiManagerEvent}.
         """
 
         # first, give the owner frame a chance to override
@@ -4480,7 +4476,7 @@ class AuiManager(wx.EvtHandler):
         Fires one of the ``EVT_AUI_PANE_FLOATED``/``FLOATING``/``DOCKING``/``DOCKED``/``ACTIVATED`` event. 
 
         :param `evtType`: one of the aforementioned events;
-        :param `pane`: the `AuiPaneInfo` instance;
+        :param `pane`: the L{AuiPaneInfo} instance associated to this event;
         :param `canVeto`: whether the event can be vetoed or not.
         """        
 
@@ -4494,7 +4490,7 @@ class AuiManager(wx.EvtHandler):
     
     def CanUseModernDockArt(self):
         """
-        Returns whether L{ModernDockArt} can be used (Windows XP/Vista/7 only,
+        Returns whether L{ModernDockArt} can be used (Windows XP / Vista / 7 only,
         requires Mark Hammonds's `pywin32` package).
         """
 
@@ -4875,16 +4871,30 @@ class AuiManager(wx.EvtHandler):
             
         elif pane_info.IsNotebookPage():
             # if we are a notebook page, remove ourselves...
-            notebook = self._notebooks[pane_info.notebook_id]
-            id = notebook.GetPageIndex(pane_info.window)
-            notebook.RemovePage(id)
-        
+            # the  code would index out of bounds 
+            # if the last page of a sub-notebook was closed
+            # because the notebook would be deleted, before this
+            # code is executed.
+            # This code just prevents an out-of bounds error.
+            if self._notebooks:
+                nid = pane_info.notebook_id
+                if nid >= 0 and nid < len(self._notebooks):
+                    notebook = self._notebooks[nid]
+                    page_idx = notebook.GetPageIndex(pane_info.window)
+                    if page_idx >= 0:
+                        notebook.RemovePage(page_idx)
+                                
         # now we need to either destroy or hide the pane
         to_destroy = 0
         if pane_info.IsDestroyOnClose():
             to_destroy = pane_info.window
             self.DetachPane(to_destroy)
         else:
+            if isinstance(pane_info.window, auibar.AuiToolBar) and pane_info.IsFloating():
+                tb = pane_info.window
+                if pane_info.dock_direction in [AUI_DOCK_LEFT, AUI_DOCK_RIGHT]:
+                    tb.SetAGWWindowStyleFlag(tb.GetAGWWindowStyleFlag() | AUI_TB_VERTICAL)
+                
             pane_info.Dock().Hide()
 
         if pane_info.IsNotebookControl():
@@ -4937,8 +4947,14 @@ class AuiManager(wx.EvtHandler):
         # last, show the window
         if pane_info.window and not pane_info.window.IsShown():
             pane_info.window.Show(True)
+
             
     def SavePreviousDockSizes(self, pane_info):
+        """
+        Stores the previous dock sizes, to be used in a "restore" action later.
+
+        :param `pane_info`: a L{AuiPaneInfo} instance.
+        """
 
         for d in self._docks:
             if not d.toolbar:
@@ -4946,6 +4962,7 @@ class AuiManager(wx.EvtHandler):
                     p.previousDockSize = d.size
                     if pane_info is not p:
                         p.SetFlag(p.needsRestore, True)
+
         
     def RestorePane(self, pane_info):
         """
@@ -5050,7 +5067,7 @@ class AuiManager(wx.EvtHandler):
          ``AUI_NB_TOP``                       With this style, tabs are drawn along the top of the notebook
          ``AUI_NB_LEFT``                      With this style, tabs are drawn along the left of the notebook. Not implemented yet.
          ``AUI_NB_RIGHT``                     With this style, tabs are drawn along the right of the notebook. Not implemented yet.
-         ``AUI_NB_BOTTOM``                    With this style, tabs are drawn along the bottom of the notebook.
+         ``AUI_NB_BOTTOM``                    With this style, tabs are drawn along the bottom of the notebook
          ``AUI_NB_TAB_SPLIT``                 Allows the tab control to be split by dragging a tab
          ``AUI_NB_TAB_MOVE``                  Allows a tab to be moved horizontally by dragging
          ``AUI_NB_TAB_EXTERNAL_MOVE``         Allows a tab to be moved to another tab control
@@ -5060,8 +5077,8 @@ class AuiManager(wx.EvtHandler):
          ``AUI_NB_CLOSE_BUTTON``              With this style, a close button is available on the tab bar
          ``AUI_NB_CLOSE_ON_ACTIVE_TAB``       With this style, a close button is available on the active tab
          ``AUI_NB_CLOSE_ON_ALL_TABS``         With this style, a close button is available on all tabs
-         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close AuiNotebook tabs by mouse middle button click
-         ``AUI_NB_SUB_NOTEBOOK``              This style is used by AuiManager to create automatic AuiNotebooks
+         ``AUI_NB_MIDDLE_CLICK_CLOSE``        Allows to close L{AuiNotebook} tabs by mouse middle button click
+         ``AUI_NB_SUB_NOTEBOOK``              This style is used by {AuiManager} to create automatic AuiNotebooks
          ``AUI_NB_HIDE_ON_SINGLE_TAB``        Hides the tab window if only one tab is present
          ``AUI_NB_SMART_TABS``                Use Smart Tabbing, like ``Alt`` + ``Tab`` on Windows
          ``AUI_NB_USE_IMAGES_DROPDOWN``       Uses images on dropdown window list menu instead of check items
@@ -5092,7 +5109,7 @@ class AuiManager(wx.EvtHandler):
 
     def SavePaneInfo(self, pane):
         """
-        This method is similar to L{AuiManager.SavePerspective}, with the exception
+        This method is similar to L{SavePerspective}, with the exception
         that it only saves information about a single pane. It is used in
         combination with L{LoadPaneInfo}.
 
@@ -5126,7 +5143,7 @@ class AuiManager(wx.EvtHandler):
 
     def LoadPaneInfo(self, pane_part, pane):
         """
-        This method is similar to to L{AuiManager.LoadPerspective}, with the exception that
+        This method is similar to to L{LoadPerspective}, with the exception that
         it only loads information about a single pane. It is used in combination
         with L{SavePaneInfo}.
 
@@ -5231,7 +5248,7 @@ class AuiManager(wx.EvtHandler):
         """
         Loads a layout which was saved with L{SavePerspective}.
         
-        If the `update` flag parameter is ``True``, L{AuiManager.Update} will be
+        If the `update` flag parameter is ``True``, L{Update} will be
         automatically invoked, thus realizing the saved perspective on screen.
 
         :param `layout`: a string which contains a saved AUI layout;
@@ -5324,6 +5341,9 @@ class AuiManager(wx.EvtHandler):
             pane.buttons = p.buttons
             self._panes[indx] = pane
 
+            if isinstance(pane.window, auibar.AuiToolBar) and (pane.IsFloatable() or pane.IsDockable()):
+                pane.window.SetGripperVisible(True)
+            
         if update:
             self.Update()
 
@@ -6377,6 +6397,8 @@ class AuiManager(wx.EvtHandler):
 
                 pageCounter += 1
 
+            notebook.DoSizing()
+
         # Add notebook pages that aren't there already...
         for paneInfo in self._panes:
             if paneInfo.IsNotebookPage():
@@ -6396,6 +6418,8 @@ class AuiManager(wx.EvtHandler):
                 
                     notebook.SetPageText(page_id, title)
                     notebook.SetPageBitmap(page_id, paneInfo.icon)
+
+                notebook.DoSizing()
                 
             # Wire-up newly created notebooks
             elif paneInfo.IsNotebookControl() and not paneInfo.window:
@@ -6439,44 +6463,39 @@ class AuiManager(wx.EvtHandler):
             
             else:
             
-                # Check page-ordering...
+                # Correct page ordering. The original wxPython code
+                # for this did not work properly, and would misplace 
+                # windows causing errors.
+                notebook.Freeze()
                 self._notebooks[nb_idx] = notebook
                 pages = notebook.GetPageCount()
                 selected = notebook.GetPage(notebook.GetSelection())
-                reordered = False
 
-                for page in xrange(pages):
-                
-                    win = notebook.GetPage(page)
-                    pane = self.GetPane(win)
-                    
-                    if pane.IsOk():
-                    
-                        lowest = pane.dock_pos
-                        where = -1
-                        
-                        # Now look for panes with lower dock_poss
-                        for look in xrange(page + 1, pages):
-                            w = notebook.GetPage(look)
-                            other = self.GetPane(w)
-                            if other.IsOk():
-                                if other.dock_pos < lowest:
-                                    where = look
-                                    lowest = other.dock_pos
-                                    pane = self.SetAttributes(pane, self.GetAttributes(other))
-                        
-                        if where > 0:                        
-                            # We need to move a new pane into slot "page"
-                            notebook.RemovePage(where)
-                            title = (pane.caption == "" and [pane.name] or [pane.caption])[0]
-                            notebook.InsertPage(page, pane.window, title)
-                            reordered = True
-                        
-                        # Now that we've move it, we can "normalise" the value.
-                        pane.dock_pos = page
-                    
-                if reordered:
-                    notebook.SetSelection(notebook.GetPageIndex(selected), True)
+                # Take each page out of the notebook, group it with
+                # its current pane, and sort the list by pane.dock_pos
+                # order
+                pages_and_panes = []
+                for idx in reversed(range(pages)):
+                    page = notebook.GetPage(idx)
+                    pane = self.GetPane(page)
+                    pages_and_panes.append((page, pane))
+                    notebook.RemovePage(idx)
+                sorted_pnp = sorted(pages_and_panes, key=lambda tup: tup[1].dock_pos)
+
+                # Grab the attributes from the panes which are ordered
+                # correctly, and copy those attributes to the original
+                # panes. (This avoids having to change the ordering
+                # of self._panes) Then, add the page back into the notebook
+                sorted_attributes = [self.GetAttributes(tup[1])
+                                     for tup in sorted_pnp]
+                for attrs, tup in zip(sorted_attributes, pages_and_panes):
+                    pane = tup[1]
+                    self.SetAttributes(pane, attrs)
+                    notebook.AddPage(pane.window, pane.caption)
+
+                notebook.SetSelection(notebook.GetPageIndex(selected), True)
+                notebook.DoSizing()
+                notebook.Thaw()
 
                 # It's a keeper.
                 remap_ids[nb] = nb_idx
@@ -6834,7 +6853,7 @@ class AuiManager(wx.EvtHandler):
         return None
 
 
-    def GetTotalPixsizeAndProportion(self, dock):
+    def GetTotalPixSizeAndProportion(self, dock):
         """
         Returns the dimensions and proportion of the input dock.
 
@@ -7035,7 +7054,7 @@ class AuiManager(wx.EvtHandler):
 
             return minPix, maxPix
         
-        totalPixsize, totalProportion = self.GetTotalPixsizeAndProportion(dock)
+        totalPixsize, totalProportion = self.GetTotalPixSizeAndProportion(dock)
         partnerPane = self.GetPartnerPane(dock, pane)
 
         if dock.IsHorizontal():
@@ -7994,10 +8013,12 @@ class AuiManager(wx.EvtHandler):
         state = AUI_BUTTON_STATE_NORMAL
 
         if part.rect.Contains(pt):
-            if wx.VERSION < (2,9):
+
+            if _VERSION_STRING < "2.9":
                 leftDown = wx.GetMouseState().LeftDown()
             else:
                 leftDown = wx.GetMouseState().LeftIsDown()
+
             if leftDown:
                 state = AUI_BUTTON_STATE_PRESSED
             else:
@@ -8222,7 +8243,7 @@ class AuiManager(wx.EvtHandler):
         """
         Handles the resizing of a floating pane.
 
-        :param `wnd` a `wx.Window` derived window, managed by the pane;
+        :param `wnd`: a `wx.Window` derived window, managed by the pane;
         :param `size`: a `wx.Size` object, specifying the new pane floating size.
         """
 
@@ -8244,7 +8265,7 @@ class AuiManager(wx.EvtHandler):
         """
         Handles the close event of a floating pane.
 
-        :param `wnd` a `wx.Window` derived window, managed by the pane;
+        :param `wnd`: a `wx.Window` derived window, managed by the pane;
         :param `event`: a `wx.CloseEvent` to be processed.
         """
         
@@ -8294,7 +8315,7 @@ class AuiManager(wx.EvtHandler):
         Handles the move event of a floating pane.
 
         :param `wnd`: a `wx.Window` derived window, managed by the pane;
-        :param `event`: a `wx.MoveEvent` to be processed.
+        :param `eventOrPt`: a `wx.MoveEvent` to be processed or an instance of `wx.Point`.
         """
         
         pane = self.GetPane(wnd)
@@ -8449,7 +8470,7 @@ class AuiManager(wx.EvtHandler):
         """
         Draws all of the pane captions, sashes,
         backgrounds, captions, grippers, pane borders and buttons.
-        It renders the entire user interface.
+        It renders the entire user interface. It binds the ``EVT_AUI_RENDER`` event.
 
         :param `event`: an instance of L{AuiManagerEvent}.
         """
@@ -8677,7 +8698,7 @@ class AuiManager(wx.EvtHandler):
         """
         Handles the ``EVT_AUI_FIND_MANAGER`` event for L{AuiManager}.
 
-        :param `event`: a `EVT_AUI_FIND_MANAGER` event to be processed.
+        :param `event`: a L{AuiManagerEvent} event to be processed.
         """
         
         # Initialize to None
@@ -8947,7 +8968,7 @@ class AuiManager(wx.EvtHandler):
                 oldPixsize = pane.rect.height
                 newPixsize = oldPixsize + newPos.y - self._action_part.rect.y
                                 
-            totalPixsize, totalProportion = self.GetTotalPixsizeAndProportion(dock)
+            totalPixsize, totalProportion = self.GetTotalPixSizeAndProportion(dock)
             partnerPane = self.GetPartnerPane(dock, pane)
 
             # prevent division by zero
@@ -9565,7 +9586,13 @@ class AuiManager(wx.EvtHandler):
 
         # when release the button out of the window.
         # TODO: a better fix is needed.
-        if not wx.GetMouseState().LeftDown():
+
+        if _VERSION_STRING < "2.9":
+            leftDown = wx.GetMouseState().LeftDown()
+        else:
+            leftDown = wx.GetMouseState().LeftIsDown()
+        
+        if not leftDown:
             self._action = actionNone
             self.OnLeftUp_DragToolbarPane(eventOrPt)
 
@@ -9643,7 +9670,7 @@ class AuiManager(wx.EvtHandler):
         """
         Handles the ``EVT_AUI_PANE_BUTTON`` event for L{AuiManager}.
 
-        :param `event`: a `EVT_AUI_PANE_BUTTON` to be processed.
+        :param `event`: a L{AuiManagerEvent} event to be processed.
         """
 
         if not event.pane:
@@ -9734,7 +9761,7 @@ class AuiManager(wx.EvtHandler):
         Minimizes a pane in a newly and automatically created L{AuiToolBar}.
 
         Clicking on the minimize button causes a new L{AuiToolBar} to be created
-        and added to the frame manager, (currently the implementation is such that
+        and added to the frame manager (currently the implementation is such that
         panes at West will have a toolbar at the right, panes at South will have
         toolbars at the bottom etc...) and the pane is hidden in the manager.
         
@@ -9978,6 +10005,9 @@ class AuiManager(wx.EvtHandler):
 
         :param `win_rect`: the original pane screen rectangle;
         :param `pane_rect`: the newly created toolbar/pane screen rectangle.
+
+        :note: This functionality is not available on wxMAC as this platform doesn't have
+         the ability to use `wx.ScreenDC` to draw on-screen and on Windows > Vista.
         """
 
         if wx.Platform == "__WXMAC__":
@@ -10249,7 +10279,11 @@ class AuiManager(wx.EvtHandler):
         
 
     def SlideOut(self):
-        """ Slides out a preview of a minimized pane. """
+        """
+        Slides out a preview of a minimized pane.
+
+        :note: This is used solely for sliding in and out minimized panes.
+        """
 
         if not self._sliding_frame:
             return
@@ -10291,7 +10325,7 @@ class AuiManager_DCP(AuiManager):
     
     def __init__(self, *args, **keys):
 
-        aui.AuiManager.__init__(self, *args, **keys)
+        AuiManager.__init__(self, *args, **keys)
         self.hasDummyPane = False
         
 
@@ -10303,7 +10337,7 @@ class AuiManager_DCP(AuiManager):
 
         self.hasDummyPane = True
         dummy = wx.Panel(self.GetManagedWindow())
-        info = aui.AuiPaneInfo().CenterPane().NotebookDockable(True).Name('dummyCenterPane').DestroyOnClose(True)
+        info = AuiPaneInfo().CenterPane().NotebookDockable(True).Name('dummyCenterPane').DestroyOnClose(True)
         self.AddPane(dummy, info)
 
 
@@ -10329,11 +10363,11 @@ class AuiManager_DCP(AuiManager):
         the whole layout at one time.
         """
         
-        aui.AuiManager.Update(self)
+        AuiManager.Update(self)
 
         # check if there's already a center pane (except our dummy pane)
         dummyCenterPane = self.GetPane('dummyCenterPane')
-        haveCenterPane = any((pane != dummyCenterPane) and (pane.dock_direction == aui.AUI_DOCK_CENTER) and
+        haveCenterPane = any((pane != dummyCenterPane) and (pane.dock_direction == AUI_DOCK_CENTER) and
                              not pane.IsFloating() and pane.IsShown() for pane in self.GetAllPanes())
         if haveCenterPane:
             if self.hasDummyPane:

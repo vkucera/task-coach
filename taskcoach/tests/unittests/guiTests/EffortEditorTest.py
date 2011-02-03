@@ -1,6 +1,6 @@
 '''
 Task Coach - Your friendly task manager
-Copyright (C) 2004-2010 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ class EffortEditorTest(test.wxTestCase):
         self.assertEqual(self.effort.getStart().date(), 
             self.editor._interior._startDateTimeEntry.GetValue().date())
         self.assertEqual(self.effort.task(), 
-            self.editor._interior._taskEntry.GetValue())
+            self.editor._interior._taskEntry.GetValue())    
         
     def testInvalidEffort(self):    
         self.editor._interior._stopDateTimeEntry.SetValue(date.DateTime(1900, 1, 1))
