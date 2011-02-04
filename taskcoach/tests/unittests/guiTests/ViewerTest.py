@@ -31,7 +31,7 @@ class ViewerTest(test.wxTestCase):
         self.taskFile.tasks().append(self.task)
         self.window = widgets.AuiManagedFrameWithDynamicCenterPane(self.frame)
         self.viewerContainer = gui.viewer.ViewerContainer(self.window, 
-            self.settings, 'mainviewer')
+            self.settings)
         self.viewer = self.createViewer()
         self.viewerContainer.addViewer(self.viewer)
         

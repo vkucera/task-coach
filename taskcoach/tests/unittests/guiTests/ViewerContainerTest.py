@@ -60,9 +60,10 @@ class ViewerContainerTest(test.wxTestCase):
         task.Task.settings = self.settings = config.Settings(load=False)
         self.settings.set('view', 'viewerwithdummywidgetcount', '2', new=True)
         self.taskFile = persistence.TaskFile()
-        self.mainWindow = gui.mainwindow.MainWindow(None, self.taskFile, self.settings)
+        self.mainWindow = gui.mainwindow.MainWindow(None, self.taskFile, 
+                                                    self.settings)
         self.container = gui.viewer.ViewerContainer(self.mainWindow,
-            self.settings, 'mainviewer')
+                                                    self.settings)
         self.viewer1 = self.createViewer('taskviewer1')
         self.container.addViewer(self.viewer1)
         self.viewer2 = self.createViewer('taskviewer2')
@@ -90,10 +91,6 @@ class ViewerContainerTest(test.wxTestCase):
         self.container.activateViewer(self.viewer2)
         self.assertEqual(self.viewer2, self.container.activeViewer())
 
-    def testChangePage_SavesActiveViewerInSettings(self):
-        self.container.onPageChanged(DummyChangeEvent(self.viewer2))
-        self.assertEqual(1, self.settings.getint('view', 'mainviewer'))
-
     def testChangePage_NotifiesObserversAboutNewActiveViewer(self):
         patterns.Publisher().registerObserver(self.onEvent, 
             eventType=self.container.viewerChangeEventType(), 
@@ -105,21 +102,11 @@ class ViewerContainerTest(test.wxTestCase):
         self.container.onPageClosed(DummyCloseEvent(self.viewer1))
         self.assertEqual([self.viewer2], self.container.viewers)
         
-    def testCloseViewer_RemovesViewerFromSettings(self):
-        self.container.onPageClosed(DummyCloseEvent(self.viewer1))
-        self.assertEqual(1, self.settings.getint('view', 
-            'viewerwithdummywidgetcount'))
-        
     def testCloseViewer_ChangesActiveViewer(self):
         self.container.onPageChanged(DummyChangeEvent(self.viewer2))
         self.container.onPageClosed(DummyCloseEvent(self.viewer2))
         self.assertEqual(self.viewer1, self.container.activeViewer())
         
-    def testCloseViewer_SavesActiveViewerInSettings(self):
-        self.container.activateViewer(self.viewer2)
-        self.container.closeViewer(self.viewer2)
-        self.assertEqual(0, self.settings.getint('view', 'mainviewer'))
-
     def testCloseViewer_NotifiesObserversAboutNewActiveViewer(self):
         self.container.activateViewer(self.viewer2)
         patterns.Publisher().registerObserver(self.onEvent, 
