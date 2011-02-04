@@ -45,7 +45,9 @@ information.'''),
         Feature('''The calendar viewer configuration has been moved to its
 own dialog. Add more configurable attributes: highlight color, show now,
 font size.'''),
-        Feature('''Effort viewers can be sorted ascending and descending.''')
+        Feature('''Effort viewers can be sorted ascending and descending.'''),
+        Feature('''Edit, preferences and help dialogs have maximize and minimize
+buttons.''', 'http://uservoice.com/a/mymqf')
         ]
     ),
 
