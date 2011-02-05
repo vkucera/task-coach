@@ -32,7 +32,9 @@ characters.''', '3172736'),
 setups.''', '3166563'),
         Bug('''The shortcut for "Decrease priority" (Ctrl-D) wasn't working
 in the Spanish translation.''', '3165234'),
-        Bug('''Prevent the tooltip overlapping popup menus on Linux.''', '2989198')
+        Bug('''Prevent the tooltip overlapping popup menus on Linux.''', '2989198'),
+        Bug('''Dropping IMAP e-mails from Thunderbird would not work on some
+configurations.''')
         ],
     featuresAdded=[
         Feature('''Hitting Ctrl-F when a viewer has keyboard focus moves 
