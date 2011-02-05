@@ -22,8 +22,8 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.9', 'February 4, 2011',
-    summary='''This is a bugfix release.''',
+Release('1.2.9', 'February 5, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Improve keyboard navigation between viewers.'''),
         Bug('''Accept dropped mail messages from Outlook with non-ascii 
