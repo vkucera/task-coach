@@ -97,3 +97,38 @@ class CtrlWithColumnsTest(CtrlWithColumnsTestCase,
             columns=[self.column1, self.column2], resizeableColumn=1, 
             columnPopupMenu=None)
 
+
+class DummyEvent(object):
+    def __init__(self, eventObject):
+        self.eventObject = eventObject
+        
+    def Skip(self):
+        pass
+    
+    def GetColumn(self):
+        return 0
+    
+    def GetEventObject(self):
+        return self.eventObject
+    
+    def GetPosition(self):
+        return 0, 0
+
+
+class ListCtrlWithColumnPopupMenuTest(CtrlWithColumnsTestCase):
+    def createControl(self):
+        return CtrlWithColumnsUnderTest(self.frame, style=wx.LC_REPORT, 
+            columns=[self.column1, self.column2], resizeableColumn=1, 
+            columnPopupMenu=wx.Menu())
+
+    def testColumnHeaderPopupMenu(self):
+        self.control.onColumnPopupMenu(DummyEvent(self.control))
+
+
+class HyperListTreeCtrlWithColumnPopupMenuTest(CtrlWithColumnsTestCase):
+    def createControl(self):
+        return widgets.TreeListCtrl(self.frame, [self.column1, self.column2], 
+            None, None, None, None, columnPopupMenu=wx.Menu())
+
+    def testColumnHeaderPopupMenu(self):
+        self.control.onColumnPopupMenu(DummyEvent(self.control))
