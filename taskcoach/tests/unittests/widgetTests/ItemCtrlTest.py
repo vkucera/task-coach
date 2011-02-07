@@ -121,6 +121,7 @@ class ListCtrlWithColumnPopupMenuTest(CtrlWithColumnsTestCase):
             columns=[self.column1, self.column2], resizeableColumn=1, 
             columnPopupMenu=wx.Menu())
 
+    @test.skipOnPlatform('__WXGTK__') # Popup menu hangs the test
     def testColumnHeaderPopupMenu(self):
         self.control.onColumnPopupMenu(DummyEvent(self.control))
 
@@ -130,5 +131,6 @@ class HyperListTreeCtrlWithColumnPopupMenuTest(CtrlWithColumnsTestCase):
         return widgets.TreeListCtrl(self.frame, [self.column1, self.column2], 
             None, None, None, None, columnPopupMenu=wx.Menu())
 
+    @test.skipOnPlatform('__WXGTK__') # Popup menu hangs the test
     def testColumnHeaderPopupMenu(self):
         self.control.onColumnPopupMenu(DummyEvent(self.control))
