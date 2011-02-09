@@ -76,16 +76,15 @@ class FilterableViewerMixin(object):
 
     def isFilterable(self):
         return True
-    
 
-class FilterableViewerForNotesMixin(FilterableViewerMixin):
-    def createFilter(self, notesContainer):
-        notesContainer = super(FilterableViewerForNotesMixin, self).createFilter(notesContainer)
-        return category.filter.CategoryFilter(notesContainer, 
-            categories=self.taskFile.categories(), treeMode=self.isTreeViewer(),
-            filterOnlyWhenAllCategoriesMatch=self.settings.getboolean('view',
-            'categoryfiltermatchall'))
-        
+    def createFilter(self, items):
+        items = super(FilterableViewerMixin, self).createFilter(items)
+        filterOnlyWhenAllCategoriesMatch = self.settings.getboolean('view', 
+            'categoryfiltermatchall')
+        return category.filter.CategoryFilter(items, 
+            categories=self.taskFile.categories(), treeMode=self.isTreeViewer(), 
+            filterOnlyWhenAllCategoriesMatch=filterOnlyWhenAllCategoriesMatch)
+    
             
 class FilterableViewerForTasksMixin(FilterableViewerMixin):
     def __init__(self, *args, **kwargs):
@@ -94,13 +93,9 @@ class FilterableViewerForTasksMixin(FilterableViewerMixin):
 
     def createFilter(self, taskList):
         taskList = super(FilterableViewerForTasksMixin, self).createFilter(taskList)
-        return category.filter.CategoryFilter( \
-            task.filter.ViewFilter(taskList, treeMode=self.isTreeViewer(), 
-                                   **self.viewFilterOptions()), 
-            categories=self.taskFile.categories(), treeMode=self.isTreeViewer(),
-            filterOnlyWhenAllCategoriesMatch=self.settings.getboolean('view',
-            'categoryfiltermatchall'))
-    
+        return task.filter.ViewFilter(taskList, treeMode=self.isTreeViewer(), 
+                                      **self.viewFilterOptions())
+                                       
     def viewFilterOptions(self):
         options = dict(dueDateTimeFilter=self.getFilteredByDueDateTime(),
                        hideCompletedTasks=self.isHidingCompletedTasks(),

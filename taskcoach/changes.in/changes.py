@@ -22,12 +22,15 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.10', 'February 7, 2011',
+Release('1.2.10', 'February 9, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Column header popup menu's didn't work.''', '3175083'),
         Bug('''The stop effort tracking button on the toolbar of effort viewers
 wasn't working.''')
+        ],
+    featuresAdded=[
+        Feature('''Efforts are filtered by categories like tasks and notes.''')
         ]
     ),
             
