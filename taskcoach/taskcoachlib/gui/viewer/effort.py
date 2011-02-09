@@ -29,7 +29,8 @@ from taskcoachlib.gui import uicommand, menu, render, dialog
 import base, mixin, refresher
 
 
-class EffortViewer(base.ListViewer, mixin.FilterableViewerMixin, 
+class EffortViewer(base.ListViewer, 
+                   mixin.FilterableViewerForCategorizablesMixin, 
                    mixin.SortableViewerForEffortMixin, 
                    mixin.SearchableViewerMixin, base.SortableViewerWithColumns): 
     defaultTitle = _('Effort')

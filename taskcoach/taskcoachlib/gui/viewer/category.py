@@ -29,6 +29,7 @@ import base, mixin
 
 
 class BaseCategoryViewer(mixin.AttachmentDropTargetMixin, 
+                         mixin.FilterableViewerMixin,
                          mixin.SortableViewerForCategoriesMixin, 
                          mixin.SearchableViewerMixin, 
                          mixin.NoteColumnMixin, mixin.AttachmentColumnMixin,
@@ -46,7 +47,8 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                           category.Category.fontChangedEventType(),
                           category.Category.iconChangedEventType(),
                           category.Category.selectedIconChangedEventType(),
-                          category.Category.exclusiveSubcategoriesChangedEventType()):
+                          category.Category.exclusiveSubcategoriesChangedEventType(),
+                          category.Category.filterChangedEventType()):
             patterns.Publisher().registerObserver(self.onAttributeChanged, 
                 eventType)
 
