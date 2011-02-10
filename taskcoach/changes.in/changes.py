@@ -27,10 +27,10 @@ Release('1.2.10', 'February 9, 2011',
     bugsFixed=[
         Bug('''Column header popup menu's didn't work.''', '3175083'),
         Bug('''The stop effort tracking button on the toolbar of effort viewers
-wasn't working.''')
-        ],
+wasn't working.'''),
         Bug('''The viewer background color would not obey the global user setting.''',
         'http://uservoice.com/a/g2CST')
+        ],
     featuresAdded=[
         Feature('''Efforts are filtered by categories like tasks and notes.''')
         ]
