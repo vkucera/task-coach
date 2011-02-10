@@ -57,6 +57,7 @@ class Viewer(wx.Panel):
         self.__presentation = self.createSorter(self.createFilter(self.domainObjectsToView()))
         # The widget used to present the presentation:
         self.widget = self.createWidget()
+        self.widget.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOW))
         self.toolbar = toolbar.ToolBar(self, (16, 16))
         self.initLayout()
         self.registerPresentationObservers()
