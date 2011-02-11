@@ -18,11 +18,15 @@ wxSCHEDULER_WEEKSTART_MONDAY = 1
 wxSCHEDULER_WEEKSTART_SUNDAY = 0
 
 # Not actually a constant :)
-_bg = wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW )
-_r, _g, _b = _bg.Red(), _bg.Green(), _bg.Blue()
-SCHEDULER_BACKGROUND_BRUSH	= wx.Color( max(0, _r - 15), max(0, _g - 15), max(0, _b - 15) )  
-DAY_BACKGROUND_BRUSH		= wx.Color( _r, _g, _b )
-FOREGROUND_PEN				= wx.Pen( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
+def SCHEDULER_BACKGROUND_BRUSH():
+    _bg = wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW )
+    _r, _g, _b = _bg.Red(), _bg.Green(), _bg.Blue()
+    return wx.Color( max(0, _r - 15), max(0, _g - 15), max(0, _b - 15) )  
+def DAY_BACKGROUND_BRUSH():
+    _bg = wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW )
+    _r, _g, _b = _bg.Red(), _bg.Green(), _bg.Blue()
+    return wx.Color( _r, _g, _b )
+FOREGROUND_PEN				= wx.LIGHT_GREY_PEN
 
 LEFT_COLUMN_SIZE		= 35
 HEADER_COLUMN_SIZE		= 20

@@ -704,7 +704,7 @@ class wxSchedulerPaint( object ):
 		try:
 			memDC.BeginDrawing()
 			try:
-				memDC.SetBackground( wx.Brush( SCHEDULER_BACKGROUND_BRUSH ) )
+				memDC.SetBackground( wx.Brush( SCHEDULER_BACKGROUND_BRUSH() ) )
 				memDC.SetPen( FOREGROUND_PEN )
 				memDC.Clear()
 				memDC.SetFont(wx.NORMAL_FONT)
@@ -734,7 +734,7 @@ class wxSchedulerPaint( object ):
 			memDC.SelectObject(self._bitmap)
 			try:
 				memDC.BeginDrawing()
-				memDC.SetBackground( wx.Brush( SCHEDULER_BACKGROUND_BRUSH ) )
+				memDC.SetBackground( wx.Brush( SCHEDULER_BACKGROUND_BRUSH() ) )
 				memDC.SetPen( FOREGROUND_PEN )
 				memDC.SetFont(wx.NORMAL_FONT)
 
@@ -872,7 +872,7 @@ class wxSchedulerPaint( object ):
 		dc = wx.PaintDC( self._headerPanel )
 		dc.BeginDrawing()
 		try:
-			dc.SetBackground( wx.Brush( SCHEDULER_BACKGROUND_BRUSH ) )
+			dc.SetBackground( wx.Brush( SCHEDULER_BACKGROUND_BRUSH() ) )
 			dc.SetPen( FOREGROUND_PEN )
 			dc.Clear()
 			dc.SetFont( wx.NORMAL_FONT )
