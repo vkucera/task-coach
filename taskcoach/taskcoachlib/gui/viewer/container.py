@@ -172,4 +172,4 @@ class ViewerContainer(object):
         viewer = event.GetPane().window
         table = wx.AcceleratorTable([(wx.ACCEL_CTRL, wx.WXK_PAGEDOWN, menu.activateNextViewerId),
                                      (wx.ACCEL_CTRL, wx.WXK_PAGEUP, menu.activatePreviousViewerId)])
-        viewer.widget.SetAcceleratorTable(table)
+        viewer.SetAcceleratorTable(table)
