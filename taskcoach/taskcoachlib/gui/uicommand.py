@@ -1407,9 +1407,9 @@ class TaskToggleCompletion(NeedsSelectedTasksMixin, ViewerCommand):
         if bitmapName != self.currentBitmap:
             self.currentBitmap = bitmapName
             self.updateToolBitmap(bitmapName)
-            self.updateToolHelp()     
+            self.updateToolHelp()
             self.updateMenuItems(allSelectedTasksAreCompleted)
-    
+        
     def updateToolState(self, allSelectedTasksAreCompleted):
         if not self.toolbar: return # Toolbar is hidden        
         if allSelectedTasksAreCompleted != self.toolbar.GetToolState(self.id): 
@@ -1820,18 +1820,25 @@ class EffortStartButton(PopupButtonMixin, TaskListCommand):
         return any(task.active() for task in self.taskList)
     
 
-class EffortStop(EffortListCommand, patterns.Observer):
+class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
+    defaultMenuText = _('Stop tracking or resume tracking')
+    defaultHelpText = _('Stop tracking effort or resume tracking effort')
+    stopMenuText = _('St&op tracking %s')
+    stopHelpText = _('Stop tracking effort for the active task(s)')
+    resumeMenuText = _('&Resume tracking %s')
+    resumeHelpText = _('Resume tracking effort for the last tracked task')
+    
     def __init__(self, *args, **kwargs):
-        super(EffortStop, self).__init__(bitmap='clock_stop_icon',
-            menuText=_('St&op tracking effort'),
-            helpText=_('Stop tracking effort for the active task(s)'), 
-            *args, **kwargs)
+        super(EffortStop, self).__init__(bitmap='clock_resume_icon', 
+            bitmap2='clock_stop_icon', menuText=self.defaultMenuText,
+            helpText=self.defaultHelpText, kind=wx.ITEM_CHECK, *args, **kwargs)
         # __trackedEfforts is a list and not a set because when an effort is
         # moved from one task to another task we might get the event that the
         # effort is (re)added to the effortList before the event that the effort
         # was removed from the effortList. If we would use a set, the effort
         # would be missing from the set after the removal event.    
         self.__trackedEfforts = self.__filterTrackedEfforts(self.effortList)
+        self.__currentBitmap = None # Don't know yet what our bitmap is
         self.registerObserver(self.onEffortAdded, 
                               eventType=self.effortList.addItemEventType(),
                               eventSource=self.effortList)
@@ -1853,24 +1860,103 @@ class EffortStop(EffortListCommand, patterns.Observer):
         
     def onStartTracking(self, event):
         self.__trackedEfforts.extend(event.sources())
-
+        
     def onStopTracking(self, event):
         for effort in event.sources():
             if effort in self.__trackedEfforts:
-                self.__trackedEfforts.remove(effort)
+                self.__trackedEfforts.remove(effort) 
                         
     def doCommand(self, event=None):
-        stop = command.StopEffortCommand(self.effortList)
-        stop.do()
-
+        if self.__trackedEfforts:
+            # Stop the tracked effort(s)
+            effortCommand = command.StopEffortCommand(self.effortList)
+        else:
+            # Resume tracking the last task
+            effortCommand = command.StartEffortCommand(self.taskList, 
+                                                       [self.mostRecentTrackedTask()])
+        effortCommand.do()
+        
     def enabled(self, event=None):
-        return bool(self.__trackedEfforts)
+        # If there are tracked efforts this command will stop them. If there are
+        # untracked efforts this command will resume them. Otherwise this command
+        # is disabled.
+        return self.anyTrackedEfforts() or self.anyStoppedEfforts()
     
     @staticmethod
     def __filterTrackedEfforts(efforts):
         return [effort for effort in efforts if effort.isBeingTracked()]
 
+    def onUpdateUI(self, event):
+        super(EffortStop, self).onUpdateUI(event)
+        self.updateUI()
+        
+    def updateUI(self):
+        paused = self.anyStoppedEfforts() and not self.anyTrackedEfforts()
+        self.updateToolState(not paused)
+        bitmapName = self.bitmap if paused else self.bitmap2
+        if bitmapName != self.__currentBitmap:
+            self.__currentBitmap = bitmapName
+            self.updateToolBitmap(bitmapName)
+            self.updateToolHelp()
+            self.updateMenuItems(paused)
+    
+    def updateToolState(self, paused):
+        if not self.toolbar: return # Toolbar is hidden        
+        if paused != self.toolbar.GetToolState(self.id): 
+            self.toolbar.ToggleTool(self.id, paused)
 
+    def updateToolBitmap(self, bitmapName):
+        if not self.toolbar: return # Toolbar is hidden
+        bitmap = wx.ArtProvider_GetBitmap(bitmapName, wx.ART_TOOLBAR, 
+                                          self.toolbar.GetToolBitmapSize())
+        # On wxGTK, changing the bitmap doesn't work when the tool is 
+        # disabled, so we first enable it if necessary:
+        disable = False
+        if not self.toolbar.GetToolEnabled(self.id):
+            self.toolbar.EnableTool(self.id, True)
+            disable = True
+        self.toolbar.SetToolNormalBitmap(self.id, bitmap)
+        if disable:
+            self.toolbar.EnableTool(self.id, False)
+        self.toolbar.Realize()
+    
+    def updateMenuItems(self, paused):
+        menuText = self.getMenuText(paused)
+        helpText = self.getHelpText(paused)
+        for menuItem in self.menuItems:
+            menuItem.Check(paused)
+            menuItem.SetItemLabel(menuText)
+            menuItem.SetHelp(helpText)
+        
+    def getMenuText(self, paused=None): # pylint: disable-msg=W0221
+        if self.anyTrackedEfforts():
+            subject = _('multiple tasks') if len(self.__trackedEfforts) > 1 else self.__trackedEfforts[0].task().subject()
+            return self.stopMenuText%subject
+        if paused is None:
+            paused = self.anyStoppedEfforts()
+        if paused:
+            return self.resumeMenuText%self.mostRecentTrackedTask().subject()
+        else:
+            return self.defaultMenuText
+        
+    def getHelpText(self, paused=None): # pylint: disable-msg=W0221
+        if self.anyTrackedEfforts():
+            return self.stopHelpText
+        if paused is None:
+            paused = self.anyStoppedEfforts()
+        return self.resumeHelpText if paused else self.defaultHelpText
+
+    def anyStoppedEfforts(self):
+        return bool(self.effortList.maxDateTime())
+    
+    def anyTrackedEfforts(self):
+        return bool(self.__trackedEfforts)
+
+    def mostRecentTrackedTask(self):
+        stopTimes = [(effort.getStop(), effort) for effort in self.effortList if effort.getStop() is not None]
+        return max(stopTimes)[1].task()
+    
+    
 class CategoryNew(CategoriesCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         categories = kwargs['categories']

@@ -22,8 +22,8 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.10', 'February 9, 2011',
-    summary='''This is a bugfix release.''',
+Release('1.2.10', 'February 12, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Column header popup menu's didn't work.''', '3175083'),
         Bug('''The stop effort tracking button on the toolbar of effort viewers
@@ -32,7 +32,10 @@ wasn't working.'''),
         'http://uservoice.com/a/g2CST')
         ],
     featuresAdded=[
-        Feature('''Efforts are filtered by categories like tasks and notes.''')
+        Feature('''Efforts are filtered by categories like tasks and notes.'''),
+        Feature('''Pausing effort tracking: clicking the stop tracking effort
+button when no effort is being tracked will resume tracking for the task that 
+was last being tracked.''', 'http://uservoice.com/a/cXLhb')
         ]
     ),
             

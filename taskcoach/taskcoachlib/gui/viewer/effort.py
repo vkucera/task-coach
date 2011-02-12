@@ -289,7 +289,7 @@ class EffortViewer(base.ListViewer,
                           None,
                           uicommand.EffortStartForEffort(viewer=self,
                                                          taskList=tasks),
-                          uicommand.EffortStop(effortList=efforts),
+                          uicommand.EffortStop(effortList=efforts, taskList=tasks),
                           None,
                           self.aggregationUICommand]:
             commands.insert(-2, uiCommand)

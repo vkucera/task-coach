@@ -147,6 +147,7 @@ class Viewer(wx.Panel):
         ''' Whenever our presentation is changed (items added, items removed,
             order changed) the viewer refreshes itself. '''
         self.refresh()
+        self.updateSelection()
         
     def onSelect(self, event=None): # pylint: disable-msg=W0613
         ''' The selection of items in the widget has been changed. Notify 
@@ -160,9 +161,10 @@ class Viewer(wx.Panel):
         wx.CallAfter(self.updateSelection)
 
     def updateSelection(self):
-        self.__curselection = self.widget.curselection()
-        patterns.Event(self.selectEventType(), self, 
-                       *self.__curselection).send()
+        newSelection = self.widget.curselection()
+        if newSelection != self.__curselection:
+            self.__curselection = newSelection
+            patterns.Event(self.selectEventType(), self, *newSelection).send()
 
     def freeze(self):
         self.widget.Freeze()
