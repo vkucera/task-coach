@@ -1,4 +1,7 @@
 
+2011-02-13  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
+	* Fixed a few little memory leaks
+
 ==== 3.1: 2011-01-23 ====
 
 2011-01-23  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>

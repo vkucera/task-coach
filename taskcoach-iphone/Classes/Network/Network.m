@@ -46,9 +46,6 @@
 		inputStream = (NSInputStream *)iStream;
 		outputStream = (NSOutputStream *)oStream;
 		
-		[inputStream retain];
-		[outputStream retain];
-		
 		[inputStream setDelegate:self];
 		[outputStream setDelegate:self];
 		
@@ -183,6 +180,7 @@
 					CFDataGetBytes(sock, CFRangeMake(0, CFDataGetLength(sock)), (UInt8 *)&fd);
 					int v = 1;
 					setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &v, sizeof(v));
+					CFRelease(sock);
 				}
 			}
 			break;
