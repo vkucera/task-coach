@@ -35,7 +35,12 @@ wasn't working.'''),
         Feature('''Efforts are filtered by categories like tasks and notes.'''),
         Feature('''Pausing effort tracking: clicking the stop tracking effort
 button when no effort is being tracked will resume tracking for the task that 
-was last being tracked.''', 'http://uservoice.com/a/cXLhb')
+was last being tracked.''', 'http://uservoice.com/a/cXLhb'),
+        Feature('''Start tracking effort and stop/resume tracking effort have
+keyboard shortcuts: Ctrl-T for start tracking effort and Shift-Ctrl-T for 
+stop/resume tracking effort.''', 'http://uservoice.com/a/9hhaE'),
+        Feature('''Clear all filters via a keyboard shortcut: Shift-Ctrl-F''',
+                'http://uservoice.com/a/4Tt4T')
         ]
     ),
             

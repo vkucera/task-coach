@@ -950,9 +950,8 @@ class ClearSelection(NeedsSelectionMixin, ViewerCommand):
 
 class ResetFilter(ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(ResetFilter, self).__init__(menuText=_('&Clear all filters'),
-            helpText=_('Show all items (reset all filters)'), 
-            bitmap='viewalltasks', *args, **kwargs)
+        super(ResetFilter, self).__init__(menuText=_('&Clear all filters\tShift-Ctrl-F'),
+            helpText=help.resetFilter, bitmap='viewalltasks', *args, **kwargs)
     
     def doCommand(self, event):
         self.viewer.resetFilter()
@@ -1745,9 +1744,8 @@ class EffortStart(NeedsSelectedTasksMixin, ViewerCommand, TaskListCommand):
     
     def __init__(self, *args, **kwargs):
         super(EffortStart, self).__init__(bitmap='clock_icon',
-            menuText=_('&Start tracking effort'), 
-            helpText=_('Start tracking effort for the selected task(s)'), 
-            *args, **kwargs)
+            menuText=_('&Start tracking effort\tCtrl-T'), 
+            helpText=help.effortStart, *args, **kwargs)
     
     def doCommand(self, event):
         start = command.StartEffortCommand(self.taskList, 
@@ -1822,10 +1820,10 @@ class EffortStartButton(PopupButtonMixin, TaskListCommand):
 
 class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
     defaultMenuText = _('Stop tracking or resume tracking')
-    defaultHelpText = _('Stop tracking effort or resume tracking effort')
-    stopMenuText = _('St&op tracking %s')
+    defaultHelpText = help.effortStopOrResume
+    stopMenuText = _('St&op tracking %s\tShift+Ctrl+T')
     stopHelpText = _('Stop tracking effort for the active task(s)')
-    resumeMenuText = _('&Resume tracking %s')
+    resumeMenuText = _('&Resume tracking %s\tShift+Ctrl+T')
     resumeHelpText = _('Resume tracking effort for the last tracked task')
     
     def __init__(self, *args, **kwargs):
