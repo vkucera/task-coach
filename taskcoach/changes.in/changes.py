@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.10', 'February 12, 2011',
+Release('1.2.10', 'February 13, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Column header popup menu's didn't work.''', '3175083'),
