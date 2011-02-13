@@ -1306,7 +1306,7 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
         
     def testRecursiveStartDateTime(self):
         self.assertAlmostEqual(date.Now().toordinal(), 
-                               self.task1.startDateTime(recursive=True).toordinal())
+                               self.task1.startDateTime(recursive=True).toordinal(), places=2)
 
     def testRecursiveStartDateTimeWhenChildStartsYesterday(self):
         self.task1_1.setStartDateTime(self.yesterday)
