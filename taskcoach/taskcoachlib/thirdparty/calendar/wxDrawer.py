@@ -81,7 +81,7 @@ class wxDrawer(object):
 			pen = wx.Pen(schedule.color)
 			self.context.SetPen(self.context.CreatePen(pen))
 
-			brush = self.context.CreateLinearGradientBrush(x, y, x + w, y + h, schedule.color, SCHEDULER_BACKGROUND_BRUSH)
+			brush = self.context.CreateLinearGradientBrush(x, y, x + w, y + h, schedule.color, SCHEDULER_BACKGROUND_BRUSH())
 			self.context.SetBrush(brush)
 			self.context.DrawRoundedRectangle(x, y, w, h, SCHEDULE_INSIDE_MARGIN)
 
@@ -382,7 +382,7 @@ class HeaderDrawerDCMixin(object):
 		if highlight is not None:
 			self.context.SetBrush( wx.Brush( highlight ) )
 		else:
-			self.context.SetBrush( wx.Brush( SCHEDULER_BACKGROUND_BRUSH ) )
+			self.context.SetBrush( wx.Brush( SCHEDULER_BACKGROUND_BRUSH() ) )
 
 		self.context.DrawRectangle( x, y, w, textH * 1.5 )
 
@@ -399,7 +399,7 @@ class HeaderDrawerDCMixin(object):
 		if day is None:
 			self.context.SetBrush(wx.LIGHT_GREY_BRUSH)
 		else:
-			self.context.SetBrush(wx.Brush(DAY_BACKGROUND_BRUSH))
+			self.context.SetBrush(wx.Brush(DAY_BACKGROUND_BRUSH()))
 
 		self.context.DrawRectangle(x, y, width, height)
 
@@ -492,7 +492,7 @@ class HeaderDrawerGCMixin(object):
 											     highlight))
 			else:
 				self.context.SetBrush(self.context.CreateLinearGradientBrush(x1, y1, x2, y2, wx.Color(128, 128, 128),
-											     SCHEDULER_BACKGROUND_BRUSH))
+											     SCHEDULER_BACKGROUND_BRUSH()))
 			self.context.DrawRectangle(x1, y1, x2 - x1, y2 - y1)
 
 			if alignRight:
@@ -507,9 +507,9 @@ class HeaderDrawerGCMixin(object):
 
 	def DrawSchedulesCompact(self, day, schedules, x, y, width, height, highlightColor):
 		if day is None:
-			brush = self.context.CreateLinearGradientBrush(x, y, x + width, y + height, wx.BLACK, SCHEDULER_BACKGROUND_BRUSH)
+			brush = self.context.CreateLinearGradientBrush(x, y, x + width, y + height, wx.BLACK, SCHEDULER_BACKGROUND_BRUSH())
 		else:
-			brush = self.context.CreateLinearGradientBrush(x, y, x + width, y + height, wx.LIGHT_GREY, DAY_BACKGROUND_BRUSH)
+			brush = self.context.CreateLinearGradientBrush(x, y, x + width, y + height, wx.LIGHT_GREY, DAY_BACKGROUND_BRUSH())
 
 		self.context.SetBrush(brush)
 		self.context.DrawRectangle(x, y, width, height)
@@ -552,7 +552,7 @@ class HeaderDrawerGCMixin(object):
 					if totalHeight + textH > height:
 						break
 
-					brush = self.context.CreateLinearGradientBrush(x, y, x + width, y + height, schedule.color, DAY_BACKGROUND_BRUSH)
+					brush = self.context.CreateLinearGradientBrush(x, y, x + width, y + height, schedule.color, DAY_BACKGROUND_BRUSH())
 					self.context.SetBrush(brush)
 					self.context.DrawRoundedRectangle(x, y, width, textH * 1.2, 1.0 * textH / 2)
 					results.append((schedule, wx.Point(x, y), wx.Point(x + width, y + textH * 1.2)))
@@ -596,7 +596,7 @@ class wxBaseDrawer(BackgroundDrawerDCMixin, HeaderDrawerDCMixin, HeaderDrawerMix
 
 	def DrawHours(self, x, y, w, h, direction, includeText=True):
 		if direction == wxSCHEDULER_VERTICAL:
-			self.context.SetBrush(wx.Brush(SCHEDULER_BACKGROUND_BRUSH))
+			self.context.SetBrush(wx.Brush(SCHEDULER_BACKGROUND_BRUSH()))
 			self.context.DrawRectangle(x, y, LEFT_COLUMN_SIZE, h)
 
 		font = self.context.GetFont()
@@ -660,7 +660,7 @@ class wxFancyDrawer(BackgroundDrawerGCMixin, HeaderDrawerGCMixin, HeaderDrawerMi
 
 	def DrawHours(self, x, y, w, h, direction, includeText=True):
 		if direction == wxSCHEDULER_VERTICAL:
-			brush = self.context.CreateLinearGradientBrush(x, y, x + w, y + h, SCHEDULER_BACKGROUND_BRUSH, DAY_BACKGROUND_BRUSH)
+			brush = self.context.CreateLinearGradientBrush(x, y, x + w, y + h, SCHEDULER_BACKGROUND_BRUSH(), DAY_BACKGROUND_BRUSH())
 			self.context.SetBrush(brush)
 			self.context.DrawRectangle(x, y, LEFT_COLUMN_SIZE, h)
 

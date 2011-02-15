@@ -350,7 +350,8 @@ class EffortStopTest(test.TestCase):
         self.effort1 = effort.Effort(self.task)
         self.effort2 = effort.Effort(self.task)
         self.taskList.append(self.task)
-        self.effortStop = gui.uicommand.EffortStop(effortList=effort.EffortList(self.taskList))
+        self.effortStop = gui.uicommand.EffortStop(effortList=effort.EffortList(self.taskList),
+                                                   taskList=self.taskList)
     
     # Tests of EffortStop.enabled()
         
@@ -361,10 +362,10 @@ class EffortStopTest(test.TestCase):
         self.task.addEffort(self.effort1)
         self.failUnless(self.effortStop.enabled())
 
-    def testStopIsDisabledWhenEffortIsTracked(self):
+    def testStopResumeIsEnabledWhenEffortIsTracked(self):
         self.task.addEffort(self.effort1)
         self.effort1.setStop(date.Now())
-        self.failIf(self.effortStop.enabled())
+        self.failUnless(self.effortStop.enabled())
 
     def testStopIsDisabledWhenEffortsIsDeleted(self):
         self.task.addEffort(self.effort1)
@@ -388,12 +389,12 @@ class EffortStopTest(test.TestCase):
         self.task.removeEffort(self.effort1)
         self.failUnless(self.effortStop.enabled())
         
-    def testStopIsDisabledWhenBothEffortsAreStopped(self):
+    def testPauseIsEnabledWhenBothEffortsAreStopped(self):
         self.task.addEffort(self.effort1)
         self.task.addEffort(self.effort2)
         self.effort1.setStop(date.Now())
         self.effort2.setStop(date.Now())
-        self.failIf(self.effortStop.enabled())
+        self.failUnless(self.effortStop.enabled())
 
     def testStopIsDisabledWhenBothEffortsAreDeleted(self):
         self.task.addEffort(self.effort1)

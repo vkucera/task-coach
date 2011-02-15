@@ -228,12 +228,9 @@ class StopEffortCommand(EffortCommand):
                   
     def canDo(self):
         return True # No selected items needed.
-
-    @patterns.eventSource
-    def stopTracking(self, event=None):
-        self.stoppedEfforts = [effort for effort in self.list if effort.isBeingTracked()] # pylint: disable-msg=W0201
-        for effort in self.stoppedEfforts:
-            effort.setStop(event=event)
+    
+    def tasksToStopTracking(self):
+        return set([effort.task() for effort in self.list if effort.isBeingTracked() and not effort.isTotal()])
 
 
 class ExtremePriorityCommand(base.BaseCommand): # pylint: disable-msg=W0223

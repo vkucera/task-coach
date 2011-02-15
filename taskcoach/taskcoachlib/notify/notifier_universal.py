@@ -407,7 +407,7 @@ class UniversalNotifier(AbstractNotifier):
     def isAvailable(self):
         return True
 
-    def notify(self, title, summary, bitmap):
+    def notify(self, title, summary, bitmap, **kwargs):
         NotificationCenter().Notify(title, summary, icon=bitmap)
 
 

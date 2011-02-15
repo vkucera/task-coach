@@ -22,6 +22,8 @@ from taskcoachlib.domain import date, task
 
 
 class DummyFile(object):
+    encoding = 'utf-8'
+    
     def close(self, *args, **kwargs): # pylint: disable-msg=W0613
         pass
 

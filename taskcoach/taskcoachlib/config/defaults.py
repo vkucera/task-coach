@@ -25,7 +25,6 @@ defaults = { \
 'view': { \
     'statusbar': 'True',
     'toolbar': '(22, 22)',
-    'mainviewer': '0',               # Index of active viewer in main window
     'effortviewerintaskeditor': '0', # Index of active effort viewer in task editor
     'taskviewercount': '1',          # Number of task viewers in main window
     'categoryviewercount': '1',      # Number of category viewers in main window

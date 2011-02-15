@@ -119,6 +119,8 @@ _TOC = sequence(
                 li(a_href(_('About templates'), 'abouttemplates')),
                 li(a_href(_('Using templates'), 'usingtemplates')))),
         li(
+            a_href(_('Graphical user interface'), 'gui')),
+        li(
             a_href(_('Keyboard shortcuts'), 'shortcuts'))))
   
 
@@ -566,6 +568,16 @@ template from a task starting today and due tomorrow, every time the template
 is instantiated, the start date will be replaced by the current date and the 
 due date by the current date plus one day.''')))
 
+_guiSection = sequence(
+    h3(
+        a_name(_('Graphical user interface'), 'gui')),
+    p(
+        _('''You can drag and drop viewers to create almost any user interface 
+layout you want. When you start dragging a viewer, drop hints will appear to
+show where you can drop the viewer. Viewers can also be dropped onto eachother
+to create notebooks.'''))
+        )
+        
 _shortcutSection = sequence(
     h3(
         a_name(_('Keyboard shortcuts'), 'shortcuts')),
@@ -579,8 +591,10 @@ shortcuts are not configurable at the moment.''')%meta.metaDict),
             tr(_('Shift-Ctrl-C'), viewCollapseAll),
             tr(_('Ctrl-D'), taskDecreasePriority),
             tr(_('Shift-Ctrl-D'), taskMinPriority),
+            tr(_('Ctrl-E'), effortNew),
             tr(_('Shift-Ctrl-E'), viewExpandAll),
             tr(_('Ctrl-F'), search),
+            tr(_('Shift-Ctrl-F'), resetFilter),
             tr(_('Ctrl-H'), help),
             tr(_('Ctrl-I'), taskIncreasePriority),
             tr(_('Shift-Ctrl-I'), taskMaxPriority),
@@ -591,6 +605,8 @@ shortcuts are not configurable at the moment.''')%meta.metaDict),
             tr(_('Ctrl-Q'), fileQuit),
             tr(_('Ctrl-S'), fileSave),
             tr(_('Shift-Ctrl-S'), fileSaveAs),
+            tr(_('Ctrl-T'), effortStart),
+            tr(_('Shift-Ctrl-T'), effortStopOrResume),
             tr(_('Ctrl-V'), editPaste),
             tr(_('Shift-Ctrl-V'), editPasteAsSubitem),
             tr(_('Ctrl-W'), fileClose),
@@ -614,7 +630,7 @@ shortcuts are not configurable at the moment.''')%meta.metaDict),
 
 helpHTML = _TOC + _taskSection + _effortSection + _categorySection + \
     _printingAndExportingSection + _emailSection + _syncmlSection + \
-    _iPhoneSection + _templatesSection + _shortcutSection
+    _iPhoneSection + _templatesSection + _guiSection + _shortcutSection
 
 
 aboutHTML = _('''<h4>%(name)s - %(description)s</h4>

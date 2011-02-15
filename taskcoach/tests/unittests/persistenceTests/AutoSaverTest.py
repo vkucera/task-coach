@@ -23,6 +23,7 @@ from taskcoachlib.domain import task, category, date
 
 class DummyFile(object):
     name = 'testfile.tsk'
+    encoding = 'utf-8'
 
     def close(self, *args, **kwargs):
         pass

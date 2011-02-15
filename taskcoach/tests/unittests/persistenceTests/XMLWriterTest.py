@@ -30,6 +30,7 @@ class XMLWriterTest(test.TestCase):
         task.Task.settings = config.Settings(load=False)
         self.fd = StringIO.StringIO()
         self.fd.name = 'testfile.tsk'
+        self.fd.encoding = 'utf-8'
         self.writer = persistence.XMLWriter(self.fd)
         self.task = task.Task()
         self.taskList = task.TaskList([self.task])
@@ -605,3 +606,6 @@ class XMLWriterTest(test.TestCase):
         self.taskList.extend(prerequisites)
         self.task.addPrerequisites(prerequisites)
         self.expectInXML('prerequisites="id id"')
+        
+    def testEncodingAttribute(self):
+        self.expectInXML('encoding="utf-8"')
