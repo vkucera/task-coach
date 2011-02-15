@@ -229,43 +229,41 @@ class ThunderbirdImapReader(object):
         if ':' in self.server:
             self.server, port = self.server.split(':')
             port = int(port)
-        self.ssl = port == 993
         self.box = mt.group(3)
         self.uid = int(mt.group(4))
 
         config = loadPreferences()
 
-        if not self.ssl:
-            stype = None
-            isSecure = False
-            # We iterate over a maximum of 100 mailservers. You'd think that
-            # mailservers would be numbered consecutively, but apparently
-            # that is not always the case, so we cannot assume that because
-            # serverX does not exist, serverX+1 won't either. 
-            for serverIndex in range(100): 
-                name = 'mail.server.server%d' % serverIndex
-                if config.has_key(name + '.hostname') and \
-                   config[name + '.hostname'] == self.server and \
-                   config[name + '.type'] == 'imap':
-                    if config.has_key(name + '.port'):
-                        port = int(config[name + '.port'])
-                    if config.has_key(name + '.socketType'):
-                        stype = config[name + '.socketType']
-                    if config.has_key(name + '.isSecure'):
-                        isSecure = int(config[name + '.isSecure'])
-                    break
-            self.ssl = bool(stype == 3 or isSecure)
+        stype = None
+        isSecure = False
+        # We iterate over a maximum of 100 mailservers. You'd think that
+        # mailservers would be numbered consecutively, but apparently
+        # that is not always the case, so we cannot assume that because
+        # serverX does not exist, serverX+1 won't either. 
+        for serverIndex in range(100): 
+            name = 'mail.server.server%d' % serverIndex
+            if config.has_key(name + '.hostname') and \
+               config[name + '.hostname'] == self.server and \
+               config[name + '.type'] == 'imap':
+                if config.has_key(name + '.port'):
+                    port = int(config[name + '.port'])
+                if config.has_key(name + '.socketType'):
+                    stype = config[name + '.socketType']
+                if config.has_key(name + '.isSecure'):
+                    isSecure = int(config[name + '.isSecure'])
+                break
+        self.ssl = bool(stype == 3 or isSecure)
 
-        # When dragging mail from Thunderbird that uses Gmail via IMAP the
-        # server reported is imap.google.com, but for a direct connection we
-        # need to connect with imap.gmail.com:
-        self.server = 'imap.gmail.com' if self.server == 'imap.google.com' else self.server 
+        if self.server == 'imap.google.com':
+            # When dragging mail from Thunderbird that uses Gmail via IMAP the
+            # server reported is imap.google.com, but for a direct connection we
+            # need to connect with imap.gmail.com:
+            self.server = 'imap.gmail.com'
+        elif config.has_key(name + '.realhostname'):
+            self.server = config[name + '.realhostname']
         self.port = port or {True: 993, False: 143}[self.ssl]
 
     def _getMail(self):
-        print 'Connecting to %s:%d' % (self.server, self.port)
-        print 'Profile dir:', getDefaultProfileDir()
-
         if self.ssl:
             cn = imaplib.IMAP4_SSL(self.server, self.port)
         else:

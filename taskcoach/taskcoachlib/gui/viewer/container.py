@@ -31,17 +31,11 @@ class ViewerContainer(object):
         components, e.g. menu's, to talk to the ViewerContainer as were
         it a regular viewer. '''
         
-    def __init__(self, containerWidget, settings, setting, *args, **kwargs):
+    def __init__(self, containerWidget, settings, *args, **kwargs):
         self.containerWidget = containerWidget
         self.registerEventHandlers()
         self._settings = settings
-        self.__setting = setting
         self.viewers = []
-        # Prepare for an exception, because this setting used to be a string
-        try:
-            self.__desiredPageNumber = int(self._settings.get('view', setting))
-        except ValueError:
-            self.__desiredPageNumber = 0
         super(ViewerContainer, self).__init__(*args, **kwargs)
         
     def advanceSelection(self, forward):
@@ -73,7 +67,7 @@ class ViewerContainer(object):
     def addViewer(self, viewer):
         self.containerWidget.addPane(viewer, viewer.title(), viewer.bitmap())
         self.viewers.append(viewer)
-        if len(self.viewers) - 1 == self.__desiredPageNumber or len(self.viewers) == 1:
+        if len(self.viewers) == 1:
             self.activateViewer(viewer)
         patterns.Publisher().registerObserver(self.onSelect, 
             eventType=viewer.selectEventType(), eventSource=viewer)
@@ -134,14 +128,9 @@ class ViewerContainer(object):
         patterns.Event(self.selectEventType(), self, *event.values()).send()
 
     def onPageChanged(self, event):
-        pane = event.GetPane()
-        if hasattr(pane, 'GetPage'):
-            # pane is a notebook, get the active notebook page 
-            pane = pane.GetCurrentPage()
-
-        self._changePage(pane)
+        patterns.Event(self.viewerChangeEventType(), self).send()
         self._ensureActiveViewerHasFocus()
-        event.Skip()
+        event.Skip()            
         
     def _ensureActiveViewerHasFocus(self):
         if not self.activeViewer():
@@ -161,37 +150,26 @@ class ViewerContainer(object):
         if hasattr(window, 'GetPage'):
             # Window is a notebook, close each of its pages
             for pageIndex in range(window.GetPageCount()):
-                self._closePage(window.GetPage(pageIndex))
+                self._closeViewer(window.GetPage(pageIndex))
         else:
             # Window is a viewer, close it
-            self._closePage(window)
+            self._closeViewer(window)
         # Make sure we have an active viewer
         if not self.activeViewer():
             self.activateViewer(self.viewers[0])
         event.Skip()
         
-    def _closePage(self, viewer):
+    def _closeViewer(self, viewer):
         # When closing an AUI managed frame, we get two close events, 
         # be prepared:
-        if viewer not in self.viewers:
-            return
-        self.viewers.remove(viewer)
-        viewer.detach()
-        setting = viewer.__class__.__name__.lower() + 'count'
-        viewerCount = self._settings.getint('view', setting)
-        self._settings.set('view', setting, str(viewerCount-1))        
+        if viewer in self.viewers:
+            self.viewers.remove(viewer)
+            viewer.detach()
         
-    def _changePage(self, viewer):
-        if viewer not in self.viewers:
-            return
-        currentPageNumber = self.viewers.index(viewer)        
-        self._settings.set('view', self.__setting, str(currentPageNumber))
-        patterns.Event(self.viewerChangeEventType(), self, currentPageNumber).send()
-
     def onPageFloated(self, event):
         ''' Give floating pane accelerator keys for activating next and previous
             viewer. '''
         viewer = event.GetPane().window
         table = wx.AcceleratorTable([(wx.ACCEL_CTRL, wx.WXK_PAGEDOWN, menu.activateNextViewerId),
                                      (wx.ACCEL_CTRL, wx.WXK_PAGEUP, menu.activatePreviousViewerId)])
-        viewer.widget.SetAcceleratorTable(table)
+        viewer.SetAcceleratorTable(table)

@@ -39,7 +39,7 @@ class LibnotifyNotifier(AbstractNotifier):
     def isAvailable(self):
         return self.__notify is not None
 
-    def notify(self, title, summary, bitmap):
+    def notify(self, title, summary, bitmap, **kwargs):
         # Libnotify needs a file, like Snarl.
         fd, filename = tempfile.mkstemp('.png')
         os.close(fd)

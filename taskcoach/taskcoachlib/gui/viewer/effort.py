@@ -22,14 +22,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from taskcoachlib import patterns, command, widgets, domain
-from taskcoachlib.domain import effort, date
+from taskcoachlib.domain import effort, date, category
 from taskcoachlib.domain.base import filter # pylint: disable-msg=W0622
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, render, dialog
 import base, mixin, refresher
 
 
-class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin, 
+class EffortViewer(base.ListViewer, 
+                   mixin.FilterableViewerForCategorizablesMixin, 
+                   mixin.SortableViewerForEffortMixin, 
                    mixin.SearchableViewerMixin, base.SortableViewerWithColumns): 
     defaultTitle = _('Effort')
     defaultBitmap = 'clock_icon'
@@ -113,7 +115,7 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
             
     def isShowingAggregatedEffort(self):
         return self.aggregation != 'details'
-
+    
     def createFilter(self, taskList):
         ''' Return a class that filters the original list. In this case we
             create an effort aggregator that aggregates the effort records in
@@ -121,8 +123,9 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
             per week, or per month. '''
         aggregation = self.settings.get(self.settingsSection(), 'aggregation')
         deletedFilter = filter.DeletedFilter(taskList)
-        searchFilter = filter.SearchFilter(self.createAggregator(deletedFilter, aggregation))
-        self.__observersToDetach.extend([deletedFilter, searchFilter])
+        categoryFilter = super(EffortViewer, self).createFilter(deletedFilter)
+        searchFilter = filter.SearchFilter(self.createAggregator(categoryFilter, aggregation))
+        self.__observersToDetach.extend([deletedFilter, categoryFilter, searchFilter])
         return searchFilter
     
     def createAggregator(self, taskList, aggregation):
@@ -286,7 +289,8 @@ class EffortViewer(base.ListViewer, mixin.SortableViewerForEffortMixin,
                           None,
                           uicommand.EffortStartForEffort(viewer=self,
                                                          taskList=tasks),
-                          uicommand.EffortStop(effortList=efforts),
+                          uicommand.EffortStop(effortList=self.taskFile.efforts(), 
+                                               taskList=tasks),
                           None,
                           self.aggregationUICommand]:
             commands.insert(-2, uiCommand)

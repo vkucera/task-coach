@@ -170,7 +170,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         self.createReminderController()
         
     def createViewerContainer(self):
-        self.viewer = viewer.ViewerContainer(self, self.settings, 'mainviewer') 
+        self.viewer = viewer.ViewerContainer(self, self.settings) 
         
     def createStatusBar(self):
         import status
@@ -303,17 +303,13 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         wx.GetApp().ExitMainLoop()
 
         # For PowerStateMixin
-
         self.OnQuit()
 
     def saveViewerCounts(self):
         ''' Save the number of viewers for each viewer type. '''
-        counts = {}
-        for viewer in self.viewer:
-            setting = viewer.__class__.__name__.lower() + 'count'
-            counts[setting] = counts.get(setting, 0) + 1
-        for key, value in counts.items():
-            self.settings.set('view', key, str(value))
+        for viewerType in viewer.viewerTypes():
+            count = len([v for v in self.viewer if v.__class__.__name__.lower() == viewerType])
+            self.settings.set('view', viewerType + 'count', str(count))
             
     def savePerspective(self):
         perspective = self.manager.SavePerspective()
@@ -361,7 +357,8 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
             uiCommands.extend([ 
                 None, 
                 uicommand.EffortStartButton(taskList=self.taskFile.tasks()), 
-                uicommand.EffortStop(effortList=self.taskFile.efforts())])
+                uicommand.EffortStop(effortList=self.taskFile.efforts(),
+                                     taskList=self.taskFile.tasks())])
         return uiCommands
         
     def showToolBar(self, size):

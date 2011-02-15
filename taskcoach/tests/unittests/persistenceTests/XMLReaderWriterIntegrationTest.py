@@ -31,6 +31,7 @@ class IntegrationTestCase(test.TestCase):
         task.Task.settings = config.Settings(load=False)
         self.fd = StringIO.StringIO()
         self.fd.name = 'testfile.tsk'
+        self.fd.encoding = 'utf-8'
         self.reader = persistence.XMLReader(self.fd)
         self.writer = persistence.XMLWriter(self.fd)
         self.taskList = task.TaskList()

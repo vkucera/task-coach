@@ -73,34 +73,42 @@ class SearchableViewerMixin(object):
 
 class FilterableViewerMixin(object):
     ''' A viewer that is filterable. This is a mixin class. '''
+    def __init__(self, *args, **kwargs):
+        self.__filterUICommands = None
+        super(FilterableViewerMixin, self).__init__(*args, **kwargs)
 
     def isFilterable(self):
         return True
-    
 
-class FilterableViewerForNotesMixin(FilterableViewerMixin):
-    def createFilter(self, notesContainer):
-        notesContainer = super(FilterableViewerForNotesMixin, self).createFilter(notesContainer)
-        return category.filter.CategoryFilter(notesContainer, 
-            categories=self.taskFile.categories(), treeMode=self.isTreeViewer(),
-            filterOnlyWhenAllCategoriesMatch=self.settings.getboolean('view',
-            'categoryfiltermatchall'))
-        
-            
-class FilterableViewerForTasksMixin(FilterableViewerMixin):
-    def __init__(self, *args, **kwargs):
-        self.__filterUICommands = None
-        super(FilterableViewerForTasksMixin, self).__init__(*args, **kwargs)
+    def getFilterUICommands(self):
+        if not self.__filterUICommands:
+            self.__filterUICommands = self.createFilterUICommands()
+        return self.__filterUICommands
 
+    def createFilterUICommands(self):
+        return [uicommand.ResetFilter(viewer=self)]
+
+    def resetFilter(self):
+        for eachCategory in self.taskFile.categories():
+            eachCategory.setFiltered(False)
+
+
+class FilterableViewerForCategorizablesMixin(FilterableViewerMixin):
+    def createFilter(self, items):
+        items = super(FilterableViewerMixin, self).createFilter(items)
+        filterOnlyWhenAllCategoriesMatch = self.settings.getboolean('view', 
+            'categoryfiltermatchall')
+        return category.filter.CategoryFilter(items, 
+            categories=self.taskFile.categories(), treeMode=self.isTreeViewer(), 
+            filterOnlyWhenAllCategoriesMatch=filterOnlyWhenAllCategoriesMatch)
+
+
+class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
     def createFilter(self, taskList):
         taskList = super(FilterableViewerForTasksMixin, self).createFilter(taskList)
-        return category.filter.CategoryFilter( \
-            task.filter.ViewFilter(taskList, treeMode=self.isTreeViewer(), 
-                                   **self.viewFilterOptions()), 
-            categories=self.taskFile.categories(), treeMode=self.isTreeViewer(),
-            filterOnlyWhenAllCategoriesMatch=self.settings.getboolean('view',
-            'categoryfiltermatchall'))
-    
+        return task.filter.ViewFilter(taskList, treeMode=self.isTreeViewer(), 
+                                      **self.viewFilterOptions())
+                                       
     def viewFilterOptions(self):
         options = dict(dueDateTimeFilter=self.getFilteredByDueDateTime(),
                        hideCompletedTasks=self.isHidingCompletedTasks(),
@@ -149,19 +157,13 @@ class FilterableViewerForTasksMixin(FilterableViewerMixin):
         return self.__getBooleanSetting('hidecompositetasks')
     
     def resetFilter(self):
+        super(FilterableViewerForTasksMixin, self).resetFilter()
         self.hideInactiveTasks(False)
         self.hideActiveTasks(False)
         self.hideCompletedTasks(False)
         self.hideCompositeTasks(False)
         self.setFilteredByDueDateTime('Unlimited')
-        for eachCategory in self.taskFile.categories():
-            eachCategory.setFiltered(False)
         
-    def getFilterUICommands(self):
-        if not self.__filterUICommands:
-            self.__filterUICommands = self.createFilterUICommands()
-        return self.__filterUICommands
-
     def createFilterUICommands(self):
         def dueDateTimeFilter(menuText, helpText, value):
             return uicommand.ViewerFilterByDueDateTime(menuText=menuText, 
@@ -183,13 +185,13 @@ class FilterableViewerForTasksMixin(FilterableViewerMixin):
                               'Month'),
             dueDateTimeFilter(_('&Year'), _('Only show tasks due this year'),
                               'Year'))
-        return [uicommand.ResetFilter(viewer=self), 
-                None,
-                dueDateTimeFilterCommands, 
-                uicommand.ViewerHideCompletedTasks(viewer=self),
-                uicommand.ViewerHideInactiveTasks(viewer=self),
-                uicommand.ViewerHideActiveTasks(viewer=self),
-                uicommand.ViewerHideCompositeTasks(viewer=self)]
+        return super(FilterableViewerForTasksMixin, 
+                     self).createFilterUICommands() + \
+            [None, dueDateTimeFilterCommands, 
+             uicommand.ViewerHideCompletedTasks(viewer=self),
+             uicommand.ViewerHideInactiveTasks(viewer=self),
+             uicommand.ViewerHideActiveTasks(viewer=self),
+             uicommand.ViewerHideCompositeTasks(viewer=self)]
 
     def __getBooleanSetting(self, setting):
         return self.settings.getboolean(self.settingsSection(), setting)

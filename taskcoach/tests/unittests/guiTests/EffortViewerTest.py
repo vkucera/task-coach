@@ -336,6 +336,13 @@ class CommonTestsMixin(object):
     def testIsShowingAggregatedEffort(self):
         isAggregating = self.aggregation != 'details'
         self.assertEqual(isAggregating, self.viewer.isShowingAggregatedEffort())
+        
+    def testStopEffortTracking(self):
+        self.task.addEffort(effort.Effort(self.task))
+        stopUICommand = gui.uicommand.EffortStop(effortList=self.taskFile.efforts(),
+                                                 taskList=self.taskFile.tasks())
+        stopUICommand.doCommand()
+        self.failIf(self.task.isBeingTracked())
     
 
 class EffortViewerWithoutAggregationTest(CommonTestsMixin, 

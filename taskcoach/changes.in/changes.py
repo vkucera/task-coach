@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.0', 'January 28, 2011',
+Release('1.3.0', 'February 15, 2011',
     summary='''This release ...''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -41,16 +41,43 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
             
-Release('1.2.9', 'January 28, 2011',
-    summary='''This is a bugfix release.''',
+Release('1.2.10', 'February 15, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
+    bugsFixed=[
+        Bug('''Column header popup menu's didn't work.''', '3175083'),
+        Bug('''The stop effort tracking button on the toolbar of effort viewers
+wasn't working.'''),
+        Bug('''The viewer background color would not obey the global user setting.''',
+        'http://uservoice.com/a/g2CST'),
+        Bug('''Task files wouldn't specify the encoding in the XML header,
+making it harder to process them with other tools.''', '3182504')
+        ],
+    featuresAdded=[
+        Feature('''Efforts are filtered by categories like tasks and notes.'''),
+        Feature('''Pausing effort tracking: clicking the stop tracking effort
+button when no effort is being tracked will resume tracking for the task that 
+was last being tracked.''', 'http://uservoice.com/a/cXLhb'),
+        Feature('''Start tracking effort and stop/resume tracking effort have
+keyboard shortcuts: Ctrl-T for start tracking effort and Shift-Ctrl-T for 
+stop/resume tracking effort.''', 'http://uservoice.com/a/9hhaE'),
+        Feature('''Clear all filters via a keyboard shortcut: Shift-Ctrl-F''',
+                'http://uservoice.com/a/4Tt4T')
+        ]
+    ),
+            
+Release('1.2.9', 'February 5, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Improve keyboard navigation between viewers.'''),
-        Bug('''Accept dropped mail messages from Outlook with non-ascii characters.'''),
+        Bug('''Accept dropped mail messages from Outlook with non-ascii 
+characters.''', '3172736'),
         Bug('''Open editor on the same display as the main window on multi-monitor
 setups.''', '3166563'),
         Bug('''The shortcut for "Decrease priority" (Ctrl-D) wasn't working
 in the Spanish translation.''', '3165234'),
-        Bug('''Prevent the tooltip overlapping popup menus on Linux.''', '2989198')
+        Bug('''Prevent the tooltip overlapping popup menus on Linux.''', '2989198'),
+        Bug('''Dropping IMAP e-mails from Thunderbird would not work on some
+configurations.''')
         ],
     featuresAdded=[
         Feature('''Hitting Ctrl-F when a viewer has keyboard focus moves 
@@ -62,7 +89,14 @@ search control menu.''', 'http://uservoice.com/a/6fW73'),
 information.'''),
         Feature('''The calendar viewer configuration has been moved to its
 own dialog. Add more configurable attributes: highlight color, show now,
+<<<<<<< .working
 font size.''')
+=======
+font size.'''),
+        Feature('''Effort viewers can be sorted ascending and descending.'''),
+        Feature('''Edit, preferences and help dialogs have maximize and minimize
+buttons.''', 'http://uservoice.com/a/mymqf')
+>>>>>>> .merge-right.r3996
         ]
     ),
 

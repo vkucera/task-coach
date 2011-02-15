@@ -179,5 +179,5 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
         return command.NewSubNoteCommand
 
 
-class NoteViewer(mixin.FilterableViewerForNotesMixin, BaseNoteViewer): 
+class NoteViewer(mixin.FilterableViewerForCategorizablesMixin, BaseNoteViewer): 
     pass

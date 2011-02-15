@@ -48,7 +48,7 @@ class XMLWriter(object):
             self.document.documentElement.appendChild(self.syncMLNode(syncMLConfig))
         if guid:
             self.document.documentElement.appendChild(self.textNode('guid', guid))
-        self.document.writexml(self.__fd, newl='\n')
+        self.document.writexml(self.__fd, newl='\n', encoding=self.__fd.encoding)
 
     def taskNode(self, task): # pylint: disable-msg=W0621
         maxDateTime = self.maxDateTime

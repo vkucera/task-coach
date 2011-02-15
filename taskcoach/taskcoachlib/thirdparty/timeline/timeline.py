@@ -74,6 +74,7 @@ class TimeLine(wx.Panel):
         self.padding = kwargs.pop('padding', 3)
         self.adapter = kwargs.pop('adapter', DefaultAdapter())
         self.selectedNode = None
+        self.backgroundColour = wx.WHITE
         self._buffer = wx.EmptyBitmap(20, 20) # Have a default buffer ready
         self.DEFAULT_PEN = wx.Pen(wx.BLACK, 1, wx.SOLID)
         self.SELECTED_PEN = wx.Pen(wx.WHITE, 2, wx.SOLID)
@@ -85,6 +86,9 @@ class TimeLine(wx.Panel):
         self.Bind(wx.EVT_LEFT_DCLICK, self.OnDoubleClick)
         self.Bind(wx.EVT_KEY_UP, self.OnKeyUp)
         self.OnSize(None)
+
+    def SetBackgroundColour(self, colour):
+        self.backgroundColour = colour
 
     def Refresh(self):
         self.UpdateDrawing()
@@ -167,7 +171,7 @@ class TimeLine(wx.Panel):
         ''' Draw the timeline on the device context. '''
         self.hot_map = HotMap()
         dc.BeginDrawing()
-        brush = wx.Brush(wx.WHITE)
+        brush = wx.Brush(self.backgroundColour)
         dc.SetBackground(brush)
         dc.Clear()
         dc.SetFont(self.FontForLabels(dc))
