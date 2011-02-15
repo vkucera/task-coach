@@ -25,6 +25,7 @@ class TemplateXMLWriterTestCase(test.TestCase):
     def setUp(self):
         self.fd = StringIO.StringIO()
         self.fd.name = 'testfile.tsk'
+        self.fd.encoding = 'utf-8'
         self.writer = persistence.TemplateXMLWriter(self.fd)
         self.task = task.Task()
         
