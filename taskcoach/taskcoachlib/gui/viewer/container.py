@@ -65,7 +65,8 @@ class ViewerContainer(object):
         return len(self.viewers)
 
     def addViewer(self, viewer):
-        self.containerWidget.addPane(viewer, viewer.title(), viewer.bitmap())
+        self.containerWidget.addPane(viewer, viewer.title(), 
+                                     viewer.settingsSection())
         self.viewers.append(viewer)
         if len(self.viewers) == 1:
             self.activateViewer(viewer)
