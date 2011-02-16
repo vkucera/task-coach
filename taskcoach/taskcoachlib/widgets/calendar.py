@@ -325,22 +325,10 @@ class TaskSchedule(wxSchedule):
         try:
             self.description = self.task.subject()
 
-            started = self.task.startDateTime()
-            if started == date.DateTime():
-                self.start = wx.DateTimeFromDMY(1, 1, 0) # Huh
-            else:
-                self.start = wx.DateTimeFromDMY(started.day, started.month - 1, 
-                                                started.year, started.hour, 
-                                                started.minute, started.second)
-
-            ended = self.task.dueDateTime()
-            if ended == date.DateTime():
-                self.end = wx.DateTimeFromDMY(1, 1, 9999)
-            else:
-                self.end = wx.DateTimeFromDMY(ended.day, ended.month - 1, 
-                                              ended.year, ended.hour,
-                                              ended.minute, ended.second)
-
+            self.start = self.wxDateTime(self.task.startDateTime(), (1, 1, 0))
+            end = self.task.completionDateTime() if self.task.completed() else self.task.dueDateTime()
+            self.end = self.wxDateTime(end, (1, 1, 9999))
+            
             if self.task.completed():
                 self.done = True
 
@@ -348,15 +336,11 @@ class TaskSchedule(wxSchedule):
             self.foreground = wx.Color(*(self.task.foregroundColor(True) or (0, 0, 0)))
             self.font = self.task.font()
 
-            icons = [self.iconProvider(self.task, False)]
-
+            self.icons = [self.iconProvider(self.task, False)]
             if self.task.attachments():
-                icons.append('paperclip_icon')
-
+                self.icons.append('paperclip_icon')
             if self.task.notes():
-                icons.append('note_icon')
-
-            self.icons = icons
+                self.icons.append('note_icon')
 
             if self.task.percentageComplete(True):
                 # If 0, just let the default None value so the progress bar isn't drawn
@@ -364,3 +348,10 @@ class TaskSchedule(wxSchedule):
                 self.complete = 1.0 * self.task.percentageComplete(True) / 100
         finally:
             self.Thaw()
+            
+    @staticmethod
+    def wxDateTime(dateTime, default):
+        args = default if dateTime == date.DateTime() else \
+            (dateTime.day, dateTime.month - 1, dateTime.year,
+             dateTime.hour, dateTime.minute, dateTime.second)
+        return wx.DateTimeFromDMY(*args)

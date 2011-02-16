@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.10', 'February 15, 2011',
+Release('1.2.10', 'February 16, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Column header popup menu's didn't work.''', '3175083'),
@@ -31,7 +31,9 @@ wasn't working.'''),
         Bug('''The viewer background color would not obey the global user setting.''',
         'http://uservoice.com/a/g2CST'),
         Bug('''Task files wouldn't specify the encoding in the XML header,
-making it harder to process them with other tools.''', '3182504')
+making it harder to process them with other tools.''', '3182504'),
+        Bug('''In the calendar viewer, use the completion date as end date when
+a task is completed.''', '3183086')
         ],
     featuresAdded=[
         Feature('''Efforts are filtered by categories like tasks and notes.'''),
