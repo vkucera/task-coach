@@ -44,7 +44,9 @@ was last being tracked.''', 'http://uservoice.com/a/cXLhb'),
 keyboard shortcuts: Ctrl-T for start tracking effort and Shift-Ctrl-T for 
 stop/resume tracking effort.''', 'http://uservoice.com/a/9hhaE'),
         Feature('''Clear all filters via a keyboard shortcut: Shift-Ctrl-F''',
-                'http://uservoice.com/a/4Tt4T')
+                'http://uservoice.com/a/4Tt4T'),
+        Feature('''Support for CRAM-MD5 authentication when dropping IMAP
+mails from Thunderbird.'''),
         ]
     ),
             
