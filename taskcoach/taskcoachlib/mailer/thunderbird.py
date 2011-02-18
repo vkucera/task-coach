@@ -293,10 +293,14 @@ class ThunderbirdImapReader(object):
 
         self._PASSWORDS[(self.server, self.user, self.port)] = pwd
 
+        # Two possibilities for separator...
+
         response, params = cn.select(self.box)
 
         if response != 'OK':
-            raise ThunderbirdError('Could not select inbox %s' % self.box)
+            response, params = cn.select(self.box.replace('/', '.'))
+            if response != 'OK':
+                raise ThunderbirdError('Could not select inbox "%s" (%s)' % (self.box, response))
 
         response, params = cn.uid('FETCH', str(self.uid), '(RFC822)')
 
