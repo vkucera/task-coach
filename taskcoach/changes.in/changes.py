@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.10', 'February 16, 2011',
+Release('1.2.10', 'February 18, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Column header popup menu's didn't work.''', '3175083'),
@@ -47,6 +47,12 @@ stop/resume tracking effort.''', 'http://uservoice.com/a/9hhaE'),
                 'http://uservoice.com/a/4Tt4T'),
         Feature('''Support for CRAM-MD5 authentication when dropping IMAP
 mails from Thunderbird.'''),
+        ],
+    featuresChanged=[
+        Feature('''Show left/right scroll buttons in notebook controls so that
+it is more clear for users that there might be more tabs in the notebook than
+currently visible. A drop down list of all tabs in the notebook can still be
+accessed using the Ctrl-Tab shortcut.''')
         ]
     ),
             
