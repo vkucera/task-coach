@@ -139,7 +139,7 @@ class Coverage(Compile):
 class UploadCoverage(DirectoryUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = 'tests/coverage.out'
-        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-coverage/%s',
+        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-coverage/%s',
                                               'buildername')
         kwargs['mode'] = 0755
         kwargs['compress'] = None
@@ -166,7 +166,7 @@ class Epydoc(Compile):
 class UploadDoc(DirectoryUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = 'epydoc.out'
-        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-doc/%s',
+        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-doc/%s',
                                               'buildername')
         kwargs['mode'] = 0755
         kwargs['compress'] = None
@@ -193,7 +193,7 @@ class DistCompile(Compile):
 class UploadBase(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = WithProperties('dist/%s' % self.filename(), 'got_revision')
-        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/%%s/%s' % self.filename(),
+        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-packages/%%s/%s' % self.filename(),
                                               'branch', 'got_revision')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
@@ -260,7 +260,7 @@ class BuildSourceZip(DistCompile):
 class UploadSourceTar(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s.tar.gz', 'got_revision')
-        kwargs['masterdest'] = WithProperties('/var/www/htdocs/TaskCoach-packages/%s/TaskCoach-r%s.tar.gz', 'branch', 'got_revision')
+        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-packages/%s/TaskCoach-r%s.tar.gz', 'branch', 'got_revision')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
 
@@ -268,7 +268,7 @@ class UploadSourceTar(FileUpload):
 class UploadSourceZip(FileUpload):
     def __init__(self, **kwargs):
         kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s.zip', 'got_revision')
-        kwargs['masterdest'] = WithProperties('/var/www/htdocs/%s/TaskCoach-packages/TaskCoach-r%s.zip', 'branch', 'got_revision')
+        kwargs['masterdest'] = WithProperties('/var/www/%s/TaskCoach-packages/TaskCoach-r%s.zip', 'branch', 'got_revision')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
 
