@@ -23,7 +23,7 @@ from taskcoachlib import persistence
 
 _RX_MAILBOX = re.compile('mailbox-message://(.*)@(.*)/(.*)#(\d+)')
 _RX_IMAP_MESSAGE = re.compile('imap-message://([^@]+)@([^/]+)/(.*)#(\d+)')
-_RX_IMAP = re.compile('imap://([^@]+)@([^/]+)/fetch%3EUID%3E/(.*)%3E(\d+)')
+_RX_IMAP = re.compile(r'imap://([^@]+)@([^/]+)/fetch%3EUID%3E(?:/|\.)(.*)%3E(\d+)')
 
 
 class ThunderbirdError(Exception):
