@@ -65,6 +65,10 @@
 	task.priority = [value objectAtIndex:8];
 	
 	JLDEBUG("New task from desktop: \"%s\"", [task.name UTF8String]);
+	JLDEBUG("Task name length: %d", [task.name length]);
+	JLDEBUG("Task ID length: %d", [task.taskCoachId length]);
+	JLDEBUG("Task description length: %d (%p)", [[task longDescription] length], [task longDescription]);
+	JLDEBUG("Task priority: %d (%p)", [[task priority] intValue], [task priority]);
 
 	if ([[value objectAtIndex:9] intValue])
 	{
@@ -74,10 +78,14 @@
 	task.recSameWeekday = [value objectAtIndex:12];
 
 	[task computeDateStatus];
+	JLDEBUG("Task date status: %d (%p)", [[task dateStatus] intValue], [task dateStatus]);
+
 	task.file = [Configuration configuration].cdCurrentFile;
 
 	if ([value objectAtIndex:7] != [NSNull null])
 	{
+		JLDEBUG("Task parent ID length: %d", [[value objectAtIndex:7] length]);
+
 		[request setEntity:[NSEntityDescription entityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()]];
 		[request setPredicate:[NSPredicate predicateWithFormat:@"taskCoachId == %@", [value objectAtIndex:7]]];
 		NSError *error;
@@ -85,7 +93,7 @@
 
 		if (results)
 		{
-			assert([results count] == 1);
+			JLDEBUG("Task parent count: %d", [results count]);
 			task.parent = [results objectAtIndex:0];
 		}
 		else
@@ -112,6 +120,8 @@
 			JLERROR("Could not find task categories: %s", [[error localizedDescription] UTF8String]);
 		}
 	}
+
+	JLDEBUG("Got task \"%s\"", [task.name UTF8String]);
 
 	[myController increment];
 	[self sendFormat:"i" values:[NSArray arrayWithObject:[NSNumber numberWithInt:1]]];

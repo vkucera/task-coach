@@ -928,10 +928,10 @@
 			children = (
 				A6F8E3F80F2C6CFD007D929C /* FullFromDesktopState.h */,
 				A6F8E3F90F2C6CFD007D929C /* FullFromDesktopState.m */,
-				A62DFB0E11BB6F6C00F594AB /* FullFromDesktopTaskState.h */,
-				A62DFB0F11BB6F6C00F594AB /* FullFromDesktopTaskState.m */,
 				A62DFB1511BB706100F594AB /* FullFromDesktopCategoryState.h */,
 				A62DFB1611BB706100F594AB /* FullFromDesktopCategoryState.m */,
+				A62DFB0E11BB6F6C00F594AB /* FullFromDesktopTaskState.h */,
+				A62DFB0F11BB6F6C00F594AB /* FullFromDesktopTaskState.m */,
 				A62DFB2A11BB763300F594AB /* FullFromDesktopEffortState.h */,
 				A62DFB2B11BB763300F594AB /* FullFromDesktopEffortState.m */,
 			);

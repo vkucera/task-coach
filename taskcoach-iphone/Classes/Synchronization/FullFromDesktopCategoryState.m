@@ -51,20 +51,27 @@
 {
 	CDCategory *category = [NSEntityDescription insertNewObjectForEntityForName:@"CDCategory" inManagedObjectContext:getManagedObjectContext()];
 
+	JLDEBUG("Getting category \"%s\"", [[value objectAtIndex:0] UTF8String]);
+	
+	JLDEBUG("Category name length: %d", [[value objectAtIndex:0] length]);
+	JLDEBUG("Category ID length: %d", [[value objectAtIndex:1] length]);
+
 	category.creationDate = [NSDate date];
 	category.file = [Configuration configuration].cdCurrentFile;
 	category.name = [value objectAtIndex:0];
 	category.taskCoachId = [value objectAtIndex:1];
 	category.status = [NSNumber numberWithInt:STATUS_NONE];
-
+	
 	if ([value objectAtIndex:2] != [NSNull null])
 	{
+		JLDEBUG("Category parent ID length: %d", [[value objectAtIndex:2] length]);
+
 		[parentReq setPredicate:[NSPredicate predicateWithFormat:@"taskCoachId == %@", [value objectAtIndex:2]]];
 		NSError *error;
 		NSArray *results = [getManagedObjectContext() executeFetchRequest:parentReq error:&error];
 		if (results)
 		{
-			assert([results count] == 1);
+			JLDEBUG("Category parent count: %d", [results count]);
 			category.parent = [results objectAtIndex:0];
 		}
 		else
