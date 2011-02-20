@@ -26,6 +26,7 @@ from html.writer import HTMLWriter
 from html.generator import viewer2html
 from csv.generator import viewer2csv
 from csv.writer import CSVWriter
+from csv.reader import splitLines
 from icalendar.writer import iCalendarWriter
 from icalendar.ical import VCalendarParser
 from taskfile import TaskFile, LockedTaskFile
