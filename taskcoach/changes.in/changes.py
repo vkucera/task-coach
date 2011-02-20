@@ -21,7 +21,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-            
+
+Release('1.2.11', 'February 20, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
+    bugsFixed=[
+        ],
+    featuresChanges=[
+        Feature('''The keyboard shortcuts for adding and deleting tasks are 
+now simply Insert and Delete. A new subtask can be added with Shift-Insert.''')
+        ]
+    ),
+                
 Release('1.2.10', 'February 20, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
