@@ -220,6 +220,8 @@ class ThunderbirdImapReader(object):
         mt = _RX_IMAP.search(url)
         if mt is None:
             mt = _RX_IMAP_MESSAGE.search(url)
+            if mt is None:
+                raise ThunderbirdError('Unrecognized URL scheme: "%s"' % url)
 
         self.url = url
 
