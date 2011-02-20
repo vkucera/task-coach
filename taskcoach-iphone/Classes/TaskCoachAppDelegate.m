@@ -63,8 +63,9 @@ NSManagedObjectContext *getManagedObjectContext(void)
 	_("Save");
 	_("Cancel");
 
-	LogCreateFile();
-	LogSetLevel(LOGLEVEL_ERROR);
+#ifdef DEBUG
+	LogSetLevel(LOGLEVEL_INFO);
+#endif
 
 	JLINFO("Started.");
 

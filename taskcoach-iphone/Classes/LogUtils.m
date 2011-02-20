@@ -12,7 +12,14 @@
 #import "LogUtils.h"
 #import "TaskCoachAppDelegate.h"
 
-static unsigned int _level = LOGLEVEL_ERROR;
+static unsigned int _level = 
+#ifdef DEBUG
+LOGLEVEL_INFO
+#else
+LOGLEVEL_ERROR
+#endif
+;
+
 static char *_logPath = NULL;
 
 void LogCreateFile(void)
