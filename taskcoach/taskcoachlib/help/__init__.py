@@ -390,8 +390,8 @@ preferences. Fill in the synchronization URL, your ID on the server and choose
 which items to synchronize (tasks and/or notes). The URL depends on the server
 you choose; some examples are:'''),
         ul(
-            li('''<a href="http://www.scheduleworld.com/" target="_blank">ScheduleWorld</a>:
-http://sync.scheduleworld.com/funambol/ds'''),
+            li('''<a href="http://my.funambol.com/" target="_blank">My Funambol</a>:
+http://my.funambol.com/sync'''),
             li('''<a href="http://memotoo.com" target="_blank">MemoToo</a>:
 http://sync.memotoo.com/syncml''')),
         _('''The database names are pretty standard; the default values 

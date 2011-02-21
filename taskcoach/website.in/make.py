@@ -405,7 +405,7 @@ pages['features'] = \
             <LI>%(name)s can be run from a removable medium.
             <LI>Tasks and notes can be synchronized via a 
             <a href="http://www.funambol.com/">Funambol</a> server such
-            as <a href="http://www.scheduleworld.com">ScheduleWorld</a>.
+            as <a href="http://my.funambol.com">My Funambol</a>.
         </UL>
        
         <P>There is a todo-list application for iPhone and iPod Touch that can synchronize with %(name)s
