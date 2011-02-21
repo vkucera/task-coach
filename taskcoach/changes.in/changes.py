@@ -26,7 +26,7 @@ Release('1.2.11', 'February 21, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         ],
-    featuresChanges=[
+    featuresChanged=[
         Feature('''On Windows, the keyboard shortcuts for adding and deleting 
 tasks are now simply Insert and Delete. A new subtask can be added with 
 Shift-Insert. On Mac OS X and Linux, the Insert shortcut doesn't work for
