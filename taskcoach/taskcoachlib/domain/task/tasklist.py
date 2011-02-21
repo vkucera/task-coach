@@ -26,14 +26,11 @@ from taskcoachlib import help
 import task
 
 
-def accelerator(key, modifier=None, macKey=None, macModifier=None):
-    # There is a bug in wxWidget/wxPython on the Mac that causes the 
-    # INSERT accelerator to be mapped so some other key sequence ('c' in
-    # this case) so that whenever that key sequence is typed, this command
-    # is invoked. Hence, we use a different accelerator on the Mac.
-    if '__WXMAC__' == wx.Platform:
-        key = macKey or key
-        modifier = macModifier or modifier
+def accelerator(key, modifier=None, mswKey=None, mswModifier=None):
+    # Some accelerators only work on Windows (like INSERT)
+    if '__WXMSW__' == wx.Platform:
+        key = mswKey or key
+        modifier = mswModifier
     shortCut = '+'.join([modifier, key]) if modifier else key
     return u'\t%s'%shortCut
 
@@ -41,13 +38,13 @@ def accelerator(key, modifier=None, macKey=None, macModifier=None):
 class TaskList(categorizable.CategorizableContainer):
     # FIXME: TaskList should be called TaskCollection or TaskSet
 
-    newItemMenuText = _('&New task...') + accelerator('INS', None, 'N', 'Ctrl')
+    newItemMenuText = _('&New task...') + accelerator('N', 'Ctrl', 'INS')
     newItemHelpText = help.taskNew
     editItemMenuText = _('&Edit task...')
     editItemHelpText = help.taskEdit
     deleteItemMenuText = _('&Delete task') + accelerator('DEL')
     deleteItemHelpText = help.taskDelete
-    newSubItemMenuText = _('New &subtask...') + accelerator('INS', 'Shift', 'N', 'Shift+Ctrl')
+    newSubItemMenuText = _('New &subtask...') + accelerator('N', 'Shift+Ctrl', 'INS', 'Shift')
     newSubItemHelpText = help.taskNewSubtask 
     
     def _nrInterestingTasks(self, isInteresting):
