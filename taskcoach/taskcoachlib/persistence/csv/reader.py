@@ -16,77 +16,134 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+from taskcoachlib.thirdparty.dateutil import parser as dparser
+from taskcoachlib.i18n import _
+from taskcoachlib.domain.category import Category
+from taskcoachlib.domain.task import Task
+from taskcoachlib.domain.date import DateTime
 
-import StringIO
+import csv, tempfile, StringIO
 
 
-def splitLines(text, separator=','):
-    """Split values delimited by a separator.
+class CSVReader(object):
+    def __init__(self, taskList, categoryList):
+        self.taskList = taskList
+        self.categoryList = categoryList
 
-    @param separator: The separator character. If part of a value, the value must
-        be enclosed in double quotes; double quotes inside the value must be
-        doubled.
-    """
+    def read(self, **kwargs):
+        fp = tempfile.TemporaryFile()
+        fp.write(file(kwargs['filename'], 'rb').read().decode(kwargs['encoding']).encode('UTF-8'))
+        fp.seek(0)
 
-    state = 0 # Start of value
-    inQuote = False
-    lines = []
-    values = []
-    currentValue = StringIO.StringIO()
+        # When fields are associated with categories, create a top-level category for the
+        # field and a subcategory for each possible value.
 
-    for character in text:
-        if state == 0:
-            if character == '"':
-                inQuote = True
-            else:
-                inQuote = False
-                currentValue.write(character)
-            state = 1 # Reading value
-        elif state == 1:
-            if inQuote:
-                if character == '"':
-                    state = 2 # Maybe escaping
+        toplevelCategories = dict()
+        for idx, headerName in enumerate(kwargs['fields']):
+            if kwargs['mappings'][idx] == _('Category'):
+                category = Category(subject=headerName)
+                toplevelCategories[headerName] = (category, dict())
+                self.categoryList.append(category)
+
+        reader = csv.reader(fp, dialect=kwargs['dialect'])
+        if kwargs['hasHeaders']:
+            reader.next()
+
+        tasksById = dict()
+        tasks = []
+
+        for line in reader:
+            subject = _('No subject')
+            id_ = None
+            description = StringIO.StringIO()
+            categories = []
+            priority = 0
+            startDate = None
+            dueDate = None
+            completionDate = None
+
+            for idx, fieldValue in enumerate(line):
+                if kwargs['mappings'][idx] == _('ID'):
+                    id_ = fieldValue.decode('UTF-8')
+                elif kwargs['mappings'][idx] == _('Subject'):
+                    subject = fieldValue.decode('UTF-8')
+                elif kwargs['mappings'][idx] == _('Description'):
+                    description.write(fieldValue.decode('UTF-8'))
+                    description.write(u'\n')
+                elif kwargs['mappings'][idx] == _('Category') and fieldValue:
+                    name = fieldValue.decode('UTF-8')
+                    parent, cats = toplevelCategories[kwargs['fields'][idx]]
+                    if name in cats:
+                        categories.append(cats[name])
+                    else:
+                        newCat = Category(subject=name)
+                        parent.addChild(newCat)
+                        cats[name] = newCat
+                        self.categoryList.append(newCat)
+                    toplevelCategories[kwargs['fields'][idx]] = (parent, cats)
+                elif kwargs['mappings'][idx] == _('Priority'):
+                    try:
+                        priority = int(fieldValue)
+                    except ValueError:
+                        pass
+                elif kwargs['mappings'][idx] == _('Start date'):
+                    if fieldValue != '':
+                        try:
+                            startDate = dparser.parse(fieldValue.decode('UTF-8'), fuzzy=True).replace(tzinfo=None)
+                            startDate = DateTime(startDate.year, startDate.month, startdate.day, 0, 0, 0)
+                        except:
+                            pass
+                elif kwargs['mappings'][idx] == _('Due date'):
+                    if fieldValue != '':
+                        try:
+                            dueDate = dparser.parse(fieldValue.decode('UTF-8'), fuzzy=True).replace(tzinfo=None)
+                            dueDate = DateTime(dueDate.year, dueDate.month, dueDate.day, 23, 59, 0)
+                        except:
+                            pass
+                elif kwargs['mappings'][idx] == _('Completion date'):
+                    if fieldValue != '':
+                        try:
+                            completionDate = dparser.parse(fieldValue.decode('UTF-8'), fuzzy=True).replace(tzinfo=None)
+                            completionDate = DateTime(completionDate.year, completionDate.month, completionDate.day, 12, 0, 0)
+                        except:
+                            pass
+
+            task = Task(subject=subject,
+                        description=description.getvalue(),
+                        priority=priority,
+                        startDateTime=startDate,
+                        dueDateTime=dueDate,
+                        completionDateTime=completionDate)
+
+            if id_ is not None:
+                tasksById[id_] = task
+
+            for category in categories:
+                category.addCategorizable(task)
+                task.addCategory(category)
+
+            tasks.append(task)
+
+        # OmniFocus uses the task's ID to keep track of hierarchy: 1 => 1.1 and 1.2, etc...
+
+        if tasksById:
+            ids = []
+            for id_, task in tasksById.items():
+                try:
+                    ids.append(tuple(map(int, id_.split('.'))))
+                except ValueError:
+                    self.taskList.append(task)
+
+            ids.sort()
+            ids.reverse()
+
+            for id_ in ids:
+                sid = '.'.join(map(str, id_))
+                if len(id_) >= 2:
+                    pid = '.'.join(map(str, id_[:-1]))
+                    if pid in tasksById:
+                        tasksById[pid].addChild(tasksById[sid])
                 else:
-                    currentValue.write(character)
-            else:
-                if character == separator:
-                    values.append(currentValue.getvalue())
-                    currentValue = StringIO.StringIO()
-                    state = 0
-                elif character == '\n':
-                    values.append(currentValue.getvalue())
-                    lines.append(values)
-                    currentValue = StringIO.StringIO()
-                    values = []
-                    state = 0
-                elif character == '\r':
-                    state = 3
-                else:
-                    currentValue.write(character)
-        elif state == 2:
-            if character == '"':
-                currentValue.write(character)
-                state = 1
-            elif character == separator:
-                values.append(currentValue.getvalue())
-                currentValue = StringIO.StringIO()
-                state = 0
-            else:
-                raise ValueError(u'Unexpected character "%s" in line "%s"' % (character, line))
-        elif state == 3:
-            if character == '\n':
-                values.append(currentValue.getvalue())
-                lines.append(values)
-                currentValue = StringIO.StringIO()
-                values = []
-                state = 0
-            else:
-                currentValue.write('\r')
-                currentValue.write(character)
-                state = 1
-
-    if state in [1, 2, 3] and values:
-        values.append(currentValue.getvalue())
-        lines.append(values)
-
-    return lines
+                    self.taskList.append(tasksById[sid])
+        else:
+            self.taskList.extend(tasks)

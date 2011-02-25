@@ -31,7 +31,8 @@ Release('1.2.11', 'February 21, 2011',
 tasks are now simply Insert and Delete. A new subtask can be added with 
 Shift-Insert. On Mac OS X and Linux, the Insert shortcut doesn't work for
 some reason so there a new task can be added with Ctrl-N and a new subtask
-with Shift-Ctrl-N.''')
+with Shift-Ctrl-N.'''),
+        Feature('''Import tasks from CSV file.'''),
         ]
     ),
                 

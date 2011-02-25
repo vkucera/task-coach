@@ -224,6 +224,10 @@ class FileMenu(Menu):
         self.appendMenu(_('&Export'),
                         ExportMenu(mainwindow, iocontroller, viewerContainer),
                         'export')
+        self.appendUICommands(
+            None,
+            uicommand.FileImportCSV(iocontroller=iocontroller)
+            )
         if settings.getboolean('feature', 'syncml'):
             try:
                 import taskcoachlib.syncml.core # pylint: disable-msg=W0612

@@ -25,6 +25,7 @@ from taskcoachlib.i18n import _
 from taskcoachlib.domain import base, task, note, category, attachment, effort
 from taskcoachlib.mailer import writeMail
 from taskcoachlib.thirdparty.calendar import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, wxSCHEDULER_TODAY
+from taskcoachlib.gui.wizard import CSVImportWizard
 import dialog, render, viewer, printer
 
 
@@ -729,6 +730,18 @@ class FileExportSelectionAsICalendar(NeedsSelectedTasksOrEffortsMixin, FileExpor
     selectionOnly = True
     menuText = _('Export selection as &iCalendar...')
     helpText = _('Export the selected items in the current viewer in iCalendar format')
+
+
+class FileImportCSV(IOCommand):
+    def __init__(self, **kwargs):
+        kwargs['menuText'] = _('Import CSV')
+        kwargs['helpText'] = _('Import tasks from a CSV file')
+        super(FileImportCSV, self).__init__(**kwargs)
+
+    def doCommand(self, event):
+        wiz = CSVImportWizard(None, wx.ID_ANY, _('CSV importation'))
+        if wiz.RunWizard():
+            self.iocontroller.importCSV(**wiz.GetOptions())
 
 
 class FileSynchronize(IOCommand, SettingsCommand):
