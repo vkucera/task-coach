@@ -21,7 +21,6 @@ import wx, os, csv, tempfile
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty import chardet
 
-import wx.lib.filebrowsebutton as fb
 import wx.wizard as wiz
 import wx.grid as gridlib
 
@@ -37,10 +36,8 @@ class CSVDialect(csv.Dialect):
 
 
 class CSVImportOptionsPage(wiz.WizardPageSimple):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, filename, *args, **kwargs):
         super(CSVImportOptionsPage, self).__init__(*args, **kwargs)
-
-        self.pathCtrl = fb.FileBrowseButton(self, wx.ID_ANY, changeCallback=self.OnFileChanged)
 
         self.delimiter = wx.Choice(self, wx.ID_ANY)
         self.delimiter.Append(_('Comma'))
@@ -62,8 +59,6 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
         self.grid.CreateGrid(0, 0)
 
         vsizer = wx.BoxSizer(wx.VERTICAL)
-        vsizer.Add(self.pathCtrl, 0, wx.EXPAND|wx.ALL, 3)
-
         gridSizer = wx.FlexGridSizer(0, 2)
 
         gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Delimiter')), 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALL, 3)
@@ -82,24 +77,15 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
 
         self.SetSizer(vsizer)
 
-        self.encoding = None
-        self.filename = None
         self.headers = None
+
+        self.filename = filename
+        self.encoding = chardet.detect(file(filename, 'rb').read())['encoding']
+        self.OnOptionChanged(None)
 
         wx.EVT_CHOICE(self.delimiter, wx.ID_ANY, self.OnOptionChanged)
         wx.EVT_CHOICE(self.quoteChar, wx.ID_ANY, self.OnOptionChanged)
         wx.EVT_CHECKBOX(self.hasHeaders, wx.ID_ANY, self.OnOptionChanged)
-
-    def OnFileChanged(self, evt):
-        filename = evt.GetString()
-        if os.path.exists(filename):
-            self.filename = filename
-            self.encoding = chardet.detect(file(filename, 'rb').read())['encoding']
-        else:
-            self.filename = None
-            self.encoding = None
-
-        self.OnOptionChanged(None)
 
     def OnOptionChanged(self, event):
         if self.filename is None:
@@ -233,11 +219,11 @@ class CSVImportMappingPage(wiz.WizardPageSimple):
 
 
 class CSVImportWizard(wiz.Wizard):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, filename, *args, **kwargs):
         kwargs['style'] = wx.RESIZE_BORDER
         super(CSVImportWizard, self).__init__(*args, **kwargs)
 
-        self.optionsPage = CSVImportOptionsPage(self)
+        self.optionsPage = CSVImportOptionsPage(filename, self)
         self.mappingPage = CSVImportMappingPage(self)
         self.optionsPage.SetNext(self.mappingPage)
         self.mappingPage.SetPrev(self.optionsPage)

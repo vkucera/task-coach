@@ -739,9 +739,11 @@ class FileImportCSV(IOCommand):
         super(FileImportCSV, self).__init__(**kwargs)
 
     def doCommand(self, event):
-        wiz = CSVImportWizard(None, wx.ID_ANY, _('CSV importation'))
-        if wiz.RunWizard():
-            self.iocontroller.importCSV(**wiz.GetOptions())
+        filename = wx.FileSelector(_('Choose CSV file'), wildcard='*.csv')
+        if filename:
+            wiz = CSVImportWizard(filename, None, wx.ID_ANY, _('CSV importation'))
+            if wiz.RunWizard():
+                self.iocontroller.importCSV(**wiz.GetOptions())
 
 
 class FileSynchronize(IOCommand, SettingsCommand):
