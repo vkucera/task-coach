@@ -164,20 +164,27 @@ class CSVImportMappingPage(wiz.WizardPageSimple):
             (_('Completion date'), False),
             ]
         self.choices = []
+        self.interior = wx.ScrolledWindow(self)
+        self.interior.EnableScrolling(False, True)
+        self.interior.SetScrollRate(10, 10)
+
+        sizer = wx.BoxSizer()
+        sizer.Add(self.interior, 1, wx.EXPAND)
+        self.SetSizer(sizer)
 
     def SetOptions(self, options):
         self.options = options
 
-        for child in self.GetChildren():
-            self.RemoveChild(child)
+        for child in self.interior.GetChildren():
+            self.interior.RemoveChild(child)
         self.choices = []
 
         gsz = wx.FlexGridSizer(0, 2)
 
         for fieldName in options['fields']:
-            gsz.Add(wx.StaticText(self, wx.ID_ANY, fieldName))
+            gsz.Add(wx.StaticText(self.interior, wx.ID_ANY, fieldName))
 
-            choice = wx.Choice(self, wx.ID_ANY)
+            choice = wx.Choice(self.interior, wx.ID_ANY)
             for tcFieldName, _ in self.fields:
                 choice.Append(tcFieldName)
             choice.SetSelection(0)
@@ -185,7 +192,7 @@ class CSVImportMappingPage(wiz.WizardPageSimple):
 
             gsz.Add(choice)
 
-        self.SetSizer(gsz)
+        self.interior.SetSizer(gsz)
 
     def CanGoNext(self):
         wrongFields = []
