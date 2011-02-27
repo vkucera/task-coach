@@ -110,7 +110,6 @@
 		A6782E7C11CCBD35005ADB23 /* TaskDetailsEffortsBase.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6782E7B11CCBD35005ADB23 /* TaskDetailsEffortsBase.xib */; };
 		A6796F1F11E8467A00C38043 /* LogUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A6796F1E11E8467A00C38043 /* LogUtils.m */; };
 		A679701D11E85A0700C38043 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A679701C11E85A0700C38043 /* MessageUI.framework */; };
-		A67A0C210F6BA57100F48A82 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = A67A0C200F6BA57100F48A82 /* Entitlements.plist */; };
 		A67E47E60F5A938F00000A24 /* BonjourBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = A67E47DF0F5A938F00000A24 /* BonjourBrowser.m */; };
 		A67E47E70F5A938F00000A24 /* BrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A67E47E10F5A938F00000A24 /* BrowserViewController.m */; };
 		A67E47E80F5A938F00000A24 /* DomainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A67E47E30F5A938F00000A24 /* DomainViewController.m */; };
@@ -368,7 +367,6 @@
 		A6796F1B11E8452B00C38043 /* LogUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogUtils.h; sourceTree = "<group>"; };
 		A6796F1E11E8467A00C38043 /* LogUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogUtils.m; sourceTree = "<group>"; };
 		A679701C11E85A0700C38043 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
-		A67A0C200F6BA57100F48A82 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		A67E47DE0F5A938F00000A24 /* BonjourBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BonjourBrowser.h; path = Bonjour/BonjourBrowser.h; sourceTree = "<group>"; };
 		A67E47DF0F5A938F00000A24 /* BonjourBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BonjourBrowser.m; path = Bonjour/BonjourBrowser.m; sourceTree = "<group>"; };
 		A67E47E00F5A938F00000A24 /* BrowserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BrowserViewController.h; path = Bonjour/BrowserViewController.h; sourceTree = "<group>"; };
@@ -642,7 +640,6 @@
 				A6831FFC102EB057002A7083 /* TaskView.xib */,
 				A6D386880F24B4450097F0F6 /* DatePickerView.xib */,
 				A66C188811C386B90081C175 /* TaskDetailsRecurrencePeriodPicker.xib */,
-				A67A0C200F6BA57100F48A82 /* Entitlements.plist */,
 				A6E46385113028A500976293 /* SyncView.xib */,
 				A60B6EE410258EB200F9983C /* TaskCategoryPicker.xib */,
 			);
@@ -1154,7 +1151,6 @@
 				A680C0DE0F47368E00A8D18B /* MainWindow.strings in Resources */,
 				A63CC07C0F517055003669FD /* TaskCellLeftBig.xib in Resources */,
 				A63CC07D0F517055003669FD /* TaskCellRightBig.xib in Resources */,
-				A67A0C210F6BA57100F48A82 /* Entitlements.plist in Resources */,
 				A6B7A5B30FA45E110067B76A /* iTunesArtwork in Resources */,
 				A6B264DD0FDBCBFE00FF2AD0 /* DateCell.xib in Resources */,
 				A60B6EE510258EB200F9983C /* TaskCategoryPicker.xib in Resources */,
@@ -1564,6 +1560,59 @@
 			};
 			name = Release;
 		};
+		A620ECD813178FA60084D932 /* DebugAdHoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_ENTITLEMENTS = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jérôme Laheurte";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_VERSION = 4.2;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_MULTIPLE_DEFINITION_TYPES_FOR_SELECTOR = NO;
+				GCC_WARN_SHADOW = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_PARAMETER = NO;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.1;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PREBINDING = NO;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "12B67111-1F30-4BD6-906D-72F14F48C940";
+				RUN_CLANG_STATIC_ANALYZER = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = DebugAdHoc;
+		};
+		A620ECD913178FA60084D932 /* DebugAdHoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jérôme Laheurte (DQ65E4R93Z)";
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = TaskCoach_Prefix.pch;
+				INFOPLIST_FILE = Info.plist;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = TaskCoach;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = DebugAdHoc;
+		};
 		A62C520011302175000B83E4 /* Version 3.0b5 */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1662,7 +1711,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+				CODE_SIGN_ENTITLEMENTS = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jérôme Laheurte (DQ65E4R93Z)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
@@ -1729,7 +1778,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.1;
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "16641A4E-F627-4F59-99CD-31A2735F5C7E";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2D8A65FA-F54A-4750-83F6-B000A1F88DAF";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1820,6 +1869,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1D6058940D05DD3E006BFB54 /* Debug */,
+				A620ECD913178FA60084D932 /* DebugAdHoc */,
 				1D6058950D05DD3E006BFB54 /* Release */,
 				A6EB636D128EB01300835A02 /* Beta */,
 				A62C520111302175000B83E4 /* Version 3.0b5 */,
@@ -1833,6 +1883,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
+				A620ECD813178FA60084D932 /* DebugAdHoc */,
 				C01FCF5008A954540054247B /* Release */,
 				A6EB636C128EB01300835A02 /* Beta */,
 				A62C520011302175000B83E4 /* Version 3.0b5 */,
