@@ -231,6 +231,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -275,6 +277,8 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
+									<integer>8</integer>
+									<integer>7</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -312,7 +316,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>A68EDEBA0F1E1EED00F51FF2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>TaskCoach.xcent</string>
+								<string>Entitlements.plist</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -320,11 +324,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>A68EDEBB0F1E1EED00F51FF2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>TaskCoach.xcent</string>
+										<string>Entitlements.plist</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A6442797131A60E90082BC9F</string>
+										<string>A6CDF1A2131A6209007689B7</string>
 										<key>history</key>
 										<array>
 											<string>A69F6C5F115E278D003F68F5</string>
@@ -573,7 +577,7 @@
 											<string>A65119341311195B00F1E332</string>
 											<string>A65119431311197600F1E332</string>
 											<string>A63F1E52131A60040092ABBD</string>
-											<string>A6442795131A60E90082BC9F</string>
+											<string>A6CDF19D131A614C007689B7</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -696,11 +700,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A6442799131A60E90082BC9F</string>
+				<string>A6CDF19F131A614C007689B7</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A644279A131A60E90082BC9F</string>
+				<string>A6CDF1A0131A614C007689B7</string>
 				<string>A68EDEBA0F1E1EED00F51FF2</string>
-				<string>A644279B131A60E90082BC9F</string>
+				<string>A6CDF1A1131A614C007689B7</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>

@@ -150,8 +150,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 320495733;
-			PBXWorkspaceStateSaveDate = 320495733;
+			PBXPerProjectTemplateStateSaveDate = 320495891;
+			PBXWorkspaceStateSaveDate = 320495891;
 		};
 		perUserProjectItems = {
 			A605A44F11D9B26900A155D5 /* PBXTextBookmark */ = A605A44F11D9B26900A155D5 /* PBXTextBookmark */;
@@ -234,8 +234,6 @@
 			A63F1E52131A60040092ABBD /* PBXTextBookmark */ = A63F1E52131A60040092ABBD /* PBXTextBookmark */;
 			A63FF69C124620B90077D45C /* PBXTextBookmark */ = A63FF69C124620B90077D45C /* PBXTextBookmark */;
 			A64403D911BD455C0029075D /* PBXTextBookmark */ = A64403D911BD455C0029075D /* PBXTextBookmark */;
-			A6442795131A60E90082BC9F /* XCBuildMessageTextBookmark */ = A6442795131A60E90082BC9F /* XCBuildMessageTextBookmark */;
-			A6442797131A60E90082BC9F /* PBXTextBookmark */ = A6442797131A60E90082BC9F /* PBXTextBookmark */;
 			A64618421228F14E005D9651 /* PBXTextBookmark */ = A64618421228F14E005D9651 /* PBXTextBookmark */;
 			A64A6F7611E842C4002B9545 /* PBXTextBookmark */ = A64A6F7611E842C4002B9545 /* PBXTextBookmark */;
 			A64A6F7E11E842C4002B9545 /* PBXTextBookmark */ = A64A6F7E11E842C4002B9545 /* PBXTextBookmark */;
@@ -387,6 +385,8 @@
 			A6C1F8F6128EA3A800718C86 /* PBXTextBookmark */ = A6C1F8F6128EA3A800718C86 /* PBXTextBookmark */;
 			A6CA5D6111FC2AA5007CDCF1 /* PBXTextBookmark */ = A6CA5D6111FC2AA5007CDCF1 /* PBXTextBookmark */;
 			A6CB3DEB11B2A6AF008398A0 /* PBXTextBookmark */ = A6CB3DEB11B2A6AF008398A0 /* PBXTextBookmark */;
+			A6CDF19D131A614C007689B7 /* PlistBookmark */ = A6CDF19D131A614C007689B7 /* PlistBookmark */;
+			A6CDF1A2131A6209007689B7 /* PlistBookmark */ = A6CDF1A2131A6209007689B7 /* PlistBookmark */;
 			A6D5FFCD11C4C5560030502F /* PBXTextBookmark */ = A6D5FFCD11C4C5560030502F /* PBXTextBookmark */;
 			A6D5FFD211C4C5560030502F /* PBXTextBookmark */ = A6D5FFD211C4C5560030502F /* PBXTextBookmark */;
 			A6D9484711D605770003CBBF /* PBXTextBookmark */ = A6D9484711D605770003CBBF /* PBXTextBookmark */;
@@ -1653,38 +1653,6 @@
 		rType = 0;
 		vrLen = 726;
 		vrLoc = 0;
-	};
-	A6442795131A60E90082BC9F /* XCBuildMessageTextBookmark */ = {
-		isa = PBXTextBookmark;
-		comments = "ProcessProductPackaging Entitlements.plist build/TaskCoach.build/DebugAdHoc-iphoneos/TaskCoach.build/TaskCoach.xcent";
-		fRef = A6442796131A60E90082BC9F /* TaskCoach.xcent */;
-		fallbackIsa = XCBuildMessageTextBookmark;
-		rLen = 0;
-		rLoc = 0;
-		rType = 1;
-	};
-	A6442796131A60E90082BC9F /* TaskCoach.xcent */ = {
-		isa = PBXFileReference;
-		lastKnownFileType = text.xml;
-		name = TaskCoach.xcent;
-		path = "/Users/jeromelaheurte/Dev/TaskCoach/taskcoach-trunk/taskcoach-iphone/build/TaskCoach.build/DebugAdHoc-iphoneos/TaskCoach.build/TaskCoach.xcent";
-		sourceTree = "<absolute>";
-	};
-	A6442797131A60E90082BC9F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A6442798131A60E90082BC9F /* TaskCoach.xcent */;
-		name = "TaskCoach.xcent: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 396;
-		vrLoc = 0;
-	};
-	A6442798131A60E90082BC9F /* TaskCoach.xcent */ = {
-		isa = PBXFileReference;
-		name = TaskCoach.xcent;
-		path = "/Users/jeromelaheurte/Dev/TaskCoach/taskcoach-trunk/taskcoach-iphone/build/TaskCoach.build/DebugAdHoc-iphoneos/TaskCoach.build/TaskCoach.xcent";
-		sourceTree = "<absolute>";
 	};
 	A64603A50F2234B500FC71AD /* CellFactory.h */ = {
 		uiCtxt = {
@@ -4210,6 +4178,28 @@
 		rType = 0;
 		vrLen = 375;
 		vrLoc = 0;
+	};
+	A6CDF19D131A614C007689B7 /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = A6CDF198131A611E007689B7 /* Entitlements.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+		);
+		name = "/Users/jeromelaheurte/Dev/TaskCoach/taskcoach-trunk/taskcoach-iphone/Entitlements.plist";
+		rLen = 0;
+		rLoc = 9223372036854775807;
+	};
+	A6CDF1A2131A6209007689B7 /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = A6CDF198131A611E007689B7 /* Entitlements.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+		);
+		name = "/Users/jeromelaheurte/Dev/TaskCoach/taskcoach-trunk/taskcoach-iphone/Entitlements.plist";
+		rLen = 0;
+		rLoc = 9223372036854775807;
 	};
 	A6CE4A8C11312557003A454F /* ru */ = {
 		uiCtxt = {
