@@ -60,7 +60,7 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.SortableViewerWithC
         self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         self._columns = self._createColumns()
         widget = widgets.ListCtrl(self, self.columns(), self.onSelect,
-            uicommand.AttachmentEdit(viewer=self, attachments=self.presentation()),
+            uicommand.Edit(viewer=self),
             itemPopupMenu, columnPopupMenu,
             resizeableColumn=1, **self.widgetCreationKeywordArguments())
         widget.SetColumnWidth(0, 150)
@@ -117,10 +117,8 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.SortableViewerWithC
         commands[-2:-2] = [None,
                            uicommand.AttachmentNew(attachments=self.presentation(),
                                                    settings=self.settings),
-                           uicommand.AttachmentEdit(attachments=self.presentation(),
-                                                    viewer=self),
-                           uicommand.AttachmentDelete(attachments=self.presentation(),
-                                                      viewer=self),
+                           uicommand.Edit(viewer=self),
+                           uicommand.Delete(viewer=self),
                            None,
                            uicommand.AttachmentOpen(attachments=attachment.AttachmentList(),
                                                     viewer=self, settings=self.settings)]

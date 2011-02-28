@@ -65,5 +65,5 @@ class EditorTestCase(test.wxTestCase):
     def testDontCloseEditorWhenItemIsFiltered(self):
         self.failIf(self.editor.cancelCalled)
         self.task.setCompletionDateTime()
-        self.taskList.hideCompletedTasks()
+        self.taskList.setFilteredByCompletionDateTime('Always')
         self.failIf(self.editor.cancelCalled)

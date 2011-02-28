@@ -66,7 +66,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
         columnPopupMenu = menu.ColumnPopupMenu(self)
         self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         widget = widgets.TreeListCtrl(self, self.columns(), self.onSelect,
-            uicommand.NoteEdit(viewer=self, notes=self.presentation()),
+            uicommand.Edit(viewer=self),
             uicommand.NoteDragAndDrop(viewer=self, notes=self.presentation()),
             uicommand.EditSubject(viewer=self),
             itemPopupMenu, columnPopupMenu,
@@ -83,12 +83,9 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
         commands[-2:-2] = [None,
                            uicommand.NoteNew(notes=self.presentation(),
                                              settings=self.settings),
-                           uicommand.NoteNewSubNote(notes=self.presentation(),
-                                                    viewer=self),
-                           uicommand.NoteEdit(notes=self.presentation(),
-                                              viewer=self),
-                           uicommand.NoteDelete(notes=self.presentation(),
-                                                viewer=self)]
+                           uicommand.NewSubItem(viewer=self),
+                           uicommand.Edit(viewer=self),
+                           uicommand.Delete(viewer=self)]
         return commands
 
     def createColumnUICommands(self):

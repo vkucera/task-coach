@@ -23,9 +23,5 @@ from taskcoachlib.i18n import _
 class AttachmentList(ObservableList):
     newItemMenuText = _('New attachment...')
     newItemHelpText =  _('Insert a new attachment')
-    editItemMenuText = _('Edit attachment...')
-    editItemHelpText = _('Edit the selected attachments')
-    deleteItemMenuText = _('Delete attachment')
-    deleteItemHelpText = _('Delete the selected attachments')
     openItemMenuText = _('Open attachment')
     openItemHelpText = _('Open the selected attachments')

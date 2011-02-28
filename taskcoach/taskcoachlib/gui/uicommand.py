@@ -178,7 +178,6 @@ class UICommand(object):
         return wx.ArtProvider_GetBitmap(bitmap, type, size)
     
 
-
 class SettingsCommand(UICommand): # pylint: disable-msg=W0223
     ''' SettingsCommands are saved in the settings (a ConfigParser). '''
 
@@ -345,6 +344,12 @@ class NeedsOneSelectedItemMixin(object):
     def enabled(self, event):
         return super(NeedsOneSelectedItemMixin, self).enabled(event) and \
             len(self.viewer.curselection()) == 1
+
+
+class NeedsOneSelectedCompositeItemMixin(NeedsOneSelectedItemMixin):
+    def enabled(self, event):
+        return super(NeedsOneSelectedCompositeItemMixin, self).enabled(event) and \
+            hasattr(self.viewer.curselection()[0], 'children')
 
 
 class NeedsTaskViewerMixin(object):
@@ -1159,6 +1164,22 @@ class ViewerFilterByDueDateTime(ViewerCommand, UIRadioCommand):
         self.viewer.setFilteredByDueDateTime(self.value)
 
 
+class ViewerFilterByCompletionDateTime(ViewerCommand, UIRadioCommand):
+    def isSettingChecked(self):
+        return self.viewer.isFilteredByCompletionDateTime(self.value)
+    
+    def doCommand(self, event):
+        self.viewer.setFilteredByCompletionDateTime(self.value)
+
+
+class ViewerFilterByStartDateTime(ViewerCommand, UIRadioCommand):
+    def isSettingChecked(self):
+        return self.viewer.isFilteredByStartDateTime(self.value)
+    
+    def doCommand(self, event):
+        self.viewer.setFilteredByStartDateTime(self.value)
+        
+
 class ViewerHideInactiveTasks(ViewerCommand, UICheckCommand):
     def __init__(self, *args, **kwargs):
         super(ViewerHideInactiveTasks, self).__init__(menuText=_('Hide &inactive tasks'), 
@@ -1166,10 +1187,15 @@ class ViewerHideInactiveTasks(ViewerCommand, UICheckCommand):
             *args, **kwargs)
         
     def isSettingChecked(self):
-        return self.viewer.isHidingInactiveTasks()
+        return not self.viewer.isFilteredByStartDateTime('Never')
         
     def doCommand(self, event):
-        self.viewer.hideInactiveTasks(self._isMenuItemChecked(event))
+        self.viewer.freeze()
+        try:
+            filter = 'Always' if self._isMenuItemChecked(event) else 'Never'
+            self.viewer.setFilteredByStartDateTime(filter)
+        finally:
+            self.viewer.thaw()
 
 
 class ViewerHideActiveTasks(ViewerCommand, UICheckCommand):
@@ -1191,12 +1217,13 @@ class ViewerHideCompletedTasks(ViewerCommand, UICheckCommand):
             helpText=_('Show/hide completed tasks'), *args, **kwargs)
          
     def isSettingChecked(self):
-        return self.viewer.isHidingCompletedTasks()
+        return not self.viewer.isFilteredByCompletionDateTime('Never')
         
     def doCommand(self, event):
         self.viewer.freeze()
         try:
-            self.viewer.hideCompletedTasks(self._isMenuItemChecked(event))
+            filter = 'Always' if self._isMenuItemChecked(event) else 'Never'
+            self.viewer.setFilteredByCompletionDateTime(filter)
         finally:
             self.viewer.thaw()
 
@@ -1217,30 +1244,13 @@ class ViewerHideCompositeTasks(ViewerCommand, UICheckCommand):
         return not self.viewer.isTreeViewer()
 
 
-class ObjectCommandBase(ViewerCommand): # pylint: disable-msg=W0223
-    """ Base class for delete and edit L{UICommand}s.
-    @cvar __containerName__: The name of the object list in
-        the keyword arguments (e.g. 'notes', 'taskList'...)
-    @cvar __bitmap__: Name of the bitmap for this command. """
-
-    __containerName__ = None
-    __bitmap__ = None
-
+class Edit(NeedsSelectionMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        kwargs['bitmap'] = self.__bitmap__
-        super(ObjectCommandBase, self).__init__(*args, **kwargs)
-
-
-class ObjectEdit(ObjectCommandBase):
-    """ Base class for L{UICommand}s to edit objects. This will use the
-    L{Viewer.editItemDialog} method to open an edit dialog. """
-
-    __bitmap__ = 'edit'
-
-    def __init__(self, *args, **kwargs):
-        kwargs['menuText'] = kwargs[self.__containerName__].editItemMenuText
-        kwargs['helpText'] = kwargs[self.__containerName__].editItemHelpText
-        super(ObjectEdit, self).__init__(*args, **kwargs)
+        kwargs['bitmap'] = 'edit'
+        kwargs['menuText'] = _('&Edit...\tRETURN')
+        kwargs['helpText'] = _('Edit the selected item(s)')
+        kwargs['id'] = wx.ID_EDIT
+        super(Edit, self).__init__(*args, **kwargs)
 
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
         try:
@@ -1252,23 +1262,19 @@ class ObjectEdit(ObjectCommandBase):
         editor.Show(show)
 
 
-class ObjectDelete(ObjectCommandBase):
-    """Base class for L{UICommand}s to delete objects. This will use
-    the L{Viewer.deleteItemCommand} method to get the actual delete
-    command."""
-
-    __bitmap__ = 'delete'
-
+class Delete(NeedsSelectionMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        kwargs['menuText'] = kwargs[self.__containerName__].deleteItemMenuText
-        kwargs['helpText'] = kwargs[self.__containerName__].deleteItemHelpText
-        super(ObjectDelete, self).__init__(*args, **kwargs)
-
+        kwargs['bitmap'] = 'delete'
+        kwargs['menuText'] = _('&Delete\tDEL')
+        kwargs['helpText'] = _('Delete the selected item(s)')
+        kwargs['id'] = wx.ID_DELETE
+        super(Delete, self).__init__(*args, **kwargs)
+        
     def doCommand(self, event):
         deleteCommand = self.viewer.deleteItemCommand()
         deleteCommand.do()
 
-        
+
 class TaskNew(TaskListCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         self.taskKeywords = kwargs.pop('taskKeywords', dict())
@@ -1374,25 +1380,17 @@ class NewTaskWithSelectedTasksAsDependencies(NeedsSelectedTasksMixin, TaskNew,
     def dependenciesForTheNewTask(self):
         return self.viewer.curselection()
     
-    
-class TaskNewSubTask(NeedsOneSelectedTaskMixin, TaskListCommand, ViewerCommand):
+
+class NewSubItem(NeedsOneSelectedCompositeItemMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        taskList = kwargs['taskList']
-        super(TaskNewSubTask, self).__init__(bitmap='newsub',
-            menuText=taskList.newSubItemMenuText,
-            helpText=taskList.newSubItemHelpText, *args, **kwargs)
+        kwargs['bitmap'] = 'newsub'
+        kwargs['menuText'] = _('New &subitem...') + '\tCtrl+INS' if '__WXMSW__' == wx.Platform else '\tShift+Ctrl+N'
+        kwargs['helpText'] = _('Insert a new subitem of the selected item')
+        super(NewSubItem, self).__init__(*args, **kwargs)
 
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
         newSubItemDialog = self.viewer.newSubItemDialog(bitmap=self.bitmap)
         newSubItemDialog.Show(show)
-        
-
-class TaskEdit(ObjectEdit, NeedsSelectedTasksMixin, TaskListCommand):
-    __containerName__ = 'taskList'
-
-
-class TaskDelete(ObjectDelete, NeedsSelectedTasksMixin, TaskListCommand):
-    __containerName__ = 'taskList'
 
 
 class TaskToggleCompletion(NeedsSelectedTasksMixin, ViewerCommand):
@@ -1746,14 +1744,6 @@ class EffortNew(NeedsAtLeastOneTaskMixin, ViewerCommand, EffortListCommand,
         return subjectDecoratedTasks[0][1]
 
 
-class EffortEdit(ObjectEdit, NeedsSelectedEffortMixin, EffortListCommand):
-    __containerName__ = 'effortList'
-
-
-class EffortDelete(ObjectDelete, NeedsSelectedEffortMixin, EffortListCommand):
-    __containerName__ = 'effortList'
-
-
 class EffortStart(NeedsSelectedTasksMixin, ViewerCommand, TaskListCommand):
     ''' UICommand to start tracking effort for the selected task(s). '''
     
@@ -1983,27 +1973,6 @@ class CategoryNew(CategoriesCommand, SettingsCommand):
             command.NewCategoryCommand(self.categories),
             self.settings, taskFile.categories(), taskFile, bitmap=self.bitmap)
         newCategoryDialog.Show(show)
-        
-
-class CategoryNewSubCategory(NeedsOneSelectedCategoryMixin, CategoriesCommand, 
-                             ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        categories = kwargs['categories']
-        super(CategoryNewSubCategory, self).__init__(bitmap='newsub', 
-            menuText=categories.newSubItemMenuText, 
-            helpText=categories.newSubItemHelpText, *args, **kwargs)
-
-    def doCommand(self, event, show=True): # pylint: disable-msg=W0221
-        newSubItemDialog = self.viewer.newSubItemDialog(bitmap=self.bitmap)
-        newSubItemDialog.Show(show)
-
-
-class CategoryDelete(ObjectDelete, NeedsSelectedCategoryMixin, CategoriesCommand):
-    __containerName__ = 'categories'
-
-
-class CategoryEdit(ObjectEdit, NeedsSelectedCategoryMixin, CategoriesCommand):
-    __containerName__ = 'categories'
 
 
 class CategoryDragAndDrop(DragAndDropCommand, CategoriesCommand):
@@ -2044,26 +2013,6 @@ class NewNoteWithSelectedCategories(NoteNew, ViewerCommand):
         return self.viewer.curselection()
 
 
-class NoteNewSubNote(NeedsOneSelectedNoteMixin, NotesCommand, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        notes = kwargs['notes']
-        super(NoteNewSubNote, self).__init__(bitmap='newsub', 
-            menuText=notes.newSubItemMenuText, 
-            helpText=notes.newSubItemHelpText, *args, **kwargs)
-
-    def doCommand(self, event, show=True): # pylint: disable-msg=W0221
-        newSubItemDialog = self.viewer.newSubItemDialog(bitmap=self.bitmap)
-        newSubItemDialog.Show(show)
-
-
-class NoteDelete(ObjectDelete, NeedsSelectedNoteMixin, NotesCommand):
-    __containerName__ = 'notes'
-
-
-class NoteEdit(ObjectEdit, NeedsSelectedNoteMixin, NotesCommand):
-    __containerName__ = 'notes'
-
-
 class NoteDragAndDrop(DragAndDropCommand, NotesCommand):
     def createCommand(self, dragItem, dropItem):
         return command.DragAndDropNoteCommand(self.notes, [dragItem], 
@@ -2085,14 +2034,6 @@ class AttachmentNew(AttachmentsCommand, SettingsCommand):
             bitmap=self.bitmap)
         attachmentDialog.Show(show)
         return attachmentDialog # for testing purposes
-
-
-class AttachmentDelete(ObjectDelete, NeedsSelectedAttachmentsMixin, AttachmentsCommand):
-    __containerName__ = 'attachments'
-
-
-class AttachmentEdit(ObjectEdit, NeedsSelectedAttachmentsMixin, AttachmentsCommand):
-    __containerName__ = 'attachments'
 
 
 class AddAttachment(NeedsSelectionMixin, ViewerCommand, SettingsCommand):

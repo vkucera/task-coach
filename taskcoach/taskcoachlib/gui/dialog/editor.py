@@ -1193,6 +1193,11 @@ class EditorWithCommand(widgets.Dialog):
 
         self.CentreOnParent()
         
+        table = wx.AcceleratorTable([(wx.ACCEL_NORMAL, wx.WXK_DELETE, wx.ID_DELETE),
+                                     (wx.ACCEL_CMD, ord('Z'), wx.ID_UNDO),
+                                     (wx.ACCEL_CMD, ord('Y'), wx.ID_REDO)])
+        self._interior.SetAcceleratorTable(table)
+        
     def cancel(self, *args, **kwargs): # pylint: disable-msg=W0221
         patterns.Publisher().removeObserver(self.onItemRemoved)
         super(EditorWithCommand, self).cancel(*args, **kwargs)

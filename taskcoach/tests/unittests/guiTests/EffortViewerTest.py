@@ -323,7 +323,9 @@ class CommonTestsMixin(object):
     def testActiveEffort(self):
         self.task2.efforts()[0].setStop(date.DateTime.max) # Make active
         self.viewer.refresher.onEverySecond(None) # Simulate clock firing
-        self.assertEqual(1, len(self.viewer.refresher.currentlyTrackedItems()))
+        expectedNrOfTrackedItems = 1 if self.aggregation == 'details' else 2
+        self.assertEqual(expectedNrOfTrackedItems, 
+                         len(self.viewer.refresher.currentlyTrackedItems()))
         
     def testActiveEffortAfterSwitch(self):
         self.task2.efforts()[0].setStop(date.DateTime.max) # Make active

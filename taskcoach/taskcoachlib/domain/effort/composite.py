@@ -84,6 +84,18 @@ class BaseCompositeEffort(base.BaseEffort): # pylint: disable-msg=W0223
 
     def onRevenueChanged(self, event): # pylint: disable-msg=W0613
         patterns.Event('effort.revenue', self, self.revenue(recursive=True)).send()
+
+    def onStartTracking(self, event):
+        startedEffort = event.value()
+        if self._inPeriod(startedEffort):
+            self._invalidateCache()
+            patterns.Event(self.trackStartEventType(), self, startedEffort).send()
+
+    def onStopTracking(self, event):
+        stoppedEffort = event.value()
+        if self._inPeriod(stoppedEffort):
+            self._invalidateCache()
+            patterns.Event(self.trackStopEventType(), self, stoppedEffort).send()
         
     def _invalidateCache(self):
         raise NotImplementedError
@@ -147,18 +159,6 @@ class CompositeEffort(BaseCompositeEffort):
             if it existed. '''
         return effort.task() == self.task() and self._inPeriod(effort)
             
-    def onStartTracking(self, event):
-        startedEffort = event.value()
-        if self._inPeriod(startedEffort):
-            self._invalidateCache()
-            patterns.Event(self.trackStartEventType(), self, startedEffort).send()
-
-    def onStopTracking(self, event):
-        stoppedEffort = event.value()
-        if self._inPeriod(stoppedEffort):
-            self._invalidateCache()
-            patterns.Event(self.trackStopEventType(), self, stoppedEffort).send()
-
     def description(self):
         effortDescriptions = [effort.description() for effort in \
                               self._getEfforts(False) if effort.description()]
@@ -189,10 +189,15 @@ class CompositeEffortPerPeriod(BaseCompositeEffort):
         for eventType in self.taskList.modificationEventTypes():
             patterns.Publisher().registerObserver(self.onTaskAddedOrRemoved, eventType,
                                                   eventSource=self.taskList)
-            
+        patterns.Publisher().registerObserver(self.onStartTracking,
+            eventType=task.Task.trackStartEventType())
+        patterns.Publisher().registerObserver(self.onStopTracking,
+            eventType=task.Task.trackStopEventType())
+        
     def addEffort(self, anEffort):
         assert self._inPeriod(anEffort)
-        self.__effortCache.append(anEffort)
+        if anEffort not in self.__effortCache:
+            self.__effortCache.append(anEffort)
 
     def onTaskAddedOrRemoved(self, event):
         if any(task.efforts() for task in event.values()):

@@ -40,12 +40,6 @@ class TaskList(categorizable.CategorizableContainer):
 
     newItemMenuText = _('&New task...') + accelerator('N', 'Ctrl', 'INS')
     newItemHelpText = help.taskNew
-    editItemMenuText = _('&Edit task...')
-    editItemHelpText = help.taskEdit
-    deleteItemMenuText = _('&Delete task') + accelerator('DEL')
-    deleteItemHelpText = help.taskDelete
-    newSubItemMenuText = _('New &subtask...') + accelerator('N', 'Shift+Ctrl', 'INS', 'Shift')
-    newSubItemHelpText = help.taskNewSubtask 
     
     def _nrInterestingTasks(self, isInteresting):
         return len(self._getInterestingTasks(isInteresting))

@@ -150,7 +150,7 @@ class EffortViewer(base.ListViewer,
         columnPopupMenu = menu.EffortViewerColumnPopupMenu(self)
         self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         widget = widgets.ListCtrl(self, self.columns(), self.onSelect,
-            uicommand.EffortEdit(viewer=self, effortList=self.presentation()),
+            uicommand.Edit(viewer=self),
             itemPopupMenu, columnPopupMenu,
             resizeableColumn=1, **self.widgetCreationKeywordArguments())
         widget.SetColumnWidth(0, 150)
@@ -274,8 +274,7 @@ class EffortViewer(base.ListViewer,
         tasks = self.taskFile.tasks()
         # This is an instance variable for use in unit tests
         # pylint: disable-msg=W0201
-        self.deleteUICommand = uicommand.EffortDelete(viewer=self,
-                                                      effortList=efforts)
+        self.deleteUICommand = uicommand.Delete(viewer=self)
         # This is an instance variable so that the choice can be changed 
         # programmatically
         self.aggregationUICommand = \
@@ -284,7 +283,7 @@ class EffortViewer(base.ListViewer,
                           uicommand.EffortNew(viewer=self, effortList=efforts,
                                               taskList=tasks,
                                               settings=self.settings),
-                          uicommand.EffortEdit(viewer=self, effortList=efforts),
+                          uicommand.Edit(viewer=self),
                           self.deleteUICommand, 
                           None,
                           uicommand.EffortStartForEffort(viewer=self,

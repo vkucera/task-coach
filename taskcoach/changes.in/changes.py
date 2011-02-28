@@ -22,9 +22,23 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.11', 'February 21, 2011',
+Release('1.2.11', 'February 28, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
+        Bug('''Sometimes the total effort per period displayed in the effort
+viewer would be wrong.''', '3146576')
+        ],
+    featuresAdded=[
+        Feature('''Import tasks from CSV file.'''),
+        Feature('''In addition to hiding all completed tasks, it is now also
+possible to hide completed tasks but keep recently completed tasks visible for
+a limited amount of time. This can be done by hiding tasks that were completed 
+before today, before yesterday, before the current week or before the current 
+month, using the View->Filter menu.''', 'http://uservoice.com/a/lZ8ss'),
+        Feature('''In addition to hiding all future tasks, it is now also
+possible to hide future tasks but still show future tasks that will become
+active in a short while. This can be done by hiding future tasks that start 
+today, tomorrow, next week or next month, using the View->Filter menu.''')
         ],
     featuresChanged=[
         Feature('''On Windows, the keyboard shortcuts for adding and deleting 
@@ -32,7 +46,7 @@ tasks are now simply Insert and Delete. A new subtask can be added with
 Shift-Insert. On Mac OS X and Linux, the Insert shortcut doesn't work for
 some reason so there a new task can be added with Ctrl-N and a new subtask
 with Shift-Ctrl-N.'''),
-        Feature('''Import tasks from CSV file.'''),
+        Feature('''The Delete keyboard shortcut works for all viewers.''')
         ]
     ),
                 
