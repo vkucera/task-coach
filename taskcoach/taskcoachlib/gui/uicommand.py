@@ -738,15 +738,15 @@ class FileExportSelectionAsICalendar(NeedsSelectedTasksOrEffortsMixin, FileExpor
 
 
 class FileImportCSV(IOCommand):
-    def __init__(self, **kwargs):
-        kwargs['menuText'] = _('Import CSV')
-        kwargs['helpText'] = _('Import tasks from a CSV file')
-        super(FileImportCSV, self).__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        super(FileImportCSV, self).__init__(menuText=_('&Import CSV...'),
+            helpText=_('Import tasks from a Comma Separated Values (CSV) file'),
+            bitmap='exportascsv', *args, **kwargs)
 
     def doCommand(self, event):
         filename = wx.FileSelector(_('Choose CSV file'), wildcard='*.csv')
         if filename:
-            wiz = CSVImportWizard(filename, None, wx.ID_ANY, _('CSV importation'))
+            wiz = CSVImportWizard(filename, None, wx.ID_ANY, _('CSV import'))
             if wiz.RunWizard():
                 self.iocontroller.importCSV(**wiz.GetOptions())
 

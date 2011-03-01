@@ -50,7 +50,7 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
         self.quoteChar.Append(_('Double quote'))
         self.quoteChar.SetSelection(1)
 
-        self.hasHeaders = wx.CheckBox(self, wx.ID_ANY, _('First line describe fields'))
+        self.hasHeaders = wx.CheckBox(self, wx.ID_ANY, _('First line describes fields'))
         self.hasHeaders.SetValue(True)
 
         self.grid = gridlib.Grid(self, wx.ID_ANY)
