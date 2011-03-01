@@ -40,6 +40,7 @@ fileOpen = _('Open a %s file')%meta.name
 fileSave = _('Save the current file')
 fileSaveAs = _('Save the current file under a new name')
 help = _('Help about the program')
+mailItem = _('Mail the selected item(s), using your default mailer')
 print_ = _('Print the current file')
 printPageSetup = _('Setup the characteristics of the printer page')
 resetFilter = _('Show all items (reset all filters)')

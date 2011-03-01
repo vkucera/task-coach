@@ -1246,11 +1246,9 @@ class ViewerHideCompositeTasks(ViewerCommand, UICheckCommand):
 
 class Edit(NeedsSelectionMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        kwargs['bitmap'] = 'edit'
-        kwargs['menuText'] = _('&Edit...\tRETURN')
-        kwargs['helpText'] = _('Edit the selected item(s)')
-        kwargs['id'] = wx.ID_EDIT
-        super(Edit, self).__init__(*args, **kwargs)
+        super(Edit, self).__init__(menuText=_('&Edit...\tRETURN'),
+            helpText=_('Edit the selected item(s)'), id=wx.ID_EDIT,
+            bitmap='edit', *args, **kwargs)
 
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
         try:
@@ -1259,16 +1257,14 @@ class Edit(NeedsSelectionMixin, ViewerCommand):
             columnName = ''
         editor = self.viewer.editItemDialog(self.viewer.curselection(), 
                                             self.bitmap, columnName)
-        editor.Show(show)
+        editor.Show(show)        
 
 
 class Delete(NeedsSelectionMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
-        kwargs['bitmap'] = 'delete'
-        kwargs['menuText'] = _('&Delete\tDEL')
-        kwargs['helpText'] = _('Delete the selected item(s)')
-        kwargs['id'] = wx.ID_DELETE
-        super(Delete, self).__init__(*args, **kwargs)
+        super(Delete, self).__init__(menuText=_('&Delete\tDEL'),
+            helpText=_('Delete the selected item(s)'), id=wx.ID_DELETE, 
+            bitmap='delete', *args, **kwargs)
         
     def doCommand(self, event):
         deleteCommand = self.viewer.deleteItemCommand()
@@ -1610,9 +1606,10 @@ class NoteToggleCategory(ToggleCategory):
             self.viewer.isShowingNotes()
     
 
-class MailItem(ViewerCommand):
+class Mail(ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(MailItem, self).__init__(bitmap='envelope_icon', *args, **kwargs)
+        super(Mail, self).__init__(menuText=_('&Mail...\tCtrl-M'),
+           helpText=help.mailItem, bitmap='envelope_icon', *args, **kwargs)
 
     def doCommand(self, event, mail=writeMail, showerror=wx.MessageBox): # pylint: disable-msg=W0221
         items = self.viewer.curselection()
@@ -1621,13 +1618,14 @@ class MailItem(ViewerCommand):
         self.mail(subject, body, mail, showerror)
 
     def subject(self, items):
-        if len(items) > 1:
-            return self.subjectForMultipleItems()
+        assert items
+        if len(items) > 2:
+            return _('Several things')
+        elif len(items) == 2:
+            subjects = [item.subject(recursive=True) for item in items]
+            return ' '.join([subjects[0], _('and'), subjects[1]])
         else:
             return items[0].subject(recursive=True)
-        
-    def subjectForMultipleItems(self):
-        raise NotImplementedError
         
     def body(self, items):
         if len(items) > 1:
@@ -1653,26 +1651,6 @@ class MailItem(ViewerCommand):
                       caption=_('%s mail error')%meta.name, 
                       style=wx.ICON_ERROR)        
  
-
-class TaskMail(NeedsSelectedTasksMixin, MailItem):
-    def __init__(self, *args, **kwargs):
-        super(TaskMail, self).__init__(menuText=_('&Mail task'),
-            helpText=_('Mail the task, using your default mailer'),
-            *args, **kwargs)
-
-    def subjectForMultipleItems(self):
-        return _('Tasks')
-
-
-class NoteMail(NeedsSelectedNoteMixin, MailItem):
-    def __init__(self, *args, **kwargs):
-        super(NoteMail, self).__init__(menuText=_('&Mail note'),
-            helpText=_('Mail the note, using your default mailer'),
-            *args, **kwargs)
-
-    def subjectForMultipleItems(self):
-        return _('Notes')
-
 
 class ItemAddNote(ViewerCommand, SettingsCommand):
     menuText=_('Add &note')

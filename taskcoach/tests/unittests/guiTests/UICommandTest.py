@@ -145,7 +145,7 @@ class MailTaskTest(test.TestCase):
         def showerror(*args, **kwargs): # pylint: disable-msg=W0613
             self.showerror = args # pylint: disable-msg=W0201
             
-        mailTask = gui.uicommand.TaskMail(viewer=DummyViewer([DummyTask()]))
+        mailTask = gui.uicommand.Mail(viewer=DummyViewer([DummyTask()]))
         mailTask.doCommand(None, mail=mail, showerror=showerror)
         self.assertEqual('Cannot send email:\nmessage', self.showerror[0])
 
@@ -216,11 +216,6 @@ class EffortNewTest(wxTestCaseWithFrameAsTopLevelWindow):
         for eachEffort in dialog._command.efforts:
             self.assertEqual(task2, eachEffort.task())
         
-
-class MailNoteTest(test.TestCase):
-    def testCreate(self):
-        gui.uicommand.NoteMail()
-
 
 class EditPreferencesTest(test.TestCase):
     def testEditPreferences(self):
