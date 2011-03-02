@@ -381,6 +381,12 @@ class AddNoteCommand(BaseCommand):
         self.owners = self.items
         self.items = self.notes = [note.Note(subject=_('New note')) \
                                    for dummy in self.items]
+
+    def name_subject(self, note):
+        # Override to use the subject of the owner of the new note instead
+        # of the subject of the new note itself, which wouldn't be very
+        # interesting because it's something like 'New note'.
+        return self.owners[0].subject()
     
     def addNotes(self):
         for owner, note in zip(self.owners, self.notes): # pylint: disable-msg=W0621

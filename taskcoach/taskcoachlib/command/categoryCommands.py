@@ -67,9 +67,3 @@ class DeleteCategoryCommand(base.DeleteCommand):
     
 class DragAndDropCategoryCommand(base.DragAndDropCommand):
     plural_name = _('Drag and drop categories')
-
-
-class AddCategoryNoteCommand(base.AddNoteCommand):
-    plural_name = _('Add note to categories')
-        
-

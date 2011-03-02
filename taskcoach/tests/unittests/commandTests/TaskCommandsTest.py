@@ -667,9 +667,9 @@ class DecreasePriorityCommandTest(PriorityCommandTestCase):
         self.assertDoUndoRedo(0, -3, 0, -2)
         
 
-class AddTaskNoteCommandTest(TaskCommandTestCase):
+class AddNoteCommandTest(TaskCommandTestCase):
     def addNote(self, tasks=None):
-        command.AddTaskNoteCommand(self.taskList, tasks or []).do()
+        command.AddNoteCommand(self.taskList, tasks or []).do()
     
     # pylint: disable-msg=E1101
     

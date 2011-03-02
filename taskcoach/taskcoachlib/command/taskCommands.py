@@ -359,7 +359,3 @@ class DecPriorityCommand(ChangePriorityCommand):
     singular_name = _('Decrease priority of "%s"')
 
     delta = -1
-    
-    
-class AddTaskNoteCommand(base.AddNoteCommand):
-    plural_name = _('Add note to tasks')

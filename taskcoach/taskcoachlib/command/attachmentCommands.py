@@ -53,7 +53,3 @@ class EditAttachmentCommand(base.EditCommand):
 class DeleteAttachmentCommand(base.DeleteCommand):
     plural_name = _('Delete attachments')
     singular_name = _('Delete attachment "%s"')
-
-
-class AddAttachmentNoteCommand(base.AddNoteCommand):
-    plural_name = _('Add note to attachments')

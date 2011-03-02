@@ -346,40 +346,23 @@ class NeedsOneSelectedItemMixin(object):
             len(self.viewer.curselection()) == 1
 
 
-class NeedsOneSelectedCompositeItemMixin(NeedsOneSelectedItemMixin):
+class NeedsSelectedCompositeMixin(NeedsSelectionMixin):
     def enabled(self, event):
-        return super(NeedsOneSelectedCompositeItemMixin, self).enabled(event) and \
-            hasattr(self.viewer.curselection()[0], 'children')
+        return super(NeedsSelectedCompositeMixin, self).enabled(event) and \
+            (self.viewer.curselectionIsInstanceOf(task.Task) or \
+             self.viewer.curselectionIsInstanceOf(note.Note) or \
+             self.viewer.curselectionIsInstanceOf(category.Category))
+    
 
-
-class NeedsTaskViewerMixin(object):
-    def enabled(self, event):
-        return super(NeedsTaskViewerMixin, self).enabled(event) and \
-            self.viewer.isShowingTasks()
-
-
-class NeedsEffortViewerMixin(object):
-    def enabled(self, event):
-        return super(NeedsEffortViewerMixin, self).enabled(event) and \
-            self.viewer.isShowingEffort()
+class NeedsOneSelectedCompositeItemMixin(NeedsOneSelectedItemMixin, 
+                                         NeedsSelectedCompositeMixin):
+    pass
 
 
 class NeedsTaskOrEffortViewerMixin(object):
     def enabled(self, event):
         return super(NeedsTaskOrEffortViewerMixin, self).enabled(event) and \
             (self.viewer.isShowingTasks() or self.viewer.isShowingEffort())
-            
-
-class NeedsCategoryViewerMixin(object):
-    def enabled(self, event):
-        return super(NeedsCategoryViewerMixin, self).enabled(event) and \
-            self.viewer.isShowingCategories()
-
-
-class NeedsNoteViewerMixin(object):
-    def enabled(self, event):
-        return super(NeedsNoteViewerMixin, self).enabled(event) and \
-            self.viewer.isShowingNotes()
 
 
 class NeedsAttachmentViewerMixin(object):
@@ -401,6 +384,21 @@ class NeedsSelectedTasksOrEffortsMixin(NeedsSelectionMixin):
              self.viewer.curselectionIsInstanceOf(effort.Effort))
 
 
+class NeedsSelectedNoteOwnersMixin(NeedsSelectionMixin):
+    def enabled(self, event):
+        return super(NeedsSelectedNoteOwnersMixin, self).enabled(event) and \
+            (self.viewer.curselectionIsInstanceOf(task.Task) or \
+             self.viewer.curselectionIsInstanceOf(category.Category))
+
+
+class NeedsSelectedAttachmentOwnersMixin(NeedsSelectionMixin):
+    def enabled(self, event):
+        return super(NeedsSelectedAttachmentOwnersMixin, self).enabled(event) and \
+            (self.viewer.curselectionIsInstanceOf(task.Task) or \
+             self.viewer.curselectionIsInstanceOf(category.Category) or \
+             self.viewer.curselectionIsInstanceOf(note.Note))
+
+
 class NeedsOneSelectedTaskMixin(NeedsSelectedTasksMixin, NeedsOneSelectedItemMixin):
     pass
 
@@ -417,38 +415,10 @@ class NeedsSelectedEffortMixin(NeedsSelectionMixin):
             self.viewer.curselectionIsInstanceOf(effort.Effort)
 
 
-class NeedsSelectedCategoryMixin(NeedsCategoryViewerMixin, NeedsSelectionMixin):
-    pass
-
-
-class NeedsOneSelectedCategoryMixin(NeedsCategoryViewerMixin, NeedsOneSelectedItemMixin):
-    pass
-
-
-class NeedsSelectedNoteMixin(NeedsNoteViewerMixin, NeedsSelectionMixin):
-    pass
-
-
-class NeedsOneSelectedNoteMixin(NeedsNoteViewerMixin, NeedsOneSelectedItemMixin):
-    pass
-
-
 class NeedsSelectedAttachmentsMixin(NeedsAttachmentViewerMixin, NeedsSelectionMixin):
     pass
 
 
-class NeedsOneSelectedAttachmentMixin(NeedsAttachmentViewerMixin, NeedsOneSelectedItemMixin):
-    pass
-
-
-class NeedsSelectedCompositeMixin(NeedsSelectionMixin):
-    def enabled(self, event):
-        return super(NeedsSelectedCompositeMixin, self).enabled(event) and \
-            (self.viewer.curselectionIsInstanceOf(task.Task) or \
-             self.viewer.curselectionIsInstanceOf(note.Note) or \
-             self.viewer.curselectionIsInstanceOf(category.Category))
-    
-    
 class NeedsAtLeastOneTaskMixin(object):
     def enabled(self, event): # pylint: disable-msg=W0613
         return len(self.taskList) > 0
@@ -463,12 +433,6 @@ class NeedsTreeViewerMixin(object):
     def enabled(self, event):
         return super(NeedsTreeViewerMixin, self).enabled(event) and \
             self.viewer.isTreeViewer()
-
-            
-class NeedsListViewerMixin(object):
-    def enabled(self, event):
-        return super(NeedsListViewerMixin, self).enabled(event) and \
-            (not self.viewer.isTreeViewer())
 
 
 class NeedsDeletedItemsMixin(object):
@@ -1652,39 +1616,20 @@ class Mail(ViewerCommand):
                       style=wx.ICON_ERROR)        
  
 
-class ItemAddNote(ViewerCommand, SettingsCommand):
-    menuText=_('Add &note')
-    helpText = 'Subclass responsibility'
-    AddNoteCommand = lambda: 'Subclass responsibility'
-    
+class AddNote(NeedsSelectedNoteOwnersMixin, ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
-        super(ItemAddNote, self).__init__(menuText=self.menuText,
-            helpText=self.helpText, bitmap='new', *args, **kwargs)
+        super(AddNote, self).__init__(menuText=_('Add &note...\tCtrl+B'),
+            helpText=help.addNote, bitmap='new', *args, **kwargs)
             
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
         editDialog = dialog.editor.NoteEditor(self.mainWindow(), 
-            self.AddNoteCommand(self.viewer.presentation(), 
-                                self.viewer.curselection()),
+            command.AddNoteCommand(self.viewer.presentation(), 
+                                   self.viewer.curselection()),
             self.settings, self.viewer.presentation(),  
             self.mainWindow().taskFile, bitmap=self.bitmap)
         editDialog.Show(show)
         return editDialog # for testing purposes
 
-
-class TaskAddNote(NeedsOneSelectedTaskMixin, ItemAddNote):
-    helpText=_('Add a note to the selected task')
-    AddNoteCommand = command.AddTaskNoteCommand 
-
-
-class CategoryAddNote(NeedsOneSelectedCategoryMixin, ItemAddNote):
-    helpText = _('Add a note to the selected category')
-    AddNoteCommand = command.AddCategoryNoteCommand
-        
-
-class AttachmentAddNote(NeedsOneSelectedAttachmentMixin, ItemAddNote):
-    helpText=_('Add a note to the selected attachment')
-    AddNoteCommand = command.AddAttachmentNoteCommand
-        
 
 class EffortNew(NeedsAtLeastOneTaskMixin, ViewerCommand, EffortListCommand, 
                 TaskListCommand, SettingsCommand):
@@ -1802,7 +1747,7 @@ class EffortStartButton(PopupButtonMixin, TaskListCommand):
     
 
 class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
-    defaultMenuText = _('Stop tracking or resume tracking')
+    defaultMenuText = _('Stop tracking or resume tracking\tShift+Ctrl+T')
     defaultHelpText = help.effortStopOrResume
     stopMenuText = _('St&op tracking %s\tShift+Ctrl+T')
     stopHelpText = _('Stop tracking effort for the active task(s)')
@@ -2014,10 +1959,10 @@ class AttachmentNew(AttachmentsCommand, SettingsCommand):
         return attachmentDialog # for testing purposes
 
 
-class AddAttachment(NeedsSelectionMixin, ViewerCommand, SettingsCommand):
+class AddAttachment(NeedsSelectedAttachmentOwnersMixin, ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
-        super(AddAttachment, self).__init__(menuText=_('&Add attachment'),          
-            bitmap='paperclip_icon', *args, **kwargs)
+        super(AddAttachment, self).__init__(menuText=_('&Add attachment...\tShift-Ctrl-A'),
+            helpText=help.addAttachment, bitmap='paperclip_icon', *args, **kwargs)
         
     def doCommand(self, event):
         filename = widgets.AttachmentSelector()
@@ -2029,32 +1974,7 @@ class AddAttachment(NeedsSelectionMixin, ViewerCommand, SettingsCommand):
         addAttachmentCommand = command.AddAttachmentCommand( \
             self.viewer.presentation(), self.viewer.curselection(), 
             attachments=[attachment.FileAttachment(filename)])
-        addAttachmentCommand.do()
-        
-    def enabled(self, event):
-        return super(AddAttachment, self).enabled(event) and \
-            not any(isinstance(item, effort.Effort) for item in self.viewer.curselection())
-
-
-class AddTaskAttachment(NeedsTaskViewerMixin, AddAttachment):
-    def __init__(self, *args, **kwargs):
-        super(AddTaskAttachment, self).__init__(\
-            helpText=_('Browse for files to add as attachment to the selected task(s)'),
-            *args, **kwargs)
-
-
-class AddCategoryAttachment(NeedsCategoryViewerMixin, AddAttachment):
-    def __init__(self, *args, **kwargs):
-        super(AddCategoryAttachment, self).__init__(\
-            helpText=_('Browse for files to add as attachment to the selected categories'),
-            *args, **kwargs)
-
-
-class AddNoteAttachment(NeedsNoteViewerMixin, AddAttachment):
-    def __init__(self, *args, **kwargs):
-        super(AddNoteAttachment, self).__init__(\
-            helpText=_('Browse for files to add as attachment to the selected note(s)'),
-            *args, **kwargs)
+        addAttachmentCommand.do()        
 
 
 def openAttachments(attachments, settings, showerror):
@@ -2084,35 +2004,15 @@ class OpenAllAttachments(NeedsSelectionWithAttachmentsMixin, ViewerCommand,
                          SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(OpenAllAttachments, self).__init__(\
-           menuText=_('&Open all attachments'), 
-           bitmap='paperclip_icon', *args, **kwargs)
+           menuText=_('&Open all attachments...\tShift+Ctrl+O'), 
+           helpText=help.openAllAttachments, bitmap='paperclip_icon', 
+           *args, **kwargs)
         
     def doCommand(self, event, showerror=wx.MessageBox): # pylint: disable-msg=W0221
         allAttachments = []
         for item in self.viewer.curselection():
             allAttachments.extend(item.attachments())
         openAttachments(allAttachments, self.settings, showerror)
-
-
-class OpenAllTaskAttachments(NeedsTaskViewerMixin, OpenAllAttachments):
-    def __init__(self, *args, **kwargs):
-        super(OpenAllTaskAttachments, self).__init__(\
-            helpText=_('Open all attachments of the selected task(s)'),
-            *args, **kwargs)
-
-
-class OpenAllCategoryAttachments(NeedsCategoryViewerMixin, OpenAllAttachments):
-    def __init__(self, *args, **kwargs):
-        super(OpenAllCategoryAttachments, self).__init__(\
-            helpText=_('Open all attachments of the selected categories'),
-            *args, **kwargs)
-
-
-class OpenAllNoteAttachments(NeedsNoteViewerMixin, OpenAllAttachments):
-    def __init__(self, *args, **kwargs):
-        super(OpenAllNoteAttachments, self).__init__(\
-            helpText=_('Open all attachments of the selected note(s)'),
-            *args, **kwargs)
             
 
 class DialogCommand(UICommand):

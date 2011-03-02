@@ -491,14 +491,12 @@ class TaskMenu(Menu):
             uicommand.Delete(viewer=viewerContainer),
             None,
             uicommand.Mail(viewer=viewerContainer),
-            uicommand.AddTaskAttachment(taskList=tasks,
-                                        viewer=viewerContainer,
-                                        settings=settings),
-            uicommand.OpenAllTaskAttachments(viewer=viewerContainer,
-                                             settings=settings))
+            uicommand.AddAttachment(viewer=viewerContainer, settings=settings),
+            uicommand.OpenAllAttachments(viewer=viewerContainer,
+                                         settings=settings))
         if settings.getboolean('feature', 'notes'):
             self.appendUICommands(
-                uicommand.TaskAddNote(viewer=viewerContainer,
+                uicommand.AddNote(viewer=viewerContainer,
                                       settings=settings)
                 )
         self.appendMenu(_('&Toggle category'),
@@ -557,13 +555,12 @@ class CategoryMenu(Menu):
             uicommand.Edit(viewer=viewerContainer),
             uicommand.Delete(viewer=viewerContainer),
             None,
-            uicommand.AddCategoryAttachment(viewer=viewerContainer,
-                                            settings=settings),
-            uicommand.OpenAllCategoryAttachments(viewer=viewerContainer,
-                                                 settings=settings))
+            uicommand.AddAttachment(viewer=viewerContainer, settings=settings),
+            uicommand.OpenAllAttachments(viewer=viewerContainer,
+                                         settings=settings))
         if settings.getboolean('feature', 'notes'):
             self.appendUICommands(
-                uicommand.CategoryAddNote(viewer=viewerContainer,
+                uicommand.AddNote(viewer=viewerContainer,
                                           settings=settings)
                 )
 
@@ -580,10 +577,9 @@ class NoteMenu(Menu):
             uicommand.Delete(viewer=viewerContainer),
             uicommand.Mail(viewer=viewerContainer),
             None,
-            uicommand.AddNoteAttachment(viewer=viewerContainer,
-                                        settings=settings),
-            uicommand.OpenAllNoteAttachments(viewer=viewerContainer,
-                                             settings=settings))
+            uicommand.AddAttachment(viewer=viewerContainer, settings=settings),
+            uicommand.OpenAllAttachments(viewer=viewerContainer,
+                                         settings=settings))
         self.appendMenu(_('&Toggle category'),
                         ToggleCategoryMenu(mainwindow, categories=categories,
                                            viewer=viewerContainer),
@@ -745,14 +741,13 @@ class TaskPopupMenu(Menu):
             uicommand.Delete(viewer=taskViewer),
             None,
             uicommand.Mail(viewer=taskViewer),
-            uicommand.AddTaskAttachment(taskList=tasks, viewer=taskViewer,
-                                        settings=settings),
-            uicommand.OpenAllTaskAttachments(viewer=taskViewer,
-                                             settings=settings)
+            uicommand.AddAttachment(viewer=taskViewer, settings=settings),
+            uicommand.OpenAllAttachments(viewer=taskViewer,
+                                         settings=settings)
             )
         if settings.getboolean('feature', 'notes'):
             self.appendUICommands(
-                uicommand.TaskAddNote(viewer=taskViewer,
+                uicommand.AddNote(viewer=taskViewer,
                                       settings=settings))
         self.appendMenu(_('&Toggle category'),
                         ToggleCategoryMenu(mainwindow, categories=categories,
@@ -813,13 +808,12 @@ class CategoryPopupMenu(Menu):
             uicommand.Edit(viewer=categoryViewer),
             uicommand.Delete(viewer=categoryViewer),
             None,
-            uicommand.AddCategoryAttachment(viewer=categoryViewer,
-                                            settings=settings),
-            uicommand.OpenAllCategoryAttachments(viewer=categoryViewer,
-                                                 settings=settings))
+            uicommand.AddAttachment(viewer=categoryViewer, settings=settings),
+            uicommand.OpenAllAttachments(viewer=categoryViewer,
+                                         settings=settings))
         if settings.getboolean('feature', 'notes'):
             self.appendUICommands(
-                uicommand.CategoryAddNote(viewer=categoryViewer,
+                uicommand.AddNote(viewer=categoryViewer,
                                           settings=settings))
 
 
@@ -839,9 +833,9 @@ class NotePopupMenu(Menu):
             None,
             uicommand.Mail(viewer=noteViewer),
             None,
-            uicommand.AddNoteAttachment(viewer=noteViewer, settings=settings),
-            uicommand.OpenAllNoteAttachments(viewer=noteViewer,
-                                             settings=settings))
+            uicommand.AddAttachment(viewer=noteViewer, settings=settings),
+            uicommand.OpenAllAttachments(viewer=noteViewer,
+                                         settings=settings))
         self.appendMenu(_('&Toggle category'),
                         ToggleCategoryMenu(mainwindow, categories=categories,
                                            viewer=noteViewer),
@@ -904,5 +898,4 @@ class AttachmentPopupMenu(Menu):
         if settings.getboolean('feature', 'notes'):
             self.appendUICommands(
                 None,
-                uicommand.AttachmentAddNote(viewer=attachmentViewer,
-                                            settings=settings))
+                uicommand.AddNote(viewer=attachmentViewer, settings=settings))

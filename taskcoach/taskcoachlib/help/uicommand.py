@@ -23,6 +23,8 @@ from taskcoachlib import meta
 # At the moment this lists mostly the uicommands that have a keyboard shortcut 
 # because we need to be able to reuse the help text in the help dialog.
 
+addAttachment = _('Browse for files to add as attachment to the selected item(s)')
+addNote = _('Add a note to the selected item(s)')
 editCut = _('Cut the selected item(s) to the clipboard')
 editCopy = _('Copy the selected item(s) to the clipboard')
 editPaste = _('Paste item(s) from the clipboard')
@@ -41,6 +43,7 @@ fileSave = _('Save the current file')
 fileSaveAs = _('Save the current file under a new name')
 help = _('Help about the program')
 mailItem = _('Mail the selected item(s), using your default mailer')
+openAllAttachments = _('Open all attachments of the selected item(s)')
 print_ = _('Print the current file')
 printPageSetup = _('Setup the characteristics of the printer page')
 resetFilter = _('Show all items (reset all filters)')
