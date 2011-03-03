@@ -1344,7 +1344,7 @@ class NewTaskWithSelectedTasksAsDependencies(NeedsSelectedTasksMixin, TaskNew,
 class NewSubItem(NeedsOneSelectedCompositeItemMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
         kwargs['bitmap'] = 'newsub'
-        kwargs['menuText'] = _('New &subitem...') + '\tCtrl+INS' if '__WXMSW__' == wx.Platform else '\tShift+Ctrl+N'
+        kwargs['menuText'] = _('New &subitem...') + ('\tCtrl+INS' if '__WXMSW__' == wx.Platform else '\tShift+Ctrl+N')
         kwargs['helpText'] = _('Insert a new subitem of the selected item')
         super(NewSubItem, self).__init__(*args, **kwargs)
 
