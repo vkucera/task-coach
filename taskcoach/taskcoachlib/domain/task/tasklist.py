@@ -26,19 +26,10 @@ from taskcoachlib import help
 import task
 
 
-def accelerator(key, modifier=None, mswKey=None, mswModifier=None):
-    # Some accelerators only work on Windows (like INSERT)
-    if '__WXMSW__' == wx.Platform:
-        key = mswKey or key
-        modifier = mswModifier
-    shortCut = '+'.join([modifier, key]) if modifier else key
-    return u'\t%s'%shortCut
-
-
 class TaskList(categorizable.CategorizableContainer):
     # FIXME: TaskList should be called TaskCollection or TaskSet
 
-    newItemMenuText = _('&New task...') + accelerator('N', 'Ctrl', 'INS')
+    newItemMenuText = _('&New task...') + ('\tINSERT' if '__WXMAC__' != wx.Platform else '\tCtrl+N')
     newItemHelpText = help.taskNew
     
     def _nrInterestingTasks(self, isInteresting):

@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.11', 'March 2, 2011',
+Release('1.2.11', 'March 3, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Sometimes the total effort per period displayed in the effort
@@ -41,17 +41,15 @@ active in a short while. This can be done by hiding future tasks that start
 today, tomorrow, next week or next month, using the View->Filter menu.''')
         ],
     featuresChanged=[
-        Feature('''On Windows, the keyboard shortcuts for adding and deleting 
-tasks are now simply Insert and Delete. A new subtask can be added with 
-Shift-Insert. On Mac OS X and Linux, the Insert shortcut doesn't work for
-some reason so there a new task can be added with Ctrl-N and a new subtask
-with Shift-Ctrl-N.'''),
-        Feature('''Other keyboard shortcut improvements: The Delete keyboard 
-shortcut works for all viewers. Notes can be added to tasks and categories with 
-the Ctrl-B keyboard shortcut. Tasks and notes can be mailed with the Ctrl-M 
-keyboard shortcut. Attachments can be added with the Shift-Ctrl-A keyboard 
-shortcut and all attachments of an item can be opened with the Shift-Ctrl-O 
-keyboard shortcut.''')
+        Feature('''Keyboard shortcut improvements: On Windows and Linux, 
+the keyboard shortcut for adding a task is now simply Insert. A new subtask can 
+be added with Shift-Insert. On Mac OS X, the Insert shortcut doesn't work for 
+some reason so there a new task can be added with Cmd-N and a new subtask with 
+Shift-Cmd-N. The Delete keyboard shortcut works for all viewers. Notes can be 
+added to tasks and categories with the Ctrl-B keyboard shortcut. Tasks and notes 
+can be mailed with the Ctrl-M keyboard shortcut. Attachments can be added with 
+the Shift-Ctrl-A keyboard shortcut and all attachments of an item can be opened 
+with the Shift-Ctrl-O keyboard shortcut.''')
         ]
     ),
                 
