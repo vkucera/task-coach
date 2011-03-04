@@ -340,6 +340,13 @@ class NeedsSelectionMixin(object):
             self.viewer.curselection()
 
 
+class NeedsSelectedCategorizableMixin(object):
+    def enabled(self, event):
+        return super(NeedsSelectedCategorizableMixin, self).enabled(event) and \
+            (self.viewer.curselectionIsInstanceOf(task.Task) or \
+             self.viewer.curselectionIsInstanceOf(note.Note))
+
+
 class NeedsOneSelectedItemMixin(object):
     def enabled(self, event):
         return super(NeedsOneSelectedItemMixin, self).enabled(event) and \
@@ -390,6 +397,12 @@ class NeedsSelectedNoteOwnersMixin(NeedsSelectionMixin):
             (self.viewer.curselectionIsInstanceOf(task.Task) or \
              self.viewer.curselectionIsInstanceOf(category.Category))
 
+
+class NeedsSelectedNoteOwnersMixinWithNotes(NeedsSelectedNoteOwnersMixin):
+    def enabled(self, event):
+        return super(NeedsSelectedNoteOwnersMixinWithNotes, self).enabled(event) and \
+            any([item.notes() for item in self.viewer.curselection()])
+            
 
 class NeedsSelectedAttachmentOwnersMixin(NeedsSelectionMixin):
     def enabled(self, event):
@@ -1516,7 +1529,7 @@ class EditSubject(ViewerCommand):
             editSubject.do()
         
 
-class ToggleCategory(NeedsSelectionMixin, ViewerCommand):
+class ToggleCategory(NeedsSelectedCategorizableMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
         self.category = kwargs.pop('category')
         subject = self.category.subject()
@@ -1547,27 +1560,13 @@ class ToggleCategory(NeedsSelectionMixin, ViewerCommand):
 
     def enabled(self, event):
         viewerHasSelection = super(ToggleCategory, self).enabled(event)
-        viewerIsNotShowingCategories = not self.viewer.isShowingCategories()
-        if viewerHasSelection and viewerIsNotShowingCategories:
-            selectionCategories = self.viewer.curselection()[0].categories()
-            for ancestor in self.category.ancestors():
-                if ancestor.isMutualExclusive() and ancestor not in selectionCategories:
-                    return False # Not all mutual exclusive ancestors are checked
-            return True # All mutual exclusive ancestors are checked
-        else:
-            return False # Either viewer is not showing categories or no selection
-
-
-class TaskToggleCategory(ToggleCategory):
-    def enabled(self, event):
-        return super(TaskToggleCategory, self).enabled(event) and \
-            self.viewer.isShowingTasks()
-
-
-class NoteToggleCategory(ToggleCategory):
-    def enabled(self, event):        
-        return super(NoteToggleCategory, self).enabled(event) and \
-            self.viewer.isShowingNotes()
+        if not viewerHasSelection or self.viewer.isShowingCategories():
+            return False
+        selectionCategories = self.viewer.curselection()[0].categories()
+        for ancestor in self.category.ancestors():
+            if ancestor.isMutualExclusive() and ancestor not in selectionCategories:
+                return False # Not all mutual exclusive ancestors are checked
+        return True # All mutual exclusive ancestors are checked
     
 
 class Mail(ViewerCommand):
@@ -1629,6 +1628,21 @@ class AddNote(NeedsSelectedNoteOwnersMixin, ViewerCommand, SettingsCommand):
             self.mainWindow().taskFile, bitmap=self.bitmap)
         editDialog.Show(show)
         return editDialog # for testing purposes
+    
+    
+class OpenAllNotes(NeedsSelectedNoteOwnersMixinWithNotes, ViewerCommand, SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        super(OpenAllNotes, self).__init__(menuText=_('Open all notes...\tShift+Ctrl+B'),
+            helpText=help.openAllNotes, bitmap='edit', *args, **kwargs)
+        
+    def doCommand(self, event):
+        for item in self.viewer.curselection():
+            for note in item.notes():
+                editDialog = dialog.editor.NoteEditor(self.mainWindow(),
+                    command.EditNoteCommand(item.notes(), [note]), self.settings,
+                    self.viewer.presentation(), self.mainWindow().taskFile,
+                    bitmap=self.bitmap)
+                editDialog.Show()
 
 
 class EffortNew(NeedsAtLeastOneTaskMixin, ViewerCommand, EffortListCommand, 
@@ -1778,7 +1792,8 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
                 
     def onEffortAdded(self, event):
         self.__trackedEfforts.extend(self.__filterTrackedEfforts(event.values()))
-        
+        self.updateUI()
+
     def onEffortRemoved(self, event):
         for effort in event.values():
             if effort in self.__trackedEfforts:
@@ -1820,7 +1835,8 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
         paused = self.anyStoppedEfforts() and not self.anyTrackedEfforts()
         self.updateToolState(not paused)
         bitmapName = self.bitmap if paused else self.bitmap2
-        if bitmapName != self.__currentBitmap:
+        menuText = self.getMenuText(paused)
+        if (bitmapName != self.__currentBitmap) or bool([item for item in self.menuItems if item.GetItemLabel() != menuText]):
             self.__currentBitmap = bitmapName
             self.updateToolBitmap(bitmapName)
             self.updateToolHelp()

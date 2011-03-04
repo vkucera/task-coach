@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.11', 'March 3, 2011',
+Release('1.2.11', 'March 4, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Sometimes the total effort per period displayed in the effort
@@ -49,7 +49,12 @@ Shift-Cmd-N. The Delete keyboard shortcut works for all viewers. Notes can be
 added to tasks and categories with the Ctrl-B keyboard shortcut. Tasks and notes 
 can be mailed with the Ctrl-M keyboard shortcut. Attachments can be added with 
 the Shift-Ctrl-A keyboard shortcut and all attachments of an item can be opened 
-with the Shift-Ctrl-O keyboard shortcut.''')
+with the Shift-Ctrl-O keyboard shortcut.'''),
+        Feature('''Rearranged the menu's: Instead of a Task, Category, Effort
+and Note menu, there are now a New menu for creating new items and an Actions
+menu for applying actions such as marking a task completed, mailing an item
+and starting and stopping effort tracking. The Edit and Delete menu items 
+are now placed in the Edit menu.''' )
         ]
     ),
                 

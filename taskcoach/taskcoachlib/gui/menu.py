@@ -179,16 +179,8 @@ class MainMenu(wx.MenuBar):
                              viewerContainer), _('&Edit'))
         self.Append(ViewMenu(mainwindow, settings, viewerContainer, taskFile),
                     _('&View'))
-        self.Append(TaskMenu(mainwindow, settings, taskFile, viewerContainer),
-                    _('&Task'))
-        if settings.getboolean('feature', 'effort'):
-            self.Append(EffortMenu(mainwindow, settings, taskFile, 
-                        viewerContainer), _('Eff&ort'))
-        self.Append(CategoryMenu(mainwindow, settings, taskFile.categories(),
-                                 viewerContainer), _('&Category'))
-        if settings.getboolean('feature', 'notes'):
-            self.Append(NoteMenu(mainwindow, settings, taskFile,
-                                 viewerContainer), _('&Note'))
+        self.Append(NewMenu(mainwindow, settings, taskFile, viewerContainer), _('&New'))
+        self.Append(ActionMenu(mainwindow, settings, taskFile, viewerContainer), _('&Actions'))
         self.Append(HelpMenu(mainwindow, settings), _('&Help'))
 
        
@@ -322,6 +314,9 @@ class EditMenu(Menu):
             uicommand.EditCopy(viewer=viewerContainer, id=wx.ID_COPY),
             uicommand.EditPaste(),
             uicommand.EditPasteAsSubItem(viewer=viewerContainer),
+            None,
+            uicommand.Edit(viewer=viewerContainer),
+            uicommand.Delete(viewer=viewerContainer),
             None)
         # Leave sufficient room for command names in the Undo and Redo menu items:
         self.appendMenu(_('&Select')+' '*50,
@@ -473,36 +468,24 @@ class ToolBarMenu(Menu):
         self.appendUICommands(*toolbarCommands)
 
 
-class TaskMenu(Menu):
+class NewMenu(Menu):
     def __init__(self, mainwindow, settings, taskFile, viewerContainer):
-        super(TaskMenu, self).__init__(mainwindow)
+        super(NewMenu, self).__init__(mainwindow)
         tasks = taskFile.tasks()
-        categories = taskFile.categories()
         self.appendMenu(_('&New task'),
             NewTaskMenu(mainwindow, tasks, viewerContainer, settings), 'new')
         self.appendUICommands(
-            None,
-            uicommand.Edit(viewer=viewerContainer),
-            uicommand.TaskToggleCompletion(viewer=viewerContainer))
-        self.appendMenu(_('&Priority'), 
-                        TaskPriorityMenu(mainwindow, tasks, viewerContainer))
-        self.appendUICommands(
-            None,
-            uicommand.Delete(viewer=viewerContainer),
-            None,
-            uicommand.Mail(viewer=viewerContainer),
-            uicommand.AddAttachment(viewer=viewerContainer, settings=settings),
-            uicommand.OpenAllAttachments(viewer=viewerContainer,
-                                         settings=settings))
+            uicommand.EffortNew(viewer=viewerContainer, 
+                                effortList=taskFile.efforts(), taskList=tasks, 
+                                settings=settings),
+            uicommand.CategoryNew(categories=taskFile.categories(), 
+                                  settings=settings))
         if settings.getboolean('feature', 'notes'):
             self.appendUICommands(
-                uicommand.AddNote(viewer=viewerContainer,
-                                      settings=settings)
-                )
-        self.appendMenu(_('&Toggle category'),
-                        ToggleCategoryMenu(mainwindow, categories=categories,
-                                           viewer=viewerContainer),
-                        'folder_blue_arrow_icon')
+                uicommand.NoteNew(notes=taskFile.notes(), settings=settings))
+        self.appendUICommands(
+            None,
+            uicommand.NewSubItem(viewer=viewerContainer))
 
 
 class NewTaskMenu(Menu):
@@ -510,7 +493,6 @@ class NewTaskMenu(Menu):
         super(NewTaskMenu, self).__init__(mainwindow)
         self.appendUICommands(
             uicommand.TaskNew(taskList=taskList, settings=settings),
-            uicommand.NewSubItem(viewer=viewerContainer),
             uicommand.NewTaskWithSelectedTasksAsPrerequisites(taskList=taskList, 
                 viewer=viewerContainer, settings=settings),
             uicommand.NewTaskWithSelectedTasksAsDependencies(taskList=taskList, 
@@ -518,6 +500,43 @@ class NewTaskMenu(Menu):
         self.appendMenu(_('New task from &template'),
             TaskTemplateMenu(mainwindow, taskList=taskList, settings=settings),
             'newtmpl')
+        
+
+
+class ActionMenu(Menu):
+    def __init__(self, mainwindow, settings, taskFile, viewerContainer):
+        super(ActionMenu, self).__init__(mainwindow)
+        tasks = taskFile.tasks()
+        efforts = taskFile.efforts()
+        categories = taskFile.categories()
+        self.appendUICommands(
+            uicommand.AddAttachment(viewer=viewerContainer, settings=settings),
+            uicommand.OpenAllAttachments(viewer=viewerContainer,
+                                         settings=settings),
+            None)
+        if settings.getboolean('feature', 'notes'):
+            self.appendUICommands(
+                uicommand.AddNote(viewer=viewerContainer, settings=settings),
+                uicommand.OpenAllNotes(viewer=viewerContainer, settings=settings),
+                None)
+        self.appendUICommands(
+            uicommand.Mail(viewer=viewerContainer),
+            None)
+        self.appendMenu(_('&Toggle category'),
+                        ToggleCategoryMenu(mainwindow, categories=categories,
+                                           viewer=viewerContainer),
+                        'folder_blue_arrow_icon')
+
+        self.appendUICommands(
+            None,
+            uicommand.TaskToggleCompletion(viewer=viewerContainer))
+        self.appendMenu(_('Change &priority'), 
+                        TaskPriorityMenu(mainwindow, tasks, viewerContainer))
+        if settings.getboolean('feature', 'effort'):
+            self.appendUICommands(
+                None,
+                uicommand.EffortStart(viewer=viewerContainer, taskList=tasks),
+                uicommand.EffortStop(effortList=efforts, taskList=tasks))
 
 
 class TaskPriorityMenu(Menu):
@@ -528,62 +547,7 @@ class TaskPriorityMenu(Menu):
             uicommand.TaskIncPriority(**kwargs),
             uicommand.TaskDecPriority(**kwargs),
             uicommand.TaskMaxPriority(**kwargs),
-            uicommand.TaskMinPriority(**kwargs))
-        
-            
-class EffortMenu(Menu):
-    def __init__(self, mainwindow, settings, taskFile, viewerContainer):
-        super(EffortMenu, self).__init__(mainwindow)
-        tasks = taskFile.tasks()
-        efforts = taskFile.efforts()
-        self.appendUICommands(
-            uicommand.EffortNew(viewer=viewerContainer, effortList=efforts,
-                                taskList=tasks, settings=settings),
-            uicommand.Edit(viewer=viewerContainer),
-            uicommand.Delete(viewer=viewerContainer),
-            None,
-            uicommand.EffortStart(viewer=viewerContainer, taskList=tasks),
-            uicommand.EffortStop(effortList=efforts, taskList=tasks))
-       
-
-class CategoryMenu(Menu):
-    def __init__(self, mainwindow, settings, categories, viewerContainer):
-        super(CategoryMenu, self).__init__(mainwindow)
-        self.appendUICommands(
-            uicommand.CategoryNew(categories=categories, settings=settings),
-            uicommand.NewSubItem(viewer=viewerContainer),
-            uicommand.Edit(viewer=viewerContainer),
-            uicommand.Delete(viewer=viewerContainer),
-            None,
-            uicommand.AddAttachment(viewer=viewerContainer, settings=settings),
-            uicommand.OpenAllAttachments(viewer=viewerContainer,
-                                         settings=settings))
-        if settings.getboolean('feature', 'notes'):
-            self.appendUICommands(
-                uicommand.AddNote(viewer=viewerContainer,
-                                          settings=settings)
-                )
-
-        
-class NoteMenu(Menu):
-    def __init__(self, mainwindow, settings, taskFile, viewerContainer):
-        super(NoteMenu, self).__init__(mainwindow)
-        notes = taskFile.notes()
-        categories = taskFile.categories()
-        self.appendUICommands(
-            uicommand.NoteNew(notes=notes, settings=settings),
-            uicommand.NewSubItem(viewer=viewerContainer),
-            uicommand.Edit(viewer=viewerContainer),
-            uicommand.Delete(viewer=viewerContainer),
-            uicommand.Mail(viewer=viewerContainer),
-            None,
-            uicommand.AddAttachment(viewer=viewerContainer, settings=settings),
-            uicommand.OpenAllAttachments(viewer=viewerContainer,
-                                         settings=settings))
-        self.appendMenu(_('&Toggle category'),
-                        ToggleCategoryMenu(mainwindow, categories=categories,
-                                           viewer=viewerContainer),
-                        'folder_blue_arrow_icon')
+            uicommand.TaskMinPriority(**kwargs))            
 
         
 class HelpMenu(Menu):
@@ -630,12 +594,6 @@ class ToggleCategoryMenu(DynamicMenu):
     def __init__(self, mainwindow, categories, viewer): # pylint: disable-msg=W0621
         self.categories = categories
         self.viewer = viewer
-        if viewer.isViewerContainer():
-            self.uiCommandClass = uicommand.ToggleCategory
-        elif viewer.isShowingTasks():
-            self.uiCommandClass = uicommand.TaskToggleCategory
-        else:
-            self.uiCommandClass = uicommand.NoteToggleCategory
         super(ToggleCategoryMenu, self).__init__(mainwindow)
         
     def registerForMenuUpdate(self):
@@ -655,7 +613,7 @@ class ToggleCategoryMenu(DynamicMenu):
         categories = categories[:]
         categories.sort(key=lambda category: category.subject())
         for category in categories:
-            uiCommand = self.uiCommandClass(category=category, viewer=self.viewer)
+            uiCommand = uicommand.ToggleCategory(category=category, viewer=self.viewer)
             uiCommand.addToMenu(menu, self._window)
         categoriesWithChildren = [category for category in categories if category.children()]
         if categoriesWithChildren:
