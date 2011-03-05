@@ -86,7 +86,7 @@ class UICommand(object):
         menuItem = wx.MenuItem(menu, self.id, self.menuText, self.helpText, 
             self.kind)
         self.menuItems.append(menuItem)
-        self.__addBitmapToMenuItem(menuItem)
+        self.addBitmapToMenuItem(menuItem)
         if position is None:
             menu.AppendItem(menuItem)
         else:
@@ -94,7 +94,7 @@ class UICommand(object):
         self.bind(window, self.id)
         return self.id
     
-    def __addBitmapToMenuItem(self, menuItem):
+    def addBitmapToMenuItem(self, menuItem):
         if self.bitmap2 and self.kind == wx.ITEM_CHECK and '__WXGTK__' != wx.Platform:
             bitmap1 = self.__getBitmap(self.bitmap) 
             bitmap2 = self.__getBitmap(self.bitmap2)
@@ -164,6 +164,22 @@ class UICommand(object):
         longHelp = self.getHelpText()
         if longHelp != self.toolbar.GetToolLongHelp(self.id):
             self.toolbar.SetToolLongHelp(self.id, longHelp)
+            
+    def updateMenuText(self, menuText):
+        self.menuText = menuText
+        if '__WXMSW__' == wx.Platform:
+            for menuItem in self.menuItems[:]:
+                menu = menuItem.GetMenu()
+                pos = menu.GetMenuItems().index(menuItem)
+                newMenuItem = wx.MenuItem(menu, self.id, menuText, self.helpText, self.kind)
+                self.addBitmapToMenuItem(newMenuItem)
+                menu.DeleteItem(menuItem)
+                self.menuItems.remove(menuItem)
+                self.menuItems.append(newMenuItem)
+                menu.InsertItem(pos, newMenuItem)
+        else:
+            for menuItem in self.menuItems:
+                menuItem.SetItemLabel(menuText)
 
     def mainWindow(self):
         return wx.GetApp().TopWindow
@@ -768,7 +784,7 @@ class EditUndo(UICommand):
             patterns.CommandHistory().undo()
 
     def onUpdateUI(self, event):
-        event.SetText(getUndoMenuText())
+        self.updateMenuText(getUndoMenuText())
         super(EditUndo, self).onUpdateUI(event)
 
     def enabled(self, event):
@@ -797,7 +813,7 @@ class EditRedo(UICommand):
             patterns.CommandHistory().redo()
 
     def onUpdateUI(self, event):
-        event.SetText(getRedoMenuText())
+        self.updateMenuText(getRedoMenuText())
         super(EditRedo, self).onUpdateUI(event)
 
     def enabled(self, event):
@@ -1355,16 +1371,30 @@ class NewTaskWithSelectedTasksAsDependencies(NeedsSelectedTasksMixin, TaskNew,
     
 
 class NewSubItem(NeedsOneSelectedCompositeItemMixin, ViewerCommand):
+    shortcut = ('\tCtrl+INS' if '__WXMSW__' == wx.Platform else '\tShift+Ctrl+N')
+    defaultMenuText = _('New &subitem...') + shortcut   
+    labels = {task.Task: _('New &subtask...'),
+              note.Note: _('New &subnote...'),
+              category.Category: _('New &subcategory...')}
+            
     def __init__(self, *args, **kwargs):
-        kwargs['bitmap'] = 'newsub'
-        kwargs['menuText'] = _('New &subitem...') + ('\tCtrl+INS' if '__WXMSW__' == wx.Platform else '\tShift+Ctrl+N')
-        kwargs['helpText'] = _('Insert a new subitem of the selected item')
-        super(NewSubItem, self).__init__(*args, **kwargs)
-
+        super(NewSubItem, self).__init__(menuText=self.defaultMenuText,
+            helpText=_('Insert a new subitem of the selected item'),
+            bitmap='newsub', *args, **kwargs)
+    
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
-        newSubItemDialog = self.viewer.newSubItemDialog(bitmap=self.bitmap)
-        newSubItemDialog.Show(show)
+        self.viewer.newSubItemDialog(bitmap=self.bitmap).Show(show)
+        
+    def onUpdateUI(self, event):
+        super(NewSubItem, self).onUpdateUI(event)
+        self.updateMenuText(self.__menuText())
 
+    def __menuText(self):
+        for class_ in self.labels:
+            if self.viewer.curselectionIsInstanceOf(class_):
+                return self.labels[class_] + self.shortcut
+        return self.defaultMenuText
+    
 
 class TaskToggleCompletion(NeedsSelectedTasksMixin, ViewerCommand):
     defaultMenuText = _('&Mark task completed\tCtrl+RETURN')
@@ -1761,7 +1791,7 @@ class EffortStartButton(PopupButtonMixin, TaskListCommand):
     
 
 class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
-    defaultMenuText = _('Stop tracking or resume tracking\tShift+Ctrl+T')
+    defaultMenuText = _('Stop tracking or resume tracking effort\tShift+Ctrl+T')
     defaultHelpText = help.effortStopOrResume
     stopMenuText = _('St&op tracking %s\tShift+Ctrl+T')
     stopHelpText = _('Stop tracking effort for the active task(s)')

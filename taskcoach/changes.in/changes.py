@@ -26,7 +26,9 @@ Release('1.2.11', 'March 5, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Sometimes the total effort per period displayed in the effort
-viewer would be wrong.''', '3146576')
+viewer would be wrong.''', '3146576'),
+        Bug('''On Windows, the icons of the undo and redo menu items would 
+disappear after their first use.''')
         ],
     featuresAdded=[
         Feature('''Import tasks from CSV file.'''),

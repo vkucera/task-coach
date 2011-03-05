@@ -530,7 +530,7 @@ class ActionMenu(Menu):
         self.appendUICommands(
             None,
             uicommand.TaskToggleCompletion(viewer=viewerContainer))
-        self.appendMenu(_('Change &priority'), 
+        self.appendMenu(_('Change task &priority'), 
                         TaskPriorityMenu(mainwindow, tasks, viewerContainer))
         if settings.getboolean('feature', 'effort'):
             self.appendUICommands(
