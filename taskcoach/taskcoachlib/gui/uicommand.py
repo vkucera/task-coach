@@ -340,7 +340,7 @@ class NeedsSelectionMixin(object):
             self.viewer.curselection()
 
 
-class NeedsSelectedCategorizableMixin(object):
+class NeedsSelectedCategorizableMixin(NeedsSelectionMixin):
     def enabled(self, event):
         return super(NeedsSelectedCategorizableMixin, self).enabled(event) and \
             (self.viewer.curselectionIsInstanceOf(task.Task) or \
