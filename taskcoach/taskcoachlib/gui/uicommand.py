@@ -1822,7 +1822,6 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
                 
     def onEffortAdded(self, event):
         self.__trackedEfforts.extend(self.__filterTrackedEfforts(event.values()))
-        self.updateUI()
 
     def onEffortRemoved(self, event):
         for effort in event.values():
