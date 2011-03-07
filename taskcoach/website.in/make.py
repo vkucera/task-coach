@@ -39,7 +39,7 @@ u'''        <P><IMG SRC="images/banner.png" ALT="Banner image"></P>
         Often, tasks and other things todo consist of several activities.
         %(name)s is designed to deal with composite tasks. In addition, it offers
         effort tracking, categories, and notes. %(name)s is available for Windows,
-        Mac OS X, Linux, and iPhone and iPod Touch.</P>
+        Mac OS X, Linux, BSD, and iPhone and iPod Touch.</P>
         <P>%(name)s is licensed under the <A HREF="license.html">%(license)s</A> 
         and free to use for both individuals and companies. 
         <P>%(name)s is developed by %(author_unicode)s, with
@@ -270,6 +270,19 @@ pages['download_for_linux'] = sep.join([download_header(platform='Linux',
                                         ubuntu_py26, ubuntu_py25, debian,
                                         fedora14, fedora12, gentoo, opensuse,
                                         redhat_el4and5, linux])
+
+
+freeBSD = download_table(image='freebsd',
+                        download_url='http://www.freebsd.org/cgi/cvsweb.cgi/ports/deskutils/taskcoach/',
+                        package_type='Port',
+                        platform='FreeBSD', platform_lower='freebsd',
+                        platform_versions_supported='FreeBSD 8.2 and later',
+                        prerequisites='none',
+                        installation='Update your ports collection and then run:<br><tt>cd /usr/ports/deskutils/taskcoach &amp;&amp; make install clean</tt>')
+
+pages['download_for_bsd'] = sep.join([download_header(platform='FreeBSD',
+                                                      release='%(version)s'), 
+                                                      freeBSD])
 
 
 iphone = download_table(image='appstore',

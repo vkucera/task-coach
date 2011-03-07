@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.11', 'March 5, 2011',
+Release('1.2.11', 'March 7, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Sometimes the total effort per period displayed in the effort
@@ -57,6 +57,10 @@ and Note menu, there are now a New menu for creating new items and an Actions
 menu for applying actions such as marking a task completed, mailing an item
 and starting and stopping effort tracking. The Edit and Delete menu items 
 are now placed in the Edit menu.''' )
+        ],
+    distributionsChanged=[
+        Distribution('''Task Coach was added to the Ports collection of FreeBSD 
+thanks to Kevin Lo. See the download section of the Task Coach website.''')
         ]
     ),
                 
