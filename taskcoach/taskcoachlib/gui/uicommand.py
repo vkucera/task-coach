@@ -411,7 +411,8 @@ class NeedsSelectedNoteOwnersMixin(NeedsSelectionMixin):
     def enabled(self, event):
         return super(NeedsSelectedNoteOwnersMixin, self).enabled(event) and \
             (self.viewer.curselectionIsInstanceOf(task.Task) or \
-             self.viewer.curselectionIsInstanceOf(category.Category))
+             self.viewer.curselectionIsInstanceOf(category.Category) or \
+             self.viewer.curselectionIsInstanceOf(attachment.Attachment))
 
 
 class NeedsSelectedNoteOwnersMixinWithNotes(NeedsSelectedNoteOwnersMixin):

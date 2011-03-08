@@ -210,13 +210,11 @@ class FileMenu(Menu):
             uicommand.PrintPreview(viewer=viewerContainer, settings=settings),
             uicommand.Print(viewer=viewerContainer, settings=settings),
             None)
+        self.appendUICommands(
+            uicommand.FileImportCSV(iocontroller=iocontroller))
         self.appendMenu(_('&Export'),
                         ExportMenu(mainwindow, iocontroller, viewerContainer),
                         'export')
-        self.appendUICommands(
-            None,
-            uicommand.FileImportCSV(iocontroller=iocontroller)
-            )
         if settings.getboolean('feature', 'syncml'):
             try:
                 import taskcoachlib.syncml.core # pylint: disable-msg=W0612
@@ -469,12 +467,22 @@ class NewMenu(Menu):
     def __init__(self, mainwindow, settings, taskFile, viewerContainer):
         super(NewMenu, self).__init__(mainwindow)
         tasks = taskFile.tasks()
-        self.appendMenu(_('&New task'),
-            NewTaskMenu(mainwindow, tasks, viewerContainer, settings), 'new')
         self.appendUICommands(
-            uicommand.EffortNew(viewer=viewerContainer, 
-                                effortList=taskFile.efforts(), taskList=tasks, 
-                                settings=settings),
+            uicommand.TaskNew(taskList=tasks, settings=settings),
+            uicommand.NewTaskWithSelectedTasksAsPrerequisites(taskList=tasks, 
+                viewer=viewerContainer, settings=settings),
+            uicommand.NewTaskWithSelectedTasksAsDependencies(taskList=tasks, 
+                viewer=viewerContainer, settings=settings))
+        self.appendMenu(_('New task from &template'),
+            TaskTemplateMenu(mainwindow, taskList=tasks, settings=settings),
+            'newtmpl')
+        self.appendUICommands(None)
+        if settings.getboolean('feature', 'effort'):
+            self.appendUICommands(
+                uicommand.EffortNew(viewer=viewerContainer, 
+                                    effortList=taskFile.efforts(), 
+                                    taskList=tasks, settings=settings))
+        self.appendUICommands(
             uicommand.CategoryNew(categories=taskFile.categories(), 
                                   settings=settings))
         if settings.getboolean('feature', 'notes'):
@@ -483,21 +491,6 @@ class NewMenu(Menu):
         self.appendUICommands(
             None,
             uicommand.NewSubItem(viewer=viewerContainer))
-
-
-class NewTaskMenu(Menu):
-    def __init__(self, mainwindow, taskList, viewerContainer, settings):
-        super(NewTaskMenu, self).__init__(mainwindow)
-        self.appendUICommands(
-            uicommand.TaskNew(taskList=taskList, settings=settings),
-            uicommand.NewTaskWithSelectedTasksAsPrerequisites(taskList=taskList, 
-                viewer=viewerContainer, settings=settings),
-            uicommand.NewTaskWithSelectedTasksAsDependencies(taskList=taskList, 
-                viewer=viewerContainer, settings=settings))
-        self.appendMenu(_('New task from &template'),
-            TaskTemplateMenu(mainwindow, taskList=taskList, settings=settings),
-            'newtmpl')
-        
 
 
 class ActionMenu(Menu):
@@ -682,39 +675,40 @@ class TaskPopupMenu(Menu):
             uicommand.EditCopy(viewer=taskViewer),
             uicommand.EditPaste(),
             uicommand.EditPasteAsSubItem(viewer=taskViewer),
-            None)
-        self.appendMenu(_('&New task'),
-            NewTaskMenu(mainwindow, tasks, taskViewer, settings), 'new')
-        self.appendUICommands(
             None,
             uicommand.Edit(viewer=taskViewer),
-            uicommand.TaskToggleCompletion(viewer=taskViewer))
-        self.appendMenu(_('&Priority'), 
-                        TaskPriorityMenu(mainwindow, tasks, taskViewer))
-        self.appendUICommands(
-            None,
             uicommand.Delete(viewer=taskViewer),
             None,
-            uicommand.Mail(viewer=taskViewer),
             uicommand.AddAttachment(viewer=taskViewer, settings=settings),
             uicommand.OpenAllAttachments(viewer=taskViewer,
-                                         settings=settings)
-            )
+                                         settings=settings),
+            None)
         if settings.getboolean('feature', 'notes'):
             self.appendUICommands(
                 uicommand.AddNote(viewer=taskViewer,
-                                      settings=settings))
+                                      settings=settings),
+                uicommand.OpenAllNotes(viewer=taskViewer, settings=settings))
+        self.appendUICommands(
+            None,
+            uicommand.Mail(viewer=taskViewer))
         self.appendMenu(_('&Toggle category'),
                         ToggleCategoryMenu(mainwindow, categories=categories,
                                            viewer=taskViewer),
                         'folder_blue_arrow_icon')
+        self.appendUICommands(
+            None,            
+            uicommand.TaskToggleCompletion(viewer=taskViewer))
+        self.appendMenu(_('&Priority'), 
+                        TaskPriorityMenu(mainwindow, tasks, taskViewer))
         if settings.getboolean('feature', 'effort'):
             self.appendUICommands(
                 None,
                 uicommand.EffortNew(viewer=taskViewer, effortList=efforts,
                                     taskList=tasks, settings=settings),
-                uicommand.EffortStart(viewer=taskViewer, taskList=tasks),
-                uicommand.EffortStop(effortList=efforts, taskList=tasks))
+                uicommand.EffortStart(viewer=taskViewer, taskList=tasks))
+        self.appendUICommands(
+            None,
+            uicommand.NewSubItem(viewer=taskViewer))
 
 
 class EffortPopupMenu(Menu):
@@ -725,12 +719,11 @@ class EffortPopupMenu(Menu):
             uicommand.EditCopy(viewer=effortViewer),
             uicommand.EditPaste(),
             None,
-            uicommand.EffortNew(viewer=effortViewer, effortList=efforts,
-                                taskList=tasks, settings=settings),
             uicommand.Edit(viewer=effortViewer),
             uicommand.Delete(viewer=effortViewer),
             None,
-            uicommand.EffortStop(effortList=efforts, taskList=tasks))
+            uicommand.EffortNew(viewer=effortViewer, effortList=efforts,
+                                taskList=tasks, settings=settings))
 
 
 class CategoryPopupMenu(Menu):
@@ -743,7 +736,22 @@ class CategoryPopupMenu(Menu):
             uicommand.EditCut(viewer=categoryViewer),
             uicommand.EditCopy(viewer=categoryViewer),
             uicommand.EditPaste(),
-            uicommand.EditPasteAsSubItem(viewer=categoryViewer))
+            uicommand.EditPasteAsSubItem(viewer=categoryViewer),
+            None,
+            uicommand.Edit(viewer=categoryViewer),
+            uicommand.Delete(viewer=categoryViewer),
+            None,
+            uicommand.AddAttachment(viewer=categoryViewer, settings=settings),
+            uicommand.OpenAllAttachments(viewer=categoryViewer,
+                                         settings=settings))
+        if settings.getboolean('feature', 'notes'):
+            self.appendUICommands(
+                None,
+                uicommand.AddNote(viewer=categoryViewer, settings=settings),
+                uicommand.OpenAllNotes(viewer=categoryViewer, settings=settings))
+        self.appendUICommands(
+            None, 
+            uicommand.Mail(viewer=categoryViewer))
         if not localOnly:
             self.appendUICommands(
                 None,
@@ -758,18 +766,7 @@ class CategoryPopupMenu(Menu):
                         viewer=categoryViewer))
         self.appendUICommands(
             None,
-            uicommand.CategoryNew(categories=categories, settings=settings),
-            uicommand.NewSubItem(viewer=categoryViewer),
-            uicommand.Edit(viewer=categoryViewer),
-            uicommand.Delete(viewer=categoryViewer),
-            None,
-            uicommand.AddAttachment(viewer=categoryViewer, settings=settings),
-            uicommand.OpenAllAttachments(viewer=categoryViewer,
-                                         settings=settings))
-        if settings.getboolean('feature', 'notes'):
-            self.appendUICommands(
-                uicommand.AddNote(viewer=categoryViewer,
-                                          settings=settings))
+            uicommand.NewSubItem(viewer=categoryViewer))
 
 
 class NotePopupMenu(Menu):
@@ -781,20 +778,21 @@ class NotePopupMenu(Menu):
             uicommand.EditPaste(),
             uicommand.EditPasteAsSubItem(viewer=noteViewer),
             None,
-            uicommand.NoteNew(notes=notes, settings=settings),
-            uicommand.NewSubItem(viewer=noteViewer),
             uicommand.Edit(viewer=noteViewer),
             uicommand.Delete(viewer=noteViewer),
             None,
-            uicommand.Mail(viewer=noteViewer),
-            None,
             uicommand.AddAttachment(viewer=noteViewer, settings=settings),
             uicommand.OpenAllAttachments(viewer=noteViewer,
-                                         settings=settings))
+                                         settings=settings),
+            None,
+            uicommand.Mail(viewer=noteViewer))
         self.appendMenu(_('&Toggle category'),
                         ToggleCategoryMenu(mainwindow, categories=categories,
                                            viewer=noteViewer),
                         'folder_blue_arrow_icon')
+        self.appendUICommands(
+            None,
+            uicommand.NewSubItem(viewer=noteViewer))
 
 
 class ColumnPopupMenuMixin(object):
@@ -843,14 +841,14 @@ class AttachmentPopupMenu(Menu):
             uicommand.EditCopy(viewer=attachmentViewer),
             uicommand.EditPaste(),
             None,
-            uicommand.AttachmentNew(attachments=attachments, settings=settings),
             uicommand.Edit(viewer=attachmentViewer),
-            uicommand.Delete(viewer=attachmentViewer),
-            uicommand.AttachmentOpen(viewer=attachmentViewer, attachments=attachments, 
-                                     settings=settings),
-            )
-
+            uicommand.Delete(viewer=attachmentViewer))
         if settings.getboolean('feature', 'notes'):
             self.appendUICommands(
                 None,
-                uicommand.AddNote(viewer=attachmentViewer, settings=settings))
+                uicommand.AddNote(viewer=attachmentViewer, settings=settings),
+                uicommand.OpenAllNotes(viewer=attachmentViewer, settings=settings))
+        self.appendUICommands(
+            None,
+            uicommand.AttachmentOpen(viewer=attachmentViewer, attachments=attachments, 
+                                     settings=settings))
