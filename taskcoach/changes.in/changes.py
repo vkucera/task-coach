@@ -28,7 +28,9 @@ Release('1.2.11', 'March 8, 2011',
         Bug('''Sometimes the total effort per period displayed in the effort
 viewer would be wrong.''', '3146576'),
         Bug('''On Windows, the icons of the undo and redo menu items would 
-disappear after their first use.''')
+disappear after their first use.'''),
+        Bug('''Correctly remember the main window position when closing 
+Task Coach while the main window is minimized.''', '3199529')
         ],
     featuresAdded=[
         Feature('''Import tasks from CSV file.'''),
