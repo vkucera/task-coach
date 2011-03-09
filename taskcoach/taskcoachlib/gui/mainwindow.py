@@ -96,11 +96,12 @@ class WindowDimensionsTracker(object):
         event.Skip()
         
     def onChangePosition(self, event):
-        # Ignore the EVT_MOVE when the window is maximized. Note how this
-        # depends on the EVT_MAXIMIZE being sent before the EVT_MOVE.
         if not self._window.IsMaximized():
-            self.setSetting('position', self._window.GetPosition())
             self.setSetting('maximized', False)
+            if not self._window.IsIconized():
+                # Only save position when the window is not maximized 
+                # *and* not minimized
+                self.setSetting('position', self._window.GetPosition())
         event.Skip()
         
     def onMaximize(self, event):

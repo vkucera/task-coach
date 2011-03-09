@@ -23,10 +23,13 @@ import task
 
 class ViewFilter(base.Filter):
     def __init__(self, *args, **kwargs):
-        self.__dueDateTimeFilter = self.__stringToDueDateTime(kwargs.pop('dueDateTimeFilter', 
-                                                                         'Unlimited'))
-        self.__hideCompletedTasks = kwargs.pop('hideCompletedTasks', False)
-        self.__hideInactiveTasks = kwargs.pop('hideInactiveTasks', False)
+        self.__dueDateTimeFilter = self.__stringToDueDateTimeFilter(kwargs.pop('dueDateTimeFilter', 
+                                                                               'Never'))
+        self.__completionDateTimeFilter = self.__stringToCompletionDateTimeFilter(kwargs.pop('completionDateTimeFilter',
+                                                                                             'Never'))
+        self.__startDateTimeFilterString = kwargs.pop('startDateTimeFilter', 
+                                                      'Never')
+        self.__startDateTimeFilter = self.__stringToStartDateTimeFilter(self.__startDateTimeFilterString)
         self.__hideActiveTasks = kwargs.pop('hideActiveTasks', False)
         self.__hideCompositeTasks = kwargs.pop('hideCompositeTasks', False)
         self.registerObservers()
@@ -46,19 +49,20 @@ class ViewFilter(base.Filter):
         self.reset()
         
     def setFilteredByDueDateTime(self, dueDateTimeString):
-        self.__dueDateTimeFilter = self.__stringToDueDateTime(dueDateTimeString)
-        self.reset()
-    
-    def hideInactiveTasks(self, hide=True):
-        self.__hideInactiveTasks = hide
-        self.reset()
-
-    def hideActiveTasks(self, hide=True):
-        self.__hideActiveTasks = hide
+        self.__dueDateTimeFilter = self.__stringToDueDateTimeFilter(dueDateTimeString)
         self.reset()
         
-    def hideCompletedTasks(self, hide=True):
-        self.__hideCompletedTasks = hide
+    def setFilteredByCompletionDateTime(self, completionDateTimeString):
+        self.__completionDateTimeFilter = self.__stringToCompletionDateTimeFilter(completionDateTimeString)
+        self.reset()
+
+    def setFilteredByStartDateTime(self, startDateTimeString):
+        self.__startDateTimeFilterString = startDateTimeString
+        self.__startDateTimeFilter = self.__stringToStartDateTimeFilter(startDateTimeString)
+        self.reset()
+        
+    def hideActiveTasks(self, hide=True):
+        self.__hideActiveTasks = hide
         self.reset()
         
     def hideCompositeTasks(self, hide=True):
@@ -70,16 +74,18 @@ class ViewFilter(base.Filter):
     
     def filterTask(self, task): # pylint: disable-msg=W0621
         result = True
-        if self.__hideCompletedTasks and task.completed():
-            result = False
-        elif self.__hideInactiveTasks and task.inactive():
-            result = False
-        elif self.__hideActiveTasks and task.active():
-            result = False
+        if self.__hideActiveTasks and task.active():
+            result = False # Hide active task
         elif self.__hideCompositeTasks and not self.treeMode() and task.children():
-            result = False
+            result = False # Hide composite task
         elif self.__taskDueLaterThanDueDateTimeFilter(task):
-            result = False
+            result = False # Hide due task
+        elif self.__taskCompletedEarlierThanCompletionDateTimeFilter(task):
+            result = False # Hide completed task
+        elif self.__startDateTimeFilterString == 'Always' and task.inactive():
+            result = False # Hide prerequisite task no matter what start date
+        elif self.__taskStartsLaterThanStartDateTimeFilter(task):
+            result = False # Hide future task 
         return result
     
     def __taskDueLaterThanDueDateTimeFilter(self, task):
@@ -87,15 +93,56 @@ class ViewFilter(base.Filter):
             return task.dueDateTime(recursive=self.treeMode()) > self.__dueDateTimeFilter()
         else:
             return False
+        
+    def __taskCompletedEarlierThanCompletionDateTimeFilter(self, task):
+        if self.__completionDateTimeFilter:
+            return task.completionDateTime(recursive=self.treeMode()) < self.__completionDateTimeFilter()
+        else:
+            return False
+        
+    def __taskStartsLaterThanStartDateTimeFilter(self, task):
+        if self.__startDateTimeFilter:
+            return task.startDateTime(recursive=self.treeMode()) > self.__startDateTimeFilter()
+        else:
+            return False
 
+    endOfPeriodFilterFactory = dict(Today=lambda: date.Now().endOfDay(), 
+                                    Tomorrow=lambda: date.Now().endOfTomorrow(),
+                                    Workweek=lambda: date.Now().endOfWorkWeek(), 
+                                    Week=lambda: date.Now().endOfWeek(), 
+                                    Month=lambda: date.Now().endOfMonth(), 
+                                    Year=lambda: date.Now().endOfYear(),
+                                    Always=lambda: date.Now(), 
+                                    Never=None)
+
+    startOfPeriodFilterFactory = dict(Today=lambda: date.Now().startOfDay(),
+                                      Yesterday=lambda: date.Now().startOfDay()-date.oneDay,
+                                      Workweek=lambda: date.Now().startOfWorkWeek(), 
+                                      Week=lambda: date.Now().startOfWeek(),
+                                      Month=lambda: date.Now().startOfMonth(),
+                                      Year=lambda: date.Now().startOfYear(), 
+                                      Always=lambda: date.DateTime(),
+                                      Never=None)
+                
+    @classmethod
+    def __stringToDueDateTimeFilter(class_, filterString):
+        return class_.__stringToFilter(class_.endOfPeriodFilterFactory, 
+                                       filterString)
+
+    @classmethod
+    def __stringToCompletionDateTimeFilter(class_, filterString):
+        return class_.__stringToFilter(class_.startOfPeriodFilterFactory, 
+                                       filterString)
+    
+    @classmethod
+    def __stringToStartDateTimeFilter(class_, filterString):
+        return class_.__stringToFilter(class_.endOfPeriodFilterFactory, 
+                                       filterString)
+    
     @staticmethod
-    def __stringToDueDateTime(dueDateTimeString):
-        # pylint: disable-msg=W0108
-        dateTimeFactory = {'Today' : lambda: date.Now().endOfDay(), 
-                           'Tomorrow' : lambda: date.Now().endOfTomorrow(),
-                           'Workweek' : lambda: date.Now().endOfWorkWeek(), 
-                           'Week' : lambda: date.Now().endOfWeek(), 
-                           'Month' : lambda: date.Now().endOfMonth(), 
-                           'Year' : lambda: date.Now().endOfYear(), 
-                           'Unlimited' : None }        
-        return dateTimeFactory[dueDateTimeString]
+    def __stringToFilter(filterFactory, filterString, default='Never'):
+        try:
+            return filterFactory[filterString]
+        except KeyError:
+            return filterFactory[default]
+        

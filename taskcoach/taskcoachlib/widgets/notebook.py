@@ -186,7 +186,7 @@ class Notebook(BookMixin, fnb.FlatNotebook):
     pageChangedEvent = wx.EVT_NOTEBOOK_PAGE_CHANGED
     
     def __init__(self, *args, **kwargs):
-        kwargs['agwStyle'] = fnb.FNB_NO_X_BUTTON | fnb.FNB_VC8 | fnb.FNB_SMART_TABS | fnb.FNB_NO_NAV_BUTTONS | fnb.FNB_DROPDOWN_TABS_LIST
+        kwargs['agwStyle'] = fnb.FNB_NO_X_BUTTON | fnb.FNB_VC8 | fnb.FNB_SMART_TABS
         super(Notebook, self).__init__(*args, **kwargs)
         bitmap = wx.BitmapFromIcon(self.TopLevelParent.GetIcon())
         if bitmap:

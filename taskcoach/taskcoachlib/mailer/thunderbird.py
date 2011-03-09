@@ -23,7 +23,7 @@ from taskcoachlib import persistence
 
 _RX_MAILBOX = re.compile('mailbox-message://(.*)@(.*)/(.*)#(\d+)')
 _RX_IMAP_MESSAGE = re.compile('imap-message://([^@]+)@([^/]+)/(.*)#(\d+)')
-_RX_IMAP = re.compile('imap://([^@]+)@([^/]+)/fetch%3EUID%3E/(.*)%3E(\d+)')
+_RX_IMAP = re.compile(r'imap://([^@]+)@([^/]+)/fetch%3EUID%3E(?:/|\.)(.*)%3E(\d+)')
 
 
 class ThunderbirdError(Exception):
@@ -220,6 +220,8 @@ class ThunderbirdImapReader(object):
         mt = _RX_IMAP.search(url)
         if mt is None:
             mt = _RX_IMAP_MESSAGE.search(url)
+            if mt is None:
+                raise ThunderbirdError('Unrecognized URL scheme: "%s"' % url)
 
         self.url = url
 
@@ -235,7 +237,6 @@ class ThunderbirdImapReader(object):
         config = loadPreferences()
 
         stype = None
-        isSecure = False
         # We iterate over a maximum of 100 mailservers. You'd think that
         # mailservers would be numbered consecutively, but apparently
         # that is not always the case, so we cannot assume that because
@@ -249,10 +250,8 @@ class ThunderbirdImapReader(object):
                     port = int(config[name + '.port'])
                 if config.has_key(name + '.socketType'):
                     stype = config[name + '.socketType']
-                if config.has_key(name + '.isSecure'):
-                    isSecure = int(config[name + '.isSecure'])
                 break
-        self.ssl = bool(stype == 3 or isSecure)
+        self.ssl = (stype == 3)
 
         if self.server == 'imap.google.com':
             # When dragging mail from Thunderbird that uses Gmail via IMAP the
@@ -279,7 +278,10 @@ class ThunderbirdImapReader(object):
 
         while True:
             try:
-                response, params = cn.login(self.user, pwd)
+                if 'AUTH=CRAM-MD5' in cn.capabilities:
+                    response, params = cn.login_cram_md5(str(self.user), str(pwd))
+                else:
+                    response, params = cn.login(self.user, pwd)
             except cn.error, e:
                 response = 'KO'
                 errmsg, = e.args
@@ -293,10 +295,14 @@ class ThunderbirdImapReader(object):
 
         self._PASSWORDS[(self.server, self.user, self.port)] = pwd
 
+        # Two possibilities for separator...
+
         response, params = cn.select(self.box)
 
         if response != 'OK':
-            raise ThunderbirdError('Could not select inbox %s' % self.box)
+            response, params = cn.select(self.box.replace('/', '.'))
+            if response != 'OK':
+                raise ThunderbirdError('Could not select inbox "%s" (%s)' % (self.box, response))
 
         response, params = cn.uid('FETCH', str(self.uid), '(RFC822)')
 

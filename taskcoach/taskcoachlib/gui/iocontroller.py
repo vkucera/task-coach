@@ -286,6 +286,10 @@ class IOController(object):
             self.__icsFileDialogOpts, persistence.iCalendarWriter, viewer, 
             selectionOnly)
 
+    def importCSV(self, **kwargs):
+        persistence.CSVReader(self.__taskFile.tasks(),
+                              self.__taskFile.categories()).read(**kwargs)
+
     def synchronize(self, password):
         synchronizer = sync.Synchronizer(self.__syncReport, self, 
                                          self.__taskFile, password)

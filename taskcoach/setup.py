@@ -56,12 +56,15 @@ setupOptions = {
     'packages': findPackages('taskcoachlib') + findPackages('buildlib'),
     'scripts': ['taskcoach.py'],
     'classifiers': [\
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: End Users/Desktop',
         'License :: OSI Approved :: GNU General Public License (GPL)',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Topic :: Office/Business :: Scheduling']}
+        'Programming Language :: Python :: 2.5',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
+        'Topic :: Office/Business']}
 
 if executable:
     # Force a specific Python version if necessary:

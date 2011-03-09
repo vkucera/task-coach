@@ -9100,10 +9100,11 @@ class AuiManager(wx.EvtHandler):
 
         :param `event`: a `wx.MoveEvent` to be processed.
         """
-
+        
+        if event is not None:
+            event.Skip()
+            
         if isinstance(self._frame, AuiFloatingFrame) and self._frame.IsShownOnScreen():
-            if event is not None:
-                event.Skip()
             return
 
         docked, hAlign, vAlign, monitor = self._is_docked
@@ -9114,7 +9115,7 @@ class AuiManager(wx.EvtHandler):
             if pane.IsSnappable():
                 if pane.IsFloating() and pane.IsShown():
                     self.SnapPane(pane, pane.floating_pos, pane.floating_size, True)
-        
+
 
     def OnSysColourChanged(self, event):
         """

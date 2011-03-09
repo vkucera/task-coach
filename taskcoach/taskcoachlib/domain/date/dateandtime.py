@@ -70,6 +70,11 @@ class DateTime(datetime.datetime):
         sunday = self + timedelta.TimeDelta(days=7-days)
         return DateTime(sunday.year, sunday.month, sunday.day).endOfDay()
     
+    def startOfWorkWeek(self):
+        days = self.weekday()
+        monday = self + timedelta.TimeDelta(days=days-1)
+        return DateTime(monday.year, monday.month, monday.day)
+    
     def endOfWorkWeek(self):
         days = 5 - self.weekday()
         if days < 0:
@@ -86,7 +91,10 @@ class DateTime(datetime.datetime):
                 return DateTime(self.year, self.month, lastday).endOfDay()
             except ValueError:
                 pass
-            
+
+    def startOfYear(self):
+        return DateTime(self.year, 1, 1).startOfDay()
+    
     def endOfYear(self):
         return DateTime(self.year, 12, 31).endOfDay()
                 

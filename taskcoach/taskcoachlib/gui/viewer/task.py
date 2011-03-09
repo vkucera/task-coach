@@ -109,13 +109,12 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
             [None,
              uicommand.TaskNew(taskList=self.presentation(),
                                settings=self.settings),
-             uicommand.TaskNewSubTask(taskList=self.presentation(),
-                                      viewer=self),
+             uicommand.NewSubItem(viewer=self),
              uicommand.TaskNewFromTemplateButton(taskList=self.presentation(),
                                                  settings=self.settings,
                                                  bitmap='newtmpl'),
-             uicommand.TaskEdit(taskList=self.presentation(), viewer=self),
-             uicommand.TaskDelete(taskList=self.presentation(), viewer=self),
+             uicommand.Edit(viewer=self),
+             uicommand.Delete(viewer=self),
              None,
              uicommand.TaskToggleCompletion(viewer=self),
              None,
@@ -287,7 +286,7 @@ class TimelineViewer(BaseTaskViewer):
 
     def onEdit(self, item):
         if isinstance(item, task.Task):
-            edit = uicommand.TaskEdit(taskList=self.presentation(), viewer=self)
+            edit = uicommand.Edit(viewer=self)
         else:
             edit = uicommand.EffortEdit(effortList=self.taskFile.efforts(), viewer=self)
         edit(item)
@@ -400,9 +399,7 @@ class SquareTaskViewer(BaseTaskViewer):
         itemPopupMenu = self.createTaskPopupMenu()
         self._popupMenus.append(itemPopupMenu)
         return widgets.SquareMap(self, SquareMapRootNode(self.presentation()), 
-            self.onSelect, 
-            uicommand.TaskEdit(taskList=self.presentation(), viewer=self),
-            itemPopupMenu)
+            self.onSelect, uicommand.Edit(viewer=self), itemPopupMenu)
         
     def getToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
@@ -559,7 +556,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         self.settings.set(self.settingsSection(), 'periodwidth', str(self.widget.GetPeriodWidth()))
 
     def onEdit(self, item):
-        edit = uicommand.TaskEdit(taskList=self.presentation(), viewer=self)
+        edit = uicommand.Edit(viewer=self)
         edit(item)
 
     def onCreate(self, dateTime, show=True):
@@ -656,7 +653,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
         columnPopupMenu = self.createColumnPopupMenu()
         self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         widget = widgets.TreeListCtrl(self, self.columns(), self.onSelect, 
-            uicommand.TaskEdit(taskList=self.presentation(), viewer=self),
+            uicommand.Edit(viewer=self),
             uicommand.TaskDragAndDrop(taskList=self.presentation(), viewer=self),
             uicommand.EditSubject(viewer=self),
             itemPopupMenu, columnPopupMenu,
@@ -995,7 +992,7 @@ class CheckableTaskViewer(TaskViewer):
         self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         widget = widgets.CheckTreeCtrl(self, self.columns(), self.onSelect,
             self.onCheck, 
-            uicommand.TaskEdit(taskList=self.presentation(), viewer=self),
+            uicommand.Edit(viewer=self),
             uicommand.TaskDragAndDrop(taskList=self.presentation(), viewer=self),
             uicommand.EditSubject(viewer=self),
             itemPopupMenu, columnPopupMenu,
