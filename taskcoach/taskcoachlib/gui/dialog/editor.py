@@ -364,12 +364,17 @@ class DatesPage(Page):
     def addDateEntries(self):
         # pylint: disable-msg=W0201
         self._oldCompletionDateTime = dict([(item, item.completionDateTime()) for item in self.items]) 
-        for label, taskMethodName, callback in [(_('Start date'), 'startDateTime', self.onStartDateTimeChanged),
-                                                (_('Due date'), 'dueDateTime', self.onDueDateTimeChanged),
-                                                (_('Completion date'), 'completionDateTime', self.onCompletionDateTimeChanged)]:
+        for idx, (label, taskMethodName, callback) in enumerate([(_('Start date'), 'startDateTime', self.onStartDateTimeChanged),
+                                          (_('Due date'), 'dueDateTime', self.onDueDateTimeChanged),
+                                          (_('Completion date'), 'completionDateTime', self.onCompletionDateTimeChanged)]):
             label = self.label(label)
             setattr(self, '_%sLabel'%taskMethodName, label)
-            dateTime = getattr(self.items[0], taskMethodName)() if len(self.items) == 1 else date.DateTime()
+            if len(self.items) == 1:
+                dateTime = getattr(self.items[0], taskMethodName)()
+            else:
+                dateTime = date.DateTime()
+                if idx == 0:
+                    dateTime = dateTime.startOfDay()
             dateTimeEntry = entry.DateTimeEntry(self, self.__settings, dateTime,
                                                 callback=callback)
             setattr(self, '_%sEntry'%taskMethodName, dateTimeEntry)
