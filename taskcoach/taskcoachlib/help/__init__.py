@@ -390,8 +390,8 @@ preferences. Fill in the synchronization URL, your ID on the server and choose
 which items to synchronize (tasks and/or notes). The URL depends on the server
 you choose; some examples are:'''),
         ul(
-            li('''<a href="http://www.scheduleworld.com/" target="_blank">ScheduleWorld</a>:
-http://sync.scheduleworld.com/funambol/ds'''),
+            li('''<a href="http://my.funambol.com/" target="_blank">My Funambol</a>:
+http://my.funambol.com/sync'''),
             li('''<a href="http://memotoo.com" target="_blank">MemoToo</a>:
 http://sync.memotoo.com/syncml''')),
         _('''The database names are pretty standard; the default values 
@@ -587,6 +587,9 @@ shortcuts are not configurable at the moment.''')%meta.metaDict),
     p(
         table(
             tr(_('Ctrl-A'), editSelectAll),
+            tr(_('Shift-Ctrl-A'), addAttachment),
+            tr(_('Ctrl-B'), addNote),
+            tr(_('Shift-Ctrl-B'), openAllNotes),
             tr(_('Ctrl-C'), editCopy),
             tr(_('Shift-Ctrl-C'), viewCollapseAll),
             tr(_('Ctrl-D'), taskDecreasePriority),
@@ -598,7 +601,11 @@ shortcuts are not configurable at the moment.''')%meta.metaDict),
             tr(_('Ctrl-H'), help),
             tr(_('Ctrl-I'), taskIncreasePriority),
             tr(_('Shift-Ctrl-I'), taskMaxPriority),
+            tr(_('Ctrl-M'), mailItem),
+            tr(_('Ctrl-N (Linux and Mac OS X)'), taskNew),
+            tr(_('Shift-Ctrl-N (Linux and Mac OS X)'), _('Insert a new subitem')),
             tr(_('Ctrl-O'), fileOpen),
+            tr(_('Shift-Ctrl-O'), openAllAttachments),
             tr(_('Alt-P'), editPreferences),
             tr(_('Ctrl-P'), print_),
             tr(_('Shift-Ctrl-P'), printPageSetup),
@@ -620,9 +627,9 @@ shortcuts are not configurable at the moment.''')%meta.metaDict),
             tr(_('Shift-Tab'), _('Move keyboard focus to the previous field in the dialog')),
             tr(_('Ctrl-Tab'), _('Move keyboard focus to the next tab in a notebook control')),
             tr(_('Shift-Ctrl-Tab'), _('Move keyboard focus to the previous tab in a notebook control')),
-            tr(_('Ctrl-DELETE'), taskDelete),
-            tr(_('Ctrl-INSERT'), taskNew),
-            tr(_('Shift-Ctrl-INSERT'), taskNewSubtask),
+            tr(_('DELETE'), _('Delete the selected item(s)')),
+            tr(_('INSERT (Windows)'), taskNew),
+            tr(_('Shift-INSERT (Windows)'), _('Insert a new subitem')),
             tr(_('Ctrl-PgDn'), viewNextViewer),
             tr(_('Ctrl-PgUp'), viewPreviousViewer),
             tr(_('Alt-Down'), _('Pop up menu or drop down box')))))

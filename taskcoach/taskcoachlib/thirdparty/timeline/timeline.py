@@ -138,8 +138,8 @@ class TimeLine(wx.Panel):
             return
         hot_map = self.hot_map.findNode(self.selectedNode)
         if hot_map is None:
-            print self.selectedNode.parent
-        if event.KeyCode == wx.WXK_DOWN:
+            newSelection = self.hot_map.firstNode()
+        elif event.KeyCode == wx.WXK_DOWN:
             newSelection = hot_map.nextChild(self.selectedNode)
         elif event.KeyCode == wx.WXK_UP:
             newSelection = hot_map.previousChild(self.selectedNode)

@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.0', 'February 15, 2011',
+Release('1.3.0', 'March 9, 2011',
     summary='''This release ...''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -40,8 +40,52 @@ immediately to all open dialogs. This will prevent overwriting
 changes made in other dialogs.''', '1152561')
         ]
     ),
-            
-Release('1.2.10', 'February 15, 2011',
+
+Release('1.2.11', 'March 8, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
+    bugsFixed=[
+        Bug('''Sometimes the total effort per period displayed in the effort
+viewer would be wrong.''', '3146576'),
+        Bug('''On Windows, the icons of the undo and redo menu items would 
+disappear after their first use.'''),
+        Bug('''Correctly remember the main window position when closing 
+Task Coach while the main window is minimized.''', '3199529')
+        ],
+    featuresAdded=[
+        Feature('''Import tasks from CSV file.'''),
+        Feature('''In addition to hiding all completed tasks, it is now also
+possible to hide completed tasks but keep recently completed tasks visible for
+a limited amount of time. This can be done by hiding tasks that were completed 
+before today, before yesterday, before the current week or before the current 
+month, using the View->Filter menu.''', 'http://uservoice.com/a/lZ8ss'),
+        Feature('''In addition to hiding all future tasks, it is now also
+possible to hide future tasks but still show future tasks that will become
+active in a short while. This can be done by hiding future tasks that start 
+today, tomorrow, next week or next month, using the View->Filter menu.''')
+        ],
+    featuresChanged=[
+        Feature('''Keyboard shortcut improvements: On Windows and Linux, 
+the keyboard shortcut for adding a task is now simply Insert. A new subtask can 
+be added with Shift-Insert. On Mac OS X, the Insert shortcut doesn't work for 
+some reason so there a new task can be added with Cmd-N and a new subtask with 
+Shift-Cmd-N. The Delete keyboard shortcut works for all viewers. Notes can be 
+added to tasks and categories with the Ctrl-B keyboard shortcut. Tasks and notes 
+can be mailed with the Ctrl-M keyboard shortcut. Attachments can be added with 
+the Shift-Ctrl-A keyboard shortcut and all attachments of an item can be opened 
+with the Shift-Ctrl-O keyboard shortcut.'''),
+        Feature('''Rearranged the menu's: Instead of a Task, Category, Effort
+and Note menu, there are now a New menu for creating new items and an Actions
+menu for applying actions such as marking a task completed, mailing an item
+and starting and stopping effort tracking. The Edit and Delete menu items 
+are now placed in the Edit menu.''' )
+        ],
+    distributionsChanged=[
+        Distribution('''Task Coach was added to the Ports collection of FreeBSD 
+thanks to Kevin Lo. See the download section of the Task Coach website.''')
+        ]
+    ),
+                
+Release('1.2.10', 'February 20, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Column header popup menu's didn't work.''', '3175083'),
@@ -50,7 +94,9 @@ wasn't working.'''),
         Bug('''The viewer background color would not obey the global user setting.''',
         'http://uservoice.com/a/g2CST'),
         Bug('''Task files wouldn't specify the encoding in the XML header,
-making it harder to process them with other tools.''', '3182504')
+making it harder to process them with other tools.''', '3182504'),
+        Bug('''In the calendar viewer, use the completion date as end date when
+a task is completed.''', '3183086')
         ],
     featuresAdded=[
         Feature('''Efforts are filtered by categories like tasks and notes.'''),
@@ -61,7 +107,15 @@ was last being tracked.''', 'http://uservoice.com/a/cXLhb'),
 keyboard shortcuts: Ctrl-T for start tracking effort and Shift-Ctrl-T for 
 stop/resume tracking effort.''', 'http://uservoice.com/a/9hhaE'),
         Feature('''Clear all filters via a keyboard shortcut: Shift-Ctrl-F''',
-                'http://uservoice.com/a/4Tt4T')
+                'http://uservoice.com/a/4Tt4T'),
+        Feature('''Support for CRAM-MD5 authentication when dropping IMAP
+mails from Thunderbird.'''),
+        ],
+    featuresChanged=[
+        Feature('''Show left/right scroll buttons in notebook controls so that
+it is more clear for users that there might be more tabs in the notebook than
+currently visible. A drop down list of all tabs in the notebook can still be
+accessed using the Ctrl-Tab shortcut.''')
         ]
     ),
             

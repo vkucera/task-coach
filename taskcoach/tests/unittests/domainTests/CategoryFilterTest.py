@@ -714,13 +714,13 @@ class CategoryFilterAndViewFilterFixtureAndCommonTestsMixin(CategoryFilterHelper
             categories=self.categories, treeMode=self.treeMode)
 
     def testThatParentIsHiddenWhenHiddenCompletedChildIsFiltered(self):
-        self.viewFilter.hideCompletedTasks(True)
+        self.viewFilter.setFilteredByCompletionDateTime('Always')
         self.assertEqual(1, len(self.viewFilter))
         self.childCategory.setFiltered(True)
         self.assertEqual(0, len(self.categoryFilter))
         
     def testThatParentIsShownWhenHiddenCompletedChildIsUnfiltered(self):
-        self.viewFilter.hideCompletedTasks(True)
+        self.viewFilter.setFilteredByCompletionDateTime('Always')
         self.childCategory.setFiltered(True)
         self.assertEqual(0, len(self.categoryFilter))
         self.childCategory.setFiltered(False)
@@ -729,14 +729,14 @@ class CategoryFilterAndViewFilterFixtureAndCommonTestsMixin(CategoryFilterHelper
     def testThatParentIsHiddenWhenFilteredCompletedChildIsHidden(self):
         self.childCategory.setFiltered(True)
         self.assertEqual(2, len(self.viewFilter))
-        self.viewFilter.hideCompletedTasks(True)
+        self.viewFilter.setFilteredByCompletionDateTime('Always')
         self.assertEqual(0, len(self.categoryFilter))        
         
     def testThatParentIsShownWhenFilteredCompletedChildIsUnhidden(self):
         self.childCategory.setFiltered(True)
-        self.viewFilter.hideCompletedTasks(True)
+        self.viewFilter.setFilteredByCompletionDateTime('Always')
         self.assertEqual(0, len(self.categoryFilter))
-        self.viewFilter.hideCompletedTasks(False)
+        self.viewFilter.setFilteredByCompletionDateTime('Never')
         self.assertEqual(2 if self.treeMode else 1, len(self.categoryFilter))
 
 

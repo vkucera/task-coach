@@ -30,12 +30,6 @@ class MaxDateTimeMixin(object):
 class EffortUICommandNamesMixin(object):
     newItemMenuText = _('&New effort...\tCtrl+E')
     newItemHelpText =  help.effortNew
-    editItemMenuText = _('&Edit effort...')
-    editItemHelpText = help.effortEdit
-    deleteItemMenuText = _('&Delete effort')
-    deleteItemHelpText = help.effortDelete 
-    newSubItemMenuText = ''
-    newSubItemHelpText = '' 
     
                         
 class EffortList(patterns.SetDecorator, MaxDateTimeMixin, 

@@ -69,7 +69,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
         self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         widget = widgets.CheckTreeCtrl(self, self._columns,
             self.onSelect, self.onCheck,
-            uicommand.CategoryEdit(viewer=self, categories=self.presentation()),
+            uicommand.Edit(viewer=self),
             uicommand.CategoryDragAndDrop(viewer=self, categories=self.presentation()),
             uicommand.EditSubject(viewer=self),
             itemPopupMenu, columnPopupMenu,
@@ -121,12 +121,9 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
         commands[-2:-2] = [None,
                            uicommand.CategoryNew(categories=self.presentation(),
                                                  settings=self.settings),
-                           uicommand.CategoryNewSubCategory(categories=self.presentation(),
-                                                            viewer=self),
-                           uicommand.CategoryEdit(categories=self.presentation(),
-                                                  viewer=self),
-                           uicommand.CategoryDelete(categories=self.presentation(),
-                                                    viewer=self)]
+                           uicommand.NewSubItem(viewer=self),
+                           uicommand.Edit(viewer=self),
+                           uicommand.Delete(viewer=self)]
         return commands
 
     def createColumnUICommands(self):

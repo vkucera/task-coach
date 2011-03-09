@@ -111,15 +111,14 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
                                        
     def viewFilterOptions(self):
         options = dict(dueDateTimeFilter=self.getFilteredByDueDateTime(),
-                       hideCompletedTasks=self.isHidingCompletedTasks(),
-                       hideInactiveTasks=self.isHidingInactiveTasks(),
+                       completionDateTimeFilter=self.getFilteredByCompletionDateTime(),
+                       startDateTimeFilter=self.getFilteredByStartDateTime(),
                        hideActiveTasks=self.isHidingActiveTasks(),
                        hideCompositeTasks=self.isHidingCompositeTasks())
         return options
     
     def isFilteredByDueDateTime(self, dueDateTimeString):
-        return dueDateTimeString == self.settings.get(self.settingsSection(), 
-                                                      'tasksdue')
+        return dueDateTimeString == self.getFilteredByDueDateTime()
     
     def setFilteredByDueDateTime(self, dueDateTimeString):
         self.settings.set(self.settingsSection(), 'tasksdue', dueDateTimeString)
@@ -128,12 +127,27 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
     def getFilteredByDueDateTime(self):
         return self.settings.get(self.settingsSection(), 'tasksdue')
     
-    def hideInactiveTasks(self, hide=True):
-        self.__setBooleanSetting('hideinactivetasks', hide)
-        self.presentation().hideInactiveTasks(hide)
+    def isFilteredByCompletionDateTime(self, completionDateTimeString):
+        return completionDateTimeString == self.getFilteredByCompletionDateTime()
         
-    def isHidingInactiveTasks(self):
-        return self.__getBooleanSetting('hideinactivetasks')
+    def setFilteredByCompletionDateTime(self, completionDateTimeString):
+        self.settings.set(self.settingsSection(), 'taskscompleted', 
+                          completionDateTimeString)
+        self.presentation().setFilteredByCompletionDateTime(completionDateTimeString)
+    
+    def getFilteredByCompletionDateTime(self):
+        return self.settings.get(self.settingsSection(), 'taskscompleted')
+    
+    def isFilteredByStartDateTime(self, startDateTimeString):
+        return startDateTimeString == self.getFilteredByStartDateTime()
+    
+    def setFilteredByStartDateTime(self, startDateTimeString):
+        self.settings.set(self.settingsSection(), 'tasksinactive', 
+                          startDateTimeString)
+        self.presentation().setFilteredByStartDateTime(startDateTimeString)
+        
+    def getFilteredByStartDateTime(self):
+        return self.settings.get(self.settingsSection(), 'tasksinactive')
     
     def hideActiveTasks(self, hide=True):
         self.__setBooleanSetting('hideactivetasks', hide)
@@ -141,13 +155,6 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
 
     def isHidingActiveTasks(self):
         return self.__getBooleanSetting('hideactivetasks')
-    
-    def hideCompletedTasks(self, hide=True):
-        self.__setBooleanSetting('hidecompletedtasks', hide)
-        self.presentation().hideCompletedTasks(hide)
-        
-    def isHidingCompletedTasks(self):
-        return self.__getBooleanSetting('hidecompletedtasks')
     
     def hideCompositeTasks(self, hide=True):
         self.__setBooleanSetting('hidecompositetasks', hide)
@@ -158,38 +165,100 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
     
     def resetFilter(self):
         super(FilterableViewerForTasksMixin, self).resetFilter()
-        self.hideInactiveTasks(False)
         self.hideActiveTasks(False)
-        self.hideCompletedTasks(False)
         self.hideCompositeTasks(False)
-        self.setFilteredByDueDateTime('Unlimited')
+        self.setFilteredByDueDateTime('Never')
+        self.setFilteredByCompletionDateTime('Never')
+        self.setFilteredByStartDateTime('Never')
         
     def createFilterUICommands(self):
         def dueDateTimeFilter(menuText, helpText, value):
             return uicommand.ViewerFilterByDueDateTime(menuText=menuText, 
                                                        helpText=helpText,
                                                        value=value, viewer=self)
-        dueDateTimeFilterCommands = (_('Show only tasks &due before end of'),
-            dueDateTimeFilter(_('&Unlimited'), _('Show all tasks'), 'Unlimited'),
-            dueDateTimeFilter(_('&Today'),_('Only show tasks due today'), 'Today'),
-            dueDateTimeFilter(_('T&omorrow'),
-                              _('Only show tasks due today and tomorrow'), 
+        def completionDateTimeFilter(menuText, helpText, value):
+            return uicommand.ViewerFilterByCompletionDateTime(menuText=menuText,
+                                                              helpText=helpText,
+                                                              value=value, viewer=self)
+        def startDateTimeFilter(menuText, helpText, value):
+            return uicommand.ViewerFilterByStartDateTime(menuText=menuText,
+                                                         helpText=helpText,
+                                                         value=value, viewer=self)
+        dueDateTimeFilterCommands = (_('&Due tasks'),
+            dueDateTimeFilter(_('&Show all due tasks'), _('Show all due tasks'), 
+                              'Never'),
+            dueDateTimeFilter(_('&Hide all due tasks'), _('Hide all due tasks'), 
+                              'Always'),
+            dueDateTimeFilter(_('Only show tasks due &today'),
+                              _('Only show tasks due today and hide later ones'), 
+                              'Today'),
+            dueDateTimeFilter(_('Only show tasks due today or t&omorrow'), 
+                              _('Only show tasks due today or tomorrow and hide later ones'), 
                               'Tomorrow'),
-            dueDateTimeFilter(_('Wo&rkweek'), 
-                              _('Only show tasks due this work week (i.e. before Friday)'),
+            dueDateTimeFilter(_('Only show tasks due this wo&rk week'), 
+                              _('Only show tasks due this work week and hide later ones'),
                               'Workweek'),
-            dueDateTimeFilter(_('&Week'), 
-                              _('Only show tasks due this week (i.e. before Sunday)'),
+            dueDateTimeFilter(_('Only show tasks due this &week'), 
+                              _('Only show tasks due this week and hide later ones'),
                               'Week'),
-            dueDateTimeFilter(_('&Month'), _('Only show tasks due this month'), 
+            dueDateTimeFilter(_('Only show tasks due this &month'), 
+                              _('Only show tasks due this month and hide later ones'), 
                               'Month'),
-            dueDateTimeFilter(_('&Year'), _('Only show tasks due this year'),
+            dueDateTimeFilter(_('Only show tasks due this &year'), 
+                              _('Only show tasks due this year and hide later ones'),
                               'Year'))
+        completionDateTimeFilterCommands = (_('&Completed tasks'),
+            completionDateTimeFilter(_('&Show all completed tasks'), 
+                                     _('Show all completed tasks'), 'Never'),
+            completionDateTimeFilter(_('&Hide all completed tasks'), 
+                                     _('Hide all completed tasks'), 'Always'),
+            completionDateTimeFilter(_('Only show tasks completed &today'), 
+                                     _('Only show tasks completed today and hide older ones'), 
+                                     'Today'),
+            completionDateTimeFilter(_('Only show tasks completed &yesterday and today'), 
+                                     _('Only show tasks completed yesterday and today and hide older ones'), 
+                                     'Yesterday'),
+            completionDateTimeFilter(_('Only show tasks completed this wo&rk week'),
+                                     _('Only show tasks completed this work week and hide older ones'),
+                                     'Workweek'),
+            completionDateTimeFilter(_('Only show tasks completed this &week'),
+                                     _('Only show tasks completed this week and hide older ones'),
+                                     'Week'),
+            completionDateTimeFilter(_('Only show tasks completed this &month'),
+                                     _('Only show tasks completed this month and hide older ones'),
+                                     'Month'),
+            completionDateTimeFilter(_('Only show tasks completed this &year'),
+                                     _('Only show tasks completed this year and hide older ones'),
+                                     'Year'))
+        startDateTimeFilterCommands = (_('&Inactive tasks'),
+            startDateTimeFilter(_('&Show all inactive tasks'),
+                                _('Show all inactive tasks (tasks with a start date in the future)'), 
+                                'Never'),
+            startDateTimeFilter(_('&Hide all inactive tasks'),
+                                _('Hide all inactive tasks (tasks with a start date in the future)'), 
+                                'Always'),
+            startDateTimeFilter(_('Only show tasks starting &today'), 
+                                _('Only show tasks starting today and hide later ones'), 
+                                'Today'),
+            startDateTimeFilter(_('Only show tasks starting today or t&omorrow'),
+                                _('Only show tasks starting today or tomorrow and hide later ones'),
+                                'Tomorrow'),
+            startDateTimeFilter(_('Only show tasks starting this wo&rk week'),
+                                _('Only show tasks starting this work week and hide later ones'),
+                                'Workweek'),
+            startDateTimeFilter(_('Only show tasks starting this &week'),
+                                _('Only show tasks starting this week and hide later ones'), 
+                                'Week'),
+            startDateTimeFilter(_('Only show tasks starting this &month'),
+                                _('Only show tasks starting this month and hide later ones'),
+                                'Month'),
+            startDateTimeFilter(_('Only show tasks starting this &year'),
+                                _('Only show tasks starting this year and hide later ones'),
+                                'Year'))
         return super(FilterableViewerForTasksMixin, 
                      self).createFilterUICommands() + \
-            [None, dueDateTimeFilterCommands, 
-             uicommand.ViewerHideCompletedTasks(viewer=self),
-             uicommand.ViewerHideInactiveTasks(viewer=self),
+            [None, dueDateTimeFilterCommands, completionDateTimeFilterCommands,
+             startDateTimeFilterCommands, 
              uicommand.ViewerHideActiveTasks(viewer=self),
              uicommand.ViewerHideCompositeTasks(viewer=self)]
 

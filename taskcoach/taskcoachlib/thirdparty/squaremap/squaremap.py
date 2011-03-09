@@ -110,6 +110,7 @@ class SquareMap( wx.Panel ):
 
     def OnClickRelease( self, event ):
         """Release over a given square in the map"""
+        self.SetFocus()
         node = HotMapNavigator.findNodeAtPosition(self.hot_map, event.GetPosition())
         self.SetSelected( node, event.GetPosition() )
         
@@ -131,7 +132,13 @@ class SquareMap( wx.Panel ):
             self.SetSelected(HotMapNavigator.lastNode(self.hot_map))
             return
         
-        parent, children, index = HotMapNavigator.findNode(self.hot_map, self.selectedNode)
+        result = HotMapNavigator.findNode(self.hot_map, self.selectedNode)
+        if result:
+            parent, children, index = result
+        else:
+            self.SetSelected(HotMapNavigator.firstNode(self.hot_map))
+            return
+        
         if event.KeyCode == wx.WXK_DOWN:
             self.SetSelected(HotMapNavigator.nextChild(children, index))
         elif event.KeyCode == wx.WXK_UP:

@@ -22,6 +22,11 @@ from taskcoachlib.domain import task, date, base
 from taskcoachlib.thirdparty import hypertreelist
 
 
+class Window(widgets.AuiManagedFrameWithDynamicCenterPane):
+    def addPane(self, viewer, title):
+        super(Window, self).addPane(viewer, title, 'name')
+        
+
 class ViewerTest(test.wxTestCase):
     def setUp(self):
         super(ViewerTest, self).setUp()
@@ -29,7 +34,7 @@ class ViewerTest(test.wxTestCase):
         self.taskFile = persistence.TaskFile()
         self.task = task.Task('task')
         self.taskFile.tasks().append(self.task)
-        self.window = widgets.AuiManagedFrameWithDynamicCenterPane(self.frame)
+        self.window = Window(self.frame)
         self.viewerContainer = gui.viewer.ViewerContainer(self.window, 
             self.settings)
         self.viewer = self.createViewer()
@@ -285,7 +290,7 @@ class FilterableViewerForTasks(test.TestCase):
         return viewer
     
     def testIsFilterByDueDate_IsUnlimitedByDefault(self):
-        self.failUnless(self.viewer.isFilteredByDueDateTime('Unlimited'))
+        self.failUnless(self.viewer.isFilteredByDueDateTime('Never'))
         
     def testSetFilterByDueDate_ToToday(self):
         self.viewer.setFilteredByDueDateTime('Today')
@@ -304,53 +309,53 @@ class FilterableViewerForTasks(test.TestCase):
     def testSetFilterByDueDate_BackToUnlimited(self):
         self.viewer.presentation().append(task.Task(dueDateTime=date.Now() + date.oneDay))
         self.viewer.setFilteredByDueDateTime('Today')
-        self.viewer.setFilteredByDueDateTime('Unlimited')
+        self.viewer.setFilteredByDueDateTime('Never')
         self.failUnless(self.viewer.presentation())
 
     def testIsNotHidingInactiveTasksByDefault(self):
-        self.failIf(self.viewer.isHidingInactiveTasks())
+        self.failUnless(self.viewer.isFilteredByStartDateTime('Never'))
 
     def testHideInactiveTasks(self):
-        self.viewer.hideInactiveTasks()
-        self.failUnless(self.viewer.isHidingInactiveTasks())
+        self.viewer.setFilteredByStartDateTime('Always')
+        self.assertEqual('Always', self.viewer.getFilteredByStartDateTime())
         
     def testHideInactiveTasks_SetsSetting(self):
-        self.viewer.hideInactiveTasks()    
-        self.failUnless(self.settings.getboolean(self.viewer.settingsSection(), 
-                                                 'hideinactivetasks'))
+        self.viewer.setFilteredByStartDateTime('Always')
+        self.assertEqual('Always', self.settings.get(self.viewer.settingsSection(), 
+                                                 'tasksinactive'))
 
     def testHideInactiveTasks_AffectsPresentation(self):
         self.viewer.presentation().append(task.Task(startDateTime=date.Now() + date.oneDay))
-        self.viewer.hideInactiveTasks()
+        self.viewer.setFilteredByStartDateTime('Always')
         self.failIf(self.viewer.presentation())
     
     def testUnhideInactiveTasks(self):
         self.viewer.presentation().append(task.Task(startDateTime=date.Now() + date.oneDay))
-        self.viewer.hideInactiveTasks()
-        self.viewer.hideInactiveTasks(False)
+        self.viewer.setFilteredByStartDateTime('Always')
+        self.viewer.setFilteredByStartDateTime('Never')
         self.failUnless(self.viewer.presentation())
     
     def testIsNotHidingCompletedTasksByDefault(self):
-        self.failIf(self.viewer.isHidingCompletedTasks())
+        self.assertEqual('Never', self.viewer.getFilteredByCompletionDateTime())
         
     def testHideCompletedTasks(self):
-        self.viewer.hideCompletedTasks()
-        self.failUnless(self.viewer.isHidingCompletedTasks())
+        self.viewer.setFilteredByCompletionDateTime('Always')
+        self.assertEqual('Always', self.viewer.getFilteredByCompletionDateTime())
     
     def testHideCompletedTasks_SetsSetting(self):
-        self.viewer.hideCompletedTasks()
-        self.failUnless(self.settings.getboolean(self.viewer.settingsSection(),
-                                                 'hidecompletedtasks'))
+        self.viewer.setFilteredByCompletionDateTime('Always')
+        self.assertEqual('Always', self.settings.get(self.viewer.settingsSection(),
+                                                 'taskscompleted'))
     
     def testHideCompletedTasks_AffectsPresentation(self):
         self.viewer.presentation().append(task.Task(completionDateTime=date.Now()))
-        self.viewer.hideCompletedTasks()
+        self.viewer.setFilteredByCompletionDateTime('Always')
         self.failIf(self.viewer.presentation())
         
     def testUnhideCompletedTasks(self):    
         self.viewer.presentation().append(task.Task(completionDateTime=date.Now()))
-        self.viewer.hideCompletedTasks()
-        self.viewer.hideCompletedTasks(False)
+        self.viewer.setFilteredByCompletionDateTime('Always')
+        self.viewer.setFilteredByCompletionDateTime('Never')
         self.failUnless(self.viewer.presentation())
 
     def testIsNotHidingCompositeTasksByDefault(self):
@@ -383,18 +388,18 @@ class FilterableViewerForTasks(test.TestCase):
         self.assertEqual(2, len(self.viewer.presentation()))
         
     def testClearAllFilters(self):
-        self.viewer.hideInactiveTasks()
-        self.viewer.hideCompletedTasks()
+        self.viewer.setFilteredByStartDateTime('Always')
+        self.viewer.setFilteredByCompletionDateTime('Today')
         self.viewer.hideCompositeTasks()
         self.viewer.setFilteredByDueDateTime('Today')
         self.viewer.resetFilter()
-        self.failIf(self.viewer.isHidingInactiveTasks())
-        self.failIf(self.viewer.isHidingCompletedTasks())
+        self.failUnless(self.viewer.isFilteredByStartDateTime('Never'))
+        self.failUnless(self.viewer.isFilteredByCompletionDateTime('Never'))
         self.failIf(self.viewer.isHidingCompositeTasks())
-        self.failUnless(self.viewer.isFilteredByDueDateTime('Unlimited'))     
+        self.failUnless(self.viewer.isFilteredByDueDateTime('Never'))     
         
     def testApplySettingsWhenCreatingViewer(self):
-        self.settings.set(self.viewer.settingsSection(), 'hidecompletedtasks', 'True')
+        self.settings.set(self.viewer.settingsSection(), 'taskscompleted', 'Always')
         anotherViewer = self.createViewer()
         anotherViewer.presentation().append(task.Task(completionDateTime=date.Now()))
         self.failIf(anotherViewer.presentation())   

@@ -26,26 +26,11 @@ from taskcoachlib import help
 import task
 
 
-def accelerator(modifier, key, macKey=None):
-    # There is a bug in wxWidget/wxPython on the Mac that causes the 
-    # INSERT accelerator to be mapped so some other key sequence ('c' in
-    # this case) so that whenever that key sequence is typed, this command
-    # is invoked. Hence, we use a different accelerator on the Mac.
-    macKey = macKey if macKey else key
-    return u'\t%s+%s'%(modifier, macKey if '__WXMAC__' == wx.Platform else key)
-
-
 class TaskList(categorizable.CategorizableContainer):
     # FIXME: TaskList should be called TaskCollection or TaskSet
 
-    newItemMenuText = _('&New task...') + accelerator('Ctrl', 'INS', 'N')
+    newItemMenuText = _('&New task...') + ('\tINSERT' if '__WXMAC__' != wx.Platform else '\tCtrl+N')
     newItemHelpText = help.taskNew
-    editItemMenuText = _('&Edit task...')
-    editItemHelpText = help.taskEdit
-    deleteItemMenuText = _('&Delete task') + accelerator('Ctrl', 'DEL')
-    deleteItemHelpText = help.taskDelete
-    newSubItemMenuText = _('New &subtask...') + accelerator('Shift+Ctrl', 'INS', 'N')
-    newSubItemHelpText = help.taskNewSubtask 
     
     def _nrInterestingTasks(self, isInteresting):
         return len(self._getInterestingTasks(isInteresting))
