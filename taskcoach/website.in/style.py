@@ -103,7 +103,7 @@ footer = '''
                     <li><a href="http://taskcoach.wikispaces.com">User manual</a></li>
                     <li><a href="https://sourceforge.net/tracker/?group_id=130831&atid=719135">Request support</a>
                     </li>
-                    <li><a href="https://sourceforge.net/tracker/?group_id=130831&atid=719134">Browse known bugs</a>
+                    <li><a href="http://sourceforge.net/tracker/?group_id=130831&atid=719134&status=1">Browse known bugs</a>
                     </li>
                     <li><a href="https://sourceforge.net/tracker/?func=add&group_id=130831&atid=719134">Report a bug</a>
                     </li>
