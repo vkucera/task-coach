@@ -41,6 +41,7 @@
 	[request setPredicate:[NSPredicate predicateWithFormat:@"guid == %@", guid]];
 	NSError *error;
 	NSArray *results = [getManagedObjectContext() executeFetchRequest:request error:&error];
+
 	CDFile *theFile;
 
 	if (results)
@@ -91,6 +92,7 @@
 	}
 	else
 	{
+		[request release];
 		JLERROR("Could not fetch files: %s", [[error localizedDescription] UTF8String]);
 		[self cancel];
 		return;

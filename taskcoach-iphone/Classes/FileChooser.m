@@ -148,6 +148,8 @@
 
 		for (CDDomainObject *object in results)
 			[getManagedObjectContext() deleteObject:object];
+
+		[results release];
 		[getManagedObjectContext() deleteObject:file];
 		
 		NSError *error;

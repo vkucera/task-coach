@@ -235,9 +235,9 @@ const float kBadgeConcaveCapsuleClippingTrim = 3.0f;
 		rectangle = CGRectOffset( rectangle, offset, 0.0);
 		offset -= CGRectGetWidth( rectangle ) + kBadgeCapsulePadding;
 
-		x = CGRectGetMaxX( self.bounds ) - CGRectGetWidth( rectangle ) - margin;
-		y = ( CGRectGetMaxY( self.bounds ) - CGRectGetMaxY( rectangle ) ) / 2.0;
-		rectangle = CGRectOffset( rectangle, x, y );
+		// x = CGRectGetMaxX( self.bounds ) - CGRectGetWidth( rectangle ) - margin;
+		// y = ( CGRectGetMaxY( self.bounds ) - CGRectGetMaxY( rectangle ) ) / 2.0;
+		// rectangle = CGRectOffset( rectangle, x, y );
 		
 		--facing;
 	}

@@ -113,8 +113,6 @@
 		[store restore:self];
 		[store release];
 	}
-	
-	[fileManager release];
 
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 	{

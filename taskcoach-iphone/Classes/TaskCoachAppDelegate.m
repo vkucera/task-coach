@@ -106,8 +106,6 @@ NSManagedObjectContext *getManagedObjectContext(void)
 	NSString *path = [cachesDir stringByAppendingPathComponent:@"positions.store.v4"];
 	[[PositionStore instance] save:path];
 	
-	[fileManager release];
-	
 	NSError *error;
 	
 	if (managedObjectContext != nil)
