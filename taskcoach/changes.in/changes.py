@@ -22,6 +22,14 @@ from changetypes import *
 
 releases = [
 
+Release('1.2.12', 'March 12, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Bring back the 'Stop tracking effort' menu item in the context
+menu of task and effort viewers and make menu's more consistent.''', '3206702')
+        ]
+    ),
+    
 Release('1.2.11', 'March 10, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[

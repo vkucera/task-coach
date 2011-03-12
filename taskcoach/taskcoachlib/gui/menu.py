@@ -558,10 +558,17 @@ class TaskBarMenu(Menu):
         efforts = taskFile.efforts()
         self.appendUICommands(
             uicommand.TaskNew(taskList=tasks, settings=settings))
+        self.appendMenu(_('New task from &template'),
+            TaskTemplateMenu(taskBarIcon, taskList=tasks, settings=settings),
+            'newtmpl')
+        self.appendUICommands(None) # Separator
         if settings.getboolean('feature', 'effort'):
             self.appendUICommands(
                 uicommand.EffortNew(viewer=viewerContainer, effortList=efforts,
                                     taskList=tasks, settings=settings))
+        self.appendUICommands(
+            uicommand.CategoryNew(categories=taskFile.categories(), 
+                                  settings=settings))
         if settings.getboolean('feature', 'notes'):
             self.appendUICommands(
                 uicommand.NoteNew(notes=taskFile.notes(), settings=settings))
@@ -705,7 +712,8 @@ class TaskPopupMenu(Menu):
                 None,
                 uicommand.EffortNew(viewer=taskViewer, effortList=efforts,
                                     taskList=tasks, settings=settings),
-                uicommand.EffortStart(viewer=taskViewer, taskList=tasks))
+                uicommand.EffortStart(viewer=taskViewer, taskList=tasks),
+                uicommand.EffortStop(effortList=efforts, taskList=tasks))
         self.appendUICommands(
             None,
             uicommand.NewSubItem(viewer=taskViewer))
@@ -723,7 +731,9 @@ class EffortPopupMenu(Menu):
             uicommand.Delete(viewer=effortViewer),
             None,
             uicommand.EffortNew(viewer=effortViewer, effortList=efforts,
-                                taskList=tasks, settings=settings))
+                                taskList=tasks, settings=settings),
+            uicommand.EffortStartForEffort(viewer=effortViewer, taskList=tasks),
+            uicommand.EffortStop(effortList=efforts, taskList=tasks))
 
 
 class CategoryPopupMenu(Menu):
