@@ -17,14 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib.domain import base
-from taskcoachlib.i18n import _
 from taskcoachlib import patterns
 
 
 class CategoryList(base.Collection):
-    newItemMenuText = _('New category...')
-    newItemHelpText =  _('Insert a new category')
-
     @patterns.eventSource    
     def extend(self, categories, event=None):
         super(CategoryList, self).extend(categories, event=event)

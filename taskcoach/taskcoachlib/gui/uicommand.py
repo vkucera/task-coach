@@ -1931,10 +1931,9 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
     
 class CategoryNew(CategoriesCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
-        categories = kwargs['categories']
         super(CategoryNew, self).__init__(bitmap='new', 
-            menuText=categories.newItemMenuText,
-            helpText=categories.newItemHelpText, *args, **kwargs)
+            menuText=_('New category...\tCtrl-G'),
+            helpText=help.categoryNew, *args, **kwargs)
 
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
         taskFile = self.mainWindow().taskFile
@@ -1951,12 +1950,12 @@ class CategoryDragAndDrop(DragAndDropCommand, CategoriesCommand):
 
 
 class NoteNew(NotesCommand, SettingsCommand):
+    menuText = _('New note...\tCtrl-J')
+    helpText = help.noteNew
+    
     def __init__(self, *args, **kwargs):
-        notes = kwargs['notes']
-        if 'menuText' not in kwargs:
-            kwargs['menuText'] = notes.newItemMenuText
-            kwargs['helpText'] = notes.newItemHelpText
-        super(NoteNew, self).__init__(bitmap='new', *args, **kwargs)
+        super(NoteNew, self).__init__(menuText=self.menuText,
+            helpText=self.helpText, bitmap='new', *args, **kwargs)
 
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
         noteDialog = dialog.editor.NoteEditor(self.mainWindow(), 
@@ -1972,12 +1971,9 @@ class NoteNew(NotesCommand, SettingsCommand):
     
 
 class NewNoteWithSelectedCategories(NoteNew, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        super(NewNoteWithSelectedCategories, self).__init__(\
-            menuText=_('New &note with selected categories...'),
-            helpText=_('Insert a new note with the selected categories checked'),
-            *args, **kwargs)
-
+    menuText = _('New &note with selected categories...')
+    helpText = _('Insert a new note with the selected categories checked')
+    
     def categoriesForTheNewNote(self):
         return self.viewer.curselection()
 

@@ -26,7 +26,8 @@ Release('1.2.12', 'March 12, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Bring back the 'Stop tracking effort' menu item in the context
-menu of task and effort viewers and make menu's more consistent.''', '3206702')
+menu of task and effort viewers and make menu's more consistent.''', '3206702'),
+        Bug('''Added keyboard shortcuts for adding categories and notes.''')
         ]
     ),
     
