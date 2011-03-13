@@ -1,5 +1,5 @@
 //
-//  CDFile.h
+//  CDList.h
 //  Task Coach
 //
 //  Created by Jérôme Laheurte on 13/03/11.
@@ -9,16 +9,13 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class CDDomainObject, CDList;
+@class CDDomainObject, CDFile;
 
-@interface CDFile : NSManagedObject {
+@interface CDList : NSManagedObject {
 @private
 }
-@property (nonatomic, retain) NSNumber * endHour;
 @property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) NSNumber * startHour;
-@property (nonatomic, retain) NSString * guid;
 @property (nonatomic, retain) NSSet* objects;
-@property (nonatomic, retain) CDList * list;
+@property (nonatomic, retain) CDFile * file;
 
 @end

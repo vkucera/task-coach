@@ -8,6 +8,9 @@
 
 #import "Task_CoachAppDelegate.h"
 #import "Migration.h"
+#import "CDDomainObject.h"
+#import "CDFile.h"
+#import "CDList.h"
 
 NSManagedObjectContext *getManagedObjectContext(void)
 {
@@ -189,7 +192,71 @@ NSManagedObjectContext *getManagedObjectContext(void)
 		}
 		
 	}
+
+    // When upgrading from Task Coach v3.x, replace existing files with lists.
+    
+	NSArray *cachesPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+	NSString *cachesDir = [cachesPaths objectAtIndex:0];
+	if (![fileManager fileExistsAtPath:cachesDir])
+	{
+		[fileManager createDirectoryAtPath:cachesDir withIntermediateDirectories:YES attributes:nil error:nil];
+	}
 	
+	path = [cachesDir stringByAppendingPathComponent:@"positions.store.v4"];
+
+    if ([fileManager fileExistsAtPath:path])
+    {
+        NSError *error;
+
+        // First convert files to lists
+        NSFetchRequest *req = [[NSFetchRequest alloc] init];
+        [req setEntity:[NSEntityDescription entityForName:@"CDFile" inManagedObjectContext:getManagedObjectContext()]];
+        NSArray *files = [getManagedObjectContext() executeFetchRequest:req error:&error];
+        [req release];
+
+        if (!files)
+        {
+            NSLog(@"Could not fetch files: %@", [error localizedDescription]);
+        }
+        else
+        {
+            for (CDFile *aFile in files)
+            {
+                NSLog(@"Creating list for file %@", aFile.name);
+
+                CDList *lst = [NSEntityDescription insertNewObjectForEntityForName:@"CDList" inManagedObjectContext:getManagedObjectContext()];
+                lst.file = aFile;
+                lst.name = [aFile.name stringByDeletingPathExtension];
+                
+                req = [[NSFetchRequest alloc] init];
+                [req setEntity:[NSEntityDescription entityForName:@"CDDomainObject" inManagedObjectContext:getManagedObjectContext()]];
+                [req setPredicate:[NSPredicate predicateWithFormat:@"file=%@", aFile]];
+                NSArray *objects = [getManagedObjectContext() executeFetchRequest:req error:&error];
+                [req release];
+                
+                if (!objects)
+                {
+                    NSLog(@"Could not fetch objects: %@", [error localizedDescription]);
+                }
+                else
+                {
+                    for (CDDomainObject *obj in objects)
+                    {
+                        NSLog(@"Migrating object \"%@\" to list \"%@\"", obj.name, lst.name);
+                        obj.list = lst;
+                    }
+                }
+            }
+
+            if (![getManagedObjectContext() save:&error])
+            {
+                NSLog(@"Could not save: %@", [error localizedDescription]);
+            }
+        }
+
+        [fileManager removeItemAtPath:path error:&error];
+    }
+
     /*
 	// Update date status for all objects
 	NSFetchRequest *request = [[NSFetchRequest alloc] init];

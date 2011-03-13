@@ -8,6 +8,7 @@
 
 #import "CDDomainObject.h"
 #import "CDFile.h"
+#import "CDList.h"
 
 
 @implementation CDDomainObject
@@ -15,6 +16,8 @@
 @dynamic name;
 @dynamic taskCoachId;
 @dynamic file;
+@dynamic list;
+
 
 
 @end

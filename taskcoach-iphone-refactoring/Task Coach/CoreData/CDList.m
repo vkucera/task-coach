@@ -1,23 +1,20 @@
 //
-//  CDFile.m
+//  CDList.m
 //  Task Coach
 //
 //  Created by Jérôme Laheurte on 13/03/11.
 //  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
 //
 
-#import "CDFile.h"
-#import "CDDomainObject.h"
 #import "CDList.h"
+#import "CDDomainObject.h"
+#import "CDFile.h"
 
 
-@implementation CDFile
-@dynamic endHour;
+@implementation CDList
 @dynamic name;
-@dynamic startHour;
-@dynamic guid;
 @dynamic objects;
-@dynamic list;
+@dynamic file;
 
 - (void)addObjectsObject:(CDDomainObject *)value {    
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];

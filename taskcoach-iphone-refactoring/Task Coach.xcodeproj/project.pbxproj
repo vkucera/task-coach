@@ -34,6 +34,7 @@
 		A6775FD6132CD87400358BC9 /* CDEffort+Addons.m in Sources */ = {isa = PBXBuildFile; fileRef = A6775FD0132CD87400358BC9 /* CDEffort+Addons.m */; };
 		A6775FD7132CD87400358BC9 /* CDHierarchicalDomainObject+Addons.m in Sources */ = {isa = PBXBuildFile; fileRef = A6775FD2132CD87400358BC9 /* CDHierarchicalDomainObject+Addons.m */; };
 		A6775FD8132CD87400358BC9 /* CDTask+Addons.m in Sources */ = {isa = PBXBuildFile; fileRef = A6775FD4132CD87400358BC9 /* CDTask+Addons.m */; };
+		A6A90571132CE1DB00F1F85A /* CDList.m in Sources */ = {isa = PBXBuildFile; fileRef = A6A90570132CE1DB00F1F85A /* CDList.m */; };
 		A6BE6618132B9C9E005105FA /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A6BE6617132B9C9E005105FA /* Icon.png */; };
 		A6BE661A132B9CA6005105FA /* Icon@2.png in Resources */ = {isa = PBXBuildFile; fileRef = A6BE6619132B9CA6005105FA /* Icon@2.png */; };
 		A6BE661C132B9D18005105FA /* Icon-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = A6BE661B132B9D18005105FA /* Icon-iPad.png */; };
@@ -50,6 +51,7 @@
 		A613AEF3132CDD0E000D6211 /* DateUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DateUtils.m; path = Utils/DateUtils.m; sourceTree = "<group>"; };
 		A613AEF4132CDD0E000D6211 /* String+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "String+Utils.h"; path = "Utils/String+Utils.h"; sourceTree = "<group>"; };
 		A613AEF5132CDD0E000D6211 /* String+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "String+Utils.m"; path = "Utils/String+Utils.m"; sourceTree = "<group>"; };
+		A613AEF8132CDE43000D6211 /* TaskCoachCD 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TaskCoachCD 3.xcdatamodel"; sourceTree = "<group>"; };
 		A62EF77C132B93F700FDB4FA /* Task Coach.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Task Coach.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A62EF780132B93F700FDB4FA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A62EF782132B93F700FDB4FA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -96,6 +98,8 @@
 		A6775FD3132CD87400358BC9 /* CDTask+Addons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CDTask+Addons.h"; path = "CoreData/CDTask+Addons.h"; sourceTree = "<group>"; };
 		A6775FD4132CD87400358BC9 /* CDTask+Addons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CDTask+Addons.m"; path = "CoreData/CDTask+Addons.m"; sourceTree = "<group>"; };
 		A6775FD9132CD90300358BC9 /* i18n.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = i18n.h; sourceTree = "<group>"; };
+		A6A9056F132CE1DB00F1F85A /* CDList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDList.h; path = CoreData/CDList.h; sourceTree = "<group>"; };
+		A6A90570132CE1DB00F1F85A /* CDList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDList.m; path = CoreData/CDList.m; sourceTree = "<group>"; };
 		A6BE6617132B9C9E005105FA /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = ../Icon.png; sourceTree = "<group>"; };
 		A6BE6619132B9CA6005105FA /* Icon@2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2.png"; path = "../Icon@2.png"; sourceTree = "<group>"; };
 		A6BE661B132B9D18005105FA /* Icon-iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-iPad.png"; path = "../Icon-iPad.png"; sourceTree = "<group>"; };
@@ -239,6 +243,8 @@
 		A6775FBA132CD7E100358BC9 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				A6A9056F132CE1DB00F1F85A /* CDList.h */,
+				A6A90570132CE1DB00F1F85A /* CDList.m */,
 				A62FF3F9132CDB8A00D33908 /* Migration.h */,
 				A62FF3FA132CDB8A00D33908 /* Migration.m */,
 				A6775FCD132CD87400358BC9 /* CDDomainObject+Addons.h */,
@@ -365,6 +371,7 @@
 				A62FF3FB132CDB8A00D33908 /* Migration.m in Sources */,
 				A613AEF6132CDD0E000D6211 /* DateUtils.m in Sources */,
 				A613AEF7132CDD0E000D6211 /* String+Utils.m in Sources */,
+				A6A90571132CE1DB00F1F85A /* CDList.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -491,10 +498,11 @@
 		A6775FB4132CD7AC00358BC9 /* TaskCoachCD.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				A613AEF8132CDE43000D6211 /* TaskCoachCD 3.xcdatamodel */,
 				A6775FB5132CD7AC00358BC9 /* TaskCoachCD 2.xcdatamodel */,
 				A6775FB6132CD7AC00358BC9 /* TaskCoachCD.xcdatamodel */,
 			);
-			currentVersion = A6775FB5132CD7AC00358BC9 /* TaskCoachCD 2.xcdatamodel */;
+			currentVersion = A613AEF8132CDE43000D6211 /* TaskCoachCD 3.xcdatamodel */;
 			path = TaskCoachCD.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

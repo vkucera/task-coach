@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class CDFile;
+@class CDFile, CDList;
 
 @interface CDDomainObject : NSManagedObject {
 @private
@@ -18,5 +18,6 @@
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * taskCoachId;
 @property (nonatomic, retain) CDFile * file;
+@property (nonatomic, retain) CDList * list;
 
 @end
