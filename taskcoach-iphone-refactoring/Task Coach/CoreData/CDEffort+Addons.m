@@ -6,12 +6,11 @@
 //  Copyright 2010 Jérôme Laheurte. All rights reserved.
 //
 
-/*
 #import "Task_CoachAppDelegate.h"
 #import "CDEffort+Addons.h"
 #import "CDDomainObject+Addons.h"
 #import "Configuration.h"
-#import "LogUtils.h"
+// #import "LogUtils.h"
 
 @implementation CDEffort (Addons)
 
@@ -19,14 +18,14 @@
 {
 	NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
 	[request setEntity:[NSEntityDescription entityForName:@"CDEffort" inManagedObjectContext:getManagedObjectContext()]];
-	[request setPredicate:[NSPredicate predicateWithFormat:@"status != %d AND ended == NULL AND file=%@",
-						   STATUS_DELETED, [Configuration configuration].cdCurrentFile]];
+	[request setPredicate:[NSPredicate predicateWithFormat:@"status != %d AND ended == NULL AND list=%@",
+						   STATUS_DELETED, [Configuration instance].currentList]];
 
 	NSError *error;
 	NSArray *result = [getManagedObjectContext() executeFetchRequest:request error:&error];
 	if (!result)
 	{
-		JLERROR("Error fetching efforts: %s", [[error localizedDescription] UTF8String]);
+		// JLERROR("Error fetching efforts: %s", [[error localizedDescription] UTF8String]);
 		return nil;
 	}
 
@@ -34,5 +33,3 @@
 }
 
 @end
-
-*/

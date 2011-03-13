@@ -6,11 +6,10 @@
 //  Copyright 2010 Jérôme Laheurte. All rights reserved.
 //
 
-/*
+#import "Task_CoachAppDelegate.h"
 #import "CDTask+Addons.h"
 #import "CDEffort.h"
 #import "Configuration.h"
-#import "TaskCoachAppDelegate.h"
 #import "DateUtils.h"
 #import "CDDomainObject+Addons.h"
 
@@ -106,11 +105,13 @@
 			return;
 		}
 
+        /*
 		if (diff < 24 * 60 * 60 * [Configuration configuration].soonDays)
 		{
 			self.dateStatus = [NSNumber numberWithInt:TASKSTATUS_DUESOON];
 			return;
 		}
+         */
 	}
 
 	if (self.startDate)
@@ -142,7 +143,7 @@
 {
 	CDEffort *effort = (CDEffort *)[NSEntityDescription insertNewObjectForEntityForName:@"CDEffort" inManagedObjectContext:getManagedObjectContext()];
 
-	effort.file = [Configuration configuration].cdCurrentFile;
+    effort.list = [Configuration instance].currentList;
 	effort.task = self;
 	effort.started = [NSDate date];
 	effort.ended = nil;
@@ -172,5 +173,3 @@
 }
 
 @end
-
-*/

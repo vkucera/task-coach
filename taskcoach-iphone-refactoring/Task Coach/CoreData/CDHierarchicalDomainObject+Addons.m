@@ -8,7 +8,6 @@
 
 #import "CDHierarchicalDomainObject+Addons.h"
 
-/*
 @implementation CDHierarchicalDomainObject (Addons)
 
 - (NSSet *)selfAndChildren
@@ -23,4 +22,3 @@
 }
 
 @end
-*/

@@ -8,11 +8,8 @@
 
 #import "CDEffort.h"
 
-/*
 @interface CDEffort (Addons)
 
 + (NSSet *)currentEfforts;
 
 @end
-
-*/

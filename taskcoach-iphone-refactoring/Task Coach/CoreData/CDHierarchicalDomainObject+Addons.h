@@ -8,12 +8,8 @@
 
 #import "CDHierarchicalDomainObject.h"
 
-/*
- 
 @interface CDHierarchicalDomainObject (Addons)
 
 - (NSSet *)selfAndChildren;
 
 @end
-
-*/

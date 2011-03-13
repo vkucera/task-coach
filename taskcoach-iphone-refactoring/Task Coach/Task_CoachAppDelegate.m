@@ -12,6 +12,8 @@
 #import "CDDomainObject.h"
 #import "CDFile.h"
 #import "CDList.h"
+#import "CDDomainObject+Addons.h"
+#import "CDTask+Addons.h"
 
 NSManagedObjectContext *getManagedObjectContext(void)
 {
@@ -274,7 +276,6 @@ NSPersistentStoreCoordinator *getPersistentStoreCoordinator(void)
         [fileManager removeItemAtPath:path error:&error];
     }
 
-    /*
 	// Update date status for all objects
 	NSFetchRequest *request = [[NSFetchRequest alloc] init];
 	[request setEntity:[NSEntityDescription entityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()]];
@@ -288,7 +289,7 @@ NSPersistentStoreCoordinator *getPersistentStoreCoordinator(void)
 		
 		if (![getManagedObjectContext() save:&error])
 		{
-			JLERROR("Error saving: %s", [[error localizedDescription] UTF8String]);
+			// JLERROR("Error saving: %s", [[error localizedDescription] UTF8String]);
 			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not save tasks" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 			[alert show];
 			[alert release];
@@ -296,14 +297,13 @@ NSPersistentStoreCoordinator *getPersistentStoreCoordinator(void)
 	}
 	else
 	{
-		JLERROR("Error fetching: %s", [[error localizedDescription] UTF8String]);
+		// JLERROR("Error fetching: %s", [[error localizedDescription] UTF8String]);
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not load tasks" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
 		[alert release];
 	}
     
 	[request release];
-     */
     
     return persistentStoreCoordinator;
 }

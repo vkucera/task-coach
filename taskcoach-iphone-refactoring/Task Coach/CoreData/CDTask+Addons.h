@@ -20,7 +20,6 @@
 #define REC_MONTHLY 2
 #define REC_YEARLY  3
 
-/*
 @interface CDTask (Addons)
 
 - (void)computeDateStatus;
@@ -34,4 +33,3 @@
 - (void)stopTracking;
 
 @end
-*/
