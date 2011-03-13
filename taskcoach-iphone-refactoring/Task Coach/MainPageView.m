@@ -9,6 +9,8 @@
 #import "MainPageView.h"
 #import "CDList.h"
 #import "Configuration.h"
+#import "TasklistView.h"
+#import "i18n.h"
 
 @implementation MainPageView
 
@@ -63,29 +65,19 @@
     CDList *list = [Configuration instance].currentList;
     if (list)
         listsLabel.text = list.name;
+    else
+        listsLabel.text = _("Lists");
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return YES;
+    return NO;
 }
 
 #pragma mark - Actions
 
 - (void)doShowToday:(id)sender
 {
-    /*
-    UIView *v = [[UIView alloc] initWithFrame:self.view.frame];
-    v.hidden = YES;
-    [self.view.superview addSubview:v];
-    
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:1.0];
-    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:self.view.superview cache:NO];
-    v.hidden = NO;
-    self.view.hidden = YES;
-    [UIView commitAnimations];
-     */
 }
 
 - (void)doConfigure:(id)sender
@@ -94,10 +86,50 @@
 
 - (void)doShowLists:(id)sender
 {
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+    {
+        TasklistView *ctrl = [[TasklistView alloc] initWithTarget:self action:@selector(onDone:)];
+        ctrl.view.frame = self.view.frame;
+        ctrl.view.hidden = YES;
+        [self.view.superview addSubview:ctrl.view];
+
+        [UIView transitionWithView:self.view.superview
+                          duration:1
+                           options:UIViewAnimationOptionTransitionFlipFromRight
+         | UIViewAnimationOptionAllowAnimatedContent
+                        animations:^(void)
+        {
+            self.view.hidden = YES;
+            ctrl.view.hidden = NO;
+        }
+                        completion:NULL];
+    }
+    else
+    {
+        // XXXTODO
+    }
 }
 
 - (void)doSync:(id)sender
 {
+}
+
+- (void)onDone:(UIViewController *)ctrl
+{
+    [UIView transitionWithView:self.view.superview
+                      duration:1.0
+                       options:UIViewAnimationOptionTransitionFlipFromLeft
+                    animations:^(void)
+    {
+        [self viewWillAppear:YES];
+        self.view.hidden = NO;
+        ctrl.view.hidden = YES;
+    }
+                    completion:^(BOOL finished)
+    {
+        [ctrl.view removeFromSuperview];
+        [ctrl release];
+    }];
 }
 
 @end

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A6103DEA132CF6BF0083FBFD /* TasklistView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6103DE8132CF6BE0083FBFD /* TasklistView.m */; };
+		A6103DEB132CF6BF0083FBFD /* TasklistView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6103DE9132CF6BE0083FBFD /* TasklistView.xib */; };
+		A6103DF0132D02DF0083FBFD /* TasklistListView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6103DEE132D02DE0083FBFD /* TasklistListView.m */; };
 		A613AEF6132CDD0E000D6211 /* DateUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A613AEF3132CDD0E000D6211 /* DateUtils.m */; };
 		A613AEF7132CDD0E000D6211 /* String+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = A613AEF5132CDD0E000D6211 /* String+Utils.m */; };
 		A62EF781132B93F700FDB4FA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A62EF780132B93F700FDB4FA /* UIKit.framework */; };
@@ -52,6 +55,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A6103DE7132CF6BE0083FBFD /* TasklistView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TasklistView.h; sourceTree = "<group>"; };
+		A6103DE8132CF6BE0083FBFD /* TasklistView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TasklistView.m; sourceTree = "<group>"; };
+		A6103DE9132CF6BE0083FBFD /* TasklistView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TasklistView.xib; sourceTree = "<group>"; };
+		A6103DED132D02DE0083FBFD /* TasklistListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TasklistListView.h; sourceTree = "<group>"; };
+		A6103DEE132D02DE0083FBFD /* TasklistListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TasklistListView.m; sourceTree = "<group>"; };
 		A613AEF2132CDD0E000D6211 /* DateUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DateUtils.h; path = Utils/DateUtils.h; sourceTree = "<group>"; };
 		A613AEF3132CDD0E000D6211 /* DateUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DateUtils.m; path = Utils/DateUtils.m; sourceTree = "<group>"; };
 		A613AEF4132CDD0E000D6211 /* String+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "String+Utils.h"; path = "Utils/String+Utils.h"; sourceTree = "<group>"; };
@@ -152,7 +160,6 @@
 		A62EF771132B93F600FDB4FA = {
 			isa = PBXGroup;
 			children = (
-				A6A90580132CEE5E00F1F85A /* libsqlite3.dylib */,
 				A62EF786132B93F700FDB4FA /* Task Coach */,
 				A62EF77F132B93F700FDB4FA /* Frameworks */,
 				A62EF77D132B93F700FDB4FA /* Products */,
@@ -170,6 +177,7 @@
 		A62EF77F132B93F700FDB4FA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A6A90580132CEE5E00F1F85A /* libsqlite3.dylib */,
 				A6775FB8132CD7D900358BC9 /* CoreData.framework */,
 				A62EF780132B93F700FDB4FA /* UIKit.framework */,
 				A62EF782132B93F700FDB4FA /* Foundation.framework */,
@@ -194,6 +202,11 @@
 				A62EF787132B93F700FDB4FA /* Supporting Files */,
 				A62EF7A5132B952500FDB4FA /* ImageButton.h */,
 				A62EF7A6132B952500FDB4FA /* ImageButton.m */,
+				A6103DE7132CF6BE0083FBFD /* TasklistView.h */,
+				A6103DE8132CF6BE0083FBFD /* TasklistView.m */,
+				A6103DE9132CF6BE0083FBFD /* TasklistView.xib */,
+				A6103DED132D02DE0083FBFD /* TasklistListView.h */,
+				A6103DEE132D02DE0083FBFD /* TasklistListView.m */,
 			);
 			path = "Task Coach";
 			sourceTree = "<group>";
@@ -360,6 +373,7 @@
 				A6A90585132CF16C00F1F85A /* Lists.png in Resources */,
 				A6A90588132CF38100F1F85A /* Sync_highlighted.png in Resources */,
 				A6A90589132CF38100F1F85A /* Sync.png in Resources */,
+				A6103DEB132CF6BF0083FBFD /* TasklistView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -392,6 +406,8 @@
 				A613AEF6132CDD0E000D6211 /* DateUtils.m in Sources */,
 				A613AEF7132CDD0E000D6211 /* String+Utils.m in Sources */,
 				A6A90571132CE1DB00F1F85A /* CDList.m in Sources */,
+				A6103DEA132CF6BF0083FBFD /* TasklistView.m in Sources */,
+				A6103DF0132D02DF0083FBFD /* TasklistListView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

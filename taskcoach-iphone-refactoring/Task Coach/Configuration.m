@@ -44,7 +44,7 @@ static NSString *kSectionsConfigName = @"sections";
     {
 		NSUserDefaults *config = [NSUserDefaults standardUserDefaults];
 
-        currentListURL = [config URLForKey:kCurrentListConfigName];
+        currentListURL = [[config URLForKey:kCurrentListConfigName] copy];
 
         /*
         if ([config objectForKey:kSectionsConfigName])
@@ -82,7 +82,10 @@ static NSString *kSectionsConfigName = @"sections";
     if (!currentListURL)
         return nil;
 
-    return (CDList *)[getPersistentStoreCoordinator() managedObjectIDForURIRepresentation:currentListURL];
+    NSManagedObjectID *objid = [getPersistentStoreCoordinator() managedObjectIDForURIRepresentation:currentListURL];
+    CDList *list = (CDList *)[getManagedObjectContext() objectWithID:objid];
+
+    return list;
 }
 
 - (void)setCurrentList:(CDList *)currentList

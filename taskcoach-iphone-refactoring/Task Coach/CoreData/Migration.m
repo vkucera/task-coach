@@ -23,7 +23,6 @@
 void migrateOldDatabase(NSString *filename)
 {
 	sqlite3 *cn;
-	int rc;
 
     CDList *currentList = nil;
 
@@ -44,7 +43,7 @@ void migrateOldDatabase(NSString *filename)
 	}
 
 	NSInteger version = 0;
-	if ((rc = sqlite3_step(req)) == SQLITE_ROW)
+	if ((sqlite3_step(req)) == SQLITE_ROW)
 	{
 		version = atoi((const char*)sqlite3_column_text(req, 0));
 	}
@@ -63,7 +62,7 @@ void migrateOldDatabase(NSString *filename)
 		@throw [NSException exceptionWithName:@"DatabaseError" reason:[NSString stringWithUTF8String:sqlite3_errmsg(cn)] userInfo:nil];
 	}
 
-	while ((rc = sqlite3_step(req)) == SQLITE_ROW)
+	while ((sqlite3_step(req)) == SQLITE_ROW)
 	{
 		CDFile *file = [NSEntityDescription insertNewObjectForEntityForName:@"CDFile" inManagedObjectContext:getManagedObjectContext()];
         CDList *list = [NSEntityDescription insertNewObjectForEntityForName:@"CDList" inManagedObjectContext:getManagedObjectContext()];
@@ -109,7 +108,7 @@ void migrateOldDatabase(NSString *filename)
 		@throw [NSException exceptionWithName:@"DatabaseError" reason:[NSString stringWithUTF8String:sqlite3_errmsg(cn)] userInfo:nil];
 	}
 
-	while ((rc = sqlite3_step(req)) == SQLITE_ROW)
+	while ((sqlite3_step(req)) == SQLITE_ROW)
 	{
 		CDCategory *category = [NSEntityDescription insertNewObjectForEntityForName:@"CDCategory" inManagedObjectContext:getManagedObjectContext()];
 
@@ -157,7 +156,7 @@ void migrateOldDatabase(NSString *filename)
 		@throw [NSException exceptionWithName:@"DatabaseError" reason:[NSString stringWithUTF8String:sqlite3_errmsg(cn)] userInfo:nil];
 	}
 
-	while ((rc = sqlite3_step(req)) == SQLITE_ROW)
+	while ((sqlite3_step(req)) == SQLITE_ROW)
 	{
 		CDTask *task = [NSEntityDescription insertNewObjectForEntityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()];
 		
@@ -221,7 +220,7 @@ void migrateOldDatabase(NSString *filename)
 		@throw [NSException exceptionWithName:@"DatabaseError" reason:[NSString stringWithUTF8String:sqlite3_errmsg(cn)] userInfo:nil];
 	}
 	
-	while ((rc = sqlite3_step(req)) == SQLITE_ROW)
+	while ((sqlite3_step(req)) == SQLITE_ROW)
 	{
 		CDEffort *effort = [NSEntityDescription insertNewObjectForEntityForName:@"CDEffort" inManagedObjectContext:getManagedObjectContext()];
 		
@@ -267,7 +266,7 @@ void migrateOldDatabase(NSString *filename)
 		@throw [NSException exceptionWithName:@"DatabaseError" reason:[NSString stringWithUTF8String:sqlite3_errmsg(cn)] userInfo:nil];
 	}
 	
-	while ((rc = sqlite3_step(req)) == SQLITE_ROW)
+	while ((sqlite3_step(req)) == SQLITE_ROW)
 	{
 		NSManagedObjectID *taskId = [mapTasks objectForKey:[NSNumber numberWithInt:sqlite3_column_int(req, 0)]];
 		NSManagedObjectID *categoryId = [mapCategories objectForKey:[NSNumber numberWithInt:sqlite3_column_int(req, 1)]];

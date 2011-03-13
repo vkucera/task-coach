@@ -32,8 +32,11 @@ NSPersistentStoreCoordinator *getPersistentStoreCoordinator(void)
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    (void)getManagedObjectContext(); // Data migration if needed
+    
     // Override point for customization after application launch.
     [self.window makeKeyAndVisible];
+
     return YES;
 }
 
@@ -257,6 +260,7 @@ NSPersistentStoreCoordinator *getPersistentStoreCoordinator(void)
                     {
                         NSLog(@"Migrating object \"%@\" to list \"%@\"", obj.name, lst.name);
                         obj.list = lst;
+                        obj.file = nil;
                     }
                 }
             }
@@ -268,6 +272,8 @@ NSPersistentStoreCoordinator *getPersistentStoreCoordinator(void)
 
             if (defaultList)
             {
+                NSLog(@"Default list: %@ (%d)", defaultList.name, [[defaultList objectID] isTemporaryID]);
+
                 [Configuration instance].currentList = defaultList;
                 [[Configuration instance] save];
             }
