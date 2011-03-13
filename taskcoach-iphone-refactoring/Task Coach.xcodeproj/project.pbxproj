@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A613AEF6132CDD0E000D6211 /* DateUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A613AEF3132CDD0E000D6211 /* DateUtils.m */; };
+		A613AEF7132CDD0E000D6211 /* String+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = A613AEF5132CDD0E000D6211 /* String+Utils.m */; };
 		A62EF781132B93F700FDB4FA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A62EF780132B93F700FDB4FA /* UIKit.framework */; };
 		A62EF783132B93F700FDB4FA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A62EF782132B93F700FDB4FA /* Foundation.framework */; };
 		A62EF785132B93F700FDB4FA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A62EF784132B93F700FDB4FA /* CoreGraphics.framework */; };
@@ -44,6 +46,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A613AEF2132CDD0E000D6211 /* DateUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DateUtils.h; path = Utils/DateUtils.h; sourceTree = "<group>"; };
+		A613AEF3132CDD0E000D6211 /* DateUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DateUtils.m; path = Utils/DateUtils.m; sourceTree = "<group>"; };
+		A613AEF4132CDD0E000D6211 /* String+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "String+Utils.h"; path = "Utils/String+Utils.h"; sourceTree = "<group>"; };
+		A613AEF5132CDD0E000D6211 /* String+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "String+Utils.m"; path = "Utils/String+Utils.m"; sourceTree = "<group>"; };
 		A62EF77C132B93F700FDB4FA /* Task Coach.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Task Coach.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A62EF780132B93F700FDB4FA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A62EF782132B93F700FDB4FA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -117,6 +123,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A613AEF0132CDCD2000D6211 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				A613AEF2132CDD0E000D6211 /* DateUtils.h */,
+				A613AEF3132CDD0E000D6211 /* DateUtils.m */,
+				A613AEF4132CDD0E000D6211 /* String+Utils.h */,
+				A613AEF5132CDD0E000D6211 /* String+Utils.m */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
 		A62EF771132B93F600FDB4FA = {
 			isa = PBXGroup;
 			children = (
@@ -155,6 +172,7 @@
 				A6BE662D132BA468005105FA /* MainPageView.m */,
 				A62EF792132B93F700FDB4FA /* iPhone */,
 				A62EF799132B93F700FDB4FA /* iPad */,
+				A613AEF0132CDCD2000D6211 /* Utils */,
 				A6775FBA132CD7E100358BC9 /* CoreData */,
 				A6775FA9132CD37B00358BC9 /* Configuration */,
 				A62EF787132B93F700FDB4FA /* Supporting Files */,
@@ -345,6 +363,8 @@
 				A6775FD7132CD87400358BC9 /* CDHierarchicalDomainObject+Addons.m in Sources */,
 				A6775FD8132CD87400358BC9 /* CDTask+Addons.m in Sources */,
 				A62FF3FB132CDB8A00D33908 /* Migration.m in Sources */,
+				A613AEF6132CDD0E000D6211 /* DateUtils.m in Sources */,
+				A613AEF7132CDD0E000D6211 /* String+Utils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -13,7 +13,6 @@
 #define STATUS_MODIFIED           2
 #define STATUS_DELETED            3
 
-/*
 @interface CDDomainObject (Addons)
 
 - (BOOL)save;
@@ -21,6 +20,5 @@
 - (void)updateStatus:(NSInteger)status;
 - (void)markDirty;
 - (void)delete;
- */
 
 @end

@@ -6,8 +6,6 @@
 //  Copyright 2010 Jérôme Laheurte. All rights reserved.
 //
 
-/*
- 
 #import "Task_CoachAppDelegate.h"
 #import "CDDomainObject+Addons.h"
 #import "i18n.h"
@@ -64,5 +62,3 @@
 }
 
 @end
-
-*/

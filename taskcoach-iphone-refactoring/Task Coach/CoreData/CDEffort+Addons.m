@@ -7,9 +7,8 @@
 //
 
 /*
- 
+#import "Task_CoachAppDelegate.h"
 #import "CDEffort+Addons.h"
-#import "TaskCoachAppDelegate.h"
 #import "CDDomainObject+Addons.h"
 #import "Configuration.h"
 #import "LogUtils.h"
