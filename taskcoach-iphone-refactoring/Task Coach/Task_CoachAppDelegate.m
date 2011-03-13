@@ -8,6 +8,7 @@
 
 #import "Task_CoachAppDelegate.h"
 #import "Migration.h"
+#import "Configuration.h"
 #import "CDDomainObject.h"
 #import "CDFile.h"
 #import "CDList.h"
@@ -15,6 +16,11 @@
 NSManagedObjectContext *getManagedObjectContext(void)
 {
 	return ((Task_CoachAppDelegate *)([UIApplication sharedApplication].delegate)).managedObjectContext;
+}
+
+NSPersistentStoreCoordinator *getPersistentStoreCoordinator(void)
+{
+    return ((Task_CoachAppDelegate *)([UIApplication sharedApplication].delegate)).persistentStoreCoordinator;
 }
 
 @implementation Task_CoachAppDelegate
@@ -220,6 +226,8 @@ NSManagedObjectContext *getManagedObjectContext(void)
         }
         else
         {
+            CDList *defaultList = nil;
+
             for (CDFile *aFile in files)
             {
                 NSLog(@"Creating list for file %@", aFile.name);
@@ -227,6 +235,9 @@ NSManagedObjectContext *getManagedObjectContext(void)
                 CDList *lst = [NSEntityDescription insertNewObjectForEntityForName:@"CDList" inManagedObjectContext:getManagedObjectContext()];
                 lst.file = aFile;
                 lst.name = [aFile.name stringByDeletingPathExtension];
+
+                if (!defaultList)
+                    defaultList = lst;
                 
                 req = [[NSFetchRequest alloc] init];
                 [req setEntity:[NSEntityDescription entityForName:@"CDDomainObject" inManagedObjectContext:getManagedObjectContext()]];
@@ -252,6 +263,9 @@ NSManagedObjectContext *getManagedObjectContext(void)
             {
                 NSLog(@"Could not save: %@", [error localizedDescription]);
             }
+
+            if (defaultList)
+                [Configuration instance].currentList = defaultList;
         }
 
         [fileManager removeItemAtPath:path error:&error];

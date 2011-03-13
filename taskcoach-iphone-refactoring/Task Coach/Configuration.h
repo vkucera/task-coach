@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+#import "CDList.h"
+
+/*
 @interface TaskStatusSection : NSObject
 {
     NSString *condition;
@@ -18,14 +21,21 @@
 @property (nonatomic) BOOL displayed;
 
 @end
+ */
 
 @interface Configuration : NSObject
 {
-    NSArray *sections;
+    NSURL *currentListURL;
+
+    // NSArray *sections;
 }
 
 + (Configuration *)instance;
 
-@property (nonatomic, copy) NSArray *sections;
+- (void)save;
+
+@property (copy) CDList *currentList;
+
+// @property (nonatomic, copy) NSArray *sections;
 
 @end

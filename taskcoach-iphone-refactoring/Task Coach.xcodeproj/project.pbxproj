@@ -141,7 +141,6 @@
 		A62EF771132B93F600FDB4FA = {
 			isa = PBXGroup;
 			children = (
-				A6775FB8132CD7D900358BC9 /* CoreData.framework */,
 				A62EF786132B93F700FDB4FA /* Task Coach */,
 				A62EF77F132B93F700FDB4FA /* Frameworks */,
 				A62EF77D132B93F700FDB4FA /* Products */,
@@ -159,6 +158,7 @@
 		A62EF77F132B93F700FDB4FA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A6775FB8132CD7D900358BC9 /* CoreData.framework */,
 				A62EF780132B93F700FDB4FA /* UIKit.framework */,
 				A62EF782132B93F700FDB4FA /* Foundation.framework */,
 				A62EF784132B93F700FDB4FA /* CoreGraphics.framework */,
@@ -452,7 +452,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Task Coach/Task Coach-Prefix.pch";
 				INFOPLIST_FILE = "Task Coach/Task Coach-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "${TARGET_NAME}";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -465,7 +465,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Task Coach/Task Coach-Prefix.pch";
 				INFOPLIST_FILE = "Task Coach/Task Coach-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "${TARGET_NAME}";
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
 			};

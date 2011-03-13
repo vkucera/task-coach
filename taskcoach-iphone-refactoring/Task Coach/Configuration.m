@@ -7,9 +7,13 @@
 //
 
 #import "Configuration.h"
+#import "Task_CoachAppDelegate.h"
 
 static Configuration *_instance = NULL;
 
+static NSString *kCurrentListConfigName = @"currentList";
+
+/*
 static NSString *kSectionsConfigName = @"sections";
 
 @implementation TaskStatusSection
@@ -28,10 +32,11 @@ static NSString *kSectionsConfigName = @"sections";
 }
 
 @end
+*/
 
 @implementation Configuration
 
-@synthesize sections;
+// @synthesize sections;
 
 - (id)init
 {
@@ -39,6 +44,9 @@ static NSString *kSectionsConfigName = @"sections";
     {
 		NSUserDefaults *config = [NSUserDefaults standardUserDefaults];
 
+        currentListURL = [config URLForKey:kCurrentListConfigName];
+
+        /*
         if ([config objectForKey:kSectionsConfigName])
         {
             // XXXTODO
@@ -47,6 +55,7 @@ static NSString *kSectionsConfigName = @"sections";
         {
             // XXXTODO
         }
+         */
     }
 
     return self;
@@ -57,6 +66,29 @@ static NSString *kSectionsConfigName = @"sections";
     if (!_instance)
         _instance = [[Configuration alloc] init];
     return _instance;
+}
+
+- (void)save
+{
+    NSUserDefaults *config = [NSUserDefaults standardUserDefaults];
+    [config setURL:currentListURL forKey:kCurrentListConfigName];
+    [config synchronize];
+}
+
+#pragma mark - Properties
+
+- (CDList *)currentList
+{
+    if (!currentListURL)
+        return nil;
+
+    return (CDList *)[getPersistentStoreCoordinator() managedObjectIDForURIRepresentation:currentListURL];
+}
+
+- (void)setCurrentList:(CDList *)currentList
+{
+    [currentListURL release];
+    currentListURL = [[[currentList objectID] URIRepresentation] copy];
 }
 
 @end

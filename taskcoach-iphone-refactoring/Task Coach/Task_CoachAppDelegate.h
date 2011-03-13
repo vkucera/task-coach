@@ -28,3 +28,4 @@
 // Utility functions
 
 NSManagedObjectContext *getManagedObjectContext(void);
+NSPersistentStoreCoordinator *getPersistentStoreCoordinator(void);
