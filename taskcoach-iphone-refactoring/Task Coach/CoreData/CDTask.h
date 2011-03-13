@@ -28,4 +28,6 @@
 @property (nonatomic, retain) NSSet* categories;
 @property (nonatomic, retain) NSSet* efforts;
 
+- (void)addCategoriesObject:(CDCategory *)value;
+
 @end

@@ -35,6 +35,7 @@
 		A6775FD7132CD87400358BC9 /* CDHierarchicalDomainObject+Addons.m in Sources */ = {isa = PBXBuildFile; fileRef = A6775FD2132CD87400358BC9 /* CDHierarchicalDomainObject+Addons.m */; };
 		A6775FD8132CD87400358BC9 /* CDTask+Addons.m in Sources */ = {isa = PBXBuildFile; fileRef = A6775FD4132CD87400358BC9 /* CDTask+Addons.m */; };
 		A6A90571132CE1DB00F1F85A /* CDList.m in Sources */ = {isa = PBXBuildFile; fileRef = A6A90570132CE1DB00F1F85A /* CDList.m */; };
+		A6A90581132CEE5E00F1F85A /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A6A90580132CEE5E00F1F85A /* libsqlite3.dylib */; };
 		A6BE6618132B9C9E005105FA /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A6BE6617132B9C9E005105FA /* Icon.png */; };
 		A6BE661A132B9CA6005105FA /* Icon@2.png in Resources */ = {isa = PBXBuildFile; fileRef = A6BE6619132B9CA6005105FA /* Icon@2.png */; };
 		A6BE661C132B9D18005105FA /* Icon-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = A6BE661B132B9D18005105FA /* Icon-iPad.png */; };
@@ -100,6 +101,7 @@
 		A6775FD9132CD90300358BC9 /* i18n.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = i18n.h; sourceTree = "<group>"; };
 		A6A9056F132CE1DB00F1F85A /* CDList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDList.h; path = CoreData/CDList.h; sourceTree = "<group>"; };
 		A6A90570132CE1DB00F1F85A /* CDList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDList.m; path = CoreData/CDList.m; sourceTree = "<group>"; };
+		A6A90580132CEE5E00F1F85A /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		A6BE6617132B9C9E005105FA /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = ../Icon.png; sourceTree = "<group>"; };
 		A6BE6619132B9CA6005105FA /* Icon@2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2.png"; path = "../Icon@2.png"; sourceTree = "<group>"; };
 		A6BE661B132B9D18005105FA /* Icon-iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-iPad.png"; path = "../Icon-iPad.png"; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6A90581132CEE5E00F1F85A /* libsqlite3.dylib in Frameworks */,
 				A6775FB9132CD7D900358BC9 /* CoreData.framework in Frameworks */,
 				A62EF781132B93F700FDB4FA /* UIKit.framework in Frameworks */,
 				A62EF783132B93F700FDB4FA /* Foundation.framework in Frameworks */,
@@ -141,6 +144,7 @@
 		A62EF771132B93F600FDB4FA = {
 			isa = PBXGroup;
 			children = (
+				A6A90580132CEE5E00F1F85A /* libsqlite3.dylib */,
 				A62EF786132B93F700FDB4FA /* Task Coach */,
 				A62EF77F132B93F700FDB4FA /* Frameworks */,
 				A62EF77D132B93F700FDB4FA /* Products */,

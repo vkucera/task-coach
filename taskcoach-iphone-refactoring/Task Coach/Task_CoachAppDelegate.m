@@ -265,7 +265,10 @@ NSPersistentStoreCoordinator *getPersistentStoreCoordinator(void)
             }
 
             if (defaultList)
+            {
                 [Configuration instance].currentList = defaultList;
+                [[Configuration instance] save];
+            }
         }
 
         [fileManager removeItemAtPath:path error:&error];

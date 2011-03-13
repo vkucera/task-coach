@@ -5,8 +5,6 @@
 //  Created by Jérôme Laheurte on 06/06/10.
 //  Copyright 2010 Jérôme Laheurte. All rights reserved.
 //
-
-/*
  
 #import <sqlite3.h>
 
@@ -17,17 +15,17 @@
 #import "i18n.h"
 
 #import "CDFile.h"
+#import "CDList.h"
 #import "CDCategory.h"
 #import "CDTask.h"
 #import "CDEffort.h"
 
- */
-
 void migrateOldDatabase(NSString *filename)
 {
-    /*
 	sqlite3 *cn;
 	int rc;
+
+    CDList *currentList = nil;
 
 	NSLog(@"Starting CoreData migration.");
 
@@ -68,12 +66,20 @@ void migrateOldDatabase(NSString *filename)
 	while ((rc = sqlite3_step(req)) == SQLITE_ROW)
 	{
 		CDFile *file = [NSEntityDescription insertNewObjectForEntityForName:@"CDFile" inManagedObjectContext:getManagedObjectContext()];
+        CDList *list = [NSEntityDescription insertNewObjectForEntityForName:@"CDList" inManagedObjectContext:getManagedObjectContext()];
+        list.file = file;
 
 		const char *s = (const char *)sqlite3_column_text(req, 1);
 		if (s)
+        {
 			file.name = [NSString stringWithUTF8String:s];
+            list.name = [file.name stringByDeletingPathExtension];
+        }
 		else
+        {
 			file.name = @"";
+            list.name = @"Unnamed list";
+        }
 
 		s = (const char *)sqlite3_column_text(req, 2);
 		if (s)
@@ -84,9 +90,7 @@ void migrateOldDatabase(NSString *filename)
 		if (sqlite3_column_int(req, 3))
 		{
 			NSLog(@"Current file: %@", file.name);
-
-			[Configuration configuration].cdCurrentFile = file;
-			[[Configuration configuration] save];
+            currentList = list;
 		}
 
 		[mapFiles setObject:file.objectID forKey:[NSNumber numberWithInt:sqlite3_column_int(req, 0)]];
@@ -161,7 +165,11 @@ void migrateOldDatabase(NSString *filename)
 		{
 			NSManagedObjectID *theId = [mapFiles objectForKey:[NSNumber numberWithInt:sqlite3_column_int(req, 1)]];
 			if (theId)
-				task.file = (CDFile *)[getManagedObjectContext() objectWithID:theId];
+            {
+                CDFile *theFile = (CDFile *)[getManagedObjectContext() objectWithID:theId];
+				task.file = theFile;
+                task.list = theFile.list;
+            }
 		}
 
 		const char *s = (const char *)sqlite3_column_text(req, 2);
@@ -283,6 +291,11 @@ void migrateOldDatabase(NSString *filename)
 		@throw [NSException exceptionWithName:@"DatabaseError" reason:[error localizedDescription] userInfo:nil];
 	}
 	
+    if (currentList)
+    {
+        [Configuration instance].currentList = currentList;
+        [[Configuration instance] save];
+    }
+    
 	NSLog(@"CoreData migration ended.");
-     */
 }
