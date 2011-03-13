@@ -18,6 +18,20 @@
 		A62EF79C132B93F700FDB4FA /* Task_CoachAppDelegate_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = A62EF79B132B93F700FDB4FA /* Task_CoachAppDelegate_iPad.m */; };
 		A62EF79F132B93F700FDB4FA /* MainWindow_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A62EF79D132B93F700FDB4FA /* MainWindow_iPad.xib */; };
 		A62EF7A7132B952500FDB4FA /* ImageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = A62EF7A6132B952500FDB4FA /* ImageButton.m */; };
+		A62FF3FB132CDB8A00D33908 /* Migration.m in Sources */ = {isa = PBXBuildFile; fileRef = A62FF3FA132CDB8A00D33908 /* Migration.m */; };
+		A6775FAD132CD3A200358BC9 /* Configuration.m in Sources */ = {isa = PBXBuildFile; fileRef = A6775FAC132CD3A200358BC9 /* Configuration.m */; };
+		A6775FB7132CD7AC00358BC9 /* TaskCoachCD.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A6775FB4132CD7AC00358BC9 /* TaskCoachCD.xcdatamodeld */; };
+		A6775FB9132CD7D900358BC9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6775FB8132CD7D900358BC9 /* CoreData.framework */; };
+		A6775FBD132CD82100358BC9 /* CDHierarchicalDomainObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A6775FBC132CD82100358BC9 /* CDHierarchicalDomainObject.m */; };
+		A6775FC0132CD82100358BC9 /* CDFile.m in Sources */ = {isa = PBXBuildFile; fileRef = A6775FBF132CD82100358BC9 /* CDFile.m */; };
+		A6775FC3132CD82100358BC9 /* CDEffort.m in Sources */ = {isa = PBXBuildFile; fileRef = A6775FC2132CD82100358BC9 /* CDEffort.m */; };
+		A6775FC6132CD82100358BC9 /* CDCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = A6775FC5132CD82100358BC9 /* CDCategory.m */; };
+		A6775FC9132CD82200358BC9 /* CDDomainObject.m in Sources */ = {isa = PBXBuildFile; fileRef = A6775FC8132CD82200358BC9 /* CDDomainObject.m */; };
+		A6775FCC132CD82200358BC9 /* CDTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A6775FCB132CD82200358BC9 /* CDTask.m */; };
+		A6775FD5132CD87400358BC9 /* CDDomainObject+Addons.m in Sources */ = {isa = PBXBuildFile; fileRef = A6775FCE132CD87400358BC9 /* CDDomainObject+Addons.m */; };
+		A6775FD6132CD87400358BC9 /* CDEffort+Addons.m in Sources */ = {isa = PBXBuildFile; fileRef = A6775FD0132CD87400358BC9 /* CDEffort+Addons.m */; };
+		A6775FD7132CD87400358BC9 /* CDHierarchicalDomainObject+Addons.m in Sources */ = {isa = PBXBuildFile; fileRef = A6775FD2132CD87400358BC9 /* CDHierarchicalDomainObject+Addons.m */; };
+		A6775FD8132CD87400358BC9 /* CDTask+Addons.m in Sources */ = {isa = PBXBuildFile; fileRef = A6775FD4132CD87400358BC9 /* CDTask+Addons.m */; };
 		A6BE6618132B9C9E005105FA /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A6BE6617132B9C9E005105FA /* Icon.png */; };
 		A6BE661A132B9CA6005105FA /* Icon@2.png in Resources */ = {isa = PBXBuildFile; fileRef = A6BE6619132B9CA6005105FA /* Icon@2.png */; };
 		A6BE661C132B9D18005105FA /* Icon-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = A6BE661B132B9D18005105FA /* Icon-iPad.png */; };
@@ -48,6 +62,34 @@
 		A62EF79E132B93F700FDB4FA /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = iPad/en.lproj/MainWindow_iPad.xib; sourceTree = "<group>"; };
 		A62EF7A5132B952500FDB4FA /* ImageButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageButton.h; sourceTree = "<group>"; };
 		A62EF7A6132B952500FDB4FA /* ImageButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageButton.m; sourceTree = "<group>"; };
+		A62FF3F9132CDB8A00D33908 /* Migration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Migration.h; path = CoreData/Migration.h; sourceTree = "<group>"; };
+		A62FF3FA132CDB8A00D33908 /* Migration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Migration.m; path = CoreData/Migration.m; sourceTree = "<group>"; };
+		A6775FAB132CD3A200358BC9 /* Configuration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Configuration.h; sourceTree = "<group>"; };
+		A6775FAC132CD3A200358BC9 /* Configuration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Configuration.m; sourceTree = "<group>"; };
+		A6775FB5132CD7AC00358BC9 /* TaskCoachCD 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TaskCoachCD 2.xcdatamodel"; sourceTree = "<group>"; };
+		A6775FB6132CD7AC00358BC9 /* TaskCoachCD.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TaskCoachCD.xcdatamodel; sourceTree = "<group>"; };
+		A6775FB8132CD7D900358BC9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		A6775FBB132CD82100358BC9 /* CDHierarchicalDomainObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDHierarchicalDomainObject.h; path = CoreData/CDHierarchicalDomainObject.h; sourceTree = "<group>"; };
+		A6775FBC132CD82100358BC9 /* CDHierarchicalDomainObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDHierarchicalDomainObject.m; path = CoreData/CDHierarchicalDomainObject.m; sourceTree = "<group>"; };
+		A6775FBE132CD82100358BC9 /* CDFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDFile.h; path = CoreData/CDFile.h; sourceTree = "<group>"; };
+		A6775FBF132CD82100358BC9 /* CDFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDFile.m; path = CoreData/CDFile.m; sourceTree = "<group>"; };
+		A6775FC1132CD82100358BC9 /* CDEffort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDEffort.h; path = CoreData/CDEffort.h; sourceTree = "<group>"; };
+		A6775FC2132CD82100358BC9 /* CDEffort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDEffort.m; path = CoreData/CDEffort.m; sourceTree = "<group>"; };
+		A6775FC4132CD82100358BC9 /* CDCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDCategory.h; path = CoreData/CDCategory.h; sourceTree = "<group>"; };
+		A6775FC5132CD82100358BC9 /* CDCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDCategory.m; path = CoreData/CDCategory.m; sourceTree = "<group>"; };
+		A6775FC7132CD82100358BC9 /* CDDomainObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDDomainObject.h; path = CoreData/CDDomainObject.h; sourceTree = "<group>"; };
+		A6775FC8132CD82200358BC9 /* CDDomainObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDDomainObject.m; path = CoreData/CDDomainObject.m; sourceTree = "<group>"; };
+		A6775FCA132CD82200358BC9 /* CDTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDTask.h; path = CoreData/CDTask.h; sourceTree = "<group>"; };
+		A6775FCB132CD82200358BC9 /* CDTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDTask.m; path = CoreData/CDTask.m; sourceTree = "<group>"; };
+		A6775FCD132CD87400358BC9 /* CDDomainObject+Addons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CDDomainObject+Addons.h"; path = "CoreData/CDDomainObject+Addons.h"; sourceTree = "<group>"; };
+		A6775FCE132CD87400358BC9 /* CDDomainObject+Addons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CDDomainObject+Addons.m"; path = "CoreData/CDDomainObject+Addons.m"; sourceTree = "<group>"; };
+		A6775FCF132CD87400358BC9 /* CDEffort+Addons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CDEffort+Addons.h"; path = "CoreData/CDEffort+Addons.h"; sourceTree = "<group>"; };
+		A6775FD0132CD87400358BC9 /* CDEffort+Addons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CDEffort+Addons.m"; path = "CoreData/CDEffort+Addons.m"; sourceTree = "<group>"; };
+		A6775FD1132CD87400358BC9 /* CDHierarchicalDomainObject+Addons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CDHierarchicalDomainObject+Addons.h"; path = "CoreData/CDHierarchicalDomainObject+Addons.h"; sourceTree = "<group>"; };
+		A6775FD2132CD87400358BC9 /* CDHierarchicalDomainObject+Addons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CDHierarchicalDomainObject+Addons.m"; path = "CoreData/CDHierarchicalDomainObject+Addons.m"; sourceTree = "<group>"; };
+		A6775FD3132CD87400358BC9 /* CDTask+Addons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CDTask+Addons.h"; path = "CoreData/CDTask+Addons.h"; sourceTree = "<group>"; };
+		A6775FD4132CD87400358BC9 /* CDTask+Addons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CDTask+Addons.m"; path = "CoreData/CDTask+Addons.m"; sourceTree = "<group>"; };
+		A6775FD9132CD90300358BC9 /* i18n.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = i18n.h; sourceTree = "<group>"; };
 		A6BE6617132B9C9E005105FA /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = ../Icon.png; sourceTree = "<group>"; };
 		A6BE6619132B9CA6005105FA /* Icon@2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2.png"; path = "../Icon@2.png"; sourceTree = "<group>"; };
 		A6BE661B132B9D18005105FA /* Icon-iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-iPad.png"; path = "../Icon-iPad.png"; sourceTree = "<group>"; };
@@ -65,6 +107,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6775FB9132CD7D900358BC9 /* CoreData.framework in Frameworks */,
 				A62EF781132B93F700FDB4FA /* UIKit.framework in Frameworks */,
 				A62EF783132B93F700FDB4FA /* Foundation.framework in Frameworks */,
 				A62EF785132B93F700FDB4FA /* CoreGraphics.framework in Frameworks */,
@@ -77,6 +120,7 @@
 		A62EF771132B93F600FDB4FA = {
 			isa = PBXGroup;
 			children = (
+				A6775FB8132CD7D900358BC9 /* CoreData.framework */,
 				A62EF786132B93F700FDB4FA /* Task Coach */,
 				A62EF77F132B93F700FDB4FA /* Frameworks */,
 				A62EF77D132B93F700FDB4FA /* Products */,
@@ -104,12 +148,15 @@
 		A62EF786132B93F700FDB4FA /* Task Coach */ = {
 			isa = PBXGroup;
 			children = (
+				A6775FD9132CD90300358BC9 /* i18n.h */,
 				A62EF78F132B93F700FDB4FA /* Task_CoachAppDelegate.h */,
 				A62EF790132B93F700FDB4FA /* Task_CoachAppDelegate.m */,
 				A6BE662C132BA468005105FA /* MainPageView.h */,
 				A6BE662D132BA468005105FA /* MainPageView.m */,
 				A62EF792132B93F700FDB4FA /* iPhone */,
 				A62EF799132B93F700FDB4FA /* iPad */,
+				A6775FBA132CD7E100358BC9 /* CoreData */,
+				A6775FA9132CD37B00358BC9 /* Configuration */,
 				A62EF787132B93F700FDB4FA /* Supporting Files */,
 				A62EF7A5132B952500FDB4FA /* ImageButton.h */,
 				A62EF7A6132B952500FDB4FA /* ImageButton.m */,
@@ -120,6 +167,7 @@
 		A62EF787132B93F700FDB4FA /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				A6775FB4132CD7AC00358BC9 /* TaskCoachCD.xcdatamodeld */,
 				A62EF7A8132B95DD00FDB4FA /* Icons */,
 				A62EF788132B93F700FDB4FA /* Task Coach-Info.plist */,
 				A62EF789132B93F700FDB4FA /* InfoPlist.strings */,
@@ -159,6 +207,44 @@
 				A6BE6617132B9C9E005105FA /* Icon.png */,
 			);
 			name = Icons;
+			sourceTree = "<group>";
+		};
+		A6775FA9132CD37B00358BC9 /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				A6775FAB132CD3A200358BC9 /* Configuration.h */,
+				A6775FAC132CD3A200358BC9 /* Configuration.m */,
+			);
+			name = Configuration;
+			sourceTree = "<group>";
+		};
+		A6775FBA132CD7E100358BC9 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				A62FF3F9132CDB8A00D33908 /* Migration.h */,
+				A62FF3FA132CDB8A00D33908 /* Migration.m */,
+				A6775FCD132CD87400358BC9 /* CDDomainObject+Addons.h */,
+				A6775FCE132CD87400358BC9 /* CDDomainObject+Addons.m */,
+				A6775FCF132CD87400358BC9 /* CDEffort+Addons.h */,
+				A6775FD0132CD87400358BC9 /* CDEffort+Addons.m */,
+				A6775FD1132CD87400358BC9 /* CDHierarchicalDomainObject+Addons.h */,
+				A6775FD2132CD87400358BC9 /* CDHierarchicalDomainObject+Addons.m */,
+				A6775FD3132CD87400358BC9 /* CDTask+Addons.h */,
+				A6775FD4132CD87400358BC9 /* CDTask+Addons.m */,
+				A6775FCA132CD82200358BC9 /* CDTask.h */,
+				A6775FCB132CD82200358BC9 /* CDTask.m */,
+				A6775FC7132CD82100358BC9 /* CDDomainObject.h */,
+				A6775FC8132CD82200358BC9 /* CDDomainObject.m */,
+				A6775FC4132CD82100358BC9 /* CDCategory.h */,
+				A6775FC5132CD82100358BC9 /* CDCategory.m */,
+				A6775FC1132CD82100358BC9 /* CDEffort.h */,
+				A6775FC2132CD82100358BC9 /* CDEffort.m */,
+				A6775FBE132CD82100358BC9 /* CDFile.h */,
+				A6775FBF132CD82100358BC9 /* CDFile.m */,
+				A6775FBB132CD82100358BC9 /* CDHierarchicalDomainObject.h */,
+				A6775FBC132CD82100358BC9 /* CDHierarchicalDomainObject.m */,
+			);
+			name = CoreData;
 			sourceTree = "<group>";
 		};
 		A6BE6627132B9F08005105FA /* Buttons */ = {
@@ -246,6 +332,19 @@
 				A62EF79C132B93F700FDB4FA /* Task_CoachAppDelegate_iPad.m in Sources */,
 				A62EF7A7132B952500FDB4FA /* ImageButton.m in Sources */,
 				A6BE662E132BA469005105FA /* MainPageView.m in Sources */,
+				A6775FAD132CD3A200358BC9 /* Configuration.m in Sources */,
+				A6775FB7132CD7AC00358BC9 /* TaskCoachCD.xcdatamodeld in Sources */,
+				A6775FBD132CD82100358BC9 /* CDHierarchicalDomainObject.m in Sources */,
+				A6775FC0132CD82100358BC9 /* CDFile.m in Sources */,
+				A6775FC3132CD82100358BC9 /* CDEffort.m in Sources */,
+				A6775FC6132CD82100358BC9 /* CDCategory.m in Sources */,
+				A6775FC9132CD82200358BC9 /* CDDomainObject.m in Sources */,
+				A6775FCC132CD82200358BC9 /* CDTask.m in Sources */,
+				A6775FD5132CD87400358BC9 /* CDDomainObject+Addons.m in Sources */,
+				A6775FD6132CD87400358BC9 /* CDEffort+Addons.m in Sources */,
+				A6775FD7132CD87400358BC9 /* CDHierarchicalDomainObject+Addons.m in Sources */,
+				A6775FD8132CD87400358BC9 /* CDTask+Addons.m in Sources */,
+				A62FF3FB132CDB8A00D33908 /* Migration.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -367,6 +466,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		A6775FB4132CD7AC00358BC9 /* TaskCoachCD.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				A6775FB5132CD7AC00358BC9 /* TaskCoachCD 2.xcdatamodel */,
+				A6775FB6132CD7AC00358BC9 /* TaskCoachCD.xcdatamodel */,
+			);
+			currentVersion = A6775FB5132CD7AC00358BC9 /* TaskCoachCD 2.xcdatamodel */;
+			path = TaskCoachCD.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = A62EF773132B93F600FDB4FA /* Project object */;
 }

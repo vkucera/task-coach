@@ -44,7 +44,7 @@
 
 - (void)doShowToday:(id)sender
 {
-    // XXXTMP
+    /*
     UIView *v = [[UIView alloc] initWithFrame:self.view.frame];
     v.hidden = YES;
     [self.view.superview addSubview:v];
@@ -55,10 +55,12 @@
     v.hidden = NO;
     self.view.hidden = YES;
     [UIView commitAnimations];
+     */
 }
 
 - (void)doConfigure:(id)sender
 {
+    /*
     // XXXTMP
     UIView *v = [[UIView alloc] initWithFrame:self.view.frame];
     v.hidden = YES;
@@ -70,6 +72,7 @@
     v.hidden = NO;
     self.view.hidden = YES;
     [UIView commitAnimations];
+     */
 }
 
 @end
