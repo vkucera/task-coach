@@ -1,0 +1,372 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A62EF781132B93F700FDB4FA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A62EF780132B93F700FDB4FA /* UIKit.framework */; };
+		A62EF783132B93F700FDB4FA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A62EF782132B93F700FDB4FA /* Foundation.framework */; };
+		A62EF785132B93F700FDB4FA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A62EF784132B93F700FDB4FA /* CoreGraphics.framework */; };
+		A62EF78B132B93F700FDB4FA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A62EF789132B93F700FDB4FA /* InfoPlist.strings */; };
+		A62EF78E132B93F700FDB4FA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A62EF78D132B93F700FDB4FA /* main.m */; };
+		A62EF791132B93F700FDB4FA /* Task_CoachAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A62EF790132B93F700FDB4FA /* Task_CoachAppDelegate.m */; };
+		A62EF795132B93F700FDB4FA /* Task_CoachAppDelegate_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = A62EF794132B93F700FDB4FA /* Task_CoachAppDelegate_iPhone.m */; };
+		A62EF798132B93F700FDB4FA /* MainWindow_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = A62EF796132B93F700FDB4FA /* MainWindow_iPhone.xib */; };
+		A62EF79C132B93F700FDB4FA /* Task_CoachAppDelegate_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = A62EF79B132B93F700FDB4FA /* Task_CoachAppDelegate_iPad.m */; };
+		A62EF79F132B93F700FDB4FA /* MainWindow_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A62EF79D132B93F700FDB4FA /* MainWindow_iPad.xib */; };
+		A62EF7A7132B952500FDB4FA /* ImageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = A62EF7A6132B952500FDB4FA /* ImageButton.m */; };
+		A6BE6618132B9C9E005105FA /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A6BE6617132B9C9E005105FA /* Icon.png */; };
+		A6BE661A132B9CA6005105FA /* Icon@2.png in Resources */ = {isa = PBXBuildFile; fileRef = A6BE6619132B9CA6005105FA /* Icon@2.png */; };
+		A6BE661C132B9D18005105FA /* Icon-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = A6BE661B132B9D18005105FA /* Icon-iPad.png */; };
+		A6BE6626132B9D88005105FA /* MainPageView-iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6BE6624132B9D88005105FA /* MainPageView-iPhone.xib */; };
+		A6BE662A132B9F17005105FA /* Configure_highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = A6BE6628132B9F17005105FA /* Configure_highlighted.png */; };
+		A6BE662B132B9F17005105FA /* Configure.png in Resources */ = {isa = PBXBuildFile; fileRef = A6BE6629132B9F17005105FA /* Configure.png */; };
+		A6BE662E132BA469005105FA /* MainPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6BE662D132BA468005105FA /* MainPageView.m */; };
+		A6BE6631132BAF6A005105FA /* Today_highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = A6BE662F132BAF69005105FA /* Today_highlighted.png */; };
+		A6BE6632132BAF6A005105FA /* Today.png in Resources */ = {isa = PBXBuildFile; fileRef = A6BE6630132BAF69005105FA /* Today.png */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A62EF77C132B93F700FDB4FA /* Task Coach.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Task Coach.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A62EF780132B93F700FDB4FA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		A62EF782132B93F700FDB4FA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		A62EF784132B93F700FDB4FA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		A62EF788132B93F700FDB4FA /* Task Coach-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Task Coach-Info.plist"; sourceTree = "<group>"; };
+		A62EF78A132B93F700FDB4FA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		A62EF78C132B93F700FDB4FA /* Task Coach-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Task Coach-Prefix.pch"; sourceTree = "<group>"; };
+		A62EF78D132B93F700FDB4FA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		A62EF78F132B93F700FDB4FA /* Task_CoachAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Task_CoachAppDelegate.h; sourceTree = "<group>"; };
+		A62EF790132B93F700FDB4FA /* Task_CoachAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Task_CoachAppDelegate.m; sourceTree = "<group>"; };
+		A62EF793132B93F700FDB4FA /* Task_CoachAppDelegate_iPhone.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Task_CoachAppDelegate_iPhone.h; path = iPhone/Task_CoachAppDelegate_iPhone.h; sourceTree = "<group>"; };
+		A62EF794132B93F700FDB4FA /* Task_CoachAppDelegate_iPhone.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = Task_CoachAppDelegate_iPhone.m; path = iPhone/Task_CoachAppDelegate_iPhone.m; sourceTree = "<group>"; };
+		A62EF797132B93F700FDB4FA /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = iPhone/en.lproj/MainWindow_iPhone.xib; sourceTree = "<group>"; };
+		A62EF79A132B93F700FDB4FA /* Task_CoachAppDelegate_iPad.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Task_CoachAppDelegate_iPad.h; path = iPad/Task_CoachAppDelegate_iPad.h; sourceTree = "<group>"; };
+		A62EF79B132B93F700FDB4FA /* Task_CoachAppDelegate_iPad.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = Task_CoachAppDelegate_iPad.m; path = iPad/Task_CoachAppDelegate_iPad.m; sourceTree = "<group>"; };
+		A62EF79E132B93F700FDB4FA /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = iPad/en.lproj/MainWindow_iPad.xib; sourceTree = "<group>"; };
+		A62EF7A5132B952500FDB4FA /* ImageButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageButton.h; sourceTree = "<group>"; };
+		A62EF7A6132B952500FDB4FA /* ImageButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageButton.m; sourceTree = "<group>"; };
+		A6BE6617132B9C9E005105FA /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = ../Icon.png; sourceTree = "<group>"; };
+		A6BE6619132B9CA6005105FA /* Icon@2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2.png"; path = "../Icon@2.png"; sourceTree = "<group>"; };
+		A6BE661B132B9D18005105FA /* Icon-iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-iPad.png"; path = "../Icon-iPad.png"; sourceTree = "<group>"; };
+		A6BE6624132B9D88005105FA /* MainPageView-iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainPageView-iPhone.xib"; sourceTree = "<group>"; };
+		A6BE6628132B9F17005105FA /* Configure_highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Configure_highlighted.png; path = Images/Configure_highlighted.png; sourceTree = "<group>"; };
+		A6BE6629132B9F17005105FA /* Configure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Configure.png; path = Images/Configure.png; sourceTree = "<group>"; };
+		A6BE662C132BA468005105FA /* MainPageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainPageView.h; sourceTree = "<group>"; };
+		A6BE662D132BA468005105FA /* MainPageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainPageView.m; sourceTree = "<group>"; };
+		A6BE662F132BAF69005105FA /* Today_highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Today_highlighted.png; path = Images/Today_highlighted.png; sourceTree = "<group>"; };
+		A6BE6630132BAF69005105FA /* Today.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Today.png; path = Images/Today.png; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A62EF779132B93F700FDB4FA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A62EF781132B93F700FDB4FA /* UIKit.framework in Frameworks */,
+				A62EF783132B93F700FDB4FA /* Foundation.framework in Frameworks */,
+				A62EF785132B93F700FDB4FA /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A62EF771132B93F600FDB4FA = {
+			isa = PBXGroup;
+			children = (
+				A62EF786132B93F700FDB4FA /* Task Coach */,
+				A62EF77F132B93F700FDB4FA /* Frameworks */,
+				A62EF77D132B93F700FDB4FA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A62EF77D132B93F700FDB4FA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A62EF77C132B93F700FDB4FA /* Task Coach.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A62EF77F132B93F700FDB4FA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A62EF780132B93F700FDB4FA /* UIKit.framework */,
+				A62EF782132B93F700FDB4FA /* Foundation.framework */,
+				A62EF784132B93F700FDB4FA /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A62EF786132B93F700FDB4FA /* Task Coach */ = {
+			isa = PBXGroup;
+			children = (
+				A62EF78F132B93F700FDB4FA /* Task_CoachAppDelegate.h */,
+				A62EF790132B93F700FDB4FA /* Task_CoachAppDelegate.m */,
+				A6BE662C132BA468005105FA /* MainPageView.h */,
+				A6BE662D132BA468005105FA /* MainPageView.m */,
+				A62EF792132B93F700FDB4FA /* iPhone */,
+				A62EF799132B93F700FDB4FA /* iPad */,
+				A62EF787132B93F700FDB4FA /* Supporting Files */,
+				A62EF7A5132B952500FDB4FA /* ImageButton.h */,
+				A62EF7A6132B952500FDB4FA /* ImageButton.m */,
+			);
+			path = "Task Coach";
+			sourceTree = "<group>";
+		};
+		A62EF787132B93F700FDB4FA /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A62EF7A8132B95DD00FDB4FA /* Icons */,
+				A62EF788132B93F700FDB4FA /* Task Coach-Info.plist */,
+				A62EF789132B93F700FDB4FA /* InfoPlist.strings */,
+				A62EF78C132B93F700FDB4FA /* Task Coach-Prefix.pch */,
+				A62EF78D132B93F700FDB4FA /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A62EF792132B93F700FDB4FA /* iPhone */ = {
+			isa = PBXGroup;
+			children = (
+				A62EF793132B93F700FDB4FA /* Task_CoachAppDelegate_iPhone.h */,
+				A62EF794132B93F700FDB4FA /* Task_CoachAppDelegate_iPhone.m */,
+				A62EF796132B93F700FDB4FA /* MainWindow_iPhone.xib */,
+				A6BE6624132B9D88005105FA /* MainPageView-iPhone.xib */,
+			);
+			name = iPhone;
+			sourceTree = "<group>";
+		};
+		A62EF799132B93F700FDB4FA /* iPad */ = {
+			isa = PBXGroup;
+			children = (
+				A62EF79A132B93F700FDB4FA /* Task_CoachAppDelegate_iPad.h */,
+				A62EF79B132B93F700FDB4FA /* Task_CoachAppDelegate_iPad.m */,
+				A62EF79D132B93F700FDB4FA /* MainWindow_iPad.xib */,
+			);
+			name = iPad;
+			sourceTree = "<group>";
+		};
+		A62EF7A8132B95DD00FDB4FA /* Icons */ = {
+			isa = PBXGroup;
+			children = (
+				A6BE6627132B9F08005105FA /* Buttons */,
+				A6BE661B132B9D18005105FA /* Icon-iPad.png */,
+				A6BE6619132B9CA6005105FA /* Icon@2.png */,
+				A6BE6617132B9C9E005105FA /* Icon.png */,
+			);
+			name = Icons;
+			sourceTree = "<group>";
+		};
+		A6BE6627132B9F08005105FA /* Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				A6BE662F132BAF69005105FA /* Today_highlighted.png */,
+				A6BE6630132BAF69005105FA /* Today.png */,
+				A6BE6628132B9F17005105FA /* Configure_highlighted.png */,
+				A6BE6629132B9F17005105FA /* Configure.png */,
+			);
+			name = Buttons;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A62EF77B132B93F700FDB4FA /* Task Coach */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A62EF7A2132B93F700FDB4FA /* Build configuration list for PBXNativeTarget "Task Coach" */;
+			buildPhases = (
+				A62EF778132B93F700FDB4FA /* Sources */,
+				A62EF779132B93F700FDB4FA /* Frameworks */,
+				A62EF77A132B93F700FDB4FA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Task Coach";
+			productName = "Task Coach";
+			productReference = A62EF77C132B93F700FDB4FA /* Task Coach.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A62EF773132B93F600FDB4FA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = A62EF776132B93F700FDB4FA /* Build configuration list for PBXProject "Task Coach" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = A62EF771132B93F600FDB4FA;
+			productRefGroup = A62EF77D132B93F700FDB4FA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A62EF77B132B93F700FDB4FA /* Task Coach */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A62EF77A132B93F700FDB4FA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A62EF78B132B93F700FDB4FA /* InfoPlist.strings in Resources */,
+				A62EF798132B93F700FDB4FA /* MainWindow_iPhone.xib in Resources */,
+				A62EF79F132B93F700FDB4FA /* MainWindow_iPad.xib in Resources */,
+				A6BE6618132B9C9E005105FA /* Icon.png in Resources */,
+				A6BE661A132B9CA6005105FA /* Icon@2.png in Resources */,
+				A6BE661C132B9D18005105FA /* Icon-iPad.png in Resources */,
+				A6BE6626132B9D88005105FA /* MainPageView-iPhone.xib in Resources */,
+				A6BE662A132B9F17005105FA /* Configure_highlighted.png in Resources */,
+				A6BE662B132B9F17005105FA /* Configure.png in Resources */,
+				A6BE6631132BAF6A005105FA /* Today_highlighted.png in Resources */,
+				A6BE6632132BAF6A005105FA /* Today.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A62EF778132B93F700FDB4FA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A62EF78E132B93F700FDB4FA /* main.m in Sources */,
+				A62EF791132B93F700FDB4FA /* Task_CoachAppDelegate.m in Sources */,
+				A62EF795132B93F700FDB4FA /* Task_CoachAppDelegate_iPhone.m in Sources */,
+				A62EF79C132B93F700FDB4FA /* Task_CoachAppDelegate_iPad.m in Sources */,
+				A62EF7A7132B952500FDB4FA /* ImageButton.m in Sources */,
+				A6BE662E132BA469005105FA /* MainPageView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		A62EF789132B93F700FDB4FA /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A62EF78A132B93F700FDB4FA /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		A62EF796132B93F700FDB4FA /* MainWindow_iPhone.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A62EF797132B93F700FDB4FA /* en */,
+			);
+			name = MainWindow_iPhone.xib;
+			sourceTree = "<group>";
+		};
+		A62EF79D132B93F700FDB4FA /* MainWindow_iPad.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A62EF79E132B93F700FDB4FA /* en */,
+			);
+			name = MainWindow_iPad.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		A62EF7A0132B93F700FDB4FA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jérôme Laheurte (DQ65E4R93Z)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				PROVISIONING_PROFILE = "AAF550AC-0298-4411-B6E3-D8290F37CE85";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A62EF7A1132B93F700FDB4FA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Jérôme Laheurte";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "F55242E2-A132-402B-B359-9B9720960BA9";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A62EF7A3132B93F700FDB4FA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Task Coach/Task Coach-Prefix.pch";
+				INFOPLIST_FILE = "Task Coach/Task Coach-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		A62EF7A4132B93F700FDB4FA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Task Coach/Task Coach-Prefix.pch";
+				INFOPLIST_FILE = "Task Coach/Task Coach-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A62EF776132B93F700FDB4FA /* Build configuration list for PBXProject "Task Coach" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A62EF7A0132B93F700FDB4FA /* Debug */,
+				A62EF7A1132B93F700FDB4FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A62EF7A2132B93F700FDB4FA /* Build configuration list for PBXNativeTarget "Task Coach" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A62EF7A3132B93F700FDB4FA /* Debug */,
+				A62EF7A4132B93F700FDB4FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A62EF773132B93F600FDB4FA /* Project object */;
+}
