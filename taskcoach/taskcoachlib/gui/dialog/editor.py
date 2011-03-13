@@ -1197,9 +1197,7 @@ class EditorWithCommand(widgets.Dialog):
         # On Linux this is not needed but doesn't do any harm.
 
         self.CentreOnParent()
-        
-        table = wx.AcceleratorTable([(wx.ACCEL_NORMAL, wx.WXK_DELETE, wx.ID_DELETE),
-                                     (wx.ACCEL_CMD, ord('Z'), wx.ID_UNDO),
+        table = wx.AcceleratorTable([(wx.ACCEL_CMD, ord('Z'), wx.ID_UNDO),
                                      (wx.ACCEL_CMD, ord('Y'), wx.ID_REDO)])
         self._interior.SetAcceleratorTable(table)
         

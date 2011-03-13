@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns, meta, command, help, widgets, persistence # pylint: disable-msg=W0622
+from taskcoachlib import patterns, meta, command, help, widgets, persistence, thirdparty # pylint: disable-msg=W0622
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import base, task, note, category, attachment, effort
 from taskcoachlib.mailer import writeMail
@@ -1245,13 +1245,25 @@ class Edit(NeedsSelectionMixin, ViewerCommand):
             bitmap='edit', *args, **kwargs)
 
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
+        windowWithFocus = wx.Window.FindFocus()
+        if isinstance(windowWithFocus, thirdparty.hypertreelist.EditTextCtrl):
+            windowWithFocus.AcceptChanges()
+            windowWithFocus.Finish()
+            return
         try:
             columnName = event.columnName
         except AttributeError:
             columnName = ''
         editor = self.viewer.editItemDialog(self.viewer.curselection(), 
                                             self.bitmap, columnName)
-        editor.Show(show)        
+        editor.Show(show)    
+
+    def enabled(self, event):
+        windowWithFocus = wx.Window.FindFocus()
+        if isinstance(windowWithFocus, thirdparty.hypertreelist.EditTextCtrl):
+            return True
+        else:
+            return super(Edit, self).enabled(event)
 
 
 class Delete(NeedsSelectionMixin, ViewerCommand):
@@ -1261,15 +1273,28 @@ class Delete(NeedsSelectionMixin, ViewerCommand):
             bitmap='delete', *args, **kwargs)
         
     def doCommand(self, event):
-        deleteCommand = self.viewer.deleteItemCommand()
-        deleteCommand.do()
+        windowWithFocus = wx.Window.FindFocus()
+        if isinstance(windowWithFocus, wx.TextCtrl):
+            # Simulate Delete key press
+            pos = windowWithFocus.GetInsertionPoint()
+            windowWithFocus.Remove(pos, pos+1)            
+        else:
+            deleteCommand = self.viewer.deleteItemCommand()
+            deleteCommand.do()
+        
+    def enabled(self, event):
+        windowWithFocus = wx.Window.FindFocus()
+        if isinstance(windowWithFocus, wx.TextCtrl):
+            return True
+        else:
+            return super(Delete, self).enabled(event)
 
 
 class TaskNew(TaskListCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         self.taskKeywords = kwargs.pop('taskKeywords', dict())
         taskList = kwargs['taskList']
-        if 'menuText' not in kwargs:
+        if 'menuText' not in kwargs: # Provide for subclassing
             kwargs['menuText'] = taskList.newItemMenuText
             kwargs['helpText'] = taskList.newItemHelpText
         super(TaskNew, self).__init__(bitmap='new', *args, **kwargs)
