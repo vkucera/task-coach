@@ -32,8 +32,6 @@ NSPersistentStoreCoordinator *getPersistentStoreCoordinator(void)
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    (void)getManagedObjectContext(); // Data migration if needed
-    
     // Override point for customization after application launch.
     [self.window makeKeyAndVisible];
 

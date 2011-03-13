@@ -6,6 +6,7 @@
 //  Copyright 2011 __MyCompanyName__. All rights reserved.
 //
 
+#import "Task_CoachAppDelegate.h"
 #import "MainPageView.h"
 #import "CDList.h"
 #import "Configuration.h"
@@ -62,6 +63,8 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    (void)getManagedObjectContext(); // Data migration if needed
+    
     CDList *list = [Configuration instance].currentList;
     if (list)
         listsLabel.text = list.name;
