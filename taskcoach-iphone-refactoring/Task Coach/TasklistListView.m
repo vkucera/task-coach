@@ -167,7 +167,7 @@
             {
                 [Configuration instance].currentList = nil;
                 [[Configuration instance] save];
-                [parent onDone:self];
+                [parent onSave:self];
             }
             else
             {
@@ -208,7 +208,7 @@
     CDList *list = [resultsCtrl objectAtIndexPath:indexPath];
     [Configuration instance].currentList = list;
     [[Configuration instance] save];
-    [parent onDone:self];
+    [parent onSave:self];
 }
 
 #pragma mark - Fetched results controller delegate

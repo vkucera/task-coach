@@ -88,7 +88,7 @@
 {
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
     {
-        TasklistView *ctrl = [[TasklistView alloc] initWithTarget:self action:@selector(onDone:)];
+        TasklistView *ctrl = [[TasklistView alloc] initWithTarget:self action:@selector(onSave:)];
         ctrl.view.frame = self.view.frame;
         ctrl.view.hidden = YES;
         [self.view.superview addSubview:ctrl.view];
@@ -114,7 +114,7 @@
 {
 }
 
-- (void)onDone:(UIViewController *)ctrl
+- (void)onSave:(UIViewController *)ctrl
 {
     [UIView transitionWithView:self.view.superview
                       duration:1.0

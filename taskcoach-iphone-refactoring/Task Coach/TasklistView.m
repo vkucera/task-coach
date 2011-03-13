@@ -29,7 +29,7 @@
     [super dealloc];
 }
 
-- (IBAction)onDone:(id)sender
+- (IBAction)onSave:(id)sender
 {
     [target performSelector:action withObject:self];
 }

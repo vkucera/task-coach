@@ -20,6 +20,6 @@
 
 - initWithTarget:(id)target action:(SEL)action;
 
-- (IBAction)onDone:(id)sender;
+- (IBAction)onSave:(id)sender;
 
 @end
