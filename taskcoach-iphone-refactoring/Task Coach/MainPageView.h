@@ -13,6 +13,9 @@
 {
     IBOutlet ImageButton *todayButton;
     IBOutlet ImageButton *configureButton;
+    IBOutlet ImageButton *listsButton;
+    IBOutlet UILabel *listsLabel;
+    IBOutlet ImageButton *syncButton;
 }
 
 - (id)init;

@@ -7,7 +7,8 @@
 //
 
 #import "MainPageView.h"
-
+#import "CDList.h"
+#import "Configuration.h"
 
 @implementation MainPageView
 
@@ -22,6 +23,11 @@
 
 - (void)dealloc
 {
+    [todayButton release];
+    [configureButton release];
+    [listsButton release];
+    [listsLabel release];
+    [syncButton release];
     [super dealloc];
 }
 
@@ -32,7 +38,31 @@
     [super viewDidLoad];
 
     [todayButton setTarget:self action:@selector(doShowToday:)];
+    [listsButton setTarget:self action:@selector(doShowLists:)];
     [configureButton setTarget:self action:@selector(doConfigure:)];
+    [syncButton setTarget:self action:@selector(doSync:)];
+}
+
+- (void)viewDidUnload
+{
+    [todayButton release];
+    todayButton = nil;
+    [configureButton release];
+    configureButton = nil;
+    [listsButton release];
+    listsButton = nil;
+    [listsLabel release];
+    listsLabel = nil;
+    [syncButton release];
+    syncButton = nil;
+    [super viewDidUnload];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    CDList *list = [Configuration instance].currentList;
+    if (list)
+        listsLabel.text = list.name;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -60,19 +90,14 @@
 
 - (void)doConfigure:(id)sender
 {
-    /*
-    // XXXTMP
-    UIView *v = [[UIView alloc] initWithFrame:self.view.frame];
-    v.hidden = YES;
-    [self.view.superview addSubview:v];
+}
 
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:1.0];
-    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:self.view.superview cache:NO];
-    v.hidden = NO;
-    self.view.hidden = YES;
-    [UIView commitAnimations];
-     */
+- (void)doShowLists:(id)sender
+{
+}
+
+- (void)doSync:(id)sender
+{
 }
 
 @end
