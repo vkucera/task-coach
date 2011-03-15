@@ -1241,8 +1241,8 @@ class ViewerHideCompositeTasks(ViewerCommand, UICheckCommand):
 class Edit(NeedsSelectionMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(Edit, self).__init__(menuText=_('&Edit...\tRETURN'),
-            helpText=_('Edit the selected item(s)'), id=wx.ID_EDIT,
-            bitmap='edit', *args, **kwargs)
+            helpText=_('Edit the selected item(s)'), bitmap='edit', 
+            *args, **kwargs)
 
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
         windowWithFocus = wx.Window.FindFocus()
@@ -1269,8 +1269,8 @@ class Edit(NeedsSelectionMixin, ViewerCommand):
 class Delete(NeedsSelectionMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(Delete, self).__init__(menuText=_('&Delete\tDEL'),
-            helpText=_('Delete the selected item(s)'), id=wx.ID_DELETE, 
-            bitmap='delete', *args, **kwargs)
+            helpText=_('Delete the selected item(s)'), bitmap='delete', 
+            *args, **kwargs)
         
     def doCommand(self, event):
         windowWithFocus = wx.Window.FindFocus()

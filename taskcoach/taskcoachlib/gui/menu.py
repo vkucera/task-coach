@@ -310,8 +310,8 @@ class EditMenu(Menu):
             uicommand.EditPaste(),
             uicommand.EditPasteAsSubItem(viewer=viewerContainer),
             None,
-            uicommand.Edit(viewer=viewerContainer),
-            uicommand.Delete(viewer=viewerContainer),
+            uicommand.Edit(viewer=viewerContainer, id=wx.ID_EDIT),
+            uicommand.Delete(viewer=viewerContainer, id=wx.ID_DELETE),
             None)
         # Leave sufficient room for command names in the Undo and Redo menu items:
         self.appendMenu(_('&Select')+' '*50,
