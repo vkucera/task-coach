@@ -29,6 +29,10 @@ Release('1.2.12', 'March 12, 2011',
 menu of task and effort viewers and make menu's more consistent.''', '3206702'),
         Bug('''Added keyboard shortcuts for adding categories and notes.'''),
         Bug('''The Delete key wasn't working in text controls.''', '3206464')
+        ],
+    featuresAdded=[
+        Feature('''Provide more options for filtering completed, due and
+inactive tasks.''', 'http://uservoice.com/a/eBFSz')
         ]
     ),
     
