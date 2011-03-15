@@ -289,10 +289,7 @@ class TimelineViewer(BaseTaskViewer):
                                 itemPopupMenu)
 
     def onEdit(self, item):
-        if isinstance(item, task.Task):
-            edit = uicommand.Edit(viewer=self)
-        else:
-            edit = uicommand.EffortEdit(effortList=self.taskFile.efforts(), viewer=self)
+        edit = uicommand.Edit(viewer=self)
         edit(item)
         
     def curselection(self):
