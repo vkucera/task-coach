@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, os.path
 from taskcoachlib import widgets, patterns, command
-from taskcoachlib.gui import viewer, artprovider
+from taskcoachlib.gui import viewer, artprovider, uicommand
 from taskcoachlib.widgets import draganddrop
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, category, date, note, attachment
@@ -1200,7 +1200,11 @@ class EditorWithCommand(widgets.Dialog):
         table = wx.AcceleratorTable([(wx.ACCEL_CMD, ord('Z'), wx.ID_UNDO),
                                      (wx.ACCEL_CMD, ord('Y'), wx.ID_REDO)])
         self._interior.SetAcceleratorTable(table)
-        
+        self.undoCommand = uicommand.EditUndo()
+        self.redoCommand = uicommand.EditRedo()
+        self.undoCommand.bind(self._interior, wx.ID_UNDO)
+        self.redoCommand.bind(self._interior, wx.ID_REDO)
+                        
     def cancel(self, *args, **kwargs): # pylint: disable-msg=W0221
         patterns.Publisher().removeObserver(self.onItemRemoved)
         super(EditorWithCommand, self).cancel(*args, **kwargs)
