@@ -31,7 +31,9 @@ menu of task and effort viewers and make menu's more consistent.''', '3206702'),
         Bug('''The Delete key wasn't working in text controls.''', '3206464', 
             '3213964'),
         Bug('''The Enter key would stop working after opening and closing a 
-new viewer.''', '3206366')
+new viewer.''', '3206366'),
+        Bug('''Fixed a performance issue with the calendar viewer when
+tracking efforts.''')
         ],
     featuresAdded=[
         Feature('''Provide more options for filtering completed, due and

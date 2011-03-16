@@ -58,10 +58,11 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
     
     def __init__(self, *args, **kwargs):
         super(BaseTaskViewer, self).__init__(*args, **kwargs)
+        if kwargs.get('doRefresh', True):
+            self.refresher = refresher.SecondRefresher(self,
+                                                       task.Task.trackStartEventType(),
+                                                       task.Task.trackStopEventType())
         self.statusMessages = TaskViewerStatusMessages(self)
-        self.refresher = refresher.SecondRefresher(self,
-                                                  task.Task.trackStartEventType(),
-                                                  task.Task.trackStopEventType())
         self.__registerForAppearanceChanges()
         
     def domainObjectsToView(self):
@@ -497,6 +498,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'calendarviewer')
+        kwargs['doRefresh'] = False
         super(CalendarViewer, self).__init__(*args, **kwargs)
 
         start = self.settings.get(self.settingsSection(), 'viewdate')
