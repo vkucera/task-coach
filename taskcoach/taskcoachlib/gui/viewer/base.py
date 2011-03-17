@@ -327,18 +327,18 @@ class Viewer(wx.Panel):
         copyCommand = uicommand.EditCopy(viewer=self)
         pasteCommand = uicommand.EditPaste()
         editCommand = uicommand.Edit(viewer=self)
-        deleteCommand = uicommand.Delete(viewer=self)
+        self.deleteUICommand = uicommand.Delete(viewer=self) # For unittests
         cutCommand.bind(self, wx.ID_CUT)
         copyCommand.bind(self, wx.ID_COPY)
         pasteCommand.bind(self, wx.ID_PASTE)
         editCommand.bind(self, wx.ID_EDIT)
-        deleteCommand.bind(self, wx.ID_DELETE)
+        self.deleteUICommand.bind(self, wx.ID_DELETE)
         actionToolBarUICommands = self.createActionToolBarUICommands()
         if actionToolBarUICommands:
             actionToolBarUICommands.insert(0, None) # Separator 
         return [cutCommand, copyCommand, pasteCommand, None] + \
             self.createCreationToolBarUICommands() + \
-            [editCommand, deleteCommand] + actionToolBarUICommands
+            [editCommand, self.deleteUICommand] + actionToolBarUICommands
     
     def createCreationToolBarUICommands(self):
         ''' UI commands for creating new items. '''
