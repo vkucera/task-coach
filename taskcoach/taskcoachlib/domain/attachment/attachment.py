@@ -117,7 +117,7 @@ class Attachment(base.Object, NoteOwner):
     @patterns.eventSource
     def __setstate__(self, state, event=None):
         try:
-            super(Attachment, self).__setstate__(state, event)
+            super(Attachment, self).__setstate__(state, event=event)
         except AttributeError:
             pass
         self.setLocation(state['location'], event)
