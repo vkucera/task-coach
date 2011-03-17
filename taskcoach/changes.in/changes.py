@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.12', 'March 16, 2011',
+Release('1.2.12', 'March 17, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Bring back the 'Stop tracking effort' menu item in the context
@@ -32,7 +32,8 @@ menu of task and effort viewers and make menu's more consistent.''', '3206702'),
             '3213964'),
         Bug('''The Enter key would stop working after opening and closing a 
 new viewer.''', '3206366'),
-        Bug('''Make Ctrl-Z (undo) and Ctrl-Y (redo) work in edit dialogs.'''),
+        Bug('''Make Ctrl-Z (undo), Ctrl-Y (redo), Enter (edit) and Delete
+work in edit dialogs.'''),
         Bug('''Fixed a performance issue with the calendar viewer when
 tracking efforts.''')
         ],

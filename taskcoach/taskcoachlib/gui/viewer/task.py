@@ -109,27 +109,24 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
                                   self.presentation(), self.taskFile.efforts(),
                                   self.taskFile.categories(), self)
 
-    def createToolBarUICommands(self):
-        ''' UI commands to put on the toolbar of this viewer. '''
-        taskUICommands = \
-            [None,
-             uicommand.TaskNew(taskList=self.presentation(),
-                               settings=self.settings),
-             uicommand.NewSubItem(viewer=self),
-             uicommand.TaskNewFromTemplateButton(taskList=self.presentation(),
-                                                 settings=self.settings,
-                                                 bitmap='newtmpl'),
-             uicommand.Edit(viewer=self),
-             uicommand.Delete(viewer=self),
-             None,
-             uicommand.TaskToggleCompletion(viewer=self),
-             None,
-             uicommand.ViewerHideCompletedTasks(viewer=self,
-                 bitmap='filtercompletedtasks'),
-             uicommand.ViewerHideInactiveTasks(viewer=self,
-                 bitmap='filterinactivetasks')]
+    def createCreationToolBarUICommands(self):
+        return [uicommand.TaskNew(taskList=self.presentation(),
+                                  settings=self.settings),
+                uicommand.NewSubItem(viewer=self),
+                uicommand.TaskNewFromTemplateButton(taskList=self.presentation(),
+                                                    settings=self.settings,
+                                                    bitmap='newtmpl')] + \
+            super(BaseTaskViewer, self).createCreationToolBarUICommands()
+    
+    def createActionToolBarUICommands(self):
+        uiCommands = [uicommand.TaskToggleCompletion(viewer=self),
+                      None,
+                      uicommand.ViewerHideCompletedTasks(viewer=self,
+                          bitmap='filtercompletedtasks'),
+                      uicommand.ViewerHideInactiveTasks(viewer=self,
+                          bitmap='filterinactivetasks')]
         if self.settings.getboolean('feature', 'effort'):
-            taskUICommands.extend([
+            uiCommands.extend([
                 # EffortStart needs a reference to the original (task) list to
                 # be able to stop tracking effort for tasks that are already 
                 # being tracked, but that might be filtered in the viewer's 
@@ -139,11 +136,8 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
                                       taskList=self.taskFile.tasks()),
                 uicommand.EffortStop(effortList=self.taskFile.efforts(),
                                      taskList=self.taskFile.tasks())])
+        return uiCommands + super(BaseTaskViewer, self).createActionToolBarUICommands()
         
-        baseUICommands = super(BaseTaskViewer, self).createToolBarUICommands()    
-        # Insert the task viewer UI commands before the search box:
-        return baseUICommands[:-2] + taskUICommands + baseUICommands[-2:]
-     
     def nrOfVisibleTasks(self):
         # Make this overridable for viewers where the widget does not show all
         # items in the presentation, i.e. the widget does filtering on its own.

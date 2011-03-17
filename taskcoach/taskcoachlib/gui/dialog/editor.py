@@ -1195,8 +1195,11 @@ class EditorWithCommand(widgets.Dialog):
         # the first display!
 
         # On Linux this is not needed but doesn't do any harm.
-
         self.CentreOnParent()
+        
+        self.createUICommands()
+        
+    def createUICommands(self):
         table = wx.AcceleratorTable([(wx.ACCEL_CMD, ord('Z'), wx.ID_UNDO),
                                      (wx.ACCEL_CMD, ord('Y'), wx.ID_REDO)])
         self._interior.SetAcceleratorTable(table)

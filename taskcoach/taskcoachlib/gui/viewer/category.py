@@ -115,16 +115,11 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                        headerImageIndex=self.imageIndex['note_icon'],
                        renderCallback=lambda category: '', **kwargs))
         return columns
-
-    def createToolBarUICommands(self):
-        commands = super(BaseCategoryViewer, self).createToolBarUICommands()
-        commands[-2:-2] = [None,
-                           uicommand.CategoryNew(categories=self.presentation(),
-                                                 settings=self.settings),
-                           uicommand.NewSubItem(viewer=self),
-                           uicommand.Edit(viewer=self),
-                           uicommand.Delete(viewer=self)]
-        return commands
+    
+    def createCreationToolBarUICommands(self):
+        return [uicommand.CategoryNew(categories=self.presentation(),
+                                      settings=self.settings),
+                uicommand.NewSubItem(viewer=self)]
 
     def createColumnUICommands(self):
         commands = [\
