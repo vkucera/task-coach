@@ -231,8 +231,7 @@ class IOController(object):
     def addtemplate(self, showerror=wx.MessageBox):
         filename = self.__askUserForFile(_('Open template...'),
             fileDialogOpts={'default_extension': 'tsktmpl',
-                            'wildcard': _('%s template files (*.tsktmpl)|*.tsktmpl')%meta.name},
-            flags=wx.OPEN)
+                            'wildcard': _('%s template files (*.tsktmpl)|*.tsktmpl')%meta.name})
         if filename:
             templates = persistence.TemplateList(self.__settings.pathToTemplatesDir())
             try:
