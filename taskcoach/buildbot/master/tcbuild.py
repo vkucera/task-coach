@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from buildbot.steps.shell import Compile, ShellCommand, WithProperties
+from buildbot.steps.master import MasterShellCommand
 from buildbot.steps.transfer import FileUpload, DirectoryUpload
 from buildbot import interfaces
 from buildbot.process.buildstep import SUCCESS, FAILURE
@@ -26,7 +27,7 @@ from buildbot.process.buildstep import SUCCESS, FAILURE
 from twisted.python import log
 
 from zope.interface import implements
-
+import re, os
 
 class TaskCoachEmailLookup(object):
     implements(interfaces.IEmailLookup)
@@ -47,6 +48,14 @@ class Cleanup(Compile):
     def __init__(self, **kwargs):
         kwargs['command'] = ['make', 'nuke']
         Compile.__init__(self, **kwargs)
+
+    def start(self):
+        try:
+            self.getProperty('release')
+        except KeyError:
+            self.setProperty('release', False)
+
+        Compile.start(self)
 
 
 class Revision(Compile):
@@ -156,12 +165,6 @@ class Epydoc(Compile):
         kwargs['command'] = ['make', 'epydoc']
         Compile.__init__(self, **kwargs)
 
-    def createSummary(self, log):
-        Compile.createSummary(self, log)
-
-        self.addURL('Documentation',
-                    'http://www.fraca7.net/TaskCoach-doc/%s/index.html' % (self.getProperty('buildername')))
-
 
 class UploadDoc(DirectoryUpload):
     def __init__(self, **kwargs):
@@ -172,178 +175,211 @@ class UploadDoc(DirectoryUpload):
         kwargs['compress'] = None
         DirectoryUpload.__init__(self, **kwargs)
 
+    def start(self):
+        DirectoryUpload.start(self)
+
+        self.addURL('Documentation',
+                    'http://www.fraca7.net/TaskCoach-doc/%s/index.html' % (self.getProperty('buildername')))
 
 
 #==============================================================================
 # Platform-specific packages
 
 class DistCompile(Compile):
+    sep = '/'
+    ignoreWarnings = False
+    filesuffix = None
+    fileprefix = None
+    target = None
+
     def __init__(self, **kwargs):
-        kwargs['command'] = ['make', self.name,
-                             WithProperties('TCVERSION=r%s', 'got_revision')]
+        self.variant = kwargs.pop('variant', None)
         Compile.__init__(self, **kwargs)
 
-    def createSummary(self, log):
-        url = 'http://www.fraca7.net/TaskCoach-packages/%%s/%s' % self.filename()
-        url = url % (self.getProperty('branch') or '', self.getProperty('got_revision'))
+    def start(self):
+        if self.getProperty('release'):
+            self.command = ['make', self.target or self.name]
+        else:
+            self.command = ['make', self.target or self.name,
+                            WithProperties('TCVERSION=r%s', 'got_revision')]
 
-        self.addURL('Download', url)
+        Compile.start(self)
+
+    def commandComplete(self, cmd):
+        log = cmd.logs['stdio']
+
+        for line in log.readlines():
+            mt = self.filename_rx.search(line)
+            if mt:
+                filename = mt.group(1).strip()
+                if self.variant is not None:
+                    filename += '_' + self.variant
+                if self.filesuffix is not None:
+                    filename += self.filesuffix
+                if self.fileprefix is not None:
+                    filename = self.fileprefix + filename
+                self.setProperty('filename', filename)
+                self.setProperty('basefilename', filename[filename.rfind(self.sep) + 1:])
+                break
+
+        Compile.commandComplete(self, cmd)
+
+    def createSummary(self, log):
+        if not self.ignoreWarnings:
+            Compile.createSummary(self, log)
 
 
 class UploadBase(FileUpload):
     def __init__(self, **kwargs):
-        kwargs['slavesrc'] = WithProperties('dist/%s' % self.filename(), 'got_revision')
-        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-packages/%%s/%s' % self.filename(),
-                                              'branch', 'got_revision')
+        kwargs['slavesrc'] = WithProperties('%s', 'filename')
+        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-packages/%s/%s',
+                                              'branch', 'basefilename')
         kwargs['mode'] = 0644
         FileUpload.__init__(self, **kwargs)
 
+    def start(self):
+        if self.getProperty('release'):
+            self.masterdest = '/var/www/TaskCoach-packages/release/%s' % self.getProperty('basefilename')
+
+        FileUpload.start(self)
+
+        if not self.getProperty('release'):
+            url = 'http://www.fraca7.net/TaskCoach-packages/%s/%s' % (self.getProperty('branch') or '',
+                                                                      self.getProperty('basefilename'))
+
+            self.addURL('Download', url)
+
 # Mac OS X
 
-class DMGMixin:
-    def filename(self):
-        return 'TaskCoach-r%s.dmg'
+class BuildDMG(DistCompile):
+    filename_rx = re.compile(r'^created: (.*)')
 
-class BuildDMG(DistCompile, DMGMixin):
     name = 'dmg'
     description = ['Generating', 'MacOS', 'binary']
     descriptionDone = ['MacOS', 'binary']
 
 
-class UploadDMG(UploadBase, DMGMixin):
+class UploadDMG(UploadBase):
     pass
 
 # Windows
 
-class EXEMixin:
-    def filename(self):
-        return 'TaskCoach-r%s-win32.exe'
+class BuildEXE(DistCompile):
+    filename_rx = re.compile(r'(dist\\.*-win32.exe)')
+    sep = '\\'
 
-class BuildEXE(DistCompile, EXEMixin):
+    ignoreWarnings = True
     name = 'windist'
     description = ['Generating', 'Windows', 'binary']
     descriptionDone = ['Windows', 'binary']
 
 
-class UploadEXE(UploadBase, EXEMixin):
+class UploadEXE(UploadBase):
     pass
 
 # Source
 
 class BuildSourceTar(DistCompile):
+    filename_rx = re.compile(r'tar -cf (.*\.tar)')
+    filesuffix = '.gz'
+
     name = 'sdist_linux'
     description = ['Generating', 'source', 'distribution']
     descriptionDone = ['Source', 'distribution']
 
-    def createSummary(self, log):
-        # Special case, handle this ourselves
-        # DistCompile.createSummary(self, log)
-
-        self.addURL('download .tar.gz',
-                    'http://www.fraca7.net/TaskCoach-packages/%s/TaskCoach-r%s.tar.gz' % (self.getProperty('branch') or '',
-                                                                                          self.getProperty('got_revision')))
 
 class BuildSourceZip(DistCompile):
+    filename_rx = re.compile(r"creating '(.*\.zip)'")
+    sep = '\\'
+
+    ignoreWarnings = True
     name = 'sdist_windows'
     description = ['Generating', 'source', 'distribution']
     descriptionDone = ['Source', 'distribution']
 
-    def createSummary(self, log):
-        # Special case, handle this ourselves
-        # DistCompile.createSummary(self, log)
 
-        self.addURL('download .zip',
-                    'http://www.fraca7.net/TaskCoach-packages/%s/TaskCoach-r%s.zip' % (self.getProperty('branch') or '',
-                                                                                       self.getProperty('got_revision')))
+class UploadSourceTar(UploadBase):
+    pass
 
 
-class UploadSourceTar(FileUpload):
-    def __init__(self, **kwargs):
-        kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s.tar.gz', 'got_revision')
-        kwargs['masterdest'] = WithProperties('/var/www/TaskCoach-packages/%s/TaskCoach-r%s.tar.gz', 'branch', 'got_revision')
-        kwargs['mode'] = 0644
-        FileUpload.__init__(self, **kwargs)
-
-
-class UploadSourceZip(FileUpload):
-    def __init__(self, **kwargs):
-        kwargs['slavesrc'] = WithProperties('dist/TaskCoach-r%s.zip', 'got_revision')
-        kwargs['masterdest'] = WithProperties('/var/www/%s/TaskCoach-packages/TaskCoach-r%s.zip', 'branch', 'got_revision')
-        kwargs['mode'] = 0644
-        FileUpload.__init__(self, **kwargs)
+class UploadSourceZip(UploadBase):
+    pass
 
 # Debian
 
-class DEBMixin:
-    def filename(self):
-        return 'taskcoach_r%%s-1_%s.deb' % self.variant
+class BuildDEB(DistCompile):
+    filename_rx = re.compile(r'^mv (dist/taskcoach.*)_all\.deb')
+    filesuffix = '.deb'
 
-
-class BuildDEB(DistCompile, DEBMixin):
     name = 'deb'
     description = ['Generating', 'Debian', 'package']
     descriptionDone = ['Debian', 'package']
 
-    def __init__(self, **kwargs):
-        self.variant = kwargs.pop('variant')
-        DistCompile.__init__(self, **kwargs)
 
-
-class UploadDEB(UploadBase, DEBMixin):
-    def __init__(self, **kwargs):
-        self.variant = kwargs.pop('variant')
-        UploadBase.__init__(self, **kwargs)
-
+class UploadDEB(UploadBase):
+    pass
 
 # Generic RPM
 
 class BuildRPM(DistCompile):
+    filename_rx = re.compile(r'([^/]*.noarch.rpm) -> dist')
+    fileprefix = 'dist/'
+
     name = 'rpm'
+    target = 'rpm'
     description = ['Generating', 'RPM', 'package']
     descriptiondone = ['RPM', 'package']
 
-    def createSummary(self, log):
-        # Not calling parent because there are a bunch of warnings we
-        # don't really care about.
-        # DistCompile.createSummary(self, log)
-        self.addURL('download',
-                    'http://www.fraca7.net/TaskCoach-packages/%s/TaskCoach-r%s-1.noarch.rpm' % (self.getProperty('branch') or '',
-                                                                                                self.getProperty('got_revision')))
+class BuildSRPM(DistCompile):
+    filename_rx = re.compile(r'([^/]*.src.rpm) -> dist')
+    fileprefix = 'dist/'
 
-        self.addURL('download',
-                    'http://www.fraca7.net/TaskCoach-packages/%s/TaskCoach-r%s-1.src.rpm' % (self.getProperty('branch') or '',
-                                                                                             self.getProperty('got_revision')))
-
+    name = 'rpm'
+    target = 'rpm'
+    description = ['Generating', 'SRPM', 'package']
+    descriptiondone = ['SRPM', 'package']
 
 class UploadRPM(UploadBase):
-    def filename(self):
-        return 'TaskCoach-r%s-1.noarch.rpm'
+    pass
 
 
 class UploadSRPM(UploadBase):
-    def filename(self):
-        return 'TaskCoach-r%s-1.src.rpm'
+    pass
 
 # Fedora
 
-class FedoraMixin:
-    def filename(self):
-        return 'taskcoach-r%%s-1.fc%d.noarch.rpm' % self.fedoraVersion
+class BuildFedora14(DistCompile):
+    filename_rx = re.compile(r'([^/]*.noarch.rpm) -> dist')
+    fileprefix = 'dist/'
 
-
-class BuildFedoraBase(DistCompile, FedoraMixin):
     name = 'fedora'
     description = ['Generating', 'Fedora', 'package']
     descriptionDone = ['Fedora', 'package']
 
 
-class UploadFedoraBase(UploadBase, FedoraMixin):
+class UploadFedora14(UploadBase):
     pass
 
+# Release
 
-class BuildFedora14(BuildFedoraBase):
-    fedoraVersion = 14
+class CleanupReleaseStep(MasterShellCommand):
+    name = 'Cleanup'
+    description = ['Cleanup']
+
+    def __init__(self, **kwargs):
+        kwargs['command'] = 'rm -f /var/www/TaskCoach-packages/release/*'
+        MasterShellCommand.__init__(self, **kwargs)
 
 
-class UploadFedora14(UploadFedoraBase):
-    fedoraVersion = 14
+class ZipReleaseStep(MasterShellCommand):
+    name = 'Zipping'
+    description = ['Zip']
+
+    def __init__(self, **kwargs):
+        kwargs['command'] = '''cd /var/www/TaskCoach-packages/release
+zip release.zip *'''
+        MasterShellCommand.__init__(self, **kwargs)
+
+    def start(self):
+        MasterShellCommand.start(self)
+        self.addURL('Download release', 'http://www.fraca7.net/TaskCoach-packages/release/release.zip')
