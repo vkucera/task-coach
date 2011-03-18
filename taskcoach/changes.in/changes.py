@@ -30,6 +30,8 @@ menu of task and effort viewers and make menu's more consistent.''', '3206702'),
         Bug('''Added keyboard shortcuts for adding categories and notes.'''),
         Bug('''The Delete key wasn't working in text controls.''', '3206464', 
             '3213964'),
+        Bug('''The Enter key wasn't working in text controls on Mac OS X.''',
+            '3223714'),
         Bug('''The Enter key would stop working after opening and closing a 
 new viewer.''', '3206366'),
         Bug('''Make Ctrl-Z (undo), Ctrl-Y (redo), Enter (edit) and Delete

@@ -1262,6 +1262,8 @@ class Edit(NeedsSelectionMixin, ViewerCommand):
         windowWithFocus = wx.Window.FindFocus()
         if isinstance(windowWithFocus, thirdparty.hypertreelist.EditTextCtrl):
             return True
+        elif '__WXMAC__' == wx.Platform and isinstance(windowWithFocus, wx.TextCtrl):
+            return False
         else:
             return super(Edit, self).enabled(event)
 
@@ -1285,7 +1287,7 @@ class Delete(NeedsSelectionMixin, ViewerCommand):
     def enabled(self, event):
         windowWithFocus = wx.Window.FindFocus()
         if isinstance(windowWithFocus, wx.TextCtrl):
-            return True
+            return '__WXMAC__' != wx.Platform
         else:
             return super(Delete, self).enabled(event)
 
