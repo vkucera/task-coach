@@ -251,10 +251,8 @@ class PasteCommand(BaseCommand, SaveStateMixin):
     def undo_command(self):
         self.__sourceOfItemsToPaste.removeItems(self.__itemsToPaste)
         self.undoStates()
-        self.restoreItemsToPasteToSource()
         
     def redo_command(self):
-        self.clearSourceOfItemsToPaste()
         self.redoStates()
         self.__sourceOfItemsToPaste.extend(self.__itemsToPaste)
 
@@ -262,15 +260,9 @@ class PasteCommand(BaseCommand, SaveStateMixin):
         for item in self.__itemsToPaste:
             item.setParent(newParent) 
     
-    # Clipboard interaction:
     def getItemsToPaste(self):
-        return Clipboard().get()
-
-    def restoreItemsToPasteToSource(self):
-        Clipboard().put(self.__itemsToPaste, self.__sourceOfItemsToPaste)
-        
-    def clearSourceOfItemsToPaste(self):
-        Clipboard().clear() 
+        items, source = Clipboard().get()
+        return [item.copy() for item in items], source
 
 
 class PasteAsSubItemCommand(PasteCommand, CompositeMixin):

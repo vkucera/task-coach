@@ -1625,7 +1625,7 @@ class ToggleCategory(NeedsSelectedCategorizableMixin, ViewerCommand):
         return True # All mutual exclusive ancestors are checked
     
 
-class Mail(ViewerCommand):
+class Mail(NeedsSelectionMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(Mail, self).__init__(menuText=_('&Mail...\tCtrl-M'),
            helpText=help.mailItem, bitmap='envelope_icon', *args, **kwargs)
@@ -1650,14 +1650,20 @@ class Mail(ViewerCommand):
         if len(items) > 1:
             bodyLines = []
             for item in items:
-                bodyLines.append(item.subject(recursive=True) + '\n')
-                if item.description():
-                    bodyLines.extend(item.description().splitlines())
-                    bodyLines.append('\n')
+                bodyLines.extend(self.itemToLines(item))
         else:
             bodyLines = items[0].description().splitlines()
-        return '\r\n'.join(bodyLines)        
-
+        return '\r\n'.join(bodyLines)
+    
+    def itemToLines(self, item):
+        lines = []
+        subject = item.subject(recursive=True)
+        lines.append(subject)
+        if item.description():
+            lines.extend(item.description().splitlines())
+            lines.extend('\r\n')
+        return lines
+    
     def mail(self, subject, body, mail, showerror):
         try:
             mail('', subject, body)
