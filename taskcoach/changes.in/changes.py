@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.12', 'March 18, 2011',
+Release('1.2.12', 'March 19, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Bring back the 'Stop tracking effort' menu item in the context
@@ -39,7 +39,9 @@ work in edit dialogs.'''),
         Bug('''Fixed a performance issue with the calendar viewer when
 tracking efforts.'''),
         Bug('''Don't clear the clipboard after pasting an item, so that an
-item can be pasted multiple times.''', '3198880 ')
+item can be pasted multiple times.''', '3198880 '),
+        Bug('''Don't try to add deleted prerequisite tasks when
+loading the task file.''', '3219001')
         ],
     featuresAdded=[
         Feature('''Provide more options for filtering completed, due and

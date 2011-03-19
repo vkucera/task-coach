@@ -66,34 +66,41 @@ class DeleteTaskCommand(base.DeleteCommand, EffortCommand):
     def tasksToStopTracking(self):
         return self.items
 
-    def do_command(self):
+    @patterns.eventSource 
+    def do_command(self, event=None):
         super(DeleteTaskCommand, self).do_command()
-        self.stopTracking()
-        self.removePrerequisites()
-        
-    def undo_command(self):
+        self.stopTracking(event=event)
+        self.__removePrerequisites(event)
+    
+    @patterns.eventSource
+    def undo_command(self, event=None):
         super(DeleteTaskCommand, self).undo_command()
-        self.startTracking()
-        self.restorePrerequisites()
+        self.startTracking(event=event)
+        self.__restorePrerequisites(event)
         
-    def redo_command(self):
+    @patterns.eventSource
+    def redo_command(self, event=None):
         super(DeleteTaskCommand, self).redo_command()
-        self.stopTracking()
-        self.removePrerequisites()
-        
-    def removePrerequisites(self):
+        self.stopTracking(event=event)
+        self.__removePrerequisites(event)
+    
+    def __removePrerequisites(self, event):
         self.__relationsToRestore = dict()
         for task in self.items:
             prerequisites, dependencies = task.prerequisites(), task.dependencies()
             self.__relationsToRestore[task] = prerequisites, dependencies
-            task.removeTaskAsDependencyOf(prerequisites)
-            task.removeTaskAsPrerequisiteOf(dependencies) 
-                            
-    def restorePrerequisites(self):
-        for task, (prerequisites, dependencies) in self.__relationsToRestore.items():
-            task.addTaskAsDependencyOf(prerequisites)
-            task.addTaskAsPrerequisiteOf(dependencies)
+            task.removeTaskAsDependencyOf(prerequisites, event=event)
+            task.removeTaskAsPrerequisiteOf(dependencies, event=event)
+            task.setPrerequisites([], event=event)
+            task.setDependencies([], event=event)
 
+    def __restorePrerequisites(self, event):
+        for task, (prerequisites, dependencies) in self.__relationsToRestore.items():
+            task.addTaskAsDependencyOf(prerequisites, event=event)
+            task.addTaskAsPrerequisiteOf(dependencies, event=event)
+            task.setPrerequisites(prerequisites, event=event)
+            task.setDependencies(dependencies, event=event)
+            
 
 class NewTaskCommand(base.NewItemCommand):
     singular_name = _('New task')

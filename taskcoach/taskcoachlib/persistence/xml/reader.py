@@ -118,10 +118,19 @@ class XMLReader(object):
         
         def addPrerequisitesAndDependencies(tasks, event):
             for task in tasks:
+                if task.isDeleted():
+                    # Don't restore prerequisites and dependencies for deleted
+                    # tasks
+                    continue
                 dummyPrerequisites = task.prerequisites()
                 prerequisites = set()
                 for dummyPrerequisite in dummyPrerequisites:
-                    prerequisites.add(tasksById[dummyPrerequisite.id])
+                    try:
+                        prerequisites.add(tasksById[dummyPrerequisite.id])
+                    except KeyError:
+                        # Release 1.2.11 and older have a bug where tasks can
+                        # have prerequisites listed that don't exist anymore
+                        pass
                 task.setPrerequisites(prerequisites, event=event)
                 for prerequisite in prerequisites:
                     prerequisite.addDependencies([task], event=event)
