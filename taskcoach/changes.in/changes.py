@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.12', 'March 19, 2011',
+Release('1.2.12', 'March 20, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Bring back the 'Stop tracking effort' menu item in the context
