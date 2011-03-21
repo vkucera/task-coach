@@ -476,7 +476,6 @@ class DatesPage(Page):
         self._maxRecurrenceCountEntry.Enable(maxRecurrenceOn)
         
     def onStartDateTimeChanged(self, event):
-        print 'CHANGE'
         event.Skip()
         if len(self.items) > 1:
             self._startDateTimeLabel.SetValue(True) # pylint: disable-msg=E1101
@@ -485,12 +484,9 @@ class DatesPage(Page):
                self._dueDateTimeEntry.get() != date.DateTime():
                 if self._duration is None:
                     self._duration = self._dueDateTimeEntry.get() - self._startDateTimeEntry.get()
-                    print 'New duration', self._duration
                 else:
                     self._dueDateTimeEntry.set(self._startDateTimeEntry.get() + self._duration)
-                    print 'New due', self._dueDateTimeEntry.get()
             else:
-                print 'No duration.'
                 self._duration = None
             self.onDateTimeChanged()
 
@@ -503,7 +499,6 @@ class DatesPage(Page):
             if self._startDateTimeEntry.get() != date.DateTime() and \
                self._dueDateTimeEntry.get() != date.DateTime():
                 self._duration = self._dueDateTimeEntry.get() - self._startDateTimeEntry.get()
-                print 'Duration:', self._duration
             else:
                 self._duration = None
 
