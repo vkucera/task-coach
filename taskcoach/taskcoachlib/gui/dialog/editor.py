@@ -379,7 +379,14 @@ class DatesPage(Page):
                                                 callback=callback)
             setattr(self, '_%sEntry'%taskMethodName, dateTimeEntry)
             self.addEntry(label, dateTimeEntry)
-        
+
+            self._duration = None
+            if len(self.items) == 1:
+                dueDateTime = self.items[0].dueDateTime()
+                startDateTime = self.items[0].startDateTime()
+                if dueDateTime != date.DateTime() and startDateTime != date.DateTime():
+                    self._duration = dueDateTime - startDateTime
+
     def addReminderEntry(self):
         # pylint: disable-msg=W0201
         reminderDateTime = self.items[0].reminder() if len(self.items) == 1 else date.DateTime()
@@ -469,10 +476,22 @@ class DatesPage(Page):
         self._maxRecurrenceCountEntry.Enable(maxRecurrenceOn)
         
     def onStartDateTimeChanged(self, event):
+        print 'CHANGE'
         event.Skip()
         if len(self.items) > 1:
             self._startDateTimeLabel.SetValue(True) # pylint: disable-msg=E1101
         else:
+            if self._startDateTimeEntry.get() != date.DateTime() and \
+               self._dueDateTimeEntry.get() != date.DateTime():
+                if self._duration is None:
+                    self._duration = self._dueDateTimeEntry.get() - self._startDateTimeEntry.get()
+                    print 'New duration', self._duration
+                else:
+                    self._dueDateTimeEntry.set(self._startDateTimeEntry.get() + self._duration)
+                    print 'New due', self._dueDateTimeEntry.get()
+            else:
+                print 'No duration.'
+                self._duration = None
             self.onDateTimeChanged()
 
     def onDueDateTimeChanged(self, event):
@@ -481,6 +500,12 @@ class DatesPage(Page):
             self._dueDateTimeLabel.SetValue(True) # pylint: disable-msg=E1101
         else:
             self.onDateTimeChanged()
+            if self._startDateTimeEntry.get() != date.DateTime() and \
+               self._dueDateTimeEntry.get() != date.DateTime():
+                self._duration = self._dueDateTimeEntry.get() - self._startDateTimeEntry.get()
+                print 'Duration:', self._duration
+            else:
+                self._duration = None
 
     def onCompletionDateTimeChanged(self, event):
         event.Skip()

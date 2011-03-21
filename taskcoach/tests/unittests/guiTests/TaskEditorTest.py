@@ -29,8 +29,9 @@ class TaskEditorTestCase(test.wxTestCase):
     def setUp(self):
         super(TaskEditorTestCase, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
-        self.tomorrow = date.Now() + date.oneDay
-        self.yesterday = date.Now() - date.oneDay
+        self.today = date.Now()
+        self.tomorrow = self.today + date.oneDay
+        self.yesterday = self.today - date.oneDay
         self.taskFile = persistence.TaskFile()
         self.taskList = self.taskFile.tasks()
         self.effortList = self.taskFile.efforts()
@@ -303,12 +304,12 @@ class EditTaskTest(TaskEditorTestCase):
         self.assertAlmostEqual(self.tomorrow.toordinal(), 
                                self.task.completionDateTime().toordinal(),
                                places=2)
-        
+     
     def testSetNegativePriority(self):
         self.editor._interior[0]._priorityEntry.SetValue(-1)
         self.editor.ok()
         self.assertEqual(-1, self.task.priority())
-        
+     
     def testSetHourlyFee(self):
         self.editor._interior[5]._hourlyFeeEntry.set(100)
         self.editor.ok()
@@ -331,11 +332,34 @@ class EditTaskTest(TaskEditorTestCase):
         # pylint: disable-msg=E1101
         self.failUnless('filename' in [att.location() for att in self.task.attachments()])
         self.failUnless('filename' in [att.subject() for att in self.task.attachments()])
-        
+     
     def testRemoveAttachment(self):
         self.editor._interior[8].viewer.presentation().removeItems([self.attachment])
         self.editor.ok()
         self.assertEqual([], self.task.attachments()) # pylint: disable-msg=E1101
+
+    def testChangeStartDateChangesDueDate(self):
+        self.editor._interior[1]._startDateTimeEntry.set(self.yesterday)
+        self.editor._interior[1]._dueDateTimeEntry.set(self.today)
+        self.editor._interior[1]._startDateTimeEntry.set(self.today)
+        # XXXFIXME: why do I have to call this explicitely ?
+        self.editor._interior[1].onStartDateTimeChanged(DummyEvent())
+        self.assertAlmostEqual(self.editor._interior[1]._dueDateTimeEntry.get().toordinal(),
+                               self.tomorrow.toordinal(),
+                               places=2)
+
+    def testChangeDueDateChangesDuration(self):
+        self.editor._interior[1]._startDateTimeEntry.set(self.yesterday)
+        self.editor._interior[1]._dueDateTimeEntry.set(self.today)
+        self.editor._interior[1]._dueDateTimeEntry.set(self.tomorrow)
+        # XXXFIXME: same remark as above.
+        self.editor._interior[1].onDueDateTimeChanged(DummyEvent())
+        self.assertEqual(self.editor._interior[1]._duration, date.oneDay * 2)
+
+
+class DummyEvent(object):
+    def Skip(self):
+        pass
 
 
 class EditTaskWithChildrenTest(TaskEditorTestCase):

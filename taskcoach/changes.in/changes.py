@@ -22,6 +22,14 @@ from changetypes import *
 
 releases = [
 
+Release('1.2.13', 'April ??, 2011',
+    summary='''This is a feature release.''',
+    featuresAdded=[
+        Feature('''When possible, try to keep the task duration when
+changing its start date.'''),
+            ]
+        ),
+
 Release('1.2.12', 'March 20, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
