@@ -22,13 +22,21 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.13', 'April ??, 2011',
-    summary='''This is a feature release.''',
+Release('1.2.13', 'March 23, 2011',
+    summary='''This is a minor feature release.''',
     featuresAdded=[
+        Feature('''Allow for filtering by category via the View->Filter 
+menu. This also adds a menu item for showing all items regardless of 
+category, with Ctrl-R (R for Reset) as keyboard shortcut.'''),    
         Feature('''When possible, try to keep the task duration when
 changing its start date.'''),
-            ]
-        ),
+        ],
+    featuresChanged=[
+        Feature('''For consistency with the menu item for resetting category
+filters, the keyboard shortcut for resetting all filters is now Shift-Ctrl-R 
+(R for Reset).''')
+        ]
+    ),
 
 Release('1.2.12', 'March 20, 2011',
     summary='''This is a bugfix release.''',

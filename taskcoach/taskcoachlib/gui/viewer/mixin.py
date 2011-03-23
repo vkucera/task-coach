@@ -73,6 +73,7 @@ class SearchableViewerMixin(object):
 
 class FilterableViewerMixin(object):
     ''' A viewer that is filterable. This is a mixin class. '''
+    
     def __init__(self, *args, **kwargs):
         self.__filterUICommands = None
         super(FilterableViewerMixin, self).__init__(*args, **kwargs)
@@ -83,14 +84,37 @@ class FilterableViewerMixin(object):
     def getFilterUICommands(self):
         if not self.__filterUICommands:
             self.__filterUICommands = self.createFilterUICommands()
-        return self.__filterUICommands
+        # Recreate the category filter commands every time because the category
+        # filter menu depends on what categories there are
+        return self.__filterUICommands[:2] + self.createCategoryFilterCommands() + self.__filterUICommands[2:]
 
     def createFilterUICommands(self):
-        return [uicommand.ResetFilter(viewer=self)]
+        return [uicommand.ResetFilter(viewer=self), None]
 
     def resetFilter(self):
-        for eachCategory in self.taskFile.categories():
-            eachCategory.setFiltered(False)
+        self.taskFile.categories().resetAllFilteredCategories()
+
+    def createCategoryFilterCommands(self):
+        categories = self.taskFile.categories()
+        commands = [_('&Categories'), 
+                uicommand.ResetCategoryFilter(categories=categories)]
+        if categories:
+            commands.append(None)
+            commands.extend(self.createToggleCategoryFilterCommands(categories.rootItems()))
+        return [tuple(commands)]
+    
+    def createToggleCategoryFilterCommands(self, categories):
+        categories = list(categories)
+        categories.sort(key=lambda category: category.subject())
+        commands = [uicommand.ToggleCategoryFilter(category=category) for category in categories]
+        categoriesWithChildren = [category for category in categories if category.children()]
+        if categoriesWithChildren:
+            commands.append(None)
+            for category in categoriesWithChildren:
+                subCommands = [_('%s (subcategories)')%category.subject()]
+                subCommands.extend(self.createToggleCategoryFilterCommands(category.children()))
+                commands.append(tuple(subCommands))
+        return commands
 
 
 class FilterableViewerForCategorizablesMixin(FilterableViewerMixin):
@@ -170,7 +194,7 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
         self.setFilteredByDueDateTime('Never')
         self.setFilteredByCompletionDateTime('Never')
         self.setFilteredByStartDateTime('Never')
-        
+
     def createFilterUICommands(self):
         def dueDateTimeFilter(menuText, helpText, value):
             return uicommand.ViewerFilterByDueDateTime(menuText=menuText, 
@@ -284,11 +308,11 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
                                 'Year'))
         return super(FilterableViewerForTasksMixin, 
                      self).createFilterUICommands() + \
-            [None, dueDateTimeFilterCommands, completionDateTimeFilterCommands,
+            [dueDateTimeFilterCommands, completionDateTimeFilterCommands, 
              startDateTimeFilterCommands, 
              uicommand.ViewerHideActiveTasks(viewer=self),
              uicommand.ViewerHideCompositeTasks(viewer=self)]
-
+            
     def __getBooleanSetting(self, setting):
         return self.settings.getboolean(self.settingsSection(), setting)
     

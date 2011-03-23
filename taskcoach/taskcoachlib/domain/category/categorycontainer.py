@@ -43,3 +43,8 @@ class CategoryList(base.Collection):
     
     def filteredCategories(self):
         return [category for category in self if category.isFiltered()]
+    
+    @patterns.eventSource
+    def resetAllFilteredCategories(self, event=None):
+        for category in self:
+            category.setFiltered(False, event=event)

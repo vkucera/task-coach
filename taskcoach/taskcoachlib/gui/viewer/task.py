@@ -482,7 +482,6 @@ class SquareTaskViewer(BaseTaskViewer):
     def render(self, value):
         return self.renderer[self.__orderBy](value)
 
-    
 
 class CalendarViewer(mixin.AttachmentDropTargetMixin,
                      mixin.SortableViewerForTasksMixin,

@@ -452,7 +452,12 @@ class NeedsSelectedAttachmentsMixin(NeedsAttachmentViewerMixin, NeedsSelectionMi
 class NeedsAtLeastOneTaskMixin(object):
     def enabled(self, event): # pylint: disable-msg=W0613
         return len(self.taskList) > 0
-
+    
+    
+class NeedsAtLeastOneCategoryMixin(object):
+    def enabled(self, event): # pylint: disable-msg=W0613
+        return len(self.categories) > 0
+        
         
 class NeedsItemsMixin(object):
     def enabled(self, event): # pylint: disable-msg=W0613
@@ -964,12 +969,43 @@ class ClearSelection(NeedsSelectionMixin, ViewerCommand):
 
 class ResetFilter(ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(ResetFilter, self).__init__(menuText=_('&Clear all filters\tShift-Ctrl-F'),
+        super(ResetFilter, self).__init__(menuText=_('&Clear all filters\tShift-Ctrl-R'),
             helpText=help.resetFilter, bitmap='viewalltasks', *args, **kwargs)
     
     def doCommand(self, event):
         self.viewer.resetFilter()
+        
+        
+class ResetCategoryFilter(NeedsAtLeastOneCategoryMixin, CategoriesCommand):
+    def __init__(self, *args, **kwargs):
+        super(ResetCategoryFilter, self).__init__(menuText=_('&Reset all categories\tCtrl-R'),
+            helpText=help.resetCategoryFilter, *args, **kwargs)
 
+    def doCommand(self, event):
+        self.categories.resetAllFilteredCategories()
+        
+        
+class ToggleCategoryFilter(UICommand):
+    def __init__(self, *args, **kwargs):
+        self.category = kwargs.pop('category')
+        subject = self.category.subject()
+        # Would like to use wx.ITEM_RADIO for mutual exclusive categories, but
+        # a menu with radio items always has to have at least of the items 
+        # checked, while we allow none of the mutual exclusive categories to
+        # be checked. Dynamically changing between wx.ITEM_CHECK and 
+        # wx.ITEM_RADIO would be a work-around in theory, using wx.ITEM_CHECK 
+        # when none of the mutual exclusive categories is checked and 
+        # wx.ITEM_RADIO otherwise, but dynamically changing the type of menu 
+        # items isn't possible. Hence, we use wx.ITEM_CHECK, even for mutual 
+        # exclusive categories.
+        kind = wx.ITEM_CHECK
+        super(ToggleCategoryFilter, self).__init__(menuText='&' + subject,
+            helpText=_('Show/hide items belonging to %s')%subject, kind=kind, 
+            *args, **kwargs)
+
+    def doCommand(self, event):
+        self.category.setFiltered(event.IsChecked())
+        
 
 class ViewViewer(SettingsCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
