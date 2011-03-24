@@ -33,7 +33,10 @@ class Timer(wx.EvtHandler):
         self.__timer.Bind(wx.EVT_TIMER, self.__OnNotify)
 
     def Start(self, milliseconds, oneShot=True):
-        self.__timer.Start(milliseconds, oneShot)
+        # On some platforms, calling Start from another thread (than the
+        # wx loop one) doesn't work. And this is called from domain.task.Task
+        # constructor, so when syncing with the iPhone it may happen.
+        wx.CallAfter(self.__timer.Start, milliseconds, oneShot)
 
     def Stop(self):
         self.__timer.Stop()
