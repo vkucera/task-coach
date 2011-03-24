@@ -22,8 +22,12 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.13', 'March 23, 2011',
+Release('1.2.13', 'March 24, 2011',
     summary='''This is a minor feature release.''',
+    bugsFixed=[
+        Bug('''The notes section was missing from the help contents.''', 
+            '3241219')
+        ],
     featuresAdded=[
         Feature('''Allow for filtering by category via the View->Filter 
 menu. This also adds a menu item for showing all items regardless of 

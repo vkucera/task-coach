@@ -639,8 +639,9 @@ shortcuts are not configurable at the moment.''')%meta.metaDict),
 
 
 helpHTML = _TOC + _taskSection + _effortSection + _categorySection + \
-    _printingAndExportingSection + _emailSection + _syncmlSection + \
-    _iPhoneSection + _templatesSection + _guiSection + _shortcutSection
+    _noteSection + _printingAndExportingSection + _emailSection + \
+    _syncmlSection + _iPhoneSection + _templatesSection + _guiSection + \
+    _shortcutSection
 
 
 aboutHTML = _('''<h4>%(name)s - %(description)s</h4>
