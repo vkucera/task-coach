@@ -26,7 +26,10 @@ Release('1.2.13', 'March 24, 2011',
     summary='''This is a minor feature release.''',
     bugsFixed=[
         Bug('''The notes section was missing from the help contents.''', 
-            '3241219')
+            '3241219'),
+        Bug('''In the setup script, don't assume Mac OS X when the operating
+system isn't Linux or Windows. There's also the possibility the user is using
+BSD.''', '3236769')
         ],
     featuresAdded=[
         Feature('''Allow for filtering by category via the View->Filter 
