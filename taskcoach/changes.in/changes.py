@@ -30,6 +30,8 @@ menu. This also adds a menu item for showing all items regardless of
 category, with Ctrl-R (R for Reset) as keyboard shortcut.'''),    
         Feature('''When possible, try to keep the task duration when
 changing its start date.'''),
+        Feature('''Tasks in the calendar view can now be dragged and dropped
+        and resized to change their dates.'''),
         ],
     featuresChanged=[
         Feature('''For consistency with the menu item for resetting category

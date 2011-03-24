@@ -299,7 +299,21 @@ class wxSchedule( wx.EvtHandler ):
 		Return the start
 		"""
 		return self._start
-	
+
+	def SetSpan( self, start, end ):
+		"""
+		Sets both start and end
+		"""
+		self._start = start
+		self._end = end
+		self._eventNotification( True )
+
+	def GetSpan( self ):
+		"""
+		Returns a 2-tuple (start, end)
+		"""
+		return (self._start, self._end)
+
 	def GetIcons(self):
 		return self._icons
 	

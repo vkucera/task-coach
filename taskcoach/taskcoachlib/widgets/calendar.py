@@ -23,6 +23,7 @@ from taskcoachlib.thirdparty.calendar import wxScheduler, wxSchedule, \
     EVT_SCHEDULE_DCLICK, EVT_PERIODWIDTH_CHANGED
 from taskcoachlib.domain import date
 from taskcoachlib.widgets import draganddrop
+from taskcoachlib import command
 import tooltip
 
 
@@ -315,6 +316,31 @@ class TaskSchedule(wxSchedule):
                 self.foreground = wx.Color(*(self.task.foregroundColor() or (0, 0, 0)))
         finally:
             self.Thaw()
+
+    def SetSpan(self, start, end):
+        super(TaskSchedule, self).SetSpan(start, end)
+
+        kwargs = dict()
+        kwargs['startDateTime'] = date.DateTime(start.GetYear(),
+                                                start.GetMonth() + 1,
+                                                start.GetDay(),
+                                                start.GetHour(),
+                                                start.GetMinute(),
+                                                start.GetSecond())
+
+        end = date.DateTime(end.GetYear(),
+                            end.GetMonth() + 1,
+                            end.GetDay(),
+                            end.GetHour(),
+                            end.GetMinute(),
+                            end.GetSecond())
+
+        if self.task.completed():
+            kwargs['completionDateTime'] = end
+        else:
+            kwargs['dueDateTime'] = end
+
+        command.EditDatesCommand(items=[self.task], **kwargs).do()
 
     @property
     def task(self):

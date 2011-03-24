@@ -240,6 +240,27 @@ class MarkCompletedCommand(EditTaskCommand, EffortCommand):
         return self.items
 
 
+class EditDatesCommand(EditTaskCommand):
+    plural_name = _('Edit task dates')
+    singular_name = _('Edit "%s" dates')
+
+    def __init__(self, *args, **kwargs):
+        self._startDateTime = kwargs.pop('startDateTime', None)
+        self._dueDateTime = kwargs.pop('dueDateTime', None)
+        self._completionDateTime = kwargs.pop('completionDateTime', None)
+        super(EditDatesCommand, self).__init__(*args, **kwargs)
+
+    def do_command(self):
+        super(EditDatesCommand, self).do_command()
+        for item in self.items:
+            if self._startDateTime is not None:
+                item.setStartDateTime(self._startDateTime)
+            if self._dueDateTime is not None:
+                item.setDueDateTime(self._dueDateTime)
+            if self._completionDateTime is not None:
+                item.setCompletionDateTime(self._completionDateTime)
+
+
 class StartEffortCommand(EffortCommand):
     plural_name = _('Start tracking')
     singular_name = _('Start tracking "%s"')
