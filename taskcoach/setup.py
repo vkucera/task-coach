@@ -75,19 +75,18 @@ languages = sorted(meta.data.languages.keys())
 for language in languages:
     setupOptions['classifiers'].append('Natural Language :: %s'%language)
 
-# Add data files for Debian-based systems:
-current_dist = [dist.lower() for dist in platform.dist()]
-if 'debian' in current_dist or 'ubuntu' in current_dist:
-    setupOptions['data_files'] = [\
-        ('share/applications', ['build.in/fedora/taskcoach.desktop']), 
-        ('share/pixmaps', ['icons.in/taskcoach.png'])]
-
 system = platform.system()
 if system == 'Linux':
     setupOptions['package_data'] = {'taskcoachlib': ['bin.in/linux/_pysyncml.so']}
+    # Add data files for Debian-based systems:
+    current_dist = [dist.lower() for dist in platform.dist()]
+    if 'debian' in current_dist or 'ubuntu' in current_dist:
+        setupOptions['data_files'] = [\
+	    ('share/applications', ['build.in/fedora/taskcoach.desktop']), 
+	    ('share/pixmaps', ['icons.in/taskcoach.png'])]
 elif system == 'Windows':
     setupOptions['scripts'].append('taskcoach.pyw')
-else:
+elif system == 'Darwin':
     # When packaging for MacOS, choose the right binary depending on
     # the platform word size. Actually, we're always packaging on 32
     # bits.
