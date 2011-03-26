@@ -22,11 +22,13 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.13', 'March 24, 2011',
-    summary='''This is a minor feature release.''',
+Release('1.2.13', 'March 26, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''The notes section was missing from the help contents.''', 
             '3241219'),
+        Bug('''Mark subtasks of tasks that have uncompleted prerequisites
+as inactive (grey).''', '3237286'),
         Bug('''In the setup script, don't assume Mac OS X when the operating
 system isn't Linux or Windows. There's also the possibility the user is using
 BSD.''', '3236769')
@@ -38,7 +40,7 @@ category, with Ctrl-R (R for Reset) as keyboard shortcut.'''),
         Feature('''When possible, try to keep the task duration when
 changing its start date.'''),
         Feature('''Tasks in the calendar view can now be dragged and dropped
-        and resized to change their dates.'''),
+and resized to change their dates.'''),
         ],
     featuresChanged=[
         Feature('''For consistency with the menu item for resetting category
