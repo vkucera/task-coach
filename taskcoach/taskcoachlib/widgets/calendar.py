@@ -317,29 +317,29 @@ class TaskSchedule(wxSchedule):
         finally:
             self.Thaw()
 
-    def SetSpan(self, start, end):
-        super(TaskSchedule, self).SetSpan(start, end)
+    def SetStart(self, start):
+        command.EditDatesCommand(items=[self.task], startDateTime=self.tcDateTime(start)).do()
 
-        kwargs = dict()
-        kwargs['startDateTime'] = date.DateTime(start.GetYear(),
-                                                start.GetMonth() + 1,
-                                                start.GetDay(),
-                                                start.GetHour(),
-                                                start.GetMinute(),
-                                                start.GetSecond())
-
-        end = date.DateTime(end.GetYear(),
-                            end.GetMonth() + 1,
-                            end.GetDay(),
-                            end.GetHour(),
-                            end.GetMinute(),
-                            end.GetSecond())
-
+    def SetEnd(self, end):
         if self.task.completed():
-            kwargs['completionDateTime'] = end
+            command.EditDatesCommand(items=[self.task], completionDateTime=self.tcDateTime(end)).do()
         else:
-            kwargs['dueDateTime'] = end
+            command.EditDatesCommand(items=[self.task], dueDateTime=self.tcDateTime(end)).do()
 
+    def Offset(self, ts):
+        kwargs = dict()
+        if self.task.startDateTime() != date.DateTime():
+            start = self.GetStart()
+            start.AddTS(ts)
+            kwargs['startDateTime'] = self.tcDateTime(start)
+        if self.task.completed():
+            end = self.GetEnd()
+            end.AddTS(ts)
+            kwargs['completionDateTime'] = self.tcDateTime(end)
+        elif self.task.dueDateTime() != date.DateTime():
+            end = self.GetEnd()
+            end.AddTS(ts)
+            kwargs['dueDateTime'] = self.tcDateTime(end)
         command.EditDatesCommand(items=[self.task], **kwargs).do()
 
     @property
@@ -381,3 +381,12 @@ class TaskSchedule(wxSchedule):
             (dateTime.day, dateTime.month - 1, dateTime.year,
              dateTime.hour, dateTime.minute, dateTime.second)
         return wx.DateTimeFromDMY(*args)
+
+    @staticmethod
+    def tcDateTime(dateTime):
+        return date.DateTime(dateTime.GetYear(),
+                             dateTime.GetMonth() + 1,
+                             dateTime.GetDay(),
+                             dateTime.GetHour(),
+                             dateTime.GetMinute(),
+                             dateTime.GetSecond())

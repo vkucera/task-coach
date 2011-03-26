@@ -95,14 +95,14 @@ class wxSchedulerPaint( object ):
 	def _doClickControl( self, point, shiftDown=False ):
 		if self._scheduleDraggingState in [3, 4]:
 			self._scheduleDraggingState += 2
-			self._scheduleDraggingOrigin = point
+			self._scheduleDraggingOrigin = self._computeCoords(point, 0, 0)
 			self._scheduleDraggingStick = shiftDown
 		else:
 			pMin, pMax, sch = self._findSchedule( point )
 			if isinstance( sch, wxSchedule ):
 				self._scheduleDragged = pMin, pMax, sch
 				self._scheduleDraggingState = 1
-				self._scheduleDraggingOrigin = point
+				self._scheduleDraggingOrigin = self._computeCoords(point, 0, 0)
 				self._scheduleDraggingStick = shiftDown
 			else:
 				self._processEvt( wxEVT_COMMAND_SCHEDULE_ACTIVATED, point )
@@ -111,14 +111,11 @@ class wxSchedulerPaint( object ):
 		if self._scheduleDraggingState == 1:
 			self._processEvt( wxEVT_COMMAND_SCHEDULE_ACTIVATED, point )
 		elif self._scheduleDraggingState == 2:
-			_, _, dateTime = self._computeAllCoords( point )
+			_, dateTime = self._computeCoords( point, 0, 0 )
 
 			sched = self._scheduleDragged[2]
 			self._drawDragging( None, self._computeAllCoords )
-			delta = sched.GetEnd().Subtract( sched.GetStart() )
-			start = utils.copyDateTime( dateTime )
-			dateTime.AddTS( delta )
-			sched.SetSpan( start, utils.copyDateTime( dateTime ) )
+			sched.Offset( dateTime.Subtract( self._scheduleDraggingOrigin[1] ) )
 			self._scheduleDraggingState = 0
 
 		elif self._scheduleDraggingState in [5, 6]:
@@ -127,11 +124,9 @@ class wxSchedulerPaint( object ):
 
 			sched = self._scheduleDragged[2]
 			if self._scheduleDraggingState == 5:
-				start, end = utils.copyDateTime( dateTime ), sched.GetEnd()
+				sched.SetStart( utils.copyDateTime( dateTime ) )
 			else:
-				start, end = sched.GetStart(), utils.copyDateTime( dateTime )
-
-			sched.SetSpan( start, end )
+				sched.SetEnd( utils.copyDateTime( dateTime ) )
 
 			self._scheduleDraggingState = 0
 			self._drawDragging( None, coords )
@@ -177,8 +172,8 @@ class wxSchedulerPaint( object ):
 		elif self._scheduleDraggingState in [5, 6]:
 			self._drawDragging( point, {5: self._computeStartCoords, 6: self._computeEndCoords}[self._scheduleDraggingState] )
 		elif self._scheduleDraggingState == 1:
-			dx = abs(self._scheduleDraggingOrigin.x - point.x)
-			dy = abs(self._scheduleDraggingOrigin.y - point.y)
+			dx = abs(self._scheduleDraggingOrigin[0].x - point.x)
+			dy = abs(self._scheduleDraggingOrigin[0].y - point.y)
 			if dx >= wx.SystemSettings.GetMetric( wx.SYS_DRAG_X ) or \
 			   dy >= wx.SystemSettings.GetMetric( wx.SYS_DRAG_Y ):
 				self._scheduleDraggingState = 2
@@ -232,8 +227,8 @@ class wxSchedulerPaint( object ):
 
 		pMin, pMax, sch = self._scheduleDragged
 
-		dx = point.x - self._scheduleDraggingOrigin.x
-		dy = point.y - self._scheduleDraggingOrigin.y
+		dx = point.x - self._scheduleDraggingOrigin[0].x
+		dy = point.y - self._scheduleDraggingOrigin[0].y
 
 		rMin, theTime = self._computeCoords( pMin, dx, dy )
 		rMax = wx.Point( rMin.x + pMax.x - pMin.x, rMin.y + pMax.y - pMin.y )
@@ -245,8 +240,8 @@ class wxSchedulerPaint( object ):
 
 		pMin, pMax, sch = self._scheduleDragged
 
- 		dx = point.x - self._scheduleDraggingOrigin.x
- 		dy = point.y - self._scheduleDraggingOrigin.y
+ 		dx = point.x - self._scheduleDraggingOrigin[0].x
+ 		dy = point.y - self._scheduleDraggingOrigin[0].y
 
 		rMin, theTime = self._computeCoords( pMin, dx, dy )
 		rMax = pMax
@@ -258,8 +253,8 @@ class wxSchedulerPaint( object ):
 
 		pMin, pMax, sch = self._scheduleDragged
 
- 		dx = point.x - self._scheduleDraggingOrigin.x
- 		dy = point.y - self._scheduleDraggingOrigin.y
+ 		dx = point.x - self._scheduleDraggingOrigin[0].x
+ 		dy = point.y - self._scheduleDraggingOrigin[0].y
 
 		rMin = pMin
 		rMax, theTime = self._computeCoords( pMax, dx, dy )
@@ -284,7 +279,10 @@ class wxSchedulerPaint( object ):
 			rMin, rMax, _ = coords( self._scheduleDraggingPrevious )
 			self.RefreshRect( wx.Rect( rMin.x - x, rMin.y - y,
 						   rMax.x - rMin.x, rMax.y - rMin.y ) )
-			wx.Yield()
+			try:
+				wx.Yield()
+			except:
+				pass
 
 		self._scheduleDraggingPrevious = point
 

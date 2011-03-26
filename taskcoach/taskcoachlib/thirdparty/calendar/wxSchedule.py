@@ -300,19 +300,13 @@ class wxSchedule( wx.EvtHandler ):
 		"""
 		return self._start
 
-	def SetSpan( self, start, end ):
+	def Offset( self, ts ):
 		"""
-		Sets both start and end
+		Offsets the schedule by the specified time span.
 		"""
-		self._start = start
-		self._end = end
+		self._start.AddTS( ts )
+		self._end.AddTS( ts )
 		self._eventNotification( True )
-
-	def GetSpan( self ):
-		"""
-		Returns a 2-tuple (start, end)
-		"""
-		return (self._start, self._end)
 
 	def GetIcons(self):
 		return self._icons
