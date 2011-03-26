@@ -71,7 +71,7 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
 
     def _handleDrop(self, x, y, object, cb):
         if cb is not None:
-            item = self._findSchedule(wx.Point(x, y))
+            _, _, item = self._findSchedule(wx.Point(x, y))
 
             if item is not  None:
                 if isinstance(item, TaskSchedule):
@@ -219,7 +219,7 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
         originX, originY = self.GetViewStart()
         unitX, unitY = self.GetScrollPixelsPerUnit()
 
-        schedule = self._findSchedule(wx.Point(x + originX * unitX, y + originY * unitY))
+        _, _, schedule = self._findSchedule(wx.Point(x + originX * unitX, y + originY * unitY))
 
         if schedule and isinstance(schedule, TaskSchedule):
             item = schedule.task
