@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E1A5E8D1332040E004E2683 /* SimpleChoiceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E1A5E8B1332040E004E2683 /* SimpleChoiceView.m */; };
+		1E1A5E8E1332040E004E2683 /* SimpleChoiceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A5E8C1332040E004E2683 /* SimpleChoiceView.xib */; };
+		1E1A5E9213336B84004E2683 /* SmartAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E1A5E9113336B84004E2683 /* SmartAlertView.m */; };
 		A6103DEA132CF6BF0083FBFD /* TasklistView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6103DE8132CF6BE0083FBFD /* TasklistView.m */; };
 		A6103DEB132CF6BF0083FBFD /* TasklistView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6103DE9132CF6BE0083FBFD /* TasklistView.xib */; };
 		A6103DF0132D02DF0083FBFD /* TasklistListView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6103DEE132D02DE0083FBFD /* TasklistListView.m */; };
@@ -55,6 +58,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1E1A5E8A1332040E004E2683 /* SimpleChoiceView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleChoiceView.h; sourceTree = "<group>"; };
+		1E1A5E8B1332040E004E2683 /* SimpleChoiceView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleChoiceView.m; sourceTree = "<group>"; };
+		1E1A5E8C1332040E004E2683 /* SimpleChoiceView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SimpleChoiceView.xib; sourceTree = "<group>"; };
+		1E1A5E9013336B84004E2683 /* SmartAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmartAlertView.h; sourceTree = "<group>"; };
+		1E1A5E9113336B84004E2683 /* SmartAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmartAlertView.m; sourceTree = "<group>"; };
 		A6103DE7132CF6BE0083FBFD /* TasklistView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TasklistView.h; sourceTree = "<group>"; };
 		A6103DE8132CF6BE0083FBFD /* TasklistView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TasklistView.m; sourceTree = "<group>"; };
 		A6103DE9132CF6BE0083FBFD /* TasklistView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TasklistView.xib; sourceTree = "<group>"; };
@@ -153,6 +161,11 @@
 				A613AEF3132CDD0E000D6211 /* DateUtils.m */,
 				A613AEF4132CDD0E000D6211 /* String+Utils.h */,
 				A613AEF5132CDD0E000D6211 /* String+Utils.m */,
+				1E1A5E8A1332040E004E2683 /* SimpleChoiceView.h */,
+				1E1A5E8B1332040E004E2683 /* SimpleChoiceView.m */,
+				1E1A5E8C1332040E004E2683 /* SimpleChoiceView.xib */,
+				1E1A5E9013336B84004E2683 /* SmartAlertView.h */,
+				1E1A5E9113336B84004E2683 /* SmartAlertView.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -374,6 +387,7 @@
 				A6A90588132CF38100F1F85A /* Sync_highlighted.png in Resources */,
 				A6A90589132CF38100F1F85A /* Sync.png in Resources */,
 				A6103DEB132CF6BF0083FBFD /* TasklistView.xib in Resources */,
+				1E1A5E8E1332040E004E2683 /* SimpleChoiceView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -408,6 +422,8 @@
 				A6A90571132CE1DB00F1F85A /* CDList.m in Sources */,
 				A6103DEA132CF6BF0083FBFD /* TasklistView.m in Sources */,
 				A6103DF0132D02DF0083FBFD /* TasklistListView.m in Sources */,
+				1E1A5E8D1332040E004E2683 /* SimpleChoiceView.m in Sources */,
+				1E1A5E9213336B84004E2683 /* SmartAlertView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
