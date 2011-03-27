@@ -1539,6 +1539,47 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
     def testIconWithSingularVersion(self):
         self.task.setIcon('book_icon')
         self.assertEqual('books_icon', self.task.icon(recursive=True))
+        
+    def testChildIsInactiveWhenParentHasPrerequisite(self):
+        prerequisite = task.Task()
+        self.task.addPrerequisites([prerequisite])
+        self.failUnless(self.task1_1.inactive())
+
+    def testChildIsNotActiveWhenParentHasPrerequisite(self):
+        prerequisite = task.Task()
+        self.task.addPrerequisites([prerequisite])
+        self.failIf(self.task1_1.active())
+        
+    def testAddingPrerequisiteToParentRecomputesChildAppearance(self):
+        # First make sure the icon is cached:
+        self.assertEqual('led_blue_icon', self.task1_1.icon(recursive=True))
+        prerequisite = task.Task()
+        self.task.addPrerequisites([prerequisite])
+        self.assertEqual('led_grey_icon', self.task1_1.icon(recursive=True))
+
+    def testSettingPrerequisitesOfParentRecomputesChildAppearance(self):
+        # First make sure the icon is cached:
+        self.assertEqual('led_blue_icon', self.task1_1.icon(recursive=True))
+        prerequisite = task.Task()
+        self.task.setPrerequisites([prerequisite])
+        self.assertEqual('led_grey_icon', self.task1_1.icon(recursive=True))
+
+    def testRemovingPrerequisiteFromParentRecomputesChildAppearance(self):
+        prerequisite = task.Task()
+        self.task.addPrerequisites([prerequisite])
+        # First make sure the icon is cached:
+        self.assertEqual('led_grey_icon', self.task1_1.icon(recursive=True))
+        self.task.removePrerequisites([prerequisite])
+        self.assertEqual('led_blue_icon', self.task1_1.icon(recursive=True))
+        
+    def testCompletingPrerequisiteOfParentRecomputesChildAppearance(self):
+        prerequisite = task.Task()
+        self.task.addPrerequisites([prerequisite])
+        prerequisite.addDependencies([self.task])
+        # First make sure the icon is cached:
+        self.assertEqual('led_grey_icon', self.task1_1.icon(recursive=True))
+        prerequisite.setCompletionDateTime(date.Today())
+        self.assertEqual('led_blue_icon', self.task1_1.icon(recursive=True))
 
 
 class TaskWithTwoChildrenTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):

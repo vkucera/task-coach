@@ -27,7 +27,7 @@ class ColorMixer(object):
                     color = color.Get(includeAlpha=True)
                 except AttributeError:
                     pass # color is already a tuple
-                for colorIndex in range(4):
+                for colorIndex in range(len(color)): 
                     colorSums[colorIndex] += color[colorIndex]
                 colorCount += 1
         return tuple(colorSum/colorCount for colorSum in colorSums) if colorCount else None

@@ -93,8 +93,9 @@ class TaskEditorTestCase(test.wxTestCase):
     def setUp(self):
         super(TaskEditorTestCase, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
-        self.tomorrow = date.Now() + date.oneDay
-        self.yesterday = date.Now() - date.oneDay
+        self.today = date.Now()
+        self.tomorrow = self.today + date.oneDay
+        self.yesterday = self.today - date.oneDay
         self.taskFile = persistence.TaskFile()
         self.taskList = self.taskFile.tasks()
         self.taskList.extend(self.createTasks())

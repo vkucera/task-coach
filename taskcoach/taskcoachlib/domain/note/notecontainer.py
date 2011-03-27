@@ -17,9 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib.domain import categorizable
-from taskcoachlib.i18n import _
 
 
 class NoteContainer(categorizable.CategorizableContainer):
-    newItemMenuText = _('New note...')
-    newItemHelpText =  _('Insert a new note')
+    pass

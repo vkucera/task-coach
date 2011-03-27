@@ -109,8 +109,11 @@ class ViewFilter(base.Filter):
     endOfPeriodFilterFactory = dict(Today=lambda: date.Now().endOfDay(), 
                                     Tomorrow=lambda: date.Now().endOfTomorrow(),
                                     Workweek=lambda: date.Now().endOfWorkWeek(), 
-                                    Week=lambda: date.Now().endOfWeek(), 
+                                    Week=lambda: date.Now().endOfWeek(),
+                                    Days7=lambda: (date.Now()+date.TimeDelta(days=7)).endOfDay(), 
+                                    Days14=lambda: (date.Now()+date.TimeDelta(days=14)).endOfDay(), 
                                     Month=lambda: date.Now().endOfMonth(), 
+                                    Days30=lambda: (date.Now()+date.TimeDelta(days=30)).endOfDay(),
                                     Year=lambda: date.Now().endOfYear(),
                                     Always=lambda: date.Now(), 
                                     Never=None)
@@ -119,7 +122,10 @@ class ViewFilter(base.Filter):
                                       Yesterday=lambda: date.Now().startOfDay()-date.oneDay,
                                       Workweek=lambda: date.Now().startOfWorkWeek(), 
                                       Week=lambda: date.Now().startOfWeek(),
+                                      Days7=lambda: (date.Now()-date.TimeDelta(days=7)).startOfDay(),
+                                      Days14=lambda: (date.Now()-date.TimeDelta(days=14)).startOfDay(),
                                       Month=lambda: date.Now().startOfMonth(),
+                                      Days30=lambda: (date.Now()-date.TimeDelta(days=30)).startOfDay(),
                                       Year=lambda: date.Now().startOfYear(), 
                                       Always=lambda: date.DateTime(),
                                       Never=None)

@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, os.path
 from taskcoachlib import widgets, patterns, command
-from taskcoachlib.gui import viewer, artprovider
+from taskcoachlib.gui import viewer, artprovider, uicommand
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, date, note, attachment
 from taskcoachlib.gui.dialog import entry, attributesync
@@ -273,8 +273,14 @@ class DatesPage(Page):
             eventType)
         setattr(self, '_%sSync'%taskMethodName, datetimeSync) 
         self.addEntry(label, dateTimeEntry)
-        dateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeEdited)
-        
+        dateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeChanged)
+        self._duration = None
+        if len(self.items) == 1:
+            dueDateTime = self.items[0].dueDateTime()
+            startDateTime = self.items[0].startDateTime()
+            if dueDateTime != date.DateTime() and startDateTime != date.DateTime():
+                self._duration = dueDateTime - startDateTime
+
     def addReminderEntry(self):
         # pylint: disable-msg=W0201
         currentReminderDateTime = self.items[0].reminder() if len(self.items) == 1 else date.DateTime()
@@ -308,12 +314,61 @@ class DatesPage(Page):
                     timeLeft=self._dueDateTimeEntry, 
                     reminder=self._reminderDateTimeEntry, 
                     recurrence=self._recurrenceEntry)
-                
-    def onDateTimeEdited(self, event):
+    
+    def onRecurrenceChanged(self, event):
+        event.Skip()
+        recurrenceOn = event.String != _('None')
+        self._maxRecurrenceCheckBox.Enable(recurrenceOn)
+        self._recurrenceFrequencyEntry.Enable(recurrenceOn)
+        self._maxRecurrenceCountEntry.Enable(recurrenceOn and \
+            self._maxRecurrenceCheckBox.IsChecked())
+        self.updateRecurrenceLabel()
+
+    def onMaxRecurrenceChecked(self, event):
+        event.Skip()
+        maxRecurrenceOn = event.IsChecked()
+        self._maxRecurrenceCountEntry.Enable(maxRecurrenceOn)
+        
+    def onStartDateTimeChanged(self, event):
+        event.Skip()
+        if len(self.items) > 1:
+            self._startDateTimeLabel.SetValue(True) # pylint: disable-msg=E1101
+        else:
+            if self._startDateTimeEntry.get() != date.DateTime() and \
+               self._dueDateTimeEntry.get() != date.DateTime():
+                if self._duration is None:
+                    self._duration = self._dueDateTimeEntry.get() - self._startDateTimeEntry.get()
+                else:
+                    self._dueDateTimeEntry.set(self._startDateTimeEntry.get() + self._duration)
+            else:
+                self._duration = None
+            self.onDateTimeChanged()
+
+    def onDueDateTimeChanged(self, event):
+        event.Skip()
+        if len(self.items) > 1:
+            self._dueDateTimeLabel.SetValue(True) # pylint: disable-msg=E1101
+        else:
+            self.onDateTimeChanged()
+            if self._startDateTimeEntry.get() != date.DateTime() and \
+               self._dueDateTimeEntry.get() != date.DateTime():
+                self._duration = self._dueDateTimeEntry.get() - self._startDateTimeEntry.get()
+            else:
+                self._duration = None
+
+    def onCompletionDateTimeChanged(self, event):
+        event.Skip()
+        if len(self.items) > 1:
+            self._completionDateTimeLabel.SetValue(True) # pylint: disable-msg=E1101
+        else:
+            self.onDateTimeChanged()
+
+    def onDateTimeChanged(self, event=None):
         ''' Called when one of the DateTimeEntries is changed by the user. 
             Update the suggested reminder if no reminder was set by the user. '''
+        if event:        
+            event.Skip()
         # Make sure the reminderDateTimeEntry has been created:
-        event.Skip()
         if hasattr(self, '_reminderDateTimeEntry') and \
             self._reminderDateTimeEntry.GetValue() == date.DateTime():
             self.suggestReminder()
@@ -914,7 +969,7 @@ class EffortEditBook(Page):
             self._startDateTimeEntry, currentStartDateTime, self.items,
             command.ChangeEffortStartDateTimeCommand, entry.EVT_DATETIMEENTRY,
             'effort.start')
-        self._startDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeEdited)        
+        self._startDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeChanged)        
         startFromLastEffortButton = self._createStartFromLastEffortButton()
         self.addEntry(_('Start'), self._startDateTimeEntry,
             startFromLastEffortButton, flags=flags)
@@ -926,7 +981,7 @@ class EffortEditBook(Page):
             self._stopDateTimeEntry, currentStopDateTime, self.items,
             command.ChangeEffortStopDateTimeCommand, entry.EVT_DATETIMEENTRY,
             'effort.stop')
-        self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeEdited)
+        self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeChanged)
         self._invalidPeriodMessage = self._createInvalidPeriodMessage()
         self.addEntry(_('Stop'), self._stopDateTimeEntry, 
                       self._invalidPeriodMessage, flags=flags)
@@ -949,7 +1004,7 @@ class EffortEditBook(Page):
         event.Skip()
         self._startDateTimeEntry.SetValue(self._effortList.maxDateTime())
         
-    def onDateTimeEdited(self, event):
+    def onDateTimeChanged(self, event):
         event.Skip()
         self.updateInvalidPeriodMessage()
                     
@@ -1027,14 +1082,19 @@ class Editor(widgets.ButtonLessDialog):
         # the first display!
 
         # On Linux this is not needed but doesn't do any harm.
-
         self.CentreOnParent()
 
-        table = wx.AcceleratorTable([(wx.ACCEL_NORMAL, wx.WXK_DELETE, wx.ID_DELETE),
-                                     (wx.ACCEL_CMD, ord('Z'), wx.ID_UNDO),
+        self.createUICommands()
+        
+    def createUICommands(self):
+        table = wx.AcceleratorTable([(wx.ACCEL_CMD, ord('Z'), wx.ID_UNDO),
                                      (wx.ACCEL_CMD, ord('Y'), wx.ID_REDO)])
         self._interior.SetAcceleratorTable(table)
-        
+        self.undoCommand = uicommand.EditUndo()
+        self.redoCommand = uicommand.EditRedo()
+        self.undoCommand.bind(self._interior, wx.ID_UNDO)
+        self.redoCommand.bind(self._interior, wx.ID_REDO)
+                        
     def createInterior(self):
         return self.EditBookClass(self._panel, self._items, 
                                   self._taskFile, self._settings)

@@ -57,10 +57,11 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
     
     def __init__(self, *args, **kwargs):
         super(BaseTaskViewer, self).__init__(*args, **kwargs)
+        if kwargs.get('doRefresh', True):
+            self.refresher = refresher.SecondRefresher(self,
+                                                       task.Task.trackStartEventType(),
+                                                       task.Task.trackStopEventType())
         self.statusMessages = TaskViewerStatusMessages(self)
-        self.refresher = refresher.SecondRefresher(self,
-                                                  task.Task.trackStartEventType(),
-                                                  task.Task.trackStopEventType())
         self.__registerForAppearanceChanges()
         
     def domainObjectsToView(self):
@@ -103,27 +104,24 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
                                   self.presentation(), self.taskFile.efforts(),
                                   self.taskFile.categories(), self)
 
-    def createToolBarUICommands(self):
-        ''' UI commands to put on the toolbar of this viewer. '''
-        taskUICommands = \
-            [None,
-             uicommand.TaskNew(taskList=self.presentation(),
-                               settings=self.settings),
-             uicommand.NewSubItem(viewer=self),
-             uicommand.TaskNewFromTemplateButton(taskList=self.presentation(),
-                                                 settings=self.settings,
-                                                 bitmap='newtmpl'),
-             uicommand.Edit(viewer=self),
-             uicommand.Delete(viewer=self),
-             None,
-             uicommand.TaskToggleCompletion(viewer=self),
-             None,
-             uicommand.ViewerHideCompletedTasks(viewer=self,
-                 bitmap='filtercompletedtasks'),
-             uicommand.ViewerHideInactiveTasks(viewer=self,
-                 bitmap='filterinactivetasks')]
+    def createCreationToolBarUICommands(self):
+        return [uicommand.TaskNew(taskList=self.presentation(),
+                                  settings=self.settings),
+                uicommand.NewSubItem(viewer=self),
+                uicommand.TaskNewFromTemplateButton(taskList=self.presentation(),
+                                                    settings=self.settings,
+                                                    bitmap='newtmpl')] + \
+            super(BaseTaskViewer, self).createCreationToolBarUICommands()
+    
+    def createActionToolBarUICommands(self):
+        uiCommands = [uicommand.TaskToggleCompletion(viewer=self),
+                      None,
+                      uicommand.ViewerHideCompletedTasks(viewer=self,
+                          bitmap='filtercompletedtasks'),
+                      uicommand.ViewerHideInactiveTasks(viewer=self,
+                          bitmap='filterinactivetasks')]
         if self.settings.getboolean('feature', 'effort'):
-            taskUICommands.extend([
+            uiCommands.extend([
                 # EffortStart needs a reference to the original (task) list to
                 # be able to stop tracking effort for tasks that are already 
                 # being tracked, but that might be filtered in the viewer's 
@@ -133,11 +131,8 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
                                       taskList=self.taskFile.tasks()),
                 uicommand.EffortStop(effortList=self.taskFile.efforts(),
                                      taskList=self.taskFile.tasks())])
+        return uiCommands + super(BaseTaskViewer, self).createActionToolBarUICommands()
         
-        baseUICommands = super(BaseTaskViewer, self).createToolBarUICommands()    
-        # Insert the task viewer UI commands before the search box:
-        return baseUICommands[:-2] + taskUICommands + baseUICommands[-2:]
-     
     def nrOfVisibleTasks(self):
         # Make this overridable for viewers where the widget does not show all
         # items in the presentation, i.e. the widget does filtering on its own.
@@ -285,10 +280,7 @@ class TimelineViewer(BaseTaskViewer):
                                 itemPopupMenu)
 
     def onEdit(self, item):
-        if isinstance(item, task.Task):
-            edit = uicommand.Edit(viewer=self)
-        else:
-            edit = uicommand.EffortEdit(effortList=self.taskFile.efforts(), viewer=self)
+        edit = uicommand.Edit(viewer=self)
         edit(item)
         
     def curselection(self):
@@ -486,7 +478,6 @@ class SquareTaskViewer(BaseTaskViewer):
     def render(self, value):
         return self.renderer[self.__orderBy](value)
 
-    
 
 class CalendarViewer(mixin.AttachmentDropTargetMixin,
                      mixin.SortableViewerForTasksMixin,
@@ -496,6 +487,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'calendarviewer')
+        kwargs['doRefresh'] = False
         super(CalendarViewer, self).__init__(*args, **kwargs)
 
         start = self.settings.get(self.settingsSection(), 'viewdate')

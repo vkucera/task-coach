@@ -23,6 +23,7 @@ from taskcoachlib.thirdparty.calendar import wxScheduler, wxSchedule, \
     EVT_SCHEDULE_DCLICK, EVT_PERIODWIDTH_CHANGED
 from taskcoachlib.domain import date
 from taskcoachlib.widgets import draganddrop
+from taskcoachlib import command
 import tooltip
 
 
@@ -70,7 +71,7 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
 
     def _handleDrop(self, x, y, object, cb):
         if cb is not None:
-            item = self._findSchedule(wx.Point(x, y))
+            _, _, item = self._findSchedule(wx.Point(x, y))
 
             if item is not  None:
                 if isinstance(item, TaskSchedule):
@@ -218,7 +219,7 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
         originX, originY = self.GetViewStart()
         unitX, unitY = self.GetScrollPixelsPerUnit()
 
-        schedule = self._findSchedule(wx.Point(x + originX * unitX, y + originY * unitY))
+        _, _, schedule = self._findSchedule(wx.Point(x + originX * unitX, y + originY * unitY))
 
         if schedule and isinstance(schedule, TaskSchedule):
             item = schedule.task
@@ -316,6 +317,30 @@ class TaskSchedule(wxSchedule):
         finally:
             self.Thaw()
 
+    def SetStart(self, start):
+        command.EditStartDateTimeCommand(items=[self.task], datetime=self.tcDateTime(start)).do()
+
+    def SetEnd(self, end):
+        if self.task.completed():
+            command.EditCompletionDateTimeCommand(items=[self.task], datetime=self.tcDateTime(end)).do()
+        else:
+            command.EditDueDateTimeCommand(items=[self.task], datetime=self.tcDateTime(end)).do()
+
+    def Offset(self, ts):
+        kwargs = dict()
+        if self.task.startDateTime() != date.DateTime():
+            start = self.GetStart()
+            start.AddTS(ts)
+            command.EditStartDateTimeCommand(items=[self.task], datetime=self.tcDateTime(start)).do()
+        if self.task.completed():
+            end = self.GetEnd()
+            end.AddTS(ts)
+            command.EditCompletionDateTimeCommand(items=[self.task], datetime=self.tcDateTime(end)).do()
+        elif self.task.dueDateTime() != date.DateTime():
+            end = self.GetEnd()
+            end.AddTS(ts)
+            command.EditDueDateTimeCommand(items=[self.task], datetime=self.tcDateTime(end)).do()
+
     @property
     def task(self):
         return self.clientdata
@@ -355,3 +380,12 @@ class TaskSchedule(wxSchedule):
             (dateTime.day, dateTime.month - 1, dateTime.year,
              dateTime.hour, dateTime.minute, dateTime.second)
         return wx.DateTimeFromDMY(*args)
+
+    @staticmethod
+    def tcDateTime(dateTime):
+        return date.DateTime(dateTime.GetYear(),
+                             dateTime.GetMonth() + 1,
+                             dateTime.GetDay(),
+                             dateTime.GetHour(),
+                             dateTime.GetMinute(),
+                             dateTime.GetSecond())

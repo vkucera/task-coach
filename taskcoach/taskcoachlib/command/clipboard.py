@@ -33,7 +33,6 @@ class Clipboard:
     def get(self):
         currentContents = self._contents
         currentSource = self._source
-        self.clear()
         return currentContents, currentSource
     
     def peek(self):

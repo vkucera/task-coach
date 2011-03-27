@@ -73,6 +73,7 @@ class SearchableViewerMixin(object):
 
 class FilterableViewerMixin(object):
     ''' A viewer that is filterable. This is a mixin class. '''
+    
     def __init__(self, *args, **kwargs):
         self.__filterUICommands = None
         super(FilterableViewerMixin, self).__init__(*args, **kwargs)
@@ -83,14 +84,37 @@ class FilterableViewerMixin(object):
     def getFilterUICommands(self):
         if not self.__filterUICommands:
             self.__filterUICommands = self.createFilterUICommands()
-        return self.__filterUICommands
+        # Recreate the category filter commands every time because the category
+        # filter menu depends on what categories there are
+        return self.__filterUICommands[:2] + self.createCategoryFilterCommands() + self.__filterUICommands[2:]
 
     def createFilterUICommands(self):
-        return [uicommand.ResetFilter(viewer=self)]
+        return [uicommand.ResetFilter(viewer=self), None]
 
     def resetFilter(self):
-        for eachCategory in self.taskFile.categories():
-            eachCategory.setFiltered(False)
+        self.taskFile.categories().resetAllFilteredCategories()
+
+    def createCategoryFilterCommands(self):
+        categories = self.taskFile.categories()
+        commands = [_('&Categories'), 
+                uicommand.ResetCategoryFilter(categories=categories)]
+        if categories:
+            commands.append(None)
+            commands.extend(self.createToggleCategoryFilterCommands(categories.rootItems()))
+        return [tuple(commands)]
+    
+    def createToggleCategoryFilterCommands(self, categories):
+        categories = list(categories)
+        categories.sort(key=lambda category: category.subject())
+        commands = [uicommand.ToggleCategoryFilter(category=category) for category in categories]
+        categoriesWithChildren = [category for category in categories if category.children()]
+        if categoriesWithChildren:
+            commands.append(None)
+            for category in categoriesWithChildren:
+                subCommands = [_('%s (subcategories)')%category.subject()]
+                subCommands.extend(self.createToggleCategoryFilterCommands(category.children()))
+                commands.append(tuple(subCommands))
+        return commands
 
 
 class FilterableViewerForCategorizablesMixin(FilterableViewerMixin):
@@ -170,7 +194,7 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
         self.setFilteredByDueDateTime('Never')
         self.setFilteredByCompletionDateTime('Never')
         self.setFilteredByStartDateTime('Never')
-        
+
     def createFilterUICommands(self):
         def dueDateTimeFilter(menuText, helpText, value):
             return uicommand.ViewerFilterByDueDateTime(menuText=menuText, 
@@ -201,9 +225,18 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
             dueDateTimeFilter(_('Only show tasks due this &week'), 
                               _('Only show tasks due this week and hide later ones'),
                               'Week'),
+            dueDateTimeFilter(_('Only show tasks due within &7 days'),
+                              _('Only show tasks due within 7 days and hide later ones'),
+                              'Days7'),
+            dueDateTimeFilter(_('Only show tasks due within &14 days'),
+                              _('Only show tasks due within 14 days and hide later ones'),
+                              'Days14'),
             dueDateTimeFilter(_('Only show tasks due this &month'), 
                               _('Only show tasks due this month and hide later ones'), 
                               'Month'),
+            dueDateTimeFilter(_('Only show tasks due within &30 days'),
+                              _('Only show tasks due within 30 days and hide later ones'),
+                              'Days30'),
             dueDateTimeFilter(_('Only show tasks due this &year'), 
                               _('Only show tasks due this year and hide later ones'),
                               'Year'))
@@ -224,9 +257,18 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
             completionDateTimeFilter(_('Only show tasks completed this &week'),
                                      _('Only show tasks completed this week and hide older ones'),
                                      'Week'),
+            completionDateTimeFilter(_('Only show tasks completed the last &7 days'),
+                                     _('Only show tasks completed the last 7 days and hide older ones'),
+                                     'Days7'),
+            completionDateTimeFilter(_('Only show tasks completed the last &14 days'),
+                                     _('Only show tasks completed the last 14 days and hide older ones'),
+                                     'Days14'),
             completionDateTimeFilter(_('Only show tasks completed this &month'),
                                      _('Only show tasks completed this month and hide older ones'),
                                      'Month'),
+            completionDateTimeFilter(_('Only show tasks completed the last &30 days'),
+                                     _('Only show tasks completed the last 30 days and hide older ones'),
+                                     'Days30'),
             completionDateTimeFilter(_('Only show tasks completed this &year'),
                                      _('Only show tasks completed this year and hide older ones'),
                                      'Year'))
@@ -249,19 +291,28 @@ class FilterableViewerForTasksMixin(FilterableViewerForCategorizablesMixin):
             startDateTimeFilter(_('Only show tasks starting this &week'),
                                 _('Only show tasks starting this week and hide later ones'), 
                                 'Week'),
+            startDateTimeFilter(_('Only show tasks starting the next &7 days'),
+                                _('Only show tasks starting the next 7 days and hide later ones'),
+                                'Days7'),
+            startDateTimeFilter(_('Only show tasks starting the next &14 days'),
+                                _('Only show tasks starting the next 14 days and hide later ones'),
+                                'Days14'),
             startDateTimeFilter(_('Only show tasks starting this &month'),
                                 _('Only show tasks starting this month and hide later ones'),
                                 'Month'),
+            startDateTimeFilter(_('Only show tasks starting the next &30 days'),
+                                _('Only show tasks starting the next 30 days and hide later ones'),
+                                'Days30'),
             startDateTimeFilter(_('Only show tasks starting this &year'),
                                 _('Only show tasks starting this year and hide later ones'),
                                 'Year'))
         return super(FilterableViewerForTasksMixin, 
                      self).createFilterUICommands() + \
-            [None, dueDateTimeFilterCommands, completionDateTimeFilterCommands,
+            [dueDateTimeFilterCommands, completionDateTimeFilterCommands, 
              startDateTimeFilterCommands, 
              uicommand.ViewerHideActiveTasks(viewer=self),
              uicommand.ViewerHideCompositeTasks(viewer=self)]
-
+            
     def __getBooleanSetting(self, setting):
         return self.settings.getboolean(self.settingsSection(), setting)
     
