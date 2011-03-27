@@ -317,12 +317,37 @@ class Viewer(wx.Panel):
 
     def createToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
-        return [
-            uicommand.EditCut(viewer=self),
-            uicommand.EditCopy(viewer=self),
-            uicommand.EditPaste()
-            ]
+        table = wx.AcceleratorTable([(wx.ACCEL_CMD, ord('X'), wx.ID_CUT),
+                                     (wx.ACCEL_CMD, ord('C'), wx.ID_COPY),
+                                     (wx.ACCEL_CMD, ord('V'), wx.ID_PASTE),
+                                     (wx.ACCEL_NORMAL, wx.WXK_RETURN, wx.ID_EDIT),
+                                     (wx.ACCEL_NORMAL, wx.WXK_DELETE, wx.ID_DELETE)])
+        self.SetAcceleratorTable(table)
+        cutCommand = uicommand.EditCut(viewer=self)
+        copyCommand = uicommand.EditCopy(viewer=self)
+        pasteCommand = uicommand.EditPaste()
+        editCommand = uicommand.Edit(viewer=self)
+        self.deleteUICommand = uicommand.Delete(viewer=self) # For unittests
+        cutCommand.bind(self, wx.ID_CUT)
+        copyCommand.bind(self, wx.ID_COPY)
+        pasteCommand.bind(self, wx.ID_PASTE)
+        editCommand.bind(self, wx.ID_EDIT)
+        self.deleteUICommand.bind(self, wx.ID_DELETE)
+        actionToolBarUICommands = self.createActionToolBarUICommands()
+        if actionToolBarUICommands:
+            actionToolBarUICommands.insert(0, None) # Separator 
+        return [cutCommand, copyCommand, pasteCommand, None] + \
+            self.createCreationToolBarUICommands() + \
+            [editCommand, self.deleteUICommand] + actionToolBarUICommands
     
+    def createCreationToolBarUICommands(self):
+        ''' UI commands for creating new items. '''
+        return []
+
+    def createActionToolBarUICommands(self):
+        ''' UI commands for actions. '''
+        return []
+        
     def newItemDialog(self, *args, **kwargs):
         bitmap = kwargs.pop('bitmap')
         newItemCommand = self.newItemCommand(*args, **kwargs)

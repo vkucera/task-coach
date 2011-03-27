@@ -597,10 +597,11 @@ shortcuts are not configurable at the moment.''')%meta.metaDict),
             tr(_('Ctrl-E'), effortNew),
             tr(_('Shift-Ctrl-E'), viewExpandAll),
             tr(_('Ctrl-F'), search),
-            tr(_('Shift-Ctrl-F'), resetFilter),
+            tr(_('Ctrl-G'), categoryNew),
             tr(_('Ctrl-H'), help),
             tr(_('Ctrl-I'), taskIncreasePriority),
             tr(_('Shift-Ctrl-I'), taskMaxPriority),
+            tr(_('Ctrl-J'), noteNew),
             tr(_('Ctrl-M'), mailItem),
             tr(_('Ctrl-N (Linux and Mac OS X)'), taskNew),
             tr(_('Shift-Ctrl-N (Linux and Mac OS X)'), _('Insert a new subitem')),
@@ -610,6 +611,8 @@ shortcuts are not configurable at the moment.''')%meta.metaDict),
             tr(_('Ctrl-P'), print_),
             tr(_('Shift-Ctrl-P'), printPageSetup),
             tr(_('Ctrl-Q'), fileQuit),
+            tr(_('Ctrl-R'), resetCategoryFilter),
+            tr(_('Shift-Ctrl-R'), resetFilter),
             tr(_('Ctrl-S'), fileSave),
             tr(_('Shift-Ctrl-S'), fileSaveAs),
             tr(_('Ctrl-T'), effortStart),
@@ -636,8 +639,9 @@ shortcuts are not configurable at the moment.''')%meta.metaDict),
 
 
 helpHTML = _TOC + _taskSection + _effortSection + _categorySection + \
-    _printingAndExportingSection + _emailSection + _syncmlSection + \
-    _iPhoneSection + _templatesSection + _guiSection + _shortcutSection
+    _noteSection + _printingAndExportingSection + _emailSection + \
+    _syncmlSection + _iPhoneSection + _templatesSection + _guiSection + \
+    _shortcutSection
 
 
 aboutHTML = _('''<h4>%(name)s - %(description)s</h4>

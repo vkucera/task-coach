@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns, meta, command, help, widgets, persistence # pylint: disable-msg=W0622
+from taskcoachlib import patterns, meta, command, help, widgets, persistence, thirdparty # pylint: disable-msg=W0622
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import base, task, note, category, attachment, effort
 from taskcoachlib.mailer import writeMail
@@ -452,7 +452,12 @@ class NeedsSelectedAttachmentsMixin(NeedsAttachmentViewerMixin, NeedsSelectionMi
 class NeedsAtLeastOneTaskMixin(object):
     def enabled(self, event): # pylint: disable-msg=W0613
         return len(self.taskList) > 0
-
+    
+    
+class NeedsAtLeastOneCategoryMixin(object):
+    def enabled(self, event): # pylint: disable-msg=W0613
+        return len(self.categories) > 0
+        
         
 class NeedsItemsMixin(object):
     def enabled(self, event): # pylint: disable-msg=W0613
@@ -964,12 +969,43 @@ class ClearSelection(NeedsSelectionMixin, ViewerCommand):
 
 class ResetFilter(ViewerCommand):
     def __init__(self, *args, **kwargs):
-        super(ResetFilter, self).__init__(menuText=_('&Clear all filters\tShift-Ctrl-F'),
+        super(ResetFilter, self).__init__(menuText=_('&Clear all filters\tShift-Ctrl-R'),
             helpText=help.resetFilter, bitmap='viewalltasks', *args, **kwargs)
     
     def doCommand(self, event):
         self.viewer.resetFilter()
+        
+        
+class ResetCategoryFilter(NeedsAtLeastOneCategoryMixin, CategoriesCommand):
+    def __init__(self, *args, **kwargs):
+        super(ResetCategoryFilter, self).__init__(menuText=_('&Reset all categories\tCtrl-R'),
+            helpText=help.resetCategoryFilter, *args, **kwargs)
 
+    def doCommand(self, event):
+        self.categories.resetAllFilteredCategories()
+        
+        
+class ToggleCategoryFilter(UICommand):
+    def __init__(self, *args, **kwargs):
+        self.category = kwargs.pop('category')
+        subject = self.category.subject()
+        # Would like to use wx.ITEM_RADIO for mutual exclusive categories, but
+        # a menu with radio items always has to have at least of the items 
+        # checked, while we allow none of the mutual exclusive categories to
+        # be checked. Dynamically changing between wx.ITEM_CHECK and 
+        # wx.ITEM_RADIO would be a work-around in theory, using wx.ITEM_CHECK 
+        # when none of the mutual exclusive categories is checked and 
+        # wx.ITEM_RADIO otherwise, but dynamically changing the type of menu 
+        # items isn't possible. Hence, we use wx.ITEM_CHECK, even for mutual 
+        # exclusive categories.
+        kind = wx.ITEM_CHECK
+        super(ToggleCategoryFilter, self).__init__(menuText='&' + subject,
+            helpText=_('Show/hide items belonging to %s')%subject, kind=kind, 
+            *args, **kwargs)
+
+    def doCommand(self, event):
+        self.category.setFiltered(event.IsChecked())
+        
 
 class ViewViewer(SettingsCommand, ViewerCommand):
     def __init__(self, *args, **kwargs):
@@ -1241,35 +1277,62 @@ class ViewerHideCompositeTasks(ViewerCommand, UICheckCommand):
 class Edit(NeedsSelectionMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(Edit, self).__init__(menuText=_('&Edit...\tRETURN'),
-            helpText=_('Edit the selected item(s)'), id=wx.ID_EDIT,
-            bitmap='edit', *args, **kwargs)
+            helpText=_('Edit the selected item(s)'), bitmap='edit', 
+            *args, **kwargs)
 
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
+        windowWithFocus = wx.Window.FindFocus()
+        if isinstance(windowWithFocus, thirdparty.hypertreelist.EditTextCtrl):
+            windowWithFocus.AcceptChanges()
+            windowWithFocus.Finish()
+            return
         try:
             columnName = event.columnName
         except AttributeError:
             columnName = ''
         editor = self.viewer.editItemDialog(self.viewer.curselection(), 
                                             self.bitmap, columnName)
-        editor.Show(show)        
+        editor.Show(show)    
+
+    def enabled(self, event):
+        windowWithFocus = wx.Window.FindFocus()
+        if isinstance(windowWithFocus, thirdparty.hypertreelist.EditTextCtrl):
+            return True
+        elif '__WXMAC__' == wx.Platform and isinstance(windowWithFocus, wx.TextCtrl):
+            return False
+        else:
+            return super(Edit, self).enabled(event)
 
 
 class Delete(NeedsSelectionMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(Delete, self).__init__(menuText=_('&Delete\tDEL'),
-            helpText=_('Delete the selected item(s)'), id=wx.ID_DELETE, 
-            bitmap='delete', *args, **kwargs)
+            helpText=_('Delete the selected item(s)'), bitmap='delete', 
+            *args, **kwargs)
         
     def doCommand(self, event):
-        deleteCommand = self.viewer.deleteItemCommand()
-        deleteCommand.do()
+        windowWithFocus = wx.Window.FindFocus()
+        if isinstance(windowWithFocus, wx.TextCtrl):
+            # Simulate Delete key press
+            pos = windowWithFocus.GetInsertionPoint()
+            windowWithFocus.Remove(pos, pos+1)            
+        else:
+            deleteCommand = self.viewer.deleteItemCommand()
+            deleteCommand.do()
+        
+    def enabled(self, event):
+        windowWithFocus = wx.Window.FindFocus()
+        if isinstance(windowWithFocus, wx.TextCtrl):
+            return '__WXMAC__' != wx.Platform
+        else:
+            return super(Delete, self).enabled(event)
 
 
 class TaskNew(TaskListCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         self.taskKeywords = kwargs.pop('taskKeywords', dict())
         taskList = kwargs['taskList']
-        if 'menuText' not in kwargs:
+        if 'menuText' not in kwargs: # Provide for subclassing
             kwargs['menuText'] = taskList.newItemMenuText
             kwargs['helpText'] = taskList.newItemHelpText
         super(TaskNew, self).__init__(bitmap='new', *args, **kwargs)
@@ -1602,7 +1665,7 @@ class ToggleCategory(NeedsSelectedCategorizableMixin, ViewerCommand):
         return True # All mutual exclusive ancestors are checked
     
 
-class Mail(ViewerCommand):
+class Mail(NeedsSelectionMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(Mail, self).__init__(menuText=_('&Mail...\tCtrl-M'),
            helpText=help.mailItem, bitmap='envelope_icon', *args, **kwargs)
@@ -1627,14 +1690,20 @@ class Mail(ViewerCommand):
         if len(items) > 1:
             bodyLines = []
             for item in items:
-                bodyLines.append(item.subject(recursive=True) + '\n')
-                if item.description():
-                    bodyLines.extend(item.description().splitlines())
-                    bodyLines.append('\n')
+                bodyLines.extend(self.itemToLines(item))
         else:
             bodyLines = items[0].description().splitlines()
-        return '\r\n'.join(bodyLines)        
-
+        return '\r\n'.join(bodyLines)
+    
+    def itemToLines(self, item):
+        lines = []
+        subject = item.subject(recursive=True)
+        lines.append(subject)
+        if item.description():
+            lines.extend(item.description().splitlines())
+            lines.extend('\r\n')
+        return lines
+    
     def mail(self, subject, body, mail, showerror):
         try:
             mail('', subject, body)
@@ -1934,10 +2003,9 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
     
 class CategoryNew(CategoriesCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
-        categories = kwargs['categories']
         super(CategoryNew, self).__init__(bitmap='new', 
-            menuText=categories.newItemMenuText,
-            helpText=categories.newItemHelpText, *args, **kwargs)
+            menuText=_('New category...\tCtrl-G'),
+            helpText=help.categoryNew, *args, **kwargs)
 
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
         newCategoryCommand = command.NewCategoryCommand(self.categories)
@@ -1956,12 +2024,12 @@ class CategoryDragAndDrop(DragAndDropCommand, CategoriesCommand):
 
 
 class NoteNew(NotesCommand, SettingsCommand, ViewerCommand):
+    menuText = _('New note...\tCtrl-J')
+    helpText = help.noteNew
+    
     def __init__(self, *args, **kwargs):
-        notes = kwargs['notes']
-        if 'menuText' not in kwargs:
-            kwargs['menuText'] = notes.newItemMenuText
-            kwargs['helpText'] = notes.newItemHelpText
-        super(NoteNew, self).__init__(bitmap='new', *args, **kwargs)
+        super(NoteNew, self).__init__(menuText=self.menuText,
+            helpText=self.helpText, bitmap='new', *args, **kwargs)
 
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
         if self.viewer:
@@ -1981,12 +2049,9 @@ class NoteNew(NotesCommand, SettingsCommand, ViewerCommand):
     
 
 class NewNoteWithSelectedCategories(NoteNew, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        super(NewNoteWithSelectedCategories, self).__init__(\
-            menuText=_('New &note with selected categories...'),
-            helpText=_('Insert a new note with the selected categories checked'),
-            *args, **kwargs)
-
+    menuText = _('New &note with selected categories...')
+    helpText = _('Insert a new note with the selected categories checked')
+    
     def categoriesForTheNewNote(self):
         return self.viewer.curselection()
 

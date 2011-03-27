@@ -27,7 +27,6 @@ AppUpdatesURL=%(url)s
 DefaultDirName={pf}\%(filename)s
 DefaultGroupName=%(name)s
 AllowNoIcons=yes
-LicenseFile=../LICENSE.txt
 Compression=lzma
 SolidCompression=yes
 OutputDir=../dist

@@ -17,14 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib.domain import base
-from taskcoachlib.i18n import _
 from taskcoachlib import patterns
 
 
 class CategoryList(base.Collection):
-    newItemMenuText = _('New category...')
-    newItemHelpText =  _('Insert a new category')
-
     @patterns.eventSource    
     def extend(self, categories, event=None):
         super(CategoryList, self).extend(categories, event=event)
@@ -47,3 +43,8 @@ class CategoryList(base.Collection):
     
     def filteredCategories(self):
         return [category for category in self if category.isFiltered()]
+    
+    @patterns.eventSource
+    def resetAllFilteredCategories(self, event=None):
+        for category in self:
+            category.setFiltered(False, event=event)

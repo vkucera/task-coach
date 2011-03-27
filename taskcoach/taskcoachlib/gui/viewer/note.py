@@ -77,18 +77,13 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
     def createFilter(self, notes):
         notes = super(BaseNoteViewer, self).createFilter(notes)
         return domain.base.DeletedFilter(notes)
-
-    def createToolBarUICommands(self):
-        commands = super(BaseNoteViewer, self).createToolBarUICommands()
-        commands[-2:-2] = [None,
-                           uicommand.NoteNew(notes=self.presentation(),
-                                             settings=self.settings,
-                                             viewer=self),
-                           uicommand.NewSubItem(viewer=self),
-                           uicommand.Edit(viewer=self),
-                           uicommand.Delete(viewer=self)]
-        return commands
-
+    
+    def createCreationToolBarUICommands(self):
+        return [uicommand.NoteNew(notes=self.presentation(),
+                                  settings=self.settings, viewer=self),
+                uicommand.NewSubItem(viewer=self)] + \
+            super(BaseNoteViewer, self).createCreationToolBarUICommands()
+        
     def createColumnUICommands(self):
         return [\
             uicommand.ToggleAutoColumnResizing(viewer=self,

@@ -64,6 +64,21 @@ class wxSchedulerPaint( object ):
 		self._headerDragOrigin = None
 		self._headerDragBase = None
 
+		# State:
+		# 0 None
+		# 1 Clicked, waiting for release or drag
+		# 2 Dragging
+		# 3 hovering up/left edge
+		# 4 hovering down/right edge
+		# 5 dragging up/left edige
+		# 6 dragging down/right edge
+
+		self._scheduleDraggingState = 0
+		self._scheduleDragged = None
+		self._scheduleDraggingOrigin = None
+		self._scheduleDraggingPrevious = None
+		self._scheduleDraggingStick = False
+
 		# The highlight colour is too dark
 		color = wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHT )
 		self._highlightColor = wx.Colour(int((color.Red() + 255) / 2),
@@ -77,8 +92,208 @@ class wxSchedulerPaint( object ):
 		if isinstance(self, wx.ScrolledWindow):
 			self.SetSizer(wxSchedulerSizer(self.CalcMinSize))
 
-	def _doClickControl( self, point ):
-		self._processEvt( wxEVT_COMMAND_SCHEDULE_ACTIVATED, point )
+	def _doClickControl( self, point, shiftDown=False ):
+		if self._scheduleDraggingState in [3, 4]:
+			self._scheduleDraggingState += 2
+			self._scheduleDraggingOrigin = self._computeCoords(point, 0, 0)
+			self._scheduleDraggingStick = shiftDown
+		else:
+			pMin, pMax, sch = self._findSchedule( point )
+			if isinstance( sch, wxSchedule ):
+				self._scheduleDragged = pMin, pMax, sch
+				self._scheduleDraggingState = 1
+				self._scheduleDraggingOrigin = self._computeCoords(point, 0, 0)
+				self._scheduleDraggingStick = shiftDown
+			else:
+				self._processEvt( wxEVT_COMMAND_SCHEDULE_ACTIVATED, point )
+
+	def _doEndClickControl( self, point ):
+		if self._scheduleDraggingState == 1:
+			self._processEvt( wxEVT_COMMAND_SCHEDULE_ACTIVATED, point )
+		elif self._scheduleDraggingState == 2:
+			_, dateTime = self._computeCoords( point, 0, 0 )
+
+			sched = self._scheduleDragged[2]
+			self._drawDragging( None, self._computeAllCoords )
+			sched.Offset( dateTime.Subtract( self._scheduleDraggingOrigin[1] ) )
+			self._scheduleDraggingState = 0
+
+		elif self._scheduleDraggingState in [5, 6]:
+			coords = {5: self._computeStartCoords, 6: self._computeEndCoords}[self._scheduleDraggingState]
+			_, _, dateTime = coords( point )
+
+			sched = self._scheduleDragged[2]
+			if self._scheduleDraggingState == 5:
+				sched.SetStart( utils.copyDateTime( dateTime ) )
+			else:
+				sched.SetEnd( utils.copyDateTime( dateTime ) )
+
+			self._scheduleDraggingState = 0
+			self._drawDragging( None, coords )
+			self.SetCursor( wx.STANDARD_CURSOR )
+
+		self._scheduleDraggingState = 0
+		self._scheduleDragged = None
+		self._scheduleDraggingOrigin = None
+		self._scheduleDraggingPrevious = None
+
+	def _doMove( self, point ):
+		if self._scheduleDraggingState in [0, 3, 4]:
+			for sched, pointMin, pointMax in self._schedulesCoords:
+				if self._style == wxSCHEDULER_VERTICAL:
+					if point.x > pointMin.x and point.x < pointMax.x:
+						if abs(point.y - pointMin.y) < 4:
+							self._scheduleDraggingState = 3
+							self.SetCursor( wx.StockCursor( wx.CURSOR_SIZENS ) )
+							self._scheduleDragged = pointMin, pointMax, sched.GetClientData()
+							return
+						if abs(point.y - pointMax.y) < 4:
+							self._scheduleDraggingState = 4
+							self.SetCursor( wx.StockCursor( wx.CURSOR_SIZENS ) )
+							self._scheduleDragged = pointMin, pointMax, sched.GetClientData()
+							return
+				else:
+					if point.y > pointMin.y and point.y < pointMax.y:
+						if abs(point.x - pointMin.x) < 4:
+							self._scheduleDraggingState = 3
+							self.SetCursor( wx.StockCursor( wx.CURSOR_SIZEWE ) )
+							self._scheduleDragged = pointMin, pointMax, sched.GetClientData()
+							return
+						if abs(point.x - pointMax.x) < 4:
+							self._scheduleDraggingState = 4
+							self.SetCursor( wx.StockCursor( wx.CURSOR_SIZEWE ) )
+							self._scheduleDragged = pointMin, pointMax, sched.GetClientData()
+							return
+
+			if self._scheduleDraggingState in [3, 4]:
+				self._scheduleDraggingState = 0
+				self.SetCursor( wx.STANDARD_CURSOR )
+				self._scheduleDragged = None
+		elif self._scheduleDraggingState in [5, 6]:
+			self._drawDragging( point, {5: self._computeStartCoords, 6: self._computeEndCoords}[self._scheduleDraggingState] )
+		elif self._scheduleDraggingState == 1:
+			dx = abs(self._scheduleDraggingOrigin[0].x - point.x)
+			dy = abs(self._scheduleDraggingOrigin[0].y - point.y)
+			if dx >= wx.SystemSettings.GetMetric( wx.SYS_DRAG_X ) or \
+			   dy >= wx.SystemSettings.GetMetric( wx.SYS_DRAG_Y ):
+				self._scheduleDraggingState = 2
+				self._drawDragging( point, self._computeAllCoords )
+		elif self._scheduleDraggingState == 2:
+			self._drawDragging( point, self._computeAllCoords )
+
+	def _computeCoords( self, point, dx, dy ):
+		if self._style == wxSCHEDULER_VERTICAL:
+			pp = wx.Point( point.x, point.y + dy )
+			if pp.y < 0:
+				pp.y = 0
+			if pp.y >= self._bitmap.GetHeight():
+				pp.y = self._bitmap.GetHeight() - 1
+		else:
+			pp = wx.Point( point.x + dx, point.y )
+			if pp.x < 0:
+				pp.x = 0
+			if pp.x >= self._bitmap.GetWidth():
+				pp.x = self._bitmap.GetWidth() - 1
+
+		for idx, (dt, pointMin, pointMax) in enumerate(self._datetimeCoords):
+			if self._style == wxSCHEDULER_VERTICAL:
+				if pp.y >= pointMin.y and pp.y <= pointMax.y:
+					break
+			else:
+				if pp.x >= pointMin.x and pp.x <= pointMax.x:
+					break
+		else:
+			idx = -1
+
+		if idx >= 0:
+			if self._scheduleDraggingStick:
+				if self._style == wxSCHEDULER_VERTICAL:
+					pp = wx.Point( pp.x, pointMin.y )
+				else:
+					pp = wx.Point( pointMin.x, pp.y )
+
+			theTime = utils.copyDateTime( dt )
+			if self._style == wxSCHEDULER_VERTICAL:
+				theTime.AddTS( wx.TimeSpan.Minutes( int(30.0 * (pp.y - pointMin.y) / (pointMax.y - pointMin.y)) ) )
+			else:
+				theTime.AddTS( wx.TimeSpan.Minutes( int(30.0 * (pp.x - pointMin.x) / (pointMax.x - pointMin.x)) ) )
+		else:
+			raise ValueError('Not found: %d %d' % (pp.x, pp.y))
+
+		return pp, theTime
+
+	def _computeAllCoords( self, point ):
+		"""Dragging the whole schedule"""
+
+		pMin, pMax, sch = self._scheduleDragged
+
+		dx = point.x - self._scheduleDraggingOrigin[0].x
+		dy = point.y - self._scheduleDraggingOrigin[0].y
+
+		rMin, theTime = self._computeCoords( pMin, dx, dy )
+		rMax = wx.Point( rMin.x + pMax.x - pMin.x, rMin.y + pMax.y - pMin.y )
+
+		return rMin, rMax, theTime
+
+	def _computeStartCoords( self, point ):
+		"""Left/up resizing"""
+
+		pMin, pMax, sch = self._scheduleDragged
+
+ 		dx = point.x - self._scheduleDraggingOrigin[0].x
+ 		dy = point.y - self._scheduleDraggingOrigin[0].y
+
+		rMin, theTime = self._computeCoords( pMin, dx, dy )
+		rMax = pMax
+
+		return rMin, rMax, theTime
+
+	def _computeEndCoords( self, point ):
+		"""Right/down resizing"""
+
+		pMin, pMax, sch = self._scheduleDragged
+
+ 		dx = point.x - self._scheduleDraggingOrigin[0].x
+ 		dy = point.y - self._scheduleDraggingOrigin[0].y
+
+		rMin = pMin
+		rMax, theTime = self._computeCoords( pMax, dx, dy )
+
+		firstTime = self._lstDisplayedHours[0]
+		lastTime = self._lstDisplayedHours[-1]
+
+		if theTime.GetHour() == firstTime.GetHour() and \
+		       theTime.GetMinute() == firstTime.GetMinute():
+			theTime.SubtractTS( wx.TimeSpan.Days( 1 ) )
+			theTime.SetHour( lastTime.GetHour() + 1 )
+			theTime.SetMinute( 0 )
+
+		return rMin, rMax, theTime
+
+	def _drawDragging( self, point, coords ):
+		if self._scheduleDraggingPrevious is not None:
+			x, y = self.GetViewStart()
+			mx, my = self.GetScrollPixelsPerUnit()
+			x *= mx
+			y *= my
+			rMin, rMax, _ = coords( self._scheduleDraggingPrevious )
+			self.RefreshRect( wx.Rect( rMin.x - x, rMin.y - y,
+						   rMax.x - rMin.x, rMax.y - rMin.y ) )
+			try:
+				wx.Yield()
+			except:
+				pass
+
+		self._scheduleDraggingPrevious = point
+
+		if point is not None:
+			rMin, rMax, _ = coords( point )
+
+			dc = wx.ClientDC( self )
+			self.PrepareDC( dc )
+			dc.SetBrush( wx.Brush( self._scheduleDragged[2].GetColor() ) )
+			dc.SetPen( wx.BLACK_PEN )
+			dc.DrawRoundedRectangle( rMin.x, rMin.y, rMax.x - rMin.x, rMax.y - rMin.y, 5 )
 
 	def _doRightClickControl( self, point ):
 		self._processEvt( wxEVT_COMMAND_SCHEDULE_RIGHT_CLICK, point )
@@ -88,21 +303,22 @@ class wxSchedulerPaint( object ):
 
 	def _findSchedule( self, point ):
 		"""
-		Check if the point is on a schedule and return the schedule
+		Check if the point is on a schedule and return the schedule and its
+		coordinates
 		"""
 		for schedule, pointMin, pointMax in self._schedulesCoords:
 			inX = ( pointMin.x <= point.x ) & ( point.x <= pointMax.x )
 			inY = ( pointMin.y <= point.y ) & ( point.y <= pointMax.y )
 			
 			if inX & inY:
-				return schedule.GetClientData()
+				return pointMin, pointMax, schedule.GetClientData()
 
 		for dt, pointMin, pointMax in self._datetimeCoords:
 			inX = ( pointMin.x <= point.x ) & ( point.x <= pointMax.x )
 			inY = ( pointMin.y <= point.y ) & ( point.y <= pointMax.y )
 			
 			if inX & inY:
-				return dt
+				return pointMin, pointMax, dt
 
 
 	def _getSchedInPeriod( schedules, start, end):
@@ -146,13 +362,6 @@ class wxSchedulerPaint( object ):
 		current = []
 
 		schedules = schedules[:] # Don't alter original list
-		## def compare(a, b):
-		## 	if a.start.IsEqualTo(b.start):
-		## 		return cmp(a.description, b.description)
-		## 	if a.start.IsEarlierThan(b.start):
-		## 		return -1
-		## 	return 1
-		## schedules.sort(compare)
 
 		def findNext(schedule):
 			# Among schedules that start after this one ends, find the "nearest".
@@ -595,7 +804,7 @@ class wxSchedulerPaint( object ):
 		Process the command event passed at the given point
 		"""
 		evt = wx.PyCommandEvent( commandEvent )
-		sch = self._findSchedule( point )
+		_, _, sch = self._findSchedule( point )
 		if isinstance( sch, wxSchedule ):
 			mySch = sch
 			myDate = None

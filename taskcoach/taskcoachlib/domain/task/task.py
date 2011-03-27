@@ -75,6 +75,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         for eventType in 'active', 'inactive', 'completed', 'duesoon', 'overdue':
             registerObserver(self.__computeRecursiveForegroundColor, 'color.%stasks')
         registerObserver(self.onDueSoonHoursChanged, 'behavior.duesoonhours')
+
         now = date.Now()
         if now < self.__dueDateTime.get() < maxDateTime:
             registerObserver(self.onOverDue, 
@@ -359,7 +360,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def completionDateTimeEvent(self, event):
         event.addSource(self, self.completionDateTime(), type='task.completionDateTime')
         for dependency in self.dependencies():
-            dependency.recomputeAppearance(event=event)
+            dependency.recomputeAppearance(recursive=True, event=event)
         
     def shouldBeMarkedCompleted(self):
         ''' Return whether this task should be marked completed. It should be
@@ -399,6 +400,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return False # Completed tasks are never inactive
         if date.Now() < self.startDateTime() < self.maxDateTime:
             return True # Start at a specific future datetime, so inactive now
+        if self.parent() and self.parent().inactive():
+            return True
         if self.prerequisites():
             # We're inactive as long as not all prerequisites are completed
             return any([not prerequisite.completed() for prerequisite in self.prerequisites()])
@@ -692,7 +695,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return taskIcon + '_icon'
 
     @patterns.eventSource
-    def recomputeAppearance(self, event=None):
+    def recomputeAppearance(self, recursive=False, event=None):
         # Need to prepare for AttributeError because the cached recursive values
         # are not set in __init__ for performance reasons
         try:
@@ -712,7 +715,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             event.addSource(self, self.selectedIcon(), type=self.selectedIconChangedEventType())
         if self.__recursiveForegroundColor != previousForegroundColor:
             event.addSource(self, self.foregroundColor(), type=self.foregroundColorChangedEventType())
-        
+        if recursive:
+            for child in self.children():
+                child.recomputeAppearance(recursive=True, event=event)
+                
     # percentage Complete
     
     def percentageComplete(self, recursive=False):
@@ -965,21 +971,27 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 prerequisites |= child.prerequisites(recursive)
         return prerequisites
     
+    @patterns.eventSource
     def setPrerequisites(self, prerequisites, event=None):
         self.__prerequisites.set(set(prerequisites), event=event)
+        self.recomputeAppearance(recursive=True, event=event)
         
     @patterns.eventSource
     def addPrerequisites(self, prerequisites, event=None):
         self.__prerequisites.add(set(prerequisites), event=event)
-        self.recomputeAppearance(event=event)
+        self.recomputeAppearance(recursive=True, event=event)
         
+    @patterns.eventSource
     def removePrerequisites(self, prerequisites, event=None):
         self.__prerequisites.remove(set(prerequisites), event=event)
-
+        self.recomputeAppearance(recursive=True, event=event)
+        
+    @patterns.eventSource
     def addTaskAsDependencyOf(self, prerequisites, event=None):
         for prerequisite in prerequisites:
             prerequisite.addDependencies([self], event=event)
-            
+    
+    @patterns.eventSource
     def removeTaskAsDependencyOf(self, prerequisites, event=None):
         for prerequisite in prerequisites:
             prerequisite.removeDependencies([self], event=event)
@@ -1029,10 +1041,12 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def removeDependencies(self, dependencies, event=None):
         self.__dependencies.remove(set(dependencies), event=event)
         
+    @patterns.eventSource
     def addTaskAsPrerequisiteOf(self, dependencies, event=None):
         for dependency in dependencies:
             dependency.addPrerequisites([self], event=event)
             
+    @patterns.eventSource
     def removeTaskAsPrerequisiteOf(self, dependencies, event=None):
         for dependency in dependencies:
             dependency.removePrerequisites([self], event=event)      

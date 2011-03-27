@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.0', 'March 9, 2011',
+Release('1.3.0', 'March 27, 2011',
     summary='''This release ...''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -41,7 +41,61 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.11', 'March 8, 2011',
+Release('1.2.13', 'March 26, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
+    bugsFixed=[
+        Bug('''The notes section was missing from the help contents.''', 
+            '3241219'),
+        Bug('''Mark subtasks of tasks that have uncompleted prerequisites
+as inactive (grey).''', '3237286'),
+        Bug('''In the setup script, don't assume Mac OS X when the operating
+system isn't Linux or Windows. There's also the possibility the user is using
+BSD.''', '3236769')
+        ],
+    featuresAdded=[
+        Feature('''Allow for filtering by category via the View->Filter 
+menu. This also adds a menu item for showing all items regardless of 
+category, with Ctrl-R (R for Reset) as keyboard shortcut.'''),    
+        Feature('''When possible, try to keep the task duration when
+changing its start date.'''),
+        Feature('''Tasks in the calendar view can now be dragged and dropped
+and resized to change their dates.'''),
+        ],
+    featuresChanged=[
+        Feature('''For consistency with the menu item for resetting category
+filters, the keyboard shortcut for resetting all filters is now Shift-Ctrl-R 
+(R for Reset).''')
+        ]
+    ),
+
+Release('1.2.12', 'March 20, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Bring back the 'Stop tracking effort' menu item in the context
+menu of task and effort viewers and make menu's more consistent.''', '3206702'),
+        Bug('''Added keyboard shortcuts for adding categories and notes.'''),
+        Bug('''The Delete key wasn't working in text controls.''', '3206464', 
+            '3213964'),
+        Bug('''The Enter key wasn't working in text controls on Mac OS X.''',
+            '3223714'),
+        Bug('''The Enter key would stop working after opening and closing a 
+new viewer.''', '3206366'),
+        Bug('''Make Ctrl-Z (undo), Ctrl-Y (redo), Enter (edit) and Delete
+work in edit dialogs.'''),
+        Bug('''Fixed a performance issue with the calendar viewer when
+tracking efforts.'''),
+        Bug('''Don't clear the clipboard after pasting an item, so that an
+item can be pasted multiple times.''', '3198880 '),
+        Bug('''Don't try to add deleted prerequisite tasks when
+loading the task file.''', '3219001')
+        ],
+    featuresAdded=[
+        Feature('''Provide more options for filtering completed, due and
+inactive tasks.''', 'http://uservoice.com/a/eBFSz')
+        ]
+    ),
+    
+Release('1.2.11', 'March 10, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Sometimes the total effort per period displayed in the effort

@@ -268,32 +268,22 @@ class EffortViewer(base.ListViewer,
                              'friday', 'saturday', 'sunday'],
                     viewer=self))
 
-    def createToolBarUICommands(self):
-        commands = super(EffortViewer, self).createToolBarUICommands()
-        efforts = self.presentation()
-        tasks = self.taskFile.tasks()
-        # This is an instance variable for use in unit tests
-        # pylint: disable-msg=W0201
-        self.deleteUICommand = uicommand.Delete(viewer=self)
+    def createCreationToolBarUICommands(self):
+        return [uicommand.EffortNew(viewer=self, effortList=self.presentation(),
+                                    taskList=self.taskFile.tasks(), 
+                                    settings=self.settings)]
+        
+    def createActionToolBarUICommands(self):
         # This is an instance variable so that the choice can be changed 
         # programmatically
         self.aggregationUICommand = \
             uicommand.EffortViewerAggregationChoice(viewer=self)
-        for uiCommand in [None, 
-                          uicommand.EffortNew(viewer=self, effortList=efforts,
-                                              taskList=tasks,
-                                              settings=self.settings),
-                          uicommand.Edit(viewer=self),
-                          self.deleteUICommand, 
-                          None,
-                          uicommand.EffortStartForEffort(viewer=self,
-                                                         taskList=tasks),
-                          uicommand.EffortStop(effortList=self.taskFile.efforts(), 
-                                               taskList=tasks),
-                          None,
-                          self.aggregationUICommand]:
-            commands.insert(-2, uiCommand)
-        return commands
+        tasks = self.taskFile.tasks()
+        return [uicommand.EffortStartForEffort(viewer=self, taskList=tasks),
+                uicommand.EffortStop(effortList=self.taskFile.efforts(), 
+                                     taskList=tasks),
+                None,
+                self.aggregationUICommand]
 
     def getItemImages(self, index, column=0): # pylint: disable-msg=W0613
         return {wx.TreeItemIcon_Normal: -1}

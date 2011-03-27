@@ -114,20 +114,18 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.SortableViewerWithC
             uicommand.ViewColumn(menuText=_('&Notes'),
                 helpText=_('Show/hide notes column'),
                 setting='notes', viewer=self)]
-
-    def createToolBarUICommands(self):
-        commands = super(AttachmentViewer, self).createToolBarUICommands()
-        commands[-2:-2] = [None,
-                           uicommand.AttachmentNew(attachments=self.presentation(),
-                                                   settings=self.settings,
-                                                   viewer=self),
-                           uicommand.Edit(viewer=self),
-                           uicommand.Delete(viewer=self),
-                           None,
-                           uicommand.AttachmentOpen(attachments=attachment.AttachmentList(),
-                                                    viewer=self, settings=self.settings)]
-        return commands
-
+    
+    def createCreationToolBarUICommands(self):
+        return [uicommand.AttachmentNew(attachments=self.presentation(),
+                                        settings=self.settings,
+                                        viewer=self)] + \
+            super(AttachmentViewer, self).createCreationToolBarUICommands()
+        
+    def createActionToolBarUICommands(self):
+        return [uicommand.AttachmentOpen(attachments=attachment.AttachmentList(),
+                                         viewer=self, settings=self.settings)] + \
+           super(AttachmentViewer, self).createActionToolBarUICommands()
+    
     def typeImageIndices(self, anAttachment, exists=os.path.exists): # pylint: disable-msg=W0613
         if anAttachment.type_ == 'file':
             attachmentBase = self.settings.get('file', 'attachmentbase')

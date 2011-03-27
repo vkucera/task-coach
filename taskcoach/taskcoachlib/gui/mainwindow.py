@@ -264,7 +264,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
             import taskbaricon, menu
             self.taskBarIcon = taskbaricon.TaskBarIcon(self, 
                 self.taskFile.tasks(), self.settings)
-            self.taskBarIcon.setPopupMenu(menu.TaskBarMenu(self.taskBarIcon,
+            self.taskBarIcon.setPopupMenu(menu.TaskBarMenu(self.taskBarIcon, 
                 self.settings, self.taskFile, self.viewer))
         self.Bind(wx.EVT_ICONIZE, self.onIconify)
 
