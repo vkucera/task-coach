@@ -13,7 +13,15 @@
 #import "CDFile.h"
 #import "CDDomainObject.h"
 #import "Configuration.h"
+#import "SmartAlertView.h"
+#import "SimpleChoiceView.h"
 #import "i18n.h"
+
+@interface TasklistListView ()
+
+- (void)deleteList:(CDList *)list assign:(CDList *)newList;
+
+@end
 
 @implementation TasklistListView
 
@@ -113,91 +121,55 @@
     return cell;
 }
 
-// Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
-        CDList *list = (CDList *)[resultsCtrl objectAtIndexPath:indexPath];
-        NSLog(@"Delete objects belonging to list %@", list.name);
-
         NSFetchRequest *req = [[NSFetchRequest alloc] init];
-        [req setEntity:[NSEntityDescription entityForName:@"CDDomainObject" inManagedObjectContext:getManagedObjectContext()]];
-        [req setPredicate:[NSPredicate predicateWithFormat:@"list=%@", list]];
-        NSError *error;
-        NSArray *objects = [getManagedObjectContext() executeFetchRequest:req error:&error];
-        [req release];
-        
-        if (objects)
-        {
-            for (CDDomainObject *obj in objects)
-            {
-                obj.file = nil;
-                obj.list = nil;
-
-                [getManagedObjectContext() deleteObject:obj];
-            }
-        }
-        else
-        {
-            NSLog(@"Could not fetch objects: %@", [error localizedDescription]);
-        }
-
-        if (list.file)
-        {
-            [getManagedObjectContext() deleteObject:(NSManagedObject *)list.file];
-            list.file = nil;
-        }
-
-        [getManagedObjectContext() deleteObject:list];
-
-        if (![getManagedObjectContext() save:&error])
-        {
-            NSLog(@"Could not save: %@", [error localizedDescription]);
-        }
-
-        req = [[NSFetchRequest alloc] init];
         [req setEntity:[NSEntityDescription entityForName:@"CDList" inManagedObjectContext:getManagedObjectContext()]];
+        NSSortDescriptor *sortdes = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+        [req setSortDescriptors:[NSArray arrayWithObject:sortdes]];
+        [sortdes release];
+        NSError *error;
         NSArray *lists = [getManagedObjectContext() executeFetchRequest:req error:&error];
         [req release];
 
         if (lists)
         {
-            if ([lists count] == 0)
+            switch ([lists count])
             {
-                [Configuration instance].currentList = nil;
-                [[Configuration instance] save];
-                [parent onSave:self];
-            }
-            else
-            {
-                [Configuration instance].currentList = [lists objectAtIndex:0];
-                [[Configuration instance] save];
-                [self.tableView reloadData];
+                case 1:
+                    [self deleteList:[resultsCtrl objectAtIndexPath:indexPath] assign:nil];
+                    break;
+                default:
+                {
+                    SmartAlertView *alert = [[SmartAlertView alloc] initWithTitle:_("Question") message:_("Do you want to affect tasks to another list ?") cancelButtonTitle:_("No") cancelAction:^(void) {
+                        [self deleteList:[resultsCtrl objectAtIndexPath:indexPath] assign:nil];
+                        if ([lists count] == 2)
+                            [parent onSave:self];
+                    }];
+                    [alert addAction:^(void) {
+                        SimpleChoiceView *choice = [[SimpleChoiceView alloc] initWithEntityName:@"CDList" completion:^(NSManagedObject *obj) {
+                            [self deleteList:[resultsCtrl objectAtIndexPath:indexPath] assign:(CDList *)obj];
+                            [parent dismissModalViewControllerAnimated:YES];
+                            if ([lists count] == 2)
+                                [parent onSave:self];
+                        } exclude:[resultsCtrl objectAtIndexPath:indexPath]];
+                        [parent presentModalViewController:choice animated:YES];
+                        [choice release];
+                    } withTitle:_("Yes")];
+                    [alert show];
+                    [alert release];
+                    break;
+                }
             }
         }
         else
         {
-            NSLog(@"Could not save: %@", [error localizedDescription]);
+            NSLog(@"Could not fetch lists: %@", [error localizedDescription]);
         }
-    }   
+    }
 }
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Table view delegate
 
@@ -268,6 +240,80 @@
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
     [self.tableView endUpdates];
+}
+
+#pragma mark - Private methods
+
+- (void)deleteList:(CDList *)list assign:(CDList *)newList
+{
+    NSFetchRequest *req = [[NSFetchRequest alloc] init];
+    [req setEntity:[NSEntityDescription entityForName:@"CDDomainObject" inManagedObjectContext:getManagedObjectContext()]];
+    [req setPredicate:[NSPredicate predicateWithFormat:@"list=%@", list]];
+    NSError *error;
+    NSArray *objects = [getManagedObjectContext() executeFetchRequest:req error:&error];
+    [req release];
+    
+    if (objects)
+    {
+        for (CDDomainObject *obj in objects)
+        {
+            obj.file = nil;
+            obj.list = newList;
+
+            if (!newList)
+                [getManagedObjectContext() deleteObject:obj];
+        }
+    }
+    else
+    {
+        NSLog(@"Could not fetch objects: %@", [error localizedDescription]);
+    }
+    
+    if (list.file)
+    {
+        [getManagedObjectContext() deleteObject:(NSManagedObject *)list.file];
+        list.file = nil;
+    }
+    
+    [getManagedObjectContext() deleteObject:list];
+    
+    if (![getManagedObjectContext() save:&error])
+    {
+        NSLog(@"Could not save: %@", [error localizedDescription]);
+    }
+
+    if (newList)
+    {
+        [Configuration instance].currentList = newList;
+        [[Configuration instance] save];
+    }
+    else
+    {
+        req = [[NSFetchRequest alloc] init];
+        [req setEntity:[NSEntityDescription entityForName:@"CDList" inManagedObjectContext:getManagedObjectContext()]];
+        NSArray *lists = [getManagedObjectContext() executeFetchRequest:req error:&error];
+        [req release];
+        
+        if (lists)
+        {
+            if ([lists count] == 0)
+            {
+                [Configuration instance].currentList = nil;
+                [[Configuration instance] save];
+                [parent onSave:self];
+            }
+            else
+            {
+                [Configuration instance].currentList = [lists objectAtIndex:0];
+                [[Configuration instance] save];
+                [self.tableView reloadData];
+            }
+        }
+        else
+        {
+            NSLog(@"Could not get lists: %@", [error localizedDescription]);
+        }
+    }
 }
 
 @end

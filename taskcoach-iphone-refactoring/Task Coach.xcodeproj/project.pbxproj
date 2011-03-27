@@ -15,6 +15,8 @@
 		A6103DF0132D02DF0083FBFD /* TasklistListView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6103DEE132D02DE0083FBFD /* TasklistListView.m */; };
 		A613AEF6132CDD0E000D6211 /* DateUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A613AEF3132CDD0E000D6211 /* DateUtils.m */; };
 		A613AEF7132CDD0E000D6211 /* String+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = A613AEF5132CDD0E000D6211 /* String+Utils.m */; };
+		A61A70D7133F373B00E510DA /* SimpleTaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = A61A70D5133F373B00E510DA /* SimpleTaskView.m */; };
+		A61A70D8133F373B00E510DA /* SimpleTaskView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A61A70D6133F373B00E510DA /* SimpleTaskView.xib */; };
 		A62EF781132B93F700FDB4FA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A62EF780132B93F700FDB4FA /* UIKit.framework */; };
 		A62EF783132B93F700FDB4FA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A62EF782132B93F700FDB4FA /* Foundation.framework */; };
 		A62EF785132B93F700FDB4FA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A62EF784132B93F700FDB4FA /* CoreGraphics.framework */; };
@@ -73,6 +75,9 @@
 		A613AEF4132CDD0E000D6211 /* String+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "String+Utils.h"; path = "Utils/String+Utils.h"; sourceTree = "<group>"; };
 		A613AEF5132CDD0E000D6211 /* String+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "String+Utils.m"; path = "Utils/String+Utils.m"; sourceTree = "<group>"; };
 		A613AEF8132CDE43000D6211 /* TaskCoachCD 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TaskCoachCD 3.xcdatamodel"; sourceTree = "<group>"; };
+		A61A70D4133F373B00E510DA /* SimpleTaskView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleTaskView.h; sourceTree = "<group>"; };
+		A61A70D5133F373B00E510DA /* SimpleTaskView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleTaskView.m; sourceTree = "<group>"; };
+		A61A70D6133F373B00E510DA /* SimpleTaskView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SimpleTaskView.xib; sourceTree = "<group>"; };
 		A62EF77C132B93F700FDB4FA /* Task Coach.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Task Coach.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A62EF780132B93F700FDB4FA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A62EF782132B93F700FDB4FA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -220,6 +225,9 @@
 				A6103DE9132CF6BE0083FBFD /* TasklistView.xib */,
 				A6103DED132D02DE0083FBFD /* TasklistListView.h */,
 				A6103DEE132D02DE0083FBFD /* TasklistListView.m */,
+				A61A70D4133F373B00E510DA /* SimpleTaskView.h */,
+				A61A70D5133F373B00E510DA /* SimpleTaskView.m */,
+				A61A70D6133F373B00E510DA /* SimpleTaskView.xib */,
 			);
 			path = "Task Coach";
 			sourceTree = "<group>";
@@ -388,6 +396,7 @@
 				A6A90589132CF38100F1F85A /* Sync.png in Resources */,
 				A6103DEB132CF6BF0083FBFD /* TasklistView.xib in Resources */,
 				1E1A5E8E1332040E004E2683 /* SimpleChoiceView.xib in Resources */,
+				A61A70D8133F373B00E510DA /* SimpleTaskView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,6 +433,7 @@
 				A6103DF0132D02DF0083FBFD /* TasklistListView.m in Sources */,
 				1E1A5E8D1332040E004E2683 /* SimpleChoiceView.m in Sources */,
 				1E1A5E9213336B84004E2683 /* SmartAlertView.m in Sources */,
+				A61A70D7133F373B00E510DA /* SimpleTaskView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

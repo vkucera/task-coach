@@ -15,6 +15,6 @@
     void (^completionCb)(NSManagedObject *);
 }
 
-- (id)initWithEntityName:(NSString *)name completion:(void (^)(NSManagedObject *))completion;
+- (id)initWithEntityName:(NSString *)name completion:(void (^)(NSManagedObject *))completion exclude:(NSManagedObject *)excl;
 
 @end

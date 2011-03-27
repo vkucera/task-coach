@@ -1,41 +1,34 @@
 //
-//  SimpleChoiceView.m
+//  SimpleTaskView.m
 //  Task Coach
 //
-//  Created by Jérôme Laheurte on 17/03/11.
+//  Created by Jérôme Laheurte on 27/03/11.
 //  Copyright 2011 __MyCompanyName__. All rights reserved.
 //
 
+#import "SimpleTaskView.h"
 #import "Task_CoachAppDelegate.h"
-#import "SimpleChoiceView.h"
+#import "CDTask.h"
 
+@implementation SimpleTaskView
 
-@implementation SimpleChoiceView
-
-- (id)initWithEntityName:(NSString *)name completion:(void (^)(NSManagedObject *))completion exclude:(NSManagedObject *)excl
+- (id)initWithList:(CDList *)list
 {
-    if ((self = [super initWithNibName:@"SimpleChoiceView" bundle:[NSBundle mainBundle]]))
+    if ((self = [super initWithNibName:@"SimpleTaskView" bundle:[NSBundle mainBundle]]))
     {
-        completionCb = Block_copy(completion);
-
         NSFetchRequest *req = [[NSFetchRequest alloc] init];
-        [req setEntity:[NSEntityDescription entityForName:name inManagedObjectContext:getManagedObjectContext()]];
+        [req setEntity:[NSEntityDescription entityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()]];
         NSSortDescriptor *des = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
         [req setSortDescriptors:[NSArray arrayWithObject:des]];
         [des release];
-
-        if (excl)
-        {
-            [req setPredicate:[NSPredicate predicateWithFormat:@"SELF != %@", excl]];
-        }
-
+        if (list)
+            [req setPredicate:[NSPredicate predicateWithFormat:@"list = %@", list]];
         resultsCtrl = [[NSFetchedResultsController alloc] initWithFetchRequest:req managedObjectContext:getManagedObjectContext() sectionNameKeyPath:nil cacheName:nil];
         [req release];
-        
         NSError *error;
         if (![resultsCtrl performFetch:&error])
         {
-            NSLog(@"Could not perform fetch: %@", [error localizedDescription]);
+            NSLog(@"Could not fetch tasks: %@", [error localizedDescription]);
         }
     }
 
@@ -45,8 +38,6 @@
 - (void)dealloc
 {
     [resultsCtrl release];
-    
-    Block_release(completionCb);
 
     [super dealloc];
 }
@@ -61,6 +52,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     id <NSFetchedResultsSectionInfo> info = [[resultsCtrl sections] objectAtIndex:section];
+    NSLog(@"%d objects.", [info numberOfObjects]);
     return [info numberOfObjects];
 }
 
@@ -69,20 +61,15 @@
     static NSString *CellIdentifier = @"Cell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
+    if (cell == nil)
+    {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
-
-    cell.textLabel.text = [[resultsCtrl objectAtIndexPath:indexPath] name];
+    
+    CDTask *task = [resultsCtrl objectAtIndexPath:indexPath];
+    cell.textLabel.text = task.name;
     
     return cell;
-}
-
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    completionCb([resultsCtrl objectAtIndexPath:indexPath]);
 }
 
 @end

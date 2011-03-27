@@ -17,7 +17,10 @@
     if ((self = [super initWithTitle:title message:message delegate:self cancelButtonTitle:cancelButtonTitle otherButtonTitles:nil]))
     {
         actions = [[NSMutableArray alloc] init];
-        [actions addObject:[NSBlockOperation blockOperationWithBlock:cancelAction]];
+        // [actions addObject:[NSBlockOperation blockOperationWithBlock:cancelAction]];
+        void (^action)(void) = Block_copy(cancelAction);
+        [actions addObject:action];
+        Block_release(action);
     }
 
     return self;
@@ -33,14 +36,19 @@
 - (void)addAction:(void (^)(void))action withTitle:(NSString *)title
 {
     [self addButtonWithTitle:title];
-    [actions addObject:[NSBlockOperation blockOperationWithBlock:action]];
+    // [actions addObject:[NSBlockOperation blockOperationWithBlock:action]];
+    void (^theAction)(void) = Block_copy(action);
+    [actions addObject:theAction];
+    Block_release(theAction);
 }
 
 #pragma mark - Delegate
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    [[actions objectAtIndex:buttonIndex] main];
+    void (^action)(void);
+    action = [actions objectAtIndex:buttonIndex];
+    action();
 }
 
 @end

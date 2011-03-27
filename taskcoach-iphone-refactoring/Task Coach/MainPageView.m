@@ -11,6 +11,7 @@
 #import "CDList.h"
 #import "Configuration.h"
 #import "TasklistView.h"
+#import "SimpleTaskView.h"
 #import "i18n.h"
 
 @implementation MainPageView
@@ -81,6 +82,23 @@
 
 - (void)doShowToday:(id)sender
 {
+    // XXXTMP
+    CDList *list = [Configuration instance].currentList;
+    SimpleTaskView *ctrl = [[SimpleTaskView alloc] initWithList:list];
+    ctrl.view.frame = self.view.frame;
+    ctrl.view.hidden = YES;
+    [self.view.superview addSubview:ctrl.view];
+
+    [UIView transitionWithView:self.view.superview
+                      duration:1
+                       options:UIViewAnimationOptionTransitionFlipFromRight
+     | UIViewAnimationOptionAllowAnimatedContent
+                    animations:^(void)
+     {
+         self.view.hidden = YES;
+         ctrl.view.hidden = NO;
+     }
+                    completion:NULL];
 }
 
 - (void)doConfigure:(id)sender
