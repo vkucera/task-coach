@@ -219,7 +219,10 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
         originX, originY = self.GetViewStart()
         unitX, unitY = self.GetScrollPixelsPerUnit()
 
-        _, _, schedule = self._findSchedule(wx.Point(x + originX * unitX, y + originY * unitY))
+        try:
+            _, _, schedule = self._findSchedule(wx.Point(x + originX * unitX, y + originY * unitY))
+        except TypeError:
+            return
 
         if schedule and isinstance(schedule, TaskSchedule):
             item = schedule.task
