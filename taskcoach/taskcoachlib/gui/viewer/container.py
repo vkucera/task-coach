@@ -90,18 +90,10 @@ class ViewerContainer(object):
             active viewer changes. '''
         return '%s.viewerChange'%class_
     
-    def __getattr__(self, method):
-        ''' Return a function that will call the method on the first viewer 
-            that both has the requested method and does not raise an exception.
-            Start looking in the current viewer. NB: this auto forwarding only 
-            works for methods, not for properties. '''
-        def findFirstViewer(*args, **kwargs):
-            for viewer in [self.activeViewer()] + self.viewers:
-                if hasattr(viewer, method):
-                    return getattr(viewer, method)(*args, **kwargs)
-            else:
-                raise AttributeError
-        return findFirstViewer
+    def __getattr__(self, attribute):
+        ''' Forward unknown attributes to the active viewer or the first
+            viewer if there is no active viewer. '''
+        return getattr(self.activeViewer() or self.viewers[0], attribute)
 
     def activeViewer(self):
         ''' Return the active viewer. '''

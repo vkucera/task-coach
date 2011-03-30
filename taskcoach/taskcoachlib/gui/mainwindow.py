@@ -345,7 +345,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         self.GetStatusBar().Show(show)
         self.SendSizeEvent()
         
-    def getToolBarUICommands(self):
+    def createToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this window. ''' 
         uiCommands = [
                 uicommand.FileOpen(iocontroller=self.iocontroller), 

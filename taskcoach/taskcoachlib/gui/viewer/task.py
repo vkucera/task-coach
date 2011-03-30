@@ -397,15 +397,12 @@ class SquareTaskViewer(BaseTaskViewer):
         return widgets.SquareMap(self, SquareMapRootNode(self.presentation()), 
             self.onSelect, uicommand.Edit(viewer=self), itemPopupMenu)
         
-    def getToolBarUICommands(self):
-        ''' UI commands to put on the toolbar of this viewer. '''
-        toolBarUICommands = super(SquareTaskViewer, self).getToolBarUICommands()
-        toolBarUICommands.insert(-2, None) # Separator
+    def createModeToolBarUICommands(self):
         self.orderUICommand = \
             uicommand.SquareTaskViewerOrderChoice(viewer=self)
-        toolBarUICommands.insert(-2, self.orderUICommand)
-        return toolBarUICommands
-    
+        return super(SquareTaskViewer, self).createModeToolBarUICommands() + \
+            [self.orderUICommand]
+        
     def orderBy(self, choice):
         if choice == self.__orderBy:
             return
@@ -563,15 +560,12 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
                                                      dueDateTime=dueDateTime))
         return create(event=None, show=show)
 
-    def getToolBarUICommands(self):
-        ''' UI commands to put on the toolbar of this viewer. '''
-        toolBarUICommands = super(CalendarViewer, self).getToolBarUICommands()
-        toolBarUICommands.insert(-2, None) # Separator
-        toolBarUICommands.insert(-2, uicommand.CalendarViewerConfigure(viewer=self))
-        toolBarUICommands.insert(-2, uicommand.CalendarViewerPreviousPeriod(viewer=self))
-        toolBarUICommands.insert(-2, uicommand.CalendarViewerToday(viewer=self))
-        toolBarUICommands.insert(-2, uicommand.CalendarViewerNextPeriod(viewer=self))
-        return toolBarUICommands
+    def createModeToolBarUICommands(self):
+        return super(CalendarViewer, self).createModeToolBarUICommands() + \
+            [uicommand.CalendarViewerConfigure(viewer=self),
+             uicommand.CalendarViewerPreviousPeriod(viewer=self),
+             uicommand.CalendarViewerToday(viewer=self),
+             uicommand.CalendarViewerNextPeriod(viewer=self)]
 
     def SetViewType(self, type_):
         self.widget.SetViewType(type_)
@@ -861,14 +855,11 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
                 setting='reminder', viewer=self)])
         return commands
 
-    def getToolBarUICommands(self):
-        ''' UI commands to put on the toolbar of this viewer. '''
-        toolBarUICommands = super(TaskViewer, self).getToolBarUICommands() 
-        toolBarUICommands.insert(-2, None) # Separator
+    def createModeToolBarUICommands(self):
         self.treeOrListUICommand = \
             uicommand.TaskViewerTreeOrListChoice(viewer=self)
-        toolBarUICommands.insert(-2, self.treeOrListUICommand)
-        return toolBarUICommands
+        return super(TaskViewer, self).createModeToolBarUICommands() + \
+            [self.treeOrListUICommand]
 
     def createColumnPopupMenu(self):
         return menu.ColumnPopupMenu(self)

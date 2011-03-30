@@ -37,22 +37,20 @@ class EffortViewer(base.ListViewer,
     defaultBitmap = 'clock_icon'
     SorterClass = effort.EffortSorter
     
-    def __init__(self, *args, **kwargs):
-        self.aggregation = 'details'
-        self.tasksToShowEffortFor = kwargs.pop('tasksToShowEffortFor', [])
+    def __init__(self, parent, taskFile, settings, *args, **kwargs):        
         kwargs.setdefault('settingsSection', 'effortviewer')
+        self.aggregation = settings.get(kwargs['settingsSection'], 'aggregation')
+        self.tasksToShowEffortFor = kwargs.pop('tasksToShowEffortFor', [])
         self.__hiddenWeekdayColumns = []
         self.__hiddenTotalColumns = []
         self.__columnUICommands = None
         self.__domainObjectsToView = None
         self.__observersToDetach = []
-        super(EffortViewer, self).__init__(*args, **kwargs)
+        super(EffortViewer, self).__init__(parent, taskFile, settings, *args, **kwargs)
         self.refresher = refresher.SecondRefresher(self,
             effort.Effort.trackStartEventType(), 
             effort.Effort.trackStopEventType())
-        self.aggregation = self.settings.get(self.settingsSection(), 'aggregation')
         self.aggregationUICommand.setChoice(self.aggregation)
-        self.createColumnUICommands()
         for eventType in (effort.Effort.foregroundColorChangedEventType(),  
                           effort.Effort.backgroundColorChangedEventType(),
                           effort.Effort.fontChangedEventType()):
@@ -230,12 +228,9 @@ class EffortViewer(base.ListViewer,
             self.showColumn(column, show, refresh=False)
             
     def getColumnUICommands(self):
-        if not self.__columnUICommands:
-            self.createColumnUICommands()
-        return self.__columnUICommands
-
-    def createColumnUICommands(self):
-        self.__columnUICommands = \
+        # Create new UI commands every time since the UI commands depend on the
+        # aggregation mode
+        columnUICommands = \
             [uicommand.ToggleAutoColumnResizing(viewer=self,
                                                 settings=self.settings),
              None,
@@ -252,38 +247,40 @@ class EffortViewer(base.ListViewer,
                                   helpText=_('Show/hide revenue column'),
                                   setting='revenue', viewer=self),]
         if self.aggregation != 'details':
-            self.__columnUICommands.insert(5,
+            columnUICommands.insert(5,
                 uicommand.ViewColumn(menuText=_('&Total time spent'),
                                      helpText=_('Show/hide total time spent column'),
                                      setting='totalTimeSpent', viewer=self))
-            self.__columnUICommands.insert(7,
+            columnUICommands.insert(7,
                 uicommand.ViewColumn(menuText=_('&Total revenue'),
                                      helpText=_('Show/hide total revenue column'),
                                      setting='totalRevenue', viewer=self))
         if self.aggregation == 'week':
-            self.__columnUICommands.append(\
+            columnUICommands.append(\
                 uicommand.ViewColumns(menuText=_('Effort per weekday'),
                     helpText=_('Show/hide time spent per weekday columns'),
                     setting=['monday', 'tuesday', 'wednesday', 'thursday', 
                              'friday', 'saturday', 'sunday'],
                     viewer=self))
-
+        return columnUICommands
+    
     def createCreationToolBarUICommands(self):
         return [uicommand.EffortNew(viewer=self, effortList=self.presentation(),
                                     taskList=self.taskFile.tasks(), 
                                     settings=self.settings)]
         
     def createActionToolBarUICommands(self):
+        tasks = self.taskFile.tasks()
+        return [uicommand.EffortStartForEffort(viewer=self, taskList=tasks),
+                uicommand.EffortStop(effortList=self.taskFile.efforts(), 
+                                     taskList=tasks)]
+                
+    def createModeToolBarUICommands(self):
         # This is an instance variable so that the choice can be changed 
         # programmatically
         self.aggregationUICommand = \
             uicommand.EffortViewerAggregationChoice(viewer=self)
-        tasks = self.taskFile.tasks()
-        return [uicommand.EffortStartForEffort(viewer=self, taskList=tasks),
-                uicommand.EffortStop(effortList=self.taskFile.efforts(), 
-                                     taskList=tasks),
-                None,
-                self.aggregationUICommand]
+        return [self.aggregationUICommand]
 
     def getItemImages(self, index, column=0): # pylint: disable-msg=W0613
         return {wx.TreeItemIcon_Normal: -1}
