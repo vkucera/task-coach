@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.13', 'March 30, 2011',
+Release('1.2.13', 'March 31, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''The notes section was missing from the help contents.''', 
@@ -36,7 +36,9 @@ BSD.''', '3236769'),
 license doesn't actually require users to accept it (Windows).''', '3247643'),
         Bug('''Upon startup, effort viewers would always show the column header 
 popup menu for detail mode, even when the effort viewer would be in aggregate
-mode (i.e. effort aggregated per day, per week or per month).''')
+mode (i.e. effort aggregated per day, per week or per month).'''),
+        Bug('''Ask the user for confirmation before overwriting existing 
+files.''', '2794041')
         ],
     featuresAdded=[
         Feature('''Allow for filtering by category via the View->Filter 

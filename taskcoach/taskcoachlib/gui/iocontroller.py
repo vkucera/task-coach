@@ -171,9 +171,10 @@ class IOController(object):
         else:
             return False
 
-    def saveas(self, filename=None, showerror=wx.MessageBox):
+    def saveas(self, filename=None, showerror=wx.MessageBox, fileExists=os.path.exists):
         if not filename:
-            filename = self.__askUserForFile(_('Save as...'), flag=wx.SAVE)
+            filename = self.__askUserForFile(_('Save as...'), flag=wx.SAVE, 
+                                             fileExists=fileExists)
             if not filename:
                 return False # User didn't enter a filename, cancel save
         if self._saveSave(self.__taskFile, showerror, filename):
@@ -182,9 +183,10 @@ class IOController(object):
             return self.saveas(showerror=showerror) # Try again
 
     def saveselection(self, tasks, filename=None, showerror=wx.MessageBox,
-                      TaskFileClass=persistence.TaskFile):
+                      TaskFileClass=persistence.TaskFile, fileExists=os.path.exists):
         if not filename:
-            filename = self.__askUserForFile(_('Save as...'), flag=wx.SAVE)
+            filename = self.__askUserForFile(_('Save as...'), flag=wx.SAVE, 
+                                             fileExists=fileExists)
             if not filename:
                 return False # User didn't enter a filename, cancel save
         selectionFile = self._createSelectionFile(tasks, TaskFileClass)
@@ -256,8 +258,11 @@ class IOController(object):
         return True
     
     def export(self, title, fileDialogOpts, writerClass, viewer, selectionOnly, 
-               openfile=codecs.open, showerror=wx.MessageBox, filename=None):
-        filename = filename or self.__askUserForFile(title, fileDialogOpts, flag=wx.SAVE)
+               openfile=codecs.open, showerror=wx.MessageBox, filename=None, 
+               fileExists=os.path.exists):
+        filename = filename or self.__askUserForFile(title, fileDialogOpts, 
+                                                     flag=wx.SAVE, 
+                                                     fileExists=fileExists)
         if filename:
             fd = self.__openFileForWriting(filename, openfile, showerror)
             if fd is None:
@@ -271,19 +276,19 @@ class IOController(object):
             return False
 
     def exportAsHTML(self, viewer, selectionOnly=False, openfile=codecs.open, 
-                     showerror=wx.MessageBox, filename=None):
+                     showerror=wx.MessageBox, filename=None, fileExists=os.path.exists):
         return self.export(_('Export as HTML...'), self.__htmlFileDialogOpts, 
             persistence.HTMLWriter, viewer, selectionOnly, openfile, showerror, 
-            filename)
+            filename, fileExists)
 
-    def exportAsCSV(self, viewer, selectionOnly=False):
+    def exportAsCSV(self, viewer, selectionOnly=False, fileExists=os.path.exists):
         return self.export(_('Export as CSV...'), self.__csvFileDialogOpts, 
-            persistence.CSVWriter, viewer, selectionOnly)
+            persistence.CSVWriter, viewer, selectionOnly, fileExists=fileExists)
         
-    def exportAsICalendar(self, viewer, selectionOnly=False):
+    def exportAsICalendar(self, viewer, selectionOnly=False, fileExists=os.path.exists):
         return self.export(_('Export as iCalendar...'),
             self.__icsFileDialogOpts, persistence.iCalendarWriter, viewer, 
-            selectionOnly)
+            selectionOnly, fileExists=fileExists)
 
     def importCSV(self, **kwargs):
         persistence.CSVReader(self.__taskFile.tasks(),
@@ -346,7 +351,7 @@ class IOController(object):
             recentFiles.remove(fileName)
             self.__settings.setlist('file', 'recentfiles', recentFiles)
         
-    def __askUserForFile(self, title, fileDialogOpts=None, flag=wx.OPEN):
+    def __askUserForFile(self, title, fileDialogOpts=None, flag=wx.OPEN, fileExists=os.path.exists):
         fileDialogOpts = fileDialogOpts or self.__tskFileDialogOpts
         filename = wx.FileSelector(title, flags=flag, **fileDialogOpts) # pylint: disable-msg=W0142
         if filename and flag == wx.SAVE:
@@ -355,7 +360,20 @@ class IOController(object):
             extension = os.path.extsep + fileDialogOpts['default_extension']
             if not filename.endswith(extension):
                 filename += extension
+            if fileExists(filename):
+                return self.__askUserForOverwriteConfirmation(filename, title, fileDialogOpts)
         return filename
+    
+    def __askUserForOverwriteConfirmation(self, filename, title, fileDialogOpts):
+        result = wx.MessageBox(_('A file named %s already exists.\nOverwrite?')%filename, 
+                               _('Overwrite existing file?'),
+                               style=wx.YES_NO|wx.CANCEL|wx.ICON_QUESTION|wx.NO_DEFAULT)
+        if result == wx.YES:
+            return filename
+        elif result == wx.NO:
+            return self.__askUserForFile(title, fileDialogOpts, flag=wx.SAVE)
+        else:
+            return None
 
     def __saveUnsavedChanges(self):
         result = wx.MessageBox(_('You have unsaved changes.\n'

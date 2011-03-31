@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, shutil
+import os, shutil, wx
 import test
 from unittests import dummy
 from taskcoachlib import gui, config, persistence
@@ -225,4 +225,43 @@ class IOControllerTest(test.TestCase):
                                         self.settings)
         iocontroller.merge(self.filename2)
         self.assertEqual('Task to merge', list(targetFile.tasks())[0].subject())
+
+
+class IOControllerOverwriteExistingFileTest(test.TestCase):
+    def setUp(self):
+        super(IOControllerOverwriteExistingFileTest, self).setUp()
+        self.originalFileSelector = wx.FileSelector
+        wx.FileSelector = lambda *args, **kwargs: 'some filename'
+        self.originalMessageBox = wx.MessageBox
+        def messageBox(*args, **kwargs):
+            self.userWarned = True
+            return wx.CANCEL
+        wx.MessageBox = messageBox
+        task.Task.settings = self.settings = config.Settings(load=False)
+        self.iocontroller = gui.IOController(dummy.TaskFile(), 
+            lambda *args: None, self.settings)
+
+    def tearDown(self):
+        wx.FileSelector = self.originalFileSelector
+        wx.MessageBox = self.originalMessageBox
+        super(IOControllerOverwriteExistingFileTest, self).tearDown()
         
+    def testCancelSaveAsExistingFile(self):
+        self.iocontroller.saveas(fileExists=lambda filename: True)
+        self.failUnless(self.userWarned)
+        
+    def testCancelSaveSelectionToExistingFile(self):
+        self.iocontroller.saveselection([], fileExists=lambda filename: True)
+        self.failUnless(self.userWarned)
+        
+    def testCancelExportAsHTMLToExistingFile(self):
+        self.iocontroller.exportAsHTML(None, fileExists=lambda filename: True)
+        self.failUnless(self.userWarned)
+        
+    def testCancelExportAsCSVToExistingFile(self):
+        self.iocontroller.exportAsCSV(None, fileExists=lambda filename: True)
+        self.failUnless(self.userWarned)
+        
+    def testCancelExportAsICalendarToExistingFile(self):
+        self.iocontroller.exportAsICalendar(None, fileExists=lambda filename: True)
+        self.failUnless(self.userWarned)
