@@ -231,7 +231,7 @@ class IOControllerOverwriteExistingFileTest(test.TestCase):
     def setUp(self):
         super(IOControllerOverwriteExistingFileTest, self).setUp()
         self.originalFileSelector = wx.FileSelector
-        wx.FileSelector = lambda *args, **kwargs: 'some filename'
+        wx.FileSelector = lambda *args, **kwargs: 'filename without extension to trigger our own overwrite warning'
         self.originalMessageBox = wx.MessageBox
         def messageBox(*args, **kwargs):
             self.userWarned = True
