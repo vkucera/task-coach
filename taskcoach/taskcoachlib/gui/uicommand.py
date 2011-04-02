@@ -1754,9 +1754,9 @@ class EffortNew(NeedsAtLeastOneTaskMixin, ViewerCommand, EffortListCommand,
             helpText=effortList.newItemHelpText, *args, **kwargs)
 
     def doCommand(self, event, show=True):
-        if self.viewer.isShowingTasks() and self.viewer.curselection():
+        if self.viewer and self.viewer.isShowingTasks() and self.viewer.curselection():
             selectedTasks = self.viewer.curselection()
-        elif self.viewer.isShowingEffort():
+        elif self.viewer and self.viewer.isShowingEffort():
             selectedEfforts = self.viewer.curselection()
             if selectedEfforts:
                 selectedTasks = [selectedEfforts[0].task()]

@@ -18,13 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import time, os
 import test, mock
-from taskcoachlib import persistence
+from taskcoachlib import persistence, config
 from taskcoachlib.domain import task, category, note
 from taskcoachlib.syncml.config import createDefaultSyncConfig
 
 
 class PerformanceTest(test.TestCase):
     def createTestFile(self):
+        task.Task.settings = config.Settings(load=False)
         taskList = task.TaskList([task.Task('test') for _ in range(self.nrTasks)])
         taskfile = file(self.taskfilename, 'w')
         taskWriter = persistence.XMLWriter(taskfile)
@@ -44,8 +45,8 @@ class PerformanceTest(test.TestCase):
     def testRead(self):
         mockApp = mock.App()
         start = time.time()
-        mockApp.io.open(self.taskfilename)
+        mockApp.iocontroller.open(self.taskfilename)
         end = time.time()
         self.assertEqual(self.nrTasks, len(mockApp.taskFile.tasks()))
         self.failUnless(end-start < self.nrTasks/10)
-        mockApp.mainwindow.quit()
+        mockApp.quit()

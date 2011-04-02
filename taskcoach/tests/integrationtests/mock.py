@@ -27,6 +27,12 @@ class MockWxApp(object):
     def SetVendorName(self, *args, **kwargs):
         pass
 
+    def ProcessIdle(self):
+        pass
+    
+    def ExitMainLoop(self):
+        pass
+    
     
 class App(application.Application):
     def __init__(self, args=None): # pylint: disable-msg=W0231
