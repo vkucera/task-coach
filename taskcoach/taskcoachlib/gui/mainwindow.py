@@ -126,6 +126,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         self.settings = settings
         self.splash = splash
         self.Bind(wx.EVT_CLOSE, self.onClose)
+        self.Bind(wx.EVT_ICONIZE, self.onIconify)
         self.createWindowComponents()
         self.initWindowComponents()
         self.initWindow()
@@ -266,7 +267,6 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
                 self.taskFile.tasks(), self.settings)
             self.taskBarIcon.setPopupMenu(menu.TaskBarMenu(self.taskBarIcon, 
                 self.settings, self.taskFile, self.viewer))
-        self.Bind(wx.EVT_ICONIZE, self.onIconify)
 
     def canCreateTaskBarIcon(self):
         try:

@@ -146,8 +146,8 @@ class SettingsIOTest(SettingsTestCase):
             raise IOError
         def showerror(*args, **kwargs): # pylint: disable-msg=W0613
             self.showerror_args = args # pylint: disable-msg=W0201
-        self.settings.setLoadAndSave(True)
-        self.settings.save(showerror=showerror, file=file)
+        settings = config.Settings()
+        settings.save(showerror=showerror, file=file)
         self.failUnless(self.showerror_args)
 
 
