@@ -33,6 +33,9 @@ class MockWxApp(object):
     def ExitMainLoop(self):
         pass
     
+    def SetTopWindow(self, *args):
+        pass
+    
     
 class App(application.Application):
     def __init__(self, args=None): # pylint: disable-msg=W0231

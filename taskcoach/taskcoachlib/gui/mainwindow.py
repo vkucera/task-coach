@@ -189,7 +189,6 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         super(MainWindow, self).addPane(page, caption, name)
         
     def initWindow(self):
-        wx.GetApp().SetTopWindow(self)
         self.setTitle(self.taskFile.filename())
         self.SetIcons(artprovider.iconBundle('taskcoach'))
         self.displayMessage(_('Welcome to %(name)s version %(version)s')% \

@@ -81,6 +81,7 @@ class Application(object):
                                              self.settings)
         self.mainwindow = gui.MainWindow(self.iocontroller, self.taskFile, 
                                          self.settings)
+        self.wxApp.SetTopWindow(self.mainwindow)
         if not self.settings.getboolean('file', 'inifileloaded'):
             self.warnUserThatIniFileWasNotLoaded()
         if loadTaskFile:
