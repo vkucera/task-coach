@@ -15,6 +15,7 @@
 #import "String+Utils.h"
 #import "TaskHeaderViewFactory.h"
 #import "TaskCellFactory.h"
+#import "DateUtils.h"
 #import "i18n.h"
 
 @implementation TaskTableView
@@ -104,11 +105,8 @@
             struct tm cdate;
             (void)strptime([[info name] UTF8String], "%Y-%m-%d %H:%M:%S %z", &cdate);
             NSDate *date = [NSDate dateWithTimeIntervalSince1970:mktime(&cdate)];
-            NSDateFormatter *fmt = [[[NSDateFormatter alloc] init] autorelease];
 
-            [fmt setDateStyle:NSDateFormatterMediumStyle];
-            [fmt setTimeStyle:NSDateFormatterMediumStyle];
-            return [fmt stringFromDate:date];
+            return [[UserTimeUtils instance] stringFromDate:date];
         }
     }
 
