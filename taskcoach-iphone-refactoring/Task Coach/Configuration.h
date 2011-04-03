@@ -10,6 +10,11 @@
 
 #import "CDList.h"
 
+#define GROUPING_STATUS      0
+#define GROUPING_PRIORITY    1
+#define GROUPING_START       2
+#define GROUPING_DUE         3
+
 /*
 @interface TaskStatusSection : NSObject
 {
@@ -27,6 +32,8 @@
 {
     NSURL *currentListURL;
     NSInteger soonDays;
+    NSInteger grouping;
+    BOOL revertGrouping;
 
     // NSArray *sections;
 }
@@ -37,6 +44,9 @@
 
 @property (copy) CDList *currentList;
 @property () NSInteger soonDays;
+@property () NSInteger grouping;
+@property (readonly) NSString *groupingName;
+@property () BOOL revertGrouping;
 
 // @property (nonatomic, copy) NSArray *sections;
 

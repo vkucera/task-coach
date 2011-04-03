@@ -9,12 +9,12 @@
 #import "CDTask.h"
 
 #define TASKSTATUS_UNDEFINED         0
-#define TASKSTATUS_OVERDUE           1
-#define TASKSTATUS_DUESOON           2
-#define TASKSTATUS_STARTED           3
-#define TASKSTATUS_NOTSTARTED        4
-#define TASKSTATUS_COMPLETED         5
-#define TASKSTATUS_TRACKING          6
+#define TASKSTATUS_TRACKING          1
+#define TASKSTATUS_OVERDUE           2
+#define TASKSTATUS_DUESOON           3
+#define TASKSTATUS_STARTED           4
+#define TASKSTATUS_NOTSTARTED        5
+#define TASKSTATUS_COMPLETED         6
 
 #define REC_DAILY   0
 #define REC_WEEKLY  1

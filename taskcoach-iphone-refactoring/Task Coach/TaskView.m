@@ -54,16 +54,18 @@
     return self;
 }
 
-- (IBAction)onDone:(id)sender
-{
-    doneAction(self);
-}
-
 - (void)dealloc
 {
     Block_release(doneAction);
+    
+    [taskTableCtrl release];
 
     [super dealloc];
+}
+
+- (IBAction)onDone:(id)sender
+{
+    doneAction(self);
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

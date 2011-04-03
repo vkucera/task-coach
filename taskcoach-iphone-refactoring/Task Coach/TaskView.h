@@ -8,10 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+#import "TaskTableView.h"
 
 @interface TaskView : UIViewController
 {
     void (^doneAction)(UIViewController *);
+
+    IBOutlet TaskTableView *taskTableCtrl;
 }
 
 - (id)initWithAction:(void (^)(UIViewController *))action;

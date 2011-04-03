@@ -13,6 +13,8 @@ static Configuration *_instance = NULL;
 
 static NSString *kCurrentListConfigName = @"currentList";
 static NSString *kSoonDaysConfigName = @"soonDays";
+static NSString *kGroupingConfigName = @"grouping";
+static NSString *kRevertGroupingConfigName = @"revertGrouping";
 
 /*
 static NSString *kSectionsConfigName = @"sections";
@@ -37,7 +39,7 @@ static NSString *kSectionsConfigName = @"sections";
 
 @implementation Configuration
 
-@synthesize soonDays;
+@synthesize soonDays, grouping, revertGrouping;
 // @synthesize sections;
 
 - (id)init
@@ -51,6 +53,9 @@ static NSString *kSectionsConfigName = @"sections";
         soonDays = [config integerForKey:kSoonDaysConfigName];
         if (!soonDays)
             soonDays = 1;
+
+        grouping = [config integerForKey:kGroupingConfigName];
+        revertGrouping = [config boolForKey:kRevertGroupingConfigName];
 
         /*
         if ([config objectForKey:kSectionsConfigName])
@@ -79,6 +84,9 @@ static NSString *kSectionsConfigName = @"sections";
     NSUserDefaults *config = [NSUserDefaults standardUserDefaults];
     [config setURL:currentListURL forKey:kCurrentListConfigName];
     [config setInteger:soonDays forKey:kSoonDaysConfigName];
+    [config setInteger:grouping forKey:kGroupingConfigName];
+    [config setBool:revertGrouping forKey:kRevertGroupingConfigName];
+
     [config synchronize];
 }
 
@@ -99,6 +107,21 @@ static NSString *kSectionsConfigName = @"sections";
 {
     [currentListURL release];
     currentListURL = [[[currentList objectID] URIRepresentation] copy];
+}
+
+- (NSString *)groupingName
+{
+    switch (self.grouping)
+    {
+        case GROUPING_PRIORITY:
+            return @"priority";
+        case GROUPING_START:
+            return @"startDate";
+        case GROUPING_DUE:
+            return @"dueDate";
+        default:
+            return @"dateStatus";
+    }
 }
 
 @end

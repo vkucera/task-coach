@@ -59,6 +59,7 @@
 		A6C817E313488A2700790A4E /* ContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C817E213488A2700790A4E /* ContainerView.m */; };
 		A6F9227D134894B40058D59E /* TaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F9227B134894B40058D59E /* TaskView.m */; };
 		A6F9227E134894B40058D59E /* TaskView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6F9227C134894B40058D59E /* TaskView.xib */; };
+		A6F9228213489D870058D59E /* TaskTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F9228113489D870058D59E /* TaskTableView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -147,6 +148,8 @@
 		A6F9227A134894B40058D59E /* TaskView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskView.h; sourceTree = "<group>"; };
 		A6F9227B134894B40058D59E /* TaskView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskView.m; sourceTree = "<group>"; };
 		A6F9227C134894B40058D59E /* TaskView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TaskView.xib; sourceTree = "<group>"; };
+		A6F9228013489D860058D59E /* TaskTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskTableView.h; sourceTree = "<group>"; };
+		A6F9228113489D870058D59E /* TaskTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskTableView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -238,6 +241,8 @@
 				A6F9227A134894B40058D59E /* TaskView.h */,
 				A6F9227B134894B40058D59E /* TaskView.m */,
 				A6F9227C134894B40058D59E /* TaskView.xib */,
+				A6F9228013489D860058D59E /* TaskTableView.h */,
+				A6F9228113489D870058D59E /* TaskTableView.m */,
 			);
 			path = "Task Coach";
 			sourceTree = "<group>";
@@ -446,6 +451,7 @@
 				A6C817E313488A2700790A4E /* ContainerView.m in Sources */,
 				A65326C313488CB400D20EBE /* AlertPrompt.m in Sources */,
 				A6F9227D134894B40058D59E /* TaskView.m in Sources */,
+				A6F9228213489D870058D59E /* TaskTableView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
