@@ -12,6 +12,8 @@
 #import "SmartAlertView.h"
 #import "Configuration.h"
 #import "CDTask+Addons.h"
+#import "CDCategory.h"
+#import "String+Utils.h"
 #import "i18n.h"
 
 @interface TaskTableView ()
@@ -149,7 +151,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
     {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
     }
 
     CDTask *task = [resultsCtrl objectAtIndexPath:indexPath];
@@ -216,6 +218,12 @@
 - (void)configureCell:(UITableViewCell *)cell forTask:(CDTask *)task
 {
     cell.textLabel.text = task.name;
+
+    NSMutableArray *categoryNames = [[NSMutableArray alloc] init];
+    for (CDCategory *category in task.categories)
+        [categoryNames addObject:category.name];
+    cell.detailTextLabel.text = [@", " stringByJoiningStrings:categoryNames];
+    [categoryNames release];
 }
 
 @end
