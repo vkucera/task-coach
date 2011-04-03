@@ -90,6 +90,12 @@
 
 - (void)computeDateStatus
 {
+    if ([self currentEffort])
+    {
+        self.dateStatus = [NSNumber numberWithInt:TASKSTATUS_TRACKING];
+        return;
+    }
+
 	if (self.completionDate)
 	{
 		self.dateStatus = [NSNumber numberWithInt:TASKSTATUS_COMPLETED];
@@ -105,13 +111,11 @@
 			return;
 		}
 
-        /*
-		if (diff < 24 * 60 * 60 * [Configuration configuration].soonDays)
+		if (diff < 24 * 60 * 60 * [Configuration instance].soonDays)
 		{
 			self.dateStatus = [NSNumber numberWithInt:TASKSTATUS_DUESOON];
 			return;
 		}
-         */
 	}
 
 	if (self.startDate)

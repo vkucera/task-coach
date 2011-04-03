@@ -26,6 +26,7 @@
 @interface Configuration : NSObject
 {
     NSURL *currentListURL;
+    NSInteger soonDays;
 
     // NSArray *sections;
 }
@@ -35,6 +36,7 @@
 - (void)save;
 
 @property (copy) CDList *currentList;
+@property () NSInteger soonDays;
 
 // @property (nonatomic, copy) NSArray *sections;
 

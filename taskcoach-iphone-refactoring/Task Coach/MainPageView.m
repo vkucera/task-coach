@@ -11,8 +11,14 @@
 #import "CDList.h"
 #import "Configuration.h"
 #import "TasklistView.h"
-#import "SimpleTaskView.h"
+#import "TaskView.h"
 #import "i18n.h"
+
+@interface MainPageView ()
+
+- (void)returnToMain:(UIViewController *)ctrl;
+
+@end
 
 @implementation MainPageView
 
@@ -82,9 +88,9 @@
 
 - (void)doShowToday:(id)sender
 {
-    // XXXTMP
-    CDList *list = [Configuration instance].currentList;
-    SimpleTaskView *ctrl = [[SimpleTaskView alloc] initWithList:list];
+    TaskView *ctrl = [[TaskView alloc] initWithAction:^(UIViewController *theCtrl) {
+        [self returnToMain:theCtrl];
+    }];
     ctrl.view.frame = self.view.frame;
     ctrl.view.hidden = YES;
     [self.view.superview addSubview:ctrl.view];
@@ -109,7 +115,9 @@
 {
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
     {
-        TasklistView *ctrl = [[TasklistView alloc] initWithTarget:self action:@selector(onSave:)];
+        TasklistView *ctrl = [[TasklistView alloc] initWithAction:^(UIViewController *theCtrl) {
+            [self returnToMain:theCtrl];
+        }];
         ctrl.view.frame = self.view.frame;
         ctrl.view.hidden = YES;
         [self.view.superview addSubview:ctrl.view];
@@ -136,7 +144,7 @@
 {
 }
 
-- (void)onSave:(UIViewController *)ctrl
+- (void)returnToMain:(UIViewController *)ctrl
 {
     [UIView transitionWithView:self.view.superview
                       duration:1.0

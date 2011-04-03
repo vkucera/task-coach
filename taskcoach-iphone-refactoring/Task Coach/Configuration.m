@@ -12,6 +12,7 @@
 static Configuration *_instance = NULL;
 
 static NSString *kCurrentListConfigName = @"currentList";
+static NSString *kSoonDaysConfigName = @"soonDays";
 
 /*
 static NSString *kSectionsConfigName = @"sections";
@@ -36,6 +37,7 @@ static NSString *kSectionsConfigName = @"sections";
 
 @implementation Configuration
 
+@synthesize soonDays;
 // @synthesize sections;
 
 - (id)init
@@ -45,6 +47,10 @@ static NSString *kSectionsConfigName = @"sections";
 		NSUserDefaults *config = [NSUserDefaults standardUserDefaults];
 
         currentListURL = [[config URLForKey:kCurrentListConfigName] copy];
+
+        soonDays = [config integerForKey:kSoonDaysConfigName];
+        if (!soonDays)
+            soonDays = 1;
 
         /*
         if ([config objectForKey:kSectionsConfigName])
@@ -72,6 +78,7 @@ static NSString *kSectionsConfigName = @"sections";
 {
     NSUserDefaults *config = [NSUserDefaults standardUserDefaults];
     [config setURL:currentListURL forKey:kCurrentListConfigName];
+    [config setInteger:soonDays forKey:kSoonDaysConfigName];
     [config synchronize];
 }
 

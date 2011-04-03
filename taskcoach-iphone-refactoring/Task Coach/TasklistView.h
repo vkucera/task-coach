@@ -12,13 +12,13 @@
 
 @interface TasklistView : UIViewController <UIAlertViewDelegate>
 {
-    id target;
-    SEL action;
+    void (^doneAction)(UIViewController *);
+
     IBOutlet TasklistListView *listsCtrl;
     IBOutlet UIToolbar *toolbar;
 }
 
-- initWithTarget:(id)target action:(SEL)action;
+- initWithAction:(void (^)(UIViewController *))action;
 
 - (IBAction)onSave:(id)sender;
 - (IBAction)onAdd:(id)sender;

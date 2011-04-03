@@ -279,35 +279,6 @@ NSPersistentStoreCoordinator *getPersistentStoreCoordinator(void)
 
         [fileManager removeItemAtPath:path error:&error];
     }
-
-	// Update date status for all objects
-	NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	[request setEntity:[NSEntityDescription entityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()]];
-	[request setPredicate:[NSPredicate predicateWithFormat:@"status != %d", STATUS_DELETED]];
-	
-	NSArray *tasks = [getManagedObjectContext() executeFetchRequest:request error:&error];
-	if (tasks)
-	{
-		for (CDTask *task in tasks)
-			[task computeDateStatus];
-		
-		if (![getManagedObjectContext() save:&error])
-		{
-			// JLERROR("Error saving: %s", [[error localizedDescription] UTF8String]);
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not save tasks" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-			[alert show];
-			[alert release];
-		}
-	}
-	else
-	{
-		// JLERROR("Error fetching: %s", [[error localizedDescription] UTF8String]);
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not load tasks" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-		[alert show];
-		[alert release];
-	}
-    
-	[request release];
     
     return persistentStoreCoordinator;
 }

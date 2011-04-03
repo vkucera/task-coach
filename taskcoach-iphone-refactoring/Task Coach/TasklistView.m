@@ -15,12 +15,11 @@
 
 @implementation TasklistView
 
-- (id)initWithTarget:(id)theTarget action:(SEL)theAction
+- (id)initWithAction:(void (^)(UIViewController *))action
 {
     if ((self = [super initWithNibName:@"TasklistView" bundle:[NSBundle mainBundle]]))
     {
-        target = theTarget;
-        action = theAction;
+        doneAction = Block_copy(action);
     }
 
     return self;
@@ -28,6 +27,8 @@
 
 - (void)dealloc
 {
+    Block_release(doneAction);
+
     [listsCtrl release];
     [toolbar release];
     [super dealloc];
@@ -40,7 +41,7 @@
 
 - (IBAction)onSave:(id)sender
 {
-    [target performSelector:action withObject:self];
+    doneAction(self);
 }
 
 - (IBAction)onAdd:(id)sender
@@ -59,7 +60,7 @@
         [Configuration instance].currentList = list;
         [[Configuration instance] save];
 
-        [target performSelector:action withObject:self];
+        doneAction(self);
     } secure:NO];
     [alert show];
     [alert release];

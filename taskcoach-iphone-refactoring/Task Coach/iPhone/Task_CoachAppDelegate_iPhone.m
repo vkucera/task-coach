@@ -14,6 +14,7 @@
 {
     mainCtrl = [[MainPageView alloc] init];
     [containerCtrl.view addSubview:mainCtrl.view];
+    mainCtrl.view.frame = CGRectMake(0, 20, 320, 460);
 
     return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
