@@ -13,8 +13,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     mainCtrl = [[MainPageView alloc] init];
-    [containerView addSubview:mainCtrl.view];
-    mainCtrl.view.frame = CGRectMake(0, 20, 320, 460);
+    [containerCtrl.view addSubview:mainCtrl.view];
 
     return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }

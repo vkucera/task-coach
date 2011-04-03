@@ -29,6 +29,11 @@
     [super dealloc];
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return YES;
+}
+
 - (IBAction)onSave:(id)sender
 {
     [target performSelector:action withObject:self];
@@ -54,11 +59,6 @@
     [toolbar release];
     toolbar = nil;
     [super viewDidUnload];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return NO;
 }
 
 @end

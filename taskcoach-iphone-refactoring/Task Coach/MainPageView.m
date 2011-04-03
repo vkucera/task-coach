@@ -75,7 +75,7 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return NO;
+    return YES;
 }
 
 #pragma mark - Actions
@@ -113,6 +113,7 @@
         ctrl.view.frame = self.view.frame;
         ctrl.view.hidden = YES;
         [self.view.superview addSubview:ctrl.view];
+        [self.view.superview bringSubviewToFront:ctrl.view];
 
         [UIView transitionWithView:self.view.superview
                           duration:1

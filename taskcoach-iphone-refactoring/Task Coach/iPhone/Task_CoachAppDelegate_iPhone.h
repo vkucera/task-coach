@@ -10,9 +10,11 @@
 #import "Task_CoachAppDelegate.h"
 #import "MainPageView.h"
 
+#import "ContainerView.h"
+
 @interface Task_CoachAppDelegate_iPhone : Task_CoachAppDelegate
 {
-    IBOutlet UIView *containerView;
+    IBOutlet ContainerView *containerCtrl;
     MainPageView *mainCtrl;
 }
 
