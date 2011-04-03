@@ -51,6 +51,8 @@
     [listsButton setTarget:self action:@selector(doShowLists:)];
     [configureButton setTarget:self action:@selector(doConfigure:)];
     [syncButton setTarget:self action:@selector(doSync:)];
+
+    [self viewWillAppear:NO];
 }
 
 - (void)viewDidUnload
