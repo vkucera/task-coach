@@ -33,6 +33,7 @@ class SaveTest(test.TestCase):
         for filename in [self.filename, self.filename2]:
             if os.path.isfile(filename):
                 os.remove(filename)
+        mock.App.deleteInstance()
         super(SaveTest, self).tearDown()
         
     def assertTasksLoaded(self, nrTasks):

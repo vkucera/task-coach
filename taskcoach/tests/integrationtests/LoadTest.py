@@ -40,6 +40,7 @@ class LoadTest(test.TestCase):
         self.mockApp.quit()
         if os.path.isfile(self.filename):
             os.remove(self.filename)
+        mock.App.deleteInstance()
         super(LoadTest, self).tearDown()
 
     def mockErrorDialog(self, *args, **kwargs): # pylint: disable-msg=W0613
