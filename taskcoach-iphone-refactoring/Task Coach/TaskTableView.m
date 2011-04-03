@@ -119,10 +119,18 @@
                 return _("Unknown");
         }
         case GROUPING_PRIORITY:
-        case GROUPING_START:
-        case GROUPING_DUE:
-            // XXXTODO format dates
             return [info name];
+        default:
+        {
+            struct tm cdate;
+            (void)strptime([[info name] UTF8String], "%Y-%m-%d %H:%M:%S %z", &cdate);
+            NSDate *date = [NSDate dateWithTimeIntervalSince1970:mktime(&cdate)];
+            NSDateFormatter *fmt = [[[NSDateFormatter alloc] init] autorelease];
+
+            [fmt setDateStyle:NSDateFormatterMediumStyle];
+            [fmt setTimeStyle:NSDateFormatterMediumStyle];
+            return [fmt stringFromDate:date];
+        }
     }
 
     return nil;
