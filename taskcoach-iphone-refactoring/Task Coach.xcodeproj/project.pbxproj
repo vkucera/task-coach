@@ -29,6 +29,7 @@
 		A62EF79F132B93F700FDB4FA /* MainWindow_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A62EF79D132B93F700FDB4FA /* MainWindow_iPad.xib */; };
 		A62EF7A7132B952500FDB4FA /* ImageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = A62EF7A6132B952500FDB4FA /* ImageButton.m */; };
 		A62FF3FB132CDB8A00D33908 /* Migration.m in Sources */ = {isa = PBXBuildFile; fileRef = A62FF3FA132CDB8A00D33908 /* Migration.m */; };
+		A65326C313488CB400D20EBE /* AlertPrompt.m in Sources */ = {isa = PBXBuildFile; fileRef = A65326C213488CB400D20EBE /* AlertPrompt.m */; };
 		A6775FAD132CD3A200358BC9 /* Configuration.m in Sources */ = {isa = PBXBuildFile; fileRef = A6775FAC132CD3A200358BC9 /* Configuration.m */; };
 		A6775FB7132CD7AC00358BC9 /* TaskCoachCD.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A6775FB4132CD7AC00358BC9 /* TaskCoachCD.xcdatamodeld */; };
 		A6775FB9132CD7D900358BC9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6775FB8132CD7D900358BC9 /* CoreData.framework */; };
@@ -99,6 +100,8 @@
 		A62EF7A6132B952500FDB4FA /* ImageButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageButton.m; sourceTree = "<group>"; };
 		A62FF3F9132CDB8A00D33908 /* Migration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Migration.h; path = CoreData/Migration.h; sourceTree = "<group>"; };
 		A62FF3FA132CDB8A00D33908 /* Migration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Migration.m; path = CoreData/Migration.m; sourceTree = "<group>"; };
+		A65326C113488CB400D20EBE /* AlertPrompt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlertPrompt.h; path = Utils/AlertPrompt.h; sourceTree = "<group>"; };
+		A65326C213488CB400D20EBE /* AlertPrompt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlertPrompt.m; path = Utils/AlertPrompt.m; sourceTree = "<group>"; };
 		A6775FAB132CD3A200358BC9 /* Configuration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Configuration.h; sourceTree = "<group>"; };
 		A6775FAC132CD3A200358BC9 /* Configuration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Configuration.m; sourceTree = "<group>"; };
 		A6775FB5132CD7AC00358BC9 /* TaskCoachCD 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TaskCoachCD 2.xcdatamodel"; sourceTree = "<group>"; };
@@ -165,6 +168,8 @@
 		A613AEF0132CDCD2000D6211 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				A65326C113488CB400D20EBE /* AlertPrompt.h */,
+				A65326C213488CB400D20EBE /* AlertPrompt.m */,
 				A613AEF2132CDD0E000D6211 /* DateUtils.h */,
 				A613AEF3132CDD0E000D6211 /* DateUtils.m */,
 				A613AEF4132CDD0E000D6211 /* String+Utils.h */,
@@ -440,6 +445,7 @@
 				1E1A5E9213336B84004E2683 /* SmartAlertView.m in Sources */,
 				A61A70D7133F373B00E510DA /* SimpleTaskView.m in Sources */,
 				A6C817E313488A2700790A4E /* ContainerView.m in Sources */,
+				A65326C313488CB400D20EBE /* AlertPrompt.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -10,7 +10,7 @@
 #import "TasklistListView.h"
 
 
-@interface TasklistView : UIViewController
+@interface TasklistView : UIViewController <UIAlertViewDelegate>
 {
     id target;
     SEL action;
@@ -21,5 +21,6 @@
 - initWithTarget:(id)target action:(SEL)action;
 
 - (IBAction)onSave:(id)sender;
+- (IBAction)onAdd:(id)sender;
 
 @end
