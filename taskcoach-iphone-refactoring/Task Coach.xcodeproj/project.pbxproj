@@ -57,6 +57,7 @@
 		A6BE662E132BA469005105FA /* MainPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6BE662D132BA468005105FA /* MainPageView.m */; };
 		A6BE6631132BAF6A005105FA /* Today_highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = A6BE662F132BAF69005105FA /* Today_highlighted.png */; };
 		A6BE6632132BAF6A005105FA /* Today.png in Resources */ = {isa = PBXBuildFile; fileRef = A6BE6630132BAF69005105FA /* Today.png */; };
+		A6CA87771348815C00C783F6 /* OrientationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CA87761348815C00C783F6 /* OrientationController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -141,6 +142,8 @@
 		A6BE662D132BA468005105FA /* MainPageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainPageView.m; sourceTree = "<group>"; };
 		A6BE662F132BAF69005105FA /* Today_highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Today_highlighted.png; path = Images/Today_highlighted.png; sourceTree = "<group>"; };
 		A6BE6630132BAF69005105FA /* Today.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Today.png; path = Images/Today.png; sourceTree = "<group>"; };
+		A6CA87751348815C00C783F6 /* OrientationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OrientationController.h; sourceTree = "<group>"; };
+		A6CA87761348815C00C783F6 /* OrientationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OrientationController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -220,6 +223,8 @@
 				A62EF787132B93F700FDB4FA /* Supporting Files */,
 				A62EF7A5132B952500FDB4FA /* ImageButton.h */,
 				A62EF7A6132B952500FDB4FA /* ImageButton.m */,
+				A6CA87751348815C00C783F6 /* OrientationController.h */,
+				A6CA87761348815C00C783F6 /* OrientationController.m */,
 				A6103DE7132CF6BE0083FBFD /* TasklistView.h */,
 				A6103DE8132CF6BE0083FBFD /* TasklistView.m */,
 				A6103DE9132CF6BE0083FBFD /* TasklistView.xib */,
@@ -434,6 +439,7 @@
 				1E1A5E8D1332040E004E2683 /* SimpleChoiceView.m in Sources */,
 				1E1A5E9213336B84004E2683 /* SmartAlertView.m in Sources */,
 				A61A70D7133F373B00E510DA /* SimpleTaskView.m in Sources */,
+				A6CA87771348815C00C783F6 /* OrientationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
