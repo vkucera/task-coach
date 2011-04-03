@@ -124,9 +124,4 @@ static NSString *kSectionsConfigName = @"sections";
     }
 }
 
-- (NSInteger)grouping
-{
-    return GROUPING_START;
-}
-
 @end
