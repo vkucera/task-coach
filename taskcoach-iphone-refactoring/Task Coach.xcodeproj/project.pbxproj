@@ -60,6 +60,16 @@
 		A6F9227D134894B40058D59E /* TaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F9227B134894B40058D59E /* TaskView.m */; };
 		A6F9227E134894B40058D59E /* TaskView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6F9227C134894B40058D59E /* TaskView.xib */; };
 		A6F9228213489D870058D59E /* TaskTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F9228113489D870058D59E /* TaskTableView.m */; };
+		A6F922931348B2410058D59E /* TaskHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F922921348B2410058D59E /* TaskHeaderView.m */; };
+		A6F922951348B2DE0058D59E /* TaskHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6F922941348B2DE0058D59E /* TaskHeaderView.xib */; };
+		A6F922981348B39E0058D59E /* TaskHeaderViewFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F922971348B39D0058D59E /* TaskHeaderViewFactory.m */; };
+		A6F922A51348B6400058D59E /* folderblue.png in Resources */ = {isa = PBXBuildFile; fileRef = A6F9229F1348B6400058D59E /* folderblue.png */; };
+		A6F922A61348B6400058D59E /* foldergreen.png in Resources */ = {isa = PBXBuildFile; fileRef = A6F922A01348B6400058D59E /* foldergreen.png */; };
+		A6F922A71348B6400058D59E /* foldergrey.png in Resources */ = {isa = PBXBuildFile; fileRef = A6F922A11348B6400058D59E /* foldergrey.png */; };
+		A6F922A81348B6400058D59E /* folderorange.png in Resources */ = {isa = PBXBuildFile; fileRef = A6F922A21348B6400058D59E /* folderorange.png */; };
+		A6F922A91348B6400058D59E /* folderred.png in Resources */ = {isa = PBXBuildFile; fileRef = A6F922A31348B6400058D59E /* folderred.png */; };
+		A6F922AA1348B6400058D59E /* ledclock.png in Resources */ = {isa = PBXBuildFile; fileRef = A6F922A41348B6400058D59E /* ledclock.png */; };
+		A6F922AC1348BA160058D59E /* headerbg.png in Resources */ = {isa = PBXBuildFile; fileRef = A6F922AB1348BA160058D59E /* headerbg.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -150,6 +160,18 @@
 		A6F9227C134894B40058D59E /* TaskView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TaskView.xib; sourceTree = "<group>"; };
 		A6F9228013489D860058D59E /* TaskTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskTableView.h; sourceTree = "<group>"; };
 		A6F9228113489D870058D59E /* TaskTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskTableView.m; sourceTree = "<group>"; };
+		A6F922911348B2400058D59E /* TaskHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskHeaderView.h; sourceTree = "<group>"; };
+		A6F922921348B2410058D59E /* TaskHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskHeaderView.m; sourceTree = "<group>"; };
+		A6F922941348B2DE0058D59E /* TaskHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TaskHeaderView.xib; sourceTree = "<group>"; };
+		A6F922961348B39D0058D59E /* TaskHeaderViewFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskHeaderViewFactory.h; sourceTree = "<group>"; };
+		A6F922971348B39D0058D59E /* TaskHeaderViewFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskHeaderViewFactory.m; sourceTree = "<group>"; };
+		A6F9229F1348B6400058D59E /* folderblue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = folderblue.png; path = Images/folderblue.png; sourceTree = "<group>"; };
+		A6F922A01348B6400058D59E /* foldergreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = foldergreen.png; path = Images/foldergreen.png; sourceTree = "<group>"; };
+		A6F922A11348B6400058D59E /* foldergrey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = foldergrey.png; path = Images/foldergrey.png; sourceTree = "<group>"; };
+		A6F922A21348B6400058D59E /* folderorange.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = folderorange.png; path = Images/folderorange.png; sourceTree = "<group>"; };
+		A6F922A31348B6400058D59E /* folderred.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = folderred.png; path = Images/folderred.png; sourceTree = "<group>"; };
+		A6F922A41348B6400058D59E /* ledclock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ledclock.png; path = Images/ledclock.png; sourceTree = "<group>"; };
+		A6F922AB1348BA160058D59E /* headerbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = headerbg.png; path = Images/headerbg.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -243,6 +265,11 @@
 				A6F9227C134894B40058D59E /* TaskView.xib */,
 				A6F9228013489D860058D59E /* TaskTableView.h */,
 				A6F9228113489D870058D59E /* TaskTableView.m */,
+				A6F922911348B2400058D59E /* TaskHeaderView.h */,
+				A6F922921348B2410058D59E /* TaskHeaderView.m */,
+				A6F922941348B2DE0058D59E /* TaskHeaderView.xib */,
+				A6F922961348B39D0058D59E /* TaskHeaderViewFactory.h */,
+				A6F922971348B39D0058D59E /* TaskHeaderViewFactory.m */,
 			);
 			path = "Task Coach";
 			sourceTree = "<group>";
@@ -284,6 +311,13 @@
 		A62EF7A8132B95DD00FDB4FA /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				A6F922AB1348BA160058D59E /* headerbg.png */,
+				A6F9229F1348B6400058D59E /* folderblue.png */,
+				A6F922A01348B6400058D59E /* foldergreen.png */,
+				A6F922A11348B6400058D59E /* foldergrey.png */,
+				A6F922A21348B6400058D59E /* folderorange.png */,
+				A6F922A31348B6400058D59E /* folderred.png */,
+				A6F922A41348B6400058D59E /* ledclock.png */,
 				A6BE6627132B9F08005105FA /* Buttons */,
 				A6BE661B132B9D18005105FA /* Icon-iPad.png */,
 				A6BE6619132B9CA6005105FA /* Icon@2.png */,
@@ -412,6 +446,14 @@
 				A6103DEB132CF6BF0083FBFD /* TasklistView.xib in Resources */,
 				1E1A5E8E1332040E004E2683 /* SimpleChoiceView.xib in Resources */,
 				A6F9227E134894B40058D59E /* TaskView.xib in Resources */,
+				A6F922951348B2DE0058D59E /* TaskHeaderView.xib in Resources */,
+				A6F922A51348B6400058D59E /* folderblue.png in Resources */,
+				A6F922A61348B6400058D59E /* foldergreen.png in Resources */,
+				A6F922A71348B6400058D59E /* foldergrey.png in Resources */,
+				A6F922A81348B6400058D59E /* folderorange.png in Resources */,
+				A6F922A91348B6400058D59E /* folderred.png in Resources */,
+				A6F922AA1348B6400058D59E /* ledclock.png in Resources */,
+				A6F922AC1348BA160058D59E /* headerbg.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -452,6 +494,8 @@
 				A65326C313488CB400D20EBE /* AlertPrompt.m in Sources */,
 				A6F9227D134894B40058D59E /* TaskView.m in Sources */,
 				A6F9228213489D870058D59E /* TaskTableView.m in Sources */,
+				A6F922931348B2410058D59E /* TaskHeaderView.m in Sources */,
+				A6F922981348B39E0058D59E /* TaskHeaderViewFactory.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

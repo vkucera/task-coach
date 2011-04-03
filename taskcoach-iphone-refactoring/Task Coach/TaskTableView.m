@@ -14,6 +14,7 @@
 #import "CDTask+Addons.h"
 #import "CDCategory.h"
 #import "String+Utils.h"
+#import "TaskHeaderViewFactory.h"
 #import "i18n.h"
 
 @interface TaskTableView ()
@@ -102,24 +103,6 @@
 
     switch ([Configuration instance].grouping)
     {
-        case GROUPING_STATUS:
-            switch ([[info name] integerValue])
-        {
-            case TASKSTATUS_TRACKING:
-                return _("Tracked");
-            case TASKSTATUS_OVERDUE:
-                return _("Overdue");
-            case TASKSTATUS_DUESOON:
-                return _("Due soon");
-            case TASKSTATUS_STARTED:
-                return _("Started");
-            case TASKSTATUS_NOTSTARTED:
-                return _("Not started");
-            case TASKSTATUS_COMPLETED:
-                return _("Completed");
-            default:
-                return _("Unknown");
-        }
         case GROUPING_PRIORITY:
             return [info name];
         default:
@@ -136,6 +119,23 @@
     }
 
     return nil;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    if ([Configuration instance].grouping == GROUPING_STATUS)
+    {
+        TaskHeaderView *view = [[TaskHeaderViewFactory instance] create];
+        [view setStyle:[[[[resultsCtrl sections] objectAtIndex:section] name] intValue]];
+        return view;
+    }
+
+    return nil;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 41;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -218,6 +218,31 @@
 - (void)configureCell:(UITableViewCell *)cell forTask:(CDTask *)task
 {
     cell.textLabel.text = task.name;
+
+    switch ([task.dateStatus intValue])
+    {
+        case TASKSTATUS_TRACKING:
+            cell.textLabel.textColor = [[[UIColor alloc] initWithRed:0.7 green:0 blue:0 alpha:1.0] autorelease];
+            break;
+        case TASKSTATUS_OVERDUE:
+            cell.textLabel.textColor = [UIColor redColor];
+            break;
+        case TASKSTATUS_DUESOON:
+            cell.textLabel.textColor = [UIColor orangeColor];
+            break;
+        case TASKSTATUS_STARTED:
+            cell.textLabel.textColor = [UIColor blueColor];
+            break;
+        case TASKSTATUS_NOTSTARTED:
+            cell.textLabel.textColor = [UIColor grayColor];
+            break;
+        case TASKSTATUS_COMPLETED:
+            cell.textLabel.textColor = [UIColor greenColor];
+            break;
+        default:
+            cell.textLabel.textColor = [UIColor blackColor];
+            break;
+    }
 
     NSMutableArray *categoryNames = [[NSMutableArray alloc] init];
     for (CDCategory *category in task.categories)
