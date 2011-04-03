@@ -70,6 +70,9 @@
 		A6F922A91348B6400058D59E /* folderred.png in Resources */ = {isa = PBXBuildFile; fileRef = A6F922A31348B6400058D59E /* folderred.png */; };
 		A6F922AA1348B6400058D59E /* ledclock.png in Resources */ = {isa = PBXBuildFile; fileRef = A6F922A41348B6400058D59E /* ledclock.png */; };
 		A6F922AC1348BA160058D59E /* headerbg.png in Resources */ = {isa = PBXBuildFile; fileRef = A6F922AB1348BA160058D59E /* headerbg.png */; };
+		A6F922B21348BC9F0058D59E /* TaskCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F922B11348BC9E0058D59E /* TaskCell.m */; };
+		A6F922B51348BD580058D59E /* TaskCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F922B41348BD570058D59E /* TaskCellFactory.m */; };
+		A6F922B71348BF5A0058D59E /* TaskCell-iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6F922B61348BF5A0058D59E /* TaskCell-iPhone.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -172,6 +175,11 @@
 		A6F922A31348B6400058D59E /* folderred.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = folderred.png; path = Images/folderred.png; sourceTree = "<group>"; };
 		A6F922A41348B6400058D59E /* ledclock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ledclock.png; path = Images/ledclock.png; sourceTree = "<group>"; };
 		A6F922AB1348BA160058D59E /* headerbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = headerbg.png; path = Images/headerbg.png; sourceTree = "<group>"; };
+		A6F922B01348BC9D0058D59E /* TaskCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCell.h; sourceTree = "<group>"; };
+		A6F922B11348BC9E0058D59E /* TaskCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskCell.m; sourceTree = "<group>"; };
+		A6F922B31348BD560058D59E /* TaskCellFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCellFactory.h; sourceTree = "<group>"; };
+		A6F922B41348BD570058D59E /* TaskCellFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskCellFactory.m; sourceTree = "<group>"; };
+		A6F922B61348BF5A0058D59E /* TaskCell-iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "TaskCell-iPhone.xib"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -270,6 +278,10 @@
 				A6F922941348B2DE0058D59E /* TaskHeaderView.xib */,
 				A6F922961348B39D0058D59E /* TaskHeaderViewFactory.h */,
 				A6F922971348B39D0058D59E /* TaskHeaderViewFactory.m */,
+				A6F922B01348BC9D0058D59E /* TaskCell.h */,
+				A6F922B11348BC9E0058D59E /* TaskCell.m */,
+				A6F922B31348BD560058D59E /* TaskCellFactory.h */,
+				A6F922B41348BD570058D59E /* TaskCellFactory.m */,
 			);
 			path = "Task Coach";
 			sourceTree = "<group>";
@@ -294,6 +306,7 @@
 				A62EF794132B93F700FDB4FA /* Task_CoachAppDelegate_iPhone.m */,
 				A62EF796132B93F700FDB4FA /* MainWindow_iPhone.xib */,
 				A6BE6624132B9D88005105FA /* MainPageView-iPhone.xib */,
+				A6F922B61348BF5A0058D59E /* TaskCell-iPhone.xib */,
 			);
 			name = iPhone;
 			sourceTree = "<group>";
@@ -454,6 +467,7 @@
 				A6F922A91348B6400058D59E /* folderred.png in Resources */,
 				A6F922AA1348B6400058D59E /* ledclock.png in Resources */,
 				A6F922AC1348BA160058D59E /* headerbg.png in Resources */,
+				A6F922B71348BF5A0058D59E /* TaskCell-iPhone.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -496,6 +510,8 @@
 				A6F9228213489D870058D59E /* TaskTableView.m in Sources */,
 				A6F922931348B2410058D59E /* TaskHeaderView.m in Sources */,
 				A6F922981348B39E0058D59E /* TaskHeaderViewFactory.m in Sources */,
+				A6F922B21348BC9F0058D59E /* TaskCell.m in Sources */,
+				A6F922B51348BD580058D59E /* TaskCellFactory.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

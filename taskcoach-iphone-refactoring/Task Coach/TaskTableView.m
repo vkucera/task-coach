@@ -11,17 +11,11 @@
 #import "CDDomainObject+Addons.h"
 #import "SmartAlertView.h"
 #import "Configuration.h"
-#import "CDTask+Addons.h"
-#import "CDCategory.h"
+#import "CDTask.h"
 #import "String+Utils.h"
 #import "TaskHeaderViewFactory.h"
+#import "TaskCellFactory.h"
 #import "i18n.h"
-
-@interface TaskTableView ()
-
-- (void)configureCell:(UITableViewCell *)cell forTask:(CDTask *)task;
-
-@end
 
 @implementation TaskTableView
 
@@ -146,16 +140,16 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"TaskCell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    TaskCell *cell = (TaskCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
     {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[TaskCellFactory instance] create];
     }
 
     CDTask *task = [resultsCtrl objectAtIndexPath:indexPath];
-    [self configureCell:cell forTask:task];
+    [cell setTask:task];
     
     return cell;
 }
@@ -211,44 +205,6 @@
      [self.navigationController pushViewController:detailViewController animated:YES];
      [detailViewController release];
      */
-}
-
-#pragma mark - Task cells
-
-- (void)configureCell:(UITableViewCell *)cell forTask:(CDTask *)task
-{
-    cell.textLabel.text = task.name;
-
-    switch ([task.dateStatus intValue])
-    {
-        case TASKSTATUS_TRACKING:
-            cell.textLabel.textColor = [[[UIColor alloc] initWithRed:0.7 green:0 blue:0 alpha:1.0] autorelease];
-            break;
-        case TASKSTATUS_OVERDUE:
-            cell.textLabel.textColor = [UIColor redColor];
-            break;
-        case TASKSTATUS_DUESOON:
-            cell.textLabel.textColor = [UIColor orangeColor];
-            break;
-        case TASKSTATUS_STARTED:
-            cell.textLabel.textColor = [UIColor blueColor];
-            break;
-        case TASKSTATUS_NOTSTARTED:
-            cell.textLabel.textColor = [UIColor grayColor];
-            break;
-        case TASKSTATUS_COMPLETED:
-            cell.textLabel.textColor = [UIColor greenColor];
-            break;
-        default:
-            cell.textLabel.textColor = [UIColor blackColor];
-            break;
-    }
-
-    NSMutableArray *categoryNames = [[NSMutableArray alloc] init];
-    for (CDCategory *category in task.categories)
-        [categoryNames addObject:category.name];
-    cell.detailTextLabel.text = [@", " stringByJoiningStrings:categoryNames];
-    [categoryNames release];
 }
 
 @end
