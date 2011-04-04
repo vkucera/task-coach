@@ -20,5 +20,6 @@
 - (id)initWithAction:(void (^)(UIViewController *))action;
 
 - (IBAction)onDone:(id)sender;
+- (IBAction)onSelectGrouping:(id)sender;
 
 @end

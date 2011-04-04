@@ -10,6 +10,7 @@
 		1E1A5E8D1332040E004E2683 /* SimpleChoiceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E1A5E8B1332040E004E2683 /* SimpleChoiceView.m */; };
 		1E1A5E8E1332040E004E2683 /* SimpleChoiceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A5E8C1332040E004E2683 /* SimpleChoiceView.xib */; };
 		1E1A5E9213336B84004E2683 /* SmartAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E1A5E9113336B84004E2683 /* SmartAlertView.m */; };
+		1E2A73D21349951600FDDF2E /* SmartActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E2A73D11349951600FDDF2E /* SmartActionSheet.m */; };
 		A6103DEA132CF6BF0083FBFD /* TasklistView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6103DE8132CF6BE0083FBFD /* TasklistView.m */; };
 		A6103DEB132CF6BF0083FBFD /* TasklistView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6103DE9132CF6BE0083FBFD /* TasklistView.xib */; };
 		A6103DF0132D02DF0083FBFD /* TasklistListView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6103DEE132D02DE0083FBFD /* TasklistListView.m */; };
@@ -81,6 +82,8 @@
 		1E1A5E8C1332040E004E2683 /* SimpleChoiceView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SimpleChoiceView.xib; sourceTree = "<group>"; };
 		1E1A5E9013336B84004E2683 /* SmartAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmartAlertView.h; sourceTree = "<group>"; };
 		1E1A5E9113336B84004E2683 /* SmartAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmartAlertView.m; sourceTree = "<group>"; };
+		1E2A73D01349951600FDDF2E /* SmartActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmartActionSheet.h; sourceTree = "<group>"; };
+		1E2A73D11349951600FDDF2E /* SmartActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmartActionSheet.m; sourceTree = "<group>"; };
 		A6103DE7132CF6BE0083FBFD /* TasklistView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TasklistView.h; sourceTree = "<group>"; };
 		A6103DE8132CF6BE0083FBFD /* TasklistView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TasklistView.m; sourceTree = "<group>"; };
 		A6103DE9132CF6BE0083FBFD /* TasklistView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TasklistView.xib; sourceTree = "<group>"; };
@@ -212,6 +215,8 @@
 				1E1A5E8C1332040E004E2683 /* SimpleChoiceView.xib */,
 				1E1A5E9013336B84004E2683 /* SmartAlertView.h */,
 				1E1A5E9113336B84004E2683 /* SmartAlertView.m */,
+				1E2A73D01349951600FDDF2E /* SmartActionSheet.h */,
+				1E2A73D11349951600FDDF2E /* SmartActionSheet.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -512,6 +517,7 @@
 				A6F922981348B39E0058D59E /* TaskHeaderViewFactory.m in Sources */,
 				A6F922B21348BC9F0058D59E /* TaskCell.m in Sources */,
 				A6F922B51348BD580058D59E /* TaskCellFactory.m in Sources */,
+				1E2A73D21349951600FDDF2E /* SmartActionSheet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

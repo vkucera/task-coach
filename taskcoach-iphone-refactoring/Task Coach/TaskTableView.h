@@ -14,4 +14,6 @@
     NSFetchedResultsController *resultsCtrl;
 }
 
+- (void)reload;
+
 @end

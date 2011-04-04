@@ -27,40 +27,41 @@
     [super dealloc];
 }
 
-#pragma mark - View lifecycle
-
-- (void)viewDidLoad
+- (void)reload
 {
-    [super viewDidLoad];
-
+    if (resultsCtrl)
+    {
+        [resultsCtrl release];
+    }
+    
     NSFetchRequest *req = [[NSFetchRequest alloc] init];
     [req setEntity:[NSEntityDescription entityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()]];
     [req setPredicate:[NSPredicate predicateWithFormat:@"status != %d AND list=%@", STATUS_DELETED, [Configuration instance].currentList]];
-
+    
     NSMutableArray *sorting = [[NSMutableArray alloc] initWithCapacity:3];
     NSSortDescriptor *des;
     
     des = [[NSSortDescriptor alloc] initWithKey:[Configuration instance].groupingName ascending:![Configuration instance].revertGrouping];
     [sorting addObject:des];
     [des release];
-
+    
     if ([Configuration instance].grouping != GROUPING_START)
     {
         des = [[NSSortDescriptor alloc] initWithKey:@"startDate" ascending:YES];
         [sorting addObject:des];
         [des release];
     }
-
+    
     des = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
     [sorting addObject:des];
     [des release];
-
+    
     [req setSortDescriptors:sorting];
     [sorting release];
-
+    
     resultsCtrl = [[NSFetchedResultsController alloc] initWithFetchRequest:req managedObjectContext:getManagedObjectContext() sectionNameKeyPath:[Configuration instance].groupingName cacheName:nil];
     [req release];
-
+    
     NSError *error;
     if (![resultsCtrl performFetch:&error])
     {
@@ -70,6 +71,14 @@
         [alert show];
         [alert release];
     }
+}
+
+#pragma mark - View lifecycle
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self reload];
 }
 
 - (void)viewDidUnload

@@ -11,6 +11,8 @@
 #import "CDDomainObject+Addons.h"
 #import "CDTask+Addons.h"
 #import "Configuration.h"
+#import "SmartActionSheet.h"
+#import "i18n.h"
 
 @implementation TaskView
 
@@ -66,6 +68,48 @@
 - (IBAction)onDone:(id)sender
 {
     doneAction(self);
+}
+
+- (void)toggleGrouping:(NSInteger)grouping
+{
+    if ([Configuration instance].grouping == grouping)
+    {
+        [Configuration instance].revertGrouping = ![Configuration instance].revertGrouping;
+    }
+    else
+    {
+        [Configuration instance].grouping = grouping;
+        [Configuration instance].revertGrouping = NO;
+    }
+
+    [[Configuration instance] save];
+    [taskTableCtrl reload];
+    [taskTableCtrl.tableView reloadData];
+}
+
+- (IBAction)onSelectGrouping:(id)sender
+{
+    SmartActionSheet *sheet = [[SmartActionSheet alloc] initWithTitle:_("Group by") cancelButtonTitle:_("Cancel") cancelAction:^(void) {
+    }];
+
+    [sheet addAction:^(void) {
+        [self toggleGrouping:GROUPING_STATUS];
+    } withTitle:_("Status")];
+    
+    [sheet addAction:^(void) {
+        [self toggleGrouping:GROUPING_PRIORITY];
+    } withTitle:_("Priority")];
+    
+    [sheet addAction:^(void) {
+        [self toggleGrouping:GROUPING_START];
+    } withTitle:_("Start date")];
+    
+    [sheet addAction:^(void) {
+        [self toggleGrouping:GROUPING_DUE];
+    } withTitle:_("Due date")];
+
+    [sheet showInView:self.view];
+    [sheet release];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
