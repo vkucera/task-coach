@@ -22,7 +22,7 @@ static TaskHeaderViewFactory *_instance = NULL;
 - (TaskHeaderView *)create
 {
     [[NSBundle mainBundle] loadNibNamed:@"TaskHeaderView" owner:self options:nil];
-    return [template retain];
+    return template;
 }
 
 @end

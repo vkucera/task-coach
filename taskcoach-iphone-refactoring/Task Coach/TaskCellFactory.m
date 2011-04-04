@@ -30,7 +30,7 @@ static TaskCellFactory *_instance = NULL;
         // XXXTODO
     }
 
-    return [template retain];
+    return template;
 }
 
 @end
