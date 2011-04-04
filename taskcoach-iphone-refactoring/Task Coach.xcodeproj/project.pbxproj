@@ -57,7 +57,6 @@
 		A6BE662E132BA469005105FA /* MainPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6BE662D132BA468005105FA /* MainPageView.m */; };
 		A6BE6631132BAF6A005105FA /* Today_highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = A6BE662F132BAF69005105FA /* Today_highlighted.png */; };
 		A6BE6632132BAF6A005105FA /* Today.png in Resources */ = {isa = PBXBuildFile; fileRef = A6BE6630132BAF69005105FA /* Today.png */; };
-		A6C817E313488A2700790A4E /* ContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6C817E213488A2700790A4E /* ContainerView.m */; };
 		A6F9227D134894B40058D59E /* TaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F9227B134894B40058D59E /* TaskView.m */; };
 		A6F9227E134894B40058D59E /* TaskView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6F9227C134894B40058D59E /* TaskView.xib */; };
 		A6F9228213489D870058D59E /* TaskTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F9228113489D870058D59E /* TaskTableView.m */; };
@@ -159,8 +158,6 @@
 		A6BE662D132BA468005105FA /* MainPageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainPageView.m; sourceTree = "<group>"; };
 		A6BE662F132BAF69005105FA /* Today_highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Today_highlighted.png; path = Images/Today_highlighted.png; sourceTree = "<group>"; };
 		A6BE6630132BAF69005105FA /* Today.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Today.png; path = Images/Today.png; sourceTree = "<group>"; };
-		A6C817E113488A2700790A4E /* ContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerView.h; sourceTree = "<group>"; };
-		A6C817E213488A2700790A4E /* ContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContainerView.m; sourceTree = "<group>"; };
 		A6F9227A134894B40058D59E /* TaskView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskView.h; sourceTree = "<group>"; };
 		A6F9227B134894B40058D59E /* TaskView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskView.m; sourceTree = "<group>"; };
 		A6F9227C134894B40058D59E /* TaskView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TaskView.xib; sourceTree = "<group>"; };
@@ -183,6 +180,8 @@
 		A6F922B31348BD560058D59E /* TaskCellFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskCellFactory.h; sourceTree = "<group>"; };
 		A6F922B41348BD570058D59E /* TaskCellFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskCellFactory.m; sourceTree = "<group>"; };
 		A6F922B61348BF5A0058D59E /* TaskCell-iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "TaskCell-iPhone.xib"; sourceTree = "<group>"; };
+		A6F922B81348C46A0058D59E /* NSDate+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+Utils.h"; path = "Utils/NSDate+Utils.h"; sourceTree = "<group>"; };
+		A6F922B91348C46A0058D59E /* NSDate+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate+Utils.m"; path = "Utils/NSDate+Utils.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -204,6 +203,8 @@
 		A613AEF0132CDCD2000D6211 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				A6F922B81348C46A0058D59E /* NSDate+Utils.h */,
+				A6F922B91348C46A0058D59E /* NSDate+Utils.m */,
 				A65326C113488CB400D20EBE /* AlertPrompt.h */,
 				A65326C213488CB400D20EBE /* AlertPrompt.m */,
 				A613AEF2132CDD0E000D6211 /* DateUtils.h */,
@@ -258,8 +259,6 @@
 				A62EF790132B93F700FDB4FA /* Task_CoachAppDelegate.m */,
 				A6BE662C132BA468005105FA /* MainPageView.h */,
 				A6BE662D132BA468005105FA /* MainPageView.m */,
-				A6C817E113488A2700790A4E /* ContainerView.h */,
-				A6C817E213488A2700790A4E /* ContainerView.m */,
 				A62EF792132B93F700FDB4FA /* iPhone */,
 				A62EF799132B93F700FDB4FA /* iPad */,
 				A613AEF0132CDCD2000D6211 /* Utils */,
@@ -509,7 +508,6 @@
 				A6103DF0132D02DF0083FBFD /* TasklistListView.m in Sources */,
 				1E1A5E8D1332040E004E2683 /* SimpleChoiceView.m in Sources */,
 				1E1A5E9213336B84004E2683 /* SmartAlertView.m in Sources */,
-				A6C817E313488A2700790A4E /* ContainerView.m in Sources */,
 				A65326C313488CB400D20EBE /* AlertPrompt.m in Sources */,
 				A6F9227D134894B40058D59E /* TaskView.m in Sources */,
 				A6F9228213489D870058D59E /* TaskTableView.m in Sources */,

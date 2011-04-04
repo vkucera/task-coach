@@ -51,8 +51,6 @@
     [listsButton setTarget:self action:@selector(doShowLists:)];
     [configureButton setTarget:self action:@selector(doConfigure:)];
     [syncButton setTarget:self action:@selector(doSync:)];
-
-    [self viewWillAppear:NO];
 }
 
 - (void)viewDidUnload
@@ -67,18 +65,24 @@
     listsLabel = nil;
     [syncButton release];
     syncButton = nil;
+
     [super viewDidUnload];
 }
 
-- (void)viewWillAppear:(BOOL)animated
+- (void)reload
 {
-    (void)getManagedObjectContext(); // Data migration if needed
-    
     CDList *list = [Configuration instance].currentList;
     if (list)
         listsLabel.text = list.name;
     else
         listsLabel.text = _("Lists");
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    (void)getManagedObjectContext(); // Data migration if needed
+
+    [self reload];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -153,7 +157,6 @@
                        options:UIViewAnimationOptionTransitionFlipFromLeft
                     animations:^(void)
     {
-        [self viewWillAppear:YES];
         self.view.hidden = NO;
         ctrl.view.hidden = YES;
     }
@@ -161,6 +164,7 @@
     {
         [ctrl.view removeFromSuperview];
         [ctrl release];
+        [self reload];
     }];
 }
 
