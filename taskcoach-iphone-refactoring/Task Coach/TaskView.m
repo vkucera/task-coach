@@ -12,6 +12,7 @@
 #import "CDTask+Addons.h"
 #import "Configuration.h"
 #import "SmartActionSheet.h"
+#import "NSDateUtils.h"
 #import "i18n.h"
 
 @implementation TaskView
@@ -63,6 +64,54 @@
     [taskTableCtrl release];
 
     [super dealloc];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    refreshStatusTimer = [[NSTimer scheduledTimerWithTimeInterval:[[NSDateUtils dateRoundedTo:15] timeIntervalSinceNow] target:self selector:@selector(onRefreshStatus:) userInfo:nil repeats:YES] retain];
+
+    [super viewDidAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    if (refreshStatusTimer)
+    {
+        [refreshStatusTimer invalidate];
+        [refreshStatusTimer release];
+        refreshStatusTimer = nil;
+    }
+
+    [super viewWillDisappear:animated];
+}
+
+- (void)onRefreshStatus:(NSTimer *)timer
+{
+    NSFetchRequest *req = [[NSFetchRequest alloc] init];
+    [req setEntity:[NSEntityDescription entityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()]];
+    [req setPredicate:[NSPredicate predicateWithFormat:@"status != %d AND list=%@", STATUS_DELETED, [Configuration instance].currentList]];
+    NSError *error;
+    NSArray *tasks = [getManagedObjectContext() executeFetchRequest:req error:&error];
+    [req release];
+
+    if (tasks)
+    {
+        for (CDTask *task in tasks)
+        {
+            [task computeDateStatus];
+        }
+
+        if (![getManagedObjectContext() save:&error])
+        {
+            NSLog(@"Could not save after refreshing: %@", [error localizedDescription]);
+        }
+    }
+    else
+    {
+        NSLog(@"Unable to refresh: %@", [error localizedDescription]);
+    }
+
+    [timer setFireDate:[NSDateUtils dateRoundedTo:15]];
 }
 
 - (IBAction)onDone:(id)sender

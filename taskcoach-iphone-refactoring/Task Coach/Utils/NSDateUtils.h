@@ -9,9 +9,9 @@
 #import <Foundation/Foundation.h>
 
 
-@interface NSDate (Utils)
+@interface NSDateUtils : NSObject
 
 // Current date, rounded to the minute start
-+ (NSDate *)dateRounded;
++ (NSDate *)dateRoundedTo:(NSInteger)round;
 
 @end

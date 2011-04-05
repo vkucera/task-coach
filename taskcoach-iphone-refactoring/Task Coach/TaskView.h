@@ -13,6 +13,7 @@
 @interface TaskView : UIViewController
 {
     void (^doneAction)(UIViewController *);
+    NSTimer *refreshStatusTimer;
 
     IBOutlet TaskTableView *taskTableCtrl;
 }
