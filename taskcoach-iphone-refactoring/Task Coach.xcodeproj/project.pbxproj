@@ -11,6 +11,10 @@
 		1E1A5E8E1332040E004E2683 /* SimpleChoiceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A5E8C1332040E004E2683 /* SimpleChoiceView.xib */; };
 		1E1A5E9213336B84004E2683 /* SmartAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E1A5E9113336B84004E2683 /* SmartAlertView.m */; };
 		1E2A73D21349951600FDDF2E /* SmartActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E2A73D11349951600FDDF2E /* SmartActionSheet.m */; };
+		1EBAD568134B02020006ECC1 /* checked.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EBAD564134B02020006ECC1 /* checked.png */; };
+		1EBAD569134B02020006ECC1 /* checked@2.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EBAD565134B02020006ECC1 /* checked@2.png */; };
+		1EBAD56A134B02020006ECC1 /* unchecked.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EBAD566134B02020006ECC1 /* unchecked.png */; };
+		1EBAD56B134B02020006ECC1 /* unchecked@2.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EBAD567134B02020006ECC1 /* unchecked@2.png */; };
 		A6103DEA132CF6BF0083FBFD /* TasklistView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6103DE8132CF6BE0083FBFD /* TasklistView.m */; };
 		A6103DEB132CF6BF0083FBFD /* TasklistView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6103DE9132CF6BE0083FBFD /* TasklistView.xib */; };
 		A6103DF0132D02DF0083FBFD /* TasklistListView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6103DEE132D02DE0083FBFD /* TasklistListView.m */; };
@@ -83,6 +87,10 @@
 		1E1A5E9113336B84004E2683 /* SmartAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmartAlertView.m; sourceTree = "<group>"; };
 		1E2A73D01349951600FDDF2E /* SmartActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmartActionSheet.h; sourceTree = "<group>"; };
 		1E2A73D11349951600FDDF2E /* SmartActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmartActionSheet.m; sourceTree = "<group>"; };
+		1EBAD564134B02020006ECC1 /* checked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = checked.png; path = Images/checked.png; sourceTree = "<group>"; };
+		1EBAD565134B02020006ECC1 /* checked@2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "checked@2.png"; path = "Images/checked@2.png"; sourceTree = "<group>"; };
+		1EBAD566134B02020006ECC1 /* unchecked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = unchecked.png; path = Images/unchecked.png; sourceTree = "<group>"; };
+		1EBAD567134B02020006ECC1 /* unchecked@2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "unchecked@2.png"; path = "Images/unchecked@2.png"; sourceTree = "<group>"; };
 		A6103DE7132CF6BE0083FBFD /* TasklistView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TasklistView.h; sourceTree = "<group>"; };
 		A6103DE8132CF6BE0083FBFD /* TasklistView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TasklistView.m; sourceTree = "<group>"; };
 		A6103DE9132CF6BE0083FBFD /* TasklistView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TasklistView.xib; sourceTree = "<group>"; };
@@ -328,6 +336,10 @@
 		A62EF7A8132B95DD00FDB4FA /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				1EBAD564134B02020006ECC1 /* checked.png */,
+				1EBAD565134B02020006ECC1 /* checked@2.png */,
+				1EBAD566134B02020006ECC1 /* unchecked.png */,
+				1EBAD567134B02020006ECC1 /* unchecked@2.png */,
 				A6F922AB1348BA160058D59E /* headerbg.png */,
 				A6F9229F1348B6400058D59E /* folderblue.png */,
 				A6F922A01348B6400058D59E /* foldergreen.png */,
@@ -472,6 +484,10 @@
 				A6F922AA1348B6400058D59E /* ledclock.png in Resources */,
 				A6F922AC1348BA160058D59E /* headerbg.png in Resources */,
 				A6F922B71348BF5A0058D59E /* TaskCell-iPhone.xib in Resources */,
+				1EBAD568134B02020006ECC1 /* checked.png in Resources */,
+				1EBAD569134B02020006ECC1 /* checked@2.png in Resources */,
+				1EBAD56A134B02020006ECC1 /* unchecked.png in Resources */,
+				1EBAD56B134B02020006ECC1 /* unchecked@2.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

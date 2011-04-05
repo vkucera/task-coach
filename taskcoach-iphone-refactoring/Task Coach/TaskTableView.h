@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 
-@interface TaskTableView : UITableViewController
+@interface TaskTableView : UITableViewController <NSFetchedResultsControllerDelegate>
 {
     NSFetchedResultsController *resultsCtrl;
 }

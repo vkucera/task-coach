@@ -17,6 +17,9 @@
 
 - (NSDate *)computeNextDate:(NSDate *)date;
 {
+    if (!date)
+        return nil;
+
 	NSCalendar *cal = [NSCalendar currentCalendar];
 	NSDate *newDate = date;
 
@@ -141,6 +144,30 @@
 	}
 
 	return nil;
+}
+
+- (void)toggleCompletion
+{
+	if (self.completionDate)
+	{
+		self.completionDate = nil;
+	}
+	else
+	{
+		if (self.recPeriod == nil)
+			self.completionDate = [NSDate date];
+
+        self.startDate = [self computeNextDate:self.startDate];
+        self.dueDate = [self computeNextDate:self.dueDate];
+        self.reminderDate = [self computeNextDate:self.reminderDate];
+	}
+
+    if ([self currentEffort])
+        [self stopTracking];
+
+    [self computeDateStatus];
+	[self markDirty];
+	[self save];
 }
 
 - (void)startTracking

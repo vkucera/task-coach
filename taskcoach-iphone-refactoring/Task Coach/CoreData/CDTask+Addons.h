@@ -26,6 +26,8 @@
 - (void)computeDateStatus;
 - (CDEffort *)currentEffort;
 
+- (void)toggleCompletion;
+
 // For recurrent tasks
 - (NSDate *)computeNextDate:(NSDate *)date;
 

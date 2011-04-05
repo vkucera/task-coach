@@ -9,13 +9,14 @@
 #import <UIKit/UIKit.h>
 
 @class CDTask;
+@class ImageButton;
 
 @interface TaskCell : UITableViewCell
 {
     IBOutlet UILabel *mainLabel;
     IBOutlet UILabel *leftLabel;
     IBOutlet UILabel *rightLabel;
-    // XXXTODO: image view
+    IBOutlet ImageButton *checkView;
 }
 
 - (void)setTask:(CDTask *)task;

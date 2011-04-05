@@ -16,10 +16,19 @@
 
 @implementation ImageButton
 
-- (void)setTarget:(id)aTarget action:(SEL)anAction
+- (void)setCallback:(void (^)(id))aCallback
 {
-    target = aTarget;
-    action = anAction;
+    if (callback)
+        Block_release(callback);
+    callback = Block_copy(aCallback);
+}
+
+- (void)dealloc
+{
+    if (callback)
+        Block_release(callback);
+
+    [super dealloc];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -53,7 +62,7 @@
     if ([self touchIsInView:[touches anyObject]])
     {
         self.highlighted = NO;
-        [target performSelector:action withObject:self];
+        callback(self);
     }
 }
 

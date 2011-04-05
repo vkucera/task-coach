@@ -47,10 +47,61 @@
 {
     [super viewDidLoad];
 
-    [todayButton setTarget:self action:@selector(doShowToday:)];
-    [listsButton setTarget:self action:@selector(doShowLists:)];
-    [configureButton setTarget:self action:@selector(doConfigure:)];
-    [syncButton setTarget:self action:@selector(doSync:)];
+    [todayButton setCallback:^(id sender) {
+        TaskView *ctrl = [[TaskView alloc] initWithAction:^(UIViewController *theCtrl) {
+            [self returnToMain:theCtrl];
+        }];
+        ctrl.view.frame = self.view.frame;
+        ctrl.view.hidden = YES;
+        [self.view.superview addSubview:ctrl.view];
+        
+        [UIView transitionWithView:self.view.superview
+                          duration:1
+                           options:UIViewAnimationOptionTransitionFlipFromRight
+         | UIViewAnimationOptionAllowAnimatedContent
+                        animations:^(void)
+         {
+             self.view.hidden = YES;
+             ctrl.view.hidden = NO;
+         }
+                        completion:NULL];
+    }];
+
+    [listsButton setCallback:^(id sender) {
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        {
+            TasklistView *ctrl = [[TasklistView alloc] initWithAction:^(UIViewController *theCtrl) {
+                [self returnToMain:theCtrl];
+            }];
+            ctrl.view.frame = self.view.frame;
+            ctrl.view.hidden = YES;
+            [self.view.superview addSubview:ctrl.view];
+            [self.view.superview bringSubviewToFront:ctrl.view];
+            
+            [UIView transitionWithView:self.view.superview
+                              duration:1
+                               options:UIViewAnimationOptionTransitionFlipFromRight
+             | UIViewAnimationOptionAllowAnimatedContent
+                            animations:^(void)
+             {
+                 self.view.hidden = YES;
+                 ctrl.view.hidden = NO;
+             }
+                            completion:NULL];
+        }
+        else
+        {
+            // XXXTODO
+        }
+    }];
+    
+    [configureButton setCallback:^(id sender) {
+        // XXXTODO
+    }];
+    
+    [syncButton setCallback:^(id sender) {
+        // XXXTODO
+    }];
 }
 
 - (void)viewDidUnload
@@ -91,64 +142,6 @@
 }
 
 #pragma mark - Actions
-
-- (void)doShowToday:(id)sender
-{
-    TaskView *ctrl = [[TaskView alloc] initWithAction:^(UIViewController *theCtrl) {
-        [self returnToMain:theCtrl];
-    }];
-    ctrl.view.frame = self.view.frame;
-    ctrl.view.hidden = YES;
-    [self.view.superview addSubview:ctrl.view];
-
-    [UIView transitionWithView:self.view.superview
-                      duration:1
-                       options:UIViewAnimationOptionTransitionFlipFromRight
-     | UIViewAnimationOptionAllowAnimatedContent
-                    animations:^(void)
-     {
-         self.view.hidden = YES;
-         ctrl.view.hidden = NO;
-     }
-                    completion:NULL];
-}
-
-- (void)doConfigure:(id)sender
-{
-}
-
-- (void)doShowLists:(id)sender
-{
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-    {
-        TasklistView *ctrl = [[TasklistView alloc] initWithAction:^(UIViewController *theCtrl) {
-            [self returnToMain:theCtrl];
-        }];
-        ctrl.view.frame = self.view.frame;
-        ctrl.view.hidden = YES;
-        [self.view.superview addSubview:ctrl.view];
-        [self.view.superview bringSubviewToFront:ctrl.view];
-
-        [UIView transitionWithView:self.view.superview
-                          duration:1
-                           options:UIViewAnimationOptionTransitionFlipFromRight
-         | UIViewAnimationOptionAllowAnimatedContent
-                        animations:^(void)
-        {
-            self.view.hidden = YES;
-            ctrl.view.hidden = NO;
-        }
-                        completion:NULL];
-    }
-    else
-    {
-        // XXXTODO
-    }
-}
-
-- (void)doSync:(id)sender
-{
-}
 
 - (void)returnToMain:(UIViewController *)ctrl
 {

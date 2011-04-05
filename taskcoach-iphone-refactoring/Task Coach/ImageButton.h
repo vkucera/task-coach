@@ -11,11 +11,10 @@
 
 @interface ImageButton : UIImageView
 {
-    id target;
-    SEL action;
+    void (^callback)(id);
     BOOL isInside;
 }
 
-- (void)setTarget:(id)target action:(SEL)action;
+- (void)setCallback:(void (^)(id))aCallback;
 
 @end

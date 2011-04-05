@@ -8,9 +8,14 @@
 
 #import "TaskCell.h"
 
+#import "Task_CoachAppDelegate.h"
 #import "CDTask+Addons.h"
 #import "String+Utils.h"
 #import "CDCategory.h"
+#import "ImageButton.h"
+
+static UIImage *_imageChecked = NULL;
+static UIImage *_imageUnchecked = NULL;
 
 @implementation TaskCell
 
@@ -21,8 +26,19 @@
 
 - (void)setTask:(CDTask *)task
 {
+    if (!_imageChecked)
+    {
+        _imageChecked = [[UIImage imageNamed:@"checked"] retain];
+        _imageUnchecked = [[UIImage imageNamed:@"unchecked"] retain];
+    }
+
     mainLabel.text = task.name;
-    
+    checkView.image = _imageUnchecked;
+
+    [checkView setCallback:^(id sender) {
+        [task toggleCompletion];
+    }];
+
     switch ([task.dateStatus intValue])
     {
         case TASKSTATUS_TRACKING:
@@ -42,6 +58,7 @@
             break;
         case TASKSTATUS_COMPLETED:
             mainLabel.textColor = [UIColor greenColor];
+            checkView.image = _imageChecked;
             break;
         default:
             mainLabel.textColor = [UIColor blackColor];
