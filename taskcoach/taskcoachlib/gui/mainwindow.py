@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import meta, patterns, widgets, help # pylint: disable-msg=W0622
+from taskcoachlib import application, meta, patterns, widgets # pylint: disable-msg=W0622
 from taskcoachlib.i18n import _
 from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
 from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog
@@ -117,20 +117,18 @@ class WindowDimensionsTracker(object):
     
 class MainWindow(DeferredCallMixin, PowerStateMixin, 
                  widgets.AuiManagedFrameWithDynamicCenterPane):
-    def __init__(self, iocontroller, taskFile, settings,
-                 splash=None, *args, **kwargs):
+    def __init__(self, iocontroller, taskFile, settings, *args, **kwargs):
         super(MainWindow, self).__init__(None, -1, '', *args, **kwargs)
         self.dimensionsTracker = WindowDimensionsTracker(self, settings)
         self.iocontroller = iocontroller
         self.taskFile = taskFile
         self.settings = settings
-        self.splash = splash
         self.Bind(wx.EVT_CLOSE, self.onClose)
+        self.Bind(wx.EVT_ICONIZE, self.onIconify)
         self.createWindowComponents()
         self.initWindowComponents()
         self.initWindow()
         self.registerForWindowComponentChanges()
-        self.closeSplashAndShowTips()
         
         if settings.getboolean('feature', 'syncml'):
             try:
@@ -167,7 +165,6 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         viewer.addViewers(self.viewer, self.taskFile, self.settings)
         self.createStatusBar()
         self.createMenuBar()
-        self.createTaskBarIcon()
         self.createReminderController()
         
     def createViewerContainer(self):
@@ -192,7 +189,6 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         super(MainWindow, self).addPane(page, caption, name)
         
     def initWindow(self):
-        wx.GetApp().SetTopWindow(self)
         self.setTitle(self.taskFile.filename())
         self.SetIcons(artprovider.iconBundle('taskcoach'))
         self.displayMessage(_('Welcome to %(name)s version %(version)s')% \
@@ -241,40 +237,12 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
             eventType='view.toolbar')
         self.Bind(aui.EVT_AUI_PANE_CLOSE, self.onCloseToolBar)
 
-    def closeSplashAndShowTips(self):
-        wx.CallAfter(self.closeSplash)
-        wx.CallAfter(self.showTips)
-
-    def showTips(self):
-        if self.settings.getboolean('window', 'tips'):
-            help.showTips(self, self.settings)
-            
-    def closeSplash(self):
-        if self.splash:
-            self.splash.Destroy()
-                         
     def onShowStatusBar(self, event=None): # pylint: disable-msg=W0613
         self.showStatusBar(self.settings.getboolean('view', 'statusbar'))
 
     def onShowToolBar(self, event=None): # pylint: disable-msg=W0613
         self.showToolBar(eval(self.settings.get('view', 'toolbar')))
 
-    def createTaskBarIcon(self):
-        if self.canCreateTaskBarIcon():
-            import taskbaricon, menu
-            self.taskBarIcon = taskbaricon.TaskBarIcon(self, 
-                self.taskFile.tasks(), self.settings)
-            self.taskBarIcon.setPopupMenu(menu.TaskBarMenu(self.taskBarIcon, 
-                self.settings, self.taskFile, self.viewer))
-        self.Bind(wx.EVT_ICONIZE, self.onIconify)
-
-    def canCreateTaskBarIcon(self):
-        try:
-            import taskbaricon # pylint: disable-msg=W0612
-            return True
-        except:
-            return False # pylint: disable-msg=W0702
-        
     def onFilenameChanged(self, event):
         self.setTitle(event.value())
 
@@ -286,25 +254,11 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         
     def displayMessage(self, message, pane=0):
         self.GetStatusBar().SetStatusText(message, pane)
-
-    def quit(self, force=False):
-        if not self.iocontroller.close(force=force):
-            return
-        # Remember what the user was working on: 
-        self.settings.set('file', 'lastfile', self.taskFile.lastFilename())
+        
+    def saveSettings(self):
         self.saveViewerCounts()
         self.savePerspective()
-        self.dimensionsTracker.savePosition()
-        self.settings.save()
-        if hasattr(self, 'taskBarIcon'):
-            self.taskBarIcon.RemoveIcon()
-        if self.bonjourRegister is not None:
-            self.bonjourRegister.stop()
-        wx.GetApp().ProcessIdle()
-        wx.GetApp().ExitMainLoop()
-
-        # For PowerStateMixin
-        self.OnQuit()
+        self.savePosition()
 
     def saveViewerCounts(self):
         ''' Save the number of viewers for each viewer type. '''
@@ -316,13 +270,16 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         perspective = self.manager.SavePerspective()
         self.settings.set('view', 'perspective', perspective)
         
+    def savePosition(self):
+        self.dimensionsTracker.savePosition()
+        
     def onClose(self, event):
         if event.CanVeto() and self.settings.getboolean('window', 
                                                         'hidewhenclosed'):
             event.Veto()
             self.Iconize()
         else:
-            self.quit()
+            application.Application().quit()
 
     def restore(self, event): # pylint: disable-msg=W0613
         if self.settings.getboolean('window', 'maximized'):
@@ -345,7 +302,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         self.GetStatusBar().Show(show)
         self.SendSizeEvent()
         
-    def getToolBarUICommands(self):
+    def createToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this window. ''' 
         uiCommands = [
                 uicommand.FileOpen(iocontroller=self.iocontroller), 

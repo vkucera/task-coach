@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, os, locale
+from taskcoachlib import patterns, help
 
         
 class wxApp(wx.App):
@@ -30,6 +31,8 @@ class wxApp(wx.App):
     
 
 class Application(object):
+    __metaclass__ = patterns.Singleton
+    
     def __init__(self, options=None, args=None, **kwargs):
         self._options = options
         self._args = args
@@ -74,19 +77,23 @@ class Application(object):
         self.taskFile = persistence.LockedTaskFile()
         self.autoSaver = persistence.AutoSaver(self.settings)
         self.autoBackup = persistence.AutoBackup(self.settings)
-        self.io = gui.IOController(self.taskFile, self.displayMessage, 
-                                   self.settings)
-        self.mainwindow = gui.MainWindow(self.io, self.taskFile, self.settings, 
-                                         splash)
+        self.iocontroller = gui.IOController(self.taskFile, self.displayMessage, 
+                                             self.settings)
+        self.mainwindow = gui.MainWindow(self.iocontroller, self.taskFile, 
+                                         self.settings)
+        self.wxApp.SetTopWindow(self.mainwindow)
         if not self.settings.getboolean('file', 'inifileloaded'):
             self.warnUserThatIniFileWasNotLoaded()
         if loadTaskFile:
-            self.io.openAfterStart(self._args)
+            self.iocontroller.openAfterStart(self._args)
         wx.SystemOptions.SetOptionInt("mac.textcontrol-use-spell-checker",
             self.settings.getboolean('editor', 'maccheckspelling'))
         self.registerSignalHandlers()
         self.createMutex()
-        
+        self.createTaskBarIcon()
+        wx.CallAfter(self.closeSplash, splash)
+        wx.CallAfter(self.showTips)
+                
     def initConfig(self, loadSettings):
         from taskcoachlib import config
         iniFile = self._options.inifile if self._options else None
@@ -141,7 +148,7 @@ class Application(object):
         self.wxApp.SetVendorName(meta.author)
                 
     def registerSignalHandlers(self):
-        quit = lambda *args: self.mainwindow.quit()
+        quit = lambda *args: self.quit()
         if '__WXMSW__' == wx.Platform:
             import win32api
             win32api.SetConsoleCtrlHandler(quit, True)
@@ -149,7 +156,7 @@ class Application(object):
             import signal
             signal.signal(signal.SIGTERM, quit)
             if hasattr(signal, 'SIGHUP'):
-                forcedQuit = lambda *args: self.mainwindow.quit(force=True)
+                forcedQuit = lambda *args: self.quit(force=True)
                 signal.signal(signal.SIGHUP, forcedQuit) # pylint: disable-msg=E1101
         
     def createMutex(self):
@@ -159,6 +166,30 @@ class Application(object):
             import ctypes
             from taskcoachlib import meta
             ctypes.windll.kernel32.CreateMutexA(None, False, meta.filename)
+
+    def createTaskBarIcon(self):
+        if self.canCreateTaskBarIcon():
+            from taskcoachlib.gui import taskbaricon, menu
+            self.taskBarIcon = taskbaricon.TaskBarIcon(self.mainwindow, 
+                self.taskFile.tasks(), self.settings)
+            self.taskBarIcon.setPopupMenu(menu.TaskBarMenu(self.taskBarIcon, 
+                self.settings, self.taskFile))
+
+    def canCreateTaskBarIcon(self):
+        try:
+            from taskcoachlib.gui import taskbaricon # pylint: disable-msg=W0612
+            return True
+        except:
+            return False # pylint: disable-msg=W0702
+                    
+    @staticmethod
+    def closeSplash(splash):
+        if splash:
+            splash.Destroy()
+            
+    def showTips(self):
+        if self.settings.getboolean('window', 'tips'):
+            help.showTips(self.mainwindow, self.settings)
 
     def warnUserThatIniFileWasNotLoaded(self):
         from taskcoachlib import meta
@@ -171,3 +202,20 @@ class Application(object):
 
     def displayMessage(self, message):
         self.mainwindow.displayMessage(message)
+
+    def quit(self, force=False):
+        if not self.iocontroller.close(force=force):
+            return
+        # Remember what the user was working on: 
+        self.settings.set('file', 'lastfile', self.taskFile.lastFilename())
+        self.mainwindow.saveSettings()
+        self.settings.save()
+        if hasattr(self, 'taskBarIcon'):
+            self.taskBarIcon.RemoveIcon()
+        if self.mainwindow.bonjourRegister is not None:
+            self.mainwindow.bonjourRegister.stop()
+        self.wxApp.ProcessIdle()
+        self.wxApp.ExitMainLoop()
+
+        # For PowerStateMixin
+        self.mainwindow.OnQuit()

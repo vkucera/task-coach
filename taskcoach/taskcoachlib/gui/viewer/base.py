@@ -49,7 +49,6 @@ class Viewer(wx.Panel):
         self.__curselection = [] 
         # Flag so that we don't notify observers while we're selecting all items
         self.__selectingAllItems = False
-        self.__toolbarUICommands = None
         # Popup menus we have to destroy before closing the viewer to prevent 
         # memory leakage:
         self._popupMenus = []
@@ -310,11 +309,6 @@ class Viewer(wx.Panel):
     def getFilterUICommands(self):
         return []
     
-    def getToolBarUICommands(self):
-        if not self.__toolbarUICommands:
-            self.__toolbarUICommands = self.createToolBarUICommands()
-        return self.__toolbarUICommands
-
     def createToolBarUICommands(self):
         ''' UI commands to put on the toolbar of this viewer. '''
         table = wx.AcceleratorTable([(wx.ACCEL_CMD, ord('X'), wx.ID_CUT),
@@ -334,11 +328,15 @@ class Viewer(wx.Panel):
         editCommand.bind(self, wx.ID_EDIT)
         self.deleteUICommand.bind(self, wx.ID_DELETE)
         actionToolBarUICommands = self.createActionToolBarUICommands()
+        modeToolBarUICommands = self.createModeToolBarUICommands()
         if actionToolBarUICommands:
             actionToolBarUICommands.insert(0, None) # Separator 
+        if modeToolBarUICommands:
+            modeToolBarUICommands.insert(0, None) # Separator
         return [cutCommand, copyCommand, pasteCommand, None] + \
             self.createCreationToolBarUICommands() + \
-            [editCommand, self.deleteUICommand] + actionToolBarUICommands
+            [editCommand, self.deleteUICommand] + actionToolBarUICommands + \
+            modeToolBarUICommands
     
     def createCreationToolBarUICommands(self):
         ''' UI commands for creating new items. '''
@@ -347,7 +345,11 @@ class Viewer(wx.Panel):
     def createActionToolBarUICommands(self):
         ''' UI commands for actions. '''
         return []
-        
+    
+    def createModeToolBarUICommands(self):
+        ''' UI commands for mode switches (e.g. list versus tree mode). '''
+        return []
+    
     def newItemDialog(self, *args, **kwargs):
         bitmap = kwargs.pop('bitmap')
         newItemCommand = self.newItemCommand(*args, **kwargs)

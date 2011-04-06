@@ -73,7 +73,7 @@ class ToolBar(_Toolbar, uicommand.UICommandContainerMixin):
         self.Realize()
         
     def uiCommands(self):
-        return self.__window.getToolBarUICommands()
+        return self.__window.createToolBarUICommands()
 
     def AppendSeparator(self):
         ''' This little adapter is needed for 

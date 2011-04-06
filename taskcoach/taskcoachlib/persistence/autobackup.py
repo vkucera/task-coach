@@ -71,7 +71,7 @@ class AutoBackup(patterns.Observer):
             return 0
         age = date.DateTime.now() - self.backupDateTime(backupFiles[0])
         ageInMinutes = age.hours() * 60
-        # We keep log(ageInMinutes) backups, but at least 3: 
+        # We keep log(ageInMinutes) backups, but at least minNrOfBackupFiles: 
         return max(self.minNrOfBackupFiles, int(math.log(max(1, ageInMinutes))))
     
     def leastUniqueBackupFile(self, backupFiles):
@@ -110,7 +110,7 @@ class AutoBackup(patterns.Observer):
     def backupDateTime(backupFilename):
         ''' Parse the date and time from the filename and return a DateTime 
             instance. '''
-        dt = backupFilename.split('.')[-3]
+        dt = backupFilename.split('.')[-3] # dt == date and time
         parts = (int(part) for part in (dt[0:4], dt[4:6], dt[6:8], 
                                         dt[9:11], dt[11:13], dt[13:14]))
         return date.DateTime(*parts)

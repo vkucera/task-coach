@@ -46,7 +46,7 @@ class AppTests(test.TestCase):
         wxApp = wx.GetApp()
         self.assertEqual(meta.name, wxApp.GetAppName())
         self.assertEqual(meta.author, wxApp.GetVendorName())
-        app.mainwindow.quit()
+        app.quit()
         
     def assertLanguage(self, expectedLanguage, locale=None):
         args = [self.options, self.settings]

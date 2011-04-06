@@ -52,9 +52,6 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
             patterns.Publisher().registerObserver(self.onAttributeChanged, 
                 eventType)
 
-    def onEveryMinute(self, event):
-        pass
-
     def domainObjectsToView(self):
         return self.taskFile.categories()
     
@@ -193,12 +190,9 @@ class CategoryViewer(BaseCategoryViewer):
         self.filterUICommand.setChoice(self.settings.getboolean('view',
             'categoryfiltermatchall'))
 
-    def getToolBarUICommands(self):
-        ''' UI commands to put on the toolbar of this viewer. '''
-        toolBarUICommands = super(CategoryViewer, self).getToolBarUICommands()
-        toolBarUICommands.insert(-2, None) # Separator
+    def createModeToolBarUICommands(self):
         # pylint: disable-msg=W0201
         self.filterUICommand = \
             uicommand.CategoryViewerFilterChoice(settings=self.settings)
-        toolBarUICommands.insert(-2, self.filterUICommand)
-        return toolBarUICommands
+        return super(CategoryViewer, self).createModeToolBarUICommands() + \
+            [self.filterUICommand]
