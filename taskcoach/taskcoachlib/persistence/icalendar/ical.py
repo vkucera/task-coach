@@ -33,14 +33,17 @@ def parseDateTime(fulldate):
     ''' Parses a datetime as seen in iCalendar files into a 
     L{taskcoachlib.domain.date.DateTime} object. '''
 
-    dt, tm = fulldate.split('T')
-    year, month, day = int(dt[:4]), int(dt[4:6]), int(dt[6:8])
-    hour, minute, second = int(tm[:2]), int(tm[2:4]), int(tm[4:6])
+    try:
+        dt, tm = fulldate.split('T')
+        year, month, day = int(dt[:4]), int(dt[4:6]), int(dt[6:8])
+        hour, minute, second = int(tm[:2]), int(tm[2:4]), int(tm[4:6])
 
-    if fulldate.endswith('Z'):
-        # GMT. Convert this to local time.
-        localTime = time.localtime(calendar.timegm((year, month, day, hour, minute, second, 0, 0, -1)))
-        year, month, day, hour, minute, second = localTime[:6]
+        if fulldate.endswith('Z'):
+            # GMT. Convert this to local time.
+            localTime = time.localtime(calendar.timegm((year, month, day, hour, minute, second, 0, 0, -1)))
+            year, month, day, hour, minute, second = localTime[:6]
+    except Exception, e:
+        raise ValueError('Malformed date: %s (%s)' % (fulldate, str(e)))
 
     return date.DateTime(year, month, day, hour, minute, second)
 

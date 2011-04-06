@@ -552,7 +552,7 @@ class HelpMenu(Menu):
 
 
 class TaskBarMenu(Menu):
-    def __init__(self, taskBarIcon, settings, taskFile, viewerContainer):
+    def __init__(self, taskBarIcon, settings, taskFile):
         super(TaskBarMenu, self).__init__(taskBarIcon)
         tasks = taskFile.tasks()
         efforts = taskFile.efforts()
@@ -564,8 +564,8 @@ class TaskBarMenu(Menu):
         self.appendUICommands(None) # Separator
         if settings.getboolean('feature', 'effort'):
             self.appendUICommands(
-                uicommand.EffortNew(viewer=viewerContainer, effortList=efforts,
-                                    taskList=tasks, settings=settings))
+                uicommand.EffortNew(effortList=efforts, taskList=tasks, 
+                                    settings=settings))
         self.appendUICommands(
             uicommand.CategoryNew(categories=taskFile.categories(), 
                                   settings=settings))

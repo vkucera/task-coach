@@ -37,16 +37,17 @@ class LoadTest(test.TestCase):
 
     def tearDown(self):
         wx.CallAfter = self.oldCallAfter
-        self.mockApp.mainwindow.quit()
+        self.mockApp.quit()
         if os.path.isfile(self.filename):
             os.remove(self.filename)
+        mock.App.deleteInstance()
         super(LoadTest, self).tearDown()
 
     def mockErrorDialog(self, *args, **kwargs): # pylint: disable-msg=W0613
         self.errorDialogCalled = True
 
     def testLoadInvalidFileDoesNotAffectFile(self):
-        self.mockApp.io.open(self.filename, showerror=self.mockErrorDialog)
+        self.mockApp.iocontroller.open(self.filename, showerror=self.mockErrorDialog)
         lines = file(self.filename, 'r').readlines()
         self.failUnless(self.errorDialogCalled)
         self.assertEqual(2, len(lines)) 
@@ -54,7 +55,7 @@ class LoadTest(test.TestCase):
         self.assertEqual('Line 2\n', lines[1])
 
     def testLoadNonExistingFileGivesErrorMessage(self):
-        self.mockApp.io.open("I don't exist.tsk", 
+        self.mockApp.iocontroller.open("I don't exist.tsk", 
                              showerror=self.mockErrorDialog,
                              fileExists=lambda filename: False)
         wx.GetApp().Yield() # io.open uses wx.CallAfter

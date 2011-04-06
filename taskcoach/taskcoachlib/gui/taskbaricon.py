@@ -38,17 +38,16 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
         self.__tooltipText = ''
         self.__tickBitmap = tickBitmap
         self.__tackBitmap = tackBitmap
-        patterns.Publisher().registerObserver(self.onTaskListChanged,
-            eventType=taskList.addItemEventType(),
-            eventSource=taskList)
-        patterns.Publisher().registerObserver(self.onTaskListChanged, 
-            eventType=taskList.removeItemEventType(),
-            eventSource=taskList)
-        patterns.Publisher().registerObserver(self.onStartTracking,
+        registerObserver = patterns.Publisher().registerObserver
+        registerObserver(self.onTaskListChanged,
+            eventType=taskList.addItemEventType(), eventSource=taskList)
+        registerObserver(self.onTaskListChanged, 
+            eventType=taskList.removeItemEventType(), eventSource=taskList)
+        registerObserver(self.onStartTracking,
             eventType=task.Task.trackStartEventType())
-        patterns.Publisher().registerObserver(self.onStopTracking,
+        registerObserver(self.onStopTracking,
             eventType=task.Task.trackStopEventType())
-        patterns.Publisher().registerObserver(self.onChangeDueDateTime,
+        registerObserver(self.onChangeDueDateTime,
             eventType='task.dueDateTime')
         event = wx.EVT_TASKBAR_LEFT_DOWN if '__WXGTK__' == wx.Platform else wx.EVT_TASKBAR_LEFT_DCLICK    
         self.Bind(event, self.onTaskbarClick)

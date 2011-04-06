@@ -113,10 +113,6 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
                 raise
         result = self._fixValuesFromOldIniFiles(section, option, result)
         result = self._ensureMinimum(section, option, result)
-
-        if section == 'feature' and option == 'notifier' and result == 'Native':
-            result = 'Task Coach'
-
         return result
     
     def _ensureMinimum(self, section, option, result):
@@ -144,6 +140,8 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
                     column += 'Time'
                 widths[column] = width
             result = str(widths)
+        elif section == 'feature' and option == 'notifier' and result == 'Native':
+            result = 'Task Coach'
         return result
 
     def set(self, section, option, value, new=False): # pylint: disable-msg=W0221
@@ -154,7 +152,6 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
         else:
             currentValue = self.get(section, option)
         if value != currentValue:
-            patterns.Event('before.%s.%s'%(section, option), self, value).send()
             super(Settings, self).set(section, option, value)
             patterns.Event('%s.%s'%(section, option), self, value).send()
             
@@ -257,10 +254,6 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
     def generatedIniFilename(self, forceProgramDir):
         return os.path.join(self.path(forceProgramDir), '%s.ini'%meta.filename)
 
-    def setLoadAndSave(self, loadAndSave=True):
-        ''' Turn saving and loading on and off, for testing purposes. '''
-        self.__loadAndSave = loadAndSave
-    
     @staticmethod
     def __escapePercentage(value):
         # Prevent ValueError: invalid interpolation syntax in '%' at position 0
