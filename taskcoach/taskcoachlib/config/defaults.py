@@ -353,7 +353,8 @@ defaults = { \
     'effort': 'True',
     'syncml': 'False',
     'iphone': 'False',
-    'notifier': 'Task Coach' },
+    'notifier': 'Task Coach',
+    'minidletime': '0' },
 'syncml': { \
     'url': '',
     'username': '',

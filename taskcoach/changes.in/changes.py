@@ -29,7 +29,10 @@ Release('1.3.0', 'April 6, 2011',
 for OK and Cancel buttons anymore.
 TODO:
 - Use AUI for edit dialogs?
-- Refactor editor.py''', 'http://uservoice.com/a/oNbcq')
+- Refactor editor.py''', 'http://uservoice.com/a/oNbcq'),
+        Feature('''If there is no user input for some (configurable) time,
+Task coach now asks what to do with tracked efforts when the user comes
+back.''', 'http://uservoice.com/a/4656L'),
         ],
     bugsFixed=[
         Bug('''It was and is possible to open multiple edit dialogs for the same

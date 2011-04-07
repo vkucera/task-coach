@@ -100,6 +100,7 @@ elif system == 'Darwin':
     import _growl
     import _growlImage
     import _powermgt
+    import _idle
 
 if __name__ == '__main__':
     setup(**setupOptions)
