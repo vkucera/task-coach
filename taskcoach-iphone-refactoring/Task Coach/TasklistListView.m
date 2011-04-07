@@ -10,6 +10,7 @@
 #import "TasklistListView.h"
 #import "Task_CoachAppDelegate.h"
 #import "CDList.h"
+#import "CDDomainObject+Addons.h"
 #import "CDFile.h"
 #import "CDDomainObject.h"
 #import "Configuration.h"
@@ -142,25 +143,37 @@
 
         if (lists)
         {
-            // XXXTODO: skip this if there are no tasks in the list.
+            req = [[NSFetchRequest alloc] init];
+            [req setEntity:[NSEntityDescription entityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()]];
+            [req setPredicate:[NSPredicate predicateWithFormat:@"status != %d AND list==%@", STATUS_DELETED, [resultsCtrl objectAtIndexPath:indexPath]]];
+            NSInteger taskCount = [getManagedObjectContext() countForFetchRequest:req error:&error];
+            [req release];
 
-            SmartAlertView *alert = [[SmartAlertView alloc] initWithTitle:_("Question") message:_("Do you want to affect tasks to another list ?") cancelButtonTitle:_("No") cancelAction:^(void) {
-                [self deleteList:[resultsCtrl objectAtIndexPath:indexPath] assign:nil];
-                if ([lists count] == 2)
-                    [parent onSave:self];
-            }];
-            [alert addAction:^(void) {
-                SimpleChoiceView *choice = [[SimpleChoiceView alloc] initWithEntityName:@"CDList" completion:^(NSManagedObject *obj) {
-                    [self deleteList:[resultsCtrl objectAtIndexPath:indexPath] assign:(CDList *)obj];
-                    [parent dismissModalViewControllerAnimated:YES];
+            if (taskCount == NSNotFound)
+            {
+                NSLog(@"Could not count tasks: %@", [error localizedDescription]);
+            }
+
+            if (taskCount >= 1)
+            {
+                SmartAlertView *alert = [[SmartAlertView alloc] initWithTitle:_("Question") message:_("Do you want to affect tasks to another list ?") cancelButtonTitle:_("No") cancelAction:^(void) {
+                    [self deleteList:[resultsCtrl objectAtIndexPath:indexPath] assign:nil];
                     if ([lists count] == 2)
                         [parent onSave:self];
-                } exclude:[resultsCtrl objectAtIndexPath:indexPath]];
-                [parent presentModalViewController:choice animated:YES];
-                [choice release];
-            } withTitle:_("Yes")];
-            [alert show];
-            [alert release];
+                }];
+                [alert addAction:^(void) {
+                    SimpleChoiceView *choice = [[SimpleChoiceView alloc] initWithEntityName:@"CDList" completion:^(NSManagedObject *obj) {
+                        [self deleteList:[resultsCtrl objectAtIndexPath:indexPath] assign:(CDList *)obj];
+                        [parent dismissModalViewControllerAnimated:YES];
+                        if ([lists count] == 2)
+                            [parent onSave:self];
+                    } exclude:[resultsCtrl objectAtIndexPath:indexPath]];
+                    [parent presentModalViewController:choice animated:YES];
+                    [choice release];
+                } withTitle:_("Yes")];
+                [alert show];
+                [alert release];
+            }
         }
         else
         {
