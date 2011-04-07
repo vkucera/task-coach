@@ -134,15 +134,11 @@ class EffortViewerTest(test.wxTestCase):
 
     def testSelect(self):
         self.task.addEffort(self.effort1)
-        self.viewer.widget.ToggleItemSelection(0)
-        self.viewer.updateSelection()
         self.failUnless(self.viewer.isselected(self.effort1))
 
     def testSelectAfterNewEffortWasAdded(self):
         self.task.addEffort(self.effort1)
-        self.viewer.widget.ToggleItemSelection(0)
         self.task.addEffort(self.effort2)
-        self.viewer.updateSelection()
         self.failUnless(self.viewer.isselected(self.effort2))
 
     def testSearch(self):

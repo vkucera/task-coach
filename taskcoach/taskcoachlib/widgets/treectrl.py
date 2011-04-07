@@ -196,8 +196,10 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         if not rootItem:
             rootItem = self.AddRoot('Hidden root')
         self._addObjectRecursively(rootItem)
-        if self.GetSelections():
-            self.ScrollTo(self.GetSelections()[0])
+        selections = self.GetSelections()
+        if selections:
+            self.GetMainWindow()._current = self.GetMainWindow()._key_current = selections[0]
+            self.ScrollTo(selections[0])
         self.Thaw()
             
     def RefreshItems(self, *objects):
