@@ -121,6 +121,12 @@
     return cell;
 }
 
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    id <NSFetchedResultsSectionInfo> info = [[resultsCtrl sections] objectAtIndex:0];
+    return ([info numberOfObjects] > 1) ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleNone;
+}
+
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
@@ -136,33 +142,25 @@
 
         if (lists)
         {
-            switch ([lists count])
-            {
-                case 1:
-                    [self deleteList:[resultsCtrl objectAtIndexPath:indexPath] assign:nil];
-                    break;
-                default:
-                {
-                    SmartAlertView *alert = [[SmartAlertView alloc] initWithTitle:_("Question") message:_("Do you want to affect tasks to another list ?") cancelButtonTitle:_("No") cancelAction:^(void) {
-                        [self deleteList:[resultsCtrl objectAtIndexPath:indexPath] assign:nil];
-                        if ([lists count] == 2)
-                            [parent onSave:self];
-                    }];
-                    [alert addAction:^(void) {
-                        SimpleChoiceView *choice = [[SimpleChoiceView alloc] initWithEntityName:@"CDList" completion:^(NSManagedObject *obj) {
-                            [self deleteList:[resultsCtrl objectAtIndexPath:indexPath] assign:(CDList *)obj];
-                            [parent dismissModalViewControllerAnimated:YES];
-                            if ([lists count] == 2)
-                                [parent onSave:self];
-                        } exclude:[resultsCtrl objectAtIndexPath:indexPath]];
-                        [parent presentModalViewController:choice animated:YES];
-                        [choice release];
-                    } withTitle:_("Yes")];
-                    [alert show];
-                    [alert release];
-                    break;
-                }
-            }
+            // XXXTODO: skip this if there are no tasks in the list.
+
+            SmartAlertView *alert = [[SmartAlertView alloc] initWithTitle:_("Question") message:_("Do you want to affect tasks to another list ?") cancelButtonTitle:_("No") cancelAction:^(void) {
+                [self deleteList:[resultsCtrl objectAtIndexPath:indexPath] assign:nil];
+                if ([lists count] == 2)
+                    [parent onSave:self];
+            }];
+            [alert addAction:^(void) {
+                SimpleChoiceView *choice = [[SimpleChoiceView alloc] initWithEntityName:@"CDList" completion:^(NSManagedObject *obj) {
+                    [self deleteList:[resultsCtrl objectAtIndexPath:indexPath] assign:(CDList *)obj];
+                    [parent dismissModalViewControllerAnimated:YES];
+                    if ([lists count] == 2)
+                        [parent onSave:self];
+                } exclude:[resultsCtrl objectAtIndexPath:indexPath]];
+                [parent presentModalViewController:choice animated:YES];
+                [choice release];
+            } withTitle:_("Yes")];
+            [alert show];
+            [alert release];
         }
         else
         {

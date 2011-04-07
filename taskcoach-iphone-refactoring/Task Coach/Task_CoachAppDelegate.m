@@ -14,6 +14,7 @@
 #import "CDList.h"
 #import "CDDomainObject+Addons.h"
 #import "CDTask+Addons.h"
+#import "i18n.h"
 
 NSManagedObjectContext *getManagedObjectContext(void)
 {
@@ -279,7 +280,24 @@ NSPersistentStoreCoordinator *getPersistentStoreCoordinator(void)
 
         [fileManager removeItemAtPath:path error:&error];
     }
+
+    // Create default list if needed
     
+    if (![Configuration instance].currentList)
+    {
+        CDList *defaultList = [NSEntityDescription insertNewObjectForEntityForName:@"CDList" inManagedObjectContext:getManagedObjectContext()];
+        defaultList.name = _("To do");
+        if (![getManagedObjectContext() save:&error])
+        {
+            NSLog(@"Could not save default list: %@", [error localizedDescription]);
+        }
+        else
+        {
+            [Configuration instance].currentList = defaultList;
+            [[Configuration instance] save];
+        }
+    }
+
     return persistentStoreCoordinator;
 }
 
