@@ -109,8 +109,7 @@ class IdleController(Observer, IdleNotifier):
                 self.__trackedEfforts.remove(effort) 
 
     def getMinIdleTime(self):
-        # return self._settings.getint('feature', 'minidletime') * 60
-        return 10 # XXXTMP
+        return self._settings.getint('feature', 'minidletime') * 60
 
     def sleep(self):
         now = date.Now()
