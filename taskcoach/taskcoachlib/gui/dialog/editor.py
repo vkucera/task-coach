@@ -1102,6 +1102,12 @@ class Editor(widgets.ButtonLessDialog):
     def onClose(self, event):
         event.Skip()
         patterns.Publisher().removeInstance(self)
+
+        # On Mac OS X, the text control does not lose focus when
+        # destroyed...
+        if wx.Platform == '__WXMAC__':
+            print 'FOCUS'
+            self._interior.SetFocusIgnoringChildren()
                         
     def onItemRemoved(self, event):
         ''' The item we're editing or one of its ancestors has been removed or 
