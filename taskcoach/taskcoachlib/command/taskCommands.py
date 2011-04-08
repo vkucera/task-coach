@@ -355,7 +355,7 @@ class AddTaskNoteCommand(base.AddNoteCommand):
 
 class EditDateTimeCommand(base.BaseCommand):
     def __init__(self, *args, **kwargs):
-        self.__newDateTime = kwargs.pop('datetime')
+        self._newDateTime = kwargs.pop('datetime')
         super(EditDateTimeCommand, self).__init__(*args, **kwargs)
         self.__oldDateTimes = [self.getDateTime(item) for item in self.items]
         familyMembers = set()
@@ -377,7 +377,7 @@ class EditDateTimeCommand(base.BaseCommand):
     def do_command(self, event=None):
         super(EditDateTimeCommand, self).do_command()
         for item in self.items:
-            self.setDateTime(item, self.__newDateTime, event=event)
+            self.setDateTime(item, self._newDateTime, event=event)
 
     @patterns.eventSource
     def undo_command(self, event=None):
@@ -402,7 +402,23 @@ class EditStartDateTimeCommand(EditDateTimeCommand):
     @staticmethod
     def setDateTime(item, dateTime, event):
         item.setStartDateTime(dateTime, event=event)
+        
+    @patterns.eventSource
+    def do_command(self, event=None):
+        for item in self.items:
+            if date.DateTime() not in [item.startDateTime(), item.dueDateTime()]:
+                delta = self._newDateTime - item.startDateTime()
+                item.setDueDateTime(item.dueDateTime() + delta, event=event)
+        super(EditStartDateTimeCommand, self).do_command(event=event)
                 
+    @patterns.eventSource
+    def undo_command(self, event=None):
+        super(EditStartDateTimeCommand, self).undo_command(event=event)
+        for item in self.items:
+            if date.DateTime() not in [item.startDateTime(), item.dueDateTime()]:
+                delta = self._newDateTime - item.startDateTime()
+                item.setDueDateTime(item.dueDateTime() - delta, event=event)
+            
 
 class EditDueDateTimeCommand(EditDateTimeCommand):
     plural_name = _('Change due date')
