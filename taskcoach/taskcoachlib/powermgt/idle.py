@@ -34,7 +34,7 @@ if sys.platform == 'linux2':
 
     class LinuxIdleQuery(object):
         def __init__(self):
-            _x11 = CDLL('libX11.so')
+            _x11 = CDLL('libX11.so.6')
 
             self.XOpenDisplay = CFUNCTYPE(c_ulong, c_char_p)(('XOpenDisplay', _x11))
             self.XCloseDisplay = CFUNCTYPE(c_int, c_ulong)(('XCloseDisplay', _x11))
@@ -42,7 +42,7 @@ if sys.platform == 'linux2':
 
             self.dpy = self.XOpenDisplay(None)
 
-            _xss = CDLL('libXss.so')
+            _xss = CDLL('libXss.so.1')
 
             self.XScreenSaverAllocInfo = CFUNCTYPE(POINTER(XScreenSaverInfo))(('XScreenSaverAllocInfo', _xss))
             self.XScreenSaverQueryInfo = CFUNCTYPE(c_int, c_ulong, c_ulong, POINTER(XScreenSaverInfo))(('XScreenSaverQueryInfo', _xss))
