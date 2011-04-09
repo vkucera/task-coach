@@ -65,4 +65,9 @@ static UIImage *_imageUnchecked = NULL;
     }];
 }
 
+- (void)editSubject
+{
+    [subject becomeFirstResponder];
+}
+
 @end

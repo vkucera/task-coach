@@ -223,6 +223,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A6126BF113508507009EC6E6 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				A6F922B01348BC9D0058D59E /* TaskCell.h */,
+				A6F922B11348BC9E0058D59E /* TaskCell.m */,
+				A6F922B31348BD560058D59E /* TaskCellFactory.h */,
+				A6F922B41348BD570058D59E /* TaskCellFactory.m */,
+				A6126BDA13507251009EC6E6 /* TaskDetailsCell.h */,
+				A6126BDB13507252009EC6E6 /* TaskDetailsCell.m */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
 		A613AEF0132CDCD2000D6211 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -288,6 +301,7 @@
 				A62EF799132B93F700FDB4FA /* iPad */,
 				A613AEF0132CDCD2000D6211 /* Utils */,
 				A6775FBA132CD7E100358BC9 /* CoreData */,
+				A6126BF113508507009EC6E6 /* Cells */,
 				A6775FA9132CD37B00358BC9 /* Configuration */,
 				A62EF787132B93F700FDB4FA /* Supporting Files */,
 				A62EF7A5132B952500FDB4FA /* ImageButton.h */,
@@ -307,12 +321,6 @@
 				A6F922941348B2DE0058D59E /* TaskHeaderView.xib */,
 				A6F922961348B39D0058D59E /* TaskHeaderViewFactory.h */,
 				A6F922971348B39D0058D59E /* TaskHeaderViewFactory.m */,
-				A6F922B01348BC9D0058D59E /* TaskCell.h */,
-				A6F922B11348BC9E0058D59E /* TaskCell.m */,
-				A6F922B31348BD560058D59E /* TaskCellFactory.h */,
-				A6F922B41348BD570058D59E /* TaskCellFactory.m */,
-				A6126BDA13507251009EC6E6 /* TaskDetailsCell.h */,
-				A6126BDB13507252009EC6E6 /* TaskDetailsCell.m */,
 			);
 			path = "Task Coach";
 			sourceTree = "<group>";

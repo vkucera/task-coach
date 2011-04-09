@@ -11,7 +11,7 @@
 #import "CDDomainObject+Addons.h"
 #import "SmartAlertView.h"
 #import "Configuration.h"
-#import "CDTask.h"
+#import "CDTask+Addons.h"
 #import "String+Utils.h"
 #import "TaskHeaderViewFactory.h"
 #import "TaskCellFactory.h"
@@ -76,6 +76,30 @@
     }
 
     resultsCtrl.delegate = self;
+}
+
+- (void)addTask
+{
+    CDTask *task = [NSEntityDescription insertNewObjectForEntityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()];
+    
+    if (detailsTask)
+    {
+        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[resultsCtrl indexPathForObject:detailsTask]] withRowAnimation:UITableViewRowAnimationFade];
+        [detailsTask release];
+    }
+    
+    editSubject = YES;
+
+    task.name = _("New task");
+    task.longDescription = @"";
+    task.startDate = [NSDate date];
+    task.list = [Configuration instance].currentList;
+    task.creationDate = [NSDate date];
+    [task computeDateStatus];
+    detailsTask = task;
+    [task save];
+
+    [self.tableView scrollToRowAtIndexPath:[resultsCtrl indexPathForObject:task] atScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 
 #pragma mark - View lifecycle
@@ -217,7 +241,13 @@
             detailsTask = nil;
             [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationFade];
         }];
-        
+
+        if (editSubject)
+        {
+            editSubject = NO;
+            [cell editSubject];
+        }
+
         return cell;
     }
     else
@@ -365,6 +395,8 @@
     if (scrollTo)
     {
         [self.tableView scrollToRowAtIndexPath:scrollTo atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        [scrollTo release];
+        scrollTo = nil;
     }
 }
 

@@ -132,6 +132,11 @@
     doneAction(self);
 }
 
+- (IBAction)onAddTask:(id)sender
+{
+    [taskTableCtrl addTask];
+}
+
 - (void)toggleGrouping:(NSInteger)grouping
 {
     if ([Configuration instance].grouping == grouping)

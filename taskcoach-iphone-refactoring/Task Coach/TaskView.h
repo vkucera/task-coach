@@ -23,5 +23,6 @@
 
 - (IBAction)onDone:(id)sender;
 - (IBAction)onSelectGrouping:(id)sender;
+- (IBAction)onAddTask:(id)sender;
 
 @end

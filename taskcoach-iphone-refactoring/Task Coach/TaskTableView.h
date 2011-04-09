@@ -14,10 +14,13 @@
 {
     NSFetchedResultsController *resultsCtrl;
     CDTask *detailsTask;
+
     NSIndexPath *scrollTo;
+    BOOL editSubject;
 }
 
 - (void)reload;
 - (void)refresh;
+- (void)addTask;
 
 @end

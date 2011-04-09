@@ -24,5 +24,6 @@
 }
 
 - (void)setTask:(CDTask *)task callback:(void (^)(id))callback;
+- (void)editSubject;
 
 @end
