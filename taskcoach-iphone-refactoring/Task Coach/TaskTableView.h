@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+@class CDTask;
 
 @interface TaskTableView : UITableViewController <NSFetchedResultsControllerDelegate>
 {
     NSFetchedResultsController *resultsCtrl;
-    NSTimer *refreshEffortTimer;
+    CDTask *detailsTask;
+    NSIndexPath *scrollTo;
 }
 
 - (void)reload;

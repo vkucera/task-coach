@@ -179,6 +179,10 @@
 	effort.started = [NSDate date];
 	effort.ended = nil;
 	effort.name = self.name;
+    [effort save];
+    
+    [self computeDateStatus];
+    [self save];
 }
 
 - (void)stopTracking
@@ -187,6 +191,9 @@
 	[effort setEnded:[NSDate date]];
 	[effort markDirty];
 	[effort save];
+    
+    [self computeDateStatus];
+    [self save];
 }
 
 - (NSString *)startDateOnly

@@ -18,6 +18,12 @@
 		A6103DEA132CF6BF0083FBFD /* TasklistView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6103DE8132CF6BE0083FBFD /* TasklistView.m */; };
 		A6103DEB132CF6BF0083FBFD /* TasklistView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6103DE9132CF6BE0083FBFD /* TasklistView.xib */; };
 		A6103DF0132D02DF0083FBFD /* TasklistListView.m in Sources */ = {isa = PBXBuildFile; fileRef = A6103DEE132D02DE0083FBFD /* TasklistListView.m */; };
+		A6126BDC13507252009EC6E6 /* TaskDetailsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A6126BDB13507252009EC6E6 /* TaskDetailsCell.m */; };
+		A6126BE613507381009EC6E6 /* blueButton.png in Resources */ = {isa = PBXBuildFile; fileRef = A6126BE413507381009EC6E6 /* blueButton.png */; };
+		A6126BE713507381009EC6E6 /* redButton.png in Resources */ = {isa = PBXBuildFile; fileRef = A6126BE513507381009EC6E6 /* redButton.png */; };
+		A6126BE913507415009EC6E6 /* whiteButton.png in Resources */ = {isa = PBXBuildFile; fileRef = A6126BE813507415009EC6E6 /* whiteButton.png */; };
+		A6126BED135075AD009EC6E6 /* TaskDetailsCell-iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6126BEC135075AD009EC6E6 /* TaskDetailsCell-iPhone.xib */; };
+		A6126BF013507A92009EC6E6 /* SmartButton.m in Sources */ = {isa = PBXBuildFile; fileRef = A6126BEF13507A92009EC6E6 /* SmartButton.m */; };
 		A613AEF6132CDD0E000D6211 /* DateUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A613AEF3132CDD0E000D6211 /* DateUtils.m */; };
 		A613AEF7132CDD0E000D6211 /* String+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = A613AEF5132CDD0E000D6211 /* String+Utils.m */; };
 		A62EF781132B93F700FDB4FA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A62EF780132B93F700FDB4FA /* UIKit.framework */; };
@@ -97,6 +103,14 @@
 		A6103DE9132CF6BE0083FBFD /* TasklistView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TasklistView.xib; sourceTree = "<group>"; };
 		A6103DED132D02DE0083FBFD /* TasklistListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TasklistListView.h; sourceTree = "<group>"; };
 		A6103DEE132D02DE0083FBFD /* TasklistListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TasklistListView.m; sourceTree = "<group>"; };
+		A6126BDA13507251009EC6E6 /* TaskDetailsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskDetailsCell.h; sourceTree = "<group>"; };
+		A6126BDB13507252009EC6E6 /* TaskDetailsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskDetailsCell.m; sourceTree = "<group>"; };
+		A6126BE413507381009EC6E6 /* blueButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blueButton.png; path = Images/blueButton.png; sourceTree = "<group>"; };
+		A6126BE513507381009EC6E6 /* redButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = redButton.png; path = Images/redButton.png; sourceTree = "<group>"; };
+		A6126BE813507415009EC6E6 /* whiteButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = whiteButton.png; path = Images/whiteButton.png; sourceTree = "<group>"; };
+		A6126BEC135075AD009EC6E6 /* TaskDetailsCell-iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "TaskDetailsCell-iPhone.xib"; sourceTree = "<group>"; };
+		A6126BEE13507A92009EC6E6 /* SmartButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmartButton.h; sourceTree = "<group>"; };
+		A6126BEF13507A92009EC6E6 /* SmartButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmartButton.m; sourceTree = "<group>"; };
 		A613AEF2132CDD0E000D6211 /* DateUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DateUtils.h; path = Utils/DateUtils.h; sourceTree = "<group>"; };
 		A613AEF3132CDD0E000D6211 /* DateUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DateUtils.m; path = Utils/DateUtils.m; sourceTree = "<group>"; };
 		A613AEF4132CDD0E000D6211 /* String+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "String+Utils.h"; path = "Utils/String+Utils.h"; sourceTree = "<group>"; };
@@ -227,6 +241,8 @@
 				1E1A5E9113336B84004E2683 /* SmartAlertView.m */,
 				1E2A73D01349951600FDDF2E /* SmartActionSheet.h */,
 				1E2A73D11349951600FDDF2E /* SmartActionSheet.m */,
+				A6126BEE13507A92009EC6E6 /* SmartButton.h */,
+				A6126BEF13507A92009EC6E6 /* SmartButton.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -295,6 +311,8 @@
 				A6F922B11348BC9E0058D59E /* TaskCell.m */,
 				A6F922B31348BD560058D59E /* TaskCellFactory.h */,
 				A6F922B41348BD570058D59E /* TaskCellFactory.m */,
+				A6126BDA13507251009EC6E6 /* TaskDetailsCell.h */,
+				A6126BDB13507252009EC6E6 /* TaskDetailsCell.m */,
 			);
 			path = "Task Coach";
 			sourceTree = "<group>";
@@ -320,6 +338,7 @@
 				A62EF796132B93F700FDB4FA /* MainWindow_iPhone.xib */,
 				A6BE6624132B9D88005105FA /* MainPageView-iPhone.xib */,
 				A6F922B61348BF5A0058D59E /* TaskCell-iPhone.xib */,
+				A6126BEC135075AD009EC6E6 /* TaskDetailsCell-iPhone.xib */,
 			);
 			name = iPhone;
 			sourceTree = "<group>";
@@ -337,6 +356,9 @@
 		A62EF7A8132B95DD00FDB4FA /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				A6126BE813507415009EC6E6 /* whiteButton.png */,
+				A6126BE413507381009EC6E6 /* blueButton.png */,
+				A6126BE513507381009EC6E6 /* redButton.png */,
 				1EBAD564134B02020006ECC1 /* checked.png */,
 				1EBAD565134B02020006ECC1 /* checked@2.png */,
 				1EBAD566134B02020006ECC1 /* unchecked.png */,
@@ -489,6 +511,10 @@
 				1EBAD569134B02020006ECC1 /* checked@2.png in Resources */,
 				1EBAD56A134B02020006ECC1 /* unchecked.png in Resources */,
 				1EBAD56B134B02020006ECC1 /* unchecked@2.png in Resources */,
+				A6126BE613507381009EC6E6 /* blueButton.png in Resources */,
+				A6126BE713507381009EC6E6 /* redButton.png in Resources */,
+				A6126BE913507415009EC6E6 /* whiteButton.png in Resources */,
+				A6126BED135075AD009EC6E6 /* TaskDetailsCell-iPhone.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -534,6 +560,8 @@
 				A6F922B51348BD580058D59E /* TaskCellFactory.m in Sources */,
 				1E2A73D21349951600FDDF2E /* SmartActionSheet.m in Sources */,
 				A6F02B09134B88F200268A25 /* NSDateUtils.m in Sources */,
+				A6126BDC13507252009EC6E6 /* TaskDetailsCell.m in Sources */,
+				A6126BF013507A92009EC6E6 /* SmartButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

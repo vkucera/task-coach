@@ -35,7 +35,7 @@ static UIImage *_imageUnchecked = NULL;
     }
 
     mainLabel.text = task.name;
-    checkView.image = _imageUnchecked;
+    checkView.image = ([task completionDate]) ? _imageChecked : _imageUnchecked;
     rightLabel.text = @"";
 
     [checkView setCallback:^(id sender) {

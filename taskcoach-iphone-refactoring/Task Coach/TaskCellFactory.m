@@ -33,4 +33,18 @@ static TaskCellFactory *_instance = NULL;
     return template;
 }
 
+- (TaskDetailsCell *)createDetails
+{
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+    {
+        [[NSBundle mainBundle] loadNibNamed:@"TaskDetailsCell-iPhone" owner:self options:nil];
+    }
+    else
+    {
+        // XXXTODO
+    }
+    
+    return detailsTemplate;
+}
+
 @end

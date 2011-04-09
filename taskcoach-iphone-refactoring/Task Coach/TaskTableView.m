@@ -24,6 +24,8 @@
 - (void)dealloc
 {
     [self viewDidUnload];
+    [detailsTask release];
+    [scrollTo release];
 
     [super dealloc];
 }
@@ -183,6 +185,13 @@
     return 41;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([indexPath isEqual:[resultsCtrl indexPathForObject:detailsTask]])
+        return 138;
+    return 44;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     id <NSFetchedResultsSectionInfo> info = [[resultsCtrl sections] objectAtIndex:section];
@@ -191,18 +200,41 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"TaskCell";
-    
-    TaskCell *cell = (TaskCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
+    if ([indexPath isEqual:[resultsCtrl indexPathForObject:detailsTask]])
     {
-        cell = [[TaskCellFactory instance] create];
+        static NSString *CellIdentifier = @"DetailsTaskCell";
+        
+        TaskDetailsCell *cell = (TaskDetailsCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil)
+        {
+            cell = [[TaskCellFactory instance] createDetails];
+        }
+        
+        CDTask *task = [resultsCtrl objectAtIndexPath:indexPath];
+        [cell setTask:task callback:^(id sender) {
+            NSIndexPath *path = [resultsCtrl indexPathForObject:detailsTask];
+            [detailsTask release];
+            detailsTask = nil;
+            [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationFade];
+        }];
+        
+        return cell;
     }
-
-    CDTask *task = [resultsCtrl objectAtIndexPath:indexPath];
-    [cell setTask:task];
+    else
+    {
+        static NSString *CellIdentifier = @"TaskCell";
     
-    return cell;
+        TaskCell *cell = (TaskCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil)
+        {
+            cell = [[TaskCellFactory instance] create];
+        }
+
+        CDTask *task = [resultsCtrl objectAtIndexPath:indexPath];
+        [cell setTask:task];
+    
+        return cell;
+    }
 }
 
 /*
@@ -248,14 +280,24 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     [detailViewController release];
-     */
+    if ([indexPath isEqual:[resultsCtrl indexPathForObject:detailsTask]])
+        return;
+
+    NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:2];
+
+    if (detailsTask)
+    {
+        [paths addObject:[resultsCtrl indexPathForObject:detailsTask]];
+        [detailsTask release];
+    }
+
+    detailsTask = [[resultsCtrl objectAtIndexPath:indexPath] retain];
+    [paths addObject:indexPath];
+
+    [self.tableView reloadRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationFade];
+    [paths release];
+
+    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 
 #pragma mark - Fetched results controller delegate
@@ -308,6 +350,10 @@
                              withRowAnimation:UITableViewRowAnimationRight];
             [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath]
                              withRowAnimation:UITableViewRowAnimationRight];
+            if ([newIndexPath isEqual:[resultsCtrl indexPathForObject:detailsTask]])
+            {
+                scrollTo = [newIndexPath copy];
+            }
             break;
     }
 }
@@ -315,6 +361,11 @@
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
     [self.tableView endUpdates];
+
+    if (scrollTo)
+    {
+        [self.tableView scrollToRowAtIndexPath:scrollTo atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    }
 }
 
 @end

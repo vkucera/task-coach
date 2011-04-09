@@ -9,14 +9,17 @@
 #import <Foundation/Foundation.h>
 
 #import "TaskCell.h"
+#import "TaskDetailsCell.h"
 
 @interface TaskCellFactory : NSObject
 {
     IBOutlet TaskCell *template;
+    IBOutlet TaskDetailsCell *detailsTemplate;
 }
 
 + (TaskCellFactory *)instance;
 
 - (TaskCell *)create;
+- (TaskDetailsCell *)createDetails;
 
 @end
