@@ -12,7 +12,9 @@
 #import "CDTask+Addons.h"
 #import "String+Utils.h"
 #import "CDCategory.h"
+#import "CDEffort.h"
 #import "ImageButton.h"
+#import "DateUtils.h"
 
 static UIImage *_imageChecked = NULL;
 static UIImage *_imageUnchecked = NULL;
@@ -34,6 +36,7 @@ static UIImage *_imageUnchecked = NULL;
 
     mainLabel.text = task.name;
     checkView.image = _imageUnchecked;
+    rightLabel.text = @"";
 
     [checkView setCallback:^(id sender) {
         [task toggleCompletion];
@@ -42,8 +45,16 @@ static UIImage *_imageUnchecked = NULL;
     switch ([task.dateStatus intValue])
     {
         case TASKSTATUS_TRACKING:
+        {
             mainLabel.textColor = [[[UIColor alloc] initWithRed:0.7 green:0 blue:0 alpha:1.0] autorelease];
+            CDEffort *effort = [task currentEffort];
+            if (effort && !(effort.ended)) // Hum
+            {
+                NSTimeInterval elapsed = [[NSDate date] timeIntervalSinceDate:effort.started];
+                rightLabel.text = formatTime((int)elapsed);
+            }
             break;
+        }
         case TASKSTATUS_OVERDUE:
             mainLabel.textColor = [UIColor redColor];
             break;

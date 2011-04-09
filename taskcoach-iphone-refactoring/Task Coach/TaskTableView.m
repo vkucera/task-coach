@@ -16,6 +16,7 @@
 #import "TaskHeaderViewFactory.h"
 #import "TaskCellFactory.h"
 #import "DateUtils.h"
+#import "NSDateUtils.h"
 #import "i18n.h"
 
 @implementation TaskTableView
@@ -94,6 +95,47 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+
+    [super viewDidAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+}
+
+- (void)refresh
+{
+    NSFetchRequest *req = [[NSFetchRequest alloc] init];
+    [req setEntity:[NSEntityDescription entityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()]];
+    [req setPredicate:[NSPredicate predicateWithFormat:@"ANY efforts.ended = NULL"]];
+    NSError *error;
+    NSArray *tasks = [getManagedObjectContext() executeFetchRequest:req error:&error];
+    [req release];
+    
+    if (tasks)
+    {
+        NSMutableArray *paths = [[NSMutableArray alloc] init];
+
+        for (CDTask *task in tasks)
+        {
+            NSIndexPath *indexPath = [resultsCtrl indexPathForObject:task];
+            if (indexPath)
+            {
+                [paths addObject:indexPath];
+            }
+        }
+
+        [self.tableView reloadRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationNone];
+    }
+    else
+    {
+        NSLog(@"Could not fetch tracked tasks: %@", [error localizedDescription]);
+    }
 }
 
 #pragma mark - Table view data source

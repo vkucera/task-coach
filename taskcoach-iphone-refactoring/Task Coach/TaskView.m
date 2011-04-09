@@ -68,7 +68,8 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    refreshStatusTimer = [[NSTimer scheduledTimerWithTimeInterval:[[NSDateUtils dateRoundedTo:15] timeIntervalSinceNow] target:self selector:@selector(onRefreshStatus:) userInfo:nil repeats:YES] retain];
+    refreshStatusTimer = [[NSTimer scheduledTimerWithTimeInterval:[[NSDateUtils dateRoundedTo:15] timeIntervalSinceNow] + 1 target:self selector:@selector(onRefreshStatus:) userInfo:nil repeats:YES] retain];
+    refreshEffortTimer = [[NSTimer scheduledTimerWithTimeInterval:[[NSDateUtils dateRoundedTo:1] timeIntervalSinceNow] + 1 target:self selector:@selector(onRefreshEffort:) userInfo:nil repeats:YES] retain];
 
     [super viewDidAppear:animated];
 }
@@ -80,6 +81,13 @@
         [refreshStatusTimer invalidate];
         [refreshStatusTimer release];
         refreshStatusTimer = nil;
+    }
+    
+    if (refreshEffortTimer)
+    {
+        [refreshEffortTimer invalidate];
+        [refreshEffortTimer release];
+        refreshEffortTimer = nil;
     }
 
     [super viewWillDisappear:animated];
@@ -112,6 +120,11 @@
     }
 
     [timer setFireDate:[NSDateUtils dateRoundedTo:15]];
+}
+
+- (void)onRefreshEffort:(NSTimer *)timer
+{
+    [taskTableCtrl refresh];
 }
 
 - (IBAction)onDone:(id)sender

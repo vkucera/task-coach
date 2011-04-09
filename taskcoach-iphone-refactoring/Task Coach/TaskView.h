@@ -14,6 +14,7 @@
 {
     void (^doneAction)(UIViewController *);
     NSTimer *refreshStatusTimer;
+    NSTimer *refreshEffortTimer;
 
     IBOutlet TaskTableView *taskTableCtrl;
 }

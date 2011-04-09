@@ -12,8 +12,10 @@
 @interface TaskTableView : UITableViewController <NSFetchedResultsControllerDelegate>
 {
     NSFetchedResultsController *resultsCtrl;
+    NSTimer *refreshEffortTimer;
 }
 
 - (void)reload;
+- (void)refresh;
 
 @end
