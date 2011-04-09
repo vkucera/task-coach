@@ -104,20 +104,25 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
     def OnChangeConfig(self, event):
         self.changeConfigCb()
 
-    def OnActivation(self, event):
-        self.SetFocus()
-
+    def Select(self, schedule=None):
         if self.__selection:
             self.taskMap[self.__selection[0].id()].SetSelected(False)
 
-        if event.schedule is None:
+        if schedule is None:
             self.__selection = []
         else:
-            self.__selection = [event.schedule.task]
-            event.schedule.SetSelected(True)
+            self.__selection = [schedule.task]
+            schedule.SetSelected(True)
 
         wx.CallAfter(self.selectCommand)
-        event.Skip()
+
+    def SelectTask(self, task):
+        if task.id() in self.taskMap:
+            self.Select(self.taskMap[task.id()])
+
+    def OnActivation(self, event):
+        self.SetFocus()
+        self.Select(event.schedule)
 
     def OnPopup(self, event):
         self.OnActivation(event)
@@ -288,6 +293,12 @@ class Calendar(wx.Panel):
 
     def isAnyItemCollapsable(self):
         return False
+
+    def select(self, tasks):
+        if len(tasks) == 1:
+            self._content.SelectTask(tasks[0])
+        else:
+            self._content.Select(None)
 
     def __getattr__(self, name):
         return getattr(self._content, name)
