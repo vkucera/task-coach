@@ -231,11 +231,11 @@ opensuse = download_table(image='opensuse',
                           prerequisites=prerequisites,
                           installation='double click the package to start the installer')
 
-fedora12 = download_table(image='fedora',
-                          download_url='%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.fc12.noarch.rpm',
+fedora13 = download_table(image='fedora',
+                          download_url='%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.fc13.noarch.rpm',
                           package_type='RPM package',
                           platform='Fedora', platform_lower='fedora',
-                          platform_versions_supported='Fedora 12 and 13',
+                          platform_versions_supported='Fedora 13',
                           prerequisites=prerequisites26,
                           installation='<tt>$ sudo yum install --nogpgcheck %(filename_lower)s-%(version)s-1.fc*.noarch.rpm</tt>')
 
@@ -268,7 +268,7 @@ linux = download_table(image='linux',
 pages['download_for_linux'] = sep.join([download_header(platform='Linux',
                                                         release='%(version)s'), 
                                         ubuntu_py26, ubuntu_py25, debian,
-                                        fedora14, fedora12, gentoo, opensuse,
+                                        fedora14, fedora13, gentoo, opensuse,
                                         redhat_el4and5, linux])
 
 

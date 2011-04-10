@@ -33,6 +33,9 @@ class DummyWidget(wx.Frame):
     def curselection(self):
         return []
     
+    def select(self, *args):
+        pass
+    
     def clearselection(self):
         pass
 

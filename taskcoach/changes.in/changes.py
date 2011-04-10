@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.0', 'April 8, 2011',
+Release('1.3.0', 'April 9, 2011',
     summary='''This release ...''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -44,7 +44,7 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.13', 'April 3, 2011',
+Release('1.2.13', 'April 9, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''The notes section was missing from the help contents.''', 
@@ -60,7 +60,11 @@ license doesn't actually require users to accept it (Windows).''', '3247643'),
 popup menu for detail mode, even when the effort viewer would be in aggregate
 mode (i.e. effort aggregated per day, per week or per month).'''),
         Bug('''Ask the user for confirmation before overwriting existing 
-files.''', '2794041')
+files.''', '2794041'),
+        Bug('''When adding an item, automatically select it. When removing an
+item with a parent, automatically select it. Make sure keyboard navigation 
+(up and down) correctly moves the selection after marking a task completed.''', 
+            '3056999')
         ],
     featuresAdded=[
         Feature('''Allow for filtering by category via the View->Filter 
