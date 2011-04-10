@@ -99,15 +99,12 @@ footer = '''
                 <h2>Get support</h2>
                 <ul>
                     <li><a href="mailinglist.html">Join mailinglist</a></li>
-                    <li><a href="https://answers.launchpad.net/taskcoach/+faqs">Frequently asked questions</a></li>
+                    <li><a href="%(faq_url)s">Frequently asked questions</a></li>
                     <li><a href="http://taskcoach.wikispaces.com">User manual</a></li>
-                    <li><a href="https://sourceforge.net/tracker/?group_id=130831&atid=719135">Request support</a>
-                    </li>
-                    <li><a href="http://sourceforge.net/tracker/?group_id=130831&atid=719134&status=1">Browse known bugs</a>
-                    </li>
-                    <li><a href="https://sourceforge.net/tracker/?func=add&group_id=130831&atid=719134">Report a bug</a>
-                    </li>
-                    <li><a href="http://taskcoach.uservoice.com/">Request a feature</a>
+                    <li><a href="%(support_request_url)s">Request support</a></li>
+                    <li><a href="%(known_bugs_url)s">Browse known bugs</a></li>
+                    <li><a href="%(bug_report_url)s">Report a bug</a></li>
+                    <li><a href="%(feature_request_url)s">Request a feature</a>
                     </li>
                 </ul>
             </div>

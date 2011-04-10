@@ -545,7 +545,14 @@ class HelpMenu(Menu):
         super(HelpMenu, self).__init__(mainwindow)
         self.appendUICommands(
             uicommand.Help(),
+            uicommand.FAQ(),
             uicommand.Tips(settings=settings),
+            None,
+            uicommand.RequestSupport(),
+            uicommand.ReportBug(),
+            uicommand.RequestFeature(),
+            None,
+            uicommand.Donate(),
             None,
             uicommand.HelpAbout(),
             uicommand.HelpLicense())
