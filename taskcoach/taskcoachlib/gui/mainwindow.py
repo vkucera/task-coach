@@ -26,7 +26,7 @@ from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog
 from taskcoachlib.gui.iphone import IPhoneSyncFrame
 from taskcoachlib.powermgt import PowerStateMixin
 import taskcoachlib.thirdparty.aui as aui
-import viewer, toolbar, uicommand, remindercontroller, artprovider
+import viewer, toolbar, uicommand, remindercontroller, artprovider, idlecontroller
 
 
 class WindowDimensionsTracker(object):
@@ -159,7 +159,11 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
                     dlg.ShowModal()
                 finally:
                     dlg.Destroy()
-                    
+
+        self._idleController = idlecontroller.IdleController(self,
+                                                             self.settings,
+                                                             self.taskFile.efforts())
+
     def createWindowComponents(self):
         self.createViewerContainer()
         viewer.addViewers(self.viewer, self.taskFile, self.settings)
@@ -279,6 +283,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
             event.Veto()
             self.Iconize()
         else:
+            self._idleController.stop()
             application.Application().quit()
 
     def restore(self, event): # pylint: disable-msg=W0613

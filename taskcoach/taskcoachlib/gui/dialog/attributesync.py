@@ -35,10 +35,6 @@ class AttributeSync(object):
         self._items = items
         self._commandClass = commandClass
         entry.Bind(editedEventType, self.onAttributeEdited)
-        if wx.Platform in ('__WXMAC__', '__WXGTK__'):
-            # On some platforms, the focused control does not receive
-            # EVT_KILL_FOCUS when the containing window is closed.
-            entry.TopLevelParent.Bind(wx.EVT_CLOSE, self.onAttributeEdited)
         if len(items) == 1:
             patterns.Publisher().registerObserver(self.onAttributeChanged,
                                                   eventType=changedEventType,

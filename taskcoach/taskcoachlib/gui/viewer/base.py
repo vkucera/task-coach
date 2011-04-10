@@ -146,6 +146,15 @@ class Viewer(wx.Panel):
         ''' Whenever our presentation is changed (items added, items removed,
             order changed) the viewer refreshes itself. '''
         self.refresh()
+        if event.type() == self.presentation().addItemEventType() and len(event.values()) == 1:
+            self.select(event.values())
+        elif event.type() == self.presentation().removeItemEventType():
+            try:
+                parents = [item.parent() for item in event.values() if item.parent() in self.presentation()]
+            except AttributeError:
+                parents = []
+            if len(parents) == 1:
+                self.select(parents)
         self.updateSelection()
         
     def onSelect(self, event=None): # pylint: disable-msg=W0613

@@ -46,7 +46,10 @@ class Effort(baseeffort.BaseEffort, base.Object):
         event.addSource(self, task, type=self.taskChangedEventType())
         
     setParent = setTask # FIXME: should we create a common superclass for Effort and Task?
-    
+
+    def task(self):
+        return self._task
+
     @classmethod
     def taskChangedEventType(class_):
         return '%s.task'%class_

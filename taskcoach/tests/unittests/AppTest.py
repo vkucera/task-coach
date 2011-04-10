@@ -38,7 +38,7 @@ class AppTests(test.TestCase):
         super(AppTests, self).setUp()
         self.settings = config.Settings(load=False)
         self.options = DummyOptions()
-        
+
     def testAppProperties(self):
         # Normally I prefer one assert per test, but creating the app is
         # expensive, so we do all the queries in one test method.
@@ -47,6 +47,7 @@ class AppTests(test.TestCase):
         self.assertEqual(meta.name, wxApp.GetAppName())
         self.assertEqual(meta.author, wxApp.GetVendorName())
         app.quit()
+        application.Application.deleteInstance()
         
     def assertLanguage(self, expectedLanguage, locale=None):
         args = [self.options, self.settings]

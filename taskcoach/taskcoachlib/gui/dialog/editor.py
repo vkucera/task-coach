@@ -315,54 +315,6 @@ class DatesPage(Page):
                     reminder=self._reminderDateTimeEntry, 
                     recurrence=self._recurrenceEntry)
     
-    def onRecurrenceChanged(self, event):
-        event.Skip()
-        recurrenceOn = event.String != _('None')
-        self._maxRecurrenceCheckBox.Enable(recurrenceOn)
-        self._recurrenceFrequencyEntry.Enable(recurrenceOn)
-        self._maxRecurrenceCountEntry.Enable(recurrenceOn and \
-            self._maxRecurrenceCheckBox.IsChecked())
-        self.updateRecurrenceLabel()
-
-    def onMaxRecurrenceChecked(self, event):
-        event.Skip()
-        maxRecurrenceOn = event.IsChecked()
-        self._maxRecurrenceCountEntry.Enable(maxRecurrenceOn)
-        
-    def onStartDateTimeChanged(self, event):
-        event.Skip()
-        if len(self.items) > 1:
-            self._startDateTimeLabel.SetValue(True) # pylint: disable-msg=E1101
-        else:
-            if self._startDateTimeEntry.get() != date.DateTime() and \
-               self._dueDateTimeEntry.get() != date.DateTime():
-                if self._duration is None:
-                    self._duration = self._dueDateTimeEntry.get() - self._startDateTimeEntry.get()
-                else:
-                    self._dueDateTimeEntry.set(self._startDateTimeEntry.get() + self._duration)
-            else:
-                self._duration = None
-            self.onDateTimeChanged()
-
-    def onDueDateTimeChanged(self, event):
-        event.Skip()
-        if len(self.items) > 1:
-            self._dueDateTimeLabel.SetValue(True) # pylint: disable-msg=E1101
-        else:
-            self.onDateTimeChanged()
-            if self._startDateTimeEntry.get() != date.DateTime() and \
-               self._dueDateTimeEntry.get() != date.DateTime():
-                self._duration = self._dueDateTimeEntry.get() - self._startDateTimeEntry.get()
-            else:
-                self._duration = None
-
-    def onCompletionDateTimeChanged(self, event):
-        event.Skip()
-        if len(self.items) > 1:
-            self._completionDateTimeLabel.SetValue(True) # pylint: disable-msg=E1101
-        else:
-            self.onDateTimeChanged()
-
     def onDateTimeChanged(self, event=None):
         ''' Called when one of the DateTimeEntries is changed by the user. 
             Update the suggested reminder if no reminder was set by the user. '''
@@ -1102,6 +1054,10 @@ class Editor(widgets.ButtonLessDialog):
     def onClose(self, event):
         event.Skip()
         patterns.Publisher().removeInstance(self)
+        # On Mac OS X, the text control does not lose focus when
+        # destroyed...
+        if wx.Platform == '__WXMAC__':
+            self._interior.SetFocusIgnoringChildren()
                         
     def onItemRemoved(self, event):
         ''' The item we're editing or one of its ancestors has been removed or 
