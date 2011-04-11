@@ -26,10 +26,7 @@ class Translator:
     
     def __init__(self, language=None):
         if not language:
-            if hasattr(self, '__language'):
-                return
-            else:
-                raise RuntimeError, 'Translator invoked before language was set'
+            return
         load = self._loadPoFile if language.endswith('.po') else self._loadModule
         module, language = load(language) 
         self._installModule(module)

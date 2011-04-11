@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-04-11 19:40+West-Europa (zomertijd)\n"
+"POT-Creation-Date: 2011-04-11 21:42+West-Europa (zomertijd)\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,13 +15,13 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: taskcoachlib\application\application.py:199
+#: taskcoachlib\application\application.py:200
 msgid ""
 "Couldn't load settings from TaskCoach.ini:\n"
 "%s"
 msgstr ""
 
-#: taskcoachlib\application\application.py:200
+#: taskcoachlib\application\application.py:201
 #: taskcoachlib\gui\iocontroller.py:57
 msgid "%s file error"
 msgstr ""
