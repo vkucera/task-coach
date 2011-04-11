@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, os, locale
-from taskcoachlib import patterns, help
+from taskcoachlib import patterns
 
         
 class wxApp(wx.App):
@@ -189,6 +189,7 @@ class Application(object):
             
     def showTips(self):
         if self.settings.getboolean('window', 'tips'):
+            from taskcoachlib import help
             help.showTips(self.mainwindow, self.settings)
 
     def warnUserThatIniFileWasNotLoaded(self):

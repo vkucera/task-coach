@@ -22,8 +22,11 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.14', 'April 10, 2011', 
-    summary='''This is a small feature release.''',
+Release('1.2.14', 'April 11, 2011', 
+    summary='''This is a mixed bugfix and feature release.''',
+    bugsFixed=[
+        Bug('''None of the translations were working.''', '3283447')
+        ],
     featuresAdded=[
         Feature('''More extensive help menu.''')
         ]
