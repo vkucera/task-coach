@@ -28,7 +28,9 @@ Release('1.2.14', 'April 11, 2011',
         Bug('''None of the translations were working.''', '3283447')
         ],
     featuresAdded=[
-        Feature('''More extensive help menu.''')
+        Feature('''More extensive help menu.'''),
+        Feature('''Import from CSV now includes budget, fixed fee
+and hourly fee fields.'''),
         ]
     ),
 

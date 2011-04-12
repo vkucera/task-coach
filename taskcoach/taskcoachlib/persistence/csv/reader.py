@@ -20,9 +20,9 @@ from taskcoachlib.thirdparty.dateutil import parser as dparser
 from taskcoachlib.i18n import _
 from taskcoachlib.domain.category import Category
 from taskcoachlib.domain.task import Task
-from taskcoachlib.domain.date import DateTime
+from taskcoachlib.domain.date import DateTime, TimeDelta
 
-import csv, tempfile, StringIO
+import csv, tempfile, StringIO, re, math
 
 
 class CSVReader(object):
@@ -34,6 +34,9 @@ class CSVReader(object):
         fp = tempfile.TemporaryFile()
         fp.write(file(kwargs['filename'], 'rb').read().decode(kwargs['encoding']).encode('UTF-8'))
         fp.seek(0)
+
+        rx1 = re.compile(r'^(\d+):(\d+)$')
+        rx2 = re.compile(r'^(\d+):(\d+):(\d+)$')
 
         # When fields are associated with categories, create a top-level category for the
         # field and a subcategory for each possible value.
@@ -61,6 +64,9 @@ class CSVReader(object):
             startDate = None
             dueDate = None
             completionDate = None
+            budget = TimeDelta()
+            fixedFee = 0.0
+            hourlyFee = 0.0
 
             for idx, fieldValue in enumerate(line):
                 if kwargs['mappings'][idx] == _('ID'):
@@ -107,13 +113,40 @@ class CSVReader(object):
                             completionDate = DateTime(completionDate.year, completionDate.month, completionDate.day, 12, 0, 0)
                         except:
                             pass
+                elif kwargs['mappings'][idx] == _('Budget'):
+                    try:
+                        value = float(fieldValue)
+                        hours = int(math.floor(value))
+                        minutes = int(60 * (value - hours))
+                        budget = TimeDelta(hours=hours, minutes=minutes, seconds=0)
+                    except ValueError:
+                        mt = rx1.search(fieldValue)
+                        if mt:
+                            budget = TimeDelta(hours=int(mt.group(1)), minutes=int(mt.group(2)), seconds=0)
+                        else:
+                            mt = rx2.search(fieldValue)
+                            if mt:
+                                budget = TimeDelta(hours=int(mt.group(1)), minutes=int(mt.group(2)), seconds=int(mt.group(3)))
+                elif kwargs['mappings'][idx] == _('Fixed fee'):
+                    try:
+                        fixedFee = float(fieldValue)
+                    except ValueError:
+                        pass
+                elif kwargs['mappings'][idx] == _('Hourly fee'):
+                    try:
+                        hourlyFee = float(fieldValue)
+                    except ValueError:
+                        pass
 
             task = Task(subject=subject,
                         description=description.getvalue(),
                         priority=priority,
                         startDateTime=startDate,
                         dueDateTime=dueDate,
-                        completionDateTime=completionDate)
+                        completionDateTime=completionDate,
+                        budget=budget,
+                        fixedFee=fixedFee,
+                        hourlyFee=hourlyFee)
 
             if id_ is not None:
                 tasksById[id_] = task
