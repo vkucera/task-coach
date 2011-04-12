@@ -630,7 +630,7 @@ class LocalAttachmentViewer(viewer.AttachmentViewer):
         super(LocalAttachmentViewer, self).__init__(attachmentsToShow=attachments, *args, **kwargs)
 
     def newItemCommand(self, *args, **kwargs):
-        return command.AddAttachmentCommand(None, [self.attachmentOwner])
+        return command.AddAttachmentCommand(None, [self.attachmentOwner], *args, **kwargs)
     
     def deleteItemCommand(self):
         return command.RemoveAttachmentCommand(None, [self.attachmentOwner], attachments=self.curselection())
