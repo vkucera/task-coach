@@ -109,6 +109,11 @@ class IOController(object):
                     self.open(filename, showerror, breakLock=True)
                 else:
                     return
+            except lockfile.LockFailed:
+                if self.__askOpenUnlocked(filename): 
+                    self.open(filename, showerror, lock=False)
+                else:
+                    return
             except persistence.xml.reader.XMLReaderTooNewException:
                 showerror(_('Cannot open %(filename)s\n'
                             'because it was created by a newer version of %(name)s.\n'
