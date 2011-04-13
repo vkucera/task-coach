@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-04-11 21:42+West-Europa (zomertijd)\n"
+"POT-Creation-Date: 2011-04-13 22:23+West-Europa (zomertijd)\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -657,7 +657,7 @@ msgid "Question mark"
 msgstr ""
 
 #: taskcoachlib\gui\artprovider.py:142
-#: taskcoachlib\gui\wizard\csvimport.py:247
+#: taskcoachlib\gui\wizard\csvimport.py:252
 msgid "Information"
 msgstr ""
 
@@ -807,8 +807,8 @@ msgstr ""
 #: taskcoachlib\gui\viewer\category.py:92
 #: taskcoachlib\gui\viewer\effort.py:170 taskcoachlib\gui\viewer\note.py:114
 #: taskcoachlib\gui\viewer\task.py:693
-#: taskcoachlib\gui\wizard\csvimport.py:159
-#: taskcoachlib\persistence\csv\reader.py:70
+#: taskcoachlib\gui\wizard\csvimport.py:161
+#: taskcoachlib\persistence\csv\reader.py:76
 #: taskcoachlib\widgets\conflict.py:167 taskcoachlib\widgets\conflict.py:195
 msgid "Description"
 msgstr ""
@@ -821,8 +821,8 @@ msgstr ""
 #: taskcoachlib\gui\viewer\attachment.py:77
 #: taskcoachlib\gui\viewer\base.py:265 taskcoachlib\gui\viewer\category.py:85
 #: taskcoachlib\gui\viewer\note.py:110 taskcoachlib\gui\viewer\task.py:683
-#: taskcoachlib\gui\wizard\csvimport.py:158
-#: taskcoachlib\persistence\csv\reader.py:68
+#: taskcoachlib\gui\wizard\csvimport.py:160
+#: taskcoachlib\persistence\csv\reader.py:74
 #: taskcoachlib\widgets\conflict.py:162 taskcoachlib\widgets\conflict.py:190
 msgid "Subject"
 msgstr ""
@@ -833,8 +833,8 @@ msgstr ""
 
 #: taskcoachlib\gui\dialog\editor.py:130 taskcoachlib\gui\uicommand.py:2364
 #: taskcoachlib\gui\viewer\task.py:752
-#: taskcoachlib\gui\wizard\csvimport.py:161
-#: taskcoachlib\persistence\csv\reader.py:84
+#: taskcoachlib\gui\wizard\csvimport.py:163
+#: taskcoachlib\persistence\csv\reader.py:90
 #: taskcoachlib\widgets\conflict.py:215
 msgid "Priority"
 msgstr ""
@@ -892,24 +892,24 @@ msgid "Dates"
 msgstr ""
 
 #: taskcoachlib\gui\dialog\editor.py:367 taskcoachlib\gui\viewer\task.py:743
-#: taskcoachlib\gui\wizard\csvimport.py:162
-#: taskcoachlib\persistence\csv\reader.py:89
+#: taskcoachlib\gui\wizard\csvimport.py:164
+#: taskcoachlib\persistence\csv\reader.py:95
 #: taskcoachlib\widgets\calendarconfig.py:79
 #: taskcoachlib\widgets\conflict.py:200
 msgid "Start date"
 msgstr ""
 
 #: taskcoachlib\gui\dialog\editor.py:368 taskcoachlib\gui\viewer\task.py:744
-#: taskcoachlib\gui\wizard\csvimport.py:163
-#: taskcoachlib\persistence\csv\reader.py:96
+#: taskcoachlib\gui\wizard\csvimport.py:165
+#: taskcoachlib\persistence\csv\reader.py:102
 #: taskcoachlib\widgets\calendarconfig.py:80
 #: taskcoachlib\widgets\conflict.py:205
 msgid "Due date"
 msgstr ""
 
 #: taskcoachlib\gui\dialog\editor.py:369 taskcoachlib\gui\viewer\task.py:745
-#: taskcoachlib\gui\wizard\csvimport.py:164
-#: taskcoachlib\persistence\csv\reader.py:103
+#: taskcoachlib\gui\wizard\csvimport.py:166
+#: taskcoachlib\persistence\csv\reader.py:109
 #: taskcoachlib\widgets\conflict.py:210
 msgid "Completion date"
 msgstr ""
@@ -920,7 +920,7 @@ msgid "Reminder"
 msgstr ""
 
 #: taskcoachlib\gui\dialog\editor.py:408 taskcoachlib\gui\dialog\editor.py:466
-#: taskcoachlib\gui\uicommand.py:70 taskcoachlib\gui\wizard\csvimport.py:156
+#: taskcoachlib\gui\uicommand.py:70 taskcoachlib\gui\wizard\csvimport.py:158
 #: taskcoachlib\widgets\dirchooser.py:28
 msgid "None"
 msgstr ""
@@ -1005,6 +1005,8 @@ msgstr ""
 
 #: taskcoachlib\gui\dialog\editor.py:665 taskcoachlib\gui\dialog\editor.py:683
 #: taskcoachlib\gui\uicommand.py:2364 taskcoachlib\gui\viewer\task.py:749
+#: taskcoachlib\gui\wizard\csvimport.py:167
+#: taskcoachlib\persistence\csv\reader.py:116
 msgid "Budget"
 msgstr ""
 
@@ -1018,11 +1020,15 @@ msgid "Budget left"
 msgstr ""
 
 #: taskcoachlib\gui\dialog\editor.py:706 taskcoachlib\gui\viewer\task.py:753
+#: taskcoachlib\gui\wizard\csvimport.py:169
+#: taskcoachlib\persistence\csv\reader.py:135
 msgid "Hourly fee"
 msgstr ""
 
 #: taskcoachlib\gui\dialog\editor.py:713 taskcoachlib\gui\uicommand.py:2364
 #: taskcoachlib\gui\viewer\task.py:754
+#: taskcoachlib\gui\wizard\csvimport.py:168
+#: taskcoachlib\persistence\csv\reader.py:130
 msgid "Fixed fee"
 msgstr ""
 
@@ -1495,129 +1501,129 @@ msgstr ""
 msgid "Open"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:113 taskcoachlib\gui\iocontroller.py:149
+#: taskcoachlib\gui\iocontroller.py:118 taskcoachlib\gui\iocontroller.py:154
 msgid ""
 "Cannot open %(filename)s\n"
 "because it was created by a newer version of %(name)s.\n"
 "Please upgrade %(name)s."
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:120 taskcoachlib\gui\iocontroller.py:155
+#: taskcoachlib\gui\iocontroller.py:125 taskcoachlib\gui\iocontroller.py:160
 msgid ""
 "Error while reading %s:\n"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:122 taskcoachlib\gui\iocontroller.py:157
+#: taskcoachlib\gui\iocontroller.py:127 taskcoachlib\gui\iocontroller.py:162
 msgid "Are you sure it is a %s-file?"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:125
+#: taskcoachlib\gui\iocontroller.py:130
 msgid "Loaded %(nrtasks)d tasks from %(filename)s"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:129
+#: taskcoachlib\gui\iocontroller.py:134
 msgid "Cannot open %s because it doesn't exist"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:139
+#: taskcoachlib\gui\iocontroller.py:144
 msgid "Merge"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:144
+#: taskcoachlib\gui\iocontroller.py:149
 msgid ""
 "Cannot open %(filename)s\n"
 "because it is locked."
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:160
+#: taskcoachlib\gui\iocontroller.py:165
 msgid "Merged %(filename)s"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:177 taskcoachlib\gui\iocontroller.py:189
+#: taskcoachlib\gui\iocontroller.py:182 taskcoachlib\gui\iocontroller.py:194
 msgid "Save as..."
-msgstr ""
-
-#: taskcoachlib\gui\iocontroller.py:221
-msgid ""
-"Cannot save %s\n"
-"It is locked by another instance of %s.\n"
 msgstr ""
 
 #: taskcoachlib\gui\iocontroller.py:226
 msgid ""
 "Cannot save %s\n"
+"It is locked by another instance of %s.\n"
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:231
+msgid ""
+"Cannot save %s\n"
 "%s"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:235
+#: taskcoachlib\gui\iocontroller.py:240
 msgid "Open template..."
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:237
+#: taskcoachlib\gui\iocontroller.py:242
 msgid "%s template files (*.tsktmpl)|*.tsktmpl"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:243
+#: taskcoachlib\gui\iocontroller.py:248
 msgid ""
 "Cannot add template %s\n"
 "%s"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:272
+#: taskcoachlib\gui\iocontroller.py:277
 msgid "Exported %(count)d items to %(filename)s"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:281
+#: taskcoachlib\gui\iocontroller.py:286
 msgid "Export as HTML..."
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:287
+#: taskcoachlib\gui\iocontroller.py:292
 msgid "Export as CSV..."
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:292
+#: taskcoachlib\gui\iocontroller.py:297
 msgid "Export as iCalendar..."
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:307
+#: taskcoachlib\gui\iocontroller.py:312
 msgid "Finished synchronization"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:314
+#: taskcoachlib\gui\iocontroller.py:319
 msgid "Note conflict"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:318
+#: taskcoachlib\gui\iocontroller.py:323
 msgid "Task conflict"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:330
+#: taskcoachlib\gui\iocontroller.py:335
 msgid "Synchronization status"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:338
+#: taskcoachlib\gui\iocontroller.py:343
 msgid ""
 "Cannot open %s\n"
 "%s"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:373
+#: taskcoachlib\gui\iocontroller.py:378
 msgid ""
 "A file named %s already exists.\n"
 "Do you want to replace it?"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:385
+#: taskcoachlib\gui\iocontroller.py:390
 msgid ""
 "You have unsaved changes.\n"
 "Save before closing?"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:386
+#: taskcoachlib\gui\iocontroller.py:391
 msgid "%s: save changes?"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:396
+#: taskcoachlib\gui\iocontroller.py:401
 msgid ""
 "Cannot open %s because it is locked.\n"
 "\n"
@@ -1629,22 +1635,22 @@ msgid ""
 "Break the lock?"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:404 taskcoachlib\gui\iocontroller.py:411
+#: taskcoachlib\gui\iocontroller.py:409 taskcoachlib\gui\iocontroller.py:416
 msgid "%s: file locked"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:409
+#: taskcoachlib\gui\iocontroller.py:414
 msgid ""
 "Cannot acquire a lock because locking is not supported\n"
 "on the location of %s.\n"
 "Open %s unlocked?"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:416
+#: taskcoachlib\gui\iocontroller.py:421
 msgid "Closed %s"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:421
+#: taskcoachlib\gui\iocontroller.py:426
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
 msgstr ""
 
@@ -3448,26 +3454,26 @@ msgstr ""
 msgid "Please select a file."
 msgstr ""
 
-#: taskcoachlib\gui\wizard\csvimport.py:157
-#: taskcoachlib\persistence\csv\reader.py:66
+#: taskcoachlib\gui\wizard\csvimport.py:159
+#: taskcoachlib\persistence\csv\reader.py:72
 msgid "ID"
 msgstr ""
 
-#: taskcoachlib\gui\wizard\csvimport.py:160
-#: taskcoachlib\persistence\csv\reader.py:43
-#: taskcoachlib\persistence\csv\reader.py:73
+#: taskcoachlib\gui\wizard\csvimport.py:162
+#: taskcoachlib\persistence\csv\reader.py:46
+#: taskcoachlib\persistence\csv\reader.py:79
 msgid "Category"
 msgstr ""
 
-#: taskcoachlib\gui\wizard\csvimport.py:212
+#: taskcoachlib\gui\wizard\csvimport.py:217
 msgid "No field mapping."
 msgstr ""
 
-#: taskcoachlib\gui\wizard\csvimport.py:215
+#: taskcoachlib\gui\wizard\csvimport.py:220
 msgid "The \"%s\" field cannot be selected several times."
 msgstr ""
 
-#: taskcoachlib\gui\wizard\csvimport.py:218
+#: taskcoachlib\gui\wizard\csvimport.py:223
 msgid "The fields %s cannot be selected several times."
 msgstr ""
 
@@ -4937,7 +4943,7 @@ msgstr ""
 msgid "Login failed (%s). Please try again."
 msgstr ""
 
-#: taskcoachlib\persistence\csv\reader.py:56
+#: taskcoachlib\persistence\csv\reader.py:59
 msgid "No subject"
 msgstr ""
 
