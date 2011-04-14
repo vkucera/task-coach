@@ -21,14 +21,18 @@ from taskcoachlib import patterns
 
         
 class wxApp(wx.App):
+    def __init__(self, callback, *args, **kwargs):
+        super(wxApp, self).__init__(*args, **kwargs)
+        self.sessionCallback = callback
+
     def OnInit(self):
         self.Bind(wx.EVT_QUERY_END_SESSION, self.onQueryEndSession)
         return True
     
     def onQueryEndSession(self, event):
-        # This makes sure we don't block shutdown on Windows
-        pass # pragma: no cover
-    
+        self.sessionCallback()
+        event.Skip()
+
 
 class Application(object):
     __metaclass__ = patterns.Singleton
@@ -36,7 +40,7 @@ class Application(object):
     def __init__(self, options=None, args=None, **kwargs):
         self._options = options
         self._args = args
-        self.wxApp = wxApp(redirect=False)
+        self.wxApp = wxApp(self.onEndSession, redirect=False)
         self.init(**kwargs)
 
     def start(self):
@@ -203,6 +207,9 @@ class Application(object):
 
     def displayMessage(self, message):
         self.mainwindow.displayMessage(message)
+
+    def onEndSession(self):
+        self.quit(force=True)
 
     def quit(self, force=False):
         if not self.iocontroller.close(force=force):
