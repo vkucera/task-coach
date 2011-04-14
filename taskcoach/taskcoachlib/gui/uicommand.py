@@ -1315,8 +1315,11 @@ class Delete(NeedsSelectionMixin, ViewerCommand):
         windowWithFocus = wx.Window.FindFocus()
         if isinstance(windowWithFocus, wx.TextCtrl):
             # Simulate Delete key press
-            pos = windowWithFocus.GetInsertionPoint()
-            windowWithFocus.Remove(pos, pos+1)            
+            fromIndex, toIndex = windowWithFocus.GetSelection()
+            if fromIndex == toIndex: 
+                pos = windowWithFocus.GetInsertionPoint()
+                fromIndex, toIndex = pos, pos+1
+            windowWithFocus.Remove(fromIndex, toIndex)            
         else:
             deleteCommand = self.viewer.deleteItemCommand()
             deleteCommand.do()

@@ -22,10 +22,12 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.14', 'April 13, 2011', 
+Release('1.2.14', 'April 14, 2011', 
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
-        Bug('''None of the translations were working.''', '3283447')
+        Bug('''None of the translations were working.''', '3283447'),
+        Bug('''Delete key was not working properly in the search box.''', 
+            '3286497')
         ],
     featuresAdded=[
         Feature('''More extensive help menu.'''),
