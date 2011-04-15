@@ -22,16 +22,41 @@ from taskcoachlib import patterns
         
 class wxApp(wx.App):
     def __init__(self, callback, *args, **kwargs):
-        super(wxApp, self).__init__(*args, **kwargs)
         self.sessionCallback = callback
+        super(wxApp, self).__init__(*args, **kwargs)
 
     def OnInit(self):
-        self.Bind(wx.EVT_QUERY_END_SESSION, self.onQueryEndSession)
+        if wx.Platform == '__WXMSW__':
+            self.Bind(wx.EVT_QUERY_END_SESSION, self.onQueryEndSession)
+        elif wx.Platform == '__WXMAC__':
+            # XXXTODO
+            pass
+        elif wx.Platform == '__WXGTK__':
+            from taskcoachlib.powermgt import xsm
+            class LinuxSessionMonitor(xsm.SessionMonitor):
+                def __init__(self, callback):
+                    super(LinuxSessionMonitor, self).__init__()
+                    self._callback = callback
+                def saveYourself(self, saveType, shutdown, interactStyle, fast):
+                    if shutdown:
+                        self._callback()
+                def die(self):
+                    pass
+                def saveComplete(self):
+                    pass
+                def shutdownCancelled(self):
+                    pass
+            self.sessionMonitor = LinuxSessionMonitor(self.onQueryEndSession)
         return True
     
-    def onQueryEndSession(self, event):
+    def onQueryEndSession(self, *args):
         self.sessionCallback()
+
         event.Skip()
+
+    def onQuit(self):
+        if wx.Platform == '__WXGTK__':
+            self.sessionMonitor.stop()
 
 
 class Application(object):
@@ -227,3 +252,6 @@ class Application(object):
 
         # For PowerStateMixin
         self.mainwindow.OnQuit()
+
+        # To end session monitor on Linux
+        self.wxApp.onQuit()
