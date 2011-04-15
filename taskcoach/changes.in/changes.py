@@ -33,6 +33,9 @@ Release('1.2.14', 'April 14, 2011',
         Feature('''More extensive help menu.'''),
         Feature('''Import from CSV now includes budget, fixed fee
 and hourly fee fields.'''),
+        Feature('''Task Coach now supports a limited form of session
+management under Windows and Linux; pending changes are automatically
+saved when the user logs out.'''),
         ]
     ),
 
