@@ -226,8 +226,9 @@ class SessionMonitor(ICELoop):
         self.clientID = id_ret.value
 
     def stop(self):
-        SmcCloseConnection(self.conn, 0, None)
         super(SessionMonitor, self).stop()
+        self.join()
+        SmcCloseConnection(self.conn, 0, None)
 
     def saveYourselfDone(self, status=True):
         """
