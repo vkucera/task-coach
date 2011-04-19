@@ -2234,7 +2234,15 @@ class RequestSupport(URLCommand):
             helpText=_('Request user support from the developers'),
             bitmap='life_ring_icon', url=meta.support_request_url, *args, **kwargs)
         
+
+class HelpTranslate(URLCommand):
+    def __init__(self, *args, **kwargs):
+        super(HelpTranslate, self).__init__( \
+            menuText=_('Help improve &translations...'),
+            helpText=_('Help improve the translations of %s')%meta.name,
+            bitmap='person_talking_icon', url=meta.translations_url, *args, **kwargs)
         
+
 class Donate(URLCommand):
     def __init__(self, *args, **kwargs):
         super(Donate, self).__init__(menuText=_('&Donate...'),

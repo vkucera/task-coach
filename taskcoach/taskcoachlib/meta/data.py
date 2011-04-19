@@ -72,6 +72,7 @@ bug_report_url = 'https://sourceforge.net/tracker/?func=add&group_id=130831&atid
 known_bugs_url = 'http://sourceforge.net/tracker/?group_id=130831&atid=719134&status=1'
 feature_request_url = 'http://taskcoach.uservoice.com'
 support_request_url = 'https://sourceforge.net/tracker/?group_id=130831&atid=719135'
+translations_url = 'https://translations.launchpad.net/taskcoach'
 donate_url = url + 'donations.html' 
 
 announcement_addresses = 'taskcoach@yahoogroups.com, python-announce-list@python.org, johnhaller@portableapps.com'

@@ -552,6 +552,7 @@ class HelpMenu(Menu):
             uicommand.ReportBug(),
             uicommand.RequestFeature(),
             None,
+            uicommand.HelpTranslate(),
             uicommand.Donate(),
             None,
             uicommand.HelpAbout(),
