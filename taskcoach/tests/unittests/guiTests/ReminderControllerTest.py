@@ -28,8 +28,15 @@ class ReminderControllerUnderTest(gui.ReminderController):
         super(ReminderControllerUnderTest, self).__init__(*args, **kwargs)
         
     def showReminderMessage(self, message):
+        class DummyDialog(object):
+            def __init__(self, *args, **kwargs):
+                pass
+            def Bind(self, *args, **kwargs):
+                pass
+            def Show(self):
+                pass
+        super(ReminderControllerUnderTest, self).showReminderMessage(message, DummyDialog)
         self.messages.append(message)
-        return True
     
     def requestUserAttention(self):
         self.userAttentionRequested = True

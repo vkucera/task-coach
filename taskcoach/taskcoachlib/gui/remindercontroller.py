@@ -65,12 +65,11 @@ class ReminderController(object):
         for task, reminderDateTime in self.__tasksWithReminders.items():
             if reminderDateTime <= now:
                 requestUserAttention = True
-                if self.showReminderMessage(task):
-                    self.__removeReminder(task)
+                self.showReminderMessage(task)
         if requestUserAttention:
             self.requestUserAttention()        
         
-    def showReminderMessage(self, task):
+    def showReminderMessage(self, task, ReminderDialog=reminder.ReminderDialog):
         notifier = self.settings.get('feature', 'notifier')
         if notifier != 'Task Coach' and notify.AbstractNotifier.get(notifier) is not None:
             notify.AbstractNotifier.get(notifier).notify(_('%s Reminder') % meta.name, task.subject(),
@@ -78,12 +77,11 @@ class ReminderController(object):
                                                          windowId=self.__mainWindow.GetHandle())
             self.__removeReminder(task)
             task.setReminder(None)
-            return False
-
-        reminderDialog = reminder.ReminderDialog(task, self.taskList, self.settings, self.__mainWindow)
-        reminderDialog.Bind(wx.EVT_CLOSE, self.onCloseReminderDialog)        
-        reminderDialog.Show()
-        return True
+        else:
+            reminderDialog = ReminderDialog(task, self.taskList, self.settings, self.__mainWindow)
+            reminderDialog.Bind(wx.EVT_CLOSE, self.onCloseReminderDialog)        
+            reminderDialog.Show()
+            self.__removeReminder(task)    
         
     def onCloseReminderDialog(self, event, show=True):
         event.Skip()
