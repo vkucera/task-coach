@@ -27,7 +27,7 @@ class WindowTest(test.wxTestCase):
         self.settings = config.Settings(load=False)
         self.settings.set('window', 'position', '(100, 100)')
         self.tracker = gui.windowdimensionstracker.WindowDimensionsTracker(self.frame, self.settings)
-        self.section = self.tracker._section
+        self.section = 'window'
         
     def testInitialPosition(self):
         self.assertEqual(eval(self.settings.get(self.section, 'position')), 

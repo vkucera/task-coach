@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, os.path
 from taskcoachlib import widgets, patterns, command
-from taskcoachlib.gui import viewer, artprovider, uicommand
+from taskcoachlib.gui import viewer, artprovider, uicommand, windowdimensionstracker
 from taskcoachlib.widgets import draganddrop
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, category, date, note, attachment
@@ -1059,6 +1059,7 @@ class AttachmentEditBook(EditBook):
     
         
 class EffortEditBook(Page):
+    object = 'effort'
     columns = 3
     
     def __init__(self, parent, efforts, taskFile, settings, *args, **kwargs):
@@ -1215,9 +1216,9 @@ class EditorWithCommand(widgets.Dialog):
         # the first display!
 
         # On Linux this is not needed but doesn't do any harm.
-        self.CentreOnParent()
-        
+        self.CentreOnParent()        
         self.createUICommands()
+        self._dimensionsTracker = windowdimensionstracker.WindowSizeAndPositionTracker(self, settings, '%sdialog'%self.EditBookClass.object)
         
     def createUICommands(self):
         table = wx.AcceleratorTable([(wx.ACCEL_CMD, ord('Z'), wx.ID_UNDO),

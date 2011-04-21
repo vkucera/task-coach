@@ -22,7 +22,13 @@ from taskcoachlib import gui, command, config, persistence
 from taskcoachlib.domain import task
 
 
+class DummyEditBookClass(object):
+    object = 'task'
+
+
 class EditorWithCommandUnderTest(gui.dialog.editor.EditorWithCommand):
+    EditBookClass = DummyEditBookClass
+    
     def __init__(self, *args, **kwargs):
         super(EditorWithCommandUnderTest, self).__init__(*args, **kwargs)
         self.cancelCalled = False

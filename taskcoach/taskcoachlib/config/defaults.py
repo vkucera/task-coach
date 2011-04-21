@@ -314,6 +314,31 @@ defaults = { \
     'tips': 'True', # Show tips after starting up
     'tipsindex': '0', # Start at the first tip
     'blinktaskbariconwhentrackingeffort': 'True' },
+'taskdialog': { \
+    'size': '(600, 400)', # Default size of the dialogs
+    'position': '(-1, -1)', # Position of the dialog, undefined by default
+    'maximized': 'False' # Don't open the dialog maximized by default
+    },
+'categorydialog': { \
+    'size': '(500, 300)', # Default size of the dialogs
+    'position': '(-1, -1)', # Position of the dialog, undefined by default
+    'maximized': 'False' # Don't open the dialog maximized by default
+    },
+'effortdialog': { \
+    'size': '(500, 300)', # Default size of the dialogs
+    'position': '(-1, -1)', # Position of the dialog, undefined by default
+    'maximized': 'False' # Don't open the dialog maximized by default
+    },
+'notedialog': { \
+    'size': '(500, 300)', # Default size of the dialogs
+    'position': '(-1, -1)', # Position of the dialog, undefined by default
+    'maximized': 'False' # Don't open the dialog maximized by default
+    },
+'attachmentdialog': { \
+    'size': '(500, 300)', # Default size of the dialogs
+    'position': '(-1, -1)', # Position of the dialog, undefined by default
+    'maximized': 'False' # Don't open the dialog maximized by default
+    },
 'file': { \
     'recentfiles': '[]',
     'maxrecentfiles': '9',
@@ -323,8 +348,7 @@ defaults = { \
     'saveinifileinprogramdir': 'False',
     'attachmentbase': '',
     'inifileloaded': 'True',
-    'inifileloaderror': ''
-    },
+    'inifileloaderror': '' },
 'color': { \
     'activetasks': '(0, 0, 0, 255)',
     'completedtasks': '(0, 255, 0, 255)',
@@ -363,22 +387,19 @@ defaults = { \
     'notedbname': 'note',
     'synctasks': 'False',
     'syncnotes': 'False',
-    'showwarning': 'True',
-    },
+    'showwarning': 'True' },
 'iphone': { \
     'password': '',
     'service': '',
     'synccompleted': 'True',
-    'showlog': 'False',
-    },
+    'showlog': 'False' },
 'printer': { \
     'margin_left': '0',
     'margin_top': '0',
     'margin_bottom': '0',
     'margin_right': '0',
     'paper_id': '0',
-    'orientation': str(wx.PORTRAIT),
-    },
+    'orientation': str(wx.PORTRAIT) },
 }
 
 minimum = { \

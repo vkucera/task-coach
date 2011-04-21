@@ -33,7 +33,9 @@ email messages from Outlook.''', '3288820')
         ],
     featuresAdded=[
         Feature('''Added a "Help improve translations" menu item to the 
-help menu.''', 'http://uservoice.com/a/468yX')
+help menu.''', 'http://uservoice.com/a/468yX'),
+        Feature('''Remember size and position of edit dialogs.''', 
+                'http://uservoice.com/a/70ZTj')
         ]
     ),
             
