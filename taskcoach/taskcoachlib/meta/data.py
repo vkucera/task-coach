@@ -45,12 +45,11 @@ date = release_month + ' ' + release_day + ', ' + release_year
 
 name = 'Task Coach'
 description = 'Your friendly task manager'
-long_description = '%(name)s is a simple open source todo manager to manage' \
-' personal tasks and todo lists. It grew out of a frustration that ' \
-'well-known task managers, such as those provided with Outlook or Lotus ' \
-'Notes, do not provide facilities for composite tasks. Often, tasks and ' \
-'other things todo consist of several activities. %(name)s is designed ' \
-'to deal with composite tasks. '%dict(name=name)
+long_description = '%(name)s is a friendly open source todo manager to manage ' \
+'personal tasks and todo lists. It supports composite tasks, i.e. tasks ' \
+'within tasks. In addition, %(name)s allows you to categorize your tasks, ' \
+'track effort against a budget per task, and much more. ' \
+'%(name)s is available for Windows, Mac OS X, BSD, Linux, iPhone and iPad.'%dict(name=name)
 keywords = 'task manager, todo list, pim, time registration, track effort'
 author_first, author_last = 'Frank', 'Niessink' # Needed for PAD file
 author = '%s %s and Jerome Laheurte'%(author_first, author_last)
