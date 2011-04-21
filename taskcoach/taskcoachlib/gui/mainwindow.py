@@ -95,8 +95,8 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
     
     def createReminderController(self):
         self.reminderController = \
-            remindercontroller.ReminderController(self, self.taskFile.tasks(), 
-                self.settings)
+            remindercontroller.ReminderController(self, self.taskFile.tasks(),
+                self.taskFile.efforts(), self.settings)
         
     def addPane(self, page, caption, *args):
         name = page.settingsSection()

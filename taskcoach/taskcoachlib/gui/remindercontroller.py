@@ -24,7 +24,7 @@ from taskcoachlib.i18n import _
 
 
 class ReminderController(object):
-    def __init__(self, mainWindow, taskList, settings):
+    def __init__(self, mainWindow, taskList, effortList, settings):
         super(ReminderController, self).__init__()
         patterns.Publisher().registerObserver(self.onSetReminder,
             eventType='task.reminder')
@@ -41,6 +41,7 @@ class ReminderController(object):
         self.__registerRemindersForTasks(taskList)
         self.settings = settings
         self.taskList = taskList
+        self.effortList = effortList
 
     def onAddTask(self, event):
         self.__registerRemindersForTasks(event.values())
@@ -78,7 +79,7 @@ class ReminderController(object):
             self.__removeReminder(task)
             task.setReminder(None)
         else:
-            reminderDialog = ReminderDialog(task, self.taskList, self.settings, self.__mainWindow)
+            reminderDialog = ReminderDialog(task, self.taskList, self.effortList, self.settings, self.__mainWindow)
             reminderDialog.Bind(wx.EVT_CLOSE, self.onCloseReminderDialog)        
             reminderDialog.Show()
             self.__removeReminder(task)    

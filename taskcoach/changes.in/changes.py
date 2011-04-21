@@ -35,7 +35,9 @@ email messages from Outlook.''', '3288820')
         Feature('''Added a "Help improve translations" menu item to the 
 help menu.''', 'http://uservoice.com/a/468yX'),
         Feature('''Remember size and position of edit dialogs.''', 
-                'http://uservoice.com/a/70ZTj')
+                'http://uservoice.com/a/70ZTj'),
+        Feature('''Start effort tracking from the reminder dialog.''', 
+                'http://uservoice.com/a/f4UUt')
         ]
     ),
             
