@@ -22,10 +22,12 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.15', 'April 20, 2011',
+Release('1.2.15', 'April 21, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
-        Bug('''When deleting items, correctly move the selection.''', '3056999')
+        Bug('''When deleting items, correctly move the selection.''', '3056999'),
+        Bug('''Saving would fail when the task file contains deleted tasks
+with prerequisite tasks.''', '', '')
         ],
     featuresAdded=[
         Feature('''Added a "Help improve translations" menu item to the 
