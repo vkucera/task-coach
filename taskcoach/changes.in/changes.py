@@ -27,7 +27,7 @@ Release('1.2.15', 'April 21, 2011',
     bugsFixed=[
         Bug('''When deleting items, correctly move the selection.''', '3056999'),
         Bug('''Saving would fail when the task file contains deleted tasks
-with prerequisite tasks.''', '', '')
+with prerequisite tasks.''', '3290163', '3290300')
         ],
     featuresAdded=[
         Feature('''Added a "Help improve translations" menu item to the 
