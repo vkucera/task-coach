@@ -153,7 +153,8 @@ class Viewer(wx.Panel):
         self.updateSelection()
         
     def selectNewItems(self, newItems):
-        if len(newItems) < len(self.presentation()) or len(newItems) == 1:
+        nrNewItems = len(newItems)
+        if nrNewItems < min(20, len(self.presentation())) or nrNewItems == 1:
             self.select(newItems)
             
     def selectNextItemsAfterRemoval(self, removedItems):
