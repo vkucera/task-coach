@@ -21,10 +21,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 helpText = '''
 Release steps:
-  - Get latest translations from Launchpad.
+  - Get latest translations from Launchpad:
+    * Go to https://translations.launchpad.net/taskcoach/<major.minor>/+export
+    * Wait for the confirmation email from Launchpad and copy the URL
+    * Run 'cd i18n.in && python make.py <url>' to update the translations
+    * Run 'make languagetests' to test the translations
+    * When all tests pass, run 'svn commit -m "Updated translations"' 
   - Run 'make reallyclean' to remove old packages.
   - Run 'make alltests'.
-  - For each platform, create and upload the packages:
+  - Go to http://www.fraca7.net:8010/builders/Release to build releases.
+  - For platforms not supported by the release builder, create and upload the 
+    packages manually:
     * Mac OS X 10.4:       'make dmg; release.py upload'
     * Ubuntu 8.04 (py2.5): 'make deb; release.py upload'
     * Ubuntu 9.10 (py2.6): 'make deb; release.py upload'
