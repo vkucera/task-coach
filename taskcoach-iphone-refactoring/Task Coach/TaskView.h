@@ -25,4 +25,7 @@
 - (IBAction)onSelectGrouping:(id)sender;
 - (IBAction)onAddTask:(id)sender;
 
+- (void)enableUpdates;
+- (void)disableUpdates;
+
 @end

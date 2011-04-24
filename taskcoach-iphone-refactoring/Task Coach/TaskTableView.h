@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @class CDTask;
+@class TaskView;
 
 @interface TaskTableView : UITableViewController <NSFetchedResultsControllerDelegate>
 {
@@ -17,6 +18,8 @@
 
     NSIndexPath *scrollTo;
     BOOL editSubject;
+
+    IBOutlet TaskView *taskView;
 }
 
 - (void)reload;

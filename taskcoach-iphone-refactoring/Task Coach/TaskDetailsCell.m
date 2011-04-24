@@ -65,6 +65,8 @@ static UIImage *_imageUnchecked = NULL;
             [task stopTracking];
         else
             [task startTracking];
+
+        callback(self);
     }];
 
     [theTask release];

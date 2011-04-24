@@ -68,27 +68,14 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    refreshStatusTimer = [[NSTimer scheduledTimerWithTimeInterval:[[NSDateUtils dateRoundedTo:15] timeIntervalSinceNow] + 1 target:self selector:@selector(onRefreshStatus:) userInfo:nil repeats:YES] retain];
-    refreshEffortTimer = [[NSTimer scheduledTimerWithTimeInterval:[[NSDateUtils dateRoundedTo:1] timeIntervalSinceNow] + 1 target:self selector:@selector(onRefreshEffort:) userInfo:nil repeats:YES] retain];
+    [self enableUpdates];
 
     [super viewDidAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    if (refreshStatusTimer)
-    {
-        [refreshStatusTimer invalidate];
-        [refreshStatusTimer release];
-        refreshStatusTimer = nil;
-    }
-    
-    if (refreshEffortTimer)
-    {
-        [refreshEffortTimer invalidate];
-        [refreshEffortTimer release];
-        refreshEffortTimer = nil;
-    }
+    [self disableUpdates];
 
     [super viewWillDisappear:animated];
 }
@@ -182,6 +169,31 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
+}
+
+#pragma mark - Updates
+
+- (void)enableUpdates
+{
+    refreshStatusTimer = [[NSTimer scheduledTimerWithTimeInterval:[[NSDateUtils dateRoundedTo:15] timeIntervalSinceNow] + 1 target:self selector:@selector(onRefreshStatus:) userInfo:nil repeats:YES] retain];
+    refreshEffortTimer = [[NSTimer scheduledTimerWithTimeInterval:[[NSDateUtils dateRoundedTo:1] timeIntervalSinceNow] + 1 target:self selector:@selector(onRefreshEffort:) userInfo:nil repeats:YES] retain];
+}
+
+- (void)disableUpdates
+{
+    if (refreshStatusTimer)
+    {
+        [refreshStatusTimer invalidate];
+        [refreshStatusTimer release];
+        refreshStatusTimer = nil;
+    }
+    
+    if (refreshEffortTimer)
+    {
+        [refreshEffortTimer invalidate];
+        [refreshEffortTimer release];
+        refreshEffortTimer = nil;
+    }
 }
 
 @end

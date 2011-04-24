@@ -15,6 +15,7 @@
 #import "String+Utils.h"
 #import "TaskHeaderViewFactory.h"
 #import "TaskCellFactory.h"
+#import "TaskView.h"
 #import "DateUtils.h"
 #import "NSDateUtils.h"
 #import "i18n.h"
@@ -242,6 +243,7 @@
             detailsTask = nil;
             [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationFade];
             [self.tableView setScrollEnabled:YES];
+            [taskView enableUpdates];
         }];
 
         if (editSubject)
@@ -334,6 +336,8 @@
 
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     [self.tableView setScrollEnabled:NO];
+
+    [taskView disableUpdates];
 }
 
 #pragma mark - Fetched results controller delegate
