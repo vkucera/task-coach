@@ -175,6 +175,9 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
+    if (detailsTask)
+        return nil;
+
     id <NSFetchedResultsSectionInfo> info = [[resultsCtrl sections] objectAtIndex:section];
 
     switch ([Configuration instance].grouping)
@@ -196,6 +199,9 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
+    if (detailsTask)
+        return nil;
+
     if ([Configuration instance].grouping == GROUPING_STATUS)
     {
         TaskHeaderView *view = [[TaskHeaderViewFactory instance] create];
@@ -241,8 +247,9 @@
             NSIndexPath *path = [resultsCtrl indexPathForObject:detailsTask];
             [detailsTask release];
             detailsTask = nil;
-            [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView reloadData];
             [self.tableView setScrollEnabled:YES];
+            [self.tableView scrollToRowAtIndexPath:path atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
             [taskView enableUpdates];
         }];
 
