@@ -137,8 +137,12 @@ static UIImage *_imageUnchecked = NULL;
     theTask.name = subject.text;
     [theTask markDirty];
     [theTask save];
+}
 
-    [subject resignFirstResponder];
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return YES;
 }
 
 #pragma mark - Date picker
