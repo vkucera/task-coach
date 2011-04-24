@@ -13,7 +13,7 @@
 
 @class CDTask;
 
-@interface TaskDetailsCell : UITableViewCell
+@interface TaskDetailsCell : UITableViewCell <UITextFieldDelegate>
 {
     IBOutlet UITextField *subject;
     IBOutlet ImageButton *completionButton;
@@ -21,6 +21,8 @@
     IBOutlet SmartButton *doneButton;
 
     void (^callback)(id);
+
+    CDTask *theTask;
 }
 
 - (void)setTask:(CDTask *)task callback:(void (^)(id))callback;

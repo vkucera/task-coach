@@ -100,6 +100,7 @@
     [task save];
 
     [self.tableView scrollToRowAtIndexPath:[resultsCtrl indexPathForObject:task] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    [self.tableView setScrollEnabled:NO];
 }
 
 #pragma mark - View lifecycle
@@ -240,6 +241,7 @@
             [detailsTask release];
             detailsTask = nil;
             [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView setScrollEnabled:YES];
         }];
 
         if (editSubject)
@@ -328,6 +330,7 @@
     [paths release];
 
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    [self.tableView setScrollEnabled:NO];
 }
 
 #pragma mark - Fetched results controller delegate

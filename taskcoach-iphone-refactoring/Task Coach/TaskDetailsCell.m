@@ -8,6 +8,7 @@
 
 #import "TaskDetailsCell.h"
 #import "CDTask+Addons.h"
+#import "CDDomainObject+Addons.h"
 #import "i18n.h"
 
 static UIImage *_imageChecked = NULL;
@@ -19,6 +20,8 @@ static UIImage *_imageUnchecked = NULL;
 {
     if (callback)
         Block_release(callback);
+
+    [theTask release];
 
     [super dealloc];
 }
@@ -63,11 +66,24 @@ static UIImage *_imageUnchecked = NULL;
         else
             [task startTracking];
     }];
+
+    [theTask release];
+    theTask = task;
 }
 
 - (void)editSubject
 {
     [subject becomeFirstResponder];
+}
+
+#pragma mark - UITextFieldDelegate
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    theTask.name = subject.text;
+    [theTask save];
+
+    [subject resignFirstResponder];
 }
 
 @end
