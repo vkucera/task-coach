@@ -116,7 +116,10 @@
 
 - (IBAction)onDone:(id)sender
 {
-    doneAction(self);
+    if (taskTableCtrl.detailsTask)
+        [taskTableCtrl doneEditing];
+    else
+        doneAction(self);
 }
 
 - (IBAction)onAddTask:(id)sender

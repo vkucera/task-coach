@@ -18,7 +18,6 @@
     IBOutlet UITextField *subject;
     IBOutlet ImageButton *completionButton;
     IBOutlet SmartButton *trackButton;
-    IBOutlet SmartButton *doneButton;
 
     void (^callback)(id);
 

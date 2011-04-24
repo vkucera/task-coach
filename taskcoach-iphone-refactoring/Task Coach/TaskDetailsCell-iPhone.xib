@@ -54,7 +54,7 @@
 							<object class="IBUITextField" id="758601204">
 								<reference key="NSNextResponder" ref="476897186"/>
 								<int key="NSvFlags">290</int>
-								<string key="NSFrame">{{20, 52}, {242, 31}}</string>
+								<string key="NSFrame">{{20, 20}, {242, 31}}</string>
 								<reference key="NSSuperview" ref="476897186"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="748074484"/>
@@ -82,14 +82,14 @@
 							<object class="IBUIButton" id="321486388">
 								<reference key="NSNextResponder" ref="476897186"/>
 								<int key="NSvFlags">290</int>
-								<string key="NSFrame">{{20, 93}, {280, 37}}</string>
+								<string key="NSFrame">{{20, 59}, {280, 37}}</string>
 								<reference key="NSSuperview" ref="476897186"/>
 								<reference key="NSWindow"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<int key="IBUIContentHorizontalAlignment">0</int>
 								<int key="IBUIContentVerticalAlignment">0</int>
-								<object class="NSFont" key="IBUIFont" id="560971427">
+								<object class="NSFont" key="IBUIFont">
 									<string key="NSName">Helvetica-Bold</string>
 									<double key="NSSize">15</double>
 									<int key="NSfFlags">16</int>
@@ -99,11 +99,11 @@
 									<int key="NSColorSpace">3</int>
 									<bytes key="NSWhite">MQA</bytes>
 								</object>
-								<object class="NSColor" key="IBUINormalTitleColor" id="564879108">
+								<object class="NSColor" key="IBUINormalTitleColor">
 									<int key="NSColorSpace">1</int>
 									<bytes key="NSRGB">MCAwIDAAA</bytes>
 								</object>
-								<object class="NSColor" key="IBUINormalTitleShadowColor" id="597248671">
+								<object class="NSColor" key="IBUINormalTitleShadowColor">
 									<int key="NSColorSpace">3</int>
 									<bytes key="NSWhite">MC41AA</bytes>
 								</object>
@@ -111,33 +111,17 @@
 							<object class="IBUIImageView" id="748074484">
 								<reference key="NSNextResponder" ref="476897186"/>
 								<int key="NSvFlags">289</int>
-								<string key="NSFrame">{{270, 53}, {30, 30}}</string>
+								<string key="NSFrame">{{270, 21}, {30, 30}}</string>
 								<reference key="NSSuperview" ref="476897186"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="321486388"/>
 								<int key="IBUIContentMode">4</int>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 							</object>
-							<object class="IBUIButton" id="198198621">
-								<reference key="NSNextResponder" ref="476897186"/>
-								<int key="NSvFlags">290</int>
-								<string key="NSFrame">{{20, 7}, {280, 37}}</string>
-								<reference key="NSSuperview" ref="476897186"/>
-								<reference key="NSWindow"/>
-								<bool key="IBUIOpaque">NO</bool>
-								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<int key="IBUIContentHorizontalAlignment">0</int>
-								<int key="IBUIContentVerticalAlignment">0</int>
-								<reference key="IBUIFont" ref="560971427"/>
-								<int key="IBUIButtonType">1</int>
-								<reference key="IBUIHighlightedTitleColor" ref="1065873334"/>
-								<reference key="IBUINormalTitleColor" ref="564879108"/>
-								<reference key="IBUINormalTitleShadowColor" ref="597248671"/>
-							</object>
 							<object class="IBUITableView" id="101396064">
 								<reference key="NSNextResponder" ref="476897186"/>
 								<int key="NSvFlags">290</int>
-								<string key="NSFrame">{{20, 140}, {280, 104}}</string>
+								<string key="NSFrame">{{20, 104}, {280, 104}}</string>
 								<reference key="NSSuperview" ref="476897186"/>
 								<reference key="NSWindow"/>
 								<reference key="IBUIBackgroundColor" ref="1065873334"/>
@@ -158,7 +142,7 @@
 							<object class="IBUIDatePicker" id="479329263">
 								<reference key="NSNextResponder" ref="476897186"/>
 								<int key="NSvFlags">290</int>
-								<string key="NSFrame">{{0, 246}, {320, 216}}</string>
+								<string key="NSFrame">{{0, 216}, {320, 216}}</string>
 								<reference key="NSSuperview" ref="476897186"/>
 								<reference key="NSWindow"/>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -195,7 +179,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 								<int key="IBUIMinuteInterval">15</int>
 							</object>
 						</object>
-						<string key="NSFrameSize">{320, 470}</string>
+						<string key="NSFrameSize">{320, 432}</string>
 						<reference key="NSSuperview" ref="651074134"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="758601204"/>
@@ -210,7 +194,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 					</object>
 				</object>
-				<string key="NSFrameSize">{320, 470}</string>
+				<string key="NSFrameSize">{320, 432}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="476897186"/>
@@ -267,14 +251,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<reference key="destination" ref="748074484"/>
 					</object>
 					<int key="connectionID">11</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">doneButton</string>
-						<reference key="source" ref="651074134"/>
-						<reference key="destination" ref="198198621"/>
-					</object>
-					<int key="connectionID">13</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -343,7 +319,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<reference key="object" ref="651074134"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="198198621"/>
 							<reference ref="758601204"/>
 							<reference ref="748074484"/>
 							<reference ref="321486388"/>
@@ -368,11 +343,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<reference key="parent" ref="651074134"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">12</int>
-						<reference key="object" ref="198198621"/>
-						<reference key="parent" ref="651074134"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">14</int>
 						<reference key="object" ref="101396064"/>
 						<reference key="parent" ref="651074134"/>
@@ -392,8 +362,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<string>-2.CustomClassName</string>
 					<string>10.CustomClassName</string>
 					<string>10.IBPluginDependency</string>
-					<string>12.CustomClassName</string>
-					<string>12.IBPluginDependency</string>
 					<string>14.IBPluginDependency</string>
 					<string>17.IBPluginDependency</string>
 					<string>2.CustomClassName</string>
@@ -407,8 +375,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<string>TaskCellFactory</string>
 					<string>UIResponder</string>
 					<string>ImageButton</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>SmartButton</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -567,7 +533,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 							<string>completionButton</string>
 							<string>datePicker</string>
 							<string>datesTable</string>
-							<string>doneButton</string>
 							<string>subject</string>
 							<string>trackButton</string>
 						</object>
@@ -576,7 +541,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 							<string>ImageButton</string>
 							<string>UIDatePicker</string>
 							<string>UITableView</string>
-							<string>SmartButton</string>
 							<string>UITextField</string>
 							<string>SmartButton</string>
 						</object>
@@ -588,7 +552,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 							<string>completionButton</string>
 							<string>datePicker</string>
 							<string>datesTable</string>
-							<string>doneButton</string>
 							<string>subject</string>
 							<string>trackButton</string>
 						</object>
@@ -605,10 +568,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 							<object class="IBToOneOutletInfo">
 								<string key="name">datesTable</string>
 								<string key="candidateClassName">UITableView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">doneButton</string>
-								<string key="candidateClassName">SmartButton</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">subject</string>

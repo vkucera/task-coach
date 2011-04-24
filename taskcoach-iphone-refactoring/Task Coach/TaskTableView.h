@@ -20,10 +20,15 @@
     BOOL editSubject;
 
     IBOutlet TaskView *taskView;
+    IBOutlet UIBarButtonItem *groupingButton;
+    IBOutlet UIBarButtonItem *addButton;
 }
+
+@property (nonatomic, readonly) CDTask *detailsTask;
 
 - (void)reload;
 - (void)refresh;
 - (void)addTask;
+- (void)doneEditing;
 
 @end

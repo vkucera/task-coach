@@ -22,6 +22,8 @@
 
 @implementation TaskTableView
 
+@synthesize detailsTask;
+
 - (void)dealloc
 {
     [self viewDidUnload];
@@ -102,6 +104,19 @@
 
     [self.tableView scrollToRowAtIndexPath:[resultsCtrl indexPathForObject:task] atScrollPosition:UITableViewScrollPositionTop animated:YES];
     [self.tableView setScrollEnabled:NO];
+}
+
+- (void)doneEditing
+{
+    NSIndexPath *path = [resultsCtrl indexPathForObject:detailsTask];
+    [detailsTask release];
+    detailsTask = nil;
+    [self.tableView reloadData];
+    [self.tableView setScrollEnabled:YES];
+    [self.tableView scrollToRowAtIndexPath:path atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+    [taskView enableUpdates];
+    [groupingButton setEnabled:YES];
+    [addButton setEnabled:YES];
 }
 
 #pragma mark - View lifecycle
@@ -220,7 +235,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([indexPath isEqual:[resultsCtrl indexPathForObject:detailsTask]])
-        return 470;
+        return 432;
     return 44;
 }
 
@@ -244,13 +259,7 @@
         
         CDTask *task = [resultsCtrl objectAtIndexPath:indexPath];
         [cell setTask:task callback:^(id sender) {
-            NSIndexPath *path = [resultsCtrl indexPathForObject:detailsTask];
-            [detailsTask release];
-            detailsTask = nil;
-            [self.tableView reloadData];
-            [self.tableView setScrollEnabled:YES];
-            [self.tableView scrollToRowAtIndexPath:path atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
-            [taskView enableUpdates];
+            [self doneEditing];
         }];
 
         if (editSubject)
@@ -345,6 +354,9 @@
     [self.tableView setScrollEnabled:NO];
 
     [taskView disableUpdates];
+
+    [groupingButton setEnabled:NO];
+    [addButton setEnabled:NO];
 }
 
 #pragma mark - Fetched results controller delegate

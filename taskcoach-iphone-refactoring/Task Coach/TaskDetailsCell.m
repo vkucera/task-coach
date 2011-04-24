@@ -42,11 +42,6 @@ static UIImage *_imageUnchecked = NULL;
         Block_release(callback);
     callback = Block_copy(theCallback);
 
-    [doneButton setTitle:_("Done") forState:UIControlStateNormal];
-    [doneButton setBackgroundImage:[[UIImage imageNamed:@"blueButton"] stretchableImageWithLeftCapWidth:12.0 topCapHeight:0.0] forState:UIControlStateNormal];
-    [doneButton setBackgroundImage:[[UIImage imageNamed:@"whiteButton"] stretchableImageWithLeftCapWidth:12.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-    [doneButton setCallback:callback];
-
     subject.text = task.name;
     completionButton.image = ([task completionDate]) ? _imageChecked : _imageUnchecked;
     [completionButton setCallback:^(id sender) {
