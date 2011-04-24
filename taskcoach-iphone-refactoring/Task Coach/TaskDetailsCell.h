@@ -13,7 +13,7 @@
 
 @class CDTask;
 
-@interface TaskDetailsCell : UITableViewCell <UITextFieldDelegate>
+@interface TaskDetailsCell : UITableViewCell <UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate>
 {
     IBOutlet UITextField *subject;
     IBOutlet ImageButton *completionButton;
@@ -23,9 +23,13 @@
     void (^callback)(id);
 
     CDTask *theTask;
+    
+    IBOutlet UITableView *datesTable;
+    IBOutlet UIDatePicker *datePicker;
 }
 
 - (void)setTask:(CDTask *)task callback:(void (^)(id))callback;
 - (void)editSubject;
+- (IBAction)onChangeDate:(id)sender;
 
 @end

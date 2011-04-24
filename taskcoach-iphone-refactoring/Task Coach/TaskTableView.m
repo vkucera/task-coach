@@ -214,7 +214,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([indexPath isEqual:[resultsCtrl indexPathForObject:detailsTask]])
-        return 138;
+        return 470;
     return 44;
 }
 
