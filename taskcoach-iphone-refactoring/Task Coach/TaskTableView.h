@@ -10,11 +10,13 @@
 
 @class CDTask;
 @class TaskView;
+@class TaskDetailsCell;
 
 @interface TaskTableView : UITableViewController <NSFetchedResultsControllerDelegate>
 {
     NSFetchedResultsController *resultsCtrl;
     CDTask *detailsTask;
+    TaskDetailsCell *detailsCell;
 
     NSIndexPath *scrollTo;
     BOOL editSubject;

@@ -15,6 +15,7 @@
 #import "String+Utils.h"
 #import "TaskHeaderViewFactory.h"
 #import "TaskCellFactory.h"
+#import "TaskDetailsCell.h"
 #import "TaskView.h"
 #import "DateUtils.h"
 #import "NSDateUtils.h"
@@ -117,6 +118,8 @@
     [taskView enableUpdates];
     [groupingButton setEnabled:YES];
     [addButton setEnabled:YES];
+    [detailsCell release];
+    detailsCell = nil;
 }
 
 #pragma mark - View lifecycle
@@ -249,29 +252,26 @@
 {
     if ([indexPath isEqual:[resultsCtrl indexPathForObject:detailsTask]])
     {
-        static NSString *CellIdentifier = @"DetailsTaskCell";
-        
-        TaskDetailsCell *cell = (TaskDetailsCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-        if (cell == nil)
+        if (!detailsCell)
         {
-            cell = [[TaskCellFactory instance] createDetails];
-        }
-        
-        CDTask *task = [resultsCtrl objectAtIndexPath:indexPath];
-        [cell setTask:task callback:^(id sender) {
-            [self doneEditing];
-        }];
+            detailsCell = [[[TaskCellFactory instance] createDetails] retain];
 
-        if (editSubject)
-        {
-            // XXXFIXME: If the cell is at the bottom of the view,
-            // the keyboard hides it...
-
-            editSubject = NO;
-            [cell editSubject];
+            CDTask *task = [resultsCtrl objectAtIndexPath:indexPath];
+            [detailsCell setTask:task callback:^(id sender) {
+                [self doneEditing];
+            }];
+            
+            if (editSubject)
+            {
+                // XXXFIXME: If the cell is at the bottom of the view,
+                // the keyboard hides it...
+                
+                editSubject = NO;
+                [detailsCell editSubject];
+            }
         }
 
-        return cell;
+        return detailsCell;
     }
     else
     {
@@ -401,7 +401,8 @@
             break;
             
         case NSFetchedResultsChangeUpdate:
-            [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            if (!detailsCell)
+                [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeMove:

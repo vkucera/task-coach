@@ -112,6 +112,9 @@ static UIImage *_imageUnchecked = NULL;
         
         [theTask save];
     }
+
+    [datesTable reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    [datesTable selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 }
 
 #pragma mark - Table view data source
