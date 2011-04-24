@@ -22,6 +22,14 @@ from changetypes import *
 
 releases = [
 
+Release('1.2.16', 'May ??, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Installing as a non-admin user on Mac OS X wouldn't work.''',
+            '3288682'),
+            ],
+    ),
+
 Release('1.2.15', 'April 23, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
