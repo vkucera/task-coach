@@ -246,6 +246,9 @@
 
         if (editSubject)
         {
+            // XXXFIXME: If the cell is at the bottom of the view,
+            // the keyboard hides it...
+
             editSubject = NO;
             [cell editSubject];
         }

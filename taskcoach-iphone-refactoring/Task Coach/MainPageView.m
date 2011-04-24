@@ -64,7 +64,9 @@
              self.view.hidden = YES;
              ctrl.view.hidden = NO;
          }
-                        completion:NULL];
+                        completion:^(BOOL finished) {
+                            [self.view removeFromSuperview];
+                        }];
     }];
 
     [listsButton setCallback:^(id sender) {
@@ -76,8 +78,7 @@
             ctrl.view.frame = self.view.frame;
             ctrl.view.hidden = YES;
             [self.view.superview addSubview:ctrl.view];
-            [self.view.superview bringSubviewToFront:ctrl.view];
-            
+
             [UIView transitionWithView:self.view.superview
                               duration:1
                                options:UIViewAnimationOptionTransitionFlipFromRight
@@ -87,7 +88,9 @@
                  self.view.hidden = YES;
                  ctrl.view.hidden = NO;
              }
-                            completion:NULL];
+                            completion:^(BOOL finished) {
+                                [self.view removeFromSuperview];
+                            }];
         }
         else
         {
@@ -145,6 +148,8 @@
 
 - (void)returnToMain:(UIViewController *)ctrl
 {
+    [ctrl.view.superview addSubview:self.view];
+
     [UIView transitionWithView:self.view.superview
                       duration:1.0
                        options:UIViewAnimationOptionTransitionFlipFromLeft
