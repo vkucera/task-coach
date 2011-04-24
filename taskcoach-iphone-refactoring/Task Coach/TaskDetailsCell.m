@@ -60,12 +60,12 @@ static UIImage *_imageUnchecked = NULL;
     [trackButton setBackgroundImage:[[UIImage imageNamed:@"whiteButton"] stretchableImageWithLeftCapWidth:12.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 
     [trackButton setCallback:^(id sender) {
+        callback(self);
+
         if ([task currentEffort])
             [task stopTracking];
         else
             [task startTracking];
-
-        callback(self);
     }];
 
     [theTask release];

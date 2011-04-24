@@ -112,14 +112,15 @@
     NSIndexPath *path = [resultsCtrl indexPathForObject:detailsTask];
     [detailsTask release];
     detailsTask = nil;
+    [detailsCell release];
+    detailsCell = nil;
+
     [self.tableView reloadData];
     [self.tableView setScrollEnabled:YES];
     [self.tableView scrollToRowAtIndexPath:path atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     [taskView enableUpdates];
     [groupingButton setEnabled:YES];
     [addButton setEnabled:YES];
-    [detailsCell release];
-    detailsCell = nil;
 }
 
 #pragma mark - View lifecycle
