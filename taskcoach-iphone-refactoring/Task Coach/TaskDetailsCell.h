@@ -25,6 +25,8 @@
     
     IBOutlet UITableView *datesTable;
     IBOutlet UIDatePicker *datePicker;
+    IBOutlet ImageButton *startDateButton;
+    IBOutlet ImageButton *dueDateButton;
 }
 
 - (void)setTask:(CDTask *)task callback:(void (^)(id))callback;

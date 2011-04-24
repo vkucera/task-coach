@@ -76,6 +76,53 @@ static UIImage *_imageUnchecked = NULL;
         [datePicker setDate:theTask.startDate];
     else
         [datePicker setDate:[NSDate date]];
+
+    [startDateButton setImage:theTask.startDate ? _imageChecked : _imageUnchecked];
+    [dueDateButton setImage:theTask.dueDate ? _imageChecked : _imageUnchecked];
+    
+    [startDateButton setCallback:^(id sender) {
+        if (theTask.startDate)
+        {
+            theTask.startDate = nil;
+            [startDateButton setImage:_imageUnchecked];
+        }
+        else
+        {
+            theTask.startDate = [NSDate date];
+            [startDateButton setImage:_imageChecked];
+            [datePicker setDate:theTask.startDate];
+        }
+        
+        [theTask computeDateStatus];
+        [theTask markDirty];
+        [theTask save];
+        
+        NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
+        [datesTable reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
+        [datesTable selectRowAtIndexPath:path animated:NO scrollPosition:UITableViewScrollPositionNone];
+    }];
+    
+    [dueDateButton setCallback:^(id sender) {
+        if (theTask.dueDate)
+        {
+            theTask.dueDate = nil;
+            [dueDateButton setImage:_imageUnchecked];
+        }
+        else
+        {
+            theTask.dueDate = [NSDate date];
+            [dueDateButton setImage:_imageChecked];
+            [datePicker setDate:theTask.dueDate];
+        }
+        
+        [theTask computeDateStatus];
+        [theTask markDirty];
+        [theTask save];
+        
+        NSIndexPath *path = [NSIndexPath indexPathForRow:1 inSection:0];
+        [datesTable reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
+        [datesTable selectRowAtIndexPath:path animated:NO scrollPosition:UITableViewScrollPositionNone];
+    }];
 }
 
 - (void)editSubject
@@ -88,6 +135,7 @@ static UIImage *_imageUnchecked = NULL;
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     theTask.name = subject.text;
+    [theTask markDirty];
     [theTask save];
 
     [subject resignFirstResponder];
@@ -110,11 +158,16 @@ static UIImage *_imageUnchecked = NULL;
                 break;
         }
         
+        [theTask computeDateStatus];
+        [theTask markDirty];
         [theTask save];
     }
 
     [datesTable reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
     [datesTable selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+
+    [startDateButton setImage:theTask.startDate ? _imageChecked : _imageUnchecked];
+    [dueDateButton setImage:theTask.dueDate ? _imageChecked : _imageUnchecked];
 }
 
 #pragma mark - Table view data source
@@ -162,17 +215,32 @@ static UIImage *_imageUnchecked = NULL;
     switch (indexPath.row)
     {
         case 0:
+            if (!theTask.startDate)
+            {
+                theTask.startDate = [NSDate date];
+            }
             theDate = theTask.startDate;
             break;
         case 1:
+            if (!theTask.dueDate)
+            {
+                theTask.dueDate = [NSDate date];
+            }
             theDate = theTask.dueDate;
             break;
     }
-    
-    if (theDate)
-        [datePicker setDate:theDate animated:NO];
-    else
-        [datePicker setDate:[NSDate date] animated:NO];
+
+    [theTask computeDateStatus];
+    [theTask markDirty];
+    [theTask save];
+
+    [datePicker setDate:[NSDate date] animated:NO];
+
+    [datesTable reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    [datesTable selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+
+    [startDateButton setImage:theTask.startDate ? _imageChecked : _imageUnchecked];
+    [dueDateButton setImage:theTask.dueDate ? _imageChecked : _imageUnchecked];
 }
 
 @end
