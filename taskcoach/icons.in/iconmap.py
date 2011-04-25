@@ -73,6 +73,7 @@ iconlist = [
 ('bomb_icon', 'apps', 'core', [16]),
 ('book_icon', 'apps', 'kdict', [16]),
 ('books_icon', 'apps', 'bookcase', [16]),
+('box_icon', 'apps', 'kpackage', [16]),
 ('box_in_icon', 'filesystems', 'folder_inbox', [16]),
 ('box_out_icon', 'filesystems', 'folder_outbox', [16]),
 ('bug_icon', 'apps', 'bug', [16]),

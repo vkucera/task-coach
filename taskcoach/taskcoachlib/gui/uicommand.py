@@ -2198,6 +2198,16 @@ class HelpLicense(DialogCommand):
             bitmap='document_icon', *args, **kwargs)
         
         
+class CheckForUpdate(SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        super(CheckForUpdate, self).__init__(menuText=_('Check for update...'),
+            helpText=_('Check for the availability of a new version of %s')%meta.name,
+            bitmap='box_icon', *args, **kwargs)
+        
+    def doCommand(self, event):
+        meta.VersionChecker(self.settings, verbose=True).start()
+        
+        
 class URLCommand(UICommand):
     def __init__(self, *args, **kwargs):
         self.url = kwargs.pop('url')

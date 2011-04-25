@@ -100,6 +100,7 @@ chooseableItemImages = dict( \
     bomb_icon=_('Bomb'),
     book_icon=_('Book'),
     books_icon=_('Books'),
+    box_icon=_('Box'),
     bug_icon=_('Ladybug'),
     cake_icon=_('Cake'),
     calculator_icon=_('Calculator'),

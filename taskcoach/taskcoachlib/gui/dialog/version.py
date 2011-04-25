@@ -25,25 +25,57 @@ from taskcoachlib.widgets import sized_controls
 
 class VersionDialog(sized_controls.SizedDialog):
     def __init__(self, *args, **kwargs):
-        version = kwargs.pop('version')
         self.settings = kwargs.pop('settings')
-        kwargs['title'] = kwargs.get('title', 
-            _('New version of %(name)s available')%dict(name=meta.data.name))
-        super(VersionDialog, self).__init__(*args, **kwargs)
+        self.message = kwargs.pop('message')
+        version = kwargs.pop('version')
+        super(VersionDialog, self).__init__(title=self.title, *args, **kwargs)
         pane = self.GetContentsPane()
         pane.SetSizerType("vertical")
-        panel = sized_controls.SizedPanel(pane)
-        panel.SetSizerType('horizontal')
-        messageInfo = dict(version=version, name=meta.data.name)
-        message = _('Version %(version)s of %(name)s is available from')%messageInfo
-        wx.StaticText(panel, label=message)
-        hyperlink.HyperLinkCtrl(panel, label=meta.data.url)
+        self.messageInfo = dict(version=version, name=meta.data.name,
+                                currentVersion=meta.data.version)
+        self.createInterior(pane)
         self.check = wx.CheckBox(pane, label=_('Notify me of new versions.'))
-        self.check.SetValue(True)
-        self.SetButtonSizer(self.CreateStdDialogButtonSizer(wx.OK))
+        self.check.SetValue(self.settings.getboolean('version', 'notify'))
+        buttonSizer = self.CreateStdDialogButtonSizer(wx.OK)
+        self.SetButtonSizer(buttonSizer)
         self.Fit()
+        buttonSizer.GetAffirmativeButton().Bind(wx.EVT_BUTTON, self.onClose)
         self.Bind(wx.EVT_CLOSE, self.onClose)
         
     def onClose(self, event):
         event.Skip()
-        self.settings.set('version', 'notify', str(self.check.GetValue())) 
+        self.settings.set('version', 'notify', str(self.check.GetValue()))
+
+
+class NewVersionDialog(VersionDialog):
+    title = _('New version of %(name)s available')%dict(name=meta.data.name)
+            
+    def createInterior(self, panel):
+        wx.StaticText(panel, label=_('You are using %(name)s version %(currentVersion)s.')%self.messageInfo)
+        urlPanel = sized_controls.SizedPanel(panel)
+        urlPanel.SetSizerType('horizontal')
+        wx.StaticText(urlPanel, label=_('Version %(version)s of %(name)s is available from')%self.messageInfo)
+        hyperlink.HyperLinkCtrl(urlPanel, label=meta.data.url)
+        
+        
+class VersionUpToDateDialog(VersionDialog):
+    title = _('%(name)s is up to date')%dict(name=meta.data.name)
+
+    def createInterior(self, panel):
+        wx.StaticText(panel, label=_('%(name)s is up to date at version %(version)s.')%self.messageInfo)
+        
+        
+class NoVersionDialog(VersionDialog):
+    title = _("Couldn't find out latest version")
+        
+    def createInterior(self, panel):
+        wx.StaticText(panel, label=_("Couldn't find out what the latest version of %(name)s is.")%self.messageInfo)
+        wx.StaticText(panel, label=self.message)
+        
+        
+class PrereleaseVersionDialog(VersionDialog):
+    title = _("Prerelease version")
+
+    def createInterior(self, panel):
+        wx.StaticText(panel, label=_('You are using %(name)s prerelease version %(currentVersion)s.')%self.messageInfo)
+        wx.StaticText(panel, label=_('The latest released version of %(name)s is %(version)s.')%self.messageInfo)

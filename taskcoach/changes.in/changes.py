@@ -30,6 +30,10 @@ Release('1.2.16', 'April 25, 2011',
         Bug('''Don't crash when the SESSSION_MANAGER environment variable is
 not set (Linux).''', '3288682'),
             ],
+    featuresAdded=[
+        Feature('''Added a "Check for update" menu item to the help menu.''',
+                'http://uservoice.com/a/dwNJ0')
+        ]
     ),
 
 Release('1.2.15', 'April 23, 2011',

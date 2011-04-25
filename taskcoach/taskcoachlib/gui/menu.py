@@ -556,6 +556,7 @@ class HelpMenu(Menu):
             uicommand.Donate(),
             None,
             uicommand.HelpAbout(),
+            uicommand.CheckForUpdate(settings=settings),
             uicommand.HelpLicense())
 
 
