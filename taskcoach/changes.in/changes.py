@@ -22,13 +22,13 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.16', 'May ??, 2011',
+Release('1.2.16', 'April 25, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Installing as a non-admin user on Mac OS X wouldn't work.''',
             '3288682'),
         Bug('''Don't crash when the SESSSION_MANAGER environment variable is
-not set (Linux)'''),
+not set (Linux).''', '3288682'),
             ],
     ),
 
