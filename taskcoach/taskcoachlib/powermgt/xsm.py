@@ -230,8 +230,6 @@ class SessionMonitor(ICELoop):
                                           None)
 
             self.clientID = id_ret.value
-        except KeyError:
-            pass
 
     def stop(self):
         super(SessionMonitor, self).stop()
