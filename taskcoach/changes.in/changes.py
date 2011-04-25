@@ -27,6 +27,8 @@ Release('1.2.16', 'May ??, 2011',
     bugsFixed=[
         Bug('''Installing as a non-admin user on Mac OS X wouldn't work.''',
             '3288682'),
+        Bug('''Don't crash when the SESSSION_MANAGER environment variable is
+not set (Linux)'''),
             ],
     ),
 
