@@ -22,13 +22,15 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.16', 'April 25, 2011',
+Release('1.2.16', 'April 26, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Installing as a non-admin user on Mac OS X wouldn't work.''',
             '3288682'),
         Bug('''Don't crash when the SESSSION_MANAGER environment variable is
 not set (Linux).''', '3288682'),
+        Bug('''Update the task viewer every minute when the time left column is
+shown.''')
             ],
     featuresAdded=[
         Feature('''Added a "Check for update" menu item to the help menu.''',

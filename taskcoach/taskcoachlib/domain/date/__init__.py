@@ -22,7 +22,7 @@ from dateandtime import DateTime, Now, parseDateTime
 from timedelta import TimeDelta, oneSecond, zeroHour, oneHour, twoHours, \
     threeHours, oneDay, oneYear, parseTimeDelta
 from timeclass import Time
-from clock import Clock, ClockObserver
+from clock import Clock, ClockSecondObserver, ClockMinuteObserver
 from recurrence import Recurrence
 from snooze import snoozeChoices
 
