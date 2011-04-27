@@ -35,7 +35,11 @@ class MinuteRefresher(date.ClockMinuteObserver):
         super(MinuteRefresher, self).__init__()
         
     def onEveryMinute(self, event): # pylint: disable-msg=W0221,W0613
-        self.__viewer.refresh()
+        try:
+            self.__viewer.refresh()
+        except wx._core.PyDeadObjectError:
+            # Our viewer was deleted, stop observation
+            self.removeInstance()
 
 
 class SecondRefresher(date.ClockSecondObserver):
