@@ -17,4 +17,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 
-import preferences, syncpreferences, entry, templates
+import preferences, syncpreferences, entry, templates, export

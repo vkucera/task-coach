@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.16', 'April 26, 2011',
+Release('1.2.16', 'April 27, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Installing as a non-admin user on Mac OS X wouldn't work.''',
@@ -34,7 +34,9 @@ shown.''')
             ],
     featuresAdded=[
         Feature('''Added a "Check for update" menu item to the help menu.''',
-                'http://uservoice.com/a/dwNJ0')
+                'http://uservoice.com/a/dwNJ0'),
+        Feature('''Allow for exporting to HTML with CSS style information
+included in the HTML file.''', 'http://uservoice.com/a/i1LqL')
         ]
     ),
 

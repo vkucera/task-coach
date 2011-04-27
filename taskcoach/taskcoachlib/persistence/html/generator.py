@@ -21,6 +21,59 @@ from taskcoachlib.domain import task
 
 # pylint: disable-msg=W0142
 
+css = '''
+body {
+    color: #333;
+    background-color: white;
+    font: 11px verdana, arial, helvetica, sans-serif;
+}
+
+/* Styles for the title and table caption */
+h1, caption {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 900;
+    color: #778;
+}
+
+/* Styles for the whole table */
+#table {
+    border-collapse: collapse;
+    border: 2px solid #ebedff;
+    margin: 10px;
+    padding: 0;
+}
+
+/* Styles for the header row */
+.header {
+    font: bold 12px/14px verdana, arial, helvetica, sans-serif;
+    color: #07a;
+    background-color: #ebedff;
+}
+
+/* Mark the column that is sorted on */
+#sorted {
+    text-decoration: underline;
+}
+
+/* Styles for a specific column */
+.subject {
+    font-weight: bold;
+}
+
+/* Styles for regular table cells */
+td {
+    padding: 5px;
+    border: 2px solid #ebedff;
+}
+
+/* Styles for table header cells */
+th {
+    padding: 5px;
+    border: 2px solid #ebedff;
+}
+'''
+
 def viewer2html(viewer, settings, cssFilename=None, selectionOnly=False):
     converter = Viewer2HTMLConverter(viewer, settings)
     return converter(cssFilename, selectionOnly) 
@@ -61,13 +114,15 @@ class Viewer2HTMLConverter(object):
             optional link to a CSS stylesheet. '''
         htmlHeaderContent = [self.indent(self.metaTag, level), 
                              self.wrap(self.viewer.title(), 'title', level, oneLine=True)] + \
-                            self.style(level)
+                            self.style(level, not cssFilename)
         if cssFilename:
             htmlHeaderContent.append(self.indent(self.cssLink%cssFilename, level))
         return htmlHeaderContent
     
-    def style(self, level):
-        ''' Add a style section that contains the alignment for the columns. '''
+    def style(self, level, includeAllCSS):
+        ''' Add a style section that contains the alignment for the columns. If
+            there is no external CSS file, we include all CSS style information
+            in a HTML style section. '''
         visibleColumns = self.viewer.visibleColumns()
         columnAlignments = [{wx.LIST_FORMAT_LEFT: 'left',
                              wx.LIST_FORMAT_CENTRE: 'center',
@@ -83,6 +138,8 @@ class Viewer2HTMLConverter(object):
                 statusColor = self.cssColorSyntax(statusColor)
                 statusStyle = '.%s {color: %s}'%(status, statusColor)
                 styleContent.append(self.indent(statusStyle, level+1))
+        if includeAllCSS:
+            styleContent.extend([self.indent(line, level+1) for line in css.split('\n')])
         return self.wrap(styleContent, 'style', level, type='text/css')
     
     def htmlBody(self, selectionOnly, printing, level):

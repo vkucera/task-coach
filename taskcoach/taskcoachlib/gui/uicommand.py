@@ -664,77 +664,62 @@ class Print(ViewerCommand, SettingsCommand):
             wxPrinter.PrintDialogData.ToPage = wxPrinter.PrintDialogData.MaxPage
         wxPrinter.Print(self.mainWindow(), printout, prompt=False)
  
-        
-class FileExportAsHTML(IOCommand, ViewerCommand):
+
+class FileExportAsHTML(IOCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(FileExportAsHTML, self).__init__(menuText=_('Export as &HTML...'), 
-            helpText=_('Export the current view as HTML file'),
+            helpText=_('Export items from a viewer in HTML format'),
             bitmap='exportashtml', *args, **kwargs)
 
     def doCommand(self, event):
-        self.iocontroller.exportAsHTML(self.viewer)
+        exportDialog = dialog.export.ExportAsHTMLDialog(self.mainWindow(),
+                                                        settings=self.settings)
+        if wx.ID_OK == exportDialog.ShowModal():
+            selectionOnly = exportDialog.selectionOnly()
+            separateCSS = exportDialog.separateCSS()
+            viewer = exportDialog.selectedViewer()
+            self.iocontroller.exportAsHTML(viewer, selectionOnly=selectionOnly,
+                                           separateCSS=separateCSS)
+        exportDialog.Destroy()
 
 
-class FileExportSelectionAsHTML(NeedsSelectionMixin, IOCommand, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        super(FileExportSelectionAsHTML, self).__init__(menuText=_('Export selection as &HTML...'),
-            helpText=_('Export the selection in the current view as HTML file'),
-            bitmap='exportashtml', *args, **kwargs)
-
-    def doCommand(self, event):
-        self.iocontroller.exportAsHTML(self.viewer, selectionOnly=True)
-
-
-class FileExportAsCSV(IOCommand, ViewerCommand):
+class FileExportAsCSV(IOCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(FileExportAsCSV, self).__init__(menuText=_('Export as &CSV...'),
-            helpText=_('Export the current view in Comma Separated Values (CSV) format'),
+            helpText=_('Export items from a viewer in Comma Separated Values (CSV) format'),
             bitmap='exportascsv', *args, **kwargs)
 
     def doCommand(self, event):
-        self.iocontroller.exportAsCSV(self.viewer)
+        exportDialog = dialog.export.ExportAsCSVDialog(self.mainWindow(),
+                                                       settings=self.settings)
+        if wx.ID_OK == exportDialog.ShowModal():
+            selectionOnly = exportDialog.selectionOnly()
+            viewer = exportDialog.selectedViewer()
+            self.iocontroller.exportAsCSV(viewer, selectionOnly=selectionOnly)
+        exportDialog.Destroy()
+        
 
-
-class FileExportSelectionAsCSV(NeedsSelectionMixin, IOCommand, ViewerCommand):
+class FileExportAsICalendar(IOCommand, SettingsCommand):    
     def __init__(self, *args, **kwargs):
-        super(FileExportSelectionAsCSV, self).__init__(menuText=_('Export selection as &CSV...'),
-            helpText=_('Export the selection in the current view in Comma Separated Values (CSV) format'),
-            bitmap='exportascsv', *args, **kwargs)
+        super(FileExportAsICalendar, self).__init__(menuText=_('Export as &iCalendar...'),
+            helpText=_('Export items from a viewer in iCalendar format'),
+            bitmap='exportasvcal', *args, **kwargs)
 
     def doCommand(self, event):
-        self.iocontroller.exportAsCSV(self.viewer, selectionOnly=True)
-
-
-class FileExportAsICalendarBase(IOCommand, ViewerCommand):
-    selectionOnly = False
-    
-    def __init__(self, *args, **kwargs):
-        super(FileExportAsICalendarBase, self).__init__(menuText=self.menuText,
-                                                        helpText=self.helpText,
-                                                        bitmap='exportasvcal', 
-                                                        *args, **kwargs)
-
-    def doCommand(self, event):
-        self.iocontroller.exportAsICalendar(self.viewer, 
-                                            selectionOnly=self.selectionOnly)
+        exportDialog = dialog.export.ExportAsICalendarDialog(self.mainWindow(),
+                                                             settings=self.settings)
+        if wx.ID_OK == exportDialog.ShowModal():
+            selectionOnly = exportDialog.selectionOnly()
+            viewer = exportDialog.selectedViewer()
+            self.iocontroller.exportAsICalendar(viewer, selectionOnly=selectionOnly)
+        exportDialog.Destroy()
 
     def enabled(self, event):
-        enabled = super(FileExportAsICalendarBase, self).enabled(event)
-        if enabled:
-            return not (self.viewer.isShowingEffort() and self.viewer.isShowingAggregatedEffort())
-        else:
-            return False
-
-
-class FileExportAsICalendar(NeedsTaskOrEffortViewerMixin, FileExportAsICalendarBase):
-    menuText = _('Export as &iCalendar...')
-    helpText = _('Export the items in the current viewer in iCalendar format')
-
-
-class FileExportSelectionAsICalendar(NeedsSelectedTasksOrEffortsMixin, FileExportAsICalendarBase):
-    selectionOnly = True
-    menuText = _('Export selection as &iCalendar...')
-    helpText = _('Export the selected items in the current viewer in iCalendar format')
+        return any(self.exportableViewer(viewer) for viewer in self.mainWindow().viewer)
+        
+    def exportableViewer(self, viewer):
+        return viewer.isShowingTasks() or \
+               (viewer.isShowingEffort() and not viewer.isShowingAggregatedEffort())
 
 
 class FileImportCSV(IOCommand):

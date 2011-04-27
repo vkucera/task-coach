@@ -400,6 +400,11 @@ defaults = { \
     'margin_right': '0',
     'paper_id': '0',
     'orientation': str(wx.PORTRAIT) },
+'export': { \
+    'html_selectiononly': 'False',
+    'html_separatecss': 'False',
+    'csv_selectiononly': 'False',
+    'ical_selectiononly': 'False' }
 }
 
 minimum = { \
