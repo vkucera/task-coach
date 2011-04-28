@@ -30,7 +30,8 @@ Release('1.2.16', 'April 27, 2011',
         Bug('''Don't crash when the SESSSION_MANAGER environment variable is
 not set (Linux).''', '3288682'),
         Bug('''Update the task viewer every minute when the time left column is
-shown.''')
+shown.'''),
+        Bug('''Task Coach would crash after 1 minute on XFCE.''', '3292509'),
             ],
     featuresAdded=[
         Feature('''Added a "Check for update" menu item to the help menu.''',
