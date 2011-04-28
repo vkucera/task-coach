@@ -22,8 +22,8 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.16', 'April 27, 2011',
-    summary='''This is a bugfix release.''',
+Release('1.2.16', 'April 28, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Installing as a non-admin user on Mac OS X wouldn't work.''',
             '3288682'),
@@ -32,6 +32,8 @@ not set (Linux).''', '3288682'),
         Bug('''Update the task viewer every minute when the time left column is
 shown.'''),
         Bug('''Task Coach would crash after 1 minute on XFCE.''', '3292509'),
+        Bug('''When multiple effort viewers are open, correctly remember
+how effort is grouped in each effort viewer across sessions.''', '3294304')
             ],
     featuresAdded=[
         Feature('''Added a "Check for update" menu item to the help menu.''',

@@ -39,14 +39,15 @@ class EffortViewer(base.ListViewer,
     
     def __init__(self, parent, taskFile, settings, *args, **kwargs):        
         kwargs.setdefault('settingsSection', 'effortviewer')
-        self.aggregation = settings.get(kwargs['settingsSection'], 'aggregation')
         self.tasksToShowEffortFor = kwargs.pop('tasksToShowEffortFor', [])
+        self.aggregation = 'details' # Temporary value, will be properly set below
         self.__hiddenWeekdayColumns = []
         self.__hiddenTotalColumns = []
         self.__columnUICommands = None
         self.__domainObjectsToView = None
         self.__observersToDetach = []
         super(EffortViewer, self).__init__(parent, taskFile, settings, *args, **kwargs)
+        self.aggregation = settings.get(self.settingsSection(), 'aggregation')
         self.secondRefresher = refresher.SecondRefresher(self,
             effort.Effort.trackStartEventType(), 
             effort.Effort.trackStopEventType())
