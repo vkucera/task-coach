@@ -49,10 +49,11 @@ class wxApp(wx.App):
             self.sessionMonitor = LinuxSessionMonitor(self.onQueryEndSession)
         return True
     
-    def onQueryEndSession(self, *args):
+    def onQueryEndSession(self, event=None):
         self.sessionCallback()
 
-        event.Skip()
+        if event is not None:
+            event.Skip()
 
     def onQuit(self):
         if wx.Platform == '__WXGTK__':
@@ -234,7 +235,7 @@ class Application(object):
         self.mainwindow.displayMessage(message)
 
     def onEndSession(self):
-        self.quit(force=True)
+        wx.CallAfter(self.quit, force=True)
 
     def quit(self, force=False):
         if not self.iocontroller.close(force=force):
