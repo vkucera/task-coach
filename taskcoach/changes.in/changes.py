@@ -22,10 +22,11 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.17', 'April 28, 2011',
+Release('1.2.17', 'April 29, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''...''')
+        Bug('''Make sure one of the viewers is selected in the export to 
+iCalendar dialog.''')
         ]
     ),
     

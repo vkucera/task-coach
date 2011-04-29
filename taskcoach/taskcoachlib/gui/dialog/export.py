@@ -49,8 +49,10 @@ class ExportDialog(sized_controls.SizedDialog):
         self.viewerComboBox = wx.ComboBox(panel, style=wx.CB_READONLY|wx.CB_SORT)
         for viewer in self.exportableViewers():
             self.viewerComboBox.Append(viewer.title(), viewer)
-        activeViewer = self.window.viewer.activeViewer() or self.window.viewer[0]
-        self.viewerComboBox.SetValue(activeViewer.title())
+        selectedViewer = self.window.viewer.activeViewer()
+        if selectedViewer not in self.exportableViewers():
+            selectedViewer = self.exportableViewers()[0]
+        self.viewerComboBox.SetValue(selectedViewer.title())
         panel.Fit()
         
     def exportableViewers(self):
