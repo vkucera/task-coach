@@ -26,7 +26,9 @@ Release('1.2.17', 'April 29, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Make sure one of the viewers is selected in the export to 
-iCalendar dialog.''')
+iCalendar dialog.'''),
+        Bug('''Properly update the icon of a task with subtasks when adding
+it to a category with an icon.''', '3295077')
         ]
     ),
     
