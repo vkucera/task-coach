@@ -96,6 +96,6 @@ class VersionCheckerTest(test.TestCase):
             def Show(self):
                 self.shown = True
         checker = meta.VersionChecker(self.settings)
-        dialog = checker.showDialog('1.0', VersionDialog=DummyDialog)
+        dialog = checker.showDialog(DummyDialog, '1.0')
         self.failUnless(dialog.shown)
 

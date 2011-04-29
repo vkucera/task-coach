@@ -121,6 +121,7 @@ class XMLReader(object):
                 if task.isDeleted():
                     # Don't restore prerequisites and dependencies for deleted
                     # tasks
+                    task.setPrerequisites([], event=event)
                     continue
                 dummyPrerequisites = task.prerequisites()
                 prerequisites = set()

@@ -16,14 +16,42 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import glob, shutil, sys, os
+import glob, shutil, sys, os, urllib, tarfile, glob
 projectRoot = os.path.abspath('..')
 if projectRoot not in sys.path:
     sys.path.insert(0, projectRoot)
 from taskcoachlib.i18n import po2dict 
 
 
-for poFile in sorted(glob.glob('*.po')):
-    print 'Creating python dictionary from', poFile
-    pyFile = po2dict.make(poFile)
-    shutil.move(pyFile, '../taskcoachlib/i18n/%s'%pyFile)
+def downloadTranslations(url):
+    def po_files(members):
+        for member in members:
+            if os.path.splitext(member.name)[1] == ".po":
+                yield member
+
+    filename, info = urllib.urlretrieve(url)
+    tarFile = tarfile.open(filename, 'r:gz')
+    folder = [member for member in tarFile if member.isdir()][0].name
+    tarFile.extractall(members=po_files(tarFile))
+    tarFile.close()
+    os.remove(filename)
+    
+    for poFile in glob.glob('*.po'):
+        newPoFile = os.path.join(folder, 'i18n.in-%s'%poFile)
+        shutil.copy(newPoFile, poFile) 
+        print 'Updating', poFile
+    shutil.rmtree(folder)
+
+
+def createPoDicts():
+    for poFile in sorted(glob.glob('*.po')):
+        print 'Creating python dictionary from', poFile
+        pyFile = po2dict.make(poFile)
+        shutil.move(pyFile, '../taskcoachlib/i18n/%s'%pyFile)
+
+
+if __name__ == '__main__':
+    if len(sys.argv) == 2:
+        downloadTranslations(sys.argv[1])
+    else:
+        createPoDicts()

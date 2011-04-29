@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.0', 'April 9, 2011',
+Release('1.3.0', 'April 29, 2011',
     summary='''This release ...''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -41,6 +41,73 @@ overwrite changes made with edit dialogs that were closed earlier. With the new
 edit dialog functionality introduced in this release, changes are propagated 
 immediately to all open dialogs. This will prevent overwriting
 changes made in other dialogs.''', '1152561')
+        ]
+    ),
+
+Release('1.2.17', 'April 29, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Make sure one of the viewers is selected in the export to 
+iCalendar dialog.'''),
+        Bug('''Properly update the icon of a task with subtasks when adding
+it to a category with an icon.''', '3295077')
+        ]
+    ),
+    
+Release('1.2.16', 'April 28, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
+    bugsFixed=[
+        Bug('''Installing as a non-admin user on Mac OS X wouldn't work.''',
+            '3288682'),
+        Bug('''Don't crash when the SESSION_MANAGER environment variable is
+not set (Linux).''', '3292509'),
+        Bug('''Update the task viewer every minute when the time left column is
+shown.'''),
+        Bug('''Task Coach would crash after 1 minute on XFCE.''', '3292509'),
+        Bug('''When multiple effort viewers are open, correctly remember
+how effort is grouped in each effort viewer across sessions.''', '3294304')
+        ],
+    featuresAdded=[
+        Feature('''Added a "Check for update" menu item to the help menu.''',
+                'http://uservoice.com/a/dwNJ0'),
+        Feature('''Allow for exporting to HTML with CSS style information
+included in the HTML file.''', 'http://uservoice.com/a/i1LqL')
+        ]
+    ),
+
+Release('1.2.15', 'April 23, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
+    bugsFixed=[
+        Bug('''When deleting items, correctly move the selection.''', '3056999'),
+        Bug('''Saving would fail when the task file contains deleted tasks
+with prerequisite tasks.''', '3290163', '3290300'),
+        Bug('''Try to guess the correct encoding when dragging and dropping
+email messages from Outlook.''', '3288820')
+        ],
+    featuresAdded=[
+        Feature('''Added a "Help improve translations" menu item to the 
+help menu.''', 'http://uservoice.com/a/468yX'),
+        Feature('''Remember size and position of edit dialogs.''', 
+                'http://uservoice.com/a/70ZTj'),
+        Feature('''Start effort tracking from the reminder dialog.''', 
+                'http://uservoice.com/a/f4UUt')
+        ]
+    ),
+            
+Release('1.2.14', 'April 17, 2011', 
+    summary='''This is a mixed bugfix and feature release.''',
+    bugsFixed=[
+        Bug('''None of the translations were working.''', '3283447'),
+        Bug('''Delete key was not working properly in the search box.''', 
+            '3286497')
+        ],
+    featuresAdded=[
+        Feature('''More extensive help menu.'''),
+        Feature('''Import from CSV now includes budget, fixed fee
+and hourly fee fields.'''),
+        Feature('''Task Coach now supports a limited form of session
+management under Windows and Linux; pending changes are automatically
+saved when the user logs out.'''),
         ]
     ),
 

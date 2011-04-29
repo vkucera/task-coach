@@ -16,7 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib import gui, config
+from taskcoachlib import config
+from taskcoachlib.gui.dialog import version 
 import test
 
 
@@ -28,7 +29,8 @@ class Event(object):
 class VersionDialogTest(test.TestCase):
     def setUp(self):
         self.settings = config.Settings(load=False)
-        self.dialog = gui.dialog.VersionDialog(None, version='0.0', settings=self.settings)
+        self.dialog = version.NewVersionDialog(None, version='0.0', message='', 
+                                               settings=self.settings)
 
     def testCreateAndClose(self):
         self.dialog.onClose(Event())

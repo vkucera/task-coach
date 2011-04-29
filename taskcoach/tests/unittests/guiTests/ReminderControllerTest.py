@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test, wx
 from taskcoachlib import gui, patterns, config, persistence
-from taskcoachlib.domain import task, date
+from taskcoachlib.domain import task, date, effort
 
 
 class ReminderControllerUnderTest(gui.ReminderController):
@@ -28,8 +28,15 @@ class ReminderControllerUnderTest(gui.ReminderController):
         super(ReminderControllerUnderTest, self).__init__(*args, **kwargs)
         
     def showReminderMessage(self, message):
+        class DummyDialog(object):
+            def __init__(self, *args, **kwargs):
+                pass
+            def Bind(self, *args, **kwargs):
+                pass
+            def Show(self):
+                pass
+        super(ReminderControllerUnderTest, self).showReminderMessage(message, DummyDialog)
         self.messages.append(message)
-        return True
     
     def requestUserAttention(self):
         self.userAttentionRequested = True
@@ -45,8 +52,9 @@ class ReminderControllerTestCase(test.TestCase):
     def setUp(self):
         task.Task.settings = settings = config.Settings(load=False)
         self.taskList = task.TaskList()
+        self.effortList = effort.EffortList(self.taskList)
         self.reminderController = ReminderControllerUnderTest(DummyWindow(), 
-            self.taskList, settings)
+            self.taskList, self.effortList, settings)
         self.nowDateTime = date.DateTime.now()
         self.reminderDateTime = self.nowDateTime + date.TimeDelta(hours=1)
 

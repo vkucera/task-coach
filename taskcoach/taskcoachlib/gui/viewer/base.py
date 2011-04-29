@@ -146,16 +146,19 @@ class Viewer(wx.Panel):
         ''' Whenever our presentation is changed (items added, items removed,
             order changed) the viewer refreshes itself. '''
         self.refresh()
-        if event.type() == self.presentation().addItemEventType() and len(event.values()) == 1:
-            self.select(event.values())
+        if event.type() == self.presentation().addItemEventType():
+            self.selectNewItems(event.values())
         elif event.type() == self.presentation().removeItemEventType():
-            try:
-                parents = [item.parent() for item in event.values() if item.parent() in self.presentation()]
-            except AttributeError:
-                parents = []
-            if len(parents) == 1:
-                self.select(parents)
+            self.selectNextItemsAfterRemoval(event.values())
         self.updateSelection()
+        
+    def selectNewItems(self, newItems):
+        nrNewItems = len(newItems)
+        if nrNewItems < min(20, len(self.presentation())) or nrNewItems == 1:
+            self.select(newItems)
+            
+    def selectNextItemsAfterRemoval(self, removedItems):
+        raise NotImplementedError        
         
     def onSelect(self, event=None): # pylint: disable-msg=W0613
         ''' The selection of items in the widget has been changed. Notify 
@@ -416,11 +419,14 @@ class ListViewer(Viewer): # pylint: disable-msg=W0223
             
     def getIndexOfItem(self, item):
         return self.presentation().index(item)
-    
+
+    def selectNextItemsAfterRemoval(self, removedItems):
+        pass # Done automatically by list controls        
+        
 
 class TreeViewer(Viewer): # pylint: disable-msg=W0223
     def __init__(self, *args, **kwargs):
-        self.__itemsByIndex = dict()
+        self.__selectionIndex = 0
         super(TreeViewer, self).__init__(*args, **kwargs)
         self.widget.Bind(wx.EVT_TREE_ITEM_EXPANDED, self.onItemExpanded)
         self.widget.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.onItemCollapsed)
@@ -461,10 +467,25 @@ class TreeViewer(Viewer): # pylint: disable-msg=W0223
     def isTreeViewer(self):
         return True
 
-    def onPresentationChanged(self, *args, **kwargs): # pylint: disable-msg=W0221
-        self.__itemsByIndex = dict()
-        super(TreeViewer, self).onPresentationChanged(*args, **kwargs)
+    def selectNextItemsAfterRemoval(self, removedItems):
+        parents = [self.getItemParent(item) for item in removedItems]
+        parents = [parent for parent in parents if parent in self.presentation()]
+        parent = parents[0] if parents else None
+        siblings = self.children(parent) if parent else self.getRootItems()
+        newSelection = siblings[min(len(siblings)-1, self.__selectionIndex)] if siblings else parent
+        if newSelection:
+            self.select([newSelection])
     
+    def updateSelection(self, *args, **kwargs):
+        super(TreeViewer, self).updateSelection(*args, **kwargs)
+        curselection = self.curselection()
+        if curselection:
+            parent = self.getItemParent(curselection[0])
+            siblings = self.children(parent) if parent else self.getRootItems()
+            self.__selectionIndex = siblings.index(curselection[0])
+        else:
+            self.__selectionIndex = 0
+            
     def visibleItems(self):
         ''' Iterate over the items in the presentation. '''            
                             

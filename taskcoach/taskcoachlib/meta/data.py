@@ -30,7 +30,7 @@ except ImportError:
 # The buildbot sets TCVERSION when building snapshots.
 version = os.environ.get('TCVERSION', '1.3.0')
 tskversion = 31 # Current version number of the task file format, changed to 31 for release 1.2.0.
-release_day = '9' # Day number of the release, 1-31, as string
+release_day = '29' # Day number of the release, 1-31, as string
 release_month = 'April' # Month of the release in plain English
 release_year = '2011' # Year of the release as string
 release_status = 'stable' # One of 'alpha', 'beta', 'stable'
@@ -46,12 +46,11 @@ date = release_month + ' ' + release_day + ', ' + release_year
 
 name = 'Task Coach'
 description = 'Your friendly task manager'
-long_description = '%(name)s is a simple open source todo manager to manage' \
-' personal tasks and todo lists. It grew out of a frustration that ' \
-'well-known task managers, such as those provided with Outlook or Lotus ' \
-'Notes, do not provide facilities for composite tasks. Often, tasks and ' \
-'other things todo consist of several activities. %(name)s is designed ' \
-'to deal with composite tasks. '%dict(name=name)
+long_description = '%(name)s is a friendly open source todo manager to manage ' \
+'personal tasks and todo lists. It supports composite tasks, i.e. tasks ' \
+'within tasks. In addition, %(name)s allows you to categorize your tasks, ' \
+'track effort against a budget per task, and much more. ' \
+'%(name)s is available for Windows, Mac OS X, BSD, Linux, iPhone and iPad.'%dict(name=name)
 keywords = 'task manager, todo list, pim, time registration, track effort'
 author_first, author_last = 'Frank', 'Niessink' # Needed for PAD file
 author = '%s %s and Jerome Laheurte'%(author_first, author_last)
@@ -68,6 +67,13 @@ pad = url + 'pad.xml'
 version_url = url + 'version.txt'
 download = url + 'download.html'
 dist_download_prefix = 'http://downloads.sourceforge.net/%s'%filename_lower
+faq_url = 'https://answers.launchpad.net/taskcoach/+faqs'
+bug_report_url = 'https://sourceforge.net/tracker/?func=add&group_id=130831&atid=719134'
+known_bugs_url = 'http://sourceforge.net/tracker/?group_id=130831&atid=719134&status=1'
+feature_request_url = 'http://taskcoach.uservoice.com'
+support_request_url = 'https://sourceforge.net/tracker/?group_id=130831&atid=719135'
+translations_url = 'https://translations.launchpad.net/taskcoach'
+donate_url = url + 'donations.html' 
 
 announcement_addresses = 'taskcoach@yahoogroups.com, python-announce-list@python.org, johnhaller@portableapps.com'
 

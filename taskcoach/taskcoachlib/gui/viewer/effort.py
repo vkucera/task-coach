@@ -39,15 +39,16 @@ class EffortViewer(base.ListViewer,
     
     def __init__(self, parent, taskFile, settings, *args, **kwargs):        
         kwargs.setdefault('settingsSection', 'effortviewer')
-        self.aggregation = settings.get(kwargs['settingsSection'], 'aggregation')
         self.tasksToShowEffortFor = kwargs.pop('tasksToShowEffortFor', [])
+        self.aggregation = 'details' # Temporary value, will be properly set below
         self.__hiddenWeekdayColumns = []
         self.__hiddenTotalColumns = []
         self.__columnUICommands = None
         self.__domainObjectsToView = None
         self.__observersToDetach = []
         super(EffortViewer, self).__init__(parent, taskFile, settings, *args, **kwargs)
-        self.refresher = refresher.SecondRefresher(self,
+        self.aggregation = settings.get(self.settingsSection(), 'aggregation')
+        self.secondRefresher = refresher.SecondRefresher(self,
             effort.Effort.trackStartEventType(), 
             effort.Effort.trackStopEventType())
         self.aggregationUICommand.setChoice(self.aggregation)
@@ -90,7 +91,7 @@ class EffortViewer(base.ListViewer,
         self.settings.set(self.settingsSection(), 'aggregation', aggregation)
         self.setPresentation(self.createSorter(self.createFilter(\
                              self.domainObjectsToView())))
-        self.refresher.updatePresentation()
+        self.secondRefresher.updatePresentation()
         self.registerPresentationObservers()
         # Invalidate the UICommands used for the column popup menu:
         self.__columnUICommands = None

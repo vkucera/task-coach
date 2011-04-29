@@ -136,6 +136,21 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 self._shouldMarkCompletedWhenAllChildrenCompleted))
         return state
 
+    @patterns.eventSource
+    def addCategory(self, *categories, **kwargs):
+        super(Task, self).addCategory(*categories, **kwargs)
+        self.recomputeAppearance(True, event=kwargs.pop('event'))
+
+    @patterns.eventSource
+    def removeCategory(self, *categories, **kwargs):
+        super(Task, self).removeCategory(*categories, **kwargs)
+        self.recomputeAppearance(True, event=kwargs.pop('event'))
+
+    @patterns.eventSource
+    def setCategories(self, *categories, **kwargs):
+        super(Task, self).setCategories(*categories, **kwargs)
+        self.recomputeAppearance(True, event=kwargs.pop('event'))
+        
     def allChildrenCompleted(self):
         ''' Return whether all children (non-recursively) are completed. '''
         children = self.children()

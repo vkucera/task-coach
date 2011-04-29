@@ -16,44 +16,51 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import threading, wx, urllib2
+import threading, wx, urllib2, sys, traceback
 import data
  
 
 class VersionChecker(threading.Thread):
-    def __init__(self, settings):
+    def __init__(self, settings, verbose=False):
         self.settings = settings
+        self.verbose = verbose
         super(VersionChecker, self).__init__()
         
     def _set_daemon(self):
         return True # Don't block application exit
         
     def run(self):
-        latestVersionString = self.getLatestVersion()
-        latestVersion = self.tupleVersion(latestVersionString)
-        lastVersionNotified = self.tupleVersion(self.getLastVersionNotified())
-        currentVersion = self.tupleVersion(data.version)
-        if latestVersion > lastVersionNotified and latestVersion > currentVersion:
-            self.setLastVersionNotified(latestVersionString)
-            self.notifyUser(latestVersionString)
+        from taskcoachlib.gui.dialog import version
+        try:
+            latestVersionString = self.getLatestVersion()
+            latestVersion = self.tupleVersion(latestVersionString)
+            lastVersionNotified = self.tupleVersion(self.getLastVersionNotified())
+            currentVersion = self.tupleVersion(data.version)
+        except:
+            if self.verbose:
+                self.notifyUser(version.NoVersionDialog, 
+                                message=''.join(traceback.format_exception_only(sys.exc_type, sys.exc_value)))
+        else:
+            if latestVersion < currentVersion and self.verbose:
+                self.notifyUser(version.PrereleaseVersionDialog, latestVersionString)
+            elif latestVersion == currentVersion and self.verbose:
+                self.notifyUser(version.VersionUpToDateDialog, latestVersionString)
+            elif latestVersion > currentVersion and (self.verbose or latestVersion > lastVersionNotified):
+                self.setLastVersionNotified(latestVersionString)
+                self.notifyUser(version.NewVersionDialog, latestVersionString)
             
     def getLatestVersion(self):
-        try:
-            versionText = self.parseVersionFile(self.retrieveVersionFile())
-            return versionText.strip()
-        except:
-            return self.getLastVersionNotified()
+        versionText = self.parseVersionFile(self.retrieveVersionFile())
+        return versionText.strip()
 
-    def notifyUser(self, latestVersion):
+    def notifyUser(self, dialog, latestVersion='', message=''):
         # Must use CallAfter because this is a non-GUI thread
-        wx.CallAfter(self.showDialog, latestVersion)
-        
-    def showDialog(self, latestVersion, VersionDialog=None):
-        # Import version here to prevent circular import:
-        from taskcoachlib.gui.dialog import version 
-        VersionDialog = VersionDialog or version.VersionDialog
+        wx.CallAfter(self.showDialog, dialog, latestVersion, message)
+
+    def showDialog(self, VersionDialog, latestVersion, message=''):
         dialog = VersionDialog(wx.GetApp().GetTopWindow(), 
-                               version=latestVersion, settings=self.settings)
+                               version=latestVersion, message=message, 
+                               settings=self.settings)
         dialog.Show()
         return dialog
     
@@ -73,8 +80,4 @@ class VersionChecker(threading.Thread):
 
     @staticmethod
     def tupleVersion(versionString):
-        try:
-            return tuple(int(i) for i in versionString.split('.'))
-        except ValueError:
-            # Something is wrong with versionString, return a default value
-            return (0, 0, 0)
+        return tuple(int(i) for i in versionString.split('.'))
