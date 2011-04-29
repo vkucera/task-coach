@@ -25,25 +25,41 @@ from taskcoachlib.gui import render
 
 
 class ReminderDialog(sized_controls.SizedDialog):
-    def __init__(self, task, taskList, settings, *args, **kwargs):
+    def __init__(self, task, taskList, effortList, settings, *args, **kwargs):
         kwargs['title'] = kwargs.get('title', meta.name + ' ' + _('Reminder'))
         super(ReminderDialog, self).__init__(*args, **kwargs)
         self.SetIcon(wx.ArtProvider_GetIcon('taskcoach', wx.ART_FRAME_ICON, (16,16)))
         self.task = task
         self.taskList = taskList
+        self.effortList = effortList
         self.settings = settings
         patterns.Publisher().registerObserver(self.onTaskRemoved, 
                                               eventType=self.taskList.removeItemEventType(),
                                               eventSource=self.taskList)
         patterns.Publisher().registerObserver(self.onTaskCompletionDateChanged, 
                                               eventType='task.completionDateTime',
-                                              eventSource=self.task)
+                                              eventSource=task)
+        patterns.Publisher().registerObserver(self.onTrackingStartedOrStopped,
+                                              eventType=task.trackStartEventType(),
+                                              eventSource=task)
+        patterns.Publisher().registerObserver(self.onTrackingStartedOrStopped,
+                                              eventType=task.trackStopEventType(),
+                                              eventSource=task)
         self.openTaskAfterClose = self.ignoreSnoozeOption = False
         pane = self.GetContentsPane()
         pane.SetSizerType("form")
         wx.StaticText(pane, label=_('Task') + ':')
-        self.openTask = wx.Button(pane, label=self.task.subject(recursive=True))
+        panel = wx.Panel(pane)
+        sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.openTask = wx.Button(panel, label=self.task.subject(recursive=True))
         self.openTask.Bind(wx.EVT_BUTTON, self.onOpenTask)
+        sizer.Add(self.openTask)
+        if self.settings.getboolean('feature', 'effort'):
+            self.startTracking = wx.BitmapButton(panel)
+            self.setTrackingIcon()
+            self.startTracking.Bind(wx.EVT_BUTTON, self.onStartOrStopTracking)
+            sizer.Add(self.startTracking)
+        panel.SetSizerAndFit(sizer)
         for label in _('Reminder date/time') + ':', \
             render.dateTime(self.task.reminder()), _('Snooze') + ':':
             wx.StaticText(pane, label=label)
@@ -68,6 +84,20 @@ class ReminderDialog(sized_controls.SizedDialog):
     def onOpenTask(self, event): # pylint: disable-msg=W0613
         self.openTaskAfterClose = True
         self.Close()
+        
+    def onStartOrStopTracking(self, event): # pylint: disable-msg=W0613
+        if self.task.isBeingTracked():
+            command.StopEffortCommand(self.effortList).do()
+        else:
+            command.StartEffortCommand(self.taskList, [self.task]).do()
+        self.setTrackingIcon()
+        
+    def onTrackingStartedOrStopped(self, event): # pylint: disable-msg=W0613
+        self.setTrackingIcon()
+        
+    def setTrackingIcon(self):
+        icon = 'clock_stop_icon' if self.task.isBeingTracked() else 'clock_icon'
+        self.startTracking.SetBitmapLabel(wx.ArtProvider_GetBitmap(icon, wx.ART_TOOLBAR, (16,16)))
         
     def onMarkTaskCompleted(self, event): # pylint: disable-msg=W0613
         self.ignoreSnoozeOption = True

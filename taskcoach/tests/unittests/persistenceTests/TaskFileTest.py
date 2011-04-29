@@ -69,11 +69,13 @@ class TaskFileTestCase(test.TestCase):
 
     def remove(self, *filenames):
         for filename in filenames:
-            if os.path.isfile(filename):
-                try:
+            tries = 0
+            while os.path.exists(filename) and tries < 3:
+                try: # Don't fail on random 'Access denied' errors.
                     os.remove(filename)
+                    break
                 except WindowsError:
-                    pass # Don't fail on random 'Access denied' errors.
+                    tries += 1 
 
 
 class TaskFileTest(TaskFileTestCase):

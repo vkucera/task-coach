@@ -76,6 +76,8 @@ class TestCase(unittest.TestCase, object):
 class wxTestCase(TestCase):
     app = wx.App(0)
     frame = wx.Frame(None, -1, 'Frame')
+    from taskcoachlib import i18n
+    i18n.Translator('en_US')
     from taskcoachlib import gui
     gui.init()
     

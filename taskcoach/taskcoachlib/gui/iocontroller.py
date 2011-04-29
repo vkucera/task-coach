@@ -109,6 +109,11 @@ class IOController(object):
                     self.open(filename, showerror, breakLock=True)
                 else:
                     return
+            except lockfile.LockFailed:
+                if self.__askOpenUnlocked(filename): 
+                    self.open(filename, showerror, lock=False)
+                else:
+                    return
             except persistence.xml.reader.XMLReaderTooNewException:
                 showerror(_('Cannot open %(filename)s\n'
                             'because it was created by a newer version of %(name)s.\n'
@@ -260,14 +265,14 @@ class IOController(object):
     
     def export(self, title, fileDialogOpts, writerClass, viewer, selectionOnly, 
                openfile=codecs.open, showerror=wx.MessageBox, filename=None, 
-               fileExists=os.path.exists):
+               fileExists=os.path.exists, **kwargs):
         filename = filename or self.__askUserForFile(title, fileDialogOpts, 
             flag=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT, fileExists=fileExists)
         if filename:
             fd = self.__openFileForWriting(filename, openfile, showerror)
             if fd is None:
                 return False
-            count = writerClass(fd, filename).write(viewer, self.__settings, selectionOnly)
+            count = writerClass(fd, filename).write(viewer, self.__settings, selectionOnly, **kwargs)
             fd.close()
             self.__messageCallback(_('Exported %(count)d items to %(filename)s')%\
                 {'count': count, 'filename': filename})
@@ -275,12 +280,12 @@ class IOController(object):
         else:
             return False
 
-    def exportAsHTML(self, viewer, selectionOnly=False, openfile=codecs.open, 
-                     showerror=wx.MessageBox, filename=None, 
-                     fileExists=os.path.exists):
+    def exportAsHTML(self, viewer, selectionOnly=False, separateCSS=False,
+                     openfile=codecs.open, showerror=wx.MessageBox, 
+                     filename=None, fileExists=os.path.exists):
         return self.export(_('Export as HTML...'), self.__htmlFileDialogOpts, 
             persistence.HTMLWriter, viewer, selectionOnly, openfile, showerror, 
-            filename, fileExists)
+            filename, fileExists, separateCSS=separateCSS)
 
     def exportAsCSV(self, viewer, selectionOnly=False, 
                     fileExists=os.path.exists):

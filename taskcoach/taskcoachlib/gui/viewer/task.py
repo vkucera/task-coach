@@ -58,9 +58,10 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
     def __init__(self, *args, **kwargs):
         super(BaseTaskViewer, self).__init__(*args, **kwargs)
         if kwargs.get('doRefresh', True):
-            self.refresher = refresher.SecondRefresher(self,
-                                                       task.Task.trackStartEventType(),
-                                                       task.Task.trackStopEventType())
+            self.secondRefresher = refresher.SecondRefresher(self,
+                                                             task.Task.trackStartEventType(),
+                                                             task.Task.trackStopEventType())
+            self.minuteRefresher = refresher.MinuteRefresher(self)
         self.statusMessages = TaskViewerStatusMessages(self)
         self.__registerForAppearanceChanges()
         
@@ -618,6 +619,8 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
         kwargs.setdefault('settingsSection', 'taskviewer')
         super(TaskViewer, self).__init__(*args, **kwargs)
         self.treeOrListUICommand.setChoice(self.isTreeViewer())
+        if self.isVisibleColumnByName('timeLeft'):
+            self.minuteRefresher.startClock()
     
     def isTreeViewer(self):
         # We first ask our presentation what the mode is because 
@@ -628,7 +631,15 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
             return self.presentation().treeMode()
         except AttributeError:
             return self.settings.getboolean(self.settingsSection(), 'treemode')
-    
+
+    def showColumn(self, column, show=True, *args, **kwargs):
+        super(TaskViewer, self).showColumn(column, show, *args, **kwargs)
+        if column.name() == 'timeLeft':
+            if show:
+                self.minuteRefresher.startClock()
+            else:
+                self.minuteRefresher.stopClock()
+                            
     def curselectionIsInstanceOf(self, class_):
         return class_ == task.Task
     

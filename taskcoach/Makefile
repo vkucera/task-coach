@@ -94,6 +94,7 @@ dmg: prepare
 	cp -f dist.in/macos/dmg-background.png "build/Task Coach/.Resources/"
 	cp -f dist.in/macos/config "build/Task Coach/.DS_Store"
 	ln -s /Applications "build/Task Coach/Applications"
+	chmod 644 "build/Task Coach/TaskCoach.app/Contents/Resources/taskcoach.py"
 	hdiutil create -ov -imagekey zlib-level=9 -fs "HFS+" -srcfolder "build/Task Coach" dist/TaskCoach-$(TCVERSION).dmg
 
 winpenpack: py2exe 

@@ -33,9 +33,15 @@ if os.name == 'nt':
         return filenames
 
     def saveItem(item, filename):
-        mailFile = codecs.open(filename, 'wb', 'utf8')
+        body = item.Body
+        encoding = 'iso-8859-1'
         try:
-            mailFile.write(headers(item) + item.Body)
+            codecs.encode(body, encoding)
+        except UnicodeEncodeError:
+            encoding = 'utf-8'
+        mailFile = codecs.open(filename, 'wb', encoding)
+        try:
+            mailFile.write(headers(item) + body)
         finally:
             mailFile.close()
             os.chmod(filename, stat.S_IREAD)

@@ -46,7 +46,7 @@ class HTMLWriterTestCase(test.wxTestCase):
         raise NotImplementedError # pragma: no cover
 
     def __writeAndRead(self, selectionOnly):
-        self.writer.write(self.viewer, self.settings, selectionOnly)
+        self.writer.write(self.viewer, self.settings, selectionOnly, True)
         return self.fd.getvalue()
     
     def expectInHTML(self, *htmlFragments, **kwargs):

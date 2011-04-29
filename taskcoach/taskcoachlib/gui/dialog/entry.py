@@ -347,7 +347,7 @@ class TaskEntry(wx.Panel):
             set the selection. '''
         super(TaskEntry, self).__init__(parent)
         self._createInterior()
-        self._addTasks(rootTasks)
+        self._addTasksRecursively(rootTasks)
         self.SetValue(selectedTask)
 
     def __getattr__(self, attr):
@@ -366,21 +366,19 @@ class TaskEntry(wx.Panel):
         boxSizer.Add(self._comboTreeBox, flag=wx.EXPAND, proportion=1)
         self.SetSizerAndFit(boxSizer)
         
-    def _addTasks(self, rootTasks):
-        ''' Add the root tasks to the ComboTreeBox, including all their
+    def _addTasksRecursively(self, tasks, parentItem=None):
+        ''' Add tasks to the ComboTreeBox and then recursively add their
             subtasks. '''
-        for task in rootTasks:
-            if not task.isDeleted():
-                self._addTaskRecursively(task)
+        for task in tasks:
+            self._addTaskRecursively(task, parentItem)
 
     def _addTaskRecursively(self, task, parentItem=None):
         ''' Add a task to the ComboTreeBox and then recursively add its
             subtasks. '''
-        item = self._comboTreeBox.Append(task.subject(), parent=parentItem,
-                                         clientData=task)
-        for child in task.children():
-            if not child.isDeleted():
-                self._addTaskRecursively(child, item)
+        if not task.isDeleted():
+            item = self._comboTreeBox.Append(task.subject(), parent=parentItem,
+                                             clientData=task)
+            self._addTasksRecursively(task.children(), item)
 
     def onTaskSelected(self, event):
         wx.PostEvent(self, TaskEntryEvent())

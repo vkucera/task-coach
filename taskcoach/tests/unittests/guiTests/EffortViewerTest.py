@@ -318,18 +318,18 @@ class CommonTestsMixin(object):
 
     def testActiveEffort(self):
         self.task2.efforts()[0].setStop(date.DateTime.max) # Make active
-        self.viewer.refresher.onEverySecond(None) # Simulate clock firing
+        self.viewer.secondRefresher.onEverySecond(None) # Simulate clock firing
         expectedNrOfTrackedItems = 1 if self.aggregation == 'details' else 2
         self.assertEqual(expectedNrOfTrackedItems, 
-                         len(self.viewer.refresher.currentlyTrackedItems()))
+                         len(self.viewer.secondRefresher.currentlyTrackedItems()))
         
     def testActiveEffortAfterSwitch(self):
         self.task2.efforts()[0].setStop(date.DateTime.max) # Make active
         self.switchAggregation()    
-        self.viewer.refresher.onEverySecond(None) # Simulate clock firing
+        self.viewer.secondRefresher.onEverySecond(None) # Simulate clock firing
         expectedNrOfTrackedItems = 2 if self.aggregation == 'details' else 1
         self.assertEqual(expectedNrOfTrackedItems, 
-                         len(self.viewer.refresher.currentlyTrackedItems()))
+                         len(self.viewer.secondRefresher.currentlyTrackedItems()))
         
     def testIsShowingAggregatedEffort(self):
         isAggregating = self.aggregation != 'details'

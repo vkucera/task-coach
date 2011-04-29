@@ -152,6 +152,8 @@ class CSVImportMappingPage(wiz.WizardPageSimple):
     def __init__(self, *args, **kwargs):
         super(CSVImportMappingPage, self).__init__(*args, **kwargs)
 
+        # (field name, multiple values allowed)
+
         self.fields = [
             (_('None'), True),
             (_('ID'), False),
@@ -162,6 +164,9 @@ class CSVImportMappingPage(wiz.WizardPageSimple):
             (_('Start date'), False),
             (_('Due date'), False),
             (_('Completion date'), False),
+            (_('Budget'), False),
+            (_('Fixed fee'), False),
+            (_('Hourly fee'), False),
             ]
         self.choices = []
         self.interior = wx.ScrolledWindow(self)

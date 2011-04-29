@@ -83,11 +83,11 @@ class ViewerWithDummyWidget(gui.viewer.base.Viewer):
     
     
 class TaskFile(persistence.TaskFile):
-    raiseIOError = False
+    raiseError = None
     
     def load(self, *args, **kwargs):
-        if self.raiseIOError:
-            raise IOError
+        if self.raiseError:
+            raise self.raiseError
         
     merge = save = saveas = load
     

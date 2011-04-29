@@ -24,9 +24,25 @@ from taskcoachlib import patterns
 
 ''' This module provides classes that implement refreshing strategies for
     viewers. '''
-        
 
-class SecondRefresher(date.ClockObserver):
+class MinuteRefresher(date.ClockMinuteObserver):
+    ''' This class can be used by viewers to refresh themselves every minute
+        to refresh attributes like time left. The user of this class is
+        responsible for calling refresher.startClock() and stopClock(). '''
+
+    def __init__(self, viewer):
+        self.__viewer = viewer        
+        super(MinuteRefresher, self).__init__()
+        
+    def onEveryMinute(self, event): # pylint: disable-msg=W0221,W0613
+        try:
+            self.__viewer.refresh()
+        except wx._core.PyDeadObjectError:
+            # Our viewer was deleted, stop observation
+            self.removeInstance()
+
+
+class SecondRefresher(date.ClockSecondObserver):
     ''' This class can be used by viewers to refresh themselves every second
         whenever items (tasks, efforts) are being tracked. '''
         
@@ -92,11 +108,11 @@ class SecondRefresher(date.ClockObserver):
             self.stopClockIfNecessary()
 
     def startClockIfNecessary(self):
-        if self.__trackedItems and not self.isClockStarted():
+        if self.__trackedItems:
             self.startClock()
 
     def stopClockIfNecessary(self):
-        if not self.__trackedItems and self.isClockStarted():
+        if not self.__trackedItems:
             self.stopClock()
             
     def currentlyTrackedItems(self):

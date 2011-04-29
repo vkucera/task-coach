@@ -21,6 +21,7 @@ import test
 from unittests import dummy
 from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import task, note, category
+from taskcoachlib.thirdparty import lockfile
 
 
 class IOControllerTest(test.TestCase):
@@ -110,7 +111,7 @@ class IOControllerTest(test.TestCase):
             self.saveAsCalled = True
         originalSaveAs = self.iocontroller.__class__.saveas
         self.iocontroller.__class__.saveas = saveasReplacement
-        self.taskFile.raiseIOError = True
+        self.taskFile.raiseError = IOError
         def showerror(*args, **kwargs): # pylint: disable-msg=W0613
             self.showerrorCalled = True # pylint: disable-msg=W0201
         self.iocontroller.save(showerror=showerror)
@@ -118,7 +119,7 @@ class IOControllerTest(test.TestCase):
         self.iocontroller.__class__.saveas = originalSaveAs
 
     def testIOErrorOnSaveAs(self):
-        self.taskFile.raiseIOError = True
+        self.taskFile.raiseError = IOError
         def saveasReplacement(*args, **kwargs): # pylint: disable-msg=W0613
             self.saveAsCalled = True
         originalSaveAs = self.iocontroller.__class__.saveas
@@ -147,7 +148,7 @@ class IOControllerTest(test.TestCase):
         self.assertEqual(1, len(taskFile.categories()))            
         
     def testIOErrorOnSaveSave(self):
-        self.taskFile.raiseIOError = True
+        self.taskFile.raiseError = IOError
         self.taskFile.setFilename(self.filename1)
         def showerror(*args, **kwargs): # pylint: disable-msg=W0613
             self.showerrorCalled = True
@@ -225,6 +226,22 @@ class IOControllerTest(test.TestCase):
                                         self.settings)
         iocontroller.merge(self.filename2)
         self.assertEqual('Task to merge', list(targetFile.tasks())[0].subject())
+        
+    def testOpenWhenLockFailed(self):
+        self.taskFile.raiseError = lockfile.LockFailed
+        def askOpenUnlocked(*args, **kwargs): # pylint: disable-msg=W0613
+            self.askOpenUnlockedCalled = True 
+        self.iocontroller._IOController__askOpenUnlocked = askOpenUnlocked
+        self.iocontroller.open(self.filename1, fileExists=lambda filename: True)
+        self.failUnless(self.askOpenUnlockedCalled)
+
+    def testOpenWhenAlreadyLocked(self):
+        self.taskFile.raiseError = lockfile.AlreadyLocked
+        def askBreakLock(*args, **kwargs):  # pylint: disable-msg=W0613
+            self.askBreakLockCalled = True
+        self.iocontroller._IOController__askBreakLock = askBreakLock
+        self.iocontroller.open(self.filename1, fileExists=lambda filename: True)
+        self.failUnless(self.askBreakLockCalled)
 
 
 class IOControllerOverwriteExistingFileTest(test.TestCase):

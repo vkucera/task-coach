@@ -182,6 +182,7 @@ class Clock(patterns.Observer):
         self._midnightTimer = PeriodicTimer(self.notifyMidnightObservers, 'day')
         self._midnightTimer.Start()
         self._secondTimer = PeriodicTimer(self.notifySecondObservers, 'second')
+        self._minuteTimer = PeriodicTimer(self.notifyMinuteObservers, 'minute')
         self._scheduledTimer = ScheduledTimer(self.notifySpecificTimeObservers)
                 
     def _watchForClockObservers(self):
@@ -189,6 +190,10 @@ class Clock(patterns.Observer):
             'publisher.firstObserverRegisteredFor.clock.second')
         self.registerObserver(self.onLastObserverRemovedForSecond, 
             'publisher.lastObserverRemovedFor.clock.second')
+        self.registerObserver(self.onFirstObserverRegisteredForMinute, 
+            'publisher.firstObserverRegisteredFor.clock.minute')
+        self.registerObserver(self.onLastObserverRemovedForMinute, 
+            'publisher.lastObserverRemovedFor.clock.minute')
         self.registerObserver(self.onFirstObserverRegisteredFor,
             'publisher.firstObserverRegisteredFor')
                 
@@ -197,7 +202,13 @@ class Clock(patterns.Observer):
         
     def onLastObserverRemovedForSecond(self, event): # pylint: disable-msg=W0613
         self._secondTimer.Stop()
-    
+
+    def onFirstObserverRegisteredForMinute(self, event): # pylint: disable-msg=W0613
+        self._minuteTimer.Start()
+        
+    def onLastObserverRemovedForMinute(self, event): # pylint: disable-msg=W0613
+        self._minuteTimer.Stop()
+        
     def onFirstObserverRegisteredFor(self, event):
         if event.value().startswith('clock.time.'):
             dateTimeString = event.value().split('.')[-1]
@@ -208,6 +219,10 @@ class Clock(patterns.Observer):
     def notifySecondObservers(self, now=None):
         now = now or dateandtime.DateTime.now()
         patterns.Event('clock.second', self, now).send()
+
+    def notifyMinuteObservers(self, now=None):
+        now = now or dateandtime.DateTime.now()
+        patterns.Event('clock.minute', self, now).send()
 
     def notifyMidnightObservers(self, now=None):
         now = now or dateandtime.DateTime.now()
@@ -220,6 +235,7 @@ class Clock(patterns.Observer):
     def reset(self):
         self._lastMidnightNotified = date.Today()
         self._secondTimer.Stop()
+        self._minuteTimer.Stop()
         self._scheduledTimer.Stop()
         self._midnightTimer.Stop()
     
@@ -231,16 +247,35 @@ class Clock(patterns.Observer):
 _clock = Clock() # make sure the clock is instantiated at least once
 
 
-class ClockObserver(patterns.Observer):    
+class ClockObserver(patterns.Observer):
     def startClock(self):
-        self.registerObserver(self.onEverySecond, eventType='clock.second')
+        if not self.__isClockStarted():
+            self.registerObserver(self.onEveryPeriod, eventType=self.eventType)
         
     def stopClock(self):
-        self.removeObserver(self.onEverySecond, eventType='clock.second')
+        if self.__isClockStarted():
+            self.removeObserver(self.onEveryPeriod, eventType=self.eventType)
 
-    def isClockStarted(self):
-        return self.onEverySecond in \
-            patterns.Publisher().observers(eventType='clock.second')
-        
+    def __isClockStarted(self):
+        return self.onEveryPeriod in \
+            patterns.Publisher().observers(eventType=self.eventType)
+    
+    
+class ClockSecondObserver(ClockObserver):
+    eventType = 'clock.second'
+
+    def onEveryPeriod(self, *args, **kwargs):
+        self.onEverySecond(*args, **kwargs)
+
     def onEverySecond(self, *args, **kwargs):
+        raise NotImplementedError # pragma: no cover
+    
+    
+class ClockMinuteObserver(ClockObserver):
+    eventType = 'clock.minute'
+        
+    def onEveryPeriod(self, *args, **kwargs):
+        self.onEveryMinute(*args, **kwargs)
+
+    def onEveryMinute(self, *args, **kwargs):
         raise NotImplementedError # pragma: no cover

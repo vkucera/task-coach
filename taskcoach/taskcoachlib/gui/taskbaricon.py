@@ -26,7 +26,7 @@ from taskcoachlib.domain import date, task
 import artprovider
 
         
-class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
+class TaskBarIcon(date.ClockSecondObserver, wx.TaskBarIcon):
     def __init__(self, mainwindow, taskList, settings, 
             defaultBitmap='taskcoach', tickBitmap='clock_icon',
             tackBitmap='clock_stopwatch_icon', *args, **kwargs):
@@ -121,13 +121,13 @@ class TaskBarIcon(date.ClockObserver, wx.TaskBarIcon):
         self.__stopTicking()
             
     def __startTicking(self):
-        if self.__taskList.nrBeingTracked() > 0 and not self.isClockStarted():
+        if self.__taskList.nrBeingTracked() > 0:
             self.startClock()
             self.__toggleTrackingBitmap()
             self.__setIcon()
 
     def __stopTicking(self):
-        if self.__taskList.nrBeingTracked() == 0 and self.isClockStarted():
+        if self.__taskList.nrBeingTracked() == 0:
             self.stopClock()
             self.__setDefaultBitmap()
             self.__setIcon()

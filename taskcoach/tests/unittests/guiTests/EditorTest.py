@@ -20,10 +20,10 @@ import wx
 import test
 from taskcoachlib import gui, config, persistence
 from taskcoachlib.domain import note, base
-from unittests import dummy
+from unittests import dummy    
 
 
-class EditorUnderTest(gui.dialog.editor.NoteEditor):    
+class EditorUnderTest(gui.dialog.editor.NoteEditor):        
     def __init__(self, *args, **kwargs):
         super(EditorUnderTest, self).__init__(*args, **kwargs)
         self.editorClosed = False

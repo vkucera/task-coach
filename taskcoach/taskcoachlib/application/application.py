@@ -17,18 +17,48 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, os, locale
-from taskcoachlib import patterns, help
+from taskcoachlib import patterns
 
         
 class wxApp(wx.App):
+    def __init__(self, callback, *args, **kwargs):
+        self.sessionCallback = callback
+        super(wxApp, self).__init__(*args, **kwargs)
+
     def OnInit(self):
-        self.Bind(wx.EVT_QUERY_END_SESSION, self.onQueryEndSession)
+        if wx.Platform == '__WXMSW__':
+            self.Bind(wx.EVT_QUERY_END_SESSION, self.onQueryEndSession)
+        elif wx.Platform == '__WXMAC__':
+            # XXXTODO
+            pass
+        elif wx.Platform == '__WXGTK__':
+            from taskcoachlib.powermgt import xsm
+            class LinuxSessionMonitor(xsm.SessionMonitor):
+                def __init__(self, callback):
+                    super(LinuxSessionMonitor, self).__init__()
+                    self._callback = callback
+                def saveYourself(self, saveType, shutdown, interactStyle, fast):
+                    if shutdown:
+                        self._callback()
+                def die(self):
+                    pass
+                def saveComplete(self):
+                    pass
+                def shutdownCancelled(self):
+                    pass
+            self.sessionMonitor = LinuxSessionMonitor(self.onQueryEndSession)
         return True
     
-    def onQueryEndSession(self, event):
-        # This makes sure we don't block shutdown on Windows
-        pass # pragma: no cover
-    
+    def onQueryEndSession(self, event=None):
+        self.sessionCallback()
+
+        if event is not None:
+            event.Skip()
+
+    def onQuit(self):
+        if wx.Platform == '__WXGTK__':
+            self.sessionMonitor.stop()
+
 
 class Application(object):
     __metaclass__ = patterns.Singleton
@@ -36,7 +66,7 @@ class Application(object):
     def __init__(self, options=None, args=None, **kwargs):
         self._options = options
         self._args = args
-        self.wxApp = wxApp(redirect=False)
+        self.wxApp = wxApp(self.onEndSession, redirect=False)
         self.init(**kwargs)
 
     def start(self):
@@ -189,6 +219,7 @@ class Application(object):
             
     def showTips(self):
         if self.settings.getboolean('window', 'tips'):
+            from taskcoachlib import help
             help.showTips(self.mainwindow, self.settings)
 
     def warnUserThatIniFileWasNotLoaded(self):
@@ -202,6 +233,9 @@ class Application(object):
 
     def displayMessage(self, message):
         self.mainwindow.displayMessage(message)
+
+    def onEndSession(self):
+        wx.CallAfter(self.quit, force=True)
 
     def quit(self, force=False):
         if not self.iocontroller.close(force=force):
@@ -219,3 +253,6 @@ class Application(object):
 
         # For PowerStateMixin
         self.mainwindow.OnQuit()
+
+        # To end session monitor on Linux
+        self.wxApp.onQuit()

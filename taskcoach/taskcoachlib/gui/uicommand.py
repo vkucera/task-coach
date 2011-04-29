@@ -25,6 +25,7 @@ from taskcoachlib.i18n import _
 from taskcoachlib.domain import base, task, note, category, attachment, effort
 from taskcoachlib.mailer import writeMail
 from taskcoachlib.thirdparty.calendar import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, wxSCHEDULER_TODAY
+from taskcoachlib.thirdparty import desktop
 from taskcoachlib.gui.wizard import CSVImportWizard
 import dialog, render, viewer, printer
 
@@ -625,7 +626,7 @@ class PrintPageSetup(SettingsCommand, UICommand):
 class PrintPreview(ViewerCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(PrintPreview, self).__init__(\
-            menuText=_('&Print preview'), 
+            menuText=_('&Print preview...'), 
             helpText=_('Show a preview of what the print will look like'), 
             bitmap='printpreview', id=wx.ID_PREVIEW, *args, **kwargs)
 
@@ -663,77 +664,62 @@ class Print(ViewerCommand, SettingsCommand):
             wxPrinter.PrintDialogData.ToPage = wxPrinter.PrintDialogData.MaxPage
         wxPrinter.Print(self.mainWindow(), printout, prompt=False)
  
-        
-class FileExportAsHTML(IOCommand, ViewerCommand):
+
+class FileExportAsHTML(IOCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(FileExportAsHTML, self).__init__(menuText=_('Export as &HTML...'), 
-            helpText=_('Export the current view as HTML file'),
+            helpText=_('Export items from a viewer in HTML format'),
             bitmap='exportashtml', *args, **kwargs)
 
     def doCommand(self, event):
-        self.iocontroller.exportAsHTML(self.viewer)
+        exportDialog = dialog.export.ExportAsHTMLDialog(self.mainWindow(),
+                                                        settings=self.settings)
+        if wx.ID_OK == exportDialog.ShowModal():
+            selectionOnly = exportDialog.selectionOnly()
+            separateCSS = exportDialog.separateCSS()
+            viewer = exportDialog.selectedViewer()
+            self.iocontroller.exportAsHTML(viewer, selectionOnly=selectionOnly,
+                                           separateCSS=separateCSS)
+        exportDialog.Destroy()
 
 
-class FileExportSelectionAsHTML(NeedsSelectionMixin, IOCommand, ViewerCommand):
-    def __init__(self, *args, **kwargs):
-        super(FileExportSelectionAsHTML, self).__init__(menuText=_('Export selection as &HTML...'),
-            helpText=_('Export the selection in the current view as HTML file'),
-            bitmap='exportashtml', *args, **kwargs)
-
-    def doCommand(self, event):
-        self.iocontroller.exportAsHTML(self.viewer, selectionOnly=True)
-
-
-class FileExportAsCSV(IOCommand, ViewerCommand):
+class FileExportAsCSV(IOCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(FileExportAsCSV, self).__init__(menuText=_('Export as &CSV...'),
-            helpText=_('Export the current view in Comma Separated Values (CSV) format'),
+            helpText=_('Export items from a viewer in Comma Separated Values (CSV) format'),
             bitmap='exportascsv', *args, **kwargs)
 
     def doCommand(self, event):
-        self.iocontroller.exportAsCSV(self.viewer)
+        exportDialog = dialog.export.ExportAsCSVDialog(self.mainWindow(),
+                                                       settings=self.settings)
+        if wx.ID_OK == exportDialog.ShowModal():
+            selectionOnly = exportDialog.selectionOnly()
+            viewer = exportDialog.selectedViewer()
+            self.iocontroller.exportAsCSV(viewer, selectionOnly=selectionOnly)
+        exportDialog.Destroy()
+        
 
-
-class FileExportSelectionAsCSV(NeedsSelectionMixin, IOCommand, ViewerCommand):
+class FileExportAsICalendar(IOCommand, SettingsCommand):    
     def __init__(self, *args, **kwargs):
-        super(FileExportSelectionAsCSV, self).__init__(menuText=_('Export selection as &CSV...'),
-            helpText=_('Export the selection in the current view in Comma Separated Values (CSV) format'),
-            bitmap='exportascsv', *args, **kwargs)
+        super(FileExportAsICalendar, self).__init__(menuText=_('Export as &iCalendar...'),
+            helpText=_('Export items from a viewer in iCalendar format'),
+            bitmap='exportasvcal', *args, **kwargs)
 
     def doCommand(self, event):
-        self.iocontroller.exportAsCSV(self.viewer, selectionOnly=True)
-
-
-class FileExportAsICalendarBase(IOCommand, ViewerCommand):
-    selectionOnly = False
-    
-    def __init__(self, *args, **kwargs):
-        super(FileExportAsICalendarBase, self).__init__(menuText=self.menuText,
-                                                        helpText=self.helpText,
-                                                        bitmap='exportasvcal', 
-                                                        *args, **kwargs)
-
-    def doCommand(self, event):
-        self.iocontroller.exportAsICalendar(self.viewer, 
-                                            selectionOnly=self.selectionOnly)
+        exportDialog = dialog.export.ExportAsICalendarDialog(self.mainWindow(),
+                                                             settings=self.settings)
+        if wx.ID_OK == exportDialog.ShowModal():
+            selectionOnly = exportDialog.selectionOnly()
+            viewer = exportDialog.selectedViewer()
+            self.iocontroller.exportAsICalendar(viewer, selectionOnly=selectionOnly)
+        exportDialog.Destroy()
 
     def enabled(self, event):
-        enabled = super(FileExportAsICalendarBase, self).enabled(event)
-        if enabled:
-            return not (self.viewer.isShowingEffort() and self.viewer.isShowingAggregatedEffort())
-        else:
-            return False
-
-
-class FileExportAsICalendar(NeedsTaskOrEffortViewerMixin, FileExportAsICalendarBase):
-    menuText = _('Export as &iCalendar...')
-    helpText = _('Export the items in the current viewer in iCalendar format')
-
-
-class FileExportSelectionAsICalendar(NeedsSelectedTasksOrEffortsMixin, FileExportAsICalendarBase):
-    selectionOnly = True
-    menuText = _('Export selection as &iCalendar...')
-    helpText = _('Export the selected items in the current viewer in iCalendar format')
+        return any(self.exportableViewer(viewer) for viewer in self.mainWindow().viewer)
+        
+    def exportableViewer(self, viewer):
+        return viewer.isShowingTasks() or \
+               (viewer.isShowingEffort() and not viewer.isShowingAggregatedEffort())
 
 
 class FileImportCSV(IOCommand):
@@ -752,7 +738,7 @@ class FileImportCSV(IOCommand):
 
 class FileSynchronize(IOCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
-        super(FileSynchronize, self).__init__(menuText=_('S&yncML synchronization'),
+        super(FileSynchronize, self).__init__(menuText=_('S&yncML synchronization...'),
             helpText=_('Synchronize with a SyncML server'),
             bitmap='arrows_looped_icon', *args, **kwargs)
 
@@ -1314,8 +1300,11 @@ class Delete(NeedsSelectionMixin, ViewerCommand):
         windowWithFocus = wx.Window.FindFocus()
         if isinstance(windowWithFocus, wx.TextCtrl):
             # Simulate Delete key press
-            pos = windowWithFocus.GetInsertionPoint()
-            windowWithFocus.Remove(pos, pos+1)            
+            fromIndex, toIndex = windowWithFocus.GetSelection()
+            if fromIndex == toIndex: 
+                pos = windowWithFocus.GetInsertionPoint()
+                fromIndex, toIndex = pos, pos+1
+            windowWithFocus.Remove(fromIndex, toIndex)            
         else:
             deleteCommand = self.viewer.deleteItemCommand()
             deleteCommand.do()
@@ -2163,10 +2152,10 @@ class Help(DialogCommand):
     def __init__(self, *args, **kwargs):
         if '__WXMAC__' in wx.PlatformInfo:
             # Use default keyboard shortcut for Mac OS X:
-            menuText = _('&Help contents\tCtrl+?') 
+            menuText = _('&Help contents...\tCtrl+?') 
         else:
             # Use a letter, because 'Ctrl-?' doesn't work on Windows:
-            menuText = _('&Help contents\tCtrl+H')
+            menuText = _('&Help contents...\tCtrl+H')
         super(Help, self).__init__(menuText=menuText, helpText=help.help,
             bitmap='led_blue_questionmark_icon', dialogTitle=_('Help'),
             dialogText=help.helpHTML, id=wx.ID_HELP, *args, **kwargs)
@@ -2174,37 +2163,94 @@ class Help(DialogCommand):
 
 class Tips(SettingsCommand):
     def __init__(self, *args, **kwargs):
-        super(Tips, self).__init__(menuText=_('&Tips'),
+        super(Tips, self).__init__(menuText=_('&Tips...'),
             helpText=_('Tips about the program'),
-            bitmap='led_blue_questionmark_icon', *args, **kwargs)
+            bitmap='lamp_icon', *args, **kwargs)
 
     def doCommand(self, event):
         help.showTips(self.mainWindow(), self.settings)
         
-
-class InfoCommand(DialogCommand):
-    def __init__(self, *args, **kwargs):
-        super(InfoCommand, self).__init__(bitmap='led_blue_information_icon',
-                                          *args, **kwargs)
     
-    
-class HelpAbout(InfoCommand):
+class HelpAbout(DialogCommand):
     def __init__(self, *args, **kwargs):
-        super(HelpAbout, self).__init__(menuText=_('&About %s')%meta.name,
+        super(HelpAbout, self).__init__(menuText=_('&About %s...')%meta.name,
             helpText=_('Version and contact information about %s')%meta.name, 
             dialogTitle=_('Help: About %s')%meta.name, 
-            dialogText=help.aboutHTML, id=wx.ID_ABOUT, *args, **kwargs)
+            dialogText=help.aboutHTML, id=wx.ID_ABOUT, 
+            bitmap='led_blue_information_icon', *args, **kwargs)
         
   
-class HelpLicense(InfoCommand):
+class HelpLicense(DialogCommand):
     def __init__(self, *args, **kwargs):
-        super(HelpLicense, self).__init__(menuText=_('&License'),
+        super(HelpLicense, self).__init__(menuText=_('&License...'),
             helpText=_('%s license')%meta.name,
             dialogTitle=_('Help: %s license')%meta.name, 
             dialogText=meta.licenseHTML, direction=wx.Layout_LeftToRight, 
-            *args, **kwargs)
+            bitmap='document_icon', *args, **kwargs)
+        
+        
+class CheckForUpdate(SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        super(CheckForUpdate, self).__init__(menuText=_('Check for update...'),
+            helpText=_('Check for the availability of a new version of %s')%meta.name,
+            bitmap='box_icon', *args, **kwargs)
+        
+    def doCommand(self, event):
+        meta.VersionChecker(self.settings, verbose=True).start()
+        
+        
+class URLCommand(UICommand):
+    def __init__(self, *args, **kwargs):
+        self.url = kwargs.pop('url')
+        super(URLCommand, self).__init__(*args, **kwargs)
+         
+    def doCommand(self, event):
+        desktop.open(self.url)
 
 
+class FAQ(URLCommand):
+    def __init__(self, *args, **kwargs):
+        super(FAQ, self).__init__(menuText=_('&Frequently asked questions...'),
+            helpText=_('Browse the frequently asked questions and answers'),
+            bitmap='led_blue_questionmark_icon', url=meta.faq_url, *args, **kwargs)
+
+
+class ReportBug(URLCommand):
+    def __init__(self, *args, **kwargs):
+        super(ReportBug, self).__init__(menuText=_('Report a &bug...'),
+            helpText=_('Report a bug or browse known bugs'),
+            bitmap='bug_icon', url=meta.known_bugs_url, *args, **kwargs)
+        
+        
+class RequestFeature(URLCommand):
+    def __init__(self, *args, **kwargs):
+        super(RequestFeature, self).__init__(menuText=_('Request a &feature...'),
+            helpText=_('Request a new feature or vote for existing requests'),
+            bitmap='cogwheel_icon', url=meta.feature_request_url, *args, **kwargs)
+
+
+class RequestSupport(URLCommand):
+    def __init__(self, *args, **kwargs):
+        super(RequestSupport, self).__init__(menuText=_('Request &support...'),
+            helpText=_('Request user support from the developers'),
+            bitmap='life_ring_icon', url=meta.support_request_url, *args, **kwargs)
+        
+
+class HelpTranslate(URLCommand):
+    def __init__(self, *args, **kwargs):
+        super(HelpTranslate, self).__init__( \
+            menuText=_('Help improve &translations...'),
+            helpText=_('Help improve the translations of %s')%meta.name,
+            bitmap='person_talking_icon', url=meta.translations_url, *args, **kwargs)
+        
+
+class Donate(URLCommand):
+    def __init__(self, *args, **kwargs):
+        super(Donate, self).__init__(menuText=_('&Donate...'),
+            helpText=_('Donate to support the development of %s')%meta.name,
+            bitmap='heart_icon', url=meta.donate_url, *args, **kwargs)
+        
+        
 class MainWindowRestore(UICommand):
     def __init__(self, *args, **kwargs):
         super(MainWindowRestore, self).__init__(menuText=_('&Restore'),

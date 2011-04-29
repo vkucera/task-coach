@@ -213,7 +213,7 @@ class FileMenu(Menu):
         self.appendUICommands(
             uicommand.FileImportCSV(iocontroller=iocontroller))
         self.appendMenu(_('&Export'),
-                        ExportMenu(mainwindow, iocontroller, viewerContainer),
+                        ExportMenu(mainwindow, iocontroller, settings),
                         'export')
         if settings.getboolean('feature', 'syncml'):
             try:
@@ -259,17 +259,14 @@ class FileMenu(Menu):
 
 
 class ExportMenu(Menu):
-    def __init__(self, mainwindow, iocontroller, viewerContainer):
+    def __init__(self, mainwindow, iocontroller, settings):
         super(ExportMenu, self).__init__(mainwindow)
-        kwargs = dict(iocontroller=iocontroller, viewer=viewerContainer)
+        kwargs = dict(iocontroller=iocontroller, settings=settings)
         # pylint: disable-msg=W0142
         self.appendUICommands(
             uicommand.FileExportAsHTML(**kwargs),
-            uicommand.FileExportSelectionAsHTML(**kwargs),
             uicommand.FileExportAsCSV(**kwargs),
-            uicommand.FileExportSelectionAsCSV(**kwargs),
-            uicommand.FileExportAsICalendar(**kwargs),
-            uicommand.FileExportSelectionAsICalendar(**kwargs))
+            uicommand.FileExportAsICalendar(**kwargs))
 
 
 class TaskTemplateMenu(DynamicMenu):
@@ -545,9 +542,18 @@ class HelpMenu(Menu):
         super(HelpMenu, self).__init__(mainwindow)
         self.appendUICommands(
             uicommand.Help(),
+            uicommand.FAQ(),
             uicommand.Tips(settings=settings),
             None,
+            uicommand.RequestSupport(),
+            uicommand.ReportBug(),
+            uicommand.RequestFeature(),
+            None,
+            uicommand.HelpTranslate(),
+            uicommand.Donate(),
+            None,
             uicommand.HelpAbout(),
+            uicommand.CheckForUpdate(settings=settings),
             uicommand.HelpLicense())
 
 

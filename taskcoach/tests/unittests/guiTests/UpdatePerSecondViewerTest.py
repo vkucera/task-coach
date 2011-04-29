@@ -46,12 +46,12 @@ class UpdatePerSecondViewerTestsMixin(object):
         return self.ListViewerClass(self.frame, self.taskFile, self.settings)
         
     def testViewerHasRegisteredWithClock(self):
-        self.failUnless(self.updateViewer.refresher.onEverySecond in
+        self.failUnless(self.updateViewer.secondRefresher.onEveryPeriod in
             patterns.Publisher().observers(eventType='clock.second'))
 
     def testClockNotificationResultsInRefreshedItem(self):
         self.updateViewer.widget = MockWidget()
-        self.updateViewer.refresher.onEverySecond(patterns.Event('clock.second', 
+        self.updateViewer.secondRefresher.onEverySecond(patterns.Event('clock.second', 
             date.Clock()))
         usingTaskViewer = self.ListViewerClass != gui.viewer.EffortViewer
         expected = self.trackedTask if usingTaskViewer else self.trackedEffort
@@ -60,13 +60,13 @@ class UpdatePerSecondViewerTestsMixin(object):
     def testClockNotificationResultsInRefreshedItem_OnlyForTrackedItems(self):
         self.taskList.append(task.Task('not tracked'))
         self.updateViewer.widget = MockWidget()
-        self.updateViewer.refresher.onEverySecond(patterns.Event('clock.second',
+        self.updateViewer.secondRefresher.onEverySecond(patterns.Event('clock.second',
             date.Clock()))
         self.assertEqual(1, len(self.updateViewer.widget.refreshedItems))
 
     def testStopTrackingRemovesViewerFromClockObservers(self):
         self.trackedTask.stopTracking()
-        self.failIf(self.updateViewer.refresher.onEverySecond in
+        self.failIf(self.updateViewer.secondRefresher.onEverySecond in
             patterns.Publisher().observers(eventType='clock.second'))
         
     def testStopTrackingRefreshesTrackedItems(self):
@@ -79,12 +79,12 @@ class UpdatePerSecondViewerTestsMixin(object):
         self.taskList.append(parent)
         parent.addChild(self.trackedTask)
         self.taskList.remove(parent)
-        self.failIf(self.updateViewer.refresher.onEverySecond in
+        self.failIf(self.updateViewer.secondRefresher.onEverySecond in
             patterns.Publisher().observers(eventType='clock.second'))
         
     def testCreateViewerWithTrackedItemsStartsTheClock(self):
         viewer = self.createUpdateViewer()
-        self.failUnless(viewer.refresher.onEverySecond in
+        self.failUnless(viewer.secondRefresher.onEveryPeriod in
             patterns.Publisher().observers(eventType='clock.second'))
         
     def testViewerDoesNotReactToAddEventsFromOtherContainers(self):

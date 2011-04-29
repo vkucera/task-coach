@@ -35,6 +35,9 @@ class MockWxApp(object):
     
     def SetTopWindow(self, *args):
         pass
+
+    def onQuit(self):
+        pass
     
     
 class App(application.Application):
