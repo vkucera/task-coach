@@ -44,7 +44,7 @@ else:
     now = datetime.datetime.today()
     release_day = str(now.day)
     release_month = now.strftime('%B')
-    release_year = now.year
+    release_year = str(now.year)
     release_status = 'automatic'
 
 # No editing needed below this line for doing a release.
