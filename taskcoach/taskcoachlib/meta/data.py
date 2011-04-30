@@ -41,7 +41,7 @@ if revision is None:
 else:
     # Buildbot
     import datetime
-    now = datetime.today()
+    now = datetime.datetime.today()
     release_day = str(now.day)
     release_month = now.strftime('%B')
     release_year = now.year
