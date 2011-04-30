@@ -28,7 +28,9 @@ Release('1.2.17', 'April 29, 2011',
         Bug('''Make sure one of the viewers is selected in the export to 
 iCalendar dialog.'''),
         Bug('''Properly update the icon of a task with subtasks when adding
-it to a category with an icon.''', '3295077')
+it to a category with an icon.''', '3295077'),
+        Bug('''The calendar view would cause spurious errors on WindowS.''',
+            '3294878'),
         ]
     ),
     
