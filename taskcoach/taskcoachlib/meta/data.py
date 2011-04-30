@@ -18,24 +18,30 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, re
-
-try:
-    from taskcoachlib.meta.revision import revision # pylint: disable-msg=F0401,W0611
-except ImportError:
-    revision = 'release'
-
 # Edit these for every release:
 
-# The buildbot sets TCVERSION when building snapshots.
-version = os.environ.get('TCVERSION', '1.3.0')
+version = '1.3.0' # Current version number of the application
 tskversion = 31 # Current version number of the task file format, changed to 31 for release 1.2.0.
-release_day = '29' # Day number of the release, 1-31, as string
+release_day = '30' # Day number of the release, 1-31, as string
 release_month = 'April' # Month of the release in plain English
 release_year = '2011' # Year of the release as string
 release_status = 'stable' # One of 'alpha', 'beta', 'stable'
 
 # No editing needed below this line for doing a release.
+
+import os, re, datetime
+try:
+    from taskcoachlib.meta.revision import revision # pylint: disable-msg=F0401,W0611
+except ImportError:
+    revision = None 
+
+if revision: # Buildbot sets revision
+    now = datetime.datetime.today()
+    release_day = str(now.day)
+    release_month = now.strftime('%B')
+    release_year = str(now.year)
+    release_status = 'beta'
+    version += '.' + revision
 
 months = ['January', 'February', 'March', 'April', 'May', 'June', 
           'July', 'August', 'September', 'October', 'November', 'December']

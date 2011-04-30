@@ -62,7 +62,10 @@ class wxScheduler( wxSchedulerCore, scrolled.ScrolledPanel ):
 		try:
 			self.InvalidateMinSize()
 			self.Refresh()
-			wx.Yield()
+			try:
+				wx.Yield()
+			except:
+				pass
 		finally:
 			self._refreshing = False
 

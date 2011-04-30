@@ -16,20 +16,26 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test
+import test, datetime
 from taskcoachlib import meta
 
 
 class VersionNumberTest(test.TestCase):
     def testVersionHasMajorMinorAndPatchLevel(self):
-        self.assertEqual(3, len(meta.data.version.split('.')))
+        expectedParts = 4 if meta.data.revision else 3
+        self.assertEqual(expectedParts, len(meta.data.version.split('.')))
         
     def testVersionComponentsAreIntegers(self):
         for component in meta.data.version.split('.'):
             self.assertEqual(component, str(int(component)))
             
     def testTskVersionIsInteger(self):
-        self.assertEqual(type(0), type(meta.data.tskversion))
+        self.assertEqual(int, type(meta.data.tskversion))
         
-    def testMonthSpelling(self):
-        self.failUnless(meta.data.release_month in meta.data.months)
+    def testReleaseStatus(self):
+        self.failUnless(meta.data.release_status in ['alpha', 'beta', 'stable'])
+        
+    def testReleaseDate(self):
+        datetime.date(int(meta.data.release_year), 
+                      meta.data.months.index(meta.data.release_month)+1, 
+                      int(meta.data.release_day))
