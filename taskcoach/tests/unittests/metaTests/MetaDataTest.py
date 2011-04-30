@@ -22,7 +22,7 @@ from taskcoachlib import meta
 
 class VersionNumberTest(test.TestCase):
     def testVersionHasMajorMinorAndPatchLevel(self):
-        self.assertEqual(3, len(meta.data.version.split('.')))
+        self.assertEqual(3, len(meta.data.version_base.split('.')))
         
     def testVersionComponentsAreIntegers(self):
         for component in meta.data.version.split('.'):
