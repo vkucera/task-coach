@@ -64,7 +64,7 @@ class Revision(Compile):
     descriptionDone = ['Revision', 'file', 'generated']
 
     def __init__(self, **kwargs):
-        kwargs['command'] = ['make', 'revision', WithProperties('TCVERSION=%s',
+        kwargs['command'] = ['make', 'revision', WithProperties('TCREV=%s',
                                                                 'got_revision')]
         Compile.__init__(self, **kwargs)
 
@@ -201,7 +201,7 @@ class DistCompile(Compile):
             self.command = ['make', self.target or self.name]
         else:
             self.command = ['make', self.target or self.name,
-                            WithProperties('TCVERSION=r%s', 'got_revision')]
+                            WithProperties('TCREV=r%s', 'got_revision')]
 
         Compile.start(self)
 
