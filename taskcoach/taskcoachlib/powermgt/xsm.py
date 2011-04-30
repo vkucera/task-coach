@@ -213,21 +213,33 @@ class SessionMonitor(ICELoop):
 
         id_ret = c_char_p()
 
-        self.conn = SmcOpenConnection(os.environ['SESSION_MANAGER'],
-                                      None,
-                                      1, 0,
-                                      SmcSaveYourselfProcMask|SmcDieProcMask|SmcSaveCompleteProcMask|SmcShutdownCancelledProcMask,
-                                      byref(self.callbacks),
-                                      None,
-                                      byref(id_ret),
-                                      0,
-                                      None)
+        try:
+            # Some distros seem to not define this env variable. Strange.
+            os.environ['SESSION_MANAGER']
+        except KeyError:
+            self.conn = None
+        else:
+            self.conn = SmcOpenConnection(os.environ['SESSION_MANAGER'],
+                                          None,
+                                          1, 0,
+                                          SmcSaveYourselfProcMask|SmcDieProcMask|SmcSaveCompleteProcMask|SmcShutdownCancelledProcMask,
+                                          byref(self.callbacks),
+                                          None,
+                                          byref(id_ret),
+                                          0,
+                                          None)
 
-        self.clientID = id_ret.value
+            self.clientID = id_ret.value
+
+            # XFCE4 session manager is seriously buggy.
+            if self.vendor == 'xfce4-session':
+                self.cancelled = True
 
     def stop(self):
-        SmcCloseConnection(self.conn, 0, None)
         super(SessionMonitor, self).stop()
+        self.join()
+        if self.conn is not None:
+            SmcCloseConnection(self.conn, 0, None)
 
     def saveYourselfDone(self, status=True):
         """
