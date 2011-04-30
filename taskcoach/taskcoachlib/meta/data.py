@@ -18,36 +18,30 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, re
+# Edit these for every release:
 
+version = '1.2.17' # Current version number of the application
+tskversion = 31 # Current version number of the task file format, changed to 31 for release 1.2.0.
+release_day = '30' # Day number of the release, 1-31, as string
+release_month = 'April' # Month of the release in plain English
+release_year = '2011' # Year of the release as string
+release_status = 'stable' # One of 'alpha', 'beta', 'stable'
+
+# No editing needed below this line for doing a release.
+
+import os, re, datetime
 try:
     from taskcoachlib.meta.revision import revision # pylint: disable-msg=F0401,W0611
 except ImportError:
-    revision = None
+    revision = None 
 
-# Edit these for every release:
-
-version_base = '1.2.17'
-if revision is None:
-    version = version_base
-else:
-    version = version_base + '.' + revision
-tskversion = 31 # Current version number of the task file format, changed to 31 for release 1.2.0.
-if revision is None:
-    release_day = '29' # Day number of the release, 1-31, as string
-    release_month = 'April' # Month of the release in plain English
-    release_year = '2011' # Year of the release as string
-    release_status = 'stable' # One of 'alpha', 'beta', 'stable'
-else:
-    # Buildbot
-    import datetime
+if revision: # Buildbot sets revision
     now = datetime.datetime.today()
     release_day = str(now.day)
     release_month = now.strftime('%B')
     release_year = str(now.year)
-    release_status = 'automatic'
-
-# No editing needed below this line for doing a release.
+    release_status = 'beta'
+    version += '.' + revision
 
 months = ['January', 'February', 'March', 'April', 'May', 'June', 
           'July', 'August', 'September', 'October', 'November', 'December']
