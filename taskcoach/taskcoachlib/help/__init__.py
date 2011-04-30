@@ -645,7 +645,7 @@ helpHTML = _TOC + _taskSection + _effortSection + _categorySection + \
 
 
 aboutHTML = _('''<h4>%(name)s - %(description)s</h4>
-<h5>Version %(version)s, Revision %(revision)s, %(date)s</h5>
+<h5>Version %(version)s, %(date)s</h5>
 <p>By %(author)s &lt;%(author_email)s&gt;<p>
 <p><a href="%(url)s" target="_blank">%(url)s</a></p>
 <p>%(copyright)s</p>
@@ -657,7 +657,7 @@ doubleline = '================================================================\n
 header = doubleline + '%(name)s - %(description)s\n'%meta.metaDict + doubleline
 
 aboutText = header + _('''
-Version %(version)s, Revision %(revision)s, %(date)s
+Version %(version)s, %(date)s
 
 By %(author)s <%(author_email)s>
 

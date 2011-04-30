@@ -44,13 +44,17 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.17', 'April 29, 2011',
+Release('1.2.17', 'April 30, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Make sure one of the viewers is selected in the export to 
 iCalendar dialog.'''),
         Bug('''Properly update the icon of a task with subtasks when adding
-it to a category with an icon.''', '3295077')
+it to a category with an icon.''', '3295077'),
+        Bug('''The calendar view would cause spurious errors on Windows.''',
+            '3294878'),
+        Bug('''Use the actual system font on Mac OS X and Windows in the
+tree and list viewers.''', '3295070'),
         ]
     ),
     
