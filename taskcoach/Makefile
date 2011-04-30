@@ -35,7 +35,7 @@ TCVERSION=$(shell python -c "import taskcoachlib.meta.data as data; print data.v
 TCPORTABLE=$(shell python -c "import os; print \"'\" + os.path.join(os.getcwd(), 'build', 'TaskCoachPortable') + \"'\"")
 
 revision:
-	echo "revision='$(TCVERSION)'" > taskcoachlib/meta/revision.py
+	echo "revision='$(TCREV)'" > taskcoachlib/meta/revision.py
 
 prepare: icons i18n templates
 

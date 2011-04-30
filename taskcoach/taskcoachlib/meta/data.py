@@ -23,17 +23,29 @@ import os, re
 try:
     from taskcoachlib.meta.revision import revision # pylint: disable-msg=F0401,W0611
 except ImportError:
-    revision = 'release'
+    revision = None
 
 # Edit these for every release:
 
-# The buildbot sets TCVERSION when building snapshots.
-version = os.environ.get('TCVERSION', '1.2.17')
+version_base = '1.2.17'
+if revision is None:
+    version = version_base
+else:
+    version = version_base + '.' + revision
 tskversion = 31 # Current version number of the task file format, changed to 31 for release 1.2.0.
-release_day = '29' # Day number of the release, 1-31, as string
-release_month = 'April' # Month of the release in plain English
-release_year = '2011' # Year of the release as string
-release_status = 'stable' # One of 'alpha', 'beta', 'stable'
+if revision is None:
+    release_day = '29' # Day number of the release, 1-31, as string
+    release_month = 'April' # Month of the release in plain English
+    release_year = '2011' # Year of the release as string
+    release_status = 'stable' # One of 'alpha', 'beta', 'stable'
+else:
+    # Buildbot
+    import datetime
+    now = datetime.today()
+    release_day = str(now.day)
+    release_month = now.strftime('%B')
+    release_year = now.year
+    release_status = 'automatic'
 
 # No editing needed below this line for doing a release.
 
