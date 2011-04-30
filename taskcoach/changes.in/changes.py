@@ -31,6 +31,8 @@ iCalendar dialog.'''),
 it to a category with an icon.''', '3295077'),
         Bug('''The calendar view would cause spurious errors on WindowS.''',
             '3294878'),
+        Bug('''Use the actual system font on Mac OS X and Windows in the
+tree and list viewers.''', '3295070'),
         ]
     ),
     
