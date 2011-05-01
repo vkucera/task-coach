@@ -249,7 +249,7 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
         return path
 
     def pathToIniFileSpecifiedOnCommandLine(self):
-        return os.path.dirname(self.__iniFileSpecifiedOnCommandLine)
+        return os.path.dirname(self.__iniFileSpecifiedOnCommandLine) or '.'
     
     def generatedIniFilename(self, forceProgramDir):
         return os.path.join(self.path(forceProgramDir), '%s.ini'%meta.filename)
