@@ -99,6 +99,8 @@ class ViewerContainer(object):
         ''' Return the active viewer. '''
         allPanes = self.containerWidget.manager.GetAllPanes()
         for pane in allPanes:
+            if pane.IsToolbar():
+                continue
             if pane.HasFlag(pane.optionActive):
                 if pane.IsNotebookControl():
                     notebook = aui.GetNotebookRoot(allPanes, pane.notebook_id)
