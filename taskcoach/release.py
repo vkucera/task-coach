@@ -32,14 +32,13 @@ Release steps:
   - Go to http://www.fraca7.net:8010/builders/Release to build releases.
   - For platforms not supported by the release builder, create and upload the 
     packages manually:
-    * Mac OS X 10.4:       'make dmg; release.py upload'
-    * Ubuntu 8.04 (py2.5): 'make deb; release.py upload'
-    * Ubuntu 9.10 (py2.6): 'make deb; release.py upload'
-    * Fedora 14:           'make fedora; release.py upload'
-    * Fedora 13:           'make fedora; release.py upload'
-                           'make rpm; release.py upload'
-    * OpenSuse:            'make opensuse; release.py upload'
-    * Windows:             'make windists; release.py upload'
+    * Mac OS X 10.4:        'make dmg; release.py upload'
+    * Ubuntu 10.04:         'make deb; release.py upload'
+    * Fedora 14:            'make fedora; release.py upload'
+    * Fedora 13:            'make fedora; release.py upload'
+                            'make rpm; release.py upload'
+    * OpenSuse:             'make opensuse; release.py upload'
+    * Windows:              'make windists; release.py upload'
   - Mark the Windows and Mac OS X distributions as defaults for their platform:
     https://sourceforge.net/project/admin/explorer.php?group_id=130831#
     Navigate into the folder of the latest release and click on the Windows

@@ -183,34 +183,22 @@ pages['download_for_mac'] = sep.join([download_header(platform='Mac OS X',
 
 
 debian = download_table(image='debian', 
-                        download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_py25.deb',
+                        download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_py26.deb',
                         package_type='Debian package (deb)',
                         platform='Debian', platform_lower='debian',
-                        platform_versions_supported='Debian GNU/Linux 4.0 ("etch") and later',
-                        prerequisites=prerequisites + '''. If your Debian 
+                        platform_versions_supported='Debian GNU/Linux 6.0 ("squeeze") and later',
+                        prerequisites=prerequisites26 + '''. If your Debian 
               installation does not have the minimally required wxPython version 
               you will need to install it yourself following 
               <a href="http://wiki.wxpython.org/InstallingOnUbuntuOrDebian">these 
               instructions</a>''',
                         installation='double click the package to start the installer')
 
-ubuntu_py25 = download_table(image='ubuntu',
-                        download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_py25.deb',
-                        package_type='Debian package (deb)',
-                        platform='Ubuntu', platform_lower='ubuntu',
-                        platform_versions_supported='Ubuntu 8.04 LTS ("Hardy Heron")',
-                        prerequisites=prerequisites + '''. If your Ubuntu 
-              installation does not have the minimally required wxPython version 
-              you will need to install it yourself following 
-              <a href="http://wiki.wxpython.org/InstallingOnUbuntuOrDebian">these 
-              instructions</a>''',
-                        installation='double click the package to start the installer')
-
-ubuntu_py26 = download_table(image='ubuntu',
+ubuntu = download_table(image='ubuntu',
                         download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_py26.deb',
                         package_type='Debian package (deb)',
                         platform='Ubuntu', platform_lower='ubuntu',
-                        platform_versions_supported='Ubuntu 9.04 ("Jaunty Jackalope"), Ubuntu 9.10 ("Karmic Koala"), Ubuntu 10.04 LTS ("Lucid Lynx") and newer',
+                        platform_versions_supported='Ubuntu 10.04 LTS ("Lucid Lynx") and newer',
                         prerequisites=prerequisites26,
                         installation='''double click the package to start the 
 installer.''')
@@ -267,9 +255,9 @@ linux = download_table(image='linux',
 
 pages['download_for_linux'] = sep.join([download_header(platform='Linux',
                                                         release='%(version)s'), 
-                                        ubuntu_py26, ubuntu_py25, debian,
-                                        fedora14, fedora13, gentoo, opensuse,
-                                        redhat_el4and5, linux])
+                                        ubuntu, debian, fedora14, fedora13, 
+                                        gentoo, opensuse, redhat_el4and5, 
+                                        linux])
 
 
 freeBSD = download_table(image='freebsd',
