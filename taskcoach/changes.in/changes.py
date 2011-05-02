@@ -40,7 +40,9 @@ Shift-Ctrl-I, for consistency.''', '3296141'),
 wasn't working in the French translation.''', '3293786'),
         Bug('''When quitting Task Coach in minimized mode, make sure the
 main window is minimized the next session and not completely hidden.''',
-            '3296144')
+            '3296144'),
+        Bug('''RPM of previous release did not install correctly on Fedora
+due to a non standard version number in the RPM.''', '3294852')
         ]
     ),
     
