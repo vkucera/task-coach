@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.17', 'May 1, 2011',
+Release('1.2.17', 'May 2, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Make sure one of the viewers is selected in the export to 
@@ -33,6 +33,9 @@ it to a category with an icon.''', '3295077'),
             '3294878'),
         Bug('''Use the actual system font on Mac OS X and Windows in the
 tree and list viewers.''', '3295070'),
+        Bug('''Dutch translation used Ctrl-H as shortcut for both help and 
+increase priority. Increase priority is now Ctrl-I. Maximize priority is
+Shift-Ctrl-I, for consistency.''', '3296141')
         ]
     ),
     

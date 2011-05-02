@@ -43,6 +43,12 @@ def downloadTranslations(url):
     shutil.rmtree(folder)
 
 
+def downloadTranslation(url):
+    # http://launchpadlibrarian.net/70943850/i18n.in_i18n.in-nl.po
+    filename, info = urllib.urlretrieve(url)
+    shutil.move(filename, url.split('-')[1])
+
+
 def createPoDicts():
     for poFile in sorted(glob.glob('*.po')):
         print 'Creating python dictionary from', poFile
@@ -52,6 +58,10 @@ def createPoDicts():
 
 if __name__ == '__main__':
     if len(sys.argv) == 2:
-        downloadTranslations(sys.argv[1])
+        url = sys.argv[1]
+        if url.endswith('.po'):
+            downloadTranslation(url)
+        else:
+            downloadTranslations(url)
     else:
         createPoDicts()
