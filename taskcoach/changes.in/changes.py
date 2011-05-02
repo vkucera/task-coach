@@ -36,6 +36,8 @@ tree and list viewers.''', '3295070'),
         Bug('''Dutch translation used Ctrl-H as shortcut for both help and 
 increase priority. Increase priority is now Ctrl-I. Maximize priority is
 Shift-Ctrl-I, for consistency.''', '3296141'),
+        Bug('''The Ctrl-Enter keyboard shortcut for marking a task completed
+wasn't working in the French translation.''', '3293786'),
         Bug('''When quitting Task Coach in minimized mode, make sure the
 main window is minimized the next session and not completely hidden.''',
             '3296144')
