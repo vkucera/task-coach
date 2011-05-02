@@ -56,6 +56,20 @@ class TranslationIntegrityTestsMixin(object):
                 "'%s' has more or less '&'s than '%s'"%(self.translatedString,
                 self.englishString))
 
+    usedShortcuts = dict()
+    # Some keyboard shortcuts are used more than once, list those here:
+    maxShortcuts = {'Ctrl-RETURN': 2, 'Shift+Ctrl+T': 3}
+    
+    def testUniqueShortCut(self):
+        if '\t' in self.translatedString:
+            shortcut = self.translatedString.split('\t')[1]
+            shortcutKey = shortcut, self.language
+            timesUsed = self.usedShortcuts.get(shortcutKey, 0)
+            timesAllowed = self.maxShortcuts.get(shortcut, 1)
+            self.failIf(timesUsed > timesAllowed, 
+                "Shortcut ('%s') used more than once in language %s."%shortcutKey)
+            self.usedShortcuts[shortcutKey] = timesUsed + 1
+            
     def testMatchingShortCut(self):
         for shortcutPrefix in ('Ctrl+', 'Shift+', 'Alt+',
                                'Shift+Ctrl+', 'Shift+Alt+'):
