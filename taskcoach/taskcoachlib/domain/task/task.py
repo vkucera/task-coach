@@ -657,7 +657,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # Icon
     
     def icon(self, recursive=False):
-        myIcon = super(Task, self).icon(recursive=False)
+        myIcon = self.__trackingIcon() or super(Task, self).icon(recursive=False)
         if not myIcon and recursive:
             try:
                 myIcon = self.__recursiveIcon
@@ -674,7 +674,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return self.__recursiveIcon
 
     def selectedIcon(self, recursive=False):
-        myIcon = super(Task, self).selectedIcon(recursive=False)
+        myIcon = self.__trackingIcon() or super(Task, self).selectedIcon(recursive=False)
         if not myIcon and recursive:
             try:
                 myIcon = self.__recursiveSelectedIcon
@@ -685,6 +685,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def selectedIconChangedEvent(self, *args, **kwargs):
         super(Task, self).selectedIconChangedEvent(*args, **kwargs)
         self.__computeRecursiveSelectedIcon()
+        
+    def __trackingIcon(self):
+        return 'clock_icon' if self.isBeingTracked() else ''
 
     def __computeRecursiveSelectedIcon(self):
         self.__recursiveSelectedIcon = self.categorySelectedIcon() or self.__stateBasedIcon(selected=True)

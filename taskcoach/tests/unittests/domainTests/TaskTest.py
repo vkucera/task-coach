@@ -1731,7 +1731,8 @@ class TaskWithActiveEffort(TaskTestCase, CommonTaskTestsMixin):
                   task.Task.trackStopEventType()]
 
     def taskCreationKeywordArguments(self):
-        return [{'efforts': [effort.Effort(None, date.DateTime.now())]}]
+        return [{'efforts': [effort.Effort(None, date.DateTime.now())],
+                 'icon': 'bomb_icon'}]
     
     def testTaskIsBeingTracked(self):
         self.failUnless(self.task.isBeingTracked())
@@ -1768,6 +1769,14 @@ class TaskWithActiveEffort(TaskTestCase, CommonTaskTestsMixin):
 
     def testSelectedIcon(self):
         self.assertEqual('clock_icon', self.task.selectedIcon(recursive=True))
+        
+    def testIconAfterStopTracking(self):
+        self.task.stopTracking()
+        self.assertNotEqual('clock_icon', self.task.icon(recursive=True))
+
+    def testSelectedIconAfterStopTracking(self):
+        self.task.stopTracking()
+        self.assertNotEqual('clock_icon', self.task.selectedIcon(recursive=True))
 
 
 class TaskWithChildAndEffortTest(TaskTestCase, CommonTaskTestsMixin):
