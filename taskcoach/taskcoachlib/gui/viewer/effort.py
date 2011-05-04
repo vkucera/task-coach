@@ -152,7 +152,6 @@ class EffortViewer(base.ListViewer,
             uicommand.Edit(viewer=self),
             itemPopupMenu, columnPopupMenu,
             resizeableColumn=1, **self.widgetCreationKeywordArguments())
-        widget.SetColumnWidth(0, 150)
         widget.AssignImageList(imageList, wx.IMAGE_LIST_SMALL) # pylint: disable-msg=E1101
         return widget
     

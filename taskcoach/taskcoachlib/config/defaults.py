@@ -231,7 +231,7 @@ defaults = { \
     'sortcasesensitive': 'True',
     'columns': "['timeSpent', 'revenue']",
     'columnsalwaysvisible': "['period', 'task']",
-    'columnwidths': "{'monday': 70, 'tuesday': 70, 'wednesday': 70, 'thursday': 70, 'friday': 70, 'saturday': 70, 'sunday': 70}",
+    'columnwidths': "{'period': 160, 'monday': 70, 'tuesday': 70, 'wednesday': 70, 'thursday': 70, 'friday': 70, 'saturday': 70, 'sunday': 70}",
     'columnautoresizing': 'True',
     'searchfilterstring': '',
     'searchfiltermatchcase': 'False',

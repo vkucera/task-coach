@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.17', 'May 3, 2011',
+Release('1.2.17', 'May 4, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Make sure one of the viewers is selected in the export to 
@@ -44,7 +44,9 @@ main window is minimized the next session and not completely hidden.''',
         Bug('''RPM of previous release did not install correctly on Fedora
 due to a non standard version number in the RPM.''', '3294852'),
         Bug('''For tasks with a non-default icon, still show the clock icon
-when tracking effort.''', '3085094')
+when tracking effort.''', '3085094'),
+        Bug('''The width of the period column in the effort viewer would not
+be reused across sessions.''', '3296303')
         ]
     ),
     
