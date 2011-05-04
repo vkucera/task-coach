@@ -33,8 +33,8 @@ import base, mixin, refresher
 
 
 class TaskViewerStatusMessages(patterns.Observer):
-    template1 = 'Tasks: %d selected, %d visible, %d total'
-    template2 = 'Status: %d over due, %d inactive, %d completed'
+    template1 = _('Tasks: %d selected, %d visible, %d total')
+    template2 = _('Status: %d overdue, %d inactive, %d completed')
     
     def __init__(self, viewer):
         super(TaskViewerStatusMessages, self).__init__()

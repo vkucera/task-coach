@@ -179,7 +179,7 @@ prerequisite tasks have been completed;''')),
     p(
         _('In addition, tasks can be referenced as:'),
         ul(
-            li(_('Over due: the due date is in the past;')),
+            li(_('Overdue: the due date is in the past;')),
             li(_('''Due soon: the due date is soon (what 'soon' is, can be 
 changed in the preferences);''')),
             li(_('Over budget: no budget left;')),
@@ -190,7 +190,7 @@ changed in the preferences);''')),
     p(
         _('The text of tasks is colored according to the following rules:'),
         ul(
-            li(_('Over due tasks are red;')),
+            li(_('Overdue tasks are red;')),
             li(_('Tasks due soon are orange;')),
             li(_('Active tasks are black text with a blue icon;')),
             li(_('Future tasks are gray, and')),

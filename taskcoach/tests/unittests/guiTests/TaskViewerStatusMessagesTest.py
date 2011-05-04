@@ -45,7 +45,7 @@ class TaskViewerStatusMessagesTest(test.TestCase):
         self.viewer = DummyViewer(self.taskList)
         self.status = gui.viewer.task.TaskViewerStatusMessages(self.viewer)
         self.template1 = 'Tasks: %d selected, %d visible, %d total'
-        self.template2 = 'Status: %d over due, %d inactive, %d completed'
+        self.template2 = 'Status: %d overdue, %d inactive, %d completed'
     
     # Helper methods
         

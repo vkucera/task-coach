@@ -287,7 +287,7 @@ class ColorsPage(SettingsPage):
             [('activetasks', _('Click this button to change the color of active tasks')), 
              ('inactivetasks', _('Click this button to change the color of inactive tasks')),
              ('completedtasks', _('Click this button to change the color of completed tasks')),
-             ('overduetasks', _('Click this button to change the color of over due tasks')),
+             ('overduetasks', _('Click this button to change the color of overdue tasks')),
              ('duesoontasks', _('Click this button to change the color of tasks due soon'))]:
             self.addColorSetting('color', setting, label)
         self.fit()

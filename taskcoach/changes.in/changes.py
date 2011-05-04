@@ -1040,7 +1040,7 @@ that consists of more than one character.''', '2889931', '2888714')
         Feature('''Don't have a setting for the maximum number of recent files
 to show, simply use some reasonable maximum (9).'''),
         Feature('''It's no longer possible to hide active tasks, over budget 
-tasks, and over due tasks. These filters were silly.''')]
+tasks, and overdue tasks. These filters were silly.''')]
     ),
 
 Release('0.75.0', 'October 24, 2009',
