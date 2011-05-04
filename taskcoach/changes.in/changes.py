@@ -41,8 +41,9 @@ wasn't working in the French translation.''', '3293786'),
         Bug('''When quitting Task Coach in minimized mode, make sure the
 main window is minimized the next session and not completely hidden.''',
             '3296144'),
-        Bug('''RPM of previous release did not install correctly on Fedora
-due to a non standard version number in the RPM.''', '3294852'),
+        Bug('''Packages of the previous release did not install correctly on 
+some Linux distributions due to a non standard version number in the 
+package (RPM or Deb).''', '3294852', '3297345'),
         Bug('''For tasks with a non-default icon, still show the clock icon
 when tracking effort.''', '3085094'),
         Bug('''The width of the period column in the effort viewer would not
