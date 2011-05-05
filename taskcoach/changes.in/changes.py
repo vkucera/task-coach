@@ -56,8 +56,7 @@ no effect.''', '3297913')
         ],
     featuresAdded=[
         Feature('''When importing a CSV file, let the user decide if quote
-characters are escaped by doubling them or escaping them with another character.''',
-                '3295368'),
+characters are escaped by doubling them or escaping them with another character.'''),
         ]
     ),
     
