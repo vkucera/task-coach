@@ -23,7 +23,7 @@ from changetypes import *
 releases = [
 
 Release('1.2.17', 'May 4, 2011',
-    summary='''This is a bugfix release.''',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Make sure one of the viewers is selected in the export to 
 iCalendar dialog.'''),
@@ -50,6 +50,12 @@ when tracking effort.''', '3085094'),
 be reused across sessions.''', '3296303'),
         Bug('''Fix session management on some Linux distributions. Also
 automatically restart Task Coach when reopening the session.''', '3296733'),
+        Bug('''Category mappings in CSV import would not work'''),
+        ],
+    featuresAdded=[
+        Feature('''When importing a CSV file, let the user decide if quote
+characters are escaped by doubling them or escaping them with another character.''',
+                '3295368'),
         ]
     ),
     
