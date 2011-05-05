@@ -656,8 +656,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     # Icon
     
-    def icon(self, recursive=False):
-        myIcon = self.__trackingIcon() or super(Task, self).icon(recursive=False)
+    def icon(self, recursive=False, raw=False):
+        myIcon = '' if raw else self.__trackingIcon()
+        myIcon = myIcon or super(Task, self).icon(recursive=False)
         if not myIcon and recursive:
             try:
                 myIcon = self.__recursiveIcon
@@ -673,8 +674,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__recursiveIcon = self.categoryIcon() or self.__stateBasedIcon(False)
         return self.__recursiveIcon
 
-    def selectedIcon(self, recursive=False):
-        myIcon = self.__trackingIcon() or super(Task, self).selectedIcon(recursive=False)
+    def selectedIcon(self, recursive=False, raw=False):
+        myIcon = '' if raw else self.__trackingIcon()
+        myIcon = myIcon or super(Task, self).selectedIcon(recursive=False)
         if not myIcon and recursive:
             try:
                 myIcon = self.__recursiveSelectedIcon

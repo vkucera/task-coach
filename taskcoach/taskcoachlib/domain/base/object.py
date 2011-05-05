@@ -323,7 +323,7 @@ class Object(SynchronizedObject):
 
     # Icons:
 
-    def icon(self):
+    def icon(self, raw=False):
         return self.__icon.get()
 
     def setIcon(self, icon, event=None):
@@ -336,7 +336,7 @@ class Object(SynchronizedObject):
     def iconChangedEventType(class_):
         return '%s.icon'%class_
 
-    def selectedIcon(self):
+    def selectedIcon(self, raw=False):
         return self.__selectedIcon.get()
 
     def setSelectedIcon(self, icon, event=None):
@@ -513,7 +513,7 @@ class CompositeObject(Object, patterns.ObservableComposite):
 
     # Icon:
 
-    def icon(self, recursive=False):
+    def icon(self, recursive=False, raw=False):
         myIcon = super(CompositeObject, self).icon()
         if not recursive:
             return myIcon
@@ -536,7 +536,7 @@ class CompositeObject(Object, patterns.ObservableComposite):
                 children.extend([child] + self.childrenWithoutOwnIcon(child))
         return children
 
-    def selectedIcon(self, recursive=False):
+    def selectedIcon(self, recursive=False, raw=False):
         myIcon = super(CompositeObject, self).selectedIcon()
         if not recursive:
             return myIcon

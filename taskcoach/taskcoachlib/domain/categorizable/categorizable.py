@@ -185,7 +185,7 @@ class CategorizableCompositeObject(base.CompositeObject):
         fonts = [category.font(recursive=True) for category in self.categories()]
         return font.FontMixer.mix(*fonts)
 
-    def icon(self, recursive=False):
+    def icon(self, recursive=False, raw=False):
         icon = super(CategorizableCompositeObject, self).icon(recursive=False)
         if not icon and recursive:
             icon = self.categoryIcon() or super(CategorizableCompositeObject, self).icon(recursive=True)
@@ -198,7 +198,7 @@ class CategorizableCompositeObject(base.CompositeObject):
                 return icon
         return ''
 
-    def selectedIcon(self, recursive=False):
+    def selectedIcon(self, recursive=False, raw=False):
         icon = super(CategorizableCompositeObject, self).selectedIcon(recursive=False)
         if not icon and recursive:
             icon = self.categorySelectedIcon() or super(CategorizableCompositeObject, self).selectedIcon(recursive=True)
