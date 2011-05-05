@@ -51,6 +51,8 @@ be reused across sessions.''', '3296303'),
         Bug('''Fix session management on some Linux distributions. Also
 automatically restart Task Coach when reopening the session.''', '3296733'),
         Bug('''Category mappings in CSV import would not work'''),
+        Bug('''On Windows, rearranging the order of the templates would have 
+no effect.''', '3297913')
         ],
     featuresAdded=[
         Feature('''When importing a CSV file, let the user decide if quote
