@@ -47,7 +47,9 @@ package (RPM or Deb).''', '3294852', '3297345'),
         Bug('''For tasks with a non-default icon, still show the clock icon
 when tracking effort.''', '3085094'),
         Bug('''The width of the period column in the effort viewer would not
-be reused across sessions.''', '3296303')
+be reused across sessions.''', '3296303'),
+        Bug('''Fix session management on some Linux distributions. Also
+automatically restart Task Coach when reopening the session.''', '3296733'),
         ]
     ),
     

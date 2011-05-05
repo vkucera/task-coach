@@ -70,6 +70,33 @@ SmSaveGlobal                 = 0
 SmSaveLocal                  = 1
 SmSaveBoth                   = 2
 
+# Restart hints
+
+SmRestartIfRunning	= 0
+SmRestartAnyway		= 1
+SmRestartImmediately	= 2
+SmRestartNever		= 3
+
+# Property types
+
+SmCARD8			= "CARD8"         # Single character
+SmARRAY8		= "ARRAY8"        # String
+SmLISTofARRAY8		= "LISTofARRAY8"  # List of strings
+
+# Property names
+
+SmCloneCommand		= "CloneCommand"
+SmCurrentDirectory	= "CurrentDirectory"
+SmDiscardCommand	= "DiscardCommand"
+SmEnvironment		= "Environment"
+SmProcessID		= "ProcessID"
+SmProgram		= "Program"
+SmRestartCommand	= "RestartCommand"
+SmResignCommand		= "ResignCommand"
+SmRestartStyleHint	= "RestartStyleHint"
+SmShutdownCommand	= "ShutdownCommand"
+SmUserID		= "UserID"
+
 #==============================================================================
 # Types and structures
 
@@ -104,6 +131,16 @@ class SmcCallbacks(Structure):
                 ('die', SmcDieCallback),
                 ('save_complete', SmcSaveCompleteCallback),
                 ('shutdown_cancelled', SmcShutdownCancelledCallback)]
+
+class SmPropValue(Structure):
+    _fields_ = [('length', c_int),
+                ('value', c_void_p)]
+
+class SmProp(Structure):
+    _fields_ = [('name', c_char_p),
+                ('type', c_char_p),
+                ('num_vals', c_int),
+                ('values', POINTER(SmPropValue))]
 
 #==============================================================================
 # Functions
@@ -145,6 +182,11 @@ SmcVendor = CFUNCTYPE(c_char_p,
 
 SmcRelease = CFUNCTYPE(c_char_p,
                        SmcConn)(('SmcRelease', _libSM))
+
+SmcSetProperties = CFUNCTYPE(None,
+                             SmcConn,
+                             c_int,
+                             POINTER(POINTER(SmProp)))(('SmcSetProperties', _libSM))
 
 #==============================================================================
 # Higher-level stuff
@@ -240,6 +282,31 @@ class SessionMonitor(ICELoop):
         self.join()
         if self.conn is not None:
             SmcCloseConnection(self.conn, 0, None)
+
+    def setProperty(self, name, value):
+        if isinstance(value, unicode):
+            value = value.encode('UTF-8')
+
+        if isinstance(value, str):
+            propval = SmPropValue(len(value), cast(c_char_p(value), c_void_p))
+            prop = SmProp(name, c_char_p(SmARRAY8), 1, pointer(propval))
+            SmcSetProperties(self.conn, 1, pointer(pointer(prop)))
+        elif isinstance(value, int):
+            value = chr(value)
+            propval = SmPropValue(1, cast(c_char_p(value), c_void_p))
+            prop = SmProp(name, c_char_p(SmCARD8), 1, pointer(propval))
+            SmcSetProperties(self.conn, 1, pointer(pointer(prop)))
+        elif isinstance(value, list):
+            values = (SmPropValue * len(value))()
+            for idx, val in enumerate(value):
+                if isinstance(val, unicode):
+                    val = val.encode('UTF-8')
+                values[idx].length = len(val)
+                values[idx].value = cast(c_char_p(val), c_void_p)
+            prop = SmProp(name, c_char_p(SmLISTofARRAY8), len(value), values)
+            SmcSetProperties(self.conn, 1, pointer(pointer(prop)))
+        else:
+            raise TypeError('Unsupported property type: %s' % str(type(value)))
 
     def saveYourselfDone(self, status=True):
         """
