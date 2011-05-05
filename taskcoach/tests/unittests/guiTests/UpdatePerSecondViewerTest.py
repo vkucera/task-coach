@@ -72,7 +72,8 @@ class UpdatePerSecondViewerTestsMixin(object):
     def testStopTrackingRefreshesTrackedItems(self):
         self.updateViewer.widget = MockWidget()
         self.trackedTask.stopTracking()
-        self.assertEqual(2, len(self.updateViewer.widget.refreshedItems))
+        expectedNrRefreshedItems = 1 if self.ListViewerClass == gui.viewer.SquareTaskViewer else 2
+        self.assertEqual(expectedNrRefreshedItems, len(self.updateViewer.widget.refreshedItems))
             
     def testRemoveTrackedChildAndParentRemovesViewerFromClockObservers(self):
         parent = task.Task()

@@ -169,10 +169,10 @@ class XMLWriter(object):
             node.setAttribute('bgColor', str(item.backgroundColor()))
         if item.font():
             node.setAttribute('font', unicode(item.font().GetNativeFontInfoDesc()))
-        if item.icon(raw=True):
-            node.setAttribute('icon', str(item.icon(raw=True)))
-        if item.selectedIcon(raw=True):
-            node.setAttribute('selectedIcon', str(item.selectedIcon(raw=True)))
+        if item.icon():
+            node.setAttribute('icon', str(item.icon()))
+        if item.selectedIcon():
+            node.setAttribute('selectedIcon', str(item.selectedIcon()))
         return node
 
     def baseCompositeNode(self, item, nodeName, childNodeFactory, childNodeFactoryArgs=()):
@@ -185,10 +185,10 @@ class XMLWriter(object):
             node.setAttribute('bgColor', str(item.backgroundColor(recursive=False)))
         if item.font(recursive=False):
             node.setAttribute('font', unicode(item.font(recursive=False).GetNativeFontInfoDesc()))
-        if item.icon(recursive=False, raw=True):
-            node.setAttribute('icon', str(item.icon(recursive=False, raw=True)))
-        if item.selectedIcon(recursive=False, raw=True):
-            node.setAttribute('selectedIcon', str(item.selectedIcon(recursive=False, raw=True)))
+        if item.icon(recursive=False):
+            node.setAttribute('icon', str(item.icon(recursive=False)))
+        if item.selectedIcon(recursive=False):
+            node.setAttribute('selectedIcon', str(item.selectedIcon(recursive=False)))
         if item.expandedContexts():
             node.setAttribute('expandedContexts', 
                               str(tuple(sorted(item.expandedContexts()))))
