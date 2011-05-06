@@ -26,6 +26,11 @@ Release('1.2.18', 'May 6, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Make sure long menu texts don't overlap the keyboard shortcut.''')
+        ],
+    featuresAdded=[
+        Feature('''Open tracked tasks without looking them up using the 
+Actions->Edit tracked task menu item (Shift-Alt-T).''', 
+        'http://uservoice.com/a/itBB5')
         ]
     ),
 

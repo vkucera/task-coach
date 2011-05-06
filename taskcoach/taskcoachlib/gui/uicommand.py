@@ -1290,6 +1290,24 @@ class Edit(NeedsSelectionMixin, ViewerCommand):
             return super(Edit, self).enabled(event)
 
 
+class EditTrackedTasks(TaskListCommand, SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        super(EditTrackedTasks, self).__init__(menuText=_('Edit &tracked task...\tShift-Alt-T'),
+            helpText=_('Edit the currently tracked task(s)'), bitmap='edit',
+            *args, **kwargs)
+        
+    def doCommand(self, event, show=True):
+        editTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
+            command.EditTaskCommand(self.taskList, self.taskList.tasksBeingTracked()), 
+            self.settings, self.taskList, self.mainWindow().taskFile, 
+            bitmap=self.bitmap)
+        editTaskDialog.Show(show)
+        return editTaskDialog # for testing purposes
+        
+    def enabled(self, event):
+        return any(self.taskList.tasksBeingTracked())
+        
+
 class Delete(NeedsSelectionMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(Delete, self).__init__(menuText=_('&Delete\tDEL'),
