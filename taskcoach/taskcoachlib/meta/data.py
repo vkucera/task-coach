@@ -36,6 +36,17 @@ except ImportError:
     revision = None 
 
 if revision: # Buildbot sets revision
+    # Decrement version because this version isn't released yet. This
+    # assumes that version components are < 100; 99 will actually mean
+    # pre-major release
+    major, inter, minor = map(int, version.split('.'))
+    numversion = major * 10000 + inter * 100 + minor
+    numversion -= 1
+    major = numversion // 10000
+    inter = (numversion // 100) % 100
+    minor = numversion % 100
+    version = '.'.join(map(str, [major, inter, minor]))
+
     now = datetime.datetime.today()
     release_day = str(now.day)
     release_month = now.strftime('%B')
