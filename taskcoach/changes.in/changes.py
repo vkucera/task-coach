@@ -21,6 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+            
+Release('1.2.18', 'May 6, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Make sure long menu texts don't overlap the keyboard shortcut.''')
+        ]
+    ),
 
 Release('1.2.17', 'May 5, 2011',
     summary='''This is a mixed bugfix and feature release.''',

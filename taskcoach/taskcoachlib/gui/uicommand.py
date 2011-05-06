@@ -1961,11 +1961,11 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
     def getMenuText(self, paused=None): # pylint: disable-msg=W0221
         if self.anyTrackedEfforts():
             subject = _('multiple tasks') if len(self.__trackedEfforts) > 1 else self.__trackedEfforts[0].task().subject()
-            return self.stopMenuText%subject
+            return self.stopMenuText%self.trimmedSubject(subject)
         if paused is None:
             paused = self.anyStoppedEfforts()
         if paused:
-            return self.resumeMenuText%self.mostRecentTrackedTask().subject()
+            return self.resumeMenuText%self.trimmedSubject(self.mostRecentTrackedTask().subject())
         else:
             return self.defaultMenuText
         
@@ -1986,7 +1986,12 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
         stopTimes = [(effort.getStop(), effort) for effort in self.effortList if effort.getStop() is not None]
         return max(stopTimes)[1].task()
     
-    
+    @staticmethod
+    def trimmedSubject(subject, maxLength=35, postFix='...'):
+        trim = len(subject) > maxLength
+        return subject[:maxLength - len(postFix)] + postFix if trim else subject
+        
+
 class CategoryNew(CategoriesCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(CategoryNew, self).__init__(bitmap='new', 
