@@ -41,6 +41,7 @@ class wxApp(wx.App):
                     self.setProperty(xsm.SmRestartCommand, sys.argv)
                     self.setProperty(xsm.SmCurrentDirectory, os.getcwd())
                     self.setProperty(xsm.SmProgram, sys.argv[0])
+                    self.setProperty(xsm.SmRestartStyleHint, xsm.SmRestartNever)
                 def saveYourself(self, saveType, shutdown, interactStyle, fast):
                     if shutdown:
                         self._callback()
