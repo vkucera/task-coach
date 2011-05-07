@@ -30,6 +30,7 @@ Release('1.2.18', 'May 6, 2011',
 constant.''', '3295368'),
         Bug('''When starting or stopping an effort, the task's icon in the
 calendar viewer would not change.'''),
+        Bug('''Session management wouldn't work on XFCE.'''),
         ],
     featuresAdded=[
         Feature('''Open tracked tasks without looking them up using the 

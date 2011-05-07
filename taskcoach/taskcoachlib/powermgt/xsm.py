@@ -273,10 +273,6 @@ class SessionMonitor(ICELoop):
 
             self.clientID = id_ret.value
 
-            # XFCE4 session manager is seriously buggy.
-            if self.vendor == 'xfce4-session':
-                self.cancelled = True
-
     def stop(self):
         super(SessionMonitor, self).stop()
         self.join()
