@@ -26,11 +26,13 @@ import wx.grid as gridlib
 
 
 class CSVDialect(csv.Dialect):
-    def __init__(self, delimiter=',', quotechar='"'):
+    def __init__(self, delimiter=',', quotechar='"', doublequote=True, escapechar=''):
         self.delimiter = delimiter
         self.quotechar = quotechar
         self.quoting = csv.QUOTE_MINIMAL
         self.lineterminator = '\r\n'
+        self.doublequote = doublequote
+        self.escapechar = escapechar
 
         csv.Dialect.__init__(self)
 
@@ -50,6 +52,20 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
         self.quoteChar.Append(_('Double quote'))
         self.quoteChar.SetSelection(1)
 
+        self.quotePanel = wx.Panel(self, wx.ID_ANY)
+        self.doubleQuote = wx.RadioButton(self.quotePanel, wx.ID_ANY, _('Double it'))
+        self.doubleQuote.SetValue(True)
+        self.escapeQuote = wx.RadioButton(self.quotePanel, wx.ID_ANY, _('Escape with'))
+        self.escapeChar = wx.TextCtrl(self.quotePanel, wx.ID_ANY, '\\', size=(50, -1))
+        self.escapeChar.Enable(False)
+        self.escapeChar.SetMaxLength(1)
+
+        hsizer = wx.BoxSizer(wx.HORIZONTAL)
+        hsizer.Add(self.doubleQuote, 1, wx.ALL, 3)
+        hsizer.Add(self.escapeQuote, 1, wx.ALL, 3)
+        hsizer.Add(self.escapeChar, 1, wx.ALL, 3)
+        self.quotePanel.SetSizer(hsizer)
+
         self.hasHeaders = wx.CheckBox(self, wx.ID_ANY, _('First line describes fields'))
         self.hasHeaders.SetValue(True)
 
@@ -66,6 +82,9 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
 
         gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Quote character')), 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALL, 3)
         gridSizer.Add(self.quoteChar, 0, wx.ALL, 3)
+
+        gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Escape quote')), 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALL, 3)
+        gridSizer.Add(self.quotePanel, 0, wx.ALL, 3)
 
         gridSizer.Add(self.hasHeaders, 0, wx.ALL, 3)
         gridSizer.Add((0, 0))
@@ -86,8 +105,13 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
         wx.EVT_CHOICE(self.delimiter, wx.ID_ANY, self.OnOptionChanged)
         wx.EVT_CHOICE(self.quoteChar, wx.ID_ANY, self.OnOptionChanged)
         wx.EVT_CHECKBOX(self.hasHeaders, wx.ID_ANY, self.OnOptionChanged)
+        wx.EVT_RADIOBUTTON(self.doubleQuote, wx.ID_ANY, self.OnOptionChanged)
+        wx.EVT_RADIOBUTTON(self.escapeQuote, wx.ID_ANY, self.OnOptionChanged)
+        wx.EVT_TEXT(self.escapeChar, wx.ID_ANY, self.OnOptionChanged)
 
     def OnOptionChanged(self, event):
+        self.escapeChar.Enable(self.escapeQuote.GetValue())
+
         if self.filename is None:
             self.grid.SetRowLabelSize(0)
             self.grid.SetColLabelSize(0)
@@ -95,8 +119,15 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
                 self.grid.DeleteRows(0, self.grid.GetNumberRows())
                 self.grid.DeleteCols(0, self.grid.GetNumberCols())
         else:
+            if self.doubleQuote.GetValue():
+                doublequote = True
+                escapechar = ''
+            else:
+                doublequote = False
+                escapechar = self.escapeChar.GetValue().encode('UTF-8')
             self.dialect = CSVDialect(delimiter={0: ',', 1: '\t', 2: ' '}[self.delimiter.GetSelection()],
-                                      quotechar={0: "'", 1: '"'}[self.quoteChar.GetSelection()])
+                                      quotechar={0: "'", 1: '"'}[self.quoteChar.GetSelection()],
+                                      doublequote=doublequote, escapechar=escapechar)
 
             fp = tempfile.TemporaryFile()
             try:
@@ -129,7 +160,8 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
                 for line in reader:
                     self.grid.InsertRows(lineno, 1)
                     for idx, value in enumerate(line):
-                        self.grid.SetCellValue(lineno, idx, value.decode('UTF-8'))
+                        if idx < self.grid.GetNumberCols():
+                            self.grid.SetCellValue(lineno, idx, value.decode('UTF-8'))
                     lineno += 1
             finally:
                 fp.close()

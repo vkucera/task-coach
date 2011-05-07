@@ -531,7 +531,7 @@ class CommonTestsMixin(object):
             
     def testStatusMessage_EmptyTaskList(self):
         self.assertEqual(('Tasks: 0 selected, 0 visible, 0 total', 
-            'Status: 0 over due, 0 inactive, 0 completed'),
+            'Status: 0 overdue, 0 inactive, 0 completed'),
             self.viewer.statusMessages())
     
     def testOnDropFiles(self):

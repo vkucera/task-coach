@@ -43,9 +43,26 @@ immediately to all open dialogs. This will prevent overwriting
 changes made in other dialogs.''', '1152561')
         ]
     ),
-
-Release('1.2.17', 'April 30, 2011',
+            
+Release('1.2.18', 'May 6, 2011',
     summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Make sure long menu texts don't overlap the keyboard shortcut.'''),
+        Bug('''CSV import would crash on Mac OS X if the number of fields wasn't
+constant.''', '3295368'),
+        Bug('''When starting or stopping an effort, the task's icon in the
+calendar viewer would not change.'''),
+        Bug('''Session management wouldn't work on XFCE.'''),
+        ],
+    featuresAdded=[
+        Feature('''Open tracked tasks without looking them up using the 
+Actions->Edit tracked task menu item (Shift-Alt-T).''', 
+        'http://uservoice.com/a/itBB5')
+        ]
+    ),
+
+Release('1.2.17', 'May 5, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Make sure one of the viewers is selected in the export to 
 iCalendar dialog.'''),
@@ -55,6 +72,30 @@ it to a category with an icon.''', '3295077'),
             '3294878'),
         Bug('''Use the actual system font on Mac OS X and Windows in the
 tree and list viewers.''', '3295070'),
+        Bug('''Dutch translation used Ctrl-H as shortcut for both help and 
+increase priority. Increase priority is now Ctrl-I. Maximize priority is
+Shift-Ctrl-I, for consistency.''', '3296141'),
+        Bug('''The Ctrl-Enter keyboard shortcut for marking a task completed
+wasn't working in the French translation.''', '3293786'),
+        Bug('''When quitting Task Coach in minimized mode, make sure the
+main window is minimized the next session and not completely hidden.''',
+            '3296144'),
+        Bug('''Packages of the previous release did not install correctly on 
+some Linux distributions due to a non standard version number in the 
+package (RPM or Deb).''', '3294852', '3297345'),
+        Bug('''For tasks with a non-default icon, still show the clock icon
+when tracking effort.''', '3085094'),
+        Bug('''The width of the period column in the effort viewer would not
+be reused across sessions.''', '3296303'),
+        Bug('''Fix session management on some Linux distributions. Also
+automatically restart Task Coach when reopening the session.''', '3296733'),
+        Bug('''Category mappings in CSV import would not work'''),
+        Bug('''On Windows, rearranging the order of the templates would have 
+no effect.''', '3297913')
+        ],
+    featuresAdded=[
+        Feature('''When importing a CSV file, let the user decide if quote
+characters are escaped by doubling them or escaping them with another character.'''),
         ]
     ),
     
@@ -1048,7 +1089,7 @@ that consists of more than one character.''', '2889931', '2888714')
         Feature('''Don't have a setting for the maximum number of recent files
 to show, simply use some reasonable maximum (9).'''),
         Feature('''It's no longer possible to hide active tasks, over budget 
-tasks, and over due tasks. These filters were silly.''')]
+tasks, and overdue tasks. These filters were silly.''')]
     ),
 
 Release('0.75.0', 'October 24, 2009',

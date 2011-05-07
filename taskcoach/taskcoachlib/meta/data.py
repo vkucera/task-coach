@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 version = '1.3.0' # Current version number of the application
 tskversion = 31 # Current version number of the task file format, changed to 31 for release 1.2.0.
-release_day = '30' # Day number of the release, 1-31, as string
-release_month = 'April' # Month of the release in plain English
+release_day = '6' # Day number of the release, 1-31, as string
+release_month = 'May' # Month of the release in plain English
 release_year = '2011' # Year of the release as string
 release_status = 'stable' # One of 'alpha', 'beta', 'stable'
 
@@ -36,6 +36,17 @@ except ImportError:
     revision = None 
 
 if revision: # Buildbot sets revision
+    # Decrement version because this version isn't released yet. This
+    # assumes that version components are < 100; 99 will actually mean
+    # pre-major release
+    major, inter, minor = map(int, version.split('.'))
+    numversion = major * 10000 + inter * 100 + minor
+    numversion -= 1
+    major = numversion // 10000
+    inter = (numversion // 100) % 100
+    minor = numversion % 100
+    version = '.'.join(map(str, [major, inter, minor]))
+
     now = datetime.datetime.today()
     release_day = str(now.day)
     release_month = now.strftime('%B')
