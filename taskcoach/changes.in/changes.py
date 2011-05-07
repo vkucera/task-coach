@@ -25,7 +25,9 @@ releases = [
 Release('1.2.18', 'May 6, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug('''Make sure long menu texts don't overlap the keyboard shortcut.''')
+        Bug('''Make sure long menu texts don't overlap the keyboard shortcut.'''),
+        Bug('''CSV import would crash on Mac OS X if the number of fields wasn't
+constant.''', '3295368'),
         ],
     featuresAdded=[
         Feature('''Open tracked tasks without looking them up using the 

@@ -160,7 +160,8 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
                 for line in reader:
                     self.grid.InsertRows(lineno, 1)
                     for idx, value in enumerate(line):
-                        self.grid.SetCellValue(lineno, idx, value.decode('UTF-8'))
+                        if idx < self.grid.GetNumberCols():
+                            self.grid.SetCellValue(lineno, idx, value.decode('UTF-8'))
                     lineno += 1
             finally:
                 fp.close()
