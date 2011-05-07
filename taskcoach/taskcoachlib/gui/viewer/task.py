@@ -510,7 +510,8 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         for eventType in (task.Task.subjectChangedEventType(), 'task.startDateTime',
                           'task.dueDateTime', 'task.completionDateTime',
                           task.Task.attachmentsChangedEventType(),
-                          task.Task.notesChangedEventType()):
+                          task.Task.notesChangedEventType(),
+                          task.Task.trackStartEventType(), task.Task.trackStopEventType()):
             self.registerObserver(self.onAttributeChanged, eventType)
 
     def isTreeViewer(self):

@@ -28,6 +28,8 @@ Release('1.2.18', 'May 6, 2011',
         Bug('''Make sure long menu texts don't overlap the keyboard shortcut.'''),
         Bug('''CSV import would crash on Mac OS X if the number of fields wasn't
 constant.''', '3295368'),
+        Bug('''When starting or stopping an effort, the task's icon in the
+calendar viewer would not change.'''),
         ],
     featuresAdded=[
         Feature('''Open tracked tasks without looking them up using the 
