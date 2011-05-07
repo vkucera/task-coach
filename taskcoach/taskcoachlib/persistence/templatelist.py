@@ -44,7 +44,7 @@ class TemplateList(object):
     def save(self):
         ''' Right now only the order is saved. '''
 
-        pickle.dump([name for task, name in self._tasks], file(os.path.join(self._path, 'list.pickle'), 'w'))
+        pickle.dump([name for task, name in self._tasks], file(os.path.join(self._path, 'list.pickle'), 'wb'))
 
         for task, name in self._toDelete:
             os.remove(os.path.join(self._path, name))

@@ -93,9 +93,8 @@ class AutoColumnWidthMixin(object):
         if self.GetColumnCount() <= self.ResizeColumn:
             return # Nothing to resize.
 
-        resizeColumnWidth = self.ResizeColumnMinWidth
         unusedWidth = max(self.AvailableWidth - self.NecessaryWidth, 0)
-        resizeColumnWidth += unusedWidth
+        resizeColumnWidth = self.ResizeColumnMinWidth + unusedWidth
         self.SetColumnWidth(self.ResizeColumn, resizeColumnWidth)
         
     def DistributeWidthAcrossColumns(self, extraWidth):
@@ -135,7 +134,7 @@ class AutoColumnWidthMixin(object):
     def GetNecessaryWidth(self):
         necessaryWidth = 0
         for columnIndex in range(self.GetColumnCount()):
-            if columnIndex == self._resizeColumn:
+            if columnIndex == self.ResizeColumn:
                 necessaryWidth += self.ResizeColumnMinWidth
             else:
                 necessaryWidth += self.GetColumnWidth(columnIndex)

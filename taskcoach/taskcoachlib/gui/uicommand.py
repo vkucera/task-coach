@@ -1290,6 +1290,24 @@ class Edit(NeedsSelectionMixin, ViewerCommand):
             return super(Edit, self).enabled(event)
 
 
+class EditTrackedTasks(TaskListCommand, SettingsCommand):
+    def __init__(self, *args, **kwargs):
+        super(EditTrackedTasks, self).__init__(menuText=_('Edit &tracked task...\tShift-Alt-T'),
+            helpText=_('Edit the currently tracked task(s)'), bitmap='edit',
+            *args, **kwargs)
+        
+    def doCommand(self, event, show=True):
+        editTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
+            command.EditTaskCommand(self.taskList, self.taskList.tasksBeingTracked()), 
+            self.settings, self.taskList, self.mainWindow().taskFile, 
+            bitmap=self.bitmap)
+        editTaskDialog.Show(show)
+        return editTaskDialog # for testing purposes
+        
+    def enabled(self, event):
+        return any(self.taskList.tasksBeingTracked())
+        
+
 class Delete(NeedsSelectionMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
         super(Delete, self).__init__(menuText=_('&Delete\tDEL'),
@@ -1964,11 +1982,11 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
     def getMenuText(self, paused=None): # pylint: disable-msg=W0221
         if self.anyTrackedEfforts():
             subject = _('multiple tasks') if len(self.__trackedEfforts) > 1 else self.__trackedEfforts[0].task().subject()
-            return self.stopMenuText%subject
+            return self.stopMenuText%self.trimmedSubject(subject)
         if paused is None:
             paused = self.anyStoppedEfforts()
         if paused:
-            return self.resumeMenuText%self.mostRecentTrackedTask().subject()
+            return self.resumeMenuText%self.trimmedSubject(self.mostRecentTrackedTask().subject())
         else:
             return self.defaultMenuText
         
@@ -1989,7 +2007,12 @@ class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
         stopTimes = [(effort.getStop(), effort) for effort in self.effortList if effort.getStop() is not None]
         return max(stopTimes)[1].task()
     
-    
+    @staticmethod
+    def trimmedSubject(subject, maxLength=35, postFix='...'):
+        trim = len(subject) > maxLength
+        return subject[:maxLength - len(postFix)] + postFix if trim else subject
+        
+
 class CategoryNew(CategoriesCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
         super(CategoryNew, self).__init__(bitmap='new', 

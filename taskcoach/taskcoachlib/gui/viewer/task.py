@@ -32,8 +32,8 @@ import base, mixin, refresher
 
 
 class TaskViewerStatusMessages(patterns.Observer):
-    template1 = 'Tasks: %d selected, %d visible, %d total'
-    template2 = 'Status: %d over due, %d inactive, %d completed'
+    template1 = _('Tasks: %d selected, %d visible, %d total')
+    template2 = _('Status: %d overdue, %d inactive, %d completed')
     
     def __init__(self, viewer):
         super(TaskViewerStatusMessages, self).__init__()
@@ -507,7 +507,8 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
         for eventType in (task.Task.subjectChangedEventType(), 'task.startDateTime',
                           'task.dueDateTime', 'task.completionDateTime',
                           task.Task.attachmentsChangedEventType(),
-                          task.Task.notesChangedEventType()):
+                          task.Task.notesChangedEventType(),
+                          task.Task.trackStartEventType(), task.Task.trackStopEventType()):
             self.registerObserver(self.onAttributeChanged, eventType)
 
     def isTreeViewer(self):

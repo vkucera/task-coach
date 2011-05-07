@@ -80,12 +80,13 @@ class CSVReader(object):
                     name = fieldValue.decode('UTF-8')
                     parent, cats = toplevelCategories[kwargs['fields'][idx]]
                     if name in cats:
-                        categories.append(cats[name])
+                        theCat = cats[name]
                     else:
-                        newCat = Category(subject=name)
-                        parent.addChild(newCat)
-                        cats[name] = newCat
-                        self.categoryList.append(newCat)
+                        theCat = Category(subject=name)
+                        parent.addChild(theCat)
+                        cats[name] = theCat
+                        self.categoryList.append(theCat)
+                    categories.append(theCat)
                     toplevelCategories[kwargs['fields'][idx]] = (parent, cats)
                 elif kwargs['mappings'][idx] == _('Priority'):
                     try:

@@ -523,7 +523,8 @@ class ActionMenu(Menu):
             self.appendUICommands(
                 None,
                 uicommand.EffortStart(viewer=viewerContainer, taskList=tasks),
-                uicommand.EffortStop(effortList=efforts, taskList=tasks))
+                uicommand.EffortStop(effortList=efforts, taskList=tasks),
+                uicommand.EditTrackedTasks(taskList=tasks, settings=settings))
 
 
 class TaskPriorityMenu(Menu):

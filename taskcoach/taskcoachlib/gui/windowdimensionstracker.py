@@ -98,10 +98,10 @@ class WindowDimensionsTracker(WindowSizeAndPositionTracker):
                 # show it.
                 self._window.Show()
             self._window.Iconize(True)
-            if wx.Platform != '__WXMAC__':
+            if wx.Platform != '__WXMAC__' and self.getSetting('hidewheniconized'):
                 # Seems like hiding the window after it's been
                 # iconized actually closes it on Mac OS...
-                wx.CallAfter(self._window.Hide)
+                wx.CallAfter(self._window.Hide)                
 
     def startIconized(self):
         startIconized = self.__settings.get('window', 'starticonized')

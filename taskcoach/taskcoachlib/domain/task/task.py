@@ -657,8 +657,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     # Icon
     
     def icon(self, recursive=False):
+        if recursive and self.isBeingTracked():
+            return 'clock_icon'
         myIcon = super(Task, self).icon(recursive=False)
-        if not myIcon and recursive:
+        if recursive and not myIcon:
             try:
                 myIcon = self.__recursiveIcon
             except AttributeError:
@@ -674,8 +676,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return self.__recursiveIcon
 
     def selectedIcon(self, recursive=False):
+        if recursive and self.isBeingTracked():
+            return 'clock_icon'
         myIcon = super(Task, self).selectedIcon(recursive=False)
-        if not myIcon and recursive:
+        if recursive and not myIcon:
             try:
                 myIcon = self.__recursiveSelectedIcon
             except AttributeError:
@@ -685,7 +689,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def selectedIconChangedEvent(self, *args, **kwargs):
         super(Task, self).selectedIconChangedEvent(*args, **kwargs)
         self.__computeRecursiveSelectedIcon()
-
+        
     def __computeRecursiveSelectedIcon(self):
         self.__recursiveSelectedIcon = self.categorySelectedIcon() or self.__stateBasedIcon(selected=True)
         return self.__recursiveSelectedIcon
@@ -694,19 +698,16 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                      ('dueSoon', '_orange'), ('inactive', '_grey'))
 
     def __stateBasedIcon(self, selected=False):
-        if self.isBeingTracked():
-            taskIcon = 'clock'
+        taskIcon = 'led'
+        for state, stateColor in self.stateColorMap:
+            if getattr(self, state)():
+                taskIcon += stateColor
+                break
         else:
-            taskIcon = 'led'
-            for state, stateColor in self.stateColorMap:
-                if getattr(self, state)():
-                    taskIcon += stateColor
-                    break
-            else:
-                taskIcon += '_blue'
-            taskIcon = self.pluralOrSingularIcon(taskIcon+'_icon')[:-len('_icon')]
-            hasChildren = any(child for child in self.children() if not child.isDeleted())
-            taskIcon += '_open' if selected and hasChildren else ''
+            taskIcon += '_blue'
+        taskIcon = self.pluralOrSingularIcon(taskIcon+'_icon')[:-len('_icon')]
+        hasChildren = any(child for child in self.children() if not child.isDeleted())
+        taskIcon += '_open' if selected and hasChildren else ''
         return taskIcon + '_icon'
 
     @patterns.eventSource

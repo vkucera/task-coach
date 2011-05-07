@@ -30,6 +30,17 @@ header = '''
         <script type="text/javascript" src="js/prototype.js"></script>
         <script type="text/javascript" src="js/scriptaculous.js?load=effects,builder"></script>
         <script type="text/javascript" src="js/lightbox.js"></script>
+        <script type="text/javascript">
+/* <![CDATA[ */
+    (function() {
+        var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
+        s.type = 'text/javascript';
+        s.async = true;
+        s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto';
+        t.parentNode.insertBefore(s, t);
+    })();
+/* ]]> */
+        </script>
         <link rel="stylesheet" href="css/lightbox.css" type="text/css" media="screen" />
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
         <title>%(name)s</title>
@@ -83,7 +94,7 @@ footer = '''
                 </ul>
             </div>
             <div class="navbox">
-                <h2>Get %(name)s</h2>
+                <h2>Download</h2>
                 <ul>
                     <li><a href="download_for_windows.html" title="Download %(name)s for Windows">Windows</a></li>
                     <li><a href="download_for_mac.html" title="Download %(name)s for Mac OS X">Mac OS X</a></li>
@@ -114,8 +125,11 @@ footer = '''
                     <li><a href="i18n.html">Help translate</a></li>
                     <li><a href="http://taskcoach.wikispaces.com">Help write the manual</a></li>
                     <li><a href="devinfo.html">Help develop</a></li>
-                    <li><a href="donations.html">Donate</a></li>
-                    <li><a href="http://twitter.com/share" class="twitter-share-button" data-url="http://taskcoach.org" data-text="Check out Task Coach: a free and open source todo app for Windows, Mac, Linux and iPhone." data-count="horizontal" data-via="taskcoach">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script><br>
+                    <li><a href="donations.html">Donate</a><br><br>
+                        <a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://taskcoach.org"></a>
+                        <noscript><a href="http://flattr.com/thing/181658/Task-Coach-Your-friendly-task-manager" target="_blank">
+                        <img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a></noscript><br>
+                        <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://taskcoach.org" data-text="Check out Task Coach: a free and open source todo app for Windows, Mac, Linux and iPhone." data-count="horizontal" data-via="taskcoach">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script><br>
                         <iframe src="http://www.facebook.com/plugins/like.php?href=http%%3A%%2F%%2Ftaskcoach.org&amp;layout=button_count&amp;show_faces=true&amp;width=190&amp;action=like&amp;colorscheme=light&amp;height=21" 
                                 scrolling="no" frameborder="0" 
                                 style="border:none; overflow:hidden; width:190px; height:21px;" 
