@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.18', 'May 6, 2011',
+Release('1.2.18', 'May 7, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Make sure long menu texts don't overlap the keyboard shortcut.'''),
@@ -591,7 +591,7 @@ wxPython 2.8.9.1.''', '3054431'),
 not when the item is hidden by a filter.''', '3042880'),
         Bug('''Refresh filtered task viewers at midnight to properly show 
 tasks that become active.''', '3035384'),
-        Bug('''The checkbox for mutual exclusive subcategories in the 
+        Bug('''The checkbox for mutually exclusive subcategories in the 
 category editor would be unchecked even if a category had exclusive 
 subcategories.''')
         ]

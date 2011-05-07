@@ -58,7 +58,7 @@ class ChangeToTextConverter(ChangeConverter):
     def postProcess(self, convertedChange):
         convertedChange = self._textWrapper.fill(convertedChange)
         # Somehow the text wrapper introduces multiple spaces within
-        # lines, this is a work around:
+        # lines, this is a workaround:
         convertedChange = self._multipleSpaces.sub(' ', convertedChange)
         return convertedChange
 
@@ -155,7 +155,7 @@ class ReleaseToTextConverter(ReleaseConverter):
         multipleSpaces = re.compile(r'(?<!^) +', re.M)
         summary = wrapper.fill(summary)
         # Somehow the text wrapper introduces multiple spaces within
-        # lines, this is a work around:
+        # lines, this is a workaround:
         summary = multipleSpaces.sub(' ', summary)
         return summary
 

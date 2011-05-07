@@ -490,7 +490,7 @@ pages['i18n'] = \
         Please be aware that, next to providing the initial translation,
         you will be expected to keep your translation up to date as new
         versions of %(name)s are released.</P>
-        <P>A Yahoo!Groups mailinglist is available for discussing the development
+        <P>A Yahoo!Groups mailing list is available for discussing the development
         and translation of %(name)s. You can join by sending mail to <tt><a 
         href="mailto:taskcoach-dev-subscribe@yahoogroups.com">taskcoach-dev-subscribe@yahoogroups.com</a></tt>
         or alternatively, if you have a Yahoo id (or don't mind creating one), 
@@ -536,8 +536,8 @@ pages['i18n'] = \
 
         
 pages['mailinglist'] = \
-'''       <H3>Mailinglist</H3>         
-        <P>A Yahoo!Groups mailinglist is available for discussing
+'''       <H3>Mailing list</H3>         
+        <P>A Yahoo!Groups mailing list is available for discussing
         %(name)s. You can join by sending mail to <tt><a 
         href="mailto:taskcoach-subscribe@yahoogroups.com">taskcoach-subscribe@yahoogroups.com</a></tt>
         or alternatively, if you have a Yahoo id (or don't mind creating
@@ -545,8 +545,8 @@ pages['mailinglist'] = \
         href="http://groups.yahoo.com/group/taskcoach/join">webinterface</a>.</P>
         <P>You can browse the <a
         href="http://groups.yahoo.com/group/taskcoach/messages">archive
-        of messages</a> without subscribing to the mailinglist.</P>
-        <p>The mailinglist is also available as the newsgroup 
+        of messages</a> without subscribing to the mailing list.</P>
+        <p>The mailing list is also available as the newsgroup 
         <a href="http://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach">gmane.comp.sysutils.pim.taskcoach</a>
         on <a href="http://gmane.org">Gmane</a>.</p>
 '''
@@ -567,20 +567,20 @@ pages['devinfo'] = \
     <a href="http://taskcoach.uservoice.com/">Uservoice</a>.
     </P>
     
-    <h4>Mailinglist</h4>
-    <P>A Yahoo!Groups mailinglist is available for discussing the development
+    <h4>Mailing list</h4>
+    <P>A Yahoo!Groups mailing list is available for discussing the development
     of %(name)s. You can join by sending mail to <tt><a 
     href="mailto:taskcoach-dev-subscribe@yahoogroups.com">taskcoach-dev-subscribe@yahoogroups.com</a></tt>
     or alternatively, if you have a Yahoo id (or don't mind creating one), 
     join via the <a href="http://groups.yahoo.com/group/taskcoach-dev/join">webinterface</a>.</P>
     <P>You can browse the <a href="http://groups.yahoo.com/group/taskcoach-dev/messages">archive
-    of messages</a> without subscribing to the mailinglist.</P>
-    <p>The mailinglist is also available as the newsgroup 
+    of messages</a> without subscribing to the mailing list.</P>
+    <p>The mailing list is also available as the newsgroup 
     <a href="http://dir.gmane.org/gmane.comp.sysutils.pim.taskcoach.devel">gmane.comp.sysutils.pim.taskcoach.devel</a>
     on <a href="http://gmane.org">Gmane</a>.</p>
-    <P>A Sourceforge mailinglist is available for receiving commit messages.
+    <P>A Sourceforge mailing list is available for receiving commit messages.
     If you are a %(name)s developer you can <a href="http://lists.sourceforge.net/lists/listinfo/taskcoach-commits">join 
-    this mailinglist</a>.
+    this mailing list</a>.
     
     <h4>Dependencies</h4>
     <p>%(name)s is developed in <A HREF="http://www.python.org">Python</A>,
