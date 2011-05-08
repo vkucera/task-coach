@@ -252,7 +252,7 @@ phone calls you need to make.''')),
             li(_('Subject: a single line that summarizes the category.')),
             li(_('Description: a multi-line description of the category.')),
             li(_('''Mutually exclusive subcategories: a check box indicating
-whether the subcategories of the category are mutual exclusive. If they are,
+whether the subcategories of the category are mutually exclusive. If they are,
 items can only belong to one of the subcategories. When filtering, you can only
 filter by one of the subcategories at a time.''')),
             li(_('''Appearance properties such as icon, font and colors: 
@@ -409,9 +409,10 @@ server.''')%meta.metaDict,
             li(_('Task and category hierarchy are lost to the server.')),
             li(_('Recurrence and reminders are not supported yet.')),
             li(_('Note categories are lost to the server.')),
-            li(_('''The conflict detection/resolution system is a work around a 
-Funambol limitation. It should work in most cases, but if many applications
-synchronize with the same server at the same time, problems may rise.''')),
+            li(_('''The conflict detection/resolution system is a workaround 
+for a Funambol limitation. It should work in most cases, but if many 
+applications synchronize with the same server at the same time, problems may 
+arise.''')),
             li(_('Probably some others...')))),
     h4(
         a_name(_('Troubleshooting'), 'syncmltrouble')),
@@ -574,7 +575,7 @@ _guiSection = sequence(
     p(
         _('''You can drag and drop viewers to create almost any user interface 
 layout you want. When you start dragging a viewer, drop hints will appear to
-show where you can drop the viewer. Viewers can also be dropped onto eachother
+show where you can drop the viewer. Viewers can also be dropped onto each other
 to create notebooks.'''))
         )
         

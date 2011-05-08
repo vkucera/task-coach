@@ -32,6 +32,7 @@ endif
 
 PYTHONVERSION=$(shell python -c "import sys; print '%d.%d'%sys.version_info[:2]")
 TCVERSION=$(shell python -c "import taskcoachlib.meta.data as data; print data.version")
+TCUBUNTUVERSION=$(TCVERSION)$(shell python -c "import taskcoachlib.meta.data as data; print data.version_suffix")
 TCPORTABLE=$(shell python -c "import os; print \"'\" + os.path.join(os.getcwd(), 'build', 'TaskCoachPortable') + \"'\"")
 
 revision:
@@ -54,6 +55,9 @@ dist/TaskCoach-$(TCVERSION).zip:
 
 sdist_linux: prepare changes templates dist/TaskCoach-$(TCVERSION).tar.gz
 
+sdist_ubuntu: sdist_linux
+	mv dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCUBUNTUVERSION).tar.gz
+
 ifeq ("2.5","$(PYTHONVERSION)")
     template="build.in/debian/MANIFEST-2.5.in"
 else
@@ -67,7 +71,7 @@ rpm: prepare changes templates
 	cp build.in/debian/MANIFEST.in .
 	$(PYTHON) make.py bdist_rpm --requires "python2.5,python-wxgtk2.8" --group "Applications/Productivity"
 	rm MANIFEST.in
-	
+
 fedora: prepare changes templates
 	cp build.in/debian/MANIFEST.in .
 	$(PYTHON) make.py bdist_rpm_fedora
@@ -85,8 +89,12 @@ else
 endif
 
 deb: sdist_linux
-	$(PYTHON) make.py bdist_deb --sdist=dist/TaskCoach-$(TCVERSION).tar.gz
+	mv dist/TaskCoach-$(TCVERSION).tar.gz dist/TaskCoach_$(TCVERSION).tar.gz
+	$(PYTHON) make.py bdist_deb --sdist=dist/TaskCoach_$(TCVERSION).tar.gz
 	mv dist/taskcoach_$(TCVERSION)-1_all.deb dist/taskcoach_$(TCVERSION)-1_$(pydeb).deb
+
+ubuntu: sdist_ubuntu
+	$(PYTHON) make.py bdist_ubuntu --sdist=dist/taskcoach_$(TCUBUNTUVERSION).tar.gz
 
 dmg: prepare
 	$(PYTHON) make.py py2app
@@ -164,7 +172,7 @@ coverage: coverage_run coverage_report
 
 coverage_run:
 	cd tests; coverage run test.py
-	
+
 coverage_report:
 	cd tests; coverage html -d coverage.out --omit "test.py,../taskcoachlib/meta/debug.py,../taskcoachlib/thirdparty,../taskcoachlib/i18n/po2dict" 
 
