@@ -55,7 +55,9 @@ if revision: # Buildbot sets revision
     version += '.' + revision
 
 version_suffix = ''
-if platform.system() == 'Linux' and 'Ubuntu' in platform.linux_distribution():
+if platform.system() == 'Linux' and \
+       hasattr(platform, 'linux_distribution') and \
+       'Ubuntu' in platform.linux_distribution():
     _distro, _ver, _codename = platform.linux_distribution()
     version_suffix = '-0%s%s' % (_distro.lower(), _ver.split('.')[0])
 
