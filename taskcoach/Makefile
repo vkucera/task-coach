@@ -89,7 +89,8 @@ else
 endif
 
 deb: sdist_linux
-	$(PYTHON) make.py bdist_deb --sdist=dist/TaskCoach-$(TCVERSION).tar.gz
+	mv dist/TaskCoach-$(TCVERSION).tar.gz dist/TaskCoach_$(TCVERSION).tar.gz
+	$(PYTHON) make.py bdist_deb --sdist=dist/TaskCoach_$(TCVERSION).tar.gz
 	mv dist/taskcoach_$(TCVERSION)-1_all.deb dist/taskcoach_$(TCVERSION)-1_$(pydeb).deb
 
 ubuntu: sdist_ubuntu
