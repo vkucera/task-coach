@@ -29,7 +29,7 @@ release_status = 'stable' # One of 'alpha', 'beta', 'stable'
 
 # No editing needed below this line for doing a release.
 
-import os, re, datetime
+import os, re, datetime, platform
 try:
     from taskcoachlib.meta.revision import revision # pylint: disable-msg=F0401,W0611
 except ImportError:
@@ -53,6 +53,11 @@ if revision: # Buildbot sets revision
     release_year = str(now.year)
     release_status = 'beta'
     version += '.' + revision
+
+version_suffix = ''
+if platform.system() == 'Linux' and 'Ubuntu' in platform.linux_distribution():
+    _distro, _ver, _codename = platform.linux_distribution()
+    version_suffix = '-0%s%s' % (_distro.lower(), _ver.split('.')[0])
 
 months = ['January', 'February', 'March', 'April', 'May', 'June', 
           'July', 'August', 'September', 'October', 'November', 'December']

@@ -134,7 +134,6 @@ class bdist_deb(Command, object):
         (dest_name, copied) = copy_file(self.sdist, self.bdist_base)
         orig_name = dest_name[:-len('.tar.gz')] + '.orig.tar.gz'
         orig_name = orig_name.lower()
-        orig_name = orig_name.replace('-', '_')
         if os.path.exists(orig_name):
             os.remove(orig_name)
         self.sdist_archive = move_file(dest_name, orig_name)
@@ -235,7 +234,7 @@ menu = '''?package(%(package)s):needs="X11"\\
 '''
 
 control = '''Source: %(package)s
-Section: %(subsection_lower)s
+Section: %(section)s
 Priority: %(priority)s
 Maintainer: %(maintainer)s <%(maintainer_email)s>
 Build-Depends: cdbs (>= 0.4.43), debhelper (>= 5), python, dpatch
