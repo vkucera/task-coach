@@ -972,9 +972,8 @@ class EffortEditBook(Page):
             return True # Entries not created yet
 
     def onEditTask(self, event):
-        taskToEdit = self._taskEntry.GetSelection()
-        TaskEditor(None, command.EditTaskCommand(self._taskFile.tasks(),
-            [taskToEdit]), self._settings, self._taskFile.tasks(), 
+        taskToEdit = self._taskEntry.GetValue()
+        TaskEditor(None, [taskToEdit], self._settings, self._taskFile.tasks(), 
             self._taskFile).Show()
 
     def addDescriptionEntry(self):
