@@ -130,6 +130,17 @@ def exception(exception, instance):
 
     try:
         # In this order. Python 2.6 fixed the unicode exception problem.
-        return unicode(instance)
+        try:
+            return unicode(instance)
+        except UnicodeDecodeError:
+            # On Windows, some exceptions raised by win32all lead to this
+            # Hack around it
+            result = []
+            for val in instance.args:
+                if isinstance(val, unicode):
+                    result.append(val.encode('UTF-8'))
+                else:
+                    result.append(val)
+            return unicode(result)
     except UnicodeEncodeError:
         return '<class %s>' % str(exception)
