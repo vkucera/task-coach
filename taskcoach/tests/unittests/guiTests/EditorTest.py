@@ -25,6 +25,7 @@ from unittests import dummy
 
 class EditorUnderTest(gui.dialog.editor.NoteEditor):        
     def __init__(self, *args, **kwargs):
+        kwargs['callAfter'] = lambda f, *args, **kwargs: f(*args, **kwargs)
         super(EditorUnderTest, self).__init__(*args, **kwargs)
         self.editorClosed = False
                 

@@ -1013,6 +1013,7 @@ class Editor(widgets.ButtonLessDialog):
         self._items = items
         self._settings = settings
         self._taskFile = taskFile
+        self._callAfter = kwargs.get('callAfter', wx.CallAfter)
         super(Editor, self).__init__(parent, self.title(), *args, **kwargs)
         columnName = kwargs.get('columnName', '')
         self._interior.setFocus(columnName)
@@ -1064,9 +1065,11 @@ class Editor(widgets.ButtonLessDialog):
             is hidden by a filter. If the item is really removed, close the tab 
             of the item involved and close the whole editor if there are no 
             tabs left. '''
-        if not self:
-            return # Prevent _wxPyDeadObject TypeError
-        for item in event.values():
+        if self: # Prevent _wxPyDeadObject TypeError
+            self._callAfter(self.closeIfItemIsDeleted, event.values())
+        
+    def closeIfItemIsDeleted(self, items):
+        for item in items:
             if self._interior.isDisplayingItemOrChildOfItem(item) and not item in self._taskFile:
                 self.Close()
                 break            

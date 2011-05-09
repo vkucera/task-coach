@@ -22,6 +22,16 @@ from taskcoachlib.domain import task, effort, date
 from unittests import dummy
 
 
+class EditorUnderTest(gui.dialog.editor.EffortEditor):        
+    def __init__(self, *args, **kwargs):
+        super(EditorUnderTest, self).__init__(*args, **kwargs)
+        self.editorClosed = False
+                
+    def onClose(self, event):
+        self.editorClosed = True
+        super(EditorUnderTest, self).onClose(event)
+        
+        
 class EffortEditorTest(test.wxTestCase):      
     def setUp(self):
         super(EffortEditorTest, self).setUp()
@@ -30,7 +40,7 @@ class EffortEditorTest(test.wxTestCase):
         self.taskList = self.taskFile.tasks()
         self.effortList = self.taskFile.efforts()
         self.taskList.extend(self.createTasks())
-        self.editor = gui.dialog.editor.EffortEditor(self.frame, 
+        self.editor = EditorUnderTest(self.frame, 
             list(self.effortList), self.settings, self.taskFile.efforts(), 
             self.taskFile, raiseDialog=False)
         
@@ -59,3 +69,8 @@ class EffortEditorTest(test.wxTestCase):
         self.editor._interior._taskSync.onAttributeEdited(dummy.Event())
         self.assertEqual(self.task2, self.effort.task())
         self.failIf(self.effort in self.task1.efforts())
+        
+    def testChangeTaskDoesNotCloseEditor(self):
+        self.editor._interior._taskEntry.SetValue(self.task2)
+        self.editor._interior._taskSync.onAttributeEdited(dummy.Event())
+        self.failIf(self.editor.editorClosed)
