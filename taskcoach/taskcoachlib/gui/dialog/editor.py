@@ -894,7 +894,7 @@ class EffortEditBook(Page):
         # pylint: disable-msg=W0201
         panel = wx.Panel(self)
         currentTask = self.items[0].task()
-        self._taskEntry = entry.TaskEntry(self, 
+        self._taskEntry = entry.TaskEntry(panel,
             rootTasks=self._taskList.rootItems(), selectedTask=currentTask)
         self._taskSync = attributesync.AttributeSync('task', self._taskEntry,
             currentTask, self.items, command.ChangeTaskCommand,
