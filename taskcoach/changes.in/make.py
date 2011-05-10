@@ -18,14 +18,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import converter, changes, sys
 
+numberOfReleases = int(sys.argv[2]) if len(sys.argv) >= 3 else sys.maxint
+
 if sys.argv[1] == 'text':
     converter = converter.ReleaseToTextConverter()
 elif sys.argv[1] == 'html':
     converter = converter.ReleaseToHTMLConverter()
+elif sys.argv[1] == 'debian':
+    # Only current release, Debian format
+    converter = converter.ReleaseToDebianConverter()
+    numberOfReleases = 1
 else:
     raise ValueError, 'Unknown target format (%s)'%sys.argv[1]
-
-numberOfReleases = int(sys.argv[2]) if len(sys.argv) >= 3 else sys.maxint
     
 releases = changes.releases[:numberOfReleases]
 for release in releases:

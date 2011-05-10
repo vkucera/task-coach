@@ -165,6 +165,7 @@ elif sys.argv[1] in ['bdist_deb', 'bdist_ubuntu']:
         bdist_deb['distribution'] = codename
         bdist_deb['version'] = meta.version + meta.version_suffix
         bdist_deb['section'] = 'editors'
+        bdist_deb['changelog_content'] = file('changelog_content', 'rb').read().rstrip()
         sys.argv[1] = 'bdist_deb'
 
     setupOptions.update(dict(options=dict(bdist_deb=bdist_deb)))
