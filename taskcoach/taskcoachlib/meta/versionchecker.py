@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import threading, wx, urllib2, sys, traceback
+import threading, urllib2, sys, traceback
 import data
  
 
@@ -55,9 +55,12 @@ class VersionChecker(threading.Thread):
 
     def notifyUser(self, dialog, latestVersion='', message=''):
         # Must use CallAfter because this is a non-GUI thread
+        # Import wx here so it isn't a build dependency
+        import wx
         wx.CallAfter(self.showDialog, dialog, latestVersion, message)
 
     def showDialog(self, VersionDialog, latestVersion, message=''):
+        import wx
         dialog = VersionDialog(wx.GetApp().GetTopWindow(), 
                                version=latestVersion, message=message, 
                                settings=self.settings)
