@@ -69,6 +69,12 @@ class ViewerContainerTest(test.wxTestCase):
         self.viewer2 = self.createViewer('taskviewer2')
         self.container.addViewer(self.viewer2)
 
+    def tearDown(self):
+        if '__WXMAC__' == wx.Platform:
+            self.mainwindow.OnQuit() # Stop power monitoring thread
+        self.mainWindow._idleController.stop()
+        super(ViewerContainerTest, self).tearDown()
+
     def createViewer(self, settingsSection):
         self.settings.add_section(settingsSection)
         return dummy.ViewerWithDummyWidget(self.mainWindow, self.taskFile, 

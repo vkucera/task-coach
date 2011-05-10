@@ -69,6 +69,8 @@ class MainWindowTestCase(test.wxTestCase):
     def tearDown(self):
         if '__WXMAC__' == wx.Platform:
             self.mainwindow.OnQuit() # Stop power monitoring thread
+        # Also stop idle time thread
+        self.mainwindow._idleController.stop()
         del self.mainwindow
         super(MainWindowTestCase, self).tearDown()
         
