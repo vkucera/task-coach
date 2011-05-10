@@ -161,8 +161,7 @@ elif sys.argv[1] in ['bdist_deb', 'bdist_ubuntu']:
         command='/usr/bin/taskcoach.py')
 
     if sys.argv[1] == 'bdist_ubuntu':
-        distro, ver, codename = platform.linux_distribution()
-        bdist_deb['distribution'] = codename
+        bdist_deb['distribution'] = 'lucid'
         bdist_deb['version'] = meta.version + meta.version_suffix
         bdist_deb['section'] = 'editors'
         bdist_deb['changelog_content'] = file('changelog_content', 'rb').read().rstrip()
