@@ -269,6 +269,7 @@ class StartEffortCommand(EffortCommand):
         super(StartEffortCommand, self).__init__(*args, **kwargs)
         start = date.DateTime.now()
         self.efforts = [effort.Effort(item, start) for item in self.items]
+        self.startDateTimes = [(item.startDateTime() if start < item.startDateTime() else None) for item in self.items]
         
     def do_command(self):
         super(StartEffortCommand, self).do_command()
@@ -283,12 +284,16 @@ class StartEffortCommand(EffortCommand):
         self.addEfforts()
 
     def addEfforts(self):
-        for item, newEffort in zip(self.items, self.efforts):
+        for item, newEffort, currentStartDateTime in zip(self.items, self.efforts, self.startDateTimes):
             item.addEffort(newEffort)
-
+            if currentStartDateTime:
+                item.setStartDateTime(newEffort.getStart())
+            
     def removeEfforts(self):
-        for item, newEffort in zip(self.items, self.efforts):
+        for item, newEffort, previousStartDateTime in zip(self.items, self.efforts, self.startDateTimes):
             item.removeEffort(newEffort)
+            if previousStartDateTime:
+                item.setStartDateTime(previousStartDateTime)
             
         
 class StopEffortCommand(EffortCommand):

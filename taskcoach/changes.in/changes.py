@@ -22,8 +22,8 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.18', 'May 7, 2011',
-    summary='''This is a bugfix release.''',
+Release('1.2.18', 'May 10, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Make sure long menu texts don't overlap the keyboard shortcut.'''),
         Bug('''CSV import would crash on Mac OS X if the number of fields wasn't
@@ -35,7 +35,10 @@ calendar viewer would not change.'''),
     featuresAdded=[
         Feature('''Open tracked tasks without looking them up using the 
 Actions->Edit tracked task menu item (Shift-Alt-T).''', 
-        'http://uservoice.com/a/itBB5')
+        'http://uservoice.com/a/itBB5'),
+        Feature('''Effort tracking can be started for inactive/future tasks.
+Doing so sets the start date and time of the task to the current date and 
+time.''', 'http://uservoice.com/a/oyhL7')
         ]
     ),
 
