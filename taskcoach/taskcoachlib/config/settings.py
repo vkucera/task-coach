@@ -51,6 +51,7 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
             except ConfigParser.ParsingError, reason:
                 # Ignore exceptions and simply use default values. 
                 # Also record the failure in the settings:
+                self.setDefaults()
                 self.set('file', 'inifileloaded', 'False') 
                 self.set('file', 'inifileloaderror', str(reason))
         else:
@@ -74,6 +75,7 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
             
     def setDefaults(self):
         for section, settings in defaults.defaults.items():
+            self.remove_section(section) # Make sure add_section can't fail
             self.add_section(section)
             for key, value in settings.items():
                 # Don't notify observers while we are initializing

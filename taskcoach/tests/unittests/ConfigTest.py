@@ -150,6 +150,12 @@ class SettingsIOTest(SettingsTestCase):
         settings.save(showerror=showerror, file=file)
         self.failUnless(self.showerror_args)
 
+    def testIOErrorWhileReading(self):
+        class SettingsUnderTest(config.Settings):
+            def read(self, *args, **kwargs):
+                self.remove_section('file')
+                raise ConfigParser.ParsingError, 'Testing'
+        self.failIf(SettingsUnderTest().getboolean('file', 'inifileloaded'))
 
 class SettingsObservableTest(SettingsTestCase):
     def setUp(self):

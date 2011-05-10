@@ -31,6 +31,8 @@ constant.''', '3295368'),
         Bug('''When starting or stopping an effort, the task's icon in the
 calendar viewer would not change.'''),
         Bug('''Session management wouldn't work on XFCE.'''),
+        Bug('''Start up even if the TaskCoach.ini file contains garbage.''', 
+            '3299850')
         ],
     featuresAdded=[
         Feature('''Open tracked tasks without looking them up using the 
