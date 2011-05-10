@@ -96,6 +96,9 @@ deb: sdist_linux
 ubuntu: sdist_ubuntu
 	$(PYTHON) make.py bdist_ubuntu --sdist=dist/taskcoach_$(TCUBUNTUVERSION).tar.gz
 
+ppa-snap: ubuntu
+	cd build; debsign -k0xa3e41706 taskcoach_$(TCUBUNTUVERSION)-1_source.changes; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCUBUNTUVERSION)-1_source.changes
+
 dmg: prepare
 	$(PYTHON) make.py py2app
 	mkdir "build/Task Coach/.Resources"
