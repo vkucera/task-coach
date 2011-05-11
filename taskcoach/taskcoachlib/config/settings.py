@@ -39,7 +39,7 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
         # have to call the superclass __init__ explicitly:
         super(Settings, self).__init__(*args, **kwargs)
         UnicodeAwareConfigParser.__init__(self, *args, **kwargs) 
-        self.setDefaults()
+        self.loadDefaults()
         self.__loadAndSave = load
         self.__iniFileSpecifiedOnCommandLine = iniFile
         if load:
@@ -51,7 +51,7 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
             except ConfigParser.ParsingError, reason:
                 # Ignore exceptions and simply use default values. 
                 # Also record the failure in the settings:
-                self.setDefaults()
+                self.loadDefaults()
                 self.set('file', 'inifileloaded', 'False') 
                 self.set('file', 'inifileloaderror', str(reason))
         else:
@@ -73,13 +73,16 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
             except: 
                 return # pylint: disable-msg=W0702
             
-    def setDefaults(self):
+    def loadDefaults(self):
         for section, settings in defaults.defaults.items():
             self.remove_section(section) # Make sure add_section can't fail
             self.add_section(section)
             for key, value in settings.items():
                 # Don't notify observers while we are initializing
                 super(Settings, self).set(section, key, value)
+                
+    def getDefault(self, section, option):
+        return defaults.defaults[section][option]
 
     def __beQuiet(self):
         noisySettings = [('window', 'splash'), ('window', 'tips')]
@@ -164,11 +167,7 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
             wx.SystemOptions.SetOptionInt("mac.textcontrol-use-spell-checker", value)
 
     def getlist(self, section, option):
-        listString = self.get(section, option)
-        try:
-            return eval(listString)
-        except:
-            return [] # pylint: disable-msg=W0702
+        return self.getEvaluatedValue(section, option, eval)
     
     def setlist(self, section, option, value):
         self.set(section, option, str(value))
@@ -177,7 +176,32 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
     setdict = setlist
 
     def getint(self, section, option):
-        return int(self.get(section, option))
+        return self.getEvaluatedValue(section, option, int)
+    
+    def getboolean(self, section, option):
+        return self.getEvaluatedValue(section, option, self.evalBoolean)
+
+    @staticmethod
+    def evalBoolean(stringValue):
+        if stringValue in ('True', 'False'):
+            return 'True' == stringValue
+        else:
+            raise ValueError, "invalid literal for Boolean value: '%s'"%stringValue
+         
+    def getEvaluatedValue(self, section, option, evaluate=eval, showerror=wx.MessageBox):
+        stringValue = self.get(section, option)
+        try:
+            return evaluate(stringValue)
+        except Exception, exceptionMessage:
+            message = '\n'.join([ \
+                _('Error while reading the %s-%s setting from %s.ini.')%(section, option, meta.filename),
+                _('The value is: %s')%stringValue,
+                _('The error is: %s')%exceptionMessage,
+                _('%s will use the default value for the setting and should proceed normally.')%meta.name])
+            showerror(message, caption=_('Settings error'), style=wx.ICON_ERROR)
+            defaultValue = self.getDefault(section, option)
+            self.set(section, option, defaultValue, new=True) # Ignore current value
+            return evaluate(defaultValue)
         
     def save(self, showerror=wx.MessageBox, file=file): # pylint: disable-msg=W0622
         self.set('version', 'python', sys.version)
