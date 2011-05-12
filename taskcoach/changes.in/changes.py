@@ -40,7 +40,9 @@ Actions->Edit tracked task menu item (Shift-Alt-T).''',
         'http://uservoice.com/a/itBB5'),
         Feature('''Effort tracking can be started for inactive/future tasks.
 Doing so sets the start date and time of the task to the current date and 
-time.''', 'http://uservoice.com/a/oyhL7')
+time.''', 'http://uservoice.com/a/oyhL7'),
+        Feature('''Show name of the current task file in the system tray 
+tooltip window.''', 'http://uservoice.com/a/959Qc')
         ]
     ),
 
