@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.18', 'May 11, 2011',
+Release('1.2.18', 'May 12, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Make sure long menu texts don't overlap the keyboard shortcut.'''),
@@ -32,7 +32,7 @@ constant.''', '3295368'),
 calendar viewer would not change.'''),
         Bug('''Session management wouldn't work on XFCE.'''),
         Bug('''Start up even if the TaskCoach.ini file contains garbage.''', 
-            '3299850')
+            '3299850', '3300722')
         ],
     featuresAdded=[
         Feature('''Open tracked tasks without looking them up using the 
