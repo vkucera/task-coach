@@ -327,10 +327,14 @@ class UploadDEB(UploadBase):
 
 
 class PPA(Compile):
-    name = 'ppa-snap'
+    name = 'ppa'
     description = ['Uploading', 'PPA']
     description_done = ['PPA', 'uploaded']
-    command = ['make', 'ppa-snap']
+
+    def __init__(self, **kwargs):
+        kwargs['command'] = ['make', 'ppa-' + kwargs.pop('name')]
+        Compile.__init__(self, **kwargs)
+
 
 # Generic RPM
 
