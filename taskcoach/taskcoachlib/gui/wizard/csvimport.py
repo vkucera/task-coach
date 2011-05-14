@@ -264,7 +264,7 @@ class CSVImportMappingPage(wiz.WizardPageSimple):
 
 class CSVImportWizard(wiz.Wizard):
     def __init__(self, filename, *args, **kwargs):
-        kwargs['style'] = wx.RESIZE_BORDER
+        kwargs['style'] = wx.RESIZE_BORDER | wx.DEFAULT_DIALOG_STYLE
         super(CSVImportWizard, self).__init__(*args, **kwargs)
 
         self.optionsPage = CSVImportOptionsPage(filename, self)
