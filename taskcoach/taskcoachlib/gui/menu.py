@@ -664,12 +664,12 @@ class StartEffortForTaskMenu(DynamicMenu):
     def addMenuItemForTask(self, task, menu): # pylint: disable-msg=W0621
         uiCommand = uicommand.EffortStartForTask(task=task, taskList=self.tasks)
         uiCommand.addToMenu(menu, self._window)
-        activeChildren = [child for child in task.children() if \
-                          child in self.tasks and child.active()]
-        if activeChildren:
-            activeChildren.sort(key=lambda child: child.subject())
+        trackableChildren = [child for child in task.children() if \
+                             child in self.tasks and not child.completed()]
+        if trackableChildren:
+            trackableChildren.sort(key=lambda child: child.subject())
             subMenu = wx.Menu()
-            for child in activeChildren:
+            for child in trackableChildren:
                 self.addMenuItemForTask(child, subMenu)
             menu.AppendSubMenu(subMenu, _('%s (subtasks)')%task.subject())
                         

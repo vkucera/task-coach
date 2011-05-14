@@ -64,7 +64,7 @@ class ReminderDialog(sized_controls.SizedDialog):
             render.dateTime(self.task.reminder()), _('Snooze') + ':':
             wx.StaticText(pane, label=label)
         self.snoozeOptions = wx.ComboBox(pane)
-        snoozeTimesUserWantsToSee = [0] + eval(self.settings.get('view', 'snoozetimes'))
+        snoozeTimesUserWantsToSee = [0] + self.settings.getlist('view', 'snoozetimes')
         for minutes, label in date.snoozeChoices:
             if minutes in snoozeTimesUserWantsToSee:
                 self.snoozeOptions.Append(label, date.TimeDelta(minutes=minutes))

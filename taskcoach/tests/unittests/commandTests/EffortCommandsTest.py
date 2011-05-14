@@ -66,6 +66,7 @@ class StartAndStopEffortCommandTest(EffortCommandTestCase):
         super(StartAndStopEffortCommandTest, self).setUp()
         self.start = command.StartEffortCommand(self.taskList, [self.originalTask])
         self.start.do()
+        self.task2 = task.Task()
         
     def testStart(self):
         self.assertDoUndoRedo(
@@ -80,9 +81,22 @@ class StartAndStopEffortCommandTest(EffortCommandTestCase):
             lambda: self.failUnless(self.originalTask.isBeingTracked()))
                 
     def testStartStopsPreviousStart(self):
-        task2 = task.Task()
-        start = command.StartEffortCommand(self.taskList, [task2])
+        start = command.StartEffortCommand(self.taskList, [self.task2])
         start.do()
         self.assertDoUndoRedo(
             lambda: self.failIf(self.originalTask.isBeingTracked()),
             lambda: self.failUnless(self.originalTask.isBeingTracked()))
+        
+    def testStartTrackingInactiveTaskSetsStartDate(self):
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(date.Today(), self.originalTask.startDateTime().date()),
+            lambda: self.assertEqual(date.DateTime(), self.originalTask.startDateTime()))
+        
+    def testStartTrackingInactiveTaskWithFutureStartDate(self):
+        futureStartDateTime = date.Now() + date.TimeDelta(days=1)
+        self.task2.setStartDateTime(futureStartDateTime)
+        start = command.StartEffortCommand(self.taskList, [self.task2])
+        start.do()
+        self.assertDoUndoRedo(
+            lambda: self.assertEqual(date.Today(), self.task2.startDateTime().date()),
+            lambda: self.assertEqual(futureStartDateTime, self.task2.startDateTime()))

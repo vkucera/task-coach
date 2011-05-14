@@ -96,6 +96,15 @@ deb: sdist_linux
 ubuntu: sdist_ubuntu
 	$(PYTHON) make.py bdist_ubuntu --sdist=dist/taskcoach_$(TCUBUNTUVERSION).tar.gz
 
+ppa-sign: ubuntu
+	cd build; debsign -k0xa3e41706 taskcoach_$(TCUBUNTUVERSION)-1_source.changes
+
+ppa-rel: ppa-sign
+	cd build; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCUBUNTUVERSION)-1_source.changes
+
+ppa-relnext: ppa-sign
+	cd build; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCUBUNTUVERSION)-1_source.changes
+
 dmg: prepare
 	$(PYTHON) make.py py2app
 	mkdir "build/Task Coach/.Resources"
@@ -146,6 +155,7 @@ i18n.in/messages.pot: $(shell find taskcoachlib -name '*.py' | grep -v i18n)
 
 changes:
 	$(PYTHON) changes.in/make.py text > CHANGES.txt
+	$(PYTHON) changes.in/make.py debian > changelog_content
 	$(PYTHON) changes.in/make.py html 7 > website.in/changes.html
 	$(PYTHON) changes.in/make.py html > website.in/all_changes.html
 

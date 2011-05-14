@@ -42,6 +42,7 @@ class bdist_deb(Command, object):
         ('long-description=', None, 'long description of the application'),
         ('version=', None, 'version of the application'),
         ('package-version=', None, 'version of the package [1]'),
+        ('changelog-content=', None, 'Content of the changelog file'),
         ('distribution=', None, 'distribution of the package [UNRELEASED]'),
         ('command=', None, 'command to start the application'),
         ('priority=', None, 'priority of the deb package [optional]'),
@@ -69,6 +70,7 @@ class bdist_deb(Command, object):
         self.priority = 'optional'
         self.urgency = 'low'
         self.architecture = 'all'
+        self.changelog_content = ''
         self.sdist = self.package = self.subsection = self.title = \
             self.description = self.long_description = self.command = \
             self.maintainer = self.maintainer_email = self.author = \
@@ -282,7 +284,7 @@ is licensed under the %(license_abbrev)s, see above.
 
 changelog = '''%(package)s (%(version)s-%(package_version)s) %(distribution)s; urgency=%(urgency)s
 
-  * New upstream release.
+%(changelog_content)s
 
  -- %(maintainer)s <%(maintainer_email)s>  %(datetime)s
 '''

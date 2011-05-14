@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-            
+
 Release('1.3.0', 'May 13, 2011',
     summary='''This release makes all edits done in dialogs immediate.''',
     featuresAdded=[
@@ -41,8 +41,8 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
             
-Release('1.2.18', 'May 7, 2011',
-    summary='''This is a bugfix release.''',
+Release('1.2.18', 'May 12, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Make sure long menu texts don't overlap the keyboard shortcut.'''),
         Bug('''CSV import would crash on Mac OS X if the number of fields wasn't
@@ -50,11 +50,18 @@ constant.''', '3295368'),
         Bug('''When starting or stopping an effort, the task's icon in the
 calendar viewer would not change.'''),
         Bug('''Session management wouldn't work on XFCE.'''),
+        Bug('''Start up even if the TaskCoach.ini file contains garbage.''', 
+            '3299850', '3300722')
         ],
     featuresAdded=[
         Feature('''Open tracked tasks without looking them up using the 
 Actions->Edit tracked task menu item (Shift-Alt-T).''', 
-        'http://uservoice.com/a/itBB5')
+        'http://uservoice.com/a/itBB5'),
+        Feature('''Effort tracking can be started for inactive/future tasks.
+Doing so sets the start date and time of the task to the current date and 
+time.''', 'http://uservoice.com/a/oyhL7'),
+        Feature('''Show name of the current task file in the system tray 
+tooltip window.''', 'http://uservoice.com/a/959Qc')
         ]
     ),
 

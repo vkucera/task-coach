@@ -1806,7 +1806,7 @@ class EffortStart(NeedsSelectedTasksMixin, ViewerCommand, TaskListCommand):
         
     def enabled(self, event):
         return super(EffortStart, self).enabled(event) and \
-            any(task.active() and not task.isBeingTracked() \
+            any(not task.completed() and not task.isBeingTracked() \
                 for task in self.viewer.curselection())
 
 
@@ -1829,7 +1829,7 @@ class EffortStartForEffort(NeedsSelectedEffortMixin, ViewerCommand,
 
     def trackableTasks(self):
         tasks = set([effort.task() for effort in self.viewer.curselection()])
-        return [task for task in tasks if task.active() \
+        return [task for task in tasks if not task.completed() \
                 and not task.isBeingTracked()]
 
 
@@ -1867,7 +1867,7 @@ class EffortStartButton(PopupButtonMixin, TaskListCommand):
         return menu.StartEffortForTaskMenu(self.mainWindow(), self.taskList)
 
     def enabled(self, event):
-        return any(task.active() for task in self.taskList)
+        return any(not task.completed() for task in self.taskList)
     
 
 class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):
