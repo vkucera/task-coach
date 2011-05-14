@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, wx.html, os
 from taskcoachlib.i18n import _
+from taskcoachlib.thirdparty import aui
 import buttonbox, notebook
 
 
@@ -79,7 +80,9 @@ class Dialog(wx.Dialog):
 
 class NotebookDialog(Dialog):    
     def createInterior(self):
-        return notebook.Notebook(self._panel)
+        return notebook.Notebook(self._panel, 
+            agwStyle=aui.AUI_NB_DEFAULT_STYLE & ~aui.AUI_NB_TAB_SPLIT & \
+                     ~aui.AUI_NB_TAB_MOVE & ~aui.AUI_NB_DRAW_DND_TAB)
 
     def fillInterior(self):
         self.addPages()

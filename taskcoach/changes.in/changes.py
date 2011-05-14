@@ -43,7 +43,9 @@ Actions->Edit tracked task menu item (Shift-Alt-T).''',
 Doing so sets the start date and time of the task to the current date and 
 time.''', 'http://uservoice.com/a/oyhL7'),
         Feature('''Show name of the current task file in the system tray 
-tooltip window.''', 'http://uservoice.com/a/959Qc')
+tooltip window.''', 'http://uservoice.com/a/959Qc'),
+        Feature('''Tabs in the edit dialogs can be dragged and dropped to 
+create any layout the user may want.''')
         ]
     ),
 
