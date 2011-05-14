@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, os, csv, tempfile
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty import chardet
+from taskcoachlib import meta
 
 import wx.wizard as wiz
 import wx.grid as gridlib
@@ -216,13 +217,17 @@ class CSVImportMappingPage(wiz.WizardPageSimple):
             self.interior.RemoveChild(child)
         self.choices = []
 
-        gsz = wx.FlexGridSizer(0, 2)
-
+        gsz = wx.FlexGridSizer(0, 2, 4, 2)
+        
+        gsz.Add(wx.StaticText(self.interior, wx.ID_ANY, _('Column header in CSV file')))
+        gsz.Add(wx.StaticText(self.interior, wx.ID_ANY, _('%s attribute')%meta.name))
+        gsz.AddSpacer((3,3))
+        gsz.AddSpacer((3,3))
         for fieldName in options['fields']:
-            gsz.Add(wx.StaticText(self.interior, wx.ID_ANY, fieldName))
+            gsz.Add(wx.StaticText(self.interior, wx.ID_ANY, fieldName), flag=wx.ALIGN_CENTER_VERTICAL)
 
             choice = wx.Choice(self.interior, wx.ID_ANY)
-            for tcFieldName, _ in self.fields:
+            for tcFieldName, multipleValuesAllowed in self.fields:
                 choice.Append(tcFieldName)
             choice.SetSelection(0)
             self.choices.append(choice)
