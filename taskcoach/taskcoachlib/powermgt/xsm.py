@@ -280,29 +280,30 @@ class SessionMonitor(ICELoop):
             SmcCloseConnection(self.conn, 0, None)
 
     def setProperty(self, name, value):
-        if isinstance(value, unicode):
-            value = value.encode('UTF-8')
+        if self.conn is not None:
+            if isinstance(value, unicode):
+                value = value.encode('UTF-8')
 
-        if isinstance(value, str):
-            propval = SmPropValue(len(value), cast(c_char_p(value), c_void_p))
-            prop = SmProp(name, c_char_p(SmARRAY8), 1, pointer(propval))
-            SmcSetProperties(self.conn, 1, pointer(pointer(prop)))
-        elif isinstance(value, int):
-            value = chr(value)
-            propval = SmPropValue(1, cast(c_char_p(value), c_void_p))
-            prop = SmProp(name, c_char_p(SmCARD8), 1, pointer(propval))
-            SmcSetProperties(self.conn, 1, pointer(pointer(prop)))
-        elif isinstance(value, list):
-            values = (SmPropValue * len(value))()
-            for idx, val in enumerate(value):
-                if isinstance(val, unicode):
-                    val = val.encode('UTF-8')
-                values[idx].length = len(val)
-                values[idx].value = cast(c_char_p(val), c_void_p)
-            prop = SmProp(name, c_char_p(SmLISTofARRAY8), len(value), values)
-            SmcSetProperties(self.conn, 1, pointer(pointer(prop)))
-        else:
-            raise TypeError('Unsupported property type: %s' % str(type(value)))
+            if isinstance(value, str):
+                propval = SmPropValue(len(value), cast(c_char_p(value), c_void_p))
+                prop = SmProp(name, c_char_p(SmARRAY8), 1, pointer(propval))
+                SmcSetProperties(self.conn, 1, pointer(pointer(prop)))
+            elif isinstance(value, int):
+                value = chr(value)
+                propval = SmPropValue(1, cast(c_char_p(value), c_void_p))
+                prop = SmProp(name, c_char_p(SmCARD8), 1, pointer(propval))
+                SmcSetProperties(self.conn, 1, pointer(pointer(prop)))
+            elif isinstance(value, list):
+                values = (SmPropValue * len(value))()
+                for idx, val in enumerate(value):
+                    if isinstance(val, unicode):
+                        val = val.encode('UTF-8')
+                    values[idx].length = len(val)
+                    values[idx].value = cast(c_char_p(val), c_void_p)
+                prop = SmProp(name, c_char_p(SmLISTofARRAY8), len(value), values)
+                SmcSetProperties(self.conn, 1, pointer(pointer(prop)))
+            else:
+                raise TypeError('Unsupported property type: %s' % str(type(value)))
 
     def saveYourselfDone(self, status=True):
         """

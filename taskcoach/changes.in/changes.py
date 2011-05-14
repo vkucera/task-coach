@@ -32,7 +32,8 @@ constant.''', '3295368'),
 calendar viewer would not change.'''),
         Bug('''Session management wouldn't work on XFCE.'''),
         Bug('''Start up even if the TaskCoach.ini file contains garbage.''', 
-            '3299850', '3300722')
+            '3299850', '3300722'),
+        Bug('''Don't crash if there is no session manager on Linux''', '3300643'),
         ],
     featuresAdded=[
         Feature('''Open tracked tasks without looking them up using the 

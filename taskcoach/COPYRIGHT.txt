@@ -6,6 +6,7 @@ Copyright (C) 2004-2011 Frank Niessink <frank@niessink.com>
 Copyright (C) 2005-2011 Jérôme Laheurte <fraca7@free.fr>
 
 Portions were contributed by:
+Copyright (C) 2011 David Harks <dave@dwink.net>
 Copyright (C) 2010 Svetoslav Trochev <sal_electronics@hotmail.com>
 Copyright (C) 2009 George Weeks <gcw52@telus.net>
 Copyright (C) 2008 Rob McMullen <rob.mcmullen@gmail.com>
