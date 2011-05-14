@@ -894,7 +894,7 @@ class EffortEditBook(Page):
         # pylint: disable-msg=W0201
         panel = wx.Panel(self)
         currentTask = self.items[0].task()
-        self._taskEntry = entry.TaskEntry(self, 
+        self._taskEntry = entry.TaskEntry(panel,
             rootTasks=self._taskList.rootItems(), selectedTask=currentTask)
         self._taskSync = attributesync.AttributeSync('task', self._taskEntry,
             currentTask, self.items, command.ChangeTaskCommand,
@@ -972,9 +972,8 @@ class EffortEditBook(Page):
             return True # Entries not created yet
 
     def onEditTask(self, event):
-        taskToEdit = self._taskEntry.GetSelection()
-        TaskEditor(None, command.EditTaskCommand(self._taskFile.tasks(),
-            [taskToEdit]), self._settings, self._taskFile.tasks(), 
+        taskToEdit = self._taskEntry.GetValue()
+        TaskEditor(None, [taskToEdit], self._settings, self._taskFile.tasks(), 
             self._taskFile).Show()
 
     def addDescriptionEntry(self):
@@ -1014,6 +1013,7 @@ class Editor(widgets.ButtonLessDialog):
         self._items = items
         self._settings = settings
         self._taskFile = taskFile
+        self._callAfter = kwargs.get('callAfter', wx.CallAfter)
         super(Editor, self).__init__(parent, self.title(), *args, **kwargs)
         columnName = kwargs.get('columnName', '')
         self._interior.setFocus(columnName)
@@ -1065,9 +1065,11 @@ class Editor(widgets.ButtonLessDialog):
             is hidden by a filter. If the item is really removed, close the tab 
             of the item involved and close the whole editor if there are no 
             tabs left. '''
-        if not self:
-            return # Prevent _wxPyDeadObject TypeError
-        for item in event.values():
+        if self: # Prevent _wxPyDeadObject TypeError
+            self._callAfter(self.closeIfItemIsDeleted, event.values())
+        
+    def closeIfItemIsDeleted(self, items):
+        for item in items:
             if self._interior.isDisplayingItemOrChildOfItem(item) and not item in self._taskFile:
                 self.Close()
                 break            

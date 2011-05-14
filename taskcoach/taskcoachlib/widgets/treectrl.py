@@ -457,14 +457,14 @@ class CheckTreeCtrl(TreeListCtrl):
             return
         self.__checking = True
         item = event.GetItem()
-        # Uncheck mutual exclusive children:
+        # Uncheck mutually exclusive children:
         for child in self.GetItemChildren(item):
             if self.GetItemType(child) == 2:
                 self.CheckItem(child, False)
-                # Recursively uncheck children of mutual exclusive children:
+                # Recursively uncheck children of mutually exclusive children:
                 for grandchild in self.GetItemChildren(child, recursively=True):
                     self.CheckItem(grandchild, False)
-        # If this item is mutual exclusive, recursively uncheck siblings and parent:
+        # If this item is mutually exclusive, recursively uncheck siblings and parent:
         parent = item.GetParent()
         if parent and self.GetItemType(item) == 2:
             for child in self.GetItemChildren(parent):

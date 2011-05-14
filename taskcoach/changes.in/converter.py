@@ -54,17 +54,34 @@ class ChangeToTextConverter(ChangeConverter):
         # Regular expression to remove multiple spaces, except when on
         # the start of a line:
         self._multipleSpaces = re.compile(r'(?<!^) +', re.M)
+        self._initialSpaces = re.compile(r'^( *)(.*)$')
 
     def postProcess(self, convertedChange):
         convertedChange = self._textWrapper.fill(convertedChange)
         # Somehow the text wrapper introduces multiple spaces within
-        # lines, this is a work around:
-        convertedChange = self._multipleSpaces.sub(' ', convertedChange)
-        return convertedChange
+        # lines, this is a workaround (preserving the initial spaces):
+
+        lines = []
+
+        for line in convertedChange.split('\n'):
+            match = self._initialSpaces.match(line)
+            lines.append(match.group(1) + self._multipleSpaces.sub(' ', match.group(2)))
+
+        return '\n'.join(lines)
 
     def convertChangeId(self, change, changeId):
         return changeId if changeId.startswith('http') else 'SF#%s'%changeId
-        
+
+
+class ChangeToDebianConverter(ChangeToTextConverter):
+    def __init__(self):
+        super(ChangeToDebianConverter, self).__init__()
+        self._textWrapper = textwrap.TextWrapper(initial_indent='  * ', 
+                subsequent_indent='    ', width=78)
+
+    def postProcess(self, convertedChange):
+        return super(ChangeToDebianConverter, self).postProcess(convertedChange) + '\n'
+
 
 class ChangeToHTMLConverter(ChangeConverter):
 
@@ -155,9 +172,22 @@ class ReleaseToTextConverter(ReleaseConverter):
         multipleSpaces = re.compile(r'(?<!^) +', re.M)
         summary = wrapper.fill(summary)
         # Somehow the text wrapper introduces multiple spaces within
-        # lines, this is a work around:
+        # lines, this is a workaround:
         summary = multipleSpaces.sub(' ', summary)
         return summary
+
+
+class ReleaseToDebianConverter(ReleaseConverter):
+    ChangeConverterClass = ChangeToDebianConverter
+
+    def summary(self, *args, **kwargs):
+        return ''
+
+    def header(self, release):
+        return ''
+
+    def sectionHeader(self, section, list):
+        return ''
 
 
 class ReleaseToHTMLConverter(ReleaseConverter):

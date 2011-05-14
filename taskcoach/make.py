@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import meta
-import sys, os, glob, wx
+import sys, os, glob, wx, platform
 from setup import setupOptions
 from buildlib import (clean, bdist_rpm_fedora, bdist_rpm_opensuse,
     bdist_deb, bdist_winpenpack, bdist_portableapps)
@@ -143,9 +143,9 @@ elif sys.argv[1] == 'bdist_rpm_opensuse':
         spec_file=spec_file, icon='icons.in/taskcoach.png', 
         desktop_file='build.in/opensuse/taskcoach.desktop'))))
 
-elif sys.argv[1] == 'bdist_deb':
+elif sys.argv[1] in ['bdist_deb', 'bdist_ubuntu']:
     from distutils.core import setup
-    setupOptions.update(dict(options=dict(bdist_deb=dict(\
+    bdist_deb = dict(\
         package=meta.data.filename_lower, title=meta.data.name, 
         description=meta.data.description, 
         long_description=meta.data.long_description, 
@@ -158,7 +158,16 @@ elif sys.argv[1] == 'bdist_deb':
         license_summary=meta.data.license_notice, 
         wxpythonversion=meta.data.wxpythonversionnumber,
         subsection='Office', url=meta.data.url,
-        command='/usr/bin/taskcoach.py'))))
+        command='/usr/bin/taskcoach.py')
+
+    if sys.argv[1] == 'bdist_ubuntu':
+        bdist_deb['distribution'] = 'lucid'
+        bdist_deb['version'] = meta.version + meta.version_suffix
+        bdist_deb['section'] = 'editors'
+        bdist_deb['changelog_content'] = file('changelog_content', 'rb').read().rstrip()
+        sys.argv[1] = 'bdist_deb'
+
+    setupOptions.update(dict(options=dict(bdist_deb=bdist_deb)))
     
 elif sys.argv[1] == 'bdist_winpenpack':
     from distutils.core import setup

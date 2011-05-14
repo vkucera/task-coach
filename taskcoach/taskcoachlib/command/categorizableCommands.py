@@ -48,7 +48,7 @@ class ToggleCategoryCommand(base.BaseCommand):
                 self.unlink_previous_categories(categorizable, event)
         
     def unlink_previous_categories(self, categorizable, event):
-        ''' Remove categorizable from any mutual exclusive categories it might
+        ''' Remove categorizable from any mutually exclusive categories it might
             belong to. '''
         if self.category.isMutualExclusive():
             parent = self.category.parent()

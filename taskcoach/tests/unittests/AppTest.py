@@ -46,6 +46,7 @@ class AppTests(test.TestCase):
         wxApp = wx.GetApp()
         self.assertEqual(meta.name, wxApp.GetAppName())
         self.assertEqual(meta.author, wxApp.GetVendorName())
+        app.mainwindow._idleController.stop()
         app.quit()
         application.Application.deleteInstance()
         

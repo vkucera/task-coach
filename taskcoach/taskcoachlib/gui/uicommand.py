@@ -975,12 +975,12 @@ class ToggleCategoryFilter(UICommand):
     def __init__(self, *args, **kwargs):
         self.category = kwargs.pop('category')
         subject = self.category.subject()
-        # Would like to use wx.ITEM_RADIO for mutual exclusive categories, but
+        # Would like to use wx.ITEM_RADIO for mutually exclusive categories, but
         # a menu with radio items always has to have at least of the items 
-        # checked, while we allow none of the mutual exclusive categories to
+        # checked, while we allow none of the mutually exclusive categories to
         # be checked. Dynamically changing between wx.ITEM_CHECK and 
         # wx.ITEM_RADIO would be a work-around in theory, using wx.ITEM_CHECK 
-        # when none of the mutual exclusive categories is checked and 
+        # when none of the mutually exclusive categories is checked and 
         # wx.ITEM_RADIO otherwise, but dynamically changing the type of menu 
         # items isn't possible. Hence, we use wx.ITEM_CHECK, even for mutual 
         # exclusive categories.
@@ -1636,12 +1636,12 @@ class ToggleCategory(NeedsSelectedCategorizableMixin, ViewerCommand):
     def __init__(self, *args, **kwargs):
         self.category = kwargs.pop('category')
         subject = self.category.subject()
-        # Would like to use wx.ITEM_RADIO for mutual exclusive categories, but
+        # Would like to use wx.ITEM_RADIO for mutually exclusive categories, but
         # a menu with radio items always has to have at least of the items 
-        # checked, while we allow none of the mutual exclusive categories to
+        # checked, while we allow none of the mutually exclusive categories to
         # be checked. Dynamically changing between wx.ITEM_CHECK and 
         # wx.ITEM_RADIO would be a work-around in theory, using wx.ITEM_CHECK 
-        # when none of the mutual exclusive categories is checked and 
+        # when none of the mutually exclusive categories is checked and 
         # wx.ITEM_RADIO otherwise, but dynamically changing the type of menu 
         # items isn't possible. Hence, we use wx.ITEM_CHECK, even for mutual 
         # exclusive categories.
@@ -1668,8 +1668,8 @@ class ToggleCategory(NeedsSelectedCategorizableMixin, ViewerCommand):
         selectionCategories = self.viewer.curselection()[0].categories()
         for ancestor in self.category.ancestors():
             if ancestor.isMutualExclusive() and ancestor not in selectionCategories:
-                return False # Not all mutual exclusive ancestors are checked
-        return True # All mutual exclusive ancestors are checked
+                return False # Not all mutually exclusive ancestors are checked
+        return True # All mutually exclusive ancestors are checked
     
 
 class Mail(NeedsSelectionMixin, ViewerCommand):
@@ -1806,7 +1806,7 @@ class EffortStart(NeedsSelectedTasksMixin, ViewerCommand, TaskListCommand):
         
     def enabled(self, event):
         return super(EffortStart, self).enabled(event) and \
-            any(task.active() and not task.isBeingTracked() \
+            any(not task.completed() and not task.isBeingTracked() \
                 for task in self.viewer.curselection())
 
 
@@ -1829,7 +1829,7 @@ class EffortStartForEffort(NeedsSelectedEffortMixin, ViewerCommand,
 
     def trackableTasks(self):
         tasks = set([effort.task() for effort in self.viewer.curselection()])
-        return [task for task in tasks if task.active() \
+        return [task for task in tasks if not task.completed() \
                 and not task.isBeingTracked()]
 
 
@@ -1867,7 +1867,7 @@ class EffortStartButton(PopupButtonMixin, TaskListCommand):
         return menu.StartEffortForTaskMenu(self.mainWindow(), self.taskList)
 
     def enabled(self, event):
-        return any(task.active() for task in self.taskList)
+        return any(not task.completed() for task in self.taskList)
     
 
 class EffortStop(EffortListCommand, TaskListCommand, patterns.Observer):

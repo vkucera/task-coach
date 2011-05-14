@@ -109,7 +109,7 @@ footer = '''
             <div class="navbox">
                 <h2>Get support</h2>
                 <ul>
-                    <li><a href="mailinglist.html">Join mailinglist</a></li>
+                    <li><a href="mailinglist.html">Join mailing list</a></li>
                     <li><a href="%(faq_url)s">Frequently asked questions</a></li>
                     <li><a href="http://taskcoach.wikispaces.com">User manual</a></li>
                     <li><a href="%(support_request_url)s">Request support</a></li>

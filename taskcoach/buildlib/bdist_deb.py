@@ -42,6 +42,7 @@ class bdist_deb(Command, object):
         ('long-description=', None, 'long description of the application'),
         ('version=', None, 'version of the application'),
         ('package-version=', None, 'version of the package [1]'),
+        ('changelog-content=', None, 'Content of the changelog file'),
         ('distribution=', None, 'distribution of the package [UNRELEASED]'),
         ('command=', None, 'command to start the application'),
         ('priority=', None, 'priority of the deb package [optional]'),
@@ -69,6 +70,7 @@ class bdist_deb(Command, object):
         self.priority = 'optional'
         self.urgency = 'low'
         self.architecture = 'all'
+        self.changelog_content = ''
         self.sdist = self.package = self.subsection = self.title = \
             self.description = self.long_description = self.command = \
             self.maintainer = self.maintainer_email = self.author = \
@@ -134,7 +136,6 @@ class bdist_deb(Command, object):
         (dest_name, copied) = copy_file(self.sdist, self.bdist_base)
         orig_name = dest_name[:-len('.tar.gz')] + '.orig.tar.gz'
         orig_name = orig_name.lower()
-        orig_name = orig_name.replace('-', '_')
         if os.path.exists(orig_name):
             os.remove(orig_name)
         self.sdist_archive = move_file(dest_name, orig_name)
@@ -235,7 +236,7 @@ menu = '''?package(%(package)s):needs="X11"\\
 '''
 
 control = '''Source: %(package)s
-Section: %(subsection_lower)s
+Section: %(section)s
 Priority: %(priority)s
 Maintainer: %(maintainer)s <%(maintainer_email)s>
 Build-Depends: cdbs (>= 0.4.43), debhelper (>= 5), python, dpatch
@@ -283,7 +284,7 @@ is licensed under the %(license_abbrev)s, see above.
 
 changelog = '''%(package)s (%(version)s-%(package_version)s) %(distribution)s; urgency=%(urgency)s
 
-  * New upstream release.
+%(changelog_content)s
 
  -- %(maintainer)s <%(maintainer_email)s>  %(datetime)s
 '''

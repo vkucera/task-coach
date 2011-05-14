@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
+import wx, os
 from taskcoachlib import meta, patterns
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import date, task
@@ -156,9 +156,11 @@ class TaskBarIcon(date.ClockSecondObserver, wx.TaskBarIcon):
                     textParts.append(singular)
                 elif count > 1:
                     textParts.append(plural%count)
-                
-        text = ', '.join(textParts)
-        text = u'%s - %s'%(meta.name, text) if text else meta.name
+        
+        textPart = ', '.join(textParts)
+        filename = os.path.basename(self.__window.taskFile.filename())        
+        namePart = u'%s - %s'%(meta.name, filename) if filename else meta.name
+        text = u'%s\n%s'%(namePart, textPart) if textPart else namePart
         
         if text != self.__tooltipText:
             self.__tooltipText = text
