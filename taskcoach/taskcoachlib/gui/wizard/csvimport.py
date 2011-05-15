@@ -46,6 +46,8 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
         self.delimiter.Append(_('Comma'))
         self.delimiter.Append(_('Tab'))
         self.delimiter.Append(_('Space'))
+        self.delimiter.Append(_('Colon'))
+        self.delimiter.Append(_('Semicolon'))
         self.delimiter.SetSelection(0)
 
         self.quoteChar = wx.Choice(self, wx.ID_ANY)
@@ -126,7 +128,7 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
             else:
                 doublequote = False
                 escapechar = self.escapeChar.GetValue().encode('UTF-8')
-            self.dialect = CSVDialect(delimiter={0: ',', 1: '\t', 2: ' '}[self.delimiter.GetSelection()],
+            self.dialect = CSVDialect(delimiter={0: ',', 1: '\t', 2: ' ', 3: ':', 4: ';'}[self.delimiter.GetSelection()],
                                       quotechar={0: "'", 1: '"'}[self.quoteChar.GetSelection()],
                                       doublequote=doublequote, escapechar=escapechar)
 
