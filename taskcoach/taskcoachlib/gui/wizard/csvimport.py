@@ -76,6 +76,7 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
         self.grid.SetRowLabelSize(0)
         self.grid.SetColLabelSize(0)
         self.grid.CreateGrid(0, 0)
+        self.grid.EnableEditing(False)
 
         vsizer = wx.BoxSizer(wx.VERTICAL)
         gridSizer = wx.FlexGridSizer(0, 2)
