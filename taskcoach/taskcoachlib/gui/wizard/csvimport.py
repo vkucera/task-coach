@@ -215,6 +215,9 @@ class CSVImportMappingPage(wiz.WizardPageSimple):
     def SetOptions(self, options):
         self.options = options
 
+        if self.interior.GetSizer():
+            self.interior.GetSizer().Clear(True)
+
         for child in self.interior.GetChildren():
             self.interior.RemoveChild(child)
         self.choices = []
@@ -236,7 +239,9 @@ class CSVImportMappingPage(wiz.WizardPageSimple):
 
             gsz.Add(choice)
 
+        gsz.AddGrowableCol(1)
         self.interior.SetSizer(gsz)
+        gsz.Layout()
 
     def CanGoNext(self):
         wrongFields = []
