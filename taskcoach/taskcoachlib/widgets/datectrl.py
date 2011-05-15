@@ -25,7 +25,7 @@ from taskcoachlib.domain import date
 class Panel(wx.Panel):
     def __init__(self, parent, callback=None, *args, **kwargs):
         super(Panel, self).__init__(parent, *args, **kwargs)
-        callback = callback or self.nullCalback
+        callback = callback or self.nullCallback
         self._controls = self._createControls(callback)
         self._layout()
         if '__WXGTK__' == wx.Platform:
