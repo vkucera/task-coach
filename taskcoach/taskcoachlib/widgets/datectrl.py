@@ -25,13 +25,14 @@ from taskcoachlib.domain import date
 class Panel(wx.Panel):
     def __init__(self, parent, callback=None, *args, **kwargs):
         super(Panel, self).__init__(parent, *args, **kwargs)
+        callback = callback or self.nullCalback
         self._controls = self._createControls(callback)
         self._layout()
         if '__WXGTK__' == wx.Platform:
             # Many EVT_CHILD_FOCUS are sent on wxGTK, see 
             # http://trac.wxwidgets.org/ticket/11305. Ignore these events
             self.Bind(wx.EVT_CHILD_FOCUS, self.onChildFocus)
-
+            
     def onChildFocus(self, event):
         pass
         
@@ -44,6 +45,10 @@ class Panel(wx.Panel):
             self._sizer.Add(control, border=2, 
                             flag=wx.RIGHT|wx.ALIGN_CENTER_VERTICAL)
         self.SetSizerAndFit(self._sizer)
+
+    @staticmethod
+    def nullCallback(*args, **kwargs):
+        pass
 
 
 class _BetterDatePickerCtrl(wx.DatePickerCtrl):
