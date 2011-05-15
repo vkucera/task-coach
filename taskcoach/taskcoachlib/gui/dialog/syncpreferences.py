@@ -126,7 +126,7 @@ class SyncMLPreferences(widgets.NotebookDialog):
                                                 **kwargs)
 
     def addPages(self):
-        self.SetMinSize((300, 300))
+        self._interior.SetMinSize((450, 200))
         kwargs = dict(parent=self._interior, columns=3,
                       iocontroller=self.iocontroller)
         pages = [(SyncMLAccessPage(growableColumn=1, **kwargs), _('Access'), 'earth_blue_icon'),

@@ -32,7 +32,6 @@ endif
 
 PYTHONVERSION=$(shell python -c "import sys; print '%d.%d'%sys.version_info[:2]")
 TCVERSION=$(shell python -c "import taskcoachlib.meta.data as data; print data.version")
-TCUBUNTUVERSION=$(TCVERSION)$(shell python -c "import taskcoachlib.meta.data as data; print data.version_suffix")
 TCPORTABLE=$(shell python -c "import os; print \"'\" + os.path.join(os.getcwd(), 'build', 'TaskCoachPortable') + \"'\"")
 
 revision:
@@ -56,7 +55,10 @@ dist/TaskCoach-$(TCVERSION).zip:
 sdist_linux: prepare changes templates dist/TaskCoach-$(TCVERSION).tar.gz
 
 sdist_ubuntu: sdist_linux
-	mv dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCUBUNTUVERSION).tar.gz
+	# Launchpad does not support one size fits all packages...
+	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu10~lucid.tar.gz
+	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu10~maverick.tar.gz
+	cp dist/TaskCoach-$(TCVERSION).tar.gz dist/taskcoach_$(TCVERSION)-0ubuntu11~natty.tar.gz
 
 ifeq ("2.5","$(PYTHONVERSION)")
     template="build.in/debian/MANIFEST-2.5.in"
@@ -94,16 +96,27 @@ deb: sdist_linux
 	mv dist/taskcoach_$(TCVERSION)-1_all.deb dist/taskcoach_$(TCVERSION)-1_$(pydeb).deb
 
 ubuntu: sdist_ubuntu
-	$(PYTHON) make.py bdist_ubuntu --sdist=dist/taskcoach_$(TCUBUNTUVERSION).tar.gz
+	$(PYTHON) make.py bdist_ubuntu lucid 10 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu10~lucid.tar.gz
+	mv build build-lucid
+	$(PYTHON) make.py bdist_ubuntu maverick 10 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu10~maverick.tar.gz
+	mv build build-maverick
+	$(PYTHON) make.py bdist_ubuntu natty 11 --sdist=dist/taskcoach_$(TCVERSION)-0ubuntu11~natty.tar.gz
+	mv build build-natty
 
 ppa-sign: ubuntu
-	cd build; debsign -k0xa3e41706 taskcoach_$(TCUBUNTUVERSION)-1_source.changes
+	cd build-lucid; debsign -k0xa3e41706 taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
+	cd build-maverick; debsign -k0xa3e41706 taskcoach_$(TCVERSION)-0ubuntu10~maverick-1_source.changes
+	cd build-natty; debsign -k0xa3e41706 taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
 
 ppa-rel: ppa-sign
-	cd build; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCUBUNTUVERSION)-1_source.changes
+	cd build-lucid; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
+	cd build-maverick; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu10~maverick-1_source.changes
+	cd build-natty; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
 
 ppa-relnext: ppa-sign
-	cd build; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCUBUNTUVERSION)-1_source.changes
+	cd build-lucid; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
+	cd build-maverick; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu10~maverick-1_source.changes
+	cd build-natty; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
 
 dmg: prepare
 	$(PYTHON) make.py py2app

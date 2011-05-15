@@ -404,7 +404,7 @@ class Preferences(widgets.NotebookDialog):
             self.CentreOnParent()
 
     def addPages(self):
-        self.SetMinSize((300, 430))
+        self._interior.SetMinSize((950, 450))
         for pageName in self.allPageNamesInUserOrder():
             if self.shouldCreatePage(pageName):
                 page = self.createPage(pageName)

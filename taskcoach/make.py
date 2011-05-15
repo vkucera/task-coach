@@ -161,11 +161,13 @@ elif sys.argv[1] in ['bdist_deb', 'bdist_ubuntu']:
         command='/usr/bin/taskcoach.py')
 
     if sys.argv[1] == 'bdist_ubuntu':
-        bdist_deb['distribution'] = 'lucid'
-        bdist_deb['version'] = meta.version + meta.version_suffix
+        bdist_deb['distribution'] = sys.argv[2]
+        bdist_deb['version'] = '%s-0ubuntu%s~%s' % (meta.version, sys.argv[3], sys.argv[2])
         bdist_deb['section'] = 'editors'
         bdist_deb['changelog_content'] = file('changelog_content', 'rb').read().rstrip()
         sys.argv[1] = 'bdist_deb'
+        del sys.argv[2]
+        del sys.argv[2]
 
     setupOptions.update(dict(options=dict(bdist_deb=bdist_deb)))
     
