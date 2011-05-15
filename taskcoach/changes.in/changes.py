@@ -51,6 +51,7 @@ tooltip window.''', 'http://uservoice.com/a/959Qc'),
         Feature('''Tabs in the edit dialogs can be dragged and dropped to 
 create any layout the user may want.'''),
         Feature('''CSV files may also have colons or semicolons as separators.'''),
+        Feature('''It is possible to select which rows to import from a CSV file.'''),
         ]
     ),
 

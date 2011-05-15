@@ -68,15 +68,19 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
         hsizer.Add(self.escapeQuote, 1, wx.ALL, 3)
         hsizer.Add(self.escapeChar, 1, wx.ALL, 3)
         self.quotePanel.SetSizer(hsizer)
+        
+        self.importSelectedRowsOnly = wx.CheckBox(self, wx.ID_ANY, _('Import only the selected rows'))
+        self.importSelectedRowsOnly.SetValue(False)
 
         self.hasHeaders = wx.CheckBox(self, wx.ID_ANY, _('First line describes fields'))
         self.hasHeaders.SetValue(True)
 
-        self.grid = gridlib.Grid(self, wx.ID_ANY)
+        self.grid = gridlib.Grid(self)
         self.grid.SetRowLabelSize(0)
         self.grid.SetColLabelSize(0)
         self.grid.CreateGrid(0, 0)
         self.grid.EnableEditing(False)
+        self.grid.SetSelectionMode(self.grid.wxGridSelectRows)
 
         vsizer = wx.BoxSizer(wx.VERTICAL)
         gridSizer = wx.FlexGridSizer(0, 2)
@@ -89,6 +93,9 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
 
         gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Escape quote')), 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALL, 3)
         gridSizer.Add(self.quotePanel, 0, wx.ALL, 3)
+
+        gridSizer.Add(self.importSelectedRowsOnly, 0, wx.ALL, 3)
+        gridSizer.Add((0, 0))
 
         gridSizer.Add(self.hasHeaders, 0, wx.ALL, 3)
         gridSizer.Add((0, 0))
@@ -108,6 +115,7 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
 
         wx.EVT_CHOICE(self.delimiter, wx.ID_ANY, self.OnOptionChanged)
         wx.EVT_CHOICE(self.quoteChar, wx.ID_ANY, self.OnOptionChanged)
+        wx.EVT_CHECKBOX(self.importSelectedRowsOnly, wx.ID_ANY, self.OnOptionChanged)
         wx.EVT_CHECKBOX(self.hasHeaders, wx.ID_ANY, self.OnOptionChanged)
         wx.EVT_RADIOBUTTON(self.doubleQuote, wx.ID_ANY, self.OnOptionChanged)
         wx.EVT_RADIOBUTTON(self.escapeQuote, wx.ID_ANY, self.OnOptionChanged)
@@ -172,17 +180,27 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
 
     def GetOptions(self):
         return dict(dialect=self.dialect,
+                    importSelectedRowsOnly=self.importSelectedRowsOnly.GetValue(),
+                    selectedRows=self.GetSelectedRows(),
                     hasHeaders=self.hasHeaders.GetValue(),
                     filename=self.filename,
                     encoding=self.encoding,
                     fields=self.headers)
+        
+    def GetSelectedRows(self):
+        startRows = [row for row, column in self.grid.GetSelectionBlockTopLeft()]
+        stopRows = [row for row, column in self.grid.GetSelectionBlockBottomRight()]
+        selectedRows = []
+        for startRow, stopRow in zip(startRows, stopRows):
+            selectedRows.extend(range(startRow, stopRow+1))
+        return selectedRows
 
     def CanGoNext(self):
         if self.filename is not None:
             self.GetNext().SetOptions(self.GetOptions())
             return True, None
         return False, _('Please select a file.')
-
+    
 
 class CSVImportMappingPage(wiz.WizardPageSimple):
     def __init__(self, *args, **kwargs):
