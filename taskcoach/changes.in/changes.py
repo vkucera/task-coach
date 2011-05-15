@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.18', 'May 12, 2011',
+Release('1.2.18', 'May 15, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Make sure long menu texts don't overlap the keyboard shortcut.'''),
@@ -36,6 +36,8 @@ calendar viewer would not change.'''),
         Bug('''Don't crash if there is no session manager on Linux''', '3300643'),
         Bug('''Give the import dialog a proper window title bar.'''),
         Bug('''Going back and then forward in the CSV import wizard didn't work.'''),
+        Bug('''Task Coach wouldn't keep the inline subject edit control open
+in the task viewer when tracking effort.''', '3301562'),
         ],
     featuresAdded=[
         Feature('''Open tracked tasks without looking them up using the 
