@@ -237,7 +237,7 @@ class CSVImportMappingPage(wiz.WizardPageSimple):
             choice.SetSelection(0)
             self.choices.append(choice)
 
-            gsz.Add(choice)
+            gsz.Add(choice, flag=wx.ALIGN_CENTER_VERTICAL)
 
         gsz.AddGrowableCol(1)
         self.interior.SetSizer(gsz)
