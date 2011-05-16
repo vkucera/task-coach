@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-04-29 22:24+0000\n"
+"POT-Creation-Date: 2011-05-08 16:21+0000\n"
 "PO-Revision-Date: 2011-02-13 11:40+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-08 12:21+0000\n"
-"X-Generator: Launchpad (build 12981)\n"
+"X-Launchpad-Export-Date: 2011-05-16 20:25+0000\n"
+"X-Generator: Launchpad (build 13045)\n"
 
 #: taskcoachlib\application\application.py:236
 msgid ""
@@ -101,7 +101,7 @@ msgstr "Kéo và thả"
 msgid "Drag and drop \"%s\""
 msgstr ""
 
-#: taskcoachlib\command\base.py:342 taskcoachlib\widgets\dialog.py:147
+#: taskcoachlib\command\base.py:342 taskcoachlib\widgets\dialog.py:150
 msgid "Add attachment"
 msgstr "Đính kèm file"
 
@@ -352,43 +352,43 @@ msgstr ""
 msgid "Start tracking \"%s\""
 msgstr ""
 
-#: taskcoachlib\command\taskCommands.py:295
+#: taskcoachlib\command\taskCommands.py:300
 msgid "Stop tracking"
 msgstr ""
 
-#: taskcoachlib\command\taskCommands.py:296
+#: taskcoachlib\command\taskCommands.py:301
 msgid "Stop tracking \"%s\""
 msgstr ""
 
-#: taskcoachlib\command\taskCommands.py:339
+#: taskcoachlib\command\taskCommands.py:344
 msgid "Maximize priority"
 msgstr "Ưu tiên tối đa"
 
-#: taskcoachlib\command\taskCommands.py:340
+#: taskcoachlib\command\taskCommands.py:345
 msgid "Maximize priority of \"%s\""
 msgstr ""
 
-#: taskcoachlib\command\taskCommands.py:349
+#: taskcoachlib\command\taskCommands.py:354
 msgid "Minimize priority"
 msgstr "Ưu tiên tối thiểu"
 
-#: taskcoachlib\command\taskCommands.py:350
+#: taskcoachlib\command\taskCommands.py:355
 msgid "Minimize priority of \"%s\""
 msgstr ""
 
-#: taskcoachlib\command\taskCommands.py:379
+#: taskcoachlib\command\taskCommands.py:384
 msgid "Increase priority"
 msgstr "Tăng độ ưu tiên"
 
-#: taskcoachlib\command\taskCommands.py:380
+#: taskcoachlib\command\taskCommands.py:385
 msgid "Increase priority of \"%s\""
 msgstr ""
 
-#: taskcoachlib\command\taskCommands.py:386
+#: taskcoachlib\command\taskCommands.py:391
 msgid "Decrease priority"
 msgstr "Giảm độ ưu tiên"
 
-#: taskcoachlib\command\taskCommands.py:387
+#: taskcoachlib\command\taskCommands.py:392
 msgid "Decrease priority of \"%s\""
 msgstr ""
 
@@ -488,7 +488,7 @@ msgstr ""
 msgid "Toggle prerequisite of \"%s\""
 msgstr ""
 
-#: taskcoachlib\config\settings.py:195
+#: taskcoachlib\config\settings.py:221
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
@@ -496,7 +496,7 @@ msgstr ""
 "Lỗi trong khi lưu %s.ini:\n"
 "%s\n"
 
-#: taskcoachlib\config\settings.py:196
+#: taskcoachlib\config\settings.py:222
 msgid "Save error"
 msgstr "Lưu lỗi"
 
@@ -813,7 +813,7 @@ msgid "Question mark"
 msgstr ""
 
 #: taskcoachlib\gui\artprovider.py:143
-#: taskcoachlib\gui\wizard\csvimport.py:284
+#: taskcoachlib\gui\wizard\csvimport.py:315
 msgid "Information"
 msgstr ""
 
@@ -958,13 +958,13 @@ msgid "No icon"
 msgstr ""
 
 #: taskcoachlib\gui\dialog\editor.py:78 taskcoachlib\gui\dialog\editor.py:97
-#: taskcoachlib\gui\dialog\editor.py:1138
+#: taskcoachlib\gui\dialog\editor.py:1145
 #: taskcoachlib\gui\viewer\attachment.py:85
 #: taskcoachlib\gui\viewer\category.py:92
 #: taskcoachlib\gui\viewer\effort.py:170 taskcoachlib\gui\viewer\note.py:114
 #: taskcoachlib\gui\viewer\task.py:705
-#: taskcoachlib\gui\wizard\csvimport.py:193
-#: taskcoachlib\persistence\csv\reader.py:76
+#: taskcoachlib\gui\wizard\csvimport.py:215
+#: taskcoachlib\persistence\csv\reader.py:78
 #: taskcoachlib\widgets\conflict.py:167 taskcoachlib\widgets\conflict.py:195
 msgid "Description"
 msgstr "Mô tả"
@@ -977,8 +977,8 @@ msgstr ""
 #: taskcoachlib\gui\viewer\attachment.py:77
 #: taskcoachlib\gui\viewer\base.py:268 taskcoachlib\gui\viewer\category.py:85
 #: taskcoachlib\gui\viewer\note.py:110 taskcoachlib\gui\viewer\task.py:695
-#: taskcoachlib\gui\wizard\csvimport.py:192
-#: taskcoachlib\persistence\csv\reader.py:74
+#: taskcoachlib\gui\wizard\csvimport.py:214
+#: taskcoachlib\persistence\csv\reader.py:76
 #: taskcoachlib\widgets\conflict.py:162 taskcoachlib\widgets\conflict.py:190
 msgid "Subject"
 msgstr "Tựa đề"
@@ -989,8 +989,8 @@ msgstr ""
 
 #: taskcoachlib\gui\dialog\editor.py:130 taskcoachlib\gui\uicommand.py:2393
 #: taskcoachlib\gui\viewer\task.py:764
-#: taskcoachlib\gui\wizard\csvimport.py:195
-#: taskcoachlib\persistence\csv\reader.py:91
+#: taskcoachlib\gui\wizard\csvimport.py:217
+#: taskcoachlib\persistence\csv\reader.py:93
 #: taskcoachlib\widgets\conflict.py:215
 msgid "Priority"
 msgstr "Độ ưu tiên"
@@ -1040,24 +1040,24 @@ msgid "Dates"
 msgstr "Ngày"
 
 #: taskcoachlib\gui\dialog\editor.py:367 taskcoachlib\gui\viewer\task.py:755
-#: taskcoachlib\gui\wizard\csvimport.py:196
-#: taskcoachlib\persistence\csv\reader.py:96
+#: taskcoachlib\gui\wizard\csvimport.py:218
+#: taskcoachlib\persistence\csv\reader.py:98
 #: taskcoachlib\widgets\calendarconfig.py:79
 #: taskcoachlib\widgets\conflict.py:200
 msgid "Start date"
 msgstr "Ngày bắt đầu"
 
 #: taskcoachlib\gui\dialog\editor.py:368 taskcoachlib\gui\viewer\task.py:756
-#: taskcoachlib\gui\wizard\csvimport.py:197
-#: taskcoachlib\persistence\csv\reader.py:103
+#: taskcoachlib\gui\wizard\csvimport.py:219
+#: taskcoachlib\persistence\csv\reader.py:105
 #: taskcoachlib\widgets\calendarconfig.py:80
 #: taskcoachlib\widgets\conflict.py:205
 msgid "Due date"
 msgstr "Ngày đến hạn"
 
 #: taskcoachlib\gui\dialog\editor.py:369 taskcoachlib\gui\viewer\task.py:757
-#: taskcoachlib\gui\wizard\csvimport.py:198
-#: taskcoachlib\persistence\csv\reader.py:110
+#: taskcoachlib\gui\wizard\csvimport.py:220
+#: taskcoachlib\persistence\csv\reader.py:112
 #: taskcoachlib\widgets\conflict.py:210
 msgid "Completion date"
 msgstr "Ngày hoàn tất"
@@ -1097,8 +1097,8 @@ msgstr ""
 
 #: taskcoachlib\gui\dialog\editor.py:665 taskcoachlib\gui\dialog\editor.py:683
 #: taskcoachlib\gui\uicommand.py:2393 taskcoachlib\gui\viewer\task.py:761
-#: taskcoachlib\gui\wizard\csvimport.py:199
-#: taskcoachlib\persistence\csv\reader.py:117
+#: taskcoachlib\gui\wizard\csvimport.py:221
+#: taskcoachlib\persistence\csv\reader.py:119
 msgid "Budget"
 msgstr ""
 
@@ -1112,15 +1112,15 @@ msgid "Budget left"
 msgstr ""
 
 #: taskcoachlib\gui\dialog\editor.py:706 taskcoachlib\gui\viewer\task.py:765
-#: taskcoachlib\gui\wizard\csvimport.py:201
-#: taskcoachlib\persistence\csv\reader.py:136
+#: taskcoachlib\gui\wizard\csvimport.py:223
+#: taskcoachlib\persistence\csv\reader.py:138
 msgid "Hourly fee"
 msgstr ""
 
 #: taskcoachlib\gui\dialog\editor.py:713 taskcoachlib\gui\uicommand.py:2393
 #: taskcoachlib\gui\viewer\task.py:766
-#: taskcoachlib\gui\wizard\csvimport.py:200
-#: taskcoachlib\persistence\csv\reader.py:131
+#: taskcoachlib\gui\wizard\csvimport.py:222
+#: taskcoachlib\persistence\csv\reader.py:133
 msgid "Fixed fee"
 msgstr ""
 
@@ -1157,25 +1157,25 @@ msgstr ""
 msgid "Prerequisites"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\editor.py:1089
+#: taskcoachlib\gui\dialog\editor.py:1096
 msgid "Edit task"
 msgstr "Sửa tác vụ"
 
-#: taskcoachlib\gui\dialog\editor.py:1087
+#: taskcoachlib\gui\dialog\editor.py:1094
 #: taskcoachlib\gui\dialog\reminder.py:51
 #: taskcoachlib\gui\viewer\effort.py:169
 msgid "Task"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\editor.py:1106
+#: taskcoachlib\gui\dialog\editor.py:1113
 msgid "Start"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\editor.py:1117
+#: taskcoachlib\gui\dialog\editor.py:1124
 msgid "Stop"
 msgstr ""
 
-#: taskcoachlib\gui\dialog\editor.py:1108
+#: taskcoachlib\gui\dialog\editor.py:1115
 msgid "Start tracking from last stop time"
 msgstr ""
 
@@ -1232,7 +1232,7 @@ msgid "Use color:"
 msgstr ""
 
 #: taskcoachlib\gui\dialog\editor.py:408 taskcoachlib\gui\dialog\editor.py:466
-#: taskcoachlib\gui\uicommand.py:70 taskcoachlib\gui\wizard\csvimport.py:190
+#: taskcoachlib\gui\uicommand.py:70 taskcoachlib\gui\wizard\csvimport.py:212
 #: taskcoachlib\widgets\dirchooser.py:28
 msgid "None"
 msgstr "Không có"
@@ -1333,7 +1333,7 @@ msgid "Refresh from device"
 msgstr ""
 
 #: taskcoachlib\gui\dialog\iphone.py:44 taskcoachlib\widgets\buttonbox.py:24
-#: taskcoachlib\widgets\dialog.py:59
+#: taskcoachlib\widgets\dialog.py:60
 msgid "Cancel"
 msgstr ""
 
@@ -1376,8 +1376,8 @@ msgstr ""
 
 #: taskcoachlib\gui\dialog\iphone.py:98 taskcoachlib\gui\iphone.py:44
 #: taskcoachlib\widgets\buttonbox.py:24 taskcoachlib\widgets\conflict.py:262
-#: taskcoachlib\widgets\dialog.py:58 taskcoachlib\widgets\dialog.py:74
-#: taskcoachlib\widgets\dialog.py:77 taskcoachlib\widgets\dialog.py:140
+#: taskcoachlib\widgets\dialog.py:59 taskcoachlib\widgets\dialog.py:75
+#: taskcoachlib\widgets\dialog.py:78 taskcoachlib\widgets\dialog.py:143
 #: taskcoachlib\widgets\syncmlwarning.py:36
 msgid "OK"
 msgstr ""
@@ -1510,7 +1510,7 @@ msgid "Click this button to change the color of completed tasks"
 msgstr ""
 
 #: taskcoachlib\gui\dialog\preferences.py:290
-msgid "Click this button to change the color of over due tasks"
+msgid "Click this button to change the color of overdue tasks"
 msgstr ""
 
 #: taskcoachlib\gui\dialog\preferences.py:291
@@ -2582,6 +2582,14 @@ msgstr ""
 msgid "Edit the selected item(s)"
 msgstr ""
 
+#: taskcoachlib\gui\uicommand.py:1295
+msgid "Edit &tracked task...\tShift-Alt-T"
+msgstr ""
+
+#: taskcoachlib\gui\uicommand.py:1296
+msgid "Edit the currently tracked task(s)"
+msgstr ""
+
 #: taskcoachlib\gui\uicommand.py:1313
 msgid "&Delete\tDEL"
 msgstr ""
@@ -3154,11 +3162,11 @@ msgid "Only show tasks due today or tomorrow and hide later ones"
 msgstr ""
 
 #: taskcoachlib\gui\viewer\mixin.py:222
-msgid "Only show tasks due this wo&rk week"
+msgid "Only show tasks due this wo&rkweek"
 msgstr ""
 
 #: taskcoachlib\gui\viewer\mixin.py:223
-msgid "Only show tasks due this work week and hide later ones"
+msgid "Only show tasks due this workweek and hide later ones"
 msgstr ""
 
 #: taskcoachlib\gui\viewer\mixin.py:225
@@ -3246,11 +3254,11 @@ msgid "Only show tasks completed yesterday and today and hide older ones"
 msgstr ""
 
 #: taskcoachlib\gui\viewer\mixin.py:254
-msgid "Only show tasks completed this wo&rk week"
+msgid "Only show tasks completed this wo&rkweek"
 msgstr ""
 
 #: taskcoachlib\gui\viewer\mixin.py:255
-msgid "Only show tasks completed this work week and hide older ones"
+msgid "Only show tasks completed this workweek and hide older ones"
 msgstr ""
 
 #: taskcoachlib\gui\viewer\mixin.py:257
@@ -3338,11 +3346,11 @@ msgid "Only show tasks starting today or tomorrow and hide later ones"
 msgstr ""
 
 #: taskcoachlib\gui\viewer\mixin.py:288
-msgid "Only show tasks starting this wo&rk week"
+msgid "Only show tasks starting this wo&rkweek"
 msgstr ""
 
 #: taskcoachlib\gui\viewer\mixin.py:289
-msgid "Only show tasks starting this work week and hide later ones"
+msgid "Only show tasks starting this workweek and hide later ones"
 msgstr ""
 
 #: taskcoachlib\gui\viewer\mixin.py:291
@@ -3570,6 +3578,14 @@ msgstr ""
 msgid "Status: n/a"
 msgstr ""
 
+#: taskcoachlib\gui\viewer\task.py:36
+msgid "Tasks: %d selected, %d visible, %d total"
+msgstr ""
+
+#: taskcoachlib\gui\viewer\task.py:37
+msgid "Status: %d overdue, %d inactive, %d completed"
+msgstr ""
+
 #: taskcoachlib\gui\viewer\task.py:270
 msgid "Timeline"
 msgstr ""
@@ -3694,66 +3710,78 @@ msgstr ""
 msgid "Show/hide reminder column"
 msgstr ""
 
-#: taskcoachlib\gui\wizard\csvimport.py:45
+#: taskcoachlib\gui\wizard\csvimport.py:46
 msgid "Comma"
 msgstr ""
 
-#: taskcoachlib\gui\wizard\csvimport.py:46 taskcoachlib\help\__init__.py:630
+#: taskcoachlib\gui\wizard\csvimport.py:47 taskcoachlib\help\__init__.py:630
 msgid "Tab"
 msgstr ""
 
-#: taskcoachlib\gui\wizard\csvimport.py:47
+#: taskcoachlib\gui\wizard\csvimport.py:48
 msgid "Space"
 msgstr ""
 
-#: taskcoachlib\gui\wizard\csvimport.py:51
+#: taskcoachlib\gui\wizard\csvimport.py:54
 msgid "Simple quote"
 msgstr ""
 
-#: taskcoachlib\gui\wizard\csvimport.py:52
+#: taskcoachlib\gui\wizard\csvimport.py:55
 msgid "Double quote"
 msgstr ""
 
-#: taskcoachlib\gui\wizard\csvimport.py:69
+#: taskcoachlib\gui\wizard\csvimport.py:59
+msgid "Double it"
+msgstr ""
+
+#: taskcoachlib\gui\wizard\csvimport.py:61
+msgid "Escape with"
+msgstr ""
+
+#: taskcoachlib\gui\wizard\csvimport.py:75
 msgid "First line describes fields"
 msgstr ""
 
-#: taskcoachlib\gui\wizard\csvimport.py:80
+#: taskcoachlib\gui\wizard\csvimport.py:88
 msgid "Delimiter"
 msgstr ""
 
-#: taskcoachlib\gui\wizard\csvimport.py:83
+#: taskcoachlib\gui\wizard\csvimport.py:91
 msgid "Quote character"
 msgstr ""
 
-#: taskcoachlib\gui\wizard\csvimport.py:146
+#: taskcoachlib\gui\wizard\csvimport.py:94
+msgid "Escape quote"
+msgstr ""
+
+#: taskcoachlib\gui\wizard\csvimport.py:158
 msgid "Field #%d"
 msgstr ""
 
-#: taskcoachlib\gui\wizard\csvimport.py:180
+#: taskcoachlib\gui\wizard\csvimport.py:202
 msgid "Please select a file."
 msgstr ""
 
-#: taskcoachlib\gui\wizard\csvimport.py:191
-#: taskcoachlib\persistence\csv\reader.py:72
+#: taskcoachlib\gui\wizard\csvimport.py:213
+#: taskcoachlib\persistence\csv\reader.py:74
 msgid "ID"
 msgstr ""
 
-#: taskcoachlib\gui\wizard\csvimport.py:194
+#: taskcoachlib\gui\wizard\csvimport.py:216
 #: taskcoachlib\persistence\csv\reader.py:46
-#: taskcoachlib\persistence\csv\reader.py:79
+#: taskcoachlib\persistence\csv\reader.py:81
 msgid "Category"
 msgstr ""
 
-#: taskcoachlib\gui\wizard\csvimport.py:249
+#: taskcoachlib\gui\wizard\csvimport.py:280
 msgid "No field mapping."
 msgstr ""
 
-#: taskcoachlib\gui\wizard\csvimport.py:252
+#: taskcoachlib\gui\wizard\csvimport.py:283
 msgid "The \"%s\" field cannot be selected several times."
 msgstr ""
 
-#: taskcoachlib\gui\wizard\csvimport.py:255
+#: taskcoachlib\gui\wizard\csvimport.py:286
 msgid "The fields %s cannot be selected several times."
 msgstr ""
 
@@ -4006,7 +4034,7 @@ msgid "In addition, tasks can be referenced as:"
 msgstr ""
 
 #: taskcoachlib\help\__init__.py:182
-msgid "Over due: the due date is in the past;"
+msgid "Overdue: the due date is in the past;"
 msgstr ""
 
 #: taskcoachlib\help\__init__.py:183
@@ -4032,7 +4060,7 @@ msgid "The text of tasks is colored according to the following rules:"
 msgstr ""
 
 #: taskcoachlib\help\__init__.py:193
-msgid "Over due tasks are red;"
+msgid "Overdue tasks are red;"
 msgstr ""
 
 #: taskcoachlib\help\__init__.py:194
@@ -4139,7 +4167,7 @@ msgstr ""
 #: taskcoachlib\help\__init__.py:254
 msgid ""
 "Mutually exclusive subcategories: a check box indicating\n"
-"whether the subcategories of the category are mutual exclusive. If they "
+"whether the subcategories of the category are mutually exclusive. If they "
 "are,\n"
 "items can only belong to one of the subcategories. When filtering, you can "
 "only\n"
@@ -4342,9 +4370,11 @@ msgstr ""
 
 #: taskcoachlib\help\__init__.py:412
 msgid ""
-"The conflict detection/resolution system is a work around a \n"
-"Funambol limitation. It should work in most cases, but if many applications\n"
-"synchronize with the same server at the same time, problems may rise."
+"The conflict detection/resolution system is a workaround \n"
+"for a Funambol limitation. It should work in most cases, but if many \n"
+"applications synchronize with the same server at the same time, problems may "
+"\n"
+"arise."
 msgstr ""
 
 #: taskcoachlib\help\__init__.py:416
@@ -4627,13 +4657,13 @@ msgid ""
 "due date by the current date plus one day."
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:575
+#: taskcoachlib\help\__init__.py:576
 msgid ""
 "You can drag and drop viewers to create almost any user interface \n"
 "layout you want. When you start dragging a viewer, drop hints will appear "
 "to\n"
-"show where you can drop the viewer. Viewers can also be dropped onto "
-"eachother\n"
+"show where you can drop the viewer. Viewers can also be dropped onto each "
+"other\n"
 "to create notebooks."
 msgstr ""
 
@@ -4876,20 +4906,20 @@ msgstr ""
 msgid "Pop up menu or drop down box"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:647
+#: taskcoachlib\help\__init__.py:648
 msgid ""
 "<h4>%(name)s - %(description)s</h4>\n"
-"<h5>Version %(version)s, Revision %(revision)s, %(date)s</h5>\n"
+"<h5>Version %(version)s, %(date)s</h5>\n"
 "<p>By %(author)s &lt;%(author_email)s&gt;<p>\n"
 "<p><a href=\"%(url)s\" target=\"_blank\">%(url)s</a></p>\n"
 "<p>%(copyright)s</p>\n"
 "<p>%(license_notice_html)s</p>\n"
 msgstr ""
 
-#: taskcoachlib\help\__init__.py:659
+#: taskcoachlib\help\__init__.py:660
 msgid ""
 "\n"
-"Version %(version)s, Revision %(revision)s, %(date)s\n"
+"Version %(version)s, %(date)s\n"
 "\n"
 "By %(author)s <%(author_email)s>\n"
 "\n"
@@ -4909,7 +4939,7 @@ msgstr ""
 
 #: taskcoachlib\help\tips.py:26
 msgid ""
-"%(name)s has a mailinglist where you can discuss usage of %(name)s with "
+"%(name)s has a mailing list where you can discuss usage of %(name)s with "
 "fellow users, discuss and request features and complain about bugs. Go to "
 "%(url)s and join today!"
 msgstr ""
@@ -5307,7 +5337,7 @@ msgstr ""
 msgid "Login failed (%s). Please try again."
 msgstr ""
 
-#: taskcoachlib\persistence\csv\reader.py:59
+#: taskcoachlib\persistence\csv\reader.py:61
 msgid "No subject"
 msgstr ""
 
@@ -5534,7 +5564,7 @@ msgstr ""
 msgid "Fusion"
 msgstr ""
 
-#: taskcoachlib\widgets\dialog.py:149
+#: taskcoachlib\widgets\dialog.py:152
 msgid "All files (*.*)|*"
 msgstr ""
 
