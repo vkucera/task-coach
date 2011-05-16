@@ -41,7 +41,7 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
             
-Release('1.2.18', 'May 12, 2011',
+Release('1.2.18', 'May 15, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Make sure long menu texts don't overlap the keyboard shortcut.'''),
@@ -51,7 +51,12 @@ constant.''', '3295368'),
 calendar viewer would not change.'''),
         Bug('''Session management wouldn't work on XFCE.'''),
         Bug('''Start up even if the TaskCoach.ini file contains garbage.''', 
-            '3299850', '3300722')
+            '3299850', '3300722'),
+        Bug('''Don't crash if there is no session manager on Linux''', '3300643'),
+        Bug('''Give the import dialog a proper window title bar.'''),
+        Bug('''Going back and then forward in the CSV import wizard didn't work.'''),
+        Bug('''Task Coach wouldn't keep the inline subject edit control open
+in the task viewer when tracking effort.''', '3301562'),
         ],
     featuresAdded=[
         Feature('''Open tracked tasks without looking them up using the 
@@ -61,7 +66,11 @@ Actions->Edit tracked task menu item (Shift-Alt-T).''',
 Doing so sets the start date and time of the task to the current date and 
 time.''', 'http://uservoice.com/a/oyhL7'),
         Feature('''Show name of the current task file in the system tray 
-tooltip window.''', 'http://uservoice.com/a/959Qc')
+tooltip window.''', 'http://uservoice.com/a/959Qc'),
+        Feature('''Tabs in the edit dialogs can be dragged and dropped to 
+create any layout the user may want.'''),
+        Feature('''CSV files may also have colons or semicolons as separators.'''),
+        Feature('''It is possible to select which rows to import from a CSV file.'''),
         ]
     ),
 

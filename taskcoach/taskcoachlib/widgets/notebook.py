@@ -17,9 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-import draganddrop, frame
+import draganddrop
 import taskcoachlib.thirdparty.aui as aui
-import taskcoachlib.thirdparty.flatnotebook as fnb
 
 
 class GridCursor:
@@ -138,10 +137,6 @@ class BookMixin(object):
         dropTarget = draganddrop.FileDropTarget(onDragOverCallback=self.onDragOver)
         self.SetDropTarget(dropTarget)
         self.Bind(self.pageChangedEvent, self.onPageChanged)
-        self.createImageList()
-        
-    def createImageList(self):
-        self.AssignImageList(wx.ImageList(*self._bitmapSize))
         
     def __getitem__(self, index):
         ''' More pythonic way to get a specific page, also useful for iterating
@@ -168,27 +163,17 @@ class BookMixin(object):
         event.Skip()    
 
     def AddPage(self, page, name, bitmap=None):
-        if bitmap:
-            imageList = self.GetImageList()
-            imageList.Add(wx.ArtProvider_GetBitmap(bitmap, wx.ART_MENU, 
-                          self._bitmapSize))
-            imageId = imageList.GetImageCount()-1
-        else:
-            imageId = -1
-        super(BookMixin, self).AddPage(page, name, imageId=imageId)
+        bitmap = wx.ArtProvider_GetBitmap(bitmap, wx.ART_MENU, self._bitmapSize)
+        super(BookMixin, self).AddPage(page, name, bitmap=bitmap)
 
     def ok(self, *args, **kwargs):
         for page in self:
             page.ok(*args, **kwargs)
             
 
-class Notebook(BookMixin, fnb.FlatNotebook):
+class Notebook(BookMixin, aui.AuiNotebook):
     pageChangedEvent = wx.EVT_NOTEBOOK_PAGE_CHANGED
     
     def __init__(self, *args, **kwargs):
-        kwargs['agwStyle'] = fnb.FNB_NO_X_BUTTON | fnb.FNB_VC8 | fnb.FNB_SMART_TABS
+        kwargs['agwStyle'] = kwargs.get('agwStyle', aui.AUI_NB_DEFAULT_STYLE) & ~aui.AUI_NB_CLOSE_ON_ACTIVE_TAB & ~aui.AUI_NB_MIDDLE_CLICK_CLOSE 
         super(Notebook, self).__init__(*args, **kwargs)
-        bitmap = wx.BitmapFromIcon(self.TopLevelParent.GetIcon())
-        if bitmap:
-            # Despite its name, we need to pass a bitmap to SetNavigatorIcon
-            self.SetNavigatorIcon(bitmap) 

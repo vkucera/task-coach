@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 version = '1.4.0' # Current version number of the application
 tskversion = 31 # Current version number of the task file format, changed to 31 for release 1.2.0.
-release_day = '13' # Day number of the release, 1-31, as string
+release_day = '15' # Day number of the release, 1-31, as string
 release_month = 'May' # Month of the release in plain English
 release_year = '2011' # Year of the release as string
 release_status = 'stable' # One of 'alpha', 'beta', 'stable'
@@ -53,12 +53,6 @@ if revision: # Buildbot sets revision
     release_year = str(now.year)
     release_status = 'beta'
     version += '.' + revision
-
-version_suffix = ''
-if platform.system() == 'Linux' and \
-       hasattr(platform, 'linux_distribution') and \
-       'Ubuntu' in platform.linux_distribution():
-    version_suffix = '-0ubuntu10'
 
 months = ['January', 'February', 'March', 'April', 'May', 'June', 
           'July', 'August', 'September', 'October', 'November', 'December']

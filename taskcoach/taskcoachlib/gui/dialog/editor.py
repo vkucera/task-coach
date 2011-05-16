@@ -747,6 +747,12 @@ class EditBook(widgets.Notebook):
         super(EditBook, self).__init__(parent)
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
         self.addPages(taskFile)
+        perspective = self.settings.get('%sdialog'%self.object, 'perspective')
+        if perspective:
+            try:
+                self.LoadPerspective(perspective)
+            except:
+                pass
         
     def addPages(self, taskFile):
         for pageName in self.allPageNamesInUserOrder():
@@ -833,6 +839,7 @@ class EditBook(widgets.Notebook):
             removeInstance(page)
         pageNames = [self[index].pageName for index in range(self.GetPageCount())]
         self.settings.setlist('editor', '%spages'%self.object, pageNames)
+        self.settings.set('%sdialog'%self.object, 'perspective', self.SavePerspective())
 
 
 class TaskEditBook(EditBook):

@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, os, csv, tempfile
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty import chardet
+from taskcoachlib import meta
 
 import wx.wizard as wiz
 import wx.grid as gridlib
@@ -45,6 +46,8 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
         self.delimiter.Append(_('Comma'))
         self.delimiter.Append(_('Tab'))
         self.delimiter.Append(_('Space'))
+        self.delimiter.Append(_('Colon'))
+        self.delimiter.Append(_('Semicolon'))
         self.delimiter.SetSelection(0)
 
         self.quoteChar = wx.Choice(self, wx.ID_ANY)
@@ -65,14 +68,19 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
         hsizer.Add(self.escapeQuote, 1, wx.ALL, 3)
         hsizer.Add(self.escapeChar, 1, wx.ALL, 3)
         self.quotePanel.SetSizer(hsizer)
+        
+        self.importSelectedRowsOnly = wx.CheckBox(self, wx.ID_ANY, _('Import only the selected rows'))
+        self.importSelectedRowsOnly.SetValue(False)
 
         self.hasHeaders = wx.CheckBox(self, wx.ID_ANY, _('First line describes fields'))
         self.hasHeaders.SetValue(True)
 
-        self.grid = gridlib.Grid(self, wx.ID_ANY)
+        self.grid = gridlib.Grid(self)
         self.grid.SetRowLabelSize(0)
         self.grid.SetColLabelSize(0)
         self.grid.CreateGrid(0, 0)
+        self.grid.EnableEditing(False)
+        self.grid.SetSelectionMode(self.grid.wxGridSelectRows)
 
         vsizer = wx.BoxSizer(wx.VERTICAL)
         gridSizer = wx.FlexGridSizer(0, 2)
@@ -85,6 +93,9 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
 
         gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Escape quote')), 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALL, 3)
         gridSizer.Add(self.quotePanel, 0, wx.ALL, 3)
+
+        gridSizer.Add(self.importSelectedRowsOnly, 0, wx.ALL, 3)
+        gridSizer.Add((0, 0))
 
         gridSizer.Add(self.hasHeaders, 0, wx.ALL, 3)
         gridSizer.Add((0, 0))
@@ -104,6 +115,7 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
 
         wx.EVT_CHOICE(self.delimiter, wx.ID_ANY, self.OnOptionChanged)
         wx.EVT_CHOICE(self.quoteChar, wx.ID_ANY, self.OnOptionChanged)
+        wx.EVT_CHECKBOX(self.importSelectedRowsOnly, wx.ID_ANY, self.OnOptionChanged)
         wx.EVT_CHECKBOX(self.hasHeaders, wx.ID_ANY, self.OnOptionChanged)
         wx.EVT_RADIOBUTTON(self.doubleQuote, wx.ID_ANY, self.OnOptionChanged)
         wx.EVT_RADIOBUTTON(self.escapeQuote, wx.ID_ANY, self.OnOptionChanged)
@@ -125,7 +137,7 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
             else:
                 doublequote = False
                 escapechar = self.escapeChar.GetValue().encode('UTF-8')
-            self.dialect = CSVDialect(delimiter={0: ',', 1: '\t', 2: ' '}[self.delimiter.GetSelection()],
+            self.dialect = CSVDialect(delimiter={0: ',', 1: '\t', 2: ' ', 3: ':', 4: ';'}[self.delimiter.GetSelection()],
                                       quotechar={0: "'", 1: '"'}[self.quoteChar.GetSelection()],
                                       doublequote=doublequote, escapechar=escapechar)
 
@@ -168,17 +180,27 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
 
     def GetOptions(self):
         return dict(dialect=self.dialect,
+                    importSelectedRowsOnly=self.importSelectedRowsOnly.GetValue(),
+                    selectedRows=self.GetSelectedRows(),
                     hasHeaders=self.hasHeaders.GetValue(),
                     filename=self.filename,
                     encoding=self.encoding,
                     fields=self.headers)
+        
+    def GetSelectedRows(self):
+        startRows = [row for row, column in self.grid.GetSelectionBlockTopLeft()]
+        stopRows = [row for row, column in self.grid.GetSelectionBlockBottomRight()]
+        selectedRows = []
+        for startRow, stopRow in zip(startRows, stopRows):
+            selectedRows.extend(range(startRow, stopRow+1))
+        return selectedRows
 
     def CanGoNext(self):
         if self.filename is not None:
             self.GetNext().SetOptions(self.GetOptions())
             return True, None
         return False, _('Please select a file.')
-
+    
 
 class CSVImportMappingPage(wiz.WizardPageSimple):
     def __init__(self, *args, **kwargs):
@@ -212,24 +234,33 @@ class CSVImportMappingPage(wiz.WizardPageSimple):
     def SetOptions(self, options):
         self.options = options
 
+        if self.interior.GetSizer():
+            self.interior.GetSizer().Clear(True)
+
         for child in self.interior.GetChildren():
             self.interior.RemoveChild(child)
         self.choices = []
 
-        gsz = wx.FlexGridSizer(0, 2)
-
+        gsz = wx.FlexGridSizer(0, 2, 4, 2)
+        
+        gsz.Add(wx.StaticText(self.interior, wx.ID_ANY, _('Column header in CSV file')))
+        gsz.Add(wx.StaticText(self.interior, wx.ID_ANY, _('%s attribute')%meta.name))
+        gsz.AddSpacer((3,3))
+        gsz.AddSpacer((3,3))
         for fieldName in options['fields']:
-            gsz.Add(wx.StaticText(self.interior, wx.ID_ANY, fieldName))
+            gsz.Add(wx.StaticText(self.interior, wx.ID_ANY, fieldName), flag=wx.ALIGN_CENTER_VERTICAL)
 
             choice = wx.Choice(self.interior, wx.ID_ANY)
-            for tcFieldName, _ in self.fields:
+            for tcFieldName, multipleValuesAllowed in self.fields:
                 choice.Append(tcFieldName)
             choice.SetSelection(0)
             self.choices.append(choice)
 
-            gsz.Add(choice)
+            gsz.Add(choice, flag=wx.ALIGN_CENTER_VERTICAL)
 
+        gsz.AddGrowableCol(1)
         self.interior.SetSizer(gsz)
+        gsz.Layout()
 
     def CanGoNext(self):
         wrongFields = []
@@ -264,7 +295,7 @@ class CSVImportMappingPage(wiz.WizardPageSimple):
 
 class CSVImportWizard(wiz.Wizard):
     def __init__(self, filename, *args, **kwargs):
-        kwargs['style'] = wx.RESIZE_BORDER
+        kwargs['style'] = wx.RESIZE_BORDER | wx.DEFAULT_DIALOG_STYLE
         super(CSVImportWizard, self).__init__(*args, **kwargs)
 
         self.optionsPage = CSVImportOptionsPage(filename, self)
