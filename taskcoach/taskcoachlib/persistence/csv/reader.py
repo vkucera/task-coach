@@ -55,7 +55,9 @@ class CSVReader(object):
         tasksById = dict()
         tasks = []
 
-        for line in reader:
+        for index, line in enumerate(reader):
+            if kwargs['importSelectedRowsOnly'] and index not in kwargs['selectedRows']:
+                continue
             subject = _('No subject')
             id_ = None
             description = StringIO.StringIO()

@@ -203,7 +203,6 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         self.Thaw()
             
     def RefreshItems(self, *objects):
-        self.StopEditing()
         self.__selection = self.curselection()
         self._refreshTargetObjects(self.GetRootItem(), *objects)
             
