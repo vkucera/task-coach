@@ -1036,6 +1036,9 @@ class RenameViewer(ViewerCommand):
             activeViewer.setTitle(viewerNameDialog.GetValue())
         viewerNameDialog.Destroy()
         
+    def enabled(self, event):
+        return bool(self.viewer.activeViewer())
+        
         
 class ActivateViewer(ViewerCommand):
     def __init__(self, *args, **kwargs):
