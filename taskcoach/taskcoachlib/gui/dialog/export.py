@@ -47,8 +47,12 @@ class ExportDialog(sized_controls.SizedDialog):
         label = wx.StaticText(panel, label=('Export items from:'))
         sized_controls.SetSizerProp(label, 'valign', 'center')
         self.viewerComboBox = wx.ComboBox(panel, style=wx.CB_READONLY|wx.CB_SORT)
+        self.titleToViewer = dict()
         for viewer in self.exportableViewers():
-            self.viewerComboBox.Append(viewer.title(), viewer)
+            self.viewerComboBox.Append(viewer.title())
+            # Would like to user client data in the combobox, but that 
+            # doesn't work on all platforms
+            self.titleToViewer[viewer.title()] = viewer
         selectedViewer = self.window.viewer.activeViewer()
         if selectedViewer not in self.exportableViewers():
             selectedViewer = self.exportableViewers()[0]
@@ -69,7 +73,7 @@ class ExportDialog(sized_controls.SizedDialog):
         return self.selectionOnlyCheckBox.GetValue()
     
     def selectedViewer(self):
-        return self.viewerComboBox.GetClientData(self.viewerComboBox.GetSelection())
+        return self.titleToViewer[self.viewerComboBox.GetValue()]
 
     def onOK(self, event):
         self.settings.set(self.section, self.selectionOnlySetting, 
@@ -78,12 +82,12 @@ class ExportDialog(sized_controls.SizedDialog):
             
 
 class ExportAsCSVDialog(ExportDialog):
-    title = _('Export as CSV...')
+    title = _('Export as CSV')
     selectionOnlySetting = 'csv_selectiononly'
 
 
 class ExportAsICalendarDialog(ExportDialog):
-    title = _('Export as iCalendar...')
+    title = _('Export as iCalendar')
     selectionOnlySetting = 'ical_selectiononly'
     
     def exportableViewers(self):
@@ -94,7 +98,7 @@ class ExportAsICalendarDialog(ExportDialog):
     
 
 class ExportAsHTMLDialog(ExportDialog):
-    title = _('Export as HTML...')
+    title = _('Export as HTML')
     selectionOnlySetting = 'html_selectiononly'
     separateCSSSetting = 'html_separatecss'
     
