@@ -41,6 +41,11 @@ IceAddConnectionWatch    = CFUNCTYPE(Status, IceWatchProc, c_void_p)(('IceAddCon
 IceRemoveConnectionWatch = CFUNCTYPE(None, IceWatchProc, c_void_p)(('IceRemoveConnectionWatch', _libICE))
 IceConnectionNumber      = CFUNCTYPE(c_int, IceConn)(('IceConnectionNumber', _libICE))
 IceProcessMessages       = CFUNCTYPE(c_int, IceConn, c_void_p, c_void_p)(('IceProcessMessages', _libICE))
+IceCloseConnection       = CFUNCTYPE(c_int, IceConn)(('IceCloseConnection', _libICE))
+
+IceIOErrorHandler        = CFUNCTYPE(None, IceConn)
+
+IceSetIOErrorHandler     = CFUNCTYPE(IceIOErrorHandler, IceIOErrorHandler)(('IceSetIOErrorHandler', _libICE))
 
 #==============================================================================
 # Constants
@@ -272,6 +277,13 @@ class SessionMonitor(ICELoop):
                                           None)
 
             self.clientID = id_ret.value
+
+            IceSetIOErrorHandler(IceIOErrorHandler(self._onIceError))
+
+    def _onIceError(self, conn):
+        IceCloseConnection(conn)
+
+        # XXXTODO: retry ? How ?
 
     def stop(self):
         super(SessionMonitor, self).stop()
