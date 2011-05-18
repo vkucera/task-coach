@@ -82,12 +82,12 @@ class ExportDialog(sized_controls.SizedDialog):
             
 
 class ExportAsCSVDialog(ExportDialog):
-    title = _('Export as CSV...')
+    title = _('Export as CSV')
     selectionOnlySetting = 'csv_selectiononly'
 
 
 class ExportAsICalendarDialog(ExportDialog):
-    title = _('Export as iCalendar...')
+    title = _('Export as iCalendar')
     selectionOnlySetting = 'ical_selectiononly'
     
     def exportableViewers(self):
@@ -98,7 +98,7 @@ class ExportAsICalendarDialog(ExportDialog):
     
 
 class ExportAsHTMLDialog(ExportDialog):
-    title = _('Export as HTML...')
+    title = _('Export as HTML')
     selectionOnlySetting = 'html_selectiononly'
     separateCSSSetting = 'html_separatecss'
     

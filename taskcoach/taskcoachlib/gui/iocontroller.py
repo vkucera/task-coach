@@ -179,7 +179,7 @@ class IOController(object):
     def saveas(self, filename=None, showerror=wx.MessageBox, 
                fileExists=os.path.exists):
         if not filename:
-            filename = self.__askUserForFile(_('Save as...'), 
+            filename = self.__askUserForFile(_('Save as'), 
                 flag=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT, fileExists=fileExists)
             if not filename:
                 return False # User didn't enter a filename, cancel save
@@ -191,7 +191,7 @@ class IOController(object):
     def saveselection(self, tasks, filename=None, showerror=wx.MessageBox,
                       TaskFileClass=persistence.TaskFile, fileExists=os.path.exists):
         if not filename:
-            filename = self.__askUserForFile(_('Save as...'), 
+            filename = self.__askUserForFile(_('Save as'), 
                 flag=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT, fileExists=fileExists)
             if not filename:
                 return False # User didn't enter a filename, cancel save
@@ -237,7 +237,7 @@ class IOController(object):
         templates.addTemplate(task)
 
     def addtemplate(self, showerror=wx.MessageBox):
-        filename = self.__askUserForFile(_('Open template...'),
+        filename = self.__askUserForFile(_('Open template'),
             fileDialogOpts={'default_extension': 'tsktmpl',
                             'wildcard': _('%s template files (*.tsktmpl)|*.tsktmpl')%meta.name})
         if filename:
@@ -283,18 +283,18 @@ class IOController(object):
     def exportAsHTML(self, viewer, selectionOnly=False, separateCSS=False,
                      openfile=codecs.open, showerror=wx.MessageBox, 
                      filename=None, fileExists=os.path.exists):
-        return self.export(_('Export as HTML...'), self.__htmlFileDialogOpts, 
+        return self.export(_('Export as HTML'), self.__htmlFileDialogOpts, 
             persistence.HTMLWriter, viewer, selectionOnly, openfile, showerror, 
             filename, fileExists, separateCSS=separateCSS)
 
     def exportAsCSV(self, viewer, selectionOnly=False, 
                     fileExists=os.path.exists):
-        return self.export(_('Export as CSV...'), self.__csvFileDialogOpts, 
+        return self.export(_('Export as CSV'), self.__csvFileDialogOpts, 
             persistence.CSVWriter, viewer, selectionOnly, fileExists=fileExists)
         
     def exportAsICalendar(self, viewer, selectionOnly=False, 
                           fileExists=os.path.exists):
-        return self.export(_('Export as iCalendar...'),
+        return self.export(_('Export as iCalendar'),
             self.__icsFileDialogOpts, persistence.iCalendarWriter, viewer, 
             selectionOnly, fileExists=fileExists)
 
