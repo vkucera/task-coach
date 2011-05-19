@@ -37,7 +37,8 @@ class CategoryList(base.Collection):
 
     def findCategoryByName(self, name):
         for category in self:
-            if category.subject() == name:
+            recursive = ' -> ' in name
+            if category.subject(recursive=recursive) == name:
                 return category
         return None
     

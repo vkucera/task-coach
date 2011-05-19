@@ -53,7 +53,9 @@ create any layout the user may want.'''),
         Feature('''CSV files may also have colons or semicolons as separators.'''),
         Feature('''It is possible to select which rows to import from a CSV file.'''),
         Feature('''The CSV import wizard tries to match column headers from the 
-CSV file to task attributes.''')
+CSV file to task attributes.'''),
+        Feature('''The CSV import will reuse existing categories if the names
+match.'''),
         ],
     featuresRemoved=[
         Feature('''Session management for X is temporarily removed, until we can
