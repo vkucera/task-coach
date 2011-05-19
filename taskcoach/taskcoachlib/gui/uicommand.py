@@ -564,15 +564,15 @@ class FileSaveSelectedTaskAsTemplate(NeedsOneSelectedTaskMixin, IOCommand, Viewe
         self.iocontroller.saveastemplate(self.viewer.curselection()[0])
 
 
-class FileAddTemplate(IOCommand):
+class FileImportTemplate(IOCommand):
     def __init__(self, *args, **kwargs):
-        super(FileAddTemplate, self).__init__(\
-            menuText=_('&Add template...'),
+        super(FileImportTemplate, self).__init__(\
+            menuText=_('&Import template...'),
             helpText=_('Add a new template from a template file'),
             bitmap='fileopen', *args, **kwargs)
 
     def doCommand(self, event):
-        self.iocontroller.addtemplate()
+        self.iocontroller.importTemplate()
 
 
 class FileEditTemplates(SettingsCommand, UICommand):

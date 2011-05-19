@@ -236,8 +236,8 @@ class IOController(object):
         templates = persistence.TemplateList(self.__settings.pathToTemplatesDir())
         templates.addTemplate(task)
 
-    def addtemplate(self, showerror=wx.MessageBox):
-        filename = self.__askUserForFile(_('Open template'),
+    def importTemplate(self, showerror=wx.MessageBox):
+        filename = self.__askUserForFile(_('Import template'),
             fileDialogOpts={'default_extension': 'tsktmpl',
                             'wildcard': _('%s template files (*.tsktmpl)|*.tsktmpl')%meta.name})
         if filename:
@@ -245,7 +245,7 @@ class IOController(object):
             try:
                 templates.copyTemplate(filename)
             except Exception, reason:
-                errorMessage = _('Cannot add template %s\n%s')%(filename, reason)
+                errorMessage = _('Cannot import template %s\n%s')%(filename, reason)
                 showerror(errorMessage, **self.__errorMessageOptions)
             
     def close(self, force=False):
