@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.18', 'May 18, 2011',
+Release('1.2.18', 'May 19, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Make sure long menu texts don't overlap the keyboard shortcut.'''),
@@ -52,6 +52,8 @@ tooltip window.''', 'http://uservoice.com/a/959Qc'),
 create any layout the user may want.'''),
         Feature('''CSV files may also have colons or semicolons as separators.'''),
         Feature('''It is possible to select which rows to import from a CSV file.'''),
+        Feature('''The CSV import wizard tries to match column headers from the 
+CSV file to task attributes.''')
         ]
     ),
 
