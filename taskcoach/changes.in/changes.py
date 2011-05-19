@@ -54,6 +54,10 @@ create any layout the user may want.'''),
         Feature('''It is possible to select which rows to import from a CSV file.'''),
         Feature('''The CSV import wizard tries to match column headers from the 
 CSV file to task attributes.''')
+        ],
+    featuresRemoved=[
+        Feature('''Session management for X is temporarily removed, until we can
+fix the occasional crashes associated with it.''')
         ]
     ),
 
