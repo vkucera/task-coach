@@ -191,7 +191,7 @@ class IOController(object):
     def saveselection(self, tasks, filename=None, showerror=wx.MessageBox,
                       TaskFileClass=persistence.TaskFile, fileExists=os.path.exists):
         if not filename:
-            filename = self.__askUserForFile(_('Save as'), 
+            filename = self.__askUserForFile(_('Save selection'), 
                 flag=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT, fileExists=fileExists)
             if not filename:
                 return False # User didn't enter a filename, cancel save

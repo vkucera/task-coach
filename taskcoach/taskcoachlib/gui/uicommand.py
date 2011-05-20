@@ -568,7 +568,7 @@ class FileImportTemplate(IOCommand):
     def __init__(self, *args, **kwargs):
         super(FileImportTemplate, self).__init__(\
             menuText=_('&Import template...'),
-            helpText=_('Add a new template from a template file'),
+            helpText=_('Import a new template from a template file'),
             bitmap='fileopen', *args, **kwargs)
 
     def doCommand(self, event):
@@ -729,9 +729,9 @@ class FileImportCSV(IOCommand):
             bitmap='exportascsv', *args, **kwargs)
 
     def doCommand(self, event):
-        filename = wx.FileSelector(_('Choose CSV file'), wildcard='*.csv')
+        filename = wx.FileSelector(_('Import CSV'), wildcard='*.csv')
         if filename:
-            wiz = CSVImportWizard(filename, None, wx.ID_ANY, _('CSV import'))
+            wiz = CSVImportWizard(filename, None, wx.ID_ANY, _('Import CSV'))
             if wiz.RunWizard():
                 self.iocontroller.importCSV(**wiz.GetOptions())
 
@@ -913,7 +913,7 @@ class EditPreferences(SettingsCommand):
             
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
         editor = dialog.preferences.Preferences(parent=self.mainWindow(), 
-            title=_('Edit preferences'), settings=self.settings)
+            title=_('Preferences'), settings=self.settings)
         editor.Show(show=show)
 
 
@@ -926,7 +926,7 @@ class EditSyncPreferences(IOCommand):
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
         editor = dialog.syncpreferences.SyncMLPreferences(parent=self.mainWindow(),
             iocontroller=self.iocontroller,
-            title=_('Edit SyncML preferences'))
+            title=_('SyncML preferences'))
         editor.Show(show=show)
 
 
@@ -2172,10 +2172,10 @@ class Help(DialogCommand):
     def __init__(self, *args, **kwargs):
         if '__WXMAC__' in wx.PlatformInfo:
             # Use default keyboard shortcut for Mac OS X:
-            menuText = _('&Help contents...\tCtrl+?') 
+            menuText = _('&Help contents\tCtrl+?') 
         else:
             # Use a letter, because 'Ctrl-?' doesn't work on Windows:
-            menuText = _('&Help contents...\tCtrl+H')
+            menuText = _('&Help contents\tCtrl+H')
         super(Help, self).__init__(menuText=menuText, helpText=help.help,
             bitmap='led_blue_questionmark_icon', dialogTitle=_('Help'),
             dialogText=help.helpHTML, id=wx.ID_HELP, *args, **kwargs)
@@ -2183,7 +2183,7 @@ class Help(DialogCommand):
 
 class Tips(SettingsCommand):
     def __init__(self, *args, **kwargs):
-        super(Tips, self).__init__(menuText=_('&Tips...'),
+        super(Tips, self).__init__(menuText=_('&Tips'),
             helpText=_('Tips about the program'),
             bitmap='lamp_icon', *args, **kwargs)
 
@@ -2193,25 +2193,25 @@ class Tips(SettingsCommand):
     
 class HelpAbout(DialogCommand):
     def __init__(self, *args, **kwargs):
-        super(HelpAbout, self).__init__(menuText=_('&About %s...')%meta.name,
+        super(HelpAbout, self).__init__(menuText=_('&About %s')%meta.name,
             helpText=_('Version and contact information about %s')%meta.name, 
-            dialogTitle=_('Help: About %s')%meta.name, 
+            dialogTitle=_('About %s')%meta.name, 
             dialogText=help.aboutHTML, id=wx.ID_ABOUT, 
             bitmap='led_blue_information_icon', *args, **kwargs)
         
   
 class HelpLicense(DialogCommand):
     def __init__(self, *args, **kwargs):
-        super(HelpLicense, self).__init__(menuText=_('&License...'),
+        super(HelpLicense, self).__init__(menuText=_('&License'),
             helpText=_('%s license')%meta.name,
-            dialogTitle=_('Help: %s license')%meta.name, 
+            dialogTitle=_('%s license')%meta.name, 
             dialogText=meta.licenseHTML, direction=wx.Layout_LeftToRight, 
             bitmap='document_icon', *args, **kwargs)
         
         
 class CheckForUpdate(SettingsCommand):
     def __init__(self, *args, **kwargs):
-        super(CheckForUpdate, self).__init__(menuText=_('Check for update...'),
+        super(CheckForUpdate, self).__init__(menuText=_('Check for update'),
             helpText=_('Check for the availability of a new version of %s')%meta.name,
             bitmap='box_icon', *args, **kwargs)
         
@@ -2230,7 +2230,7 @@ class URLCommand(UICommand):
 
 class FAQ(URLCommand):
     def __init__(self, *args, **kwargs):
-        super(FAQ, self).__init__(menuText=_('&Frequently asked questions...'),
+        super(FAQ, self).__init__(menuText=_('&Frequently asked questions'),
             helpText=_('Browse the frequently asked questions and answers'),
             bitmap='led_blue_questionmark_icon', url=meta.faq_url, *args, **kwargs)
 
