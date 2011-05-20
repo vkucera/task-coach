@@ -71,8 +71,9 @@ class TranslationIntegrityTestsMixin(object):
             self.usedShortcuts[shortcutKey] = timesUsed + 1
             
     def testMatchingShortCut(self):
-        for shortcutPrefix in ('Ctrl+', 'Shift+', 'Alt+',
-                               'Shift+Ctrl+', 'Shift+Alt+'):
+        for shortcutPrefix in ('Ctrl+', 'Ctrl-', 'Shift+', 'Shift-', 
+                               'Alt+', 'Alt-', 'Shift+Ctrl+', 'Shift-Ctrl-',
+                               'Shift+Alt+', 'Shift-Alt-'):
             self.assertEqual(self.englishString.count('\t'+shortcutPrefix),
                              self.translatedString.count('\t'+shortcutPrefix),
                              "Shortcut prefix ('%s') doesn't match for '%s' and '%s'"%(shortcutPrefix,
