@@ -21,13 +21,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+
+Release('1.2.19', 'May 21, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug(''' ... '''),
+        ]
+    ),
             
 Release('1.2.18', 'May 21, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Make sure long menu texts don't overlap the keyboard shortcut.'''),
         Bug('''CSV import would crash on Mac OS X if the number of fields wasn't
-constant.''', '3295368'),
+constant.'''),
         Bug('''When starting or stopping an effort, the task's icon in the
 calendar viewer would not change.'''),
         Bug('''Session management wouldn't work on XFCE.'''),
