@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.18', 'May 20, 2011',
+Release('1.2.18', 'May 21, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Make sure long menu texts don't overlap the keyboard shortcut.'''),
