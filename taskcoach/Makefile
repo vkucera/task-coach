@@ -109,7 +109,7 @@ ubuntu: sdist_ubuntu
 
 ppa-sign: ubuntu
 	cd build-lucid; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
-	cd build-maverick; debsign -0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu10~maverick-1_source.changes
+	cd build-maverick; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu10~maverick-1_source.changes
 	cd build-natty; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
 
 ppa-rel: ppa-sign
