@@ -9,14 +9,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-05-19 23:01+0000\n"
+"POT-Creation-Date: 2011-05-20 23:33+0000\n"
 "PO-Revision-Date: 2011-05-12 08:51+0000\n"
 "Last-Translator: Carlos Monteiro <offbyte@gmail.com>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-20 20:37+0000\n"
+"X-Launchpad-Export-Date: 2011-05-21 13:37+0000\n"
 "X-Generator: Launchpad (build 13085)\n"
 
 #: taskcoachlib\application\application.py:241
@@ -1675,8 +1675,12 @@ msgstr ""
 msgid "Merged %(filename)s"
 msgstr "%(filename)s Fundidos"
 
-#: taskcoachlib\gui\iocontroller.py:182 taskcoachlib\gui\iocontroller.py:194
+#: taskcoachlib\gui\iocontroller.py:182
 msgid "Save as"
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:194
+msgid "Save selection"
 msgstr ""
 
 #: taskcoachlib\gui\iocontroller.py:226
@@ -2173,8 +2177,8 @@ msgid "&Import template..."
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:571
-msgid "Add a new template from a template file"
-msgstr "Adicionar novo modelo com base noutro modelo"
+msgid "Import a new template from a template file"
+msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:581
 msgid "Edit templates..."
@@ -2268,12 +2272,8 @@ msgstr ""
 msgid "Import tasks from a Comma Separated Values (CSV) file"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:732
-msgid "Choose CSV file"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:734
-msgid "CSV import"
+#: taskcoachlib\gui\uicommand.py:732 taskcoachlib\gui\uicommand.py:734
+msgid "Import CSV"
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:741
@@ -2324,17 +2324,21 @@ msgstr "Col&ar como sub-item\tShift+Ctrl+V"
 msgid "&Preferences...\tAlt+P"
 msgstr "&Preferências...\tAlt+P"
 
-#: taskcoachlib\gui\uicommand.py:916 taskcoachlib\help\uicommand.py:33
-msgid "Edit preferences"
-msgstr "Editar preferências"
+#: taskcoachlib\gui\uicommand.py:916
+msgid "Preferences"
+msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:922
 msgid "&SyncML preferences..."
 msgstr "Preferências &SyncML..."
 
-#: taskcoachlib\gui\uicommand.py:923 taskcoachlib\gui\uicommand.py:929
+#: taskcoachlib\gui\uicommand.py:923
 msgid "Edit SyncML preferences"
 msgstr "Editar preferências SyncML"
+
+#: taskcoachlib\gui\uicommand.py:929
+msgid "SyncML preferences"
+msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:935
 msgid "&All\tCtrl+A"
@@ -2672,51 +2676,47 @@ msgid "&Open all attachments...\tShift+Ctrl+O"
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:2175
-msgid "&Help contents...\tCtrl+?"
-msgstr ""
+msgid "&Help contents\tCtrl+?"
+msgstr "&Conteudos da Ajuda\tCtrl+?"
 
 #: taskcoachlib\gui\uicommand.py:2178
-msgid "&Help contents...\tCtrl+H"
-msgstr ""
+msgid "&Help contents\tCtrl+H"
+msgstr "Conteúdos de &Ajuda\tCtrl+H"
 
 #: taskcoachlib\gui\uicommand.py:2180
 msgid "Help"
 msgstr "Ajuda"
 
 #: taskcoachlib\gui\uicommand.py:2186
-msgid "&Tips..."
-msgstr ""
+msgid "&Tips"
+msgstr "&Dicas"
 
 #: taskcoachlib\gui\uicommand.py:2187
 msgid "Tips about the program"
 msgstr "Dicas sobre o programa"
 
 #: taskcoachlib\gui\uicommand.py:2196
-msgid "&About %s..."
-msgstr ""
+msgid "&About %s"
+msgstr "&Acerca %s"
 
 #: taskcoachlib\gui\uicommand.py:2197
 msgid "Version and contact information about %s"
 msgstr "Versão e contactos sobre %s"
 
 #: taskcoachlib\gui\uicommand.py:2198
-msgid "Help: About %s"
-msgstr "Ajuda: Acerca de %s"
-
-#: taskcoachlib\gui\uicommand.py:2205
-msgid "&License..."
+msgid "About %s"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:2206
+#: taskcoachlib\gui\uicommand.py:2205
+msgid "&License"
+msgstr "&Licença"
+
+#: taskcoachlib\gui\uicommand.py:2206 taskcoachlib\gui\uicommand.py:2207
 msgid "%s license"
 msgstr "%s licença"
 
-#: taskcoachlib\gui\uicommand.py:2207
-msgid "Help: %s license"
-msgstr "Ajuda: %s licença"
-
 #: taskcoachlib\gui\uicommand.py:2214
-msgid "Check for update..."
+msgid "Check for update"
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:2215
@@ -2724,7 +2724,7 @@ msgid "Check for the availability of a new version of %s"
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:2233
-msgid "&Frequently asked questions..."
+msgid "&Frequently asked questions"
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:2234
@@ -5012,6 +5012,10 @@ msgid "Paste item(s) from the clipboard as subitem of the selected item"
 msgstr ""
 "Colar item(ns) na área de transferência como um sub-item do item seleccionado"
 
+#: taskcoachlib\help\uicommand.py:33
+msgid "Edit preferences"
+msgstr "Editar preferências"
+
 #: taskcoachlib\help\uicommand.py:34
 msgid "Redo the last command that was undone"
 msgstr "Refazer o último comando que foi desfeito"
@@ -5855,6 +5859,9 @@ msgstr "Erro ao abrir a URL"
 #~ msgid "&Add template..."
 #~ msgstr "&Adicionar modelo..."
 
+#~ msgid "Add a new template from a template file"
+#~ msgstr "Adicionar novo modelo com base noutro modelo"
+
 #~ msgid "&Print preview"
 #~ msgstr "&Imprimir a antevisão"
 
@@ -5946,20 +5953,11 @@ msgstr "Erro ao abrir a URL"
 #~ msgid "St&op tracking effort"
 #~ msgstr "Parar acompanhament&o de empenho"
 
-#~ msgid "&Help contents\tCtrl+?"
-#~ msgstr "&Conteudos da Ajuda\tCtrl+?"
+#~ msgid "Help: About %s"
+#~ msgstr "Ajuda: Acerca de %s"
 
-#~ msgid "&Help contents\tCtrl+H"
-#~ msgstr "Conteúdos de &Ajuda\tCtrl+H"
-
-#~ msgid "&Tips"
-#~ msgstr "&Dicas"
-
-#~ msgid "&About %s"
-#~ msgstr "&Acerca %s"
-
-#~ msgid "&License"
-#~ msgstr "&Licença"
+#~ msgid "Help: %s license"
+#~ msgstr "Ajuda: %s licença"
 
 #~ msgid "Show only tasks &due before end of"
 #~ msgstr "Apenas mostrar tarefas &concluidas antes do fim de"

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-05-19 23:01+0000\n"
-"PO-Revision-Date: 2011-05-20 17:56+0000\n"
+"POT-Creation-Date: 2011-05-20 23:33+0000\n"
+"PO-Revision-Date: 2011-05-21 09:59+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Dutch <frank@niessink.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-20 20:37+0000\n"
+"X-Launchpad-Export-Date: 2011-05-21 13:37+0000\n"
 "X-Generator: Launchpad (build 13085)\n"
 "X-Poedit-Country: NETHERLANDS\n"
 "X-Poedit-Language: dutch\n"
@@ -1682,9 +1682,13 @@ msgstr ""
 msgid "Merged %(filename)s"
 msgstr "Taken uit %(filename)s ingevoegd"
 
-#: taskcoachlib\gui\iocontroller.py:182 taskcoachlib\gui\iocontroller.py:194
+#: taskcoachlib\gui\iocontroller.py:182
 msgid "Save as"
 msgstr "Opslaan als"
+
+#: taskcoachlib\gui\iocontroller.py:194
+msgid "Save selection"
+msgstr "Selectie opslaan"
 
 #: taskcoachlib\gui\iocontroller.py:226
 msgid ""
@@ -2180,8 +2184,8 @@ msgid "&Import template..."
 msgstr "&Template importeren..."
 
 #: taskcoachlib\gui\uicommand.py:571
-msgid "Add a new template from a template file"
-msgstr "Nieuwe template toevoegen uit een template bestand"
+msgid "Import a new template from a template file"
+msgstr "Een nieuw template uit een templatebestand importeren"
 
 #: taskcoachlib\gui\uicommand.py:581
 msgid "Edit templates..."
@@ -2276,13 +2280,9 @@ msgstr "CSV &importeren..."
 msgid "Import tasks from a Comma Separated Values (CSV) file"
 msgstr "Taken uit een kommagescheiden bestand (CSV) importeren"
 
-#: taskcoachlib\gui\uicommand.py:732
-msgid "Choose CSV file"
-msgstr "Kies CSV bestand"
-
-#: taskcoachlib\gui\uicommand.py:734
-msgid "CSV import"
-msgstr "CSV import"
+#: taskcoachlib\gui\uicommand.py:732 taskcoachlib\gui\uicommand.py:734
+msgid "Import CSV"
+msgstr "Importeer CSV"
 
 #: taskcoachlib\gui\uicommand.py:741
 msgid "S&yncML synchronization..."
@@ -2332,17 +2332,21 @@ msgstr "Als &subitem plakken\tShift+Ctrl+V"
 msgid "&Preferences...\tAlt+P"
 msgstr "&Voorkeuren...\tAlt+V"
 
-#: taskcoachlib\gui\uicommand.py:916 taskcoachlib\help\uicommand.py:33
-msgid "Edit preferences"
-msgstr "Opties bewerken"
+#: taskcoachlib\gui\uicommand.py:916
+msgid "Preferences"
+msgstr "Voorkeuren"
 
 #: taskcoachlib\gui\uicommand.py:922
 msgid "&SyncML preferences..."
 msgstr "&SyncML voorkeuren..."
 
-#: taskcoachlib\gui\uicommand.py:923 taskcoachlib\gui\uicommand.py:929
+#: taskcoachlib\gui\uicommand.py:923
 msgid "Edit SyncML preferences"
 msgstr "SyncML voorkeuren bewerken"
+
+#: taskcoachlib\gui\uicommand.py:929
+msgid "SyncML preferences"
+msgstr "SyncML voorkeuren"
 
 #: taskcoachlib\gui\uicommand.py:935
 msgid "&All\tCtrl+A"
@@ -2684,60 +2688,56 @@ msgid "&Open all attachments...\tShift+Ctrl+O"
 msgstr "Alle bijlagen &openen...\tShift+Ctrl+O"
 
 #: taskcoachlib\gui\uicommand.py:2175
-msgid "&Help contents...\tCtrl+?"
-msgstr "&Helpinhoud...\tCtrl+?"
+msgid "&Help contents\tCtrl+?"
+msgstr "&Helpinhoud\tCtrl+?"
 
 #: taskcoachlib\gui\uicommand.py:2178
-msgid "&Help contents...\tCtrl+H"
-msgstr "&Helpinhoud...\tCtrl+H"
+msgid "&Help contents\tCtrl+H"
+msgstr "&Helpinhoud\tCtrl+H"
 
 #: taskcoachlib\gui\uicommand.py:2180
 msgid "Help"
 msgstr "Help"
 
 #: taskcoachlib\gui\uicommand.py:2186
-msgid "&Tips..."
-msgstr "&Tips..."
+msgid "&Tips"
+msgstr "&Tips"
 
 #: taskcoachlib\gui\uicommand.py:2187
 msgid "Tips about the program"
 msgstr "Tips over het programma"
 
 #: taskcoachlib\gui\uicommand.py:2196
-msgid "&About %s..."
-msgstr "&Over %s..."
+msgid "&About %s"
+msgstr "&Over %s"
 
 #: taskcoachlib\gui\uicommand.py:2197
 msgid "Version and contact information about %s"
 msgstr "Versie- en contactinformatie over %s"
 
 #: taskcoachlib\gui\uicommand.py:2198
-msgid "Help: About %s"
-msgstr "Help: Over %s"
+msgid "About %s"
+msgstr "Over %s"
 
 #: taskcoachlib\gui\uicommand.py:2205
-msgid "&License..."
-msgstr "&Licentie..."
+msgid "&License"
+msgstr "&Licentie"
 
-#: taskcoachlib\gui\uicommand.py:2206
+#: taskcoachlib\gui\uicommand.py:2206 taskcoachlib\gui\uicommand.py:2207
 msgid "%s license"
 msgstr "%s licentie"
 
-#: taskcoachlib\gui\uicommand.py:2207
-msgid "Help: %s license"
-msgstr "Help: %s licentie"
-
 #: taskcoachlib\gui\uicommand.py:2214
-msgid "Check for update..."
-msgstr "Controleer op nieuwe versie..."
+msgid "Check for update"
+msgstr "Controleren op updates"
 
 #: taskcoachlib\gui\uicommand.py:2215
 msgid "Check for the availability of a new version of %s"
 msgstr "Controleer of er een nieuwe versie van %s beschikbaar is"
 
 #: taskcoachlib\gui\uicommand.py:2233
-msgid "&Frequently asked questions..."
-msgstr "&Vaak gestelde vragen..."
+msgid "&Frequently asked questions"
+msgstr "&Vaak gestelde vragen"
 
 #: taskcoachlib\gui\uicommand.py:2234
 msgid "Browse the frequently asked questions and answers"
@@ -5362,6 +5362,10 @@ msgid "Paste item(s) from the clipboard as subitem of the selected item"
 msgstr ""
 "Plak item(s) van het klembord als subitem van het geselecteerde item."
 
+#: taskcoachlib\help\uicommand.py:33
+msgid "Edit preferences"
+msgstr "Opties bewerken"
+
 #: taskcoachlib\help\uicommand.py:34
 msgid "Redo the last command that was undone"
 msgstr "De laatste ongedaan gemaakte bewerking opnieuw uitvoeren"
@@ -6280,6 +6284,9 @@ msgstr "Fout bij openen van URL"
 #~ msgid "&Add template..."
 #~ msgstr "&Template toevoegen..."
 
+#~ msgid "Add a new template from a template file"
+#~ msgstr "Nieuwe template toevoegen uit een template bestand"
+
 #~ msgid "&Print preview"
 #~ msgstr "Afdruk&voorbeeld"
 
@@ -6378,20 +6385,11 @@ msgstr "Fout bij openen van URL"
 #~ msgid "St&op tracking effort"
 #~ msgstr "Tijdsbesteding st&oppen"
 
-#~ msgid "&Help contents\tCtrl+?"
-#~ msgstr "&Helpinhoud\tCtrl+?"
+#~ msgid "Help: About %s"
+#~ msgstr "Help: Over %s"
 
-#~ msgid "&Help contents\tCtrl+H"
-#~ msgstr "&Helpinhoud\tCtrl+H"
-
-#~ msgid "&Tips"
-#~ msgstr "&Tips"
-
-#~ msgid "&About %s"
-#~ msgstr "&Over %s"
-
-#~ msgid "&License"
-#~ msgstr "&Licentie"
+#~ msgid "Help: %s license"
+#~ msgstr "Help: %s licentie"
 
 #~ msgid "Show only tasks &due before end of"
 #~ msgstr "&Alleen taken tonen die af moeten voor het einde van"
@@ -7686,9 +7684,6 @@ msgstr "Fout bij openen van URL"
 #~ msgid "&Clear all filters\tShift-Ctrl-F"
 #~ msgstr "&Alle filters uitzetten\tShift-Ctrl-F"
 
-#~ msgid "Import CSV"
-#~ msgstr "Importeer CSV"
-
 #~ msgid "Import tasks from a CSV file"
 #~ msgstr "Importeer taken uit een CSV bestand"
 
@@ -7715,6 +7710,30 @@ msgstr "Fout bij openen van URL"
 #~ "plaatsen. Tabbladen kunnen ook op elkaar worden geplaatst om zo notebooks te "
 #~ "maken."
 
+#~ msgid "Choose CSV file"
+#~ msgstr "Kies CSV bestand"
+
+#~ msgid "CSV import"
+#~ msgstr "CSV import"
+
+#~ msgid "&Tips..."
+#~ msgstr "&Tips..."
+
+#~ msgid "&Help contents...\tCtrl+H"
+#~ msgstr "&Helpinhoud...\tCtrl+H"
+
+#~ msgid "&Help contents...\tCtrl+?"
+#~ msgstr "&Helpinhoud...\tCtrl+?"
+
+#~ msgid "&About %s..."
+#~ msgstr "&Over %s..."
+
+#~ msgid "&Frequently asked questions..."
+#~ msgstr "&Vaak gestelde vragen..."
+
+#~ msgid "&License..."
+#~ msgstr "&Licentie..."
+
 #~ msgid "Only show tasks due this wo&rk week"
 #~ msgstr "Toon alleen taken die deze we&rkweek af moeten"
 
@@ -7734,6 +7753,9 @@ msgstr "Fout bij openen van URL"
 
 #~ msgid "Only show tasks starting this work week and hide later ones"
 #~ msgstr "Toon alleen taken die deze werkweek starten en verberg latere taken"
+
+#~ msgid "Check for update..."
+#~ msgstr "Controleer op nieuwe versie..."
 
 #~ msgid "Open template"
 #~ msgstr "Open template"

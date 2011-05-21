@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-05-19 23:01+0000\n"
-"PO-Revision-Date: 2011-05-20 20:33+0000\n"
+"POT-Creation-Date: 2011-05-20 23:33+0000\n"
+"PO-Revision-Date: 2011-05-21 13:32+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-20 20:37+0000\n"
+"X-Launchpad-Export-Date: 2011-05-21 13:37+0000\n"
 "X-Generator: Launchpad (build 13085)\n"
 
 #: taskcoachlib\application\application.py:241
@@ -147,7 +147,7 @@ msgstr "\"%s\" grubunu seçer/bırakır"
 #: taskcoachlib\command\categoryCommands.py:25
 #: taskcoachlib\command\categoryCommands.py:28
 msgid "New category"
-msgstr ""
+msgstr "Yeni grup"
 
 #: taskcoachlib\command\categoryCommands.py:40
 msgid "New subcategories"
@@ -195,7 +195,7 @@ msgstr "Çalışmaları düzenle"
 
 #: taskcoachlib\command\effortCommands.py:48
 msgid "Edit effort \"%s\""
-msgstr "\"%s\" çalışmasını düzenle"
+msgstr "\"%s\" çalışmasını düzenler"
 
 #: taskcoachlib\command\effortCommands.py:70
 msgid "Delete efforts"
@@ -223,7 +223,7 @@ msgstr "Notları düzenle"
 
 #: taskcoachlib\command\noteCommands.py:55
 msgid "Edit note \"%s\""
-msgstr "\"%s\" notunu düzenle"
+msgstr "\"%s\" notunu düzenler"
 
 #: taskcoachlib\command\noteCommands.py:66
 msgid "Delete notes"
@@ -284,7 +284,7 @@ msgstr "İşleri tamamlandı olarak işaretle"
 
 #: taskcoachlib\command\taskCommands.py:229
 msgid "Mark \"%s\" completed"
-msgstr "\"%s\" tamamlandı olarak işaretler"
+msgstr "\"%s\" ögesini tamamlandı olarak işaretler"
 
 #: taskcoachlib\command\taskCommands.py:244
 msgid "Edit task dates"
@@ -730,7 +730,7 @@ msgstr "Sarı ışık"
 
 #: taskcoachlib\gui\artprovider.py:153
 msgid "Life ring"
-msgstr ""
+msgstr "Yaşam yüzüğü"
 
 #: taskcoachlib\gui\artprovider.py:154
 msgid "Locked lock"
@@ -1126,15 +1126,15 @@ msgstr "Yalnız seçili ögeleri ver"
 
 #: taskcoachlib\gui\dialog\export.py:85 taskcoachlib\gui\iocontroller.py:292
 msgid "Export as CSV"
-msgstr ""
+msgstr "CSV olarak ver"
 
 #: taskcoachlib\gui\dialog\export.py:90 taskcoachlib\gui\iocontroller.py:297
 msgid "Export as iCalendar"
-msgstr ""
+msgstr "iCalendar olarak ver"
 
 #: taskcoachlib\gui\dialog\export.py:101 taskcoachlib\gui\iocontroller.py:286
 msgid "Export as HTML"
-msgstr ""
+msgstr "HTML olarak ver"
 
 #: taskcoachlib\gui\dialog\export.py:111
 msgid "Write style information to a separate CSS file"
@@ -1146,6 +1146,9 @@ msgid ""
 "This allows you to change the style information without losing your changes "
 "on the next export."
 msgstr ""
+"Verilen dosya için bir CSS dosyası varsa, %(name)s üzerine yazmayacak. "
+"Böylece bir sonraki verme işleminde, tanımladığınız stil bilgisini "
+"kaybetmezsiniz."
 
 #: taskcoachlib\gui\dialog\iphone.py:32
 msgid ""
@@ -1671,9 +1674,13 @@ msgstr ""
 msgid "Merged %(filename)s"
 msgstr "%(filename)s dosyası birleştirildi"
 
-#: taskcoachlib\gui\iocontroller.py:182 taskcoachlib\gui\iocontroller.py:194
+#: taskcoachlib\gui\iocontroller.py:182
 msgid "Save as"
-msgstr ""
+msgstr "Farklı kaydet"
+
+#: taskcoachlib\gui\iocontroller.py:194
+msgid "Save selection"
+msgstr "Seçimi kaydet"
 
 #: taskcoachlib\gui\iocontroller.py:226
 msgid ""
@@ -1693,7 +1700,7 @@ msgstr ""
 
 #: taskcoachlib\gui\iocontroller.py:240
 msgid "Import template"
-msgstr ""
+msgstr "Kalıp al"
 
 #: taskcoachlib\gui\iocontroller.py:242
 msgid "%s template files (*.tsktmpl)|*.tsktmpl"
@@ -1704,6 +1711,8 @@ msgid ""
 "Cannot import template %s\n"
 "%s"
 msgstr ""
+"%s kalıbı alınamadı\n"
+"%s"
 
 #: taskcoachlib\gui\iocontroller.py:277
 msgid "Exported %(count)d items to %(filename)s"
@@ -2164,11 +2173,11 @@ msgstr "Seçili işi bir iş kalıbı olarak kaydet"
 
 #: taskcoachlib\gui\uicommand.py:570
 msgid "&Import template..."
-msgstr ""
+msgstr "&Kalıp al..."
 
 #: taskcoachlib\gui\uicommand.py:571
-msgid "Add a new template from a template file"
-msgstr "Bir kalıp dosyasından yeni bir kalıp ekle"
+msgid "Import a new template from a template file"
+msgstr "Bir kalıp dosyasından yeni bir kalıp alır"
 
 #: taskcoachlib\gui\uicommand.py:581
 msgid "Edit templates..."
@@ -2257,23 +2266,19 @@ msgstr "Bir görüntüleyicideki ögeleri iCalendar biçiminde ver"
 
 #: taskcoachlib\gui\uicommand.py:727
 msgid "&Import CSV..."
-msgstr ""
+msgstr "CSV A&l..."
 
 #: taskcoachlib\gui\uicommand.py:728
 msgid "Import tasks from a Comma Separated Values (CSV) file"
-msgstr ""
+msgstr "İşleri virgülle ayrılmış değer dosyasından (CSV) alır"
 
-#: taskcoachlib\gui\uicommand.py:732
-msgid "Choose CSV file"
-msgstr "CSV dosyasını seçin"
-
-#: taskcoachlib\gui\uicommand.py:734
-msgid "CSV import"
+#: taskcoachlib\gui\uicommand.py:732 taskcoachlib\gui\uicommand.py:734
+msgid "Import CSV"
 msgstr "CSV al"
 
 #: taskcoachlib\gui\uicommand.py:741
 msgid "S&yncML synchronization..."
-msgstr ""
+msgstr "S&yncML eşleştirme..."
 
 #: taskcoachlib\gui\uicommand.py:742
 msgid "Synchronize with a SyncML server"
@@ -2319,17 +2324,21 @@ msgstr "Altöge olarak ya&pıştır\tShift+Ctrl+V"
 msgid "&Preferences...\tAlt+P"
 msgstr "&Ayarlar...\tAlt+P"
 
-#: taskcoachlib\gui\uicommand.py:916 taskcoachlib\help\uicommand.py:33
-msgid "Edit preferences"
-msgstr "Ayarları düzenle"
+#: taskcoachlib\gui\uicommand.py:916
+msgid "Preferences"
+msgstr "Ayarlar"
 
 #: taskcoachlib\gui\uicommand.py:922
 msgid "&SyncML preferences..."
 msgstr "&SyncML ayarları..."
 
-#: taskcoachlib\gui\uicommand.py:923 taskcoachlib\gui\uicommand.py:929
+#: taskcoachlib\gui\uicommand.py:923
 msgid "Edit SyncML preferences"
 msgstr "SyncML ayarlarını düzenle"
+
+#: taskcoachlib\gui\uicommand.py:929
+msgid "SyncML preferences"
+msgstr "SyncML ayarları"
 
 #: taskcoachlib\gui\uicommand.py:935
 msgid "&All\tCtrl+A"
@@ -2345,15 +2354,15 @@ msgstr "Seçili tüm ögeleri bırakır"
 
 #: taskcoachlib\gui\uicommand.py:958
 msgid "&Clear all filters\tShift-Ctrl-R"
-msgstr ""
+msgstr "Tüm &süzgecleri kaldır\tShift-Ctrl-R"
 
 #: taskcoachlib\gui\uicommand.py:967
 msgid "&Reset all categories\tCtrl-R"
-msgstr ""
+msgstr "Tüm g&rupları sıfırla\tCtrl-R"
 
 #: taskcoachlib\gui\uicommand.py:989
 msgid "Show/hide items belonging to %s"
-msgstr ""
+msgstr "%s ögesine ait tüm ögeleri göster/gizle"
 
 #: taskcoachlib\gui\uicommand.py:1027
 msgid "&Rename viewer..."
@@ -2454,7 +2463,7 @@ msgstr "İşlerle altişleri liste kipinde gösterir/gizler"
 
 #: taskcoachlib\gui\uicommand.py:1268
 msgid "&Edit...\tRETURN"
-msgstr ""
+msgstr "Düz&enle...\tRETURN"
 
 #: taskcoachlib\gui\uicommand.py:1269
 msgid "Edit the selected item(s)"
@@ -2462,11 +2471,11 @@ msgstr "Seçili ögeleri düzenle"
 
 #: taskcoachlib\gui\uicommand.py:1298
 msgid "Edit &tracked task...\tShift-Alt-T"
-msgstr ""
+msgstr "İ&zlenen işi düzenle...\tShift-Alt-T"
 
 #: taskcoachlib\gui\uicommand.py:1299
 msgid "Edit the currently tracked task(s)"
-msgstr ""
+msgstr "İzlenmekte olan işleri düzenler"
 
 #: taskcoachlib\gui\uicommand.py:1316
 msgid "&Delete\tDEL"
@@ -2522,7 +2531,7 @@ msgstr "Yeni al&tgrup..."
 
 #: taskcoachlib\gui\uicommand.py:1456
 msgid "Insert a new subitem of the selected item"
-msgstr ""
+msgstr "Seçili ögeye yeni bir alt öge ekler"
 
 #: taskcoachlib\gui\uicommand.py:1474
 msgid "&Mark task completed\tCtrl+RETURN"
@@ -2562,11 +2571,11 @@ msgstr "%s çevir"
 
 #: taskcoachlib\gui\uicommand.py:1678
 msgid "&Mail...\tCtrl-M"
-msgstr ""
+msgstr "E-&posta...\tCtrl-M"
 
 #: taskcoachlib\gui\uicommand.py:1690
 msgid "Several things"
-msgstr ""
+msgstr "Birkaç şey"
 
 #: taskcoachlib\gui\uicommand.py:1693
 msgid "and"
@@ -2614,7 +2623,7 @@ msgstr "Menüden bir iş seçin ve üzerinde çalışmaya başlayın"
 
 #: taskcoachlib\gui\uicommand.py:1874
 msgid "Stop tracking or resume tracking effort\tShift+Ctrl+T"
-msgstr ""
+msgstr "İş izlemeyi durdur ya da sürdür\tShift+Ctrl+T"
 
 #: taskcoachlib\gui\uicommand.py:1876
 msgid "St&op tracking %s\tShift+Ctrl+T"
@@ -2662,63 +2671,59 @@ msgstr "Ek açılırken hata"
 
 #: taskcoachlib\gui\uicommand.py:2133
 msgid "&Open all attachments...\tShift+Ctrl+O"
-msgstr ""
+msgstr "Tüm e&kleri aç...\tShift+Ctrl+O"
 
 #: taskcoachlib\gui\uicommand.py:2175
-msgid "&Help contents...\tCtrl+?"
-msgstr ""
+msgid "&Help contents\tCtrl+?"
+msgstr "&Yardım konuları\tCtrl+?"
 
 #: taskcoachlib\gui\uicommand.py:2178
-msgid "&Help contents...\tCtrl+H"
-msgstr "Yardım konuları...\tCtrl+H"
+msgid "&Help contents\tCtrl+H"
+msgstr "&Yardım konuları\tCtrl+H"
 
 #: taskcoachlib\gui\uicommand.py:2180
 msgid "Help"
 msgstr "Yardım"
 
 #: taskcoachlib\gui\uicommand.py:2186
-msgid "&Tips..."
-msgstr "İ&puçları..."
+msgid "&Tips"
+msgstr "İ&puçları"
 
 #: taskcoachlib\gui\uicommand.py:2187
 msgid "Tips about the program"
 msgstr "Yazılım hakkında ipuçları"
 
 #: taskcoachlib\gui\uicommand.py:2196
-msgid "&About %s..."
-msgstr "%s h&akkında..."
+msgid "&About %s"
+msgstr "%s &hakkında"
 
 #: taskcoachlib\gui\uicommand.py:2197
 msgid "Version and contact information about %s"
 msgstr "%s hakkında sürüm ve iletişim bilgileri verir"
 
 #: taskcoachlib\gui\uicommand.py:2198
-msgid "Help: About %s"
-msgstr "Yardım: %s hakkında"
+msgid "About %s"
+msgstr "%s hakkında"
 
 #: taskcoachlib\gui\uicommand.py:2205
-msgid "&License..."
-msgstr "&Lisans..."
+msgid "&License"
+msgstr "&Lisans"
 
-#: taskcoachlib\gui\uicommand.py:2206
+#: taskcoachlib\gui\uicommand.py:2206 taskcoachlib\gui\uicommand.py:2207
 msgid "%s license"
 msgstr "%s lisansı"
 
-#: taskcoachlib\gui\uicommand.py:2207
-msgid "Help: %s license"
-msgstr "Yardım: %s lisansı"
-
 #: taskcoachlib\gui\uicommand.py:2214
-msgid "Check for update..."
-msgstr "Güncellemeleri denetle..."
+msgid "Check for update"
+msgstr "Güncellemeleri denetle"
 
 #: taskcoachlib\gui\uicommand.py:2215
 msgid "Check for the availability of a new version of %s"
 msgstr "Yeni bir %s sürümü var mı bak"
 
 #: taskcoachlib\gui\uicommand.py:2233
-msgid "&Frequently asked questions..."
-msgstr "&Sık sorulan sorular..."
+msgid "&Frequently asked questions"
+msgstr "&Sık sorulan sorular"
 
 #: taskcoachlib\gui\uicommand.py:2234
 msgid "Browse the frequently asked questions and answers"
@@ -3010,99 +3015,99 @@ msgstr "Durum: %d üzerinde çalışılıyor"
 
 #: taskcoachlib\gui\viewer\mixin.py:211
 msgid "&Due tasks"
-msgstr ""
+msgstr "&Bitmiş işler"
 
 #: taskcoachlib\gui\viewer\mixin.py:212
 msgid "&Show all due tasks"
-msgstr ""
+msgstr "Tüm bitmiş işleri gö&ster"
 
 #: taskcoachlib\gui\viewer\mixin.py:212
 msgid "Show all due tasks"
-msgstr ""
+msgstr "Tüm bitmiş işleri gösterir"
 
 #: taskcoachlib\gui\viewer\mixin.py:214
 msgid "&Hide all due tasks"
-msgstr ""
+msgstr "Tüm bitmiş işleri &gizle"
 
 #: taskcoachlib\gui\viewer\mixin.py:214
 msgid "Hide all due tasks"
-msgstr ""
+msgstr "Tüm bitmiş işleri gizler"
 
 #: taskcoachlib\gui\viewer\mixin.py:216
 msgid "Only show tasks due &today"
-msgstr ""
+msgstr "Bugün bi&tecek işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:217
 msgid "Only show tasks due today and hide later ones"
-msgstr ""
+msgstr "Bugün bitecek işleri gösterir ve sonrakileri gizler"
 
 #: taskcoachlib\gui\viewer\mixin.py:219
 msgid "Only show tasks due today or t&omorrow"
-msgstr ""
+msgstr "Bugün ve &yarın bitecek işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:220
 msgid "Only show tasks due today or tomorrow and hide later ones"
-msgstr ""
+msgstr "Bugün ve yarın bitecek işleri gösterir ve sonrakileri gizler"
 
 #: taskcoachlib\gui\viewer\mixin.py:222
 msgid "Only show tasks due this wo&rkweek"
-msgstr ""
+msgstr "Bu iş haftasında bitecek işle&ri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:223
 msgid "Only show tasks due this workweek and hide later ones"
-msgstr ""
+msgstr "Bu iş haftasında bitecek işleri gösterir ve sonrakileri gizler"
 
 #: taskcoachlib\gui\viewer\mixin.py:225
 msgid "Only show tasks due this &week"
-msgstr ""
+msgstr "Bu &hafta bitecek işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:226
 msgid "Only show tasks due this week and hide later ones"
-msgstr ""
+msgstr "Bu hafta bitecek işleri gösterir ve sonrakileri gizler"
 
 #: taskcoachlib\gui\viewer\mixin.py:228
 msgid "Only show tasks due within &7 days"
-msgstr ""
+msgstr "&7 gün içinde bitecek işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:229
 msgid "Only show tasks due within 7 days and hide later ones"
-msgstr ""
+msgstr "7 gün içinde bitecek işleri gösterir ve sonrakileri gizler"
 
 #: taskcoachlib\gui\viewer\mixin.py:231
 msgid "Only show tasks due within &14 days"
-msgstr ""
+msgstr "&14 gün içinde bitecek işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:232
 msgid "Only show tasks due within 14 days and hide later ones"
-msgstr ""
+msgstr "14 gün içinde bitecek işleri gösterir ve sonrakileri gizler"
 
 #: taskcoachlib\gui\viewer\mixin.py:234
 msgid "Only show tasks due this &month"
-msgstr ""
+msgstr "Bu &ay bitecek işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:235
 msgid "Only show tasks due this month and hide later ones"
-msgstr ""
+msgstr "Bu ay bitecek işleri gösterir ve sonrakileri gizler"
 
 #: taskcoachlib\gui\viewer\mixin.py:237
 msgid "Only show tasks due within &30 days"
-msgstr ""
+msgstr "&30 gün içinde bitecek işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:238
 msgid "Only show tasks due within 30 days and hide later ones"
-msgstr ""
+msgstr "30 gün içinde bitecek işleri gösterir ve sonrakileri gizler"
 
 #: taskcoachlib\gui\viewer\mixin.py:240
 msgid "Only show tasks due this &year"
-msgstr ""
+msgstr "Bu yıl bitecek işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:241
 msgid "Only show tasks due this year and hide later ones"
-msgstr ""
+msgstr "Bu yıl bitecek işleri gösterir ve sonrakileri gizler"
 
 #: taskcoachlib\gui\viewer\mixin.py:243
 msgid "&Completed tasks"
-msgstr ""
+msgstr "&Tamamlanmış işler"
 
 #: taskcoachlib\gui\viewer\mixin.py:244
 msgid "&Show all completed tasks"
@@ -3122,167 +3127,172 @@ msgstr "Tüm tamamlanmış işleri gizler"
 
 #: taskcoachlib\gui\viewer\mixin.py:248
 msgid "Only show tasks completed &today"
-msgstr ""
+msgstr "&Bugün tamamlanmış işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:249
 msgid "Only show tasks completed today and hide older ones"
-msgstr ""
+msgstr "Bugün tamamlanmış işleri gösterir ve sonrakileri gizler"
 
 #: taskcoachlib\gui\viewer\mixin.py:251
 msgid "Only show tasks completed &yesterday and today"
-msgstr ""
+msgstr "Bugün ve &dün tamamlanmış işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:252
 msgid "Only show tasks completed yesterday and today and hide older ones"
-msgstr ""
+msgstr "Bugün ve dün tamamlanmış işleri gösterir"
 
 #: taskcoachlib\gui\viewer\mixin.py:254
 msgid "Only show tasks completed this wo&rkweek"
-msgstr ""
+msgstr "Bu iş haftasında tamamlanmış işleri göste&r"
 
 #: taskcoachlib\gui\viewer\mixin.py:255
 msgid "Only show tasks completed this workweek and hide older ones"
-msgstr ""
+msgstr "Bu iş haftasında tamamlanmış işleri gösterir"
 
 #: taskcoachlib\gui\viewer\mixin.py:257
 msgid "Only show tasks completed this &week"
-msgstr ""
+msgstr "Bu &hafta tamamlanmış işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:258
 msgid "Only show tasks completed this week and hide older ones"
-msgstr ""
+msgstr "Bu &hafta tamamlanmış işleri gösterir"
 
 #: taskcoachlib\gui\viewer\mixin.py:260
 msgid "Only show tasks completed the last &7 days"
-msgstr ""
+msgstr "Son &7 gün içinde tamamlanmış işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:261
 msgid "Only show tasks completed the last 7 days and hide older ones"
-msgstr ""
+msgstr "Son 7 gün içinde tamamlanmış işleri gösterir"
 
 #: taskcoachlib\gui\viewer\mixin.py:263
 msgid "Only show tasks completed the last &14 days"
-msgstr ""
+msgstr "Son &14 gün içinde tamamlanmış işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:264
 msgid "Only show tasks completed the last 14 days and hide older ones"
-msgstr ""
+msgstr "Son 14 gün içinde tamamlanmış işleri gösterir"
 
 #: taskcoachlib\gui\viewer\mixin.py:266
 msgid "Only show tasks completed this &month"
-msgstr ""
+msgstr "Bu ay içinde ta&mamlanmış işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:267
 msgid "Only show tasks completed this month and hide older ones"
-msgstr ""
+msgstr "Bu ay içinde tamamlanmış işleri gösterir"
 
 #: taskcoachlib\gui\viewer\mixin.py:269
 msgid "Only show tasks completed the last &30 days"
-msgstr ""
+msgstr "Son &30 gün içinde tamamlanmış işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:270
 msgid "Only show tasks completed the last 30 days and hide older ones"
-msgstr ""
+msgstr "Son 30 gün içinde tamamlanmış işleri gösterir"
 
 #: taskcoachlib\gui\viewer\mixin.py:272
 msgid "Only show tasks completed this &year"
-msgstr ""
+msgstr "Bu &yıl içinde tamamlanmış işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:273
 msgid "Only show tasks completed this year and hide older ones"
-msgstr ""
+msgstr "Bu yıl içinde tamamlanmış işleri gösterir"
 
 #: taskcoachlib\gui\viewer\mixin.py:275
 msgid "&Inactive tasks"
-msgstr ""
+msgstr "&Etkin olmayan işler"
 
 #: taskcoachlib\gui\viewer\mixin.py:276
 msgid "&Show all inactive tasks"
-msgstr ""
+msgstr "Tüm etkin olmayan işleri gö&ster"
 
 #: taskcoachlib\gui\viewer\mixin.py:277
 msgid "Show all inactive tasks (tasks with a start date in the future)"
 msgstr ""
+"Tüm etkin olmayan işleri gösterir (başlama tarihi gelecekte olan işler)"
 
 #: taskcoachlib\gui\viewer\mixin.py:279
 msgid "&Hide all inactive tasks"
-msgstr ""
+msgstr "&Tüm etkin olmayan işleri gizle"
 
 #: taskcoachlib\gui\viewer\mixin.py:280
 msgid "Hide all inactive tasks (tasks with a start date in the future)"
 msgstr ""
+"Tüm etkin olmayan işleri gizler (başlama tarihi gelecekte olan işler)"
 
 #: taskcoachlib\gui\viewer\mixin.py:282
 msgid "Only show tasks starting &today"
-msgstr ""
+msgstr "&Bugün başlayan işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:283
 msgid "Only show tasks starting today and hide later ones"
-msgstr ""
+msgstr "Bugün başlayacak işleri gösterir ve sonrakileri gizler"
 
 #: taskcoachlib\gui\viewer\mixin.py:285
 msgid "Only show tasks starting today or t&omorrow"
-msgstr ""
+msgstr "Bugün ve &dün başlayan işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:286
 msgid "Only show tasks starting today or tomorrow and hide later ones"
-msgstr ""
+msgstr "Bugün ve dün başlayan işleri gösterir ve sonrakileri gizler"
 
 #: taskcoachlib\gui\viewer\mixin.py:288
 msgid "Only show tasks starting this wo&rkweek"
-msgstr ""
+msgstr "Bu iş haftasında başlayacak işleri göste&r"
 
 #: taskcoachlib\gui\viewer\mixin.py:289
 msgid "Only show tasks starting this workweek and hide later ones"
-msgstr ""
+msgstr "Bu iş haftasında başlayacak işleri gösterir ve sonrakileri gizler"
 
 #: taskcoachlib\gui\viewer\mixin.py:291
 msgid "Only show tasks starting this &week"
-msgstr ""
+msgstr "Bu &hafta başlayacak işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:292
 msgid "Only show tasks starting this week and hide later ones"
-msgstr ""
+msgstr "Bu hafta başlayacak işleri gösterir ve sonrakileri gizler"
 
 #: taskcoachlib\gui\viewer\mixin.py:294
 msgid "Only show tasks starting the next &7 days"
-msgstr ""
+msgstr "Gelecek &7 gün içinde başlayacak işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:295
 msgid "Only show tasks starting the next 7 days and hide later ones"
 msgstr ""
+"Gelecek 7 gün içinde başlayacak işleri gösterir ve sonrakileri gizler"
 
 #: taskcoachlib\gui\viewer\mixin.py:297
 msgid "Only show tasks starting the next &14 days"
-msgstr ""
+msgstr "Gelecek &14 gün içinde başlayacak işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:298
 msgid "Only show tasks starting the next 14 days and hide later ones"
 msgstr ""
+"Gelecek 14 gün içinde başlayacak işleri gösterir ve sonrakileri gizler"
 
 #: taskcoachlib\gui\viewer\mixin.py:300
 msgid "Only show tasks starting this &month"
-msgstr ""
+msgstr "Bu &ay içinde başlayacak işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:301
 msgid "Only show tasks starting this month and hide later ones"
-msgstr ""
+msgstr "Bu ay içinde başlayacak işleri gösterir ve sonrakileri gizler"
 
 #: taskcoachlib\gui\viewer\mixin.py:303
 msgid "Only show tasks starting the next &30 days"
-msgstr ""
+msgstr "Gelecek &30 gün içinde başlayacak işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:304
 msgid "Only show tasks starting the next 30 days and hide later ones"
 msgstr ""
+"Gelecek 30 gün içinde başlayacak işleri gösterir ve sonrakileri gizler"
 
 #: taskcoachlib\gui\viewer\mixin.py:306
 msgid "Only show tasks starting this &year"
-msgstr ""
+msgstr "Bu &yıl içinde başlayacak işleri göster"
 
 #: taskcoachlib\gui\viewer\mixin.py:307
 msgid "Only show tasks starting this year and hide later ones"
-msgstr ""
+msgstr "Bu yıl içinde başlayacak işleri gösterir ve sonrakileri gizler"
 
 #: taskcoachlib\gui\viewer\mixin.py:427
 msgid "Sort categories by subject"
@@ -3467,7 +3477,7 @@ msgstr "İşler: %d seçili, %d görünür, %d toplam"
 
 #: taskcoachlib\gui\viewer\task.py:37
 msgid "Status: %d overdue, %d inactive, %d completed"
-msgstr ""
+msgstr "Durum: %d zamanı geçmiş, %d etkin olmayan, %d tamamlanmış"
 
 #: taskcoachlib\gui\viewer\task.py:270
 msgid "Timeline"
@@ -3615,7 +3625,7 @@ msgstr "Noktalı virgül"
 
 #: taskcoachlib\gui\wizard\csvimport.py:54
 msgid "Simple quote"
-msgstr ""
+msgstr "Basit ayraç"
 
 #: taskcoachlib\gui\wizard\csvimport.py:55
 msgid "Double quote"
@@ -3623,19 +3633,19 @@ msgstr "Çift tırnak"
 
 #: taskcoachlib\gui\wizard\csvimport.py:59
 msgid "Double it"
-msgstr ""
+msgstr "Kopyala"
 
 #: taskcoachlib\gui\wizard\csvimport.py:61
 msgid "Escape with"
-msgstr ""
+msgstr "Şununla kes"
 
 #: taskcoachlib\gui\wizard\csvimport.py:72
 msgid "Import only the selected rows"
-msgstr ""
+msgstr "Yalnız seçili satırları al"
 
 #: taskcoachlib\gui\wizard\csvimport.py:75
 msgid "First line describes fields"
-msgstr ""
+msgstr "İlk satır alan adlarını içeriyor"
 
 #: taskcoachlib\gui\wizard\csvimport.py:88
 msgid "Delimiter"
@@ -3643,15 +3653,15 @@ msgstr "Ayraç"
 
 #: taskcoachlib\gui\wizard\csvimport.py:91
 msgid "Quote character"
-msgstr ""
+msgstr "Ayraç karakteri"
 
 #: taskcoachlib\gui\wizard\csvimport.py:94
 msgid "Escape quote"
-msgstr ""
+msgstr "Kesme ayracı"
 
 #: taskcoachlib\gui\wizard\csvimport.py:158
 msgid "Field #%d"
-msgstr ""
+msgstr "Alan #%d"
 
 #: taskcoachlib\gui\wizard\csvimport.py:202
 msgid "Please select a file."
@@ -3669,23 +3679,23 @@ msgstr "Grup"
 
 #: taskcoachlib\gui\wizard\csvimport.py:246
 msgid "Column header in CSV file"
-msgstr ""
+msgstr "CSV dosyasındaki sütun başlığı"
 
 #: taskcoachlib\gui\wizard\csvimport.py:247
 msgid "%s attribute"
-msgstr ""
+msgstr "%s özniteliği"
 
 #: taskcoachlib\gui\wizard\csvimport.py:288
 msgid "No field mapping."
-msgstr ""
+msgstr "Alan haritalaması yok."
 
 #: taskcoachlib\gui\wizard\csvimport.py:291
 msgid "The \"%s\" field cannot be selected several times."
-msgstr ""
+msgstr "\"%s\" alanı birden fazla seçilemez."
 
 #: taskcoachlib\gui\wizard\csvimport.py:294
 msgid "The fields %s cannot be selected several times."
-msgstr ""
+msgstr "%s alanları birden fazla seçilemez."
 
 #: taskcoachlib\help\__init__.py:65
 msgid "Table of contents"
@@ -3971,7 +3981,7 @@ msgstr "Bunlara ek olarak, işler şu şekilde görünebilirler:"
 
 #: taskcoachlib\help\__init__.py:182
 msgid "Overdue: the due date is in the past;"
-msgstr ""
+msgstr "Zaman aşımı: Bitiş tarihi geçmişte;"
 
 #: taskcoachlib\help\__init__.py:183
 msgid ""
@@ -3999,7 +4009,7 @@ msgstr "İş metinleri şu kurallara göre renk alırlar:"
 
 #: taskcoachlib\help\__init__.py:193
 msgid "Overdue tasks are red;"
-msgstr ""
+msgstr "Zamanı geçmiş işler kırmızı renktir;"
 
 #: taskcoachlib\help\__init__.py:194
 msgid "Tasks due soon are orange;"
@@ -4135,6 +4145,11 @@ msgid ""
 "only\n"
 "filter by one of the subcategories at a time."
 msgstr ""
+"Birbirini dışlayan altgruplar: Grubun altgruplarının birbirini \n"
+"dışlayıp dışlamayacağını gösteren işaret kutusu. Birbirini dışlıyorlarsa \n"
+"ögeler yalnız bir altgruba ait olabilir. Süzme işlemlerinde, aynı anda bu "
+"altgruplardan \n"
+"yalnızca birine göre süzebilirsiniz."
 
 #: taskcoachlib\help\__init__.py:258
 msgid ""
@@ -4440,6 +4455,10 @@ msgid ""
 "\n"
 "arise."
 msgstr ""
+"Çakışma algılama/çözme sistemi Funambol sınırlaması üzerine \n"
+"çalışan bir çözümdür. Çoğu durumda çalışır. Ancak eğer aynı sunucu \n"
+"üzerinde aynı anda eşleştirme yapan pek çok uygulama varsa sorun \n"
+"çıkabilir."
 
 #: taskcoachlib\help\__init__.py:416
 msgid "Probably some others..."
@@ -4849,6 +4868,12 @@ msgid ""
 "other\n"
 "to create notebooks."
 msgstr ""
+"Görüntüleyicileri sürükleyip bırakarak neredeyse istediğiniz her şekilde \n"
+"bir kullanıcı arayüzü oluşturabilirsiniz. Bir görüntüleyiciyi sürüklemeye "
+"başladığınızda \n"
+"nereye bırakabileceğinizi gösteren ipuçları belirir. Görüntüleyiciler bir "
+"not defteri oluşturacak \n"
+"şekilde birbiri üzerine de bırakılabilir."
 
 #: taskcoachlib\help\__init__.py:586
 msgid ""
@@ -4936,7 +4961,7 @@ msgstr "Shift-Ctrl-N (Linux ve Mac OS X)"
 
 #: taskcoachlib\help\__init__.py:608 taskcoachlib\help\__init__.py:636
 msgid "Insert a new subitem"
-msgstr ""
+msgstr "Yeni bir alt öge ekler"
 
 #: taskcoachlib\help\__init__.py:609
 msgid "Ctrl-O"
@@ -5102,6 +5127,12 @@ msgid ""
 "<p>%(copyright)s</p>\n"
 "<p>%(license_notice_html)s</p>\n"
 msgstr ""
+"<h4>%(name)s - %(description)s</h4>\n"
+"<h5>Sürüm %(version)s, %(date)s</h5>\n"
+"<p>Yazar %(author)s &lt;%(author_email)s&gt;<p>\n"
+"<p><a href=\"%(url)s\" target=\"_blank\">%(url)s</a></p>\n"
+"<p>%(copyright)s</p>\n"
+"<p>%(license_notice_html)s</p>\n"
 
 #: taskcoachlib\help\__init__.py:660
 msgid ""
@@ -5116,6 +5147,16 @@ msgid ""
 "%(license)s\n"
 "\n"
 msgstr ""
+"\n"
+"Sürüm %(version)s, %(date)s\n"
+"\n"
+"Yazar %(author)s <%(author_email)s>\n"
+"\n"
+"%(url)s\n"
+"\n"
+"%(copyright)s\n"
+"%(license)s\n"
+"\n"
 
 #: taskcoachlib\help\tips.py:25
 msgid ""
@@ -5133,6 +5174,9 @@ msgid ""
 "fellow users, discuss and request features and complain about bugs. Go to "
 "%(url)s and join today!"
 msgstr ""
+"%(name)s, %(name)s kullanıcılarının görüşlerini paylaştıkları, isteklerini "
+"dile getirdikleri ve hataları bildirdikleri bir posta listesine sahiptir. "
+"Katılmak için %(url)s adresine gidebilirsiniz!"
 
 #: taskcoachlib\help\tips.py:27
 msgid ""
@@ -5249,11 +5293,11 @@ msgstr ""
 
 #: taskcoachlib\help\uicommand.py:26
 msgid "Browse for files to add as attachment to the selected item(s)"
-msgstr ""
+msgstr "Seçili ögelere ek eklemek için dosyalara gözatın"
 
 #: taskcoachlib\help\uicommand.py:27
 msgid "Add a note to the selected item(s)"
-msgstr ""
+msgstr "seçili ögelere not ekler"
 
 #: taskcoachlib\help\uicommand.py:28
 msgid "Insert a new category"
@@ -5274,6 +5318,10 @@ msgstr "Panodaki ögeleri yapıştırır"
 #: taskcoachlib\help\uicommand.py:32
 msgid "Paste item(s) from the clipboard as subitem of the selected item"
 msgstr "Panodaki ögeleri seçili ögenin altögeleri olarak yapıştırır"
+
+#: taskcoachlib\help\uicommand.py:33
+msgid "Edit preferences"
+msgstr "Ayarları düzenle"
 
 #: taskcoachlib\help\uicommand.py:34
 msgid "Redo the last command that was undone"
@@ -5325,7 +5373,7 @@ msgstr "Yazılım hakkında yardım"
 
 #: taskcoachlib\help\uicommand.py:46
 msgid "Mail the selected item(s), using your default mailer"
-msgstr ""
+msgstr "Varsayılan e-posta programınızı kullanarak seçili ögeleri gönderir"
 
 #: taskcoachlib\help\uicommand.py:47
 msgid "Insert a new note"
@@ -5333,11 +5381,11 @@ msgstr "Yeni not ekler"
 
 #: taskcoachlib\help\uicommand.py:48
 msgid "Open all attachments of the selected item(s)"
-msgstr ""
+msgstr "Seçili ögelerin tüm eklerini açar"
 
 #: taskcoachlib\help\uicommand.py:49
 msgid "Open all notes of the selected item(s)"
-msgstr ""
+msgstr "Seçili ögelerin tüm notlarını açar"
 
 #: taskcoachlib\help\uicommand.py:50
 msgid "Print the current file"
@@ -6193,6 +6241,9 @@ msgstr "İnternet adresi açılırken hata"
 #~ msgid "&Add template..."
 #~ msgstr "K&alıp ekle..."
 
+#~ msgid "Add a new template from a template file"
+#~ msgstr "Bir kalıp dosyasından yeni bir kalıp ekle"
+
 #~ msgid "&Print preview"
 #~ msgstr "Baskı ö&nizleme"
 
@@ -6285,20 +6336,11 @@ msgstr "İnternet adresi açılırken hata"
 #~ msgid "St&op tracking effort"
 #~ msgstr "Çalışmayı &bırak"
 
-#~ msgid "&Help contents\tCtrl+?"
-#~ msgstr "&Yardım konuları\tCtrl+?"
+#~ msgid "Help: About %s"
+#~ msgstr "Yardım: %s hakkında"
 
-#~ msgid "&Help contents\tCtrl+H"
-#~ msgstr "&Yardım konuları\tCtrl+H"
-
-#~ msgid "&Tips"
-#~ msgstr "İ&puçları"
-
-#~ msgid "&About %s"
-#~ msgstr "%s &hakkında"
-
-#~ msgid "&License"
-#~ msgstr "&Lisans"
+#~ msgid "Help: %s license"
+#~ msgstr "Yardım: %s lisansı"
 
 #~ msgid "Show only tasks &due before end of"
 #~ msgstr "Şun&dan önce bitecek işleri göster"
@@ -6688,3 +6730,33 @@ msgstr "İnternet adresi açılırken hata"
 #~ msgstr ""
 #~ "%s kalıbı eklenemiyor\n"
 #~ "%s"
+
+#~ msgid "Choose CSV file"
+#~ msgstr "CSV dosyasını seçin"
+
+#~ msgid "CSV import"
+#~ msgstr "CSV al"
+
+#~ msgid "&Tips..."
+#~ msgstr "İ&puçları..."
+
+#~ msgid "&Help contents...\tCtrl+H"
+#~ msgstr "Yardım konuları...\tCtrl+H"
+
+#~ msgid "&License..."
+#~ msgstr "&Lisans..."
+
+#~ msgid "&About %s..."
+#~ msgstr "%s h&akkında..."
+
+#~ msgid "Check for update..."
+#~ msgstr "Güncellemeleri denetle..."
+
+#~ msgid "&Frequently asked questions..."
+#~ msgstr "&Sık sorulan sorular..."
+
+#~ msgid "Open template"
+#~ msgstr "Kalıp aç"
+
+#~ msgid "&Help contents...\tCtrl+?"
+#~ msgstr "&Yardım konuları...\tCtrl+?"

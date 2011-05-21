@@ -38,14 +38,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TaskCoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-05-19 23:01+0000\n"
-"PO-Revision-Date: 2011-04-19 02:46+0000\n"
-"Last-Translator: Florin Cătălin RUSSEN <cfrussen@yahoo.co.uk>\n"
+"POT-Creation-Date: 2011-05-20 23:33+0000\n"
+"PO-Revision-Date: 2011-05-21 10:16+0000\n"
+"Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Romanian <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-20 20:37+0000\n"
+"X-Launchpad-Export-Date: 2011-05-21 13:36+0000\n"
 "X-Generator: Launchpad (build 13085)\n"
 "X-Poedit-Country: ROMANIA\n"
 "X-Poedit-Language: Romanian\n"
@@ -1161,15 +1161,15 @@ msgstr ""
 
 #: taskcoachlib\gui\dialog\export.py:85 taskcoachlib\gui\iocontroller.py:292
 msgid "Export as CSV"
-msgstr ""
+msgstr "Exportă ca CSV"
 
 #: taskcoachlib\gui\dialog\export.py:90 taskcoachlib\gui\iocontroller.py:297
 msgid "Export as iCalendar"
-msgstr ""
+msgstr "Exportă ca iCalendar"
 
 #: taskcoachlib\gui\dialog\export.py:101 taskcoachlib\gui\iocontroller.py:286
 msgid "Export as HTML"
-msgstr ""
+msgstr "Exportă ca HTML"
 
 #: taskcoachlib\gui\dialog\export.py:111
 msgid "Write style information to a separate CSS file"
@@ -1706,9 +1706,13 @@ msgstr ""
 msgid "Merged %(filename)s"
 msgstr "%(filename)s unite"
 
-#: taskcoachlib\gui\iocontroller.py:182 taskcoachlib\gui\iocontroller.py:194
+#: taskcoachlib\gui\iocontroller.py:182
 msgid "Save as"
-msgstr ""
+msgstr "Salvează ca"
+
+#: taskcoachlib\gui\iocontroller.py:194
+msgid "Save selection"
+msgstr "Salvează selecția"
 
 #: taskcoachlib\gui\iocontroller.py:226
 msgid ""
@@ -2206,8 +2210,8 @@ msgid "&Import template..."
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:571
-msgid "Add a new template from a template file"
-msgstr "Adaugă un șablon nou dintr-un fișier de șablon"
+msgid "Import a new template from a template file"
+msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:581
 msgid "Edit templates..."
@@ -2302,13 +2306,9 @@ msgstr "&Import CSV..."
 msgid "Import tasks from a Comma Separated Values (CSV) file"
 msgstr "Importă sarcini dintr-un fișier CSV (Comma Separated Values)"
 
-#: taskcoachlib\gui\uicommand.py:732
-msgid "Choose CSV file"
-msgstr "Alegeți fișierul CSV"
-
-#: taskcoachlib\gui\uicommand.py:734
-msgid "CSV import"
-msgstr "Import CSV"
+#: taskcoachlib\gui\uicommand.py:732 taskcoachlib\gui\uicommand.py:734
+msgid "Import CSV"
+msgstr "Importă CSV"
 
 #: taskcoachlib\gui\uicommand.py:741
 msgid "S&yncML synchronization..."
@@ -2358,17 +2358,21 @@ msgstr "Lipește c&a subelement\tShift+Ctrl+V"
 msgid "&Preferences...\tAlt+P"
 msgstr "&Preferințe...\tAlt+P"
 
-#: taskcoachlib\gui\uicommand.py:916 taskcoachlib\help\uicommand.py:33
-msgid "Edit preferences"
-msgstr "Editare preferințe"
+#: taskcoachlib\gui\uicommand.py:916
+msgid "Preferences"
+msgstr "Preferinţe"
 
 #: taskcoachlib\gui\uicommand.py:922
 msgid "&SyncML preferences..."
 msgstr "Preferințe &SyncML..."
 
-#: taskcoachlib\gui\uicommand.py:923 taskcoachlib\gui\uicommand.py:929
+#: taskcoachlib\gui\uicommand.py:923
 msgid "Edit SyncML preferences"
 msgstr "Editează preferințele SyncML"
+
+#: taskcoachlib\gui\uicommand.py:929
+msgid "SyncML preferences"
+msgstr "SyncML preferinţe"
 
 #: taskcoachlib\gui\uicommand.py:935
 msgid "&All\tCtrl+A"
@@ -2708,60 +2712,56 @@ msgid "&Open all attachments...\tShift+Ctrl+O"
 msgstr "Deschide t&oate atașamentele...\tShift+Ctrl+O"
 
 #: taskcoachlib\gui\uicommand.py:2175
-msgid "&Help contents...\tCtrl+?"
-msgstr "Sumar ajutor...\tCtrl+?"
+msgid "&Help contents\tCtrl+?"
+msgstr "&Cuprins ajutor\tCtrl+?"
 
 #: taskcoachlib\gui\uicommand.py:2178
-msgid "&Help contents...\tCtrl+H"
-msgstr "Sumar ajutor...\tCtrl+H"
+msgid "&Help contents\tCtrl+H"
+msgstr "&Cuprins ajutor\tCtrl+H"
 
 #: taskcoachlib\gui\uicommand.py:2180
 msgid "Help"
 msgstr "Ajutor"
 
 #: taskcoachlib\gui\uicommand.py:2186
-msgid "&Tips..."
-msgstr "&Trucuri..."
+msgid "&Tips"
+msgstr "Sfa&turi"
 
 #: taskcoachlib\gui\uicommand.py:2187
 msgid "Tips about the program"
 msgstr "Sfaturi despre program"
 
 #: taskcoachlib\gui\uicommand.py:2196
-msgid "&About %s..."
-msgstr "&Despre %s..."
+msgid "&About %s"
+msgstr "&Despre %s"
 
 #: taskcoachlib\gui\uicommand.py:2197
 msgid "Version and contact information about %s"
 msgstr "Versiune și informații de contact despre %s"
 
 #: taskcoachlib\gui\uicommand.py:2198
-msgid "Help: About %s"
-msgstr "Ajutor: Despre %s"
+msgid "About %s"
+msgstr "Despre %s"
 
 #: taskcoachlib\gui\uicommand.py:2205
-msgid "&License..."
-msgstr "&Licență..."
+msgid "&License"
+msgstr "&Licență"
 
-#: taskcoachlib\gui\uicommand.py:2206
+#: taskcoachlib\gui\uicommand.py:2206 taskcoachlib\gui\uicommand.py:2207
 msgid "%s license"
 msgstr "Licență %s"
 
-#: taskcoachlib\gui\uicommand.py:2207
-msgid "Help: %s license"
-msgstr "Ajutor: Licență %s"
-
 #: taskcoachlib\gui\uicommand.py:2214
-msgid "Check for update..."
-msgstr ""
+msgid "Check for update"
+msgstr "Verificaţi dacă există actualizări"
 
 #: taskcoachlib\gui\uicommand.py:2215
 msgid "Check for the availability of a new version of %s"
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:2233
-msgid "&Frequently asked questions..."
-msgstr "Întrebări frecvente..."
+msgid "&Frequently asked questions"
+msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:2234
 msgid "Browse the frequently asked questions and answers"
@@ -3681,11 +3681,11 @@ msgstr "Spațiu"
 
 #: taskcoachlib\gui\wizard\csvimport.py:49
 msgid "Colon"
-msgstr ""
+msgstr "Două puncte"
 
 #: taskcoachlib\gui\wizard\csvimport.py:50
 msgid "Semicolon"
-msgstr ""
+msgstr "Punct și virgulă"
 
 #: taskcoachlib\gui\wizard\csvimport.py:54
 msgid "Simple quote"
@@ -5349,6 +5349,10 @@ msgid "Paste item(s) from the clipboard as subitem of the selected item"
 msgstr ""
 "Lipește elementele din cliplanșetă ca subelement al elementului selectat"
 
+#: taskcoachlib\help\uicommand.py:33
+msgid "Edit preferences"
+msgstr "Editare preferințe"
+
 #: taskcoachlib\help\uicommand.py:34
 msgid "Redo the last command that was undone"
 msgstr "Refă ultima comandă desfăcută"
@@ -6270,6 +6274,9 @@ msgstr "Eroare la deschiderea URL"
 #~ msgid "&Add template..."
 #~ msgstr "&Adaugă șablon..."
 
+#~ msgid "Add a new template from a template file"
+#~ msgstr "Adaugă un șablon nou dintr-un fișier de șablon"
+
 #~ msgid "&Print preview"
 #~ msgstr "&Previzualizare tipărire"
 
@@ -6363,20 +6370,11 @@ msgstr "Eroare la deschiderea URL"
 #~ msgid "St&op tracking effort"
 #~ msgstr "&Oprește urmărirea efortului"
 
-#~ msgid "&Help contents\tCtrl+?"
-#~ msgstr "&Cuprins ajutor\tCtrl+?"
+#~ msgid "Help: About %s"
+#~ msgstr "Ajutor: Despre %s"
 
-#~ msgid "&Help contents\tCtrl+H"
-#~ msgstr "&Cuprins ajutor\tCtrl+H"
-
-#~ msgid "&Tips"
-#~ msgstr "Sfa&turi"
-
-#~ msgid "&About %s"
-#~ msgstr "&Despre %s"
-
-#~ msgid "&License"
-#~ msgstr "&Licență"
+#~ msgid "Help: %s license"
+#~ msgstr "Ajutor: Licență %s"
 
 #~ msgid "Show only tasks &due before end of"
 #~ msgstr "Arată numai sarcinile sca&dente înainte de"
@@ -6623,8 +6621,29 @@ msgstr "Eroare la deschiderea URL"
 #~ msgid "First line describe fields"
 #~ msgstr "Prima linie descrie cîmpurile"
 
-#~ msgid "Import CSV"
-#~ msgstr "Importă CSV"
+#~ msgid "Choose CSV file"
+#~ msgstr "Alegeți fișierul CSV"
+
+#~ msgid "CSV import"
+#~ msgstr "Import CSV"
+
+#~ msgid "&Tips..."
+#~ msgstr "&Trucuri..."
+
+#~ msgid "&Help contents...\tCtrl+H"
+#~ msgstr "Sumar ajutor...\tCtrl+H"
+
+#~ msgid "&Help contents...\tCtrl+?"
+#~ msgstr "Sumar ajutor...\tCtrl+?"
+
+#~ msgid "&About %s..."
+#~ msgstr "&Despre %s..."
+
+#~ msgid "&License..."
+#~ msgstr "&Licență..."
+
+#~ msgid "&Frequently asked questions..."
+#~ msgstr "Întrebări frecvente..."
 
 #~ msgid "Only show tasks due this wo&rk week"
 #~ msgstr "Afișează numai sarcinile scadente în această săptămînă lucrătoare"

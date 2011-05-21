@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-05-19 23:01+0000\n"
+"POT-Creation-Date: 2011-05-20 23:33+0000\n"
 "PO-Revision-Date: 2011-05-19 21:37+0000\n"
 "Last-Translator: Csaba Vágányik <Unknown>\n"
 "Language-Team: Majsa Norbert <nmajsa@szintezis.hu>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-20 20:37+0000\n"
+"X-Launchpad-Export-Date: 2011-05-21 13:36+0000\n"
 "X-Generator: Launchpad (build 13085)\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "Generated-By: pygettext.py 1.5\n"
@@ -1672,8 +1672,12 @@ msgstr ""
 msgid "Merged %(filename)s"
 msgstr "%(filename)s hozzáfűzve"
 
-#: taskcoachlib\gui\iocontroller.py:182 taskcoachlib\gui\iocontroller.py:194
+#: taskcoachlib\gui\iocontroller.py:182
 msgid "Save as"
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:194
+msgid "Save selection"
 msgstr ""
 
 #: taskcoachlib\gui\iocontroller.py:226
@@ -2167,8 +2171,8 @@ msgid "&Import template..."
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:571
-msgid "Add a new template from a template file"
-msgstr "Új sablon hozzáadása sablonfájlból"
+msgid "Import a new template from a template file"
+msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:581
 msgid "Edit templates..."
@@ -2263,13 +2267,9 @@ msgstr "CSV fájl &importálása..."
 msgid "Import tasks from a Comma Separated Values (CSV) file"
 msgstr "Feladatok importálása CSV fájlból"
 
-#: taskcoachlib\gui\uicommand.py:732
-msgid "Choose CSV file"
+#: taskcoachlib\gui\uicommand.py:732 taskcoachlib\gui\uicommand.py:734
+msgid "Import CSV"
 msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:734
-msgid "CSV import"
-msgstr "CSV fájl importálása"
 
 #: taskcoachlib\gui\uicommand.py:741
 msgid "S&yncML synchronization..."
@@ -2319,17 +2319,21 @@ msgstr "Beillesztés &résztételként\tShift+Ctrl+V"
 msgid "&Preferences...\tAlt+P"
 msgstr "&Beállítások...\tAlt+P"
 
-#: taskcoachlib\gui\uicommand.py:916 taskcoachlib\help\uicommand.py:33
-msgid "Edit preferences"
-msgstr "Beállítások szerkesztése"
+#: taskcoachlib\gui\uicommand.py:916
+msgid "Preferences"
+msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:922
 msgid "&SyncML preferences..."
 msgstr "&SyncML beállítások..."
 
-#: taskcoachlib\gui\uicommand.py:923 taskcoachlib\gui\uicommand.py:929
+#: taskcoachlib\gui\uicommand.py:923
 msgid "Edit SyncML preferences"
 msgstr "SyncML beállítások szerkesztése"
+
+#: taskcoachlib\gui\uicommand.py:929
+msgid "SyncML preferences"
+msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:935
 msgid "&All\tCtrl+A"
@@ -2668,60 +2672,56 @@ msgid "&Open all attachments...\tShift+Ctrl+O"
 msgstr "&Összes melléklet megnyitása...\tShift+Ctrl+O"
 
 #: taskcoachlib\gui\uicommand.py:2175
-msgid "&Help contents...\tCtrl+?"
-msgstr "&Tartalom...\tCtrl+?"
+msgid "&Help contents\tCtrl+?"
+msgstr "&Súgó\tCtrl+?"
 
 #: taskcoachlib\gui\uicommand.py:2178
-msgid "&Help contents...\tCtrl+H"
-msgstr "&Tartalom...\tCtrl+H"
+msgid "&Help contents\tCtrl+H"
+msgstr "&Súgó\tCtrl+H"
 
 #: taskcoachlib\gui\uicommand.py:2180
 msgid "Help"
 msgstr "Súgó"
 
 #: taskcoachlib\gui\uicommand.py:2186
-msgid "&Tips..."
-msgstr "&Tippek..."
+msgid "&Tips"
+msgstr "&Tipp"
 
 #: taskcoachlib\gui\uicommand.py:2187
 msgid "Tips about the program"
 msgstr "Tippek a program használatához"
 
 #: taskcoachlib\gui\uicommand.py:2196
-msgid "&About %s..."
-msgstr "&Névjegy %s..."
+msgid "&About %s"
+msgstr "%s &Névjegy"
 
 #: taskcoachlib\gui\uicommand.py:2197
 msgid "Version and contact information about %s"
 msgstr "%s verzió és kapcsolat információk"
 
 #: taskcoachlib\gui\uicommand.py:2198
-msgid "Help: About %s"
-msgstr "Súgó: Névjegy %s"
-
-#: taskcoachlib\gui\uicommand.py:2205
-msgid "&License..."
+msgid "About %s"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:2206
+#: taskcoachlib\gui\uicommand.py:2205
+msgid "&License"
+msgstr "&Liszensz"
+
+#: taskcoachlib\gui\uicommand.py:2206 taskcoachlib\gui\uicommand.py:2207
 msgid "%s license"
 msgstr "%s liszensz"
 
-#: taskcoachlib\gui\uicommand.py:2207
-msgid "Help: %s license"
-msgstr "Súgó: %s liszensz"
-
 #: taskcoachlib\gui\uicommand.py:2214
-msgid "Check for update..."
-msgstr "Frissítések keresése..."
+msgid "Check for update"
+msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:2215
 msgid "Check for the availability of a new version of %s"
 msgstr "Új %s verzió elérhetőségének ellenőrzése"
 
 #: taskcoachlib\gui\uicommand.py:2233
-msgid "&Frequently asked questions..."
-msgstr "&Gyakran ismétlődő kérdések..."
+msgid "&Frequently asked questions"
+msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:2234
 msgid "Browse the frequently asked questions and answers"
@@ -5031,6 +5031,10 @@ msgid "Paste item(s) from the clipboard as subitem of the selected item"
 msgstr ""
 "A vágólapon lévő tétel(ek) beillesztése a kijelölt tétel résztételeként"
 
+#: taskcoachlib\help\uicommand.py:33
+msgid "Edit preferences"
+msgstr "Beállítások szerkesztése"
+
 #: taskcoachlib\help\uicommand.py:34
 msgid "Redo the last command that was undone"
 msgstr "Utolsó visszavont parancs lefuttatása"
@@ -5794,20 +5798,8 @@ msgstr "Hiba az URL megnyitásakor"
 #~ msgid "St&op tracking effort"
 #~ msgstr "Ráfordított idő mérésének leállítása"
 
-#~ msgid "&Help contents\tCtrl+?"
-#~ msgstr "&Súgó\tCtrl+?"
-
-#~ msgid "&Help contents\tCtrl+H"
-#~ msgstr "&Súgó\tCtrl+H"
-
-#~ msgid "&Tips"
-#~ msgstr "&Tipp"
-
-#~ msgid "&About %s"
-#~ msgstr "%s &Névjegy"
-
-#~ msgid "&License"
-#~ msgstr "&Liszensz"
+#~ msgid "Help: %s license"
+#~ msgstr "Súgó: %s liszensz"
 
 #~ msgid "Show only tasks &due before end of"
 #~ msgstr "Mutasd a még le nem járt &határidejű feladatokat"
@@ -6256,6 +6248,9 @@ msgstr "Hiba az URL megnyitásakor"
 #~ msgid "New note with selected categories..."
 #~ msgstr "Új jegyzet a kiválasztott kategóriákhoz..."
 
+#~ msgid "&Tips..."
+#~ msgstr "&Tippek..."
+
 #~ msgid "&Add template..."
 #~ msgstr "&Sablon hozzáadása..."
 
@@ -6297,8 +6292,29 @@ msgstr "Hiba az URL megnyitásakor"
 #~ msgid "Export the selected items in the current viewer in iCalendar format"
 #~ msgstr "Az aktuális ablakban lévő kijelölés exportálása iCalendar formátumba"
 
+#~ msgid "&About %s..."
+#~ msgstr "&Névjegy %s..."
+
+#~ msgid "Help: About %s"
+#~ msgstr "Súgó: Névjegy %s"
+
 #~ msgid "Export selection as &CSV..."
 #~ msgstr "Kijelölés exportálása &CSV-be..."
+
+#~ msgid "Add a new template from a template file"
+#~ msgstr "Új sablon hozzáadása sablonfájlból"
+
+#~ msgid "CSV import"
+#~ msgstr "CSV fájl importálása"
+
+#~ msgid "Check for update..."
+#~ msgstr "Frissítések keresése..."
+
+#~ msgid "&Help contents...\tCtrl+H"
+#~ msgstr "&Tartalom...\tCtrl+H"
+
+#~ msgid "&Help contents...\tCtrl+?"
+#~ msgstr "&Tartalom...\tCtrl+?"
 
 #~ msgid "Only show tasks due this work week and hide later ones"
 #~ msgstr ""
@@ -6317,6 +6333,9 @@ msgstr "Hiba az URL megnyitásakor"
 #~ msgstr ""
 #~ "Csak az ezen a munkahéten kezdődő feladatok megjelenítése és a későbbiek "
 #~ "elrejtése"
+
+#~ msgid "&Frequently asked questions..."
+#~ msgstr "&Gyakran ismétlődő kérdések..."
 
 #~ msgid ""
 #~ "Cannot add template %s\n"

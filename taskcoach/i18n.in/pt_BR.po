@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-05-19 23:01+0000\n"
-"PO-Revision-Date: 2011-05-20 20:35+0000\n"
-"Last-Translator: millemiglia <dnieper650@gmail.com>\n"
+"POT-Creation-Date: 2011-05-20 23:33+0000\n"
+"PO-Revision-Date: 2011-05-21 13:31+0000\n"
+"Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-20 20:37+0000\n"
+"X-Launchpad-Export-Date: 2011-05-21 13:36+0000\n"
 "X-Generator: Launchpad (build 13085)\n"
 
 #: taskcoachlib\application\application.py:241
@@ -61,7 +61,7 @@ msgstr "Copiar \"%s\""
 
 #: taskcoachlib\command\base.py:177 taskcoachlib\gui\dialog\templates.py:51
 msgid "Delete"
-msgstr "Apagar"
+msgstr "Excluir"
 
 #: taskcoachlib\command\base.py:178
 msgid "Delete \"%s\""
@@ -280,11 +280,11 @@ msgstr "Editar tarefas \"%s\""
 
 #: taskcoachlib\command\taskCommands.py:228
 msgid "Mark tasks completed"
-msgstr "Marcar tarefas completadas"
+msgstr "Marcar tarefas terminadas"
 
 #: taskcoachlib\command\taskCommands.py:229
 msgid "Mark \"%s\" completed"
-msgstr "Marcar  \"%s\" completadas"
+msgstr "Marcar  \"%s\" terminadas"
 
 #: taskcoachlib\command\taskCommands.py:244
 msgid "Edit task dates"
@@ -296,19 +296,19 @@ msgstr "Editar datas \"%s\""
 
 #: taskcoachlib\command\taskCommands.py:265
 msgid "Start tracking"
-msgstr "Iniciar acompanhamento"
+msgstr "Iniciar monitoramento"
 
 #: taskcoachlib\command\taskCommands.py:266
 msgid "Start tracking \"%s\""
-msgstr "Iniciar acompanhamento  \"%s\""
+msgstr "Iniciar monitoramento  \"%s\""
 
 #: taskcoachlib\command\taskCommands.py:300
 msgid "Stop tracking"
-msgstr "Parar acompanhamento"
+msgstr "Parar monitoramento"
 
 #: taskcoachlib\command\taskCommands.py:301
 msgid "Stop tracking \"%s\""
-msgstr "Parar acompanhamento  \"%s\""
+msgstr "Parar monitoramento  \"%s\""
 
 #: taskcoachlib\command\taskCommands.py:344
 msgid "Maximize priority"
@@ -369,12 +369,12 @@ msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
 msgstr ""
-"Erro enquanto salvando %s.ini:\n"
+"Erro ao salvar %s.ini\n"
 "%s\n"
 
 #: taskcoachlib\config\settings.py:222
 msgid "Save error"
-msgstr "Erro de gravação"
+msgstr "Erro ao salvar"
 
 #: taskcoachlib\domain\attachment\attachmentlist.py:24
 msgid "New attachment..."
@@ -482,7 +482,7 @@ msgstr "Total"
 
 #: taskcoachlib\domain\effort\composite.py:224
 msgid "Total for %s"
-msgstr "Total para %s"
+msgstr "Total de %s"
 
 #: taskcoachlib\domain\effort\effortlist.py:31
 msgid "&New effort...\tCtrl+E"
@@ -658,7 +658,7 @@ msgstr "Pasta azul com seta"
 
 #: taskcoachlib\gui\artprovider.py:135
 msgid "Heart"
-msgstr ""
+msgstr "Coração"
 
 #: taskcoachlib\gui\artprovider.py:136
 msgid "Hearts"
@@ -755,7 +755,7 @@ msgstr "Nota musical"
 
 #: taskcoachlib\gui\artprovider.py:159
 msgid "Note"
-msgstr "Anotação"
+msgstr "Nota"
 
 #: taskcoachlib\gui\artprovider.py:160
 msgid "Palette"
@@ -979,7 +979,7 @@ msgstr ", tudo"
 
 #: taskcoachlib\gui\dialog\editor.py:425
 msgid "keeping dates on the same weekday"
-msgstr "Manter datas no mesmo dia da semana"
+msgstr "manter datas no mesmo dia da semana"
 
 #: taskcoachlib\gui\dialog\editor.py:442 taskcoachlib\gui\viewer\task.py:760
 msgid "Recurrence"
@@ -1015,7 +1015,7 @@ msgstr "ano(s)"
 
 #: taskcoachlib\gui\dialog\editor.py:606
 msgid "Progress"
-msgstr "Andamento"
+msgstr "Progesso"
 
 #: taskcoachlib\gui\dialog\editor.py:619
 msgid "Percentage complete"
@@ -1036,7 +1036,7 @@ msgstr "Sim"
 #: taskcoachlib\gui\dialog\editor.py:635
 msgid "Mark task completed when all children are completed?"
 msgstr ""
-"Marcar tarefa como completa quando todas suas subtarefas forem completadas?"
+"Marcar tarefa como completa quando todas suas subtarefas forem terminadas?"
 
 #: taskcoachlib\gui\dialog\editor.py:665 taskcoachlib\gui\dialog\editor.py:683
 #: taskcoachlib\gui\uicommand.py:2396 taskcoachlib\gui\viewer\task.py:761
@@ -1189,18 +1189,18 @@ msgstr ""
 
 #: taskcoachlib\gui\dialog\iphone.py:79
 msgid "Please download and install Bonjour for Windows from\n"
-msgstr "Por favor baixe e instale o Bonjour para Windows do\n"
+msgstr "Por favor baixe e instale o Bonjour para Windows de\n"
 
 #: taskcoachlib\gui\dialog\iphone.py:81
 msgid "Apple's web site"
-msgstr "Site da Apple"
+msgstr "site da Apple"
 
 #: taskcoachlib\gui\dialog\iphone.py:86
 msgid ""
 "Bonjour support for Linux is generally provided by\n"
 "Avahi."
 msgstr ""
-"O Bonjour para Linux é geralmente fornecido por\n"
+"O Bonjour para Linux é geralmente fornecido pelo\n"
 "Avahi"
 
 #: taskcoachlib\gui\dialog\iphone.py:89
@@ -1213,16 +1213,16 @@ msgid ""
 "install the avahi-compat-libdns_sd package as well as Avahi in order\n"
 "for this to work."
 msgstr ""
-"Note que em alguns sistemas operacionais (Fedora), você terá de instalar o "
-"pacote avahi-compat-libdns_sd bem como o Avahi para que funcione "
-"corretamente."
+"Note que em alguns sistemas operacionais (Fedora), você terá que\n"
+"instalar o pacote avahi-compat-libdns_sd bem como o Avahi \n"
+"para que funcione corretamente."
 
 #: taskcoachlib\gui\dialog\iphone.py:96
 msgid ""
 "In addition, if you have a firewall, check that ports 4096-4100 are open."
 msgstr ""
-"Além disso, se você tiver um firewall, cheque se as portas 4096-4100 estão "
-"abertas."
+"Além disso, se você tiver um firewall, verifique que as portas 4096-4100 "
+"estejam abertas."
 
 #: taskcoachlib\gui\dialog\iphone.py:98 taskcoachlib\gui\iphone.py:44
 #: taskcoachlib\widgets\buttonbox.py:24 taskcoachlib\widgets\conflict.py:262
@@ -1270,7 +1270,7 @@ msgid ""
 "from a removable medium)"
 msgstr ""
 "(Para executar %s\n"
-"a partir de uma mídia removível)"
+"de uma mídia removível)"
 
 #: taskcoachlib\gui\dialog\preferences.py:162
 msgid "Attachment base directory"
@@ -1314,7 +1314,7 @@ msgstr "Se estava iconificada na última sessão"
 
 #: taskcoachlib\gui\dialog\preferences.py:184
 msgid "Check for new version of %(name)s on startup"
-msgstr "Checar por nova versão de %(name)s ao iniciar"
+msgstr "Verificar por nova versão de %(name)s ao iniciar"
 
 #: taskcoachlib\gui\dialog\preferences.py:186
 msgid "Hide main window when iconized"
@@ -1364,15 +1364,15 @@ msgstr "Cores"
 
 #: taskcoachlib\gui\dialog\preferences.py:287
 msgid "Click this button to change the color of active tasks"
-msgstr "Clique nesse botão para mudar a cor das tarefas ativas"
+msgstr "Clique neste botão para mudar a cor das tarefas ativas"
 
 #: taskcoachlib\gui\dialog\preferences.py:288
 msgid "Click this button to change the color of inactive tasks"
-msgstr "Clique nesse botão para mudar a cor das tarefas inativas"
+msgstr "Clique neste botão para mudar a cor das tarefas inativas"
 
 #: taskcoachlib\gui\dialog\preferences.py:289
 msgid "Click this button to change the color of completed tasks"
-msgstr "Clique nesse botão para mudar a cor das tarefas finalizadas"
+msgstr "Clique neste botão para mudar a cor das tarefas finalizadas"
 
 #: taskcoachlib\gui\dialog\preferences.py:290
 msgid "Click this button to change the color of overdue tasks"
@@ -1380,7 +1380,7 @@ msgstr "Clique neste botão para alterar a cor das tarefas atrasadas"
 
 #: taskcoachlib\gui\dialog\preferences.py:291
 msgid "Click this button to change the color of tasks due soon"
-msgstr "Clique aqui para alterar a cor das tarefas que vencem logo"
+msgstr "Clique neste botão para alterar a cor das tarefas que vencem logo"
 
 #: taskcoachlib\gui\dialog\preferences.py:298
 msgid "Features"
@@ -1388,7 +1388,7 @@ msgstr "Recursos"
 
 #: taskcoachlib\gui\dialog\preferences.py:304
 msgid "Allow for tracking effort"
-msgstr "Ver acompanhamento de esforço"
+msgstr "Ver monitoramento de esforço"
 
 #: taskcoachlib\gui\dialog\preferences.py:305
 msgid "Allow for taking notes"
@@ -1490,7 +1490,7 @@ msgstr "Pausa"
 
 #: taskcoachlib\gui\dialog\reminder.py:73
 msgid "Mark task completed"
-msgstr "Marcar tarefa como completada"
+msgstr "Marcar tarefa como finalizada"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:80
 msgid "SyncML server URL"
@@ -1676,9 +1676,13 @@ msgstr "Não pode abrir %(filename)s porque ele está travado."
 msgid "Merged %(filename)s"
 msgstr "%(filename)s mesclado"
 
-#: taskcoachlib\gui\iocontroller.py:182 taskcoachlib\gui\iocontroller.py:194
+#: taskcoachlib\gui\iocontroller.py:182
 msgid "Save as"
 msgstr "Salvar como"
+
+#: taskcoachlib\gui\iocontroller.py:194
+msgid "Save selection"
+msgstr "Salva a seleção"
 
 #: taskcoachlib\gui\iocontroller.py:226
 msgid ""
@@ -2179,8 +2183,8 @@ msgid "&Import template..."
 msgstr "&Importar modelo..."
 
 #: taskcoachlib\gui\uicommand.py:571
-msgid "Add a new template from a template file"
-msgstr "Adicionar um novo modelo de um arquivo de modelos"
+msgid "Import a new template from a template file"
+msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:581
 msgid "Edit templates..."
@@ -2274,12 +2278,8 @@ msgstr "&Importar CSV..."
 msgid "Import tasks from a Comma Separated Values (CSV) file"
 msgstr "Importar tarefas de um arquivo Comma Separated Values (CSV)"
 
-#: taskcoachlib\gui\uicommand.py:732
-msgid "Choose CSV file"
-msgstr "Escolher arquivo CSV"
-
-#: taskcoachlib\gui\uicommand.py:734
-msgid "CSV import"
+#: taskcoachlib\gui\uicommand.py:732 taskcoachlib\gui\uicommand.py:734
+msgid "Import CSV"
 msgstr "Importar CSV"
 
 #: taskcoachlib\gui\uicommand.py:741
@@ -2330,17 +2330,21 @@ msgstr "C&olar como subitem\tShift+Ctrl+V"
 msgid "&Preferences...\tAlt+P"
 msgstr "&Preferências...\tAlt+P"
 
-#: taskcoachlib\gui\uicommand.py:916 taskcoachlib\help\uicommand.py:33
-msgid "Edit preferences"
-msgstr "Editar preferências"
+#: taskcoachlib\gui\uicommand.py:916
+msgid "Preferences"
+msgstr "Preferências"
 
 #: taskcoachlib\gui\uicommand.py:922
 msgid "&SyncML preferences..."
 msgstr "Preferẽncias do &SyncML..."
 
-#: taskcoachlib\gui\uicommand.py:923 taskcoachlib\gui\uicommand.py:929
+#: taskcoachlib\gui\uicommand.py:923
 msgid "Edit SyncML preferences"
 msgstr "Editar preferências de SyncML"
+
+#: taskcoachlib\gui\uicommand.py:929
+msgid "SyncML preferences"
+msgstr "SyncML preferências"
 
 #: taskcoachlib\gui\uicommand.py:935
 msgid "&All\tCtrl+A"
@@ -2682,60 +2686,56 @@ msgid "&Open all attachments...\tShift+Ctrl+O"
 msgstr "&Abrir todos os anexos...\tShift+Ctrl+O"
 
 #: taskcoachlib\gui\uicommand.py:2175
-msgid "&Help contents...\tCtrl+?"
-msgstr "Conteúdo da &ajuda...\tCtrl+?"
+msgid "&Help contents\tCtrl+?"
+msgstr "&Conteúdo de ajuda\tCtrl+?"
 
 #: taskcoachlib\gui\uicommand.py:2178
-msgid "&Help contents...\tCtrl+H"
-msgstr "Conteúdo da &ajuda...\tCtrl+H"
+msgid "&Help contents\tCtrl+H"
+msgstr "Conteúdo de &ajuda \tCtrl+H"
 
 #: taskcoachlib\gui\uicommand.py:2180
 msgid "Help"
 msgstr "Ajuda"
 
 #: taskcoachlib\gui\uicommand.py:2186
-msgid "&Tips..."
-msgstr "&Dicas..."
+msgid "&Tips"
+msgstr "&Dicas"
 
 #: taskcoachlib\gui\uicommand.py:2187
 msgid "Tips about the program"
 msgstr "Dicas sobre o programa"
 
 #: taskcoachlib\gui\uicommand.py:2196
-msgid "&About %s..."
-msgstr "&Sobre %s..."
+msgid "&About %s"
+msgstr "&Sobre %s"
 
 #: taskcoachlib\gui\uicommand.py:2197
 msgid "Version and contact information about %s"
 msgstr "Versão e informações de contato sobre %s"
 
 #: taskcoachlib\gui\uicommand.py:2198
-msgid "Help: About %s"
-msgstr "Ajuda: Sobre %s"
+msgid "About %s"
+msgstr "Sobre %s"
 
 #: taskcoachlib\gui\uicommand.py:2205
-msgid "&License..."
-msgstr "&Licença..."
+msgid "&License"
+msgstr "&Licença"
 
-#: taskcoachlib\gui\uicommand.py:2206
+#: taskcoachlib\gui\uicommand.py:2206 taskcoachlib\gui\uicommand.py:2207
 msgid "%s license"
 msgstr "%s licença"
 
-#: taskcoachlib\gui\uicommand.py:2207
-msgid "Help: %s license"
-msgstr "Ajuda: %s licença"
-
 #: taskcoachlib\gui\uicommand.py:2214
-msgid "Check for update..."
-msgstr "Verificar atualização..."
+msgid "Check for update"
+msgstr "Verificar atualizações"
 
 #: taskcoachlib\gui\uicommand.py:2215
 msgid "Check for the availability of a new version of %s"
 msgstr "Verificar a existência de nova versão de %s"
 
 #: taskcoachlib\gui\uicommand.py:2233
-msgid "&Frequently asked questions..."
-msgstr "Perguntas &frequentes..."
+msgid "&Frequently asked questions"
+msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:2234
 msgid "Browse the frequently asked questions and answers"
@@ -5285,6 +5285,7 @@ msgstr "Ctrl-Tab alterna entre abas no diálogo de edição."
 #: taskcoachlib\help\uicommand.py:26
 msgid "Browse for files to add as attachment to the selected item(s)"
 msgstr ""
+"Pesquisar arquivos para adicionar como anexos ao(s) item(ns) selecionado(s)"
 
 #: taskcoachlib\help\uicommand.py:27
 msgid "Add a note to the selected item(s)"
@@ -5310,6 +5311,10 @@ msgstr "Colar os ítens da área de transferência"
 msgid "Paste item(s) from the clipboard as subitem of the selected item"
 msgstr ""
 "Colar item (ns) da área de transferência como subitem do ítem selecionado"
+
+#: taskcoachlib\help\uicommand.py:33
+msgid "Edit preferences"
+msgstr "Editar preferências"
 
 #: taskcoachlib\help\uicommand.py:34
 msgid "Redo the last command that was undone"
@@ -6052,6 +6057,9 @@ msgstr "Erro ao abrir URL"
 #~ msgid "&Add template..."
 #~ msgstr "&Adicionar modelo..."
 
+#~ msgid "Add a new template from a template file"
+#~ msgstr "Adicionar um novo modelo de um arquivo de modelos"
+
 #~ msgid "&Print preview"
 #~ msgstr "Visualizar &impressão"
 
@@ -6142,20 +6150,11 @@ msgstr "Erro ao abrir URL"
 #~ msgid "St&op tracking effort"
 #~ msgstr "Interromper acompanhamento de esforço"
 
-#~ msgid "&Help contents\tCtrl+?"
-#~ msgstr "&Conteúdo de ajuda\tCtrl+?"
+#~ msgid "Help: About %s"
+#~ msgstr "Ajuda: Sobre %s"
 
-#~ msgid "&Help contents\tCtrl+H"
-#~ msgstr "Conteúdo de &ajuda \tCtrl+H"
-
-#~ msgid "&Tips"
-#~ msgstr "&Dicas"
-
-#~ msgid "&About %s"
-#~ msgstr "&Sobre %s"
-
-#~ msgid "&License"
-#~ msgstr "&Licença"
+#~ msgid "Help: %s license"
+#~ msgstr "Ajuda: %s licença"
 
 #~ msgid "Show only tasks &due before end of"
 #~ msgstr "Mostrar somente tarefas não terminadas"
@@ -6789,3 +6788,30 @@ msgstr "Erro ao abrir URL"
 
 #~ msgid "<h3><a name=\"syncml\">SyncML support</a></h3>\n"
 #~ msgstr "<h3><a name=\"syncml\">Suporte a SyncML</a></h3>\n"
+
+#~ msgid "Choose CSV file"
+#~ msgstr "Escolher arquivo CSV"
+
+#~ msgid "CSV import"
+#~ msgstr "Importar CSV"
+
+#~ msgid "&Help contents...\tCtrl+H"
+#~ msgstr "Conteúdo da &ajuda...\tCtrl+H"
+
+#~ msgid "&Help contents...\tCtrl+?"
+#~ msgstr "Conteúdo da &ajuda...\tCtrl+?"
+
+#~ msgid "&License..."
+#~ msgstr "&Licença..."
+
+#~ msgid "&About %s..."
+#~ msgstr "&Sobre %s..."
+
+#~ msgid "Check for update..."
+#~ msgstr "Verificar atualização..."
+
+#~ msgid "&Frequently asked questions..."
+#~ msgstr "Perguntas &frequentes..."
+
+#~ msgid "&Tips..."
+#~ msgstr "&Dicas..."

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-05-19 23:01+0000\n"
+"POT-Creation-Date: 2011-05-20 23:33+0000\n"
 "PO-Revision-Date: 2010-12-17 19:52+0000\n"
 "Last-Translator: Samir Ribić <Unknown>\n"
 "Language-Team: Bosnian <bs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-20 20:36+0000\n"
+"X-Launchpad-Export-Date: 2011-05-21 13:36+0000\n"
 "X-Generator: Launchpad (build 13085)\n"
 
 #: taskcoachlib\application\application.py:241
@@ -1637,8 +1637,12 @@ msgstr ""
 msgid "Merged %(filename)s"
 msgstr ""
 
-#: taskcoachlib\gui\iocontroller.py:182 taskcoachlib\gui\iocontroller.py:194
+#: taskcoachlib\gui\iocontroller.py:182
 msgid "Save as"
+msgstr ""
+
+#: taskcoachlib\gui\iocontroller.py:194
+msgid "Save selection"
 msgstr ""
 
 #: taskcoachlib\gui\iocontroller.py:226
@@ -2110,7 +2114,7 @@ msgid "&Import template..."
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:571
-msgid "Add a new template from a template file"
+msgid "Import a new template from a template file"
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:581
@@ -2197,12 +2201,8 @@ msgstr ""
 msgid "Import tasks from a Comma Separated Values (CSV) file"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:732
-msgid "Choose CSV file"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:734
-msgid "CSV import"
+#: taskcoachlib\gui\uicommand.py:732 taskcoachlib\gui\uicommand.py:734
+msgid "Import CSV"
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:741
@@ -2253,17 +2253,21 @@ msgstr ""
 msgid "&Preferences...\tAlt+P"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:916 taskcoachlib\help\uicommand.py:33
-msgid "Edit preferences"
-msgstr "Uredi povlastice"
+#: taskcoachlib\gui\uicommand.py:916
+msgid "Preferences"
+msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:922
 msgid "&SyncML preferences..."
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:923 taskcoachlib\gui\uicommand.py:929
+#: taskcoachlib\gui\uicommand.py:923
 msgid "Edit SyncML preferences"
 msgstr "Uredi SyncML povlastice"
+
+#: taskcoachlib\gui\uicommand.py:929
+msgid "SyncML preferences"
+msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:935
 msgid "&All\tCtrl+A"
@@ -2594,11 +2598,11 @@ msgid "&Open all attachments...\tShift+Ctrl+O"
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:2175
-msgid "&Help contents...\tCtrl+?"
+msgid "&Help contents\tCtrl+?"
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:2178
-msgid "&Help contents...\tCtrl+H"
+msgid "&Help contents\tCtrl+H"
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:2180
@@ -2606,39 +2610,35 @@ msgid "Help"
 msgstr "Pomoć"
 
 #: taskcoachlib\gui\uicommand.py:2186
-msgid "&Tips..."
-msgstr ""
+msgid "&Tips"
+msgstr "&Savjeti"
 
 #: taskcoachlib\gui\uicommand.py:2187
 msgid "Tips about the program"
 msgstr "Savjeti u vezi programa"
 
 #: taskcoachlib\gui\uicommand.py:2196
-msgid "&About %s..."
-msgstr ""
+msgid "&About %s"
+msgstr "&O %s"
 
 #: taskcoachlib\gui\uicommand.py:2197
 msgid "Version and contact information about %s"
 msgstr "Verzija i kontaktna informacija o %s"
 
 #: taskcoachlib\gui\uicommand.py:2198
-msgid "Help: About %s"
-msgstr "Pomoć: O %s"
-
-#: taskcoachlib\gui\uicommand.py:2205
-msgid "&License..."
+msgid "About %s"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:2206
+#: taskcoachlib\gui\uicommand.py:2205
+msgid "&License"
+msgstr "&Licenca"
+
+#: taskcoachlib\gui\uicommand.py:2206 taskcoachlib\gui\uicommand.py:2207
 msgid "%s license"
 msgstr "%s licenca"
 
-#: taskcoachlib\gui\uicommand.py:2207
-msgid "Help: %s license"
-msgstr "Pomoć: %s licenca"
-
 #: taskcoachlib\gui\uicommand.py:2214
-msgid "Check for update..."
+msgid "Check for update"
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:2215
@@ -2646,7 +2646,7 @@ msgid "Check for the availability of a new version of %s"
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:2233
-msgid "&Frequently asked questions..."
+msgid "&Frequently asked questions"
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:2234
@@ -4877,6 +4877,10 @@ msgstr ""
 msgid "Paste item(s) from the clipboard as subitem of the selected item"
 msgstr ""
 
+#: taskcoachlib\help\uicommand.py:33
+msgid "Edit preferences"
+msgstr "Uredi povlastice"
+
 #: taskcoachlib\help\uicommand.py:34
 msgid "Redo the last command that was undone"
 msgstr "Vrati komandu koja je poništena"
@@ -5562,14 +5566,11 @@ msgstr ""
 #~ msgid "Open all attachments of the selected note(s)"
 #~ msgstr "Otvori sve priloge izabranih zabilješki"
 
-#~ msgid "&Tips"
-#~ msgstr "&Savjeti"
+#~ msgid "Help: About %s"
+#~ msgstr "Pomoć: O %s"
 
-#~ msgid "&About %s"
-#~ msgstr "&O %s"
-
-#~ msgid "&License"
-#~ msgstr "&Licenca"
+#~ msgid "Help: %s license"
+#~ msgstr "Pomoć: %s licenca"
 
 #~ msgid "&Unlimited"
 #~ msgstr "&Neograničeno"

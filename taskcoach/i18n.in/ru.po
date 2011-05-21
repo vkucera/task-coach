@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-05-19 23:01+0000\n"
-"PO-Revision-Date: 2011-05-16 19:55+0000\n"
+"POT-Creation-Date: 2011-05-20 23:33+0000\n"
+"PO-Revision-Date: 2011-05-21 13:05+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Russian <fundamentator@yahoo.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-20 20:37+0000\n"
+"X-Launchpad-Export-Date: 2011-05-21 13:36+0000\n"
 "X-Generator: Launchpad (build 13085)\n"
 "Generated-By: pygettext.py 1.5\n"
 
@@ -681,7 +681,7 @@ msgstr "Ключи"
 
 #: taskcoachlib\gui\artprovider.py:141
 msgid "Lamp"
-msgstr ""
+msgstr "Лампочка"
 
 #: taskcoachlib\gui\artprovider.py:142
 msgid "Question mark"
@@ -1126,15 +1126,15 @@ msgstr "Экспортировать только выбранные позиц�
 
 #: taskcoachlib\gui\dialog\export.py:85 taskcoachlib\gui\iocontroller.py:292
 msgid "Export as CSV"
-msgstr ""
+msgstr "Экспортировать в CSV"
 
 #: taskcoachlib\gui\dialog\export.py:90 taskcoachlib\gui\iocontroller.py:297
 msgid "Export as iCalendar"
-msgstr ""
+msgstr "Экспортировать в iCalendar"
 
 #: taskcoachlib\gui\dialog\export.py:101 taskcoachlib\gui\iocontroller.py:286
 msgid "Export as HTML"
-msgstr ""
+msgstr "Экспортировать в HTML"
 
 #: taskcoachlib\gui\dialog\export.py:111
 msgid "Write style information to a separate CSS file"
@@ -1585,7 +1585,7 @@ msgstr ""
 
 #: taskcoachlib\gui\dialog\version.py:69
 msgid "Couldn't find out latest version"
-msgstr ""
+msgstr "Невозможно найти последнюю версию"
 
 #: taskcoachlib\gui\dialog\version.py:72
 msgid "Couldn't find out what the latest version of %(name)s is."
@@ -1669,9 +1669,13 @@ msgstr ""
 msgid "Merged %(filename)s"
 msgstr "Добавлен файл %(filename)s"
 
-#: taskcoachlib\gui\iocontroller.py:182 taskcoachlib\gui\iocontroller.py:194
+#: taskcoachlib\gui\iocontroller.py:182
 msgid "Save as"
-msgstr ""
+msgstr "Сохранить как"
+
+#: taskcoachlib\gui\iocontroller.py:194
+msgid "Save selection"
+msgstr "Сохранить выделение"
 
 #: taskcoachlib\gui\iocontroller.py:226
 msgid ""
@@ -1846,7 +1850,7 @@ msgstr "&Вид"
 
 #: taskcoachlib\gui\menu.py:179
 msgid "&New"
-msgstr ""
+msgstr "&Создать"
 
 #: taskcoachlib\gui\menu.py:180
 msgid "&Actions"
@@ -2163,8 +2167,8 @@ msgid "&Import template..."
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:571
-msgid "Add a new template from a template file"
-msgstr "Добавить новый шаблон из файла шаблонов"
+msgid "Import a new template from a template file"
+msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:581
 msgid "Edit templates..."
@@ -2258,13 +2262,9 @@ msgstr "&Импортировать CSV..."
 msgid "Import tasks from a Comma Separated Values (CSV) file"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:732
-msgid "Choose CSV file"
+#: taskcoachlib\gui\uicommand.py:732 taskcoachlib\gui\uicommand.py:734
+msgid "Import CSV"
 msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:734
-msgid "CSV import"
-msgstr "Импорт CSV"
 
 #: taskcoachlib\gui\uicommand.py:741
 msgid "S&yncML synchronization..."
@@ -2314,17 +2314,21 @@ msgstr "&Вставить как подэлемент\tShift+Ctrl+V"
 msgid "&Preferences...\tAlt+P"
 msgstr "Настройки...\tAlt+P"
 
-#: taskcoachlib\gui\uicommand.py:916 taskcoachlib\help\uicommand.py:33
-msgid "Edit preferences"
-msgstr "Редактировать настройки"
+#: taskcoachlib\gui\uicommand.py:916
+msgid "Preferences"
+msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:922
 msgid "&SyncML preferences..."
 msgstr "Настройки SyncML..."
 
-#: taskcoachlib\gui\uicommand.py:923 taskcoachlib\gui\uicommand.py:929
+#: taskcoachlib\gui\uicommand.py:923
 msgid "Edit SyncML preferences"
 msgstr "Редактировать настройки SyncML"
+
+#: taskcoachlib\gui\uicommand.py:929
+msgid "SyncML preferences"
+msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:935
 msgid "&All\tCtrl+A"
@@ -2662,51 +2666,47 @@ msgid "&Open all attachments...\tShift+Ctrl+O"
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:2175
-msgid "&Help contents...\tCtrl+?"
-msgstr ""
+msgid "&Help contents\tCtrl+?"
+msgstr "&Содержание\tCtrl+?"
 
 #: taskcoachlib\gui\uicommand.py:2178
-msgid "&Help contents...\tCtrl+H"
-msgstr ""
+msgid "&Help contents\tCtrl+H"
+msgstr "&Содержание\tCtrl+H"
 
 #: taskcoachlib\gui\uicommand.py:2180
 msgid "Help"
 msgstr "Справка"
 
 #: taskcoachlib\gui\uicommand.py:2186
-msgid "&Tips..."
-msgstr ""
+msgid "&Tips"
+msgstr "&Подсказки"
 
 #: taskcoachlib\gui\uicommand.py:2187
 msgid "Tips about the program"
 msgstr "Полезные советы по использованию программы"
 
 #: taskcoachlib\gui\uicommand.py:2196
-msgid "&About %s..."
-msgstr ""
+msgid "&About %s"
+msgstr "&О программе %s"
 
 #: taskcoachlib\gui\uicommand.py:2197
 msgid "Version and contact information about %s"
 msgstr "Версия %s и контактная информация"
 
 #: taskcoachlib\gui\uicommand.py:2198
-msgid "Help: About %s"
-msgstr "Помощь: О программе %s"
-
-#: taskcoachlib\gui\uicommand.py:2205
-msgid "&License..."
+msgid "About %s"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:2206
+#: taskcoachlib\gui\uicommand.py:2205
+msgid "&License"
+msgstr "&Лицензия"
+
+#: taskcoachlib\gui\uicommand.py:2206 taskcoachlib\gui\uicommand.py:2207
 msgid "%s license"
 msgstr "Лицензия %s"
 
-#: taskcoachlib\gui\uicommand.py:2207
-msgid "Help: %s license"
-msgstr "Помощь: Лицензия на использование %s"
-
 #: taskcoachlib\gui\uicommand.py:2214
-msgid "Check for update..."
+msgid "Check for update"
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:2215
@@ -2714,7 +2714,7 @@ msgid "Check for the availability of a new version of %s"
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:2233
-msgid "&Frequently asked questions..."
+msgid "&Frequently asked questions"
 msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:2234
@@ -5204,6 +5204,10 @@ msgid "Paste item(s) from the clipboard as subitem of the selected item"
 msgstr ""
 "Вставить элемент(ы) из буфера обмена как подэлемент выбранного элемента"
 
+#: taskcoachlib\help\uicommand.py:33
+msgid "Edit preferences"
+msgstr "Редактировать настройки"
+
 #: taskcoachlib\help\uicommand.py:34
 msgid "Redo the last command that was undone"
 msgstr "Повторить последнюю отмененную команду"
@@ -6119,6 +6123,9 @@ msgstr "Ошибка при открытии URL"
 #~ msgid "&Add template..."
 #~ msgstr "Добавить шаблон..."
 
+#~ msgid "Add a new template from a template file"
+#~ msgstr "Добавить новый шаблон из файла шаблонов"
+
 #~ msgid "&Print preview"
 #~ msgstr "Предварительный просмотр"
 
@@ -6213,20 +6220,11 @@ msgstr "Ошибка при открытии URL"
 #~ msgid "St&op tracking effort"
 #~ msgstr "Ос&тановить учет"
 
-#~ msgid "&Help contents\tCtrl+?"
-#~ msgstr "&Содержание\tCtrl+?"
+#~ msgid "Help: About %s"
+#~ msgstr "Помощь: О программе %s"
 
-#~ msgid "&Help contents\tCtrl+H"
-#~ msgstr "&Содержание\tCtrl+H"
-
-#~ msgid "&Tips"
-#~ msgstr "&Подсказки"
-
-#~ msgid "&About %s"
-#~ msgstr "&О программе %s"
-
-#~ msgid "&License"
-#~ msgstr "&Лицензия"
+#~ msgid "Help: %s license"
+#~ msgstr "Помощь: Лицензия на использование %s"
 
 #~ msgid "Show only tasks &due before end of"
 #~ msgstr "Показать только те задачи, которые завершатся  до конца"
@@ -6955,3 +6953,6 @@ msgstr "Ошибка при открытии URL"
 #~ msgstr ""
 #~ "Не удается добавить шаблон %s\n"
 #~ "%s"
+
+#~ msgid "CSV import"
+#~ msgstr "Импорт CSV"
