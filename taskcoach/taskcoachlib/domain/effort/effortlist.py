@@ -39,11 +39,11 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
 
     def  __init__(self, *args, **kwargs):
         super(EffortList, self).__init__(*args, **kwargs)
-        patterns.Publisher().registerObserver(self.onAddEffortToTask, 
+        patterns.Publisher().registerObserver(self.onAddEffortToOrRemoveEffortFromTask, 
             eventType='task.effort.add')
-        patterns.Publisher().registerObserver(self.onRemoveEffortFromTask,
+        patterns.Publisher().registerObserver(self.onAddEffortToOrRemoveEffortFromTask,
             eventType='task.effort.remove')
-    
+        
     def extendSelf(self, tasks, event=None):
         ''' This method is called when a task is added to the observed list.
             It overrides ObservableListObserver.extendSelf whose default 
@@ -67,18 +67,18 @@ class EffortList(patterns.SetDecorator, MaxDateTimeMixin,
             effortsToRemove.extend(task.efforts())
         super(EffortList, self).removeItemsFromSelf(effortsToRemove, event)
 
-    def onAddEffortToTask(self, event):
+    def onAddEffortToOrRemoveEffortFromTask(self, event):
         effortsToAdd = []
-        for task in event.sources():
-            if task in self.observable():
-                effortsToAdd.extend(event.values(task))
-        super(EffortList, self).extendSelf(effortsToAdd)
-        
-    def onRemoveEffortFromTask(self, event):
         effortsToRemove = []
         for task in event.sources():
             if task in self.observable():
-                effortsToRemove.extend(event.values(task))
+                effortsToAdd.extend(event.values(task, type='task.effort.add'))
+                effortsToRemove.extend(event.values(task, type='task.effort.remove'))
+        # Don't bother with efforts that just change tasks
+        for effort in set(effortsToAdd) & set(effortsToRemove):
+            effortsToAdd.remove(effort)
+            effortsToRemove.remove(effort)
+        super(EffortList, self).extendSelf(effortsToAdd)
         super(EffortList, self).removeItemsFromSelf(effortsToRemove)
 
     def originalLength(self):

@@ -1268,7 +1268,6 @@ class EditorWithCommand(widgets.Dialog):
         return self.EditBookClass(self._panel, self._command.items, 
                                   self._taskFile, self._settings)
         
-    @patterns.eventSource
     def okInterior(self, event=None):
         self._interior.ok(event=event)
                 

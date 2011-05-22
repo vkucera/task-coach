@@ -140,3 +140,11 @@ class EffortListTest(test.TestCase):
         self.assertEqual(1, len(self.effortList))
         self.taskList.remove(anotherTask)
         self.assertEqual(1, len(self.effortList))
+        
+    def testChangeTask(self):
+        self.task.addEffort(self.effort)
+        anotherTask = task.Task('Another task without effort')
+        self.taskList.append(anotherTask)
+        self.assertEqual(1, len(self.effortList))
+        self.effort.setTask(anotherTask)
+        self.assertEqual(1, len(self.effortList))

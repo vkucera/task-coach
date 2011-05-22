@@ -26,6 +26,8 @@ Release('1.2.19', 'May 22, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Editing multiple items would hang Task Coach.''' ,'3305844'),
+        Bug('''Changing the task of an effort record would make it 
+invisible.''', '3304940'),
         ]
     ),
             
