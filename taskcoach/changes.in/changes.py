@@ -25,7 +25,7 @@ releases = [
 Release('1.2.19', 'May 22, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
-        Bug(''' ... '''),
+        Bug('''Editing multiple items would hang Task Coach.''' ,'3305844'),
         ]
     ),
             
