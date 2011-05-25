@@ -22,12 +22,17 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.19', 'May 22, 2011',
-    summary='''This is a bugfix release.''',
+Release('1.2.19', 'May 25, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Editing multiple items would hang Task Coach.''' ,'3305844'),
         Bug('''Changing the task of an effort record would make it 
 invisible.''', '3304940'),
+        ],
+    featuresAdded=[
+        Feature('''The default foreground color, background color, font and 
+icon of active, inactive, completed, over due and due soon tasks can be changed 
+in the preferences.''', 'http://uservoice.com/a/nLMgZ')
         ]
     ),
             

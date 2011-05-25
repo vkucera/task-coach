@@ -109,7 +109,7 @@ class TaskViewerTestCase(test.wxTestCase):
         self.viewer.showColumnByName(columnName, show)
 
     def setColor(self, setting):
-        self.settings.set('color', setting, str(self.newColor))        
+        self.settings.set('fgcolor', setting, str(self.newColor))        
          
     def assertColor(self, expectedColor=None):
         expectedColor = expectedColor or wx.Colour(*self.newColor)
@@ -273,7 +273,7 @@ class CommonTestsMixin(object):
     def testForegroundColorWhenTaskIsCompleted(self):
         self.taskList.append(self.task)
         self.task.setCompletionDateTime()
-        newColor = self.task.statusColor()
+        newColor = self.task.statusFgColor()
         newColor = wx.Colour(newColor.Red(), newColor.Green(), newColor.Blue())
         self.assertColor(newColor)
         

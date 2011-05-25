@@ -354,12 +354,30 @@ defaults = { \
     'attachmentbase': '',
     'inifileloaded': 'True',
     'inifileloaderror': '' },
-'color': { \
+'fgcolor': { \
     'activetasks': '(0, 0, 0, 255)',
     'completedtasks': '(0, 255, 0, 255)',
     'overduetasks': '(255, 0, 0, 255)',
     'inactivetasks': '(192, 192, 192, 255)',
     'duesoontasks': '(255, 128, 0, 255)' },
+'bgcolor': { \
+    'activetasks': '(255, 255, 255, 255)',
+    'completedtasks': '(255, 255, 255, 255)',
+    'overduetasks': '(255, 255, 255, 255)',
+    'inactivetasks': '(255, 255, 255, 255)',
+    'duesoontasks': '(255, 255, 255, 255)' },
+'font': { \
+    'activetasks': '',
+    'completedtasks': '',
+    'overduetasks': '',
+    'inactivetasks': '',
+    'duesoontasks': '' },
+'icon': { \
+    'activetasks': 'led_blue_icon',
+    'completedtasks': 'led_green_icon',
+    'overduetasks': 'led_red_icon',
+    'inactivetasks': 'led_grey_icon',
+    'duesoontasks': 'led_orange_icon' },
 'editor': { \
     'taskpages': '[]',        # Order of tabs in the task editor
     'categorypages': '[]',    # Order of tabs in the category editor

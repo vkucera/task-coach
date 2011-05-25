@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from taskcoachlib import meta, widgets, notify
+from taskcoachlib.gui import artprovider
 from taskcoachlib.domain import date
 from taskcoachlib.i18n import _
 
@@ -33,13 +34,15 @@ class SettingsPageBase(widgets.BookPage):
         self._multipleChoiceSettings = []
         self._integerSettings = []
         self._colorSettings = []
+        self._fontSettings = []
+        self._iconSettings = []
         self._pathSettings = []
         self._textSettings = []
         
     def addBooleanSetting(self, section, setting, text, helpText=''):
         checkBox = wx.CheckBox(self, -1)
         checkBox.SetValue(self.getboolean(section, setting))
-        self.addEntry(text, checkBox, helpText)
+        self.addEntry(text, checkBox, helpText=helpText)
         self._booleanSettings.append((section, setting, checkBox))
 
     def addChoiceSetting(self, section, setting, text, choices, helpText=''):
@@ -50,7 +53,7 @@ class SettingsPageBase(widgets.BookPage):
                 choice.SetSelection(choice.GetCount()-1)
         if choice.GetSelection() == wx.NOT_FOUND: # force a selection if necessary
             choice.SetSelection(0)
-        self.addEntry(text, choice, helpText)
+        self.addEntry(text, choice, helpText=helpText)
         self._choiceSettings.append((section, setting, choice))
         
     def addMultipleChoiceSettings(self, section, setting, text, choices, helpText=''):
@@ -59,7 +62,7 @@ class SettingsPageBase(widgets.BookPage):
         checkedNumbers = eval(self.get(section, setting))
         for index, choice in enumerate(choices):
             multipleChoice.Check(index, choice[0] in checkedNumbers)
-        self.addEntry(text, multipleChoice, helpText, growable=True)
+        self.addEntry(text, multipleChoice, helpText=helpText, growable=True)
         self._multipleChoiceSettings.append((section, setting, multipleChoice, 
                                              [choice[0] for choice in choices]))
         
@@ -67,24 +70,50 @@ class SettingsPageBase(widgets.BookPage):
             helpText=''):
         spin = widgets.SpinCtrl(self, min=minimum, max=maximum, size=(40, -1),
             initial=self.getint(section, setting))
-        self.addEntry(text, spin, helpText)
+        self.addEntry(text, spin, helpText=helpText)
         self._integerSettings.append((section, setting, spin))
 
-    def addColorSetting(self, section, setting, text):
-        colorButton = widgets.ColorSelect(self, -1, text,
-            eval(self.get(section, setting)))
-        self.addEntry(None, colorButton)
-        self._colorSettings.append((section, setting, colorButton))
+    def addAppearanceSetting(self, fgColorSection, fgColorSetting, bgColorSection,
+                             bgColorSetting, fontSection, fontSetting, iconSection,
+                             iconSetting, text):
+        currentFgColor = eval(self.get(fgColorSection, fgColorSetting))
+        fgColorButton = wx.ColourPickerCtrl(self, col=currentFgColor)
+        currentBgColor = eval(self.get(bgColorSection, bgColorSetting))
+        bgColorButton = wx.ColourPickerCtrl(self, col=currentBgColor)
+        defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
+        nativeInfoString = self.get(fontSection, fontSetting)
+        currentFont = wx.FontFromNativeInfoString(nativeInfoString) if nativeInfoString else None
+        fontButton = widgets.FontPickerCtrl(self, font=currentFont or defaultFont, colour='black')
+        
+        iconEntry = wx.combo.BitmapComboBox(self, style=wx.CB_READONLY)
+        imageNames = sorted(artprovider.chooseableItemImages.keys())
+        for imageName in imageNames:
+            label = artprovider.chooseableItemImages[imageName]
+            bitmap = wx.ArtProvider_GetBitmap(imageName, wx.ART_MENU, (16, 16))
+            iconEntry.Append(label, bitmap, clientData=imageName)
+        currentIcon = self.get(iconSection, iconSetting)
+        currentSelectionIndex = imageNames.index(currentIcon)
+        iconEntry.SetSelection(currentSelectionIndex)
+
+        self.addEntry(text, fgColorButton, bgColorButton, fontButton, iconEntry)
+        self._colorSettings.append((fgColorSection, fgColorSetting, fgColorButton))
+        self._colorSettings.append((bgColorSection, bgColorSetting, bgColorButton))
+        self._iconSettings.append((iconSection, iconSetting, iconEntry))        
+        self._fontSettings.append((fontSection, fontSetting, fontButton))
+        
+    def addAppearanceHeader(self):
+        self.addEntry('', _('Foreground color'), _('Background color'),
+                      _('Font'), _('Icon'), flags=[wx.ALL|wx.ALIGN_CENTER]*5)
 
     def addPathSetting(self, section, setting, text, helpText=''):
         pathChooser = widgets.DirectoryChooser(self, wx.ID_ANY)
         pathChooser.SetPath(self.get(section, setting))
-        self.addEntry(text, pathChooser, helpText)
+        self.addEntry(text, pathChooser, helpText=helpText)
         self._pathSettings.append((section, setting, pathChooser))
 
     def addTextSetting(self, section, setting, text, helpText=''):
         textChooser = wx.TextCtrl(self, wx.ID_ANY, self.get(section, setting))
-        self.addEntry(text, textChooser, helpText)
+        self.addEntry(text, textChooser, helpText=helpText)
         self._textSettings.append((section, setting, textChooser))
 
     def addText(self, label, text):
@@ -103,6 +132,14 @@ class SettingsPageBase(widgets.BookPage):
             self.set(section, setting, str(spin.GetValue()))
         for section, setting, colorButton in self._colorSettings:
             self.set(section, setting, str(colorButton.GetColour()))
+        for section, setting, fontButton in self._fontSettings:
+            nativeFontInfoDesc = fontButton.GetSelectedFont().GetNativeFontInfoDesc()
+            defaultFontInfoDesc = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT).GetNativeFontInfoDesc()
+            if nativeFontInfoDesc != defaultFontInfoDesc:
+                self.set(section, setting, nativeFontInfoDesc)
+        for section, setting, iconEntry in self._iconSettings:
+            iconName = iconEntry.GetClientData(iconEntry.GetSelection())
+            self.set(section, setting, iconName)
         for section, setting, btn in self._pathSettings:
             self.set(section, setting, btn.GetPath())
         for section, setting, txt in self._textSettings:
@@ -126,10 +163,13 @@ class SettingsPage(SettingsPageBase):
         self.settings = settings
         super(SettingsPage, self).__init__(*args, **kwargs)
         
-    def addEntry(self, text, control, helpText='', **kwargs): # pylint: disable-msg=W0221
+    def addEntry(self, text, *controls, **kwargs): # pylint: disable-msg=W0221
+        helpText = kwargs.pop('helpText', '')
         if helpText == 'restart':
             helpText = _('This setting will take effect\nafter you restart %s')%meta.name
-        super(SettingsPage, self).addEntry(text, control, helpText, **kwargs)
+        if helpText:
+            controls = controls + (helpText,)
+        super(SettingsPage, self).addEntry(text, *controls, **kwargs)
 
     def get(self, section, name):
         return self.settings.get(section, name)
@@ -170,7 +210,7 @@ class WindowBehaviorPage(SettingsPage):
     pageIcon = 'windows'
     
     def __init__(self, *args, **kwargs):
-        super(WindowBehaviorPage, self).__init__(columns=3, *args, **kwargs)
+        super(WindowBehaviorPage, self).__init__(columns=2, growableColumn=-1, *args, **kwargs)
         self.addBooleanSetting('window', 'splash', 
             _('Show splash screen on startup'))
         self.addBooleanSetting('window', 'tips', 
@@ -276,20 +316,25 @@ improving, please consider helping. See:'''))
         self.set('view', 'language', self.get('view', 'language_set_by_user'))
         
 
-class ColorsPage(SettingsPage):
-    pageName = 'colors'
-    pageTitle = _('Colors')
+class AppearancePage(SettingsPage):
+    pageName = 'appearance'
+    pageTitle = _('Appearance')
     pageIcon = 'palette_icon'
     
     def __init__(self, *args, **kwargs):
-        super(ColorsPage, self).__init__(columns=1, growableColumn=-1, *args, **kwargs)
+        super(AppearancePage, self).__init__(columns=9, growableColumn=-1, *args, **kwargs)
+        self.addAppearanceHeader()
         for setting, label in \
-            [('activetasks', _('Click this button to change the color of active tasks')), 
-             ('inactivetasks', _('Click this button to change the color of inactive tasks')),
-             ('completedtasks', _('Click this button to change the color of completed tasks')),
-             ('overduetasks', _('Click this button to change the color of overdue tasks')),
-             ('duesoontasks', _('Click this button to change the color of tasks due soon'))]:
-            self.addColorSetting('color', setting, label)
+            [('activetasks', _('Active tasks')), 
+             ('inactivetasks', _('Inactive tasks')),
+             ('completedtasks', _('Completed tasks')),
+             ('overduetasks', _('Overdue tasks')),
+             ('duesoontasks', _('Tasks due soon'))]:
+            self.addLine()
+            self.addAppearanceSetting('fgcolor', setting, 
+                                      'bgcolor', setting, 
+                                      'font', setting, 
+                                      'icon', setting, label)
         self.fit()
 
 
@@ -299,7 +344,7 @@ class FeaturesPage(SettingsPage):
     pageIcon = 'cogwheel_icon'
     
     def __init__(self, *args, **kwargs):
-        super(FeaturesPage, self).__init__(columns=3, *args, **kwargs)
+        super(FeaturesPage, self).__init__(columns=3, growableColumn=-1, *args, **kwargs)
         self.addBooleanSetting('feature', 'effort', 
             _('Allow for tracking effort'), helpText='restart')
         self.addBooleanSetting('feature', 'notes', _('Allow for taking notes'),
@@ -322,15 +367,16 @@ class FeaturesPage(SettingsPage):
         self.addBooleanSetting('feature', 'iphone', _('Enable iPhone synchronization'),
             helpText='restart')
         self.addIntegerSetting('view', 'efforthourstart',
-            _('Hour of start of work day'), minimum=0, maximum=23)
+            _('Hour of start of work day'), minimum=0, maximum=23, helpText=' ')
         self.addIntegerSetting('view', 'efforthourend',
-            _('Hour of end of work day'), minimum=1, maximum=24)
+            _('Hour of end of work day'), minimum=1, maximum=24, helpText=' ')
         self.addBooleanSetting('calendarviewer', 'gradient',
             _('Use gradients in calendar views.\nThis may slow down Task Coach.'),
             helpText='restart')
         self.addChoiceSetting('view', 'effortminuteinterval',
             _('Minutes between task start/end times'),
-            [('5', '5'), ('10', '10'), ('15', '15'), ('20', '20'), ('30', '30')])
+            [('5', '5'), ('10', '10'), ('15', '15'), ('20', '20'), ('30', '30')],
+            helpText=' ')
         self.fit()
         
 
@@ -340,7 +386,7 @@ class TaskBehaviorPage(SettingsPage):
     pageIcon = 'cogwheel_icon'
     
     def __init__(self, *args, **kwargs):
-        super(TaskBehaviorPage, self).__init__(columns=3, *args, **kwargs)
+        super(TaskBehaviorPage, self).__init__(columns=2, growableColumn=-1, *args, **kwargs)
         self.addBooleanSetting('behavior', 'markparentcompletedwhenallchildrencompleted',
             _('Mark parent task completed when all children are completed'))
         self.addIntegerSetting('behavior', 'duesoonhours', 
@@ -388,10 +434,10 @@ class EditorPage(SettingsPage):
 
 
 class Preferences(widgets.NotebookDialog):
-    allPageNames = ['window', 'task', 'save', 'language', 'colors', 'features',
+    allPageNames = ['window', 'task', 'save', 'language', 'appearance', 'features',
                     'iphone', 'editor']
     pages = dict(window=WindowBehaviorPage, task=TaskBehaviorPage, 
-                 save=SavePage, language=LanguagePage, colors=ColorsPage, 
+                 save=SavePage, language=LanguagePage, appearance=AppearancePage, 
                  features=FeaturesPage, iphone=IPhonePage, editor=EditorPage)
     
     def __init__(self, settings=None, *args, **kwargs):

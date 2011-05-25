@@ -147,6 +147,8 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
             result = str(widths)
         elif section == 'feature' and option == 'notifier' and result == 'Native':
             result = 'Task Coach'
+        elif section == 'editor' and option == 'preferencespages':
+            result = result.replace('colors', 'appearance')
         return result
 
     def set(self, section, option, value, new=False): # pylint: disable-msg=W0221
