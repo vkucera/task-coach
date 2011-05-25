@@ -112,7 +112,7 @@ class TaskTestsMixin(CommonTestsMixin):
         self.expectInHTML('      .completed {color: #00FF00}\n')
         
     def testTaskStatusStyleWhenForegroundColorChangedInSettings(self):
-        self.settings.set('color', 'completedtasks', str(wx.RED))
+        self.settings.set('fgcolor', 'completedtasks', str(wx.RED))
         self.expectInHTML('      .completed {color: #FF0000}\n')
         
     def testOverdueTask(self):

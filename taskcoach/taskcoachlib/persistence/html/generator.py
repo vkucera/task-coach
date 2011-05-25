@@ -134,7 +134,7 @@ class Viewer2HTMLConverter(object):
             styleContent.append(columnStyle)
         if self.viewer.isShowingTasks():
             for status in 'completed', 'duesoon', 'overdue', 'inactive', 'active':
-                statusColor = task.Task.colorForStatus(status)
+                statusColor = task.Task.fgColorForStatus(status)
                 statusColor = self.cssColorSyntax(statusColor)
                 statusStyle = '.%s {color: %s}'%(status, statusColor)
                 styleContent.append(self.indent(statusStyle, level+1))
