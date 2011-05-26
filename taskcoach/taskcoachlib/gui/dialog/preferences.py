@@ -26,6 +26,29 @@ from taskcoachlib.domain import date
 from taskcoachlib.i18n import _
 
 
+class FontColorSyncer(object):
+    def __init__(self, fgColorButton, bgColorButton, fontButton):
+        self._fgColorButton = fgColorButton
+        self._bgColorButton = bgColorButton
+        self._fontButton = fontButton
+        fgColorButton.Bind(wx.EVT_COLOURPICKER_CHANGED, self.onFgColorPicked)
+        bgColorButton.Bind(wx.EVT_COLOURPICKER_CHANGED, self.onBgColorPicked)
+        fontButton.Bind(wx.wx.EVT_FONTPICKER_CHANGED, self.onFontPicked)
+        
+    def onFgColorPicked(self, event):
+        self._fontButton.SetColour(self._fgColorButton.GetColour())
+        
+    def onBgColorPicked(self, event):
+        self._fontButton.SetBackgroundColour(self._bgColorButton.GetColour())
+
+    def onFontPicked(self, event):
+        fontColor = self._fontButton.GetSelectedColour() 
+        if  fontColor != self._fgColorButton.GetColour() and fontColor != wx.BLACK:
+            self._fgColorButton.SetColour(self._fontButton.GetSelectedColour())
+        else:
+            self._fontButton.SetColour(self._fgColorButton.GetColour())
+
+
 class SettingsPageBase(widgets.BookPage):
     def __init__(self, *args, **kwargs):
         super(SettingsPageBase, self).__init__(*args, **kwargs)
@@ -38,6 +61,7 @@ class SettingsPageBase(widgets.BookPage):
         self._iconSettings = []
         self._pathSettings = []
         self._textSettings = []
+        self._syncers = []
         
     def addBooleanSetting(self, section, setting, text, helpText=''):
         checkBox = wx.CheckBox(self, -1)
@@ -73,6 +97,10 @@ class SettingsPageBase(widgets.BookPage):
         self.addEntry(text, spin, helpText=helpText)
         self._integerSettings.append((section, setting, spin))
 
+    def addAppearanceHeader(self):
+        self.addEntry('', _('Foreground color'), _('Background color'),
+                      _('Font'), _('Icon'), flags=[wx.ALL|wx.ALIGN_CENTER]*5)
+
     def addAppearanceSetting(self, fgColorSection, fgColorSetting, bgColorSection,
                              bgColorSetting, fontSection, fontSetting, iconSection,
                              iconSetting, text):
@@ -83,8 +111,8 @@ class SettingsPageBase(widgets.BookPage):
         defaultFont = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         nativeInfoString = self.get(fontSection, fontSetting)
         currentFont = wx.FontFromNativeInfoString(nativeInfoString) if nativeInfoString else None
-        fontButton = widgets.FontPickerCtrl(self, font=currentFont or defaultFont, colour='black')
-        
+        fontButton = widgets.FontPickerCtrl(self, font=currentFont or defaultFont, colour=currentFgColor)
+        fontButton.SetBackgroundColour(currentBgColor)        
         iconEntry = wx.combo.BitmapComboBox(self, style=wx.CB_READONLY)
         imageNames = sorted(artprovider.chooseableItemImages.keys())
         for imageName in imageNames:
@@ -100,11 +128,8 @@ class SettingsPageBase(widgets.BookPage):
         self._colorSettings.append((bgColorSection, bgColorSetting, bgColorButton))
         self._iconSettings.append((iconSection, iconSetting, iconEntry))        
         self._fontSettings.append((fontSection, fontSetting, fontButton))
+        self._syncers.append(FontColorSyncer(fgColorButton, bgColorButton, fontButton))
         
-    def addAppearanceHeader(self):
-        self.addEntry('', _('Foreground color'), _('Background color'),
-                      _('Font'), _('Icon'), flags=[wx.ALL|wx.ALIGN_CENTER]*5)
-
     def addPathSetting(self, section, setting, text, helpText=''):
         pathChooser = widgets.DirectoryChooser(self, wx.ID_ANY)
         pathChooser.SetPath(self.get(section, setting))
