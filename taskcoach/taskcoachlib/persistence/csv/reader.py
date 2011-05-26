@@ -38,16 +38,6 @@ class CSVReader(object):
         rx1 = re.compile(r'^(\d+):(\d+)$')
         rx2 = re.compile(r'^(\d+):(\d+):(\d+)$')
 
-        # When fields are associated with categories, create a top-level category for the
-        # field and a subcategory for each possible value.
-
-        toplevelCategories = dict()
-        for idx, headerName in enumerate(kwargs['fields']):
-            if kwargs['mappings'][idx] == _('Category'):
-                category = Category(subject=headerName)
-                toplevelCategories[headerName] = (category, dict())
-                self.categoryList.append(category)
-
         reader = csv.reader(fp, dialect=kwargs['dialect'])
         if kwargs['hasHeaders']:
             reader.next()
@@ -80,16 +70,12 @@ class CSVReader(object):
                     description.write(u'\n')
                 elif kwargs['mappings'][idx] == _('Category') and fieldValue:
                     name = fieldValue.decode('UTF-8')
-                    parent, cats = toplevelCategories[kwargs['fields'][idx]]
-                    if name in cats:
-                        theCat = cats[name]
-                    else:
-                        theCat = Category(subject=name)
-                        parent.addChild(theCat)
-                        cats[name] = theCat
-                        self.categoryList.append(theCat)
-                    categories.append(theCat)
-                    toplevelCategories[kwargs['fields'][idx]] = (parent, cats)
+                    if name.startswith('(') and name.endswith(')'):
+                        continue # Skip categories of subitems
+                    cat = self.categoryList.findCategoryByName(name)
+                    if not cat:
+                        cat = self.createCategory(name)
+                    categories.append(cat)
                 elif kwargs['mappings'][idx] == _('Priority'):
                     try:
                         priority = int(fieldValue)
@@ -183,3 +169,17 @@ class CSVReader(object):
                     self.taskList.append(tasksById[sid])
         else:
             self.taskList.extend(tasks)
+
+    def createCategory(self, name):
+        if ' -> ' in name:
+            parentName, childName = name.rsplit(' -> ', 1)
+            parent = self.categoryList.findCategoryByName(parentName)
+            if not parent:
+                parent = self.createCategory(parentName)
+            newCategory = Category(subject=childName)
+            parent.addChild(newCategory)
+            newCategory.setParent(parent)
+        else:
+            newCategory = Category(subject=name)
+        self.categoryList.append(newCategory)
+        return newCategory

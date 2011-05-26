@@ -319,13 +319,13 @@ defaults = { \
     'size': '(600, 400)',   # Default size of the dialogs
     'position': '(-1, -1)', # Position of the dialog, undefined by default
     'maximized': 'False',   # Don't open the dialog maximized by default
-    'perspective': ''       # The layout of the tabs in the dialog
+    'perspectives': '{}'    # The layout of the tabs in the dialog
     },
 'categorydialog': { \
     'size': '(500, 300)',   # Default size of the dialogs
     'position': '(-1, -1)', # Position of the dialog, undefined by default
     'maximized': 'False',   # Don't open the dialog maximized by default
-    'perspective': ''       # The layout of the tabs in the dialog
+    'perspectives': '{}'    # The layout of the tabs in the dialog
     },
 'effortdialog': { \
     'size': '(500, 300)',   # Default size of the dialogs
@@ -336,13 +336,13 @@ defaults = { \
     'size': '(500, 300)',   # Default size of the dialogs
     'position': '(-1, -1)', # Position of the dialog, undefined by default
     'maximized': 'False',   # Don't open the dialog maximized by default
-    'perspective': ''       # The layout of the tabs in the dialog
+    'perspectives': '{}'    # The layout of the tabs in the dialog
     },
 'attachmentdialog': { \
     'size': '(500, 300)',   # Default size of the dialogs
     'position': '(-1, -1)', # Position of the dialog, undefined by default
     'maximized': 'False',   # Don't open the dialog maximized by default
-    'perspective': ''       # The layout of the tabs in the dialog
+    'perspectives': '{}'    # The layout of the tabs in the dialog
     },
 'file': { \
     'recentfiles': '[]',

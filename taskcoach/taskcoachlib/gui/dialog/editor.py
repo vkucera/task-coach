@@ -746,20 +746,18 @@ class EditBook(widgets.Notebook):
         self.settings = settings
         super(EditBook, self).__init__(parent)
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
-        self.addPages(taskFile)
-        perspective = self.settings.get('%sdialog'%self.object, 'perspective')
-        if perspective:
-            try:
-                self.LoadPerspective(perspective)
-            except:
-                pass
+        pageNames = self.addPages(taskFile)
+        self.loadPerspective(pageNames)
         
     def addPages(self, taskFile):
+        pageNames = []
         for pageName in self.allPageNamesInUserOrder():
             if self.shouldCreatePage(pageName):
                 page = self.createPage(pageName, taskFile)
                 self.AddPage(page, page.pageTitle, page.pageIcon)
-
+                pageNames.append(pageName)
+        return pageNames
+    
     def allPageNamesInUserOrder(self):
         ''' Return all pages names in the order stored in the settings. The
             settings may not contain all pages (e.g. because a feature was
@@ -832,6 +830,25 @@ class EditBook(widgets.Notebook):
             ancestors.extend(item.ancestors())
         return targetItem in self.items + ancestors
     
+    def loadPerspective(self, pageNames):
+        perspectiveKey = self.perspectiveKey(pageNames) 
+        perspective = self.settings.getdict('%sdialog'%self.object, 'perspectives').get(perspectiveKey, '')
+        if perspective:
+            try:
+                self.LoadPerspective(perspective)
+            except:
+                pass
+
+    def savePerspective(self, pageNames):
+        perspectives = self.settings.getdict('%sdialog'%self.object, 'perspectives')
+        perspectiveKey = self.perspectiveKey(pageNames)
+        perspectives[perspectiveKey] = self.SavePerspective() 
+        self.settings.setdict('%sdialog'%self.object, 'perspectives', perspectives)
+        
+    @staticmethod
+    def perspectiveKey(pageNames):
+        return '_'.join(pageNames + ['perspective'])
+    
     def onClose(self, event):
         event.Skip()
         removeInstance = patterns.Publisher().removeInstance
@@ -839,7 +856,7 @@ class EditBook(widgets.Notebook):
             removeInstance(page)
         pageNames = [self[index].pageName for index in range(self.GetPageCount())]
         self.settings.setlist('editor', '%spages'%self.object, pageNames)
-        self.settings.set('%sdialog'%self.object, 'perspective', self.SavePerspective())
+        self.savePerspective(pageNames)
 
 
 class TaskEditBook(EditBook):
@@ -1022,6 +1039,7 @@ class Editor(widgets.ButtonLessDialog):
         self._taskFile = taskFile
         self._callAfter = kwargs.get('callAfter', wx.CallAfter)
         super(Editor, self).__init__(parent, self.title(), *args, **kwargs)
+
         columnName = kwargs.get('columnName', '')
         self._interior.setFocus(columnName)
         patterns.Publisher().registerObserver(self.onItemRemoved, 

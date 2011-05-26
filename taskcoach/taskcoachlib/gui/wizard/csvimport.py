@@ -247,13 +247,14 @@ class CSVImportMappingPage(wiz.WizardPageSimple):
         gsz.Add(wx.StaticText(self.interior, wx.ID_ANY, _('%s attribute')%meta.name))
         gsz.AddSpacer((3,3))
         gsz.AddSpacer((3,3))
+        tcFieldNames = [field[0] for field in self.fields]
         for fieldName in options['fields']:
             gsz.Add(wx.StaticText(self.interior, wx.ID_ANY, fieldName), flag=wx.ALIGN_CENTER_VERTICAL)
-
+            
             choice = wx.Choice(self.interior, wx.ID_ANY)
-            for tcFieldName, multipleValuesAllowed in self.fields:
+            for tcFieldName in tcFieldNames:
                 choice.Append(tcFieldName)
-            choice.SetSelection(0)
+            choice.SetSelection(self.findFieldName(fieldName, tcFieldNames))
             self.choices.append(choice)
 
             gsz.Add(choice, flag=wx.ALIGN_CENTER_VERTICAL)
@@ -261,15 +262,22 @@ class CSVImportMappingPage(wiz.WizardPageSimple):
         gsz.AddGrowableCol(1)
         self.interior.SetSizer(gsz)
         gsz.Layout()
-
+        
+    def findFieldName(self, fieldName, fieldNames):
+        def fieldNameIndex(fieldName, fieldNames):
+            return fieldNames.index(fieldName) if fieldName in fieldNames else 0
+        
+        index = fieldNameIndex(fieldName, fieldNames)
+        return index if index else fieldNameIndex(fieldName[:6], [fieldName[:6] for fieldName in fieldNames])
+        
     def CanGoNext(self):
         wrongFields = []
         countNotNone = 0
 
-        for idx, (fieldName, canMultiple) in enumerate(self.fields):
+        for index, (fieldName, canMultiple) in enumerate(self.fields):
             count = 0
             for choice in self.choices:
-                if choice.GetSelection() == idx:
+                if choice.GetSelection() == index:
                     count += 1
                 if choice.GetSelection() != 0:
                     countNotNone += 1
