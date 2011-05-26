@@ -598,6 +598,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return ('task.budgetLeft',)
 
     # Foreground color
+
+    def setForegroundColor(self, *args, **kwargs):
+        super(Task, self).setForegroundColor(*args, **kwargs)
+        self.__computeRecursiveForegroundColor()
     
     def foregroundColor(self, recursive=False):
         if not recursive:
@@ -650,7 +654,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return 'active'
         
     # Background color
-
+    
+    def setBackgroundColor(self, *args, **kwargs):
+        super(Task, self).setBackgroundColor(*args, **kwargs)
+        self.__computeRecursiveBackgroundColor()
+        
     def backgroundColor(self, recursive=False):
         if not recursive:
             return super(Task, self).backgroundColor(recursive)
@@ -768,13 +776,16 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         # are not set in __init__ for performance reasons
         try:
             previousForegroundColor = self.__recursiveForegroundColor
+            previousBackgroundColor = self.__recursiveBackgroundColor
             previousRecursiveIcon = self.__recursiveIcon
             previousRecursiveSelectedIcon = self.__recursiveSelectedIcon
         except AttributeError:
             previousForegroundColor = None
+            previousBackgroundColor = None
             previousRecursiveIcon = None
             previousRecursiveSelectedIcon = None
         self.__computeRecursiveForegroundColor()
+        self.__computeRecursiveBackgroundColor()
         self.__computeRecursiveIcon()
         self.__computeRecursiveSelectedIcon()
         if self.__recursiveIcon != previousRecursiveIcon:
@@ -783,6 +794,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             event.addSource(self, self.selectedIcon(), type=self.selectedIconChangedEventType())
         if self.__recursiveForegroundColor != previousForegroundColor:
             event.addSource(self, self.foregroundColor(), type=self.foregroundColorChangedEventType())
+        if self.__recursiveBackgroundColor != previousBackgroundColor:
+            event.addSource(self, self.backgroundColor(), type=self.backgroundColorChangedEventType())
         if recursive:
             for child in self.children():
                 child.recomputeAppearance(recursive=True, event=event)
