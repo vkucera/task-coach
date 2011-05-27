@@ -951,7 +951,13 @@ class EditBook(widgets.Notebook):
                 self.AddPage(page, page.pageTitle, page.pageIcon)
                 pageNames.append(pageName)
         return pageNames
-    
+
+    def getPage(self, pageName):
+        for index in range(self.GetPageCount()):
+            if pageName == self[index].pageName:
+                return self[index]
+        return None
+        
     def allPageNamesInUserOrder(self):
         ''' Return all pages names in the order stored in the settings. The
             settings may not contain all pages (e.g. because a feature was
@@ -1094,6 +1100,9 @@ class EffortEditBook(Page):
         self._settings = settings
         self._taskFile = taskFile
         super(EffortEditBook, self).__init__(efforts, parent, *args, **kwargs)
+        
+    def getPage(self, pageName):
+        return None # An EffortEditBook is not really a notebook...
         
     def addEntries(self):
         self.addTaskEntry()
@@ -1246,13 +1255,25 @@ class EditorWithCommand(widgets.Dialog):
         self._dimensionsTracker = windowdimensionstracker.WindowSizeAndPositionTracker(self, settings, '%sdialog' % self.EditBookClass.object)
         
     def createUICommands(self):
+        # FIXME: keyboard shortcuts are hardcoded here, but they can be 
+        # changed in the translations
+        # FIXME: there are more keyboard shortcuts that don't work in dialogs atm 
+        newEffortId = wx.NewId()
         table = wx.AcceleratorTable([(wx.ACCEL_CMD, ord('Z'), wx.ID_UNDO),
-                                     (wx.ACCEL_CMD, ord('Y'), wx.ID_REDO)])
+                                     (wx.ACCEL_CMD, ord('Y'), wx.ID_REDO),
+                                     (wx.ACCEL_CMD, ord('E'), newEffortId)])
         self._interior.SetAcceleratorTable(table)
         self.undoCommand = uicommand.EditUndo()
         self.redoCommand = uicommand.EditRedo()
+        effortPage = self._interior.getPage('effort') 
+        effortViewer = effortPage.viewer if effortPage else None 
+        self.newEffortCommand = uicommand.EffortNew(viewer=effortViewer,
+                                                    taskList=self._taskFile.tasks(),
+                                                    effortList=self._taskFile.efforts(),
+                                                    settings=self._settings)
         self.undoCommand.bind(self._interior, wx.ID_UNDO)
         self.redoCommand.bind(self._interior, wx.ID_REDO)
+        self.newEffortCommand.bind(self._interior, newEffortId)
                         
     def cancel(self, *args, **kwargs): # pylint: disable-msg=W0221
         patterns.Publisher().removeObserver(self.onItemRemoved)
