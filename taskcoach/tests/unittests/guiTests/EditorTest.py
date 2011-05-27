@@ -37,6 +37,7 @@ class EditorWithCommandUnderTest(gui.dialog.editor.EditorWithCommand):
         interior = wx.Panel(self)
         interior.setFocus = lambda columnName: None
         interior.isDisplayingItemOrChildOfItem = lambda item: item == self._command.items[0]
+        interior.getPage = lambda pageName: None
         return interior
             
     def cancel(self, *args, **kwargs):
