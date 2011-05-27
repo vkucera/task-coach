@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-05-20 23:33+0000\n"
-"PO-Revision-Date: 2011-05-21 13:31+0000\n"
+"POT-Creation-Date: 2011-05-21 17:39+0000\n"
+"PO-Revision-Date: 2011-05-27 20:49+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-21 13:36+0000\n"
-"X-Generator: Launchpad (build 13085)\n"
+"X-Launchpad-Export-Date: 2011-05-27 20:52+0000\n"
+"X-Generator: Launchpad (build 13117)\n"
 
 #: taskcoachlib\application\application.py:241
 msgid ""
@@ -1642,9 +1642,6 @@ msgid ""
 "because it was created by a newer version of %(name)s.\n"
 "Please upgrade %(name)s."
 msgstr ""
-"Não foi possível abrir %(filename)s\n"
-"porque ele foi criado por uma versão mais nova do %(name)s.\n"
-"Por favor, atualize %(name)s."
 
 #: taskcoachlib\gui\iocontroller.py:125 taskcoachlib\gui\iocontroller.py:160
 msgid "Error while reading %s:\n"
@@ -1670,7 +1667,9 @@ msgstr "Mesclar"
 msgid ""
 "Cannot open %(filename)s\n"
 "because it is locked."
-msgstr "Não pode abrir %(filename)s porque ele está travado."
+msgstr ""
+"Não foi possível abrir %(filename)s\n"
+"porque ele está travado."
 
 #: taskcoachlib\gui\iocontroller.py:165
 msgid "Merged %(filename)s"
@@ -1682,14 +1681,14 @@ msgstr "Salvar como"
 
 #: taskcoachlib\gui\iocontroller.py:194
 msgid "Save selection"
-msgstr "Salva a seleção"
+msgstr "Salvar a seleção"
 
 #: taskcoachlib\gui\iocontroller.py:226
 msgid ""
 "Cannot save %s\n"
 "It is locked by another instance of %s.\n"
 msgstr ""
-"Não pode salvar %s\n"
+"Não foi possível salvar %s\n"
 "Ele está travado por outra instância de %s.\n"
 
 #: taskcoachlib\gui\iocontroller.py:231
@@ -1775,7 +1774,7 @@ msgid ""
 "\n"
 "Break the lock?"
 msgstr ""
-"Não é possível abrir %s porque ele está bloqueado.\n"
+"Não é possível abrir %s porque ele está travado.\n"
 "\n"
 "Isto significa ou que outra instância do TaskCoach\n"
 "está em execução e tem este arquivo aberto, ou que o\n"
@@ -1794,7 +1793,7 @@ msgid ""
 "on the location of %s.\n"
 "Open %s unlocked?"
 msgstr ""
-"Não foi possível bloquear porque os bloqueio não é suportado\n"
+"Não foi possível bloquear porque o bloqueio não é suportado\n"
 "na localização de %s.\n"
 "Abrir %s desbloqueado?"
 
@@ -1904,11 +1903,11 @@ msgstr "&Colunas"
 
 #: taskcoachlib\gui\menu.py:365
 msgid "&Tree options"
-msgstr "&Opções de árvore"
+msgstr "Opções de &árvore"
 
 #: taskcoachlib\gui\menu.py:369
 msgid "T&oolbar"
-msgstr "&Barra de ferramentas"
+msgstr "B&arra de ferramentas"
 
 #: taskcoachlib\gui\menu.py:371
 msgid "Show/hide status bar"
@@ -2039,7 +2038,7 @@ msgstr "Alterar &prioridade da tarefa"
 #: taskcoachlib\gui\menu.py:584 taskcoachlib\gui\uicommand.py:1819
 #: taskcoachlib\gui\uicommand.py:1861
 msgid "&Start tracking effort"
-msgstr "&Iniciar acompanhamento de esforço"
+msgstr "&Iniciar monitoramento de esforço"
 
 #: taskcoachlib\gui\menu.py:632 taskcoachlib\gui\viewer\mixin.py:114
 msgid "%s (subcategories)"
@@ -2128,7 +2127,7 @@ msgstr "uma tarefa que vence logo"
 
 #: taskcoachlib\gui\taskbaricon.py:148
 msgid "tracking \"%s\""
-msgstr "acompanhamento \"%s\""
+msgstr "monitoramento \"%s\""
 
 #: taskcoachlib\gui\taskbaricon.py:150
 msgid "tracking effort for %d tasks"
@@ -2184,7 +2183,7 @@ msgstr "&Importar modelo..."
 
 #: taskcoachlib\gui\uicommand.py:571
 msgid "Import a new template from a template file"
-msgstr ""
+msgstr "Importar um novo modelo de um arquivo de modelo"
 
 #: taskcoachlib\gui\uicommand.py:581
 msgid "Edit templates..."
@@ -2206,7 +2205,7 @@ msgstr "&Excluir ítens apagados"
 msgid ""
 "Actually delete deleted tasks and notes (see the SyncML chapter in Help"
 msgstr ""
-"Apagar realmente as tarefas deletadas (veja o capítulo de ajuda do SyncML"
+"Excluir realmente as tarefas excluídas (veja o capítulo de ajuda do SyncML"
 
 #: taskcoachlib\gui\uicommand.py:598
 msgid ""
@@ -2219,7 +2218,7 @@ msgid ""
 "Do you still want to purge?"
 msgstr ""
 "Se apagar itens deletados será impossível recuperar.\n"
-"Se estiver planejando habiltar\n"
+"Se estiver planejando habilitar\n"
 "o SyncML novamente com o\n"
 "mesmo servidor que usou anteriormente\n"
 "estes itens provavelmente voltarão.\n"
@@ -2247,7 +2246,7 @@ msgstr "&Imprimir...\tCtrl+P"
 
 #: taskcoachlib\gui\uicommand.py:670
 msgid "Export as &HTML..."
-msgstr "Exportar para &HTML..."
+msgstr "Exportar como &HTML..."
 
 #: taskcoachlib\gui\uicommand.py:671
 msgid "Export items from a viewer in HTML format"
@@ -2255,7 +2254,7 @@ msgstr "Exportar itens de um visualizador em formato HTML"
 
 #: taskcoachlib\gui\uicommand.py:688
 msgid "Export as &CSV..."
-msgstr "Exportar para &CSV..."
+msgstr "Exportar como &CSV..."
 
 #: taskcoachlib\gui\uicommand.py:689
 msgid "Export items from a viewer in Comma Separated Values (CSV) format"
@@ -2292,7 +2291,7 @@ msgstr "Sincronizar com um servidor SyncML"
 
 #: taskcoachlib\gui\uicommand.py:746
 msgid "Please enter your password:"
-msgstr "Digite a sua senha:"
+msgstr "Por favor, digite sua senha:"
 
 #: taskcoachlib\gui\uicommand.py:747
 msgid "Task Coach SyncML password"
@@ -2344,7 +2343,7 @@ msgstr "Editar preferências de SyncML"
 
 #: taskcoachlib\gui\uicommand.py:929
 msgid "SyncML preferences"
-msgstr "SyncML preferências"
+msgstr "Preferẽncias do SyncML"
 
 #: taskcoachlib\gui\uicommand.py:935
 msgid "&All\tCtrl+A"
@@ -2368,7 +2367,7 @@ msgstr "&Reiniciar todas as categorias\tCtrl-R"
 
 #: taskcoachlib\gui\uicommand.py:989
 msgid "Show/hide items belonging to %s"
-msgstr ""
+msgstr "Mostrar/ocultar itens pertencentes a %s"
 
 #: taskcoachlib\gui\uicommand.py:1027
 msgid "&Rename viewer..."
@@ -2453,7 +2452,7 @@ msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:1235
 msgid "Hide &completed tasks"
-msgstr "Ocultar tarefas &completadas"
+msgstr "Ocultar tarefas &finalizadas"
 
 #: taskcoachlib\gui\uicommand.py:1236
 msgid "Show/hide completed tasks"
@@ -2477,7 +2476,7 @@ msgstr "Editar o(s) item(ns) selecionado(s)"
 
 #: taskcoachlib\gui\uicommand.py:1298
 msgid "Edit &tracked task...\tShift-Alt-T"
-msgstr "Editar &acompanhar tarefa...\tShift-Alt-T"
+msgstr "Editar &monitorar tarefa...\tShift-Alt-T"
 
 #: taskcoachlib\gui\uicommand.py:1299
 msgid "Edit the currently tracked task(s)"
@@ -2489,7 +2488,7 @@ msgstr "&Excluir\tDEL"
 
 #: taskcoachlib\gui\uicommand.py:1317 taskcoachlib\help\__init__.py:634
 msgid "Delete the selected item(s)"
-msgstr "Excluir o(s) item(s) selecionado(s)"
+msgstr "Excluir o(s) item(ns) selecionado(s)"
 
 #: taskcoachlib\gui\uicommand.py:1409
 msgid "Create a new task from a template"
@@ -2631,7 +2630,7 @@ msgstr "Iniciar acompanhamento de esforço %s"
 #: taskcoachlib\gui\uicommand.py:1862
 msgid "Select a task via the menu and start tracking effort for it"
 msgstr ""
-"Selecionar uma tarefa pelo menu e iniciar acompanhamento de seu esforço"
+"Selecionar uma tarefa pelo menu e iniciar monitoramento de seu esforço"
 
 #: taskcoachlib\gui\uicommand.py:1874
 msgid "Stop tracking or resume tracking effort\tShift+Ctrl+T"
@@ -2643,7 +2642,7 @@ msgstr "Pa&rar monitoramento %s\tShift+Ctrl+T"
 
 #: taskcoachlib\gui\uicommand.py:1877
 msgid "Stop tracking effort for the active task(s)"
-msgstr "Parar acompanhamento do esforço para a(s) tarefa(s) ativa(s)"
+msgstr "Parar monitoramento do esforço para a(s) tarefa(s) ativa(s)"
 
 #: taskcoachlib\gui\uicommand.py:1878
 msgid "&Resume tracking %s\tShift+Ctrl+T"
@@ -2667,7 +2666,7 @@ msgstr "Nova nota...\tCtrl-J"
 
 #: taskcoachlib\gui\uicommand.py:2058
 msgid "New &note with selected categories..."
-msgstr "Nova &anotação com categorias selecionadas..."
+msgstr "Nova &nota com categorias selecionadas..."
 
 #: taskcoachlib\gui\uicommand.py:2059
 msgid "Insert a new note with the selected categories checked"
@@ -2735,7 +2734,7 @@ msgstr "Verificar a existência de nova versão de %s"
 
 #: taskcoachlib\gui\uicommand.py:2233
 msgid "&Frequently asked questions"
-msgstr ""
+msgstr "Perguntas &frequentes"
 
 #: taskcoachlib\gui\uicommand.py:2234
 msgid "Browse the frequently asked questions and answers"
@@ -2755,7 +2754,7 @@ msgstr "Requisitar um &recurso..."
 
 #: taskcoachlib\gui\uicommand.py:2248
 msgid "Request a new feature or vote for existing requests"
-msgstr "Requisitar um novo recurso ou votar nas requisiçoes existentes"
+msgstr "Requisitar um novo recurso ou votar nas requisições existentes"
 
 #: taskcoachlib\gui\uicommand.py:2254
 msgid "Request &support..."
@@ -3668,7 +3667,7 @@ msgstr "Aspas"
 
 #: taskcoachlib\gui\wizard\csvimport.py:59
 msgid "Double it"
-msgstr ""
+msgstr "Dobrar"
 
 #: taskcoachlib\gui\wizard\csvimport.py:61
 msgid "Escape with"
@@ -4182,6 +4181,11 @@ msgid ""
 "only\n"
 "filter by one of the subcategories at a time."
 msgstr ""
+"Categorias mutuamente exclusivas: uma marca indica\n"
+"onde as subcategorias da categoria são mutuamente exclusiva. Se houver,\n"
+"os itens podem pertencer a somente uma das subcategorias. Ao filtrar, você "
+"pode somente\n"
+"filtrar por uma subcategoria de cada vez."
 
 #: taskcoachlib\help\__init__.py:258
 msgid ""
@@ -6815,3 +6819,63 @@ msgstr "Erro ao abrir URL"
 
 #~ msgid "&Tips..."
 #~ msgstr "&Dicas..."
+
+#~ msgid "Edit description \"%s\""
+#~ msgstr "Editar descrições \"%s\""
+
+#~ msgid "Add subnote to \"%s\""
+#~ msgstr "Adicionar subnota para \"%s\""
+
+#~ msgid "Remove note"
+#~ msgstr "Remover nota"
+
+#~ msgid "Remove attachment to \"%s\""
+#~ msgstr "Remover anexo para \"%s\""
+
+#~ msgid "Add subnote"
+#~ msgstr "Adicionar subnota"
+
+#~ msgid "Edit attachment \"%s\" location"
+#~ msgstr "Editar localização dos anexos \"%s\""
+
+#~ msgid "Remove attachment"
+#~ msgstr "Remover anexo"
+
+#~ msgid "Edit location of attachments"
+#~ msgstr "Editar localização dos anexos"
+
+#~ msgid "Remove note from \"%s\""
+#~ msgstr "Remover nota de \"%s\""
+
+#~ msgid "Edit descriptions"
+#~ msgstr "Editar descrições"
+
+#~ msgid "Edit exclusive subcategories of \"%s\""
+#~ msgstr "Editar subcategorias exclusivas de \"%s\""
+
+#~ msgid "Change font \"%s\""
+#~ msgstr "Alterar fontes \"%s\""
+
+#~ msgid "Change foreground colors"
+#~ msgstr "Alterar cores de primeiro plano"
+
+#~ msgid "Change foreground color \"%s\""
+#~ msgstr "Alterar cor de primeiro plano \"%s\""
+
+#~ msgid "Change background colors"
+#~ msgstr "Alterar cores do plano de fundo"
+
+#~ msgid "Change icons"
+#~ msgstr "Alterar ícones"
+
+#~ msgid "Change icon \"%s\""
+#~ msgstr "Alterar ícones \"%s\""
+
+#~ msgid "Change fonts"
+#~ msgstr "Alterar fontes"
+
+#~ msgid "Change background color \"%s\""
+#~ msgstr "Alterar cores do plano de fundo \"%s\""
+
+#~ msgid "Edit exclusive subcategories"
+#~ msgstr "Editar subcategorias exclusivas"

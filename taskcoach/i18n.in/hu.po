@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-05-20 23:33+0000\n"
-"PO-Revision-Date: 2011-05-19 21:37+0000\n"
+"POT-Creation-Date: 2011-05-21 17:39+0000\n"
+"PO-Revision-Date: 2011-05-22 08:50+0000\n"
 "Last-Translator: Csaba Vágányik <Unknown>\n"
 "Language-Team: Majsa Norbert <nmajsa@szintezis.hu>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-21 13:36+0000\n"
-"X-Generator: Launchpad (build 13085)\n"
+"X-Launchpad-Export-Date: 2011-05-27 20:45+0000\n"
+"X-Generator: Launchpad (build 13117)\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "Generated-By: pygettext.py 1.5\n"
 
@@ -362,7 +362,7 @@ msgstr ""
 
 #: taskcoachlib\config\settings.py:201
 msgid "Settings error"
-msgstr ""
+msgstr "Hiba a beállításokban"
 
 #: taskcoachlib\config\settings.py:221
 msgid ""
@@ -1126,15 +1126,15 @@ msgstr "Csak a kijelölt elemek exportálása"
 
 #: taskcoachlib\gui\dialog\export.py:85 taskcoachlib\gui\iocontroller.py:292
 msgid "Export as CSV"
-msgstr ""
+msgstr "Exportálás CSV-be"
 
 #: taskcoachlib\gui\dialog\export.py:90 taskcoachlib\gui\iocontroller.py:297
 msgid "Export as iCalendar"
-msgstr ""
+msgstr "Exportálás iCalendar formátumba"
 
 #: taskcoachlib\gui\dialog\export.py:101 taskcoachlib\gui\iocontroller.py:286
 msgid "Export as HTML"
-msgstr ""
+msgstr "Exportálás HTML-be"
 
 #: taskcoachlib\gui\dialog\export.py:111
 msgid "Write style information to a separate CSS file"
@@ -1674,11 +1674,11 @@ msgstr "%(filename)s hozzáfűzve"
 
 #: taskcoachlib\gui\iocontroller.py:182
 msgid "Save as"
-msgstr ""
+msgstr "Mentés másként"
 
 #: taskcoachlib\gui\iocontroller.py:194
 msgid "Save selection"
-msgstr ""
+msgstr "Kijelölés mentése"
 
 #: taskcoachlib\gui\iocontroller.py:226
 msgid ""
@@ -1698,7 +1698,7 @@ msgstr ""
 
 #: taskcoachlib\gui\iocontroller.py:240
 msgid "Import template"
-msgstr ""
+msgstr "Sablon importálása"
 
 #: taskcoachlib\gui\iocontroller.py:242
 msgid "%s template files (*.tsktmpl)|*.tsktmpl"
@@ -1709,6 +1709,8 @@ msgid ""
 "Cannot import template %s\n"
 "%s"
 msgstr ""
+"Nem sikerült a %s sablont importálni\n"
+"%s"
 
 #: taskcoachlib\gui\iocontroller.py:277
 msgid "Exported %(count)d items to %(filename)s"
@@ -2168,11 +2170,11 @@ msgstr "Kijelölt feladat mentése feladat-sablonként"
 
 #: taskcoachlib\gui\uicommand.py:570
 msgid "&Import template..."
-msgstr ""
+msgstr "&Sablon importálása..."
 
 #: taskcoachlib\gui\uicommand.py:571
 msgid "Import a new template from a template file"
-msgstr ""
+msgstr "Új sablon importálása sablon fájlból"
 
 #: taskcoachlib\gui\uicommand.py:581
 msgid "Edit templates..."
@@ -2269,7 +2271,7 @@ msgstr "Feladatok importálása CSV fájlból"
 
 #: taskcoachlib\gui\uicommand.py:732 taskcoachlib\gui\uicommand.py:734
 msgid "Import CSV"
-msgstr ""
+msgstr "CSV fájl importálása"
 
 #: taskcoachlib\gui\uicommand.py:741
 msgid "S&yncML synchronization..."
@@ -2321,7 +2323,7 @@ msgstr "&Beállítások...\tAlt+P"
 
 #: taskcoachlib\gui\uicommand.py:916
 msgid "Preferences"
-msgstr ""
+msgstr "Beállítások"
 
 #: taskcoachlib\gui\uicommand.py:922
 msgid "&SyncML preferences..."
@@ -2333,7 +2335,7 @@ msgstr "SyncML beállítások szerkesztése"
 
 #: taskcoachlib\gui\uicommand.py:929
 msgid "SyncML preferences"
-msgstr ""
+msgstr "SyncML beállítások"
 
 #: taskcoachlib\gui\uicommand.py:935
 msgid "&All\tCtrl+A"
@@ -2357,7 +2359,7 @@ msgstr "&Összes kategória visszaállítása\tCtrl-R"
 
 #: taskcoachlib\gui\uicommand.py:989
 msgid "Show/hide items belonging to %s"
-msgstr ""
+msgstr "Mutatja/elrejti %s kapcsolódó tételeit"
 
 #: taskcoachlib\gui\uicommand.py:1027
 msgid "&Rename viewer..."
@@ -2701,7 +2703,7 @@ msgstr "%s verzió és kapcsolat információk"
 
 #: taskcoachlib\gui\uicommand.py:2198
 msgid "About %s"
-msgstr ""
+msgstr "A %s névjegye"
 
 #: taskcoachlib\gui\uicommand.py:2205
 msgid "&License"
@@ -2713,7 +2715,7 @@ msgstr "%s liszensz"
 
 #: taskcoachlib\gui\uicommand.py:2214
 msgid "Check for update"
-msgstr ""
+msgstr "Frissítések keresése"
 
 #: taskcoachlib\gui\uicommand.py:2215
 msgid "Check for the availability of a new version of %s"
@@ -2729,11 +2731,11 @@ msgstr ""
 
 #: taskcoachlib\gui\uicommand.py:2240
 msgid "Report a &bug..."
-msgstr ""
+msgstr "&Hibabejelentés..."
 
 #: taskcoachlib\gui\uicommand.py:2241
 msgid "Report a bug or browse known bugs"
-msgstr ""
+msgstr "Hibabejelentés vagy az ismert hibák közti keresés"
 
 #: taskcoachlib\gui\uicommand.py:2247
 msgid "Request a &feature..."
@@ -3724,7 +3726,7 @@ msgstr ""
 
 #: taskcoachlib\gui\wizard\csvimport.py:247
 msgid "%s attribute"
-msgstr ""
+msgstr "%s attribútum"
 
 #: taskcoachlib\gui\wizard\csvimport.py:288
 msgid "No field mapping."
@@ -3881,6 +3883,7 @@ msgstr ""
 #: taskcoachlib\help\__init__.py:139
 msgid "Tasks have the following properties you can change:"
 msgstr ""
+"A feladatok a következő megváltoztatható tulajdonságokkal rendelkeznek:"
 
 #: taskcoachlib\help\__init__.py:141
 msgid "Subject: a single line that summarizes the task."
@@ -3972,7 +3975,7 @@ msgstr "Bevétel: óraszámszor óradíj és fix díj."
 
 #: taskcoachlib\help\__init__.py:173
 msgid "Tasks always have exactly one of the following states:"
-msgstr ""
+msgstr "A feladatok mindig a következő állapotok egyikében vannak:"
 
 #: taskcoachlib\help\__init__.py:175
 msgid "Active: the start date is in the past and the due date in the future;"
@@ -4070,6 +4073,8 @@ msgstr ""
 #: taskcoachlib\help\__init__.py:218
 msgid "Effort records have the following properties you can change:"
 msgstr ""
+"Az időráfordítások a következő megváltoztatható tulajdonságokkal "
+"rendelkeznek:"
 
 #: taskcoachlib\help\__init__.py:220
 msgid "Task: the task the effort belongs to."
@@ -4121,6 +4126,7 @@ msgstr ""
 #: taskcoachlib\help\__init__.py:250
 msgid "Categories have the following properties you can change:"
 msgstr ""
+"A kategóriák a következő megváltoztatható tulajdonságokkal rendelkeznek:"
 
 #: taskcoachlib\help\__init__.py:252
 msgid "Subject: a single line that summarizes the category."
@@ -4168,6 +4174,7 @@ msgstr ""
 #: taskcoachlib\help\__init__.py:280
 msgid "Notes have the following properties you can change:"
 msgstr ""
+"A jegyzetek a következő megváltoztatható tulajdonságokkal rendelkeznek:"
 
 #: taskcoachlib\help\__init__.py:282
 msgid "Subject: a single line that summarizes the note."

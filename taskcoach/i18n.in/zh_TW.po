@@ -7,21 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-05-20 23:33+0000\n"
-"PO-Revision-Date: 2010-11-28 14:23+0000\n"
-"Last-Translator: Frank Niessink <frank@niessink.com>\n"
+"POT-Creation-Date: 2011-05-21 17:39+0000\n"
+"PO-Revision-Date: 2011-05-22 13:36+0000\n"
+"Last-Translator: Sophina Liu <Unknown>\n"
 "Language-Team: Traditional Chinese <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-21 13:37+0000\n"
-"X-Generator: Launchpad (build 13085)\n"
+"X-Launchpad-Export-Date: 2011-05-27 20:45+0000\n"
+"X-Generator: Launchpad (build 13117)\n"
 
 #: taskcoachlib\application\application.py:241
 msgid ""
 "Couldn't load settings from TaskCoach.ini:\n"
 "%s"
-msgstr ""
+msgstr "無法從 TaskCoach.ini 載入設定檔：%s"
 
 #: taskcoachlib\application\application.py:242
 #: taskcoachlib\gui\iocontroller.py:57
@@ -35,19 +35,19 @@ msgstr "新增附件"
 
 #: taskcoachlib\command\attachmentCommands.py:42
 msgid "Edit attachments"
-msgstr ""
+msgstr "編輯附件"
 
 #: taskcoachlib\command\attachmentCommands.py:43
 msgid "Edit attachment \"%s\""
-msgstr ""
+msgstr "編輯附件  \"%s\""
 
 #: taskcoachlib\command\attachmentCommands.py:54
 msgid "Delete attachments"
-msgstr ""
+msgstr "刪除附件"
 
 #: taskcoachlib\command\attachmentCommands.py:55
 msgid "Delete attachment \"%s\""
-msgstr ""
+msgstr "刪除附件  \"%s\""
 
 #: taskcoachlib\command\base.py:162
 msgid "Copy"
@@ -55,7 +55,7 @@ msgstr "複製"
 
 #: taskcoachlib\command\base.py:163
 msgid "Copy \"%s\""
-msgstr ""
+msgstr "複製  \"%s\""
 
 #: taskcoachlib\command\base.py:177 taskcoachlib\gui\dialog\templates.py:51
 msgid "Delete"
@@ -63,7 +63,7 @@ msgstr "刪除"
 
 #: taskcoachlib\command\base.py:178
 msgid "Delete \"%s\""
-msgstr ""
+msgstr "刪除  \"%s\""
 
 #: taskcoachlib\command\base.py:207
 msgid "Cut"
@@ -71,7 +71,7 @@ msgstr "剪下"
 
 #: taskcoachlib\command\base.py:208
 msgid "Cut \"%s\""
-msgstr ""
+msgstr "剪下  \"%s\""
 
 #: taskcoachlib\command\base.py:233
 msgid "Paste"
@@ -79,23 +79,23 @@ msgstr "貼上"
 
 #: taskcoachlib\command\base.py:234
 msgid "Paste \"%s\""
-msgstr ""
+msgstr "貼上  \"%s\""
 
 #: taskcoachlib\command\base.py:269
 msgid "Paste as subitem"
-msgstr ""
+msgstr "貼為子項目"
 
 #: taskcoachlib\command\base.py:270
 msgid "Paste as subitem of \"%s\""
-msgstr ""
+msgstr "貼為  \"%s\" 的子項目"
 
 #: taskcoachlib\command\base.py:282
 msgid "Edit"
-msgstr ""
+msgstr "編輯"
 
 #: taskcoachlib\command\base.py:283
 msgid "Edit \"%s\""
-msgstr ""
+msgstr "編輯  \"%s\""
 
 #: taskcoachlib\command\base.py:302
 msgid "Drag and drop"
@@ -103,7 +103,7 @@ msgstr "拖放"
 
 #: taskcoachlib\command\base.py:303
 msgid "Drag and drop \"%s\""
-msgstr ""
+msgstr "拖曳  \"%s\""
 
 #: taskcoachlib\command\base.py:342 taskcoachlib\widgets\dialog.py:150
 msgid "Add attachment"
@@ -111,15 +111,15 @@ msgstr "新增附件"
 
 #: taskcoachlib\command\base.py:343
 msgid "Add attachment to \"%s\""
-msgstr ""
+msgstr "增加附件到  \"%s\""
 
 #: taskcoachlib\command\base.py:368
 msgid "Add note"
-msgstr ""
+msgstr "增加註解"
 
 #: taskcoachlib\command\base.py:369
 msgid "Add note to \"%s\""
-msgstr ""
+msgstr "增加註解到 \"%s\""
 
 #: taskcoachlib\command\base.py:374 taskcoachlib\command\noteCommands.py:25
 #: taskcoachlib\command\noteCommands.py:28
@@ -128,19 +128,19 @@ msgstr "新增備註"
 
 #: taskcoachlib\command\base.py:402
 msgid "Edit subjects"
-msgstr ""
+msgstr "編輯主題"
 
 #: taskcoachlib\command\base.py:403
 msgid "Edit subject \"%s\""
-msgstr ""
+msgstr "編輯主題 \"%s\""
 
 #: taskcoachlib\command\categorizableCommands.py:25
 msgid "Toggle category"
-msgstr ""
+msgstr "切換類別"
 
 #: taskcoachlib\command\categorizableCommands.py:26
 msgid "Toggle category of \"%s\""
-msgstr ""
+msgstr "切換分類 \"%s\""
 
 #: taskcoachlib\command\categoryCommands.py:25
 #: taskcoachlib\command\categoryCommands.py:28
@@ -149,11 +149,11 @@ msgstr "新增類別"
 
 #: taskcoachlib\command\categoryCommands.py:40
 msgid "New subcategories"
-msgstr ""
+msgstr "新建子分類"
 
 #: taskcoachlib\command\categoryCommands.py:41
 msgid "New subcategory of \"%s\""
-msgstr ""
+msgstr "新建子分類 \"%s\""
 
 #: taskcoachlib\command\categoryCommands.py:44
 msgid "New subcategory"
@@ -161,55 +161,55 @@ msgstr "新增子類別"
 
 #: taskcoachlib\command\categoryCommands.py:56
 msgid "Edit categories"
-msgstr ""
+msgstr "編輯分類"
 
 #: taskcoachlib\command\categoryCommands.py:57
 msgid "Edit category \"%s\""
-msgstr ""
+msgstr "編輯分類 \"%s\""
 
 #: taskcoachlib\command\categoryCommands.py:64
 msgid "Delete categories"
-msgstr ""
+msgstr "刪除分類"
 
 #: taskcoachlib\command\categoryCommands.py:65
 msgid "Delete category \"%s\""
-msgstr ""
+msgstr "刪除分類  \"%s\""
 
 #: taskcoachlib\command\categoryCommands.py:69
 msgid "Drag and drop categories"
-msgstr ""
+msgstr "拖曳分類"
 
 #: taskcoachlib\command\effortCommands.py:25
 msgid "New efforts"
-msgstr ""
+msgstr "新建工作"
 
 #: taskcoachlib\command\effortCommands.py:26
 msgid "New effort of \"%s\""
-msgstr ""
+msgstr "新建工作 \"%s\""
 
 #: taskcoachlib\command\effortCommands.py:47
 msgid "Edit efforts"
-msgstr ""
+msgstr "編輯工作"
 
 #: taskcoachlib\command\effortCommands.py:48
 msgid "Edit effort \"%s\""
-msgstr ""
+msgstr "編輯工作  \"%s\""
 
 #: taskcoachlib\command\effortCommands.py:70
 msgid "Delete efforts"
-msgstr ""
+msgstr "刪除工作"
 
 #: taskcoachlib\command\effortCommands.py:71
 msgid "Delete effort \"%s\""
-msgstr ""
+msgstr "刪除工作 \"%s\""
 
 #: taskcoachlib\command\noteCommands.py:39
 msgid "New subnotes"
-msgstr ""
+msgstr "新建子註解"
 
 #: taskcoachlib\command\noteCommands.py:40
 msgid "New subnote of \"%s\""
-msgstr ""
+msgstr "新建子註解 \"%s\""
 
 #: taskcoachlib\command\noteCommands.py:43
 msgid "New subnote"
@@ -217,39 +217,39 @@ msgstr "新增子註記"
 
 #: taskcoachlib\command\noteCommands.py:54
 msgid "Edit notes"
-msgstr ""
+msgstr "編輯註解"
 
 #: taskcoachlib\command\noteCommands.py:55
 msgid "Edit note \"%s\""
-msgstr ""
+msgstr "編輯註解 \"%s\""
 
 #: taskcoachlib\command\noteCommands.py:66
 msgid "Delete notes"
-msgstr ""
+msgstr "刪除註解"
 
 #: taskcoachlib\command\noteCommands.py:67
 msgid "Delete note \"%s\""
-msgstr ""
+msgstr "刪除註解 \"%s\""
 
 #: taskcoachlib\command\noteCommands.py:71
 msgid "Drag and drop notes"
-msgstr ""
+msgstr "拖曳註解"
 
 #: taskcoachlib\command\noteCommands.py:72
 msgid "Drag and drop note \"%s\""
-msgstr ""
+msgstr "拖曳註解 \"%s\""
 
 #: taskcoachlib\command\taskCommands.py:59
 msgid "Drag and drop tasks"
-msgstr ""
+msgstr "拖曳任務"
 
 #: taskcoachlib\command\taskCommands.py:63
 msgid "Delete tasks"
-msgstr ""
+msgstr "刪除任務"
 
 #: taskcoachlib\command\taskCommands.py:64
 msgid "Delete task \"%s\""
-msgstr ""
+msgstr "刪除任務 \"%s\""
 
 #: taskcoachlib\command\taskCommands.py:106
 #: taskcoachlib\command\taskCommands.py:109
@@ -258,11 +258,11 @@ msgstr "新增工作"
 
 #: taskcoachlib\command\taskCommands.py:145
 msgid "New subtasks"
-msgstr ""
+msgstr "新建子任務"
 
 #: taskcoachlib\command\taskCommands.py:146
 msgid "New subtask of \"%s\""
-msgstr ""
+msgstr "新建子任務 \"%s\""
 
 #: taskcoachlib\command\taskCommands.py:150
 msgid "New subtask"
@@ -270,27 +270,27 @@ msgstr "新增子工作"
 
 #: taskcoachlib\command\taskCommands.py:169
 msgid "Edit tasks"
-msgstr ""
+msgstr "編輯任務"
 
 #: taskcoachlib\command\taskCommands.py:170
 msgid "Edit task \"%s\""
-msgstr ""
+msgstr "編輯任務 \"%s\""
 
 #: taskcoachlib\command\taskCommands.py:228
 msgid "Mark tasks completed"
-msgstr ""
+msgstr "標記任務已完成"
 
 #: taskcoachlib\command\taskCommands.py:229
 msgid "Mark \"%s\" completed"
-msgstr ""
+msgstr "標記 \"%s\" 已完成"
 
 #: taskcoachlib\command\taskCommands.py:244
 msgid "Edit task dates"
-msgstr ""
+msgstr "編輯任務日期"
 
 #: taskcoachlib\command\taskCommands.py:245
 msgid "Edit \"%s\" dates"
-msgstr ""
+msgstr "編輯  \"%s\" 日期"
 
 #: taskcoachlib\command\taskCommands.py:265
 msgid "Start tracking"
@@ -298,7 +298,7 @@ msgstr "開始追蹤"
 
 #: taskcoachlib\command\taskCommands.py:266
 msgid "Start tracking \"%s\""
-msgstr ""
+msgstr "開始追縱  \"%s\""
 
 #: taskcoachlib\command\taskCommands.py:300
 msgid "Stop tracking"
@@ -306,7 +306,7 @@ msgstr "停止追蹤"
 
 #: taskcoachlib\command\taskCommands.py:301
 msgid "Stop tracking \"%s\""
-msgstr ""
+msgstr "停止追縱 \"%s\""
 
 #: taskcoachlib\command\taskCommands.py:344
 msgid "Maximize priority"
@@ -314,7 +314,7 @@ msgstr "最大優先權"
 
 #: taskcoachlib\command\taskCommands.py:345
 msgid "Maximize priority of \"%s\""
-msgstr ""
+msgstr "最高優先級 \"%s\""
 
 #: taskcoachlib\command\taskCommands.py:354
 msgid "Minimize priority"
@@ -322,7 +322,7 @@ msgstr "最小優先權"
 
 #: taskcoachlib\command\taskCommands.py:355
 msgid "Minimize priority of \"%s\""
-msgstr ""
+msgstr "最低優先級 \"%s\""
 
 #: taskcoachlib\command\taskCommands.py:384
 msgid "Increase priority"
@@ -330,7 +330,7 @@ msgstr "提昇優先權"
 
 #: taskcoachlib\command\taskCommands.py:385
 msgid "Increase priority of \"%s\""
-msgstr ""
+msgstr "提高優先級 \"%s\""
 
 #: taskcoachlib\command\taskCommands.py:391
 msgid "Decrease priority"
@@ -338,11 +338,11 @@ msgstr "降低優先權"
 
 #: taskcoachlib\command\taskCommands.py:392
 msgid "Decrease priority of \"%s\""
-msgstr ""
+msgstr "降低優先級 \"%s\""
 
 #: taskcoachlib\config\settings.py:197
 msgid "Error while reading the %s-%s setting from %s.ini."
-msgstr ""
+msgstr "從 %s.ini 讀取整個 %s-%s 設定錯誤"
 
 #: taskcoachlib\config\settings.py:198
 msgid "The value is: %s"
@@ -391,7 +391,7 @@ msgstr "開啟選取附件"
 
 #: taskcoachlib\domain\date\snooze.py:22
 msgid "5 minutes"
-msgstr ""
+msgstr "5 分鐘"
 
 #: taskcoachlib\domain\date\snooze.py:22
 msgid "Don't snooze"
@@ -399,7 +399,7 @@ msgstr "不延後通知"
 
 #: taskcoachlib\domain\date\snooze.py:23
 msgid "10 minutes"
-msgstr ""
+msgstr "10 分鐘"
 
 #: taskcoachlib\domain\date\snooze.py:23
 msgid "15 minutes"
@@ -411,79 +411,79 @@ msgstr ""
 
 #: taskcoachlib\domain\date\snooze.py:24
 msgid "30 minutes"
-msgstr ""
+msgstr "30 分鐘"
 
 #: taskcoachlib\domain\date\snooze.py:25
 msgid "1 hour"
-msgstr ""
+msgstr "1 小時"
 
 #: taskcoachlib\domain\date\snooze.py:25
 msgid "1.5 hour"
-msgstr ""
+msgstr "1.5 小時"
 
 #: taskcoachlib\domain\date\snooze.py:25
 msgid "45 minutes"
-msgstr ""
+msgstr "45 分鐘"
 
 #: taskcoachlib\domain\date\snooze.py:26
 msgid "2 hours"
-msgstr ""
+msgstr "2 小時"
 
 #: taskcoachlib\domain\date\snooze.py:26
 msgid "3 hours"
-msgstr ""
+msgstr "3 小時"
 
 #: taskcoachlib\domain\date\snooze.py:26
 msgid "4 hours"
-msgstr ""
+msgstr "4 小時"
 
 #: taskcoachlib\domain\date\snooze.py:27
 msgid "12 hours"
-msgstr ""
+msgstr "12 小時"
 
 #: taskcoachlib\domain\date\snooze.py:27
 msgid "6 hours"
-msgstr ""
+msgstr "6 小時"
 
 #: taskcoachlib\domain\date\snooze.py:27
 msgid "8 hours"
-msgstr ""
+msgstr "8 小時"
 
 #: taskcoachlib\domain\date\snooze.py:28
 msgid "18 hours"
-msgstr ""
+msgstr "18 小時"
 
 #: taskcoachlib\domain\date\snooze.py:28
 msgid "24 hours"
-msgstr ""
+msgstr "24小時"
 
 #: taskcoachlib\domain\date\snooze.py:29
 msgid "48 hours"
-msgstr ""
+msgstr "48 小時"
 
 #: taskcoachlib\domain\date\snooze.py:29
 msgid "72 hours"
-msgstr ""
+msgstr "72 小時"
 
 #: taskcoachlib\domain\date\snooze.py:30
 msgid "1 week"
-msgstr ""
+msgstr "1 週"
 
 #: taskcoachlib\domain\date\snooze.py:30
 msgid "2 weeks"
-msgstr ""
+msgstr "2 週"
 
 #: taskcoachlib\domain\effort\composite.py:211
 msgid "Total"
-msgstr ""
+msgstr "總計"
 
 #: taskcoachlib\domain\effort\composite.py:224
 msgid "Total for %s"
-msgstr ""
+msgstr "%s 總計"
 
 #: taskcoachlib\domain\effort\effortlist.py:31
 msgid "&New effort...\tCtrl+E"
-msgstr ""
+msgstr "新建工作(&N)...\tCtrl+E"
 
 #: taskcoachlib\domain\task\tasklist.py:32
 msgid "&New task..."
@@ -5418,7 +5418,7 @@ msgstr ""
 
 #: taskcoachlib\widgets\searchctrl.py:57
 msgid "&Match case"
-msgstr ""
+msgstr "符合大小寫(&M)"
 
 #: taskcoachlib\widgets\searchctrl.py:57
 msgid "Match case when filtering"
@@ -5426,7 +5426,7 @@ msgstr "過濾時需符合大小寫"
 
 #: taskcoachlib\widgets\searchctrl.py:60
 msgid "&Include sub items"
-msgstr ""
+msgstr "包含子項目(&I)"
 
 #: taskcoachlib\widgets\searchctrl.py:61
 msgid "Include sub items of matching items in the search results"
@@ -5434,11 +5434,11 @@ msgstr "搜尋結果中包含符合項目的子項目"
 
 #: taskcoachlib\widgets\searchctrl.py:64
 msgid "&Search description too"
-msgstr ""
+msgstr "也搜尋描述(&S)"
 
 #: taskcoachlib\widgets\searchctrl.py:65
 msgid "Search both subject and description"
-msgstr ""
+msgstr "搜尋主題和描述"
 
 #: taskcoachlib\widgets\searchctrl.py:126
 msgid "This is an invalid regular expression."
