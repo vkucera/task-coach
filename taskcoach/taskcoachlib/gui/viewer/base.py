@@ -128,7 +128,8 @@ class Viewer(wx.Panel):
         return self.widget
     
     def SetFocus(self):
-        self.widget.SetFocus()
+        if self.widget: # prevent PyDeadObjectError
+            self.widget.SetFocus()
             
     def createSorter(self, collection):
         ''' This method can be overridden to decorate the presentation with a 
