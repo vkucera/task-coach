@@ -273,7 +273,6 @@ class ThunderbirdImapReader(object):
         if self.ssl:
             cn = imaplib.IMAP4_SSL(self.server, self.port)
         else:
-            print self.server, self.port
             cn = imaplib.IMAP4(self.server, self.port)
 
         if self._PASSWORDS.has_key((self.server, self.user, self.port)):
