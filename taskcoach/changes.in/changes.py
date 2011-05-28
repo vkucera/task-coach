@@ -31,7 +31,9 @@ invisible.''', '3304940'),
         Bug('''The keyboard shortcut for adding effort (Ctrl-E) wouldn't work 
 in edit dialogs.''', '3306827'),
         Bug('''Closing Task Coach with a square task viewer open caused
-exceptions in the log file.''', '3307836')
+exceptions in the log file.''', '3307836'),
+        Bug('''Drag and drop email from Thunderbird, PortableApps edition,
+didn't work.''', '3058781'),
         ],
     featuresAdded=[
         Feature('''The default foreground color, background color, font and 

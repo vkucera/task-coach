@@ -244,7 +244,7 @@ class ThunderbirdImapReader(object):
         for serverIndex in range(100): 
             name = 'mail.server.server%d' % serverIndex
             if config.has_key(name + '.hostname') and \
-               config[name + '.hostname'] == self.server and \
+               self._equalServers(config[name + '.hostname'], self.server) and \
                config[name + '.type'] == 'imap':
                 if config.has_key(name + '.port'):
                     port = int(config[name + '.port'])
@@ -253,7 +253,7 @@ class ThunderbirdImapReader(object):
                 break
         self.ssl = (stype == 3)
 
-        if self.server == 'imap.google.com':
+        if self.server in ('imap.google.com', 'imap.googlemail.com'):
             # When dragging mail from Thunderbird that uses Gmail via IMAP the
             # server reported is imap.google.com, but for a direct connection we
             # need to connect with imap.gmail.com:
@@ -261,11 +261,19 @@ class ThunderbirdImapReader(object):
         elif config.has_key(name + '.realhostname'):
             self.server = config[name + '.realhostname']
         self.port = port or {True: 993, False: 143}[self.ssl]
+        
+    def _equalServers(self, server1, server2):
+        gmailServers = ('imap.gmail.com', 'imap.google.com', 'imap.googlemail.com')
+        if server1 in gmailServers and server2 in gmailServers:
+            return True
+        else:
+            return server1 == server2
 
     def _getMail(self):
         if self.ssl:
             cn = imaplib.IMAP4_SSL(self.server, self.port)
         else:
+            print self.server, self.port
             cn = imaplib.IMAP4(self.server, self.port)
 
         if self._PASSWORDS.has_key((self.server, self.user, self.port)):
