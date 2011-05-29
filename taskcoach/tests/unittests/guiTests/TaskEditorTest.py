@@ -32,6 +32,7 @@ class TaskEditorTestCase(test.wxTestCase):
         self.today = date.Now()
         self.tomorrow = self.today + date.oneDay
         self.yesterday = self.today - date.oneDay
+        self.twodaysago = self.yesterday - date.oneDay
         self.taskFile = persistence.TaskFile()
         self.taskList = self.taskFile.tasks()
         self.effortList = self.taskFile.efforts()
@@ -339,6 +340,7 @@ class EditTaskTest(TaskEditorTestCase):
         self.assertEqual([], self.task.attachments()) # pylint: disable-msg=E1101
 
     def testChangeStartDateChangesDueDate(self):
+        self.settings.set('view', 'datestied', 'startdue')
         self.editor._interior[1]._startDateTimeEntry.set(self.yesterday)
         self.editor._interior[1]._dueDateTimeEntry.set(self.today)
         self.editor._interior[1]._startDateTimeEntry.set(self.today)
@@ -348,13 +350,56 @@ class EditTaskTest(TaskEditorTestCase):
                                self.tomorrow.toordinal(),
                                places=2)
 
+    def testChangeDueDateChangesStartDate(self):
+        self.settings.set('view', 'datestied', 'duestart')
+        self.editor._interior[1]._startDateTimeEntry.set(self.yesterday)
+        self.editor._interior[1]._dueDateTimeEntry.set(self.today)
+        self.editor._interior[1]._dueDateTimeEntry.set(self.yesterday)
+        # XXXFIXME: why do I have to call this explicitely ?
+        self.editor._interior[1].onDueDateTimeChanged(DummyEvent())
+        self.assertAlmostEqual(self.editor._interior[1]._startDateTimeEntry.get().toordinal(),
+                               self.twodaysago.toordinal(),
+                               places=2)
+
+    def testChangeStartDateDoesNotChangeDueDate(self):
+        self.settings.set('view', 'datestied', '')
+        self.editor._interior[1]._startDateTimeEntry.set(self.yesterday)
+        self.editor._interior[1]._dueDateTimeEntry.set(self.today)
+        self.editor._interior[1]._startDateTimeEntry.set(self.today)
+        # XXXFIXME: why do I have to call this explicitely ?
+        self.editor._interior[1].onStartDateTimeChanged(DummyEvent())
+        self.assertAlmostEqual(self.editor._interior[1]._dueDateTimeEntry.get().toordinal(),
+                               self.today.toordinal(),
+                               places=2)
+
+    def testChangeDueDateDoesNotChangeStartDate(self):
+        self.settings.set('view', 'datestied', '')
+        self.editor._interior[1]._startDateTimeEntry.set(self.yesterday)
+        self.editor._interior[1]._dueDateTimeEntry.set(self.today)
+        self.editor._interior[1]._dueDateTimeEntry.set(self.yesterday)
+        # XXXFIXME: why do I have to call this explicitely ?
+        self.editor._interior[1].onDueDateTimeChanged(DummyEvent())
+        self.assertAlmostEqual(self.editor._interior[1]._startDateTimeEntry.get().toordinal(),
+                               self.yesterday.toordinal(),
+                               places=2)
+
     def testChangeDueDateChangesDuration(self):
+        self.settings.set('view', 'datestied', 'startdue')
         self.editor._interior[1]._startDateTimeEntry.set(self.yesterday)
         self.editor._interior[1]._dueDateTimeEntry.set(self.today)
         self.editor._interior[1]._dueDateTimeEntry.set(self.tomorrow)
         # XXXFIXME: same remark as above.
         self.editor._interior[1].onDueDateTimeChanged(DummyEvent())
         self.assertEqual(self.editor._interior[1]._duration, date.oneDay * 2)
+
+    def testChangeStartDateChangesDuration(self):
+        self.settings.set('view', 'datestied', 'duestart')
+        self.editor._interior[1]._startDateTimeEntry.set(self.yesterday)
+        self.editor._interior[1]._dueDateTimeEntry.set(self.tomorrow)
+        self.editor._interior[1]._startDateTimeEntry.set(self.today)
+        # XXXFIXME: same remark as above.
+        self.editor._interior[1].onStartDateTimeChanged(DummyEvent())
+        self.assertEqual(self.editor._interior[1]._duration, date.oneDay)
 
 
 class DummyEvent(object):
