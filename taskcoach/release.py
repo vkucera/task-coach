@@ -35,7 +35,6 @@ Release steps:
     * Mac OS X 10.4:        'make dmg; release.py upload'
     * Ubuntu 10.04:         'make deb; release.py upload'
     * Fedora 14:            'make fedora; release.py upload'
-    * Fedora 13:            'make fedora; release.py upload'
                             'make rpm; release.py upload'
     * OpenSuse:             'make opensuse; release.py upload'
     * Windows:              'make windists; release.py upload'
