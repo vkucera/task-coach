@@ -36,6 +36,8 @@ exceptions in the log file.''', '3307836'),
 didn't work.''', '3058781'),
         Bug('''On Mac OS X, the main window would grow 11 pixels in height at
 each launch.'''),
+        Bug('''On Mac OS X, the editor dialogs would shrink a little each time
+they were opened.'''),
         ],
     featuresAdded=[
         Feature('''The default foreground color, background color, font and 
