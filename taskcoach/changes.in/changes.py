@@ -38,7 +38,9 @@ didn't work.''', '3058781'),
     featuresAdded=[
         Feature('''The default foreground color, background color, font and 
 icon of active, inactive, completed, over due and due soon tasks can be changed 
-in the preferences.''', 'http://uservoice.com/a/nLMgZ')
+in the preferences.''', 'http://uservoice.com/a/nLMgZ'),
+        Feature('''The way start and due dates are tied together when changing
+one of them is now configurable.'''),
         ]
     ),
             
