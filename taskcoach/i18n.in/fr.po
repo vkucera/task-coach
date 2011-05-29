@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: TaskCoach\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-05-28 02:42+0000\n"
-"PO-Revision-Date: 2011-05-21 10:08+0000\n"
-"Last-Translator: Frank Niessink <frank@niessink.com>\n"
+"PO-Revision-Date: 2011-05-29 12:14+0000\n"
+"Last-Translator: Jérôme Laheurte <fraca7@free.fr>\n"
 "Language-Team: Français <fraca7@free.fr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-29 10:17+0000\n"
+"X-Launchpad-Export-Date: 2011-05-29 12:16+0000\n"
 "X-Generator: Launchpad (build 13117)\n"
 "X-Poedit-Country: France\n"
 "X-Poedit-Language: fr_FR\n"
@@ -346,24 +346,25 @@ msgstr "Diminuer la priorité de \"%s\""
 
 #: taskcoachlib\config\settings.py:199
 msgid "Error while reading the %s-%s setting from %s.ini."
-msgstr ""
+msgstr "Erreur lors de la lecture du paramètre %s-%s depuis %s.ini."
 
 #: taskcoachlib\config\settings.py:200
 msgid "The value is: %s"
-msgstr ""
+msgstr "La valeur est: %s"
 
 #: taskcoachlib\config\settings.py:201
 msgid "The error is: %s"
-msgstr ""
+msgstr "L'erreur est: %s"
 
 #: taskcoachlib\config\settings.py:202
 msgid ""
 "%s will use the default value for the setting and should proceed normally."
 msgstr ""
+"%s utilisera la valeur par défaut et devrait fonctionner normalement."
 
 #: taskcoachlib\config\settings.py:203
 msgid "Settings error"
-msgstr ""
+msgstr "Erreur de paramètre"
 
 #: taskcoachlib\config\settings.py:223
 msgid ""
@@ -1362,23 +1363,23 @@ msgstr "Langue non trouvée?"
 
 #: taskcoachlib\gui\dialog\preferences.py:353
 msgid "Active tasks"
-msgstr ""
+msgstr "Tâches actives"
 
 #: taskcoachlib\gui\dialog\preferences.py:354
 msgid "Inactive tasks"
-msgstr ""
+msgstr "Tâches inactives"
 
 #: taskcoachlib\gui\dialog\preferences.py:355
 msgid "Completed tasks"
-msgstr ""
+msgstr "Tâches terminées"
 
 #: taskcoachlib\gui\dialog\preferences.py:356
 msgid "Overdue tasks"
-msgstr ""
+msgstr "Tâches en dépassement"
 
 #: taskcoachlib\gui\dialog\preferences.py:357
 msgid "Tasks due soon"
-msgstr ""
+msgstr "Tâches dues bientôt"
 
 #: taskcoachlib\gui\dialog\preferences.py:368
 msgid "Features"
@@ -1703,7 +1704,7 @@ msgstr ""
 
 #: taskcoachlib\gui\iocontroller.py:240
 msgid "Import template"
-msgstr ""
+msgstr "Importer un patron"
 
 #: taskcoachlib\gui\iocontroller.py:242
 msgid "%s template files (*.tsktmpl)|*.tsktmpl"
@@ -1714,6 +1715,8 @@ msgid ""
 "Cannot import template %s\n"
 "%s"
 msgstr ""
+"Impossible d'importer le patron %s\n"
+"%s"
 
 #: taskcoachlib\gui\iocontroller.py:277
 msgid "Exported %(count)d items to %(filename)s"
@@ -2177,11 +2180,11 @@ msgstr "Sauvegarde la tâche sélectionnée comme patron de tâche"
 
 #: taskcoachlib\gui\uicommand.py:570
 msgid "&Import template..."
-msgstr ""
+msgstr "&Importer un patron..."
 
 #: taskcoachlib\gui\uicommand.py:571
 msgid "Import a new template from a template file"
-msgstr ""
+msgstr "Importer un nouveau patron depuis un fichier"
 
 #: taskcoachlib\gui\uicommand.py:581
 msgid "Edit templates..."
@@ -2279,7 +2282,7 @@ msgstr "Importer des tâches depuis un fichier CSV"
 
 #: taskcoachlib\gui\uicommand.py:732 taskcoachlib\gui\uicommand.py:734
 msgid "Import CSV"
-msgstr ""
+msgstr "Importation CSV"
 
 #: taskcoachlib\gui\uicommand.py:741
 msgid "S&yncML synchronization..."
@@ -2476,11 +2479,11 @@ msgstr "Editer les objets sélectionnés"
 
 #: taskcoachlib\gui\uicommand.py:1298
 msgid "Edit &tracked task...\tShift-Alt-T"
-msgstr ""
+msgstr "Editer la &tâche suivie...\tShift-Alt-T"
 
 #: taskcoachlib\gui\uicommand.py:1299
 msgid "Edit the currently tracked task(s)"
-msgstr ""
+msgstr "Editer les tâches actuellement suivies"
 
 #: taskcoachlib\gui\uicommand.py:1316
 msgid "&Delete\tDEL"
@@ -2712,7 +2715,7 @@ msgstr "Version et information de contact à propos de %s"
 
 #: taskcoachlib\gui\uicommand.py:2198
 msgid "About %s"
-msgstr ""
+msgstr "A propos de %s"
 
 #: taskcoachlib\gui\uicommand.py:2205
 msgid "&License"
@@ -2724,7 +2727,7 @@ msgstr "Licence de %s"
 
 #: taskcoachlib\gui\uicommand.py:2214
 msgid "Check for update"
-msgstr ""
+msgstr "Vérifier les mises à jour"
 
 #: taskcoachlib\gui\uicommand.py:2215
 msgid "Check for the availability of a new version of %s"
@@ -2732,7 +2735,7 @@ msgstr "Vérifier la disponibilité d'une nouvelle version de %s"
 
 #: taskcoachlib\gui\uicommand.py:2233
 msgid "&Frequently asked questions"
-msgstr ""
+msgstr "Questions fréquemment posées"
 
 #: taskcoachlib\gui\uicommand.py:2234
 msgid "Browse the frequently asked questions and answers"
@@ -3653,11 +3656,11 @@ msgstr "Espace"
 
 #: taskcoachlib\gui\wizard\csvimport.py:49
 msgid "Colon"
-msgstr ""
+msgstr "Deux points"
 
 #: taskcoachlib\gui\wizard\csvimport.py:50
 msgid "Semicolon"
-msgstr ""
+msgstr "Point virgule"
 
 #: taskcoachlib\gui\wizard\csvimport.py:54
 msgid "Simple quote"
@@ -3669,15 +3672,15 @@ msgstr "Guillemet double"
 
 #: taskcoachlib\gui\wizard\csvimport.py:59
 msgid "Double it"
-msgstr ""
+msgstr "Le doubler"
 
 #: taskcoachlib\gui\wizard\csvimport.py:61
 msgid "Escape with"
-msgstr ""
+msgstr "L'échapper avec"
 
 #: taskcoachlib\gui\wizard\csvimport.py:72
 msgid "Import only the selected rows"
-msgstr ""
+msgstr "N'importer que les colonnes sélectionnées"
 
 #: taskcoachlib\gui\wizard\csvimport.py:75
 msgid "First line describes fields"
@@ -3693,7 +3696,7 @@ msgstr "Caractère d'échappement"
 
 #: taskcoachlib\gui\wizard\csvimport.py:94
 msgid "Escape quote"
-msgstr ""
+msgstr "Echapper les quotes"
 
 #: taskcoachlib\gui\wizard\csvimport.py:158
 msgid "Field #%d"
@@ -3715,11 +3718,11 @@ msgstr "Catégorie"
 
 #: taskcoachlib\gui\wizard\csvimport.py:246
 msgid "Column header in CSV file"
-msgstr ""
+msgstr "En-têtes de colonnes dans le fichier CSV"
 
 #: taskcoachlib\gui\wizard\csvimport.py:247
 msgid "%s attribute"
-msgstr ""
+msgstr "Attribut %s"
 
 #: taskcoachlib\gui\wizard\csvimport.py:288
 msgid "No field mapping."
@@ -4181,6 +4184,11 @@ msgid ""
 "only\n"
 "filter by one of the subcategories at a time."
 msgstr ""
+"Sous-catégories mutuellement exclusives: une case à cocher qui\n"
+"indique si les sous-catégories d'une catégorie sont mutuellement\n"
+"exclusives. Si elles le sont, un objet ne peut appartenir qu'à l'une\n"
+"de ces sous-catégories. En filtrant, vous ne pouvez filtrer que sur\n"
+"l'une des sous-catégories à la fois."
 
 #: taskcoachlib\help\__init__.py:258
 msgid ""
@@ -4479,6 +4487,10 @@ msgid ""
 "\n"
 "arise."
 msgstr ""
+"Le système de détection et de résolution des conflits est un\n"
+"contournement d'une limitation de Funambol. Il devrait fonctionner\n"
+"dans la plupart des cas, mais si plusieurs applications se synchronisent\n"
+"en même temps avec un compte, il peut y avoir des problèmes."
 
 #: taskcoachlib\help\__init__.py:416
 msgid "Probably some others..."
@@ -4879,6 +4891,11 @@ msgid ""
 "other\n"
 "to create notebooks."
 msgstr ""
+"Vous pouvez glisser et déplacer les vues pour créer pratiquement n'importe\n"
+"quelle mise en page. Lorsque vous commencez à glisser une vue, des indices\n"
+"apparaîssent pour vous montrer où vous pouvez la déposer. Les vues peuvent\n"
+"aussi être déposées les unes sur les autres pour créer une interface par "
+"onglet."
 
 #: taskcoachlib\help\__init__.py:586
 msgid ""
@@ -5181,6 +5198,11 @@ msgid ""
 "fellow users, discuss and request features and complain about bugs. Go to "
 "%(url)s and join today!"
 msgstr ""
+"%(name)s dispose d'une liste de courriels sur laquelle vous pouvez discuter "
+"de l'utilisation de %(name)s avec\r\n"
+"d'autres utilisateurs, discuter et demander des fonctionnalités et vous "
+"plaindre des bogues. Allez sur %(url)s et\r\n"
+"rejoignez-nous aujourd'hui !"
 
 #: taskcoachlib\help\tips.py:27
 msgid ""
