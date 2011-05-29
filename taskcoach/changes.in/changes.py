@@ -34,6 +34,8 @@ in edit dialogs.''', '3306827'),
 exceptions in the log file.''', '3307836'),
         Bug('''Drag and drop email from Thunderbird, PortableApps edition,
 didn't work.''', '3058781'),
+        Bug('''On Mac OS X, the main window would grow 11 pixels in height at
+each launch.'''),
         ],
     featuresAdded=[
         Feature('''The default foreground color, background color, font and 
