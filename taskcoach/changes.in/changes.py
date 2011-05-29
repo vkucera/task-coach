@@ -45,6 +45,7 @@ icon of active, inactive, completed, over due and due soon tasks can be changed
 in the preferences.''', 'http://uservoice.com/a/nLMgZ'),
         Feature('''The way start and due dates are tied together when changing
 one of them is now configurable.'''),
+        Feature('''Add percentage complete to CSV import fields.'''),
         ],
     distributionsChanged=[
         Distribution('''Removed support for Fedora 13.''')
