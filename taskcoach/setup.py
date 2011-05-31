@@ -25,7 +25,7 @@ from taskcoachlib import meta
 # Import this here so that py2exe and py2app can find the _pysyncml module:
 try:
     import taskcoachlib.syncml.core
-    executable = '/usr/bin/python2.5' # We only have pysyncml for python 2.5
+    executable = '/usr/bin/python2.6'
 except ImportError:
     executable = None # No need to force a specific python version
     print 'WARNING: SyncML is not supported on your platform.'
