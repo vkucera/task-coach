@@ -205,7 +205,7 @@ ubuntu = download_table(image='ubuntu',
                         platform_versions_supported='Ubuntu 10.04 LTS ("Lucid Lynx") and newer',
                         prerequisites=prerequisites26,
                         installation='''double click the package to start the 
-installer.''')
+installer. You can also use the PPA (<a href="https://answers.launchpad.net/taskcoach/+faq/1615">see the FAQ</a>).''')
 
 gentoo = download_table(image='gentoo',
                         download_url='http://packages.gentoo.org/package/app-office/taskcoach',
