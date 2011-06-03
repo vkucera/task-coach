@@ -128,7 +128,8 @@ class Viewer(wx.Panel):
         return self.widget
     
     def SetFocus(self):
-        self.widget.SetFocus()
+        if self.widget: # prevent PyDeadObjectError
+            self.widget.SetFocus()
             
     def createSorter(self, collection):
         ''' This method can be overridden to decorate the presentation with a 
@@ -472,18 +473,17 @@ class TreeViewer(Viewer): # pylint: disable-msg=W0223
         parents = [self.getItemParent(item) for item in removedItems]
         parents = [parent for parent in parents if parent in self.presentation()]
         parent = parents[0] if parents else None
-        siblings = self.children(parent) if parent else self.getRootItems()
+        siblings = self.children(parent)
         newSelection = siblings[min(len(siblings)-1, self.__selectionIndex)] if siblings else parent
         if newSelection:
             self.select([newSelection])
     
-    def updateSelection(self, *args, **kwargs):
+    def updateSelection(self, *args, **kwargs):        
         super(TreeViewer, self).updateSelection(*args, **kwargs)
         curselection = self.curselection()
         if curselection:
-            parent = self.getItemParent(curselection[0])
-            siblings = self.children(parent) if parent else self.getRootItems()
-            self.__selectionIndex = siblings.index(curselection[0])
+            siblings = self.children(self.getItemParent(curselection[0]))
+            self.__selectionIndex = siblings.index(curselection[0]) if curselection[0] in siblings else 0
         else:
             self.__selectionIndex = 0
             

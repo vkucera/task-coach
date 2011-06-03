@@ -73,8 +73,10 @@ class WindowSizeAndPositionTracker(Tracker):
         width, height = self.getSetting('size')
         if wx.Platform == '__WXMAC__':
             # Under MacOS 10.5 and 10.4, when setting the size, the actual window height
-            # is increased by 29 pixels. Dunno why, but it's highly annoying.
-            height -= 29
+            # is increased by 40 pixels. Dunno why, but it's highly annoying. This doesn't
+            # hold for dialogs though. Sigh.
+            if not isinstance(self._window, wx.Dialog):
+                height -= 40
         x, y = self.getSetting('position')
         self._window.SetDimensions(x, y, width, height)
         if self.getSetting('maximized'):

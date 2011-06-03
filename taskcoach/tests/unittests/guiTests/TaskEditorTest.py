@@ -80,12 +80,17 @@ class TaskEditorBySettingFocusMixin(TaskEditorSetterBase):
 
 
 class TaskEditorTestCase(test.wxTestCase):
+    extraSettings = list()
+
     def setUp(self):
         super(TaskEditorTestCase, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
+        for section, name, value in self.extraSettings:
+            self.settings.set(section, name, value)
         self.today = date.Now()
         self.tomorrow = self.today + date.oneDay
         self.yesterday = self.today - date.oneDay
+        self.twodaysago = self.yesterday - date.oneDay
         self.taskFile = persistence.TaskFile()
         self.taskList = self.taskFile.tasks()
         self.taskList.extend(self.createTasks())
@@ -352,3 +357,55 @@ class FocusTest(TaskEditorTestCase):
             wx.Yield() # pragma: no cover
         # pylint: disable-msg=W0212
         self.assertEqual(self.editor._interior[0]._subjectEntry, wx.Window_FindFocus())
+
+
+class DatesTestBase(TaskEditorSetterBase, TaskEditorTestCase):
+    def createTasks(self):
+        # pylint: disable-msg=W0201
+        self.task = task.Task('Task to edit')
+        return [self.task]
+
+    def getItems(self):
+        return [self.task]
+
+
+class DatesStartDueTest(DatesTestBase):
+    extraSettings = [('view', 'datestied', 'startdue')]
+
+    def testChangeStartDateChangesDueDate(self):
+        self.setStartDateTime(self.yesterday)
+        self.setDueDateTime(self.today)
+        self.setStartDateTime(self.today)
+        self.assertAlmostEqual(self.editor._interior[1]._dueDateTimeEntry.GetValue().toordinal(),
+                               self.tomorrow.toordinal(),
+                               places=2)
+
+
+class DatesDueStartBase(DatesTestBase):
+    extraSettings = [('view', 'datestied', 'duestart')]
+
+    def testChangeDueDateChangesStartDate(self):
+        self.setStartDateTime(self.yesterday)
+        self.setDueDateTime(self.today)
+        self.setDueDateTime(self.yesterday)
+        self.assertAlmostEqual(self.editor._interior[1]._startDateTimeEntry.GetValue().toordinal(),
+                               self.twodaysago.toordinal(),
+                               places=2)
+
+
+class DatesTest(DatesTestBase):
+    def testChangeStartDateDoesNotChangeDueDate(self):
+        self.setStartDateTime(self.yesterday)
+        self.setDueDateTime(self.today)
+        self.setStartDateTime(self.today)
+        self.assertAlmostEqual(self.editor._interior[1]._dueDateTimeEntry.GetValue().toordinal(),
+                               self.today.toordinal(),
+                               places=2)
+
+    def testChangeDueDateDoesNotChangeStartDate(self):
+        self.setStartDateTime(self.yesterday)
+        self.setDueDateTime(self.today)
+        self.setDueDateTime(self.yesterday)
+        self.assertAlmostEqual(self.editor._interior[1]._startDateTimeEntry.GetValue().toordinal(),
+                               self.yesterday.toordinal(),
+                               places=2)

@@ -44,6 +44,7 @@ defaults = { \
     'effortminuteinterval': '15',    # Generate times with this interval
     'snoozetimes': "[5, 10, 15, 30, 60, 120, 1440]",
     'perspective': '',               # The layout of the viewers in the main window
+    'datestied': '',                 # What to do when changing the start date or due date
 },
 'taskviewer': { \
     'title': '',                     # User supplied viewer title 

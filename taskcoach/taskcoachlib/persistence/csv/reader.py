@@ -59,6 +59,7 @@ class CSVReader(object):
             budget = TimeDelta()
             fixedFee = 0.0
             hourlyFee = 0.0
+            percentComplete = 0
 
             for idx, fieldValue in enumerate(line):
                 if kwargs['mappings'][idx] == _('ID'):
@@ -126,6 +127,11 @@ class CSVReader(object):
                         hourlyFee = float(fieldValue)
                     except ValueError:
                         pass
+                elif kwargs['mappings'][idx] == _('Percent complete'):
+                    try:
+                        percentComplete = max(0, min(100, int(fieldValue)))
+                    except ValueError:
+                        pass
 
             task = Task(subject=subject,
                         description=description.getvalue(),
@@ -135,7 +141,8 @@ class CSVReader(object):
                         completionDateTime=completionDate,
                         budget=budget,
                         fixedFee=fixedFee,
-                        hourlyFee=hourlyFee)
+                        hourlyFee=hourlyFee,
+                        percentageComplete=percentComplete)
 
             if id_ is not None:
                 tasksById[id_] = task

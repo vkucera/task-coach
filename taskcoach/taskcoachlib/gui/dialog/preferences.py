@@ -419,6 +419,11 @@ class TaskBehaviorPage(SettingsPage):
         self.addIntegerSetting('behavior', 'duesoonhours', 
             _("Number of hours that tasks are considered to be 'due soon'"), 
             minimum=0, maximum=90)
+        choices = [('', _('Nothing'))]
+        choices.append(('startdue', _('Changing the start date changes the due date')))
+        choices.append(('duestart', _('Changing the due date changes the start date')))
+        self.addChoiceSetting('view', 'datestied', _('Dates behaviour'), 
+               choices, helpText=_('What to do with start and due date if the other one is changed'))
         self.addMultipleChoiceSettings('view', 'snoozetimes', 
             _('Snooze times to offer in task reminder dialog'), 
             date.snoozeChoices[1:]) # Don't offer "Don't snooze" as a choice

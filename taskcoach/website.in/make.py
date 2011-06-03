@@ -205,7 +205,7 @@ ubuntu = download_table(image='ubuntu',
                         platform_versions_supported='Ubuntu 10.04 LTS ("Lucid Lynx") and newer',
                         prerequisites=prerequisites26,
                         installation='''double click the package to start the 
-installer.''')
+installer. You can also use the PPA (<a href="https://answers.launchpad.net/taskcoach/+faq/1615">see the FAQ</a>).''')
 
 gentoo = download_table(image='gentoo',
                         download_url='http://packages.gentoo.org/package/app-office/taskcoach',
@@ -222,14 +222,6 @@ opensuse = download_table(image='opensuse',
                           platform_versions_supported='OpenSuse 11.2',
                           prerequisites=prerequisites,
                           installation='double click the package to start the installer')
-
-fedora13 = download_table(image='fedora',
-                          download_url='%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.fc13.noarch.rpm',
-                          package_type='RPM package',
-                          platform='Fedora', platform_lower='fedora',
-                          platform_versions_supported='Fedora 13',
-                          prerequisites=prerequisites26,
-                          installation='<tt>$ sudo yum install --nogpgcheck %(filename_lower)s-%(version)s-1.fc*.noarch.rpm</tt>')
 
 fedora14 = download_table(image='fedora',
                           download_url='%(dist_download_prefix)s/%(filename_lower)s-%(version)s-1.fc14.noarch.rpm',
@@ -259,9 +251,8 @@ linux = download_table(image='linux',
 
 pages['download_for_linux'] = sep.join([download_header(platform='Linux',
                                                         release='%(version)s'), 
-                                        ubuntu, debian, fedora14, fedora13, 
-                                        gentoo, opensuse, redhat_el4and5, 
-                                        linux])
+                                        ubuntu, debian, fedora14, gentoo, 
+                                        opensuse, redhat_el4and5, linux])
 
 
 freeBSD = download_table(image='freebsd',

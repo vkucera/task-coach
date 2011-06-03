@@ -123,9 +123,9 @@ ppa-relnext: ppa-sign
 	cd build-natty; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
 
 ppa-release: ppa-sign
-	cd build-lucid; dput ppa:taskcoach-developers/taskcoach taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
-	cd build-maverick; dput ppa:taskcoach-developers/taskcoach taskcoach_$(TCVERSION)-0ubuntu10~maverick-1_source.changes
-	cd build-natty; dput ppa:taskcoach-developers/taskcoach taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
+	cd build-lucid; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
+	cd build-maverick; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu10~maverick-1_source.changes
+	cd build-natty; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
 
 dmg: prepare
 	$(PYTHON) make.py py2app

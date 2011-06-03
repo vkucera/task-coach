@@ -41,17 +41,41 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.19', 'May 26, 2011',
+Release('1.2.20', 'June ??, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Task Coach tried to use Python 2.5 on Ubuntu.''',
+            '3309089', '3309317'),
+        ],
+    ),
+
+Release('1.2.19', 'May 29, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Editing multiple items would hang Task Coach.''' ,'3305844'),
         Bug('''Changing the task of an effort record would make it 
 invisible.''', '3304940'),
+        Bug('''The keyboard shortcut for adding effort (Ctrl-E) wouldn't work 
+in edit dialogs.''', '3306827'),
+        Bug('''Closing Task Coach with a square task viewer open caused
+exceptions in the log file.''', '3307836'),
+        Bug('''Drag and drop email from Thunderbird, PortableApps edition,
+didn't work.''', '3058781'),
+        Bug('''On Mac OS X, the main window would grow 11 pixels in height at
+each launch.'''),
+        Bug('''On Mac OS X, the editor dialogs would shrink a little each time
+they were opened.'''),
         ],
     featuresAdded=[
         Feature('''The default foreground color, background color, font and 
 icon of active, inactive, completed, over due and due soon tasks can be changed 
-in the preferences.''', 'http://uservoice.com/a/nLMgZ')
+in the preferences.''', 'http://uservoice.com/a/nLMgZ'),
+        Feature('''The way start and due dates are tied together when changing
+one of them is now configurable.'''),
+        Feature('''Add percentage complete to CSV import fields.'''),
+        ],
+    distributionsChanged=[
+        Distribution('''Removed support for Fedora 13.''')
         ]
     ),
             

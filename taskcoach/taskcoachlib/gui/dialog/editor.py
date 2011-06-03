@@ -248,13 +248,13 @@ class DatesPage(Page):
         self.addReminderEntry()
         self.addLine()
         self.addRecurrenceEntry()
-        
+
     def addDateEntries(self):
         for label, taskMethodName in [(_('Start date'), 'startDateTime'),
-                                      (_('Due date'), 'dueDateTime'),
-                                      (_('Completion date'), 'completionDateTime')]:
+                                                (_('Due date'), 'dueDateTime'),
+                                                (_('Completion date'), 'completionDateTime')]:
             self.addDateEntry(label, taskMethodName)
-            
+
     def addDateEntry(self, label, taskMethodName):
         TaskMethodName = taskMethodName[0].capitalize() + taskMethodName[1:]
         if len(self.items) == 1:
@@ -266,7 +266,12 @@ class DatesPage(Page):
         setattr(self, '_current%s'%TaskMethodName, dateTime)
         dateTimeEntry = entry.DateTimeEntry(self, self.__settings, dateTime)
         setattr(self, '_%sEntry'%taskMethodName, dateTimeEntry)
-        commandClass = getattr(command, 'Edit%sCommand'%TaskMethodName)
+        if self.__settings.get('view', 'datestied') == 'startdue' and taskMethodName == 'startDateTime':
+            commandClass = command.EditStartDateTimeSyncCommand
+        elif self.__settings.get('view', 'datestied') == 'duestart' and taskMethodName == 'dueDateTime':
+            commandClass = command.EditDueDateTimeSyncCommand
+        else:
+            commandClass = getattr(command, 'Edit%sCommand'%TaskMethodName)
         eventType = 'task.%s'%taskMethodName
         datetimeSync = attributesync.AttributeSync('datetime', dateTimeEntry, 
             dateTime, self.items, commandClass, entry.EVT_DATETIMEENTRY, 
@@ -274,12 +279,6 @@ class DatesPage(Page):
         setattr(self, '_%sSync'%taskMethodName, datetimeSync) 
         self.addEntry(label, dateTimeEntry)
         dateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeChanged)
-        self._duration = None
-        if len(self.items) == 1:
-            dueDateTime = self.items[0].dueDateTime()
-            startDateTime = self.items[0].startDateTime()
-            if dueDateTime != date.DateTime() and startDateTime != date.DateTime():
-                self._duration = dueDateTime - startDateTime
 
     def addReminderEntry(self):
         # pylint: disable-msg=W0201
@@ -314,8 +313,8 @@ class DatesPage(Page):
                     timeLeft=self._dueDateTimeEntry,
                     reminder=self._reminderDateTimeEntry,
                     recurrence=self._recurrenceEntry)
-    
-    def onDateTimeChanged(self, event=None):
+
+    def onDateTimeChanged(self, event):
         ''' Called when one of the DateTimeEntries is changed by the user. 
             Update the suggested reminder if no reminder was set by the user. '''
         if event:        
@@ -757,7 +756,13 @@ class EditBook(widgets.Notebook):
                 self.AddPage(page, page.pageTitle, page.pageIcon)
                 pageNames.append(pageName)
         return pageNames
-    
+
+    def getPage(self, pageName):
+        for index in range(self.GetPageCount()):
+            if pageName == self[index].pageName:
+                return self[index]
+        return None
+        
     def allPageNamesInUserOrder(self):
         ''' Return all pages names in the order stored in the settings. The
             settings may not contain all pages (e.g. because a feature was
@@ -906,6 +911,9 @@ class EffortEditBook(Page):
         self._settings = settings
         self._taskFile = taskFile
         super(EffortEditBook, self).__init__(efforts, parent, *args, **kwargs)
+        
+    def getPage(self, pageName):
+        return None # An EffortEditBook is not really a notebook...
         
     def addEntries(self):
         self.addTaskEntry()
@@ -1065,13 +1073,25 @@ class Editor(widgets.ButtonLessDialog):
         self._dimensionsTracker = windowdimensionstracker.WindowSizeAndPositionTracker(self, settings, '%sdialog' % self.EditBookClass.object)
         
     def createUICommands(self):
+        # FIXME: keyboard shortcuts are hardcoded here, but they can be 
+        # changed in the translations
+        # FIXME: there are more keyboard shortcuts that don't work in dialogs atm 
+        newEffortId = wx.NewId()
         table = wx.AcceleratorTable([(wx.ACCEL_CMD, ord('Z'), wx.ID_UNDO),
-                                     (wx.ACCEL_CMD, ord('Y'), wx.ID_REDO)])
+                                     (wx.ACCEL_CMD, ord('Y'), wx.ID_REDO),
+                                     (wx.ACCEL_CMD, ord('E'), newEffortId)])
         self._interior.SetAcceleratorTable(table)
         self.undoCommand = uicommand.EditUndo()
         self.redoCommand = uicommand.EditRedo()
+        effortPage = self._interior.getPage('effort') 
+        effortViewer = effortPage.viewer if effortPage else None 
+        self.newEffortCommand = uicommand.EffortNew(viewer=effortViewer,
+                                                    taskList=self._taskFile.tasks(),
+                                                    effortList=self._taskFile.efforts(),
+                                                    settings=self._settings)
         self.undoCommand.bind(self._interior, wx.ID_UNDO)
         self.redoCommand.bind(self._interior, wx.ID_REDO)
+        self.newEffortCommand.bind(self._interior, newEffortId)
                         
     def createInterior(self):
         return self.EditBookClass(self._panel, self._items, 

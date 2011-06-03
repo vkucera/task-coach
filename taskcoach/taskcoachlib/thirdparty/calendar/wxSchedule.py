@@ -41,8 +41,6 @@ class wxSchedule( wx.EvtHandler ):
 		
 		self._color			= self.SCHEDULE_DEFAULT_COLOR
 		self._font                      = wx.NORMAL_FONT
-		self._font.SetPointSize(10)
-		self._font.SetWeight(wx.FONTWEIGHT_NORMAL)
 		self._foreground                = self.SCHEDULE_DEFAULT_FOREGROUND
 		self._category		= "Work"
 		self._description	= ''
@@ -196,8 +194,6 @@ class wxSchedule( wx.EvtHandler ):
 
 		if font is None:
 			self._font = wx.NORMAL_FONT
-			self._font.SetPointSize(10)
-			self._font.SetWeight(wx.FONTWEIGHT_NORMAL)
 		else:
 			self._font = font
 

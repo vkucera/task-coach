@@ -221,6 +221,7 @@ class CSVImportMappingPage(wiz.WizardPageSimple):
             (_('Budget'), False),
             (_('Fixed fee'), False),
             (_('Hourly fee'), False),
+            (_('Percent complete'), False),
             ]
         self.choices = []
         self.interior = wx.ScrolledWindow(self)
