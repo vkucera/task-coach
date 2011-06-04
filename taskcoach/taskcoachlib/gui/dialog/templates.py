@@ -19,6 +19,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 from taskcoachlib import widgets, persistence
 from taskcoachlib.i18n import _
+from taskcoachlib.thirdparty.deltaTime import nlTimeExpression
+
+
+class TimeExpressionEntry(wx.TextCtrl):
+    def __init__(self, *args, **kwargs):
+        super(TimeExpressionEntry, self).__init__(*args, **kwargs)
+
+        self.__defaultColor = self.GetBackgroundColour()
+        self.__invalidColor = wx.Colour(128, 0, 0)
+
+        wx.EVT_TEXT(self, wx.ID_ANY, self._onTextChanged)
+
+    def isValid(self):
+        if self.GetValue():
+            try:
+                res = nlTimeExpression.parseString(self.GetValue())
+            except:
+                return False
+            return 'calculatedTime' in res
+        return True # Empty is valid.
+
+    def _onTextChanged(self, event):
+        event.Skip()
+        self.SetBackgroundColour(self.__defaultColor if self.isValid() else self.__invalidColor)
 
 
 class TemplatesDialog(widgets.Dialog):
