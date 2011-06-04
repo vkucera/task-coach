@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, dialog, colorselect
 from taskcoachlib.i18n import _
-from taskcoachlib.thirdparty.calendar import wxSCHEDULER_DAILY, wxSCHEDULER_WEEKLY, \
+from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_DAILY, wxSCHEDULER_WEEKLY, \
      wxSCHEDULER_MONTHLY, wxSCHEDULER_NEXT, wxSCHEDULER_PREV, wxSCHEDULER_TODAY, \
      wxSCHEDULER_HORIZONTAL, wxSCHEDULER_VERTICAL
 import  wx.lib.colourselect as  csel

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, operator
-from taskcoachlib.thirdparty.calendar import wxScheduler, wxSchedule, \
+from taskcoachlib.thirdparty.wxScheduler import wxScheduler, wxSchedule, \
     EVT_SCHEDULE_ACTIVATED, EVT_SCHEDULE_RIGHT_CLICK, \
     EVT_SCHEDULE_DCLICK, EVT_PERIODWIDTH_CHANGED
 from taskcoachlib.domain import date

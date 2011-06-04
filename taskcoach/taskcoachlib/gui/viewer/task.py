@@ -25,7 +25,7 @@ from taskcoachlib import patterns, command, widgets, domain
 from taskcoachlib.domain import task, date
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, render, dialog
-from taskcoachlib.thirdparty.calendar import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, \
+from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, \
     wxSCHEDULER_TODAY, wxSCHEDULER_HORIZONTAL, wxSCHEDULER_TODAY, wxSCHEDULER_MONTHLY, \
     wxFancyDrawer
 from taskcoachlib.widgets import CalendarConfigDialog
