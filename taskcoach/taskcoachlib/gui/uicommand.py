@@ -24,7 +24,7 @@ from taskcoachlib import patterns, meta, command, help, widgets, persistence, th
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import base, task, note, category, attachment, effort
 from taskcoachlib.mailer import writeMail
-from taskcoachlib.thirdparty.calendar import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, wxSCHEDULER_TODAY
+from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, wxSCHEDULER_TODAY
 from taskcoachlib.thirdparty import desktop
 from taskcoachlib.gui.wizard import CSVImportWizard
 import dialog, render, viewer, printer

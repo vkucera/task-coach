@@ -24,6 +24,26 @@ from taskcoachlib import persistence, config
 from taskcoachlib.domain import date, task
 
 
+class XMLTemplateReaderTestCase(test.TestCase):
+    def testConvertNow(self):
+        self.assertEqual(persistence.TemplateXMLReader.convertOldFormat('Now()'), 'now')
+
+    def testConvertToday(self):
+        self.assertEqual(persistence.TemplateXMLReader.convertOldFormat('Today()'), '00:00 AM today')
+
+    def testConvertTomorrow(self):
+        self.assertEqual(persistence.TemplateXMLReader.convertOldFormat('Tomorrow()'), '11:59 PM tomorrow')
+
+    def testConvertEndOfDay(self):
+        self.assertEqual(persistence.TemplateXMLReader.convertOldFormat('Now().endOfDay()'), '11:59 PM today')
+
+    def testConvertTomorrow2(self):
+        self.assertEqual(persistence.TemplateXMLReader.convertOldFormat('Now().endOfDay() + oneDay'), '11:59 PM tomorrow')
+
+    def testConvertDelta(self):
+        self.assertEqual(persistence.TemplateXMLReader.convertOldFormat('Now() + TimeDelta(2, 1861, 0)'), '2911 minutes from now')
+
+
 class XMLReaderTestCase(test.TestCase):
     tskversion = 'Subclass responsibility'
 

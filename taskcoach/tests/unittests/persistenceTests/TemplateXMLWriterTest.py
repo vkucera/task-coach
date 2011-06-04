@@ -43,17 +43,17 @@ class TemplateXMLWriterTestCase(test.TestCase):
         self.expectInXML('<tasks>\n<task id="%s" status="1"/>\n</tasks>'%self.task.id())
         
     def testTaskWithStartDateTime(self):
-        self.task.setStartDateTime(date.Now())
-        self.expectInXML('startdatetmpl="Now() + TimeDelta(')
+        self.task.setStartDateTime(date.Now() + date.TimeDelta(minutes=31))
+        self.expectInXML('startdatetmpl="30 minutes from now')
         
     def testTaskWithDueDateTime(self):
-        self.task.setDueDateTime(date.Now())
-        self.expectInXML('duedatetmpl="Now() + TimeDelta(')
+        self.task.setDueDateTime(date.Now() + date.TimeDelta(minutes=13))
+        self.expectInXML('duedatetmpl="12 minutes from now')
         
     def testTaskWithCompletionDateTime(self):
-        self.task.setCompletionDateTime(date.Now())
-        self.expectInXML('completiondatetmpl="Now() + TimeDelta(')
+        self.task.setCompletionDateTime(date.Now() + date.TimeDelta(minutes=5))
+        self.expectInXML('completiondatetmpl="4 minutes from now')
         
     def testTaskWithReminder(self):
         self.task.setReminder(date.Now() + date.TimeDelta(seconds=10))
-        self.expectInXML('remindertmpl="Now() + TimeDelta(')
+        self.expectInXML('remindertmpl="0 minutes from now')

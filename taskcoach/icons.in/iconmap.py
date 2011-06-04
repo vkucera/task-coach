@@ -152,7 +152,7 @@ iconlist = [
 ('person_photo_icon', 'actions', 'kgpg_photo', [16]),
 ('persons_icon', 'apps', 'kdmconfig', [16]),
 ('sign_warning_icon', 'actions', 'messagebox_warning', [16]),
-('symbol_plus_icon', 'actions', 'edit_add', [16]),
+('symbol_plus_icon', 'actions', 'edit_add', [16, 32]),
 ('symbol_minus_icon', 'actions', 'edit_remove', [16]),
 ('star_yellow_icon', 'filesystems', 'services', [16]),
 ('star_red_icon', 'apps', 'mozilla', [16]),

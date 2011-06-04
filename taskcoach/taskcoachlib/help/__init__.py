@@ -567,7 +567,21 @@ task is created, the due, start and completion dates, if applicable, are
 reevaluated relatively to the current date. That means that if you create a 
 template from a task starting today and due tomorrow, every time the template 
 is instantiated, the start date will be replaced by the current date and the 
-due date by the current date plus one day.''')))
+due date by the current date plus one day.''')),
+    p(
+        _('''You can also add templates from the template editor (File/Edit
+templates), as well as edit the template's basic properties (dates and
+subject). Dates are provided in a human-readable format; the date editor
+will become red if Task Coach cannot figure out what it means. Example
+dates:''')),
+    ul(
+        li('3 pm tomorrow'),
+        li('next saturday'),
+        li('noon')
+    ),
+    p(
+        _('''Please note that this system is not localized; you must enter
+the dates in english.''')))
 
 _guiSection = sequence(
     h3(

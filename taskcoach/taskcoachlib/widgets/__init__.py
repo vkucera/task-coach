@@ -37,7 +37,7 @@ from tooltip import ToolTipMixin, SimpleToolTip
 from dirchooser import DirectoryChooser
 from fontpicker import FontPickerCtrl
 from syncmlwarning import SyncMLWarningDialog
-from calendar import Calendar
+from calendarwidget import Calendar
 from calendarconfig import CalendarConfigDialog
 import masked
 try:

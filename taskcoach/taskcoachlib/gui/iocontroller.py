@@ -235,6 +235,7 @@ class IOController(object):
     def saveastemplate(self, task):
         templates = persistence.TemplateList(self.__settings.pathToTemplatesDir())
         templates.addTemplate(task)
+        templates.save()
 
     def importTemplate(self, showerror=wx.MessageBox):
         filename = self.__askUserForFile(_('Import template'),

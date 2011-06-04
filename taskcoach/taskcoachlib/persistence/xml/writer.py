@@ -254,10 +254,20 @@ class TemplateXMLWriter(XMLWriter):
                              ('duedate', 'dueDateTime'),
                              ('completiondate', 'completionDateTime'),
                              ('reminder', 'reminder')]:
-            dateTime = getattr(task, getter)()
-            if dateTime not in (None, date.DateTime()):
-                node.removeAttribute(name)
-                delta = dateTime - date.Now()
-                node.setAttribute(name + 'tmpl', 'Now() + %s' % repr(delta))
+            if hasattr(task, name + 'tmpl'):
+                value = getattr(task, name + 'tmpl') or None
+            else:
+                dateTime = getattr(task, getter)()
+                if dateTime not in (None, date.DateTime()):
+                    delta = dateTime - date.Now()
+                    value = '%d minutes from now' % (delta.days * 26 * 60 + delta.seconds // 60)
+                else:
+                    value = None
+
+            if value is None:
+                if node.hasAttribute(name):
+                    node.removeAttribute(name)
+            else:
+                node.setAttribute(name + 'tmpl', value)
 
         return node
