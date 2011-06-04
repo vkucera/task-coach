@@ -495,6 +495,10 @@ class TemplateXMLReader(XMLReader):
             return '11:59 PM today'
         if expr == 'Now().endOfDay() + oneDay':
             return '11:59 PM tomorrow'
+        if expr == 'Today()':
+            return '00:00 AM today'
+        if expr == 'Tomorrow()':
+            return '11:59 PM tomorrow'
         context = dict()
         context.update(date.__dict__)
         context.update(datetime.__dict__)
