@@ -41,10 +41,20 @@ class TemplateList(object):
 
         self._toDelete = []
 
-    def save(self):
-        ''' Right now only the order is saved. '''
+    def _copyTask(self, task):
+        copy = task.copy()
+        for name in ['startdatetmpl', 'duedatetmpl', 'completiondatetmpl', 'remindertmpl']:
+            if hasattr(task, name):
+                setattr(copy, name, getattr(task, name))
+        return copy
 
+    def save(self):
         pickle.dump([name for task, name in self._tasks], file(os.path.join(self._path, 'list.pickle'), 'wb'))
+
+        for task, name in self._tasks:
+            templateFile = codecs.open(os.path.join(self._path, name), 'w', 'utf-8')
+            writer = TemplateXMLWriter(templateFile)
+            writer.write(self._copyTask(task))
 
         for task, name in self._toDelete:
             os.remove(os.path.join(self._path, name))
@@ -59,7 +69,6 @@ class TemplateList(object):
         writer.write(task.copy())
         templateFile.close()
         self._tasks.append((TemplateXMLReader(file(filename, 'rU')).read(), os.path.split(filename)[-1]))
-        self.save()
 
     def deleteTemplate(self, idx):
         self._toDelete.append(self._tasks[idx])

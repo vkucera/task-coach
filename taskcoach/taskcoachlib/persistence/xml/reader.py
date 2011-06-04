@@ -464,27 +464,27 @@ class XMLReader(object):
 
 
 class TemplateXMLReader(XMLReader):
-    def __init__(self, *args, **kwargs):
-        super(TemplateXMLReader, self).__init__(*args, **kwargs)
-
-        self.__context = dict()
-        self.__context.update(date.__dict__)
-        self.__context.update(datetime.__dict__)
-
     def read(self):
         return super(TemplateXMLReader, self).read()[0][0]
 
     def _parseTaskNode(self, taskNode):
+        attrs = dict()
         for name in ['startdate', 'duedate', 'completiondate', 'reminder']:
             if taskNode.attrib.has_key(name + 'tmpl'):
                 if self.tskversion() < 32:
                     value = TemplateXMLReader.convertOldFormat(taskNode.attrib[name + 'tmpl'])
                 else:
                     value = taskNode.attrib[name + 'tmpl']
+                attrs[name] = value
                 taskNode.attrib[name] = str(nlTimeExpression.parseString(value).calculatedTime)
+            else:
+                attrs[name] = None
         if taskNode.attrib.has_key('subject'):
             taskNode.attrib['subject'] = translate(taskNode.attrib['subject'])
-        return super(TemplateXMLReader, self)._parseTaskNode(taskNode)
+        task = super(TemplateXMLReader, self)._parseTaskNode(taskNode)
+        for name, value in attrs.items():
+            setattr(task, name + 'tmpl', value)
+        return task
 
     @staticmethod
     def convertOldFormat(expr):

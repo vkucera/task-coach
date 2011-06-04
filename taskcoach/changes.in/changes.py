@@ -23,10 +23,13 @@ from changetypes import *
 releases = [
 
 Release('1.2.20', 'June ??, 2011',
-    summary='''This is a bugfix release.''',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Task Coach tried to use Python 2.5 on Ubuntu.''',
             '3309089', '3309317'),
+        ],
+    featuresAdded=[
+        Feature('''Basic editing (dates, subject) of task templates.'''),
         ],
     ),
 

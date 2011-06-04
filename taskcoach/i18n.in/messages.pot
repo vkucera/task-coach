@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-06-04 07:14+CEST\n"
+"POT-Creation-Date: 2011-06-04 09:17+CEST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,7 +55,7 @@ msgstr ""
 msgid "Copy \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/base.py:177 taskcoachlib/gui/dialog/templates.py:51
+#: taskcoachlib/command/base.py:177 taskcoachlib/gui/dialog/templates.py:79
 msgid "Delete"
 msgstr ""
 
@@ -842,6 +842,7 @@ msgid "Edit to change all subjects"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:89
+#: taskcoachlib/gui/dialog/templates.py:114
 #: taskcoachlib/gui/viewer/attachment.py:77
 #: taskcoachlib/gui/viewer/base.py:270 taskcoachlib/gui/viewer/category.py:85
 #: taskcoachlib/gui/viewer/note.py:110 taskcoachlib/gui/viewer/task.py:696
@@ -920,7 +921,9 @@ msgstr ""
 msgid "Dates"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:367 taskcoachlib/gui/viewer/task.py:756
+#: taskcoachlib/gui/dialog/editor.py:367
+#: taskcoachlib/gui/dialog/templates.py:116
+#: taskcoachlib/gui/viewer/task.py:756
 #: taskcoachlib/gui/wizard/csvimport.py:218
 #: taskcoachlib/persistence/csv/reader.py:85
 #: taskcoachlib/widgets/calendarconfig.py:79
@@ -928,7 +931,9 @@ msgstr ""
 msgid "Start date"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:368 taskcoachlib/gui/viewer/task.py:757
+#: taskcoachlib/gui/dialog/editor.py:368
+#: taskcoachlib/gui/dialog/templates.py:118
+#: taskcoachlib/gui/viewer/task.py:757
 #: taskcoachlib/gui/wizard/csvimport.py:219
 #: taskcoachlib/persistence/csv/reader.py:92
 #: taskcoachlib/widgets/calendarconfig.py:80
@@ -936,7 +941,9 @@ msgstr ""
 msgid "Due date"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/editor.py:369 taskcoachlib/gui/viewer/task.py:758
+#: taskcoachlib/gui/dialog/editor.py:369
+#: taskcoachlib/gui/dialog/templates.py:120
+#: taskcoachlib/gui/viewer/task.py:758
 #: taskcoachlib/gui/wizard/csvimport.py:220
 #: taskcoachlib/persistence/csv/reader.py:99
 #: taskcoachlib/widgets/conflict.py:210
@@ -944,7 +951,9 @@ msgid "Completion date"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:393
-#: taskcoachlib/gui/dialog/reminder.py:29 taskcoachlib/gui/viewer/task.py:769
+#: taskcoachlib/gui/dialog/reminder.py:29
+#: taskcoachlib/gui/dialog/templates.py:122
+#: taskcoachlib/gui/viewer/task.py:769
 msgid "Reminder"
 msgstr ""
 
@@ -1120,15 +1129,15 @@ msgstr ""
 msgid "Export only the selected items"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:85 taskcoachlib/gui/iocontroller.py:292
+#: taskcoachlib/gui/dialog/export.py:85 taskcoachlib/gui/iocontroller.py:293
 msgid "Export as CSV"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:90 taskcoachlib/gui/iocontroller.py:297
+#: taskcoachlib/gui/dialog/export.py:90 taskcoachlib/gui/iocontroller.py:298
 msgid "Export as iCalendar"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:101 taskcoachlib/gui/iocontroller.py:286
+#: taskcoachlib/gui/dialog/export.py:101 taskcoachlib/gui/iocontroller.py:287
 msgid "Export as HTML"
 msgstr ""
 
@@ -1534,8 +1543,12 @@ msgstr ""
 msgid "Tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/templates.py:40
+#: taskcoachlib/gui/dialog/templates.py:68
 msgid "Template"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/templates.py:224
+msgid "New task template"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/version.py:37
@@ -1660,63 +1673,63 @@ msgid ""
 "%s"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:240
+#: taskcoachlib/gui/iocontroller.py:241
 msgid "Import template"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:242
+#: taskcoachlib/gui/iocontroller.py:243
 msgid "%s template files (*.tsktmpl)|*.tsktmpl"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:248
+#: taskcoachlib/gui/iocontroller.py:249
 msgid ""
 "Cannot import template %s\n"
 "%s"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:277
+#: taskcoachlib/gui/iocontroller.py:278
 msgid "Exported %(count)d items to %(filename)s"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:312
+#: taskcoachlib/gui/iocontroller.py:313
 msgid "Finished synchronization"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:319
+#: taskcoachlib/gui/iocontroller.py:320
 msgid "Note conflict"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:323
+#: taskcoachlib/gui/iocontroller.py:324
 msgid "Task conflict"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:335
+#: taskcoachlib/gui/iocontroller.py:336
 msgid "Synchronization status"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:343
+#: taskcoachlib/gui/iocontroller.py:344
 msgid ""
 "Cannot open %s\n"
 "%s"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:378
+#: taskcoachlib/gui/iocontroller.py:379
 msgid ""
 "A file named %s already exists.\n"
 "Do you want to replace it?"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:390
+#: taskcoachlib/gui/iocontroller.py:391
 msgid ""
 "You have unsaved changes.\n"
 "Save before closing?"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:391
+#: taskcoachlib/gui/iocontroller.py:392
 msgid "%s: save changes?"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:401
+#: taskcoachlib/gui/iocontroller.py:402
 msgid ""
 "Cannot open %s because it is locked.\n"
 "\n"
@@ -1728,22 +1741,22 @@ msgid ""
 "Break the lock?"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:409 taskcoachlib/gui/iocontroller.py:416
+#: taskcoachlib/gui/iocontroller.py:410 taskcoachlib/gui/iocontroller.py:417
 msgid "%s: file locked"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:414
+#: taskcoachlib/gui/iocontroller.py:415
 msgid ""
 "Cannot acquire a lock because locking is not supported\n"
 "on the location of %s.\n"
 "Open %s unlocked?"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:421
+#: taskcoachlib/gui/iocontroller.py:422
 msgid "Closed %s"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:426
+#: taskcoachlib/gui/iocontroller.py:427
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
 msgstr ""
 
