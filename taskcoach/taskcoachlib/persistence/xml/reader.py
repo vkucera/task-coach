@@ -481,9 +481,7 @@ class TemplateXMLReader(XMLReader):
                     value = TemplateXMLReader.convertOldFormat(taskNode.attrib[name + 'tmpl'])
                 else:
                     value = taskNode.attrib[name + 'tmpl']
-                print '====', value
                 taskNode.attrib[name] = str(nlTimeExpression.parseString(value).calculatedTime)
-                print '====', taskNode.attrib[name]
         if taskNode.attrib.has_key('subject'):
             taskNode.attrib['subject'] = translate(taskNode.attrib['subject'])
         return super(TemplateXMLReader, self)._parseTaskNode(taskNode)
