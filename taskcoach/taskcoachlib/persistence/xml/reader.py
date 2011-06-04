@@ -23,6 +23,7 @@ import xml.etree.ElementTree as ET
 from taskcoachlib.domain import date, effort, task, category, note, attachment
 from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
+from taskcoachlib.thirdparty.deltaTime import nlTimeExpression
 from taskcoachlib.i18n import translate
 from taskcoachlib import meta, patterns
 from .. import sessiontempfile # pylint: disable-msg=F0401
@@ -52,6 +53,9 @@ class XMLReader(object):
     def __init__(self, fd):
         self.__fd = fd
         self.__defaultFontSize = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT).GetPointSize()
+
+    def tskversion(self):
+        return self.__tskversion
 
     def read(self):
         if self._hasBrokenLines():
@@ -473,7 +477,28 @@ class TemplateXMLReader(XMLReader):
     def _parseTaskNode(self, taskNode):
         for name in ['startdate', 'duedate', 'completiondate', 'reminder']:
             if taskNode.attrib.has_key(name + 'tmpl'):
-                taskNode.attrib[name] = str(eval(taskNode.attrib[name + 'tmpl'], self.__context))
+                if self.tskversion() < 32:
+                    value = TemplateXMLReader.convertOldFormat(taskNode.attrib[name + 'tmpl'])
+                else:
+                    value = taskNode.attrib[name + 'tmpl']
+                print '====', value
+                taskNode.attrib[name] = str(nlTimeExpression.parseString(value).calculatedTime)
+                print '====', taskNode.attrib[name]
         if taskNode.attrib.has_key('subject'):
             taskNode.attrib['subject'] = translate(taskNode.attrib['subject'])
         return super(TemplateXMLReader, self)._parseTaskNode(taskNode)
+
+    @staticmethod
+    def convertOldFormat(expr):
+        # Built-in templates
+        if expr == 'Now()':
+            return 'now'
+        if expr == 'Now().endOfDay()':
+            return '11:59 PM today'
+        if expr == 'Now().endOfDay() + oneDay':
+            return '11:59 PM tomorrow'
+        context = dict()
+        context.update(date.__dict__)
+        context.update(datetime.__dict__)
+        delta = eval(expr, context) - date.Now()
+        return '%d minutes from now' % (delta.days * 24 * 60 + (delta.seconds // 60))
