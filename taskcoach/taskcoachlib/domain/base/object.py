@@ -201,6 +201,10 @@ class Object(SynchronizedObject):
     
     def copy(self):
         return self.__class__(**self.__getcopystate__())
+
+    @classmethod
+    def monitoredAttributes(klass):
+        return ['subject', 'description', 'foregroundColor', 'backgroundColor', 'font', 'icon', 'selectedIcon']
  
     # Id:
        
@@ -377,8 +381,12 @@ class CompositeObject(Object, patterns.ObservableComposite):
         state.update(dict(expandedContexts=self.expandedContexts()))
         return state
 
+    @classmethod
+    def monitoredAttributes(klass):
+        return Object.monitoredAttributes() + ['expandedContexts']
+
     # Subject:
-    
+
     def subject(self, recursive=False): # pylint: disable-msg=W0221
         subject = super(CompositeObject, self).subject()
         if recursive and self.parent():
@@ -440,7 +448,12 @@ class CompositeObject(Object, patterns.ObservableComposite):
 
     def expansionChangedEvent(self, event):
         event.addSource(self, type=self.expansionChangedEventType())
-    
+
+    # The ChangeMonitor expects this...
+    @classmethod
+    def expandedContextsChangedEventType(class_):
+        return class_.expansionChangedEventType()
+
     # Color:
 
     def foregroundColor(self, recursive=True):
