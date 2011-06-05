@@ -23,6 +23,7 @@ import xml.etree.ElementTree as ET
 from taskcoachlib.domain import date, effort, task, category, note, attachment
 from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
+from taskcoachlib.thirdparty.deltaTime import nlTimeExpression
 from taskcoachlib.i18n import translate
 from taskcoachlib import meta, patterns
 from .. import sessiontempfile # pylint: disable-msg=F0401
@@ -52,6 +53,9 @@ class XMLReader(object):
     def __init__(self, fd):
         self.__fd = fd
         self.__defaultFontSize = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT).GetPointSize()
+
+    def tskversion(self):
+        return self.__tskversion
 
     def read(self):
         if self._hasBrokenLines():
@@ -460,20 +464,43 @@ class XMLReader(object):
 
 
 class TemplateXMLReader(XMLReader):
-    def __init__(self, *args, **kwargs):
-        super(TemplateXMLReader, self).__init__(*args, **kwargs)
-
-        self.__context = dict()
-        self.__context.update(date.__dict__)
-        self.__context.update(datetime.__dict__)
-
     def read(self):
         return super(TemplateXMLReader, self).read()[0][0]
 
     def _parseTaskNode(self, taskNode):
+        attrs = dict()
         for name in ['startdate', 'duedate', 'completiondate', 'reminder']:
             if taskNode.attrib.has_key(name + 'tmpl'):
-                taskNode.attrib[name] = str(eval(taskNode.attrib[name + 'tmpl'], self.__context))
+                if self.tskversion() < 32:
+                    value = TemplateXMLReader.convertOldFormat(taskNode.attrib[name + 'tmpl'])
+                else:
+                    value = taskNode.attrib[name + 'tmpl']
+                attrs[name] = value
+                taskNode.attrib[name] = str(nlTimeExpression.parseString(value).calculatedTime)
+            else:
+                attrs[name] = None
         if taskNode.attrib.has_key('subject'):
             taskNode.attrib['subject'] = translate(taskNode.attrib['subject'])
-        return super(TemplateXMLReader, self)._parseTaskNode(taskNode)
+        task = super(TemplateXMLReader, self)._parseTaskNode(taskNode)
+        for name, value in attrs.items():
+            setattr(task, name + 'tmpl', value)
+        return task
+
+    @staticmethod
+    def convertOldFormat(expr):
+        # Built-in templates
+        if expr == 'Now()':
+            return 'now'
+        if expr == 'Now().endOfDay()':
+            return '11:59 PM today'
+        if expr == 'Now().endOfDay() + oneDay':
+            return '11:59 PM tomorrow'
+        if expr == 'Today()':
+            return '00:00 AM today'
+        if expr == 'Tomorrow()':
+            return '11:59 PM tomorrow'
+        context = dict()
+        context.update(date.__dict__)
+        context.update(datetime.__dict__)
+        delta = eval(expr, context) - date.Now()
+        return '%d minutes from now' % (delta.days * 24 * 60 + (delta.seconds // 60))

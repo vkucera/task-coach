@@ -44,6 +44,7 @@ defaults = { \
     'effortminuteinterval': '15',    # Generate times with this interval
     'snoozetimes': "[5, 10, 15, 30, 60, 120, 1440]",
     'perspective': '',               # The layout of the viewers in the main window
+    'datestied': '',                 # What to do when changing the start date or due date
 },
 'taskviewer': { \
     'title': '',                     # User supplied viewer title 
@@ -319,13 +320,13 @@ defaults = { \
     'size': '(600, 400)',   # Default size of the dialogs
     'position': '(-1, -1)', # Position of the dialog, undefined by default
     'maximized': 'False',   # Don't open the dialog maximized by default
-    'perspective': ''       # The layout of the tabs in the dialog
+    'perspectives': '{}'    # The layout of the tabs in the dialog
     },
 'categorydialog': { \
     'size': '(500, 300)',   # Default size of the dialogs
     'position': '(-1, -1)', # Position of the dialog, undefined by default
     'maximized': 'False',   # Don't open the dialog maximized by default
-    'perspective': ''       # The layout of the tabs in the dialog
+    'perspectives': '{}'    # The layout of the tabs in the dialog
     },
 'effortdialog': { \
     'size': '(500, 300)',   # Default size of the dialogs
@@ -336,13 +337,13 @@ defaults = { \
     'size': '(500, 300)',   # Default size of the dialogs
     'position': '(-1, -1)', # Position of the dialog, undefined by default
     'maximized': 'False',   # Don't open the dialog maximized by default
-    'perspective': ''       # The layout of the tabs in the dialog
+    'perspectives': '{}'    # The layout of the tabs in the dialog
     },
 'attachmentdialog': { \
     'size': '(500, 300)',   # Default size of the dialogs
     'position': '(-1, -1)', # Position of the dialog, undefined by default
     'maximized': 'False',   # Don't open the dialog maximized by default
-    'perspective': ''       # The layout of the tabs in the dialog
+    'perspectives': '{}'    # The layout of the tabs in the dialog
     },
 'file': { \
     'recentfiles': '[]',
@@ -354,12 +355,30 @@ defaults = { \
     'attachmentbase': '',
     'inifileloaded': 'True',
     'inifileloaderror': '' },
-'color': { \
+'fgcolor': { \
     'activetasks': '(0, 0, 0, 255)',
     'completedtasks': '(0, 255, 0, 255)',
     'overduetasks': '(255, 0, 0, 255)',
     'inactivetasks': '(192, 192, 192, 255)',
     'duesoontasks': '(255, 128, 0, 255)' },
+'bgcolor': { \
+    'activetasks': '(255, 255, 255, 255)',
+    'completedtasks': '(255, 255, 255, 255)',
+    'overduetasks': '(255, 255, 255, 255)',
+    'inactivetasks': '(255, 255, 255, 255)',
+    'duesoontasks': '(255, 255, 255, 255)' },
+'font': { \
+    'activetasks': '',
+    'completedtasks': '',
+    'overduetasks': '',
+    'inactivetasks': '',
+    'duesoontasks': '' },
+'icon': { \
+    'activetasks': 'led_blue_icon',
+    'completedtasks': 'led_green_icon',
+    'overduetasks': 'led_red_icon',
+    'inactivetasks': 'led_grey_icon',
+    'duesoontasks': 'led_orange_icon' },
 'editor': { \
     'taskpages': '[]',        # Order of tabs in the task editor
     'categorypages': '[]',    # Order of tabs in the category editor

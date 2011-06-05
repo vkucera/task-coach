@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.0', 'May 13, 2011',
+Release('1.3.0', 'May 26, 2011',
     summary='''This release makes all edits done in dialogs immediate.''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -40,13 +40,54 @@ immediately to all open dialogs. This will prevent overwriting
 changes made in other dialogs.''', '1152561')
         ]
     ),
+
+Release('1.2.20', 'June ??, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
+    bugsFixed=[
+        Bug('''Task Coach tried to use Python 2.5 on Ubuntu.''',
+            '3309089', '3309317'),
+        ],
+    featuresAdded=[
+        Feature('''Basic editing (dates, subject) of task templates.'''),
+        ],
+    ),
+
+Release('1.2.19', 'May 29, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
+    bugsFixed=[
+        Bug('''Editing multiple items would hang Task Coach.''' ,'3305844'),
+        Bug('''Changing the task of an effort record would make it 
+invisible.''', '3304940'),
+        Bug('''The keyboard shortcut for adding effort (Ctrl-E) wouldn't work 
+in edit dialogs.''', '3306827'),
+        Bug('''Closing Task Coach with a square task viewer open caused
+exceptions in the log file.''', '3307836'),
+        Bug('''Drag and drop email from Thunderbird, PortableApps edition,
+didn't work.''', '3058781'),
+        Bug('''On Mac OS X, the main window would grow 11 pixels in height at
+each launch.'''),
+        Bug('''On Mac OS X, the editor dialogs would shrink a little each time
+they were opened.'''),
+        ],
+    featuresAdded=[
+        Feature('''The default foreground color, background color, font and 
+icon of active, inactive, completed, over due and due soon tasks can be changed 
+in the preferences.''', 'http://uservoice.com/a/nLMgZ'),
+        Feature('''The way start and due dates are tied together when changing
+one of them is now configurable.'''),
+        Feature('''Add percentage complete to CSV import fields.'''),
+        ],
+    distributionsChanged=[
+        Distribution('''Removed support for Fedora 13.''')
+        ]
+    ),
             
-Release('1.2.18', 'May 18, 2011',
+Release('1.2.18', 'May 21, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Make sure long menu texts don't overlap the keyboard shortcut.'''),
         Bug('''CSV import would crash on Mac OS X if the number of fields wasn't
-constant.''', '3295368'),
+constant.'''),
         Bug('''When starting or stopping an effort, the task's icon in the
 calendar viewer would not change.'''),
         Bug('''Session management wouldn't work on XFCE.'''),
@@ -71,6 +112,14 @@ tooltip window.''', 'http://uservoice.com/a/959Qc'),
 create any layout the user may want.'''),
         Feature('''CSV files may also have colons or semicolons as separators.'''),
         Feature('''It is possible to select which rows to import from a CSV file.'''),
+        Feature('''The CSV import wizard tries to match column headers from the 
+CSV file to task attributes.'''),
+        Feature('''The CSV import will reuse existing categories if the names
+match.'''),
+        ],
+    featuresRemoved=[
+        Feature('''Session management for X is temporarily removed, until we can
+fix the occasional crashes associated with it.''')
         ]
     ),
 

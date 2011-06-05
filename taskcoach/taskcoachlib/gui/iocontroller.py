@@ -191,7 +191,7 @@ class IOController(object):
     def saveselection(self, tasks, filename=None, showerror=wx.MessageBox,
                       TaskFileClass=persistence.TaskFile, fileExists=os.path.exists):
         if not filename:
-            filename = self.__askUserForFile(_('Save as'), 
+            filename = self.__askUserForFile(_('Save selection'), 
                 flag=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT, fileExists=fileExists)
             if not filename:
                 return False # User didn't enter a filename, cancel save
@@ -235,9 +235,10 @@ class IOController(object):
     def saveastemplate(self, task):
         templates = persistence.TemplateList(self.__settings.pathToTemplatesDir())
         templates.addTemplate(task)
+        templates.save()
 
-    def addtemplate(self, showerror=wx.MessageBox):
-        filename = self.__askUserForFile(_('Open template'),
+    def importTemplate(self, showerror=wx.MessageBox):
+        filename = self.__askUserForFile(_('Import template'),
             fileDialogOpts={'default_extension': 'tsktmpl',
                             'wildcard': _('%s template files (*.tsktmpl)|*.tsktmpl')%meta.name})
         if filename:
@@ -245,7 +246,7 @@ class IOController(object):
             try:
                 templates.copyTemplate(filename)
             except Exception, reason:
-                errorMessage = _('Cannot add template %s\n%s')%(filename, reason)
+                errorMessage = _('Cannot import template %s\n%s')%(filename, reason)
                 showerror(errorMessage, **self.__errorMessageOptions)
             
     def close(self, force=False):

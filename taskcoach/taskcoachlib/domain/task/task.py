@@ -73,7 +73,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.registerObserver = registerObserver = patterns.Publisher().registerObserver
         self.removeObserver = patterns.Publisher().removeObserver
         for eventType in 'active', 'inactive', 'completed', 'duesoon', 'overdue':
-            registerObserver(self.__computeRecursiveForegroundColor, 'color.%stasks')
+            registerObserver(self.__computeRecursiveForegroundColor, 'fgcolor.%stasks'%eventType)
+            registerObserver(self.__computeRecursiveBackgroundColor, 'bgcolor.%stasks'%eventType)
+            registerObserver(self.__computeRecursiveIcon, 'icon.%stasks'%eventType)
+            registerObserver(self.__computeRecursiveSelectedIcon, 'icon.%stasks'%eventType)
         registerObserver(self.onDueSoonHoursChanged, 'behavior.duesoonhours')
 
         now = date.Now()
@@ -595,6 +598,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return ('task.budgetLeft',)
 
     # Foreground color
+
+    def setForegroundColor(self, *args, **kwargs):
+        super(Task, self).setForegroundColor(*args, **kwargs)
+        self.__computeRecursiveForegroundColor()
     
     def foregroundColor(self, recursive=False):
         if not recursive:
@@ -606,7 +613,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         
     def __computeRecursiveForegroundColor(self, *args, **kwargs):
         fgColor = super(Task, self).foregroundColor(recursive=True)
-        statusColor = self.statusColor()
+        statusColor = self.statusFgColor()
         if statusColor == wx.BLACK:
             recursiveColor = fgColor
         elif fgColor == None:
@@ -616,25 +623,15 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__recursiveForegroundColor = recursiveColor 
         return recursiveColor
     
-    def statusColor(self):
+    def statusFgColor(self):
         ''' Return the current color of task, based on its status (completed,
-            overdue, duesoon, inactive, or active). '''
-        if self.completed():
-            status = 'completed'
-        elif self.overdue(): 
-            status = 'overdue'
-        elif self.dueSoon():
-            status = 'duesoon'
-        elif self.inactive(): 
-            status = 'inactive'
-        else:
-            status = 'active'
-        return self.colorForStatus(status)
+            overdue, duesoon, inactive, or active). '''            
+        return self.fgColorForStatus(self.status())
     
     @classmethod
-    def colorForStatus(class_, status):
-        return wx.Colour(*eval(class_.settings.get('color', '%stasks'%status))) # pylint: disable-msg=E1101
-    
+    def fgColorForStatus(class_, status):
+        return wx.Colour(*eval(class_.settings.get('fgcolor', '%stasks'%status))) # pylint: disable-msg=E1101
+
     def foregroundColorChangedEvent(self, event):
         super(Task, self).foregroundColorChangedEvent(event)
         fgColor = self.foregroundColor()
@@ -643,8 +640,53 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 event.addSource(eachEffort, fgColor, 
                                 type=eachEffort.foregroundColorChangedEventType())
         self.__computeRecursiveForegroundColor()
-    
+
+    def status(self):
+        if self.completed():
+            return 'completed'
+        elif self.overdue(): 
+            return 'overdue'
+        elif self.dueSoon():
+            return 'duesoon'
+        elif self.inactive(): 
+            return 'inactive'
+        else:
+            return 'active'
+        
     # Background color
+    
+    def setBackgroundColor(self, *args, **kwargs):
+        super(Task, self).setBackgroundColor(*args, **kwargs)
+        self.__computeRecursiveBackgroundColor()
+        
+    def backgroundColor(self, recursive=False):
+        if not recursive:
+            return super(Task, self).backgroundColor(recursive)
+        try:
+            return self.__recursiveBackgroundColor
+        except AttributeError:
+            return self.__computeRecursiveBackgroundColor()
+        
+    def __computeRecursiveBackgroundColor(self, *args, **kwargs):
+        bgColor = super(Task, self).backgroundColor(recursive=True)
+        statusColor = self.statusBgColor()
+        if statusColor == wx.WHITE:
+            recursiveColor = bgColor
+        elif bgColor == None:
+            recursiveColor = statusColor
+        else:
+            recursiveColor = color.ColorMixer.mix((bgColor, statusColor))
+        self.__recursiveBackgroundColor = recursiveColor 
+        return recursiveColor
+    
+    def statusBgColor(self):
+        ''' Return the current color of task, based on its status (completed,
+            overdue, duesoon, inactive, or active). '''            
+        return self.bgColorForStatus(self.status())
+    
+    @classmethod
+    def bgColorForStatus(class_, status):
+        return wx.Colour(*eval(class_.settings.get('bgcolor', '%stasks'%status))) # pylint: disable-msg=E1101
     
     def backgroundColorChangedEvent(self, event):
         super(Task, self).backgroundColorChangedEvent(event)
@@ -654,6 +696,28 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 event.addSource(eachEffort, bgColor, 
                                 type=eachEffort.backgroundColorChangedEventType())
 
+    # Font
+
+    def font(self, recursive=False):
+        myFont = super(Task, self).font(recursive=False)
+        if myFont or not recursive:
+            return myFont
+        recursiveFont = super(Task, self).font(recursive=recursive)
+        if recursiveFont:
+            return recursiveFont
+        else:
+            return self.statusFont()
+
+    def statusFont(self):
+        ''' Return the current font of task, based on its status (completed,
+            overdue, duesoon, inactive, or active). '''
+        return self.fontForStatus(self.status())            
+
+    @classmethod
+    def fontForStatus(class_, status):
+        nativeInfoString = class_.settings.get('font', '%stasks'%status)
+        return wx.FontFromNativeInfoString(nativeInfoString) if nativeInfoString else None
+                
     # Icon
     
     def icon(self, recursive=False):
@@ -671,8 +735,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         super(Task, self).iconChangedEvent(*args, **kwargs)
         self.__computeRecursiveIcon()
 
-    def __computeRecursiveIcon(self):
-        self.__recursiveIcon = self.categoryIcon() or self.__stateBasedIcon(False)
+    def __computeRecursiveIcon(self, *args, **kwargs):
+        self.__recursiveIcon = self.categoryIcon() or self.statusIcon()
         return self.__recursiveIcon
 
     def selectedIcon(self, recursive=False):
@@ -690,25 +754,21 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         super(Task, self).selectedIconChangedEvent(*args, **kwargs)
         self.__computeRecursiveSelectedIcon()
         
-    def __computeRecursiveSelectedIcon(self):
-        self.__recursiveSelectedIcon = self.categorySelectedIcon() or self.__stateBasedIcon(selected=True)
+    def __computeRecursiveSelectedIcon(self, *args, **kwargs):
+        self.__recursiveSelectedIcon = self.categorySelectedIcon() or self.statusIcon(selected=True)
         return self.__recursiveSelectedIcon
 
-    stateColorMap = (('completed', '_green'), ('overdue', '_red'),
-                     ('dueSoon', '_orange'), ('inactive', '_grey'))
+    def statusIcon(self, selected=False):
+        ''' Return the current icon of the task, based on its status (completed,
+            overdue, duesoon, inactive, or active). '''
+        return self.iconForStatus(self.status(), selected)            
 
-    def __stateBasedIcon(self, selected=False):
-        taskIcon = 'led'
-        for state, stateColor in self.stateColorMap:
-            if getattr(self, state)():
-                taskIcon += stateColor
-                break
-        else:
-            taskIcon += '_blue'
-        taskIcon = self.pluralOrSingularIcon(taskIcon+'_icon')[:-len('_icon')]
-        hasChildren = any(child for child in self.children() if not child.isDeleted())
-        taskIcon += '_open' if selected and hasChildren else ''
-        return taskIcon + '_icon'
+    def iconForStatus(self, status, selected=False):
+        iconName = self.settings.get('icon', '%stasks'%status)
+        iconName = self.pluralOrSingularIcon(iconName)
+        if selected and iconName.startswith('folder'):
+            iconName = iconName[:-len('_icon')] + '_open_icon' 
+        return iconName
 
     @patterns.eventSource
     def recomputeAppearance(self, recursive=False, event=None):
@@ -716,13 +776,16 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         # are not set in __init__ for performance reasons
         try:
             previousForegroundColor = self.__recursiveForegroundColor
+            previousBackgroundColor = self.__recursiveBackgroundColor
             previousRecursiveIcon = self.__recursiveIcon
             previousRecursiveSelectedIcon = self.__recursiveSelectedIcon
         except AttributeError:
             previousForegroundColor = None
+            previousBackgroundColor = None
             previousRecursiveIcon = None
             previousRecursiveSelectedIcon = None
         self.__computeRecursiveForegroundColor()
+        self.__computeRecursiveBackgroundColor()
         self.__computeRecursiveIcon()
         self.__computeRecursiveSelectedIcon()
         if self.__recursiveIcon != previousRecursiveIcon:
@@ -731,6 +794,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             event.addSource(self, self.selectedIcon(), type=self.selectedIconChangedEventType())
         if self.__recursiveForegroundColor != previousForegroundColor:
             event.addSource(self, self.foregroundColor(), type=self.foregroundColorChangedEventType())
+        if self.__recursiveBackgroundColor != previousBackgroundColor:
+            event.addSource(self, self.backgroundColor(), type=self.backgroundColorChangedEventType())
         if recursive:
             for child in self.children():
                 child.recomputeAppearance(recursive=True, event=event)

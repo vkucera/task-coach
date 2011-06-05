@@ -134,7 +134,7 @@ class Event(object):
             the caller is sure there is only one source. '''
         type = type or self.type()
         source = source or self.__sourcesAndValuesByType[type].keys()[0]
-        return self.__sourcesAndValuesByType[type][source]
+        return self.__sourcesAndValuesByType.get(type, {}).get(source, [])
     
     def subEvent(self, *typesAndSources):
         ''' Create a new event that contains a subset of the data of this 

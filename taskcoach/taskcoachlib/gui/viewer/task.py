@@ -25,7 +25,7 @@ from taskcoachlib import patterns, command, widgets, domain
 from taskcoachlib.domain import task, date
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, render, dialog
-from taskcoachlib.thirdparty.calendar import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, \
+from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, \
     wxSCHEDULER_TODAY, wxSCHEDULER_TODAY, wxSCHEDULER_MONTHLY, wxFancyDrawer
 from taskcoachlib.widgets import CalendarConfigDialog
 import base, mixin, refresher
@@ -140,11 +140,12 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
         return len(self.presentation())
 
     def __registerForAppearanceChanges(self):
-        colorSettings = ['color.%s'%setting for setting in 'activetasks',\
-            'inactivetasks', 'completedtasks', 'duesoontasks', 'overduetasks'] 
-        for colorSetting in colorSettings:
-            patterns.Publisher().registerObserver(self.onColorSettingChange, 
-                eventType=colorSetting)
+        for appearance in ('font', 'fgcolor', 'bgcolor', 'icon'):
+            appearanceSettings = ['%s.%s'%(appearance, setting) for setting in 'activetasks',\
+                                  'inactivetasks', 'completedtasks', 'duesoontasks', 'overduetasks'] 
+            for appearanceSetting in appearanceSettings:
+                patterns.Publisher().registerObserver(self.onAppearanceSettingChange, 
+                                                      eventType=appearanceSetting)
         for eventType in (task.Task.foregroundColorChangedEventType(),
                           task.Task.backgroundColorChangedEventType(),
                           task.Task.fontChangedEventType(),
@@ -165,8 +166,8 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
     def onWake(self, event):
         self.refresh()
         
-    def onColorSettingChange(self, event): # pylint: disable-msg=W0613
-        self.refresh()
+    def onAppearanceSettingChange(self, event): # pylint: disable-msg=W0613
+        wx.CallAfter(self.refresh) # Let domain objects update appearance first
 
     def iconName(self, item, isSelected):
         return item.selectedIcon(recursive=True) if isSelected else item.icon(recursive=True)

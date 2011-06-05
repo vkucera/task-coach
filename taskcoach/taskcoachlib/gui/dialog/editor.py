@@ -88,7 +88,7 @@ class SubjectPage(Page):
                         
     def entries(self):
         return dict(firstEntry=self._subjectEntry,
-                    subject=self._subjectEntry, 
+                    subject=self._subjectEntry,
                     description=self._descriptionEntry)
 
     
@@ -134,7 +134,7 @@ class CategorySubjectPage(SubjectPage):
 
 class AttachmentSubjectPage(SubjectPage):
     def __init__(self, attachments, parent, basePath, *args, **kwargs):
-        super(AttachmentSubjectPage, self).__init__(attachments, parent, 
+        super(AttachmentSubjectPage, self).__init__(attachments, parent,
                                                     *args, **kwargs)
         self.basePath = basePath
         
@@ -248,13 +248,13 @@ class DatesPage(Page):
         self.addReminderEntry()
         self.addLine()
         self.addRecurrenceEntry()
-        
+
     def addDateEntries(self):
         for label, taskMethodName in [(_('Start date'), 'startDateTime'),
-                                      (_('Due date'), 'dueDateTime'),
-                                      (_('Completion date'), 'completionDateTime')]:
+                                                (_('Due date'), 'dueDateTime'),
+                                                (_('Completion date'), 'completionDateTime')]:
             self.addDateEntry(label, taskMethodName)
-            
+
     def addDateEntry(self, label, taskMethodName):
         TaskMethodName = taskMethodName[0].capitalize() + taskMethodName[1:]
         if len(self.items) == 1:
@@ -266,7 +266,12 @@ class DatesPage(Page):
         setattr(self, '_current%s'%TaskMethodName, dateTime)
         dateTimeEntry = entry.DateTimeEntry(self, self.__settings, dateTime)
         setattr(self, '_%sEntry'%taskMethodName, dateTimeEntry)
-        commandClass = getattr(command, 'Edit%sCommand'%TaskMethodName)
+        if self.__settings.get('view', 'datestied') == 'startdue' and taskMethodName == 'startDateTime':
+            commandClass = command.EditStartDateTimeSyncCommand
+        elif self.__settings.get('view', 'datestied') == 'duestart' and taskMethodName == 'dueDateTime':
+            commandClass = command.EditDueDateTimeSyncCommand
+        else:
+            commandClass = getattr(command, 'Edit%sCommand'%TaskMethodName)
         eventType = 'task.%s'%taskMethodName
         datetimeSync = attributesync.AttributeSync('datetime', dateTimeEntry, 
             dateTime, self.items, commandClass, entry.EVT_DATETIMEENTRY, 
@@ -274,17 +279,11 @@ class DatesPage(Page):
         setattr(self, '_%sSync'%taskMethodName, datetimeSync) 
         self.addEntry(label, dateTimeEntry)
         dateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeChanged)
-        self._duration = None
-        if len(self.items) == 1:
-            dueDateTime = self.items[0].dueDateTime()
-            startDateTime = self.items[0].startDateTime()
-            if dueDateTime != date.DateTime() and startDateTime != date.DateTime():
-                self._duration = dueDateTime - startDateTime
 
     def addReminderEntry(self):
         # pylint: disable-msg=W0201
         currentReminderDateTime = self.items[0].reminder() if len(self.items) == 1 else date.DateTime()
-        self._reminderDateTimeEntry = entry.DateTimeEntry(self, self.__settings, 
+        self._reminderDateTimeEntry = entry.DateTimeEntry(self, self.__settings,
                                                           currentReminderDateTime)
         # If the user has not set a reminder, make sure that the default 
         # date time in the reminder entry is a reasonable suggestion:
@@ -308,14 +307,14 @@ class DatesPage(Page):
     def entries(self):
         # pylint: disable-msg=E1101
         return dict(firstEntry=self._startDateTimeEntry,
-                    startDateTime=self._startDateTimeEntry, 
+                    startDateTime=self._startDateTimeEntry,
                     dueDateTime=self._dueDateTimeEntry,
-                    completionDateTime=self._completionDateTimeEntry, 
-                    timeLeft=self._dueDateTimeEntry, 
-                    reminder=self._reminderDateTimeEntry, 
+                    completionDateTime=self._completionDateTimeEntry,
+                    timeLeft=self._dueDateTimeEntry,
+                    reminder=self._reminderDateTimeEntry,
                     recurrence=self._recurrenceEntry)
-    
-    def onDateTimeChanged(self, event=None):
+
+    def onDateTimeChanged(self, event):
         ''' Called when one of the DateTimeEntries is changed by the user. 
             Update the suggested reminder if no reminder was set by the user. '''
         if event:        
@@ -524,10 +523,10 @@ class BudgetPage(Page):
         
     def entries(self):
         return dict(firstEntry=self._budgetEntry,
-                    budget=self._budgetEntry, 
-                    budgetLeft=self._budgetEntry,  
-                    hourlyFee=self._hourlyFeeEntry, 
-                    fixedFee=self._fixedFeeEntry,  
+                    budget=self._budgetEntry,
+                    budgetLeft=self._budgetEntry,
+                    hourlyFee=self._hourlyFeeEntry,
+                    fixedFee=self._fixedFeeEntry,
                     revenue=self._hourlyFeeEntry)
 
 
@@ -568,7 +567,7 @@ class EffortPage(PageWithViewer):
     pageIcon = 'clock_icon'
             
     def createViewer(self, taskFile, settings, settingsSection):
-        return viewer.EffortViewer(self, taskFile, settings, 
+        return viewer.EffortViewer(self, taskFile, settings,
             settingsSection=settingsSection,
             tasksToShowEffortFor=task.TaskList(self.items))
 
@@ -733,7 +732,7 @@ class PrerequisitesPage(PageWithViewer):
         self.viewer.refreshItems(*event.values())
     
     def entries(self):
-        return dict(firstEntry=self.viewer, prerequisites=self.viewer, 
+        return dict(firstEntry=self.viewer, prerequisites=self.viewer,
                     dependencies=self.viewer)
 
 
@@ -746,25 +745,29 @@ class EditBook(widgets.Notebook):
         self.settings = settings
         super(EditBook, self).__init__(parent)
         self.TopLevelParent.Bind(wx.EVT_CLOSE, self.onClose)
-        self.addPages(taskFile)
-        perspective = self.settings.get('%sdialog'%self.object, 'perspective')
-        if perspective:
-            try:
-                self.LoadPerspective(perspective)
-            except:
-                pass
+        pageNames = self.addPages(taskFile)
+        self.loadPerspective(pageNames)
         
     def addPages(self, taskFile):
+        pageNames = []
         for pageName in self.allPageNamesInUserOrder():
             if self.shouldCreatePage(pageName):
                 page = self.createPage(pageName, taskFile)
                 self.AddPage(page, page.pageTitle, page.pageIcon)
+                pageNames.append(pageName)
+        return pageNames
 
+    def getPage(self, pageName):
+        for index in range(self.GetPageCount()):
+            if pageName == self[index].pageName:
+                return self[index]
+        return None
+        
     def allPageNamesInUserOrder(self):
         ''' Return all pages names in the order stored in the settings. The
             settings may not contain all pages (e.g. because a feature was
             turned off by the user) so we add the missing pages if necessary. '''
-        pageNamesInUserOrder = self.settings.getlist('editor', '%spages'%self.object)
+        pageNamesInUserOrder = self.settings.getlist('editor', '%spages' % self.object)
         remainingPageNames = self.allPageNames[:]
         for pageName in pageNamesInUserOrder:
             remainingPageNames.remove(pageName)
@@ -791,24 +794,24 @@ class EditBook(widgets.Notebook):
         elif pageName == 'dates':
             return DatesPage(self.items, self, self.settings) 
         elif pageName == 'prerequisites':
-            return PrerequisitesPage(self.items, self, taskFile, self.settings, 
-                                     settingsSection='prerequisiteviewerin%seditor'%self.object)
+            return PrerequisitesPage(self.items, self, taskFile, self.settings,
+                                     settingsSection='prerequisiteviewerin%seditor' % self.object)
         elif pageName == 'progress':    
             return ProgressPage(self.items, self)
         elif pageName == 'categories':
-            return CategoriesPage(self.items, self, taskFile, self.settings, 
-                                  settingsSection='categoryviewerin%seditor'%self.object)
+            return CategoriesPage(self.items, self, taskFile, self.settings,
+                                  settingsSection='categoryviewerin%seditor' % self.object)
         elif pageName == 'budget':                 
             return BudgetPage(self.items, self)
         elif pageName == 'effort':        
             return EffortPage(self.items, self, taskFile, self.settings,
-                              settingsSection='effortviewerin%seditor'%self.object)
+                              settingsSection='effortviewerin%seditor' % self.object)
         elif pageName == 'notes':
             return NotesPage(self.items, self, taskFile, self.settings,
-                             settingsSection='noteviewerin%seditor'%self.object)
+                             settingsSection='noteviewerin%seditor' % self.object)
         elif pageName == 'attachments':
-            return AttachmentsPage(self.items, self, taskFile, self.settings, 
-                                   settingsSection='attachmentviewerin%seditor'%self.object)
+            return AttachmentsPage(self.items, self, taskFile, self.settings,
+                                   settingsSection='attachmentviewerin%seditor' % self.object)
         elif pageName == 'appearance':
             return AppearancePage(self.items, self)
         
@@ -832,6 +835,25 @@ class EditBook(widgets.Notebook):
             ancestors.extend(item.ancestors())
         return targetItem in self.items + ancestors
     
+    def loadPerspective(self, pageNames):
+        perspectiveKey = self.perspectiveKey(pageNames) 
+        perspective = self.settings.getdict('%sdialog'%self.object, 'perspectives').get(perspectiveKey, '')
+        if perspective:
+            try:
+                self.LoadPerspective(perspective)
+            except:
+                pass
+
+    def savePerspective(self, pageNames):
+        perspectives = self.settings.getdict('%sdialog'%self.object, 'perspectives')
+        perspectiveKey = self.perspectiveKey(pageNames)
+        perspectives[perspectiveKey] = self.SavePerspective() 
+        self.settings.setdict('%sdialog'%self.object, 'perspectives', perspectives)
+        
+    @staticmethod
+    def perspectiveKey(pageNames):
+        return '_'.join(pageNames + ['perspective'])
+    
     def onClose(self, event):
         event.Skip()
         removeInstance = patterns.Publisher().removeInstance
@@ -839,12 +861,12 @@ class EditBook(widgets.Notebook):
             removeInstance(page)
         pageNames = [self[index].pageName for index in range(self.GetPageCount())]
         self.settings.setlist('editor', '%spages'%self.object, pageNames)
-        self.settings.set('%sdialog'%self.object, 'perspective', self.SavePerspective())
+        self.savePerspective(pageNames)
 
 
 class TaskEditBook(EditBook):
-    allPageNames = ['subject', 'dates', 'prerequisites', 'progress', 
-                    'categories', 'budget', 'effort', 'notes', 'attachments', 
+    allPageNames = ['subject', 'dates', 'prerequisites', 'progress',
+                    'categories', 'budget', 'effort', 'notes', 'attachments',
                     'appearance']
     object = 'task'
 
@@ -890,6 +912,9 @@ class EffortEditBook(Page):
         self._taskFile = taskFile
         super(EffortEditBook, self).__init__(efforts, parent, *args, **kwargs)
         
+    def getPage(self, pageName):
+        return None # An EffortEditBook is not really a notebook...
+        
     def addEntries(self):
         self.addTaskEntry()
         self.addStartAndStopEntries()
@@ -909,10 +934,10 @@ class EffortEditBook(Page):
         editTaskButton = wx.Button(panel, label=_('Edit task'))
         editTaskButton.Bind(wx.EVT_BUTTON, self.onEditTask)
         panelSizer = wx.BoxSizer(wx.HORIZONTAL)
-        panelSizer.Add(self._taskEntry, proportion=1, 
-                       flag=wx.EXPAND|wx.ALIGN_CENTER_VERTICAL)
-        panelSizer.Add((3,-1))
-        panelSizer.Add(editTaskButton, proportion=0, 
+        panelSizer.Add(self._taskEntry, proportion=1,
+                       flag=wx.EXPAND | wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add((3, -1))
+        panelSizer.Add(editTaskButton, proportion=0,
                        flag=wx.ALIGN_CENTER_VERTICAL)
         panel.SetSizerAndFit(panelSizer)
         self.addEntry(_('Task'), panel, flags=[None, wx.ALL|wx.EXPAND])
@@ -920,7 +945,7 @@ class EffortEditBook(Page):
     def addStartAndStopEntries(self):
         # pylint: disable-msg=W0201,W0142
         dateTimeEntryKwArgs = dict(showSeconds=True)
-        flags = [None, wx.ALIGN_RIGHT|wx.ALL, wx.ALIGN_LEFT|wx.ALL, None]
+        flags = [None, wx.ALIGN_RIGHT | wx.ALL, wx.ALIGN_LEFT | wx.ALL, None]
         
         currentStartDateTime = self.items[0].getStart()
         self._startDateTimeEntry = entry.DateTimeEntry(self, self._settings,
@@ -1022,9 +1047,10 @@ class Editor(widgets.ButtonLessDialog):
         self._taskFile = taskFile
         self._callAfter = kwargs.get('callAfter', wx.CallAfter)
         super(Editor, self).__init__(parent, self.title(), *args, **kwargs)
+
         columnName = kwargs.get('columnName', '')
         self._interior.setFocus(columnName)
-        patterns.Publisher().registerObserver(self.onItemRemoved, 
+        patterns.Publisher().registerObserver(self.onItemRemoved,
             eventType=container.removeItemEventType(), eventSource=container)
         if len(self._items) == 1:
             patterns.Publisher().registerObserver(self.onSubjectChanged,
@@ -1044,16 +1070,28 @@ class Editor(widgets.ButtonLessDialog):
         # On Linux this is not needed but doesn't do any harm.
         self.CentreOnParent()
         self.createUICommands()
-        self._dimensionsTracker = windowdimensionstracker.WindowSizeAndPositionTracker(self, settings, '%sdialog'%self.EditBookClass.object)
+        self._dimensionsTracker = windowdimensionstracker.WindowSizeAndPositionTracker(self, settings, '%sdialog' % self.EditBookClass.object)
         
     def createUICommands(self):
+        # FIXME: keyboard shortcuts are hardcoded here, but they can be 
+        # changed in the translations
+        # FIXME: there are more keyboard shortcuts that don't work in dialogs atm 
+        newEffortId = wx.NewId()
         table = wx.AcceleratorTable([(wx.ACCEL_CMD, ord('Z'), wx.ID_UNDO),
-                                     (wx.ACCEL_CMD, ord('Y'), wx.ID_REDO)])
+                                     (wx.ACCEL_CMD, ord('Y'), wx.ID_REDO),
+                                     (wx.ACCEL_CMD, ord('E'), newEffortId)])
         self._interior.SetAcceleratorTable(table)
         self.undoCommand = uicommand.EditUndo()
         self.redoCommand = uicommand.EditRedo()
+        effortPage = self._interior.getPage('effort') 
+        effortViewer = effortPage.viewer if effortPage else None 
+        self.newEffortCommand = uicommand.EffortNew(viewer=effortViewer,
+                                                    taskList=self._taskFile.tasks(),
+                                                    effortList=self._taskFile.efforts(),
+                                                    settings=self._settings)
         self.undoCommand.bind(self._interior, wx.ID_UNDO)
         self.redoCommand.bind(self._interior, wx.ID_REDO)
+        self.newEffortCommand.bind(self._interior, newEffortId)
                         
     def createInterior(self):
         return self.EditBookClass(self._panel, self._items, 

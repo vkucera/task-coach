@@ -26,7 +26,7 @@ class PreferencesTest(test.wxTestCase):
         self.settings = config.Settings(load=False)
         self.preferences = gui.Preferences(parent=self.frame, title='Test',
             settings=self.settings, raiseDialog=False)
-        self.originalColor = self.settings.get('color', 'activetasks')
+        self.originalColor = self.settings.get('fgcolor', 'activetasks')
         self.newColor = (1, 2, 29)
         
     # pylint: disable-msg=W0212
@@ -34,13 +34,13 @@ class PreferencesTest(test.wxTestCase):
     def testCancel(self):
         self.preferences[4]._colorSettings[0][2].SetColour(self.newColor)
         self.preferences.cancel()
-        self.assertEqual(self.originalColor, self.settings.get('color', 'activetasks'))
+        self.assertEqual(self.originalColor, self.settings.get('fgcolor', 'activetasks'))
         
     def testOk(self):
         self.preferences[4]._colorSettings[0][2].SetColour(self.newColor)
         self.preferences.ok()
         self.assertEqual(self.newColor, 
-            eval(self.settings.get('color', 'activetasks'))[:3])
+            eval(self.settings.get('fgcolor', 'activetasks'))[:3])
         
 
 class SyncMLPreferencesTest(test.TestCase):

@@ -38,16 +38,6 @@ class CSVReader(object):
         rx1 = re.compile(r'^(\d+):(\d+)$')
         rx2 = re.compile(r'^(\d+):(\d+):(\d+)$')
 
-        # When fields are associated with categories, create a top-level category for the
-        # field and a subcategory for each possible value.
-
-        toplevelCategories = dict()
-        for idx, headerName in enumerate(kwargs['fields']):
-            if kwargs['mappings'][idx] == _('Category'):
-                category = Category(subject=headerName)
-                toplevelCategories[headerName] = (category, dict())
-                self.categoryList.append(category)
-
         reader = csv.reader(fp, dialect=kwargs['dialect'])
         if kwargs['hasHeaders']:
             reader.next()
@@ -69,6 +59,7 @@ class CSVReader(object):
             budget = TimeDelta()
             fixedFee = 0.0
             hourlyFee = 0.0
+            percentComplete = 0
 
             for idx, fieldValue in enumerate(line):
                 if kwargs['mappings'][idx] == _('ID'):
@@ -80,16 +71,12 @@ class CSVReader(object):
                     description.write(u'\n')
                 elif kwargs['mappings'][idx] == _('Category') and fieldValue:
                     name = fieldValue.decode('UTF-8')
-                    parent, cats = toplevelCategories[kwargs['fields'][idx]]
-                    if name in cats:
-                        theCat = cats[name]
-                    else:
-                        theCat = Category(subject=name)
-                        parent.addChild(theCat)
-                        cats[name] = theCat
-                        self.categoryList.append(theCat)
-                    categories.append(theCat)
-                    toplevelCategories[kwargs['fields'][idx]] = (parent, cats)
+                    if name.startswith('(') and name.endswith(')'):
+                        continue # Skip categories of subitems
+                    cat = self.categoryList.findCategoryByName(name)
+                    if not cat:
+                        cat = self.createCategory(name)
+                    categories.append(cat)
                 elif kwargs['mappings'][idx] == _('Priority'):
                     try:
                         priority = int(fieldValue)
@@ -140,6 +127,11 @@ class CSVReader(object):
                         hourlyFee = float(fieldValue)
                     except ValueError:
                         pass
+                elif kwargs['mappings'][idx] == _('Percent complete'):
+                    try:
+                        percentComplete = max(0, min(100, int(fieldValue)))
+                    except ValueError:
+                        pass
 
             task = Task(subject=subject,
                         description=description.getvalue(),
@@ -149,7 +141,8 @@ class CSVReader(object):
                         completionDateTime=completionDate,
                         budget=budget,
                         fixedFee=fixedFee,
-                        hourlyFee=hourlyFee)
+                        hourlyFee=hourlyFee,
+                        percentageComplete=percentComplete)
 
             if id_ is not None:
                 tasksById[id_] = task
@@ -183,3 +176,17 @@ class CSVReader(object):
                     self.taskList.append(tasksById[sid])
         else:
             self.taskList.extend(tasks)
+
+    def createCategory(self, name):
+        if ' -> ' in name:
+            parentName, childName = name.rsplit(' -> ', 1)
+            parent = self.categoryList.findCategoryByName(parentName)
+            if not parent:
+                parent = self.createCategory(parentName)
+            newCategory = Category(subject=childName)
+            parent.addChild(newCategory)
+            newCategory.setParent(parent)
+        else:
+            newCategory = Category(subject=name)
+        self.categoryList.append(newCategory)
+        return newCategory

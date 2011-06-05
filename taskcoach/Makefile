@@ -34,6 +34,10 @@ PYTHONVERSION=$(shell python -c "import sys; print '%d.%d'%sys.version_info[:2]"
 TCVERSION=$(shell python -c "import taskcoachlib.meta.data as data; print data.version")
 TCPORTABLE=$(shell python -c "import os; print \"'\" + os.path.join(os.getcwd(), 'build', 'TaskCoachPortable') + \"'\"")
 
+ifeq ($(PGPID)x,x)
+PGPID=a3e41706
+endif
+
 revision:
 	echo "revision='$(TCREV)'" > taskcoachlib/meta/revision.py
 
@@ -104,9 +108,9 @@ ubuntu: sdist_ubuntu
 	mv build build-natty
 
 ppa-sign: ubuntu
-	cd build-lucid; debsign -k0xa3e41706 taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
-	cd build-maverick; debsign -k0xa3e41706 taskcoach_$(TCVERSION)-0ubuntu10~maverick-1_source.changes
-	cd build-natty; debsign -k0xa3e41706 taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
+	cd build-lucid; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
+	cd build-maverick; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu10~maverick-1_source.changes
+	cd build-natty; debsign -k0x$(PGPID) taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
 
 ppa-rel: ppa-sign
 	cd build-lucid; dput ppa:taskcoach-developers/release-snapshot taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
@@ -117,6 +121,11 @@ ppa-relnext: ppa-sign
 	cd build-lucid; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
 	cd build-maverick; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu10~maverick-1_source.changes
 	cd build-natty; dput ppa:taskcoach-developers/nextrelease-snapshot taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
+
+ppa-release: ppa-sign
+	cd build-lucid; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu10~lucid-1_source.changes
+	cd build-maverick; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu10~maverick-1_source.changes
+	cd build-natty; dput ppa:taskcoach-developers/ppa taskcoach_$(TCVERSION)-0ubuntu11~natty-1_source.changes
 
 dmg: prepare
 	$(PYTHON) make.py py2app
