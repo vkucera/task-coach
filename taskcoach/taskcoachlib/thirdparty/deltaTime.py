@@ -15,6 +15,8 @@ import calendar
 
 __all__ = ["nlTimeExpression"]
 
+daynames = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+
 # string conversion parse actions
 def convertToTimedelta(toks):
     unit = toks.timeunit.lower().rstrip("s")
@@ -35,7 +37,6 @@ def convertToDay(toks):
     now = datetime.now()
     if "wkdayRef" in toks:
         todaynum = now.weekday()
-        daynames = [n.lower() for n in calendar.day_name]
         nameddaynum = daynames.index(toks.wkdayRef.day.lower())
         if toks.wkdayRef.dir > 0:
             daydiff = (nameddaynum + 7 - todaynum) % 7
@@ -116,7 +117,7 @@ a_qty = CL("a").setParseAction(replaceWith(1))
 integer = Word(nums).setParseAction(lambda t:int(t[0]))
 int4 = Group(Word(nums,exact=4).setParseAction(lambda t: [int(t[0][:2]),int(t[0][2:])] ))
 qty = integer | couple | a_qty
-dayName = oneOf( list(calendar.day_name) )
+dayName = oneOf( daynames )
  
 dayOffset = (qty("qty") + (week | day)("timeunit"))
 dayFwdBack = (from_ + now.suppress() | ago)("dir")
