@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 28 Nov 2010, 16.00 GMT
+# Latest Revision: 23 Jan 2011, 10.00 GMT
 #
 #
 # TODO List
@@ -102,7 +102,7 @@ Plus it has 3 more styles to handle checkbox-type items:
 And a style you can use to force the horizontal alignment of all the widgets
 attached to the tree items:
 
-- ``TR_ALIGN_WINDOWS``: aligns horizontally the windows belongiing to the item on the
+- ``TR_ALIGN_WINDOWS``: aligns horizontally the windows belonging to the item on the
   same tree level.
 
     
@@ -209,7 +209,7 @@ License And Version
 
 CustomTreeCtrl is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 28 Nov 2010, 16.00 GMT
+Latest Revision: Andrea Gavana @ 23 Jan 2011, 10.00 GMT
 
 Version 2.3
 
