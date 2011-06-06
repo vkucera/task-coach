@@ -22,11 +22,15 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.20', 'June ??, 2011',
+Release('1.2.20', 'June 6, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Task Coach tried to use Python 2.5 on Ubuntu.''',
             '3309089', '3309317'),
+        Bug('''When hiding completed tasks and showing tasks belonging to a 
+specific category (say C), Task Coach would show a task even though it didn't
+belong to that category if that task had completed subtasks belonging 
+to category C.''', '3309006'),
         ],
     featuresAdded=[
         Feature('''Basic editing (dates, subject) of task templates.'''),

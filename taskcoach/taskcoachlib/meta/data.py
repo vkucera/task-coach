@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 version = '1.2.20' # Current version number of the application
 tskversion = 32 # Current version number of the task file format, changed to 31 for release 1.2.0.
-release_day = '29' # Day number of the release, 1-31, as string
-release_month = 'May' # Month of the release in plain English
+release_day = '6' # Day number of the release, 1-31, as string
+release_month = 'June' # Month of the release in plain English
 release_year = '2011' # Year of the release as string
 release_status = 'stable' # One of 'alpha', 'beta', 'stable'
 
