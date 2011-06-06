@@ -503,4 +503,8 @@ class TemplateXMLReader(XMLReader):
         context.update(date.__dict__)
         context.update(datetime.__dict__)
         delta = eval(expr, context) - date.Now()
-        return '%d minutes from now' % (delta.days * 24 * 60 + (delta.seconds // 60))
+        minutes = delta.days * 24 * 60 + (delta.seconds // 60)
+        if minutes < 0:
+            return '%d minutes ago' % (-minutes)
+        else:
+            return '%d minutes from now' % minutes
