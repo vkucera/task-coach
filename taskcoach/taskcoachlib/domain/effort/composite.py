@@ -125,10 +125,8 @@ class CompositeEffort(BaseCompositeEffort):
             eventType=task.hourlyFeeChangedEventType(), eventSource=task)
         '''
         FIMXE! CompositeEffort does not derive from base.Object
-        patterns.Publisher().registerObserver(self.onBackgroundColorChanged,
-            eventType=task.backgroundColorChangedEventType(), eventSource=task)
-        patterns.Publisher().registerObserver(self.onForegroundColorChanged,
-            eventType=task.foregroundColorChangedEventType(), eventSource=task)
+        patterns.Publisher().registerObserver(self.onAppearanceChanged,
+            eventType=task.appearanceChangedEventType(), eventSource=task)
         '''
 
     def __hash__(self):
@@ -163,14 +161,10 @@ class CompositeEffort(BaseCompositeEffort):
         effortDescriptions = [effort.description() for effort in \
                               self._getEfforts(False) if effort.description()]
         return '\n'.join(effortDescriptions)
-    
-    def onBackgroundColorChanged(self, event):
+        
+    def onAppearanceChanged(self, event):    
         return # FIXME: CompositeEffort does not derive from base.Object
-        patterns.Event(self.backgroundColorChangedEventType(), self, event.value()).send()
-    
-    def onForegroundColorChanged(self, event):    
-        return # FIXME: CompositeEffort does not derive from base.Object
-        patterns.Event(self.foregroundColorChangedEventType(), self, event.value()).send()
+        patterns.Event(self.appearanceChangedEventType(), self, event.value()).send()
 
 
 class CompositeEffortPerPeriod(BaseCompositeEffort):

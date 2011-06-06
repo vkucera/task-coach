@@ -632,15 +632,15 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def fgColorForStatus(class_, status):
         return wx.Colour(*eval(class_.settings.get('fgcolor', '%stasks'%status))) # pylint: disable-msg=E1101
 
-    def foregroundColorChangedEvent(self, event):
-        super(Task, self).foregroundColorChangedEvent(event)
-        fgColor = self.foregroundColor()
-        for task in [self] + self.childrenWithoutOwnForegroundColor():
-            for eachEffort in task.efforts():
-                event.addSource(eachEffort, fgColor, 
-                                type=eachEffort.foregroundColorChangedEventType())
+    def appearanceChangedEvent(self, event):
         self.__computeRecursiveForegroundColor()
-
+        self.__computeRecursiveBackgroundColor()
+        self.__computeRecursiveIcon()
+        self.__computeRecursiveSelectedIcon()
+        super(Task, self).appearanceChangedEvent(event)
+        for eachEffort in self.efforts():
+            eachEffort.appearanceChangedEvent(event)
+        
     def status(self):
         if self.completed():
             return 'completed'
@@ -688,21 +688,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def bgColorForStatus(class_, status):
         return wx.Colour(*eval(class_.settings.get('bgcolor', '%stasks'%status))) # pylint: disable-msg=E1101
     
-    def backgroundColorChangedEvent(self, event):
-        super(Task, self).backgroundColorChangedEvent(event)
-        bgColor = self.backgroundColor()
-        for task in [self] + self.childrenWithoutOwnBackgroundColor():
-            for eachEffort in task.efforts():
-                event.addSource(eachEffort, bgColor, 
-                                type=eachEffort.backgroundColorChangedEventType())
-
     # Font
 
     def font(self, recursive=False):
-        myFont = super(Task, self).font(recursive=False)
+        myFont = super(Task, self).font()
         if myFont or not recursive:
             return myFont
-        recursiveFont = super(Task, self).font(recursive=recursive)
+        recursiveFont = super(Task, self).font(recursive=True)
         if recursiveFont:
             return recursiveFont
         else:
@@ -723,7 +715,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def icon(self, recursive=False):
         if recursive and self.isBeingTracked():
             return 'clock_icon'
-        myIcon = super(Task, self).icon(recursive=False)
+        myIcon = super(Task, self).icon()
         if recursive and not myIcon:
             try:
                 myIcon = self.__recursiveIcon
@@ -731,10 +723,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 myIcon = self.__computeRecursiveIcon()
         return self.pluralOrSingularIcon(myIcon)
     
-    def iconChangedEvent(self, *args, **kwargs):
-        super(Task, self).iconChangedEvent(*args, **kwargs)
-        self.__computeRecursiveIcon()
-
     def __computeRecursiveIcon(self, *args, **kwargs):
         self.__recursiveIcon = self.categoryIcon() or self.statusIcon()
         return self.__recursiveIcon
@@ -742,17 +730,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def selectedIcon(self, recursive=False):
         if recursive and self.isBeingTracked():
             return 'clock_icon'
-        myIcon = super(Task, self).selectedIcon(recursive=False)
+        myIcon = super(Task, self).selectedIcon()
         if recursive and not myIcon:
             try:
                 myIcon = self.__recursiveSelectedIcon
             except AttributeError:
                 myIcon = self.__computeRecursiveSelectedIcon() 
         return self.pluralOrSingularIcon(myIcon)
-
-    def selectedIconChangedEvent(self, *args, **kwargs):
-        super(Task, self).selectedIconChangedEvent(*args, **kwargs)
-        self.__computeRecursiveSelectedIcon()
         
     def __computeRecursiveSelectedIcon(self, *args, **kwargs):
         self.__recursiveSelectedIcon = self.categorySelectedIcon() or self.statusIcon(selected=True)
@@ -788,14 +772,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__computeRecursiveBackgroundColor()
         self.__computeRecursiveIcon()
         self.__computeRecursiveSelectedIcon()
-        if self.__recursiveIcon != previousRecursiveIcon:
-             event.addSource(self, self.icon(), type=self.iconChangedEventType())
-        if self.__recursiveSelectedIcon != previousRecursiveSelectedIcon:
-            event.addSource(self, self.selectedIcon(), type=self.selectedIconChangedEventType())
-        if self.__recursiveForegroundColor != previousForegroundColor:
-            event.addSource(self, self.foregroundColor(), type=self.foregroundColorChangedEventType())
-        if self.__recursiveBackgroundColor != previousBackgroundColor:
-            event.addSource(self, self.backgroundColor(), type=self.backgroundColorChangedEventType())
+        if self.__recursiveForegroundColor != previousForegroundColor or \
+           self.__recursiveBackgroundColor != previousBackgroundColor or \
+           self.__recursiveIcon != previousRecursiveIcon or \
+           self.__recursiveSelectedIcon != previousRecursiveSelectedIcon:
+            event.addSource(self, type=self.appearanceChangedEventType())
         if recursive:
             for child in self.children():
                 child.recomputeAppearance(recursive=True, event=event)

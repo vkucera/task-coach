@@ -999,10 +999,10 @@ class TreeEvent(CommandTreeEvent):
         
     
 # -----------------------------------------------------------------------------
-# Auxiliary Classes: TreeRenameTimer
+# Auxiliary Classes: TreeEditTimer
 # -----------------------------------------------------------------------------
 
-class TreeRenameTimer(wx.Timer):
+class TreeEditTimer(wx.Timer):
     """ Timer used for enabling in-place edit."""
 
     def __init__(self, owner):
@@ -1020,7 +1020,7 @@ class TreeRenameTimer(wx.Timer):
     def Notify(self):
         """ The timer has expired. """
 
-        self._owner.OnRenameTimer()
+        self._owner.OnEditTimer()
 
 
 # -----------------------------------------------------------------------------
@@ -1130,10 +1130,10 @@ class TreeTextCtrl(ExpandoTextCtrl):
             # needs to be notified that the user decided
             # not to change the tree item label, and that
             # the edit has been cancelled
-            self._owner.OnRenameCancelled(self._itemEdited)
+            self._owner.OnCancelEdit(self._itemEdited)
             return True
 
-        if not self._owner.OnRenameAccept(self._itemEdited, value):
+        if not self._owner.OnAcceptEdit(self._itemEdited, value):
             # vetoed by the user
             return False
 
@@ -1149,7 +1149,7 @@ class TreeTextCtrl(ExpandoTextCtrl):
         if not self._finished:        
             self._finished = True
             self._owner.SetFocusIgnoringChildren()
-            self._owner.ResetTextControl()
+            self._owner.ResetEditControl()
         
 
     def OnChar(self, event):
@@ -1221,7 +1221,7 @@ class TreeTextCtrl(ExpandoTextCtrl):
             # focus problems:
             
             if not self.AcceptChanges():
-                self._owner.OnRenameCancelled(self._itemEdited)
+                self._owner.OnCancelEdit(self._itemEdited)
         
         # We must let the native text control handle focus, too, otherwise
         # it could have problems with the cursor (e.g., in wxGTK).
@@ -1231,7 +1231,7 @@ class TreeTextCtrl(ExpandoTextCtrl):
     def StopEditing(self):
         """Suddenly stops the editing."""
 
-        self._owner.OnRenameCancelled(self._itemEdited)
+        self._owner.OnCancelEdit(self._itemEdited)
         self.Finish()
         
     
@@ -2322,9 +2322,9 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         self._dragImage = None
         self._underMouse = None
 
-        # TextCtrl initial settings for editable items        
-        self._textCtrl = None
-        self._renameTimer = None
+        # EditCtrl initial settings for editable items        
+        self._editCtrl = None
+        self._editTimer = None
 
         # This one allows us to handle Freeze() and Thaw() calls        
         self._freezeCount = 0
@@ -2477,10 +2477,10 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
         # Here there may be something I miss... do I have to destroy
         # something else?
-        if self._renameTimer and self._renameTimer.IsRunning():
-            self._renameTimer.Stop()
-            del self._renameTimer
-            self._renameTimer = None
+        if self._editTimer and self._editTimer.IsRunning():
+            self._editTimer.Stop()
+            del self._editTimer
+            self._editTimer = None
 
         if self._findTimer and self._findTimer.IsRunning():
             self._findTimer.Stop()
@@ -4110,12 +4110,12 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         return lastGoodItem
 
 
-    def ResetTextControl(self):
-        """ Called by L{TreeTextCtrl} when it marks itself for deletion. """
+    def ResetEditControl(self):
+        """ Called by L{EditCtrl} when it marks itself for deletion. """
 
-        if self._textCtrl is not None:
-            self._textCtrl.Destroy()
-            self._textCtrl = None
+        if self._editCtrl is not None:
+            self._editCtrl.Destroy()
+            self._editCtrl = None
 
         self.CalculatePositions()
         self.Refresh()
@@ -4442,8 +4442,8 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         :param `item`: an instance of L{GenericTreeItem}.
         """
 
-        if self._textCtrl != None and item != self._textCtrl.item() and self.IsDescendantOf(item, self._textCtrl.item()):
-            self._textCtrl.StopEditing()
+        if self._editCtrl != None and item != self._editCtrl.item() and self.IsDescendantOf(item, self._editCtrl.item()):
+            self._editCtrl.StopEditing()
         
         if item != self._key_current and self.IsDescendantOf(item, self._key_current):
             self._key_current = None
@@ -4479,9 +4479,9 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 
         self._dirty = True     # do this first so stuff below doesn't cause flicker
 
-        if self._textCtrl != None and self.IsDescendantOf(item, self._textCtrl.item()):
+        if self._editCtrl != None and self.IsDescendantOf(item, self._editCtrl.item()):
             # can't delete the item being edited, cancel editing it first
-            self._textCtrl.StopEditing()
+            self._editCtrl.StopEditing()
         
         parent = item.GetParent()
 
@@ -6608,11 +6608,11 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             else:
                 wx.YieldIfNeeded()
 
-        if self._textCtrl != None and item != self._textCtrl.item():
-            self._textCtrl.StopEditing()
+        if self._editCtrl != None and item != self._editCtrl.item():
+            self._editCtrl.StopEditing()
 
-        self._textCtrl = TreeTextCtrl(self, item=item)
-        self._textCtrl.SetFocus()
+        self._editCtrl = TreeTextCtrl(self, item=item)
+        self._editCtrl.SetFocus()
 
  
     def GetEditControl(self):
@@ -6622,12 +6622,12 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         simultaneously).
         """
         
-        return self._textCtrl
+        return self._editCtrl
 
 
-    def OnRenameAccept(self, item, value):
+    def OnAcceptEdit(self, item, value):
         """
-        Called by L{TreeTextCtrl}, to accept the changes and to send the
+        Called by L{EditCtrl}, to accept the changes and to send the
         ``EVT_TREE_END_LABEL_EDIT`` event.
 
         :param `item`: an instance of L{GenericTreeItem};
@@ -6643,9 +6643,9 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         return not self.GetEventHandler().ProcessEvent(le) or le.IsAllowed()
     
 
-    def OnRenameCancelled(self, item):
+    def OnCancelEdit(self, item):
         """
-        Called by L{TreeTextCtrl}, to cancel the changes and to send the
+        Called by L{EditCtrl}, to cancel the changes and to send the
         ``EVT_TREE_END_LABEL_EDIT`` event.
 
         :param `item`: an instance of L{GenericTreeItem}.        
@@ -6661,8 +6661,8 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         self.GetEventHandler().ProcessEvent(le)
 
 
-    def OnRenameTimer(self):
-        """ The timer for renaming has expired. Start editing. """
+    def OnEditTimer(self):
+        """ The timer for editing has expired. Start editing. """
         
         self.Edit(self._current)
 
@@ -6686,7 +6686,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         underMouseChanged = underMouse != self._underMouse
 
         if underMouse and (flags & TREE_HITTEST_ONITEM) and not event.LeftIsDown() and \
-           not self._isDragging and (not self._renameTimer or not self._renameTimer.IsRunning()):
+           not self._isDragging and (not self._editTimer or not self._editTimer.IsRunning()):
             underMouse = underMouse
         else:
             underMouse = None
@@ -6701,8 +6701,8 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         # Determines what item we are hovering over and need a tooltip for
         hoverItem = thisItem
 
-        # We do not want a tooltip if we are dragging, or if the rename timer is running
-        if underMouseChanged and not self._isDragging and (not self._renameTimer or not self._renameTimer.IsRunning()):
+        # We do not want a tooltip if we are dragging, or if the edit timer is running
+        if underMouseChanged and not self._isDragging and (not self._editTimer or not self._editTimer.IsRunning()):
             
             if hoverItem is not None:
                 # Ask the tree control what tooltip (if any) should be shown
@@ -6867,14 +6867,14 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             self._dragCount = 0
 
             if item == None:
-                if self._textCtrl != None and item != self._textCtrl.item():
-                    self._textCtrl.StopEditing()
+                if self._editCtrl != None and item != self._editCtrl.item():
+                    self._editCtrl.StopEditing()
                 return  # we hit the blank area
 
             if event.RightDown():
                 
-                if self._textCtrl != None and item != self._textCtrl.item():
-                    self._textCtrl.StopEditing()
+                if self._editCtrl != None and item != self._editCtrl.item():
+                    self._editCtrl.StopEditing()
 
                 self._hasFocus = True
                 self.SetFocusIgnoringChildren()
@@ -6915,17 +6915,17 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                 
                     if item == self._current and (flags & TREE_HITTEST_ONITEMLABEL) and self.HasAGWFlag(TR_EDIT_LABELS):
                     
-                        if self._renameTimer:
+                        if self._editTimer:
                         
-                            if self._renameTimer.IsRunning():
+                            if self._editTimer.IsRunning():
                                 
-                                self._renameTimer.Stop()
+                                self._editTimer.Stop()
                         
                         else:
                         
-                            self._renameTimer = TreeRenameTimer(self)
+                            self._editTimer = TreeEditTimer(self)
                         
-                        self._renameTimer.Start(_DELAY, True)
+                        self._editTimer.Start(_DELAY, True)
                     
                     self._lastOnSame = False
                 
@@ -6933,12 +6933,12 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             else: # !RightDown() && !LeftUp() ==> LeftDown() || LeftDClick()
 
                 if not item or not item.IsEnabled():
-                    if self._textCtrl != None and item != self._textCtrl.item():
-                        self._textCtrl.StopEditing()
+                    if self._editCtrl != None and item != self._editCtrl.item():
+                        self._editCtrl.StopEditing()
                     return
 
-                if self._textCtrl != None and item != self._textCtrl.item():
-                    self._textCtrl.StopEditing()
+                if self._editCtrl != None and item != self._editCtrl.item():
+                    self._editCtrl.StopEditing()
 
                 self._hasFocus = True
                 self.SetFocusIgnoringChildren()
@@ -7001,8 +7001,8 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
                 if event.LeftDClick():
                 
                     # double clicking should not start editing the item label
-                    if self._renameTimer:
-                        self._renameTimer.Stop()
+                    if self._editTimer:
+                        self._editTimer.Stop()
 
                     self._lastOnSame = False
 

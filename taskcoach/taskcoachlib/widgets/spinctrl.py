@@ -28,7 +28,7 @@ class SpinCtrl(wx.SpinCtrl):
     maxRange = 2147483647
     
     def __init__(self, *args, **kwargs):
-        kwargs['style'] = wx.SP_ARROW_KEYS
+        kwargs['style'] = kwargs.get('style', 0) | wx.SP_ARROW_KEYS
         if 'min' not in kwargs:
             kwargs['min'] = -self.maxRange
         if 'max' not in kwargs:

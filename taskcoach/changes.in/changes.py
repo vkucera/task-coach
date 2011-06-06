@@ -27,12 +27,18 @@ Release('1.2.20', 'June 6, 2011',
     bugsFixed=[
         Bug('''Task Coach tried to use Python 2.5 on Ubuntu.''',
             '3309089', '3309317'),
+        Bug('''The total number of effort records displayed in the status
+bar of an effort viewer would be incorrect when the effort viewer was showing 
+aggregated effort (per day, per week or per month).'''),
         Bug('''When hiding completed tasks and showing tasks belonging to a 
 specific category (say C), Task Coach would show a task even though it didn't
 belong to that category if that task had completed subtasks belonging 
 to category C.''', '3309006'),
         ],
     featuresAdded=[
+        Feature('''Descriptions of tasks, notes and categories can be edited 
+in-place when the description column is visible. Priority of tasks can be
+edited in-place when the priority column is visible.'''),
         Feature('''Basic editing (dates, subject) of task templates.'''),
         ],
     ),

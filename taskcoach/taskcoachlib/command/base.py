@@ -403,7 +403,7 @@ class EditSubjectCommand(BaseCommand):
     singular_name = _('Edit subject "%s"')
 
     def __init__(self, *args, **kwargs):
-        self.__newSubject = kwargs.pop('subject')
+        self.__newSubject = kwargs.pop('newValue')
         super(EditSubjectCommand, self).__init__(*args, **kwargs)
         self.__oldSubjects = [item.subject() for item in self.items]
     
@@ -414,6 +414,27 @@ class EditSubjectCommand(BaseCommand):
     def undo_command(self):
         for item, oldSubject in zip(self.items, self.__oldSubjects):
             item.setSubject(oldSubject)
+            
+    def redo_command(self):
+        self.do_command()
+        
+        
+class EditDescriptionCommand(BaseCommand):
+    plural_name = _('Edit descripions')
+    singular_name = _('Edit description "%s"')
+
+    def __init__(self, *args, **kwargs):
+        self.__newDescription = kwargs.pop('newValue')
+        super(EditDescriptionCommand, self).__init__(*args, **kwargs)
+        self.__oldDescriptions = [item.description() for item in self.items]
+    
+    def do_command(self):
+        for item in self.items:
+            item.setDescription(self.__newDescription)
+            
+    def undo_command(self):
+        for item, oldDescription in zip(self.items, self.__oldDescriptions):
+            item.setDescription(oldDescription)
             
     def redo_command(self):
         self.do_command()

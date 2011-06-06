@@ -122,6 +122,7 @@ class IOController(object):
                 return
             except Exception:
                 # pylint: disable-msg=W0142
+                print ''.join(traceback.format_exception(*sys.exc_info()))
                 showerror(_('Error while reading %s:\n')%filename + \
                     ''.join(traceback.format_exception(*sys.exc_info())) + \
                     _('Are you sure it is a %s-file?')%meta.name, 

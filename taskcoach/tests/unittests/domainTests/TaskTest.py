@@ -733,10 +733,10 @@ class TaskDueTodayTest(TaskTestCase, CommonTaskTestsMixin):
         self.settings.set('behavior', 'duesoonhours', '0')
         self.assertEqual('led_grey_icon', self.task.icon(recursive=True))
         
-    def testIconNotificationAfterChangingDueSoonHours(self):
-        self.registerObserver(self.task.iconChangedEventType())
+    def testAppearanceNotificationAfterChangingDueSoonHours(self):
+        self.registerObserver(self.task.appearanceChangedEventType())
         self.settings.set('behavior', 'duesoonhours', '0')
-        self.assertEvent(self.task.iconChangedEventType(), self.task, '')
+        self.assertEvent(self.task.appearanceChangedEventType(), self.task)
         
     def testIconAfterDueDateTimeHasPassed(self):
         now = self.task.dueDateTime() + date.oneSecond
@@ -746,13 +746,13 @@ class TaskDueTodayTest(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual('led_red_icon', self.task.icon(recursive=True))
         date.Now = oldNow
         
-    def testIconNotificationAfterDueDateTimeHasPassed(self):
-        self.registerObserver(self.task.iconChangedEventType())
+    def testAppearanceNotificationAfterDueDateTimeHasPassed(self):
+        self.registerObserver(self.task.appearanceChangedEventType())
         now = self.task.dueDateTime() + date.oneSecond
         oldNow = date.Now
         date.Now = lambda: now
         date.Clock().notifySpecificTimeObservers(now)
-        self.assertEvent(self.task.iconChangedEventType(), self.task, '')
+        self.assertEvent(self.task.appearanceChangedEventType(), self.task)
         date.Now = oldNow
 
 
@@ -789,10 +789,10 @@ class TaskDueTomorrowTest(TaskTestCase, CommonTaskTestsMixin):
         self.settings.set('behavior', 'duesoonhours', '48')
         self.assertEqual('led_orange_icon', self.task.selectedIcon(recursive=True))
 
-    def testIconNotificationAfterChangingDueSoonHours(self):
-        self.registerObserver(self.task.iconChangedEventType())
+    def testAppearanceNotificationAfterChangingDueSoonHours(self):
+        self.registerObserver(self.task.appearanceChangedEventType())
         self.settings.set('behavior', 'duesoonhours', '48')
-        self.assertEvent(self.task.iconChangedEventType(), self.task, '')
+        self.assertEvent(self.task.appearanceChangedEventType(), self.task)
 
 
 class OverdueTaskTest(TaskTestCase, CommonTaskTestsMixin):
@@ -834,10 +834,10 @@ class OverdueTaskTest(TaskTestCase, CommonTaskTestsMixin):
         self.task.setDueDateTime(date.Now() + date.TimeDelta(hours=72))
         self.assertEqual('led_grey_icon', self.task.selectedIcon(recursive=True))
 
-    def testIconNotificationAfterChangingDueDateTime(self):
-        self.registerObserver(self.task.iconChangedEventType())
+    def testAppearanceNotificationAfterChangingDueDateTime(self):
+        self.registerObserver(self.task.appearanceChangedEventType())
         self.task.setDueDateTime(date.Now() + date.TimeDelta(hours=72))
-        self.assertEvent(self.task.iconChangedEventType(), self.task, '')
+        self.assertEvent(self.task.appearanceChangedEventType(), self.task)
 
     def testIconAfterMarkingComplete(self):
         self.task.setCompletionDateTime()
@@ -847,10 +847,10 @@ class OverdueTaskTest(TaskTestCase, CommonTaskTestsMixin):
         self.task.setCompletionDateTime()
         self.assertEqual('led_green_icon', self.task.selectedIcon(recursive=True))
 
-    def testIconNotificationAfterMarkingComplete(self):
-        self.registerObserver(self.task.iconChangedEventType())
+    def testAppearanceNotificationAfterMarkingComplete(self):
+        self.registerObserver(self.task.appearanceChangedEventType())
         self.task.setCompletionDateTime()
-        self.assertEvent(self.task.iconChangedEventType(), self.task, '')
+        self.assertEvent(self.task.appearanceChangedEventType(), self.task)
 
 
 class CompletedTaskTest(TaskTestCase, CommonTaskTestsMixin):
@@ -904,10 +904,10 @@ class CompletedTaskTest(TaskTestCase, CommonTaskTestsMixin):
         self.task.setCompletionDateTime(date.DateTime.max)
         self.assertEqual('led_grey_icon', self.task.selectedIcon(recursive=True))
 
-    def testIconNotificationAfterMarkingUncomplete(self):
-        self.registerObserver(self.task.iconChangedEventType())
+    def testAppearanceNotificationAfterMarkingUncomplete(self):
+        self.registerObserver(self.task.appearanceChangedEventType())
         self.task.setCompletionDateTime(date.DateTime.max)
-        self.assertEvent(self.task.iconChangedEventType(), self.task, '')
+        self.assertEvent(self.task.appearanceChangedEventType(), self.task)
         
 
 class TaskCompletedInTheFutureTest(TaskTestCase, CommonTaskTestsMixin):
@@ -971,13 +971,13 @@ class TaskWithStartDateInTheFutureTest(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual('led_blue_icon', self.task.icon(recursive=True))
         date.Now = oldNow
         
-    def testIconNotificationAfterStartDateTimeHasPassed(self):
-        self.registerObserver(self.task.iconChangedEventType())
+    def testAppearanceNotificationAfterStartDateTimeHasPassed(self):
+        self.registerObserver(self.task.appearanceChangedEventType())
         now = self.task.startDateTime() + date.oneSecond
         oldNow = date.Now
         date.Now = lambda: now
         date.Clock().notifySpecificTimeObservers(now)
-        self.assertEvent(self.task.iconChangedEventType(), self.task, '')
+        self.assertEvent(self.task.appearanceChangedEventType(), self.task)
         date.Now = oldNow
 
     def testIconAfterMarkingComplete(self):
@@ -988,10 +988,10 @@ class TaskWithStartDateInTheFutureTest(TaskTestCase, CommonTaskTestsMixin):
         self.task.setCompletionDateTime()
         self.assertEqual('led_green_icon', self.task.selectedIcon(recursive=True))
 
-    def testIconNotificationAfterMarkingComplete(self):
-        self.registerObserver(self.task.iconChangedEventType())
+    def testAppearanceNotificationAfterMarkingComplete(self):
+        self.registerObserver(self.task.appearanceChangedEventType())
         self.task.setCompletionDateTime()
-        self.assertEvent(self.task.iconChangedEventType(), self.task, '')
+        self.assertEvent(self.task.appearanceChangedEventType(), self.task)
 
     def testIconAfterChangingStartDateTime(self):
         self.task.setStartDateTime(date.Now() - date.TimeDelta(hours=72))
@@ -1001,10 +1001,10 @@ class TaskWithStartDateInTheFutureTest(TaskTestCase, CommonTaskTestsMixin):
         self.task.setStartDateTime(date.Now() - date.TimeDelta(hours=72))
         self.assertEqual('led_blue_icon', self.task.selectedIcon(recursive=True))
 
-    def testIconNotificationAfterChangingStartDateTime(self):
-        self.registerObserver(self.task.iconChangedEventType())
+    def testApperanceNotificationAfterChangingStartDateTime(self):
+        self.registerObserver(self.task.appearanceChangedEventType())
         self.task.setStartDateTime(date.Now() - date.TimeDelta(hours=72))
-        self.assertEvent(self.task.iconChangedEventType(), self.task, '')
+        self.assertEvent(self.task.appearanceChangedEventType(), self.task)
 
 
 class TaskWithStartDateInThePastTest(TaskTestCase, CommonTaskTestsMixin):
@@ -1021,11 +1021,11 @@ class TaskWithStartDateInThePastTest(TaskTestCase, CommonTaskTestsMixin):
         self.task2.addDependencies([self.task])
         self.failUnless(self.task.inactive())
         
-    def testIconNotificationWhenAddingAnUncompletedPrerequisite(self):
-        self.registerObserver(self.task.iconChangedEventType())
+    def testAppearanceNotificationWhenAddingAnUncompletedPrerequisite(self):
+        self.registerObserver(self.task.appearanceChangedEventType())
         self.task.addPrerequisites([self.task2])
         self.task2.addDependencies([self.task])
-        self.assertEvent(self.task.iconChangedEventType(), self.task, '')
+        self.assertEvent(self.task.appearanceChangedEventType(), self.task)
 
     def testTaskBecomesActiveWhenUncompletedPrerequisiteIsCompleted(self):
         # pylint: disable-msg=E1101
@@ -1034,12 +1034,12 @@ class TaskWithStartDateInThePastTest(TaskTestCase, CommonTaskTestsMixin):
         self.task2.setCompletionDateTime()
         self.failIf(self.task.inactive())
         
-    def testIconNotificationWhenUncompletedPrerequisiteIsCompleted(self):
+    def testAppearanceNotificationWhenUncompletedPrerequisiteIsCompleted(self):
         self.task.addPrerequisites([self.task2])
         self.task2.addDependencies([self.task])
-        self.registerObserver(self.task.iconChangedEventType(), eventSource=self.task)
+        self.registerObserver(self.task.appearanceChangedEventType(), eventSource=self.task)
         self.task2.setCompletionDateTime()
-        self.assertEvent(self.task.iconChangedEventType(), self.task, '')
+        self.assertEvent(self.task.appearanceChangedEventType(), self.task)
 
 
 class TaskWithoutStartDateTime(TaskTestCase, CommonTaskTestsMixin):
@@ -1058,12 +1058,12 @@ class TaskWithoutStartDateTime(TaskTestCase, CommonTaskTestsMixin):
         self.failUnless(self.task.active())
         self.assertEqual('led_blue_icon', self.task.icon(recursive=True))
 
-    def testIconNotificationWhenUncompletedPrerequisiteIsCompleted(self):
+    def testAppearanceNotificationWhenUncompletedPrerequisiteIsCompleted(self):
         self.task.addPrerequisites([self.task2])
         self.task2.addDependencies([self.task])
-        self.registerObserver(self.task.iconChangedEventType(), eventSource=self.task)
+        self.registerObserver(self.task.appearanceChangedEventType(), eventSource=self.task)
         self.task2.setCompletionDateTime()
-        self.failUnless(self.task.iconChangedEventType() in self.events[0].types())
+        self.failUnless(self.task.appearanceChangedEventType() in self.events[0].types())
 
         
 class InactiveTaskWithChildTest(TaskTestCase):
@@ -1464,21 +1464,21 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
         self.assertEqual(3000, self.task.revenue(recursive=True))
 
     def testForegroundColorChangeNotificationOfEfforts(self):
-        self.registerObserver(effort.Effort.foregroundColorChangedEventType())
+        self.registerObserver(effort.Effort.appearanceChangedEventType())
         self.task.addEffort(effort.Effort(self.task))
         self.task1_1.addEffort(effort.Effort(self.task1_1))
         self.task.setForegroundColor(wx.RED)
         self.assertEqual(1, len(self.events))
         
     def testBackgroundColorChangeNotificationOfEfforts(self):
-        self.registerObserver(effort.Effort.backgroundColorChangedEventType())
+        self.registerObserver(effort.Effort.appearanceChangedEventType())
         self.task.addEffort(effort.Effort(self.task))
         self.task1_1.addEffort(effort.Effort(self.task1_1))
         self.task.setBackgroundColor(wx.RED)
         self.assertEqual(1, len(self.events))
 
     def testForegroundColorChangeNotificationOfEfforts_ViaCategory(self):
-        self.registerObserver(effort.Effort.foregroundColorChangedEventType())
+        self.registerObserver(effort.Effort.appearanceChangedEventType())
         self.task.addEffort(effort.Effort(self.task))
         self.task1_1.addEffort(effort.Effort(self.task1_1))
         cat = category.Category('Cat')
@@ -1488,7 +1488,7 @@ class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
         self.assertEqual(1, len(self.events))
 
     def testBackgroundColorChangeNotificationOfEfforts_ViaCategory(self):
-        self.registerObserver(effort.Effort.backgroundColorChangedEventType())
+        self.registerObserver(effort.Effort.appearanceChangedEventType())
         self.task.addEffort(effort.Effort(self.task))
         self.task1_1.addEffort(effort.Effort(self.task1_1))
         cat = category.Category('Cat')
@@ -1702,10 +1702,10 @@ class TaskWithOneEffortTest(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual(0, self.task.revenue())
 
     def testNotifyEffortOfBackgroundColorChange(self):
-        self.registerObserver(effort.Effort.backgroundColorChangedEventType())
+        self.registerObserver(effort.Effort.appearanceChangedEventType())
         self.task.setBackgroundColor(wx.RED)
-        self.assertEvent(effort.Effort.backgroundColorChangedEventType(), 
-                         self.task1effort1, wx.RED)
+        self.assertEvent(effort.Effort.appearanceChangedEventType(), 
+                         self.task1effort1)
         
 
 class TaskWithTwoEffortsTest(TaskTestCase, CommonTaskTestsMixin):
@@ -1803,10 +1803,10 @@ class TaskWithChildAndEffortTest(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual(4800, self.task.revenue(recursive=True))
         
     def testChildEffortBackgroundColorNotification(self):
-        eventType = self.task1_1effort1.backgroundColorChangedEventType()
+        eventType = self.task1_1effort1.appearanceChangedEventType()
         self.registerObserver(eventType, self.task1_1effort1)
         self.task.setBackgroundColor(wx.RED)
-        self.assertEvent(eventType, self.task1_1effort1, wx.RED)
+        self.assertEvent(eventType, self.task1_1effort1)
         
 
 class TaskWithGrandChildAndEffortTest(TaskTestCase, CommonTaskTestsMixin):
@@ -2238,12 +2238,12 @@ class TaskWithPrerequisite(TaskTestCase):
         self.prerequisite.setSubject('New subject')
         self.assertEvent(eventType, self.task, 'New subject')
         
-    def testIconNotificationAfterMarkingPrerequisiteCompleted(self):
+    def testAppearanceNotificationAfterMarkingPrerequisiteCompleted(self):
         self.prerequisite.addDependencies([self.task])
-        eventType = self.task.iconChangedEventType()
+        eventType = self.task.appearanceChangedEventType()
         self.registerObserver(eventType, eventSource=self.task)
         self.prerequisite.setCompletionDateTime(date.Now())
-        self.assertEvent(eventType, self.task, '')
+        self.assertEvent(eventType, self.task)
         
 
 class TaskWithDependency(TaskTestCase):

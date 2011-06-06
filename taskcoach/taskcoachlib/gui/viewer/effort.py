@@ -52,11 +52,8 @@ class EffortViewer(base.ListViewer,
             effort.Effort.trackStartEventType(), 
             effort.Effort.trackStopEventType())
         self.aggregationUICommand.setChoice(self.aggregation)
-        for eventType in (effort.Effort.foregroundColorChangedEventType(),  
-                          effort.Effort.backgroundColorChangedEventType(),
-                          effort.Effort.fontChangedEventType()):
-            patterns.Publisher().registerObserver(self.onAttributeChanged,
-                                                  eventType=eventType)
+        patterns.Publisher().registerObserver(self.onAttributeChanged,
+                                              eventType=effort.Effort.appearanceChangedEventType())
         
     def domainObjectsToView(self):
         if self.__domainObjectsToView is None:
@@ -313,7 +310,7 @@ class EffortViewer(base.ListViewer,
     def statusMessages(self):
         status1 = _('Effort: %d selected, %d visible, %d total')%\
             (len(self.curselection()), len(self.presentation()), 
-             self.presentation().originalLength())         
+             len(self.taskFile.efforts()))         
         status2 = _('Status: %d tracking')% self.presentation().nrBeingTracked()
         return status1, status2
     

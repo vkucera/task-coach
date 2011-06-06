@@ -25,7 +25,8 @@ from taskcoachlib import patterns, command, widgets, domain
 from taskcoachlib.domain import note
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, dialog
-import base, mixin
+import base, mixin, inplace_editor
+
 
 class BaseNoteViewer(mixin.AttachmentDropTargetMixin, 
                      mixin.SearchableViewerMixin, 
@@ -40,12 +41,8 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
         kwargs.setdefault('settingsSection', 'noteviewer')
         self.notesToShow = kwargs.get('notesToShow', None)
         super(BaseNoteViewer, self).__init__(*args, **kwargs)
-        for eventType in (note.Note.subjectChangedEventType(),
-                          note.Note.foregroundColorChangedEventType(),
-                          note.Note.backgroundColorChangedEventType(),
-                          note.Note.fontChangedEventType(),
-                          note.Note.iconChangedEventType(),
-                          note.Note.selectedIconChangedEventType()):
+        for eventType in (note.Note.appearanceChangedEventType(), 
+                          note.Note.subjectChangedEventType()):
             patterns.Publisher().registerObserver(self.onAttributeChanged, 
                                                   eventType)
 
@@ -65,7 +62,6 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
         widget = widgets.TreeListCtrl(self, self.columns(), self.onSelect,
             uicommand.Edit(viewer=self),
             uicommand.NoteDragAndDrop(viewer=self, notes=self.presentation()),
-            uicommand.EditSubject(viewer=self),
             itemPopupMenu, columnPopupMenu,
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(imageList) # pylint: disable-msg=E1101
@@ -97,31 +93,26 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
                 setting='categories', viewer=self)]
 
     def _createColumns(self):
-        columns = [widgets.Column(name, columnHeader,
-                width=self.getColumnWidth(name), 
-                resizeCallback=self.onResizeColumn,
-                renderCallback=renderCallback, 
-                sortCallback=uicommand.ViewerSortByCommand(viewer=self, 
-                    value=name.lower(), menuText=sortMenuText, 
-                    helpText=sortHelpText),
-                imageIndicesCallback=imageIndicesCallback,
-                *eventTypes) \
-            for name, columnHeader, sortMenuText, sortHelpText, eventTypes, renderCallback, imageIndicesCallback in \
-            ('subject', _('Subject'), _('&Subject'), _('Sort notes by subject'), 
-                (note.Note.subjectChangedEventType(),), 
-                lambda note: note.subject(recursive=False), 
-                self.subjectImageIndices),
-            ('description', _('Description'), _('&Description'), 
-                _('Sort notes by description'), 
-                (note.Note.descriptionChangedEventType(),), 
-                lambda note: note.description(), None),
-            ('categories', _('Categories'), _('&Categories'), 
-                _('Sort notes by categories'), 
-                (note.Note.categoryAddedEventType(), 
-                 note.Note.categoryRemovedEventType(), 
-                 note.Note.categorySubjectChangedEventType(),
-                 note.Note.expansionChangedEventType()), 
-                self.renderCategories, None)]
+        subjectColumn = widgets.Column('subject', _('Subject'), 
+            width=self.getColumnWidth('subject'), 
+            resizeCallback=self.onResizeColumn,
+            renderCallback=lambda note: note.subject(),
+            sortCallback=uicommand.ViewerSortByCommand(viewer=self, 
+                value='subject', menuText=_('&Subject'), 
+                helpText=_('Sort notes by subject')),
+            imageIndicesCallback=self.subjectImageIndices,
+            editCommand=command.EditSubjectCommand,
+            editControl=inplace_editor.EditTextCtrl)
+        descriptionColumn = widgets.Column('description', _('Description'),
+            note.Note.descriptionChangedEventType(),
+            width=self.getColumnWidth('description'), 
+            resizeCallback=self.onResizeColumn,
+            renderCallback=lambda note: note.description(),
+            sortCallback=uicommand.ViewerSortByCommand(viewer=self, 
+                value='description', menuText=_('&Description'), 
+                helpText=_('Sort notes by description')),
+            editCommand=command.EditDescriptionCommand,
+            editControl=inplace_editor.MultilineEditTextCtrl)
         attachmentsColumn = widgets.Column('attachments', '', 
             note.Note.attachmentsChangedEventType(), # pylint: disable-msg=E1101
             width=self.getColumnWidth('attachments'),
@@ -129,8 +120,18 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
             imageIndicesCallback=self.attachmentImageIndices,
             headerImageIndex=self.imageIndex['paperclip_icon'],
             renderCallback=lambda note: '')
-        columns.insert(2, attachmentsColumn)
-        return columns
+        categoriesColumn = widgets.Column('categories', _('Categories'),
+            note.Note.categoryAddedEventType(), 
+            note.Note.categoryRemovedEventType(), 
+            note.Note.categorySubjectChangedEventType(),
+            note.Note.expansionChangedEventType(),
+            width=self.getColumnWidth('categories'),
+            resizeCallback=self.onResizeColumn,
+            renderCallback=self.renderCategories,
+            sortCallback=uicommand.ViewerSortByCommand(viewer=self, 
+                value='categories', menuText=_('&Categories'), 
+                helpText=_('Sort notes by categories')))
+        return [subjectColumn, descriptionColumn, attachmentsColumn, categoriesColumn]
 
     def getItemTooltipData(self, item, column=0):
         if self.settings.getboolean('view', 'descriptionpopups'):
