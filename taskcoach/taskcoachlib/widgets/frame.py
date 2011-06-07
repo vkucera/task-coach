@@ -39,8 +39,9 @@ class AuiManagedFrameWithDynamicCenterPane(wx.Frame):
             event.Veto() 
         else:
             event.Skip() 
-            if self.isCenterPane(pane):                
-                dockedPanes.remove(pane)
+            if self.isCenterPane(pane):
+                if pane in dockedPanes:                
+                    dockedPanes.remove(pane)
                 dockedPanes[0].Center()
                 
     def addPane(self, window, caption, name):

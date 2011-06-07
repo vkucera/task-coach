@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.20', 'June 6, 2011',
+Release('1.2.20', 'June 7, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Task Coach tried to use Python 2.5 on Ubuntu.''',
@@ -34,6 +34,8 @@ aggregated effort (per day, per week or per month).'''),
 specific category (say C), Task Coach would show a task even though it didn't
 belong to that category if that task had completed subtasks belonging 
 to category C.''', '3309006'),
+        Bug('''Floating and then closing the task viewer didn't work.''', 
+            '3313199'),
         ],
     featuresAdded=[
         Feature('''Descriptions of tasks, notes and categories can be edited 
