@@ -251,7 +251,7 @@ _MAX_WIDTH = 30000  # pixels; used by OnPaint to redraw only exposed items
 
 _DRAG_TIMER_TICKS = 250   # minimum drag wait time in ms
 _FIND_TIMER_TICKS = 500   # minimum find wait time in ms
-_RENAME_TIMER_TICKS = 250 # minimum edit wait time in ms
+_EDIT_TIMER_TICKS = 250 # minimum edit wait time in ms
 
 # --------------------------------------------------------------------------
 # Additional HitTest style
@@ -3596,7 +3596,7 @@ class TreeListMainWindow(CustomTreeCtrl):
                 if item == self._current and self._curColumn != -1 and \
                    self._owner.GetHeaderWindow().IsColumnEditable(self._curColumn) and \
                    flags & (wx.TREE_HITTEST_ONITEMLABEL | wx.TREE_HITTEST_ONITEMCOLUMN):
-                    self._editTimer.Start(_RENAME_TIMER_TICKS, wx.TIMER_ONE_SHOT)
+                    self._editTimer.Start(_EDIT_TIMER_TICKS, wx.TIMER_ONE_SHOT)
                 
                 self._lastOnSame = False
             
