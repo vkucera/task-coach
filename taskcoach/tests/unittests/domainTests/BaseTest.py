@@ -100,11 +100,7 @@ class ObjectTest(test.TestCase):
         self.eventsReceived = []
         for eventType in (self.object.subjectChangedEventType(), 
                           self.object.descriptionChangedEventType(),
-                          self.object.foregroundColorChangedEventType(),
-                          self.object.backgroundColorChangedEventType(),
-                          self.object.fontChangedEventType(),
-                          self.object.iconChangedEventType(),
-                          self.object.selectedIconChangedEventType()):
+                          self.object.appearanceChangedEventType()):
             patterns.Publisher().registerObserver(self.onEvent, eventType)
 
     def onEvent(self, event):
@@ -340,11 +336,7 @@ class ObjectTest(test.TestCase):
     def testModificationEventTypes(self):
         self.assertEqual([self.object.subjectChangedEventType(),
                           self.object.descriptionChangedEventType(),
-                          self.object.foregroundColorChangedEventType(),
-                          self.object.backgroundColorChangedEventType(),
-                          self.object.fontChangedEventType(),
-                          self.object.iconChangedEventType(),
-                          self.object.selectedIconChangedEventType()],
+                          self.object.appearanceChangedEventType()],
                          self.object.modificationEventTypes())
 
 
@@ -426,10 +418,10 @@ class CompositeObjectTest(test.TestCase):
         self.compositeObject.setForegroundColor(wx.BLUE)        
         self.assertEqual(wx.RED, self.child.foregroundColor(recursive=True))
 
-    def testForegroundColorChangedNotification(self):
+    def testApperanceChangedNotificationWhenForegroundColorChanges(self):
         self.addChild()
         patterns.Publisher().registerObserver(self.onEvent,
-            eventType=base.CompositeObject.foregroundColorChangedEventType(),
+            eventType=base.CompositeObject.appearanceChangedEventType(),
             eventSource=self.child)
         self.compositeObject.setForegroundColor(wx.RED)
         self.assertEqual(1, len(self.eventsReceived))
@@ -447,7 +439,7 @@ class CompositeObjectTest(test.TestCase):
     def testBackgroundColorChangedNotification(self):
         self.addChild()
         patterns.Publisher().registerObserver(self.onEvent,
-            eventType=base.CompositeObject.backgroundColorChangedEventType(),
+            eventType=base.CompositeObject.appearanceChangedEventType(),
             eventSource=self.child)
         self.compositeObject.setBackgroundColor(wx.RED)
         self.assertEqual(1, len(self.eventsReceived))
@@ -465,7 +457,7 @@ class CompositeObjectTest(test.TestCase):
     def testFontChangedNotification(self):
         self.addChild()
         patterns.Publisher().registerObserver(self.onEvent,
-            eventType=base.CompositeObject.fontChangedEventType(), 
+            eventType=base.CompositeObject.appearanceChangedEventType(), 
             eventSource=self.child)
         self.compositeObject.setFont(wx.SWISS_FONT)
         self.assertEqual(1, len(self.eventsReceived))
@@ -483,7 +475,7 @@ class CompositeObjectTest(test.TestCase):
     def testIconChangedNotification(self):
         self.addChild()
         patterns.Publisher().registerObserver(self.onEvent,
-            eventType=base.CompositeObject.iconChangedEventType(),
+            eventType=base.CompositeObject.appearanceChangedEventType(),
             eventSource=self.child)
         self.compositeObject.setIcon('icon')
         self.assertEqual(1, len(self.eventsReceived))
@@ -506,7 +498,7 @@ class CompositeObjectTest(test.TestCase):
     def testSelectedIconChangedNotification(self):
         self.addChild()
         patterns.Publisher().registerObserver(self.onEvent,
-            eventType=base.CompositeObject.selectedIconChangedEventType(),
+            eventType=base.CompositeObject.appearanceChangedEventType(),
             eventSource=self.child)
         self.compositeObject.setSelectedIcon('icon')
         self.assertEqual(1, len(self.eventsReceived))
@@ -616,11 +608,7 @@ class CompositeObjectTest(test.TestCase):
                           self.compositeObject.removeChildEventType(),
                           self.compositeObject.subjectChangedEventType(),
                           self.compositeObject.descriptionChangedEventType(),
-                          self.compositeObject.foregroundColorChangedEventType(),
-                          self.compositeObject.backgroundColorChangedEventType(),
-                          self.compositeObject.fontChangedEventType(),
-                          self.compositeObject.iconChangedEventType(),
-                          self.compositeObject.selectedIconChangedEventType(),
+                          self.compositeObject.appearanceChangedEventType(),
                           self.compositeObject.expansionChangedEventType()], 
                          self.compositeObject.modificationEventTypes())
 

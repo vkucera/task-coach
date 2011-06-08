@@ -135,15 +135,15 @@ class Object(SynchronizedObject):
         self.__description = Attribute(kwargs.pop('description', ''), self,
                                        self.descriptionChangedEvent)
         self.__fgColor = Attribute(kwargs.pop('fgColor', None), self, 
-                                   self.foregroundColorChangedEvent)
+                                   self.appearanceChangedEvent)
         self.__bgColor = Attribute(kwargs.pop('bgColor', None), self,
-                                   self.backgroundColorChangedEvent)
+                                   self.appearanceChangedEvent)
         self.__font = Attribute(kwargs.pop('font', None), self,
-                                self.fontChangedEvent)
+                                self.appearanceChangedEvent)
         self.__icon = Attribute(kwargs.pop('icon', ''), self,
-                                self.iconChangedEvent)
+                                self.appearanceChangedEvent)
         self.__selectedIcon = Attribute(kwargs.pop('selectedIcon', ''), self,
-                                        self.selectedIconChangedEvent)
+                                        self.appearanceChangedEvent)
         self.__id = kwargs.pop('id', None) or '%s:%s'%(id(self), time.time())
         # FIXME: Not a valid XML id
         # FIXME: When dropping support for python 2.4, use the uuid module
@@ -278,14 +278,6 @@ class Object(SynchronizedObject):
         # the simplest workaround.
         return self.__fgColor.get()
 
-    def foregroundColorChangedEvent(self, event):
-        event.addSource(self, self.foregroundColor(), 
-                        type=self.foregroundColorChangedEventType())
-
-    @classmethod
-    def foregroundColorChangedEventType(class_):
-        return '%s.fgColor'%class_
-    
     def setBackgroundColor(self, color, event=None):
         self.__bgColor.set(color, event=event)
         
@@ -294,14 +286,6 @@ class Object(SynchronizedObject):
         # code assumes composite objects where there aren't. This is
         # the simplest workaround.
         return self.__bgColor.get()
-
-    def backgroundColorChangedEvent(self, event):
-        event.addSource(self, self.backgroundColor(), 
-                        type=self.backgroundColorChangedEventType())
-
-    @classmethod
-    def backgroundColorChangedEventType(class_):
-        return '%s.bgColor'%class_
     
     # Font:
     
@@ -313,13 +297,6 @@ class Object(SynchronizedObject):
     
     def setFont(self, font, event=None):
         self.__font.set(font, event=event)
-        
-    def fontChangedEvent(self, event):
-        event.addSource(self, self.font(), type=self.fontChangedEventType())
-
-    @classmethod    
-    def fontChangedEventType(class_):
-        return '%s.font'%class_
 
     # Icons:
 
@@ -329,28 +306,20 @@ class Object(SynchronizedObject):
     def setIcon(self, icon, event=None):
         self.__icon.set(icon, event=event)
 
-    def iconChangedEvent(self, event):
-        event.addSource(self, self.icon(), type=self.iconChangedEventType())
-
-    @classmethod
-    def iconChangedEventType(class_):
-        return '%s.icon'%class_
-
     def selectedIcon(self):
         return self.__selectedIcon.get()
 
     def setSelectedIcon(self, icon, event=None):
         self.__selectedIcon.set(icon, event=event)
-
-    def selectedIconChangedEvent(self, event):
-        event.addSource(self, self.selectedIcon(),
-                        type=self.selectedIconChangedEventType())
-
-    @classmethod
-    def selectedIconChangedEventType(class_):
-        return '%s.selectedIcon'%class_
     
     # Event types:
+    
+    @classmethod
+    def appearanceChangedEventType(class_):
+        return '%s.appearance'%class_
+    
+    def appearanceChangedEvent(self, event):
+        event.addSource(self, type=self.appearanceChangedEventType())
     
     @classmethod
     def modificationEventTypes(class_):
@@ -359,12 +328,8 @@ class Object(SynchronizedObject):
         except AttributeError:
             eventTypes = []
         return eventTypes + [class_.subjectChangedEventType(),
-                             class_.descriptionChangedEventType(),
-                             class_.foregroundColorChangedEventType(),
-                             class_.backgroundColorChangedEventType(),
-                             class_.fontChangedEventType(),
-                             class_.iconChangedEventType(),
-                             class_.selectedIconChangedEventType()]
+                             class_.descriptionChangedEventType(), 
+                             class_.appearanceChangedEventType()]
 
 
 class CompositeObject(Object, patterns.ObservableComposite):
@@ -441,53 +406,27 @@ class CompositeObject(Object, patterns.ObservableComposite):
     def expansionChangedEvent(self, event):
         event.addSource(self, type=self.expansionChangedEventType())
     
-    # Color:
+    # Appearance:
 
-    def foregroundColor(self, recursive=True):
+    def appearanceChangedEvent(self, event):
+        super(CompositeObject, self).appearanceChangedEvent(event)
+        # Assume that most of the times our children change appearance too
+        for child in self.children():
+            child.appearanceChangedEvent(event)
+
+    def foregroundColor(self, recursive=False):
         myFgColor = super(CompositeObject, self).foregroundColor()
         if not myFgColor and recursive and self.parent():
             return self.parent().foregroundColor(recursive=True)
         else:
             return myFgColor
-
-    def foregroundColorChangedEvent(self, event):
-        super(CompositeObject, self).foregroundColorChangedEvent(event)
-        children = self.childrenWithoutOwnForegroundColor()
-        fgColor = self.foregroundColor(recursive=False)
-        for child in children:
-            event.addSource(child, fgColor, type=child.foregroundColorChangedEventType())
-
-    def childrenWithoutOwnForegroundColor(self, parent=None):
-        parent = parent or self
-        children = []
-        for child in parent.children():
-            if child.foregroundColor(recursive=False) is None:
-                children.extend([child] + self.childrenWithoutOwnForegroundColor(child))
-        return children
-        
-    def backgroundColor(self, recursive=True):
+                
+    def backgroundColor(self, recursive=False):
         myBgColor = super(CompositeObject, self).backgroundColor()
         if not myBgColor and recursive and self.parent():
             return self.parent().backgroundColor(recursive=True)
         else:
             return myBgColor
-                
-    def backgroundColorChangedEvent(self, event):
-        super(CompositeObject, self).backgroundColorChangedEvent(event)
-        children = self.childrenWithoutOwnBackgroundColor()
-        bgColor = self.backgroundColor(recursive=False)
-        for child in children:
-            event.addSource(child, bgColor, type=child.backgroundColorChangedEventType())
-
-    def childrenWithoutOwnBackgroundColor(self, parent=None):
-        parent = parent or self
-        children = []
-        for child in parent.children():
-            if child.backgroundColor(recursive=False) is None:
-                children.extend([child] + self.childrenWithoutOwnBackgroundColor(child))
-        return children
-    
-    # Font:
     
     def font(self, recursive=False):
         myFont = super(CompositeObject, self).font()
@@ -495,23 +434,6 @@ class CompositeObject(Object, patterns.ObservableComposite):
             return self.parent().font(recursive=True)
         else:
             return myFont
-
-    def fontChangedEvent(self, event):
-        super(CompositeObject, self).fontChangedEvent(event)
-        children = self.childrenWithoutOwnFont()
-        font = self.font(recursive=False)
-        for child in children:
-            event.addSource(child, font, type=child.fontChangedEventType())
-            
-    def childrenWithoutOwnFont(self, parent=None):
-        parent = parent or self
-        children = []
-        for child in parent.children():
-            if child.font(recursive=False) is None:
-                children.extend([child] + self.childrenWithoutOwnFont(child))
-        return children
-
-    # Icon:
 
     def icon(self, recursive=False):
         myIcon = super(CompositeObject, self).icon()
@@ -521,21 +443,6 @@ class CompositeObject(Object, patterns.ObservableComposite):
             myIcon = self.parent().icon(recursive=True)
         return self.pluralOrSingularIcon(myIcon)
 
-    def iconChangedEvent(self, event):
-        super(CompositeObject, self).iconChangedEvent(event)
-        children = self.childrenWithoutOwnIcon()
-        icon = self.icon(recursive=False)
-        for child in children:
-            event.addSource(child, icon, type=child.iconChangedEventType())
-
-    def childrenWithoutOwnIcon(self, parent=None):
-        parent = parent or self
-        children = []
-        for child in parent.children():
-            if not child.icon(recursive=False):
-                children.extend([child] + self.childrenWithoutOwnIcon(child))
-        return children
-
     def selectedIcon(self, recursive=False):
         myIcon = super(CompositeObject, self).selectedIcon()
         if not recursive:
@@ -543,21 +450,6 @@ class CompositeObject(Object, patterns.ObservableComposite):
         if not myIcon and self.parent():
             myIcon = self.parent().selectedIcon(recursive=True)
         return self.pluralOrSingularIcon(myIcon)
-
-    def selectedIconChangedEvent(self, event):
-        super(CompositeObject, self).selectedIconChangedEvent(event)
-        children = self.childrenWithoutOwnSelectedIcon()
-        icon = self.selectedIcon(recursive=False)
-        for child in children:
-            event.addSource(child, icon, type=child.selectedIconChangedEventType())
-
-    def childrenWithoutOwnSelectedIcon(self, parent=None):
-        parent = parent or self
-        children = []
-        for child in parent.children():
-            if not child.selectedIcon(recursive=False):
-                children.extend([child] + self.childrenWithoutOwnSelectedIcon(child))
-        return children
 
     def pluralOrSingularIcon(self, myIcon):
         hasChildren = any(child for child in self.children() if not child.isDeleted())

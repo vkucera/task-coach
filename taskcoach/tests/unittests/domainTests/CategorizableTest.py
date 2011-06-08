@@ -30,10 +30,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
     categoryAddedEventType = categorizable.CategorizableCompositeObject.categoryAddedEventType()
     categoryRemovedEventType = categorizable.CategorizableCompositeObject.categoryRemovedEventType()
     categorySubjectChangedEventType = categorizable.CategorizableCompositeObject.categorySubjectChangedEventType()
-    foregroundColorChangedEventType = categorizable.CategorizableCompositeObject.foregroundColorChangedEventType()
-    backgroundColorChangedEventType = categorizable.CategorizableCompositeObject.backgroundColorChangedEventType()
-    fontChangedEventType = categorizable.CategorizableCompositeObject.fontChangedEventType()
-    iconChangedEventType = categorizable.CategorizableCompositeObject.iconChangedEventType()
+    appearanceChangedEventType = categorizable.CategorizableCompositeObject.appearanceChangedEventType()
         
     def assertEvent(self, *expectedEventArgs):
         expectedEvent = patterns.Event(*expectedEventArgs)
@@ -152,12 +149,12 @@ class CategorizableCompositeObjectTest(test.TestCase):
     def testForegroundColor(self):
         self.categorizable.addCategory(self.category)
         self.category.setForegroundColor(wx.RED)
-        self.assertEqual(wx.RED, self.categorizable.foregroundColor())
+        self.assertEqual(wx.RED, self.categorizable.foregroundColor(recursive=True))
 
     def testBackgroundColor(self):
         self.categorizable.addCategory(self.category)
         self.category.setBackgroundColor(wx.RED)
-        self.assertEqual(wx.RED, self.categorizable.backgroundColor())
+        self.assertEqual(wx.RED, self.categorizable.backgroundColor(recursive=True))
         
     def testFont(self):
         self.categorizable.addCategory(self.category)
@@ -168,13 +165,13 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.categorizable.addCategory(self.category)
         self.category.setForegroundColor(wx.RED)
         self.categorizable.setForegroundColor(wx.GREEN)
-        self.assertEqual(wx.GREEN, self.categorizable.foregroundColor())
+        self.assertEqual(wx.GREEN, self.categorizable.foregroundColor(recursive=True))
 
     def testCategorizableOwnBackgroundColorOverridesCategoryBackgroundColor(self):
         self.categorizable.addCategory(self.category)
         self.category.setBackgroundColor(wx.RED)
         self.categorizable.setBackgroundColor(wx.GREEN)
-        self.assertEqual(wx.GREEN, self.categorizable.backgroundColor())
+        self.assertEqual(wx.GREEN, self.categorizable.backgroundColor(recursive=True))
 
     def testCategorizableOwnFontOverridesCategoryFont(self):
         self.categorizable.addCategory(self.category)
@@ -185,12 +182,12 @@ class CategorizableCompositeObjectTest(test.TestCase):
     def testForegroundColorWithTupleColor(self):
         self.categorizable.addCategory(self.category)
         self.category.setForegroundColor((255, 0, 0, 255))
-        self.assertEqual(wx.RED, self.categorizable.foregroundColor())
+        self.assertEqual(wx.RED, self.categorizable.foregroundColor(recursive=True))
         
     def testBackgroundColorWithTupleColor(self):
         self.categorizable.addCategory(self.category)
         self.category.setBackgroundColor((255, 0, 0, 255))
-        self.assertEqual(wx.RED, self.categorizable.backgroundColor())
+        self.assertEqual(wx.RED, self.categorizable.backgroundColor(recursive=True))
 
     def testSubItemUsesParentForegroundColor(self):
         self.categorizable.addCategory(self.category)
@@ -198,7 +195,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.categorizable.addChild(child)
         child.setParent(self.categorizable)
         self.category.setForegroundColor(wx.RED)
-        self.assertEqual(wx.RED, child.foregroundColor())
+        self.assertEqual(wx.RED, child.foregroundColor(recursive=True))
     
     def testSubItemUsesParentBackgroundColor(self):
         self.categorizable.addCategory(self.category)
@@ -206,7 +203,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.categorizable.addChild(child)
         child.setParent(self.categorizable)
         self.category.setBackgroundColor(wx.RED)
-        self.assertEqual(wx.RED, child.backgroundColor())
+        self.assertEqual(wx.RED, child.backgroundColor(recursive=True))
         
     def testSubItemUsesParentFont(self):
         self.categorizable.addCategory(self.category)
@@ -223,7 +220,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
         child.addCategory(self.category)
         self.categorizable.setForegroundColor(wx.RED)
         self.category.setForegroundColor(wx.BLUE)
-        self.assertEqual(wx.BLUE, child.foregroundColor())
+        self.assertEqual(wx.BLUE, child.foregroundColor(recursive=True))
         
     def testSubItemDoesNotUseParentBackgroundColorWhenItHasItsOwnBackgroundColor(self):
         child = categorizable.CategorizableCompositeObject()
@@ -232,7 +229,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
         child.addCategory(self.category)
         self.categorizable.setBackgroundColor(wx.RED)
         self.category.setBackgroundColor(wx.BLUE)
-        self.assertEqual(wx.BLUE, child.backgroundColor())
+        self.assertEqual(wx.BLUE, child.backgroundColor(recursive=True))
 
     def testSubItemDoesNotUseParentFontWhenItHasItsOwnFont(self):
         child = categorizable.CategorizableCompositeObject()
@@ -249,35 +246,35 @@ class CategorizableCompositeObjectTest(test.TestCase):
     def testForegroundColorChanged(self):
         self.categorizable.addCategory(self.category)
         self.category.addCategorizable(self.categorizable)
-        self.registerObserver(self.foregroundColorChangedEventType)
+        self.registerObserver(self.appearanceChangedEventType)
         self.category.setForegroundColor(wx.RED)
         self.assertEqual(1, len(self.events))
     
     def testBackgroundColorChanged(self):
         self.categorizable.addCategory(self.category)
         self.category.addCategorizable(self.categorizable)
-        self.registerObserver(self.backgroundColorChangedEventType)
+        self.registerObserver(self.appearanceChangedEventType)
         self.category.setBackgroundColor(wx.RED)
         self.assertEqual(1, len(self.events))
         
     def testFontChanged(self):
         self.categorizable.addCategory(self.category)
         self.category.addCategorizable(self.categorizable)
-        self.registerObserver(self.fontChangedEventType)
+        self.registerObserver(self.appearanceChangedEventType)
         self.category.setFont(wx.SWISS_FONT)
         self.assertEqual(1, len(self.events))
 
     def testIconChanged(self):
         self.categorizable.addCategory(self.category)
         self.category.addCategorizable(self.categorizable)
-        self.registerObserver(self.iconChangedEventType)
+        self.registerObserver(self.appearanceChangedEventType)
         self.category.setIcon('icon')
         self.assertEqual(1, len(self.events))
 
     def testForegroundColorChanged_NotifySubItemsToo(self):
         child = categorizable.CategorizableCompositeObject()
         self.categorizable.addChild(child)
-        self.registerObserver(self.foregroundColorChangedEventType, eventSource=child)
+        self.registerObserver(self.appearanceChangedEventType, eventSource=child)
         self.categorizable.addCategory(self.category)
         self.category.addCategorizable(self.categorizable)
         self.category.setForegroundColor(wx.RED)
@@ -286,7 +283,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
     def testBackgroundColorChanged_NotifySubItemsToo(self):
         child = categorizable.CategorizableCompositeObject()
         self.categorizable.addChild(child)
-        self.registerObserver(self.backgroundColorChangedEventType, 
+        self.registerObserver(self.appearanceChangedEventType, 
                               eventSource=child)
         self.categorizable.addCategory(self.category)
         self.category.addCategorizable(self.categorizable)
@@ -296,7 +293,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
     def testFontChanged_NotifySubItemsToo(self):
         child = categorizable.CategorizableCompositeObject()
         self.categorizable.addChild(child)
-        self.registerObserver(self.fontChangedEventType, eventSource=child)
+        self.registerObserver(self.appearanceChangedEventType, eventSource=child)
         self.categorizable.addCategory(self.category)
         self.category.addCategorizable(self.categorizable)
         self.category.setFont(wx.SWISS_FONT)
@@ -305,7 +302,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
     def testIconChanged_NotifySubItemsToo(self):
         child = categorizable.CategorizableCompositeObject()
         self.categorizable.addChild(child)
-        self.registerObserver(self.iconChangedEventType, eventSource=child)
+        self.registerObserver(self.appearanceChangedEventType, eventSource=child)
         self.categorizable.addCategory(self.category)
         self.category.addCategorizable(self.categorizable)
         self.category.setIcon('icon')
@@ -314,33 +311,33 @@ class CategorizableCompositeObjectTest(test.TestCase):
     def testCategorizableDoesNotNotifyWhenItHasItsOwnForegroundColor(self):
         self.categorizable.addCategory(self.category)
         self.categorizable.setForegroundColor(wx.RED)
-        self.registerObserver(self.categorizable.foregroundColorChangedEventType())
+        self.registerObserver(self.categorizable.appearanceChangedEventType())
         self.category.setForegroundColor(wx.GREEN)
         self.failIf(self.events)
                 
     def testCategorizableDoesNotNotifyWhenItHasItsOwnBackgroundColor(self):
         self.categorizable.addCategory(self.category)
         self.categorizable.setBackgroundColor(wx.RED)
-        self.registerObserver(self.categorizable.backgroundColorChangedEventType())
+        self.registerObserver(self.categorizable.appearanceChangedEventType())
         self.category.setBackgroundColor(wx.GREEN)
         self.failIf(self.events)
 
     def testCategorizableDoesNotNotifyWhenItHasItsOwnFont(self):
         self.categorizable.addCategory(self.category)
         self.categorizable.setFont(wx.SWISS_FONT)
-        self.registerObserver(self.categorizable.fontChangedEventType())
+        self.registerObserver(self.categorizable.appearanceChangedEventType())
         self.category.setFont(wx.NORMAL_FONT)
         self.failIf(self.events)
 
     def testCategorizableDoesNotNotifyWhenItHasItsOwnIcon(self):
         self.categorizable.addCategory(self.category)
         self.categorizable.setIcon('icon')
-        self.registerObserver(self.categorizable.iconChangedEventType())
+        self.registerObserver(self.categorizable.appearanceChangedEventType())
         self.category.setIcon('another icon')
         self.failIf(self.events)
 
     def testParentForegroundColorChanged(self):
-        self.registerObserver(self.foregroundColorChangedEventType)
+        self.registerObserver(self.appearanceChangedEventType)
         subCategory = category.Category('Subcategory')
         self.category.addChild(subCategory)
         subCategory.setParent(self.category)
@@ -350,7 +347,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.assertEqual(1, len(self.events))
         
     def testParentBackgroundColorChanged(self):
-        self.registerObserver(self.backgroundColorChangedEventType)
+        self.registerObserver(self.appearanceChangedEventType)
         subCategory = category.Category('Subcategory')
         self.category.addChild(subCategory)
         subCategory.setParent(self.category)
@@ -360,7 +357,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.assertEqual(1, len(self.events))
 
     def testParentFontChanged(self):
-        self.registerObserver(self.fontChangedEventType)
+        self.registerObserver(self.appearanceChangedEventType)
         subCategory = category.Category('Subcategory')
         self.category.addChild(subCategory)
         subCategory.setParent(self.category)
@@ -370,7 +367,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.assertEqual(1, len(self.events))
 
     def testParentIconChanged(self):
-        self.registerObserver(self.iconChangedEventType)
+        self.registerObserver(self.appearanceChangedEventType)
         subCategory = category.Category('Subcategory')
         self.category.addChild(subCategory)
         subCategory.setParent(self.category)
@@ -380,35 +377,35 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.assertEqual(1, len(self.events))
         
     def testAddCategoryWithForegroundColor(self):
-        self.registerObserver(self.foregroundColorChangedEventType)
+        self.registerObserver(self.appearanceChangedEventType)
         newCategory = category.Category('New category')
         newCategory.setForegroundColor(wx.RED)
         self.categorizable.addCategory(newCategory)
         self.assertEqual(1, len(self.events))
         
     def testAddCategoryWithBackgroundColor(self):
-        self.registerObserver(self.backgroundColorChangedEventType)
+        self.registerObserver(self.appearanceChangedEventType)
         newCategory = category.Category('New category')
         newCategory.setBackgroundColor(wx.RED)
         self.categorizable.addCategory(newCategory)
         self.assertEqual(1, len(self.events))
 
     def testAddCategoryWithFont(self):
-        self.registerObserver(self.fontChangedEventType)
+        self.registerObserver(self.appearanceChangedEventType)
         newCategory = category.Category('New category')
         newCategory.setFont(wx.SWISS_FONT)
         self.categorizable.addCategory(newCategory)
         self.assertEqual(1, len(self.events))
 
     def testAddCategoryWithIcon(self):
-        self.registerObserver(self.iconChangedEventType)
+        self.registerObserver(self.appearanceChangedEventType)
         newCategory = category.Category('New category')
         newCategory.setIcon('icon')
         self.categorizable.addCategory(newCategory)
         self.assertEqual(1, len(self.events))
 
     def testAddCategoryWithParentWithForegroundColor(self):
-        self.registerObserver(self.foregroundColorChangedEventType)
+        self.registerObserver(self.appearanceChangedEventType)
         parentCategory = category.Category('Parent')
         parentCategory.setForegroundColor(wx.RED)
         childCategory = category.Category('Child')
@@ -418,7 +415,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.assertEqual(1, len(self.events))
         
     def testAddCategoryWithParentWithBackgroundColor(self):
-        self.registerObserver(self.backgroundColorChangedEventType)
+        self.registerObserver(self.appearanceChangedEventType)
         parentCategory = category.Category('Parent')
         parentCategory.setBackgroundColor(wx.RED)
         childCategory = category.Category('Child')
@@ -428,7 +425,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.assertEqual(1, len(self.events))
 
     def testAddCategoryWithParentWithFont(self):
-        self.registerObserver(self.fontChangedEventType)
+        self.registerObserver(self.appearanceChangedEventType)
         parentCategory = category.Category('Parent')
         parentCategory.setFont(wx.SWISS_FONT)
         childCategory = category.Category('Child')
@@ -438,7 +435,7 @@ class CategorizableCompositeObjectTest(test.TestCase):
         self.assertEqual(1, len(self.events))
 
     def testAddCategoryWithParentWithIcon(self):
-        self.registerObserver(self.iconChangedEventType)
+        self.registerObserver(self.appearanceChangedEventType)
         parentCategory = category.Category('Parent')
         parentCategory.setIcon('icon')
         childCategory = category.Category('Child')
@@ -450,28 +447,28 @@ class CategorizableCompositeObjectTest(test.TestCase):
     def testRemoveCategoryWithForegroundColor(self):
         self.categorizable.addCategory(self.category)
         self.category.setForegroundColor(wx.RED)
-        self.registerObserver(self.foregroundColorChangedEventType)
+        self.registerObserver(self.appearanceChangedEventType)
         self.categorizable.removeCategory(self.category)
         self.assertEqual(1, len(self.events))
         
     def testRemoveCategoryWithBackgroundColor(self):
         self.categorizable.addCategory(self.category)
         self.category.setBackgroundColor(wx.RED)
-        self.registerObserver(self.backgroundColorChangedEventType)
+        self.registerObserver(self.appearanceChangedEventType)
         self.categorizable.removeCategory(self.category)
         self.assertEqual(1, len(self.events))
 
     def testRemoveCategoryWithFont(self):
         self.categorizable.addCategory(self.category)
         self.category.setFont(wx.SWISS_FONT)
-        self.registerObserver(self.fontChangedEventType)
+        self.registerObserver(self.appearanceChangedEventType)
         self.categorizable.removeCategory(self.category)
         self.assertEqual(1, len(self.events))
 
     def testRemoveCategoryWithIcon(self):
         self.categorizable.addCategory(self.category)
         self.category.setIcon('icon')
-        self.registerObserver(self.iconChangedEventType)
+        self.registerObserver(self.appearanceChangedEventType)
         self.categorizable.removeCategory(self.category)
         self.assertEqual(1, len(self.events))
 

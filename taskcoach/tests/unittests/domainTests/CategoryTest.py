@@ -269,13 +269,13 @@ class CategoryTest(test.TestCase):
         self.assertEqual(wx.RED, copy.backgroundColor())
 
     def testForegroundColorChangeNotification(self):
-        eventType = category.Category.foregroundColorChangedEventType()
+        eventType = category.Category.appearanceChangedEventType()
         self.registerObserver(eventType)
         self.category.setForegroundColor(wx.RED)
         self.assertEqual(1, len(self.events))
         
     def testBackgroundColorChangeNotification(self):
-        eventType = category.Category.backgroundColorChangedEventType()
+        eventType = category.Category.appearanceChangedEventType()
         self.registerObserver(eventType)
         self.category.setBackgroundColor(wx.RED)
         self.assertEqual(1, len(self.events))
@@ -283,32 +283,32 @@ class CategoryTest(test.TestCase):
     def testSubCategoryWithoutForegroundColorHasParentForegroundColor(self):
         self.category.addChild(self.subCategory)
         self.category.setForegroundColor(wx.RED)
-        self.assertEqual(wx.RED, self.subCategory.foregroundColor())
+        self.assertEqual(wx.RED, self.subCategory.foregroundColor(recursive=True))
         
     def testSubCategoryWithoutBackgroundColorHasParentBackgroundColor(self):
         self.category.addChild(self.subCategory)
         self.category.setBackgroundColor(wx.RED)
-        self.assertEqual(wx.RED, self.subCategory.backgroundColor())
+        self.assertEqual(wx.RED, self.subCategory.backgroundColor(recursive=True))
 
     def testSubCategoryWithoutForegroundColorHasNoOwnForegroundColor(self):
         self.category.addChild(self.subCategory)
         self.category.setForegroundColor(wx.RED)
-        self.assertEqual(None, self.subCategory.foregroundColor(recursive=False))
+        self.assertEqual(None, self.subCategory.foregroundColor())
         
     def testSubCategoryWithoutBackgroundColorHasNoOwnBackgroundColor(self):
         self.category.addChild(self.subCategory)
         self.category.setBackgroundColor(wx.RED)
-        self.assertEqual(None, self.subCategory.backgroundColor(recursive=False))
+        self.assertEqual(None, self.subCategory.backgroundColor())
 
     def testParentForegroundColorChangeNotification(self):
-        eventType = category.Category.foregroundColorChangedEventType()
+        eventType = category.Category.appearanceChangedEventType()
         self.registerObserver(eventType)
         self.category.addChild(self.subCategory)
         self.category.setForegroundColor(wx.RED)
         self.assertEqual(1, len(self.events))
                 
     def testParentBackgroundColorChangeNotification(self):
-        eventType = category.Category.backgroundColorChangedEventType()
+        eventType = category.Category.appearanceChangedEventType()
         self.registerObserver(eventType)
         self.category.addChild(self.subCategory)
         self.category.setBackgroundColor(wx.RED)
@@ -317,19 +317,19 @@ class CategoryTest(test.TestCase):
     # Icon:
 
     def testIconChangedNotification(self):
-        eventType = categorizable.CategorizableCompositeObject.iconChangedEventType()
+        eventType = categorizable.CategorizableCompositeObject.appearanceChangedEventType()
         self.registerObserver(eventType)
         self.category.addCategorizable(self.categorizable)
         self.category.setIcon('icon')
-        self.assertEqual([patterns.Event(eventType, self.categorizable, '')],
+        self.assertEqual([patterns.Event(eventType, self.categorizable)],
                          self.events)
 
     def testSelectedIconChangedNotification(self):
-        eventType = categorizable.CategorizableCompositeObject.selectedIconChangedEventType()
+        eventType = categorizable.CategorizableCompositeObject.appearanceChangedEventType()
         self.registerObserver(eventType)
         self.category.addCategorizable(self.categorizable)
         self.category.setSelectedIcon('icon')
-        self.assertEqual([patterns.Event(eventType, self.categorizable, '')],
+        self.assertEqual([patterns.Event(eventType, self.categorizable)],
                          self.events)
 
     # Notes:

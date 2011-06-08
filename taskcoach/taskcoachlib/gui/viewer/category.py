@@ -25,7 +25,7 @@ from taskcoachlib import patterns, command, widgets
 from taskcoachlib.domain import category 
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, dialog
-import base, mixin
+import base, mixin, inplace_editor
 
 
 class BaseCategoryViewer(mixin.AttachmentDropTargetMixin, 
@@ -41,14 +41,10 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'categoryviewer')
         super(BaseCategoryViewer, self).__init__(*args, **kwargs)
-        for eventType in (category.Category.subjectChangedEventType(),
-                          category.Category.foregroundColorChangedEventType(),
-                          category.Category.backgroundColorChangedEventType(),
-                          category.Category.fontChangedEventType(),
-                          category.Category.iconChangedEventType(),
-                          category.Category.selectedIconChangedEventType(),
+        for eventType in [category.Category.subjectChangedEventType(),
+                          category.Category.appearanceChangedEventType(),
                           category.Category.exclusiveSubcategoriesChangedEventType(),
-                          category.Category.filterChangedEventType()):
+                          category.Category.filterChangedEventType()]:
             patterns.Publisher().registerObserver(self.onAttributeChanged, 
                 eventType)
 
@@ -68,7 +64,6 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
             self.onSelect, self.onCheck,
             uicommand.Edit(viewer=self),
             uicommand.CategoryDragAndDrop(viewer=self, categories=self.presentation()),
-            uicommand.EditSubject(viewer=self),
             itemPopupMenu, columnPopupMenu,
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(imageList) # pylint: disable-msg=E1101
@@ -87,15 +82,17 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                        sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                            value='subject'),
                        imageIndicesCallback=self.subjectImageIndices,
-                       width=self.getColumnWidth('subject'), 
-                       **kwargs),
+                       width=self.getColumnWidth('subject'),
+                       editCommand=command.EditSubjectCommand, 
+                       editControl=inplace_editor.EditTextCtrl, **kwargs),
                    widgets.Column('description', _('Description'), 
                        category.Category.descriptionChangedEventType(), 
                        sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                            value='description'),
                        renderCallback=lambda category: category.description(), 
                        width=self.getColumnWidth('description'), 
-                       **kwargs),
+                       editCommand=command.EditDescriptionCommand,
+                       editControl=inplace_editor.MultilineEditTextCtrl, **kwargs),
                    widgets.Column('attachments', '', 
                        category.Category.attachmentsChangedEventType(), # pylint: disable-msg=E1101
                        width=self.getColumnWidth('attachments'),

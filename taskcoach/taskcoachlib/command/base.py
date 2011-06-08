@@ -492,7 +492,7 @@ class EditSubjectCommand(BaseCommand):
     singular_name = _('Edit subject "%s"')
 
     def __init__(self, *args, **kwargs):
-        self.__newSubject = kwargs.pop('subject')
+        self.__newSubject = kwargs.pop('newValue', '') or kwargs.pop('subject', '')
         super(EditSubjectCommand, self).__init__(*args, **kwargs)
         self.__oldSubjects = [item.subject() for item in self.items]
     
@@ -515,7 +515,7 @@ class EditDescriptionCommand(BaseCommand):
     singular_name = _('Edit description "%s"')
 
     def __init__(self, *args, **kwargs):
-        self.__newDescription = kwargs.pop('description')
+        self.__newDescription = kwargs.pop('newValue', '') or kwargs.pop('description', '')
         super(EditDescriptionCommand, self).__init__(*args, **kwargs)
         self.__oldDescriptions = [item.description() for item in self.items]
     
@@ -636,5 +636,5 @@ class EditBackgroundColorCommand(EditColorCommand):
     @staticmethod
     def setItemColor(item, color, event):
         item.setBackgroundColor(color, event=event)
-    
-    
+            
+        

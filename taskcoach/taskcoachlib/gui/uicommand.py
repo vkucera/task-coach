@@ -1271,7 +1271,7 @@ class Edit(NeedsSelectionMixin, ViewerCommand):
 
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
         windowWithFocus = wx.Window.FindFocus()
-        if isinstance(windowWithFocus, thirdparty.hypertreelist.EditTextCtrl):
+        if isinstance(windowWithFocus, thirdparty.hypertreelist.EditCtrl):
             windowWithFocus.AcceptChanges()
             windowWithFocus.Finish()
             return
@@ -1285,7 +1285,7 @@ class Edit(NeedsSelectionMixin, ViewerCommand):
 
     def enabled(self, event):
         windowWithFocus = wx.Window.FindFocus()
-        if isinstance(windowWithFocus, thirdparty.hypertreelist.EditTextCtrl):
+        if isinstance(windowWithFocus, thirdparty.hypertreelist.EditCtrl):
             return True
         elif '__WXMAC__' == wx.Platform and isinstance(windowWithFocus, wx.TextCtrl):
             return False
@@ -1620,19 +1620,6 @@ class TaskDragAndDrop(DragAndDropCommand, TaskListCommand):
     def createCommand(self, dragItem, dropItem):
         return command.DragAndDropTaskCommand(self.taskList, [dragItem], 
                                               drop=[dropItem])
-
-
-class EditSubject(ViewerCommand):
-    def onCommandActivate(self, item, newSubject): # pylint: disable-msg=W0221
-        ''' Override onCommandActivate to tbe able to accept an item and the
-            new subject. '''
-        self.doCommand(item, newSubject)
-        
-    def doCommand(self, item, newSubject):
-        if newSubject and newSubject != item.subject():
-            editSubject = command.EditSubjectCommand(self.viewer.presentation(),
-                                                     [item], subject=newSubject)
-            editSubject.do()
         
 
 class ToggleCategory(NeedsSelectedCategorizableMixin, ViewerCommand):

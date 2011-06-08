@@ -43,6 +43,7 @@ header = '''
         </script>
         <link rel="stylesheet" href="css/lightbox.css" type="text/css" media="screen" />
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+        <link rel="canonical" href="%(url)s" />
         <title>%(name)s</title>
     </head>
     <body>
@@ -134,7 +135,8 @@ footer = '''
                                 scrolling="no" frameborder="0" 
                                 style="border:none; overflow:hidden; width:190px; height:21px;" 
                                 allowTransparency="true">
-                        </iframe>
+                        </iframe><br>
+                        <g:plusone size="medium"></g:plusone>
                     </li>
                 </p>
             </div>
@@ -186,6 +188,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
                 </ul>
             </div>
         </div>
+        <script type="text/javascript" src="http://apis.google.com/js/plusone.js"></script>
     </body>
 </html>
 '''%meta.metaDict

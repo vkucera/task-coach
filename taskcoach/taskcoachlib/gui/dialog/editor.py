@@ -127,7 +127,8 @@ class CategorySubjectPage(SubjectPage):
             'exclusivity', self._exclusiveSubcategoriesCheckBox, 
             currentExclusivity, self.items, 
             command.EditExclusiveSubcategoriesCommand, wx.EVT_CHECKBOX,
-            self.items[0].exclusiveSubcategoriesChangedEventType())
+            self.items[0].exclusiveSubcategoriesChangedEventType(),
+            'hasExclusiveSubcategories')
         self.addEntry(_('Subcategories'), self._exclusiveSubcategoriesCheckBox,
                       flags=[None, wx.ALL])
             
@@ -200,9 +201,9 @@ class AppearancePage(Page):
         colorEntry = entry.ColorEntry(self, currentColor, defaultColor)
         setattr(self, '_%sColorEntry'%colorType, colorEntry)        
         commandClass = getattr(command, 'Edit%sColorCommand'%colorType.capitalize())
-        eventType = getattr(self.items[0], '%sColorChangedEventType'%colorType)()
         colorSync = attributesync.AttributeSync('color', colorEntry, currentColor, 
-            self.items, commandClass, entry.EVT_COLORENTRY, eventType)
+            self.items, commandClass, entry.EVT_COLORENTRY, 
+            self.items[0].appearanceChangedEventType(), '%sColor'%colorType)
         setattr(self, '_%sColorSync'%colorType, colorSync)
         self.addEntry(labelText, colorEntry, flags=[None, wx.ALL])
             
@@ -213,11 +214,11 @@ class AppearancePage(Page):
         self._fontEntry = entry.FontEntry(self, currentFont, currentColor)
         self._fontSync = attributesync.AttributeSync('font', self._fontEntry, 
             currentFont, self.items, command.EditFontCommand, 
-            entry.EVT_FONTENTRY, self.items[0].fontChangedEventType())
+            entry.EVT_FONTENTRY, self.items[0].appearanceChangedEventType())
         self._fontColorSync = attributesync.FontColorSync('color', 
             self._fontEntry, currentColor, self.items, 
             command.EditForegroundColorCommand, entry.EVT_FONTENTRY,
-            self.items[0].foregroundColorChangedEventType())
+            self.items[0].appearanceChangedEventType(), 'foregroundColor')
         self.addEntry(_('Font'), self._fontEntry, flags=[None, wx.ALL])
                     
     def addIconEntry(self):
@@ -226,7 +227,7 @@ class AppearancePage(Page):
         self._iconEntry = entry.IconEntry(self, currentIcon)
         self._iconSync = attributesync.AttributeSync('icon', self._iconEntry, 
             currentIcon, self.items, command.EditIconCommand, 
-            entry.EVT_ICONENTRY, self.items[0].iconChangedEventType())
+            entry.EVT_ICONENTRY, self.items[0].appearanceChangedEventType())
         self.addEntry(_('Icon'), self._iconEntry, flags=[None, wx.ALL])
     
     def entries(self):
@@ -275,7 +276,7 @@ class DatesPage(Page):
         eventType = 'task.%s'%taskMethodName
         datetimeSync = attributesync.AttributeSync('datetime', dateTimeEntry, 
             dateTime, self.items, commandClass, entry.EVT_DATETIMEENTRY, 
-            eventType)
+            eventType, taskMethodName)
         setattr(self, '_%sSync'%taskMethodName, datetimeSync) 
         self.addEntry(label, dateTimeEntry)
         dateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeChanged)
@@ -292,7 +293,7 @@ class DatesPage(Page):
         self._reminderDateTimeSync = attributesync.AttributeSync('datetime', 
             self._reminderDateTimeEntry, currentReminderDateTime, self.items, 
             command.EditReminderDateTimeCommand, entry.EVT_DATETIMEENTRY, 
-            'task.reminder')
+            'task.reminder', 'reminder')
         self.addEntry(_('Reminder'), self._reminderDateTimeEntry)
         
     def addRecurrenceEntry(self):
@@ -362,7 +363,8 @@ class ProgressPage(Page):
             self._percentageCompleteEntry, currentPercentageComplete, 
             self.items, command.EditPercentageCompleteCommand, 
             entry.EVT_PERCENTAGEENTRY, 
-            self.items[0].percentageCompleteChangedEventType())
+            self.items[0].percentageCompleteChangedEventType(), 
+            'percentageComplete')
         self.addEntry(_('Percentage complete'), self._percentageCompleteEntry)
 
     @staticmethod
@@ -382,7 +384,8 @@ class ProgressPage(Page):
             'shouldMarkCompleted', self._shouldMarkCompletedEntry, 
             currentChoice, self.items, command.EditShouldMarkCompletedCommand, 
             entry.EVT_CHOICEENTRY,
-            'task.setting.shouldMarkCompletedWhenAllChildrenCompleted')                                                       
+            'task.setting.shouldMarkCompletedWhenAllChildrenCompleted',
+            'shouldMarkCompletedWhenAllChildrenCompleted')                                                       
         self.addEntry(_('Mark task completed when all children are completed?'), 
                       self._shouldMarkCompletedEntry, flags=[None, wx.ALL])
         
@@ -953,7 +956,7 @@ class EffortEditBook(Page):
         self._startDateTimeSync = attributesync.AttributeSync('datetime',
             self._startDateTimeEntry, currentStartDateTime, self.items,
             command.ChangeEffortStartDateTimeCommand, entry.EVT_DATETIMEENTRY,
-            'effort.start')
+            'effort.start', 'getStart')
         self._startDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeChanged)        
         startFromLastEffortButton = self._createStartFromLastEffortButton()
         self.addEntry(_('Start'), self._startDateTimeEntry,
@@ -965,7 +968,7 @@ class EffortEditBook(Page):
         self._stopDateTimeSync = attributesync.AttributeSync('datetime',
             self._stopDateTimeEntry, currentStopDateTime, self.items,
             command.ChangeEffortStopDateTimeCommand, entry.EVT_DATETIMEENTRY,
-            'effort.stop')
+            'effort.stop', 'getStop')
         self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeChanged)
         self._invalidPeriodMessage = self._createInvalidPeriodMessage()
         self.addEntry(_('Stop'), self._stopDateTimeEntry, 

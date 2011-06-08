@@ -212,6 +212,9 @@ class Column(object):
         # NB: because the header image is needed for sorting a fixed header
         # image cannot be combined with a sortable column
         self.__headerImageIndex = kwargs.pop('headerImageIndex', -1)
+        self.__editCommand = kwargs.get('editCommand', None)
+        self.__multiline = kwargs.get('multiline', False)
+        self.__editControlClass = kwargs.get('editControl', None)
         
     def name(self):
         return self.__name
@@ -257,6 +260,18 @@ class Column(object):
     
     def hasImages(self):
         return self.__hasImages
+    
+    def isEditable(self):
+        return self.__editCommand != None
+    
+    def editCommand(self):
+        return self.__editCommand
+    
+    def editControl(self):
+        return self.__editControlClass
+    
+    def isMultiline(self):
+        return self.__multiline
         
     def __eq__(self, other):
         return self.name() == other.name()

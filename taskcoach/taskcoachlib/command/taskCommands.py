@@ -336,7 +336,7 @@ class EditPriorityCommand(base.BaseCommand):
     singular_name = _('Change priority of "%s"')
     
     def __init__(self, *args, **kwargs):
-        self.__newPriority = kwargs.pop('priority')
+        self.__newPriority = kwargs.pop('priority', '') or kwargs.pop('newValue', '')
         super(EditPriorityCommand, self).__init__(*args, **kwargs)
         self.__oldPriorities = [item.priority() for item in self.items]
 
@@ -665,3 +665,6 @@ class TogglePrerequisiteCommand(base.BaseCommand):
 
     def redo_command(self):
         self.do_command()
+
+
+

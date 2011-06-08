@@ -101,7 +101,7 @@ class EditSubjectTestCase(CommandTestCase):
     def editSubject(self, newSubject, *items):
         editSubjectCommand = command.EditSubjectCommand(self.container, 
                                                         items, 
-                                                        subject=newSubject)
+                                                        newValue=newSubject)
         editSubjectCommand.do()
         
     def testEditSubject(self):

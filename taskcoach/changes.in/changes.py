@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.0', 'May 26, 2011',
+Release('1.3.0', 'June 8, 2011',
     summary='''This release makes all edits done in dialogs immediate.''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -41,14 +41,27 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.20', 'June ??, 2011',
+Release('1.2.20', 'June 7, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Task Coach tried to use Python 2.5 on Ubuntu.''',
             '3309089', '3309317'),
+        Bug('''The total number of effort records displayed in the status
+bar of an effort viewer would be incorrect when the effort viewer was showing 
+aggregated effort (per day, per week or per month).'''),
+        Bug('''When hiding completed tasks and showing tasks belonging to a 
+specific category (say C), Task Coach would show a task even though it didn't
+belong to that category if that task had completed subtasks belonging 
+to category C.''', '3309006'),
+        Bug('''Floating and then closing the task viewer didn't work.''', 
+            '3313199'),
         ],
     featuresAdded=[
+        Feature('''Descriptions of tasks, notes and categories can be edited 
+in-place when the description column is visible. Priority of tasks can be
+edited in-place when the priority column is visible.'''),
         Feature('''Basic editing (dates, subject) of task templates.'''),
+        Feature('''Session management on Linux is back.''', '2929786'),
         ],
     ),
 

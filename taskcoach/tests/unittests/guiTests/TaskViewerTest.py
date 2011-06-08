@@ -739,9 +739,7 @@ class CommonTestsMixin(object):
         # We still get an event for the subject column:
         expectedEvent = patterns.Event('task.completionDateTime', self.task, self.task.completionDateTime())
         expectedEvent.addSource(self.task, self.task.percentageComplete(), type=self.task.percentageCompleteChangedEventType())
-        expectedEvent.addSource(self.task, self.task.icon(), type=self.task.iconChangedEventType())
-        expectedEvent.addSource(self.task, self.task.selectedIcon(), type=self.task.selectedIconChangedEventType())
-        expectedEvent.addSource(self.task, self.task.foregroundColor(), type=self.task.foregroundColorChangedEventType())
+        expectedEvent.addSource(self.task, type=self.task.appearanceChangedEventType())
         self.assertEqual([expectedEvent], self.viewer.events)
 
     def testChangeCompletionDateWhileColumnShown(self):
@@ -750,9 +748,7 @@ class CommonTestsMixin(object):
         self.task.setCompletionDateTime(date.Now())
         expectedEvent = patterns.Event('task.completionDateTime', self.task, self.task.completionDateTime())
         expectedEvent.addSource(self.task, self.task.percentageComplete(), type=self.task.percentageCompleteChangedEventType())
-        expectedEvent.addSource(self.task, self.task.icon(), type=self.task.iconChangedEventType())
-        expectedEvent.addSource(self.task, self.task.selectedIcon(), type=self.task.selectedIconChangedEventType())
-        expectedEvent.addSource(self.task, self.task.foregroundColor(), type=self.task.foregroundColorChangedEventType())
+        expectedEvent.addSource(self.task, type=self.task.appearanceChangedEventType())
         self.assertEqual([expectedEvent], self.viewer.events)
 
     def testChangePercentageCompleteWhileColumnNotShown(self):

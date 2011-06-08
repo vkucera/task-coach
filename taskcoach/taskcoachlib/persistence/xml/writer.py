@@ -179,16 +179,16 @@ class XMLWriter(object):
         ''' Same as baseNode, but also create child nodes by means of
             the childNodeFactory. '''
         node = self.__baseNode(item, nodeName)
-        if item.foregroundColor(recursive=False):
-            node.setAttribute('fgColor', str(item.foregroundColor(recursive=False)))
-        if item.backgroundColor(recursive=False):
-            node.setAttribute('bgColor', str(item.backgroundColor(recursive=False)))
-        if item.font(recursive=False):
-            node.setAttribute('font', unicode(item.font(recursive=False).GetNativeFontInfoDesc()))
-        if item.icon(recursive=False):
-            node.setAttribute('icon', str(item.icon(recursive=False)))
-        if item.selectedIcon(recursive=False):
-            node.setAttribute('selectedIcon', str(item.selectedIcon(recursive=False)))
+        if item.foregroundColor():
+            node.setAttribute('fgColor', str(item.foregroundColor()))
+        if item.backgroundColor():
+            node.setAttribute('bgColor', str(item.backgroundColor()))
+        if item.font():
+            node.setAttribute('font', unicode(item.font().GetNativeFontInfoDesc()))
+        if item.icon():
+            node.setAttribute('icon', str(item.icon()))
+        if item.selectedIcon():
+            node.setAttribute('selectedIcon', str(item.selectedIcon()))
         if item.expandedContexts():
             node.setAttribute('expandedContexts', 
                               str(tuple(sorted(item.expandedContexts()))))
