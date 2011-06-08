@@ -420,7 +420,7 @@ class TaskBehaviorPage(SettingsPage):
         choices = [('', _('Nothing'))]
         choices.append(('startdue', _('Changing the start date changes the due date')))
         choices.append(('duestart', _('Changing the due date changes the start date')))
-        self.addChoiceSetting('view', 'datestied', _('Dates behaviour'), 
+        self.addChoiceSetting('view', 'datestied', _('Dates behavior'), 
                choices, helpText=_('What to do with start and due date if the other one is changed'))
         self.addMultipleChoiceSettings('view', 'snoozetimes', 
             _('Snooze times to offer in task reminder dialog'), 

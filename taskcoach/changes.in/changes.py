@@ -2889,7 +2889,7 @@ same month or week but in different years would erroneously be added.
 E.g. effort in January 2004 and January 2006 would be added.'''),
         Bug('''The mechanism to prevent effort periods with a negative
 duration (i.e.  a start time later than the stop time) in the effort editor
-was invoked on each key stroke which caused inconvenient behaviour. Fixed
+was invoked on each key stroke which caused inconvenient behavior. Fixed
 it by only invoking it when the user leaves the text or combo box.''')],
     featuresAdded=[
         Feature('''Added possibility to start tracking effort for a task, 
