@@ -42,6 +42,7 @@ to category C.''', '3309006'),
 in-place when the description column is visible. Priority of tasks can be
 edited in-place when the priority column is visible.'''),
         Feature('''Basic editing (dates, subject) of task templates.'''),
+        Feature('''Session management on Linux is back.''', '2929786'),
         ],
     ),
 
