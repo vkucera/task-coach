@@ -410,3 +410,26 @@ class EditPriorityCommand(base.BaseCommand):
             
     def redo_command(self):
         self.do_command()
+        
+        
+class EditBudgetCommand(base.BaseCommand):
+    plural_name = _('Change budgets')
+    singular_name = _('Change budget of "%s"')
+    
+    def __init__(self, *args, **kwargs):
+        self.__newBudget = kwargs.pop('newValue')
+        super(EditBudgetCommand, self).__init__(*args, **kwargs)
+        self.__oldBudgets = [item.budget() for item in self.items]
+        
+    @patterns.eventSource
+    def do_command(self, event=None):
+        for item in self.items:
+            item.setBudget(self.__newBudget, event=event)
+            
+    @patterns.eventSource
+    def undo_command(self, event=None):
+        for item, oldBudget in zip(self.items, self.__oldBudgets):
+            item.setBudget(oldBudget, event=event)
+            
+    def redo_command(self):
+        self.do_command()

@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.20', 'June 7, 2011',
+Release('1.2.20', 'June 9, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Task Coach tried to use Python 2.5 on Ubuntu.''',
@@ -40,7 +40,8 @@ to category C.''', '3309006'),
     featuresAdded=[
         Feature('''Descriptions of tasks, notes and categories can be edited 
 in-place when the description column is visible. Priority of tasks can be
-edited in-place when the priority column is visible.'''),
+edited in-place when the priority column is visible. Budget of tasks can be
+edited in-place when the budget column is visible.'''),
         Feature('''Basic editing (dates, subject) of task templates.'''),
         Feature('''Session management on Linux is back.''', '2929786'),
         ],

@@ -66,11 +66,7 @@ class TimeDeltaEntry(widgets.PanelWithBoxSizer):
                  *args, **kwargs):
         super(TimeDeltaEntry, self).__init__(parent, *args, **kwargs)
         hours, minutes, seconds = timeDelta.hoursMinutesSeconds()
-        self._entry = widgets.masked.TextCtrl(self, mask='#{6}:##:##',
-            formatcodes='FS',
-            fields=[masked.Field(formatcodes='r', defaultValue='%6d'%hours),
-                    masked.Field(defaultValue='%02d'%minutes),
-                    masked.Field(defaultValue='%02d'%seconds)])
+        self._entry = widgets.masked.TimeDeltaCtrl(self, hours, minutes, seconds)
         if readonly:
             self._entry.Disable()
         self.add(self._entry, flag=wx.EXPAND|wx.ALL, proportion=1)

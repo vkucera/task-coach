@@ -363,11 +363,14 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         command = self._getColumn(event.GetInt()).editCommand()
         wx.FutureCall(50, lambda: command(items=[domainObject], newValue=newValue).do())
         
-    def CreateEditCtrl(self, item, column):
-        editControlClass = self._getColumn(column).editControl()
+    def CreateEditCtrl(self, item, columnIndex):
+        column = self._getColumn(columnIndex)
+        editControlClass = column.editControl()
         parent = owner = self.GetMainWindow()
-        return editControlClass(parent, wx.ID_ANY, item, column, 
-                                owner, self.GetItemText(item, column))
+        domainObject = self.GetItemPyData(item)
+        value = column.value(domainObject)
+        return editControlClass(parent, wx.ID_ANY, item, columnIndex, 
+                                owner, value)
             
     # Override CtrlWithColumnsMixin with TreeListCtrl specific behaviour:
         

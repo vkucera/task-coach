@@ -1271,9 +1271,10 @@ class Edit(NeedsSelectionMixin, ViewerCommand):
 
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
         windowWithFocus = wx.Window.FindFocus()
-        if isinstance(windowWithFocus, thirdparty.hypertreelist.EditCtrl):
-            windowWithFocus.AcceptChanges()
-            windowWithFocus.Finish()
+        editCtrl = self.findEditCtrl(windowWithFocus)
+        if editCtrl:
+            editCtrl.AcceptChanges()
+            editCtrl.Finish()
             return
         try:
             columnName = event.columnName
@@ -1285,12 +1286,19 @@ class Edit(NeedsSelectionMixin, ViewerCommand):
 
     def enabled(self, event):
         windowWithFocus = wx.Window.FindFocus()
-        if isinstance(windowWithFocus, thirdparty.hypertreelist.EditCtrl):
+        if self.findEditCtrl(windowWithFocus):
             return True
         elif '__WXMAC__' == wx.Platform and isinstance(windowWithFocus, wx.TextCtrl):
             return False
         else:
-            return super(Edit, self).enabled(event)
+            return super(Edit, self).enabled(event)        
+
+    def findEditCtrl(self, windowWithFocus):
+        if isinstance(windowWithFocus, thirdparty.hypertreelist.EditCtrl):
+            return windowWithFocus
+        if isinstance(windowWithFocus.GetParent(), thirdparty.hypertreelist.EditCtrl):
+            return windowWithFocus.GetParent()
+        return None
 
 
 class EditTrackedTasks(TaskListCommand, SettingsCommand):

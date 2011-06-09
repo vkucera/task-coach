@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from wx.lib import masked
- 
+
 
 class FixOverwriteSelection(object):
     def _SetSelection(self, start, end):
@@ -37,3 +37,12 @@ class TextCtrl(FixOverwriteSelection, masked.TextCtrl):
 class NumCtrl(FixOverwriteSelection, masked.NumCtrl):
     pass
 
+
+class TimeDeltaCtrl(TextCtrl):
+    def __init__(self, parent, hours, minutes, seconds, *args, **kwargs):
+        super(TimeDeltaCtrl, self).__init__(parent, mask='#{6}:##:##',
+            formatcodes='FS',
+            fields=[masked.Field(formatcodes='r', defaultValue='%6d'%hours),
+                    masked.Field(defaultValue='%02d'%minutes),
+                    masked.Field(defaultValue='%02d'%seconds)], *args, **kwargs)
+        

@@ -23,21 +23,22 @@ In place editors for viewers.
 import wx
 from taskcoachlib.thirdparty import hypertreelist
 from taskcoachlib import widgets
+from taskcoachlib.domain import date
 
 
-class EditTextCtrl(hypertreelist.EditTextCtrl):
+class SubjectCtrl(hypertreelist.EditTextCtrl):
     pass
 
 
-class MultilineEditTextCtrl(EditTextCtrl):
+class DescriptionCtrl(hypertreelist.EditTextCtrl):
     def __init__(self, *args, **kwargs):
         kwargs['style'] = kwargs.get('style', 0) | wx.TE_MULTILINE
-        super(MultilineEditTextCtrl, self).__init__(*args, **kwargs)
+        super(DescriptionCtrl, self).__init__(*args, **kwargs)
         
         
-class EditSpinCtrl(hypertreelist.EditCtrl, widgets.SpinCtrl):
-    def __init__(self, *args, **kwargs):
-        super(EditSpinCtrl, self).__init__(*args, **kwargs)
+class PriorityCtrl(hypertreelist.EditCtrl, widgets.SpinCtrl):
+    def __init__(self, parent, id, item, column, owner, value):
+        super(PriorityCtrl, self).__init__(parent, id, item, column, owner, str(value))
         self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
         
     def OnKeyDown(self, event):
@@ -45,3 +46,26 @@ class EditSpinCtrl(hypertreelist.EditCtrl, widgets.SpinCtrl):
             self.StopEditing()
         else:
             event.Skip()
+
+
+class Panel(wx.Panel):
+    def __init__(self, parent, id, value, *args, **kwargs):
+        # Don't pass the value argument to the wx.Panel since it doesn't take 
+        # a value argument
+        super(Panel, self).__init__(parent, id, *args, **kwargs)        
+
+
+class BudgetCtrl(hypertreelist.EditCtrl, Panel):
+    def __init__(self, parent, id, item, column, owner, value):
+        super(BudgetCtrl, self).__init__(parent, id, item, column, owner)
+        hours, minutes, seconds = value.hoursMinutesSeconds()
+        # Can't inherit from TimeDeltaCtrl because we need to override GetValue,
+        # so we use composition instead
+        self.__timeDeltaCtrl = widgets.masked.TimeDeltaCtrl(self, hours, minutes, seconds)
+        sizer = wx.BoxSizer(wx.HORIZONTAL)
+        sizer.Add(self.__timeDeltaCtrl, flag=wx.EXPAND)
+        self.SetSizerAndFit(sizer)
+        
+    def GetValue(self):
+        return date.parseTimeDelta(self.__timeDeltaCtrl.GetValue())
+    
