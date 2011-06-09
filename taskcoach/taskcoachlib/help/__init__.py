@@ -110,7 +110,7 @@ _TOC = sequence(
         li(
             a_href(_('iPhone and iPod Touch'), 'iphone'),
             ul(
-                li(a_href(_('Task Coach on the iPhone'), 'taskcoachiphone')),
+                li(a_href(_('%(name)s on the iPhone')%meta.metaDict, 'taskcoachiphone')),
                 li(a_href(_('Configuration'), 'iphoneconf')),
                 li(a_href(_('Troubleshooting'), 'iphonetrouble')))),
         li(
@@ -572,8 +572,8 @@ due date by the current date plus one day.''')),
         _('''You can also add templates from the template editor (File/Edit
 templates), as well as edit the template's basic properties (dates and
 subject). Dates are provided in a human-readable format; the date editor
-will become red if Task Coach cannot figure out what it means. Example
-dates:''')),
+will become red if %(name)s cannot figure out what it means. Example
+dates:''')%meta.metaDict),
     ul(
         li('3 pm tomorrow'),
         li('next saturday'),

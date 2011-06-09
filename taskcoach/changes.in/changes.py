@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.0', 'June 8, 2011',
+Release('1.3.0', 'June 9, 2011',
     summary='''This release makes all edits done in dialogs immediate.''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -41,7 +41,7 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.20', 'June 7, 2011',
+Release('1.2.20', 'June 9, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Task Coach tried to use Python 2.5 on Ubuntu.''',
@@ -59,7 +59,8 @@ to category C.''', '3309006'),
     featuresAdded=[
         Feature('''Descriptions of tasks, notes and categories can be edited 
 in-place when the description column is visible. Priority of tasks can be
-edited in-place when the priority column is visible.'''),
+edited in-place when the priority column is visible. Budget of tasks can be
+edited in-place when the budget column is visible.'''),
         Feature('''Basic editing (dates, subject) of task templates.'''),
         Feature('''Session management on Linux is back.''', '2929786'),
         ],
@@ -2908,7 +2909,7 @@ same month or week but in different years would erroneously be added.
 E.g. effort in January 2004 and January 2006 would be added.'''),
         Bug('''The mechanism to prevent effort periods with a negative
 duration (i.e.  a start time later than the stop time) in the effort editor
-was invoked on each key stroke which caused inconvenient behaviour. Fixed
+was invoked on each key stroke which caused inconvenient behavior. Fixed
 it by only invoking it when the user leaves the text or combo box.''')],
     featuresAdded=[
         Feature('''Added possibility to start tracking effort for a task, 

@@ -102,7 +102,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
                 helpText=_('Sort notes by subject')),
             imageIndicesCallback=self.subjectImageIndices,
             editCommand=command.EditSubjectCommand,
-            editControl=inplace_editor.EditTextCtrl)
+            editControl=inplace_editor.SubjectCtrl)
         descriptionColumn = widgets.Column('description', _('Description'),
             note.Note.descriptionChangedEventType(),
             width=self.getColumnWidth('description'), 
@@ -112,7 +112,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
                 value='description', menuText=_('&Description'), 
                 helpText=_('Sort notes by description')),
             editCommand=command.EditDescriptionCommand,
-            editControl=inplace_editor.MultilineEditTextCtrl)
+            editControl=inplace_editor.DescriptionCtrl)
         attachmentsColumn = widgets.Column('attachments', '', 
             note.Note.attachmentsChangedEventType(), # pylint: disable-msg=E1101
             width=self.getColumnWidth('attachments'),

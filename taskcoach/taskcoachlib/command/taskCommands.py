@@ -574,7 +574,7 @@ class EditBudgetCommand(base.BaseCommand):
     singular_name = _('Change budget of "%s"')
     
     def __init__(self, *args, **kwargs):
-        self.__newBudget = kwargs.pop('budget')
+        self.__newBudget = kwargs.pop('budget', '') or kwargs.pop('newValue', '') 
         super(EditBudgetCommand, self).__init__(*args, **kwargs)
         self.__oldBudgets = [item.budget() for item in self.items]
         
@@ -665,6 +665,3 @@ class TogglePrerequisiteCommand(base.BaseCommand):
 
     def redo_command(self):
         self.do_command()
-
-
-
