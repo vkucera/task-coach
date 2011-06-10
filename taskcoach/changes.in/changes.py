@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.20', 'June 9, 2011',
+Release('1.2.20', 'June 10, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Task Coach tried to use Python 2.5 on Ubuntu.''',
