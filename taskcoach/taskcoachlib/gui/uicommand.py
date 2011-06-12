@@ -1294,11 +1294,11 @@ class Edit(NeedsSelectionMixin, ViewerCommand):
             return super(Edit, self).enabled(event)        
 
     def findEditCtrl(self, windowWithFocus):
-        if isinstance(windowWithFocus, thirdparty.hypertreelist.EditCtrl):
-            return windowWithFocus
-        if isinstance(windowWithFocus.GetParent(), thirdparty.hypertreelist.EditCtrl):
-            return windowWithFocus.GetParent()
-        return None
+        while windowWithFocus:
+            if isinstance(windowWithFocus, thirdparty.hypertreelist.EditCtrl):
+                break
+            windowWithFocus = windowWithFocus.GetParent()
+	return windowWithFocus
 
 
 class EditTrackedTasks(TaskListCommand, SettingsCommand):
