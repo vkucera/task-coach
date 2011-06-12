@@ -23,9 +23,13 @@ from changetypes import *
 releases = [
 
 Release('1.2.21', 'June 12, 2011',
-    summary='''This is a bugfix release.''',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Prevent exception messages on Ubuntu.''', '3315358')
+        ],
+    featuresAdded=[
+        Feature('''Start date and time of tasks can be edited in-place when the
+start date column is visible.''')
         ]
     ),
 

@@ -343,6 +343,7 @@ class EditTaskTest(TaskEditorTestCase):
         self.settings.set('view', 'datestied', 'startdue')
         self.editor._interior[1]._startDateTimeEntry.set(self.yesterday)
         self.editor._interior[1]._dueDateTimeEntry.set(self.today)
+        self.editor._interior[1].onDueDateTimeChanged(DummyEvent()) # Force computation of duration
         self.editor._interior[1]._startDateTimeEntry.set(self.today)
         # XXXFIXME: why do I have to call this explicitely ?
         self.editor._interior[1].onStartDateTimeChanged(DummyEvent())
@@ -354,6 +355,7 @@ class EditTaskTest(TaskEditorTestCase):
         self.settings.set('view', 'datestied', 'duestart')
         self.editor._interior[1]._startDateTimeEntry.set(self.yesterday)
         self.editor._interior[1]._dueDateTimeEntry.set(self.today)
+        self.editor._interior[1].onDueDateTimeChanged(DummyEvent()) # Force computation of duration
         self.editor._interior[1]._dueDateTimeEntry.set(self.yesterday)
         # XXXFIXME: why do I have to call this explicitely ?
         self.editor._interior[1].onDueDateTimeChanged(DummyEvent())

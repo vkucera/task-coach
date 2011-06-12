@@ -259,6 +259,20 @@ class EditDatesCommand(EditTaskCommand):
                 item.setDueDateTime(self._dueDateTime)
             if self._completionDateTime is not None:
                 item.setCompletionDateTime(self._completionDateTime)
+                
+                
+class EditStartDateTimeCommand(EditTaskCommand):
+    plural_name = _('Edit start date and time')
+    singular_name = _('Edit "%s" start dates and time')
+
+    def __init__(self, *args, **kwargs):
+        self.__newStartDateTime = kwargs.pop('newValue')
+        super(EditStartDateTimeCommand, self).__init__(*args, **kwargs)
+
+    def do_command(self):
+        super(EditStartDateTimeCommand, self).do_command()
+        for item in self.items:
+            item.setStartDateTime(self.__newStartDateTime)
 
 
 class StartEffortCommand(EffortCommand):

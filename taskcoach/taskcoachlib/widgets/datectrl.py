@@ -215,8 +215,9 @@ class TimeCtrl(Panel):
         self._controls[0].SetValue(formattedTime)
     
     def _createControls(self, callback):
-        control = combo.ComboCtrl(self, choices=self._choices(), 
-                                  size=(100 if self._showSeconds else 75,-1))
+        ComboClass = wx.ComboBox if wx.Platform == '__WXMSW__' else combo.ComboCtrl
+        control = ComboClass(self, choices=self._choices(),
+                              size=(100 if self._showSeconds else 75,-1))
         control.Bind(wx.EVT_TEXT, callback)
         control.Bind(wx.EVT_COMBOBOX, callback)
         return [control]
