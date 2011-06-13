@@ -29,23 +29,23 @@ class CommonTestsMixin(object):
 
     def testChoicesStartTime(self):
         self.assertEqual('08:00:00' if self.showSeconds else '08:00', 
-                         self.dateTimeCtrl._timeCtrl._choices()[0])
+                         self.dateTimeCtrl._timeChoices()[0])
         
     def testChoicesEndTime(self):
         self.assertEqual('18:00:00' if self.showSeconds else '18:00', 
-                         self.dateTimeCtrl._timeCtrl._choices()[-1])
+                         self.dateTimeCtrl._timeChoices()[-1])
         
     def testChoicesEndTime24(self):
         dateTimeCtrl = widgets.datectrl.DateTimeCtrl(self.frame, endhour=24, 
                                                      showSeconds=self.showSeconds)
         self.assertEqual('23:45:00' if self.showSeconds else '23:45', 
-                         dateTimeCtrl._timeCtrl._choices()[-1])
+                         dateTimeCtrl._timeChoices()[-1])
 
     def testChoicesStartTime0(self):
         dateTimeCtrl = widgets.datectrl.DateTimeCtrl(self.frame, starthour=0, 
                                                      showSeconds=self.showSeconds)
         self.assertEqual('00:00:00' if self.showSeconds else '00:00', 
-                         dateTimeCtrl._timeCtrl._choices()[0])
+                         dateTimeCtrl._timeChoices()[0])
 
         
 class DateTimeCtrlTestCase(test.wxTestCase):
