@@ -88,8 +88,7 @@ class _DatePickerCtrlThatFixesAllowNoneStyle(wx.Panel):
     def _layout(self):
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         for control in (self.__check, self.__datePicker):
-            sizer.Add(control, border=2, 
-                            flag=wx.RIGHT|wx.ALIGN_CENTER_VERTICAL)
+            sizer.Add(control, flag=wx.ALIGN_CENTER_VERTICAL)
         self.SetSizerAndFit(sizer)
 
     def onCheck(self, event):
