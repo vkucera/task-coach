@@ -16,14 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, os, re, tempfile
+import wx, os, re, tempfile, urllib, email.header
 from taskcoachlib.thirdparty import desktop, chardet
 from taskcoachlib.i18n import _
-from macmail import getSubjectOfMail
-import urllib
+
 
 
 def readMail(filename, readContent=True):
+    # FIXME: Why not use the email package?
     subject = None
     content = ''
     encoding = None
@@ -33,7 +33,7 @@ def readMail(filename, readContent=True):
     for line in file(filename, 'r'):
         if s == 0:
             if line.lower().startswith('subject:'):
-                subject = line[8:].strip()
+                subject = line[8:].strip() # FIXME: subject lines may be continued on the next line
             if line.strip() == '':
                 if not readContent:
                     break
@@ -57,7 +57,7 @@ def readMail(filename, readContent=True):
         except UnicodeError:
             encoding = chardet.detect(content)['encoding']
 
-    subject = _('Untitled e-mail') if subject is None else subject.decode(encoding)
+    subject = _('Untitled e-mail') if subject is None else u''.join((part[0].decode(part[1]) if part[1] else part[0]) for part in email.header.decode_header(subject))
     content = content.decode(encoding)
     return subject, content
 

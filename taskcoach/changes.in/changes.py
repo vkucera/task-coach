@@ -25,7 +25,8 @@ releases = [
 Release('1.2.21', 'June 13, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
-        Bug('''Prevent exception messages on Ubuntu.''', '3315358')
+        Bug('''Prevent exception messages on Ubuntu.''', '3315358'),
+        Bug('''Properly decode non-ascii email subject headers.''', '3311272')
         ],
     featuresAdded=[
         Feature('''Start date and time of tasks can be edited in-place when the
