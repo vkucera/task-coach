@@ -1274,7 +1274,8 @@ class Edit(NeedsSelectionMixin, ViewerCommand):
         editCtrl = self.findEditCtrl(windowWithFocus)
         if editCtrl:
             editCtrl.AcceptChanges()
-            editCtrl.Finish()
+            if editCtrl:
+                editCtrl.Finish()
             return
         try:
             columnName = event.columnName
@@ -1298,7 +1299,7 @@ class Edit(NeedsSelectionMixin, ViewerCommand):
             if isinstance(windowWithFocus, thirdparty.hypertreelist.EditCtrl):
                 break
             windowWithFocus = windowWithFocus.GetParent()
-	return windowWithFocus
+        return windowWithFocus
 
 
 class EditTrackedTasks(TaskListCommand, SettingsCommand):
