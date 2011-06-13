@@ -208,8 +208,7 @@ class DateTimeCtrl(wx.Panel):
     def _layout(self):
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         for control in (self._dateCtrl, self._timeCtrl):
-            sizer.Add(control, border=2, 
-                            flag=wx.RIGHT|wx.ALIGN_CENTER_VERTICAL)
+            sizer.Add(control, flag=wx.ALIGN_CENTER_VERTICAL)
         self.SetSizerAndFit(sizer)        
         
     def __nullCallback(self, *args, **kwargs):
