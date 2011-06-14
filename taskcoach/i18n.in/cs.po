@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-06-09 22:31+0000\n"
-"PO-Revision-Date: 2010-11-28 15:00+0000\n"
-"Last-Translator: Frank Niessink <frank@niessink.com>\n"
+"PO-Revision-Date: 2011-06-13 17:36+0000\n"
+"Last-Translator: Matěj Lenc <Unknown>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-10 18:57+0000\n"
-"X-Generator: Launchpad (build 13175)\n"
+"X-Launchpad-Export-Date: 2011-06-14 10:08+0000\n"
+"X-Generator: Launchpad (build 13216)\n"
 
 #: taskcoachlib\application\application.py:240
 msgid ""
@@ -37,11 +37,11 @@ msgstr "Nová příloha"
 
 #: taskcoachlib\command\attachmentCommands.py:42
 msgid "Edit attachments"
-msgstr ""
+msgstr "Upravit přílohy"
 
 #: taskcoachlib\command\attachmentCommands.py:43
 msgid "Edit attachment \"%s\""
-msgstr ""
+msgstr "Upravit přílohu \"%s\""
 
 #: taskcoachlib\command\attachmentCommands.py:54
 msgid "Delete attachments"
@@ -93,7 +93,7 @@ msgstr "Vložit jako podpoložku \"%s\""
 
 #: taskcoachlib\command\base.py:282
 msgid "Edit"
-msgstr ""
+msgstr "Upravit"
 
 #: taskcoachlib\command\base.py:283
 msgid "Edit \"%s\""
@@ -105,7 +105,7 @@ msgstr "Táhnout a pustit"
 
 #: taskcoachlib\command\base.py:303
 msgid "Drag and drop \"%s\""
-msgstr ""
+msgstr "Přetáhnout \"%s\""
 
 #: taskcoachlib\command\base.py:342 taskcoachlib\widgets\dialog.py:150
 msgid "Add attachment"
@@ -113,7 +113,7 @@ msgstr "Přidat přílohu"
 
 #: taskcoachlib\command\base.py:343
 msgid "Add attachment to \"%s\""
-msgstr ""
+msgstr "Přidat přílohu k \"%s\""
 
 #: taskcoachlib\command\base.py:368
 msgid "Add note"
@@ -121,7 +121,7 @@ msgstr "Přidat poznámku"
 
 #: taskcoachlib\command\base.py:369
 msgid "Add note to \"%s\""
-msgstr ""
+msgstr "Přidat poznámku k \"%s\""
 
 #: taskcoachlib\command\base.py:374 taskcoachlib\command\noteCommands.py:25
 #: taskcoachlib\command\noteCommands.py:28
@@ -130,19 +130,19 @@ msgstr "Nová poznámka"
 
 #: taskcoachlib\command\base.py:402
 msgid "Edit subjects"
-msgstr ""
+msgstr "Upravit předměty"
 
 #: taskcoachlib\command\base.py:403
 msgid "Edit subject \"%s\""
-msgstr ""
+msgstr "Upravit předmět \"%s\""
 
 #: taskcoachlib\command\base.py:423
 msgid "Edit descripions"
-msgstr ""
+msgstr "Upravit popisky"
 
 #: taskcoachlib\command\base.py:424
 msgid "Edit description \"%s\""
-msgstr ""
+msgstr "Upravit popis \"%s\""
 
 #: taskcoachlib\command\categorizableCommands.py:25
 msgid "Toggle category"
@@ -159,7 +159,7 @@ msgstr "Nová kategorie"
 
 #: taskcoachlib\command\categoryCommands.py:40
 msgid "New subcategories"
-msgstr ""
+msgstr "Nová podkategorie"
 
 #: taskcoachlib\command\categoryCommands.py:41
 msgid "New subcategory of \"%s\""
@@ -171,23 +171,23 @@ msgstr "Nová podkategorie"
 
 #: taskcoachlib\command\categoryCommands.py:56
 msgid "Edit categories"
-msgstr ""
+msgstr "Upravit kategorie"
 
 #: taskcoachlib\command\categoryCommands.py:57
 msgid "Edit category \"%s\""
-msgstr ""
+msgstr "Upravit kategorii \"%s\""
 
 #: taskcoachlib\command\categoryCommands.py:64
 msgid "Delete categories"
-msgstr ""
+msgstr "Smazat kategorie"
 
 #: taskcoachlib\command\categoryCommands.py:65
 msgid "Delete category \"%s\""
-msgstr ""
+msgstr "Smazat kategorii \"%s\""
 
 #: taskcoachlib\command\categoryCommands.py:69
 msgid "Drag and drop categories"
-msgstr ""
+msgstr "Přetáhnout kategorie"
 
 #: taskcoachlib\command\effortCommands.py:25
 msgid "New efforts"
@@ -227,15 +227,15 @@ msgstr "Nová vnořená poznámka"
 
 #: taskcoachlib\command\noteCommands.py:54
 msgid "Edit notes"
-msgstr ""
+msgstr "Nové poznámky"
 
 #: taskcoachlib\command\noteCommands.py:55
 msgid "Edit note \"%s\""
-msgstr ""
+msgstr "Upravit poznámku \"%s\""
 
 #: taskcoachlib\command\noteCommands.py:66
 msgid "Delete notes"
-msgstr ""
+msgstr "Smazat poznámky"
 
 #: taskcoachlib\command\noteCommands.py:67
 msgid "Delete note \"%s\""
@@ -5613,7 +5613,7 @@ msgstr ""
 
 #: taskcoachlib\widgets\textctrl.py:77
 msgid "Error opening URL"
-msgstr ""
+msgstr "Chyba při otevírání URL"
 
 #~ msgid "Add note to attachments"
 #~ msgstr "Přidat poznámku k přílohám"
