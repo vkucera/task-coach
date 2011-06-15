@@ -41,7 +41,19 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.20', 'June 9, 2011',
+Release('1.2.21', 'June 13, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
+    bugsFixed=[
+        Bug('''Prevent exception messages on Ubuntu.''', '3315358'),
+        Bug('''Properly decode non-ascii email subject headers.''', '3311272')
+        ],
+    featuresAdded=[
+        Feature('''Start date and time of tasks can be edited in-place when the
+start date column is visible.''')
+        ]
+    ),
+
+Release('1.2.20', 'June 10, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Task Coach tried to use Python 2.5 on Ubuntu.''',

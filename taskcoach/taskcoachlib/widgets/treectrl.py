@@ -355,13 +355,14 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             event.Skip()
         
     def onEndEdit(self, event):
-        event.Skip()
         if event._editCancelled:
+            event.Skip()
             return
+        event.Veto() # Let us update the tree
         domainObject = self.GetItemPyData(event.GetItem())
         newValue = event.GetLabel()
         command = self._getColumn(event.GetInt()).editCommand()
-        wx.FutureCall(50, lambda: command(items=[domainObject], newValue=newValue).do())
+        command(items=[domainObject], newValue=newValue).do()
         
     def CreateEditCtrl(self, item, columnIndex):
         column = self._getColumn(columnIndex)

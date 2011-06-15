@@ -52,7 +52,12 @@ class Panel(wx.Panel):
     def __init__(self, parent, id, value, *args, **kwargs):
         # Don't pass the value argument to the wx.Panel since it doesn't take 
         # a value argument
-        super(Panel, self).__init__(parent, id, *args, **kwargs)        
+        super(Panel, self).__init__(parent, id, *args, **kwargs)      
+        
+    def makeSizer(self, control):  
+        sizer = wx.BoxSizer(wx.HORIZONTAL)
+        sizer.Add(control, flag=wx.EXPAND)
+        self.SetSizerAndFit(sizer)
 
 
 class BudgetCtrl(hypertreelist.EditCtrl, Panel):
@@ -62,10 +67,21 @@ class BudgetCtrl(hypertreelist.EditCtrl, Panel):
         # Can't inherit from TimeDeltaCtrl because we need to override GetValue,
         # so we use composition instead
         self.__timeDeltaCtrl = widgets.masked.TimeDeltaCtrl(self, hours, minutes, seconds)
-        sizer = wx.BoxSizer(wx.HORIZONTAL)
-        sizer.Add(self.__timeDeltaCtrl, flag=wx.EXPAND)
-        self.SetSizerAndFit(sizer)
+        self.makeSizer(self.__timeDeltaCtrl)
         
     def GetValue(self):
         return date.parseTimeDelta(self.__timeDeltaCtrl.GetValue())
     
+    
+class DateTimeCtrl(hypertreelist.EditCtrl, Panel):
+    def __init__(self, parent, id, item, column, owner, value):
+        super(DateTimeCtrl, self).__init__(parent, id, item, column, owner)
+        #starthour = settings.getint('view', 'efforthourstart')
+        #endhour = settings.getint('view', 'efforthourend')
+        #interval = settings.getint('view', 'effortminuteinterval')
+        self.__dateTimeCtrl = widgets.DateTimeCtrl(self)
+        self.__dateTimeCtrl.SetValue(value)
+        self.makeSizer(self.__dateTimeCtrl)
+                
+    def GetValue(self):
+        return self.__dateTimeCtrl.GetValue()

@@ -46,7 +46,7 @@ class DatePickerCtrlThatFixesAllowNoneStyleTest(test.wxTestCase):
 class DatePickerCtrlWithStyleDP_ALLOWNONETest(test.wxTestCase):
     def setUp(self):
         super(DatePickerCtrlWithStyleDP_ALLOWNONETest, self).setUp()
-        self.datePicker = widgets.DatePickerCtrl(self.frame, 
+        self.datePicker = widgets.datectrl.DatePickerCtrl(self.frame, 
             style=wx.DP_ALLOWNONE)
 
     def testInitialValueIsNotValid(self):
@@ -73,11 +73,11 @@ class DatePickerCtrlFactoryTest(test.wxTestCase):
         return isinstance(instance, wx.DatePickerCtrl)
 
     def testFactoryFunctionNoStyle(self):
-        dpc = widgets.DatePickerCtrl(self.frame)
+        dpc = widgets.datectrl.DatePickerCtrl(self.frame)
         self.failUnless(self.isWxDatePickerCtrl(dpc))
 
     def testFactoryFunctionStyleIncludesDP_ALLOWNONE(self):
-        dpc = widgets.DatePickerCtrl(self.frame, style=wx.DP_ALLOWNONE)
+        dpc = widgets.datectrl.DatePickerCtrl(self.frame, style=wx.DP_ALLOWNONE)
         # style=wx.DP_ALLOWNONE is broken on some platforms/wxPython versions:
         if widgets.datectrl.styleDP_ALLOWNONEIsBroken(): # pragma: no cover
             self.failIf(self.isWxDatePickerCtrl(dpc))

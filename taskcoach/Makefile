@@ -208,7 +208,7 @@ coverage_run:
 coverage_report:
 	cd tests; coverage html -d coverage.out --omit "test.py,../taskcoachlib/meta/debug.py,../taskcoachlib/thirdparty,../taskcoachlib/i18n/po2dict" 
 
-CLEANFILES=build website.out dot.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile tests/.coverage tests/coverage.out
+CLEANFILES=build build-* website.out dot.out MANIFEST README.txt INSTALL.txt LICENSE.txt CHANGES.txt @webchecker.pickle .profile tests/.coverage tests/coverage.out
 REALLYCLEANFILES=dist taskcoachlib/gui/icons.py taskcoachlib/persistence/templates.py \
 	taskcoachlib/i18n/??.py taskcoachlib/i18n/???.py taskcoachlib/i18n/??_??.py .\#* */.\#* */*/.\#*
 

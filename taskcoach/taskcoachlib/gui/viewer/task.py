@@ -749,7 +749,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
         dependsOnEffortFeature = ['budget',  'timeSpent', 'budgetLeft',
                                   'hourlyFee', 'fixedFee', 'revenue']
         for name, columnHeader, editCtrl, editCommand, eventTypes in [
-            ('startDateTime', _('Start date'), None, None, []),
+            ('startDateTime', _('Start date'), inplace_editor.DateTimeCtrl, command.EditStartDateTimeCommand, []),
             ('dueDateTime', _('Due date'), None, None, [task.Task.expansionChangedEventType()]),
             ('completionDateTime', _('Completion date'), None, None, [task.Task.expansionChangedEventType()]),
             ('percentageComplete', _('% complete'), None, None, [task.Task.expansionChangedEventType(), 'task.percentageComplete']),
