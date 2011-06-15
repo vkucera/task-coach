@@ -194,11 +194,6 @@ class MarkCompletedCommand(base.SaveStateMixin, EffortCommand):
     def tasksToStopTracking(self):
         return self.items
 
-    def do_command(self):
-        super(EditStartDateTimeCommand, self).do_command()
-        for item in self.items:
-            item.setStartDateTime(self.__newStartDateTime)
-
 
 class StartEffortCommand(EffortCommand):
     plural_name = _('Start tracking')
