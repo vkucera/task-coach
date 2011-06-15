@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, locale
+import wx, wx.combo, locale
 from wx.lib import masked, newevent
 from taskcoachlib import widgets
 from taskcoachlib.gui import artprovider
