@@ -260,7 +260,11 @@ class TemplateXMLWriter(XMLWriter):
                 dateTime = getattr(task, getter)()
                 if dateTime not in (None, date.DateTime()):
                     delta = dateTime - date.Now()
-                    value = '%d minutes from now' % (delta.days * 26 * 60 + delta.seconds // 60)
+                    minutes = delta.days * 24 * 60 + delta.seconds // 60
+                    if minutes < 0:
+                        value = '%d minutes ago' % -minutes
+                    else:
+                        value = '%d minutes from now' % minutes
                 else:
                     value = None
 
