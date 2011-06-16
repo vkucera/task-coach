@@ -22,10 +22,11 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.21', 'June 13, 2011',
+Release('1.2.21', 'June 16, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
-        Bug('''Prevent exception messages on Ubuntu.''', '3315358'),
+        Bug('''Prevent exception messages in log file (Windows) or on command 
+line (Linux).''', '3315358', '3316220'),
         Bug('''Properly decode non-ascii email subject headers.''', '3311272')
         ],
     featuresAdded=[
