@@ -29,6 +29,8 @@ Release('1.2.21', 'June 16, 2011',
 line (Linux).''', '3315358', '3316220'),
         Bug('''Properly decode non-ascii email subject headers.''', '3311272'),
         Bug('''Creating a template from a task would not work any more.''', '3317048'),
+        Bug('''Unplugging a monitor while Task Coach was running would cause
+the dialogs to always open in the top left corner on Windows.'''),
         ],
     featuresAdded=[
         Feature('''Start date and time of tasks can be edited in-place when the
