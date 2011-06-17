@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.21', 'June 16, 2011',
+Release('1.2.21', 'June 17, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Prevent exception messages in log file (Windows) or on command 
@@ -33,8 +33,8 @@ line (Linux).''', '3315358', '3316220'),
 the dialogs to always open in the top left corner on Windows.'''),
         ],
     featuresAdded=[
-        Feature('''Start date and time of tasks can be edited in-place when the
-start date column is visible.''')
+        Feature('''Start, due, completion, and reminder date and time of tasks 
+can be edited in-place when the relevant column is visible.''')
         ]
     ),
 

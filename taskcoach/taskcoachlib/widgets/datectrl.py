@@ -175,7 +175,7 @@ class DateTimeCtrl(wx.Panel):
         self._dateCtrl.Bind(wx.EVT_DATE_CHANGED, self._dateCtrlCallback)
         self._dateCtrl.Bind(wx.EVT_CHECKBOX, self.onEnableDatePicker)
         self._timeCtrl = wx.ComboBox(self, choices=self._timeChoices(),
-                                     size=(100 if self._showSeconds else 75,-1))
+                                     size=(90 if self._showSeconds else 60,-1))
         self._timeCtrl.Bind(wx.EVT_TEXT, self._timeCtrlCallback)
         self._timeCtrl.Bind(wx.EVT_COMBOBOX, self._timeCtrlCallback)
     

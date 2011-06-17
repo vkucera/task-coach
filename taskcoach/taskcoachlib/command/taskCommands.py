@@ -263,16 +263,58 @@ class EditDatesCommand(EditTaskCommand):
                 
 class EditStartDateTimeCommand(EditTaskCommand):
     plural_name = _('Edit start date and time')
-    singular_name = _('Edit "%s" start dates and time')
+    singular_name = _('Edit "%s" start date and time')
 
     def __init__(self, *args, **kwargs):
-        self.__newStartDateTime = kwargs.pop('newValue')
+        self.__newDateTime = kwargs.pop('newValue')
         super(EditStartDateTimeCommand, self).__init__(*args, **kwargs)
 
     def do_command(self):
         super(EditStartDateTimeCommand, self).do_command()
         for item in self.items:
-            item.setStartDateTime(self.__newStartDateTime)
+            item.setStartDateTime(self.__newDateTime)
+
+
+class EditDueDateTimeCommand(EditTaskCommand):
+    plural_name = _('Edit due date and time')
+    singular_name = _('Edit "%s" due date and time')
+
+    def __init__(self, *args, **kwargs):
+        self.__newDateTime = kwargs.pop('newValue')
+        super(EditDueDateTimeCommand, self).__init__(*args, **kwargs)
+
+    def do_command(self):
+        super(EditDueDateTimeCommand, self).do_command()
+        for item in self.items:
+            item.setDueDateTime(self.__newDateTime)
+
+
+class EditCompletionDateTimeCommand(EditTaskCommand):
+    plural_name = _('Edit completion date and time')
+    singular_name = _('Edit "%s" completion date and time')
+
+    def __init__(self, *args, **kwargs):
+        self.__newDateTime = kwargs.pop('newValue')
+        super(EditCompletionDateTimeCommand, self).__init__(*args, **kwargs)
+
+    def do_command(self):
+        super(EditCompletionDateTimeCommand, self).do_command()
+        for item in self.items:
+            item.setCompletionDateTime(self.__newDateTime)
+
+
+class EditReminderDateTimeCommand(EditTaskCommand):
+    plural_name = _('Edit reminder date and time')
+    singular_name = _('Edit "%s" reminder date and time')
+
+    def __init__(self, *args, **kwargs):
+        self.__newDateTime = kwargs.pop('newValue')
+        super(EditReminderDateTimeCommand, self).__init__(*args, **kwargs)
+
+    def do_command(self):
+        super(EditReminderDateTimeCommand, self).do_command()
+        for item in self.items:
+            item.setReminderDateTime(self.__newDateTime)
 
 
 class StartEffortCommand(EffortCommand):

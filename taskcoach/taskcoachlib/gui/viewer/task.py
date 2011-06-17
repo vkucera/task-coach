@@ -752,8 +752,8 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
                                   'hourlyFee', 'fixedFee', 'revenue']
         for name, columnHeader, editCtrl, editCommand, eventTypes in [
             ('startDateTime', _('Start date'), inplace_editor.DateTimeCtrl, command.EditStartDateTimeCommand, []),
-            ('dueDateTime', _('Due date'), None, None, [task.Task.expansionChangedEventType()]),
-            ('completionDateTime', _('Completion date'), None, None, [task.Task.expansionChangedEventType()]),
+            ('dueDateTime', _('Due date'), inplace_editor.DateTimeCtrl, command.EditDueDateTimeCommand, [task.Task.expansionChangedEventType()]),
+            ('completionDateTime', _('Completion date'), inplace_editor.DateTimeCtrl, command.EditCompletionDateTimeCommand, [task.Task.expansionChangedEventType()]),
             ('percentageComplete', _('% complete'), None, None, [task.Task.expansionChangedEventType(), 'task.percentageComplete']),
             ('timeLeft', _('Time left'), None, None, [task.Task.expansionChangedEventType(), 'task.timeLeft']),
             ('recurrence', _('Recurrence'), None, None, [task.Task.expansionChangedEventType(), 'task.recurrence']),
@@ -764,7 +764,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
             ('hourlyFee', _('Hourly fee'), None, None, [task.Task.hourlyFeeChangedEventType()]),
             ('fixedFee', _('Fixed fee'), None, None, [task.Task.expansionChangedEventType(), 'task.fixedFee']),            
             ('revenue', _('Revenue'), None, None, [task.Task.expansionChangedEventType(), 'task.revenue']),
-            ('reminder', _('Reminder'), None, None, [task.Task.expansionChangedEventType(), 'task.reminder'])]:
+            ('reminder', _('Reminder'), inplace_editor.DateTimeCtrl, command.EditReminderDateTimeCommand, [task.Task.expansionChangedEventType(), 'task.reminder'])]:
             if (name in dependsOnEffortFeature and effortOn) or name not in dependsOnEffortFeature:
                 renderCallback = getattr(self, 'render%s'%(name[0].capitalize()+name[1:]))
                 columns.append(widgets.Column(name, columnHeader,  
