@@ -192,8 +192,8 @@ class MarkCompletedCommand(base.SaveStateMixin, EffortCommand):
         super(MarkCompletedCommand, self).redo_command()
 
     def tasksToStopTracking(self):
-        return self.items
-
+        return self.items                
+                
 
 class StartEffortCommand(EffortCommand):
     plural_name = _('Start tracking')
@@ -360,7 +360,7 @@ class AddTaskNoteCommand(base.AddNoteCommand):
 
 class EditDateTimeCommand(base.BaseCommand):
     def __init__(self, *args, **kwargs):
-        self._newDateTime = kwargs.pop('datetime')
+        self._newDateTime = kwargs.pop('datetime', '') or kwargs.pop('newValue', '')
         super(EditDateTimeCommand, self).__init__(*args, **kwargs)
         self.__oldDateTimes = [self.getDateTime(item) for item in self.items]
         familyMembers = set()

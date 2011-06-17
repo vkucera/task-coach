@@ -16,6 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+# This modules works around bugs in third party modules, mostly by
+# monkey-patching so import it first
+from taskcoachlib import workarounds
+
+
 import wx, os, locale, sys
 from taskcoachlib import patterns
 

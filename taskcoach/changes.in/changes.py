@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.0', 'June 9, 2011',
+Release('1.3.0', 'June 17, 2011',
     summary='''This release makes all edits done in dialogs immediate.''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -41,15 +41,19 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.21', 'June 13, 2011',
+Release('1.2.21', 'June 17, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
-        Bug('''Prevent exception messages on Ubuntu.''', '3315358'),
-        Bug('''Properly decode non-ascii email subject headers.''', '3311272')
+        Bug('''Prevent exception messages in log file (Windows) or on command 
+line (Linux).''', '3315358', '3316220'),
+        Bug('''Properly decode non-ascii email subject headers.''', '3311272'),
+        Bug('''Creating a template from a task would not work any more.''', '3317048'),
+        Bug('''Unplugging a monitor while Task Coach was running would cause
+the dialogs to always open in the top left corner on Windows.'''),
         ],
     featuresAdded=[
-        Feature('''Start date and time of tasks can be edited in-place when the
-start date column is visible.''')
+        Feature('''Start, due, completion, and reminder date and time of tasks 
+can be edited in-place when the relevant column is visible.''')
         ]
     ),
 

@@ -408,6 +408,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             super(TreeListCtrl, self).InsertColumn(columnIndex, columnHeader, 
                 *args, **kwargs)
         self.SetColumnAlignment(columnIndex, format)
+        self.SetColumnEditable(columnIndex, self._getColumn(columnIndex).isEditable())
 
     def showColumn(self, *args, **kwargs):
         ''' Stop editing before we hide or show a column to prevent problems
