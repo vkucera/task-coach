@@ -175,7 +175,7 @@ class DateTimeCtrl(wx.Panel):
         self._dateCtrl.Bind(wx.EVT_DATE_CHANGED, self._dateCtrlCallback)
         self._dateCtrl.Bind(wx.EVT_CHECKBOX, self.onEnableDatePicker)
         self._timeCtrl = wx.ComboBox(self, choices=self._timeChoices(),
-                                     size=(90 if self._showSeconds else 60,-1))
+                                     size=self._timeSize())
         self._timeCtrl.Bind(wx.EVT_TEXT, self._timeCtrlCallback)
         self._timeCtrl.Bind(wx.EVT_COMBOBOX, self._timeCtrlCallback)
     
@@ -197,6 +197,12 @@ class DateTimeCtrl(wx.Panel):
         if self._endhour < 24:
             choices.append(self._formatTime(date.Time(self._endhour, 0)))
         return choices
+    
+    def _timeSize(self):
+        if '__WXMAC__' in wx.PlatformInfo:
+            return (95 if self._showSeconds else 70, -1)
+        else:
+            return (90 if self._showSeconds else 60, -1) 
 
     def _formatTime(self, time):
         formattedTime = '%02d:%02d'%(time.hour, time.minute)
