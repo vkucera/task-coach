@@ -44,7 +44,8 @@ class XMLWriter(object):
             self.document.documentElement.appendChild(self.categoryNode(rootCategory, taskList, noteContainer))
         for rootNote in noteContainer.rootItems():
             self.document.documentElement.appendChild(self.noteNode(rootNote))
-        self.document.documentElement.appendChild(self.changesNode(changes))
+        if changes:
+            self.document.documentElement.appendChild(self.changesNode(changes))
         if syncMLConfig:
             self.document.documentElement.appendChild(self.syncMLNode(syncMLConfig))
         if guid:

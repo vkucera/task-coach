@@ -410,10 +410,10 @@ class LockedTaskFile(TaskFile):
             self.acquire_lock(filename)
         return super(LockedTaskFile, self).load(filename)
     
-    def save(self):
+    def save(self, **kwargs):
         ''' Lock the file before we save, if not already locked. '''
         self.acquire_lock(self.filename())
-        return super(LockedTaskFile, self).save()
+        return super(LockedTaskFile, self).save(**kwargs)
     
     def saveas(self, filename):
         ''' Unlock the file before we save it under another name. '''
