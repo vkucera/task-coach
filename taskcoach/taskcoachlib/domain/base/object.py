@@ -204,7 +204,7 @@ class Object(SynchronizedObject):
 
     @classmethod
     def monitoredAttributes(klass):
-        return ['subject', 'description', 'foregroundColor', 'backgroundColor', 'font', 'icon', 'selectedIcon']
+        return ['subject', 'description', 'appearance']
  
     # Id:
        
