@@ -97,8 +97,9 @@ class ChangeMonitor(object):
 
     def _objectsRemoved(self, event):
         for obj in event.values():
-            self._removed[obj.id()] = self._changes[obj.id()]
-            del self._changes[obj.id()]
+            if obj.id() in self._changes:
+                self._removed[obj.id()] = self._changes[obj.id()]
+                del self._changes[obj.id()]
 
     def onChildAdded(self, event):
         self._objectsAdded(event)

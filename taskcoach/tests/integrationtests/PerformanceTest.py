@@ -30,7 +30,7 @@ class PerformanceTest(test.TestCase):
         taskfile = file(self.taskfilename, 'w')
         taskWriter = persistence.XMLWriter(taskfile)
         taskWriter.write(taskList, category.CategoryList(), note.NoteContainer(),
-                         createDefaultSyncConfig('fake'), 'fake')
+                         createDefaultSyncConfig('fake'), dict(), 'fake')
         taskfile.close()
 
     def setUp(self):
