@@ -111,6 +111,9 @@ class _DatePickerCtrlThatFixesAllowNoneStyle(wx.Panel):
     def IsEnabled(self): # pylint: disable-msg=W0221
         return self.__datePicker.IsEnabled()
 
+    def __getattr__(self, attr):
+        return getattr(self.__datePicker, attr)
+
 
 def styleDP_ALLOWNONEIsBroken():
     # DP_ALLOWNONE is not supported on Mac OS and Linux
@@ -199,10 +202,10 @@ class DateTimeCtrl(wx.Panel):
         return choices
     
     def _timeSize(self):
-        if '__WXMAC__' in wx.PlatformInfo:
-            return (95 if self._showSeconds else 70, -1)
-        else:
+        if '__WXMSW__' in wx.PlatformInfo:
             return (90 if self._showSeconds else 60, -1) 
+        else:
+            return (95 if self._showSeconds else 70, self._dateCtrl.GetSize()[1])
 
     def _formatTime(self, time):
         formattedTime = '%02d:%02d'%(time.hour, time.minute)
