@@ -28,7 +28,7 @@ from taskcoachlib.gui import uicommand, menu, render, dialog
 from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, \
     wxSCHEDULER_TODAY, wxSCHEDULER_TODAY, wxSCHEDULER_MONTHLY, wxFancyDrawer
 from taskcoachlib.widgets import CalendarConfigDialog
-import base, mixin, refresher
+import base, mixin, refresher, inplace_editor
 
 
 class TaskViewerStatusMessages(patterns.Observer):
@@ -146,11 +146,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
             for appearanceSetting in appearanceSettings:
                 patterns.Publisher().registerObserver(self.onAppearanceSettingChange, 
                                                       eventType=appearanceSetting)
-        for eventType in (task.Task.foregroundColorChangedEventType(),
-                          task.Task.backgroundColorChangedEventType(),
-                          task.Task.fontChangedEventType(),
-                          task.Task.iconChangedEventType(),
-                          task.Task.selectedIconChangedEventType(),
+        for eventType in (task.Task.appearanceChangedEventType(), 
                           task.Task.percentageCompleteChangedEventType(),
                           'task.prerequisites'):
             patterns.Publisher().registerObserver(self.onAttributeChanged,
@@ -654,7 +650,6 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
         widget = widgets.TreeListCtrl(self, self.columns(), self.onSelect, 
             uicommand.Edit(viewer=self),
             uicommand.TaskDragAndDrop(taskList=self.presentation(), viewer=self),
-            uicommand.EditSubject(viewer=self),
             itemPopupMenu, columnPopupMenu,
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(imageList) # pylint: disable-msg=E1101
@@ -699,13 +694,17 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
                     value='subject'),
                 width=self.getColumnWidth('subject'), 
                 imageIndicesCallback=self.subjectImageIndices,
-                renderCallback=self.renderSubject, **kwargs)] + \
+                renderCallback=self.renderSubject, 
+                editCommand=command.EditSubjectCommand, 
+                editControl=inplace_editor.SubjectCtrl, **kwargs)] + \
             [widgets.Column('description', _('Description'), 
                 task.Task.descriptionChangedEventType(), 
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                     value='description'),
                 renderCallback=lambda task: task.description(), 
-                width=self.getColumnWidth('description'), **kwargs)] + \
+                width=self.getColumnWidth('description'),  
+                editCommand=command.EditDescriptionCommand, 
+                editControl=inplace_editor.DescriptionCtrl, **kwargs)] + \
             [widgets.Column('attachments', '', 
                 task.Task.attachmentsChangedEventType(), # pylint: disable-msg=E1101
                 width=self.getColumnWidth('attachments'),
@@ -749,27 +748,28 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
         effortOn = self.settings.getboolean('feature', 'effort')
         dependsOnEffortFeature = ['budget',  'timeSpent', 'budgetLeft',
                                   'hourlyFee', 'fixedFee', 'revenue']
-        for name, columnHeader, eventTypes in [
-            ('startDateTime', _('Start date'), []),
-            ('dueDateTime', _('Due date'), [task.Task.expansionChangedEventType()]),
-            ('completionDateTime', _('Completion date'), [task.Task.expansionChangedEventType()]),
-            ('percentageComplete', _('% complete'), [task.Task.expansionChangedEventType(), 'task.percentageComplete']),
-            ('timeLeft', _('Time left'), [task.Task.expansionChangedEventType(), 'task.timeLeft']),
-            ('recurrence', _('Recurrence'), [task.Task.expansionChangedEventType(), 'task.recurrence']),
-            ('budget', _('Budget'), [task.Task.expansionChangedEventType(), 'task.budget']),            
-            ('timeSpent', _('Time spent'), [task.Task.expansionChangedEventType(), 'task.timeSpent']),
-            ('budgetLeft', _('Budget left'), [task.Task.expansionChangedEventType(), 'task.budgetLeft']),            
-            ('priority', _('Priority'), [task.Task.expansionChangedEventType(), 'task.priority']),
-            ('hourlyFee', _('Hourly fee'), [task.Task.hourlyFeeChangedEventType()]),
-            ('fixedFee', _('Fixed fee'), [task.Task.expansionChangedEventType(), 'task.fixedFee']),            
-            ('revenue', _('Revenue'), [task.Task.expansionChangedEventType(), 'task.revenue']),
-            ('reminder', _('Reminder'), [task.Task.expansionChangedEventType(), 'task.reminder'])]:
+        for name, columnHeader, editCtrl, editCommand, eventTypes in [
+            ('startDateTime', _('Start date'), inplace_editor.DateTimeCtrl, command.EditStartDateTimeCommand, []),
+            ('dueDateTime', _('Due date'), inplace_editor.DateTimeCtrl, command.EditDueDateTimeCommand, [task.Task.expansionChangedEventType()]),
+            ('completionDateTime', _('Completion date'), inplace_editor.DateTimeCtrl, command.EditCompletionDateTimeCommand, [task.Task.expansionChangedEventType()]),
+            ('percentageComplete', _('% complete'), None, None, [task.Task.expansionChangedEventType(), 'task.percentageComplete']),
+            ('timeLeft', _('Time left'), None, None, [task.Task.expansionChangedEventType(), 'task.timeLeft']),
+            ('recurrence', _('Recurrence'), None, None, [task.Task.expansionChangedEventType(), 'task.recurrence']),
+            ('budget', _('Budget'), inplace_editor.BudgetCtrl, command.EditBudgetCommand, [task.Task.expansionChangedEventType(), 'task.budget']),            
+            ('timeSpent', _('Time spent'), None, None, [task.Task.expansionChangedEventType(), 'task.timeSpent']),
+            ('budgetLeft', _('Budget left'), None, None, [task.Task.expansionChangedEventType(), 'task.budgetLeft']),            
+            ('priority', _('Priority'), inplace_editor.PriorityCtrl, command.EditPriorityCommand, [task.Task.expansionChangedEventType(), 'task.priority']),
+            ('hourlyFee', _('Hourly fee'), None, None, [task.Task.hourlyFeeChangedEventType()]),
+            ('fixedFee', _('Fixed fee'), None, None, [task.Task.expansionChangedEventType(), 'task.fixedFee']),            
+            ('revenue', _('Revenue'), None, None, [task.Task.expansionChangedEventType(), 'task.revenue']),
+            ('reminder', _('Reminder'), inplace_editor.DateTimeCtrl, command.EditReminderDateTimeCommand, [task.Task.expansionChangedEventType(), 'task.reminder'])]:
             if (name in dependsOnEffortFeature and effortOn) or name not in dependsOnEffortFeature:
                 renderCallback = getattr(self, 'render%s'%(name[0].capitalize()+name[1:]))
                 columns.append(widgets.Column(name, columnHeader,  
                     sortCallback=uicommand.ViewerSortByCommand(viewer=self, value=name),
                     renderCallback=renderCallback, width=self.getColumnWidth(name),
-                    alignment=wx.LIST_FORMAT_RIGHT, *eventTypes, **kwargs))
+                    alignment=wx.LIST_FORMAT_RIGHT, editControl=editCtrl, 
+                    editCommand=editCommand, *eventTypes, **kwargs))
         return columns
     
     def createColumnUICommands(self):
@@ -990,7 +990,6 @@ class CheckableTaskViewer(TaskViewer):
             self.onCheck, 
             uicommand.Edit(viewer=self),
             uicommand.TaskDragAndDrop(taskList=self.presentation(), viewer=self),
-            uicommand.EditSubject(viewer=self),
             itemPopupMenu, columnPopupMenu,
             **self.widgetCreationKeywordArguments())
         widget.AssignImageList(imageList) # pylint: disable-msg=E1101

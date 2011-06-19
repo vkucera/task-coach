@@ -192,8 +192,8 @@ class MarkCompletedCommand(base.SaveStateMixin, EffortCommand):
         super(MarkCompletedCommand, self).redo_command()
 
     def tasksToStopTracking(self):
-        return self.items
-
+        return self.items                
+                
 
 class StartEffortCommand(EffortCommand):
     plural_name = _('Start tracking')
@@ -336,7 +336,7 @@ class EditPriorityCommand(base.BaseCommand):
     singular_name = _('Change priority of "%s"')
     
     def __init__(self, *args, **kwargs):
-        self.__newPriority = kwargs.pop('priority')
+        self.__newPriority = kwargs.pop('priority', '') or kwargs.pop('newValue', '')
         super(EditPriorityCommand, self).__init__(*args, **kwargs)
         self.__oldPriorities = [item.priority() for item in self.items]
 
@@ -360,7 +360,7 @@ class AddTaskNoteCommand(base.AddNoteCommand):
 
 class EditDateTimeCommand(base.BaseCommand):
     def __init__(self, *args, **kwargs):
-        self._newDateTime = kwargs.pop('datetime')
+        self._newDateTime = kwargs.pop('datetime', '') or kwargs.pop('newValue', '')
         super(EditDateTimeCommand, self).__init__(*args, **kwargs)
         self.__oldDateTimes = [self.getDateTime(item) for item in self.items]
         familyMembers = set()
@@ -574,7 +574,7 @@ class EditBudgetCommand(base.BaseCommand):
     singular_name = _('Change budget of "%s"')
     
     def __init__(self, *args, **kwargs):
-        self.__newBudget = kwargs.pop('budget')
+        self.__newBudget = kwargs.pop('budget', '') or kwargs.pop('newValue', '') 
         super(EditBudgetCommand, self).__init__(*args, **kwargs)
         self.__oldBudgets = [item.budget() for item in self.items]
         

@@ -1961,6 +1961,11 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
 
+        eventHandler = self.GetEventHandler()
+        if not isinstance(eventHandler, AuiTabCtrl):
+            event.Skip()
+            return
+
         x, y = event.GetX(), event.GetY()
         wnd = self.TabHitTest(x, y)
 
@@ -1982,6 +1987,11 @@ class AuiTabCtrl(wx.PyControl, AuiTabContainer):
         :param `event`: a `wx.MouseEvent` event to be processed.
         """
 
+        eventHandler = self.GetEventHandler()
+        if not isinstance(eventHandler, AuiTabCtrl):
+            event.Skip()
+            return
+        
         x, y = event.GetX(), event.GetY()
         wnd = self.TabHitTest(x, y)
 
@@ -2886,7 +2896,8 @@ class AuiNotebook(wx.PyPanel):
 
                 tab_idx = int(tab)
                 if tab_idx >= self.GetPageCount():
-                    continue
+                    to_break1 = True
+                    break
 
                 # Move tab to pane
                 page = self._tabs.GetPage(tab_idx)
@@ -5376,6 +5387,10 @@ class AuiNotebook(wx.PyPanel):
         self.SetNormalFont(font)
         self.SetSelectedFont(selectedFont)
         self.SetMeasuringFont(selectedFont)
+
+        # Recalculate tab container size based on new font
+        self.UpdateTabCtrlHeight(force=False)
+        self.DoSizing()
 
         return True
 

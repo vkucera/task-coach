@@ -1271,9 +1271,11 @@ class Edit(NeedsSelectionMixin, ViewerCommand):
 
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
         windowWithFocus = wx.Window.FindFocus()
-        if isinstance(windowWithFocus, thirdparty.hypertreelist.EditTextCtrl):
-            windowWithFocus.AcceptChanges()
-            windowWithFocus.Finish()
+        editCtrl = self.findEditCtrl(windowWithFocus)
+        if editCtrl:
+            editCtrl.AcceptChanges()
+            if editCtrl:
+                editCtrl.Finish()
             return
         try:
             columnName = event.columnName
@@ -1285,12 +1287,19 @@ class Edit(NeedsSelectionMixin, ViewerCommand):
 
     def enabled(self, event):
         windowWithFocus = wx.Window.FindFocus()
-        if isinstance(windowWithFocus, thirdparty.hypertreelist.EditTextCtrl):
+        if self.findEditCtrl(windowWithFocus):
             return True
         elif '__WXMAC__' == wx.Platform and isinstance(windowWithFocus, wx.TextCtrl):
             return False
         else:
-            return super(Edit, self).enabled(event)
+            return super(Edit, self).enabled(event)        
+
+    def findEditCtrl(self, windowWithFocus):
+        while windowWithFocus:
+            if isinstance(windowWithFocus, thirdparty.hypertreelist.EditCtrl):
+                break
+            windowWithFocus = windowWithFocus.GetParent()
+        return windowWithFocus
 
 
 class EditTrackedTasks(TaskListCommand, SettingsCommand):
@@ -1620,19 +1629,6 @@ class TaskDragAndDrop(DragAndDropCommand, TaskListCommand):
     def createCommand(self, dragItem, dropItem):
         return command.DragAndDropTaskCommand(self.taskList, [dragItem], 
                                               drop=[dropItem])
-
-
-class EditSubject(ViewerCommand):
-    def onCommandActivate(self, item, newSubject): # pylint: disable-msg=W0221
-        ''' Override onCommandActivate to tbe able to accept an item and the
-            new subject. '''
-        self.doCommand(item, newSubject)
-        
-    def doCommand(self, item, newSubject):
-        if newSubject and newSubject != item.subject():
-            editSubject = command.EditSubjectCommand(self.viewer.presentation(),
-                                                     [item], subject=newSubject)
-            editSubject.do()
         
 
 class ToggleCategory(NeedsSelectedCategorizableMixin, ViewerCommand):

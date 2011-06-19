@@ -133,45 +133,13 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
         event.addSource(self, self.isFiltered(), 
                         type=self.filterChangedEventType())
                                 
-    def foregroundColorChangedEvent(self, event):
-        ''' Override to include all categorizables (recursively) in the event 
-            that belong to this category since their foreground colors (may) 
+    def appearanceChangedEvent(self, event):
+        ''' Override to include all categorizables in the event 
+            that belong to this category since their appearance (may) 
             have changed too. ''' 
-        super(Category, self).foregroundColorChangedEvent(event)
-        for categorizable in self.categorizables(recursive=True):
-            categorizable.foregroundColorChangedEvent(event)
-
-    def backgroundColorChangedEvent(self, event):
-        ''' Override to include all categorizables (recursively) in the event 
-            that belong to this category since their background colors (may) 
-            have changed too. ''' 
-        super(Category, self).backgroundColorChangedEvent(event)
-        for categorizable in self.categorizables(recursive=True):
-            categorizable.backgroundColorChangedEvent(event)
-            
-    def fontChangedEvent(self, event):
-        ''' Override to include all categorizables (recursively) in the event 
-            that belong to this category since their font (may) have changed 
-            too. ''' 
-        super(Category, self).fontChangedEvent(event)
-        for categorizable in self.categorizables(recursive=True):
-            categorizable.fontChangedEvent(event)
-
-    def iconChangedEvent(self, event):
-        ''' Override to include all categorizables (recursively) in the event
-            that belong to this category since their icon (may) have changed
-            too. '''
-        super(Category, self).iconChangedEvent(event)
-        for categorizable in self.categorizables(recursive=True):
-            categorizable.iconChangedEvent(event)
-
-    def selectedIconChangedEvent(self, event):
-        ''' Override to include all categorizables (recursively) in the event
-            that belong to this category since their selected icon (may) have
-            changed too. '''
-        super(Category, self).selectedIconChangedEvent(event)
-        for categorizable in self.categorizables(recursive=True):
-            categorizable.selectedIconChangedEvent(event)
+        super(Category, self).appearanceChangedEvent(event)
+        for categorizable in self.categorizables():
+            categorizable.appearanceChangedEvent(event)
 
     def hasExclusiveSubcategories(self):
         return self.__exclusiveSubcategories

@@ -124,7 +124,7 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
             self.GetLabelTextCtrl().StopEditing()
             
     def GetLabelTextCtrl(self):
-        return self.GetMainWindow()._textCtrl
+        return self.GetMainWindow()._editCtrl
     
     def GetItemCount(self):
         rootItem = self.GetRootItem()
@@ -144,8 +144,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
     ct_type = 0
     
     def __init__(self, parent, columns, selectCommand, editCommand, 
-                 dragAndDropCommand, editSubjectCommand,
-                 itemPopupMenu=None, columnPopupMenu=None, 
+                 dragAndDropCommand, itemPopupMenu=None, columnPopupMenu=None, 
                  *args, **kwargs):    
         self.__adapter = parent
         self.__selection = []
@@ -157,16 +156,13 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             columns=columns,  
             itemPopupMenu=itemPopupMenu,
             columnPopupMenu=columnPopupMenu, *args, **kwargs)
-        self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand,
-                               editSubjectCommand)
+        self.bindEventHandlers(selectCommand, editCommand, dragAndDropCommand)
 
-    def bindEventHandlers(self, selectCommand, editCommand, dragAndDropCommand,
-                          editSubjectCommand):
+    def bindEventHandlers(self, selectCommand, editCommand, dragAndDropCommand):
         # pylint: disable-msg=W0201
         self.selectCommand = selectCommand
         self.editCommand = editCommand
         self.dragAndDropCommand = dragAndDropCommand
-        self.editSubjectCommand = editSubjectCommand
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.onSelect)
         self.Bind(wx.EVT_TREE_KEY_DOWN, self.onKeyDown)
         self.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.onItemActivated)
@@ -302,7 +298,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         if event.GetKeyCode() == wx.WXK_RETURN:
             self.editCommand(event)
         elif event.GetKeyCode() == wx.WXK_F2 and self.GetSelections():
-            self.EditLabel(self.GetSelections()[0])
+            self.EditLabel(self.GetSelections()[0], column=0)
         else:
             event.Skip()
          
@@ -328,16 +324,24 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         
     def onItemActivated(self, event):
         ''' Attach the column clicked on to the event so we can use it elsewhere. '''
+        columnIndex = self.columnUnderMouse()
+        if columnIndex >= 0:
+            event.columnName = self._getColumn(columnIndex).name()
+        self.editCommand(event)
+        event.Skip(False)
+        
+    def columnUnderMouse(self):
         mousePosition = self.GetMainWindow().ScreenToClient(wx.GetMousePosition())
         item, _, column = self.HitTest(mousePosition)
         if item:
             # Only get the column name if the hittest returned an item,
             # otherwise the item was activated from the menu or by double 
             # clicking on a portion of the tree view not containing an item.
-            column = max(0, column) # FIXME: Why can the column be -1?
-            event.columnName = self._getColumn(column).name()
-        self.editCommand(event)
-        event.Skip(False)
+            return max(0, column) # FIXME: Why can the column be -1?
+        else:
+            return -1
+        
+    # Inline editing
         
     def onBeginEdit(self, event):
         if self.__dontStartEditingLabelBecauseUserDoubleClicked:
@@ -351,18 +355,31 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             event.Skip()
         
     def onEndEdit(self, event):
+        if event._editCancelled:
+            event.Skip()
+            return
+        event.Veto() # Let us update the tree
         domainObject = self.GetItemPyData(event.GetItem())
         newValue = event.GetLabel()
-        # Give HyperTreeList a chance to properly close the text editor:
-        wx.FutureCall(50, self.editSubjectCommand, domainObject, newValue)
-        event.Skip()
+        command = self._getColumn(event.GetInt()).editCommand()
+        command(items=[domainObject], newValue=newValue).do()
         
+    def CreateEditCtrl(self, item, columnIndex):
+        column = self._getColumn(columnIndex)
+        editControlClass = column.editControl()
+        parent = owner = self.GetMainWindow()
+        domainObject = self.GetItemPyData(item)
+        value = column.value(domainObject)
+        return editControlClass(parent, wx.ID_ANY, item, columnIndex, 
+                                owner, value)
+            
     # Override CtrlWithColumnsMixin with TreeListCtrl specific behaviour:
         
     def _setColumns(self, *args, **kwargs):
         super(TreeListCtrl, self)._setColumns(*args, **kwargs)
         self.SetMainColumn(0)
-        self.SetColumnEditable(0, True)
+        for columnIndex in range(self.GetColumnCount()):
+            self.SetColumnEditable(columnIndex, self._getColumn(columnIndex).isEditable())
                         
     # Extend TreeMixin with TreeListCtrl specific behaviour:
 
@@ -391,6 +408,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             super(TreeListCtrl, self).InsertColumn(columnIndex, columnHeader, 
                 *args, **kwargs)
         self.SetColumnAlignment(columnIndex, format)
+        self.SetColumnEditable(columnIndex, self._getColumn(columnIndex).isEditable())
 
     def showColumn(self, *args, **kwargs):
         ''' Stop editing before we hide or show a column to prevent problems

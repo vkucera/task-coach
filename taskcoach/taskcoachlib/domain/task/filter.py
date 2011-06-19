@@ -39,7 +39,7 @@ class ViewFilter(base.Filter):
         registerObserver = patterns.Publisher().registerObserver
         for eventType in ('task.dueDateTime', 'task.startDateTime', 
                           'task.completionDateTime', 'task.prerequisites',
-                          task.Task.iconChangedEventType(), # Proxy for status changes
+                          task.Task.appearanceChangedEventType(), # Proxy for status changes
                           task.Task.addChildEventType(),
                           task.Task.removeChildEventType(),
                           'clock.midnight'):

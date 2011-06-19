@@ -225,7 +225,7 @@ import wx.gizmos
 
 from customtreectrl import CustomTreeCtrl
 from customtreectrl import DragImage, TreeEvent, GenericTreeItem
-from customtreectrl import TreeRenameTimer as TreeListRenameTimer
+from customtreectrl import TreeEditTimer as TreeListEditTimer
 from customtreectrl import EVT_TREE_ITEM_CHECKING, EVT_TREE_ITEM_CHECKED, EVT_TREE_ITEM_HYPERLINK
 
 # Version Info
@@ -251,7 +251,7 @@ _MAX_WIDTH = 30000  # pixels; used by OnPaint to redraw only exposed items
 
 _DRAG_TIMER_TICKS = 250   # minimum drag wait time in ms
 _FIND_TIMER_TICKS = 500   # minimum find wait time in ms
-_RENAME_TIMER_TICKS = 250 # minimum rename wait time in ms
+_EDIT_TIMER_TICKS = 250 # minimum edit wait time in ms
 
 # --------------------------------------------------------------------------
 # Additional HitTest style
@@ -1712,17 +1712,17 @@ class TreeListItem(GenericTreeItem):
 # EditTextCtrl (internal)
 #-----------------------------------------------------------------------------
 
-class EditTextCtrl(wx.TextCtrl):
+
+class EditCtrl(object):
     """
-    Control used for in-place edit.
+    Base class for controls used for in-place edit.
     """
-    
+
     def __init__(self, parent, id=wx.ID_ANY, item=None, column=None, owner=None,
                  value="", pos=wx.DefaultPosition, size=wx.DefaultSize, style=0,
-                 validator=wx.DefaultValidator, name="edittextctrl"):
+                 validator=wx.DefaultValidator, name="editctrl", **kwargs):
         """
         Default class constructor.
-        For internal use: do not call it in your code!
 
         :param `parent`: the window parent. Must not be ``None``;
         :param `id`: window identifier. A value of -1 indicates a default value;
@@ -1730,7 +1730,7 @@ class EditTextCtrl(wx.TextCtrl):
         :param `column`: if not ``None``, an integer specifying the column index.
          If it is ``None``, the main column index is used;
         :param `owner`: the window owner, in this case an instance of L{TreeListMainWindow};
-        :param `value`: the initial value in the text control;
+        :param `value`: the initial value in the control;
         :param `pos`: the control position. A value of (-1, -1) indicates a default position,
          chosen by either the windowing system or wxPython, depending on platform;
         :param `size`: the control size. A value of (-1, -1) indicates a default size,
@@ -1739,12 +1739,11 @@ class EditTextCtrl(wx.TextCtrl):
         :param `validator`: the window validator;
         :param `name`: the window name.
         """
-        
         self._owner = owner
         self._startValue = value
-        self._finished = False
         self._itemEdited = item
-
+        self._finished = False
+        
         column = (column is not None and [column] or [self._owner.GetMainColumn()])[0]
         
         self._column = column
@@ -1801,17 +1800,46 @@ class EditTextCtrl(wx.TextCtrl):
         x += image_w + wcheck
         w -= image_w + 2*_MARGIN + wcheck
 
-        wx.TextCtrl.__init__(self, parent, id, value, wx.Point(x, y),
-                             wx.Size(w + 15, h), style|wx.SIMPLE_BORDER, validator, name)
+        super(EditCtrl, self).__init__(parent, id, value, wx.Point(x,y),
+                                       wx.Size(w+15, h), 
+                                       style=style|wx.SIMPLE_BORDER, 
+                                       name=name, **kwargs)
         
         if wx.Platform == "__WXMAC__":
             self.SetFont(owner.GetFont())
             bs = self.GetBestSize()
             self.SetSize((-1, bs.height))
-                    
-        self.Bind(wx.EVT_CHAR, self.OnChar)
-        self.Bind(wx.EVT_KEY_UP, self.OnKeyUp)
+
         self.Bind(wx.EVT_KILL_FOCUS, self.OnKillFocus)
+
+
+    def item(self):
+        """Returns the item currently edited."""
+
+        return self._itemEdited
+
+
+    def column(self): 
+        """Returns the column currently edited.""" 
+
+        return self._column
+
+
+    def StopEditing(self):
+        """Suddenly stops the editing."""
+
+        self._owner.OnCancelEdit()
+        self.Finish()
+
+
+    def Finish(self):
+        """Finish editing."""
+
+        if not self._finished:
+        
+            self._finished = True
+            self._owner.SetFocusIgnoringChildren()
+            self._owner.ResetEditControl()
 
 
     def AcceptChanges(self):
@@ -1825,25 +1853,61 @@ class EditTextCtrl(wx.TextCtrl):
             # needs to be notified that the user decided
             # not to change the tree item label, and that
             # the edit has been cancelled
-            self._owner.OnRenameCancelled()
+            self._owner.OnCancelEdit()
             return True
-
-        if not self._owner.OnRenameAccept(value):
-            # vetoed by the user
-            return False
-        
-        return True
+        else:
+            return self._owner.OnAcceptEdit(value)
 
 
-    def Finish(self):
-        """Finish editing."""
+    def OnKillFocus(self, event):
+        """
+        Handles the ``wx.EVT_KILL_FOCUS`` event for L{EditCtrl}
 
-        if not self._finished:
-        
-            self._finished = True
-            self._owner.SetFocusIgnoringChildren()
-            self._owner.ResetTextControl()
-        
+        :param `event`: a `wx.FocusEvent` event to be processed.
+        """
+
+        # We must let the native control handle focus, too, otherwise
+        # it could have problems with the cursor (e.g., in wxGTK).
+        event.Skip()
+
+
+
+class EditTextCtrl(EditCtrl, wx.TextCtrl):
+    """
+    Text control used for in-place edit.
+    """
+    
+    def __init__(self, parent, id=wx.ID_ANY, item=None, column=None, owner=None,
+                 value="", pos=wx.DefaultPosition, size=wx.DefaultSize, style=0,
+                 validator=wx.DefaultValidator, name="edittextctrl", **kwargs):
+        """
+        Default class constructor.
+        For internal use: do not call it in your code!
+
+        :param `parent`: the window parent. Must not be ``None``;
+        :param `id`: window identifier. A value of -1 indicates a default value;
+        :param `item`: an instance of L{TreeListItem};
+        :param `column`: if not ``None``, an integer specifying the column index.
+         If it is ``None``, the main column index is used;
+        :param `owner`: the window owner, in this case an instance of L{TreeListMainWindow};
+        :param `value`: the initial value in the text control;
+        :param `pos`: the control position. A value of (-1, -1) indicates a default position,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param `size`: the control size. A value of (-1, -1) indicates a default size,
+         chosen by either the windowing system or wxPython, depending on platform;
+        :param `style`: the window style;
+        :param `validator`: the window validator;
+        :param `name`: the window name.
+        """
+
+        super(EditTextCtrl, self).__init__(parent, id, item, column, owner, 
+                                           value, pos, size, style, validator, 
+                                           name, **kwargs)       
+        self.SelectAll()
+
+        self.Bind(wx.EVT_CHAR, self.OnChar)
+        self.Bind(wx.EVT_KEY_UP, self.OnKeyUp)
+
 
     def OnChar(self, event):
         """
@@ -1854,8 +1918,7 @@ class EditTextCtrl(wx.TextCtrl):
 
         keycode = event.GetKeyCode()
 
-        if keycode in [wx.WXK_RETURN, wx.WXK_NUMPAD_ENTER]:
-            self._aboutToFinish = True
+        if keycode in [wx.WXK_RETURN, wx.WXK_NUMPAD_ENTER] and not event.ShiftDown():
             # Notify the owner about the changes
             self.AcceptChanges()
             # Even if vetoed, close the control (consistent with MSW)
@@ -1891,39 +1954,9 @@ class EditTextCtrl(wx.TextCtrl):
             self.SetSize((sx, -1))
 
         event.Skip()
-
-
-    def OnKillFocus(self, event):
-        """
-        Handles the ``wx.EVT_KILL_FOCUS`` event for L{EditTextCtrl}
-
-        :param `event`: a `wx.FocusEvent` event to be processed.
-        """
-
-        # We must let the native text control handle focus, too, otherwise
-        # it could have problems with the cursor (e.g., in wxGTK).
-        event.Skip()
-
-
-    def StopEditing(self):
-        """Suddenly stops the editing."""
-
-        self._owner.OnRenameCancelled()
-        self.Finish()
         
-
-    def item(self):
-        """Returns the item currently edited."""
-
-        return self._itemEdited
-
-
-    def column(self): 
-        """Returns the column currently edited.""" 
-
-        return self._column
-
-
+        
+        
 # ---------------------------------------------------------------------------
 # TreeListMainWindow implementation
 # ---------------------------------------------------------------------------
@@ -2003,7 +2036,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         self._current = None
 
         # TextCtrl initial settings for editable items
-        self._renameTimer = TreeListRenameTimer(self)
+        self._editTimer = TreeListEditTimer(self)
         self._left_down_selection = False
 
         self._dragTimer = wx.Timer(self)
@@ -2380,9 +2413,9 @@ class TreeListMainWindow(CustomTreeCtrl):
         
         self._dirty = True     # do this first so stuff below doesn't cause flicker
 
-        if self._textCtrl != None and self.IsDescendantOf(item, self._textCtrl.item()):
+        if self._editCtrl != None and self.IsDescendantOf(item, self._editCtrl.item()):
             # can't delete the item being edited, cancel editing it first
-            self._textCtrl.StopEditing()
+            self._editCtrl.StopEditing()
 
         # don't stay with invalid self._shiftItem or we will crash in the next call to OnChar()
         changeKeyCurrent = False
@@ -2428,8 +2461,8 @@ class TreeListMainWindow(CustomTreeCtrl):
         :param `item`: an instance of L{TreeListItem}.
         """
 
-        if self._textCtrl != None and item != self._textCtrl.item() and self.IsDescendantOf(item, self._textCtrl.item()):
-            self._textCtrl.StopEditing()
+        if self._editCtrl != None and item != self._editCtrl.item() and self.IsDescendantOf(item, self._editCtrl.item()):
+            self._editCtrl.StopEditing()
 
         if self.IsDescendantOf(item, self._selectItem):
             self._selectItem = item
@@ -3265,10 +3298,11 @@ class TreeListMainWindow(CustomTreeCtrl):
             return
 
         column = (column is not None and [column] or [self._main_column])[0]
-
+        
         if column < 0 or column >= self.GetColumnCount():
             return
 
+        self._curColumn = column
         self._editItem = item
 
         te = TreeEvent(wx.wxEVT_COMMAND_TREE_BEGIN_LABEL_EDIT, self._owner.GetId())
@@ -3283,33 +3317,21 @@ class TreeListMainWindow(CustomTreeCtrl):
         # ensure that the position of the item it calculated in any case
         if self._dirty:
             self.CalculatePositions()
-
-        header_win = self._owner.GetHeaderWindow()
-        alignment = header_win.GetColumnAlignment(column)
-        if alignment == wx.ALIGN_LEFT:
-            style = wx.TE_LEFT
-        elif alignment == wx.ALIGN_RIGHT:
-            style = wx.TE_RIGHT
-        elif alignment == wx.ALIGN_CENTER:
-            style = wx.TE_CENTER
             
-        if self._textCtrl != None and (item != self._textCtrl.item() or column != self._textCtrl.column()):
-            self._textCtrl.StopEditing()
+        if self._editCtrl != None and (item != self._editCtrl.item() or column != self._editCtrl.column()):
+            self._editCtrl.StopEditing()
             
-        self._textCtrl = EditTextCtrl(self, -1, self._editItem, column,
-                                      self, self._editItem.GetText(column),
-                                      style=style|wx.TE_PROCESS_ENTER)
-        self._textCtrl.SelectAll()
-        self._textCtrl.SetFocus()
+        self._editCtrl = self._owner.CreateEditCtrl(item, column) 
+        self._editCtrl.SetFocus()
+        
 
-
-    def OnRenameTimer(self):
-        """ The timer for renaming has expired. Start editing. """
+    def OnEditTimer(self):
+        """ The timer for editing has expired. Start editing. """
 
         self.EditLabel(self._current, self._curColumn)
 
 
-    def OnRenameAccept(self, value):
+    def OnAcceptEdit(self, value):
         """
         Called by L{EditTextCtrl}, to accept the changes and to send the
         ``EVT_TREE_END_LABEL_EDIT`` event.
@@ -3332,12 +3354,12 @@ class TreeListMainWindow(CustomTreeCtrl):
         if self._curColumn == -1:
             self._curColumn = 0
            
-        self.SetItemText(self._editItem, value, self._curColumn)
+        self.SetItemText(self._editItem, unicode(value), self._curColumn)
 
 
-    def OnRenameCancelled(self):
+    def OnCancelEdit(self):
         """
-        Called by L{EditTextCtrl}, to cancel the changes and to send the
+        Called by L{EditCtrl}, to cancel the changes and to send the
         ``EVT_TREE_END_LABEL_EDIT`` event.
         """
 
@@ -3385,7 +3407,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         underMouseChanged = underMouse != self._underMouse
 
         if underMouse and (flags & wx.TREE_HITTEST_ONITEM) and not event.LeftIsDown() and \
-           not self._isDragging and (not self._renameTimer or not self._renameTimer.IsRunning()):
+           not self._isDragging and (not self._editTimer or not self._editTimer.IsRunning()):
             underMouse = underMouse
         else:
             underMouse = None
@@ -3402,11 +3424,11 @@ class TreeListMainWindow(CustomTreeCtrl):
 
         if (event.LeftDown() or event.LeftUp() or event.RightDown() or \
             event.RightUp() or event.LeftDClick() or event.Dragging()):
-            if self._textCtrl != None and (item != self._textCtrl.item() or column != self._textCtrl.column()):
-                self._textCtrl.StopEditing()
+            if self._editCtrl != None and (item != self._editCtrl.item() or column != self._editCtrl.column()):
+                self._editCtrl.StopEditing()
 
-        # We do not want a tooltip if we are dragging, or if the rename timer is running
-        if underMouseChanged and not self._isDragging and (not self._renameTimer or not self._renameTimer.IsRunning()):
+        # We do not want a tooltip if we are dragging, or if the edit timer is running
+        if underMouseChanged and not self._isDragging and (not self._editTimer or not self._editTimer.IsRunning()):
             
             if hoverItem is not None:
                 # Ask the tree control what tooltip (if any) should be shown
@@ -3574,7 +3596,7 @@ class TreeListMainWindow(CustomTreeCtrl):
                 if item == self._current and self._curColumn != -1 and \
                    self._owner.GetHeaderWindow().IsColumnEditable(self._curColumn) and \
                    flags & (wx.TREE_HITTEST_ONITEMLABEL | wx.TREE_HITTEST_ONITEMCOLUMN):
-                    self._renameTimer.Start(_RENAME_TIMER_TICKS, wx.TIMER_ONE_SHOT)
+                    self._editTimer.Start(_EDIT_TIMER_TICKS, wx.TIMER_ONE_SHOT)
                 
                 self._lastOnSame = False
             
@@ -3642,7 +3664,7 @@ class TreeListMainWindow(CustomTreeCtrl):
             if event.LeftDClick():
 
                 # double clicking should not start editing the item label
-                self._renameTimer.Stop()
+                self._editTimer.Stop()
                 self._lastOnSame = False
 
                 # send activate event first
@@ -4688,6 +4710,50 @@ class HyperTreeList(wx.PyControl):
         # to let the user override it
 
         return self.GetItemText(item1) == self.GetItemText(item2)
+
+
+    def CreateEditCtrl(self, item, column):
+        """
+        Create an edit control for editing a label of an item. By default, this
+        returns a text control.
+        
+        Override this function in the derived class to return a different type
+        of control.
+        
+        :param `item`: an instance of L{TreeListItem};
+        :param `column`: an integer specifying the column index.
+        """
+        return EditTextCtrl(self.GetMainWindow(), -1, item, column,
+                            self.GetMainWindow(), item.GetText(column),
+                            style=self.GetTextCtrlStyle(column))
+
+        
+    def GetTextCtrlStyle(self, column):
+        """
+        Return the style to use for the text control that is used to edit
+        labels of items. 
+        
+        Override this function in the derived class to support a different
+        style, e.g. wx.TE_MULTILINE.
+        
+        :param `column`: an integer specifying the column index.
+        """
+        return self.GetTextCtrlAlignmentStyle(column) | wx.TE_PROCESS_ENTER
+
+        
+    def GetTextCtrlAlignmentStyle(self, column):
+        """
+        Return the alignment style to use for the text control that is used
+        to edit labels of items. The alignment style is derived from the 
+        column alignment.
+        
+        :param `column`: an integer specifying the column index.
+        """
+        header_win = self.GetHeaderWindow()
+        alignment = header_win.GetColumnAlignment(column)
+        return {wx.ALIGN_LEFT: wx.TE_LEFT, 
+                wx.ALIGN_RIGHT: wx.TE_RIGHT, 
+                wx.ALIGN_CENTER: wx.TE_CENTER}[alignment]
 
     
     def GetClassDefaultAttributes(self):

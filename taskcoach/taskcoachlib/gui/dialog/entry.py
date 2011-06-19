@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, locale
+import wx, wx.combo, locale
 from wx.lib import masked, newevent
 from taskcoachlib import widgets
 from taskcoachlib.gui import artprovider
@@ -69,11 +69,7 @@ class TimeDeltaEntry(widgets.PanelWithBoxSizer):
         if timeDelta < self.defaultTimeDelta:
             hours = -hours
         mask = 'X{8}:XX:XX' if readonly else '#{8}:##:##' # X is needed to allow for negative values 
-        self._entry = widgets.masked.TextCtrl(self, mask=mask,
-            formatcodes='FS',
-            fields=[masked.Field(formatcodes='r', defaultValue='%8d'%hours),
-                    masked.Field(defaultValue='%02d'%minutes),
-                    masked.Field(defaultValue='%02d'%seconds)])
+        self._entry = widgets.masked.TimeDeltaCtrl(self, hours, minutes, seconds, mask=mask)
         if readonly:
             self._entry.Disable()
         self.add(self._entry, flag=wx.EXPAND|wx.ALL, proportion=1)

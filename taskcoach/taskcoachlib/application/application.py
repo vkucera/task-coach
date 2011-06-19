@@ -16,6 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+# This modules works around bugs in third party modules, mostly by
+# monkey-patching so import it first
+from taskcoachlib import workarounds
+
+
 import wx, os, locale, sys
 from taskcoachlib import patterns
 
@@ -34,27 +39,27 @@ class wxApp(wx.App):
         elif wx.Platform == '__WXGTK__':
             # Seems to SIGSEGV and exit one occasion, so disabling this for now
 
-            ## from taskcoachlib.powermgt import xsm
-            ## class LinuxSessionMonitor(xsm.SessionMonitor):
-            ##     def __init__(self, callback):
-            ##         super(LinuxSessionMonitor, self).__init__()
-            ##         self._callback = callback
-            ##         self.setProperty(xsm.SmCloneCommand, sys.argv)
-            ##         self.setProperty(xsm.SmRestartCommand, sys.argv)
-            ##         self.setProperty(xsm.SmCurrentDirectory, os.getcwd())
-            ##         self.setProperty(xsm.SmProgram, sys.argv[0])
-            ##         self.setProperty(xsm.SmRestartStyleHint, xsm.SmRestartNever)
-            ##     def saveYourself(self, saveType, shutdown, interactStyle, fast):
-            ##         if shutdown:
-            ##             self._callback()
-            ##         self.saveYourselfDone(True)
-            ##     def die(self):
-            ##         pass
-            ##     def saveComplete(self):
-            ##         pass
-            ##     def shutdownCancelled(self):
-            ##         pass
-            ## self.sessionMonitor = LinuxSessionMonitor(self.onQueryEndSession)
+            from taskcoachlib.powermgt import xsm
+            class LinuxSessionMonitor(xsm.SessionMonitor):
+                def __init__(self, callback):
+                    super(LinuxSessionMonitor, self).__init__()
+                    self._callback = callback
+                    self.setProperty(xsm.SmCloneCommand, sys.argv)
+                    self.setProperty(xsm.SmRestartCommand, sys.argv)
+                    self.setProperty(xsm.SmCurrentDirectory, os.getcwd())
+                    self.setProperty(xsm.SmProgram, sys.argv[0])
+                    self.setProperty(xsm.SmRestartStyleHint, xsm.SmRestartNever)
+                def saveYourself(self, saveType, shutdown, interactStyle, fast):
+                    if shutdown:
+                        self._callback()
+                    self.saveYourselfDone(True)
+                def die(self):
+                    pass
+                def saveComplete(self):
+                    pass
+                def shutdownCancelled(self):
+                    pass
+            self.sessionMonitor = LinuxSessionMonitor(self.onQueryEndSession)
 
             pass
         return True
@@ -66,9 +71,8 @@ class wxApp(wx.App):
             event.Skip()
 
     def onQuit(self):
-        ## if wx.Platform == '__WXGTK__':
-        ##     self.sessionMonitor.stop()
-        pass
+        if wx.Platform == '__WXGTK__':
+            self.sessionMonitor.stop()
 
 
 class Application(object):

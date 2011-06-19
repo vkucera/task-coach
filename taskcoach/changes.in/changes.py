@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.3.0', 'May 26, 2011',
+Release('1.3.0', 'June 17, 2011',
     summary='''This release makes all edits done in dialogs immediate.''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -41,14 +41,44 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.20', 'June ??, 2011',
+Release('1.2.21', 'June 17, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
+    bugsFixed=[
+        Bug('''Prevent exception messages in log file (Windows) or on command 
+line (Linux).''', '3315358', '3316220'),
+        Bug('''Properly decode non-ascii email subject headers.''', '3311272'),
+        Bug('''Creating a template from a task would not work any more.''', '3317048'),
+        Bug('''Unplugging a monitor while Task Coach was running would cause
+the dialogs to always open in the top left corner on Windows.'''),
+        ],
+    featuresAdded=[
+        Feature('''Start, due, completion, and reminder date and time of tasks 
+can be edited in-place when the relevant column is visible.''')
+        ]
+    ),
+
+Release('1.2.20', 'June 10, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Task Coach tried to use Python 2.5 on Ubuntu.''',
             '3309089', '3309317'),
+        Bug('''The total number of effort records displayed in the status
+bar of an effort viewer would be incorrect when the effort viewer was showing 
+aggregated effort (per day, per week or per month).'''),
+        Bug('''When hiding completed tasks and showing tasks belonging to a 
+specific category (say C), Task Coach would show a task even though it didn't
+belong to that category if that task had completed subtasks belonging 
+to category C.''', '3309006'),
+        Bug('''Floating and then closing the task viewer didn't work.''', 
+            '3313199'),
         ],
     featuresAdded=[
+        Feature('''Descriptions of tasks, notes and categories can be edited 
+in-place when the description column is visible. Priority of tasks can be
+edited in-place when the priority column is visible. Budget of tasks can be
+edited in-place when the budget column is visible.'''),
         Feature('''Basic editing (dates, subject) of task templates.'''),
+        Feature('''Session management on Linux is back.''', '2929786'),
         ],
     ),
 
@@ -2895,7 +2925,7 @@ same month or week but in different years would erroneously be added.
 E.g. effort in January 2004 and January 2006 would be added.'''),
         Bug('''The mechanism to prevent effort periods with a negative
 duration (i.e.  a start time later than the stop time) in the effort editor
-was invoked on each key stroke which caused inconvenient behaviour. Fixed
+was invoked on each key stroke which caused inconvenient behavior. Fixed
 it by only invoking it when the user leaves the text or combo box.''')],
     featuresAdded=[
         Feature('''Added possibility to start tracking effort for a task, 

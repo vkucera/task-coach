@@ -18,37 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-import combo
 from taskcoachlib.domain import date
-
-
-class Panel(wx.Panel):
-    def __init__(self, parent, callback=None, *args, **kwargs):
-        super(Panel, self).__init__(parent, *args, **kwargs)
-        callback = callback or self.nullCallback
-        self._controls = self._createControls(callback)
-        self._layout()
-        if '__WXGTK__' == wx.Platform:
-            # Many EVT_CHILD_FOCUS are sent on wxGTK, see 
-            # http://trac.wxwidgets.org/ticket/11305. Ignore these events
-            self.Bind(wx.EVT_CHILD_FOCUS, self.onChildFocus)
-            
-    def onChildFocus(self, event):
-        pass
-        
-    def _createControls(self, callback):
-        raise NotImplementedError
-                
-    def _layout(self):
-        self._sizer = wx.BoxSizer(wx.HORIZONTAL) # pylint: disable-msg=W0201
-        for control in self._controls:
-            self._sizer.Add(control, border=2, 
-                            flag=wx.RIGHT|wx.ALIGN_CENTER_VERTICAL)
-        self.SetSizerAndFit(self._sizer)
-
-    @staticmethod
-    def nullCallback(*args, **kwargs):
-        pass
 
 
 class _BetterDatePickerCtrl(wx.DatePickerCtrl):
@@ -95,30 +65,39 @@ class _BetterDatePickerCtrl(wx.DatePickerCtrl):
             child.Enable(enable)
             
 
-class _DatePickerCtrlThatFixesAllowNoneStyle(Panel):
+class _DatePickerCtrlThatFixesAllowNoneStyle(wx.Panel):
     def __init__(self, parent, *args, **kwargs):
         self.__args = args
         self.__kwargs = kwargs
         super(_DatePickerCtrlThatFixesAllowNoneStyle, self).__init__(parent)
-        
-    def _createControls(self, callback):
+        self._createControls()
+        self._layout()
+        if '__WXGTK__' == wx.Platform:
+            # Many EVT_CHILD_FOCUS are sent on wxGTK, see 
+            # http://trac.wxwidgets.org/ticket/11305. Ignore these events
+            self.Bind(wx.EVT_CHILD_FOCUS, lambda event: None)
+            
+    def _createControls(self):
         # pylint: disable-msg=W0201
         self.__check = wx.CheckBox(self)
         self.__check.Bind(wx.EVT_CHECKBOX, self.onCheck)
         self.__datePicker = _BetterDatePickerCtrl(self, *self.__args, 
                                                   **self.__kwargs)
         self.__datePicker.Disable()
-        return [self.__check, self.__datePicker]
+
+    def _layout(self):
+        sizer = wx.BoxSizer(wx.HORIZONTAL)
+        for control in (self.__check, self.__datePicker):
+            sizer.Add(control, flag=wx.ALIGN_CENTER_VERTICAL)
+        self.SetSizerAndFit(sizer)
 
     def onCheck(self, event):
         self.__datePicker.Enable(event.IsChecked())
         event.Skip()
 
     def GetValue(self):
-        if self.__datePicker.IsEnabled():
-            return self.__datePicker.GetValue()
-        else:
-            return wx.DateTime()
+        dp = self.__datePicker
+        return dp.GetValue() if dp.IsEnabled() else wx.DateTime()
 
     def SetValue(self, value):
         if value.IsValid():
@@ -134,9 +113,7 @@ class _DatePickerCtrlThatFixesAllowNoneStyle(Panel):
 
 
 def styleDP_ALLOWNONEIsBroken():
-    # DP_ALLOWNONE is not supported on Mac OS and Linux, and currently 
-    # (wxPython 2.8.1), Windows because one can't set the date to None, 
-    # despite style=wx.DP_ALLOWNONE:
+    # DP_ALLOWNONE is not supported on Mac OS and Linux
     return not ('__WXMSW__' in wx.PlatformInfo)
 
 
@@ -173,82 +150,8 @@ def wxDateTime2Date(wxDateTime):
     else:
         return date.Date()
 
-    
-class DateCtrl(Panel):
-    def __init__(self, parent, callback=None, noneAllowed=True, *args, 
-                 **kwargs):
-        self._noneAllowed = noneAllowed
-        super(DateCtrl, self).__init__(parent, callback, *args, **kwargs)
-        self._callback = callback
-        self.Bind(wx.EVT_DATE_CHANGED, self._callback)
-        
-    def _createControls(self, callback):
-        options = dict(style=wx.DP_DROPDOWN, dt=wx.DateTime_Today())
-        if self._noneAllowed:
-            options['style'] |= wx.DP_ALLOWNONE
-        if '__WXMSW__' in wx.PlatformInfo:
-            options['size'] = (100, -1)
-        elif '__WXGTK__' in wx.PlatformInfo:
-            options['size'] = (110, -1)
-        return [DatePickerCtrl(self, **options)] # pylint: disable-msg=W0142
 
-    def SetValue(self, value):
-        wxDate = date2wxDateTime(value)
-        if wxDate.IsValid() or self._noneAllowed:
-            self._controls[0].SetValue(wxDate)
-
-    def GetValue(self):
-        return wxDateTime2Date(self._controls[0].GetValue())
-        
-
-class TimeCtrl(Panel):
-    def __init__(self, parent, callback=None, starthour=8, endhour=18, 
-                 interval=15, showSeconds=False, *args, **kwargs):
-        self._starthour = starthour
-        self._endhour = endhour
-        self._interval = interval
-        self._showSeconds = showSeconds
-        super(TimeCtrl, self).__init__(parent, callback, *args, **kwargs)
-        
-    def SetValue(self, time):
-        formattedTime = self._formatTime(date.Now() if time is None else time)
-        self._controls[0].SetValue(formattedTime)
-    
-    def _createControls(self, callback):
-        control = combo.ComboCtrl(self, choices=self._choices(), 
-                                  size=(100 if self._showSeconds else 75,-1))
-        control.Bind(wx.EVT_TEXT, callback)
-        control.Bind(wx.EVT_COMBOBOX, callback)
-        return [control]
-        
-    def _choices(self):
-        choices = []
-        for hour in range(self._starthour, self._endhour):
-            for minute in range(0, 60, self._interval):
-                choices.append(self._formatTime(date.Time(hour, minute)))
-        if self._endhour < 24:
-            choices.append(self._formatTime(date.Time(self._endhour, 0)))
-        return choices
-    
-    def _formatTime(self, time):
-        formattedTime = '%02d:%02d'%(time.hour, time.minute)
-        if self._showSeconds:
-            formattedTime += ':%02d'%time.second
-        return formattedTime
-        
-    def GetValue(self):
-        value = self._controls[0].GetValue()
-        try:
-            timeComponents = [int(component) for component in value.split(':')]
-            return date.Time(*timeComponents) # pylint: disable-msg=W0142
-        except ValueError:
-            return date.Time()            
-    
-    def Enable(self, enable=True): # pylint: disable-msg=W0221
-        self._controls[0].Enable(enable)
-        
-
-class DateTimeCtrl(Panel):
+class DateTimeCtrl(wx.Panel):
     def __init__(self, parent, callback=None, noneAllowed=True,
                  starthour=8, endhour=18, interval=15, showSeconds=False,
                  *args, **kwargs):
@@ -257,21 +160,58 @@ class DateTimeCtrl(Panel):
         self._endhour = endhour
         self._interval = interval
         self._showSeconds = showSeconds
-        super(DateTimeCtrl, self).__init__(parent, callback, *args, **kwargs)
-        self._callback = callback or self.__nullCallback           
+        self._callback = callback or self.__nullCallback
+        super(DateTimeCtrl, self).__init__(parent, *args, **kwargs)
+        self._createControls()
+        self._layout()
+        if '__WXGTK__' == wx.Platform:
+            # Many EVT_CHILD_FOCUS are sent on wxGTK, see 
+            # http://trac.wxwidgets.org/ticket/11305. Ignore these events
+            self.Bind(wx.EVT_CHILD_FOCUS, lambda event: None)
+
+    def _createControls(self): 
+        # pylint: disable-msg=W0201
+        self._dateCtrl = DatePickerCtrl(self, **self._datePickerOptions()) # pylint: disable-msg=W0142
+        self._dateCtrl.Bind(wx.EVT_DATE_CHANGED, self._dateCtrlCallback)
+        self._dateCtrl.Bind(wx.EVT_CHECKBOX, self.onEnableDatePicker)
+        self._timeCtrl = wx.ComboBox(self, choices=self._timeChoices(),
+                                     size=(90 if self._showSeconds else 60,-1))
+        self._timeCtrl.Bind(wx.EVT_TEXT, self._timeCtrlCallback)
+        self._timeCtrl.Bind(wx.EVT_COMBOBOX, self._timeCtrlCallback)
+    
+    def _datePickerOptions(self):
+        options = dict(style=wx.DP_DROPDOWN, dt=wx.DateTime_Today())
+        if self._noneAllowed:
+            options['style'] |= wx.DP_ALLOWNONE
+        if '__WXMSW__' in wx.PlatformInfo:
+            options['size'] = (100, -1)
+        elif '__WXGTK__' in wx.PlatformInfo:
+            options['size'] = (110, -1)
+        return options
+    
+    def _timeChoices(self):
+        choices = []
+        for hour in range(self._starthour, self._endhour):
+            for minute in range(0, 60, self._interval):
+                choices.append(self._formatTime(date.Time(hour, minute)))
+        if self._endhour < 24:
+            choices.append(self._formatTime(date.Time(self._endhour, 0)))
+        return choices
+
+    def _formatTime(self, time):
+        formattedTime = '%02d:%02d'%(time.hour, time.minute)
+        if self._showSeconds:
+            formattedTime += ':%02d'%time.second
+        return formattedTime
+                    
+    def _layout(self):
+        sizer = wx.BoxSizer(wx.HORIZONTAL)
+        for control in (self._dateCtrl, self._timeCtrl):
+            sizer.Add(control, flag=wx.ALIGN_CENTER_VERTICAL)
+        self.SetSizerAndFit(sizer)        
         
     def __nullCallback(self, *args, **kwargs):
         pass
-        
-    def _createControls(self, callback): 
-        # pylint: disable-msg=W0201
-        self._dateCtrl = DateCtrl(self, self._dateCtrlCallback, 
-            self._noneAllowed)
-        self._dateCtrl.Bind(wx.EVT_CHECKBOX, self.onEnableDatePicker)
-        self._timeCtrl = TimeCtrl(self, self._timeCtrlCallback,
-                                  self._starthour, self._endhour, self._interval,
-                                  self._showSeconds)
-        return [self._dateCtrl, self._timeCtrl]
         
     def onEnableDatePicker(self, event):
         self._timeCtrl.Enable(event.IsChecked())
@@ -286,7 +226,7 @@ class DateTimeCtrl(Panel):
         self._callback(*args, **kwargs)
 
     def _isDateCtrlEnabled(self):
-        return self._dateCtrl.GetValue() != date.Date()
+        return self._dateCtrl.GetValue().IsValid()
         
     def SetValue(self, dateTime):
         if dateTime is None:
@@ -294,16 +234,25 @@ class DateTimeCtrl(Panel):
         else:
             datePart = dateTime.date()
             timePart = dateTime.time()
-        self._dateCtrl.SetValue(datePart)
-        self._timeCtrl.SetValue(timePart)
+        wxDate = date2wxDateTime(datePart)
+        if wxDate.IsValid() or self._noneAllowed:
+            self._dateCtrl.SetValue(wxDate)
+        formattedTime = self._formatTime(date.Now() if timePart is None else timePart)
+        self._timeCtrl.SetValue(formattedTime)
         self._timeCtrl.Enable(self._isDateCtrlEnabled())
         
     def GetValue(self):
-        dateValue = self._dateCtrl.GetValue()
+        dateValue = wxDateTime2Date(self._dateCtrl.GetValue())
         if dateValue == date.Date():
             return date.DateTime()
         else:
-            return date.DateTime.combine(dateValue, self._timeCtrl.GetValue())
+            timeText = self._timeCtrl.GetValue()
+            try:
+                timeComponents = [int(component) for component in timeText.split(':')]
+                timeValue = date.Time(*timeComponents) # pylint: disable-msg=W0142
+            except ValueError:
+                timeValue = date.Time()
+            return date.DateTime.combine(dateValue, timeValue)
 
     def setCallback(self, callback):
         self._callback = callback
