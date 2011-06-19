@@ -261,7 +261,7 @@ class TemplateXMLWriter(XMLWriter):
         super(TemplateXMLWriter, self).write(task.TaskList([tsk]),
                    category.CategoryList(),
                    note.NoteContainer(),
-                   None, None)
+                   None, dict(), None)
 
     def taskNode(self, task): # pylint: disable-msg=W0621
         node = super(TemplateXMLWriter, self).taskNode(task)
