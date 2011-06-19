@@ -35,34 +35,36 @@ class ChangeMonitor(object):
         self._removed = dict()
 
     def monitorClass(self, klass):
-        for name in klass.monitoredAttributes():
-            Publisher().registerObserver(self.onAttributeChanged, getattr(klass, '%sChangedEventType' % name)())
-            self._classes.add(klass)
-        if issubclass(klass, ObservableComposite):
-            Publisher().registerObserver(self.onChildAdded, klass.addChildEventType())
-            Publisher().registerObserver(self.onChildRemoved, klass.removeChildEventType())
-        if issubclass(klass, CategorizableCompositeObject):
-            Publisher().registerObserver(self.onCategoryAdded, klass.categoryAddedEventType())
-            Publisher().registerObserver(self.onCategoryRemoved, klass.categoryRemovedEventType())
+        if klass not in self._classes:
+            for name in klass.monitoredAttributes():
+                Publisher().registerObserver(self.onAttributeChanged, getattr(klass, '%sChangedEventType' % name)())
+                self._classes.add(klass)
+            if issubclass(klass, ObservableComposite):
+                Publisher().registerObserver(self.onChildAdded, klass.addChildEventType())
+                Publisher().registerObserver(self.onChildRemoved, klass.removeChildEventType())
+            if issubclass(klass, CategorizableCompositeObject):
+                Publisher().registerObserver(self.onCategoryAdded, klass.categoryAddedEventType())
+                Publisher().registerObserver(self.onCategoryRemoved, klass.categoryRemovedEventType())
 
     def unmonitorClass(self, klass):
-        for name in klass.monitoredAttributes():
-            Publisher().removeObserver(self.onAttributeChanged, getattr(klass, '%sChangedEventType' % name)())
-        if issubclass(klass, ObservableComposite):
-            Publisher().removeObserver(self.onChildAdded, klass.addChildEventType())
-            Publisher().removeObserver(self.onChildRemoved, klass.removeChildEventType())
-        if issubclass(klass, CategorizableCompositeObject):
-            Publisher().removeObserver(self.onCategoryAdded, klass.categoryAddedEventType())
-            Publisher().removeObserver(self.onCategoryRemoved, klass.categoryRemovedEventType())
-        self._classes.remove(klass)
+        if klass in self._classes:
+            for name in klass.monitoredAttributes():
+                Publisher().removeObserver(self.onAttributeChanged, getattr(klass, '%sChangedEventType' % name)())
+            if issubclass(klass, ObservableComposite):
+                Publisher().removeObserver(self.onChildAdded, klass.addChildEventType())
+                Publisher().removeObserver(self.onChildRemoved, klass.removeChildEventType())
+            if issubclass(klass, CategorizableCompositeObject):
+                Publisher().removeObserver(self.onCategoryAdded, klass.categoryAddedEventType())
+                Publisher().removeObserver(self.onCategoryRemoved, klass.categoryRemovedEventType())
+            self._classes.remove(klass)
 
-    def monitorCollectionClass(self, klass):
-        Publisher().registerObserver(self.onObjectAdded, klass.addItemEventType())
-        Publisher().registerObserver(self.onObjectRemoved, klass.removeItemEventType())
+    def monitorCollection(self, collection):
+        Publisher().registerObserver(self.onObjectAdded, collection.addItemEventType(), eventSource=collection)
+        Publisher().registerObserver(self.onObjectRemoved, collection.removeItemEventType(), eventSource=collection)
 
-    def unmonitorCollectionClass(self, klass):
-        Publisher().removeObserver(self.onObjectAdded, klass.addItemEventType())
-        Publisher().removeObserver(self.onObjectRemoved, klass.removeItemEventType())
+    def unmonitorCollection(self, collection):
+        Publisher().removeObserver(self.onObjectAdded, collection.addItemEventType(), eventSource=collection)
+        Publisher().removeObserver(self.onObjectRemoved, collection.removeItemEventType(), eventSource=collection)
 
     def onAttributeChanged(self, event):
         for obj in event.sources():
@@ -134,3 +136,4 @@ class ChangeMonitor(object):
     def resetAllChanges(self):
         for id_ in self._changes.keys():
             self._changes[id_] = set()
+        self._removed = dict()

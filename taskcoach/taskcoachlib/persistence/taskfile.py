@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import os, codecs, xml
-from taskcoachlib import patterns
+from taskcoachlib import patterns, changes
 from taskcoachlib.domain import base, task, category, note, effort, attachment
 from taskcoachlib.syncml.config import createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
@@ -49,6 +49,12 @@ class TaskFile(patterns.Observer):
         self.__efforts = effort.EffortList(self.tasks())
         self.__guid = generate()
         self.__syncMLConfig = createDefaultSyncConfig(self.__guid)
+        self.__monitor = changes.ChangeMonitor()
+        # XXXTODO: efforts
+        for collection in [self.__tasks, self.__categories, self.__notes]:
+            self.__monitor.monitorCollection(collection)
+        for domainClass in [task.Task, category.Category, note.Note]:
+            self.__monitor.monitorClass(domainClass)
         super(TaskFile, self).__init__(*args, **kwargs)
         # Register for tasks, categories, efforts and notes being changed so we 
         # can monitor when the task file needs saving (i.e. is 'dirty'):
@@ -80,6 +86,9 @@ class TaskFile(patterns.Observer):
     def __contains__(self, item):
         return item in self.tasks() or item in self.notes() or \
                item in self.categories() or item in self.efforts()
+
+    def monitor(self):
+        return self.__monitor
 
     def categories(self):
         return self.__categories
@@ -195,7 +204,7 @@ class TaskFile(patterns.Observer):
         if regenerate:
             self.__guid = generate()
             self.__syncMLConfig = createDefaultSyncConfig(self.__guid)
-        
+
     def close(self):
         self.setFilename('')
         self.__guid = generate()
@@ -231,9 +240,11 @@ class TaskFile(patterns.Observer):
                 guid = generate()
                 syncMLConfig = createDefaultSyncConfig(guid)
             self.clear()
+            self.__monitor.reset()
             self.categories().extend(categories)
             self.tasks().extend(tasks)
             self.notes().extend(notes)
+            self.__monitor.resetAllChanges()
             self.__syncMLConfig = syncMLConfig
             self.__guid = guid
         except:
@@ -258,6 +269,7 @@ class TaskFile(patterns.Observer):
         if name is not None: # Unit tests (AutoSaver)
             os.rename(name, self.__filename)
         self.__needSave = False
+        self.__monitor.resetAllChanges()
 
     def saveas(self, filename):
         self.setFilename(filename)

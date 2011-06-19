@@ -29,15 +29,15 @@ class MonitorBaseTest(test.TestCase):
     def setUp(self):
         self.monitor = ChangeMonitor()
         self.monitor.monitorClass(self.klass)
-        self.monitor.monitorCollectionClass(self.listClass)
 
         self.list = self.listClass()
+        self.monitor.monitorCollection(self.list)
         self.obj = self.klass(subject=u'New object')
         self.list.append(self.obj)
 
     def tearDown(self):
         self.monitor.unmonitorClass(self.klass)
-        self.monitor.unmonitorCollectionClass(self.listClass)
+        self.monitor.unmonitorCollection(self.list)
 
 
 class MonitorObjectTest(MonitorBaseTest):

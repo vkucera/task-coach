@@ -26,10 +26,10 @@ class MonitorCategorizableTest(test.TestCase):
     def setUp(self):
         self.monitor = ChangeMonitor()
         self.monitor.monitorClass(CategorizableCompositeObject)
-        self.monitor.monitorCollectionClass(ObservableList)
 
         self.obj = CategorizableCompositeObject(subject=u'Object')
         self.list = ObservableList()
+        self.monitor.monitorCollection(self.list)
         self.list.append(self.obj)
 
         self.cat1 = Category(subject=u'Cat #1')
@@ -40,7 +40,7 @@ class MonitorCategorizableTest(test.TestCase):
 
     def tearDown(self):
         self.monitor.unmonitorClass(CategorizableCompositeObject)
-        self.monitor.unmonitorCollectionClass(ObservableList)
+        self.monitor.unmonitorCollection(self.list)
 
     def testAddCategory(self):
         self.monitor.resetAllChanges()
