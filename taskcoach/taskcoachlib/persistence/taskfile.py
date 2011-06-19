@@ -276,7 +276,7 @@ class TaskFile(patterns.Observer):
 
             if self.exists():
                 # We need to reset the changes on disk because we're up to date.
-                self.save()
+                self.save(doNotify=False)
         except:
             self.setFilename('')
             raise
@@ -284,8 +284,9 @@ class TaskFile(patterns.Observer):
             self.__loading = False
             self.__needSave = False
         
-    def save(self):
-        patterns.Event('taskfile.aboutToSave', self).send()
+    def save(self, doNotify=True):
+        if doNotify:
+            patterns.Event('taskfile.aboutToSave', self).send()
         # When encountering a problem while saving (disk full,
         # computer on fire), if we were writing directly to the file,
         # it's lost. So write to a temporary file and rename it if

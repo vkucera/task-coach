@@ -39,7 +39,7 @@ class DummyTaskFile(persistence.TaskFile):
         return None, DummyFile()
     
     def _read(self, *args, **kwargs): # pylint: disable-msg=W0613
-        return [task.Task()], [], [], None, None
+        return [task.Task()], [], [], None, dict(), None
     
     def exists(self):
         return True

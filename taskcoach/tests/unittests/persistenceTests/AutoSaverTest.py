@@ -35,14 +35,15 @@ class DummyFile(object):
 class DummyTaskFile(persistence.TaskFile):
     def __init__(self, *args, **kwargs):
         self.saveCalled = 0
+        self._throw = False
         super(DummyTaskFile, self).__init__(*args, **kwargs)
-        
+
     def _read(self, *args, **kwargs): # pylint: disable-msg=W0613,W0221
         if self._throw:
             raise IOError
         else:
-            return [task.Task()], [category.Category('category')], [], None, None
-        
+            return [task.Task()], [category.Category('category')], [], None, {self.monitor().guid(): set()}, None
+
     def exists(self, *args, **kwargs): # pylint: disable-msg=W0613
         return True
         
@@ -53,7 +54,8 @@ class DummyTaskFile(persistence.TaskFile):
         return None, DummyFile()
     
     def save(self, *args, **kwargs):
-        self.saveCalled += 1
+        if kwargs.get('doNotify', True):
+            self.saveCalled += 1
         super(DummyTaskFile, self).save(*args, **kwargs)
 
     def load(self, filename=None, throw=False, *args, **kwargs): # pylint: disable-msg=W0221
