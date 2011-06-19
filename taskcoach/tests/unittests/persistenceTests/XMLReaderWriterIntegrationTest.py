@@ -38,13 +38,15 @@ class IntegrationTestCase(test.TestCase):
         self.categories = category.CategoryList()
         self.notes = note.NoteContainer()
         self.syncMLConfig = SyncMLConfigNode('root')
+        self.changes = dict()
         self.guid = u'GUID'
         self.fillContainers()
-        tasks, categories, notes, syncMLConfig, guid = self.readAndWrite()
+        tasks, categories, notes, syncMLConfig, changes, guid = self.readAndWrite()
         self.tasksWrittenAndRead = task.TaskList(tasks)
         self.categoriesWrittenAndRead = category.CategoryList(categories)
         self.notesWrittenAndRead = note.NoteContainer(notes)
         self.syncMLConfigWrittenAndRead = syncMLConfig
+        self.changesWrittenAndRead = changes
         self.guidWrittenAndRead = guid
 
     def fillContainers(self):
@@ -52,7 +54,7 @@ class IntegrationTestCase(test.TestCase):
 
     def readAndWrite(self):
         self.fd.seek(0)
-        self.writer.write(self.taskList, self.categories, self.notes, self.syncMLConfig, self.guid)
+        self.writer.write(self.taskList, self.categories, self.notes, self.syncMLConfig, self.changes, self.guid)
         self.fd.seek(0)
         return self.reader.read()
 

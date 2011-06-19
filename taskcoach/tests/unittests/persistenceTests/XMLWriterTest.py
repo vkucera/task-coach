@@ -38,10 +38,11 @@ class XMLWriterTest(test.TestCase):
         self.categoryContainer = category.CategoryList([self.category])
         self.note = note.Note()
         self.noteContainer = note.NoteContainer([self.note])
+        self.changes = dict()
             
     def __writeAndRead(self):
         self.writer.write(self.taskList, self.categoryContainer, 
-            self.noteContainer, SyncMLConfigNode('root'), u'GUID')
+            self.noteContainer, SyncMLConfigNode('root'), self.changes, u'GUID')
         return self.fd.getvalue()
     
     def expectInXML(self, xmlFragment):

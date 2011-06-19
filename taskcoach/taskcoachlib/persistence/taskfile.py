@@ -50,6 +50,8 @@ class TaskFile(patterns.Observer):
         self.__guid = generate()
         self.__syncMLConfig = createDefaultSyncConfig(self.__guid)
         self.__monitor = changes.ChangeMonitor()
+        self.__changes = dict()
+        self.__changes[self.__monitor.guid()] = self.__monitor
         # XXXTODO: efforts
         for collection in [self.__tasks, self.__categories, self.__notes]:
             self.__monitor.monitorCollection(collection)
@@ -107,6 +109,9 @@ class TaskFile(patterns.Observer):
 
     def guid(self):
         return self.__guid
+
+    def changes(self):
+        return self.__changes
 
     def setSyncMLConfig(self, config):
         self.__syncMLConfig = config
@@ -206,6 +211,23 @@ class TaskFile(patterns.Observer):
             self.__syncMLConfig = createDefaultSyncConfig(self.__guid)
 
     def close(self):
+        if self.exists():
+            # Just remove ourself from the active devices. XXXTODO: lock
+            fd = self._openForRead()
+            tasks, categories, notes, syncMLConfig, changes, guid = self._read(fd)
+            fd.close()
+            del changes[self.__monitor.guid()]
+
+            name, fd = self._openForWrite()
+            xml.XMLWriter(fd).write(task.TaskList(tasks), category.CategoryList(categories),
+                                    note.NoteContainer(notes),
+                                    syncMLConfig, changes, guid)
+            fd.close()
+            if os.path.exists(self.__filename): # Not using self.exists() because DummyFile.exists returns True
+                os.remove(self.__filename)
+            if name is not None: # Unit tests (AutoSaver)
+                os.rename(name, self.__filename)
+
         self.setFilename('')
         self.__guid = generate()
         self.clear()
@@ -225,28 +247,36 @@ class TaskFile(patterns.Observer):
         return name, codecs.open(name, 'w', 'utf-8')
     
     def load(self, filename=None):
+        # XXXTODO: lock only here
         self.__loading = True
         if filename:
             self.setFilename(filename)
         try:
             if self.exists():
                 fd = self._openForRead()
-                tasks, categories, notes, syncMLConfig, guid = self._read(fd)
+                tasks, categories, notes, syncMLConfig, changes, guid = self._read(fd)
                 fd.close()
-            else: 
+            else:
                 tasks = []
                 categories = []
                 notes = []
+                changes = dict()
                 guid = generate()
                 syncMLConfig = createDefaultSyncConfig(guid)
             self.clear()
             self.__monitor.reset()
+            self.__changes = changes
+            self.__changes[self.__monitor.guid()] = self.__monitor
             self.categories().extend(categories)
             self.tasks().extend(tasks)
             self.notes().extend(notes)
             self.__monitor.resetAllChanges()
             self.__syncMLConfig = syncMLConfig
             self.__guid = guid
+
+            if self.exists():
+                # We need to reset the changes on disk because we're up to date.
+                self.save()
         except:
             self.setFilename('')
             raise
@@ -260,16 +290,32 @@ class TaskFile(patterns.Observer):
         # computer on fire), if we were writing directly to the file,
         # it's lost. So write to a temporary file and rename it if
         # everything went OK.
+
+        # XXXTODO: lock
+
+        if self.exists():
+            fd = self._openForRead()
+            tasks, categories, notes, syncMLConfig, allChanges, guid = self._read(fd)
+            fd.close()
+            # Set the changes for other instances
+            for devGUID, changes in allChanges.items():
+                if devGUID != self.__monitor.guid():
+                    changes.merge(self.__monitor)
+            allChanges[self.__monitor.guid()] = self.__monitor
+            self.__changes = allChanges
+
+        # XXXTODO: merge only changes
+
+        self.__monitor.resetAllChanges()
         name, fd = self._openForWrite()
         xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
-                                self.syncMLConfig(), self.guid())
+                                self.syncMLConfig(), self.changes(), self.guid())
         fd.close()
         if os.path.exists(self.__filename): # Not using self.exists() because DummyFile.exists returns True
             os.remove(self.__filename)
         if name is not None: # Unit tests (AutoSaver)
             os.rename(name, self.__filename)
         self.__needSave = False
-        self.__monitor.resetAllChanges()
 
     def saveas(self, filename):
         self.setFilename(filename)

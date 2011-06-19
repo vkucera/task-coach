@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib.patterns import Publisher, Singleton, ObservableComposite
 from taskcoachlib.domain.categorizable import CategorizableCompositeObject
+from taskcoachlib.thirdparty import guid
 
 class ChangeMonitor(object):
     """
@@ -27,7 +28,11 @@ class ChangeMonitor(object):
     def __init__(self):
         super(ChangeMonitor, self).__init__()
 
+        self.__guid = guid.generate()
         self.reset()
+
+    def guid(self):
+        return self.__guid
 
     def reset(self):
         self._changes = dict()
@@ -124,8 +129,14 @@ class ChangeMonitor(object):
     def onCategoryRemoved(self, event):
         self._categoryChange(event)
 
+    def allChanges(self):
+        return self._changes
+
     def getChanges(self, obj):
         return self._changes.get(obj.id(), None)
+
+    def setChanges(self, id_, changes):
+        self._changes[id_] = changes
 
     def isRemoved(self, obj):
         return obj.id() in self._removed
@@ -137,3 +148,10 @@ class ChangeMonitor(object):
         for id_ in self._changes.keys():
             self._changes[id_] = set()
         self._removed = dict()
+
+    def merge(self, monitor):
+        # XXXTODO: deleted objetcs
+        for id_, changes in self._changes.items():
+            theirChanges = monitor._changes.get(id_, None)
+            if theirChanges is not None:
+                changes.update(theirChanges)

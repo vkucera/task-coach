@@ -74,18 +74,18 @@ class XMLReaderTestCase(test.TestCase):
         return self.writeAndRead(xmlContents)[3]
 
     def writeAndReadGUID(self, xmlContents):
-        return self.writeAndRead(xmlContents)[4]
+        return self.writeAndRead(xmlContents)[5]
 
     def writeAndReadTasksAndCategories(self, xmlContents):
-        tasks, categories, _, _, _ = self.writeAndRead(xmlContents)
+        tasks, categories, _, _, _, _ = self.writeAndRead(xmlContents)
         return tasks, categories
 
     def writeAndReadTasksAndCategoriesAndNotes(self, xmlContents):
-        tasks, categories, notes, _, _ = self.writeAndRead(xmlContents)
+        tasks, categories, notes, _, _, _ = self.writeAndRead(xmlContents)
         return tasks, categories, notes
 
     def writeAndReadCategoriesAndNotes(self, xmlContents):
-        _, categories, notes, _, _ = self.writeAndRead(xmlContents)
+        _, categories, notes, _, _, _ = self.writeAndRead(xmlContents)
         return categories, notes
     
 

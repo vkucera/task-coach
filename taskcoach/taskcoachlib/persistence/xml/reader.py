@@ -25,6 +25,7 @@ from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
 from taskcoachlib.thirdparty.deltaTime import nlTimeExpression
 from taskcoachlib.i18n import translate
+from taskcoachlib.changes import ChangeMonitor
 from taskcoachlib import meta, patterns
 from .. import sessiontempfile # pylint: disable-msg=F0401
 
@@ -89,8 +90,10 @@ class XMLReader(object):
         guid = self.__parseGUIDNode(root.find('guid'))
         syncMLConfig = self._parseSyncMLNode(root, guid)
 
-        return tasks, categories, notes, syncMLConfig, guid
-    
+        changes = self._parseChanges(root.find('changes'))
+
+        return tasks, categories, notes, syncMLConfig, changes, guid
+
     def _hasBrokenLines(self):
         ''' tskversion 24 may contain newlines in element tags. '''
         hasBrokenLines = '><spds><sources><TaskCoach-\n' in self.__fd.read()
@@ -108,6 +111,21 @@ class XMLReader(object):
                 lines[index+1] = lines[index+1][:-1] # Remove newline
         self.__fd.write(''.join(lines))
         self.__fd.seek(0)
+
+    def _parseChanges(self, node):
+        allChanges = dict()
+        if node is not None:
+            for devNode in node.findall('device'):
+                mon = ChangeMonitor()
+                for objNode in devNode.findall('obj'):
+                    text = self._parseText(objNode)
+                    if text:
+                        changes = set(text.split(','))
+                    else:
+                        changes = set()
+                    mon.setChanges(objNode.attrib['id'], changes)
+                allChanges[devNode.attrib['guid']] = mon
+        return allChanges
 
     def _parseTaskNodes(self, node):
         return [self._parseTaskNode(child) for child in node.findall('task')]

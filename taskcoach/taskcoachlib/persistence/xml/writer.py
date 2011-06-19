@@ -31,7 +31,7 @@ class XMLWriter(object):
         self.__versionnr = versionnr
 
     def write(self, taskList, categoryContainer,
-              noteContainer, syncMLConfig, guid):
+              noteContainer, syncMLConfig, changes, guid):
         domImplementation = xml.dom.getDOMImplementation()
         self.document = domImplementation.createDocument(None, 'tasks', None) # pylint: disable-msg=W0201
         pi = self.document.createProcessingInstruction('taskcoach', 
@@ -44,11 +44,27 @@ class XMLWriter(object):
             self.document.documentElement.appendChild(self.categoryNode(rootCategory, taskList, noteContainer))
         for rootNote in noteContainer.rootItems():
             self.document.documentElement.appendChild(self.noteNode(rootNote))
+        self.document.documentElement.appendChild(self.changesNode(changes))
         if syncMLConfig:
             self.document.documentElement.appendChild(self.syncMLNode(syncMLConfig))
         if guid:
             self.document.documentElement.appendChild(self.textNode('guid', guid))
         self.document.writexml(self.__fd, newl='\n', encoding=self.__fd.encoding)
+
+    def changesNode(self, allChanges):
+        node = self.document.createElement('changes')
+        for devName, monitor in allChanges.items():
+            node.appendChild(self.changeNode(devName, monitor))
+        return node
+
+    def changeNode(self, devName, monitor):
+        node = self.document.createElement('device')
+        node.setAttribute('guid', devName)
+        for id_, changes in monitor.allChanges().items():
+            child = self.textNode('obj', ','.join(list(changes)))
+            child.setAttribute('id', id_)
+            node.appendChild(child)
+        return node
 
     def taskNode(self, task): # pylint: disable-msg=W0621
         maxDateTime = self.maxDateTime
