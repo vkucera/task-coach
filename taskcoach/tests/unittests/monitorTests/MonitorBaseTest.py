@@ -27,17 +27,17 @@ class MonitorBaseTest(test.TestCase):
     listClass = ObservableList
 
     def setUp(self):
-        ChangeMonitor().reset()
-        ChangeMonitor().monitorClass(self.klass)
-        ChangeMonitor().monitorCollectionClass(self.listClass)
+        self.monitor = ChangeMonitor()
+        self.monitor.monitorClass(self.klass)
+        self.monitor.monitorCollectionClass(self.listClass)
 
         self.list = self.listClass()
         self.obj = self.klass(subject=u'New object')
         self.list.append(self.obj)
 
     def tearDown(self):
-        ChangeMonitor().unmonitorClass(self.klass)
-        ChangeMonitor().unmonitorCollectionClass(self.listClass)
+        self.monitor.unmonitorClass(self.klass)
+        self.monitor.unmonitorCollectionClass(self.listClass)
 
 
 class MonitorObjectTest(MonitorBaseTest):
@@ -45,17 +45,17 @@ class MonitorObjectTest(MonitorBaseTest):
         if methodName is None:
             methodName = name
         getattr(self.obj, 'set' + methodName[:1].upper() + methodName[1:])(initialValue)
-        ChangeMonitor().resetChanges(self.obj)
+        self.monitor.resetChanges(self.obj)
         getattr(self.obj, 'set' + methodName[:1].upper() + methodName[1:])(value)
-        self.assertEqual(ChangeMonitor().getChanges(self.obj), set([name]))
+        self.assertEqual(self.monitor.getChanges(self.obj), set([name]))
 
     def doTestAttributeDidNotChange(self, name, initialValue, methodName=None):
         if methodName is None:
             methodName = name
         getattr(self.obj, 'set' + methodName[:1].upper() + methodName[1:])(initialValue)
-        ChangeMonitor().resetChanges(self.obj)
+        self.monitor.resetChanges(self.obj)
         getattr(self.obj, 'set' + methodName[:1].upper() + methodName[1:])(getattr(self.obj, methodName)())
-        self.assertEqual(ChangeMonitor().getChanges(self.obj), set())
+        self.assertEqual(self.monitor.getChanges(self.obj), set())
 
     def testSubjectChanged(self):
         self.doTestAttributeChanged('subject', 'New subject', 'Old subject')
@@ -102,20 +102,20 @@ class MonitorObjectTest(MonitorBaseTest):
     def testNewObject(self):
         obj = self.klass(subject=u'New')
         self.list.append(obj)
-        self.assertEqual(ChangeMonitor().getChanges(obj), None)
+        self.assertEqual(self.monitor.getChanges(obj), None)
 
     def testDeletedObject(self):
         self.list.remove(self.obj)
-        self.failUnless(ChangeMonitor().isRemoved(self.obj))
+        self.failUnless(self.monitor.isRemoved(self.obj))
 
     def testRemoveAdd(self):
-        ChangeMonitor().resetChanges(self.obj)
+        self.monitor.resetChanges(self.obj)
         self.obj.setSubject('Foo')
         self.list.remove(self.obj)
-        self.assertEqual(ChangeMonitor().getChanges(self.obj), None)
+        self.assertEqual(self.monitor.getChanges(self.obj), None)
         self.list.append(self.obj)
-        self.assertEqual(ChangeMonitor().getChanges(self.obj), set(['subject']))
-        self.failIf(ChangeMonitor().isRemoved(self.obj))
+        self.assertEqual(self.monitor.getChanges(self.obj), set(['subject']))
+        self.failIf(self.monitor.isRemoved(self.obj))
 
 
 class MonitorCompositeObjectTest(MonitorObjectTest):
@@ -129,26 +129,26 @@ class MonitorCompositeObjectTest(MonitorObjectTest):
 
     def testNewChild(self):
         child = self.obj.newChild(subject='Child')
-        self.assertEqual(ChangeMonitor().getChanges(child), None)
+        self.assertEqual(self.monitor.getChanges(child), None)
 
     def testChangeChildSubject1(self):
-        ChangeMonitor().resetChanges(self.obj)
+        self.monitor.resetChanges(self.obj)
         self.child.setSubject('Child subject')
-        self.assertEqual(ChangeMonitor().getChanges(self.obj), set())
+        self.assertEqual(self.monitor.getChanges(self.obj), set())
 
     def testChangeChildSubject2(self):
-        ChangeMonitor().resetChanges(self.child)
+        self.monitor.resetChanges(self.child)
         self.child.setSubject('Child subject')
-        self.assertEqual(ChangeMonitor().getChanges(self.child), set(['subject']))
+        self.assertEqual(self.monitor.getChanges(self.child), set(['subject']))
 
     def testExpansionChanged(self):
-        ChangeMonitor().resetChanges(self.obj)
+        self.monitor.resetChanges(self.obj)
         self.obj.expand()
-        self.assertEqual(ChangeMonitor().getChanges(self.obj), set(['expandedContexts']))
+        self.assertEqual(self.monitor.getChanges(self.obj), set(['expandedContexts']))
 
     def testAddChild(self):
         child = self.klass(subject='Child')
         self.list.append(child)
-        ChangeMonitor().resetChanges(child)
+        self.monitor.resetChanges(child)
         self.obj.addChild(child)
-        self.assertEqual(ChangeMonitor().getChanges(child), set(['__parent__']))
+        self.assertEqual(self.monitor.getChanges(child), set(['__parent__']))

@@ -24,9 +24,9 @@ from taskcoachlib.patterns import ObservableList
 
 class MonitorCategorizableTest(test.TestCase):
     def setUp(self):
-        ChangeMonitor().reset()
-        ChangeMonitor().monitorClass(CategorizableCompositeObject)
-        ChangeMonitor().monitorCollectionClass(ObservableList)
+        self.monitor = ChangeMonitor()
+        self.monitor.monitorClass(CategorizableCompositeObject)
+        self.monitor.monitorCollectionClass(ObservableList)
 
         self.obj = CategorizableCompositeObject(subject=u'Object')
         self.list = ObservableList()
@@ -39,22 +39,22 @@ class MonitorCategorizableTest(test.TestCase):
         self.catList.append(self.cat2)
 
     def tearDown(self):
-        ChangeMonitor().unmonitorClass(CategorizableCompositeObject)
-        ChangeMonitor().unmonitorCollectionClass(ObservableList)
+        self.monitor.unmonitorClass(CategorizableCompositeObject)
+        self.monitor.unmonitorCollectionClass(ObservableList)
 
     def testAddCategory(self):
-        ChangeMonitor().resetAllChanges()
+        self.monitor.resetAllChanges()
         self.obj.addCategory(self.cat1)
-        self.assertEqual(ChangeMonitor().getChanges(self.obj), set(['__categories__']))
+        self.assertEqual(self.monitor.getChanges(self.obj), set(['__categories__']))
 
     def testRemoveCategory(self):
         self.obj.addCategory(self.cat1)
-        ChangeMonitor().resetAllChanges()
+        self.monitor.resetAllChanges()
         self.obj.removeCategory(self.cat1)
-        self.assertEqual(ChangeMonitor().getChanges(self.obj), set(['__categories__']))
+        self.assertEqual(self.monitor.getChanges(self.obj), set(['__categories__']))
 
     def testRemoveBadCategory(self):
         self.obj.addCategory(self.cat1)
-        ChangeMonitor().resetAllChanges()
+        self.monitor.resetAllChanges()
         self.obj.removeCategory(self.cat2)
-        self.assertEqual(ChangeMonitor().getChanges(self.obj), set())
+        self.assertEqual(self.monitor.getChanges(self.obj), set())
