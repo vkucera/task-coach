@@ -24,8 +24,6 @@ class ChangeMonitor(object):
     This class monitors change to object on a per-attribute basis.
     """
 
-    __metaclass__ = Singleton
-
     def __init__(self):
         super(ChangeMonitor, self).__init__()
 
