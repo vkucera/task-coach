@@ -41,16 +41,20 @@ class MonitorBaseTest(test.TestCase):
 
 
 class MonitorObjectTest(MonitorBaseTest):
-    def doTestAttributeChanged(self, name, value, initialValue):
-        getattr(self.obj, 'set' + name[:1].upper() + name[1:])(initialValue)
+    def doTestAttributeChanged(self, name, value, initialValue, methodName=None):
+        if methodName is None:
+            methodName = name
+        getattr(self.obj, 'set' + methodName[:1].upper() + methodName[1:])(initialValue)
         ChangeMonitor().resetChanges(self.obj)
-        getattr(self.obj, 'set' + name[:1].upper() + name[1:])(value)
+        getattr(self.obj, 'set' + methodName[:1].upper() + methodName[1:])(value)
         self.assertEqual(ChangeMonitor().getChanges(self.obj), set([name]))
 
-    def doTestAttributeDidNotChange(self, name, initialValue):
-        getattr(self.obj, 'set' + name[:1].upper() + name[1:])(initialValue)
+    def doTestAttributeDidNotChange(self, name, initialValue, methodName=None):
+        if methodName is None:
+            methodName = name
+        getattr(self.obj, 'set' + methodName[:1].upper() + methodName[1:])(initialValue)
         ChangeMonitor().resetChanges(self.obj)
-        getattr(self.obj, 'set' + name[:1].upper() + name[1:])(getattr(self.obj, name)())
+        getattr(self.obj, 'set' + methodName[:1].upper() + methodName[1:])(getattr(self.obj, methodName)())
         self.assertEqual(ChangeMonitor().getChanges(self.obj), set())
 
     def testSubjectChanged(self):
@@ -66,34 +70,34 @@ class MonitorObjectTest(MonitorBaseTest):
         self.doTestAttributeDidNotChange('description', 'Description')
 
     def testForegroundColorChanged(self):
-        self.doTestAttributeChanged('foregroundColor', (128, 128, 128), (64, 64, 64))
+        self.doTestAttributeChanged('appearance', (128, 128, 128), (64, 64, 64), 'foregroundColor')
 
     def testForegroundColorDidNotChange(self):
-        self.doTestAttributeDidNotChange('backgroundColor', (128, 128, 128))
+        self.doTestAttributeDidNotChange('appearance', (128, 128, 128), 'backgroundColor')
 
     def testBackgroundColorChanged(self):
-        self.doTestAttributeChanged('backgroundColor', (128, 128, 128), (64, 64, 64))
+        self.doTestAttributeChanged('appearance', (128, 128, 128), (64, 64, 64), 'backgroundColor')
 
     def testBackgroundColorDidNotChange(self):
-        self.doTestAttributeDidNotChange('backgroundColor', (128, 128, 128))
+        self.doTestAttributeDidNotChange('appearance', (128, 128, 128), 'backgroundColor')
 
     def testFontChanged(self):
-        self.doTestAttributeChanged('font', 'dummy1', 'dummy2')
+        self.doTestAttributeChanged('appearance', 'dummy1', 'dummy2', 'font')
 
     def testFontDidNotChange(self):
-        self.doTestAttributeDidNotChange('font', 'dummy')
+        self.doTestAttributeDidNotChange('appearance', 'dummy', 'font')
 
     def testIconChanged(self):
-        self.doTestAttributeChanged('icon', 'foo', 'bar')
+        self.doTestAttributeChanged('appearance', 'foo', 'bar', 'icon')
 
     def testIconDidNotChange(self):
-        self.doTestAttributeDidNotChange('icon', 'foo')
+        self.doTestAttributeDidNotChange('appearance', 'foo', 'icon')
 
     def testSelectedIconChanged(self):
-        self.doTestAttributeChanged('selectedIcon', 'foo', 'bar')
+        self.doTestAttributeChanged('appearance', 'foo', 'bar', 'selectedIcon')
 
     def testSelectedIconDidNotChange(self):
-        self.doTestAttributeDidNotChange('selectedIcon', 'foo')
+        self.doTestAttributeDidNotChange('appearance', 'foo', 'selectedIcon')
 
     def testNewObject(self):
         obj = self.klass(subject=u'New')
