@@ -17,11 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import os, codecs, xml
-from taskcoachlib import patterns, changes
+from taskcoachlib import patterns
 from taskcoachlib.domain import base, task, category, note, effort, attachment
 from taskcoachlib.syncml.config import createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
 from taskcoachlib.thirdparty import lockfile
+from taskcoachlib.changes import ChangeMonitor, ChangeSynchronizer
 
 
 def getTemporaryFileName(path):
@@ -49,7 +50,7 @@ class TaskFile(patterns.Observer):
         self.__efforts = effort.EffortList(self.tasks())
         self.__guid = generate()
         self.__syncMLConfig = createDefaultSyncConfig(self.__guid)
-        self.__monitor = changes.ChangeMonitor()
+        self.__monitor = ChangeMonitor()
         self.__changes = dict()
         self.__changes[self.__monitor.guid()] = self.__monitor
         # XXXTODO: efforts
@@ -294,28 +295,34 @@ class TaskFile(patterns.Observer):
 
         # XXXTODO: lock
 
-        if self.exists():
+        if os.path.exists(self.__filename): # Not using self.exists() because DummyFile.exists returns True
+            # Instead of writing the content of memory, merge changes
+            # with the on-disk version and save the result.
             fd = self._openForRead()
             tasks, categories, notes, syncMLConfig, allChanges, guid = self._read(fd)
             fd.close()
-            # Set the changes for other instances
-            for devGUID, changes in allChanges.items():
-                if devGUID != self.__monitor.guid():
-                    changes.merge(self.__monitor)
-            allChanges[self.__monitor.guid()] = self.__monitor
+
             self.__changes = allChanges
 
-        # XXXTODO: merge only changes
+            ChangeSynchronizer(self.__monitor, allChanges).sync(
+                [(self.categories(), category.CategoryList(categories)),
+                 (self.tasks(), task.TaskList(tasks)),
+                 (self.notes(), note.NoteContainer(notes))]
+                )
+        else:
+            self.__changes = {self.__monitor.guid(): self.__monitor}
 
-        self.__monitor.resetAllChanges()
         name, fd = self._openForWrite()
+        self.__monitor.resetAllChanges()
         xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
                                 self.syncMLConfig(), self.changes(), self.guid())
+
         fd.close()
         if os.path.exists(self.__filename): # Not using self.exists() because DummyFile.exists returns True
             os.remove(self.__filename)
         if name is not None: # Unit tests (AutoSaver)
             os.rename(name, self.__filename)
+
         self.__needSave = False
 
     def saveas(self, filename):
@@ -404,24 +411,23 @@ class LockedTaskFile(TaskFile):
     def load(self, filename=None, lock=True, breakLock=False): # pylint: disable-msg=W0221
         ''' Lock the file before we load, if not already locked. '''
         filename = filename or self.filename()
-        if lock and filename:
-            if breakLock:
-                self.break_lock(filename)
-            self.acquire_lock(filename)
-        return super(LockedTaskFile, self).load(filename)
+        try:
+            if lock and filename:
+                if breakLock:
+                    self.break_lock(filename)
+                self.acquire_lock(filename)
+            return super(LockedTaskFile, self).load(filename)
+        finally:
+            self.release_lock()
     
     def save(self, **kwargs):
         ''' Lock the file before we save, if not already locked. '''
         self.acquire_lock(self.filename())
-        return super(LockedTaskFile, self).save(**kwargs)
+        try:
+            return super(LockedTaskFile, self).save(**kwargs)
+        finally:
+            self.release_lock()
     
     def saveas(self, filename):
         ''' Unlock the file before we save it under another name. '''
-        self.release_lock()
         return super(LockedTaskFile, self).saveas(filename)
-    
-    def close(self):
-        ''' Unlock the file after we close it. '''
-        result = super(LockedTaskFile, self).close()
-        self.release_lock()
-        return result

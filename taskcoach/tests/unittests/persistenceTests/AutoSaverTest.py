@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import test
 from taskcoachlib import persistence, config
 from taskcoachlib.domain import task, category, date
+from taskcoachlib.changes import ChangeMonitor
 
 
 class DummyFile(object):
@@ -42,7 +43,7 @@ class DummyTaskFile(persistence.TaskFile):
         if self._throw:
             raise IOError
         else:
-            return [task.Task()], [category.Category('category')], [], None, {self.monitor().guid(): set()}, None
+            return [task.Task()], [category.Category('category')], [], None, {self.monitor().guid(): self.monitor()}, None
 
     def exists(self, *args, **kwargs): # pylint: disable-msg=W0613
         return True

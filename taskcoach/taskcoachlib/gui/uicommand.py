@@ -530,7 +530,11 @@ class FileSave(IOCommand):
         self.iocontroller.save()
         
     def enabled(self, event):
-        return self.iocontroller.needSave()
+        # return self.iocontroller.needSave()
+
+        # XXXTODO: monitor the file system in TaskFile so that
+        # needSave also becomes true if someone else changed the file.
+        return True
 
 
 class FileSaveAs(IOCommand):
