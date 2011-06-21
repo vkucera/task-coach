@@ -273,7 +273,10 @@ class DatesPage(Page):
             commandClass = command.EditDueDateTimeSyncCommand
         else:
             commandClass = getattr(command, 'Edit%sCommand'%TaskMethodName)
-        eventType = 'task.%s'%taskMethodName
+        try:
+            eventType = getattr(task.Task, '%sChangedEventType' % taskMethodName)()
+        except AttributeError:
+            eventType = 'task.%s' % taskMethodName
         datetimeSync = attributesync.AttributeSync('datetime', dateTimeEntry, 
             dateTime, self.items, commandClass, entry.EVT_DATETIMEENTRY, 
             eventType, taskMethodName)
