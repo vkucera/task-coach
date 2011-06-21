@@ -31,7 +31,10 @@ class Sorter(base.TreeSorter):
         self.__sortByTaskStatusFirst = kwargs.pop('sortByTaskStatusFirst', True)
         super(Sorter, self).__init__(*args, **kwargs)
         for attribute in self.TaskStatusAttributes:
-            eventType = '.'.join(['task', attribute])
+            try:
+                eventType = getattr(self.DomainObjectClass, '%sChangedEventType' % attribute)()
+            except AttributeError:
+                eventType = 'task.%s' % attribute
             patterns.Publisher().registerObserver(self.onAttributeChanged, 
                                                   eventType=eventType)
     
