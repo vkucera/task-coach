@@ -203,7 +203,7 @@ class Object(SynchronizedObject):
         return self.__class__(**self.__getcopystate__())
 
     @classmethod
-    def monitoredAttributes(klass):
+    def monitoredAttributes(class_):
         return ['subject', 'description', 'appearance']
  
     # Id:
@@ -347,7 +347,7 @@ class CompositeObject(Object, patterns.ObservableComposite):
         return state
 
     @classmethod
-    def monitoredAttributes(klass):
+    def monitoredAttributes(class_):
         return Object.monitoredAttributes() + ['expandedContexts']
 
     # Subject:

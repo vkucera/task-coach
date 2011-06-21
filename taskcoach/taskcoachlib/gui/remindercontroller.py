@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from taskcoachlib import patterns, command, meta, notify
-from taskcoachlib.domain import date
+from taskcoachlib.domain import date, task
 from taskcoachlib.gui.dialog import reminder, editor
 from taskcoachlib.i18n import _
 
@@ -27,7 +27,7 @@ class ReminderController(object):
     def __init__(self, mainWindow, taskList, effortList, settings):
         super(ReminderController, self).__init__()
         patterns.Publisher().registerObserver(self.onSetReminder,
-            eventType='task.reminder')
+            eventType=task.Task.reminderChangedEventType())
         patterns.Publisher().registerObserver(self.onAddTask,
             eventType=taskList.addItemEventType(),
             eventSource=taskList)

@@ -33,7 +33,11 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
                                                   self.categorizableRemovedEvent)
         self.__filtered = filtered
         self.__exclusiveSubcategories = exclusiveSubcategories
-            
+
+    @classmethod
+    def monitoredAttributes(class_):
+        return base.CompositeObject.monitoredAttributes() + ['exclusiveSubcategories']
+
     @classmethod
     def filterChangedEventType(class_):
         ''' Event type to notify observers that categorizables belonging to
@@ -156,7 +160,15 @@ class Category(attachment.AttachmentOwner, note.NoteOwner, base.CompositeObject)
         self.exclusiveSubcategoriesEvent(event)
         for child in self.children():
             child.setFiltered(False, event=event)
-            
+
+    # "Conventional" naming for the monitor
+    def exclusiveSubcategories(self):
+        return self.hasExclusiveSubcategories()
+
+    @patterns.eventSource
+    def setExclusiveSubcategories(self, exclusive=True, event=None):
+        self.makeSubcategoriesExclusive(exclusive=exclusive, event=event)
+
     def exclusiveSubcategoriesEvent(self, event):
         event.addSource(self, self.hasExclusiveSubcategories(), 
                         type=self.exclusiveSubcategoriesChangedEventType())

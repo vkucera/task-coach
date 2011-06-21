@@ -298,17 +298,23 @@ class TaskFile(patterns.Observer):
         if os.path.exists(self.__filename): # Not using self.exists() because DummyFile.exists returns True
             # Instead of writing the content of memory, merge changes
             # with the on-disk version and save the result.
-            fd = self._openForRead()
-            tasks, categories, notes, syncMLConfig, allChanges, guid = self._read(fd)
-            fd.close()
+            self.__monitor.freeze()
+            try:
+                fd = self._openForRead()
+                tasks, categories, notes, syncMLConfig, allChanges, guid = self._read(fd)
+                fd.close()
 
-            self.__changes = allChanges
+                self.__changes = allChanges
 
-            ChangeSynchronizer(self.__monitor, allChanges).sync(
-                [(self.categories(), category.CategoryList(categories)),
-                 (self.tasks(), task.TaskList(tasks)),
-                 (self.notes(), note.NoteContainer(notes))]
-                )
+                sync = ChangeSynchronizer(self.__monitor, allChanges)
+
+                sync.sync(
+                    [(self.categories(), category.CategoryList(categories)),
+                     (self.tasks(), task.TaskList(tasks)),
+                     (self.notes(), note.NoteContainer(notes))]
+                    )
+            finally:
+                self.__monitor.thaw()
         else:
             self.__changes = {self.__monitor.guid(): self.__monitor}
 

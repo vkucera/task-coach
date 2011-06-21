@@ -715,7 +715,7 @@ class CommonTestsMixin(object):
     def testChangeStartDateTimeWhileColumnShown(self):
         self.taskList.append(self.task)
         self.task.setStartDateTime(date.Now() - date.oneDay)
-        self.assertEqual('task.startDateTime', self.viewer.events[0].type())
+        self.assertEqual(task.Task.startDateTimeChangedEventType(), self.viewer.events[0].type())
 
     def testStartTracking(self):
         self.taskList.append(self.task)
@@ -731,13 +731,13 @@ class CommonTestsMixin(object):
     def testChangeDueDate(self):
         self.taskList.append(self.task)
         self.task.setDueDateTime(date.Now().endOfDay())
-        self.failUnless('task.dueDateTime' in self.viewer.events[0].types())
+        self.failUnless(task.Task.dueDateTimeChangedEventType() in self.viewer.events[0].types())
 
     def testChangeCompletionDateWhileColumnNotShown(self):
         self.taskList.append(self.task)
         self.task.setCompletionDateTime(date.Now())
         # We still get an event for the subject column:
-        expectedEvent = patterns.Event('task.completionDateTime', self.task, self.task.completionDateTime())
+        expectedEvent = patterns.Event(task.Task.completionDateTimeChangedEventType(), self.task, self.task.completionDateTime())
         expectedEvent.addSource(self.task, self.task.percentageComplete(), type=self.task.percentageCompleteChangedEventType())
         expectedEvent.addSource(self.task, type=self.task.appearanceChangedEventType())
         self.assertEqual([expectedEvent], self.viewer.events)
@@ -746,7 +746,7 @@ class CommonTestsMixin(object):
         self.taskList.append(self.task)
         self.showColumn('completionDate')
         self.task.setCompletionDateTime(date.Now())
-        expectedEvent = patterns.Event('task.completionDateTime', self.task, self.task.completionDateTime())
+        expectedEvent = patterns.Event(task.Task.completionDateTimeChangedEventType(), self.task, self.task.completionDateTime())
         expectedEvent.addSource(self.task, self.task.percentageComplete(), type=self.task.percentageCompleteChangedEventType())
         expectedEvent.addSource(self.task, type=self.task.appearanceChangedEventType())
         self.assertEqual([expectedEvent], self.viewer.events)
@@ -754,13 +754,13 @@ class CommonTestsMixin(object):
     def testChangePercentageCompleteWhileColumnNotShown(self):
         self.taskList.append(self.task)
         self.task.setPercentageComplete(50)
-        self.assertEventFired('task.percentageComplete')
+        self.assertEventFired(task.Task.percentageCompleteChangedEventType())
 
     def testChangePercentageCompleteWhileColumnShown(self):
         self.taskList.append(self.task)
         self.showColumn('percentageComplete')
         self.task.setPercentageComplete(50)
-        self.assertEventFired('task.percentageComplete')
+        self.assertEventFired(task.Task.percentageCompleteChangedEventType())
 
     def testChangePriorityWhileColumnNotShown(self):
         self.taskList.append(self.task)
@@ -771,14 +771,14 @@ class CommonTestsMixin(object):
         self.taskList.append(self.task)
         self.showColumn('priority')
         self.task.setPriority(10)
-        self.assertEventFired('task.priority')
+        self.assertEventFired(task.Task.priorityChangedEventType())
 
     def testChangePriorityOfSubtask(self):
         self.showColumn('priority')
         self.task.addChild(self.child)
         self.taskList.append(self.task)
         self.child.setPriority(10)
-        self.assertEventFired('task.priority')
+        self.assertEventFired(task.Task.priorityChangedEventType())
         
     def testChangeHourlyFeeWhileColumnShown(self):
         self.showColumn('hourlyFee')

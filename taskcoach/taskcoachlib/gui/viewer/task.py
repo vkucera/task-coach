@@ -266,8 +266,10 @@ class TimelineViewer(BaseTaskViewer):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('settingsSection', 'timelineviewer')
         super(TimelineViewer, self).__init__(*args, **kwargs)
-        for eventType in (task.Task.subjectChangedEventType(), 'task.startDateTime',
-            'task.dueDateTime', 'task.completionDateTime'):
+        for eventType in (task.Task.subjectChangedEventType(),
+                          task.Task.startDateTimeChangedEventType(),
+                          task.Task.dueDateTimeChangedEventType(),
+                          task.Task.completionDateTimeChangedEventType()):
             self.registerObserver(self.onAttributeChanged, eventType)
         
     def createWidget(self):
@@ -378,8 +380,10 @@ class SquareTaskViewer(BaseTaskViewer):
         super(SquareTaskViewer, self).__init__(*args, **kwargs)
         self.orderBy(self.settings.get(self.settingsSection(), 'sortby'))
         self.orderUICommand.setChoice(self.__orderBy)
-        for eventType in (task.Task.subjectChangedEventType(), 'task.dueDateTime',
-            'task.startDateTime', 'task.completionDateTime'):
+        for eventType in (task.Task.subjectChangedEventType(),
+                          task.Task.dueDateTimeChangedEventType(),
+                          task.Task.startDateTimeChangedEventType(),
+                          task.Task.completionDateTimeChangedEventType()):
             self.registerObserver(self.onAttributeChanged, eventType)
 
     def curselectionIsInstanceOf(self, class_):
@@ -501,8 +505,10 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
             self.registerObserver(self.onWorkingHourChanged, eventType)
 
         # pylint: disable-msg=E1101
-        for eventType in (task.Task.subjectChangedEventType(), 'task.startDateTime',
-                          'task.dueDateTime', 'task.completionDateTime',
+        for eventType in (task.Task.subjectChangedEventType(),
+                          task.Task.startDateTimeChangedEventType(),
+                          task.Task.dueDateTimeChangedEventType(),
+                          task.Task.completionDateTimeChangedEventType(),
                           task.Task.attachmentsChangedEventType(),
                           task.Task.notesChangedEventType(),
                           task.Task.trackStartEventType(), task.Task.trackStopEventType()):
@@ -686,9 +692,10 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
         kwargs = dict(renderDescriptionCallback=lambda task: task.description(),
                       resizeCallback=self.onResizeColumn)
         columns = [widgets.Column('subject', _('Subject'), 
-                task.Task.subjectChangedEventType(), 
-                'task.completionDateTime', 'task.dueDateTime', 
-                'task.startDateTime',
+                task.Task.subjectChangedEventType(),
+                task.Task.completionDateTimeChangedEventType(),
+                task.Task.dueDateTimeChangedEventType(),
+                task.Task.startDateTimeChangedEventType(),
                 task.Task.trackStartEventType(), task.Task.trackStopEventType(), 
                 sortCallback=uicommand.ViewerSortByCommand(viewer=self,
                     value='subject'),
@@ -752,17 +759,17 @@ class TaskViewer(mixin.AttachmentDropTargetMixin,
             ('startDateTime', _('Start date'), inplace_editor.DateTimeCtrl, command.EditStartDateTimeCommand, []),
             ('dueDateTime', _('Due date'), inplace_editor.DateTimeCtrl, command.EditDueDateTimeCommand, [task.Task.expansionChangedEventType()]),
             ('completionDateTime', _('Completion date'), inplace_editor.DateTimeCtrl, command.EditCompletionDateTimeCommand, [task.Task.expansionChangedEventType()]),
-            ('percentageComplete', _('% complete'), None, None, [task.Task.expansionChangedEventType(), 'task.percentageComplete']),
+            ('percentageComplete', _('% complete'), None, None, [task.Task.expansionChangedEventType(), task.Task.percentageCompleteChangedEventType()]),
             ('timeLeft', _('Time left'), None, None, [task.Task.expansionChangedEventType(), 'task.timeLeft']),
-            ('recurrence', _('Recurrence'), None, None, [task.Task.expansionChangedEventType(), 'task.recurrence']),
-            ('budget', _('Budget'), inplace_editor.BudgetCtrl, command.EditBudgetCommand, [task.Task.expansionChangedEventType(), 'task.budget']),            
+            ('recurrence', _('Recurrence'), None, None, [task.Task.expansionChangedEventType(), task.Task.recurrenceChangedEventType()]),
+            ('budget', _('Budget'), inplace_editor.BudgetCtrl, command.EditBudgetCommand, [task.Task.expansionChangedEventType(), task.Task.budgetChangedEventType()]),            
             ('timeSpent', _('Time spent'), None, None, [task.Task.expansionChangedEventType(), 'task.timeSpent']),
             ('budgetLeft', _('Budget left'), None, None, [task.Task.expansionChangedEventType(), 'task.budgetLeft']),            
-            ('priority', _('Priority'), inplace_editor.PriorityCtrl, command.EditPriorityCommand, [task.Task.expansionChangedEventType(), 'task.priority']),
+            ('priority', _('Priority'), inplace_editor.PriorityCtrl, command.EditPriorityCommand, [task.Task.expansionChangedEventType(), task.Task.priorityChangedEventType()]),
             ('hourlyFee', _('Hourly fee'), None, None, [task.Task.hourlyFeeChangedEventType()]),
-            ('fixedFee', _('Fixed fee'), None, None, [task.Task.expansionChangedEventType(), 'task.fixedFee']),            
+            ('fixedFee', _('Fixed fee'), None, None, [task.Task.expansionChangedEventType(), task.Task.fixedFeeChangedEventType()]),            
             ('revenue', _('Revenue'), None, None, [task.Task.expansionChangedEventType(), 'task.revenue']),
-            ('reminder', _('Reminder'), inplace_editor.DateTimeCtrl, command.EditReminderDateTimeCommand, [task.Task.expansionChangedEventType(), 'task.reminder'])]:
+            ('reminder', _('Reminder'), inplace_editor.DateTimeCtrl, command.EditReminderDateTimeCommand, [task.Task.expansionChangedEventType(), task.Task.reminderChangedEventType()])]:
             if (name in dependsOnEffortFeature and effortOn) or name not in dependsOnEffortFeature:
                 renderCallback = getattr(self, 'render%s'%(name[0].capitalize()+name[1:]))
                 columns.append(widgets.Column(name, columnHeader,  

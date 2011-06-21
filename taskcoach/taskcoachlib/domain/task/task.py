@@ -139,6 +139,14 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 self._shouldMarkCompletedWhenAllChildrenCompleted))
         return state
 
+    @classmethod
+    def monitoredAttributes(class_):
+        return categorizable.CategorizableCompositeObject.monitoredAttributes() + \
+               ['startDateTime', 'dueDateTime', 'completionDateTime',
+                'percentageComplete', 'recurrence', 'reminder', 'budget',
+                'priority', 'hourlyFee', 'fixedFee',
+                'shouldMarkCompletedWhenAllChildrenCompleted']
+
     @patterns.eventSource
     def addCategory(self, *categories, **kwargs):
         super(Task, self).addCategory(*categories, **kwargs)
@@ -250,7 +258,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             
     def dueDateTimeEvent(self, event):
         dueDateTime = self.dueDateTime()
-        event.addSource(self, dueDateTime, type='task.dueDateTime')
+        event.addSource(self, dueDateTime, type=self.dueDateTimeChangedEventType())
         for child in self.children():
             if child.dueDateTime() > dueDateTime:
                 child.setDueDateTime(dueDateTime, event=event)
@@ -259,7 +267,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             if dueDateTime > parent.dueDateTime():
                 parent.setDueDateTime(dueDateTime, event=event)
         self.recomputeAppearance(event=event)
-    
+
+    @classmethod
+    def dueDateTimeChangedEventType(class_):
+        return '%s.dueDateTime' % class_
+
     def onOverDue(self, event):
         self.recomputeAppearance()
         
@@ -274,7 +286,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def dueDateTimeSortEventTypes(class_):
         ''' The event types that influence the due date time sort order. '''
-        return ('task.dueDateTime',)
+        return (class_.dueDateTimeChangedEventType(),)
     
     # Start date
     
@@ -295,7 +307,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             
     def startDateTimeEvent(self, event):
         startDateTime = self.startDateTime()
-        event.addSource(self, startDateTime, type='task.startDateTime')
+        event.addSource(self, startDateTime, type=self.startDateTimeChangedEventType())
         if not self.recurrence(recursive=True, upwards=True):
             for child in self.children():
                 if startDateTime > child.startDateTime():
@@ -304,7 +316,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             if parent and startDateTime < parent.startDateTime():
                 parent.setStartDateTime(startDateTime, event=event)
         self.recomputeAppearance(event=event)
-        
+
+    @classmethod
+    def startDateTimeChangedEventType(class_):
+        return '%s.startDateTime' % class_
+
     def onStarted(self, event):
         self.recomputeAppearance()
         
@@ -316,7 +332,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def startDateTimeSortEventTypes(class_):
         ''' The event types that influence the start date time sort order. '''
-        return ('task.startDateTime',)
+        return (class_.startDateTimeChangedEventType(),)
 
     def timeLeft(self, recursive=False):
         return self.dueDateTime(recursive) - date.Now()
@@ -329,7 +345,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def timeLeftSortEventTypes(class_):
         ''' The event types that influence the time left sort order. '''
-        return ('task.dueDateTime',)
+        return (class_.dueDateTimeChangedEventType(),)
                     
     # Completion date
             
@@ -376,10 +392,14 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             self.recomputeAppearance(event=event)
             
     def completionDateTimeEvent(self, event):
-        event.addSource(self, self.completionDateTime(), type='task.completionDateTime')
+        event.addSource(self, self.completionDateTime(), type=self.completionDateTimeChangedEventType())
         for dependency in self.dependencies():
             dependency.recomputeAppearance(recursive=True, event=event)
-        
+
+    @classmethod
+    def completionDateTimeChangedEventType(class_):
+        return '%s.completionDateTime' % class_
+
     def shouldBeMarkedCompleted(self):
         ''' Return whether this task should be marked completed. It should be
             marked completed when 1) it's not completed, 2) all of its children
@@ -403,7 +423,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def completionDateTimeSortEventTypes(class_):
         ''' The event types that influence the completion date time sort order. '''
-        return ('task.completionDateTime',)
+        return (class_.completionDateTimeChangedEventType(),)
 
     # Task state
     
@@ -559,12 +579,16 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__budget.set(budget, event=event)
         
     def budgetEvent(self, event):
-        event.addSource(self, self.budget(), type='task.budget')
+        event.addSource(self, self.budget(), type=self.budgetChangedEventType())
         for ancestor in self.ancestors():
             event.addSource(ancestor, ancestor.budget(recursive=True), 
-                            type='task.budget')
+                            type=self.budgetChangedEventType())
         self.budgetLeftEvent(event)
-        
+
+    @classmethod
+    def budgetChangedEventType(class_):
+        return '%s.budget' % class_
+
     @staticmethod
     def budgetSortFunction(**kwargs):
         recursive = kwargs.get('treeMode', False)
@@ -573,7 +597,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def budgetSortEventTypes(class_):
         ''' The event types that influence the budget sort order. '''
-        return ('task.budget',)
+        return (class_.budgetChangedEventType(),)
 
     # Budget left
     
@@ -812,7 +836,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                         type=self.percentageCompleteChangedEventType())
         for ancestor in self.ancestors():
             event.addSource(ancestor, ancestor.percentageComplete(recursive=True), 
-                            type='task.percentageComplete')
+                            type=self.percentageCompleteChangedEventType())
     
     @staticmethod
     def percentageCompleteSortFunction(**kwargs):
@@ -822,11 +846,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def percentageCompleteSortEventTypes(class_):
         ''' The event types that influence the percentage complete sort order. '''
-        return ('task.percentageComplete',)
+        return (class_.percentageCompleteChangedEventType(),)
 
     @classmethod
     def percentageCompleteChangedEventType(class_):
-        return 'task.percentageComplete'
+        return '%s.percentageComplete' % class_
        
     # priority
     
@@ -843,11 +867,15 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__priority.set(priority, event=event)
         
     def priorityEvent(self, event):
-        event.addSource(self, self.priority(), type='task.priority')
+        event.addSource(self, self.priority(), type=self.priorityChangedEventType())
         for ancestor in self.ancestors():
             event.addSource(ancestor, ancestor.priority(recursive=True),
-                            type='task.priority')
-    
+                            type=self.priorityChangedEventType())
+
+    @classmethod
+    def priorityChangedEventType(class_):
+        return '%s.priority' % class_
+
     @staticmethod
     def prioritySortFunction(**kwargs):
         recursive = kwargs.get('treeMode', False)
@@ -856,7 +884,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def prioritySortEventTypes(class_):
         ''' The event types that influence the priority sort order. '''
-        return ('task.priority',)
+        return (class_.priorityChangedEventType(),)
     
     # Hourly fee
     
@@ -895,12 +923,16 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     
     def setFixedFee(self, fixedFee, event=None):
         self.__fixedFee.set(fixedFee, event=event)
-        
+
+    @classmethod
+    def fixedFeeChangedEventType(class_):
+        return '%s.fixedFee' % class_
+
     def fixedFeeEvent(self, event):
-        event.addSource(self, self.fixedFee(), type='task.fixedFee')
+        event.addSource(self, self.fixedFee(), type=self.fixedFeeChangedEventType())
         for ancestor in self.ancestors():
             event.addSource(ancestor, ancestor.fixedFee(recursive=True),
-                            type='task.fixedFee')
+                            type=self.fixedFeeChangedEventType())
         self.revenueEvent(event)
 
     @staticmethod
@@ -911,7 +943,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def fixedFeeSortEventTypes(class_):
         ''' The event types that influence the fixed fee sort order. '''
-        return ('task.fixedFee',)
+        return (class_.fixedFeeChangedEventType(),)
 
     # Revenue        
         
@@ -954,7 +986,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__reminder.set(reminderDateTime, event=event)
             
     def reminderEvent(self, event):
-        event.addSource(self, self.reminder(), type='task.reminder')
+        event.addSource(self, self.reminder(), type=self.reminderChangedEventType())
     
     @staticmethod
     def reminderSortFunction(**kwargs):
@@ -965,7 +997,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def reminderSortEventTypes(class_):
         ''' The event types that influence the reminder sort order. '''
-        return ('task.reminder',)
+        return (class_.reminderChangedEventType(),)
+
+    @classmethod
+    def reminderChangedEventType(class_):
+        return '%s.reminder' % class_
 
     # Recurrence
     
@@ -986,7 +1022,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if recurrence == self._recurrence:
             return
         self._recurrence = recurrence
-        event.addSource(self, recurrence, type='task.recurrence')
+        event.addSource(self, recurrence, type=self.recurrenceChangedEventType())
 
     @patterns.eventSource
     def recur(self, event=None):
@@ -1022,8 +1058,12 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def recurrenceSortEventTypes(class_):
         ''' The event types that influence the recurrence sort order. '''
-        return ('task.recurrence',)
-    
+        return (class_.recurrenceChangedEventType(),)
+
+    @classmethod
+    def recurrenceChangedEventType(class_):
+        return '%s.recurrence' % class_
+
     # Prerequisites
     
     def prerequisites(self, recursive=False):
@@ -1147,23 +1187,30 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return
         self._shouldMarkCompletedWhenAllChildrenCompleted = newValue
         event.addSource(self, newValue, 
-                        type='task.setting.shouldMarkCompletedWhenAllChildrenCompleted')
+                        type=self.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType())
         event.addSource(self, self.percentageComplete(recursive=True), 
-                        type='task.percentageComplete')
+                        type=self.percentageCompleteChangedEventType())
 
     def shouldMarkCompletedWhenAllChildrenCompleted(self):
         return self._shouldMarkCompletedWhenAllChildrenCompleted
-    
+
+    @classmethod
+    def shouldMarkCompletedWhenAllChildrenCompletedChangedEventType(class_):
+        return '%s.setting.shouldMarkCompletedWhenAllChildrenCompleted' % class_
+
     @classmethod
     def modificationEventTypes(class_):
         eventTypes = super(Task, class_).modificationEventTypes()
-        return eventTypes + ['task.dueDateTime', 'task.startDateTime', 
-                             'task.completionDateTime', 
+        return eventTypes + [class_.dueDateTimeChangedEventType(),
+                             class_.startDateTimeChangedEventType(),
+                             class_.completionDateTimeChangedEventType(),
                              'task.effort.add', 'task.effort.remove', 
-                             'task.budget', 'task.percentageComplete', 
-                             'task.priority', 
+                             class_.budgetChangedEventType(),
+                             class_.percentageCompleteChangedEventType(),
+                             class_.priorityChangedEventType(),
                              class_.hourlyFeeChangedEventType(), 
-                             'task.fixedFee',
-                             'task.reminder', 'task.recurrence',
+                             class_.fixedFeeChangedEventType(),
+                             class_.reminderChangedEventType(),
+                             class_.recurrenceChangedEventType(),
                              'task.prerequisites', 'task.dependencies',
-                             'task.setting.shouldMarkCompletedWhenAllChildrenCompleted']
+                             class_.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType()]

@@ -1024,8 +1024,6 @@ class TaskFileMultiUserTest(test.TestCase):
         self.note = note.Note(subject='Note')
         self.taskFile1.notes().append(self.note)
 
-        # XXXTODO efforts
-
         self.filename = 'test.tsk'
 
         self.taskFile1.setFilename(self.filename)
@@ -1076,10 +1074,12 @@ class TaskFileMultiUserTest(test.TestCase):
     def _testCreateChildInOther(self, listName):
         item = getattr(self.taskFile1, listName)().rootItems()[0]
         subItem = item.newChild(subject='New sub%s' % item.__class__.__name__)
+        getattr(self.taskFile1, listName)().append(subItem)
         item.addChild(subItem)
         self.taskFile2.monitor().resetAllChanges()
         self.taskFile1.save()
         self.taskFile2.save()
+        self.assertEqual(len(getattr(self.taskFile2, listName)()), 2)
         otherItem = getattr(self.taskFile2, listName)().rootItems()[0]
         self.assertEqual(len(otherItem.children()), 1)
         self.assertEqual(otherItem.children()[0].id(), subItem.id())
@@ -1101,7 +1101,7 @@ class TaskFileMultiUserTest(test.TestCase):
         self.taskFile2.monitor().resetAllChanges()
         self.taskFile1.save()
         self.taskFile2.save()
-        self.assertEqual(len(getattr(self.taskFile2, listName)()), 2)
+        self.assertEqual(len(getattr(self.taskFile2, listName)()), 3)
         otherItem = getattr(self.taskFile2, listName)().rootItems()[1]
         self.assertEqual(otherItem.id(), item.id())
         self.assertEqual(len(otherItem.children()), 1)
@@ -1125,7 +1125,7 @@ class TaskFileMultiUserTest(test.TestCase):
         self.taskFile2.monitor().resetAllChanges()
         self.taskFile1.save()
         self.taskFile2.save()
-        self.assertEqual(len(getattr(self.taskFile2, listName)()), 1)
+        self.assertEqual(len(getattr(self.taskFile2, listName)()), 2)
         otherItem = getattr(self.taskFile2, listName)().rootItems()[0]
         self.assertEqual(otherItem.id(), newItem.id())
         self.assertEqual(len(otherItem.children()), 1)
@@ -1183,5 +1183,140 @@ class TaskFileMultiUserTest(test.TestCase):
     def testChangeNoteDescription(self):
         self._testChangeAttribute('description', 'New note description', 'notes')
 
+    ## def testChangeTaskStartDateTime(self):
+    ##     self._testChangeAttribute('startDateTime', date.DateTime(2011, 6, 15), 'tasks')
+
+    ## def testChangeTaskDueDateTime(self):
+    ##     self._testChangeAttribute('dueDateTime', date.DateTime(2011, 7, 16), 'tasks')
+
+    ## def testChangeTaskCompletionDateTime(self):
+    ##     self._testChangeAttribute('completionDateTime', date.DateTime(2011, 2, 1), 'tasks')
+
+    def testChangeTaskPrecentageComplete(self):
+        self._testChangeAttribute('percentageComplete', 42, 'tasks')
+
+    def testChangeTaskRecurrence(self):
+        self._testChangeAttribute('recurrence', date.Recurrence('daily', 3), 'tasks')
+
+    def testChangeTaskReminder(self):
+        self._testChangeAttribute('reminder', date.DateTime(2999, 2, 1), 'tasks')
+
+    def testChangeTaskBudget(self):
+        self._testChangeAttribute('budget', date.TimeDelta(seconds=60), 'tasks')
+
+    def testChangeTaskPriority(self):
+        self._testChangeAttribute('priority', 42, 'tasks')
+
+    def testChangeTaskHourlyFee(self):
+        self._testChangeAttribute('hourlyFee', 42, 'tasks')
+
+    def testChangeTaskFixedFee(self):
+        self._testChangeAttribute('fixedFee', 42, 'tasks')
+
+    def testChangeTaskShouldMarkCompletedWhenAllChildrenCompleted(self):
+        self._testChangeAttribute('shouldMarkCompletedWhenAllChildrenCompleted',
+                                  False, 'tasks')
+
     def testExpandNote(self):
         self._testExpand('notes')
+
+    def _testChangeAppearance(self, listName, attrName, initialValue, newValue):
+        setName = 'set' + attrName[0].upper() + attrName[1:]
+        obj = getattr(self.taskFile1, listName)().rootItems()[0]
+        newObj = getattr(self.taskFile2, listName)().rootItems()[0]
+        getattr(obj, setName)(initialValue)
+        getattr(newObj, setName)(initialValue)
+        self.taskFile1.monitor().resetAllChanges()
+        self.taskFile2.monitor().resetAllChanges()
+        getattr(obj, setName)(newValue)
+        self.taskFile2.monitor().resetAllChanges()
+        self.taskFile1.save()
+        self.taskFile2.save()
+        self.assertEqual(getattr(newObj, attrName)(), newValue)
+
+    def testChangeCategoryForeground(self):
+        self._testChangeAppearance('categories', 'foregroundColor', (128, 128, 128), (255, 255, 0))
+
+    def testChangeCategoryBackground(self):
+        self._testChangeAppearance('categories', 'backgroundColor', (128, 128, 128), (255, 255, 0))
+
+    def testChangeCategoryIcon(self):
+        self._testChangeAppearance('categories', 'icon', 'initialIcon', 'finalIcon')
+
+    def testChangeCategorySelectedIcon(self):
+        self._testChangeAppearance('categories', 'selectedIcon', 'initialIcon', 'finalIcon')
+
+    def testChangeNoteForeground(self):
+        self._testChangeAppearance('notes', 'foregroundColor', (128, 128, 128), (255, 255, 0))
+
+    def testChangeNoteBackground(self):
+        self._testChangeAppearance('notes', 'backgroundColor', (128, 128, 128), (255, 255, 0))
+
+    def testChangeNoteIcon(self):
+        self._testChangeAppearance('notes', 'icon', 'initialIcon', 'finalIcon')
+
+    def testChangeNoteSelectedIcon(self):
+        self._testChangeAppearance('notes', 'selectedIcon', 'initialIcon', 'finalIcon')
+
+    def testChangeTaskBackground(self):
+        self._testChangeAppearance('tasks', 'backgroundColor', (128, 128, 128), (255, 255, 0))
+
+    def testChangeTaskIcon(self):
+        self._testChangeAppearance('tasks', 'icon', 'initialIcon', 'finalIcon')
+
+    def testChangeTaskSelectedIcon(self):
+        self._testChangeAppearance('tasks', 'selectedIcon', 'initialIcon', 'finalIcon')
+
+    def testChangeExclusiveSubcategories(self):
+        self.category.makeSubcategoriesExclusive(True)
+        self.taskFile2.monitor().resetAllChanges()
+        self.taskFile1.save()
+        self.taskFile2.save()
+        self.assert_(self.taskFile2.categories().rootItems()[0].hasExclusiveSubcategories())
+
+    def _testAddObjectCategory(self, listName):
+        obj = getattr(self.taskFile1, listName)().rootItems()[0]
+        obj.addCategory(self.category)
+        self.category.addCategorizable(obj)
+        self.taskFile2.monitor().resetAllChanges()
+        self.taskFile1.save()
+        self.taskFile2.save()
+        newObj = getattr(self.taskFile2, listName)().rootItems()[0]
+        self.assertEqual(len(newObj.categories()), 1)
+        self.assertEqual(newObj.categories().pop().id(), self.category.id())
+
+    def testAddNoteCategory(self):
+        self._testAddObjectCategory('notes')
+
+    def testAddTaskCategory(self):
+        self._testAddObjectCategory('tasks')
+
+    def _testChangeObjectCategory(self, listName):
+        self.category2 = category.Category(subject='Other category')
+        self.taskFile1.categories().append(self.category2)
+        obj = getattr(self.taskFile1, listName)().rootItems()[0]
+        obj.addCategory(self.category)
+        self.category.addCategorizable(obj)
+        self.taskFile1.save()
+        self.taskFile2.load()
+        # Load => CategoryList => addCategory()...
+        self.taskFile1.monitor().resetAllChanges()
+
+        self.category.removeCategorizable(obj)
+        obj.removeCategory(self.category)
+        self.category2.addCategorizable(obj)
+        obj.addCategory(self.category2)
+
+        self.taskFile1.save()
+        self.taskFile2.monitor().resetAllChanges()
+        self.taskFile2.save()
+
+        newObj = getattr(self.taskFile2, listName)().rootItems()[0]
+        self.assertEqual(len(newObj.categories()), 1)
+        self.assertEqual(newObj.categories().pop().id(), self.category2.id())
+
+    def testChangeNoteCategory(self):
+        self._testChangeObjectCategory('notes')
+
+    def testChangeTaskCategory(self):
+        self._testChangeObjectCategory('tasks')

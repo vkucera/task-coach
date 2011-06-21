@@ -37,8 +37,10 @@ class ViewFilter(base.Filter):
         
     def registerObservers(self):
         registerObserver = patterns.Publisher().registerObserver
-        for eventType in ('task.dueDateTime', 'task.startDateTime', 
-                          'task.completionDateTime', 'task.prerequisites',
+        for eventType in (task.Task.dueDateTimeChangedEventType(),
+                          task.Task.startDateTimeChangedEventType(),
+                          task.Task.completionDateTimeChangedEventType(),
+                          'task.prerequisites',
                           task.Task.appearanceChangedEventType(), # Proxy for status changes
                           task.Task.addChildEventType(),
                           task.Task.removeChildEventType(),

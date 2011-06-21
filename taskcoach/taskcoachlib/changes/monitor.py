@@ -29,7 +29,15 @@ class ChangeMonitor(object):
         super(ChangeMonitor, self).__init__()
 
         self.__guid = guid.generate()
+        self.__frozen = False
+
         self.reset()
+
+    def freeze(self):
+        self.__frozen = True
+
+    def thaw(self):
+        self.__frozen = False
 
     def guid(self):
         return self.__guid
@@ -72,6 +80,9 @@ class ChangeMonitor(object):
         Publisher().removeObserver(self.onObjectRemoved, collection.removeItemEventType(), eventSource=collection)
 
     def onAttributeChanged(self, event):
+        if self.__frozen:
+            return
+
         for obj in event.sources():
             for name in obj.monitoredAttributes():
                 if event.type() == getattr(obj, '%sChangedEventType' % name)():
@@ -102,21 +113,33 @@ class ChangeMonitor(object):
                 del self._changes[obj.id()]
 
     def onChildAdded(self, event):
+        if self.__frozen:
+            return
+
         self._objectsAdded(event)
         for obj in event.values():
             if self._changes[obj.id()] is not None:
                 self._changes[obj.id()].add('__parent__')
 
     def onChildRemoved(self, event):
+        if self.__frozen:
+            return
+
         self._objectsRemoved(event)
         for obj in event.values():
             if self._removed[obj.id()] is not None:
                 self._removed[obj.id()].add('__parent__')
 
     def onObjectAdded(self, event):
+        if self.__frozen:
+            return
+
         self._objectsAdded(event)
 
     def onObjectRemoved(self, event):
+        if self.__frozen:
+            return
+
         self._objectsRemoved(event)
 
     def _categoryChange(self, event):
@@ -125,9 +148,15 @@ class ChangeMonitor(object):
                 self._changes[obj.id()].add('__categories__')
 
     def onCategoryAdded(self, event):
+        if self.__frozen:
+            return
+
         self._categoryChange(event)
 
     def onCategoryRemoved(self, event):
+        if self.__frozen:
+            return
+
         self._categoryChange(event)
 
     def allChanges(self):

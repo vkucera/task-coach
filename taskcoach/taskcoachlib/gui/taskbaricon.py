@@ -48,7 +48,7 @@ class TaskBarIcon(date.ClockSecondObserver, wx.TaskBarIcon):
         registerObserver(self.onStopTracking,
             eventType=task.Task.trackStopEventType())
         registerObserver(self.onChangeDueDateTime,
-            eventType='task.dueDateTime')
+            eventType=task.Task.dueDateTimeChangedEventType())
         event = wx.EVT_TASKBAR_LEFT_DOWN if '__WXGTK__' == wx.Platform else wx.EVT_TASKBAR_LEFT_DCLICK    
         self.Bind(event, self.onTaskbarClick)
         self.__setTooltipText()

@@ -26,12 +26,16 @@ class ChangeSynchronizer(object):
 
     def sync(self, lists):
         self.diskChanges = ChangeMonitor()
+
         for devGUID, changes in self._allChanges.items():
             if devGUID == self._monitor.guid():
                 self.diskChanges = changes
             else:
                 changes.merge(self._monitor)
         self._allChanges[self._monitor.guid()] = self._monitor
+
+        self.allSelfMap = dict()
+        self.allOtherMap = dict()
 
         for oldList, newList in lists:
             self.mergeObjects(oldList, newList)
@@ -44,8 +48,10 @@ class ChangeSynchronizer(object):
                 addIds(obj.children(), idMap)
         selfMap = dict()
         addIds(oldList, selfMap)
+        self.allSelfMap.update(selfMap)
         otherMap = dict()
         addIds(newList, otherMap)
+        self.allOtherMap.update(otherMap)
 
         # Objects added on disk
         for otherObject in newList.allItemsSorted():
@@ -53,12 +59,11 @@ class ChangeSynchronizer(object):
                 for child in otherObject.children():
                     otherObject.removeChild(child)
                 parent = otherObject.parent()
-                if parent is None:
-                    oldList.append(otherObject)
-                else:
+                if parent is not None:
                     parent = selfMap[parent.id()]
                     parent.addChild(otherObject)
                     otherObject.setParent(parent)
+                oldList.append(otherObject)
                 selfMap[otherObject.id()] = otherObject
 
         # Objects changed on disk
@@ -85,20 +90,35 @@ class ChangeSynchronizer(object):
                                 not sameParents(selfObject.parent(), otherObject.parent())):
                             oldParent = selfObject.parent()
                             newParent = otherObject.parent()
-                            if oldParent is None:
-                                oldList.remove(selfObject)
-                            else:
+                            if oldParent is not None:
                                 oldParent.removeChild(selfObject)
-                            if newParent is None:
-                                oldList.append(selfObject)
-                            else:
+                            if newParent is not None:
                                 newParent = selfMap[newParent.id()]
                                 newParent.addChild(selfObject)
                             selfObject.setParent(newParent)
                     elif changeName == '__categories__':
-                        pass # XXXTODO
+                        otherCategories = set([self.allSelfMap[category.id()] for category in otherObject.categories()])
+                        if memChanges is not None and \
+                           '__categories__' in memChanges and \
+                           otherCategories != selfObject.categories():
+                            conflicts.append('__categories__')
+                        else:
+                            for cat in selfObject.categories():
+                                cat.removeCategorizable(selfObject)
+                                selfObject.removeCategory(cat)
+                            for cat in otherCategories:
+                                cat.addCategorizable(selfObject)
+                                selfObject.addCategory(cat)
                     elif changeName == 'appearance':
-                        pass # XXXTODO
+                        attrNames = ['foregroundColor', 'backgroundColor', 'font', 'icon', 'selectedIcon']
+                        if memChanges is not None and \
+                           'appearance' in memChanges:
+                            for attrName in attrNames:
+                                if getattr(selfObject, attrName)() != getattr(otherObject, attrName)():
+                                    conflicts.append(attrName)
+                        else:
+                            for attrName in attrNames:
+                                getattr(selfObject, 'set' + attrName[0].upper() + attrName[1:])(getattr(otherObject, attrName)())
                     elif changeName == 'expandedContexts':
                         # Note: no conflict resolution for this one.
                         selfObject.expand(otherObject.isExpanded())
@@ -111,4 +131,4 @@ class ChangeSynchronizer(object):
                             getattr(selfObject, 'set' + changeName[0].upper() + changeName[1:])(getattr(otherObject, changeName)())
 
                 if conflicts:
-                    pass # XXXTODO
+                    print conflicts # XXXTODO

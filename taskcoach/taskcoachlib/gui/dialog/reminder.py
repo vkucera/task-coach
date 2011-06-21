@@ -37,7 +37,7 @@ class ReminderDialog(sized_controls.SizedDialog):
                                               eventType=self.taskList.removeItemEventType(),
                                               eventSource=self.taskList)
         patterns.Publisher().registerObserver(self.onTaskCompletionDateChanged, 
-                                              eventType='task.completionDateTime',
+                                              eventType=task.completionDateTimeChangedEventType(),
                                               eventSource=task)
         patterns.Publisher().registerObserver(self.onTrackingStartedOrStopped,
                                               eventType=task.trackStartEventType(),

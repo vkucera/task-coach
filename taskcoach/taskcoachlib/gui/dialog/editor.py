@@ -104,7 +104,7 @@ class TaskSubjectPage(SubjectPage):
             value=str(currentPriority), initial=currentPriority)
         self._prioritySync = attributesync.AttributeSync('priority', 
             self._priorityEntry, currentPriority, self.items,
-            command.EditPriorityCommand, wx.EVT_SPINCTRL, 'task.priority')
+            command.EditPriorityCommand, wx.EVT_SPINCTRL, task.Task.priorityChangedEventType())
         self.addEntry(_('Priority'), self._priorityEntry, flags=[None, wx.ALL])
             
     def entries(self):
@@ -293,7 +293,7 @@ class DatesPage(Page):
         self._reminderDateTimeSync = attributesync.AttributeSync('datetime', 
             self._reminderDateTimeEntry, currentReminderDateTime, self.items, 
             command.EditReminderDateTimeCommand, entry.EVT_DATETIMEENTRY, 
-            'task.reminder', 'reminder')
+            task.Task.reminderChangedEventType(), 'reminder')
         self.addEntry(_('Reminder'), self._reminderDateTimeEntry)
         
     def addRecurrenceEntry(self):
@@ -302,7 +302,7 @@ class DatesPage(Page):
         self._recurrenceSync = attributesync.AttributeSync('recurrence',
             self._recurrenceEntry, currentRecurrence, self.items,
             command.EditRecurrenceCommand, entry.EVT_RECURRENCEENTRY,
-            'task.recurrence')
+            task.Task.recurrenceChangedEventType())
         self.addEntry(_('Recurrence'), self._recurrenceEntry)
             
     def entries(self):
@@ -384,7 +384,7 @@ class ProgressPage(Page):
             'shouldMarkCompleted', self._shouldMarkCompletedEntry, 
             currentChoice, self.items, command.EditShouldMarkCompletedCommand, 
             entry.EVT_CHOICEENTRY,
-            'task.setting.shouldMarkCompletedWhenAllChildrenCompleted',
+            task.Task.shouldMarkCompletedWhenAllChildrenCompletedChangedEventType(),
             'shouldMarkCompletedWhenAllChildrenCompleted')                                                       
         self.addEntry(_('Mark task completed when all children are completed?'), 
                       self._shouldMarkCompletedEntry, flags=[None, wx.ALL])
@@ -417,7 +417,7 @@ class BudgetPage(Page):
         self._budgetEntry = entry.TimeDeltaEntry(self, currentBudget)
         self._budgetSync = attributesync.AttributeSync('budget', 
             self._budgetEntry, currentBudget, self.items,                                         
-            command.EditBudgetCommand, wx.EVT_KILL_FOCUS, 'task.budget')
+            command.EditBudgetCommand, wx.EVT_KILL_FOCUS, task.Task.budgetChangedEventType())
         self.addEntry(_('Budget'), self._budgetEntry, flags=[None, wx.ALL])
                     
     def addTimeSpentEntry(self):
@@ -476,7 +476,7 @@ class BudgetPage(Page):
         self._fixedFeeEntry = entry.AmountEntry(self, currentFixedFee)
         self._fixedFeeSync = attributesync.AttributeSync('fixedFee',
             self._fixedFeeEntry, currentFixedFee, self.items,
-            command.EditFixedFeeCommand, wx.EVT_KILL_FOCUS, 'task.fixedFee')
+            command.EditFixedFeeCommand, wx.EVT_KILL_FOCUS, task.Task.fixedFeeChangedEventType())
         self.addEntry(_('Fixed fee'), self._fixedFeeEntry, flags=[None, wx.ALL])
 
     def addRevenueEntry(self):
