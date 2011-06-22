@@ -1183,14 +1183,14 @@ class TaskFileMultiUserTest(test.TestCase):
     def testChangeNoteDescription(self):
         self._testChangeAttribute('description', 'New note description', 'notes')
 
-    ## def testChangeTaskStartDateTime(self):
-    ##     self._testChangeAttribute('startDateTime', date.DateTime(2011, 6, 15), 'tasks')
+    def testChangeTaskStartDateTime(self):
+        self._testChangeAttribute('startDateTime', date.DateTime(2011, 6, 15), 'tasks')
 
-    ## def testChangeTaskDueDateTime(self):
-    ##     self._testChangeAttribute('dueDateTime', date.DateTime(2011, 7, 16), 'tasks')
+    def testChangeTaskDueDateTime(self):
+        self._testChangeAttribute('dueDateTime', date.DateTime(2011, 7, 16), 'tasks')
 
-    ## def testChangeTaskCompletionDateTime(self):
-    ##     self._testChangeAttribute('completionDateTime', date.DateTime(2011, 2, 1), 'tasks')
+    def testChangeTaskCompletionDateTime(self):
+        self._testChangeAttribute('completionDateTime', date.DateTime(2011, 2, 1), 'tasks')
 
     def testChangeTaskPrecentageComplete(self):
         self._testChangeAttribute('percentageComplete', 42, 'tasks')

@@ -83,20 +83,21 @@ class ChangeMonitor(object):
         if self.__frozen:
             return
 
-        for obj in event.sources():
-            for name in obj.monitoredAttributes():
-                if event.type() == getattr(obj, '%sChangedEventType' % name)():
-                    changes = None
-                    if obj.id() in self._changes:
-                        container = self._changes
-                        changes = self._changes[obj.id()]
-                    elif obj.id() in self._removed:
-                        container = self._removed
-                        changes = self._removed[obj.id()]
-                    if changes is not None:
-                        changes.add(name)
-                        container[obj.id()] = changes
-                    break
+        for type_, valBySource in event.sourcesAndValuesByType().items():
+            for obj in valBySource.keys():
+                for name in obj.monitoredAttributes():
+                    if type_ == getattr(obj, '%sChangedEventType' % name)():
+                        changes = None
+                        if obj.id() in self._changes:
+                            container = self._changes
+                            changes = self._changes[obj.id()]
+                        elif obj.id() in self._removed:
+                            container = self._removed
+                            changes = self._removed[obj.id()]
+                        if changes is not None:
+                            changes.add(name)
+                            container[obj.id()] = changes
+                        break
 
     def _objectsAdded(self, event):
         for obj in event.values():
