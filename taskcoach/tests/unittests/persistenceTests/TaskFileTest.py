@@ -1006,9 +1006,25 @@ class TaskFileMonitorTest(TaskFileTestCase):
         self.assertEqual(allChanges[self.taskFile.monitor().guid()].getChanges(self.task), set(['subject']))
         self.assertEqual(allChanges[self.otherFile.monitor().guid()].getChanges(self.task), set())
 
+    def testDeleteObject(self):
+        self.otherFile.tasks().remove(self.otherFile.tasks().rootItems()[0])
+        self.otherFile.save()
+        allChanges = self._loadChangesFromFile(self.filename)
+        self.assertEqual(allChanges[self.taskFile.monitor().guid()].getChanges(self.task), set(['__del__']))
+        self.assertEqual(allChanges[self.otherFile.monitor().guid()].getChanges(self.task), None)
+
     def testDiskChangesAfterLoad(self):
         changes = self._loadChangesFromFile(self.filename)[self.taskFile.monitor().guid()]
         self.assertEqual(changes.getChanges(self.task), set())
+
+    def testNewObject(self):
+        item = task.Task(subject='New task')
+        self.otherFile.tasks().append(item)
+        self.otherFile.save()
+        self.taskFile.save()
+        allChanges = self._loadChangesFromFile(self.filename)
+        self.assertEqual(allChanges[self.otherFile.monitor().guid()].getChanges(item), set())
+        self.assertEqual(allChanges[self.taskFile.monitor().guid()].getChanges(item), set())
 
 
 class TaskFileMultiUserTest(test.TestCase):
@@ -1320,3 +1336,21 @@ class TaskFileMultiUserTest(test.TestCase):
 
     def testChangeTaskCategory(self):
         self._testChangeObjectCategory('tasks')
+
+    def _testDeleteObject(self, listName):
+        item = getattr(self.taskFile1, listName)().rootItems()[0]
+        getattr(self.taskFile1, listName)().remove(item)
+        self.taskFile2.monitor().resetAllChanges()
+        self.taskFile1.save()
+        self.taskFile2.save()
+        self.assertEqual(len(getattr(self.taskFile1, listName)()), 0)
+        self.assertEqual(len(getattr(self.taskFile2, listName)()), 0)
+
+    def testDeleteCategory(self):
+        self._testDeleteObject('categories')
+
+    def testDeleteNote(self):
+        self._testDeleteObject('notes')
+
+    def testDeleteTask(self):
+        self._testDeleteObject('tasks')

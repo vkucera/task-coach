@@ -105,6 +105,7 @@ class MonitorObjectTest(MonitorBaseTest):
         self.assertEqual(self.monitor.getChanges(obj), None)
 
     def testDeletedObject(self):
+        self.monitor.setChanges(self.obj.id(), set())
         self.list.remove(self.obj)
         self.failUnless(self.monitor.isRemoved(self.obj))
 
@@ -112,7 +113,7 @@ class MonitorObjectTest(MonitorBaseTest):
         self.monitor.resetChanges(self.obj)
         self.obj.setSubject('Foo')
         self.list.remove(self.obj)
-        self.assertEqual(self.monitor.getChanges(self.obj), None)
+        self.assertEqual(self.monitor.getChanges(self.obj), set(['subject', '__del__']))
         self.list.append(self.obj)
         self.assertEqual(self.monitor.getChanges(self.obj), set(['subject']))
         self.failIf(self.monitor.isRemoved(self.obj))

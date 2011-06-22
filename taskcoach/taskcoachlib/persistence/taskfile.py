@@ -232,6 +232,7 @@ class TaskFile(patterns.Observer):
         self.setFilename('')
         self.__guid = generate()
         self.clear()
+        self.__monitor.reset()
         self.__needSave = False
 
     def _read(self, fd):

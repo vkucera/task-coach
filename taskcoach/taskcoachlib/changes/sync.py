@@ -53,9 +53,13 @@ class ChangeSynchronizer(object):
         addIds(newList, otherMap)
         self.allOtherMap.update(otherMap)
 
-        # Objects added on disk
+        # Objects added on disk or removed from memory
         for otherObject in newList.allItemsSorted():
-            if otherObject.id() not in selfMap:
+            memChanges = self._monitor.getChanges(otherObject)
+            if memChanges is not None and '__del__' in memChanges:
+                newList.remove(otherObject)
+                del otherMap[otherObject.id()]
+            elif otherObject.id() not in selfMap:
                 for child in otherObject.children():
                     otherObject.removeChild(child)
                 parent = otherObject.parent()
@@ -64,7 +68,16 @@ class ChangeSynchronizer(object):
                     parent.addChild(otherObject)
                     otherObject.setParent(parent)
                 oldList.append(otherObject)
+                self._monitor.setChanges(otherObject.id(), set())
                 selfMap[otherObject.id()] = otherObject
+
+        # Objects removed from disk
+        for selfObject in oldList.allItemsSorted():
+            ch = self.diskChanges.getChanges(selfObject)
+            if ch is not None and '__del__' in ch:
+                oldList.remove(selfObject)
+                self._monitor.setChanges(selfObject.id(), None)
+                del selfMap[selfObject.id()]
 
         # Objects changed on disk
         for selfObject in oldList.allItemsSorted():

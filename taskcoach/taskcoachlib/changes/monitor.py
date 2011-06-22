@@ -45,7 +45,6 @@ class ChangeMonitor(object):
     def reset(self):
         self._changes = dict()
         self._classes = set()
-        self._removed = dict()
 
     def monitorClass(self, klass):
         if klass not in self._classes:
@@ -87,31 +86,25 @@ class ChangeMonitor(object):
             for obj in valBySource.keys():
                 for name in obj.monitoredAttributes():
                     if type_ == getattr(obj, '%sChangedEventType' % name)():
-                        changes = None
-                        if obj.id() in self._changes:
-                            container = self._changes
-                            changes = self._changes[obj.id()]
-                        elif obj.id() in self._removed:
-                            container = self._removed
-                            changes = self._removed[obj.id()]
-                        if changes is not None:
-                            changes.add(name)
-                            container[obj.id()] = changes
-                        break
+                        if obj.id() in self._changes and self._changes[obj.id()] is not None:
+                            self._changes[obj.id()].add(name)
 
     def _objectsAdded(self, event):
         for obj in event.values():
-            if obj.id() in self._removed:
-                self._changes[obj.id()] = self._removed[obj.id()]
-                del self._removed[obj.id()]
-            elif obj.id() not in self._changes:
+            if obj.id() in self._changes:
+                if self._changes[obj.id()] is not None and \
+                       '__del__' in self._changes[obj.id()]:
+                    self._changes[obj.id()].remove('__del__')
+            else:
                 self._changes[obj.id()] = None
 
     def _objectsRemoved(self, event):
         for obj in event.values():
             if obj.id() in self._changes:
-                self._removed[obj.id()] = self._changes[obj.id()]
-                del self._changes[obj.id()]
+                if self._changes[obj.id()] is None:
+                    del self._changes[obj.id()]
+                else:
+                    self._changes[obj.id()].add('__del__')
 
     def onChildAdded(self, event):
         if self.__frozen:
@@ -128,8 +121,8 @@ class ChangeMonitor(object):
 
         self._objectsRemoved(event)
         for obj in event.values():
-            if self._removed[obj.id()] is not None:
-                self._removed[obj.id()].add('__parent__')
+            if obj in self._changes and self._changes[obj.id()] is not None:
+                self._changes[obj.id()].add('__parent__')
 
     def onObjectAdded(self, event):
         if self.__frozen:
@@ -167,21 +160,27 @@ class ChangeMonitor(object):
         return self._changes.get(obj.id(), None)
 
     def setChanges(self, id_, changes):
-        self._changes[id_] = changes
+        if changes is None:
+            del self._changes[id_]
+        else:
+            self._changes[id_] = changes
 
     def isRemoved(self, obj):
-        return obj.id() in self._removed
+        return obj.id() in self._changes and \
+               self._changes[obj.id()] is not None and \
+               '__del__' in self._changes[obj.id()]
 
     def resetChanges(self, obj):
         self._changes[obj.id()] = set()
 
     def resetAllChanges(self):
-        for id_ in self._changes.keys():
-            self._changes[id_] = set()
-        self._removed = dict()
+        for id_, changes in self._changes.items():
+            if changes is not None and '__del__' in changes:
+                del self._changes[id_]
+            else:
+                self._changes[id_] = set()
 
     def merge(self, monitor):
-        # XXXTODO: deleted objetcs
         for id_, changes in self._changes.items():
             theirChanges = monitor._changes.get(id_, None)
             if theirChanges is not None:
