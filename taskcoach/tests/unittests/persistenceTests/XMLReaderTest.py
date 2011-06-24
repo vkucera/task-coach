@@ -116,6 +116,7 @@ class TempFileLockTest(XMLReaderTestCase):
                 '</attachment>\n</task>\n</tasks>\n'%base64.encodestring('Data'))
             try:
                 os.remove(self.__filename)
+                os.remove(self.__filename + '.delta')
             except:
                 pass # pylint: disable-msg=W0702
 

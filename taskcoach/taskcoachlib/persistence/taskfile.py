@@ -212,22 +212,10 @@ class TaskFile(patterns.Observer):
             self.__syncMLConfig = createDefaultSyncConfig(self.__guid)
 
     def close(self):
-        if self.exists():
-            # Just remove ourself from the active devices. XXXTODO: lock
-            fd = self._openForRead()
-            tasks, categories, notes, syncMLConfig, changes, guid = self._read(fd)
-            fd.close()
+        if os.path.exists(self.filename()):
+            changes = xml.ChangesXMLReader(self.filename() + '.delta').read()
             del changes[self.__monitor.guid()]
-
-            name, fd = self._openForWrite()
-            xml.XMLWriter(fd).write(task.TaskList(tasks), category.CategoryList(categories),
-                                    note.NoteContainer(notes),
-                                    syncMLConfig, changes, guid)
-            fd.close()
-            if os.path.exists(self.__filename): # Not using self.exists() because DummyFile.exists returns True
-                os.remove(self.__filename)
-            if name is not None: # Unit tests (AutoSaver)
-                os.rename(name, self.__filename)
+            xml.ChangesXMLWriter(file(self.filename() + '.delta', 'wb')).write(changes)
 
         self.setFilename('')
         self.__guid = generate()
@@ -276,9 +264,9 @@ class TaskFile(patterns.Observer):
             self.__syncMLConfig = syncMLConfig
             self.__guid = guid
 
-            if self.exists():
+            if os.path.exists(self.filename()):
                 # We need to reset the changes on disk because we're up to date.
-                self.save(doNotify=False)
+                xml.ChangesXMLWriter(file(self.filename() + '.delta', 'wb')).write(self.__changes)
         except:
             self.setFilename('')
             raise
@@ -286,9 +274,8 @@ class TaskFile(patterns.Observer):
             self.__loading = False
             self.__needSave = False
         
-    def save(self, doNotify=True):
-        if doNotify:
-            patterns.Event('taskfile.aboutToSave', self).send()
+    def save(self):
+        patterns.Event('taskfile.aboutToSave', self).send()
         # When encountering a problem while saving (disk full,
         # computer on fire), if we were writing directly to the file,
         # it's lost. So write to a temporary file and rename it if
@@ -327,8 +314,11 @@ class TaskFile(patterns.Observer):
         fd.close()
         if os.path.exists(self.__filename): # Not using self.exists() because DummyFile.exists returns True
             os.remove(self.__filename)
+        if os.path.exists(self.__filename + '.delta'):
+            os.remove(self.__filename + '.delta')
         if name is not None: # Unit tests (AutoSaver)
             os.rename(name, self.__filename)
+            os.rename(name + '.delta', self.__filename + '.delta')
 
         self.__needSave = False
 
@@ -414,7 +404,15 @@ class LockedTaskFile(TaskFile):
     def break_lock(self, filename):
         self.__lock = lockfile.FileLock(filename)
         self.__lock.break_lock()
-            
+
+    def close(self):
+        if self.filename():
+            self.acquire_lock(self.filename())
+        try:
+            super(LockedTaskFile, self).close()
+        finally:
+            self.release_lock()
+
     def load(self, filename=None, lock=True, breakLock=False): # pylint: disable-msg=W0221
         ''' Lock the file before we load, if not already locked. '''
         filename = filename or self.filename()

@@ -39,6 +39,8 @@ class IOControllerTest(test.TestCase):
                 os.remove(filename)
             if os.path.exists(filename + '.lock'):
                 shutil.rmtree(filename + '.lock') # pragma: no cover
+            if os.path.exists(filename + '.delta'):
+                os.remove(filename + '.delta')
         super(IOControllerTest, self).tearDown()
         
     def doIOAndCheckRecentFiles(self, open=None, saveas=None, # pylint: disable-msg=W0622

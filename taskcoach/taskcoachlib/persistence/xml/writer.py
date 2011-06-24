@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import xml.dom, os
+from xml.etree import ElementTree as ET
 from taskcoachlib import meta
 from taskcoachlib.domain import date, task, note, category
 
@@ -44,28 +45,13 @@ class XMLWriter(object):
             self.document.documentElement.appendChild(self.categoryNode(rootCategory, taskList, noteContainer))
         for rootNote in noteContainer.rootItems():
             self.document.documentElement.appendChild(self.noteNode(rootNote))
-        if changes:
-            self.document.documentElement.appendChild(self.changesNode(changes))
         if syncMLConfig:
             self.document.documentElement.appendChild(self.syncMLNode(syncMLConfig))
         if guid:
             self.document.documentElement.appendChild(self.textNode('guid', guid))
         self.document.writexml(self.__fd, newl='\n', encoding=self.__fd.encoding)
 
-    def changesNode(self, allChanges):
-        node = self.document.createElement('changes')
-        for devName, monitor in allChanges.items():
-            node.appendChild(self.changeNode(devName, monitor))
-        return node
-
-    def changeNode(self, devName, monitor):
-        node = self.document.createElement('device')
-        node.setAttribute('guid', devName)
-        for id_, changes in monitor.allChanges().items():
-            child = self.textNode('obj', ','.join(list(changes)))
-            child.setAttribute('id', id_)
-            node.appendChild(child)
-        return node
+        ChangesXMLWriter(file(self.__fd.name + '.delta', 'wb')).write(changes)
 
     def taskNode(self, task): # pylint: disable-msg=W0621
         maxDateTime = self.maxDateTime
@@ -255,6 +241,26 @@ class XMLWriter(object):
 
     def formatDateTime(self, dateTime):
         return dateTime.strftime('%Y-%m-%d %H:%M:%S')
+
+
+class ChangesXMLWriter(object):
+    def __init__(self, fd):
+        self.__fd = fd
+
+    def write(self, allChanges):
+        root = ET.Element('changes')
+        if allChanges:
+            for devName, monitor in allChanges.items():
+                devNode = ET.SubElement(root, 'device')
+                devNode.attrib['guid'] = monitor.guid()
+                for id_, changes in monitor.allChanges().items():
+                    objNode = ET.SubElement(devNode, 'obj')
+                    objNode.attrib['id'] = id_
+                    if changes:
+                        objNode.text = ','.join(list(changes))
+
+        tree = ET.ElementTree(root)
+        tree.write(self.__fd)
 
 
 class TemplateXMLWriter(XMLWriter):

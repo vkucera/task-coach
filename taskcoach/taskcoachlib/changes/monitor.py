@@ -25,10 +25,10 @@ class ChangeMonitor(object):
     This class monitors change to object on a per-attribute basis.
     """
 
-    def __init__(self):
+    def __init__(self, id_=None):
         super(ChangeMonitor, self).__init__()
 
-        self.__guid = guid.generate()
+        self.__guid = id_ or guid.generate()
         self.__frozen = False
 
         self.reset()

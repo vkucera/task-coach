@@ -19,6 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # This is the xml package. This package contains classes to read and 
 # write xml (.tsk) files.
 import xml.dom.minidom # Force py2app to include the minidom module.
-from reader import XMLReader, TemplateXMLReader
-from writer import XMLWriter, TemplateXMLWriter
+from reader import XMLReader, TemplateXMLReader, ChangesXMLReader
+from writer import XMLWriter, TemplateXMLWriter, ChangesXMLWriter
 from templates import getDefaultTemplates

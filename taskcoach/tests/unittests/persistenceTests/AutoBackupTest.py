@@ -23,6 +23,7 @@ from taskcoachlib.domain import date, task
 
 class DummyFile(object):
     encoding = 'utf-8'
+    name = 'whatever.tsk'
     
     def close(self, *args, **kwargs): # pylint: disable-msg=W0613
         pass
@@ -46,7 +47,7 @@ class DummyTaskFile(persistence.TaskFile):
     
     def filename(self):
         return super(DummyTaskFile, self).filename() or 'whatever.tsk'
-            
+
 
 class AutoBackupTest(test.TestCase):
     def setUp(self):

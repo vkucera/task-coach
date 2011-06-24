@@ -90,7 +90,11 @@ class XMLReader(object):
         guid = self.__parseGUIDNode(root.find('guid'))
         syncMLConfig = self._parseSyncMLNode(root, guid)
 
-        changes = self._parseChanges(root.find('changes'))
+        changesName = self.__fd.name + '.delta'
+        if os.path.exists(changesName):
+            changes = ChangesXMLReader(file(self.__fd.name + '.delta', 'rU')).read()
+        else:
+            changes = dict()
 
         return tasks, categories, notes, syncMLConfig, changes, guid
 
@@ -104,6 +108,7 @@ class XMLReader(object):
         ''' Remove spurious newlines from element tags. '''
         self.__origFd = self.__fd # pylint: disable-msg=W0201
         self.__fd = StringIO.StringIO()
+        self.__fd.name = self.__origFd.name
         lines = self.__origFd.readlines()
         for index in xrange(len(lines)):
             if lines[index].endswith('<TaskCoach-\n') or lines[index].endswith('</TaskCoach-\n'):
@@ -111,21 +116,6 @@ class XMLReader(object):
                 lines[index+1] = lines[index+1][:-1] # Remove newline
         self.__fd.write(''.join(lines))
         self.__fd.seek(0)
-
-    def _parseChanges(self, node):
-        allChanges = dict()
-        if node is not None:
-            for devNode in node.findall('device'):
-                mon = ChangeMonitor()
-                for objNode in devNode.findall('obj'):
-                    text = self._parseText(objNode)
-                    if text:
-                        changes = set(text.split(','))
-                    else:
-                        changes = set()
-                    mon.setChanges(objNode.attrib['id'], changes)
-                allChanges[devNode.attrib['guid']] = mon
-        return allChanges
 
     def _parseTaskNodes(self, node):
         return [self._parseTaskNode(child) for child in node.findall('task')]
@@ -479,6 +469,26 @@ class XMLReader(object):
             return parseFunction(text, *parseArgs) if parseArgs else parseFunction(text) 
         except ValueError:
             return defaultValue
+
+
+class ChangesXMLReader(object):
+    def __init__(self, fd):
+        self.__fd = fd
+
+    def read(self):
+        allChanges = dict()
+        tree = ET.parse(self.__fd)
+        for devNode in tree.getroot().findall('device'):
+            id_ = devNode.attrib['guid']
+            mon = ChangeMonitor(id_)
+            for objNode in devNode.findall('obj'):
+                if objNode.text:
+                    changes = set(objNode.text.split(','))
+                else:
+                    changes = set()
+                mon.setChanges(objNode.attrib['id'], changes)
+            allChanges[id_] = mon
+        return allChanges
 
 
 class TemplateXMLReader(XMLReader):

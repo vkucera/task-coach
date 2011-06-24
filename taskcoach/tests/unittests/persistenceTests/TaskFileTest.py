@@ -67,7 +67,9 @@ class TaskFileTestCase(test.TestCase):
         super(TaskFileTestCase, self).tearDown()
         self.taskFile.close()
         self.emptyTaskFile.close()
-        self.remove(self.filename, self.filename2)
+        self.remove(self.filename, self.filename2,
+                    self.filename + '.delta',
+                    self.filename2 + '.delta')
 
     def remove(self, *filenames):
         for filename in filenames:
@@ -582,7 +584,7 @@ class ChangingAttachmentsTestsMixin(object):
         self.taskFile.setFilename(self.filename)
         self.item.addAttachments(anAttachment)
         self.taskFile.save()
-   
+
     def addFileAttachment(self):
         self.fileAttachment = attachment.FileAttachment('Old location') # pylint: disable-msg=W0201
         self.addAttachment(self.fileAttachment)
@@ -761,7 +763,7 @@ class TaskFileSaveAndLoadTest(TaskFileTestCase):
         self.taskFile.load()
         self.assertEqual(1, len(self.taskFile.tasks()))
         self.taskFile.close()
-        self.remove('new.tsk')
+        self.remove('new.tsk', 'new.tsk.delta')
 
 
 class TaskFileMergeTest(TaskFileTestCase):
@@ -771,7 +773,7 @@ class TaskFileMergeTest(TaskFileTestCase):
         self.mergeFile.setFilename('merge.tsk')
 
     def tearDown(self):
-        self.remove('merge.tsk')
+        self.remove('merge.tsk', 'merge.tsk.delta')
         super(TaskFileMergeTest, self).tearDown()
 
     def merge(self):
@@ -820,7 +822,7 @@ class TaskFileMergeTest(TaskFileTestCase):
         self.merge()
         self.assertEqual(aTask.id(), 
                          list(list(self.taskFile.categories())[0].categorizables())[0].id())
-             
+          
     def testMerge_Notes(self):
         newNote = note.Note(subject='new note')
         self.mergeFile.notes().append(newNote)
@@ -976,21 +978,7 @@ class TaskFileMonitorTest(TaskFileTestCase):
         self.assertEqual(self.taskFile.monitor().getChanges(self.task), None)
 
     def _loadChangesFromFile(self, filename):
-        allChanges = dict()
-        tree = ET.parse(filename)
-        root = tree.getroot()
-        changesNode = root.find('changes')
-        if changesNode is not None:
-            for devNode in changesNode.findall('device'):
-                mon = ChangeMonitor()
-                for objNode in devNode.findall('obj'):
-                    if objNode.text.strip():
-                        c = set(objNode.text.strip().split(','))
-                    else:
-                        c = set()
-                    mon.setChanges(objNode.attrib['id'], c)
-                allChanges[devNode.attrib['guid']] = mon
-        return allChanges
+        return persistence.ChangesXMLReader(file(filename + '.delta', 'rU')).read()
 
     def testGUIDPresentAfterLoad(self):
         self.failUnless(self._loadChangesFromFile(self.filename).has_key(self.taskFile.monitor().guid()))
@@ -1052,7 +1040,7 @@ class TaskFileMultiUserTest(test.TestCase):
         # pylint: disable-msg=W0201
         self.taskFile1 = persistence.TaskFile()
         self.taskFile2 = persistence.TaskFile()
-        
+     
     def tearDown(self):
         super(TaskFileMultiUserTest, self).tearDown()
         self.taskFile1.close()
