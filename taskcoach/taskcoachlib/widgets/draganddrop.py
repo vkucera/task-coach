@@ -134,7 +134,16 @@ class DropTarget(wx.DropTarget):
                 data = data.decode('unicode_internal')
             except UnicodeDecodeError:
                 data = data.decode('utf-16')
-            self.__onDropMailCallback(x, y, thunderbird.getMail(data))
+
+            try:
+                email = thunderbird.getMail(data)
+            except thunderbird.ThunderbirdCancelled:
+                pass
+            except thunderbird.ThunderbirdError, e:
+                print e.args
+                wx.MessageBox(e.args[0], _('Error'), wx.OK|wx.ICON_ERROR)
+            else:
+                self.__onDropMailCallback(x, y, thunderbird.getMail(data))
 
     def onOutlookDrop(self, x, y):
         if self.__onDropMailCallback:

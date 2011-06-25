@@ -81,7 +81,7 @@ def getThunderbirdDir():
         raise EnvironmentError('Unsupported platform: %s' % os.name)
 
     if path is None:
-        raise RuntimeError, 'Could not find Thunderbird data dir'
+        raise ThunderbirdError(_('Could not find Thunderbird data dir'))
 
     return path
 
@@ -109,7 +109,7 @@ def getDefaultProfileDir():
                 _PORTABLECACHE = os.path.join(os.path.split(process.ExecutablePath)[0], 'Data', 'profile')
                 break
         else:
-            raise RuntimeError, 'Could not find Thunderbird profile.'
+            raise ThunderbirdError(_('Could not find Thunderbird profile.'))
 
         return _PORTABLECACHE
 
@@ -128,7 +128,7 @@ def getDefaultProfileDir():
                 return os.path.join(path, parser.get(section, 'Path'))
             return parser.get(section, 'Path')
 
-    raise ThunderbirdError('No default section in profiles.ini')
+    raise ThunderbirdError(_('No default section in profiles.ini'))
 
 
 class ThunderbirdMailboxReader(object):
@@ -141,7 +141,7 @@ class ThunderbirdMailboxReader(object):
 
         mt = _RX_MAILBOX.search(url)
         if mt is None:
-            raise RuntimeError(_('Malformed Thunderbird internal ID: %s. Please file a bug report.') % url)
+            raise ThunderbirdError(_('Malformed Thunderbird internal ID:\n%s. Please file a bug report.') % url)
 
         self.url = url
 
@@ -163,7 +163,7 @@ class ThunderbirdMailboxReader(object):
                     self.filename = os.path.join(config['%s.directory' % base], *tuple(self.path))
                     break
         else:
-            raise RuntimeError(_('Could not find directory for ID %s. Please file a bug report.') % url)
+            raise ThunderbirdError(_('Could not find directory for ID\n%s.\nPlease file a bug report.') % url)
 
         self.fp = file(self.filename, 'rb')
         self.fp.seek(self.offset)
@@ -221,7 +221,7 @@ class ThunderbirdImapReader(object):
         if mt is None:
             mt = _RX_IMAP_MESSAGE.search(url)
             if mt is None:
-                raise ThunderbirdError('Unrecognized URL scheme: "%s"' % url)
+                raise ThunderbirdError(_('Unrecognized URL scheme: "%s"' % url))
 
         self.url = url
 
@@ -309,12 +309,12 @@ class ThunderbirdImapReader(object):
         if response != 'OK':
             response, params = cn.select(self.box.replace('/', '.'))
             if response != 'OK':
-                raise ThunderbirdError('Could not select inbox "%s" (%s)' % (self.box, response))
+                raise ThunderbirdError(_('Could not select inbox "%s"\n(%s)' % (self.box, response)))
 
         response, params = cn.uid('FETCH', str(self.uid), '(RFC822)')
 
         if response != 'OK':
-            raise ThunderbirdError('No such mail: %d' % self.uid)
+            raise ThunderbirdError(_('No such mail: %d' % self.uid))
 
         return params[0][1]
 
