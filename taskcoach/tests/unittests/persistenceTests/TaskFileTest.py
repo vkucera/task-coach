@@ -1057,6 +1057,14 @@ class TaskFileMultiUserTest(test.TestCase):
                 except WindowsError:
                     tries += 1 
 
+    def _assertIdInList(self, objects, id_):
+        for obj in objects:
+            if obj.id() == id_:
+                break
+        else:
+            self.fail('ID %s not found' % id_)
+        return obj
+
     def _testCreateObjectInOther(self, class_, listName):
         newObject = class_(subject='New %s' % class_.__name__)
         getattr(self.taskFile1, listName)().append(newObject)
@@ -1064,7 +1072,7 @@ class TaskFileMultiUserTest(test.TestCase):
         self.taskFile1.save()
         self.taskFile2.save()
         self.assertEqual(len(getattr(self.taskFile2, listName)()), 2)
-        self.assertEqual(getattr(self.taskFile2, listName)().rootItems()[1].id(), newObject.id())
+        self._assertIdInList(getattr(self.taskFile2, listName)().rootItems(), newObject.id())
 
     def testOtherCreatesCategory(self):
         self._testCreateObjectInOther(category.Category, 'categories')
@@ -1106,8 +1114,7 @@ class TaskFileMultiUserTest(test.TestCase):
         self.taskFile1.save()
         self.taskFile2.save()
         self.assertEqual(len(getattr(self.taskFile2, listName)()), 3)
-        otherItem = getattr(self.taskFile2, listName)().rootItems()[1]
-        self.assertEqual(otherItem.id(), item.id())
+        otherItem = self._assertIdInList(getattr(self.taskFile2, listName)().rootItems(), item.id())
         self.assertEqual(len(otherItem.children()), 1)
         self.assertEqual(otherItem.children()[0].id(), subItem.id())
 
