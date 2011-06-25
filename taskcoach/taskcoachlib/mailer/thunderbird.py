@@ -166,7 +166,7 @@ class ThunderbirdMailboxReader(object):
             raise ThunderbirdError(_('Could not find directory for ID\n%s.\nPlease file a bug report.') % url)
 
         self.fp = file(self.filename, 'rb')
-        if offset >= 0:
+        if self.offset >= 0:
             self.fp.seek(self.offset)
         else:
             self.fp.seek(self.offset, os.SEEK_END)
