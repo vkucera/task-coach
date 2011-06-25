@@ -21,8 +21,8 @@ from taskcoachlib.i18n import _
 from taskcoachlib import persistence
 
 
-_RX_MAILBOX = re.compile('mailbox-message://(.*)@(.*)/(.*)#(\d+)')
-_RX_IMAP_MESSAGE = re.compile('imap-message://([^@]+)@([^/]+)/(.*)#(\d+)')
+_RX_MAILBOX = re.compile(r'mailbox-message://(.*)@(.*)/(.*)#(\d+)')
+_RX_IMAP_MESSAGE = re.compile(r'imap-message://([^@]+)@([^/]+)/(.*)#(\d+)')
 _RX_IMAP = re.compile(r'imap://([^@]+)@([^/]+)/fetch%3EUID%3E(?:/|\.)(.*)%3E(\d+)')
 
 
