@@ -21,7 +21,7 @@ from taskcoachlib.i18n import _
 from taskcoachlib import persistence
 
 
-_RX_MAILBOX = re.compile(r'mailbox-message://(.*)@(.*)/(.*)#(\d+)')
+_RX_MAILBOX = re.compile(r'mailbox-message://(.*)@(.*)/(.*)#((?:-)?\d+)')
 _RX_IMAP_MESSAGE = re.compile(r'imap-message://([^@]+)@([^/]+)/(.*)#(\d+)')
 _RX_IMAP = re.compile(r'imap://([^@]+)@([^/]+)/fetch%3EUID%3E(?:/|\.)(.*)%3E(\d+)')
 
@@ -166,7 +166,10 @@ class ThunderbirdMailboxReader(object):
             raise ThunderbirdError(_('Could not find directory for ID\n%s.\nPlease file a bug report.') % url)
 
         self.fp = file(self.filename, 'rb')
-        self.fp.seek(self.offset)
+        if offset >= 0:
+            self.fp.seek(self.offset)
+        else:
+            self.fp.seek(self.offset, os.SEEK_END)
 
         self.done = False
 
