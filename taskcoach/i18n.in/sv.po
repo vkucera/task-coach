@@ -9,15 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sv\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-06-09 22:31+0000\n"
-"PO-Revision-Date: 2011-06-14 11:58+0000\n"
+"POT-Creation-Date: 2011-06-14 20:12+0000\n"
+"PO-Revision-Date: 2011-06-25 20:15+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-14 12:01+0000\n"
-"X-Generator: Launchpad (build 13216)\n"
+"X-Launchpad-Export-Date: 2011-06-25 20:16+0000\n"
+"X-Generator: Launchpad (build 13265)\n"
 
 #: taskcoachlib\application\application.py:240
 msgid ""
@@ -225,7 +225,7 @@ msgstr "Ny underanteckning till \"%s\""
 
 #: taskcoachlib\command\noteCommands.py:43
 msgid "New subnote"
-msgstr ""
+msgstr "Ny underanteckning"
 
 #: taskcoachlib\command\noteCommands.py:54
 msgid "Edit notes"
@@ -253,15 +253,15 @@ msgstr "Drag och släpp anteckning \"%s\""
 
 #: taskcoachlib\command\taskCommands.py:59
 msgid "Drag and drop tasks"
-msgstr "Drag och släpp aktiviteter"
+msgstr "Drag och släpp uppgifter"
 
 #: taskcoachlib\command\taskCommands.py:63
 msgid "Delete tasks"
-msgstr "Ta bort aktiviteter"
+msgstr "Ta bort uppgifter"
 
 #: taskcoachlib\command\taskCommands.py:64
 msgid "Delete task \"%s\""
-msgstr "Ta bort aktivitet \"%s\""
+msgstr "Ta bort uppgift \"%s\""
 
 #: taskcoachlib\command\taskCommands.py:106
 #: taskcoachlib\command\taskCommands.py:109
@@ -270,93 +270,101 @@ msgstr "Ny uppgift"
 
 #: taskcoachlib\command\taskCommands.py:145
 msgid "New subtasks"
-msgstr "Ny underaktivitet"
+msgstr "Ny deluppgift"
 
 #: taskcoachlib\command\taskCommands.py:146
 msgid "New subtask of \"%s\""
-msgstr "Ny underaktivit till \"%s\""
+msgstr "Ny deluppgift till \"%s\""
 
 #: taskcoachlib\command\taskCommands.py:150
 msgid "New subtask"
-msgstr "Ny underuppgift"
+msgstr "Ny deluppgift"
 
 #: taskcoachlib\command\taskCommands.py:169
 msgid "Edit tasks"
-msgstr "Redigera aktivitet"
+msgstr "Redigera uppgift"
 
 #: taskcoachlib\command\taskCommands.py:170
 msgid "Edit task \"%s\""
-msgstr "Redigera aktivitet \"%s\""
+msgstr "Redigera uppgift \"%s\""
 
 #: taskcoachlib\command\taskCommands.py:228
 msgid "Mark tasks completed"
-msgstr "Markera aktivitet som färdig"
+msgstr "Klarskriv uppgift"
 
 #: taskcoachlib\command\taskCommands.py:229
 msgid "Mark \"%s\" completed"
-msgstr "Markera \"%s\" som färdig"
+msgstr "Klarskriv \"%s\""
 
 #: taskcoachlib\command\taskCommands.py:244
 msgid "Edit task dates"
-msgstr "Redigera aktivitetens datum"
+msgstr "Redigera uppgiftens tider"
 
 #: taskcoachlib\command\taskCommands.py:245
 msgid "Edit \"%s\" dates"
-msgstr "Redigera \"%s\" datum"
+msgstr "Redigera \"%s\" tider"
 
 #: taskcoachlib\command\taskCommands.py:265
-msgid "Start tracking"
-msgstr "Påbörja spåring"
+msgid "Edit start date and time"
+msgstr "Redigera starttidpunkt"
 
 #: taskcoachlib\command\taskCommands.py:266
+msgid "Edit \"%s\" start dates and time"
+msgstr "Redigera \"%s\" starttidpunkt"
+
+#: taskcoachlib\command\taskCommands.py:279
+msgid "Start tracking"
+msgstr "Starta tidtagning"
+
+#: taskcoachlib\command\taskCommands.py:280
 msgid "Start tracking \"%s\""
-msgstr "Starta tidtagning \"%s\""
+msgstr "Starta tidtagning för \"%s\""
 
-#: taskcoachlib\command\taskCommands.py:300
+#: taskcoachlib\command\taskCommands.py:314
 msgid "Stop tracking"
-msgstr "Stoppa spåring"
+msgstr "Avbryt tidtagning"
 
-#: taskcoachlib\command\taskCommands.py:301
+#: taskcoachlib\command\taskCommands.py:315
 msgid "Stop tracking \"%s\""
-msgstr "Stoppa tidtagning \"%s\""
+msgstr "Avbryt tidtagning för \"%s\""
 
-#: taskcoachlib\command\taskCommands.py:344
+#: taskcoachlib\command\taskCommands.py:358
 msgid "Maximize priority"
-msgstr "Maximera prioritet"
+msgstr "Sätt högsta prioritet"
 
-#: taskcoachlib\command\taskCommands.py:345
+#: taskcoachlib\command\taskCommands.py:359
 msgid "Maximize priority of \"%s\""
-msgstr "Höj prioritet till \"%s\""
+msgstr ""
 
-#: taskcoachlib\command\taskCommands.py:354
+#: taskcoachlib\command\taskCommands.py:368
 msgid "Minimize priority"
-msgstr "Minimera prioritet"
+msgstr "Sätt lägsta prioritet"
 
-#: taskcoachlib\command\taskCommands.py:355
+#: taskcoachlib\command\taskCommands.py:369
 msgid "Minimize priority of \"%s\""
-msgstr "Sänk prioritet till \"%s\""
+msgstr "Sätt lägsta prioritet för \"%s\""
 
-#: taskcoachlib\command\taskCommands.py:384
+#: taskcoachlib\command\taskCommands.py:398
 msgid "Increase priority"
-msgstr "Öka prioritet"
+msgstr "Höj prioritet"
 
-#: taskcoachlib\command\taskCommands.py:385
+#: taskcoachlib\command\taskCommands.py:399
 msgid "Increase priority of \"%s\""
 msgstr "Höj prioriteten för \"%s\""
 
-#: taskcoachlib\command\taskCommands.py:391
+#: taskcoachlib\command\taskCommands.py:405
 msgid "Decrease priority"
-msgstr "Minska prioritet"
+msgstr "Sänk prioritet"
 
-#: taskcoachlib\command\taskCommands.py:392
+#: taskcoachlib\command\taskCommands.py:406
 msgid "Decrease priority of \"%s\""
-msgstr "Sänk prioritet på \"%s\""
+msgstr "Sänk prioriteten för \"%s\""
 
-#: taskcoachlib\command\taskCommands.py:416
+#: taskcoachlib\command\taskCommands.py:430
 msgid "Change budgets"
 msgstr "Ändra budget"
 
-#: taskcoachlib\command\taskCommands.py:417
+#: taskcoachlib\command\taskCommands.py:431
 msgid "Change budget of \"%s\""
 msgstr "Ändra budgeten för \"%s\""
 
@@ -376,40 +384,39 @@ msgstr "Felmeddelandet är %s."
 msgid ""
 "%s will use the default value for the setting and should proceed normally."
 msgstr ""
-"%s kommer att använda standard värde för att standard värdet skall kunna "
-"genomföras utan fel."
+"%s kommer att använda standardinställningen och bör fortsätta normalt."
 
 #: taskcoachlib\config\settings.py:203
 msgid "Settings error"
-msgstr "Inställnings fel"
+msgstr "Fel inställning"
 
 #: taskcoachlib\config\settings.py:223
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
 msgstr ""
-"Fel vid sparandet av %s.ini:\n"
+"Fel när %s.ini sparades:\n"
 "%s\n"
 
 #: taskcoachlib\config\settings.py:224
 msgid "Save error"
-msgstr "Sparfel"
+msgstr "Kunde inte spara"
 
 #: taskcoachlib\domain\attachment\attachmentlist.py:24
 msgid "New attachment..."
-msgstr "Ny bilaga..."
+msgstr "Ny bifogad fil..."
 
 #: taskcoachlib\domain\attachment\attachmentlist.py:25
 msgid "Insert a new attachment"
-msgstr "Lägg till en ny bilaga"
+msgstr "Lägg till en ny bifogad fil"
 
 #: taskcoachlib\domain\attachment\attachmentlist.py:26
 msgid "Open attachment"
-msgstr "Öppna bilaga"
+msgstr "Öppna bifogad fil"
 
 #: taskcoachlib\domain\attachment\attachmentlist.py:27
 msgid "Open the selected attachments"
-msgstr "Öppna valda bilagor"
+msgstr "Öppna markerad bifogad fil(er)"
 
 #: taskcoachlib\domain\date\snooze.py:22
 msgid "5 minutes"
@@ -417,7 +424,7 @@ msgstr "5 minuter"
 
 #: taskcoachlib\domain\date\snooze.py:22
 msgid "Don't snooze"
-msgstr "Senarelägg inte"
+msgstr "Slumra inte"
 
 #: taskcoachlib\domain\date\snooze.py:23
 msgid "10 minutes"
@@ -521,11 +528,11 @@ msgstr "Pil ner med status"
 
 #: taskcoachlib\gui\artprovider.py:96
 msgid "Blue arrows looped"
-msgstr ""
+msgstr "Blå rotationspil"
 
 #: taskcoachlib\gui\artprovider.py:97
 msgid "Green arrows looped"
-msgstr ""
+msgstr "Grön rotationspil"
 
 #: taskcoachlib\gui\artprovider.py:98
 msgid "Arrow up"
@@ -541,15 +548,15 @@ msgstr "Bomb"
 
 #: taskcoachlib\gui\artprovider.py:101
 msgid "Book"
-msgstr "Reservera"
+msgstr "Bok"
 
 #: taskcoachlib\gui\artprovider.py:102
 msgid "Books"
-msgstr "Reservationer"
+msgstr "Böcker"
 
 #: taskcoachlib\gui\artprovider.py:103
 msgid "Box"
-msgstr "Ruta"
+msgstr "Låda"
 
 #: taskcoachlib\gui\artprovider.py:104
 msgid "Ladybug"
@@ -561,11 +568,11 @@ msgstr "Kaka"
 
 #: taskcoachlib\gui\artprovider.py:106
 msgid "Calculator"
-msgstr "Kalkylator"
+msgstr "Miniräknare"
 
 #: taskcoachlib\gui\artprovider.py:107 taskcoachlib\gui\viewer\task.py:483
 msgid "Calendar"
-msgstr "Kalender"
+msgstr "Almanacka"
 
 #: taskcoachlib\gui\artprovider.py:108
 msgid "Cat"
@@ -577,11 +584,11 @@ msgstr "CD-skiva (CD)"
 
 #: taskcoachlib\gui\artprovider.py:110
 msgid "Chatting"
-msgstr "Chatta"
+msgstr "Chatbubblor"
 
 #: taskcoachlib\gui\artprovider.py:111
 msgid "Check mark"
-msgstr "Markering"
+msgstr "Bock"
 
 #: taskcoachlib\gui\artprovider.py:112
 msgid "Clock"
@@ -589,7 +596,7 @@ msgstr "Klocka"
 
 #: taskcoachlib\gui\artprovider.py:113
 msgid "Alarm clock"
-msgstr "Alarmklocka"
+msgstr "Väckarklocka"
 
 #: taskcoachlib\gui\artprovider.py:114
 msgid "Stopwatch"
@@ -629,11 +636,11 @@ msgstr "Dokument"
 
 #: taskcoachlib\gui\artprovider.py:123
 msgid "Blue earth"
-msgstr "Blå jord"
+msgstr "Blå jordglob"
 
 #: taskcoachlib\gui\artprovider.py:124
 msgid "Green earth"
-msgstr "Grön jord"
+msgstr "Grön jordglob"
 
 #: taskcoachlib\gui\artprovider.py:125
 msgid "Envelope"
@@ -673,7 +680,7 @@ msgstr "Gul mapp"
 
 #: taskcoachlib\gui\artprovider.py:134
 msgid "Blue folder with arrow"
-msgstr "Blå kuvert med pil"
+msgstr "Blå mapp med pil"
 
 #: taskcoachlib\gui\artprovider.py:135
 msgid "Heart"
@@ -794,11 +801,11 @@ msgstr "Person"
 
 #: taskcoachlib\gui\artprovider.py:164
 msgid "People"
-msgstr "Folk"
+msgstr "Personer"
 
 #: taskcoachlib\gui\artprovider.py:165
 msgid "Identification"
-msgstr "Identifikation"
+msgstr "ID-kort"
 
 #: taskcoachlib\gui\artprovider.py:166
 msgid "Person talking"
@@ -842,7 +849,7 @@ msgstr "Paraply"
 
 #: taskcoachlib\gui\artprovider.py:176
 msgid "Partly sunny"
-msgstr "Delvis soligt"
+msgstr "Halvklart"
 
 #: taskcoachlib\gui\artprovider.py:177
 msgid "Wrench"
@@ -866,7 +873,7 @@ msgstr "Beskrivning"
 
 #: taskcoachlib\gui\dialog\editor.py:87
 msgid "Edit to change all subjects"
-msgstr "Redigera alla kategorier"
+msgstr "Redigera alla ämnen"
 
 #: taskcoachlib\gui\dialog\editor.py:89
 #: taskcoachlib\gui\dialog\templates.py:114
@@ -881,9 +888,9 @@ msgstr "Ämne"
 
 #: taskcoachlib\gui\dialog\editor.py:94
 msgid "Edit to change all descriptions"
-msgstr "Rediggera alla beskrivningar"
+msgstr "Redigera alla beskrivningar"
 
-#: taskcoachlib\gui\dialog\editor.py:130 taskcoachlib\gui\uicommand.py:2391
+#: taskcoachlib\gui\dialog\editor.py:130 taskcoachlib\gui\uicommand.py:2392
 #: taskcoachlib\gui\viewer\task.py:763
 #: taskcoachlib\gui\wizard\csvimport.py:217
 #: taskcoachlib\persistence\csv\reader.py:80
@@ -901,7 +908,7 @@ msgstr "Underkategorier"
 
 #: taskcoachlib\gui\dialog\editor.py:189
 msgid "Edit to change location of all attachments"
-msgstr "Redigera för att ändra sökvägar för alla bifogade filer"
+msgstr "Ändra sökväg för alla bifogade filer"
 
 #: taskcoachlib\gui\dialog\editor.py:193
 msgid "Browse"
@@ -909,12 +916,12 @@ msgstr "Bläddra"
 
 #: taskcoachlib\gui\dialog\editor.py:197
 msgid "Location"
-msgstr "Plats"
+msgstr "Sökväg"
 
 #: taskcoachlib\gui\dialog\editor.py:224
 #: taskcoachlib\gui\dialog\preferences.py:346
 msgid "Appearance"
-msgstr "Uppträdande"
+msgstr "Visning"
 
 #: taskcoachlib\gui\dialog\editor.py:238
 #: taskcoachlib\gui\dialog\preferences.py:101
@@ -956,7 +963,7 @@ msgstr "Datum"
 #: taskcoachlib\widgets\calendarconfig.py:79
 #: taskcoachlib\widgets\conflict.py:200
 msgid "Start date"
-msgstr "Startdatum"
+msgstr "Starttidpunkt"
 
 #: taskcoachlib\gui\dialog\editor.py:368
 #: taskcoachlib\gui\dialog\templates.py:118
@@ -966,7 +973,7 @@ msgstr "Startdatum"
 #: taskcoachlib\widgets\calendarconfig.py:80
 #: taskcoachlib\widgets\conflict.py:205
 msgid "Due date"
-msgstr "Förfallodatum"
+msgstr "Deadline"
 
 #: taskcoachlib\gui\dialog\editor.py:369
 #: taskcoachlib\gui\dialog\templates.py:120
@@ -975,7 +982,7 @@ msgstr "Förfallodatum"
 #: taskcoachlib\persistence\csv\reader.py:99
 #: taskcoachlib\widgets\conflict.py:210
 msgid "Completion date"
-msgstr "Färdigdatum"
+msgstr "Klarskriven"
 
 #: taskcoachlib\gui\dialog\editor.py:393
 #: taskcoachlib\gui\dialog\reminder.py:29
@@ -992,11 +999,11 @@ msgstr "Ingen"
 
 #: taskcoachlib\gui\dialog\editor.py:408 taskcoachlib\gui\render.py:70
 msgid "Daily"
-msgstr "Dagligen"
+msgstr "Varje dag"
 
 #: taskcoachlib\gui\dialog\editor.py:408 taskcoachlib\gui\render.py:70
 msgid "Monthly"
-msgstr "Månadsvis"
+msgstr "Varje månad"
 
 #: taskcoachlib\gui\dialog\editor.py:408 taskcoachlib\gui\render.py:70
 msgid "Weekly"
@@ -1004,7 +1011,7 @@ msgstr "Varje vecka"
 
 #: taskcoachlib\gui\dialog\editor.py:408 taskcoachlib\gui\render.py:70
 msgid "Yearly"
-msgstr "Årligen"
+msgstr "Varje år"
 
 #: taskcoachlib\gui\dialog\editor.py:412
 msgid ", every"
@@ -1012,17 +1019,17 @@ msgstr ", varje"
 
 #: taskcoachlib\gui\dialog\editor.py:425
 msgid "keeping dates on the same weekday"
-msgstr "bibehåll datum på samma veckodag"
+msgstr "välj datum på samma veckodag"
 
 #: taskcoachlib\gui\dialog\editor.py:442 taskcoachlib\gui\viewer\task.py:759
 msgid "Recurrence"
-msgstr "Upprepning"
+msgstr "Återkommande"
 
 #: taskcoachlib\gui\dialog\editor.py:450
 msgid ""
 "Maximum number\n"
 "of recurrences"
-msgstr "Maximala antalet upprepningar"
+msgstr "Antal tillfällen"
 
 #: taskcoachlib\gui\dialog\editor.py:585
 msgid "day(s),"
@@ -1046,11 +1053,11 @@ msgstr "år,"
 
 #: taskcoachlib\gui\dialog\editor.py:614
 msgid "Progress"
-msgstr "Förlopp"
+msgstr "Progress"
 
 #: taskcoachlib\gui\dialog\editor.py:627
 msgid "Percentage complete"
-msgstr "Andel slutfört"
+msgstr "Progress"
 
 #: taskcoachlib\gui\dialog\editor.py:635
 msgid "Use application-wide setting"
@@ -1066,41 +1073,41 @@ msgstr "Ja"
 
 #: taskcoachlib\gui\dialog\editor.py:643
 msgid "Mark task completed when all children are completed?"
-msgstr "Markera uppgift som klar när underuppgifter är klara?"
+msgstr "Klarskriv uppgift när deluppgifter är klara?"
 
 #: taskcoachlib\gui\dialog\editor.py:673 taskcoachlib\gui\dialog\editor.py:691
-#: taskcoachlib\gui\uicommand.py:2391 taskcoachlib\gui\viewer\task.py:760
+#: taskcoachlib\gui\uicommand.py:2392 taskcoachlib\gui\viewer\task.py:760
 #: taskcoachlib\gui\wizard\csvimport.py:221
 #: taskcoachlib\persistence\csv\reader.py:106
 msgid "Budget"
-msgstr "Budget"
+msgstr "Planerad tidsåtgång"
 
-#: taskcoachlib\gui\dialog\editor.py:697 taskcoachlib\gui\uicommand.py:2391
+#: taskcoachlib\gui\dialog\editor.py:697 taskcoachlib\gui\uicommand.py:2392
 #: taskcoachlib\gui\viewer\effort.py:176 taskcoachlib\gui\viewer\task.py:761
 msgid "Time spent"
-msgstr "Spenderad tid"
+msgstr "Förbrukad tid"
 
 #: taskcoachlib\gui\dialog\editor.py:702 taskcoachlib\gui\viewer\task.py:762
 msgid "Budget left"
-msgstr "Kvarvarande budget"
+msgstr "Återstående tid"
 
 #: taskcoachlib\gui\dialog\editor.py:714 taskcoachlib\gui\viewer\task.py:764
 #: taskcoachlib\gui\wizard\csvimport.py:223
 #: taskcoachlib\persistence\csv\reader.py:125
 msgid "Hourly fee"
-msgstr "Timavgift"
+msgstr "Timpris"
 
-#: taskcoachlib\gui\dialog\editor.py:721 taskcoachlib\gui\uicommand.py:2391
+#: taskcoachlib\gui\dialog\editor.py:721 taskcoachlib\gui\uicommand.py:2392
 #: taskcoachlib\gui\viewer\task.py:765
 #: taskcoachlib\gui\wizard\csvimport.py:222
 #: taskcoachlib\persistence\csv\reader.py:120
 msgid "Fixed fee"
-msgstr "Fast avgift"
+msgstr "Fast pris"
 
-#: taskcoachlib\gui\dialog\editor.py:727 taskcoachlib\gui\uicommand.py:2391
+#: taskcoachlib\gui\dialog\editor.py:727 taskcoachlib\gui\uicommand.py:2392
 #: taskcoachlib\gui\viewer\effort.py:180 taskcoachlib\gui\viewer\task.py:766
 msgid "Revenue"
-msgstr "Inkomster"
+msgstr "Inkomst"
 
 #: taskcoachlib\gui\dialog\editor.py:781 taskcoachlib\gui\viewer\effort.py:36
 #: taskcoachlib\help\__init__.py:75 taskcoachlib\help\__init__.py:207
@@ -1128,13 +1135,13 @@ msgstr "Anteckningar"
 
 #: taskcoachlib\gui\dialog\editor.py:918 taskcoachlib\gui\viewer\task.py:735
 msgid "Prerequisites"
-msgstr "Förutsättningar"
+msgstr "Beroenden"
 
 #: taskcoachlib\gui\dialog\editor.py:1128
 #: taskcoachlib\gui\dialog\reminder.py:51
 #: taskcoachlib\gui\viewer\effort.py:166
 msgid "Task"
-msgstr "Aktivitet"
+msgstr "Uppgift"
 
 #: taskcoachlib\gui\dialog\editor.py:1130
 msgid "Edit task"
@@ -1142,15 +1149,15 @@ msgstr "Redigera uppgift"
 
 #: taskcoachlib\gui\dialog\editor.py:1147
 msgid "Start"
-msgstr "Start"
+msgstr "Starta"
 
 #: taskcoachlib\gui\dialog\editor.py:1149
 msgid "Start tracking from last stop time"
-msgstr "Starta tidsmätning från senaste stopptid"
+msgstr "Starta tidtagning från senaste stopptid"
 
 #: taskcoachlib\gui\dialog\editor.py:1158
 msgid "Stop"
-msgstr "Stopp"
+msgstr "Avbryt"
 
 #: taskcoachlib\gui\dialog\export.py:67
 msgid "Export only the selected items"
@@ -1178,6 +1185,9 @@ msgid ""
 "This allows you to change the style information without losing your changes "
 "on the next export."
 msgstr ""
+"Om den exporterade filen har en CSS-fil kommer den inte att skrivas över av "
+"%(name)s. Du kan alltså redigera format utan att ändringarna förloras nästa "
+"gång du exporterar."
 
 #: taskcoachlib\gui\dialog\iphone.py:32
 msgid ""
@@ -1186,14 +1196,18 @@ msgid ""
 "the first time. What kind of synchronization\n"
 "would you like to use?"
 msgstr ""
+"En iPhone eller en iPodTouch försöker\n"
+"synkronisera uppgiftsfilen för första\n"
+"gången. Vilken typ av synkronisering\n"
+"ska göras?"
 
 #: taskcoachlib\gui\dialog\iphone.py:38
 msgid "Refresh from desktop"
-msgstr "Uppdatera från skrivbordet"
+msgstr "Uppdatera från PC"
 
 #: taskcoachlib\gui\dialog\iphone.py:41
 msgid "Refresh from device"
-msgstr "Uppdatera från utrustning"
+msgstr "Uppdatera från enhet"
 
 #: taskcoachlib\gui\dialog\iphone.py:44 taskcoachlib\widgets\buttonbox.py:24
 #: taskcoachlib\widgets\dialog.py:60
@@ -1206,13 +1220,13 @@ msgid ""
 "needs Bonjour. Bonjour does not seem to be installed on\n"
 "your system."
 msgstr ""
-"Du har aktiverat iPhonesynkroniserings-funktionen,\n"
-"som behöver Bonjour. Bonjour verkar inte vara\n"
+"Du har aktiverat iPhonesynkronisering som\n"
+"behöver Bonjour. Bonjour verkar inte vara\n"
 "installerat i ditt system."
 
 #: taskcoachlib\gui\dialog\iphone.py:79
 msgid "Please download and install Bonjour for Windows from\n"
-msgstr "Vänligen ladda ner och installera Bonjour för Windows från\n"
+msgstr "Ladda ner och installera Bonjour för Windows från\n"
 
 #: taskcoachlib\gui\dialog\iphone.py:81
 msgid "Apple's web site"
@@ -1228,7 +1242,7 @@ msgstr ""
 
 #: taskcoachlib\gui\dialog\iphone.py:89
 msgid "You may find details for your distribution here"
-msgstr "Du kan hitta information för din distibution här"
+msgstr "Här hittar du information om din distibution"
 
 #: taskcoachlib\gui\dialog\iphone.py:92
 msgid ""
@@ -1244,7 +1258,7 @@ msgstr ""
 msgid ""
 "In addition, if you have a firewall, check that ports 4096-4100 are open."
 msgstr ""
-"Dessutom, om du har en brandvägg aktiv, kontrollera\r\n"
+"Om du har en brandvägg kontrollera även\r\n"
 "att portarna 4096-4100 är öppna."
 
 #: taskcoachlib\gui\dialog\iphone.py:98 taskcoachlib\gui\iphone.py:44
@@ -1261,7 +1275,7 @@ msgid ""
 "after you restart %s"
 msgstr ""
 "Inställningarna kommer att fungera\n"
-"när du startar om %s"
+"när du startat om %s"
 
 #: taskcoachlib\gui\dialog\preferences.py:214
 msgid "Files"
@@ -1292,22 +1306,24 @@ msgid ""
 "(For running %s\n"
 "from a removable medium)"
 msgstr ""
-"(För att köra %s\n"
-"från ett mobilt media)"
+"(För att kunna köra %s\n"
+"från ett flyttbart lagringsmedium)"
 
 #: taskcoachlib\gui\dialog\preferences.py:227
 msgid "Attachment base directory"
-msgstr "Infogade filers huvudkatalog"
+msgstr "Huvudkatalog för bifogade filer"
 
 #: taskcoachlib\gui\dialog\preferences.py:228
 msgid ""
 "When adding an attachment, try to make\n"
 "its path relative to this one."
-msgstr "Vid tillagd bifogad fil, försök att göra denna sökväg relativ"
+msgstr ""
+"Försök att utgå från den här katalogen\n"
+"när du lägger till en bifogad fil."
 
 #: taskcoachlib\gui\dialog\preferences.py:234
 msgid "Window behavior"
-msgstr "Fönsterbeteende"
+msgstr "Fönsterhantering"
 
 #: taskcoachlib\gui\dialog\preferences.py:240
 msgid "Show splash screen on startup"
@@ -1335,11 +1351,11 @@ msgstr "om det senast var minimerat vid förra sessionen"
 
 #: taskcoachlib\gui\dialog\preferences.py:249
 msgid "Check for new version of %(name)s on startup"
-msgstr "Kolla efter ny version av %(name)s vid uppstart"
+msgstr "Sök efter ny version av %(name)s vid uppstart"
 
 #: taskcoachlib\gui\dialog\preferences.py:251
 msgid "Hide main window when iconized"
-msgstr "Göm huvudfönstret vid minimering"
+msgstr "Dölj huvudfönstret vid minimering"
 
 #: taskcoachlib\gui\dialog\preferences.py:253
 msgid "Minimize main window when closed"
@@ -1347,7 +1363,9 @@ msgstr "Minimera huvudfönstret vid stängning"
 
 #: taskcoachlib\gui\dialog\preferences.py:255
 msgid "Make clock in the task bar tick when tracking effort"
-msgstr "Gör så att klockan i aktivitetsfältet tickar."
+msgstr ""
+"Gör så att klockan i aktivitetsfältet tickar\r\n"
+"vid tidtagning."
 
 #: taskcoachlib\gui\dialog\preferences.py:257
 msgid ""
@@ -1371,7 +1389,7 @@ msgid ""
 "If your language is not available, or the translation needs \n"
 "improving, please consider helping. See:"
 msgstr ""
-"Om ditt språk inte finns, eller översättningen behöver\n"
+"Om ditt språk saknas, eller översättningen behöver\n"
 "förbättras, kan du bidra. Se:"
 
 #: taskcoachlib\gui\dialog\preferences.py:336
@@ -1384,11 +1402,11 @@ msgstr "Aktiva uppgifter"
 
 #: taskcoachlib\gui\dialog\preferences.py:354
 msgid "Inactive tasks"
-msgstr "Inaktiva jobb"
+msgstr "Inaktiva uppgifter"
 
 #: taskcoachlib\gui\dialog\preferences.py:355
 msgid "Completed tasks"
-msgstr "Slutförda uppgifter"
+msgstr "Klara uppgifter"
 
 #: taskcoachlib\gui\dialog\preferences.py:356
 msgid "Overdue tasks"
@@ -1396,7 +1414,7 @@ msgstr "Försenade uppgifter"
 
 #: taskcoachlib\gui\dialog\preferences.py:357
 msgid "Tasks due soon"
-msgstr "Uppgifter som snart är försenade"
+msgstr "Uppgifter på gång"
 
 #: taskcoachlib\gui\dialog\preferences.py:368
 msgid "Features"
@@ -1404,35 +1422,35 @@ msgstr "Funktioner"
 
 #: taskcoachlib\gui\dialog\preferences.py:374
 msgid "Allow for tracking effort"
-msgstr ""
+msgstr "Aktivera tidtagning"
 
 #: taskcoachlib\gui\dialog\preferences.py:375
 msgid "Allow for taking notes"
-msgstr ""
+msgstr "Aktivera anteckningar"
 
 #: taskcoachlib\gui\dialog\preferences.py:382
 msgid "Notification system"
-msgstr ""
+msgstr "Metod för påminnelser"
 
 #: taskcoachlib\gui\dialog\preferences.py:383
 msgid "Notification system to use for reminders (Growl, Snarl, etc)"
-msgstr ""
+msgstr "Vilket system ska användas för påminnelser (Growl, Snarl etc)?"
 
 #: taskcoachlib\gui\dialog\preferences.py:390
 msgid "Enable SyncML"
-msgstr ""
+msgstr "Aktivera SyncML"
 
 #: taskcoachlib\gui\dialog\preferences.py:392
 msgid "Enable iPhone synchronization"
-msgstr ""
+msgstr "Aktivera iPhone-synkronisering"
 
 #: taskcoachlib\gui\dialog\preferences.py:395
 msgid "Hour of start of work day"
-msgstr "Timme som arbetsdagen startar"
+msgstr "Klockslag när arbetsdagen startar"
 
 #: taskcoachlib\gui\dialog\preferences.py:397
 msgid "Hour of end of work day"
-msgstr "Timme som arbetsdagen slutar"
+msgstr "Klockslag när arbetsdagen slutar"
 
 #: taskcoachlib\gui\dialog\preferences.py:399
 msgid ""
@@ -1442,67 +1460,67 @@ msgstr ""
 
 #: taskcoachlib\gui\dialog\preferences.py:402
 msgid "Minutes between task start/end times"
-msgstr ""
+msgstr "Uppgiftens varaktighet (min)"
 
 #: taskcoachlib\gui\dialog\preferences.py:410
 msgid "Task behavior"
-msgstr "Aktivitetsbeteende"
+msgstr "Uppgiftshantering"
 
 #: taskcoachlib\gui\dialog\preferences.py:416
 msgid "Mark parent task completed when all children are completed"
-msgstr ""
+msgstr "Klarskriv överordnad uppgift när alla underuppgifter är klara"
 
 #: taskcoachlib\gui\dialog\preferences.py:418
 msgid "Number of hours that tasks are considered to be 'due soon'"
-msgstr ""
+msgstr "Återstående tid (tim) för att uppgiften ska vara \"på gång\""
 
 #: taskcoachlib\gui\dialog\preferences.py:420
 msgid "Nothing"
-msgstr ""
+msgstr "Inget"
 
 #: taskcoachlib\gui\dialog\preferences.py:421
 msgid "Changing the start date changes the due date"
-msgstr ""
+msgstr "Vid ändring av Starttid ändras även Deadline"
 
 #: taskcoachlib\gui\dialog\preferences.py:422
 msgid "Changing the due date changes the start date"
-msgstr ""
+msgstr "Vid ändring av Deadline ändras även Starttid"
 
 #: taskcoachlib\gui\dialog\preferences.py:423
 msgid "Dates behavior"
-msgstr ""
+msgstr "Tidsuppdatering"
 
 #: taskcoachlib\gui\dialog\preferences.py:424
 msgid "What to do with start and due date if the other one is changed"
-msgstr ""
+msgstr "Automatisk uppdatering av Starttid alt Deadline"
 
 #: taskcoachlib\gui\dialog\preferences.py:426
 msgid "Snooze times to offer in task reminder dialog"
-msgstr ""
+msgstr "Tillgängliga slummertider i dialogrutan Påminnelse"
 
 #: taskcoachlib\gui\dialog\preferences.py:433
 msgid "iPhone"
-msgstr ""
+msgstr "iPhone"
 
 #: taskcoachlib\gui\dialog\preferences.py:439
 msgid "Password for synchronization with iPhone"
-msgstr ""
+msgstr "Lösenord för synkronisering med iPhone"
 
 #: taskcoachlib\gui\dialog\preferences.py:441
 msgid "Bonjour service name"
-msgstr ""
+msgstr "Namn i Bonjour"
 
 #: taskcoachlib\gui\dialog\preferences.py:443
 msgid "Upload completed tasks to device"
-msgstr ""
+msgstr "Ladda upp klara uppgifter till enhet"
 
 #: taskcoachlib\gui\dialog\preferences.py:445
 msgid "Show sync log"
-msgstr ""
+msgstr "Visa synk logg"
 
 #: taskcoachlib\gui\dialog\preferences.py:445
 msgid "Show the synchronization log"
-msgstr ""
+msgstr "Visa synkroniseringsloggen"
 
 #: taskcoachlib\gui\dialog\preferences.py:451
 msgid "Editor"
@@ -1522,11 +1540,11 @@ msgstr "Slumra"
 
 #: taskcoachlib\gui\dialog\reminder.py:73
 msgid "Mark task completed"
-msgstr ""
+msgstr "Klarskriv uppgift"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:80
 msgid "SyncML server URL"
-msgstr ""
+msgstr "Server-URL för SyncML"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:81
 msgid "User name/ID"
@@ -1534,21 +1552,21 @@ msgstr "Användarnamn/ID"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:90
 msgid "Enable tasks synchronization"
-msgstr ""
+msgstr "Aktivera synkronisering av uppgifter"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:91
 msgid "Tasks database name"
-msgstr ""
+msgstr "Uppgiftsdatabasens namn"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:93
 #: taskcoachlib\gui\dialog\syncpreferences.py:111
 msgid "Preferred synchonization mode"
-msgstr ""
+msgstr "Synkmetod"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:94
 #: taskcoachlib\gui\dialog\syncpreferences.py:112
 msgid "Two way"
-msgstr ""
+msgstr "Dubbelriktad"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:95
 #: taskcoachlib\gui\dialog\syncpreferences.py:113
@@ -1558,54 +1576,54 @@ msgstr "Långsam"
 #: taskcoachlib\gui\dialog\syncpreferences.py:96
 #: taskcoachlib\gui\dialog\syncpreferences.py:114
 msgid "One way from client"
-msgstr ""
+msgstr "Enkelriktad från klient"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:97
 #: taskcoachlib\gui\dialog\syncpreferences.py:115
 msgid "Refresh from client"
-msgstr ""
+msgstr "Förändringar från klient"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:98
 #: taskcoachlib\gui\dialog\syncpreferences.py:116
 msgid "One way from server"
-msgstr ""
+msgstr "Enkelriktad från server"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:99
 #: taskcoachlib\gui\dialog\syncpreferences.py:117
 #: taskcoachlib\syncml\basesource.py:61 taskcoachlib\syncml\basesource.py:73
 msgid "Refresh from server"
-msgstr ""
+msgstr "Förändringar från server"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:108
 msgid "Enable notes synchronization"
-msgstr ""
+msgstr "Aktivera synkronisering av anteckningar"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:109
 msgid "Notes database name"
-msgstr ""
+msgstr "Anteckningsdatabasens namn"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:132
 msgid "Access"
-msgstr ""
+msgstr "Access"
 
 #: taskcoachlib\gui\dialog\syncpreferences.py:133
 #: taskcoachlib\gui\viewer\task.py:56 taskcoachlib\help\__init__.py:68
 #: taskcoachlib\help\__init__.py:129
 #: taskcoachlib\widgets\calendarconfig.py:107
 msgid "Tasks"
-msgstr ""
+msgstr "Uppgifter"
 
 #: taskcoachlib\gui\dialog\templates.py:68
 msgid "Template"
-msgstr ""
+msgstr "Mall"
 
 #: taskcoachlib\gui\dialog\templates.py:224
 msgid "New task template"
-msgstr ""
+msgstr "Ny uppgiftsmall"
 
 #: taskcoachlib\gui\dialog\version.py:37
 msgid "Notify me of new versions."
-msgstr "Notifiera mig om nya versioner."
+msgstr "Informera mig om nya versioner."
 
 #: taskcoachlib\gui\dialog\version.py:51
 msgid "New version of %(name)s available"
@@ -1613,56 +1631,57 @@ msgstr "Ny version av %(name)s är tillgänglig"
 
 #: taskcoachlib\gui\dialog\version.py:54
 msgid "You are using %(name)s version %(currentVersion)s."
-msgstr ""
+msgstr "Du kör %(name)s version %(currentVersion)s"
 
 #: taskcoachlib\gui\dialog\version.py:57
 msgid "Version %(version)s of %(name)s is available from"
-msgstr "Version %(version)s av %(name)s är tillgänglig från"
+msgstr "Version %(version)s av %(name)s kan hämtas från"
 
 #: taskcoachlib\gui\dialog\version.py:62
 msgid "%(name)s is up to date"
-msgstr ""
+msgstr "Du kör senaste versionen av %(name)s"
 
 #: taskcoachlib\gui\dialog\version.py:65
 msgid "%(name)s is up to date at version %(version)s."
-msgstr ""
+msgstr "Du kör senaste versionen av %(name)s, %(version)s."
 
 #: taskcoachlib\gui\dialog\version.py:69
 msgid "Couldn't find out latest version"
-msgstr ""
+msgstr "Hittade inte senaste version"
 
 #: taskcoachlib\gui\dialog\version.py:72
 msgid "Couldn't find out what the latest version of %(name)s is."
-msgstr ""
+msgstr "Hittade inte senaste version av %(name)s."
 
 #: taskcoachlib\gui\dialog\version.py:77
 msgid "Prerelease version"
-msgstr ""
+msgstr "Betaversion"
 
 #: taskcoachlib\gui\dialog\version.py:80
 msgid "You are using %(name)s prerelease version %(currentVersion)s."
-msgstr ""
+msgstr "Du kör betaversion av %(name)s, %(currentVersion)s."
 
 #: taskcoachlib\gui\dialog\version.py:81
 msgid "The latest released version of %(name)s is %(version)s."
-msgstr ""
+msgstr "Den senaste versionan av %(name)s är %(version)s."
 
 #: taskcoachlib\gui\iocontroller.py:47
 msgid ""
 "%s files (*.tsk)|*.tsk|Backup files (*.tsk.bak)|*.tsk.bak|All files (*.*)|*"
 msgstr ""
+"%s filer (*.tsk)|*.tsk|Backupfiler (*.tsk.bak)|*.tsk.bak|Alla filer (*.*)|*"
 
 #: taskcoachlib\gui\iocontroller.py:50
 msgid "iCalendar files (*.ics)|*.ics|All files (*.*)|*"
-msgstr "iCalendar filer (*.ics)|*.ics|Alla filer (*.*)|*"
+msgstr "iCalendarfiler (*.ics)|*.ics|Alla filer (*.*)|*"
 
 #: taskcoachlib\gui\iocontroller.py:53
 msgid "HTML files (*.html)|*.html|All files (*.*)|*"
-msgstr "HTML filer (*.html)|*.html|Alla filer (*.*)|*"
+msgstr "HTML-filer (*.html)|*.html|Alla filer (*.*)|*"
 
 #: taskcoachlib\gui\iocontroller.py:56
 msgid "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*"
-msgstr "CSV filer (*.csv)|*.csv|Text filer (*.txt)|*.txt|Alla filer (*.*)|*"
+msgstr "CSV-filer (*.csv)|*.csv|Text filer (*.txt)|*.txt|Alla filer (*.*)|*"
 
 #: taskcoachlib\gui\iocontroller.py:95
 msgid "Open"
@@ -1674,6 +1693,9 @@ msgid ""
 "because it was created by a newer version of %(name)s.\n"
 "Please upgrade %(name)s."
 msgstr ""
+"Kan inte öppna %(filename)s\n"
+"eftersom den skapats av en nyare version av  %(name)s.\n"
+"Vänligen uppgradera %(name)s."
 
 #: taskcoachlib\gui\iocontroller.py:126 taskcoachlib\gui\iocontroller.py:161
 msgid "Error while reading %s:\n"
@@ -1685,7 +1707,7 @@ msgstr "Är du säker att det är en %s-fil?"
 
 #: taskcoachlib\gui\iocontroller.py:131
 msgid "Loaded %(nrtasks)d tasks from %(filename)s"
-msgstr ""
+msgstr "Lade till %(nrtasks)d från %(filename)s"
 
 #: taskcoachlib\gui\iocontroller.py:135
 msgid "Cannot open %s because it doesn't exist"
@@ -1700,76 +1722,88 @@ msgid ""
 "Cannot open %(filename)s\n"
 "because it is locked."
 msgstr ""
+"Kan inte öppna %(filename)s\n"
+"eftersom den låst."
 
 #: taskcoachlib\gui\iocontroller.py:166
 msgid "Merged %(filename)s"
-msgstr ""
+msgstr "Sammanfogad %(filename)s"
 
 #: taskcoachlib\gui\iocontroller.py:183
 msgid "Save as"
-msgstr ""
+msgstr "Spara som"
 
 #: taskcoachlib\gui\iocontroller.py:195
 msgid "Save selection"
-msgstr ""
+msgstr "Spara markerade"
 
 #: taskcoachlib\gui\iocontroller.py:227
 msgid ""
 "Cannot save %s\n"
 "It is locked by another instance of %s.\n"
 msgstr ""
+"Kan inte spara %s.\n"
+"Filen används av en annan %s-session.\n"
 
 #: taskcoachlib\gui\iocontroller.py:232
 msgid ""
 "Cannot save %s\n"
 "%s"
 msgstr ""
+"Kan inte spara %s\n"
+"%s"
 
 #: taskcoachlib\gui\iocontroller.py:242
 msgid "Import template"
-msgstr ""
+msgstr "Importera mall"
 
 #: taskcoachlib\gui\iocontroller.py:244
 msgid "%s template files (*.tsktmpl)|*.tsktmpl"
-msgstr ""
+msgstr "%s mallfiler (*.tsktmpl)|*.tsktmpl"
 
 #: taskcoachlib\gui\iocontroller.py:250
 msgid ""
 "Cannot import template %s\n"
 "%s"
 msgstr ""
+"Kan inte importera mall %s\n"
+"%s"
 
 #: taskcoachlib\gui\iocontroller.py:279
 msgid "Exported %(count)d items to %(filename)s"
-msgstr ""
+msgstr "Exporterade %(count)d objekt till %(filename)s"
 
 #: taskcoachlib\gui\iocontroller.py:314
 msgid "Finished synchronization"
-msgstr ""
+msgstr "Synkronisering klar"
 
 #: taskcoachlib\gui\iocontroller.py:321
 msgid "Note conflict"
-msgstr ""
+msgstr "Konflikt mellan anteckningar"
 
 #: taskcoachlib\gui\iocontroller.py:325
 msgid "Task conflict"
-msgstr ""
+msgstr "Konflikt mellan uppgifter"
 
 #: taskcoachlib\gui\iocontroller.py:337
 msgid "Synchronization status"
-msgstr ""
+msgstr "Synkroniseringsstatus"
 
 #: taskcoachlib\gui\iocontroller.py:345
 msgid ""
 "Cannot open %s\n"
 "%s"
 msgstr ""
+"Kan inte öppna %s\n"
+"%s"
 
 #: taskcoachlib\gui\iocontroller.py:380
 msgid ""
 "A file named %s already exists.\n"
 "Do you want to replace it?"
 msgstr ""
+"Det finns redan en fil som heter %s.\n"
+"Vill du ersätta den?"
 
 #: taskcoachlib\gui\iocontroller.py:392
 msgid ""
@@ -1794,10 +1828,18 @@ msgid ""
 "\n"
 "Break the lock?"
 msgstr ""
+"Kan inte öppna %s eftersom den används.\n"
+"\n"
+"Det betyder att filen antingen används av en annan\n"
+"session av TaskCoach, eller att en tidigare session\n"
+"av Task Coach har crashat. Om ingen annan session\n"
+"körs kan du lugnt tvinga igång filen.\n"
+"\n"
+"Tvinga igång filen?"
 
 #: taskcoachlib\gui\iocontroller.py:411 taskcoachlib\gui\iocontroller.py:418
 msgid "%s: file locked"
-msgstr ""
+msgstr "%s: fil låst"
 
 #: taskcoachlib\gui\iocontroller.py:416
 msgid ""
@@ -1805,18 +1847,21 @@ msgid ""
 "on the location of %s.\n"
 "Open %s unlocked?"
 msgstr ""
+"Kan inte låsa eftesom lås inte stöds av operativsystemet\n"
+"där %s lagras.\n"
+"Öppna %s utan lås?"
 
 #: taskcoachlib\gui\iocontroller.py:423
 msgid "Closed %s"
-msgstr "Stängd %s"
+msgstr "Stängde %s"
 
 #: taskcoachlib\gui\iocontroller.py:428
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
-msgstr ""
+msgstr "Sparade %(nrtasks)d uppgifter till %(filename)s"
 
 #: taskcoachlib\gui\iphone.py:32
 msgid "Synchronizing..."
-msgstr ""
+msgstr "Synkroniserar..."
 
 #: taskcoachlib\gui\iphone.py:54
 msgid "Synchronizing with %s..."
@@ -1824,19 +1869,19 @@ msgstr "Synkroniserar med %s..."
 
 #: taskcoachlib\gui\mainwindow.py:71 taskcoachlib\gui\uicommand.py:605
 msgid "Warning"
-msgstr ""
+msgstr "VARNING"
 
 #: taskcoachlib\gui\mainwindow.py:108
 msgid "Welcome to %(name)s version %(version)s"
-msgstr ""
+msgstr "Välkommen till %(name)s version %(version)s"
 
 #: taskcoachlib\gui\mainwindow.py:285
 msgid "iPhone/iPod"
-msgstr ""
+msgstr "iPhone/iPod"
 
 #: taskcoachlib\gui\mainwindow.py:294
 msgid "Synchronization type"
-msgstr ""
+msgstr "Synkmetod"
 
 #: taskcoachlib\gui\mainwindow.py:304
 msgid ""
@@ -1844,12 +1889,15 @@ msgid ""
 "task file, but the protocol negotiation failed. Please file a\n"
 "bug report."
 msgstr ""
+"En iPhone eller iPodTouch försökte synkronisera med den här\n"
+"uppgiftsfilen, men handskakningen misslyckades. Skicka gärna\n"
+"en felrapport."
 
 #: taskcoachlib\gui\mainwindow.py:307 taskcoachlib\iphone\protocol.py:481
 #: taskcoachlib\widgets\draganddrop.py:108
 #: taskcoachlib\widgets\draganddrop.py:110
 msgid "Error"
-msgstr ""
+msgstr "Fel"
 
 #: taskcoachlib\gui\menu.py:174
 msgid "&File"
@@ -1865,11 +1913,11 @@ msgstr "&Visa"
 
 #: taskcoachlib\gui\menu.py:179
 msgid "&New"
-msgstr ""
+msgstr "&Ny"
 
 #: taskcoachlib\gui\menu.py:180
 msgid "&Actions"
-msgstr ""
+msgstr "&Åtgärder"
 
 #: taskcoachlib\gui\menu.py:181
 msgid "&Help"
@@ -1881,23 +1929,23 @@ msgstr "&Exportera"
 
 #: taskcoachlib\gui\menu.py:314
 msgid "&Select"
-msgstr ""
+msgstr "&Välj"
 
 #: taskcoachlib\gui\menu.py:342
 msgid "&New viewer"
-msgstr ""
+msgstr "&Öppna vy"
 
 #: taskcoachlib\gui\menu.py:346
 msgid "&Activate next viewer\tCtrl+PgDn"
-msgstr ""
+msgstr "&Öppna nästa vy\tCtrl+PgDn"
 
 #: taskcoachlib\gui\menu.py:350
 msgid "Activate &previous viewer\tCtrl+PgUp"
-msgstr ""
+msgstr "Öppna &tidigare vy\tCtrl+PgUp"
 
 #: taskcoachlib\gui\menu.py:358 taskcoachlib\gui\menu.py:359
 msgid "&Filter"
-msgstr ""
+msgstr "&Filtrera"
 
 #: taskcoachlib\gui\menu.py:360 taskcoachlib\gui\menu.py:361
 msgid "&Sort"
@@ -1909,11 +1957,11 @@ msgstr "&Kolumner"
 
 #: taskcoachlib\gui\menu.py:365
 msgid "&Tree options"
-msgstr ""
+msgstr "&Trädstruktur"
 
 #: taskcoachlib\gui\menu.py:369
 msgid "T&oolbar"
-msgstr ""
+msgstr "&Verktygsfält"
 
 #: taskcoachlib\gui\menu.py:371
 msgid "Show/hide status bar"
@@ -1921,137 +1969,138 @@ msgstr "Visa/dölj statusfält"
 
 #: taskcoachlib\gui\menu.py:371
 msgid "Status&bar"
-msgstr ""
+msgstr "&Statusfält"
 
 #: taskcoachlib\gui\menu.py:382
 msgid "&Task"
-msgstr ""
+msgstr "&Uppgift"
 
 #: taskcoachlib\gui\menu.py:383
 msgid "Open a new tab with a viewer that displays tasks"
-msgstr ""
+msgstr "Öppna en ny flik med en uppgiftsvy"
 
 #: taskcoachlib\gui\menu.py:385
 msgid "Task &square map"
-msgstr ""
+msgstr "Uppgifter som &rutor"
 
 #: taskcoachlib\gui\menu.py:386
 msgid "Open a new tab with a viewer that displays tasks in a square map"
-msgstr ""
+msgstr "Öppna en ny flik med en uppgiftsvy som rutor"
 
 #: taskcoachlib\gui\menu.py:388
 msgid "T&imeline"
-msgstr ""
+msgstr "T&idslinje"
 
 #: taskcoachlib\gui\menu.py:389
 msgid ""
 "Open a new tab with a viewer that displays a timeline of tasks and effort"
 msgstr ""
+"Öppna en ny flik med en vy som visar uppgifter och insatser på en tidslinje"
 
 #: taskcoachlib\gui\menu.py:391
 msgid "&Calendar"
-msgstr ""
+msgstr "&Kalender"
 
 #: taskcoachlib\gui\menu.py:392
 msgid "Open a new tab with a viewer that displays tasks in a calendar"
-msgstr ""
+msgstr "Öppna en ny flik med en uppgifter i en kalendervy"
 
 #: taskcoachlib\gui\menu.py:394 taskcoachlib\gui\viewer\mixin.py:437
 msgid "&Category"
-msgstr ""
+msgstr "&Kategori"
 
 #: taskcoachlib\gui\menu.py:395
 msgid "Open a new tab with a viewer that displays categories"
-msgstr ""
+msgstr "Öppna en ny flik med en kategorivy"
 
 #: taskcoachlib\gui\menu.py:399
 msgid "&Effort"
-msgstr ""
+msgstr "&Insats"
 
 #: taskcoachlib\gui\menu.py:400
 msgid "Open a new tab with a viewer that displays efforts"
-msgstr ""
+msgstr "Öppna en ny flik med en insatsvy"
 
 #: taskcoachlib\gui\menu.py:403
 msgid "Effort for &one task"
-msgstr ""
+msgstr "Insatser för &en uppgift"
 
 #: taskcoachlib\gui\menu.py:404
 msgid ""
 "Open a new tab with a viewer that displays efforts for the selected task"
-msgstr ""
+msgstr "Öppna en ny flik med en insatsvy för markerade uppgifter"
 
 #: taskcoachlib\gui\menu.py:408
 msgid "&Note"
-msgstr ""
+msgstr "&Anteckning"
 
 #: taskcoachlib\gui\menu.py:409
 msgid "Open a new tab with a viewer that displays notes"
-msgstr ""
+msgstr "Öppna en ny flik med en anteckningsvy"
 
 #: taskcoachlib\gui\menu.py:452
 msgid "&Hide"
-msgstr ""
+msgstr "&Dölj"
 
 #: taskcoachlib\gui\menu.py:452
 msgid "Hide the toolbar"
-msgstr "Göm statusfält"
+msgstr "Dölj verktygsfältet"
 
 #: taskcoachlib\gui\menu.py:453
 msgid "&Small images"
-msgstr "&Små bilder"
+msgstr "&Små ikoner"
 
 #: taskcoachlib\gui\menu.py:453
 msgid "Small images (16x16) on the toolbar"
-msgstr "Små bilder (16x16) i statusfält"
+msgstr "Små ikoner (16x16) i verktygsfältet"
 
 #: taskcoachlib\gui\menu.py:454
 msgid "&Medium-sized images"
-msgstr "&Mellanstora bilder"
+msgstr "&Halvstora ikoner"
 
 #: taskcoachlib\gui\menu.py:454
 msgid "Medium-sized images (22x22) on the toolbar"
-msgstr "Mellanstora bilder (22x22) i statusfält"
+msgstr "Halvstora ikoner (22x22) i verktygsfältet"
 
 #: taskcoachlib\gui\menu.py:455
 msgid "&Large images"
-msgstr ""
+msgstr "&Stora ikoner"
 
 #: taskcoachlib\gui\menu.py:455
 msgid "Large images (32x32) on the toolbar"
-msgstr "Stora bilder (32x32) i statusfält"
+msgstr "Stora ikoner (32x32) i verktygsfältet"
 
 #: taskcoachlib\gui\menu.py:473 taskcoachlib\gui\menu.py:568
-#: taskcoachlib\gui\uicommand.py:1414
+#: taskcoachlib\gui\uicommand.py:1415
 msgid "New task from &template"
-msgstr ""
+msgstr "Ny uppgift från &mall"
 
 #: taskcoachlib\gui\menu.py:512 taskcoachlib\gui\menu.py:708
 #: taskcoachlib\gui\menu.py:806
 msgid "&Toggle category"
-msgstr ""
+msgstr "&Ändra kategori"
 
 #: taskcoachlib\gui\menu.py:520
 msgid "Change task &priority"
-msgstr ""
+msgstr "Ändra uppgiftens &prioritet"
 
-#: taskcoachlib\gui\menu.py:584 taskcoachlib\gui\uicommand.py:1814
-#: taskcoachlib\gui\uicommand.py:1856
+#: taskcoachlib\gui\menu.py:584 taskcoachlib\gui\uicommand.py:1815
+#: taskcoachlib\gui\uicommand.py:1857
 msgid "&Start tracking effort"
-msgstr ""
+msgstr "&Starta tidtagning"
 
 #: taskcoachlib\gui\menu.py:632 taskcoachlib\gui\viewer\mixin.py:114
 msgid "%s (subcategories)"
-msgstr ""
+msgstr "%s (underkategorier)"
 
 #: taskcoachlib\gui\menu.py:674
 msgid "%s (subtasks)"
-msgstr ""
+msgstr "%s (deluppgifter)"
 
 #: taskcoachlib\gui\menu.py:715 taskcoachlib\gui\viewer\mixin.py:513
 #: taskcoachlib\gui\viewer\task.py:862
 msgid "&Priority"
-msgstr ""
+msgstr "&Prioritet"
 
 #: taskcoachlib\gui\printer.py:84
 msgid "Page"
@@ -2059,51 +2108,51 @@ msgstr "Sida"
 
 #: taskcoachlib\gui\remindercontroller.py:76
 msgid "%s Reminder"
-msgstr ""
+msgstr "%s Påminnelse"
 
 #: taskcoachlib\gui\render.py:38
 msgid "Infinite"
-msgstr ""
+msgstr "Oändlig"
 
 #: taskcoachlib\gui\render.py:42
 msgid "%d days"
-msgstr ""
+msgstr "%d dagar"
 
 #: taskcoachlib\gui\render.py:42
 msgid "1 day"
-msgstr ""
+msgstr "1 dygn"
 
 #: taskcoachlib\gui\render.py:64
 msgid "Every %(frequency)d days"
-msgstr ""
+msgstr "Var %(frequency)d dag"
 
 #: taskcoachlib\gui\render.py:64
 msgid "Every %(frequency)d weeks"
-msgstr ""
+msgstr "Var %(frequency)d vecka"
 
 #: taskcoachlib\gui\render.py:65
 msgid "Every %(frequency)d months"
-msgstr ""
+msgstr "Var %(frequency)d månad"
 
 #: taskcoachlib\gui\render.py:65
 msgid "Every %(frequency)d years"
-msgstr ""
+msgstr "Vart %(frequency)d år"
 
 #: taskcoachlib\gui\render.py:67
 msgid "Every other day"
-msgstr ""
+msgstr "Varannan dag"
 
 #: taskcoachlib\gui\render.py:67
 msgid "Every other week"
-msgstr ""
+msgstr "Varannan vecka"
 
 #: taskcoachlib\gui\render.py:68
 msgid "Every other month"
-msgstr ""
+msgstr "Varannan månad"
 
 #: taskcoachlib\gui\render.py:68
 msgid "Every other year"
-msgstr ""
+msgstr "Vartannat år"
 
 #: taskcoachlib\gui\render.py:102
 msgid "now"
@@ -2111,31 +2160,31 @@ msgstr "nu"
 
 #: taskcoachlib\gui\taskbaricon.py:136
 msgid "%d tasks overdue"
-msgstr ""
+msgstr "%d försenade uppgifter"
 
 #: taskcoachlib\gui\taskbaricon.py:136
 msgid "one task overdue"
-msgstr ""
+msgstr "en försenad uppgift"
 
 #: taskcoachlib\gui\taskbaricon.py:137
 msgid "%d tasks due soon"
-msgstr ""
+msgstr "%d uppgifter på gång"
 
 #: taskcoachlib\gui\taskbaricon.py:137
 msgid "one task due soon"
-msgstr ""
+msgstr "en uppgift på gång"
 
 #: taskcoachlib\gui\taskbaricon.py:148
 msgid "tracking \"%s\""
-msgstr ""
+msgstr "tar tid på \"%s\""
 
 #: taskcoachlib\gui\taskbaricon.py:150
 msgid "tracking effort for %d tasks"
-msgstr ""
+msgstr "tar tid på %d uppgifter"
 
 #: taskcoachlib\gui\uicommand.py:484
 msgid "&Open...\tCtrl+O"
-msgstr ""
+msgstr "&Öppna...\tCtrl+O"
 
 #: taskcoachlib\gui\uicommand.py:497
 msgid "Open %s"
@@ -2143,68 +2192,70 @@ msgstr "Öppna %s"
 
 #: taskcoachlib\gui\uicommand.py:505
 msgid "&Merge..."
-msgstr ""
+msgstr "&Sammanfoga..."
 
 #: taskcoachlib\gui\uicommand.py:506
 msgid "Merge tasks from another file with the current file"
-msgstr ""
+msgstr "Sammanfoga uppgifter från en annan fil med denna fil"
 
 #: taskcoachlib\gui\uicommand.py:515
 msgid "&Close\tCtrl+W"
-msgstr ""
+msgstr "&Stäng\tCtrl+W"
 
 #: taskcoachlib\gui\uicommand.py:525
 msgid "&Save\tCtrl+S"
-msgstr ""
+msgstr "&Spara\tCtrl+S"
 
 #: taskcoachlib\gui\uicommand.py:538
 msgid "S&ave as...\tShift+Ctrl+S"
-msgstr ""
+msgstr "S&para som...\tShift+Ctrl+S"
 
 #: taskcoachlib\gui\uicommand.py:548
 msgid "Sa&ve selection..."
-msgstr ""
+msgstr "Sp&ara markerade..."
 
 #: taskcoachlib\gui\uicommand.py:549
 msgid "Save the selected tasks to a separate file"
-msgstr ""
+msgstr "Spara markerad uppgift till en separat fil"
 
 #: taskcoachlib\gui\uicommand.py:559
 msgid "Save selected task as &template"
-msgstr ""
+msgstr "Spara markerad uppgift som &mall"
 
 #: taskcoachlib\gui\uicommand.py:560
 msgid "Save the selected task as a task template"
-msgstr ""
+msgstr "Spara markerad uppgift som en uppgiftsmall"
 
 #: taskcoachlib\gui\uicommand.py:570
 msgid "&Import template..."
-msgstr ""
+msgstr "&Importera mall..."
 
 #: taskcoachlib\gui\uicommand.py:571
 msgid "Import a new template from a template file"
-msgstr ""
+msgstr "Importera en ny mall från en mallfil"
 
 #: taskcoachlib\gui\uicommand.py:581
 msgid "Edit templates..."
-msgstr ""
+msgstr "Redigera mallar..."
 
 #: taskcoachlib\gui\uicommand.py:582
 msgid "Edit existing templates"
-msgstr ""
+msgstr "Redigera befintliga mallar"
 
 #: taskcoachlib\gui\uicommand.py:586
 msgid "Edit templates"
-msgstr ""
+msgstr "Redigera mallar"
 
 #: taskcoachlib\gui\uicommand.py:593
 msgid "&Purge deleted items"
-msgstr ""
+msgstr "&Radera objekt permanent"
 
 #: taskcoachlib\gui\uicommand.py:594
 msgid ""
 "Actually delete deleted tasks and notes (see the SyncML chapter in Help"
 msgstr ""
+"Permanent radering av raderade uppgifter och anteckningar (se hjälpavsnittet "
+"om SyncML)"
 
 #: taskcoachlib\gui\uicommand.py:598
 msgid ""
@@ -2216,18 +2267,25 @@ msgid ""
 "\n"
 "Do you still want to purge?"
 msgstr ""
+"Kan inte radera permanent.\n"
+"Om du aktiverar SyncML igen\n"
+"med samma server så kommer\n"
+"troligen dessa objekt att\n"
+"finnas kvar.\n"
+"\n"
+"Vill du ändå radera permanent?"
 
 #: taskcoachlib\gui\uicommand.py:612
 msgid "&Page setup...\tShift+Ctrl+P"
-msgstr ""
+msgstr "&Utskriftsformat...\tShift+Ctrl+P"
 
 #: taskcoachlib\gui\uicommand.py:629
 msgid "&Print preview..."
-msgstr ""
+msgstr "&Förhandsgranska..."
 
 #: taskcoachlib\gui\uicommand.py:630
 msgid "Show a preview of what the print will look like"
-msgstr ""
+msgstr "Visa hur utskriften kommer att se ut"
 
 #: taskcoachlib\gui\uicommand.py:640
 msgid "Print preview"
@@ -2235,626 +2293,633 @@ msgstr "Förhandsgranska"
 
 #: taskcoachlib\gui\uicommand.py:647
 msgid "&Print...\tCtrl+P"
-msgstr ""
+msgstr "&Skriv ut...\tCtrl+P"
 
 #: taskcoachlib\gui\uicommand.py:670
 msgid "Export as &HTML..."
-msgstr ""
+msgstr "Exportera som &HTML..."
 
 #: taskcoachlib\gui\uicommand.py:671
 msgid "Export items from a viewer in HTML format"
-msgstr ""
+msgstr "Exporterar objekt från en vy i HTML-format"
 
 #: taskcoachlib\gui\uicommand.py:688
 msgid "Export as &CSV..."
-msgstr ""
+msgstr "Exportera som &CSV..."
 
 #: taskcoachlib\gui\uicommand.py:689
 msgid "Export items from a viewer in Comma Separated Values (CSV) format"
-msgstr ""
+msgstr "Exporterar objekt från en vy till kommaseparerat format (CSV)"
 
 #: taskcoachlib\gui\uicommand.py:704
 msgid "Export as &iCalendar..."
-msgstr ""
+msgstr "Exportera som &iCalendar..."
 
 #: taskcoachlib\gui\uicommand.py:705
 msgid "Export items from a viewer in iCalendar format"
-msgstr ""
+msgstr "Exporterar objekt från en vy i iCalendarformat"
 
 #: taskcoachlib\gui\uicommand.py:727
 msgid "&Import CSV..."
-msgstr ""
+msgstr "&Import CSV..."
 
 #: taskcoachlib\gui\uicommand.py:728
 msgid "Import tasks from a Comma Separated Values (CSV) file"
-msgstr ""
+msgstr "Importerar uppgifter från en kommaseparerad fil (CSV)"
 
 #: taskcoachlib\gui\uicommand.py:732 taskcoachlib\gui\uicommand.py:734
 msgid "Import CSV"
-msgstr ""
+msgstr "Importera CSV"
 
 #: taskcoachlib\gui\uicommand.py:741
 msgid "S&yncML synchronization..."
-msgstr ""
+msgstr "S&yncML-synkronisering..."
 
 #: taskcoachlib\gui\uicommand.py:742
 msgid "Synchronize with a SyncML server"
-msgstr ""
+msgstr "Synkroniserar med en SyncML-server"
 
 #: taskcoachlib\gui\uicommand.py:746
 msgid "Please enter your password:"
-msgstr ""
+msgstr "Ange ditt lösenord:"
 
 #: taskcoachlib\gui\uicommand.py:747
 msgid "Task Coach SyncML password"
-msgstr ""
+msgstr "Task Coach SyncML lösenord"
 
 #: taskcoachlib\gui\uicommand.py:754
 msgid "&Quit\tCtrl+Q"
-msgstr ""
+msgstr "&Avsluta\tCtrl+Q"
 
 #: taskcoachlib\gui\uicommand.py:763
 msgid "&Undo"
-msgstr ""
+msgstr "&Ångra"
 
 #: taskcoachlib\gui\uicommand.py:792
 msgid "&Redo"
-msgstr ""
+msgstr "&Gör om"
 
 #: taskcoachlib\gui\uicommand.py:822
 msgid "Cu&t\tCtrl+X"
-msgstr ""
+msgstr "&Klipp ut\tCtrl+X"
 
 #: taskcoachlib\gui\uicommand.py:844
 msgid "&Copy\tCtrl+C"
-msgstr ""
+msgstr "K&opiera\tCtrl+C"
 
 #: taskcoachlib\gui\uicommand.py:866
 msgid "&Paste\tCtrl+V"
-msgstr ""
+msgstr "K&listra in\tCtrl+V"
 
 #: taskcoachlib\gui\uicommand.py:889
 msgid "P&aste as subitem\tShift+Ctrl+V"
-msgstr ""
+msgstr "Klistra in som &underobjekt\tShift+Ctrl+V"
 
 #: taskcoachlib\gui\uicommand.py:910
 msgid "&Preferences...\tAlt+P"
-msgstr ""
+msgstr "&Inställningar...\tAlt+P"
 
 #: taskcoachlib\gui\uicommand.py:916
 msgid "Preferences"
-msgstr ""
+msgstr "Inställningar"
 
 #: taskcoachlib\gui\uicommand.py:922
 msgid "&SyncML preferences..."
-msgstr ""
+msgstr "&SyncML-inställningar..."
 
 #: taskcoachlib\gui\uicommand.py:923
 msgid "Edit SyncML preferences"
-msgstr ""
+msgstr "Redigera SyncML-inställningar"
 
 #: taskcoachlib\gui\uicommand.py:929
 msgid "SyncML preferences"
-msgstr ""
+msgstr "SyncML-inställningar"
 
 #: taskcoachlib\gui\uicommand.py:935
 msgid "&All\tCtrl+A"
-msgstr ""
+msgstr "&Alla\tCtrl+A"
 
 #: taskcoachlib\gui\uicommand.py:949
 msgid "&Clear selection"
-msgstr ""
+msgstr "&Ta bort markeringar"
 
 #: taskcoachlib\gui\uicommand.py:950
 msgid "Unselect all items"
-msgstr ""
+msgstr "Tar bort alla markeringar"
 
 #: taskcoachlib\gui\uicommand.py:958
 msgid "&Clear all filters\tShift-Ctrl-R"
-msgstr ""
+msgstr "Ta bort alla &filter\tShift-Ctrl-R"
 
 #: taskcoachlib\gui\uicommand.py:967
 msgid "&Reset all categories\tCtrl-R"
-msgstr ""
+msgstr "&Återställ alla kategorier\tCtrl-R"
 
 #: taskcoachlib\gui\uicommand.py:989
 msgid "Show/hide items belonging to %s"
-msgstr ""
+msgstr "Visa/dölj objekt som tillhör %s"
 
 #: taskcoachlib\gui\uicommand.py:1027
 msgid "&Rename viewer..."
-msgstr ""
+msgstr "&Döp om vy..."
 
 #: taskcoachlib\gui\uicommand.py:1028
 msgid "Rename the selected viewer"
-msgstr ""
+msgstr "Byt namn på markerad vy"
 
 #: taskcoachlib\gui\uicommand.py:1033
 msgid "New title for the viewer:"
-msgstr ""
+msgstr "Ny rubrik på vyn"
 
 #: taskcoachlib\gui\uicommand.py:1033
 msgid "Rename viewer"
-msgstr ""
+msgstr "Döp om vy"
 
 #: taskcoachlib\gui\uicommand.py:1057
 msgid "&Hide this column"
-msgstr ""
+msgstr "&Dölj den här kolumnen"
 
 #: taskcoachlib\gui\uicommand.py:1058
 msgid "Hide the selected column"
-msgstr ""
+msgstr "Dölj markerad kolumn"
 
 #: taskcoachlib\gui\uicommand.py:1104
 msgid "&Expand all items\tShift+Ctrl+E"
-msgstr ""
+msgstr "&Visa alla underobjekt\tShift+Ctrl+E"
 
 #: taskcoachlib\gui\uicommand.py:1118
 msgid "&Collapse all items\tShift+Ctrl+C"
-msgstr ""
+msgstr "&Dölj alla underobjekt\tShift+Ctrl+C"
 
 #: taskcoachlib\gui\uicommand.py:1139
 msgid "&Ascending"
-msgstr ""
+msgstr "&Stigande"
 
 #: taskcoachlib\gui\uicommand.py:1140
 msgid "Sort ascending (checked) or descending (unchecked)"
-msgstr ""
+msgstr "Sortera stigande (markerad) eller fallande (omarkerad)"
 
 #: taskcoachlib\gui\uicommand.py:1153
 msgid "Sort &case sensitive"
-msgstr ""
+msgstr "Sortera &case sensitive"
 
 #: taskcoachlib\gui\uicommand.py:1154
 msgid ""
 "When comparing text, sorting is case sensitive (checked) or insensitive "
 "(unchecked)"
 msgstr ""
+"Vid sortering kan hänsyn tas till stora/små bokstäver (markerad) eller ej "
+"(omarkerad)"
 
 #: taskcoachlib\gui\uicommand.py:1167
 msgid "Sort by status &first"
-msgstr ""
+msgstr "Sortera på status i första hand"
 
 #: taskcoachlib\gui\uicommand.py:1168
 msgid "Sort tasks by status (active/inactive/completed) first"
-msgstr ""
+msgstr "Sorterar uppgifter i första hand på status (aktiva/passiva/klara)"
 
 #: taskcoachlib\gui\uicommand.py:1204
 msgid "Hide &inactive tasks"
-msgstr ""
+msgstr "Dölj &passiva uppgifter"
 
 #: taskcoachlib\gui\uicommand.py:1205
 msgid "Show/hide inactive tasks (tasks with a start date in the future)"
-msgstr ""
+msgstr "Visa/dölj passiva uppgifter (med starttidpunkt i framtiden)"
 
 #: taskcoachlib\gui\uicommand.py:1222
 msgid "Hide &active tasks"
-msgstr ""
+msgstr "Dölj &aktiva uppgifter"
 
 #: taskcoachlib\gui\uicommand.py:1223
 msgid ""
 "Show/hide active tasks (tasks with a start date in the past that are not "
 "completed)"
 msgstr ""
+"Visa/dölj aktiva uppgifter (ej klarskrivna och med tidigare starttidpunkt)"
 
 #: taskcoachlib\gui\uicommand.py:1235
 msgid "Hide &completed tasks"
-msgstr ""
+msgstr "Dölj &klara uppgifter"
 
 #: taskcoachlib\gui\uicommand.py:1236
 msgid "Show/hide completed tasks"
-msgstr ""
+msgstr "Visa/dölj klara uppgifter"
 
 #: taskcoachlib\gui\uicommand.py:1252
 msgid "Hide c&omposite tasks"
-msgstr ""
+msgstr "Dölj &sammansatta uppgifter"
 
 #: taskcoachlib\gui\uicommand.py:1253
 msgid "Show/hide tasks with subtasks in list mode"
-msgstr ""
+msgstr "Visa/dölj uppgifter som har deluppgifter"
 
 #: taskcoachlib\gui\uicommand.py:1268
 msgid "&Edit...\tRETURN"
-msgstr ""
+msgstr "&Redigera...\tRETURN"
 
 #: taskcoachlib\gui\uicommand.py:1269
 msgid "Edit the selected item(s)"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1306
-msgid "Edit &tracked task...\tShift-Alt-T"
-msgstr ""
+msgstr "Redigera markerat objekt"
 
 #: taskcoachlib\gui\uicommand.py:1307
+msgid "Edit &tracked task...\tShift-Alt-T"
+msgstr "Redigera tidtagen uppgift...\tShift-Alt-T"
+
+#: taskcoachlib\gui\uicommand.py:1308
 msgid "Edit the currently tracked task(s)"
-msgstr ""
+msgstr "Redigera uppgift med pågående tidtagning"
 
-#: taskcoachlib\gui\uicommand.py:1324
+#: taskcoachlib\gui\uicommand.py:1325
 msgid "&Delete\tDEL"
-msgstr ""
+msgstr "&Radera\tDEL"
 
-#: taskcoachlib\gui\uicommand.py:1325 taskcoachlib\help\__init__.py:660
+#: taskcoachlib\gui\uicommand.py:1326 taskcoachlib\help\__init__.py:660
 msgid "Delete the selected item(s)"
-msgstr ""
+msgstr "Radera markerat objekt"
 
-#: taskcoachlib\gui\uicommand.py:1417
+#: taskcoachlib\gui\uicommand.py:1418
 msgid "Create a new task from a template"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1423
-msgid "New task with selected &categories..."
-msgstr ""
+msgstr "Skapa en ny uppgift från en mall"
 
 #: taskcoachlib\gui\uicommand.py:1424
-msgid "Insert a new task with the selected categories checked"
-msgstr ""
+msgid "New task with selected &categories..."
+msgstr "Ny uppgift med markerad &kategori..."
 
-#: taskcoachlib\gui\uicommand.py:1435
-msgid "New task with selected tasks as &prerequisites..."
-msgstr ""
+#: taskcoachlib\gui\uicommand.py:1425
+msgid "Insert a new task with the selected categories checked"
+msgstr "Skapa en ny uppgift med de markerade kategorierna"
 
 #: taskcoachlib\gui\uicommand.py:1436
-msgid "Insert a new task with the selected tasks as prerequisite tasks"
-msgstr ""
+msgid "New task with selected tasks as &prerequisites..."
+msgstr "Ny uppgift med markerade uppgifter som &förutsättning..."
 
-#: taskcoachlib\gui\uicommand.py:1447
-msgid "New task with selected tasks as &dependencies..."
-msgstr ""
+#: taskcoachlib\gui\uicommand.py:1437
+msgid "Insert a new task with the selected tasks as prerequisite tasks"
+msgstr "Skapa en ny uppgift som är beroende av markerade uppgifter"
 
 #: taskcoachlib\gui\uicommand.py:1448
-msgid "Insert a new task with the selected tasks as dependent tasks"
-msgstr ""
+msgid "New task with selected tasks as &dependencies..."
+msgstr "Ny uppgift med markerade uppgifter som &beroenden..."
 
-#: taskcoachlib\gui\uicommand.py:1457
-msgid "New &subitem..."
-msgstr ""
+#: taskcoachlib\gui\uicommand.py:1449
+msgid "Insert a new task with the selected tasks as dependent tasks"
+msgstr "Skapa en ny uppgift som markerade uppgifter är beroende av"
 
 #: taskcoachlib\gui\uicommand.py:1458
-msgid "New &subtask..."
-msgstr "Ny &underuppgift..."
+msgid "New &subitem..."
+msgstr "Nytt &underobjekt..."
 
 #: taskcoachlib\gui\uicommand.py:1459
-msgid "New &subnote..."
-msgstr ""
+msgid "New &subtask..."
+msgstr "Ny &deluppgift..."
 
 #: taskcoachlib\gui\uicommand.py:1460
+msgid "New &subnote..."
+msgstr "Ny &underanteckning..."
+
+#: taskcoachlib\gui\uicommand.py:1461
 msgid "New &subcategory..."
-msgstr ""
+msgstr "Ny &underkategori..."
 
-#: taskcoachlib\gui\uicommand.py:1464
+#: taskcoachlib\gui\uicommand.py:1465
 msgid "Insert a new subitem of the selected item"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1482
-msgid "&Mark task completed\tCtrl+RETURN"
-msgstr ""
+msgstr "Skapa ett nytt underobjekt till markerat objekt"
 
 #: taskcoachlib\gui\uicommand.py:1483
-msgid "Mark the selected task(s) completed"
-msgstr ""
+msgid "&Mark task completed\tCtrl+RETURN"
+msgstr "&Klarskriv uppgift\tCtrl+RETURN"
 
 #: taskcoachlib\gui\uicommand.py:1484
-msgid "&Mark task uncompleted\tCtrl+RETURN"
-msgstr ""
+msgid "Mark the selected task(s) completed"
+msgstr "Klarskriver markerad(e) uppgift(er)"
 
 #: taskcoachlib\gui\uicommand.py:1485
+msgid "&Mark task uncompleted\tCtrl+RETURN"
+msgstr "&Ta bort klarskrivning\tCtrl+RETURN"
+
+#: taskcoachlib\gui\uicommand.py:1486
 msgid "Mark the selected task(s) uncompleted"
-msgstr ""
+msgstr "Tar bort klarskrivning"
 
-#: taskcoachlib\gui\uicommand.py:1561
+#: taskcoachlib\gui\uicommand.py:1562
 msgid "&Maximize priority\tShift+Ctrl+I"
-msgstr ""
+msgstr "&Sätt högsta prioritet\tShift+Ctrl+I"
 
-#: taskcoachlib\gui\uicommand.py:1574
+#: taskcoachlib\gui\uicommand.py:1575
 msgid "&Minimize priority\tShift+Ctrl+D"
-msgstr ""
+msgstr "&Sätt lägsta prioritet\tShift+Ctrl+D"
 
-#: taskcoachlib\gui\uicommand.py:1587
+#: taskcoachlib\gui\uicommand.py:1588
 msgid "&Increase priority\tCtrl+I"
-msgstr ""
+msgstr "&Höj prioritet\tCtrl+I"
 
-#: taskcoachlib\gui\uicommand.py:1600
+#: taskcoachlib\gui\uicommand.py:1601
 msgid "&Decrease priority\tCtrl+D"
-msgstr ""
+msgstr "&Sänk prioritet\tCtrl+D"
 
-#: taskcoachlib\gui\uicommand.py:1646
+#: taskcoachlib\gui\uicommand.py:1647
 msgid "Toggle %s"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:1673
+#: taskcoachlib\gui\uicommand.py:1674
 msgid "&Mail...\tCtrl-M"
-msgstr ""
+msgstr "&E-post...\tCtrl-M"
 
-#: taskcoachlib\gui\uicommand.py:1685
+#: taskcoachlib\gui\uicommand.py:1686
 msgid "Several things"
-msgstr ""
+msgstr "Flera saker"
 
-#: taskcoachlib\gui\uicommand.py:1688
+#: taskcoachlib\gui\uicommand.py:1689
 msgid "and"
-msgstr ""
+msgstr "och"
 
-#: taskcoachlib\gui\uicommand.py:1718
+#: taskcoachlib\gui\uicommand.py:1719
 msgid ""
 "Cannot send email:\n"
 "%s"
 msgstr ""
+"Kan inte skicka e-post:\n"
+"%s"
 
-#: taskcoachlib\gui\uicommand.py:1719
+#: taskcoachlib\gui\uicommand.py:1720
 msgid "%s mail error"
-msgstr ""
+msgstr "%s e-postfel"
 
-#: taskcoachlib\gui\uicommand.py:1725
+#: taskcoachlib\gui\uicommand.py:1726
 msgid "Add &note...\tCtrl+B"
-msgstr ""
+msgstr "Skapa &anteckning...\tCtrl+B"
 
-#: taskcoachlib\gui\uicommand.py:1740
+#: taskcoachlib\gui\uicommand.py:1741
 msgid "Open all notes...\tShift+Ctrl+B"
-msgstr ""
+msgstr "Öppna alla anteckningar...\tShift+Ctrl+B"
 
-#: taskcoachlib\gui\uicommand.py:1794
+#: taskcoachlib\gui\uicommand.py:1795
 msgid "&Start tracking effort\tCtrl-T"
-msgstr ""
+msgstr "&Starta tidtagning\tCtrl-T"
 
-#: taskcoachlib\gui\uicommand.py:1815
+#: taskcoachlib\gui\uicommand.py:1816
 msgid "Start tracking effort for the task(s) of the selected effort(s)"
-msgstr ""
+msgstr "Startar tidtagning för uppgifter med markerade insatser"
 
-#: taskcoachlib\gui\uicommand.py:1838
+#: taskcoachlib\gui\uicommand.py:1839
 msgid "(No subject)"
-msgstr ""
+msgstr "(Inget ämne)"
 
-#: taskcoachlib\gui\uicommand.py:1841
+#: taskcoachlib\gui\uicommand.py:1842
 msgid "Start tracking effort for %s"
-msgstr ""
+msgstr "Starta tidtagning för %s"
 
-#: taskcoachlib\gui\uicommand.py:1857
+#: taskcoachlib\gui\uicommand.py:1858
 msgid "Select a task via the menu and start tracking effort for it"
-msgstr ""
+msgstr "Välj en uppgift i menyn och starta tidtagning"
 
-#: taskcoachlib\gui\uicommand.py:1869
+#: taskcoachlib\gui\uicommand.py:1870
 msgid "Stop tracking or resume tracking effort\tShift+Ctrl+T"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:1871
-msgid "St&op tracking %s\tShift+Ctrl+T"
-msgstr ""
+msgstr "Avbryt eller återuppta tidtagning\tShift+Ctrl+T"
 
 #: taskcoachlib\gui\uicommand.py:1872
-msgid "Stop tracking effort for the active task(s)"
-msgstr ""
+msgid "St&op tracking %s\tShift+Ctrl+T"
+msgstr "Avbryt tidtagning för %s\tShift+Ctrl+T"
 
 #: taskcoachlib\gui\uicommand.py:1873
-msgid "&Resume tracking %s\tShift+Ctrl+T"
-msgstr ""
+msgid "Stop tracking effort for the active task(s)"
+msgstr "Avbryt tidtagning för markerad(e) uppgift(er)"
 
 #: taskcoachlib\gui\uicommand.py:1874
+msgid "&Resume tracking %s\tShift+Ctrl+T"
+msgstr "&Återuppta tidtagning för %s\tShift+Ctrl+T"
+
+#: taskcoachlib\gui\uicommand.py:1875
 msgid "Resume tracking effort for the last tracked task"
-msgstr ""
+msgstr "Återuppta tidtagning för den uppgift som avbrutits"
 
-#: taskcoachlib\gui\uicommand.py:1979
+#: taskcoachlib\gui\uicommand.py:1980
 msgid "multiple tasks"
-msgstr ""
+msgstr "flera uppgifter"
 
-#: taskcoachlib\gui\uicommand.py:2014
+#: taskcoachlib\gui\uicommand.py:2015
 msgid "New category...\tCtrl-G"
-msgstr ""
+msgstr "Ny kategori...\tCtrl-G"
 
-#: taskcoachlib\gui\uicommand.py:2032
+#: taskcoachlib\gui\uicommand.py:2033
 msgid "New note...\tCtrl-J"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:2053
-msgid "New &note with selected categories..."
-msgstr ""
+msgstr "Ny anteckning...\tCtrl-J"
 
 #: taskcoachlib\gui\uicommand.py:2054
+msgid "New &note with selected categories..."
+msgstr "Ny &anteckning med markerade kategorier..."
+
+#: taskcoachlib\gui\uicommand.py:2055
 msgid "Insert a new note with the selected categories checked"
-msgstr ""
+msgstr "Skapa en ny anteckning med de markerade kategorierna"
 
-#: taskcoachlib\gui\uicommand.py:2085
+#: taskcoachlib\gui\uicommand.py:2086
 msgid "&Add attachment...\tShift-Ctrl-A"
-msgstr ""
+msgstr "&Lägg till bifogad fil...\tShift-Ctrl-A"
 
-#: taskcoachlib\gui\uicommand.py:2108
+#: taskcoachlib\gui\uicommand.py:2109
 msgid "Error opening attachment"
-msgstr "Fel vid öppnandet av bilaga"
+msgstr "Kunde inte öppna bifogad fil"
 
-#: taskcoachlib\gui\uicommand.py:2128
+#: taskcoachlib\gui\uicommand.py:2129
 msgid "&Open all attachments...\tShift+Ctrl+O"
-msgstr ""
+msgstr "&Öppna alla bifogade filer...\tShift+Ctrl+O"
 
-#: taskcoachlib\gui\uicommand.py:2170
+#: taskcoachlib\gui\uicommand.py:2171
 msgid "&Help contents\tCtrl+?"
-msgstr ""
+msgstr "&Hjälp om Task Coach\tCtrl+?"
 
-#: taskcoachlib\gui\uicommand.py:2173
+#: taskcoachlib\gui\uicommand.py:2174
 msgid "&Help contents\tCtrl+H"
-msgstr ""
+msgstr "&Hjälp om Task Coach\tCtrl+H"
 
-#: taskcoachlib\gui\uicommand.py:2175
+#: taskcoachlib\gui\uicommand.py:2176
 msgid "Help"
 msgstr "Hjälp"
 
-#: taskcoachlib\gui\uicommand.py:2181
+#: taskcoachlib\gui\uicommand.py:2182
 msgid "&Tips"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:2182
+#: taskcoachlib\gui\uicommand.py:2183
 msgid "Tips about the program"
 msgstr "Tips om promgrammet"
 
-#: taskcoachlib\gui\uicommand.py:2191
-msgid "&About %s"
-msgstr ""
-
 #: taskcoachlib\gui\uicommand.py:2192
-msgid "Version and contact information about %s"
-msgstr ""
+msgid "&About %s"
+msgstr "&Om %s"
 
 #: taskcoachlib\gui\uicommand.py:2193
-msgid "About %s"
-msgstr ""
+msgid "Version and contact information about %s"
+msgstr "Version- och kontaktinformation om %s"
 
-#: taskcoachlib\gui\uicommand.py:2200
+#: taskcoachlib\gui\uicommand.py:2194
+msgid "About %s"
+msgstr "Om %s"
+
+#: taskcoachlib\gui\uicommand.py:2201
 msgid "&License"
 msgstr "&Licens"
 
-#: taskcoachlib\gui\uicommand.py:2201 taskcoachlib\gui\uicommand.py:2202
+#: taskcoachlib\gui\uicommand.py:2202 taskcoachlib\gui\uicommand.py:2203
 msgid "%s license"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:2209
-msgid "Check for update"
-msgstr ""
+msgstr "%s licens"
 
 #: taskcoachlib\gui\uicommand.py:2210
-msgid "Check for the availability of a new version of %s"
-msgstr ""
+msgid "Check for update"
+msgstr "Leta efter uppdateringar"
 
-#: taskcoachlib\gui\uicommand.py:2228
-msgid "&Frequently asked questions"
-msgstr ""
+#: taskcoachlib\gui\uicommand.py:2211
+msgid "Check for the availability of a new version of %s"
+msgstr "Försök hitta en nyare version av %s"
 
 #: taskcoachlib\gui\uicommand.py:2229
-msgid "Browse the frequently asked questions and answers"
-msgstr ""
+msgid "&Frequently asked questions"
+msgstr "&Frequently asked questions"
 
-#: taskcoachlib\gui\uicommand.py:2235
-msgid "Report a &bug..."
-msgstr ""
+#: taskcoachlib\gui\uicommand.py:2230
+msgid "Browse the frequently asked questions and answers"
+msgstr "Leta bland vanliga frågor och svar"
 
 #: taskcoachlib\gui\uicommand.py:2236
-msgid "Report a bug or browse known bugs"
-msgstr ""
+msgid "Report a &bug..."
+msgstr "Fel&rapport..."
 
-#: taskcoachlib\gui\uicommand.py:2242
-msgid "Request a &feature..."
-msgstr ""
+#: taskcoachlib\gui\uicommand.py:2237
+msgid "Report a bug or browse known bugs"
+msgstr "Rapportera ett fel eller leta bland kända fel"
 
 #: taskcoachlib\gui\uicommand.py:2243
-msgid "Request a new feature or vote for existing requests"
-msgstr ""
+msgid "Request a &feature..."
+msgstr "Önska nya &funktioner..."
 
-#: taskcoachlib\gui\uicommand.py:2249
-msgid "Request &support..."
-msgstr ""
+#: taskcoachlib\gui\uicommand.py:2244
+msgid "Request a new feature or vote for existing requests"
+msgstr "Önska en ny funktion eller rösta på befintliga önskemål"
 
 #: taskcoachlib\gui\uicommand.py:2250
-msgid "Request user support from the developers"
-msgstr ""
+msgid "Request &support..."
+msgstr "&Support..."
 
-#: taskcoachlib\gui\uicommand.py:2257
-msgid "Help improve &translations..."
-msgstr ""
+#: taskcoachlib\gui\uicommand.py:2251
+msgid "Request user support from the developers"
+msgstr "Begär support från programutvecklarna"
 
 #: taskcoachlib\gui\uicommand.py:2258
-msgid "Help improve the translations of %s"
-msgstr ""
+msgid "Help improve &translations..."
+msgstr "Hjälp till med &översättning..."
 
-#: taskcoachlib\gui\uicommand.py:2264
-msgid "&Donate..."
-msgstr ""
+#: taskcoachlib\gui\uicommand.py:2259
+msgid "Help improve the translations of %s"
+msgstr "Hjälp till att förbättra översättningar av %s"
 
 #: taskcoachlib\gui\uicommand.py:2265
-msgid "Donate to support the development of %s"
-msgstr ""
+msgid "&Donate..."
+msgstr "&Donera..."
 
-#: taskcoachlib\gui\uicommand.py:2271
-msgid "&Restore"
-msgstr ""
+#: taskcoachlib\gui\uicommand.py:2266
+msgid "Donate to support the development of %s"
+msgstr "Gör en donation till förmån för utvecklingen av %s"
 
 #: taskcoachlib\gui\uicommand.py:2272
+msgid "&Restore"
+msgstr "&Återställning"
+
+#: taskcoachlib\gui\uicommand.py:2273
 msgid "Restore the window to its previous state"
-msgstr ""
+msgstr "Återställer fönstret till tidigare utseende"
 
-#: taskcoachlib\gui\uicommand.py:2365
+#: taskcoachlib\gui\uicommand.py:2366
 msgid "Effort details"
-msgstr ""
+msgstr "Total insats"
 
-#: taskcoachlib\gui\uicommand.py:2365
+#: taskcoachlib\gui\uicommand.py:2366
 msgid "Effort per day"
-msgstr ""
+msgstr "Insats per dag"
 
-#: taskcoachlib\gui\uicommand.py:2366
+#: taskcoachlib\gui\uicommand.py:2367
 msgid "Effort per month"
-msgstr ""
+msgstr "Insats per månad"
 
-#: taskcoachlib\gui\uicommand.py:2366
+#: taskcoachlib\gui\uicommand.py:2367
 msgid "Effort per week"
-msgstr ""
+msgstr "Insats per vecka"
 
-#: taskcoachlib\gui\uicommand.py:2374
+#: taskcoachlib\gui\uicommand.py:2375
 msgid "List of tasks"
-msgstr ""
+msgstr "Uppgifter i lista"
 
-#: taskcoachlib\gui\uicommand.py:2374
+#: taskcoachlib\gui\uicommand.py:2375
 msgid "Tree of tasks"
-msgstr ""
-
-#: taskcoachlib\gui\uicommand.py:2382
-msgid "Filter on all checked categories"
-msgstr ""
+msgstr "Uppgifter i träd"
 
 #: taskcoachlib\gui\uicommand.py:2383
+msgid "Filter on all checked categories"
+msgstr "Filtrera på alla markerade kategorier"
+
+#: taskcoachlib\gui\uicommand.py:2384
 msgid "Filter on any checked category"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:2399
-msgid "&Configure"
-msgstr ""
-
 #: taskcoachlib\gui\uicommand.py:2400
-msgid "Configure the calendar viewer"
-msgstr ""
+msgid "&Configure"
+msgstr "&Inställningar"
 
-#: taskcoachlib\gui\uicommand.py:2427
-msgid "&Next period"
-msgstr ""
+#: taskcoachlib\gui\uicommand.py:2401
+msgid "Configure the calendar viewer"
+msgstr "Inställningar för kalendervyn"
 
 #: taskcoachlib\gui\uicommand.py:2428
-msgid "Show next period"
-msgstr ""
+msgid "&Next period"
+msgstr "&Nästa period"
 
-#: taskcoachlib\gui\uicommand.py:2434
-msgid "&Previous period"
-msgstr ""
+#: taskcoachlib\gui\uicommand.py:2429
+msgid "Show next period"
+msgstr "Visa nästa period"
 
 #: taskcoachlib\gui\uicommand.py:2435
-msgid "Show previous period"
-msgstr ""
+msgid "&Previous period"
+msgstr "&Föregående period"
 
-#: taskcoachlib\gui\uicommand.py:2441
-msgid "&Today"
-msgstr ""
+#: taskcoachlib\gui\uicommand.py:2436
+msgid "Show previous period"
+msgstr "Visa föregående period"
 
 #: taskcoachlib\gui\uicommand.py:2442
-msgid "Show today"
-msgstr ""
+msgid "&Today"
+msgstr "&Idag"
 
-#: taskcoachlib\gui\uicommand.py:2450
-msgid "&Automatic column resizing"
-msgstr ""
+#: taskcoachlib\gui\uicommand.py:2443
+msgid "Show today"
+msgstr "Visa idag"
 
 #: taskcoachlib\gui\uicommand.py:2451
+msgid "&Automatic column resizing"
+msgstr "&Automatisk kolumnbredd"
+
+#: taskcoachlib\gui\uicommand.py:2452
 msgid "When checked, automatically resize columns to fill available space"
 msgstr ""
+"Ändrar automatiskt kolumnbredd så att kolumnerna fyller ut tillgängligt "
+"utrymme"
 
 #: taskcoachlib\gui\viewer\attachment.py:71
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #: taskcoachlib\gui\viewer\attachment.py:81
 msgid "Sort by subject"
-msgstr ""
+msgstr "Sortera efter ämne"
 
 #: taskcoachlib\gui\viewer\attachment.py:81
 #: taskcoachlib\gui\viewer\mixin.py:403
 msgid "Sub&ject"
-msgstr ""
+msgstr "&Ämne"
 
 #: taskcoachlib\gui\viewer\attachment.py:89
 msgid "Sort by description"
-msgstr ""
+msgstr "Sortera efter beskrivning"
 
 #: taskcoachlib\gui\viewer\attachment.py:89
 #: taskcoachlib\gui\viewer\attachment.py:108
@@ -2863,33 +2928,33 @@ msgstr ""
 #: taskcoachlib\gui\viewer\note.py:85 taskcoachlib\gui\viewer\note.py:112
 #: taskcoachlib\gui\viewer\task.py:838
 msgid "&Description"
-msgstr ""
+msgstr "&Beskrivning"
 
 #: taskcoachlib\gui\viewer\attachment.py:109
 #: taskcoachlib\gui\viewer\category.py:124
 #: taskcoachlib\gui\viewer\effort.py:235 taskcoachlib\gui\viewer\note.py:86
 #: taskcoachlib\gui\viewer\task.py:839
 msgid "Show/hide description column"
-msgstr ""
+msgstr "Visa/dölj beskrivningskolumn"
 
 #: taskcoachlib\gui\viewer\attachment.py:111
 #: taskcoachlib\gui\viewer\category.py:130 taskcoachlib\gui\viewer\task.py:855
 msgid "&Notes"
-msgstr ""
+msgstr "&Anteckningar"
 
 #: taskcoachlib\gui\viewer\attachment.py:112
 #: taskcoachlib\gui\viewer\category.py:131 taskcoachlib\gui\viewer\task.py:856
 msgid "Show/hide notes column"
-msgstr ""
+msgstr "Visa/dölj anteckningskolumn"
 
 #: taskcoachlib\gui\viewer\category.py:126 taskcoachlib\gui\viewer\note.py:88
 #: taskcoachlib\gui\viewer\task.py:850
 msgid "&Attachments"
-msgstr ""
+msgstr "&Bifogade filer"
 
 #: taskcoachlib\gui\viewer\category.py:127 taskcoachlib\gui\viewer\note.py:89
 msgid "Show/hide attachments column"
-msgstr ""
+msgstr "Visa/dölj bilagekolumn"
 
 #: taskcoachlib\gui\viewer\category.py:165
 msgid "Categories: %d selected, %d total"
@@ -2905,549 +2970,590 @@ msgstr "Period"
 
 #: taskcoachlib\gui\viewer\effort.py:178
 msgid "Total time spent"
-msgstr "Total tid spenderad"
+msgstr "Total förbrukad tid"
 
 #: taskcoachlib\gui\viewer\effort.py:182
 msgid "Total revenue"
-msgstr ""
+msgstr "Total inkomst"
 
 #: taskcoachlib\gui\viewer\effort.py:188
 msgid "Monday"
-msgstr ""
+msgstr "Måndag"
 
 #: taskcoachlib\gui\viewer\effort.py:190
 msgid "Tuesday"
-msgstr ""
+msgstr "Tisdag"
 
 #: taskcoachlib\gui\viewer\effort.py:192
 msgid "Wednesday"
-msgstr ""
+msgstr "Onsdag"
 
 #: taskcoachlib\gui\viewer\effort.py:194
 msgid "Thursday"
-msgstr ""
+msgstr "Torsdag"
 
 #: taskcoachlib\gui\viewer\effort.py:196
 msgid "Friday"
-msgstr ""
+msgstr "Fredag"
 
 #: taskcoachlib\gui\viewer\effort.py:198
 msgid "Saturday"
-msgstr ""
+msgstr "Lördag"
 
 #: taskcoachlib\gui\viewer\effort.py:200
 msgid "Sunday"
-msgstr ""
+msgstr "Söndag"
 
 #: taskcoachlib\gui\viewer\effort.py:237 taskcoachlib\gui\viewer\mixin.py:99
 #: taskcoachlib\gui\viewer\note.py:91 taskcoachlib\gui\viewer\note.py:132
 #: taskcoachlib\gui\viewer\task.py:859
 msgid "&Categories"
-msgstr ""
+msgstr "&Kategorier"
 
 #: taskcoachlib\gui\viewer\effort.py:238 taskcoachlib\gui\viewer\note.py:92
 #: taskcoachlib\gui\viewer\task.py:860
 msgid "Show/hide categories column"
-msgstr ""
+msgstr "Visa/dölj kategorikolumn"
 
 #: taskcoachlib\gui\viewer\effort.py:240 taskcoachlib\gui\viewer\mixin.py:511
 #: taskcoachlib\gui\viewer\task.py:815
 msgid "&Time spent"
-msgstr ""
+msgstr "&Förbrukad tid"
 
 #: taskcoachlib\gui\viewer\effort.py:241 taskcoachlib\gui\viewer\task.py:816
 msgid "Show/hide time spent column"
-msgstr ""
+msgstr "Visa/dölj kolumn förbrukad tid"
 
 #: taskcoachlib\gui\viewer\effort.py:243 taskcoachlib\gui\viewer\mixin.py:516
 #: taskcoachlib\gui\viewer\task.py:834
 msgid "&Revenue"
-msgstr ""
+msgstr "&Inkomst"
 
 #: taskcoachlib\gui\viewer\effort.py:244 taskcoachlib\gui\viewer\task.py:835
 msgid "Show/hide revenue column"
-msgstr ""
+msgstr "Visa/dölj inkomstkolumn"
 
 #: taskcoachlib\gui\viewer\effort.py:248
 msgid "&Total time spent"
-msgstr ""
+msgstr "&Total förbrukad tid"
 
 #: taskcoachlib\gui\viewer\effort.py:249
 msgid "Show/hide total time spent column"
-msgstr ""
+msgstr "Visa/dölj kolumn total förbrukad tid"
 
 #: taskcoachlib\gui\viewer\effort.py:252
 msgid "&Total revenue"
-msgstr ""
+msgstr "&Total inkomst"
 
 #: taskcoachlib\gui\viewer\effort.py:253
 msgid "Show/hide total revenue column"
-msgstr ""
+msgstr "Visa/dölj kolumn total inkomst"
 
 #: taskcoachlib\gui\viewer\effort.py:257
 msgid "Effort per weekday"
-msgstr ""
+msgstr "Insats per veckodag"
 
 #: taskcoachlib\gui\viewer\effort.py:258
 msgid "Show/hide time spent per weekday columns"
-msgstr ""
+msgstr "Visa/dölj kolumn förbrukad tid per veckodag"
 
 #: taskcoachlib\gui\viewer\effort.py:311
 msgid "Effort: %d selected, %d visible, %d total"
-msgstr ""
+msgstr "Insats: %d markerade, %d synliga, %d totalt"
 
 #: taskcoachlib\gui\viewer\effort.py:314
 msgid "Status: %d tracking"
-msgstr ""
+msgstr "Status: %d pågående tidtagning"
 
 #: taskcoachlib\gui\viewer\mixin.py:211
 msgid "&Due tasks"
-msgstr ""
+msgstr "Uppgifter som passerat deadline"
 
 #: taskcoachlib\gui\viewer\mixin.py:212
 msgid "&Show all due tasks"
-msgstr ""
+msgstr "&Visa alla uppgifter som passerat deadline"
 
 #: taskcoachlib\gui\viewer\mixin.py:212
 msgid "Show all due tasks"
-msgstr ""
+msgstr "Visa alla uppgifter som passerat deadline"
 
 #: taskcoachlib\gui\viewer\mixin.py:214
 msgid "&Hide all due tasks"
-msgstr ""
+msgstr "Dölj alla uppgifter som passerat deadline"
 
 #: taskcoachlib\gui\viewer\mixin.py:214
 msgid "Hide all due tasks"
-msgstr ""
+msgstr "Dölj alla uppgifter som passerat deadline"
 
 #: taskcoachlib\gui\viewer\mixin.py:216
 msgid "Only show tasks due &today"
-msgstr ""
+msgstr "Visa uppgifter som passerar deadline &idag"
 
 #: taskcoachlib\gui\viewer\mixin.py:217
 msgid "Only show tasks due today and hide later ones"
 msgstr ""
+"Visa bara uppgifter som passerar deadline &idag och dölj senare uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:219
 msgid "Only show tasks due today or t&omorrow"
-msgstr ""
+msgstr "Visa bara uppgifter som passerar deadline idag och i&morgon"
 
 #: taskcoachlib\gui\viewer\mixin.py:220
 msgid "Only show tasks due today or tomorrow and hide later ones"
 msgstr ""
+"Visa bara uppgifter som passerar deadline idag och imorgon och dölj senare "
+"uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:222
 msgid "Only show tasks due this wo&rkweek"
-msgstr ""
+msgstr "Visa bara uppgifter som passerar deadline den här &arbetsveckan"
 
 #: taskcoachlib\gui\viewer\mixin.py:223
 msgid "Only show tasks due this workweek and hide later ones"
 msgstr ""
+"Visa bara uppgifter som passerar deadline den här arbetsveckan och dölj "
+"senare uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:225
 msgid "Only show tasks due this &week"
-msgstr ""
+msgstr "Visa bara uppgifter som passerar deadline den här &veckan"
 
 #: taskcoachlib\gui\viewer\mixin.py:226
 msgid "Only show tasks due this week and hide later ones"
 msgstr ""
+"Visa bara uppgifter som passerar deadline den här veckan och dölj senare "
+"uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:228
 msgid "Only show tasks due within &7 days"
-msgstr ""
+msgstr "Visa bara uppgifter som passerar deadline inom &7 dagar"
 
 #: taskcoachlib\gui\viewer\mixin.py:229
 msgid "Only show tasks due within 7 days and hide later ones"
 msgstr ""
+"Visa bara uppgifter som passerar deadline inom 7 dagar och dölj senare "
+"uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:231
 msgid "Only show tasks due within &14 days"
-msgstr ""
+msgstr "Visa bara uppgifter som passerar deadline inom &14 dagar"
 
 #: taskcoachlib\gui\viewer\mixin.py:232
 msgid "Only show tasks due within 14 days and hide later ones"
 msgstr ""
+"Visa bara uppgifter som passerar deadline inom 14 dagar och dölj senare "
+"uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:234
 msgid "Only show tasks due this &month"
-msgstr ""
+msgstr "Visa bara uppgifter som passerar deadline den här &månaden"
 
 #: taskcoachlib\gui\viewer\mixin.py:235
 msgid "Only show tasks due this month and hide later ones"
 msgstr ""
+"Visa bara uppgifter som passerar deadline den här månaden och dölj senare "
+"uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:237
 msgid "Only show tasks due within &30 days"
-msgstr ""
+msgstr "Visa bara uppgifter som passerar deadline inom &30 dagar"
 
 #: taskcoachlib\gui\viewer\mixin.py:238
 msgid "Only show tasks due within 30 days and hide later ones"
 msgstr ""
+"Visa bara uppgifter som passerar deadline inom 30 dagar och dölj senare "
+"uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:240
 msgid "Only show tasks due this &year"
-msgstr ""
+msgstr "Visa bara uppgifter som passerar deadline i &år"
 
 #: taskcoachlib\gui\viewer\mixin.py:241
 msgid "Only show tasks due this year and hide later ones"
 msgstr ""
+"Visa bara uppgifter som passerar deadline i år och dölj senare uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:243
 msgid "&Completed tasks"
-msgstr ""
+msgstr "&Klara uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:244
 msgid "&Show all completed tasks"
-msgstr ""
+msgstr "&Visa alla klara uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:245
 msgid "Show all completed tasks"
-msgstr ""
+msgstr "Visa alla klara uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:246
 msgid "&Hide all completed tasks"
-msgstr ""
+msgstr "&Dölj alla klara uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:247
 msgid "Hide all completed tasks"
-msgstr ""
+msgstr "Dölj alla klara uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:248
 msgid "Only show tasks completed &today"
-msgstr ""
+msgstr "Visa bara uppgifter som klarskrivits &idag"
 
 #: taskcoachlib\gui\viewer\mixin.py:249
 msgid "Only show tasks completed today and hide older ones"
-msgstr ""
+msgstr "Visa bara uppgifter som klarskrivits idag och dölj äldre uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:251
 msgid "Only show tasks completed &yesterday and today"
-msgstr ""
+msgstr "Visa bara uppgifter som klarskrivits i&går och idag"
 
 #: taskcoachlib\gui\viewer\mixin.py:252
 msgid "Only show tasks completed yesterday and today and hide older ones"
 msgstr ""
+"Visa bara uppgifter som klarskrivits igår och idag och dölj äldre uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:254
 msgid "Only show tasks completed this wo&rkweek"
-msgstr ""
+msgstr "Visa bara uppgifter som klarskrivits den här &arbetsveckan"
 
 #: taskcoachlib\gui\viewer\mixin.py:255
 msgid "Only show tasks completed this workweek and hide older ones"
 msgstr ""
+"Visa bara uppgifter som klarskrivits den här arbetsveckan och dölj äldre "
+"uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:257
 msgid "Only show tasks completed this &week"
-msgstr ""
+msgstr "Visa bara uppgifter som klarskrivits den här &veckan"
 
 #: taskcoachlib\gui\viewer\mixin.py:258
 msgid "Only show tasks completed this week and hide older ones"
 msgstr ""
+"Visa bara uppgifter som klarskrivits den här veckan och dölj äldre uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:260
 msgid "Only show tasks completed the last &7 days"
-msgstr ""
+msgstr "Visa bara uppgifter som klarskrivits de senaste &7 dagarna"
 
 #: taskcoachlib\gui\viewer\mixin.py:261
 msgid "Only show tasks completed the last 7 days and hide older ones"
 msgstr ""
+"Visa bara uppgifter som klarskrivits de senaste 7 dagarna och dölj äldre "
+"uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:263
 msgid "Only show tasks completed the last &14 days"
-msgstr ""
+msgstr "Visa bara uppgifter som klarskrivits de senaste &14 dagarna"
 
 #: taskcoachlib\gui\viewer\mixin.py:264
 msgid "Only show tasks completed the last 14 days and hide older ones"
 msgstr ""
+"Visa bara uppgifter som klarskrivits de senaste 14 dagarna  och dölj äldre "
+"uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:266
 msgid "Only show tasks completed this &month"
-msgstr ""
+msgstr "Visa bara uppgifter som klarskrivits innevarande &månad"
 
 #: taskcoachlib\gui\viewer\mixin.py:267
 msgid "Only show tasks completed this month and hide older ones"
 msgstr ""
+"Visa bara uppgifter som klarskrivits innevarande månad och dölj äldre "
+"uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:269
 msgid "Only show tasks completed the last &30 days"
-msgstr ""
+msgstr "Visa bara uppgifter som klarskrivits de senaste &30 dagarna"
 
 #: taskcoachlib\gui\viewer\mixin.py:270
 msgid "Only show tasks completed the last 30 days and hide older ones"
 msgstr ""
+"Visa bara uppgifter som klarskrivits de senaste 30 dagarna och dölj äldre "
+"uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:272
 msgid "Only show tasks completed this &year"
-msgstr ""
+msgstr "Visa bara uppgifter som klarskrivits i &år"
 
 #: taskcoachlib\gui\viewer\mixin.py:273
 msgid "Only show tasks completed this year and hide older ones"
-msgstr ""
+msgstr "Visa bara uppgifter som klarskrivits i år och dölj äldre uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:275
 msgid "&Inactive tasks"
-msgstr ""
+msgstr "&Passiva uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:276
 msgid "&Show all inactive tasks"
-msgstr ""
+msgstr "&Visa alla passiva uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:277
 msgid "Show all inactive tasks (tasks with a start date in the future)"
 msgstr ""
+"Visa alla passiva uppgifter (uppgifter med starttidpunkt i framtiden)"
 
 #: taskcoachlib\gui\viewer\mixin.py:279
 msgid "&Hide all inactive tasks"
-msgstr ""
+msgstr "&Dölj alla passiva uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:280
 msgid "Hide all inactive tasks (tasks with a start date in the future)"
 msgstr ""
+"Dölj alla passiva uppgifter (uppgifter med starttidpunkt i framtiden)"
 
 #: taskcoachlib\gui\viewer\mixin.py:282
 msgid "Only show tasks starting &today"
-msgstr ""
+msgstr "Visa bara uppgifter med starttidpunkt &idag"
 
 #: taskcoachlib\gui\viewer\mixin.py:283
 msgid "Only show tasks starting today and hide later ones"
-msgstr ""
+msgstr "Visa bara uppgifter med starttidpunkt idag och dölj senare uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:285
 msgid "Only show tasks starting today or t&omorrow"
-msgstr ""
+msgstr "Visa bara uppgifter med starttidpunkt idag och i&morgon"
 
 #: taskcoachlib\gui\viewer\mixin.py:286
 msgid "Only show tasks starting today or tomorrow and hide later ones"
 msgstr ""
+"Visa bara uppgifter med starttidpunkt idag och imorgon och dölj senare "
+"uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:288
 msgid "Only show tasks starting this wo&rkweek"
-msgstr ""
+msgstr "Visa bara uppgifter med starttidpunkt innevarande &arbetsvecka"
 
 #: taskcoachlib\gui\viewer\mixin.py:289
 msgid "Only show tasks starting this workweek and hide later ones"
 msgstr ""
+"Visa bara uppgifter med starttidpunkt innevarande arbetsvecka och dölj "
+"senare uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:291
 msgid "Only show tasks starting this &week"
-msgstr ""
+msgstr "Visa bara uppgifter med starttidpunkt innevarande &vecka"
 
 #: taskcoachlib\gui\viewer\mixin.py:292
 msgid "Only show tasks starting this week and hide later ones"
 msgstr ""
+"Visa bara uppgifter med starttidpunkt innevarande vecka och dölj senare "
+"uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:294
 msgid "Only show tasks starting the next &7 days"
-msgstr ""
+msgstr "Visa bara uppgifter med starttidpunkt inom &7 dagar"
 
 #: taskcoachlib\gui\viewer\mixin.py:295
 msgid "Only show tasks starting the next 7 days and hide later ones"
 msgstr ""
+"Visa bara uppgifter med starttidpunkt inom 7 dagar och dölj senare uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:297
 msgid "Only show tasks starting the next &14 days"
-msgstr ""
+msgstr "Visa bara uppgifter med starttidpunkt inom &14 dagar"
 
 #: taskcoachlib\gui\viewer\mixin.py:298
 msgid "Only show tasks starting the next 14 days and hide later ones"
 msgstr ""
+"Visa bara uppgifter med starttidpunkt inom 14 dagar och dölj senare uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:300
 msgid "Only show tasks starting this &month"
-msgstr ""
+msgstr "Visa bara uppgifter med starttidpunkt innevarande &månad"
 
 #: taskcoachlib\gui\viewer\mixin.py:301
 msgid "Only show tasks starting this month and hide later ones"
 msgstr ""
+"Visa bara uppgifter med starttidpunkt innevarande månad och dölj senare "
+"uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:303
 msgid "Only show tasks starting the next &30 days"
-msgstr ""
+msgstr "Visa bara uppgifter med starttidpunkt inom &30 dagar"
 
 #: taskcoachlib\gui\viewer\mixin.py:304
 msgid "Only show tasks starting the next 30 days and hide later ones"
 msgstr ""
+"Visa bara uppgifter med starttidpunkt inom 30 dagar och dölj senare uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:306
 msgid "Only show tasks starting this &year"
-msgstr ""
+msgstr "Visa bara uppgifter med starttidpunkt i &år"
 
 #: taskcoachlib\gui\viewer\mixin.py:307
 msgid "Only show tasks starting this year and hide later ones"
-msgstr ""
+msgstr "Visa bara uppgifter med starttidpunkt i år och dölj senare uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:427
 msgid "Sort categories by subject"
-msgstr ""
+msgstr "Sortera kategorier efter ämne"
 
 #: taskcoachlib\gui\viewer\mixin.py:428
 msgid "Sort categories by description"
-msgstr ""
+msgstr "Sortera kategorier efter beskrivning"
 
 #: taskcoachlib\gui\viewer\mixin.py:443
 msgid "Sort attachments by subject"
-msgstr ""
+msgstr "Sortera bifogade filer efter ämne"
 
 #: taskcoachlib\gui\viewer\mixin.py:444
 msgid "Sort attachments by description"
-msgstr ""
+msgstr "Sortera bifogade filer efter beskrivning"
 
 #: taskcoachlib\gui\viewer\mixin.py:445
 msgid "Sort attachments by category"
-msgstr ""
+msgstr "Sortera bifogade filer efter kategori"
 
 #: taskcoachlib\gui\viewer\mixin.py:449 taskcoachlib\gui\viewer\note.py:102
 msgid "Sort notes by subject"
-msgstr ""
+msgstr "Sortera anteckningar efter ämne"
 
 #: taskcoachlib\gui\viewer\mixin.py:450 taskcoachlib\gui\viewer\note.py:113
 msgid "Sort notes by description"
-msgstr ""
+msgstr "Sortera anteckningar efter beskrivning"
 
 #: taskcoachlib\gui\viewer\mixin.py:451
 msgid "Sort notes by category"
-msgstr ""
+msgstr "Sortera anteckningar efter kategori"
 
 #: taskcoachlib\gui\viewer\mixin.py:456
 msgid "Sort tasks by subject"
-msgstr ""
+msgstr "Sortera uppgifter efter ämne"
 
 #: taskcoachlib\gui\viewer\mixin.py:457
 msgid "Sort tasks by description"
-msgstr ""
+msgstr "Sortera uppgifter efter beskrivning"
 
 #: taskcoachlib\gui\viewer\mixin.py:458
 msgid "Sort tasks by category"
-msgstr ""
+msgstr "Sortera uppgifter efter kategori"
 
 #: taskcoachlib\gui\viewer\mixin.py:502
 msgid "Sort tasks by start date"
-msgstr ""
+msgstr "Sortera uppgifter efter starttidpunkt"
 
 #: taskcoachlib\gui\viewer\mixin.py:502 taskcoachlib\gui\viewer\task.py:789
 msgid "&Start date"
-msgstr ""
+msgstr "&Starttidpunkt"
 
 #: taskcoachlib\gui\viewer\mixin.py:503
 msgid "Sort tasks by due date"
-msgstr ""
+msgstr "Sortera uppgifter efter deadline"
 
 #: taskcoachlib\gui\viewer\mixin.py:503 taskcoachlib\gui\viewer\task.py:792
 msgid "&Due date"
-msgstr ""
+msgstr "&Deadline"
 
 #: taskcoachlib\gui\viewer\mixin.py:504
 msgid "Sort tasks by completion date"
-msgstr ""
+msgstr "Sortera uppgifter efter klartidpunkt"
 
 #: taskcoachlib\gui\viewer\mixin.py:504 taskcoachlib\gui\viewer\task.py:795
 msgid "&Completion date"
-msgstr ""
+msgstr "&Klarskriven"
 
 #: taskcoachlib\gui\viewer\mixin.py:505
 msgid "Sort tasks by prerequisite tasks"
-msgstr ""
+msgstr "Sortera uppgifter efter uppgifter som de är beroende av"
 
 #: taskcoachlib\gui\viewer\mixin.py:505 taskcoachlib\gui\viewer\task.py:841
 msgid "&Prerequisites"
-msgstr ""
+msgstr "&Förutsättningar"
 
 #: taskcoachlib\gui\viewer\mixin.py:506
 msgid "Sort tasks by dependent tasks"
-msgstr ""
+msgstr "Sortera uppgifter efter beroende uppgifter"
 
 #: taskcoachlib\gui\viewer\mixin.py:506 taskcoachlib\gui\viewer\task.py:844
 msgid "&Dependencies"
-msgstr ""
+msgstr "&Beroenden"
 
 #: taskcoachlib\gui\viewer\mixin.py:507
 msgid "Sort tasks by time left"
-msgstr ""
+msgstr "Sortera uppgifter efter återstående tid"
 
 #: taskcoachlib\gui\viewer\mixin.py:507 taskcoachlib\gui\viewer\task.py:798
 msgid "&Time left"
-msgstr ""
+msgstr "&Återstående tid"
 
 #: taskcoachlib\gui\viewer\mixin.py:508
 msgid "Sort tasks by percentage complete"
-msgstr ""
+msgstr "Sortera uppgifter efter progress"
 
 #: taskcoachlib\gui\viewer\mixin.py:508 taskcoachlib\gui\viewer\task.py:847
 msgid "&Percentage complete"
-msgstr ""
+msgstr "&Progress"
 
 #: taskcoachlib\gui\viewer\mixin.py:509
 msgid "Sort tasks by recurrence"
-msgstr ""
+msgstr "Sortera uppgifter efter återkommande"
 
 #: taskcoachlib\gui\viewer\mixin.py:509 taskcoachlib\gui\viewer\task.py:801
 msgid "&Recurrence"
-msgstr ""
+msgstr "&Återkommande"
 
 #: taskcoachlib\gui\viewer\mixin.py:510
 msgid "Sort tasks by budget"
-msgstr ""
+msgstr "Sortera uppgifter efter planerad tidsåtgång"
 
 #: taskcoachlib\gui\viewer\mixin.py:510 taskcoachlib\gui\viewer\task.py:806
 #: taskcoachlib\gui\viewer\task.py:812
 msgid "&Budget"
-msgstr ""
+msgstr "&Planerad tidsåtgång"
 
 #: taskcoachlib\gui\viewer\mixin.py:511
 msgid "Sort tasks by time spent"
-msgstr ""
+msgstr "Sortera uppgifter efter förbrukad tid"
 
 #: taskcoachlib\gui\viewer\mixin.py:512
 msgid "Budget &left"
-msgstr ""
+msgstr "Återstående &tid"
 
 #: taskcoachlib\gui\viewer\mixin.py:512
 msgid "Sort tasks by budget left"
-msgstr ""
+msgstr "Sortera uppgifter efter återstående tid"
 
 #: taskcoachlib\gui\viewer\mixin.py:513
 msgid "Sort tasks by priority"
-msgstr ""
+msgstr "Sortera uppgifter efter prioritet"
 
 #: taskcoachlib\gui\viewer\mixin.py:514
 msgid "Sort tasks by hourly fee"
-msgstr ""
+msgstr "Sortera uppgifter efter timpris"
 
 #: taskcoachlib\gui\viewer\mixin.py:514 taskcoachlib\gui\viewer\task.py:828
 msgid "&Hourly fee"
-msgstr ""
+msgstr "&Timpris"
 
 #: taskcoachlib\gui\viewer\mixin.py:515
 msgid "Sort tasks by fixed fee"
-msgstr ""
+msgstr "Sortera uppgifter efter fast pris"
 
 #: taskcoachlib\gui\viewer\mixin.py:515 taskcoachlib\gui\viewer\task.py:831
 msgid "&Fixed fee"
-msgstr ""
+msgstr "&Fast pris"
 
 #: taskcoachlib\gui\viewer\mixin.py:516
 msgid "Sort tasks by revenue"
-msgstr ""
+msgstr "Sortera uppgifter efter inkomst"
 
 #: taskcoachlib\gui\viewer\mixin.py:517
 msgid "Sort tasks by reminder date and time"
-msgstr ""
+msgstr "Sortera uppgifter efter påminnelsetidpunkt"
 
 #: taskcoachlib\gui\viewer\mixin.py:517 taskcoachlib\gui\viewer\task.py:865
 msgid "&Reminder"
-msgstr ""
+msgstr "&Påminnelse"
 
 #: taskcoachlib\gui\viewer\note.py:101
 msgid "&Subject"
-msgstr ""
+msgstr "&Ämne"
 
 #: taskcoachlib\gui\viewer\note.py:133
 msgid "Sort notes by categories"
-msgstr ""
+msgstr "Sortera anteckningar efter kategori"
 
 #: taskcoachlib\gui\viewer\note.py:149
 msgid "Notes: %d selected, %d total"
-msgstr "Anteckningar: %d valda, %d totalt"
+msgstr "Anteckningar: %d markerade, %d totalt"
 
 #: taskcoachlib\gui\viewer\note.py:151
 msgid "Status: n/a"
@@ -3455,19 +3561,19 @@ msgstr "Status: n/a"
 
 #: taskcoachlib\gui\viewer\task.py:36
 msgid "Tasks: %d selected, %d visible, %d total"
-msgstr ""
+msgstr "Uppgifter: %d markerade, %d synliga, %d totalt"
 
 #: taskcoachlib\gui\viewer\task.py:37
 msgid "Status: %d overdue, %d inactive, %d completed"
-msgstr ""
+msgstr "Status: %d försenade, %d passiva, %d klara"
 
 #: taskcoachlib\gui\viewer\task.py:266
 msgid "Timeline"
-msgstr ""
+msgstr "Tidslinje"
 
 #: taskcoachlib\gui\viewer\task.py:357
 msgid "Now"
-msgstr ""
+msgstr "Nu"
 
 #: taskcoachlib\gui\viewer\task.py:373
 msgid "Task square map"
@@ -3475,19 +3581,19 @@ msgstr ""
 
 #: taskcoachlib\gui\viewer\task.py:607
 msgid "Calendar viewer configuration"
-msgstr ""
+msgstr "Inställningar för kalendervyn"
 
 #: taskcoachlib\gui\viewer\task.py:742
 msgid "Dependencies"
-msgstr ""
+msgstr "Beroenden"
 
 #: taskcoachlib\gui\viewer\task.py:757
 msgid "% complete"
-msgstr ""
+msgstr "% klar"
 
 #: taskcoachlib\gui\viewer\task.py:758
 msgid "Time left"
-msgstr ""
+msgstr "Återstående tid"
 
 #: taskcoachlib\gui\viewer\task.py:782
 msgid "&Dates"
@@ -3495,123 +3601,123 @@ msgstr "&Datum"
 
 #: taskcoachlib\gui\viewer\task.py:783
 msgid "&All date columns"
-msgstr ""
+msgstr "&Alla datumkolumner"
 
 #: taskcoachlib\gui\viewer\task.py:784
 msgid "Show/hide all date-related columns"
-msgstr ""
+msgstr "Visa/dölj alla datumkolumner"
 
 #: taskcoachlib\gui\viewer\task.py:790
 msgid "Show/hide start date column"
-msgstr ""
+msgstr "Visa/dölj kolumn för starttid"
 
 #: taskcoachlib\gui\viewer\task.py:793
 msgid "Show/hide due date column"
-msgstr ""
+msgstr "Visa/dölj kolumn för deadline"
 
 #: taskcoachlib\gui\viewer\task.py:796
 msgid "Show/hide completion date column"
-msgstr ""
+msgstr "Visa/dölj kolumn för klardatum"
 
 #: taskcoachlib\gui\viewer\task.py:799
 msgid "Show/hide time left column"
-msgstr ""
+msgstr "Visa/dölj kolumn för återstående tid"
 
 #: taskcoachlib\gui\viewer\task.py:802
 msgid "Show/hide recurrence column"
-msgstr ""
+msgstr "Visa/dölj kolumn för återkommande uppgift"
 
 #: taskcoachlib\gui\viewer\task.py:807
 msgid "&All budget columns"
-msgstr ""
+msgstr "&Alla kolumner för tidplanering"
 
 #: taskcoachlib\gui\viewer\task.py:808
 msgid "Show/hide all budget-related columns"
-msgstr ""
+msgstr "Visa/dölj alla kolumner för tidplanering"
 
 #: taskcoachlib\gui\viewer\task.py:813
 msgid "Show/hide budget column"
-msgstr ""
+msgstr "Visa/dölj kolumn för planerad tidsåtgång"
 
 #: taskcoachlib\gui\viewer\task.py:818
 msgid "&Budget left"
-msgstr ""
+msgstr "&Återstående tid"
 
 #: taskcoachlib\gui\viewer\task.py:819
 msgid "Show/hide budget left column"
-msgstr ""
+msgstr "Visa/dölj kolumn för återstående tid"
 
 #: taskcoachlib\gui\viewer\task.py:822
 msgid "&Financial"
-msgstr ""
+msgstr "&Ekonomi"
 
 #: taskcoachlib\gui\viewer\task.py:823
 msgid "&All financial columns"
-msgstr ""
+msgstr "&Alla ekonomikolumner"
 
 #: taskcoachlib\gui\viewer\task.py:824
 msgid "Show/hide all finance-related columns"
-msgstr ""
+msgstr "Visa/dölj alla kolumner för ekonomi"
 
 #: taskcoachlib\gui\viewer\task.py:829
 msgid "Show/hide hourly fee column"
-msgstr ""
+msgstr "Visa/dölj kolumn för timpris"
 
 #: taskcoachlib\gui\viewer\task.py:832
 msgid "Show/hide fixed fee column"
-msgstr ""
+msgstr "Visa/dölj kolumn för fast pris"
 
 #: taskcoachlib\gui\viewer\task.py:842
 msgid "Show/hide prerequisites column"
-msgstr ""
+msgstr "Visa/dölj kolumn för föutsättningar"
 
 #: taskcoachlib\gui\viewer\task.py:845
 msgid "Show/hide dependencies column"
-msgstr ""
+msgstr "Visa/dölj kolumn för beroenden"
 
 #: taskcoachlib\gui\viewer\task.py:848
 msgid "Show/hide percentage complete column"
-msgstr ""
+msgstr "Visa/dölj kolumn för progress"
 
 #: taskcoachlib\gui\viewer\task.py:851
 msgid "Show/hide attachment column"
-msgstr ""
+msgstr "Visa/dölj kolumn för bifogade filer"
 
 #: taskcoachlib\gui\viewer\task.py:863
 msgid "Show/hide priority column"
-msgstr ""
+msgstr "Visa/dölj kolumn för prioritet"
 
 #: taskcoachlib\gui\viewer\task.py:866
 msgid "Show/hide reminder column"
-msgstr ""
+msgstr "Visa/dölj kolumn för påminnelser"
 
 #: taskcoachlib\gui\wizard\csvimport.py:46
 msgid "Comma"
-msgstr ""
+msgstr "Komma"
 
 #: taskcoachlib\gui\wizard\csvimport.py:47 taskcoachlib\help\__init__.py:656
 msgid "Tab"
-msgstr ""
+msgstr "Tab"
 
 #: taskcoachlib\gui\wizard\csvimport.py:48
 msgid "Space"
-msgstr ""
+msgstr "Blanksteg"
 
 #: taskcoachlib\gui\wizard\csvimport.py:49
 msgid "Colon"
-msgstr ""
+msgstr "Kolon"
 
 #: taskcoachlib\gui\wizard\csvimport.py:50
 msgid "Semicolon"
-msgstr ""
+msgstr "Semikolon"
 
 #: taskcoachlib\gui\wizard\csvimport.py:54
 msgid "Simple quote"
-msgstr ""
+msgstr "Apostrof"
 
 #: taskcoachlib\gui\wizard\csvimport.py:55
 msgid "Double quote"
-msgstr ""
+msgstr "Citationstecken"
 
 #: taskcoachlib\gui\wizard\csvimport.py:59
 msgid "Double it"
@@ -3623,15 +3729,15 @@ msgstr ""
 
 #: taskcoachlib\gui\wizard\csvimport.py:72
 msgid "Import only the selected rows"
-msgstr ""
+msgstr "Importera markerade rader"
 
 #: taskcoachlib\gui\wizard\csvimport.py:75
 msgid "First line describes fields"
-msgstr ""
+msgstr "Första raden innehåller fältnamn"
 
 #: taskcoachlib\gui\wizard\csvimport.py:88
 msgid "Delimiter"
-msgstr ""
+msgstr "Avgränsare"
 
 #: taskcoachlib\gui\wizard\csvimport.py:91
 msgid "Quote character"
@@ -3643,30 +3749,30 @@ msgstr ""
 
 #: taskcoachlib\gui\wizard\csvimport.py:158
 msgid "Field #%d"
-msgstr ""
+msgstr "Fäl #%d"
 
 #: taskcoachlib\gui\wizard\csvimport.py:202
 msgid "Please select a file."
-msgstr ""
+msgstr "Markera en fil"
 
 #: taskcoachlib\gui\wizard\csvimport.py:213
 #: taskcoachlib\persistence\csv\reader.py:65
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: taskcoachlib\gui\wizard\csvimport.py:216
 #: taskcoachlib\persistence\csv\reader.py:72
 msgid "Category"
-msgstr ""
+msgstr "Kategori"
 
 #: taskcoachlib\gui\wizard\csvimport.py:224
 #: taskcoachlib\persistence\csv\reader.py:130
 msgid "Percent complete"
-msgstr ""
+msgstr "Progress"
 
 #: taskcoachlib\gui\wizard\csvimport.py:247
 msgid "Column header in CSV file"
-msgstr ""
+msgstr "Kolumnrubrik i CSV-fil"
 
 #: taskcoachlib\gui\wizard\csvimport.py:248
 msgid "%s attribute"
@@ -3678,144 +3784,144 @@ msgstr ""
 
 #: taskcoachlib\gui\wizard\csvimport.py:292
 msgid "The \"%s\" field cannot be selected several times."
-msgstr ""
+msgstr "Fältet \"%s\" kan inte markeras flera gånger"
 
 #: taskcoachlib\gui\wizard\csvimport.py:295
 msgid "The fields %s cannot be selected several times."
-msgstr ""
+msgstr "Fälten \"%s\" kan inte markeras flera gånger"
 
 #: taskcoachlib\help\__init__.py:65
 msgid "Table of contents"
-msgstr ""
+msgstr "Innehåll"
 
 #: taskcoachlib\help\__init__.py:70 taskcoachlib\help\__init__.py:131
 msgid "About tasks"
-msgstr ""
+msgstr "Om uppgifter"
 
 #: taskcoachlib\help\__init__.py:71 taskcoachlib\help\__init__.py:137
 msgid "Task properties"
-msgstr ""
+msgstr "Egenskaper för uppgifter"
 
 #: taskcoachlib\help\__init__.py:72 taskcoachlib\help\__init__.py:171
 msgid "Task states"
-msgstr ""
+msgstr "Status för uppgifter"
 
 #: taskcoachlib\help\__init__.py:73 taskcoachlib\help\__init__.py:189
 msgid "Task colors"
-msgstr ""
+msgstr "Färgmärkning för uppgifter"
 
 #: taskcoachlib\help\__init__.py:77 taskcoachlib\help\__init__.py:209
 msgid "About effort"
-msgstr ""
+msgstr "Om insatser"
 
 #: taskcoachlib\help\__init__.py:78 taskcoachlib\help\__init__.py:216
 msgid "Effort properties"
-msgstr ""
+msgstr "Egenskaper för insatser"
 
 #: taskcoachlib\help\__init__.py:82 taskcoachlib\help\__init__.py:235
 msgid "About categories"
-msgstr ""
+msgstr "Om kategorier"
 
 #: taskcoachlib\help\__init__.py:83 taskcoachlib\help\__init__.py:248
 msgid "Category properties"
-msgstr ""
+msgstr "Egenskaper för kategorier"
 
 #: taskcoachlib\help\__init__.py:87 taskcoachlib\help\__init__.py:270
 msgid "About notes"
-msgstr ""
+msgstr "Om anteckningar"
 
 #: taskcoachlib\help\__init__.py:88 taskcoachlib\help\__init__.py:278
 msgid "Note properties"
-msgstr ""
+msgstr "Egenskaper för anteckningar"
 
 #: taskcoachlib\help\__init__.py:90 taskcoachlib\help\__init__.py:289
 msgid "Printing and exporting"
-msgstr ""
+msgstr "Utskrift och export"
 
 #: taskcoachlib\help\__init__.py:92 taskcoachlib\help\__init__.py:291
 msgid "About printing and exporting"
-msgstr ""
+msgstr "Om utskrift och export"
 
 #: taskcoachlib\help\__init__.py:94 taskcoachlib\help\__init__.py:301
 msgid "Printing"
-msgstr ""
+msgstr "Utskrifter"
 
 #: taskcoachlib\help\__init__.py:95 taskcoachlib\help\__init__.py:313
 msgid "Exporting"
-msgstr ""
+msgstr "Export"
 
 #: taskcoachlib\help\__init__.py:97 taskcoachlib\help\__init__.py:328
 msgid "E-mail (Outlook &amp; Thunderbird) integration"
-msgstr ""
+msgstr "E-postintegration (Outlook &amp; Thunderbird)"
 
 #: taskcoachlib\help\__init__.py:99 taskcoachlib\help\__init__.py:330
 msgid "About e-mail integration"
-msgstr ""
+msgstr "Om e-postintegration"
 
 #: taskcoachlib\help\__init__.py:100 taskcoachlib\help\__init__.py:343
 msgid "Attaching an e-mail to a task"
-msgstr ""
+msgstr "Lägg till e-postmeddelande som bifogad fil till en uppgift"
 
 #: taskcoachlib\help\__init__.py:101 taskcoachlib\help\__init__.py:350
 msgid "Creating a task from an e-mail"
-msgstr ""
+msgstr "Skapa en uppgift från ett e-postmeddelande"
 
 #: taskcoachlib\help\__init__.py:103 taskcoachlib\help\__init__.py:360
 msgid "SyncML support"
-msgstr ""
+msgstr "Stöd för SyncML"
 
 #: taskcoachlib\help\__init__.py:105 taskcoachlib\help\__init__.py:362
 msgid "What is SyncML"
-msgstr ""
+msgstr "Vad är SyncML"
 
 #: taskcoachlib\help\__init__.py:106 taskcoachlib\help\__init__.py:383
 msgid "Setup"
-msgstr ""
+msgstr "Konfigurera"
 
 #: taskcoachlib\help\__init__.py:107 taskcoachlib\help\__init__.py:403
 msgid "Limitations"
-msgstr ""
+msgstr "Begränsningar"
 
 #: taskcoachlib\help\__init__.py:108 taskcoachlib\help\__init__.py:115
 #: taskcoachlib\help\__init__.py:418 taskcoachlib\help\__init__.py:523
 msgid "Troubleshooting"
-msgstr ""
+msgstr "Felsökning"
 
 #: taskcoachlib\help\__init__.py:109 taskcoachlib\help\__init__.py:430
 msgid "Purging deleted items"
-msgstr ""
+msgstr "Raderar objekt permanent"
 
 #: taskcoachlib\help\__init__.py:111
 msgid "iPhone and iPod Touch"
-msgstr ""
+msgstr "iPhone och iPod Touch"
 
 #: taskcoachlib\help\__init__.py:113
 msgid "%(name)s on the iPhone"
-msgstr ""
+msgstr "%(name)s på iPhone"
 
 #: taskcoachlib\help\__init__.py:114 taskcoachlib\help\__init__.py:469
 msgid "Configuration"
-msgstr ""
+msgstr "Konfigurering"
 
 #: taskcoachlib\help\__init__.py:117 taskcoachlib\help\__init__.py:544
 msgid "Task templates"
-msgstr ""
+msgstr "Uppgiftsmallar"
 
 #: taskcoachlib\help\__init__.py:119 taskcoachlib\help\__init__.py:546
 msgid "About templates"
-msgstr ""
+msgstr "Om mallar"
 
 #: taskcoachlib\help\__init__.py:120 taskcoachlib\help\__init__.py:553
 msgid "Using templates"
-msgstr ""
+msgstr "Att använda mallar"
 
 #: taskcoachlib\help\__init__.py:122 taskcoachlib\help\__init__.py:588
 msgid "Graphical user interface"
-msgstr ""
+msgstr "Användargränssnitt"
 
 #: taskcoachlib\help\__init__.py:124 taskcoachlib\help\__init__.py:610
 msgid "Keyboard shortcuts"
-msgstr ""
+msgstr "Tangentbordsgenvägar"
 
 #: taskcoachlib\help\__init__.py:133
 msgid ""
@@ -3823,24 +3929,29 @@ msgid ""
 "represent anything from a single little thing you have to do to a complete \n"
 "project consisting of different phases and numerous activities."
 msgstr ""
+"Uppgifter är de viktigaste objekten du kan hantera. En uppgift kan "
+"representera allt från den enklaste uppgift till ett stort projekt med olika "
+"faser och många aktiviteter."
 
 #: taskcoachlib\help\__init__.py:139
 msgid "Tasks have the following properties you can change:"
-msgstr ""
+msgstr "Du kan ändra följande egenskaper för en uppgift:"
 
 #: taskcoachlib\help\__init__.py:141
 msgid "Subject: a single line that summarizes the task."
-msgstr ""
+msgstr "Ämne: en rubrik som sammanfattar uppgifter"
 
 #: taskcoachlib\help\__init__.py:142
 msgid "Description: a multi-line description of the task."
-msgstr ""
+msgstr "Beskrivning: där du kan skriva flera rader om uppgiften"
 
 #: taskcoachlib\help\__init__.py:143
 msgid ""
 "Due date: the date the task should be finished. \n"
 "This can be 'None' indicating that this task has no fixed due date."
 msgstr ""
+"Deadline: tidpunkten när uppgiften ska vara klar. \n"
+"Här kan det stå \"Ingen\" om det inte finns något särskilt klardatum."
 
 #: taskcoachlib\help\__init__.py:145
 msgid ""
@@ -3851,6 +3962,12 @@ msgid ""
 "convenient \n"
 "for e.g. registering sick leave."
 msgstr ""
+"Starttidpunkt: datum när uppgiften kan påbörjas. \n"
+"Som förvald starttidpunkt står datumet när uppgiften skapades. Det kan också "
+"\n"
+"stå \"Ingen\" för att visa att du egentligen inte vill starta uppgiften. Det "
+"kan vara \n"
+"praktiskt t ex för att anmäla sjukfrånvara."
 
 #: taskcoachlib\help\__init__.py:149
 msgid ""
@@ -3859,6 +3976,9 @@ msgid ""
 "\n"
 "completed. The completion date can also be entered manually."
 msgstr ""
+"Klardatum: i det här fältet står det \"Ingen\" så länge uppgiften pågår. \n"
+"När du klarskriver uppgiften skrivs automatiskt dagens datum i fältet, \n"
+"men du kan också mata in ett annat datum manuellt."
 
 #: taskcoachlib\help\__init__.py:152
 msgid ""
@@ -3869,90 +3989,104 @@ msgid ""
 "date has to be in the past <em>and</em> all prerequisite tasks need to be\n"
 "completed before the task becomes active."
 msgstr ""
+"Förutsättningar: andra uppgifter som måste vara klara innan en\n"
+"uppgift kan påbörjas. Uppgiften har statusen \"Passiv\" tills den sista \n"
+"uppgiften som ingår som förutsättning är klarskriven. OBS att om en uppgift\n"
+"har en starttidpunkt så måste startidpunkten ha passerats <em>and</em>\n"
+"alla uppgifter som ingår som förutsättning vara klarskrivna innan uppgiften\n"
+"får statusen \"Aktiv\"."
 
 #: taskcoachlib\help\__init__.py:157
 msgid "Budget: amount of hours available for the task."
-msgstr ""
+msgstr "Budget: Planerad tidsåtgång för uppgiften i timmar."
 
 #: taskcoachlib\help\__init__.py:158
 msgid "Hourly fee: the amount of money earned with the task per hour."
-msgstr ""
+msgstr "Timpris: Inkomst per timme för uppgiften"
 
 #: taskcoachlib\help\__init__.py:159
 msgid ""
 "Fixed fee: the amount of money earned with the task \n"
 "regardless of the time spent."
-msgstr ""
+msgstr "Fast pris: inkomsten för en uppgift oavsett tidsåtgång."
 
 #: taskcoachlib\help\__init__.py:162 taskcoachlib\help\__init__.py:226
 msgid "The following properties are calculated from the properties above:"
-msgstr ""
+msgstr "Följande värden räknas ut med hjälp av värdena ovan:"
 
 #: taskcoachlib\help\__init__.py:164
 msgid "Days left: the number of days left until the due date."
-msgstr ""
+msgstr "Dagar kvar: antal dagar till deadline"
 
 #: taskcoachlib\help\__init__.py:165
 msgid ""
 "Dependencies: other tasks that can be started when the \n"
 "prerequisite task has been completed."
 msgstr ""
+"Beroenden: uppgifter som kan startas först när alla \n"
+"uppgifter som är förutsättningar är klarskrivna."
 
 #: taskcoachlib\help\__init__.py:167
 msgid "Time spent: effort spent on the task."
-msgstr ""
+msgstr "Förbrukad tid: tid som använts för uppgiften"
 
 #: taskcoachlib\help\__init__.py:168
 msgid "Budget left: task budget minus time spent on the task."
 msgstr ""
+"Återstående tid: Planerad tidsåtgång minus förbrukad tid för uppgiften"
 
 #: taskcoachlib\help\__init__.py:169
 msgid "Revenue: hourly fee times hours spent plus fixed fee."
-msgstr ""
+msgstr "Inkomst: timpris x förbrukad tid + fast pris"
 
 #: taskcoachlib\help\__init__.py:173
 msgid "Tasks always have exactly one of the following states:"
-msgstr ""
+msgstr "Uppgifter har alltid endast en av följande status:"
 
 #: taskcoachlib\help\__init__.py:175
 msgid "Active: the start date is in the past and the due date in the future;"
 msgstr ""
+"Aktiv: Starttidpunkten har passerats och deadline ligger i framtiden;"
 
 #: taskcoachlib\help\__init__.py:176
 msgid ""
 "Inactive: the start date is in the future, and/or not all \n"
 "prerequisite tasks have been completed;"
 msgstr ""
+"Passiv: starttidpunkten ligger i framtiden, och/eller alla \n"
+"förutsättningar är inte klarskrivna;"
 
 #: taskcoachlib\help\__init__.py:178
 msgid "Completed: the task has been completed."
-msgstr ""
+msgstr "Klarskriven: uppgiften är klar."
 
 #: taskcoachlib\help\__init__.py:180
 msgid "In addition, tasks can be referenced as:"
-msgstr ""
+msgstr "Dessutom kan uppgifter klassas som:"
 
 #: taskcoachlib\help\__init__.py:182
 msgid "Overdue: the due date is in the past;"
-msgstr ""
+msgstr "Försenad: Deadline har passerats;"
 
 #: taskcoachlib\help\__init__.py:183
 msgid ""
 "Due soon: the due date is soon (what 'soon' is, can be \n"
 "changed in the preferences);"
 msgstr ""
+"På gång: Deadline ligger i nära framtid (hur långt in i framtiden \n"
+"kan ändras i Inställningar);"
 
 #: taskcoachlib\help\__init__.py:185
 msgid "Over budget: no budget left;"
-msgstr ""
+msgstr "Över budget: all planerad tid har använts;"
 
 #: taskcoachlib\help\__init__.py:186
 msgid "Under budget: still budget left;"
-msgstr ""
+msgstr "Under budget: det finns fortfarande tillgänglig tid;"
 
 #: taskcoachlib\help\__init__.py:187
 msgid "No budget: the task has no budget."
-msgstr ""
+msgstr "Ingen budget: uppgiften saknar planerad tid"
 
 #: taskcoachlib\help\__init__.py:191
 msgid "The text of tasks is colored according to the following rules:"
@@ -3960,29 +4094,31 @@ msgstr ""
 
 #: taskcoachlib\help\__init__.py:193
 msgid "Overdue tasks are red;"
-msgstr ""
+msgstr "Försenade uppgifter är röda;"
 
 #: taskcoachlib\help\__init__.py:194
 msgid "Tasks due soon are orange;"
-msgstr ""
+msgstr "Uppgifter på gång är orange;"
 
 #: taskcoachlib\help\__init__.py:195
 msgid "Active tasks are black text with a blue icon;"
-msgstr ""
+msgstr "Aktiva uppgifter har svart text och en blå ikon;"
 
 #: taskcoachlib\help\__init__.py:196
 msgid "Future tasks are gray, and"
-msgstr ""
+msgstr "Framtida uppgifter är grå, och"
 
 #: taskcoachlib\help\__init__.py:197
 msgid "Completed tasks are green."
-msgstr ""
+msgstr "Klarskrivna uppgifter är gröna."
 
 #: taskcoachlib\help\__init__.py:198
 msgid ""
 "This all assumes you have not changed the text colors through the \n"
 "preferences dialog, of course."
 msgstr ""
+"Detta förutsätter förstås att du inte ändrat textfärgerna i\n"
+"inställningarna."
 
 #: taskcoachlib\help\__init__.py:201
 msgid ""
@@ -3990,6 +4126,9 @@ msgid ""
 "task belongs to. See the section about \n"
 "<a href=\"#categoryproperties\">category properties</a> below."
 msgstr ""
+"Uppgifternas bakgrundsfärg styrs av den kategori som uppgiften \n"
+"tillhör. Se avsnittet om \n"
+"<a href=\"#categoryproperties\">Egenskaper för kategorier</a> nedan."
 
 #: taskcoachlib\help\__init__.py:211
 msgid ""
@@ -3999,36 +4138,45 @@ msgid ""
 "the Effort menu or context menu or via the 'Start tracking effort' toolbar \n"
 "button."
 msgstr ""
+"När du arbetar med en uppgift kan du registrera den använda tiden\n"
+"med tidtagningsfunktionen. Markera en uppgift och välj \"Starta "
+"tidtagning\"\n"
+"i insatsmenyn eller åtgärdsmenyn eller tryck på knappen \"Starta "
+"tidtagning\" \n"
+"i verktygsfältet."
 
 #: taskcoachlib\help\__init__.py:218
 msgid "Effort records have the following properties you can change:"
-msgstr ""
+msgstr "Även för Insatser kan du ändra vissa värden:"
 
 #: taskcoachlib\help\__init__.py:220
 msgid "Task: the task the effort belongs to."
-msgstr ""
+msgstr "Uppgift: den uppgift som insatsen tillhör."
 
 #: taskcoachlib\help\__init__.py:221
 msgid "Start date/time: start date and time of the effort."
-msgstr ""
+msgstr "Starttidpunkt: insatsens starttidpunkt"
 
 #: taskcoachlib\help\__init__.py:222
 msgid ""
 "Stop date/time: stop date and time of the effort. This can be \n"
 "'None' as long as you are still working on the task."
 msgstr ""
+"Stopptidpunkt: insatsens sluttidpunkt. Här kan det stå \n"
+"\"Ingen\" under tiden som du arbetar med uppgiften."
 
 #: taskcoachlib\help\__init__.py:224
 msgid "Description: a multi-line description of the effort."
-msgstr ""
+msgstr "Beskrivning: här kan insatsen beskrivas med flera rader"
 
 #: taskcoachlib\help\__init__.py:228
 msgid "Time spent: how much time you have spent working on the task."
 msgstr ""
+"Förbrukad tid: hur mycket tid du använt för att arbeta med uppgiften."
 
 #: taskcoachlib\help\__init__.py:229
 msgid "Revenue: money earned with the time spent."
-msgstr ""
+msgstr "Inkomst: pengar som tjänats på den förbrukade tiden."
 
 #: taskcoachlib\help\__init__.py:237
 msgid ""
@@ -4039,6 +4187,13 @@ msgid ""
 "the \n"
 "relevant categories for that item in the category pane of the edit dialog."
 msgstr ""
+"Uppgifter och anteckningar kan tillhöra en eller flera kategorier. Först "
+"måste \n"
+"du skapa kategorierna från kategorimenyn. När det är klart kan du lägga till "
+"\n"
+"en eller flera kategorier till objekt genom att redigera objektet och kryssa "
+"\n"
+"för önskade kategorier under kategorifliken i dialogrutan redigera."
 
 #: taskcoachlib\help\__init__.py:242
 msgid ""
@@ -4050,18 +4205,26 @@ msgid ""
 "\n"
 "phone calls you need to make."
 msgstr ""
+"Du kan filtrera ut objekt som ska visas i uppgifts- och anteckningsvyn \n"
+"genom att kryssa för önskade kategorier i kategorivyn. Om du t.ex. har en \n"
+"kategori som heter \"telefonsamtal\" och kryssar för den kategorin så kommer "
+"\n"
+"bara uppgifter som tillhör den kategorin att visas i uppgiftsvyn, med andra "
+"\n"
+"ord de telefonsamtal du behöver ringa."
 
 #: taskcoachlib\help\__init__.py:250
 msgid "Categories have the following properties you can change:"
-msgstr ""
+msgstr "Kategorier har följande egenskaper som du kan ändra:"
 
 #: taskcoachlib\help\__init__.py:252
 msgid "Subject: a single line that summarizes the category."
-msgstr ""
+msgstr "Ämne: en rubrik som sammanfattar kategorin"
 
 #: taskcoachlib\help\__init__.py:253
 msgid "Description: a multi-line description of the category."
 msgstr ""
+"Beskrivning: hhär kan du använda flera rader för att beskriva kategorin"
 
 #: taskcoachlib\help\__init__.py:254
 msgid ""
@@ -4072,6 +4235,10 @@ msgid ""
 "only\n"
 "filter by one of the subcategories at a time."
 msgstr ""
+"Ömsesidigt exklusiva underkategorier: en kryssruta som visar\n"
+"om underkategorierna är ömsesidigt exklusiva. Om rutan är ikryssad\n"
+"kommer objekt endast att kunna tillhöra en av underkategorierna och \n"
+"du kommer endast att kunna filtrera på en underkategori i taget."
 
 #: taskcoachlib\help\__init__.py:258
 msgid ""
@@ -4087,6 +4254,12 @@ msgid ""
 "associated with it, a mixture of those colors will be used to render that \n"
 "item."
 msgstr ""
+"Visningsegenskaper som ikon, teckensnitt och färg: \n"
+"visningsegenskaper används för att märka kategorin och de objekt som\n"
+"tillhör kategorin. Om en kategori saknar egen färg, teckensnitt och ikon, \n"
+"så kommer den att ärva märkningen från överordnad kategori om den har \n"
+"någon. Ett objekt som tillhör flera kategorier kommer att märkas med en \n"
+"blandning av kategoriernas färger."
 
 #: taskcoachlib\help\__init__.py:272
 msgid ""
@@ -4097,22 +4270,29 @@ msgid ""
 "viewer. Notes that are part of other items are not displayed in the notes\n"
 "viewer."
 msgstr ""
+"Anteckningar används för olika typer av information som du vill lagra\n"
+"i uppgiftsfilen. Anteckningar kan vara självständiga eller knutna till "
+"andra\n"
+"objekt som uppgifter och kategorier. Självständiga anteckningar visas\n"
+"i anteckningsvyn. Anteckningar som tillhör andra objekt visas inte i\n"
+"anteckningsvyn."
 
 #: taskcoachlib\help\__init__.py:280
 msgid "Notes have the following properties you can change:"
-msgstr ""
+msgstr "Anteckningar hör följande egenskaper som du kan ändra:"
 
 #: taskcoachlib\help\__init__.py:282
 msgid "Subject: a single line that summarizes the note."
-msgstr ""
+msgstr "Ämne: en rubrik som beskriver anteckningen."
 
 #: taskcoachlib\help\__init__.py:283
 msgid "Description: a multi-line description of the note."
 msgstr ""
+"Beskrivning: här kan du använda flera rader för att beskriva anteckningen."
 
 #: taskcoachlib\help\__init__.py:284
 msgid "Appearance properties such as icon, font and colors."
-msgstr ""
+msgstr "Visningsegenskaper som ikon, teckensnitt och färg."
 
 #: taskcoachlib\help\__init__.py:293
 msgid ""
@@ -4124,6 +4304,14 @@ msgid ""
 "details get printed or exported. When you filter items, for example hide\n"
 "completed tasks, those items don't get printed or exported."
 msgstr ""
+"Utskrift och export fungerar på samma sätt: när du skriver ut eller\n"
+"exporterar data så är det data från den aktiva vyn som skrivs ut eller\n"
+"exporteras. Data skrivs ut eller exporteras likadant som de visas i vyn. \n"
+"Data skrivs ut eller exporteras i samma ordning som de visas i vyn. \n"
+"Vilka kolumner som är synliga avgör vilka data som kommer med i \n"
+"en utskrift eller export. När du filtrerar, t.ex. döljer klara uppgifter, "
+"så\n"
+"kommer inte dessa objekt med i utskriften eller exporten."
 
 #: taskcoachlib\help\__init__.py:303 taskcoachlib\help\__init__.py:315
 msgid ""
@@ -4131,6 +4319,8 @@ msgid ""
 "right order, show or hide the appropriate columns and apply the relevant \n"
 "filters."
 msgstr ""
+"Förbered innehållet i vyn genom att sortera objekten i rätt ordning, \n"
+"visa eller dölj önskade kolumner och använd önskade filter."
 
 #: taskcoachlib\help\__init__.py:307
 msgid ""
@@ -4141,6 +4331,12 @@ msgid ""
 "choose to print all visible items in the active viewer, or just the \n"
 "selected items."
 msgstr ""
+"Du kan förhandsgranska utskriften med kommandot\n"
+"Arkiv -> Förhandsgranska. Du kan redigera utskriftsformat med kommandot\n"
+"Arkiv -> Utskriftsformatt. Om det stöds av skrivare och operativsystem så \n"
+"kan du välja mellan att skriva ut alla synliga ovjekt i vyn, eller bara "
+"markerade \n"
+"objekt."
 
 #: taskcoachlib\help\__init__.py:319
 msgid ""
@@ -4151,6 +4347,11 @@ msgid ""
 "you export to HTML, a CSS file is created that you can edit to change\n"
 "the appearance of the HTML."
 msgstr ""
+"Därefter väljer du format för exporten och om du vill exportera alla\n"
+"synliga objekt eller bara markerade objekt. Tillgängliga exportformat\n"
+"är CSV (kommaseparerat format), HTML och iCalendar. När du exporterar\n"
+"till HTML skapas en CSS-fil som du kan redigera för att få önskat utseende\n"
+"i HTML."
 
 #: taskcoachlib\help\__init__.py:332
 msgid ""
@@ -4162,24 +4363,32 @@ msgid ""
 "e-mail attachments on a system which is different from the one you\n"
 "created it first."
 msgstr ""
+"Med %(name)s kan du använda dra och släpp tillsammans med både\n"
+"Outlook- och Thunderbirdklienter - dock med vissa begränsningar:\n"
+"e-postmeddelanden kopieras till en katalog intill %(name)s-filen som\n"
+".eml-filer som sedan kan öppnas med valfritt program som associerats\n"
+"med filtypen. Å andra sidan kan du nu öppna de här e-postbilagorna på\n"
+"ett annat operativsystem än systemet där de först skapades."
 
 #: taskcoachlib\help\__init__.py:340
 msgid ""
 "Due to a Thunderbird limitation, you can't drag and drop several\n"
 "e-mails from Thunderbird. This does not apply to Outlook."
 msgstr ""
+"P.g.a. en begränsning i Thunderbird går det inte att dra och släppa\n"
+"flera e-postmeddelanden fån Thunderbird. Det går däremot bra i Outlook."
 
 #: taskcoachlib\help\__init__.py:345
 msgid "There are two ways to attach an e-mail to a task; you can:"
-msgstr ""
+msgstr "Det finns två sätt att knyta ett e-postmeddelande till en uppgift:"
 
 #: taskcoachlib\help\__init__.py:347
 msgid "Drop it on a task either in the task tree or the task list."
-msgstr ""
+msgstr "Släpp det på en uppgift i uppgiftsträdet eller uppgiftslistan."
 
 #: taskcoachlib\help\__init__.py:348
 msgid "Drop it in the attachment pane in the task editor."
-msgstr ""
+msgstr "Släpp det i bilagefältet i dialogrutan redigera uppgift"
 
 #: taskcoachlib\help\__init__.py:352
 msgid ""
@@ -4188,6 +4397,10 @@ msgid ""
 "description is its content. Additionally, the mail is automatically\n"
 "attached to the newly created task."
 msgstr ""
+"Om du släpper e-postmeddelandet i en tom del av uppgiftsträdet\n"
+"eller uppgiftslistan så skapas en ny uppgift. Den får samma ämne som\n"
+"e-postmeddelandets rubrik, och får meddelandet som beskrivning.\n"
+"Dessutom läggs e-postmeddelandet till som bifogad fil till uppgiften."
 
 #: taskcoachlib\help\__init__.py:364
 msgid ""
@@ -4201,6 +4414,13 @@ msgid ""
 "which allow the server to synchronize with Exchange, Google Calendar,\n"
 "etc."
 msgstr ""
+"SyncML är ett XML-protokoll som används för att synkronisera\n"
+"flera applikationer med en server. En populär open-sourceserver är\n"
+"<a href=\"http://www.funambol.com/\" target=\"_blank\">Funambol</a>. \n"
+"Synkklienter finns tillgängliga för många enheter och applikationer\n"
+"(Outlook, PocketPC, iPod, iPhone, Evolution m.fl...) men även som s.k.\n"
+"\"connectors\" som låter en server synkronisera med Exchange, Google "
+"Calendar m.fl."
 
 #: taskcoachlib\help\__init__.py:372
 msgid ""
@@ -4219,12 +4439,19 @@ msgid ""
 "are available on the <a target=\"_blank\" "
 "href=\"https://pysyncml.forge.funambol.org/\">pysyncml home page</a>."
 msgstr ""
+"I Linux måste du själv installera knytningen mellan SyncML\n"
+"och Python.  Debian installationer för 32 och 64 bitar, Python 2.5 och 2.6\n"
+"kan laddas ned från <a target=\"_blank\" "
+"href=\"https://pysyncml.forge.funambol.org/\">pysyncml home page</a>."
 
 #: taskcoachlib\help\__init__.py:385
 msgid ""
 "This feature is optional and off by default. In order to turn it on,\n"
 "go to the preferences dialog and check it on the Features page."
 msgstr ""
+"Den här funktionen är valfri och är från början avstängd. För att\n"
+"starta den gå till dialogrutan Inställningar och kryssa för den\n"
+"under fliken Funktioner."
 
 #: taskcoachlib\help\__init__.py:388
 msgid ""
@@ -4235,18 +4462,26 @@ msgid ""
 "server\n"
 "you choose; some examples are:"
 msgstr ""
+"För att göra inställningar för SyncML, gå till Redigera -> SyncML "
+"inställningar \n"
+"Fyll i URL för synkronisering, ditt ID på servern och välj vilka objekt som "
+"\n"
+"ska synkroniseras (uppgifter och/eller anteckningar). URL beror på vilken\n"
+"server du väljer. Några exempel:"
 
 #: taskcoachlib\help\__init__.py:397
 msgid ""
 "The database names are pretty standard; the default values \n"
 "should work."
-msgstr ""
+msgstr "Databasnamnen är hyftat standardiserade. Defaultvärdena bör fungera."
 
 #: taskcoachlib\help\__init__.py:400
 msgid ""
 "Each task file has its own client ID, so that two different task \n"
 "files will be considered different \"devices\" by the server."
 msgstr ""
+"Varje uppgiftsfil har sitt eget klient-ID, så att två olika \n"
+"uppgiftsfiler kommer att uppfattas som olika \"enheter\" av servern."
 
 #: taskcoachlib\help\__init__.py:405
 msgid ""
@@ -4254,18 +4489,21 @@ msgid ""
 "type being vcalendar, some %(name)s features cannot be presented to the \n"
 "server."
 msgstr ""
+"Eftersom det underliggande formatet är vcalendar kan inte vissa av %(name)s "
+"\n"
+"funktioner hanteras av servern:"
 
 #: taskcoachlib\help\__init__.py:409
 msgid "Task and category hierarchy are lost to the server."
-msgstr ""
+msgstr "Uppgifts- och kategorihierarkier går förlorade."
 
 #: taskcoachlib\help\__init__.py:410
 msgid "Recurrence and reminders are not supported yet."
-msgstr ""
+msgstr "Det saknas f.n. stöd för återkommande uppgifter och påminnelser."
 
 #: taskcoachlib\help\__init__.py:411
 msgid "Note categories are lost to the server."
-msgstr ""
+msgstr "Anteckningskategorier går förlorade."
 
 #: taskcoachlib\help\__init__.py:412
 msgid ""
@@ -4275,28 +4513,34 @@ msgid ""
 "\n"
 "arise."
 msgstr ""
+"Systemet för detektering och lösning av konflikter är en \n"
+"workaround som tillkommit p.g.a. en begränsning i Funambol. \n"
+"Det bör fungera i de flesta fall, men det kan uppstå problem om \n"
+"många applikationer synkroniserar samtidigt med samma server."
 
 #: taskcoachlib\help\__init__.py:416
 msgid "Probably some others..."
-msgstr ""
+msgstr "och troligen ytterligare några..."
 
 #: taskcoachlib\help\__init__.py:420
 msgid ""
 "The SyncML menu items are only present if your platform is \n"
 "supported. Currently supported platforms are:"
 msgstr ""
+"SynkML-menyn är synlig endast om det finns stöd för ditt \n"
+"system. F.n. stöds följande system:"
 
 #: taskcoachlib\help\__init__.py:423
 msgid "Windows, 32 bits (see below)"
-msgstr ""
+msgstr "Windows, 32 bitar (se nedan)"
 
 #: taskcoachlib\help\__init__.py:424
 msgid "Linux, 32 bits"
-msgstr ""
+msgstr "Linux, 32 bitar"
 
 #: taskcoachlib\help\__init__.py:425
 msgid "Mac OS 10.3 and later, both Intel and PPC"
-msgstr ""
+msgstr "Mac OS 10.3 och senare, både Intel och PPC"
 
 #: taskcoachlib\help\__init__.py:426
 msgid ""
@@ -4304,6 +4548,9 @@ msgid ""
 "Microsoft Visual 8 runtime installed. You can download it on the\n"
 "<a target=\"_blank\" href=\"%s\"> Microsoft download site</a>."
 msgstr ""
+"Det kan uppstå problem under Windows om du ite har installerat \n"
+"Microsoft Visual 8 runtime. Du kan ladda ner det från <a target=\"_blank\" "
+"href=\"%s\"> Microsoft download site</a>."
 
 #: taskcoachlib\help\__init__.py:432
 msgid ""
@@ -4318,6 +4565,14 @@ msgid ""
 "not a \n"
 "problem, but takes a little more disk space."
 msgstr ""
+"När SyncML är aktiverat så sker ingen egentlig radering av uppgifter och\n"
+"anteckningar - de markeras bara som raderade. Den raderade uppgiften \n"
+"eller anteckningen tas bort från uppgifts- eller anteckningslistan först vid "
+"\n"
+"nästa synkronisering. Det innebär att om du stänger av SyncML utan att \n"
+"först ha synkroniserat så kommer raderade uppgifter och anteckningar \n"
+"att finnas kvar i din uppgiftsfil. Det är inget problem, mer än att filen \n"
+"tar lite större diskutrymme."
 
 #: taskcoachlib\help\__init__.py:439
 msgid ""
@@ -4329,14 +4584,20 @@ msgid ""
 "previously, all those items will reappear, as the server\n"
 "doesn't know they're deleted."
 msgstr ""
+"I det här läget kan kommandot Arkiv -> Radera permanent användas \n"
+"för att verkligen ta bort de här uppgifterna. Kommandot är bara synligt\n"
+"när du behöver det, d.v.s. när det finns objekt som kan raderas permanent.\n"
+"Var försiktig med det här. När du åter aktiverar SyncML och synkroniserar\n"
+"med samma server kommer alla borttagna objekt att återuppstå eftersom\n"
+"servern inte vet att de har raderats."
 
 #: taskcoachlib\help\__init__.py:449
 msgid "iPhone, iPod Touch and iPad"
-msgstr ""
+msgstr "iPhone, iPod Touch och iPad"
 
 #: taskcoachlib\help\__init__.py:451
 msgid "%(name)s on the iPhone/iPod Touch/iPad"
-msgstr ""
+msgstr "%(name)s på iPhone/iPod Touch/iPad"
 
 #: taskcoachlib\help\__init__.py:453
 msgid ""
@@ -4349,80 +4610,104 @@ msgid ""
 "your computer, you'll be presented a page where you can download iTunes). \n"
 "It supports the following features:"
 msgstr ""
+"Det finns en syskon-app för %(name)s som kan laddas ner från <a \n"
+" "
+"href=\"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=3114"
+"03563&mt=8\"\n"
+" target=\"_blank\">Apple's AppStore</a>. (Om du inte har installerat iTunes "
+"på \n"
+"din dator, kommer en sida där du kan ladda ner iTunes att visas för dig). "
+"Den \n"
+"stöder följande funktioner:"
 
 #: taskcoachlib\help\__init__.py:460
 msgid ""
 "Basic task attributes: subject, description, dates (with \n"
 "recurrence)..."
 msgstr ""
+"Grundläggande uppgiftsegenskaper som ämne, beskrivning, \n"
+"tidpunkter (inklusive återkommande)..."
 
 #: taskcoachlib\help\__init__.py:462
 msgid "Hierarchical tasks and categories"
-msgstr ""
+msgstr "Hierarkiska uppgifter och kategorier"
 
 #: taskcoachlib\help\__init__.py:463
 msgid "Time tracking"
-msgstr ""
+msgstr "Tidtagning"
 
 #: taskcoachlib\help\__init__.py:464
 msgid "Multiple task files"
-msgstr ""
+msgstr "Hantering av flera uppgiftsfiler"
 
 #: taskcoachlib\help\__init__.py:465
 msgid "Two-way synchronization with %(name)s on the desktop"
-msgstr ""
+msgstr "Tvåvägssynk med desktopversionen av %(name)s"
 
 #: taskcoachlib\help\__init__.py:467
 msgid "The application is universal and has a custom iPad UI."
 msgstr ""
+"Applikationen är universell och har ett skräddarsytt användargränssnitt för "
+"iPad."
 
 #: taskcoachlib\help\__init__.py:471
 msgid "Configuration on the iPhone/iPod Touch/iPad"
-msgstr ""
+msgstr "Inställningar på iPhone/iPod Touch/iPad"
 
 #: taskcoachlib\help\__init__.py:473
 msgid ""
 "There are some settings for the iPhone/iPod Touch/iPad app in the \n"
 "Settings application:"
 msgstr ""
+"Det finns några inställningar i applikationen för iPhone/iPod Touch/iPad:"
 
 #: taskcoachlib\help\__init__.py:476
 msgid "Show completed: whether to show completed tasks."
-msgstr ""
+msgstr "Visa klarskrivna: om klarskrivna uppgifter ska visas."
 
 #: taskcoachlib\help\__init__.py:477
 msgid ""
 "Show inactive: whether to show inactive tasks (start date \n"
 "in the future)."
 msgstr ""
+"Show inactive: om passiva uppgifter ska visas (starttidpunkt \n"
+"i framtiden)."
 
 #: taskcoachlib\help\__init__.py:479
 msgid ""
 "Icon position: the LED icon may show up either on the \n"
 "left side or the right side of the screen."
 msgstr ""
+"Icon position: LED-ikonen kan visas antingen på vänster \n"
+"eller höger sida av skärmen."
 
 #: taskcoachlib\help\__init__.py:481
 msgid ""
 "Compact mode: if this is enabled, the task list has smaller \n"
 "LEDs and doesn't show categories or dates."
 msgstr ""
+"Compact mode: uppgiftslistan visas med mindre LED-ikoner \n"
+"och utan kategorier och tidpunkter."
 
 #: taskcoachlib\help\__init__.py:483
 msgid ""
 "Confirm complete: if enabled, a message box will pop up for \n"
 "confirmation when you mark a task complete by tapping its LED."
 msgstr ""
+"Confirm complete: en dialoruta kommer att visas där du får \n"
+"bekräfta klarskrivning efter att ha tryckt på uppgiftens LED-ikon."
 
 #: taskcoachlib\help\__init__.py:485
 msgid ""
 "# days due soon: How many days in the future is \n"
 "considered \"soon\"."
 msgstr ""
+"# days due soon: Hur många dagar framåt för att en uppgift\n"
+"ska markeras som På gång."
 
 #: taskcoachlib\help\__init__.py:488
 msgid "Configuration on the desktop, all platforms"
-msgstr ""
+msgstr "Inställningar i desktopversionen, alla plattformar"
 
 #: taskcoachlib\help\__init__.py:490
 msgid ""
@@ -4431,6 +4716,10 @@ msgid ""
 "synchronization\". Restart %(name)s. Now, in the preferences, choose the \n"
 "\"iPhone\" tab and fill in at least the password."
 msgstr ""
+"Innan du synkroniserar måste du konfigurera desktopversionen av \n"
+"%(name)s. Gå till Redigera -> Inställningar -> Funktioner och markera\n"
+"\"Aktivera iPhonesynkronisering. Starta om %(name)s. Gå till Redigera -> \n"
+"Inställningar -> iPhone och bestäm ett lösenord. Övriga fält är valfria."
 
 #: taskcoachlib\help\__init__.py:495
 msgid ""
@@ -4442,12 +4731,21 @@ msgid ""
 "identifying the computer it's running on. To customize this, you may\n"
 "change the \"Bonjour service name\" in the configuration."
 msgstr ""
+"När du trycker på \"sync\"-knappen i kategorivyn kommer %(name)s\n"
+"automatiskt att känna av om det körs flera instander av %(name)s på\n"
+"din dator och ber dig välja en (du kan ha flera instanser igång på olika\n"
+"datorer i ditt nät, eller flera instanser på samma dator). De namn som\n"
+"visas är någon sträng som identifierar datorn den körs på. Om du vill\n"
+"sätta egna namn kan du ändra \"Bonjour tjänstenamn\" i konfigureringen."
 
 #: taskcoachlib\help\__init__.py:503
 msgid ""
 "%(name)s will remember the chosen instance and try it next time\n"
 "you synchronize; if it's not running, it will prompt you again."
 msgstr ""
+"%(name)s kommer att komma ihåg den valda instansen och försöka\n"
+"att använda den igen nästa gång du synkroniserar. Om instansen inte\n"
+"körs då så blir du ombedd att välja en annan."
 
 #: taskcoachlib\help\__init__.py:506
 msgid ""
@@ -4455,10 +4753,12 @@ msgid ""
 "is no need for the device to be connected through USB nor for iTunes to\n"
 "be running."
 msgstr ""
+"Observera att synkroniseringen sker över nätet. Enheten behöver \n"
+"alltså inte vara ansluten via USB och iTunes behöver inte köras."
 
 #: taskcoachlib\help\__init__.py:510
 msgid "Configuration on Windows"
-msgstr ""
+msgstr "Konfigurering på Windows"
 
 #: taskcoachlib\help\__init__.py:512
 msgid ""
@@ -4466,10 +4766,13 @@ msgid ""
 "href=\"http://support.apple.com/kb/dl999\">Bonjour for Windows</a> and\n"
 "unblock it when asked by the firewall."
 msgstr ""
+"På Windows måste du installera <a\n"
+"href=\"http://support.apple.com/kb/dl999\">Bonjour for Windows</a> och\n"
+"avblockera programmet i brandväggen."
 
 #: taskcoachlib\help\__init__.py:516
 msgid "Configuration on Linux"
-msgstr ""
+msgstr "Konfigurering på Linux"
 
 #: taskcoachlib\help\__init__.py:518
 msgid ""
@@ -4480,12 +4783,17 @@ msgid ""
 "distribution \n"
 "(libavahi-compat-libdnssd1 on Ubuntu for instance)."
 msgstr ""
+"På Linux måste <a href=\"http://avahi.org/\">Avahi</a> \n"
+"daemon vara installerad och igång. Den ingår i de flesta moderna "
+"distributioner. Du \n"
+"måste också installera dnscompatpaketet; namnet beror på din distribution \n"
+"(libavahi-compat-libdnssd1 på Ubuntu t.ex.)."
 
 #: taskcoachlib\help\__init__.py:525
 msgid ""
 "I can't seem to find the iPhone/iPod Touch app on Apple's \n"
 "website"
-msgstr ""
+msgstr "Jag hittar inte iPhone/iPod Touch-appen på Apples websida"
 
 #: taskcoachlib\help\__init__.py:528
 msgid ""
@@ -4494,24 +4802,30 @@ msgid ""
 "target=\"_blank\">Get \n"
 "iTunes</a>."
 msgstr ""
+"Du måste installera iTunes på datorn för att kunna surfa på \n"
+"Apples App Store. <a href=\"http://www.apple.com/itunes/\" "
+"target=\"_blank\">Get \n"
+" iTunes</a>."
 
 #: taskcoachlib\help\__init__.py:532
 msgid "My computer doesn't appear in the list when trying to sync"
-msgstr ""
+msgstr "Min dator visas inte i listan när jag försöker synka"
 
 #: taskcoachlib\help\__init__.py:534
 msgid ""
 "Check that your iPhone/iPod Touch is connected to the same network \n"
 "your computer is through WiFi."
 msgstr ""
+"Kolla att din iPhone/iPod Touch är ansluten till samma WLAN-nät som din "
+"dator."
 
 #: taskcoachlib\help\__init__.py:537
 msgid "The iPhone can't connect to my computer"
-msgstr ""
+msgstr "iPhone kan inte ansluta till min dator"
 
 #: taskcoachlib\help\__init__.py:539
 msgid "If you have a firewall, check that ports 4096-4100 are open."
-msgstr ""
+msgstr "Om du har en brandvägg, kolla att portarna 4096-4100 är öppna."
 
 #: taskcoachlib\help\__init__.py:548
 msgid ""
@@ -4555,6 +4869,12 @@ msgid ""
 "\n"
 "due date by the current date plus one day."
 msgstr ""
+"Använd \"Ny uppgift från mall\" för att skapa en ny uppgift från en mall, \n"
+"eller använd motsvarande knapp i verktygsfältet. När den nya uppgiften \n"
+"skapas kommer Starttidpunkt och Deadline att fyllas i automatiskt utifrån \n"
+"dagens datum. Det innebär att om du skapar en uppgift från en mall som\n"
+"har starttidpunkt idag och deadline imorgon så kommer varje ny uppgift\n"
+"att få aktuellt datum som starttidpunkt och följande dag som deadline."
 
 #: taskcoachlib\help\__init__.py:572
 msgid ""
@@ -5279,7 +5599,7 @@ msgstr "Redigera insats %s"
 msgid "Sending GUID: %s"
 msgstr "Skickar GUID: %s"
 
-#: taskcoachlib\mailer\__init__.py:60
+#: taskcoachlib\mailer\__init__.py:61
 msgid "Untitled e-mail"
 msgstr "E-post utan rubrik"
 
@@ -5309,11 +5629,11 @@ msgstr "Ämne saknas"
 
 #: taskcoachlib\persistence\xml\templates.py:8
 msgid "New task due today"
-msgstr "Ny uppgift senast klar idag"
+msgstr "Ny uppgift med deadline idag"
 
 #: taskcoachlib\persistence\xml\templates.py:10
 msgid "New task due tomorrow"
-msgstr "Ny uppgift senast klar imorgon"
+msgstr "Ny uppgift med deadline imorgon"
 
 #: taskcoachlib\syncml\basesource.py:58 taskcoachlib\syncml\basesource.py:70
 msgid "The synchronization for source %s"
@@ -5473,7 +5793,7 @@ msgstr "Vertikal"
 
 #: taskcoachlib\widgets\calendarconfig.py:78
 msgid "Start and due date"
-msgstr ""
+msgstr "Starttidpunkt och deadline"
 
 #: taskcoachlib\widgets\calendarconfig.py:81
 msgid "All but unplanned"

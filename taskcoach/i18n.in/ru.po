@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-09 22:31+0000\n"
-"PO-Revision-Date: 2011-06-13 23:28+0000\n"
+"POT-Creation-Date: 2011-06-14 20:12+0000\n"
+"PO-Revision-Date: 2011-06-16 09:25+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <fundamentator@yahoo.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-14 10:08+0000\n"
-"X-Generator: Launchpad (build 13216)\n"
+"X-Launchpad-Export-Date: 2011-06-25 20:16+0000\n"
+"X-Generator: Launchpad (build 13265)\n"
 "Generated-By: pygettext.py 1.5\n"
 
 #: taskcoachlib\application\application.py:240
@@ -303,58 +303,66 @@ msgid "Edit \"%s\" dates"
 msgstr "Редактировать \"%s\" даты"
 
 #: taskcoachlib\command\taskCommands.py:265
+msgid "Edit start date and time"
+msgstr "Изменить дату и время начала"
+
+#: taskcoachlib\command\taskCommands.py:266
+msgid "Edit \"%s\" start dates and time"
+msgstr "Изменить дату и время начала \"%s\""
+
+#: taskcoachlib\command\taskCommands.py:279
 msgid "Start tracking"
 msgstr "Начать учет"
 
-#: taskcoachlib\command\taskCommands.py:266
+#: taskcoachlib\command\taskCommands.py:280
 msgid "Start tracking \"%s\""
 msgstr "Начать отслеживание \"%s\""
 
-#: taskcoachlib\command\taskCommands.py:300
+#: taskcoachlib\command\taskCommands.py:314
 msgid "Stop tracking"
 msgstr "Остановить учет"
 
-#: taskcoachlib\command\taskCommands.py:301
+#: taskcoachlib\command\taskCommands.py:315
 msgid "Stop tracking \"%s\""
 msgstr "Завершить отслеживание \"%s\""
 
-#: taskcoachlib\command\taskCommands.py:344
+#: taskcoachlib\command\taskCommands.py:358
 msgid "Maximize priority"
 msgstr "Установить максимальный приоритет"
 
-#: taskcoachlib\command\taskCommands.py:345
+#: taskcoachlib\command\taskCommands.py:359
 msgid "Maximize priority of \"%s\""
 msgstr "Максимизировать приоритет \"%s\""
 
-#: taskcoachlib\command\taskCommands.py:354
+#: taskcoachlib\command\taskCommands.py:368
 msgid "Minimize priority"
 msgstr "Установить минимальный приоритет"
 
-#: taskcoachlib\command\taskCommands.py:355
+#: taskcoachlib\command\taskCommands.py:369
 msgid "Minimize priority of \"%s\""
 msgstr "Минимизировать приоритет \"%s\""
 
-#: taskcoachlib\command\taskCommands.py:384
+#: taskcoachlib\command\taskCommands.py:398
 msgid "Increase priority"
 msgstr "Увеличить приоритет"
 
-#: taskcoachlib\command\taskCommands.py:385
+#: taskcoachlib\command\taskCommands.py:399
 msgid "Increase priority of \"%s\""
 msgstr "Увеличить приоритет \"%s\""
 
-#: taskcoachlib\command\taskCommands.py:391
+#: taskcoachlib\command\taskCommands.py:405
 msgid "Decrease priority"
 msgstr "Уменьшить приоритет"
 
-#: taskcoachlib\command\taskCommands.py:392
+#: taskcoachlib\command\taskCommands.py:406
 msgid "Decrease priority of \"%s\""
 msgstr "Уменьшить приоритет  \"%s\""
 
-#: taskcoachlib\command\taskCommands.py:416
+#: taskcoachlib\command\taskCommands.py:430
 msgid "Change budgets"
 msgstr "Изменить бюджеты"
 
-#: taskcoachlib\command\taskCommands.py:417
+#: taskcoachlib\command\taskCommands.py:431
 msgid "Change budget of \"%s\""
 msgstr "Изменить бюджет \"%s\""
 
@@ -881,7 +889,7 @@ msgstr "Тема"
 msgid "Edit to change all descriptions"
 msgstr "Изменить, чтобы изменить все описания"
 
-#: taskcoachlib\gui\dialog\editor.py:130 taskcoachlib\gui\uicommand.py:2391
+#: taskcoachlib\gui\dialog\editor.py:130 taskcoachlib\gui\uicommand.py:2392
 #: taskcoachlib\gui\viewer\task.py:763
 #: taskcoachlib\gui\wizard\csvimport.py:217
 #: taskcoachlib\persistence\csv\reader.py:80
@@ -1069,13 +1077,13 @@ msgid "Mark task completed when all children are completed?"
 msgstr "Отметить задачу как выполненную при выполнении всех подзадач?"
 
 #: taskcoachlib\gui\dialog\editor.py:673 taskcoachlib\gui\dialog\editor.py:691
-#: taskcoachlib\gui\uicommand.py:2391 taskcoachlib\gui\viewer\task.py:760
+#: taskcoachlib\gui\uicommand.py:2392 taskcoachlib\gui\viewer\task.py:760
 #: taskcoachlib\gui\wizard\csvimport.py:221
 #: taskcoachlib\persistence\csv\reader.py:106
 msgid "Budget"
 msgstr "Бюджет"
 
-#: taskcoachlib\gui\dialog\editor.py:697 taskcoachlib\gui\uicommand.py:2391
+#: taskcoachlib\gui\dialog\editor.py:697 taskcoachlib\gui\uicommand.py:2392
 #: taskcoachlib\gui\viewer\effort.py:176 taskcoachlib\gui\viewer\task.py:761
 msgid "Time spent"
 msgstr "Затраченное время"
@@ -1090,14 +1098,14 @@ msgstr "Остаток бюджета"
 msgid "Hourly fee"
 msgstr "Почасовая оплата"
 
-#: taskcoachlib\gui\dialog\editor.py:721 taskcoachlib\gui\uicommand.py:2391
+#: taskcoachlib\gui\dialog\editor.py:721 taskcoachlib\gui\uicommand.py:2392
 #: taskcoachlib\gui\viewer\task.py:765
 #: taskcoachlib\gui\wizard\csvimport.py:222
 #: taskcoachlib\persistence\csv\reader.py:120
 msgid "Fixed fee"
 msgstr "Фиксированная оплата"
 
-#: taskcoachlib\gui\dialog\editor.py:727 taskcoachlib\gui\uicommand.py:2391
+#: taskcoachlib\gui\dialog\editor.py:727 taskcoachlib\gui\uicommand.py:2392
 #: taskcoachlib\gui\viewer\effort.py:180 taskcoachlib\gui\viewer\task.py:766
 msgid "Revenue"
 msgstr "Доход"
@@ -2066,7 +2074,7 @@ msgid "Large images (32x32) on the toolbar"
 msgstr "Крупные значки (32x32) на панели инструментов"
 
 #: taskcoachlib\gui\menu.py:473 taskcoachlib\gui\menu.py:568
-#: taskcoachlib\gui\uicommand.py:1414
+#: taskcoachlib\gui\uicommand.py:1415
 msgid "New task from &template"
 msgstr "Новая задача по шаблону"
 
@@ -2079,8 +2087,8 @@ msgstr "&Переключить категорию"
 msgid "Change task &priority"
 msgstr "Изменить задачу и приоритет"
 
-#: taskcoachlib\gui\menu.py:584 taskcoachlib\gui\uicommand.py:1814
-#: taskcoachlib\gui\uicommand.py:1856
+#: taskcoachlib\gui\menu.py:584 taskcoachlib\gui\uicommand.py:1815
+#: taskcoachlib\gui\uicommand.py:1857
 msgid "&Start tracking effort"
 msgstr "Н&ачать учет"
 
@@ -2520,120 +2528,120 @@ msgstr "&Редактировать...\tВВОД"
 msgid "Edit the selected item(s)"
 msgstr "Редактировать выделенные позиции"
 
-#: taskcoachlib\gui\uicommand.py:1306
+#: taskcoachlib\gui\uicommand.py:1307
 msgid "Edit &tracked task...\tShift-Alt-T"
 msgstr "Редактировать &отслеживаемое задание...\tShift-Alt-T"
 
-#: taskcoachlib\gui\uicommand.py:1307
+#: taskcoachlib\gui\uicommand.py:1308
 msgid "Edit the currently tracked task(s)"
 msgstr "Редактировать текущее отслеживаемое задание(я)"
 
-#: taskcoachlib\gui\uicommand.py:1324
+#: taskcoachlib\gui\uicommand.py:1325
 msgid "&Delete\tDEL"
 msgstr "&Удалить\tDEL"
 
-#: taskcoachlib\gui\uicommand.py:1325 taskcoachlib\help\__init__.py:660
+#: taskcoachlib\gui\uicommand.py:1326 taskcoachlib\help\__init__.py:660
 msgid "Delete the selected item(s)"
 msgstr "Удалить выбранные позиции"
 
-#: taskcoachlib\gui\uicommand.py:1417
+#: taskcoachlib\gui\uicommand.py:1418
 msgid "Create a new task from a template"
 msgstr "Создать новую задачу из шаблона"
 
-#: taskcoachlib\gui\uicommand.py:1423
+#: taskcoachlib\gui\uicommand.py:1424
 msgid "New task with selected &categories..."
 msgstr "Новая задача с выбранными &категориями..."
 
-#: taskcoachlib\gui\uicommand.py:1424
+#: taskcoachlib\gui\uicommand.py:1425
 msgid "Insert a new task with the selected categories checked"
 msgstr "Добавить новую задачу в выбранных категориях"
 
-#: taskcoachlib\gui\uicommand.py:1435
+#: taskcoachlib\gui\uicommand.py:1436
 msgid "New task with selected tasks as &prerequisites..."
 msgstr "Новая задача с выбранными задачами как &предзадача..."
 
-#: taskcoachlib\gui\uicommand.py:1436
+#: taskcoachlib\gui\uicommand.py:1437
 msgid "Insert a new task with the selected tasks as prerequisite tasks"
 msgstr ""
 "Вставить новую задачу с выбранными задачами как предварительными задачами"
 
-#: taskcoachlib\gui\uicommand.py:1447
+#: taskcoachlib\gui\uicommand.py:1448
 msgid "New task with selected tasks as &dependencies..."
 msgstr "Новая задача с выбранными задачами как &зависимыми..."
 
-#: taskcoachlib\gui\uicommand.py:1448
+#: taskcoachlib\gui\uicommand.py:1449
 msgid "Insert a new task with the selected tasks as dependent tasks"
 msgstr "Вставить новую задачу с выбранными задачами как зависимыми задачами"
 
-#: taskcoachlib\gui\uicommand.py:1457
+#: taskcoachlib\gui\uicommand.py:1458
 msgid "New &subitem..."
 msgstr "Новый подэлемент..."
 
-#: taskcoachlib\gui\uicommand.py:1458
+#: taskcoachlib\gui\uicommand.py:1459
 msgid "New &subtask..."
 msgstr "Новая &подзадача..."
 
-#: taskcoachlib\gui\uicommand.py:1459
+#: taskcoachlib\gui\uicommand.py:1460
 msgid "New &subnote..."
 msgstr "Новая подзаметка..."
 
-#: taskcoachlib\gui\uicommand.py:1460
+#: taskcoachlib\gui\uicommand.py:1461
 msgid "New &subcategory..."
 msgstr "Новая &подкатегория..."
 
-#: taskcoachlib\gui\uicommand.py:1464
+#: taskcoachlib\gui\uicommand.py:1465
 msgid "Insert a new subitem of the selected item"
 msgstr "Вставить новый дочерний элемент"
 
-#: taskcoachlib\gui\uicommand.py:1482
+#: taskcoachlib\gui\uicommand.py:1483
 msgid "&Mark task completed\tCtrl+RETURN"
 msgstr "Отметить как &завершенную\tCtrl+RETURN"
 
-#: taskcoachlib\gui\uicommand.py:1483
+#: taskcoachlib\gui\uicommand.py:1484
 msgid "Mark the selected task(s) completed"
 msgstr "Отметить выделенные задачи как выполненные"
 
-#: taskcoachlib\gui\uicommand.py:1484
+#: taskcoachlib\gui\uicommand.py:1485
 msgid "&Mark task uncompleted\tCtrl+RETURN"
 msgstr "Отметить как &незавершенную\tCtrl+RETURN"
 
-#: taskcoachlib\gui\uicommand.py:1485
+#: taskcoachlib\gui\uicommand.py:1486
 msgid "Mark the selected task(s) uncompleted"
 msgstr "Отметить выбранные задачи как выполненные"
 
-#: taskcoachlib\gui\uicommand.py:1561
+#: taskcoachlib\gui\uicommand.py:1562
 msgid "&Maximize priority\tShift+Ctrl+I"
 msgstr "Максимизировать приоритет\tShift+Ctrl+I"
 
-#: taskcoachlib\gui\uicommand.py:1574
+#: taskcoachlib\gui\uicommand.py:1575
 msgid "&Minimize priority\tShift+Ctrl+D"
 msgstr "Минимизировать приоритет\tShift+Ctrl+D"
 
-#: taskcoachlib\gui\uicommand.py:1587
+#: taskcoachlib\gui\uicommand.py:1588
 msgid "&Increase priority\tCtrl+I"
 msgstr "Увеличить приоритет\tCtrl+I"
 
-#: taskcoachlib\gui\uicommand.py:1600
+#: taskcoachlib\gui\uicommand.py:1601
 msgid "&Decrease priority\tCtrl+D"
 msgstr "Уменьшить приоритет\tCtrl+D"
 
-#: taskcoachlib\gui\uicommand.py:1646
+#: taskcoachlib\gui\uicommand.py:1647
 msgid "Toggle %s"
 msgstr "Переключить %s"
 
-#: taskcoachlib\gui\uicommand.py:1673
+#: taskcoachlib\gui\uicommand.py:1674
 msgid "&Mail...\tCtrl-M"
 msgstr "&Отправить по почте...\tCtrl-M"
 
-#: taskcoachlib\gui\uicommand.py:1685
+#: taskcoachlib\gui\uicommand.py:1686
 msgid "Several things"
 msgstr ""
 
-#: taskcoachlib\gui\uicommand.py:1688
+#: taskcoachlib\gui\uicommand.py:1689
 msgid "and"
 msgstr "и"
 
-#: taskcoachlib\gui\uicommand.py:1718
+#: taskcoachlib\gui\uicommand.py:1719
 msgid ""
 "Cannot send email:\n"
 "%s"
@@ -2641,265 +2649,265 @@ msgstr ""
 "Невозможно отправить e-mail:\n"
 "%s"
 
-#: taskcoachlib\gui\uicommand.py:1719
+#: taskcoachlib\gui\uicommand.py:1720
 msgid "%s mail error"
 msgstr "%s почтовая ошибка"
 
-#: taskcoachlib\gui\uicommand.py:1725
+#: taskcoachlib\gui\uicommand.py:1726
 msgid "Add &note...\tCtrl+B"
 msgstr "Добавить &заметку...\tCtrl+B"
 
-#: taskcoachlib\gui\uicommand.py:1740
+#: taskcoachlib\gui\uicommand.py:1741
 msgid "Open all notes...\tShift+Ctrl+B"
 msgstr "Открыть все заметки...\tShift+Ctrl+B"
 
-#: taskcoachlib\gui\uicommand.py:1794
+#: taskcoachlib\gui\uicommand.py:1795
 msgid "&Start tracking effort\tCtrl-T"
 msgstr "&Начать отслеживание усилий\tCtrl-T"
 
-#: taskcoachlib\gui\uicommand.py:1815
+#: taskcoachlib\gui\uicommand.py:1816
 msgid "Start tracking effort for the task(s) of the selected effort(s)"
 msgstr "Начать отслеживание усилий по задаче(ам) выбранных усилий"
 
-#: taskcoachlib\gui\uicommand.py:1838
+#: taskcoachlib\gui\uicommand.py:1839
 msgid "(No subject)"
 msgstr "(Без темы)"
 
-#: taskcoachlib\gui\uicommand.py:1841
+#: taskcoachlib\gui\uicommand.py:1842
 msgid "Start tracking effort for %s"
 msgstr "Начать отслеживать выполнение для %s"
 
-#: taskcoachlib\gui\uicommand.py:1857
+#: taskcoachlib\gui\uicommand.py:1858
 msgid "Select a task via the menu and start tracking effort for it"
 msgstr "Выбрать задачу через меню и начать отслеживать её выполнение"
 
-#: taskcoachlib\gui\uicommand.py:1869
+#: taskcoachlib\gui\uicommand.py:1870
 msgid "Stop tracking or resume tracking effort\tShift+Ctrl+T"
 msgstr "Остановить или продолжить отслеживание усилий\tShift+Ctrl+T"
 
-#: taskcoachlib\gui\uicommand.py:1871
+#: taskcoachlib\gui\uicommand.py:1872
 msgid "St&op tracking %s\tShift+Ctrl+T"
 msgstr "Ос&тановить отслеживание %s\tShift+Ctrl+T"
 
-#: taskcoachlib\gui\uicommand.py:1872
+#: taskcoachlib\gui\uicommand.py:1873
 msgid "Stop tracking effort for the active task(s)"
 msgstr "Остановить учет работы над активными задачами"
 
-#: taskcoachlib\gui\uicommand.py:1873
+#: taskcoachlib\gui\uicommand.py:1874
 msgid "&Resume tracking %s\tShift+Ctrl+T"
 msgstr "&Возобновить отслеживание %s\tShift+Ctrl+T"
 
-#: taskcoachlib\gui\uicommand.py:1874
+#: taskcoachlib\gui\uicommand.py:1875
 msgid "Resume tracking effort for the last tracked task"
 msgstr "Продолжить отслеживание усилий по последней отслеживаемой задаче"
 
-#: taskcoachlib\gui\uicommand.py:1979
+#: taskcoachlib\gui\uicommand.py:1980
 msgid "multiple tasks"
 msgstr "несколько задач"
 
-#: taskcoachlib\gui\uicommand.py:2014
+#: taskcoachlib\gui\uicommand.py:2015
 msgid "New category...\tCtrl-G"
 msgstr "Создать категорию...\tCtrl-G"
 
-#: taskcoachlib\gui\uicommand.py:2032
+#: taskcoachlib\gui\uicommand.py:2033
 msgid "New note...\tCtrl-J"
 msgstr "Создать заметку...\tCtrl-J"
 
-#: taskcoachlib\gui\uicommand.py:2053
+#: taskcoachlib\gui\uicommand.py:2054
 msgid "New &note with selected categories..."
 msgstr "Новая &заметка для выбранных категорий..."
 
-#: taskcoachlib\gui\uicommand.py:2054
+#: taskcoachlib\gui\uicommand.py:2055
 msgid "Insert a new note with the selected categories checked"
 msgstr "Добавить новую заметку к выбранным категориям"
 
-#: taskcoachlib\gui\uicommand.py:2085
+#: taskcoachlib\gui\uicommand.py:2086
 msgid "&Add attachment...\tShift-Ctrl-A"
 msgstr "&Добавить вложение...\tShift-Ctrl-A"
 
-#: taskcoachlib\gui\uicommand.py:2108
+#: taskcoachlib\gui\uicommand.py:2109
 msgid "Error opening attachment"
 msgstr "Ошибка открытия вложения"
 
-#: taskcoachlib\gui\uicommand.py:2128
+#: taskcoachlib\gui\uicommand.py:2129
 msgid "&Open all attachments...\tShift+Ctrl+O"
 msgstr "Открыть все вложения...\tShift+Ctrl+O"
 
-#: taskcoachlib\gui\uicommand.py:2170
+#: taskcoachlib\gui\uicommand.py:2171
 msgid "&Help contents\tCtrl+?"
 msgstr "&Содержание\tCtrl+?"
 
-#: taskcoachlib\gui\uicommand.py:2173
+#: taskcoachlib\gui\uicommand.py:2174
 msgid "&Help contents\tCtrl+H"
 msgstr "&Содержание\tCtrl+H"
 
-#: taskcoachlib\gui\uicommand.py:2175
+#: taskcoachlib\gui\uicommand.py:2176
 msgid "Help"
 msgstr "Справка"
 
-#: taskcoachlib\gui\uicommand.py:2181
+#: taskcoachlib\gui\uicommand.py:2182
 msgid "&Tips"
 msgstr "&Подсказки"
 
-#: taskcoachlib\gui\uicommand.py:2182
+#: taskcoachlib\gui\uicommand.py:2183
 msgid "Tips about the program"
 msgstr "Полезные советы по использованию программы"
 
-#: taskcoachlib\gui\uicommand.py:2191
+#: taskcoachlib\gui\uicommand.py:2192
 msgid "&About %s"
 msgstr "&О программе %s"
 
-#: taskcoachlib\gui\uicommand.py:2192
+#: taskcoachlib\gui\uicommand.py:2193
 msgid "Version and contact information about %s"
 msgstr "Версия %s и контактная информация"
 
-#: taskcoachlib\gui\uicommand.py:2193
+#: taskcoachlib\gui\uicommand.py:2194
 msgid "About %s"
 msgstr "О программе %s"
 
-#: taskcoachlib\gui\uicommand.py:2200
+#: taskcoachlib\gui\uicommand.py:2201
 msgid "&License"
 msgstr "&Лицензия"
 
-#: taskcoachlib\gui\uicommand.py:2201 taskcoachlib\gui\uicommand.py:2202
+#: taskcoachlib\gui\uicommand.py:2202 taskcoachlib\gui\uicommand.py:2203
 msgid "%s license"
 msgstr "Лицензия %s"
 
-#: taskcoachlib\gui\uicommand.py:2209
+#: taskcoachlib\gui\uicommand.py:2210
 msgid "Check for update"
 msgstr "Проверить обновления"
 
-#: taskcoachlib\gui\uicommand.py:2210
+#: taskcoachlib\gui\uicommand.py:2211
 msgid "Check for the availability of a new version of %s"
 msgstr "Проверить доступность новой версии %s"
 
-#: taskcoachlib\gui\uicommand.py:2228
+#: taskcoachlib\gui\uicommand.py:2229
 msgid "&Frequently asked questions"
 msgstr "Частозадаваемые вопросы"
 
-#: taskcoachlib\gui\uicommand.py:2229
+#: taskcoachlib\gui\uicommand.py:2230
 msgid "Browse the frequently asked questions and answers"
 msgstr "Просмотреть частозадаваемые вопросы"
 
-#: taskcoachlib\gui\uicommand.py:2235
+#: taskcoachlib\gui\uicommand.py:2236
 msgid "Report a &bug..."
 msgstr "Сообщить об о&шибке..."
 
-#: taskcoachlib\gui\uicommand.py:2236
+#: taskcoachlib\gui\uicommand.py:2237
 msgid "Report a bug or browse known bugs"
 msgstr "Сообщить об ошибке или просмотреть список известных ошибок"
 
-#: taskcoachlib\gui\uicommand.py:2242
+#: taskcoachlib\gui\uicommand.py:2243
 msgid "Request a &feature..."
 msgstr "Запросить новую функцию..."
 
-#: taskcoachlib\gui\uicommand.py:2243
+#: taskcoachlib\gui\uicommand.py:2244
 msgid "Request a new feature or vote for existing requests"
 msgstr ""
 "Запросить новую функцию у разработчиков или проголосовать за уже имеющиеся "
 "запросы"
 
-#: taskcoachlib\gui\uicommand.py:2249
+#: taskcoachlib\gui\uicommand.py:2250
 msgid "Request &support..."
 msgstr "Запросить &поддержку..."
 
-#: taskcoachlib\gui\uicommand.py:2250
+#: taskcoachlib\gui\uicommand.py:2251
 msgid "Request user support from the developers"
 msgstr "Запросить пользовательскую поддержку у разработчиков"
 
-#: taskcoachlib\gui\uicommand.py:2257
+#: taskcoachlib\gui\uicommand.py:2258
 msgid "Help improve &translations..."
 msgstr "Помочь улучшить &перевод..."
 
-#: taskcoachlib\gui\uicommand.py:2258
+#: taskcoachlib\gui\uicommand.py:2259
 msgid "Help improve the translations of %s"
 msgstr "Помочь улучшить перевод %s"
 
-#: taskcoachlib\gui\uicommand.py:2264
+#: taskcoachlib\gui\uicommand.py:2265
 msgid "&Donate..."
 msgstr "&Пожертвовать..."
 
-#: taskcoachlib\gui\uicommand.py:2265
+#: taskcoachlib\gui\uicommand.py:2266
 msgid "Donate to support the development of %s"
 msgstr "Пожертвовать средства на разработку %s"
 
-#: taskcoachlib\gui\uicommand.py:2271
+#: taskcoachlib\gui\uicommand.py:2272
 msgid "&Restore"
 msgstr "&Восстановить"
 
-#: taskcoachlib\gui\uicommand.py:2272
+#: taskcoachlib\gui\uicommand.py:2273
 msgid "Restore the window to its previous state"
 msgstr "Восстановить окно до предыдущего состояния"
 
-#: taskcoachlib\gui\uicommand.py:2365
+#: taskcoachlib\gui\uicommand.py:2366
 msgid "Effort details"
 msgstr "Подробности работы над задачей"
 
-#: taskcoachlib\gui\uicommand.py:2365
+#: taskcoachlib\gui\uicommand.py:2366
 msgid "Effort per day"
 msgstr "Работы над задачей за день"
 
-#: taskcoachlib\gui\uicommand.py:2366
+#: taskcoachlib\gui\uicommand.py:2367
 msgid "Effort per month"
 msgstr "Работы над задачей за месяц"
 
-#: taskcoachlib\gui\uicommand.py:2366
+#: taskcoachlib\gui\uicommand.py:2367
 msgid "Effort per week"
 msgstr "Работы над задачей за неделю"
 
-#: taskcoachlib\gui\uicommand.py:2374
+#: taskcoachlib\gui\uicommand.py:2375
 msgid "List of tasks"
 msgstr "Список задач"
 
-#: taskcoachlib\gui\uicommand.py:2374
+#: taskcoachlib\gui\uicommand.py:2375
 msgid "Tree of tasks"
 msgstr "Дерево задач"
 
-#: taskcoachlib\gui\uicommand.py:2382
+#: taskcoachlib\gui\uicommand.py:2383
 msgid "Filter on all checked categories"
 msgstr "Отфильтровать все отмеченные категории"
 
-#: taskcoachlib\gui\uicommand.py:2383
+#: taskcoachlib\gui\uicommand.py:2384
 msgid "Filter on any checked category"
 msgstr "Отфильтровать любую отмеченную категорию"
 
-#: taskcoachlib\gui\uicommand.py:2399
+#: taskcoachlib\gui\uicommand.py:2400
 msgid "&Configure"
 msgstr "На&строить"
 
-#: taskcoachlib\gui\uicommand.py:2400
+#: taskcoachlib\gui\uicommand.py:2401
 msgid "Configure the calendar viewer"
 msgstr "Настроить обозреватель календаря"
 
-#: taskcoachlib\gui\uicommand.py:2427
+#: taskcoachlib\gui\uicommand.py:2428
 msgid "&Next period"
 msgstr "Следующий период"
 
-#: taskcoachlib\gui\uicommand.py:2428
+#: taskcoachlib\gui\uicommand.py:2429
 msgid "Show next period"
 msgstr "Показать следующий период"
 
-#: taskcoachlib\gui\uicommand.py:2434
+#: taskcoachlib\gui\uicommand.py:2435
 msgid "&Previous period"
 msgstr "Предыдущий период"
 
-#: taskcoachlib\gui\uicommand.py:2435
+#: taskcoachlib\gui\uicommand.py:2436
 msgid "Show previous period"
 msgstr "Показать предыдущий период"
 
-#: taskcoachlib\gui\uicommand.py:2441
+#: taskcoachlib\gui\uicommand.py:2442
 msgid "&Today"
 msgstr "Се&годня"
 
-#: taskcoachlib\gui\uicommand.py:2442
+#: taskcoachlib\gui\uicommand.py:2443
 msgid "Show today"
 msgstr "Показать сегодня"
 
-#: taskcoachlib\gui\uicommand.py:2450
+#: taskcoachlib\gui\uicommand.py:2451
 msgid "&Automatic column resizing"
 msgstr "&Автоматический размер колонок"
 
-#: taskcoachlib\gui\uicommand.py:2451
+#: taskcoachlib\gui\uicommand.py:2452
 msgid "When checked, automatically resize columns to fill available space"
 msgstr ""
 "Когда выбрано, автоматически изменять ширину столбцов для заполнения "
@@ -4911,79 +4919,79 @@ msgstr ""
 
 #: taskcoachlib\help\__init__.py:616
 msgid "Ctrl-A"
-msgstr ""
+msgstr "Ctrl-A"
 
 #: taskcoachlib\help\__init__.py:617
 msgid "Shift-Ctrl-A"
-msgstr ""
+msgstr "Shift-Ctrl-A"
 
 #: taskcoachlib\help\__init__.py:618
 msgid "Ctrl-B"
-msgstr ""
+msgstr "Ctrl-B"
 
 #: taskcoachlib\help\__init__.py:619
 msgid "Shift-Ctrl-B"
-msgstr ""
+msgstr "Shift-Ctrl-B"
 
 #: taskcoachlib\help\__init__.py:620
 msgid "Ctrl-C"
-msgstr ""
+msgstr "Ctrl-C"
 
 #: taskcoachlib\help\__init__.py:621
 msgid "Shift-Ctrl-C"
-msgstr ""
+msgstr "Shift-Ctrl-C"
 
 #: taskcoachlib\help\__init__.py:622
 msgid "Ctrl-D"
-msgstr ""
+msgstr "Ctrl-D"
 
 #: taskcoachlib\help\__init__.py:623
 msgid "Shift-Ctrl-D"
-msgstr ""
+msgstr "Shift-Ctrl-D"
 
 #: taskcoachlib\help\__init__.py:624
 msgid "Ctrl-E"
-msgstr ""
+msgstr "Ctrl-E"
 
 #: taskcoachlib\help\__init__.py:625
 msgid "Shift-Ctrl-E"
-msgstr ""
+msgstr "Shift-Ctrl-E"
 
 #: taskcoachlib\help\__init__.py:626
 msgid "Ctrl-F"
-msgstr ""
+msgstr "Ctrl-F"
 
 #: taskcoachlib\help\__init__.py:627
 msgid "Ctrl-G"
-msgstr ""
+msgstr "Ctrl-G"
 
 #: taskcoachlib\help\__init__.py:628
 msgid "Ctrl-H"
-msgstr ""
+msgstr "Ctrl-H"
 
 #: taskcoachlib\help\__init__.py:629
 msgid "Ctrl-I"
-msgstr ""
+msgstr "Ctrl-I"
 
 #: taskcoachlib\help\__init__.py:630
 msgid "Shift-Ctrl-I"
-msgstr ""
+msgstr "Shift-Ctrl-I"
 
 #: taskcoachlib\help\__init__.py:631
 msgid "Ctrl-J"
-msgstr ""
+msgstr "Ctrl-J"
 
 #: taskcoachlib\help\__init__.py:632
 msgid "Ctrl-M"
-msgstr ""
+msgstr "Ctrl-M"
 
 #: taskcoachlib\help\__init__.py:633
 msgid "Ctrl-N (Linux and Mac OS X)"
-msgstr ""
+msgstr "Ctrl-N (Linux и Mac OS X)"
 
 #: taskcoachlib\help\__init__.py:634
 msgid "Shift-Ctrl-N (Linux and Mac OS X)"
-msgstr ""
+msgstr "Shift-Ctrl-N (Linux и Mac OS X)"
 
 #: taskcoachlib\help\__init__.py:634 taskcoachlib\help\__init__.py:662
 msgid "Insert a new subitem"
@@ -4991,75 +4999,75 @@ msgstr "Вставить новый подэлемент"
 
 #: taskcoachlib\help\__init__.py:635
 msgid "Ctrl-O"
-msgstr ""
+msgstr "Ctrl-O"
 
 #: taskcoachlib\help\__init__.py:636
 msgid "Shift-Ctrl-O"
-msgstr ""
+msgstr "Shift-Ctrl-O"
 
 #: taskcoachlib\help\__init__.py:637
 msgid "Alt-P"
-msgstr ""
+msgstr "Alt-P"
 
 #: taskcoachlib\help\__init__.py:638
 msgid "Ctrl-P"
-msgstr ""
+msgstr "Ctrl-P"
 
 #: taskcoachlib\help\__init__.py:639
 msgid "Shift-Ctrl-P"
-msgstr ""
+msgstr "Shift-Ctrl-P"
 
 #: taskcoachlib\help\__init__.py:640
 msgid "Ctrl-Q"
-msgstr ""
+msgstr "Ctrl-Q"
 
 #: taskcoachlib\help\__init__.py:641
 msgid "Ctrl-R"
-msgstr ""
+msgstr "Ctrl-R"
 
 #: taskcoachlib\help\__init__.py:642
 msgid "Shift-Ctrl-R"
-msgstr ""
+msgstr "Shift-Ctrl-R"
 
 #: taskcoachlib\help\__init__.py:643
 msgid "Ctrl-S"
-msgstr ""
+msgstr "Ctrl-S"
 
 #: taskcoachlib\help\__init__.py:644
 msgid "Shift-Ctrl-S"
-msgstr ""
+msgstr "Shift-Ctrl-S"
 
 #: taskcoachlib\help\__init__.py:645
 msgid "Ctrl-T"
-msgstr ""
+msgstr "Ctrl-T"
 
 #: taskcoachlib\help\__init__.py:646
 msgid "Shift-Ctrl-T"
-msgstr ""
+msgstr "Shift-Ctrl-T"
 
 #: taskcoachlib\help\__init__.py:647
 msgid "Ctrl-V"
-msgstr ""
+msgstr "Ctrl-V"
 
 #: taskcoachlib\help\__init__.py:648
 msgid "Shift-Ctrl-V"
-msgstr ""
+msgstr "Shift-Ctrl-V"
 
 #: taskcoachlib\help\__init__.py:649
 msgid "Ctrl-W"
-msgstr ""
+msgstr "Ctrl-W"
 
 #: taskcoachlib\help\__init__.py:650
 msgid "Ctrl-X"
-msgstr ""
+msgstr "Ctrl-X"
 
 #: taskcoachlib\help\__init__.py:651
 msgid "Ctrl-Y"
-msgstr ""
+msgstr "Ctrl-Y"
 
 #: taskcoachlib\help\__init__.py:652
 msgid "Ctrl-Z"
-msgstr ""
+msgstr "Ctrl-Z"
 
 #: taskcoachlib\help\__init__.py:653
 msgid "Edit the selected item(s) or close a dialog"
@@ -5067,11 +5075,11 @@ msgstr "Изменить выделенный(е) объект(ы) или зак
 
 #: taskcoachlib\help\__init__.py:653
 msgid "Enter"
-msgstr ""
+msgstr "Enter"
 
 #: taskcoachlib\help\__init__.py:654
 msgid "Ctrl-Enter"
-msgstr ""
+msgstr "Ctrl-Enter"
 
 #: taskcoachlib\help\__init__.py:654
 msgid "Mark the selected task(s) (un)completed"
@@ -5085,7 +5093,7 @@ msgstr ""
 
 #: taskcoachlib\help\__init__.py:655
 msgid "Escape"
-msgstr ""
+msgstr "Escape"
 
 #: taskcoachlib\help\__init__.py:656
 msgid "Move keyboard focus to the next field in the dialog"
@@ -5097,11 +5105,11 @@ msgstr "Переместить фокус клавиатуры в предыду
 
 #: taskcoachlib\help\__init__.py:657
 msgid "Shift-Tab"
-msgstr ""
+msgstr "Shift-Tab"
 
 #: taskcoachlib\help\__init__.py:658
 msgid "Ctrl-Tab"
-msgstr ""
+msgstr "Ctrl-Tab"
 
 #: taskcoachlib\help\__init__.py:658
 msgid "Move keyboard focus to the next tab in a notebook control"
@@ -5113,31 +5121,31 @@ msgstr ""
 
 #: taskcoachlib\help\__init__.py:659
 msgid "Shift-Ctrl-Tab"
-msgstr ""
+msgstr "Shift-Ctrl-Tab"
 
 #: taskcoachlib\help\__init__.py:660
 msgid "DELETE"
-msgstr ""
+msgstr "DELETE"
 
 #: taskcoachlib\help\__init__.py:661
 msgid "INSERT (Windows)"
-msgstr ""
+msgstr "INSERT (Windows)"
 
 #: taskcoachlib\help\__init__.py:662
 msgid "Shift-INSERT (Windows)"
-msgstr ""
+msgstr "Shift-INSERT (Windows)"
 
 #: taskcoachlib\help\__init__.py:663
 msgid "Ctrl-PgDn"
-msgstr ""
+msgstr "Ctrl-PgDn"
 
 #: taskcoachlib\help\__init__.py:664
 msgid "Ctrl-PgUp"
-msgstr ""
+msgstr "Ctrl-PgUp"
 
 #: taskcoachlib\help\__init__.py:665
 msgid "Alt-Down"
-msgstr ""
+msgstr "Alt-Down"
 
 #: taskcoachlib\help\__init__.py:665
 msgid "Pop up menu or drop down box"
@@ -5149,7 +5157,7 @@ msgstr ""
 
 #: taskcoachlib\help\__init__.py:666
 msgid "F2"
-msgstr ""
+msgstr "F2"
 
 #: taskcoachlib\help\__init__.py:675
 msgid ""
@@ -5629,7 +5637,7 @@ msgstr "Изменить работу %s"
 msgid "Sending GUID: %s"
 msgstr "Отправляемый GUID: %s"
 
-#: taskcoachlib\mailer\__init__.py:60
+#: taskcoachlib\mailer\__init__.py:61
 msgid "Untitled e-mail"
 msgstr "Письмо без темы"
 
@@ -5657,7 +5665,7 @@ msgstr "Сбой входа (%s). Попробуйте ещё раз."
 
 #: taskcoachlib\persistence\csv\reader.py:51
 msgid "No subject"
-msgstr ""
+msgstr "Нет темы"
 
 #: taskcoachlib\persistence\xml\templates.py:8
 msgid "New task due today"
@@ -5845,11 +5853,11 @@ msgstr ""
 
 #: taskcoachlib\widgets\calendarconfig.py:106
 msgid "Calendar orientation"
-msgstr ""
+msgstr "Ориентация календаря"
 
 #: taskcoachlib\widgets\calendarconfig.py:106
 msgid "Orientation"
-msgstr ""
+msgstr "Ориентация"
 
 #: taskcoachlib\widgets\calendarconfig.py:107
 msgid "Mandatory attributes of displayed tasks"
@@ -5857,7 +5865,7 @@ msgstr "Обязательные атрибуты отображаемых за�
 
 #: taskcoachlib\widgets\calendarconfig.py:108
 msgid "Draw a line showing the current time"
-msgstr ""
+msgstr "Чертить линию, показывающую текущее время"
 
 #: taskcoachlib\widgets\calendarconfig.py:108
 msgid "Show now"
@@ -5865,7 +5873,7 @@ msgstr ""
 
 #: taskcoachlib\widgets\calendarconfig.py:109
 msgid "Color used to highlight the current day"
-msgstr ""
+msgstr "Цвет используемый для выделения текущего дня"
 
 #: taskcoachlib\widgets\calendarconfig.py:109
 msgid "Highlight"
@@ -5877,7 +5885,7 @@ msgstr "Размер шрифта"
 
 #: taskcoachlib\widgets\calendarconfig.py:110
 msgid "Size of the font used to draw the task subject"
-msgstr ""
+msgstr "Размер шрифта, используемого для вывода темы задачи"
 
 #: taskcoachlib\widgets\conflict.py:84
 msgid "Field name"
@@ -5909,7 +5917,7 @@ msgstr ""
 
 #: taskcoachlib\widgets\searchctrl.py:57
 msgid "&Match case"
-msgstr ""
+msgstr "С &учётом регистра"
 
 #: taskcoachlib\widgets\searchctrl.py:57
 msgid "Match case when filtering"
@@ -5917,7 +5925,7 @@ msgstr "Учитывать регистр при фильтрации"
 
 #: taskcoachlib\widgets\searchctrl.py:60
 msgid "&Include sub items"
-msgstr ""
+msgstr "&Включить подэлементы"
 
 #: taskcoachlib\widgets\searchctrl.py:61
 msgid "Include sub items of matching items in the search results"
@@ -5925,7 +5933,7 @@ msgstr "Включать в результаты поиска подпункты
 
 #: taskcoachlib\widgets\searchctrl.py:64
 msgid "&Search description too"
-msgstr ""
+msgstr "&Также искать в описании"
 
 #: taskcoachlib\widgets\searchctrl.py:65
 msgid "Search both subject and description"
