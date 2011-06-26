@@ -29,6 +29,8 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
       - addFoo, removeFoo, addFoos, removeFoos
       - setFoos, foos
       - foosChangedEventType
+      - fooAddedEventType
+      - fooRemovedEventType
       - modificationEventTypes
       - __notifyObservers"""
 
@@ -51,7 +53,19 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
 
     setattr(klass, '%ssChangedEventType' % klass.__ownedType__.lower(), 
             classmethod(changedEventType))
-    
+
+    def addedEventType(class_):
+        return '%s.%s.added' % (class_, klass.__ownedType__.lower())
+
+    setattr(klass, '%sAddedEventType' % klass.__ownedType__.lower(),
+            classmethod(addedEventType))
+
+    def removedEventType(class_):
+        return '%s.%s.removed' % (class_, klass.__ownedType__.lower())
+
+    setattr(klass, '%sRemovedEventType' % klass.__ownedType__.lower(),
+            classmethod(removedEventType))
+
     def modificationEventTypes(class_):
         try:
             eventTypes = super(klass, class_).modificationEventTypes()
@@ -84,10 +98,23 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
     
     setattr(klass, '%ssChangedEvent' % klass.__ownedType__.lower(), changedEvent)
 
+    def addedEvent(instance, event, *objects):
+        event.addSource(instance, *objects,
+                        **dict(type=addedEventType(instance.__class__)))
+
+    setattr(klass, '%sAddedEvent' % klass.__ownedType__.lower(), addedEvent)
+
+    def removedEvent(instance, event, *objects):
+        event.addSource(instance, *objects,
+                        **dict(type=removedEventType(instance.__class__)))
+
+    setattr(klass, '%sRemovedEvent' % klass.__ownedType__.lower(), removedEvent)
+
     @patterns.eventSource
     def addObject(instance, ownedObject, event=None):
         getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).append(ownedObject)
         changedEvent(instance, event, ownedObject)
+        addedEvent(instance, event, ownedObject)
 
     setattr(klass, 'add%s' % klass.__ownedType__, addObject)
 
@@ -98,6 +125,7 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
         getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).extend(ownedObjects)
         event = kwargs.pop('event', None)
         changedEvent(instance, event, *ownedObjects)
+        addedEvent(instance, event, *ownedObjects)
 
     setattr(klass, 'add%ss' % klass.__ownedType__, addObjects)
 
@@ -105,6 +133,7 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
     def removeObject(instance, ownedObject, event=None):
         getattr(instance, '_%s__%ss' % (name, klass.__ownedType__.lower())).remove(ownedObject)
         changedEvent(instance, event, ownedObject)
+        removedEvent(instance, event, ownedObject)
 
     setattr(klass, 'remove%s' % klass.__ownedType__, removeObject)
 
@@ -119,6 +148,7 @@ def DomainObjectOwnerMetaclass(name, bases, ns):
                 pass
         event = kwargs.pop('event', None)
         changedEvent(instance, event, *ownedObjects)
+        removedEvent(instance, event, *ownedObjects)
         
     setattr(klass, 'remove%ss' % klass.__ownedType__, removeObjects)
 
