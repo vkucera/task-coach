@@ -98,15 +98,16 @@ def getDefaultProfileDir():
     # profile. And there's only one way to know where it
     # is... Hackish.
 
-    if os.name == 'nt' and not os.path.exists(path):
+    if os.name == 'nt' and not os.path.exists(os.path.join(path, 'profiles.ini')):
         if _PORTABLECACHE is not None:
             return _PORTABLECACHE
 
         from taskcoachlib.thirdparty import wmi
 
         for process in wmi.WMI().Win32_Process():
-            if process.ExecutablePath.lower().endswith('thunderbirdportable.exe'):
+            if process.ExecutablePath and process.ExecutablePath.lower().endswith('thunderbirdportable.exe'):
                 _PORTABLECACHE = os.path.join(os.path.split(process.ExecutablePath)[0], 'Data', 'profile')
+                print 'Found:', _PORTABLECACHE
                 break
         else:
             raise ThunderbirdError(_('Could not find Thunderbird profile.'))
