@@ -56,7 +56,9 @@ class TaskFile(patterns.Observer):
         # XXXTODO: efforts
         for collection in [self.__tasks, self.__categories, self.__notes]:
             self.__monitor.monitorCollection(collection)
-        for domainClass in [task.Task, category.Category, note.Note]:
+        for domainClass in [task.Task, category.Category, note.Note,
+                            attachment.FileAttachment, attachment.URIAttachment,
+                            attachment.MailAttachment]:
             self.__monitor.monitorClass(domainClass)
         super(TaskFile, self).__init__(*args, **kwargs)
         # Register for tasks, categories, efforts and notes being changed so we 
@@ -259,16 +261,19 @@ class TaskFile(patterns.Observer):
             self.categories().extend(categories)
             self.tasks().extend(tasks)
             self.notes().extend(notes)
-            def registerNotes(objects):
+            def registerNotesAndAttachments(objects):
                 for obj in objects:
                     if isinstance(obj, base.CompositeObject):
-                        registerNotes(obj.children())
+                        registerNotesAndAttachments(obj.children())
                     if isinstance(obj, note.NoteOwner):
-                        registerNotes(obj.notes())
-                    if isinstance(obj, note.Note):
+                        registerNotesAndAttachments(obj.notes())
+                    if isinstance(obj, attachment.AttachmentOwner):
+                        registerNotesAndAttachments(obj.attachments())
+                    if isinstance(obj, note.Note) or isinstance(obj, attachment.Attachment):
                         self.__monitor.setChanges(obj.id(), set())
-            registerNotes(self.categories().rootItems())
-            registerNotes(self.tasks().rootItems())
+            registerNotesAndAttachments(self.categories().rootItems())
+            registerNotesAndAttachments(self.tasks().rootItems())
+            registerNotesAndAttachments(self.notes().rootItems())
             self.__monitor.resetAllChanges()
             self.__syncMLConfig = syncMLConfig
             self.__guid = guid

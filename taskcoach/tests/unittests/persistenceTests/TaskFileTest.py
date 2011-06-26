@@ -1031,6 +1031,9 @@ class TaskFileMultiUserTest(test.TestCase):
         self.taskNote = note.Note(subject='Task note')
         self.task.addNote(self.taskNote)
 
+        self.attachment = attachment.FileAttachment('foobarfile')
+        self.task.addAttachment(self.attachment)
+
         self.filename = 'test.tsk'
 
         self.taskFile1.setFilename(self.filename)
@@ -1154,7 +1157,7 @@ class TaskFileMultiUserTest(test.TestCase):
     def testOtherCreatesNoteAndReparentsExisting(self):
         self._testCreateObjectAndReparentExisting('notes')
 
-    # XXXTODO: efforts, notes in tasks/categories, attachments
+    # XXXTODO: efforts
 
     def _testChangeAttribute(self, name, value, listName):
         obj = getattr(self.taskFile1, listName)().rootItems()[0]
@@ -1357,7 +1360,6 @@ class TaskFileMultiUserTest(test.TestCase):
         newNote = note.Note(subject='Other note')
         getattr(self.taskFile1, listName)().rootItems()[0].addNote(newNote)
         noteCount = len(getattr(self.taskFile1, listName)().rootItems()[0].notes())
-        self.taskFile2.monitor().resetAllChanges()
         self.taskFile1.save()
         self.taskFile2.save()
         self.assertEqual(len(getattr(self.taskFile2, listName)().rootItems()[0].notes()), noteCount)
@@ -1367,6 +1369,30 @@ class TaskFileMultiUserTest(test.TestCase):
 
     def testAddNoteToCategory(self):
         self._testAddNoteToObject('categories')
+
+    def testAddNoteToAttachment(self):
+        newNote = note.Note(subject='Attachment note')
+        self.attachment.addNote(newNote)
+        self.taskFile1.save()
+        self.taskFile2.save()
+        self.assertEqual(len(self.taskFile2.tasks().rootItems()[0].attachments()[0].notes()), 1)
+
+    def _testAddAttachmentToObject(self, listName):
+        newAttachment = attachment.FileAttachment('Other attachment')
+        getattr(self.taskFile1, listName)().rootItems()[0].addAttachment(newAttachment)
+        attachmentCount = len(getattr(self.taskFile1, listName)().rootItems()[0].attachments())
+        self.taskFile1.save()
+        self.taskFile2.save()
+        self.assertEqual(len(getattr(self.taskFile2, listName)().rootItems()[0].attachments()), attachmentCount)
+
+    def testAddAttachmentToTask(self):
+        self._testAddAttachmentToObject('tasks')
+
+    def testAddAttachmentToCategory(self):
+        self._testAddAttachmentToObject('categories')
+
+    def testAddAttachmentToNote(self):
+        self._testAddAttachmentToObject('notes')
 
     def _testRemoveNoteFromObject(self, listName):
         newNote = note.Note(subject='Other note')
@@ -1388,12 +1414,54 @@ class TaskFileMultiUserTest(test.TestCase):
     def testRemoveNoteFromCategory(self):
         self._testRemoveNoteFromObject('categories')
 
+    def testRemoveNoteFromAttachment(self):
+        newNote = note.Note(subject='Attachment note')
+        self.attachment.addNote(newNote)
+        self.taskFile1.save()
+        self.taskFile2.save()
+
+        self.taskFile1.tasks().rootItems()[0].attachments()[0].removeNote(newNote)
+        self.taskFile2.monitor().setChanges(newNote.id(), set())
+        self.taskFile1.save()
+        self.taskFile2.save()
+        self.assertEqual(len(self.taskFile2.tasks().rootItems()[0].attachments()[0].notes()), 0)
+
+    def _testRemoveAttachmentFromObject(self, listName):
+        newAttachment = attachment.FileAttachment('Other attachment')
+        attachmentCount = len(getattr(self.taskFile1, listName)().rootItems()[0].attachments())
+        getattr(self.taskFile1, listName)().rootItems()[0].addAttachment(newAttachment)
+        self.taskFile2.monitor().resetAllChanges()
+        self.taskFile1.save()
+        self.taskFile2.save()
+
+        getattr(self.taskFile1, listName)().rootItems()[0].removeAttachment(newAttachment)
+        self.taskFile2.monitor().setChanges(newAttachment.id(), set())
+        self.taskFile1.save()
+        self.taskFile2.save()
+        self.assertEqual(len(getattr(self.taskFile2, listName)().rootItems()[0].attachments()), attachmentCount)
+
+    def testRemoveAttachmentFromTask(self):
+        self._testRemoveAttachmentFromObject('tasks')
+
+    def testRemoveAttachmentFromCategory(self):
+        self._testRemoveAttachmentFromObject('categories')
+
+    def testRemoveAttachmentFromNote(self):
+        self._testRemoveAttachmentFromObject('notes')
+
     def testChangeNoteBelongingToTask(self):
         self.taskNote.setSubject('New subject')
         self.taskFile2.monitor().resetAllChanges()
         self.taskFile1.save()
         self.taskFile2.save()
         self.assertEqual(self.taskFile2.tasks().rootItems()[0].notes()[0].subject(), 'New subject')
+
+    def testChangeAttachmentBelongingToTask(self):
+        self.attachment.setLocation('new location')
+        self.taskFile2.monitor().resetAllChanges()
+        self.taskFile1.save()
+        self.taskFile2.save()
+        self.assertEqual(self.taskFile2.tasks().rootItems()[0].attachments()[0].location(), 'new location')
 
     def testAddChildToNoteBelongingToTask(self):
         subNote = self.taskNote.newChild(subject='Child note')

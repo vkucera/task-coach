@@ -96,7 +96,11 @@ class Attachment(base.Object, NoteOwner):
     @classmethod
     def locationChangedEventType(class_):
         return '%s.location'%class_
-    
+
+    @classmethod
+    def monitoredAttributes(class_):
+        return base.Object.monitoredAttributes() + ['location']
+
     def open(self, workingDir=None):
         raise NotImplementedError
 

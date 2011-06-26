@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib.patterns import Publisher, Singleton, ObservableComposite
 from taskcoachlib.domain.categorizable import CategorizableCompositeObject
 from taskcoachlib.domain.note import NoteOwner
+from taskcoachlib.domain.attachment import AttachmentOwner
 from taskcoachlib.thirdparty import guid
 
 class ChangeMonitor(object):
@@ -59,8 +60,11 @@ class ChangeMonitor(object):
                 Publisher().registerObserver(self.onCategoryAdded, klass.categoryAddedEventType())
                 Publisher().registerObserver(self.onCategoryRemoved, klass.categoryRemovedEventType())
             if issubclass(klass, NoteOwner):
-                Publisher().registerObserver(self.onNoteAdded, klass.noteAddedEventType())
-                Publisher().registerObserver(self.onNoteRemoved, klass.noteRemovedEventType())
+                Publisher().registerObserver(self.onNoteOrAttachmentAdded, klass.noteAddedEventType())
+                Publisher().registerObserver(self.onNoteOrAttachmentRemoved, klass.noteRemovedEventType())
+            if issubclass(klass, AttachmentOwner):
+                Publisher().registerObserver(self.onNoteOrAttachmentAdded, klass.attachmentAddedEventType())
+                Publisher().registerObserver(self.onNoteOrAttachmentRemoved, klass.attachmentRemovedEventType())
 
     def unmonitorClass(self, klass):
         if klass in self._classes:
@@ -140,13 +144,13 @@ class ChangeMonitor(object):
 
         self._objectsRemoved(event)
 
-    def onNoteAdded(self, event):
+    def onNoteOrAttachmentAdded(self, event):
         if self.__frozen:
             return
 
         self._objectsAdded(event)
 
-    def onNoteRemoved(self, event):
+    def onNoteOrAttachmentRemoved(self, event):
         if self.__frozen:
             return
 

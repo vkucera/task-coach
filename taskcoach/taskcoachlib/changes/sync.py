@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib.changes import ChangeMonitor
 from taskcoachlib.domain.note import NoteOwner
+from taskcoachlib.domain.attachment import AttachmentOwner
 from taskcoachlib.domain.base import CompositeObject
 
 
@@ -53,6 +54,8 @@ class ChangeSynchronizer(object):
                     addIds(obj.children(), idMap, ownerMap)
                 if isinstance(obj, NoteOwner):
                     addIds(obj.notes(), idMap, ownerMap, obj)
+                if isinstance(obj, AttachmentOwner):
+                    addIds(obj.attachments(), idMap, ownerMap, obj)
         selfMap = dict()
         selfOwnerMap = dict()
         addIds(oldList, selfMap, selfOwnerMap)
@@ -90,54 +93,83 @@ class ChangeSynchronizer(object):
                 self._monitor.setChanges(selfObject.id(), None)
                 del selfMap[selfObject.id()]
 
-        # Notes added on disk or removed from memory (except root ones)
-        def handleNewNotesOnDisk(notesOnDisk):
-            for theNote in notesOnDisk:
-                children = theNote.children()[:]
-                memChanges = self._monitor.getChanges(theNote)
+        # Notes/attachments added on disk or removed from memory (except root ones)
+
+        def handleNewOwnedObjectsOnDisk(objectsOnDisk):
+            for theObject in objectsOnDisk:
+                className = theObject.__class__.__name__
+                if className.endswith('Attachment'):
+                    className = 'Attachment'
+                if isinstance(theObject, CompositeObject):
+                    children = theObject.children()[:]
+                memChanges = self._monitor.getChanges(theObject)
                 if memChanges is not None and '__del__' in memChanges:
                     # XXX potential conflict
-                    if theNote.id() in otherMap:
-                        if theNote.id() in otherOwnerMap:
-                            otherOwnerMap[theNote.id()].removeNote(theNote)
-                            del otherOwnerMap[theNote.id()]
-                        del otherMap[theNote.id()]
-                elif theNote.id() not in selfMap:
-                    for child in theNote.children():
-                        theNote.removeChild(child)
-                    parent = theNote.parent()
-                    if parent is None:
-                        selfMap[otherOwnerMap[theNote.id()].id()].addNote(theNote)
+                    if theObject.id() in otherMap:
+                        if theObject.id() in otherOwnerMap:
+                            getattr(otherOwnerMap[theObject.id()], 'remove%s' % className)(theObject)
+                            del otherOwnerMap[theObject.id()]
+                        del otherMap[theObject.id()]
+                elif theObject.id() not in selfMap:
+                    if isinstance(theObject, CompositeObject):
+                        for child in theObject.children():
+                            theObject.removeChild(child)
+                        parent = theObject.parent()
+                        if parent is None:
+                            getattr(selfMap[otherOwnerMap[theObject.id()].id()], 'add%s' % className)(theObject)
+                        else:
+                            parent = selfMap[parent.id()]
+                            parent.addChild(theObject)
+                            theObject.setParent(parent)
                     else:
-                        parent = selfMap[parent.id()]
-                        parent.addChild(theNote)
-                        theNote.setParent(parent)
-                    selfMap[theNote.id()] = theNote
-                if theNote.id() in selfMap:
-                    handleNewNotesOnDisk(children)
+                        getattr(selfMap[otherOwnerMap[theObject.id()].id()], 'add%s' % className)(theObject)
+                    selfMap[theObject.id()] = theObject
+                if theObject.id() in selfMap:
+                    if isinstance(theObject, CompositeObject):
+                        handleNewOwnedObjectsOnDisk(children)
+                    if isinstance(theObject, NoteOwner):
+                        handleNewOwnedObjectsOnDisk(theObject.notes())
+                    if isinstance(theObject, AttachmentOwner):
+                        handleNewOwnedObjectsOnDisk(theObject.attachments())
 
         for obj in newList.allItemsSorted():
             if isinstance(obj, NoteOwner):
-                handleNewNotesOnDisk(obj.notes())
+                handleNewOwnedObjectsOnDisk(obj.notes())
+            if isinstance(obj, AttachmentOwner):
+                handleNewOwnedObjectsOnDisk(obj.attachments())
 
-        # Notes removed from disk
-        def handleNotesRemovedFromDisk(notesInMemory):
-            for theNote in notesInMemory:
-                ch = self.diskChanges.getChanges(theNote)
+        # Notes/attachments removed from disk
+
+        def handleOwnedObjectsRemovedFromDisk(objectsInMemory):
+            for theObject in objectsInMemory:
+                className = theObject.__class__.__name__
+                if className.endswith('Attachment'):
+                    className = 'Attachment'
+                ch = self.diskChanges.getChanges(theObject)
                 if ch is not None and '__del__' in ch:
                     # XXX potential conflict
-                    if theNote.parent() is None:
-                        selfOwnerMap[theNote.id()].removeNote(theNote)
+                    if isinstance(theObject, CompositeObject):
+                        if theObject.parent() is None:
+                            getattr(selfOwnerMap[theObject.id()], 'remove%s' % className)(theObject)
+                        else:
+                            selfMap[theObject.parent().id()].removeChild(theObject)
                     else:
-                        selfMap[theNote.parent().id()].removeChild(theNote)
-                    self._monitor.setChanges(theNote.id(), None)
-                    del selfMap[theNote.id()]
-                if theNote.id() in selfMap:
-                    handleNotesRemovedFromDisk(theNote.children())
+                        getattr(selfOwnerMap[theObject.id()], 'remove%s' % className)(theObject)
+                    self._monitor.setChanges(theObject.id(), None)
+                    del selfMap[theObject.id()]
+                if theObject.id() in selfMap:
+                    if isinstance(theObject, CompositeObject):
+                        handleOwnedObjectsRemovedFromDisk(theObject.children())
+                    if isinstance(theObject, NoteOwner):
+                        handleOwnedObjectsRemovedFromDisk(theObject.notes())
+                    if isinstance(theObject, AttachmentOwner):
+                        handleOwnedObjectsRemovedFromDisk(theObject.attachments())
 
         for obj in oldList.allItemsSorted():
             if isinstance(obj, NoteOwner):
-                handleNotesRemovedFromDisk(obj.notes())
+                handleOwnedObjectsRemovedFromDisk(obj.notes())
+            if isinstance(obj, AttachmentOwner):
+                handleOwnedObjectsRemovedFromDisk(obj.attachments())
 
         # Objects changed on disk
         def allObjects(theList):
@@ -148,6 +180,8 @@ class ChangeSynchronizer(object):
                     result.extend(allObjects(obj.children()))
                 if isinstance(obj, NoteOwner):
                     result.extend(allObjects(obj.notes()))
+                if isinstance(obj, AttachmentOwner):
+                    result.extend(allObjects(obj.attachments()))
             return result
 
         for selfObject in allObjects(oldList):
