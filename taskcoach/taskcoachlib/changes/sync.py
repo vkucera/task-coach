@@ -17,6 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib.changes import ChangeMonitor
+from taskcoachlib.domain.note import NoteOwner
+from taskcoachlib.domain.base import CompositeObject
 
 
 class ChangeSynchronizer(object):
@@ -42,15 +44,22 @@ class ChangeSynchronizer(object):
 
     def mergeObjects(self, oldList, newList):
         # Map id to object
-        def addIds(objects, idMap):
+        def addIds(objects, idMap, ownerMap, owner=None):
             for obj in objects:
                 idMap[obj.id()] = obj
-                addIds(obj.children(), idMap)
+                if owner is not None:
+                    ownerMap[obj.id()] = owner
+                if isinstance(obj, CompositeObject):
+                    addIds(obj.children(), idMap, ownerMap)
+                if isinstance(obj, NoteOwner):
+                    addIds(obj.notes(), idMap, ownerMap, obj)
         selfMap = dict()
-        addIds(oldList, selfMap)
+        selfOwnerMap = dict()
+        addIds(oldList, selfMap, selfOwnerMap)
         self.allSelfMap.update(selfMap)
         otherMap = dict()
-        addIds(newList, otherMap)
+        otherOwnerMap = dict()
+        addIds(newList, otherMap, otherOwnerMap)
         self.allOtherMap.update(otherMap)
 
         # Objects added on disk or removed from memory
