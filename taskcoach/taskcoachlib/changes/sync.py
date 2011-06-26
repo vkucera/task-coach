@@ -66,6 +66,7 @@ class ChangeSynchronizer(object):
         for otherObject in newList.allItemsSorted():
             memChanges = self._monitor.getChanges(otherObject)
             if memChanges is not None and '__del__' in memChanges:
+                # XXX potential conflict
                 newList.remove(otherObject)
                 del otherMap[otherObject.id()]
             elif otherObject.id() not in selfMap:
@@ -84,9 +85,59 @@ class ChangeSynchronizer(object):
         for selfObject in oldList.allItemsSorted():
             ch = self.diskChanges.getChanges(selfObject)
             if ch is not None and '__del__' in ch:
+                # XXX potential conflict
                 oldList.remove(selfObject)
                 self._monitor.setChanges(selfObject.id(), None)
                 del selfMap[selfObject.id()]
+
+        # Notes added on disk or removed from memory (except root ones)
+        def handleNewNotesOnDisk(notesOnDisk):
+            for theNote in notesOnDisk:
+                children = theNote.children()[:]
+                memChanges = self._monitor.getChanges(theNote)
+                if memChanges is not None and '__del__' in memChanges:
+                    # XXX potential conflict
+                    if theNote.id() in otherMap:
+                        if theNote.id() in otherOwnerMap:
+                            otherOwnerMap[theNote.id()].removeNote(theNote)
+                            del otherOwnerMap[theNote.id()]
+                        del otherMap[theNote.id()]
+                elif theNote.id() not in selfMap:
+                    for child in theNote.children():
+                        theNote.removeChild(child)
+                    parent = theNote.parent()
+                    if parent is None:
+                        selfMap[otherOwnerMap[theNote.id()].id()].addNote(theNote)
+                    else:
+                        parent = selfMap[parent.id()]
+                        parent.addChild(theNote)
+                        theNote.setParent(parent)
+                    selfMap[theNote.id()] = theNote
+                if theNote.id() in selfMap:
+                    handleNewNotesOnDisk(children)
+
+        for obj in newList.allItemsSorted():
+            if isinstance(obj, NoteOwner):
+                handleNewNotesOnDisk(obj.notes())
+
+        # Notes removed from disk
+        def handleNotesRemovedFromDisk(notesInMemory):
+            for theNote in notesInMemory:
+                ch = self.diskChanges.getChanges(theNote)
+                if ch is not None and '__del__' in ch:
+                    # XXX potential conflict
+                    if theNote.parent() is None:
+                        selfOwnerMap[theNote.id()].removeNote(theNote)
+                    else:
+                        selfMap[theNote.parent().id()].removeChild(theNote)
+                    self._monitor.setChanges(theNote.id(), None)
+                    del selfMap[theNote.id()]
+                if theNote.id() in selfMap:
+                    handleNotesRemovedFromDisk(theNote.children())
+
+        for obj in oldList.allItemsSorted():
+            if isinstance(obj, NoteOwner):
+                handleNotesRemovedFromDisk(obj.notes())
 
         # Objects changed on disk
         def allObjects(theList):

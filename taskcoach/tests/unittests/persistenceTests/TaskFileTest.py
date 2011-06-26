@@ -1028,6 +1028,9 @@ class TaskFileMultiUserTest(test.TestCase):
         self.note = note.Note(subject='Note')
         self.taskFile1.notes().append(self.note)
 
+        self.taskNote = note.Note(subject='Task note')
+        self.task.addNote(self.taskNote)
+
         self.filename = 'test.tsk'
 
         self.taskFile1.setFilename(self.filename)
@@ -1349,3 +1352,79 @@ class TaskFileMultiUserTest(test.TestCase):
 
     def testDeleteTask(self):
         self._testDeleteObject('tasks')
+
+    def _testAddNoteToObject(self, listName):
+        newNote = note.Note(subject='Other note')
+        getattr(self.taskFile1, listName)().rootItems()[0].addNote(newNote)
+        noteCount = len(getattr(self.taskFile1, listName)().rootItems()[0].notes())
+        self.taskFile2.monitor().resetAllChanges()
+        self.taskFile1.save()
+        self.taskFile2.save()
+        self.assertEqual(len(getattr(self.taskFile2, listName)().rootItems()[0].notes()), noteCount)
+
+    def testAddNoteToTask(self):
+        self._testAddNoteToObject('tasks')
+
+    def testAddNoteToCategory(self):
+        self._testAddNoteToObject('categories')
+
+    def _testRemoveNoteFromObject(self, listName):
+        newNote = note.Note(subject='Other note')
+        noteCount = len(getattr(self.taskFile1, listName)().rootItems()[0].notes())
+        getattr(self.taskFile1, listName)().rootItems()[0].addNote(newNote)
+        self.taskFile2.monitor().resetAllChanges()
+        self.taskFile1.save()
+        self.taskFile2.save()
+
+        getattr(self.taskFile1, listName)().rootItems()[0].removeNote(newNote)
+        self.taskFile2.monitor().setChanges(newNote.id(), set())
+        self.taskFile1.save()
+        self.taskFile2.save()
+        self.assertEqual(len(getattr(self.taskFile2, listName)().rootItems()[0].notes()), noteCount)
+
+    def testRemoveNoteFromTask(self):
+        self._testRemoveNoteFromObject('tasks')
+
+    def testRemoveNoteFromCategory(self):
+        self._testRemoveNoteFromObject('categories')
+
+    def testChangeNoteBelongingToTask(self):
+        self.taskNote.setSubject('New subject')
+        self.taskFile2.monitor().resetAllChanges()
+        self.taskFile1.save()
+        self.taskFile2.save()
+        self.assertEqual(self.taskFile2.tasks().rootItems()[0].notes()[0].subject(), 'New subject')
+
+    def testAddChildToNoteBelongingToTask(self):
+        subNote = self.taskNote.newChild(subject='Child note')
+        self.taskNote.addChild(subNote)
+        self.taskFile1.save()
+        self.taskFile2.save()
+        self.assertEqual(len(self.taskFile2.tasks().rootItems()[0].notes()[0].children()), 1)
+
+    def testRemoveChildToNoteBelongingToTask(self):
+        subNote = self.taskNote.newChild(subject='Child note')
+        self.taskNote.addChild(subNote)
+        self.taskFile1.save()
+        self.taskFile2.save()
+
+        self.taskNote.removeChild(subNote)
+        self.taskFile2.monitor().setChanges(subNote.id(), set())
+        self.taskFile1.save()
+        self.taskFile2.save()
+        self.assertEqual(len(self.taskFile2.tasks().rootItems()[0].notes()[0].children()), 0)
+
+    def testAddCategorizedNoteBelongingToOtherCategory(self):
+        # Categories should be handled in priority...
+        cat1 = category.Category(subject='Cat #1')
+        cat2 = category.Category(subject='Cat #2')
+        newNote = note.Note(subject='Note')
+        cat1.addNote(newNote)
+        newNote.addCategory(cat2)
+        cat2.addCategorizable(newNote)
+        self.taskFile2.monitor().resetAllChanges()
+        self.taskFile1.save()
+        try:
+            self.taskFile2.save()
+        except Exception, e:
+            self.fail(str(e))
