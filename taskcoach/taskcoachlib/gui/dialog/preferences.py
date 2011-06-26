@@ -413,7 +413,7 @@ class TaskBehaviorPage(SettingsPage):
     pageIcon = 'cogwheel_icon'
     
     def __init__(self, *args, **kwargs):
-        super(TaskBehaviorPage, self).__init__(columns=2, growableColumn=-1, *args, **kwargs)
+        super(TaskBehaviorPage, self).__init__(columns=3, growableColumn=-1, *args, **kwargs)
         self.addBooleanSetting('behavior', 'markparentcompletedwhenallchildrencompleted',
             _('Mark parent task completed when all children are completed'))
         self.addIntegerSetting('behavior', 'duesoonhours', 

@@ -337,15 +337,17 @@ class PopupButtonMixin(object):
 
     def menuXY(self):
         ''' Location to pop up the menu. '''
-        mouseX = wx.GetMousePosition()[0]
-        windowX = self.mainWindow().GetPosition()[0]
+        return self.mainWindow().ScreenToClient((self.menuX(), self.menuY()))
+
+    def menuX(self):
         buttonWidth = self.toolbar.GetToolSize()[0]
-        menuX = mouseX - windowX - 0.5 * buttonWidth
+        mouseX = wx.GetMousePosition()[0]
+        return mouseX - 0.5 * buttonWidth
+
+    def menuY(self):
+        toolbarY = self.toolbar.GetScreenPosition()[1]
         toolbarHeight = self.toolbar.GetSize()[1]
-        mouseY = wx.GetMousePosition()[1]
-        windowY = self.mainWindow().GetPosition()[1]
-        menuY = mouseY - windowY - 1.5 * toolbarHeight
-        return menuX, menuY
+        return toolbarY + toolbarHeight
     
     def createPopupMenu(self):
         raise NotImplementedError
@@ -1850,7 +1852,7 @@ class EffortStartForTask(TaskListCommand):
         start.do()
         
     def enabled(self, event):
-        return not self.task.isBeingTracked() and not self.task.completed()      
+        return not self.task.isBeingTracked() and not self.task.completed()
 
 
 class EffortStartButton(PopupButtonMixin, TaskListCommand):
