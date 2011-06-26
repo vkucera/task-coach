@@ -140,7 +140,6 @@ class DropTarget(wx.DropTarget):
             except thunderbird.ThunderbirdCancelled:
                 pass
             except thunderbird.ThunderbirdError, e:
-                print e.args
                 wx.MessageBox(e.args[0], _('Error'), wx.OK|wx.ICON_ERROR)
             else:
                 self.__onDropMailCallback(x, y, thunderbird.getMail(data))
