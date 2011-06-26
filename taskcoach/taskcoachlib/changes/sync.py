@@ -89,7 +89,17 @@ class ChangeSynchronizer(object):
                 del selfMap[selfObject.id()]
 
         # Objects changed on disk
-        for selfObject in oldList.allItemsSorted():
+        def allObjects(theList):
+            result = list()
+            for obj in theList:
+                result.append(obj)
+                if isinstance(obj, CompositeObject):
+                    result.extend(allObjects(obj.children()))
+                if isinstance(obj, NoteOwner):
+                    result.extend(allObjects(obj.notes()))
+            return result
+
+        for selfObject in allObjects(oldList):
             objChanges = self.diskChanges.getChanges(selfObject)
             if objChanges is not None and objChanges:
                 memChanges = self._monitor.getChanges(selfObject)

@@ -237,7 +237,6 @@ class TaskFile(patterns.Observer):
         return name, codecs.open(name, 'w', 'utf-8')
     
     def load(self, filename=None):
-        # XXXTODO: lock only here
         self.__loading = True
         if filename:
             self.setFilename(filename)
@@ -260,6 +259,16 @@ class TaskFile(patterns.Observer):
             self.categories().extend(categories)
             self.tasks().extend(tasks)
             self.notes().extend(notes)
+            def registerNotes(objects):
+                for obj in objects:
+                    if isinstance(obj, base.CompositeObject):
+                        registerNotes(obj.children())
+                    if isinstance(obj, note.NoteOwner):
+                        registerNotes(obj.notes())
+                    if isinstance(obj, note.Note):
+                        self.__monitor.setChanges(obj.id(), set())
+            registerNotes(self.categories().rootItems())
+            registerNotes(self.tasks().rootItems())
             self.__monitor.resetAllChanges()
             self.__syncMLConfig = syncMLConfig
             self.__guid = guid
