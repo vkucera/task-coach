@@ -21,8 +21,8 @@ from taskcoachlib.i18n import _
 from taskcoachlib import persistence
 
 
-_RX_MAILBOX = re.compile('mailbox-message://(.*)@(.*)/(.*)#(\d+)')
-_RX_IMAP_MESSAGE = re.compile('imap-message://([^@]+)@([^/]+)/(.*)#(\d+)')
+_RX_MAILBOX = re.compile(r'mailbox-message://(.*)@(.*)/(.*)#((?:-)?\d+)')
+_RX_IMAP_MESSAGE = re.compile(r'imap-message://([^@]+)@([^/]+)/(.*)#(\d+)')
 _RX_IMAP = re.compile(r'imap://([^@]+)@([^/]+)/fetch%3EUID%3E(?:/|\.)(.*)%3E(\d+)')
 
 
@@ -81,7 +81,7 @@ def getThunderbirdDir():
         raise EnvironmentError('Unsupported platform: %s' % os.name)
 
     if path is None:
-        raise RuntimeError, 'Could not find Thunderbird data dir'
+        raise ThunderbirdError(_('Could not find Thunderbird data dir'))
 
     return path
 
@@ -98,18 +98,19 @@ def getDefaultProfileDir():
     # profile. And there's only one way to know where it
     # is... Hackish.
 
-    if os.name == 'nt' and not os.path.exists(path):
+    if os.name == 'nt' and not os.path.exists(os.path.join(path, 'profiles.ini')):
         if _PORTABLECACHE is not None:
             return _PORTABLECACHE
 
         from taskcoachlib.thirdparty import wmi
 
         for process in wmi.WMI().Win32_Process():
-            if process.ExecutablePath.lower().endswith('thunderbirdportable.exe'):
+            if process.ExecutablePath and process.ExecutablePath.lower().endswith('thunderbirdportable.exe'):
                 _PORTABLECACHE = os.path.join(os.path.split(process.ExecutablePath)[0], 'Data', 'profile')
+                print 'Found:', _PORTABLECACHE
                 break
         else:
-            raise RuntimeError, 'Could not find Thunderbird profile.'
+            raise ThunderbirdError(_('Could not find Thunderbird profile.'))
 
         return _PORTABLECACHE
 
@@ -128,7 +129,7 @@ def getDefaultProfileDir():
                 return os.path.join(path, parser.get(section, 'Path'))
             return parser.get(section, 'Path')
 
-    raise ThunderbirdError('No default section in profiles.ini')
+    raise ThunderbirdError(_('No default section in profiles.ini'))
 
 
 class ThunderbirdMailboxReader(object):
@@ -141,7 +142,7 @@ class ThunderbirdMailboxReader(object):
 
         mt = _RX_MAILBOX.search(url)
         if mt is None:
-            raise RuntimeError(_('Malformed Thunderbird internal ID: %s. Please file a bug report.') % url)
+            raise ThunderbirdError(_('Malformed Thunderbird internal ID:\n%s. Please file a bug report.') % url)
 
         self.url = url
 
@@ -163,10 +164,13 @@ class ThunderbirdMailboxReader(object):
                     self.filename = os.path.join(config['%s.directory' % base], *tuple(self.path))
                     break
         else:
-            raise RuntimeError(_('Could not find directory for ID %s. Please file a bug report.') % url)
+            raise ThunderbirdError(_('Could not find directory for ID\n%s.\nPlease file a bug report.') % url)
 
         self.fp = file(self.filename, 'rb')
-        self.fp.seek(self.offset)
+        if self.offset >= 0:
+            self.fp.seek(self.offset)
+        else:
+            self.fp.seek(self.offset, os.SEEK_END)
 
         self.done = False
 
@@ -221,7 +225,7 @@ class ThunderbirdImapReader(object):
         if mt is None:
             mt = _RX_IMAP_MESSAGE.search(url)
             if mt is None:
-                raise ThunderbirdError('Unrecognized URL scheme: "%s"' % url)
+                raise ThunderbirdError(_('Unrecognized URL scheme: "%s"' % url))
 
         self.url = url
 
@@ -309,12 +313,12 @@ class ThunderbirdImapReader(object):
         if response != 'OK':
             response, params = cn.select(self.box.replace('/', '.'))
             if response != 'OK':
-                raise ThunderbirdError('Could not select inbox "%s" (%s)' % (self.box, response))
+                raise ThunderbirdError(_('Could not select inbox "%s"\n(%s)' % (self.box, response)))
 
         response, params = cn.uid('FETCH', str(self.uid), '(RFC822)')
 
         if response != 'OK':
-            raise ThunderbirdError('No such mail: %d' % self.uid)
+            raise ThunderbirdError(_('No such mail: %d' % self.uid))
 
         return params[0][1]
 
