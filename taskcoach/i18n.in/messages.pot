@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-06-25 22:02+West-Europa (zomertijd)\n"
+"POT-Creation-Date: 2011-06-27 23:29+West-Europa (zomertijd)\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1842,7 +1842,7 @@ msgstr ""
 #: taskcoachlib\gui\mainwindow.py:307 taskcoachlib\iphone\protocol.py:481
 #: taskcoachlib\widgets\draganddrop.py:108
 #: taskcoachlib\widgets\draganddrop.py:110
-#: taskcoachlib\widgets\draganddrop.py:144
+#: taskcoachlib\widgets\draganddrop.py:143
 msgid "Error"
 msgstr ""
 
@@ -5172,33 +5172,47 @@ msgstr ""
 msgid "Could not find Thunderbird data dir"
 msgstr ""
 
-#: taskcoachlib\mailer\thunderbird.py:112
+#: taskcoachlib\mailer\thunderbird.py:113
 msgid "Could not find Thunderbird profile."
 msgstr ""
 
-#: taskcoachlib\mailer\thunderbird.py:131
+#: taskcoachlib\mailer\thunderbird.py:132
 msgid "No default section in profiles.ini"
 msgstr ""
 
-#: taskcoachlib\mailer\thunderbird.py:144
+#: taskcoachlib\mailer\thunderbird.py:145
 msgid ""
 "Malformed Thunderbird internal ID:\n"
 "%s. Please file a bug report."
 msgstr ""
 
-#: taskcoachlib\mailer\thunderbird.py:166
+#: taskcoachlib\mailer\thunderbird.py:167
 msgid ""
 "Could not find directory for ID\n"
 "%s.\n"
 "Please file a bug report."
 msgstr ""
 
-#: taskcoachlib\mailer\thunderbird.py:284
+#: taskcoachlib\mailer\thunderbird.py:228
+msgid "Unrecognized URL scheme: \"%s\""
+msgstr ""
+
+#: taskcoachlib\mailer\thunderbird.py:285
 msgid "Please enter password for user %(user)s on %(server)s:%(port)d"
 msgstr ""
 
-#: taskcoachlib\mailer\thunderbird.py:302
+#: taskcoachlib\mailer\thunderbird.py:303
 msgid "Login failed (%s). Please try again."
+msgstr ""
+
+#: taskcoachlib\mailer\thunderbird.py:316
+msgid ""
+"Could not select inbox \"%s\"\n"
+"(%s)"
+msgstr ""
+
+#: taskcoachlib\mailer\thunderbird.py:321
+msgid "No such mail: %d"
 msgstr ""
 
 #: taskcoachlib\persistence\csv\reader.py:51
