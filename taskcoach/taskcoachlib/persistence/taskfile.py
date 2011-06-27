@@ -56,7 +56,7 @@ class TaskFile(patterns.Observer):
         # XXXTODO: efforts
         for collection in [self.__tasks, self.__categories, self.__notes]:
             self.__monitor.monitorCollection(collection)
-        for domainClass in [task.Task, category.Category, note.Note,
+        for domainClass in [task.Task, category.Category, note.Note, effort.Effort,
                             attachment.FileAttachment, attachment.URIAttachment,
                             attachment.MailAttachment]:
             self.__monitor.monitorClass(domainClass)
@@ -261,19 +261,23 @@ class TaskFile(patterns.Observer):
             self.categories().extend(categories)
             self.tasks().extend(tasks)
             self.notes().extend(notes)
-            def registerNotesAndAttachments(objects):
+            def registerOtherObjects(objects):
                 for obj in objects:
                     if isinstance(obj, base.CompositeObject):
-                        registerNotesAndAttachments(obj.children())
+                        registerOtherObjects(obj.children())
                     if isinstance(obj, note.NoteOwner):
-                        registerNotesAndAttachments(obj.notes())
+                        registerOtherObjects(obj.notes())
                     if isinstance(obj, attachment.AttachmentOwner):
-                        registerNotesAndAttachments(obj.attachments())
-                    if isinstance(obj, note.Note) or isinstance(obj, attachment.Attachment):
+                        registerOtherObjects(obj.attachments())
+                    if isinstance(obj, task.Task):
+                        registerOtherObjects(obj.efforts())
+                    if isinstance(obj, note.Note) or \
+                           isinstance(obj, attachment.Attachment) or \
+                           isinstance(obj, effort.Effort):
                         self.__monitor.setChanges(obj.id(), set())
-            registerNotesAndAttachments(self.categories().rootItems())
-            registerNotesAndAttachments(self.tasks().rootItems())
-            registerNotesAndAttachments(self.notes().rootItems())
+            registerOtherObjects(self.categories().rootItems())
+            registerOtherObjects(self.tasks().rootItems())
+            registerOtherObjects(self.notes().rootItems())
             self.__monitor.resetAllChanges()
             self.__syncMLConfig = syncMLConfig
             self.__guid = guid
@@ -324,7 +328,6 @@ class TaskFile(patterns.Observer):
         self.__monitor.resetAllChanges()
         xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
                                 self.syncMLConfig(), self.changes(), self.guid())
-
         fd.close()
         if os.path.exists(self.__filename): # Not using self.exists() because DummyFile.exists returns True
             os.remove(self.__filename)

@@ -20,6 +20,7 @@ from taskcoachlib.changes import ChangeMonitor
 from taskcoachlib.domain.note import NoteOwner
 from taskcoachlib.domain.attachment import AttachmentOwner
 from taskcoachlib.domain.base import CompositeObject
+from taskcoachlib.domain.task import Task
 
 
 class ChangeSynchronizer(object):
@@ -56,6 +57,8 @@ class ChangeSynchronizer(object):
                     addIds(obj.notes(), idMap, ownerMap, obj)
                 if isinstance(obj, AttachmentOwner):
                     addIds(obj.attachments(), idMap, ownerMap, obj)
+                if isinstance(obj, Task):
+                    addIds(obj.efforts(), idMap, ownerMap)
         selfMap = dict()
         selfOwnerMap = dict()
         addIds(oldList, selfMap, selfOwnerMap)
@@ -124,6 +127,7 @@ class ChangeSynchronizer(object):
                     else:
                         getattr(selfMap[otherOwnerMap[theObject.id()].id()], 'add%s' % className)(theObject)
                     selfMap[theObject.id()] = theObject
+                    self._monitor.setChanges(theObject.id(), set())
                 if theObject.id() in selfMap:
                     if isinstance(theObject, CompositeObject):
                         handleNewOwnedObjectsOnDisk(children)
@@ -132,11 +136,26 @@ class ChangeSynchronizer(object):
                     if isinstance(theObject, AttachmentOwner):
                         handleNewOwnedObjectsOnDisk(theObject.attachments())
 
+        def handleNewEffortsOnDisk(effortsOnDisk):
+            for theEffort in effortsOnDisk:
+                memChanges = self._monitor.getChanges(theEffort)
+                if memChanges is not None and '__del__' in memChanges:
+                    # XXX potential conflict
+                    otherMap[theEffort.parent().id()].removeEffort(theEffort)
+                    del otherMap[theEffort.id()]
+                elif theEffort.id() not in selfMap:
+                    parent = selfMap[theEffort.parent().id()]
+                    theEffort.setTask(parent)
+                    selfMap[theEffort.id()] = theEffort
+                    self._monitor.setChanges(theEffort.id(), set())
+
         for obj in newList.allItemsSorted():
             if isinstance(obj, NoteOwner):
                 handleNewOwnedObjectsOnDisk(obj.notes())
             if isinstance(obj, AttachmentOwner):
                 handleNewOwnedObjectsOnDisk(obj.attachments())
+            if isinstance(obj, Task):
+                handleNewEffortsOnDisk(obj.efforts())
 
         # Notes/attachments removed from disk
 
@@ -165,11 +184,22 @@ class ChangeSynchronizer(object):
                     if isinstance(theObject, AttachmentOwner):
                         handleOwnedObjectsRemovedFromDisk(theObject.attachments())
 
+        def handleEffortsRemovedFromDisk(effortsInMemory):
+            for theEffort in effortsInMemory:
+                ch = self.diskChanges.getChanges(theEffort)
+                if ch is not None and '__del__' in ch:
+                    # XXX potential conflict
+                    selfMap[theEffort.parent().id()].removeEffort(theEffort)
+                    self._monitor.setChanges(theEffort.id(), None)
+                    del selfMap[theEffort.id()]
+
         for obj in oldList.allItemsSorted():
             if isinstance(obj, NoteOwner):
                 handleOwnedObjectsRemovedFromDisk(obj.notes())
             if isinstance(obj, AttachmentOwner):
                 handleOwnedObjectsRemovedFromDisk(obj.attachments())
+            if isinstance(obj, Task):
+                handleEffortsRemovedFromDisk(obj.efforts())
 
         # Objects changed on disk
         def allObjects(theList):
@@ -182,6 +212,8 @@ class ChangeSynchronizer(object):
                     result.extend(allObjects(obj.notes()))
                 if isinstance(obj, AttachmentOwner):
                     result.extend(allObjects(obj.attachments()))
+                if isinstance(obj, Task):
+                    result.extend(obj.efforts())
             return result
 
         for selfObject in allObjects(oldList):
@@ -240,12 +272,16 @@ class ChangeSynchronizer(object):
                         # Note: no conflict resolution for this one.
                         selfObject.expand(otherObject.isExpanded())
                     else:
+                        if changeName in ['start', 'stop']:
+                            getterName = 'get' + changeName[0].upper() + changeName[1:]
+                        else:
+                            getterName = changeName
                         if memChanges is not None and \
                                changeName in memChanges and \
-                               getattr(selfObject, changeName)() != getattr(otherObject, changeName)():
+                               getattr(selfObject, getterName)() != getattr(otherObject, getterName)():
                             conflicts.append(changeName)
                         else:
-                            getattr(selfObject, 'set' + changeName[0].upper() + changeName[1:])(getattr(otherObject, changeName)())
+                            getattr(selfObject, 'set' + changeName[0].upper() + changeName[1:])(getattr(otherObject, getterName)())
 
                 if conflicts:
                     print conflicts # XXXTODO

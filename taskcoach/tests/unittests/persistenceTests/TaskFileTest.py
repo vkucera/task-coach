@@ -1157,8 +1157,6 @@ class TaskFileMultiUserTest(test.TestCase):
     def testOtherCreatesNoteAndReparentsExisting(self):
         self._testCreateObjectAndReparentExisting('notes')
 
-    # XXXTODO: efforts
-
     def _testChangeAttribute(self, name, value, listName):
         obj = getattr(self.taskFile1, listName)().rootItems()[0]
         getattr(obj, 'set' + name[0].upper() + name[1:])(value)
@@ -1496,3 +1494,49 @@ class TaskFileMultiUserTest(test.TestCase):
             self.taskFile2.save()
         except Exception, e:
             self.fail(str(e))
+
+    def testAddEffortToTask(self):
+        newEffort = effort.Effort(self.task, date.DateTime(2011, 5, 1), date.DateTime(2011, 6, 1))
+        self.task.addEffort(newEffort)
+        self.taskFile1.save()
+        self.taskFile2.save()
+        self.assertEqual(newEffort.id(), self.taskFile2.tasks().rootItems()[0].efforts()[0].id())
+
+    def testRemoveEffortFromTask(self):
+        newEffort = effort.Effort(self.task, date.DateTime(2011, 5, 1), date.DateTime(2011, 6, 1))
+        self.task.addEffort(newEffort)
+        self.taskFile1.save()
+        self.taskFile2.save()
+        self.task.removeEffort(newEffort)
+        self.taskFile2.monitor().setChanges(newEffort.id(), set())
+        self.taskFile1.save()
+        self.taskFile2.save()
+        self.assertEqual(len(self.taskFile2.tasks().rootItems()[0].efforts()), 0)
+
+    def testChangeEffortStart(self):
+        newEffort = effort.Effort(self.task, date.DateTime(2011, 5, 1), date.DateTime(2011, 6, 1))
+        self.task.addEffort(newEffort)
+        self.taskFile1.save()
+        self.taskFile2.save()
+        # This is needed because the setTask in sync() generates a DEL event
+        self.taskFile1.monitor().setChanges(newEffort.id(), set())
+        newDate = date.DateTime(2010, 6, 1)
+        newEffort.setStart(newDate)
+        self.taskFile2.monitor().resetAllChanges()
+        self.taskFile1.save()
+        self.taskFile2.save()
+        self.assertEqual(self.taskFile2.tasks().rootItems()[0].efforts()[0].getStart(), newDate)
+
+    def testChangeEffortStop(self):
+        newEffort = effort.Effort(self.task, date.DateTime(2011, 5, 1), date.DateTime(2011, 6, 1))
+        self.task.addEffort(newEffort)
+        self.taskFile1.save()
+        self.taskFile2.save()
+        # This is needed because the setTask in sync() generates a DEL event
+        self.taskFile1.monitor().setChanges(newEffort.id(), set())
+        newDate = date.DateTime(2012, 6, 1)
+        newEffort.setStop(newDate)
+        self.taskFile2.monitor().resetAllChanges()
+        self.taskFile1.save()
+        self.taskFile2.save()
+        self.assertEqual(self.taskFile2.tasks().rootItems()[0].efforts()[0].getStop(), newDate)
