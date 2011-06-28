@@ -213,6 +213,9 @@ class ChangeMonitor(object):
             else:
                 self._changes[id_] = set()
 
+    def empty(self):
+        self._changes = dict()
+
     def merge(self, monitor):
         for id_, changes in self._changes.items():
             theirChanges = monitor._changes.get(id_, None)

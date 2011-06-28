@@ -23,6 +23,21 @@ from taskcoachlib.domain.base import CompositeObject
 from taskcoachlib.domain.task import Task
 
 
+def allObjects(theList):
+    result = list()
+    for obj in theList:
+        result.append(obj)
+        if isinstance(obj, CompositeObject):
+            result.extend(allObjects(obj.children()))
+        if isinstance(obj, NoteOwner):
+            result.extend(allObjects(obj.notes()))
+        if isinstance(obj, AttachmentOwner):
+            result.extend(allObjects(obj.attachments()))
+        if isinstance(obj, Task):
+            result.extend(obj.efforts())
+    return result
+
+
 class ChangeSynchronizer(object):
     def __init__(self, monitor, allChanges):
         self._monitor = monitor
@@ -39,10 +54,15 @@ class ChangeSynchronizer(object):
         self._allChanges[self._monitor.guid()] = self._monitor
 
         self.allSelfMap = dict()
-        self.allOtherMap = dict()
 
         for oldList, newList in lists:
             self.mergeObjects(oldList, newList)
+
+        # Cleanup monitor
+        self._monitor.empty()
+        for oldList, newList in lists:
+            for obj in allObjects(oldList.rootItems()):
+                self._monitor.resetChanges(obj)
 
     def mergeObjects(self, oldList, newList):
         # Map id to object
@@ -66,7 +86,6 @@ class ChangeSynchronizer(object):
         otherMap = dict()
         otherOwnerMap = dict()
         addIds(newList, otherMap, otherOwnerMap)
-        self.allOtherMap.update(otherMap)
 
         # Objects added on disk or removed from memory
         for otherObject in newList.allItemsSorted():
@@ -84,7 +103,6 @@ class ChangeSynchronizer(object):
                     parent.addChild(otherObject)
                     otherObject.setParent(parent)
                 oldList.append(otherObject)
-                self._monitor.setChanges(otherObject.id(), set())
                 selfMap[otherObject.id()] = otherObject
 
         # Objects removed from disk
@@ -93,7 +111,6 @@ class ChangeSynchronizer(object):
             if ch is not None and '__del__' in ch:
                 # XXX potential conflict
                 oldList.remove(selfObject)
-                self._monitor.setChanges(selfObject.id(), None)
                 del selfMap[selfObject.id()]
 
         # Notes/attachments added on disk or removed from memory (except root ones)
@@ -127,7 +144,6 @@ class ChangeSynchronizer(object):
                     else:
                         getattr(selfMap[otherOwnerMap[theObject.id()].id()], 'add%s' % className)(theObject)
                     selfMap[theObject.id()] = theObject
-                    self._monitor.setChanges(theObject.id(), set())
                 if theObject.id() in selfMap:
                     if isinstance(theObject, CompositeObject):
                         handleNewOwnedObjectsOnDisk(children)
@@ -147,7 +163,6 @@ class ChangeSynchronizer(object):
                     parent = selfMap[theEffort.parent().id()]
                     theEffort.setTask(parent)
                     selfMap[theEffort.id()] = theEffort
-                    self._monitor.setChanges(theEffort.id(), set())
 
         for obj in newList.allItemsSorted():
             if isinstance(obj, NoteOwner):
@@ -174,7 +189,6 @@ class ChangeSynchronizer(object):
                             selfMap[theObject.parent().id()].removeChild(theObject)
                     else:
                         getattr(selfOwnerMap[theObject.id()], 'remove%s' % className)(theObject)
-                    self._monitor.setChanges(theObject.id(), None)
                     del selfMap[theObject.id()]
                 if theObject.id() in selfMap:
                     if isinstance(theObject, CompositeObject):
@@ -190,7 +204,6 @@ class ChangeSynchronizer(object):
                 if ch is not None and '__del__' in ch:
                     # XXX potential conflict
                     selfMap[theEffort.parent().id()].removeEffort(theEffort)
-                    self._monitor.setChanges(theEffort.id(), None)
                     del selfMap[theEffort.id()]
 
         for obj in oldList.allItemsSorted():
@@ -202,21 +215,7 @@ class ChangeSynchronizer(object):
                 handleEffortsRemovedFromDisk(obj.efforts())
 
         # Objects changed on disk
-        def allObjects(theList):
-            result = list()
-            for obj in theList:
-                result.append(obj)
-                if isinstance(obj, CompositeObject):
-                    result.extend(allObjects(obj.children()))
-                if isinstance(obj, NoteOwner):
-                    result.extend(allObjects(obj.notes()))
-                if isinstance(obj, AttachmentOwner):
-                    result.extend(allObjects(obj.attachments()))
-                if isinstance(obj, Task):
-                    result.extend(obj.efforts())
-            return result
-
-        for selfObject in allObjects(oldList):
+        for selfObject in allObjects(oldList.rootItems()):
             objChanges = self.diskChanges.getChanges(selfObject)
             if objChanges is not None and objChanges:
                 memChanges = self._monitor.getChanges(selfObject)
