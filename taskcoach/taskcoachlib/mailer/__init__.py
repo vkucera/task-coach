@@ -22,7 +22,6 @@ from taskcoachlib.mailer.macmail import getSubjectOfMail
 from taskcoachlib.i18n import _
 
 
-
 def readMail(filename, readContent=True):
     # FIXME: Why not use the email package?
     subject = None
