@@ -36,8 +36,8 @@ class WindowTest(test.wxTestCase):
     def testInitialSize(self):
         # See MainWindowTest...
         w, h = self.frame.GetSizeTuple()
-        if wx.Platform == '__WXMAC__': 
-            h += 29 # pragma: no cover
+        if wx.Platform == '__WXMAC__':
+            h += 40 # pragma: no cover
         self.assertEqual(eval(self.settings.get(self.section, 'size')),
             (w, h))
      
