@@ -1143,8 +1143,11 @@ class TaskFileMultiUserTest(test.TestCase):
         self.taskFile1.save()
         self.taskFile2.save()
         self.assertEqual(len(getattr(self.taskFile2, listName)()), 2)
-        otherItem = getattr(self.taskFile2, listName)().rootItems()[0]
-        self.assertEqual(otherItem.id(), newItem.id())
+        for otherItem in getattr(self.taskFile2, listName)().rootItems():
+            if otherItem.id() == newItem.id():
+                break
+        else:
+            self.fail()
         self.assertEqual(len(otherItem.children()), 1)
         self.assertEqual(otherItem.children()[0].id(), item.id())
 
@@ -1339,8 +1342,8 @@ class TaskFileMultiUserTest(test.TestCase):
     def _testDeleteObject(self, listName):
         item = getattr(self.taskFile1, listName)().rootItems()[0]
         getattr(self.taskFile1, listName)().remove(item)
-        self.taskFile2.monitor().resetAllChanges()
         self.taskFile1.save()
+        self.taskFile2.monitor().setChanges(item.id(), set())
         self.taskFile2.save()
         self.assertEqual(len(getattr(self.taskFile1, listName)()), 0)
         self.assertEqual(len(getattr(self.taskFile2, listName)()), 0)

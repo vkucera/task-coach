@@ -23,28 +23,34 @@ from taskcoachlib.domain.base import CompositeObject
 from taskcoachlib.domain.task import Task
 
 
-def allObjects(theList):
-    result = list()
-    for obj in theList:
-        result.append(obj)
-        if isinstance(obj, CompositeObject):
-            result.extend(allObjects(obj.children()))
-        if isinstance(obj, NoteOwner):
-            result.extend(allObjects(obj.notes()))
-        if isinstance(obj, AttachmentOwner):
-            result.extend(allObjects(obj.attachments()))
-        if isinstance(obj, Task):
-            result.extend(obj.efforts())
-    return result
-
-
 class ChangeSynchronizer(object):
     def __init__(self, monitor, allChanges):
         self._monitor = monitor
         self._allChanges = allChanges
 
+    @staticmethod
+    def allObjects(theList):
+        result = list()
+        for obj in theList:
+            result.append(obj)
+            if isinstance(obj, CompositeObject):
+                result.extend(ChangeSynchronizer.allObjects(obj.children()))
+            if isinstance(obj, NoteOwner):
+                result.extend(ChangeSynchronizer.allObjects(obj.notes()))
+            if isinstance(obj, AttachmentOwner):
+                result.extend(ChangeSynchronizer.allObjects(obj.attachments()))
+            if isinstance(obj, Task):
+                result.extend(obj.efforts())
+        return result
+
     def sync(self, lists):
         self.diskChanges = ChangeMonitor()
+        self.conflictChanges = ChangeMonitor()
+
+        self.memMap = dict()
+        self.memOwnerMap = dict()
+        self.diskMap = dict()
+        self.diskOwnerMap = dict()
 
         for devGUID, changes in self._allChanges.items():
             if devGUID == self._monitor.guid():
@@ -53,18 +59,21 @@ class ChangeSynchronizer(object):
                 changes.merge(self._monitor)
         self._allChanges[self._monitor.guid()] = self._monitor
 
-        self.allSelfMap = dict()
-
-        for oldList, newList in lists:
-            self.mergeObjects(oldList, newList)
+        for memList, diskList in lists:
+            self.mergeObjects(memList, diskList)
 
         # Cleanup monitor
         self._monitor.empty()
-        for oldList, newList in lists:
-            for obj in allObjects(oldList.rootItems()):
+        for memList, diskList in lists:
+            for obj in self.allObjects(memList.rootItems()):
                 self._monitor.resetChanges(obj)
 
-    def mergeObjects(self, oldList, newList):
+        # Merge conflict changes
+        for devGUID, changes in self._allChanges.items():
+            if devGUID != self._monitor.guid():
+                changes.merge(self.conflictChanges)
+
+    def mergeObjects(self, memList, diskList):
         # Map id to object
         def addIds(objects, idMap, ownerMap, owner=None):
             for obj in objects:
@@ -79,197 +88,297 @@ class ChangeSynchronizer(object):
                     addIds(obj.attachments(), idMap, ownerMap, obj)
                 if isinstance(obj, Task):
                     addIds(obj.efforts(), idMap, ownerMap)
-        selfMap = dict()
-        selfOwnerMap = dict()
-        addIds(oldList, selfMap, selfOwnerMap)
-        self.allSelfMap.update(selfMap)
-        otherMap = dict()
-        otherOwnerMap = dict()
-        addIds(newList, otherMap, otherOwnerMap)
+        addIds(memList, self.memMap, self.memOwnerMap)
+        addIds(diskList, self.diskMap, self.diskOwnerMap)
 
-        # Objects added on disk or removed from memory
-        for otherObject in newList.allItemsSorted():
-            memChanges = self._monitor.getChanges(otherObject)
-            if memChanges is not None and '__del__' in memChanges:
-                # XXX potential conflict
-                newList.remove(otherObject)
-                del otherMap[otherObject.id()]
-            elif otherObject.id() not in selfMap:
-                for child in otherObject.children():
-                    otherObject.removeChild(child)
-                parent = otherObject.parent()
-                if parent is not None:
-                    parent = selfMap[parent.id()]
-                    parent.addChild(otherObject)
-                    otherObject.setParent(parent)
-                oldList.append(otherObject)
-                selfMap[otherObject.id()] = otherObject
+        self.mergeCompositeObjects(memList, diskList)
+        self.mergeOwnedObjectsFromDisk(diskList)
+        self.reparentObjects(memList, diskList)
+        self.deletedObjects(memList)
+        self.deletedOwnedObjects(memList)
+        self.applyChanges(memList)
 
-        # Objects removed from disk
-        for selfObject in oldList.allItemsSorted():
-            ch = self.diskChanges.getChanges(selfObject)
-            if ch is not None and '__del__' in ch:
-                # XXX potential conflict
-                oldList.remove(selfObject)
-                del selfMap[selfObject.id()]
+    def mergeCompositeObjects(self, memList, diskList):
+        # First pass: new composite objects on disk. Don't handle
+        # other (notes belonging to object, attachments, efforts) yet
+        # because they may belong to a category. This assumes that
+        # categories are the first domain class handled.
 
-        # Notes/attachments added on disk or removed from memory (except root ones)
+        for diskObject in diskList.allItemsSorted():
+            memChanges = self._monitor.getChanges(diskObject)
+            deleted = memChanges is not None and '__del__' in memChanges
 
-        def handleNewOwnedObjectsOnDisk(objectsOnDisk):
-            for theObject in objectsOnDisk:
-                className = theObject.__class__.__name__
-                if className.endswith('Attachment'):
-                    className = 'Attachment'
-                if isinstance(theObject, CompositeObject):
-                    children = theObject.children()[:]
-                memChanges = self._monitor.getChanges(theObject)
-                if memChanges is not None and '__del__' in memChanges:
-                    # XXX potential conflict
-                    if theObject.id() in otherMap:
-                        if theObject.id() in otherOwnerMap:
-                            getattr(otherOwnerMap[theObject.id()], 'remove%s' % className)(theObject)
-                            del otherOwnerMap[theObject.id()]
-                        del otherMap[theObject.id()]
-                elif theObject.id() not in selfMap:
-                    if isinstance(theObject, CompositeObject):
-                        for child in theObject.children():
-                            theObject.removeChild(child)
-                        parent = theObject.parent()
-                        if parent is None:
-                            getattr(selfMap[otherOwnerMap[theObject.id()].id()], 'add%s' % className)(theObject)
-                        else:
-                            parent = selfMap[parent.id()]
-                            parent.addChild(theObject)
-                            theObject.setParent(parent)
-                    else:
-                        getattr(selfMap[otherOwnerMap[theObject.id()].id()], 'add%s' % className)(theObject)
-                    selfMap[theObject.id()] = theObject
-                if theObject.id() in selfMap:
-                    if isinstance(theObject, CompositeObject):
-                        handleNewOwnedObjectsOnDisk(children)
-                    if isinstance(theObject, NoteOwner):
-                        handleNewOwnedObjectsOnDisk(theObject.notes())
-                    if isinstance(theObject, AttachmentOwner):
-                        handleNewOwnedObjectsOnDisk(theObject.attachments())
+            if diskObject.id() not in self.memMap and not deleted:
+                if isinstance(diskObject, CompositeObject):
+                    # New children will be handled later. This assumes
+                    # that the parent() is not changed when removing a
+                    # child.
+                    for child in diskObject.children():
+                        diskObject.removeChild(child)
+                    parent = diskObject.parent()
+                    if parent is not None and parent.id() in self.memMap:
+                        parent = self.memMap[parent.id()]
+                        parent.addChild(diskObject)
+                        diskObject.setParent(parent)
+                    elif parent is not None:
+                        # Parent deleted from memory; the task will be
+                        # top-level.
+                        diskObject.setParent(None)
+                        self.conflictChanges.addChange(diskObject, '__parent__')
+                memList.append(diskObject)
+                self.memMap[diskObject.id()] = diskObject
 
-        def handleNewEffortsOnDisk(effortsOnDisk):
-            for theEffort in effortsOnDisk:
-                memChanges = self._monitor.getChanges(theEffort)
-                if memChanges is not None and '__del__' in memChanges:
-                    # XXX potential conflict
-                    otherMap[theEffort.parent().id()].removeEffort(theEffort)
-                    del otherMap[theEffort.id()]
-                elif theEffort.id() not in selfMap:
-                    parent = selfMap[theEffort.parent().id()]
-                    theEffort.setTask(parent)
-                    selfMap[theEffort.id()] = theEffort
+    def mergeOwnedObjectsFromDisk(self, diskList):
+        # Second pass: 'owned' objects (notes and attachments
+        # currently) new on disk, and efforts.
 
-        for obj in newList.allItemsSorted():
+        for obj in diskList.allItemsSorted():
             if isinstance(obj, NoteOwner):
-                handleNewOwnedObjectsOnDisk(obj.notes())
+                self._handleNewOwnedObjectsOnDisk(obj.notes())
             if isinstance(obj, AttachmentOwner):
-                handleNewOwnedObjectsOnDisk(obj.attachments())
+                self._handleNewOwnedObjectsOnDisk(obj.attachments())
             if isinstance(obj, Task):
-                handleNewEffortsOnDisk(obj.efforts())
+                self._handleNewEffortsOnDisk(obj.efforts())
 
-        # Notes/attachments removed from disk
+    def _handleNewOwnedObjectsOnDisk(self, diskObjects):
+        for diskObject in diskObjects:
+            className = diskObject.__class__.__name__
+            if className.endswith('Attachment'):
+                className = 'Attachment'
 
-        def handleOwnedObjectsRemovedFromDisk(objectsInMemory):
-            for theObject in objectsInMemory:
-                className = theObject.__class__.__name__
-                if className.endswith('Attachment'):
-                    className = 'Attachment'
-                ch = self.diskChanges.getChanges(theObject)
-                if ch is not None and '__del__' in ch:
-                    # XXX potential conflict
-                    if isinstance(theObject, CompositeObject):
-                        if theObject.parent() is None:
-                            getattr(selfOwnerMap[theObject.id()], 'remove%s' % className)(theObject)
-                        else:
-                            selfMap[theObject.parent().id()].removeChild(theObject)
+            if isinstance(diskObject, CompositeObject):
+                children = diskObject.children()[:]
+
+            memChanges = self._monitor.getChanges(diskObject)
+            deleted = memChanges is not None and '__del__' in memChanges
+
+            if diskObject.id() not in self.memMap and not deleted:
+                addObject = True
+
+                if isinstance(diskObject, CompositeObject):
+                    for child in diskObject.children():
+                        diskObject.removeChild(child)
+                    parent = diskObject.parent()
+                    if parent is not None and parent.id() in self.memMap:
+                        parent = self.memMap[parent.id()]
+                        parent.addChild(diskObject)
+                        diskObject.setParent(parent)
+                    elif parent is not None:
+                        # Parent deleted from memory; the object
+                        # becomes top-level but its owner stays
+                        # the same.
+                        diskObject.setParent(None)
+                        while parent.parent() is not None:
+                            parent = parent.parent()
+                        diskOwner = self.diskOwnerMap[parent.id()]
+                        if diskOwner.id() in self.memMap:
+                            memOwner = self.memMap[diskOwner.id()]
+                            getattr(memOwner, 'add%s' % className)(diskObject)
+                            self.conflictChanges.addChange(diskObject, '__owner__')
+                            self.memOwnerMap[diskObject.id()] = memOwner
                     else:
-                        getattr(selfOwnerMap[theObject.id()], 'remove%s' % className)(theObject)
-                    del selfMap[theObject.id()]
-                if theObject.id() in selfMap:
-                    if isinstance(theObject, CompositeObject):
-                        handleOwnedObjectsRemovedFromDisk(theObject.children())
-                    if isinstance(theObject, NoteOwner):
-                        handleOwnedObjectsRemovedFromDisk(theObject.notes())
-                    if isinstance(theObject, AttachmentOwner):
-                        handleOwnedObjectsRemovedFromDisk(theObject.attachments())
+                        diskOwner = self.diskOwnerMap[diskObject.id()]
+                        if diskOwner.id() in self.memMap:
+                            memOwner = self.memMap[diskOwner.id()]
+                            getattr(memOwner, 'add%s' % className)(diskObject)
+                            self.memOwnerMap[diskObject.id()] = memOwner
+                        else:
+                            # Owner deleted. Just forget it.
+                            self.conflictChanges.addChange(diskObject, '__del__')
+                            addObject = False
+                else:
+                    diskOwner = self.diskOwnerMap[diskObject.id()]
+                    if diskOwner.id() in self.memMap:
+                        memOwner = self.memMap[diskOwner.id()]
+                        getattr(memOwner, 'add%s' % className)(diskObject)
+                        self.memOwnerMap[diskObject.id()] = memOwner
+                    else:
+                        # Forget it again...
+                        self.conflictChanges.addChange(diskObject, '__del__')
+                        addObject = False
 
-        def handleEffortsRemovedFromDisk(effortsInMemory):
-            for theEffort in effortsInMemory:
-                ch = self.diskChanges.getChanges(theEffort)
-                if ch is not None and '__del__' in ch:
-                    # XXX potential conflict
-                    selfMap[theEffort.parent().id()].removeEffort(theEffort)
-                    del selfMap[theEffort.id()]
+                if addObject:
+                    self.memMap[diskObject.id()] = diskObject
 
-        for obj in oldList.allItemsSorted():
+            if diskObject.id() in self.memMap:
+                if isinstance(diskObject, CompositeObject):
+                    self._handleNewOwnedObjectsOnDisk(children)
+                if isinstance(diskObject, NoteOwner):
+                    self._handleNewOwnedObjectsOnDisk(diskObject.notes())
+                if isinstance(diskObject, AttachmentOwner):
+                    self._handleNewOwnedObjectsOnDisk(diskObject.attachments())
+
+    def _handleNewEffortsOnDisk(self, diskEfforts):
+        for diskEffort in diskEfforts:
+            memChanges = self._monitor.getChanges(diskEffort)
+            deleted = memChanges is not None and '__del__' in memChanges
+            if diskEffort.id() not in self.memMap and not deleted:
+                diskTask = diskEffort.parent()
+                if diskTask.id() in self.memMap:
+                    memTask = self.memMap[diskTask.id()]
+                    diskEffort.setTask(memTask)
+                    self.memMap[diskEffort.id()] = diskEffort
+                else:
+                    # Task deleted; forget it.
+                    self.conflictChanges.addChange(diskEffort, '__del__')
+
+    def reparentObjects(self, memList, diskList):
+        # Third pass: objects reparented on disk.
+
+        for diskObject in self.allObjects(diskList):
+            diskChanges = self.diskChanges.getChanges(diskObject)
+            if diskChanges is not None and '__parent__' in diskChanges:
+                memChanges = self._monitor.getChanges(diskObject)
+                memObject = self.memMap[diskObject.id()]
+                memList.remove(memObject)
+
+                # Note: no conflict resolution for this one,
+                # it would be a bit tricky... Instead, the
+                # disk version wins.
+
+                def sameParents(a, b):
+                    if a is None and b is None:
+                        return True
+                    elif a is None or b is None:
+                        return False
+                    return a.id() == b.id()
+
+                parentConflict = False
+                if memChanges is not None and '__parent__' in memChanges:
+                    if not sameParents(memObject.parent(), diskObject.parent()):
+                        parentConflict = True
+
+                if memObject.parent() is not None:
+                    memObject.parent().removeChild(memObject)
+
+                if parentConflict:
+                    diskParent = diskObject.parent()
+
+                    if diskParent is None:
+                        memObject.setParent(None)
+                    else:
+                        if diskParent.id() in self.memMap:
+                            memParent = self.memMap[diskParent.id()]
+                            memParent.addChild(memObject)
+                            memObject.setParent(memParent)
+                        else:
+                            # New parent deleted from memory...
+                            memObject.setParent(None)
+                            self.conflictChanges.addChange(memObject, '__parent__')
+                else:
+                    diskParent = diskObject.parent()
+                    if diskParent is None:
+                        memObject.setParent(None)
+                    else:
+                        if diskParent.id() in self.memMap:
+                            memParent = self.memMap[diskParent.id()]
+                            memParent.addChild(memObject)
+                            memObject.setParent(memParent)
+                        else:
+                            memObject.setParent(None)
+                            self.conflictChanges.addChange(memObject, '__parent__')
+
+                memList.append(memObject)
+
+    def deletedObjects(self, memList):
+        # Fourth pass: objects deleted from disk
+
+        for memObject in memList.allItemsSorted():
+            diskChanges = self.diskChanges.getChanges(memObject)
+
+            if diskChanges is not None and '__del__' in diskChanges:
+                # If there are local changes we just ignore them if
+                # the object has been deleted on disk.
+                memList.remove(memObject)
+                del self.memMap[memObject.id()]
+                if memObject.id() in self.memOwnerMap:
+                    del self.memOwnerMap[memObject.id()]
+
+    def deletedOwnedObjects(self, memList):
+        for obj in memList.allItemsSorted():
             if isinstance(obj, NoteOwner):
-                handleOwnedObjectsRemovedFromDisk(obj.notes())
+                self._handleOwnedObjectsRemovedFromDisk(obj.notes())
             if isinstance(obj, AttachmentOwner):
-                handleOwnedObjectsRemovedFromDisk(obj.attachments())
+                self._handleOwnedObjectsRemovedFromDisk(obj.attachments())
             if isinstance(obj, Task):
-                handleEffortsRemovedFromDisk(obj.efforts())
+                self._handleEffortsRemovedFromDisk(obj.efforts())
 
-        # Objects changed on disk
-        for selfObject in allObjects(oldList.rootItems()):
-            objChanges = self.diskChanges.getChanges(selfObject)
-            if objChanges is not None and objChanges:
-                memChanges = self._monitor.getChanges(selfObject)
-                otherObject = otherMap[selfObject.id()]
+    def _handleOwnedObjectsRemovedFromDisk(self, memObjects):
+        for memObject in memObjects:
+            className = memObject.__class__.__name__
+            if className.endswith('Attachment'):
+                className = 'Attachment'
+
+            if isinstance(memObject, CompositeObject):
+                self._handleOwnedObjectsRemovedFromDisk(memObject.children())
+            if isinstance(memObject, NoteOwner):
+                self._handleOwnedObjectsRemovedFromDisk(memObject.notes())
+            if isinstance(memObject, AttachmentOwner):
+                self._handleOwnedObjectsRemovedFromDisk(memObject.attachments())
+
+            diskChanges = self.diskChanges.getChanges(memObject)
+            if diskChanges is not None and '__del__' in diskChanges:
+                # Same remark as above
+                if isinstance(memObject, CompositeObject):
+                    if memObject.parent() is None:
+                        getattr(self.memOwnerMap[memObject.id()], 'remove%s' % className)(memObject)
+                    else:
+                        self.memMap[memObject.parent().id()].removeChild(memObject)
+                else:
+                    getattr(self.memOwnerMap[memObject.id()], 'remove%s' % className)(memObject)
+                del self.memMap[memObject.id()]
+
+    def _handleEffortsRemovedFromDisk(self, memEfforts):
+        for memEffort in memEfforts:
+            diskChanges = self.diskChanges.getChanges(memEffort)
+
+            if diskChanges is not None and '__del__' in diskChanges:
+                # Same remark as above
+                self.memMap[memEffort.parent().id()].removeEffort(memEffort)
+                del self.memMap[memEffort.id()]
+
+    def applyChanges(self, memList):
+        # Final: apply disk changes
+
+        for memObject in self.allObjects(memList.rootItems()):
+            diskChanges = self.diskChanges.getChanges(memObject)
+            if diskChanges:
+                memChanges = self._monitor.getChanges(memObject)
+                diskObject = self.diskMap[memObject.id()]
+
                 conflicts = []
-                for changeName in objChanges:
-                    if changeName == '__parent__':
-                        # Note: no conflict resolution for this one,
-                        # it would be a bit tricky... Instead, the
-                        # "memory" version wins.
-                        def sameParents(a, b):
-                            if a is None and b is None:
-                                return True
-                            elif a is None or b is None:
-                                return False
-                            return a.id() == b.id()
 
-                        if not (memChanges is not None and \
-                                '__parent__' in memChanges and \
-                                not sameParents(selfObject.parent(), otherObject.parent())):
-                            oldParent = selfObject.parent()
-                            newParent = otherObject.parent()
-                            if oldParent is not None:
-                                oldParent.removeChild(selfObject)
-                            if newParent is not None:
-                                newParent = selfMap[newParent.id()]
-                                newParent.addChild(selfObject)
-                            selfObject.setParent(newParent)
+                for changeName in diskChanges:
+                    if changeName == '__parent__':
+                        pass # Already handled
                     elif changeName == '__categories__':
-                        otherCategories = set([self.allSelfMap[category.id()] for category in otherObject.categories()])
+                        diskCategories = set([self.memMap[category.id()] for category in diskObject.categories()])
                         if memChanges is not None and \
                            '__categories__' in memChanges and \
-                           otherCategories != selfObject.categories():
+                           diskCategories != memObject.categories():
                             conflicts.append('__categories__')
+                            self.conflictChanges.addChange(memObject, '__categories__')
                         else:
-                            for cat in selfObject.categories():
-                                cat.removeCategorizable(selfObject)
-                                selfObject.removeCategory(cat)
-                            for cat in otherCategories:
-                                cat.addCategorizable(selfObject)
-                                selfObject.addCategory(cat)
+                            for cat in memObject.categories():
+                                cat.removeCategorizable(memObject)
+                                memObject.removeCategory(cat)
+                            for cat in diskCategories:
+                                cat.addCategorizable(memObject)
+                                memObject.addCategory(cat)
                     elif changeName == 'appearance':
                         attrNames = ['foregroundColor', 'backgroundColor', 'font', 'icon', 'selectedIcon']
                         if memChanges is not None and \
                            'appearance' in memChanges:
                             for attrName in attrNames:
-                                if getattr(selfObject, attrName)() != getattr(otherObject, attrName)():
+                                if getattr(memObject, attrName)() != getattr(diskObject, attrName)():
                                     conflicts.append(attrName)
+                            self.conflictChanges.addChange(memObject, 'appearance')
                         else:
                             for attrName in attrNames:
-                                getattr(selfObject, 'set' + attrName[0].upper() + attrName[1:])(getattr(otherObject, attrName)())
+                                getattr(memObject, 'set' + attrName[0].upper() + attrName[1:])(getattr(diskObject, attrName)())
                     elif changeName == 'expandedContexts':
                         # Note: no conflict resolution for this one.
-                        selfObject.expand(otherObject.isExpanded())
+                        memObject.expand(diskObject.isExpanded())
                     else:
                         if changeName in ['start', 'stop']:
                             getterName = 'get' + changeName[0].upper() + changeName[1:]
@@ -277,10 +386,11 @@ class ChangeSynchronizer(object):
                             getterName = changeName
                         if memChanges is not None and \
                                changeName in memChanges and \
-                               getattr(selfObject, getterName)() != getattr(otherObject, getterName)():
+                               getattr(memObject, getterName)() != getattr(diskObject, getterName)():
                             conflicts.append(changeName)
+                            self.conflictChanges.addChange(memObject, changeName)
                         else:
-                            getattr(selfObject, 'set' + changeName[0].upper() + changeName[1:])(getattr(otherObject, getterName)())
+                            getattr(memObject, 'set' + changeName[0].upper() + changeName[1:])(getattr(diskObject, getterName)())
 
-                if conflicts:
-                    print conflicts # XXXTODO
+                    if conflicts:
+                        print conflicts # XXXTODO

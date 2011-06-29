@@ -206,6 +206,11 @@ class ChangeMonitor(object):
     def resetChanges(self, obj):
         self._changes[obj.id()] = set()
 
+    def addChange(self, obj, name):
+        changes = self._changes.get(obj.id(), set())
+        changes.add(name)
+        self._changes[obj.id()] = changes
+
     def resetAllChanges(self):
         for id_, changes in self._changes.items():
             if changes is not None and '__del__' in changes:
