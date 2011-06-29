@@ -57,7 +57,15 @@ def readMail(filename, readContent=True):
         except UnicodeError:
             encoding = chardet.detect(content)['encoding']
 
-    subject = _('Untitled e-mail') if subject is None else u''.join((part[0].decode(part[1]) if part[1] else part[0]) for part in email.header.decode_header(subject))
+    if subject:
+        try:
+            decoded_subject = u''.join((part[0].decode(part[1]) if part[1] else part[0]) for part in email.header.decode_header(subject))
+        except UnicodeDecodeError:
+            decoded_subject = subject.decode(encoding)
+        subject = decoded_subject
+    else:
+        subject = _('Untitled e-mail')
+    
     content = content.decode(encoding)
     return subject, content
 

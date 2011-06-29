@@ -22,9 +22,11 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.22', 'June 27, 2011',
+Release('1.2.22', 'June 29, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bug('''Properly open task files with email attachments that
+have a non-ascii subject.''', '3333730')
         ]
     ),
     
