@@ -48,7 +48,8 @@ class ToolTipMixin(object):
         # taking the taskbar into account...
 
         if self.__enabled:
-            _, displayY, _, displayHeight = wx.ClientDisplayRect()
+            theDisplay = wx.Display(wx.Display.GetFromPoint(wx.Point(x, y)))
+            displayX, displayY, displayWidth, displayHeight = theDisplay.GetClientArea()
             tipWidth, tipHeight = self.__tip.GetSizeTuple()
 
             if tipHeight > displayHeight:
@@ -58,6 +59,11 @@ class ToolTipMixin(object):
             elif y + tipHeight > displayY + displayHeight:
                 # Adjust y so that the whole tip is visible.
                 y = displayY + displayHeight - tipHeight - 5
+
+            if tipWidth > displayWidth:
+                x = 5
+            elif x + tipWidth > displayX + displayWidth:
+                x = displayX + displayWidth - tipWidth - 5
 
             self.__tip.Show(x, y, tipWidth, tipHeight)
 
