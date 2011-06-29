@@ -43,6 +43,7 @@ defaults = { \
     'efforthourend': '18',           # Last time, i.e. end of working day
     'effortminuteinterval': '15',    # Generate times with this interval
     'snoozetimes': "[5, 10, 15, 30, 60, 120, 1440]",
+    'lastsnoozetime': '5',           # Last snooze time used
     'perspective': '',               # The layout of the viewers in the main window
     'datestied': '',                 # What to do when changing the start date or due date
 },

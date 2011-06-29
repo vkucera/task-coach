@@ -27,6 +27,12 @@ Release('1.2.22', 'June 29, 2011',
     bugsFixed=[
         Bug('''Properly open task files with email attachments that
 have a non-ascii subject.''', '3333730')
+        ],
+    featuresChanged=[
+        Feature('''Reminder dialogs now remember the snooze time you picked 
+last time and suggest that time in the next reminder dialog. Also, 
+"don't snooze" is no longer the default snooze option to make it less 
+likely that you click away the reminder and forget about the task.''')
         ]
     ),
     

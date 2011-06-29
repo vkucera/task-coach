@@ -39,9 +39,14 @@ class TimeDelta(datetime.timedelta):
         return hours, minutes, seconds
     
     def hours(self):
-        ''' Return hours as float. '''
+        ''' Timedelta expressed in number of hours. '''
         hours, minutes, seconds = self.hoursMinutesSeconds()
         return hours + (minutes / 60.) + (seconds / 3600.)
+    
+    def minutes(self):
+        ''' Timedelta expressed in number of minutes. '''
+        hours, minutes, seconds = self.hoursMinutesSeconds()
+        return hours * 60 + minutes + (seconds / 60.)
         
     def milliseconds(self):
         ''' Timedelta expressed in number of milliseconds. '''
