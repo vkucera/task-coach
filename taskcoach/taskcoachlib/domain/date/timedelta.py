@@ -38,21 +38,24 @@ class TimeDelta(datetime.timedelta):
         hours += days*24
         return hours, minutes, seconds
     
+    def sign(self):
+        return -1 if self < TimeDelta() else 1
+    
     def hours(self):
         ''' Timedelta expressed in number of hours. '''
         hours, minutes, seconds = self.hoursMinutesSeconds()
-        return hours + (minutes / 60.) + (seconds / 3600.)
+        return self.sign() * (hours + (minutes / 60.) + (seconds / 3600.))
     
     def minutes(self):
         ''' Timedelta expressed in number of minutes. '''
         hours, minutes, seconds = self.hoursMinutesSeconds()
-        return hours * 60 + minutes + (seconds / 60.)
+        return self.sign() * (hours * 60 + minutes + (seconds / 60.))
         
     def milliseconds(self):
         ''' Timedelta expressed in number of milliseconds. '''
-        return int(round((self.days * self.millisecondsPerDay) + \
-                         (self.seconds * self.millisecondsPerSecond) + \
-                         (self.microseconds * self.millisecondsPerMicroSecond)))
+        return self.sign() * int(round((self.days * self.millisecondsPerDay) + \
+                                       (self.seconds * self.millisecondsPerSecond) + \
+                                       (self.microseconds * self.millisecondsPerMicroSecond)))
         
     def __add__(self, other):
         ''' Make sure we return a TimeDelta instance and not a 

@@ -41,7 +41,10 @@ class XMLTemplateReaderTestCase(test.TestCase):
         self.assertEqual(persistence.TemplateXMLReader.convertOldFormat('Now().endOfDay() + oneDay'), '11:59 PM tomorrow')
 
     def testConvertDelta(self):
-        self.assertEqual(persistence.TemplateXMLReader.convertOldFormat('Now() + TimeDelta(2, 1861, 0)'), '2880 minutes from now')
+        self.assertEqual(persistence.TemplateXMLReader.convertOldFormat('Now() + TimeDelta(2, 1861, 0)'), '%d minutes from now'%date.TimeDelta(2, 1861, 0).minutes())
+
+    def testConvertNegativeDelta(self):
+        self.assertEqual(persistence.TemplateXMLReader.convertOldFormat('Now() - TimeDelta(2, 1861, 0)'), '%d minutes ago'%date.TimeDelta(2, 1861, 0).minutes())
 
 
 class XMLReaderTestCase(test.TestCase):

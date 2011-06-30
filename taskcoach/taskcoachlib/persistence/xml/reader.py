@@ -496,12 +496,9 @@ class TemplateXMLReader(XMLReader):
             return '00:00 AM today'
         if expr == 'Tomorrow()':
             return '11:59 PM tomorrow'
-        context = dict()
-        context.update(date.__dict__)
-        context.update(datetime.__dict__)
-        newdate = eval(expr, context)
-        delta = date.DateTime(newdate.year, newdate.month, newdate.day, 0, 0, 0) - date.Now().startOfDay()
-        minutes = delta.days * 24 * 60 + (delta.seconds // 60)
+        newDateTime = eval(expr, date.__dict__)
+        delta = newDateTime - date.Now()
+        minutes = delta.minutes()
         if minutes < 0:
             return '%d minutes ago' % (-minutes)
         else:
