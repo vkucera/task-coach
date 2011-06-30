@@ -708,10 +708,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     @classmethod
     def fontForStatus(class_, status):
         nativeInfoString = class_.settings.get('font', '%stasks'%status)
-        try:
-            return wx.FontFromNativeInfoString(nativeInfoString) if nativeInfoString else None
-        except:
-            return None
+        return wx.FontFromNativeInfoString(nativeInfoString) if nativeInfoString else None
                 
     # Icon
     

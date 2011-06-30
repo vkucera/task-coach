@@ -16,4 +16,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import display, font
+import wx
+
+wxFontFromNativeInfoString = wx.FontFromNativeInfoString
+
+def FontFromNativeInfoString(nativeInfoString):
+    ''' wx.FontFromNativeInfoString may throw an wx.PyAssertionError when the 
+        PointSize is zero. This may happen when fonts are set on one platform
+        and then used on another platform. Catch the exception and return None
+        instead. '''
+    if nativeInfoString:
+        try:
+            return wxFontFromNativeInfoString(nativeInfoString)
+        except wx.PyAssertionError:
+            pass
+    return None
+
+wx.FontFromNativeInfoString = FontFromNativeInfoString
