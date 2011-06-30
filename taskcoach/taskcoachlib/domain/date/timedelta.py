@@ -53,9 +53,10 @@ class TimeDelta(datetime.timedelta):
         
     def milliseconds(self):
         ''' Timedelta expressed in number of milliseconds. '''
-        return self.sign() * int(round((self.days * self.millisecondsPerDay) + \
-                                       (self.seconds * self.millisecondsPerSecond) + \
-                                       (self.microseconds * self.millisecondsPerMicroSecond)))
+        # No need to use self.sign() since self.days is negative for negative values
+        return int(round((self.days * self.millisecondsPerDay) + \
+                         (self.seconds * self.millisecondsPerSecond) + \
+                         (self.microseconds * self.millisecondsPerMicroSecond)))
         
     def __add__(self, other):
         ''' Make sure we return a TimeDelta instance and not a 
