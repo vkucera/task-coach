@@ -43,21 +43,21 @@ class ReminderDialogTest(test.TestCase):
         self.reminderDialog = self.createReminderDialog()
         self.reminderDialog.snoozeOptions.SetSelection(0)
         self.reminderDialog.onClose(DummyEvent())        
-        self.assertEqual(0, self.settings.getint('view', 'lastsnoozetime'))
+        self.assertEqual(0, self.settings.getint('view', 'defaultsnoozetime'))
 
     def testRememberSnoozeTime(self):
         self.reminderDialog = self.createReminderDialog()
         self.reminderDialog.snoozeOptions.SetSelection(2)
         self.reminderDialog.onClose(DummyEvent())        
-        self.assertEqual(10, self.settings.getint('view', 'lastsnoozetime'))
+        self.assertEqual(10, self.settings.getint('view', 'defaultsnoozetime'))
 
-    def testReuseLastSnoozeTime(self):
-        self.settings.set('view', 'lastsnoozetime', '15')
+    def testUseDefaultSnoozeTime(self):
+        self.settings.set('view', 'defaultsnoozetime', '15')
         reminderDialog = self.createReminderDialog()
         self.assertEqual('15 minutes', reminderDialog.snoozeOptions.GetStringSelection())
         
-    def testDontReuzeLastSnoozeTimeWhenItsNotInTheListOfOptions(self):
-        self.settings.set('view', 'lastsnoozetime', '17')
+    def testDontUseDefaultSnoozeTimeWhenItsNotInTheListOfOptions(self):
+        self.settings.set('view', 'defaultsnoozetime', '17')
         reminderDialog = self.createReminderDialog()
         self.assertEqual('5 minutes', reminderDialog.snoozeOptions.GetStringSelection())
         

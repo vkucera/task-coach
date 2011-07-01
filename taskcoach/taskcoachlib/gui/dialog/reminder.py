@@ -65,7 +65,7 @@ class ReminderDialog(sized_controls.SizedDialog):
             wx.StaticText(pane, label=label)
         self.snoozeOptions = wx.ComboBox(pane)
         snoozeTimesUserWantsToSee = [0] + self.settings.getlist('view', 'snoozetimes')
-        lastSnoozeTime = self.settings.getint('view', 'lastsnoozetime')
+        lastSnoozeTime = self.settings.getint('view', 'defaultsnoozetime')
         selectionIndex = 1 # Use the 1st non-zero option if we don't find the last snooze time
         for minutes, label in date.snoozeChoices:
             if minutes in snoozeTimesUserWantsToSee:
@@ -122,7 +122,7 @@ class ReminderDialog(sized_controls.SizedDialog):
         event.Skip()
         selection = self.snoozeOptions.Selection
         minutes = self.snoozeOptions.GetClientData(selection).minutes()
-        self.settings.set('view', 'lastsnoozetime', str(int(minutes)))
+        self.settings.set('view', 'defaultsnoozetime', str(int(minutes)))
         patterns.Publisher().removeInstance(self)
         
     def onOK(self, event):
