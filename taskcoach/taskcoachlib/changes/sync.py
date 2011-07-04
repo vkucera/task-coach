@@ -218,7 +218,6 @@ class ChangeSynchronizer(object):
 
                 if addObject:
                     self.memMap[diskObject.id()] = diskObject
-                    self.notify(2, _('New: "%s"') % diskObject.subject())
 
             if diskObject.id() in self.memMap:
                 if isinstance(diskObject, CompositeObject):
@@ -238,7 +237,6 @@ class ChangeSynchronizer(object):
                     memTask = self.memMap[diskTask.id()]
                     diskEffort.setTask(memTask)
                     self.memMap[diskEffort.id()] = diskEffort
-                    self.notify(2, _('New: "%s"') % diskEffort.subject())
                 else:
                     # Task deleted; forget it.
                     self.conflictChanges.addChange(diskEffort, '__del__')
