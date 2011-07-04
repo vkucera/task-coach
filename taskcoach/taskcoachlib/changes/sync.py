@@ -16,11 +16,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import wx # For ArtProvider
+
 from taskcoachlib.changes import ChangeMonitor
 from taskcoachlib.domain.note import NoteOwner
 from taskcoachlib.domain.attachment import AttachmentOwner
 from taskcoachlib.domain.base import CompositeObject
 from taskcoachlib.domain.task import Task
+from taskcoachlib.domain.note import Note
+from taskcoachlib.domain.category import Category
+from taskcoachlib.notify import AbstractNotifier
+from taskcoachlib.i18n import _
 
 
 class ChangeSynchronizer(object):
@@ -46,6 +52,7 @@ class ChangeSynchronizer(object):
     def sync(self, lists):
         self.diskChanges = ChangeMonitor()
         self.conflictChanges = ChangeMonitor()
+        self.notifier = AbstractNotifier.getSimple()
 
         self.memMap = dict()
         self.memOwnerMap = dict()
@@ -72,6 +79,10 @@ class ChangeSynchronizer(object):
         for devGUID, changes in self._allChanges.items():
             if devGUID != self._monitor.guid():
                 changes.merge(self.conflictChanges)
+
+    def notify(self, message):
+        self.notifier.notify(_('Task Coach'), message,
+                             wx.ArtProvider.GetBitmap('taskcoach', size=wx.Size(32, 32)))
 
     def mergeObjects(self, memList, diskList):
         # Map id to object
@@ -125,6 +136,8 @@ class ChangeSynchronizer(object):
                         # top-level.
                         diskObject.setParent(None)
                         self.conflictChanges.addChange(diskObject, '__parent__')
+                        self.notify(_('"%s" became top-level because its parent was locally deleted.') %
+                                    diskObject.subject())
                 memList.append(diskObject)
                 self.memMap[diskObject.id()] = diskObject
 
@@ -176,6 +189,8 @@ class ChangeSynchronizer(object):
                             getattr(memOwner, 'add%s' % className)(diskObject)
                             self.conflictChanges.addChange(diskObject, '__owner__')
                             self.memOwnerMap[diskObject.id()] = memOwner
+                        self.notify(_('"%s" became top-level because its parent was locally deleted.') %
+                                    diskObject.subject())
                     else:
                         diskOwner = self.diskOwnerMap[diskObject.id()]
                         if diskOwner.id() in self.memMap:
@@ -186,6 +201,8 @@ class ChangeSynchronizer(object):
                             # Owner deleted. Just forget it.
                             self.conflictChanges.addChange(diskObject, '__del__')
                             addObject = False
+                            self.notify(_('"%s" was not kept because its owner ("%s") was locally deleted.') %
+                                        (diskObject.subject(), diskOwner.subject()))
                 else:
                     diskOwner = self.diskOwnerMap[diskObject.id()]
                     if diskOwner.id() in self.memMap:
@@ -196,9 +213,12 @@ class ChangeSynchronizer(object):
                         # Forget it again...
                         self.conflictChanges.addChange(diskObject, '__del__')
                         addObject = False
+                        self.notify(_('"%s" was not kept because its owner ("%s") was locally deleted.') %
+                                    (diskObject.subject(), diskOwner.subject()))
 
                 if addObject:
                     self.memMap[diskObject.id()] = diskObject
+                    self.notify(2, _('New: "%s"') % diskObject.subject())
 
             if diskObject.id() in self.memMap:
                 if isinstance(diskObject, CompositeObject):
@@ -218,9 +238,12 @@ class ChangeSynchronizer(object):
                     memTask = self.memMap[diskTask.id()]
                     diskEffort.setTask(memTask)
                     self.memMap[diskEffort.id()] = diskEffort
+                    self.notify(2, _('New: "%s"') % diskEffort.subject())
                 else:
                     # Task deleted; forget it.
                     self.conflictChanges.addChange(diskEffort, '__del__')
+                    self.notify(_('Effort discarded because its owner ("%s") was locally deleted.') %
+                                diskTask.subject())
 
     def reparentObjects(self, memList, diskList):
         # Third pass: objects reparented on disk.
@@ -402,4 +425,4 @@ class ChangeSynchronizer(object):
                             getattr(memObject, 'set' + changeName[0].upper() + changeName[1:])(getattr(diskObject, getterName)())
 
                     if conflicts:
-                        print conflicts # XXXTODO
+                        self.notify(_('Conflicts detected for "%s".\nThe local version was used.' % memObject.subject()))

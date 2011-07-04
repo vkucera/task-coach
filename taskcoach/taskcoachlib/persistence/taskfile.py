@@ -53,7 +53,6 @@ class TaskFile(patterns.Observer):
         self.__monitor = ChangeMonitor()
         self.__changes = dict()
         self.__changes[self.__monitor.guid()] = self.__monitor
-        # XXXTODO: efforts
         for collection in [self.__tasks, self.__categories, self.__notes]:
             self.__monitor.monitorCollection(collection)
         for domainClass in [task.Task, category.Category, note.Note, effort.Effort,

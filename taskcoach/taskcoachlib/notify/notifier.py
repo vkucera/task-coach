@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import wx
+
+
 class AbstractNotifier(object):
     """
     Abstract base class for interfacing with notification systems
@@ -41,6 +44,21 @@ class AbstractNotifier(object):
     @classmethod
     def get(klass, name):
         return klass.notifiers.get(name, None)
+
+    @classmethod
+    def getSimple(klass):
+        """
+        Returns a notifier suitable for simple notifications. This
+        defaults to Growl/Snarl/libnotify depending on their
+        availability.
+        """
+
+        if '__WXMAC__' in wx.PlatformInfo:
+            return klass.get('Growl') or klass.get('Task Coach')
+        elif '__WXMSW__' in wx.PlatformInfo:
+            return klass.get('Snarl') or klass.get('Task Coach')
+        else:
+            return klass.get('libnotify') or klass.get('Task Coach')
 
     @classmethod
     def names(klass):
