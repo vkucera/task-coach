@@ -61,8 +61,8 @@ class ChangeMonitor(object):
                 Publisher().registerObserver(self.onCategoryAdded, klass.categoryAddedEventType())
                 Publisher().registerObserver(self.onCategoryRemoved, klass.categoryRemovedEventType())
             if issubclass(klass, Task):
-                Publisher().registerObserver(self.onOtherObjectAdded, 'task.effort.add')
-                Publisher().registerObserver(self.onOtherObjectRemoved, 'task.effort.remove')
+                Publisher().registerObserver(self.onEffortAddedOrRemoved, 'task.effort.add')
+                Publisher().registerObserver(self.onEffortAddedOrRemoved, 'task.effort.remove')
             if issubclass(klass, NoteOwner):
                 Publisher().registerObserver(self.onOtherObjectAdded, klass.noteAddedEventType())
                 Publisher().registerObserver(self.onOtherObjectRemoved, klass.noteRemovedEventType())
@@ -110,22 +110,28 @@ class ChangeMonitor(object):
                         if obj.id() in self._changes and self._changes[obj.id()] is not None:
                             self._changes[obj.id()].add(name)
 
+    def _objectAdded(self, obj):
+        if obj.id() in self._changes:
+            if self._changes[obj.id()] is not None and \
+                   '__del__' in self._changes[obj.id()]:
+                self._changes[obj.id()].remove('__del__')
+        else:
+            self._changes[obj.id()] = None
+
     def _objectsAdded(self, event):
         for obj in event.values():
-            if obj.id() in self._changes:
-                if self._changes[obj.id()] is not None and \
-                       '__del__' in self._changes[obj.id()]:
-                    self._changes[obj.id()].remove('__del__')
+            self._objectAdded(obj)
+
+    def _objectRemoved(self, obj):
+        if obj.id() in self._changes:
+            if self._changes[obj.id()] is None:
+                del self._changes[obj.id()]
             else:
-                self._changes[obj.id()] = None
+                self._changes[obj.id()].add('__del__')
 
     def _objectsRemoved(self, event):
         for obj in event.values():
-            if obj.id() in self._changes:
-                if self._changes[obj.id()] is None:
-                    del self._changes[obj.id()]
-                else:
-                    self._changes[obj.id()].add('__del__')
+            self._objectRemoved(obj)
 
     def onChildAdded(self, event):
         if self.__frozen:
@@ -168,6 +174,26 @@ class ChangeMonitor(object):
             return
 
         self._objectsRemoved(event)
+
+    def onEffortAddedOrRemoved(self, event):
+        effortsToAdd = []
+        effortsToRemove = []
+        for task in event.sources():
+            effortsToAdd.extend(event.values(task, type='task.effort.add'))
+            effortsToRemove.extend(event.values(task, type='task.effort.remove'))
+
+        for effort in set(effortsToAdd) & set(effortsToRemove):
+            effortsToAdd.remove(effort)
+            effortsToRemove.remove(effort)
+            # This effort's task was changed.
+            changes = self._changes.get(effort.id(), None)
+            if changes is not None:
+                changes.add('__task__')
+
+        for effort in effortsToAdd:
+            self._objectAdded(effort)
+        for effort in effortsToRemove:
+            self._objectRemoved(effort)
 
     def _categoryChange(self, event):
         for obj in event.sources():

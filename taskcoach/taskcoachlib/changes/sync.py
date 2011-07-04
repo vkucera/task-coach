@@ -365,6 +365,15 @@ class ChangeSynchronizer(object):
                             for cat in diskCategories:
                                 cat.addCategorizable(memObject)
                                 memObject.addCategory(cat)
+                    elif changeName == '__task__':
+                        # Effort changed task
+                        if memChanges is not None and \
+                           '__task__' in memChanges and \
+                           memObject.parent().id() != diskObject.parent().id():
+                            conflicts.append('__task__')
+                            self.conflictChanges.addChange(memObject, '__task__')
+                        else:
+                            memObject.setTask(self.memMap[diskObject.parent().id()])
                     elif changeName == 'appearance':
                         attrNames = ['foregroundColor', 'backgroundColor', 'font', 'icon', 'selectedIcon']
                         if memChanges is not None and \

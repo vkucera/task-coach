@@ -1516,6 +1516,24 @@ class TaskFileMultiUserTest(test.TestCase):
         self.taskFile2.save()
         self.assertEqual(len(self.taskFile2.tasks().rootItems()[0].efforts()), 0)
 
+    def testChangeEffortTask(self):
+        newTask = task.Task(subject='Other task')
+        self.taskFile1.tasks().append(newTask)
+        newEffort = effort.Effort(self.task, date.DateTime(2011, 5, 1), date.DateTime(2011, 6, 1))
+        self.task.addEffort(newEffort)
+        self.taskFile1.save()
+        self.taskFile2.save()
+        newEffort.setTask(newTask)
+        self.taskFile2.monitor().setChanges(newEffort.id(), set())
+        self.taskFile1.save()
+        self.taskFile2.save()
+        for theTask in self.taskFile2.tasks():
+            if theTask.id() == newTask.id():
+                self.assertEqual(len(theTask.efforts()), 1)
+                break
+        else:
+            self.fail()
+
     def testChangeEffortStart(self):
         newEffort = effort.Effort(self.task, date.DateTime(2011, 5, 1), date.DateTime(2011, 6, 1))
         self.task.addEffort(newEffort)
