@@ -372,20 +372,43 @@ class ChangeSynchronizer(object):
                 for changeName in diskChanges:
                     if changeName == '__parent__':
                         pass # Already handled
-                    elif changeName == '__categories__':
-                        diskCategories = set([self.memMap[category.id()] for category in diskObject.categories()])
-                        if memChanges is not None and \
-                           '__categories__' in memChanges and \
-                           diskCategories != memObject.categories():
-                            conflicts.append('__categories__')
-                            self.conflictChanges.addChange(memObject, '__categories__')
+                    elif changeName.startswith('__add_category:'):
+                        categoryId = changeName[15:]
+                        if categoryId not in self.memMap:
+                            # Mmmh, deleted...
+                            self.conflicts.append(changeName)
+                            self.conflictChanges.addChange(memObject, '__del' + changeName[5:])
                         else:
-                            for cat in memObject.categories():
-                                cat.removeCategorizable(memObject)
-                                memObject.removeCategory(cat)
-                            for cat in diskCategories:
-                                cat.addCategorizable(memObject)
-                                memObject.addCategory(cat)
+                            if memChanges is not None and \
+                               '__del' + changeName[5:] in memChanges:
+                                self.conflicts.append(changeName)
+                                self.conflictChanges.addChange(memObject, '__del' + changeName[5:])
+                            else:
+                                # Aaaaah finally
+                                theCategory = self.memMap[categoryId]
+                                memObject.addCategory(theCategory)
+                                theCategory.addCategorizable(memObject)
+                    elif changeName.startswith('__del_category:'):
+                        categoryId = changeName[15:]
+                        if categoryId in self.memMap:
+                            if memChanges is not None and \
+                               '__add' + changeName[5:] in memChanges:
+                                self.conflicts.append(changeName)
+                                self.conflictChanges.addChange(memObject, '__add' + changeName[5:])
+                            else:
+                                theCategory = self.memMap[categoryId]
+                                memObject.removeCategory(theCategory)
+                                theCategory.removeCategorizable(memObject)
+                    elif changeName == '__prerequisites__':
+                        diskPrereqs = set([self.memMap[obj.id()] for obj in diskObject.prerequisites()])
+                        memPrereqs = set(memObject.prerequisites())
+                        if memChanges is not None and \
+                           '__prerequisites__' in memChanges and \
+                           memPrereqs != diskPrereqs:
+                            conflicts.append('__prerequisites__')
+                            self.conflictChanges.addChange(memObject, '__prerequisites__')
+                        else:
+                            memObject.setPrerequisites(diskPrereqs)
                     elif changeName == '__task__':
                         # Effort changed task
                         if memChanges is not None and \
@@ -395,6 +418,22 @@ class ChangeSynchronizer(object):
                             self.conflictChanges.addChange(memObject, '__task__')
                         else:
                             memObject.setTask(self.memMap[diskObject.parent().id()])
+                    elif changeName == '__owner__':
+                        # This happens after a conflict
+                        if memChanges is not None and \
+                           '__owner__' in memChanges and \
+                           self.memOwnerMap[memObject.id()].id() != self.diskOwnerMap[diskObject.id()].id():
+                            # Yet another conflict... Memory wins
+                            conflicts.append('__owner__')
+                            self.conflictChanges.addChange(memObject, '__owner__')
+                        else:
+                            className = memObject.__class__.__name__
+                            if className.endsWith('Attachment'):
+                                className = 'Attachment'
+                            oldOwner = self.memOwnerMap[memObject.id()]
+                            newOwner = self.memOwnerMap[diskObject.id()]
+                            getattr(oldOwner, 'remove%s' % className)(memObject)
+                            getattr(newOwner, 'add%s' % className)(memObject)
                     elif changeName == 'appearance':
                         attrNames = ['foregroundColor', 'backgroundColor', 'font', 'icon', 'selectedIcon']
                         if memChanges is not None and \

@@ -63,6 +63,7 @@ class ChangeMonitor(object):
             if issubclass(klass, Task):
                 Publisher().registerObserver(self.onEffortAddedOrRemoved, 'task.effort.add')
                 Publisher().registerObserver(self.onEffortAddedOrRemoved, 'task.effort.remove')
+                Publisher().registerObserver(self.onPrerequisitesChanged, 'task.prerequisites')
             if issubclass(klass, NoteOwner):
                 Publisher().registerObserver(self.onOtherObjectAdded, klass.noteAddedEventType())
                 Publisher().registerObserver(self.onOtherObjectRemoved, klass.noteRemovedEventType())
@@ -83,6 +84,7 @@ class ChangeMonitor(object):
             if issubclass(klass, Task):
                 Publisher().removeObserver(self.onOtherObjectAdded, 'task.effort.add')
                 Publisher().removeObserver(self.onOtherObjectRemoved, 'task.effort.remove')
+                Publisher().removeObserver(self.onPrerequisitesChanged, 'task.prerequisites')
             if issubclass(klass, NoteOwner):
                 Publisher().removeObserver(self.onOtherObjectAdded, klass.noteAddedEventType())
                 Publisher().removeObserver(self.onOtherObjectRemoved, klass.noteRemovedEventType())
@@ -195,22 +197,36 @@ class ChangeMonitor(object):
         for effort in effortsToRemove:
             self._objectRemoved(effort)
 
-    def _categoryChange(self, event):
-        for obj in event.sources():
-            if obj.id() in self._changes and self._changes[obj.id()] is not None:
-                self._changes[obj.id()].add('__categories__')
-
     def onCategoryAdded(self, event):
         if self.__frozen:
             return
 
-        self._categoryChange(event)
+        for obj in event.sources():
+            if obj.id() in self._changes and self._changes[obj.id()] is not None:
+                for theCategory in event.values(source=obj):
+                    name = '_category:%s' % theCategory.id()
+                    if '__del' + name in self._changes[obj.id()]:
+                        self._changes[obj.id()].remove('__del' + name)
+                    else:
+                        self._changes[obj.id()].add('__add' + name)
 
     def onCategoryRemoved(self, event):
         if self.__frozen:
             return
 
-        self._categoryChange(event)
+        for obj in event.sources():
+            if obj.id() in self._changes and self._changes[obj.id()] is not None:
+                for theCategory in event.values(source=obj):
+                    name = '_category:%s' % theCategory.id()
+                    if '__add' + name in self._changes[obj.id()]:
+                        self._changes[obj.id()].remove('__add' + name)
+                    else:
+                        self._changes[obj.id()].add('__del' + name)
+
+    def onPrerequisitesChanged(self, event):
+        for obj in event.sources():
+            if obj.id() in self._changes and self._changes[obj.id()] is not None:
+                self._changes[obj.id()].add('__prerequisites__')
 
     def allChanges(self):
         return self._changes

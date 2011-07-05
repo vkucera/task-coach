@@ -1561,3 +1561,39 @@ class TaskFileMultiUserTest(test.TestCase):
         self.taskFile1.save()
         self.taskFile2.save()
         self.assertEqual(self.taskFile2.tasks().rootItems()[0].efforts()[0].getStop(), newDate)
+
+    def testAddPrerequisite(self):
+        newTask = task.Task(subject='Prereq')
+        self.taskFile1.tasks().append(newTask)
+        self.taskFile1.save()
+        self.task.addPrerequisites([newTask])
+        self.taskFile2.load()
+        self.taskFile1.save()
+        self.taskFile2.monitor().resetAllChanges()
+        self.taskFile2.save()
+
+        for tsk in self.taskFile2.tasks():
+            if tsk.id() == self.task.id():
+                self.assertEqual(len(tsk.prerequisites()), 1)
+                self.assertEqual(list(tsk.prerequisites())[0].id(), newTask.id())
+                break
+        else:
+            self.fail()
+
+    def testRemovePrerequisite(self):
+        newTask = task.Task(subject='Prereq')
+        self.taskFile1.tasks().append(newTask)
+        self.task.addPrerequisites([newTask])
+        self.taskFile1.save()
+        self.taskFile2.load()
+        self.task.removePrerequisites([newTask])
+        self.taskFile1.save()
+        self.taskFile2.monitor().resetAllChanges()
+        self.taskFile2.save()
+
+        for tsk in self.taskFile2.tasks():
+            if tsk.id() == self.task.id():
+                self.assertEqual(len(tsk.prerequisites()), 0)
+                break
+        else:
+            self.fail()
