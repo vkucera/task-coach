@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import re, os, stat, datetime, StringIO, wx
+import re, os, stat, StringIO, wx
 import xml.etree.ElementTree as ET
 from taskcoachlib.domain import date, effort, task, category, note, attachment
 from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
@@ -497,6 +497,8 @@ class TemplateXMLReader(XMLReader):
         if expr == 'Tomorrow()':
             return '11:59 PM tomorrow'
         newDateTime = eval(expr, date.__dict__)
+        if isinstance(newDateTime, date.date.RealDate):
+            newDateTime = date.DateTime(newDateTime.year, newDateTime.month, newDateTime.day)
         delta = newDateTime - date.Now()
         minutes = delta.minutes()
         if minutes < 0:
