@@ -45,13 +45,13 @@ class MonitorCategorizableTest(test.TestCase):
     def testAddCategory(self):
         self.monitor.resetAllChanges()
         self.obj.addCategory(self.cat1)
-        self.assertEqual(self.monitor.getChanges(self.obj), set(['__categories__']))
+        self.assertEqual(self.monitor.getChanges(self.obj), set(['__add_category:%s' % self.cat1.id()]))
 
     def testRemoveCategory(self):
         self.obj.addCategory(self.cat1)
         self.monitor.resetAllChanges()
         self.obj.removeCategory(self.cat1)
-        self.assertEqual(self.monitor.getChanges(self.obj), set(['__categories__']))
+        self.assertEqual(self.monitor.getChanges(self.obj), set(['__del_category:%s' % self.cat1.id()]))
 
     def testRemoveBadCategory(self):
         self.obj.addCategory(self.cat1)
