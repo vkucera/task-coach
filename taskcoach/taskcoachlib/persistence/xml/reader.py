@@ -484,7 +484,7 @@ class TemplateXMLReader(XMLReader):
         return task
 
     @staticmethod
-    def convertOldFormat(expr):
+    def convertOldFormat(expr, now=date.Now):
         # Built-in templates
         if expr == 'Now()':
             return 'now'
@@ -499,7 +499,7 @@ class TemplateXMLReader(XMLReader):
         newDateTime = eval(expr, date.__dict__)
         if isinstance(newDateTime, date.date.RealDate):
             newDateTime = date.DateTime(newDateTime.year, newDateTime.month, newDateTime.day)
-        delta = newDateTime - date.Now()
+        delta = newDateTime - now()
         minutes = delta.minutes()
         if minutes < 0:
             return '%d minutes ago' % (-minutes)

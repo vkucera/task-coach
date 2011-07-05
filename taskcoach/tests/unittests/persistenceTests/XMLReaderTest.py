@@ -25,8 +25,8 @@ from taskcoachlib.domain import date, task
 
 
 class XMLTemplateReaderTestCase(test.TestCase):
-    def convert(self, oldFormat):
-        return persistence.TemplateXMLReader.convertOldFormat(oldFormat)
+    def convert(self, oldFormat, now=date.Now):
+        return persistence.TemplateXMLReader.convertOldFormat(oldFormat, now)
     
     def testConvertNow(self):
         self.assertEqual('now', self.convert('Now()'))
@@ -56,7 +56,7 @@ class XMLTemplateReaderTestCase(test.TestCase):
         minutesToday = (now - now.startOfDay()).minutes()
         expectedMinutes = date.TimeDelta(17).minutes() - minutesToday
         self.assertEqual('%d minutes from now'%expectedMinutes, 
-                         self.convert('Today() + TimeDelta(17)'))
+                         self.convert('Today() + TimeDelta(17)', lambda: now))
 
     def testConvertTodayAndZeroTimeDelta(self):
         now = date.Now()
