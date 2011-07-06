@@ -17,12 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test, StringIO
-from taskcoachlib import persistence
+from taskcoachlib import persistence, config
 from taskcoachlib.domain import task, date
 
 
 class TemplateXMLWriterTestCase(test.TestCase):
     def setUp(self):
+        task.Task.settings = config.Settings(load=False)
         self.fd = StringIO.StringIO()
         self.fd.name = 'testfile.tsk'
         self.fd.encoding = 'utf-8'
@@ -44,14 +45,14 @@ class TemplateXMLWriterTestCase(test.TestCase):
         
     def testTaskWithStartDateTime(self):
         self.task.setStartDateTime(date.Now() + date.TimeDelta(minutes=31))
-        self.expectInXML('startdatetmpl="30 minutes from now')
+        self.expectInXML('startdatetmpl="31 minutes from now')
         
     def testTaskWithDueDateTime(self):
         self.task.setDueDateTime(date.Now() + date.TimeDelta(minutes=13))
-        self.expectInXML('duedatetmpl="12 minutes from now')
+        self.expectInXML('duedatetmpl="13 minutes from now')
         
     def testTaskWithCompletionDateTime(self):
-        self.task.setCompletionDateTime(date.Now() + date.TimeDelta(minutes=5))
+        self.task.setCompletionDateTime(date.Now() + date.TimeDelta(minutes=4))
         self.expectInXML('completiondatetmpl="4 minutes from now')
         
     def testTaskWithReminder(self):

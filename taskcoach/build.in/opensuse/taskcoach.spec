@@ -16,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#%%{!?python_sitelib: %%define python_sitelib %%(%%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 %%define		originalName	TaskCoach
 
 Name: 		%(filename_lower)s
@@ -65,9 +64,8 @@ desktop-file-install --vendor opensuse \
 %%files
 %%defattr(0644,root,root,0755)
 %%attr(0755,root,root) %%{_bindir}/taskcoach.py
-#python_sitelib definition should be used instead of
-#%%dir %%{python_sitelib}/taskcoachlib
 %%{_libdir}/python*/site-packages/taskcoachlib/*
+%%{_libdir}/python*/site-packages/%%{originalName}-%%{version}-py*.egg-info
 %%{_datadir}/applications/opensuse-taskcoach.desktop
 %%{_datadir}/pixmaps/taskcoach.png
 %%doc CHANGES.txt LICENSE.txt PUBLICITY.txt README.txt TODO.tsk
@@ -75,6 +73,9 @@ desktop-file-install --vendor opensuse \
 %%exclude %%{_libdir}/python*/site-packages/buildlib/*.py*
 
 %%changelog
+* Sun Jul 3 2011 Frank Niessink <frank ATT niessink DOTT com> - 1.0.2-1
+- fix unstalled but unpackaged file issue
+
 * Fri Mar 26 2010 Frank Niessink <frank ATT niessink DOTT com> - 1.0.1-1
 - no need to exclude pysyncml library here, it is no longer included upstream
 

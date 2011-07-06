@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, os, sys, codecs, traceback, shutil
+import wx, os, sys, codecs, traceback
 from taskcoachlib import meta, persistence, patterns
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty import lockfile

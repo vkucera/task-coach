@@ -374,14 +374,6 @@ class FeaturesPage(SettingsPage):
             _('Allow for tracking effort'), helpText='restart')
         self.addBooleanSetting('feature', 'notes', _('Allow for taking notes'),
             helpText='restart')
-
-        names = [] # There's at least one, the universal one
-        for name in notify.AbstractNotifier.names():
-            names.append((name, name))
-
-        self.addChoiceSetting('feature', 'notifier', _('Notification system'), names,
-                              helpText=_('Notification system to use for reminders (Growl, Snarl, etc)'))
-
         try:
             import taskcoachlib.syncml.core
         except ImportError:
@@ -418,15 +410,23 @@ class TaskBehaviorPage(SettingsPage):
             _('Mark parent task completed when all children are completed'))
         self.addIntegerSetting('behavior', 'duesoonhours', 
             _("Number of hours that tasks are considered to be 'due soon'"), 
-            minimum=0, maximum=90)
+            minimum=0, maximum=90, helpText=' ')
         choices = [('', _('Nothing'))]
         choices.append(('startdue', _('Changing the start date changes the due date')))
         choices.append(('duestart', _('Changing the due date changes the start date')))
         self.addChoiceSetting('view', 'datestied', _('Dates behavior'), 
                choices, helpText=_('What to do with start and due date if the other one is changed'))
+        names = [] # There's at least one, the universal one
+        for name in notify.AbstractNotifier.names():
+            names.append((name, name))
+        self.addChoiceSetting('feature', 'notifier', _('Notification system'), names,
+                              helpText=_('Notification system to use for reminders (Growl, Snarl, etc.)'))
+        snoozeChoices = [(str(choice[0]), choice[1]) for choice in date.snoozeChoices]
+        self.addChoiceSetting('view', 'defaultsnoozetime', _('Default snooze time'), 
+                                       snoozeChoices, _('Snooze time to use after the reminder'))
         self.addMultipleChoiceSettings('view', 'snoozetimes', 
             _('Snooze times to offer in task reminder dialog'), 
-            date.snoozeChoices[1:]) # Don't offer "Don't snooze" as a choice
+            date.snoozeChoices[1:], helpText=' ') # Don't offer "Don't snooze" as a choice
         self.fit()
 
 

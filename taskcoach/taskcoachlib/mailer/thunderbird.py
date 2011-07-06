@@ -225,7 +225,7 @@ class ThunderbirdImapReader(object):
         if mt is None:
             mt = _RX_IMAP_MESSAGE.search(url)
             if mt is None:
-                raise ThunderbirdError(_('Unrecognized URL scheme: "%s"' % url))
+                raise ThunderbirdError(_('Unrecognized URL scheme: "%s"') % url)
 
         self.url = url
 
@@ -313,12 +313,12 @@ class ThunderbirdImapReader(object):
         if response != 'OK':
             response, params = cn.select(self.box.replace('/', '.'))
             if response != 'OK':
-                raise ThunderbirdError(_('Could not select inbox "%s"\n(%s)' % (self.box, response)))
+                raise ThunderbirdError(_('Could not select inbox "%s"\n(%s)') % (self.box, response))
 
         response, params = cn.uid('FETCH', str(self.uid), '(RFC822)')
 
         if response != 'OK':
-            raise ThunderbirdError(_('No such mail: %d' % self.uid))
+            raise ThunderbirdError(_('No such mail: %d') % self.uid)
 
         return params[0][1]
 

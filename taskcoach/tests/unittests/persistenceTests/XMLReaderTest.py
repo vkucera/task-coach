@@ -25,23 +25,46 @@ from taskcoachlib.domain import date, task
 
 
 class XMLTemplateReaderTestCase(test.TestCase):
+    def convert(self, oldFormat, now=date.Now):
+        return persistence.TemplateXMLReader.convertOldFormat(oldFormat, now)
+    
     def testConvertNow(self):
-        self.assertEqual(persistence.TemplateXMLReader.convertOldFormat('Now()'), 'now')
+        self.assertEqual('now', self.convert('Now()'))
 
     def testConvertToday(self):
-        self.assertEqual(persistence.TemplateXMLReader.convertOldFormat('Today()'), '00:00 AM today')
+        self.assertEqual('00:00 AM today', self.convert('Today()'))
 
     def testConvertTomorrow(self):
-        self.assertEqual(persistence.TemplateXMLReader.convertOldFormat('Tomorrow()'), '11:59 PM tomorrow')
+        self.assertEqual('11:59 PM tomorrow', self.convert('Tomorrow()'))
 
     def testConvertEndOfDay(self):
-        self.assertEqual(persistence.TemplateXMLReader.convertOldFormat('Now().endOfDay()'), '11:59 PM today')
+        self.assertEqual('11:59 PM today', self.convert('Now().endOfDay()'))
 
     def testConvertTomorrow2(self):
-        self.assertEqual(persistence.TemplateXMLReader.convertOldFormat('Now().endOfDay() + oneDay'), '11:59 PM tomorrow')
+        self.assertEqual('11:59 PM tomorrow', self.convert('Now().endOfDay() + oneDay'))
 
-    def testConvertDelta(self):
-        self.assertEqual(persistence.TemplateXMLReader.convertOldFormat('Now() + TimeDelta(2, 1861, 0)'), '2880 minutes from now')
+    def testConvertNowAndPositiveTimeDelta(self):
+        self.assertEqual('%d minutes from now'%date.TimeDelta(2, 1861, 0).minutes(), 
+                         self.convert('Now() + TimeDelta(2, 1861, 0)'))
+
+    def testConvertNowAndNegativeTimeDelta(self):
+        self.assertEqual('%d minutes ago'%date.TimeDelta(2, 1861, 0).minutes(),
+                         self.convert('Now() - TimeDelta(2, 1861, 0)'))
+
+    def testConvertTodayAndPositiveTimeDelta(self):
+        now = date.Now()
+        minutesToday = (now - now.startOfDay()).minutes()
+        expectedMinutes = date.TimeDelta(17).minutes() - minutesToday
+        self.assertEqual('%d minutes from now'%expectedMinutes, 
+                         self.convert('Today() + TimeDelta(17)', lambda: now))
+
+    def testConvertTodayAndZeroTimeDelta(self):
+        now = date.Now()
+        minutesToday = (now - now.startOfDay()).minutes()
+        expectedMinutes = minutesToday - date.TimeDelta().minutes()
+        self.assertEqual('%d minutes ago'%expectedMinutes, 
+                         self.convert('Today() + TimeDelta(0)'))
+
 
 
 class XMLReaderTestCase(test.TestCase):
