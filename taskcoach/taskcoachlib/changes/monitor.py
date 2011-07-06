@@ -16,14 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib.patterns import Publisher, Singleton, ObservableComposite
+from taskcoachlib.patterns import Observer, Singleton, ObservableComposite
 from taskcoachlib.domain.categorizable import CategorizableCompositeObject
 from taskcoachlib.domain.note import NoteOwner
 from taskcoachlib.domain.task import Task
 from taskcoachlib.domain.attachment import AttachmentOwner
 from taskcoachlib.thirdparty import guid
 
-class ChangeMonitor(object):
+class ChangeMonitor(Observer):
     """
     This class monitors change to object on a per-attribute basis.
     """
@@ -52,54 +52,54 @@ class ChangeMonitor(object):
     def monitorClass(self, klass):
         if klass not in self._classes:
             for name in klass.monitoredAttributes():
-                Publisher().registerObserver(self.onAttributeChanged, getattr(klass, '%sChangedEventType' % name)())
+                self.registerObserver(self.onAttributeChanged, getattr(klass, '%sChangedEventType' % name)())
                 self._classes.add(klass)
             if issubclass(klass, ObservableComposite):
-                Publisher().registerObserver(self.onChildAdded, klass.addChildEventType())
-                Publisher().registerObserver(self.onChildRemoved, klass.removeChildEventType())
+                self.registerObserver(self.onChildAdded, klass.addChildEventType())
+                self.registerObserver(self.onChildRemoved, klass.removeChildEventType())
             if issubclass(klass, CategorizableCompositeObject):
-                Publisher().registerObserver(self.onCategoryAdded, klass.categoryAddedEventType())
-                Publisher().registerObserver(self.onCategoryRemoved, klass.categoryRemovedEventType())
+                self.registerObserver(self.onCategoryAdded, klass.categoryAddedEventType())
+                self.registerObserver(self.onCategoryRemoved, klass.categoryRemovedEventType())
             if issubclass(klass, Task):
-                Publisher().registerObserver(self.onEffortAddedOrRemoved, 'task.effort.add')
-                Publisher().registerObserver(self.onEffortAddedOrRemoved, 'task.effort.remove')
-                Publisher().registerObserver(self.onPrerequisitesChanged, 'task.prerequisites')
+                self.registerObserver(self.onEffortAddedOrRemoved, 'task.effort.add')
+                self.registerObserver(self.onEffortAddedOrRemoved, 'task.effort.remove')
+                self.registerObserver(self.onPrerequisitesChanged, 'task.prerequisites')
             if issubclass(klass, NoteOwner):
-                Publisher().registerObserver(self.onOtherObjectAdded, klass.noteAddedEventType())
-                Publisher().registerObserver(self.onOtherObjectRemoved, klass.noteRemovedEventType())
+                self.registerObserver(self.onOtherObjectAdded, klass.noteAddedEventType())
+                self.registerObserver(self.onOtherObjectRemoved, klass.noteRemovedEventType())
             if issubclass(klass, AttachmentOwner):
-                Publisher().registerObserver(self.onOtherObjectAdded, klass.attachmentAddedEventType())
-                Publisher().registerObserver(self.onOtherObjectRemoved, klass.attachmentRemovedEventType())
+                self.registerObserver(self.onOtherObjectAdded, klass.attachmentAddedEventType())
+                self.registerObserver(self.onOtherObjectRemoved, klass.attachmentRemovedEventType())
 
     def unmonitorClass(self, klass):
         if klass in self._classes:
             for name in klass.monitoredAttributes():
-                Publisher().removeObserver(self.onAttributeChanged, getattr(klass, '%sChangedEventType' % name)())
+                self.removeObserver(self.onAttributeChanged, getattr(klass, '%sChangedEventType' % name)())
             if issubclass(klass, ObservableComposite):
-                Publisher().removeObserver(self.onChildAdded, klass.addChildEventType())
-                Publisher().removeObserver(self.onChildRemoved, klass.removeChildEventType())
+                self.removeObserver(self.onChildAdded, klass.addChildEventType())
+                self.removeObserver(self.onChildRemoved, klass.removeChildEventType())
             if issubclass(klass, CategorizableCompositeObject):
-                Publisher().removeObserver(self.onCategoryAdded, klass.categoryAddedEventType())
-                Publisher().removeObserver(self.onCategoryRemoved, klass.categoryRemovedEventType())
+                self.removeObserver(self.onCategoryAdded, klass.categoryAddedEventType())
+                self.removeObserver(self.onCategoryRemoved, klass.categoryRemovedEventType())
             if issubclass(klass, Task):
-                Publisher().removeObserver(self.onOtherObjectAdded, 'task.effort.add')
-                Publisher().removeObserver(self.onOtherObjectRemoved, 'task.effort.remove')
-                Publisher().removeObserver(self.onPrerequisitesChanged, 'task.prerequisites')
+                self.removeObserver(self.onOtherObjectAdded, 'task.effort.add')
+                self.removeObserver(self.onOtherObjectRemoved, 'task.effort.remove')
+                self.removeObserver(self.onPrerequisitesChanged, 'task.prerequisites')
             if issubclass(klass, NoteOwner):
-                Publisher().removeObserver(self.onOtherObjectAdded, klass.noteAddedEventType())
-                Publisher().removeObserver(self.onOtherObjectRemoved, klass.noteRemovedEventType())
+                self.removeObserver(self.onOtherObjectAdded, klass.noteAddedEventType())
+                self.removeObserver(self.onOtherObjectRemoved, klass.noteRemovedEventType())
             if issubclass(klass, AttachmentOwner):
-                Publisher().removeObserver(self.onOtherObjectAdded, klass.attachmentAddedEventType())
-                Publisher().removeObserver(self.onOtherObjectRemoved, klass.attachmentRemovedEventType())
+                self.removeObserver(self.onOtherObjectAdded, klass.attachmentAddedEventType())
+                self.removeObserver(self.onOtherObjectRemoved, klass.attachmentRemovedEventType())
             self._classes.remove(klass)
 
     def monitorCollection(self, collection):
-        Publisher().registerObserver(self.onObjectAdded, collection.addItemEventType(), eventSource=collection)
-        Publisher().registerObserver(self.onObjectRemoved, collection.removeItemEventType(), eventSource=collection)
+        self.registerObserver(self.onObjectAdded, collection.addItemEventType(), eventSource=collection)
+        self.registerObserver(self.onObjectRemoved, collection.removeItemEventType(), eventSource=collection)
 
     def unmonitorCollection(self, collection):
-        Publisher().removeObserver(self.onObjectAdded, collection.addItemEventType(), eventSource=collection)
-        Publisher().removeObserver(self.onObjectRemoved, collection.removeItemEventType(), eventSource=collection)
+        self.removeObserver(self.onObjectAdded, collection.addItemEventType(), eventSource=collection)
+        self.removeObserver(self.onObjectRemoved, collection.removeItemEventType(), eventSource=collection)
 
     def onAttributeChanged(self, event):
         if self.__frozen:
