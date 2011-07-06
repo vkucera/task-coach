@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import re, os, stat, datetime, StringIO, wx
+import re, os, stat, StringIO, wx
 import xml.etree.ElementTree as ET
 from taskcoachlib.domain import date, effort, task, category, note, attachment
 from taskcoachlib.syncml.config import SyncMLConfigNode, createDefaultSyncConfig
@@ -432,11 +432,8 @@ class XMLReader(object):
     
     def _parseFontDesc(self, fontDesc, defaultValue=None):
         if fontDesc:
-            try:
-                font = wx.FontFromNativeInfoString(fontDesc)
-            except wx.PyAssertionError:
-                return defaultValue
-            if font.IsOk():
+            font = wx.FontFromNativeInfoString(fontDesc)
+            if font and font.IsOk():
                 if font.GetPointSize() < 4:
                     font.SetPointSize(self.__defaultFontSize)
                 return font
@@ -487,7 +484,7 @@ class TemplateXMLReader(XMLReader):
         return task
 
     @staticmethod
-    def convertOldFormat(expr):
+    def convertOldFormat(expr, now=date.Now):
         # Built-in templates
         if expr == 'Now()':
             return 'now'
@@ -499,12 +496,11 @@ class TemplateXMLReader(XMLReader):
             return '00:00 AM today'
         if expr == 'Tomorrow()':
             return '11:59 PM tomorrow'
-        context = dict()
-        context.update(date.__dict__)
-        context.update(datetime.__dict__)
-        newdate = eval(expr, context)
-        delta = date.DateTime(newdate.year, newdate.month, newdate.day, 0, 0, 0) - date.Now().startOfDay()
-        minutes = delta.days * 24 * 60 + (delta.seconds // 60)
+        newDateTime = eval(expr, date.__dict__)
+        if isinstance(newDateTime, date.date.RealDate):
+            newDateTime = date.DateTime(newDateTime.year, newDateTime.month, newDateTime.day)
+        delta = newDateTime - now()
+        minutes = delta.minutes()
         if minutes < 0:
             return '%d minutes ago' % (-minutes)
         else:

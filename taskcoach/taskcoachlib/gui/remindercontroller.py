@@ -71,19 +71,34 @@ class ReminderController(object):
             self.requestUserAttention()        
         
     def showReminderMessage(self, task, ReminderDialog=reminder.ReminderDialog):
-        notifier = self.settings.get('feature', 'notifier')
-        if notifier != 'Task Coach' and notify.AbstractNotifier.get(notifier) is not None:
-            notify.AbstractNotifier.get(notifier).notify(_('%s Reminder') % meta.name, task.subject(),
-                                                         wx.ArtProvider.GetBitmap('taskcoach', size=wx.Size(32, 32)),
-                                                         windowId=self.__mainWindow.GetHandle())
+        if self.__useOwnReminderDialog():
+            self.__showReminderDialog(task, ReminderDialog)
             self.__removeReminder(task)
-            task.setReminder(None)
         else:
-            reminderDialog = ReminderDialog(task, self.taskList, self.effortList, self.settings, self.__mainWindow)
-            reminderDialog.Bind(wx.EVT_CLOSE, self.onCloseReminderDialog)        
-            reminderDialog.Show()
-            self.__removeReminder(task)    
+            self.__showReminderViaNotifier(task)
+            self.__removeReminder(task)
+            self.__snooze(task)
+            
+    def __useOwnReminderDialog(self):
+        notifier = self.settings.get('feature', 'notifier')
+        return notifier == 'Task Coach' or notify.AbstractNotifier.get(notifier) is None
         
+    def __showReminderDialog(self, task, ReminderDialog):
+        reminderDialog = ReminderDialog(task, self.taskList, self.effortList, self.settings, self.__mainWindow)
+        reminderDialog.Bind(wx.EVT_CLOSE, self.onCloseReminderDialog)
+        reminderDialog.Show()
+
+    def __showReminderViaNotifier(self, task):
+        notifier = notify.AbstractNotifier.get(self.settings.get('feature', 'notifier'))
+        notifier.notify(_('%s Reminder') % meta.name, task.subject(),
+                        wx.ArtProvider.GetBitmap('taskcoach', size=wx.Size(32, 32)),
+                        windowId=self.__mainWindow.GetHandle())
+        
+    def __snooze(self, task):
+        minutesToSnooze = self.settings.getint('view', 'defaultsnoozetime')
+        newReminder = date.Now() + date.TimeDelta(minutes=minutesToSnooze) if minutesToSnooze > 0 else None
+        task.setReminder(newReminder)
+            
     def onCloseReminderDialog(self, event, show=True):
         event.Skip()
         dialog = event.EventObject
@@ -112,7 +127,7 @@ class ReminderController(object):
 
     def requestUserAttention(self):
         notifier = self.settings.get('feature', 'notifier')
-        if notifier != 'Native' and notify.AbstractNotifier.get(notifier) is not None:
+        if notifier != 'Task Coach' and notify.AbstractNotifier.get(notifier) is not None:
             # When using Growl/Snarl, this is not necessary. Even when not using Growl, it's
             # annoying as hell. Anyway.
             return
