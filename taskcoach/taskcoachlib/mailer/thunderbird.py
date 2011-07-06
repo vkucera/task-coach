@@ -162,7 +162,8 @@ class ThunderbirdMailboxReader(object):
             if config.has_key('%s.userName' % base):
                 if config['%s.userName' % base] == self.user and config['%s.hostname' % base] == self.server:
                     self.filename = os.path.join(config['%s.directory' % base], *tuple(self.path))
-                    break
+                    if os.path.exists(self.filename):
+                        break
         else:
             raise ThunderbirdError(_('Could not find directory for ID\n%s.\nPlease file a bug report.') % url)
 
