@@ -72,6 +72,8 @@ class AutoSaverTestCase(test.TestCase):
         
     def tearDown(self):
         super(AutoSaverTestCase, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
         del self.autoSaver # Make sure AutoSaver is not observing task files
         
     def testCreate(self):

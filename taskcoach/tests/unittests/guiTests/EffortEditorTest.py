@@ -43,7 +43,12 @@ class EffortEditorTest(test.wxTestCase):
         self.editor = EditorUnderTest(self.frame, 
             list(self.effortList), self.settings, self.taskFile.efforts(), 
             self.taskFile, raiseDialog=False)
-        
+
+    def tearDown(self):
+        super(EffortEditorTest, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
+
     # pylint: disable-msg=W0201,W0212
     
     def createTasks(self):

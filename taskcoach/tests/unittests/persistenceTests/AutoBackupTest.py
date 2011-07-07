@@ -56,7 +56,12 @@ class AutoBackupTest(test.TestCase):
         self.taskFile = DummyTaskFile()
         self.backup = persistence.AutoBackup(self.settings, copyfile=self.onCopyFile)
         self.copyCalled = False
-        
+
+    def tearDown(self):
+        super(AutoBackupTest, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
+
     def onCopyFile(self, *args):
         self.copyCalled = True
 

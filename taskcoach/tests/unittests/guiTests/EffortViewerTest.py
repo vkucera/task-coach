@@ -35,19 +35,24 @@ class EffortViewerForSpecificTasksTest(test.wxTestCase):
         super(EffortViewerForSpecificTasksTest, self).setUp()
         self.settings = config.Settings(load=False)
         task.Task.settings = self.settings
-        taskFile = persistence.TaskFile()
+        self.taskFile = persistence.TaskFile()
         self.task1 = task.Task('Task 1')
         self.task2 = task.Task('Task 2')
-        taskFile.tasks().extend([self.task1, self.task2])
+        self.taskFile.tasks().extend([self.task1, self.task2])
         self.effort1 = effort.Effort(self.task1, date.DateTime(2006,1,1),
             date.DateTime(2006,1,2))
         self.task1.addEffort(self.effort1)
         self.effort2 = effort.Effort(self.task2, date.DateTime(2006,1,2),
             date.DateTime(2006,1,3))
         self.task2.addEffort(self.effort2)
-        self.viewer = EffortViewerUnderTest(self.frame, taskFile,  
+        self.viewer = EffortViewerUnderTest(self.frame, self.taskFile,  
             self.settings, tasksToShowEffortFor=task.TaskList([self.task1]))
-        
+
+    def tearDown(self):
+        super(EffortViewerForSpecificTasksTest, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
+
     def testViewerShowsOnlyEffortForSpecifiedTask(self):
         self.assertEqual([self.effort1], self.viewer.presentation())
         
@@ -73,7 +78,12 @@ class EffortViewerStatusMessageTest(test.wxTestCase):
             date.DateTime(2006,1,3))
         self.viewer = EffortViewerUnderTest(self.frame, self.taskFile,  
             self.settings)
-            
+
+    def tearDown(self):
+        super(EffortViewerStatusMessageTest, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
+
     def assertStatusMessages(self, message1, message2):
         self.assertEqual((message1, message2), self.viewer.statusMessages())
         
@@ -134,7 +144,12 @@ class EffortViewerTest(test.wxTestCase):
             date.DateTime(2006,1,3))
         self.viewer = gui.viewer.EffortViewer(self.frame, self.taskFile, 
                                               self.settings)
-        
+
+    def tearDown(self):
+        super(EffortViewerTest, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
+
     @test.skipOnPlatform('__WXMSW__') # GetItemBackgroundColour doesn't work on Windows
     def testEffortBackgroundColor(self): # pragma: no cover
         self.task.setBackgroundColor(wx.RED)
@@ -221,6 +236,11 @@ class EffortViewerAggregationTestCase(test.wxTestCase):
         self.taskFile = persistence.TaskFile()
         self.taskFile.tasks().extend([self.task, self.task2])
         self.viewer = self.createViewer()
+
+    def tearDown(self):
+        super(EffortViewerAggregationTestCase, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
 
     def switchAggregation(self):
         aggregations = ['details', 'day', 'week', 'month']

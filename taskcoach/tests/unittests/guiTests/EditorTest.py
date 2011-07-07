@@ -47,6 +47,11 @@ class EditorTestCase(test.wxTestCase):
                                       self.taskFile, raiseDialog=False)
         self.appearance = self.editor._interior[-1]
 
+    def tearDown(self):
+        super(EditorTestCase, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
+
     def testCloseEditorWhenItemIsDeleted(self):
         self.items.remove(self.item)
         self.failUnless(self.editor.editorClosed)

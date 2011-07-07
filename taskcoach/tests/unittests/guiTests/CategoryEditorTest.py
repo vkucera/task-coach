@@ -44,6 +44,8 @@ class CategoryEditorTest(test.wxTestCase):
         if '__WXMAC__' not in wx.PlatformInfo and ('__WXMSW__' not in wx.PlatformInfo or sys.version_info < (2, 5)):
             wx.Yield() # pragma: no cover 
         super(CategoryEditorTest, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
         
     def createCommand(self):
         newCategoryCommand = command.NewCategoryCommand(self.categories)

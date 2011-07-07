@@ -53,10 +53,16 @@ class ReminderControllerTestCase(test.TestCase):
         task.Task.settings = settings = config.Settings(load=False)
         self.taskList = task.TaskList()
         self.effortList = effort.EffortList(self.taskList)
-        self.reminderController = ReminderControllerUnderTest(DummyWindow(), 
+        self.dummyWindow = DummyWindow()
+        self.reminderController = ReminderControllerUnderTest(self.dummyWindow, 
             self.taskList, self.effortList, settings)
         self.nowDateTime = date.DateTime.now()
         self.reminderDateTime = self.nowDateTime + date.TimeDelta(hours=1)
+
+    def tearDown(self):
+        super(ReminderControllerTestCase, self).tearDown()
+        self.dummyWindow.taskFile.close()
+        self.dummyWindow.taskFile.stop()
 
 
 class ReminderControllerTest(ReminderControllerTestCase):

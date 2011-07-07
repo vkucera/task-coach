@@ -32,6 +32,11 @@ class NoteViewerTest(test.wxTestCase):
                                             self.settings, 
                                             notesToShow=self.taskFile.notes())
 
+    def tearDown(self):
+        super(NoteViewerTest, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
+
     def firstItem(self):
         widget = self.viewer.widget
         return widget.GetFirstChild(widget.GetRootItem())[0]

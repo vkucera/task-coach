@@ -73,6 +73,11 @@ class wxTestCaseWithFrameAsTopLevelWindow(test.wxTestCase):
         wx.GetApp().SetTopWindow(self.frame)
         self.taskFile = self.frame.taskFile = persistence.TaskFile()
 
+    def tearDown(self):
+        super(wxTestCaseWithFrameAsTopLevelWindow, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
+
 
 class NewTaskWithSelectedCategoryTest(wxTestCaseWithFrameAsTopLevelWindow):
     def setUp(self):

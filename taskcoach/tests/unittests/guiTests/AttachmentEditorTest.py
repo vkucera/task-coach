@@ -38,6 +38,11 @@ class AttachmentEditorTest(test.wxTestCase):
             self.attachments, self.settings, self.attachments, self.taskFile, 
             raiseDialog=False)
 
+    def tearDown(self):
+        super(AttachmentEditorTest, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
+
     def setSubject(self, newSubject):
         page = self.editor._interior[0]
         page._subjectEntry.SetFocus()

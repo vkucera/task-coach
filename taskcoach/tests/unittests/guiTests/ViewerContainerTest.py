@@ -74,6 +74,8 @@ class ViewerContainerTest(test.wxTestCase):
             self.mainwindow.OnQuit() # Stop power monitoring thread
         self.mainWindow._idleController.stop()
         super(ViewerContainerTest, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
 
     def createViewer(self, settingsSection):
         self.settings.add_section(settingsSection)

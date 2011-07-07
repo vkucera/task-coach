@@ -25,7 +25,12 @@ class TaskFileTestCase(test.TestCase):
     def setUp(self):
         self.taskFile = persistence.TaskFile()
         self.task = task.Task(subject='Subject')
-        
+
+    def tearDown(self):
+        super(TaskFileTestCase, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
+
     def testTaskIsDirtyAfterEditingSubject(self):
         self.taskFile.tasks().append(self.task)
         self.failUnless(task.Task.STATUS_NEW, self.task.getStatus())

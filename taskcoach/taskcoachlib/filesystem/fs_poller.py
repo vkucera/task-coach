@@ -57,7 +57,7 @@ class FilesystemNotifier(threading.Thread):
             for i in xrange(10):
                 if self.cancelled:
                     return
-                time.sleep(1.0)
+                time.sleep(0.1) # XXXFIXME: increase timeout
 
     def stop(self):
         self.cancelled = True

@@ -19,66 +19,62 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os, threading
 
 try:
-    import pyinotify
+    import inotifyx
 except ImportError:
     from fs_poller import *
 else:
-    class _EventHandler(pyinotify.ProcessEvent):
-        def __init__(self, callback):
-            self.callback = callback
-            super(_EventHandler, self).__init__()
-
-        def process_IN_MODIFY(self, event):
-            self.callback(event)
-
-        def process_IN_MOVED_TO(self, event):
-            self.callback(event)
-
-    class FilesystemNotifier(object):
+    class FilesystemNotifier(threading.Thread):
         def __init__(self):
+            super(FilesystemNotifier, self).__init__()
+
             self.lock = threading.RLock()
             self.filename = None
             self.name = None
             self.path = None
+            self.fd = inotifyx.init()
             self.wd = None
+            self.cancelled = False
 
-            self.wm = pyinotify.WatchManager()
-            self.eh = _EventHandler(self._onFileChanged)
-            self.notifier = pyinotify.ThreadedNotifier(self.wm, self.eh)
-            self.notifier.start()
+            self.setDaemon(True)
+            self.start()
+
+        def run(self):
+            try:
+                while not self.cancelled:
+                    events = inotifyx.get_events(self.fd, 0.1) # XXXFIXME: increase timeout
+                    self.lock.acquire()
+                    try:
+                        for event in events:
+                            if event.name == self.filename:
+                                self.onFileChanged()
+                    finally:
+                        self.lock.release()
+            except TypeError:
+                # Interpreter termination (we're daemon)
+                pass
 
         def setFilename(self, filename):
             self.lock.acquire()
             try:
+                filename = os.path.normpath(os.path.abspath(filename))
                 if self.wd is not None:
-                    self.wm.rm_watch(self.wd)
+                    inotifyx.rm_watch(self.fd, self.wd)
                     self.wd = None
                 self.filename = filename
                 if filename:
                     self.path, self.name = os.path.split(filename)
-                    self.wm.add_watch(self.path, pyinotify.ALL_EVENTS)
-                    self.wd = self.wm.get_wd(self.path)
-                else:
-                    self.path = None
-                    self.name = None
+                    self.wd = inotifyx.add_watch(self.fd, self.path,
+                                                 inotifyx.IN_MOVED_TO|inotifyx.IN_MODIFY)
             finally:
                 self.lock.release()
 
         def stop(self):
-            self.lock.acquire()
-            try:
-                self.wm.close()
-                self.notifier.stop()
-            finally:
-                self.lock.release()
+            self.cancelled = True
+            self.join()
 
-        def _onFileChanged(self, event):
-            self.lock.acquire()
-            try:
-                if event.pathname == self.filename:
-                    self.onFileChanged()
-            finally:
-                self.lock.release()
+            if self.fd is not None:
+                os.close(self.fd)
+                self.fd = None
 
         def onFileChanged(self):
             raise NotImplementedError

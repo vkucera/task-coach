@@ -61,6 +61,8 @@ class TaskViewerTestCase(test.wxTestCase):
         super(TaskViewerTestCase, self).tearDown()
         locale.setlocale(locale.LC_ALL, self.originalLocale)
         attachment.Attachment.attdir = None
+        self.taskFile.close()
+        self.taskFile.stop()
 
         for name in os.listdir('.'):
             if os.path.isdir(name) and name.endswith('_attachments'):
@@ -851,6 +853,8 @@ class TaskCalendarViewerTest(test.wxTestCase):
     def tearDown(self):
         super(TaskCalendarViewerTest, self).tearDown()
         wx.GetApp().TopWindow = self.originalTopWindow
+        self.taskFile.close()
+        self.taskFile.stop()
         
     def openDialogAndAssertDateTimes(self, dateTime, expectedStartDateTime, 
                                      expectedDueDateTime):
@@ -873,10 +877,19 @@ class TaskSquareMapViewerTest(test.wxTestCase):
         task.Task.settings = self.settings = config.Settings(load=False)
         self.taskFile = persistence.TaskFile()
         gui.viewer.task.SquareTaskViewer(self.frame, self.taskFile, self.settings)
-        
+
+    def tearDown(self):
+        super(TaskSquareMapViewerTest, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
         
 class TaskTimelineViewerTest(test.wxTestCase):
     def testCreate(self):
         task.Task.settings = self.settings = config.Settings(load=False)
         self.taskFile = persistence.TaskFile()
         gui.viewer.task.TimelineViewer(self.frame, self.taskFile, self.settings)
+
+    def tearDown(self):
+        super(TaskTimelineViewerTest, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()

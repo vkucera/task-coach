@@ -45,7 +45,11 @@ class PreferencesTest(test.wxTestCase):
 
 class SyncMLPreferencesTest(test.TestCase):
     def testCreate(self):
-        gui.dialog.syncpreferences.SyncMLPreferences(parent=None,
-            iocontroller=gui.IOController(persistence.TaskFile(), None, None), 
-            title='Edit SyncML preferences')
-        
+        taskFile = persistence.TaskFile()
+        try:
+            gui.dialog.syncpreferences.SyncMLPreferences(parent=None,
+                  iocontroller=gui.IOController(taskFile, None, None), 
+                  title='Edit SyncML preferences')
+        finally:
+            taskFile.close()
+            taskFile.stop()

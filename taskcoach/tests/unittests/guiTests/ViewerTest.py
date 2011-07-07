@@ -39,7 +39,12 @@ class ViewerTest(test.wxTestCase):
             self.settings)
         self.viewer = self.createViewer()
         self.viewerContainer.addViewer(self.viewer)
-        
+
+    def tearDown(self):
+        super(ViewerTest, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
+
     def createViewer(self):
         return gui.viewer.TaskViewer(self.window, self.taskFile,
             self.settings)
@@ -278,7 +283,12 @@ class FilterableViewerForTasks(test.TestCase):
         self.settings = config.Settings(load=False)
         task.Task.settings = self.settings
         self.viewer = self.createViewer()
-        
+
+    def tearDown(self):
+        super(FilterableViewerForTasks, self).tearDown()
+        self.viewer.taskFile.close()
+        self.viewer.taskFile.stop()
+
     def createViewer(self):
         viewer = FilterableViewerForTasksUnderTest()
         # pylint: disable-msg=W0201
@@ -407,12 +417,17 @@ class FilterableViewerForTasks(test.TestCase):
 
 class ViewerBaseClassTest(test.wxTestCase):
     def testNotImplementedError(self):
+        taskFile = persistence.TaskFile()
         try:
-            gui.viewer.base.Viewer(self.frame, persistence.TaskFile(), 
-                                   None, settingsSection='bla')
-            self.fail('Expected NotImplementedError') # pragma: no cover
-        except NotImplementedError:
-            pass
+            try:
+                gui.viewer.base.Viewer(self.frame, taskFile,
+                                       None, settingsSection='bla')
+                self.fail('Expected NotImplementedError') # pragma: no cover
+            except NotImplementedError:
+                pass
+        finally:
+            taskFile.close()
+            taskFile.stop()
 
 
 class ViewerIteratorTestCase(test.wxTestCase):
@@ -432,6 +447,11 @@ class ViewerIteratorTestCase(test.wxTestCase):
         self.viewer = self.createViewer()
         self.viewer.showTree(self.treeMode == 'True')
         self.viewer.sortBy('subject')
+
+    def tearDown(self):
+        super(ViewerIteratorTestCase, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
 
     def getItemsFromIterator(self):
         return list(self.viewer.visibleItems())
@@ -490,7 +510,12 @@ class ViewerWithColumnsTest(test.wxTestCase):
         self.settings = config.Settings(load=False)
         self.taskFile = persistence.TaskFile()
         self.viewer = gui.viewer.TaskViewer(self.frame, self.taskFile, self.settings)
-        
+
+    def tearDown(self):
+        super(ViewerWithColumnsTest, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
+
     def testDefaultColumnWidth(self):
         expectedWidth = hypertreelist._DEFAULT_COL_WIDTH # pylint: disable-msg=W0212
         self.assertEqual(expectedWidth, self.viewer.getColumnWidth('subject'))

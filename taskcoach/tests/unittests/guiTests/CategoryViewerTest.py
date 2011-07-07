@@ -25,11 +25,16 @@ class CategoryViewerTest(test.wxTestCase):
     def setUp(self):
         super(CategoryViewerTest, self).setUp()
         self.settings = config.Settings(load=False)
-        taskFile = persistence.TaskFile()
-        self.categories = taskFile.categories()
-        self.viewer = gui.viewer.CategoryViewer(self.frame, taskFile, 
+        self.taskFile = persistence.TaskFile()
+        self.categories = self.taskFile.categories()
+        self.viewer = gui.viewer.CategoryViewer(self.frame, self.taskFile, 
                                                 self.settings)
-        
+
+    def tearDown(self):
+        super(CategoryViewerTest, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
+
     def addTwoCategories(self):
         cat1 = category.Category('1')
         cat2 = category.Category('2')

@@ -147,7 +147,11 @@ class IOControllerTest(test.TestCase):
         taskFile = persistence.TaskFile()
         taskFile.setFilename(self.filename1)
         taskFile.load()
-        self.assertEqual(1, len(taskFile.categories()))            
+        try:
+            self.assertEqual(1, len(taskFile.categories()))
+        finally:
+            taskFile.close()
+            taskFile.stop()
         
     def testIOErrorOnSaveSave(self):
         self.taskFile.raiseError = IOError
@@ -227,7 +231,13 @@ class IOControllerTest(test.TestCase):
         iocontroller = gui.IOController(targetFile, lambda *args: None, 
                                         self.settings)
         iocontroller.merge(self.filename2)
-        self.assertEqual('Task to merge', list(targetFile.tasks())[0].subject())
+        try:
+            self.assertEqual('Task to merge', list(targetFile.tasks())[0].subject())
+        finally:
+            mergeFile.close()
+            mergeFile.stop()
+            targetFile.close()
+            targetFile.stop()
         
     def testOpenWhenLockFailed(self):
         self.taskFile.raiseError = lockfile.LockFailed

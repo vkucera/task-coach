@@ -33,6 +33,11 @@ class VCalTestCase(test.wxTestCase):
         self.writer = persistence.iCalendarWriter(self.fd)
         self.taskFile = persistence.TaskFile()
 
+    def tearDown(self):
+        super(VCalTestCase, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
+
     def writeAndRead(self):
         self.writer.write(self.viewer, self.settings, self.selectionOnly)
         return self.fd.getvalue()

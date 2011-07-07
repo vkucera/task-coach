@@ -66,7 +66,9 @@ class TaskFileTestCase(test.TestCase):
     def tearDown(self):
         super(TaskFileTestCase, self).tearDown()
         self.taskFile.close()
+        self.taskFile.stop()
         self.emptyTaskFile.close()
+        self.emptyTaskFile.stop()
         self.remove(self.filename, self.filename2,
                     self.filename + '.delta',
                     self.filename2 + '.delta')
@@ -773,6 +775,8 @@ class TaskFileMergeTest(TaskFileTestCase):
         self.mergeFile.setFilename('merge.tsk')
 
     def tearDown(self):
+        self.mergeFile.close()
+        self.mergeFile.stop()
         self.remove('merge.tsk', 'merge.tsk.delta')
         super(TaskFileMergeTest, self).tearDown()
 
@@ -875,6 +879,7 @@ class LockedTaskFileLockTest(TaskFileTestCase):
 
     def tearDown(self):
         self.taskFile.close()
+        self.taskFile.stop()
         self.emptyTaskFile.close()
         super(LockedTaskFileLockTest, self).tearDown()
 
@@ -944,6 +949,8 @@ class TaskFileMonitorTest(TaskFileTestCase):
         self.otherFile.load()
 
     def tearDown(self):
+        self.otherFile.close()
+        self.otherFile.stop()
         self.remove('other.tsk')
         super(TaskFileMonitorTest, self).tearDown()
 
@@ -1050,7 +1057,9 @@ class TaskFileMultiUserTest(test.TestCase):
     def tearDown(self):
         super(TaskFileMultiUserTest, self).tearDown()
         self.taskFile1.close()
+        self.taskFile1.stop()
         self.taskFile2.close()
+        self.taskFile2.stop()
         self.remove(self.filename)
 
     def remove(self, *filenames):

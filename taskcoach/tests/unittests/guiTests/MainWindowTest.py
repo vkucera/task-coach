@@ -76,6 +76,8 @@ class MainWindowTestCase(test.wxTestCase):
         self.mainwindow._idleController.stop()
         del self.mainwindow
         super(MainWindowTestCase, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
         
         
 class MainWindowTest(MainWindowTestCase):

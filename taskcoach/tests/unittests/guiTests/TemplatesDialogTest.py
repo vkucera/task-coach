@@ -46,6 +46,8 @@ class TemplatesDialogTestCase(test.wxTestCase):
             shutil.rmtree(self.path)
         except OSError:
             pass
+        self.taskFile.close()
+        self.taskFile.stop()
 
     def testTwoDefaultTemplates(self):
         self.assertEqual(0, len(self.editor._templates.tasks()))

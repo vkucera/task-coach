@@ -34,7 +34,12 @@ class CSVWriterTestCase(test.wxTestCase):
         self.task = task.Task('Task subject')
         self.taskFile.tasks().append(self.task)
         self.createViewer()
-        
+
+    def tearDown(self):
+        super(CSVWriterTestCase, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
+
     def createViewer(self):
         self.settings.set('taskviewer', 'treemode', self.treeMode)
         # pylint: disable-msg=W0201

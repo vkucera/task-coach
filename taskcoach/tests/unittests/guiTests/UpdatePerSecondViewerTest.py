@@ -41,7 +41,12 @@ class UpdatePerSecondViewerTestsMixin(object):
         self.trackedEffort = effort.Effort(self.trackedTask)
         self.trackedTask.addEffort(self.trackedEffort)
         self.taskList.append(self.trackedTask)
-        
+
+    def tearDown(self):
+        super(UpdatePerSecondViewerTestsMixin, self).tearDown()
+        self.taskFile.close()
+        self.taskFile.stop()
+
     def createUpdateViewer(self):
         return self.ListViewerClass(self.frame, self.taskFile, self.settings)
         

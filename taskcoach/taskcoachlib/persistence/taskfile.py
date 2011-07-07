@@ -350,7 +350,7 @@ class TaskFile(patterns.Observer):
             else:
                 self.__changes = {self.__monitor.guid(): self.__monitor}
 
-            if self.__needSave:
+            if self.__needSave or not os.path.exists(self.__filename):
                 name, fd = self._openForWrite()
                 xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
                                         self.syncMLConfig(), self.guid())
