@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, threading
+import os, threading, time
 
 try:
     import inotifyx
@@ -41,7 +41,7 @@ else:
         def run(self):
             try:
                 while not self.cancelled:
-                    events = inotifyx.get_events(self.fd, 0.1) # XXXFIXME: increase timeout
+                    events = inotifyx.get_events(self.fd, 0)
                     self.lock.acquire()
                     try:
                         for event in events:
@@ -49,6 +49,7 @@ else:
                                 self.onFileChanged()
                     finally:
                         self.lock.release()
+                    time.sleep(1)
             except TypeError:
                 # Interpreter termination (we're daemon)
                 pass
