@@ -23,6 +23,7 @@ from taskcoachlib.syncml.config import createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
 from taskcoachlib.thirdparty import lockfile
 from taskcoachlib.changes import ChangeMonitor, ChangeSynchronizer
+from taskcoachlib.filesystem import FilesystemNotifier
 
 
 def getTemporaryFileName(path):
@@ -40,6 +41,15 @@ def getTemporaryFileName(path):
         idx += 1
 
 
+class TaskCoachFilesystemNotifier(FilesystemNotifier):
+    def __init__(self, taskFile):
+        self.__taskFile = taskFile
+        super(TaskCoachFilesystemNotifier, self).__init__()
+
+    def onFileChanged(self):
+        self.__taskFile.onFileChanged()
+
+
 class TaskFile(patterns.Observer):
     def __init__(self, *args, **kwargs):
         self.__filename = self.__lastFilename = ''
@@ -53,6 +63,9 @@ class TaskFile(patterns.Observer):
         self.__monitor = ChangeMonitor()
         self.__changes = dict()
         self.__changes[self.__monitor.guid()] = self.__monitor
+        self.__changedOnDisk = False
+        self.__notifier = TaskCoachFilesystemNotifier(self)
+        self.__saving = False
         for collection in [self.__tasks, self.__categories, self.__notes]:
             self.__monitor.monitorCollection(collection)
         for domainClass in [task.Task, category.Category, note.Note, effort.Effort,
@@ -123,10 +136,12 @@ class TaskFile(patterns.Observer):
         return 0 == len(self.categories()) == len(self.tasks()) == len(self.notes())
             
     def onDomainObjectAddedOrRemoved(self, event): # pylint: disable-msg=W0613
+        if self.__loading or self.__saving:
+            return
         self.markDirty()
         
     def onTaskChanged(self, event):
-        if self.__loading:
+        if self.__loading or self.__saving:
             return
         changedTasks = [changedTask for changedTask in event.sources() \
                         if changedTask in self.tasks()]
@@ -136,7 +151,7 @@ class TaskFile(patterns.Observer):
                 changedTask.markDirty()
             
     def onEffortChanged(self, event):
-        if self.__loading:
+        if self.__loading or self.__saving:
             return
         changedEfforts = [changedEffort for changedEffort in event.sources() if \
                           changedEffort.task() in self.tasks()]
@@ -146,7 +161,7 @@ class TaskFile(patterns.Observer):
                 changedEffort.markDirty()
             
     def onCategoryChanged(self, event):
-        if self.__loading:
+        if self.__loading or self.__saving:
             return
         changedCategories = [changedCategory for changedCategory in event.sources() if \
                              changedCategory in self.categories()]
@@ -163,7 +178,7 @@ class TaskFile(patterns.Observer):
                     categorizable.markDirty()
             
     def onNoteChanged(self, event):
-        if self.__loading:
+        if self.__loading or self.__saving:
             return
         # A note may be in self.notes() or it may be a note of another 
         # domain object.
@@ -172,7 +187,7 @@ class TaskFile(patterns.Observer):
             changedNote.markDirty()
             
     def onAttachmentChanged(self, event):
-        if self.__loading:
+        if self.__loading or self.__saving:
             return
         # Attachments don't know their owner, so we can't check whether the
         # attachment is actually in the task file. Assume it is.
@@ -185,6 +200,7 @@ class TaskFile(patterns.Observer):
             return
         self.__lastFilename = filename or self.__filename
         self.__filename = filename
+        self.__notifier.setFilename(filename)
         patterns.Event('taskfile.filenameChanged', self, filename).send()
 
     def filename(self):
@@ -202,7 +218,13 @@ class TaskFile(patterns.Observer):
         if self.__needSave:
             self.__needSave = False
             patterns.Event('taskfile.dirty', self, False).send()
-            
+
+    def onFileChanged(self):
+        if not self.__saving:
+            import wx # Not really clean but we're in another thread...
+            self.__changedOnDisk = True
+            wx.CallAfter(patterns.Event('taskfile.changed', self, False).send)
+
     @patterns.eventSource
     def clear(self, regenerate=True, event=None):
         self.tasks().clear(event=event)
@@ -223,6 +245,10 @@ class TaskFile(patterns.Observer):
         self.clear()
         self.__monitor.reset()
         self.__needSave = False
+        self.__changedOnDisk = False
+
+    def stop(self):
+        self.__notifier.stop()
 
     def _read(self, fd):
         return xml.XMLReader(fd).read()
@@ -290,6 +316,7 @@ class TaskFile(patterns.Observer):
         finally:
             self.__loading = False
             self.__needSave = False
+            self.__changedOnDisk = False
         
     def save(self):
         patterns.Event('taskfile.aboutToSave', self).send()
@@ -298,45 +325,55 @@ class TaskFile(patterns.Observer):
         # it's lost. So write to a temporary file and rename it if
         # everything went OK.
 
-        # XXXTODO: lock
+        self.__saving = True
+        try:
+            if os.path.exists(self.__filename): # Not using self.exists() because DummyFile.exists returns True
+                # Instead of writing the content of memory, merge changes
+                # with the on-disk version and save the result.
+                self.__monitor.freeze()
+                try:
+                    fd = self._openForRead()
+                    tasks, categories, notes, syncMLConfig, allChanges, guid = self._read(fd)
+                    fd.close()
 
-        if os.path.exists(self.__filename): # Not using self.exists() because DummyFile.exists returns True
-            # Instead of writing the content of memory, merge changes
-            # with the on-disk version and save the result.
-            self.__monitor.freeze()
-            try:
-                fd = self._openForRead()
-                tasks, categories, notes, syncMLConfig, allChanges, guid = self._read(fd)
+                    self.__changes = allChanges
+
+                    sync = ChangeSynchronizer(self.__monitor, allChanges)
+
+                    sync.sync(
+                        [(self.categories(), category.CategoryList(categories)),
+                         (self.tasks(), task.TaskList(tasks)),
+                         (self.notes(), note.NoteContainer(notes))]
+                        )
+                finally:
+                    self.__monitor.thaw()
+            else:
+                self.__changes = {self.__monitor.guid(): self.__monitor}
+
+            if self.__needSave:
+                name, fd = self._openForWrite()
+                xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
+                                        self.syncMLConfig(), self.guid())
                 fd.close()
+                if os.path.exists(self.__filename): # Not using self.exists() because DummyFile.exists returns True
+                    os.remove(self.__filename)
+                if name is not None: # Unit tests (AutoSaver)
+                    os.rename(name, self.__filename)
 
-                self.__changes = allChanges
+            self.__monitor.resetAllChanges()
+            name, fd = self._openForWrite()
+            xml.ChangesXMLWriter(fd).write(self.changes())
+            fd.close()
+            if os.path.exists(self.__filename + '.delta'):
+                os.remove(self.__filename + '.delta')
+            if name is not None: # Unit tests (AutoSaver)
+                os.rename(name, self.__filename + '.delta')
 
-                sync = ChangeSynchronizer(self.__monitor, allChanges)
-
-                sync.sync(
-                    [(self.categories(), category.CategoryList(categories)),
-                     (self.tasks(), task.TaskList(tasks)),
-                     (self.notes(), note.NoteContainer(notes))]
-                    )
-            finally:
-                self.__monitor.thaw()
-        else:
-            self.__changes = {self.__monitor.guid(): self.__monitor}
-
-        name, fd = self._openForWrite()
-        self.__monitor.resetAllChanges()
-        xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
-                                self.syncMLConfig(), self.changes(), self.guid())
-        fd.close()
-        if os.path.exists(self.__filename): # Not using self.exists() because DummyFile.exists returns True
-            os.remove(self.__filename)
-        if os.path.exists(self.__filename + '.delta'):
-            os.remove(self.__filename + '.delta')
-        if name is not None: # Unit tests (AutoSaver)
-            os.rename(name, self.__filename)
-            os.rename(name + '.delta', self.__filename + '.delta')
-
-        self.__needSave = False
+            self.__needSave = False
+            self.__changedOnDisk = False
+        finally:
+            self.__saving = False
+            self.__notifier.saved()
 
     def saveas(self, filename):
         self.setFilename(filename)
@@ -386,6 +423,9 @@ class TaskFile(patterns.Observer):
     
     def needSave(self):
         return not self.__loading and self.__needSave
+
+    def changedOnDisk(self):
+        return self.__changedOnDisk
 
     def beginSync(self):
         self.__loading = True

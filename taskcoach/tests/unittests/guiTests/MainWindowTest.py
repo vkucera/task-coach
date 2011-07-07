@@ -53,6 +53,9 @@ class DummyIOController(object):
     def needSave(self, *args, **kwargs): # pylint: disable-msg=W0613
         return False # pragma: no cover
 
+    def changedOnDisk(self):
+        return False # pragme: no cover
+
 
 class MainWindowTestCase(test.wxTestCase):
     def setUp(self):

@@ -32,7 +32,7 @@ class XMLWriter(object):
         self.__versionnr = versionnr
 
     def write(self, taskList, categoryContainer,
-              noteContainer, syncMLConfig, changes, guid):
+              noteContainer, syncMLConfig, guid):
         domImplementation = xml.dom.getDOMImplementation()
         self.document = domImplementation.createDocument(None, 'tasks', None) # pylint: disable-msg=W0201
         pi = self.document.createProcessingInstruction('taskcoach', 
@@ -50,8 +50,6 @@ class XMLWriter(object):
         if guid:
             self.document.documentElement.appendChild(self.textNode('guid', guid))
         self.document.writexml(self.__fd, newl='\n', encoding=self.__fd.encoding)
-
-        ChangesXMLWriter(file(self.__fd.name + '.delta', 'wb')).write(changes)
 
     def taskNode(self, task): # pylint: disable-msg=W0621
         maxDateTime = self.maxDateTime
@@ -268,7 +266,7 @@ class TemplateXMLWriter(XMLWriter):
         super(TemplateXMLWriter, self).write(task.TaskList([tsk]),
                    category.CategoryList(),
                    note.NoteContainer(),
-                   None, dict(), None)
+                   None, None)
 
     def taskNode(self, task): # pylint: disable-msg=W0621
         node = super(TemplateXMLWriter, self).taskNode(task)

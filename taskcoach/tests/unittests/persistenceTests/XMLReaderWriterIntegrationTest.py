@@ -54,7 +54,7 @@ class IntegrationTestCase(test.TestCase):
 
     def readAndWrite(self):
         self.fd.seek(0)
-        self.writer.write(self.taskList, self.categories, self.notes, self.syncMLConfig, self.changes, self.guid)
+        self.writer.write(self.taskList, self.categories, self.notes, self.syncMLConfig, self.guid)
         self.fd.seek(0)
         return self.reader.read()
 

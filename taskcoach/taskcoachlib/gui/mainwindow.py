@@ -198,6 +198,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
             self.Iconize()
         else:
             self._idleController.stop()
+            self.taskFile.stop()
             application.Application().quit()
 
     def restore(self, event): # pylint: disable-msg=W0613

@@ -66,6 +66,9 @@ class IOController(object):
     def needSave(self):
         return self.__taskFile.needSave()
 
+    def changedOnDisk(self):
+        return self.__taskFile.changedOnDisk()
+
     def hasDeletedItems(self):
         return bool([task for task in self.__taskFile.tasks() if task.isDeleted()] + \
                     [note for note in self.__taskFile.notes() if note.isDeleted()])

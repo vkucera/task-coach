@@ -42,7 +42,7 @@ class XMLWriterTest(test.TestCase):
             
     def __writeAndRead(self):
         self.writer.write(self.taskList, self.categoryContainer, 
-            self.noteContainer, SyncMLConfigNode('root'), self.changes, u'GUID')
+            self.noteContainer, SyncMLConfigNode('root'), u'GUID')
         return self.fd.getvalue()
     
     def expectInXML(self, xmlFragment):
