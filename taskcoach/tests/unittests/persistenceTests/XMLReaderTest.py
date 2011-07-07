@@ -60,11 +60,9 @@ class XMLTemplateReaderTestCase(test.TestCase):
 
     def testConvertTodayAndZeroTimeDelta(self):
         now = date.Now()
-        minutesToday = (now - now.startOfDay()).minutes()
-        expectedMinutes = minutesToday - date.TimeDelta().minutes()
+        expectedMinutes = (now - now.startOfDay()).minutes()
         self.assertEqual('%d minutes ago'%expectedMinutes, 
-                         self.convert('Today() + TimeDelta(0)'))
-
+                         self.convert('Today() + TimeDelta(0)', lambda: now))
 
 
 class XMLReaderTestCase(test.TestCase):
