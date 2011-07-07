@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.23', 'July 5, 2011',
+Release('1.2.23', 'July 7, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Task Coach would fail on parsing old templates, causing it not to start
