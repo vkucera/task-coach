@@ -16,69 +16,182 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, threading, time
+# inotify wrapper from this recipe: http://code.activestate.com/recipes/576375-low-level-inotify-wrapper/
+# Slightly modified to handle timeout and use select(); cleanup error handling
 
-try:
-    import inotifyx
-except ImportError:
-    from fs_poller import *
-else:
-    class FilesystemNotifier(threading.Thread):
-        def __init__(self):
-            super(FilesystemNotifier, self).__init__()
+import os, threading, time, select
+from struct import unpack
+from fcntl import ioctl
+from termios import FIONREAD
+from time import sleep
+from ctypes import cdll, create_string_buffer, c_int, POINTER
+from errno import errorcode
 
-            self.lock = threading.RLock()
-            self.filename = None
-            self.name = None
-            self.path = None
-            self.fd = inotifyx.init()
-            self.wd = None
-            self.cancelled = False
 
-            self.setDaemon(True)
-            self.start()
+libc = cdll.LoadLibrary('libc.so.6')
+libc.__errno_location.restype = POINTER(c_int)
+def geterr():
+    return errorcode[libc.__errno_location().contents.value]
 
-        def run(self):
-            try:
-                while not self.cancelled:
-                    events = inotifyx.get_events(self.fd, 0)
-                    self.lock.acquire()
-                    try:
-                        for event in events:
-                            if event.name == self.filename:
-                                self.onFileChanged()
-                    finally:
-                        self.lock.release()
-                    time.sleep(1)
-            except TypeError:
-                # Interpreter termination (we're daemon)
-                pass
 
-        def setFilename(self, filename):
+class Inotify(object):
+    def __init__(self):
+        self.fd = libc.inotify_init()
+        if self.fd == -1:
+            raise OSError('inotify init: %s' % geterr())
+        self.fd_read, self.fd_write = os.pipe()
+        self.lock = threading.RLock()
+
+    def do_read(self, fd):
+        size_int = c_int()
+        ioctl(fd, FIONREAD, size_int)
+        size = size_int.value
+        if size:
+            return os.read(fd, size), size
+        return None, 0
+
+    def read(self, timeout=None):
+        self.lock.acquire()
+        try:
+            result = []
+            fds, _, _ = select.select([self.fd, self.fd_read], [], [], timeout)
+            if self.fd in fds:
+                data, size = self.do_read(self.fd)
+                if size:
+                    deb = 0
+                    while deb < size:
+                        fin = deb + 16
+                        wd, mask, cookie, name_len = unpack('iIII', data[deb:fin])
+                        deb, fin = fin, fin+name_len
+                        name = unpack('%ds' % name_len, data[deb:fin])
+                        name = name[0].rstrip('\0')
+                        deb = fin
+                        result.append((wd, mask, cookie, name))
+            if self.fd_read in fds:
+                self.do_read(self.fd_read)
+            return result
+        finally:
+            self.lock.release()
+
+    def stop(self):
+        os.write(self.fd_write, 'X')
+
+    def add_watch(self, path, mask):
+        os.write(self.fd_write, 'X')
+        self.lock.acquire()
+        try:
+            wd = libc.inotify_add_watch(self.fd, path, mask)
+            if wd == -1:
+                raise OSError('inotify add_watch: %s' % geterr())
+            return wd
+        finally:
+            self.lock.release()
+
+    def rm_watch(self, wd):
+        os.write(self.fd_write, 'X')
+        self.lock.acquire()
+        try:
+            ret = libc.inotify_rm_watch(self.fd, wd)
+            if ret == -1:
+                raise OSError('inotify rm_watch: %s' % geterr())
+        finally:
+            self.lock.release()
+
+    def close(self):
+        os.close(self.fd)
+        os.close(self.fd_read)
+        os.close(self.fd_write)
+
+
+FLAGS = {
+    'ACCESS'      : 0x00000001, # IN_ACCESS
+    'MODIFY'      : 0x00000002, # IN_MODIFY
+    'ATTRIB'      : 0x00000004, # IN_ATTRIB
+    'WRITE'       : 0x00000008, # IN_CLOSE_WRITE
+    'CLOSE'       : 0x00000010, # IN_CLOSE_NOWRITE
+    'OPEN'        : 0x00000020, # IN_OPEN
+    'MOVED_FROM'  : 0x00000040, # IN_MOVED_FROM
+    'MOVED_TO'    : 0x00000080, # IN_MOVED_TO
+    'CREATE'      : 0x00000100, # IN_CREATE
+    'DELETE'      : 0x00000200, # IN_DELETE
+    'DELETE_SELF' : 0x00000400, # IN_DELETE_SELF
+    'MOVE_SELF'   : 0x00000800, # IN_MOVE_SELF
+    'UNMOUNT'     : 0x00002000, # IN_UNMOUNT
+    'Q_OVERFLOW'  : 0x00004000, # IN_Q_OVERFLOW
+    'IGNORED'     : 0x00008000, # IN_IGNORED
+    'ONLYDIR'     : 0x01000000, # IN_ONLYDIR
+    'DONT_FOLLOW' : 0x02000000, # IN_DONT_FOLLOW
+    'MASK_ADD'    : 0x20000000, # IN_MASK_ADD
+    'ISDIR'       : 0x40000000, # IN_ISDIR
+    'ONESHOT'     : 0x80000000, # IN_ONESHOT
+}
+
+
+def mask_str(mask):
+    return ' | '.join(name for name, val in FLAGS.items() if val & mask)
+
+
+class FilesystemNotifier(threading.Thread):
+    def __init__(self):
+        super(FilesystemNotifier, self).__init__()
+
+        self.filename = None
+        self.name = None
+        self.path = None
+        self.wd = None
+        self.notifier = Inotify()
+        self.cancelled = False
+        self.lock = threading.RLock()
+
+        self.setDaemon(True)
+        self.start()
+
+    def run(self):
+        try:
+            while not self.cancelled:
+                self.lock.acquire()
+                try:
+                    myName = self.name.encode('UTF-8')
+                finally:
+                    self.lock.release()
+                if myName is not None:
+                    events = self.notifier.read()
+                    for _, _, _, name in events:
+                        if name == myName:
+                            self.onFileChanged()
+        except TypeError:
+            # Interpreter termination (we're daemon)
+            pass
+        except:
+            import traceback
+            traceback.print_exc()
+
+    def setFilename(self, filename):
+        if self.notifier is not None:
             self.lock.acquire()
             try:
                 filename = os.path.normpath(os.path.abspath(filename))
                 if self.wd is not None:
-                    inotifyx.rm_watch(self.fd, self.wd)
+                    self.notifier.rm_watch(self.wd)
                     self.wd = None
                 self.filename = filename
                 if filename:
                     self.path, self.name = os.path.split(filename)
-                    self.wd = inotifyx.add_watch(self.fd, self.path,
-                                                 inotifyx.IN_MOVED_TO|inotifyx.IN_MODIFY)
+                    self.wd = self.notifier.add_watch(self.path.encode('UTF-8'),
+                                FLAGS['MODIFY']|FLAGS['MOVED_TO'])
             finally:
                 self.lock.release()
 
-        def stop(self):
+    def stop(self):
+        if self.notifier is not None:
             self.cancelled = True
+            self.notifier.stop()
             self.join()
+            self.notifier.close()
+            self.notifier = None
 
-            if self.fd is not None:
-                os.close(self.fd)
-                self.fd = None
+    def onFileChanged(self):
+        raise NotImplementedError
 
-        def onFileChanged(self):
-            raise NotImplementedError
-
-        def saved(self):
-            pass
+    def saved(self):
+        pass

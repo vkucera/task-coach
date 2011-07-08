@@ -27,6 +27,7 @@ class FilesystemNotifier(threading.Thread):
         self.stamp = None
         self.lock = threading.RLock()
         self.cancelled = False
+        self.evt = threading.Event()
 
         self.setDaemon(True)
         self.start()
@@ -43,24 +44,25 @@ class FilesystemNotifier(threading.Thread):
             self.lock.release()
 
     def run(self):
-        while True:
-            self.lock.acquire()
-            try:
-                if self.filename and os.path.exists(self.filename):
-                    stamp = os.stat(self.filename).st_mtime
-                    if stamp > self.stamp:
-                        self.stamp = stamp
-                        self.onFileChanged()
-            finally:
-                self.lock.release()
+        try:
+            while not self.cancelled:
+                self.lock.acquire()
+                try:
+                    if self.filename and os.path.exists(self.filename):
+                        stamp = os.stat(self.filename).st_mtime
+                        if stamp > self.stamp:
+                            self.stamp = stamp
+                            self.onFileChanged()
+                finally:
+                    self.lock.release()
 
-            for i in xrange(10):
-                if self.cancelled:
-                    return
-                time.sleep(0.1) # XXXFIXME: increase timeout
+                self.evt.wait(10)
+        except TypeError:
+            pass
 
     def stop(self):
         self.cancelled = True
+        self.evt.set()
         self.join()
 
     def onFileChanged(self):

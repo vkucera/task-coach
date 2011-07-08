@@ -34,6 +34,8 @@ class IOControllerTest(test.TestCase):
         self.filename2 = 'another.tsk' 
 
     def tearDown(self):
+        self.taskFile.close()
+        self.taskFile.stop()
         for filename in self.filename1, self.filename2:
             if os.path.exists(filename):
                 os.remove(filename)
@@ -152,7 +154,7 @@ class IOControllerTest(test.TestCase):
         finally:
             taskFile.close()
             taskFile.stop()
-        
+     
     def testIOErrorOnSaveSave(self):
         self.taskFile.raiseError = IOError
         self.taskFile.setFilename(self.filename1)
@@ -267,10 +269,13 @@ class IOControllerOverwriteExistingFileTest(test.TestCase):
             return wx.CANCEL
         wx.MessageBox = messageBox
         task.Task.settings = self.settings = config.Settings(load=False)
-        self.iocontroller = gui.IOController(dummy.TaskFile(), 
+        self.taskFile = dummy.TaskFile()
+        self.iocontroller = gui.IOController(self.taskFile, 
             lambda *args: None, self.settings)
 
     def tearDown(self):
+        self.taskFile.close()
+        self.taskFile.stop()
         wx.FileSelector = self.originalFileSelector
         wx.MessageBox = self.originalMessageBox
         super(IOControllerOverwriteExistingFileTest, self).tearDown()

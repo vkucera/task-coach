@@ -23,7 +23,7 @@ _system = platform.system()
 if _system == 'Linux':
     from fs_inotify import *
 elif _system == 'Windows':
-    from fs_poller import * # XXXTODO
+    from fs_win32 import *
 elif _system == 'Darwin':
     from fs_poller import * # XXXTODO
 else:

@@ -226,7 +226,7 @@ class IOController(object):
             self.__showSaveMessage(taskFile)
             self.__addRecentFile(filename)
             return True
-        except lockfile.AlreadyLocked:
+        except lockfile.LockTimeout:
             errorMessage = _('Cannot save %s\n'
                 'It is locked by another instance of %s.\n')%(filename, meta.name)
             showerror(errorMessage, **self.__errorMessageOptions)

@@ -455,7 +455,7 @@ class LockedTaskFile(TaskFile):
     def acquire_lock(self, filename):
         if not self.is_locked_by_me():
             self.__lock = lockfile.FileLock(filename)
-            self.__lock.acquire(10)
+            self.__lock.acquire(5)
             
     def break_lock(self, filename):
         self.__lock = lockfile.FileLock(filename)
@@ -488,7 +488,3 @@ class LockedTaskFile(TaskFile):
             return super(LockedTaskFile, self).save(**kwargs)
         finally:
             self.release_lock()
-    
-    def saveas(self, filename):
-        ''' Unlock the file before we save it under another name. '''
-        return super(LockedTaskFile, self).saveas(filename)
