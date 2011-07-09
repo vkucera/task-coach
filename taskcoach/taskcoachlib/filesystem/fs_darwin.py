@@ -91,9 +91,13 @@ class FileMonitor(object):
 
         self.fd = None
 
-        self.fd = open_(filename, O_EVTONLY)
-        if self.fd < 0:
-            raise OSError('Could not open "%s"' % filename)
+        if os.path.exists(filename):
+            self.fd = open_(filename, O_EVTONLY)
+            if self.fd < 0:
+                raise OSError('Could not open "%s"' % filename)
+            self.state = 2
+        else:
+            self.state = 1
 
         self.dir = opendir(path)
         if self.dir is None:
@@ -102,7 +106,6 @@ class FileMonitor(object):
             raise OSError('Could not open "%s"' % path)
         self.dirfd = dirfd(self.dir)
 
-        self.state = 2 # File exists. Also, number of changes
         self.cancelled = False
 
     def loop(self):
@@ -113,9 +116,10 @@ class FileMonitor(object):
 
             EV_SET(changes[0], self.dirfd, EVFILT_VNODE, EV_ADD | EV_ENABLE | EV_ONESHOT,
                    NOTE_WRITE | NOTE_EXTEND, 0, 0)
-            EV_SET(changes[1], self.fd, EVFILT_VNODE, EV_ADD | EV_ENABLE | EV_ONESHOT,
-                   NOTE_WRITE | NOTE_EXTEND | NOTE_DELETE | NOTE_ATTRIB | \
-                   NOTE_LINK | NOTE_RENAME | NOTE_REVOKE, 0, 0)
+            if self.fd is not None:
+                EV_SET(changes[1], self.fd, EVFILT_VNODE, EV_ADD | EV_ENABLE | EV_ONESHOT,
+                       NOTE_WRITE | NOTE_EXTEND | NOTE_DELETE | NOTE_ATTRIB | \
+                       NOTE_LINK | NOTE_RENAME | NOTE_REVOKE, 0, 0)
 
             while True:
                 if kevent(kq, changes, self.state, byref(event), 1, None) > 0:
@@ -136,7 +140,9 @@ class FileMonitor(object):
                             self.fd = open_(self.filename, O_EVTONLY)
                             if self.fd < 0:
                                 raise OSError('Could not open "%s"' % self.filename)
-                            EV_SET(changes[1], self.fd, EVFILT_VNODE, EV_ADD | EV_ENABLE | EV_ONESHOT, NOTE_WRITE | NOTE_EXTEND | NOTE_DELETE, 0, 0)
+                            EV_SET(changes[1], self.fd, EVFILT_VNODE, EV_ADD | EV_ENABLE | EV_ONESHOT,
+                                   NOTE_WRITE | NOTE_EXTEND | NOTE_DELETE | NOTE_ATTRIB | \
+                                   NOTE_LINK | NOTE_RENAME | NOTE_REVOKE, 0, 0)
                             self.state = 2
                             self.onFileChanged()
         finally:
