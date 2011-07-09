@@ -94,6 +94,11 @@ _TOC = sequence(
                 li(a_href(_('Printing'), 'printing')),
                 li(a_href(_('Exporting'), 'exporting')))),
         li(
+            a_href(_('Multi-user usage'), 'multiuser'),
+            ul(
+                li(a_href(_('About multi-user'), 'aboutmultiuser')),
+                li(a_href(_('Storage options'), 'storage')))),
+        li(
             a_href(_('E-mail (Outlook &amp; Thunderbird) integration'), 'email'),
             ul(
                 li(a_href(_('About e-mail integration'), 'aboutemail')),
@@ -321,6 +326,49 @@ want to export all visible items or just the selected ones. Available formats
 to export to include CSV (comma separated format), HTML and iCalendar. When
 you export to HTML, a CSS file is created that you can edit to change
 the appearance of the HTML.''')))
+
+
+_multiuserSection = sequence(
+    h3(
+        a_name(_('Multi-user usage'), 'multiuser')),
+    h4(
+        a_name(_('About multi-user'), 'aboutmultiuser')),
+    p(
+        _('''A task file may be opened by several instances of %(name)s, either
+running on the same computer or on different ones, on a network share for
+instance. When you save, %(name)s will actually merge your work with whatever
+has been saved on disk since the last time you did. Conflicts are automatically
+resolved, usually by you winning the conflict. This serves two use cases:''') % meta.metaDict),
+    ul(
+        li(_('''A single user, opening the task file on several computers (work,
+home, laptop).''')),
+        li(_('''Several users working on the same task file.'''))),
+    p(
+        _('''The first case is the most common and the most secure. The second
+case may be dangerous. Most network disk sharing protocols do not support the
+kind of file locking that would make this 100% secure. A list of common protocols
+and their behaviour follows.''')),
+    h4(
+        a_name(_('Storage options'), 'storage')),
+    p(
+        _('''None of the sharing options discussed here work fully. If two users
+save their changes within a few hundreds of milliseconds time frame, data will be lost.''')),
+    h5(
+        _('SMB/CIFS')),
+    p(
+        _('''This is the most common protocol: Windows shares and their lookalikes
+(Samba). If the server and client don't support certain extensions, Task Coach will not
+be able to detect automatically when the file has been modified by someone else.''')),
+    h5(
+        _('NFS')),
+    p(
+        _('Not tested yet.')),
+    h5(
+        _('DropBox')),
+    p(
+        _('''A popular way to access files from several computers (also see SpiderOak
+for a more secure alternative). Changes to the task file are correctly detected by %(name)s
+when it's updated.''') % meta.metaDict))
 
 
 _emailSection = sequence(
@@ -667,7 +715,7 @@ shortcuts are not configurable at the moment.''')%meta.metaDict),
 
 
 helpHTML = _TOC + _taskSection + _effortSection + _categorySection + \
-    _noteSection + _printingAndExportingSection + _emailSection + \
+    _noteSection + _printingAndExportingSection + _multiuserSection + _emailSection + \
     _syncmlSection + _iPhoneSection + _templatesSection + _guiSection + \
     _shortcutSection
 
