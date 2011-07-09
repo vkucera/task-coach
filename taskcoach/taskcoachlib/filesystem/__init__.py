@@ -25,6 +25,6 @@ if _system == 'Linux':
 elif _system == 'Windows':
     from fs_win32 import *
 elif _system == 'Darwin':
-    from fs_poller import * # XXXTODO
+    from fs_darwin import *
 else:
     from fs_poller import *
