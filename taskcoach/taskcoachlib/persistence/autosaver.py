@@ -27,6 +27,7 @@ class AutoSaver(patterns.Observer):
         super(AutoSaver, self).__init__(*args, **kwargs)
         self.__settings = settings
         self.registerObserver(self.onTaskFileDirty, eventType='taskfile.dirty')
+        self.registerObserver(self.onTaskFileChanged, eventType='taskfile.changed')
             
     def onTaskFileDirty(self, event):
         ''' When a task file gets dirty and auto save is on, save it. '''
@@ -34,6 +35,16 @@ class AutoSaver(patterns.Observer):
             if self._needSave(taskFile):
                 taskFile.save()
 
+    def onTaskFileChanged(self, event):
+        ''' When a task file changed on disk and auto load is on, save it '''
+        for taskFile in event.sources():
+            if self._needLoad(taskFile):
+                taskFile.save()
+
     def _needSave(self, taskFile):
         return taskFile.filename() and taskFile.needSave() and \
             self.__settings.getboolean('file', 'autosave')
+
+    def _needLoad(self, taskFile):
+        return taskFile.changedOnDisk() and \
+            self.__settings.getboolean('file', 'autoload')

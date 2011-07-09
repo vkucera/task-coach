@@ -218,6 +218,8 @@ class SavePage(SettingsPage):
         super(SavePage, self).__init__(columns=3, *args, **kwargs)
         self.addBooleanSetting('file', 'autosave', 
             _('Auto save after every change'))
+        self.addBooleanSetting('file', 'autoload',
+            _('Auto save when the file changes on disk'))
         self.addBooleanSetting('file', 'backup', 
             _('Create a backup copy before\noverwriting a %s file')%meta.name)
         self.addBooleanSetting('file', 'saveinifileinprogramdir',

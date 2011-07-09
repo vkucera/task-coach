@@ -351,6 +351,7 @@ defaults = { \
     'maxrecentfiles': '9',
     'lastfile': '',
     'autosave': 'False',
+    'autoload': 'False',
     'backup': 'False',
     'saveinifileinprogramdir': 'False',
     'attachmentbase': '',
