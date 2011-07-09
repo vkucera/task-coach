@@ -117,8 +117,6 @@ class FileMonitor(object):
                    NOTE_WRITE | NOTE_EXTEND | NOTE_DELETE | NOTE_ATTRIB | \
                    NOTE_LINK | NOTE_RENAME | NOTE_REVOKE, 0, 0)
 
-            print 'MONITOR', self.filename
-
             while True:
                 if kevent(kq, changes, self.state, byref(event), 1, None) > 0:
                     if self.cancelled:
