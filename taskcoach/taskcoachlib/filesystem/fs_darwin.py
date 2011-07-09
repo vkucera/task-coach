@@ -35,6 +35,9 @@ NOTE_DELETE     = 0x00000001
 NOTE_EXTEND     = 0x00000004
 NOTE_WRITE      = 0x00000002
 NOTE_ATTRIB     = 0x00000008
+NOTE_LINK       = 0x00000010
+NOTE_RENAME     = 0x00000020
+NOTE_REVOKE     = 0x00000040
 
 # Structures
 
@@ -108,8 +111,13 @@ class FileMonitor(object):
             event = keventstruct()
             changes = (keventstruct * 2)()
 
-            EV_SET(changes[0], self.dirfd, EVFILT_VNODE, EV_ADD | EV_ENABLE | EV_ONESHOT, NOTE_WRITE | NOTE_EXTEND, 0, 0)
-            EV_SET(changes[1], self.fd, EVFILT_VNODE, EV_ADD | EV_ENABLE | EV_ONESHOT, NOTE_WRITE | NOTE_EXTEND | NOTE_DELETE, 0, 0)
+            EV_SET(changes[0], self.dirfd, EVFILT_VNODE, EV_ADD | EV_ENABLE | EV_ONESHOT,
+                   NOTE_WRITE | NOTE_EXTEND, 0, 0)
+            EV_SET(changes[1], self.fd, EVFILT_VNODE, EV_ADD | EV_ENABLE | EV_ONESHOT,
+                   NOTE_WRITE | NOTE_EXTEND | NOTE_DELETE | NOTE_ATTRIB | \
+                   NOTE_LINK | NOTE_RENAME | NOTE_REVOKE, 0, 0)
+
+            print 'MONITOR', self.filename
 
             while True:
                 if kevent(kq, changes, self.state, byref(event), 1, None) > 0:
@@ -121,14 +129,8 @@ class FileMonitor(object):
                             close(self.fd)
                             self.fd = None
                             self.state = 1
-
-                        # XXXFIXME: we receive those events far too
-                        # often. Since Task Coach doesn't write to the
-                        # file but renames it, let's forget this for
-                        # now.
-
-                        # else:
-                        #     self.onFileChanged()
+                        elif event.ident == self.fd:
+                            self.onFileChanged()
                     elif self.state == 1:
                         # The event can only concern the directory anyway.
                         if os.path.exists(self.filename):
