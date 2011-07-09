@@ -41,7 +41,14 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.23', 'July 5, 2011',
+Release('1.2.24', 'July 8, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''...''')
+        ]
+    ),
+            
+Release('1.2.23', 'July 7, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Task Coach would fail on parsing old templates, causing it not to start
