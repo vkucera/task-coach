@@ -250,7 +250,7 @@ class IOControllerTest(test.TestCase):
         self.failUnless(self.askOpenUnlockedCalled)
 
     def testOpenWhenAlreadyLocked(self):
-        self.taskFile.raiseError = lockfile.AlreadyLocked
+        self.taskFile.raiseError = lockfile.LockTimeout
         def askBreakLock(*args, **kwargs):  # pylint: disable-msg=W0613
             self.askBreakLockCalled = True
         self.iocontroller._IOController__askBreakLock = askBreakLock
