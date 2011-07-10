@@ -160,7 +160,7 @@ class ViewFilterTestsMixin(object):
         self.assertFilterIsEmpty()
         oldNow = date.Now
         date.Now = lambda: oldNow().endOfDay() + date.TimeDelta(seconds=1)
-        date.Clock().notifyMidnightObservers()
+        date.Clock().notifyDayObservers()
         self.assertFilterShows(self.dueTomorrow)
         date.Now = oldNow
         

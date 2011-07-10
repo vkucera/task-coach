@@ -24,7 +24,7 @@ import wx
 from taskcoachlib import patterns, command, widgets
 from taskcoachlib.domain import category 
 from taskcoachlib.i18n import _
-from taskcoachlib.gui import uicommand, menu, dialog, render
+from taskcoachlib.gui import uicommand, menu, dialog
 import base, mixin, inplace_editor
 
 

@@ -42,7 +42,7 @@ class ViewFilter(base.Filter):
                           task.Task.appearanceChangedEventType(), # Proxy for status changes
                           task.Task.addChildEventType(),
                           task.Task.removeChildEventType(),
-                          'clock.midnight'):
+                          'clock.day'):
             registerObserver(self.onTaskStatusChange, eventType=eventType)
 
     def onTaskStatusChange(self, event): # pylint: disable-msg=W0613

@@ -20,14 +20,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns, meta, command, help, widgets, persistence, thirdparty # pylint: disable-msg=W0622
+from taskcoachlib import patterns, meta, command, help, widgets, persistence, thirdparty, render # pylint: disable-msg=W0622
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import base, task, note, category, attachment, effort
 from taskcoachlib.mailer import writeMail
 from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, wxSCHEDULER_TODAY
 from taskcoachlib.thirdparty import desktop
 from taskcoachlib.gui.wizard import CSVImportWizard
-import dialog, render, viewer, printer
+import dialog, viewer, printer
 
 
 ''' User interface commands (subclasses of UICommand) are actions that can

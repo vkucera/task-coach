@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test, wx
 from unittests import dummy
-from taskcoachlib import gui, config, persistence
+from taskcoachlib import gui, config, persistence, render
 from taskcoachlib.domain import task, effort, date
 
 
@@ -365,7 +365,7 @@ class EffortViewerWithoutAggregationTest(CommonTestsMixin,
                                          EffortViewerAggregationTestCase):
     aggregation = 'details'
     expectedNumberOfItems = 5
-    expectedPeriodRendering = gui.render.dateTimePeriod(\
+    expectedPeriodRendering = render.dateTimePeriod(\
         date.DateTime(2008,7,23,1,0), date.DateTime(2008,7,23,2,0))
     
     
@@ -373,7 +373,7 @@ class EffortViewerWithAggregationPerDayTest(CommonTestsMixin,
                                             EffortViewerAggregationTestCase):
     aggregation = 'day'
     expectedNumberOfItems = 7 # 4 day/task combinations on 3 days (== 3 total rows) 
-    expectedPeriodRendering = gui.render.date(date.DateTime(2008,7,23))
+    expectedPeriodRendering = render.date(date.DateTime(2008,7,23))
 
 
 class EffortViewerWithAggregationPerWeekTest(CommonTestsMixin, 
@@ -387,5 +387,5 @@ class EffortViewerWithAggregationPerMonthTest(CommonTestsMixin,
                                               EffortViewerAggregationTestCase):
     aggregation = 'month'
     expectedNumberOfItems = 3 # 2 month/task combinations in 1 month (== 1 total row)
-    expectedPeriodRendering = gui.render.month(date.DateTime(2008,07,01))
+    expectedPeriodRendering = render.month(date.DateTime(2008,07,01))
 

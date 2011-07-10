@@ -18,8 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, os, locale
 import test
-from taskcoachlib import gui, config, persistence, command, patterns
-from taskcoachlib.gui import render
+from taskcoachlib import gui, config, persistence, command, patterns, render
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, date, effort, category, attachment
 
