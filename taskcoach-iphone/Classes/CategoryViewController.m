@@ -706,7 +706,13 @@
 
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 	{
-		[self.navigationController dismissModalViewControllerAnimated:YES];
+        // On iOS 5 beta 2, dismissing a stack of modal controllers crashes the app.
+        if ([self.navigationController.modalViewController respondsToSelector:@selector(dismissViewControllerAnimated:completion:)])
+            [self.navigationController.modalViewController dismissViewControllerAnimated:YES completion:^(void) {
+                [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+            }];
+        else
+            [self.navigationController dismissModalViewControllerAnimated:YES];
 	}
 	else
 	{
