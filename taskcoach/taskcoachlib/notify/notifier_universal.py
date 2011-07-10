@@ -152,7 +152,8 @@ class NotificationFrameBase(_NotifyBase):
             hsz.Add(wx.StaticBitmap(panel, wx.ID_ANY, self.icon), 0,
                     wx.ALL|wx.ALIGN_CENTRE, 2)
 
-        font = wx.NORMAL_FONT
+        # Seems that font copy-on-write does not work sometimes...
+        font = wx.FontFromNativeInfoString(wx.NORMAL_FONT.GetNativeFontInfoDesc())
         font.SetPointSize(8)
         font.SetWeight(wx.FONTWEIGHT_BOLD)
 
