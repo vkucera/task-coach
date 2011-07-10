@@ -23,7 +23,7 @@ from taskcoachlib.syncml.config import createDefaultSyncConfig
 from taskcoachlib.thirdparty.guid import generate
 from taskcoachlib.thirdparty import lockfile
 from taskcoachlib.changes import ChangeMonitor, ChangeSynchronizer
-from taskcoachlib.filesystem import FilesystemNotifier
+from taskcoachlib.filesystem import FilesystemNotifier, FilesystemPollerNotifier
 
 
 def getTemporaryFileName(path):
@@ -50,6 +50,15 @@ class TaskCoachFilesystemNotifier(FilesystemNotifier):
         self.__taskFile.onFileChanged()
 
 
+class TaskCoachFilesystemPollerNotifier(FilesystemPollerNotifier):
+    def __init__(self, taskFile):
+        self.__taskFile = taskFile
+        super(TaskCoachFilesystemPollerNotifier, self).__init__()
+
+    def onFileChanged(self):
+        self.__taskFile.onFileChanged()
+
+
 class TaskFile(patterns.Observer):
     def __init__(self, *args, **kwargs):
         self.__filename = self.__lastFilename = ''
@@ -64,7 +73,10 @@ class TaskFile(patterns.Observer):
         self.__changes = dict()
         self.__changes[self.__monitor.guid()] = self.__monitor
         self.__changedOnDisk = False
-        self.__notifier = TaskCoachFilesystemNotifier(self)
+        if kwargs.pop('poll', True):
+            self.__notifier = TaskCoachFilesystemPollerNotifier(self)
+        else:
+            self.__notifier = TaskCoachFilesystemNotifier(self)
         self.__saving = False
         for collection in [self.__tasks, self.__categories, self.__notes]:
             self.__monitor.monitorCollection(collection)

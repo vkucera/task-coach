@@ -19,9 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os, time, threading
 
 
-class FilesystemNotifier(threading.Thread):
+class FilesystemPollerNotifier(threading.Thread):
     def __init__(self):
-        super(FilesystemNotifier, self).__init__()
+        super(FilesystemPollerNotifier, self).__init__()
 
         self.filename = None
         self.stamp = None

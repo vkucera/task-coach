@@ -352,6 +352,7 @@ defaults = { \
     'lastfile': '',
     'autosave': 'False',
     'autoload': 'False',
+    'nopoll': 'False',
     'backup': 'False',
     'saveinifileinprogramdir': 'False',
     'attachmentbase': '',

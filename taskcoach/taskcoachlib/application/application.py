@@ -119,7 +119,7 @@ class Application(object):
         showSplashScreen = self.settings.getboolean('window', 'splash')
         splash = gui.SplashScreen() if showSplashScreen else None
         # pylint: disable-msg=W0201
-        self.taskFile = persistence.LockedTaskFile()
+        self.taskFile = persistence.LockedTaskFile(poll=not self.settings.getboolean('file', 'nopoll'))
         self.autoSaver = persistence.AutoSaver(self.settings)
         self.autoBackup = persistence.AutoBackup(self.settings)
         self.iocontroller = gui.IOController(self.taskFile, self.displayMessage, 
