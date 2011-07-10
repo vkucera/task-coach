@@ -104,7 +104,7 @@ class IOController(object):
             self.__addRecentFile(filename) 
             try:
                 self.__taskFile.load(filename, lock=lock, breakLock=breakLock)
-            except lockfile.AlreadyLocked:
+            except lockfile.LockTimeout:
                 if breakLock:
                     if self.__askOpenUnlocked(filename): 
                         self.open(filename, showerror, lock=False)
@@ -149,7 +149,7 @@ class IOController(object):
         if filename:
             try:
                 self.__taskFile.merge(filename)
-            except lockfile.AlreadyLocked:
+            except lockfile.LockTimeout:
                 showerror(_('Cannot open %(filename)s\nbecause it is locked.')%\
                           dict(filename=filename),
                           **self.__errorMessageOptions)
