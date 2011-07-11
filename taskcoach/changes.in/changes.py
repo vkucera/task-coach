@@ -26,6 +26,7 @@ Release('1.2.24', 'July 8, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Synchronizing with an iDevice could change the whole UI font.'''),
+        Bug('''Drag and drop from Thunderbird would not work in some circumstances.'''),
         ]
     ),
             
