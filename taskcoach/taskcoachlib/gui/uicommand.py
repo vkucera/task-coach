@@ -27,6 +27,7 @@ from taskcoachlib.mailer import writeMail
 from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, wxSCHEDULER_TODAY
 from taskcoachlib.thirdparty import desktop
 from taskcoachlib.gui.wizard import CSVImportWizard
+from taskcoachlib.tools import anonymize
 import dialog, viewer, printer
 
 
@@ -2187,7 +2188,17 @@ class Tips(SettingsCommand):
 
     def doCommand(self, event):
         help.showTips(self.mainWindow(), self.settings)
-        
+
+
+class Anonymize(IOCommand):
+    def __init__(self, *args, **kwargs):
+        super(Anonymize, self).__init__(menuText=_('Anonymize'),
+             helpText = _('Anonymize a task file to attach it to a bug report'),
+             *args, **kwargs)
+
+    def doCommand(self, event):
+        anonymize(self.iocontroller.filename())
+
     
 class HelpAbout(DialogCommand):
     def __init__(self, *args, **kwargs):
