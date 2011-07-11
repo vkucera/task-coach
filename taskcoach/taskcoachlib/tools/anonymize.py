@@ -46,6 +46,5 @@ def _anonymize(filename):
 
 def anonymize(filename):
     name = _anonymize(filename)
-    wx.MessageBox(u'Your task file has been anonymized and saved to\n%s' % name,
-                  u'Finished',
-                  wx.OK)
+    wx.MessageBox(_('Your task file has been anonymized and saved to:') + '\n' + name,
+                  _('Finished'), wx.OK)
