@@ -28,7 +28,6 @@ Release('1.2.24', 'July 8, 2011',
         Bug('''Synchronizing with an iDevice could change the whole UI font.'''),
         Bug('''Drag and drop from Thunderbird would not work in some circumstances.'''),
         ],
-    ),
     featuresChanged=[
         Feature('''New "Anonymize" item in the Help menu. This removes all actual data
 from a task file in order to attach it to a bug report regardless of its content.'''),
