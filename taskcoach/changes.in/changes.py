@@ -32,6 +32,7 @@ Release('1.2.24', 'July 8, 2011',
         Feature('''New "Anonymize" item in the Help menu. This removes all actual data
 from a task file in order to attach it to a bug report regardless of its content.'''),
         ]
+    ),
             
 Release('1.2.23', 'July 7, 2011',
     summary='''This is a bugfix release.''',
