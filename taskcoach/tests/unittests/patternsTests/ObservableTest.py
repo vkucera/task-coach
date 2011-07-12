@@ -578,14 +578,14 @@ class PublisherTest(test.TestCase):
         
     def testNotificationForLastObserverRemoved(self):
         self.publisher.registerObserver(self.onEvent, eventType='eventType')
-        self.publisher.registerObserver(self.onEvent, eventType='publisher.lastObserverRemovedFor.eventType')
+        self.publisher.registerObserver(self.onEvent, eventType='publisher.lastObserverRemovedFor')
         self.publisher.removeObserver(self.onEvent, eventType='eventType')
         self.assertEqual([patterns.Event( \
-            'publisher.lastObserverRemovedFor.eventType', self.publisher, 
+            'publisher.lastObserverRemovedFor', self.publisher, 
             'eventType')], self.events)
 
     def testNoNotificationForNonExistingObserverRemoved(self):
-        self.publisher.registerObserver(self.onEvent, eventType='publisher.lastObserverRemovedFor.eventType')
+        self.publisher.registerObserver(self.onEvent, eventType='publisher.lastObserverRemovedFor')
         self.publisher.removeObserver(self.onEvent, eventType='eventType')
         self.assertEqual([], self.events)
 

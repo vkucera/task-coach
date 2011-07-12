@@ -41,10 +41,15 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.24', 'July 8, 2011',
-    summary='''This is a bugfix release.''',
+Release('1.2.24', 'July 11, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
-        Bug('''...''')
+        Bug('''Synchronizing with an iDevice could change the whole UI font.'''),
+        Bug('''Drag and drop from Thunderbird would not work in some circumstances.'''),
+        ],
+    featuresChanged=[
+        Feature('''New "Anonymize" item in the Help menu. This saves an anonymized copy of 
+all data from a task file in order to safely attach it to a bug report.'''),
         ]
     ),
             

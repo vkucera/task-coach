@@ -318,7 +318,7 @@ class Publisher(object):
             if self.__observers[(eventType, eventSource)]:
                 continue
             del self.__observers[(eventType, eventSource)]
-            event.addSource(self, eventType, type='publisher.lastObserverRemovedFor.%s'%eventType)
+            event.addSource(self, eventType, type='publisher.lastObserverRemovedFor')
                         
     def notifyObservers(self, event):
         ''' Notify observers of the event. The event type and sources are 

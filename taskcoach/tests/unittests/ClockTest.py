@@ -59,41 +59,41 @@ class ClockTest(test.wxTestCase):
         realSoonNow = date.DateTime.now() + date.TimeDelta(seconds=2)
         patterns.Publisher().registerObserver(self.onEvent, 
             eventType=date.Clock.eventType(realSoonNow))
-        self.clock._scheduledTimer._notify(now=realSoonNow) # pylint: disable-msg=W0212
+        self.clock._timers['scheduled']._notify(now=realSoonNow) # pylint: disable-msg=W0212
         self.assertEqual(1, len(self.events))
 
     def testRegisterForDateChange_Midnight(self):
         patterns.Publisher().registerObserver(self.onEvent,
-            eventType='clock.midnight')
-        self.clock.notifyMidnightObservers(now=date.DateTime(2000,1,1,0,0,0))
+            eventType='clock.day')
+        self.clock.notifyDayObservers(now=date.DateTime(2000,1,1,0,0,0))
         self.assertEqual(1, len(self.events))
         
     def testRegisterForDateChange_BeforeMidnight(self):
-        self.clock.notifyMidnightObservers(now=date.DateTime(2000,1,1,23,59,58))
+        self.clock.notifyDayObservers(now=date.DateTime(2000,1,1,23,59,58))
         patterns.Publisher().registerObserver(self.onEvent,
-            eventType='clock.midnight')
-        self.clock.notifyMidnightObservers(now=date.DateTime(2000,1,2,0,0,0))
+            eventType='clock.day')
+        self.clock.notifyDayObservers(now=date.DateTime(2000,1,2,0,0,0))
         self.assertEqual(1, len(self.events))
 
     def testRegisterForDateChange_ComputerHibernatedAtMidnight(self):
         patterns.Publisher().registerObserver(self.onEvent,
-            eventType='clock.midnight')
-        self.clock.notifyMidnightObservers(now=date.DateTime(2000,1,1,1,10,15))
+            eventType='clock.day')
+        self.clock.notifyDayObservers(now=date.DateTime(2000,1,1,1,10,15))
         self.assertEqual(1, len(self.events))
 
     def testStartClockOnFirstObserverRegisteredForSecond(self):
-        self.clock._secondTimer = MockTimer()
+        self.clock._timers['second'] = MockTimer()
         patterns.Publisher().registerObserver(self.onEvent,
             eventType='clock.second')
-        self.failUnless(self.clock._secondTimer.started) # pylint: disable-msg=W0212
+        self.failUnless(self.clock._timers['second'].started) # pylint: disable-msg=W0212
 
     def testStopClockOnLastObserverRemovedForSecond(self):
-        self.clock._secondTimer = MockTimer()
+        self.clock._timers['second'] = MockTimer()
         patterns.Publisher().registerObserver(self.onEvent,
             eventType='clock.second')
         patterns.Publisher().removeObserver(self.onEvent,
             eventType='clock.second')
-        self.failUnless(self.clock._secondTimer.stopped) # pylint: disable-msg=W0212
+        self.failUnless(self.clock._timers['second'].stopped) # pylint: disable-msg=W0212
 
 
 class TimerTestCase(test.TestCase):

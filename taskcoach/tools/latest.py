@@ -28,7 +28,7 @@ def findLatest(path, valid):
 
 def listPath(path):
     def isSource(name):
-	return name.endswith('.zip') or name.endswith('.tar.gz') or name.endswith('.src.rpm')
+        return name.endswith('.zip') or name.endswith('.tar.gz') or name.endswith('.src.rpm')
 
     print '<h2>Sources</h2>'
     print '<ul>'
