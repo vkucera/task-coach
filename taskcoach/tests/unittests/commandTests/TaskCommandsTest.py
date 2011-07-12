@@ -665,6 +665,17 @@ class DecreasePriorityCommandTest(PriorityCommandTestCase):
         self.task2.setPriority(-2)
         self.decPriority([self.task2])
         self.assertDoUndoRedo(0, -3, 0, -2)
+
+
+class EditReminderCommandTest(TaskCommandTestCase):
+    def editReminder(self, tasks=None):
+        command.EditReminderDateTimeCommand(self.taskList, tasks or [], 
+                                            newValue=date.Now() + date.TimeDelta(hours=1)).do()
+        
+    def testEditReminder(self):
+        self.editReminder([self.task1])
+        self.assertDoUndoRedo(lambda: self.failUnless(self.task1.reminder()),
+                              lambda: self.failIf(self.task1.reminder()))
         
 
 class AddNoteCommandTest(TaskCommandTestCase):

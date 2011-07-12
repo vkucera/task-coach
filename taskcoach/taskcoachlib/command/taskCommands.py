@@ -314,7 +314,7 @@ class EditReminderDateTimeCommand(EditTaskCommand):
     def do_command(self):
         super(EditReminderDateTimeCommand, self).do_command()
         for item in self.items:
-            item.setReminderDateTime(self.__newDateTime)
+            item.setReminder(self.__newDateTime)
 
 
 class StartEffortCommand(EffortCommand):
