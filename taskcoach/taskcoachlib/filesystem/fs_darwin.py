@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from ctypes import *
 import os, tempfile, threading
+from taskcoachlib.filesystem import base
 
 _libc = CDLL('libc.dylib')
 
@@ -168,13 +169,10 @@ class FileMonitor(object):
         self.callback(self.filename)
 
 
-class FilesystemNotifier(object):
+class FilesystemNotifier(base.NotifierBase):
     def __init__(self):
         super(FilesystemNotifier, self).__init__()
 
-        self.filename = None
-        self.path = None
-        self.name = None
         self.monitor = None
         self.thread = None
         self.lock = threading.Lock()
@@ -188,17 +186,12 @@ class FilesystemNotifier(object):
                 self.monitor.close()
                 self.monitor = None
                 self.thread = None
-            if filename:
-                self.filename = os.path.normpath(os.path.abspath(filename))
-                self.path, self.name = os.path.split(self.filename)
+            super(FilesystemNotifier, self).setFilename(filename)
+            if self.filename:
                 self.monitor = FileMonitor(self.filename, self._onFileChanged)
                 self.thread = threading.Thread(target=self._run)
                 self.thread.setDaemon(True)
                 self.thread.start()
-            else:
-                self.filename = None
-                self.path = None
-                self.name = None
         finally:
             self.lock.release()
 
@@ -215,13 +208,12 @@ class FilesystemNotifier(object):
             self.lock.release()
 
     def _onFileChanged(self, filename):
-        self.onFileChanged()
+        if self._check(filename):
+            self.stamp = os.stat(filename).st_mtime
+            self.onFileChanged()
 
     def onFileChanged(self):
         raise NotImplementedError
-
-    def saved(self):
-        pass
 
     def _run(self):
         self.monitor.loop()

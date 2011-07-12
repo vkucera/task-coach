@@ -26,7 +26,7 @@ from termios import FIONREAD
 from time import sleep
 from ctypes import cdll, create_string_buffer, c_int, POINTER
 from errno import errorcode
-
+from taskcoachlib.filesystem import base
 
 libc = cdll.LoadLibrary('libc.so.6')
 libc.__errno_location.restype = POINTER(c_int)
@@ -131,13 +131,10 @@ def mask_str(mask):
     return ' | '.join(name for name, val in FLAGS.items() if val & mask)
 
 
-class FilesystemNotifier(threading.Thread):
+class FilesystemNotifier(base.NotifierBase, threading.Thread):
     def __init__(self):
         super(FilesystemNotifier, self).__init__()
 
-        self.filename = None
-        self.name = None
-        self.path = None
         self.wd = None
         self.notifier = Inotify()
         self.cancelled = False
@@ -151,14 +148,18 @@ class FilesystemNotifier(threading.Thread):
             while not self.cancelled:
                 self.lock.acquire()
                 try:
-                    myName = self.name.encode('UTF-8')
+                    myName = self.filename
                 finally:
                     self.lock.release()
                 if myName is not None:
+                    myName = myName.encode('UTF-8')
                     events = self.notifier.read()
                     for _, _, _, name in events:
-                        if name == myName:
-                            self.onFileChanged()
+                        if name == os.path.split(myName)[-1]:
+                            if self._check(myName):
+                                self.stamp = os.stat(myName).st_mtime
+                                self.onFileChanged()
+                                break
         except TypeError:
             # Interpreter termination (we're daemon)
             pass
@@ -170,13 +171,11 @@ class FilesystemNotifier(threading.Thread):
         if self.notifier is not None:
             self.lock.acquire()
             try:
-                filename = os.path.normpath(os.path.abspath(filename))
                 if self.wd is not None:
                     self.notifier.rm_watch(self.wd)
                     self.wd = None
-                self.filename = filename
-                if filename:
-                    self.path, self.name = os.path.split(filename)
+                super(FilesystemNotifier, self).setFilename(filename)
+                if self.filename:
                     self.wd = self.notifier.add_watch(self.path.encode('UTF-8'),
                                 FLAGS['MODIFY']|FLAGS['MOVED_TO'])
             finally:
@@ -192,6 +191,3 @@ class FilesystemNotifier(threading.Thread):
 
     def onFileChanged(self):
         raise NotImplementedError
-
-    def saved(self):
-        pass

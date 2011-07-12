@@ -21,6 +21,7 @@ import platform
 
 from fs_poller import *
 
+
 _system = platform.system()
 if _system == 'Linux':
     from fs_inotify import *

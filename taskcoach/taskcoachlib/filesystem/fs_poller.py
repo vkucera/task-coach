@@ -17,14 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import os, time, threading
+from taskcoachlib.filesystem import base
 
-
-class FilesystemPollerNotifier(threading.Thread):
+class FilesystemPollerNotifier(base.NotifierBase, threading.Thread):
     def __init__(self):
         super(FilesystemPollerNotifier, self).__init__()
 
-        self.filename = None
-        self.stamp = None
         self.lock = threading.RLock()
         self.cancelled = False
         self.evt = threading.Event()
@@ -35,11 +33,7 @@ class FilesystemPollerNotifier(threading.Thread):
     def setFilename(self, filename):
         self.lock.acquire()
         try:
-            self.filename = filename
-            if filename and os.path.exists(filename):
-                self.stamp = os.stat(filename).st_mtime
-            else:
-                self.stamp = None
+            super(FilesystemPollerNotifier, self).setFilename(filename)
         finally:
             self.lock.release()
 
@@ -67,13 +61,3 @@ class FilesystemPollerNotifier(threading.Thread):
 
     def onFileChanged(self):
         raise NotImplementedError
-
-    def saved(self):
-        self.lock.acquire()
-        try:
-            if self.filename and os.path.exists(self.filename):
-                self.stamp = os.stat(self.filename).st_mtime
-            else:
-                self.stamp = None
-        finally:
-            self.lock.release()

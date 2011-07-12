@@ -20,6 +20,7 @@ from win32file import *
 from win32con import *
 from win32event import *
 import os, threading
+from taskcoachlib.filesystem import base
 
 
 class DirectoryWatcher(object):
@@ -67,13 +68,10 @@ class DirectoryWatcher(object):
         CloseHandle(self.dirHandle)
 
 
-class FilesystemNotifier(object):
+class FilesystemNotifier(base.NotifierBase):
     def __init__(self):
         super(FilesystemNotifier, self).__init__()
 
-        self.filename = None
-        self.path = None
-        self.name = None
         self.watcher = None
         self.thread = None
         self.lock = threading.Lock()
@@ -86,17 +84,12 @@ class FilesystemNotifier(object):
                 self.thread.join()
                 self.watcher = None
                 self.thread = None
-            if filename:
-                self.filename = os.path.normpath(os.path.abspath(filename))
-                self.path, self.name = os.path.split(self.filename)
+            super(FilesystemNotifier, self).setFilename(filename)
+            if self.filename:
                 self.watcher = DirectoryWatcher(self.path)
                 self.thread = threading.Thread(target=self._run)
                 self.thread.setDaemon(True)
                 self.thread.start()
-            else:
-                self.filename = None
-                self.path = None
-                self.name = None
         finally:
             self.lock.release()
 
@@ -114,14 +107,11 @@ class FilesystemNotifier(object):
     def onFileChanged(self):
         raise NotImplementedError
 
-    def saved(self):
-        pass
-
     def _run(self):
         while True:
             self.lock.acquire()
             try:
-                watcher, myname = self.watcher, self.name
+                watcher, myname = self.watcher, self.filename
             finally:
                 self.lock.release()
 
@@ -130,30 +120,8 @@ class FilesystemNotifier(object):
                 if changes is None:
                     return
                 for change, name in changes:
-                    if name == myname:
-                        self.onFileChanged()
-                        break
-
-
-if __name__ == '__main__':
-    watcher = Watcher('.')
-    def loop():
-        while True:
-            changes = watcher.wait()
-            if changes is None:
-                break
-            for change, name in changes:
-                print '%s "%s"' % ({watcher.ADDED: 'ADD',
-                                    watcher.MODIFIED: 'CHANGE',
-                                    watcher.REMOVED: 'REMOVE',
-                                    watcher.RENAMED_OLD: 'RENAME',
-                                    watcher.RENAMED_NEW: 'RENAMED'}[change], name)
-
-    import threading
-    thr = threading.Thread(target=loop)
-    thr.start()
-
-    raw_input('...')
-
-    watcher.stop()
-    thr.join()
+                    if name == os.path.split(myname)[-1]:
+                        if self._check(myname):
+                            self.stamp = os.stat(myname).st_mtime
+                            self.onFileChanged()
+                            break
