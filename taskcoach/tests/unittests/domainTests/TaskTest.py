@@ -1900,6 +1900,46 @@ class TaskReminderTestCase(TaskTestCase, CommonTaskTestsMixin):
         self.task.setReminder()
         self.assertReminder(None)
         
+    def testSnoozeReminder(self):
+        snoozePeriod = date.TimeDelta(hours=1)
+        now = date.Now()
+        self.task.snoozeReminder(snoozePeriod, now=lambda: now)
+        self.assertReminder(now + snoozePeriod)
+
+    def testSnoozeReminderTwice(self):        
+        snoozePeriod = date.TimeDelta(hours=1)
+        now = date.Now()
+        self.task.snoozeReminder(snoozePeriod, now=lambda: now)
+        self.task.snoozeReminder(snoozePeriod, now=lambda: now+snoozePeriod)
+        self.assertReminder(now + 2*snoozePeriod)
+
+    def testSnoozeWhenReminderNotSet(self):
+        self.task.setReminder()
+        snoozePeriod = date.TimeDelta(hours=1)
+        now = date.Now()
+        self.task.snoozeReminder(snoozePeriod, now=lambda: now)
+        self.assertReminder(now + snoozePeriod)
+        
+    def testSnoozeWithZeroTimeDelta(self):
+        self.task.snoozeReminder(date.TimeDelta())
+        self.assertReminder(None)
+        
+    def testOriginalReminder(self):
+        self.assertEqual(self.initialReminder(), self.task.reminder(includeSnooze=False))
+        
+    def testOriginalReminderAfterSnooze(self):
+        self.task.snoozeReminder(date.TimeDelta(hours=1))
+        self.assertEqual(self.initialReminder(), self.task.reminder(includeSnooze=False))
+        
+    def testOriginalReminderAfterTwoSnoozes(self):
+        self.task.snoozeReminder(date.TimeDelta(hours=1))
+        self.task.snoozeReminder(date.TimeDelta(hours=1))
+        self.assertEqual(self.initialReminder(), self.task.reminder(includeSnooze=False))
+        
+    def testOriginalReminderAfterCancel(self):
+        self.task.setReminder(None)
+        self.assertEqual(None, self.task.reminder(includeSnooze=False))
+        
     def testCancelReminderWithMaxDateTime(self):
         self.task.setReminder(date.DateTime.max)
         self.assertReminder(None)

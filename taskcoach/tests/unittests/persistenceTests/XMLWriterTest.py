@@ -263,6 +263,14 @@ class XMLWriterTest(test.TestCase):
     def testReminder(self):
         self.task.setReminder(date.DateTime(2005, 5, 7, 13, 15, 10))
         self.expectInXML('reminder="%s"'%str(self.task.reminder()))
+        self.expectNotInXML('reminderBeforeSnooze')
+        
+    def testSnoozedReminder(self):
+        now = date.Now()
+        self.task.setReminder(now + date.TimeDelta(seconds=30))
+        self.task.snoozeReminder(date.TimeDelta(seconds=120), now=lambda: now)
+        self.expectInXML('reminder="%s"'%str(self.task.reminder()))
+        self.expectInXML('reminderBeforeSnooze="%s"'%str(self.task.reminder(includeSnooze=False)))
         
     def testMarkCompletedWhenAllChildrenAreCompletedSetting_None(self):
         self.expectNotInXML('shouldMarkCompletedWhenAllChildrenCompleted')

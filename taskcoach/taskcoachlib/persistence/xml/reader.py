@@ -224,6 +224,7 @@ class XMLReader(object):
             hourlyFee=float(taskNode.attrib.get('hourlyFee', '0')),
             fixedFee=float(taskNode.attrib.get('fixedFee', '0')),
             reminder=self._parseDateTime(taskNode.attrib.get('reminder', '')),
+            reminderBeforeSnooze=self._parseDateTime(taskNode.attrib.get('reminderBeforeSnooze', '')),
             # Here we just add the ids, they will be converted to object references later on:
             prerequisites=[DummyPrerequisite(id) for id in taskNode.attrib.get('prerequisites', '').split(' ') if id], 
             shouldMarkCompletedWhenAllChildrenCompleted= \

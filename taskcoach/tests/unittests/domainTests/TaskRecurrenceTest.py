@@ -98,6 +98,14 @@ class CommonRecurrenceTestsMixin(object):
         self.task.setCompletionDateTime()
         self.assertEqual(self.createRecurrence()(reminder), self.task.reminder())
         
+    def testMarkCompletedIgnoresSnoozeWhenSettingNewReminder(self):
+        now = date.Now()
+        reminder = now + date.TimeDelta(seconds=10)
+        self.task.setReminder(reminder)
+        self.task.snoozeReminder(date.TimeDelta(seconds=30), now=lambda: now)
+        self.task.setCompletionDateTime()
+        self.assertEqual(self.createRecurrence()(reminder), self.task.reminder())
+        
     def testMarkCompletedResetPercentageComplete(self):
         self.task.setPercentageComplete(50)
         self.task.setCompletionDateTime()
