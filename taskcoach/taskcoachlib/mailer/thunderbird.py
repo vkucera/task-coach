@@ -161,9 +161,18 @@ class ThunderbirdMailboxReader(object):
             base = 'mail.server.server%d' % i
             if config.has_key('%s.userName' % base):
                 if config['%s.userName' % base] == self.user and config['%s.hostname' % base] == self.server:
-                    self.filename = os.path.join(config['%s.directory' % base], *tuple(self.path))
-                    if os.path.exists(self.filename):
-                        break
+                    # First try the relative path.
+                    if config.has_key('%s.directory-rel' % base):
+                        path = config['%s.directory-rel' % base]
+                        if path.startswith('[ProfD]'):
+                            path = os.path.join(getDefaultProfileDir(), path[7:])
+                        self.filename = os.path.join(path, *tuple(self.path))
+                        if os.path.exists(self.filename):
+                            break
+                        else:
+                            self.filename = os.path.join(config['%s.directory' % base], *tuple(self.path))
+                            if os.path.exists(self.filename):
+                                break
         else:
             raise ThunderbirdError(_('Could not find directory for ID\n%s.\nPlease file a bug report.') % url)
 

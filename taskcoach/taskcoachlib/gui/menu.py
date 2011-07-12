@@ -178,7 +178,7 @@ class MainMenu(wx.MenuBar):
                     _('&View'))
         self.Append(NewMenu(mainwindow, settings, taskFile, viewerContainer), _('&New'))
         self.Append(ActionMenu(mainwindow, settings, taskFile, viewerContainer), _('&Actions'))
-        self.Append(HelpMenu(mainwindow, settings), _('&Help'))
+        self.Append(HelpMenu(mainwindow, settings, iocontroller), _('&Help'))
 
        
 class FileMenu(Menu):
@@ -539,12 +539,13 @@ class TaskPriorityMenu(Menu):
 
         
 class HelpMenu(Menu):
-    def __init__(self, mainwindow, settings):
+    def __init__(self, mainwindow, settings, iocontroller):
         super(HelpMenu, self).__init__(mainwindow)
         self.appendUICommands(
             uicommand.Help(),
             uicommand.FAQ(),
             uicommand.Tips(settings=settings),
+            uicommand.Anonymize(iocontroller=iocontroller),
             None,
             uicommand.RequestSupport(),
             uicommand.ReportBug(),

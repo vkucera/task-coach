@@ -21,11 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns, command, widgets, domain
-from taskcoachlib.domain import effort, date, category
+from taskcoachlib import patterns, command, widgets, domain, render
+from taskcoachlib.domain import effort, date
 from taskcoachlib.domain.base import filter # pylint: disable-msg=W0622
 from taskcoachlib.i18n import _
-from taskcoachlib.gui import uicommand, menu, render, dialog
+from taskcoachlib.gui import uicommand, menu, dialog
 import base, mixin, refresher
 
 

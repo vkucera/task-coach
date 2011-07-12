@@ -17,11 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import meta, patterns, command
+from taskcoachlib import meta, patterns, command, render
 from taskcoachlib.widgets import sized_controls
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import date
-from taskcoachlib.gui import render
 
 
 class ReminderDialog(sized_controls.SizedDialog):

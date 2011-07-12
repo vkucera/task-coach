@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns, command, widgets, domain
+from taskcoachlib import patterns, command, widgets, domain, render
 from taskcoachlib.domain import task, date
 from taskcoachlib.i18n import _
 from taskcoachlib.gui import uicommand, menu, render, dialog
@@ -152,7 +152,7 @@ class BaseTaskViewer(mixin.SearchableViewerMixin,
             patterns.Publisher().registerObserver(self.onAttributeChanged,
                                                   eventType=eventType)
         patterns.Publisher().registerObserver(self.atMidnight,
-            eventType='clock.midnight')
+            eventType='clock.day')
         patterns.Publisher().registerObserver(self.onWake,
             eventType='powermgt.on')
 
