@@ -1205,11 +1205,11 @@ class TwoWayModifiedTasks(BaseState):
             categories = None
         elif self.version < 5:
             subject, taskId, description, startDate, dueDate, completionDate, categories = args
-            categories = [self.categoryMap[catId] for catId in categories]
+            categories = set([self.categoryMap[catId] for catId in categories])
         else:
             (subject, taskId, description, startDate, dueDate, completionDate, reminderDateTime,
              priority, hasRecurrence, recPeriod, recRepeat, recSameWeekday, categories) = args
-            categories = [self.categoryMap[catId] for catId in categories]
+            categories = set([self.categoryMap[catId] for catId in categories])
 
             if hasRecurrence:
                 recurrence = Recurrence(unit={0: 'daily', 1: 'weekly', 2: 'monthly', 3: 'yearly'}[recPeriod],

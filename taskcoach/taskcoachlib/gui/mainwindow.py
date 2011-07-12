@@ -373,10 +373,10 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         task.setPriority(priority)
 
         if categories is not None: # Protocol v2
-            for category in task.categories():
-                task.removeCategory(category)
-                category.removeCategorizable(task)
+            for toRemove in task.categories() - categories:
+                task.removeCategory(toRemove)
+                toRemove.removeCategorizable(task)
 
-            for category in categories:
-                task.addCategory(category)
-                category.addCategorizable(task)
+            for toAdd in categories - task.categories():
+                task.addCategory(toAdd)
+                toAdd.addCategorizable(task)
