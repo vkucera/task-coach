@@ -121,7 +121,7 @@ class FilesystemNotifier(base.NotifierBase):
                     return
                 for change, name in changes:
                     if name == os.path.split(myname)[-1]:
-                        if self._check(myname):
+                        if self._check(myname) and myname:
                             self.stamp = os.stat(myname).st_mtime
                             self.onFileChanged()
                             break

@@ -156,7 +156,7 @@ class FilesystemNotifier(base.NotifierBase, threading.Thread):
                     events = self.notifier.read()
                     for _, _, _, name in events:
                         if name == os.path.split(myName)[-1]:
-                            if self._check(myName):
+                            if self._check(myName) and myName:
                                 self.stamp = os.stat(myName).st_mtime
                                 self.onFileChanged()
                                 break

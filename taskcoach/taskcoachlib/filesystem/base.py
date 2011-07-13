@@ -31,7 +31,7 @@ class NotifierBase(object):
 
     def _check(self, filename):
         return self.stamp is None or \
-               (filename is not None and \
+               (filename and \
                 os.path.exists(filename) and \
                 os.stat(filename).st_mtime > self.stamp)
 
