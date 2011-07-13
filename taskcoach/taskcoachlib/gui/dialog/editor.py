@@ -437,6 +437,17 @@ class DatesPage(Page):
                                                          initial=1, min=1)
         panelSizer.Add(self._maxRecurrenceCountEntry)
         maxPanel.SetSizerAndFit(panelSizer)
+        
+        schedulePanel = wx.Panel(self)
+        panelSizer = wx.BoxSizer(wx.HORIZONTAL)
+        label = wx.StaticText(schedulePanel, label=_('Schedule each next recurrence based on'))
+        panelSizer.Add(label, flag=wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add((3, -1))
+        self._scheduleChoice = wx.Choice(schedulePanel,
+            choices=[_('previous start and/or due date and time'),
+                     _('last completion date and time')])
+        panelSizer.Add(self._scheduleChoice, flag=wx.ALIGN_CENTER_VERTICAL)
+        schedulePanel.SetSizerAndFit(panelSizer)
                
         self._recurrenceLabel = self.label(_('Recurrence'),
                                            self._recurrenceEntry, wx.EVT_CHOICE,
@@ -446,6 +457,7 @@ class DatesPage(Page):
                                            self._maxRecurrenceCountEntry, wx.EVT_SPINCTRL)
         
         self.addEntry(self._recurrenceLabel, recurrencePanel)
+        self.addEntry(_('Schedule'), schedulePanel)
         self.addEntry(_('Maximum number\nof recurrences'), maxPanel)
         
         self.setRecurrence(self.items[0].recurrence() if len(self.items) == 1 else date.Recurrence())
@@ -464,6 +476,7 @@ class DatesPage(Page):
         event.Skip()
         recurrenceOn = event.String != _('None')
         self._maxRecurrenceCheckBox.Enable(recurrenceOn)
+        self._scheduleChoice.Enable(recurrenceOn)
         self._recurrenceFrequencyEntry.Enable(recurrenceOn)
         self._maxRecurrenceCountEntry.Enable(recurrenceOn and \
             self._maxRecurrenceCheckBox.IsChecked())
@@ -544,6 +557,7 @@ class DatesPage(Page):
             kwargs['max'] = self._maxRecurrenceCountEntry.Value
         kwargs['amount'] = self._recurrenceFrequencyEntry.Value
         kwargs['sameWeekday'] = self._recurrenceSameWeekdayCheckBox.IsChecked()
+        kwargs['recurBasedOnCompletion'] = bool(self._scheduleChoice.Selection)
         # pylint: disable-msg=E1101,W0142
         newCompletionDateTime = self._completionDateTimeEntry.get()
         for item in self.items:
@@ -565,6 +579,8 @@ class DatesPage(Page):
     def setRecurrence(self, recurrence):
         index = {'': 0, 'daily': 1, 'weekly': 2, 'monthly': 3, 'yearly': 4}[recurrence.unit]
         self._recurrenceEntry.Selection = index
+        self._scheduleChoice.Selection = 1 if recurrence.recurBasedOnCompletion else 0
+        self._scheduleChoice.Enable(bool(recurrence))
         self._maxRecurrenceCheckBox.Enable(bool(recurrence))
         self._maxRecurrenceCheckBox.SetValue(recurrence.max > 0)
         self._maxRecurrenceCountEntry.Enable(recurrence.max > 0)

@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.24', 'July 12, 2011',
+Release('1.2.24', 'July 13, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Synchronizing with an iDevice could change the whole UI font.'''),
@@ -35,6 +35,9 @@ reminder.''', '2942198'),
     featuresChanged=[
         Feature('''New "Anonymize" item in the Help menu. This saves an anonymized copy of 
 all data from a task file in order to safely attach it to a bug report.'''),
+        Feature('''Recurring tasks can recur based on the original start and due
+date (as was the only option until now) or based on the last completion date.''', 
+        'http://uservoice.com/a/d3n3g')
         ]
     ),
             

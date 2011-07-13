@@ -412,6 +412,10 @@ class XMLWriterTest(test.TestCase):
     def testRecurrenceFrequency(self):
         self.task.setRecurrence(date.Recurrence('daily', amount=2))
         self.expectInXML('amount="2"')
+        
+    def testRecurrenceBasedOnCompletion(self):
+        self.task.setRecurrence(date.Recurrence('daily', recurBasedOnCompletion=True))
+        self.expectInXML('recurBasedOnCompletion="True"')
 
     def testNoAttachments(self):
         self.expectNotInXML('attachment')

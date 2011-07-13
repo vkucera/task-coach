@@ -104,6 +104,8 @@ class XMLWriter(object):
             node.setAttribute('max', str(recurrence.max))
         if recurrence.sameWeekday:
             node.setAttribute('sameWeekday', 'True')
+        if recurrence.recurBasedOnCompletion:
+            node.setAttribute('recurBasedOnCompletion', 'True')
         return node
 
     def effortNode(self, effort):

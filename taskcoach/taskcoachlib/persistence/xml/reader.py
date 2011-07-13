@@ -253,7 +253,8 @@ class XMLReader(object):
                 amount=int(node.attrib.get('amount', '1')),
                 count=int(node.attrib.get('count', '0')),
                 max=int(node.attrib.get('max', '0')),
-                sameWeekday=self._parseBoolean(node.attrib.get('sameWeekday', 'False')))
+                sameWeekday=self._parseBoolean(node.attrib.get('sameWeekday', 'False')),
+                recurBasedOnCompletion=self._parseBoolean(node.attrib.get('recurBasedOnCompletion', 'False')))
         return kwargs
                                
     def _parseRecurrenceAttributesFromTaskNode(self, taskNode):

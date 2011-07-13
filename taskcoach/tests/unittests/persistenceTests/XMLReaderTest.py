@@ -1479,3 +1479,19 @@ class XMLReaderVersion33Test(XMLReaderTestCase):
                          tasks[0].reminder(includeSnooze=False))
         self.assertEqual(date.DateTime(2004, 1, 1, 10, 0, 0), 
                          tasks[0].reminder())
+
+    def testRecurrenceNotBasedOnCompletion(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task><recurrence unit="daily"/></task>
+        </tasks>''')
+        self.failIf(tasks[0].recurrence().recurBasedOnCompletion)
+
+    def testRecurrenceBasedOnCompletion(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task>
+                <recurrence unit="daily" recurBasedOnCompletion="True"/>
+            </task>
+        </tasks>''')
+        self.failUnless(tasks[0].recurrence().recurBasedOnCompletion)
