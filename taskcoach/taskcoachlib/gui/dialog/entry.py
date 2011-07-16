@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, locale
-from wx.lib import masked #, combotreebox
 from taskcoachlib import widgets
 from taskcoachlib.domain import date
 from taskcoachlib.thirdparty import combotreebox
@@ -131,7 +130,8 @@ class PercentageEntry(widgets.PanelWithBoxSizer):
         
     def _createSpinCtrl(self, percentage):
         entry = widgets.SpinCtrl(self, value=str(percentage),
-            initial=percentage, size=(50, -1), min=0, max=100)
+            initial=percentage, min=0, max=100,
+            size=(60 if '__WXMAC__' == wx.Platform else 50, -1))
         for eventType in wx.EVT_SPINCTRL, wx.EVT_KILL_FOCUS:
             entry.Bind(eventType, self.onSpin)
         return entry

@@ -446,6 +446,10 @@ class DatesPage(Page):
         self._scheduleChoice = wx.Choice(schedulePanel,
             choices=[_('previous start and/or due date and time'),
                      _('last completion date and time')])
+        if '__WXMAC__' == wx.Platform:
+            # On Mac OS X, the wx.Choice gets too little vertical space by default
+            size = self._scheduleChoice.GetSizeTuple()
+            self._scheduleChoice.SetMinSize((size[0], size[1]+1))
         panelSizer.Add(self._scheduleChoice, flag=wx.ALIGN_CENTER_VERTICAL)
         schedulePanel.SetSizerAndFit(panelSizer)
                
