@@ -937,9 +937,9 @@ class LockedTaskFileLockTest(TaskFileTestCase):
         self.assertEqual(1, len(self.emptyTaskFile.tasks()))
 
 
-class TaskFileMonitorTest(TaskFileTestCase):
+class TaskFileMonitorTestBase(TaskFileTestCase):
     def setUp(self):
-        super(TaskFileMonitorTest, self).setUp()
+        super(TaskFileMonitorTestBase, self).setUp()
 
         self.taskFile.saveas(self.filename)
         self.taskFile.load()
@@ -952,7 +952,7 @@ class TaskFileMonitorTest(TaskFileTestCase):
         self.otherFile.close()
         self.otherFile.stop()
         self.remove('other.tsk')
-        super(TaskFileMonitorTest, self).tearDown()
+        super(TaskFileMonitorTestBase, self).tearDown()
 
     def testTaskExistsAfterLoad(self):
         self.assertEqual(self.taskFile.monitor().getChanges(self.task), set())
@@ -1022,7 +1022,7 @@ class TaskFileMonitorTest(TaskFileTestCase):
         self.assertEqual(allChanges[self.taskFile.monitor().guid()].getChanges(item), set())
 
 
-class TaskFileMultiUserTest(test.TestCase):
+class TaskFileMultiUserTestBase(object):
     def setUp(self):
         self.createTaskFiles()
 
@@ -1055,7 +1055,6 @@ class TaskFileMultiUserTest(test.TestCase):
         self.taskFile2 = persistence.TaskFile()
      
     def tearDown(self):
-        super(TaskFileMultiUserTest, self).tearDown()
         self.taskFile1.close()
         self.taskFile1.stop()
         self.taskFile2.close()
@@ -1085,7 +1084,7 @@ class TaskFileMultiUserTest(test.TestCase):
         getattr(self.taskFile1, listName)().append(newObject)
         self.taskFile2.monitor().resetAllChanges()
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.assertEqual(len(getattr(self.taskFile2, listName)()), 2)
         self._assertIdInList(getattr(self.taskFile2, listName)().rootItems(), newObject.id())
 
@@ -1105,7 +1104,7 @@ class TaskFileMultiUserTest(test.TestCase):
         item.addChild(subItem)
         self.taskFile2.monitor().resetAllChanges()
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.assertEqual(len(getattr(self.taskFile2, listName)()), 2)
         otherItem = getattr(self.taskFile2, listName)().rootItems()[0]
         self.assertEqual(len(otherItem.children()), 1)
@@ -1127,7 +1126,7 @@ class TaskFileMultiUserTest(test.TestCase):
         getattr(self.taskFile1, listName)().append(item)
         self.taskFile2.monitor().resetAllChanges()
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.assertEqual(len(getattr(self.taskFile2, listName)()), 3)
         otherItem = self._assertIdInList(getattr(self.taskFile2, listName)().rootItems(), item.id())
         self.assertEqual(len(otherItem.children()), 1)
@@ -1150,7 +1149,7 @@ class TaskFileMultiUserTest(test.TestCase):
         item.setParent(newItem)
         self.taskFile2.monitor().resetAllChanges()
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.assertEqual(len(getattr(self.taskFile2, listName)()), 2)
         for otherItem in getattr(self.taskFile2, listName)().rootItems():
             if otherItem.id() == newItem.id():
@@ -1174,7 +1173,7 @@ class TaskFileMultiUserTest(test.TestCase):
         getattr(obj, 'set' + name[0].upper() + name[1:])(value)
         self.taskFile2.monitor().resetAllChanges()
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.assertEqual(getattr(getattr(self.taskFile2, listName)().rootItems()[0], name)(),
                          value)
 
@@ -1183,7 +1182,7 @@ class TaskFileMultiUserTest(test.TestCase):
         obj.expand()
         self.taskFile2.monitor().resetAllChanges()
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.failUnless(getattr(self.taskFile2, listName)().rootItems()[0].isExpanded())
 
     def testChangeCategoryName(self):
@@ -1258,7 +1257,7 @@ class TaskFileMultiUserTest(test.TestCase):
         getattr(obj, setName)(newValue)
         self.taskFile2.monitor().resetAllChanges()
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.assertEqual(getattr(newObj, attrName)(), newValue)
 
     def testChangeCategoryForeground(self):
@@ -1298,7 +1297,7 @@ class TaskFileMultiUserTest(test.TestCase):
         self.category.makeSubcategoriesExclusive(True)
         self.taskFile2.monitor().resetAllChanges()
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.assert_(self.taskFile2.categories().rootItems()[0].hasExclusiveSubcategories())
 
     def _testAddObjectCategory(self, listName):
@@ -1307,7 +1306,7 @@ class TaskFileMultiUserTest(test.TestCase):
         self.category.addCategorizable(obj)
         self.taskFile2.monitor().resetAllChanges()
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         newObj = getattr(self.taskFile2, listName)().rootItems()[0]
         self.assertEqual(len(newObj.categories()), 1)
         self.assertEqual(newObj.categories().pop().id(), self.category.id())
@@ -1325,7 +1324,7 @@ class TaskFileMultiUserTest(test.TestCase):
         obj.addCategory(self.category)
         self.category.addCategorizable(obj)
         self.taskFile1.save()
-        self.taskFile2.load()
+        self.taskFile2.save()
         # Load => CategoryList => addCategory()...
         self.taskFile1.monitor().resetAllChanges()
 
@@ -1336,7 +1335,7 @@ class TaskFileMultiUserTest(test.TestCase):
 
         self.taskFile1.save()
         self.taskFile2.monitor().resetAllChanges()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
 
         newObj = getattr(self.taskFile2, listName)().rootItems()[0]
         self.assertEqual(len(newObj.categories()), 1)
@@ -1353,7 +1352,7 @@ class TaskFileMultiUserTest(test.TestCase):
         getattr(self.taskFile1, listName)().remove(item)
         self.taskFile1.save()
         self.taskFile2.monitor().setChanges(item.id(), set())
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.assertEqual(len(getattr(self.taskFile1, listName)()), 0)
         self.assertEqual(len(getattr(self.taskFile2, listName)()), 0)
 
@@ -1371,7 +1370,7 @@ class TaskFileMultiUserTest(test.TestCase):
         getattr(self.taskFile1, listName)().rootItems()[0].addNote(newNote)
         noteCount = len(getattr(self.taskFile1, listName)().rootItems()[0].notes())
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.assertEqual(len(getattr(self.taskFile2, listName)().rootItems()[0].notes()), noteCount)
 
     def testAddNoteToTask(self):
@@ -1384,7 +1383,7 @@ class TaskFileMultiUserTest(test.TestCase):
         newNote = note.Note(subject='Attachment note')
         self.attachment.addNote(newNote)
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.assertEqual(len(self.taskFile2.tasks().rootItems()[0].attachments()[0].notes()), 1)
 
     def _testAddAttachmentToObject(self, listName):
@@ -1392,7 +1391,7 @@ class TaskFileMultiUserTest(test.TestCase):
         getattr(self.taskFile1, listName)().rootItems()[0].addAttachment(newAttachment)
         attachmentCount = len(getattr(self.taskFile1, listName)().rootItems()[0].attachments())
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.assertEqual(len(getattr(self.taskFile2, listName)().rootItems()[0].attachments()), attachmentCount)
 
     def testAddAttachmentToTask(self):
@@ -1415,7 +1414,7 @@ class TaskFileMultiUserTest(test.TestCase):
         getattr(self.taskFile1, listName)().rootItems()[0].removeNote(newNote)
         self.taskFile2.monitor().setChanges(newNote.id(), set())
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.assertEqual(len(getattr(self.taskFile2, listName)().rootItems()[0].notes()), noteCount)
 
     def testRemoveNoteFromTask(self):
@@ -1433,7 +1432,7 @@ class TaskFileMultiUserTest(test.TestCase):
         self.taskFile1.tasks().rootItems()[0].attachments()[0].removeNote(newNote)
         self.taskFile2.monitor().setChanges(newNote.id(), set())
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.assertEqual(len(self.taskFile2.tasks().rootItems()[0].attachments()[0].notes()), 0)
 
     def _testRemoveAttachmentFromObject(self, listName):
@@ -1447,7 +1446,7 @@ class TaskFileMultiUserTest(test.TestCase):
         getattr(self.taskFile1, listName)().rootItems()[0].removeAttachment(newAttachment)
         self.taskFile2.monitor().setChanges(newAttachment.id(), set())
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.assertEqual(len(getattr(self.taskFile2, listName)().rootItems()[0].attachments()), attachmentCount)
 
     def testRemoveAttachmentFromTask(self):
@@ -1463,21 +1462,21 @@ class TaskFileMultiUserTest(test.TestCase):
         self.taskNote.setSubject('New subject')
         self.taskFile2.monitor().resetAllChanges()
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.assertEqual(self.taskFile2.tasks().rootItems()[0].notes()[0].subject(), 'New subject')
 
     def testChangeAttachmentBelongingToTask(self):
         self.attachment.setLocation('new location')
         self.taskFile2.monitor().resetAllChanges()
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.assertEqual(self.taskFile2.tasks().rootItems()[0].attachments()[0].location(), 'new location')
 
     def testAddChildToNoteBelongingToTask(self):
         subNote = self.taskNote.newChild(subject='Child note')
         self.taskNote.addChild(subNote)
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.assertEqual(len(self.taskFile2.tasks().rootItems()[0].notes()[0].children()), 1)
 
     def testRemoveChildToNoteBelongingToTask(self):
@@ -1489,7 +1488,7 @@ class TaskFileMultiUserTest(test.TestCase):
         self.taskNote.removeChild(subNote)
         self.taskFile2.monitor().setChanges(subNote.id(), set())
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.assertEqual(len(self.taskFile2.tasks().rootItems()[0].notes()[0].children()), 0)
 
     def testAddCategorizedNoteBelongingToOtherCategory(self):
@@ -1503,7 +1502,7 @@ class TaskFileMultiUserTest(test.TestCase):
         self.taskFile2.monitor().resetAllChanges()
         self.taskFile1.save()
         try:
-            self.taskFile2.save()
+            self.doSave(self.taskFile2)
         except Exception, e:
             self.fail(str(e))
 
@@ -1511,7 +1510,7 @@ class TaskFileMultiUserTest(test.TestCase):
         newEffort = effort.Effort(self.task, date.DateTime(2011, 5, 1), date.DateTime(2011, 6, 1))
         self.task.addEffort(newEffort)
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.assertEqual(newEffort.id(), self.taskFile2.tasks().rootItems()[0].efforts()[0].id())
 
     def testRemoveEffortFromTask(self):
@@ -1522,7 +1521,7 @@ class TaskFileMultiUserTest(test.TestCase):
         self.task.removeEffort(newEffort)
         self.taskFile2.monitor().setChanges(newEffort.id(), set())
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.assertEqual(len(self.taskFile2.tasks().rootItems()[0].efforts()), 0)
 
     def testChangeEffortTask(self):
@@ -1535,7 +1534,7 @@ class TaskFileMultiUserTest(test.TestCase):
         newEffort.setTask(newTask)
         self.taskFile2.monitor().setChanges(newEffort.id(), set())
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         for theTask in self.taskFile2.tasks():
             if theTask.id() == newTask.id():
                 self.assertEqual(len(theTask.efforts()), 1)
@@ -1554,7 +1553,7 @@ class TaskFileMultiUserTest(test.TestCase):
         newEffort.setStart(newDate)
         self.taskFile2.monitor().resetAllChanges()
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.assertEqual(self.taskFile2.tasks().rootItems()[0].efforts()[0].getStart(), newDate)
 
     def testChangeEffortStop(self):
@@ -1568,18 +1567,18 @@ class TaskFileMultiUserTest(test.TestCase):
         newEffort.setStop(newDate)
         self.taskFile2.monitor().resetAllChanges()
         self.taskFile1.save()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
         self.assertEqual(self.taskFile2.tasks().rootItems()[0].efforts()[0].getStop(), newDate)
 
     def testAddPrerequisite(self):
         newTask = task.Task(subject='Prereq')
         self.taskFile1.tasks().append(newTask)
-        self.taskFile1.save()
+        self.taskFile2.save()
         self.task.addPrerequisites([newTask])
         self.taskFile2.load()
         self.taskFile1.save()
         self.taskFile2.monitor().resetAllChanges()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
 
         for tsk in self.taskFile2.tasks():
             if tsk.id() == self.task.id():
@@ -1598,7 +1597,7 @@ class TaskFileMultiUserTest(test.TestCase):
         self.task.removePrerequisites([newTask])
         self.taskFile1.save()
         self.taskFile2.monitor().resetAllChanges()
-        self.taskFile2.save()
+        self.doSave(self.taskFile2)
 
         for tsk in self.taskFile2.tasks():
             if tsk.id() == self.task.id():
@@ -1606,3 +1605,13 @@ class TaskFileMultiUserTest(test.TestCase):
                 break
         else:
             self.fail()
+
+
+class TaskFileMultiUserTestSave(TaskFileMultiUserTestBase, TaskFileTestCase):
+    def doSave(self, taskFile):
+        taskFile.save()
+
+
+class TaskFileMultiUserTestMerge(TaskFileMultiUserTestBase, TaskFileTestCase):
+    def doSave(self, taskFile):
+        taskFile.mergeDiskChanges()
