@@ -22,14 +22,6 @@ import platform, os
 from distutils.core import setup
 from taskcoachlib import meta
 
-# Import this here so that py2exe and py2app can find the _pysyncml module:
-try:
-    import taskcoachlib.syncml.core
-    executable = '/usr/bin/python2.6'
-except ImportError:
-    executable = None # No need to force a specific python version
-    print 'WARNING: SyncML is not supported on your platform.'
-
 
 def findPackages(base):
     result = [base.replace('/', '.')]
@@ -65,10 +57,6 @@ setupOptions = {
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Topic :: Office/Business']}
-
-if executable:
-    # Force a specific Python version if necessary:
-    setupOptions['options'] =  dict(build=dict(executable=executable))
 
 # Add available translations:
 languages = sorted(meta.data.languages.keys())
