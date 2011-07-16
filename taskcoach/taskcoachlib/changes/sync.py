@@ -375,12 +375,12 @@ class ChangeSynchronizer(object):
                         categoryId = changeName[15:]
                         if categoryId not in self.memMap:
                             # Mmmh, deleted...
-                            self.conflicts.append(changeName)
+                            conflicts.append(changeName)
                             self.conflictChanges.addChange(memObject, '__del' + changeName[5:])
                         else:
                             if memChanges is not None and \
                                '__del' + changeName[5:] in memChanges:
-                                self.conflicts.append(changeName)
+                                conflicts.append(changeName)
                                 self.conflictChanges.addChange(memObject, '__del' + changeName[5:])
                             else:
                                 # Aaaaah finally
@@ -392,7 +392,7 @@ class ChangeSynchronizer(object):
                         if categoryId in self.memMap:
                             if memChanges is not None and \
                                '__add' + changeName[5:] in memChanges:
-                                self.conflicts.append(changeName)
+                                conflicts.append(changeName)
                                 self.conflictChanges.addChange(memObject, '__add' + changeName[5:])
                             else:
                                 theCategory = self.memMap[categoryId]
