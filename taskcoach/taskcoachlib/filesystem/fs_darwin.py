@@ -213,8 +213,7 @@ class FilesystemNotifier(base.NotifierBase):
             self.lock.release()
 
     def _onFileChanged(self, filename):
-        if filename and os.path.exists(filename):
-            print 'CHANGED'
+        if self._check(filename):
             self.stamp = os.stat(filename).st_mtime
             self.onFileChanged()
         else:
