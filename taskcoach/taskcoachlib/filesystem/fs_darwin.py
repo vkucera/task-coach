@@ -216,8 +216,6 @@ class FilesystemNotifier(base.NotifierBase):
         if self._check(filename):
             self.stamp = os.stat(filename).st_mtime
             self.onFileChanged()
-        else:
-            print 'NO PATH'
 
     def onFileChanged(self):
         raise NotImplementedError
