@@ -154,15 +154,16 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
 
         for task in self.taskList:
             if not task.isDeleted():
-                if task.startDateTime() == date.DateTime() and not self.__showNoStartDate:
-                    continue
-
-                if task.dueDateTime() == date.DateTime() and not self.__showNoDueDate:
-                    continue
-
-                if not self.__showUnplanned:
-                    if task.startDateTime() == date.DateTime() and task.dueDateTime() == date.DateTime():
+                if task.startDateTime() == date.DateTime() or not task.completed():
+                    if task.startDateTime() == date.DateTime() and not self.__showNoStartDate:
                         continue
+
+                    if task.dueDateTime() == date.DateTime() and not self.__showNoDueDate:
+                        continue
+
+                    if not self.__showUnplanned:
+                        if task.startDateTime() == date.DateTime() and task.dueDateTime() == date.DateTime():
+                            continue
 
                 schedule = TaskSchedule(task, self.iconProvider)
                 schedules.append(schedule)
@@ -185,9 +186,6 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
         for task in args:
             doShow = True
 
-            if task.isDeleted():
-                doShow = False
-
             if task.startDateTime() == date.DateTime() and task.dueDateTime() == date.DateTime():
                 doShow = False
 
@@ -196,6 +194,13 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
 
             if task.dueDateTime() == date.DateTime() and not self.__showNoDueDate:
                 doShow = False
+
+            # Special case
+
+            if task.isDeleted():
+                doShow = False
+            elif task.startDateTime() != date.DateTime() and task.completed():
+                doShow = True
 
             if doShow:
                 if self.taskMap.has_key(task.id()):

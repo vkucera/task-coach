@@ -30,7 +30,8 @@ Release('1.2.24', 'July 15, 2011',
         Bug('''When recurring tasks with a snoozed reminder, use the original
 reminder date and time as basis for the next reminder, instead of the snoozed 
 reminder.''', '2942198'),
-        Bug('''In-place editing of reminders didn't work.''', '3361971')
+        Bug('''In-place editing of reminders didn't work.''', '3361971'),
+        Bug('''Completed tasks with a start date would not show up in the calendar.''')
         ],
     featuresChanged=[
         Feature('''New "Anonymize" item in the Help menu. This saves an anonymized copy of 
