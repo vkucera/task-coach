@@ -443,7 +443,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             self.registerObserver(self.onDueSoon, date.Clock.eventType(newDueSoonDateTime))    
         self.recomputeAppearance()
             
-   # effort related methods:
+    # effort related methods:
 
     def efforts(self, recursive=False):
         childEfforts = []
