@@ -192,10 +192,6 @@ class DistCompile(Compile):
     fileprefix = None
     target = None
 
-    def __init__(self, **kwargs):
-        self.variant = kwargs.pop('variant', None)
-        Compile.__init__(self, **kwargs)
-
     def start(self):
         if self.getProperty('release'):
             self.command = ['make', self.target or self.name]
@@ -212,8 +208,6 @@ class DistCompile(Compile):
             mt = self.filename_rx.search(line)
             if mt:
                 filename = mt.group(1).strip()
-                if self.variant is not None:
-                    filename += '_' + self.variant
                 if self.filesuffix is not None:
                     filename += self.filesuffix
                 if self.fileprefix is not None:
