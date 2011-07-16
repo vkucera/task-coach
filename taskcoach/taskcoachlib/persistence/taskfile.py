@@ -374,7 +374,6 @@ class TaskFile(patterns.Observer):
                         for devGUID, changes in self.__changes.items():
                             if devGUID != self.__monitor.guid():
                                 changes.merge(self.__monitor)
-                    self.__changes[self.__monitor.guid()] = self.__monitor
 
                     sync = ChangeSynchronizer(self.__monitor, allChanges)
 
@@ -383,6 +382,8 @@ class TaskFile(patterns.Observer):
                          (self.tasks(), task.TaskList(tasks)),
                          (self.notes(), note.NoteContainer(notes))]
                         )
+
+                    self.__changes[self.__monitor.guid()] = self.__monitor
                 finally:
                     self.__monitor.thaw()
             else:
