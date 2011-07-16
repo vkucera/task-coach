@@ -35,13 +35,13 @@ class FontColorSyncer(object):
         bgColorButton.Bind(wx.EVT_COLOURPICKER_CHANGED, self.onBgColorPicked)
         fontButton.Bind(wx.wx.EVT_FONTPICKER_CHANGED, self.onFontPicked)
         
-    def onFgColorPicked(self, event):
+    def onFgColorPicked(self, event): # pylint: disable-msg=W0613
         self._fontButton.SetColour(self._fgColorButton.GetColour())
         
-    def onBgColorPicked(self, event):
+    def onBgColorPicked(self, event): # pylint: disable-msg=W0613
         self._fontButton.SetBackgroundColour(self._bgColorButton.GetColour())
 
-    def onFontPicked(self, event):
+    def onFontPicked(self, event): # pylint: disable-msg=W0613
         fontColor = self._fontButton.GetSelectedColour() 
         if  fontColor != self._fgColorButton.GetColour() and fontColor != wx.BLACK:
             self._fgColorButton.SetColour(self._fontButton.GetSelectedColour())
@@ -121,7 +121,7 @@ class SettingsPageBase(widgets.BookPage):
             iconEntry.Append(label, bitmap, clientData=imageName)
         currentIcon = self.get(iconSection, iconSetting)
         currentSelectionIndex = imageNames.index(currentIcon)
-        iconEntry.SetSelection(currentSelectionIndex)
+        iconEntry.SetSelection(currentSelectionIndex) # pylint: disable-msg=E1101
 
         self.addEntry(text, fgColorButton, bgColorButton, fontButton, iconEntry)
         self._colorSettings.append((fgColorSection, fgColorSetting, fgColorButton))

@@ -106,20 +106,20 @@ class FilterableViewerMixin(object):
     def createToggleCategoryFilterCommands(self, categories):
         categories = list(categories)
         categories.sort(key=lambda category: category.subject())
-        commands = [uicommand.ToggleCategoryFilter(category=category) for category in categories]
-        categoriesWithChildren = [category for category in categories if category.children()]
+        commands = [uicommand.ToggleCategoryFilter(category=eachCategory) for eachCategory in categories]
+        categoriesWithChildren = [eachCategory for eachCategory in categories if eachCategory.children()]
         if categoriesWithChildren:
             commands.append(None)
-            for category in categoriesWithChildren:
-                subCommands = [_('%s (subcategories)')%category.subject()]
-                subCommands.extend(self.createToggleCategoryFilterCommands(category.children()))
+            for eachCategory in categoriesWithChildren:
+                subCommands = [_('%s (subcategories)')%eachCategory.subject()]
+                subCommands.extend(self.createToggleCategoryFilterCommands(eachCategory.children()))
                 commands.append(tuple(subCommands))
         return commands
 
 
 class FilterableViewerForCategorizablesMixin(FilterableViewerMixin):
     def createFilter(self, items):
-        items = super(FilterableViewerMixin, self).createFilter(items)
+        items = super(FilterableViewerForCategorizablesMixin, self).createFilter(items)
         filterOnlyWhenAllCategoriesMatch = self.settings.getboolean('view', 
             'categoryfiltermatchall')
         return category.filter.CategoryFilter(items, 

@@ -18,11 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # This modules works around bugs in third party modules, mostly by
 # monkey-patching so import it first
-from taskcoachlib import workarounds
-
+from taskcoachlib import workarounds # pylint: disable-msg=W0611
 
 import wx, os, locale, sys
 from taskcoachlib import patterns
+
+# pylint: disable-msg=W0404
 
         
 class wxApp(wx.App):
@@ -34,11 +35,8 @@ class wxApp(wx.App):
         if wx.Platform == '__WXMSW__':
             self.Bind(wx.EVT_QUERY_END_SESSION, self.onQueryEndSession)
         elif wx.Platform == '__WXMAC__':
-            # XXXTODO
-            pass
+            pass # TODO
         elif wx.Platform == '__WXGTK__':
-            # Seems to SIGSEGV and exit one occasion, so disabling this for now
-
             from taskcoachlib.powermgt import xsm
             class LinuxSessionMonitor(xsm.SessionMonitor):
                 def __init__(self, callback):
@@ -49,7 +47,7 @@ class wxApp(wx.App):
                     self.setProperty(xsm.SmCurrentDirectory, os.getcwd())
                     self.setProperty(xsm.SmProgram, sys.argv[0])
                     self.setProperty(xsm.SmRestartStyleHint, xsm.SmRestartNever)
-                def saveYourself(self, saveType, shutdown, interactStyle, fast):
+                def saveYourself(self, saveType, shutdown, interactStyle, fast): # pylint: disable-msg=W0613
                     if shutdown:
                         self._callback()
                     self.saveYourselfDone(True)
@@ -59,9 +57,8 @@ class wxApp(wx.App):
                     pass
                 def shutdownCancelled(self):
                     pass
-            self.sessionMonitor = LinuxSessionMonitor(self.onQueryEndSession)
+            self.sessionMonitor = LinuxSessionMonitor(self.onQueryEndSession) # pylint: disable-msg=W0201
 
-            pass
         return True
     
     def onQueryEndSession(self, event=None):
@@ -151,7 +148,7 @@ class Application(object):
         i18n.Translator(self.determineLanguage(self._options, self.settings))
         
     @staticmethod
-    def determineLanguage(options, settings, locale=locale):
+    def determineLanguage(options, settings, locale=locale): # pylint: disable-msg=W0621
         language = None
         if options: 
             # User specified language or .po file on command line
@@ -177,7 +174,7 @@ class Application(object):
         # On Jolicloud, printing crashes unless we do this:
         if '__WXGTK__' == wx.Platform:
             try:
-                import gtk
+                import gtk # pylint: disable-msg=F0401
                 gtk.remove_log_handlers()
             except ImportError:
                 pass
@@ -193,13 +190,13 @@ class Application(object):
         self.wxApp.SetVendorName(meta.author)
                 
     def registerSignalHandlers(self):
-        quit = lambda *args: self.quit()
+        quitAdapter = lambda *args: self.quit()
         if '__WXMSW__' == wx.Platform:
-            import win32api
-            win32api.SetConsoleCtrlHandler(quit, True)
+            import win32api # pylint: disable-msg=F0401
+            win32api.SetConsoleCtrlHandler(quitAdapter, True)
         else:
             import signal
-            signal.signal(signal.SIGTERM, quit)
+            signal.signal(signal.SIGTERM, quitAdapter)
             if hasattr(signal, 'SIGHUP'):
                 forcedQuit = lambda *args: self.quit(force=True)
                 signal.signal(signal.SIGHUP, forcedQuit) # pylint: disable-msg=E1101
@@ -215,7 +212,7 @@ class Application(object):
     def createTaskBarIcon(self):
         if self.canCreateTaskBarIcon():
             from taskcoachlib.gui import taskbaricon, menu
-            self.taskBarIcon = taskbaricon.TaskBarIcon(self.mainwindow, 
+            self.taskBarIcon = taskbaricon.TaskBarIcon(self.mainwindow, # pylint: disable-msg=W0201
                 self.taskFile.tasks(), self.settings)
             self.taskBarIcon.setPopupMenu(menu.TaskBarMenu(self.taskBarIcon, 
                 self.settings, self.taskFile))
@@ -234,7 +231,7 @@ class Application(object):
             
     def showTips(self):
         if self.settings.getboolean('window', 'tips'):
-            from taskcoachlib import help
+            from taskcoachlib import help # pylint: disable-msg=W0622
             help.showTips(self.mainwindow, self.settings)
 
     def warnUserThatIniFileWasNotLoaded(self):

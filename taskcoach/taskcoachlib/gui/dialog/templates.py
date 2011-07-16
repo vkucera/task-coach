@@ -64,6 +64,7 @@ class TemplatesDialog(widgets.Dialog):
         return wx.Panel(self._panel, wx.ID_ANY)
 
     def fillInterior(self):
+        # pylint: disable-msg=W0201
         self._templateList = wx.ListCtrl(self._interior, wx.ID_ANY, style=wx.LC_REPORT)
         self._templateList.InsertColumn(0, _('Template'))
         self._templateList.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnSelectionChanged)
@@ -164,24 +165,22 @@ class TemplatesDialog(widgets.Dialog):
             selection.append(idx)
         return selection
 
-    def OnSelectionChanged(self, event):
+    def OnSelectionChanged(self, event): # pylint: disable-msg=W0613
         self._changing = True
         try:
             selection = self._GetSelection()
             self._btnDelete.Enable(bool(selection))
             self._btnUp.Enable(len(selection) == 1 and selection != [0])
             self._btnDown.Enable(len(selection) == 1 and selection != [len(self._templates) - 1])
-
+            self._editPanel.Enable(len(selection) == 1)
             if len(selection) == 1:
                 task = self._templates.tasks()[selection[0]]
-                self._editPanel.Enable(True)
                 self._subjectCtrl.SetValue(task.subject())
                 self._startDateTimeCtrl.SetValue(task.startdatetmpl or u'')
                 self._dueDateTimeCtrl.SetValue(task.duedatetmpl or u'')
                 self._completionDateTimeCtrl.SetValue(task.completiondatetmpl or u'')
                 self._reminderCtrl.SetValue(task.remindertmpl or u'')
             else:
-                self._editPanel.Enable(False)
                 self._subjectCtrl.SetValue(u'')
                 self._startDateTimeCtrl.SetValue(u'')
                 self._dueDateTimeCtrl.SetValue(u'')
@@ -190,7 +189,7 @@ class TemplatesDialog(widgets.Dialog):
         finally:
             self._changing = False
 
-    def OnDelete(self, event):
+    def OnDelete(self, event): # pylint: disable-msg=W0613
         selection = self._GetSelection()
         selection.sort(lambda x, y: -cmp(x, y))
 
@@ -200,7 +199,7 @@ class TemplatesDialog(widgets.Dialog):
 
         self._Check()
 
-    def OnUp(self, event):
+    def OnUp(self, event): # pylint: disable-msg=W0613
         selection = self._GetSelection()[0]
         self._templates.swapTemplates(selection - 1, selection)
         self._templateList.SetStringItem(selection, 0, self._templates.tasks()[selection].subject())
@@ -210,7 +209,7 @@ class TemplatesDialog(widgets.Dialog):
 
         self._Check()
 
-    def OnDown(self, event):
+    def OnDown(self, event): # pylint: disable-msg=W0613
         selection = self._GetSelection()[0]
         self._templates.swapTemplates(selection, selection + 1)
         self._templateList.SetStringItem(selection, 0, self._templates.tasks()[selection].subject())
@@ -220,7 +219,7 @@ class TemplatesDialog(widgets.Dialog):
 
         self._Check()
 
-    def OnAdd(self, event):
+    def OnAdd(self, event): # pylint: disable-msg=W0613
         task = Task(subject=_('New task template'))
         self._templates.addTemplate(task)
         self._templateList.InsertStringItem(self._templateList.GetItemCount(), task.subject())

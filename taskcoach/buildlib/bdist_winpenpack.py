@@ -36,9 +36,12 @@ class bdist_winpenpack(bdist_portable_base.bdist_portable_base):
         ('date=', None, 'the release date')]
     
     def initialize_options(self):
+        # pylint: disable-msg=W0201
         self.bdist_base = 'build'
         self.dist_dir = 'dist'
         self.version = self.license = self.url = self.filename = self.date = None
+        self.bdist_base_wpp = os.path.join(self.bdist_base, 
+                                          'X-TaskCoach_%s_rev1'%self.version)
     
     def finalize_options(self):
         mandatoryOptions = [('version', 'the version of the application'),
@@ -52,8 +55,6 @@ class bdist_winpenpack(bdist_portable_base.bdist_portable_base):
                     'you must provide %s (--%s)'%(description, option)
 
     def run(self):
-        self.bdist_base_wpp = os.path.join(self.bdist_base, 
-                                          'X-TaskCoach_%s_rev1'%self.version)
         self.create_winpenpack_paths()
         self.copy_launcher()
         self.copy_readme()
@@ -65,7 +66,7 @@ class bdist_winpenpack(bdist_portable_base.bdist_portable_base):
                                ('Documents', 'TaskCoach'),
                                ('ReadMe',), 
                                ('User', 'TaskCoach')]:
-            path = os.path.join(self.bdist_base_wpp, *pathComponents)
+            path = os.path.join(self.bdist_base_wpp, *pathComponents) # pylint: disable-msg=W0142
             if not os.path.exists(path):
                 os.makedirs(path)
                     
@@ -86,7 +87,7 @@ class bdist_winpenpack(bdist_portable_base.bdist_portable_base):
     def zip(self):
         archive_filename = os.path.join(self.dist_dir, 'X-TaskCoach_%s_rev1.zip'%self.version)
         archive = zipfile.ZipFile(archive_filename, 'w', zipfile.ZIP_DEFLATED)
-        for dirpath, dirnames, filenames in os.walk(self.bdist_base_wpp):
+        for dirpath, _, filenames in os.walk(self.bdist_base_wpp):
             for filename in filenames:
                 filepath = os.path.join(dirpath, filename)
                 arcname = filepath[len(self.bdist_base_wpp):]

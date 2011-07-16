@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 '''
 In place editors for viewers.
-'''
+''' # pylint: disable-msg=W0105
 
 import wx
 from taskcoachlib.thirdparty import hypertreelist
@@ -37,8 +37,8 @@ class DescriptionCtrl(hypertreelist.EditTextCtrl):
         
         
 class PriorityCtrl(hypertreelist.EditCtrl, widgets.SpinCtrl):
-    def __init__(self, parent, id, item, column, owner, value):
-        super(PriorityCtrl, self).__init__(parent, id, item, column, owner, str(value))
+    def __init__(self, parent, wxId, item, column, owner, value):
+        super(PriorityCtrl, self).__init__(parent, wxId, item, column, owner, str(value))
         self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
         
     def OnKeyDown(self, event):
@@ -49,10 +49,10 @@ class PriorityCtrl(hypertreelist.EditCtrl, widgets.SpinCtrl):
 
 
 class Panel(wx.Panel):
-    def __init__(self, parent, id, value, *args, **kwargs):
+    def __init__(self, parent, wxId, value, *args, **kwargs): # pylint: disable-msg=W0613
         # Don't pass the value argument to the wx.Panel since it doesn't take 
         # a value argument
-        super(Panel, self).__init__(parent, id, *args, **kwargs)      
+        super(Panel, self).__init__(parent, wxId, *args, **kwargs)      
         
     def makeSizer(self, control):  
         sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -61,8 +61,8 @@ class Panel(wx.Panel):
 
 
 class BudgetCtrl(hypertreelist.EditCtrl, Panel):
-    def __init__(self, parent, id, item, column, owner, value):
-        super(BudgetCtrl, self).__init__(parent, id, item, column, owner)
+    def __init__(self, parent, wxId, item, column, owner, value):
+        super(BudgetCtrl, self).__init__(parent, wxId, item, column, owner)
         hours, minutes, seconds = value.hoursMinutesSeconds()
         # Can't inherit from TimeDeltaCtrl because we need to override GetValue,
         # so we use composition instead
@@ -74,8 +74,8 @@ class BudgetCtrl(hypertreelist.EditCtrl, Panel):
     
     
 class DateTimeCtrl(hypertreelist.EditCtrl, Panel):
-    def __init__(self, parent, id, item, column, owner, value):
-        super(DateTimeCtrl, self).__init__(parent, id, item, column, owner)
+    def __init__(self, parent, wxId, item, column, owner, value):
+        super(DateTimeCtrl, self).__init__(parent, wxId, item, column, owner)
         #starthour = settings.getint('view', 'efforthourstart')
         #endhour = settings.getint('view', 'efforthourend')
         #interval = settings.getint('view', 'effortminuteinterval')
