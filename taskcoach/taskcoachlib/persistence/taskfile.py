@@ -340,9 +340,6 @@ class TaskFile(patterns.Observer):
         self.__saving = True
         try:
             self.mergeDiskChanges()
-            for devGUID, changes in self.__changes.items():
-                if devGUID == self.__monitor.guid():
-                    changes.merge(self.__monitor)
 
             if self.__needSave or not os.path.exists(self.__filename):
                 name, fd = self._openForWrite()
@@ -372,6 +369,12 @@ class TaskFile(patterns.Observer):
                     fd.close()
 
                     self.__changes = allChanges
+
+                    if self.__saving:
+                        for devGUID, changes in self.__changes.items():
+                            if devGUID != self.__monitor.guid():
+                                changes.merge(self.__monitor)
+                    self.__changes[self.__monitor.guid()] = self.__monitor
 
                     sync = ChangeSynchronizer(self.__monitor, allChanges)
 
