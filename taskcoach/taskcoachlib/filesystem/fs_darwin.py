@@ -76,6 +76,11 @@ def EV_SET(kev, ident, filter_, flags, fflags, data, udata):
     kev.data = data
     kev.udata = udata
 
+def traceEvents(fflags):
+    names = ['NOTE_WRITE', 'NOTE_EXTEND', 'NOTE_DELETE', 'NOTE_ATTRIB', 'NOTE_LINK', 'NOTE_RENAME', 'NOTE_REVOKE']
+    return ', '.join([name for name in names if fflags & globals()[name]])
+
+
 # Higher-evel API
 
 class FileMonitor(object):
@@ -127,7 +132,7 @@ class FileMonitor(object):
                     if self.cancelled:
                         break
                     if self.state == 2:
-                        if event.ident == self.fd and event.fflags & NOTE_DELETE:
+                        if event.ident == self.fd and event.fflags & (NOTE_DELETE | NOTE_RENAME):
                             # File deleted.
                             close(self.fd)
                             self.fd = None
@@ -208,9 +213,12 @@ class FilesystemNotifier(base.NotifierBase):
             self.lock.release()
 
     def _onFileChanged(self, filename):
-        if self._check(filename):
+        if filename and os.path.exists(filename):
+            print 'CHANGED'
             self.stamp = os.stat(filename).st_mtime
             self.onFileChanged()
+        else:
+            print 'NO PATH'
 
     def onFileChanged(self):
         raise NotImplementedError
