@@ -62,8 +62,7 @@ class ChangeSynchronizer(object):
         for devGUID, changes in self._allChanges.items():
             if devGUID == self._monitor.guid():
                 self.diskChanges = changes
-            else:
-                changes.merge(self._monitor)
+                break
         self._allChanges[self._monitor.guid()] = self._monitor
 
         for memList, diskList in lists:

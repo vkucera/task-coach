@@ -533,7 +533,20 @@ class FileSave(IOCommand):
         self.iocontroller.save()
         
     def enabled(self, event):
-        return self.iocontroller.needSave() or self.iocontroller.changedOnDisk()
+        return self.iocontroller.needSave()
+
+
+class FileMergeDiskChanges(IOCommand):
+    def __init__(self, *args, **kwargs):
+        super(FileMergeDiskChanges, self).__init__(menuText=_('Merge &disk changes\tCtrl+D'),
+            helpText=help.fileMergeDiskChanges, bitmap='mergedisk', 
+            *args, **kwargs)
+
+    def doCommand(self, event):
+        self.iocontroller.mergeDiskChanges()
+
+    def enabled(self, event):
+        return self.iocontroller.changedOnDisk()
 
 
 class FileSaveAs(IOCommand):

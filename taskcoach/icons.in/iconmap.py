@@ -41,6 +41,7 @@ iconlist = [
 ('undo', 'actions', 'undo', [16, 22, 32]),
 ('redo', 'actions', 'redo', [16, 22, 32]),
 ('save', 'actions', 'filesave', [16, 22, 32]),
+('mergedisk', 'actions', 'top', [16, 22, 32]),
 ('saveas', 'actions', 'filesaveas', [16]),
 ('taskcoach', 'apps', 'korganizer_todo', [16, 22, 32, 48, 64, 128]),
 ('listview', 'actions', 'view_detailed', [16, 22, 32]),

@@ -180,6 +180,9 @@ class IOController(object):
         else:
             return False
 
+    def mergeDiskChanges(self):
+        self.__taskFile.mergeDiskChanges()
+
     def saveas(self, filename=None, showerror=wx.MessageBox, 
                fileExists=os.path.exists):
         if not filename:

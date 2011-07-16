@@ -219,7 +219,7 @@ class SavePage(SettingsPage):
         self.addBooleanSetting('file', 'autosave', 
             _('Auto save after every change'))
         self.addBooleanSetting('file', 'autoload',
-            _('Auto save when the file changes on disk'))
+            _('Auto load when the file changes on disk'))
         self.addBooleanSetting('file', 'nopoll',
              _('Smart filesystem monitoring'),
              _('Try to detect changes to the task file in real time.\nDo not check this if your task file is on a network share.\nYou must restart %s after changing this.') % meta.name)

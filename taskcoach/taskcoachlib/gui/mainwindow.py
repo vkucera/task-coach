@@ -226,7 +226,8 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         ''' UI commands to put on the toolbar of this window. ''' 
         uiCommands = [
                 uicommand.FileOpen(iocontroller=self.iocontroller), 
-                uicommand.FileSave(iocontroller=self.iocontroller), 
+                uicommand.FileSave(iocontroller=self.iocontroller),
+                uicommand.FileMergeDiskChanges(iocontroller=self.iocontroller),
                 uicommand.Print(viewer=self.viewer, settings=self.settings), 
                 None, 
                 uicommand.EditUndo(), 

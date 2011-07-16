@@ -339,6 +339,29 @@ class TaskFile(patterns.Observer):
 
         self.__saving = True
         try:
+            self.mergeDiskChanges()
+            for devGUID, changes in self.__changes.items():
+                if devGUID == self.__monitor.guid():
+                    changes.merge(self.__monitor)
+
+            if self.__needSave or not os.path.exists(self.__filename):
+                name, fd = self._openForWrite()
+                xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
+                                        self.syncMLConfig(), self.guid())
+                fd.close()
+                if os.path.exists(self.__filename): # Not using self.exists() because DummyFile.exists returns True
+                    os.remove(self.__filename)
+                if name is not None: # Unit tests (AutoSaver)
+                    os.rename(name, self.__filename)
+
+            self.__needSave = False
+        finally:
+            self.__saving = False
+            self.__notifier.saved()
+
+    def mergeDiskChanges(self):
+        self.__loading = True
+        try:
             if os.path.exists(self.__filename): # Not using self.exists() because DummyFile.exists returns True
                 # Instead of writing the content of memory, merge changes
                 # with the on-disk version and save the result.
@@ -371,21 +394,9 @@ class TaskFile(patterns.Observer):
             if name is not None: # Unit tests (AutoSaver)
                 os.rename(name, self.__filename + '.delta')
 
-            if self.__needSave or not os.path.exists(self.__filename):
-                name, fd = self._openForWrite()
-                xml.XMLWriter(fd).write(self.tasks(), self.categories(), self.notes(),
-                                        self.syncMLConfig(), self.guid())
-                fd.close()
-                if os.path.exists(self.__filename): # Not using self.exists() because DummyFile.exists returns True
-                    os.remove(self.__filename)
-                if name is not None: # Unit tests (AutoSaver)
-                    os.rename(name, self.__filename)
-
-            self.__needSave = False
             self.__changedOnDisk = False
         finally:
-            self.__saving = False
-            self.__notifier.saved()
+            self.__loading = False
 
     def saveas(self, filename):
         self.setFilename(filename)
@@ -498,5 +509,12 @@ class LockedTaskFile(TaskFile):
         self.acquire_lock(self.filename())
         try:
             return super(LockedTaskFile, self).save(**kwargs)
+        finally:
+            self.release_lock()
+
+    def mergeDiskChanges(self):
+        self.acquire_lock(self.filename())
+        try:
+            super(LockedTaskFile, self).mergeDiskChanges()
         finally:
             self.release_lock()

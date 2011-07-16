@@ -194,6 +194,7 @@ class FileMenu(Menu):
             uicommand.FileClose(iocontroller=iocontroller),
             None,
             uicommand.FileSave(iocontroller=iocontroller),
+            uicommand.FileMergeDiskChanges(iocontroller=iocontroller),
             uicommand.FileSaveAs(iocontroller=iocontroller),
             uicommand.FileSaveSelection(iocontroller=iocontroller,
                                         viewer=viewerContainer))
