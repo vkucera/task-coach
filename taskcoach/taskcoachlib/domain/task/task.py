@@ -261,10 +261,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 parent.setDueDateTime(dueDateTime, event=event)
         self.recomputeAppearance(event=event)
     
-    def onOverDue(self, event):
+    def onOverDue(self, event): # pylint: disable-msg=W0613
         self.recomputeAppearance()
         
-    def onDueSoon(self, event):
+    def onDueSoon(self, event): # pylint: disable-msg=W0613
         self.recomputeAppearance()
         
     @staticmethod
@@ -306,7 +306,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 parent.setStartDateTime(startDateTime, event=event)
         self.recomputeAppearance(event=event)
         
-    def onStarted(self, event):
+    def onStarted(self, event): # pylint: disable-msg=W0613
         self.recomputeAppearance()
         
     @staticmethod
@@ -509,6 +509,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             return
         oldEfforts = self._efforts
         self._efforts = efforts
+        # pylint: disable-msg=W0142
         self.removeEffortEvent(event, *oldEfforts)
         self.addEffortEvent(event, *efforts)
         self.timeSpentEvent(event, *(oldEfforts + efforts))
@@ -612,7 +613,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         except AttributeError:
             return self.__computeRecursiveForegroundColor()
         
-    def __computeRecursiveForegroundColor(self, *args, **kwargs):
+    def __computeRecursiveForegroundColor(self, *args, **kwargs): # pylint: disable-msg=W0613
         fgColor = super(Task, self).foregroundColor(recursive=True)
         statusColor = self.statusFgColor()
         if statusColor == wx.BLACK:
@@ -621,7 +622,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             recursiveColor = statusColor
         else:
             recursiveColor = color.ColorMixer.mix((fgColor, statusColor))
-        self.__recursiveForegroundColor = recursiveColor 
+        self.__recursiveForegroundColor = recursiveColor # pylint: disable-msg=W0201
         return recursiveColor
     
     def statusFgColor(self):
@@ -668,7 +669,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         except AttributeError:
             return self.__computeRecursiveBackgroundColor()
         
-    def __computeRecursiveBackgroundColor(self, *args, **kwargs):
+    def __computeRecursiveBackgroundColor(self, *args, **kwargs): # pylint: disable-msg=W0613
         bgColor = super(Task, self).backgroundColor(recursive=True)
         statusColor = self.statusBgColor()
         if statusColor == wx.WHITE:
@@ -677,7 +678,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             recursiveColor = statusColor
         else:
             recursiveColor = color.ColorMixer.mix((bgColor, statusColor))
-        self.__recursiveBackgroundColor = recursiveColor 
+        self.__recursiveBackgroundColor = recursiveColor # pylint: disable-msg=W0201
         return recursiveColor
     
     def statusBgColor(self):
@@ -708,7 +709,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     @classmethod
     def fontForStatus(class_, status):
-        nativeInfoString = class_.settings.get('font', '%stasks'%status)
+        nativeInfoString = class_.settings.get('font', '%stasks'%status) # pylint: disable-msg=E1101
         return wx.FontFromNativeInfoString(nativeInfoString) if nativeInfoString else None
                 
     # Icon
@@ -724,7 +725,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 myIcon = self.__computeRecursiveIcon()
         return self.pluralOrSingularIcon(myIcon)
     
-    def __computeRecursiveIcon(self, *args, **kwargs):
+    def __computeRecursiveIcon(self, *args, **kwargs): # pylint: disable-msg=W0613
+        # pylint: disable-msg=W0201
         self.__recursiveIcon = self.categoryIcon() or self.statusIcon()
         return self.__recursiveIcon
 
@@ -739,7 +741,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                 myIcon = self.__computeRecursiveSelectedIcon() 
         return self.pluralOrSingularIcon(myIcon)
         
-    def __computeRecursiveSelectedIcon(self, *args, **kwargs):
+    def __computeRecursiveSelectedIcon(self, *args, **kwargs): # pylint: disable-msg=W0613
+        # pylint: disable-msg=W0201
         self.__recursiveSelectedIcon = self.categorySelectedIcon() or self.statusIcon(selected=True)
         return self.__recursiveSelectedIcon
 
@@ -749,7 +752,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return self.iconForStatus(self.status(), selected)            
 
     def iconForStatus(self, status, selected=False):
-        iconName = self.settings.get('icon', '%stasks'%status)
+        iconName = self.settings.get('icon', '%stasks'%status) # pylint: disable-msg=E1101
         iconName = self.pluralOrSingularIcon(iconName)
         if selected and iconName.startswith('folder'):
             iconName = iconName[:-len('_icon')] + '_open_icon' 
@@ -1004,6 +1007,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if currentDueDateTime != date.DateTime():        
             basisForRecurrence = completionDateTime if recur.recurBasedOnCompletion else currentDueDateTime 
             nextDueDateTime = recur(basisForRecurrence, next=False)
+            nextDueDateTime = nextDueDateTime.replace(hour=currentDueDateTime.hour,
+                                                      minute=currentDueDateTime.minute,
+                                                      second=currentDueDateTime.second,
+                                                      microsecond=currentDueDateTime.microsecond)
             self.setDueDateTime(nextDueDateTime, event=event)
         
         currentStartDateTime = self.startDateTime()
@@ -1014,6 +1021,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             else:
                 basisForRecurrence = completionDateTime if recur.recurBasedOnCompletion else currentStartDateTime
                 nextStartDateTime = recur(basisForRecurrence, next=False)
+            nextStartDateTime = nextStartDateTime.replace(hour=currentStartDateTime.hour,
+                                                          minute=currentStartDateTime.minute,
+                                                          second=currentStartDateTime.second,
+                                                          microsecond=currentStartDateTime.microsecond)
             self.setStartDateTime(nextStartDateTime, event=event)
         
         self.setPercentageComplete(0, event=event)

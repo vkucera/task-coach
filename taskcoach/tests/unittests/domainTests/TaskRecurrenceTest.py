@@ -184,17 +184,17 @@ class TaskWithDailyRecurrenceBasedOnCompletionFixture(RecurringTaskTestCase,
     def testStartDateToday(self):
         self.task.setStartDateTime(self.now.startOfDay())
         self.task.setCompletionDateTime(self.now)
-        self.assertEqual(self.tomorrow, self.task.startDateTime())
+        self.assertEqual(self.tomorrow.startOfDay(), self.task.startDateTime())
 
     def testStartDateTomorrow(self):
-        self.task.setStartDateTime(self.tomorrow)
+        self.task.setStartDateTime(self.tomorrow.startOfDay())
         self.task.setCompletionDateTime(self.now)
-        self.assertEqual(self.tomorrow, self.task.startDateTime())
+        self.assertEqual(self.tomorrow.startOfDay(), self.task.startDateTime())
         
     def testDueDateToday(self):
         self.task.setDueDateTime(self.now.endOfDay())
         self.task.setCompletionDateTime(self.now)
-        self.assertEqual(self.tomorrow, self.task.dueDateTime())
+        self.assertEqual(self.tomorrow.endOfDay(), self.task.dueDateTime())
 
     def testDueDateYesterday(self):
         self.task.setDueDateTime(self.yesterday)
@@ -210,8 +210,8 @@ class TaskWithDailyRecurrenceBasedOnCompletionFixture(RecurringTaskTestCase,
         self.task.setStartDateTime(self.now.startOfDay())
         self.task.setDueDateTime(self.now.endOfDay())
         self.task.setCompletionDateTime(self.now)
-        self.assertAlmostEqual(self.now.toordinal(), self.task.startDateTime().toordinal())
-        self.assertAlmostEqual(self.tomorrow.toordinal(), self.task.dueDateTime().toordinal())
+        self.assertEqual(self.tomorrow.startOfDay(), self.task.startDateTime())
+        self.assertEqual(self.tomorrow.endOfDay(), self.task.dueDateTime())
 
     def testStartAndDueDateInThePast(self):
         self.task.setStartDateTime(self.now - date.TimeDelta(hours=48))
