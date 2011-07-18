@@ -21,6 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
+            
+Release('1.2.25', 'July 18, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        ]
+    ),
 
 Release('1.2.24', 'July 17, 2011',
     summary='''This is a mixed bugfix and feature release.''',
