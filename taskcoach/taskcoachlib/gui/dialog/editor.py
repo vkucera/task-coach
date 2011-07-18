@@ -314,7 +314,7 @@ class DatesPage(Page):
                     timeLeft=self._dueDateTimeEntry,
                     reminder=self._reminderDateTimeEntry,
                     recurrence=self._recurrenceEntry)
-
+    
     def onDateTimeChanged(self, event):
         ''' Called when one of the DateTimeEntries is changed by the user. 
             Update the suggested reminder if no reminder was set by the user. '''

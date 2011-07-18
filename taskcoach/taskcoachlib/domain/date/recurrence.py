@@ -26,7 +26,8 @@ import dateandtime as date
 class Recurrence(object):
     units = ('daily', 'weekly', 'monthly', 'yearly', '')
     
-    def __init__(self, unit='', amount=1, sameWeekday=False, max=0, count=0): # pylint: disable-msg=W0622
+    def __init__(self, unit='', amount=1, sameWeekday=False, max=0, count=0,
+                 recurBasedOnCompletion=False): # pylint: disable-msg=W0622
         assert unit in self.units
         assert amount >= 1
         self.unit = unit
@@ -34,6 +35,7 @@ class Recurrence(object):
         self.sameWeekday = sameWeekday
         self.max = max # Maximum number of recurrences we give out, 0 == infinite
         self.count = count # Actual number of recurrences given out so far
+        self.recurBasedOnCompletion = recurBasedOnCompletion
                 
     def __call__(self, *dateTimes, **kwargs):
         result = [self._nextDateTime(dateTime) for dateTime in dateTimes]
@@ -117,13 +119,15 @@ class Recurrence(object):
 
     def copy(self):
         return self.__class__(self.unit, self.amount, self.sameWeekday, 
-                              self.max)
+                              self.max, 
+                              recurBasedOnCompletion=self.recurBasedOnCompletion)
     
     def __eq__(self, other):
         try:
             return self.unit == other.unit and self.amount == other.amount and \
                    self.sameWeekday == other.sameWeekday and \
-                   self.max == other.max
+                   self.max == other.max and \
+                   self.recurBasedOnCompletion == other.recurBasedOnCompletion
         except AttributeError:
             return False
  

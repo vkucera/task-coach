@@ -35,9 +35,16 @@ class TemplateList(object):
                 fileList = pickle.load(file(listName, 'rb'))
             except:
                 pass
-
-        self._tasks = [(TemplateXMLReader(file(os.path.join(self._path, name), 'rU')).read(), name) \
-                       for name in fileList]
+        
+        self._tasks = []
+        for filename in fileList:
+            try:
+                fd = file(os.path.join(self._path, filename), 'rU')
+                self._tasks.append((TemplateXMLReader(fd).read(), filename))
+            except IOError:
+                pass
+            finally:
+                fd.close()
 
         self._toDelete = []
 

@@ -28,7 +28,7 @@ from taskcoachlib.gui import uicommand, menu, dialog
 import base, mixin, inplace_editor
 
 
-class BaseNoteViewer(mixin.AttachmentDropTargetMixin, 
+class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
                      mixin.SearchableViewerMixin, 
                      mixin.SortableViewerForNotesMixin,
                      mixin.AttachmentColumnMixin, 
@@ -117,7 +117,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
             note.Note.attachmentsChangedEventType(), # pylint: disable-msg=E1101
             width=self.getColumnWidth('attachments'),
             alignment=wx.LIST_FORMAT_LEFT,
-            imageIndicesCallback=self.attachmentImageIndices,
+            imageIndicesCallback=self.attachmentImageIndices, # pylint: disable-msg=E1101
             headerImageIndex=self.imageIndex['paperclip_icon'],
             renderCallback=lambda note: '')
         categoriesColumn = widgets.Column('categories', _('Categories'),
@@ -169,5 +169,5 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin,
         return command.NewSubNoteCommand
 
 
-class NoteViewer(mixin.FilterableViewerForCategorizablesMixin, BaseNoteViewer): 
+class NoteViewer(mixin.FilterableViewerForCategorizablesMixin, BaseNoteViewer): # pylint: disable-msg=W0223
     pass

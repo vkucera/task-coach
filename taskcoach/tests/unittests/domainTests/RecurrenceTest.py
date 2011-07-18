@@ -145,7 +145,6 @@ class DailyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
         now = self.recur(self.now - date.oneDay)
         self.assertEqual(self.now + date.oneDay, self.recur(now))
         
-        
     def testCompareWithBiDailyRecurrence(self):
         self.failUnless(self.recur < date.Recurrence('daily', amount=2))
         

@@ -72,8 +72,12 @@ class XMLWriter(object):
             node.setAttribute('hourlyFee', str(task.hourlyFee()))
         if task.fixedFee() != 0:
             node.setAttribute('fixedFee', str(task.fixedFee()))
-        if task.reminder() != None:
-            node.setAttribute('reminder', str(task.reminder()))
+        reminder = task.reminder() 
+        if reminder != None:
+            node.setAttribute('reminder', str(reminder))
+            reminderBeforeSnooze = task.reminder(includeSnooze=False)
+            if reminderBeforeSnooze != None and reminderBeforeSnooze < task.reminder():
+                node.setAttribute('reminderBeforeSnooze', str(reminderBeforeSnooze))
         prerequisiteIds = ' '.join([prerequisite.id() for prerequisite in \
             task.prerequisites()])
         if prerequisiteIds:            
@@ -100,6 +104,8 @@ class XMLWriter(object):
             node.setAttribute('max', str(recurrence.max))
         if recurrence.sameWeekday:
             node.setAttribute('sameWeekday', 'True')
+        if recurrence.recurBasedOnCompletion:
+            node.setAttribute('recurBasedOnCompletion', 'True')
         return node
 
     def effortNode(self, effort):

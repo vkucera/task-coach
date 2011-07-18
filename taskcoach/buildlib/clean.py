@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, os.path, fnmatch
+import os, fnmatch
 from distutils.command.clean import clean as BaseCleanCommand
 from distutils import log
 
@@ -28,6 +28,7 @@ class clean(BaseCleanCommand, object):
 
     def initialize_options(self):
         super(clean, self).initialize_options()
+        # pylint: disable-msg=W0201
         self.really_clean = False
         self.cleaning_patterns = ['*.pyc']
         self.really_clean_patterns = ['*.bak']
@@ -41,7 +42,7 @@ class clean(BaseCleanCommand, object):
         super(clean, self).run()
         if not self.verbose:
             log.info("recursively removing '" + "', '".join(self.cleaning_patterns) + "'")
-        for root, dirs, files in os.walk('.'):
+        for root, _, files in os.walk('.'):
             for pattern in self.cleaning_patterns:
                 for filename in fnmatch.filter(files, pattern):
                     filename = os.path.join(root, filename)
@@ -50,5 +51,5 @@ class clean(BaseCleanCommand, object):
                             os.unlink(filename)
                         if self.verbose:
                             log.info("removing '%s'"%filename.strip('.\\'))
-                    except:
+                    except IOError:
                         pass

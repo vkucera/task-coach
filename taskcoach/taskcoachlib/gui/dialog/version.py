@@ -24,6 +24,8 @@ from taskcoachlib.widgets import sized_controls
 
 
 class VersionDialog(sized_controls.SizedDialog):
+    title = ''
+    
     def __init__(self, *args, **kwargs):
         self.settings = kwargs.pop('settings')
         self.message = kwargs.pop('message')
@@ -41,6 +43,9 @@ class VersionDialog(sized_controls.SizedDialog):
         self.Fit()
         buttonSizer.GetAffirmativeButton().Bind(wx.EVT_BUTTON, self.onClose)
         self.Bind(wx.EVT_CLOSE, self.onClose)
+        
+    def createInterior(self, pane):
+        raise NotImplementedError
         
     def onClose(self, event):
         event.Skip()

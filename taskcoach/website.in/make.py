@@ -187,7 +187,7 @@ pages['download_for_mac'] = sep.join([download_header(platform='Mac OS X',
 
 
 debian = download_table(image='debian', 
-                        download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_py26.deb',
+                        download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1.deb',
                         package_type='Debian package (deb)',
                         platform='Debian', platform_lower='debian',
                         platform_versions_supported='Debian GNU/Linux 6.0 ("squeeze") and later',
@@ -199,7 +199,7 @@ debian = download_table(image='debian',
                         installation='double click the package to start the installer')
 
 ubuntu = download_table(image='ubuntu',
-                        download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1_py26.deb',
+                        download_url='%(dist_download_prefix)s/%(filename_lower)s_%(version)s-1.deb',
                         package_type='Debian package (deb)',
                         platform='Ubuntu', platform_lower='ubuntu',
                         platform_versions_supported='Ubuntu 10.04 LTS ("Lucid Lynx") and newer',

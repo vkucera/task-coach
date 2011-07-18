@@ -94,11 +94,6 @@ class DateTimeTest(test.TestCase):
                          date.DateTime(2000, 1, 1, 12, 0, 0).toordinal())
 
 
-class TimeTest(test.TestCase):
-    def testNow(self):
-        date.Time.now()
-
-
 class TimeDeltaTest(test.TestCase):
     def testHours(self):
         timedelta = date.TimeDelta(hours=2, minutes=15)

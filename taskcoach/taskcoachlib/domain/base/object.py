@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import time
+import uuid
 from taskcoachlib import patterns
 import attribute
 from taskcoachlib.domain.attribute import icon
@@ -144,9 +144,7 @@ class Object(SynchronizedObject):
                                 self.appearanceChangedEvent)
         self.__selectedIcon = Attribute(kwargs.pop('selectedIcon', ''), self,
                                         self.appearanceChangedEvent)
-        self.__id = kwargs.pop('id', None) or '%s:%s'%(id(self), time.time())
-        # FIXME: Not a valid XML id
-        # FIXME: When dropping support for python 2.4, use the uuid module
+        self.__id = kwargs.pop('id', None) or str(uuid.uuid1())
         super(Object, self).__init__(*args, **kwargs)
         
     def __repr__(self):
@@ -309,8 +307,8 @@ class Object(SynchronizedObject):
     def selectedIcon(self):
         return self.__selectedIcon.get()
 
-    def setSelectedIcon(self, icon, event=None):
-        self.__selectedIcon.set(icon, event=event)
+    def setSelectedIcon(self, selectedIcon, event=None):
+        self.__selectedIcon.set(selectedIcon, event=event)
     
     # Event types:
     

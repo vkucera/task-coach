@@ -20,8 +20,5 @@ import datetime
 
 
 class Time(datetime.time):
-    @classmethod
-    def now(class_):
-        d = datetime.datetime.now()
-        return class_(d.hour, d.minute, d.second, d.microsecond)
+    pass
 

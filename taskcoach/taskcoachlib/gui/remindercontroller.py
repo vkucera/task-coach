@@ -96,9 +96,8 @@ class ReminderController(object):
         
     def __snooze(self, task):
         minutesToSnooze = self.settings.getint('view', 'defaultsnoozetime')
-        newReminder = date.Now() + date.TimeDelta(minutes=minutesToSnooze) if minutesToSnooze > 0 else None
-        task.setReminder(newReminder)
-            
+        task.snoozeReminder(date.TimeDelta(minutes=minutesToSnooze))
+        
     def onCloseReminderDialog(self, event, show=True):
         event.Skip()
         dialog = event.EventObject
@@ -106,11 +105,7 @@ class ReminderController(object):
         if not dialog.ignoreSnoozeOption:
             snoozeOptions = dialog.snoozeOptions
             snoozeTimeDelta = snoozeOptions.GetClientData(snoozeOptions.Selection)
-            if snoozeTimeDelta:
-                newReminder = date.DateTime.now() + snoozeTimeDelta
-            else:
-                newReminder = None
-            task.setReminder(newReminder) # Note that this is not undoable
+            task.snoozeReminder(snoozeTimeDelta) # Note that this is not undoable
             # Undoing the snoozing makes little sense, because it would set the 
             # reminder back to its original date-time, which is now in the past.
         if dialog.openTaskAfterClose:

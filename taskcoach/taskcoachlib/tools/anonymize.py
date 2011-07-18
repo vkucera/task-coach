@@ -33,9 +33,15 @@ def _anonymize(filename):
 
         if node.tag in ['description', 'data'] and node.text:
             node.text = '\n'.join([u'X' * len(line) for line in node.text.split('\n')])
+            if node.tag == 'data':
+                node.attrib['extension'] = 'X' * len(node.attrib['extension'])
 
         if node.tag == 'property' and node.attrib.has_key('name') and node.attrib['name'] == 'username':
             node.text = 'XXX'
+
+        if node.tag == 'attachment':
+            if node.attrib.has_key('location'):
+                node.attrib['location'] = 'X' * len(node.attrib['location'])
 
     handle(root)
 

@@ -71,7 +71,7 @@ class ViewerContainerTest(test.wxTestCase):
 
     def tearDown(self):
         if '__WXMAC__' == wx.Platform:
-            self.mainwindow.OnQuit() # Stop power monitoring thread
+            self.mainWindow.OnQuit() # Stop power monitoring thread
         self.mainWindow._idleController.stop()
         super(ViewerContainerTest, self).tearDown()
 
