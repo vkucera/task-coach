@@ -21,15 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # Edit these for every release:
 
 version = '1.4.0' # Current version number of the application
-tskversion = 32 # Current version number of the task file format, changed to 32 for release 1.2.20.
-release_day = '11' # Day number of the release, 1-31, as string
+tskversion = 33 # Current version number of the task file format, changed to 33 for release 1.2.24.
+release_day = '18' # Day number of the release, 1-31, as string
 release_month = 'July' # Month of the release in plain English
 release_year = '2011' # Year of the release as string
 release_status = 'stable' # One of 'alpha', 'beta', 'stable'
 
 # No editing needed below this line for doing a release.
 
-import os, re, datetime, platform
+import re, datetime
 try:
     from taskcoachlib.meta.revision import revision # pylint: disable-msg=F0401,W0611
 except ImportError:
@@ -39,6 +39,7 @@ if revision: # Buildbot sets revision
     # Decrement version because this version isn't released yet. This
     # assumes that version components are < 100; 99 will actually mean
     # pre-major release
+    # pylint: disable-msg=W0141
     major, inter, minor = map(int, version.split('.'))
     numversion = major * 10000 + inter * 100 + minor
     numversion -= 1

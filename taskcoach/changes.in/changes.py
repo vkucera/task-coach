@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from changetypes import *
 
 releases = [
-
-Release('1.3.0', 'June 17, 2011',
+            
+Release('1.3.0', 'June 18, 2011',
     summary='''This release makes all edits done in dialogs immediate.''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -41,15 +41,29 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.24', 'July 11, 2011',
+Release('1.2.25', 'July 18, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        ]
+    ),
+
+Release('1.2.24', 'July 17, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Synchronizing with an iDevice could change the whole UI font.'''),
         Bug('''Drag and drop from Thunderbird would not work in some circumstances.'''),
+        Bug('''When recurring tasks with a snoozed reminder, use the original
+reminder date and time as basis for the next reminder, instead of the snoozed 
+reminder.''', '2942198'),
+        Bug('''In-place editing of reminders didn't work.''', '3361971'),
+        Bug('''Completed tasks with a start date would not show up in the calendar.''')
         ],
     featuresChanged=[
         Feature('''New "Anonymize" item in the Help menu. This saves an anonymized copy of 
 all data from a task file in order to safely attach it to a bug report.'''),
+        Feature('''Recurring tasks can recur based on the original start and due
+date (as was the only option until now) or based on the last completion date.''', 
+        'http://uservoice.com/a/d3n3g')
         ]
     ),
             

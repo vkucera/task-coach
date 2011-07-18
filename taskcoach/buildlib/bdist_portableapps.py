@@ -16,11 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, glob, zipfile
-from distutils.core import Command
-from distutils.file_util import copy_file
-from distutils import log, errors
+import os
+from distutils import errors
 import bdist_portable_base
+
 
 class bdist_portableapps(bdist_portable_base.bdist_portable_base):
     
@@ -37,9 +36,11 @@ class bdist_portableapps(bdist_portable_base.bdist_portable_base):
         ('filename=', None, 'filename of the application without extension'),
         ('date=', None, 'the release date')]
     
-    def initialize_options(self):
+    def initialize_options(self): 
+        # pylint: disable-msg=W0201
         self.bdist_base = 'build'
         self.dist_dir = 'dist'
+        self.bdist_base_pa = os.path.join(self.bdist_base, 'TaskCoachPortable')
         self.name = self.version = self.license = self.url = self.filename = self.date = None
     
     def finalize_options(self):
@@ -55,7 +56,6 @@ class bdist_portableapps(bdist_portable_base.bdist_portable_base):
                     'you must provide %s (--%s)'%(description, option)
 
     def run(self):
-        self.bdist_base_pa = os.path.join(self.bdist_base, 'TaskCoachPortable')
         self.create_portableapps_paths()
         self.copy_launcher()
         self.copy_appinfo()

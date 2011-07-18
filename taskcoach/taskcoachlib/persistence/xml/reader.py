@@ -232,6 +232,7 @@ class XMLReader(object):
             hourlyFee=float(taskNode.attrib.get('hourlyFee', '0')),
             fixedFee=float(taskNode.attrib.get('fixedFee', '0')),
             reminder=self._parseDateTime(taskNode.attrib.get('reminder', '')),
+            reminderBeforeSnooze=self._parseDateTime(taskNode.attrib.get('reminderBeforeSnooze', '')),
             # Here we just add the ids, they will be converted to object references later on:
             prerequisites=[DummyPrerequisite(id) for id in taskNode.attrib.get('prerequisites', '').split(' ') if id], 
             shouldMarkCompletedWhenAllChildrenCompleted= \
@@ -260,7 +261,8 @@ class XMLReader(object):
                 amount=int(node.attrib.get('amount', '1')),
                 count=int(node.attrib.get('count', '0')),
                 max=int(node.attrib.get('max', '0')),
-                sameWeekday=self._parseBoolean(node.attrib.get('sameWeekday', 'False')))
+                sameWeekday=self._parseBoolean(node.attrib.get('sameWeekday', 'False')),
+                recurBasedOnCompletion=self._parseBoolean(node.attrib.get('recurBasedOnCompletion', 'False')))
         return kwargs
                                
     def _parseRecurrenceAttributesFromTaskNode(self, taskNode):

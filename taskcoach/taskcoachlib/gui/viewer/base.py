@@ -86,8 +86,8 @@ class Viewer(wx.Panel):
         for popupMenu in self._popupMenus:
             try:
                 popupMenu.Destroy()
-            except:
-                pass # Ignore PyDeadObjectError
+            except wx.PyDeadObjectError:
+                pass
 
     @classmethod
     def selectEventType(class_):
@@ -130,7 +130,7 @@ class Viewer(wx.Panel):
     def SetFocus(self):
         try:
             self.widget.SetFocus()
-        except wx._core.PyDeadObjectError:
+        except wx.PyDeadObjectError:
             pass
             
     def createSorter(self, collection):
@@ -337,7 +337,7 @@ class Viewer(wx.Panel):
         copyCommand = uicommand.EditCopy(viewer=self)
         pasteCommand = uicommand.EditPaste()
         editCommand = uicommand.Edit(viewer=self)
-        self.deleteUICommand = uicommand.Delete(viewer=self) # For unittests
+        self.deleteUICommand = uicommand.Delete(viewer=self) # For unittests pylint: disable-msg=W0201
         cutCommand.bind(self, wx.ID_CUT)
         copyCommand.bind(self, wx.ID_COPY)
         pasteCommand.bind(self, wx.ID_PASTE)

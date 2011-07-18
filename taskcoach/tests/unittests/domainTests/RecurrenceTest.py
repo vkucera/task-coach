@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib.domain import date
-from tests import test
+import test
 
 
 class CommonRecurrenceTestsMixin(object):
@@ -144,7 +144,6 @@ class DailyRecurrenceTest(test.TestCase, CommonRecurrenceTestsMixin,
     def testNextDateTwice(self):
         now = self.recur(self.now - date.oneDay)
         self.assertEqual(self.now + date.oneDay, self.recur(now))
-        
         
     def testCompareWithBiDailyRecurrence(self):
         self.failUnless(self.recur < date.Recurrence('daily', amount=2))

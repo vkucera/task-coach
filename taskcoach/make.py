@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib import meta
-import sys, os, glob, wx, platform
+import sys, os, glob, wx
 from setup import setupOptions
 from buildlib import (clean, bdist_rpm_fedora, bdist_rpm_opensuse,
     bdist_deb, bdist_winpenpack, bdist_portableapps)

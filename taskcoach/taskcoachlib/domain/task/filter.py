@@ -90,6 +90,8 @@ class ViewFilter(base.Filter):
             result = False # Hide future task 
         return result
     
+    # pylint: disable-msg=W0621
+    
     def __taskDueLaterThanDueDateTimeFilter(self, task):
         if self.__dueDateTimeFilter:
             return task.dueDateTime(recursive=self.treeMode()) > self.__dueDateTimeFilter()
@@ -108,6 +110,8 @@ class ViewFilter(base.Filter):
         else:
             return False
 
+    # pylint: disable-msg=W0108
+    
     endOfPeriodFilterFactory = dict(Today=lambda: date.Now().endOfDay(), 
                                     Tomorrow=lambda: date.Now().endOfTomorrow(),
                                     Workweek=lambda: date.Now().endOfWorkWeek(), 

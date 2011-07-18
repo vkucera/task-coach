@@ -18,12 +18,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+''' This module provides classes that implement refreshing strategies for
+    viewers. ''' # pylint: disable-msg=W0105
+
 import wx
 from taskcoachlib.domain import date
-from taskcoachlib import patterns
 
-''' This module provides classes that implement refreshing strategies for
-    viewers. '''
 
 class MinuteRefresher(date.ClockMinuteObserver):
     ''' This class can be used by viewers to refresh themselves every minute
@@ -37,7 +37,7 @@ class MinuteRefresher(date.ClockMinuteObserver):
     def onEveryMinute(self, event): # pylint: disable-msg=W0221,W0613
         try:
             self.__viewer.refresh()
-        except wx._core.PyDeadObjectError:
+        except wx.PyDeadObjectError:
             # Our viewer was deleted, stop observation
             self.removeInstance()
 
@@ -47,6 +47,7 @@ class SecondRefresher(date.ClockSecondObserver):
         whenever items (tasks, efforts) are being tracked. '''
         
     def __init__(self, viewer, trackStartEventType, trackStopEventType):
+        super(SecondRefresher, self).__init__()
         self.__viewer = viewer
         self.__presentation = viewer.presentation()
         self.__trackedItems = set()
@@ -83,8 +84,8 @@ class SecondRefresher(date.ClockSecondObserver):
         
     def refreshItems(self, items):
         try:
-            self.__viewer.refreshItems(*items)
-        except wx._core.PyDeadObjectError:
+            self.__viewer.refreshItems(*items) # pylint: disable-msg=W0142
+        except wx.PyDeadObjectError:
             # Our viewer was deleted, stop observation
             self.removeInstance()
 

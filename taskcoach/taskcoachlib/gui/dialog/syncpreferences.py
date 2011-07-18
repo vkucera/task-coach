@@ -129,6 +129,7 @@ class SyncMLPreferences(widgets.NotebookDialog):
         self._interior.SetMinSize((450, 200))
         kwargs = dict(parent=self._interior, columns=3,
                       iocontroller=self.iocontroller)
+        # pylint: disable-msg=W0142
         pages = [(SyncMLAccessPage(growableColumn=1, **kwargs), _('Access'), 'earth_blue_icon'),
                  (SyncMLTaskPage(**kwargs), _('Tasks'), 'taskcoach'),
                  (SyncMLNotePage(**kwargs), _('Notes'), 'note_icon')]

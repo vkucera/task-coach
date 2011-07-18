@@ -150,7 +150,8 @@ class PercentageEntry(widgets.PanelWithBoxSizer):
         
     def _createSpinCtrl(self, percentage):
         entry = widgets.SpinCtrl(self, value=str(percentage),
-            initial=percentage, size=(50, -1), min=0, max=100)
+            initial=percentage, min=0, max=100,
+            size=(60 if '__WXMAC__' == wx.Platform else 50, -1))
         for eventType in wx.EVT_SPINCTRL, wx.EVT_KILL_FOCUS:
             entry.Bind(eventType, self.onSpin)
         return entry
@@ -445,8 +446,26 @@ class RecurrenceEntry(wx.Panel):
                        flag=wx.ALIGN_CENTER_VERTICAL)
         maxPanel.SetSizerAndFit(panelSizer)
         
+        schedulePanel = wx.Panel(self)
+        panelSizer = wx.BoxSizer(wx.HORIZONTAL)
+        label = wx.StaticText(schedulePanel, label=_('Schedule each next recurrence based on'))
+        panelSizer.Add(label, flag=wx.ALIGN_CENTER_VERTICAL)
+        panelSizer.Add((3, -1))
+        self._scheduleChoice = wx.Choice(schedulePanel,
+            choices=[_('previous start and/or due date and time'),
+                     _('last completion date and time')])
+        self._scheduleChoice.Bind(wx.EVT_CHOICE, self.onRecurrenceEdited)
+        if '__WXMAC__' == wx.Platform:
+            # On Mac OS X, the wx.Choice gets too little vertical space by default
+            size = self._scheduleChoice.GetSizeTuple()
+            self._scheduleChoice.SetMinSize((size[0], size[1]+1))
+        panelSizer.Add(self._scheduleChoice, flag=wx.ALIGN_CENTER_VERTICAL)
+        schedulePanel.SetSizerAndFit(panelSizer)
+        
         panelSizer = wx.BoxSizer(wx.VERTICAL)
         panelSizer.Add(recurrenceFrequencyPanel)
+        panelSizer.Add(self.verticalSpace)
+        panelSizer.Add(schedulePanel)
         panelSizer.Add(self.verticalSpace)
         panelSizer.Add(maxPanel)
         self.SetSizerAndFit(panelSizer)
@@ -489,6 +508,8 @@ class RecurrenceEntry(wx.Panel):
         self._recurrenceFrequencyEntry.Value = recurrence.amount
         self._recurrenceSameWeekdayCheckBox.Value = recurrence.sameWeekday \
             if recurrence.unit in ('monthly', 'yearly') else False
+        self._scheduleChoice.Selection = 1 if recurrence.recurBasedOnCompletion else 0
+        self._scheduleChoice.Enable(bool(recurrence))
         self.updateRecurrenceLabel()
 
     def GetValue(self):
@@ -498,4 +519,5 @@ class RecurrenceEntry(wx.Panel):
             kwargs['max'] = self._maxRecurrenceCountEntry.Value
         kwargs['amount'] = self._recurrenceFrequencyEntry.Value
         kwargs['sameWeekday'] = self._recurrenceSameWeekdayCheckBox.IsChecked()
+        kwargs['recurBasedOnCompletion'] = bool(self._scheduleChoice.Selection)
         return date.Recurrence(**kwargs) # pylint: disable-msg=W0142

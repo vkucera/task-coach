@@ -53,8 +53,9 @@ class XMLTemplateReaderTestCase(test.TestCase):
 
     def testConvertTodayAndPositiveTimeDelta(self):
         now = date.Now()
-        minutesToday = (now - now.startOfDay()).minutes()
-        expectedMinutes = date.TimeDelta(17).minutes() - minutesToday
+        expectedDate = date.Today() + date.TimeDelta(17)
+        expectedDateTime = date.DateTime(expectedDate.year, expectedDate.month, expectedDate.day)
+        expectedMinutes = (expectedDateTime - now).minutes() 
         self.assertEqual('%d minutes from now'%expectedMinutes, 
                          self.convert('Today() + TimeDelta(17)', lambda: now))
 
@@ -1456,3 +1457,43 @@ class XMLReaderVersion31Test(XMLReaderTestCase):
         </tasks>\n''')
         self.assertDepends(tasks['1.1'], tasks['1.2'])
 
+
+class XMLReaderVersion33Test(XMLReaderTestCase):
+    tskversion = 33 # New in release 1.2.24.
+    
+    def testReminderBeforeSnooze(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task reminder="2004-01-01 10:00:00" 
+                  reminderBeforeSnooze="2004-01-01 9:00:00"/>
+        </tasks>\n''')
+        self.assertEqual(date.DateTime(2004, 1, 1, 9, 0, 0), 
+                         tasks[0].reminder(includeSnooze=False))
+        self.assertEqual(date.DateTime(2004, 1, 1, 10, 0, 0), 
+                         tasks[0].reminder())
+
+    def testReminder(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task reminder="2004-01-01 10:00:00"/>
+        </tasks>\n''')
+        self.assertEqual(date.DateTime(2004, 1, 1, 10, 0, 0), 
+                         tasks[0].reminder(includeSnooze=False))
+        self.assertEqual(date.DateTime(2004, 1, 1, 10, 0, 0), 
+                         tasks[0].reminder())
+
+    def testRecurrenceNotBasedOnCompletion(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task><recurrence unit="daily"/></task>
+        </tasks>''')
+        self.failIf(tasks[0].recurrence().recurBasedOnCompletion)
+
+    def testRecurrenceBasedOnCompletion(self):
+        tasks = self.writeAndReadTasks('''
+        <tasks>
+            <task>
+                <recurrence unit="daily" recurBasedOnCompletion="True"/>
+            </task>
+        </tasks>''')
+        self.failUnless(tasks[0].recurrence().recurBasedOnCompletion)

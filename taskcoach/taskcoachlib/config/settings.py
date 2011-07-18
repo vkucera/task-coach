@@ -23,14 +23,14 @@ import defaults
 
 
 class UnicodeAwareConfigParser(ConfigParser.SafeConfigParser):
-    def set(self, section, setting, value):
+    def set(self, section, setting, value): # pylint: disable-msg=W0222
         if type(value) == type(u''):
             value = value.encode('utf-8')
         ConfigParser.SafeConfigParser.set(self, section, setting, value)
 
     def get(self, section, setting): # pylint: disable-msg=W0221
         value = ConfigParser.SafeConfigParser.get(self, section, setting)
-        return value.decode('utf-8')
+        return value.decode('utf-8') # pylint: disable-msg=E1103
     
 
 class Settings(patterns.Observer, UnicodeAwareConfigParser):
@@ -59,11 +59,7 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
             # should be quiet (i.e. we are probably in test mode):
             self.__beQuiet()
         self.registerObserver(self.onSettingsFileLocationChanged, 
-                              'file.saveinifileinprogramdir') 
-        # FIXME: add some machinery to check whether values read in from
-        # the TaskCoach.ini file are allowed values. We need some way to 
-        # specify allowed values. That's easy for boolean and enumeration types,
-        # but more difficult for e.g. color values and coordinates.
+                              'file.saveinifileinprogramdir')
         
     def onSettingsFileLocationChanged(self, event):
         saveIniFileInProgramDir = event.value() == 'True'
@@ -105,7 +101,7 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
                 # section exists, the setting should exist also. But, changes 
                 # in the .ini format may cause sections not to have all 
                 # settings yet.
-                import re
+                import re # pylint: disable-msg=W0404
                 sectionName, sectionNumber = re.match('(\w+)(\d+)', 
                                                       section).groups()
                 sectionNumber = int(sectionNumber) 
@@ -194,7 +190,7 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
         stringValue = self.get(section, option)
         try:
             return evaluate(stringValue)
-        except Exception, exceptionMessage:
+        except Exception, exceptionMessage: # pylint: disable-msg=W0703
             message = '\n'.join([ \
                 _('Error while reading the %s-%s setting from %s.ini.')%(section, option, meta.filename),
                 _('The value is: %s')%stringValue,
@@ -230,7 +226,7 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
         else:
             return self.generatedIniFilename(forceProgramDir) 
     
-    def path(self, forceProgramDir=False, environ=os.environ):
+    def path(self, forceProgramDir=False, environ=os.environ): # pylint: disable-msg=W0102
         if self.__iniFileSpecifiedOnCommandLine:
             return self.pathToIniFileSpecifiedOnCommandLine()
         elif forceProgramDir or self.getboolean('file', 
@@ -264,7 +260,7 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
             # exists.
 
             if os.path.exists(path + '.lnk'):
-                from win32com.client import Dispatch
+                from win32com.client import Dispatch # pylint: disable-msg=F0401
 
                 shell = Dispatch('WScript.Shell')
                 shortcut = shell.CreateShortcut(path + '.lnk')

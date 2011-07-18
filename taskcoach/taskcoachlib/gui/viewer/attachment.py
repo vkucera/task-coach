@@ -28,10 +28,11 @@ from taskcoachlib.gui import uicommand, menu, dialog
 import base, mixin
 
 
-class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.SortableViewerWithColumns,
+class AttachmentViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
+                       base.SortableViewerWithColumns,
                        mixin.SortableViewerForAttachmentsMixin, 
                        mixin.SearchableViewerMixin, mixin.NoteColumnMixin,
-                       base.ListViewer):
+                       base.ListViewer): 
     SorterClass = attachment.AttachmentSorter
     viewerImages = base.ListViewer.viewerImages + ['fileopen', 'fileopen_red']
 
@@ -48,7 +49,7 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.SortableViewerWithC
     
     def curselectionIsInstanceOf(self, class_):
         return class_ == attachment.Attachment
-    
+
     def createWidget(self):
         imageList = self.createImageList()
         itemPopupMenu = menu.AttachmentPopupMenu(self.parent, self.settings,
@@ -97,7 +98,7 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.SortableViewerWithC
                                attachment.MailAttachment.notesChangedEventType(), # pylint: disable-msg=E1101
                                width=self.getColumnWidth('notes'),
                                alignment=wx.LIST_FORMAT_LEFT,
-                               imageIndicesCallback=self.noteImageIndices,
+                               imageIndicesCallback=self.noteImageIndices, # pylint: disable-msg=E1101
                                headerImageIndex=self.imageIndex['note_icon'],
                                renderCallback=lambda item: '',
                                resizeCallback=self.onResizeColumn),
@@ -147,5 +148,11 @@ class AttachmentViewer(mixin.AttachmentDropTargetMixin, base.SortableViewerWithC
     def newItemCommandClass(self):
         return command.NewAttachmentCommand
     
+    def editItemCommandClass(self):
+        return command.EditAttachmentCommand
+    
+    def newSubItemCommandClass(self):
+        return None
+
     def deleteItemCommandClass(self):
         return command.DeleteAttachmentCommand

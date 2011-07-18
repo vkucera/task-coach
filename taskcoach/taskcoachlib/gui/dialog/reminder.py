@@ -66,6 +66,7 @@ class ReminderDialog(sized_controls.SizedDialog):
         snoozeTimesUserWantsToSee = [0] + self.settings.getlist('view', 'snoozetimes')
         lastSnoozeTime = self.settings.getint('view', 'defaultsnoozetime')
         selectionIndex = 1 # Use the 1st non-zero option if we don't find the last snooze time
+        # pylint: disable-msg=E1101
         for minutes, label in date.snoozeChoices:
             if minutes in snoozeTimesUserWantsToSee:
                 self.snoozeOptions.Append(label, date.TimeDelta(minutes=minutes))
@@ -119,6 +120,7 @@ class ReminderDialog(sized_controls.SizedDialog):
     
     def onClose(self, event):
         event.Skip()
+        # pylint: disable-msg=E1101
         selection = self.snoozeOptions.Selection
         minutes = self.snoozeOptions.GetClientData(selection).minutes()
         self.settings.set('view', 'defaultsnoozetime', str(int(minutes)))

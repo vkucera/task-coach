@@ -498,7 +498,7 @@ class EditReminderDateTimeCommand(EditDateTimeCommand):
     @staticmethod
     def setDateTime(item, dateTime, event):
         item.setReminder(dateTime, event=event)
-        
+
         
 class EditRecurrenceCommand(base.BaseCommand):
     plural_name = _('Change recurrences')
