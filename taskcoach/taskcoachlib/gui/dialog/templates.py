@@ -96,11 +96,11 @@ class TemplatesDialog(widgets.Dialog):
         self._btnAdd.Bind(wx.EVT_BUTTON, self.OnAdd)
 
         self._editPanel = wx.Panel(self._interior)
-        self._subjectCtrl = wx.TextCtrl(self._editPanel, wx.ID_ANY, u'')
-        self._startDateTimeCtrl = TimeExpressionEntry(self._editPanel, wx.ID_ANY, u'')
-        self._dueDateTimeCtrl = TimeExpressionEntry(self._editPanel, wx.ID_ANY, u'')
-        self._completionDateTimeCtrl = TimeExpressionEntry(self._editPanel, wx.ID_ANY, u'')
-        self._reminderCtrl = TimeExpressionEntry(self._editPanel, wx.ID_ANY, u'')
+        self._subjectCtrl = wx.TextCtrl(self._editPanel)
+        self._startDateTimeCtrl = TimeExpressionEntry(self._editPanel)
+        self._dueDateTimeCtrl = TimeExpressionEntry(self._editPanel)
+        self._completionDateTimeCtrl = TimeExpressionEntry(self._editPanel)
+        self._reminderCtrl = TimeExpressionEntry(self._editPanel)
         self._editPanel.Enable(False)
 
         hsz = wx.BoxSizer(wx.HORIZONTAL)
@@ -111,17 +111,19 @@ class TemplatesDialog(widgets.Dialog):
         vsz.Add(self._btnDown, 0, wx.ALL|wx.ALIGN_CENTRE, 3)
         vsz.Add(self._btnAdd, 0, wx.ALL|wx.ALIGN_CENTRE, 3)
         hsz.Add(vsz, 0, wx.ALL, 3)
-        gsz = wx.FlexGridSizer(0, 2)
-        gsz.Add(wx.StaticText(self._editPanel, wx.ID_ANY, _('Subject')))
-        gsz.Add(self._subjectCtrl, 1, wx.EXPAND)
-        gsz.Add(wx.StaticText(self._editPanel, wx.ID_ANY, _('Start date')))
-        gsz.Add(self._startDateTimeCtrl, 1, wx.EXPAND)
-        gsz.Add(wx.StaticText(self._editPanel, wx.ID_ANY, _('Due date')))
-        gsz.Add(self._dueDateTimeCtrl, 1, wx.EXPAND)
-        gsz.Add(wx.StaticText(self._editPanel, wx.ID_ANY, _('Completion date')))
-        gsz.Add(self._completionDateTimeCtrl, 1, wx.EXPAND)
-        gsz.Add(wx.StaticText(self._editPanel, wx.ID_ANY, _('Reminder')))
-        gsz.Add(self._reminderCtrl, 1, wx.EXPAND)
+        gsz = wx.FlexGridSizer(0, 2, 2, 2)
+        ctrlOptions = dict(proportion=1, flag=wx.EXPAND|wx.ALIGN_CENTRE_VERTICAL)
+        textOptions = dict(flag=wx.ALIGN_CENTRE_VERTICAL)
+        gsz.Add(wx.StaticText(self._editPanel, label=_('Subject')), **textOptions)
+        gsz.Add(self._subjectCtrl, **ctrlOptions)
+        gsz.Add(wx.StaticText(self._editPanel, label=_('Start date')), **textOptions)
+        gsz.Add(self._startDateTimeCtrl, **ctrlOptions)
+        gsz.Add(wx.StaticText(self._editPanel, label=_('Due date')), **textOptions)
+        gsz.Add(self._dueDateTimeCtrl, **ctrlOptions)
+        gsz.Add(wx.StaticText(self._editPanel, label=_('Completion date')), **textOptions)
+        gsz.Add(self._completionDateTimeCtrl, **ctrlOptions)
+        gsz.Add(wx.StaticText(self._editPanel, label=_('Reminder')), **textOptions)
+        gsz.Add(self._reminderCtrl, **ctrlOptions)
         gsz.AddGrowableCol(1)
         self._editPanel.SetSizer(gsz)
         sz = wx.BoxSizer(wx.VERTICAL)
@@ -129,9 +131,9 @@ class TemplatesDialog(widgets.Dialog):
         sz.Add(self._editPanel, 0, wx.EXPAND|wx.ALL, 3)
         self._interior.SetSizer(sz)
 
-        for ctrl in [self._subjectCtrl, self._startDateTimeCtrl, self._dueDateTimeCtrl,
-                     self._completionDateTimeCtrl, self._reminderCtrl]:
-            wx.EVT_TEXT(ctrl, wx.ID_ANY, self.OnValueChanged)
+        for ctrl in (self._subjectCtrl, self._startDateTimeCtrl, self._dueDateTimeCtrl,
+                     self._completionDateTimeCtrl, self._reminderCtrl):
+            ctrl.Bind(wx.EVT_TEXT, self.OnValueChanged)
 
     def _Check(self):
         for task in self._templates.tasks():
@@ -169,11 +171,13 @@ class TemplatesDialog(widgets.Dialog):
         self._changing = True
         try:
             selection = self._GetSelection()
+            oneTemplateSelected = len(selection) == 1
             self._btnDelete.Enable(bool(selection))
-            self._btnUp.Enable(len(selection) == 1 and selection != [0])
-            self._btnDown.Enable(len(selection) == 1 and selection != [len(self._templates) - 1])
+            self._btnUp.Enable(oneTemplateSelected and selection != [0])
+            self._btnDown.Enable(oneTemplateSelected and selection != [len(self._templates) - 1])
+            self._editPanel.Enable(oneTemplateSelected)
             self._editPanel.Enable(len(selection) == 1)
-            if len(selection) == 1:
+            if oneTemplateSelected:
                 task = self._templates.tasks()[selection[0]]
                 self._subjectCtrl.SetValue(task.subject())
                 self._startDateTimeCtrl.SetValue(task.startdatetmpl or u'')
