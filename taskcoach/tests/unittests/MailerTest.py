@@ -22,8 +22,8 @@ import taskcoachlib.mailer
 
 class TestMailer(test.TestCase):        
     def testWriteMail(self):
-        def openMail(mailtoString):
+        def openURL(mailtoString):
             self.mailtoString = mailtoString # pylint: disable-msg=W0201
-        taskcoachlib.mailer.writeMail('to', 'subject', 'body', open=openMail)
+        taskcoachlib.mailer.writeMail('to', 'subject', 'body', openURL=openURL)
         self.failUnless(self.mailtoString.startswith('mailto:'))
         

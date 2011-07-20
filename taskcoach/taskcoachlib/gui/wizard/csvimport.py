@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 
-import wx, os, csv, tempfile
+import wx, csv, tempfile
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty import chardet
 from taskcoachlib import meta
@@ -121,7 +121,7 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
         wx.EVT_RADIOBUTTON(self.escapeQuote, wx.ID_ANY, self.OnOptionChanged)
         wx.EVT_TEXT(self.escapeChar, wx.ID_ANY, self.OnOptionChanged)
 
-    def OnOptionChanged(self, event):
+    def OnOptionChanged(self, event): # pylint: disable-msg=W0613
         self.escapeChar.Enable(self.escapeQuote.GetValue())
 
         if self.filename is None:

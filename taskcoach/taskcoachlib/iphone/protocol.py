@@ -28,7 +28,7 @@ from taskcoachlib.domain.effort import Effort
 from taskcoachlib.i18n import _
 
 import wx, asynchat, threading, asyncore, struct, \
-    random, time, hashlib, cStringIO, socket, os, sys
+    random, time, hashlib, cStringIO, socket, os
 
 # Default port is 8001.
 #
@@ -265,7 +265,7 @@ class CompositeItem(BaseItem):
                             for idx, v in enumerate(values)])
 
     def __str__(self):
-        return 'CompositeItem([%s])' % ', '.join(map(str, self._items))
+        return 'CompositeItem([%s])' % ', '.join(map(str, self._items)) # pylint: disable-msg=W0141
 
 
 class ListItem(BaseItem):
@@ -356,7 +356,7 @@ class ItemParser(object):
 
         klass.formatMap[character] = itemClass
 
-    def parse(self, format):
+    def parse(self, format): # pylint: disable-msg=W0622
         if format.startswith('['):
             return ListItem(self.parse(format[1:-1]))
 
@@ -397,7 +397,7 @@ class State(object):
 
         self.__disp = disp
 
-    def init(self, format, count):
+    def init(self, format, count): # pylint: disable-msg=W0622
         self.__format = format
         self.__count = count
 
@@ -448,7 +448,7 @@ class State(object):
             else:
                 self.__disp.set_terminator(length)
 
-    def pack(self, format, *values):
+    def pack(self, format, *values):  # pylint: disable-msg=W0622
         """Send a value."""
 
         self.__disp.push(ItemParser().parse(format).pack(*values))
@@ -519,7 +519,7 @@ class IPhoneHandler(asynchat.async_chat):
 
     def handle_error(self):
         if self.state.ui is not None:
-            import traceback, StringIO
+            import traceback, StringIO # pylint: disable-msg=W0404
             bf = StringIO.StringIO()
             traceback.print_exc(file=bf)
 
@@ -530,7 +530,7 @@ class IPhoneHandler(asynchat.async_chat):
         self.state.handleClose()
 
 
-class BaseState(State):
+class BaseState(State): # pylint: disable-msg=W0223
     def __init__(self, disp, *args, **kwargs):
         self.oldTasks = disp.window.taskFile.tasks().copy()
         self.oldCategories = disp.window.taskFile.categories().copy()
@@ -614,10 +614,10 @@ class PasswordState(BaseState):
     def init(self):
         super(PasswordState, self).init('20b', 1)
 
-        self.hashData = ''.join([struct.pack('B', random.randint(0, 255)) for i in xrange(512)])
+        self.hashData = ''.join([struct.pack('B', random.randint(0, 255)) for dummy in xrange(512)])
         self.pack('20b', self.hashData)
 
-    def handleNewObject(self, hash):
+    def handleNewObject(self, hash): # pylint: disable-msg=W0622
         local = hashlib.sha1()
         local.update(self.hashData + self.disp().settings.get('iphone', 'password').encode('UTF-8'))
 
@@ -686,12 +686,9 @@ class TaskFileNameState(BaseState):
         self.disp().log(_('Sending file name: %s'), filename)
         self.pack('z', filename)
 
-    def handleNewObject(self, response):
-        if self.version < 5:
-            self.setState(TwoWayState)
-        else:
-            self.setState(DayHoursState)
-
+    def handleNewObject(self, response): # pylint: disable-msg=W0613
+        self.setState(TwoWayState if self.version < 5 else DayHoursState)
+        
     def finished(self):
         pass
 
@@ -704,7 +701,7 @@ class DayHoursState(BaseState):
                   self.disp().settings.getint('view', 'efforthourstart'),
                   self.disp().settings.getint('view', 'efforthourend'))
 
-    def handleNewObject(self, response):
+    def handleNewObject(self, response): # pylint: disable-msg=W0613
         self.setState(TwoWayState)
 
     def finished(self):
@@ -727,7 +724,7 @@ class FullFromDesktopState(BaseState):
                 self.efforts = list([effort for effort in allEfforts \
                                   if effort.task() is None or not (effort.task().isDeleted() or effort.task().completed())])
         else:
-            self.tasks = filter(self.isTaskEligible, self.disp().window.taskFile.tasks())
+            self.tasks = filter(self.isTaskEligible, self.disp().window.taskFile.tasks()) # pylint: disable-msg=W0141
         self.categories = list([cat for cat in self.disp().window.taskFile.categories().allItemsSorted() if not cat.isDeleted()])
 
         if self.version >= 4:
@@ -860,7 +857,7 @@ class FullFromDesktopEffortState(BaseState):
                       effort.getStart(),
                       effort.getStop())
 
-    def handleNewObject(self, code):
+    def handleNewObject(self, code): # pylint: disable-msg=W0613
         self.count += 1
         self.ui.SetProgress(self.count, self.total)
         self.sendObject()

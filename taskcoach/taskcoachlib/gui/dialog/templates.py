@@ -38,7 +38,7 @@ class TimeExpressionEntry(wx.TextCtrl):
             try:
                 res = nlTimeExpression.parseString(value)
             except:
-                return False
+                return False # pylint: disable-msg=W0702
             return 'calculatedTime' in res
         return True # Empty is valid.
 
