@@ -81,7 +81,7 @@ def openMailWithOutlook(filename):
     if id_ is None:
         return False
 
-    from win32com.client import GetActiveObject
+    from win32com.client import GetActiveObject # pylint: disable-msg=F0401
     app = GetActiveObject('Outlook.Application')
     app.ActiveExplorer().Session.GetItemFromID(id_).Display()
 
@@ -90,7 +90,7 @@ def openMailWithOutlook(filename):
 def openMail(filename):
     if os.name == 'nt':
         # Find out if Outlook is the so-called 'default' mailer.
-        import _winreg
+        import _winreg # pylint: disable-msg=F0401
         key = _winreg.OpenKey(_winreg.HKEY_CLASSES_ROOT,
                               r'mailto\shell\open\command')
         try:
@@ -107,7 +107,7 @@ def openMail(filename):
 
     desktop.open(filename)
 
-def writeMail(to, subject, body, open=desktop.open):
+def writeMail(to, subject, body, openURL=desktop.open):
     def unicode_quote(s):
         # This is like urllib.quote but leaves out Unicode characters,
         # which urllib.quote does not support.
@@ -119,5 +119,5 @@ def writeMail(to, subject, body, open=desktop.open):
     # one, it fails.  Maybe we should use Mail.app  directly ? What if
     # the user uses something else ?
 
-    open(u'mailto:%s?subject=%s&body=%s' % (to, unicode_quote(subject),
-                                                unicode_quote(body)))
+    openURL(u'mailto:%s?subject=%s&body=%s' % (to, unicode_quote(subject),
+                                               unicode_quote(body)))

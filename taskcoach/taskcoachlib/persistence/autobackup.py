@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os, shutil, glob, math
 from taskcoachlib import patterns
 from taskcoachlib.domain import date
-                    
+
 
 class AutoBackup(patterns.Observer):
     ''' If backups are on, AutoBackup creates a backup copy of the task 
@@ -51,7 +51,7 @@ class AutoBackup(patterns.Observer):
         self.__copyfile(taskFile.filename(), self.backupFilename(taskFile))
     
     def removeExtraneousBackupFiles(self, taskFile, remove=os.remove, 
-                                    glob=glob.glob):
+                                    glob=glob.glob): # pylint: disable-msg=W0621
         backupFiles = self.backupFiles(taskFile, glob)
         for _ in range(min(self.maxNrOfBackupFilesToRemoveAtOnce,
                            self.numberOfExtraneousBackupFiles(backupFiles))):
@@ -88,8 +88,8 @@ class AutoBackup(patterns.Observer):
         return deltas[0][1]
 
     @staticmethod
-    def backupFiles(taskFile, glob=glob.glob):
-        root, ext = os.path.splitext(taskFile.filename())
+    def backupFiles(taskFile, glob=glob.glob):  # pylint: disable-msg=W0621
+        root, ext = os.path.splitext(taskFile.filename()) # pylint: disable-msg=W0612
         datePattern = '[0-9]'*8
         timePattern = '[0-9]'*6
         files = glob('%s.%s-%s.tsk.bak'%(root, datePattern, timePattern))
@@ -113,4 +113,4 @@ class AutoBackup(patterns.Observer):
         dt = backupFilename.split('.')[-3] # dt == date and time
         parts = (int(part) for part in (dt[0:4], dt[4:6], dt[6:8], 
                                         dt[9:11], dt[11:13], dt[13:14]))
-        return date.DateTime(*parts)
+        return date.DateTime(*parts) # pylint: disable-msg=W0142

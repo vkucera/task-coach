@@ -375,7 +375,7 @@ class FeaturesPage(SettingsPage):
         self.addBooleanSetting('feature', 'notes', _('Allow for taking notes'),
             helpText='restart')
         try:
-            import taskcoachlib.syncml.core
+            import taskcoachlib.syncml.core # pylint: disable-msg=W0404,W0612
         except ImportError:
             pass
         else:

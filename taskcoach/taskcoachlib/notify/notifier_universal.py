@@ -20,7 +20,6 @@ import wx
 from notifier import AbstractNotifier
 
 
-
 #==============================================================================
 # Utils
 
@@ -49,7 +48,7 @@ class AnimatedShow(wx.Timer):
         else:
             frame.Show(show)
 
-    def __OnTick(self, evt):
+    def __OnTick(self, event): # pylint: disable-msg=W0613
         self.__step += 1
 
         if self.__show:
@@ -84,7 +83,7 @@ class AnimatedMove(wx.Timer):
         wx.EVT_TIMER(self, id_, self.__OnTick)
         self.Start(100)
 
-    def __OnTick(self, evt):
+    def __OnTick(self, event): # pylint: disable-msg=W0613
         x0, y0 = self.__origin
         x1, y1 = self.__destination
         self.__step += 1
@@ -106,10 +105,10 @@ if '__WXMSW__' in wx.PlatformInfo:
         pass
 elif '__WXGTK__' in wx.PlatformInfo:
     class _NotifyBase(wx.PopupWindow):
-        def __init__(self, parent, id_, title, style=0):
+        def __init__(self, parent, id_, title, style=0): # pylint: disable-msg=W0613,E1003
             super(_NotifyBase, self).__init__(parent, id_) # No style
 
-        def Close(self):
+        def Close(self): # pylint: disable-msg=W0221,E1003
             # Strange...
             super(_NotifyBase, self).Close()
             self.Destroy()
@@ -117,32 +116,25 @@ else:
     class _NotifyBase(wx.Frame):
         """FIXME: steals focus..."""
 
+
 class NotificationFrameBase(_NotifyBase):
     """
     Base class for a notification frame.
 
     @ivar title: The notification title
     @type title: unicode
-    @ivar icon: An optionnal icon
+    @ivar icon: An optional icon
     @type icon: NoneType or wx.Bitmap
     """
 
     def __init__(self, title, icon=None, parent=None):
-        style = self.Style()
-
-        if parent is None:
-            style |= wx.STAY_ON_TOP
-        else:
-            style |= wx.FRAME_FLOAT_ON_PARENT
-
-        super(NotificationFrameBase, self).__init__(parent, wx.ID_ANY, u'', style=style)
-
-        self.Populate(title, icon=icon)
-
-    def Populate(self, title, icon=None):
         self.title = title
         self.icon = icon
+        style = self.Style() | (wx.STAY_ON_TOP if parent is None else wx.FRAME_FLOAT_ON_PARENT)
+        super(NotificationFrameBase, self).__init__(parent, wx.ID_ANY, u'', style=style)
+        self.Populate()
 
+    def Populate(self):
         panel = wx.Panel(self, wx.ID_ANY)
 
         vsz = wx.BoxSizer(wx.VERTICAL)
@@ -221,7 +213,7 @@ class NotificationFrameBase(_NotifyBase):
 
         return style
 
-    def DoClose(self, evt=None):
+    def DoClose(self, event=None): # pylint: disable-msg=W0613
         """Use this method instead of Close. Never use Close directly."""
 
         NotificationCenter().HideFrame(self)
@@ -358,7 +350,7 @@ class _NotificationCenter(wx.EvtHandler):
             return wx.ClientDisplayRect()
         return wx.Display(dpyIndex).GetClientArea()
 
-    def __OnTick(self, evt):
+    def __OnTick(self, event): # pylint: disable-msg=W0613
         s = 0
         newList = []
 
