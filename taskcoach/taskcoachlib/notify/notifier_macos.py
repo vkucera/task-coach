@@ -25,23 +25,24 @@ else:
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'bin.in', 'macos', _subdir))
 
-from taskcoachlib.thirdparty.Growl import GrowlNotifier, Image
+from taskcoachlib.thirdparty import Growl
 from taskcoachlib import meta
 from notifier import AbstractNotifier
 
 
-class TaskCoachGrowlNotifier(GrowlNotifier):
+class TaskCoachGrowlNotifier(Growl.GrowlNotifier):
     applicationName = meta.name
     notifications = [u'Reminder']
 
 
 class GrowlNotifier(AbstractNotifier):
     def __init__(self):
+        super(GrowlNotifier, self).__init__()
         try:
-            self._notifier = TaskCoachGrowlNotifier(applicationIcon=Image.imageWithIconForCurrentApplication())
+            self._notifier = TaskCoachGrowlNotifier(applicationIcon=Growl.Image.imageWithIconForCurrentApplication())
             self._notifier.register()
         except:
-            self._available = False
+            self._available = False # pylint: disable-msg=W0702
         else:
             self._available = True
 

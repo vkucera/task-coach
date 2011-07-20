@@ -17,37 +17,47 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import os, pickle, tempfile, codecs, shutil
-
-from taskcoachlib.persistence import TemplateXMLWriter, TemplateXMLReader
 from taskcoachlib import patterns
+from xml import TemplateXMLWriter, TemplateXMLReader
 
 
 class TemplateList(object):
-    def __init__(self, path):
+    def __init__(self, path, TemplateXMLReader=TemplateXMLReader, file=file):
         self._path = path
+        self._templates = self._readTemplates(TemplateXMLReader, file)
+        self._toDelete = []
 
-        fileList = [name for name in os.listdir(self._path) if \
+    def _readTemplates(self, TemplateXMLReader, file):
+        templates = []
+        for filename in self._templateFilenames():
+            template = self._readTemplate(filename, TemplateXMLReader, file)
+            if template:
+                templates.append((template, filename))
+        return templates
+    
+    def _readTemplate(self, filename, TemplateXMLReader, file):
+        try:
+            fd = file(os.path.join(self._path, filename), 'rU')
+        except IOError:
+            return
+        try:
+            return TemplateXMLReader(fd).read()
+        except:
+            pass
+        finally:
+            fd.close()
+
+    def _templateFilenames(self):
+        filenames = [name for name in os.listdir(self._path) if \
                     name.endswith('.tsktmpl') and os.path.exists(os.path.join(self._path, name))]
-
         listName = os.path.join(self._path, 'list.pickle')
         if os.path.exists(listName):
             try:
-                fileList = pickle.load(file(listName, 'rb'))
+                filenames = pickle.load(file(listName, 'rb'))
             except:
                 pass
-        
-        self._tasks = []
-        for filename in fileList:
-            try:
-                fd = file(os.path.join(self._path, filename), 'rU')
-                self._tasks.append((TemplateXMLReader(fd).read(), filename))
-            except IOError:
-                pass
-            finally:
-                fd.close()
-
-        self._toDelete = []
-
+        return filenames
+    
     def _copyTask(self, task):
         copy = task.copy()
         for name in ['startdatetmpl', 'duedatetmpl', 'completiondatetmpl', 'remindertmpl']:
@@ -56,12 +66,13 @@ class TemplateList(object):
         return copy
 
     def save(self):
-        pickle.dump([name for task, name in self._tasks], file(os.path.join(self._path, 'list.pickle'), 'wb'))
+        pickle.dump([name for task, name in self._templates], file(os.path.join(self._path, 'list.pickle'), 'wb'))
 
-        for task, name in self._tasks:
+        for task, name in self._templates:
             templateFile = codecs.open(os.path.join(self._path, name), 'w', 'utf-8')
             writer = TemplateXMLWriter(templateFile)
             writer.write(self._copyTask(task))
+            templateFile.close()
 
         for task, name in self._toDelete:
             os.remove(os.path.join(self._path, name))
@@ -75,11 +86,11 @@ class TemplateList(object):
         writer = TemplateXMLWriter(templateFile)
         writer.write(task.copy())
         templateFile.close()
-        self._tasks.append((TemplateXMLReader(file(filename, 'rU')).read(), os.path.split(filename)[-1]))
+        self._templates.append((TemplateXMLReader(file(filename, 'rU')).read(), os.path.split(filename)[-1]))
 
     def deleteTemplate(self, idx):
-        self._toDelete.append(self._tasks[idx])
-        del self._tasks[idx]
+        self._toDelete.append(self._templates[idx])
+        del self._templates[idx]
 
     def copyTemplate(self, filename):
         shutil.copyfile(filename,
@@ -87,13 +98,13 @@ class TemplateList(object):
         patterns.Event('templates.saved', self).send()
         
     def swapTemplates(self, i, j):
-        self._tasks[i], self._tasks[j] = self._tasks[j], self._tasks[i]
+        self._templates[i], self._templates[j] = self._templates[j], self._templates[i]
 
     def __len__(self):
-        return len(self._tasks)
+        return len(self._templates)
 
     def tasks(self):
-        return [task for task, name in self._tasks]
+        return [task for task, name in self._templates]
 
     def names(self):
-        return [name for task, name in self._tasks]
+        return [name for task, name in self._templates]

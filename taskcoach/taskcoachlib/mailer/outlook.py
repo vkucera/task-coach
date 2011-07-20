@@ -21,7 +21,7 @@ from taskcoachlib import persistence
 
 
 if os.name == 'nt':
-    from win32com.client import GetActiveObject
+    from win32com.client import GetActiveObject # pylint: disable-msg=F0401
 
     def getCurrentSelection():
         selection = GetActiveObject('Outlook.Application').ActiveExplorer().Selection
@@ -41,12 +41,12 @@ if os.name == 'nt':
             encoding = 'utf-8'
         mailFile = codecs.open(filename, 'wb', encoding)
         try:
-            mailFile.write(headers(item) + body)
+            mailFile.write(emailHeaders(item) + body)
         finally:
             mailFile.close()
             os.chmod(filename, stat.S_IREAD)
 
-    def headers(item, lineSep=u'\r\n'):
+    def emailHeaders(item, lineSep=u'\r\n'):
         headers = []
         headers.append(u'subject: %s'%item.Subject)
         headers.append(u'X-Outlook-ID: %s'%item.EntryID)
