@@ -46,7 +46,8 @@ class XMLWriterTest(test.TestCase):
     
     def expectInXML(self, xmlFragment):
         xml = self.__writeAndRead()
-        self.failUnless(xmlFragment in xml, '%s not in %s'%(xmlFragment, xml))
+        self.failUnless(xmlFragment in xml or \
+                        xmlFragment in xml.replace('&apos;', "'"), '%s not in %s'%(xmlFragment, xml))
     
     def expectNotInXML(self, xmlFragment):
         xml = self.__writeAndRead()
