@@ -22,9 +22,11 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.25', 'July 19, 2011',
+Release('1.2.25', 'July 21, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bug('''The anonymize function wouldn't give a notification after saving
+the file.''')
         ]
     ),
 
