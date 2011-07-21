@@ -49,6 +49,8 @@ class PIElementTree(ET.ElementTree):
         ET.ElementTree._write(self, file, node, encoding, namespaces)
 
     def write(self, file, encoding, *args, **kwargs):
+        if encoding is None:
+            encoding = 'utf-8'
         if sys.version_info >= (2, 7):
             file.write('<?xml version="1.0" encoding="%s"?>\n' % encoding)
             file.write(self.__pi.encode(encoding) + '\n')
