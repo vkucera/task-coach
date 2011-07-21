@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os
+import os, sys
 from xml.etree import ElementTree as ET
 
 from taskcoachlib import meta
@@ -47,6 +47,13 @@ class PIElementTree(ET.ElementTree):
                 file.write('<?xml version="1.0" encoding="%s"?>\n' % encoding)
             file.write(self.__pi.encode(encoding) + '\n')
         ET.ElementTree._write(self, file, node, encoding, namespaces)
+
+    def write(self, file, encoding, *args, **kwargs):
+        if sys.version_info >= (2, 7):
+            file.write('<?xml version="1.0" encoding="%s"?>\n' % encoding)
+            file.write(self.__pi.encode(encoding) + '\n')
+            kwargs['xml_declaration'] = False
+        ET.ElementTree.write(self, file, encoding, *args, **kwargs)
 
 
 class XMLWriter(object):
