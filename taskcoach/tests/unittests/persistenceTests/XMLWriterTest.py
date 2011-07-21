@@ -494,26 +494,26 @@ class XMLWriterTest(test.TestCase):
 
     def testTaskExpansionState(self):
         self.task.expand()
-        self.expectInXML('''expandedContexts="(&apos;None&apos;,)"''')
+        self.expectInXML('''expandedContexts="('None',)"''')
 
     def testTaskExpansionState_SpecificContext(self):
         self.task.expand(context='Test')
-        self.expectInXML('''expandedContexts="(&apos;Test&apos;,)"''')
+        self.expectInXML('''expandedContexts="('Test',)"''')
 
     def testTaskExpansionState_MultipleContexts(self):
         self.task.expand(context='Test')
         self.task.expand(context='Another context')
-        self.expectInXML('''expandedContexts="(&apos;Another context&apos;, &apos;Test&apos;)"''')
+        self.expectInXML('''expandedContexts="('Another context', 'Test')"''')
 
     def testCategoryExpansionState(self):
         cat = category.Category('cat')
         self.categoryContainer.append(cat)
         cat.expand()
-        self.expectInXML('''expandedContexts="(&apos;None&apos;,)"''')
+        self.expectInXML('''expandedContexts="('None',)"''')
 
     def testNoteExpansionState(self):
         self.note.expand()
-        self.expectInXML('''expandedContexts="(&apos;None&apos;,)"''')
+        self.expectInXML('''expandedContexts="('None',)"''')
         
     def testPercentageComplete(self):
         self.task.setPercentageComplete(50)
