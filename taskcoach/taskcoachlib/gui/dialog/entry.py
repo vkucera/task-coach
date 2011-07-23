@@ -29,7 +29,7 @@ class DateTimeEntry(widgets.PanelWithBoxSizer):
 
     def __init__(self, parent, settings, initialDateTime=defaultDateTime, 
                  readonly=False, callback=None, noneAllowed=True, 
-                 showSeconds=False, *args, **kwargs):
+                 showSeconds=False, suggestedDateTime=None, *args, **kwargs):
         super(DateTimeEntry, self).__init__(parent, *args, **kwargs)
         starthour = settings.getint('view', 'efforthourstart')
         endhour = settings.getint('view', 'efforthourend')
@@ -42,7 +42,11 @@ class DateTimeEntry(widgets.PanelWithBoxSizer):
             self._entry.Disable()
         # First set the initial value and then set the callback so that the
         # callback is not triggered for the initial value
-        self._entry.SetValue(initialDateTime)
+        if initialDateTime == date.DateTime() and suggestedDateTime:
+            self._entry.SetValue(suggestedDateTime)
+            self._entry.SetNone() # Disable DateTimeCtrl
+        else:
+            self._entry.SetValue(initialDateTime)
         if callback:
             self._entry.setCallback(callback) 
         self.add(self._entry)

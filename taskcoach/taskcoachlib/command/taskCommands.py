@@ -85,21 +85,21 @@ class DeleteTaskCommand(base.DeleteCommand, EffortCommand):
         self.__removePrerequisites(event)
     
     def __removePrerequisites(self, event):
-        self.__relationsToRestore = dict()
-        for task in self.items:
-            prerequisites, dependencies = task.prerequisites(), task.dependencies()
-            self.__relationsToRestore[task] = prerequisites, dependencies
-            task.removeTaskAsDependencyOf(prerequisites, event=event)
-            task.removeTaskAsPrerequisiteOf(dependencies, event=event)
-            task.setPrerequisites([], event=event)
-            task.setDependencies([], event=event)
+        self.__relationsToRestore = dict() # pylint: disable-msg=W0201
+        for eachTask in self.items:
+            prerequisites, dependencies = eachTask.prerequisites(), eachTask.dependencies()
+            self.__relationsToRestore[eachTask] = prerequisites, dependencies
+            eachTask.removeTaskAsDependencyOf(prerequisites, event=event)
+            eachTask.removeTaskAsPrerequisiteOf(dependencies, event=event)
+            eachTask.setPrerequisites([], event=event)
+            eachTask.setDependencies([], event=event)
 
     def __restorePrerequisites(self, event):
-        for task, (prerequisites, dependencies) in self.__relationsToRestore.items():
-            task.addTaskAsDependencyOf(prerequisites, event=event)
-            task.addTaskAsPrerequisiteOf(dependencies, event=event)
-            task.setPrerequisites(prerequisites, event=event)
-            task.setDependencies(dependencies, event=event)
+        for eachTask, (prerequisites, dependencies) in self.__relationsToRestore.items():
+            eachTask.addTaskAsDependencyOf(prerequisites, event=event)
+            eachTask.addTaskAsPrerequisiteOf(dependencies, event=event)
+            eachTask.setPrerequisites(prerequisites, event=event)
+            eachTask.setDependencies(dependencies, event=event)
             
 
 class NewTaskCommand(base.NewItemCommand):
@@ -107,10 +107,8 @@ class NewTaskCommand(base.NewItemCommand):
     
     def __init__(self, *args, **kwargs):
         subject = kwargs.pop('subject', _('New task'))
-        startDateTime = kwargs.pop('startDateTime', date.Now())
         super(NewTaskCommand, self).__init__(*args, **kwargs)
-        self.items = [task.Task(subject=subject, 
-                                startDateTime=startDateTime, **kwargs)]
+        self.items = [task.Task(subject=subject, **kwargs)]
 
     def do_command(self):
         super(NewTaskCommand, self).do_command()
@@ -126,19 +124,19 @@ class NewTaskCommand(base.NewItemCommand):
         
     @patterns.eventSource
     def addDependenciesAndPrerequisites(self, event=None):
-        for task in self.items:
-            for prerequisite in task.prerequisites():
-                prerequisite.addDependencies([task], event=event)
-            for dependency in task.dependencies():
-                dependency.addPrerequisites([task], event=event)
+        for eachTask in self.items:
+            for prerequisite in eachTask.prerequisites():
+                prerequisite.addDependencies([eachTask], event=event)
+            for dependency in eachTask.dependencies():
+                dependency.addPrerequisites([eachTask], event=event)
 
     @patterns.eventSource
     def removeDependenciesAndPrerequisites(self, event=None):
-        for task in self.items:
-            for prerequisite in task.prerequisites():
-                prerequisite.removeDependencies([task], event=event)                                
-            for dependency in task.dependencies():
-                dependency.removePrerequisites([task], event=event)
+        for eachTask in self.items:
+            for prerequisite in eachTask.prerequisites():
+                prerequisite.removeDependencies([eachTask], event=event)                                
+            for dependency in eachTask.dependencies():
+                dependency.removePrerequisites([eachTask], event=event)
                 
                 
 class NewSubTaskCommand(base.NewSubItemCommand, SaveTaskStateMixin):
@@ -182,7 +180,7 @@ class EditTaskCommand(base.EditCommand):
         if self.newCategories != self.oldCategories:
             self.updateCategories(self.oldCategories, self.newCategories, event)
         self.newPrerequisites = [item.prerequisites() for item in self.items]
-        if self.newPrerequisites != self.oldCategories:
+        if self.newPrerequisites != self.oldPrerequisites:
             self.updatePrerequisites(self.oldPrerequisites, self.newPrerequisites, 
                                      event)
         
@@ -228,13 +226,12 @@ class MarkCompletedCommand(EditTaskCommand, EffortCommand):
     plural_name = _('Mark tasks completed')
     singular_name = _('Mark "%s" completed')
 
-    def do_command(self):
-        super(MarkCompletedCommand, self).do_command()
+    @patterns.eventSource
+    def do_command(self, event=None):
+        super(MarkCompletedCommand, self).do_command(event=event)
         for item in self.items:
-            if item.completed():
-                item.setCompletionDateTime(date.DateTime())
-            else:
-                item.setCompletionDateTime()
+            completionDateTime = date.DateTime() if item.completed() else task.Task.suggestedCompletionDateTime()
+            item.setCompletionDateTime(completionDateTime, event=event)
 
     def tasksToStopTracking(self):
         return self.items
@@ -250,15 +247,16 @@ class EditDatesCommand(EditTaskCommand):
         self._completionDateTime = kwargs.pop('completionDateTime', None)
         super(EditDatesCommand, self).__init__(*args, **kwargs)
 
-    def do_command(self):
-        super(EditDatesCommand, self).do_command()
+    @patterns.eventSource
+    def do_command(self, event=None):
+        super(EditDatesCommand, self).do_command(event=event)
         for item in self.items:
             if self._startDateTime is not None:
-                item.setStartDateTime(self._startDateTime)
+                item.setStartDateTime(self._startDateTime, event=event)
             if self._dueDateTime is not None:
-                item.setDueDateTime(self._dueDateTime)
+                item.setDueDateTime(self._dueDateTime, event=event)
             if self._completionDateTime is not None:
-                item.setCompletionDateTime(self._completionDateTime)
+                item.setCompletionDateTime(self._completionDateTime, event=event)
                 
                 
 class EditStartDateTimeCommand(EditTaskCommand):
@@ -269,10 +267,11 @@ class EditStartDateTimeCommand(EditTaskCommand):
         self.__newDateTime = kwargs.pop('newValue')
         super(EditStartDateTimeCommand, self).__init__(*args, **kwargs)
 
-    def do_command(self):
-        super(EditStartDateTimeCommand, self).do_command()
+    @patterns.eventSource
+    def do_command(self, event=None):
+        super(EditStartDateTimeCommand, self).do_command(event=event)
         for item in self.items:
-            item.setStartDateTime(self.__newDateTime)
+            item.setStartDateTime(self.__newDateTime, event=event)
 
 
 class EditDueDateTimeCommand(EditTaskCommand):
@@ -283,10 +282,11 @@ class EditDueDateTimeCommand(EditTaskCommand):
         self.__newDateTime = kwargs.pop('newValue')
         super(EditDueDateTimeCommand, self).__init__(*args, **kwargs)
 
-    def do_command(self):
-        super(EditDueDateTimeCommand, self).do_command()
+    @patterns.eventSource
+    def do_command(self, event=None):
+        super(EditDueDateTimeCommand, self).do_command(event=event)
         for item in self.items:
-            item.setDueDateTime(self.__newDateTime)
+            item.setDueDateTime(self.__newDateTime, event=event)
 
 
 class EditCompletionDateTimeCommand(EditTaskCommand):
@@ -297,10 +297,11 @@ class EditCompletionDateTimeCommand(EditTaskCommand):
         self.__newDateTime = kwargs.pop('newValue')
         super(EditCompletionDateTimeCommand, self).__init__(*args, **kwargs)
 
-    def do_command(self):
-        super(EditCompletionDateTimeCommand, self).do_command()
+    @patterns.eventSource
+    def do_command(self, event=None):
+        super(EditCompletionDateTimeCommand, self).do_command(event=event)
         for item in self.items:
-            item.setCompletionDateTime(self.__newDateTime)
+            item.setCompletionDateTime(self.__newDateTime, event=event)
 
 
 class EditReminderDateTimeCommand(EditTaskCommand):
@@ -311,10 +312,11 @@ class EditReminderDateTimeCommand(EditTaskCommand):
         self.__newDateTime = kwargs.pop('newValue')
         super(EditReminderDateTimeCommand, self).__init__(*args, **kwargs)
 
-    def do_command(self):
-        super(EditReminderDateTimeCommand, self).do_command()
+    @patterns.eventSource
+    def do_command(self, event=None):
+        super(EditReminderDateTimeCommand, self).do_command(event=event)
         for item in self.items:
-            item.setReminder(self.__newDateTime)
+            item.setReminder(self.__newDateTime, event=event)
 
 
 class StartEffortCommand(EffortCommand):
@@ -360,7 +362,8 @@ class StopEffortCommand(EffortCommand):
         return True # No selected items needed.
     
     def tasksToStopTracking(self):
-        return set([effort.task() for effort in self.list if effort.isBeingTracked() and not effort.isTotal()])
+        stoppable = lambda effort: effort.isBeingTracked() and not effort.isTotal()
+        return set([effort.task() for effort in self.list if stoppable(effort)]) # pylint: disable-msg=W0621 
 
 
 class ExtremePriorityCommand(base.BaseCommand): # pylint: disable-msg=W0223

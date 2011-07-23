@@ -351,6 +351,7 @@ class DatesPage(Page):
     
     def __init__(self, theTask, parent, settings, *args, **kwargs):
         self.__settings = settings
+        self._duration = None
         super(DatesPage, self).__init__(theTask, parent, *args, **kwargs)
         
     def addEntries(self):
@@ -363,19 +364,22 @@ class DatesPage(Page):
     def addDateEntries(self):
         # pylint: disable-msg=W0201
         self._oldCompletionDateTime = dict([(item, item.completionDateTime()) for item in self.items]) 
-        for idx, (label, taskMethodName, callback) in enumerate([(_('Start date'), 'startDateTime', self.onStartDateTimeChanged),
-                                          (_('Due date'), 'dueDateTime', self.onDueDateTimeChanged),
-                                          (_('Completion date'), 'completionDateTime', self.onCompletionDateTimeChanged)]):
+        for (label, taskMethodName, callback) in [(_('Start date'), 'startDateTime', self.onStartDateTimeChanged),
+                                                  (_('Due date'), 'dueDateTime', self.onDueDateTimeChanged),
+                                                  (_('Completion date'), 'completionDateTime', self.onCompletionDateTimeChanged)]:
             label = self.label(label)
             setattr(self, '_%sLabel' % taskMethodName, label)
             if len(self.items) == 1:
                 dateTime = getattr(self.items[0], taskMethodName)()
             else:
                 dateTime = date.DateTime()
-                if idx == 0:
-                    dateTime = dateTime.startOfDay()
+
+            suggestedDateTimeMethodName = 'suggested' + taskMethodName[0].capitalize() + taskMethodName[1:]
+            suggestedDateTime = getattr(self.items[0], suggestedDateTimeMethodName)()
+   
             dateTimeEntry = entry.DateTimeEntry(self, self.__settings, dateTime,
-                                                callback=callback)
+                                                callback=callback, 
+                                                suggestedDateTime=suggestedDateTime)
             setattr(self, '_%sEntry' % taskMethodName, dateTimeEntry)
             self.addEntry(label, dateTimeEntry)
 
@@ -492,6 +496,7 @@ class DatesPage(Page):
         self._maxRecurrenceCountEntry.Enable(maxRecurrenceOn)
 
     def _computeDuration(self):
+        # pylint: disable-msg=E1101
         if self._startDateTimeEntry.get() != date.DateTime() and \
                self._dueDateTimeEntry.get() != date.DateTime():
             if self._duration is None:
@@ -507,7 +512,7 @@ class DatesPage(Page):
         else:
             duration = self._computeDuration()
             if duration is not None and self.__settings.get('view', 'datestied') == 'startdue':
-                self._dueDateTimeEntry.set(self._startDateTimeEntry.get() + duration)
+                self._dueDateTimeEntry.set(self._startDateTimeEntry.get() + duration) # pylint: disable-msg=E1101
             if self.__settings.get('view', 'datestied') == 'duestart':
                 self._duration = None
                 self._computeDuration()
@@ -520,7 +525,7 @@ class DatesPage(Page):
         else:
             duration = self._computeDuration()
             if duration is not None and self.__settings.get('view', 'datestied') == 'duestart':
-                self._startDateTimeEntry.set(self._dueDateTimeEntry.get() - duration)
+                self._startDateTimeEntry.set(self._dueDateTimeEntry.get() - duration) # pylint: disable-msg=E1101
             if self.__settings.get('view', 'datestied') == 'startdue':
                 self._duration = None
                 self._computeDuration()
@@ -704,7 +709,7 @@ class BudgetPage(Page):
             self.addBudgetLeftEntry()
             
     def addBudgetEntry(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable-msg=W0201,W0212
         budget = self.items[0].budget() if len(self.items) == 1 else date.TimeDelta()
         self._budgetEntry = entry.TimeDeltaEntry(self, budget)
         self._budgetLabel = self.label(_('Budget'), self._budgetEntry._entry, wx.EVT_TEXT)
@@ -727,14 +732,14 @@ class BudgetPage(Page):
             self.addRevenueEntry()
             
     def addHourlyFeeEntry(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable-msg=W0201,W0212
         hourlyFee = self.items[0].hourlyFee() if len(self.items) == 1 else 0
         self._hourlyFeeEntry = entry.AmountEntry(self, hourlyFee)
         self._hourlyFeeLabel = self.label(_('Hourly fee'), self._hourlyFeeEntry._entry, wx.EVT_TEXT)
         self.addEntry(self._hourlyFeeLabel, self._hourlyFeeEntry, flags=[None, wx.ALL])
         
     def addFixedFeeEntry(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable-msg=W0201,W0212
         fixedFee = self.items[0].fixedFee() if len(self.items) == 1 else 0
         self._fixedFeeEntry = entry.AmountEntry(self, fixedFee)
         self._fixedFeeLabel = self.label(_('Fixed fee'), self._fixedFeeEntry._entry, wx.EVT_TEXT)
@@ -832,12 +837,12 @@ class CheckableViewerMixin(object):
         self.__checked[item] = event.GetItem().IsChecked()
 
 
-class CategoryViewer(viewer.BaseCategoryViewer):
+class CategoryViewer(viewer.BaseCategoryViewer): # pylint: disable-msg=W0223
     def __init__(self, items, *args, **kwargs):
         self.__items = items
         super(CategoryViewer, self).__init__(*args, **kwargs)
 
-    def getIsItemChecked(self, category):
+    def getIsItemChecked(self, category): # pylint: disable-msg=W0621
         for item in self.__items:
             if category in item.categories():
                 return True
@@ -847,7 +852,7 @@ class CategoryViewer(viewer.BaseCategoryViewer):
         return super(CategoryViewer, self).createCategoryPopupMenu(True)
         
 
-class LocalCategoryViewer(CheckableViewerMixin, CategoryViewer):
+class LocalCategoryViewer(CheckableViewerMixin, CategoryViewer): # pylint: disable-msg=W0223
     pass
 
 
@@ -865,15 +870,15 @@ class CategoriesPage(PageWithViewer):
 
     @patterns.eventSource
     def ok(self, event=None): # pylint: disable-msg=W0221
-        for category, checked in self.viewer.checkedItems().items():
+        for eachCategory, checked in self.viewer.checkedItems().items():
             if checked:
                 for item in self.items:
-                    category.addCategorizable(item, event=event)
-                    item.addCategory(category, event=event)
+                    eachCategory.addCategorizable(item, event=event)
+                    item.addCategory(eachCategory, event=event)
             else:
                 for item in self.items:
-                    category.removeCategorizable(item, event=event)
-                    item.removeCategory(category, event=event)
+                    eachCategory.removeCategorizable(item, event=event)
+                    item.removeCategory(eachCategory, event=event)
         
 
 class AttachmentsPage(PageWithViewer):
@@ -916,19 +921,19 @@ class NotesPage(PageWithViewer):
         self.items[0].setNotes(list(self.notes.rootItems()), event=event)
 
 
-class PrerequisiteViewer(viewer.CheckableTaskViewer):
+class PrerequisiteViewer(viewer.CheckableTaskViewer): # pylint: disable-msg=W0223
     def __init__(self, items, *args, **kwargs):
         self.__items = items
         super(PrerequisiteViewer, self).__init__(*args, **kwargs)
 
-    def getIsItemChecked(self, task):
+    def getIsItemChecked(self, task): # pylint: disable-msg=W0621
         return task in self.__items[0].prerequisites()
 
-    def getIsItemCheckable(self, task):
+    def getIsItemCheckable(self, task): # pylint: disable-msg=W0621
         return task not in self.__items
     
 
-class LocalPrerequisiteViewer(CheckableViewerMixin, PrerequisiteViewer):
+class LocalPrerequisiteViewer(CheckableViewerMixin, PrerequisiteViewer): # pylint: disable-msg=W0223
     pass        
     
     
@@ -1064,7 +1069,7 @@ class EditBook(widgets.Notebook):
             try:
                 self.LoadPerspective(perspective)
             except:
-                pass
+                pass # pylint: disable-msg=W0702
 
     def savePerspective(self, pageNames):
         perspectives = self.settings.getdict('%sdialog'%self.object, 'perspectives')
@@ -1128,7 +1133,7 @@ class EffortEditBook(Page):
         self._taskFile = taskFile
         super(EffortEditBook, self).__init__(efforts, parent, *args, **kwargs)
         
-    def getPage(self, pageName):
+    def getPage(self, pageName): # pylint: disable-msg=W0613
         return None # An EffortEditBook is not really a notebook...
         
     def addEntries(self):
@@ -1139,7 +1144,7 @@ class EffortEditBook(Page):
     def addTaskEntry(self):
         ''' Add an entry for changing the task that this effort record
             belongs to. '''
-        # pylint: disable-msg=W0201
+        # pylint: disable-msg=W0201,W0212
         panel = wx.Panel(self)
         self._taskEntry = entry.TaskComboTreeBox(panel,
             rootTasks=self._taskList.rootItems(),
@@ -1184,7 +1189,7 @@ class EffortEditBook(Page):
         self._startEntry.set(self._effortList.maxDateTime())
         self.preventNegativeEffortDuration()
 
-    def onEditTask(self, event):
+    def onEditTask(self, event): # pylint: disable-msg=W0613
         taskToEdit = self._taskEntry.GetSelection()
         TaskEditor(None, command.EditTaskCommand(self._taskFile.tasks(),
             [taskToEdit]), self._settings, self._taskFile.tasks(),
@@ -1253,13 +1258,13 @@ class EffortEditBook(Page):
     
     
 class EditorWithCommand(widgets.Dialog):
-    EditBookClass = lambda: 'Subclass responsibility'
+    EditBookClass = lambda *args: 'Subclass responsibility'
     
-    def __init__(self, parent, command, settings, container, taskFile, *args, **kwargs):
-        self._command = command
+    def __init__(self, parent, editCommand, settings, container, taskFile, *args, **kwargs):
+        self._command = editCommand
         self._settings = settings
         self._taskFile = taskFile
-        super(EditorWithCommand, self).__init__(parent, command.name(),
+        super(EditorWithCommand, self).__init__(parent, editCommand.name(),
                                                 *args, **kwargs)
 
         columnName = kwargs.get('columnName', '')
@@ -1290,6 +1295,7 @@ class EditorWithCommand(widgets.Dialog):
                                      (wx.ACCEL_CMD, ord('Y'), wx.ID_REDO),
                                      (wx.ACCEL_CMD, ord('E'), newEffortId)])
         self._interior.SetAcceleratorTable(table)
+        # pylint: disable-msg=W0201
         self.undoCommand = uicommand.EditUndo()
         self.redoCommand = uicommand.EditRedo()
         effortPage = self._interior.getPage('effort') 

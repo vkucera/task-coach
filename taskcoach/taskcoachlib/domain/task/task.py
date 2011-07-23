@@ -163,9 +163,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     def newChild(self, subject='New subtask'): # pylint: disable-msg=W0221
         ''' Subtask constructor '''
-        return super(Task, self).newChild(subject=subject, 
-            dueDateTime=self.dueDateTime(), 
-            startDateTime=max(date.Now(), self.startDateTime()), parent=self)
+        return super(Task, self).newChild(subject=subject, parent=self)
 
     @patterns.eventSource
     def addChild(self, child, event=None):
@@ -1176,6 +1174,37 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def shouldMarkCompletedWhenAllChildrenCompleted(self):
         return self._shouldMarkCompletedWhenAllChildrenCompleted
     
+    @classmethod
+    def suggestedStartDateTime(cls, now=date.Now):
+        return cls.suggestedDateTime('defaultstartdatetime', now)
+    
+    @classmethod
+    def suggestedDueDateTime(cls, now=date.Now):
+        return cls.suggestedDateTime('defaultduedatetime', now)
+        
+    @classmethod
+    def suggestedCompletionDateTime(cls, now=date.Now):
+        return cls.suggestedDateTime('defaultcompletiondatetime', now)
+    
+    @classmethod    
+    def suggestedDateTime(cls, defaultDateTimeSetting, now=date.Now):
+        # pylint: disable-msg=E1101
+        defaultDateTime = cls.settings.get('view', defaultDateTimeSetting)
+        if defaultDateTime == 'startofday':
+            return now().startOfDay()
+        elif defaultDateTime == 'startofworkingday':
+            startHour = cls.settings.getint('view', 'efforthourstart')
+            return now().replace(hour=startHour, minute=0,
+                                 second=0, microsecond=0)
+        elif defaultDateTime == 'now':
+            return now()
+        elif defaultDateTime == 'endofworkingday':
+            endHour = cls.settings.getint('view', 'efforthourend')
+            return now().replace(hour=endHour, minute=0,
+                                 second=0, microsecond=0)
+        elif defaultDateTime == 'endofday':
+            return now().endOfDay()
+        
     @classmethod
     def modificationEventTypes(class_):
         eventTypes = super(Task, class_).modificationEventTypes()
