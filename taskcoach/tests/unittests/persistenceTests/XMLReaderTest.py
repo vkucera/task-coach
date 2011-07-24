@@ -196,7 +196,7 @@ class XMLReaderVersion11Test(XMLReaderTestCase):
     
     def testReadTaskWithoutReminder(self):
         tasks = self.writeAndReadTasks('<tasks><task id="foo"/></tasks>')
-        self.assertEqual(None, tasks[0].reminder())
+        self.assertEqual(date.DateTime(), tasks[0].reminder())
         
         
 class XMLReaderVersion12Test(XMLReaderTestCase):
@@ -568,7 +568,7 @@ class XMLReaderVersion20Test(XMLReaderTestCase):
 
     def testNoReminder(self):
         tasks = self.writeAndReadTasks('<tasks><task reminder="None"/></tasks>')
-        self.assertEqual(None, tasks[0].reminder())
+        self.assertEqual(date.DateTime(), tasks[0].reminder())
         
     def testReminder(self):
         tasks = self.writeAndReadTasks('''

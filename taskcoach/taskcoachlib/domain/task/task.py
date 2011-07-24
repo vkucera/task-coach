@@ -60,7 +60,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__priority = Attribute(priority, self, self.priorityEvent)
         self.__hourlyFee = Attribute(hourlyFee, self, self.hourlyFeeEvent)
         self.__fixedFee = Attribute(fixedFee, self, self.fixedFeeEvent)
-        self.__reminder = Attribute(reminder, self, self.reminderEvent)
+        self.__reminder = Attribute(reminder or maxDateTime, self, self.reminderEvent)
         self.__reminderBeforeSnooze = reminderBeforeSnooze or self.__reminder.get()
         self._recurrence = date.Recurrence() if recurrence is None else recurrence
         self.__prerequisites = SetAttribute(prerequisites or [], self, 
@@ -1186,24 +1186,42 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def suggestedCompletionDateTime(cls, now=date.Now):
         return cls.suggestedDateTime('defaultcompletiondatetime', now)
     
+    @classmethod
+    def suggestedReminderDateTime(cls, now=date.Now):
+        return cls.suggestedDateTime('defaultreminderdatetime', now)
+    
     @classmethod    
     def suggestedDateTime(cls, defaultDateTimeSetting, now=date.Now):
         # pylint: disable-msg=E1101
         defaultDateTime = cls.settings.get('view', defaultDateTimeSetting)
-        if defaultDateTime == 'startofday':
+        if defaultDateTime == 'today_startofday':
             return now().startOfDay()
-        elif defaultDateTime == 'startofworkingday':
+        elif defaultDateTime == 'today_startofworkingday':
             startHour = cls.settings.getint('view', 'efforthourstart')
             return now().replace(hour=startHour, minute=0,
                                  second=0, microsecond=0)
-        elif defaultDateTime == 'now':
+        elif defaultDateTime == 'today_currenttime':
             return now()
-        elif defaultDateTime == 'endofworkingday':
+        elif defaultDateTime == 'today_endofworkingday':
             endHour = cls.settings.getint('view', 'efforthourend')
             return now().replace(hour=endHour, minute=0,
                                  second=0, microsecond=0)
-        elif defaultDateTime == 'endofday':
+        elif defaultDateTime == 'today_endofday':
             return now().endOfDay()
+        elif defaultDateTime == 'tomorrow_startofday':
+            return (now() + date.oneDay).startOfDay()
+        elif defaultDateTime == 'tomorrow_startofworkingday':
+            startHour = cls.settings.getint('view', 'efforthourstart')
+            return (now() + date.oneDay).replace(hour=startHour, minute=0, 
+                                                 second=0, microsecond=0)
+        elif defaultDateTime == 'tomorrow_currenttime':
+            return now() + date.TimeDelta(hours=24)
+        elif defaultDateTime == 'tomorrow_endofworkingday':
+            endHour = cls.settings.getint('view', 'efforthourend')
+            return (now() + date.oneDay).replace(hour=endHour, minute=0,
+                                                 second=0, microsecond=0)
+        elif defaultDateTime == 'tomorrow_endofday':
+            return (now() + date.oneDay).endOfDay()
         
     @classmethod
     def modificationEventTypes(class_):

@@ -392,14 +392,12 @@ class DatesPage(Page):
 
     def addReminderEntry(self):
         # pylint: disable-msg=W0201
-        reminderDateTime = self.items[0].reminder() if len(self.items) == 1 else date.DateTime()
         self._reminderDateTimeLabel = self.label(_('Reminder'))
+        reminderDateTime = self.items[0].reminder() if len(self.items) == 1 else date.DateTime()
+        suggestedDateTime = self.items[0].suggestedReminderDateTime()
         self._reminderDateTimeEntry = entry.DateTimeEntry(self, self.__settings,
-                                                          reminderDateTime)
-        # If the user has not set a reminder, make sure that the default 
-        # date time in the reminder entry is a reasonable suggestion:
-        if self._reminderDateTimeEntry.get() == date.DateTime():
-            self.suggestReminder()
+                                                          reminderDateTime, 
+                                                          suggestedDateTime=suggestedDateTime)
         self.addEntry(self._reminderDateTimeLabel, self._reminderDateTimeEntry)
         self._reminderDateTimeEntry.setCallback(self.onReminderChanged)
         
@@ -516,7 +514,6 @@ class DatesPage(Page):
             if self.__settings.get('view', 'datestied') == 'duestart':
                 self._duration = None
                 self._computeDuration()
-            self.onDateTimeChanged()
 
     def onDueDateTimeChanged(self, event):
         event.Skip()
@@ -529,22 +526,11 @@ class DatesPage(Page):
             if self.__settings.get('view', 'datestied') == 'startdue':
                 self._duration = None
                 self._computeDuration()
-            self.onDateTimeChanged()
 
     def onCompletionDateTimeChanged(self, event):
         event.Skip()
         if len(self.items) > 1:
             self._completionDateTimeLabel.SetValue(True) # pylint: disable-msg=E1101
-        else:
-            self.onDateTimeChanged()
-
-    def onDateTimeChanged(self):
-        ''' Called when one of the DateTimeEntries is changed by the user. 
-            Update the suggested reminder if no reminder was set by the user. '''
-        # Make sure the reminderDateTimeEntry has been created:
-        if hasattr(self, '_reminderDateTimeEntry') and \
-            self._reminderDateTimeEntry.get() == date.DateTime():
-            self.suggestReminder()
             
     def onReminderChanged(self, event):
         if len(self.items) > 1:
@@ -613,25 +599,6 @@ class DatesPage(Page):
         self._recurrenceSameWeekdayCheckBox.Enable(self._recurrenceEntry.Selection in (3, 4))
         self._recurrenceSizer.Layout()
 
-    def suggestReminder(self):
-        ''' suggestReminder populates the reminder entry with a reasonable
-            suggestion for a reminder date and time, but does not enable the
-            reminder entry. '''
-        # The suggested date for the reminder is the first date from the
-        # list of candidates that is a real date:
-        # pylint: disable-msg=E1101
-        candidates = [self._dueDateTimeEntry.get(), self._startDateTimeEntry.get(),
-                      date.Now() + date.oneDay]
-        suggestedDateTime = [candidate for candidate in candidates \
-                            if date.Now() <= candidate < date.DateTime()][0]
-        # Now, make sure the suggested date time is set in the control
-        self.setReminder(suggestedDateTime)
-        # And then disable the control (because the SetValue in the
-        # previous statement enables the control)
-        self.setReminder(None)
-        # Now, when the user clicks the check box to enable the
-        # control it will show the suggested date time
-        
 
 class ProgressPage(Page):
     pageName = 'progress'

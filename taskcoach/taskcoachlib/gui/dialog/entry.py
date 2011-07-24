@@ -43,10 +43,9 @@ class DateTimeEntry(widgets.PanelWithBoxSizer):
         # First set the initial value and then set the callback so that the
         # callback is not triggered for the initial value
         if initialDateTime == date.DateTime() and suggestedDateTime:
-            self._entry.SetValue(suggestedDateTime)
-            self._entry.SetNone() # Disable DateTimeCtrl
+            self.setSuggested(suggestedDateTime)
         else:
-            self._entry.SetValue(initialDateTime)
+            self.set(initialDateTime)
         if callback:
             self._entry.setCallback(callback) 
         self.add(self._entry)
@@ -57,6 +56,10 @@ class DateTimeEntry(widgets.PanelWithBoxSizer):
 
     def set(self, newDateTime=defaultDateTime):
         self._entry.SetValue(newDateTime)
+        
+    def setSuggested(self, suggestedDateTime):
+        self._entry.SetValue(suggestedDateTime)
+        self._entry.SetNone()
         
     def setCallback(self, callback):
         self._entry.setCallback(callback)

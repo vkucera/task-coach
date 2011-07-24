@@ -108,7 +108,7 @@ class XMLWriter(object):
         if task.fixedFee() != 0:
             node.attrib['fixedFee'] = str(task.fixedFee())
         reminder = task.reminder() 
-        if reminder != None:
+        if reminder != maxDateTime:
             node.attrib['reminder'] = str(reminder)
             reminderBeforeSnooze = task.reminder(includeSnooze=False)
             if reminderBeforeSnooze != None and reminderBeforeSnooze < task.reminder():

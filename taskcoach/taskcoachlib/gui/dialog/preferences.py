@@ -416,18 +416,25 @@ class TaskBehaviorPage(SettingsPage):
             _('What to do with start and due date if the other one is changed'), 
             choices)
         
-        choices = [('startofday', _('Start of day')),
-                   ('startofworkingday', _('Start of working day')),
-                   ('now', _('Current time')),
-                   ('endofworkingday', _('End of working day')),
-                   ('endofday', _('End of day'))]
+        choices = [('today_startofday', _('Today, start of day')),
+                   ('today_startofworkingday', _('Today, start of working day')),
+                   ('today_currenttime', _('Today, current time')),
+                   ('today_endofworkingday', _('Today, end of working day')),
+                   ('today_endofday', _('Today, end of day')),
+                   ('tomorrow_startofday', _('Tomorrow, start of day')),
+                   ('tomorrow_startofworkingday', _('Tomorrow, start of working day')),
+                   ('tomorrow_currenttime', _('Tomorrow, current time')),
+                   ('tomorrow_endofworkingday', _('Tomorrow, end of working day')),
+                   ('tomorrow_endofday', _('Tomorrow, end of day'))]
         self.addChoiceSetting('view', 'defaultstartdatetime', 
-                              _('Proposed start time of new tasks'), choices)
+                              _('Proposed start date and time of new tasks'), choices)
         self.addChoiceSetting('view', 'defaultduedatetime', 
-                              _('Proposed due time of new tasks'), choices)
+                              _('Proposed due date and time of new tasks'), choices)
         self.addChoiceSetting('view', 'defaultcompletiondatetime', 
-                              _('Proposed completion time of completed tasks'),
+                              _('Proposed completion date and time of completed tasks'),
                               choices)
+        self.addChoiceSetting('view', 'defaultreminderdatetime', 
+                              _('Proposed reminder date and time'), choices)
         
         names = [] # There's at least one, the universal one
         for name in notify.AbstractNotifier.names():
