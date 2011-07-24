@@ -51,7 +51,7 @@ class TaskTestCase(test.TestCase):
             self.labelTaskChildrenAndEffort(eachTask, taskLabel)
             self.labelEfforts(eachTask, taskLabel)
         for eventType in self.eventTypes:
-            self.registerObserver(eventType)
+            self.registerObserver(eventType) # pylint: disable-msg=W0201
             
     def createTasks(self):
         def createAttachments(kwargs):
@@ -162,7 +162,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
             self.assertEqual(0, self.task.priority(recursive=recursive))
 
     def testTaskHasNoReminderSetByDefault(self):
-        self.assertReminder(None)
+        self.assertReminder(date.DateTime())
     
     def testShouldMarkTaskCompletedIsUndecidedByDefault(self):
         self.assertEqual(None, 
@@ -701,7 +701,7 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
 
 class TaskDueTodayTest(TaskTestCase, CommonTaskTestsMixin):
     def taskCreationKeywordArguments(self):
-        self.dueDateTime = date.Now() + date.oneHour
+        self.dueDateTime = date.Now() + date.oneHour # pylint: disable-msg=W0201
         return [{'dueDateTime': self.dueDateTime}]
     
     def testIsDueSoon(self):
@@ -1022,6 +1022,7 @@ class TaskWithStartDateInThePastTest(TaskTestCase, CommonTaskTestsMixin):
         self.failUnless(self.task.inactive())
         
     def testAppearanceNotificationWhenAddingAnUncompletedPrerequisite(self):
+        # pylint: disable-msg=E1101
         self.registerObserver(self.task.appearanceChangedEventType())
         self.task.addPrerequisites([self.task2])
         self.task2.addDependencies([self.task])
@@ -1035,6 +1036,7 @@ class TaskWithStartDateInThePastTest(TaskTestCase, CommonTaskTestsMixin):
         self.failIf(self.task.inactive())
         
     def testAppearanceNotificationWhenUncompletedPrerequisiteIsCompleted(self):
+        # pylint: disable-msg=E1101
         self.task.addPrerequisites([self.task2])
         self.task2.addDependencies([self.task])
         self.registerObserver(self.task.appearanceChangedEventType(), eventSource=self.task)
@@ -1059,6 +1061,7 @@ class TaskWithoutStartDateTime(TaskTestCase, CommonTaskTestsMixin):
         self.assertEqual('led_blue_icon', self.task.icon(recursive=True))
 
     def testAppearanceNotificationWhenUncompletedPrerequisiteIsCompleted(self):
+        # pylint: disable-msg=E1101
         self.task.addPrerequisites([self.task2])
         self.task2.addDependencies([self.task])
         self.registerObserver(self.task.appearanceChangedEventType(), eventSource=self.task)
@@ -1129,44 +1132,22 @@ class TwoTasksTest(TaskTestCase):
         state = self.task1.__getstate__()
         self.task2.__setstate__(state)
         self.assertNotEqual(self.task1, self.task2)
-
-
-class NewChildTestCase(TaskTestCase):
-    def setUp(self):
-        super(NewChildTestCase, self).setUp()
-        self.child = self.task.newChild()
-
-
-class NewChildOfDefaultTaskTest(NewChildTestCase):
-    def taskCreationKeywordArguments(self):
-        return [{'dueDateTime': self.tomorrow}]
     
-    def testNewChildHasSameDueDateTimeAsParent(self):
-        self.assertEqual(self.task.dueDateTime(), self.child.dueDateTime())
+
+class NewChildTest(TaskTestCase):
+    def setUp(self):
+        super(NewChildTest, self).setUp()
+        self.child = self.task.newChild()
+    
+    def testNewChildHasNoDueDateTimeByDefault(self):
+        self.assertEqual(date.DateTime(), self.child.dueDateTime())
                 
-    def testNewChildHasStartDateTimeNow(self):
+    def testNewChildHasNoStartDateTimeByDefault(self):
         self.assertEqual(date.DateTime(), self.child.startDateTime())
 
     def testNewChildIsNotCompleted(self):
         self.failIf(self.child.completed())
 
-
-class NewChildOfInactiveTask(NewChildTestCase):
-    def taskCreationKeywordArguments(self):
-        return [{'startDateTime': self.tomorrow}]
-    
-    def testChildHasSameStartDateTimeAsParent(self):
-        self.assertEqual(self.task.startDateTime(), self.child.startDateTime())
-
-
-class NewChildOfActiveTask(NewChildTestCase):
-    def taskCreationKeywordArguments(self):
-        return [{'startDateTime': self.yesterday}]
-
-    def testNewChildHasStartDateTimeNow(self):
-        self.assertAlmostEqual(date.Now().toordinal(), 
-                               self.child.startDateTime().toordinal(), places=2)
-        
 
 class TaskWithChildTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixin):
     def taskCreationKeywordArguments(self):
@@ -2323,3 +2304,55 @@ class TaskWithDependency(TaskTestCase):
         self.registerObserver('task.dependency.subject', eventSource=self.task)
         self.dependency.setSubject('New subject')
         self.assertEvent('task.dependency.subject', self.task, 'New subject')
+
+
+class TaskSuggestedDateTimeTest(test.TestCase):
+    def setUp(self):
+        self.settings = task.Task.settings = config.Settings(load=False)
+        self.now = now = date.Now()
+        tomorrow = now + date.oneDay
+        startOfWorkingDayHour = self.settings.getint('view', 'efforthourstart')
+        startOfWorkingDay = now.replace(hour=startOfWorkingDayHour, minute=0, 
+                                        second=0, microsecond=0)
+        startOfWorkingTomorrow = tomorrow.replace(hour=startOfWorkingDayHour,
+                                                  minute=0, second=0, microsecond=0)
+        endOfWorkingDayHour = self.settings.getint('view', 'efforthourend')
+        endOfWorkingDay = now.replace(hour=endOfWorkingDayHour, minute=0,
+                                      second=0, microsecond=0)
+        endOfWorkingTomorrow = tomorrow.replace(hour=endOfWorkingDayHour,
+                                                minute=0, second=0, microsecond=0)
+        
+        self.times = dict(today_startofday=now.startOfDay(), 
+                          today_startofworkingday=startOfWorkingDay,
+                          today_currenttime=now,
+                          today_endofworkingday=endOfWorkingDay,
+                          today_endofday=now.endOfDay(),
+                          tomorrow_startofday=tomorrow.startOfDay(),
+                          tomorrow_startofworkingday=startOfWorkingTomorrow,
+                          tomorrow_currenttime=tomorrow,
+                          tomorrow_endofworkingday=endOfWorkingTomorrow,
+                          tomorrow_endofday=tomorrow.endOfDay())
+        
+    def testSuggestedStartDateTime(self):
+        for timeValue, expectedDateTime in self.times.items():
+            self.settings.set('view', 'defaultstartdatetime', timeValue)
+            self.assertEqual(expectedDateTime,
+                             task.Task.suggestedStartDateTime(lambda: self.now))
+
+    def testSuggestedDueDateTime(self):
+        for timeValue, expectedDateTime in self.times.items():
+            self.settings.set('view', 'defaultduedatetime', timeValue) 
+            self.assertEqual(expectedDateTime,
+                             task.Task.suggestedDueDateTime(lambda: self.now))
+               
+    def testSuggestedCompletionDateTime(self):
+        for timeValue, expectedDateTime in self.times.items():
+            self.settings.set('view', 'defaultcompletiondatetime', timeValue) 
+            self.assertEqual(expectedDateTime,
+                             task.Task.suggestedCompletionDateTime(lambda: self.now))
+            
+    def testSuggestedReminderDateTime(self):
+        for timeValue, expectedDateTime in self.times.items():
+            self.settings.set('view', 'defaultreminderdatetime', timeValue)
+            self.assertEqual(expectedDateTime,
+                             task.Task.suggestedReminderDateTime(lambda: self.now))

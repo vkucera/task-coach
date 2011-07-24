@@ -16,8 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from xml.etree import ElementTree as ET
 import os, wx
+from xml.etree import ElementTree as ET
+from taskcoachlib.i18n import _
 
 
 def _anonymize(filename):
@@ -37,7 +38,7 @@ def _anonymize(filename):
                 node.attrib['extension'] = 'X' * len(node.attrib['extension'])
 
         if node.tag == 'property' and node.attrib.has_key('name') and node.attrib['name'] == 'username':
-            node.text = 'XXX'
+            node.text = 'XXX' # pylint: disable-msg=W0511
 
         if node.tag == 'attachment':
             if node.attrib.has_key('location'):

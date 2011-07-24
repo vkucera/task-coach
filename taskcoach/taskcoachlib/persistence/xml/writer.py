@@ -18,9 +18,44 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import xml.dom, os
+import os, sys
+from xml.etree import ElementTree as ET
+
 from taskcoachlib import meta
 from taskcoachlib.domain import date, task, note, category
+
+
+def flatten(elem):
+    if len(elem) and not elem.text:
+        elem.text = '\n'
+    elif elem.text:
+        elem.text = u'\n%s\n' % elem.text
+    elem.tail = '\n'
+    for child in elem:
+        flatten(child)
+
+
+class PIElementTree(ET.ElementTree):
+    def __init__(self, pi, *args, **kwargs):
+        self.__pi = pi
+        ET.ElementTree.__init__(self, *args, **kwargs)
+
+    def _write(self, file, node, encoding, namespaces):
+        if node == self._root:
+            # WTF ? ElementTree does not write the encoding if it's ASCII or UTF-8...
+            if encoding in ['us-ascii', 'utf-8']:
+                file.write('<?xml version="1.0" encoding="%s"?>\n' % encoding)
+            file.write(self.__pi.encode(encoding) + '\n')
+        ET.ElementTree._write(self, file, node, encoding, namespaces)
+
+    def write(self, file, encoding, *args, **kwargs):
+        if encoding is None:
+            encoding = 'utf-8'
+        if sys.version_info >= (2, 7):
+            file.write('<?xml version="1.0" encoding="%s"?>\n' % encoding)
+            file.write(self.__pi.encode(encoding) + '\n')
+            kwargs['xml_declaration'] = False
+        ET.ElementTree.write(self, file, encoding, *args, **kwargs)
 
 
 class XMLWriter(object):
@@ -32,215 +67,200 @@ class XMLWriter(object):
 
     def write(self, taskList, categoryContainer,
               noteContainer, syncMLConfig, guid):
-        domImplementation = xml.dom.getDOMImplementation()
-        self.document = domImplementation.createDocument(None, 'tasks', None) # pylint: disable-msg=W0201
-        pi = self.document.createProcessingInstruction('taskcoach', 
-            'release="%s" tskversion="%d"'%(meta.data.version, 
-            self.__versionnr))
-        self.document.insertBefore(pi, self.document.documentElement)
-        for rootTask in taskList.rootItems():
-            self.document.documentElement.appendChild(self.taskNode(rootTask))
-        for rootCategory in categoryContainer.rootItems():
-            self.document.documentElement.appendChild(self.categoryNode(rootCategory, taskList, noteContainer))
-        for rootNote in noteContainer.rootItems():
-            self.document.documentElement.appendChild(self.noteNode(rootNote))
-        if syncMLConfig:
-            self.document.documentElement.appendChild(self.syncMLNode(syncMLConfig))
-        if guid:
-            self.document.documentElement.appendChild(self.textNode('guid', guid))
-        self.document.writexml(self.__fd, newl='\n', encoding=self.__fd.encoding)
+        root = ET.Element('tasks')
 
-    def taskNode(self, task): # pylint: disable-msg=W0621
+        for rootTask in taskList.rootItems():
+            self.taskNode(root, rootTask)
+        for rootCategory in categoryContainer.rootItems():
+            self.categoryNode(root, rootCategory, taskList, noteContainer)
+        for rootNote in noteContainer.rootItems():
+            self.noteNode(root, rootNote)
+        if syncMLConfig:
+            self.syncMLNode(root, syncMLConfig)
+        if guid:
+            ET.SubElement(root, 'guid').text = guid
+
+        flatten(root)
+        PIElementTree('<?taskcoach release="%s" tskversion="%d"?>\n' % (meta.data.version,
+                                                                        self.__versionnr),
+                      root).write(self.__fd, self.__fd.encoding)
+
+    def taskNode(self, parentNode, task): # pylint: disable-msg=W0621
         maxDateTime = self.maxDateTime
-        node = self.baseCompositeNode(task, 'task', self.taskNode)
-        node.setAttribute('status', str(task.getStatus()))
+        node = self.baseCompositeNode(parentNode, task, 'task', self.taskNode)
+        node.attrib['status'] = str(task.getStatus())
         if task.startDateTime() != maxDateTime:
-            node.setAttribute('startdate', str(task.startDateTime()))
+            node.attrib['startdate'] = str(task.startDateTime())
         if task.dueDateTime() != maxDateTime:
-            node.setAttribute('duedate', str(task.dueDateTime()))
+            node.attrib['duedate'] = str(task.dueDateTime())
         if task.completionDateTime() != maxDateTime:
-            node.setAttribute('completiondate', str(task.completionDateTime()))
+            node.attrib['completiondate'] = str(task.completionDateTime())
         if task.percentageComplete() != 0:
-            node.setAttribute('percentageComplete', str(task.percentageComplete()))
+            node.attrib['percentageComplete'] = str(task.percentageComplete())
         if task.recurrence():
-            node.appendChild(self.recurrenceNode(task.recurrence()))
+            self.recurrenceNode(node, task.recurrence())
         if task.budget() != date.TimeDelta():
-            node.setAttribute('budget', self.budgetAsAttribute(task.budget()))
+            node.attrib['budget'] = self.budgetAsAttribute(task.budget())
         if task.priority() != 0:
-            node.setAttribute('priority', str(task.priority()))
+            node.attrib['priority'] = str(task.priority())
         if task.hourlyFee() != 0:
-            node.setAttribute('hourlyFee', str(task.hourlyFee()))
+            node.attrib['hourlyFee'] = str(task.hourlyFee())
         if task.fixedFee() != 0:
-            node.setAttribute('fixedFee', str(task.fixedFee()))
+            node.attrib['fixedFee'] = str(task.fixedFee())
         reminder = task.reminder() 
-        if reminder != None:
-            node.setAttribute('reminder', str(reminder))
+        if reminder != maxDateTime:
+            node.attrib['reminder'] = str(reminder)
             reminderBeforeSnooze = task.reminder(includeSnooze=False)
             if reminderBeforeSnooze != None and reminderBeforeSnooze < task.reminder():
-                node.setAttribute('reminderBeforeSnooze', str(reminderBeforeSnooze))
+                node.attrib['reminderBeforeSnooze'] = str(reminderBeforeSnooze)
         prerequisiteIds = ' '.join([prerequisite.id() for prerequisite in \
             task.prerequisites()])
         if prerequisiteIds:            
-            node.setAttribute('prerequisites', prerequisiteIds)
+            node.attrib['prerequisites'] = prerequisiteIds
         if task.shouldMarkCompletedWhenAllChildrenCompleted() != None:
-            node.setAttribute('shouldMarkCompletedWhenAllChildrenCompleted', 
-                              str(task.shouldMarkCompletedWhenAllChildrenCompleted()))
+            node.attrib['shouldMarkCompletedWhenAllChildrenCompleted'] = \
+                              str(task.shouldMarkCompletedWhenAllChildrenCompleted())
         for effort in task.efforts():
-            node.appendChild(self.effortNode(effort))
+            self.effortNode(node, effort)
         for eachNote in task.notes():
-            node.appendChild(self.noteNode(eachNote))
+            self.noteNode(node, eachNote)
         for attachment in task.attachments():
-            node.appendChild(self.attachmentNode(attachment))
+            self.attachmentNode(node, attachment)
         return node
 
-    def recurrenceNode(self, recurrence):
-        node = self.document.createElement('recurrence')
-        node.setAttribute('unit', recurrence.unit)
+    def recurrenceNode(self, parentNode, recurrence):
+        attrs = dict(unit=recurrence.unit)
         if recurrence.amount > 1:
-            node.setAttribute('amount', str(recurrence.amount))
+            attrs['amount'] = str(recurrence.amount)
         if recurrence.count > 0:
-            node.setAttribute('count', str(recurrence.count))
+            attrs['count'] = str(recurrence.count)
         if recurrence.max > 0:
-            node.setAttribute('max', str(recurrence.max))
+            attrs['max'] = str(recurrence.max)
         if recurrence.sameWeekday:
-            node.setAttribute('sameWeekday', 'True')
+            attrs['sameWeekday'] = 'True'
         if recurrence.recurBasedOnCompletion:
-            node.setAttribute('recurBasedOnCompletion', 'True')
-        return node
+            attrs['recurBasedOnCompletion'] = 'True'
+        return ET.SubElement(parentNode, 'recurrence', attrs)
 
-    def effortNode(self, effort):
-        node = self.document.createElement('effort')
+    def effortNode(self, parentNode, effort):
         formattedStart = self.formatDateTime(effort.getStart())
-        node.setAttribute('id', effort.id())
-        node.setAttribute('status', str(effort.getStatus()))
-        node.setAttribute('start', formattedStart)
+        attrs = dict(id=effort.id(), status=str(effort.getStatus()), start=formattedStart)
         stop = effort.getStop()
         if stop != None:
             formattedStop = self.formatDateTime(stop)
             if formattedStop == formattedStart:
                 # Make sure the effort duration is at least one second
                 formattedStop = self.formatDateTime(stop + date.TimeDelta(seconds=1))
-            node.setAttribute('stop', formattedStop)
+            attrs['stop'] = formattedStop
+        node = ET.SubElement(parentNode, 'effort', attrs)
         if effort.description():
-            node.appendChild(self.textNode('description', effort.description()))
+            ET.SubElement(node, 'description').text = effort.description()
         return node
     
-    def categoryNode(self, category, *categorizableContainers): # pylint: disable-msg=W0621
+    def categoryNode(self, parentNode, category, *categorizableContainers): # pylint: disable-msg=W0621
         def inCategorizableContainer(categorizable):
             for container in categorizableContainers:
                 if categorizable in container:
                     return True
             return False
-        node = self.baseCompositeNode(category, 'category', self.categoryNode, 
+        node = self.baseCompositeNode(parentNode, category, 'category', self.categoryNode, 
                                       categorizableContainers)
         if category.isFiltered():
-            node.setAttribute('filtered', str(category.isFiltered()))
+            node.attrib['filtered'] = str(category.isFiltered())
         if category.hasExclusiveSubcategories():
-            node.setAttribute('exclusiveSubcategories', str(category.hasExclusiveSubcategories()))
+            node.attrib['exclusiveSubcategories'] = str(category.hasExclusiveSubcategories())
         for eachNote in category.notes():
-            node.appendChild(self.noteNode(eachNote))
+            self.noteNode(node, eachNote)
         for attachment in category.attachments():
-            node.appendChild(self.attachmentNode(attachment))
+            self.attachmentNode(node, attachment)
         # Make sure the categorizables referenced are actually in the 
         # categorizableContainer, i.e. they are not deleted
         categorizableIds = ' '.join([categorizable.id() for categorizable in \
             category.categorizables() if inCategorizableContainer(categorizable)])
         if categorizableIds:            
-            node.setAttribute('categorizables', categorizableIds)
+            node.attrib['categorizables'] = categorizableIds
         return node
     
-    def noteNode(self, note): # pylint: disable-msg=W0621
-        node = self.baseCompositeNode(note, 'note', self.noteNode)
+    def noteNode(self, parentNode, note): # pylint: disable-msg=W0621
+        node = self.baseCompositeNode(parentNode, note, 'note', self.noteNode)
         for attachment in note.attachments():
-            node.appendChild(self.attachmentNode(attachment))
+            self.attachmentNode(node, attachment)
         return node
 
-    def __baseNode(self, item, nodeName):
-        node = self.document.createElement(nodeName)
-        node.setAttribute('id', item.id())
-        node.setAttribute('status', str(item.getStatus()))
+    def __baseNode(self, parentNode, item, nodeName):
+        node = ET.SubElement(parentNode, nodeName,
+                             dict(id=item.id(), status=str(item.getStatus())))
         if item.subject():
-            node.setAttribute('subject', item.subject())
+            node.attrib['subject'] = item.subject()
         if item.description():
-            node.appendChild(self.textNode('description', item.description()))
+            ET.SubElement(node, 'description').text = item.description()
         return node
 
-    def baseNode(self, item, nodeName):
+    def baseNode(self, parentNode, item, nodeName):
         ''' Create a node and add the attributes that all domain
             objects share, such as id, subject, description. '''
-        node = self.__baseNode(item, nodeName)
+        node = self.__baseNode(parentNode, item, nodeName)
         if item.foregroundColor():
-            node.setAttribute('fgColor', str(item.foregroundColor()))
+            node.attrib['fgColor'] = str(item.foregroundColor())
         if item.backgroundColor():
-            node.setAttribute('bgColor', str(item.backgroundColor()))
+            node.attrib['bgColor'] = str(item.backgroundColor())
         if item.font():
-            node.setAttribute('font', unicode(item.font().GetNativeFontInfoDesc()))
+            node.attrib['font'] = unicode(item.font().GetNativeFontInfoDesc())
         if item.icon():
-            node.setAttribute('icon', str(item.icon()))
+            node.attrib['icon'] = str(item.icon())
         if item.selectedIcon():
-            node.setAttribute('selectedIcon', str(item.selectedIcon()))
+            node.attrib['selectedIcon'] = str(item.selectedIcon())
         return node
 
-    def baseCompositeNode(self, item, nodeName, childNodeFactory, childNodeFactoryArgs=()):
+    def baseCompositeNode(self, parentNode, item, nodeName, childNodeFactory, childNodeFactoryArgs=()):
         ''' Same as baseNode, but also create child nodes by means of
             the childNodeFactory. '''
-        node = self.__baseNode(item, nodeName)
+        node = self.__baseNode(parentNode, item, nodeName)
         if item.foregroundColor():
-            node.setAttribute('fgColor', str(item.foregroundColor()))
+            node.attrib['fgColor'] = str(item.foregroundColor())
         if item.backgroundColor():
-            node.setAttribute('bgColor', str(item.backgroundColor()))
+            node.attrib['bgColor'] = str(item.backgroundColor())
         if item.font():
-            node.setAttribute('font', unicode(item.font().GetNativeFontInfoDesc()))
+            node.attrib['font'] = unicode(item.font().GetNativeFontInfoDesc())
         if item.icon():
-            node.setAttribute('icon', str(item.icon()))
+            node.attrib['icon'] = str(item.icon())
         if item.selectedIcon():
-            node.setAttribute('selectedIcon', str(item.selectedIcon()))
+            node.attrib['selectedIcon'] = str(item.selectedIcon())
         if item.expandedContexts():
-            node.setAttribute('expandedContexts', 
-                              str(tuple(sorted(item.expandedContexts()))))
+            node.attrib['expandedContexts'] = \
+                     str(tuple(sorted(item.expandedContexts())))
         for child in item.children():
-            node.appendChild(childNodeFactory(child, *childNodeFactoryArgs)) # pylint: disable-msg=W0142
+            childNodeFactory(node, child, *childNodeFactoryArgs)
         return node
 
-    def attachmentNode(self, attachment):
-        node = self.baseNode(attachment, 'attachment')
-        node.setAttribute('type', attachment.type_)
+    def attachmentNode(self, parentNode, attachment):
+        node = self.baseNode(parentNode, attachment, 'attachment')
+        node.attrib['type'] = attachment.type_
         data = attachment.data()
         if data is None:
-            node.setAttribute('location', attachment.location())
+            node.attrib['location'] = attachment.location()
         else:
-            dataNode = self.textNode('data', data.encode('base64'))
-            dataNode.setAttribute('extension',
-                                  os.path.splitext(attachment.location())[-1])
-            node.appendChild(dataNode)
+            ET.SubElement(node, 'data', dict(extension=os.path.splitext(attachment.location())[-1])).text = \
+                                data.encode('base64')
         for eachNote in attachment.notes():
-            node.appendChild(self.noteNode(eachNote))
+            self.noteNode(node, eachNote)
         return node
 
-    def syncMLNode(self, syncMLConfig):
-        node = self.document.createElement('syncmlconfig')
+    def syncMLNode(self, parentNode, syncMLConfig):
+        node = ET.SubElement(parentNode, 'syncmlconfig')
         self.__syncMLNode(syncMLConfig, node)
         return node
 
     def __syncMLNode(self, cfg, node):
         for name, value in cfg.properties():
-            child = self.textNode('property', value)
-            child.setAttribute('name', name)
-            node.appendChild(child)
+            ET.SubElement(node, 'property', dict(name=name)).text = value
 
         for childCfg in cfg.children():
-            child = self.document.createElement(childCfg.name)
+            child = ET.SubElement(node, childCfg.name)
             self.__syncMLNode(childCfg, child)
-            node.appendChild(child)
 
     def budgetAsAttribute(self, budget):
         return '%d:%02d:%02d'%budget.hoursMinutesSeconds()
-                
-    def textNode(self, nodeName, text):
-        node = self.document.createElement(nodeName)
-        textNode = self.document.createTextNode(text)
-        node.appendChild(textNode)
-        return node
 
     def formatDateTime(self, dateTime):
         return dateTime.strftime('%Y-%m-%d %H:%M:%S')
@@ -253,8 +273,8 @@ class TemplateXMLWriter(XMLWriter):
                    note.NoteContainer(),
                    None, None)
 
-    def taskNode(self, task): # pylint: disable-msg=W0621
-        node = super(TemplateXMLWriter, self).taskNode(task)
+    def taskNode(self, parentNode, task): # pylint: disable-msg=W0621
+        node = super(TemplateXMLWriter, self).taskNode(parentNode, task)
 
         for name, getter in [('startdate', 'startDateTime'),
                              ('duedate', 'dueDateTime'),
@@ -275,9 +295,9 @@ class TemplateXMLWriter(XMLWriter):
                     value = None
 
             if value is None:
-                if node.hasAttribute(name):
-                    node.removeAttribute(name)
+                if name in node.attrib:
+                    del node.attrib[name]
             else:
-                node.setAttribute(name + 'tmpl', value)
+                node.attrib[name + 'tmpl'] = value
 
         return node

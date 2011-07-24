@@ -46,6 +46,12 @@ defaults = { \
     'defaultsnoozetime': '5',        # Default snooze time
     'perspective': '',               # The layout of the viewers in the main window
     'datestied': '',                 # What to do when changing the start date or due date
+    # Default date and times to offer in the task dialog, see preferences for
+    # possible values.
+    'defaultstartdatetime': 'today_currenttime',
+    'defaultduedatetime': 'tomorrow_endofworkingday',
+    'defaultcompletiondatetime': 'today_currenttime',
+    'defaultreminderdatetime': 'tomorrow_startofworkingday',
 },
 'taskviewer': { \
     'title': '',                     # User supplied viewer title 
