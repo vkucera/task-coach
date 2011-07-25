@@ -250,6 +250,12 @@ class DateTimeCtrl(wx.Panel):
         self._timeCtrl.SetValue(formattedTime)
         self._timeCtrl.Enable(self._isDateCtrlEnabled())
         
+    def SetNone(self):
+        ''' Set the date and time to none. allowNone should be True. '''
+        assert self._noneAllowed
+        self._dateCtrl.SetValue(date2wxDateTime(None))
+        self._timeCtrl.Disable()
+        
     def GetValue(self):
         dateValue = wxDateTime2Date(self._dateCtrl.GetValue())
         if dateValue == date.Date():

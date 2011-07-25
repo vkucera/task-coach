@@ -410,28 +410,52 @@ class TaskBehaviorPage(SettingsPage):
     pageIcon = 'cogwheel_icon'
     
     def __init__(self, *args, **kwargs):
-        super(TaskBehaviorPage, self).__init__(columns=3, growableColumn=-1, *args, **kwargs)
+        super(TaskBehaviorPage, self).__init__(columns=2, growableColumn=-1, *args, **kwargs)
         self.addBooleanSetting('behavior', 'markparentcompletedwhenallchildrencompleted',
             _('Mark parent task completed when all children are completed'))
         self.addIntegerSetting('behavior', 'duesoonhours', 
             _("Number of hours that tasks are considered to be 'due soon'"), 
-            minimum=0, maximum=90, helpText=' ')
-        choices = [('', _('Nothing'))]
-        choices.append(('startdue', _('Changing the start date changes the due date')))
-        choices.append(('duestart', _('Changing the due date changes the start date')))
-        self.addChoiceSetting('view', 'datestied', _('Dates behavior'), 
-               choices, helpText=_('What to do with start and due date if the other one is changed'))
+            minimum=0, maximum=90)
+        choices = [('', _('Nothing')),
+                   ('startdue', _('Changing the start date changes the due date')),
+                   ('duestart', _('Changing the due date changes the start date'))]
+        self.addChoiceSetting('view', 'datestied', 
+            _('What to do with start and due date if the other one is changed'), 
+            choices)
+        
+        choices = [('today_startofday', _('Today, start of day')),
+                   ('today_startofworkingday', _('Today, start of working day')),
+                   ('today_currenttime', _('Today, current time')),
+                   ('today_endofworkingday', _('Today, end of working day')),
+                   ('today_endofday', _('Today, end of day')),
+                   ('tomorrow_startofday', _('Tomorrow, start of day')),
+                   ('tomorrow_startofworkingday', _('Tomorrow, start of working day')),
+                   ('tomorrow_currenttime', _('Tomorrow, current time')),
+                   ('tomorrow_endofworkingday', _('Tomorrow, end of working day')),
+                   ('tomorrow_endofday', _('Tomorrow, end of day'))]
+        self.addChoiceSetting('view', 'defaultstartdatetime', 
+                              _('Proposed start date and time of new tasks'), choices)
+        self.addChoiceSetting('view', 'defaultduedatetime', 
+                              _('Proposed due date and time of new tasks'), choices)
+        self.addChoiceSetting('view', 'defaultcompletiondatetime', 
+                              _('Proposed completion date and time of completed tasks'),
+                              choices)
+        self.addChoiceSetting('view', 'defaultreminderdatetime', 
+                              _('Proposed reminder date and time'), choices)
+        
         names = [] # There's at least one, the universal one
         for name in notify.AbstractNotifier.names():
             names.append((name, name))
-        self.addChoiceSetting('feature', 'notifier', _('Notification system'), names,
-                              helpText=_('Notification system to use for reminders (Growl, Snarl, etc.)'))
+        self.addChoiceSetting('feature', 'notifier', 
+                              _('Notification system to use for reminders'), 
+                              names)
         snoozeChoices = [(str(choice[0]), choice[1]) for choice in date.snoozeChoices]
-        self.addChoiceSetting('view', 'defaultsnoozetime', _('Default snooze time'), 
-                                       snoozeChoices, _('Snooze time to use after the reminder'))
+        self.addChoiceSetting('view', 'defaultsnoozetime', 
+                              _('Default snooze time to use after reminder'), 
+                              snoozeChoices)
         self.addMultipleChoiceSettings('view', 'snoozetimes', 
             _('Snooze times to offer in task reminder dialog'), 
-            date.snoozeChoices[1:], helpText=' ') # Don't offer "Don't snooze" as a choice
+            date.snoozeChoices[1:]) # Don't offer "Don't snooze" as a choice
         self.fit()
 
 

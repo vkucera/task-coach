@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, wx.combo, locale
-from wx.lib import masked, newevent
+from wx.lib import newevent
 from taskcoachlib import widgets
 from taskcoachlib.gui import artprovider
 from taskcoachlib.domain import date
@@ -34,7 +34,7 @@ class DateTimeEntry(widgets.DateTimeCtrl):
 
     def __init__(self, parent, settings, initialDateTime=defaultDateTime, 
                  readonly=False, noneAllowed=True, showSeconds=False, 
-                 *args, **kwargs):
+                 suggestedDateTime=None, *args, **kwargs):
         starthour = settings.getint('view', 'efforthourstart')
         endhour = settings.getint('view', 'efforthourend')
         interval = settings.getint('view', 'effortminuteinterval')
@@ -46,15 +46,22 @@ class DateTimeEntry(widgets.DateTimeCtrl):
             self.Disable()
         # First set the initial value and then set the callback so that the
         # callback is not triggered for the initial value
-        self.SetValue(initialDateTime)
+        if initialDateTime == date.DateTime() and suggestedDateTime:
+            self.setSuggested(suggestedDateTime)
+        else:
+            self.SetValue(initialDateTime)
         self.setCallback(self.onDateTimeCtrlEdited)
         
     def SetValue(self, newValue=None):
         super(DateTimeEntry, self).SetValue(newValue or self.defaultDateTime)
 
-    def onDateTimeCtrlEdited(self, *args, **kwargs):
+    def setSuggested(self, suggestedDateTime):
+        super(DateTimeEntry, self).SetValue(suggestedDateTime)
+        super(DateTimeEntry, self).SetNone()
+        
+    def onDateTimeCtrlEdited(self, *args, **kwargs): # pylint: disable-msg=W0613
         wx.PostEvent(self, DateTimeEntryEvent())            
-
+        
 
 class TimeDeltaEntry(widgets.PanelWithBoxSizer):
     # We can't inherit from widgets.masked.TextCtrl because that class expects

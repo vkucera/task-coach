@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.0', 'June 20, 2011',
+Release('1.3.0', 'June 24, 2011',
     summary='''This release makes all edits done in dialogs immediate.''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -41,9 +41,16 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.25', 'July 19, 2011',
-    summary='''This is a bugfix release.''',
+Release('1.2.25', 'July 23, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
+        Bug('''The anonymize function wouldn't give a notification after saving
+the file.''')
+        ],
+    featuresAdded=[
+        Feature('''Users can choose default start, due and completion times for
+tasks in the preference dialog.''', 'http://uservoice.com/a/g9xpy'),
+        Feature('''Faster saving.''')
         ]
     ),
 

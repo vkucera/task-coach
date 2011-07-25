@@ -86,20 +86,20 @@ class DeleteTaskCommand(base.DeleteCommand, EffortCommand):
     
     def __removePrerequisites(self, event):
         self.__relationsToRestore = dict() # pylint: disable-msg=W0201
-        for task in self.items:
-            prerequisites, dependencies = task.prerequisites(), task.dependencies()
-            self.__relationsToRestore[task] = prerequisites, dependencies
-            task.removeTaskAsDependencyOf(prerequisites, event=event)
-            task.removeTaskAsPrerequisiteOf(dependencies, event=event)
-            task.setPrerequisites([], event=event)
-            task.setDependencies([], event=event)
+        for eachTask in self.items:
+            prerequisites, dependencies = eachTask.prerequisites(), eachTask.dependencies()
+            self.__relationsToRestore[eachTask] = prerequisites, dependencies
+            eachTask.removeTaskAsDependencyOf(prerequisites, event=event)
+            eachTask.removeTaskAsPrerequisiteOf(dependencies, event=event)
+            eachTask.setPrerequisites([], event=event)
+            eachTask.setDependencies([], event=event)
 
     def __restorePrerequisites(self, event):
-        for task, (prerequisites, dependencies) in self.__relationsToRestore.items():
-            task.addTaskAsDependencyOf(prerequisites, event=event)
-            task.addTaskAsPrerequisiteOf(dependencies, event=event)
-            task.setPrerequisites(prerequisites, event=event)
-            task.setDependencies(dependencies, event=event)
+        for eachTask, (prerequisites, dependencies) in self.__relationsToRestore.items():
+            eachTask.addTaskAsDependencyOf(prerequisites, event=event)
+            eachTask.addTaskAsPrerequisiteOf(dependencies, event=event)
+            eachTask.setPrerequisites(prerequisites, event=event)
+            eachTask.setDependencies(dependencies, event=event)
             
 
 class NewTaskCommand(base.NewItemCommand):
@@ -107,10 +107,8 @@ class NewTaskCommand(base.NewItemCommand):
     
     def __init__(self, *args, **kwargs):
         subject = kwargs.pop('subject', _('New task'))
-        startDateTime = kwargs.pop('startDateTime', date.Now())
         super(NewTaskCommand, self).__init__(*args, **kwargs)
-        self.items = [task.Task(subject=subject, 
-                                startDateTime=startDateTime, **kwargs)]
+        self.items = [task.Task(subject=subject, **kwargs)]
 
     def do_command(self):
         super(NewTaskCommand, self).do_command()
@@ -162,7 +160,7 @@ class NewSubTaskCommand(base.NewSubItemCommand, SaveTaskStateMixin):
 
     def redo_command(self):
         super(NewSubTaskCommand, self).redo_command()
-        self.redoStates()        
+        self.redoStates()
                 
                 
 class MarkCompletedCommand(base.SaveStateMixin, EffortCommand):
@@ -178,10 +176,8 @@ class MarkCompletedCommand(base.SaveStateMixin, EffortCommand):
     def do_command(self, event=None):
         super(MarkCompletedCommand, self).do_command()
         for item in self.items:
-            if item.completed():
-                item.setCompletionDateTime(date.DateTime(), event=event)
-            else:
-                item.setCompletionDateTime(event=event)
+            completionDateTime = date.DateTime() if item.completed() else task.Task.suggestedCompletionDateTime()
+            item.setCompletionDateTime(completionDateTime, event=event)
 
     def undo_command(self):
         self.undoStates()
@@ -193,8 +189,8 @@ class MarkCompletedCommand(base.SaveStateMixin, EffortCommand):
 
     def tasksToStopTracking(self):
         return self.items                
-                
 
+                
 class StartEffortCommand(EffortCommand):
     plural_name = _('Start tracking')
     singular_name = _('Start tracking "%s"')
@@ -240,7 +236,8 @@ class StopEffortCommand(EffortCommand):
         return True # No selected items needed.
     
     def tasksToStopTracking(self):
-        return set([effort.task() for effort in self.list if effort.isBeingTracked() and not effort.isTotal()])
+        stoppable = lambda effort: effort.isBeingTracked() and not effort.isTotal()
+        return set([effort.task() for effort in self.list if stoppable(effort)]) # pylint: disable-msg=W0621 
 
 
 class ExtremePriorityCommand(base.BaseCommand): # pylint: disable-msg=W0223

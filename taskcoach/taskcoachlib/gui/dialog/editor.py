@@ -241,6 +241,7 @@ class DatesPage(Page):
     
     def __init__(self, theTask, parent, settings, *args, **kwargs):
         self.__settings = settings
+        self._duration = None
         super(DatesPage, self).__init__(theTask, parent, *args, **kwargs)
         
     def addEntries(self):
@@ -262,10 +263,11 @@ class DatesPage(Page):
             dateTime = getattr(self.items[0], taskMethodName)()
         else:
             dateTime = date.DateTime()
-            if taskMethodName == 'startDateTime':
-                dateTime = dateTime.startOfDay()
         setattr(self, '_current%s'%TaskMethodName, dateTime)
-        dateTimeEntry = entry.DateTimeEntry(self, self.__settings, dateTime)
+        suggestedDateTimeMethodName = 'suggested' + TaskMethodName
+        suggestedDateTime = getattr(self.items[0], suggestedDateTimeMethodName)()
+        dateTimeEntry = entry.DateTimeEntry(self, self.__settings, dateTime,
+                                            suggestedDateTime=suggestedDateTime)
         setattr(self, '_%sEntry'%taskMethodName, dateTimeEntry)
         if self.__settings.get('view', 'datestied') == 'startdue' and taskMethodName == 'startDateTime':
             commandClass = command.EditStartDateTimeSyncCommand
@@ -282,19 +284,16 @@ class DatesPage(Page):
             eventType, taskMethodName)
         setattr(self, '_%sSync'%taskMethodName, datetimeSync) 
         self.addEntry(label, dateTimeEntry)
-        dateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeChanged)
 
     def addReminderEntry(self):
         # pylint: disable-msg=W0201
-        currentReminderDateTime = self.items[0].reminder() if len(self.items) == 1 else date.DateTime()
+        reminderDateTime = self.items[0].reminder() if len(self.items) == 1 else date.DateTime()
+        suggestedDateTime = self.items[0].suggestedReminderDateTime()
         self._reminderDateTimeEntry = entry.DateTimeEntry(self, self.__settings,
-                                                          currentReminderDateTime)
-        # If the user has not set a reminder, make sure that the default 
-        # date time in the reminder entry is a reasonable suggestion:
-        if self._reminderDateTimeEntry.GetValue() == date.DateTime():
-            self.suggestReminder()
+                                                          reminderDateTime, 
+                                                          suggestedDateTime=suggestedDateTime)
         self._reminderDateTimeSync = attributesync.AttributeSync('datetime', 
-            self._reminderDateTimeEntry, currentReminderDateTime, self.items, 
+            self._reminderDateTimeEntry, reminderDateTime, self.items, 
             command.EditReminderDateTimeCommand, entry.EVT_DATETIMEENTRY, 
             task.Task.reminderChangedEventType(), 'reminder')
         self.addEntry(_('Reminder'), self._reminderDateTimeEntry)
@@ -317,36 +316,7 @@ class DatesPage(Page):
                     timeLeft=self._dueDateTimeEntry,
                     reminder=self._reminderDateTimeEntry,
                     recurrence=self._recurrenceEntry)
-    
-    def onDateTimeChanged(self, event):
-        ''' Called when one of the DateTimeEntries is changed by the user. 
-            Update the suggested reminder if no reminder was set by the user. '''
-        if event:        
-            event.Skip()
-        # Make sure the reminderDateTimeEntry has been created:
-        if hasattr(self, '_reminderDateTimeEntry') and \
-            self._reminderDateTimeEntry.GetValue() == date.DateTime():
-            self.suggestReminder()
-            
-    def suggestReminder(self):
-        ''' suggestReminder populates the reminder entry with a reasonable
-            suggestion for a reminder date and time, but does not enable the
-            reminder entry. '''
-        # The suggested date for the reminder is the first date from the
-        # list of candidates that is a real date:
-        # pylint: disable-msg=E1101
-        candidates = [self._dueDateTimeEntry.GetValue(), self._startDateTimeEntry.GetValue(),
-                      date.Now() + date.oneDay]
-        suggestedDateTime = [candidate for candidate in candidates \
-                            if date.Now() <= candidate < date.DateTime()][0]
-        # Now, make sure the suggested date time is set in the control
-        self._reminderDateTimeEntry.SetValue(suggestedDateTime)
-        # And then disable the control (because the SetValue in the
-        # previous statement enables the control)
-        self._reminderDateTimeEntry.SetValue(None)
-        # Now, when the user clicks the check box to enable the
-        # control it will show the suggested date time
-        
+
 
 class ProgressPage(Page):
     pageName = 'progress'
@@ -415,7 +385,7 @@ class BudgetPage(Page):
             self.addBudgetLeftEntry()
             
     def addBudgetEntry(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable-msg=W0201,W0212
         currentBudget = self.items[0].budget() if len(self.items) == 1 else date.TimeDelta()
         self._budgetEntry = entry.TimeDeltaEntry(self, currentBudget)
         self._budgetSync = attributesync.AttributeSync('budget', 
@@ -464,7 +434,7 @@ class BudgetPage(Page):
             self.addRevenueEntry()
             
     def addHourlyFeeEntry(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable-msg=W0201,W0212
         currentHourlyFee = self.items[0].hourlyFee() if len(self.items) == 1 else 0
         self._hourlyFeeEntry = entry.AmountEntry(self, currentHourlyFee)
         self._hourlyFeeSync = attributesync.AttributeSync('hourlyFee',
@@ -474,7 +444,7 @@ class BudgetPage(Page):
         self.addEntry(_('Hourly fee'), self._hourlyFeeEntry, flags=[None, wx.ALL])
         
     def addFixedFeeEntry(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable-msg=W0201,W0212
         currentFixedFee = self.items[0].fixedFee() if len(self.items) == 1 else 0
         self._fixedFeeEntry = entry.AmountEntry(self, currentFixedFee)
         self._fixedFeeSync = attributesync.AttributeSync('fixedFee',
@@ -589,7 +559,7 @@ class LocalCategoryViewer(viewer.BaseCategoryViewer):
         for item in self.domainObjectsToView():
             item.expand(context=self.settingsSection())
 
-    def getIsItemChecked(self, category):
+    def getIsItemChecked(self, category): # pylint: disable-msg=W0621
         for item in self.__items:
             if category in item.categories():
                 return True
@@ -848,7 +818,7 @@ class EditBook(widgets.Notebook):
             try:
                 self.LoadPerspective(perspective)
             except:
-                pass
+                pass # pylint: disable-msg=W0702
 
     def savePerspective(self, pageNames):
         perspectives = self.settings.getdict('%sdialog'%self.object, 'perspectives')
@@ -918,7 +888,7 @@ class EffortEditBook(Page):
         self._taskFile = taskFile
         super(EffortEditBook, self).__init__(efforts, parent, *args, **kwargs)
         
-    def getPage(self, pageName):
+    def getPage(self, pageName): # pylint: disable-msg=W0613
         return None # An EffortEditBook is not really a notebook...
         
     def addEntries(self):
@@ -929,7 +899,7 @@ class EffortEditBook(Page):
     def addTaskEntry(self):
         ''' Add an entry for changing the task that this effort record
             belongs to. '''
-        # pylint: disable-msg=W0201
+        # pylint: disable-msg=W0201,W0212
         panel = wx.Panel(self)
         currentTask = self.items[0].task()
         self._taskEntry = entry.TaskEntry(panel,
@@ -1009,7 +979,7 @@ class EffortEditBook(Page):
         except AttributeError:
             return True # Entries not created yet
 
-    def onEditTask(self, event):
+    def onEditTask(self, event): # pylint: disable-msg=W0613
         taskToEdit = self._taskEntry.GetValue()
         TaskEditor(None, [taskToEdit], self._settings, self._taskFile.tasks(), 
             self._taskFile).Show()
@@ -1043,7 +1013,7 @@ class EffortEditBook(Page):
     
     
 class Editor(widgets.ButtonLessDialog):
-    EditBookClass = lambda: 'Subclass responsibility'
+    EditBookClass = lambda *args: 'Subclass responsibility'
     singular_title = 'Subclass responsibility %s'
     plural_title = 'Subclass responsibility'
     
@@ -1053,7 +1023,6 @@ class Editor(widgets.ButtonLessDialog):
         self._taskFile = taskFile
         self._callAfter = kwargs.get('callAfter', wx.CallAfter)
         super(Editor, self).__init__(parent, self.title(), *args, **kwargs)
-
         columnName = kwargs.get('columnName', '')
         self._interior.setFocus(columnName)
         patterns.Publisher().registerObserver(self.onItemRemoved,
@@ -1087,6 +1056,7 @@ class Editor(widgets.ButtonLessDialog):
                                      (wx.ACCEL_CMD, ord('Y'), wx.ID_REDO),
                                      (wx.ACCEL_CMD, ord('E'), newEffortId)])
         self._interior.SetAcceleratorTable(table)
+        # pylint: disable-msg=W0201
         self.undoCommand = uicommand.EditUndo()
         self.redoCommand = uicommand.EditRedo()
         effortPage = self._interior.getPage('effort') 
