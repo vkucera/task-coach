@@ -22,15 +22,16 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.25', 'July 23, 2011',
+Release('1.2.25', 'July 26, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''The anonymize function wouldn't give a notification after saving
 the file.''')
         ],
     featuresAdded=[
-        Feature('''Users can choose default start, due and completion times for
-tasks in the preference dialog.''', 'http://uservoice.com/a/g9xpy'),
+        Feature('''Users can choose default start, due and completion days and
+times for tasks in the preference dialog. This allows for e.g. automatically 
+setting a reminder the next day.''', 'http://uservoice.com/a/g9xpy'),
         Feature('''Faster saving.''')
         ]
     ),

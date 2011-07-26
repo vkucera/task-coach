@@ -24,7 +24,7 @@ import wx.combo, os.path
 from taskcoachlib import widgets, patterns, command
 from taskcoachlib.gui import viewer, artprovider, uicommand, windowdimensionstracker
 from taskcoachlib.i18n import _
-from taskcoachlib.domain import task, category, date, note, attachment
+from taskcoachlib.domain import task, date, note, attachment
 from taskcoachlib.gui.dialog import entry
 
 
@@ -376,6 +376,8 @@ class DatesPage(Page):
 
             suggestedDateTimeMethodName = 'suggested' + taskMethodName[0].capitalize() + taskMethodName[1:]
             suggestedDateTime = getattr(self.items[0], suggestedDateTimeMethodName)()
+            if self.__settings.get('view', 'default%s'%taskMethodName.lower()).startswith('preset') and dateTime == date.DateTime():
+                dateTime = suggestedDateTime
    
             dateTimeEntry = entry.DateTimeEntry(self, self.__settings, dateTime,
                                                 callback=callback, 
@@ -395,6 +397,8 @@ class DatesPage(Page):
         self._reminderDateTimeLabel = self.label(_('Reminder'))
         reminderDateTime = self.items[0].reminder() if len(self.items) == 1 else date.DateTime()
         suggestedDateTime = self.items[0].suggestedReminderDateTime()
+        if self.__settings.get('view', 'defaultreminderdatetime').startswith('preset') and reminderDateTime == date.DateTime():
+            reminderDateTime = suggestedDateTime
         self._reminderDateTimeEntry = entry.DateTimeEntry(self, self.__settings,
                                                           reminderDateTime, 
                                                           suggestedDateTime=suggestedDateTime)
