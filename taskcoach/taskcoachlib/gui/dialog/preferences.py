@@ -69,16 +69,22 @@ class SettingsPageBase(widgets.BookPage):
         self.addEntry(text, checkBox, helpText=helpText)
         self._booleanSettings.append((section, setting, checkBox))
 
-    def addChoiceSetting(self, section, setting, text, choices, helpText=''):
-        choice = wx.Choice(self, -1)
-        for choiceValue, choiceText in choices:
-            choice.Append(choiceText, choiceValue)
-            if choiceValue == self.get(section, setting):
-                choice.SetSelection(choice.GetCount()-1)
-        if choice.GetSelection() == wx.NOT_FOUND: # force a selection if necessary
-            choice.SetSelection(0)
-        self.addEntry(text, choice, helpText=helpText)
-        self._choiceSettings.append((section, setting, choice))
+    def addChoiceSetting(self, section, setting, text, helpText, *listsOfChoices, **kwargs):
+        choiceCtrls = []
+        currentValue = self.get(section, setting)
+        for choices, currentValuePart in zip(listsOfChoices, currentValue.split('_')):
+            choiceCtrl = wx.Choice(self, -1)
+            choiceCtrls.append(choiceCtrl)
+            for choiceValue, choiceText in choices:
+                choiceCtrl.Append(choiceText, choiceValue)
+                if choiceValue == currentValuePart:
+                    choiceCtrl.SetSelection(choiceCtrl.GetCount()-1)
+            if choiceCtrl.GetSelection() == wx.NOT_FOUND: # force a selection if necessary
+                choiceCtrl.SetSelection(0)
+        # pylint: disable-msg=W0142
+        self.addEntry(text, *choiceCtrls, helpText=helpText, 
+                      flags=kwargs.get('flags', None)) 
+        self._choiceSettings.append((section, setting, choiceCtrls))
         
     def addMultipleChoiceSettings(self, section, setting, text, choices, helpText=''):
         ''' choices is a list of (number, text) tuples. '''
@@ -91,10 +97,11 @@ class SettingsPageBase(widgets.BookPage):
                                              [choice[0] for choice in choices]))
         
     def addIntegerSetting(self, section, setting, text, minimum=0, maximum=100,
-            helpText=''):
-        spin = widgets.SpinCtrl(self, min=minimum, max=maximum, size=(40, -1),
-            initial=self.getint(section, setting))
-        self.addEntry(text, spin, helpText=helpText)
+            helpText='', flags=None):
+        intValue = self.getint(section, setting)
+        spin = widgets.SpinCtrl(self, min=minimum, max=maximum, size=(65, -1),
+            initial=intValue, value=str(intValue))
+        self.addEntry(text, spin, helpText=helpText, flags=flags)
         self._integerSettings.append((section, setting, spin))
 
     def addAppearanceHeader(self):
@@ -123,7 +130,12 @@ class SettingsPageBase(widgets.BookPage):
         currentSelectionIndex = imageNames.index(currentIcon)
         iconEntry.SetSelection(currentSelectionIndex) # pylint: disable-msg=E1101
 
-        self.addEntry(text, fgColorButton, bgColorButton, fontButton, iconEntry)
+        self.addEntry(text, fgColorButton, bgColorButton, fontButton, iconEntry, 
+                      flags=(wx.ALL|wx.ALIGN_CENTER_VERTICAL, 
+                             wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL,
+                             wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 
+                             wx.ALL|wx.ALIGN_CENTER_VERTICAL, # wx.EXPAND causes the button to be top aligned on Mac OS X
+                             wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL))
         self._colorSettings.append((fgColorSection, fgColorSetting, fgColorButton))
         self._colorSettings.append((bgColorSection, bgColorSetting, bgColorButton))
         self._iconSettings.append((iconSection, iconSetting, iconEntry))        
@@ -147,9 +159,9 @@ class SettingsPageBase(widgets.BookPage):
     def ok(self):
         for section, setting, checkBox in self._booleanSettings:
             self.set(section, setting, str(checkBox.IsChecked()))
-        for section, setting, choice in self._choiceSettings:
-            self.set(section, setting, 
-                              choice.GetClientData(choice.GetSelection()))
+        for section, setting, choiceCtrls in self._choiceSettings:
+            value = '_'.join([choice.GetClientData(choice.GetSelection()) for choice in choiceCtrls])
+            self.set(section, setting, value)
         for section, setting, multipleChoice, choices in self._multipleChoiceSettings:
             self.set(section, setting,
                      str([choices[index] for index in range(len(choices)) if multipleChoice.IsChecked(index)]))
@@ -241,7 +253,7 @@ class WindowBehaviorPage(SettingsPage):
         self.addBooleanSetting('window', 'tips', 
             _('Show tips window on startup'))
         self.addChoiceSetting('window', 'starticonized',
-            _('Start with the main window iconized'),
+            _('Start with the main window iconized'), '',
             [('Never', _('Never')), ('Always', _('Always')), 
              ('WhenClosedIconized', 
               _('If it was iconized last session'))])
@@ -321,7 +333,7 @@ class LanguagePage(SettingsPage):
              ('uk_UA', u'украї́нська мо́ва (Ukranian)'),
              ('vi_VI', u'tiếng Việt (Vietnamese)')]
         self.addChoiceSetting('view', 'language_set_by_user', _('Language'), 
-                              choices, helpText='restart')
+                              'restart', choices)
         
         panel = wx.Panel(self)
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -391,9 +403,8 @@ class FeaturesPage(SettingsPage):
             _('Use gradients in calendar views.\nThis may slow down Task Coach.'),
             helpText='restart')
         self.addChoiceSetting('view', 'effortminuteinterval',
-            _('Minutes between task start/end times'),
-            [('5', '5'), ('10', '10'), ('15', '15'), ('20', '20'), ('30', '30')],
-            helpText=' ')
+            _('Minutes between task start/end times'), ' ',
+            [('5', '5'), ('10', '10'), ('15', '15'), ('20', '20'), ('30', '30')])
         self.addIntegerSetting('feature', 'minidletime', _('Minimum idle time'),
             helpText=_('If there is no user input for at least this amount of\nminutes, Task Coach will ask what to do about current efforts.'))
         self.fit()
@@ -405,49 +416,53 @@ class TaskBehaviorPage(SettingsPage):
     pageIcon = 'cogwheel_icon'
     
     def __init__(self, *args, **kwargs):
-        super(TaskBehaviorPage, self).__init__(columns=2, growableColumn=-1, *args, **kwargs)
+        super(TaskBehaviorPage, self).__init__(columns=4, growableColumn=-1, *args, **kwargs)
         self.addBooleanSetting('behavior', 'markparentcompletedwhenallchildrencompleted',
             _('Mark parent task completed when all children are completed'))
         self.addIntegerSetting('behavior', 'duesoonhours', 
             _("Number of hours that tasks are considered to be 'due soon'"), 
-            minimum=0, maximum=90)
+            minimum=0, maximum=90, flags=(None, wx.ALL|wx.ALIGN_LEFT))
         choices = [('', _('Nothing')),
                    ('startdue', _('Changing the start date changes the due date')),
                    ('duestart', _('Changing the due date changes the start date'))]
         self.addChoiceSetting('view', 'datestied', 
             _('What to do with start and due date if the other one is changed'), 
-            choices)
-        
-        choices = [('today_startofday', _('Today, start of day')),
-                   ('today_startofworkingday', _('Today, start of working day')),
-                   ('today_currenttime', _('Today, current time')),
-                   ('today_endofworkingday', _('Today, end of working day')),
-                   ('today_endofday', _('Today, end of day')),
-                   ('tomorrow_startofday', _('Tomorrow, start of day')),
-                   ('tomorrow_startofworkingday', _('Tomorrow, start of working day')),
-                   ('tomorrow_currenttime', _('Tomorrow, current time')),
-                   ('tomorrow_endofworkingday', _('Tomorrow, end of working day')),
-                   ('tomorrow_endofday', _('Tomorrow, end of day'))]
+            '', choices, flags=(None, wx.ALL|wx.ALIGN_LEFT))
+
+        check_choices = [('preset', _('Preset')),
+                         ('propose', _('Propose'))]
+        day_choices = [('today', _('Today')),
+                       ('tomorrow', _('Tomorrow')),
+                       ('dayaftertomorrow', _('Day after tomorrow')),
+                       ('nextfriday', _('Next Friday'))]
+        time_choices = [('startofday', _('Start of day')),
+                        ('startofworkingday', _('Start of working day')),
+                        ('currenttime', _('Current time')),
+                        ('endofworkingday', _('End of working day')),
+                        ('endofday', _('End of day'))]
         self.addChoiceSetting('view', 'defaultstartdatetime', 
-                              _('Proposed start date and time of new tasks'), choices)
+                              _('Default start date and time of new tasks'), 
+                              '', check_choices, day_choices, time_choices)
         self.addChoiceSetting('view', 'defaultduedatetime', 
-                              _('Proposed due date and time of new tasks'), choices)
+                              _('Default due date and time of new tasks'), 
+                              '', check_choices, day_choices, time_choices)
         self.addChoiceSetting('view', 'defaultcompletiondatetime', 
-                              _('Proposed completion date and time of completed tasks'),
-                              choices)
+                              _('Default completion date and time of completed tasks'),
+                              '', [check_choices[1]], day_choices, time_choices)
         self.addChoiceSetting('view', 'defaultreminderdatetime', 
-                              _('Proposed reminder date and time'), choices)
-        
+                              _('Default reminder date and time'), 
+                              '', check_choices, day_choices, time_choices)
+
         names = [] # There's at least one, the universal one
         for name in notify.AbstractNotifier.names():
             names.append((name, name))
         self.addChoiceSetting('feature', 'notifier', 
                               _('Notification system to use for reminders'), 
-                              names)
+                              '', names, flags=(None, wx.ALL|wx.ALIGN_LEFT))
         snoozeChoices = [(str(choice[0]), choice[1]) for choice in date.snoozeChoices]
         self.addChoiceSetting('view', 'defaultsnoozetime', 
                               _('Default snooze time to use after reminder'), 
-                              snoozeChoices)
+                              '', snoozeChoices, flags=(None, wx.ALL|wx.ALIGN_LEFT))
         self.addMultipleChoiceSettings('view', 'snoozetimes', 
             _('Snooze times to offer in task reminder dialog'), 
             date.snoozeChoices[1:]) # Don't offer "Don't snooze" as a choice

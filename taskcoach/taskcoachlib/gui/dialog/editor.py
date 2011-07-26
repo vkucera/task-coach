@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx.combo, os.path
 from taskcoachlib import widgets, patterns, command
-from taskcoachlib.gui import viewer, artprovider, uicommand, windowdimensionstracker
+from taskcoachlib.gui import viewer, uicommand, windowdimensionstracker
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, date, note, attachment
 from taskcoachlib.gui.dialog import entry, attributesync
@@ -208,7 +208,7 @@ class AppearancePage(Page):
         self.addEntry(labelText, colorEntry, flags=[None, wx.ALL])
             
     def addFontEntry(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable-msg=W0201,E1101
         currentFont = self.items[0].font() if len(self.items) == 1 else None
         currentColor = self._foregroundColorEntry.GetValue()
         self._fontEntry = entry.FontEntry(self, currentFont, currentColor)
@@ -222,7 +222,7 @@ class AppearancePage(Page):
         self.addEntry(_('Font'), self._fontEntry, flags=[None, wx.ALL])
                     
     def addIconEntry(self):
-        # pylint: disable-msg=W0201
+        # pylint: disable-msg=W0201,E1101
         currentIcon = self.items[0].icon() if len(self.items) == 1 else ''
         self._iconEntry = entry.IconEntry(self, currentIcon)
         self._iconSync = attributesync.AttributeSync('icon', self._iconEntry, 
@@ -231,7 +231,7 @@ class AppearancePage(Page):
         self.addEntry(_('Icon'), self._iconEntry, flags=[None, wx.ALL])
     
     def entries(self):
-        return dict(firstEntry=self._foregroundColorEntry)
+        return dict(firstEntry=self._foregroundColorEntry) # pylint: disable-msg=E1101
     
 
 class DatesPage(Page):
@@ -266,6 +266,8 @@ class DatesPage(Page):
         setattr(self, '_current%s'%TaskMethodName, dateTime)
         suggestedDateTimeMethodName = 'suggested' + TaskMethodName
         suggestedDateTime = getattr(self.items[0], suggestedDateTimeMethodName)()
+        if self.__settings.get('view', 'default%s'%taskMethodName.lower()).startswith('preset') and dateTime == date.DateTime():
+            dateTime = suggestedDateTime
         dateTimeEntry = entry.DateTimeEntry(self, self.__settings, dateTime,
                                             suggestedDateTime=suggestedDateTime)
         setattr(self, '_%sEntry'%taskMethodName, dateTimeEntry)
@@ -286,6 +288,8 @@ class DatesPage(Page):
         # pylint: disable-msg=W0201
         reminderDateTime = self.items[0].reminder() if len(self.items) == 1 else date.DateTime()
         suggestedDateTime = self.items[0].suggestedReminderDateTime()
+        if self.__settings.get('view', 'defaultreminderdatetime').startswith('preset') and reminderDateTime == date.DateTime():
+            reminderDateTime = suggestedDateTime
         self._reminderDateTimeEntry = entry.DateTimeEntry(self, self.__settings,
                                                           reminderDateTime, 
                                                           suggestedDateTime=suggestedDateTime)
