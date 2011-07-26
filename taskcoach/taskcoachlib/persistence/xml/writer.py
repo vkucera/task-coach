@@ -84,7 +84,7 @@ class XMLWriter(object):
         flatten(root)
         PIElementTree('<?taskcoach release="%s" tskversion="%d"?>\n' % (meta.data.version,
                                                                         self.__versionnr),
-                      root).write(self.__fd, self.__fd.encoding)
+                      root).write(self.__fd, 'utf-8')
 
     def taskNode(self, parentNode, task): # pylint: disable-msg=W0621
         maxDateTime = self.maxDateTime
