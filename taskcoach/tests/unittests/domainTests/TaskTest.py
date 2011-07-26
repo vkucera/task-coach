@@ -2319,16 +2319,26 @@ class TaskSuggestedDateTimeTest(test.TestCase):
         self.settings = task.Task.settings = config.Settings(load=False)
         self.now = now = date.Now()
         tomorrow = now + date.oneDay
+        dayAfterTomorrow = tomorrow + date.oneDay
+        nextFriday = tomorrow.endOfWorkWeek().replace(hour=now.hour, 
+                                                      minute=now.minute,
+                                                      second=now.second,
+                                                      microsecond=now.microsecond)
         startOfWorkingDayHour = self.settings.getint('view', 'efforthourstart')
-        startOfWorkingDay = now.replace(hour=startOfWorkingDayHour, minute=0, 
-                                        second=0, microsecond=0)
-        startOfWorkingTomorrow = tomorrow.replace(hour=startOfWorkingDayHour,
-                                                  minute=0, second=0, microsecond=0)
+        startOfWorkingDayKwArgs = dict(hour=startOfWorkingDayHour,
+                                       minute=0, second=0, microsecond=0)
         endOfWorkingDayHour = self.settings.getint('view', 'efforthourend')
-        endOfWorkingDay = now.replace(hour=endOfWorkingDayHour, minute=0,
+        endOfWorkingDayKwArgs = dict(hour=endOfWorkingDayHour, minute=0,
                                       second=0, microsecond=0)
-        endOfWorkingTomorrow = tomorrow.replace(hour=endOfWorkingDayHour,
-                                                minute=0, second=0, microsecond=0)
+        # pylint: disable-msg=W0142
+        startOfWorkingDay = now.replace(**startOfWorkingDayKwArgs)
+        endOfWorkingDay = now.replace(**endOfWorkingDayKwArgs)
+        startOfWorkingTomorrow = tomorrow.replace(**startOfWorkingDayKwArgs)
+        endOfWorkingTomorrow = tomorrow.replace(**endOfWorkingDayKwArgs)
+        startOfWorkingDayAfterTomorrow = dayAfterTomorrow.replace(**startOfWorkingDayKwArgs)
+        endOfWorkingDayAfterTomorrow = dayAfterTomorrow.replace(**endOfWorkingDayKwArgs)
+        startOfWorkingNextFriday = nextFriday.replace(**startOfWorkingDayKwArgs)
+        endOfWorkingNextFriday = nextFriday.replace(**endOfWorkingDayKwArgs)
         
         self.times = dict(today_startofday=now.startOfDay(), 
                           today_startofworkingday=startOfWorkingDay,
@@ -2339,28 +2349,38 @@ class TaskSuggestedDateTimeTest(test.TestCase):
                           tomorrow_startofworkingday=startOfWorkingTomorrow,
                           tomorrow_currenttime=tomorrow,
                           tomorrow_endofworkingday=endOfWorkingTomorrow,
-                          tomorrow_endofday=tomorrow.endOfDay())
+                          tomorrow_endofday=tomorrow.endOfDay(),
+                          dayaftertomorrow_startofday=dayAfterTomorrow.startOfDay(),
+                          dayaftertomorrow_startofworkingday=startOfWorkingDayAfterTomorrow,
+                          dayaftertomorrow_currenttime=dayAfterTomorrow,
+                          dayaftertomorrow_endofworkingday=endOfWorkingDayAfterTomorrow,
+                          dayaftertomorrow_endofday=dayAfterTomorrow.endOfDay(),
+                          nextfriday_startofday=nextFriday.startOfDay(),
+                          nextfriday_startofworkingday=startOfWorkingNextFriday,
+                          nextfriday_currenttime=nextFriday,
+                          nextfriday_endofworkingday=endOfWorkingNextFriday,
+                          nextfriday_endofday=nextFriday.endOfDay())
         
     def testSuggestedStartDateTime(self):
         for timeValue, expectedDateTime in self.times.items():
-            self.settings.set('view', 'defaultstartdatetime', timeValue)
+            self.settings.set('view', 'defaultstartdatetime', 'preset_' + timeValue)
             self.assertEqual(expectedDateTime,
                              task.Task.suggestedStartDateTime(lambda: self.now))
 
     def testSuggestedDueDateTime(self):
         for timeValue, expectedDateTime in self.times.items():
-            self.settings.set('view', 'defaultduedatetime', timeValue) 
+            self.settings.set('view', 'defaultduedatetime', 'propose_' + timeValue) 
             self.assertEqual(expectedDateTime,
                              task.Task.suggestedDueDateTime(lambda: self.now))
                
     def testSuggestedCompletionDateTime(self):
         for timeValue, expectedDateTime in self.times.items():
-            self.settings.set('view', 'defaultcompletiondatetime', timeValue) 
+            self.settings.set('view', 'defaultcompletiondatetime', 'preset_' + timeValue) 
             self.assertEqual(expectedDateTime,
                              task.Task.suggestedCompletionDateTime(lambda: self.now))
             
     def testSuggestedReminderDateTime(self):
         for timeValue, expectedDateTime in self.times.items():
-            self.settings.set('view', 'defaultreminderdatetime', timeValue)
+            self.settings.set('view', 'defaultreminderdatetime', 'propose_' + timeValue)
             self.assertEqual(expectedDateTime,
                              task.Task.suggestedReminderDateTime(lambda: self.now))

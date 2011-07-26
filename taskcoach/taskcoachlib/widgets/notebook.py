@@ -146,7 +146,7 @@ class BookMixin(object):
         else:
             raise IndexError
         
-    def onDragOver(self, x, y, defaultResult, pageSelectionArea=None):
+    def onDragOver(self, x, y, defaultResult, pageSelectionArea=None): # pylint: disable-msg=W0613
         ''' When the user drags something (currently limited to files because
             the DropTarget created in __init__ is a FileDropTarget) over a tab
             raise the appropriate page. '''

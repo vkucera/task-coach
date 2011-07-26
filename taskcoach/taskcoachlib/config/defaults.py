@@ -48,10 +48,10 @@ defaults = { \
     'datestied': '',                 # What to do when changing the start date or due date
     # Default date and times to offer in the task dialog, see preferences for
     # possible values.
-    'defaultstartdatetime': 'today_currenttime',
-    'defaultduedatetime': 'tomorrow_endofworkingday',
-    'defaultcompletiondatetime': 'today_currenttime',
-    'defaultreminderdatetime': 'tomorrow_startofworkingday',
+    'defaultstartdatetime': 'preset_today_currenttime',
+    'defaultduedatetime': 'propose_tomorrow_endofworkingday',
+    'defaultcompletiondatetime': 'propose_today_currenttime',
+    'defaultreminderdatetime': 'propose_tomorrow_startofworkingday',
 },
 'taskviewer': { \
     'title': '',                     # User supplied viewer title 
