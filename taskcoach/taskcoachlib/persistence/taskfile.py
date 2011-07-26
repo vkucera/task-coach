@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, codecs, xml
+import os, xml
 from taskcoachlib import patterns
 from taskcoachlib.domain import base, task, category, note, effort, attachment
 from taskcoachlib.syncml.config import createDefaultSyncConfig
@@ -213,7 +213,7 @@ class TaskFile(patterns.Observer):
 
     def _openForWrite(self):
         name = getTemporaryFileName(os.path.split(self.__filename)[0])
-        return name, codecs.open(name, 'w', 'utf-8')
+        return name, file(name, 'w')
     
     def load(self, filename=None):
         self.__loading = True
