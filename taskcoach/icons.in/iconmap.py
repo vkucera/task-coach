@@ -85,7 +85,7 @@ iconlist = [
 ('chat_icon', 'apps', 'chat', [16]),
 ('checkmark_green_icon', 'actions', 'apply', [16]),
 ('clock_icon', 'apps', 'clock', [16, 22, 32, 128]),
-('clock_alarm', 'actions', 'kalarm', [16]),
+('clock_alarm_icon', 'actions', 'kalarm', [16]),
 ('clock_stopwatch_icon', 'apps', 'ktimer', [16, 128]),
 ('clock_stop_icon', 'actions', 'history_stop', [16, 22, 32]),
 ('clock_resume_icon', 'actions', 'history_resume', [16, 22, 32]),

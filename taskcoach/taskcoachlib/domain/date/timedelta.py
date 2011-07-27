@@ -78,6 +78,7 @@ oneHour = TimeDelta(hours=1)
 twoHours = TimeDelta(hours=2)
 threeHours = TimeDelta(hours=3)
 oneDay = TimeDelta(days=1)
+oneWeek = TimeDelta(days=7)
 oneYear = TimeDelta(days=365)
 
 def parseTimeDelta(string):
