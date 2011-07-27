@@ -26,7 +26,9 @@ Release('1.2.25', 'July 27, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''The anonymize function wouldn't give a notification after saving
-the file.''')
+the file.'''),
+        Bug('''Refresh subtask appearance when moving it to a different parent
+task.''')
         ],
     featuresAdded=[
         Feature('''Users can choose default (relative) dates and
