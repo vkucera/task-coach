@@ -2308,21 +2308,21 @@ class TaskWithDependency(TaskTestCase):
 
 class TaskSuggestedDateTimeTest(test.TestCase):
     def setUp(self):
+        # pylint: disable-msg=W0142
         self.settings = task.Task.settings = config.Settings(load=False)
         self.now = now = date.Now()
         tomorrow = now + date.oneDay
         dayAfterTomorrow = tomorrow + date.oneDay
-        nextFriday = tomorrow.endOfWorkWeek().replace(hour=now.hour, 
-                                                      minute=now.minute,
-                                                      second=now.second,
-                                                      microsecond=now.microsecond)
+        currentTimeKwArgs = dict(hour=now.hour, minute=now.minute,
+                                 second=now.second, microsecond=now.microsecond)
+        nextFriday = tomorrow.endOfWorkWeek().replace(**currentTimeKwArgs)
+        nextMonday = (now + date.oneWeek).startOfWorkWeek().replace(**currentTimeKwArgs)
         startOfWorkingDayHour = self.settings.getint('view', 'efforthourstart')
         startOfWorkingDayKwArgs = dict(hour=startOfWorkingDayHour,
                                        minute=0, second=0, microsecond=0)
         endOfWorkingDayHour = self.settings.getint('view', 'efforthourend')
         endOfWorkingDayKwArgs = dict(hour=endOfWorkingDayHour, minute=0,
                                       second=0, microsecond=0)
-        # pylint: disable-msg=W0142
         startOfWorkingDay = now.replace(**startOfWorkingDayKwArgs)
         endOfWorkingDay = now.replace(**endOfWorkingDayKwArgs)
         startOfWorkingTomorrow = tomorrow.replace(**startOfWorkingDayKwArgs)
@@ -2331,6 +2331,8 @@ class TaskSuggestedDateTimeTest(test.TestCase):
         endOfWorkingDayAfterTomorrow = dayAfterTomorrow.replace(**endOfWorkingDayKwArgs)
         startOfWorkingNextFriday = nextFriday.replace(**startOfWorkingDayKwArgs)
         endOfWorkingNextFriday = nextFriday.replace(**endOfWorkingDayKwArgs)
+        startOfWorkingNextMonday = nextMonday.replace(**startOfWorkingDayKwArgs)
+        endOfWorkingNextMonday = nextMonday.replace(**endOfWorkingDayKwArgs)
         
         self.times = dict(today_startofday=now.startOfDay(), 
                           today_startofworkingday=startOfWorkingDay,
@@ -2351,7 +2353,12 @@ class TaskSuggestedDateTimeTest(test.TestCase):
                           nextfriday_startofworkingday=startOfWorkingNextFriday,
                           nextfriday_currenttime=nextFriday,
                           nextfriday_endofworkingday=endOfWorkingNextFriday,
-                          nextfriday_endofday=nextFriday.endOfDay())
+                          nextfriday_endofday=nextFriday.endOfDay(),
+                          nextmonday_startofday=nextMonday.startOfDay(),
+                          nextmonday_startofworkingday=startOfWorkingNextMonday,
+                          nextmonday_currenttime=nextMonday,
+                          nextmonday_endofworkingday=endOfWorkingNextMonday,
+                          nextmonday_endofday=nextMonday.endOfDay())
         
     def testSuggestedStartDateTime(self):
         for timeValue, expectedDateTime in self.times.items():
@@ -2369,7 +2376,10 @@ class TaskSuggestedDateTimeTest(test.TestCase):
         for timeValue, expectedDateTime in self.times.items():
             self.settings.set('view', 'defaultcompletiondatetime', 'preset_' + timeValue) 
             self.assertEqual(expectedDateTime,
-                             task.Task.suggestedCompletionDateTime(lambda: self.now))
+                             task.Task.suggestedCompletionDateTime(lambda: self.now),
+                             'Expected %s, but got %s, with default completion date time set to %s'%(expectedDateTime, 
+                                                        task.Task.suggestedCompletionDateTime(lambda: self.now),
+                                                        'preset_' + timeValue))
             
     def testSuggestedReminderDateTime(self):
         for timeValue, expectedDateTime in self.times.items():

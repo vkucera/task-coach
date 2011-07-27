@@ -1192,19 +1192,20 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     
     @classmethod    
     def suggestedDateTime(cls, defaultDateTimeSetting, now=date.Now):
-        # pylint: disable-msg=E1101
+        # pylint: disable-msg=E1101,W0142
         defaultDateTime = cls.settings.get('view', defaultDateTimeSetting)
         dummy_prefix, defaultDate, defaultTime = defaultDateTime.split('_')
         dateTime = now()
+        currentTime = dict(hour=dateTime.hour, minute=dateTime.minute,
+                           second=dateTime.second, microsecond=dateTime.microsecond)
         if defaultDate == 'tomorrow':
             dateTime += date.oneDay
         elif defaultDate == 'dayaftertomorrow':
             dateTime += (date.oneDay + date.oneDay)
         elif defaultDate == 'nextfriday':
-            dateTime = dateTime.endOfWorkWeek().replace(hour=dateTime.hour,
-                                                        minute=dateTime.minute,
-                                                        second=dateTime.second,
-                                                        microsecond=dateTime.microsecond)
+            dateTime = dateTime.endOfWorkWeek().replace(**currentTime)
+        elif defaultDate == 'nextmonday':
+            dateTime = (dateTime + date.oneWeek).startOfWorkWeek().replace(**currentTime)
             
         if defaultTime == 'startofday':
             return dateTime.startOfDay()
