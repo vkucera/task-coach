@@ -154,7 +154,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     def setCategories(self, *categories, **kwargs):
         super(Task, self).setCategories(*categories, **kwargs)
         self.recomputeAppearance(True, event=kwargs.pop('event'))
-        
+                
     def allChildrenCompleted(self):
         ''' Return whether all children (non-recursively) are completed. '''
         children = self.children()
@@ -179,6 +179,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             self.setDueDateTime(child.dueDateTime(), event=event)           
         if child.startDateTime() < self.startDateTime():
             self.setStartDateTime(child.startDateTime(), event=event)
+        child.recomputeAppearance(recursive=True, event=event)
 
     @patterns.eventSource
     def removeChild(self, child, event=None):
@@ -189,6 +190,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if self.shouldBeMarkedCompleted(): 
             # The removed child was the last uncompleted child
             self.setCompletionDateTime(date.Now(), event=event)
+        child.recomputeAppearance(recursive=True, event=event)
                     
     def childChangeEvent(self, child, event):
         childHasTimeSpent = child.timeSpent(recursive=True)

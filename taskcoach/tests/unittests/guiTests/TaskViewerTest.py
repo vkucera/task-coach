@@ -664,7 +664,10 @@ class CommonTestsMixin(object):
             self.assertItems((self.task, 1), self.child)
             
     def assertEventFired(self, type_):
-        self.failUnless(type_ in self.viewer.events[0].types(),
+        types = []
+        for event in self.viewer.events:
+            types.extend(event.types())
+        self.failUnless(type_ in types,
                         '"%s" not in %s' % (type_, self.viewer.events))
 
     def testGetTimeSpent(self):
