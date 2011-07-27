@@ -181,7 +181,7 @@ class AttachmentSubjectPage(SubjectPage):
             self._locationSync.onAttributeEdited(event)
         
 
-class AppearancePage(Page):
+class TaskAppearancePage(Page):
     pageName = 'appearance'
     pageTitle = _('Appearance')
     pageIcon = 'palette_icon'
@@ -793,7 +793,7 @@ class EditBook(widgets.Notebook):
             return AttachmentsPage(self.items, self, taskFile, self.settings,
                                    settingsSection='attachmentviewerin%seditor' % self.object)
         elif pageName == 'appearance':
-            return AppearancePage(self.items, self)
+            return TaskAppearancePage(self.items, self)
         
     def createSubjectPage(self):
         return SubjectPage(self.items, self)

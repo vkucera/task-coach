@@ -20,7 +20,7 @@ from date import Date, Today, Tomorrow, Yesterday, NextSunday, \
     NextFriday, LastDayOfCurrentMonth, LastDayOfCurrentYear, parseDate, minimumDate
 from dateandtime import DateTime, Now, parseDateTime
 from timedelta import TimeDelta, oneSecond, zeroHour, oneHour, twoHours, \
-    threeHours, oneDay, oneYear, parseTimeDelta
+    threeHours, oneDay, oneWeek, oneYear, parseTimeDelta
 from timeclass import Time
 from clock import Clock, ClockSecondObserver, ClockMinuteObserver
 from recurrence import Recurrence

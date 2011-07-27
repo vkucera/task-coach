@@ -86,13 +86,14 @@ class SettingsPageBase(widgets.BookPage):
                       flags=kwargs.get('flags', None)) 
         self._choiceSettings.append((section, setting, choiceCtrls))
         
-    def addMultipleChoiceSettings(self, section, setting, text, choices, helpText=''):
+    def addMultipleChoiceSettings(self, section, setting, text, choices, helpText='', **kwargs):
         ''' choices is a list of (number, text) tuples. '''
         multipleChoice = wx.CheckListBox(self, choices=[choice[1] for choice in choices])
         checkedNumbers = eval(self.get(section, setting))
         for index, choice in enumerate(choices):
             multipleChoice.Check(index, choice[0] in checkedNumbers)
-        self.addEntry(text, multipleChoice, helpText=helpText, growable=True)
+        self.addEntry(text, multipleChoice, helpText=helpText, growable=True, 
+                      flags=kwargs.get('flags', None))
         self._multipleChoiceSettings.append((section, setting, multipleChoice, 
                                              [choice[0] for choice in choices]))
         
@@ -358,13 +359,13 @@ improving, please consider helping. See:'''))
         self.set('view', 'language', self.get('view', 'language_set_by_user'))
         
 
-class AppearancePage(SettingsPage):
+class TaskAppearancePage(SettingsPage):
     pageName = 'appearance'
-    pageTitle = _('Appearance')
+    pageTitle = _('Task appearance')
     pageIcon = 'palette_icon'
     
     def __init__(self, *args, **kwargs):
-        super(AppearancePage, self).__init__(columns=9, growableColumn=-1, *args, **kwargs)
+        super(TaskAppearancePage, self).__init__(columns=9, growableColumn=-1, *args, **kwargs)
         self.addAppearanceHeader()
         for setting, label in \
             [('activetasks', _('Active tasks')), 
@@ -415,13 +416,13 @@ class FeaturesPage(SettingsPage):
         self.fit()
         
 
-class TaskBehaviorPage(SettingsPage):
+class TaskDatesPage(SettingsPage):
     pageName = 'task'
-    pageTitle = _('Task behavior')
-    pageIcon = 'cogwheel_icon'
+    pageTitle = _('Task dates')
+    pageIcon = 'calendar_icon'
     
     def __init__(self, *args, **kwargs):
-        super(TaskBehaviorPage, self).__init__(columns=4, growableColumn=-1, *args, **kwargs)
+        super(TaskDatesPage, self).__init__(columns=4, growableColumn=-1, *args, **kwargs)
         self.addBooleanSetting('behavior', 'markparentcompletedwhenallchildrencompleted',
             _('Mark parent task completed when all children are completed'))
         self.addIntegerSetting('behavior', 'duesoonhours', 
@@ -439,25 +440,35 @@ class TaskBehaviorPage(SettingsPage):
         day_choices = [('today', _('Today')),
                        ('tomorrow', _('Tomorrow')),
                        ('dayaftertomorrow', _('Day after tomorrow')),
-                       ('nextfriday', _('Next Friday'))]
+                       ('nextfriday', _('Next Friday')),
+                       ('nextmonday', _('Next Monday'))]
         time_choices = [('startofday', _('Start of day')),
                         ('startofworkingday', _('Start of working day')),
                         ('currenttime', _('Current time')),
                         ('endofworkingday', _('End of working day')),
                         ('endofday', _('End of day'))]
         self.addChoiceSetting('view', 'defaultstartdatetime', 
-                              _('Default start date and time of new tasks'), 
+                              _('Default start date and time'), 
                               '', check_choices, day_choices, time_choices)
         self.addChoiceSetting('view', 'defaultduedatetime', 
-                              _('Default due date and time of new tasks'), 
+                              _('Default due date and time'), 
                               '', check_choices, day_choices, time_choices)
         self.addChoiceSetting('view', 'defaultcompletiondatetime', 
-                              _('Default completion date and time of completed tasks'),
+                              _('Default completion date and time'),
                               '', [check_choices[1]], day_choices, time_choices)
         self.addChoiceSetting('view', 'defaultreminderdatetime', 
                               _('Default reminder date and time'), 
                               '', check_choices, day_choices, time_choices)
+        self.fit()
 
+
+class TaskReminderPage(SettingsPage):
+    pageName = 'reminder'
+    pageTitle = _('Task reminders')
+    pageIcon = 'clock_alarm_icon'
+    
+    def __init__(self, *args, **kwargs):
+        super(TaskReminderPage, self).__init__(columns=2, growableColumn=-1, *args, **kwargs)
         names = [] # There's at least one, the universal one
         for name in notify.AbstractNotifier.names():
             names.append((name, name))
@@ -470,7 +481,7 @@ class TaskBehaviorPage(SettingsPage):
                               '', snoozeChoices, flags=(None, wx.ALL|wx.ALIGN_LEFT))
         self.addMultipleChoiceSettings('view', 'snoozetimes', 
             _('Snooze times to offer in task reminder dialog'), 
-            date.snoozeChoices[1:]) # Don't offer "Don't snooze" as a choice
+            date.snoozeChoices[1:], flags=(wx.ALIGN_TOP|wx.ALL, None)) # Don't offer "Don't snooze" as a choice
         self.fit()
 
 
@@ -510,10 +521,11 @@ class EditorPage(SettingsPage):
 
 
 class Preferences(widgets.NotebookDialog):
-    allPageNames = ['window', 'task', 'save', 'language', 'appearance', 'features',
-                    'iphone', 'editor']
-    pages = dict(window=WindowBehaviorPage, task=TaskBehaviorPage, 
-                 save=SavePage, language=LanguagePage, appearance=AppearancePage, 
+    allPageNames = ['window', 'save', 'language', 'task', 'reminder', 
+                    'appearance', 'features', 'iphone', 'editor']
+    pages = dict(window=WindowBehaviorPage, task=TaskDatesPage, 
+                 reminder=TaskReminderPage, save=SavePage, 
+                 language=LanguagePage, appearance=TaskAppearancePage, 
                  features=FeaturesPage, iphone=IPhonePage, editor=EditorPage)
     
     def __init__(self, settings=None, *args, **kwargs):
@@ -534,7 +546,7 @@ class Preferences(widgets.NotebookDialog):
         ''' Return all pages names in the order stored in the settings. The
             settings may not contain all pages (e.g. because a feature was
             turned off by the user) so we add the missing pages if necessary. '''
-        pageNamesInUserOrder = self.settings.getlist('editor', 'preferencespages')
+        pageNamesInUserOrder = []#self.settings.getlist('editor', 'preferencespages')
         remainingPageNames = self.allPageNames[:]
         for pageName in pageNamesInUserOrder:
             remainingPageNames.remove(pageName)
