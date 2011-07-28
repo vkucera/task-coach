@@ -22,13 +22,15 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.25', 'July 27, 2011',
+Release('1.2.25', 'July 28, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''The anonymize function wouldn't give a notification after saving
 the file.'''),
         Bug('''Refresh subtask appearance when moving it to a different parent
-task.''')
+task.'''),
+        Bug('''Indentation of categories with and without subcategories in the 
+category viewer was slightly different.''', '3345002')
         ],
     featuresAdded=[
         Feature('''Users can choose default (relative) dates and

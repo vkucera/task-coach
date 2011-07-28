@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wx.gizmos.TreeListCtrl.
 #
 # Andrea Gavana, @ 08 May 2006
-# Latest Revision: 17 Jan 2011, 15.00 GMT
+# Latest Revision: 26 Jul 2011, 22.00 GMT
 #
 #
 # TODO List
@@ -31,7 +31,7 @@
 # Write To Me At:
 #
 # andrea.gavana@gmail.com
-# gavana@kpo.kz
+# andrea.gavana@maerskoil.com
 #
 # Or, Obviously, To The wxPython Mailing List!!!
 #
@@ -214,7 +214,7 @@ License And Version
 
 HyperTreeList is distributed under the wxPython license.
 
-Latest Revision: Andrea Gavana @ 17 Jan 2011, 15.00 GMT
+Latest Revision: Andrea Gavana @ 26 Jul 2011, 22.00 GMT
 
 Version 1.2
 
@@ -252,6 +252,7 @@ _MAX_WIDTH = 30000  # pixels; used by OnPaint to redraw only exposed items
 _DRAG_TIMER_TICKS = 250   # minimum drag wait time in ms
 _FIND_TIMER_TICKS = 500   # minimum find wait time in ms
 _EDIT_TIMER_TICKS = 250 # minimum edit wait time in ms
+
 
 # --------------------------------------------------------------------------
 # Additional HitTest style
@@ -780,7 +781,6 @@ class TreeListHeaderWindow(wx.Window):
         else:
             dc = wx.PaintDC(self)
             
-        self.PrepareDC(dc)
         self.AdjustDC(dc)
 
         x = 0
@@ -2044,15 +2044,7 @@ class TreeListMainWindow(CustomTreeCtrl):
         
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouse)
-
-        # Listen for EVT_SCROLLWIN in a separate event handler so that the
-        # default handler can be called without entering an infinite loop.
-        # See OnScroll for why calling the default handler manually is needed.
-        # Store the default handler in _default_evt_handler.
-        scroll_evt_handler = wx.EvtHandler()
-        self.PushEventHandler(scroll_evt_handler)
-        scroll_evt_handler.Bind(wx.EVT_SCROLLWIN, self.OnScroll)
-        self._default_evt_handler = scroll_evt_handler.GetNextHandler()
+        self.Bind(wx.EVT_SCROLLWIN, self.OnScroll)
 
         # Sets the focus to ourselves: this is useful if you have items
         # with associated widgets.
@@ -2843,8 +2835,8 @@ class TreeListMainWindow(CustomTreeCtrl):
                 w = (col_w - (image_w + wcheck + text_w + off_w + _MARGIN))/2
                 x += (w > 0 and [w] or [0])[0]
             else:
-                if not item.HasPlus() and image_w == 0 and wcheck:
-                    x += 3*_MARGIN
+                if image_w == 0 and wcheck:
+                    x += 2*_MARGIN
             
             text_x = x + image_w + wcheck + 1
             
@@ -3693,21 +3685,16 @@ class TreeListMainWindow(CustomTreeCtrl):
         :param `event`: a `wx.ScrollEvent` event to be processed.
         """
 
-        # Let wx.PyScrolledWindow compute the new scroll position so that
-        # TreeListHeaderWindow is repainted with the same scroll position as
-        # TreeListMainWindow.
-        #
-        # event.Skip() would not work, Update() would call
-        # TreeListHeaderWindow.OnPaint() synchronously, before
-        # wx.PyScrolledWindow.OnScroll() is called by the event handler. OnPaint()
-        # would not use the latest scroll position so the header and the tree
-        # scrolling positions would be unsynchronized.
-        self._default_evt_handler.ProcessEvent(event)
-        
+        def _updateHeaderWindow(header):
+            header.Refresh()
+            header.Update()
+            
+        # Update the header window after this scroll event has fully finished
+        # processing, and the scoll action is complete.
         if event.GetOrientation() == wx.HORIZONTAL:
-            self._owner.GetHeaderWindow().Refresh()
-            self._owner.GetHeaderWindow().Update()
-        
+            wx.CallAfter(_updateHeaderWindow, self._owner.GetHeaderWindow())
+        event.Skip()
+            
 
     def CalculateSize(self, item, dc):
         """
