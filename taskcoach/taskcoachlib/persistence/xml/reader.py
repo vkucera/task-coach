@@ -284,8 +284,8 @@ class XMLReader(object):
             fgColor=self._parseTuple(node.attrib.get('fgColor', ''), None),
             bgColor=self._parseTuple(node.attrib.get(bgColorAttribute, ''), None),
             font=self._parseFontDesc(node.attrib.get('font', '')),
-            icon=node.attrib.get('icon', ''),
-            selectedIcon=node.attrib.get('selectedIcon', ''))
+            icon=self._parseIcon(node.attrib.get('icon', '')),
+            selectedIcon=self._parseIcon(node.attrib.get('selectedIcon', '')))
 
         if self.__tskversion <= 20:
             attributes['attachments'] = self._parseAttachmentsBeforeVersion21(node)
@@ -440,6 +440,10 @@ class XMLReader(object):
                     font.SetPointSize(self.__defaultFontSize)
                 return font
         return defaultValue
+    
+    def _parseIcon(self, icon):
+        # Parse is a big word, we just need to fix one particular icon
+        return 'clock_alarm_icon' if icon == 'clock_alarm' else icon
     
     def _parseBoolean(self, booleanText, defaultValue=None):
         def textToBoolean(text):
