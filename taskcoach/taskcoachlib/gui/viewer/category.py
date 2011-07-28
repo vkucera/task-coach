@@ -74,7 +74,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
                                       self, localOnly)
 
     def _createColumns(self):
-        # pylint: disable-msg=W0142
+        # pylint: disable-msg=W0142,E1101
         kwargs = dict(renderDescriptionCallback=lambda category: category.description(),
                       resizeCallback=self.onResizeColumn)
         columns = [widgets.Column('subject', _('Subject'), 
@@ -140,7 +140,7 @@ class BaseCategoryViewer(mixin.AttachmentDropTargetMixin,
             items = event.sources()
             for item in items.copy():
                 items |= set(item.children())
-            self.widget.RefreshItems(*items) 
+            self.widget.RefreshItems(*items) # pylint: disable-msg=W0142
         else:
             super(BaseCategoryViewer, self).onAttributeChanged(event)
         
