@@ -90,7 +90,7 @@ class SyncMLTaskPage(SyncMLBasePage):
         self.addBooleanSetting('task', 'dosync', _('Enable tasks synchronization'))
         self.addTextSetting('task', 'uri', _('Tasks database name'))
 
-        self.addChoiceSetting('task', 'preferredsyncmode', _('Preferred synchonization mode'),
+        self.addChoiceSetting('task', 'preferredsyncmode', _('Preferred synchonization mode'), '',
                               [('TWO_WAY', _('Two way')),
                                ('SLOW', _('Slow')),
                                ('ONE_WAY_FROM_CLIENT', _('One way from client')),
@@ -108,7 +108,7 @@ class SyncMLNotePage(SyncMLBasePage):
         self.addBooleanSetting('note', 'dosync', _('Enable notes synchronization'))
         self.addTextSetting('note', 'uri', _('Notes database name'))
 
-        self.addChoiceSetting('note', 'preferredsyncmode', _('Preferred synchonization mode'),
+        self.addChoiceSetting('note', 'preferredsyncmode', _('Preferred synchonization mode'), '',
                               [('TWO_WAY', _('Two way')),
                                ('SLOW', _('Slow')),
                                ('ONE_WAY_FROM_CLIENT', _('One way from client')),
