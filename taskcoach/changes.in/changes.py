@@ -37,7 +37,8 @@ category viewer was slightly different.''', '3345002'),
         Feature('''Users can choose default (relative) dates and
 times for tasks in the preference dialog. This allows for e.g. automatically 
 setting a reminder the next day.''', 'http://uservoice.com/a/g9xpy'),
-        Feature('''Faster saving.''')
+        Feature('''Faster saving.'''),
+        Feature('''Preset common SyncML servers (myFunambol and MemoToo)'''),
         ]
     ),
 

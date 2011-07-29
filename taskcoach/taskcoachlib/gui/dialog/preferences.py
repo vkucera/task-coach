@@ -68,6 +68,7 @@ class SettingsPageBase(widgets.BookPage):
         checkBox.SetValue(self.getboolean(section, setting))
         self.addEntry(text, checkBox, helpText=helpText)
         self._booleanSettings.append((section, setting, checkBox))
+        return checkBox
 
     def addChoiceSetting(self, section, setting, text, helpText, *listsOfChoices, **kwargs):
         choiceCtrls = []
@@ -85,7 +86,15 @@ class SettingsPageBase(widgets.BookPage):
         self.addEntry(text, *choiceCtrls, helpText=helpText, 
                       flags=kwargs.get('flags', None)) 
         self._choiceSettings.append((section, setting, choiceCtrls))
-        
+        return choiceCtrls
+
+    def enableChoiceSetting(self, section, setting, enabled):
+        for theSection, theSetting, ctrls in self._choiceSettings:
+            if theSection == section and theSetting == setting:
+                for ctrl in ctrls:
+                    ctrl.Enable(enabled)
+                break
+
     def addMultipleChoiceSettings(self, section, setting, text, choices, helpText='', **kwargs):
         ''' choices is a list of (number, text) tuples. '''
         multipleChoice = wx.CheckListBox(self, choices=[choice[1] for choice in choices])
@@ -154,6 +163,17 @@ class SettingsPageBase(widgets.BookPage):
         self.addEntry(text, textChooser, helpText=helpText)
         self._textSettings.append((section, setting, textChooser))
 
+    def setTextSetting(self, section, setting, value):
+        for theSection, theSetting, textChooser in self._textSettings:
+            if theSection == section and theSetting == setting:
+                textChooser.SetValue(value)
+
+    def enableTextSetting(self, section, setting, enabled):
+        for theSection, theSetting, textChooser in self._textSettings:
+            if theSection == section and theSetting == setting:
+                textChooser.Enable(enabled)
+                break
+
     def addText(self, label, text):
         self.addEntry(label, text)
 
@@ -219,7 +239,8 @@ class SettingsPage(SettingsPageBase):
         return self.settings.getboolean(section, name)
 
     def set(self, section, name, value):
-        self.settings.set(section, name, value)
+        if section is not None:
+            self.settings.set(section, name, value)
 
 
 class SavePage(SettingsPage):
