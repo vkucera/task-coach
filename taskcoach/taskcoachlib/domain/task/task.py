@@ -1205,7 +1205,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         elif defaultDate == 'dayaftertomorrow':
             dateTime += (date.oneDay + date.oneDay)
         elif defaultDate == 'nextfriday':
-            dateTime = dateTime.endOfWorkWeek().replace(**currentTime)
+            dateTime = (dateTime + date.oneDay).endOfWorkWeek().replace(**currentTime)
         elif defaultDate == 'nextmonday':
             dateTime = (dateTime + date.oneWeek).startOfWorkWeek().replace(**currentTime)
             
