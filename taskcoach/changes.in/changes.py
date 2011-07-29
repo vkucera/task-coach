@@ -30,7 +30,8 @@ the file.'''),
         Bug('''Refresh subtask appearance when moving it to a different parent
 task.'''),
         Bug('''Indentation of categories with and without subcategories in the 
-category viewer was slightly different.''', '3345002')
+category viewer was slightly different.''', '3345002'),
+        Bug('''Windows would appear on the wrong monitor on Windows 7.''', '3370403'),
         ],
     featuresAdded=[
         Feature('''Users can choose default (relative) dates and

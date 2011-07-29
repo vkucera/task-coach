@@ -41,7 +41,13 @@ if '__WXMSW__' in wx.PlatformInfo:
 
         @staticmethod
         def GetFromWindow(window):
-            return Display.GetFromPoint(window.GetPosition())
+            if window.GetWindowStyle() & wx.THICK_FRAME:
+                margin = wx.SystemSettings.GetMetric(wx.SYS_FRAMESIZE_X)
+            else:
+                margin = 0
+
+            x, y = window.GetPositionTuple()
+            return Display.GetFromPoint(wx.Point(x + margin, y + margin))
 
         def __init__(self, index):
             self.hMonitor, _, (self.x, self.y, x2, y2) = win32api.EnumDisplayMonitors(None, None)[index]
