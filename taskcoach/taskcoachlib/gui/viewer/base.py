@@ -127,9 +127,9 @@ class Viewer(wx.Panel):
     def getWidget(self):
         return self.widget
     
-    def SetFocus(self):
+    def SetFocus(self, *args, **kwargs):
         try:
-            self.widget.SetFocus()
+            self.widget.SetFocus(*args, **kwargs)
         except wx.PyDeadObjectError:
             pass
             
@@ -179,7 +179,7 @@ class Viewer(wx.Panel):
         newSelection = self.widget.curselection()
         if newSelection != self.__curselection:
             self.__curselection = newSelection
-            patterns.Event(self.selectEventType(), self, *newSelection).send()
+            patterns.Event(self.selectEventType(), self, *newSelection).send() # pylint: disable-msg=W0142
 
     def freeze(self):
         self.widget.Freeze()
@@ -707,6 +707,7 @@ class ViewerWithColumns(Viewer): # pylint: disable-msg=W0223
         return ', '.join(sorted(subjects))
             
     def isItemCollapsed(self, item): 
+        # pylint: disable-msg=E1101
         # pylint: disable-msg=E1101
         return not self.getItemExpanded(item) \
             if self.isTreeViewer() and item.children() else False

@@ -18,19 +18,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, sys, os, ConfigParser
+import test, sys, os, ConfigParser, StringIO
 from taskcoachlib import patterns, config, meta
-
-
-class SettingsUnderTest(config.Settings):
-    def __init__(self, *args, **kwargs):
-        kwargs['load'] = False
-        super(SettingsUnderTest, self).__init__(*args, **kwargs)
 
 
 class SettingsTestCase(test.TestCase):
     def setUp(self):
-        self.settings = SettingsUnderTest()
+        self.settings = config.Settings(load=False)
 
     def tearDown(self):
         super(SettingsTestCase, self).tearDown()
@@ -126,7 +120,6 @@ class SettingsTest(SettingsTestCase):
 class SettingsIOTest(SettingsTestCase):
     def setUp(self):
         super(SettingsIOTest, self).setUp()
-        import StringIO
         self.fakeFile = StringIO.StringIO()
 
     def testSave(self):
@@ -151,11 +144,11 @@ class SettingsIOTest(SettingsTestCase):
         self.failUnless(self.showerror_args)
 
     def testIOErrorWhileReading(self):
-        class SettingsUnderTest(config.Settings):
-            def read(self, *args, **kwargs):
+        class SettingsThatThrowsParsingError(config.Settings):
+            def read(self, *args, **kwargs): # pylint: disable-msg=W0613
                 self.remove_section('file')
                 raise ConfigParser.ParsingError, 'Testing'
-        self.failIf(SettingsUnderTest().getboolean('file', 'inifileloaded'))
+        self.failIf(SettingsThatThrowsParsingError().getboolean('file', 'inifileloaded'))
 
 class SettingsObservableTest(SettingsTestCase):
     def setUp(self):
@@ -178,11 +171,10 @@ class SettingsObservableTest(SettingsTestCase):
 
 class UnicodeAwareConfigParserTest(test.TestCase):
     ''' The default Python ConfigParser does not deal with unicode. So we
-        build a wrapper around ConfigParser that does. These are the unitttests
+        build a wrapper around ConfigParser that does. These are the unittests
         for UnicodeAwareConfigParser. '''
         
     def setUp(self):
-        import StringIO
         self.parser = config.settings.UnicodeAwareConfigParser()
         self.parser.add_section('section')
         self.iniFile = StringIO.StringIO()

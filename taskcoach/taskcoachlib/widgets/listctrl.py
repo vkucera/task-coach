@@ -18,12 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, itemctrl
 
+
 class _ListCtrl(wx.ListCtrl):
     ''' Make ListCtrl API more like the TreeList and TreeListCtrl API '''
     
-    def HitTest(self, (x,y)):
+    def HitTest(self, (x, y), *args, **kwargs):
         ''' Always return a three-tuple (item, flag, column). '''
-        index, flags = super(_ListCtrl, self).HitTest((x,y))
+        index, flags = super(_ListCtrl, self).HitTest((x, y), *args, **kwargs)
         column = 0
         if self.InReportView():
             # Determine the column in which the user clicked
@@ -53,6 +54,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
         self.bindEventHandlers(selectCommand, editCommand)
             
     def bindEventHandlers(self, selectCommand, editCommand):
+        # pylint: disable-msg=W0201
         if selectCommand:
             self.selectCommand = selectCommand
             self.Bind(wx.EVT_LIST_ITEM_FOCUSED, self.onSelect)
@@ -101,7 +103,7 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
             itemAttrArgs.append(font)
         # We need to keep a reference to the item attribute to prevent it
         # from being garbage collected too soon:
-        self.__itemAttribute = wx.ListItemAttr(*itemAttrArgs)
+        self.__itemAttribute = wx.ListItemAttr(*itemAttrArgs) # pylint: disable-msg=W0142,W0201
         return self.__itemAttribute
         
     def onSelect(self, event):
@@ -112,13 +114,13 @@ class VirtualListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin
         ''' Override default behavior to attach the column clicked on
             to the event so we can use it elsewhere. '''
         mousePosition = self.GetMainWindow().ScreenToClient(wx.GetMousePosition())
-        index, flags, column = self.HitTest(mousePosition)
+        index, dummy_flags, column = self.HitTest(mousePosition)
         if index >= 0:
             # Only get the column name if the hittest returned an item,
             # otherwise the item was activated from the menu or by double 
             # clicking on a portion of the tree view not containing an item.
             column = max(0, column) # FIXME: Why can the column be -1?
-            event.columnName = self._getColumn(column).name()
+            event.columnName = self._getColumn(column).name() # pylint: disable-msg=E1101
         self.editCommand(event)
 
     def RefreshAllItems(self, count):

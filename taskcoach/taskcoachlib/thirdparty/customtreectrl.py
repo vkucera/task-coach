@@ -3,7 +3,7 @@
 # Inspired By And Heavily Based On wxGenericTreeCtrl.
 #
 # Andrea Gavana, @ 17 May 2006
-# Latest Revision: 23 Jan 2011, 10.00 GMT
+# Latest Revision: 27 Jul 2011, 19.00 GMT
 #
 #
 # TODO List
@@ -28,7 +28,7 @@
 # For All Kind Of Problems, Requests Of Enhancements And Bug Reports, Please
 # Write To Me At:
 #
-# gavana@kpo.kz
+# andrea.gavana@maerskoil.com
 # andrea.gavana@gmail.com
 #
 # Or, Obviously, To The wxPython Mailing List!!!
@@ -74,6 +74,7 @@ to the standard `wx.TreeCtrl` behaviour this class supports:
 * Whatever non-toplevel widget can be attached next to an item;
 * Possibility to horizontally align the widgets attached to tree items on the
   same tree level.
+* Possibility to align the widgets attached to tree items to the rightmost edge of CustomTreeCtrl;
 * Default selection style, gradient (horizontal/vertical) selection style and Windows
   Vista selection style;
 * Customized drag and drop images built on the fly;
@@ -99,12 +100,13 @@ Plus it has 3 more styles to handle checkbox-type items:
 - ``TR_AUTO_CHECK_PARENT``: automatically checks/unchecks the item parent;
 - ``TR_AUTO_TOGGLE_CHILD``: automatically toggles the item children.
 
-And a style you can use to force the horizontal alignment of all the widgets
+And two styles you can use to force the horizontal alignment of all the widgets
 attached to the tree items:
 
 - ``TR_ALIGN_WINDOWS``: aligns horizontally the windows belonging to the item on the
   same tree level.
-
+- ``TR_ALIGN_WINDOWS_RIGHT``: aligns to the rightmost position the windows belonging
+  to the item on the same tree level.
     
 All the methods available in `wx.TreeCtrl` are also available in CustomTreeCtrl.
 
@@ -166,6 +168,7 @@ Window Styles                  Hex Value   Description
 ``TR_AUTO_TOGGLE_CHILD``            0x8000 Only meaningful foe checkbox-type items: when a parent item is checked/unchecked its children are toggled accordingly.
 ``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful foe checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
 ``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
+``TR_ALIGN_WINDOWS_RIGHT``         0x40000 Flag used to align windows (in items with windows) to the rightmost edge of `CustomTreeCtrl`.
 ============================== =========== ==================================================
 
 
@@ -209,14 +212,14 @@ License And Version
 
 CustomTreeCtrl is distributed under the wxPython license. 
 
-Latest Revision: Andrea Gavana @ 23 Jan 2011, 10.00 GMT
+Latest Revision: Andrea Gavana @ 27 Jul 2011, 19.00 GMT
 
-Version 2.3
+Version 2.4
 
 """
 
 # Version Info
-__version__ = "2.3"
+__version__ = "2.4"
 
 import wx
 from wx.lib.expando import ExpandoTextCtrl
@@ -300,6 +303,8 @@ TR_AUTO_CHECK_PARENT = 0x10000                                 # only meaningful
 """ its parent item is checked/unchecked as well. """
 TR_ALIGN_WINDOWS = 0x20000                                     # to align windows horizontally for items at the same level
 """ Flag used to align windows (in items with windows) at the same horizontal position. """
+TR_ALIGN_WINDOWS_RIGHT = 0x40000                               # to align windows to the rightmost edge of CustomTreeCtrl
+""" Flag used to align windows (in items with windows) to the rightmost edge of `CustomTreeCtrl`."""
 
 TR_DEFAULT_STYLE = wx.TR_DEFAULT_STYLE                         # default style for the tree control
 """ The set of flags that are closest to the defaults for the native control for a""" \
@@ -2282,6 +2287,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
          ``TR_AUTO_TOGGLE_CHILD``            0x8000 Only meaningful foe checkbox-type items: when a parent item is checked/unchecked its children are toggled accordingly.
          ``TR_AUTO_CHECK_PARENT``           0x10000 Only meaningful foe checkbox-type items: when a child item is checked/unchecked its parent item is checked/unchecked as well.
          ``TR_ALIGN_WINDOWS``               0x20000 Flag used to align windows (in items with windows) at the same horizontal position.
+         ``TR_ALIGN_WINDOWS_RIGHT``         0x40000 Flag used to align windows (in items with windows) to the rightmost edge of `CustomTreeCtrl`.
          ============================== =========== ==================================================
 
         :param `validator`: window validator;
@@ -3063,7 +3069,7 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         
         :see: The L{__init__} method for the `agwStyle` parameter description.
         """
-
+        
         # Do not try to expand the root node if it hasn't been created yet
         if self._anchor and not self.HasAGWFlag(TR_HIDE_ROOT) and agwStyle & TR_HIDE_ROOT:
         
@@ -5859,8 +5865,14 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             if item.GetHeight() > item.GetWindowSize()[1]:
                 ya += (item.GetHeight() - item.GetWindowSize()[1])/2
 
-            if align and level in self.absoluteWindows:
-                wndx = self.absoluteWindows[level] + item.GetX() + 2
+            if align == 1:
+                # Horizontal alignment of windows
+                if level in self.absoluteWindows:
+                    wndx = self.absoluteWindows[level] + item.GetX() + 2
+                    
+            elif align == 2:
+                # Rightmost alignment of windows
+                wndx = self.GetClientSize().x - item.GetWindowSize().x - 2
                 
             if not wnd.IsShown():
                 wnd.Show()
@@ -5880,8 +5892,16 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         :param `dc`: an instance of `wx.DC`;
         :param `level`: the item level in the tree hierarchy;
         :param `y`: the current vertical position in the `wx.PyScrolledWindow`;
-        :param `align`: ``True`` if we want to align windows (in items with windows)
-         at the same horizontal position.
+        :param `align`: an integer specifying the alignment type:
+
+         =============== =========================================
+         `align` Value   Description
+         =============== =========================================
+                0        No horizontal alignment of windows (in items with windows).
+                1        Windows (in items with windows) are aligned at the same horizontal position.
+                2        Windows (in items with windows) are aligned at the rightmost edge of L{CustomTreeCtrl}.
+         =============== =========================================
+
         """
 
         x = level*self._indent
@@ -6113,7 +6133,13 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         dc.SetFont(self._normalFont)
         dc.SetPen(self._dottedPen)
 
-        align = self.HasAGWFlag(TR_ALIGN_WINDOWS)            
+        align = 0
+        
+        if self.HasAGWFlag(TR_ALIGN_WINDOWS):
+            align = 1
+        elif self.HasAGWFlag(TR_ALIGN_WINDOWS_RIGHT):
+            align = 2
+            
         y = 2
         self.PaintLevel(self._anchor, dc, 0, y, align)
 
@@ -6125,7 +6151,11 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         :param `event`: a `wx.SizeEvent` event to be processed.
         """
 
-        self.RefreshSelected()
+        if self.HasAGWFlag(TR_ALIGN_WINDOWS_RIGHT) and self._itemWithWindow:
+            self.RefreshItemWithWindows()
+        else:
+            self.RefreshSelected()
+            
         event.Skip()
         
 
@@ -7059,15 +7089,23 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
 #        event.Skip()        
 
 
-    def CalculateSize(self, item, dc, level=-1, align=False):
+    def CalculateSize(self, item, dc, level=-1, align=0):
         """
         Calculates overall position and size of an item.
 
         :param `item`: an instance of L{GenericTreeItem};
         :param `dc`: an instance of `wx.DC`;
         :param `level`: the item level in the tree hierarchy;
-        :param `align`: ``True`` if we want to align windows (in items with windows)
-         at the same horizontal position.
+        :param `align`: an integer specifying the alignment type:
+
+         =============== =========================================
+         `align` Value   Description
+         =============== =========================================
+                0        No horizontal alignment of windows (in items with windows).
+                1        Windows (in items with windows) are aligned at the same horizontal position.
+                2        Windows (in items with windows) are aligned at the rightmost edge of L{CustomTreeCtrl}.
+         =============== =========================================
+
         """
 
         attr = item.GetAttributes()
@@ -7124,19 +7162,19 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
             totalHeight = max(total_h, item.GetWindowSize()[1])
 
         if level >= 0 and wnd:
-            if not align:
+            if align == 0:
                 if level in self.absoluteWindows:
                     self.absoluteWindows[level] = max(self.absoluteWindows[level], image_w+text_w+wcheck+2)
                 else:
                     self.absoluteWindows[level] = image_w+text_w+wcheck+2
-            else:
+            elif align == 1:
                 self.absoluteWindows[level] = max(self.absoluteWindows[level], image_w+text_w+wcheck+2)
                                         
         item.SetWidth(totalWidth)
         item.SetHeight(totalHeight)
 
 
-    def CalculateLevel(self, item, dc, level, y, align=False):
+    def CalculateLevel(self, item, dc, level, y, align=0):
         """
         Calculates the level of an item inside the tree hierarchy.
 
@@ -7144,8 +7182,16 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         :param `dc`: an instance of `wx.DC`;
         :param `level`: the item level in the tree hierarchy;
         :param `y`: the current vertical position inside the `wx.PyScrolledWindow`;
-        :param `align`: ``True`` if we want to align windows (in items with windows)
-         at the same horizontal position.
+        :param `align`: an integer specifying the alignment type:
+
+         =============== =========================================
+         `align` Value   Description
+         =============== =========================================
+                0        No horizontal alignment of windows (in items with windows).
+                1        Windows (in items with windows) are aligned at the same horizontal position.
+                2        Windows (in items with windows) are aligned at the rightmost edge of L{CustomTreeCtrl}.
+         =============== =========================================
+
         """
 
         x = level*self._indent
@@ -7202,9 +7248,10 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         y = 2
         y = self.CalculateLevel(self._anchor, dc, 0, y) # start recursion
         
-        if self.HasAGWFlag(TR_ALIGN_WINDOWS):
+        if self.HasAGWFlag(TR_ALIGN_WINDOWS) or self.HasAGWFlag(TR_ALIGN_WINDOWS_RIGHT):
+            align = (self.HasAGWFlag(TR_ALIGN_WINDOWS) and [1] or [2])[0]
             y = 2
-            y = self.CalculateLevel(self._anchor, dc, 0, y, align=True) # start recursion
+            y = self.CalculateLevel(self._anchor, dc, 0, y, align) # start recursion
 
 
     def RefreshSubtree(self, item):
@@ -7279,6 +7326,33 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         for child in children:
             self.RefreshSelectedUnder(child)
     
+
+    def RefreshItemWithWindows(self, item=None):
+        """
+        Refreshes the items with which a window is associated.
+
+        :param `item`: an instance of L{GenericTreeItem}. If `item` is ``None``, then the
+         recursive refresh starts from the root node.
+         
+        :note: This method is called only if the style ``TR_ALIGN_WINDOWS_RIGHT`` is used.
+        """
+
+        if self._freezeCount:
+            return
+
+        if item is None:
+            if self._anchor:
+                self.RefreshItemWithWindows(self._anchor)
+                return
+
+        wnd = item.GetWindow()            
+        if wnd and wnd.IsShown():
+            self.RefreshLine(item)
+
+        children = item.GetChildren()
+        for child in children:
+            self.RefreshItemWithWindows(child)
+
 
     def Freeze(self):
         """
@@ -7439,8 +7513,9 @@ class CustomTreeCtrl(wx.PyScrolledWindow):
         """
         
         child, cookie = self.GetFirstChild(item)
+        lastheight = 0
 
-        while child.IsOk():
+        while child:
 
             rect = self.GetBoundingRect(child, True)
             

@@ -401,13 +401,13 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         self.RemoveColumn(columnIndex)
         
     def InsertColumn(self, columnIndex, columnHeader, *args, **kwargs):
-        format = self.alignmentMap[kwargs.pop('format', wx.LIST_FORMAT_LEFT)]
+        alignment = self.alignmentMap[kwargs.pop('format', wx.LIST_FORMAT_LEFT)]
         if columnIndex == self.GetColumnCount():
             self.AddColumn(columnHeader, *args, **kwargs)
         else:
             super(TreeListCtrl, self).InsertColumn(columnIndex, columnHeader, 
                 *args, **kwargs)
-        self.SetColumnAlignment(columnIndex, format)
+        self.SetColumnAlignment(columnIndex, alignment)
         self.SetColumnEditable(columnIndex, self._getColumn(columnIndex).isEditable())
 
     def showColumn(self, *args, **kwargs):

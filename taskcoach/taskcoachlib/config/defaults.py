@@ -419,8 +419,8 @@ defaults = { \
     'verbose': 'True',
     'taskdbname': 'task',
     'notedbname': 'note',
-    'synctasks': 'False',
-    'syncnotes': 'False',
+    'synctasks': 'True',
+    'syncnotes': 'True',
     'showwarning': 'True' },
 'iphone': { \
     'password': '',

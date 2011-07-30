@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.0', 'June 27, 2011',
+Release('1.3.0', 'June 31, 2011',
     summary='''This release makes all edits done in dialogs immediate.''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -41,19 +41,25 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.25', 'July 27, 2011',
+Release('1.2.25', 'July 30, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''The anonymize function wouldn't give a notification after saving
 the file.'''),
         Bug('''Refresh subtask appearance when moving it to a different parent
-task.''')
+task.'''),
+        Bug('''Indentation of categories with and without subcategories in the 
+category viewer was slightly different.''', '3345002'),
+        Bug('''Windows would appear on the wrong monitor on Windows 7.''', '3370403'),
+        ## Bug('''SyncML synchronization now works with myFunambol.''',
+        ##     '3337902', '3295655', '3377497'),
         ],
     featuresAdded=[
         Feature('''Users can choose default (relative) dates and
 times for tasks in the preference dialog. This allows for e.g. automatically 
 setting a reminder the next day.''', 'http://uservoice.com/a/g9xpy'),
-        Feature('''Faster saving.''')
+        Feature('''Faster saving.'''),
+        Feature('''Preset common SyncML servers (myFunambol and MemoToo)'''),
         ]
     ),
 

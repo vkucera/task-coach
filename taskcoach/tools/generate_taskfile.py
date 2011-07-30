@@ -115,7 +115,7 @@ def generateTask(index, categories, children=3, chanceNextLevel=0.8):
             newTask.addChild(child)
     return newTask
 
-def generate(nrCategories=5, nrTasks=100):
+def generate(nrCategories=20, nrTasks=250):
     task.Task.settings = config.Settings(load=False)
     taskFile = persistence.TaskFile()
     taskFile.setFilename('generated_tasfile.tsk')
