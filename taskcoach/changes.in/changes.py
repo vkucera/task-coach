@@ -32,6 +32,8 @@ task.'''),
         Bug('''Indentation of categories with and without subcategories in the 
 category viewer was slightly different.''', '3345002'),
         Bug('''Windows would appear on the wrong monitor on Windows 7.''', '3370403'),
+        Bug('''SyncML synchronization now works with myFunambol.''',
+            '3337902', '3295655', '3377497'),
         ],
     featuresAdded=[
         Feature('''Users can choose default (relative) dates and

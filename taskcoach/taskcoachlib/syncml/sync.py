@@ -150,9 +150,8 @@ class Synchronizer(wx.ProgressDialog):
             try:
                 cfg = self.dmt.getSyncSourceConfig('%s.Tasks' % self.clientName)
             except ValueError:
-                cfg = SyncSourceConfig()
+                cfg = SyncSourceConfig('%s.Tasks' % self.clientName)
 
-            cfg.name = '%s.Tasks' % self.clientName
             cfg.URI = self.taskdbname
             cfg.syncModes = 'two-way'
             cfg.supportedTypes = 'text/vcard:3.0'
@@ -171,9 +170,8 @@ class Synchronizer(wx.ProgressDialog):
             try:
                 cfg = self.dmt.getSyncSourceConfig('%s.Notes' % self.clientName)
             except ValueError:
-                cfg = SyncSourceConfig()
+                cfg = SyncSourceConfig('%s.Notes' % self.clientName)
 
-            cfg.name = '%s.Notes' % self.clientName
             cfg.URI = self.notedbname
             cfg.syncModes = 'two-way'
             cfg.supportedTypes = 'text/plain'
