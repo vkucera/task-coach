@@ -142,18 +142,18 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     @patterns.eventSource
     def addCategory(self, *categories, **kwargs):
-        super(Task, self).addCategory(*categories, **kwargs)
-        self.recomputeAppearance(True, event=kwargs.pop('event'))
+        if super(Task, self).addCategory(*categories, **kwargs):
+            self.recomputeAppearance(True, event=kwargs.pop('event'))
 
     @patterns.eventSource
     def removeCategory(self, *categories, **kwargs):
-        super(Task, self).removeCategory(*categories, **kwargs)
-        self.recomputeAppearance(True, event=kwargs.pop('event'))
+        if super(Task, self).removeCategory(*categories, **kwargs):
+            self.recomputeAppearance(True, event=kwargs.pop('event'))
 
     @patterns.eventSource
     def setCategories(self, *categories, **kwargs):
-        super(Task, self).setCategories(*categories, **kwargs)
-        self.recomputeAppearance(True, event=kwargs.pop('event'))
+        if super(Task, self).setCategories(*categories, **kwargs):
+            self.recomputeAppearance(True, event=kwargs.pop('event'))
                 
     def allChildrenCompleted(self):
         ''' Return whether all children (non-recursively) are completed. '''
@@ -1057,18 +1057,18 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
     
     @patterns.eventSource
     def setPrerequisites(self, prerequisites, event=None):
-        self.__prerequisites.set(set(prerequisites), event=event)
-        self.recomputeAppearance(recursive=True, event=event)
+        if self.__prerequisites.set(set(prerequisites), event=event):
+            self.recomputeAppearance(recursive=True, event=event)
         
     @patterns.eventSource
     def addPrerequisites(self, prerequisites, event=None):
-        self.__prerequisites.add(set(prerequisites), event=event)
-        self.recomputeAppearance(recursive=True, event=event)
+        if self.__prerequisites.add(set(prerequisites), event=event):
+            self.recomputeAppearance(recursive=True, event=event)
         
     @patterns.eventSource
     def removePrerequisites(self, prerequisites, event=None):
-        self.__prerequisites.remove(set(prerequisites), event=event)
-        self.recomputeAppearance(recursive=True, event=event)
+        if self.__prerequisites.remove(set(prerequisites), event=event):
+            self.recomputeAppearance(recursive=True, event=event)
         
     @patterns.eventSource
     def addTaskAsDependencyOf(self, prerequisites, event=None):
@@ -1082,7 +1082,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             
     def prerequisitesEvent(self, event, *prerequisites):
         event.addSource(self, *prerequisites, **dict(type='task.prerequisites'))
-        self.recomputeAppearance(event=event)
 
     @staticmethod
     def prerequisitesSortFunction(**kwargs):

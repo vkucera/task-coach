@@ -34,10 +34,11 @@ class Attribute(object):
     @patterns.eventSource
     def set(self, value, event=None):
         if value == self.__value:
-            return
+            return False
         self.__value = value
         self.__setEvent(event)
-           
+        return True
+    
 
 class SetAttribute(object):
     __slots__ = ('__set', '__owner', '__addEvent', '__removeEvent', 
@@ -56,7 +57,7 @@ class SetAttribute(object):
     @patterns.eventSource
     def set(self, values, event=None):
         if values == self.__set:
-            return
+            return False
         added = values - self.__set
         removed = self.__set - values
         self.__set = values
@@ -66,22 +67,25 @@ class SetAttribute(object):
             self.__removeEvent(event, *removed) # pylint: disable-msg=W0142
         if added or removed:
             self.__changeEvent(event, *self.__set)
-
+        return True
+    
     @patterns.eventSource            
     def add(self, values, event=None):
         if values <= self.__set:
-            return
+            return False
         self.__set |= values
         self.__addEvent(event, *values) # pylint: disable-msg=W0142
         self.__changeEvent(event, *self.__set)
-        
+        return True
+    
     @patterns.eventSource                    
     def remove(self, values, event=None):
         if values & self.__set == set():
-            return
+            return False
         self.__set -= values
         self.__removeEvent(event, *values) # pylint: disable-msg=W0142
         self.__changeEvent(event, *self.__set)
-        
+        return True
+    
     def __nullEvent(self, *args, **kwargs):
         pass

@@ -62,7 +62,7 @@ class CategorizableCompositeObject(base.CompositeObject):
         return 'categorizable.category.add'
 
     def addCategory(self, *categories, **kwargs):
-        self.__categories.add(set(categories), event=kwargs.pop('event', None))
+        return self.__categories.add(set(categories), event=kwargs.pop('event', None))
             
     def addCategoryEvent(self, event, *categories):
         event.addSource(self, *categories, **dict(type=self.categoryAddedEventType()))
@@ -95,7 +95,7 @@ class CategorizableCompositeObject(base.CompositeObject):
         return 'categorizable.category.remove'
     
     def removeCategory(self, *categories, **kwargs):
-        self.__categories.remove(set(categories), event=kwargs.pop('event', None))
+        return self.__categories.remove(set(categories), event=kwargs.pop('event', None))
             
     def removeCategoryEvent(self, event, *categories):
         event.addSource(self, *categories, **dict(type=self.categoryRemovedEventType()))
@@ -106,7 +106,7 @@ class CategorizableCompositeObject(base.CompositeObject):
             self.appearanceChangedEvent(event)
             
     def setCategories(self, categories, event=None):
-        self.__categories.set(set(categories), event=event)
+        return self.__categories.set(set(categories), event=event)
 
     @staticmethod
     def categoriesSortFunction(**kwargs):
@@ -189,7 +189,7 @@ class CategorizableCompositeObject(base.CompositeObject):
             font is mixed. If a categorizable composite object has no font of 
             its own, it uses its parent's font. '''
         fonts = [category.font(recursive=True) for category in self.categories()]
-        return font.FontMixer.mix(*fonts)
+        return font.FontMixer.mix(*fonts) # pylint: disable-msg=W0142
 
     def icon(self, recursive=False):
         icon = super(CategorizableCompositeObject, self).icon()
