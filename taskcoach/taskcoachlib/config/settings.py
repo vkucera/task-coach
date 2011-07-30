@@ -38,6 +38,10 @@ class CachingConfigParser(UnicodeAwareConfigParser):
     def __init__(self, *args, **kwargs):
         self.__cachedValues = dict()
         UnicodeAwareConfigParser.__init__(self, *args, **kwargs)
+        
+    def read(self, *args, **kwargs):
+        self.__cachedValues = dict()
+        return UnicodeAwareConfigParser.read(self, *args, **kwargs)
 
     def set(self, section, setting, value):
         self.__cachedValues[(section, setting)] = value
