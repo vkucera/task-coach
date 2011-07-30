@@ -34,25 +34,35 @@ if '__WXMSW__' in wx.PlatformInfo:
 
         @staticmethod
         def GetFromPoint(p):
-            for idx, (_, _, (x, y, w, h)) in enumerate(win32api.EnumDisplayMonitors(None, None)):
-                if p.x >= x and p.x < x + w and p.y >= y and p.y < y + h:
+            for idx, (_, _, (x1, y1, x2, y2)) in enumerate(win32api.EnumDisplayMonitors(None, None)):
+                if p.x >= x1 and p.x < x2 and p.y >= y1 and p.y < y2:
                     return idx
             return wx.NOT_FOUND
 
         @staticmethod
         def GetFromWindow(window):
-            return Display.GetFromPoint(window.GetPosition())
+            if window.GetWindowStyle() & wx.THICK_FRAME:
+                margin = wx.SystemSettings.GetMetric(wx.SYS_FRAMESIZE_X)
+            else:
+                margin = 0
+
+            x, y = window.GetPositionTuple()
+            return Display.GetFromPoint(wx.Point(x + margin, y + margin))
 
         def __init__(self, index):
-            self.hMonitor, _, (self.x, self.y, self.w, self.h) = win32api.EnumDisplayMonitors(None, None)[index]
+            self.hMonitor, _, (self.x, self.y, x2, y2) = win32api.EnumDisplayMonitors(None, None)[index]
+            self.w = x2 - self.x
+            self.h = y2 - self.y
 
         def GetClientArea(self):
             ns = win32api.GetMonitorInfo(self.hMonitor)
-            return wx.Rect(*ns['Work'])
+            x1, y1, x2, y2 = ns['Work']
+            return wx.Rect(x1, y1, x2 - x1, y2 - y1)
 
         def GetGeometry(self):
             ns = win32api.GetMonitorInfo(self.hMonitor)
-            return wx.Rect(*ns['Monitor'])
+            x1, y1, x2, y2 = ns['Monitor']
+            return wx.Rect(x1, y1, x2 - x1, y2 - y1)
 
         def GetName(self):
             ns = win32api.GetMonitorInfo(self.hMonitor)

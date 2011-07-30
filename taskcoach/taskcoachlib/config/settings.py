@@ -31,14 +31,41 @@ class UnicodeAwareConfigParser(ConfigParser.SafeConfigParser):
     def get(self, section, setting): # pylint: disable-msg=W0221
         value = ConfigParser.SafeConfigParser.get(self, section, setting)
         return value.decode('utf-8') # pylint: disable-msg=E1103
-    
 
-class Settings(patterns.Observer, UnicodeAwareConfigParser):
+
+class CachingConfigParser(UnicodeAwareConfigParser):
+    ''' ConfigParser is rather slow, so cache its values. '''
+    def __init__(self, *args, **kwargs):
+        self.__cachedValues = dict()
+        UnicodeAwareConfigParser.__init__(self, *args, **kwargs)
+        
+    def read(self, *args, **kwargs):
+        self.__cachedValues = dict()
+        return UnicodeAwareConfigParser.read(self, *args, **kwargs)
+
+    def set(self, section, setting, value):
+        self.__cachedValues[(section, setting)] = value
+        value = self.__escapePercentage(value)
+        UnicodeAwareConfigParser.set(self, section, setting, value)
+        
+    def get(self, section, setting):
+        cache, key = self.__cachedValues, (section, setting)
+        if key not in cache:
+            cache[key] = UnicodeAwareConfigParser.get(self, *key) # pylint: disable-msg=W0142
+        return cache[key]
+
+    @staticmethod
+    def __escapePercentage(value):
+        # Prevent ValueError: invalid interpolation syntax in '%' at position 0
+        return value.replace('%', '%%')
+        
+        
+class Settings(patterns.Observer, CachingConfigParser):
     def __init__(self, load=True, iniFile=None, *args, **kwargs):
         # Sigh, ConfigParser.SafeConfigParser is an old-style class, so we 
         # have to call the superclass __init__ explicitly:
         super(Settings, self).__init__(*args, **kwargs)
-        UnicodeAwareConfigParser.__init__(self, *args, **kwargs) 
+        CachingConfigParser.__init__(self, *args, **kwargs) 
         self.loadDefaults()
         self.__loadAndSave = load
         self.__iniFileSpecifiedOnCommandLine = iniFile
@@ -148,7 +175,6 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
         return result
 
     def set(self, section, option, value, new=False): # pylint: disable-msg=W0221
-        value = self.__escapePercentage(value)
         if new:
             currentValue = 'a new option, so use something as current value'\
                 ' that is unlikely to be equal to the new value'
@@ -278,8 +304,4 @@ class Settings(patterns.Observer, UnicodeAwareConfigParser):
     def generatedIniFilename(self, forceProgramDir):
         return os.path.join(self.path(forceProgramDir), '%s.ini'%meta.filename)
 
-    @staticmethod
-    def __escapePercentage(value):
-        # Prevent ValueError: invalid interpolation syntax in '%' at position 0
-        return value.replace('%', '%%')
-        
+ 

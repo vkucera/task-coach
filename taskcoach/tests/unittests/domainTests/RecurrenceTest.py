@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from taskcoachlib.domain import date
-from tests import test
+import test
 
 
 class CommonRecurrenceTestsMixin(object):

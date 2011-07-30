@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import wx
 from taskcoachlib.gui.dialog.preferences import SettingsPageBase
 from taskcoachlib import widgets
 from taskcoachlib.i18n import _
@@ -77,46 +78,60 @@ class SyncMLAccessPage(SyncMLBasePage):
     def __init__(self, *args, **kwargs):
         super(SyncMLAccessPage, self).__init__(*args, **kwargs)
 
+        choice = self.addChoiceSetting(None, 'preset', _('SyncML server'), '',
+                                       [('0', _('Custom')),
+                                        ('1', _('myFunambol (http://my.funambol.com/)')),
+                                        ('2', _('MemoToo (http://www.memotoo.com/)'))])[0]
+        wx.EVT_CHOICE(choice, wx.ID_ANY, self.OnPresetChanged)
+
         self.addTextSetting('access', 'syncUrl', _('SyncML server URL'))
         self.addTextSetting('access', 'username', _('User name/ID'))
 
-        self.fit()
-
-
-class SyncMLTaskPage(SyncMLBasePage):
-    def __init__(self, *args, **kwargs):
-        super(SyncMLTaskPage, self).__init__(*args, **kwargs)
-
-        self.addBooleanSetting('task', 'dosync', _('Enable tasks synchronization'))
+        checkBox = self.addBooleanSetting('task', 'dosync', _('Enable tasks synchronization'))
+        wx.EVT_CHECKBOX(checkBox, wx.ID_ANY, self.OnSyncTaskChanged)
         self.addTextSetting('task', 'uri', _('Tasks database name'))
-
-        self.addChoiceSetting('task', 'preferredsyncmode', _('Preferred synchonization mode'),
+        self.addChoiceSetting('task', 'preferredsyncmode', _('Preferred synchonization mode'), '',
                               [('TWO_WAY', _('Two way')),
                                ('SLOW', _('Slow')),
                                ('ONE_WAY_FROM_CLIENT', _('One way from client')),
                                ('REFRESH_FROM_CLIENT', _('Refresh from client')),
                                ('ONE_WAY_FROM_SERVER', _('One way from server')),
                                ('REFRESH_FROM_SERVER', _('Refresh from server'))])
+        self.enableTextSetting('task', 'uri', self.getboolean('task', 'dosync'))
+        self.enableChoiceSetting('task', 'preferredsyncmode', self.getboolean('task', 'dosync'))
 
-        self.fit()
-
-
-class SyncMLNotePage(SyncMLBasePage):
-    def __init__(self, *args, **kwargs):
-        super(SyncMLNotePage, self).__init__(*args, **kwargs)
-
-        self.addBooleanSetting('note', 'dosync', _('Enable notes synchronization'))
+        checkBox = self.addBooleanSetting('note', 'dosync', _('Enable notes synchronization'))
+        wx.EVT_CHECKBOX(checkBox, wx.ID_ANY, self.OnSyncNoteChanged)
         self.addTextSetting('note', 'uri', _('Notes database name'))
-
-        self.addChoiceSetting('note', 'preferredsyncmode', _('Preferred synchonization mode'),
+        self.addChoiceSetting('note', 'preferredsyncmode', _('Preferred synchonization mode'), '',
                               [('TWO_WAY', _('Two way')),
                                ('SLOW', _('Slow')),
                                ('ONE_WAY_FROM_CLIENT', _('One way from client')),
                                ('REFRESH_FROM_CLIENT', _('Refresh from client')),
                                ('ONE_WAY_FROM_SERVER', _('One way from server')),
                                ('REFRESH_FROM_SERVER', _('Refresh from server'))])
+        self.enableTextSetting('note', 'uri', self.getboolean('note', 'dosync'))
+        self.enableChoiceSetting('note', 'preferredsyncmode', self.getboolean('note', 'dosync'))
 
         self.fit()
+
+    def OnPresetChanged(self, event):
+        if event.GetInt() == 1:
+            self.setTextSetting('access', 'syncUrl', 'http://my.funambol.com/sync')
+            self.setTextSetting('task', 'uri', 'task')
+            self.setTextSetting('note', 'uri', 'note')
+        elif event.GetInt() == 2:
+            self.setTextSetting('access', 'syncUrl', 'http://sync.memotoo.com/syncml')
+            self.setTextSetting('task', 'uri', 'task')
+            self.setTextSetting('note', 'uri', 'note')
+
+    def OnSyncTaskChanged(self, event):
+        self.enableTextSetting('task', 'uri', event.IsChecked())
+        self.enableChoiceSetting('task', 'preferredsyncmode', event.IsChecked())
+
+    def OnSyncNoteChanged(self, event):
+        self.enableTextSetting('note', 'uri', event.IsChecked())
+        self.enableChoiceSetting('note', 'preferredsyncmode', event.IsChecked())
 
 
 class SyncMLPreferences(widgets.NotebookDialog):
@@ -124,15 +139,15 @@ class SyncMLPreferences(widgets.NotebookDialog):
         self.iocontroller = iocontroller
         super(SyncMLPreferences, self).__init__(bitmap='wrench_icon', *args,
                                                 **kwargs)
+        if '__WXMAC__' in wx.PlatformInfo:
+            self.CentreOnParent()
 
     def addPages(self):
-        self._interior.SetMinSize((450, 200))
+        self._interior.SetMinSize((550, 400))
         kwargs = dict(parent=self._interior, columns=3,
                       iocontroller=self.iocontroller)
         # pylint: disable-msg=W0142
-        pages = [(SyncMLAccessPage(growableColumn=1, **kwargs), _('Access'), 'earth_blue_icon'),
-                 (SyncMLTaskPage(**kwargs), _('Tasks'), 'taskcoach'),
-                 (SyncMLNotePage(**kwargs), _('Notes'), 'note_icon')]
+        pages = [(SyncMLAccessPage(growableColumn=1, **kwargs), _('Access'), 'earth_blue_icon')]
 
         for page, title, bitmap in pages:
             self._interior.AddPage(page, title, bitmap=bitmap)

@@ -2306,10 +2306,11 @@ class TaskWithDependency(TaskTestCase):
         self.assertEvent('task.dependency.subject', self.task, 'New subject')
 
 
-class TaskSuggestedDateTimeTest(test.TestCase):
+class TaskSuggestedDateTimeBaseSetupAndTests(object):
     def setUp(self):
         # pylint: disable-msg=W0142
         self.settings = task.Task.settings = config.Settings(load=False)
+        self.changeSettings()
         self.now = now = date.Now()
         tomorrow = now + date.oneDay
         dayAfterTomorrow = tomorrow + date.oneDay
@@ -2321,8 +2322,15 @@ class TaskSuggestedDateTimeTest(test.TestCase):
         startOfWorkingDayKwArgs = dict(hour=startOfWorkingDayHour,
                                        minute=0, second=0, microsecond=0)
         endOfWorkingDayHour = self.settings.getint('view', 'efforthourend')
-        endOfWorkingDayKwArgs = dict(hour=endOfWorkingDayHour, minute=0,
-                                      second=0, microsecond=0)
+        if endOfWorkingDayHour == 24:
+            endOfWorkingDayHour = 23
+            minute = 59
+            second = 59
+        else:
+            minute = 0
+            second = 0
+        endOfWorkingDayKwArgs = dict(hour=endOfWorkingDayHour, minute=minute,
+                                      second=second, microsecond=0)
         startOfWorkingDay = now.replace(**startOfWorkingDayKwArgs)
         endOfWorkingDay = now.replace(**endOfWorkingDayKwArgs)
         startOfWorkingTomorrow = tomorrow.replace(**startOfWorkingDayKwArgs)
@@ -2360,6 +2368,9 @@ class TaskSuggestedDateTimeTest(test.TestCase):
                           nextmonday_endofworkingday=endOfWorkingNextMonday,
                           nextmonday_endofday=nextMonday.endOfDay())
         
+    def changeSettings(self):
+        pass
+
     def testSuggestedStartDateTime(self):
         for timeValue, expectedDateTime in self.times.items():
             self.settings.set('view', 'defaultstartdatetime', 'preset_' + timeValue)
@@ -2386,3 +2397,15 @@ class TaskSuggestedDateTimeTest(test.TestCase):
             self.settings.set('view', 'defaultreminderdatetime', 'propose_' + timeValue)
             self.assertEqual(expectedDateTime,
                              task.Task.suggestedReminderDateTime(lambda: self.now))
+
+
+class TaskSuggestedDateTimeTestWithDefaultStartAndEndOfWorkingDay( \
+        TaskSuggestedDateTimeBaseSetupAndTests, test.TestCase):
+    pass
+
+
+class TaskSuggestedDateTimeTestWithStartAndEndOfWorkingDayEqualToDay( \
+        TaskSuggestedDateTimeBaseSetupAndTests, test.TestCase):
+    def changeSettings(self):
+        self.settings.set('view', 'efforthourstart', '0')
+        self.settings.set('view', 'efforthourend', '24')
