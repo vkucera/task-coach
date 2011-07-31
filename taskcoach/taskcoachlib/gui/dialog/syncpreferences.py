@@ -80,8 +80,8 @@ class SyncMLAccessPage(SyncMLBasePage):
 
         choice = self.addChoiceSetting(None, 'preset', _('SyncML server'), '',
                                        [('0', _('Custom')),
-                                        ('1', _('myFunambol (http://my.funambol.com/)')),
-                                        ('2', _('MemoToo (http://www.memotoo.com/)'))])[0]
+                                        #('1', _('myFunambol (http://my.funambol.com/)')),
+                                        ('1', _('MemoToo (http://www.memotoo.com/)'))])[0]
         wx.EVT_CHOICE(choice, wx.ID_ANY, self.OnPresetChanged)
 
         self.addTextSetting('access', 'syncUrl', _('SyncML server URL'))
