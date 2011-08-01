@@ -16,58 +16,46 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, os, re, tempfile, urllib, email.header
+import wx, os, re, tempfile, urllib, email, email.header
 from taskcoachlib.thirdparty import desktop, chardet
 from taskcoachlib.mailer.macmail import getSubjectOfMail
 from taskcoachlib.i18n import _
 
 
 def readMail(filename, readContent=True):
-    # FIXME: Why not use the email package?
-    subject = None
-    content = ''
-    encoding = None
-    s = 0
-    rx = re.compile('charset=([-0-9a-zA-Z]+)')
-
-    for line in file(filename, 'r'):
-        if s == 0:
-            if line.lower().startswith('subject:'):
-                subject = line[8:].strip() # FIXME: subject lines may be continued on the next line
-            if line.strip() == '':
-                if not readContent:
-                    break
-                s = 1
-            mt = rx.search(line)
-            if mt:
-                encoding = mt.group(1)
-        elif s == 1:
-            content += line
-
-    if encoding is None:
-        # Don't try to guess every time. When there are many e-mails
-        # with big attachments, it may take *very* long.
-
-        try:
-            encoding = wx.Locale_GetSystemEncodingName()
-            if not encoding:
-                # This happens on Mac OS...
-                encoding = 'UTF-8'
-            content.decode(encoding)
-        except UnicodeError:
-            encoding = chardet.detect(content)['encoding']
-
-    if subject:
-        try:
-            decoded_subject = u''.join((part[0].decode(part[1]) if part[1] else part[0]) for part in email.header.decode_header(subject))
-        except UnicodeDecodeError:
-            decoded_subject = subject.decode(encoding)
-        subject = decoded_subject
-    else:
-        subject = _('Untitled e-mail')
-    
-    content = content.decode(encoding)
+    with file(filename, 'r') as fd:
+        message = email.message_from_file(fd)
+    subject = u''.join((part[0].decode(part[1]) if part[1] else part[0]) for part in email.header.decode_header(message['subject']))
+    content = getContent(message) if readContent else ''
     return subject, content
+
+charset_re = re.compile('charset=([-0-9a-zA-Z]+)')
+
+def getContent(message):
+    if message.is_multipart():
+        content = []
+        for submessage in message.get_payload():
+            content.append(getContent(submessage))
+        return u'\n'.join(content)
+    elif message.get_content_type() in ('text/plain', 'message/rfc822'):
+        content = message.get_payload()
+        transfer_encoding = message['content-transfer-encoding']
+        if transfer_encoding:
+            try:
+                content = content.decode(transfer_encoding)
+            except LookupError:
+                pass # 8bit transfer encoding gives LookupError, ignore
+        content_type = message['content-type']
+        if content_type:
+            match = charset_re.search(message['content-type'])
+            encoding = match.group(1) if match else ''
+            if encoding:
+                content = content.decode(encoding)
+        return content
+    else:
+        return ''
+        
+    
 
 def openMailWithOutlook(filename):
     id_ = None

@@ -47,7 +47,7 @@ def unquote(s):
 
 
 def loadPreferences():
-    """Reads Thunderbird's prefs.js file and return a dictionnary of
+    """Reads Thunderbird's prefs.js file and return a dictionary of
     configuration options."""
 
     config = {}
