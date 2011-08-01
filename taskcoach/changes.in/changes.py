@@ -32,6 +32,7 @@ task.'''),
         Bug('''Indentation of categories with and without subcategories in the 
 category viewer was slightly different.''', '3345002'),
         Bug('''Windows would appear on the wrong monitor on Windows 7.''', '3370403'),
+        Bug('''On Windows 7, the task view would flicker every second.''', '3354402'),
         ## Bug('''SyncML synchronization now works with myFunambol.''',
         ##     '3337902', '3295655', '3377497'),
         ],
