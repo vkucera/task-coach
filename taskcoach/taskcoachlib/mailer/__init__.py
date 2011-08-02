@@ -29,7 +29,7 @@ def readMail(filename, readContent=True):
     content = getContent(message) if readContent else ''
     return subject, content
 
-charset_re = re.compile('charset=([-0-9a-zA-Z]+)')
+charset_re = re.compile('charset="?([-0-9a-zA-Z]+)"?')
 
 def getContent(message):
     if message.is_multipart():
