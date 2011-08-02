@@ -41,14 +41,15 @@ if os.name == 'nt':
             encoding = 'utf-8'
         mailFile = codecs.open(filename, 'wb', encoding)
         try:
-            mailFile.write(emailHeaders(item) + body)
+            mailFile.write(emailHeaders(item, encoding) + body)
         finally:
             mailFile.close()
             os.chmod(filename, stat.S_IREAD)
 
-    def emailHeaders(item, lineSep=u'\r\n'):
+    def emailHeaders(item, encoding, lineSep=u'\r\n'):
         headers = []
         headers.append(u'subject: %s'%item.Subject)
         headers.append(u'X-Outlook-ID: %s'%item.EntryID)
+        headers.append(u'Content-Transfer-Encoding: %s'%encoding)
         headers.append(lineSep)
         return lineSep.join(headers)
