@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.25', 'August 2, 2011',
+Release('1.2.25', 'August 3, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''The anonymize function wouldn't give a notification after saving
@@ -44,6 +44,8 @@ times for tasks in the preference dialog. This allows for e.g. automatically
 setting a reminder the next day.''', 'http://uservoice.com/a/g9xpy'),
         Feature('''Faster saving.'''),
         Feature('''Preset common SyncML servers (MemoToo)'''),
+        Feature('''Support for drag and drop of email messages from local 
+folders in Thunderbird.''')
         ]
     ),
 

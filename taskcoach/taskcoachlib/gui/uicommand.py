@@ -23,7 +23,7 @@ import wx
 from taskcoachlib import patterns, meta, command, help, widgets, persistence, thirdparty, render # pylint: disable-msg=W0622
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import base, task, note, category, attachment, effort
-from taskcoachlib.mailer import writeMail
+from taskcoachlib.mailer import sendMail
 from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, wxSCHEDULER_TODAY
 from taskcoachlib.thirdparty import desktop
 from taskcoachlib.gui.wizard import CSVImportWizard
@@ -1677,7 +1677,7 @@ class Mail(NeedsSelectionMixin, ViewerCommand):
         super(Mail, self).__init__(menuText=_('&Mail...\tCtrl-M'),
            helpText=help.mailItem, bitmap='envelope_icon', *args, **kwargs)
 
-    def doCommand(self, event, mail=writeMail, showerror=wx.MessageBox): # pylint: disable-msg=W0221
+    def doCommand(self, event, mail=sendMail, showerror=wx.MessageBox): # pylint: disable-msg=W0221
         items = self.viewer.curselection()
         subject = self.subject(items)
         body = self.body(items)

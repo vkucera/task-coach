@@ -55,7 +55,6 @@ def getContent(message):
     else:
         return ''
         
-    
 
 def openMailWithOutlook(filename):
     id_ = None
@@ -95,7 +94,7 @@ def openMail(filename):
 
     desktop.open(filename)
 
-def writeMail(to, subject, body, openURL=desktop.open):
+def sendMail(to, subject, body, openURL=desktop.open):
     def unicode_quote(s):
         # This is like urllib.quote but leaves out Unicode characters,
         # which urllib.quote does not support.

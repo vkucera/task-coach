@@ -99,7 +99,7 @@ class DropTarget(wx.DropTarget):
             url = self.__macMailObject.GetData()
             if url.startswith('message:') and self.__onDropURLCallback:
                 self.__onDropURLCallback(x, y, url)
-            elif url.startswith('imap:') and self.__onDropMailCallback:
+            elif (url.startswith('imap:') or url.startswith('mailbox:')) and self.__onDropMailCallback:
                 try:
                     self.__onDropMailCallback(x, y, thunderbird.getMail(url))
                 except thunderbird.ThunderbirdCancelled:
@@ -142,7 +142,7 @@ class DropTarget(wx.DropTarget):
             except thunderbird.ThunderbirdError, e:
                 wx.MessageBox(e.args[0], _('Error'), wx.OK|wx.ICON_ERROR)
             else:
-                self.__onDropMailCallback(x, y, thunderbird.getMail(data))
+                self.__onDropMailCallback(x, y, email)
 
     def onOutlookDrop(self, x, y):
         if self.__onDropMailCallback:

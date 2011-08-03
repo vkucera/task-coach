@@ -16,15 +16,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, stat, re, imaplib, ConfigParser, wx
+import os, stat, re, imaplib, ConfigParser, wx, socket, mailbox
 from taskcoachlib.i18n import _
 from taskcoachlib import persistence
 
 
-_RX_MAILBOX = re.compile(r'mailbox-message://(.*)@(.*)/(.*)#((?:-)?\d+)')
+_RX_MAILBOX_MESSAGE = re.compile(r'mailbox-message://(.*)@(.*)/(.*)#((?:-)?\d+)')
 _RX_IMAP_MESSAGE = re.compile(r'imap-message://([^@]+)@([^/]+)/(.*)#(\d+)')
 _RX_IMAP = re.compile(r'imap://([^@]+)@([^/]+)/fetch%3EUID%3E(?:/|\.)(.*)%3E(\d+)')
-
+_RX_MAILBOX = re.compile(r'mailbox://([^?]+)\?number=(\d+)')
 
 class ThunderbirdError(Exception):
     pass
@@ -140,7 +140,7 @@ class ThunderbirdMailboxReader(object):
         """url is the internal reference to the mail, as collected
         through drag-n-drop."""
 
-        mt = _RX_MAILBOX.search(url)
+        mt = _RX_MAILBOX_MESSAGE.search(url)
         if mt is None:
             raise ThunderbirdError(_('Malformed Thunderbird internal ID:\n%s. Please file a bug report.') % url)
 
@@ -284,10 +284,14 @@ class ThunderbirdImapReader(object):
             return server1 == server2
 
     def _getMail(self):
-        if self.ssl:
-            cn = imaplib.IMAP4_SSL(self.server, self.port)
-        else:
-            cn = imaplib.IMAP4(self.server, self.port)
+        imapClass = imaplib.IMAP4_SSL if self.ssl else imaplib.IMAP4
+        try:
+            cn = imapClass(self.server, self.port)
+        except socket.gaierror, exceptionMessage:
+            errorMessage = _('Could not open an IMAP connection to %(server)s:%(port)s\n'
+                             'to retrieve Thunderbird email message:\n%(error)s')%\
+                             dict(server=self.server, port=self.port, error=exceptionMessage)
+            raise ThunderbirdError(errorMessage)
 
         if self._PASSWORDS.has_key((self.server, self.user, self.port)):
             pwd = self._PASSWORDS[(self.server, self.user, self.port)]
@@ -335,14 +339,45 @@ class ThunderbirdImapReader(object):
     def saveToFile(self, fp):
         fp.write(self._getMail())
 
-#==============================================================================
 
+class ThunderbirdLocalMailboxReader(object):
+    ''' Reads email from a local Thunderbird mailbox. '''
+    def __init__(self, url):
+        self.url = url
+        
+    def _getMail(self):
+        match = _RX_MAILBOX.match(self.url)
+        if match is None:
+            raise ThunderbirdError(_('Unrecognized URL scheme: "%s"') % self.url)
+        path = unquote(match.group(1))
+        # Note that the number= part of the URL is not the message key, but
+        # rather an offset in the mbox file.
+        offset = int(match.group(2))
+        # So we skip the first offset bytes before reading the contents:
+        with file(path, 'rb') as mbox:
+            mbox.seek(offset)
+            contents = mbox.read(4*1024*1024) # Assume message size <= 4MB
+        # Then we get a filename for a temporary file...
+        filename = persistence.get_temp_file()
+        # And save the remaining contents of the original mbox file: 
+        with file(filename, 'wb') as tmpmbox:
+            tmpmbox.write(contents)
+        # Now we can open the temporary mbox file...
+        mb = mailbox.mbox(filename)
+        # And the message we look for should be the first one:
+        return mb.get_string(0)
+        
+    def saveToFile(self, fp):
+        fp.write(self._getMail())
+    
 
 def getMail(id_):
     if id_.startswith('mailbox-message://'):
         reader = ThunderbirdMailboxReader(id_)
     elif id_.startswith('imap'):
         reader = ThunderbirdImapReader(id_)
+    elif id_.startswith('mailbox:'):
+        reader = ThunderbirdLocalMailboxReader(id_)
     else:
         raise TypeError('Not supported: %s' % id_)
 
