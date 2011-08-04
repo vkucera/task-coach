@@ -41,7 +41,7 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.25', 'July 30, 2011',
+Release('1.2.25', 'August 4, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''The anonymize function wouldn't give a notification after saving
@@ -51,6 +51,10 @@ task.'''),
         Bug('''Indentation of categories with and without subcategories in the 
 category viewer was slightly different.''', '3345002'),
         Bug('''Windows would appear on the wrong monitor on Windows 7.''', '3370403'),
+        Bug('''On Windows 7, the task view would flicker every second.''', '3354402'),
+        Bug('''On Mac OS X, Task Coach would hang when both the splash screen
+and the "file locked" dialog are displayed.''', '3383050'),
+        Bug('''Startup even when reading one of the templates fails.''', '3386296'),
         ## Bug('''SyncML synchronization now works with myFunambol.''',
         ##     '3337902', '3295655', '3377497'),
         ],
@@ -59,7 +63,9 @@ category viewer was slightly different.''', '3345002'),
 times for tasks in the preference dialog. This allows for e.g. automatically 
 setting a reminder the next day.''', 'http://uservoice.com/a/g9xpy'),
         Feature('''Faster saving.'''),
-        Feature('''Preset common SyncML servers (myFunambol and MemoToo)'''),
+        Feature('''Preset common SyncML servers (MemoToo)'''),
+        Feature('''Support for drag and drop of email messages from local 
+folders in Thunderbird.''')
         ]
     ),
 

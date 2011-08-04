@@ -120,7 +120,7 @@ class Application(object):
         self.autoSaver = persistence.AutoSaver(self.settings)
         self.autoBackup = persistence.AutoBackup(self.settings)
         self.iocontroller = gui.IOController(self.taskFile, self.displayMessage, 
-                                             self.settings)
+                                             self.settings, splash)
         self.mainwindow = gui.MainWindow(self.iocontroller, self.taskFile, 
                                          self.settings)
         self.wxApp.SetTopWindow(self.mainwindow)

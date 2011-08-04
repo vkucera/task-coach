@@ -36,11 +36,12 @@ class IOController(object):
     saving, and exporting files. It also presents the necessary dialogs
     to let the user specify what file to load/save/etc. '''
 
-    def __init__(self, taskFile, messageCallback, settings): 
+    def __init__(self, taskFile, messageCallback, settings, splash=None): 
         super(IOController, self).__init__()
         self.__taskFile = taskFile
         self.__messageCallback = messageCallback
         self.__settings = settings
+        self.__splash = splash
         defaultPath = os.path.expanduser('~')
         self.__tskFileDialogOpts = {'default_path': defaultPath, 
             'default_extension': 'tsk', 'wildcard': 
@@ -101,9 +102,16 @@ class IOController(object):
         self.__updateDefaultPath(filename)
         if fileExists(filename):
             self.__closeUnconditionally()
-            self.__addRecentFile(filename) 
+            self.__addRecentFile(filename)
             try:
-                self.__taskFile.load(filename, lock=lock, breakLock=breakLock)
+                try:
+                    self.__taskFile.load(filename, lock=lock, breakLock=breakLock)
+                except:
+                    # Need to destroy splash screen first because it may 
+                    # interfere with dialogs we show later on Mac OS X
+                    if self.__splash:
+                        self.__splash.Destroy()
+                    raise
             except lockfile.LockTimeout:
                 if breakLock:
                     if self.__askOpenUnlocked(filename): 
