@@ -33,6 +33,14 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
                  widgets.AuiManagedFrameWithDynamicCenterPane):
     def __init__(self, iocontroller, taskFile, settings, *args, **kwargs):
         super(MainWindow, self).__init__(None, -1, '', *args, **kwargs)
+
+        # This prevents the wiewers from flickering on Windows when refreshed.
+        if '__WXMSW__' in wx.PlatformInfo:
+            import win32gui, win32con
+            exstyle = win32gui.GetWindowLong(self.GetHandle(), win32con.GWL_EXSTYLE)
+            exstyle |= win32con.WS_EX_COMPOSITED
+            win32gui.SetWindowLong(self.GetHandle(), win32con.GWL_EXSTYLE, exstyle)
+
         self.dimensionsTracker = windowdimensionstracker.WindowDimensionsTracker(self, settings)
         self.iocontroller = iocontroller
         self.taskFile = taskFile
