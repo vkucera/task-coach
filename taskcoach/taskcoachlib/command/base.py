@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from taskcoachlib import patterns
 from taskcoachlib.i18n import _
-from taskcoachlib.domain import note
 from clipboard import Clipboard
  
 
@@ -336,66 +335,6 @@ class DragAndDropCommand(BaseCommand, SaveStateMixin, CompositeMixin):
         self.list.removeItems(self.items)
         self.redoStates()
         self.list.extend(self.items)
-        
-
-class AddAttachmentCommand(BaseCommand):
-    plural_name = _('Add attachment')
-    singular_name = _('Add attachment to "%s"')
-    
-    def __init__(self, *args, **kwargs):
-        self.__attachments = kwargs.pop('attachments')
-        super(AddAttachmentCommand, self).__init__(*args, **kwargs)
-
-    def addAttachments(self):
-        for item in self.items:
-            item.addAttachments(*self.__attachments)
-        
-    def removeAttachments(self):
-        for item in self.items:
-            item.removeAttachments(*self.__attachments)
-                
-    def do_command(self):
-        self.addAttachments()
-        
-    def undo_command(self):
-        self.removeAttachments()
-
-    def redo_command(self):
-        self.addAttachments()
-        
-
-class AddNoteCommand(BaseCommand):
-    plural_name = _('Add note')
-    singular_name = _('Add note to "%s"')
-
-    def __init__(self, *args, **kwargs):
-        super(AddNoteCommand, self).__init__(*args, **kwargs)
-        self.owners = self.items
-        self.items = self.notes = [note.Note(subject=_('New note')) \
-                                   for dummy in self.items]
-
-    def name_subject(self, note):
-        # Override to use the subject of the owner of the new note instead
-        # of the subject of the new note itself, which wouldn't be very
-        # interesting because it's something like 'New note'.
-        return self.owners[0].subject()
-    
-    def addNotes(self):
-        for owner, note in zip(self.owners, self.notes): # pylint: disable-msg=W0621
-            owner.addNote(note)
-
-    def removeNotes(self):
-        for owner, note in zip(self.owners, self.notes): # pylint: disable-msg=W0621
-            owner.removeNote(note)
-    
-    def do_command(self):
-        self.addNotes()
-        
-    def undo_command(self):
-        self.removeNotes()
-        
-    def redo_command(self):
-        self.addNotes()    
 
 
 class EditSubjectCommand(BaseCommand):

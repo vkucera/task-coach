@@ -82,18 +82,20 @@ class ClockTest(test.wxTestCase):
         self.assertEqual(1, len(self.events))
 
     def testStartClockOnFirstObserverRegisteredForSecond(self):
-        self.clock._timers['second'] = MockTimer()
+        # pylint: disable-msg=W0212
+        self.clock._timers['second'] = MockTimer() 
         patterns.Publisher().registerObserver(self.onEvent,
             eventType='clock.second')
-        self.failUnless(self.clock._timers['second'].started) # pylint: disable-msg=W0212
+        self.failUnless(self.clock._timers['second'].started) 
 
     def testStopClockOnLastObserverRemovedForSecond(self):
+         # pylint: disable-msg=W0212
         self.clock._timers['second'] = MockTimer()
         patterns.Publisher().registerObserver(self.onEvent,
             eventType='clock.second')
         patterns.Publisher().removeObserver(self.onEvent,
             eventType='clock.second')
-        self.failUnless(self.clock._timers['second'].stopped) # pylint: disable-msg=W0212
+        self.failUnless(self.clock._timers['second'].stopped)
 
 
 class TimerTestCase(test.TestCase):

@@ -421,6 +421,7 @@ class NeedsSelectedNoteOwnersMixin(NeedsSelectionMixin):
 
 class NeedsSelectedNoteOwnersMixinWithNotes(NeedsSelectedNoteOwnersMixin):
     def enabled(self, event):
+        # pylint: disable-msg=E1101
         return super(NeedsSelectedNoteOwnersMixinWithNotes, self).enabled(event) and \
             any([item.notes() for item in self.viewer.curselection()])
             
@@ -1386,7 +1387,7 @@ class TaskNewFromTemplate(TaskNew):
         super(TaskNewFromTemplate, self).__init__(*args, **kwargs)
         self.__filename = filename
         templateTask = self.__readTemplate()
-        self.menuText = '&' + templateTask.subject()
+        self.menuText = '&' + templateTask.subject() # pylint: disable-msg=E1103
 
     def __readTemplate(self):
         return persistence.TemplateXMLReader(file(self.__filename,
@@ -1397,7 +1398,7 @@ class TaskNewFromTemplate(TaskNew):
         # TemplateXMLReader that evaluates dynamic values (Now()
         # should be evaluated at task creation for instance).
         templateTask = self.__readTemplate()
-        kwargs = templateTask.__getcopystate__()
+        kwargs = templateTask.__getcopystate__()  # pylint: disable-msg=E1103
         kwargs['categories'] = self.categoriesForTheNewTask()
         # pylint: disable-msg=W0142
         newTaskDialog = dialog.editor.TaskEditor(self.mainWindow(), 
@@ -2432,7 +2433,7 @@ class CalendarViewerNavigationCommand(ViewerCommand):
     def doCommand(self, event):
         self.viewer.freeze()
         try:
-            self.viewer.SetViewType(self.calendarViewType)
+            self.viewer.SetViewType(self.calendarViewType) # pylint: disable-msg=E1101
         finally:
             self.viewer.thaw()
 

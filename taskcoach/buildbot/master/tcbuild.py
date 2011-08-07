@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+# pylint: disable-msg=F0401,E1101
 from buildbot.steps.shell import Compile, ShellCommand, WithProperties
 from buildbot.steps.transfer import FileUpload, DirectoryUpload
 from buildbot import interfaces

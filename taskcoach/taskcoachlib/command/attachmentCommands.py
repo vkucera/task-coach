@@ -53,3 +53,29 @@ class EditAttachmentCommand(base.EditCommand):
 class DeleteAttachmentCommand(base.DeleteCommand):
     plural_name = _('Delete attachments')
     singular_name = _('Delete attachment "%s"')
+
+
+class AddAttachmentCommand(base.BaseCommand):
+    plural_name = _('Add attachment')
+    singular_name = _('Add attachment to "%s"')
+    
+    def __init__(self, *args, **kwargs):
+        self.__attachments = kwargs.pop('attachments')
+        super(AddAttachmentCommand, self).__init__(*args, **kwargs)
+
+    def addAttachments(self):
+        for item in self.items:
+            item.addAttachments(*self.__attachments)
+        
+    def removeAttachments(self):
+        for item in self.items:
+            item.removeAttachments(*self.__attachments)
+                
+    def do_command(self):
+        self.addAttachments()
+        
+    def undo_command(self):
+        self.removeAttachments()
+
+    def redo_command(self):
+        self.addAttachments()

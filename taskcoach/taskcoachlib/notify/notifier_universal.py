@@ -216,7 +216,7 @@ class NotificationFrameBase(_NotifyBase):
     def DoClose(self, event=None): # pylint: disable-msg=W0613
         """Use this method instead of Close. Never use Close directly."""
 
-        NotificationCenter().HideFrame(self)
+        NotificationCenter().HideFrame(self) # pylint: disable-msg=E1101
 
 
 class NotificationFrame(NotificationFrameBase):
@@ -401,7 +401,7 @@ class UniversalNotifier(AbstractNotifier):
         return True
 
     def notify(self, title, summary, bitmap, **kwargs):
-        NotificationCenter().Notify(title, summary, icon=bitmap)
+        NotificationCenter().Notify(title, summary, icon=bitmap) # pylint: disable-msg=E1101
 
 
 AbstractNotifier.register(UniversalNotifier())
@@ -428,7 +428,7 @@ if __name__ == '__main__':
     class TestFrame(wx.Frame):
         def __init__(self):
             super(TestFrame, self).__init__(None, wx.ID_ANY, 'Test frame')
-
+            # pylint: disable-msg=E1101
             NotificationCenter().Notify('Sample title', 'Sample content', timeout=3)
             NotificationCenter().Notify('Other sample', 'Multi-line sample content\nfor example\nDont try this at home', timeout=3,
                                         icon=wx.ArtProvider.GetBitmap('taskcoach', wx.ART_FRAME_ICON, (16, 16)))
@@ -440,7 +440,7 @@ if __name__ == '__main__':
             wx.EVT_CLOSE(self, self.OnClose)
 
         def OnClose(self, evt):
-            NotificationCenter().HideAll()
+            NotificationCenter().HideAll() # pylint: disable-msg=E1101
             evt.Skip()
 
 

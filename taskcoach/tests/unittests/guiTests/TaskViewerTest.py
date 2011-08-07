@@ -68,7 +68,7 @@ class TaskViewerTestCase(test.wxTestCase):
             os.remove('test.mail')
 
     def assertItems(self, *tasks):
-        self.viewer.expandAll()
+        self.viewer.expandAll() # pylint: disable-msg=E1101
         self.assertEqual(self.viewer.size(), len(tasks))
         for index, eachTask in enumerate(tasks):
             self.assertItem(index, eachTask)
@@ -351,10 +351,10 @@ class CommonTestsMixin(object):
     def testRenderDifferentParentAndChildCategories(self):
         self.task.addChild(self.child)
         self.taskList.append(self.task)
-        for index, task in enumerate([self.task, self.child]):
+        for index, eachTask in enumerate([self.task, self.child]):
             cat = category.Category(subject='Category %d'%index)
-            task.addCategory(cat)
-            cat.addCategorizable(task)
+            eachTask.addCategory(cat)
+            cat.addCategorizable(eachTask)
         expectedCategory = 'Category 0 (Category 1)' if self.viewer.isTreeViewer() else 'Category 0'
         self.assertEqual(expectedCategory, self.viewer.renderCategories(self.task))
 
@@ -362,9 +362,9 @@ class CommonTestsMixin(object):
         self.task.addChild(self.child)
         self.taskList.append(self.task)
         cat = category.Category(subject='Category')
-        for task in (self.task, self.child):
-            task.addCategory(cat)
-            cat.addCategorizable(task)
+        for eachTask in (self.task, self.child):
+            eachTask.addCategory(cat)
+            cat.addCategorizable(eachTask)
         expectedCategory = 'Category'
         self.assertEqual(expectedCategory, self.viewer.renderCategories(self.task))
 
@@ -565,7 +565,7 @@ class CommonTestsMixin(object):
     def testNewItem(self):
         self.taskFile.categories().append(category.Category('cat', filtered=True))
         dialog = self.viewer.newItemDialog(bitmap='new')
-        tree = dialog._interior[4].viewer.widget
+        tree = dialog._interior[4].viewer.widget # pylint: disable-msg=W0212
         firstChild = tree.GetFirstChild(tree.GetRootItem())[0]
         self.failUnless(firstChild.IsChecked())
         
@@ -857,7 +857,7 @@ class TaskCalendarViewerTest(test.wxTestCase):
     def openDialogAndAssertDateTimes(self, dateTime, expectedStartDateTime, 
                                      expectedDueDateTime):
         dialog = self.viewer.onCreate(dateTime, show=False)
-        newTask = dialog._command.items[0]
+        newTask = dialog._command.items[0] # pylint: disable-msg=W0212
         self.assertEqual(expectedStartDateTime, newTask.startDateTime())
         self.assertEqual(expectedDueDateTime, newTask.dueDateTime())
         
@@ -872,6 +872,7 @@ class TaskCalendarViewerTest(test.wxTestCase):
         
 class TaskSquareMapViewerTest(test.wxTestCase):
     def testCreate(self):
+        # pylint: disable-msg=W0201
         task.Task.settings = self.settings = config.Settings(load=False)
         self.taskFile = persistence.TaskFile()
         gui.viewer.task.SquareTaskViewer(self.frame, self.taskFile, self.settings)
@@ -879,6 +880,7 @@ class TaskSquareMapViewerTest(test.wxTestCase):
         
 class TaskTimelineViewerTest(test.wxTestCase):
     def testCreate(self):
+        # pylint: disable-msg=W0201
         task.Task.settings = self.settings = config.Settings(load=False)
         self.taskFile = persistence.TaskFile()
         gui.viewer.task.TimelineViewer(self.frame, self.taskFile, self.settings)

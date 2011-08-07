@@ -30,7 +30,7 @@ class AuiManagedFrameWithDynamicCenterPane(wx.Frame):
 
     def bindEvents(self):
         for eventType in aui.EVT_AUI_PANE_CLOSE, aui.EVT_AUI_PANE_FLOATING:
-           self.manager.Bind(eventType, self.onPaneClosingOrFloating)
+            self.manager.Bind(eventType, self.onPaneClosingOrFloating)
 
     def onPaneClosingOrFloating(self, event):
         pane = event.GetPane()

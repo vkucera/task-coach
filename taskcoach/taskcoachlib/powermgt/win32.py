@@ -16,8 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import win32gui, win32con
+import win32gui, win32con # pylint: disable-msg=F0401
 from taskcoachlib.powermgt.base import PowerStateMixinBase
+
 
 class PowerStateMixin(PowerStateMixinBase):
     def __init__(self, *args, **kwargs):

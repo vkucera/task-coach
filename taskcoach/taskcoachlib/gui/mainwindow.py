@@ -36,7 +36,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
 
         # This prevents the wiewers from flickering on Windows when refreshed.
         if '__WXMSW__' in wx.PlatformInfo:
-            import win32gui, win32con
+            import win32gui, win32con # pylint: disable-msg=F0401
             exstyle = win32gui.GetWindowLong(self.GetHandle(), win32con.GWL_EXSTYLE)
             exstyle |= win32con.WS_EX_COMPOSITED
             win32gui.SetWindowLong(self.GetHandle(), win32con.GWL_EXSTYLE, exstyle)
@@ -54,7 +54,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         
         if settings.getboolean('feature', 'syncml'):
             try:
-                import taskcoachlib.syncml.core # pylint: disable-msg=W0612
+                import taskcoachlib.syncml.core # pylint: disable-msg=W0612,W0404
             except ImportError:
                 if settings.getboolean('syncml', 'showwarning'):
                     dlg = widgets.SyncMLWarningDialog(self)
@@ -67,8 +67,9 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         self.bonjourRegister = None
 
         if settings.getboolean('feature', 'iphone'):
+            # pylint: disable-msg=W0612,W0404,W0702
             try:
-                from taskcoachlib.thirdparty import pybonjour # pylint: disable-msg=W0612
+                from taskcoachlib.thirdparty import pybonjour 
                 from taskcoachlib.iphone import IPhoneAcceptor, BonjourServiceRegister
 
                 acceptor = IPhoneAcceptor(self, settings, iocontroller)
@@ -90,23 +91,25 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         self.createReminderController()
         
     def createViewerContainer(self):
+        # pylint: disable-msg=W0201
         self.viewer = viewer.ViewerContainer(self, self.settings) 
         
     def createStatusBar(self):
-        import status
+        import status # pylint: disable-msg=W0404
         self.SetStatusBar(status.StatusBar(self, self.viewer))
         
     def createMenuBar(self):
-        import menu
+        import menu # pylint: disable-msg=W0404
         self.SetMenuBar(menu.MainMenu(self, self.settings, self.iocontroller, 
                                       self.viewer, self.taskFile))
     
     def createReminderController(self):
+        # pylint: disable-msg=W0201
         self.reminderController = \
             remindercontroller.ReminderController(self, self.taskFile.tasks(),
                 self.taskFile.efforts(), self.settings)
         
-    def addPane(self, page, caption, *args):
+    def addPane(self, page, caption): # pylint: disable-msg=W0221
         name = page.settingsSection()
         super(MainWindow, self).addPane(page, caption, name)
         

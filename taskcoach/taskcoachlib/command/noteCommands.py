@@ -70,3 +70,37 @@ class DeleteNoteCommand(base.DeleteCommand):
 class DragAndDropNoteCommand(base.DragAndDropCommand):
     plural_name = _('Drag and drop notes')
     singular_name = _('Drag and drop note "%s"')
+
+
+class AddNoteCommand(base.BaseCommand):
+    plural_name = _('Add note')
+    singular_name = _('Add note to "%s"')
+
+    def __init__(self, *args, **kwargs):
+        super(AddNoteCommand, self).__init__(*args, **kwargs)
+        self.owners = self.items
+        self.items = self.notes = [note.Note(subject=_('New note')) \
+                                   for dummy in self.items]
+
+    def name_subject(self, newNote): # pylint: disable-msg=W0613
+        # Override to use the subject of the owner of the new note instead
+        # of the subject of the new note itself, which wouldn't be very
+        # interesting because it's something like 'New note'.
+        return self.owners[0].subject()
+    
+    def addNotes(self):
+        for owner, note in zip(self.owners, self.notes): # pylint: disable-msg=W0621
+            owner.addNote(note)
+
+    def removeNotes(self):
+        for owner, note in zip(self.owners, self.notes): # pylint: disable-msg=W0621
+            owner.removeNote(note)
+    
+    def do_command(self):
+        self.addNotes()
+        
+    def undo_command(self):
+        self.removeNotes()
+        
+    def redo_command(self):
+        self.addNotes()    

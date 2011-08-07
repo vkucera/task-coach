@@ -86,7 +86,7 @@ class CSVReader(object):
                     if fieldValue != '':
                         try:
                             startDate = dparser.parse(fieldValue.decode('UTF-8'), fuzzy=True).replace(tzinfo=None)
-                            startDate = DateTime(startDate.year, startDate.month, startdate.day, 0, 0, 0)
+                            startDate = DateTime(startDate.year, startDate.month, startDate.day, 0, 0, 0)
                         except:
                             pass
                 elif kwargs['mappings'][idx] == _('Due date'):

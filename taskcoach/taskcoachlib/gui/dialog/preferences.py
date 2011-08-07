@@ -33,8 +33,8 @@ class FontColorSyncer(object):
         self._fontButton = fontButton
         fgColorButton.Bind(wx.EVT_COLOURPICKER_CHANGED, self.onFgColorPicked)
         bgColorButton.Bind(wx.EVT_COLOURPICKER_CHANGED, self.onBgColorPicked)
-        fontButton.Bind(wx.wx.EVT_FONTPICKER_CHANGED, self.onFontPicked)
-        
+        fontButton.Bind(wx.EVT_FONTPICKER_CHANGED, self.onFontPicked)
+
     def onFgColorPicked(self, event): # pylint: disable-msg=W0613
         self._fontButton.SetColour(self._fgColorButton.GetColour())
         

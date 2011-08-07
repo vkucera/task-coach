@@ -142,7 +142,8 @@ class NewTaskCommand(base.NewItemCommand):
 class NewSubTaskCommand(base.NewSubItemCommand, SaveTaskStateMixin):
     plural_name = _('New subtasks')
     singular_name = _('New subtask of "%s"')
-
+    # pylint: disable-msg=E1101
+    
     def __init__(self, *args, **kwargs):
         super(NewSubTaskCommand, self).__init__(*args, **kwargs)
         subject = kwargs.pop('subject', _('New subtask'))

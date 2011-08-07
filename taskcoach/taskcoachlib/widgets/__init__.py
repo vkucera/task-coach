@@ -29,7 +29,6 @@ from datectrl import DateTimeCtrl
 from textctrl import SingleLineTextCtrl, SingleLineTextCtrlWithEnterButton, \
     MultiLineTextCtrl, StaticTextWithToolTip
 from panel import PanelWithBoxSizer, BoxWithFlexGridSizer, BoxWithBoxSizer
-from colorselect import ColorSelect
 from searchctrl import SearchCtrl
 from spinctrl import SpinCtrl
 from tooltip import ToolTipMixin, SimpleToolTip
@@ -43,6 +42,6 @@ try:
     from wx.lib import sized_controls
 except ImportError:
     try:
-        from wxaddons import sized_controls
+        from wxaddons import sized_controls # pylint: disable-msg=F0401
     except ImportError:
-        from taskcoachlib.thirdparty import sized_controls
+        from taskcoachlib.thirdparty import sized_controls # pylint: disable-msg=W0404

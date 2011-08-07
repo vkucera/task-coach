@@ -16,12 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, dialog, colorselect
+import wx, dialog
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_DAILY, wxSCHEDULER_WEEKLY, \
-     wxSCHEDULER_MONTHLY, wxSCHEDULER_NEXT, wxSCHEDULER_PREV, wxSCHEDULER_TODAY, \
-     wxSCHEDULER_HORIZONTAL, wxSCHEDULER_VERTICAL
-import  wx.lib.colourselect as  csel
+     wxSCHEDULER_MONTHLY, wxSCHEDULER_HORIZONTAL, wxSCHEDULER_VERTICAL
+import wx.lib.colourselect as csel
+
 
 class CalendarConfigDialog(dialog.Dialog):
     VIEWTYPES = [wxSCHEDULER_DAILY, wxSCHEDULER_WEEKLY, wxSCHEDULER_MONTHLY]
@@ -50,13 +50,14 @@ class CalendarConfigDialog(dialog.Dialog):
     def indexOfViewFilter(self, flt):
         return self.indexOf(self.VIEWFILTERS, flt)
 
-    def addItem(self, sizer, description, item1, item2, help):
+    def addItem(self, sizer, description, item1, item2, helpText):
         sizer.Add(wx.StaticText(self._interior, wx.ID_ANY, description), 0, wx.ALL|wx.ALIGN_CENTRE_VERTICAL, 3)
         sizer.Add(item1, 0, wx.ALL|wx.ALIGN_CENTRE_VERTICAL, 3)
         sizer.Add(item2, 0, wx.ALL|wx.ALIGN_CENTRE_VERTICAL, 3)
-        sizer.Add(wx.StaticText(self._interior, wx.ID_ANY, help), 0, wx.ALL|wx.ALIGN_CENTRE_VERTICAL, 3)
+        sizer.Add(wx.StaticText(self._interior, wx.ID_ANY, helpText), 0, wx.ALL|wx.ALIGN_CENTRE_VERTICAL, 3)
 
     def fillInterior(self):
+        # pylint: disable-msg=W0201
         sizer = wx.FlexGridSizer(0, 4)
 
         self._spanCount = wx.SpinCtrl(self._interior, wx.ID_ANY, '1')
@@ -96,7 +97,7 @@ class CalendarConfigDialog(dialog.Dialog):
                               int((color.Green() + 255) / 2),
                               int((color.Blue() + 255) / 2))
         else:
-            color = wx.Colour(*tuple(map(int, hcolor.split(','))))
+            color = wx.Colour(*tuple(map(int, hcolor.split(',')))) # pylint: disable-msg=W0141
         self._highlight = csel.ColourSelect(self._interior, wx.ID_ANY, size=(100, 20))
         self._highlight.SetColour(color)
 
@@ -115,7 +116,7 @@ class CalendarConfigDialog(dialog.Dialog):
 
         wx.EVT_CHOICE(self._spanType, wx.ID_ANY, self.OnChangeViewType)
 
-    def OnChangeViewType(self, event):
+    def OnChangeViewType(self, event): # pylint: disable-msg=W0613
         if self.VIEWTYPES[self._spanType.GetSelection()] == wxSCHEDULER_MONTHLY:
             self._spanCount.SetValue(1)
             self._spanCount.Enable(False)

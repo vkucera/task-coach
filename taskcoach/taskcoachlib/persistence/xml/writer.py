@@ -46,7 +46,7 @@ class PIElementTree(ET.ElementTree):
             if encoding in ['us-ascii', 'utf-8']:
                 file.write('<?xml version="1.0" encoding="%s"?>\n' % encoding)
             file.write(self.__pi.encode(encoding) + '\n')
-        ET.ElementTree._write(self, file, node, encoding, namespaces)
+        ET.ElementTree._write(self, file, node, encoding, namespaces) # pylint: disable-msg=E1101
 
     def write(self, file, encoding, *args, **kwargs):
         if encoding is None:

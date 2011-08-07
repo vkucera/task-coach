@@ -117,12 +117,12 @@ class DropTarget(wx.DropTarget):
         return wx.DragCopy
     
     def getReceivedFormatTypeAndId(self):
-        format = self.__compositeDataObject.GetReceivedFormat()
-        formatType = format.GetType()
+        receivedFormat = self.__compositeDataObject.GetReceivedFormat()
+        formatType = receivedFormat.GetType()
         try:
-            formatId = format.GetId() 
+            formatId = receivedFormat.GetId() 
         except:
-            formatId = None
+            formatId = None # pylint: disable-msg=W0702
         return formatType, formatId
     
     def onThunderbirdDrop(self, x, y):

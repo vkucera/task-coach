@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from taskcoachlib.thirdparty import hypertreelist
-    
-    
+
+
 class AutoColumnWidthMixin(object):
     """ A mix-in class that automatically resizes one column to take up
         the remaining width of a control with columns (i.e. ListCtrl, 
@@ -60,6 +60,7 @@ class AutoColumnWidthMixin(object):
         return self._isAutoResizing
             
     def OnBeginColumnDrag(self, event):
+        # pylint: disable-msg=W0201
         if event.Column == self.ResizeColumn:
             self.__oldResizeColumnWidth = self.GetColumnWidth(self.ResizeColumn)
         # Temporarily unbind the EVT_SIZE to prevent resizing during dragging
@@ -118,7 +119,7 @@ class AutoColumnWidthMixin(object):
             return self._resizeColumn
         
     def SetResizeColumn(self, columnIndex):
-        self._resizeColumn = columnIndex
+        self._resizeColumn = columnIndex # pylint: disable-msg=W0201
 
     ResizeColumn = property(GetResizeColumn, SetResizeColumn)
     
