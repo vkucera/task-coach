@@ -1,6 +1,7 @@
 '''
 Task Coach - Your friendly task manager
 Copyright (C) 2004-2011 Task Coach developers <developers@taskcoach.org>
+Copyright (C) 2011 Tobias Gradl <https://sourceforge.net/users/greentomato>
 
 Task Coach is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -66,6 +67,7 @@ class DropTarget(wx.DropTarget):
         self.__urlDataObject = wx.TextDataObject()
         self.__fileDataObject = wx.FileDataObject()
         self.__thunderbirdMailDataObject = wx.CustomDataObject('text/x-moz-message')
+	self.__clawsMailDataObject = wx.CustomDataObject('text/uri-list')
         self.__outlookDataObject = wx.CustomDataObject('Object Descriptor')
         # Starting with Snow Leopard, mail.app supports the message: protocol
         self.__macMailObject = wx.CustomDataObject('public.url')
@@ -93,6 +95,8 @@ class DropTarget(wx.DropTarget):
 
         if formatId == 'text/x-moz-message':
             self.onThunderbirdDrop(x, y)
+	elif formatId == 'text/uri-list' and formatType == wx.DF_FILENAME:
+	    self.onClawsDrop(x, y)
         elif formatId == 'Object Descriptor':
             self.onOutlookDrop(x, y)
         elif formatId == 'public.url':
@@ -143,6 +147,11 @@ class DropTarget(wx.DropTarget):
                 wx.MessageBox(e.args[0], _('Error'), wx.OK|wx.ICON_ERROR)
             else:
                 self.__onDropMailCallback(x, y, email)
+
+    def onClawsDrop(self, x, y):
+        if self.__onDropMailCallback:
+            for filename in self.__fileDataObject.GetFilenames():
+                self.__onDropMailCallback(x, y, filename)
 
     def onOutlookDrop(self, x, y):
         if self.__onDropMailCallback:
