@@ -29,7 +29,6 @@ import taskcoachlib.thirdparty.aui as aui
 import viewer, toolbar, uicommand, remindercontroller, artprovider, windowdimensionstracker
 
 
-
 def turnOnDoubleBufferingOnWindows(window):
     import win32gui, win32con # pylint: disable-msg=F0401
     exstyle = win32gui.GetWindowLong(window.GetHandle(), win32con.GWL_EXSTYLE)
@@ -41,7 +40,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
                  widgets.AuiManagedFrameWithDynamicCenterPane):
     def __init__(self, iocontroller, taskFile, settings, *args, **kwargs):
         super(MainWindow, self).__init__(None, -1, '', *args, **kwargs)
-        # This prevents the wiewers from flickering on Windows 7 when refreshed:
+        # This prevents the viewers from flickering on Windows 7 when refreshed:
         if platform.isWindows7_OrNewer():
             turnOnDoubleBufferingOnWindows(self)
         self.dimensionsTracker = windowdimensionstracker.WindowDimensionsTracker(self, settings)
