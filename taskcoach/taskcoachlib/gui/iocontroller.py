@@ -260,7 +260,7 @@ class IOController(object):
             templates = persistence.TemplateList(self.__settings.pathToTemplatesDir())
             try:
                 templates.copyTemplate(filename)
-            except Exception, reason:
+            except Exception, reason: # pylint: disable-msg=W0703
                 errorMessage = _('Cannot import template %s\n%s')%(filename, reason)
                 showerror(errorMessage, **self.__errorMessageOptions)
             

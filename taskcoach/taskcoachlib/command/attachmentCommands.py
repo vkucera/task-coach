@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import patterns
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import attachment
-import base
+import base, noteCommands
 
 
 class NewAttachmentCommand(base.NewItemCommand):
@@ -44,7 +44,7 @@ class DeleteAttachmentCommand(base.DeleteCommand):
     singular_name = _('Delete attachment "%s"')
 
 
-class AddAttachmentNoteCommand(base.AddNoteCommand):
+class AddAttachmentNoteCommand(noteCommands.AddNoteCommand):
     plural_name = _('Add note to attachments')
     
     
@@ -69,3 +69,66 @@ class EditAttachmentLocationCommand(base.BaseCommand):
             
     def redo_command(self):
         self.do_command()
+
+
+class AddAttachmentCommand(base.BaseCommand):
+    plural_name = _('Add attachment')
+    singular_name = _('Add attachment to "%s"')
+    
+    def __init__(self, *args, **kwargs):
+        self.__attachments = kwargs.get('attachments', 
+                                        [attachment.FileAttachment('', subject=_('New attachment'))])
+        super(AddAttachmentCommand, self).__init__(*args, **kwargs)
+        self.owners = self.items
+        self.items = self.__attachments
+        
+    @patterns.eventSource
+    def addAttachments(self, event=None):
+        kwargs = dict(event=event)
+        for owner in self.owners:
+            owner.addAttachments(*self.__attachments, **kwargs) # pylint: disable-msg=W0142
+
+    @patterns.eventSource
+    def removeAttachments(self, event=None):
+        kwargs = dict(event=event)
+        for owner in self.owners:
+            owner.removeAttachments(*self.__attachments, **kwargs) # pylint: disable-msg=W0142
+                         
+    def do_command(self):
+        self.addAttachments()
+        
+    def undo_command(self):
+        self.removeAttachments()
+
+    def redo_command(self):
+        self.addAttachments()
+
+
+class RemoveAttachmentCommand(base.BaseCommand):
+    plural_name = _('Remove attachment')
+    singular_name = _('Remove attachment to "%s"')
+    
+    def __init__(self, *args, **kwargs):
+        self.__attachments = kwargs.pop('attachments')
+        super(RemoveAttachmentCommand, self).__init__(*args, **kwargs)
+
+    @patterns.eventSource
+    def addAttachments(self, event=None):
+        kwargs = dict(event=event)
+        for item in self.items:
+            item.addAttachments(*self.__attachments, **kwargs) # pylint: disable-msg=W0142
+        
+    @patterns.eventSource
+    def removeAttachments(self, event=None):
+        kwargs = dict(event=event)
+        for item in self.items:
+            item.removeAttachments(*self.__attachments, **kwargs) # pylint: disable-msg=W0142
+                
+    def do_command(self):
+        self.removeAttachments()
+        
+    def undo_command(self):
+        self.addAttachments()
+
+    def redo_command(self):
+        self.removeAttachments()

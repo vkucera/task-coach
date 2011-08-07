@@ -51,8 +51,8 @@ class TestCase(unittest.TestCase, object):
             
     def registerObserver(self, eventType, eventSource=None):
         if not hasattr(self, 'events'):
-            self.events = []
-        from taskcoachlib import patterns
+            self.events = [] # pylint: disable-msg=W0201
+        from taskcoachlib import patterns # pylint: disable-msg=W0404
         patterns.Publisher().registerObserver(self.onEvent, eventType=eventType,
                                               eventSource=eventSource)
         
@@ -60,6 +60,7 @@ class TestCase(unittest.TestCase, object):
         self.events.append(event)
 
     def tearDown(self):
+        # pylint: disable-msg=W0404
         # Prevent processing of pending events after the test has finished:
         wx.GetApp().Disconnect(wx.ID_ANY) 
         from taskcoachlib import patterns
@@ -74,6 +75,7 @@ class TestCase(unittest.TestCase, object):
         
 
 class wxTestCase(TestCase):
+    # pylint: disable-msg=W0404
     app = wx.App(0)
     frame = wx.Frame(None, -1, 'Frame')
     from taskcoachlib import i18n
@@ -280,7 +282,7 @@ class TestProfiler:
         self._options = options
 
     def reportLastRun(self):
-        import pstats
+        import pstats # pylint: disable-msg=W0404
         stats = pstats.Stats(self._logfile)
         stats.strip_dirs()
         for sortKey in self._options.profile_sort:
@@ -297,7 +299,7 @@ class TestProfiler:
             self.reportLastRun()
 
     def profile(self, tests, command): # pylint: disable-msg=W0613
-        import cProfile
+        import cProfile # pylint: disable-msg=W0404
         _locals = dict(locals())
         cProfile.runctx('result = tests.%s()'%command, globals(), _locals,
             filename=self._logfile)

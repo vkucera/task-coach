@@ -305,8 +305,8 @@ class CommonTestsMixin(object):
         self.viewer.updateSelection()
         dialog = self.viewer.newItemDialog(selectedTasks=[self.task2], 
                                            bitmap='new')
-        for effort in dialog._items:
-            self.assertEqual(self.task2, effort.task())
+        for newEffort in dialog._items: # pylint: disable-msg=W0212
+            self.assertEqual(self.task2, newEffort.task())
         
     def testColumnUICommands(self):
         expectedLength = dict(details=6, day=8, week=9, month=8)[self.aggregation]

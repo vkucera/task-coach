@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, operator
+import wx
 from taskcoachlib.thirdparty.wxScheduler import wxScheduler, wxSchedule, \
     EVT_SCHEDULE_ACTIVATED, EVT_SCHEDULE_RIGHT_CLICK, \
     EVT_SCHEDULE_DCLICK, EVT_PERIODWIDTH_CHANGED
@@ -69,16 +69,16 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
         EVT_SCHEDULE_DCLICK(self, self.OnEdit)
         EVT_PERIODWIDTH_CHANGED(self, self.OnChangeConfig)
 
-    def _handleDrop(self, x, y, object, cb):
+    def _handleDrop(self, x, y, droppedObject, cb):
         if cb is not None:
             _, _, item = self._findSchedule(wx.Point(x, y))
 
-            if item is not  None:
+            if item is not None:
                 if isinstance(item, TaskSchedule):
-                    cb(item.task, object)
+                    cb(item.task, droppedObject)
                 else:
                     datetime = date.DateTime(item.GetYear(), item.GetMonth() + 1, item.GetDay())
-                    cb(None, object, startDateTime=datetime, dueDateTime=datetime.endOfDay())
+                    cb(None, droppedObject, startDateTime=datetime, dueDateTime=datetime.endOfDay())
 
     def OnDropURL(self, x, y, url):
         self._handleDrop(x, y, url, self.__onDropURLCallback)
@@ -101,7 +101,7 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
         self.__showUnplanned = doShow
         self.RefreshAllItems(0)
 
-    def OnChangeConfig(self, event):
+    def OnChangeConfig(self, event): # pylint: disable-msg=W0613
         self.changeConfigCb()
 
     def Select(self, schedule=None):
@@ -140,7 +140,7 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
         else:
             self.editCommand(event.schedule.task)
 
-    def RefreshAllItems(self, count):
+    def RefreshAllItems(self, count): # pylint: disable-msg=W0613
         x, y = self.GetViewStart()
         selectionId = None
         if self.__selection:
@@ -150,19 +150,20 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
         self.DeleteAll()
 
         schedules = []
-        self.taskMap = {}
+        self.taskMap = {} # pylint: disable-msg=W0201
+        maxDateTime = date.DateTime()
 
         for task in self.taskList:
             if not task.isDeleted():
-                if task.startDateTime() == date.DateTime() or not task.completed():
-                    if task.startDateTime() == date.DateTime() and not self.__showNoStartDate:
+                if task.startDateTime() == maxDateTime or not task.completed():
+                    if task.startDateTime() == maxDateTime and not self.__showNoStartDate:
                         continue
 
-                    if task.dueDateTime() == date.DateTime() and not self.__showNoDueDate:
+                    if task.dueDateTime() == maxDateTime and not self.__showNoDueDate:
                         continue
 
                     if not self.__showUnplanned:
-                        if task.startDateTime() == date.DateTime() and task.dueDateTime() == date.DateTime():
+                        if task.startDateTime() == maxDateTime and task.dueDateTime() == maxDateTime:
                             continue
 
                 schedule = TaskSchedule(task, self.iconProvider)
@@ -238,9 +239,7 @@ class _CalendarContent(tooltip.ToolTipMixin, wxScheduler):
             item = schedule.task
 
             tooltipData = self.getItemTooltipData(item)
-            doShow = reduce(operator.__or__,
-                            map(bool, [data[1] for data in tooltipData]),
-                            False)
+            doShow = any(data[1] for data in tooltipData)
             if doShow:
                 self.__tip.SetData(tooltipData)
                 return self.__tip
@@ -329,7 +328,7 @@ class TaskSchedule(wxSchedule):
                 # the foreground color is too dark, invert it.
                 r, g, b = self.task.foregroundColor() or (0, 0, 0)
                 if r + g + b < 128 * 3:
-                    self.foreground = wx.Color(*(255 - r, 255 - g, 255 - b))
+                    self.foreground = wx.Color(255 - r, 255 - g, 255 - b)
             else:
                 self.color = wx.Color(*(self.task.backgroundColor() or (255, 255, 255)))
                 self.foreground = wx.Color(*(self.task.foregroundColor() or (0, 0, 0)))
@@ -398,7 +397,7 @@ class TaskSchedule(wxSchedule):
         args = default if dateTime == date.DateTime() else \
             (dateTime.day, dateTime.month - 1, dateTime.year,
              dateTime.hour, dateTime.minute, dateTime.second)
-        return wx.DateTimeFromDMY(*args)
+        return wx.DateTimeFromDMY(*args) # pylint: disable-msg=W0142
 
     @staticmethod
     def tcDateTime(dateTime):

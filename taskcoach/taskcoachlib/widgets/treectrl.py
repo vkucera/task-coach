@@ -124,7 +124,7 @@ class HyperTreeList(draganddrop.TreeCtrlDragAndDropMixin,
             self.GetLabelTextCtrl().StopEditing()
             
     def GetLabelTextCtrl(self):
-        return self.GetMainWindow()._editCtrl
+        return self.GetMainWindow()._editCtrl # pylint: disable-msg=W0212
     
     def GetItemCount(self):
         rootItem = self.GetRootItem()
@@ -149,6 +149,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         self.__adapter = parent
         self.__selection = []
         self.__dontStartEditingLabelBecauseUserDoubleClicked = False
+        self.__columnsWithImages = []
         self.__defaultFont = wx.NORMAL_FONT
         kwargs.setdefault('resizeableColumn', 0)
         super(TreeListCtrl, self).__init__(parent, style=self.getStyle(), 
@@ -355,7 +356,7 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
             event.Skip()
         
     def onEndEdit(self, event):
-        if event._editCancelled:
+        if event._editCancelled: # pylint: disable-msg=W0212
             event.Skip()
             return
         event.Veto() # Let us update the tree

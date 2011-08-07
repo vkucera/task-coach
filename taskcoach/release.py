@@ -59,6 +59,7 @@ import ftplib, smtplib, httplib, urllib, os, glob, sys, getpass, hashlib, \
     base64, ConfigParser, simplejson, codecs, optparse, taskcoachlib.meta
 import oauth2 as oauth
 
+# pylint: disable-msg=W0621,W0613
 
 def progress(func):
     ''' Decorator to print out a message when a release step starts and print
@@ -94,7 +95,7 @@ class Settings(ConfigParser.SafeConfigParser, object):
             for option in defaults[section]:
                 self.set(section, option, 'ask')
 
-    def get(self, section, option):
+    def get(self, section, option): # pylint: disable-msg=W0221
         value = super(Settings, self).get(section, option)
         if value == 'ask':
             if option == 'password':
@@ -148,7 +149,7 @@ def generating_MD5_digests(settings, options):
     contents = '''md5digests = {\n'''
     for filename in glob.glob(os.path.join('dist', '*')):
         
-        md5digest = hashlib.md5(file(filename, 'rb').read())
+        md5digest = hashlib.md5(file(filename, 'rb').read()) # pylint: disable-msg=E1101
         filename = os.path.basename(filename)
         hexdigest = md5digest.hexdigest()
         contents += '''    "%s": "%s",\n'''%(filename, hexdigest)
@@ -177,20 +178,20 @@ class SimpleFTP(ftplib.FTP, object):
     def ensure_folder(self, folder):
         try:
             self.cwd(folder)
-        except ftplib.error_perm, info:
+        except ftplib.error_perm:
             self.mkd(folder)
             self.cwd(folder)    
             
     def put(self, folder):
-        for root, dirs, filenames in os.walk(folder):
+        for root, subfolders, filenames in os.walk(folder):
             if root != folder:
                 print 'Change into %s'%root
                 for part in root.split(os.sep):
                     self.cwd(part)
-            for dir in dirs:
-                print 'Create %s'%os.path.join(root, dir)
+            for subfolder in subfolders:
+                print 'Create %s'%os.path.join(root, subfolder)
                 try:
-                    self.mkd(dir)
+                    self.mkd(subfolder)
                 except ftplib.error_perm, info:
                     print info
             for filename in filenames:
@@ -242,6 +243,7 @@ def registering_with_PyPI(settings, options):
     pypirc.write('[server-login]\nusername = %s\npassword = %s\n'%\
                  (username, password))
     pypirc.close()
+    # pylint: disable-msg=W0404
     from setup import setupOptions
     languagesThatPyPIDoesNotRecognize = ['Basque', 'Breton', 'Estonian', 
         'Galician', 'Lithuanian', 'Norwegian (Bokmal)', 'Norwegian (Nynorsk)', 
@@ -255,7 +257,7 @@ def registering_with_PyPI(settings, options):
     if options.dry_run:
         print 'Skipping PyPI registration.'
     else:
-        setup(**setupOptions)
+        setup(**setupOptions) # pylint: disable-msg=W0142
     os.remove('.pypirc')
 
 
@@ -297,7 +299,6 @@ def announcing_via_Basic_Auth_Api(settings, options, section, host, api_prefix='
                            for credential in ('username', 'password'))
     basic_auth = base64.encodestring(credentials)[:-1]
     status = status_message()
-    connection = httplib.HTTPConnection('%s:80'%host)
     api_call = api_prefix + '/statuses/update.json'
     body = '='.join((urllib.quote(body_part.encode('utf-8')) \
                      for body_part in ('status', status)))
@@ -321,7 +322,7 @@ def announcing_via_OAuth_Api(settings, options, section, host):
     if options.dry_run:
         print 'Skipping announcing "%s" on %s.'%(status, host)
     else: 
-        response, content = client.request('http://api.%s/1/statuses/update.json'%host,
+        response, dummy_content = client.request('http://api.%s/1/statuses/update.json'%host,
             method='POST', body='status=%s'%status, headers=None)
         if response.status != 200:
             print 'Request failed: %d %s'%(response.status, response.reason)
@@ -361,7 +362,7 @@ def releasing(settings, options):
 
 def latest_release(metadata, summaryOnly=False):
     sys.path.insert(0, 'changes.in')
-    import changes, converter
+    import changes, converter # pylint: disable-msg=F0401
     del sys.path[0]
     greeting = 'release %(version)s of %(name)s.'%metadata
     if summaryOnly:

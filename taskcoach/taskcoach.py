@@ -25,13 +25,10 @@ os.environ['XLIB_SKIP_ARGB_VISUALS'] = '1'
 if not hasattr(sys, "frozen"):
     # These checks are only necessary in a non-frozen environment, i.e. we
     # skip these checks when run from a py2exe-fied application
+    import wxversion
+    wxversion.ensureMinimal("2.8-unicode", optionsRequired=True)
     try:
-        import wxversion
-        wxversion.ensureMinimal("2.8-unicode", optionsRequired=True)
-    except:
-        pass
-    try:
-        import taskcoachlib
+        import taskcoachlib # pylint: disable-msg=W0611
     except ImportError:
         sys.stderr.write('''ERROR: cannot import the library 'taskcoachlib'.
 Please see https://answers.launchpad.net/taskcoach/+faq/1063 
@@ -39,7 +36,8 @@ for more information and possible resolutions.''')
         sys.exit(1)
 
 def start():
-    from taskcoachlib import config, application
+    # pylint: disable-msg=W0404
+    from taskcoachlib import config, application 
     options, args = config.ApplicationOptionParser().parse_args()
     app = application.Application(options, args)
     if options.profile:

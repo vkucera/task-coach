@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from taskcoachlib import meta
+from taskcoachlib import meta, help # pylint: disable-msg=W0622
 import sys, os, glob, wx
 from setup import setupOptions
 from buildlib import (clean, bdist_rpm_fedora, bdist_rpm_opensuse,
@@ -58,15 +58,13 @@ manifest = """
 </assembly>
 """%meta.name
 
-def writeFile(filename, text, directory='.'):
+def writeFile(filename, text, directory='.'): # pylint: disable-msg=W0621
     if not os.path.exists(directory):
         os.mkdir(directory)
-    file = open(os.path.join(directory, filename), 'w')
-    file.write(text)
-    file.close()
+    with file(os.path.join(directory, filename), 'w') as textFile:
+        textFile.write(text)
 
 def createDocumentation():
-    from taskcoachlib import help
     writeFile('README.txt',  help.aboutText)
     writeFile('INSTALL.txt', help.installText)
     writeFile('LICENSE.txt', meta.licenseText)
@@ -82,7 +80,7 @@ def createDebianChangelog():
 
 if sys.argv[1] == 'py2exe':
     from distutils.core import setup
-    import py2exe
+    import py2exe # pylint: disable-msg=F0401
     py2exeDistdir = '%s-%s-win32exe'%(meta.filename, meta.version)
     # Get .mo files for wxWidgets:
     locale_dir = os.path.join(os.path.dirname(wx.__file__), 'locale')
@@ -113,7 +111,7 @@ if sys.argv[1] == 'py2exe':
     os.environ['PATH'] = 'dist.in;' + os.environ['PATH']
  
 elif sys.argv[1] == 'py2app':
-    from setuptools import setup
+    from setuptools import setup # pylint: disable-msg=W0404
     setupOptions.update(dict(app=['taskcoach.py'], 
         setup_requires=['py2app'],
         options=dict(py2app=dict(argv_emulation=True, compressed=True,
@@ -199,6 +197,6 @@ if __name__ == '__main__':
         if not os.path.exists(directory):
             os.mkdir(directory)
     createDocumentation()
-    setup(**setupOptions)
+    setup(**setupOptions) # pylint: disable-msg=W0142
     if sys.argv[1] == 'py2exe':
         createInnoSetupScript()

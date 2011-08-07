@@ -142,10 +142,10 @@ class NotebookDialog(Dialog):
 
         
 class HtmlWindowThatUsesWebBrowserForExternalLinks(wx.html.HtmlWindow):
-    def OnLinkClicked(self, linkInfo):
+    def OnLinkClicked(self, linkInfo): # pylint: disable-msg=W0221
         openedLinkInExternalBrowser = False
         if linkInfo.GetTarget() == '_blank':
-            import webbrowser
+            import webbrowser # pylint: disable-msg=W0404
             try:
                 webbrowser.open(linkInfo.GetHref())
                 openedLinkInExternalBrowser = True
@@ -184,4 +184,4 @@ def AttachmentSelector(**callerKeywordArguments):
               'wildcard' : _('All files (*.*)|*'), 
               'flags': wx.OPEN}
     kwargs.update(callerKeywordArguments)
-    return wx.FileSelector(**kwargs)
+    return wx.FileSelector(**kwargs) # pylint: disable-msg=W0142

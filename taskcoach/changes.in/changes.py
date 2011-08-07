@@ -41,7 +41,7 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.25', 'August 4, 2011',
+Release('1.2.25', 'August 7, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''The anonymize function wouldn't give a notification after saving
@@ -65,7 +65,9 @@ setting a reminder the next day.''', 'http://uservoice.com/a/g9xpy'),
         Feature('''Faster saving.'''),
         Feature('''Preset common SyncML servers (MemoToo)'''),
         Feature('''Support for drag and drop of email messages from local 
-folders in Thunderbird.''')
+folders in Thunderbird.'''),
+        Feature('''The user can choose to use the selected snooze time in the 
+reminder dialog as default snooze time for future reminders.'''),
         ]
     ),
 
