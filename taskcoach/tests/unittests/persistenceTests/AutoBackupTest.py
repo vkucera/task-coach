@@ -49,6 +49,7 @@ class DummyTaskFile(persistence.TaskFile):
             
 
 class AutoBackupTest(test.TestCase):
+    # pylint: disable-msg=E1101,E1002,W0232
     def setUp(self):
         super(AutoBackupTest, self).setUp()
         task.Task.settings = self.settings = config.Settings(load=False)
@@ -56,7 +57,7 @@ class AutoBackupTest(test.TestCase):
         self.backup = persistence.AutoBackup(self.settings, copyfile=self.onCopyFile)
         self.copyCalled = False
         
-    def onCopyFile(self, *args):
+    def onCopyFile(self, *args): # pylint: disable-msg=W0613
         self.copyCalled = True
 
     def oneBackupFile(self):
@@ -79,7 +80,7 @@ class AutoBackupTest(test.TestCase):
         files.sort()
         return files
 
-    def globMany(self, pattern):
+    def globMany(self, pattern): # pylint: disable-msg=W0613
         return self.manyBackupFiles()
     
     def manyBackupFiles(self):
@@ -102,14 +103,14 @@ class AutoBackupTest(test.TestCase):
 
     def testRemoveExtraneousBackFiles(self):
         self.backup.maxNrOfBackupFilesToRemoveAtOnce = 100
-        self.removedFiles = []
+        removedFiles = []
         def remove(filename):
-            self.removedFiles.append(filename)
+            removedFiles.append(filename)
         self.backup.removeExtraneousBackupFiles(self.taskFile, remove=remove, glob=self.globMany)
-        self.assertEqual(86, len(self.removedFiles))
+        self.assertEqual(86, len(removedFiles))
                 
     def testRemoveExtraneousBackFiles_OSError(self):
-        def remove(filename):
+        def remove(filename): # pylint: disable-msg=W0613
             raise OSError
         self.backup.removeExtraneousBackupFiles(self.taskFile, remove=remove, glob=self.globMany)
 

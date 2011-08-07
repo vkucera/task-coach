@@ -79,16 +79,13 @@ elif system == 'Darwin':
     # the platform word size. Actually, we're always packaging on 32
     # bits.
     import sys, struct
-    if struct.calcsize('L') == 4:
-        sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'macos', 'IA32'))
-        sys.path.insert(0, os.path.join('extension', 'macos', 'bin-ia32'))
-    else:
-        sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'macos', 'IA64'))
-        sys.path.insert(0, os.path.join('extension', 'macos', 'bin-ia32'))
-    import _growl
-    import _growlImage
-    import _powermgt
+    wordSize = '32' if struct.calcsize('L') == 4 else '64'
+    sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'macos', 'IA%s'%wordSize))
+    sys.path.insert(0, os.path.join('extension', 'macos', 'bin-ia32'))
+    # pylint: disable-msg=F0401,W0611
+    import _growl, _growlImage, _powermgt
     import _idle
 
+
 if __name__ == '__main__':
-    setup(**setupOptions)
+    setup(**setupOptions) # pylint: disable-msg=W0142

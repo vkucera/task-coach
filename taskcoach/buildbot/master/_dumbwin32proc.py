@@ -6,6 +6,8 @@
 http://isometric.sixsided.org/_/gates_in_the_head/
 """
 
+# pylint: disable-msg=F0401,E1101
+
 import os
 
 # Win32 imports

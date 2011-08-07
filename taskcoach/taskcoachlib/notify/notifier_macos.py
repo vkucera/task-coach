@@ -18,10 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys, os, struct
 
-if struct.calcsize('L') == 8:
-    _subdir = 'IA64'
-else:
-    _subdir = 'IA32'
+_subdir = 'IA64' if struct.calcsize('L') == 8 else 'IA32'
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'bin.in', 'macos', _subdir))
 
@@ -39,6 +36,7 @@ class GrowlNotifier(AbstractNotifier):
     def __init__(self):
         super(GrowlNotifier, self).__init__()
         try:
+            # pylint: disable-msg=E1101
             self._notifier = TaskCoachGrowlNotifier(applicationIcon=Growl.Image.imageWithIconForCurrentApplication())
             self._notifier.register()
         except:

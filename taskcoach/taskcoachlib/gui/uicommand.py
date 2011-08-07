@@ -421,6 +421,7 @@ class NeedsSelectedNoteOwnersMixin(NeedsSelectionMixin):
 
 class NeedsSelectedNoteOwnersMixinWithNotes(NeedsSelectedNoteOwnersMixin):
     def enabled(self, event):
+        # pylint: disable-msg=E1101
         return super(NeedsSelectedNoteOwnersMixinWithNotes, self).enabled(event) and \
             any([item.notes() for item in self.viewer.curselection()])
             
@@ -1387,7 +1388,7 @@ class TaskNewFromTemplate(TaskNew):
         super(TaskNewFromTemplate, self).__init__(*args, **kwargs)
         self.__filename = filename
         templateTask = self.__readTemplate()
-        self.menuText = '&' + templateTask.subject()
+        self.menuText = '&' + templateTask.subject() # pylint: disable-msg=E1103
 
     def __readTemplate(self):
         return persistence.TemplateXMLReader(file(self.__filename,
@@ -1398,7 +1399,7 @@ class TaskNewFromTemplate(TaskNew):
         # TemplateXMLReader that evaluates dynamic values (Now()
         # should be evaluated at task creation for instance).
         templateTask = self.__readTemplate()
-        kwargs = templateTask.__getcopystate__()
+        kwargs = templateTask.__getcopystate__()  # pylint: disable-msg=E1103
         kwargs['categories'] = self.categoriesForTheNewTask()
         newTaskCommand = command.NewTaskCommand(self.taskList, **kwargs)
         newTaskCommand.do()
@@ -1732,8 +1733,8 @@ class AddNote(NeedsSelectedNoteOwnersMixin, ViewerCommand, SettingsCommand):
             helpText=help.addNote, bitmap='new', *args, **kwargs)
             
     def doCommand(self, event, show=True): # pylint: disable-msg=W0221
-        addNoteCommand = self.AddNoteCommand(self.viewer.presentation(), 
-                                self.viewer.curselection())
+        addNoteCommand = command.AddNoteCommand(self.viewer.presentation(), 
+                                                self.viewer.curselection())
         addNoteCommand.do()
         editDialog = dialog.editor.NoteEditor(self.mainWindow(), 
             addNoteCommand.items, self.settings, self.viewer.presentation(),  
@@ -2438,7 +2439,7 @@ class CalendarViewerNavigationCommand(ViewerCommand):
     def doCommand(self, event):
         self.viewer.freeze()
         try:
-            self.viewer.SetViewType(self.calendarViewType)
+            self.viewer.SetViewType(self.calendarViewType) # pylint: disable-msg=E1101
         finally:
             self.viewer.thaw()
 

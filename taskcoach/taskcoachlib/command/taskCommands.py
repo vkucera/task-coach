@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from taskcoachlib import patterns
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, effort, date
-import base
+import base, noteCommands
 
 
 class SaveTaskStateMixin(base.SaveStateMixin, base.CompositeMixin):
@@ -142,7 +142,8 @@ class NewTaskCommand(base.NewItemCommand):
 class NewSubTaskCommand(base.NewSubItemCommand, SaveTaskStateMixin):
     plural_name = _('New subtasks')
     singular_name = _('New subtask of "%s"')
-
+    # pylint: disable-msg=E1101
+    
     def __init__(self, *args, **kwargs):
         super(NewSubTaskCommand, self).__init__(*args, **kwargs)
         subject = kwargs.pop('subject', _('New subtask'))
@@ -351,7 +352,7 @@ class EditPriorityCommand(base.BaseCommand):
         self.do_command()
     
     
-class AddTaskNoteCommand(base.AddNoteCommand):
+class AddTaskNoteCommand(noteCommands.AddNoteCommand):
     plural_name = _('Add note to tasks')
 
 

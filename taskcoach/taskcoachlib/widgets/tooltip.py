@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, textwrap
 
+
 class ToolTipMixin(object):
     """Subclass this and override OnBeforeShowToolTip to provide
     dynamic tooltip over a control."""
@@ -98,7 +99,7 @@ class ToolTipMixin(object):
 
         event.Skip()
 
-    def __OnTipMotion(self, event):
+    def __OnTipMotion(self, event): # pylint: disable-msg=W0613
         self.HideTip()
 
     def __OnLeave(self, event):
@@ -110,7 +111,7 @@ class ToolTipMixin(object):
 
         event.Skip()
 
-    def __OnTimer(self, event):
+    def __OnTimer(self, event): # pylint: disable-msg=W0613
         self.ShowTip(*self.GetMainWindow().ClientToScreenXY(*self.__position))
 
 
@@ -121,13 +122,13 @@ if '__WXMSW__' in wx.PlatformInfo:
             super(ToolTipBase, self).__init__(parent, wx.ID_ANY, 'Tooltip',
                                               style=style)
 
-        def Show(self, x, y, w, h):
+        def Show(self, x, y, w, h): # pylint: disable-msg=W0221
             self.SetDimensions(x, y, w, h)
             super(ToolTipBase, self).Show()
 
 elif '__WXMAC__' in wx.PlatformInfo:
     class ToolTipBase(wx.Frame):
-        def __init__(self, parent):
+        def __init__(self, parent): # pylint: disable-msg=E1003
             style = wx.FRAME_NO_TASKBAR | wx.FRAME_FLOAT_ON_PARENT | wx.NO_BORDER
             super(ToolTipBase, self).__init__(parent, wx.ID_ANY, 'ToolTip',
                                               style=style)
@@ -144,15 +145,15 @@ elif '__WXMAC__' in wx.PlatformInfo:
             self.MoveXY(self.__maxWidth, self.__maxHeight)
             super(ToolTipBase, self).Show()
 
-        def Show(self, x, y, width, height):
+        def Show(self, x, y, width, height): # pylint: disable-msg=W0221
             self.SetDimensions(x, y, width, height)
 
-        def Hide(self):
+        def Hide(self):  # pylint: disable-msg=W0221
             self.MoveXY(self.__maxWidth, self.__maxHeight)
 
 else:
     class ToolTipBase(wx.PopupWindow):
-        def Show(self, x, y, width, height):
+        def Show(self, x, y, width, height): # pylint: disable-msg=E1003,W0221
             self.SetDimensions(x, y, width, height)
             super(ToolTipBase, self).Show()
 
@@ -204,7 +205,7 @@ class SimpleToolTip(ToolTipBase):
     def _calculateLineSize(self, dc, line):
         return dc.GetTextExtent(line)
 
-    def OnPaint(self, event):
+    def OnPaint(self, event): # pylint: disable-msg=W0613
         dc = wx.PaintDC(self)
         dc.BeginDrawing()
         try:
@@ -265,7 +266,7 @@ class SimpleToolTip(ToolTipBase):
         
     def _drawTextLine(self, dc, textLine, x, y):
         dc.DrawText(textLine, x, y)
-        textWidth, textHeight = dc.GetTextExtent(textLine)
+        textHeight = dc.GetTextExtent(textLine)[1]
         return y + textHeight + 1
     
     def _drawIconSeparator(self, dc, x, top, bottom):

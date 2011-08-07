@@ -22,15 +22,12 @@ import sys
 if not hasattr(sys, 'frozen'):
     import struct, os
 
-    if struct.calcsize('L') == 8:
-        _subdir = 'ia64'
-    else:
-        _subdir = 'ia32'
-
+    _subdir = 'ia64' if struct.calcsize('L') == 8 else 'ia32'
+    
     sys.path.insert(0, os.path.join(os.path.split(__file__)[0],
                                     '..', '..', 'extension', 'macos', 'bin-%s' % _subdir))
 
-import _powermgt
+import _powermgt # pylint: disable-msg=F0401
 import threading
 from taskcoachlib.powermgt.base import PowerStateMixinBase
 
@@ -51,12 +48,12 @@ class PowerStateMixin(PowerStateMixinBase):
                 self.__callback(state)
 
         self.__observer = Observer(self.__OnPowerState)
-        self.__thread = threading.Thread(target=self.__observer.run)
+        self.__thread = threading.Thread(target=self.__observer.run) # pylint: disable-msg=E1101
         self.__thread.start()
 
     def __OnPowerState(self, state):
         self.OnPowerState(state)
 
     def OnQuit(self):
-        self.__observer.stop()
+        self.__observer.stop() # pylint: disable-msg=E1101
         self.__thread.join()

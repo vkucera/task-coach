@@ -24,13 +24,14 @@ from taskcoachlib.syncml.tasksource import TaskSource
 
 import wx
 
+
 class FieldMixin(object):
     def __init__(self, *args, **kwargs):
         self.callback = kwargs.pop('callback', None)
 
         super(FieldMixin, self).__init__(*args, **kwargs)
 
-    def OnChange(self, evt):
+    def OnChange(self, event): # pylint: disable-msg=W0613
         if self.callback is not None:
             self.callback(self.GetId())
 
@@ -113,11 +114,7 @@ class BaseConflictPanel(wx.Panel):
 
         btnLocal = wx.RadioButton(self, id_, u'', style=wx.RB_GROUP)
         btnRemote = wx.RadioButton(self, id_, u'')
-
-        if canMerge:
-            btnFusion = wx.RadioButton(self, id_, u'')
-        else:
-            btnFusion = None
+        btnFusion = wx.RadioButton(self, id_, u'') if canMerge else None
 
         wx.EVT_RADIOBUTTON(btnLocal, id_, self.OnLocalSelected)
         wx.EVT_RADIOBUTTON(btnRemote, id_, self.OnRemoteSelected)
@@ -128,11 +125,7 @@ class BaseConflictPanel(wx.Panel):
         self.sizer.Add(remoteWidget, 0, wx.EXPAND|wx.ALL, 3)
         self.sizer.Add(btnRemote)
         self.sizer.Add(fusionWidget, 0, wx.EXPAND|wx.ALL, 3)
-
-        if canMerge:
-            self.sizer.Add(btnFusion)
-        else:
-            self.sizer.Add((0, 0))
+        self.sizer.Add(btnFusion if canMerge else (0, 0))
 
         self.fields[id_] = (localWidget, remoteWidget, fusionWidget, btnFusion)
 
@@ -140,17 +133,17 @@ class BaseConflictPanel(wx.Panel):
 
     def OnLocalSelected(self, evt):
         if self.fields.has_key(evt.GetId()):
-            localWidget, remoteWidget, fusionWidget, btnFusion = self.fields[evt.GetId()]
+            localWidget, dummy, fusionWidget, dummy = self.fields[evt.GetId()]
             fusionWidget.ChangeValue(localWidget.GetValue())
 
     def OnRemoteSelected(self, evt):
         if self.fields.has_key(evt.GetId()):
-            localWidget, remoteWidget, fusionWidget, btnFusion = self.fields[evt.GetId()]
+            dummy, remoteWidget, fusionWidget, dummy = self.fields[evt.GetId()]
             fusionWidget.ChangeValue(remoteWidget.GetValue())
 
     def OnFusionChanged(self, id_):
         if self.fields.has_key(id_):
-            localWidget, remoteWidget, fusionWidget, btnFusion = self.fields[id_]
+            btnFusion = self.fields[id_][3]
             btnFusion.SetValue(True)
 
 
@@ -173,10 +166,10 @@ class NoteConflictPanel(BaseConflictPanel):
         resolved = {}
 
         if self.flags & NoteSource.CONFLICT_SUBJECT:
-            localWidget, remoteWidget, fusionWidget, btnFusion = self.fields[self.idSubject]
+            fusionWidget = self.fields[self.idSubject][2]
             resolved['subject'] = fusionWidget.GetValue()
         if self.flags & NoteSource.CONFLICT_DESCRIPTION:
-            localWidget, remoteWidget, fusionWidget, btnFusion = self.fields[self.idDescription]
+            fusionWidget = self.fields[self.idDescription][2]
             resolved['description'] = fusionWidget.GetValue()
 
         return resolved
@@ -270,6 +263,6 @@ class ConflictDialog(wx.Dialog):
 
         wx.EVT_BUTTON(btnOK, wx.ID_ANY, self.OnOK)
 
-    def OnOK(self, evt):
-        self.resolved = self.panel.getResolved()
+    def OnOK(self, event): # pylint: disable-msg=W0613
+        self.resolved = self.panel.getResolved() # pylint: disable-msg=W0201
         self.EndModal(wx.ID_OK)

@@ -25,8 +25,8 @@ from categorizableCommands import *
 from noteCommands import *
 from attachmentCommands import *
 from base import CopyCommand, DeleteCommand, CutCommand, PasteCommand, \
-    PasteAsSubItemCommand, AddAttachmentCommand, RemoveAttachmentCommand, \
-    AddNoteCommand, AddSubNoteCommand, RemoveNoteCommand, EditSubjectCommand, \
+    PasteAsSubItemCommand, EditSubjectCommand, \
     EditDescriptionCommand, EditIconCommand, EditFontCommand, \
-    EditForegroundColorCommand, EditBackgroundColorCommand
+    EditForegroundColorCommand, EditBackgroundColorCommand, \
+    PasteAsSubItemCommand, EditSubjectCommand, EditDescriptionCommand
 from clipboard import Clipboard
