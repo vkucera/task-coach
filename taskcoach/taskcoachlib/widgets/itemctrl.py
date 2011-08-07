@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     and TreeListCtrl. ''' # pylint: disable-msg=W0105
 
 
-import wx, wx.lib.mixins.listctrl, draganddrop, autowidth, tooltip
+import wx, draganddrop, autowidth, tooltip
 from taskcoachlib.thirdparty import hypertreelist
 
 

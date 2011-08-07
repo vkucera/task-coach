@@ -25,11 +25,18 @@ from taskcoachlib.i18n import _
 def readMail(filename, readContent=True):
     with file(filename, 'r') as fd:
         message = email.message_from_file(fd)
-    subject = u''.join((part[0].decode(part[1]) if part[1] else part[0]) for part in email.header.decode_header(message['subject']))
+    subject = getSubject(message)
     content = getContent(message) if readContent else ''
     return subject, content
 
 charset_re = re.compile('charset="?([-0-9a-zA-Z]+)"?')
+
+def getSubject(message):
+    subject = message['subject']
+    try:
+        return u''.join((part[0].decode(part[1]) if part[1] else part[0]) for part in email.header.decode_header(subject))
+    except UnicodeDecodeError:
+        return subject
 
 def getContent(message):
     if message.is_multipart():
