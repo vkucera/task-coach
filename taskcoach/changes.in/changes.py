@@ -46,7 +46,9 @@ setting a reminder the next day.''', 'http://uservoice.com/a/g9xpy'),
         Feature('''Faster saving.'''),
         Feature('''Preset common SyncML servers (MemoToo)'''),
         Feature('''Support for drag and drop of email messages from local 
-folders in Thunderbird.''')
+folders in Thunderbird.'''),
+        Feature('''The user can choose to use the selected snooze time in the 
+reminder dialog as default snooze time for future reminders.'''),
         ]
     ),
 
