@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import application, meta, patterns, widgets # pylint: disable-msg=W0622
+from taskcoachlib import application, meta, patterns, widgets, platform # pylint: disable-msg=W0622
 from taskcoachlib.i18n import _
 from taskcoachlib.gui.threads import DeferredCallMixin, synchronized
 from taskcoachlib.gui.dialog.iphone import IPhoneSyncTypeDialog
@@ -27,20 +27,23 @@ from taskcoachlib.gui.iphone import IPhoneSyncFrame
 from taskcoachlib.powermgt import PowerStateMixin
 import taskcoachlib.thirdparty.aui as aui
 import viewer, toolbar, uicommand, remindercontroller, artprovider, windowdimensionstracker, idlecontroller
-                            
-    
+
+
+
+def turnOnDoubleBufferingOnWindows(window):
+    import win32gui, win32con # pylint: disable-msg=F0401
+    exstyle = win32gui.GetWindowLong(window.GetHandle(), win32con.GWL_EXSTYLE)
+    exstyle |= win32con.WS_EX_COMPOSITED
+    win32gui.SetWindowLong(window.GetHandle(), win32con.GWL_EXSTYLE, exstyle)
+
+
 class MainWindow(DeferredCallMixin, PowerStateMixin, 
                  widgets.AuiManagedFrameWithDynamicCenterPane):
     def __init__(self, iocontroller, taskFile, settings, *args, **kwargs):
         super(MainWindow, self).__init__(None, -1, '', *args, **kwargs)
-
-        # This prevents the wiewers from flickering on Windows when refreshed.
-        if '__WXMSW__' in wx.PlatformInfo:
-            import win32gui, win32con # pylint: disable-msg=F0401
-            exstyle = win32gui.GetWindowLong(self.GetHandle(), win32con.GWL_EXSTYLE)
-            exstyle |= win32con.WS_EX_COMPOSITED
-            win32gui.SetWindowLong(self.GetHandle(), win32con.GWL_EXSTYLE, exstyle)
-
+        # This prevents the wiewers from flickering on Windows 7 when refreshed:
+        if platform.isWindows7_OrNewer():
+            turnOnDoubleBufferingOnWindows(self)
         self.dimensionsTracker = windowdimensionstracker.WindowDimensionsTracker(self, settings)
         self.iocontroller = iocontroller
         self.taskFile = taskFile
@@ -259,7 +262,7 @@ class MainWindow(DeferredCallMixin, PowerStateMixin,
         # controls. Immediately after you click on a text control the focus
         # is removed. We work around it by not having AUI manage the toolbar
         # on Mac OS X:
-        if '__WXMAC__' in wx.PlatformInfo:
+        if platform.isMac():
             if self.GetToolBar():
                 self.GetToolBar().Destroy()
             if size is not None:
