@@ -280,19 +280,23 @@ class SessionMonitor(ICELoop):
 
             IceSetIOErrorHandler(IceIOErrorHandler(self._onIceError))
 
+    def isValid(self):
+        return self.conn is not None and self.connections
+
     def _onIceError(self, conn):
-        IceCloseConnection(conn)
+        if self.isValid():
+            IceCloseConnection(conn)
 
         # XXXTODO: retry ? How ?
 
     def stop(self):
         super(SessionMonitor, self).stop()
         self.join()
-        if self.conn is not None:
+        if self.isValid():
             SmcCloseConnection(self.conn, 0, None)
 
     def setProperty(self, name, value):
-        if self.conn is not None:
+        if self.isValid():
             if isinstance(value, unicode):
                 value = value.encode('UTF-8')
 

@@ -377,10 +377,11 @@ pages['features'] = \
             <LI>Several filters to e.g. hide completed tasks or view
             only tasks that are due today. 
             <LI>Tasks can be created by dragging an e-mail message from 
-            Outlook or Thunderbird onto a task viewer.
+            a mail user agent (Outlook, Thunderbird, Claws Mail, Apple Mail)
+            onto a task viewer.
             <LI>Attachments can be added to tasks, notes, and categories by 
-            dragging and dropping files, e-mail messages from Outlook or 
-            Thunderbird, or URL's onto a task, note or category.
+            dragging and dropping files, e-mail messages, or URL's onto a 
+            task, note or category.
             <LI>Task status depends on its subtask and vice versa. E.g. if 
             you mark the last uncompleted subtask as completed, the parent 
             task is automatically marked as completed too.
