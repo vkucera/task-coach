@@ -95,8 +95,8 @@ class DropTarget(wx.DropTarget):
 
         if formatId == 'text/x-moz-message':
             self.onThunderbirdDrop(x, y)
-	elif formatId == 'text/uri-list' and formatType == wx.DF_FILENAME:
-	    self.onClawsDrop(x, y)
+        elif formatId == 'text/uri-list' and formatType == wx.DF_FILENAME:
+            self.onClawsDrop(x, y)
         elif formatId == 'Object Descriptor':
             self.onOutlookDrop(x, y)
         elif formatId == 'public.url':

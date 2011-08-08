@@ -99,7 +99,7 @@ _TOC = sequence(
                 li(a_href(_('About multi-user'), 'aboutmultiuser')),
                 li(a_href(_('Storage options'), 'storage')))),
         li(
-            a_href(_('E-mail (Outlook &amp; Thunderbird) integration'), 'email'),
+            a_href(_('E-mail integration'), 'email'),
             ul(
                 li(a_href(_('About e-mail integration'), 'aboutemail')),
                 li(a_href(_('Attaching an e-mail to a task'), 'emailattach')),
@@ -373,17 +373,24 @@ when it's updated.''') % meta.metaDict))
 
 _emailSection = sequence(
     h3(
-        a_name(_('E-mail (Outlook &amp; Thunderbird) integration'), 'email')),
+        a_name(_('E-mail integration'), 'email')),
     h4(
         a_name(_('About e-mail integration'), 'aboutemail')),
     p(
-        _('''%(name)s integrates with both Outlook and Thunderbird mail user
+        _('''%(name)s integrates with several mail user
 agents, through drag and drop. This has some limitations; e-mails are
 copied in a directory next to the %(name)s file, as .eml files and are
 later opened using whatever program is associated with this file type
 on your system. On the other hand, this allows you to open these
 e-mail attachments on a system which is different from the one you
 created it first.''')%meta.metaDict),
+    p(
+        _('''Mail user agents supported include:'''),
+        ul(
+           li(_('Mozilla Thunderbird')),
+           li(_('Microsoft Outlook')),
+           li(_('Claws Mail')),
+           li(_('Apple Mail')))),
     p(
         _('''Due to a Thunderbird limitation, you can't drag and drop several
 e-mails from Thunderbird. This does not apply to Outlook.''')),
