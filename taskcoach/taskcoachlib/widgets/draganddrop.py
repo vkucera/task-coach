@@ -67,7 +67,7 @@ class DropTarget(wx.DropTarget):
         self.__urlDataObject = wx.TextDataObject()
         self.__fileDataObject = wx.FileDataObject()
         self.__thunderbirdMailDataObject = wx.CustomDataObject('text/x-moz-message')
-	self.__clawsMailDataObject = wx.CustomDataObject('text/uri-list')
+        self.__clawsMailDataObject = wx.CustomDataObject('text/uri-list')
         self.__outlookDataObject = wx.CustomDataObject('Object Descriptor')
         # Starting with Snow Leopard, mail.app supports the message: protocol
         self.__macMailObject = wx.CustomDataObject('public.url')
