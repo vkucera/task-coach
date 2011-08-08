@@ -158,9 +158,8 @@ The i18n ('internationalization') package contains the (generated)
 translation modules. These python modules are generated from the .po 
 files (see taskcoach/i18n.in).
 
-The mailer package contains modules to interact with Outlook and 
-Thunderbird for email attachments and drag and drop from email 
-clients.
+The mailer package contains modules to interact with email clients
+for email attachments and drag and drop from email clients.
 
 The meta package contains meta information about Task Coach, such as 
 author, version number, etc.
