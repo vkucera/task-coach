@@ -24,7 +24,7 @@ from taskcoachlib.domain import task, category, date
 
 
 class MockViewerContainer(object):
-    def __init__(self, *args, **kwargs):
+    def __init__(self):
         self.__sortBy = 'subject'
         self.__ascending = True
         self.selection = []
@@ -35,9 +35,6 @@ class MockViewerContainer(object):
     
     def curselection(self):
         return self.selection # pragma: no cover
-    
-    def isViewerContainer(self):
-        return True
     
     def isShowingCategories(self):
         return self.showingCategories # pragma: no cover
@@ -145,12 +142,11 @@ class MenuWithRadioItemsTest(MenuWithBooleanMenuItemsTestCase):
 
 
 class MockIOController:
-    def __init__(self, *args, **kwargs):
+    def __init__(self):
         self.openCalled = False
         
     def open(self, *args, **kwargs): # pylint: disable-msg=W0613
         self.openCalled = True
-
 
 
 class RecentFilesMenuTest(test.wxTestCase):

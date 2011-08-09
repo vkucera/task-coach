@@ -37,10 +37,6 @@ class TemplateXMLWriterTestCase(test.TestCase):
     def expectInXML(self, xmlFragment):
         xml = self.__writeAndRead()
         self.failUnless(xmlFragment in xml, '%s not in %s'%(xmlFragment, xml))
-    
-    def expectNotInXML(self, xmlFragment):
-        xml = self.__writeAndRead()
-        self.failIf(xmlFragment in xml, '%s in %s'%(xmlFragment, xml))
         
     # tests
     

@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx
+import test
 from unittests import dummy
-from taskcoachlib import gui, config, widgets, patterns, persistence
+from taskcoachlib import gui, config, patterns, persistence
 from taskcoachlib.domain import task
 
 
@@ -30,12 +30,12 @@ class DummyPane(object):
         
     def IsToolbar(self):
         return False
-        
-    def HasFlag(self, *args):
-        return False
 
 
 class DummyEvent(object):
+    def __init__(self, pane):
+        self._pane = pane
+    
     def Skip(self):
         pass
 
@@ -44,13 +44,12 @@ class DummyEvent(object):
 
 
 class DummyChangeEvent(DummyEvent):
-    def __init__(self, window):
-        self._pane = window
+    pass
         
 
 class DummyCloseEvent(DummyEvent):
     def __init__(self, window):
-        self._pane = DummyPane(window)
+        super(DummyCloseEvent, self).__init__(DummyPane(window))
 
     
 class ViewerContainerTest(test.wxTestCase):

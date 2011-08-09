@@ -49,6 +49,8 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
                                        self.dueDateTimeEvent)
         self.__startDateTime = Attribute(startDateTime or maxDateTime, self, 
                                          self.startDateTimeEvent)
+        if completionDateTime is None and percentageComplete == 100:
+            completionDateTime = date.Now()
         self.__completionDateTime = Attribute(completionDateTime or maxDateTime, 
                                               self, self.completionDateTimeEvent)
         percentageComplete = 100 if self.__completionDateTime.get() != maxDateTime else percentageComplete

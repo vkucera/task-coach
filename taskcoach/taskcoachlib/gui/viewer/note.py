@@ -56,7 +56,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
         imageList = self.createImageList() # Has side-effects
         self._columns = self._createColumns()
         itemPopupMenu = menu.NotePopupMenu(self.parent, self.settings,
-            self.presentation(), self.taskFile.categories(), self)
+            self.taskFile.categories(), self)
         columnPopupMenu = menu.ColumnPopupMenu(self)
         self._popupMenus.extend([itemPopupMenu, columnPopupMenu])
         widget = widgets.TreeListCtrl(self, self.columns(), self.onSelect,

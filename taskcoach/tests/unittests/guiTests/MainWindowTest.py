@@ -20,16 +20,8 @@ import wx, test
 from taskcoachlib import gui, config, persistence, meta
 
 
-class MockWidget(object):
-    def Bind(*args, **kwargs):
-        pass
-
-
 class MockViewer(wx.Frame):
     def title(self):
-        return ''
-    
-    def bitmap(self):
         return ''
     
     def settingsSection(self):
@@ -37,8 +29,6 @@ class MockViewer(wx.Frame):
     
     def selectEventType(self):
         return ''
-
-    widget = MockWidget()
 
 
 class MainWindowUnderTest(gui.MainWindow):
@@ -109,7 +99,7 @@ class MainWindowNotMaximizedTest(MainWindowMaximizeTestCase):
     def testCreate(self):
         self.failIf(self.mainwindow.IsMaximized())
 
-    @test.skipOnPlatform('__WXGTK__', '__WXMAC__')
+    @test.skipOnPlatform('__WXGTK__')
     def testMaximize(self): # pragma: no cover
         # Skipping this test under wxGTK. I don't know how it managed
         # to pass before but according to
@@ -143,7 +133,7 @@ class MainWindowIconizedTest(MainWindowTestCase):
             height -= 40 # pragma: no cover
         return height
     
-    @test.skipOnPlatform('__WXGTK__', '__WXMAC__') # Test fails on Fedora and Mac OS X, don't know why nor how to fix it    
+    @test.skipOnPlatform('__WXGTK__') # Test fails on Fedora, don't know why nor how to fix it    
     def testIsIconized(self):
         self.failUnless(self.mainwindow.IsIconized()) # pragma: no cover
                         

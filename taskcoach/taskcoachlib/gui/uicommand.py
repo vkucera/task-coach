@@ -147,7 +147,7 @@ class UICommand(object):
         return self.onCommandActivate(*args, **kwargs)
         
     def doCommand(self, event):
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     def onUpdateUI(self, event):
         event.Enable(bool(self.enabled(event)))
@@ -192,8 +192,8 @@ class UICommand(object):
     def getHelpText(self):
         return self.helpText
 
-    def __getBitmap(self, bitmap, type=wx.ART_MENU, size=(16, 16)):
-        return wx.ArtProvider_GetBitmap(bitmap, type, size)
+    def __getBitmap(self, bitmapName, bitmapType=wx.ART_MENU, bitmapSize=(16, 16)):
+        return wx.ArtProvider_GetBitmap(bitmapName, bitmapType, bitmapSize)
     
 
 class SettingsCommand(UICommand): # pylint: disable-msg=W0223
@@ -223,7 +223,7 @@ class BooleanSettingsCommand(SettingsCommand): # pylint: disable-msg=W0223
         menuItem.Check(self.isSettingChecked())
         
     def isSettingChecked(self):
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
     
 
 class UICheckCommand(BooleanSettingsCommand):
@@ -330,7 +330,7 @@ class PopupButtonMixin(object):
         try:
             args = [self.__menu]
         except AttributeError:
-            self.__menu = self.createPopupMenu()
+            self.__menu = self.createPopupMenu() # pylint: disable-msg=W0201
             args = [self.__menu]
         if self.toolbar:
             args.append(self.menuXY())
@@ -351,7 +351,7 @@ class PopupButtonMixin(object):
         return toolbarY + toolbarHeight
     
     def createPopupMenu(self):
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
 
 class NeedsSelectionMixin(object):
@@ -554,7 +554,7 @@ class FileSaveSelection(NeedsSelectedTasksMixin, IOCommand, ViewerCommand):
             bitmap='saveselection', *args, **kwargs)
     
     def doCommand(self, event):
-        self.iocontroller.saveselection(self.viewer.curselection()), 
+        self.iocontroller.saveselection(self.viewer.curselection()) 
 
 
 class FileSaveSelectedTaskAsTemplate(NeedsOneSelectedTaskMixin, IOCommand, ViewerCommand):
@@ -668,55 +668,57 @@ class Print(ViewerCommand, SettingsCommand):
             wxPrinter.PrintDialogData.ToPage = wxPrinter.PrintDialogData.MaxPage
         wxPrinter.Print(self.mainWindow(), printout, prompt=False)
  
+ 
+class FileExportCommand(IOCommand, SettingsCommand):    
+    def doCommand(self, event):
+        exportDialog = self.ExportDialogClass(self.mainWindow(), settings=self.settings) # pylint: disable-msg=E1101
+        if wx.ID_OK == exportDialog.ShowModal():
+            selectedViewer = exportDialog.selectedViewer()
+            exportOptions = exportDialog.options()
+            self.exportFunction()(selectedViewer, **exportOptions) # pylint: disable-msg=W0142
+        exportDialog.Destroy()
+    
+    def exportFunction(self):
+        ''' Return a function that does the actual export. The function should
+            take the selected viewer as the first parameter and possibly a
+            number of keyword arguments for export options. '''
+        raise NotImplementedError # pragma: no cover
+ 
 
-class FileExportAsHTML(IOCommand, SettingsCommand):
+class FileExportAsHTML(FileExportCommand):
+    ExportDialogClass = dialog.export.ExportAsHTMLDialog
+    
     def __init__(self, *args, **kwargs):
         super(FileExportAsHTML, self).__init__(menuText=_('Export as &HTML...'), 
             helpText=_('Export items from a viewer in HTML format'),
             bitmap='exportashtml', *args, **kwargs)
 
-    def doCommand(self, event):
-        exportDialog = dialog.export.ExportAsHTMLDialog(self.mainWindow(),
-                                                        settings=self.settings)
-        if wx.ID_OK == exportDialog.ShowModal():
-            selectionOnly = exportDialog.selectionOnly()
-            separateCSS = exportDialog.separateCSS()
-            viewer = exportDialog.selectedViewer()
-            self.iocontroller.exportAsHTML(viewer, selectionOnly=selectionOnly,
-                                           separateCSS=separateCSS)
-        exportDialog.Destroy()
+    def exportFunction(self):
+        return self.iocontroller.exportAsHTML
 
 
-class FileExportAsCSV(IOCommand, SettingsCommand):
+class FileExportAsCSV(FileExportCommand):
+    ExportDialogClass = dialog.export.ExportAsCSVDialog
+    
     def __init__(self, *args, **kwargs):
         super(FileExportAsCSV, self).__init__(menuText=_('Export as &CSV...'),
             helpText=_('Export items from a viewer in Comma Separated Values (CSV) format'),
             bitmap='exportascsv', *args, **kwargs)
-
-    def doCommand(self, event):
-        exportDialog = dialog.export.ExportAsCSVDialog(self.mainWindow(),
-                                                       settings=self.settings)
-        if wx.ID_OK == exportDialog.ShowModal():
-            selectionOnly = exportDialog.selectionOnly()
-            viewer = exportDialog.selectedViewer()
-            self.iocontroller.exportAsCSV(viewer, selectionOnly=selectionOnly)
-        exportDialog.Destroy()
         
+    def exportFunction(self):
+        return self.iocontroller.exportAsCSV
 
-class FileExportAsICalendar(IOCommand, SettingsCommand):    
+
+class FileExportAsICalendar(FileExportCommand):
+    ExportDialogClass = dialog.export.ExportAsICalendarDialog
+    
     def __init__(self, *args, **kwargs):
         super(FileExportAsICalendar, self).__init__(menuText=_('Export as &iCalendar...'),
             helpText=_('Export items from a viewer in iCalendar format'),
             bitmap='exportasvcal', *args, **kwargs)
-
-    def doCommand(self, event):
-        exportDialog = dialog.export.ExportAsICalendarDialog(self.mainWindow(),
-                                                             settings=self.settings)
-        if wx.ID_OK == exportDialog.ShowModal():
-            selectionOnly = exportDialog.selectionOnly()
-            viewer = exportDialog.selectedViewer()
-            self.iocontroller.exportAsICalendar(viewer, selectionOnly=selectionOnly)
-        exportDialog.Destroy()
+     
+    def exportFunction(self):
+        return self.iocontroller.exportAsICalendar
 
     def enabled(self, event):
         return any(self.exportableViewer(viewer) for viewer in self.mainWindow().viewer)
@@ -1624,7 +1626,7 @@ class DragAndDropCommand(ViewerCommand):
             dragAndDropCommand.do()
             
     def createCommand(self, dragItem, dropItem):
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
     
 
 class TaskDragAndDrop(DragAndDropCommand, TaskListCommand):
@@ -2364,7 +2366,7 @@ class ToolbarChoiceCommandMixin(object):
         self.doChoice(self.choiceData[choiceIndex])
         
     def doChoice(self, choice):
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
     
     def doCommand(self, event):
         pass # Not used

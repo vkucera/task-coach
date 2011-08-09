@@ -38,7 +38,7 @@ class RecurringTaskTestCase(test.TestCase):
         return [dict(recurrence=self.createRecurrence())]
       
     def createRecurrence(self):
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
     
 
 class RecurringTaskWithChildTestCase(RecurringTaskTestCase):
@@ -48,7 +48,7 @@ class RecurringTaskWithChildTestCase(RecurringTaskTestCase):
         return kwargs_list
 
     def createRecurrence(self):
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
 
 class RecurringTaskWithRecurringChildTestCase(RecurringTaskTestCase):
@@ -59,7 +59,7 @@ class RecurringTaskWithRecurringChildTestCase(RecurringTaskTestCase):
         return kwargs_list
 
     def createRecurrence(self):
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
 
 class CommonRecurrenceTestsMixin(object):        

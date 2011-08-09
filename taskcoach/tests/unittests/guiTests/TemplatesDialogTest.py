@@ -17,8 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import test, os, shutil
-from taskcoachlib import gui, command, config, persistence
-from taskcoachlib.domain import note, attachment
+from taskcoachlib import gui, config
 
  
 class TemplatesDialogTestCase(test.wxTestCase):
@@ -28,24 +27,23 @@ class TemplatesDialogTestCase(test.wxTestCase):
 
         # Monkey-patching
         self.path = os.path.join(os.path.split(__file__)[0], 'tmpl')
-        try:
-            shutil.rmtree(self.path)
-        except OSError:
-            pass
+        self.safelyRemove(self.path)
         os.mkdir(self.path)
 
         self.settings.pathToTemplatesDir = lambda: self.path
 
-        self.taskFile = persistence.TaskFile()
         self.editor = gui.dialog.templates.TemplatesDialog(self.settings, self.frame, 
             'title', raiseDialog=False)
         
     def tearDown(self):
         super(TemplatesDialogTestCase, self).tearDown()
+        self.safelyRemove(self.path)
+        
+    def safelyRemove(self, path):
         try:
-            shutil.rmtree(self.path)
-        except OSError:
+            shutil.rmtree(path)
+        except OSError: # pragma: no cover
             pass
 
     def testTwoDefaultTemplates(self):
-        self.assertEqual(0, len(self.editor._templates.tasks()))
+        self.assertEqual(0, len(self.editor._templates.tasks())) # pylint: disable-msg=W0212

@@ -16,25 +16,25 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
 from wx.lib import masked
+from taskcoachlib import platform
 
 
-class FixOverwriteSelection(object):
+class FixOverwriteSelectionMixin(object):
     def _SetSelection(self, start, end):
-        if '__WXGTK__' == wx.Platform:
+        if platform.isGTK(): # pragma: no cover
             # By exchanging the start and end parameters we make sure that the 
             # cursor is at the start of the field so that typing overwrites the 
             # current field instead of moving to the next field:
             start, end = end, start
-        super(FixOverwriteSelection, self)._SetSelection(start, end)
+        super(FixOverwriteSelectionMixin, self)._SetSelection(start, end)
 
 
-class TextCtrl(FixOverwriteSelection, masked.TextCtrl):
+class TextCtrl(FixOverwriteSelectionMixin, masked.TextCtrl):
     pass
 
 
-class NumCtrl(FixOverwriteSelection, masked.NumCtrl):
+class NumCtrl(FixOverwriteSelectionMixin, masked.NumCtrl):
     pass
 
 

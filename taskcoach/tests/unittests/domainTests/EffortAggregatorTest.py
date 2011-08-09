@@ -59,10 +59,6 @@ class EffortAggregatorTestCase(test.TestCase):
     def onEvent(self, event):
         self.events.append(event)
 
-    def startOfPeriod(self):
-        return getattr(date.DateTime.now(), 
-            'startOf%s'%self.aggregation.capitalize())()
-
                 
 class CommonTestsMixin(object):
     def testEmptyTaskList(self):
