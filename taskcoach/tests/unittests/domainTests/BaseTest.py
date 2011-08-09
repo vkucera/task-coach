@@ -618,11 +618,7 @@ class BaseCollectionTest(test.TestCase):
         self.collection = base.Collection()
         
     def testLookupByIdWhenCollectionIsEmptyRaisesIndexError(self):
-        try:
-            self.collection.getObjectById('id')
-            self.fail()
-        except IndexError:
-            pass
+        self.assertRaises(IndexError, self.collection.getObjectById, 'id')
         
     def testLookupIdWhenObjectIsInCollection(self):
         domainObject = base.CompositeObject()

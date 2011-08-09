@@ -80,7 +80,7 @@ class TaskFileTestCase(test.TestCase):
                 try: # Don't fail on random 'Access denied' errors.
                     os.remove(filename)
                     break
-                except WindowsError:
+                except WindowsError: # pragma: no cover pylint: disable-msg=E0602
                     tries += 1 
 
 

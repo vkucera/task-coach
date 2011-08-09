@@ -138,9 +138,6 @@ class DummyViewer(object):
     def isShowingEffort(self):
         return self.showingEffort
     
-    def domainObjectsToView(self):
-        return self.domainObjects
-
 
 class MailTaskTest(test.TestCase):
     def testException(self):
@@ -424,8 +421,6 @@ class EffortStopTest(test.TestCase):
         self.task.addEffort(self.effort1)
         self.taskList.append(self.task2)
         self.effort1.setTask(self.task2)
-        if not self.effortStop.enabled():
-            print self.effortStop.log
         self.failUnless(self.effortStop.enabled())
         
     # Tests of EffortStop.doCommand()

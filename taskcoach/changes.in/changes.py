@@ -41,7 +41,13 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.25', 'August 7, 2011',
+Release('1.2.26', 'August 9, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        ]
+    ),
+
+Release('1.2.25', 'August 8, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''The anonymize function wouldn't give a notification after saving

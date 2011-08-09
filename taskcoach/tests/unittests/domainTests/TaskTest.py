@@ -917,6 +917,14 @@ class CompletedTaskTest(TaskTestCase, CommonTaskTestsMixin):
         self.task.setCompletionDateTime(date.DateTime.max)
         self.assertEvent(self.task.appearanceChangedEventType(), self.task)
         
+        
+class HundredProcentCompletedTaskTest(TaskTestCase, CommonTaskTestsMixin):
+    def taskCreationKeywordArguments(self):
+        return [{'percentageComplete': 100}]
+        
+    def testAHundredProcentCompleteTaskIsCompleted(self):
+        self.failUnless(self.task.completed())
+        
 
 class TaskCompletedInTheFutureTest(TaskTestCase, CommonTaskTestsMixin):
     def taskCreationKeywordArguments(self):

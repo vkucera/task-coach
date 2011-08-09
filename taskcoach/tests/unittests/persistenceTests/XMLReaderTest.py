@@ -116,7 +116,7 @@ class TempFileLockTest(XMLReaderTestCase):
 
     def setUp(self):
         self.oldMkstemp = tempfile.mkstemp
-        def newMkstemp(*args, **kwargs):
+        def newMkstemp(*args, **kwargs): # pragma: no cover
             handle, name = self.oldMkstemp(*args, **kwargs)
             self.__filename = name # pylint: disable-msg=W0201
             return handle, name
@@ -129,8 +129,8 @@ class TempFileLockTest(XMLReaderTestCase):
         super(TempFileLockTest, self).tearDown()
 
     def testLock(self):
-        if os.name == 'nt':
-            import base64
+        if os.name == 'nt': # pragma: no cover
+            import base64 # pylint: disable-msg=W0404
             self.writeAndReadTasks(\
                 '<tasks>\n<task status="0">\n'
                 '<attachment type="mail" status="0">\n'

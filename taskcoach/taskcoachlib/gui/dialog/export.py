@@ -23,7 +23,10 @@ from taskcoachlib import meta
 
 
 class ExportDialog(sized_controls.SizedDialog):
+    title = 'Override in subclass'
     section = 'export'
+    selectionOnlySetting = 'Override in subclass'
+
     
     def __init__(self, *args, **kwargs):
         self.window = args[0]
@@ -46,10 +49,11 @@ class ExportDialog(sized_controls.SizedDialog):
         panel.SetSizerType('horizontal')
         label = wx.StaticText(panel, label=('Export items from:'))
         sized_controls.SetSizerProp(label, 'valign', 'center')
+        # pylint: disable-msg=W0201
         self.viewerComboBox = wx.ComboBox(panel, style=wx.CB_READONLY|wx.CB_SORT)
         self.titleToViewer = dict()
         for viewer in self.exportableViewers():
-            self.viewerComboBox.Append(viewer.title())
+            self.viewerComboBox.Append(viewer.title()) # pylint: disable-msg=E1101
             # Would like to user client data in the combobox, but that 
             # doesn't work on all platforms
             self.titleToViewer[viewer.title()] = viewer
@@ -63,7 +67,7 @@ class ExportDialog(sized_controls.SizedDialog):
         return self.window.viewer
         
     def createSelectionOnlyChooser(self, pane):
-        self.selectionOnlyCheckBox = wx.CheckBox(pane, 
+        self.selectionOnlyCheckBox = wx.CheckBox(pane, # pylint: disable-msg=W0201
             label=_('Export only the selected items'))
         selectionOnly = self.settings.getboolean(self.section, 
             self.selectionOnlySetting)
@@ -72,11 +76,14 @@ class ExportDialog(sized_controls.SizedDialog):
     def selectionOnly(self):
         return self.selectionOnlyCheckBox.GetValue()
     
+    def options(self):
+        return dict(selectionOnly=self.selectionOnly())
+    
     def selectedViewer(self):
         return self.titleToViewer[self.viewerComboBox.GetValue()]
 
     def onOK(self, event):
-        self.settings.set(self.section, self.selectionOnlySetting, 
+        self.settings.set(self.section, self.selectionOnlySetting, # pylint: disable-msg=E1101
                           str(self.selectionOnly()))
         event.Skip()
             
@@ -107,7 +114,7 @@ class ExportAsHTMLDialog(ExportDialog):
         self.createSeparateCSSChooser(pane)
                 
     def createSeparateCSSChooser(self, pane):        
-        self.separateCSSCheckBox = wx.CheckBox(pane, 
+        self.separateCSSCheckBox = wx.CheckBox(pane, # pylint: disable-msg=W0201
             label=_('Write style information to a separate CSS file'))
         width = max(self.separateCSSCheckBox.GetSize()[0],
                     self.selectionOnlyCheckBox.GetSize()[0],
@@ -122,6 +129,11 @@ class ExportAsHTMLDialog(ExportDialog):
     
     def separateCSS(self):
         return self.separateCSSCheckBox.GetValue()
+    
+    def options(self):
+        options = super(ExportAsHTMLDialog, self).options()
+        options['separateCSS'] = self.separateCSS()
+        return options
         
     def onOK(self, event):
         super(ExportAsHTMLDialog, self).onOK(event)
