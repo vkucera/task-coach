@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx, os
-from taskcoachlib import patterns, persistence, help
+from taskcoachlib import patterns, persistence, help # pylint: disable-msg=W0622
 from taskcoachlib.domain import task, base, category
 from taskcoachlib.i18n import _
 import uicommand, viewer
@@ -217,7 +217,7 @@ class FileMenu(Menu):
                         'export')
         if settings.getboolean('feature', 'syncml'):
             try:
-                import taskcoachlib.syncml.core # pylint: disable-msg=W0612
+                import taskcoachlib.syncml.core # pylint: disable-msg=W0612,W0404
             except ImportError:
                 pass
             else:
@@ -316,7 +316,7 @@ class EditMenu(Menu):
         self.appendUICommands(None, uicommand.EditPreferences(settings))
         if settings.getboolean('feature', 'syncml'):
             try:
-                import taskcoachlib.syncml.core # pylint: disable-msg=W0612
+                import taskcoachlib.syncml.core # pylint: disable-msg=W0612,W0404
             except ImportError:
                 pass
             else:
@@ -531,6 +531,7 @@ class TaskPriorityMenu(Menu):
     def __init__(self, mainwindow, taskList, viewerContainer):
         super(TaskPriorityMenu, self).__init__(mainwindow)
         kwargs = dict(taskList=taskList, viewer=viewerContainer)
+        # pylint: disable-msg=W0142
         self.appendUICommands(
             uicommand.TaskIncPriority(**kwargs),
             uicommand.TaskDecPriority(**kwargs),
@@ -615,6 +616,7 @@ class ToggleCategoryMenu(DynamicMenu):
         self.addMenuItemsForCategories(self.categories.rootItems(), self)
             
     def addMenuItemsForCategories(self, categories, menu):
+        # pylint: disable-msg=W0621
         categories = categories[:]
         categories.sort(key=lambda category: category.subject())
         for category in categories:
@@ -788,7 +790,7 @@ class CategoryPopupMenu(Menu):
 
 
 class NotePopupMenu(Menu):
-    def __init__(self, mainwindow, settings, notes, categories, noteViewer):
+    def __init__(self, mainwindow, settings, categories, noteViewer):
         super(NotePopupMenu, self).__init__(mainwindow)
         self.appendUICommands(
             uicommand.EditCut(viewer=noteViewer),

@@ -179,7 +179,7 @@ class ObservableCollectionFixture(test.TestCase):
         self.receivedRemoveEvents = []
         
     def createObservableCollection(self):
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     def onAdd(self, event):
         self.receivedAddEvents.append(event)

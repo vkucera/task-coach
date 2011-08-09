@@ -18,13 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test
 from taskcoachlib import patterns, config
-from taskcoachlib.domain import task, date, category, base
+from taskcoachlib.domain import task, category
 
+# pylint: disable-msg=W0201,E1101
 
 ''' The tests below test the category filter. Different fixtures are defined
     for different combinations of tasks and categories. Each fixture is than
     subclassed by a <Fixture>InListMode and a <Fixture>InTreeMode class since 
-    we want to run the tests in both list and tree mode. '''
+    we want to run the tests in both list and tree mode. ''' # pylint: disable-msg=W0105
     
 
 class CategoryFilterHelpersMixin(object):
@@ -34,7 +35,7 @@ class CategoryFilterHelpersMixin(object):
     def setFilterOnAllCategories(self):
         self.settings.set('view', 'categoryfiltermatchall', 'True')
 
-    def link(self, category, categorizable):
+    def link(self, category, categorizable): # pylint: disable-msg=W0621
         category.addCategorizable(categorizable)
         categorizable.addCategory(category)
 
@@ -50,6 +51,8 @@ class CategoryFilterHelpersMixin(object):
         
 
 class Fixture(CategoryFilterHelpersMixin):
+    treeMode = False
+    
     def setUp(self):
         self.settings = task.Task.settings = config.Settings(load=False)
         self.categories = category.CategoryList(self.createCategories())
@@ -62,7 +65,7 @@ class Fixture(CategoryFilterHelpersMixin):
         return []
     
     def createCategories(self):
-        return []
+        return [] # pragma: no cover
     
     def categorize(self):
         pass

@@ -19,19 +19,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx, sys
 
 # This module is meant to be imported like this: from taskcoachlib import platform
-# so that the function calls read: platform.isWindows(), platform.isGtk(), etc.
+# so that the function calls read: platform.isWindows(), platform.isGTK(), etc.
 
 def isMac():
-    return '__WXMAC__' == wx.Platform
+    return isPlatform('MAC')
 
 
 def isWindows():
-    return '__WXMSW__' == wx.Platform
+    return isPlatform('MSW')
 
 
-def isWindows7_OrNewer():
-    if isWindows():
-        major, minor = sys.getwindowsversion()[:2]
+def isGTK():
+    return isPlatform('GTK')
+
+
+def isPlatform(threeLetterPlatformAbbreviation, wxPlatform=wx.Platform):
+    return '__WX%s__'%threeLetterPlatformAbbreviation == wxPlatform
+
+
+def isWindows7_OrNewer(): # pragma: no cover
+    if isWindows(): 
+        major, minor = sys.getwindowsversion()[:2] # pylint: disable-msg=E1101
         return (major, minor) >= (6, 1)
     else:
         return False

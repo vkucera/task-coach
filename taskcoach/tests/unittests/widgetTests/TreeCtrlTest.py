@@ -53,6 +53,8 @@ class DummyDomainObject(object):
     def subject(self):
         return self.__subject
     
+    # pylint: disable-msg=W0613
+    
     def foregroundColor(self, recursive=False):
         return None
     
@@ -283,10 +285,7 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
             dummy.DummyUICommand(), dummy.DummyUICommand())
         self.mutual1 = DummyDomainObject('mutual 1')
         self.mutual2 = DummyDomainObject('mutual 2')
-        
-    def getIsItemChecked(self, item): # pylint: disable-msg=W0613
-        return False
-    
+
     def onCheck(self, event):
         pass
 
@@ -294,7 +293,7 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
         self.children[None] = [self.item0]
         self.children[self.item0] = [self.item0_0]
         self.treeCtrl.RefreshAllItems(2)
-        self.treeCtrl.ExpandAll()
+        self.treeCtrl.ExpandAll() # pylint: disable-msg=E1101
         parent = self.getFirstTreeItem()
         self.treeCtrl.CheckItem(parent)
         child = self.treeCtrl.GetItemChildren(parent)[0]
@@ -304,7 +303,7 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
         self.children[None] = [self.item0]
         self.children[self.item0] = [self.mutual1, self.mutual2]
         self.treeCtrl.RefreshAllItems(3)
-        self.treeCtrl.ExpandAll()
+        self.treeCtrl.ExpandAll() # pylint: disable-msg=E1101
         parent = self.getFirstTreeItem()
         children = self.treeCtrl.GetItemChildren(parent)
         self.treeCtrl.CheckItem(children[0])
@@ -317,7 +316,7 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
         self.children[self.item0] = [self.mutual1, self.mutual2]
         self.children[self.mutual1] = [self.item1_0]
         self.treeCtrl.RefreshAllItems(4)
-        self.treeCtrl.ExpandAll()
+        self.treeCtrl.ExpandAll() # pylint: disable-msg=E1101
         parent = self.getFirstTreeItem()
         children = self.treeCtrl.GetItemChildren(parent, recursively=True)
         grandchild = children[1]
@@ -329,9 +328,9 @@ class CheckTreeCtrlTest(TreeCtrlTestCase, CommonTestsMixin):
         self.children[None] = [self.item0]
         self.children[self.item0] = [self.mutual1, self.mutual2]
         self.treeCtrl.RefreshAllItems(3)
-        self.treeCtrl.ExpandAll()
+        self.treeCtrl.ExpandAll() # pylint: disable-msg=E1101
         parent = self.getFirstTreeItem()
         children = self.treeCtrl.GetItemChildren(parent)
         self.treeCtrl.CheckItem(parent)
         self.treeCtrl.CheckItem(children[0])
-        self.failIf(self.treeCtrl.IsItemChecked(parent))
+        self.failIf(self.treeCtrl.IsItemChecked(parent))  # pylint: disable-msg=E1101

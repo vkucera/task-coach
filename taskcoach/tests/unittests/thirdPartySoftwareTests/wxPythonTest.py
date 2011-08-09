@@ -32,9 +32,9 @@ class TextCtrlTest(test.wxTestCase):
         textCtrl.Clear()
         if '__WXMAC__' in wx.PlatformInfo: # pragma: no cover
             self.failIf(self.clearTextCausesEvent)
-        else:
+        else: # pragma: no cover
             self.failUnless(self.clearTextCausesEvent)
 
     def onTextChanged(self, event): # pylint: disable-msg=W0613
-        self.clearTextCausesEvent = True
+        self.clearTextCausesEvent = True # pragma: no cover pylint: disable-msg=W0201 
 

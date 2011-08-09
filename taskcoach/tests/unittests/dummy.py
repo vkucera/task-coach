@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import widgets, patterns, persistence, gui
+from taskcoachlib import persistence, gui
 
 
 class Event(object):
@@ -43,9 +43,6 @@ class DummyWidget(wx.Frame):
         return len(self.viewer.presentation())
 
     def RefreshAllItems(self, *args, **kwargs):
-        pass
-    
-    def RefreshItems(self, *args, **kwargs):
         pass
 
     def IsAutoResizing(self):

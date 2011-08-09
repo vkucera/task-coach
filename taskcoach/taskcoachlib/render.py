@@ -24,7 +24,7 @@ etc. ''' # pylint: disable-msg=W0105
 import locale, codecs
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import date as datemodule
- 
+
 # pylint: disable-msg=W0621
 
 def priority(priority):
@@ -49,13 +49,12 @@ def timeLeft(timeLeft, completedTask):
 def timeSpent(timeSpent):
     ''' render time spent (of type date.TimeDelta) as
     "<hours>:<minutes>:<seconds>" '''
-    if timeSpent == datemodule.TimeDelta():
+    zero = datemodule.TimeDelta()
+    if timeSpent == zero:
         return ''
-    if timeSpent < datemodule.TimeDelta():
-        sign = '-'
     else:
-        sign = ''
-    return sign + '%d:%02d:%02d'%timeSpent.hoursMinutesSeconds()
+        sign = '-' if timeSpent < zero else ''
+        return sign + '%d:%02d:%02d'%timeSpent.hoursMinutesSeconds()
 
 def recurrence(recurrence):
     if not recurrence:
@@ -85,17 +84,14 @@ timeFormat = '%H:%M' # Alas, %X includes seconds
 dateTimeFormat = ' '.join([dateFormat, timeFormat])
 
 def date(date): 
-    ''' render a date (of type date.Date) '''
-    if str(date) == '':
-        return ''
-    return date.strftime(dateFormat)   
+    ''' Render a date (of type date.Date) '''
+    return '' if str(date) == '' else date.strftime(dateFormat)   
         
 def dateTime(dateTime):
     if not dateTime or dateTime == datemodule.DateTime():
         return ''
     timeIsMidnight = (dateTime.hour, dateTime.minute) in ((0, 0), (23, 59))
-    format = dateFormat if timeIsMidnight else dateTimeFormat
-    return dateTime.strftime(format)
+    return dateTime.strftime(dateFormat if timeIsMidnight else dateTimeFormat)
 
 def dateTimePeriod(start, stop):
     if stop is None:

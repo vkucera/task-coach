@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx
+import test
 from taskcoachlib import gui, config, persistence, patterns
 from taskcoachlib.domain import base, task, effort, category, date
 
@@ -92,7 +92,7 @@ class UpdatePerSecondViewerTestsMixin(object):
         categories = base.filter.SearchFilter(category.CategoryList())
         try:
             categories.append(category.Category('Test'))
-        except AttributeError:
+        except AttributeError: # pragma: no cover
             self.fail("Adding a category shouldn't affect the UpdatePerSecondViewer.")
 
     def testViewerDoesNotReactToRemoveEventsFromOtherContainers(self):
@@ -100,7 +100,7 @@ class UpdatePerSecondViewerTestsMixin(object):
         categories.append(category.Category('Test'))
         try:
             categories.clear()
-        except AttributeError:
+        except AttributeError: # pragma: no cover
             self.fail("Removing a category shouldn't affect the UpdatePerSecondViewer.")
             
 

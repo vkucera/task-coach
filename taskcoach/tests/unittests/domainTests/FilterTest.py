@@ -68,9 +68,6 @@ class DummyFilter(base.Filter):
 class DummyItem(str):
     def ancestors(self):
         return []
-    
-    def children(self, *args, **kwargs):
-        return []
 
 
 class StackedFilterTest(test.TestCase):

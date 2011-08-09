@@ -52,11 +52,6 @@ class EffortAssertsMixin(object):
         
                 
 class TaskAssertsMixin(object):
-    def failIfParentAndChild(self, parent, child):
-        self.failIf(child in parent.children())
-        if child.parent():
-            self.failIf(child.parent() == parent)
-
     def failUnlessParentAndChild(self, parent, child):
         self.failUnless(child in parent.children())
         self.failUnless(child.parent() == parent)
