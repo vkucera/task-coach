@@ -22,11 +22,21 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.26', 'August 10, 2011',
-    summary='''This is a bugfix release.''',
+Release('1.2.26', 'August 11, 2011',
+    summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Checking an already checked mutually exclusive subcategory now 
 unchecks it.''', '3377145')
+        ],
+    featuresAdded=[
+        Feature('''Importing and exporting of Todo.txt format task files. 
+Todo.txt is an open source todo list manager, created by Gina Trapani, that 
+works with plain text files. Todo.txt has a command-line interface. However,
+Since the file format is plain text, you can also edit your tasks with any text 
+editor. Todo.txt Touch is a version of Todo.txt for the Android platform, that
+syncs with Dropbox. This can be seen as a first step towards Android support. 
+
+So far, Task Coach imports and exports task subjects, start date and priority.''')
         ]
     ),
 

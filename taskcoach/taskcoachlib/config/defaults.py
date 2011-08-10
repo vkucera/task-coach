@@ -435,7 +435,8 @@ defaults = { \
     'html_selectiononly': 'False',
     'html_separatecss': 'False',
     'csv_selectiononly': 'False',
-    'ical_selectiononly': 'False' }
+    'ical_selectiononly': 'False',
+    'todotxt_selectiononly': 'False' }
 }
 
 minimum = { \
