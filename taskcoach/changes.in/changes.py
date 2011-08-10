@@ -41,9 +41,11 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.26', 'August 9, 2011',
+Release('1.2.26', 'August 10, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
+        Bug('''Checking an already checked mutually exclusive subcategory now 
+unchecks it.''', '3377145')
         ]
     ),
 
