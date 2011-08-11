@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test, StringIO
 from taskcoachlib import persistence, config, gui
-from taskcoachlib.domain import task, date
+from taskcoachlib.domain import task, category, date
 
 
 class TodoTxtWriterTestCase(test.wxTestCase):
@@ -76,4 +76,62 @@ class TodoTxtWriterTestCase(test.wxTestCase):
         self.writer.write(self.viewer, self.settings, False)
         self.assertEqual('2027-01-23 Get cheese\n', self.file.getvalue())
         
+    def testCompletionDate(self):
+        self.taskFile.tasks().append(task.Task(subject='Get cheese', 
+                                               completionDateTime=date.DateTime(2027,1,23,15,34,12)))
+        self.writer.write(self.viewer, self.settings, False)
+        self.assertEqual('X 2027-01-23 Get cheese\n', self.file.getvalue())
         
+    def testCategory(self):
+        phone = category.Category(subject='phone')
+        self.taskFile.categories().append(phone)
+        pizza = task.Task(subject='Order pizza')
+        self.taskFile.tasks().append(pizza)
+        phone.addCategorizable(pizza)
+        pizza.addCategory(phone)
+        self.writer.write(self.viewer, self.settings, False)
+        self.assertEqual('Order pizza @phone\n', self.file.getvalue())
+        
+    def testCategoryWithSpaces(self):
+        at_home = category.Category(subject='at home')
+        self.taskFile.categories().append(at_home)
+        dishes = task.Task(subject='Do dishes')
+        self.taskFile.tasks().append(dishes)
+        at_home.addCategorizable(dishes)
+        dishes.addCategory(at_home)
+        self.writer.write(self.viewer, self.settings, False)
+        self.assertEqual('Do dishes @at_home\n', self.file.getvalue())
+        
+    def testSubcategory(self):
+        work = category.Category(subject='Work')
+        staff_meeting = category.Category(subject='Staff meeting')
+        work.addChild(staff_meeting)
+        self.taskFile.categories().append(work)
+        discuss_proposal = task.Task(subject='Discuss the proposal')
+        self.taskFile.tasks().append(discuss_proposal)
+        discuss_proposal.addCategory(staff_meeting)
+        staff_meeting.addCategorizable(discuss_proposal)
+        self.writer.write(self.viewer, self.settings, False)
+        self.assertEqual('Discuss the proposal @Work->Staff_meeting\n', 
+                         self.file.getvalue())
+
+    def testMultipleCategories(self):
+        phone = category.Category(subject='phone')
+        food = category.Category(subject='food')
+        self.taskFile.categories().extend([phone, food])
+        pizza = task.Task(subject='Order pizza')
+        self.taskFile.tasks().append(pizza)
+        phone.addCategorizable(pizza)
+        pizza.addCategory(phone)
+        food.addCategorizable(pizza)
+        pizza.addCategory(food)
+        self.writer.write(self.viewer, self.settings, False)
+        self.assertEqual('Order pizza @food @phone\n', self.file.getvalue())
+
+    def testSubtask(self):
+        project = task.Task(subject='Project')
+        activity = task.Task(subject='Some activity')
+        project.addChild(activity)
+        self.taskFile.tasks().append(project)
+        self.writer.write(self.viewer, self.settings, False)
+        self.assertEqual('Project\nProject -> Some activity\n', self.file.getvalue())

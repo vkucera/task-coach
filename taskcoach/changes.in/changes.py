@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.26', 'August 11, 2011',
+Release('1.2.26', 'August 12, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Checking an already checked mutually exclusive subcategory now 
@@ -32,11 +32,20 @@ unchecks it.''', '3377145')
         Feature('''Importing and exporting of Todo.txt format task files. 
 Todo.txt is an open source todo list manager, created by Gina Trapani, that 
 works with plain text files. Todo.txt has a command-line interface. However,
-Since the file format is plain text, you can also edit your tasks with any text 
+since the file format is plain text, you can also edit your tasks with any text 
 editor. Todo.txt Touch is a version of Todo.txt for the Android platform, that
 syncs with Dropbox. This can be seen as a first step towards Android support. 
 
-So far, Task Coach imports and exports task subjects, start date and priority.''')
+So far, Task Coach exports task subjects, start date, completion 
+date, priority and categories. Categories are exported as contexts. Task 
+Coach imports task subjects, start date, completion date, priority, contexts
+and projects. Contexts and projects are both transformed into categories in 
+Task Coach. Projects cannot be transformed into parent tasks because Todo.txt
+allows single task to have multiple projects, while Task Coach only allows one
+parent task per task.
+
+NB: The parsing of Todo.txt files is not robust yet, so if an unexpected 
+situation occurs Task Coach may complain in undefined ways.''')
         ]
     ),
 
