@@ -211,8 +211,8 @@ class FileMenu(Menu):
             uicommand.PrintPreview(viewer=viewerContainer, settings=settings),
             uicommand.Print(viewer=viewerContainer, settings=settings),
             None)
-        self.appendUICommands(
-            uicommand.FileImportCSV(iocontroller=iocontroller))
+        self.appendMenu(_('&Import'),
+                        ImportMenu(mainwindow, iocontroller))
         self.appendMenu(_('&Export'),
                         ExportMenu(mainwindow, iocontroller, settings),
                         'export')
@@ -267,7 +267,16 @@ class ExportMenu(Menu):
         self.appendUICommands(
             uicommand.FileExportAsHTML(**kwargs),
             uicommand.FileExportAsCSV(**kwargs),
-            uicommand.FileExportAsICalendar(**kwargs))
+            uicommand.FileExportAsICalendar(**kwargs),
+            uicommand.FileExportAsTodoTxt(**kwargs))
+        
+        
+class ImportMenu(Menu):
+    def __init__(self, mainwindow, iocontroller):
+        super(ImportMenu, self).__init__(mainwindow)
+        self.appendUICommands(
+            uicommand.FileImportCSV(iocontroller=iocontroller),
+            uicommand.FileImportTodoTxt(iocontroller=iocontroller))
 
 
 class TaskTemplateMenu(DynamicMenu):

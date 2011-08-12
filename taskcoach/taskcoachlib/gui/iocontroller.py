@@ -55,6 +55,9 @@ class IOController(object):
         self.__csvFileDialogOpts = {'default_path': defaultPath,
             'default_extension': 'csv', 'wildcard': 
             _('CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*')}
+        self.__todotxtFileDialogOpts = {'default_path': defaultPath,
+            'default_extension': 'txt', 'wildcard':
+            _('Todo.txt files (*.txt)|*.txt|All files (*.*)|*')}
         self.__errorMessageOptions = dict(caption=_('%s file error')%meta.name, 
                                           style=wx.ICON_ERROR)
 
@@ -313,10 +316,20 @@ class IOController(object):
         return self.export(_('Export as iCalendar'),
             self.__icsFileDialogOpts, persistence.iCalendarWriter, viewer, 
             selectionOnly, fileExists=fileExists)
+        
+    def exportAsTodoTxt(self, viewer, selectionOnly=False,
+                        fileExists=os.path.exists):
+        return self.export(_('Export as Todo.txt'),
+            self.__todotxtFileDialogOpts, persistence.TodoTxtWriter, viewer,
+            selectionOnly, fileExists=fileExists)
 
     def importCSV(self, **kwargs):
         persistence.CSVReader(self.__taskFile.tasks(),
                               self.__taskFile.categories()).read(**kwargs)
+                              
+    def importTodoTxt(self, filename):
+        persistence.TodoTxtReader(self.__taskFile.tasks(),
+                                  self.__taskFile.categories()).read(filename)
 
     def synchronize(self, password):
         synchronizer = sync.Synchronizer(self.__syncReport, self, 

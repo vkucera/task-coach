@@ -428,6 +428,7 @@ class CheckTreeCtrl(TreeListCtrl):
             itemPopupMenu, *args, **kwargs)
         self.checkCommand = checkCommand
         self.Bind(customtree.EVT_TREE_ITEM_CHECKED, self.onItemChecked)
+        self.GetMainWindow().Bind(wx.EVT_LEFT_DOWN, self.onMouseLeftDown)
         self.getIsItemCheckable = parent.getIsItemCheckable if hasattr(parent, 'getIsItemCheckable') else lambda item: True
         self.getIsItemChecked = parent.getIsItemChecked
         self.getItemParentHasExclusiveChildren = parent.getItemParentHasExclusiveChildren
@@ -448,6 +449,32 @@ class CheckTreeCtrl(TreeListCtrl):
             self.UnCheckRadioParent(item, checked)
         else:
             super(CheckTreeCtrl, self).CheckItem(item, checked)
+            
+    def onMouseLeftDown(self, event):
+        ''' By default, the HyperTreeList widget doesn't allow for unchecking
+            a radio item. Since we do want to support unchecking a radio 
+            item, we look for mouse left down and uncheck the item and all of
+            its children if the user clicks on an already selected radio item. '''
+        position = self.GetMainWindow().CalcUnscrolledPosition(event.GetPosition())
+        item, flags, dummy_column = self.HitTest(position)
+        if item and item.GetType() == 2 and (flags & customtree.TREE_HITTEST_ONITEMCHECKICON) and self.IsItemChecked(item):
+            self.uncheckItemRecursively(item)
+        else:
+            event.Skip()
+            
+    def uncheckItemRecursively(self, item, parentIsExpanded=True, disableItem=False):
+        if item.GetType():
+            self.uncheckItem(item, torefresh=parentIsExpanded)
+        if disableItem:
+            self.EnableItem(item, False, torefresh=parentIsExpanded)
+        parentIsExpanded = item.IsExpanded()
+        child, cookie = self.GetFirstChild(item)    
+        while child:
+            self.uncheckItemRecursively(child, parentIsExpanded, disableItem=True)
+            child, cookie = self.GetNextChild(item, cookie)
+            
+    def uncheckItem(self, item, torefresh):
+        self.GetMainWindow().CheckItem2(item, checked=False, torefresh=torefresh)
         
     def _refreshObjectCompletely(self, item, domainObject):
         super(CheckTreeCtrl, self)._refreshObjectCompletely(item, domainObject)
