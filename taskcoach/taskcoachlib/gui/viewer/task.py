@@ -588,7 +588,6 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
             self.widget.SetShowNoDueDate(self.settings.getboolean(self.settingsSection(), 'shownodue'))
             self.widget.SetShowUnplanned(self.settings.getboolean(self.settingsSection(), 'showunplanned'))
             self.widget.SetShowNow(self.settings.getboolean(self.settingsSection(), 'shownow'))
-            self.widget.SetFontSize(self.settings.getint(self.settingsSection(), 'fontsize'))
 
             hcolor = self.settings.get(self.settingsSection(), 'highlightcolor')
             if hcolor:

@@ -139,3 +139,13 @@ class ExportAsHTMLDialog(ExportDialog):
         super(ExportAsHTMLDialog, self).onOK(event)
         self.settings.set(self.section, self.separateCSSSetting, 
                           str(self.separateCSS()))
+
+
+class ExportAsTodoTxtDialog(ExportDialog):
+    title = _('Export as Todo.txt')
+    selectionOnlySetting = 'todotxt_selectiononly'
+    
+    def exportableViewers(self):
+        viewers = super(ExportAsTodoTxtDialog, self).exportableViewers()
+        return [viewer for viewer in viewers if viewer.isShowingTasks()]
+    

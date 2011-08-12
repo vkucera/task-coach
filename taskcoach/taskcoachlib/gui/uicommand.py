@@ -728,6 +728,24 @@ class FileExportAsICalendar(FileExportCommand):
                (viewer.isShowingEffort() and not viewer.isShowingAggregatedEffort())
 
 
+class FileExportAsTodoTxt(FileExportCommand):
+    ExportDialogClass = dialog.export.ExportAsTodoTxtDialog
+    
+    def __init__(self, *args, **kwargs):
+        super(FileExportAsTodoTxt, self).__init__(menuText=_('Export as &Todo.txt...'),
+            helpText=_('Export items from a viewer in Todo.txt format (see todotxt.com)'),
+            bitmap='exportascsv', *args, **kwargs)
+        
+    def exportFunction(self):
+        return self.iocontroller.exportAsTodoTxt
+    
+    def enabled(self, event):
+        return any(self.exportableViewer(viewer) for viewer in self.mainWindow().viewer)
+    
+    def exportableViewer(self, viewer):
+        return viewer.isShowingTasks()
+    
+    
 class FileImportCSV(IOCommand):
     def __init__(self, *args, **kwargs):
         super(FileImportCSV, self).__init__(menuText=_('&Import CSV...'),
@@ -740,7 +758,19 @@ class FileImportCSV(IOCommand):
             wiz = CSVImportWizard(filename, None, wx.ID_ANY, _('Import CSV'))
             if wiz.RunWizard():
                 self.iocontroller.importCSV(**wiz.GetOptions())
+                
+                
+class FileImportTodoTxt(IOCommand):
+    def __init__(self, *args, **kwargs):
+        super(FileImportTodoTxt, self).__init__(menuText=_('&Import Todo.txt...'),
+            helpText=_('Import tasks from a Todo.txt (see todotxt.com) file'),
+            bitmap='exportascsv', *args, **kwargs)
 
+    def doCommand(self, event):
+        filename = wx.FileSelector(_('Import Todo.txt'), wildcard='*.txt')
+        if filename:
+            self.iocontroller.importTodoTxt(filename)
+            
 
 class FileSynchronize(IOCommand, SettingsCommand):
     def __init__(self, *args, **kwargs):
