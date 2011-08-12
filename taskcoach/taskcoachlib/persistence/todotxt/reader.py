@@ -102,32 +102,25 @@ class TodoTxtReader(object):
         return categories
         
     def findOrCreateCategory(self, subject, parent, event):
-        if subject in self.__categoriesBySubject:
-            categories = self.__categoriesBySubject[subject]
-            for categoryWithSubjectWeAreLookingFor in categories:
-                if categoryWithSubjectWeAreLookingFor.parent() == parent:
-                    return categoryWithSubjectWeAreLookingFor
-        newCategory = category.Category(subject=subject)
-        if parent:
-            newCategory.setParent(parent)
-            parent.addChild(newCategory, event=event)
-        self.__categoryList.append(newCategory, event=event)
-        self.__categoriesBySubject.setdefault(subject, []).append(newCategory)
-        return newCategory
+        return self.findOrCreateCompositeItem(subject, parent, 
+            self.__categoriesBySubject, self.__categoryList, category.Category, 
+            event)
         
     def findOrCreateTask(self, subject, parent, event):
-        if subject in self.__tasksBySubject:
-            tasks = self.__tasksBySubject[subject]
-            for taskWithSubjectWeAreLookingFor in tasks:
-                if taskWithSubjectWeAreLookingFor.parent() == parent:
-                    return taskWithSubjectWeAreLookingFor
-        newTask = task.Task(subject=subject)
+        return self.findOrCreateCompositeItem(subject, parent, 
+            self.__tasksBySubject, self.__taskList, task.Task, event)
+    
+    def findOrCreateCompositeItem(self, subject, parent, subjectCache, 
+                                  itemContainer, itemClass, event):
+        if (subject, parent) in subjectCache:
+            return subjectCache[(subject, parent)]           
+        newItem = itemClass(subject=subject)
         if parent:
-            newTask.setParent(parent)
-            parent.addChild(newTask, event=event)
-        self.__taskList.append(newTask, event=event)
-        self.__tasksBySubject.setdefault(subject, []).append(newTask)
-        return newTask
+            newItem.setParent(parent)
+            parent.addChild(newItem, event=event)
+        itemContainer.append(newItem, event=event)
+        subjectCache[(subject, parent)] = newItem
+        return newItem        
     
     @staticmethod
     def compileTodoTxtRE():
@@ -135,7 +128,7 @@ class TodoTxtReader(object):
         completedRe = r'(?P<completed>[Xx] )?'
         completionDateRE = r'(?:(?<=[xX] )(?P<completionDate>\d{4}-\d{2}-\d{2}) )?'
         startDateRE = r'(?:(?P<startDate>\d{4}-\d{2}-\d{2}) )?' 
-        contextsAndProjectsPreRE = r'(?P<contexts_and_projects_pre>(?:(?:^| )[@+][^\s]+)*)'
+        contextsAndProjectsPreRE = r'(?P<contexts_and_projects_pre>(?: ?[@+][^\s]+)*)'
         subjectRE = r'(?P<subject>.*?)'
         contextsAndProjectsPostRE = r'(?P<contexts_and_projects_post>(?: [@+][^\s]+)*)'
         return re.compile('^' + priorityRE + completedRe + completionDateRE + \
@@ -146,7 +139,7 @@ class TodoTxtReader(object):
     def __createSubjectCache(itemContainer):
         cache = dict()
         for item in itemContainer:
-            cache.setdefault(item.subject(), []).append(item)
+            cache[(item.subject(), item.parent())] = item
         return cache
 
         
