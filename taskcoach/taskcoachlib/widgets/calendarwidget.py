@@ -326,12 +326,12 @@ class TaskSchedule(wxSchedule):
                 self.color = wx.SystemSettings_GetColour(wx.SYS_COLOUR_HIGHLIGHT)
                 # On MS Windows, the selection background is very dark. If
                 # the foreground color is too dark, invert it.
-                r, g, b = self.task.foregroundColor() or (0, 0, 0)
+                r, g, b, a = self.task.foregroundColor(True)
                 if r + g + b < 128 * 3:
                     self.foreground = wx.Color(255 - r, 255 - g, 255 - b)
             else:
-                self.color = wx.Color(*(self.task.backgroundColor() or (255, 255, 255)))
-                self.foreground = wx.Color(*(self.task.foregroundColor() or (0, 0, 0)))
+                self.color = wx.Color(*(self.task.backgroundColor(True) or (255, 255, 255)))
+                self.foreground = wx.Color(*(self.task.foregroundColor(True) or (0, 0, 0)))
         finally:
             self.Thaw()
 
