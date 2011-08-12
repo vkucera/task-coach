@@ -376,9 +376,9 @@ class TaskSchedule(wxSchedule):
             if self.task.completed():
                 self.done = True
 
-            self.color = wx.Color(*(self.task.backgroundColor() or (255, 255, 255)))
+            self.color = wx.Color(*(self.task.backgroundColor(True) or (255, 255, 255)))
             self.foreground = wx.Color(*(self.task.foregroundColor(True) or (0, 0, 0)))
-            self.font = self.task.font()
+            self.font = self.task.font(True)
 
             self.icons = [self.iconProvider(self.task, False)]
             if self.task.attachments():
