@@ -1150,6 +1150,7 @@ class EffortEditBook(Page):
         self._stopEntry = entry.DateTimeEntry(self, self._settings,
             self.items[0].getStop(), noneAllowed=True,
             callback=self.onStopChanged, **dateTimeEntryKwArgs)
+        self._previousStopValue = self.items[0].getStop() or date.DateTime()
         self._stopLabel = self.label(_('Stop'))
         flags = [None, wx.ALIGN_RIGHT | wx.ALL, wx.ALIGN_LEFT | wx.ALL, None]
         self.addEntry(self._startLabel, self._startEntry,
@@ -1196,6 +1197,10 @@ class EffortEditBook(Page):
     def onStopChanged(self, *args, **kwargs):
         if len(self.items) > 1:
             self._stopLabel.SetValue(True)
+        # When the user checks the stop datetime, enter the current datetime
+        if self._stopEntry.get() != date.DateTime() and self._previousStopValue == date.DateTime():
+            self._stopEntry.set(date.Now())
+        self._previousStopValue = self._stopEntry.get() # pylint: disable-msg=W0201
         self.onPeriodChanged(*args, **kwargs)
         
     def onPeriodChanged(self, *args, **kwargs): # pylint: disable-msg=W0613
