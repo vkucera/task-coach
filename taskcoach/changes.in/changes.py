@@ -61,10 +61,10 @@ Coach imports task subjects, start date, completion date, priority, contexts
 and projects. Contexts and projects are both transformed into categories in 
 Task Coach. Projects cannot be transformed into parent tasks because Todo.txt
 allows single task to have multiple projects, while Task Coach only allows one
-parent task per task.
-
-NB: The parsing of Todo.txt files is not robust yet, so if an unexpected 
-situation occurs Task Coach may complain in undefined ways.''')
+parent task per task.''', 'http://uservoice.com/a/6Z54H'),
+        Feature('''When turning on the stop date and time in the effort edit
+dialog, set the date and time to the current date and time.''', 
+        'http://uservoice.com/a/iFkds')
         ]
     ),
 

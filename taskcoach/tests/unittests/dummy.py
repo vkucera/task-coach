@@ -55,16 +55,16 @@ class DummyWidget(wx.Frame):
         pass
         
 
-class DummyUICommand(gui.uicommand.UICommand):
+class DummyUICommand(gui.uicommand.UICommand): # pylint: disable-msg=W0223
     bitmap = 'undo'
     section = 'view'
     setting = 'setting'
 
     def onCommandActivate(self, event):
-        self.activated = True
+        self.activated = True # pylint: disable-msg=W0201
 
 
-class ViewerWithDummyWidget(gui.viewer.base.Viewer):
+class ViewerWithDummyWidget(gui.viewer.base.Viewer): # pylint: disable-msg=W0223
     defaultTitle = 'ViewerWithDummyWidget'
     defaultBitmap = ''
     
@@ -72,7 +72,7 @@ class ViewerWithDummyWidget(gui.viewer.base.Viewer):
         return self.taskFile.tasks()
     
     def createWidget(self):
-        self._columns = self._createColumns()
+        self._columns = self._createColumns() # pylint: disable-msg=W0201
         return DummyWidget(self)
 
     def _createColumns(self):
@@ -82,12 +82,12 @@ class ViewerWithDummyWidget(gui.viewer.base.Viewer):
 class TaskFile(persistence.TaskFile):
     raiseError = None
     
-    def load(self, *args, **kwargs):
+    def load(self, *args, **kwargs): # pylint: disable-msg=W0613
         if self.raiseError:
-            raise self.raiseError
+            raise self.raiseError # pylint: disable-msg=E0702
         
     merge = save = saveas = load
     
 
-class MainWindow:
+class MainWindow: # pylint: disable-msg=W0232
     showFindDialog = None

@@ -146,6 +146,19 @@ class TodoTxtReaderTestCase(test.TestCase):
         self.reader.readFile(StringIO.StringIO('+phone Order pizza\n'))
         self.assertEqual(1, len(self.categories))
         
+    def testPriorityAndContextBeforeTask(self):
+        self.reader.readFile(StringIO.StringIO('(A) @phone thank Mom for the meatballs'))
+        self.assertEqual(1, len(self.categories))
+        phone = list(self.categories)[0]
+        self.assertEqual('phone', phone.subject())
+        thankMom = list(self.tasks)[0]
+        self.assertEqual(set([thankMom]), phone.categorizables())
+        self.assertEqual(set([phone]), thankMom.categories())
+                
+    def testPriorityAndProjectAndContextBeforeTask(self):
+        self.reader.readFile(StringIO.StringIO('(B) +GarageSale @phone schedule Goodwill pickup'))
+        self.assertEqual(2, len(self.categories))
+        
     def testAutomaticallyCreateParentTask(self):
         self.reader.readFile(StringIO.StringIO('Project->Activity'))
         self.assertEqual(2, len(self.tasks))
@@ -159,3 +172,14 @@ class TodoTxtReaderTestCase(test.TestCase):
         parent = [t for t in self.tasks if not t.parent()][0]
         self.assertEqual('Project', parent.subject())
         self.assertEqual('Activity', parent.children()[0].subject())
+        
+    def testFirstChildAndThenParent(self):
+        self.reader.readFile(StringIO.StringIO('Project->Activity\nProject\n'))
+        self.assertEqual(2, len(self.tasks))
+        parent = [t for t in self.tasks if not t.parent()][0]
+        self.assertEqual('Project', parent.subject())
+        self.assertEqual('Activity', parent.children()[0].subject())
+        
+    def testIgnoreEmptyLine(self):
+        self.reader.readFile(StringIO.StringIO('\n'))
+        self.assertEqual(0, len(self.tasks))
