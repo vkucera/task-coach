@@ -18,43 +18,48 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import re
 from taskcoachlib.domain import task, category, date
+from taskcoachlib import patterns
 
 
 class TodoTxtReader(object):
     def __init__(self, taskList, categoryList):
-        self.taskList = taskList
-        self.categoryList = categoryList
+        self.__taskList = taskList
+        self.__tasksBySubject = self.__createSubjectCache(taskList)
+        self.__categoryList = categoryList
+        self.__categoriesBySubject = self.__createSubjectCache(categoryList)
 
     def read(self, filename):
         with file(filename, 'r') as fp:
             self.readFile(fp)
-        
-    def readFile(self, fp, now=date.Now):
+    
+    @patterns.eventSource    
+    def readFile(self, fp, now=date.Now, event=None):
         todoTxtRE = self.compileTodoTxtRE()
         for line in fp:
-            match = todoTxtRE.match(line.strip())
-            priority = self.priority(match)    
-            completionDateTime = self.completionDateTime(match, now)
-            startDateTime = self.startDateTime(match)
-            categories = self.categories(match)
-           
-            recursiveSubject = match.group('subject')
-            parentForTask = None
-            subjects = recursiveSubject.split('->')
-            for subject in subjects[:-1]:
-                parentForTask = self.findOrCreateTask(subject.strip(), parentForTask)
-                
-            newTask = task.Task(subject=subjects[-1].strip(), 
-                                priority=priority, 
-                                startDateTime=startDateTime,
-                                completionDateTime=completionDateTime,
-                                categories=categories)
-            if parentForTask:
-                newTask.setParent(parentForTask)
-                parentForTask.addChild(newTask)
-            self.taskList.append(newTask)
+            line = line.strip()
+            if line:
+                self.processLine(line, todoTxtRE, now, event)
             
-
+    def processLine(self, line, todoTxtRE, now, event):
+        match = todoTxtRE.match(line)
+        priority = self.priority(match)    
+        completionDateTime = self.completionDateTime(match, now)
+        startDateTime = self.startDateTime(match)
+        categories = self.categories(match, event)
+       
+        recursiveSubject = match.group('subject')
+        subjects = recursiveSubject.split('->')
+        newTask = None
+        for subject in subjects:
+            newTask = self.findOrCreateTask(subject.strip(), newTask, event)
+        
+        newTask.setPriority(priority, event=event)
+        newTask.setStartDateTime(startDateTime, event=event)
+        newTask.setCompletionDateTime(completionDateTime, event=event)
+        for eachCategory in categories:
+            newTask.addCategory(eachCategory, event=event)
+            eachCategory.addCategorizable(newTask, event=event)
+                
     @staticmethod
     def priority(match):
         priorityText = match.group('priority')
@@ -66,19 +71,19 @@ class TodoTxtReader(object):
             completionDateText = match.group('completionDate')
             return cls.dateTime(completionDateText) if completionDateText else now()
         else:
-            return None
+            return date.DateTime()
         
     @classmethod
     def startDateTime(cls, match):
         startDateText = match.group('startDate')
-        return cls.dateTime(startDateText) if startDateText else None
+        return cls.dateTime(startDateText) if startDateText else date.DateTime()
 
     @staticmethod
     def dateTime(dateText):
         year, month, day = dateText.split('-')
         return date.DateTime(int(year), int(month), int(day), 0, 0, 0)
       
-    def categories(self, match):
+    def categories(self, match, event):
         ''' Transform both projects and contexts into categories. Since Todo.txt
             allows multiple projects for one task, but Task Coach does not allow
             for tasks to have more than one parent task, we cannot transform 
@@ -92,33 +97,30 @@ class TodoTxtReader(object):
                 recursiveSubject = contextOrProject.strip('+@')
                 categoryForTask = None
                 for subject in recursiveSubject.split('->'):
-                    categoryForTask = self.findOrCreateCategory(subject, categoryForTask)
+                    categoryForTask = self.findOrCreateCategory(subject, categoryForTask, event)
                 categories.append(categoryForTask)
         return categories
         
-    def findOrCreateCategory(self, subject, parent=None):
-        categoriesToSearch = parent.children() if parent else self.categoryList.rootItems()
-        for existingCategory in categoriesToSearch:
-            if existingCategory.subject() == subject:
-                return existingCategory
-        newCategory = category.Category(subject=subject)
-        if parent:
-            newCategory.setParent(parent)
-            parent.addChild(newCategory)
-        self.categoryList.append(newCategory)
-        return newCategory
+    def findOrCreateCategory(self, subject, parent, event):
+        return self.findOrCreateCompositeItem(subject, parent, 
+            self.__categoriesBySubject, self.__categoryList, category.Category, 
+            event)
+        
+    def findOrCreateTask(self, subject, parent, event):
+        return self.findOrCreateCompositeItem(subject, parent, 
+            self.__tasksBySubject, self.__taskList, task.Task, event)
     
-    def findOrCreateTask(self, subject, parent=None):
-        tasksToSearch = parent.children() if parent else self.taskList.rootItems()
-        for existingTask in tasksToSearch:
-            if existingTask.subject() == subject:
-                return existingTask
-        newTask = task.Task(subject=subject)
+    def findOrCreateCompositeItem(self, subject, parent, subjectCache, 
+                                  itemContainer, itemClass, event):
+        if (subject, parent) in subjectCache:
+            return subjectCache[(subject, parent)]           
+        newItem = itemClass(subject=subject)
         if parent:
-            newTask.setParent(parent)
-            parent.addChild(newTask)
-        self.taskList.append(newTask)
-        return newTask
+            newItem.setParent(parent)
+            parent.addChild(newItem, event=event)
+        itemContainer.append(newItem, event=event)
+        subjectCache[(subject, parent)] = newItem
+        return newItem        
     
     @staticmethod
     def compileTodoTxtRE():
@@ -126,10 +128,18 @@ class TodoTxtReader(object):
         completedRe = r'(?P<completed>[Xx] )?'
         completionDateRE = r'(?:(?<=[xX] )(?P<completionDate>\d{4}-\d{2}-\d{2}) )?'
         startDateRE = r'(?:(?P<startDate>\d{4}-\d{2}-\d{2}) )?' 
-        contextsAndProjectsPreRE = r'(?P<contexts_and_projects_pre>(?:(?:^| )[@+][^\s]+)*)'
+        contextsAndProjectsPreRE = r'(?P<contexts_and_projects_pre>(?: ?[@+][^\s]+)*)'
         subjectRE = r'(?P<subject>.*?)'
         contextsAndProjectsPostRE = r'(?P<contexts_and_projects_post>(?: [@+][^\s]+)*)'
         return re.compile('^' + priorityRE + completedRe + completionDateRE + \
                           startDateRE + contextsAndProjectsPreRE + subjectRE + \
                           contextsAndProjectsPostRE + '$')
+        
+    @staticmethod
+    def __createSubjectCache(itemContainer):
+        cache = dict()
+        for item in itemContainer:
+            cache[(item.subject(), item.parent())] = item
+        return cache
+
         

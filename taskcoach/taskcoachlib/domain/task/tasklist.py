@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import wx
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import categorizable
-from taskcoachlib import help
+from taskcoachlib import help # pylint: disable-msg=W0622
 import task
 
 

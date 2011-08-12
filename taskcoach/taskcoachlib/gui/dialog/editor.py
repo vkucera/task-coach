@@ -939,14 +939,14 @@ class EffortEditBook(Page):
         self.addEntry(_('Start'), self._startDateTimeEntry,
             startFromLastEffortButton, flags=flags)
 
-        currentStopDateTime = self.items[0].getStop()
+        self._previousStopDateTime = currentStopDateTime = self.items[0].getStop()
         self._stopDateTimeEntry = entry.DateTimeEntry(self, self._settings, 
             currentStopDateTime, noneAllowed=True, **dateTimeEntryKwArgs)
         self._stopDateTimeSync = attributesync.AttributeSync('datetime',
             self._stopDateTimeEntry, currentStopDateTime, self.items,
             command.ChangeEffortStopDateTimeCommand, entry.EVT_DATETIMEENTRY,
             'effort.stop', 'getStop')
-        self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onDateTimeChanged)
+        self._stopDateTimeEntry.Bind(entry.EVT_DATETIMEENTRY, self.onStopDateTimeChanged)
         self._invalidPeriodMessage = self._createInvalidPeriodMessage()
         self.addEntry(_('Stop'), self._stopDateTimeEntry, 
                       self._invalidPeriodMessage, flags=flags)
@@ -968,7 +968,14 @@ class EffortEditBook(Page):
     def onStartFromLastEffort(self, event): # pylint: disable-msg=W0613
         event.Skip()
         self._startDateTimeEntry.SetValue(self._effortList.maxDateTime())
-        
+
+    def onStopDateTimeChanged(self, *args, **kwargs):
+        # When the user checks the stop datetime, enter the current datetime
+        if self._stopDateTimeEntry.GetValue() != date.DateTime() and self._previousStopDateTime == date.DateTime():
+            self._stopDateTimeEntry.SetValue(date.Now())
+        self._previousStopDateTime = self._stopDateTimeEntry.GetValue() # pylint: disable-msg=W0201
+        self.onDateTimeChanged(*args, **kwargs)
+
     def onDateTimeChanged(self, event):
         event.Skip()
         self.updateInvalidPeriodMessage()

@@ -129,6 +129,8 @@ class TodoTxtWriterTestCase(test.wxTestCase):
         self.assertEqual('Order pizza @food @phone\n', self.file.getvalue())
 
     def testSubtask(self):
+        self.viewer.sortBy('subject')
+        self.viewer.setSortOrderAscending()
         project = task.Task(subject='Project')
         activity = task.Task(subject='Some activity')
         project.addChild(activity)
