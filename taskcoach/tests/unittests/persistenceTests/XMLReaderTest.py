@@ -56,14 +56,14 @@ class XMLTemplateReaderTestCase(test.TestCase):
         expectedDate = date.Today() + date.TimeDelta(17)
         expectedDateTime = date.DateTime(expectedDate.year, expectedDate.month, expectedDate.day)
         expectedMinutes = (expectedDateTime - now).minutes() 
-        self.assertEqual('%d minutes from now'%expectedMinutes, 
-                         self.convert('Today() + TimeDelta(17)', lambda: now))
+        actualMinutes = int(self.convert('Today() + TimeDelta(17)').split(' ')[0])
+        self.failUnless(abs(actualMinutes - expectedMinutes) <= 1)
 
     def testConvertTodayAndZeroTimeDelta(self):
         now = date.Now()
         expectedMinutes = (now - now.startOfDay()).minutes()
-        self.assertEqual('%d minutes ago'%expectedMinutes, 
-                         self.convert('Today() + TimeDelta(0)', lambda: now))
+        actualMinutes = int(self.convert('Today() + TimeDelta(0)').split(' ')[0])
+        self.failUnless(abs(actualMinutes - expectedMinutes) <= 1)
 
 
 class XMLReaderTestCase(test.TestCase):
