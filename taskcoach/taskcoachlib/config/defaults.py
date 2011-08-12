@@ -142,8 +142,7 @@ defaults = { \
     'sortcasesensitive': 'False',
     'sortbystatusfirst': 'True',
     'highlightcolor': '',
-    'shownow': 'True',
-    'fontsize': '10' },
+    'shownow': 'True' },
 'categoryviewer': { \
     'title': '',
     'sortby': 'subject',
