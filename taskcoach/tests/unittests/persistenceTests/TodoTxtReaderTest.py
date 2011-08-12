@@ -159,3 +159,14 @@ class TodoTxtReaderTestCase(test.TestCase):
         parent = [t for t in self.tasks if not t.parent()][0]
         self.assertEqual('Project', parent.subject())
         self.assertEqual('Activity', parent.children()[0].subject())
+        
+    def testFirstChildAndThenParent(self):
+        self.reader.readFile(StringIO.StringIO('Project->Activity\nProject\n'))
+        self.assertEqual(2, len(self.tasks))
+        parent = [t for t in self.tasks if not t.parent()][0]
+        self.assertEqual('Project', parent.subject())
+        self.assertEqual('Activity', parent.children()[0].subject())
+        
+    def testIgnoreEmptyLine(self):
+        self.reader.readFile(StringIO.StringIO('\n'))
+        self.assertEqual(0, len(self.tasks))
