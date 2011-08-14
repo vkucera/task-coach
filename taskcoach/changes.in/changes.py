@@ -36,13 +36,13 @@ since the file format is plain text, you can also edit your tasks with any text
 editor. Todo.txt Touch is a version of Todo.txt for the Android platform, that
 syncs with Dropbox. This can be seen as a first step towards Android support. 
 
-So far, Task Coach exports task subjects, start date, completion 
+So far, Task Coach exports task subjects, start date, due date, completion 
 date, priority and categories. Categories are exported as contexts. Task 
-Coach imports task subjects, start date, completion date, priority, contexts
-and projects. Contexts and projects are both transformed into categories in 
-Task Coach. Projects cannot be transformed into parent tasks because Todo.txt
-allows single task to have multiple projects, while Task Coach only allows one
-parent task per task.''', 'http://uservoice.com/a/6Z54H'),
+Coach imports task subjects, start date, due date, completion date, priority, 
+contexts and projects. Contexts and projects are both transformed into 
+categories in Task Coach. Projects cannot be transformed into parent tasks 
+because Todo.txt allows single task to have multiple projects, while Task Coach 
+only allows one parent task per task.''', 'http://uservoice.com/a/6Z54H'),
         Feature('''When turning on the stop date and time in the effort edit
 dialog, set the date and time to the current date and time.''', 
         'http://uservoice.com/a/iFkds')

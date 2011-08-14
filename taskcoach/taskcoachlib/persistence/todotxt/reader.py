@@ -35,12 +35,24 @@ class TodoTxtReader(object):
     @patterns.eventSource    
     def readFile(self, fp, now=date.Now, event=None):
         todoTxtRE = self.compileTodoTxtRE()
+        keyValueRE = self.compileKeyValueRE()
         for line in fp:
             line = line.strip()
             if line:
-                self.processLine(line, todoTxtRE, now, event)
+                self.processLine(line, todoTxtRE, keyValueRE, now, event)
             
-    def processLine(self, line, todoTxtRE, now, event):
+    def processLine(self, line, todoTxtRE, keyValueRE, now, event):
+        # First, process all key:value pairs. These are additional metadata not
+        # defined by the todo.txt format  at
+        # https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format
+        dueDateTime = date.DateTime()
+        for key, value in re.findall(keyValueRE, line):
+            if key == 'due':
+                dueDateTime = self.dateTime(value)
+        line = re.sub(keyValueRE, '', line) # Remove all key:value pairs
+        
+        # Now, process the "official" todo.txt format using a RE that should 
+        # match the line completely.
         match = todoTxtRE.match(line)
         priority = self.priority(match)    
         completionDateTime = self.completionDateTime(match, now)
@@ -56,9 +68,10 @@ class TodoTxtReader(object):
         newTask.setPriority(priority, event=event)
         newTask.setStartDateTime(startDateTime, event=event)
         newTask.setCompletionDateTime(completionDateTime, event=event)
+        newTask.setDueDateTime(dueDateTime, event=event)
         for eachCategory in categories:
             newTask.addCategory(eachCategory, event=event)
-            eachCategory.addCategorizable(newTask, event=event)
+            eachCategory.addCategorizable(newTask, event=event)        
                 
     @staticmethod
     def priority(match):
@@ -77,7 +90,7 @@ class TodoTxtReader(object):
     def startDateTime(cls, match):
         startDateText = match.group('startDate')
         return cls.dateTime(startDateText) if startDateText else date.DateTime()
-
+    
     @staticmethod
     def dateTime(dateText):
         year, month, day = dateText.split('-')
@@ -126,8 +139,8 @@ class TodoTxtReader(object):
     def compileTodoTxtRE():
         priorityRE = r'(?:\((?P<priority>[A-Z])\) )?'
         completedRe = r'(?P<completed>[Xx] )?'
-        completionDateRE = r'(?:(?<=[xX] )(?P<completionDate>\d{4}-\d{2}-\d{2}) )?'
-        startDateRE = r'(?:(?P<startDate>\d{4}-\d{2}-\d{2}) )?' 
+        completionDateRE = r'(?:(?<=[xX] )(?P<completionDate>\d{4}-\d{1,2}-\d{1,2}) )?'
+        startDateRE = r'(?:(?P<startDate>\d{4}-\d{1,2}-\d{1,2}) )?' 
         contextsAndProjectsPreRE = r'(?P<contexts_and_projects_pre>(?: ?[@+][^\s]+)*)'
         subjectRE = r'(?P<subject>.*?)'
         contextsAndProjectsPostRE = r'(?P<contexts_and_projects_post>(?: [@+][^\s]+)*)'
@@ -135,6 +148,10 @@ class TodoTxtReader(object):
                           startDateRE + contextsAndProjectsPreRE + subjectRE + \
                           contextsAndProjectsPostRE + '$')
         
+    @staticmethod
+    def compileKeyValueRE():
+        return re.compile(' (?P<key>\S+):(?P<value>\S+)')
+    
     @staticmethod
     def __createSubjectCache(itemContainer):
         cache = dict()
