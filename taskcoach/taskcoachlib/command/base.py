@@ -359,7 +359,7 @@ class EditSubjectCommand(BaseCommand):
         
         
 class EditDescriptionCommand(BaseCommand):
-    plural_name = _('Edit descripions')
+    plural_name = _('Edit descriptions')
     singular_name = _('Edit description "%s"')
 
     def __init__(self, *args, **kwargs):
