@@ -90,7 +90,7 @@ class SyncMLAccessPage(SyncMLBasePage):
         checkBox = self.addBooleanSetting('task', 'dosync', _('Enable tasks synchronization'))
         wx.EVT_CHECKBOX(checkBox, wx.ID_ANY, self.OnSyncTaskChanged)
         self.addTextSetting('task', 'uri', _('Tasks database name'))
-        self.addChoiceSetting('task', 'preferredsyncmode', _('Preferred synchonization mode'), '',
+        self.addChoiceSetting('task', 'preferredsyncmode', _('Preferred synchronization mode'), '',
                               [('TWO_WAY', _('Two way')),
                                ('SLOW', _('Slow')),
                                ('ONE_WAY_FROM_CLIENT', _('One way from client')),
@@ -103,7 +103,7 @@ class SyncMLAccessPage(SyncMLBasePage):
         checkBox = self.addBooleanSetting('note', 'dosync', _('Enable notes synchronization'))
         wx.EVT_CHECKBOX(checkBox, wx.ID_ANY, self.OnSyncNoteChanged)
         self.addTextSetting('note', 'uri', _('Notes database name'))
-        self.addChoiceSetting('note', 'preferredsyncmode', _('Preferred synchonization mode'), '',
+        self.addChoiceSetting('note', 'preferredsyncmode', _('Preferred synchronization mode'), '',
                               [('TWO_WAY', _('Two way')),
                                ('SLOW', _('Slow')),
                                ('ONE_WAY_FROM_CLIENT', _('One way from client')),
