@@ -50,6 +50,11 @@ class TodoTxtReaderTestCase(test.TestCase):
         self.assertEqual(date.DateTime(2011, 1, 31, 0, 0, 0), 
                          list(self.tasks)[0].startDateTime())
         
+    def testTaskWithStartDateWithoutLeadingZero(self):
+        self.reader.readFile(StringIO.StringIO('2011-1-31 Get milk\n'))
+        self.assertEqual(date.DateTime(2011, 1, 31, 0, 0, 0), 
+                         list(self.tasks)[0].startDateTime())
+        
     def testTaskWithPriorityAndStartDate(self):
         self.reader.readFile(StringIO.StringIO('(Z) 2011-01-31 Get milk\n'))
         self.assertEqual(26, list(self.tasks)[0].priority())
@@ -67,9 +72,9 @@ class TodoTxtReaderTestCase(test.TestCase):
         self.failUnless(list(self.tasks)[0].completed())
         self.assertEqual(date.DateTime(2011, 2, 22, 0, 0, 0), 
                          list(self.tasks)[0].completionDateTime())
-        
+
     def testTaskWithStartAndCompletionDate(self):
-        self.reader.readFile(StringIO.StringIO('X 2011-02-22 2011-02-21 Do dishes\n'))
+        self.reader.readFile(StringIO.StringIO('X 2011-2-22 2011-2-21 Do dishes\n'))
         self.failUnless(list(self.tasks)[0].completed())
         self.assertEqual(date.DateTime(2011, 2, 22, 0, 0, 0), 
                          list(self.tasks)[0].completionDateTime())
@@ -183,3 +188,16 @@ class TodoTxtReaderTestCase(test.TestCase):
     def testIgnoreEmptyLine(self):
         self.reader.readFile(StringIO.StringIO('\n'))
         self.assertEqual(0, len(self.tasks))
+        
+    def testDueDate(self):
+        self.reader.readFile(StringIO.StringIO('Import due date due:2011-03-05\n'))
+        self.assertEqual('Import due date', list(self.tasks)[0].subject())
+        self.assertEqual(date.DateTime(2011, 3, 5, 0, 0, 0), 
+                         list(self.tasks)[0].dueDateTime())
+
+    def testDueDateBeforeProject(self):
+        self.reader.readFile(StringIO.StringIO('Import due date due:2011-03-05 +TaskCoach\n'))
+        self.assertEqual('Import due date', list(self.tasks)[0].subject())
+        self.assertEqual(date.DateTime(2011, 3, 5, 0, 0, 0), 
+                         list(self.tasks)[0].dueDateTime())
+        self.assertEqual('TaskCoach', list(self.categories)[0].subject())

@@ -36,7 +36,8 @@ class TodoTxtWriter(object):
                             self.completionDate(task.completionDateTime()) + \
                             self.startDate(task.startDateTime()) + \
                             task.subject(recursive=True) + \
-                            self.contexts(task) + '\n')
+                            self.contexts(task) + \
+                            self.dueDate(task.dueDateTime()) + '\n')
         return count
                 
     @staticmethod
@@ -45,16 +46,20 @@ class TodoTxtWriter(object):
 
     @classmethod
     def startDate(cls, startDateTime):
-        return cls.dateTime(startDateTime) if cls.isActualDateTime(startDateTime) else ''
+        return '%s '%cls.dateTime(startDateTime) if cls.isActualDateTime(startDateTime) else ''
+    
+    @classmethod
+    def dueDate(cls, dueDateTime):
+        return ' due:%s'%cls.dateTime(dueDateTime) if cls.isActualDateTime(dueDateTime) else ''
         
     @classmethod
     def completionDate(cls, completionDateTime):
-        return 'X ' + cls.dateTime(completionDateTime) if cls.isActualDateTime(completionDateTime) else ''
+        return 'X ' + '%s '%cls.dateTime(completionDateTime) if cls.isActualDateTime(completionDateTime) else ''
         
     @staticmethod
     def dateTime(dateTime):
         ''' Todo.txt doesn't support time, just dates, so ignore the time part. '''
-        return dateTime.date().strftime('%Y-%m-%d') + ' '
+        return dateTime.date().strftime('%Y-%m-%d')
 
     @staticmethod
     def isActualDateTime(dateTime, maxDateTime=date.DateTime()):
