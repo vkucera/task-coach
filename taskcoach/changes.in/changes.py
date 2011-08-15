@@ -26,7 +26,8 @@ Release('1.2.26', 'August 14, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Checking an already checked mutually exclusive subcategory now 
-unchecks it.''', '3377145')
+unchecks it.''', '3377145'),
+        Bug('''Task Coach would not start on PPC Macs.''', '3388666'),
         ],
     featuresAdded=[
         Feature('''Importing and exporting of Todo.txt format task files. 
