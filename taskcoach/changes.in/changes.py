@@ -48,7 +48,8 @@ because Todo.txt allows single task to have multiple projects, while Task Coach
 only allows one parent task per task.''', 'http://uservoice.com/a/6Z54H'),
         Feature('''When turning on the stop date and time in the effort edit
 dialog, set the date and time to the current date and time.''', 
-        'http://uservoice.com/a/iFkds')
+        'http://uservoice.com/a/iFkds'),
+        Feature('''When editing templates, one can now also edit subtasks.'''),
         ]
     ),
 

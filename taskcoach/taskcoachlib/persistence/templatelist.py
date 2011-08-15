@@ -63,6 +63,12 @@ class TemplateList(object):
         for name in ['startdatetmpl', 'duedatetmpl', 'completiondatetmpl', 'remindertmpl']:
             if hasattr(task, name):
                 setattr(copy, name, getattr(task, name))
+        for child in copy.children():
+            copy.removeChild(child)
+        for child in task.children():
+            childCopy = self._copyTask(child)
+            childCopy.setParent(copy)
+            copy.addChild(childCopy)
         return copy
 
     def save(self):
