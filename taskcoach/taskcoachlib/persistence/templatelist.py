@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, pickle, tempfile, codecs, shutil
+import os, pickle, tempfile, shutil
 from taskcoachlib import patterns
 from xml import TemplateXMLWriter, TemplateXMLReader
 
@@ -69,7 +69,7 @@ class TemplateList(object):
         pickle.dump([name for task, name in self._templates], file(os.path.join(self._path, 'list.pickle'), 'wb'))
 
         for task, name in self._templates:
-            templateFile = codecs.open(os.path.join(self._path, name), 'w', 'utf-8')
+            templateFile = file(os.path.join(self._path, name), 'w')
             writer = TemplateXMLWriter(templateFile)
             writer.write(self._copyTask(task))
             templateFile.close()
@@ -82,7 +82,7 @@ class TemplateList(object):
     def addTemplate(self, task):
         handle, filename = tempfile.mkstemp('.tsktmpl', dir=self._path)
         os.close(handle)
-        templateFile = codecs.open(filename, 'w', 'utf-8')
+        templateFile = file(filename, 'w')
         writer = TemplateXMLWriter(templateFile)
         writer.write(task.copy())
         templateFile.close()

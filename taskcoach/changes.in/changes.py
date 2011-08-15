@@ -28,6 +28,8 @@ Release('1.2.26', 'August 14, 2011',
         Bug('''Checking an already checked mutually exclusive subcategory now 
 unchecks it.''', '3377145'),
         Bug('''Task Coach would not start on PPC Macs.''', '3388666'),
+        Bug('''Saving a task as template would not work if the subject or
+description contains non-ascii characters'''),
         ],
     featuresAdded=[
         Feature('''Importing and exporting of Todo.txt format task files. 
