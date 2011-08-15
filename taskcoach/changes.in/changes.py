@@ -45,7 +45,10 @@ Release('1.2.26', 'August 14, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Checking an already checked mutually exclusive subcategory now 
-unchecks it.''', '3377145')
+unchecks it.''', '3377145'),
+        Bug('''Task Coach would not start on PPC Macs.''', '3388666'),
+        Bug('''Saving a task as template would not work if the subject or
+description contains non-ascii characters'''),
         ],
     featuresAdded=[
         Feature('''Importing and exporting of Todo.txt format task files. 
@@ -64,7 +67,8 @@ because Todo.txt allows single task to have multiple projects, while Task Coach
 only allows one parent task per task.''', 'http://uservoice.com/a/6Z54H'),
         Feature('''When turning on the stop date and time in the effort edit
 dialog, set the date and time to the current date and time.''', 
-        'http://uservoice.com/a/iFkds')
+        'http://uservoice.com/a/iFkds'),
+        Feature('''When editing templates, one can now also edit subtasks.'''),
         ]
     ),
 

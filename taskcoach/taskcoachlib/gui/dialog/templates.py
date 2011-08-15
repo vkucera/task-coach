@@ -63,19 +63,25 @@ class TemplatesDialog(widgets.Dialog):
     def createInterior(self):
         return wx.Panel(self._panel, wx.ID_ANY)
 
+    def appendTemplate(self, parentItem, task):
+        item = self._templateList.AppendItem(parentItem, task.subject(), data=wx.TreeItemData(task))
+        for child in task.children():
+            self.appendTemplate(item, child)
+        return item
+
     def fillInterior(self):
         # pylint: disable-msg=W0201
-        self._templateList = wx.ListCtrl(self._interior, wx.ID_ANY, style=wx.LC_REPORT)
-        self._templateList.InsertColumn(0, _('Template'))
-        self._templateList.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnSelectionChanged)
-        self._templateList.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.OnSelectionChanged)
+        self._templateList = wx.TreeCtrl(self._interior, wx.ID_ANY, style=wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT|wx.TR_SINGLE)
+        self._templateList.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelectionChanged)
 
         self._templates = persistence.TemplateList(self.settings.pathToTemplatesDir())
 
+        self._root = self._templateList.AddRoot('Root')
         for task in self._templates.tasks():
-            self._templateList.InsertStringItem(self._templateList.GetItemCount(), task.subject())
-
-        self._templateList.SetColumnWidth(0, -1)
+            item = self.appendTemplate(self._root, task)
+            if '__WXMAC__' in wx.PlatformInfo:
+                # See http://trac.wxwidgets.org/ticket/10085
+                self._templateList.SetItemText(item, task.subject())
 
         self._btnDelete = wx.Button(self._interior, wx.ID_ANY, _("Delete"))
         self._btnDelete.Bind(wx.EVT_BUTTON, self.OnDelete)
@@ -147,8 +153,8 @@ class TemplatesDialog(widgets.Dialog):
     def OnValueChanged(self, event):
         event.Skip()
 
-        if len(self._GetSelection()) == 1 and not self._changing:
-            task = self._templates.tasks()[self._GetSelection()[0]]
+        if self._GetSelection().IsOk() and not self._changing:
+            task = self._templateList.GetItemData(self._GetSelection()).GetData()
             task.setSubject(self._subjectCtrl.GetValue())
             for ctrl, name in [(self._startDateTimeCtrl, 'startdatetmpl'),
                                (self._dueDateTimeCtrl, 'duedatetmpl'),
@@ -158,32 +164,34 @@ class TemplatesDialog(widgets.Dialog):
         self._Check()
 
     def _GetSelection(self):
-        selection = []
-        idx = -1
-        while True:
-            idx = self._templateList.GetNextItem(idx, wx.LIST_NEXT_ALL, wx.LIST_STATE_SELECTED)
-            if idx == -1:
-                break
-            selection.append(idx)
-        return selection
+        return self._templateList.GetSelection()
 
     def OnSelectionChanged(self, event): # pylint: disable-msg=W0613
         self._changing = True
         try:
             selection = self._GetSelection()
-            oneTemplateSelected = len(selection) == 1
-            self._btnDelete.Enable(bool(selection))
-            self._btnUp.Enable(oneTemplateSelected and selection != [0])
-            self._btnDown.Enable(oneTemplateSelected and selection != [len(self._templates) - 1])
-            self._editPanel.Enable(oneTemplateSelected)
-            self._editPanel.Enable(len(selection) == 1)
-            if oneTemplateSelected:
-                task = self._templates.tasks()[selection[0]]
-                self._subjectCtrl.SetValue(task.subject())
-                self._startDateTimeCtrl.SetValue(task.startdatetmpl or u'')
-                self._dueDateTimeCtrl.SetValue(task.duedatetmpl or u'')
-                self._completionDateTimeCtrl.SetValue(task.completiondatetmpl or u'')
-                self._reminderCtrl.SetValue(task.remindertmpl or u'')
+            selectionAtRoot = False
+            if selection.IsOk():
+                selectionAtRoot = (self._templateList.GetItemParent(selection) == self._root)
+            self._btnDelete.Enable(selectionAtRoot)
+            self._btnUp.Enable(selectionAtRoot and self._templateList.GetPrevSibling(selection).IsOk())
+            self._btnDown.Enable(selectionAtRoot and self._templateList.GetNextSibling(selection).IsOk())
+            self._editPanel.Enable(selection.IsOk())
+            self._editPanel.Enable(selection.IsOk())
+            if selection.IsOk():
+                task = self._templateList.GetItemData(selection).GetData()
+                if task is None:
+                    self._subjectCtrl.SetValue(u'')
+                    self._startDateTimeCtrl.SetValue(u'')
+                    self._dueDateTimeCtrl.SetValue(u'')
+                    self._completionDateTimeCtrl.SetValue(u'')
+                    self._reminderCtrl.SetValue(u'')
+                else:
+                    self._subjectCtrl.SetValue(task.subject())
+                    self._startDateTimeCtrl.SetValue(task.startdatetmpl or u'')
+                    self._dueDateTimeCtrl.SetValue(task.duedatetmpl or u'')
+                    self._completionDateTimeCtrl.SetValue(task.completiondatetmpl or u'')
+                    self._reminderCtrl.SetValue(task.remindertmpl or u'')
             else:
                 self._subjectCtrl.SetValue(u'')
                 self._startDateTimeCtrl.SetValue(u'')
@@ -194,39 +202,46 @@ class TemplatesDialog(widgets.Dialog):
             self._changing = False
 
     def OnDelete(self, event): # pylint: disable-msg=W0613
-        selection = self._GetSelection()
-        selection.sort(lambda x, y: -cmp(x, y))
-
-        for idx in selection:
-            self._templates.deleteTemplate(idx)
-            self._templateList.DeleteItem(idx)
-
+        task = self._templateList.GetItemData(self._GetSelection()).GetData()
+        index = self._templates.tasks().index(task)
+        self._templates.deleteTemplate(index)
+        self._templateList.Delete(self._GetSelection())
         self._Check()
 
     def OnUp(self, event): # pylint: disable-msg=W0613
-        selection = self._GetSelection()[0]
-        self._templates.swapTemplates(selection - 1, selection)
-        self._templateList.SetStringItem(selection, 0, self._templates.tasks()[selection].subject())
-        self._templateList.SetStringItem(selection - 1, 0, self._templates.tasks()[selection - 1].subject())
-        self._templateList.SetItemState(selection, 0, wx.LIST_STATE_SELECTED|wx.LIST_STATE_FOCUSED)
-        self._templateList.SetItemState(selection - 1, wx.LIST_STATE_SELECTED|wx.LIST_STATE_FOCUSED, wx.LIST_STATE_SELECTED|wx.LIST_STATE_FOCUSED)
-
+        selection = self._GetSelection()
+        prev = self._templateList.GetPrevSibling(selection)
+        prev = self._templateList.GetPrevSibling(prev)
+        task = self._templateList.GetItemData(selection).GetData()
+        self._templateList.Delete(selection)
+        if prev.IsOk():
+            item = self._templateList.InsertItem(self._root, prev, task.subject(), data=wx.TreeItemData(task))
+        else:
+            item = self._templateList.PrependItem(self._root, task.subject(), data=wx.TreeItemData(task))
+        for child in task.children():
+            self.appendTemplate(item, child)
+        index = self._templates.tasks().index(task)
+        self._templates.swapTemplates(index - 1, index)
+        self._templateList.SelectItem(item)
         self._Check()
 
     def OnDown(self, event): # pylint: disable-msg=W0613
-        selection = self._GetSelection()[0]
-        self._templates.swapTemplates(selection, selection + 1)
-        self._templateList.SetStringItem(selection, 0, self._templates.tasks()[selection].subject())
-        self._templateList.SetStringItem(selection + 1, 0, self._templates.tasks()[selection + 1].subject())
-        self._templateList.SetItemState(selection, 0, wx.LIST_STATE_SELECTED|wx.LIST_STATE_FOCUSED)
-        self._templateList.SetItemState(selection + 1, wx.LIST_STATE_SELECTED|wx.LIST_STATE_FOCUSED, wx.LIST_STATE_SELECTED|wx.LIST_STATE_FOCUSED)
-
+        selection = self._GetSelection()
+        next = self._templateList.GetNextSibling(selection)
+        task = self._templateList.GetItemData(selection).GetData()
+        self._templateList.Delete(selection)
+        item = self._templateList.InsertItem(self._root, next, task.subject(), data=wx.TreeItemData(task))
+        for child in task.children():
+            self.appendTemplate(item, task)
+        index = self._templates.tasks().index(task)
+        self._templates.swapTemplates(index, index + 1)
+        self._templateList.SelectItem(item)
         self._Check()
 
     def OnAdd(self, event): # pylint: disable-msg=W0613
         task = Task(subject=_('New task template'))
         self._templates.addTemplate(task)
-        self._templateList.InsertStringItem(self._templateList.GetItemCount(), task.subject())
+        self.appendTemplate(self._root, task)
 
         self._Check()
 
