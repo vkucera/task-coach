@@ -82,8 +82,8 @@ class TodoTxtWriterTestCase(test.wxTestCase):
         self.writer.write(self.viewer, self.settings, False)
         self.assertEqual('X 2027-01-23 Get cheese\n', self.file.getvalue())
         
-    def testCategory(self):
-        phone = category.Category(subject='phone')
+    def testContext(self):
+        phone = category.Category(subject='@phone')
         self.taskFile.categories().append(phone)
         pizza = task.Task(subject='Order pizza')
         self.taskFile.tasks().append(pizza)
@@ -92,8 +92,8 @@ class TodoTxtWriterTestCase(test.wxTestCase):
         self.writer.write(self.viewer, self.settings, False)
         self.assertEqual('Order pizza @phone\n', self.file.getvalue())
         
-    def testCategoryWithSpaces(self):
-        at_home = category.Category(subject='at home')
+    def testContextWithSpaces(self):
+        at_home = category.Category(subject='@at home')
         self.taskFile.categories().append(at_home)
         dishes = task.Task(subject='Do dishes')
         self.taskFile.tasks().append(dishes)
@@ -102,8 +102,8 @@ class TodoTxtWriterTestCase(test.wxTestCase):
         self.writer.write(self.viewer, self.settings, False)
         self.assertEqual('Do dishes @at_home\n', self.file.getvalue())
         
-    def testSubcategory(self):
-        work = category.Category(subject='Work')
+    def testSubcontext(self):
+        work = category.Category(subject='@Work')
         staff_meeting = category.Category(subject='Staff meeting')
         work.addChild(staff_meeting)
         self.taskFile.categories().append(work)
@@ -115,9 +115,9 @@ class TodoTxtWriterTestCase(test.wxTestCase):
         self.assertEqual('Discuss the proposal @Work->Staff_meeting\n', 
                          self.file.getvalue())
 
-    def testMultipleCategories(self):
-        phone = category.Category(subject='phone')
-        food = category.Category(subject='food')
+    def testMultipleContexts(self):
+        phone = category.Category(subject='@phone')
+        food = category.Category(subject='@food')
         self.taskFile.categories().extend([phone, food])
         pizza = task.Task(subject='Order pizza')
         self.taskFile.tasks().append(pizza)
@@ -127,7 +127,27 @@ class TodoTxtWriterTestCase(test.wxTestCase):
         pizza.addCategory(food)
         self.writer.write(self.viewer, self.settings, False)
         self.assertEqual('Order pizza @food @phone\n', self.file.getvalue())
-
+        
+    def testProject(self):
+        alive = category.Category(subject='+Stay alive')
+        self.taskFile.categories().append(alive)
+        pizza = task.Task(subject='Order pizza')
+        self.taskFile.tasks().append(pizza)
+        alive.addCategorizable(pizza)
+        pizza.addCategory(alive)
+        self.writer.write(self.viewer, self.settings, False)
+        self.assertEqual('Order pizza +Stay_alive\n', self.file.getvalue())
+        
+    def testIgnoreCategoriesThatAreNotAContextNorAProject(self):
+        phone = category.Category(subject='phone')
+        self.taskFile.categories().append(phone)
+        pizza = task.Task(subject='Order pizza')
+        self.taskFile.tasks().append(pizza)
+        phone.addCategorizable(pizza)
+        pizza.addCategory(phone)
+        self.writer.write(self.viewer, self.settings, False)
+        self.assertEqual('Order pizza\n', self.file.getvalue())
+         
     def testSubtask(self):
         self.viewer.sortBy('subject')
         self.viewer.setSortOrderAscending()

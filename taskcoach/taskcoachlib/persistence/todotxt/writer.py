@@ -36,7 +36,7 @@ class TodoTxtWriter(object):
                             self.completionDate(task.completionDateTime()) + \
                             self.startDate(task.startDateTime()) + \
                             task.subject(recursive=True) + \
-                            self.contexts(task) + \
+                            self.contextsAndProjects(task) + \
                             self.dueDate(task.dueDateTime()) + '\n')
         return count
                 
@@ -66,13 +66,12 @@ class TodoTxtWriter(object):
         return dateTime != maxDateTime
 
     @classmethod
-    def contexts(cls, task):
-        contexts = ' '.join(sorted([cls.context(category) for category in task.categories()]))
-        return ' ' + contexts if contexts else ''
-
-    @staticmethod
-    def context(category):
-        subject = category.subject(recursive=True).strip()
-        subject = re.sub(r' -> ', '->', subject)
-        context = re.sub(r'\s+', '_', subject)
-        return context if context.startswith('@') else '@' + context
+    def contextsAndProjects(cls, task):
+        subjects = []
+        for category in task.categories():
+            subject = category.subject(recursive=True).strip()
+            if subject and subject[0] in ('@', '+'):
+                subject = re.sub(r' -> ', '->', subject)
+                subject = re.sub(r'\s+', '_', subject)
+                subjects.append(subject)
+        return ' ' + ' '.join(sorted(subjects)) if subjects else ''
