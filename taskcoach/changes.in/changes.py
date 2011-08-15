@@ -41,7 +41,7 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.26', 'August 14, 2011',
+Release('1.2.26', 'August 15, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Checking an already checked mutually exclusive subcategory now 
@@ -52,19 +52,11 @@ description contains non-ascii characters'''),
         ],
     featuresAdded=[
         Feature('''Importing and exporting of Todo.txt format task files. 
-Todo.txt is an open source todo list manager, created by Gina Trapani, that 
-works with plain text files. Todo.txt has a command-line interface. However,
-since the file format is plain text, you can also edit your tasks with any text 
-editor. Todo.txt Touch is a version of Todo.txt for the Android platform, that
-syncs with Dropbox. This can be seen as a first step towards Android support. 
-
-So far, Task Coach exports task subjects, start date, due date, completion 
-date, priority and categories. Categories are exported as contexts. Task 
-Coach imports task subjects, start date, due date, completion date, priority, 
-contexts and projects. Contexts and projects are both transformed into 
-categories in Task Coach. Projects cannot be transformed into parent tasks 
-because Todo.txt allows single task to have multiple projects, while Task Coach 
-only allows one parent task per task.''', 'http://uservoice.com/a/6Z54H'),
+Todo.txt is an open source todo list manager that works with plain text files. 
+Todo.txt Touch is a version of Todo.txt for the Android platform, that
+syncs with Dropbox. By exporting your tasks to a todo.txt file in your Dropbox
+folder, you can then edit them on your Android device with Todo.txt Touch. See
+the help contents for more information.''', 'http://uservoice.com/a/6Z54H'),
         Feature('''When turning on the stop date and time in the effort edit
 dialog, set the date and time to the current date and time.''', 
         'http://uservoice.com/a/iFkds'),
