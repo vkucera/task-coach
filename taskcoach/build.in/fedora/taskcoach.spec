@@ -65,17 +65,19 @@ desktop-file-install --vendor fedora \
 %%files
 %%defattr(0644,root,root,0755)
 %%attr(0755,root,root) %%{_bindir}/taskcoach.py
-#python_sitelib definition should be used instead of
-#%%dir %%{python_sitelib}/taskcoachlib
-%%{_libdir}/python*/site-packages/taskcoachlib/*
-%%{_libdir}/python*/site-packages/TaskCoach-*-py2.*.egg-info
+%%{python_sitelib}/taskcoachlib/*
+%%{python_sitelib}/TaskCoach-*-py2.*.egg-info
 %%{_datadir}/applications/fedora-taskcoach.desktop
 %%{_datadir}/pixmaps/taskcoach.png
 %%doc CHANGES.txt LICENSE.txt PUBLICITY.txt README.txt TODO.tsk
 
-%%exclude %%{_libdir}/python*/site-packages/buildlib/*.py*
+%%exclude %%{python_sitelib}/buildlib/*.py*
 
 %%changelog
+* Mon Aug 15 2011 Jerome Laheurte <fraca7 AT free DOTT fr> - 1.2.26-1
+- Apply patch from Oleg Tsarev <oleg-tsarev AT users DOTT sourceforge DOTT net>
+  to fix RPM build on x64 systems.
+
 * Mon May 02 2010 Jerome Laheurte <fraca7 AT free DOTT fr> - 1.0.8-1
 - add the egginfo to __files to build on Fedora 12
 
