@@ -107,7 +107,7 @@ class TodoTxtReader(object):
         contextsAndProjects = contextsAndProjects.strip()
         if contextsAndProjects:        
             for contextOrProject in contextsAndProjects.split(' '):
-                recursiveSubject = contextOrProject.strip('+@')
+                recursiveSubject = contextOrProject.strip()
                 categoryForTask = None
                 for subject in recursiveSubject.split('->'):
                     categoryForTask = self.findOrCreateCategory(subject, categoryForTask, event)

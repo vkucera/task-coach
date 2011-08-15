@@ -119,6 +119,13 @@ _TOC = sequence(
                 li(a_href(_('Configuration'), 'iphoneconf')),
                 li(a_href(_('Troubleshooting'), 'iphonetrouble')))),
         li(
+            a_href(_('Android'), 'android'),
+            ul(
+                li(a_href(_('%(name)s on Android?')%meta.metaDict, 'taskcoachandroid')),
+                li(a_href(_('Todo.txt and Todo.txt Touch'), 'todotxt')),
+                li(a_href(_('Importing todo.txt'), 'todotxtimporting')),
+                li(a_href(_('Exporting todo.txt'), 'todotxtexporting')))),
+        li(
             a_href(_('Task templates'), 'templates'),
             ul(
                 li(a_href(_('About templates'), 'abouttemplates')),
@@ -594,6 +601,61 @@ your computer is through WiFi.''')),
         _('If you have a firewall, check that ports 4096-4100 are open.'))))
 
 
+_androidSection = sequence(
+    h3(
+        a_name(_('Android'), 'android')),
+    h4(
+        a_name(_('%(name)s on Android?')%meta.metaDict, 'taskcoachandroid')),
+    p(
+        _('''No, %(name)s is not available for the Android platform. But,
+<a target="_blank" href="http://todotxt.com">Todo.txt Touch</a> is. 
+You can export your tasks from %(name)s to the <a target="_blank" 
+href="https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format">Todo.txt 
+format</a> and then edit your tasks on your Android device.''')%meta.metaDict),
+    h4(
+        a_name(_('Todo.txt and Todo.txt Touch'), 'todotxt')),
+    p(
+        _('''Todo.txt is an open source todo list manager, created by Gina 
+Trapani, that works with plain text files. Todo.txt has a command-line 
+interface. However, since the file format is plain text, you can also edit your 
+tasks with any text editor. Todo.txt Touch is a version of Todo.txt for the 
+Android platform. Todo.txt Touch uses a todo.txt file that lives in your
+Dropbox folder. %(name)s can import from and export to that todo.txt 
+file.''')%meta.metaDict),
+    h4(
+        a_name(_('Importing todo.txt'), 'todotxtimporting')),
+    p(
+        _('''%(name)s imports task subjects, start date, due date, completion 
+date, priority, contexts and projects. Contexts and projects are both 
+transformed into categories in %(name)s. Projects cannot be transformed into 
+parent tasks because Todo.txt allows tasks to belong to multiple projects, 
+while %(name)s only allows one parent task per task.''')%meta.metaDict),
+    h4(
+        a_name(_('Exporting todo.txt'), 'todotxtexporting')),
+    p(
+        _('''%(name)s exports task subjects, start date, due date, completion 
+date, priority and categories to the Todo.txt format. Other attributes are not
+exported.''')%meta.metaDict),
+    p(
+        _('''%(name)s supports dates and times, but Todo.txt only supports 
+dates, so the time part of start, due, and completion date/times is not
+exported.''')%meta.metaDict),
+    p(
+        _('''The default Todo.txt format only supports start dates and 
+completion dates, but no due dates. Therefore, %(name)s uses an extension to
+export the due date of tasks. Due dates are shown as "due:YYYY-MM-DD" in the
+todo.txt file.''')%meta.metaDict),
+    p(
+        _('''Todo.txt has priorities in the form of a letter ('A'-'Z'). 
+%(name)s has numerical priorities. %(name)s priority 1 is transformed into 'A',
+2 becomes 'B', etc., and 26 is 'Z'. %(name)s priorities below 1 and above 26
+are not exported.''')%meta.metaDict),
+    p(
+        _('''Categories whose subject starts with a '+' are exported as projects. 
+Categories whose subject starts with an '@'-sign are exported as context. 
+Categories whose subject doesn't start with '+' or '@' are not exported. 
+Subcategories are exported if their parent category is.''')%meta.metaDict))
+
 _templatesSection = sequence(
     h3(
         a_name(_('Task templates'), 'templates')),
@@ -724,8 +786,8 @@ shortcuts are not configurable at the moment.''')%meta.metaDict),
 
 helpHTML = _TOC + _taskSection + _effortSection + _categorySection + \
     _noteSection + _printingAndExportingSection + _multiuserSection + _emailSection + \
-    _syncmlSection + _iPhoneSection + _templatesSection + _guiSection + \
-    _shortcutSection
+    _syncmlSection + _iPhoneSection + _androidSection + _templatesSection + \
+    _guiSection + _shortcutSection
 
 
 aboutHTML = _('''<h4>%(name)s - %(description)s</h4>
