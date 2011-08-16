@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-07-28 23:01+0000\n"
+"POT-Creation-Date: 2011-08-04 23:21+0000\n"
 "PO-Revision-Date: 2010-11-28 14:36+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Breton <br@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-04 20:04+0000\n"
-"X-Generator: Launchpad (build 13604)\n"
+"X-Launchpad-Export-Date: 2011-08-15 21:29+0000\n"
+"X-Generator: Launchpad (build 13687)\n"
 
 #: taskcoachlib/application/application.py:242
 msgid ""
@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 
 #: taskcoachlib/application/application.py:243
-#: taskcoachlib/gui/iocontroller.py:57
+#: taskcoachlib/gui/iocontroller.py:58
 msgid "%s file error"
 msgstr "fazi restr %s"
 
@@ -388,28 +388,28 @@ msgstr ""
 msgid "Change budget of \"%s\""
 msgstr ""
 
-#: taskcoachlib/config/settings.py:195
+#: taskcoachlib/config/settings.py:221
 msgid "Error while reading the %s-%s setting from %s.ini."
 msgstr ""
 
-#: taskcoachlib/config/settings.py:196
+#: taskcoachlib/config/settings.py:222
 msgid "The value is: %s"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:197
+#: taskcoachlib/config/settings.py:223
 msgid "The error is: %s"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:198
+#: taskcoachlib/config/settings.py:224
 msgid ""
 "%s will use the default value for the setting and should proceed normally."
 msgstr ""
 
-#: taskcoachlib/config/settings.py:199
+#: taskcoachlib/config/settings.py:225
 msgid "Settings error"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:219
+#: taskcoachlib/config/settings.py:245
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
@@ -417,7 +417,7 @@ msgstr ""
 "Fazi oc'h enrollañ %s.ini:\n"
 "%s\n"
 
-#: taskcoachlib/config/settings.py:220
+#: taskcoachlib/config/settings.py:246
 msgid "Save error"
 msgstr "Fazi enrollañ"
 
@@ -942,12 +942,12 @@ msgid "Appearance"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:237
-#: taskcoachlib/gui/dialog/preferences.py:109
+#: taskcoachlib/gui/dialog/preferences.py:118
 msgid "Foreground color"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:240
-#: taskcoachlib/gui/dialog/preferences.py:109
+#: taskcoachlib/gui/dialog/preferences.py:118
 msgid "Background color"
 msgstr ""
 
@@ -960,12 +960,12 @@ msgid "Use font:"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:293
-#: taskcoachlib/gui/dialog/preferences.py:110
+#: taskcoachlib/gui/dialog/preferences.py:119
 msgid "Font"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:319
-#: taskcoachlib/gui/dialog/preferences.py:110
+#: taskcoachlib/gui/dialog/preferences.py:119
 msgid "Icon"
 msgstr ""
 
@@ -1160,10 +1160,8 @@ msgstr "Rummadoù"
 msgid "Attachments"
 msgstr "Restroù stag"
 
-#: taskcoachlib/gui/dialog/editor.py:877
-#: taskcoachlib/gui/dialog/syncpreferences.py:135
-#: taskcoachlib/gui/viewer/note.py:37 taskcoachlib/help/__init__.py:85
-#: taskcoachlib/help/__init__.py:268
+#: taskcoachlib/gui/dialog/editor.py:877 taskcoachlib/gui/viewer/note.py:37
+#: taskcoachlib/help/__init__.py:85 taskcoachlib/help/__init__.py:268
 msgid "Notes"
 msgstr "Notennoù"
 
@@ -1197,15 +1195,15 @@ msgstr "Paouez"
 msgid "Export only the selected items"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:85 taskcoachlib/gui/iocontroller.py:294
+#: taskcoachlib/gui/dialog/export.py:85 taskcoachlib/gui/iocontroller.py:302
 msgid "Export as CSV"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:90 taskcoachlib/gui/iocontroller.py:299
+#: taskcoachlib/gui/dialog/export.py:90 taskcoachlib/gui/iocontroller.py:307
 msgid "Export as iCalendar"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:101 taskcoachlib/gui/iocontroller.py:288
+#: taskcoachlib/gui/dialog/export.py:101 taskcoachlib/gui/iocontroller.py:296
 msgid "Export as HTML"
 msgstr ""
 
@@ -1286,109 +1284,109 @@ msgstr ""
 msgid "OK"
 msgstr "Mat eo"
 
-#: taskcoachlib/gui/dialog/preferences.py:207
+#: taskcoachlib/gui/dialog/preferences.py:227
 msgid ""
 "This setting will take effect\n"
 "after you restart %s"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:227
+#: taskcoachlib/gui/dialog/preferences.py:248
 msgid "Files"
 msgstr "Restroù"
 
-#: taskcoachlib/gui/dialog/preferences.py:233
+#: taskcoachlib/gui/dialog/preferences.py:254
 msgid "Auto save after every change"
 msgstr "Enrollañ emgefreek goude pep kemm"
 
-#: taskcoachlib/gui/dialog/preferences.py:235
+#: taskcoachlib/gui/dialog/preferences.py:256
 msgid ""
 "Create a backup copy before\n"
 "overwriting a %s file"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:237
+#: taskcoachlib/gui/dialog/preferences.py:258
 msgid ""
 "Save settings (%s.ini) in the same\n"
 "directory as the program"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:239
+#: taskcoachlib/gui/dialog/preferences.py:260
 msgid ""
 "(For running %s\n"
 "from a removable medium)"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:240
+#: taskcoachlib/gui/dialog/preferences.py:261
 msgid "Attachment base directory"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:241
+#: taskcoachlib/gui/dialog/preferences.py:262
 msgid ""
 "When adding an attachment, try to make\n"
 "its path relative to this one."
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:247
+#: taskcoachlib/gui/dialog/preferences.py:268
 msgid "Window behavior"
 msgstr "Emzalc'h ar prenestr"
 
-#: taskcoachlib/gui/dialog/preferences.py:253
+#: taskcoachlib/gui/dialog/preferences.py:274
 msgid "Show splash screen on startup"
 msgstr "Diskwel ar skramm degemer d'al loc'hañ"
 
-#: taskcoachlib/gui/dialog/preferences.py:255
+#: taskcoachlib/gui/dialog/preferences.py:276
 msgid "Show tips window on startup"
 msgstr "Diskwel prenestr an tunioù d'al loc'hañ"
 
-#: taskcoachlib/gui/dialog/preferences.py:257
+#: taskcoachlib/gui/dialog/preferences.py:278
 msgid "Start with the main window iconized"
 msgstr "Loc'hañ gant ar prenestr pennañ arlunet"
 
-#: taskcoachlib/gui/dialog/preferences.py:258
+#: taskcoachlib/gui/dialog/preferences.py:279
 msgid "Always"
 msgstr "Bepred"
 
-#: taskcoachlib/gui/dialog/preferences.py:258
+#: taskcoachlib/gui/dialog/preferences.py:279
 msgid "Never"
 msgstr "Morse"
 
-#: taskcoachlib/gui/dialog/preferences.py:260
+#: taskcoachlib/gui/dialog/preferences.py:281
 msgid "If it was iconized last session"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:262
+#: taskcoachlib/gui/dialog/preferences.py:283
 msgid "Check for new version of %(name)s on startup"
 msgstr "Gwiriekaat bezañs un doare nevez eus %(name)s el loc'hañ"
 
-#: taskcoachlib/gui/dialog/preferences.py:264
+#: taskcoachlib/gui/dialog/preferences.py:285
 msgid "Hide main window when iconized"
 msgstr "Kuzhat ar prenestr pennañ pa vez arlunet"
 
-#: taskcoachlib/gui/dialog/preferences.py:266
+#: taskcoachlib/gui/dialog/preferences.py:287
 msgid "Minimize main window when closed"
 msgstr "Izelaat ar prenestr pennañ pa vez serret"
 
-#: taskcoachlib/gui/dialog/preferences.py:268
+#: taskcoachlib/gui/dialog/preferences.py:289
 msgid "Make clock in the task bar tick when tracking effort"
 msgstr ""
 "Lakaat an horolaj er varrenn gefridi d'ober titirin pa vez heuliet ur striv"
 
-#: taskcoachlib/gui/dialog/preferences.py:270
+#: taskcoachlib/gui/dialog/preferences.py:291
 msgid ""
 "Show a popup with the description of an item\n"
 "when hovering over it"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:276
-#: taskcoachlib/gui/dialog/preferences.py:336
+#: taskcoachlib/gui/dialog/preferences.py:297
+#: taskcoachlib/gui/dialog/preferences.py:357
 msgid "Language"
 msgstr "Yezh"
 
-#: taskcoachlib/gui/dialog/preferences.py:282
+#: taskcoachlib/gui/dialog/preferences.py:303
 msgid "Let the system determine the language"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:342
+#: taskcoachlib/gui/dialog/preferences.py:363
 msgid ""
 "If your language is not available, or the translation needs \n"
 "improving, please consider helping. See:"
@@ -1396,209 +1394,209 @@ msgstr ""
 "Ma ne c'haller ket kavout ho yezh, pe ma vefe ezhomm da \n"
 "wellaat an droidigezh, klaskit reiñ skoazell mar plij. Gwelit :"
 
-#: taskcoachlib/gui/dialog/preferences.py:349
+#: taskcoachlib/gui/dialog/preferences.py:370
 msgid "Language not found?"
 msgstr "Ne gaver ket ar yezh-se ?"
 
-#: taskcoachlib/gui/dialog/preferences.py:359
+#: taskcoachlib/gui/dialog/preferences.py:380
 msgid "Task appearance"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:366
+#: taskcoachlib/gui/dialog/preferences.py:387
 msgid "Active tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:367
+#: taskcoachlib/gui/dialog/preferences.py:388
 msgid "Inactive tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:368
+#: taskcoachlib/gui/dialog/preferences.py:389
 msgid "Completed tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:369
+#: taskcoachlib/gui/dialog/preferences.py:390
 msgid "Overdue tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:370
+#: taskcoachlib/gui/dialog/preferences.py:391
 msgid "Tasks due soon"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:381
+#: taskcoachlib/gui/dialog/preferences.py:402
 msgid "Features"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:387
+#: taskcoachlib/gui/dialog/preferences.py:408
 msgid "Allow for tracking effort"
 msgstr "Aotren d'an heuliañ striv"
 
-#: taskcoachlib/gui/dialog/preferences.py:388
+#: taskcoachlib/gui/dialog/preferences.py:409
 msgid "Allow for taking notes"
 msgstr "Aotren da gemer notennoù"
 
-#: taskcoachlib/gui/dialog/preferences.py:395
+#: taskcoachlib/gui/dialog/preferences.py:416
 msgid "Enable SyncML"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:397
+#: taskcoachlib/gui/dialog/preferences.py:418
 msgid "Enable iPhone synchronization"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:400
+#: taskcoachlib/gui/dialog/preferences.py:421
 msgid "Hour of start of work day"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:402
+#: taskcoachlib/gui/dialog/preferences.py:423
 msgid "Hour of end of work day"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:404
+#: taskcoachlib/gui/dialog/preferences.py:425
 msgid ""
 "Use gradients in calendar views.\n"
 "This may slow down Task Coach."
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:407
+#: taskcoachlib/gui/dialog/preferences.py:428
 msgid "Minutes between task start/end times"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:414
+#: taskcoachlib/gui/dialog/preferences.py:435
 msgid "Task dates"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:420
+#: taskcoachlib/gui/dialog/preferences.py:441
 msgid "Mark parent task completed when all children are completed"
 msgstr "Merkañ ar gefridi gar evel peurechu pa vez peurechu an holl vugale"
 
-#: taskcoachlib/gui/dialog/preferences.py:422
+#: taskcoachlib/gui/dialog/preferences.py:443
 msgid "Number of hours that tasks are considered to be 'due soon'"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:424
+#: taskcoachlib/gui/dialog/preferences.py:445
 msgid "Nothing"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:425
+#: taskcoachlib/gui/dialog/preferences.py:446
 msgid "Changing the start date changes the due date"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:426
+#: taskcoachlib/gui/dialog/preferences.py:447
 msgid "Changing the due date changes the start date"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:428
+#: taskcoachlib/gui/dialog/preferences.py:449
 msgid "What to do with start and due date if the other one is changed"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:431
+#: taskcoachlib/gui/dialog/preferences.py:452
 msgid "Preset"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:432
+#: taskcoachlib/gui/dialog/preferences.py:453
 msgid "Propose"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:433
+#: taskcoachlib/gui/dialog/preferences.py:454
 msgid "Today"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:434
+#: taskcoachlib/gui/dialog/preferences.py:455
 msgid "Tomorrow"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:435
+#: taskcoachlib/gui/dialog/preferences.py:456
 msgid "Day after tomorrow"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:436
+#: taskcoachlib/gui/dialog/preferences.py:457
 msgid "Next Friday"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:437
+#: taskcoachlib/gui/dialog/preferences.py:458
 msgid "Next Monday"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:438
+#: taskcoachlib/gui/dialog/preferences.py:459
 msgid "Start of day"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:439
+#: taskcoachlib/gui/dialog/preferences.py:460
 msgid "Start of working day"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:440
+#: taskcoachlib/gui/dialog/preferences.py:461
 msgid "Current time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:441
+#: taskcoachlib/gui/dialog/preferences.py:462
 msgid "End of working day"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:442
+#: taskcoachlib/gui/dialog/preferences.py:463
 msgid "End of day"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:444
+#: taskcoachlib/gui/dialog/preferences.py:465
 msgid "Default start date and time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:447
+#: taskcoachlib/gui/dialog/preferences.py:468
 msgid "Default due date and time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:450
+#: taskcoachlib/gui/dialog/preferences.py:471
 msgid "Default completion date and time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:453
+#: taskcoachlib/gui/dialog/preferences.py:474
 msgid "Default reminder date and time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:460
+#: taskcoachlib/gui/dialog/preferences.py:481
 msgid "Task reminders"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:469
+#: taskcoachlib/gui/dialog/preferences.py:490
 msgid "Notification system to use for reminders"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:473
+#: taskcoachlib/gui/dialog/preferences.py:494
 msgid "Default snooze time to use after reminder"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:476
+#: taskcoachlib/gui/dialog/preferences.py:497
 msgid "Snooze times to offer in task reminder dialog"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:483
+#: taskcoachlib/gui/dialog/preferences.py:504
 msgid "iPhone"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:489
+#: taskcoachlib/gui/dialog/preferences.py:510
 msgid "Password for synchronization with iPhone"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:491
+#: taskcoachlib/gui/dialog/preferences.py:512
 msgid "Bonjour service name"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:493
+#: taskcoachlib/gui/dialog/preferences.py:514
 msgid "Upload completed tasks to device"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:495
+#: taskcoachlib/gui/dialog/preferences.py:516
 msgid "Show sync log"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:495
+#: taskcoachlib/gui/dialog/preferences.py:516
 msgid "Show the synchronization log"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:501
+#: taskcoachlib/gui/dialog/preferences.py:522
 msgid "Editor"
 msgstr "Aozer"
 
-#: taskcoachlib/gui/dialog/preferences.py:507
+#: taskcoachlib/gui/dialog/preferences.py:528
 msgid "Check spelling in editors"
 msgstr "Gwiriekaat ar reizhskrivadur e-barzh aozerioù"
 
@@ -1614,11 +1612,23 @@ msgstr ""
 msgid "Mark task completed"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:80
+#: taskcoachlib/gui/dialog/syncpreferences.py:81
+msgid "SyncML server"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/syncpreferences.py:82
+msgid "Custom"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/syncpreferences.py:84
+msgid "MemoToo (http://www.memotoo.com/)"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/syncpreferences.py:87
 msgid "SyncML server URL"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:81
+#: taskcoachlib/gui/dialog/syncpreferences.py:88
 msgid "User name/ID"
 msgstr ""
 
@@ -1626,64 +1636,57 @@ msgstr ""
 msgid "Enable tasks synchronization"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:91
+#: taskcoachlib/gui/dialog/syncpreferences.py:92
 msgid "Tasks database name"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:93
-#: taskcoachlib/gui/dialog/syncpreferences.py:111
+#: taskcoachlib/gui/dialog/syncpreferences.py:106
 msgid "Preferred synchonization mode"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:94
-#: taskcoachlib/gui/dialog/syncpreferences.py:112
+#: taskcoachlib/gui/dialog/syncpreferences.py:107
 msgid "Two way"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:95
-#: taskcoachlib/gui/dialog/syncpreferences.py:113
+#: taskcoachlib/gui/dialog/syncpreferences.py:108
 msgid "Slow"
 msgstr "Gorrek"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:96
-#: taskcoachlib/gui/dialog/syncpreferences.py:114
+#: taskcoachlib/gui/dialog/syncpreferences.py:109
 msgid "One way from client"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:97
-#: taskcoachlib/gui/dialog/syncpreferences.py:115
+#: taskcoachlib/gui/dialog/syncpreferences.py:110
 msgid "Refresh from client"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:98
-#: taskcoachlib/gui/dialog/syncpreferences.py:116
+#: taskcoachlib/gui/dialog/syncpreferences.py:111
 msgid "One way from server"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:99
-#: taskcoachlib/gui/dialog/syncpreferences.py:117
+#: taskcoachlib/gui/dialog/syncpreferences.py:112
 #: taskcoachlib/syncml/basesource.py:61 taskcoachlib/syncml/basesource.py:73
 msgid "Refresh from server"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:108
+#: taskcoachlib/gui/dialog/syncpreferences.py:103
 msgid "Enable notes synchronization"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:109
+#: taskcoachlib/gui/dialog/syncpreferences.py:105
 msgid "Notes database name"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:133
+#: taskcoachlib/gui/dialog/syncpreferences.py:150
 msgid "Access"
 msgstr ""
-
-#: taskcoachlib/gui/dialog/syncpreferences.py:134
-#: taskcoachlib/gui/viewer/task.py:54 taskcoachlib/help/__init__.py:68
-#: taskcoachlib/help/__init__.py:129
-#: taskcoachlib/widgets/calendarconfig.py:107
-msgid "Tasks"
-msgstr "Kefridioù"
 
 #: taskcoachlib/gui/dialog/templates.py:69
 msgid "Template"
@@ -1737,133 +1740,133 @@ msgstr ""
 msgid "The latest released version of %(name)s is %(version)s."
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:47
+#: taskcoachlib/gui/iocontroller.py:48
 msgid ""
 "%s files (*.tsk)|*.tsk|Backup files (*.tsk.bak)|*.tsk.bak|All files (*.*)|*"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:50
+#: taskcoachlib/gui/iocontroller.py:51
 msgid "iCalendar files (*.ics)|*.ics|All files (*.*)|*"
 msgstr "Restroù iCalendar (*.ics)|*.ics|An holl restroù (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:53
+#: taskcoachlib/gui/iocontroller.py:54
 msgid "HTML files (*.html)|*.html|All files (*.*)|*"
 msgstr "Restroù HTML (*.html)|*.html|An holl restroù (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:56
+#: taskcoachlib/gui/iocontroller.py:57
 msgid "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*"
 msgstr ""
 "Restroù CSV (*.csv)|*.csv|Restroù Testenn (*.txt)|*.txt|An holl restroù "
 "(*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:95
+#: taskcoachlib/gui/iocontroller.py:96
 msgid "Open"
 msgstr "Digeriñ"
 
-#: taskcoachlib/gui/iocontroller.py:118 taskcoachlib/gui/iocontroller.py:155
+#: taskcoachlib/gui/iocontroller.py:126 taskcoachlib/gui/iocontroller.py:163
 msgid ""
 "Cannot open %(filename)s\n"
 "because it was created by a newer version of %(name)s.\n"
 "Please upgrade %(name)s."
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:126 taskcoachlib/gui/iocontroller.py:161
+#: taskcoachlib/gui/iocontroller.py:134 taskcoachlib/gui/iocontroller.py:169
 msgid "Error while reading %s:\n"
 msgstr "Fazi en ur lenn %s:\n"
 
-#: taskcoachlib/gui/iocontroller.py:128 taskcoachlib/gui/iocontroller.py:163
+#: taskcoachlib/gui/iocontroller.py:136 taskcoachlib/gui/iocontroller.py:171
 msgid "Are you sure it is a %s-file?"
 msgstr "Sur oc'h ez eo ur restr %s?"
 
-#: taskcoachlib/gui/iocontroller.py:131
+#: taskcoachlib/gui/iocontroller.py:139
 msgid "Loaded %(nrtasks)d tasks from %(filename)s"
 msgstr "%(nrtasks)d (g)kefridioù karget eus %(filename)s"
 
-#: taskcoachlib/gui/iocontroller.py:135
+#: taskcoachlib/gui/iocontroller.py:143
 msgid "Cannot open %s because it doesn't exist"
 msgstr "Ne c'haller ket digeriñ %s rak n'eus ket anezhañ"
 
-#: taskcoachlib/gui/iocontroller.py:145
+#: taskcoachlib/gui/iocontroller.py:153
 msgid "Merge"
 msgstr "Kendeuziñ"
 
-#: taskcoachlib/gui/iocontroller.py:150
+#: taskcoachlib/gui/iocontroller.py:158
 msgid ""
 "Cannot open %(filename)s\n"
 "because it is locked."
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:166
+#: taskcoachlib/gui/iocontroller.py:174
 msgid "Merged %(filename)s"
 msgstr "%(filename)s kendeuzet"
 
-#: taskcoachlib/gui/iocontroller.py:183
+#: taskcoachlib/gui/iocontroller.py:191
 msgid "Save as"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:195
+#: taskcoachlib/gui/iocontroller.py:203
 msgid "Save selection"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:227
+#: taskcoachlib/gui/iocontroller.py:235
 msgid ""
 "Cannot save %s\n"
 "It is locked by another instance of %s.\n"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:232
+#: taskcoachlib/gui/iocontroller.py:240
 msgid ""
 "Cannot save %s\n"
 "%s"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:242
+#: taskcoachlib/gui/iocontroller.py:250
 msgid "Import template"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:244
+#: taskcoachlib/gui/iocontroller.py:252
 msgid "%s template files (*.tsktmpl)|*.tsktmpl"
 msgstr "%s restr patrom (*.tsktmpl)|*.tsktmpl"
 
-#: taskcoachlib/gui/iocontroller.py:250
+#: taskcoachlib/gui/iocontroller.py:258
 msgid ""
 "Cannot import template %s\n"
 "%s"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:279
+#: taskcoachlib/gui/iocontroller.py:287
 msgid "Exported %(count)d items to %(filename)s"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:314
+#: taskcoachlib/gui/iocontroller.py:322
 msgid "Finished synchronization"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:321
+#: taskcoachlib/gui/iocontroller.py:329
 msgid "Note conflict"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:325
+#: taskcoachlib/gui/iocontroller.py:333
 msgid "Task conflict"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:337
+#: taskcoachlib/gui/iocontroller.py:345
 msgid "Synchronization status"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:345
+#: taskcoachlib/gui/iocontroller.py:353
 msgid ""
 "Cannot open %s\n"
 "%s"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:380
+#: taskcoachlib/gui/iocontroller.py:388
 msgid ""
 "A file named %s already exists.\n"
 "Do you want to replace it?"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:392
+#: taskcoachlib/gui/iocontroller.py:400
 msgid ""
 "You have unsaved changes.\n"
 "Save before closing?"
@@ -1871,11 +1874,11 @@ msgstr ""
 "Kemmoù dienroll ho peus.\n"
 "Enrollañ a-raok serriñ?"
 
-#: taskcoachlib/gui/iocontroller.py:393
+#: taskcoachlib/gui/iocontroller.py:401
 msgid "%s: save changes?"
 msgstr "%s: enrollañ ar c'hemmoù?"
 
-#: taskcoachlib/gui/iocontroller.py:403
+#: taskcoachlib/gui/iocontroller.py:411
 msgid ""
 "Cannot open %s because it is locked.\n"
 "\n"
@@ -1887,22 +1890,22 @@ msgid ""
 "Break the lock?"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:411 taskcoachlib/gui/iocontroller.py:418
+#: taskcoachlib/gui/iocontroller.py:419 taskcoachlib/gui/iocontroller.py:426
 msgid "%s: file locked"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:416
+#: taskcoachlib/gui/iocontroller.py:424
 msgid ""
 "Cannot acquire a lock because locking is not supported\n"
 "on the location of %s.\n"
 "Open %s unlocked?"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:423
+#: taskcoachlib/gui/iocontroller.py:431
 msgid "Closed %s"
 msgstr "%s serret"
 
-#: taskcoachlib/gui/iocontroller.py:428
+#: taskcoachlib/gui/iocontroller.py:436
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
 msgstr "%(nrtasks)d enrollet e %(filename)s"
 
@@ -1914,30 +1917,30 @@ msgstr ""
 msgid "Synchronizing with %s..."
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:71 taskcoachlib/gui/uicommand.py:608
+#: taskcoachlib/gui/mainwindow.py:79 taskcoachlib/gui/uicommand.py:608
 msgid "Warning"
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:108
+#: taskcoachlib/gui/mainwindow.py:116
 msgid "Welcome to %(name)s version %(version)s"
 msgstr "Degemer mat e %(name)s aozadur %(version)s"
 
-#: taskcoachlib/gui/mainwindow.py:285
+#: taskcoachlib/gui/mainwindow.py:293
 msgid "iPhone/iPod"
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:294
+#: taskcoachlib/gui/mainwindow.py:302
 msgid "Synchronization type"
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:304
+#: taskcoachlib/gui/mainwindow.py:312
 msgid ""
 "An iPhone or iPod Touch device tried to synchronize with this\n"
 "task file, but the protocol negotiation failed. Please file a\n"
 "bug report."
 msgstr ""
 
-#: taskcoachlib/gui/mainwindow.py:307 taskcoachlib/iphone/protocol.py:481
+#: taskcoachlib/gui/mainwindow.py:315 taskcoachlib/iphone/protocol.py:481
 #: taskcoachlib/widgets/draganddrop.py:108
 #: taskcoachlib/widgets/draganddrop.py:110
 #: taskcoachlib/widgets/draganddrop.py:143
@@ -3517,6 +3520,12 @@ msgstr "Kefridioù: %d diuzet, %d gwelus, %d en holl"
 #: taskcoachlib/gui/viewer/task.py:35
 msgid "Status: %d overdue, %d inactive, %d completed"
 msgstr ""
+
+#: taskcoachlib/gui/viewer/task.py:54 taskcoachlib/help/__init__.py:68
+#: taskcoachlib/help/__init__.py:129
+#: taskcoachlib/widgets/calendarconfig.py:107
+msgid "Tasks"
+msgstr "Kefridioù"
 
 #: taskcoachlib/gui/viewer/task.py:262
 msgid "Timeline"
@@ -5354,10 +5363,6 @@ msgstr ""
 msgid "Sending GUID: %s"
 msgstr ""
 
-#: taskcoachlib/mailer/__init__.py:67
-msgid "Untitled e-mail"
-msgstr "Postel hep titl"
-
 #: taskcoachlib/mailer/macmail.py:49
 msgid "Mail.app message"
 msgstr ""
@@ -5388,24 +5393,32 @@ msgid ""
 msgstr ""
 
 #: taskcoachlib/mailer/thunderbird.py:238
+#: taskcoachlib/mailer/thunderbird.py:351
 msgid "Unrecognized URL scheme: \"%s\""
 msgstr ""
 
-#: taskcoachlib/mailer/thunderbird.py:295
+#: taskcoachlib/mailer/thunderbird.py:291
+msgid ""
+"Could not open an IMAP connection to %(server)s:%(port)s\n"
+"to retrieve Thunderbird email message:\n"
+"%(error)s"
+msgstr ""
+
+#: taskcoachlib/mailer/thunderbird.py:299
 msgid "Please enter password for user %(user)s on %(server)s:%(port)d"
 msgstr "Bizskrivit ger-tremen %(user)s e %(server)s:%(port)d mar plij"
 
-#: taskcoachlib/mailer/thunderbird.py:313
+#: taskcoachlib/mailer/thunderbird.py:317
 msgid "Login failed (%s). Please try again."
 msgstr ""
 
-#: taskcoachlib/mailer/thunderbird.py:326
+#: taskcoachlib/mailer/thunderbird.py:330
 msgid ""
 "Could not select inbox \"%s\"\n"
 "(%s)"
 msgstr ""
 
-#: taskcoachlib/mailer/thunderbird.py:331
+#: taskcoachlib/mailer/thunderbird.py:335
 msgid "No such mail: %d"
 msgstr ""
 
@@ -5517,7 +5530,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: taskcoachlib/syncml/sync.py:203
+#: taskcoachlib/syncml/sync.py:201
 msgid ""
 "%d items added.\n"
 "%d items updated.\n"
@@ -5527,13 +5540,13 @@ msgstr ""
 "%d elfenn hizivaet.\n"
 "%d elfenn dilamet."
 
-#: taskcoachlib/syncml/sync.py:209
+#: taskcoachlib/syncml/sync.py:207
 msgid ""
 "An error occurred in the synchronization.\n"
 "Error code: %d; message: %s"
 msgstr ""
 
-#: taskcoachlib/syncml/sync.py:214
+#: taskcoachlib/syncml/sync.py:212
 msgid "You must first edit your SyncML Settings, in Edit/SyncML preferences."
 msgstr ""
 
@@ -5766,707 +5779,8 @@ msgstr ""
 msgid "Error opening URL"
 msgstr ""
 
-#~ msgid "Edit attachment..."
-#~ msgstr "Aozañ ar restr stag..."
-
-#~ msgid "Edit the selected attachments"
-#~ msgstr "Aozañ ar restroù stag diuzet"
-
-#~ msgid "Delete attachment"
-#~ msgstr "Dilemel ar restr stag"
-
-#~ msgid "Delete the selected attachments"
-#~ msgstr "Dilemel ar restroù stag diuzet"
-
-#~ msgid "New category..."
-#~ msgstr "Rummad nevez..."
-
-#~ msgid "Edit category..."
-#~ msgstr "Aozañ ar rummad..."
-
-#~ msgid "Edit the selected categories"
-#~ msgstr "Aozañ ar rummadoù diuzet"
-
-#~ msgid "Delete category"
-#~ msgstr "Dilemel ar rummad"
-
-#~ msgid "Delete the selected categories"
-#~ msgstr "Dilemel ar rummadoù diuzet"
-
-#~ msgid "New subcategory..."
-#~ msgstr "Isrummad nevez..."
-
-#~ msgid "Insert a new subcategory"
-#~ msgstr "Enlakaat un isrummad nevez"
-
-#~ msgid "&Edit effort..."
-#~ msgstr "&Aozañ ar striv..."
-
-#~ msgid "Edit the selected effort period(s)"
-#~ msgstr "Aozañ ar mare(où) striv diuzet"
-
-#~ msgid "&Delete effort"
-#~ msgstr "&Dilemel ar striv"
-
-#~ msgid "Delete the selected effort period(s)"
-#~ msgstr "Dilemel ar mare(où) striv diuzet"
-
-#~ msgid "New note..."
-#~ msgstr "Notenn nevez..."
-
-#~ msgid "Edit note..."
-#~ msgstr "Aozañ an notenn..."
-
-#~ msgid "Edit the selected notes"
-#~ msgstr "Aozañ an notennoù diuzet"
-
-#~ msgid "Delete note"
-#~ msgstr "Dilemel an notenn"
-
-#~ msgid "Delete the selected notes"
-#~ msgstr "Dilemel an notennoù diuzet"
-
-#~ msgid "New subnote..."
-#~ msgstr "Isnotenn nevez..."
-
-#~ msgid "Insert a new subnote"
-#~ msgstr "Enlakaat un isnotenn nevez"
-
-#~ msgid "&Edit task..."
-#~ msgstr "&Aozañ ar gefridi..."
-
-#~ msgid "Delete the selected task(s)"
-#~ msgstr "Dilemel ar gefridi(où) diuzet"
-
-#~ msgid "Insert a new subtask into the selected task"
-#~ msgstr "Enlakaat un iskefridi nevez er gefridi diuzet"
-
-#~ msgid "Colors"
-#~ msgstr "Livioù"
-
-#~ msgid "Click this button to change the color of active tasks"
-#~ msgstr "Klikañ war an afell-mañ da gemm liv ar c'hefridioù vev"
-
-#~ msgid "Click this button to change the color of inactive tasks"
-#~ msgstr "Klikañ war an afell-mañ da gemm liv ar c'hefridioù varv"
-
-#~ msgid "Click this button to change the color of completed tasks"
-#~ msgstr "Klikañ war an afell-mañ da gemm liv ar c'hefridioù beurechu"
-
-#~ msgid "Click this button to change the color of over due tasks"
-#~ msgstr "Klikañ war an afell-mañ da gemm liv ar c'hefridioù dreist an termen"
-
 #~ msgid "Task behavior"
 #~ msgstr "Emzalc'h ar gefridi"
 
-#~ msgid "Save as..."
-#~ msgstr "Enrollañ e..."
-
-#~ msgid "Save as template"
-#~ msgstr "Enrollañ evel ur patrom"
-
-#~ msgid "Open template..."
-#~ msgstr "Digeriñ ur patrom..."
-
-#~ msgid "Export as HTML..."
-#~ msgstr "Ezporzhiañ evel HTML..."
-
-#~ msgid "Export as CSV..."
-#~ msgstr "Ezporzhiañ evel CSV..."
-
-#~ msgid "Export as iCalendar..."
-#~ msgstr "Ezporzhiañ evel iCalendar..."
-
-#~ msgid "Eff&ort"
-#~ msgstr "&Striv"
-
-#~ msgid "Export the current view as HTML file"
-#~ msgstr "Ezporzhiañ ar gwel red en ur restr HTML"
-
-#~ msgid "Export the current view in Comma Separated Values (CSV) format"
-#~ msgstr "Ezporzhiañ ar gwel red e stumm Comma Separated Values (CVS)"
-
-#~ msgid "&Clear all filters"
-#~ msgstr "&Goullonderiñ an holl siloù"
-
-#~ msgid "Mail the task, using your default mailer"
-#~ msgstr "Postelañ ar gefridi, dre ho posteler dre ziouer"
-
-#~ msgid "Add &note"
-#~ msgstr "Ouzhpennañ un &notenn"
-
-#~ msgid "&Add attachment"
-#~ msgstr "&Ouzhpennañ ur restr stag"
-
-#~ msgid "Browse for files to add as attachment to the selected task(s)"
-#~ msgstr ""
-#~ "Furchal da gavout restroù da vezañ ouzhpennet d'ar g(c'h)efridi(où) diuzet"
-
-#~ msgid "Browse for files to add as attachment to the selected categories"
-#~ msgstr "Furchal da gavout restroù da vezañ ouzhpennet d'ar rummad(où) diuzet"
-
-#~ msgid "Browse for files to add as attachment to the selected note(s)"
-#~ msgstr "Furchal da gaout restroù da vezañ ouzhpennet d'an notenn(où) diuzet"
-
-#~ msgid "&Open all attachments"
-#~ msgstr "&Digeriñ an holl restroù stag"
-
-#~ msgid "Open all attachments of the selected task(s)"
-#~ msgstr "&Digeriñ holl restroù stag ar gefridi(où) diuzet"
-
-#~ msgid "Open all attachments of the selected categories"
-#~ msgstr "Digeriñ holl restroù stag ar rummadoù diuzet"
-
-#~ msgid "Open all attachments of the selected note(s)"
-#~ msgstr "Digeriñ holl restroù stag an notenn(où) diuzet"
-
-#~ msgid "St&op tracking effort"
-#~ msgstr "&Paouez an heuliañ striv"
-
-#~ msgid "Help: About %s"
-#~ msgstr "Skoazell: Diwar-benn %s"
-
-#~ msgid "Help: %s license"
-#~ msgstr "Skoazell: aotre %s"
-
-#~ msgid "Show only tasks &due before end of"
-#~ msgstr "Diskouez hepken ar c'hefridioù &dleet a-raok dibenn"
-
-#~ msgid "&Unlimited"
-#~ msgstr "&Didermen"
-
-#~ msgid "Show all tasks"
-#~ msgstr "Diskwel an holl gefridioù"
-
-#~ msgid "Only show tasks due today"
-#~ msgstr "Diskwel ar c'hefridioù dleet hiziv hepken"
-
-#~ msgid "T&omorrow"
-#~ msgstr "&Warc'hoazh"
-
-#~ msgid "Only show tasks due today and tomorrow"
-#~ msgstr "Diskwel ar c'hefridioù dleet hiziv ha warc'hoazh hepken"
-
-#~ msgid "Wo&rkweek"
-#~ msgstr "&Sizhunvezhiad labour"
-
-#~ msgid "Only show tasks due this work week (i.e. before Friday)"
-#~ msgstr ""
-#~ "Diskwel ar c'hefridioù dleet er sizhunvezhiad labour-mañ hepken (da lâret eo "
-#~ "a-raok ar gwener)"
-
-#~ msgid "&Week"
-#~ msgstr "&Sizhunvezh"
-
-#~ msgid "Only show tasks due this week (i.e. before Sunday)"
-#~ msgstr "Diskwel ar gefridi dleet er sizhun-mañ (da lâret eo a-raok disadorn)"
-
-#~ msgid "&Month"
-#~ msgstr "&Mizvezh"
-
-#~ msgid "Only show tasks due this month"
-#~ msgstr "Diskwel ar c'hefridioù dleet er miz-mañ hepken"
-
-#~ msgid "&Year"
-#~ msgstr "&Bloavezh"
-
-#~ msgid "Only show tasks due this year"
-#~ msgstr "Diskwel ar c'hefridioù dleet er bloaz-mañ hepken"
-
-#~ msgid "Status: %d over due, %d inactive, %d completed"
-#~ msgstr "Stad: %d dreist an termen, %d marv, %d peurechu"
-
-#~ msgid ""
-#~ "%(name)s has a mailinglist where you can discuss usage of %(name)s with "
-#~ "fellow users, discuss and request features and complain about bugs. Go to "
-#~ "%(url)s and join today!"
-#~ msgstr ""
-#~ "%(name)s en deus ur roll skignañ e-lec'h ma c'hellit eskemm gant implijerien "
-#~ "boas diwar-benn implij %(name)s, kaozeal ha goulenn keweriusteroù ha klemm "
-#~ "diwar-benn bogoù. Kit da %(url)s hag emellit hiziv!"
-
-#~ msgid "Edit effort"
-#~ msgstr "Aozañ ar striv"
-
-#~ msgid "New effort"
-#~ msgstr "Striv nevez"
-
-#~ msgid "Paste into task"
-#~ msgstr "Pegañ er gefridi"
-
-#~ msgid "Mark completed"
-#~ msgstr "Merkañ evel peurechu"
-
-#~ msgid "For this task including all subtasks"
-#~ msgstr "Evit ar gefridi-mañ hag an holl iskefridioù enni"
-
-#~ msgid "For this task"
-#~ msgstr "Evit ar gefridi-mañ"
-
-#~ msgid "Maximum number of recent files to remember"
-#~ msgstr "Niver uhelañ a restroù nevez da zelc'her soñj enno"
-
-#~ msgid "Behavior"
-#~ msgstr "Emzalc'h"
-
-#~ msgid "Match case"
-#~ msgstr "Teuler evezh ouzh ar c'hef"
-
-#~ msgid "Exported %(nrtasks)d tasks to %(filename)s"
-#~ msgstr "%(nrtasks)d ezporzhiet da %(filename)s"
-
-#~ msgid "%d tasks due today"
-#~ msgstr "%d (g)kefridi dleet hiziv"
-
-#~ msgid "Select unselected items and unselect selected items"
-#~ msgstr "Diuzañ an elfennoù ezdiuzet hag ezdiuzañ an elfennoù diuzet"
-
-#~ msgid "Paste item(s) from the clipboard into the selected task"
-#~ msgstr "Pegañ (un) elfenn(où) eus ar golver d'ar gefridi diuzet"
-
-#~ msgid "Preferences..."
-#~ msgstr "Penndibaboù..."
-
-#~ msgid "E&xpand"
-#~ msgstr "&Digeriñ ar wezenn"
-
-#~ msgid "Edit the selected task"
-#~ msgstr "Aozañ ar gefridi diuzet"
-
-#~ msgid "&Active"
-#~ msgstr "&Bev"
-
-#~ msgid "&Inactive"
-#~ msgstr "&Marv"
-
-#~ msgid "&Completed"
-#~ msgstr "&Peurechu"
-
-#~ msgid ""
-#~ "Show/hide active tasks (tasks with a start date in the past and a due date "
-#~ "in the future)"
-#~ msgstr ""
-#~ "Diskwel/Kuzhat ar c'hefridioù vev (kefridioù gant o deiziad loc'hañ en amzer-"
-#~ "dremenet hag o deiziad dleet en dazont)"
-
-#~ msgid "Co&mpletion date"
-#~ msgstr "Deiziad &peurechu"
-
-#~ msgid "D&ays left"
-#~ msgstr "&Devezhioù a chom"
-
-#~ msgid "Show/hide days left column"
-#~ msgstr "Diskwel/Kuzhat bann an devezhioù a chom"
-
-#~ msgid "Show/hide tasks that are over budget"
-#~ msgstr "Diskwel/Kuzhat ar c'hefridioù a zo a-us d'ar budjed"
-
-#~ msgid "T&otal time spent"
-#~ msgstr "H&ollad an amzer implijet"
-
-#~ msgid "Total b&udget"
-#~ msgstr "Hollad ar b&udjed"
-
-#~ msgid ""
-#~ "Show/hide total time spent column (total time includes time spent on "
-#~ "subtasks)"
-#~ msgstr ""
-#~ "Diskwel/Kuzhat bann holladoù an amzerioù implijet (hollad an amzer a zo an "
-#~ "amzer implijet gant an iskefridioù ennañ)"
-
-#~ msgid ""
-#~ "Show/hide total budget column (total budget includes budget for subtasks)"
-#~ msgstr ""
-#~ "Diskwel/Kuzhat bann holladoù ar budjedoù (hollad ar budjed a zo budjed an "
-#~ "iskefridioù ennañ)"
-
-#~ msgid ""
-#~ "Show/hide total budget left column (total budget left includes budget left "
-#~ "for subtasks)"
-#~ msgstr ""
-#~ "Diskwel/Kuzhat bann hollad ar budjedoù hegerz (hollad ar budjedoù hegerz a "
-#~ "zo budjed hegerz an iskefridioù ennañ)"
-
-#~ msgid "&Total fixed fee"
-#~ msgstr "&Hollad an treziadoù"
-
-#~ msgid "O&verall priority"
-#~ msgstr "&Pennrenk"
-
-#~ msgid "Total budget l&eft"
-#~ msgstr "Hollad ar budjed hegerz"
-
-#~ msgid "Show/hide total fixed fee column"
-#~ msgstr "Diskwel/Kuzhat bann holladoù an treziadoù"
-
-#~ msgid "T&otal revenue"
-#~ msgstr "&Hollad ar gounidoù"
-
-#~ msgid "Sort case sensitive"
-#~ msgstr "Rummañ en ur deuler evezh ouzh ar c'hef"
-
-#~ msgid "All budget columns"
-#~ msgstr "An holl vannoù budjed"
-
-#~ msgid "All financial columns"
-#~ msgstr "An holl vannoù arc'hanterezh"
-
-#~ msgid "All date columns"
-#~ msgstr "Holl bannou an deiziadoù"
-
-#~ msgid "Sort tasks by total fixed fee"
-#~ msgstr "Rummañ ar c'hefridioù dre hollad an treziadoù"
-
-#~ msgid "Overall priority"
-#~ msgstr "Pennrenk"
-
-#~ msgid "Sort tasks by overall priority"
-#~ msgstr "Rummañ ar gefridioù dre bennrenk"
-
-#~ msgid "Sort tasks by total time spent"
-#~ msgstr "Rummañ ar gefridioù dre hollad an amzer implijet"
-
-#~ msgid "Sort tasks by total budget left"
-#~ msgstr "Rummañ ar c'hefridioù dre hollad ar budjedoù hegerz"
-
-#~ msgid "Total re&venue"
-#~ msgstr "Hollad ar &gounidoù"
-
-#~ msgid "Sort tasks by total revenue"
-#~ msgstr "Rummañ ar c'hefridioù dre hollad ar gounidoù"
-
-#~ msgid "Days left"
-#~ msgstr "Devezhioù a chom"
-
-#~ msgid "Total budget"
-#~ msgstr "Hollad ar budjed"
-
-#~ msgid "Mail task"
-#~ msgstr "Postelañ ar gefridi"
-
-#~ msgid "<h3><a name=\"effort\">Effort</a></h3>\n"
-#~ msgstr "<h3><a name=\"effort\">Striv</a></h3>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"taskstates\">Task states</a></h4>\n"
-#~ "\n"
-#~ "<p>Tasks always have exactly one of the following states:\n"
-#~ "<ul>\n"
-#~ "<li>Active: the start date is in the past and the due date in the "
-#~ "future;</li>\n"
-#~ "<li>Inactive: the start date is in the future, or</li>\n"
-#~ "<li>Completed: the task has been completed.</li>\n"
-#~ "</ul></p>\n"
-#~ "\n"
-#~ "<p>In addition, tasks can be referenced as:\n"
-#~ "<ul>\n"
-#~ "<li>Over due: the due date is in the past;</li>\n"
-#~ "<li>Due today: the due date is today;</li>\n"
-#~ "<li>Over budget: no buget left;</li>\n"
-#~ "<li>Under budget: still budget left;</li>\n"
-#~ "<li>No budget: the task has no budget.</li>\n"
-#~ "</ul></p>\n"
-#~ " "
-#~ msgstr ""
-#~ "<h4><a name=\"taskstates\">Stadoù ar c'hefridioù</a></h4>\n"
-#~ "\n"
-#~ "<p>Ar c'hefridioù a zo unan dres eus ar stadoù da heul ganto:\n"
-#~ "<ul>\n"
-#~ "<li>Bev: en amzer-dremenet emañ an deiziad loc'hañ hag en dazont an deiziad "
-#~ "dleet;</li>\n"
-#~ "<li>Marv: en dazont emañ an deiziad loc'hañ, pe</li>\n"
-#~ "<li>Peurechu: peurechuet eo bet ar gefridi.</li>\n"
-#~ "</ul></p>\n"
-#~ "\n"
-#~ "<p>war ar marc'had e c'hellont ar c'hefridioù bezañ meneget evel:\n"
-#~ "<ul>\n"
-#~ "<li>Dreist an termen: en amzer-dremenet emañ an deiziad dleet;</li>\n"
-#~ "<li>Dleet hiziv: hiziv eo an deiziad dleet;</li>\n"
-#~ "<li>A-us d'ar budjed: ne chom ket budjed hegerz ken;</li>\n"
-#~ "<li>A-is d'ar budjed: chom a ra budjed hegerz c'hoazh;</li>\n"
-#~ "<li>Divudjed: n'eus budjed ebet d'ar gefridi.</li>\n"
-#~ "</ul></p>\n"
-#~ " "
-
-#~ msgid ""
-#~ "<h4><a name=\"effortproperties\">Effort\n"
-#~ "properties</a></h4>\n"
-#~ "\n"
-#~ "<p>Effort records have the following properties you can change:\n"
-#~ "<ul>\n"
-#~ "<li>Task: the task the effort belongs to.</li>\n"
-#~ "<li>Start date/time: start date and time of the effort.</li>\n"
-#~ "<li>Stop date/time: stop date and time of the effort. This can be 'None' as "
-#~ "\n"
-#~ "long as you are still working on the task.</li>\n"
-#~ "<li>Description: a multi-line description of the effort.</li>\n"
-#~ "</ul></p>\n"
-#~ "\n"
-#~ "<p>The following properties are calculated from the properties above:\n"
-#~ "<ul>\n"
-#~ "<li>Time spent: how much time you have spent working on the task.</li>\n"
-#~ "<li>Total time spent: sum of time spent on the task and all subtasks, \n"
-#~ "recursively.</li>\n"
-#~ "<li>Revenue: money earned with the time spent.</li>\n"
-#~ "<li>Total revenue: money earned with the total time spent.</li>\n"
-#~ "</ul></p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"effortproperties\">Perzhioù ar striv</a></h4>\n"
-#~ "\n"
-#~ "<p>An enrolladurioù striv a zo ar perzhioù da heul a c'hellit kemm dezho:\n"
-#~ "<ul>\n"
-#~ "<li>Kefridi: ar gefridi a zo ar striv dezhi.</li>\n"
-#~ "<li>Loc'hañ deiziad/amzer: loc'hañ deiziad hag amzer ar striv.</li>\n"
-#~ "<li>Paouez deiziad/amzer: paouez deiziad hag amzer ar striv. 'hini ebet' a "
-#~ "c'hell bezañ se ma \n"
-#~ "emaoc'h o labourat war ar gefridi c'hoazh.</li>\n"
-#~ "<li>Deskrivadur: un deskrivadur lieslinenn eus ar striv.</li>\n"
-#~ "</ul></p>\n"
-#~ "\n"
-#~ "<p>Ar perzhioù da heul a vez jedet diouzh ar perzhioù a-us:\n"
-#~ "<ul>\n"
-#~ "<li>Amzer implijet: an amzer hoc'h eus implijet o labourat war ar "
-#~ "gefridi.</li>\n"
-#~ "<li>Hollad an amzerioù implijet: sammad an amzerioù implijet evit ar gefridi "
-#~ "hag he holl iskefridioù.</li>\n"
-#~ "<li>Gounid: arc'hant gounezet gant an amzer implijet.</li>\n"
-#~ "<li>Hollad ar gounidoù: arc'hant gounezet gant hollad an amzerioù "
-#~ "implijet.</li>\n"
-#~ "</ul></p>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"abouteffort\">About effort</a></h4>\n"
-#~ "\n"
-#~ "<p>Whenever you spent time on tasks, you can record the amount of time\n"
-#~ "spent by tracking effort. Select a task and invoke 'Start tracking effort' "
-#~ "in\n"
-#~ "the Effort menu or the context menu or via the 'Start tracking effort' "
-#~ "toolbar \n"
-#~ "button.</p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"abouteffort\">Diwar-benn striv</a></h4>\n"
-#~ "\n"
-#~ "<p>Pa emaoc'h oc'h implijout amzer war kefridioù e c'hallit enrollañ ar "
-#~ "sammad amzer implijet dre an heuliañ striv. Diuzit ur gefridi ha dibabit "
-#~ "'Loc'hañ an heuliañ striv' er\n"
-#~ "meuziad Striv pe er meuziad kemperzhel pe dre an afell barrenn ostilhoù "
-#~ "'Loc'hañ an heuliañ striv'.</p>\n"
-
-#~ msgid "<h3><a name=\"tasks\">Tasks</a></h3>\n"
-#~ msgstr "<h3><a name=\"tasks\">Kefridioù</a></h3>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"abouttasks\">About tasks</a></h4>\n"
-#~ " \n"
-#~ "<p>Tasks are the basic objects that you manipulate. Tasks can\n"
-#~ "represent anything from a simple little thing you have to do, like buying a "
-#~ "gift\n"
-#~ "for your loved one, to a complete project, consisting of different phases, "
-#~ "and\n"
-#~ "numerous activities.</p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"abouttasks\">Diwar-benn ar c'hefridioù</a></h4>\n"
-#~ " \n"
-#~ "<p>Ar c'hefridioù eo an draezennoù diazez a zo dornataet ganeoc'h. Ar "
-#~ "c'hefridioù a c'hell\n"
-#~ "ober evit n'eus forzh petra eus un dra vihan eeun ho peus da ober, evel "
-#~ "prenañ ur prof\n"
-#~ "d'ho karedig, betek ur raktres klok, c'hoarvezet e prantadoù disheñvel, hag\n"
-#~ "obererezhioù lies.</p>\n"
-
-#~ msgid "Click this button to change the color of tasks due today"
-#~ msgstr "Klikañ war an afell-mañ da gemm liv ar c'hefridioù dleet hiziv"
-
-#~ msgid "&New effort..."
-#~ msgstr "Striv &nevez..."
-
-#~ msgid "C&ollapse"
-#~ msgstr "&Serriñ ar wezenn"
-
-#~ msgid "&Over due"
-#~ msgstr "&Dreist an termen"
-
-#~ msgid "Over &budget"
-#~ msgstr "A-us d'ar budjed"
-
-#~ msgid "Total fi&xed fee"
-#~ msgstr "Hollad an &treziadoù"
-
-#~ msgid "Sort tasks by total budget"
-#~ msgstr "Rummañ ar c'hefridioù dre hollad ar budjed"
-
-#~ msgid "Total budget left"
-#~ msgstr "Hollad ar budjedoù hegerz"
-
-#~ msgid "Total fixed fee"
-#~ msgstr "Hollad an treziadoù"
-
-#~ msgid "Sort tasks by number of days left"
-#~ msgstr "Rummañ ar c'hefridioù dre niver a zevezhioù a chom"
-
-#~ msgid "&Delete task\tCtrl+DEL"
-#~ msgstr "&Dilemel ar gefridi\tCtrl+DEL"
-
-#~ msgid "Edit category"
-#~ msgstr "Aozañ ar rummad"
-
-#~ msgid "Drag and drop category"
-#~ msgstr "Riklañ-dilec'hiañ ar rummad"
-
-#~ msgid "Drag and drop note"
-#~ msgstr "Riklañ-dilec'hiañ an notenn"
-
-#~ msgid "Edit note"
-#~ msgstr "Aozañ an notenn"
-
-#~ msgid "Drag and drop task"
-#~ msgstr "Riklañ-dilec'hiañ ar gefridi"
-
-#~ msgid "Half an hour"
-#~ msgstr "Un hanter eur"
-
-#~ msgid "Fifteen minutes"
-#~ msgstr "Pemzek munutenn"
-
-#~ msgid "Five minutes"
-#~ msgstr "Pemp munutenn"
-
-#~ msgid "Ten minutes"
-#~ msgstr "Dek munutenn"
-
-#~ msgid "Exported %(nrtasks)d items to %(filename)s"
-#~ msgstr "%(nrtasks)d elfenn ezporzhiet da %(filename)s"
-
-#~ msgid "Collapse the selected items with subitems"
-#~ msgstr "&Serriñ gwezenn an elfennoù diuzet gant an iselfennoù"
-
-#~ msgid "Two hours"
-#~ msgstr "Div eur"
-
-#~ msgid "One hour"
-#~ msgstr "Un eur"
-
-#~ msgid "Export effort as &iCalendar..."
-#~ msgstr "Ezporzhiañ ar striv evel &iCalendar..."
-
-#~ msgid "Show/hide over due tasks (tasks with a due date in the past)"
-#~ msgstr ""
-#~ "Diskwel/Kuzhat ar c'hefridioù dreist an termen (kefridioù gant o deiziad "
-#~ "dleet en amzer-dremenet)"
-
-#~ msgid "one task due today"
-#~ msgstr "ur gefridi dleet hiziv"
-
-#~ msgid "Delete task"
-#~ msgstr "Dilemel ar gefridi"
-
-#~ msgid "Use this color:"
-#~ msgstr "Ober gant al liv-mañ"
-
-#~ msgid "Color"
-#~ msgstr "Liv"
-
-#~ msgid "P&aste into task\tShift+Ctrl+V"
-#~ msgstr "Peg&añ er gefridi\tShift+Ctrl+V"
-
-#~ msgid "Print...\tCtrl+P"
-#~ msgstr "Moullañ...\tCtrl+P"
-
-#~ msgid "&Invert selection"
-#~ msgstr "E&ilpennañ an diuzadenn"
-
-#~ msgid "Expand the selected item(s)"
-#~ msgstr "Digeriñ gwezenn an elfenn(où) diuzet"
-
-#~ msgid "Maximum number of recurrences"
-#~ msgstr "Brasañ niver a rekurañsoù"
-
-#~ msgid "Increase priority\tCtrl+I"
-#~ msgstr "Kreskiñ ar briorelezh\tCtrl+I"
-
-#~ msgid "Minimize priority\tShift+Ctrl+D"
-#~ msgstr "Minimizañ ar briorelezh\tShift+Ctrl+D"
-
-#~ msgid "Maximize priority\tShift+Ctrl+I"
-#~ msgstr "Maksimizañ ar briorelezh\tShift+Ctrl+I"
-
-#~ msgid "Sort by category"
-#~ msgstr "Rummañ dre rummad"
-
-#~ msgid "Export effort in iCalendar (*.ics) format"
-#~ msgstr "Ezporzhiañ ar striv e stumm iCalendar (*.ics)"
-
-#~ msgid "&Hide tasks that are"
-#~ msgstr "&Kuzhat ar c'hefridioù a zo"
-
-#~ msgid "<h3><a name=\"categories\">Categories</a></h3>\n"
-#~ msgstr "<h3><a name=\"categories\">Rummadoù</a></h3>\n"
-
-#~ msgid "Wrong password. Please try again."
-#~ msgstr "Ger-tremen direizh. Klaskit adarre mar plij."
-
-#~ msgid "Include sub items"
-#~ msgstr "Lakaat an iselfennoù e-barzh"
-
-#~ msgid "Decrease priority\tCtrl+D"
-#~ msgstr "Digreskiñ ar briorelezh\tCtrl+D"
-
-#~ msgid "Mail note"
-#~ msgstr "Kas an notenn der bostel"
-
-#~ msgid "Edit attachment"
-#~ msgstr "Aozañ ar restr stag"
-
-#~ msgid "Add note to attachment"
-#~ msgstr "Ouzhpennañ un notenn d'ar restr stag"
-
-#~ msgid "Add note to category"
-#~ msgstr "Ouzhpennañ un notenn d'ar rummad"
-
-#~ msgid "Add note to task"
-#~ msgstr "Ouzhpennañ un notenn d'ar gefridi"
-
-#~ msgid "For this note"
-#~ msgstr "Evit an notenn-mañ"
-
-#~ msgid "For this note including all subnotes"
-#~ msgstr "Evit an notenn-mañ hag an holl isnotennoù"
-
-#~ msgid "VCalendar files (*.vcal)|*.vcal|All files (*.*)|*"
-#~ msgstr "Restroù VCalendar (*.vcal)|*.vcal|An holl restroù (*.*)|*"
-
-#~ msgid "Export as VCalendar..."
-#~ msgstr "Ezporzhiañ evel VCalendar..."
-
-#~ msgid "Export as &VCalendar..."
-#~ msgstr "Ezporzhañ evel &VCalendar..."
-
-#~ msgid "SyncML preferences..."
-#~ msgstr "Penndibaboù SyncML..."
-
-#~ msgid "New task with selected categories..."
-#~ msgstr "Kefridi nevez gant ar rummadoù diuzet..."
-
-#~ msgid "Add a note to the selected attachment(s)"
-#~ msgstr "Ouzhpennañ un notenn d'ar restr(où) stag diuzet"
-
-#~ msgid "Add a note to the selected category(ies)"
-#~ msgstr "Ouzhpennañ un notenn d'ar rummad(où) diuzet"
-
-#~ msgid "Add a note to the selected task(s)"
-#~ msgstr "Ouzhpennañ un notenn d'ar (c'h)gefridi(où) diuzet"
-
-#~ msgid "New note with selected categories..."
-#~ msgstr "Notenn nevez gant ar rummadoù diuzet..."
-
-#~ msgid "New task &from template"
-#~ msgstr "Kefridi nevez &diwar ur patrom"
-
-#~ msgid "Add template"
-#~ msgstr "Ouzhpennañ ur gefridi"
-
-#~ msgid "Add a new template from a template file\n"
-#~ msgstr "Ouzhpennañ ur patrom nevez diwar ur restr patrom\n"
-
-#~ msgid "<h3><a name=\"templates\">Task templates</a></h3>\n"
-#~ msgstr "<h3><a name=\"templates\">Patromoù kefridioù</a></h3>\n"
+#~ msgid "Untitled e-mail"
+#~ msgstr "Postel hep titl"

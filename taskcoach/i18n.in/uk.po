@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-07-28 23:01+0000\n"
+"POT-Creation-Date: 2011-08-04 23:21+0000\n"
 "PO-Revision-Date: 2010-11-28 19:09+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-04 20:05+0000\n"
-"X-Generator: Launchpad (build 13604)\n"
+"X-Launchpad-Export-Date: 2011-08-15 21:29+0000\n"
+"X-Generator: Launchpad (build 13687)\n"
 
 #: taskcoachlib/application/application.py:242
 msgid ""
@@ -26,7 +26,7 @@ msgstr ""
 "%s"
 
 #: taskcoachlib/application/application.py:243
-#: taskcoachlib/gui/iocontroller.py:57
+#: taskcoachlib/gui/iocontroller.py:58
 msgid "%s file error"
 msgstr "Файл %s пошкоджено"
 
@@ -390,28 +390,28 @@ msgstr "Редагування бюджетів"
 msgid "Change budget of \"%s\""
 msgstr "Змінити бюджет \"%s\""
 
-#: taskcoachlib/config/settings.py:195
+#: taskcoachlib/config/settings.py:221
 msgid "Error while reading the %s-%s setting from %s.ini."
 msgstr ""
 
-#: taskcoachlib/config/settings.py:196
+#: taskcoachlib/config/settings.py:222
 msgid "The value is: %s"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:197
+#: taskcoachlib/config/settings.py:223
 msgid "The error is: %s"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:198
+#: taskcoachlib/config/settings.py:224
 msgid ""
 "%s will use the default value for the setting and should proceed normally."
 msgstr ""
 
-#: taskcoachlib/config/settings.py:199
+#: taskcoachlib/config/settings.py:225
 msgid "Settings error"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:219
+#: taskcoachlib/config/settings.py:245
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
@@ -419,7 +419,7 @@ msgstr ""
 "Трапилась помилка під час запису %s.ini:\n"
 "%s\n"
 
-#: taskcoachlib/config/settings.py:220
+#: taskcoachlib/config/settings.py:246
 msgid "Save error"
 msgstr "Ой-йой, не зміг зберегти"
 
@@ -944,12 +944,12 @@ msgid "Appearance"
 msgstr "Оформлення"
 
 #: taskcoachlib/gui/dialog/editor.py:237
-#: taskcoachlib/gui/dialog/preferences.py:109
+#: taskcoachlib/gui/dialog/preferences.py:118
 msgid "Foreground color"
 msgstr "Колір тексту"
 
 #: taskcoachlib/gui/dialog/editor.py:240
-#: taskcoachlib/gui/dialog/preferences.py:109
+#: taskcoachlib/gui/dialog/preferences.py:118
 msgid "Background color"
 msgstr "Колір фону"
 
@@ -962,12 +962,12 @@ msgid "Use font:"
 msgstr "Використати шрифт:"
 
 #: taskcoachlib/gui/dialog/editor.py:293
-#: taskcoachlib/gui/dialog/preferences.py:110
+#: taskcoachlib/gui/dialog/preferences.py:119
 msgid "Font"
 msgstr "Шрифт"
 
 #: taskcoachlib/gui/dialog/editor.py:319
-#: taskcoachlib/gui/dialog/preferences.py:110
+#: taskcoachlib/gui/dialog/preferences.py:119
 msgid "Icon"
 msgstr "Значок"
 
@@ -1165,10 +1165,8 @@ msgstr "Категорії"
 msgid "Attachments"
 msgstr "Вкладені файли"
 
-#: taskcoachlib/gui/dialog/editor.py:877
-#: taskcoachlib/gui/dialog/syncpreferences.py:135
-#: taskcoachlib/gui/viewer/note.py:37 taskcoachlib/help/__init__.py:85
-#: taskcoachlib/help/__init__.py:268
+#: taskcoachlib/gui/dialog/editor.py:877 taskcoachlib/gui/viewer/note.py:37
+#: taskcoachlib/help/__init__.py:85 taskcoachlib/help/__init__.py:268
 msgid "Notes"
 msgstr "Примітки"
 
@@ -1202,15 +1200,15 @@ msgstr "Зупинити"
 msgid "Export only the selected items"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:85 taskcoachlib/gui/iocontroller.py:294
+#: taskcoachlib/gui/dialog/export.py:85 taskcoachlib/gui/iocontroller.py:302
 msgid "Export as CSV"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:90 taskcoachlib/gui/iocontroller.py:299
+#: taskcoachlib/gui/dialog/export.py:90 taskcoachlib/gui/iocontroller.py:307
 msgid "Export as iCalendar"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:101 taskcoachlib/gui/iocontroller.py:288
+#: taskcoachlib/gui/dialog/export.py:101 taskcoachlib/gui/iocontroller.py:296
 msgid "Export as HTML"
 msgstr ""
 
@@ -1304,7 +1302,7 @@ msgstr ""
 msgid "OK"
 msgstr "Гаразд"
 
-#: taskcoachlib/gui/dialog/preferences.py:207
+#: taskcoachlib/gui/dialog/preferences.py:227
 msgid ""
 "This setting will take effect\n"
 "after you restart %s"
@@ -1312,15 +1310,15 @@ msgstr ""
 "Ця опція застосується\n"
 "лише після перезапуску %s"
 
-#: taskcoachlib/gui/dialog/preferences.py:227
+#: taskcoachlib/gui/dialog/preferences.py:248
 msgid "Files"
 msgstr "Файли"
 
-#: taskcoachlib/gui/dialog/preferences.py:233
+#: taskcoachlib/gui/dialog/preferences.py:254
 msgid "Auto save after every change"
 msgstr "Автоматично зберігати після кожної зміни"
 
-#: taskcoachlib/gui/dialog/preferences.py:235
+#: taskcoachlib/gui/dialog/preferences.py:256
 msgid ""
 "Create a backup copy before\n"
 "overwriting a %s file"
@@ -1328,7 +1326,7 @@ msgstr ""
 "Створити резервну копію перед\n"
 "перезаписом файла %s"
 
-#: taskcoachlib/gui/dialog/preferences.py:237
+#: taskcoachlib/gui/dialog/preferences.py:258
 msgid ""
 "Save settings (%s.ini) in the same\n"
 "directory as the program"
@@ -1336,7 +1334,7 @@ msgstr ""
 "Зберегти файл налаштувань (%s.ini)\n"
 "в тій самій теці, що й програма"
 
-#: taskcoachlib/gui/dialog/preferences.py:239
+#: taskcoachlib/gui/dialog/preferences.py:260
 msgid ""
 "(For running %s\n"
 "from a removable medium)"
@@ -1344,11 +1342,11 @@ msgstr ""
 "(Для використання %s\n"
 "на змінних носіях)"
 
-#: taskcoachlib/gui/dialog/preferences.py:240
+#: taskcoachlib/gui/dialog/preferences.py:261
 msgid "Attachment base directory"
 msgstr "Базовий каталог для вкладень"
 
-#: taskcoachlib/gui/dialog/preferences.py:241
+#: taskcoachlib/gui/dialog/preferences.py:262
 msgid ""
 "When adding an attachment, try to make\n"
 "its path relative to this one."
@@ -1356,51 +1354,51 @@ msgstr ""
 "При додаванні вкладень, постарайтесь щоб\n"
 "шлях до нього був відносним до цього."
 
-#: taskcoachlib/gui/dialog/preferences.py:247
+#: taskcoachlib/gui/dialog/preferences.py:268
 msgid "Window behavior"
 msgstr "Поведінка вікна"
 
-#: taskcoachlib/gui/dialog/preferences.py:253
+#: taskcoachlib/gui/dialog/preferences.py:274
 msgid "Show splash screen on startup"
 msgstr "Показувати заставку під час запуску"
 
-#: taskcoachlib/gui/dialog/preferences.py:255
+#: taskcoachlib/gui/dialog/preferences.py:276
 msgid "Show tips window on startup"
 msgstr "Показувати підказку під час запуску"
 
-#: taskcoachlib/gui/dialog/preferences.py:257
+#: taskcoachlib/gui/dialog/preferences.py:278
 msgid "Start with the main window iconized"
 msgstr "Запускати мінімізованим"
 
-#: taskcoachlib/gui/dialog/preferences.py:258
+#: taskcoachlib/gui/dialog/preferences.py:279
 msgid "Always"
 msgstr "Завжди"
 
-#: taskcoachlib/gui/dialog/preferences.py:258
+#: taskcoachlib/gui/dialog/preferences.py:279
 msgid "Never"
 msgstr "Ніколи"
 
-#: taskcoachlib/gui/dialog/preferences.py:260
+#: taskcoachlib/gui/dialog/preferences.py:281
 msgid "If it was iconized last session"
 msgstr "Так як останній раз"
 
-#: taskcoachlib/gui/dialog/preferences.py:262
+#: taskcoachlib/gui/dialog/preferences.py:283
 msgid "Check for new version of %(name)s on startup"
 msgstr "Перевіряти нову версію %(name)s під час запуску"
 
-#: taskcoachlib/gui/dialog/preferences.py:264
+#: taskcoachlib/gui/dialog/preferences.py:285
 msgid "Hide main window when iconized"
 msgstr "Ховати головне вікно при згортанні"
 
-#: taskcoachlib/gui/dialog/preferences.py:266
+#: taskcoachlib/gui/dialog/preferences.py:287
 msgid "Minimize main window when closed"
 msgstr "Згортати в трей замість закриття"
 
-#: taskcoachlib/gui/dialog/preferences.py:268
+#: taskcoachlib/gui/dialog/preferences.py:289
 msgid "Make clock in the task bar tick when tracking effort"
 msgstr "Показувати годинник в треї під час відслідковування зусилля"
 
-#: taskcoachlib/gui/dialog/preferences.py:270
+#: taskcoachlib/gui/dialog/preferences.py:291
 msgid ""
 "Show a popup with the description of an item\n"
 "when hovering over it"
@@ -1408,16 +1406,16 @@ msgstr ""
 "Показувати підказку, з описом при\n"
 "наведені на елемент"
 
-#: taskcoachlib/gui/dialog/preferences.py:276
-#: taskcoachlib/gui/dialog/preferences.py:336
+#: taskcoachlib/gui/dialog/preferences.py:297
+#: taskcoachlib/gui/dialog/preferences.py:357
 msgid "Language"
 msgstr "Мова"
 
-#: taskcoachlib/gui/dialog/preferences.py:282
+#: taskcoachlib/gui/dialog/preferences.py:303
 msgid "Let the system determine the language"
 msgstr "Нехай система визначить мову"
 
-#: taskcoachlib/gui/dialog/preferences.py:342
+#: taskcoachlib/gui/dialog/preferences.py:363
 msgid ""
 "If your language is not available, or the translation needs \n"
 "improving, please consider helping. See:"
@@ -1426,63 +1424,63 @@ msgstr ""
 "або потребує вдосконалення, ви\n"
 "можете допомогти в цьому. Дивіться:"
 
-#: taskcoachlib/gui/dialog/preferences.py:349
+#: taskcoachlib/gui/dialog/preferences.py:370
 msgid "Language not found?"
 msgstr "Мову не знайдено ?"
 
-#: taskcoachlib/gui/dialog/preferences.py:359
+#: taskcoachlib/gui/dialog/preferences.py:380
 msgid "Task appearance"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:366
+#: taskcoachlib/gui/dialog/preferences.py:387
 msgid "Active tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:367
+#: taskcoachlib/gui/dialog/preferences.py:388
 msgid "Inactive tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:368
+#: taskcoachlib/gui/dialog/preferences.py:389
 msgid "Completed tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:369
+#: taskcoachlib/gui/dialog/preferences.py:390
 msgid "Overdue tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:370
+#: taskcoachlib/gui/dialog/preferences.py:391
 msgid "Tasks due soon"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:381
+#: taskcoachlib/gui/dialog/preferences.py:402
 msgid "Features"
 msgstr "Можливості"
 
-#: taskcoachlib/gui/dialog/preferences.py:387
+#: taskcoachlib/gui/dialog/preferences.py:408
 msgid "Allow for tracking effort"
 msgstr "Дозволити відслідковувати зусилля"
 
-#: taskcoachlib/gui/dialog/preferences.py:388
+#: taskcoachlib/gui/dialog/preferences.py:409
 msgid "Allow for taking notes"
 msgstr "Дозволити примітки"
 
-#: taskcoachlib/gui/dialog/preferences.py:395
+#: taskcoachlib/gui/dialog/preferences.py:416
 msgid "Enable SyncML"
 msgstr "Ввімкнути SyncML"
 
-#: taskcoachlib/gui/dialog/preferences.py:397
+#: taskcoachlib/gui/dialog/preferences.py:418
 msgid "Enable iPhone synchronization"
 msgstr "Ввімкнуит синхронізацію з iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:400
+#: taskcoachlib/gui/dialog/preferences.py:421
 msgid "Hour of start of work day"
 msgstr "Година початку робочого дня"
 
-#: taskcoachlib/gui/dialog/preferences.py:402
+#: taskcoachlib/gui/dialog/preferences.py:423
 msgid "Hour of end of work day"
 msgstr "Годиа закінчення робочого дня"
 
-#: taskcoachlib/gui/dialog/preferences.py:404
+#: taskcoachlib/gui/dialog/preferences.py:425
 msgid ""
 "Use gradients in calendar views.\n"
 "This may slow down Task Coach."
@@ -1490,148 +1488,148 @@ msgstr ""
 "Показувати градієнт при перегляді календаря.\n"
 "Це може сповільнити роботу Task Coach."
 
-#: taskcoachlib/gui/dialog/preferences.py:407
+#: taskcoachlib/gui/dialog/preferences.py:428
 msgid "Minutes between task start/end times"
 msgstr "Хвилин між початком/закінченням завдання"
 
-#: taskcoachlib/gui/dialog/preferences.py:414
+#: taskcoachlib/gui/dialog/preferences.py:435
 msgid "Task dates"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:420
+#: taskcoachlib/gui/dialog/preferences.py:441
 msgid "Mark parent task completed when all children are completed"
 msgstr ""
 "Помітити батьківське завдання як виконане після виконання всіх дочірніх"
 
-#: taskcoachlib/gui/dialog/preferences.py:422
+#: taskcoachlib/gui/dialog/preferences.py:443
 msgid "Number of hours that tasks are considered to be 'due soon'"
 msgstr "Кількість годин, які означають, що завдання \"скоро завершаться\""
 
-#: taskcoachlib/gui/dialog/preferences.py:424
+#: taskcoachlib/gui/dialog/preferences.py:445
 msgid "Nothing"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:425
+#: taskcoachlib/gui/dialog/preferences.py:446
 msgid "Changing the start date changes the due date"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:426
+#: taskcoachlib/gui/dialog/preferences.py:447
 msgid "Changing the due date changes the start date"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:428
+#: taskcoachlib/gui/dialog/preferences.py:449
 msgid "What to do with start and due date if the other one is changed"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:431
+#: taskcoachlib/gui/dialog/preferences.py:452
 msgid "Preset"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:432
+#: taskcoachlib/gui/dialog/preferences.py:453
 msgid "Propose"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:433
+#: taskcoachlib/gui/dialog/preferences.py:454
 msgid "Today"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:434
+#: taskcoachlib/gui/dialog/preferences.py:455
 msgid "Tomorrow"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:435
+#: taskcoachlib/gui/dialog/preferences.py:456
 msgid "Day after tomorrow"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:436
+#: taskcoachlib/gui/dialog/preferences.py:457
 msgid "Next Friday"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:437
+#: taskcoachlib/gui/dialog/preferences.py:458
 msgid "Next Monday"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:438
+#: taskcoachlib/gui/dialog/preferences.py:459
 msgid "Start of day"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:439
+#: taskcoachlib/gui/dialog/preferences.py:460
 msgid "Start of working day"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:440
+#: taskcoachlib/gui/dialog/preferences.py:461
 msgid "Current time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:441
+#: taskcoachlib/gui/dialog/preferences.py:462
 msgid "End of working day"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:442
+#: taskcoachlib/gui/dialog/preferences.py:463
 msgid "End of day"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:444
+#: taskcoachlib/gui/dialog/preferences.py:465
 msgid "Default start date and time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:447
+#: taskcoachlib/gui/dialog/preferences.py:468
 msgid "Default due date and time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:450
+#: taskcoachlib/gui/dialog/preferences.py:471
 msgid "Default completion date and time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:453
+#: taskcoachlib/gui/dialog/preferences.py:474
 msgid "Default reminder date and time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:460
+#: taskcoachlib/gui/dialog/preferences.py:481
 msgid "Task reminders"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:469
+#: taskcoachlib/gui/dialog/preferences.py:490
 msgid "Notification system to use for reminders"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:473
+#: taskcoachlib/gui/dialog/preferences.py:494
 msgid "Default snooze time to use after reminder"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:476
+#: taskcoachlib/gui/dialog/preferences.py:497
 msgid "Snooze times to offer in task reminder dialog"
 msgstr "Час дрімання, який пропонується в діалозі нагадування"
 
-#: taskcoachlib/gui/dialog/preferences.py:483
+#: taskcoachlib/gui/dialog/preferences.py:504
 msgid "iPhone"
 msgstr "iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:489
+#: taskcoachlib/gui/dialog/preferences.py:510
 msgid "Password for synchronization with iPhone"
 msgstr "Пароль для синхронізації з iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:491
+#: taskcoachlib/gui/dialog/preferences.py:512
 msgid "Bonjour service name"
 msgstr "Ім'я сервісу Bonjour"
 
-#: taskcoachlib/gui/dialog/preferences.py:493
+#: taskcoachlib/gui/dialog/preferences.py:514
 msgid "Upload completed tasks to device"
 msgstr "Вивантаження завдань на пристірй виконано"
 
-#: taskcoachlib/gui/dialog/preferences.py:495
+#: taskcoachlib/gui/dialog/preferences.py:516
 msgid "Show sync log"
 msgstr "Показати журнал синхронізації"
 
-#: taskcoachlib/gui/dialog/preferences.py:495
+#: taskcoachlib/gui/dialog/preferences.py:516
 msgid "Show the synchronization log"
 msgstr "Показати журнал синхронізації"
 
-#: taskcoachlib/gui/dialog/preferences.py:501
+#: taskcoachlib/gui/dialog/preferences.py:522
 msgid "Editor"
 msgstr "Редактор"
 
-#: taskcoachlib/gui/dialog/preferences.py:507
+#: taskcoachlib/gui/dialog/preferences.py:528
 msgid "Check spelling in editors"
 msgstr "Перевіряти правопис в редакторі"
 
@@ -1647,11 +1645,23 @@ msgstr "Засни!"
 msgid "Mark task completed"
 msgstr "Помітити завдання як виконане"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:80
+#: taskcoachlib/gui/dialog/syncpreferences.py:81
+msgid "SyncML server"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/syncpreferences.py:82
+msgid "Custom"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/syncpreferences.py:84
+msgid "MemoToo (http://www.memotoo.com/)"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/syncpreferences.py:87
 msgid "SyncML server URL"
 msgstr "URL сервера SyncML"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:81
+#: taskcoachlib/gui/dialog/syncpreferences.py:88
 msgid "User name/ID"
 msgstr "Ім'я користувача/ID"
 
@@ -1659,64 +1669,57 @@ msgstr "Ім'я користувача/ID"
 msgid "Enable tasks synchronization"
 msgstr "Ввімкнути синхронізацію завдань"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:91
+#: taskcoachlib/gui/dialog/syncpreferences.py:92
 msgid "Tasks database name"
 msgstr "Ім'я бази даних завдань"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:93
-#: taskcoachlib/gui/dialog/syncpreferences.py:111
+#: taskcoachlib/gui/dialog/syncpreferences.py:106
 msgid "Preferred synchonization mode"
 msgstr "Бажаний режим синхронізації"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:94
-#: taskcoachlib/gui/dialog/syncpreferences.py:112
+#: taskcoachlib/gui/dialog/syncpreferences.py:107
 msgid "Two way"
 msgstr "Двусторонній"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:95
-#: taskcoachlib/gui/dialog/syncpreferences.py:113
+#: taskcoachlib/gui/dialog/syncpreferences.py:108
 msgid "Slow"
 msgstr "Повільно"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:96
-#: taskcoachlib/gui/dialog/syncpreferences.py:114
+#: taskcoachlib/gui/dialog/syncpreferences.py:109
 msgid "One way from client"
 msgstr "Односторонньо з клієнта"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:97
-#: taskcoachlib/gui/dialog/syncpreferences.py:115
+#: taskcoachlib/gui/dialog/syncpreferences.py:110
 msgid "Refresh from client"
 msgstr "Оновити з клієнта"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:98
-#: taskcoachlib/gui/dialog/syncpreferences.py:116
+#: taskcoachlib/gui/dialog/syncpreferences.py:111
 msgid "One way from server"
 msgstr "Односторонньо з сервера"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:99
-#: taskcoachlib/gui/dialog/syncpreferences.py:117
+#: taskcoachlib/gui/dialog/syncpreferences.py:112
 #: taskcoachlib/syncml/basesource.py:61 taskcoachlib/syncml/basesource.py:73
 msgid "Refresh from server"
 msgstr "Оновити з сервера"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:108
+#: taskcoachlib/gui/dialog/syncpreferences.py:103
 msgid "Enable notes synchronization"
 msgstr "Ввімкнути синхронізацію заміток"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:109
+#: taskcoachlib/gui/dialog/syncpreferences.py:105
 msgid "Notes database name"
 msgstr "Ім'я бази даних заміток"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:133
+#: taskcoachlib/gui/dialog/syncpreferences.py:150
 msgid "Access"
 msgstr "Доступ"
-
-#: taskcoachlib/gui/dialog/syncpreferences.py:134
-#: taskcoachlib/gui/viewer/task.py:54 taskcoachlib/help/__init__.py:68
-#: taskcoachlib/help/__init__.py:129
-#: taskcoachlib/widgets/calendarconfig.py:107
-msgid "Tasks"
-msgstr "Завдання"
 
 #: taskcoachlib/gui/dialog/templates.py:69
 msgid "Template"
@@ -1770,31 +1773,31 @@ msgstr ""
 msgid "The latest released version of %(name)s is %(version)s."
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:47
+#: taskcoachlib/gui/iocontroller.py:48
 msgid ""
 "%s files (*.tsk)|*.tsk|Backup files (*.tsk.bak)|*.tsk.bak|All files (*.*)|*"
 msgstr ""
 "%s файли (*.tsk)|*.tsk|Файли резервної копії (*.tsk.bak)|*.tsk.bak|Всі файли "
 "(*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:50
+#: taskcoachlib/gui/iocontroller.py:51
 msgid "iCalendar files (*.ics)|*.ics|All files (*.*)|*"
 msgstr "Файли iCalendar (*.ics)|*.ics|Всі файли (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:53
+#: taskcoachlib/gui/iocontroller.py:54
 msgid "HTML files (*.html)|*.html|All files (*.*)|*"
 msgstr "Файли HTML (*.html)|*.html|Всі файли (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:56
+#: taskcoachlib/gui/iocontroller.py:57
 msgid "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*"
 msgstr ""
 "Файли CSV (*.csv)|*.csv|Текстові файли (*.txt)|*.txt|Всі файли (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:95
+#: taskcoachlib/gui/iocontroller.py:96
 msgid "Open"
 msgstr "Відкрити"
 
-#: taskcoachlib/gui/iocontroller.py:118 taskcoachlib/gui/iocontroller.py:155
+#: taskcoachlib/gui/iocontroller.py:126 taskcoachlib/gui/iocontroller.py:163
 msgid ""
 "Cannot open %(filename)s\n"
 "because it was created by a newer version of %(name)s.\n"
@@ -1804,27 +1807,27 @@ msgstr ""
 "так як його створено в новій версії %(name)s.\n"
 "Будь ласка, оновіть %(name)s."
 
-#: taskcoachlib/gui/iocontroller.py:126 taskcoachlib/gui/iocontroller.py:161
+#: taskcoachlib/gui/iocontroller.py:134 taskcoachlib/gui/iocontroller.py:169
 msgid "Error while reading %s:\n"
 msgstr "Глюки під час читання %s:\n"
 
-#: taskcoachlib/gui/iocontroller.py:128 taskcoachlib/gui/iocontroller.py:163
+#: taskcoachlib/gui/iocontroller.py:136 taskcoachlib/gui/iocontroller.py:171
 msgid "Are you sure it is a %s-file?"
 msgstr "Ви впевнені, що це файл %s ?(Що-то ви мутите)"
 
-#: taskcoachlib/gui/iocontroller.py:131
+#: taskcoachlib/gui/iocontroller.py:139
 msgid "Loaded %(nrtasks)d tasks from %(filename)s"
 msgstr "Завантажено %(nrtasks)d завдань із %(filename)s"
 
-#: taskcoachlib/gui/iocontroller.py:135
+#: taskcoachlib/gui/iocontroller.py:143
 msgid "Cannot open %s because it doesn't exist"
 msgstr "Не можу відкрити %s бо його просто нема"
 
-#: taskcoachlib/gui/iocontroller.py:145
+#: taskcoachlib/gui/iocontroller.py:153
 msgid "Merge"
 msgstr "Об'єднати"
 
-#: taskcoachlib/gui/iocontroller.py:150
+#: taskcoachlib/gui/iocontroller.py:158
 msgid ""
 "Cannot open %(filename)s\n"
 "because it is locked."
@@ -1832,19 +1835,19 @@ msgstr ""
 "Неможливо відкрити %(filename)s\n"
 "так як файл заблоковано."
 
-#: taskcoachlib/gui/iocontroller.py:166
+#: taskcoachlib/gui/iocontroller.py:174
 msgid "Merged %(filename)s"
 msgstr "Об'єднано %(filename)s"
 
-#: taskcoachlib/gui/iocontroller.py:183
+#: taskcoachlib/gui/iocontroller.py:191
 msgid "Save as"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:195
+#: taskcoachlib/gui/iocontroller.py:203
 msgid "Save selection"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:227
+#: taskcoachlib/gui/iocontroller.py:235
 msgid ""
 "Cannot save %s\n"
 "It is locked by another instance of %s.\n"
@@ -1852,7 +1855,7 @@ msgstr ""
 "Неможливо зберегти %s\n"
 "Він заблокований іншою копією %s.\n"
 
-#: taskcoachlib/gui/iocontroller.py:232
+#: taskcoachlib/gui/iocontroller.py:240
 msgid ""
 "Cannot save %s\n"
 "%s"
@@ -1860,53 +1863,53 @@ msgstr ""
 "Неможливо зберегти %s\n"
 "%s"
 
-#: taskcoachlib/gui/iocontroller.py:242
+#: taskcoachlib/gui/iocontroller.py:250
 msgid "Import template"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:244
+#: taskcoachlib/gui/iocontroller.py:252
 msgid "%s template files (*.tsktmpl)|*.tsktmpl"
 msgstr "Файли шаблонів %s (*.tsktmpl)|*.tsktmpl"
 
-#: taskcoachlib/gui/iocontroller.py:250
+#: taskcoachlib/gui/iocontroller.py:258
 msgid ""
 "Cannot import template %s\n"
 "%s"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:279
+#: taskcoachlib/gui/iocontroller.py:287
 msgid "Exported %(count)d items to %(filename)s"
 msgstr "Експортовано %(count)d записів до %(filename)s"
 
-#: taskcoachlib/gui/iocontroller.py:314
+#: taskcoachlib/gui/iocontroller.py:322
 msgid "Finished synchronization"
 msgstr "Синхронізацію завершено"
 
-#: taskcoachlib/gui/iocontroller.py:321
+#: taskcoachlib/gui/iocontroller.py:329
 msgid "Note conflict"
 msgstr "Конфлікт заміток"
 
-#: taskcoachlib/gui/iocontroller.py:325
+#: taskcoachlib/gui/iocontroller.py:333
 msgid "Task conflict"
 msgstr "Конфлікт завдань"
 
-#: taskcoachlib/gui/iocontroller.py:337
+#: taskcoachlib/gui/iocontroller.py:345
 msgid "Synchronization status"
 msgstr "Статус синхронізації"
 
-#: taskcoachlib/gui/iocontroller.py:345
+#: taskcoachlib/gui/iocontroller.py:353
 msgid ""
 "Cannot open %s\n"
 "%s"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:380
+#: taskcoachlib/gui/iocontroller.py:388
 msgid ""
 "A file named %s already exists.\n"
 "Do you want to replace it?"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:392
+#: taskcoachlib/gui/iocontroller.py:400
 msgid ""
 "You have unsaved changes.\n"
 "Save before closing?"
@@ -1914,11 +1917,11 @@ msgstr ""
 "У вас є незбережені зміни.\n"
 "Зберегти перед закриттям ?"
 
-#: taskcoachlib/gui/iocontroller.py:393
+#: taskcoachlib/gui/iocontroller.py:401
 msgid "%s: save changes?"
 msgstr "%s: зберегти зміни?"
 
-#: taskcoachlib/gui/iocontroller.py:403
+#: taskcoachlib/gui/iocontroller.py:411
 msgid ""
 "Cannot open %s because it is locked.\n"
 "\n"
@@ -1938,11 +1941,11 @@ msgstr ""
 "\n"
 "Зняти блокування?"
 
-#: taskcoachlib/gui/iocontroller.py:411 taskcoachlib/gui/iocontroller.py:418
+#: taskcoachlib/gui/iocontroller.py:419 taskcoachlib/gui/iocontroller.py:426
 msgid "%s: file locked"
 msgstr "%s: файл заблоковано"
 
-#: taskcoachlib/gui/iocontroller.py:416
+#: taskcoachlib/gui/iocontroller.py:424
 msgid ""
 "Cannot acquire a lock because locking is not supported\n"
 "on the location of %s.\n"
@@ -1952,11 +1955,11 @@ msgstr ""
 "в місці розміщення %s.\n"
 "Відкрити %s. незаблокованим?"
 
-#: taskcoachlib/gui/iocontroller.py:423
+#: taskcoachlib/gui/iocontroller.py:431
 msgid "Closed %s"
 msgstr "Закрито %s"
 
-#: taskcoachlib/gui/iocontroller.py:428
+#: taskcoachlib/gui/iocontroller.py:436
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
 msgstr "Записано %(nrtasks)d завдань до %(filename)s"
 
@@ -1968,23 +1971,23 @@ msgstr "Синхронізація..."
 msgid "Synchronizing with %s..."
 msgstr "Синхронізація з %s..."
 
-#: taskcoachlib/gui/mainwindow.py:71 taskcoachlib/gui/uicommand.py:608
+#: taskcoachlib/gui/mainwindow.py:79 taskcoachlib/gui/uicommand.py:608
 msgid "Warning"
 msgstr "Увага"
 
-#: taskcoachlib/gui/mainwindow.py:108
+#: taskcoachlib/gui/mainwindow.py:116
 msgid "Welcome to %(name)s version %(version)s"
 msgstr "Вітаємо у %(name)s версії %(version)s"
 
-#: taskcoachlib/gui/mainwindow.py:285
+#: taskcoachlib/gui/mainwindow.py:293
 msgid "iPhone/iPod"
 msgstr "iPhone/iPod"
 
-#: taskcoachlib/gui/mainwindow.py:294
+#: taskcoachlib/gui/mainwindow.py:302
 msgid "Synchronization type"
 msgstr "Тип синхронізації"
 
-#: taskcoachlib/gui/mainwindow.py:304
+#: taskcoachlib/gui/mainwindow.py:312
 msgid ""
 "An iPhone or iPod Touch device tried to synchronize with this\n"
 "task file, but the protocol negotiation failed. Please file a\n"
@@ -1994,7 +1997,7 @@ msgstr ""
 "файлом завдань, але не вдалось узгодити протокол.\n"
 "Будь ласка, повідомте про помилку."
 
-#: taskcoachlib/gui/mainwindow.py:307 taskcoachlib/iphone/protocol.py:481
+#: taskcoachlib/gui/mainwindow.py:315 taskcoachlib/iphone/protocol.py:481
 #: taskcoachlib/widgets/draganddrop.py:108
 #: taskcoachlib/widgets/draganddrop.py:110
 #: taskcoachlib/widgets/draganddrop.py:143
@@ -3589,6 +3592,12 @@ msgstr "Завдання: %d вибрані, %d видимі, %d всього"
 #: taskcoachlib/gui/viewer/task.py:35
 msgid "Status: %d overdue, %d inactive, %d completed"
 msgstr ""
+
+#: taskcoachlib/gui/viewer/task.py:54 taskcoachlib/help/__init__.py:68
+#: taskcoachlib/help/__init__.py:129
+#: taskcoachlib/widgets/calendarconfig.py:107
+msgid "Tasks"
+msgstr "Завдання"
 
 #: taskcoachlib/gui/viewer/task.py:262
 msgid "Timeline"
@@ -5473,10 +5482,6 @@ msgstr "Редагувати зусилля %s"
 msgid "Sending GUID: %s"
 msgstr "Відправлений GUID: %s"
 
-#: taskcoachlib/mailer/__init__.py:67
-msgid "Untitled e-mail"
-msgstr "Неназване повідомлення"
-
 #: taskcoachlib/mailer/macmail.py:49
 msgid "Mail.app message"
 msgstr "Повідомлення Mail.app"
@@ -5507,25 +5512,33 @@ msgid ""
 msgstr ""
 
 #: taskcoachlib/mailer/thunderbird.py:238
+#: taskcoachlib/mailer/thunderbird.py:351
 msgid "Unrecognized URL scheme: \"%s\""
 msgstr ""
 
-#: taskcoachlib/mailer/thunderbird.py:295
+#: taskcoachlib/mailer/thunderbird.py:291
+msgid ""
+"Could not open an IMAP connection to %(server)s:%(port)s\n"
+"to retrieve Thunderbird email message:\n"
+"%(error)s"
+msgstr ""
+
+#: taskcoachlib/mailer/thunderbird.py:299
 msgid "Please enter password for user %(user)s on %(server)s:%(port)d"
 msgstr ""
 "Будь-ласка введіть пароль для користувача %(user)s на %(server)s:%(port)d"
 
-#: taskcoachlib/mailer/thunderbird.py:313
+#: taskcoachlib/mailer/thunderbird.py:317
 msgid "Login failed (%s). Please try again."
 msgstr "Збій входу (%s). Спробуйте ще раз."
 
-#: taskcoachlib/mailer/thunderbird.py:326
+#: taskcoachlib/mailer/thunderbird.py:330
 msgid ""
 "Could not select inbox \"%s\"\n"
 "(%s)"
 msgstr ""
 
-#: taskcoachlib/mailer/thunderbird.py:331
+#: taskcoachlib/mailer/thunderbird.py:335
 msgid "No such mail: %d"
 msgstr ""
 
@@ -5644,7 +5657,7 @@ msgstr ""
 "\n"
 "\n"
 
-#: taskcoachlib/syncml/sync.py:203
+#: taskcoachlib/syncml/sync.py:201
 msgid ""
 "%d items added.\n"
 "%d items updated.\n"
@@ -5654,7 +5667,7 @@ msgstr ""
 "%d елементів оновлено.\n"
 "%d елементів видалено."
 
-#: taskcoachlib/syncml/sync.py:209
+#: taskcoachlib/syncml/sync.py:207
 msgid ""
 "An error occurred in the synchronization.\n"
 "Error code: %d; message: %s"
@@ -5662,7 +5675,7 @@ msgstr ""
 "Під час синхронізації виникла помилка.\n"
 "Код помилки: %d; Опис: %s"
 
-#: taskcoachlib/syncml/sync.py:214
+#: taskcoachlib/syncml/sync.py:212
 msgid "You must first edit your SyncML Settings, in Edit/SyncML preferences."
 msgstr ""
 "Для початку Ви маєте змінити налаштування SyncML, в Редагування/Налаштування "
@@ -5952,9 +5965,6 @@ msgstr "Помилка під час відкриття URL адреси"
 #~ msgid "Change background color \"%s\""
 #~ msgstr "Змінити колір фону \"%s\""
 
-#~ msgid "Add note to categories"
-#~ msgstr "додати замітку до категорії"
-
 #~ msgid "Change priority"
 #~ msgstr "Зміна пріоритету"
 
@@ -6021,87 +6031,6 @@ msgstr "Помилка під час відкриття URL адреси"
 #~ msgid "Toggle prerequisite of \"%s\""
 #~ msgstr "Перемкнути передумову \"%s\""
 
-#~ msgid "Edit attachment..."
-#~ msgstr "Редагувати вкладення..."
-
-#~ msgid "Edit the selected attachments"
-#~ msgstr "Редагувати виділені вкладення"
-
-#~ msgid "Delete attachment"
-#~ msgstr "Видалити вкладення"
-
-#~ msgid "Delete the selected attachments"
-#~ msgstr "Видалити обране вкладення"
-
-#~ msgid "New category..."
-#~ msgstr "Нова категорія..."
-
-#~ msgid "Edit category..."
-#~ msgstr "Редагувати категорію..."
-
-#~ msgid "Edit the selected categories"
-#~ msgstr "Редагувати виділені категорії"
-
-#~ msgid "Delete category"
-#~ msgstr "Видалити категорію"
-
-#~ msgid "Delete the selected categories"
-#~ msgstr "Видалити виділені категорії"
-
-#~ msgid "New subcategory..."
-#~ msgstr "Нова підкатегорія..."
-
-#~ msgid "Insert a new subcategory"
-#~ msgstr "Вставити нову підкатегорію"
-
-#~ msgid "&Edit effort..."
-#~ msgstr "&Редагувати зусилля..."
-
-#~ msgid "Edit the selected effort period(s)"
-#~ msgstr "Редагувати період виділених зусиль"
-
-#~ msgid "&Delete effort"
-#~ msgstr "&Видалити зусилля"
-
-#~ msgid "Delete the selected effort period(s)"
-#~ msgstr "Видалити період виділеного зусилля"
-
-#~ msgid "New note..."
-#~ msgstr "Нова примітка..."
-
-#~ msgid "Edit note..."
-#~ msgstr "Редагувати примітку..."
-
-#~ msgid "Edit the selected notes"
-#~ msgstr "Редагувати віделенні примітки"
-
-#~ msgid "Delete note"
-#~ msgstr "Видалити примітку"
-
-#~ msgid "Delete the selected notes"
-#~ msgstr "Видалити видиілені примітки"
-
-#~ msgid "New subnote..."
-#~ msgstr "Нова підпримітка..."
-
-#~ msgid "Insert a new subnote"
-#~ msgstr "Вставити нову підпримітку"
-
-#~ msgid "&Edit task..."
-#~ msgstr "&Редагувати завдання..."
-
-#~ msgid "Edit the selected task(s)"
-#~ msgstr "Редагувати обране(-ні) завдання"
-
-#~ msgid "&Delete task"
-#~ msgstr "&Видалити завдання"
-
-#~ msgid "Delete the selected task(s)"
-#~ msgstr "Видалити виділені завдання"
-
-#~ msgid "Insert a new subtask into the selected task"
-#~ msgstr "Вставити нове підзавдання у виділене завадання"
-
 #~ msgid "Warning: start must be earlier than stop"
 #~ msgstr "Попередження: початок має бути раніше закінчення"
 
@@ -6135,900 +6064,11 @@ msgstr "Помилка під час відкриття URL адреси"
 #~ msgid "%s (effort)"
 #~ msgstr "%s (зусилля)"
 
-#~ msgid "Colors"
-#~ msgstr "Кольори"
-
-#~ msgid "Click this button to change the color of active tasks"
-#~ msgstr "Натисніть, щоб змінити колір активних завдань"
-
-#~ msgid "Click this button to change the color of inactive tasks"
-#~ msgstr "Натисніть, щоб змінити колір неактивних завдань"
-
-#~ msgid "Click this button to change the color of completed tasks"
-#~ msgstr "Натисніть, щоб змінити колір виконаних завдань"
-
-#~ msgid "Click this button to change the color of over due tasks"
-#~ msgstr "Натисніть, щоб змінити колір просрочених завдань"
-
-#~ msgid "Click this button to change the color of tasks due soon"
-#~ msgstr ""
-#~ "Натисніть кнопку для зміни кольору завдань, термін яких скоро закінчується"
-
 #~ msgid "Notification system"
 #~ msgstr "Система оповіщення"
-
-#~ msgid "Notification system to use for reminders (Growl, Snarl, etc)"
-#~ msgstr "Система оповіщення для нагадувань (Growl, Snarl, або інша)"
 
 #~ msgid "Task behavior"
 #~ msgstr "Поведінка завдання"
 
-#~ msgid "Save as..."
-#~ msgstr "Зберегти як..."
-
-#~ msgid "Please enter the template name."
-#~ msgstr "Вкажіть ім'я шаблона."
-
-#~ msgid "Save as template"
-#~ msgstr "Зберегти як шаблон"
-
-#~ msgid "Open template..."
-#~ msgstr "Відкрити шаблон..."
-
-#~ msgid "Export as HTML..."
-#~ msgstr "Експорт як HTML..."
-
-#~ msgid "Export as CSV..."
-#~ msgstr "Експорт як CSV..."
-
-#~ msgid "Export as iCalendar..."
-#~ msgstr "Експорт у форматі iCalendar..."
-
-#~ msgid "Eff&ort"
-#~ msgstr "Зу&силля"
-
-#~ msgid "&New task"
-#~ msgstr "Нове завдання"
-
-#~ msgid "Save selected task as &template..."
-#~ msgstr "Зберегти обране завдання як шаблон..."
-
-#~ msgid "&Add template..."
-#~ msgstr "Додати шаблон..."
-
-#~ msgid "Add a new template from a template file"
-#~ msgstr "Додати новий шаблон із файлу шаблона"
-
-#~ msgid "&Print preview"
-#~ msgstr "Попередній перегляд"
-
-#~ msgid "Export the current view as HTML file"
-#~ msgstr "Експорт поточного вигляду в HTML"
-
-#~ msgid "Export selection as &HTML..."
-#~ msgstr "Експортувати вибране  в HTML..."
-
-#~ msgid "Export the selection in the current view as HTML file"
-#~ msgstr "Експортувати вибране в поточному вікні як HTML-файл"
-
-#~ msgid "Export the current view in Comma Separated Values (CSV) format"
-#~ msgstr "Експорт поточного вигляду в формат &CSV"
-
-#~ msgid "Export selection as &CSV..."
-#~ msgstr "Експортувати виділене в CSV..."
-
-#~ msgid ""
-#~ "Export the selection in the current view in Comma Separated Values (CSV) "
-#~ "format"
-#~ msgstr "Експортувати вибране в поточному вікні як  CSV - файл"
-
-#~ msgid "Export the items in the current viewer in iCalendar format"
-#~ msgstr "Експортувати поточні елементи в файл формату iCalendar"
-
-#~ msgid "Export selection as &iCalendar..."
-#~ msgstr "Експортувати обране як iCalendar..."
-
-#~ msgid "Export the selected items in the current viewer in iCalendar format"
-#~ msgstr "Експортувати вибрані елементи в файл формату iCalendar"
-
-#~ msgid "S&yncML synchronization"
-#~ msgstr "Синхронізація SyncML"
-
-#~ msgid "&Clear all filters"
-#~ msgstr "&Очистити всі фільтри"
-
-#~ msgid "&Mail task"
-#~ msgstr "&Надіслати завдання"
-
-#~ msgid "Mail the task, using your default mailer"
-#~ msgstr ""
-#~ "Відправити завдання по пошті використовуючи вашу поштову програму за "
-#~ "умовчанням"
-
-#~ msgid "&Mail note"
-#~ msgstr "&Надіслати замітку"
-
-#~ msgid "Mail the note, using your default mailer"
-#~ msgstr ""
-#~ "Надіслати замітку поштою, використовуючи поштову програму за замовчуванням"
-
-#~ msgid "Add &note"
-#~ msgstr "Додати замітку"
-
-#~ msgid "Add a note to the selected task"
-#~ msgstr "Додати замітку до обраного завдання"
-
-#~ msgid "Add a note to the selected category"
-#~ msgstr "Додати замітку до обраної категорії"
-
-#~ msgid "Add a note to the selected attachment"
-#~ msgstr "Додати замітку до обраного вкладення"
-
-#~ msgid "&Add attachment"
-#~ msgstr "&Додати файл"
-
-#~ msgid "Browse for files to add as attachment to the selected task(s)"
-#~ msgstr "Виберіть файл, щоб прикріпити до виділених завдань"
-
-#~ msgid "Browse for files to add as attachment to the selected categories"
-#~ msgstr "Огляд файлів, для додавання вкладення, до вибраних категорій"
-
-#~ msgid "Browse for files to add as attachment to the selected note(s)"
-#~ msgstr "Огляд файлів, для додавання вкладення, до вибраних заміток"
-
-#~ msgid "&Open all attachments"
-#~ msgstr "& Відкрити всі прикріплення"
-
-#~ msgid "Open all attachments of the selected task(s)"
-#~ msgstr "& Відкрити всі прикріплення у виділених завданнях"
-
-#~ msgid "Open all attachments of the selected categories"
-#~ msgstr "Відкрити всі вкладення до вибраних категорій"
-
-#~ msgid "Open all attachments of the selected note(s)"
-#~ msgstr "Відкрити всі вкладення до вибраних заміток"
-
-#~ msgid "St&op tracking effort"
-#~ msgstr "П&ерестати відслідковувати зусилля"
-
-#~ msgid "Help: About %s"
-#~ msgstr "Допомога: Про %s"
-
-#~ msgid "Help: %s license"
-#~ msgstr "Допомога по %s ліцензії"
-
-#~ msgid "Show only tasks &due before end of"
-#~ msgstr "Показувати завдання які &треба завершити до"
-
-#~ msgid "&Unlimited"
-#~ msgstr "&Без обмежень"
-
-#~ msgid "Show all tasks"
-#~ msgstr "Показувати всі завдання"
-
-#~ msgid "Only show tasks due today"
-#~ msgstr "Показувати тільки завдання які треба завершити сьогодні"
-
-#~ msgid "T&omorrow"
-#~ msgstr "З&автра"
-
-#~ msgid "Only show tasks due today and tomorrow"
-#~ msgstr "Показувати завдання які треба завершити сьогодні-завтра"
-
-#~ msgid "Wo&rkweek"
-#~ msgstr "робочий тиждень"
-
-#~ msgid "Only show tasks due this work week (i.e. before Friday)"
-#~ msgstr ""
-#~ "Показувати завдання які треба завершити протягом робочого тижня(до П'ятниці)"
-
-#~ msgid "&Week"
-#~ msgstr "&Тиждень"
-
-#~ msgid "Only show tasks due this week (i.e. before Sunday)"
-#~ msgstr "Показувати завдання які треба завершити на цьому тижні (до Неділі)"
-
-#~ msgid "&Month"
-#~ msgstr "&Місяць"
-
-#~ msgid "Only show tasks due this month"
-#~ msgstr "Показувати завдання які треба завершити протягом цього місяця"
-
-#~ msgid "&Year"
-#~ msgstr "&Рік"
-
-#~ msgid "Only show tasks due this year"
-#~ msgstr "Показувати завдання які треба завершити до кінця року"
-
-#~ msgid "Status: %d over due, %d inactive, %d completed"
-#~ msgstr "Статус: %d просрочених, %d неактивних, %d завершених"
-
-#~ msgid "Task Coach on the iPhone"
-#~ msgstr "Task Coach на iPhone"
-
-#~ msgid "Over due: the due date is in the past;"
-#~ msgstr "Прострочена: термін виконання в минулому;"
-
-#~ msgid "Over due tasks are red;"
-#~ msgstr "Прострочені завдання, пофарбовано в червоний;"
-
-#~ msgid ""
-#~ "<h4>%(name)s - %(description)s</h4>\n"
-#~ "<h5>Version %(version)s, Revision %(revision)s, %(date)s</h5>\n"
-#~ "<p>By %(author)s &lt;%(author_email)s&gt;<p>\n"
-#~ "<p><a href=\"%(url)s\" target=\"_blank\">%(url)s</a></p>\n"
-#~ "<p>%(copyright)s</p>\n"
-#~ "<p>%(license_notice_html)s</p>\n"
-#~ msgstr ""
-#~ "<h4>%(name)s - %(description)s</h4>\n"
-#~ "<h5>Версія %(version)s, редакція %(revision)s, %(date)s</h5>\n"
-#~ "<p>%(author)s &lt;%(author_email)s&gt;<p>\n"
-#~ "<p><a href=\"%(url)s\" target=\"_blank\">%(url)s</a></p>\n"
-#~ "<p>%(copyright)s</p>\n"
-#~ "<p>%(license_notice_html)s</p>\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Version %(version)s, Revision %(revision)s, %(date)s\n"
-#~ "\n"
-#~ "By %(author)s <%(author_email)s>\n"
-#~ "\n"
-#~ "%(url)s\n"
-#~ "\n"
-#~ "%(copyright)s\n"
-#~ "%(license)s\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Версія %(version)s, Редакція %(revision)s, %(date)s\n"
-#~ "\n"
-#~ "Від %(author)s <%(author_email)s>\n"
-#~ "\n"
-#~ "%(url)s\n"
-#~ "\n"
-#~ "%(copyright)s\n"
-#~ "%(license)s\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "%(name)s has a mailinglist where you can discuss usage of %(name)s with "
-#~ "fellow users, discuss and request features and complain about bugs. Go to "
-#~ "%(url)s and join today!"
-#~ msgstr ""
-#~ "%(name)s має mailinglist, де ви можете обговорити використання %(name)s із "
-#~ "іншими користувачами, а також вказати на помилки і попросити додаткові "
-#~ "властивості. Заходьте за адресою %(url)s  і приєднуйтесь сьогодні!"
-
-#~ msgid ""
-#~ "You can create any viewer layout you want by dragging and dropping the tabs. "
-#~ "Unfortunately, due to a limitation of the current version of the graphical "
-#~ "toolkit (wxPython), the layout cannot be saved for reuse in the next session."
-#~ msgstr ""
-#~ "Ви можете створити будь який макет перегляду, з допомогою перетягування "
-#~ "вкладок.Нажаль в зв'язку з обмеженнями поточної версії графічного "
-#~ "інструменту (wxPython), макети макети не можуть бути збережені для "
-#~ "повторного використання в наступній сесії."
-
-#~ msgid "Malformed Thunderbird internal ID: %s. Please file a bug report."
-#~ msgstr ""
-#~ "Хибно сформоване внутрішнє ID Thunderbird: %s. Будь ласка, повідомте про "
-#~ "помилку."
-
-#~ msgid "Could not find directory for ID %s. Please file a bug report."
-#~ msgstr "Не знайдено каталог для ID %s. Будь ласка, повідомте про помилку."
-
-#~ msgid "Drag and drop category"
-#~ msgstr "Перетягнути категорію"
-
-#~ msgid "Edit category"
-#~ msgstr "Редагувати категорію"
-
-#~ msgid "New effort"
-#~ msgstr "Нове зусилля"
-
-#~ msgid "Drag and drop task"
-#~ msgstr "Перетягнути завдання"
-
-#~ msgid "Edit note"
-#~ msgstr "Редагувати примітку"
-
-#~ msgid "Edit effort"
-#~ msgstr "Редагувати зусилля"
-
-#~ msgid "Delete task"
-#~ msgstr "Видалити завдання"
-
-#~ msgid "Paste into task"
-#~ msgstr "Вставити в завдання"
-
-#~ msgid "Drag and drop note"
-#~ msgstr "Перетягнути примітку"
-
-#~ msgid "Mark completed"
-#~ msgstr "Виконано"
-
-#~ msgid "&New effort..."
-#~ msgstr "&Нове зусилля..."
-
-#~ msgid "&Delete task\tCtrl+DEL"
-#~ msgstr "&Видалити завдання\tCtrl+DEL"
-
-#~ msgid "Edit the selected task"
-#~ msgstr "Редагувати виділене завдання"
-
-#~ msgid "For this task including all subtasks"
-#~ msgstr "Для цього завдання включаючи всі підзавдання"
-
-#~ msgid "For this task"
-#~ msgstr "Для цього завдання"
-
-#~ msgid "Maximum number of recurrences"
-#~ msgstr "Максимальна кількість повторень"
-
-#~ msgid "Use this color:"
-#~ msgstr "Використовувати цей колір"
-
-#~ msgid "Color"
-#~ msgstr "Колір"
-
-#~ msgid "Behavior"
-#~ msgstr "Поведінка"
-
-#~ msgid "Maximum number of recent files to remember"
-#~ msgstr "Кількість останніх відкритих файлів для запам'ятовування"
-
-#~ msgid "Click this button to change the color of tasks due today"
-#~ msgstr "Натисніть, щоб змінити колір завдань на сьогодні"
-
-#~ msgid "Half an hour"
-#~ msgstr "Півгодини"
-
-#~ msgid "Two hours"
-#~ msgstr "Дві години"
-
-#~ msgid "Fifteen minutes"
-#~ msgstr "П'ятнадцять хвилин"
-
-#~ msgid "One hour"
-#~ msgstr "Одна година"
-
-#~ msgid "Five minutes"
-#~ msgstr "П'ять хвилин"
-
-#~ msgid "Ten minutes"
-#~ msgstr "Десять хвилин"
-
-#~ msgid "one task due today"
-#~ msgstr "одне завдання на сьогодні"
-
-#~ msgid "Export effort as &iCalendar..."
-#~ msgstr "Експорт зусилля в формат &iCalendar..."
-
-#~ msgid "Export effort in iCalendar (*.ics) format"
-#~ msgstr "Експорт зусилля в формат iCalendar (*.ics)"
-
-#~ msgid "Paste item(s) from the clipboard into the selected task"
-#~ msgstr "Вставити з буферу обміну у виділене завдання"
-
-#~ msgid "Preferences..."
-#~ msgstr "Настройки..."
-
-#~ msgid "Select unselected items and unselect selected items"
-#~ msgstr "Виділити не виділене та прибрати виділення з виділенного"
-
-#~ msgid "E&xpand"
-#~ msgstr "Роз&крити"
-
-#~ msgid "Expand the selected item(s)"
-#~ msgstr "Розкрити тільки виділені позиції"
-
-#~ msgid "Collapse the selected items with subitems"
-#~ msgstr "Згорнути виділені пункти разом із підпунктами"
-
-#~ msgid "&Active"
-#~ msgstr "&Активний"
-
-#~ msgid "&Inactive"
-#~ msgstr "&Неактивні"
-
-#~ msgid "C&ollapse"
-#~ msgstr "Зг&орнути"
-
-#~ msgid ""
-#~ "Show/hide active tasks (tasks with a start date in the past and a due date "
-#~ "in the future)"
-#~ msgstr ""
-#~ "Показати/сховати активні завдання (завдання з початковою датою в минулому і "
-#~ "датою прогнозованого закінчення в майбутньому)"
-
-#~ msgid "&Completed"
-#~ msgstr "&Виконані"
-
-#~ msgid "&Over due"
-#~ msgstr "&Просрочені"
-
-#~ msgid "Show/hide over due tasks (tasks with a due date in the past)"
-#~ msgstr ""
-#~ "Показати/приховати просрочені завдання (завдання з датою планованого "
-#~ "завершення в минулому)"
-
-#~ msgid "Over &budget"
-#~ msgstr "Поза &бюджетом"
-
-#~ msgid "Show/hide tasks that are over budget"
-#~ msgstr "Показати/приховати завдання, що поза бюджетом."
-
-#~ msgid "Increase priority\tCtrl+I"
-#~ msgstr "Збільшити пріоритет \tCtrl+I"
-
-#~ msgid "Decrease priority\tCtrl+D"
-#~ msgstr "Зменшити приорітет \tCtrl+D"
-
-#~ msgid "Overall categories"
-#~ msgstr "Повні категорії"
-
-#~ msgid "D&ays left"
-#~ msgstr "Д&нів залишилося"
-
-#~ msgid "Show/hide days left column"
-#~ msgstr "Показати/сховати стовпчик скільки днів залишилося"
-
-#~ msgid "Total b&udget"
-#~ msgstr "Загальний б&юджет"
-
-#~ msgid "Co&mpletion date"
-#~ msgstr "Д&ата завершення"
-
-#~ msgid ""
-#~ "Show/hide total budget column (total budget includes budget for subtasks)"
-#~ msgstr ""
-#~ "Показати/сховати стовпчик повного бюджету (повний бюджет з урахуванням "
-#~ "бюджету підзавдань)"
-
-#~ msgid "T&otal time spent"
-#~ msgstr "П&овний витрачений час"
-
-#~ msgid ""
-#~ "Show/hide total time spent column (total time includes time spent on "
-#~ "subtasks)"
-#~ msgstr ""
-#~ "Показати/сховати стовпчик повного витраченого часу (включаючи час витрачений "
-#~ "на підзавдання)"
-
-#~ msgid "O&verall priority"
-#~ msgstr "Повний пріоритет"
-
-#~ msgid "Total budget l&eft"
-#~ msgstr "Повний залишок бю&джету"
-
-#~ msgid ""
-#~ "Show/hide total budget left column (total budget left includes budget left "
-#~ "for subtasks)"
-#~ msgstr ""
-#~ "Показати/сховати повного залишку бюджету (включаючи залишок бюджету "
-#~ "підзавдань)"
-
-#~ msgid "Show/hide total fixed fee column"
-#~ msgstr "Показати/сховати стовпчик сумарної фіксованої винагороди"
-
-#~ msgid "&Total fixed fee"
-#~ msgstr "&Загальна фіксована винагорода"
-
-#~ msgid "T&otal revenue"
-#~ msgstr "&Загальний прибуток"
-
-#~ msgid "All date columns"
-#~ msgstr "Стовпчики всіх дат"
-
-#~ msgid "All budget columns"
-#~ msgstr "Стовпчики всього бюджету"
-
-#~ msgid "All financial columns"
-#~ msgstr "Всі фінансові стовпчики"
-
-#~ msgid "Sort case sensitive"
-#~ msgstr "Сортувати чутливо до великик і малих букв"
-
-#~ msgid "Sort by category"
-#~ msgstr "Сортувати за категорією"
-
-#~ msgid "Sort tasks by total budget"
-#~ msgstr "Сортувати завдання за загальним бюджетом"
-
-#~ msgid "Sort by overall categories"
-#~ msgstr "Сортувати за повними категоріями"
-
-#~ msgid "Sort tasks by number of days left"
-#~ msgstr "Сортувати завдання за кількістю днів, що залишилися"
-
-#~ msgid "Sort tasks by total fixed fee"
-#~ msgstr "Сортувати завдання за повною фіксованою винагородою"
-
-#~ msgid "Overall priority"
-#~ msgstr "Повний пріоритет"
-
-#~ msgid "Sort tasks by overall priority"
-#~ msgstr "Сортувати завдання за повним пріоритетом"
-
-#~ msgid "Total fi&xed fee"
-#~ msgstr "Повна фі&ксована винагорода"
-
-#~ msgid "Sort tasks by total time spent"
-#~ msgstr "Сортувати завдання за повним витраченим часом"
-
-#~ msgid "Sort tasks by total budget left"
-#~ msgstr "Сортувати завдання за залишком повного бюджету"
-
-#~ msgid "Sort tasks by total revenue"
-#~ msgstr "Сортувати завдання за повним прибутком"
-
-#~ msgid "Total re&venue"
-#~ msgstr "Повний п&рибуток"
-
-#~ msgid "&Hide tasks that are"
-#~ msgstr "&Приховати завдяння які"
-
-#~ msgid "Mail task"
-#~ msgstr "Відправити завдання по пошті"
-
-#~ msgid "Days left"
-#~ msgstr "Днів залишилося"
-
-#~ msgid "Total budget"
-#~ msgstr "Загальний бюджет"
-
-#~ msgid "Total budget left"
-#~ msgstr "Повний затрачений бюджет"
-
-#~ msgid "Total fixed fee"
-#~ msgstr "Повна фіксована винагорода"
-
-#~ msgid "<h3><a name=\"tasks\">Tasks</a></h3>\n"
-#~ msgstr "<h3><a name=\"tasks\">Завдання</a></h3>\n"
-
-#~ msgid "Exported %(nrtasks)d tasks to %(filename)s"
-#~ msgstr "Експортовано %(nrtasks)d завдань до %(filename)s"
-
-#~ msgid "Exported %(nrtasks)d items to %(filename)s"
-#~ msgstr "Експортовано %(nrtasks)d позицій до %(filename)s"
-
-#~ msgid ""
-#~ "<h4><a name=\"aboutcategories\">About \n"
-#~ "categories</a></h4>\n"
-#~ "\n"
-#~ "<p>Tasks may belong to one or more categories. First, you need to create "
-#~ "the\n"
-#~ "category that you want to use via the 'Category' menu. Then, you can add a "
-#~ "task to\n"
-#~ "one or more categories by editing the task and checking the relevant "
-#~ "categories\n"
-#~ "for that task in the category pane of the task editor.</p>\n"
-#~ "\n"
-#~ "<p>You can limit the tasks shown in the task viewers to one or more "
-#~ "categories\n"
-#~ "by checking a category in the category viewer. For example, if you have a \n"
-#~ "category 'phone calls' and you check that category, the task viewers will \n"
-#~ "only show tasks belonging to that category; in other words the phone calls \n"
-#~ "you need to make.</p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"aboutcategories\">Про\n"
-#~ "категорії</a></h4>\n"
-#~ "\n"
-#~ "<p>Завдання можуть належати до однієї або більше категорій. Перш за все \n"
-#~ "вам необхідно створити категорію, яку ви хочете використовувати, за "
-#~ "допомогою \n"
-#~ "меню \"Категорії\".\n"
-#~ "Потім ви можете додати завдання до однієї або більше створених таким чином "
-#~ "категорій\n"
-#~ "під час редагування завдання. Зробити це можна в панелі категорій в "
-#~ "редакторі завдань.</p>\n"
-#~ "\n"
-#~ "<p>Ви можете відбирати завдання, які будуть показані у вигляді завдань, що "
-#~ "належать до\n"
-#~ "однієї або більше категорій, вибираючи відповідні категорії у вигляді "
-#~ "категорій.\n"
-#~ "Наприклад, якщо у вас є категорія \"телефонні дзвінки\" і ви виберете цю "
-#~ "категорію, то \n"
-#~ "у перегляді завдань  ви побачите тільки завдання, що належать до цієї "
-#~ "категорії; \n"
-#~ "іншими словами ви побачите телефонні дзвінки, які вам необхідно "
-#~ "зробити.</p>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"taskstates\">Task states</a></h4>\n"
-#~ "\n"
-#~ "<p>Tasks always have exactly one of the following states:\n"
-#~ "<ul>\n"
-#~ "<li>Active: the start date is in the past and the due date in the "
-#~ "future;</li>\n"
-#~ "<li>Inactive: the start date is in the future, or</li>\n"
-#~ "<li>Completed: the task has been completed.</li>\n"
-#~ "</ul></p>\n"
-#~ "\n"
-#~ "<p>In addition, tasks can be referenced as:\n"
-#~ "<ul>\n"
-#~ "<li>Over due: the due date is in the past;</li>\n"
-#~ "<li>Due today: the due date is today;</li>\n"
-#~ "<li>Over budget: no buget left;</li>\n"
-#~ "<li>Under budget: still budget left;</li>\n"
-#~ "<li>No budget: the task has no budget.</li>\n"
-#~ "</ul></p>\n"
-#~ " "
-#~ msgstr ""
-#~ "<h4><a name=\"taskstates\">Стан завдань</a></h4>\n"
-#~ "\n"
-#~ "<p>Завдання можуть мати один з наступних станів:\n"
-#~ "<ul>\n"
-#~ "<li>Активне: дата початку в знаходиться минулому, а дата бажаного завершення "
-#~ "в майбутньому;</li>\n"
-#~ "<li>Неактивне: дата початку знаходиться в майбутньому, або</li>\n"
-#~ "<li>Завершене: завдання позначене як завершене.</li>\n"
-#~ "</ul></p>\n"
-#~ "\n"
-#~ "<p>Додатково завдання може бути позначене як:\n"
-#~ "<ul>\n"
-#~ "<li>Просрочене: дата бажаного виконання знаходиться в минулому;</li>\n"
-#~ "<li>Заплановане на сьогодні: дата бажаного виконання - сьогодні;</li>\n"
-#~ "<li>Поза бюджетом: бюджет закінчився;</li>\n"
-#~ "<li>В рамках бюджету: бюджет ще залишився;</li>\n"
-#~ "<li>Немає бюджету: для завдання не виділено бюджету.</li>\n"
-#~ "</ul></p>\n"
-#~ " "
-
-#~ msgid ""
-#~ "<h4><a name=\"effortproperties\">Effort\n"
-#~ "properties</a></h4>\n"
-#~ "\n"
-#~ "<p>Effort records have the following properties you can change:\n"
-#~ "<ul>\n"
-#~ "<li>Task: the task the effort belongs to.</li>\n"
-#~ "<li>Start date/time: start date and time of the effort.</li>\n"
-#~ "<li>Stop date/time: stop date and time of the effort. This can be 'None' as "
-#~ "\n"
-#~ "long as you are still working on the task.</li>\n"
-#~ "<li>Description: a multi-line description of the effort.</li>\n"
-#~ "</ul></p>\n"
-#~ "\n"
-#~ "<p>The following properties are calculated from the properties above:\n"
-#~ "<ul>\n"
-#~ "<li>Time spent: how much time you have spent working on the task.</li>\n"
-#~ "<li>Total time spent: sum of time spent on the task and all subtasks, \n"
-#~ "recursively.</li>\n"
-#~ "<li>Revenue: money earned with the time spent.</li>\n"
-#~ "<li>Total revenue: money earned with the total time spent.</li>\n"
-#~ "</ul></p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"effortproperties\">Властивості \n"
-#~ "зусиль</a></h4>\n"
-#~ "\n"
-#~ "<p>Записи зусиль мають наступні властивості, яку ви можете змінювати:\n"
-#~ "<ul>\n"
-#~ "<li>Завдання: завдання до якого належить дане зусилля.</li>\n"
-#~ "<li>Дата/час початку: дата та час початку зусилля.</li>\n"
-#~ "<li>Дата/час закінченнч: дата та час закінчення докладання зусиль. Це поле "
-#~ "може мати \n"
-#~ "значення 'Відсутня', якщо ви ще продовжеєте ковбасити завдання.</li>\n"
-#~ "<li>Опис: багатостроковий(розвернутий) опис зусилля.</li>\n"
-#~ "</ul></p>\n"
-#~ "\n"
-#~ "<p>Наступні властивості розраховуються виходячи з властивостей заданих "
-#~ "вище:\n"
-#~ "<ul>\n"
-#~ "<li>Затрачений час: скільки часу ви витратили на роботу над завданням.</li>\n"
-#~ "<li>Загальний затрачений час: сума часу витраченого на виконання завдання та "
-#~ "всіх його підзавдань.</li>\n"
-#~ "<li>Прибуток: гроші зароблені за витрачений час.</li>\n"
-#~ "<li>Загальний прибуток: гроші зароблені за увесь витрачений час.</li>\n"
-#~ "</ul></p>\n"
-
-#~ msgid "<h3><a name=\"effort\">Effort</a></h3>\n"
-#~ msgstr "<h3><a name=\"effort\">Зусилля</a></h3>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"abouteffort\">About effort</a></h4>\n"
-#~ "\n"
-#~ "<p>Whenever you spent time on tasks, you can record the amount of time\n"
-#~ "spent by tracking effort. Select a task and invoke 'Start tracking effort' "
-#~ "in\n"
-#~ "the Effort menu or the context menu or via the 'Start tracking effort' "
-#~ "toolbar \n"
-#~ "button.</p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"abouteffort\">Про зусилля</a></h4>\n"
-#~ "\n"
-#~ "<p>Кожного разу, коли ви витрачаєте час на виконання завдання, ви можете\n"
-#~ "записувати кількість витраченого часу за допомогою відслідковування зусиль.\n"
-#~ "Виберіть завдання та викличте \"Почати відслідковувати зусилля\" в меню "
-#~ "Зусиль \n"
-#~ "або в контекстному меню або через кнопку на панелі \"Почати відслідковувати "
-#~ "зусилля\".</p>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"taskcolors\">Task colors</a></h4>\n"
-#~ "\n"
-#~ "<p>The text of tasks is colored according to the following rules:\n"
-#~ "<ul>\n"
-#~ "<li>Over due tasks are red;</li>\n"
-#~ "<li>Tasks due today are orange;</li>\n"
-#~ "<li>Active tasks are black text with a blue icon;</li>\n"
-#~ "<li>Future tasks are gray, and</li>\n"
-#~ "<li>Completed tasks are green.</li>\n"
-#~ "</ul>\n"
-#~ "This all assumes you have not changed the text colors through the "
-#~ "preferences \n"
-#~ "dialog, of course.</p>\n"
-#~ "<p>The background color of tasks is determined by the categories the task\n"
-#~ "belongs to, see the section about \n"
-#~ "<a href=\"#categoryproperties\">category properties</a> below.</p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"taskcolors\">Кольори завдань</a></h4>\n"
-#~ "\n"
-#~ "<p>Текст завдань розфарбовано згідно наступних правил:\n"
-#~ "<ul>\n"
-#~ "<li>Просрочені завдання - червоні;</li>\n"
-#~ "<li>Завдання на сьогодні - жовтогарячі;</li>\n"
-#~ "<li>Активні завдання - чорний текст з голубим значком;</li>\n"
-#~ "<li>Завдання в майбутньому - сірі, та</li>\n"
-#~ "<li>Виконані завдання - зелені.</li>\n"
-#~ "</ul>\n"
-#~ "Все сказане вище є справедливим лише за умови, що ви не змінювали типові "
-#~ "кольори \n"
-#~ "в діалогі налаштувань.</p>\n"
-#~ "<p>Колір фону завдань визначається категорією, до якої належить завадння, "
-#~ "див. відповідну секцію \n"
-#~ "<a href=\"#categoryproperties\">властивості категорій</a> нижче.</p>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"taskproperties\">Task \n"
-#~ "properties</a></h4>\n"
-#~ "\n"
-#~ "<p>Tasks have the following properties you can change:\n"
-#~ "<ul>\n"
-#~ "<li>Subject: a single line that summarizes the task.</li>\n"
-#~ "<li>Description: a multi-line description of the task.</li>\n"
-#~ "<li>Due date: the date the task should be finished. This can be 'None' \n"
-#~ "indicating that this task has no fixed due date.</li>\n"
-#~ "<li>Start date: the first date on which the task can be started. The start "
-#~ "date \n"
-#~ "defaults to the date the task is created. It can also be 'None' indicating "
-#~ "that\n"
-#~ "you don't really want to start this task. This can be convenient for e.g. \n"
-#~ "registering sick leave.</li>\n"
-#~ "<li>Completion date: this date is 'None' as long as the task has not been \n"
-#~ "completed. It is set to the current date when you mark the task as "
-#~ "completed. \n"
-#~ "The completion date can also be entered manually.</li>\n"
-#~ "<li>Budget: amount of hours available for the task.</li>\n"
-#~ "<li>Hourly fee: the amount of money earned with the task per hour.</li>\n"
-#~ "<li>Fixed fee: the amount of money earned with the task regardless of the "
-#~ "time\n"
-#~ "spent.</li>\n"
-#~ "</ul></p>\n"
-#~ "\n"
-#~ "<p>The following properties are calculated from the properties above:\n"
-#~ "<ul>\n"
-#~ "<li>Days left: the number of days left until the due date.</li>\n"
-#~ "<li>Total budget: sum of task budget and the budgets of all subtasks of the "
-#~ "\n"
-#~ "task, recursively.</li>\n"
-#~ "<li>Time spent: effort spent on the task.</li>\n"
-#~ "<li>Total time spent: effort spent on the task and all subtasks, \n"
-#~ "recursively.</li>\n"
-#~ "<li>Budget left: task budget minus time spent on the task.</li>\n"
-#~ "<li>Total budget left: total task budget minus total time spent.</li>\n"
-#~ "<li>Total fixed fee: sum of fixed fee of the task and the fixed fees of all "
-#~ "\n"
-#~ "subtasks of the task, recursively.</li>\n"
-#~ "<li>Revenue: hourly fee times hours spent plus fixed fee.</li>\n"
-#~ "<li>Total revenue: sum of task revenue and revenue of all subtasks, \n"
-#~ "recursively.</li>\n"
-#~ "</ul></p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"taskproperties\">Властивості \n"
-#~ "завдань</a></h4>\n"
-#~ "\n"
-#~ "<p>Завдання мають наступні властивості, які ви можете змінити:\n"
-#~ "<ul>\n"
-#~ "<li>Тема: одно-строчний опис завдання.</li>\n"
-#~ "<li>Опис: багатостроковий(розвернутий) опис завдання.</li>\n"
-#~ "<li>Бажаний строк виконання: дата, до якої завдання повинне бути виконаним. "
-#~ "Це поле може мати значення 'Відсутня',\n"
-#~ "що значитиме, що це завдання не має фіксованої дати завершення.</li>\n"
-#~ "<li>Дата початку: дата, коли завдання може бути розпочатим. Дата початку за\n"
-#~ "умовчанням така ж як і дата створення завдання. Це поле може мати значення "
-#~ "'Відсутня',\n"
-#~ "що значитиме, що ви не хочете розпочинати дане завдання. Це може бути "
-#~ "зручним, наприклад, для \n"
-#~ "опису відпустки по хворобі.</li>\n"
-#~ "<li>Дата завершення: Це поле матиме значення 'Відсутня', до тих пір, доки "
-#~ "завдання не буде виконано.\n"
-#~ "Вона автоматично буде встановлена до поточної дати, коли ви позначаєте "
-#~ "завдання як виконане.\n"
-#~ "Також дату завершення можна ввести вручну.</li>\n"
-#~ "<li>Бюджет: кількість годин доступних для завдання.</li>\n"
-#~ "<li>Погодинна ставка: кількість зароблених грошей за кожну годину виконання "
-#~ "завдання.</li>\n"
-#~ "<li>Фіксована ставка: кількість зароблених грошей в разі виконання завдання "
-#~ "незалежно від затраченого часу.</li>\n"
-#~ "</ul></p>\n"
-#~ "\n"
-#~ "<p>Наступні властивості розраховуються виходячи з властивостей заданих "
-#~ "вище:\n"
-#~ "<ul>\n"
-#~ "<li>Днів залишилося: кількість днів, що залишилося до бажаного строку "
-#~ "виконання.</li>\n"
-#~ "<li>Загальний буджет: сума бюджетів всіх завдань та бюджетів всіх "
-#~ "підзавдань.</li>\n"
-#~ "<li>Часу витрачено: кількість зусиль витрачених на завдання.</li>\n"
-#~ "<li>Загальний витрачений час: кількість зусиль витрачених на завдання та на "
-#~ "всі підзавдання.</li>\n"
-#~ "<li>Залишок бюджету: бюджет завдання мінус час витрачений на виконання "
-#~ "завдання.</li>\n"
-#~ "<li>Загальний залишок бюджету: загальний бюджет усіх завдань мінус загальний "
-#~ "час витрачений на виконання всіх завдань.</li>\n"
-#~ "<li>Загальна фіксована ставка: сума фіксованої ставки всіх завдань включаючи "
-#~ "підзавдання.</li>\n"
-#~ "<li>Прибуток: погодинна ставка помножена на кількість потрачених годин плюс "
-#~ "фіксована ставка.</li>\n"
-#~ "<li>Загальний прибуток: сума прибутку від завдань плюс прибуток від всіх "
-#~ "підзавдань.</li>\n"
-#~ "</ul></p>\n"
-
-#~ msgid "<h3><a name=\"categories\">Categories</a></h3>\n"
-#~ msgstr "<h3><a name=\"categories\">Категорії</a></h3>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"categoryproperties\">Category \n"
-#~ "properties</a></h4>\n"
-#~ "\n"
-#~ "<p>Categories have a subject, a description, and a color. The color is used\n"
-#~ "to render the background of the category and the background of tasks that\n"
-#~ "belong to that category. If a category has no color of its own, but it has\n"
-#~ "a parent category with a color, the parent's color will be used.  \n"
-#~ "If a task belongs to multiple categories that each have a color associated "
-#~ "with\n"
-#~ "them, a mixture of the colors will be used to render the background of that\n"
-#~ "task.</p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"categoryproperties\">Властивості \n"
-#~ "категорій</a></h4>\n"
-#~ "\n"
-#~ "<p>Категорії мають тему, опис та колір. Колір використовується для "
-#~ "відображення фону\n"
-#~ "категорії та завдань, що належать до цієї категорії. Якщо в категорії не "
-#~ "зазначено \n"
-#~ "власного кольору, але батьківська категорія має свій колір, то буде "
-#~ "використано колір\n"
-#~ "батьківської категорії.   \n"
-#~ "Якщо завдання належить до декількох категорій, то буде використано\n"
-#~ "суміш кольорів зі всіх категорій для відображення фону завдання.</p>\n"
-
-#~ msgid "Match case"
-#~ msgstr "Враховувати регістр"
-
-#~ msgid "Wrong password. Please try again."
-#~ msgstr "Промазав пароль! Налабай ще раз."
-
-#~ msgid "Include sub items"
-#~ msgstr "Включати підпункти"
-
-#~ msgid "Page setup...\tShift+Ctrl+P"
-#~ msgstr "Налаштування сторінги...\tShift+Ctrl+P"
-
-#~ msgid "Print...\tCtrl+P"
-#~ msgstr "Друкувати...\tCtrl+P"
-
-#~ msgid "&Invert selection"
-#~ msgstr "В&ибрати навпаки"
-
-#~ msgid "Minimize priority\tShift+Ctrl+D"
-#~ msgstr "Зменшити пріоритет\tShift+Ctrl+D"
-
-#~ msgid "Maximize priority\tShift+Ctrl+I"
-#~ msgstr "Збільшити пріоритет\tShift+Ctrl+I"
-
-#~ msgid "P&aste into task\tShift+Ctrl+V"
-#~ msgstr "В&ставити до завдання\tShift+Ctrl+V"
-
-#~ msgid "Edit attachment"
-#~ msgstr "Редагувати вкладення"
+#~ msgid "Untitled e-mail"
+#~ msgstr "Неназване повідомлення"

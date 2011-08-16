@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: zh_CN\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-28 23:01+0000\n"
+"POT-Creation-Date: 2011-08-04 23:21+0000\n"
 "PO-Revision-Date: 2010-11-28 14:16+0000\n"
 "Last-Translator: Alex Gissing <jixing_alex@yahoo.com.cn>\n"
 "Language-Team: Nederlands <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-04 20:04+0000\n"
-"X-Generator: Launchpad (build 13604)\n"
+"X-Launchpad-Export-Date: 2011-08-15 21:28+0000\n"
+"X-Generator: Launchpad (build 13687)\n"
 "X-Poedit-Country: CHINA\n"
 "X-Poedit-Language: Chinese\n"
 "Generated-By: pygettext.py 1.5\n"
@@ -28,7 +28,7 @@ msgstr ""
 "%s"
 
 #: taskcoachlib/application/application.py:243
-#: taskcoachlib/gui/iocontroller.py:57
+#: taskcoachlib/gui/iocontroller.py:58
 msgid "%s file error"
 msgstr "%s文件错误"
 
@@ -392,28 +392,28 @@ msgstr ""
 msgid "Change budget of \"%s\""
 msgstr ""
 
-#: taskcoachlib/config/settings.py:195
+#: taskcoachlib/config/settings.py:221
 msgid "Error while reading the %s-%s setting from %s.ini."
 msgstr ""
 
-#: taskcoachlib/config/settings.py:196
+#: taskcoachlib/config/settings.py:222
 msgid "The value is: %s"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:197
+#: taskcoachlib/config/settings.py:223
 msgid "The error is: %s"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:198
+#: taskcoachlib/config/settings.py:224
 msgid ""
 "%s will use the default value for the setting and should proceed normally."
 msgstr ""
 
-#: taskcoachlib/config/settings.py:199
+#: taskcoachlib/config/settings.py:225
 msgid "Settings error"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:219
+#: taskcoachlib/config/settings.py:245
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
@@ -421,7 +421,7 @@ msgstr ""
 "保存%s.ini:时发生错误：\n"
 "%s\n"
 
-#: taskcoachlib/config/settings.py:220
+#: taskcoachlib/config/settings.py:246
 msgid "Save error"
 msgstr "保存错误"
 
@@ -946,12 +946,12 @@ msgid "Appearance"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:237
-#: taskcoachlib/gui/dialog/preferences.py:109
+#: taskcoachlib/gui/dialog/preferences.py:118
 msgid "Foreground color"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:240
-#: taskcoachlib/gui/dialog/preferences.py:109
+#: taskcoachlib/gui/dialog/preferences.py:118
 msgid "Background color"
 msgstr ""
 
@@ -964,12 +964,12 @@ msgid "Use font:"
 msgstr "所使用字体："
 
 #: taskcoachlib/gui/dialog/editor.py:293
-#: taskcoachlib/gui/dialog/preferences.py:110
+#: taskcoachlib/gui/dialog/preferences.py:119
 msgid "Font"
 msgstr "字体"
 
 #: taskcoachlib/gui/dialog/editor.py:319
-#: taskcoachlib/gui/dialog/preferences.py:110
+#: taskcoachlib/gui/dialog/preferences.py:119
 msgid "Icon"
 msgstr ""
 
@@ -1164,10 +1164,8 @@ msgstr "分类"
 msgid "Attachments"
 msgstr "附件"
 
-#: taskcoachlib/gui/dialog/editor.py:877
-#: taskcoachlib/gui/dialog/syncpreferences.py:135
-#: taskcoachlib/gui/viewer/note.py:37 taskcoachlib/help/__init__.py:85
-#: taskcoachlib/help/__init__.py:268
+#: taskcoachlib/gui/dialog/editor.py:877 taskcoachlib/gui/viewer/note.py:37
+#: taskcoachlib/help/__init__.py:85 taskcoachlib/help/__init__.py:268
 msgid "Notes"
 msgstr "便笺"
 
@@ -1201,15 +1199,15 @@ msgstr "停止"
 msgid "Export only the selected items"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:85 taskcoachlib/gui/iocontroller.py:294
+#: taskcoachlib/gui/dialog/export.py:85 taskcoachlib/gui/iocontroller.py:302
 msgid "Export as CSV"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:90 taskcoachlib/gui/iocontroller.py:299
+#: taskcoachlib/gui/dialog/export.py:90 taskcoachlib/gui/iocontroller.py:307
 msgid "Export as iCalendar"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:101 taskcoachlib/gui/iocontroller.py:288
+#: taskcoachlib/gui/dialog/export.py:101 taskcoachlib/gui/iocontroller.py:296
 msgid "Export as HTML"
 msgstr ""
 
@@ -1297,7 +1295,7 @@ msgstr "特别地，如果有防火墙，请确保 4096 至 4100 端口开启。
 msgid "OK"
 msgstr "确定"
 
-#: taskcoachlib/gui/dialog/preferences.py:207
+#: taskcoachlib/gui/dialog/preferences.py:227
 msgid ""
 "This setting will take effect\n"
 "after you restart %s"
@@ -1305,15 +1303,15 @@ msgstr ""
 "重启%s后\n"
 "该设置将生效"
 
-#: taskcoachlib/gui/dialog/preferences.py:227
+#: taskcoachlib/gui/dialog/preferences.py:248
 msgid "Files"
 msgstr "文件"
 
-#: taskcoachlib/gui/dialog/preferences.py:233
+#: taskcoachlib/gui/dialog/preferences.py:254
 msgid "Auto save after every change"
 msgstr "每次修改后自动保存"
 
-#: taskcoachlib/gui/dialog/preferences.py:235
+#: taskcoachlib/gui/dialog/preferences.py:256
 msgid ""
 "Create a backup copy before\n"
 "overwriting a %s file"
@@ -1321,7 +1319,7 @@ msgstr ""
 "在覆盖一个%s文件之前\n"
 "创建一个备份"
 
-#: taskcoachlib/gui/dialog/preferences.py:237
+#: taskcoachlib/gui/dialog/preferences.py:258
 msgid ""
 "Save settings (%s.ini) in the same\n"
 "directory as the program"
@@ -1329,7 +1327,7 @@ msgstr ""
 "保存设置 (%s.ini) 到\n"
 "程序的安装目录中"
 
-#: taskcoachlib/gui/dialog/preferences.py:239
+#: taskcoachlib/gui/dialog/preferences.py:260
 msgid ""
 "(For running %s\n"
 "from a removable medium)"
@@ -1337,76 +1335,76 @@ msgstr ""
 "(For 从可移动介质中\n"
 "运行 %s)"
 
-#: taskcoachlib/gui/dialog/preferences.py:240
+#: taskcoachlib/gui/dialog/preferences.py:261
 msgid "Attachment base directory"
 msgstr "附件相对目录基于"
 
-#: taskcoachlib/gui/dialog/preferences.py:241
+#: taskcoachlib/gui/dialog/preferences.py:262
 msgid ""
 "When adding an attachment, try to make\n"
 "its path relative to this one."
 msgstr "添加新附件时，将使用相对路径。"
 
-#: taskcoachlib/gui/dialog/preferences.py:247
+#: taskcoachlib/gui/dialog/preferences.py:268
 msgid "Window behavior"
 msgstr "窗口行为"
 
-#: taskcoachlib/gui/dialog/preferences.py:253
+#: taskcoachlib/gui/dialog/preferences.py:274
 msgid "Show splash screen on startup"
 msgstr "启动时显示启动画面"
 
-#: taskcoachlib/gui/dialog/preferences.py:255
+#: taskcoachlib/gui/dialog/preferences.py:276
 msgid "Show tips window on startup"
 msgstr "启动时弹出提示窗口"
 
-#: taskcoachlib/gui/dialog/preferences.py:257
+#: taskcoachlib/gui/dialog/preferences.py:278
 msgid "Start with the main window iconized"
 msgstr "启动时主窗缩小为图标"
 
-#: taskcoachlib/gui/dialog/preferences.py:258
+#: taskcoachlib/gui/dialog/preferences.py:279
 msgid "Always"
 msgstr "总是"
 
-#: taskcoachlib/gui/dialog/preferences.py:258
+#: taskcoachlib/gui/dialog/preferences.py:279
 msgid "Never"
 msgstr "从不"
 
-#: taskcoachlib/gui/dialog/preferences.py:260
+#: taskcoachlib/gui/dialog/preferences.py:281
 msgid "If it was iconized last session"
 msgstr "如果上一次关闭时是图标状态"
 
-#: taskcoachlib/gui/dialog/preferences.py:262
+#: taskcoachlib/gui/dialog/preferences.py:283
 msgid "Check for new version of %(name)s on startup"
 msgstr "启动时检查新版本%(name)s"
 
-#: taskcoachlib/gui/dialog/preferences.py:264
+#: taskcoachlib/gui/dialog/preferences.py:285
 msgid "Hide main window when iconized"
 msgstr "当图标化时隐藏主窗口"
 
-#: taskcoachlib/gui/dialog/preferences.py:266
+#: taskcoachlib/gui/dialog/preferences.py:287
 msgid "Minimize main window when closed"
 msgstr "当关闭时最小化窗口"
 
-#: taskcoachlib/gui/dialog/preferences.py:268
+#: taskcoachlib/gui/dialog/preferences.py:289
 msgid "Make clock in the task bar tick when tracking effort"
 msgstr "当跟踪花费时，让闹钟显示在任务提示栏"
 
-#: taskcoachlib/gui/dialog/preferences.py:270
+#: taskcoachlib/gui/dialog/preferences.py:291
 msgid ""
 "Show a popup with the description of an item\n"
 "when hovering over it"
 msgstr "当鼠标悬停时弹出气泡显示项目的说明。"
 
-#: taskcoachlib/gui/dialog/preferences.py:276
-#: taskcoachlib/gui/dialog/preferences.py:336
+#: taskcoachlib/gui/dialog/preferences.py:297
+#: taskcoachlib/gui/dialog/preferences.py:357
 msgid "Language"
 msgstr "语言"
 
-#: taskcoachlib/gui/dialog/preferences.py:282
+#: taskcoachlib/gui/dialog/preferences.py:303
 msgid "Let the system determine the language"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:342
+#: taskcoachlib/gui/dialog/preferences.py:363
 msgid ""
 "If your language is not available, or the translation needs \n"
 "improving, please consider helping. See:"
@@ -1414,209 +1412,209 @@ msgstr ""
 "如果您的语言尚不可用，\n"
 "或现有翻译尚待改进，并愿意帮助的话，请看："
 
-#: taskcoachlib/gui/dialog/preferences.py:349
+#: taskcoachlib/gui/dialog/preferences.py:370
 msgid "Language not found?"
 msgstr "未发现语言包？"
 
-#: taskcoachlib/gui/dialog/preferences.py:359
+#: taskcoachlib/gui/dialog/preferences.py:380
 msgid "Task appearance"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:366
+#: taskcoachlib/gui/dialog/preferences.py:387
 msgid "Active tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:367
+#: taskcoachlib/gui/dialog/preferences.py:388
 msgid "Inactive tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:368
+#: taskcoachlib/gui/dialog/preferences.py:389
 msgid "Completed tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:369
+#: taskcoachlib/gui/dialog/preferences.py:390
 msgid "Overdue tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:370
+#: taskcoachlib/gui/dialog/preferences.py:391
 msgid "Tasks due soon"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:381
+#: taskcoachlib/gui/dialog/preferences.py:402
 msgid "Features"
 msgstr "特点"
 
-#: taskcoachlib/gui/dialog/preferences.py:387
+#: taskcoachlib/gui/dialog/preferences.py:408
 msgid "Allow for tracking effort"
 msgstr "允许跟踪花费"
 
-#: taskcoachlib/gui/dialog/preferences.py:388
+#: taskcoachlib/gui/dialog/preferences.py:409
 msgid "Allow for taking notes"
 msgstr "允许加入便笺"
 
-#: taskcoachlib/gui/dialog/preferences.py:395
+#: taskcoachlib/gui/dialog/preferences.py:416
 msgid "Enable SyncML"
 msgstr "启用SyncML"
 
-#: taskcoachlib/gui/dialog/preferences.py:397
+#: taskcoachlib/gui/dialog/preferences.py:418
 msgid "Enable iPhone synchronization"
 msgstr "开启 iPhone 同步"
 
-#: taskcoachlib/gui/dialog/preferences.py:400
+#: taskcoachlib/gui/dialog/preferences.py:421
 msgid "Hour of start of work day"
 msgstr "工作日的起始时间"
 
-#: taskcoachlib/gui/dialog/preferences.py:402
+#: taskcoachlib/gui/dialog/preferences.py:423
 msgid "Hour of end of work day"
 msgstr "工作日的结束时间"
 
-#: taskcoachlib/gui/dialog/preferences.py:404
+#: taskcoachlib/gui/dialog/preferences.py:425
 msgid ""
 "Use gradients in calendar views.\n"
 "This may slow down Task Coach."
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:407
+#: taskcoachlib/gui/dialog/preferences.py:428
 msgid "Minutes between task start/end times"
 msgstr "在任务开始/结束期间的分钟"
 
-#: taskcoachlib/gui/dialog/preferences.py:414
+#: taskcoachlib/gui/dialog/preferences.py:435
 msgid "Task dates"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:420
+#: taskcoachlib/gui/dialog/preferences.py:441
 msgid "Mark parent task completed when all children are completed"
 msgstr "当所有子任务完成时将父任务标记为完成"
 
-#: taskcoachlib/gui/dialog/preferences.py:422
+#: taskcoachlib/gui/dialog/preferences.py:443
 msgid "Number of hours that tasks are considered to be 'due soon'"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:424
+#: taskcoachlib/gui/dialog/preferences.py:445
 msgid "Nothing"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:425
+#: taskcoachlib/gui/dialog/preferences.py:446
 msgid "Changing the start date changes the due date"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:426
+#: taskcoachlib/gui/dialog/preferences.py:447
 msgid "Changing the due date changes the start date"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:428
+#: taskcoachlib/gui/dialog/preferences.py:449
 msgid "What to do with start and due date if the other one is changed"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:431
+#: taskcoachlib/gui/dialog/preferences.py:452
 msgid "Preset"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:432
+#: taskcoachlib/gui/dialog/preferences.py:453
 msgid "Propose"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:433
+#: taskcoachlib/gui/dialog/preferences.py:454
 msgid "Today"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:434
+#: taskcoachlib/gui/dialog/preferences.py:455
 msgid "Tomorrow"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:435
+#: taskcoachlib/gui/dialog/preferences.py:456
 msgid "Day after tomorrow"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:436
+#: taskcoachlib/gui/dialog/preferences.py:457
 msgid "Next Friday"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:437
+#: taskcoachlib/gui/dialog/preferences.py:458
 msgid "Next Monday"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:438
+#: taskcoachlib/gui/dialog/preferences.py:459
 msgid "Start of day"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:439
+#: taskcoachlib/gui/dialog/preferences.py:460
 msgid "Start of working day"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:440
+#: taskcoachlib/gui/dialog/preferences.py:461
 msgid "Current time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:441
+#: taskcoachlib/gui/dialog/preferences.py:462
 msgid "End of working day"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:442
+#: taskcoachlib/gui/dialog/preferences.py:463
 msgid "End of day"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:444
+#: taskcoachlib/gui/dialog/preferences.py:465
 msgid "Default start date and time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:447
+#: taskcoachlib/gui/dialog/preferences.py:468
 msgid "Default due date and time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:450
+#: taskcoachlib/gui/dialog/preferences.py:471
 msgid "Default completion date and time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:453
+#: taskcoachlib/gui/dialog/preferences.py:474
 msgid "Default reminder date and time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:460
+#: taskcoachlib/gui/dialog/preferences.py:481
 msgid "Task reminders"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:469
+#: taskcoachlib/gui/dialog/preferences.py:490
 msgid "Notification system to use for reminders"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:473
+#: taskcoachlib/gui/dialog/preferences.py:494
 msgid "Default snooze time to use after reminder"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:476
+#: taskcoachlib/gui/dialog/preferences.py:497
 msgid "Snooze times to offer in task reminder dialog"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:483
+#: taskcoachlib/gui/dialog/preferences.py:504
 msgid "iPhone"
 msgstr "iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:489
+#: taskcoachlib/gui/dialog/preferences.py:510
 msgid "Password for synchronization with iPhone"
 msgstr "同 iPhone 同步的密码"
 
-#: taskcoachlib/gui/dialog/preferences.py:491
+#: taskcoachlib/gui/dialog/preferences.py:512
 msgid "Bonjour service name"
 msgstr "Bonjour 服务名"
 
-#: taskcoachlib/gui/dialog/preferences.py:493
+#: taskcoachlib/gui/dialog/preferences.py:514
 msgid "Upload completed tasks to device"
 msgstr "将所有任务上传到设备"
 
-#: taskcoachlib/gui/dialog/preferences.py:495
+#: taskcoachlib/gui/dialog/preferences.py:516
 msgid "Show sync log"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:495
+#: taskcoachlib/gui/dialog/preferences.py:516
 msgid "Show the synchronization log"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:501
+#: taskcoachlib/gui/dialog/preferences.py:522
 msgid "Editor"
 msgstr "编辑器"
 
-#: taskcoachlib/gui/dialog/preferences.py:507
+#: taskcoachlib/gui/dialog/preferences.py:528
 msgid "Check spelling in editors"
 msgstr "在编辑器中检查拼写"
 
@@ -1632,11 +1630,23 @@ msgstr "打盹"
 msgid "Mark task completed"
 msgstr "标记任务已完成"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:80
+#: taskcoachlib/gui/dialog/syncpreferences.py:81
+msgid "SyncML server"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/syncpreferences.py:82
+msgid "Custom"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/syncpreferences.py:84
+msgid "MemoToo (http://www.memotoo.com/)"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/syncpreferences.py:87
 msgid "SyncML server URL"
 msgstr "SyncML服务器的URL"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:81
+#: taskcoachlib/gui/dialog/syncpreferences.py:88
 msgid "User name/ID"
 msgstr "用户名/ID"
 
@@ -1644,64 +1654,57 @@ msgstr "用户名/ID"
 msgid "Enable tasks synchronization"
 msgstr "启用任务同步"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:91
+#: taskcoachlib/gui/dialog/syncpreferences.py:92
 msgid "Tasks database name"
 msgstr "任务数据库名称"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:93
-#: taskcoachlib/gui/dialog/syncpreferences.py:111
+#: taskcoachlib/gui/dialog/syncpreferences.py:106
 msgid "Preferred synchonization mode"
 msgstr "优先同步模式"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:94
-#: taskcoachlib/gui/dialog/syncpreferences.py:112
+#: taskcoachlib/gui/dialog/syncpreferences.py:107
 msgid "Two way"
 msgstr "两种土建"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:95
-#: taskcoachlib/gui/dialog/syncpreferences.py:113
+#: taskcoachlib/gui/dialog/syncpreferences.py:108
 msgid "Slow"
 msgstr "慢"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:96
-#: taskcoachlib/gui/dialog/syncpreferences.py:114
+#: taskcoachlib/gui/dialog/syncpreferences.py:109
 msgid "One way from client"
 msgstr "来自客户端的办法"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:97
-#: taskcoachlib/gui/dialog/syncpreferences.py:115
+#: taskcoachlib/gui/dialog/syncpreferences.py:110
 msgid "Refresh from client"
 msgstr "从客户端刷新"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:98
-#: taskcoachlib/gui/dialog/syncpreferences.py:116
+#: taskcoachlib/gui/dialog/syncpreferences.py:111
 msgid "One way from server"
 msgstr "来自服务器的办法"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:99
-#: taskcoachlib/gui/dialog/syncpreferences.py:117
+#: taskcoachlib/gui/dialog/syncpreferences.py:112
 #: taskcoachlib/syncml/basesource.py:61 taskcoachlib/syncml/basesource.py:73
 msgid "Refresh from server"
 msgstr "从服务器端刷新"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:108
+#: taskcoachlib/gui/dialog/syncpreferences.py:103
 msgid "Enable notes synchronization"
 msgstr "启用便笺同步"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:109
+#: taskcoachlib/gui/dialog/syncpreferences.py:105
 msgid "Notes database name"
 msgstr "便笺数据库名称"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:133
+#: taskcoachlib/gui/dialog/syncpreferences.py:150
 msgid "Access"
 msgstr "存取权限"
-
-#: taskcoachlib/gui/dialog/syncpreferences.py:134
-#: taskcoachlib/gui/viewer/task.py:54 taskcoachlib/help/__init__.py:68
-#: taskcoachlib/help/__init__.py:129
-#: taskcoachlib/widgets/calendarconfig.py:107
-msgid "Tasks"
-msgstr "任务"
 
 #: taskcoachlib/gui/dialog/templates.py:69
 msgid "Template"
@@ -1755,28 +1758,28 @@ msgstr ""
 msgid "The latest released version of %(name)s is %(version)s."
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:47
+#: taskcoachlib/gui/iocontroller.py:48
 msgid ""
 "%s files (*.tsk)|*.tsk|Backup files (*.tsk.bak)|*.tsk.bak|All files (*.*)|*"
 msgstr "%s 文件 (*.tsk)|*.tsk|备份文件 (*.tsk.bak)|*.tsk.bak|所有文件 (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:50
+#: taskcoachlib/gui/iocontroller.py:51
 msgid "iCalendar files (*.ics)|*.ics|All files (*.*)|*"
 msgstr "iCalendar文件(*.ics)|*.ics|所有文件(*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:53
+#: taskcoachlib/gui/iocontroller.py:54
 msgid "HTML files (*.html)|*.html|All files (*.*)|*"
 msgstr "HTML文件(*.html)|*.html|所有文件(*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:56
+#: taskcoachlib/gui/iocontroller.py:57
 msgid "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*"
 msgstr "CSV文件(*.csv)|*.csv|文本文件(*.txt)|*.txt|所有文件(*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:95
+#: taskcoachlib/gui/iocontroller.py:96
 msgid "Open"
 msgstr "打开"
 
-#: taskcoachlib/gui/iocontroller.py:118 taskcoachlib/gui/iocontroller.py:155
+#: taskcoachlib/gui/iocontroller.py:126 taskcoachlib/gui/iocontroller.py:163
 msgid ""
 "Cannot open %(filename)s\n"
 "because it was created by a newer version of %(name)s.\n"
@@ -1786,51 +1789,51 @@ msgstr ""
 "因为它是被一个更新的版本创建的： %(name)s。\n"
 "请升级 %(name)s。"
 
-#: taskcoachlib/gui/iocontroller.py:126 taskcoachlib/gui/iocontroller.py:161
+#: taskcoachlib/gui/iocontroller.py:134 taskcoachlib/gui/iocontroller.py:169
 msgid "Error while reading %s:\n"
 msgstr "当读取%s时出错\n"
 
-#: taskcoachlib/gui/iocontroller.py:128 taskcoachlib/gui/iocontroller.py:163
+#: taskcoachlib/gui/iocontroller.py:136 taskcoachlib/gui/iocontroller.py:171
 msgid "Are you sure it is a %s-file?"
 msgstr "你确定是文件%s吗？"
 
-#: taskcoachlib/gui/iocontroller.py:131
+#: taskcoachlib/gui/iocontroller.py:139
 msgid "Loaded %(nrtasks)d tasks from %(filename)s"
 msgstr "从 %(filename)s 中装入 %(nrtasks)d 条任务"
 
-#: taskcoachlib/gui/iocontroller.py:135
+#: taskcoachlib/gui/iocontroller.py:143
 msgid "Cannot open %s because it doesn't exist"
 msgstr "无法打开%s，因为它不存在。"
 
-#: taskcoachlib/gui/iocontroller.py:145
+#: taskcoachlib/gui/iocontroller.py:153
 msgid "Merge"
 msgstr "合并"
 
-#: taskcoachlib/gui/iocontroller.py:150
+#: taskcoachlib/gui/iocontroller.py:158
 msgid ""
 "Cannot open %(filename)s\n"
 "because it is locked."
 msgstr "无法打开 %(filename)s ，已被锁。"
 
-#: taskcoachlib/gui/iocontroller.py:166
+#: taskcoachlib/gui/iocontroller.py:174
 msgid "Merged %(filename)s"
 msgstr "已合并 %(filename)s"
 
-#: taskcoachlib/gui/iocontroller.py:183
+#: taskcoachlib/gui/iocontroller.py:191
 msgid "Save as"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:195
+#: taskcoachlib/gui/iocontroller.py:203
 msgid "Save selection"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:227
+#: taskcoachlib/gui/iocontroller.py:235
 msgid ""
 "Cannot save %s\n"
 "It is locked by another instance of %s.\n"
 msgstr "无法保存 %s ，已被另一个 %s 的实例锁住了。\n"
 
-#: taskcoachlib/gui/iocontroller.py:232
+#: taskcoachlib/gui/iocontroller.py:240
 msgid ""
 "Cannot save %s\n"
 "%s"
@@ -1838,53 +1841,53 @@ msgstr ""
 "无法保存 %s\n"
 "%s"
 
-#: taskcoachlib/gui/iocontroller.py:242
+#: taskcoachlib/gui/iocontroller.py:250
 msgid "Import template"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:244
+#: taskcoachlib/gui/iocontroller.py:252
 msgid "%s template files (*.tsktmpl)|*.tsktmpl"
 msgstr "%s 模板文件(*.tsktmpl)|*.tsktmpl"
 
-#: taskcoachlib/gui/iocontroller.py:250
+#: taskcoachlib/gui/iocontroller.py:258
 msgid ""
 "Cannot import template %s\n"
 "%s"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:279
+#: taskcoachlib/gui/iocontroller.py:287
 msgid "Exported %(count)d items to %(filename)s"
 msgstr "已将 %(count)d 条条目到文件 %(filename)s"
 
-#: taskcoachlib/gui/iocontroller.py:314
+#: taskcoachlib/gui/iocontroller.py:322
 msgid "Finished synchronization"
 msgstr "结束同步"
 
-#: taskcoachlib/gui/iocontroller.py:321
+#: taskcoachlib/gui/iocontroller.py:329
 msgid "Note conflict"
 msgstr "便笺冲突"
 
-#: taskcoachlib/gui/iocontroller.py:325
+#: taskcoachlib/gui/iocontroller.py:333
 msgid "Task conflict"
 msgstr "任务冲突"
 
-#: taskcoachlib/gui/iocontroller.py:337
+#: taskcoachlib/gui/iocontroller.py:345
 msgid "Synchronization status"
 msgstr "同步状态"
 
-#: taskcoachlib/gui/iocontroller.py:345
+#: taskcoachlib/gui/iocontroller.py:353
 msgid ""
 "Cannot open %s\n"
 "%s"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:380
+#: taskcoachlib/gui/iocontroller.py:388
 msgid ""
 "A file named %s already exists.\n"
 "Do you want to replace it?"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:392
+#: taskcoachlib/gui/iocontroller.py:400
 msgid ""
 "You have unsaved changes.\n"
 "Save before closing?"
@@ -1892,11 +1895,11 @@ msgstr ""
 "存在未保存的修改。\n"
 "在关闭前保存吗？"
 
-#: taskcoachlib/gui/iocontroller.py:393
+#: taskcoachlib/gui/iocontroller.py:401
 msgid "%s: save changes?"
 msgstr "%s: 保存修改？"
 
-#: taskcoachlib/gui/iocontroller.py:403
+#: taskcoachlib/gui/iocontroller.py:411
 msgid ""
 "Cannot open %s because it is locked.\n"
 "\n"
@@ -1908,11 +1911,11 @@ msgid ""
 "Break the lock?"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:411 taskcoachlib/gui/iocontroller.py:418
+#: taskcoachlib/gui/iocontroller.py:419 taskcoachlib/gui/iocontroller.py:426
 msgid "%s: file locked"
 msgstr "%s ：文件已锁定"
 
-#: taskcoachlib/gui/iocontroller.py:416
+#: taskcoachlib/gui/iocontroller.py:424
 msgid ""
 "Cannot acquire a lock because locking is not supported\n"
 "on the location of %s.\n"
@@ -1922,11 +1925,11 @@ msgstr ""
 "位置%s.\n"
 "不锁定打开%s？"
 
-#: taskcoachlib/gui/iocontroller.py:423
+#: taskcoachlib/gui/iocontroller.py:431
 msgid "Closed %s"
 msgstr "%s 已关闭"
 
-#: taskcoachlib/gui/iocontroller.py:428
+#: taskcoachlib/gui/iocontroller.py:436
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
 msgstr "保存 %(nrtasks)d 条任务到 %(filename)s"
 
@@ -1938,23 +1941,23 @@ msgstr ""
 msgid "Synchronizing with %s..."
 msgstr "正在与 %s 同步..."
 
-#: taskcoachlib/gui/mainwindow.py:71 taskcoachlib/gui/uicommand.py:608
+#: taskcoachlib/gui/mainwindow.py:79 taskcoachlib/gui/uicommand.py:608
 msgid "Warning"
 msgstr "警告"
 
-#: taskcoachlib/gui/mainwindow.py:108
+#: taskcoachlib/gui/mainwindow.py:116
 msgid "Welcome to %(name)s version %(version)s"
 msgstr "欢迎使用 %(name)s 版本 %(version)s"
 
-#: taskcoachlib/gui/mainwindow.py:285
+#: taskcoachlib/gui/mainwindow.py:293
 msgid "iPhone/iPod"
 msgstr "iPhone/iPod"
 
-#: taskcoachlib/gui/mainwindow.py:294
+#: taskcoachlib/gui/mainwindow.py:302
 msgid "Synchronization type"
 msgstr "同步类型"
 
-#: taskcoachlib/gui/mainwindow.py:304
+#: taskcoachlib/gui/mainwindow.py:312
 msgid ""
 "An iPhone or iPod Touch device tried to synchronize with this\n"
 "task file, but the protocol negotiation failed. Please file a\n"
@@ -1964,7 +1967,7 @@ msgstr ""
 "任务文件，但协议握手失败，请发送\n"
 "错误报告。"
 
-#: taskcoachlib/gui/mainwindow.py:307 taskcoachlib/iphone/protocol.py:481
+#: taskcoachlib/gui/mainwindow.py:315 taskcoachlib/iphone/protocol.py:481
 #: taskcoachlib/widgets/draganddrop.py:108
 #: taskcoachlib/widgets/draganddrop.py:110
 #: taskcoachlib/widgets/draganddrop.py:143
@@ -3548,6 +3551,12 @@ msgstr "任务：%d 选中，%d 可见，%d 总数"
 #: taskcoachlib/gui/viewer/task.py:35
 msgid "Status: %d overdue, %d inactive, %d completed"
 msgstr ""
+
+#: taskcoachlib/gui/viewer/task.py:54 taskcoachlib/help/__init__.py:68
+#: taskcoachlib/help/__init__.py:129
+#: taskcoachlib/widgets/calendarconfig.py:107
+msgid "Tasks"
+msgstr "任务"
 
 #: taskcoachlib/gui/viewer/task.py:262
 msgid "Timeline"
@@ -5358,10 +5367,6 @@ msgstr ""
 msgid "Sending GUID: %s"
 msgstr ""
 
-#: taskcoachlib/mailer/__init__.py:67
-msgid "Untitled e-mail"
-msgstr "无题电子邮件"
-
 #: taskcoachlib/mailer/macmail.py:49
 msgid "Mail.app message"
 msgstr ""
@@ -5392,24 +5397,32 @@ msgid ""
 msgstr ""
 
 #: taskcoachlib/mailer/thunderbird.py:238
+#: taskcoachlib/mailer/thunderbird.py:351
 msgid "Unrecognized URL scheme: \"%s\""
 msgstr ""
 
-#: taskcoachlib/mailer/thunderbird.py:295
+#: taskcoachlib/mailer/thunderbird.py:291
+msgid ""
+"Could not open an IMAP connection to %(server)s:%(port)s\n"
+"to retrieve Thunderbird email message:\n"
+"%(error)s"
+msgstr ""
+
+#: taskcoachlib/mailer/thunderbird.py:299
 msgid "Please enter password for user %(user)s on %(server)s:%(port)d"
 msgstr ""
 
-#: taskcoachlib/mailer/thunderbird.py:313
+#: taskcoachlib/mailer/thunderbird.py:317
 msgid "Login failed (%s). Please try again."
 msgstr ""
 
-#: taskcoachlib/mailer/thunderbird.py:326
+#: taskcoachlib/mailer/thunderbird.py:330
 msgid ""
 "Could not select inbox \"%s\"\n"
 "(%s)"
 msgstr ""
 
-#: taskcoachlib/mailer/thunderbird.py:331
+#: taskcoachlib/mailer/thunderbird.py:335
 msgid "No such mail: %d"
 msgstr ""
 
@@ -5521,20 +5534,20 @@ msgid ""
 "\n"
 msgstr ""
 
-#: taskcoachlib/syncml/sync.py:203
+#: taskcoachlib/syncml/sync.py:201
 msgid ""
 "%d items added.\n"
 "%d items updated.\n"
 "%d items deleted."
 msgstr ""
 
-#: taskcoachlib/syncml/sync.py:209
+#: taskcoachlib/syncml/sync.py:207
 msgid ""
 "An error occurred in the synchronization.\n"
 "Error code: %d; message: %s"
 msgstr ""
 
-#: taskcoachlib/syncml/sync.py:214
+#: taskcoachlib/syncml/sync.py:212
 msgid "You must first edit your SyncML Settings, in Edit/SyncML preferences."
 msgstr ""
 
@@ -5767,718 +5780,8 @@ msgstr "不再显示该对话框"
 msgid "Error opening URL"
 msgstr ""
 
-#~ msgid "Edit attachment..."
-#~ msgstr "编辑附件..."
-
-#~ msgid "Edit the selected attachments"
-#~ msgstr "编辑选中的附件"
-
-#~ msgid "Delete attachment"
-#~ msgstr "删除附件"
-
-#~ msgid "Delete the selected attachments"
-#~ msgstr "删除选中的附件"
-
-#~ msgid "New category..."
-#~ msgstr "新建分类..."
-
-#~ msgid "Edit category..."
-#~ msgstr "编辑分类..."
-
-#~ msgid "Edit the selected categories"
-#~ msgstr "编辑所选分类"
-
-#~ msgid "Delete category"
-#~ msgstr "删除分类"
-
-#~ msgid "Delete the selected categories"
-#~ msgstr "删除所选分类"
-
-#~ msgid "New subcategory..."
-#~ msgstr "新建子分类..."
-
-#~ msgid "Insert a new subcategory"
-#~ msgstr "插入一个新的子分类"
-
-#~ msgid "&Edit effort..."
-#~ msgstr "编辑花费(&E)..."
-
-#~ msgid "Edit the selected effort period(s)"
-#~ msgstr "编辑选中的花费日期"
-
-#~ msgid "&Delete effort"
-#~ msgstr "删除花费(&D)"
-
-#~ msgid "Delete the selected effort period(s)"
-#~ msgstr "删除选中花费时段"
-
-#~ msgid "New note..."
-#~ msgstr "新建便笺..."
-
-#~ msgid "Edit note..."
-#~ msgstr "编辑便笺..."
-
-#~ msgid "Edit the selected notes"
-#~ msgstr "编辑所选便笺"
-
-#~ msgid "Delete note"
-#~ msgstr "删除便笺"
-
-#~ msgid "Delete the selected notes"
-#~ msgstr "删除所选便笺"
-
-#~ msgid "New subnote..."
-#~ msgstr "新建子便笺..."
-
-#~ msgid "Insert a new subnote"
-#~ msgstr "插入一个子便笺"
-
-#~ msgid "&Edit task..."
-#~ msgstr "编辑任务(&E)..."
-
-#~ msgid "Delete the selected task(s)"
-#~ msgstr "删除所选任务"
-
-#~ msgid "Insert a new subtask into the selected task"
-#~ msgstr "向所选任务插入一个新的子任务"
-
-#~ msgid "Colors"
-#~ msgstr "颜色"
-
-#~ msgid "Click this button to change the color of active tasks"
-#~ msgstr "点击此按钮更新活动任务的颜色"
-
-#~ msgid "Click this button to change the color of inactive tasks"
-#~ msgstr "点击此按钮更新非活动任务的颜色"
-
-#~ msgid "Click this button to change the color of completed tasks"
-#~ msgstr "点击此按钮更新已完成任务的颜色"
-
-#~ msgid "Click this button to change the color of over due tasks"
-#~ msgstr "点击此按钮更新超过预期任务的颜色"
-
-#~ msgid "Click this button to change the color of tasks due soon"
-#~ msgstr "单击此按钮更改即将到期的任务的颜色"
-
 #~ msgid "Task behavior"
 #~ msgstr "任务行为"
 
-#~ msgid "Save as..."
-#~ msgstr "另存为..."
-
-#~ msgid "Please enter the template name."
-#~ msgstr "请输入模板名城"
-
-#~ msgid "Save as template"
-#~ msgstr "保存为模板"
-
-#~ msgid "Open template..."
-#~ msgstr "打开模板..."
-
-#~ msgid "Export as HTML..."
-#~ msgstr "输出为HTML..."
-
-#~ msgid "Export as CSV..."
-#~ msgstr "输出为CSV..."
-
-#~ msgid "Export as iCalendar..."
-#~ msgstr "输出为iCalender..."
-
-#~ msgid "Eff&ort"
-#~ msgstr "花费(&O)"
-
-#~ msgid "Export the current view as HTML file"
-#~ msgstr "输出当前视图为HTML文件"
-
-#~ msgid "Export the selection in the current view as HTML file"
-#~ msgstr "将当前视图中的选中项导出为 HTML 文件"
-
-#~ msgid "Export the current view in Comma Separated Values (CSV) format"
-#~ msgstr "将当前视图按(CSV)格式导出"
-
-#~ msgid "Export selection as &CSV..."
-#~ msgstr "将选中项导出为 CSV....(&C)"
-
-#~ msgid ""
-#~ "Export the selection in the current view in Comma Separated Values (CSV) "
-#~ "format"
-#~ msgstr "将当前视图中的选中项导出为逗号分隔值文件(CSV)"
-
-#~ msgid "Export selection as &iCalendar..."
-#~ msgstr "导出所选项为&iCalendar..."
-
-#~ msgid "S&yncML synchronization"
-#~ msgstr "S&yncML 同步"
-
-#~ msgid "&Clear all filters"
-#~ msgstr "清除所有过滤器(&C)"
-
-#~ msgid "Add &note"
-#~ msgstr "添加注释"
-
-#~ msgid "&Add attachment"
-#~ msgstr "添加附件(&A)"
-
-#~ msgid "Browse for files to add as attachment to the selected task(s)"
-#~ msgstr "浏览文件以加入附件到所选任务中"
-
-#~ msgid "Browse for files to add as attachment to the selected categories"
-#~ msgstr "浏览文件为选中的类别添加附件"
-
-#~ msgid "&Open all attachments"
-#~ msgstr "打开所有附件(&O)"
-
-#~ msgid "Open all attachments of the selected task(s)"
-#~ msgstr "打开所选任务的所有附件"
-
-#~ msgid "Open all attachments of the selected categories"
-#~ msgstr "打开选中的类别的所有附件"
-
-#~ msgid "St&op tracking effort"
-#~ msgstr "停止跟踪花费(&o)"
-
-#~ msgid "Help: About %s"
-#~ msgstr "帮助: 关于 %s"
-
-#~ msgid "Help: %s license"
-#~ msgstr "帮助: %s 版权"
-
-#~ msgid "&Unlimited"
-#~ msgstr "无限制的(&U)"
-
-#~ msgid "Show all tasks"
-#~ msgstr "显示所有任务"
-
-#~ msgid "Only show tasks due today"
-#~ msgstr "仅显示今天到期的任务"
-
-#~ msgid "T&omorrow"
-#~ msgstr "明天(&o)"
-
-#~ msgid "Only show tasks due today and tomorrow"
-#~ msgstr "仅显示今天和明天到期的任务"
-
-#~ msgid "Only show tasks due this work week (i.e. before Friday)"
-#~ msgstr "仅显示本工作周到期的任务(例如，日期五之前)"
-
-#~ msgid "&Week"
-#~ msgstr "周(&W)"
-
-#~ msgid "Only show tasks due this week (i.e. before Sunday)"
-#~ msgstr "仅显示本周到期的任务(例如，星期日之前)"
-
-#~ msgid "&Month"
-#~ msgstr "月(&M)"
-
-#~ msgid "Only show tasks due this month"
-#~ msgstr "仅显示本月到期的任务"
-
-#~ msgid "&Year"
-#~ msgstr "年(&Y)"
-
-#~ msgid "Only show tasks due this year"
-#~ msgstr "仅显示本年到期的任务"
-
-#~ msgid "Status: %d over due, %d inactive, %d completed"
-#~ msgstr "状态：%d 超出预定，%d 非活动，%d 已完成"
-
-#~ msgid "New effort"
-#~ msgstr "新建花费"
-
-#~ msgid "Edit effort"
-#~ msgstr "编辑花费"
-
-#~ msgid "Paste into task"
-#~ msgstr "粘贴到任务"
-
-#~ msgid "For this task"
-#~ msgstr "为这个任务"
-
-#~ msgid "For this task including all subtasks"
-#~ msgstr "为所有包括子任务的这个任务"
-
-#~ msgid "Maximum number of recent files to remember"
-#~ msgstr "记住最近文件的最大数值"
-
-#~ msgid "Click this button to change the color of tasks due today"
-#~ msgstr "点击此按钮更新今日到期任务的颜色"
-
-#~ msgid "%d tasks due today"
-#~ msgstr "%d 个任务今天到期"
-
-#~ msgid "Paste item(s) from the clipboard into the selected task"
-#~ msgstr "从剪贴板粘贴项目到造中的任务"
-
-#~ msgid "Preferences..."
-#~ msgstr "参数..."
-
-#~ msgid "Select unselected items and unselect selected items"
-#~ msgstr "选择未选中的条目并且不选择已经选择的条目"
-
-#~ msgid "E&xpand"
-#~ msgstr "展开(&x)"
-
-#~ msgid "C&ollapse"
-#~ msgstr "折叠(&o)"
-
-#~ msgid "&New effort..."
-#~ msgstr "新花费(&N)..."
-
-#~ msgid "&Completed"
-#~ msgstr "完成(&C)"
-
-#~ msgid "&Inactive"
-#~ msgstr "非活动(&I)"
-
-#~ msgid "&Active"
-#~ msgstr "活动(&A)"
-
-#~ msgid ""
-#~ "Show/hide active tasks (tasks with a start date in the past and a due date "
-#~ "in the future)"
-#~ msgstr "显示或隐藏活动任务(任务带有在过去开始的日期和在将来的预定日期)"
-
-#~ msgid "Over &budget"
-#~ msgstr "超过预算(&b)"
-
-#~ msgid "Show/hide tasks that are over budget"
-#~ msgstr "显示或隐藏超出预算的任务"
-
-#~ msgid "D&ays left"
-#~ msgstr "剩余天数(&a)"
-
-#~ msgid "Show/hide days left column"
-#~ msgstr "显示或隐藏剩余天数列"
-
-#~ msgid "Co&mpletion date"
-#~ msgstr "完成日期(&m)"
-
-#~ msgid ""
-#~ "Show/hide total budget column (total budget includes budget for subtasks)"
-#~ msgstr "显示或隐藏全部预算列(全部预算包括子任务的预算)"
-
-#~ msgid "Total b&udget"
-#~ msgstr "全部预算(&u)"
-
-#~ msgid ""
-#~ "Show/hide total time spent column (total time includes time spent on "
-#~ "subtasks)"
-#~ msgstr "显示或隐藏全部花费时间列(全部时间包括子交易的花费时间)"
-
-#~ msgid "T&otal time spent"
-#~ msgstr "全部花费时间(&o)"
-
-#~ msgid ""
-#~ "Show/hide total budget left column (total budget left includes budget left "
-#~ "for subtasks)"
-#~ msgstr "显示或隐藏剩余预算列(全部剩余预算包括子任务的剩余预算)"
-
-#~ msgid "Total budget l&eft"
-#~ msgstr "全部剩余预算(&e)"
-
-#~ msgid "O&verall priority"
-#~ msgstr "总体分类(&v)"
-
-#~ msgid "&Total fixed fee"
-#~ msgstr "全部固定报酬(&T)"
-
-#~ msgid "Show/hide total fixed fee column"
-#~ msgstr "显示或隐藏全部固定报酬列"
-
-#~ msgid "T&otal revenue"
-#~ msgstr "全部收入(&o)"
-
-#~ msgid "All date columns"
-#~ msgstr "所有日期列"
-
-#~ msgid "All budget columns"
-#~ msgstr "全部预算列"
-
-#~ msgid "All financial columns"
-#~ msgstr "所有金融列"
-
-#~ msgid "Sort case sensitive"
-#~ msgstr "大小写敏感排序"
-
-#~ msgid "Sort tasks by number of days left"
-#~ msgstr "按剩余天数对任务排序"
-
-#~ msgid "Sort tasks by total budget"
-#~ msgstr "按全部预算对任务排序"
-
-#~ msgid "Sort tasks by total time spent"
-#~ msgstr "按全部花费时间对任务排序"
-
-#~ msgid "Sort tasks by total budget left"
-#~ msgstr "按全部剩余预算对任务排序"
-
-#~ msgid "Sort tasks by overall priority"
-#~ msgstr "按全部优先级对任务排序"
-
-#~ msgid "Overall priority"
-#~ msgstr "总体优先级"
-
-#~ msgid "Sort tasks by total fixed fee"
-#~ msgstr "按全部固定报酬对任务排序"
-
-#~ msgid "Sort tasks by total revenue"
-#~ msgstr "按全部收入对任务排序"
-
-#~ msgid "Total re&venue"
-#~ msgstr "全部收入(&v)"
-
-#~ msgid "Days left"
-#~ msgstr "剩余天数"
-
-#~ msgid "Total budget"
-#~ msgstr "全部预算"
-
-#~ msgid "Total budget left"
-#~ msgstr "全部剩余预算"
-
-#~ msgid "Total fixed fee"
-#~ msgstr "全部固定报酬"
-
-#~ msgid "<h3><a name=\"tasks\">Tasks</a></h3>\n"
-#~ msgstr "<h3><a name=\"tasks\">任务</a></h3>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"abouttasks\">About tasks</a></h4>\n"
-#~ " \n"
-#~ "<p>Tasks are the basic objects that you manipulate. Tasks can\n"
-#~ "represent anything from a simple little thing you have to do, like buying a "
-#~ "gift\n"
-#~ "for your loved one, to a complete project, consisting of different phases, "
-#~ "and\n"
-#~ "numerous activities.</p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"abouttasks\">关于任务</a></h4>\n"
-#~ " \n"
-#~ "<p>任务是你进行操作的基本对象。任务可以\n"
-#~ "表示任务你将要做的事情，象给爱人买礼物\n"
-#~ "完成一个由不同阶段组成的项目，和许多的\n"
-#~ "活动。</p>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"taskproperties\">Task \n"
-#~ "properties</a></h4>\n"
-#~ "\n"
-#~ "<p>Tasks have the following properties you can change:\n"
-#~ "<ul>\n"
-#~ "<li>Subject: a single line that summarizes the task.</li>\n"
-#~ "<li>Description: a multi-line description of the task.</li>\n"
-#~ "<li>Due date: the date the task should be finished. This can be 'None' \n"
-#~ "indicating that this task has no fixed due date.</li>\n"
-#~ "<li>Start date: the first date on which the task can be started. The start "
-#~ "date \n"
-#~ "defaults to the date the task is created. It can also be 'None' indicating "
-#~ "that\n"
-#~ "you don't really want to start this task. This can be convenient for e.g. \n"
-#~ "registering sick leave.</li>\n"
-#~ "<li>Completion date: this date is 'None' as long as the task has not been \n"
-#~ "completed. It is set to the current date when you mark the task as "
-#~ "completed. \n"
-#~ "The completion date can also be entered manually.</li>\n"
-#~ "<li>Budget: amount of hours available for the task.</li>\n"
-#~ "<li>Hourly fee: the amount of money earned with the task per hour.</li>\n"
-#~ "<li>Fixed fee: the amount of money earned with the task regardless of the "
-#~ "time\n"
-#~ "spent.</li>\n"
-#~ "</ul></p>\n"
-#~ "\n"
-#~ "<p>The following properties are calculated from the properties above:\n"
-#~ "<ul>\n"
-#~ "<li>Days left: the number of days left until the due date.</li>\n"
-#~ "<li>Total budget: sum of task budget and the budgets of all subtasks of the "
-#~ "\n"
-#~ "task, recursively.</li>\n"
-#~ "<li>Time spent: effort spent on the task.</li>\n"
-#~ "<li>Total time spent: effort spent on the task and all subtasks, \n"
-#~ "recursively.</li>\n"
-#~ "<li>Budget left: task budget minus time spent on the task.</li>\n"
-#~ "<li>Total budget left: total task budget minus total time spent.</li>\n"
-#~ "<li>Total fixed fee: sum of fixed fee of the task and the fixed fees of all "
-#~ "\n"
-#~ "subtasks of the task, recursively.</li>\n"
-#~ "<li>Revenue: hourly fee times hours spent plus fixed fee.</li>\n"
-#~ "<li>Total revenue: sum of task revenue and revenue of all subtasks, \n"
-#~ "recursively.</li>\n"
-#~ "</ul></p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"taskproperties\">任务属性</a></h4>\n"
-#~ "\n"
-#~ "<p>任务拥有下面可以允许你修改的属性：\n"
-#~ "<ul>\n"
-#~ "<li>主题：小结任务的单行文本。</li>\n"
-#~ "<li>描述：关于任务的多行描述文本。</li>\n"
-#~ "<li>到期日期：任务应该完成的日期。它可以是'None'表示此\n"
-#~ "任务没有固定的到期日期。</li>\n"
-#~ "<li>开始日期：任务可以开始的第一天日期。开始日期缺省为\n"
-#~ "创建任务的日期。它也可以为'None'表示你不是真正想开始这\n"
-#~ "项任务。比如可以方便地用它来登记休病假。</li>\n"
-#~ "<li>完成日期：一理任务还没有完成，这个日期为'None'。一\n"
-#~ "旦你标记此任务为完成，它将被设为当前日期。完成日期也可\n"
-#~ "以手工输入。</li>\n"
-#~ "<li>预算：用于任务的有效小时总数。</li>\n"
-#~ "<li>小时报酬：任务每小时挣到的金钱总数。</li>\n"
-#~ "<li>固定报酬：不考虑花费的时间所挣到的金钱总数。</li>\n"
-#~ "</ul></p>\n"
-#~ "\n"
-#~ "<p>下面的属性是从上面的属性计算出来的：\n"
-#~ "<ul>\n"
-#~ "<li>剩余天数：直到到期日期之前还剩的天数。</li>\n"
-#~ "<li>全部预算：任务预算和任务的所有子任务的预算之和。</li>\n"
-#~ "<li>时间花费：在任务上所用的花费。</li>\n"
-#~ "<li>全部时间花费：在任务和所有子任务上所用的花费。</li>\n"
-#~ "<li>剩余预算：任务预算减去任务已用花费。</li>\n"
-#~ "<li>全部剩余预算：全部任务预算减去全部时间花费。</li>\n"
-#~ "<li>全部固定报酬：任务和所有子任务的固定报酬之和。</li>\n"
-#~ "<li>收入：每小时报酬乘以花费小时数加上固定报酬。</li>\n"
-#~ "<li>全部收入：任务和所有子任务的收入之和。</li>\n"
-#~ "</ul></p>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"taskstates\">Task states</a></h4>\n"
-#~ "\n"
-#~ "<p>Tasks always have exactly one of the following states:\n"
-#~ "<ul>\n"
-#~ "<li>Active: the start date is in the past and the due date in the "
-#~ "future;</li>\n"
-#~ "<li>Inactive: the start date is in the future, or</li>\n"
-#~ "<li>Completed: the task has been completed.</li>\n"
-#~ "</ul></p>\n"
-#~ "\n"
-#~ "<p>In addition, tasks can be referenced as:\n"
-#~ "<ul>\n"
-#~ "<li>Over due: the due date is in the past;</li>\n"
-#~ "<li>Due today: the due date is today;</li>\n"
-#~ "<li>Over budget: no buget left;</li>\n"
-#~ "<li>Under budget: still budget left;</li>\n"
-#~ "<li>No budget: the task has no budget.</li>\n"
-#~ "</ul></p>\n"
-#~ " "
-#~ msgstr ""
-#~ "<h4><a name=\"taskstates\">任务状态</a></h4>\n"
-#~ "\n"
-#~ "<p>任务具有下列确切的状态之一：\n"
-#~ "<ul>\n"
-#~ "<li>活动：开始日期在过去并且到期日期在未来；</li>\n"
-#~ "<li>不活动：开始日期在未来；</li>\n"
-#~ "<li>完成：任务已经结束了。</li>\n"
-#~ "</ul></p>\n"
-#~ "\n"
-#~ "<p>另外，任务还可以被引用为：\n"
-#~ "<ul>\n"
-#~ "<li>超过预期：到期日期在过去；</li>\n"
-#~ "<li>今天到期：到期日期是今天；</li>\n"
-#~ "<li>超过预算：没有剩余的预算；</li>\n"
-#~ "<li>在预算内：仍然有剩余预算；</li>\n"
-#~ "<li>无预算：任务没有预算。</li>\n"
-#~ "</ul></p>\n"
-#~ " "
-
-#~ msgid "<h3><a name=\"effort\">Effort</a></h3>\n"
-#~ msgstr "<h3><a name=\"effort\">花费(Effort)</a></h3>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"abouteffort\">About effort</a></h4>\n"
-#~ "\n"
-#~ "<p>Whenever you spent time on tasks, you can record the amount of time\n"
-#~ "spent by tracking effort. Select a task and invoke 'Start tracking effort' "
-#~ "in\n"
-#~ "the Effort menu or the context menu or via the 'Start tracking effort' "
-#~ "toolbar \n"
-#~ "button.</p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"abouteffort\">关于花费(Effort)</a></h4>\n"
-#~ "\n"
-#~ "<p>无论何时你在任务上花费了时间，你都可以通过跟踪\n"
-#~ "花费来记录所用时间。选中一个任务，然后执行在花费菜\n"
-#~ "单或上下文菜单中的'开始跟踪花费'或通过工具条上的'开\n"
-#~ "始跟踪花费'按钮。</p>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"effortproperties\">Effort\n"
-#~ "properties</a></h4>\n"
-#~ "\n"
-#~ "<p>Effort records have the following properties you can change:\n"
-#~ "<ul>\n"
-#~ "<li>Task: the task the effort belongs to.</li>\n"
-#~ "<li>Start date/time: start date and time of the effort.</li>\n"
-#~ "<li>Stop date/time: stop date and time of the effort. This can be 'None' as "
-#~ "\n"
-#~ "long as you are still working on the task.</li>\n"
-#~ "<li>Description: a multi-line description of the effort.</li>\n"
-#~ "</ul></p>\n"
-#~ "\n"
-#~ "<p>The following properties are calculated from the properties above:\n"
-#~ "<ul>\n"
-#~ "<li>Time spent: how much time you have spent working on the task.</li>\n"
-#~ "<li>Total time spent: sum of time spent on the task and all subtasks, \n"
-#~ "recursively.</li>\n"
-#~ "<li>Revenue: money earned with the time spent.</li>\n"
-#~ "<li>Total revenue: money earned with the total time spent.</li>\n"
-#~ "</ul></p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"effortproperties\">花费属性</a></h4>\n"
-#~ "\n"
-#~ "<p>花费记录拥有下列可以允许你修改的属性：\n"
-#~ "<ul>\n"
-#~ "<li>任务：花费所属的任务。</li>\n"
-#~ "<li>开始日期/时间：花费的开始日期和时间。</li>\n"
-#~ "<li>停止日期/时间：花费的停止日期和时间。它可以是'None'\n"
-#~ "表示你仍然在进行着这项任务。</li>\n"
-#~ "<li>描述：花费的多行描述。</li>\n"
-#~ "</ul></p>\n"
-#~ "\n"
-#~ "<p>下面的属性是从上面的属性计算出来的：\n"
-#~ "<ul>\n"
-#~ "<li>时间花费：你已经花费在任务上多长时间。</li>\n"
-#~ "<li>全部时间花费：在任务和它的所有子任务上花费的全部时间。</li>\n"
-#~ "<li>收入：花费时间所挣到的金钱。</li>\n"
-#~ "<li>全部收入：全部花费时间所挣到的金钱。</li>\n"
-#~ "</ul></p>\n"
-
-#~ msgid "Drag and drop category"
-#~ msgstr "拖放分类"
-
-#~ msgid "Delete task"
-#~ msgstr "删除任务"
-
-#~ msgid "Use this color:"
-#~ msgstr "使用该颜色"
-
-#~ msgid "Color"
-#~ msgstr "颜色"
-
-#~ msgid "Behavior"
-#~ msgstr "行为"
-
-#~ msgid "Half an hour"
-#~ msgstr "半个小时"
-
-#~ msgid "Fifteen minutes"
-#~ msgstr "十五分钟"
-
-#~ msgid "Two hours"
-#~ msgstr "两个小时"
-
-#~ msgid "One hour"
-#~ msgstr "一个小时"
-
-#~ msgid "Five minutes"
-#~ msgstr "五分钟"
-
-#~ msgid "Ten minutes"
-#~ msgstr "十分钟"
-
-#~ msgid "Exported %(nrtasks)d tasks to %(filename)s"
-#~ msgstr "输出任务%(nrtasks)d到%(filename)s中"
-
-#~ msgid "one task due today"
-#~ msgstr "一个任务今天到期"
-
-#~ msgid "P&aste into task\tShift+Ctrl+V"
-#~ msgstr "粘贴到任务\tShift+Ctrl+V"
-
-#~ msgid "Expand the selected item(s)"
-#~ msgstr "展开所选条目"
-
-#~ msgid "&Over due"
-#~ msgstr "过期(&O)"
-
-#~ msgid "Overall categories"
-#~ msgstr "所有分类"
-
-#~ msgid "Sort by category"
-#~ msgstr "按分类排序"
-
-#~ msgid "Mail task"
-#~ msgstr "邮件任务"
-
-#~ msgid "<h3><a name=\"categories\">Categories</a></h3>\n"
-#~ msgstr "<h3><a name=\"categories\">分类</a></h3>\n"
-
-#~ msgid "Wrong password. Please try again."
-#~ msgstr "密码错误。请重新输入。"
-
-#~ msgid "Match case"
-#~ msgstr "区分大小写"
-
-#~ msgid "Include sub items"
-#~ msgstr "包括子条目"
-
-#~ msgid "Drag and drop task"
-#~ msgstr "拖放任务"
-
-#~ msgid "Drag and drop note"
-#~ msgstr "拖放便笺"
-
-#~ msgid "Edit note"
-#~ msgstr "编辑便笺"
-
-#~ msgid "Mark completed"
-#~ msgstr "标记为完成"
-
-#~ msgid "Edit the selected task"
-#~ msgstr "编辑所选任务"
-
-#~ msgid "Maximum number of recurrences"
-#~ msgstr "最大重复次数"
-
-#~ msgid "Export effort as &iCalendar..."
-#~ msgstr "按&iCalender格式输出花费..."
-
-#~ msgid "Export effort in iCalendar (*.ics) format"
-#~ msgstr "按iCalendar(*.ics)格式输出花费"
-
-#~ msgid "Exported %(nrtasks)d items to %(filename)s"
-#~ msgstr "将 %(nrtasks)d 条目输出到 %(filename)s"
-
-#~ msgid "Sort by overall categories"
-#~ msgstr "排列所有分类"
-
-#~ msgid "Collapse the selected items with subitems"
-#~ msgstr "折叠所选中带有子条目的条目"
-
-#~ msgid "&Hide tasks that are"
-#~ msgstr "隐藏符合以下条件的任务(&H)"
-
-#~ msgid "&Delete task\tCtrl+DEL"
-#~ msgstr "删除任务(&D)\tCtrl+DEL"
-
-#~ msgid "Page setup...\tShift+Ctrl+P"
-#~ msgstr "页面设置...\tShift+Ctrl+P"
-
-#~ msgid "Print...\tCtrl+P"
-#~ msgstr "打印...\tCtrl+P"
-
-#~ msgid "Add note to attachment"
-#~ msgstr "添加便笺到附件"
-
-#~ msgid "Edit category"
-#~ msgstr "编辑类别"
-
-#~ msgid "Edit attachment"
-#~ msgstr "编辑附件"
-
-#~ msgid "Add note to task"
-#~ msgstr "添加便笺到任务"
-
-#~ msgid "Add note to category"
-#~ msgstr "添加便笺到类别"
-
-#~ msgid "For this note"
-#~ msgstr "为这个便笺"
-
-#~ msgid "For this note including all subnotes"
-#~ msgstr "为这个便笺包含所有的子便笺"
-
-#~ msgid "VCalendar files (*.vcal)|*.vcal|All files (*.*)|*"
-#~ msgstr "VCalendar文件(*.vcal)|*.vcal|所有文件(*.*)|*"
-
-#~ msgid "Export as VCalendar..."
-#~ msgstr "输出为VCalendar..."
-
-#~ msgid "New task &from template"
-#~ msgstr "从模板新建任务(&f)"
+#~ msgid "Untitled e-mail"
+#~ msgstr "无题电子邮件"

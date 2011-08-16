@@ -38,15 +38,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TaskCoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-07-28 23:01+0000\n"
+"POT-Creation-Date: 2011-08-04 23:21+0000\n"
 "PO-Revision-Date: 2011-05-21 10:16+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Romanian <taskcoach-dev@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-04 20:05+0000\n"
-"X-Generator: Launchpad (build 13604)\n"
+"X-Launchpad-Export-Date: 2011-08-15 21:29+0000\n"
+"X-Generator: Launchpad (build 13687)\n"
 "X-Poedit-Country: ROMANIA\n"
 "X-Poedit-Language: Romanian\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -60,7 +60,7 @@ msgstr ""
 "%s"
 
 #: taskcoachlib/application/application.py:243
-#: taskcoachlib/gui/iocontroller.py:57
+#: taskcoachlib/gui/iocontroller.py:58
 msgid "%s file error"
 msgstr "%s eroare  de fișier"
 
@@ -424,28 +424,28 @@ msgstr "Schimbă bugetele"
 msgid "Change budget of \"%s\""
 msgstr "Schimbă bugetul lui „%s”"
 
-#: taskcoachlib/config/settings.py:195
+#: taskcoachlib/config/settings.py:221
 msgid "Error while reading the %s-%s setting from %s.ini."
 msgstr ""
 
-#: taskcoachlib/config/settings.py:196
+#: taskcoachlib/config/settings.py:222
 msgid "The value is: %s"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:197
+#: taskcoachlib/config/settings.py:223
 msgid "The error is: %s"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:198
+#: taskcoachlib/config/settings.py:224
 msgid ""
 "%s will use the default value for the setting and should proceed normally."
 msgstr ""
 
-#: taskcoachlib/config/settings.py:199
+#: taskcoachlib/config/settings.py:225
 msgid "Settings error"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:219
+#: taskcoachlib/config/settings.py:245
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
@@ -453,7 +453,7 @@ msgstr ""
 "Eroare la salvarea %s.ini:\n"
 "%s\n"
 
-#: taskcoachlib/config/settings.py:220
+#: taskcoachlib/config/settings.py:246
 msgid "Save error"
 msgstr "Eroare la salvare"
 
@@ -978,12 +978,12 @@ msgid "Appearance"
 msgstr "Aspect"
 
 #: taskcoachlib/gui/dialog/editor.py:237
-#: taskcoachlib/gui/dialog/preferences.py:109
+#: taskcoachlib/gui/dialog/preferences.py:118
 msgid "Foreground color"
 msgstr "Culoare de prim plan"
 
 #: taskcoachlib/gui/dialog/editor.py:240
-#: taskcoachlib/gui/dialog/preferences.py:109
+#: taskcoachlib/gui/dialog/preferences.py:118
 msgid "Background color"
 msgstr "Culoare de fundal"
 
@@ -996,12 +996,12 @@ msgid "Use font:"
 msgstr "Utilizează fontul:"
 
 #: taskcoachlib/gui/dialog/editor.py:293
-#: taskcoachlib/gui/dialog/preferences.py:110
+#: taskcoachlib/gui/dialog/preferences.py:119
 msgid "Font"
 msgstr "Font"
 
 #: taskcoachlib/gui/dialog/editor.py:319
-#: taskcoachlib/gui/dialog/preferences.py:110
+#: taskcoachlib/gui/dialog/preferences.py:119
 msgid "Icon"
 msgstr "Pictogramă"
 
@@ -1199,10 +1199,8 @@ msgstr "Categorii"
 msgid "Attachments"
 msgstr "Atașamente"
 
-#: taskcoachlib/gui/dialog/editor.py:877
-#: taskcoachlib/gui/dialog/syncpreferences.py:135
-#: taskcoachlib/gui/viewer/note.py:37 taskcoachlib/help/__init__.py:85
-#: taskcoachlib/help/__init__.py:268
+#: taskcoachlib/gui/dialog/editor.py:877 taskcoachlib/gui/viewer/note.py:37
+#: taskcoachlib/help/__init__.py:85 taskcoachlib/help/__init__.py:268
 msgid "Notes"
 msgstr "Notițe"
 
@@ -1236,15 +1234,15 @@ msgstr "Sfîrșit"
 msgid "Export only the selected items"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/export.py:85 taskcoachlib/gui/iocontroller.py:294
+#: taskcoachlib/gui/dialog/export.py:85 taskcoachlib/gui/iocontroller.py:302
 msgid "Export as CSV"
 msgstr "Exportă ca CSV"
 
-#: taskcoachlib/gui/dialog/export.py:90 taskcoachlib/gui/iocontroller.py:299
+#: taskcoachlib/gui/dialog/export.py:90 taskcoachlib/gui/iocontroller.py:307
 msgid "Export as iCalendar"
 msgstr "Exportă ca iCalendar"
 
-#: taskcoachlib/gui/dialog/export.py:101 taskcoachlib/gui/iocontroller.py:288
+#: taskcoachlib/gui/dialog/export.py:101 taskcoachlib/gui/iocontroller.py:296
 msgid "Export as HTML"
 msgstr "Exportă ca HTML"
 
@@ -1339,7 +1337,7 @@ msgstr ""
 msgid "OK"
 msgstr "OK"
 
-#: taskcoachlib/gui/dialog/preferences.py:207
+#: taskcoachlib/gui/dialog/preferences.py:227
 msgid ""
 "This setting will take effect\n"
 "after you restart %s"
@@ -1347,15 +1345,15 @@ msgstr ""
 "Acest parametru va fi activat\n"
 "după ce reporniți %s"
 
-#: taskcoachlib/gui/dialog/preferences.py:227
+#: taskcoachlib/gui/dialog/preferences.py:248
 msgid "Files"
 msgstr "Fișiere"
 
-#: taskcoachlib/gui/dialog/preferences.py:233
+#: taskcoachlib/gui/dialog/preferences.py:254
 msgid "Auto save after every change"
 msgstr "Salvează automat după fiecare modificare"
 
-#: taskcoachlib/gui/dialog/preferences.py:235
+#: taskcoachlib/gui/dialog/preferences.py:256
 msgid ""
 "Create a backup copy before\n"
 "overwriting a %s file"
@@ -1363,7 +1361,7 @@ msgstr ""
 "Creează o copie de siguranță înainte\n"
 "de suprascrierea unui fișier %s"
 
-#: taskcoachlib/gui/dialog/preferences.py:237
+#: taskcoachlib/gui/dialog/preferences.py:258
 msgid ""
 "Save settings (%s.ini) in the same\n"
 "directory as the program"
@@ -1371,7 +1369,7 @@ msgstr ""
 "Salvează configurările (%s.ini) în același\n"
 "director cu programul"
 
-#: taskcoachlib/gui/dialog/preferences.py:239
+#: taskcoachlib/gui/dialog/preferences.py:260
 msgid ""
 "(For running %s\n"
 "from a removable medium)"
@@ -1379,11 +1377,11 @@ msgstr ""
 "(Pentru executarea lui %s\n"
 "de pe un mediu amovibil)"
 
-#: taskcoachlib/gui/dialog/preferences.py:240
+#: taskcoachlib/gui/dialog/preferences.py:261
 msgid "Attachment base directory"
 msgstr "Directorul de bază al atașamentului"
 
-#: taskcoachlib/gui/dialog/preferences.py:241
+#: taskcoachlib/gui/dialog/preferences.py:262
 msgid ""
 "When adding an attachment, try to make\n"
 "its path relative to this one."
@@ -1391,51 +1389,51 @@ msgstr ""
 "Cînd se adaugă un atașament, se creează\n"
 "calea sa relativă la acesta."
 
-#: taskcoachlib/gui/dialog/preferences.py:247
+#: taskcoachlib/gui/dialog/preferences.py:268
 msgid "Window behavior"
 msgstr "Comportament fereastră"
 
-#: taskcoachlib/gui/dialog/preferences.py:253
+#: taskcoachlib/gui/dialog/preferences.py:274
 msgid "Show splash screen on startup"
 msgstr "Afișează imaginea de pornire"
 
-#: taskcoachlib/gui/dialog/preferences.py:255
+#: taskcoachlib/gui/dialog/preferences.py:276
 msgid "Show tips window on startup"
 msgstr "Afișează fereastra cu sfaturi la pornire"
 
-#: taskcoachlib/gui/dialog/preferences.py:257
+#: taskcoachlib/gui/dialog/preferences.py:278
 msgid "Start with the main window iconized"
 msgstr "Pornește cu fereastra principală iconizată"
 
-#: taskcoachlib/gui/dialog/preferences.py:258
+#: taskcoachlib/gui/dialog/preferences.py:279
 msgid "Always"
 msgstr "Totdeauna"
 
-#: taskcoachlib/gui/dialog/preferences.py:258
+#: taskcoachlib/gui/dialog/preferences.py:279
 msgid "Never"
 msgstr "Niciodată"
 
-#: taskcoachlib/gui/dialog/preferences.py:260
+#: taskcoachlib/gui/dialog/preferences.py:281
 msgid "If it was iconized last session"
 msgstr "Dacă a fost iconizat ultima sesiune"
 
-#: taskcoachlib/gui/dialog/preferences.py:262
+#: taskcoachlib/gui/dialog/preferences.py:283
 msgid "Check for new version of %(name)s on startup"
 msgstr "Verifică la pornire pentru noi versiuni de %(name)s"
 
-#: taskcoachlib/gui/dialog/preferences.py:264
+#: taskcoachlib/gui/dialog/preferences.py:285
 msgid "Hide main window when iconized"
 msgstr "Ascunde fereastra principală la iconizare"
 
-#: taskcoachlib/gui/dialog/preferences.py:266
+#: taskcoachlib/gui/dialog/preferences.py:287
 msgid "Minimize main window when closed"
 msgstr "Minimizează fereastra principală la închidere"
 
-#: taskcoachlib/gui/dialog/preferences.py:268
+#: taskcoachlib/gui/dialog/preferences.py:289
 msgid "Make clock in the task bar tick when tracking effort"
 msgstr "Fă să ticăie ceasul din bara de sarcini cînd se urmărește efortul"
 
-#: taskcoachlib/gui/dialog/preferences.py:270
+#: taskcoachlib/gui/dialog/preferences.py:291
 msgid ""
 "Show a popup with the description of an item\n"
 "when hovering over it"
@@ -1443,16 +1441,16 @@ msgstr ""
 "Afișează o fereastră cu descrierea unui element\n"
 "cînd este planat"
 
-#: taskcoachlib/gui/dialog/preferences.py:276
-#: taskcoachlib/gui/dialog/preferences.py:336
+#: taskcoachlib/gui/dialog/preferences.py:297
+#: taskcoachlib/gui/dialog/preferences.py:357
 msgid "Language"
 msgstr "Limbă"
 
-#: taskcoachlib/gui/dialog/preferences.py:282
+#: taskcoachlib/gui/dialog/preferences.py:303
 msgid "Let the system determine the language"
 msgstr "Lăsați sistemul să determine limba"
 
-#: taskcoachlib/gui/dialog/preferences.py:342
+#: taskcoachlib/gui/dialog/preferences.py:363
 msgid ""
 "If your language is not available, or the translation needs \n"
 "improving, please consider helping. See:"
@@ -1460,63 +1458,63 @@ msgstr ""
 "Dacă limba voastră nu este disponibilă, sau traducerea necesită \n"
 "îmbunătățiri, ne puteți ajuta. Vedeți:"
 
-#: taskcoachlib/gui/dialog/preferences.py:349
+#: taskcoachlib/gui/dialog/preferences.py:370
 msgid "Language not found?"
 msgstr "Limbă negăsită?"
 
-#: taskcoachlib/gui/dialog/preferences.py:359
+#: taskcoachlib/gui/dialog/preferences.py:380
 msgid "Task appearance"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:366
+#: taskcoachlib/gui/dialog/preferences.py:387
 msgid "Active tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:367
+#: taskcoachlib/gui/dialog/preferences.py:388
 msgid "Inactive tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:368
+#: taskcoachlib/gui/dialog/preferences.py:389
 msgid "Completed tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:369
+#: taskcoachlib/gui/dialog/preferences.py:390
 msgid "Overdue tasks"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:370
+#: taskcoachlib/gui/dialog/preferences.py:391
 msgid "Tasks due soon"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:381
+#: taskcoachlib/gui/dialog/preferences.py:402
 msgid "Features"
 msgstr "Funcționalități"
 
-#: taskcoachlib/gui/dialog/preferences.py:387
+#: taskcoachlib/gui/dialog/preferences.py:408
 msgid "Allow for tracking effort"
 msgstr "Permite urmărirea efortului"
 
-#: taskcoachlib/gui/dialog/preferences.py:388
+#: taskcoachlib/gui/dialog/preferences.py:409
 msgid "Allow for taking notes"
 msgstr "Permite luarea de notițe"
 
-#: taskcoachlib/gui/dialog/preferences.py:395
+#: taskcoachlib/gui/dialog/preferences.py:416
 msgid "Enable SyncML"
 msgstr "Activează SyncML"
 
-#: taskcoachlib/gui/dialog/preferences.py:397
+#: taskcoachlib/gui/dialog/preferences.py:418
 msgid "Enable iPhone synchronization"
 msgstr "Activează sincronizarea iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:400
+#: taskcoachlib/gui/dialog/preferences.py:421
 msgid "Hour of start of work day"
 msgstr "Ora de început a zilei de lucru"
 
-#: taskcoachlib/gui/dialog/preferences.py:402
+#: taskcoachlib/gui/dialog/preferences.py:423
 msgid "Hour of end of work day"
 msgstr "Ora de sfîrșit a zilei de lucru"
 
-#: taskcoachlib/gui/dialog/preferences.py:404
+#: taskcoachlib/gui/dialog/preferences.py:425
 msgid ""
 "Use gradients in calendar views.\n"
 "This may slow down Task Coach."
@@ -1524,148 +1522,148 @@ msgstr ""
 "Utilizează gradienți în vederile de calendar.\n"
 "Aceasta poate încetini Task Coach."
 
-#: taskcoachlib/gui/dialog/preferences.py:407
+#: taskcoachlib/gui/dialog/preferences.py:428
 msgid "Minutes between task start/end times"
 msgstr "Minutele dintre începutul/sfîrșitul sarcinii"
 
-#: taskcoachlib/gui/dialog/preferences.py:414
+#: taskcoachlib/gui/dialog/preferences.py:435
 msgid "Task dates"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:420
+#: taskcoachlib/gui/dialog/preferences.py:441
 msgid "Mark parent task completed when all children are completed"
 msgstr ""
 "Marchează terminată sarcina părinte cînd toate sarcinile copil sînt terminate"
 
-#: taskcoachlib/gui/dialog/preferences.py:422
+#: taskcoachlib/gui/dialog/preferences.py:443
 msgid "Number of hours that tasks are considered to be 'due soon'"
 msgstr "Numărul de ore în care sarcinile sînt considerate „scadente curînd”"
 
-#: taskcoachlib/gui/dialog/preferences.py:424
+#: taskcoachlib/gui/dialog/preferences.py:445
 msgid "Nothing"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:425
+#: taskcoachlib/gui/dialog/preferences.py:446
 msgid "Changing the start date changes the due date"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:426
+#: taskcoachlib/gui/dialog/preferences.py:447
 msgid "Changing the due date changes the start date"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:428
+#: taskcoachlib/gui/dialog/preferences.py:449
 msgid "What to do with start and due date if the other one is changed"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:431
+#: taskcoachlib/gui/dialog/preferences.py:452
 msgid "Preset"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:432
+#: taskcoachlib/gui/dialog/preferences.py:453
 msgid "Propose"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:433
+#: taskcoachlib/gui/dialog/preferences.py:454
 msgid "Today"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:434
+#: taskcoachlib/gui/dialog/preferences.py:455
 msgid "Tomorrow"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:435
+#: taskcoachlib/gui/dialog/preferences.py:456
 msgid "Day after tomorrow"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:436
+#: taskcoachlib/gui/dialog/preferences.py:457
 msgid "Next Friday"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:437
+#: taskcoachlib/gui/dialog/preferences.py:458
 msgid "Next Monday"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:438
+#: taskcoachlib/gui/dialog/preferences.py:459
 msgid "Start of day"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:439
+#: taskcoachlib/gui/dialog/preferences.py:460
 msgid "Start of working day"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:440
+#: taskcoachlib/gui/dialog/preferences.py:461
 msgid "Current time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:441
+#: taskcoachlib/gui/dialog/preferences.py:462
 msgid "End of working day"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:442
+#: taskcoachlib/gui/dialog/preferences.py:463
 msgid "End of day"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:444
+#: taskcoachlib/gui/dialog/preferences.py:465
 msgid "Default start date and time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:447
+#: taskcoachlib/gui/dialog/preferences.py:468
 msgid "Default due date and time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:450
+#: taskcoachlib/gui/dialog/preferences.py:471
 msgid "Default completion date and time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:453
+#: taskcoachlib/gui/dialog/preferences.py:474
 msgid "Default reminder date and time"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:460
+#: taskcoachlib/gui/dialog/preferences.py:481
 msgid "Task reminders"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:469
+#: taskcoachlib/gui/dialog/preferences.py:490
 msgid "Notification system to use for reminders"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:473
+#: taskcoachlib/gui/dialog/preferences.py:494
 msgid "Default snooze time to use after reminder"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/preferences.py:476
+#: taskcoachlib/gui/dialog/preferences.py:497
 msgid "Snooze times to offer in task reminder dialog"
 msgstr "Duratele de repetiție propuse în dialogul de rapel"
 
-#: taskcoachlib/gui/dialog/preferences.py:483
+#: taskcoachlib/gui/dialog/preferences.py:504
 msgid "iPhone"
 msgstr "iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:489
+#: taskcoachlib/gui/dialog/preferences.py:510
 msgid "Password for synchronization with iPhone"
 msgstr "Parola pentru sincronizarea cu iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:491
+#: taskcoachlib/gui/dialog/preferences.py:512
 msgid "Bonjour service name"
 msgstr "Serviciul de nume Bonjour"
 
-#: taskcoachlib/gui/dialog/preferences.py:493
+#: taskcoachlib/gui/dialog/preferences.py:514
 msgid "Upload completed tasks to device"
 msgstr "Încarcă pe dispozitiv sarcinile complete"
 
-#: taskcoachlib/gui/dialog/preferences.py:495
+#: taskcoachlib/gui/dialog/preferences.py:516
 msgid "Show sync log"
 msgstr "Afișează jurnalul sync"
 
-#: taskcoachlib/gui/dialog/preferences.py:495
+#: taskcoachlib/gui/dialog/preferences.py:516
 msgid "Show the synchronization log"
 msgstr "Afișează jurnalul de sincronizare"
 
-#: taskcoachlib/gui/dialog/preferences.py:501
+#: taskcoachlib/gui/dialog/preferences.py:522
 msgid "Editor"
 msgstr "Editor"
 
-#: taskcoachlib/gui/dialog/preferences.py:507
+#: taskcoachlib/gui/dialog/preferences.py:528
 msgid "Check spelling in editors"
 msgstr "Verificare ortografică în editoare"
 
@@ -1681,11 +1679,23 @@ msgstr "Ațipește"
 msgid "Mark task completed"
 msgstr "Marchează sarcina terminată"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:80
+#: taskcoachlib/gui/dialog/syncpreferences.py:81
+msgid "SyncML server"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/syncpreferences.py:82
+msgid "Custom"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/syncpreferences.py:84
+msgid "MemoToo (http://www.memotoo.com/)"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/syncpreferences.py:87
 msgid "SyncML server URL"
 msgstr "URL server SyncML"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:81
+#: taskcoachlib/gui/dialog/syncpreferences.py:88
 msgid "User name/ID"
 msgstr "Nume/ID utilizator"
 
@@ -1693,64 +1703,57 @@ msgstr "Nume/ID utilizator"
 msgid "Enable tasks synchronization"
 msgstr "Activează sincronizarea sarcinilor"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:91
+#: taskcoachlib/gui/dialog/syncpreferences.py:92
 msgid "Tasks database name"
 msgstr "Denumirea bazei de date de sarcini"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:93
-#: taskcoachlib/gui/dialog/syncpreferences.py:111
+#: taskcoachlib/gui/dialog/syncpreferences.py:106
 msgid "Preferred synchonization mode"
 msgstr "Mod de sincronizare preferat"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:94
-#: taskcoachlib/gui/dialog/syncpreferences.py:112
+#: taskcoachlib/gui/dialog/syncpreferences.py:107
 msgid "Two way"
 msgstr "Ambele sensuri"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:95
-#: taskcoachlib/gui/dialog/syncpreferences.py:113
+#: taskcoachlib/gui/dialog/syncpreferences.py:108
 msgid "Slow"
 msgstr "Lent"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:96
-#: taskcoachlib/gui/dialog/syncpreferences.py:114
+#: taskcoachlib/gui/dialog/syncpreferences.py:109
 msgid "One way from client"
 msgstr "Sens unic de la client"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:97
-#: taskcoachlib/gui/dialog/syncpreferences.py:115
+#: taskcoachlib/gui/dialog/syncpreferences.py:110
 msgid "Refresh from client"
 msgstr "Împrospătează de la client"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:98
-#: taskcoachlib/gui/dialog/syncpreferences.py:116
+#: taskcoachlib/gui/dialog/syncpreferences.py:111
 msgid "One way from server"
 msgstr "Sens unic de la server"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:99
-#: taskcoachlib/gui/dialog/syncpreferences.py:117
+#: taskcoachlib/gui/dialog/syncpreferences.py:112
 #: taskcoachlib/syncml/basesource.py:61 taskcoachlib/syncml/basesource.py:73
 msgid "Refresh from server"
 msgstr "Împrospătează de la server"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:108
+#: taskcoachlib/gui/dialog/syncpreferences.py:103
 msgid "Enable notes synchronization"
 msgstr "Activează sincronizarea notițelor"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:109
+#: taskcoachlib/gui/dialog/syncpreferences.py:105
 msgid "Notes database name"
 msgstr "Denumirea bazei de date de notițe"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:133
+#: taskcoachlib/gui/dialog/syncpreferences.py:150
 msgid "Access"
 msgstr "Acces"
-
-#: taskcoachlib/gui/dialog/syncpreferences.py:134
-#: taskcoachlib/gui/viewer/task.py:54 taskcoachlib/help/__init__.py:68
-#: taskcoachlib/help/__init__.py:129
-#: taskcoachlib/widgets/calendarconfig.py:107
-msgid "Tasks"
-msgstr "Sarcini"
 
 #: taskcoachlib/gui/dialog/templates.py:69
 msgid "Template"
@@ -1804,31 +1807,31 @@ msgstr ""
 msgid "The latest released version of %(name)s is %(version)s."
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:47
+#: taskcoachlib/gui/iocontroller.py:48
 msgid ""
 "%s files (*.tsk)|*.tsk|Backup files (*.tsk.bak)|*.tsk.bak|All files (*.*)|*"
 msgstr ""
 "%s fișiere (*.tsk)|*.tsk|Fișiere salvgardare (*.tsk.bak)|*.tsk.bak|Toate "
 "fișierele (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:50
+#: taskcoachlib/gui/iocontroller.py:51
 msgid "iCalendar files (*.ics)|*.ics|All files (*.*)|*"
 msgstr "Fișiere iCalendar (*.ics)|*.ics|Toate fișierele (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:53
+#: taskcoachlib/gui/iocontroller.py:54
 msgid "HTML files (*.html)|*.html|All files (*.*)|*"
 msgstr "Fișiere HTML (*.html)|*.html|Toate fișierele (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:56
+#: taskcoachlib/gui/iocontroller.py:57
 msgid "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*"
 msgstr ""
 "Fișiere CSV (*.csv)|*.csv|Fișiere text (*.txt)|*.txt|Toate fișierele (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:95
+#: taskcoachlib/gui/iocontroller.py:96
 msgid "Open"
 msgstr "Deschide"
 
-#: taskcoachlib/gui/iocontroller.py:118 taskcoachlib/gui/iocontroller.py:155
+#: taskcoachlib/gui/iocontroller.py:126 taskcoachlib/gui/iocontroller.py:163
 msgid ""
 "Cannot open %(filename)s\n"
 "because it was created by a newer version of %(name)s.\n"
@@ -1838,27 +1841,27 @@ msgstr ""
 "deoarece a fost creat de o versiune mai nouă de %(name)s.\n"
 "Actualizați %(name)s."
 
-#: taskcoachlib/gui/iocontroller.py:126 taskcoachlib/gui/iocontroller.py:161
+#: taskcoachlib/gui/iocontroller.py:134 taskcoachlib/gui/iocontroller.py:169
 msgid "Error while reading %s:\n"
 msgstr "Eroare la citirea %s:\n"
 
-#: taskcoachlib/gui/iocontroller.py:128 taskcoachlib/gui/iocontroller.py:163
+#: taskcoachlib/gui/iocontroller.py:136 taskcoachlib/gui/iocontroller.py:171
 msgid "Are you sure it is a %s-file?"
 msgstr "Sînteți sigur că este un fișier %s?"
 
-#: taskcoachlib/gui/iocontroller.py:131
+#: taskcoachlib/gui/iocontroller.py:139
 msgid "Loaded %(nrtasks)d tasks from %(filename)s"
 msgstr "%(nrtasks)d sarcini încărcate din %(filename)s"
 
-#: taskcoachlib/gui/iocontroller.py:135
+#: taskcoachlib/gui/iocontroller.py:143
 msgid "Cannot open %s because it doesn't exist"
 msgstr "Nu se poate deschide %s pentru că nu există"
 
-#: taskcoachlib/gui/iocontroller.py:145
+#: taskcoachlib/gui/iocontroller.py:153
 msgid "Merge"
 msgstr "Unește"
 
-#: taskcoachlib/gui/iocontroller.py:150
+#: taskcoachlib/gui/iocontroller.py:158
 msgid ""
 "Cannot open %(filename)s\n"
 "because it is locked."
@@ -1866,19 +1869,19 @@ msgstr ""
 "Nu se poate deschide %(filename)s\n"
 "pentru că este blocat."
 
-#: taskcoachlib/gui/iocontroller.py:166
+#: taskcoachlib/gui/iocontroller.py:174
 msgid "Merged %(filename)s"
 msgstr "%(filename)s unite"
 
-#: taskcoachlib/gui/iocontroller.py:183
+#: taskcoachlib/gui/iocontroller.py:191
 msgid "Save as"
 msgstr "Salvează ca"
 
-#: taskcoachlib/gui/iocontroller.py:195
+#: taskcoachlib/gui/iocontroller.py:203
 msgid "Save selection"
 msgstr "Salvează selecția"
 
-#: taskcoachlib/gui/iocontroller.py:227
+#: taskcoachlib/gui/iocontroller.py:235
 msgid ""
 "Cannot save %s\n"
 "It is locked by another instance of %s.\n"
@@ -1886,7 +1889,7 @@ msgstr ""
 "Nu se poate salva %s\n"
 "Este blocat de o altă instanță de %s.\n"
 
-#: taskcoachlib/gui/iocontroller.py:232
+#: taskcoachlib/gui/iocontroller.py:240
 msgid ""
 "Cannot save %s\n"
 "%s"
@@ -1894,41 +1897,41 @@ msgstr ""
 "Nu se poate salva %s\n"
 "%s"
 
-#: taskcoachlib/gui/iocontroller.py:242
+#: taskcoachlib/gui/iocontroller.py:250
 msgid "Import template"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:244
+#: taskcoachlib/gui/iocontroller.py:252
 msgid "%s template files (*.tsktmpl)|*.tsktmpl"
 msgstr "%s fișiere șablon (*.tsktmpl)|*.tsktmpl"
 
-#: taskcoachlib/gui/iocontroller.py:250
+#: taskcoachlib/gui/iocontroller.py:258
 msgid ""
 "Cannot import template %s\n"
 "%s"
 msgstr ""
 
-#: taskcoachlib/gui/iocontroller.py:279
+#: taskcoachlib/gui/iocontroller.py:287
 msgid "Exported %(count)d items to %(filename)s"
 msgstr "%(count)d elemente exportate în %(filename)s"
 
-#: taskcoachlib/gui/iocontroller.py:314
+#: taskcoachlib/gui/iocontroller.py:322
 msgid "Finished synchronization"
 msgstr "Sincronizare încheiată"
 
-#: taskcoachlib/gui/iocontroller.py:321
+#: taskcoachlib/gui/iocontroller.py:329
 msgid "Note conflict"
 msgstr "Conflict de notițe"
 
-#: taskcoachlib/gui/iocontroller.py:325
+#: taskcoachlib/gui/iocontroller.py:333
 msgid "Task conflict"
 msgstr "Conflict de sarcini"
 
-#: taskcoachlib/gui/iocontroller.py:337
+#: taskcoachlib/gui/iocontroller.py:345
 msgid "Synchronization status"
 msgstr "Stare sincronizare"
 
-#: taskcoachlib/gui/iocontroller.py:345
+#: taskcoachlib/gui/iocontroller.py:353
 msgid ""
 "Cannot open %s\n"
 "%s"
@@ -1936,7 +1939,7 @@ msgstr ""
 "Nu se poate deschide %s\n"
 "%s"
 
-#: taskcoachlib/gui/iocontroller.py:380
+#: taskcoachlib/gui/iocontroller.py:388
 msgid ""
 "A file named %s already exists.\n"
 "Do you want to replace it?"
@@ -1944,7 +1947,7 @@ msgstr ""
 "Un fișier numit %s există deja.\n"
 "Doriți să-l înlocuiți?"
 
-#: taskcoachlib/gui/iocontroller.py:392
+#: taskcoachlib/gui/iocontroller.py:400
 msgid ""
 "You have unsaved changes.\n"
 "Save before closing?"
@@ -1952,11 +1955,11 @@ msgstr ""
 "Aveți modificări nesalvate.\n"
 "Salvați înainte de închidere?"
 
-#: taskcoachlib/gui/iocontroller.py:393
+#: taskcoachlib/gui/iocontroller.py:401
 msgid "%s: save changes?"
 msgstr "%s: salvați modificările?"
 
-#: taskcoachlib/gui/iocontroller.py:403
+#: taskcoachlib/gui/iocontroller.py:411
 msgid ""
 "Cannot open %s because it is locked.\n"
 "\n"
@@ -1976,11 +1979,11 @@ msgstr ""
 "\n"
 "Deblocați fișierul?"
 
-#: taskcoachlib/gui/iocontroller.py:411 taskcoachlib/gui/iocontroller.py:418
+#: taskcoachlib/gui/iocontroller.py:419 taskcoachlib/gui/iocontroller.py:426
 msgid "%s: file locked"
 msgstr "%s: fișier blocat"
 
-#: taskcoachlib/gui/iocontroller.py:416
+#: taskcoachlib/gui/iocontroller.py:424
 msgid ""
 "Cannot acquire a lock because locking is not supported\n"
 "on the location of %s.\n"
@@ -1990,11 +1993,11 @@ msgstr ""
 "suportată pe locația lui %s.\n"
 "Deschideți %s neblocat?"
 
-#: taskcoachlib/gui/iocontroller.py:423
+#: taskcoachlib/gui/iocontroller.py:431
 msgid "Closed %s"
 msgstr "Închise %s"
 
-#: taskcoachlib/gui/iocontroller.py:428
+#: taskcoachlib/gui/iocontroller.py:436
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
 msgstr "%(nrtasks)d sarcini salvate în %(filename)s"
 
@@ -2006,23 +2009,23 @@ msgstr "Sincronizare..."
 msgid "Synchronizing with %s..."
 msgstr "Sincronizare cu %s..."
 
-#: taskcoachlib/gui/mainwindow.py:71 taskcoachlib/gui/uicommand.py:608
+#: taskcoachlib/gui/mainwindow.py:79 taskcoachlib/gui/uicommand.py:608
 msgid "Warning"
 msgstr "Avertisment"
 
-#: taskcoachlib/gui/mainwindow.py:108
+#: taskcoachlib/gui/mainwindow.py:116
 msgid "Welcome to %(name)s version %(version)s"
 msgstr "Bun venit în %(name)s versiunea %(version)s"
 
-#: taskcoachlib/gui/mainwindow.py:285
+#: taskcoachlib/gui/mainwindow.py:293
 msgid "iPhone/iPod"
 msgstr "iPhone/iPod"
 
-#: taskcoachlib/gui/mainwindow.py:294
+#: taskcoachlib/gui/mainwindow.py:302
 msgid "Synchronization type"
 msgstr "Tip de sincronizare"
 
-#: taskcoachlib/gui/mainwindow.py:304
+#: taskcoachlib/gui/mainwindow.py:312
 msgid ""
 "An iPhone or iPod Touch device tried to synchronize with this\n"
 "task file, but the protocol negotiation failed. Please file a\n"
@@ -2032,7 +2035,7 @@ msgstr ""
 "acest fișier de sarcini, dar protocolul de negociere a eșuat.\n"
 "Trimiteți un raport de eroare."
 
-#: taskcoachlib/gui/mainwindow.py:307 taskcoachlib/iphone/protocol.py:481
+#: taskcoachlib/gui/mainwindow.py:315 taskcoachlib/iphone/protocol.py:481
 #: taskcoachlib/widgets/draganddrop.py:108
 #: taskcoachlib/widgets/draganddrop.py:110
 #: taskcoachlib/widgets/draganddrop.py:143
@@ -3667,6 +3670,12 @@ msgstr "Sarcini: %d selectate, %d vizibile, %d în total"
 #: taskcoachlib/gui/viewer/task.py:35
 msgid "Status: %d overdue, %d inactive, %d completed"
 msgstr ""
+
+#: taskcoachlib/gui/viewer/task.py:54 taskcoachlib/help/__init__.py:68
+#: taskcoachlib/help/__init__.py:129
+#: taskcoachlib/widgets/calendarconfig.py:107
+msgid "Tasks"
+msgstr "Sarcini"
 
 #: taskcoachlib/gui/viewer/task.py:262
 msgid "Timeline"
@@ -5796,10 +5805,6 @@ msgstr "Modifică efortul %s"
 msgid "Sending GUID: %s"
 msgstr "Trimitere GUID: %s"
 
-#: taskcoachlib/mailer/__init__.py:67
-msgid "Untitled e-mail"
-msgstr "E-mail fără titlu"
-
 #: taskcoachlib/mailer/macmail.py:49
 msgid "Mail.app message"
 msgstr "Mesaj Mail.app"
@@ -5830,25 +5835,33 @@ msgid ""
 msgstr ""
 
 #: taskcoachlib/mailer/thunderbird.py:238
+#: taskcoachlib/mailer/thunderbird.py:351
 msgid "Unrecognized URL scheme: \"%s\""
 msgstr ""
 
-#: taskcoachlib/mailer/thunderbird.py:295
+#: taskcoachlib/mailer/thunderbird.py:291
+msgid ""
+"Could not open an IMAP connection to %(server)s:%(port)s\n"
+"to retrieve Thunderbird email message:\n"
+"%(error)s"
+msgstr ""
+
+#: taskcoachlib/mailer/thunderbird.py:299
 msgid "Please enter password for user %(user)s on %(server)s:%(port)d"
 msgstr ""
 "Introduceți parola pentru utilizatorul %(user)s pe %(server)s:%(port)d"
 
-#: taskcoachlib/mailer/thunderbird.py:313
+#: taskcoachlib/mailer/thunderbird.py:317
 msgid "Login failed (%s). Please try again."
 msgstr "Autentificare eșuată (%s). Încercați din nou."
 
-#: taskcoachlib/mailer/thunderbird.py:326
+#: taskcoachlib/mailer/thunderbird.py:330
 msgid ""
 "Could not select inbox \"%s\"\n"
 "(%s)"
 msgstr ""
 
-#: taskcoachlib/mailer/thunderbird.py:331
+#: taskcoachlib/mailer/thunderbird.py:335
 msgid "No such mail: %d"
 msgstr ""
 
@@ -5967,7 +5980,7 @@ msgstr ""
 "\n"
 "\n"
 
-#: taskcoachlib/syncml/sync.py:203
+#: taskcoachlib/syncml/sync.py:201
 msgid ""
 "%d items added.\n"
 "%d items updated.\n"
@@ -5977,7 +5990,7 @@ msgstr ""
 "%d elemente actualizate.\n"
 "%d elemente șterse."
 
-#: taskcoachlib/syncml/sync.py:209
+#: taskcoachlib/syncml/sync.py:207
 msgid ""
 "An error occurred in the synchronization.\n"
 "Error code: %d; message: %s"
@@ -5985,7 +5998,7 @@ msgstr ""
 "O eroare s-a produs în sincronizare.\n"
 "Cod de eroare: %d; mesaj: %s"
 
-#: taskcoachlib/syncml/sync.py:214
+#: taskcoachlib/syncml/sync.py:212
 msgid "You must first edit your SyncML Settings, in Edit/SyncML preferences."
 msgstr ""
 "Trebuie mai întîi să vă editați configurările SyncML, în Editează/Preferințe "
@@ -6288,9 +6301,6 @@ msgstr "Eroare la deschiderea URL"
 #~ msgid "Edit exclusive subcategories of \"%s\""
 #~ msgstr "Editează categoriile exclusive ale lui „%s”"
 
-#~ msgid "Add note to categories"
-#~ msgstr "Adaugă notiță la categorii"
-
 #~ msgid "Change task of effort"
 #~ msgstr "Schimbă sarcina efortului"
 
@@ -6375,87 +6385,6 @@ msgstr "Eroare la deschiderea URL"
 #~ msgid "Toggle prerequisite of \"%s\""
 #~ msgstr "Schimbă precerințele lui „%s”"
 
-#~ msgid "Edit attachment..."
-#~ msgstr "Editare atașament..."
-
-#~ msgid "Edit the selected attachments"
-#~ msgstr "Editează atașamentele selectate"
-
-#~ msgid "Delete attachment"
-#~ msgstr "Șterge atașamentul"
-
-#~ msgid "Delete the selected attachments"
-#~ msgstr "Șterge atașamentele selectate"
-
-#~ msgid "New category..."
-#~ msgstr "Categorie nouă..."
-
-#~ msgid "Edit category..."
-#~ msgstr "Editare categorie..."
-
-#~ msgid "Edit the selected categories"
-#~ msgstr "Editează categoriile selectate"
-
-#~ msgid "Delete category"
-#~ msgstr "Șterge categoria"
-
-#~ msgid "Delete the selected categories"
-#~ msgstr "Șterge categoriile selectate"
-
-#~ msgid "New subcategory..."
-#~ msgstr "Subcategorie nouă..."
-
-#~ msgid "Insert a new subcategory"
-#~ msgstr "Inserează o nouă subcategorie"
-
-#~ msgid "&Edit effort..."
-#~ msgstr "&Editare efort..."
-
-#~ msgid "Edit the selected effort period(s)"
-#~ msgstr "Editează perioadele de efort selectate"
-
-#~ msgid "&Delete effort"
-#~ msgstr "Șterge efortul"
-
-#~ msgid "Delete the selected effort period(s)"
-#~ msgstr "Șterge perioadele de efort selectate"
-
-#~ msgid "New note..."
-#~ msgstr "Notiță nouă..."
-
-#~ msgid "Edit note..."
-#~ msgstr "Editare notiță..."
-
-#~ msgid "Edit the selected notes"
-#~ msgstr "Editează notițele selectate"
-
-#~ msgid "Delete note"
-#~ msgstr "Șterge notița"
-
-#~ msgid "Delete the selected notes"
-#~ msgstr "Șterge notițele selectate"
-
-#~ msgid "New subnote..."
-#~ msgstr "Subnotiță nouă..."
-
-#~ msgid "Insert a new subnote"
-#~ msgstr "Inserează o subnotiță nouă"
-
-#~ msgid "&Edit task..."
-#~ msgstr "&Editare sarcină..."
-
-#~ msgid "Edit the selected task(s)"
-#~ msgstr "Editează sarcinile selectate"
-
-#~ msgid "&Delete task"
-#~ msgstr "Șterge sarcina"
-
-#~ msgid "Delete the selected task(s)"
-#~ msgstr "Șterge sarcinile selectate"
-
-#~ msgid "Insert a new subtask into the selected task"
-#~ msgstr "Inserează o subsarcină nouă în sarcina selectată"
-
 #~ msgid "Warning: start must be earlier than stop"
 #~ msgstr "Avertisment: începutul trebuie să fie anterior sfîrșitului"
 
@@ -6489,468 +6418,11 @@ msgstr "Eroare la deschiderea URL"
 #~ msgid "%s (effort)"
 #~ msgstr "%s (efort)"
 
-#~ msgid "Colors"
-#~ msgstr "Culori"
-
-#~ msgid "Click this button to change the color of active tasks"
-#~ msgstr "Apăsați acest buton ca să schimbați culoarea sarcinilor active"
-
-#~ msgid "Click this button to change the color of inactive tasks"
-#~ msgstr "Apăsați acest buton să schimbați culoarea sarcinilor inactive"
-
-#~ msgid "Click this button to change the color of completed tasks"
-#~ msgstr "Apăsați acest buton ca să schimbați culoarea sarcinilor terminate"
-
-#~ msgid "Click this button to change the color of over due tasks"
-#~ msgstr "Apăsați acest buton ca să schimbați culoarea sarcinilor depășite"
-
-#~ msgid "Click this button to change the color of tasks due soon"
-#~ msgstr ""
-#~ "Apăsați acest buton ca să schimbați culoarea sarcinilor scadente curînd"
-
 #~ msgid "Notification system"
 #~ msgstr "Sistem de notificare"
-
-#~ msgid "Notification system to use for reminders (Growl, Snarl, etc)"
-#~ msgstr "Sistem de notificare utilizat pentru rapeluri (Growl, Snarl, etc)"
 
 #~ msgid "Task behavior"
 #~ msgstr "Comportament sarcini"
 
-#~ msgid "Save as..."
-#~ msgstr "Salvează ca..."
-
-#~ msgid "Please enter the template name."
-#~ msgstr "Introduceți numele șablonului."
-
-#~ msgid "Save as template"
-#~ msgstr "Salvează ca șablon"
-
-#~ msgid "Open template..."
-#~ msgstr "Deschide șablon..."
-
-#~ msgid "Export as HTML..."
-#~ msgstr "Exportă ca HTML..."
-
-#~ msgid "Export as CSV..."
-#~ msgstr "Exportă ca CSV..."
-
-#~ msgid "Export as iCalendar..."
-#~ msgstr "Exportă ca iCalendar..."
-
-#~ msgid "Eff&ort"
-#~ msgstr "Ef&ort"
-
-#~ msgid "&New task"
-#~ msgstr "Sarcină &nouă"
-
-#~ msgid "Save selected task as &template..."
-#~ msgstr "Salvează sarcinile selec&tate ca șablon..."
-
-#~ msgid "&Add template..."
-#~ msgstr "&Adaugă șablon..."
-
-#~ msgid "Add a new template from a template file"
-#~ msgstr "Adaugă un șablon nou dintr-un fișier de șablon"
-
-#~ msgid "&Print preview"
-#~ msgstr "&Previzualizare tipărire"
-
-#~ msgid "Export the current view as HTML file"
-#~ msgstr "Exportă afișarea curentă ca fișier HTML"
-
-#~ msgid "Export selection as &HTML..."
-#~ msgstr "Exportă selecția ca &HTML..."
-
-#~ msgid "Export the selection in the current view as HTML file"
-#~ msgstr "Exportă selecția din afișarea curentă ca fișier HTML"
-
-#~ msgid "Export the current view in Comma Separated Values (CSV) format"
-#~ msgstr "Exportă afișarea curentă în format CSV (Comma Separated Values)"
-
-#~ msgid "Export selection as &CSV..."
-#~ msgstr "Exportă selecția ca &CSV..."
-
-#~ msgid ""
-#~ "Export the selection in the current view in Comma Separated Values (CSV) "
-#~ "format"
-#~ msgstr ""
-#~ "Exportă selecția din afișarea curentă în format CSV (Comma Separated Values)"
-
-#~ msgid "Export the items in the current viewer in iCalendar format"
-#~ msgstr "Exportă elementele din afișarea curentă în format iCalendar"
-
-#~ msgid "Export selection as &iCalendar..."
-#~ msgstr "Exportă selecția ca &iCalendar..."
-
-#~ msgid "Export the selected items in the current viewer in iCalendar format"
-#~ msgstr ""
-#~ "Exportă elementele selectate din afișarea curentă în format iCalendar"
-
-#~ msgid "S&yncML synchronization"
-#~ msgstr "Sincronizare S&yncML"
-
-#~ msgid "&Clear all filters"
-#~ msgstr "&Curăță toate filtrele"
-
-#~ msgid "&Mail task"
-#~ msgstr "Tri&mite sarcina pe e-mail"
-
-#~ msgid "Mail the task, using your default mailer"
-#~ msgstr ""
-#~ "Trimite sarcina prin e-mail, utilizînd clientul vostru de e-mail implicit"
-
-#~ msgid "&Mail note"
-#~ msgstr "Tri&mite notița pe e-mail"
-
-#~ msgid "Mail the note, using your default mailer"
-#~ msgstr ""
-#~ "Trimite notița prin e-mail, utilizînd clientul vostru de e-mail implicit"
-
-#~ msgid "Add &note"
-#~ msgstr "Adaugă &notiță"
-
-#~ msgid "Add a note to the selected task"
-#~ msgstr "Adaugă o notiță la sarcina selectată"
-
-#~ msgid "Add a note to the selected category"
-#~ msgstr "Adaugă o notiță la categoria selectată"
-
-#~ msgid "Add a note to the selected attachment"
-#~ msgstr "Adaugă o notiță la atașamentul selectat"
-
-#~ msgid "&Add attachment"
-#~ msgstr "&Adaugă atașament"
-
-#~ msgid "Browse for files to add as attachment to the selected task(s)"
-#~ msgstr "Căutați fișiere de adăugat ca atașament la sarcinile selectate"
-
-#~ msgid "Browse for files to add as attachment to the selected categories"
-#~ msgstr "Căutați fișiere de adăugat ca atașament la categoriile selectate"
-
-#~ msgid "Browse for files to add as attachment to the selected note(s)"
-#~ msgstr "Căutați fișiere de adăugat ca atașament la notițele selectate"
-
-#~ msgid "&Open all attachments"
-#~ msgstr "Deschide t&oate atașamentele"
-
-#~ msgid "Open all attachments of the selected task(s)"
-#~ msgstr "Deschide toate atașamentele pentru sarcinile selectate"
-
-#~ msgid "Open all attachments of the selected categories"
-#~ msgstr "Deschide toate atașamentele pentru categoriile selectate"
-
-#~ msgid "Open all attachments of the selected note(s)"
-#~ msgstr "Deschide toate atașamentele pentru notițele selectate"
-
-#~ msgid "St&op tracking effort"
-#~ msgstr "&Oprește urmărirea efortului"
-
-#~ msgid "Help: About %s"
-#~ msgstr "Ajutor: Despre %s"
-
-#~ msgid "Help: %s license"
-#~ msgstr "Ajutor: Licență %s"
-
-#~ msgid "Show only tasks &due before end of"
-#~ msgstr "Arată numai sarcinile sca&dente înainte de"
-
-#~ msgid "&Unlimited"
-#~ msgstr "&Nelimitat"
-
-#~ msgid "Show all tasks"
-#~ msgstr "Arată toate sarcinile"
-
-#~ msgid "Only show tasks due today"
-#~ msgstr "Arată numai sarcinile scadente astăzi"
-
-#~ msgid "T&omorrow"
-#~ msgstr "&Mîine"
-
-#~ msgid "Only show tasks due today and tomorrow"
-#~ msgstr "Arată numai sarcinile scadente astăzi și mîine"
-
-#~ msgid "Wo&rkweek"
-#~ msgstr "Săptămînă luc&rătoare"
-
-#~ msgid "Only show tasks due this work week (i.e. before Friday)"
-#~ msgstr ""
-#~ "Arată numai sarcinile scadente săptămîna aceasta lucrătoare (ex: înainte de "
-#~ "vineri)"
-
-#~ msgid "&Week"
-#~ msgstr "&Săptămînă"
-
-#~ msgid "Only show tasks due this week (i.e. before Sunday)"
-#~ msgstr ""
-#~ "Arată numai sarcinile scadente săptămîna aceasta (ex: înainte de duminică)"
-
-#~ msgid "&Month"
-#~ msgstr "&Lună"
-
-#~ msgid "Only show tasks due this month"
-#~ msgstr "Arată numai sarcinile scadente luna aceasta"
-
-#~ msgid "&Year"
-#~ msgstr "&An"
-
-#~ msgid "Only show tasks due this year"
-#~ msgstr "Arată numai sarcinile scadente anul acesta"
-
-#~ msgid "Status: %d over due, %d inactive, %d completed"
-#~ msgstr "Stare: %d depășite, %d inactive, %d terminate"
-
-#~ msgid "Task Coach on the iPhone"
-#~ msgstr "Task Coach pe iPhone"
-
-#~ msgid "Over due: the due date is in the past;"
-#~ msgstr "Depășită: data scadentă este în trecut;"
-
-#~ msgid "Over due tasks are red;"
-#~ msgstr "Sarcinile depășite sînt roșii;"
-
-#~ msgid ""
-#~ "Mutually exclusive subcategories: a check box indicating\n"
-#~ "whether the subcategories of the category are mutual exclusive. If they "
-#~ "are,\n"
-#~ "items can only belong to one of the subcategories. When filtering, you can "
-#~ "only\n"
-#~ "filter by one of the subcategories at a time."
-#~ msgstr ""
-#~ "Subcategorii excluse reciproc: o căsuță de bifat indicînd dacă\n"
-#~ "subcategoriile unei categorii se exclud reciproc. Dacă sînt, elementele\n"
-#~ "pot aparține numai uneia din subcategorii. Cînd filtrați, puteți filtra "
-#~ "numai\n"
-#~ "după cîte o categorie odată."
-
-#~ msgid ""
-#~ "%(name)s has built-in SyncML client support. This means you can\n"
-#~ "setup %(name)s to synchronize with the same SyncML server you\n"
-#~ "synchronize Outlook with and have all Outlook tasks and notes in\n"
-#~ "your %(name)s file, as well as %(name)s tasks and notes in Outlook. Or\n"
-#~ "your Pocket PC."
-#~ msgstr ""
-#~ "%(name)s are încorporat suport de client SyncML. Asta înseamnă\n"
-#~ "că puteți configura %(name)s să sincronizeze cu același server SyncML\n"
-#~ "cu care sincronizați Outlook cu toate sarcinile și notițele sale în "
-#~ "fișierul\n"
-#~ "vostru %(name)s, cît și sarcinile și notițele %(name)s în Outlook, sau\n"
-#~ "în calculatorul vostru de buzunar."
-
-#~ msgid ""
-#~ "The conflict detection/resolution system is a work around a \n"
-#~ "Funambol limitation. It should work in most cases, but if many applications\n"
-#~ "synchronize with the same server at the same time, problems may rise."
-#~ msgstr ""
-#~ "Sistemul de detectare/rezolvare a conflictelor este o conturnare a \n"
-#~ "unei limitări Funambol. Ar trebui să meargă în majoritatea cazurilor, dar "
-#~ "dacă mai\n"
-#~ "multe aplicații sincronizează cu același server în același timp, pot apărea "
-#~ "probleme."
-
-#~ msgid ""
-#~ "<h4>%(name)s - %(description)s</h4>\n"
-#~ "<h5>Version %(version)s, Revision %(revision)s, %(date)s</h5>\n"
-#~ "<p>By %(author)s &lt;%(author_email)s&gt;<p>\n"
-#~ "<p><a href=\"%(url)s\" target=\"_blank\">%(url)s</a></p>\n"
-#~ "<p>%(copyright)s</p>\n"
-#~ "<p>%(license_notice_html)s</p>\n"
-#~ msgstr ""
-#~ "<h4>%(name)s - %(description)s</h4>\n"
-#~ "<h5>Versiunea %(version)s, Revizia %(revision)s, %(date)s</h5>\n"
-#~ "<p>De către %(author)s &lt;%(author_email)s&gt;<p>\n"
-#~ "<p><a href=\"%(url)s\" target=\"_blank\">%(url)s</a></p>\n"
-#~ "<p>%(copyright)s</p>\n"
-#~ "<p>%(license_notice_html)s</p>\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Version %(version)s, Revision %(revision)s, %(date)s\n"
-#~ "\n"
-#~ "By %(author)s <%(author_email)s>\n"
-#~ "\n"
-#~ "%(url)s\n"
-#~ "\n"
-#~ "%(copyright)s\n"
-#~ "%(license)s\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Versiuna %(version)s, Revizia %(revision)s, %(date)s\n"
-#~ "\n"
-#~ "De către %(author)s <%(author_email)s>\n"
-#~ "\n"
-#~ "%(url)s\n"
-#~ "\n"
-#~ "%(copyright)s\n"
-#~ "%(license)s\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "%(name)s has a mailinglist where you can discuss usage of %(name)s with "
-#~ "fellow users, discuss and request features and complain about bugs. Go to "
-#~ "%(url)s and join today!"
-#~ msgstr ""
-#~ "%(name)s are o listă de discuții unde puteți discuta de utilizarea lui "
-#~ "%(name)s cu alți utilizatori, puteți discuta și cere funcționalități "
-#~ "suplimentare, cît și reclama erorile. Mergeți la %(url)s și alăturați-vă "
-#~ "astăzi!"
-
-#~ msgid ""
-#~ "You can create any viewer layout you want by dragging and dropping the tabs. "
-#~ "Unfortunately, due to a limitation of the current version of the graphical "
-#~ "toolkit (wxPython), the layout cannot be saved for reuse in the next session."
-#~ msgstr ""
-#~ "Puteți crea orice aranjament doriți prin tragerea și punerea filelor. Din "
-#~ "păcate, datorită unei limitări a versiunii curente a trusei de unelte "
-#~ "grafice (wxPython), dispunerea nu poate fi salvată și reutilizată în "
-#~ "sesiunea viitoare."
-
-#~ msgid "Malformed Thunderbird internal ID: %s. Please file a bug report."
-#~ msgstr "ID intern Thunderbird malformat: %s. Trimiteți un raport de eroare."
-
-#~ msgid "Could not find directory for ID %s. Please file a bug report."
-#~ msgstr ""
-#~ "Nu s-a găsit director pentru ID-ul %s. Trimiteți un raport de eroare."
-
-#~ msgid "New effort"
-#~ msgstr "Efort nou"
-
-#~ msgid "&New effort..."
-#~ msgstr "Efort &nou..."
-
-#~ msgid "For this task"
-#~ msgstr "Pentru această sarcină"
-
-#~ msgid "Use this color:"
-#~ msgstr "Utilizează această culoare"
-
-#~ msgid "Color"
-#~ msgstr "Culoare"
-
-#~ msgid "Behavior"
-#~ msgstr "Comportament"
-
-#~ msgid "Maximum number of recent files to remember"
-#~ msgstr "Numărul maxim de fişiere recente amintite"
-
-#~ msgid "Half an hour"
-#~ msgstr "Jumătate de oră"
-
-#~ msgid "Fifteen minutes"
-#~ msgstr "Cincisprezece minute"
-
-#~ msgid "Two hours"
-#~ msgstr "Două ore"
-
-#~ msgid "One hour"
-#~ msgstr "O oră"
-
-#~ msgid "Five minutes"
-#~ msgstr "Cinci minute"
-
-#~ msgid "Ten minutes"
-#~ msgstr "Zece minute"
-
-#~ msgid ""
-#~ "Cannot add template %s\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Nu se poate adăuga șablonul %s\n"
-#~ "%s"
-
-#~ msgid "&Clear all filters\tShift-Ctrl-F"
-#~ msgstr "&Curăță toate filtrele\tShift-Ctrl-F"
-
-#~ msgid "Stop tracking or resume tracking"
-#~ msgstr "Oprește sau reia urmărirea"
-
-#~ msgid "Shift-Ctrl-F"
-#~ msgstr "Shift-Ctrl-F"
-
-#~ msgid "Shift-Ctrl-INSERT"
-#~ msgstr "Shift-Ctrl-INSERT"
-
-#~ msgid "Ctrl-INSERT"
-#~ msgstr "Ctrl-INSERT"
-
-#~ msgid "Ctrl-DELETE"
-#~ msgstr "Ctrl-DELETE"
-
-#~ msgid "&Resume tracking %s"
-#~ msgstr "&Reia urmărirea %s"
-
-#~ msgid "St&op tracking %s"
-#~ msgstr "&Oprește urmărirea %s"
-
-#~ msgid ""
-#~ "You can drag and drop viewers to create almost any user interface \n"
-#~ "layout you want. When you start dragging a viewer, drop hints will appear "
-#~ "to\n"
-#~ "show where you can drop the viewer. Viewers can also be dropped onto "
-#~ "eachother\n"
-#~ "to create notebooks."
-#~ msgstr ""
-#~ "Puteți trage și plasa ferestrele să creați aproape orice dispunere doriți \n"
-#~ "pentru interfața utilizator. Cînd trageți o fereastră, indicii de plasare "
-#~ "vor apărea\n"
-#~ "pentru a vă arăta unde o puteți plasa. Ferestrele pot fi plasate una în alta "
-#~ "pentru\n"
-#~ "a crea carnețele."
-
-#~ msgid "Import tasks from a CSV file"
-#~ msgstr "Importă sarcinile dintr-un fișier CSV"
-
-#~ msgid "CSV importation"
-#~ msgstr "Importare CSV"
-
-#~ msgid "First line describe fields"
-#~ msgstr "Prima linie descrie cîmpurile"
-
-#~ msgid "Choose CSV file"
-#~ msgstr "Alegeți fișierul CSV"
-
-#~ msgid "CSV import"
-#~ msgstr "Import CSV"
-
-#~ msgid "&Tips..."
-#~ msgstr "&Trucuri..."
-
-#~ msgid "&Help contents...\tCtrl+H"
-#~ msgstr "Sumar ajutor...\tCtrl+H"
-
-#~ msgid "&Help contents...\tCtrl+?"
-#~ msgstr "Sumar ajutor...\tCtrl+?"
-
-#~ msgid "&About %s..."
-#~ msgstr "&Despre %s..."
-
-#~ msgid "&License..."
-#~ msgstr "&Licență..."
-
-#~ msgid "&Frequently asked questions..."
-#~ msgstr "Întrebări frecvente..."
-
-#~ msgid "Only show tasks due this wo&rk week"
-#~ msgstr "Afișează numai sarcinile scadente în această săptămînă lucrătoare"
-
-#~ msgid "Only show tasks due this work week and hide later ones"
-#~ msgstr ""
-#~ "Afișează numai sarcinile scadente în această săptămînă lucrătoare și ascunde "
-#~ "pe cele viitoare"
-
-#~ msgid "Only show tasks completed this wo&rk week"
-#~ msgstr "Afișează numai sarcinile încheiate în această săptămînă luc&rătoare"
-
-#~ msgid "Only show tasks completed this work week and hide older ones"
-#~ msgstr ""
-#~ "Afișează numai sarcinile încheiate în această săptămînă lucrătoare și "
-#~ "ascunde pe cele trecute"
-
-#~ msgid "Only show tasks starting this wo&rk week"
-#~ msgstr "Afișează numai sarcinile care încep în această săptămînă lucrătoare"
-
-#~ msgid "Only show tasks starting this work week and hide later ones"
-#~ msgstr ""
-#~ "Afișează numai sarcinile care încep în această săptămînă lucrătoare și "
-#~ "ascunde pe cele viitoare"
+#~ msgid "Untitled e-mail"
+#~ msgstr "E-mail fără titlu"

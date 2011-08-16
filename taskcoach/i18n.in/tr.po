@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-07-28 23:01+0000\n"
-"PO-Revision-Date: 2011-08-04 19:54+0000\n"
-"Last-Translator: Frank Niessink <frank@niessink.com>\n"
+"POT-Creation-Date: 2011-08-04 23:21+0000\n"
+"PO-Revision-Date: 2011-08-10 05:54+0000\n"
+"Last-Translator: Kaya Zeren <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-04 20:05+0000\n"
-"X-Generator: Launchpad (build 13604)\n"
+"X-Launchpad-Export-Date: 2011-08-15 21:29+0000\n"
+"X-Generator: Launchpad (build 13687)\n"
 
 #: taskcoachlib/application/application.py:242
 msgid ""
@@ -26,7 +26,7 @@ msgstr ""
 "%s"
 
 #: taskcoachlib/application/application.py:243
-#: taskcoachlib/gui/iocontroller.py:57
+#: taskcoachlib/gui/iocontroller.py:58
 msgid "%s file error"
 msgstr "%s dosya hatası"
 
@@ -390,28 +390,28 @@ msgstr "Bütçeleri değiştir"
 msgid "Change budget of \"%s\""
 msgstr "\"%s\" için bütçeyi değiştirir"
 
-#: taskcoachlib/config/settings.py:195
+#: taskcoachlib/config/settings.py:221
 msgid "Error while reading the %s-%s setting from %s.ini."
 msgstr "%s-%s ayarları %s.ini dosyasından okunurken hata oldu."
 
-#: taskcoachlib/config/settings.py:196
+#: taskcoachlib/config/settings.py:222
 msgid "The value is: %s"
 msgstr "Değer: %s"
 
-#: taskcoachlib/config/settings.py:197
+#: taskcoachlib/config/settings.py:223
 msgid "The error is: %s"
 msgstr "Hata: %s"
 
-#: taskcoachlib/config/settings.py:198
+#: taskcoachlib/config/settings.py:224
 msgid ""
 "%s will use the default value for the setting and should proceed normally."
 msgstr "%s varsayılan ayarları kullanarak normal şekilde çalışacak."
 
-#: taskcoachlib/config/settings.py:199
+#: taskcoachlib/config/settings.py:225
 msgid "Settings error"
 msgstr "Ayar hatası"
 
-#: taskcoachlib/config/settings.py:219
+#: taskcoachlib/config/settings.py:245
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
@@ -419,7 +419,7 @@ msgstr ""
 "%s.ini kaydedilirken hata oluştu:\n"
 "%s\n"
 
-#: taskcoachlib/config/settings.py:220
+#: taskcoachlib/config/settings.py:246
 msgid "Save error"
 msgstr "Kaydetme hatası"
 
@@ -944,12 +944,12 @@ msgid "Appearance"
 msgstr "Görünüm"
 
 #: taskcoachlib/gui/dialog/editor.py:237
-#: taskcoachlib/gui/dialog/preferences.py:109
+#: taskcoachlib/gui/dialog/preferences.py:118
 msgid "Foreground color"
 msgstr "Yazı rengi"
 
 #: taskcoachlib/gui/dialog/editor.py:240
-#: taskcoachlib/gui/dialog/preferences.py:109
+#: taskcoachlib/gui/dialog/preferences.py:118
 msgid "Background color"
 msgstr "Artalan rengi"
 
@@ -962,12 +962,12 @@ msgid "Use font:"
 msgstr "Şu yazı tipini kullan:"
 
 #: taskcoachlib/gui/dialog/editor.py:293
-#: taskcoachlib/gui/dialog/preferences.py:110
+#: taskcoachlib/gui/dialog/preferences.py:119
 msgid "Font"
 msgstr "Yazı tipi"
 
 #: taskcoachlib/gui/dialog/editor.py:319
-#: taskcoachlib/gui/dialog/preferences.py:110
+#: taskcoachlib/gui/dialog/preferences.py:119
 msgid "Icon"
 msgstr "Simge"
 
@@ -1164,10 +1164,8 @@ msgstr "Gruplar"
 msgid "Attachments"
 msgstr "Ekler"
 
-#: taskcoachlib/gui/dialog/editor.py:877
-#: taskcoachlib/gui/dialog/syncpreferences.py:135
-#: taskcoachlib/gui/viewer/note.py:37 taskcoachlib/help/__init__.py:85
-#: taskcoachlib/help/__init__.py:268
+#: taskcoachlib/gui/dialog/editor.py:877 taskcoachlib/gui/viewer/note.py:37
+#: taskcoachlib/help/__init__.py:85 taskcoachlib/help/__init__.py:268
 msgid "Notes"
 msgstr "Notlar"
 
@@ -1201,15 +1199,15 @@ msgstr "Dur"
 msgid "Export only the selected items"
 msgstr "Yalnız seçili ögeleri ver"
 
-#: taskcoachlib/gui/dialog/export.py:85 taskcoachlib/gui/iocontroller.py:294
+#: taskcoachlib/gui/dialog/export.py:85 taskcoachlib/gui/iocontroller.py:302
 msgid "Export as CSV"
 msgstr "CSV olarak ver"
 
-#: taskcoachlib/gui/dialog/export.py:90 taskcoachlib/gui/iocontroller.py:299
+#: taskcoachlib/gui/dialog/export.py:90 taskcoachlib/gui/iocontroller.py:307
 msgid "Export as iCalendar"
 msgstr "iCalendar olarak ver"
 
-#: taskcoachlib/gui/dialog/export.py:101 taskcoachlib/gui/iocontroller.py:288
+#: taskcoachlib/gui/dialog/export.py:101 taskcoachlib/gui/iocontroller.py:296
 msgid "Export as HTML"
 msgstr "HTML olarak ver"
 
@@ -1307,7 +1305,7 @@ msgstr ""
 msgid "OK"
 msgstr "Tamam"
 
-#: taskcoachlib/gui/dialog/preferences.py:207
+#: taskcoachlib/gui/dialog/preferences.py:227
 msgid ""
 "This setting will take effect\n"
 "after you restart %s"
@@ -1315,15 +1313,15 @@ msgstr ""
 "Bu ayarın etkin olması için\n"
 "%s yeniden başlatılmalı"
 
-#: taskcoachlib/gui/dialog/preferences.py:227
+#: taskcoachlib/gui/dialog/preferences.py:248
 msgid "Files"
 msgstr "Dosyalar"
 
-#: taskcoachlib/gui/dialog/preferences.py:233
+#: taskcoachlib/gui/dialog/preferences.py:254
 msgid "Auto save after every change"
 msgstr "Her değişiklikten sonra kendiliğinden kaydet"
 
-#: taskcoachlib/gui/dialog/preferences.py:235
+#: taskcoachlib/gui/dialog/preferences.py:256
 msgid ""
 "Create a backup copy before\n"
 "overwriting a %s file"
@@ -1331,7 +1329,7 @@ msgstr ""
 "Bir %s dosyasının üzerine\n"
 "yazmadan önce yedekle"
 
-#: taskcoachlib/gui/dialog/preferences.py:237
+#: taskcoachlib/gui/dialog/preferences.py:258
 msgid ""
 "Save settings (%s.ini) in the same\n"
 "directory as the program"
@@ -1339,7 +1337,7 @@ msgstr ""
 "Ayar dosyasını (%s.ini)\n"
 "yazılımla aynı klasöre kaydet"
 
-#: taskcoachlib/gui/dialog/preferences.py:239
+#: taskcoachlib/gui/dialog/preferences.py:260
 msgid ""
 "(For running %s\n"
 "from a removable medium)"
@@ -1347,11 +1345,11 @@ msgstr ""
 "(%s yazılımını taşınabilir \n"
 "diskten çalıştırmak için)"
 
-#: taskcoachlib/gui/dialog/preferences.py:240
+#: taskcoachlib/gui/dialog/preferences.py:261
 msgid "Attachment base directory"
 msgstr "Eklerin kök klasörü"
 
-#: taskcoachlib/gui/dialog/preferences.py:241
+#: taskcoachlib/gui/dialog/preferences.py:262
 msgid ""
 "When adding an attachment, try to make\n"
 "its path relative to this one."
@@ -1359,51 +1357,51 @@ msgstr ""
 "Dosya eklerken, klasör yolunu\n"
 "bununla ilişkili yapmayı dene."
 
-#: taskcoachlib/gui/dialog/preferences.py:247
+#: taskcoachlib/gui/dialog/preferences.py:268
 msgid "Window behavior"
 msgstr "Pencere davranışı"
 
-#: taskcoachlib/gui/dialog/preferences.py:253
+#: taskcoachlib/gui/dialog/preferences.py:274
 msgid "Show splash screen on startup"
 msgstr "Açılırken logoyu göster"
 
-#: taskcoachlib/gui/dialog/preferences.py:255
+#: taskcoachlib/gui/dialog/preferences.py:276
 msgid "Show tips window on startup"
 msgstr "Açılışta ipuçları penceresini göster"
 
-#: taskcoachlib/gui/dialog/preferences.py:257
+#: taskcoachlib/gui/dialog/preferences.py:278
 msgid "Start with the main window iconized"
 msgstr "Sistem tepsisinde simge durumunda başlat"
 
-#: taskcoachlib/gui/dialog/preferences.py:258
+#: taskcoachlib/gui/dialog/preferences.py:279
 msgid "Always"
 msgstr "Her zaman"
 
-#: taskcoachlib/gui/dialog/preferences.py:258
+#: taskcoachlib/gui/dialog/preferences.py:279
 msgid "Never"
 msgstr "Asla"
 
-#: taskcoachlib/gui/dialog/preferences.py:260
+#: taskcoachlib/gui/dialog/preferences.py:281
 msgid "If it was iconized last session"
 msgstr "Son kullanıldığında simge şeklindeyse"
 
-#: taskcoachlib/gui/dialog/preferences.py:262
+#: taskcoachlib/gui/dialog/preferences.py:283
 msgid "Check for new version of %(name)s on startup"
 msgstr "Açılışta %(name)s yeni sürüm denetimi yap"
 
-#: taskcoachlib/gui/dialog/preferences.py:264
+#: taskcoachlib/gui/dialog/preferences.py:285
 msgid "Hide main window when iconized"
 msgstr "Sistem tepsisi simgesi olarak küçült"
 
-#: taskcoachlib/gui/dialog/preferences.py:266
+#: taskcoachlib/gui/dialog/preferences.py:287
 msgid "Minimize main window when closed"
 msgstr "Ana pencere kapatıldığında görev tepsisine buğuna küçült"
 
-#: taskcoachlib/gui/dialog/preferences.py:268
+#: taskcoachlib/gui/dialog/preferences.py:289
 msgid "Make clock in the task bar tick when tracking effort"
 msgstr "Çalışılırken sistem tepsisinde saat simgesi göster"
 
-#: taskcoachlib/gui/dialog/preferences.py:270
+#: taskcoachlib/gui/dialog/preferences.py:291
 msgid ""
 "Show a popup with the description of an item\n"
 "when hovering over it"
@@ -1411,16 +1409,16 @@ msgstr ""
 "İmleç bir ögenin üzerine getirildiğinde\n"
 "açılır pencerede açıklamasını göster"
 
-#: taskcoachlib/gui/dialog/preferences.py:276
-#: taskcoachlib/gui/dialog/preferences.py:336
+#: taskcoachlib/gui/dialog/preferences.py:297
+#: taskcoachlib/gui/dialog/preferences.py:357
 msgid "Language"
 msgstr "Dil"
 
-#: taskcoachlib/gui/dialog/preferences.py:282
+#: taskcoachlib/gui/dialog/preferences.py:303
 msgid "Let the system determine the language"
 msgstr "Dili sistem varsayılanına göre belirle"
 
-#: taskcoachlib/gui/dialog/preferences.py:342
+#: taskcoachlib/gui/dialog/preferences.py:363
 msgid ""
 "If your language is not available, or the translation needs \n"
 "improving, please consider helping. See:"
@@ -1428,63 +1426,63 @@ msgstr ""
 "Sizin diliniz yoksa ya da düzeltmek gerekiyorsa,\n"
 "yardım edebilirsiniz. Ayrıntılı bilgi için:"
 
-#: taskcoachlib/gui/dialog/preferences.py:349
+#: taskcoachlib/gui/dialog/preferences.py:370
 msgid "Language not found?"
 msgstr "Dil bulunamadı?"
 
-#: taskcoachlib/gui/dialog/preferences.py:359
+#: taskcoachlib/gui/dialog/preferences.py:380
 msgid "Task appearance"
 msgstr "İş görünümü"
 
-#: taskcoachlib/gui/dialog/preferences.py:366
+#: taskcoachlib/gui/dialog/preferences.py:387
 msgid "Active tasks"
 msgstr "Etkin işler"
 
-#: taskcoachlib/gui/dialog/preferences.py:367
+#: taskcoachlib/gui/dialog/preferences.py:388
 msgid "Inactive tasks"
 msgstr "Etkin olmayan işler"
 
-#: taskcoachlib/gui/dialog/preferences.py:368
+#: taskcoachlib/gui/dialog/preferences.py:389
 msgid "Completed tasks"
 msgstr "Tamamlanmış işler"
 
-#: taskcoachlib/gui/dialog/preferences.py:369
+#: taskcoachlib/gui/dialog/preferences.py:390
 msgid "Overdue tasks"
 msgstr "Zamanı geçmiş işler"
 
-#: taskcoachlib/gui/dialog/preferences.py:370
+#: taskcoachlib/gui/dialog/preferences.py:391
 msgid "Tasks due soon"
 msgstr "Zamanı yaklaşan işler"
 
-#: taskcoachlib/gui/dialog/preferences.py:381
+#: taskcoachlib/gui/dialog/preferences.py:402
 msgid "Features"
 msgstr "Özellikler"
 
-#: taskcoachlib/gui/dialog/preferences.py:387
+#: taskcoachlib/gui/dialog/preferences.py:408
 msgid "Allow for tracking effort"
 msgstr "Çalışmaları izlemeye izin ver"
 
-#: taskcoachlib/gui/dialog/preferences.py:388
+#: taskcoachlib/gui/dialog/preferences.py:409
 msgid "Allow for taking notes"
 msgstr "Notlar alınmasına izin ver"
 
-#: taskcoachlib/gui/dialog/preferences.py:395
+#: taskcoachlib/gui/dialog/preferences.py:416
 msgid "Enable SyncML"
 msgstr "SyncML eşleştirmeyi etkinleştir"
 
-#: taskcoachlib/gui/dialog/preferences.py:397
+#: taskcoachlib/gui/dialog/preferences.py:418
 msgid "Enable iPhone synchronization"
 msgstr "iPhone eşleştirmeyi etkinleştir"
 
-#: taskcoachlib/gui/dialog/preferences.py:400
+#: taskcoachlib/gui/dialog/preferences.py:421
 msgid "Hour of start of work day"
 msgstr "İş gününde çalışmaya başlama saati"
 
-#: taskcoachlib/gui/dialog/preferences.py:402
+#: taskcoachlib/gui/dialog/preferences.py:423
 msgid "Hour of end of work day"
 msgstr "İş gününde çalışmayı bitirme saati"
 
-#: taskcoachlib/gui/dialog/preferences.py:404
+#: taskcoachlib/gui/dialog/preferences.py:425
 msgid ""
 "Use gradients in calendar views.\n"
 "This may slow down Task Coach."
@@ -1492,147 +1490,147 @@ msgstr ""
 "Takvim görünümlerinde gölgelendirme kullan.\n"
 "Bu ayar Task Coach'u yavaşlatabilir."
 
-#: taskcoachlib/gui/dialog/preferences.py:407
+#: taskcoachlib/gui/dialog/preferences.py:428
 msgid "Minutes between task start/end times"
 msgstr "İşe başlama/bitiş zamanları arasındaki dakikalar"
 
-#: taskcoachlib/gui/dialog/preferences.py:414
+#: taskcoachlib/gui/dialog/preferences.py:435
 msgid "Task dates"
 msgstr "İş tarihleri"
 
-#: taskcoachlib/gui/dialog/preferences.py:420
+#: taskcoachlib/gui/dialog/preferences.py:441
 msgid "Mark parent task completed when all children are completed"
 msgstr "Altişleri tamamlandığında işi tamamlanmış olarak işaretle"
 
-#: taskcoachlib/gui/dialog/preferences.py:422
+#: taskcoachlib/gui/dialog/preferences.py:443
 msgid "Number of hours that tasks are considered to be 'due soon'"
 msgstr "İşin 'Bitiş zamanı yaklaşıyor' durumuna geçmesi için kalacak saat"
 
-#: taskcoachlib/gui/dialog/preferences.py:424
+#: taskcoachlib/gui/dialog/preferences.py:445
 msgid "Nothing"
 msgstr "Hiçbir şey"
 
-#: taskcoachlib/gui/dialog/preferences.py:425
+#: taskcoachlib/gui/dialog/preferences.py:446
 msgid "Changing the start date changes the due date"
 msgstr "Başlangıç tarihi değişince bitiş tarihi de değişsin"
 
-#: taskcoachlib/gui/dialog/preferences.py:426
+#: taskcoachlib/gui/dialog/preferences.py:447
 msgid "Changing the due date changes the start date"
 msgstr "Bitiş tarihi değişince başlangıç tarihi de değişsin"
 
-#: taskcoachlib/gui/dialog/preferences.py:428
+#: taskcoachlib/gui/dialog/preferences.py:449
 msgid "What to do with start and due date if the other one is changed"
 msgstr "Başlangıç ya da bitiş tarihi değiştirildiğinde diğeri ne olsun"
 
-#: taskcoachlib/gui/dialog/preferences.py:431
+#: taskcoachlib/gui/dialog/preferences.py:452
 msgid "Preset"
 msgstr "Ön Ayar"
 
-#: taskcoachlib/gui/dialog/preferences.py:432
+#: taskcoachlib/gui/dialog/preferences.py:453
 msgid "Propose"
 msgstr "Öner"
 
-#: taskcoachlib/gui/dialog/preferences.py:433
+#: taskcoachlib/gui/dialog/preferences.py:454
 msgid "Today"
 msgstr "Bugün"
 
-#: taskcoachlib/gui/dialog/preferences.py:434
+#: taskcoachlib/gui/dialog/preferences.py:455
 msgid "Tomorrow"
 msgstr "Yarın"
 
-#: taskcoachlib/gui/dialog/preferences.py:435
+#: taskcoachlib/gui/dialog/preferences.py:456
 msgid "Day after tomorrow"
 msgstr "Ertesi gün"
 
-#: taskcoachlib/gui/dialog/preferences.py:436
+#: taskcoachlib/gui/dialog/preferences.py:457
 msgid "Next Friday"
 msgstr "Gelecek Cuma"
 
-#: taskcoachlib/gui/dialog/preferences.py:437
+#: taskcoachlib/gui/dialog/preferences.py:458
 msgid "Next Monday"
 msgstr "Gelecek Pazartesi"
 
-#: taskcoachlib/gui/dialog/preferences.py:438
+#: taskcoachlib/gui/dialog/preferences.py:459
 msgid "Start of day"
 msgstr "Gün başı"
 
-#: taskcoachlib/gui/dialog/preferences.py:439
+#: taskcoachlib/gui/dialog/preferences.py:460
 msgid "Start of working day"
 msgstr "İş günü başı"
 
-#: taskcoachlib/gui/dialog/preferences.py:440
+#: taskcoachlib/gui/dialog/preferences.py:461
 msgid "Current time"
 msgstr "Şu an"
 
-#: taskcoachlib/gui/dialog/preferences.py:441
+#: taskcoachlib/gui/dialog/preferences.py:462
 msgid "End of working day"
 msgstr "İş günü sonu"
 
-#: taskcoachlib/gui/dialog/preferences.py:442
+#: taskcoachlib/gui/dialog/preferences.py:463
 msgid "End of day"
 msgstr "Gün sonu"
 
-#: taskcoachlib/gui/dialog/preferences.py:444
+#: taskcoachlib/gui/dialog/preferences.py:465
 msgid "Default start date and time"
 msgstr "Varsayılan başlangıç tarih ve saati"
 
-#: taskcoachlib/gui/dialog/preferences.py:447
+#: taskcoachlib/gui/dialog/preferences.py:468
 msgid "Default due date and time"
 msgstr "Varsayılan bitiş tarih ve saati"
 
-#: taskcoachlib/gui/dialog/preferences.py:450
+#: taskcoachlib/gui/dialog/preferences.py:471
 msgid "Default completion date and time"
 msgstr "Varsayılan tamamlanma tarih ve saati"
 
-#: taskcoachlib/gui/dialog/preferences.py:453
+#: taskcoachlib/gui/dialog/preferences.py:474
 msgid "Default reminder date and time"
 msgstr "Varsayılan anımsatıcı tarih ve saati"
 
-#: taskcoachlib/gui/dialog/preferences.py:460
+#: taskcoachlib/gui/dialog/preferences.py:481
 msgid "Task reminders"
 msgstr "İş anımsatıcıları"
 
-#: taskcoachlib/gui/dialog/preferences.py:469
+#: taskcoachlib/gui/dialog/preferences.py:490
 msgid "Notification system to use for reminders"
 msgstr "Anımsatıcılar için kullanılacak uyarı sistemi"
 
-#: taskcoachlib/gui/dialog/preferences.py:473
+#: taskcoachlib/gui/dialog/preferences.py:494
 msgid "Default snooze time to use after reminder"
 msgstr "Varsayılan anımsatıcı erteleme süresi"
 
-#: taskcoachlib/gui/dialog/preferences.py:476
+#: taskcoachlib/gui/dialog/preferences.py:497
 msgid "Snooze times to offer in task reminder dialog"
 msgstr "İş anımsatıcı iletisinde önerilecek süre ertelemeleri"
 
-#: taskcoachlib/gui/dialog/preferences.py:483
+#: taskcoachlib/gui/dialog/preferences.py:504
 msgid "iPhone"
 msgstr "iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:489
+#: taskcoachlib/gui/dialog/preferences.py:510
 msgid "Password for synchronization with iPhone"
 msgstr "iPhone ile eşleştirme için parola"
 
-#: taskcoachlib/gui/dialog/preferences.py:491
+#: taskcoachlib/gui/dialog/preferences.py:512
 msgid "Bonjour service name"
 msgstr "Bonjour hizmeti adı"
 
-#: taskcoachlib/gui/dialog/preferences.py:493
+#: taskcoachlib/gui/dialog/preferences.py:514
 msgid "Upload completed tasks to device"
 msgstr "Tamamlanmış işleri aygıta yükle"
 
-#: taskcoachlib/gui/dialog/preferences.py:495
+#: taskcoachlib/gui/dialog/preferences.py:516
 msgid "Show sync log"
 msgstr "Eşleştirme günlüğünü göster"
 
-#: taskcoachlib/gui/dialog/preferences.py:495
+#: taskcoachlib/gui/dialog/preferences.py:516
 msgid "Show the synchronization log"
 msgstr "Eşleştirme günlüğünü göster"
 
-#: taskcoachlib/gui/dialog/preferences.py:501
+#: taskcoachlib/gui/dialog/preferences.py:522
 msgid "Editor"
 msgstr "Düzenleyici"
 
-#: taskcoachlib/gui/dialog/preferences.py:507
+#: taskcoachlib/gui/dialog/preferences.py:528
 msgid "Check spelling in editors"
 msgstr "Düzenyicilerde yazım denetim yap"
 
@@ -1648,11 +1646,23 @@ msgstr "Sustur"
 msgid "Mark task completed"
 msgstr "İşi tamamlanmış olarak işaretle"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:80
+#: taskcoachlib/gui/dialog/syncpreferences.py:81
+msgid "SyncML server"
+msgstr "SyncML sunucusu"
+
+#: taskcoachlib/gui/dialog/syncpreferences.py:82
+msgid "Custom"
+msgstr "Özelleştirilmiş"
+
+#: taskcoachlib/gui/dialog/syncpreferences.py:84
+msgid "MemoToo (http://www.memotoo.com/)"
+msgstr "MemoToo (http://www.memotoo.com/)"
+
+#: taskcoachlib/gui/dialog/syncpreferences.py:87
 msgid "SyncML server URL"
 msgstr "SyncML sunucusunun adresi"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:81
+#: taskcoachlib/gui/dialog/syncpreferences.py:88
 msgid "User name/ID"
 msgstr "Kullanıcı adı/kimliği"
 
@@ -1660,64 +1670,57 @@ msgstr "Kullanıcı adı/kimliği"
 msgid "Enable tasks synchronization"
 msgstr "İşleri eşleştir"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:91
+#: taskcoachlib/gui/dialog/syncpreferences.py:92
 msgid "Tasks database name"
 msgstr "İşler veritabanının adı"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:93
-#: taskcoachlib/gui/dialog/syncpreferences.py:111
+#: taskcoachlib/gui/dialog/syncpreferences.py:106
 msgid "Preferred synchonization mode"
 msgstr "Yeğlenen eşleştirme kipi"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:94
-#: taskcoachlib/gui/dialog/syncpreferences.py:112
+#: taskcoachlib/gui/dialog/syncpreferences.py:107
 msgid "Two way"
 msgstr "İki yönlü"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:95
-#: taskcoachlib/gui/dialog/syncpreferences.py:113
+#: taskcoachlib/gui/dialog/syncpreferences.py:108
 msgid "Slow"
 msgstr "Yavaş"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:96
-#: taskcoachlib/gui/dialog/syncpreferences.py:114
+#: taskcoachlib/gui/dialog/syncpreferences.py:109
 msgid "One way from client"
 msgstr "İstemciden tek yönlü"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:97
-#: taskcoachlib/gui/dialog/syncpreferences.py:115
+#: taskcoachlib/gui/dialog/syncpreferences.py:110
 msgid "Refresh from client"
 msgstr "İstemciden aktar"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:98
-#: taskcoachlib/gui/dialog/syncpreferences.py:116
+#: taskcoachlib/gui/dialog/syncpreferences.py:111
 msgid "One way from server"
 msgstr "Sunucudan tek yönlü"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:99
-#: taskcoachlib/gui/dialog/syncpreferences.py:117
+#: taskcoachlib/gui/dialog/syncpreferences.py:112
 #: taskcoachlib/syncml/basesource.py:61 taskcoachlib/syncml/basesource.py:73
 msgid "Refresh from server"
 msgstr "Sunucudan aktar"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:108
+#: taskcoachlib/gui/dialog/syncpreferences.py:103
 msgid "Enable notes synchronization"
 msgstr "Notları eşleştir"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:109
+#: taskcoachlib/gui/dialog/syncpreferences.py:105
 msgid "Notes database name"
 msgstr "Notlar veritabanının adı"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:133
+#: taskcoachlib/gui/dialog/syncpreferences.py:150
 msgid "Access"
 msgstr "Erişim"
-
-#: taskcoachlib/gui/dialog/syncpreferences.py:134
-#: taskcoachlib/gui/viewer/task.py:54 taskcoachlib/help/__init__.py:68
-#: taskcoachlib/help/__init__.py:129
-#: taskcoachlib/widgets/calendarconfig.py:107
-msgid "Tasks"
-msgstr "İşler"
 
 #: taskcoachlib/gui/dialog/templates.py:69
 msgid "Template"
@@ -1771,32 +1774,32 @@ msgstr "%(name)s yayın öncesi sürümü %(currentVersion)s kullanıyorsunuz."
 msgid "The latest released version of %(name)s is %(version)s."
 msgstr "Son yayınlanan %(name)s sürümü %(version)s."
 
-#: taskcoachlib/gui/iocontroller.py:47
+#: taskcoachlib/gui/iocontroller.py:48
 msgid ""
 "%s files (*.tsk)|*.tsk|Backup files (*.tsk.bak)|*.tsk.bak|All files (*.*)|*"
 msgstr ""
 "%s dosyaları (*.tsk)|*.tsk|Yedek dosyaları (*.tsk.bak)|*.tsk.bak|Tüm "
 "dosyalar (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:50
+#: taskcoachlib/gui/iocontroller.py:51
 msgid "iCalendar files (*.ics)|*.ics|All files (*.*)|*"
 msgstr "iCalendar dosyaları (*.ics)|*.ics|Tüm dosyalar (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:53
+#: taskcoachlib/gui/iocontroller.py:54
 msgid "HTML files (*.html)|*.html|All files (*.*)|*"
 msgstr "HTML dosyaları (*.html)|*.html|Tüm dosyalar (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:56
+#: taskcoachlib/gui/iocontroller.py:57
 msgid "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*"
 msgstr ""
 "CSV dosyaları (*.csv)|*.csv|Metin dosyaları (*.txt)|*.txt|Tüm dosyalar "
 "(*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:95
+#: taskcoachlib/gui/iocontroller.py:96
 msgid "Open"
 msgstr "Aç"
 
-#: taskcoachlib/gui/iocontroller.py:118 taskcoachlib/gui/iocontroller.py:155
+#: taskcoachlib/gui/iocontroller.py:126 taskcoachlib/gui/iocontroller.py:163
 msgid ""
 "Cannot open %(filename)s\n"
 "because it was created by a newer version of %(name)s.\n"
@@ -1806,27 +1809,27 @@ msgstr ""
 "bu dosya %(name)s yazılımının daha yeni bir sürümüyle oluşturulmuş.\n"
 "Lütfen %(name)s yazılımını güncelleyin."
 
-#: taskcoachlib/gui/iocontroller.py:126 taskcoachlib/gui/iocontroller.py:161
+#: taskcoachlib/gui/iocontroller.py:134 taskcoachlib/gui/iocontroller.py:169
 msgid "Error while reading %s:\n"
 msgstr "%s okunurken hata oluştu:\n"
 
-#: taskcoachlib/gui/iocontroller.py:128 taskcoachlib/gui/iocontroller.py:163
+#: taskcoachlib/gui/iocontroller.py:136 taskcoachlib/gui/iocontroller.py:171
 msgid "Are you sure it is a %s-file?"
 msgstr "Bunun bir %s dosyası olduğuna emin misiniz?"
 
-#: taskcoachlib/gui/iocontroller.py:131
+#: taskcoachlib/gui/iocontroller.py:139
 msgid "Loaded %(nrtasks)d tasks from %(filename)s"
 msgstr "%(filename)s dosyasından %(nrtasks)d iş yüklendi"
 
-#: taskcoachlib/gui/iocontroller.py:135
+#: taskcoachlib/gui/iocontroller.py:143
 msgid "Cannot open %s because it doesn't exist"
 msgstr "%s bulunamadığından açılamıyor"
 
-#: taskcoachlib/gui/iocontroller.py:145
+#: taskcoachlib/gui/iocontroller.py:153
 msgid "Merge"
 msgstr "Birleştir"
 
-#: taskcoachlib/gui/iocontroller.py:150
+#: taskcoachlib/gui/iocontroller.py:158
 msgid ""
 "Cannot open %(filename)s\n"
 "because it is locked."
@@ -1834,19 +1837,19 @@ msgstr ""
 "%(filename)s dosyası kilitli\n"
 "olduğundan açılamıyor."
 
-#: taskcoachlib/gui/iocontroller.py:166
+#: taskcoachlib/gui/iocontroller.py:174
 msgid "Merged %(filename)s"
 msgstr "%(filename)s dosyası birleştirildi"
 
-#: taskcoachlib/gui/iocontroller.py:183
+#: taskcoachlib/gui/iocontroller.py:191
 msgid "Save as"
 msgstr "Farklı kaydet"
 
-#: taskcoachlib/gui/iocontroller.py:195
+#: taskcoachlib/gui/iocontroller.py:203
 msgid "Save selection"
 msgstr "Seçimi kaydet"
 
-#: taskcoachlib/gui/iocontroller.py:227
+#: taskcoachlib/gui/iocontroller.py:235
 msgid ""
 "Cannot save %s\n"
 "It is locked by another instance of %s.\n"
@@ -1854,7 +1857,7 @@ msgstr ""
 "%s kaydedilemiyor\n"
 "Programın %s çalışan başka bir kopyası kilitlemiş.\n"
 
-#: taskcoachlib/gui/iocontroller.py:232
+#: taskcoachlib/gui/iocontroller.py:240
 msgid ""
 "Cannot save %s\n"
 "%s"
@@ -1862,15 +1865,15 @@ msgstr ""
 "%s kaydedilemiyor\n"
 "%s"
 
-#: taskcoachlib/gui/iocontroller.py:242
+#: taskcoachlib/gui/iocontroller.py:250
 msgid "Import template"
 msgstr "Kalıp al"
 
-#: taskcoachlib/gui/iocontroller.py:244
+#: taskcoachlib/gui/iocontroller.py:252
 msgid "%s template files (*.tsktmpl)|*.tsktmpl"
 msgstr "%s kalıp dosyası (*.tsktmpl)|*.tsktmpl"
 
-#: taskcoachlib/gui/iocontroller.py:250
+#: taskcoachlib/gui/iocontroller.py:258
 msgid ""
 "Cannot import template %s\n"
 "%s"
@@ -1878,27 +1881,27 @@ msgstr ""
 "%s kalıbı alınamadı\n"
 "%s"
 
-#: taskcoachlib/gui/iocontroller.py:279
+#: taskcoachlib/gui/iocontroller.py:287
 msgid "Exported %(count)d items to %(filename)s"
 msgstr "%(count)d öge %(filename)s dosyasına verildi"
 
-#: taskcoachlib/gui/iocontroller.py:314
+#: taskcoachlib/gui/iocontroller.py:322
 msgid "Finished synchronization"
 msgstr "Eşleştirme bitti"
 
-#: taskcoachlib/gui/iocontroller.py:321
+#: taskcoachlib/gui/iocontroller.py:329
 msgid "Note conflict"
 msgstr "Not çakışması"
 
-#: taskcoachlib/gui/iocontroller.py:325
+#: taskcoachlib/gui/iocontroller.py:333
 msgid "Task conflict"
 msgstr "İş çakışması"
 
-#: taskcoachlib/gui/iocontroller.py:337
+#: taskcoachlib/gui/iocontroller.py:345
 msgid "Synchronization status"
 msgstr "Eşleştirme durumu"
 
-#: taskcoachlib/gui/iocontroller.py:345
+#: taskcoachlib/gui/iocontroller.py:353
 msgid ""
 "Cannot open %s\n"
 "%s"
@@ -1906,7 +1909,7 @@ msgstr ""
 "%s açılamıyor\n"
 "%s"
 
-#: taskcoachlib/gui/iocontroller.py:380
+#: taskcoachlib/gui/iocontroller.py:388
 msgid ""
 "A file named %s already exists.\n"
 "Do you want to replace it?"
@@ -1914,7 +1917,7 @@ msgstr ""
 "%s adında bir dosya zaten var.\n"
 "Değiştirmek istiyor musunuz?"
 
-#: taskcoachlib/gui/iocontroller.py:392
+#: taskcoachlib/gui/iocontroller.py:400
 msgid ""
 "You have unsaved changes.\n"
 "Save before closing?"
@@ -1922,11 +1925,11 @@ msgstr ""
 "Kaydedilmemiş değişiklikler var.\n"
 "Kapatmadan önce kaydedilsin mi?"
 
-#: taskcoachlib/gui/iocontroller.py:393
+#: taskcoachlib/gui/iocontroller.py:401
 msgid "%s: save changes?"
 msgstr "%s: değişiklikler kaydedilsin mi?"
 
-#: taskcoachlib/gui/iocontroller.py:403
+#: taskcoachlib/gui/iocontroller.py:411
 msgid ""
 "Cannot open %s because it is locked.\n"
 "\n"
@@ -1946,11 +1949,11 @@ msgstr ""
 "\n"
 "Kilit açılsın mı?"
 
-#: taskcoachlib/gui/iocontroller.py:411 taskcoachlib/gui/iocontroller.py:418
+#: taskcoachlib/gui/iocontroller.py:419 taskcoachlib/gui/iocontroller.py:426
 msgid "%s: file locked"
 msgstr "%s: dosya kilitli"
 
-#: taskcoachlib/gui/iocontroller.py:416
+#: taskcoachlib/gui/iocontroller.py:424
 msgid ""
 "Cannot acquire a lock because locking is not supported\n"
 "on the location of %s.\n"
@@ -1960,11 +1963,11 @@ msgstr ""
 "kilitlenemiyor.\n"
 "%s dosyası kilitsiz olarak açılsın mı?"
 
-#: taskcoachlib/gui/iocontroller.py:423
+#: taskcoachlib/gui/iocontroller.py:431
 msgid "Closed %s"
 msgstr "%s kapatıldı"
 
-#: taskcoachlib/gui/iocontroller.py:428
+#: taskcoachlib/gui/iocontroller.py:436
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
 msgstr "%(filename)s dosyasına %(nrtasks)d iş kaydedildi"
 
@@ -1976,23 +1979,23 @@ msgstr "Eşleştiriliyor..."
 msgid "Synchronizing with %s..."
 msgstr "%s ile eşleştiriliyor..."
 
-#: taskcoachlib/gui/mainwindow.py:71 taskcoachlib/gui/uicommand.py:608
+#: taskcoachlib/gui/mainwindow.py:79 taskcoachlib/gui/uicommand.py:608
 msgid "Warning"
 msgstr "Uyarı"
 
-#: taskcoachlib/gui/mainwindow.py:108
+#: taskcoachlib/gui/mainwindow.py:116
 msgid "Welcome to %(name)s version %(version)s"
 msgstr "%(name)s %(version)s sürümüne hoşgeldiniz"
 
-#: taskcoachlib/gui/mainwindow.py:285
+#: taskcoachlib/gui/mainwindow.py:293
 msgid "iPhone/iPod"
 msgstr "iPhone/iPod"
 
-#: taskcoachlib/gui/mainwindow.py:294
+#: taskcoachlib/gui/mainwindow.py:302
 msgid "Synchronization type"
 msgstr "Eşleştirme tipi"
 
-#: taskcoachlib/gui/mainwindow.py:304
+#: taskcoachlib/gui/mainwindow.py:312
 msgid ""
 "An iPhone or iPod Touch device tried to synchronize with this\n"
 "task file, but the protocol negotiation failed. Please file a\n"
@@ -2002,7 +2005,7 @@ msgstr ""
 "eşleşmeye çalışıyor ancak iletişim bağlantısı kurulamadı.\n"
 "Lütfen bir hata raporunu inceleyin ve iletin."
 
-#: taskcoachlib/gui/mainwindow.py:307 taskcoachlib/iphone/protocol.py:481
+#: taskcoachlib/gui/mainwindow.py:315 taskcoachlib/iphone/protocol.py:481
 #: taskcoachlib/widgets/draganddrop.py:108
 #: taskcoachlib/widgets/draganddrop.py:110
 #: taskcoachlib/widgets/draganddrop.py:143
@@ -3607,6 +3610,12 @@ msgstr "İşler: %d seçili, %d görünür, %d toplam"
 #: taskcoachlib/gui/viewer/task.py:35
 msgid "Status: %d overdue, %d inactive, %d completed"
 msgstr "Durum: %d zamanı geçmiş, %d etkin olmayan, %d tamamlanmış"
+
+#: taskcoachlib/gui/viewer/task.py:54 taskcoachlib/help/__init__.py:68
+#: taskcoachlib/help/__init__.py:129
+#: taskcoachlib/widgets/calendarconfig.py:107
+msgid "Tasks"
+msgstr "İşler"
 
 #: taskcoachlib/gui/viewer/task.py:262
 msgid "Timeline"
@@ -5784,10 +5793,6 @@ msgstr "Güncellenen çalışma %s"
 msgid "Sending GUID: %s"
 msgstr "Gönderilen GUID: %s"
 
-#: taskcoachlib/mailer/__init__.py:67
-msgid "Untitled e-mail"
-msgstr "E-postanın konusu yok"
-
 #: taskcoachlib/mailer/macmail.py:49
 msgid "Mail.app message"
 msgstr "Mail.app iletisi"
@@ -5823,20 +5828,31 @@ msgstr ""
 "Lütfen hata raporu iletin."
 
 #: taskcoachlib/mailer/thunderbird.py:238
+#: taskcoachlib/mailer/thunderbird.py:351
 msgid "Unrecognized URL scheme: \"%s\""
 msgstr "Anlaşılamayan İnternet adresi düzeni: \"%s\""
 
-#: taskcoachlib/mailer/thunderbird.py:295
+#: taskcoachlib/mailer/thunderbird.py:291
+msgid ""
+"Could not open an IMAP connection to %(server)s:%(port)s\n"
+"to retrieve Thunderbird email message:\n"
+"%(error)s"
+msgstr ""
+"Thunderbird e-posta iletisini almak için %(server)s:%(port)s \n"
+"sunucusuna IMAP bağlantısı açılamadı:\n"
+"%(error)s"
+
+#: taskcoachlib/mailer/thunderbird.py:299
 msgid "Please enter password for user %(user)s on %(server)s:%(port)d"
 msgstr ""
 "Lütfen %(server)s:%(port)d üzerindeki %(user)s kullanıcısı için parolayı "
 "yazın"
 
-#: taskcoachlib/mailer/thunderbird.py:313
+#: taskcoachlib/mailer/thunderbird.py:317
 msgid "Login failed (%s). Please try again."
 msgstr "Girilemedi (%s). Lütfen yeniden deneyin."
 
-#: taskcoachlib/mailer/thunderbird.py:326
+#: taskcoachlib/mailer/thunderbird.py:330
 msgid ""
 "Could not select inbox \"%s\"\n"
 "(%s)"
@@ -5844,7 +5860,7 @@ msgstr ""
 "\"%s\" gelen kutusu seçilemedi\n"
 "(%s)"
 
-#: taskcoachlib/mailer/thunderbird.py:331
+#: taskcoachlib/mailer/thunderbird.py:335
 msgid "No such mail: %d"
 msgstr "Hiç posta yok: %d"
 
@@ -5963,7 +5979,7 @@ msgstr ""
 "\n"
 "\n"
 
-#: taskcoachlib/syncml/sync.py:203
+#: taskcoachlib/syncml/sync.py:201
 msgid ""
 "%d items added.\n"
 "%d items updated.\n"
@@ -5973,7 +5989,7 @@ msgstr ""
 "%d öge güncellendi.\n"
 "%d öge silindi."
 
-#: taskcoachlib/syncml/sync.py:209
+#: taskcoachlib/syncml/sync.py:207
 msgid ""
 "An error occurred in the synchronization.\n"
 "Error code: %d; message: %s"
@@ -5981,7 +5997,7 @@ msgstr ""
 "Eşleştirme sırasında bir hata oldu.\n"
 "Hata kodu: %d; ileti: %s"
 
-#: taskcoachlib/syncml/sync.py:214
+#: taskcoachlib/syncml/sync.py:212
 msgid "You must first edit your SyncML Settings, in Edit/SyncML preferences."
 msgstr ""
 "Önce menüden Düzenle -> SyncML ayarları komutuyla SyncML ayarlarınızı "
@@ -6282,9 +6298,6 @@ msgstr "İnternet adresi açılırken hata"
 #~ msgid "Edit exclusive subcategories of \"%s\""
 #~ msgstr "\"%s\" için dışlayıcı altgrupları düzenler"
 
-#~ msgid "Add note to categories"
-#~ msgstr "Gruplara not ekle"
-
 #~ msgid "Change task of effort"
 #~ msgstr "Çalışmanın işini değiştir"
 
@@ -6369,87 +6382,6 @@ msgstr "İnternet adresi açılırken hata"
 #~ msgid "Toggle prerequisite of \"%s\""
 #~ msgstr "\"%s\" için ön koşulu açar ya da kapatır"
 
-#~ msgid "Edit attachment..."
-#~ msgstr "Eki düzenle..."
-
-#~ msgid "Edit the selected attachments"
-#~ msgstr "Seçili ekleri düzenler"
-
-#~ msgid "Delete attachment"
-#~ msgstr "Eki sil"
-
-#~ msgid "Delete the selected attachments"
-#~ msgstr "Seçili ekleri kaldırır"
-
-#~ msgid "New category..."
-#~ msgstr "Yeni grup..."
-
-#~ msgid "Edit category..."
-#~ msgstr "Grubu düzenle..."
-
-#~ msgid "Edit the selected categories"
-#~ msgstr "Seçili grupları düzenler"
-
-#~ msgid "Delete category"
-#~ msgstr "Grubu sil"
-
-#~ msgid "Delete the selected categories"
-#~ msgstr "Seçili grupları siler"
-
-#~ msgid "New subcategory..."
-#~ msgstr "Yeni altgrup..."
-
-#~ msgid "Insert a new subcategory"
-#~ msgstr "Yeni altgrup ekler"
-
-#~ msgid "&Edit effort..."
-#~ msgstr "Çalışmayı düz&enle..."
-
-#~ msgid "Edit the selected effort period(s)"
-#~ msgstr "Seçili çalışma dönemlerini düzenler"
-
-#~ msgid "&Delete effort"
-#~ msgstr "Çalışmayı &sil"
-
-#~ msgid "Delete the selected effort period(s)"
-#~ msgstr "Seçili çalışma dönemlerini siler"
-
-#~ msgid "New note..."
-#~ msgstr "Yeni not..."
-
-#~ msgid "Edit note..."
-#~ msgstr "Notu düzenle..."
-
-#~ msgid "Edit the selected notes"
-#~ msgstr "Seçili notları düzenler"
-
-#~ msgid "Delete note"
-#~ msgstr "Notu sil"
-
-#~ msgid "Delete the selected notes"
-#~ msgstr "Seçili notları siler"
-
-#~ msgid "New subnote..."
-#~ msgstr "Yeni altnot..."
-
-#~ msgid "Insert a new subnote"
-#~ msgstr "Yeni alt not ekler"
-
-#~ msgid "&Edit task..."
-#~ msgstr "İşi düz&enle..."
-
-#~ msgid "Edit the selected task(s)"
-#~ msgstr "Seçili işleri düzenler"
-
-#~ msgid "&Delete task"
-#~ msgstr "İşi &sil"
-
-#~ msgid "Delete the selected task(s)"
-#~ msgstr "Seçili işleri siler"
-
-#~ msgid "Insert a new subtask into the selected task"
-#~ msgstr "Seçili işin altına bir altiş ekler"
-
 #~ msgid "Warning: start must be earlier than stop"
 #~ msgstr "Dikkat: Başlangıç bitişten önce olmalı"
 
@@ -6483,599 +6415,14 @@ msgstr "İnternet adresi açılırken hata"
 #~ msgid "%s (effort)"
 #~ msgstr "%s (çalışma)"
 
-#~ msgid "Colors"
-#~ msgstr "Renkler"
-
-#~ msgid "Click this button to change the color of active tasks"
-#~ msgstr "Etkin işlerin rengini değiştirmek için bu düğmeye tıklayın"
-
-#~ msgid "Click this button to change the color of inactive tasks"
-#~ msgstr "Etkin olmayan işlerin rengini değiştirmek için bu düğmeye tıklayın"
-
-#~ msgid "Click this button to change the color of completed tasks"
-#~ msgstr "Tamamlanmış işlerin rengini değiştirmek için bu düğmeye tıklayın"
-
-#~ msgid "Click this button to change the color of over due tasks"
-#~ msgstr ""
-#~ "Bitiş tarihi geçmiş işlerin rengini değiştirmek için bu düğmeye tıklayın"
-
-#~ msgid "Click this button to change the color of tasks due soon"
-#~ msgstr ""
-#~ "Bitiş zamanı yaklaşan işlerin rengini değiştirmek için bu düğmeye tıklayın"
-
 #~ msgid "Notification system"
 #~ msgstr "Bildirim sistemi"
-
-#~ msgid "Notification system to use for reminders (Growl, Snarl, etc)"
-#~ msgstr "Growl, Snarl vb anımsatıcılar için kullanılan bildirim sistemi"
 
 #~ msgid "Task behavior"
 #~ msgstr "İş davranışı"
 
-#~ msgid "Save as..."
-#~ msgstr "Farklı kaydet..."
-
-#~ msgid "Please enter the template name."
-#~ msgstr "Lütfen kalıp adını yazın."
-
-#~ msgid "Save as template"
-#~ msgstr "Kalıp olarak kaydet"
-
-#~ msgid "Open template..."
-#~ msgstr "Kalıp aç..."
-
-#~ msgid "Export as HTML..."
-#~ msgstr "HTML olarak ver..."
-
-#~ msgid "Export as CSV..."
-#~ msgstr "CSV olarak ver..."
-
-#~ msgid "Export as iCalendar..."
-#~ msgstr "iCalendar olarak ver..."
-
-#~ msgid "Eff&ort"
-#~ msgstr "Ça&lışmalar"
-
-#~ msgid "&New task"
-#~ msgstr "&Yeni iş"
-
-#~ msgid "Save selected task as &template..."
-#~ msgstr "Seçili işi kalıp olarak kayde&t..."
-
-#~ msgid "&Add template..."
-#~ msgstr "K&alıp ekle..."
-
-#~ msgid "Add a new template from a template file"
-#~ msgstr "Bir kalıp dosyasından yeni bir kalıp ekle"
-
-#~ msgid "&Print preview"
-#~ msgstr "Baskı ö&nizleme"
-
-#~ msgid "Export the current view as HTML file"
-#~ msgstr "Şu anki görünümü HTML dosyası olarak verir"
-
-#~ msgid "Export selection as &HTML..."
-#~ msgstr "Seçimi &HTML olarak ver..."
-
-#~ msgid "Export the selection in the current view as HTML file"
-#~ msgstr "Şu anki görünümde seçili ögeleri HTML dosyası olarak verir"
-
-#~ msgid "Export the current view in Comma Separated Values (CSV) format"
-#~ msgstr ""
-#~ "Şu anki görünümdeki ögeleri virgülle ayrılmış değerler (CSV) biçiminde verir"
-
-#~ msgid "Export selection as &CSV..."
-#~ msgstr "Seçimi &CSV olarak ver..."
-
-#~ msgid ""
-#~ "Export the selection in the current view in Comma Separated Values (CSV) "
-#~ "format"
-#~ msgstr ""
-#~ "Şu anki görünümde seçili ögeleri virgülle ayrılmış değerler (CSV) biçiminde "
-#~ "verir"
-
-#~ msgid "Export the items in the current viewer in iCalendar format"
-#~ msgstr "Şu anki görünümdeki ögeleri iCalendar biçiminde verir"
-
-#~ msgid "Export selection as &iCalendar..."
-#~ msgstr "Seçimi &iCalendar olarak ver..."
-
-#~ msgid "Export the selected items in the current viewer in iCalendar format"
-#~ msgstr "Şu anki görünümde seçili ögeleri iCalendar biçiminde verir"
-
-#~ msgid "S&yncML synchronization"
-#~ msgstr "S&yncML eşleştirmesi"
-
-#~ msgid "&Clear all filters"
-#~ msgstr "Tüm süzgeçleri &kaldır"
-
-#~ msgid "&Mail task"
-#~ msgstr "İşi &e-postala"
-
-#~ msgid "Mail the task, using your default mailer"
-#~ msgstr "İşi, varsayılan e-posta yazılımıyla gönder"
-
-#~ msgid "&Mail note"
-#~ msgstr "&Notu e-postala"
-
-#~ msgid "Mail the note, using your default mailer"
-#~ msgstr "Notu, varsayılan e-posta yazılımıyla gönder"
-
-#~ msgid "Add &note"
-#~ msgstr "&Not ekle"
-
-#~ msgid "Add a note to the selected task"
-#~ msgstr "Seçili işe bir not ekler"
-
-#~ msgid "Add a note to the selected category"
-#~ msgstr "Seçili gruba bir not ekler"
-
-#~ msgid "Add a note to the selected attachment"
-#~ msgstr "Seçili eke bir not ekler"
-
-#~ msgid "&Add attachment"
-#~ msgstr "&Ek ekle"
-
-#~ msgid "Browse for files to add as attachment to the selected task(s)"
-#~ msgstr "Seçili işlere ek olarak eklenecek dosyalara gözatın"
-
-#~ msgid "Browse for files to add as attachment to the selected categories"
-#~ msgstr "Seçili gruplara ek olarak eklenecek dosyalara gözatın"
-
-#~ msgid "Browse for files to add as attachment to the selected note(s)"
-#~ msgstr "Seçili notlara ek olarak eklenecek dosyalara gözatın"
-
-#~ msgid "&Open all attachments"
-#~ msgstr "&Tüm ekleri aç"
-
-#~ msgid "Open all attachments of the selected task(s)"
-#~ msgstr "Seçili işlerin tüm eklerini açar"
-
-#~ msgid "Open all attachments of the selected categories"
-#~ msgstr "Seçili grupların tüm eklerini açar"
-
-#~ msgid "Open all attachments of the selected note(s)"
-#~ msgstr "Seçili notların tüm eklerini açar"
-
-#~ msgid "St&op tracking effort"
-#~ msgstr "Çalışmayı &bırak"
-
-#~ msgid "Help: About %s"
-#~ msgstr "Yardım: %s hakkında"
-
-#~ msgid "Help: %s license"
-#~ msgstr "Yardım: %s lisansı"
-
-#~ msgid "Show only tasks &due before end of"
-#~ msgstr "Şun&dan önce bitecek işleri göster"
-
-#~ msgid "&Unlimited"
-#~ msgstr "&Sınırsız"
-
-#~ msgid "Show all tasks"
-#~ msgstr "Tüm işleri gösterir"
-
-#~ msgid "Only show tasks due today"
-#~ msgstr "Yalnız bugün bitecek işleri gösterir"
-
-#~ msgid "T&omorrow"
-#~ msgstr "Y&arın"
-
-#~ msgid "Only show tasks due today and tomorrow"
-#~ msgstr "Yalnız bugün ve yarın bitecek işleri gösterir"
-
-#~ msgid "Wo&rkweek"
-#~ msgstr "Çalışma &haftası"
-
-#~ msgid "Only show tasks due this work week (i.e. before Friday)"
-#~ msgstr ""
-#~ "Yalnız bu çalışma haftasında bitecek işleri gösterir (örneğin Cuma'dan önce)"
-
-#~ msgid "&Week"
-#~ msgstr "&Hafta"
-
-#~ msgid "Only show tasks due this week (i.e. before Sunday)"
-#~ msgstr "Yalnız bu hafta bitecek işleri gösterir"
-
-#~ msgid "&Month"
-#~ msgstr "&Ay"
-
-#~ msgid "Only show tasks due this month"
-#~ msgstr "Yalnız bu ay bitecek işleri gösterir"
-
-#~ msgid "&Year"
-#~ msgstr "&Yıl"
-
-#~ msgid "Only show tasks due this year"
-#~ msgstr "Yalnız bu yıl bitecek işleri gösterir"
-
-#~ msgid "Status: %d over due, %d inactive, %d completed"
-#~ msgstr "Durum: %d zamanı geçmiş, %d etkin olmayan, %d tamamlanmış"
-
-#~ msgid "Task Coach on the iPhone"
-#~ msgstr "iPhone ile Task Coach"
-
-#~ msgid "Over due: the due date is in the past;"
-#~ msgstr "Gecikmiş: Bitiş tarihi geçmiş olan işler."
-
-#~ msgid "Over due tasks are red;"
-#~ msgstr "Gecikmiş işler kırmızı ile;"
-
-#~ msgid ""
-#~ "Mutually exclusive subcategories: a check box indicating\n"
-#~ "whether the subcategories of the category are mutual exclusive. If they "
-#~ "are,\n"
-#~ "items can only belong to one of the subcategories. When filtering, you can "
-#~ "only\n"
-#~ "filter by one of the subcategories at a time."
-#~ msgstr ""
-#~ "Birbirini dışlayan altgruplar: Grubun altgruplarının birbirini \n"
-#~ "dışlayıp dışlamadığını gösteren işaret kutusu. İşaretlenirse, ögeler "
-#~ "yalnızca bir \n"
-#~ "altgruba ait olabilir. Süzme işlemi sırasında aynı anda bu altgruplardan "
-#~ "yalnızca \n"
-#~ "birini süzebilirsiniz."
-
-#~ msgid ""
-#~ "%(name)s has built-in SyncML client support. This means you can\n"
-#~ "setup %(name)s to synchronize with the same SyncML server you\n"
-#~ "synchronize Outlook with and have all Outlook tasks and notes in\n"
-#~ "your %(name)s file, as well as %(name)s tasks and notes in Outlook. Or\n"
-#~ "your Pocket PC."
-#~ msgstr ""
-#~ "%(name)s SyncML desteği sağlar. Yani %(name)s ile\n"
-#~ "Outlook için kullandığınız SyncML sunucusunu eşleştirebilirsiniz.\n"
-#~ "Böylece tüm Outlook görev ve notlarınız %(name)s dosyasına,\n"
-#~ "ve bütün %(name)s iş ve notlarınız da Outlook içine ya da cep\n"
-#~ "bilgisayarınıza aktarılır."
-
-#~ msgid ""
-#~ "The conflict detection/resolution system is a work around a \n"
-#~ "Funambol limitation. It should work in most cases, but if many applications\n"
-#~ "synchronize with the same server at the same time, problems may rise."
-#~ msgstr ""
-#~ "Çakışma algılama/çözme sistemi bir Funambol sınırlamasına \n"
-#~ "çözüm olarak geliştirilmiştir. Çoğu durumda çalışır. Ancak bir çok \n"
-#~ "uygulama aynı sunucudan aynı anda eşleştirme yapıyorsa sorunlar çıkabilir."
-
-#~ msgid ""
-#~ "<h4>%(name)s - %(description)s</h4>\n"
-#~ "<h5>Version %(version)s, Revision %(revision)s, %(date)s</h5>\n"
-#~ "<p>By %(author)s &lt;%(author_email)s&gt;<p>\n"
-#~ "<p><a href=\"%(url)s\" target=\"_blank\">%(url)s</a></p>\n"
-#~ "<p>%(copyright)s</p>\n"
-#~ "<p>%(license_notice_html)s</p>\n"
-#~ msgstr ""
-#~ "<h4>%(name)s - %(description)s</h4>\n"
-#~ "<h5>Sürüm %(version)s, Revizyon %(revision)s, %(date)s</h5>\n"
-#~ "<p>By %(author)s &lt;%(author_email)s&gt;<p>\n"
-#~ "<p><a href=\"%(url)s\" target=\"_blank\">%(url)s</a></p>\n"
-#~ "<p>%(copyright)s</p>\n"
-#~ "<p>%(license_notice_html)s</p>\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Version %(version)s, Revision %(revision)s, %(date)s\n"
-#~ "\n"
-#~ "By %(author)s <%(author_email)s>\n"
-#~ "\n"
-#~ "%(url)s\n"
-#~ "\n"
-#~ "%(copyright)s\n"
-#~ "%(license)s\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Sürüm %(version)s, Revizyon %(revision)s, %(date)s\n"
-#~ "\n"
-#~ "By %(author)s <%(author_email)s>\n"
-#~ "\n"
-#~ "%(url)s\n"
-#~ "\n"
-#~ "%(copyright)s\n"
-#~ "%(license)s\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "%(name)s has a mailinglist where you can discuss usage of %(name)s with "
-#~ "fellow users, discuss and request features and complain about bugs. Go to "
-#~ "%(url)s and join today!"
-#~ msgstr ""
-#~ "%(name)s kullanımını hakkında diğer %(name)s kullanıcıları ile tartışıp, "
-#~ "sorunları aktarabileceğiniz bir e-posta listesi vardır. %(url)s İnternet "
-#~ "adresine giderek listeye katılabilirsiniz."
-
-#~ msgid ""
-#~ "You can create any viewer layout you want by dragging and dropping the tabs. "
-#~ "Unfortunately, due to a limitation of the current version of the graphical "
-#~ "toolkit (wxPython), the layout cannot be saved for reuse in the next session."
-#~ msgstr ""
-#~ "Sekmeleri sürükleyip bırakarak istediğiniz görünüm yerleşimini elde "
-#~ "edebilirsiniz. Malesef şu anda kullanılan grafik araçlarındaki (wxPython) "
-#~ "bir sınırlama yüzünden, yerleşim her oturumda kullanılacak şekilde "
-#~ "kaydedilememektedir."
-
-#~ msgid "Malformed Thunderbird internal ID: %s. Please file a bug report."
-#~ msgstr "Hatalı Thunderbird iç kodu: %s. Lütfen bir hata raporu gönderin."
-
-#~ msgid "Could not find directory for ID %s. Please file a bug report."
-#~ msgstr "%s kimliği için klasör bulunamadı. Lütfen bir hata raporu gönderin."
-
-#~ msgid "Drag and drop category"
-#~ msgstr "Kategoriyi sürükle bırak"
-
-#~ msgid "Edit category"
-#~ msgstr "Kategori düzenle"
-
-#~ msgid "New effort"
-#~ msgstr "Yeni çaba"
-
-#~ msgid "Edit note"
-#~ msgstr "Notu düzenle"
-
-#~ msgid "Edit effort"
-#~ msgstr "Çabayı düzenle"
-
-#~ msgid "Delete task"
-#~ msgstr "Görevi Sil"
-
-#~ msgid "Mark completed"
-#~ msgstr "Tamamlanmış olarak işaretle"
-
-#~ msgid "&New effort..."
-#~ msgstr "&Yeni çaba..."
-
-#~ msgid "For this task"
-#~ msgstr "Bu görev için"
-
-#~ msgid "&Delete task\tCtrl+DEL"
-#~ msgstr "&Görevi sil\tCtrl+Del"
-
-#~ msgid "Edit the selected task"
-#~ msgstr "Seçili görevi düzenle"
-
-#~ msgid "Ten minutes"
-#~ msgstr "On dakika"
-
-#~ msgid "Five minutes"
-#~ msgstr "Beş dakika"
-
-#~ msgid "Two hours"
-#~ msgstr "İki saat"
-
-#~ msgid "Half an hour"
-#~ msgstr "Yarım saat"
-
-#~ msgid "Fifteen minutes"
-#~ msgstr "Onbeş dakika"
-
-#~ msgid "One hour"
-#~ msgstr "Bir saat"
-
-#~ msgid "Preferences..."
-#~ msgstr "Tercihler..."
-
-#~ msgid "&Active"
-#~ msgstr "&Etkin"
-
-#~ msgid "&Completed"
-#~ msgstr "&Tamamlandı"
-
-#~ msgid "&Over due"
-#~ msgstr "&Tarihi geçmiş"
-
-#~ msgid "Over &budget"
-#~ msgstr "Bütçe &aşılmış"
-
-#~ msgid "Show/hide tasks that are over budget"
-#~ msgstr "Bütçesi aşılmış görevleri göster/sakla"
-
-#~ msgid "Days left"
-#~ msgstr "Kalan gün"
-
-#~ msgid "Total budget"
-#~ msgstr "Toplam bütçe"
-
-#~ msgid "Total budget left"
-#~ msgstr "Toplam kalan bütçe"
-
-#~ msgid "Total fixed fee"
-#~ msgstr "Toplam sabit ücret"
-
-#~ msgid "Wrong password. Please try again."
-#~ msgstr "Yanlış şifre. Lütfen yeniden deneyin."
-
-#~ msgid "Drag and drop task"
-#~ msgstr "Görevi sürükle ve bırak"
-
-#~ msgid "Drag and drop note"
-#~ msgstr "Notu sürükle ve bırak"
-
-#~ msgid "Match case"
-#~ msgstr "Büyük/küçük harf duyarlı olarak eşit"
-
-#~ msgid "Include sub items"
-#~ msgstr "Alt elemanları da içer"
-
-#~ msgid "<h3><a name=\"effort\">Effort</a></h3>\n"
-#~ msgstr "<h3><a name=\"effort\">Çaba</a></h3>\n"
-
-#~ msgid "<h3><a name=\"tasks\">Tasks</a></h3>\n"
-#~ msgstr "<h3><a name=\"tasks\">Görevler</a></h3>\n"
-
-#~ msgid "&Hide tasks that are"
-#~ msgstr "&Görevleri gizle"
-
-#~ msgid "Mail task"
-#~ msgstr "Görevi postala"
-
-#~ msgid "Maximum number of recurrences"
-#~ msgstr "En çok yineleme sayısı"
-
-#~ msgid "Behavior"
-#~ msgstr "Davranış"
-
-#~ msgid "Maximum number of recent files to remember"
-#~ msgstr "En fazla hatırlanacak geçmiş dosya sayısı"
-
-#~ msgid "Use this color:"
-#~ msgstr "Şu rengi kullan:"
-
-#~ msgid "Color"
-#~ msgstr "Renk"
-
-#~ msgid "For this task including all subtasks"
-#~ msgstr "Bu görev ve tüm altgörevleri için"
-
-#~ msgid "Click this button to change the color of tasks due today"
-#~ msgstr "Bugün bitecek görevlerin rengini değiştirmek için butonu tıkla"
-
-#~ msgid "Paste into task"
-#~ msgstr "Görevin içine yapıştır"
-
-#~ msgid "For this note including all subnotes"
-#~ msgstr "Yeni alt not"
-
-#~ msgid "For this note"
-#~ msgstr "Bu not için"
-
-#~ msgid "Add note to task"
-#~ msgstr "göreve not ekle"
-
-#~ msgid "Edit attachment"
-#~ msgstr "Eklenti düzenle"
-
-#~ msgid "Add note to attachment"
-#~ msgstr "Eklentiye not ekle"
-
-#~ msgid "Add note to category"
-#~ msgstr "Kategoriye not ekle"
-
-#~ msgid "VCalendar files (*.vcal)|*.vcal|All files (*.*)|*"
-#~ msgstr "VCalendar dosyaları (*.vcal)|*.vcal|Tüm dosyalar (*.*)|*"
-
-#~ msgid "Export as VCalendar..."
-#~ msgstr "VCalendar olarak dışa aktar..."
-
-#~ msgid "one task due today"
-#~ msgstr "bir görevin bugün yapılması gerekiyor"
-
-#~ msgid "New task &from template"
-#~ msgstr "&Şablondan yeni bir görev"
-
-#~ msgid "%d tasks due today"
-#~ msgstr "%d görevin bugün yapılması gerekiyor"
-
-#~ msgid "Purge deleted items"
-#~ msgstr "Silinmiş öğeleri temizle"
-
-#~ msgid "Page setup...\tShift+Ctrl+P"
-#~ msgstr "Sayfa düzeni...\tShift+Ctrl+P"
-
-#~ msgid "Add template"
-#~ msgstr "Şablon ekle"
-
-#~ msgid "Add a new template from a template file\n"
-#~ msgstr "Bir şablon dosyasından yeni bir şablon ekle\n"
-
-#~ msgid "Print...\tCtrl+P"
-#~ msgstr "Yazdır...\tCtrl+P"
-
-#~ msgid "Export effort in iCalendar (*.ics) format"
-#~ msgstr "Çalışmayı &iCalendar (*.ics) biçiminde dışa aktar"
-
-#~ msgid "Export effort as &iCalendar..."
-#~ msgstr "Çalışmayı &iCalendar olarak dışa aktar..."
-
-#~ msgid "Export &selection as HTML..."
-#~ msgstr "&Seçimi HTML olarak dışa aktar..."
-
-#~ msgid "SyncML preferences..."
-#~ msgstr "SyncML yeğlenenleri..."
-
-#~ msgid "P&aste into task\tShift+Ctrl+V"
-#~ msgstr "Göreve &yapıştır\tShift+Ctrl+V"
-
-#~ msgid "Select unselected items and unselect selected items"
-#~ msgstr "Seçilmemiş öğeleri seç ve seçilmiş öğelerin seçimini kaldır"
-
-#~ msgid "Paste item(s) from the clipboard into the selected task"
-#~ msgstr "Panodan öğeyi seçilen göreve yapıştır"
-
-#~ msgid "&Invert selection"
-#~ msgstr "Seçimi &tersine çevir"
-
-#~ msgid "E&xpand"
-#~ msgstr "G&enişlet"
-
-#~ msgid "Expand the selected item(s)"
-#~ msgstr "Seçilen öğeyi genişlet"
-
-#~ msgid "Collapse the selected items with subitems"
-#~ msgstr "Seçilen öğeleri alt öğeleri ile daralt"
-
-#~ msgid "Sort case sensitive"
-#~ msgstr "Büyük ve küçük harfe duyarlı sırala"
-
-#~ msgid ""
-#~ "Show/hide active tasks (tasks with a start date in the past and a due date "
-#~ "in the future)"
-#~ msgstr ""
-#~ "Etkin görevleri göster/gizle (geçmişte başlayıp gelecekte bitecek olan "
-#~ "görevler)"
-
-#~ msgid "C&ollapse"
-#~ msgstr "D&aralt"
-
-#~ msgid "&Inactive"
-#~ msgstr "&Etkin değil"
-
-#~ msgid "New task with selected categories..."
-#~ msgstr "Seçilen kategorilerle yeni görev..."
-
-#~ msgid "Show/hide over due tasks (tasks with a due date in the past)"
-#~ msgstr ""
-#~ "Gecikmiş görevleri göster/gizle (bitiş zamanı geçmişte olan görevler)"
-
-#~ msgid "Click this button to change the color of overdue tasks"
-#~ msgstr "Zamanı geçen işlerin rengini değiştirmek için bu düğmeye tıklayın"
-
-#~ msgid ""
-#~ "Cannot add template %s\n"
-#~ "%s"
-#~ msgstr ""
-#~ "%s kalıbı eklenemiyor\n"
-#~ "%s"
-
-#~ msgid "Choose CSV file"
-#~ msgstr "CSV dosyasını seçin"
-
-#~ msgid "CSV import"
-#~ msgstr "CSV al"
-
-#~ msgid "&Tips..."
-#~ msgstr "İ&puçları..."
-
-#~ msgid "&Help contents...\tCtrl+H"
-#~ msgstr "Yardım konuları...\tCtrl+H"
-
-#~ msgid "&License..."
-#~ msgstr "&Lisans..."
-
-#~ msgid "&About %s..."
-#~ msgstr "%s h&akkında..."
-
-#~ msgid "Check for update..."
-#~ msgstr "Güncellemeleri denetle..."
-
-#~ msgid "&Frequently asked questions..."
-#~ msgstr "&Sık sorulan sorular..."
-
-#~ msgid "Open template"
-#~ msgstr "Kalıp aç"
-
-#~ msgid "&Help contents...\tCtrl+?"
-#~ msgstr "&Yardım konuları...\tCtrl+?"
+#~ msgid "Untitled e-mail"
+#~ msgstr "E-postanın konusu yok"
 
 #~ msgid "Dates behavior"
 #~ msgstr "Tarihlerin davranışı"

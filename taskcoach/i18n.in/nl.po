@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Task Coach\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-28 23:01+0000\n"
-"PO-Revision-Date: 2011-07-31 09:41+0000\n"
-"Last-Translator: Frank Niessink <frank@niessink.com>\n"
+"POT-Creation-Date: 2011-08-04 23:21+0000\n"
+"PO-Revision-Date: 2011-08-09 12:13+0000\n"
+"Last-Translator: Alfred Spijker <Unknown>\n"
 "Language-Team: Dutch <frank@niessink.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-04 20:05+0000\n"
-"X-Generator: Launchpad (build 13604)\n"
+"X-Launchpad-Export-Date: 2011-08-15 21:30+0000\n"
+"X-Generator: Launchpad (build 13687)\n"
 "X-Poedit-Country: NETHERLANDS\n"
 "X-Poedit-Language: dutch\n"
 "Generated-By: pygettext.py 1.5\n"
@@ -28,7 +28,7 @@ msgstr ""
 "%s"
 
 #: taskcoachlib/application/application.py:243
-#: taskcoachlib/gui/iocontroller.py:57
+#: taskcoachlib/gui/iocontroller.py:58
 msgid "%s file error"
 msgstr "%s bestand fout"
 
@@ -392,30 +392,30 @@ msgstr "Verander budgetten"
 msgid "Change budget of \"%s\""
 msgstr "Verander het budget van \"%s\""
 
-#: taskcoachlib/config/settings.py:195
+#: taskcoachlib/config/settings.py:221
 msgid "Error while reading the %s-%s setting from %s.ini."
 msgstr "Fout bij het lezen van de %s-%s instelling uit %s.ini."
 
-#: taskcoachlib/config/settings.py:196
+#: taskcoachlib/config/settings.py:222
 msgid "The value is: %s"
 msgstr "De waarde is: %s"
 
-#: taskcoachlib/config/settings.py:197
+#: taskcoachlib/config/settings.py:223
 msgid "The error is: %s"
 msgstr "de fout is: %s"
 
-#: taskcoachlib/config/settings.py:198
+#: taskcoachlib/config/settings.py:224
 msgid ""
 "%s will use the default value for the setting and should proceed normally."
 msgstr ""
 "%s zal de standaard waarde voor de instelling gebruiken en zou verder "
 "normaal moeten functioneren."
 
-#: taskcoachlib/config/settings.py:199
+#: taskcoachlib/config/settings.py:225
 msgid "Settings error"
 msgstr "Instellingsfout"
 
-#: taskcoachlib/config/settings.py:219
+#: taskcoachlib/config/settings.py:245
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
@@ -423,7 +423,7 @@ msgstr ""
 "Fout bij het opslaan van %s.ini:\n"
 "%s\n"
 
-#: taskcoachlib/config/settings.py:220
+#: taskcoachlib/config/settings.py:246
 msgid "Save error"
 msgstr "Fout bij het opslaan"
 
@@ -948,12 +948,12 @@ msgid "Appearance"
 msgstr "Uiterlijk"
 
 #: taskcoachlib/gui/dialog/editor.py:237
-#: taskcoachlib/gui/dialog/preferences.py:109
+#: taskcoachlib/gui/dialog/preferences.py:118
 msgid "Foreground color"
 msgstr "Voorgrondkleur"
 
 #: taskcoachlib/gui/dialog/editor.py:240
-#: taskcoachlib/gui/dialog/preferences.py:109
+#: taskcoachlib/gui/dialog/preferences.py:118
 msgid "Background color"
 msgstr "Achtergrondkleur"
 
@@ -966,12 +966,12 @@ msgid "Use font:"
 msgstr "Gebruik lettertype:"
 
 #: taskcoachlib/gui/dialog/editor.py:293
-#: taskcoachlib/gui/dialog/preferences.py:110
+#: taskcoachlib/gui/dialog/preferences.py:119
 msgid "Font"
 msgstr "Lettertype"
 
 #: taskcoachlib/gui/dialog/editor.py:319
-#: taskcoachlib/gui/dialog/preferences.py:110
+#: taskcoachlib/gui/dialog/preferences.py:119
 msgid "Icon"
 msgstr "Icoon"
 
@@ -1168,10 +1168,8 @@ msgstr "Categorieën"
 msgid "Attachments"
 msgstr "Bijlagen"
 
-#: taskcoachlib/gui/dialog/editor.py:877
-#: taskcoachlib/gui/dialog/syncpreferences.py:135
-#: taskcoachlib/gui/viewer/note.py:37 taskcoachlib/help/__init__.py:85
-#: taskcoachlib/help/__init__.py:268
+#: taskcoachlib/gui/dialog/editor.py:877 taskcoachlib/gui/viewer/note.py:37
+#: taskcoachlib/help/__init__.py:85 taskcoachlib/help/__init__.py:268
 msgid "Notes"
 msgstr "Notities"
 
@@ -1205,15 +1203,15 @@ msgstr "Stop"
 msgid "Export only the selected items"
 msgstr "Alleen de geselecteerde items exporteren"
 
-#: taskcoachlib/gui/dialog/export.py:85 taskcoachlib/gui/iocontroller.py:294
+#: taskcoachlib/gui/dialog/export.py:85 taskcoachlib/gui/iocontroller.py:302
 msgid "Export as CSV"
 msgstr "Exporteer als CSV"
 
-#: taskcoachlib/gui/dialog/export.py:90 taskcoachlib/gui/iocontroller.py:299
+#: taskcoachlib/gui/dialog/export.py:90 taskcoachlib/gui/iocontroller.py:307
 msgid "Export as iCalendar"
 msgstr "Exporteer als iCalendar"
 
-#: taskcoachlib/gui/dialog/export.py:101 taskcoachlib/gui/iocontroller.py:288
+#: taskcoachlib/gui/dialog/export.py:101 taskcoachlib/gui/iocontroller.py:296
 msgid "Export as HTML"
 msgstr "Exporteer als HTML"
 
@@ -1311,7 +1309,7 @@ msgstr ""
 msgid "OK"
 msgstr "OK"
 
-#: taskcoachlib/gui/dialog/preferences.py:207
+#: taskcoachlib/gui/dialog/preferences.py:227
 msgid ""
 "This setting will take effect\n"
 "after you restart %s"
@@ -1319,15 +1317,15 @@ msgstr ""
 "Deze instelling wordt effectief nadat u \n"
 "%s opnieuw heeft opgestart"
 
-#: taskcoachlib/gui/dialog/preferences.py:227
+#: taskcoachlib/gui/dialog/preferences.py:248
 msgid "Files"
 msgstr "Bestanden"
 
-#: taskcoachlib/gui/dialog/preferences.py:233
+#: taskcoachlib/gui/dialog/preferences.py:254
 msgid "Auto save after every change"
 msgstr "Automatisch opslaan na elke wijziging"
 
-#: taskcoachlib/gui/dialog/preferences.py:235
+#: taskcoachlib/gui/dialog/preferences.py:256
 msgid ""
 "Create a backup copy before\n"
 "overwriting a %s file"
@@ -1335,7 +1333,7 @@ msgstr ""
 "Een backup kopie maken voordat een\n"
 "%s bestand wordt overschreven"
 
-#: taskcoachlib/gui/dialog/preferences.py:237
+#: taskcoachlib/gui/dialog/preferences.py:258
 msgid ""
 "Save settings (%s.ini) in the same\n"
 "directory as the program"
@@ -1343,7 +1341,7 @@ msgstr ""
 "Sla de instellingen (%s.ini) op in \n"
 "dezelfde folder als het programma"
 
-#: taskcoachlib/gui/dialog/preferences.py:239
+#: taskcoachlib/gui/dialog/preferences.py:260
 msgid ""
 "(For running %s\n"
 "from a removable medium)"
@@ -1351,11 +1349,11 @@ msgstr ""
 "(Voor het gebruik van %s \n"
 "vanaf een verwisselbaar medium)"
 
-#: taskcoachlib/gui/dialog/preferences.py:240
+#: taskcoachlib/gui/dialog/preferences.py:261
 msgid "Attachment base directory"
 msgstr "Standaardmap voor bijlagen"
 
-#: taskcoachlib/gui/dialog/preferences.py:241
+#: taskcoachlib/gui/dialog/preferences.py:262
 msgid ""
 "When adding an attachment, try to make\n"
 "its path relative to this one."
@@ -1363,53 +1361,53 @@ msgstr ""
 "Probeer het pad van toegevoegde bijlagen relatief \n"
 "aan dit pad te maken"
 
-#: taskcoachlib/gui/dialog/preferences.py:247
+#: taskcoachlib/gui/dialog/preferences.py:268
 msgid "Window behavior"
 msgstr "Window gedrag"
 
-#: taskcoachlib/gui/dialog/preferences.py:253
+#: taskcoachlib/gui/dialog/preferences.py:274
 msgid "Show splash screen on startup"
 msgstr "Openingsscherm tonen bij starten"
 
-#: taskcoachlib/gui/dialog/preferences.py:255
+#: taskcoachlib/gui/dialog/preferences.py:276
 msgid "Show tips window on startup"
 msgstr "Tips tonen bij starten"
 
-#: taskcoachlib/gui/dialog/preferences.py:257
+#: taskcoachlib/gui/dialog/preferences.py:278
 msgid "Start with the main window iconized"
 msgstr "Start met het hoofdscherm geminimaliseerd"
 
-#: taskcoachlib/gui/dialog/preferences.py:258
+#: taskcoachlib/gui/dialog/preferences.py:279
 msgid "Always"
 msgstr "Altijd"
 
-#: taskcoachlib/gui/dialog/preferences.py:258
+#: taskcoachlib/gui/dialog/preferences.py:279
 msgid "Never"
 msgstr "Nooit"
 
-#: taskcoachlib/gui/dialog/preferences.py:260
+#: taskcoachlib/gui/dialog/preferences.py:281
 msgid "If it was iconized last session"
 msgstr "Als het hoofdscherm de laatste keer geminimaliseerd was"
 
-#: taskcoachlib/gui/dialog/preferences.py:262
+#: taskcoachlib/gui/dialog/preferences.py:283
 msgid "Check for new version of %(name)s on startup"
 msgstr ""
 "Controleer bij het opstarten of een nieuwe versie van %(name)s beschikbaar is"
 
-#: taskcoachlib/gui/dialog/preferences.py:264
+#: taskcoachlib/gui/dialog/preferences.py:285
 msgid "Hide main window when iconized"
 msgstr "Het window verbergen bij minimaliseren"
 
-#: taskcoachlib/gui/dialog/preferences.py:266
+#: taskcoachlib/gui/dialog/preferences.py:287
 msgid "Minimize main window when closed"
 msgstr "Het window minimaliseren bij sluiten"
 
-#: taskcoachlib/gui/dialog/preferences.py:268
+#: taskcoachlib/gui/dialog/preferences.py:289
 msgid "Make clock in the task bar tick when tracking effort"
 msgstr ""
 "Animeer de klok in de werkbalk bij het registreren van tijdsbesteding"
 
-#: taskcoachlib/gui/dialog/preferences.py:270
+#: taskcoachlib/gui/dialog/preferences.py:291
 msgid ""
 "Show a popup with the description of an item\n"
 "when hovering over it"
@@ -1417,16 +1415,16 @@ msgstr ""
 "Toon een popup met de beschrijving van het item \n"
 "als de cursor erboven hangt"
 
-#: taskcoachlib/gui/dialog/preferences.py:276
-#: taskcoachlib/gui/dialog/preferences.py:336
+#: taskcoachlib/gui/dialog/preferences.py:297
+#: taskcoachlib/gui/dialog/preferences.py:357
 msgid "Language"
 msgstr "Taal"
 
-#: taskcoachlib/gui/dialog/preferences.py:282
+#: taskcoachlib/gui/dialog/preferences.py:303
 msgid "Let the system determine the language"
 msgstr "Laat het systeem de taal bepalen"
 
-#: taskcoachlib/gui/dialog/preferences.py:342
+#: taskcoachlib/gui/dialog/preferences.py:363
 msgid ""
 "If your language is not available, or the translation needs \n"
 "improving, please consider helping. See:"
@@ -1434,63 +1432,63 @@ msgstr ""
 "Als uw taal niet beschikbaar is, of als de vertaling verbetering \n"
 "behoeft, overweeg dan a.u.b. te helpen. Zie:"
 
-#: taskcoachlib/gui/dialog/preferences.py:349
+#: taskcoachlib/gui/dialog/preferences.py:370
 msgid "Language not found?"
 msgstr "Taal niet gevonden?"
 
-#: taskcoachlib/gui/dialog/preferences.py:359
+#: taskcoachlib/gui/dialog/preferences.py:380
 msgid "Task appearance"
 msgstr "Taak uiterlijk"
 
-#: taskcoachlib/gui/dialog/preferences.py:366
+#: taskcoachlib/gui/dialog/preferences.py:387
 msgid "Active tasks"
 msgstr "Actieve taken"
 
-#: taskcoachlib/gui/dialog/preferences.py:367
+#: taskcoachlib/gui/dialog/preferences.py:388
 msgid "Inactive tasks"
 msgstr "Inactieve taken"
 
-#: taskcoachlib/gui/dialog/preferences.py:368
+#: taskcoachlib/gui/dialog/preferences.py:389
 msgid "Completed tasks"
 msgstr "Afgeronde taken"
 
-#: taskcoachlib/gui/dialog/preferences.py:369
+#: taskcoachlib/gui/dialog/preferences.py:390
 msgid "Overdue tasks"
 msgstr "Taken die te laat zijn"
 
-#: taskcoachlib/gui/dialog/preferences.py:370
+#: taskcoachlib/gui/dialog/preferences.py:391
 msgid "Tasks due soon"
 msgstr "Binnenkort af te ronden taken"
 
-#: taskcoachlib/gui/dialog/preferences.py:381
+#: taskcoachlib/gui/dialog/preferences.py:402
 msgid "Features"
 msgstr "Functies"
 
-#: taskcoachlib/gui/dialog/preferences.py:387
+#: taskcoachlib/gui/dialog/preferences.py:408
 msgid "Allow for tracking effort"
 msgstr "Tijdsbesteding bewaken aanzetten"
 
-#: taskcoachlib/gui/dialog/preferences.py:388
+#: taskcoachlib/gui/dialog/preferences.py:409
 msgid "Allow for taking notes"
 msgstr "Maak notities mogelijk"
 
-#: taskcoachlib/gui/dialog/preferences.py:395
+#: taskcoachlib/gui/dialog/preferences.py:416
 msgid "Enable SyncML"
 msgstr "SyncML aanzetten"
 
-#: taskcoachlib/gui/dialog/preferences.py:397
+#: taskcoachlib/gui/dialog/preferences.py:418
 msgid "Enable iPhone synchronization"
 msgstr "Schakel iPhone synchronisatie in"
 
-#: taskcoachlib/gui/dialog/preferences.py:400
+#: taskcoachlib/gui/dialog/preferences.py:421
 msgid "Hour of start of work day"
 msgstr "Starttijd van de werkdag"
 
-#: taskcoachlib/gui/dialog/preferences.py:402
+#: taskcoachlib/gui/dialog/preferences.py:423
 msgid "Hour of end of work day"
 msgstr "Eindtijd van de werkdag"
 
-#: taskcoachlib/gui/dialog/preferences.py:404
+#: taskcoachlib/gui/dialog/preferences.py:425
 msgid ""
 "Use gradients in calendar views.\n"
 "This may slow down Task Coach."
@@ -1498,149 +1496,149 @@ msgstr ""
 "Gebruik verlopende kleuren in kalender tabs.\n"
 "Dit zou Task Coach trager kunnen maken."
 
-#: taskcoachlib/gui/dialog/preferences.py:407
+#: taskcoachlib/gui/dialog/preferences.py:428
 msgid "Minutes between task start/end times"
 msgstr "Minuten tussen begin en eindtijden van taken"
 
-#: taskcoachlib/gui/dialog/preferences.py:414
+#: taskcoachlib/gui/dialog/preferences.py:435
 msgid "Task dates"
 msgstr "Taak datums"
 
-#: taskcoachlib/gui/dialog/preferences.py:420
+#: taskcoachlib/gui/dialog/preferences.py:441
 msgid "Mark parent task completed when all children are completed"
 msgstr "De taak als afgerond markeren als alle subtaken zijn afgerond"
 
-#: taskcoachlib/gui/dialog/preferences.py:422
+#: taskcoachlib/gui/dialog/preferences.py:443
 msgid "Number of hours that tasks are considered to be 'due soon'"
 msgstr "Aantal uren dat taken als 'binnenkort af te ronden"
 
-#: taskcoachlib/gui/dialog/preferences.py:424
+#: taskcoachlib/gui/dialog/preferences.py:445
 msgid "Nothing"
 msgstr "Niets"
 
-#: taskcoachlib/gui/dialog/preferences.py:425
+#: taskcoachlib/gui/dialog/preferences.py:446
 msgid "Changing the start date changes the due date"
 msgstr "Aanpassingen aan de startdatum veranderen ook de geplande einddatum"
 
-#: taskcoachlib/gui/dialog/preferences.py:426
+#: taskcoachlib/gui/dialog/preferences.py:447
 msgid "Changing the due date changes the start date"
 msgstr "Aanpassingen aan de geplande einddatum veranderen ook de startdatum"
 
-#: taskcoachlib/gui/dialog/preferences.py:428
+#: taskcoachlib/gui/dialog/preferences.py:449
 msgid "What to do with start and due date if the other one is changed"
 msgstr ""
 "Wat te doen met startdatum of geplande einddatum als de andere datum wordt "
 "veranderd"
 
-#: taskcoachlib/gui/dialog/preferences.py:431
+#: taskcoachlib/gui/dialog/preferences.py:452
 msgid "Preset"
 msgstr "Stel in"
 
-#: taskcoachlib/gui/dialog/preferences.py:432
+#: taskcoachlib/gui/dialog/preferences.py:453
 msgid "Propose"
 msgstr "Stel voor"
 
-#: taskcoachlib/gui/dialog/preferences.py:433
+#: taskcoachlib/gui/dialog/preferences.py:454
 msgid "Today"
 msgstr "Vandaag"
 
-#: taskcoachlib/gui/dialog/preferences.py:434
+#: taskcoachlib/gui/dialog/preferences.py:455
 msgid "Tomorrow"
 msgstr "Morgen"
 
-#: taskcoachlib/gui/dialog/preferences.py:435
+#: taskcoachlib/gui/dialog/preferences.py:456
 msgid "Day after tomorrow"
 msgstr "Overmorgen"
 
-#: taskcoachlib/gui/dialog/preferences.py:436
+#: taskcoachlib/gui/dialog/preferences.py:457
 msgid "Next Friday"
 msgstr "Volgende vrijdag"
 
-#: taskcoachlib/gui/dialog/preferences.py:437
+#: taskcoachlib/gui/dialog/preferences.py:458
 msgid "Next Monday"
 msgstr "Volgende maandag"
 
-#: taskcoachlib/gui/dialog/preferences.py:438
+#: taskcoachlib/gui/dialog/preferences.py:459
 msgid "Start of day"
 msgstr "Begin van de dag"
 
-#: taskcoachlib/gui/dialog/preferences.py:439
+#: taskcoachlib/gui/dialog/preferences.py:460
 msgid "Start of working day"
 msgstr "Begin van de werkdag"
 
-#: taskcoachlib/gui/dialog/preferences.py:440
+#: taskcoachlib/gui/dialog/preferences.py:461
 msgid "Current time"
 msgstr "Huidige tijd"
 
-#: taskcoachlib/gui/dialog/preferences.py:441
+#: taskcoachlib/gui/dialog/preferences.py:462
 msgid "End of working day"
 msgstr "Eind van de werkdag"
 
-#: taskcoachlib/gui/dialog/preferences.py:442
+#: taskcoachlib/gui/dialog/preferences.py:463
 msgid "End of day"
 msgstr "Eind van de dag"
 
-#: taskcoachlib/gui/dialog/preferences.py:444
+#: taskcoachlib/gui/dialog/preferences.py:465
 msgid "Default start date and time"
 msgstr "Standaard startdatum en -tijd"
 
-#: taskcoachlib/gui/dialog/preferences.py:447
+#: taskcoachlib/gui/dialog/preferences.py:468
 msgid "Default due date and time"
 msgstr "Standaard geplande einddatum en -tijd"
 
-#: taskcoachlib/gui/dialog/preferences.py:450
+#: taskcoachlib/gui/dialog/preferences.py:471
 msgid "Default completion date and time"
 msgstr "Standaard werkelijke einddatum en -tijd"
 
-#: taskcoachlib/gui/dialog/preferences.py:453
+#: taskcoachlib/gui/dialog/preferences.py:474
 msgid "Default reminder date and time"
 msgstr "Standaard herinneringsdatum en -tijd"
 
-#: taskcoachlib/gui/dialog/preferences.py:460
+#: taskcoachlib/gui/dialog/preferences.py:481
 msgid "Task reminders"
 msgstr "Taak herinneringen"
 
-#: taskcoachlib/gui/dialog/preferences.py:469
+#: taskcoachlib/gui/dialog/preferences.py:490
 msgid "Notification system to use for reminders"
 msgstr "Notificatiesysteem te gebruiken voor herinneringen"
 
-#: taskcoachlib/gui/dialog/preferences.py:473
+#: taskcoachlib/gui/dialog/preferences.py:494
 msgid "Default snooze time to use after reminder"
 msgstr "Standaard sluimertijd te gebruiken na een herinnering"
 
-#: taskcoachlib/gui/dialog/preferences.py:476
+#: taskcoachlib/gui/dialog/preferences.py:497
 msgid "Snooze times to offer in task reminder dialog"
 msgstr "Aan te bieden sluimertijden in de taakherinneringdialoog"
 
-#: taskcoachlib/gui/dialog/preferences.py:483
+#: taskcoachlib/gui/dialog/preferences.py:504
 msgid "iPhone"
 msgstr "iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:489
+#: taskcoachlib/gui/dialog/preferences.py:510
 msgid "Password for synchronization with iPhone"
 msgstr "Wachtvoor voor synchronisatie met iPhone"
 
-#: taskcoachlib/gui/dialog/preferences.py:491
+#: taskcoachlib/gui/dialog/preferences.py:512
 msgid "Bonjour service name"
 msgstr "Bonjour service naam"
 
-#: taskcoachlib/gui/dialog/preferences.py:493
+#: taskcoachlib/gui/dialog/preferences.py:514
 msgid "Upload completed tasks to device"
 msgstr "Upload complete taken naar apparaat"
 
-#: taskcoachlib/gui/dialog/preferences.py:495
+#: taskcoachlib/gui/dialog/preferences.py:516
 msgid "Show sync log"
 msgstr "Toon synchronisatie log"
 
-#: taskcoachlib/gui/dialog/preferences.py:495
+#: taskcoachlib/gui/dialog/preferences.py:516
 msgid "Show the synchronization log"
 msgstr "Toon het synchronisatie logbestand"
 
-#: taskcoachlib/gui/dialog/preferences.py:501
+#: taskcoachlib/gui/dialog/preferences.py:522
 msgid "Editor"
 msgstr "Editor"
 
-#: taskcoachlib/gui/dialog/preferences.py:507
+#: taskcoachlib/gui/dialog/preferences.py:528
 msgid "Check spelling in editors"
 msgstr "Controleer spelling in editors"
 
@@ -1656,11 +1654,23 @@ msgstr "Sluimer"
 msgid "Mark task completed"
 msgstr "Taak als afgerond markeren"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:80
+#: taskcoachlib/gui/dialog/syncpreferences.py:81
+msgid "SyncML server"
+msgstr "SyncML server"
+
+#: taskcoachlib/gui/dialog/syncpreferences.py:82
+msgid "Custom"
+msgstr "Aangepast"
+
+#: taskcoachlib/gui/dialog/syncpreferences.py:84
+msgid "MemoToo (http://www.memotoo.com/)"
+msgstr "MemoToo"
+
+#: taskcoachlib/gui/dialog/syncpreferences.py:87
 msgid "SyncML server URL"
 msgstr "SyncML server URL"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:81
+#: taskcoachlib/gui/dialog/syncpreferences.py:88
 msgid "User name/ID"
 msgstr "Gebruikersnaam/ID"
 
@@ -1668,64 +1678,57 @@ msgstr "Gebruikersnaam/ID"
 msgid "Enable tasks synchronization"
 msgstr "Taak synchronisatie aanzetten"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:91
+#: taskcoachlib/gui/dialog/syncpreferences.py:92
 msgid "Tasks database name"
 msgstr "Naam van takendatabase"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:93
-#: taskcoachlib/gui/dialog/syncpreferences.py:111
+#: taskcoachlib/gui/dialog/syncpreferences.py:106
 msgid "Preferred synchonization mode"
 msgstr "Gewenste synchronisatiemode"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:94
-#: taskcoachlib/gui/dialog/syncpreferences.py:112
+#: taskcoachlib/gui/dialog/syncpreferences.py:107
 msgid "Two way"
 msgstr "Beide richtingen"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:95
-#: taskcoachlib/gui/dialog/syncpreferences.py:113
+#: taskcoachlib/gui/dialog/syncpreferences.py:108
 msgid "Slow"
 msgstr "Langzaam"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:96
-#: taskcoachlib/gui/dialog/syncpreferences.py:114
+#: taskcoachlib/gui/dialog/syncpreferences.py:109
 msgid "One way from client"
 msgstr "Alleen van de client naar de server"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:97
-#: taskcoachlib/gui/dialog/syncpreferences.py:115
+#: taskcoachlib/gui/dialog/syncpreferences.py:110
 msgid "Refresh from client"
 msgstr "Verversen vanaf de client"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:98
-#: taskcoachlib/gui/dialog/syncpreferences.py:116
+#: taskcoachlib/gui/dialog/syncpreferences.py:111
 msgid "One way from server"
 msgstr "Alleen van de server naar de client"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:99
-#: taskcoachlib/gui/dialog/syncpreferences.py:117
+#: taskcoachlib/gui/dialog/syncpreferences.py:112
 #: taskcoachlib/syncml/basesource.py:61 taskcoachlib/syncml/basesource.py:73
 msgid "Refresh from server"
 msgstr "Verversen vanaf de server"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:108
+#: taskcoachlib/gui/dialog/syncpreferences.py:103
 msgid "Enable notes synchronization"
 msgstr "Synchronisatie van notities aanzetten"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:109
+#: taskcoachlib/gui/dialog/syncpreferences.py:105
 msgid "Notes database name"
 msgstr "Naam van notitiedatabase"
 
-#: taskcoachlib/gui/dialog/syncpreferences.py:133
+#: taskcoachlib/gui/dialog/syncpreferences.py:150
 msgid "Access"
 msgstr "Toegang"
-
-#: taskcoachlib/gui/dialog/syncpreferences.py:134
-#: taskcoachlib/gui/viewer/task.py:54 taskcoachlib/help/__init__.py:68
-#: taskcoachlib/help/__init__.py:129
-#: taskcoachlib/widgets/calendarconfig.py:107
-msgid "Tasks"
-msgstr "Taken"
 
 #: taskcoachlib/gui/dialog/templates.py:69
 msgid "Template"
@@ -1779,32 +1782,32 @@ msgstr "U gebruikt %(name)s prerelease versie %(currentVersion)s."
 msgid "The latest released version of %(name)s is %(version)s."
 msgstr "De meest recente versie van %(name)s is %(version)s."
 
-#: taskcoachlib/gui/iocontroller.py:47
+#: taskcoachlib/gui/iocontroller.py:48
 msgid ""
 "%s files (*.tsk)|*.tsk|Backup files (*.tsk.bak)|*.tsk.bak|All files (*.*)|*"
 msgstr ""
 "%s bestanden (*.tsk)|*.tsk|Backup bestanden (*.tsk.bak)|*.tsk.bak|Alle "
 "bestanden (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:50
+#: taskcoachlib/gui/iocontroller.py:51
 msgid "iCalendar files (*.ics)|*.ics|All files (*.*)|*"
 msgstr "iCalendar bestanden (*.ics)|*.ics|Alle bestanden (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:53
+#: taskcoachlib/gui/iocontroller.py:54
 msgid "HTML files (*.html)|*.html|All files (*.*)|*"
 msgstr "HTML bestanden (*.html)|*.html|Alle bestanden (*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:56
+#: taskcoachlib/gui/iocontroller.py:57
 msgid "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt|All files (*.*)|*"
 msgstr ""
 "CSV bestanden (*.csv)|*.csv|Tekstbestanden (*.txt)|*.txt|Alle bestanden "
 "(*.*)|*"
 
-#: taskcoachlib/gui/iocontroller.py:95
+#: taskcoachlib/gui/iocontroller.py:96
 msgid "Open"
 msgstr "Openen"
 
-#: taskcoachlib/gui/iocontroller.py:118 taskcoachlib/gui/iocontroller.py:155
+#: taskcoachlib/gui/iocontroller.py:126 taskcoachlib/gui/iocontroller.py:163
 msgid ""
 "Cannot open %(filename)s\n"
 "because it was created by a newer version of %(name)s.\n"
@@ -1814,27 +1817,27 @@ msgstr ""
 "een nieuwere versie van %(name)s is gemaakt.\n"
 "Installeer a. u.b. de laatste versie van %(name)s."
 
-#: taskcoachlib/gui/iocontroller.py:126 taskcoachlib/gui/iocontroller.py:161
+#: taskcoachlib/gui/iocontroller.py:134 taskcoachlib/gui/iocontroller.py:169
 msgid "Error while reading %s:\n"
 msgstr "Fout bij het lezen van %s:\n"
 
-#: taskcoachlib/gui/iocontroller.py:128 taskcoachlib/gui/iocontroller.py:163
+#: taskcoachlib/gui/iocontroller.py:136 taskcoachlib/gui/iocontroller.py:171
 msgid "Are you sure it is a %s-file?"
 msgstr "Weet u zeker dat het een %s-bestand is?"
 
-#: taskcoachlib/gui/iocontroller.py:131
+#: taskcoachlib/gui/iocontroller.py:139
 msgid "Loaded %(nrtasks)d tasks from %(filename)s"
 msgstr "%(nrtasks)d taken geladen uit %(filename)s"
 
-#: taskcoachlib/gui/iocontroller.py:135
+#: taskcoachlib/gui/iocontroller.py:143
 msgid "Cannot open %s because it doesn't exist"
 msgstr "Kan %s niet openen omdat het bestand niet bestaat"
 
-#: taskcoachlib/gui/iocontroller.py:145
+#: taskcoachlib/gui/iocontroller.py:153
 msgid "Merge"
 msgstr "Invoegen"
 
-#: taskcoachlib/gui/iocontroller.py:150
+#: taskcoachlib/gui/iocontroller.py:158
 msgid ""
 "Cannot open %(filename)s\n"
 "because it is locked."
@@ -1842,19 +1845,19 @@ msgstr ""
 "Kan %(filename)s niet openen\n"
 "omdat het vergrendeld is."
 
-#: taskcoachlib/gui/iocontroller.py:166
+#: taskcoachlib/gui/iocontroller.py:174
 msgid "Merged %(filename)s"
 msgstr "Taken uit %(filename)s ingevoegd"
 
-#: taskcoachlib/gui/iocontroller.py:183
+#: taskcoachlib/gui/iocontroller.py:191
 msgid "Save as"
 msgstr "Opslaan als"
 
-#: taskcoachlib/gui/iocontroller.py:195
+#: taskcoachlib/gui/iocontroller.py:203
 msgid "Save selection"
 msgstr "Selectie opslaan"
 
-#: taskcoachlib/gui/iocontroller.py:227
+#: taskcoachlib/gui/iocontroller.py:235
 msgid ""
 "Cannot save %s\n"
 "It is locked by another instance of %s.\n"
@@ -1862,7 +1865,7 @@ msgstr ""
 "Kan %s niet opslaan\n"
 "omdat het vergrendeld is door een andere instantie van %s.\n"
 
-#: taskcoachlib/gui/iocontroller.py:232
+#: taskcoachlib/gui/iocontroller.py:240
 msgid ""
 "Cannot save %s\n"
 "%s"
@@ -1870,15 +1873,15 @@ msgstr ""
 "Kan %s niet opslaan\n"
 "%s"
 
-#: taskcoachlib/gui/iocontroller.py:242
+#: taskcoachlib/gui/iocontroller.py:250
 msgid "Import template"
 msgstr "Template importeren"
 
-#: taskcoachlib/gui/iocontroller.py:244
+#: taskcoachlib/gui/iocontroller.py:252
 msgid "%s template files (*.tsktmpl)|*.tsktmpl"
 msgstr "%s template bestanden (*.tsktmpl)|*.tsktmpl"
 
-#: taskcoachlib/gui/iocontroller.py:250
+#: taskcoachlib/gui/iocontroller.py:258
 msgid ""
 "Cannot import template %s\n"
 "%s"
@@ -1886,27 +1889,27 @@ msgstr ""
 "Kan template %s niet importeren\n"
 "%s"
 
-#: taskcoachlib/gui/iocontroller.py:279
+#: taskcoachlib/gui/iocontroller.py:287
 msgid "Exported %(count)d items to %(filename)s"
 msgstr "%(count)d items naar %(filename)s geëxporteerd"
 
-#: taskcoachlib/gui/iocontroller.py:314
+#: taskcoachlib/gui/iocontroller.py:322
 msgid "Finished synchronization"
 msgstr "Synchronisatie gereed"
 
-#: taskcoachlib/gui/iocontroller.py:321
+#: taskcoachlib/gui/iocontroller.py:329
 msgid "Note conflict"
 msgstr "Conflict bij notities"
 
-#: taskcoachlib/gui/iocontroller.py:325
+#: taskcoachlib/gui/iocontroller.py:333
 msgid "Task conflict"
 msgstr "Conflict bij taken"
 
-#: taskcoachlib/gui/iocontroller.py:337
+#: taskcoachlib/gui/iocontroller.py:345
 msgid "Synchronization status"
 msgstr "Synchronisatie status"
 
-#: taskcoachlib/gui/iocontroller.py:345
+#: taskcoachlib/gui/iocontroller.py:353
 msgid ""
 "Cannot open %s\n"
 "%s"
@@ -1914,7 +1917,7 @@ msgstr ""
 "Kan %s niet openen\n"
 "%s"
 
-#: taskcoachlib/gui/iocontroller.py:380
+#: taskcoachlib/gui/iocontroller.py:388
 msgid ""
 "A file named %s already exists.\n"
 "Do you want to replace it?"
@@ -1922,7 +1925,7 @@ msgstr ""
 "Er bestaat al een bestand met de naam %s\n"
 "Wilt u het vervangen?"
 
-#: taskcoachlib/gui/iocontroller.py:392
+#: taskcoachlib/gui/iocontroller.py:400
 msgid ""
 "You have unsaved changes.\n"
 "Save before closing?"
@@ -1930,11 +1933,11 @@ msgstr ""
 "U heeft niet-opgeslagen veranderingen.\n"
 "Opslaan voor het afsluiten?"
 
-#: taskcoachlib/gui/iocontroller.py:393
+#: taskcoachlib/gui/iocontroller.py:401
 msgid "%s: save changes?"
 msgstr "%s: veranderingen opslaan?"
 
-#: taskcoachlib/gui/iocontroller.py:403
+#: taskcoachlib/gui/iocontroller.py:411
 msgid ""
 "Cannot open %s because it is locked.\n"
 "\n"
@@ -1954,11 +1957,11 @@ msgstr ""
 "\n"
 "Blokkering opheffen?"
 
-#: taskcoachlib/gui/iocontroller.py:411 taskcoachlib/gui/iocontroller.py:418
+#: taskcoachlib/gui/iocontroller.py:419 taskcoachlib/gui/iocontroller.py:426
 msgid "%s: file locked"
 msgstr "%s: bestand vergrendeld"
 
-#: taskcoachlib/gui/iocontroller.py:416
+#: taskcoachlib/gui/iocontroller.py:424
 msgid ""
 "Cannot acquire a lock because locking is not supported\n"
 "on the location of %s.\n"
@@ -1968,11 +1971,11 @@ msgstr ""
 "op de locatie van %s.\n"
 "%s onvergrendeld openen?"
 
-#: taskcoachlib/gui/iocontroller.py:423
+#: taskcoachlib/gui/iocontroller.py:431
 msgid "Closed %s"
 msgstr "%s gesloten"
 
-#: taskcoachlib/gui/iocontroller.py:428
+#: taskcoachlib/gui/iocontroller.py:436
 msgid "Saved %(nrtasks)d tasks to %(filename)s"
 msgstr "%(nrtasks)d taken opgeslagen in %(filename)s"
 
@@ -1984,23 +1987,23 @@ msgstr "Synchroniseren…"
 msgid "Synchronizing with %s..."
 msgstr "Synchroniseren met %s..."
 
-#: taskcoachlib/gui/mainwindow.py:71 taskcoachlib/gui/uicommand.py:608
+#: taskcoachlib/gui/mainwindow.py:79 taskcoachlib/gui/uicommand.py:608
 msgid "Warning"
 msgstr "Waarschuwing"
 
-#: taskcoachlib/gui/mainwindow.py:108
+#: taskcoachlib/gui/mainwindow.py:116
 msgid "Welcome to %(name)s version %(version)s"
 msgstr "Welkom bij %(name)s versie %(version)s"
 
-#: taskcoachlib/gui/mainwindow.py:285
+#: taskcoachlib/gui/mainwindow.py:293
 msgid "iPhone/iPod"
 msgstr "iPhone/iPod"
 
-#: taskcoachlib/gui/mainwindow.py:294
+#: taskcoachlib/gui/mainwindow.py:302
 msgid "Synchronization type"
 msgstr "Synchronisatie type"
 
-#: taskcoachlib/gui/mainwindow.py:304
+#: taskcoachlib/gui/mainwindow.py:312
 msgid ""
 "An iPhone or iPod Touch device tried to synchronize with this\n"
 "task file, but the protocol negotiation failed. Please file a\n"
@@ -2010,7 +2013,7 @@ msgstr ""
 "takenbestand te synchroniseren, maar de protocol afstemming\n"
 "faalde. Dien a.u.b. een foutrapportage in."
 
-#: taskcoachlib/gui/mainwindow.py:307 taskcoachlib/iphone/protocol.py:481
+#: taskcoachlib/gui/mainwindow.py:315 taskcoachlib/iphone/protocol.py:481
 #: taskcoachlib/widgets/draganddrop.py:108
 #: taskcoachlib/widgets/draganddrop.py:110
 #: taskcoachlib/widgets/draganddrop.py:143
@@ -3632,6 +3635,12 @@ msgstr "Taken: %d geselecteerd, %d zichtbaar, %d totaal"
 #: taskcoachlib/gui/viewer/task.py:35
 msgid "Status: %d overdue, %d inactive, %d completed"
 msgstr "Status: %d te laat, %d inactief, %d afgerond"
+
+#: taskcoachlib/gui/viewer/task.py:54 taskcoachlib/help/__init__.py:68
+#: taskcoachlib/help/__init__.py:129
+#: taskcoachlib/widgets/calendarconfig.py:107
+msgid "Tasks"
+msgstr "Taken"
 
 #: taskcoachlib/gui/viewer/task.py:262
 msgid "Timeline"
@@ -5827,10 +5836,6 @@ msgstr "Wijzig tijdsbesteding %s"
 msgid "Sending GUID: %s"
 msgstr "GUID versturen: %s"
 
-#: taskcoachlib/mailer/__init__.py:67
-msgid "Untitled e-mail"
-msgstr "E-mail zonder titel"
-
 #: taskcoachlib/mailer/macmail.py:49
 msgid "Mail.app message"
 msgstr "Mail.app bericht"
@@ -5865,19 +5870,30 @@ msgstr ""
 "%s vinden."
 
 #: taskcoachlib/mailer/thunderbird.py:238
+#: taskcoachlib/mailer/thunderbird.py:351
 msgid "Unrecognized URL scheme: \"%s\""
 msgstr "Onbekend URL formaat: \"%s\""
 
-#: taskcoachlib/mailer/thunderbird.py:295
+#: taskcoachlib/mailer/thunderbird.py:291
+msgid ""
+"Could not open an IMAP connection to %(server)s:%(port)s\n"
+"to retrieve Thunderbird email message:\n"
+"%(error)s"
+msgstr ""
+"Er kon geen IMAP-verbinding worden geopend naar %(server)s:%(port)s\n"
+"voor het ophalen van het Thunderbird-bericht:\n"
+"%(error)s"
+
+#: taskcoachlib/mailer/thunderbird.py:299
 msgid "Please enter password for user %(user)s on %(server)s:%(port)d"
 msgstr ""
 "Geef a.u.b. het wachtwoord voor gebruiker %(user)s op %(server)s:%(port)d"
 
-#: taskcoachlib/mailer/thunderbird.py:313
+#: taskcoachlib/mailer/thunderbird.py:317
 msgid "Login failed (%s). Please try again."
 msgstr "Login gefaald (%s). Probeer nogmaals a.u.b."
 
-#: taskcoachlib/mailer/thunderbird.py:326
+#: taskcoachlib/mailer/thunderbird.py:330
 msgid ""
 "Could not select inbox \"%s\"\n"
 "(%s)"
@@ -5885,7 +5901,7 @@ msgstr ""
 "Kon inbox \"%s\" niet selecteren\n"
 "(%s)"
 
-#: taskcoachlib/mailer/thunderbird.py:331
+#: taskcoachlib/mailer/thunderbird.py:335
 msgid "No such mail: %d"
 msgstr "Geen email: %d"
 
@@ -6005,7 +6021,7 @@ msgstr ""
 "\n"
 "\n"
 
-#: taskcoachlib/syncml/sync.py:203
+#: taskcoachlib/syncml/sync.py:201
 msgid ""
 "%d items added.\n"
 "%d items updated.\n"
@@ -6015,7 +6031,7 @@ msgstr ""
 "%d items gewijzigd.\n"
 "%d items verwijderd."
 
-#: taskcoachlib/syncml/sync.py:209
+#: taskcoachlib/syncml/sync.py:207
 msgid ""
 "An error occurred in the synchronization.\n"
 "Error code: %d; message: %s"
@@ -6023,7 +6039,7 @@ msgstr ""
 "Er is een fout opgetreden bij het synchroniseren.\n"
 "Foutcode: %d; foutbericht: %s"
 
-#: taskcoachlib/syncml/sync.py:214
+#: taskcoachlib/syncml/sync.py:212
 msgid "You must first edit your SyncML Settings, in Edit/SyncML preferences."
 msgstr "U moet eerst SyncML instellen, in Bewerk/SyncML voorkeuren."
 
@@ -6324,9 +6340,6 @@ msgstr "Fout bij openen van URL"
 #~ msgid "Edit exclusive subcategories of \"%s\""
 #~ msgstr "Bewerk uitsluitende subcategorieën van \"%s\""
 
-#~ msgid "Add note to categories"
-#~ msgstr "Notitie aan categorieën toevoegen"
-
 #~ msgid "Change task of effort"
 #~ msgstr "Verander taak van tijdsbesteding"
 
@@ -6411,87 +6424,6 @@ msgstr "Fout bij openen van URL"
 #~ msgid "Toggle prerequisite of \"%s\""
 #~ msgstr "Zet voorwaardelijke taak van \"%s\" om"
 
-#~ msgid "Edit attachment..."
-#~ msgstr "Bijlage bewerken..."
-
-#~ msgid "Edit the selected attachments"
-#~ msgstr "De geselecteerde bijlagen bewerken"
-
-#~ msgid "Delete attachment"
-#~ msgstr "Bijlage verwijderen"
-
-#~ msgid "Delete the selected attachments"
-#~ msgstr "De geselecteerde bijlagen verwijderen"
-
-#~ msgid "New category..."
-#~ msgstr "Nieuwe categorie..."
-
-#~ msgid "Edit category..."
-#~ msgstr "Categorie &bewerken..."
-
-#~ msgid "Edit the selected categories"
-#~ msgstr "De geselecteerde categorieën bewerken"
-
-#~ msgid "Delete category"
-#~ msgstr "Categorie verwijderen"
-
-#~ msgid "Delete the selected categories"
-#~ msgstr "De geselecteerde categorieën verwijderen"
-
-#~ msgid "New subcategory..."
-#~ msgstr "Nieuwe subcategorie..."
-
-#~ msgid "Insert a new subcategory"
-#~ msgstr "Een nieuwe subcategorie toevoegen"
-
-#~ msgid "&Edit effort..."
-#~ msgstr "Tijdsbesteding &bewerken..."
-
-#~ msgid "Edit the selected effort period(s)"
-#~ msgstr "De geselecteerde tijdsbesteding(en) bewerken"
-
-#~ msgid "&Delete effort"
-#~ msgstr "Tijdsbesteding &verwijderen"
-
-#~ msgid "Delete the selected effort period(s)"
-#~ msgstr "De geselecteerde tijdsbesteding(en) verwijderen"
-
-#~ msgid "New note..."
-#~ msgstr "Nieuwe notitie..."
-
-#~ msgid "Edit note..."
-#~ msgstr "Notitie bewerken..."
-
-#~ msgid "Edit the selected notes"
-#~ msgstr "De geselecteerde notities bewerken"
-
-#~ msgid "Delete note"
-#~ msgstr "Notitie verwijderen"
-
-#~ msgid "Delete the selected notes"
-#~ msgstr "De geselecteerde notities verwijderen"
-
-#~ msgid "New subnote..."
-#~ msgstr "Nieuwe subnotitie..."
-
-#~ msgid "Insert a new subnote"
-#~ msgstr "Een nieuwe subnotitie toevoegen"
-
-#~ msgid "&Edit task..."
-#~ msgstr "Taak &bewerken..."
-
-#~ msgid "Edit the selected task(s)"
-#~ msgstr "Bewerk de geselecteerde ta(a)k(en)"
-
-#~ msgid "&Delete task"
-#~ msgstr "Verwijder Taak"
-
-#~ msgid "Delete the selected task(s)"
-#~ msgstr "De geselecteerde taak verwijderen"
-
-#~ msgid "Insert a new subtask into the selected task"
-#~ msgstr "Een nieuwe subtaak toevoegen aan de geselecteerde taak"
-
 #~ msgid "Warning: start must be earlier than stop"
 #~ msgstr "Waarschuwing: starttijd moet vroeger dan stoptijd zijn"
 
@@ -6525,1563 +6457,14 @@ msgstr "Fout bij openen van URL"
 #~ msgid "%s (effort)"
 #~ msgstr "%s (tijdsbesteding)"
 
-#~ msgid "Colors"
-#~ msgstr "Kleuren"
-
-#~ msgid "Click this button to change the color of active tasks"
-#~ msgstr "Klik op deze knop om de kleur van actieve taken te veranderen"
-
-#~ msgid "Click this button to change the color of inactive tasks"
-#~ msgstr "Klik op deze knop om de kleur van inactieve taken te veranderen"
-
-#~ msgid "Click this button to change the color of completed tasks"
-#~ msgstr "Klik op deze knop om de kleur van afgeronde taken te veranderen"
-
-#~ msgid "Click this button to change the color of over due tasks"
-#~ msgstr ""
-#~ "Klik op deze knop om de kleur van taken die te laat zijn te veranderen"
-
-#~ msgid "Click this button to change the color of tasks due soon"
-#~ msgstr ""
-#~ "Druk deze knop in om de kleur van binnenkort af te ronden taken te veranderen"
-
 #~ msgid "Notification system"
 #~ msgstr "Notificatiesysteem"
-
-#~ msgid "Notification system to use for reminders (Growl, Snarl, etc)"
-#~ msgstr ""
-#~ "Te gebruiken notificatiesysteem voor herinneringen (Growl, Snarl, etc.)"
 
 #~ msgid "Task behavior"
 #~ msgstr "Taakgedrag"
 
-#~ msgid "Save as..."
-#~ msgstr "Opslaan als..."
-
-#~ msgid "Please enter the template name."
-#~ msgstr "Voer de template naam in."
-
-#~ msgid "Save as template"
-#~ msgstr "Opslaan als template"
-
-#~ msgid "Open template..."
-#~ msgstr "Template openen..."
-
-#~ msgid "Export as HTML..."
-#~ msgstr "Exporteren als HTML..."
-
-#~ msgid "Export as CSV..."
-#~ msgstr "Als CSV exporteren..."
-
-#~ msgid "Export as iCalendar..."
-#~ msgstr "Als iCalendar exporteren..."
-
-#~ msgid "Eff&ort"
-#~ msgstr "Tijdsb&esteding"
-
-#~ msgid "&New task"
-#~ msgstr "&Nieuwe taak"
-
-#~ msgid "Save selected task as &template..."
-#~ msgstr "Geselecteerde taak als &template opslaan..."
-
-#~ msgid "&Add template..."
-#~ msgstr "&Template toevoegen..."
-
-#~ msgid "Add a new template from a template file"
-#~ msgstr "Nieuwe template toevoegen uit een template bestand"
-
-#~ msgid "&Print preview"
-#~ msgstr "Afdruk&voorbeeld"
-
-#~ msgid "Export the current view as HTML file"
-#~ msgstr "Het huidige beeld als HTML bestand exporteren"
-
-#~ msgid "Export selection as &HTML..."
-#~ msgstr "Selectie als &HTML exporteren..."
-
-#~ msgid "Export the selection in the current view as HTML file"
-#~ msgstr "De selectie in de huidige tab als HTML bestand exporteren"
-
-#~ msgid "Export the current view in Comma Separated Values (CSV) format"
-#~ msgstr "Het huidige tabblad in komma-gescheiden formaat (CSV) exporteren"
-
-#~ msgid "Export selection as &CSV..."
-#~ msgstr "Exporteer selectie als &CSV..."
-
-#~ msgid ""
-#~ "Export the selection in the current view in Comma Separated Values (CSV) "
-#~ "format"
-#~ msgstr ""
-#~ "Exporteer de selectie in de huidige tab in komma-gescheiden-waarden (Comma "
-#~ "Separated Values, CSV) formaat"
-
-#~ msgid "Export the items in the current viewer in iCalendar format"
-#~ msgstr "Exporteer de items in de huidige weergave in iCalendar formaat"
-
-#~ msgid "Export selection as &iCalendar..."
-#~ msgstr "Selectie exporteren als &iCalendar..."
-
-#~ msgid "Export the selected items in the current viewer in iCalendar format"
-#~ msgstr ""
-#~ "Exporteer de geselecteerde items in de huidige weergave in iCalendar formaat"
-
-#~ msgid "S&yncML synchronization"
-#~ msgstr "S&yncML synchronisatie"
-
-#~ msgid "&Clear all filters"
-#~ msgstr "&Wis alle filters"
-
-#~ msgid "&Mail task"
-#~ msgstr "Ver&zend taak"
-
-#~ msgid "Mail the task, using your default mailer"
-#~ msgstr "De taak versturen met behulp van uw standaard e-mail programma"
-
-#~ msgid "&Mail note"
-#~ msgstr "Ver&zend notitie"
-
-#~ msgid "Mail the note, using your default mailer"
-#~ msgstr "De notitie e-mailen, met uw standaard e-mail programma"
-
-#~ msgid "Add &note"
-#~ msgstr "&Notitie toevoegen"
-
-#~ msgid "Add a note to the selected task"
-#~ msgstr "Voeg een notitie toe aan de geselecteerde taak"
-
-#~ msgid "Add a note to the selected category"
-#~ msgstr "Voeg een notitie toe aan de geselecteerde categorie"
-
-#~ msgid "Add a note to the selected attachment"
-#~ msgstr "Voeg een notitie toe aan de geselecteerde bijlage"
-
-#~ msgid "&Add attachment"
-#~ msgstr "&Bijlage toevoegen"
-
-#~ msgid "Browse for files to add as attachment to the selected task(s)"
-#~ msgstr ""
-#~ "Bladeren naar bestanden om als bijlage aan de geselecteerde ta(a)k(en) toe "
-#~ "te voegen"
-
-#~ msgid "Browse for files to add as attachment to the selected categories"
-#~ msgstr ""
-#~ "Bladeren naar bestanden om als bijlage aan de geselecteerde categorieën toe "
-#~ "te voegen"
-
-#~ msgid "Browse for files to add as attachment to the selected note(s)"
-#~ msgstr ""
-#~ "Bladeren naar bestanden om als bijlage aan de geselecteerde notities toe te "
-#~ "voegen"
-
-#~ msgid "&Open all attachments"
-#~ msgstr "Alle bijlagen &openen"
-
-#~ msgid "Open all attachments of the selected task(s)"
-#~ msgstr "Alle bijlagen van de geselecteerde taken openen"
-
-#~ msgid "Open all attachments of the selected categories"
-#~ msgstr "Alle bijlagen van de geselecteerde categorieën openen"
-
-#~ msgid "Open all attachments of the selected note(s)"
-#~ msgstr "Alle bijlagen van de geselecteerde notities openen"
-
-#~ msgid "St&op tracking effort"
-#~ msgstr "Tijdsbesteding st&oppen"
-
-#~ msgid "Help: About %s"
-#~ msgstr "Help: Over %s"
-
-#~ msgid "Help: %s license"
-#~ msgstr "Help: %s licentie"
-
-#~ msgid "Show only tasks &due before end of"
-#~ msgstr "&Alleen taken tonen die af moeten voor het einde van"
-
-#~ msgid "&Unlimited"
-#~ msgstr "&Ongelimiteerd"
-
-#~ msgid "Show all tasks"
-#~ msgstr "Alle taken tonen"
-
-#~ msgid "Only show tasks due today"
-#~ msgstr "Alleen taken tonen die vandaag af moeten"
-
-#~ msgid "T&omorrow"
-#~ msgstr "&Morgen"
-
-#~ msgid "Only show tasks due today and tomorrow"
-#~ msgstr "Alleen taken tonen die vandaag of morgen af moeten"
-
-#~ msgid "Wo&rkweek"
-#~ msgstr "We&rkweek"
-
-#~ msgid "Only show tasks due this work week (i.e. before Friday)"
-#~ msgstr ""
-#~ "Alleen taken tonen die deze werkweek (uiterlijk a.s. vrijdag) af moeten"
-
-#~ msgid "&Week"
-#~ msgstr "&Week"
-
-#~ msgid "Only show tasks due this week (i.e. before Sunday)"
-#~ msgstr "Alleen taken tonen die deze week (uiterlijk a.s. zondag) af moeten"
-
-#~ msgid "&Month"
-#~ msgstr "M&aand"
-
-#~ msgid "Only show tasks due this month"
-#~ msgstr "Alleen taken tonen die deze maand af moeten"
-
-#~ msgid "&Year"
-#~ msgstr "&Jaar"
-
-#~ msgid "Only show tasks due this year"
-#~ msgstr "Alleen taken tonen die dit jaar af moeten"
-
-#~ msgid "Status: %d over due, %d inactive, %d completed"
-#~ msgstr "Status: %d te laat, %d inactief, %d afgerond"
-
-#~ msgid "Task Coach on the iPhone"
-#~ msgstr "Task Coach op de iPhone"
-
-#~ msgid "Over due: the due date is in the past;"
-#~ msgstr "Te laat: de geplande einddatum is in het verleden;"
-
-#~ msgid "Over due tasks are red;"
-#~ msgstr "Taken die te laat zijn, zijn rood;"
-
-#~ msgid ""
-#~ "Mutually exclusive subcategories: a check box indicating\n"
-#~ "whether the subcategories of the category are mutual exclusive. If they "
-#~ "are,\n"
-#~ "items can only belong to one of the subcategories. When filtering, you can "
-#~ "only\n"
-#~ "filter by one of the subcategories at a time."
-#~ msgstr ""
-#~ "Elkaar uitsluitende subcategorieën: een vinkje dat aanduidt of de\n"
-#~ "subcategorieën van de categorie elkaar uitsluiten. Als dat het geval\n"
-#~ "is kunnen items maar tot één van de subcategorieën behoren. Ook\n"
-#~ "kan maar op één van de subcategorieën tegelijkertijd gefilterd worden."
-
-#~ msgid ""
-#~ "%(name)s has built-in SyncML client support. This means you can\n"
-#~ "setup %(name)s to synchronize with the same SyncML server you\n"
-#~ "synchronize Outlook with and have all Outlook tasks and notes in\n"
-#~ "your %(name)s file, as well as %(name)s tasks and notes in Outlook. Or\n"
-#~ "your Pocket PC."
-#~ msgstr ""
-#~ "%(name)s heeft ingebouwde ondersteuning voor SyncML. Dit betekent dat\n"
-#~ "u %(name)s kan instellen om met dezelfde SyncML server te synchroniseren\n"
-#~ "als waar u Outlook mee synchroniseert. Zo komen alle Outlook taken en "
-#~ "notities\n"
-#~ "in uw %(name)s bestand en uw %(name)s taken en notities in Outlook. Of in\n"
-#~ "uw Pocket PC."
-
-#~ msgid ""
-#~ "The conflict detection/resolution system is a work around a \n"
-#~ "Funambol limitation. It should work in most cases, but if many applications\n"
-#~ "synchronize with the same server at the same time, problems may rise."
-#~ msgstr ""
-#~ "Het conflictdetectie en -resolutiesysteem is een omzeiling van een\n"
-#~ "Funambol beperking. Het zou moeten werken in de meeste omstandigheden,\n"
-#~ "maar als veel applicaites met dezelfde server op hetzelfde moment "
-#~ "synchroniseren\n"
-#~ "kunnen er problemen optreden."
-
-#~ msgid ""
-#~ "<h4>%(name)s - %(description)s</h4>\n"
-#~ "<h5>Version %(version)s, Revision %(revision)s, %(date)s</h5>\n"
-#~ "<p>By %(author)s &lt;%(author_email)s&gt;<p>\n"
-#~ "<p><a href=\"%(url)s\" target=\"_blank\">%(url)s</a></p>\n"
-#~ "<p>%(copyright)s</p>\n"
-#~ "<p>%(license_notice_html)s</p>\n"
-#~ msgstr ""
-#~ "<h4>%(name)s - %(description)s</h4>\n"
-#~ "<h5>Versie %(version)s, Revisie %(revision)s, %(date)s</h5>\n"
-#~ "<p>Door %(author)s &lt;%(author_email)s&gt;<p>\n"
-#~ "<p><a href=\"%(url)s\" target=\"_blank\">%(url)s</a></p>\n"
-#~ "<p>%(copyright)s</p>\n"
-#~ "<p>%(license_notice_html)s</p>\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Version %(version)s, Revision %(revision)s, %(date)s\n"
-#~ "\n"
-#~ "By %(author)s <%(author_email)s>\n"
-#~ "\n"
-#~ "%(url)s\n"
-#~ "\n"
-#~ "%(copyright)s\n"
-#~ "%(license)s\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Versie %(version)s, Revisie %(revision)s, %(date)s\n"
-#~ "\n"
-#~ "Door %(author)s <%(author_email)s>\n"
-#~ "\n"
-#~ "%(url)s\n"
-#~ "\n"
-#~ "%(copyright)s\n"
-#~ "%(license)s\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "%(name)s has a mailinglist where you can discuss usage of %(name)s with "
-#~ "fellow users, discuss and request features and complain about bugs. Go to "
-#~ "%(url)s and join today!"
-#~ msgstr ""
-#~ "%(name)s heeft een mailinglijst waar het gebruik van %(name)s met "
-#~ "medegebruikers kan worden besproken (in het Engels), huidige en gewenste "
-#~ "features kunnen worden besproken en over fouten kan worden geklaagd. Bezoek "
-#~ "%(url)s en abonneer u vandaag!"
-
-#~ msgid ""
-#~ "You can create any viewer layout you want by dragging and dropping the tabs. "
-#~ "Unfortunately, due to a limitation of the current version of the graphical "
-#~ "toolkit (wxPython), the layout cannot be saved for reuse in the next session."
-#~ msgstr ""
-#~ "Je kunt de tabs zo indelen als je zelf wilt door ze te verslepen. Helaas kan "
-#~ "de zo gemaakte indeling, door een beperking in de huidige versie van de "
-#~ "gebruikte grafische toolkit (wxPython), niet worden opgeslagen voor gebruik "
-#~ "in een volgende sessie."
-
-#~ msgid "Malformed Thunderbird internal ID: %s. Please file a bug report."
-#~ msgstr "Misvormd Thunderbird intern ID: %s. Dien a.u.b. een foutrapport in."
-
-#~ msgid "Could not find directory for ID %s. Please file a bug report."
-#~ msgstr "Kon geen folder voor ID %s vinden. Dien a.u.b. een foutrapport in."
-
-#~ msgid "New effort"
-#~ msgstr "Nieuwe tijdsbesteding"
-
-#~ msgid "Edit effort"
-#~ msgstr "Tijdsbesteding bewerken"
-
-#~ msgid "Paste into task"
-#~ msgstr "Plakken in taak"
-
-#~ msgid "Mark completed"
-#~ msgstr "Als afgerond markeren"
-
-#~ msgid "For this task"
-#~ msgstr "Voor deze taak"
-
-#~ msgid "For this task including all subtasks"
-#~ msgstr "Voor deze taak inclusief alle subtaken"
-
-#~ msgid "Behavior"
-#~ msgstr "Gedrag"
-
-#~ msgid "Maximum number of recent files to remember"
-#~ msgstr "Maximum aantal te onthouden recente bestanden"
-
-#~ msgid "Click this button to change the color of tasks due today"
-#~ msgstr ""
-#~ "Klik op deze knop om de kleur van taken die vandaag af moeten te veranderen"
-
-#~ msgid "Match case"
-#~ msgstr "Hoofdlettergevoelig"
-
-#~ msgid "Exported %(nrtasks)d tasks to %(filename)s"
-#~ msgstr "%(nrtasks)d taken geëxporteerd in %(filename)s"
-
-#~ msgid "%d tasks due today"
-#~ msgstr "%d taken die vandaag af moeten"
-
-#~ msgid "Paste item(s) from the clipboard into the selected task"
-#~ msgstr "Item(s) van het klembord in de geselecteerde taak plakken"
-
-#~ msgid "Preferences..."
-#~ msgstr "Opties..."
-
-#~ msgid "Select unselected items and unselect selected items"
-#~ msgstr ""
-#~ "Niet-geselecteerde items selecteren en geselecteerde items deselecteren"
-
-#~ msgid "C&ollapse"
-#~ msgstr "Ink&lappen"
-
-#~ msgid "Edit the selected task"
-#~ msgstr "De geselecteerde taak bewerken"
-
-#~ msgid "&Delete task\tCtrl+DEL"
-#~ msgstr "Taak &verwijderen\tCtrl+DEL"
-
-#~ msgid "&New effort..."
-#~ msgstr "&Nieuwe tijdsbesteding..."
-
-#~ msgid "&Completed"
-#~ msgstr "A&fgerond"
-
-#~ msgid "&Inactive"
-#~ msgstr "&Inactief"
-
-#~ msgid "&Active"
-#~ msgstr "&Actief"
-
-#~ msgid ""
-#~ "Show/hide active tasks (tasks with a start date in the past and a due date "
-#~ "in the future)"
-#~ msgstr ""
-#~ "Actieve taken tonen/verbergen (niet-afgeronde taken met een startdatum in "
-#~ "het verleden)"
-
-#~ msgid "&Over due"
-#~ msgstr "&Te laat"
-
-#~ msgid "Over &budget"
-#~ msgstr "Over &budget"
-
-#~ msgid "Show/hide tasks that are over budget"
-#~ msgstr "Taken die over budget zijn tonen/verbergen"
-
-#~ msgid "D&ays left"
-#~ msgstr "&Dagen over"
-
-#~ msgid "Show/hide days left column"
-#~ msgstr "Dagen over kolom tonen/verbergen"
-
-#~ msgid "Co&mpletion date"
-#~ msgstr "&Werkelijke einddatum"
-
-#~ msgid ""
-#~ "Show/hide total budget column (total budget includes budget for subtasks)"
-#~ msgstr ""
-#~ "Totaal budget kolom tonen/verbergen (totaal budget is inclusief budget voor "
-#~ "subtaken)"
-
-#~ msgid "Total b&udget"
-#~ msgstr "Totaal b&udget"
-
-#~ msgid ""
-#~ "Show/hide total time spent column (total time includes time spent on "
-#~ "subtasks)"
-#~ msgstr ""
-#~ "Totaal bestede tijd kolom tonen/verbergen (totaal bestede tijd is inclusief "
-#~ "tijd besteed aan subtaken)"
-
-#~ msgid "T&otal time spent"
-#~ msgstr "Tot&aal bestede tijd"
-
-#~ msgid ""
-#~ "Show/hide total budget left column (total budget left includes budget left "
-#~ "for subtasks)"
-#~ msgstr ""
-#~ "Totaal budget over kolom tonen/verbergen (totaal budget over is inclusief "
-#~ "budget over voor subtaken)"
-
-#~ msgid "Total budget l&eft"
-#~ msgstr "Totaal budget o&ver"
-
-#~ msgid "O&verall priority"
-#~ msgstr "Totale prioriteit"
-
-#~ msgid "&Total fixed fee"
-#~ msgstr "Totaal vast tarief"
-
-#~ msgid "Show/hide total fixed fee column"
-#~ msgstr "Totaal vast tarief kolom tonen/verbergen"
-
-#~ msgid "T&otal revenue"
-#~ msgstr "T&otale opbrengst"
-
-#~ msgid "All date columns"
-#~ msgstr "Alle datum kolommen"
-
-#~ msgid "All budget columns"
-#~ msgstr "Alle budget kolommen"
-
-#~ msgid "All financial columns"
-#~ msgstr "Alle financiële kolommen"
-
-#~ msgid "Sort case sensitive"
-#~ msgstr "Hoofdlettergevoelig sorteren"
-
-#~ msgid "Sort tasks by number of days left"
-#~ msgstr "Taken sorteren op aantal dagen over"
-
-#~ msgid "Sort tasks by total budget"
-#~ msgstr "Taken op totaal budget sorteren"
-
-#~ msgid "Sort tasks by total time spent"
-#~ msgstr "Taken op totaal bestede tijd sorteren"
-
-#~ msgid "Sort tasks by total budget left"
-#~ msgstr "Taken op totaal budget over sorteren"
-
-#~ msgid "Sort tasks by overall priority"
-#~ msgstr "Taken sorteren op totale prioriteit"
-
-#~ msgid "Overall priority"
-#~ msgstr "Totale prioriteit"
-
-#~ msgid "Sort tasks by total fixed fee"
-#~ msgstr "Taken op totaal vast tarief sorteren"
-
-#~ msgid "Total fi&xed fee"
-#~ msgstr "Totaal v&ast tarief"
-
-#~ msgid "Sort tasks by total revenue"
-#~ msgstr "Taken op totale opbrengst sorteren"
-
-#~ msgid "Total re&venue"
-#~ msgstr "Totale o&pbrengst"
-
-#~ msgid "Mail task"
-#~ msgstr "Taak versturen"
-
-#~ msgid "Days left"
-#~ msgstr "Dagen over"
-
-#~ msgid "Total budget"
-#~ msgstr "Totaal budget"
-
-#~ msgid "Total budget left"
-#~ msgstr "Totaal budget over"
-
-#~ msgid "Total fixed fee"
-#~ msgstr "Totaal vast tarief"
-
-#~ msgid "<h3><a name=\"tasks\">Tasks</a></h3>\n"
-#~ msgstr "<h3><a name=\"tasks\">Taken</a></h3>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"abouttasks\">About tasks</a></h4>\n"
-#~ " \n"
-#~ "<p>Tasks are the basic objects that you manipulate. Tasks can\n"
-#~ "represent anything from a simple little thing you have to do, like buying a "
-#~ "gift\n"
-#~ "for your loved one, to a complete project, consisting of different phases, "
-#~ "and\n"
-#~ "numerous activities.</p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"abouttasks\">Over taken</a></h4>\n"
-#~ " \n"
-#~ "<p>Taken zijn de basisobjecten die u manipuleert. Taken kunnen\n"
-#~ "van alles vertegenwoordigen, van een eenvoudig dingetje dat je nog moet "
-#~ "doen, zoals een kadootje kopen\n"
-#~ "voor een vriend, tot een compleet project, met verschillende fasen en\n"
-#~ "tientallen activiteiten.</p>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"taskproperties\">Task \n"
-#~ "properties</a></h4>\n"
-#~ "\n"
-#~ "<p>Tasks have the following properties you can change:\n"
-#~ "<ul>\n"
-#~ "<li>Subject: a single line that summarizes the task.</li>\n"
-#~ "<li>Description: a multi-line description of the task.</li>\n"
-#~ "<li>Due date: the date the task should be finished. This can be 'None' \n"
-#~ "indicating that this task has no fixed due date.</li>\n"
-#~ "<li>Start date: the first date on which the task can be started. The start "
-#~ "date \n"
-#~ "defaults to the date the task is created. It can also be 'None' indicating "
-#~ "that\n"
-#~ "you don't really want to start this task. This can be convenient for e.g. \n"
-#~ "registering sick leave.</li>\n"
-#~ "<li>Completion date: this date is 'None' as long as the task has not been \n"
-#~ "completed. It is set to the current date when you mark the task as "
-#~ "completed. \n"
-#~ "The completion date can also be entered manually.</li>\n"
-#~ "<li>Budget: amount of hours available for the task.</li>\n"
-#~ "<li>Hourly fee: the amount of money earned with the task per hour.</li>\n"
-#~ "<li>Fixed fee: the amount of money earned with the task regardless of the "
-#~ "time\n"
-#~ "spent.</li>\n"
-#~ "</ul></p>\n"
-#~ "\n"
-#~ "<p>The following properties are calculated from the properties above:\n"
-#~ "<ul>\n"
-#~ "<li>Days left: the number of days left until the due date.</li>\n"
-#~ "<li>Total budget: sum of task budget and the budgets of all subtasks of the "
-#~ "\n"
-#~ "task, recursively.</li>\n"
-#~ "<li>Time spent: effort spent on the task.</li>\n"
-#~ "<li>Total time spent: effort spent on the task and all subtasks, \n"
-#~ "recursively.</li>\n"
-#~ "<li>Budget left: task budget minus time spent on the task.</li>\n"
-#~ "<li>Total budget left: total task budget minus total time spent.</li>\n"
-#~ "<li>Total fixed fee: sum of fixed fee of the task and the fixed fees of all "
-#~ "\n"
-#~ "subtasks of the task, recursively.</li>\n"
-#~ "<li>Revenue: hourly fee times hours spent plus fixed fee.</li>\n"
-#~ "<li>Total revenue: sum of task revenue and revenue of all subtasks, \n"
-#~ "recursively.</li>\n"
-#~ "</ul></p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"taskproperties\">Eigenschappen \n"
-#~ "van taken</a></h4>\n"
-#~ "\n"
-#~ "<p>Taken hebben de volgende eigenschappen die bewerkt kunnen worden:\n"
-#~ "<ul>\n"
-#~ "<li>Onderwerp: één regel tekst die de taak samenvat.</li>\n"
-#~ "<li>Beschrijving: een meer-regelige beschrijving van de taak.</li>\n"
-#~ "<li>Geplande einddatum: de datum dat de taak klaar zou moeten zijn. Dit kan "
-#~ "'Geen' zijn \n"
-#~ "om aan te geven dat de taak geen vaste einddatum heeft.</li>\n"
-#~ "<li>Startdatum: de vroegste datum dat aan de taak kan worden begonnen. De "
-#~ "startdatum \n"
-#~ "is de datum waarop de taak wordt gemaakt als die niet wordt aangepast. De "
-#~ "startdatum kan ook 'Geen' zijn\n"
-#~ "om aan te geven dat u eigenlijk de taak niet wilt uitvoeren. Dit kan handig "
-#~ "zijn om bijvoorbeeld \n"
-#~ "ziekte te registreren.</li>\n"
-#~ "<li>Werkelijke einddatum: deze datum is 'Geen' zolang de taak niet is "
-#~ "afgerond. \n"
-#~ "De huidige datum wordt ingevuld als de taak als afgerond wordt gemarkeerd. \n"
-#~ "De werkelijke einddatum kan ook handmatig worden ingevuld.</li>\n"
-#~ "<li>Budget: aantal uren beschikbaar voor de taak.</li>\n"
-#~ "<li>Tarief per uur: opbrengst van de taak per uur.</li>\n"
-#~ "<li>Vaste prijs: opbrengst van de taak, onafhankelijk van de hoeveelheid "
-#~ "bestede tijd.</li>\n"
-#~ "</ul></p>\n"
-#~ "\n"
-#~ "<p>De onderstaande eigenschappen worden berekend uit bovenstaande "
-#~ "eigenschappen:\n"
-#~ "<ul>\n"
-#~ "<li>Dagen over: het aantal dagen over tot de geplande einddatum.</li>\n"
-#~ "<li>Totale budget: som van het budget van de taak en de budgetten van alle "
-#~ "subtaken van de taak, \n"
-#~ "recursief.</li>\n"
-#~ "<li>Bestede tijd: tijd aan de taak besteed.</li>\n"
-#~ "<li>Totale bestede tijd: tijd besteed aan de taak en alle subtaken, \n"
-#~ "recursief.</li>\n"
-#~ "<li>Budget over: budget van de taak minus tijd besteed aan de taak.</li>\n"
-#~ "<li>Totale budget over: totale taak budget minus totale bestede tijd.</li>\n"
-#~ "<li>Totale vaste prijs: som van de vaste prijs van de taak en de vaste "
-#~ "prijzen van alle \n"
-#~ "subtaken van de taak, recursief.</li>\n"
-#~ "<li>Opbrengst: tarief per uur maal bestede tijd plus de vaste prijs.</li>\n"
-#~ "<li>Totale opbrengst: som van de taak opbrengst en de opbrengst van alle "
-#~ "subtaken, \n"
-#~ "recursief.</li>\n"
-#~ "</ul></p>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"taskstates\">Task states</a></h4>\n"
-#~ "\n"
-#~ "<p>Tasks always have exactly one of the following states:\n"
-#~ "<ul>\n"
-#~ "<li>Active: the start date is in the past and the due date in the "
-#~ "future;</li>\n"
-#~ "<li>Inactive: the start date is in the future, or</li>\n"
-#~ "<li>Completed: the task has been completed.</li>\n"
-#~ "</ul></p>\n"
-#~ "\n"
-#~ "<p>In addition, tasks can be referenced as:\n"
-#~ "<ul>\n"
-#~ "<li>Over due: the due date is in the past;</li>\n"
-#~ "<li>Due today: the due date is today;</li>\n"
-#~ "<li>Over budget: no buget left;</li>\n"
-#~ "<li>Under budget: still budget left;</li>\n"
-#~ "<li>No budget: the task has no budget.</li>\n"
-#~ "</ul></p>\n"
-#~ " "
-#~ msgstr ""
-#~ "<h4><a name=\"taskstates\">Toestanden van taken</a></h4>\n"
-#~ "\n"
-#~ "<p>Taken bevinden zich altijd in precies één van de volgende toestanden:\n"
-#~ "<ul>\n"
-#~ "<li>Actief: de startdatum ligt in het verleden en de geplande einddatum in "
-#~ "de toekomst;</li>\n"
-#~ "<li>Inactief: de startdatum ligt in de toekomst, of</li>\n"
-#~ "<li>Afgerond: de taak is klaar.</li>\n"
-#~ "</ul></p>\n"
-#~ "\n"
-#~ "<p>Daarnaast worden taken benoemd als:\n"
-#~ "<ul>\n"
-#~ "<li>Te laat: de geplande einddatum ligt in het verleden;</li>\n"
-#~ "<li>Vandaag af: de geplande einddatum is vandaag;</li>\n"
-#~ "<li>Over budget: er is geen budget over;</li>\n"
-#~ "<li>Onder budget: er is nog budget over;</li>\n"
-#~ "<li>Geen budget: de taak heeft geen budget.</li>\n"
-#~ "</ul></p>\n"
-#~ " "
-
-#~ msgid "<h3><a name=\"effort\">Effort</a></h3>\n"
-#~ msgstr "<h3><a name=\"effort\">Tijdsbesteding</a></h3>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"effortproperties\">Effort\n"
-#~ "properties</a></h4>\n"
-#~ "\n"
-#~ "<p>Effort records have the following properties you can change:\n"
-#~ "<ul>\n"
-#~ "<li>Task: the task the effort belongs to.</li>\n"
-#~ "<li>Start date/time: start date and time of the effort.</li>\n"
-#~ "<li>Stop date/time: stop date and time of the effort. This can be 'None' as "
-#~ "\n"
-#~ "long as you are still working on the task.</li>\n"
-#~ "<li>Description: a multi-line description of the effort.</li>\n"
-#~ "</ul></p>\n"
-#~ "\n"
-#~ "<p>The following properties are calculated from the properties above:\n"
-#~ "<ul>\n"
-#~ "<li>Time spent: how much time you have spent working on the task.</li>\n"
-#~ "<li>Total time spent: sum of time spent on the task and all subtasks, \n"
-#~ "recursively.</li>\n"
-#~ "<li>Revenue: money earned with the time spent.</li>\n"
-#~ "<li>Total revenue: money earned with the total time spent.</li>\n"
-#~ "</ul></p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"effortproperties\">Eigenschappen \n"
-#~ "van tijdsbestedingen</a></h4>\n"
-#~ "\n"
-#~ "<p>Tijdsbestedingen hebben de volgende eigenschappen die u kunt bewerken:\n"
-#~ "<ul>\n"
-#~ "<li>Taak: de taak waarbij de tijdsbesteding hoort.</li>\n"
-#~ "<li>Begindatum/-tijd: startdatum en -tijd van de tijdsbesteding.</li>\n"
-#~ "<li>Einddatum/-tijd: einddatum en -tijd van de tijdsbesteding. Dit is 'Geen' "
-#~ "zolang \n"
-#~ "u nog werkt aan de taak.</li>\n"
-#~ "<li>Beschrijving: een meer-regelige beschrijving van de "
-#~ "tijdsbesteding.</li>\n"
-#~ "</ul></p>\n"
-#~ "\n"
-#~ "<p>Onderstaande eigenschappen worden berekend uit bovenstaande "
-#~ "eigenschappen:\n"
-#~ "<ul>\n"
-#~ "<li>Bestede tijd: hoeveel tijd is besteed aan de taak.</li>\n"
-#~ "<li>Totale bestede tijd: som van tijd besteed aan de taak en alle subtaken, "
-#~ "\n"
-#~ "recursief.</li>\n"
-#~ "<li>Opbrengst: geld verdiend met de bestede tijd.</li>\n"
-#~ "<li>Totale opbrengst: geld verdiend met de totale bestede tijd.</li>\n"
-#~ "</ul></p>\n"
-
-#~ msgid "Edit category"
-#~ msgstr "Bewerk categorie"
-
-#~ msgid "Drag and drop category"
-#~ msgstr "Slepen en neerzetten van een categorie"
-
-#~ msgid "Drag and drop task"
-#~ msgstr "Slepen en neerzetten van een taak"
-
-#~ msgid "Five minutes"
-#~ msgstr "Vijf minuten"
-
-#~ msgid "Ten minutes"
-#~ msgstr "Tien minuten"
-
-#~ msgid "Fifteen minutes"
-#~ msgstr "Vijftien minuten"
-
-#~ msgid "Half an hour"
-#~ msgstr "Een half uur"
-
-#~ msgid "One hour"
-#~ msgstr "Een uur"
-
-#~ msgid "Two hours"
-#~ msgstr "Twee uur"
-
-#~ msgid "Exported %(nrtasks)d items to %(filename)s"
-#~ msgstr "%(nrtasks)d items geëxporteerd naar %(filename)s"
-
-#~ msgid "one task due today"
-#~ msgstr "één taak die vandaag af moet"
-
-#~ msgid "Expand the selected item(s)"
-#~ msgstr "De geselecteerde items uitklappen"
-
-#~ msgid "Collapse the selected items with subitems"
-#~ msgstr "De geselecteerde items met subitems inklappen"
-
-#~ msgid "Show/hide over due tasks (tasks with a due date in the past)"
-#~ msgstr ""
-#~ "Taken die te laat zijn tonen/verbergen (taken met een einddatum in het "
-#~ "verleden)"
-
-#~ msgid "Drag and drop note"
-#~ msgstr "Notitie slepen en neerzetten"
-
-#~ msgid "Edit note"
-#~ msgstr "Notitie bewerken"
-
-#~ msgid "Export effort in iCalendar (*.ics) format"
-#~ msgstr "Tijdsbestedingen in iCalendar (*.ics) formaat exporteren"
-
-#~ msgid "Wrong password. Please try again."
-#~ msgstr "Verkeerde wachtwoord. Probeer a.u.b. opnieuw."
-
-#~ msgid "P&aste into task\tShift+Ctrl+V"
-#~ msgstr "P&lak in taak\tShift+Ctrl+V"
-
-#~ msgid "&Hide tasks that are"
-#~ msgstr "Taken &verbergen die"
-
-#~ msgid "Include sub items"
-#~ msgstr "Inclusief subitems"
-
-#~ msgid "Delete task"
-#~ msgstr "Taak verwijderen"
-
-#~ msgid "Overall categories"
-#~ msgstr "Alle categorieën"
-
-#~ msgid "Maximum number of recurrences"
-#~ msgstr "Maximum aantal herhalingen"
-
-#~ msgid "Use this color:"
-#~ msgstr "Gebruik deze kleur:"
-
-#~ msgid "Color"
-#~ msgstr "Kleur"
-
-#~ msgid "Sort by category"
-#~ msgstr "Op categorie sorteren"
-
-#~ msgid "Sort by overall categories"
-#~ msgstr "Op alle categorieën sorteren"
-
-#~ msgid ""
-#~ "<h4><a name=\"taskcolors\">Task colors</a></h4>\n"
-#~ "\n"
-#~ "<p>The text of tasks is colored according to the following rules:\n"
-#~ "<ul>\n"
-#~ "<li>Over due tasks are red;</li>\n"
-#~ "<li>Tasks due today are orange;</li>\n"
-#~ "<li>Active tasks are black text with a blue icon;</li>\n"
-#~ "<li>Future tasks are gray, and</li>\n"
-#~ "<li>Completed tasks are green.</li>\n"
-#~ "</ul>\n"
-#~ "This all assumes you have not changed the text colors through the "
-#~ "preferences \n"
-#~ "dialog, of course.</p>\n"
-#~ "<p>The background color of tasks is determined by the categories the task\n"
-#~ "belongs to, see the section about \n"
-#~ "<a href=\"#categoryproperties\">category properties</a> below.</p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"taskcolors\">Kleuren van taken</a></h4>\n"
-#~ "\n"
-#~ "<p>De tekst van taken krijgt een kleur volgens de volgende regels:\n"
-#~ "<ul>\n"
-#~ "<li>Taken die te laat zijn zijn rood;</li>\n"
-#~ "<li>Taken die vandaag af moeten zijn oranje;</li>\n"
-#~ "<li>Actieve taken hebben zwarte tekst en een blauw icoon;</li>\n"
-#~ "<li>Toekomstige taken zijn grijs, en</li>\n"
-#~ "<li>Afgeronde taken zijn groen.</li>\n"
-#~ "</ul>\n"
-#~ "Dit alles onder de aanname dat u de tekstkleuren niet via de instellingen "
-#~ "dialoog hebt \n"
-#~ "veranderd, uiteraard.</p>\n"
-#~ "<p>De achtergrondkleur van de taken wordt bepaald door de categorieën "
-#~ "waartoe\n"
-#~ "de taak behoort, zie de sectie over \n"
-#~ "<a href=\"#categoryproperties\">eigenschappen van categorieën</a> "
-#~ "hieronder.</p>\n"
-
-#~ msgid "<h3><a name=\"categories\">Categories</a></h3>\n"
-#~ msgstr "<h3><a name=\"categories\">Categorieën</a></h3>\n"
-
-#~ msgid "Decrease priority\tCtrl+D"
-#~ msgstr "Verlaag prioriteit\tCtrl+D"
-
-#~ msgid ""
-#~ "%(name)s is currently alpha software. Although the %(name)s developers try "
-#~ "hard to prevent them, bugs do happen. So, backing up your work on a regular "
-#~ "basis is strongly advised."
-#~ msgstr ""
-#~ "%(name)s is momenteel alfa software. Hoewel de %(name)s ontwikkelaars hun "
-#~ "best doen fouten te voorkomen, komen ze voor. U wordt dus aangeraden "
-#~ "regelmatig een backup te maken van uw werk."
-
-#~ msgid "Increase priority\tCtrl+I"
-#~ msgstr "Verhoog prioriteit\tCtrl+I"
-
-#~ msgid "Page setup...\tShift+Ctrl+P"
-#~ msgstr "Pagina instellingen...\tShift+Ctrl+P"
-
-#~ msgid "Print...\tCtrl+P"
-#~ msgstr "Afdrukken...\tCtrl+P"
-
-#~ msgid "&Invert selection"
-#~ msgstr "Select&ie omkeren"
-
-#~ msgid "Minimize priority\tShift+Ctrl+D"
-#~ msgstr "Prioriteit minimaliseren\tShift+Ctrl+D"
-
-#~ msgid "Maximize priority\tShift+Ctrl+I"
-#~ msgstr "Prioriteit maximaliseren\tShift+Ctrl+I"
-
-#~ msgid ""
-#~ "Use a tabbed user interface for the main window\n"
-#~ "(Note: the layout you create by dragging and\n"
-#~ "dropping tabs cannot be saved. This is a limitation\n"
-#~ "of the underlying toolkit)."
-#~ msgstr ""
-#~ "Gebruik  de gebruikersinterface met tabs in het hoofdscherm\n"
-#~ "(Merk op: de layout die wordt gemaakt door het slepen en\n"
-#~ "neerzetten van tabs kan niet worden bewaard. Dit is een\n"
-#~ "beperking van de gebruikte software voor de \n"
-#~ "gebruikersinterface)."
-
-#~ msgid ""
-#~ "<h4><a name=\"emailattach\">Attaching an e-mail to a task</a></h4>\n"
-#~ "\n"
-#~ "<p>There are two ways to attach an e-mail to a task; you can\n"
-#~ "\n"
-#~ "<ul>\n"
-#~ "  <li>Drop it on a task either in the task tree or the task list.</li>\n"
-#~ "  <li>Drop it in the attachment pane in the task editor.</li>\n"
-#~ "</ul>\n"
-#~ "\n"
-#~ "</p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"emailattach\">Een e-mail bericht aan een taak toevoegen als "
-#~ "bijlage</a></h4>\n"
-#~ "\n"
-#~ "<p>Er zijn twee manieren om een e-mail bericht als bijlage aan een taak toe "
-#~ "te voegen; u kunt\n"
-#~ "\n"
-#~ "<ul>\n"
-#~ "  <li>Het email-bericht neerzetten op een taak in de takenboom of "
-#~ "takenlijst.</li>\n"
-#~ "  <li>Het email-bericht neerzetten op het bijlagenscherm in de "
-#~ "takeneditor.</li>\n"
-#~ "</ul>\n"
-#~ "\n"
-#~ "</p>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"emailcreate\">Creating a task from an e-mail</a></h4>\n"
-#~ "\n"
-#~ "<p>Dropping an e-mail on an empty part of the task tree or task list\n"
-#~ "creates a new task. Its subject is the subject of the mail, its\n"
-#~ "description is its content. Additionnaly, the mail is automatically\n"
-#~ "attached to the newly created task.</p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"emailcreate\">Een taak maken van een e-mail bericht</a></h4>\n"
-#~ "\n"
-#~ "<p>Het slepen en neerzetten van een e-mail bericht op een leeg stuk van de "
-#~ "takenboom of takenlijst\n"
-#~ "maakt een nieuwe taak. Het onderwerp van de nieuwe taak is gelijk aan het "
-#~ "onderwerp van\n"
-#~ "het e-mail bericht, de beschrijving van de nieuwe taak is de inhoud van het "
-#~ "e-mail bericht.\n"
-#~ "Ook wordt het e-mail bericht automatisch aan de taak toegevoegd als "
-#~ "bijlage.</p>\n"
-
-#~ msgid ""
-#~ "<h3><a name=\"email\">E-mail (Outlook &amp; Thunderbird) "
-#~ "integration</a></h3>\n"
-#~ msgstr ""
-#~ "<h3><a name=\"email\">E-mail (Outlook &amp; Thunderbird) "
-#~ "integratie</a></h3>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"aboutemail\">About e-mail integration</a></h4>\n"
-#~ "\n"
-#~ "<p>%(name)s integrates with both Outlook and Thunderbird mail user\n"
-#~ "agents, through drag and drop. This has some limitations; e-mails are\n"
-#~ "copied in a directory next to the %(name)s file, as .eml files and are\n"
-#~ "later opened using whatever program is associated with this file type\n"
-#~ "on your system. On the other hand, this allows you to open these\n"
-#~ "e-mail attachments on a system which is different from the one you\n"
-#~ "created it first.</p>\n"
-#~ "\n"
-#~ "<p>Due to a Thunderbird limitation, you can't drag and drop several\n"
-#~ "e-mails from Thunderbird. This does not apply to Outlook.</p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"aboutemail\">Over e-mail integratie</a></h4>\n"
-#~ "\n"
-#~ "<p>%(name)s integreert met Outlook en Thunderbird, via het slepen en \n"
-#~ "neerzetten van e-mail berichten. Dit heeft een aantal beperkingen; \n"
-#~ "e-mail berichten worden gekopieerd in een folder naast het %(name)s \n"
-#~ "bestand, als .eml bestanden, en worden later geopend met het programma\n"
-#~ "dat is geassocieerd met het .eml bestandstype op uw systeem. Het voordeel\n"
-#~ "hiervan is dat deze e-mail bijlagen ook op een ander systeem kunnen worden\n"
-#~ "geopend dan waar deze initieel zijn gemaakt.</p>\n"
-#~ "\n"
-#~ "<p>Door een beperking van Thunderbird kunnen niet meerdere e-mail\n"
-#~ "berichten tegelijk worden gesleept vanuit Thunderbird. Dit geldt niet voor\n"
-#~ "Outlook.</p>\n"
-
-#~ msgid "For this note"
-#~ msgstr "Voor deze notitie"
-
-#~ msgid "For this note including all subnotes"
-#~ msgstr "Voor deze notitie inclusief alle subnotities"
-
-#~ msgid "Add note to task"
-#~ msgstr "Notitie aan taak toevoegen"
-
-#~ msgid "C&omposite"
-#~ msgstr "&Samengesteld"
-
-#~ msgid "Add a note to the selected task(s)"
-#~ msgstr "Een notitie aan de geselecteerde taken toevoegen"
-
-#~ msgid "Add note to category"
-#~ msgstr "Notitie aan categorie toevoegen"
-
-#~ msgid "Edit attachment"
-#~ msgstr "Bewerk bijlage"
-
-#~ msgid "Add note to attachment"
-#~ msgstr "Notitie aan bijlage toevoegen"
-
-#~ msgid "Export as VCalendar..."
-#~ msgstr "Exporteren als VCalendar..."
-
-#~ msgid "New task &from template"
-#~ msgstr "Nieuwe taak &op basis van een template"
-
-#~ msgid "Add template"
-#~ msgstr "Template toevoegen"
-
-#~ msgid "Add a new template from a template file\n"
-#~ msgstr "Een nieuwe template toevoegen uit een template bestand\n"
-
-#~ msgid "Export as &VCalendar..."
-#~ msgstr "Exporteren als &VCalendar bestand..."
-
-#~ msgid "Export the current view in VCalendar format"
-#~ msgstr "Het actieve tabblad in VCalendar formaat exporteren"
-
-#~ msgid "Add a note to the selected attachment(s)"
-#~ msgstr "Een notitie toevoegen aan de geselecteerde bijlage(n)"
-
-#~ msgid "SyncML preferences..."
-#~ msgstr "SyncML voorkeuren..."
-
-#~ msgid "New task with selected categories..."
-#~ msgstr "Nieuwe taak met geselecteerde categorieën..."
-
-#~ msgid "Mail note"
-#~ msgstr "Notitie e-mailen"
-
-#~ msgid ""
-#~ "Show/hide overall priority column (overall priority is the maximum priority "
-#~ "of a task and all its subtasks"
-#~ msgstr ""
-#~ "Kolom met totale prioriteit tonen/verbergen (de totale prioriteit is de "
-#~ "maximumprioriteit van een taak en al zijn subtaken)"
-
-#~ msgid "<h3><a name=\"syncml\">SyncML support</a></h3>\n"
-#~ msgstr "<h3><a name=\"syncml\">SyncML ondersteuning</a></h3>\n"
-
-#~ msgid "Total &revenue"
-#~ msgstr "Totale opb&rengst"
-
-#~ msgid "<h3><a name=\"templates\">Task templates</a></h3>\n"
-#~ msgstr "<h3><a name=\"templates\">Taak templates</a></h3>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"abouttemplates\">About templates</a></h4>\n"
-#~ "<p>Templates are blueprints for new tasks. Right now, the only task "
-#~ "properties that\n"
-#~ "can be \"parameterized\" are the dates. When instantiating a template, the "
-#~ "created\n"
-#~ "task has its dates replaced with dates relative to the current date.</p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"abouttemplates\">Over templates</a></h4>\n"
-#~ "<p>Templates zijn blauwdrukken voor nieuwe taken. Op dit moment kunnen "
-#~ "alleen datums \n"
-#~ "worden \"geparameteriseerd\". Als een nieuwe taak wordt gemaakt op basis van "
-#~ "een template,\n"
-#~ "worden de datums van de nieuwe taak ingevuld met datums relatief aan de "
-#~ "huidige datum.</p>\n"
-
-#~ msgid ""
-#~ "This is an invalid regular expression.\n"
-#~ "Defaulting to substring search."
-#~ msgstr ""
-#~ "Dit is een ongeldige reguliere expressie.\n"
-#~ "Terugvallen op substring zoeken."
-
-#~ msgid "Purge deleted items"
-#~ msgstr "Verwijderde items definitief verwijderen"
-
-#~ msgid "Export &selection as HTML..."
-#~ msgstr "&Selectie als HTML exporteren..."
-
-#~ msgid ""
-#~ "<h3>Table of contents</h3>\n"
-#~ "<ul>\n"
-#~ "<li><a href=\"#tasks\">Tasks</a>\n"
-#~ "    <ul>\n"
-#~ "        <li><a href=\"#abouttasks\">About tasks</a></li>\n"
-#~ "        <li><a href=\"#taskproperties\">Task properties</a></li>\n"
-#~ "        <li><a href=\"#taskstates\">Task states</a></li>\n"
-#~ "        <li><a href=\"#taskcolors\">Task colors</a></li>\n"
-#~ "    </ul>\n"
-#~ "</li>\n"
-#~ "<li><a href=\"#effort\">Effort</a>\n"
-#~ "    <ul>\n"
-#~ "        <li><a href=\"#abouteffort\">About effort</a></li>\n"
-#~ "        <li><a href=\"#effortproperties\">Effort properties</a></li>\n"
-#~ "    </ul>\n"
-#~ "</li>\n"
-#~ "<li><a href=\"#categories\">Categories</a>\n"
-#~ "    <ul>\n"
-#~ "        <li><a href=\"#aboutcategories\">About categories</a></li>\n"
-#~ "        <li><a href=\"#categoryproperties\">Category properties</a></li>\n"
-#~ "    </ul>\n"
-#~ "</li>\n"
-#~ "<li><a href=\"#email\">E-mail (Outlook &amp; Thunderbird) integration</a>\n"
-#~ "  <ul>\n"
-#~ "    <li><a href=\"#aboutemail\">About e-mail integration</a></li>\n"
-#~ "    <li><a href=\"#emailattach\">Attaching an e-mail to a task</a></li>\n"
-#~ "    <li><a href=\"#emailcreate\">Creating a task from an e-mail</a></li>\n"
-#~ "  </ul>\n"
-#~ "</li>\n"
-#~ "<li><a href=\"#syncml\">SyncML support</a>\n"
-#~ "  <ul>\n"
-#~ "    <li><a href=\"#aboutsyncml\">What is SyncML</a></li>\n"
-#~ "    <li><a href=\"#syncmlsetup\">Setup</a></li>\n"
-#~ "    <li><a href=\"#syncmllimits\">Limitations</a></li>\n"
-#~ "    <li><a href=\"#syncmltrouble\">Troubleshooting</a></li>\n"
-#~ "    <li><a href=\"#syncmlpurge\">Purging deleted items</a></li>\n"
-#~ "  </ul>\n"
-#~ "</li>\n"
-#~ "<li><a href=\"#templates\">Task templates</a>\n"
-#~ "  <ul>\n"
-#~ "    <li><a href=\"#abouttemplates\">About templates</a></li>\n"
-#~ "    <li><a href=\"#usingtemplates\">Using templates</a></li>\n"
-#~ "  </ul>\n"
-#~ "</li>\n"
-#~ "</ul>\n"
-#~ msgstr ""
-#~ "<h3>Inhoudsopgave</h3>\n"
-#~ "<ul>\n"
-#~ "<li><a href=\"#tasks\">Taken</a>\n"
-#~ "    <ul>\n"
-#~ "        <li><a href=\"#abouttasks\">Over taken</a></li>\n"
-#~ "        <li><a href=\"#taskproperties\">Eigenschappen van taken</a></li>\n"
-#~ "        <li><a href=\"#taskstates\">Toestanden van taken</a></li>\n"
-#~ "        <li><a href=\"#taskcolors\">Kleuren van taken</a></li>\n"
-#~ "    </ul>\n"
-#~ "</li>\n"
-#~ "<li><a href=\"#effort\">Tijdsbesteding</a>\n"
-#~ "    <ul>\n"
-#~ "        <li><a href=\"#abouteffort\">Over tijdsbestedingen</a></li>\n"
-#~ "        <li><a href=\"#effortproperties\">Eigenschappen van "
-#~ "tijdsbestedingen</a></li>\n"
-#~ "    </ul>\n"
-#~ "</li>\n"
-#~ "<li><a href=\"#categories\">Categorie&euml;n</a>\n"
-#~ "    <ul>\n"
-#~ "        <li><a href=\"#aboutcategories\">Over categorie&euml;n</a></li>\n"
-#~ "        <li><a href=\"#categoryproperties\">Eigenschappen van "
-#~ "categorie&euml;n</a></li>\n"
-#~ "    </ul>\n"
-#~ "</li>\n"
-#~ "<li><a href=\"#email\">E-mail (Outlook &amp; Thunderbird) integratie</a>\n"
-#~ "  <ul>\n"
-#~ "    <li><a href=\"#aboutemail\">Over e-mail integratie</a></li>\n"
-#~ "    <li><a href=\"#emailattach\">Een e-mail bericht aan een taak toevoegen "
-#~ "als bijlage</a></li>\n"
-#~ "    <li><a href=\"#emailcreate\">Een taak maken van een e-mail "
-#~ "bericht</a></li>\n"
-#~ "  </ul>\n"
-#~ "</li>\n"
-#~ "<li><a href=\"#syncml\">SyncML ondersteuning</a>\n"
-#~ "  <ul>\n"
-#~ "    <li><a href=\"#aboutsyncml\">Wat is SyncML</a></li>\n"
-#~ "    <li><a href=\"#syncmlsetup\">Voorbereiding</a></li>\n"
-#~ "    <li><a href=\"#syncmllimits\">Beperkingen</a></li>\n"
-#~ "    <li><a href=\"#syncmltrouble\">Probleemoplossing</a></li>\n"
-#~ "    <li><a href=\"#syncmlpurge\">Verwijderde items definitief "
-#~ "verwijderen</a></li>\n"
-#~ "  </ul>\n"
-#~ "</li>\n"
-#~ "<li><a href=\"#templates\">Taak templates</a>\n"
-#~ "  <ul>\n"
-#~ "    <li><a href=\"#abouttemplates\">Over templates</a></li>\n"
-#~ "    <li><a href=\"#usingtemplates\">Templates gebruiken</a></li>\n"
-#~ "  </ul>\n"
-#~ "</li>\n"
-#~ "</ul>\n"
-
-#~ msgid "VCalendar files (*.vcal)|*.vcal|All files (*.*)|*"
-#~ msgstr "VCalendar bestanden (*.vcal)|*.vcal|Alle bestanden (*.*)|*"
-
-#~ msgid "E&xpand"
-#~ msgstr "&Uitklappen"
-
-#~ msgid "Add a note to the selected category(ies)"
-#~ msgstr "Een notitie aan de geselecteerde categorieën toevoegen"
-
-#~ msgid "New note with selected categories..."
-#~ msgstr "Nieuwe notitie met geselecteerde categorieën..."
-
-#~ msgid "Sort attachments by overall categories"
-#~ msgstr "Bijlagen op alle categorieën sorteren"
-
-#~ msgid "Sort notes by overall categories"
-#~ msgstr "Notities op alle categorieën sorteren"
-
-#~ msgid "&Overall categories"
-#~ msgstr "&Alle categorieën"
-
-#~ msgid "Show/hide overall categories column"
-#~ msgstr "Kolom met alle categorieën tonen/verbergen"
-
-#~ msgid ""
-#~ "<h4><a name=\"abouteffort\">About effort</a></h4>\n"
-#~ "\n"
-#~ "<p>Whenever you spent time on tasks, you can record the amount of time\n"
-#~ "spent by tracking effort. Select a task and invoke 'Start tracking effort' "
-#~ "in\n"
-#~ "the Effort menu or the context menu or via the 'Start tracking effort' "
-#~ "toolbar \n"
-#~ "button.</p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"abouteffort\">Over tijdsbestedingen</a></h4><p>Als u tijd "
-#~ "besteedt aan taken kunt u de hoeveelheid bestede tijd bijhouden. Selecteer "
-#~ "een taak en vervolgens 'Tijdsbesteding starten' in het Tijdsbesteding menu "
-#~ "of in het context menu of via de 'Tijdsbesteding starten' werkbalk "
-#~ "knop.</p>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"categoryproperties\">Category \n"
-#~ "properties</a></h4>\n"
-#~ "\n"
-#~ "<p>Categories have a subject, a description, and a color. The color is used\n"
-#~ "to render the background of the category and the background of tasks that\n"
-#~ "belong to that category. If a category has no color of its own, but it has\n"
-#~ "a parent category with a color, the parent's color will be used.  \n"
-#~ "If a task belongs to multiple categories that each have a color associated "
-#~ "with\n"
-#~ "them, a mixture of the colors will be used to render the background of that\n"
-#~ "task.</p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"categoryproperties\">Eigenschappen van "
-#~ "categorieën</a></h4><p>Categorieën hebben een onderwerp, omschrijving en een "
-#~ "kleur. De kleur wordt gebruikt voor de achtergrondkleur van de categorie en "
-#~ "voor de achtergrondkleur van taken die tot die categorie behoren. Als een "
-#~ "categorie geen eigen kleur heeft, maar wel een oudercategorie met een kleur, "
-#~ "wordt de kleur van de oudercategorie gebruikt. Als een taak tot meerdere "
-#~ "categorieën behoort, die elk een eigen kleur hebben, wordt een mix van de "
-#~ "kleuren van die categorieën gebruikt als achtergrondkleur van de taak.</p>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"syncmllimits\">Limitations</a></h4>\n"
-#~ "\n"
-#~ "<p>Some limitations are due to the fact that, the underlying data type being "
-#~ "vcalendar, some TaskCoach features cannot be presented to the server.\n"
-#~ "\n"
-#~ "  <ul>\n"
-#~ "    <li>Task and category hierarchy are lost to the server.</li>\n"
-#~ "    <li>Recurrence and reminders are not supported yet.</li>\n"
-#~ "    <li>Note categories are lost to the server.</li>\n"
-#~ "    <li>The conflict detection/resolution system is a work around a "
-#~ "Funambol\n"
-#~ "        limitation. It should work in most cases, but if many applications\n"
-#~ "        synchronize with the same server at the same time, problems may "
-#~ "rise.</li>\n"
-#~ "    <li>Probably some others...</li>\n"
-#~ "  </ul>\n"
-#~ "</p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"syncmllimits\">Beperkingen</a></h4>\n"
-#~ "<p>Er zijn enkele beperkingen aan wat gesynchroniseerd kan worden omdat de "
-#~ "informatie met behulp van het VCalendar formaat wordt uitgewisseld. Niet "
-#~ "alle Task Coach data kan daarmee worden overgestuurd naar de server: <ul> "
-#~ "<li>Taken en categorie hiërarchieën worden niet naar de server "
-#~ "overgestuurd.</li> <li>Herhalende taken en herinneringen worden nog niet "
-#~ "ondersteund.</li> <li>De categorieën van notities worden niet naar de server "
-#~ "overgestuurd.</li> <li>Het conflictendetectie- en oplossingssysteem probeert "
-#~ "een beperking van Funambol te omzeilen. Dat zou moeten lukken in de meeste "
-#~ "gevallen, maar als meerdere applicaties met dezelfde server op hetzelfde "
-#~ "moment synchroniseren zouden er problemen kunnen optreden.</li> "
-#~ "<li>Waarschijnlijk nog meer...</li> </ul></p>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"syncmlsetup\">Setup</a></h4>\n"
-#~ "\n"
-#~ "<p>To setup SyncML, edit the SyncML preferences in Edit/SyncML preferences.\n"
-#~ "Fill in the synchronization URL, your ID on the server and choose which\n"
-#~ "items to synchronize (tasks and/or notes). The URL depends on the server\n"
-#~ "you choose; some examples are:\n"
-#~ "\n"
-#~ "<ul>\n"
-#~ "  <li><a href=\"http://www.scheduleworld.com/\">ScheduleWorld</a>: "
-#~ "http://sync.scheduleworld.com/funambol/ds</li>\n"
-#~ "  <li><a href=\"http://memotoo.com\">MemoToo</a>: "
-#~ "http://sync.memotoo.com/syncml</li>\n"
-#~ "</ul>\n"
-#~ "\n"
-#~ "The database names are pretty standard; the default values should work.</p>\n"
-#~ "\n"
-#~ "<p>Each task file has its own client ID, so that two different task files\n"
-#~ "will de considered different \"devices\" by the server.</p>"
-#~ msgstr ""
-#~ "<h4><a name=\"syncmlsetup\">Voorbereiding</a></h4><p>Om SyncML te gebruiken "
-#~ "dient u de SyncML voorkeuren in te vullen via het \"Bewerken/SyncML "
-#~ "voorkeuren\" menu. Vul de synchronisatie URL in, uw ID op de server en kies "
-#~ "welke items moeten worden gesynchroniseerd (taken en/of notities). De URL "
-#~ "hangt af van de server die u gebruikt. Enkele voorbeelden zijn:<ul> <li><a "
-#~ "href=\"http://www.scheduleworld.com/\">ScheduleWorld</a>: "
-#~ "http://sync.scheduleworld.com/funambol/ds</li> <li><a "
-#~ "href=\"http://memotoo.com\">MemoToo</a>: "
-#~ "http://sync.memotoo.com/syncml</li></ul>De database namen zijn "
-#~ "gestandaardiseerd; de default waarden zouden moeten werken.</p><p>Elk "
-#~ "takenbestand heeft zijn eigen client ID, waardoor twee verschillende "
-#~ "takenbestanden door de server als twee verschillende \"devices\" worden "
-#~ "gezien.</p>"
-
-#~ msgid ""
-#~ "<h4><a name=\"aboutsyncml\">What is SyncML</a></h4>\n"
-#~ "\n"
-#~ "<p>This feature is optional and off by default. In order to turn it on,\n"
-#~ "go to the preferences dialog and check it in the Features page.</p>\n"
-#~ "\n"
-#~ "<p>SyncML  is   an  XML  protocol  designed   to  synchronize  several\n"
-#~ "applications  with  a  server.  A  popular open-source  server  is  <a\n"
-#~ "href=\"http://www.funambol.com/\">Funambol</a>.  Synchronization clients\n"
-#~ "are available  for many devices and applications  (Outlook, Pocket PC,\n"
-#~ "iPod, iPhone,  Evolution, etc...),  as well as  so-called \"connectors\"\n"
-#~ "which allow the server  to synchronize with Exchange, Google Calendar,\n"
-#~ "etc.</p>\n"
-#~ "\n"
-#~ "<p>%(name)s has built-in SyncML client support. This means you can\n"
-#~ "setup %(name)s to synchronize with the same SyncML server you\n"
-#~ "synchronize with with Outlook and have all Outlook tasks and notes in\n"
-#~ "your %(name)s file, as well as %(name)s tasks and notes in Outlook. Or\n"
-#~ "your Pocket PC.</p>\n"
-#~ "\n"
-#~ msgstr ""
-#~ "<h4><a name=\"aboutsyncml\">Wat is SyncML</a></h4><p>Deze feature is "
-#~ "optioneel en is standaard uitgeschakeld. Ga naar de Functies pagina in de "
-#~ "Opties dialoog om deze feature aan te zetten.</p><p>SyncML is een XML "
-#~ "protocol dat is ontworpen om meerdere applicaties met een server te laten "
-#~ "synchroniseren. Een populaire open source server is "
-#~ "<ahref=\"http://www.funambol.com/\">Funambol</a>. Synchronisatie clients "
-#~ "zijn beschikbaar voor vele apparaten en applicaties (Outlook, Pocket PC, "
-#~ "iPod, iPhone, Evolution, etc...), evenals zogenaamde \"connectoren\" die het "
-#~ "mogelijk maken de server te synchroniseren met Exchange, Google Calendar, "
-#~ "etc.</p><p>%(name)s heeft ingebouwde SyncML client ondersteuning. Dit "
-#~ "betekent dat %(name)s kan worden ingesteld om te synchroniseren met dezelfde "
-#~ "SyncML server die u gebruikt voor Outlook zodat alle Outlook taken en "
-#~ "notities in %(name)s beschikbaar zijn als ook %(name)s taken en notities in "
-#~ "Outlook. Of in uw Pocket PC.</p>\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"usingtemplates\">Using templates</a></h4>\n"
-#~ "<p>One can create a template by selecting a task (only one) and click on "
-#~ "the\n"
-#~ "\"Save task as template\" item in the File menu. All subtasks, notes and "
-#~ "attachments\n"
-#~ "are part of the template. Only categories are not saved.</p>\n"
-#~ "\n"
-#~ "<p>You can also create a new template from a pre-made template file "
-#~ "(.tsktmpl);\n"
-#~ "just select \"Add template\" in the File menu and select the file. Template "
-#~ "files\n"
-#~ "are stored in a subdirectory of the directory where %(name)s.ini is.</p>\n"
-#~ "\n"
-#~ "<p>In order to instantiate a task template, use the \"New task from "
-#~ "template\" menu\n"
-#~ "in the Task menu, or the equivalent toolbar button. When the task is "
-#~ "created, the\n"
-#~ "due, start and completion dates, if applicable, are reevaluated relatively "
-#~ "to the\n"
-#~ "current date. That means that if you create a template from a task starting "
-#~ "today\n"
-#~ "and due tomorrow, every time the template is instantiated, the start date "
-#~ "will be\n"
-#~ "replaced by the current date and the due date by the current date plus one "
-#~ "day.</p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"usingtemplates\">Templates gebruiken</a></h4><p>Men kan een "
-#~ "template maken door (precies) één taak te selecteren en op het \"Taak als "
-#~ "template opslaan\" menu item te klikken in het Bestandsmenu. Alle subtaken, "
-#~ "notities en bijlagen worden onderdeel van de template. Alleen categorieën "
-#~ "worden niet opgeslagen in de template.</p><p>Templates kunnen ook worden "
-#~ "ingeladen uit bestaande templatebestanden (.tsktmpl); selecteer \"Template "
-#~ "toevoegen\" in het menu Bestanden en selecteer het template bestand. "
-#~ "Template bestanden worden opgeslagen in een subfolder van de folder waar "
-#~ "%(name)s.ini wordt opgeslagen.</p><p>Gebruik het \"Nieuwe taak op basis van "
-#~ "template\" menu in het Taken menu, of de equivalente toolbarknop om een taak "
-#~ "op basis van een template te maken. Bij de nieuwe taak worden de einddatum, "
-#~ "startdatum en gereeddatum, indien van toepassing, ingevuld relatief ten "
-#~ "opzichte van de huidige datum. Dat betekent dat als u een template maakt op "
-#~ "basis van een taak die vandaag start en morgen af moet, bij elke taak die op "
-#~ "basis van dit template wordt gemaakt de startdatum de dan huidige datum "
-#~ "krijgt en de einddatum de datum van (dan) morgen krijgt.</p>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"syncmltrouble\">Troubleshooting</a></h4>\n"
-#~ "\n"
-#~ "<p>The SyncML menu items are only present if your platform is supported.\n"
-#~ "Currently supported platforms are:\n"
-#~ "\n"
-#~ "  <ul>\n"
-#~ "    <li>Windows, 32 bits (see below)</li>\n"
-#~ "    <li>Linux, 32 bits</li>\n"
-#~ "    <li>Mac OS 10.3 and later, both Intel and PPC</li>\n"
-#~ "  </ul>\n"
-#~ "\n"
-#~ "You may experience problems under Windows if you don't have the Microsoft\n"
-#~ "Visual 8 runtime installed. You can download it on the\n"
-#~ "<a target=\"_blank\" href=\"%s\">\n"
-#~ "Microsoft download site</a>.\n"
-#~ "</p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"syncmltrouble\">Probleemoplossing</a></h4>\n"
-#~ "<p>De SyncML menu items zijn alleen aanwezig als uw platform wordt "
-#~ "ondersteund. De op dit moment ondersteunde platforms zijn: <ul> <li>Windows, "
-#~ "32 bits (zie hieronder)</li> <li>Linux, 32 bits</li> <li>Mac OS 10.3 en "
-#~ "nieuwer, zowel Intel als PPC</li> </ul>U kunt problemen ondervinden als u de "
-#~ "Microsoft Visual 8 runtime niet heeft geïnstalleerd. U kunt deze downloaden "
-#~ "vanaf de <a target=\"_blank\" href=\"%s\">Microsoft download site</a>.</p>\n"
-
-#~ msgid ""
-#~ "<h4><a name=\"syncmlpurge\">Purging deleted items</a></h4>\n"
-#~ "\n"
-#~ "<p>When SyncML is enabled, deleting a task or a note does not actually\n"
-#~ "delete it, but rather mark it as deleted. The deleted task or note is\n"
-#~ "actually removed from the task or note list on the next\n"
-#~ "synchronization. For this reason, if you happen to use the SyncML\n"
-#~ "feature, then disable it without having done a sync, there may be some\n"
-#~ "deleted notes or tasks in your task file. This is not a problem, but\n"
-#~ "takes a little more disk space.</p>\n"
-#~ "\n"
-#~ "<p>In this case, the \"Purge deleted items\" menu item in the File menu can\n"
-#~ "be used to actually delete these tasks. It is only enabled when you\n"
-#~ "need it, that is when there are items to purge. Be aware that after doing "
-#~ "this,\n"
-#~ "if you re-enable SyncML and make a sync with the same server you used\n"
-#~ "previously, all those items will reappear, as the server\n"
-#~ "doesn't know they're deleted.</p>\n"
-#~ "\n"
-#~ "<p>In addition, prior to version 0.71.4 of %(name)s, these deleted\n"
-#~ "tasks and notes were kept around even with the SyncML feature\n"
-#~ "disabled, so tasks and notes were never actually deleted. the \"Purge\n"
-#~ "deleted items\" menu item can be used when upgrading to 0.71.4 to clear\n"
-#~ "all these unwanted items.</p>\n"
-#~ msgstr ""
-#~ "<h4><a name=\"syncmlpurge\">Verwijderde items definitief "
-#~ "verwijderen</a></h4><p>Als SyncML geactiveerd is zal het verwijderen van een "
-#~ "taak of notitie niet alszodanig verwijderd worden, maar eigenlijk eerst "
-#~ "worden gemarkeerd om verwijderd te worden. De verwijderde taak of notitie "
-#~ "wordt pas echt verwijderd van de taak- of notitielijst tijdens de volgende "
-#~ "synchronisatie. Als gebruik gemaakt wordt van SyncML, en wanneer het weer "
-#~ "wordt gedeactiveerd zonder eerst een synchronisatie te hebben uitgevoerd, "
-#~ "dan kunnen er voor verwijdering gemarkeerde taken of notities achterblijven "
-#~ "in het takenbestand. Dit is geen probleem, maar kost slechts wat "
-#~ "diskruimte.</p><p>In dit geval kan gebruik gemaakt worden van de "
-#~ "\"Verwijderde items definitief verwijderen\" optie in het Bestand menu. Het "
-#~ "is alleen beschikbaar indien nodig, dat wil zeggen als er definitief te "
-#~ "verwijderen items aanwezig zijn. Let er wel op, dat als u na deze aktie "
-#~ "SyncML weer activeert en synchroniseert met dezelfde server als voorheen, "
-#~ "deze items weer zullen verschijnen, omdat de server niet weet dat ze "
-#~ "verwijderd zijn.</p><p>Overigens werd in %(name)s versies lager dan 0.71.4 "
-#~ "de verwijderde taken en notities bewaard zelfs als de SyncML uitbreiding "
-#~ "niet geactiveerd was, zodat taken en notities nooit definitief verwijderd "
-#~ "konden worden. De optie \"Verwijderde items definitief verwijderen\" kan "
-#~ "gebruikt worden bij een upgrade naar 0.71.4 om deze ongewenste items te "
-#~ "schonen.</p>\n"
-
-#~ msgid ""
-#~ "Cannot add template %s\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Kan template %s niet toevoegen\n"
-#~ "%s"
-
-#~ msgid "Shift-Ctrl-INSERT"
-#~ msgstr "Shift-Ctrl-INSERT"
-
-#~ msgid "Ctrl-INSERT"
-#~ msgstr "Ctrl-INSERT"
-
-#~ msgid "Ctrl-DELETE"
-#~ msgstr "Ctrl-DELETE"
-
-#~ msgid "&Clear all filters\tShift-Ctrl-F"
-#~ msgstr "&Alle filters uitzetten\tShift-Ctrl-F"
-
-#~ msgid "Import tasks from a CSV file"
-#~ msgstr "Importeer taken uit een CSV bestand"
-
-#~ msgid "Stop tracking or resume tracking"
-#~ msgstr "Tijdsbesteding stoppen of herstarten"
-
-#~ msgid "First line describe fields"
-#~ msgstr "Eerste regel beschrijft de velden"
-
-#~ msgid "Shift-Ctrl-F"
-#~ msgstr "Shift-Ctrl-F"
-
-#~ msgid ""
-#~ "You can drag and drop viewers to create almost any user interface \n"
-#~ "layout you want. When you start dragging a viewer, drop hints will appear "
-#~ "to\n"
-#~ "show where you can drop the viewer. Viewers can also be dropped onto "
-#~ "eachother\n"
-#~ "to create notebooks."
-#~ msgstr ""
-#~ "U kunt tabbladen slepen en neerzetten om zo bijna elke layout van de "
-#~ "gebruikersinterface te creëren die u wilt. Als u begint met het slepen van "
-#~ "een tabblad, verschijnen er hints om aan te geven waar u het tabblad kunt "
-#~ "plaatsen. Tabbladen kunnen ook op elkaar worden geplaatst om zo notebooks te "
-#~ "maken."
-
-#~ msgid "Choose CSV file"
-#~ msgstr "Kies CSV bestand"
-
-#~ msgid "CSV import"
-#~ msgstr "CSV import"
-
-#~ msgid "&Tips..."
-#~ msgstr "&Tips..."
-
-#~ msgid "&Help contents...\tCtrl+H"
-#~ msgstr "&Helpinhoud...\tCtrl+H"
-
-#~ msgid "&Help contents...\tCtrl+?"
-#~ msgstr "&Helpinhoud...\tCtrl+?"
-
-#~ msgid "&About %s..."
-#~ msgstr "&Over %s..."
-
-#~ msgid "&Frequently asked questions..."
-#~ msgstr "&Vaak gestelde vragen..."
-
-#~ msgid "&License..."
-#~ msgstr "&Licentie..."
-
-#~ msgid "Only show tasks due this wo&rk week"
-#~ msgstr "Toon alleen taken die deze we&rkweek af moeten"
-
-#~ msgid "Only show tasks due this work week and hide later ones"
-#~ msgstr ""
-#~ "Toon alleen taken die deze werkweek af moeten en verberg latere taken"
-
-#~ msgid "Only show tasks completed this wo&rk week"
-#~ msgstr "Toon alleen taken die deze we&rkweek zijn afgerond"
-
-#~ msgid "Only show tasks completed this work week and hide older ones"
-#~ msgstr ""
-#~ "Toon alleen taken die deze werkweek zijn afgerond en verberg oudere taken"
-
-#~ msgid "Only show tasks starting this wo&rk week"
-#~ msgstr "Toon alleen taken die deze we&rkweek starten"
-
-#~ msgid "Only show tasks starting this work week and hide later ones"
-#~ msgstr "Toon alleen taken die deze werkweek starten en verberg latere taken"
-
-#~ msgid "Check for update..."
-#~ msgstr "Controleer op nieuwe versie..."
-
-#~ msgid "Click this button to change the color of overdue tasks"
-#~ msgstr ""
-#~ "Klik op deze knop om de klaar van taken die te laat zijn te veranderen"
-
-#~ msgid "Open template"
-#~ msgstr "Open template"
-
-#~ msgid "Dates behaviour"
-#~ msgstr "Datumgedrag"
+#~ msgid "Untitled e-mail"
+#~ msgstr "E-mail zonder titel"
 
 #~ msgid "Dates behavior"
 #~ msgstr "Datumgedrag"
-
-#~ msgid "Edit \"%s\" start dates and time"
-#~ msgstr "Bewerk \"%s\" start- en einddatums"
