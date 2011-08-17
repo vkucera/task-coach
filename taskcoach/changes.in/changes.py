@@ -43,6 +43,8 @@ the help contents for more information.''', 'http://uservoice.com/a/6Z54H',
 dialog, set the date and time to the current date and time.''', 
         'http://uservoice.com/a/iFkds'),
         Feature('''When editing templates, one can now also edit subtasks.'''),
+        Feature('''Remember the last visited path when choosing a file
+attachment.''', 'http://uservoice.com/a/jz5dE'),
         ]
     ),
 
