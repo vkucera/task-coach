@@ -27,10 +27,14 @@ class TodoTxtWriter(object):
         self.__maxDateTime = date.DateTime()
         
     def write(self, viewer, settings, selectionOnly, **kwargs):
+        tasks = viewer.visibleItems()
+        if selectionOnly:
+            tasks = [task for task in tasks if viewer.isselected(task)]
+        return self.writeTasks(tasks)
+    
+    def writeTasks(self, tasks):
         count = 0
-        for task in viewer.visibleItems():
-            if selectionOnly and not viewer.isselected(task):
-                continue
+        for task in tasks:
             count += 1
             self.__fd.write(self.priority(task.priority()) + \
                             self.completionDate(task.completionDateTime()) + \
