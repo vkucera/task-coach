@@ -35,23 +35,22 @@ class iCalendarWriter(object):
         self.__fd = fd
 
     def write(self, viewer, settings, selectionOnly=False): # pylint: disable-msg=W0613
-        self.__fd.write('BEGIN:VCALENDAR\r\n')
-        self._writeMetaData()
-        
-        tree = viewer.isTreeViewer()
+        items = viewer.visibleItems()
         if selectionOnly:
             selection = viewer.curselection()
-            if tree:
+            if viewer.isTreeViewer():
                 selection = extendedWithAncestors(selection)
-
+            items = [item for item in items if item in selection]
+        return self.writeItems(items)
+    
+    def writeItems(self, items):
+        self.__fd.write('BEGIN:VCALENDAR\r\n')
+        self._writeMetaData()
         count = 0
-        for item in viewer.visibleItems():
-            if selectionOnly and item not in selection:
-                continue
+        for item in items:
             transform = ical.VCalFromTask if isinstance(item, task.Task) else ical.VCalFromEffort
             self.__fd.write(transform(item, encoding=False))
             count += 1
-            
         self.__fd.write('END:VCALENDAR\r\n')
         return count
 

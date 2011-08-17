@@ -260,6 +260,9 @@ class SavePage(SettingsPage):
             _('(For running %s\nfrom a removable medium)')%meta.name)
         self.addPathSetting('file', 'attachmentbase', _('Attachment base directory'),
                             _('When adding an attachment, try to make\nits path relative to this one.'))
+        self.addMultipleChoiceSettings('file', 'autoexport', 
+                                       _('When saving, automatically export to'), 
+                                       [('Todo.txt', 'Todo.txt')])
         self.fit()
             
                
