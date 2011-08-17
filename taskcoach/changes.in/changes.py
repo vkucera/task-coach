@@ -41,7 +41,7 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.26', 'August 15, 2011',
+Release('1.2.26', 'August 16, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Checking an already checked mutually exclusive subcategory now 
@@ -56,11 +56,14 @@ Todo.txt is an open source todo list manager that works with plain text files.
 Todo.txt Touch is a version of Todo.txt for the Android platform, that
 syncs with Dropbox. By exporting your tasks to a todo.txt file in your Dropbox
 folder, you can then edit them on your Android device with Todo.txt Touch. See
-the help contents for more information.''', 'http://uservoice.com/a/6Z54H'),
+the help contents for more information.''', 'http://uservoice.com/a/6Z54H',
+'http://uservoice.com/a/ceNES'),
         Feature('''When turning on the stop date and time in the effort edit
 dialog, set the date and time to the current date and time.''', 
         'http://uservoice.com/a/iFkds'),
         Feature('''When editing templates, one can now also edit subtasks.'''),
+        Feature('''Remember the last visited path when choosing a file
+attachment.''', 'http://uservoice.com/a/jz5dE'),
         ]
     ),
 

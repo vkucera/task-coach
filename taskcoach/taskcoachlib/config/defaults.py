@@ -359,6 +359,7 @@ defaults = { \
     'backup': 'False',
     'saveinifileinprogramdir': 'False',
     'attachmentbase': '',
+    'lastattachmentpath': '',
     'inifileloaded': 'True',
     'inifileloaderror': '' },
 'fgcolor': { \
