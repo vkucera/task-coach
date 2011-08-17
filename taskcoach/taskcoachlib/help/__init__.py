@@ -630,6 +630,11 @@ date, priority, contexts and projects. Contexts and projects are both
 transformed into categories in %(name)s. Projects cannot be transformed into 
 parent tasks because Todo.txt allows tasks to belong to multiple projects, 
 while %(name)s only allows one parent task per task.''')%meta.metaDict),
+    p(
+        _('''When importing, %(name)s tries to find matching tasks and 
+categories and update those instead of creating new ones. It does the matching
+by looking at the subject of the task (or project, or context) and the parent
+item if any.''')),
     h4(
         a_name(_('Exporting todo.txt'), 'todotxtexporting')),
     p(

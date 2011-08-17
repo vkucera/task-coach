@@ -134,10 +134,10 @@ class CategorySubjectPage(SubjectPage):
             
 
 class AttachmentSubjectPage(SubjectPage):
-    def __init__(self, attachments, parent, basePath, *args, **kwargs):
+    def __init__(self, attachments, parent, settings, *args, **kwargs):
         super(AttachmentSubjectPage, self).__init__(attachments, parent,
                                                     *args, **kwargs)
-        self.basePath = basePath
+        self.settings = settings
         
     def addEntries(self):
         # Override addEntries to insert a location entry between the subject
@@ -165,16 +165,16 @@ class AttachmentSubjectPage(SubjectPage):
         self.addEntry(_('Location'), panel, flags=[None, wx.ALL|wx.EXPAND])
 
     def onSelectLocation(self, event): # pylint: disable-msg=W0613
-        if self.items[0].type_ == 'file':
-            basePath = os.path.split(self.items[0].normalizedLocation())[0]
-        else:
+        basePath = self.settings.get('file', 'lastattachmentpath')
+        if not basePath:
             basePath = os.getcwd()
 
         filename = widgets.AttachmentSelector(default_path=basePath)
 
         if filename:
-            if self.basePath:
-                filename = attachment.getRelativePath(filename, self.basePath)
+            self.settings.set('file', 'lastattachmentpath', os.path.abspath(os.path.split(filename)[0]))
+            if self.settings.get('file', 'attachmentbase'):
+                filename = attachment.getRelativePath(filename, self.settings.get('file', 'attachmentbase'))
             self._subjectEntry.SetValue(os.path.split(filename)[-1])
             self._locationEntry.SetValue(filename)
             self._subjectSync.onAttributeEdited(event)
@@ -872,8 +872,7 @@ class AttachmentEditBook(EditBook):
     object = 'attachment'
             
     def createSubjectPage(self):
-        return AttachmentSubjectPage(self.items, self,
-                                     self.settings.get('file', 'attachmentbase'))
+        return AttachmentSubjectPage(self.items, self, self.settings)
     
     def isDisplayingItemOrChildOfItem(self, targetItem):
         return targetItem in self.items

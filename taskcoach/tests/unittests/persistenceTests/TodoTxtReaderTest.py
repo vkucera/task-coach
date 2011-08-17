@@ -206,7 +206,7 @@ class TodoTxtReaderTestCase(test.TestCase):
         
     def testIgnoreEmptyLine(self):
         self.read('\n')
-        self.assertEqual(0, len(self.tasks))
+        self.failIf(self.tasks)
         
     def testDueDate(self):
         self.read('Import due date due:2011-03-05\n')
@@ -219,3 +219,8 @@ class TodoTxtReaderTestCase(test.TestCase):
         self.assertTaskSubject('Import due date')
         self.assertDueDate(2011, 3, 5)
         self.assertCategorySubject('+TaskCoach')
+        
+    def testTrailingJunk(self):
+        taskWithJunk = 'Test +this_is_not_a_project due to trailing junk'
+        self.read(taskWithJunk)
+        self.assertTaskSubject(taskWithJunk)
