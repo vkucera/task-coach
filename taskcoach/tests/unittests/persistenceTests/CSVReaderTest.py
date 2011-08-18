@@ -70,6 +70,14 @@ class CSVReaderTestCase(test.TestCase):
         self.assertEqual(date.DateTime(2011, 6, 30, 12, 0, 0), 
                          list(self.taskList)[0].startDateTime())
         
+    def testTaskWithEmptyStartDate(self):
+        filename = self.createCSVFile('Subject,\n')
+        self.reader.read(filename=filename,
+                         mappings={0: 'Subject', 1: 'Start date'},
+                         **self.defaultReaderKwArgs)
+        self.assertEqual(date.DateTime(), 
+                         list(self.taskList)[0].startDateTime())
+        
     def testTaskWithDueDate(self):
         filename = self.createCSVFile('Subject,2011-6-30\n')
         self.reader.read(filename=filename,
