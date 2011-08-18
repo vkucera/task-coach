@@ -53,9 +53,9 @@ class CSVReader(object):
             description = StringIO.StringIO()
             categories = []
             priority = 0
-            startDate = None
-            dueDate = None
-            completionDate = None
+            startDateTime = None
+            dueDateTime = None
+            completionDateTime = None
             budget = TimeDelta()
             fixedFee = 0.0
             hourlyFee = 0.0
@@ -83,26 +83,11 @@ class CSVReader(object):
                     except ValueError:
                         pass
                 elif kwargs['mappings'][idx] == _('Start date'):
-                    if fieldValue != '':
-                        try:
-                            startDate = dparser.parse(fieldValue.decode('UTF-8'), fuzzy=True).replace(tzinfo=None)
-                            startDate = DateTime(startDate.year, startDate.month, startDate.day, 0, 0, 0)
-                        except:
-                            pass
+                    startDateTime = self.parseDateTime(fieldValue)
                 elif kwargs['mappings'][idx] == _('Due date'):
-                    if fieldValue != '':
-                        try:
-                            dueDate = dparser.parse(fieldValue.decode('UTF-8'), fuzzy=True).replace(tzinfo=None)
-                            dueDate = DateTime(dueDate.year, dueDate.month, dueDate.day, 23, 59, 0)
-                        except:
-                            pass
+                    dueDateTime = self.parseDateTime(fieldValue, 23, 59, 59) 
                 elif kwargs['mappings'][idx] == _('Completion date'):
-                    if fieldValue != '':
-                        try:
-                            completionDate = dparser.parse(fieldValue.decode('UTF-8'), fuzzy=True).replace(tzinfo=None)
-                            completionDate = DateTime(completionDate.year, completionDate.month, completionDate.day, 12, 0, 0)
-                        except:
-                            pass
+                    completionDateTime = self.parseDateTime(fieldValue, 12, 0, 0) 
                 elif kwargs['mappings'][idx] == _('Budget'):
                     try:
                         value = float(fieldValue)
@@ -136,9 +121,9 @@ class CSVReader(object):
             task = Task(subject=subject,
                         description=description.getvalue(),
                         priority=priority,
-                        startDateTime=startDate,
-                        dueDateTime=dueDate,
-                        completionDateTime=completionDate,
+                        startDateTime=startDateTime,
+                        dueDateTime=dueDateTime,
+                        completionDateTime=completionDateTime,
                         budget=budget,
                         fixedFee=fixedFee,
                         hourlyFee=hourlyFee,
@@ -190,3 +175,18 @@ class CSVReader(object):
             newCategory = Category(subject=name)
         self.categoryList.append(newCategory)
         return newCategory
+
+    def parseDateTime(self, fieldValue, defaultHour=0, defaultMinute=0, defaultSecond=0):
+        if not fieldValue:
+            return None
+        try:
+            dateTime = dparser.parse(fieldValue.decode('UTF-8'), fuzzy=True).replace(tzinfo=None)
+            hour, minute, second = dateTime.hour, dateTime.minute, dateTime.second
+            if 0 == hour == minute == second:
+                hour = defaultHour
+                minute = defaultMinute
+                second = defaultSecond
+            return DateTime(dateTime.year, dateTime.month, dateTime.day,
+                            hour, minute, second)
+        except:
+            return None # pylint: disable-msg=W0702

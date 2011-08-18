@@ -41,7 +41,7 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.26', 'August 17, 2011',
+Release('1.2.26', 'August 18, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Checking an already checked mutually exclusive subcategory now 
@@ -66,6 +66,7 @@ dialog, set the date and time to the current date and time.''',
         Feature('''When editing templates, one can now also edit subtasks.'''),
         Feature('''Remember the last visited path when choosing a file
 attachment.''', 'http://uservoice.com/a/jz5dE'),
+        Feature('''Support times in addition to dates when importing from CSV.'''),
         ]
     ),
 

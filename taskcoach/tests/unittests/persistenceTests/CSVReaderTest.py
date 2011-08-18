@@ -62,12 +62,36 @@ class CSVReaderTestCase(test.TestCase):
         self.assertEqual(date.DateTime(2011, 6, 30, 0, 0, 0), 
                          list(self.taskList)[0].startDateTime())
         
+    def testTaskWithStartDateTime(self):
+        filename = self.createCSVFile('Subject,2011-6-30 12:00\n')
+        self.reader.read(filename=filename,
+                         mappings={0: 'Subject', 1: 'Start date'},
+                         **self.defaultReaderKwArgs)
+        self.assertEqual(date.DateTime(2011, 6, 30, 12, 0, 0), 
+                         list(self.taskList)[0].startDateTime())
+        
+    def testTaskWithEmptyStartDate(self):
+        filename = self.createCSVFile('Subject,\n')
+        self.reader.read(filename=filename,
+                         mappings={0: 'Subject', 1: 'Start date'},
+                         **self.defaultReaderKwArgs)
+        self.assertEqual(date.DateTime(), 
+                         list(self.taskList)[0].startDateTime())
+        
     def testTaskWithDueDate(self):
         filename = self.createCSVFile('Subject,2011-6-30\n')
         self.reader.read(filename=filename,
                          mappings={0: 'Subject', 1: 'Due date'},
                          **self.defaultReaderKwArgs)
-        self.assertEqual(date.DateTime(2011, 6, 30, 23, 59, 0), 
+        self.assertEqual(date.DateTime(2011, 6, 30, 23, 59, 59), 
+                         list(self.taskList)[0].dueDateTime())
+        
+    def testTaskWithDueDateTime(self):
+        filename = self.createCSVFile('Subject,2011-6-30 1:34:01 pm\n')
+        self.reader.read(filename=filename,
+                         mappings={0: 'Subject', 1: 'Due date'},
+                         **self.defaultReaderKwArgs)
+        self.assertEqual(date.DateTime(2011, 6, 30, 13, 34, 1), 
                          list(self.taskList)[0].dueDateTime())
 
     def testTaskWithCompletionDate(self):
@@ -76,6 +100,14 @@ class CSVReaderTestCase(test.TestCase):
                          mappings={0: 'Subject', 1: 'Completion date'},
                          **self.defaultReaderKwArgs)
         self.assertEqual(date.DateTime(2011, 6, 30, 12, 0, 0), 
+                         list(self.taskList)[0].completionDateTime())
+        
+    def testTaskWithCompletionDateTime(self):
+        filename = self.createCSVFile('Subject,1:33 am 2011-6-30\n')
+        self.reader.read(filename=filename,
+                         mappings={0: 'Subject', 1: 'Completion date'},
+                         **self.defaultReaderKwArgs)
+        self.assertEqual(date.DateTime(2011, 6, 30, 1, 33, 0), 
                          list(self.taskList)[0].completionDateTime())
 
     def testTaskWithHourMinuteBudget(self):
