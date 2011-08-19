@@ -356,6 +356,7 @@ defaults = { \
     'maxrecentfiles': '9',
     'lastfile': '',
     'autosave': 'False',
+    'autoimport': '[]',     # Formats to automatically import from, only "Todo.txt" supported at this time
     'autoexport': '[]',     # Formats to automatically export to, only "Todo.txt" supported at this time
     'backup': 'False',
     'saveinifileinprogramdir': 'False',
