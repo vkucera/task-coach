@@ -47,13 +47,13 @@ def h5(text):
 def p(*text):
     return '<p>%s</p>'%'\n'.join(text)
 
-def ul(*li):
+def ul(*li): # pylint: disable-msg=W0621
     return '<ul>%s</ul>'%'\n'.join(li)
 
 def li(*text):
     return '<li>%s</li>'%'\n'.join(text)
 
-def table(*tr):
+def table(*tr): # pylint: disable-msg=W0621
     return '<table border=1>%s</table>'%'\n'.join(tr)
 
 def tr(*td):
@@ -622,6 +622,11 @@ tasks with any text editor. Todo.txt Touch is a version of Todo.txt for the
 Android platform. Todo.txt Touch uses a todo.txt file that lives in your
 Dropbox folder. %(name)s can import from and export to that todo.txt 
 file.''')%meta.metaDict),
+    p(
+        _('''Tip: if you save your task file in the todo folder that Todo.txt
+Touch creates in your Dropbox folder, and you turn on automatic importing and 
+exporting of Todo.txt, %(name)s will keep the task file and the 
+todo.txt file in sync.''')%meta.metaDict),
     h4(
         a_name(_('Importing todo.txt'), 'todotxtimporting')),
     p(

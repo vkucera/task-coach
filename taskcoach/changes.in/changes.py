@@ -41,7 +41,7 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.26', 'August 18, 2011',
+Release('1.2.26', 'August 19, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Checking an already checked mutually exclusive subcategory now 
@@ -58,15 +58,20 @@ syncs with Dropbox. By exporting your tasks to a todo.txt file in your Dropbox
 folder, you can then edit them on your Android device with Todo.txt Touch. See
 the help contents for more information.''', 'http://uservoice.com/a/6Z54H',
 'http://uservoice.com/a/ceNES'),
-        Feature('''Automatic exporting on every save. This can be turned on
-in the preferences dialog. Currently only possible for the Todo.txt format.'''),
+        Feature('''Automatic importing and/or exporting on every save. This can 
+be turned on in the preferences dialog. Currently only possible for the Todo.txt 
+format.'''),
         Feature('''When turning on the stop date and time in the effort edit
 dialog, set the date and time to the current date and time.''', 
         'http://uservoice.com/a/iFkds'),
         Feature('''When editing templates, one can now also edit subtasks.'''),
         Feature('''Remember the last visited path when choosing a file
 attachment.''', 'http://uservoice.com/a/jz5dE'),
-        Feature('''Support times in addition to dates when importing from CSV.'''),
+        Feature('''Support times in addition to dates when importing from CSV.''')
+        ],
+    featuresChanged=[
+        Feature('''The maximum of the number of hours that tasks are considered 
+"due soon" is now a big number instead of a mere 90.''', 'http://uservoice.com/a/dVIBF')
         ]
     ),
 

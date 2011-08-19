@@ -24,12 +24,11 @@ from taskcoachlib.domain import task
 class AutoExporterTestCase(test.TestCase):
     def setUp(self):
         task.Task.settings = self.settings = config.Settings(load=False)
-        self.exporter = persistence.AutoExporter(self.settings)
+        self.exporter = persistence.AutoImporterExporter(self.settings)
         self.taskFile = persistence.TaskFile()
         self.tskFilename = 'autoexport.tsk'
         self.txtFilename = 'autoexport.txt'
         self.taskFile.setFilename(self.tskFilename)
-        self.settings.set('file', 'autoexport', '["Todo.txt"]')
         
     def tearDown(self):
         super(AutoExporterTestCase, self).tearDown()
@@ -41,13 +40,31 @@ class AutoExporterTestCase(test.TestCase):
                 pass
         
     def testAddOneTaskWhenAutoSaveIsOn(self):
+        self.settings.set('file', 'autoexport', '["Todo.txt"]')
         self.settings.set('file', 'autosave', 'True')
         persistence.AutoSaver(self.settings)
         self.taskFile.tasks().append(task.Task(subject='Some task'))
         self.assertEqual('Some task\n', file(self.txtFilename, 'r').read())
         
     def testAddOneTaskAndSaveManually(self):
+        self.settings.set('file', 'autoexport', '["Todo.txt"]')
         self.taskFile.tasks().append(task.Task(subject='Whatever'))
         self.taskFile.save()
         self.assertEqual('Whatever\n', file(self.txtFilename, 'r').read())
         
+    def testImportOneTaskWhenSavingManually(self):
+        self.settings.set('file', 'autoimport', '["Todo.txt"]')
+        with file(self.txtFilename, 'w') as todoTxtFile:
+            todoTxtFile.write('Imported task\n')
+        self.taskFile.save()
+        self.assertEqual('Imported task', 
+                         list(self.taskFile.tasks())[0].subject())
+        
+    def testImportOneTaskWhenAutoSaving(self):
+        self.settings.set('file', 'autoimport', '["Todo.txt"]')
+        self.settings.set('file', 'autosave', 'True')
+        persistence.AutoSaver(self.settings)
+        with file(self.txtFilename, 'w') as todoTxtFile:
+            todoTxtFile.write('Imported task\n')
+        self.taskFile.tasks().append(task.Task(subject='Some task'))
+        self.assertEqual(2, len(self.taskFile.tasks()))

@@ -357,6 +357,7 @@ defaults = { \
     'lastfile': '',
     'autosave': 'False',
     'autoload': 'False',
+    'autoimport': '[]',     # Formats to automatically import from, only "Todo.txt" supported at this time
     'autoexport': '[]',     # Formats to automatically export to, only "Todo.txt" supported at this time
     'nopoll': 'False',
     'backup': 'False',

@@ -265,6 +265,9 @@ class SavePage(SettingsPage):
             _('(For running %s\nfrom a removable medium)')%meta.name)
         self.addPathSetting('file', 'attachmentbase', _('Attachment base directory'),
                             _('When adding an attachment, try to make\nits path relative to this one.'))
+        self.addMultipleChoiceSettings('file', 'autoimport', 
+                                       _('Before saving, automatically import from'), 
+                                       [('Todo.txt', 'Todo.txt')])
         self.addMultipleChoiceSettings('file', 'autoexport', 
                                        _('When saving, automatically export to'), 
                                        [('Todo.txt', 'Todo.txt')])
@@ -451,7 +454,7 @@ class TaskDatesPage(SettingsPage):
             _('Mark parent task completed when all children are completed'))
         self.addIntegerSetting('behavior', 'duesoonhours', 
             _("Number of hours that tasks are considered to be 'due soon'"), 
-            minimum=0, maximum=90, flags=(None, wx.ALL|wx.ALIGN_LEFT))
+            minimum=0, maximum=9999, flags=(None, wx.ALL|wx.ALIGN_LEFT))
         choices = [('', _('Nothing')),
                    ('startdue', _('Changing the start date changes the due date')),
                    ('duestart', _('Changing the due date changes the start date'))]

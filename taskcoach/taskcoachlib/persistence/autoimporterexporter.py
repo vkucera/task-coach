@@ -20,26 +20,49 @@ from taskcoachlib import patterns
 import todotxt
 
 
-class AutoExporter(patterns.Observer):
-    ''' AutoExporter observes task files. If a task file is saved, either by the 
-        user or automatically (when autosave is on) and auto export is on, 
-        AutoExporter exports the task file. '''
+class AutoImporterExporter(patterns.Observer):
+    ''' AutoImporterExporter observes task files. If a task file is saved, 
+        either by the user or automatically (when autosave is on) and auto 
+        import and/or export is on, AutoImporterExporter imports and/or exports 
+        the task file. '''
         
     def __init__(self, settings):
-        super(AutoExporter, self).__init__()
+        super(AutoImporterExporter, self).__init__()
         self.__settings = settings
         self.registerObserver(self.onTaskFileAboutToBeSaved, 
                               eventType='taskfile.aboutToSave')
             
     def onTaskFileAboutToBeSaved(self, event):
-        ''' When a task file is about to be saved and auto export is on, export it. '''
+        ''' When a task file is about to be saved and auto import and/or 
+            export is on, import and/or export it. '''
+        self.importFiles(event)
+        self.exportFiles(event)
+        
+    def importFiles(self, event):
+        importFormats = self.__settings.getlist('file', 'autoimport')
+        for importFormat in importFormats:
+            if importFormat == 'Todo.txt':
+                self.importTodoTxt(event)
+                
+    def exportFiles(self, event):
         exportFormats = self.__settings.getlist('file', 'autoexport')
         for exportFormat in exportFormats:
             if exportFormat == 'Todo.txt':
                 self.exportTodoTxt(event)
-
-    def exportTodoTxt(self, event):
+    
+    @classmethod            
+    def importTodoTxt(cls, event):
         for taskFile in event.sources():
-            filename = taskFile.filename()[:-len('tsk')] + 'txt'
+            filename = cls.todoTxtFilename(taskFile)
+            todotxt.TodoTxtReader(taskFile.tasks(), taskFile.categories()).read(filename)
+
+    @classmethod
+    def exportTodoTxt(cls, event):
+        for taskFile in event.sources():
+            filename = cls.todoTxtFilename(taskFile)
             with file(filename, 'w') as todoFile:
                 todotxt.TodoTxtWriter(todoFile, filename).writeTasks(taskFile.tasks())
+    
+    @staticmethod   
+    def todoTxtFilename(taskFile):
+        return taskFile.filename()[:-len('tsk')] + 'txt'
