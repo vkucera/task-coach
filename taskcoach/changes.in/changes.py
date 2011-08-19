@@ -39,8 +39,9 @@ syncs with Dropbox. By exporting your tasks to a todo.txt file in your Dropbox
 folder, you can then edit them on your Android device with Todo.txt Touch. See
 the help contents for more information.''', 'http://uservoice.com/a/6Z54H',
 'http://uservoice.com/a/ceNES'),
-        Feature('''Automatic exporting on every save. This can be turned on
-in the preferences dialog. Currently only possible for the Todo.txt format.'''),
+        Feature('''Automatic importing and/or exporting on every save. This can 
+be turned on in the preferences dialog. Currently only possible for the Todo.txt 
+format.'''),
         Feature('''When turning on the stop date and time in the effort edit
 dialog, set the date and time to the current date and time.''', 
         'http://uservoice.com/a/iFkds'),
