@@ -31,7 +31,9 @@ unchecks it.''', '3377145'),
         Bug('''Saving a task as template would not work if the subject or
 description contains non-ascii characters'''),
         Bug('''Fix case insensitive searching with non-ascii languages.'''
-            '3395268')
+            '3395268'),
+        Bug('''The recent searches menu in the search control wasn't working
+properly on Mac OS X.''')
         ],
     featuresAdded=[
         Feature('''Importing and exporting of Todo.txt format task files. 
