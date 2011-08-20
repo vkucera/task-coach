@@ -130,7 +130,7 @@ class SearchFilter(Filter):
     def __compileSearchPredicate(searchString, matchCase):
         if not searchString:
             return ''
-        flag = 0 if matchCase else re.IGNORECASE
+        flag = 0 if matchCase else re.IGNORECASE|re.UNICODE
         try:    
             rx = re.compile(searchString, flag)
         except sre_constants.error:
@@ -139,7 +139,7 @@ class SearchFilter(Filter):
             else:
                 return lambda x: x.lower().find(searchString.lower()) != -1
         else:
-            return lambda x: bool(rx.search(x))
+            return rx.search
 
     def filter(self, items):
         return [item for item in items if \

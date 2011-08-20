@@ -30,6 +30,8 @@ unchecks it.''', '3377145'),
         Bug('''Task Coach would not start on PPC Macs.''', '3388666'),
         Bug('''Saving a task as template would not work if the subject or
 description contains non-ascii characters'''),
+        Bug('''Fix case insensitive searching with non-ascii languages.'''
+            '3395268')
         ],
     featuresAdded=[
         Feature('''Importing and exporting of Todo.txt format task files. 
