@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-08-16 11:42+0000\n"
-"PO-Revision-Date: 2011-08-16 09:37+0000\n"
+"PO-Revision-Date: 2011-08-17 00:56+0000\n"
 "Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-16 19:37+0000\n"
+"X-Launchpad-Export-Date: 2011-08-19 22:09+0000\n"
 "X-Generator: Launchpad (build 13697)\n"
 
 #: taskcoachlib/application/application.py:242
@@ -1231,7 +1231,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/export.py:145 taskcoachlib/gui/iocontroller.py:316
 msgid "Export as Todo.txt"
-msgstr ""
+msgstr "Exportar como Todo.txt"
 
 #: taskcoachlib/gui/dialog/iphone.py:32
 msgid ""
@@ -1656,7 +1656,7 @@ msgstr "Pausa"
 #: taskcoachlib/gui/dialog/reminder.py:84
 msgid ""
 "Also use the selected snooze time as default snooze time for future reminders"
-msgstr ""
+msgstr "Também utilize o tempo de soneca selecionado para lembretes futuros"
 
 #: taskcoachlib/gui/dialog/reminder.py:88
 msgid "Mark task completed"
@@ -1693,7 +1693,7 @@ msgstr "Nome do banco de dados de tarefas"
 #: taskcoachlib/gui/dialog/syncpreferences.py:93
 #: taskcoachlib/gui/dialog/syncpreferences.py:106
 msgid "Preferred synchronization mode"
-msgstr ""
+msgstr "Modo de sincronização preferido"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:94
 #: taskcoachlib/gui/dialog/syncpreferences.py:107
@@ -2054,7 +2054,7 @@ msgstr "&Ajuda"
 
 #: taskcoachlib/gui/menu.py:213
 msgid "&Import"
-msgstr ""
+msgstr "&Importar"
 
 #: taskcoachlib/gui/menu.py:215
 msgid "&Export"
@@ -2410,7 +2410,7 @@ msgstr "Exportar itens de um visualizador em formato iCalendar"
 
 #: taskcoachlib/gui/uicommand.py:735
 msgid "Export as &Todo.txt..."
-msgstr ""
+msgstr "Exportar como &Todo.txt..."
 
 #: taskcoachlib/gui/uicommand.py:736
 msgid "Export items from a viewer in Todo.txt format (see todotxt.com)"
@@ -2430,15 +2430,15 @@ msgstr "Importar CSV"
 
 #: taskcoachlib/gui/uicommand.py:765
 msgid "&Import Todo.txt..."
-msgstr ""
+msgstr "&Importar Todo.txt..."
 
 #: taskcoachlib/gui/uicommand.py:766
 msgid "Import tasks from a Todo.txt (see todotxt.com) file"
-msgstr ""
+msgstr "Importar tarefas do arquivo Todo.txt (veja todotxt.com)"
 
 #: taskcoachlib/gui/uicommand.py:770
 msgid "Import Todo.txt"
-msgstr ""
+msgstr "Importar Todo.txt"
 
 #: taskcoachlib/gui/uicommand.py:777
 msgid "S&yncML synchronization..."
@@ -3971,7 +3971,7 @@ msgstr "Exportar"
 
 #: taskcoachlib/help/__init__.py:97 taskcoachlib/help/__init__.py:335
 msgid "E-mail integration"
-msgstr ""
+msgstr "Integração de e-mail"
 
 #: taskcoachlib/help/__init__.py:99 taskcoachlib/help/__init__.py:337
 msgid "About e-mail integration"
@@ -4024,11 +4024,11 @@ msgstr "Configuração"
 
 #: taskcoachlib/help/__init__.py:117 taskcoachlib/help/__init__.py:558
 msgid "Android"
-msgstr ""
+msgstr "Android"
 
 #: taskcoachlib/help/__init__.py:119 taskcoachlib/help/__init__.py:560
 msgid "%(name)s on Android?"
-msgstr ""
+msgstr "%(name)s no Android?"
 
 #: taskcoachlib/help/__init__.py:120 taskcoachlib/help/__init__.py:568
 msgid "Todo.txt and Todo.txt Touch"
@@ -4036,11 +4036,11 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:121 taskcoachlib/help/__init__.py:578
 msgid "Importing todo.txt"
-msgstr ""
+msgstr "Importando todo.txt"
 
 #: taskcoachlib/help/__init__.py:122 taskcoachlib/help/__init__.py:591
 msgid "Exporting todo.txt"
-msgstr ""
+msgstr "Exportando todo.txt"
 
 #: taskcoachlib/help/__init__.py:124 taskcoachlib/help/__init__.py:618
 msgid "Task templates"
@@ -4523,26 +4523,33 @@ msgid ""
 "e-mail attachments on a system which is different from the one you\n"
 "created it first."
 msgstr ""
+"%(name)s integra com vários agentes de email\n"
+"utilizando arrastar e soltar. Isto tem algumas limitações; os emails\n"
+"são copiados no diretório junto ao arquivo %(name)s, e arquivos .eml\n"
+"são depois abertos usando o programa associado no seu sistema.\n"
+"De qualquer forma, isto habilita com que você abra estes anexos\n"
+"de e-mail em um sistema que é diferente do que voce criou\n"
+"primeiramente."
 
 #: taskcoachlib/help/__init__.py:347
 msgid "Mail user agents supported include:"
-msgstr ""
+msgstr "Agentes de email suportados incluem:"
 
 #: taskcoachlib/help/__init__.py:349
 msgid "Mozilla Thunderbird"
-msgstr ""
+msgstr "Mozilla Thunderbird"
 
 #: taskcoachlib/help/__init__.py:350
 msgid "Microsoft Outlook"
-msgstr ""
+msgstr "Microsoft Outlook"
 
 #: taskcoachlib/help/__init__.py:351
 msgid "Claws Mail"
-msgstr ""
+msgstr "Claws Mail"
 
 #: taskcoachlib/help/__init__.py:352
 msgid "Apple Mail"
-msgstr ""
+msgstr "Apple Mail"
 
 #: taskcoachlib/help/__init__.py:354
 msgid ""
@@ -5041,6 +5048,12 @@ msgid ""
 "Format\">Todo.txt \n"
 "format</a> and then edit your tasks on your Android device."
 msgstr ""
+"Não, %(name)s não está disponível para a plataforma Android. Mas,\n"
+"<a target=\"_blank\" href=\"http://todotxt.com\">Todo.txt Touch</a> está. \n"
+"Você pode exportar suas tarefas de %(name)s para o <a target=\"_blank\" \n"
+"href=\"https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-"
+"Format\">formato \n"
+"Todo.txt</a> e então editar suas tarefas no seu dispositivo Android."
 
 #: taskcoachlib/help/__init__.py:570
 msgid ""
@@ -6531,8 +6544,119 @@ msgstr "Erro ao abrir URL"
 #~ msgid "Edit exclusive subcategories"
 #~ msgstr "Editar subcategorias exclusivas"
 
-#~ msgid "Edit descripions"
-#~ msgstr "Editar descrições"
-
 #~ msgid "Dates behavior"
 #~ msgstr "Comportamento das datas"
+
+#~ msgid "Change effort start date and time"
+#~ msgstr "Alterar data de início e fim do esforço"
+
+#~ msgid "Change task of \"%s\" effort"
+#~ msgstr "Alterar tarefa do esforço  \"%s\""
+
+#~ msgid "Change task of effort"
+#~ msgstr "Alterar tarefa do esforço"
+
+#~ msgid "Change priority"
+#~ msgstr "Alterar prioridade"
+
+#~ msgid "Change effort stop date and time of \"%s\""
+#~ msgstr "Alterar data e hora de parada do esforço de \"%s\""
+
+#~ msgid "Change effort stop date and time"
+#~ msgstr "Alterar data e hora de parada do esforço"
+
+#~ msgid "Change start date"
+#~ msgstr "Alterar data de início"
+
+#~ msgid "Change priority of \"%s\""
+#~ msgstr "Alterar prioridade de \"%s\""
+
+#~ msgid "Change effort start date and time of \"%s\""
+#~ msgstr "Alterar data de início e fim do esforço de \"%s\""
+
+#~ msgid "Change start date of \"%s\""
+#~ msgstr "Alterar data de início de \"%s\""
+
+#~ msgid "Change when tasks are marked completed"
+#~ msgstr "Alterar quando as tarefas forem marcadas como completadas"
+
+#~ msgid "Change recurrence of \"%s\""
+#~ msgstr "Alterar recorrências de \"%s\""
+
+#~ msgid "Change percentage complete of \"%s\""
+#~ msgstr "Alterar poncentagem completada de \"%s\""
+
+#~ msgid "Change due date of \"%s\""
+#~ msgstr "Alterar data final de \"%s\""
+
+#~ msgid "Change completion date"
+#~ msgstr "Alterar data de finalização"
+
+#~ msgid "Change due date"
+#~ msgstr "Alterar data final"
+
+#~ msgid "Change reminder date/time of \"%s\""
+#~ msgstr "Alterar lembrete de data/hora de \"%s\""
+
+#~ msgid "Change recurrences"
+#~ msgstr "Alterar recorrências"
+
+#~ msgid "Change completion date of \"%s\""
+#~ msgstr "Alterar data de finalização de \"%s\""
+
+#~ msgid "Change reminder dates/times"
+#~ msgstr "Alterar datas/horários dos lembretes"
+
+#~ msgid "Toggle prerequisite of \"%s\""
+#~ msgstr "Alterar pré-requisito de \"%s\""
+
+#~ msgid "Toggle prerequisite"
+#~ msgstr "Alterar pré-requisito"
+
+#~ msgid "Change when \"%s\" is marked completed"
+#~ msgstr "Alterar quando \"%s\" for marcado completado."
+
+#~ msgid "Change hourly fee of \"%s\""
+#~ msgstr "Alterar remuneração por hora de \"%s\""
+
+#~ msgid "Change hourly fees"
+#~ msgstr "Alterar remuneração por hora"
+
+#~ msgid "Change fixed fee of \"%s\""
+#~ msgstr "Alterar remuneração fixa de \"%s\""
+
+#~ msgid "Change fixed fees"
+#~ msgstr "Alterar remuneração fixa"
+
+#~ msgid "Warning: start must be earlier than stop"
+#~ msgstr "Alerta: o começo deve ser anterior à parada."
+
+#~ msgid "Multiple tasks"
+#~ msgstr "Tarefas múltiplas"
+
+#~ msgid "%s (task)"
+#~ msgstr "%s (tarefa)"
+
+#~ msgid "%s (effort)"
+#~ msgstr "%s (esforço)"
+
+#~ msgid "Multiple categories"
+#~ msgstr "Categorias múltiplas"
+
+#~ msgid "%s (category)"
+#~ msgstr "%s (categoria)"
+
+#~ msgid "Multiple notes"
+#~ msgstr "Notas múltiplas"
+
+#~ msgid "%s (note)"
+#~ msgstr "%s (nota)"
+
+#~ msgid "Multiple attachments"
+#~ msgstr "Anexos múltiplos"
+
+#~ msgid "%s (attachment)"
+#~ msgstr "%s (anexo)"
+
+#~ msgid "Multiple efforts"
+#~ msgstr "Esforços múltiplos"

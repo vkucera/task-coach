@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: Task Coach\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-08-16 11:42+0000\n"
-"PO-Revision-Date: 2011-08-16 06:44+0000\n"
+"PO-Revision-Date: 2011-08-18 19:42+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <fundamentator@yahoo.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-16 19:37+0000\n"
+"X-Launchpad-Export-Date: 2011-08-19 22:08+0000\n"
 "X-Generator: Launchpad (build 13697)\n"
 "Generated-By: pygettext.py 1.5\n"
 
@@ -1231,7 +1231,7 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/export.py:145 taskcoachlib/gui/iocontroller.py:316
 msgid "Export as Todo.txt"
-msgstr ""
+msgstr "Экспорт в Todo.txt"
 
 #: taskcoachlib/gui/dialog/iphone.py:32
 msgid ""
@@ -1690,7 +1690,7 @@ msgstr "Имя базы данных задач"
 #: taskcoachlib/gui/dialog/syncpreferences.py:93
 #: taskcoachlib/gui/dialog/syncpreferences.py:106
 msgid "Preferred synchronization mode"
-msgstr ""
+msgstr "Предпочтительный режим синхронизации"
 
 #: taskcoachlib/gui/dialog/syncpreferences.py:94
 #: taskcoachlib/gui/dialog/syncpreferences.py:107
@@ -1805,7 +1805,7 @@ msgstr ""
 
 #: taskcoachlib/gui/iocontroller.py:60
 msgid "Todo.txt files (*.txt)|*.txt|All files (*.*)|*"
-msgstr ""
+msgstr "Файлы Todo.txt (*.txt)|*.txt|Все файлы (*.*)|*"
 
 #: taskcoachlib/gui/iocontroller.py:99
 msgid "Open"
@@ -2051,7 +2051,7 @@ msgstr "&Помощь"
 
 #: taskcoachlib/gui/menu.py:213
 msgid "&Import"
-msgstr ""
+msgstr "&Импорт"
 
 #: taskcoachlib/gui/menu.py:215
 msgid "&Export"
@@ -2401,11 +2401,11 @@ msgstr "Экспортировать позиции в iCalendar формат"
 
 #: taskcoachlib/gui/uicommand.py:735
 msgid "Export as &Todo.txt..."
-msgstr ""
+msgstr "Экспорт в &Todo.txt..."
 
 #: taskcoachlib/gui/uicommand.py:736
 msgid "Export items from a viewer in Todo.txt format (see todotxt.com)"
-msgstr ""
+msgstr "Экспорт элементов из окна в формат Todo.txt (см. todotxt.com)"
 
 #: taskcoachlib/gui/uicommand.py:751
 msgid "&Import CSV..."
@@ -2422,15 +2422,15 @@ msgstr "Импортировать CSV"
 
 #: taskcoachlib/gui/uicommand.py:765
 msgid "&Import Todo.txt..."
-msgstr ""
+msgstr "&Импорт Todo.txt..."
 
 #: taskcoachlib/gui/uicommand.py:766
 msgid "Import tasks from a Todo.txt (see todotxt.com) file"
-msgstr ""
+msgstr "Импорт задач из файла Todo.txt (см. todotxt.com)"
 
 #: taskcoachlib/gui/uicommand.py:770
 msgid "Import Todo.txt"
-msgstr ""
+msgstr "Импорт Todo.txt"
 
 #: taskcoachlib/gui/uicommand.py:777
 msgid "S&yncML synchronization..."
@@ -3959,7 +3959,7 @@ msgstr "Экспортирование"
 
 #: taskcoachlib/help/__init__.py:97 taskcoachlib/help/__init__.py:335
 msgid "E-mail integration"
-msgstr ""
+msgstr "Интеграция с электронной почтой"
 
 #: taskcoachlib/help/__init__.py:99 taskcoachlib/help/__init__.py:337
 msgid "About e-mail integration"
@@ -4012,23 +4012,23 @@ msgstr "Конфигурация"
 
 #: taskcoachlib/help/__init__.py:117 taskcoachlib/help/__init__.py:558
 msgid "Android"
-msgstr ""
+msgstr "Android"
 
 #: taskcoachlib/help/__init__.py:119 taskcoachlib/help/__init__.py:560
 msgid "%(name)s on Android?"
-msgstr ""
+msgstr "%(name)s под Android?"
 
 #: taskcoachlib/help/__init__.py:120 taskcoachlib/help/__init__.py:568
 msgid "Todo.txt and Todo.txt Touch"
-msgstr ""
+msgstr "Todo.txt и Todo.txt Touch"
 
 #: taskcoachlib/help/__init__.py:121 taskcoachlib/help/__init__.py:578
 msgid "Importing todo.txt"
-msgstr ""
+msgstr "Импортирование todo.txt"
 
 #: taskcoachlib/help/__init__.py:122 taskcoachlib/help/__init__.py:591
 msgid "Exporting todo.txt"
-msgstr ""
+msgstr "Экспортирование todo.txt"
 
 #: taskcoachlib/help/__init__.py:124 taskcoachlib/help/__init__.py:618
 msgid "Task templates"
@@ -4507,19 +4507,19 @@ msgstr ""
 
 #: taskcoachlib/help/__init__.py:349
 msgid "Mozilla Thunderbird"
-msgstr ""
+msgstr "Mozilla Thunderbird"
 
 #: taskcoachlib/help/__init__.py:350
 msgid "Microsoft Outlook"
-msgstr ""
+msgstr "Microsoft Outlook"
 
 #: taskcoachlib/help/__init__.py:351
 msgid "Claws Mail"
-msgstr ""
+msgstr "Claws Mail"
 
 #: taskcoachlib/help/__init__.py:352
 msgid "Apple Mail"
-msgstr ""
+msgstr "Apple Mail"
 
 #: taskcoachlib/help/__init__.py:354
 msgid ""
@@ -5080,6 +5080,11 @@ msgid ""
 "26\n"
 "are not exported."
 msgstr ""
+"Todo.txt имеет приоритеты в виде букв ('A'-'Z'). \n"
+"%(name)s имеет числовые приоритеты. приоритет %(name)s 1 преобразуется в "
+"'A',\n"
+"2 становится 'B' и т.д.,  26 - 'Z'. Приоритеты %(name)s менее 1 и более 26\n"
+"не экспортируются."
 
 #: taskcoachlib/help/__init__.py:611
 msgid ""
@@ -5088,6 +5093,10 @@ msgid ""
 "Categories whose subject doesn't start with '+' or '@' are not exported. \n"
 "Subcategories are exported if their parent category is."
 msgstr ""
+"Категории, тема которых начинается с \"+\" экспортируются как проекты.\n"
+"Категории, тема которых начинается с \"@\", экспортируются как контекст.\n"
+"Категории, тема которых не начинается с '+' или '@' не экспортируются.\n"
+"Подкатегории экспортируются, если их родители категории."
 
 #: taskcoachlib/help/__init__.py:622
 msgid ""
@@ -6588,9 +6597,6 @@ msgstr "Ошибка при открытии URL"
 
 #~ msgid "Dates behavior"
 #~ msgstr "Поведение дат"
-
-#~ msgid "Edit descripions"
-#~ msgstr "Изменить описания"
 
 #~ msgid ""
 #~ "%(name)s integrates with both Outlook and Thunderbird mail user\n"

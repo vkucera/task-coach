@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: taskcoach\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-08-16 11:42+0000\n"
-"PO-Revision-Date: 2011-08-10 05:54+0000\n"
-"Last-Translator: Kaya Zeren <Unknown>\n"
+"PO-Revision-Date: 2011-08-17 00:29+0000\n"
+"Last-Translator: Frank Niessink <frank@niessink.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-16 19:37+0000\n"
+"X-Launchpad-Export-Date: 2011-08-19 22:09+0000\n"
 "X-Generator: Launchpad (build 13697)\n"
 
 #: taskcoachlib/application/application.py:242
@@ -6600,9 +6600,6 @@ msgstr "İnternet adresi açılırken hata"
 
 #~ msgid "Template"
 #~ msgstr "Kalıp"
-
-#~ msgid "Edit descripions"
-#~ msgstr "Açıklamaları düzenle"
 
 #~ msgid "Dates behavior"
 #~ msgstr "Tarihlerin davranışı"
