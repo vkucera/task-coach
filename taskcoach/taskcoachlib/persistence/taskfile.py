@@ -242,6 +242,7 @@ class TaskFile(patterns.Observer):
         finally:
             self.__loading = False
             self.__needSave = False
+        patterns.Event('taskfile.justRead', self).send()
         
     def save(self):
         patterns.Event('taskfile.aboutToSave', self).send()

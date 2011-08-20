@@ -32,6 +32,13 @@ class AutoImporterExporter(patterns.Observer):
         self.__settings = settings
         self.registerObserver(self.onTaskFileAboutToBeSaved, 
                               eventType='taskfile.aboutToSave')
+        self.registerObserver(self.onTaskFileJustRead,
+                              eventType='taskfile.justRead')
+        
+    def onTaskFileJustRead(self, event):
+        ''' After a task file has been read and if auto import is on, 
+            import it. '''
+        self.importFiles(event)
             
     def onTaskFileAboutToBeSaved(self, event):
         ''' When a task file is about to be saved and auto import and/or 
