@@ -30,6 +30,7 @@ the day/month order correctly. It is now possible to specify whether days or
 months come first in date columns.''' ),
         Bug('''Unchecking an already checked mutually exclusive subcategory
 would uncheck it, but not change the filtering.''', '3377145'),
+        Bug('''The calendar configuration dialog wouldn't open.''', '3395689'),
         ],
     ),
 
