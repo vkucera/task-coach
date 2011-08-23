@@ -28,6 +28,8 @@ Release('1.2.27', 'August 23, 2011',
         Bug('''When importing a CVS file, Task Coach would not always guess
 the day/month order correctly. It is now possible to specify whether days or 
 months come first in date columns.''' ),
+        Bug('''Unchecking an already checked mutually exclusive subcategory
+would uncheck it, but not change the filtering.''', '3377145'),
         ],
     ),
 
