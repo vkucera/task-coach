@@ -22,6 +22,15 @@ from changetypes import *
 
 releases = [
 
+Release('1.2.27', 'August 23, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''When importing a CVS file, Task Coach would not always guess
+the day/month order correctly. It is now possible to specify whether days or 
+months come first in date columns.''' ),
+        ],
+    ),
+
 Release('1.2.26', 'August 20, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[

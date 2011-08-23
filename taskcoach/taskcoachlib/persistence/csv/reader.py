@@ -29,19 +29,23 @@ class CSVReader(object):
     def __init__(self, taskList, categoryList):
         self.taskList = taskList
         self.categoryList = categoryList
-
+        
+    def createReader(self, fp, dialect, hasHeaders):
+        reader = csv.reader(fp, dialect=dialect)
+        if hasHeaders:
+            reader.next()
+        return reader
+        
     def read(self, **kwargs):
         fp = tempfile.TemporaryFile()
         fp.write(file(kwargs['filename'], 'rb').read().decode(kwargs['encoding']).encode('UTF-8'))
         fp.seek(0)
-
+        
         rx1 = re.compile(r'^(\d+):(\d+)$')
         rx2 = re.compile(r'^(\d+):(\d+):(\d+)$')
 
-        reader = csv.reader(fp, dialect=kwargs['dialect'])
-        if kwargs['hasHeaders']:
-            reader.next()
-
+        reader = self.createReader(fp, kwargs['dialect'], kwargs['hasHeaders'])
+        dayfirst = kwargs['dayfirst']
         tasksById = dict()
         tasks = []
 
@@ -83,11 +87,11 @@ class CSVReader(object):
                     except ValueError:
                         pass
                 elif kwargs['mappings'][idx] == _('Start date'):
-                    startDateTime = self.parseDateTime(fieldValue)
+                    startDateTime = self.parseDateTime(fieldValue, dayfirst=dayfirst)
                 elif kwargs['mappings'][idx] == _('Due date'):
-                    dueDateTime = self.parseDateTime(fieldValue, 23, 59, 59) 
+                    dueDateTime = self.parseDateTime(fieldValue, 23, 59, 59, dayfirst=dayfirst) 
                 elif kwargs['mappings'][idx] == _('Completion date'):
-                    completionDateTime = self.parseDateTime(fieldValue, 12, 0, 0) 
+                    completionDateTime = self.parseDateTime(fieldValue, 12, 0, 0, dayfirst=dayfirst) 
                 elif kwargs['mappings'][idx] == _('Budget'):
                     try:
                         value = float(fieldValue)
@@ -176,11 +180,13 @@ class CSVReader(object):
         self.categoryList.append(newCategory)
         return newCategory
 
-    def parseDateTime(self, fieldValue, defaultHour=0, defaultMinute=0, defaultSecond=0):
+    def parseDateTime(self, fieldValue, defaultHour=0, defaultMinute=0, 
+                      defaultSecond=0, dayfirst=False):
         if not fieldValue:
             return None
         try:
-            dateTime = dparser.parse(fieldValue.decode('UTF-8'), fuzzy=True).replace(tzinfo=None)
+            dateTime = dparser.parse(fieldValue.decode('UTF-8'), 
+                                     dayfirst=dayfirst, fuzzy=True).replace(tzinfo=None)
             hour, minute, second = dateTime.hour, dateTime.minute, dateTime.second
             if 0 == hour == minute == second:
                 hour = defaultHour

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-08-20 09:56+CEST\n"
+"POT-Creation-Date: 2011-08-23 13:06+CEST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -731,7 +731,7 @@ msgid "Question mark"
 msgstr ""
 
 #: taskcoachlib/gui/artprovider.py:143
-#: taskcoachlib/gui/wizard/csvimport.py:324
+#: taskcoachlib/gui/wizard/csvimport.py:333
 msgid "Information"
 msgstr ""
 
@@ -881,8 +881,8 @@ msgstr ""
 #: taskcoachlib/gui/viewer/category.py:88
 #: taskcoachlib/gui/viewer/effort.py:167 taskcoachlib/gui/viewer/note.py:106
 #: taskcoachlib/gui/viewer/task.py:698
-#: taskcoachlib/gui/wizard/csvimport.py:215
-#: taskcoachlib/persistence/csv/reader.py:69
+#: taskcoachlib/gui/wizard/csvimport.py:224
+#: taskcoachlib/persistence/csv/reader.py:73
 #: taskcoachlib/widgets/conflict.py:160 taskcoachlib/widgets/conflict.py:188
 msgid "Description"
 msgstr ""
@@ -896,8 +896,8 @@ msgstr ""
 #: taskcoachlib/gui/viewer/attachment.py:78
 #: taskcoachlib/gui/viewer/base.py:272 taskcoachlib/gui/viewer/category.py:80
 #: taskcoachlib/gui/viewer/note.py:96 taskcoachlib/gui/viewer/task.py:686
-#: taskcoachlib/gui/wizard/csvimport.py:214
-#: taskcoachlib/persistence/csv/reader.py:67
+#: taskcoachlib/gui/wizard/csvimport.py:223
+#: taskcoachlib/persistence/csv/reader.py:71
 #: taskcoachlib/widgets/conflict.py:155 taskcoachlib/widgets/conflict.py:183
 msgid "Subject"
 msgstr ""
@@ -908,8 +908,8 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:129 taskcoachlib/gui/uicommand.py:2438
 #: taskcoachlib/gui/viewer/task.py:759
-#: taskcoachlib/gui/wizard/csvimport.py:217
-#: taskcoachlib/persistence/csv/reader.py:80
+#: taskcoachlib/gui/wizard/csvimport.py:226
+#: taskcoachlib/persistence/csv/reader.py:84
 #: taskcoachlib/widgets/conflict.py:208
 msgid "Priority"
 msgstr ""
@@ -973,8 +973,8 @@ msgstr ""
 #: taskcoachlib/gui/dialog/editor.py:367
 #: taskcoachlib/gui/dialog/templates.py:125
 #: taskcoachlib/gui/viewer/task.py:750
-#: taskcoachlib/gui/wizard/csvimport.py:218
-#: taskcoachlib/persistence/csv/reader.py:85
+#: taskcoachlib/gui/wizard/csvimport.py:227
+#: taskcoachlib/persistence/csv/reader.py:89
 #: taskcoachlib/widgets/calendarconfig.py:80
 #: taskcoachlib/widgets/conflict.py:193
 msgid "Start date"
@@ -983,8 +983,8 @@ msgstr ""
 #: taskcoachlib/gui/dialog/editor.py:368
 #: taskcoachlib/gui/dialog/templates.py:127
 #: taskcoachlib/gui/viewer/task.py:751
-#: taskcoachlib/gui/wizard/csvimport.py:219
-#: taskcoachlib/persistence/csv/reader.py:87
+#: taskcoachlib/gui/wizard/csvimport.py:228
+#: taskcoachlib/persistence/csv/reader.py:91
 #: taskcoachlib/widgets/calendarconfig.py:81
 #: taskcoachlib/widgets/conflict.py:198
 msgid "Due date"
@@ -993,8 +993,8 @@ msgstr ""
 #: taskcoachlib/gui/dialog/editor.py:369
 #: taskcoachlib/gui/dialog/templates.py:129
 #: taskcoachlib/gui/viewer/task.py:752
-#: taskcoachlib/gui/wizard/csvimport.py:220
-#: taskcoachlib/persistence/csv/reader.py:89
+#: taskcoachlib/gui/wizard/csvimport.py:229
+#: taskcoachlib/persistence/csv/reader.py:93
 #: taskcoachlib/widgets/conflict.py:203
 msgid "Completion date"
 msgstr ""
@@ -1007,7 +1007,7 @@ msgid "Reminder"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:413 taskcoachlib/gui/dialog/editor.py:487
-#: taskcoachlib/gui/uicommand.py:71 taskcoachlib/gui/wizard/csvimport.py:212
+#: taskcoachlib/gui/uicommand.py:71 taskcoachlib/gui/wizard/csvimport.py:221
 #: taskcoachlib/widgets/dirchooser.py:28
 msgid "None"
 msgstr ""
@@ -1108,8 +1108,8 @@ msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:668 taskcoachlib/gui/dialog/editor.py:686
 #: taskcoachlib/gui/uicommand.py:2438 taskcoachlib/gui/viewer/task.py:756
-#: taskcoachlib/gui/wizard/csvimport.py:221
-#: taskcoachlib/persistence/csv/reader.py:91
+#: taskcoachlib/gui/wizard/csvimport.py:230
+#: taskcoachlib/persistence/csv/reader.py:95
 msgid "Budget"
 msgstr ""
 
@@ -1123,15 +1123,15 @@ msgid "Budget left"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:709 taskcoachlib/gui/viewer/task.py:760
-#: taskcoachlib/gui/wizard/csvimport.py:223
-#: taskcoachlib/persistence/csv/reader.py:110
+#: taskcoachlib/gui/wizard/csvimport.py:232
+#: taskcoachlib/persistence/csv/reader.py:114
 msgid "Hourly fee"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:716 taskcoachlib/gui/uicommand.py:2438
 #: taskcoachlib/gui/viewer/task.py:761
-#: taskcoachlib/gui/wizard/csvimport.py:222
-#: taskcoachlib/persistence/csv/reader.py:105
+#: taskcoachlib/gui/wizard/csvimport.py:231
+#: taskcoachlib/persistence/csv/reader.py:109
 msgid "Fixed fee"
 msgstr ""
 
@@ -3688,81 +3688,93 @@ msgid "Semicolon"
 msgstr ""
 
 #: taskcoachlib/gui/wizard/csvimport.py:54
-msgid "Simple quote"
+msgid "DD/MM (day first)"
 msgstr ""
 
 #: taskcoachlib/gui/wizard/csvimport.py:55
-msgid "Double quote"
+msgid "MM/DD (month first)"
 msgstr ""
 
 #: taskcoachlib/gui/wizard/csvimport.py:59
+msgid "Simple quote"
+msgstr ""
+
+#: taskcoachlib/gui/wizard/csvimport.py:60
+msgid "Double quote"
+msgstr ""
+
+#: taskcoachlib/gui/wizard/csvimport.py:64
 msgid "Double it"
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:61
+#: taskcoachlib/gui/wizard/csvimport.py:66
 msgid "Escape with"
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:72
+#: taskcoachlib/gui/wizard/csvimport.py:77
 msgid "Import only the selected rows"
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:75
+#: taskcoachlib/gui/wizard/csvimport.py:80
 msgid "First line describes fields"
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:88
+#: taskcoachlib/gui/wizard/csvimport.py:93
 msgid "Delimiter"
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:91
+#: taskcoachlib/gui/wizard/csvimport.py:96
+msgid "Date format"
+msgstr ""
+
+#: taskcoachlib/gui/wizard/csvimport.py:99
 msgid "Quote character"
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:94
+#: taskcoachlib/gui/wizard/csvimport.py:102
 msgid "Escape quote"
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:158
+#: taskcoachlib/gui/wizard/csvimport.py:166
 msgid "Field #%d"
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:202
+#: taskcoachlib/gui/wizard/csvimport.py:211
 msgid "Please select a file."
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:213
-#: taskcoachlib/persistence/csv/reader.py:65
+#: taskcoachlib/gui/wizard/csvimport.py:222
+#: taskcoachlib/persistence/csv/reader.py:69
 msgid "ID"
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:216
-#: taskcoachlib/persistence/csv/reader.py:72
+#: taskcoachlib/gui/wizard/csvimport.py:225
+#: taskcoachlib/persistence/csv/reader.py:76
 msgid "Category"
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:224
-#: taskcoachlib/persistence/csv/reader.py:115
+#: taskcoachlib/gui/wizard/csvimport.py:233
+#: taskcoachlib/persistence/csv/reader.py:119
 msgid "Percent complete"
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:247
+#: taskcoachlib/gui/wizard/csvimport.py:256
 msgid "Column header in CSV file"
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:248
+#: taskcoachlib/gui/wizard/csvimport.py:257
 msgid "%s attribute"
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:289
+#: taskcoachlib/gui/wizard/csvimport.py:298
 msgid "No field mapping."
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:292
+#: taskcoachlib/gui/wizard/csvimport.py:301
 msgid "The \"%s\" field cannot be selected several times."
 msgstr ""
 
-#: taskcoachlib/gui/wizard/csvimport.py:295
+#: taskcoachlib/gui/wizard/csvimport.py:304
 msgid "The fields %s cannot be selected several times."
 msgstr ""
 
@@ -5436,7 +5448,7 @@ msgstr ""
 msgid "No such mail: %d"
 msgstr ""
 
-#: taskcoachlib/persistence/csv/reader.py:51
+#: taskcoachlib/persistence/csv/reader.py:55
 msgid "No subject"
 msgstr ""
 
@@ -5765,11 +5777,11 @@ msgstr ""
 msgid "Defaulting to substring search."
 msgstr ""
 
-#: taskcoachlib/widgets/searchctrl.py:187
+#: taskcoachlib/widgets/searchctrl.py:189
 msgid "Recent searches"
 msgstr ""
 
-#: taskcoachlib/widgets/searchctrl.py:195
+#: taskcoachlib/widgets/searchctrl.py:197
 msgid "Viewer not searchable"
 msgstr ""
 
