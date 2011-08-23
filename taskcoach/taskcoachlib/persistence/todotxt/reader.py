@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import re
+import re, codecs
 from taskcoachlib.domain import task, category, date
 from taskcoachlib import patterns
 
@@ -29,7 +29,7 @@ class TodoTxtReader(object):
         self.__categoriesBySubject = self.__createSubjectCache(categoryList)
 
     def read(self, filename):
-        with file(filename, 'r') as fp:
+        with codecs.open(filename, 'r', 'utf-8') as fp:
             self.readFile(fp)
     
     @patterns.eventSource    

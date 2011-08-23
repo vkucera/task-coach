@@ -68,3 +68,14 @@ class AutoExporterTestCase(test.TestCase):
             todoTxtFile.write('Imported task\n')
         self.taskFile.tasks().append(task.Task(subject='Some task'))
         self.assertEqual(2, len(self.taskFile.tasks()))
+
+    def testImportAfterReadingTaskFile(self):
+        self.taskFile.save()
+        self.settings.set('file', 'autoimport', '["Todo.txt"]')
+        with file(self.txtFilename, 'w') as todoTxtFile:
+            todoTxtFile.write('Imported task\n')
+        self.taskFile.load()
+        self.assertEqual('Imported task', 
+                         list(self.taskFile.tasks())[0].subject())
+        
+        

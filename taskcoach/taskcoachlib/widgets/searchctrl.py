@@ -162,8 +162,10 @@ class SearchCtrl(tooltip.ToolTipMixin, wx.SearchCtrl):
     def onRecentSearchMenuItem(self, event):
         self.SetValue(self.__recentSearches[event.GetId()-self.__recentSearchMenuItemIds[0]])
         self.onFind(event)
-        event.Skip()
-                
+        # Don't call event.Skip(). It will result in this event handler being
+        # called again with the next menu item since wxPython thinks the 
+        # event has not been dealt with (on Mac OS X at least).
+        
     def rememberSearchString(self, searchString):
         if searchString in self.__recentSearches:
             self.__recentSearches.remove(searchString)

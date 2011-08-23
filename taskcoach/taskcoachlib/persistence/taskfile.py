@@ -329,6 +329,7 @@ class TaskFile(patterns.Observer):
             self.__loading = False
             self.__needSave = False
             self.__changedOnDisk = False
+        patterns.Event('taskfile.justRead', self).send()
         
     def save(self):
         patterns.Event('taskfile.aboutToSave', self).send()
