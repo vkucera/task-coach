@@ -50,6 +50,11 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
         self.delimiter.Append(_('Semicolon'))
         self.delimiter.SetSelection(0)
 
+        self.date = wx.Choice(self)
+        self.date.Append(_('DD/MM (day first)'))
+        self.date.Append(_('MM/DD (month first)'))
+        self.date.SetSelection(0)
+        
         self.quoteChar = wx.Choice(self, wx.ID_ANY)
         self.quoteChar.Append(_('Simple quote'))
         self.quoteChar.Append(_('Double quote'))
@@ -87,7 +92,10 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
 
         gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Delimiter')), 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALL, 3)
         gridSizer.Add(self.delimiter, 0, wx.ALL, 3)
-
+        
+        gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Date format')), 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 3)
+        gridSizer.Add(self.date, 0, wx.ALL, 3)
+        
         gridSizer.Add(wx.StaticText(self, wx.ID_ANY, _('Quote character')), 0, wx.ALIGN_CENTRE_VERTICAL|wx.ALL, 3)
         gridSizer.Add(self.quoteChar, 0, wx.ALL, 3)
 
@@ -180,6 +188,7 @@ class CSVImportOptionsPage(wiz.WizardPageSimple):
 
     def GetOptions(self):
         return dict(dialect=self.dialect,
+                    dayfirst=self.date.GetSelection() == 0,
                     importSelectedRowsOnly=self.importSelectedRowsOnly.GetValue(),
                     selectedRows=self.GetSelectedRows(),
                     hasHeaders=self.hasHeaders.GetValue(),

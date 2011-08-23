@@ -30,7 +30,8 @@ class CSVReaderTestCase(test.TestCase):
         self.reader = persistence.CSVReader(self.taskList, self.categoryList)
         self.defaultReaderKwArgs = dict(encoding='utf-8', dialect='excel',
                                         hasHeaders=False, 
-                                        importSelectedRowsOnly=False)
+                                        importSelectedRowsOnly=False,
+                                        dayfirst=True)
         
     def createCSVFile(self, contents):
         with tempfile.NamedTemporaryFile(delete=False) as tmpFile:
@@ -200,4 +201,19 @@ class CSVReaderTestCase(test.TestCase):
                          **self.defaultReaderKwArgs)
         parent = [t for t in self.taskList if not t.parent()][0]
         self.assertEqual(2, len(parent.children()))
+        
+    def testDayFirstDates(self):
+        filename = self.createCSVFile('T1,30-6-2011\nT2,1-1-2011\nT3,4-4-2011')
+        self.reader.read(filename=filename,
+                         mappings={0: 'Subject', 1: 'Due date'},
+                         **self.defaultReaderKwArgs)
+        self.assertEqual(set([1,4,6]), set(t.dueDateTime().month for t in self.taskList))
+        
+    def testMonthFirstDates(self):
+        filename = self.createCSVFile('T1,3-6-2011\nT2,1-1-2011\nT3,4-20-2011')
+        self.defaultReaderKwArgs['dayfirst'] = False
+        self.reader.read(filename=filename,
+                         mappings={0: 'Subject', 1: 'Due date'},
+                         **self.defaultReaderKwArgs)
+        self.assertEqual(set([1,3,4]), set(t.dueDateTime().month for t in self.taskList))
         

@@ -41,7 +41,16 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.26', 'August 19, 2011',
+Release('1.2.27', 'August 23, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''When importing a CVS file, Task Coach would not always guess
+the day/month order correctly. It is now possible to specify whether days or 
+months come first in date columns.''' ),
+        ],
+    ),
+
+Release('1.2.26', 'August 20, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Checking an already checked mutually exclusive subcategory now 
@@ -49,6 +58,10 @@ unchecks it.''', '3377145'),
         Bug('''Task Coach would not start on PPC Macs.''', '3388666'),
         Bug('''Saving a task as template would not work if the subject or
 description contains non-ascii characters'''),
+        Bug('''Fix case insensitive searching with non-ascii languages.''',
+            '3395268'),
+        Bug('''The recent searches menu in the search control wasn't working
+properly on Mac OS X.''')
         ],
     featuresAdded=[
         Feature('''Importing and exporting of Todo.txt format task files. 
