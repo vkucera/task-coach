@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
 
-Release('1.2.27', 'August 23, 2011',
+Release('1.2.27', 'August 24, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''When importing a CVS file, Task Coach would not always guess

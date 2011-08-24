@@ -101,14 +101,11 @@ class CalendarConfigDialog(dialog.Dialog):
         self._highlight = csel.ColourSelect(self._interior, wx.ID_ANY, size=(100, 20))
         self._highlight.SetColour(color)
 
-        self._fontsize = wx.SpinCtrl(self._interior, wx.ID_ANY, self._settings.get(self._settingsSection, 'fontsize'))
-
         self.addItem(sizer, _('Span'), self._spanCount, self._spanType, _('Kind of period displayed and its count'))
         self.addItem(sizer, _('Orientation'), (0, 0), self._type, _('Calendar orientation'))
         self.addItem(sizer, _('Tasks'), (0, 0), self._display, _('Mandatory attributes of displayed tasks'))
         self.addItem(sizer, _('Show now'), (0, 0), self._shownow, _('Draw a line showing the current time'))
         self.addItem(sizer, _('Highlight'), (0, 0), self._highlight, _('Color used to highlight the current day'))
-        self.addItem(sizer, _('Font size'), (0, 0), self._fontsize, _('Size of the font used to draw the task subject'))
 
         sizer.AddGrowableCol(3)
 
@@ -132,7 +129,6 @@ class CalendarConfigDialog(dialog.Dialog):
         self._settings.set(self._settingsSection, 'shownodue', str(shownodue))
         self._settings.set(self._settingsSection, 'showunplanned', str(showunplanned))
         self._settings.set(self._settingsSection, 'shownow', str(self._shownow.GetValue()))
-        self._settings.set(self._settingsSection, 'fontsize', str(self._fontsize.GetValue()))
 
         color = self._highlight.GetColour()
         self._settings.set(self._settingsSection, 'highlightcolor', '%d,%d,%d' % (color.Red(), color.Green(), color.Blue()))
