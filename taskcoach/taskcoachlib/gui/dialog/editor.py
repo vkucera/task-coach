@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx.combo, os.path
-from taskcoachlib import widgets, patterns, command
+from taskcoachlib import widgets, patterns, command, platform
 from taskcoachlib.gui import viewer, artprovider, uicommand, windowdimensionstracker
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, date, note, attachment
@@ -182,7 +182,7 @@ class AttachmentSubjectPage(SubjectPage):
         self.addDescriptionEntry()
 
     def addLocationEntry(self):
-        panel = wx.Panel(self, wx.ID_ANY)
+        panel = wx.Panel(self)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         # pylint: disable-msg=W0201
         location = self.items[0].location() if len(self.items) == 1 else _('Edit to change location of all attachments')
@@ -452,7 +452,7 @@ class DatesPage(Page):
         self._scheduleChoice = wx.Choice(schedulePanel,
             choices=[_('previous start and/or due date and time'),
                      _('last completion date and time')])
-        if '__WXMAC__' == wx.Platform:
+        if platform.isMac():
             # On Mac OS X, the wx.Choice gets too little vertical space by default
             size = self._scheduleChoice.GetSizeTuple()
             self._scheduleChoice.SetMinSize((size[0], size[1]+1))
@@ -968,7 +968,10 @@ class EditBook(widgets.Notebook):
         pageNamesInUserOrder = self.settings.getlist('editor', '%spages' % self.object)
         remainingPageNames = self.allPageNames[:]
         for pageName in pageNamesInUserOrder:
-            remainingPageNames.remove(pageName)
+            try:
+                remainingPageNames.remove(pageName)
+            except ValueError:
+                pass # Page doesn't exist anymore
         return pageNamesInUserOrder + remainingPageNames
                     
     def shouldCreatePage(self, pageName):

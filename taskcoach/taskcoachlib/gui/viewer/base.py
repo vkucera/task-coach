@@ -81,8 +81,18 @@ class Viewer(wx.Panel):
                
     def detach(self):
         ''' Should be called by viewer.container before closing the viewer '''
-        patterns.Publisher().removeInstance(self.presentation())
-        patterns.Publisher().removeInstance(self)
+        observers = [self, self.presentation()]
+        observable = self.presentation()
+        while True:
+            try:
+                observable = observable.observable()
+            except AttributeError:
+                break
+            else:
+                observers.append(observable)
+        for observer in observers:
+            patterns.Publisher().removeInstance(observer)
+        
         for popupMenu in self._popupMenus:
             try:
                 popupMenu.Destroy()
