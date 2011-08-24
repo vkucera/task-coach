@@ -587,7 +587,7 @@ class FileEditTemplates(SettingsCommand, UICommand):
 
     def doCommand(self, event):
         dlg = dialog.templates.TemplatesDialog(self.settings, self.mainWindow(), 
-                                               _('Edit templates'))
+                                               title=_('Edit templates'))
         dlg.Show()
 
 

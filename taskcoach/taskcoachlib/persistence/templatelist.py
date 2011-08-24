@@ -58,26 +58,13 @@ class TemplateList(object):
                 pass
         return filenames
     
-    def _copyTask(self, task):
-        copy = task.copy()
-        for name in ['startdatetmpl', 'duedatetmpl', 'completiondatetmpl', 'remindertmpl']:
-            if hasattr(task, name):
-                setattr(copy, name, getattr(task, name))
-        for child in copy.children():
-            copy.removeChild(child)
-        for child in task.children():
-            childCopy = self._copyTask(child)
-            childCopy.setParent(copy)
-            copy.addChild(childCopy)
-        return copy
-
     def save(self):
         pickle.dump([name for task, name in self._templates], file(os.path.join(self._path, 'list.pickle'), 'wb'))
 
         for task, name in self._templates:
             templateFile = file(os.path.join(self._path, name), 'w')
             writer = TemplateXMLWriter(templateFile)
-            writer.write(self._copyTask(task))
+            writer.write(task)
             templateFile.close()
 
         for task, name in self._toDelete:
