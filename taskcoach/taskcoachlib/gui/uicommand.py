@@ -1363,7 +1363,6 @@ class Delete(NeedsSelectionMixin, ViewerCommand):
             *args, **kwargs)
         
     def doCommand(self, event):
-        print event
         windowWithFocus = wx.Window.FindFocus()
         if self.windowIsTextCtrl(windowWithFocus):
             # Simulate Delete key press
