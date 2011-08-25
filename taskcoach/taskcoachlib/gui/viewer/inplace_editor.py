@@ -42,8 +42,14 @@ class PriorityCtrl(hypertreelist.EditCtrl, widgets.SpinCtrl):
         self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
         
     def OnKeyDown(self, event):
-        if event.GetKeyCode() == wx.WXK_ESCAPE:
+        keyCode = event.GetKeyCode()
+        if keyCode == wx.WXK_ESCAPE:
             self.StopEditing()
+        elif keyCode in (wx.WXK_RETURN, wx.WXK_NUMPAD_ENTER) and not event.ShiftDown():
+            # Notify the owner about the changes
+            self.AcceptChanges()
+            # Even if vetoed, close the control (consistent with MSW)
+            wx.CallAfter(self.Finish)
         else:
             event.Skip()
 

@@ -598,7 +598,7 @@ class CalendarViewer(mixin.AttachmentDropTargetMixin,
             self.widget.Thaw()
 
     def configure(self):
-        dlg = CalendarConfigDialog(self.settings, self.settingsSection(), self, _('Calendar viewer configuration'))
+        dlg = CalendarConfigDialog(self.settings, self.settingsSection(), self, title=_('Calendar viewer configuration'))
         dlg.CentreOnParent()
         if dlg.ShowModal() == wx.ID_OK:
             self.reconfig()

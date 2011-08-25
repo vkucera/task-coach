@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx.combo, os.path
-from taskcoachlib import widgets, patterns, command
+from taskcoachlib import widgets, patterns, command, platform
 from taskcoachlib.gui import viewer, uicommand, windowdimensionstracker
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, date, note, attachment
@@ -747,7 +747,10 @@ class EditBook(widgets.Notebook):
         pageNamesInUserOrder = self.settings.getlist('editor', '%spages' % self.object)
         remainingPageNames = self.allPageNames[:]
         for pageName in pageNamesInUserOrder:
-            remainingPageNames.remove(pageName)
+            try:
+                remainingPageNames.remove(pageName)
+            except ValueError:
+                pass # Page doesn't exist anymore
         return pageNamesInUserOrder + remainingPageNames
                     
     def shouldCreatePage(self, pageName):
@@ -1085,7 +1088,7 @@ class Editor(widgets.ButtonLessDialog):
         patterns.Publisher().removeInstance(self)
         # On Mac OS X, the text control does not lose focus when
         # destroyed...
-        if wx.Platform == '__WXMAC__':
+        if platform.isMac():
             self._interior.SetFocusIgnoringChildren()
                         
     def onItemRemoved(self, event):
