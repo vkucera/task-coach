@@ -35,6 +35,8 @@ would uncheck it, but not change the filtering.''', '3377145'),
 later the reminder dialog was closed without snoozing.''', '3397920'),
         Bug('''Using the Delete key when editing the priority inline would 
 delete the task.'''),
+        Bug('''Using the Enter key when editing the priority inline would not
+accept the changes on Mac OS X.'''),
         ],
     ),
 

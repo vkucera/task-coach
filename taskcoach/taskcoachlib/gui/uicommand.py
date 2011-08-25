@@ -1363,6 +1363,7 @@ class Delete(NeedsSelectionMixin, ViewerCommand):
             *args, **kwargs)
         
     def doCommand(self, event):
+        print event
         windowWithFocus = wx.Window.FindFocus()
         if self.windowIsTextCtrl(windowWithFocus):
             # Simulate Delete key press
@@ -1378,7 +1379,7 @@ class Delete(NeedsSelectionMixin, ViewerCommand):
     def enabled(self, event):
         windowWithFocus = wx.Window.FindFocus()
         if self.windowIsTextCtrl(windowWithFocus):
-            return not platform.isMac()
+            return True #not platform.isMac()
         else:
             return super(Delete, self).enabled(event)
         
