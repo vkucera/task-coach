@@ -33,6 +33,8 @@ would uncheck it, but not change the filtering.''', '3377145'),
         Bug('''The calendar configuration dialog wouldn't open.''', '3395689'),
         Bug('''Saving could fail after a reminder was first snoozed and then
 later the reminder dialog was closed without snoozing.''', '3397920'),
+        Bug('''Using the Delete key when editing the priority inline would 
+delete the task.'''),
         ],
     ),
 
