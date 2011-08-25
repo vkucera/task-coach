@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns, meta, command, help, widgets, persistence, thirdparty, render, platform # pylint: disable-msg=W0622
+from taskcoachlib import patterns, meta, command, help, widgets, persistence, thirdparty, render # pylint: disable-msg=W0622
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import base, task, note, category, attachment, effort
 from taskcoachlib.mailer import sendMail
@@ -974,10 +974,16 @@ class SelectAll(NeedsItemsMixin, ViewerCommand):
         
     def doCommand(self, event):
         windowWithFocus = wx.Window.FindFocus()
-        if isinstance(windowWithFocus, wx.TextCtrl):
+        if self.windowIsTextCtrl(windowWithFocus):
             windowWithFocus.SetSelection(-1, -1) # Select all text
         else:
             self.viewer.selectall()
+            
+    @staticmethod
+    def windowIsTextCtrl(window):
+        return isinstance(window, wx.TextCtrl) or \
+               isinstance(window, hypertreelist.EditCtrl)
+
 
 
 class ClearSelection(NeedsSelectionMixin, ViewerCommand):
