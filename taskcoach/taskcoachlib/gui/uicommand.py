@@ -1379,7 +1379,7 @@ class Delete(NeedsSelectionMixin, ViewerCommand):
     def enabled(self, event):
         windowWithFocus = wx.Window.FindFocus()
         if self.windowIsTextCtrl(windowWithFocus):
-            return True #not platform.isMac()
+            return True
         else:
             return super(Delete, self).enabled(event)
         
