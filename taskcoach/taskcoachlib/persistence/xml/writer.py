@@ -109,7 +109,7 @@ class XMLWriter(object):
         if task.fixedFee() != 0:
             node.attrib['fixedFee'] = str(task.fixedFee())
         reminder = task.reminder() 
-        if reminder != maxDateTime:
+        if reminder != maxDateTime and reminder != None:
             node.attrib['reminder'] = str(reminder)
             reminderBeforeSnooze = task.reminder(includeSnooze=False)
             if reminderBeforeSnooze != None and reminderBeforeSnooze < task.reminder():
@@ -231,7 +231,7 @@ class XMLWriter(object):
             node.attrib['expandedContexts'] = \
                      str(tuple(sorted(item.expandedContexts())))
         for child in item.children():
-            childNodeFactory(node, child, *childNodeFactoryArgs)
+            childNodeFactory(node, child, *childNodeFactoryArgs) # pylint: disable-msg=W0142
         return node
 
     def attachmentNode(self, parentNode, attachment):

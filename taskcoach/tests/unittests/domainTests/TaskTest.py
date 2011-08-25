@@ -1920,6 +1920,7 @@ class TaskReminderTestCase(TaskTestCase, CommonTaskTestsMixin):
     def testSnoozeWithZeroTimeDelta(self):
         self.task.snoozeReminder(date.TimeDelta())
         self.assertReminder(None)
+        self.assertEqual(None, self.task.reminder(includeSnooze=False))
         
     def testOriginalReminder(self):
         self.assertEqual(self.initialReminder(), self.task.reminder(includeSnooze=False))

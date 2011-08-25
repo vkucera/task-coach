@@ -993,8 +993,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         self.__reminderBeforeSnooze = reminderDateTime
         
     def snoozeReminder(self, timeDelta, event=None, now=date.Now):
-        newReminderDateTime = now() + timeDelta if timeDelta else None
-        self.__reminder.set(newReminderDateTime, event=event)
+        if timeDelta:
+            self.__reminder.set(now() + timeDelta, event=event)
+        else:
+            self.setReminder(event=event)
 
     def reminderEvent(self, event):
         event.addSource(self, self.reminder(), type=self.reminderChangedEventType())

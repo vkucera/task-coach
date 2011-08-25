@@ -33,7 +33,7 @@ class ExportDialog(sized_controls.SizedDialog):
         self.settings = kwargs.pop('settings')
         super(ExportDialog, self).__init__(title=self.title, *args, **kwargs)
         pane = self.GetContentsPane()
-        pane.SetSizerType("vertical")
+        pane.SetSizerType('vertical')
         self.createInterior(pane)
         buttonSizer = self.CreateStdDialogButtonSizer(wx.OK|wx.CANCEL)
         self.SetButtonSizer(buttonSizer)
@@ -48,7 +48,7 @@ class ExportDialog(sized_controls.SizedDialog):
         panel = sized_controls.SizedPanel(pane)
         panel.SetSizerType('horizontal')
         label = wx.StaticText(panel, label=('Export items from:'))
-        sized_controls.SetSizerProp(label, 'valign', 'center')
+        label.SetSizerProps(valign='center')
         # pylint: disable-msg=W0201
         self.viewerComboBox = wx.ComboBox(panel, style=wx.CB_READONLY|wx.CB_SORT)
         self.titleToViewer = dict()

@@ -32,8 +32,8 @@ class TemplatesDialogTestCase(test.wxTestCase):
 
         self.settings.pathToTemplatesDir = lambda: self.path
 
-        self.editor = gui.dialog.templates.TemplatesDialog(self.settings, self.frame, 
-            'title', raiseDialog=False)
+        self.editor = gui.dialog.templates.TemplatesDialog(self.settings, 
+                                                           self.frame, title='title')
         
     def tearDown(self):
         super(TemplatesDialogTestCase, self).tearDown()

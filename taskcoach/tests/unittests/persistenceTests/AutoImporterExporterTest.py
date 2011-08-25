@@ -33,7 +33,7 @@ class AutoExporterTestCase(test.TestCase):
     def tearDown(self):
         super(AutoExporterTestCase, self).tearDown()
         del self.exporter
-        for filename in self.tskFilename, self.txtFilename:
+        for filename in self.tskFilename, self.tskFilename + '.delta', self.txtFilename:
             try:
                 os.remove(filename)
             except OSError:

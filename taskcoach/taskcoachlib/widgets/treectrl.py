@@ -475,6 +475,10 @@ class CheckTreeCtrl(TreeListCtrl):
             
     def uncheckItem(self, item, torefresh):
         self.GetMainWindow().CheckItem2(item, checked=False, torefresh=torefresh)
+        event = customtree.TreeEvent(customtree.wxEVT_TREE_ITEM_CHECKED, self.GetId())
+        event.SetItem(item)
+        event.SetEventObject(self)
+        self.GetEventHandler().ProcessEvent(event)
         
     def _refreshObjectCompletely(self, item, domainObject):
         super(CheckTreeCtrl, self)._refreshObjectCompletely(item, domainObject)

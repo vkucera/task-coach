@@ -25,7 +25,7 @@ from taskcoachlib.i18n import _
 from taskcoachlib.domain import base, task, note, category, attachment, effort
 from taskcoachlib.mailer import sendMail
 from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_NEXT, wxSCHEDULER_PREV, wxSCHEDULER_TODAY
-from taskcoachlib.thirdparty import desktop
+from taskcoachlib.thirdparty import desktop, hypertreelist
 from taskcoachlib.gui.wizard import CSVImportWizard
 from taskcoachlib.tools import anonymize
 import dialog, viewer, printer
@@ -600,7 +600,7 @@ class FileEditTemplates(SettingsCommand, UICommand):
 
     def doCommand(self, event):
         dlg = dialog.templates.TemplatesDialog(self.settings, self.mainWindow(), 
-                                               _('Edit templates'))
+                                               title=_('Edit templates'))
         dlg.Show()
 
 
@@ -987,10 +987,16 @@ class SelectAll(NeedsItemsMixin, ViewerCommand):
         
     def doCommand(self, event):
         windowWithFocus = wx.Window.FindFocus()
-        if isinstance(windowWithFocus, wx.TextCtrl):
+        if self.windowIsTextCtrl(windowWithFocus):
             windowWithFocus.SetSelection(-1, -1) # Select all text
         else:
             self.viewer.selectall()
+            
+    @staticmethod
+    def windowIsTextCtrl(window):
+        return isinstance(window, wx.TextCtrl) or \
+               isinstance(window, hypertreelist.EditCtrl)
+
 
 
 class ClearSelection(NeedsSelectionMixin, ViewerCommand):
@@ -1377,7 +1383,7 @@ class Delete(NeedsSelectionMixin, ViewerCommand):
         
     def doCommand(self, event):
         windowWithFocus = wx.Window.FindFocus()
-        if isinstance(windowWithFocus, wx.TextCtrl):
+        if self.windowIsTextCtrl(windowWithFocus):
             # Simulate Delete key press
             fromIndex, toIndex = windowWithFocus.GetSelection()
             if fromIndex == toIndex: 
@@ -1390,10 +1396,15 @@ class Delete(NeedsSelectionMixin, ViewerCommand):
         
     def enabled(self, event):
         windowWithFocus = wx.Window.FindFocus()
-        if isinstance(windowWithFocus, wx.TextCtrl):
-            return '__WXMAC__' != wx.Platform
+        if self.windowIsTextCtrl(windowWithFocus):
+            return True
         else:
             return super(Delete, self).enabled(event)
+        
+    @staticmethod
+    def windowIsTextCtrl(window):
+        return isinstance(window, wx.TextCtrl) or \
+               isinstance(window, hypertreelist.EditCtrl)
 
 
 class TaskNew(TaskListCommand, SettingsCommand):

@@ -16,14 +16,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, dialog
+import wx
+import wx.lib.colourselect as csel
+from taskcoachlib.thirdparty import sized_controls
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty.wxScheduler import wxSCHEDULER_DAILY, wxSCHEDULER_WEEKLY, \
      wxSCHEDULER_MONTHLY, wxSCHEDULER_HORIZONTAL, wxSCHEDULER_VERTICAL
-import wx.lib.colourselect as csel
 
 
-class CalendarConfigDialog(dialog.Dialog):
+class CalendarConfigDialog(sized_controls.SizedDialog):
     VIEWTYPES = [wxSCHEDULER_DAILY, wxSCHEDULER_WEEKLY, wxSCHEDULER_MONTHLY]
     VIEWORIENTATIONS = [wxSCHEDULER_HORIZONTAL, wxSCHEDULER_VERTICAL]
     VIEWFILTERS = [(False, False, False), (False, True, False), (True, False, False), (True, True, False), (True, True, True)]
@@ -32,110 +33,100 @@ class CalendarConfigDialog(dialog.Dialog):
         self._settings = settings
         self._settingsSection = settingsSection
         super(CalendarConfigDialog, self).__init__(*args, **kwargs)
+        pane = self.GetContentsPane()
+        pane.SetSizerType('form')
+        self.createInterior(pane)
+        buttonSizer = self.CreateStdDialogButtonSizer(wx.OK|wx.CANCEL)
+        self.SetButtonSizer(buttonSizer)
+        self.Fit()
+        buttonSizer.GetAffirmativeButton().Bind(wx.EVT_BUTTON, self.ok)
 
-    def createInterior(self):
-        return wx.Panel(self._panel)
-
-    def indexOf(self, lst, v):
-        for idx, value in enumerate(lst):
-            if v == value:
-                return idx
-
-    def indexOfViewType(self, type_):
-        return self.indexOf(self.VIEWTYPES, type_)
-
-    def indexOfViewOrientation(self, orientation):
-        return self.indexOf(self.VIEWORIENTATIONS, orientation)
-
-    def indexOfViewFilter(self, flt):
-        return self.indexOf(self.VIEWFILTERS, flt)
-
-    def addItem(self, sizer, description, item1, item2, helpText):
-        sizer.Add(wx.StaticText(self._interior, wx.ID_ANY, description), 0, wx.ALL|wx.ALIGN_CENTRE_VERTICAL, 3)
-        sizer.Add(item1, 0, wx.ALL|wx.ALIGN_CENTRE_VERTICAL, 3)
-        sizer.Add(item2, 0, wx.ALL|wx.ALIGN_CENTRE_VERTICAL, 3)
-        sizer.Add(wx.StaticText(self._interior, wx.ID_ANY, helpText), 0, wx.ALL|wx.ALIGN_CENTRE_VERTICAL, 3)
-
-    def fillInterior(self):
-        # pylint: disable-msg=W0201
-        sizer = wx.FlexGridSizer(0, 4)
-
-        self._spanCount = wx.SpinCtrl(self._interior, wx.ID_ANY, '1')
-        self._spanType = wx.Choice(self._interior, wx.ID_ANY)
-        self._spanType.Append(_('Day(s)'))
-        self._spanType.Append(_('Week(s)'))
-        self._spanType.Append(_('Month'))
-
+    def createInterior(self, pane):
+        self.createPeriodEntry(pane)
+        self.createOrientationEntry(pane)
+        self.createDisplayEntry(pane)
+        self.createLineEntry(pane)
+        self.createColorEntry(pane)
+        
+    def createPeriodEntry(self, pane):
+        label = wx.StaticText(pane, label=_('Kind of period displayed and its count'))
+        label.SetSizerProps(valign='center')
+        panel = sized_controls.SizedPanel(pane)
+        panel.SetSizerType('horizontal')
+        self._spanCount = wx.SpinCtrl(panel, value='1', min=1) # pylint: disable-msg=W0201
+        self._spanCount.SetSizerProps(valign='center')
+        periods = (_('Day(s)'), _('Week(s)'), _('Month'))
+        self._spanType = wx.Choice(panel, choices=periods) # pylint: disable-msg=W0201
+        self._spanType.SetSizerProps(valign='center')
         self._spanCount.SetValue(self._settings.getint(self._settingsSection, 'periodcount'))
-        self._spanType.SetSelection(self.indexOfViewType(self._settings.getint(self._settingsSection, 'viewtype')))
-
-        self._type = wx.Choice(self._interior, wx.ID_ANY)
-        self._type.Append(_('Horizontal'))
-        self._type.Append(_('Vertical'))
-
-        self._type.SetSelection(self.indexOfViewOrientation(self._settings.getint(self._settingsSection, 'vieworientation')))
-
-        self._display = wx.Choice(self._interior, wx.ID_ANY)
-        self._display.Append(_('Start and due date'))
-        self._display.Append(_('Start date'))
-        self._display.Append(_('Due date'))
-        self._display.Append(_('All but unplanned'))
-        self._display.Append(_('All'))
-
-        self._display.SetSelection(self.indexOfViewFilter((self._settings.getboolean(self._settingsSection, 'shownostart'),
-                                                           self._settings.getboolean(self._settingsSection, 'shownodue'),
-                                                           self._settings.getboolean(self._settingsSection, 'showunplanned'))))
-
-        self._shownow = wx.CheckBox(self._interior, wx.ID_ANY, '')
+        selection = self.VIEWTYPES.index(self._settings.getint(self._settingsSection, 'viewtype'))
+        self._spanType.SetSelection(selection)
+        panel.SetSizerProps(valign='center')
+        panel.Fit()
+        self._spanType.Bind(wx.EVT_CHOICE, self.onChangeViewType)
+        
+    def createOrientationEntry(self, pane):
+        label = wx.StaticText(pane, label=_('Calendar orientation'))
+        label.SetSizerProps(valign='center')
+        orientations = (_('Horizontal'), _('Vertical'))
+        self._orientation = wx.Choice(pane, choices=orientations) # pylint: disable-msg=W0201
+        self._orientation.SetSizerProps(valign='center')
+        selection = self.VIEWORIENTATIONS.index(self._settings.getint(self._settingsSection, 'vieworientation'))
+        self._orientation.SetSelection(selection)
+        
+    def createDisplayEntry(self, pane):
+        label = wx.StaticText(pane, label=_('Which tasks to display'))
+        label.SetSizerProps(valign='center')
+        choices = (_('Tasks with a start date and a due date'), 
+                   _('Tasks with a start date'), _('Tasks with a due date'),
+                   _('All tasks, except unplanned tasks'), _('All tasks'))
+        self._display = wx.Choice(pane, choices=choices) # pylint: disable-msg=W0201
+        self._display.SetSizerProps(valign='center')
+        selection = self.VIEWFILTERS.index((self._settings.getboolean(self._settingsSection, 'shownostart'),
+                                            self._settings.getboolean(self._settingsSection, 'shownodue'),
+                                            self._settings.getboolean(self._settingsSection, 'showunplanned')))
+        self._display.SetSelection(selection)
+        
+    def createLineEntry(self, pane):
+        label = wx.StaticText(pane, label=_('Draw a line showing the current time'))
+        label.SetSizerProps(valign='center')
+        self._shownow = wx.CheckBox(pane) # pylint: disable-msg=W0201
+        self._shownow.SetSizerProps(valign='center')
         self._shownow.SetValue(self._settings.getboolean(self._settingsSection, 'shownow'))
 
+    def createColorEntry(self, pane):
+        label = wx.StaticText(pane, label=_('Color used to highlight the current day'))
+        label.SetSizerProps(valign='center')
         hcolor = self._settings.get(self._settingsSection, 'highlightcolor')
         if not hcolor:
-            # The highlight colour is too dark
+            # The highlight color is too dark
             color = wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHT )
             color = wx.Colour(int((color.Red() + 255) / 2),
                               int((color.Green() + 255) / 2),
                               int((color.Blue() + 255) / 2))
         else:
             color = wx.Colour(*tuple(map(int, hcolor.split(',')))) # pylint: disable-msg=W0141
-        self._highlight = csel.ColourSelect(self._interior, wx.ID_ANY, size=(100, 20))
+        self._highlight = csel.ColourSelect(pane, size=(100, 20)) # pylint: disable-msg=W0201
+        label.SetSizerProps(valign='center')
         self._highlight.SetColour(color)
 
-        self._fontsize = wx.SpinCtrl(self._interior, wx.ID_ANY, self._settings.get(self._settingsSection, 'fontsize'))
-
-        self.addItem(sizer, _('Span'), self._spanCount, self._spanType, _('Kind of period displayed and its count'))
-        self.addItem(sizer, _('Orientation'), (0, 0), self._type, _('Calendar orientation'))
-        self.addItem(sizer, _('Tasks'), (0, 0), self._display, _('Mandatory attributes of displayed tasks'))
-        self.addItem(sizer, _('Show now'), (0, 0), self._shownow, _('Draw a line showing the current time'))
-        self.addItem(sizer, _('Highlight'), (0, 0), self._highlight, _('Color used to highlight the current day'))
-        self.addItem(sizer, _('Font size'), (0, 0), self._fontsize, _('Size of the font used to draw the task subject'))
-
-        sizer.AddGrowableCol(3)
-
-        self._interior.SetSizer(sizer)
-
-        wx.EVT_CHOICE(self._spanType, wx.ID_ANY, self.OnChangeViewType)
-
-    def OnChangeViewType(self, event): # pylint: disable-msg=W0613
+    def onChangeViewType(self, event): # pylint: disable-msg=W0613
         if self.VIEWTYPES[self._spanType.GetSelection()] == wxSCHEDULER_MONTHLY:
             self._spanCount.SetValue(1)
             self._spanCount.Enable(False)
         else:
             self._spanCount.Enable(True)
 
-    def ok(self, event=None):
-        self._settings.set(self._settingsSection, 'periodcount', str(self._spanCount.GetValue()))
-        self._settings.set(self._settingsSection, 'viewtype', str(self.VIEWTYPES[self._spanType.GetSelection()]))
-        self._settings.set(self._settingsSection, 'vieworientation', str(self.VIEWORIENTATIONS[self._type.GetSelection()]))
+    def ok(self, event=None): # pylint: disable-msg=W0613
+        settings, section = self._settings, self._settingsSection
+        settings.set(section, 'periodcount', str(self._spanCount.GetValue()))
+        settings.set(section, 'viewtype', str(self.VIEWTYPES[self._spanType.GetSelection()]))
+        settings.set(section, 'vieworientation', str(self.VIEWORIENTATIONS[self._orientation.GetSelection()]))
         shownostart, shownodue, showunplanned = self.VIEWFILTERS[self._display.GetSelection()]
-        self._settings.set(self._settingsSection, 'shownostart', str(shownostart))
-        self._settings.set(self._settingsSection, 'shownodue', str(shownodue))
-        self._settings.set(self._settingsSection, 'showunplanned', str(showunplanned))
-        self._settings.set(self._settingsSection, 'shownow', str(self._shownow.GetValue()))
-        self._settings.set(self._settingsSection, 'fontsize', str(self._fontsize.GetValue()))
-
+        settings.set(section, 'shownostart', str(shownostart))
+        settings.set(section, 'shownodue', str(shownodue))
+        settings.set(section, 'showunplanned', str(showunplanned))
+        settings.set(section, 'shownow', str(self._shownow.GetValue()))
         color = self._highlight.GetColour()
-        self._settings.set(self._settingsSection, 'highlightcolor', '%d,%d,%d' % (color.Red(), color.Green(), color.Blue()))
-
+        settings.set(section, 'highlightcolor', '%d,%d,%d' % (color.Red(), color.Green(), color.Blue()))
         self.EndModal(wx.ID_OK)
-        super(CalendarConfigDialog, self).ok(event)
