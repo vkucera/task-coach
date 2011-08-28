@@ -1239,6 +1239,7 @@ class TwoWayModifiedTasks(BaseState):
                 self.pack('s', task.id())
 
     def finished(self):
+        self.disp().log(_('End of task synchronization.'))
         if self.version < 4:
             self.setState(FullFromDesktopState)
         else:
@@ -1255,11 +1256,11 @@ class TwoWayNewEffortsState(BaseState):
             try:
                 task = self.taskMap[taskId]
             except KeyError:
-                pass
+                self.disp().log(_('Could not find task %s for effort.'), taskId)
 
         effort = Effort(task, started, ended, subject=subject)
-        self.disp().window.addIPhoneEffort(task, effort)
         self.disp().log(_('New effort %s'), effort.id())
+        self.disp().window.addIPhoneEffort(task, effort)
 
         self.pack('s', effort.id())
 
