@@ -68,7 +68,7 @@ def recurrence(recurrence):
     else:
         labels = [_('Daily'), _('Weekly'), _('Monthly'), _('Yearly')] 
     mapping = dict(zip(['daily', 'weekly', 'monthly', 'yearly'], labels))
-    return mapping.get(recurrence.unit, recurrence.amount)%dict(frequency=recurrence.amount)
+    return mapping.get(recurrence.unit)%dict(frequency=recurrence.amount)
 
 def budget(aBudget):
     ''' render budget (of type date.TimeDelta) as

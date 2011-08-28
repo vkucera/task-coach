@@ -41,7 +41,7 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.27', 'August 25, 2011',
+Release('1.2.27', 'August 26, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''When importing a CVS file, Task Coach would not always guess
@@ -56,6 +56,7 @@ later the reminder dialog was closed without snoozing.''', '3397920'),
 delete the task.'''),
         Bug('''Using the Enter key when editing the priority inline would not
 accept the changes on Mac OS X.'''),
+        Bug('''Fix issues in Italian translation.''', '3398600'),
         ],
     ),
 

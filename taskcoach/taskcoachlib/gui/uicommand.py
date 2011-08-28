@@ -595,7 +595,7 @@ class FilePurgeDeletedItems(NeedsDeletedItemsMixin, IOCommand):
     def __init__(self, *args, **kwargs):
         super(FilePurgeDeletedItems, self).__init__(\
             menuText=_('&Purge deleted items'),
-            helpText=_('Actually delete deleted tasks and notes (see the SyncML chapter in Help'),
+            helpText=_('Actually delete deleted tasks and notes (see the SyncML chapter in Help)'),
             bitmap='delete', *args, **kwargs)
 
     def doCommand(self, event):
