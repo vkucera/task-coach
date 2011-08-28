@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, threading
+import wx, threading, traceback, StringIO
 
 wxEVT_INVOKE = wx.NewEventType()
 
@@ -37,6 +37,7 @@ class InvokeEvent(wx.PyEvent):
         self.kwargs = kwargs
         self.event = threading.Event()
         self.result = None
+        self.exception = None
 
 
 class DeferredCallMixin(object):
@@ -49,7 +50,10 @@ class DeferredCallMixin(object):
         EVT_INVOKE(self, self.__OnInvoke)
 
     def __OnInvoke(self, event):
-        event.result = event.func(*event.args, **event.kwargs)
+        try:
+            event.result = event.func(*event.args, **event.kwargs)
+        except Exception, e:
+            event.exception = e
         event.event.set()
 
     def Invoke(self, sync, func, *args, **kwargs):
@@ -64,6 +68,8 @@ class DeferredCallMixin(object):
         if sync:
             event.event.wait()
 
+        if event.exception:
+            raise event.exception
         return event.result
 
 

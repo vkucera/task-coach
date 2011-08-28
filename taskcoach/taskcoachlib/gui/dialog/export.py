@@ -39,6 +39,7 @@ class ExportDialog(sized_controls.SizedDialog):
         self.SetButtonSizer(buttonSizer)
         self.Fit()
         buttonSizer.GetAffirmativeButton().Bind(wx.EVT_BUTTON, self.onOK)
+        self.CentreOnParent()
 
     def createInterior(self, pane):
         self.createViewerChooser(pane)
