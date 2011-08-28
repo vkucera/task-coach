@@ -61,7 +61,7 @@
 	
 	JLDEBUG("Effort name length: %d", [[effort name] length]);
 	JLDEBUG("Effort ID length: %d", [[effort taskCoachId] length]);
-	JLDEBUG("Effort started: %s", [[value objectAtIndex:4] UTF8String]);
+	JLDEBUG("Effort started: %s", [[value objectAtIndex:3] UTF8String]);
 
 	if ([value objectAtIndex:2] != [NSNull null])
 	{
