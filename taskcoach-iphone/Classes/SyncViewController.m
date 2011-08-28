@@ -130,4 +130,11 @@
 	[state network:network didGetData:data controller:self];
 }
 
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    [self cancel];
+}
+
 @end

@@ -11,7 +11,7 @@
 #import "Network.h"
 #import "State.h"
 
-@interface SyncViewController : UIViewController <NetworkDelegate>
+@interface SyncViewController : UIViewController <NetworkDelegate, UIAlertViewDelegate>
 {
 	UILabel *label;
 	UIActivityIndicatorView *activity;
