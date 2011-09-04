@@ -29,7 +29,6 @@ from taskcoachlib.thirdparty import desktop, hypertreelist
 from taskcoachlib.gui.wizard import CSVImportWizard
 from taskcoachlib.tools import anonymize
 import dialog, viewer, printer
-from bsddb.test.test_thread import WindowsError
 
 
 ''' User interface commands (subclasses of UICommand) are actions that can
