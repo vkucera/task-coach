@@ -92,7 +92,6 @@ class SubjectPage(Page):
         # pylint: disable-msg=W0201
         description = self.items[0].description() if len(self.items) == 1 else _('Edit to change all descriptions')
         self._descriptionEntry = widgets.MultiLineTextCtrl(self, description)
-        self._descriptionEntry.SetSizeHints(450, 150)
         self._descriptionLabel = self.label(_('Description'), self._descriptionEntry, wx.EVT_TEXT)
         self.addEntry(self._descriptionLabel, self._descriptionEntry, growable=True)
 

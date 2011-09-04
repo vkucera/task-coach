@@ -62,7 +62,6 @@ class ExportDialog(sized_controls.SizedDialog):
         if selectedViewer not in self.exportableViewers():
             selectedViewer = self.exportableViewers()[0]
         self.viewerComboBox.SetValue(selectedViewer.title())
-        panel.Fit()
         
     def exportableViewers(self):
         return self.window.viewer
