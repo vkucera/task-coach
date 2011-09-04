@@ -38,6 +38,7 @@ class EditorWithCommandUnderTest(gui.dialog.editor.EditorWithCommand):
         interior.setFocus = lambda columnName: None
         interior.isDisplayingItemOrChildOfItem = lambda item: item == self._command.items[0]
         interior.getPage = lambda pageName: None
+        interior.SetSizerProps = lambda *args, **kwargs: None
         return interior
             
     def cancel(self, *args, **kwargs):
