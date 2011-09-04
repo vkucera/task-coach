@@ -2284,7 +2284,12 @@ class URLCommand(UICommand):
         super(URLCommand, self).__init__(*args, **kwargs)
          
     def doCommand(self, event):
-        desktop.open(self.url)
+        try:
+            desktop.open(self.url)
+        except Exception, reason:
+            wx.MessageBox(_('Cannot open URL:\n%s')%reason, 
+                      caption=_('%s URL error')%meta.name, 
+                      style=wx.ICON_ERROR)
 
 
 class FAQ(URLCommand):
