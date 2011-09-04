@@ -79,7 +79,6 @@ class SubjectPage(Page):
         # pylint: disable-msg=W0201
         currentDescription = self.items[0].description() if len(self.items) == 1 else _('Edit to change all descriptions')
         self._descriptionEntry = widgets.MultiLineTextCtrl(self, currentDescription)
-        self._descriptionEntry.SetSizeHints(450, 150)
         self._descriptionSync = attributesync.AttributeSync('description', 
             self._descriptionEntry, currentDescription, self.items,
             command.EditDescriptionCommand, wx.EVT_KILL_FOCUS,

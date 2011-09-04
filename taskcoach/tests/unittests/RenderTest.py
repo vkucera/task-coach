@@ -77,6 +77,9 @@ class RenderDateTime(test.TestCase):
     def testElevenOClock(self):
         expectedDateTime = self.expectedDateTime(2010, 4, 5, 23, 0)
         self.assertRenderedDateTime(expectedDateTime, 2010, 4, 5, 23, 0, 0)
+        
+    def testDateBefore1900(self):
+        self.failUnless('1800' in render.dateTime(date.DateTime(1800, 4, 5, 23, 0, 0)))
                          
 
 class RenderTimeLeftTest(test.TestCase):
