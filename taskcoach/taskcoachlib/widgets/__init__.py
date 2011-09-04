@@ -20,7 +20,6 @@ from notebook import Notebook, BookPage
 from frame import AuiManagedFrameWithDynamicCenterPane
 from dialog import ButtonLessDialog, Dialog, NotebookDialog, HTMLDialog, \
     AttachmentSelector
-from buttonbox import ButtonBox
 from itemctrl import Column
 from listctrl import ListCtrl
 from treectrl import CheckTreeCtrl, TreeListCtrl

@@ -40,8 +40,15 @@ immediately to all open dialogs. This will prevent overwriting
 changes made in other dialogs.''', '1152561')
         ]
     ),
+            
+Release('1.2.28', 'September 4, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''Task Coach would not work correctly with dates before 1900.'''),
+        ]
+    ),
 
-Release('1.2.27', 'August 26, 2011',
+Release('1.2.27', 'August 28, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''When importing a CVS file, Task Coach would not always guess

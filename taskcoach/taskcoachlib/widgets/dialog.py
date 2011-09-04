@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, wx.html, os
 from taskcoachlib.i18n import _
-from taskcoachlib.thirdparty import aui
-import buttonbox, notebook
+from taskcoachlib.thirdparty import aui, sized_controls
+import notebook
 
 
 class ButtonLessDialog(wx.Dialog):
@@ -54,7 +54,7 @@ class ButtonLessDialog(wx.Dialog):
         pass
 
 
-class Dialog(wx.Dialog):
+class Dialog(sized_controls.SizedDialog):
     def __init__(self, parent, title, bitmap='edit', 
                  direction=None, *args, **kwargs):
         # On wxGTK, calling Raise() on the dialog causes it to be shown, which
@@ -65,18 +65,17 @@ class Dialog(wx.Dialog):
             style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER|wx.MAXIMIZE_BOX|wx.MINIMIZE_BOX)
         self.SetIcon(wx.ArtProvider_GetIcon(bitmap, wx.ART_FRAME_ICON,
             (16, 16)))
-        self._verticalSizer = wx.BoxSizer(wx.VERTICAL)
-        self._panel = wx.Panel(self)
-        self._panelSizer = wx.GridSizer(1, 1)
-        self._panelSizer.Add(self._panel, flag=wx.EXPAND)
+        self._panel = self.GetContentsPane()
+        self._panel.SetSizerType('vertical')
+        self._panel.SetSizerProps(expand=True, proportion=1)
         self._direction = direction
         self._interior = self.createInterior()
+        self._interior.SetSizerProps(expand=True, proportion=1)
         self.fillInterior()
-        self._verticalSizer.Add(self._interior, 1, flag=wx.EXPAND)
-        self._buttonBox = self.createButtonBox()
-        self._verticalSizer.Add(self._buttonBox, 0, wx.ALIGN_CENTER)
-        self._panel.SetSizerAndFit(self._verticalSizer)
-        self.SetSizerAndFit(self._panelSizer)
+        self._panel.Fit()
+        self._buttons = self.createButtons()
+        self.Fit()
+        self.CentreOnParent()
         if raiseDialog:
             wx.CallAfter(self.Raise)
         wx.CallAfter(self._panel.SetFocus)
@@ -86,11 +85,14 @@ class Dialog(wx.Dialog):
 
     def fillInterior(self):
         pass
-        
-    def createButtonBox(self):
-        return buttonbox.ButtonBox(self._panel, (_('OK'), self.ok), 
-                                   (_('Cancel'), self.cancel))
-        
+    
+    def createButtons(self):
+        buttonSizer = self.CreateStdDialogButtonSizer(wx.OK|wx.CANCEL)
+        self.SetButtonSizer(buttonSizer)
+        buttonSizer.GetAffirmativeButton().Bind(wx.EVT_BUTTON, self.ok)
+        buttonSizer.GetCancelButton().Bind(wx.EVT_BUTTON, self.cancel)
+        return buttonSizer
+    
     def ok(self, event=None):
         if event:
             event.Skip()
@@ -104,10 +106,10 @@ class Dialog(wx.Dialog):
         self.Destroy()
         
     def disableOK(self):
-        self._buttonBox.disable(_('OK'))
+        self._buttons.GetAffirmativeButton().Disable()
         
     def enableOK(self):
-        self._buttonBox.enable(_('OK'))
+        self._buttons.GetAffirmativeButton().Enable()
 
 
 class NotebookDialog(Dialog):    
@@ -171,8 +173,11 @@ class HTMLDialog(Dialog):
     def fillInterior(self):
         self._interior.AppendToPage(self._htmlText)
         
-    def createButtonBox(self):
-        return buttonbox.ButtonBox(self._panel, (_('OK'), self.ok))
+    def createButtons(self):
+        buttonSizer = self.CreateStdDialogButtonSizer(wx.OK)
+        self.SetButtonSizer(buttonSizer)
+        buttonSizer.GetAffirmativeButton().Bind(wx.EVT_BUTTON, self.ok)
+        return buttonSizer
     
     def OnLinkClicked(self, linkInfo):
         pass
