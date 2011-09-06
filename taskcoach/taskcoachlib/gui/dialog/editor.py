@@ -1021,7 +1021,7 @@ class EffortEditBook(Page):
                     revenue=self._taskEntry)
     
     
-class Editor(widgets.ButtonLessDialog):
+class Editor(widgets.Dialog):
     EditBookClass = lambda *args: 'Subclass responsibility'
     singular_title = 'Subclass responsibility %s'
     plural_title = 'Subclass responsibility'
@@ -1031,7 +1031,7 @@ class Editor(widgets.ButtonLessDialog):
         self._settings = settings
         self._taskFile = taskFile
         self._callAfter = kwargs.get('callAfter', wx.CallAfter)
-        super(Editor, self).__init__(parent, self.title(), *args, **kwargs)
+        super(Editor, self).__init__(parent, self.title(), buttonTypes=wx.ID_CLOSE, *args, **kwargs)
         columnName = kwargs.get('columnName', '')
         self._interior.setFocus(columnName)
         patterns.Publisher().registerObserver(self.onItemRemoved,

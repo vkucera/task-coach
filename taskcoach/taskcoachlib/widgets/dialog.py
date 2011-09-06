@@ -22,41 +22,10 @@ from taskcoachlib.thirdparty import aui, sized_controls
 import notebook
 
 
-class ButtonLessDialog(wx.Dialog):
-    def __init__(self, parent, title, bitmap='edit', 
-                 direction=None, *args, **kwargs):
-        # On wxGTK, calling Raise() on the dialog causes it to be shown, which
-        # is rather undesirable during testing, so provide a way to instruct 
-        # the dialog to not call self.Raise():
-        raiseDialog = kwargs.pop('raiseDialog', True)  
-        super(ButtonLessDialog, self).__init__(parent, -1, title,
-            style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER)
-        self.SetIcon(wx.ArtProvider_GetIcon(bitmap, wx.ART_FRAME_ICON,
-            (16, 16)))
-        self._verticalSizer = wx.BoxSizer(wx.VERTICAL)
-        self._panel = wx.Panel(self)
-        self._panelSizer = wx.GridSizer(1, 1)
-        self._panelSizer.Add(self._panel, flag=wx.EXPAND)
-        self._direction = direction
-        self._interior = self.createInterior()
-        self.fillInterior()
-        self._verticalSizer.Add(self._interior, 1, flag=wx.EXPAND)
-        self._panel.SetSizerAndFit(self._verticalSizer)
-        self.SetSizerAndFit(self._panelSizer)
-        if raiseDialog:
-            wx.CallAfter(self.Raise)
-        wx.CallAfter(self._panel.SetFocus)
-        
-    def createInterior(self):
-        raise NotImplementedError
-
-    def fillInterior(self):
-        pass
-
-
 class Dialog(sized_controls.SizedDialog):
     def __init__(self, parent, title, bitmap='edit', 
                  direction=None, *args, **kwargs):
+        self._buttonTypes = kwargs.get('buttonTypes', wx.OK|wx.CANCEL)
         # On wxGTK, calling Raise() on the dialog causes it to be shown, which
         # is rather undesirable during testing, so provide a way to instruct 
         # the dialog to not call self.Raise():
@@ -72,8 +41,8 @@ class Dialog(sized_controls.SizedDialog):
         self._interior = self.createInterior()
         self._interior.SetSizerProps(expand=True, proportion=1)
         self.fillInterior()
-        self._panel.Fit()
         self._buttons = self.createButtons()
+        self._panel.Fit()
         self.Fit()
         self.CentreOnParent()
         if raiseDialog:
@@ -87,10 +56,14 @@ class Dialog(sized_controls.SizedDialog):
         pass
     
     def createButtons(self):
-        buttonSizer = self.CreateStdDialogButtonSizer(wx.OK|wx.CANCEL)
+        buttonSizer = self.CreateStdDialogButtonSizer(wx.OK if self._buttonTypes == wx.ID_CLOSE else self._buttonTypes)
+        if self._buttonTypes & wx.OK:
+            buttonSizer.GetAffirmativeButton().Bind(wx.EVT_BUTTON, self.ok)
+        if self._buttonTypes & wx.CANCEL:
+            buttonSizer.GetCancelButton().Bind(wx.EVT_BUTTON, self.cancel)
+        if self._buttonTypes == wx.ID_CLOSE:
+            buttonSizer.GetAffirmativeButton().SetLabel(_('Close'))
         self.SetButtonSizer(buttonSizer)
-        buttonSizer.GetAffirmativeButton().Bind(wx.EVT_BUTTON, self.ok)
-        buttonSizer.GetCancelButton().Bind(wx.EVT_BUTTON, self.cancel)
         return buttonSizer
     
     def ok(self, event=None):
@@ -161,7 +134,8 @@ class HtmlWindowThatUsesWebBrowserForExternalLinks(wx.html.HtmlWindow):
 class HTMLDialog(Dialog):
     def __init__(self, title, htmlText, *args, **kwargs):
         self._htmlText = htmlText
-        super(HTMLDialog, self).__init__(None, title, *args, **kwargs)
+        super(HTMLDialog, self).__init__(None, title, buttonTypes=wx.ID_CLOSE, 
+                                         *args, **kwargs)
         
     def createInterior(self):
         interior = HtmlWindowThatUsesWebBrowserForExternalLinks(self._panel, 
@@ -172,13 +146,7 @@ class HTMLDialog(Dialog):
         
     def fillInterior(self):
         self._interior.AppendToPage(self._htmlText)
-        
-    def createButtons(self):
-        buttonSizer = self.CreateStdDialogButtonSizer(wx.OK)
-        self.SetButtonSizer(buttonSizer)
-        buttonSizer.GetAffirmativeButton().Bind(wx.EVT_BUTTON, self.ok)
-        return buttonSizer
-    
+
     def OnLinkClicked(self, linkInfo):
         pass
         
