@@ -627,9 +627,23 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1E9E0DE91417CEAA005DE213 /* Translated XIB files */ = {
+			isa = PBXGroup;
+			children = (
+				A68B5E0F11C4B799009AE2F1 /* MainWindow-iPad.xib */,
+				A6E8F66111CD02670087DDF3 /* TaskDetailsControlleriPad.xib */,
+				A68EDEC30F1E1F1700F51FF2 /* MainWindow.xib */,
+				A6831FFC102EB057002A7083 /* TaskView.xib */,
+				A6D386880F24B4450097F0F6 /* DatePickerView.xib */,
+				A66C188811C386B90081C175 /* TaskDetailsRecurrencePeriodPicker.xib */,
+			);
+			name = "Translated XIB files";
+			sourceTree = "<group>";
+		};
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				1E9E0DE91417CEAA005DE213 /* Translated XIB files */,
 				A6638ACC1417BB2A00BE6E25 /* String files */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
@@ -638,10 +652,6 @@
 				A63980FB11C3DECC00B43940 /* Resources-iPhone */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				A68EDEC30F1E1F1700F51FF2 /* MainWindow.xib */,
-				A6831FFC102EB057002A7083 /* TaskView.xib */,
-				A6D386880F24B4450097F0F6 /* DatePickerView.xib */,
-				A66C188811C386B90081C175 /* TaskDetailsRecurrencePeriodPicker.xib */,
 				A6E46385113028A500976293 /* SyncView.xib */,
 				A60B6EE410258EB200F9983C /* TaskCategoryPicker.xib */,
 				A6CDF198131A611E007689B7 /* Entitlements.plist */,
@@ -692,7 +702,6 @@
 			children = (
 				A6B63B4911C66615002C9069 /* TaskDetailsControlleriPad.h */,
 				A6B63B4A11C66615002C9069 /* TaskDetailsControlleriPad.m */,
-				A6E8F66111CD02670087DDF3 /* TaskDetailsControlleriPad.xib */,
 				A611CC6711E0A1C8006B4571 /* TaskDetailsViewiPad.h */,
 				A611CC6811E0A1C8006B4571 /* TaskDetailsViewiPad.m */,
 				A6EDD13A11CCDB570092BC79 /* TaskDetailsRecurrenceControlleriPad.h */,
@@ -883,7 +892,6 @@
 				A696428711CE21550002F90E /* Default-Landscape.png */,
 				A696428811CE21550002F90E /* Default-Portrait.png */,
 				A6DFB4E611C64BF8007FB4F0 /* TaskCoach-iPad.png */,
-				A68B5E0F11C4B799009AE2F1 /* MainWindow-iPad.xib */,
 			);
 			name = "Resources-iPad";
 			sourceTree = "<group>";
@@ -1514,6 +1522,7 @@
 				A685A6E812EC3366008682F9 /* tr */,
 			);
 			name = TaskDetailsControlleriPad.xib;
+			path = Classes;
 			sourceTree = "<group>";
 		};
 		A6E8F66411CD02800087DDF3 /* TaskDetailsControlleriPad.strings */ = {
