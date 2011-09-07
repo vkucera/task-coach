@@ -3,12 +3,12 @@
 	<data>
 		<int key="IBDocument.SystemTarget">800</int>
 		<string key="IBDocument.SystemVersion">11B26</string>
-		<string key="IBDocument.InterfaceBuilderVersion">1934</string>
+		<string key="IBDocument.InterfaceBuilderVersion">1617</string>
 		<string key="IBDocument.AppKitVersion">1138</string>
 		<string key="IBDocument.HIToolboxVersion">566.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">931</string>
+			<string key="NS.object.0">534</string>
 		</object>
 		<object class="NSArray" key="IBDocument.IntegratedClassDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -28,8 +28,11 @@
 			<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 		</object>
 		<object class="NSMutableDictionary" key="IBDocument.Metadata">
-			<string key="NS.key.0">PluginDependencyRecalculationVersion</string>
-			<integer value="1" key="NS.object.0"/>
+			<bool key="EncodedWithXMLCoder">YES</bool>
+			<object class="NSArray" key="dict.sortedKeys" id="0">
+				<bool key="EncodedWithXMLCoder">YES</bool>
+			</object>
+			<reference key="dict.values" ref="0"/>
 		</object>
 		<object class="NSMutableArray" key="IBDocument.RootObjects" id="1000">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -75,23 +78,17 @@
 								<int key="NSID">2</int>
 							</object>
 						</object>
+						<object class="NSFont" key="IBUIFont">
+							<string key="NSName">MarkerFelt-Thin</string>
+							<double key="NSSize">24</double>
+							<int key="NSfFlags">16</int>
+						</object>
 						<int key="IBUITextAlignment">1</int>
 						<float key="IBUIMinimumFontSize">17</float>
 						<object class="IBUITextInputTraits" key="IBUITextInputTraits">
 							<int key="IBUIAutocapitalizationType">2</int>
 							<int key="IBUIReturnKeyType">9</int>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						</object>
-						<object class="IBUIFontDescription" key="IBUIFontDescription">
-							<string key="name">MarkerFelt-Thin</string>
-							<string key="family">Marker Felt</string>
-							<int key="traits">0</int>
-							<double key="pointSize">24</double>
-						</object>
-						<object class="NSFont" key="IBUIFont">
-							<string key="NSName">MarkerFelt-Thin</string>
-							<double key="NSSize">24</double>
-							<int key="NSfFlags">16</int>
 						</object>
 					</object>
 					<object class="IBUITextView" id="717116200">
@@ -115,15 +112,6 @@
 							<int key="IBUIAutocapitalizationType">2</int>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						</object>
-						<object class="IBUIFontDescription" key="IBUIFontDescription" id="1046846321">
-							<int key="type">1</int>
-							<double key="pointSize">17</double>
-						</object>
-						<object class="NSFont" key="IBUIFont" id="382245205">
-							<string key="NSName">Helvetica</string>
-							<double key="NSSize">17</double>
-							<int key="NSfFlags">16</int>
-						</object>
 					</object>
 					<object class="IBUIButton" id="540127476">
 						<reference key="NSNextResponder" ref="766721923"/>
@@ -134,9 +122,14 @@
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 						<int key="IBUIContentHorizontalAlignment">2</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
+						<object class="NSFont" key="IBUIFont" id="790542157">
+							<string key="NSName">MarkerFelt-Wide</string>
+							<double key="NSSize">18</double>
+							<int key="NSfFlags">16</int>
+						</object>
 						<string key="IBUITitleShadowOffset">{1, 1}</string>
-						<string key="IBUIHighlightedTitle">Start date</string>
-						<string key="IBUINormalTitle">Start date</string>
+						<string key="IBUIHighlightedTitle">Inget startdatum</string>
+						<string key="IBUINormalTitle">Inget startdatum</string>
 						<object class="NSColor" key="IBUIHighlightedTitleColor" id="95075987">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>
@@ -147,17 +140,6 @@
 						</object>
 						<reference key="IBUIHighlightedTitleShadowColor" ref="183637560"/>
 						<reference key="IBUINormalTitleShadowColor" ref="95075987"/>
-						<object class="IBUIFontDescription" key="IBUIFontDescription" id="485125175">
-							<string key="name">MarkerFelt-Wide</string>
-							<string key="family">Marker Felt</string>
-							<int key="traits">2</int>
-							<double key="pointSize">18</double>
-						</object>
-						<object class="NSFont" key="IBUIFont" id="790542157">
-							<string key="NSName">MarkerFelt-Wide</string>
-							<double key="NSSize">18</double>
-							<int key="NSfFlags">16</int>
-						</object>
 					</object>
 					<object class="IBUIButton" id="845346674">
 						<reference key="NSNextResponder" ref="766721923"/>
@@ -168,14 +150,13 @@
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 						<int key="IBUIContentHorizontalAlignment">2</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
+						<reference key="IBUIFont" ref="790542157"/>
 						<string key="IBUITitleShadowOffset">{1, 1}</string>
-						<string key="IBUINormalTitle">Due date</string>
+						<string key="IBUINormalTitle">Ingen deadline</string>
 						<reference key="IBUIHighlightedTitleColor" ref="95075987"/>
 						<reference key="IBUINormalTitleColor" ref="183637560"/>
 						<reference key="IBUIHighlightedTitleShadowColor" ref="183637560"/>
 						<reference key="IBUINormalTitleShadowColor" ref="95075987"/>
-						<reference key="IBUIFontDescription" ref="485125175"/>
-						<reference key="IBUIFont" ref="790542157"/>
 					</object>
 					<object class="IBUIButton" id="722846233">
 						<reference key="NSNextResponder" ref="766721923"/>
@@ -186,14 +167,13 @@
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 						<int key="IBUIContentHorizontalAlignment">2</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
+						<reference key="IBUIFont" ref="790542157"/>
 						<string key="IBUITitleShadowOffset">{1, 1}</string>
-						<string key="IBUINormalTitle">Completion date</string>
+						<string key="IBUINormalTitle">Klarskriven</string>
 						<reference key="IBUIHighlightedTitleColor" ref="95075987"/>
 						<reference key="IBUINormalTitleColor" ref="183637560"/>
 						<reference key="IBUIHighlightedTitleShadowColor" ref="183637560"/>
 						<reference key="IBUINormalTitleShadowColor" ref="95075987"/>
-						<reference key="IBUIFontDescription" ref="485125175"/>
-						<reference key="IBUIFont" ref="790542157"/>
 					</object>
 					<object class="IBUIButton" id="7453789">
 						<reference key="NSNextResponder" ref="766721923"/>
@@ -204,14 +184,13 @@
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 						<int key="IBUIContentHorizontalAlignment">2</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
+						<reference key="IBUIFont" ref="790542157"/>
 						<string key="IBUITitleShadowOffset">{1, 1}</string>
-						<string key="IBUINormalTitle">Reminder</string>
+						<string key="IBUINormalTitle">Påminnelse</string>
 						<reference key="IBUIHighlightedTitleColor" ref="95075987"/>
 						<reference key="IBUINormalTitleColor" ref="183637560"/>
 						<reference key="IBUIHighlightedTitleShadowColor" ref="183637560"/>
 						<reference key="IBUINormalTitleShadowColor" ref="95075987"/>
-						<reference key="IBUIFontDescription" ref="485125175"/>
-						<reference key="IBUIFont" ref="790542157"/>
 					</object>
 					<object class="IBUIButton" id="1025686190">
 						<reference key="NSNextResponder" ref="766721923"/>
@@ -222,16 +201,15 @@
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 						<int key="IBUIContentHorizontalAlignment">2</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
+						<reference key="IBUIFont" ref="790542157"/>
 						<string key="IBUITitleShadowOffset">{1, 1}</string>
-						<string key="IBUINormalTitle">Recurrence</string>
+						<string key="IBUINormalTitle">Återkommande</string>
 						<object class="NSColor" key="IBUIHighlightedTitleColor" id="675182885">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MQA</bytes>
 						</object>
 						<reference key="IBUINormalTitleColor" ref="183637560"/>
 						<reference key="IBUINormalTitleShadowColor" ref="95075987"/>
-						<reference key="IBUIFontDescription" ref="485125175"/>
-						<reference key="IBUIFont" ref="790542157"/>
 					</object>
 					<object class="IBUIButton" id="807122848">
 						<reference key="NSNextResponder" ref="766721923"/>
@@ -242,8 +220,13 @@
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
+						<object class="NSFont" key="IBUIFont">
+							<string key="NSName">Helvetica-Bold</string>
+							<double key="NSSize">15</double>
+							<int key="NSfFlags">16</int>
+						</object>
 						<int key="IBUIButtonType">1</int>
-						<string key="IBUINormalTitle">Start tracking</string>
+						<string key="IBUINormalTitle">Starta tidtagning</string>
 						<reference key="IBUIHighlightedTitleColor" ref="675182885"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
@@ -252,17 +235,6 @@
 						<object class="NSColor" key="IBUINormalTitleShadowColor" id="364871194">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MC41AA</bytes>
-						</object>
-						<object class="IBUIFontDescription" key="IBUIFontDescription">
-							<string key="name">Helvetica-Bold</string>
-							<string key="family">Helvetica</string>
-							<int key="traits">2</int>
-							<double key="pointSize">15</double>
-						</object>
-						<object class="NSFont" key="IBUIFont">
-							<string key="NSName">Helvetica-Bold</string>
-							<double key="NSSize">15</double>
-							<int key="NSfFlags">16</int>
 						</object>
 					</object>
 					<object class="IBUIButton" id="629420770">
@@ -274,16 +246,15 @@
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
+						<reference key="IBUIFont" ref="790542157"/>
 						<string key="IBUITitleShadowOffset">{1, 1}</string>
-						<string key="IBUINormalTitle">Categories</string>
+						<string key="IBUINormalTitle">Kategorier</string>
 						<reference key="IBUIHighlightedTitleColor" ref="183637560"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 						</object>
 						<reference key="IBUINormalTitleShadowColor" ref="364871194"/>
-						<reference key="IBUIFontDescription" ref="485125175"/>
-						<reference key="IBUIFont" ref="790542157"/>
 					</object>
 					<object class="IBUISlider" id="151210863">
 						<reference key="NSNextResponder" ref="766721923"/>
@@ -317,8 +288,6 @@
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 						<float key="IBUIMinimumFontSize">10</float>
 						<int key="IBUITextAlignment">2</int>
-						<reference key="IBUIFontDescription" ref="1046846321"/>
-						<reference key="IBUIFont" ref="382245205"/>
 					</object>
 					<object class="IBUITableView" id="765648494">
 						<reference key="NSNextResponder" ref="766721923"/>
@@ -348,7 +317,12 @@
 						<int key="IBUIContentMode">7</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-						<string key="IBUIText">Activity log</string>
+						<string key="IBUIText">Händelselogg</string>
+						<object class="NSFont" key="IBUIFont">
+							<string key="NSName">MarkerFelt-Thin</string>
+							<double key="NSSize">14</double>
+							<int key="NSfFlags">16</int>
+						</object>
 						<reference key="IBUITextColor" ref="61910975"/>
 						<nil key="IBUIHighlightedColor"/>
 						<reference key="IBUIShadowColor" ref="95075987"/>
@@ -356,17 +330,6 @@
 						<int key="IBUIBaselineAdjustment">1</int>
 						<float key="IBUIMinimumFontSize">10</float>
 						<int key="IBUITextAlignment">1</int>
-						<object class="IBUIFontDescription" key="IBUIFontDescription">
-							<string key="name">MarkerFelt-Thin</string>
-							<string key="family">Marker Felt</string>
-							<int key="traits">0</int>
-							<double key="pointSize">14</double>
-						</object>
-						<object class="NSFont" key="IBUIFont">
-							<string key="NSName">MarkerFelt-Thin</string>
-							<double key="NSSize">14</double>
-							<int key="NSfFlags">16</int>
-						</object>
 					</object>
 				</object>
 				<string key="NSFrameSize">{780, 884}</string>
@@ -493,46 +456,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">taskCatCtrl</string>
-						<reference key="source" ref="841351856"/>
-						<reference key="destination" ref="220521605"/>
-					</object>
-					<int key="connectionID">48</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">taskEffortCtrl</string>
-						<reference key="source" ref="841351856"/>
-						<reference key="destination" ref="176170855"/>
-					</object>
-					<int key="connectionID">58</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">priorityLabel</string>
-						<reference key="source" ref="841351856"/>
-						<reference key="destination" ref="968144469"/>
-					</object>
-					<int key="connectionID">66</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">categoryButton</string>
-						<reference key="source" ref="841351856"/>
-						<reference key="destination" ref="629420770"/>
-					</object>
-					<int key="connectionID">67</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">prioritySlider</string>
-						<reference key="source" ref="841351856"/>
-						<reference key="destination" ref="151210863"/>
-					</object>
-					<int key="connectionID">75</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">delegate</string>
 						<reference key="source" ref="88587167"/>
 						<reference key="destination" ref="841351856"/>
@@ -584,29 +507,20 @@
 					<int key="connectionID">40</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">onClickRecurrence:</string>
-						<reference key="source" ref="1025686190"/>
-						<reference key="destination" ref="841351856"/>
-						<int key="IBEventType">7</int>
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">taskCatCtrl</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="220521605"/>
 					</object>
-					<int key="connectionID">60</int>
+					<int key="connectionID">48</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">delegate</string>
-						<reference key="source" ref="765648494"/>
+						<string key="label">taskEffortCtrl</string>
+						<reference key="source" ref="841351856"/>
 						<reference key="destination" ref="176170855"/>
 					</object>
-					<int key="connectionID">70</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">dataSource</string>
-						<reference key="source" ref="765648494"/>
-						<reference key="destination" ref="176170855"/>
-					</object>
-					<int key="connectionID">71</int>
+					<int key="connectionID">58</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -616,6 +530,15 @@
 						<int key="IBEventType">7</int>
 					</object>
 					<int key="connectionID">59</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">onClickRecurrence:</string>
+						<reference key="source" ref="1025686190"/>
+						<reference key="destination" ref="841351856"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">60</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -635,11 +558,44 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">view</string>
-						<reference key="source" ref="176170855"/>
-						<reference key="destination" ref="765648494"/>
+						<string key="label">priorityLabel</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="968144469"/>
 					</object>
-					<int key="connectionID">76</int>
+					<int key="connectionID">66</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">categoryButton</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="629420770"/>
+					</object>
+					<int key="connectionID">67</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">onPriorityChanged:</string>
+						<reference key="source" ref="151210863"/>
+						<reference key="destination" ref="841351856"/>
+						<int key="IBEventType">13</int>
+					</object>
+					<int key="connectionID">69</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="765648494"/>
+						<reference key="destination" ref="176170855"/>
+					</object>
+					<int key="connectionID">70</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">dataSource</string>
+						<reference key="source" ref="765648494"/>
+						<reference key="destination" ref="176170855"/>
+					</object>
+					<int key="connectionID">71</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -651,13 +607,20 @@
 					<int key="connectionID">72</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">onPriorityChanged:</string>
-						<reference key="source" ref="151210863"/>
-						<reference key="destination" ref="841351856"/>
-						<int key="IBEventType">13</int>
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">prioritySlider</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="151210863"/>
 					</object>
-					<int key="connectionID">69</int>
+					<int key="connectionID">75</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">view</string>
+						<reference key="source" ref="176170855"/>
+						<reference key="destination" ref="765648494"/>
+					</object>
+					<int key="connectionID">76</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -665,9 +628,7 @@
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<object class="IBObjectRecord">
 						<int key="objectID">0</int>
-						<object class="NSArray" key="object" id="0">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
+						<reference key="object" ref="0"/>
 						<reference key="children" ref="1000"/>
 						<nil key="parent"/>
 					</object>
@@ -1094,6 +1055,6 @@
 			<string key="NS.key.0">headerbg.png</string>
 			<string key="NS.object.0">{1, 60}</string>
 		</object>
-		<string key="IBCocoaTouchPluginVersion">931</string>
+		<string key="IBCocoaTouchPluginVersion">534</string>
 	</data>
 </archive>
