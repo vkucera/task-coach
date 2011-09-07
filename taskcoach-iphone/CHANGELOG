@@ -1,4 +1,8 @@
 
+2011-09-07  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
+    * Actually works on iOS 3.x
+    * Added Swedish and Italian translations
+
 2011-02-13  Jérôme Laheurte  <jeromelaheurte@mac-mini-de-jerome-laheurte.local>
 	* Fixed a few little memory leaks
 
