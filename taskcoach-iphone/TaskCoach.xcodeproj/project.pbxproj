@@ -630,6 +630,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				A6638ACC1417BB2A00BE6E25 /* String files */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -653,12 +654,6 @@
 			children = (
 				A65D1B1D119D379300F0F5C3 /* BUILD.txt */,
 				A60B70EA1025AF0B00F9983C /* CHANGELOG */,
-				A6E8F66411CD02800087DDF3 /* TaskDetailsControlleriPad.strings */,
-				A6832036102EB499002A7083 /* TaskView.strings */,
-				A680C0D50F47368E00A8D18B /* DatePickerView.strings */,
-				A680C0D70F47368E00A8D18B /* MainWindow.strings */,
-				A6D5FFBB11C4C43D0030502F /* MainWindow-iPad.strings */,
-				A668B4E111C3B0820048BB89 /* TaskDetailsRecurrencePeriodPicker.strings */,
 				32CA4F630368D1EE00C91783 /* TaskCoach_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 			);
@@ -670,7 +665,6 @@
 			children = (
 				A6BF530A1272E1E800CC5D3C /* configure.png */,
 				A6B7A5B20FA45E110067B76A /* iTunesArtwork */,
-				A680C0C40F47366900A8D18B /* Localizable.strings */,
 				A65C6889128FFE7900FAEC4B /* TaskCoachCD.xcdatamodeld */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 			);
@@ -815,6 +809,20 @@
 				A639811211C3DEE100B43940 /* whiteButton.png */,
 			);
 			name = Images;
+			sourceTree = "<group>";
+		};
+		A6638ACC1417BB2A00BE6E25 /* String files */ = {
+			isa = PBXGroup;
+			children = (
+				A680C0C40F47366900A8D18B /* Localizable.strings */,
+				A6E8F66411CD02800087DDF3 /* TaskDetailsControlleriPad.strings */,
+				A6832036102EB499002A7083 /* TaskView.strings */,
+				A680C0D50F47368E00A8D18B /* DatePickerView.strings */,
+				A680C0D70F47368E00A8D18B /* MainWindow.strings */,
+				A6D5FFBB11C4C43D0030502F /* MainWindow-iPad.strings */,
+				A668B4E111C3B0820048BB89 /* TaskDetailsRecurrencePeriodPicker.strings */,
+			);
+			name = "String files";
 			sourceTree = "<group>";
 		};
 		A6664D3B0F2B417B00638C68 /* Synchronization */ = {
