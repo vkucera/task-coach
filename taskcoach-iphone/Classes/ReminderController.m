@@ -121,38 +121,42 @@ static ReminderController *_instance = NULL;
 
 - (void)scheduleLocalNotifications
 {
-	NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	[request setEntity:[NSEntityDescription entityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()]];
-	[request setPredicate:[NSPredicate predicateWithFormat:@"reminderDate != NULL"]];
-	
-	NSError *error;
-	NSArray *results = [getManagedObjectContext() executeFetchRequest:request error:&error];
-	[request release];
-
-	if (results)
-	{
-		for (CDTask *task in results)
-		{
-			UILocalNotification *notif = [[UILocalNotification alloc] init];
-			if (!notif)
-				return;
-			
-			notif.fireDate = task.reminderDate;
-			notif.timeZone = [NSTimeZone defaultTimeZone];
-			notif.alertBody = task.name;
-			notif.alertAction = _("Completed");
-			notif.soundName = UILocalNotificationDefaultSoundName;
-			notif.applicationIconBadgeNumber = 0;
-			notif.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[[[task objectID] URIRepresentation] absoluteString], @"CoreID", nil];
-			[[UIApplication sharedApplication] scheduleLocalNotification:notif];
-			[notif release];
-		}
-	}
+    if ([[UIApplication sharedApplication] respondsToSelector:@selector(scheduleLocalNotification:)])
+    {
+        NSFetchRequest *request = [[NSFetchRequest alloc] init];
+        [request setEntity:[NSEntityDescription entityForName:@"CDTask" inManagedObjectContext:getManagedObjectContext()]];
+        [request setPredicate:[NSPredicate predicateWithFormat:@"reminderDate != NULL"]];
+        
+        NSError *error;
+        NSArray *results = [getManagedObjectContext() executeFetchRequest:request error:&error];
+        [request release];
+        
+        if (results)
+        {
+            for (CDTask *task in results)
+            {
+                UILocalNotification *notif = [[UILocalNotification alloc] init];
+                if (!notif)
+                    return;
+                
+                notif.fireDate = task.reminderDate;
+                notif.timeZone = [NSTimeZone defaultTimeZone];
+                notif.alertBody = task.name;
+                notif.alertAction = _("Completed");
+                notif.soundName = UILocalNotificationDefaultSoundName;
+                notif.applicationIconBadgeNumber = 0;
+                notif.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[[[task objectID] URIRepresentation] absoluteString], @"CoreID", nil];
+                [[UIApplication sharedApplication] scheduleLocalNotification:notif];
+                [notif release];
+            }
+        }
+    }
 }
 
 - (void)unscheduleLocalNotifications
 {
-	[[UIApplication sharedApplication] cancelAllLocalNotifications];
+    if ([[UIApplication sharedApplication] respondsToSelector:@selector(cancelAllLocalNotifications)])
+        [[UIApplication sharedApplication] cancelAllLocalNotifications];
 }
 
 @end

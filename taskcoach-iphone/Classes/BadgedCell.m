@@ -74,7 +74,7 @@
 
 - (void)drawRect:(CGRect)rect
 {
-	CGFloat x, y, w, h;
+	CGFloat x = 0, y, w, h;
 
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 	{
@@ -98,25 +98,29 @@
 		CGContextFillPath(context);
 
 		CGContextRestoreGState(context);
+
+        [super drawRect:rect];
+
+        if (isChecked)
+        {
+            CGContextRef context = UIGraphicsGetCurrentContext();
+            CGContextSaveGState(context);
+            CGContextClipToRect(context, rect);
+            
+            // WTF?
+            CGContextTranslateCTM(context, x + w - 30 + 11, y + h / 2);
+            CGContextRotateCTM(context, M_PI);
+            CGContextScaleCTM(context, -1, 1);
+            
+            CGRect imgRect = CGRectMake(-11, -11, 22, 22);
+            CGContextDrawImage(context, imgRect, checkImage.CGImage);
+            
+            CGContextRestoreGState(context);
+        }
 	}
-	
-	[super drawRect:rect];
-	
-	if (isChecked && (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad))
-	{
-		CGContextRef context = UIGraphicsGetCurrentContext();
-		CGContextSaveGState(context);
-		CGContextClipToRect(context, rect);
-
-		// WTF?
-		CGContextTranslateCTM(context, x + w - 30 + 11, y + h / 2);
-		CGContextRotateCTM(context, M_PI);
-		CGContextScaleCTM(context, -1, 1);
-
-		CGRect imgRect = CGRectMake(-11, -11, 22, 22);
-		CGContextDrawImage(context, imgRect, checkImage.CGImage);
-
-		CGContextRestoreGState(context);
+    else
+    {
+        [super drawRect:rect];
 	}
 }
 

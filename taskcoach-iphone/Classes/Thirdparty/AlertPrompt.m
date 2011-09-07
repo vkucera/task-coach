@@ -22,8 +22,12 @@
         self.textField = theTextField;
         [theTextField release];
 
-        //CGAffineTransform translate = CGAffineTransformMakeTranslation(0.0, 130.0); 
-        //[self setTransform:translate];
+        if (![[UIApplication sharedApplication] respondsToSelector:@selector(scheduleLocalNotification:)])
+        {
+            // Only needed on iOS 3.x
+            CGAffineTransform translate = CGAffineTransformMakeTranslation(0.0, 130.0); 
+            [self setTransform:translate];
+        }
     }
 
     return self;

@@ -205,8 +205,8 @@ static void deleteTask(CDTask *task)
 	[request setPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:preds]];
 	[preds release];
 
-	NSString *grouping;
-	NSString *sorting;
+	NSString *grouping = @"dateStatus";
+	NSString *sorting = @"dateStatus";
 
 	switch ([Configuration configuration].taskGrouping)
 	{
@@ -242,7 +242,7 @@ static void deleteTask(CDTask *task)
 	NSError *error;
 	if (![results performFetch:&error])
 	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not fetch tasks"@ delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not fetch tasks" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
 		[alert release];
 
