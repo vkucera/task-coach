@@ -172,7 +172,7 @@
 	switch (buttonIndex)
 	{
 		case 0:
-			[self cancel];
+			[myController cancel];
 			break;
 		case 1:
 		{
