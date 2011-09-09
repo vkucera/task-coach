@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, select, threading
+import os, select, time, threading
 
 from ctypes import *
 
@@ -202,7 +202,9 @@ class ICELoop(threading.Thread):
     before calling IceProcessMessages.
     """
     def __init__(self):
-        self.connections = dict()
+        # Don't track all connections. It seems to cause SIGSEGV when ProcessMessages
+        # is called on another one
+        self.connection = None
         self.cancelled = False
 
         self.watchProc = IceWatchProc(self._onWatch)
@@ -222,10 +224,8 @@ class ICELoop(threading.Thread):
         self.cancelled = True
 
     def _onWatch(self, conn, client_data, opening, watchdata):
-        if opening:
-            self.connections[IceConnectionNumber(conn)] = conn
-        else:
-            del self.connections[IceConnectionNumber(conn)]
+        if opening and self.connection is None:
+            self.connection = (conn, IceConnectionNumber(conn))
 
     def run(self):
         class DummyDescriptor(object):
@@ -236,12 +236,14 @@ class ICELoop(threading.Thread):
                 return self.fd
 
         while not self.cancelled:
-            fds = [DummyDescriptor(fd) for fd in self.connections.keys()]
+            if self.connection is not None:
+                fds = [DummyDescriptor(self.connection[1])]
 
-            ready, _, _ = select.select(fds, [], [], 1.0)
-            for fd in ready:
-                if fd.fileno() in self.connections:
-                    IceProcessMessages(self.connections[fd.fileno()], None, None)
+                ready, _, _ = select.select(fds, [], [], 1.0)
+                if ready:
+                    IceProcessMessages(self.connection[0], None, None)
+            else:
+                time.sleep(1.0)
 
 
 class SessionMonitor(ICELoop):
@@ -281,7 +283,7 @@ class SessionMonitor(ICELoop):
             IceSetIOErrorHandler(IceIOErrorHandler(self._onIceError))
 
     def isValid(self):
-        return self.conn is not None and self.connections
+        return self.conn is not None and self.connection is not None
 
     def _onIceError(self, conn):
         if self.isValid():

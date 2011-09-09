@@ -36,6 +36,7 @@ from fontpicker import FontPickerCtrl
 from syncmlwarning import SyncMLWarningDialog
 from calendarwidget import Calendar
 from calendarconfig import CalendarConfigDialog
+from password import GetPassword
 import masked
 try:
     from wx.lib import sized_controls

@@ -116,11 +116,11 @@ class SyncMLAccessPage(SyncMLBasePage):
         self.fit()
 
     def OnPresetChanged(self, event):
+        ## if event.GetInt() == 1:
+        ##     self.setTextSetting('access', 'syncUrl', 'http://my.funambol.com/sync')
+        ##     self.setTextSetting('task', 'uri', 'task')
+        ##     self.setTextSetting('note', 'uri', 'note')
         if event.GetInt() == 1:
-            self.setTextSetting('access', 'syncUrl', 'http://my.funambol.com/sync')
-            self.setTextSetting('task', 'uri', 'task')
-            self.setTextSetting('note', 'uri', 'note')
-        elif event.GetInt() == 2:
             self.setTextSetting('access', 'syncUrl', 'http://sync.memotoo.com/syncml')
             self.setTextSetting('task', 'uri', 'task')
             self.setTextSetting('note', 'uri', 'note')
