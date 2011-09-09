@@ -16,7 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx
 from taskcoachlib import patterns
 
 
@@ -37,9 +36,7 @@ class AttributeSync(object):
         self._commandClass = commandClass
         entry.Bind(editedEventType, self.onAttributeEdited)
         if len(items) == 1:
-            patterns.Publisher().registerObserver(self.onAttributeChanged,
-                                                  eventType=changedEventType,
-                                                  eventSource=items[0])
+            self.startObservingAttribute(changedEventType, items[0])
         
     def onAttributeEdited(self, event):
         event.Skip()
@@ -50,19 +47,30 @@ class AttributeSync(object):
             self._commandClass(None, self._items, **commandKwArgs).do()
             
     def onAttributeChanged(self, event):
-        newValue = getattr(self._items[0], self._getter)()
-        if newValue != self._currentValue:
-            self._currentValue = newValue
-            self.setValue(newValue)
-
+        if self._entry: 
+            newValue = getattr(self._items[0], self._getter)()
+            if newValue != self._currentValue:
+                self._currentValue = newValue
+                self.setValue(newValue)
+        else:
+            self.stopObservingAttribute()
+            
     def commandKwArgs(self, newValue):
         return {self._attributeName: newValue}
     
     def setValue(self, newValue):
         self._entry.SetValue(newValue)
-
+            
     def getValue(self):
-        return self._entry.GetValue()     
+        return self._entry.GetValue()
+    
+    def startObservingAttribute(self, eventType, eventSource):
+        patterns.Publisher().registerObserver(self.onAttributeChanged,
+                                                  eventType=eventType,
+                                                  eventSource=eventSource)
+    
+    def stopObservingAttribute(self):
+        patterns.Publisher().removeObserver(self.onAttributeChanged)
 
 
 class FontColorSync(AttributeSync):

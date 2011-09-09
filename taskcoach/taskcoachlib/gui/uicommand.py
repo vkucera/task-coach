@@ -792,10 +792,7 @@ class FileSynchronize(IOCommand, SettingsCommand):
             bitmap='arrows_looped_icon', *args, **kwargs)
 
     def doCommand(self, event):
-        password = wx.GetPasswordFromUser(_('Please enter your password:'), 
-                                          _('Task Coach SyncML password'))
-        if password:
-            self.iocontroller.synchronize(password)
+        self.iocontroller.synchronize()
 
 
 class FileQuit(UICommand):
@@ -2297,7 +2294,12 @@ class URLCommand(UICommand):
         super(URLCommand, self).__init__(*args, **kwargs)
          
     def doCommand(self, event):
-        desktop.open(self.url)
+        try:
+            desktop.open(self.url)
+        except Exception, reason:
+            wx.MessageBox(_('Cannot open URL:\n%s')%reason, 
+                      caption=_('%s URL error')%meta.name, 
+                      style=wx.ICON_ERROR)
 
 
 class FAQ(URLCommand):

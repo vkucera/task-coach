@@ -22,6 +22,7 @@ import wx, os, sys, codecs, traceback
 from taskcoachlib import meta, persistence, patterns
 from taskcoachlib.i18n import _
 from taskcoachlib.thirdparty import lockfile
+from taskcoachlib.widgets import GetPassword
 
 try:
     from taskcoachlib.syncml import sync
@@ -331,14 +332,24 @@ class IOController(object):
         persistence.TodoTxtReader(self.__taskFile.tasks(),
                                   self.__taskFile.categories()).read(filename)
 
-    def synchronize(self, password):
-        synchronizer = sync.Synchronizer(self.__syncReport, self, 
+    def synchronize(self):
+        doReset = False
+        while True:
+            password = GetPassword('Task Coach', 'SyncML', reset=doReset)
+            if not password:
+                break
+
+            synchronizer = sync.Synchronizer(self.__syncReport, self, 
                                          self.__taskFile, password)
-        try:
-            synchronizer.synchronize()
-        finally:
-            synchronizer.Destroy()
-        self.__messageCallback(_('Finished synchronization'))
+            try:
+                synchronizer.synchronize()
+            except sync.AuthenticationFailure:
+                doReset = True
+            else:
+                self.__messageCallback(_('Finished synchronization'))
+                break
+            finally:
+                synchronizer.Destroy()
 
     def filename(self):
         return self.__taskFile.filename()

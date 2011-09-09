@@ -27,6 +27,10 @@ from taskcoachlib.meta import data
 import sys, wx
 
 
+class AuthenticationFailure(Exception):
+    pass
+
+
 class TaskCoachManagementNode(ManagementNode):
     def __init__(self, syncMLConfig, *args, **kwargs):
         super(TaskCoachManagementNode, self).__init__(*args, **kwargs)
@@ -243,6 +247,8 @@ class Synchronizer(wx.ProgressDialog):
             code = client.report.lastErrorCode
 
             if code:
+                if code == 401:
+                    raise AuthenticationFailure()
                 self.error(code, client.report.lastErrorMsg)
 
                 # TODO: undo local modifications ?

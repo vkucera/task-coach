@@ -223,7 +223,7 @@ class Settings(patterns.Observer, CachingConfigParser):
                 _('The error is: %s')%exceptionMessage,
                 _('%s will use the default value for the setting and should proceed normally.')%meta.name])
             showerror(message, caption=_('Settings error'), style=wx.ICON_ERROR)
-            defaultValue = self.getDefault(section, option)
+            defaultValue = self.getDefault(section.strip('0123456789'), option)
             self.set(section, option, defaultValue, new=True) # Ignore current value
             return evaluate(defaultValue)
         
@@ -270,7 +270,7 @@ class Settings(patterns.Observer, CachingConfigParser):
     def pathToConfigDir(self, environ):
         try:
             path = os.path.join(environ['APPDATA'], meta.filename)
-        except:
+        except Exception, e:
             path = os.path.expanduser("~") # pylint: disable-msg=W0702
             if path == "~":
                 # path not expanded: apparently, there is no home dir
