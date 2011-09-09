@@ -225,7 +225,7 @@ class ICELoop(threading.Thread):
 
     def _onWatch(self, conn, client_data, opening, watchdata):
         if opening and self.connection is None:
-            self.connection = conn
+            self.connection = (conn, IceConnectionNumber(conn))
 
     def run(self):
         class DummyDescriptor(object):
@@ -236,11 +236,11 @@ class ICELoop(threading.Thread):
                 return self.fd
 
         while not self.cancelled:
-            fds = [DummyDescriptor(IceConnectionNumber(self.connection))]
+            fds = [DummyDescriptor(self.connection[1])]
 
             ready, _, _ = select.select(fds, [], [], 1.0)
             if ready:
-                IceProcessMessages(self.connection, None, None)
+                IceProcessMessages(self.connection[0], None, None)
 
 
 class SessionMonitor(ICELoop):
@@ -280,7 +280,7 @@ class SessionMonitor(ICELoop):
             IceSetIOErrorHandler(IceIOErrorHandler(self._onIceError))
 
     def isValid(self):
-        return self.conn is not None and self.connections
+        return self.conn is not None and self.connection is not None
 
     def _onIceError(self, conn):
         if self.isValid():
