@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os, select, threading
+import os, select, time, threading
 
 from ctypes import *
 
@@ -236,11 +236,14 @@ class ICELoop(threading.Thread):
                 return self.fd
 
         while not self.cancelled:
-            fds = [DummyDescriptor(self.connection[1])]
+            if self.connection is not None:
+                fds = [DummyDescriptor(self.connection[1])]
 
-            ready, _, _ = select.select(fds, [], [], 1.0)
-            if ready:
-                IceProcessMessages(self.connection[0], None, None)
+                ready, _, _ = select.select(fds, [], [], 1.0)
+                if ready:
+                    IceProcessMessages(self.connection[0], None, None)
+            else:
+                time.sleep(1.0)
 
 
 class SessionMonitor(ICELoop):
