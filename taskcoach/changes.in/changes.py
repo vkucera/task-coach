@@ -29,6 +29,8 @@ Release('1.2.28', 'September 4, 2011',
         Bug('''When recovering from an error in the TaskCoach.ini file, get
 the default settings from the right section.''', '3404024'),
         Bug('''When opening a URL fails, show an error message dialog.'''),
+        Bug('''Task Coach would crash when editing a task/category/etc on
+some versions of wxPython.'''),
         ],
     featuresAdded=[
         Feature('''The SyncML password is now stored encrypted in the

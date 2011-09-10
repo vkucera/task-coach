@@ -311,7 +311,8 @@ class TaskAppearancePage(Page):
         for imageName in imageNames:
             label = artprovider.chooseableItemImages[imageName]
             bitmap = wx.ArtProvider_GetBitmap(imageName, wx.ART_MENU, size)
-            self._iconEntry.Append(label, bitmap, clientData=imageName)
+            item = self._iconEntry.Append(label, bitmap)
+            self._iconEntry.SetClientData(item, imageName)
         icon = self.items[0].icon() if len(self.items) == 1 else ''
         currentSelectionIndex = imageNames.index(icon)
         self._iconEntry.SetSelection(currentSelectionIndex)

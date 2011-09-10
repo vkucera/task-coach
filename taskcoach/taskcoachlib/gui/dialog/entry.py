@@ -204,8 +204,8 @@ class TaskComboTreeBox(wx.Panel):
         ''' Add a task to the ComboTreeBox and then recursively add its
             subtasks. '''
         if not task.isDeleted():
-            item = self._comboTreeBox.Append(task.subject(), parent=parentItem,
-                                             clientData=task)
+            item = self._comboTreeBox.Append(task.subject(), parent=parentItem)
+            self._comboTreeBox.SetClientData(item, task)
             self._addTasksRecursively(task.children(), item)
 
     def SetSelection(self, task):
