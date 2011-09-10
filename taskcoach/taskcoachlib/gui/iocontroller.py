@@ -44,7 +44,10 @@ class IOController(object):
         self.__settings = settings
         self.__splash = splash
         defaultPath = os.path.expanduser('~')
-        self.__tskFileDialogOpts = {'default_path': defaultPath, 
+        self.__tskFileSaveDialogOpts = {'default_path': defaultPath, 
+            'default_extension': 'tsk', 'wildcard': 
+            _('%s files (*.tsk)|*.tsk|All files (*.*)|*')%meta.name }
+        self.__tskFileOpenDialogOpts = {'default_path': defaultPath, 
             'default_extension': 'tsk', 'wildcard': 
             _('%s files (*.tsk)|*.tsk|Backup files (*.tsk.bak)|*.tsk.bak|All files (*.*)|*')%meta.name }
         self.__icsFileDialogOpts = {'default_path': defaultPath, 
@@ -97,7 +100,7 @@ class IOController(object):
             if not self.__saveUnsavedChanges():
                 return
         if not filename:
-            filename = self.__askUserForFile(_('Open'))
+            filename = self.__askUserForFile(_('Open'), self.__tskFileOpenDialogOpts)
         if not filename:
             return
         self.__updateDefaultPath(filename)
@@ -154,7 +157,7 @@ class IOController(object):
             
     def merge(self, filename=None, showerror=wx.MessageBox):
         if not filename:
-            filename = self.__askUserForFile(_('Merge'))
+            filename = self.__askUserForFile(_('Merge'), self.__tskFileOpenDialogOpts)
         if filename:
             try:
                 self.__taskFile.merge(filename)
@@ -193,6 +196,7 @@ class IOController(object):
                fileExists=os.path.exists):
         if not filename:
             filename = self.__askUserForFile(_('Save as'), 
+                self.__tskFileSaveDialogOpts,
                 flag=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT, fileExists=fileExists)
             if not filename:
                 return False # User didn't enter a filename, cancel save
@@ -204,7 +208,8 @@ class IOController(object):
     def saveselection(self, tasks, filename=None, showerror=wx.MessageBox,
                       TaskFileClass=persistence.TaskFile, fileExists=os.path.exists):
         if not filename:
-            filename = self.__askUserForFile(_('Save selection'), 
+            filename = self.__askUserForFile(_('Save selection'),
+                self.__tskFileSaveDialogOpts, 
                 flag=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT, fileExists=fileExists)
             if not filename:
                 return False # User didn't enter a filename, cancel save
@@ -393,9 +398,8 @@ class IOController(object):
             recentFiles.remove(fileName)
             self.__settings.setlist('file', 'recentfiles', recentFiles)
         
-    def __askUserForFile(self, title, fileDialogOpts=None, flag=wx.FD_OPEN, 
+    def __askUserForFile(self, title, fileDialogOpts, flag=wx.FD_OPEN, 
                          fileExists=os.path.exists):
-        fileDialogOpts = fileDialogOpts or self.__tskFileDialogOpts
         filename = wx.FileSelector(title, flags=flag, **fileDialogOpts) # pylint: disable-msg=W0142
         if filename and (flag & wx.FD_SAVE):
             # On Ubuntu, the default extension is not added automatically to
@@ -462,6 +466,9 @@ Break the lock?''') % filename,
              'filename': savedFile.filename()})
 
     def __updateDefaultPath(self, filename):
-        for options in [self.__tskFileDialogOpts, self.__csvFileDialogOpts,
-                        self.__icsFileDialogOpts, self.__htmlFileDialogOpts]:
+        for options in [self.__tskFileOpenDialogOpts, 
+                        self.__tskFileSaveDialogOpts,
+                        self.__csvFileDialogOpts,
+                        self.__icsFileDialogOpts, 
+                        self.__htmlFileDialogOpts]:
             options['default_path'] = os.path.dirname(filename)
