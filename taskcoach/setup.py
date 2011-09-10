@@ -65,7 +65,6 @@ for language in languages:
 
 system = platform.system()
 if system == 'Linux':
-    setupOptions['package_data'] = {'taskcoachlib': ['bin.in/linux/_pysyncml.so']}
     # Add data files for Debian-based systems:
     current_dist = [dist.lower() for dist in platform.dist()]
     if 'debian' in current_dist or 'ubuntu' in current_dist:
