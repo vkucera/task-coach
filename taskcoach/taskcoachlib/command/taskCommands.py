@@ -147,7 +147,7 @@ class NewSubTaskCommand(base.NewSubItemCommand, SaveTaskStateMixin):
     def __init__(self, *args, **kwargs):
         super(NewSubTaskCommand, self).__init__(*args, **kwargs)
         subject = kwargs.pop('subject', _('New subtask'))
-        self.items = [parent.newChild(subject=subject, **kwargs) for parent in self.items]
+        self.items = [parent.newChild(subject=subject, dueDateTime=parent.dueDateTime(), **kwargs) for parent in self.items]
         self.saveStates(self.getTasksToSave())
     
     def getTasksToSave(self):
