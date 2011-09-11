@@ -57,7 +57,7 @@ class Dialog(sized_controls.SizedDialog):
     
     def createButtons(self):
         buttonSizer = self.CreateStdDialogButtonSizer(wx.OK if self._buttonTypes == wx.ID_CLOSE else self._buttonTypes)
-        if self._buttonTypes & wx.OK:
+        if self._buttonTypes & wx.OK or self._buttonTypes & wx.ID_CLOSE:
             buttonSizer.GetAffirmativeButton().Bind(wx.EVT_BUTTON, self.ok)
         if self._buttonTypes & wx.CANCEL:
             buttonSizer.GetCancelButton().Bind(wx.EVT_BUTTON, self.cancel)
