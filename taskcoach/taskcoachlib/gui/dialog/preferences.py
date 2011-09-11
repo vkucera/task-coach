@@ -135,7 +135,8 @@ class SettingsPageBase(widgets.BookPage):
         for imageName in imageNames:
             label = artprovider.chooseableItemImages[imageName]
             bitmap = wx.ArtProvider_GetBitmap(imageName, wx.ART_MENU, (16, 16))
-            iconEntry.Append(label, bitmap, clientData=imageName)
+            item = iconEntry.Append(label, bitmap)
+            iconEntry.SetClientData(item, imageName)
         currentIcon = self.get(iconSection, iconSetting)
         currentSelectionIndex = imageNames.index(currentIcon)
         iconEntry.SetSelection(currentSelectionIndex) # pylint: disable-msg=E1101
