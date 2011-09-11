@@ -72,7 +72,9 @@ class SpinCtrl(wx.Panel):
         return self._spinButton.GetValue()
     
     def SetValue(self, value):
-        self._spinButton.SetValue(value)
+        self._spinButton.SetValue(value) 
+        # Get the value from the spinButton because it is guaranteed to be
+        # within the min/max range.
         self._textCtrl.SetValue(str(self.GetValue()))
 
     Value = property(GetValue, SetValue)
