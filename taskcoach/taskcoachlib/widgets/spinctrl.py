@@ -22,7 +22,7 @@ import wx
 from taskcoachlib import platform
 
 
-if platform.isWindows():
+if platform.isWindows() or platform.isMac():
     # The native SpinCtrl on Windows has no TextCtrl API which means we cannot make
     # the Delete key work (see uicommand.py::Delete). Our own SpinCtrl below doesn't 
     # have this disadvantage.
@@ -33,48 +33,45 @@ if platform.isWindows():
         def __init__(self, parent, wxId=wx.ID_ANY, value=0, pos=wx.DefaultPosition, size=wx.DefaultSize, 
                      style=0, name='wx.SpinCtrl', **kwargs):
             super(SpinCtrl, self).__init__(parent, wxId, pos=pos, size=size)
-            self._minValue = kwargs['min'] if 'min' in kwargs else -self.maxRange
-            self._maxValue = kwargs['max'] if 'max' in kwargs else self.maxRange
-            value = min(self._maxValue, max(int(value), self._minValue))
+            minValue = kwargs['min'] if 'min' in kwargs else -self.maxRange
+            maxValue = kwargs['max'] if 'max' in kwargs else self.maxRange
+            value = min(maxValue, max(int(value), minValue))
             self._textCtrl = wx.TextCtrl(self, value=str(value))
-            self._spinButton = wx.SpinButton(self, size=(-1, self._textCtrl.GetSize()[1]), style=wx.SP_VERTICAL|wx.SP_ARROW_KEYS)
+            self._spinButton = wx.SpinButton(self, size=(-1, self._textCtrl.GetSize()[1]), 
+                                             style=wx.SP_VERTICAL|wx.SP_ARROW_KEYS)
+            self._spinButton.SetRange(minValue, maxValue)
+            self._spinButton.SetValue(value)
             self._textCtrl.SetMinSize((size[0]-self._spinButton.GetSize()[0], -1))
             sizer = wx.BoxSizer(wx.HORIZONTAL)
-            sizer.Add(self._textCtrl)
-            sizer.Add(self._spinButton)
+            sizer.AddMany([self._textCtrl, self._spinButton])
             self.SetSizerAndFit(sizer)
             self._textCtrl.Bind(wx.EVT_TEXT, self.onText)
-            self._spinButton.Bind(wx.EVT_SPIN_UP, self.onUp)
-            self._spinButton.Bind(wx.EVT_SPIN_DOWN, self.onDown)
-            self._previousValue = value
+            self._spinButton.Bind(wx.EVT_SPIN, self.onSpin)
             
         def onText(self, event):
             try:
-                self._previousValue = int(self._textCtrl.GetValue())
+                self._spinButton.SetValue(int(self._textCtrl.GetValue()))
             except ValueError:
-                self._textCtrl.SetValue(str(self._previousValue))
+                self._textCtrl.SetValue(str(self._spinButton.GetValue()))
             event.Skip()
     
-        def onUp(self, event):
-            currentValue = int(self._textCtrl.GetValue())
-            if currentValue < self._maxValue:
-                self._textCtrl.SetValue(str(currentValue+1))
-            
-        def onDown(self, event):
-            currentValue = int(self._textCtrl.GetValue())
-            if currentValue > self._minValue:
-                self._textCtrl.SetValue(str(currentValue-1))
-            
+        def onSpin(self, event): # pylint: disable-msg=W0613
+            self._textCtrl.SetValue(str(self._spinButton.GetValue()))
+
         def GetValue(self):
-            return int(self._textCtrl.GetValue())
+            return self._spinButton.GetValue()
         
-        Value = property(GetValue)
+        def SetValue(self, value):
+            self._textCtrl.SetValue(str(value))
+            self._spinButton.SetValue(value)
+        
+        Value = property(GetValue, SetValue)
         
         def GetMax(self):
-            return self._maxValue
+            return self._spinButton.GetMax()
         
         def GetMin(self):
-            return self._minValue
+            return self._spinButton.GetMin()
     
 else:
     

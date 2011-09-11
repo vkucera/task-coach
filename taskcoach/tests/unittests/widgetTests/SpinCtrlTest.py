@@ -44,10 +44,3 @@ class SpinCtrlTest(test.wxTestCase):
     def testDefaultValueIsAtMostMaxRange(self):
         spinCtrl = widgets.SpinCtrl(self.frame, max=-1)
         self.assertEqual(-1, spinCtrl.GetValue())
-    
-    @test.skipOnPlatform('__WXMSW__')
-    def testSetInvalidValue(self):
-        spinCtrl = widgets.SpinCtrl(self.frame)
-        spinCtrl.SetValueString('text')
-        self.assertEqual(0, spinCtrl.GetValue())
-        
