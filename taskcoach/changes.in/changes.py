@@ -52,7 +52,7 @@ would uncheck it, but not change the filtering.''', '3377145'),
         Bug('''Saving could fail after a reminder was first snoozed and then
 later the reminder dialog was closed without snoozing.''', '3397920'),
         Bug('''Using the Delete key when editing the priority inline would 
-delete the task.'''),
+delete the task.''', '3400086'),
         Bug('''Using the Enter key when editing the priority inline would not
 accept the changes on Mac OS X.'''),
         Bug('''Fix issues in Italian translation.''', '3398600'),
