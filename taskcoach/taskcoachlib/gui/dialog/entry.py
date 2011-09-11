@@ -137,7 +137,7 @@ class PercentageEntry(widgets.PanelWithBoxSizer):
         
     def _createSpinCtrl(self, percentage):
         entry = widgets.SpinCtrl(self, value=percentage,
-            imin=0, max=100, size=(60 if '__WXMAC__' == wx.Platform else 50, -1))
+            min=0, max=100, size=(60 if '__WXMAC__' == wx.Platform else 50, -1))
         for eventType in wx.EVT_SPINCTRL, wx.EVT_KILL_FOCUS:
             entry.Bind(eventType, self.onSpin)
         return entry
