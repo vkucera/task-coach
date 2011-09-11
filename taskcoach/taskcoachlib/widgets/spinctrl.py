@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import platform
 
 
 # The native SpinCtrl on Windows has no TextCtrl API which means we cannot make
@@ -30,8 +29,8 @@ class SpinCtrl(wx.Panel):
     maxRange = 2147483647 # 2^31
     
     def __init__(self, parent, wxId=wx.ID_ANY, value=0, pos=wx.DefaultPosition, size=wx.DefaultSize, 
-                 style=0, name='wx.SpinCtrl', **kwargs):
-        super(SpinCtrl, self).__init__(parent, wxId, pos=pos, size=size)
+                 style=0, name='wx.SpinCtrl', **kwargs): # pylint: disable-msg=W0613
+        super(SpinCtrl, self).__init__(parent, wxId, pos=pos, size=size, name=name)
         minValue = kwargs['min'] if 'min' in kwargs else -self.maxRange
         maxValue = kwargs['max'] if 'max' in kwargs else self.maxRange
         value = min(maxValue, max(int(value), minValue))
@@ -45,15 +44,27 @@ class SpinCtrl(wx.Panel):
         sizer.AddMany([self._textCtrl, self._spinButton])
         self.SetSizerAndFit(sizer)
         self._textCtrl.Bind(wx.EVT_TEXT, self.onText)
+        self._textCtrl.Bind(wx.EVT_KEY_DOWN, self.onKey)
         self._spinButton.Bind(wx.EVT_SPIN, self.onSpin)
         
     def onText(self, event):
         try:
             self._spinButton.SetValue(int(self._textCtrl.GetValue()))
-        except ValueError:
+        except (ValueError, OverflowError):
             self._textCtrl.SetValue(str(self._spinButton.GetValue()))
         event.Skip()
 
+    def onKey(self, event):
+        if not event.HasModifiers():
+            keyCode = event.GetKeyCode()
+            if keyCode in (wx.WXK_UP, wx.WXK_NUMPAD_UP):
+                self.SetValue(self.GetValue() + 1)
+                return
+            elif keyCode in (wx.WXK_DOWN, wx.WXK_NUMPAD_DOWN):
+                self.SetValue(self.GetValue() - 1)
+                return
+        event.Skip()
+            
     def onSpin(self, event): # pylint: disable-msg=W0613
         self._textCtrl.SetValue(str(self._spinButton.GetValue()))
 
@@ -61,9 +72,9 @@ class SpinCtrl(wx.Panel):
         return self._spinButton.GetValue()
     
     def SetValue(self, value):
-        self._textCtrl.SetValue(str(value))
         self._spinButton.SetValue(value)
-    
+        self._textCtrl.SetValue(str(self.GetValue()))
+
     Value = property(GetValue, SetValue)
     
     def GetMax(self):

@@ -39,7 +39,7 @@ class DescriptionCtrl(hypertreelist.EditTextCtrl):
 class PriorityCtrl(hypertreelist.EditCtrl, widgets.SpinCtrl):
     def __init__(self, parent, wxId, item, column, owner, value):
         super(PriorityCtrl, self).__init__(parent, wxId, item, column, owner, str(value))
-        self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
+        self._textCtrl.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
         
     def OnKeyDown(self, event):
         keyCode = event.GetKeyCode()
