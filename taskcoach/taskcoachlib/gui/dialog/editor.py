@@ -123,8 +123,7 @@ class TaskSubjectPage(SubjectPage):
     def addPriorityEntry(self):
         priority = self.items[0].priority() if len(self.items) == 1 else 0
         # pylint: disable-msg=W0201
-        self._priorityEntry = widgets.SpinCtrl(self, value=str(priority),
-            initial=priority, size=(100, -1))
+        self._priorityEntry = widgets.SpinCtrl(self, value=priority, size=(100, -1))
         self._priorityLabel = self.label(_('Priority'), self._priorityEntry, wx.EVT_SPINCTRL)
         self.addEntry(self._priorityLabel, self._priorityEntry, flags=[None, wx.ALL])
     
@@ -419,7 +418,7 @@ class DatesPage(Page):
         panelSizer.Add((3, -1))
         self._recurrenceFrequencyEntry = widgets.SpinCtrl(recurrencePanel,
                                                           size=(50, -1),
-                                                          initial=1, min=1)
+                                                          value=1, min=1)
         panelSizer.Add(self._recurrenceFrequencyEntry, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3, -1))
         self._recurrenceStaticText = wx.StaticText(recurrencePanel,
@@ -440,7 +439,7 @@ class DatesPage(Page):
         panelSizer.Add(self._maxRecurrenceCheckBox, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add((3, -1))
         self._maxRecurrenceCountEntry = widgets.SpinCtrl(maxPanel, size=(50, -1),
-                                                         initial=1, min=1)
+                                                         value=1, min=1)
         panelSizer.Add(self._maxRecurrenceCountEntry)
         maxPanel.SetSizerAndFit(panelSizer)
         
