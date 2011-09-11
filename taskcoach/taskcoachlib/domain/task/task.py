@@ -163,10 +163,6 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         return all(child.completed() for child in children) if children \
             else False        
 
-    def newChild(self, subject='New subtask'): # pylint: disable-msg=W0221
-        ''' Subtask constructor '''
-        return super(Task, self).newChild(subject=subject, parent=self)
-
     @patterns.eventSource
     def addChild(self, child, event=None):
         if child in self.children():

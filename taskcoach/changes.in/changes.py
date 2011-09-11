@@ -41,13 +41,17 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
             
-Release('1.2.28', 'September 4, 2011',
+Release('1.2.28', 'September 10, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Task Coach would not work correctly with dates before 1900.'''),
         Bug('''When recovering from an error in the TaskCoach.ini file, get
 the default settings from the right section.''', '3404024'),
         Bug('''When opening a URL fails, show an error message dialog.'''),
+        Bug('''Task Coach would crash when editing a task/category/etc on
+some versions of wxPython.'''),
+        Bug('''Adding a subtask without a due date would reset its parent's
+due date.''', '3405053'),
         ],
     featuresAdded=[
         Feature('''The SyncML password is now stored encrypted in the

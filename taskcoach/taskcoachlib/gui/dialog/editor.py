@@ -228,7 +228,7 @@ class TaskAppearancePage(Page):
             currentIcon, self.items, command.EditIconCommand, 
             entry.EVT_ICONENTRY, self.items[0].appearanceChangedEventType())
         self.addEntry(_('Icon'), self._iconEntry, flags=[None, wx.ALL])
-    
+
     def entries(self):
         return dict(firstEntry=self._foregroundColorEntry) # pylint: disable-msg=E1101
     

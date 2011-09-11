@@ -65,7 +65,6 @@ for language in languages:
 
 system = platform.system()
 if system == 'Linux':
-    setupOptions['package_data'] = {'taskcoachlib': ['bin.in/linux/_pysyncml.so']}
     # Add data files for Debian-based systems:
     current_dist = [dist.lower() for dist in platform.dist()]
     if 'debian' in current_dist or 'ubuntu' in current_dist:
@@ -74,6 +73,10 @@ if system == 'Linux':
 	    ('share/pixmaps', ['icons.in/taskcoach.png'])]
 elif system == 'Windows':
     setupOptions['scripts'].append('taskcoach.pyw')
+    import sys
+    info = sys.version_info
+    sys.path.insert(0, os.path.join('taskcoachlib', 'bin.in', 'windows', 'py%d%d' % (info.major, info.minor)))
+    import _pysyncml
 elif system == 'Darwin':
     # When packaging for MacOS, choose the right binary depending on
     # the platform word size. Actually, we're always packaging on 32

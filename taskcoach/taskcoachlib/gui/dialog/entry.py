@@ -293,7 +293,8 @@ class IconEntry(wx.combo.BitmapComboBox):
         for imageName in imageNames:
             label = artprovider.chooseableItemImages[imageName]
             bitmap = wx.ArtProvider_GetBitmap(imageName, wx.ART_MENU, size)
-            self.Append(label, bitmap, clientData=imageName)
+            item = self.Append(label, bitmap)
+            self.SetClientData(item, imageName)
         self.SetSelection(imageNames.index(currentIcon))
         self.Bind(wx.EVT_COMBOBOX, self.onIconPicked)
         
@@ -380,8 +381,8 @@ class TaskEntry(wx.Panel):
         ''' Add a task to the ComboTreeBox and then recursively add its
             subtasks. '''
         if not task.isDeleted():
-            item = self._comboTreeBox.Append(task.subject(), parent=parentItem,
-                                             clientData=task)
+            item = self._comboTreeBox.Append(task.subject(), parent=parentItem)
+            self._comboTreeBox.SetClientData(item, task)
             self._addTasksRecursively(task.children(), item)
 
     def onTaskSelected(self, event):
