@@ -163,7 +163,11 @@ class Settings(patterns.Observer, CachingConfigParser):
             result = str(columns)
         elif option == 'columnwidths':
             widths = dict()
-            for column, width in eval(result).items():
+            try:
+                columnWidthMap = eval(result)
+            except SyntaxError:
+                columnWidthMap = dict()
+            for column, width in columnWidthMap.items():
                 if column in taskDateColumns:
                     column += 'Time'
                 widths[column] = width
