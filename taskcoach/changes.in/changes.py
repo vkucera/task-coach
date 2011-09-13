@@ -41,7 +41,7 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
             
-Release('1.2.28', 'September 10, 2011',
+Release('1.2.28', 'September 12, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Task Coach would not work correctly with dates before 1900.'''),
@@ -52,6 +52,9 @@ the default settings from the right section.''', '3404024'),
 some versions of wxPython.'''),
         Bug('''Adding a subtask without a due date would reset its parent's
 due date.''', '3405053'),
+        Bug('''Using the Delete key when editing the priority inline would 
+delete the task on Windows.''', '3400086'),
+        Bug('''On Windows, SyncML couldn't be turned on.''', '3406653'),
         ],
     featuresAdded=[
         Feature('''The SyncML password is now stored encrypted in the
@@ -71,7 +74,7 @@ would uncheck it, but not change the filtering.''', '3377145'),
         Bug('''Saving could fail after a reminder was first snoozed and then
 later the reminder dialog was closed without snoozing.''', '3397920'),
         Bug('''Using the Delete key when editing the priority inline would 
-delete the task.'''),
+delete the task.''', '3400086'),
         Bug('''Using the Enter key when editing the priority inline would not
 accept the changes on Mac OS X.'''),
         Bug('''Fix issues in Italian translation.''', '3398600'),

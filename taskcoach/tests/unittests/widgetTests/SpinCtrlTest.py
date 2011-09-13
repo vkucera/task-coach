@@ -16,13 +16,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import test, wx
+import test
 from taskcoachlib import widgets
 
 
 class SpinCtrlTest(test.wxTestCase):
+    def testPositiveValue(self):
+        spinCtrl = widgets.SpinCtrl(self.frame, value=5)
+        self.assertEqual(5, spinCtrl.GetValue())
+        
     def testNegativeValue(self):
-        spinCtrl = widgets.SpinCtrl(self.frame, value='-5')
+        spinCtrl = widgets.SpinCtrl(self.frame, value=-5)
         self.assertEqual(-5, spinCtrl.GetValue())
         
     def testMinRange(self):
@@ -40,18 +44,3 @@ class SpinCtrlTest(test.wxTestCase):
     def testDefaultValueIsAtMostMaxRange(self):
         spinCtrl = widgets.SpinCtrl(self.frame, max=-1)
         self.assertEqual(-1, spinCtrl.GetValue())
-        
-    def fakeWindowsSpinCtrlBehaviourWhenSettingTextValue(self, spinCtrl): # pragma: no cover
-        spinCtrl.SetValue(0)
-        class DummyEvent(object):
-            def Skip(self):
-                pass
-        spinCtrl.onValueChanged(DummyEvent())
-        
-    def testSetInvalidValue(self):
-        spinCtrl = widgets.SpinCtrl(self.frame)
-        spinCtrl.SetValueString('text')
-        if '__WXMSW__' == wx.Platform: # pragma: no cover
-            self.fakeWindowsSpinCtrlBehaviourWhenSettingTextValue(spinCtrl)
-        self.assertEqual(0, spinCtrl.GetValue())
-        
