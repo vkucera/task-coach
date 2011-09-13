@@ -85,8 +85,38 @@ static PyObject* PySendInput(PyObject *self, PyObject *args)
 
         case INPUT_KEYBOARD:
         {
-            PyErr_SetString(PyExc_NotImplementedError, "Not implemented");
-            goto err;
+            HKL layout = GetKeyboardLayout(GetWindowThreadProcessId(GetForegroundWindow(), NULL));
+
+            PyObject *kinput = PyTuple_GetItem(tpl, 1);
+
+            if (!PyTuple_Check(kinput))
+            {
+                PyErr_SetString(PyExc_TypeError, "Structure must be a tuple");
+                goto err;
+            }
+
+            PyObject *theChar;
+            int type;
+            if (!PyArg_ParseTuple(kinput, "Oi", &theChar, &type))
+                goto err;
+
+            if (!PyUnicode_Check(theChar))
+            {
+                PyErr_SetString(PyExc_TypeError, "Text must be a Unicode character");
+                goto err;
+            }
+
+            WCHAR szChar;
+            PyUnicode_AsWideChar((PyUnicodeObject *)theChar, &szChar, 1);
+
+            pInputs[i].type = INPUT_KEYBOARD;
+            pInputs[i].ki.wVk = 0;
+            pInputs[i].ki.wScan = MapVirtualKeyEx(VkKeyScan(szChar), 0, layout);
+            pInputs[i].ki.dwFlags = KEYEVENTF_SCANCODE | type;
+            pInputs[i].ki.time = 0;
+            pInputs[i].ki.dwExtraInfo = 0;
+
+            break;
         }
 
         default:
@@ -141,4 +171,5 @@ __declspec(dllexport) void initsendinput(void)
     ADDCST(MOUSEEVENTF_WHEEL);
     ADDCST(MOUSEEVENTF_XDOWN);
     ADDCST(MOUSEEVENTF_XUP);
+    ADDCST(KEYEVENTF_KEYUP);
 }
