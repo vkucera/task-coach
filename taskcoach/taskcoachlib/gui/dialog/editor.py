@@ -100,7 +100,7 @@ class TaskSubjectPage(SubjectPage):
         # pylint: disable-msg=W0201
         currentPriority = self.items[0].priority() if len(self.items) == 1 else 0
         self._priorityEntry = widgets.SpinCtrl(self, size=(100, -1),
-            value=str(currentPriority), initial=currentPriority)
+            value=currentPriority)
         self._prioritySync = attributesync.AttributeSync('priority', 
             self._priorityEntry, currentPriority, self.items,
             command.EditPriorityCommand, wx.EVT_SPINCTRL, task.Task.priorityChangedEventType())

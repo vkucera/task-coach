@@ -110,7 +110,7 @@ class SettingsPageBase(widgets.BookPage):
             helpText='', flags=None):
         intValue = self.getint(section, setting)
         spin = widgets.SpinCtrl(self, min=minimum, max=maximum, size=(65, -1),
-            initial=intValue, value=str(intValue))
+            value=intValue)
         self.addEntry(text, spin, helpText=helpText, flags=flags)
         self._integerSettings.append((section, setting, spin))
 

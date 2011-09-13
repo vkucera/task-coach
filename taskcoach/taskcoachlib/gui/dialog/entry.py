@@ -156,9 +156,8 @@ class PercentageEntry(widgets.PanelWithBoxSizer):
         return slider
         
     def _createSpinCtrl(self, percentage):
-        entry = widgets.SpinCtrl(self, value=str(percentage),
-            initial=percentage, min=0, max=100,
-            size=(60 if '__WXMAC__' == wx.Platform else 50, -1))
+        entry = widgets.SpinCtrl(self, value=percentage,
+            min=0, max=100, size=(60 if '__WXMAC__' == wx.Platform else 50, -1))
         for eventType in wx.EVT_SPINCTRL, wx.EVT_KILL_FOCUS:
             entry.Bind(eventType, self.onSpin)
         return entry
@@ -412,7 +411,7 @@ class RecurrenceEntry(wx.Panel):
         self._recurrencePeriodEntry.Bind(wx.EVT_CHOICE, self.onRecurrencePeriodEdited)
         self._recurrenceFrequencyEntry = widgets.SpinCtrl(recurrenceFrequencyPanel, 
                                                           size=(50,-1), 
-                                                          initial=1, min=1)
+                                                          value=1, min=1)
         self._recurrenceFrequencyEntry.Bind(wx.EVT_SPINCTRL, self.onRecurrenceEdited)
         self._recurrenceStaticText = wx.StaticText(recurrenceFrequencyPanel, 
                                                    label='reserve some space')
@@ -440,7 +439,7 @@ class RecurrenceEntry(wx.Panel):
         self._maxRecurrenceCheckBox = wx.CheckBox(maxPanel)
         self._maxRecurrenceCheckBox.Bind(wx.EVT_CHECKBOX, self.onMaxRecurrenceChecked)
         self._maxRecurrenceCountEntry = widgets.SpinCtrl(maxPanel, size=(50,-1), 
-                                                         initial=1, min=1)
+                                                         value=1, min=1)
         self._maxRecurrenceCountEntry.Bind(wx.EVT_SPINCTRL, self.onRecurrenceEdited)
         panelSizer.Add(self._maxRecurrenceCheckBox, flag=wx.ALIGN_CENTER_VERTICAL)
         panelSizer.Add(self.horizontalSpace)
