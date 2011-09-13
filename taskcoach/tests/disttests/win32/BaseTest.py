@@ -55,8 +55,8 @@ class TestWithTaskFile(base.Win32TestCase):
         self.failIf(editor is None, 'Task editor not found')
         editor.waitFocus()
 
-        # Increase priority so the task is "dirty":
-        editor.findChildren('msctls_updown32', '')[0].clickAt(2, 2) 
+        # Change subject so the task is "dirty":
+        editor.sendText(u'New subject')
         # Close the task edit dialog:
         editor.findChildren('Button', 'OK')[0].clickAt(5, 5)
 
