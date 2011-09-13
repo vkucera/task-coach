@@ -85,6 +85,13 @@ class Window(object):
                      (si.INPUT_MOUSE, (0, 0, 0, si.MOUSEEVENTF_LEFTDOWN, 0)),
                      (si.INPUT_MOUSE, (0, 0, 0, si.MOUSEEVENTF_LEFTUP, 0)))
 
+    def sendText(self, text):
+        inputs = []
+        for char in text:
+            inputs.append((si.INPUT_KEYBOARD, (char, 0)))
+            inputs.append((si.INPUT_KEYBOARD, (char, si.KEYEVENTF_KEYUP)))
+        si.SendInput(*tuple(inputs))
+
     def close(self):
         """ Closes the window. """
         win32gui.SendMessage(self.hwnd, win32con.WM_CLOSE, 0, 0)
