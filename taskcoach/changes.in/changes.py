@@ -40,6 +40,9 @@ delete the task on Windows.''', '3400086'),
     featuresAdded=[
         Feature('''The SyncML password is now stored encrypted in the
 system keychain, if available.'''),
+        Feature('''Add task subject to the reminder dialog window title so that
+it's easier to find a particular reminder when cycling through windows with
+Alt-Tab.''', 'http://uservoice.com/a/au6wa'),
         ]
     ),
 
