@@ -440,7 +440,7 @@ class DatesPage(Page):
         panelSizer.Add((3, -1))
         self._maxRecurrenceCountEntry = widgets.SpinCtrl(maxPanel, size=(50, -1),
                                                          value=1, min=1)
-        panelSizer.Add(self._maxRecurrenceCountEntry)
+        panelSizer.Add(self._maxRecurrenceCountEntry, flag=wx.ALIGN_CENTER_VERTICAL)
         maxPanel.SetSizerAndFit(panelSizer)
         
         schedulePanel = wx.Panel(self)

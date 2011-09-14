@@ -274,7 +274,7 @@ class Settings(patterns.Observer, CachingConfigParser):
     def pathToConfigDir(self, environ):
         try:
             path = os.path.join(environ['APPDATA'], meta.filename)
-        except Exception, e:
+        except Exception:
             path = os.path.expanduser("~") # pylint: disable-msg=W0702
             if path == "~":
                 # path not expanded: apparently, there is no home dir
