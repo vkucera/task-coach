@@ -173,7 +173,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             self.setCompletionDateTime(child.completionDateTime(), event=event)
         elif self.completed() and not child.completed():
             self.setCompletionDateTime(self.maxDateTime, event=event)
-        if child.dueDateTime() > self.dueDateTime():
+        if self.maxDateTime > child.dueDateTime() > self.dueDateTime():
             self.setDueDateTime(child.dueDateTime(), event=event)           
         if child.startDateTime() < self.startDateTime():
             self.setStartDateTime(child.startDateTime(), event=event)

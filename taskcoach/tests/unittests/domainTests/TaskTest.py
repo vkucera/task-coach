@@ -451,6 +451,13 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.task.addChild(child)
         self.assertEqual(child.dueDateTime(), self.task.dueDateTime())
         
+    def testAddChildWithoutDueDateTimeDoesNotResetParentDueDateTime(self):
+        dueDateTime = date.Now() + date.oneHour
+        self.task.setDueDateTime(dueDateTime)
+        child = task.Task()
+        self.task.addChild(child)
+        self.assertEqual(dueDateTime, self.task.dueDateTime())
+        
     def testAddChildWithEarlierStartDateTimeMakesParentStartDateTimeEarlier(self):
         child = task.Task(startDateTime=self.yesterday)
         self.task.addChild(child)
