@@ -177,6 +177,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             self.setDueDateTime(child.dueDateTime(), event=event)           
         if child.startDateTime() < self.startDateTime():
             self.setStartDateTime(child.startDateTime(), event=event)
+        self.recomputeAppearance(recursive=False, event=event)
         child.recomputeAppearance(recursive=True, event=event)
 
     @patterns.eventSource
@@ -188,6 +189,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if self.shouldBeMarkedCompleted(): 
             # The removed child was the last uncompleted child
             self.setCompletionDateTime(date.Now(), event=event)
+        self.recomputeAppearance(recursive=False, event=event)
         child.recomputeAppearance(recursive=True, event=event)
                     
     def childChangeEvent(self, child, event):
