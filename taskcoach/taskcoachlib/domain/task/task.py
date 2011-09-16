@@ -301,9 +301,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             for child in self.children():
                 if startDateTime > child.startDateTime():
                     child.setStartDateTime(startDateTime, event=event)
-            parent = self.parent()
-            if parent and startDateTime < parent.startDateTime():
-                parent.setStartDateTime(startDateTime, event=event)
+        parent = self.parent()
+        if parent and startDateTime < parent.startDateTime():
+            parent.setStartDateTime(startDateTime, event=event)
         self.recomputeAppearance(event=event)
         
     def onStarted(self, event): # pylint: disable-msg=W0613

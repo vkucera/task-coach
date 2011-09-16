@@ -461,7 +461,15 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
     def testAddChildWithEarlierStartDateTimeMakesParentStartDateTimeEarlier(self):
         child = task.Task(startDateTime=self.yesterday)
         self.task.addChild(child)
-        self.assertEqual(child.startDateTime(), self.task.startDateTime())
+        self.assertEqual(self.yesterday, self.task.startDateTime())
+        self.assertEqual(self.yesterday, child.startDateTime())
+        
+    def testAddActiveRecurringChildWithEarlierStartDateTimeMakesParentStartDateTimeEarlier(self):
+        child = task.Task(startDateTime=self.yesterday)
+        child.setRecurrence(date.Recurrence('monthly'))
+        self.task.addChild(child)
+        self.assertEqual(self.yesterday, self.task.startDateTime())
+        self.assertEqual(self.yesterday, child.startDateTime())
         
     def testAddChildWithBudgetCausesBudgetNotification(self):
         child = task.Task()

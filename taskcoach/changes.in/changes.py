@@ -36,6 +36,8 @@ due date.''', '3405053'),
         Bug('''Using the Delete key when editing the priority inline would 
 delete the task on Windows.''', '3400086'),
         Bug('''On Windows, SyncML couldn't be turned on.''', '3406653'),
+        Bug('''When adding a new (recurring) subtask to a parent task,
+push back the start date of the parent if necessary.''', '3409716'),
         ],
     featuresAdded=[
         Feature('''The SyncML password is now stored encrypted in the
