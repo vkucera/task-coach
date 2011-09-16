@@ -105,7 +105,7 @@ class Settings(patterns.Observer, CachingConfigParser):
                 super(Settings, self).set(section, key, value)
                 
     def getDefault(self, section, option):
-        return defaults.defaults[section][option]
+        return defaults.defaults[section.strip('0123456789')][option]
 
     def __beQuiet(self):
         noisySettings = [('window', 'splash'), ('window', 'tips')]
@@ -227,7 +227,7 @@ class Settings(patterns.Observer, CachingConfigParser):
                 _('The error is: %s')%exceptionMessage,
                 _('%s will use the default value for the setting and should proceed normally.')%meta.name])
             showerror(message, caption=_('Settings error'), style=wx.ICON_ERROR)
-            defaultValue = self.getDefault(section.strip('0123456789'), option)
+            defaultValue = self.getDefault(section, option)
             self.set(section, option, defaultValue, new=True) # Ignore current value
             return evaluate(defaultValue)
         
