@@ -25,7 +25,8 @@ from taskcoachlib.domain import date
 
 class ReminderDialog(sized_controls.SizedDialog):
     def __init__(self, task, taskList, effortList, settings, *args, **kwargs):
-        kwargs['title'] = kwargs.get('title', meta.name + ' ' + _('Reminder'))
+        kwargs['title'] = _('%(name)s reminder - %(task)s')%dict(name=meta.name, 
+                                                                task=task.subject(recursive=True))
         super(ReminderDialog, self).__init__(*args, **kwargs)
         self.SetIcon(wx.ArtProvider_GetIcon('taskcoach', wx.ART_FRAME_ICON, (16,16)))
         self.task = task

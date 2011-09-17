@@ -173,10 +173,11 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             self.setCompletionDateTime(child.completionDateTime(), event=event)
         elif self.completed() and not child.completed():
             self.setCompletionDateTime(self.maxDateTime, event=event)
-        if child.dueDateTime() > self.dueDateTime():
+        if self.maxDateTime > child.dueDateTime() > self.dueDateTime():
             self.setDueDateTime(child.dueDateTime(), event=event)           
         if child.startDateTime() < self.startDateTime():
             self.setStartDateTime(child.startDateTime(), event=event)
+        self.recomputeAppearance(recursive=False, event=event)
         child.recomputeAppearance(recursive=True, event=event)
 
     @patterns.eventSource
@@ -188,6 +189,7 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
         if self.shouldBeMarkedCompleted(): 
             # The removed child was the last uncompleted child
             self.setCompletionDateTime(date.Now(), event=event)
+        self.recomputeAppearance(recursive=False, event=event)
         child.recomputeAppearance(recursive=True, event=event)
                     
     def childChangeEvent(self, child, event):
@@ -299,9 +301,9 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             for child in self.children():
                 if startDateTime > child.startDateTime():
                     child.setStartDateTime(startDateTime, event=event)
-            parent = self.parent()
-            if parent and startDateTime < parent.startDateTime():
-                parent.setStartDateTime(startDateTime, event=event)
+        parent = self.parent()
+        if parent and startDateTime < parent.startDateTime():
+            parent.setStartDateTime(startDateTime, event=event)
         self.recomputeAppearance(event=event)
         
     def onStarted(self, event): # pylint: disable-msg=W0613

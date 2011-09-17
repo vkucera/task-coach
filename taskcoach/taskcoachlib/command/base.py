@@ -283,10 +283,7 @@ class DragAndDropCommand(BaseCommand, SaveStateMixin, CompositeMixin):
     
     def __init__(self, *args, **kwargs):
         dropTargets = kwargs.pop('drop')
-        if dropTargets:
-            self.__itemToDropOn = dropTargets[0]
-        else:
-            self.__itemToDropOn = None
+        self.__itemToDropOn = dropTargets[0] if dropTargets else None
         super(DragAndDropCommand, self).__init__(*args, **kwargs)
         self.saveStates(self.getItemsToSave())
         
