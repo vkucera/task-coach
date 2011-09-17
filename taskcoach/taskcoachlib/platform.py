@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import wx, sys
+import wx, sys, platform
 
 # This module is meant to be imported like this: from taskcoachlib import platform
 # so that the function calls read: platform.isWindows(), platform.isGTK(), etc.
@@ -45,4 +45,9 @@ def isWindows7_OrNewer(): # pragma: no cover
         return False
     
 
+def isMacOsXLion_OrNewer(): # pragma: no cover
+    if isMac():
+        return platform.release() >= '11.1.0'
+    else:
+        return False
 

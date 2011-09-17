@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.0', 'September 6, 2011',
+Release('1.3.0', 'September 17, 2011',
     summary='''This release makes all edits done in dialogs immediate.''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -41,7 +41,7 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
             
-Release('1.2.28', 'September 12, 2011',
+Release('1.2.28', 'September 16, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Task Coach would not work correctly with dates before 1900.'''),
@@ -55,10 +55,15 @@ due date.''', '3405053'),
         Bug('''Using the Delete key when editing the priority inline would 
 delete the task on Windows.''', '3400086'),
         Bug('''On Windows, SyncML couldn't be turned on.''', '3406653'),
+        Bug('''When adding a new (recurring) subtask to a parent task,
+push back the start date of the parent if necessary.''', '3409716'),
         ],
     featuresAdded=[
         Feature('''The SyncML password is now stored encrypted in the
 system keychain, if available.'''),
+        Feature('''Add task subject to the reminder dialog window title so that
+it's easier to find a particular reminder when cycling through windows with
+Alt-Tab.''', 'http://uservoice.com/a/au6wa'),
         ]
     ),
 
