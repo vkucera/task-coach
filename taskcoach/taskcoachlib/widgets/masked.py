@@ -17,12 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from wx.lib import masked
-from taskcoachlib import platform
+from taskcoachlib import operating_system
 
 
 class FixOverwriteSelectionMixin(object):
     def _SetSelection(self, start, end):
-        if platform.isGTK(): # pragma: no cover
+        if operating_system.isGTK(): # pragma: no cover
             # By exchanging the start and end parameters we make sure that the 
             # cursor is at the start of the field so that typing overwrites the 
             # current field instead of moving to the next field:

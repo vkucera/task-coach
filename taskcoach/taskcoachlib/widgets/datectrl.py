@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx
 from taskcoachlib.domain import date
-from taskcoachlib import platform
+from taskcoachlib import operating_system
 
 
 class _BetterDatePickerCtrl(wx.DatePickerCtrl):
@@ -29,7 +29,7 @@ class _BetterDatePickerCtrl(wx.DatePickerCtrl):
 
     def __init__(self, *args, **kwargs):
         super(_BetterDatePickerCtrl, self).__init__(*args, **kwargs)
-        if platform.isGTK():
+        if operating_system.isGTK():
             comboCtrl = self.GetChildren()[0]
             comboCtrl.Bind(wx.EVT_KEY_DOWN, self.onKey)
 
@@ -73,7 +73,7 @@ class _DatePickerCtrlThatFixesAllowNoneStyle(wx.Panel):
         super(_DatePickerCtrlThatFixesAllowNoneStyle, self).__init__(parent)
         self._createControls()
         self._layout()
-        if platform.isGTK():
+        if operating_system.isGTK():
             # Many EVT_CHILD_FOCUS are sent on wxGTK, see 
             # http://trac.wxwidgets.org/ticket/11305. Ignore these events
             self.Bind(wx.EVT_CHILD_FOCUS, lambda event: None)
@@ -118,7 +118,7 @@ class _DatePickerCtrlThatFixesAllowNoneStyle(wx.Panel):
 
 def styleDP_ALLOWNONEIsBroken():
     # DP_ALLOWNONE is not supported on Mac OS and Linux
-    return not platform.isWindows()
+    return not operating_system.isWindows()
 
 
 def DatePickerCtrl(*args, **kwargs):
@@ -168,7 +168,7 @@ class DateTimeCtrl(wx.Panel):
         super(DateTimeCtrl, self).__init__(parent, *args, **kwargs)
         self._createControls()
         self._layout()
-        if platform.isGTK():
+        if operating_system.isGTK():
             # Many EVT_CHILD_FOCUS are sent on wxGTK, see 
             # http://trac.wxwidgets.org/ticket/11305. Ignore these events
             self.Bind(wx.EVT_CHILD_FOCUS, lambda event: None)
@@ -187,9 +187,9 @@ class DateTimeCtrl(wx.Panel):
         options = dict(style=wx.DP_DROPDOWN, dt=wx.DateTime_Today())
         if self._noneAllowed:
             options['style'] |= wx.DP_ALLOWNONE
-        if platform.isWindows():
+        if operating_system.isWindows():
             options['size'] = (100, -1)
-        elif platform.isGTK():
+        elif operating_system.isGTK():
             options['size'] = (115, -1)
         return options
     
@@ -203,9 +203,9 @@ class DateTimeCtrl(wx.Panel):
         return choices
     
     def _timeSize(self):
-        if platform.isWindows():
+        if operating_system.isWindows():
             return (90 if self._showSeconds else 60, -1) 
-        elif platform.isGTK():
+        elif operating_system.isGTK():
             return (105 if self._showSeconds else 80, -1)
         else:
             return (95 if self._showSeconds else 70, self._dateCtrl.GetSize()[1])

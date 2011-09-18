@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx.combo, os.path
-from taskcoachlib import widgets, patterns, command, platform
+from taskcoachlib import widgets, patterns, command, operating_system
 from taskcoachlib.gui import viewer, artprovider, uicommand, windowdimensionstracker
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, date, note, attachment
@@ -451,7 +451,7 @@ class DatesPage(Page):
         self._scheduleChoice = wx.Choice(schedulePanel,
             choices=[_('previous start and/or due date and time'),
                      _('last completion date and time')])
-        if platform.isMac():
+        if operating_system.isMac():
             # On Mac OS X, the wx.Choice gets too little vertical space by default
             size = self._scheduleChoice.GetSizeTuple()
             self._scheduleChoice.SetMinSize((size[0], size[1]+1))

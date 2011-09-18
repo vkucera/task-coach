@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.28', 'September 16, 2011',
+Release('1.2.28', 'September 18, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Task Coach would not work correctly with dates before 1900.'''),
@@ -38,6 +38,9 @@ delete the task on Windows.''', '3400086'),
         Bug('''On Windows, SyncML couldn't be turned on.''', '3406653'),
         Bug('''When adding a new (recurring) subtask to a parent task,
 push back the start date of the parent if necessary.''', '3409716'),
+        Bug('''On Mac OS X Tiger, whenever trying to give focus to the
+search control focus would return to the viewer immediately, making
+searching impossible.''', '3410268'),
         ],
     featuresAdded=[
         Feature('''The SyncML password is now stored encrypted in the
