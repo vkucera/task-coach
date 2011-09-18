@@ -208,24 +208,23 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
                           wx.TR_HIDE_ROOT
         super(TreeCtrlDragAndDropMixin, self).__init__(*args, **kwargs)
         self.Bind(wx.EVT_TREE_BEGIN_DRAG, self.OnBeginDrag)
-        self._dragItem = None
+        self._dragItems = []
 
-    def OnDrop(self, dropItem, dragItem):
-        ''' This function must be overloaded in the derived class.
-        dragItem is the item being dragged by the user. dropItem is the
-        item dragItem is dropped upon. If the user doesn't drop dragItem
+    def OnDrop(self, dropItem, dragItems):
+        ''' This function must be overloaded in the derived class. dragItems 
+        are the items being dragged by the user. dropItem is the item the 
+        dragItems are dropped on. If the user doesn't drop the dragItems
         on another item, dropItem equals the (hidden) root item of the
         tree control. '''
         raise NotImplementedError
 
     def OnBeginDrag(self, event):
         ''' This method is called when the drag starts. It either allows the
-        drag and starts it or it vetoes the drag when the dragged item is the
-        root item. '''
+        drag and starts it or it vetoes the drag when the the root item is one
+        of the dragged items. '''
         selections = self.GetSelections()
-        # We allow only one item to be dragged at a time, to keep it simple
-        self._dragItem = selections[0] if selections else event.GetItem()
-        if self._dragItem and self._dragItem != self.GetRootItem(): 
+        self._dragItems = selections[:] if selections else [event.GetItem()] if event.GetItem() else []
+        if self._dragItems and (self.GetRootItem() not in self._dragItems): 
             self.StartDragging()
             event.Allow()
         else:
@@ -240,7 +239,7 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
             self.UnselectAll()
             if dropTarget != self.GetRootItem():
                 self.SelectItem(dropTarget)
-            self.OnDrop(dropTarget, self._dragItem)
+            self.OnDrop(dropTarget, self._dragItems)
         else:
             # Work around an issue with HyperTreeList. HyperTreeList will
             # restore the selection to the last item highlighted by the drag,
@@ -248,11 +247,11 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
             # want, so use wx.CallAfter to clear the selection after
             # HyperTreeList did its (wrong) thing and reselect the previously
             # dragged item.
-            wx.CallAfter(self.selectDraggedItem)
+            wx.CallAfter(self.select, self._dragItems)
+        self._dragItems = []
 
-    def selectDraggedItem(self):
-        self.UnselectAll()
-        self.SelectItem(self._dragItem)
+    def selectDraggedItems(self):
+        self.select(reversed(self._dragItems))
         
     def OnDragging(self, event):
         if not event.Dragging():
@@ -282,8 +281,7 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
         self.GetMainWindow().Unbind(wx.EVT_MOTION)
         self.Unbind(wx.EVT_TREE_END_DRAG)
         self.ResetCursor()
-        self.UnselectAll()
-        self.SelectItem(self._dragItem)
+        self.selectDraggedItems()
         
     def SetCursorToDragging(self):
         self.GetMainWindow().SetCursor(wx.StockCursor(wx.CURSOR_HAND))
@@ -295,9 +293,11 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
         self.GetMainWindow().SetCursor(wx.NullCursor)
 
     def IsValidDropTarget(self, dropTarget):
-        if dropTarget: 
-            allChildren = self.GetItemChildren(self._dragItem, recursively=True)
-            parent = self.GetItemParent(self._dragItem) 
-            return dropTarget not in [self._dragItem, parent] + allChildren
+        if dropTarget:
+            invalidDropTargets = set(self._dragItems) 
+            invalidDropTargets |= set(self.GetItemParent(item) for item in self._dragItems)
+            for item in self._dragItems:
+                invalidDropTargets |= set(self.GetItemChildren(item, recursively=True))
+            return dropTarget not in invalidDropTargets
         else:
-            return True        
+            return True
