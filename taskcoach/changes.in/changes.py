@@ -22,6 +22,14 @@ from changetypes import *
 
 releases = [
             
+Release('1.2.29', 'September 19, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''If auto importing of Todo.txt files was turned on, but
+there was no Todo.txt file available for importing, saving would fail.'''),
+        ]
+    ),
+            
 Release('1.2.28', 'September 18, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[

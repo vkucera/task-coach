@@ -78,4 +78,8 @@ class AutoExporterTestCase(test.TestCase):
         self.assertEqual('Imported task', 
                          list(self.taskFile.tasks())[0].subject())
         
-        
+    def testSaveWithAutoImportWhenFileToImportDoesNotExist(self):
+        self.settings.set('file', 'autoimport', '["Todo.txt"]')
+        self.taskFile.tasks().append(task.Task(subject='Whatever'))
+        self.taskFile.save()
+     
