@@ -45,6 +45,7 @@ class SpinCtrl(wx.Panel):
         self.SetSizerAndFit(sizer)
         self._textCtrl.Bind(wx.EVT_TEXT, self.onText)
         self._textCtrl.Bind(wx.EVT_KEY_DOWN, self.onKey)
+        self._textCtrl.Bind(wx.EVT_SET_FOCUS, self.onSetFocus)
         self._spinButton.Bind(wx.EVT_SPIN, self.onSpin)
         
     def onText(self, event):
@@ -63,6 +64,10 @@ class SpinCtrl(wx.Panel):
             elif keyCode in (wx.WXK_DOWN, wx.WXK_NUMPAD_DOWN):
                 self.SetValue(self.GetValue() - 1)
                 return
+        event.Skip()
+        
+    def onSetFocus(self, event):
+        self._textCtrl.SelectAll()
         event.Skip()
             
     def onSpin(self, event): # pylint: disable-msg=W0613

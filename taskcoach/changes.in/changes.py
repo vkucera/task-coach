@@ -26,7 +26,11 @@ Release('1.2.29', 'September 19, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''If auto importing of Todo.txt files was turned on, but
-there was no Todo.txt file available for importing, saving would fail.'''),
+there was no Todo.txt file available for importing, saving would fail.''', 
+        '3410648'),
+        Bug('''When the priority field gets focus, select all priority digits
+so the user can simply type a new number to overwrite the previous one.''', 
+        '3411384'),
         ]
     ),
             
