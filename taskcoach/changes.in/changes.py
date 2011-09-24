@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.0', 'September 17, 2011',
+Release('1.3.0', 'September 24, 2011',
     summary='''This release makes all edits done in dialogs immediate.''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -40,8 +40,23 @@ immediately to all open dialogs. This will prevent overwriting
 changes made in other dialogs.''', '1152561')
         ]
     ),
+
+Release('1.2.29', 'September 20, 2011',
+    summary='''This is a bugfix release.''',
+    bugsFixed=[
+        Bug('''If auto importing of Todo.txt files was turned on, but
+there was no Todo.txt file available for importing, saving would fail.''', 
+        '3410648'),
+        Bug('''When the priority field gets focus, select all priority digits
+so the user can simply type a new number to overwrite the previous one.''', 
+        '3411384'),
+        Bug('''When showing effort in detail mode, Task Coach would only 
+consider the start of a period to decide whether to hide the period as a
+repeated period. Now it considers both the start and the end date and time.'''),
+        ]
+    ),
             
-Release('1.2.28', 'September 16, 2011',
+Release('1.2.28', 'September 18, 2011',
     summary='''This is a mixed bugfix and feature release.''',
     bugsFixed=[
         Bug('''Task Coach would not work correctly with dates before 1900.'''),
@@ -57,6 +72,9 @@ delete the task on Windows.''', '3400086'),
         Bug('''On Windows, SyncML couldn't be turned on.''', '3406653'),
         Bug('''When adding a new (recurring) subtask to a parent task,
 push back the start date of the parent if necessary.''', '3409716'),
+        Bug('''On Mac OS X Tiger, whenever trying to give focus to the
+search control focus would return to the viewer immediately, making
+searching impossible.''', '3410268'),
         ],
     featuresAdded=[
         Feature('''The SyncML password is now stored encrypted in the
@@ -64,6 +82,9 @@ system keychain, if available.'''),
         Feature('''Add task subject to the reminder dialog window title so that
 it's easier to find a particular reminder when cycling through windows with
 Alt-Tab.''', 'http://uservoice.com/a/au6wa'),
+        Feature('''Allow for dragging and dropping multiple items (tasks,
+notes, etc.) at once. Patch provided by Kirill Müller.''', 
+        'http://uservoice.com/a/hledQ'),
         ]
     ),
 

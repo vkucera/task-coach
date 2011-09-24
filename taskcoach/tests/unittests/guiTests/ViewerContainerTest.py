@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import test
 from unittests import dummy
-from taskcoachlib import gui, config, patterns, persistence, platform
+from taskcoachlib import gui, config, patterns, persistence, operating_system
 from taskcoachlib.domain import task
 
 
@@ -69,7 +69,7 @@ class ViewerContainerTest(test.wxTestCase):
         self.container.addViewer(self.viewer2)
 
     def tearDown(self):
-        if platform.isMac():
+        if operating_system.isMac():
             self.mainWindow.OnQuit() # Stop power monitoring thread
         self.mainWindow._idleController.stop()
         super(ViewerContainerTest, self).tearDown()

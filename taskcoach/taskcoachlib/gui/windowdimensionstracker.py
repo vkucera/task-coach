@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import platform
+from taskcoachlib import operating_system
 
 
 class Tracker(object):
@@ -72,7 +72,7 @@ class WindowSizeAndPositionTracker(Tracker):
 
     def setDimensions(self):
         width, height = self.getSetting('size')
-        if platform.isMac():
+        if operating_system.isMac():
             # Under MacOS 10.5 and 10.4, when setting the size, the actual window height
             # is increased by 40 pixels. Dunno why, but it's highly annoying. This doesn't
             # hold for dialogs though. Sigh.
@@ -94,14 +94,14 @@ class WindowDimensionsTracker(WindowSizeAndPositionTracker):
         super(WindowDimensionsTracker, self).__init__(window, settings, 'window')
         self.__settings = settings
         if self.startIconized():
-            if platform.isMac() or platform.isGTK():
+            if operating_system.isMac() or operating_system.isGTK():
                 # Need to show the window on Mac OS X first, otherwise it   
                 # won't be properly minimized. On wxGTK we need to show the
                 # window first, otherwise clicking the task bar icon won't
                 # show it.
                 self._window.Show()
             self._window.Iconize(True)
-            if not platform.isMac() and self.getSetting('hidewheniconized'):
+            if not operating_system.isMac() and self.getSetting('hidewheniconized'):
                 # Seems like hiding the window after it's been
                 # iconized actually closes it on Mac OS...
                 wx.CallAfter(self._window.Hide)                

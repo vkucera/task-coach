@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import wx, wx.combo, locale
 from wx.lib import newevent
-from taskcoachlib import widgets
+from taskcoachlib import widgets, operating_system
 from taskcoachlib.gui import artprovider
 from taskcoachlib.domain import date
 from taskcoachlib.thirdparty import combotreebox
@@ -462,7 +462,7 @@ class RecurrenceEntry(wx.Panel):
             choices=[_('previous start and/or due date and time'),
                      _('last completion date and time')])
         self._scheduleChoice.Bind(wx.EVT_CHOICE, self.onRecurrenceEdited)
-        if '__WXMAC__' == wx.Platform:
+        if operating_system.isMac():
             # On Mac OS X, the wx.Choice gets too little vertical space by default
             size = self._scheduleChoice.GetSizeTuple()
             self._scheduleChoice.SetMinSize((size[0], size[1]+1))

@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx
-from taskcoachlib import patterns
+from taskcoachlib import patterns, operating_system
 from taskcoachlib.gui import menu
 import taskcoachlib.thirdparty.aui as aui
 
@@ -130,6 +130,13 @@ class ViewerContainer(object):
         if not self.activeViewer():
             return
         window = wx.Window.FindFocus()
+        if operating_system.isMacOsXTiger_OrOlder() and window is None:
+            # If the SearchCtrl has focus on Mac OS X Tiger,
+            # wx.Window.FindFocus returns None. If we would continue,
+            # the focus would be set to the active viewer right away,
+            # making it impossible for the user to type in the search
+            # control.
+            return
         while window:
             if window == self.activeViewer():
                 break
