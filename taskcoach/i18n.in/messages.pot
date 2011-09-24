@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-09-11 22:20+CEST\n"
+"POT-Creation-Date: 2011-09-24 17:53+CEST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -112,19 +112,19 @@ msgstr ""
 msgid "Drag and drop \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/base.py:341
+#: taskcoachlib/command/base.py:338
 msgid "Edit subjects"
 msgstr ""
 
-#: taskcoachlib/command/base.py:342
+#: taskcoachlib/command/base.py:339
 msgid "Edit subject \"%s\""
 msgstr ""
 
-#: taskcoachlib/command/base.py:362
+#: taskcoachlib/command/base.py:359
 msgid "Edit descriptions"
 msgstr ""
 
-#: taskcoachlib/command/base.py:363
+#: taskcoachlib/command/base.py:360
 msgid "Edit description \"%s\""
 msgstr ""
 
@@ -388,33 +388,33 @@ msgstr ""
 msgid "Change budget of \"%s\""
 msgstr ""
 
-#: taskcoachlib/config/settings.py:221
+#: taskcoachlib/config/settings.py:225
 msgid "Error while reading the %s-%s setting from %s.ini."
 msgstr ""
 
-#: taskcoachlib/config/settings.py:222
+#: taskcoachlib/config/settings.py:226
 msgid "The value is: %s"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:223
+#: taskcoachlib/config/settings.py:227
 msgid "The error is: %s"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:224
+#: taskcoachlib/config/settings.py:228
 msgid "%s will use the default value for the setting and should proceed normally."
 msgstr ""
 
-#: taskcoachlib/config/settings.py:225
+#: taskcoachlib/config/settings.py:229
 msgid "Settings error"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:245
+#: taskcoachlib/config/settings.py:249
 msgid ""
 "Error while saving %s.ini:\n"
 "%s\n"
 msgstr ""
 
-#: taskcoachlib/config/settings.py:246
+#: taskcoachlib/config/settings.py:250
 msgid "Save error"
 msgstr ""
 
@@ -998,7 +998,6 @@ msgid "Completion date"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:396
-#: taskcoachlib/gui/dialog/reminder.py:28
 #: taskcoachlib/gui/dialog/templates.py:121
 #: taskcoachlib/gui/viewer/task.py:763
 msgid "Reminder"
@@ -1165,7 +1164,7 @@ msgid "Prerequisites"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/editor.py:1124
-#: taskcoachlib/gui/dialog/reminder.py:51
+#: taskcoachlib/gui/dialog/reminder.py:52
 #: taskcoachlib/gui/viewer/effort.py:166
 msgid "Task"
 msgstr ""
@@ -1598,19 +1597,23 @@ msgstr ""
 msgid "Check spelling in editors"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/reminder.py:65
-msgid "Reminder date/time"
+#: taskcoachlib/gui/dialog/reminder.py:28
+msgid "%(name)s reminder - %(task)s"
 msgstr ""
 
 #: taskcoachlib/gui/dialog/reminder.py:66
+msgid "Reminder date/time"
+msgstr ""
+
+#: taskcoachlib/gui/dialog/reminder.py:67
 msgid "Snooze"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/reminder.py:84
+#: taskcoachlib/gui/dialog/reminder.py:85
 msgid "Also use the selected snooze time as default snooze time for future reminders"
 msgstr ""
 
-#: taskcoachlib/gui/dialog/reminder.py:88
+#: taskcoachlib/gui/dialog/reminder.py:89
 msgid "Mark task completed"
 msgstr ""
 
@@ -5461,11 +5464,11 @@ msgid "No subject"
 msgstr ""
 
 #: taskcoachlib/persistence/xml/templates.py:8
-msgid "New task due tomorrow"
+msgid "New task due today"
 msgstr ""
 
 #: taskcoachlib/persistence/xml/templates.py:10
-msgid "New task due today"
+msgid "New task due tomorrow"
 msgstr ""
 
 #: taskcoachlib/render.py:38
