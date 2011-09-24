@@ -3554,6 +3554,7 @@ class TreeListMainWindow(CustomTreeCtrl):
                 self._dragImage = None
             
             self.Refresh()
+            return
 
         elif self._dragCount > 0:  # just in case dragging is initiated
 

@@ -21,7 +21,7 @@ from CommandTestCase import CommandTestCase
 from TaskCommandsTest import TaskCommandTestCase, CommandWithChildrenTestCase, \
     CommandWithEffortTestCase
 from taskcoachlib import command
-from taskcoachlib.domain import task, note
+from taskcoachlib.domain import note
 
 
 class CutCommandWithTasksTest(TaskCommandTestCase):

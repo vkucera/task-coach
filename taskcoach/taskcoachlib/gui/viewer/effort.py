@@ -327,7 +327,15 @@ class EffortViewer(base.ListViewer,
             effort record. '''
         index = self.presentation().index(anEffort)
         previousEffort = index > 0 and self.presentation()[index-1] or None
-        return previousEffort and anEffort.getStart() == previousEffort.getStart()
+        if not previousEffort:
+            return False
+        if anEffort.getStart() != previousEffort.getStart():
+            return False # Starts are not equal, so period cannot be repeated
+        if self.isShowingAggregatedEffort():
+            return True # Starts are equal and length of period is equal, so period is repeated
+        # If we get here, we are in details mode and the starts are equal 
+        # Period can only be repeated when the stop times are also equal
+        return anEffort.getStop() == previousEffort.getStop()
 
     def renderTimeSpentOnDay(self, anEffort, dayOffset):
         duration = anEffort.durationDay(dayOffset) if self.aggregation == 'week' else date.TimeDelta()

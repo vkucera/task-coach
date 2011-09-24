@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import codecs
+import codecs, os
 from taskcoachlib import patterns
 import todotxt
 
@@ -62,7 +62,8 @@ class AutoImporterExporter(patterns.Observer):
     def importTodoTxt(cls, event):
         for taskFile in event.sources():
             filename = cls.todoTxtFilename(taskFile)
-            todotxt.TodoTxtReader(taskFile.tasks(), taskFile.categories()).read(filename)
+            if os.path.exists(filename):
+                todotxt.TodoTxtReader(taskFile.tasks(), taskFile.categories()).read(filename)
 
     @classmethod
     def exportTodoTxt(cls, event):

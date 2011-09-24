@@ -1655,23 +1655,23 @@ class TaskDecPriority(NeedsSelectedTasksMixin, TaskListCommand, ViewerCommand):
 
 
 class DragAndDropCommand(ViewerCommand):
-    def onCommandActivate(self, dropItem, dragItem): # pylint: disable-msg=W0221
+    def onCommandActivate(self, dropItem, dragItems): # pylint: disable-msg=W0221
         ''' Override onCommandActivate to be able to accept two items instead
             of one event. '''
-        self.doCommand(dropItem, dragItem)
+        self.doCommand(dropItem, dragItems)
 
-    def doCommand(self, dropItem, dragItem): # pylint: disable-msg=W0221
-        dragAndDropCommand = self.createCommand(dragItem, dropItem)
+    def doCommand(self, dropItem, dragItems): # pylint: disable-msg=W0221
+        dragAndDropCommand = self.createCommand(dropItem=dropItem, dragItems=dragItems)
         if dragAndDropCommand.canDo():
             dragAndDropCommand.do()
             
-    def createCommand(self, dragItem, dropItem):
+    def createCommand(self, dropItem, dragItems):
         raise NotImplementedError # pragma: no cover
     
 
 class TaskDragAndDrop(DragAndDropCommand, TaskListCommand):
-    def createCommand(self, dragItem, dropItem):
-        return command.DragAndDropTaskCommand(self.taskList, [dragItem], 
+    def createCommand(self, dropItem, dragItems):
+        return command.DragAndDropTaskCommand(self.taskList, dragItems, 
                                               drop=[dropItem])
         
 
@@ -2073,8 +2073,8 @@ class CategoryNew(CategoriesCommand, SettingsCommand):
 
 
 class CategoryDragAndDrop(DragAndDropCommand, CategoriesCommand):
-    def createCommand(self, dragItem, dropItem):
-        return command.DragAndDropCategoryCommand(self.categories, [dragItem], 
+    def createCommand(self, dropItem, dragItems):
+        return command.DragAndDropCategoryCommand(self.categories, dragItems, 
                                                   drop=[dropItem])
 
 
@@ -2112,8 +2112,8 @@ class NewNoteWithSelectedCategories(NoteNew, ViewerCommand):
 
 
 class NoteDragAndDrop(DragAndDropCommand, NotesCommand):
-    def createCommand(self, dragItem, dropItem):
-        return command.DragAndDropNoteCommand(self.notes, [dragItem], 
+    def createCommand(self, dropItem, dragItems):
+        return command.DragAndDropNoteCommand(self.notes, dragItems, 
                                               drop=[dropItem])
  
                                                         

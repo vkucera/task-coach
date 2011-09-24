@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 import wx.combo, os.path
-from taskcoachlib import widgets, patterns, command, platform
+from taskcoachlib import widgets, patterns, command, operating_system
 from taskcoachlib.gui import viewer, uicommand, windowdimensionstracker
 from taskcoachlib.i18n import _
 from taskcoachlib.domain import task, date, note, attachment
@@ -1087,7 +1087,7 @@ class Editor(widgets.Dialog):
         patterns.Publisher().removeInstance(self)
         # On Mac OS X, the text control does not lose focus when
         # destroyed...
-        if platform.isMac():
+        if operating_system.isMac():
             self._interior.SetFocusIgnoringChildren()
                         
     def onItemRemoved(self, event):
