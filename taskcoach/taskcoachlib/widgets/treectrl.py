@@ -303,11 +303,11 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         else:
             event.Skip()
          
-    def OnDrop(self, dropItem, dragItems):
+    def OnDrop(self, dropItem, dragItems, part):
         dropItem = None if dropItem == self.GetRootItem() else \
                    self.GetItemPyData(dropItem)
         dragItems = list(self.GetItemPyData(dragItem) for dragItem in dragItems)
-        wx.CallAfter(self.dragAndDropCommand, dropItem, dragItems)
+        wx.CallAfter(self.dragAndDropCommand, dropItem, dragItems, part)
         
     def onItemExpanding(self, event):
         event.Skip()

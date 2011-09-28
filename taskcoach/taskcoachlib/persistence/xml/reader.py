@@ -281,6 +281,7 @@ class XMLReader(object):
         attributes = dict(id=node.attrib.get('id', ''),
             subject=node.attrib.get('subject', ''),
             description=self._parseDescription(node),
+            ordering=long(node.attrib.get('ordering', '0L')),
             fgColor=self._parseTuple(node.attrib.get('fgColor', ''), None),
             bgColor=self._parseTuple(node.attrib.get(bgColorAttribute, ''), None),
             font=self._parseFontDesc(node.attrib.get('font', '')),
