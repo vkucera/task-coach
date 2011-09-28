@@ -304,25 +304,73 @@ class DragAndDropCommand(BaseCommand, SaveStateMixin, CompositeMixin):
     def __init__(self, *args, **kwargs):
         dropTargets = kwargs.pop('drop')
         self.__itemToDropOn = dropTargets[0] if dropTargets else None
+        self.__part = kwargs.pop('part', 0)
         super(DragAndDropCommand, self).__init__(*args, **kwargs)
         self.saveStates(self.getItemsToSave())
         
     def getItemsToSave(self):
-        if self.__itemToDropOn is None:
-            return self.items
-        else:
-            return [self.__itemToDropOn] + self.items
+        toSave = self.items[:]
+        if self.__itemToDropOn is not None:
+            toSave.insert(0, self.__itemToDropOn)
+        if self.__part != 0:
+            toSave.extend(self.getSiblings())
+        return toSave
     
     def canDo(self):
         return self.__itemToDropOn not in (self.items + \
             self.getAllChildren(self.items) + self.getAllParents(self.items))
-    
+
+    def getSiblings(self):
+        siblings = []
+        for item in self.list:
+            if item.parent() == self.__itemToDropOn.parent() and item not in self.items:
+                siblings.append(item)
+        return siblings
+
     def do_command(self):
-        self.list.removeItems(self.items)
-        for item in self.items:
-            item.setParent(self.__itemToDropOn)
-        self.list.extend(self.items)
-        
+        if self.__part == 0:
+            self.list.removeItems(self.items)
+            for item in self.items:
+                item.setParent(self.__itemToDropOn)
+            self.list.extend(self.items)
+        else:
+            siblings = self.getSiblings()
+            self.list.removeItems(self.items)
+            for item in self.items:
+                item.setParent(self.__itemToDropOn.parent())
+
+            minOrdering = min([item.ordering() for item in self.items])
+            maxOrdering = max([item.ordering() for item in self.items])
+
+            insertIndex = siblings.index(self.__itemToDropOn) + (self.__part + 1) // 2
+
+            # Simple special cases
+            if insertIndex == 0:
+                minOrderingOfSiblings = min([item.ordering() for item in siblings])
+                for item in self.items:
+                    item.setOrdering(item.ordering() - maxOrdering + minOrderingOfSiblings - 1)
+            elif insertIndex == len(siblings):
+                maxOrderingOfSiblings = max([item.ordering() for item in siblings])
+                for item in self.items:
+                    item.setOrdering(item.ordering() - minOrdering + maxOrderingOfSiblings + 1)
+            else:
+                maxOrderingOfPreviousSiblings = max([item.ordering() for idx, item in enumerate(siblings) if idx < insertIndex])
+                minOrderingOfPreviousSiblings = min([item.ordering() for idx, item in enumerate(siblings) if idx < insertIndex])
+                maxOrderingOfNextSiblings = max([item.ordering() for idx, item in enumerate(siblings) if idx >= insertIndex])
+                minOrderingOfNextSiblings = min([item.ordering() for idx, item in enumerate(siblings) if idx >= insertIndex])
+                if insertIndex < len(siblings) // 2:
+                    for item in self.items:
+                        item.setOrdering(item.ordering() - maxOrdering - 1 + minOrderingOfNextSiblings)
+                    for item in siblings[:insertIndex]:
+                        item.setOrdering(item.ordering() - maxOrderingOfPreviousSiblings - 1 + minOrdering - maxOrdering - 1 + minOrderingOfNextSiblings)
+                else:
+                    for item in self.items:
+                        item.setOrdering(item.ordering() - minOrdering + 1 + maxOrderingOfPreviousSiblings)
+                    for item in siblings[insertIndex:]:
+                        item.setOrdering(item.ordering() - minOrderingOfNextSiblings + 1 + maxOrdering - minOrdering + 1 + maxOrderingOfPreviousSiblings)
+
+            self.list.extend(self.items)
+
     def undo_command(self):
         self.list.removeItems(self.items)
         self.undoStates()

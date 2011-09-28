@@ -210,12 +210,14 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
         self.Bind(wx.EVT_TREE_BEGIN_DRAG, self.OnBeginDrag)
         self._dragItems = []
 
-    def OnDrop(self, dropItem, dragItems):
+    def OnDrop(self, dropItem, dragItems, part):
         ''' This function must be overloaded in the derived class. dragItems 
         are the items being dragged by the user. dropItem is the item the 
         dragItems are dropped on. If the user doesn't drop the dragItems
         on another item, dropItem equals the (hidden) root item of the
-        tree control. '''
+        tree control. `part` is 0 if the items were dropped on the middle third
+        of the dropItem, -1 if they were dropped on the upper third and 1 for
+        the lower third.'''
         raise NotImplementedError
 
     def OnBeginDrag(self, event):
@@ -239,7 +241,13 @@ class TreeCtrlDragAndDropMixin(TreeHelperMixin):
             self.UnselectAll()
             if dropTarget != self.GetRootItem():
                 self.SelectItem(dropTarget)
-            self.OnDrop(dropTarget, self._dragItems)
+            item, flags, column = self.HitTest(event.GetPoint())
+            part = 0
+            if flags & wx.TREE_HITTEST_ONITEMUPPERPART:
+                part = -1
+            elif flags & wx.TREE_HITTEST_ONITEMLOWERPART:
+                part = 1
+            self.OnDrop(dropTarget, self._dragItems, part)
         else:
             # Work around an issue with HyperTreeList. HyperTreeList will
             # restore the selection to the last item highlighted by the drag,

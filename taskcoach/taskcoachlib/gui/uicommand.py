@@ -1653,24 +1653,24 @@ class TaskDecPriority(NeedsSelectedTasksMixin, TaskListCommand, ViewerCommand):
 
 
 class DragAndDropCommand(ViewerCommand):
-    def onCommandActivate(self, dropItem, dragItems): # pylint: disable-msg=W0221
+    def onCommandActivate(self, dropItem, dragItems, part): # pylint: disable-msg=W0221
         ''' Override onCommandActivate to be able to accept two items instead
             of one event. '''
-        self.doCommand(dropItem, dragItems)
+        self.doCommand(dropItem, dragItems, part)
 
-    def doCommand(self, dropItem, dragItems): # pylint: disable-msg=W0221
-        dragAndDropCommand = self.createCommand(dropItem=dropItem, dragItems=dragItems)
+    def doCommand(self, dropItem, dragItems, part): # pylint: disable-msg=W0221
+        dragAndDropCommand = self.createCommand(dropItem=dropItem, dragItems=dragItems, part=part)
         if dragAndDropCommand.canDo():
             dragAndDropCommand.do()
             
-    def createCommand(self, dropItem, dragItems):
+    def createCommand(self, dropItem, dragItems, part):
         raise NotImplementedError # pragma: no cover
     
 
 class TaskDragAndDrop(DragAndDropCommand, TaskListCommand):
-    def createCommand(self, dropItem, dragItems):
+    def createCommand(self, dropItem, dragItems, part):
         return command.DragAndDropTaskCommand(self.taskList, dragItems, 
-                                              drop=[dropItem])
+                                              drop=[dropItem], part=part)
         
 
 class ToggleCategory(NeedsSelectedCategorizableMixin, ViewerCommand):
@@ -2068,9 +2068,9 @@ class CategoryNew(CategoriesCommand, SettingsCommand):
 
 
 class CategoryDragAndDrop(DragAndDropCommand, CategoriesCommand):
-    def createCommand(self, dropItem, dragItems):
+    def createCommand(self, dropItem, dragItems, part):
         return command.DragAndDropCategoryCommand(self.categories, dragItems, 
-                                                  drop=[dropItem])
+                                                  drop=[dropItem], part=part)
 
 
 class NoteNew(NotesCommand, SettingsCommand):
@@ -2103,9 +2103,9 @@ class NewNoteWithSelectedCategories(NoteNew, ViewerCommand):
 
 
 class NoteDragAndDrop(DragAndDropCommand, NotesCommand):
-    def createCommand(self, dropItem, dragItems):
+    def createCommand(self, dropItem, dragItems, part):
         return command.DragAndDropNoteCommand(self.notes, dragItems, 
-                                              drop=[dropItem])
+                                              drop=[dropItem], part=part)
  
                                                         
 class AttachmentNew(AttachmentsCommand, SettingsCommand):
