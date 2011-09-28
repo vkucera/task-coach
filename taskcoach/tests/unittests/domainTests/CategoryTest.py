@@ -61,7 +61,7 @@ class CategoryTest(test.TestCase):
                         parent=None, children=[self.subCategory], id=self.category.id(),
                         categorizables=[self.categorizable], notes=[],
                         attachments=[], filtered=True, exclusiveSubcategories=True,
-                        icon='icon', selectedIcon='selected')
+                        icon='icon', selectedIcon='selected', ordering=42L)
         for eventType in self.category.modificationEventTypes():
             self.registerObserver(eventType)
         self.category.__setstate__(newState)
