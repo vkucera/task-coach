@@ -1,0 +1,149 @@
+Index: hypertreelist.py
+===================================================================
+--- hypertreelist.py	(revision 4825)
++++ hypertreelist.py	(working copy)
+@@ -1355,9 +1355,11 @@
+ 
+                 # check for above/below middle
+                 y_mid = self._y + h/2
+-                if point.y < y_mid:
++                y_mid1 = self._y + h/3
++                y_mid2 = self._y + 2*h/3
++                if point.y < y_mid1:
+                     flags |= wx.TREE_HITTEST_ONITEMUPPERPART
+-                else:
++                elif point.y > y_mid2:
+                     flags |= wx.TREE_HITTEST_ONITEMLOWERPART
+                 
+                 # check for button hit
+@@ -2746,7 +2748,21 @@
+                 if wnd:
+                     wndx, wndy = item.GetWindowSize(self._main_column)
+ 
+-                itemrect = wx.Rect(0, item.GetY() + off_h, total_w-1, total_h - off_h)
++                if item.PartialHilight():
++                    itemrect = wx.Rect(0, item.GetY() + off_h, total_w-1, total_h - off_h)
++                    dc.SetBrush(wx.Brush(colBg, wx.SOLID))
++                    dc.DrawRectangleRect(itemrect)
++
++                itemh = total_h - off_h
++                itemy = item.GetY()
++
++                if item.PartialHilight() == wx.TREE_HITTEST_ONITEMUPPERPART:
++                    itemh = itemh // 3
++                elif item.PartialHilight() == wx.TREE_HITTEST_ONITEMLOWERPART:
++                    itemh = itemh // 3
++                    itemy += total_h - off_h - itemh
++
++                itemrect = wx.Rect(0, itemy, total_w-1, itemh)
+                 
+                 if self._usegradients:
+                     if self._gradientstyle == 0:   # Horizontal
+@@ -2764,9 +2780,12 @@
+                         dc.SetBrush((self._hasFocus and [self._hilightBrush] or [self._hilightUnfocusedBrush])[0])
+                         dc.SetPen((self._hasFocus and [self._borderPen] or [wx.TRANSPARENT_PEN])[0])
+                         dc.DrawRectangleRect(itemrect)
+-                
+-                dc.SetTextForeground(colTextHilight)
+ 
++                if item.PartialHilight():
++                    dc.SetTextForeground(colText)
++                else:
++                    dc.SetTextForeground(colTextHilight)
++
+             # On GTK+ 2, drawing a 'normal' background is wrong for themes that
+             # don't allow backgrounds to be customized. Not drawing the background,
+             # except for custom item backgrounds, works for both kinds of theme.
+@@ -2872,7 +2891,10 @@
+                             else:
+                                 dc.DrawRectangleRect(itemrect)
+ 
+-                        dc.SetTextForeground(colTextHilight)
++                        if item.PartialHilight():
++                            dc.SetTextForeground(colText)
++                        else:
++                            dc.SetTextForeground(colTextHilight)
+ 
+                     elif item == self._current:
+                         dc.SetPen((self._hasFocus and [wx.BLACK_PEN] or [wx.TRANSPARENT_PEN])[0])
+@@ -2938,7 +2960,7 @@
+                 _paintText(text, textrect, alignment)
+                 dc.SetTextForeground(foreground)
+             else:
+-                if wx.Platform == "__WXMAC__" and item.IsSelected() and self._hasFocus:
++                if wx.Platform == "__WXMAC__" and item.IsSelected() and self._hasFocus and not item.PartialHilight():
+                     dc.SetTextForeground(wx.WHITE)
+                 _paintText(text, textrect, alignment)
+ 
+@@ -3455,6 +3477,8 @@
+                     self._oldItem = self._current
+                     self._oldSelection = self._current
+ 
++                hitflags = flags & (wx.TREE_HITTEST_ONITEMLOWERPART|wx.TREE_HITTEST_ONITEMUPPERPART)
++
+                 if item != self._dropTarget:
+                         
+                     # unhighlight the previous drop target
+@@ -3463,11 +3487,15 @@
+                         self.RefreshLine(self._dropTarget)
+                     if item:
+                         item.SetHilight(True)
++                        item.SetPartialHilight(hitflags)
+                         self.RefreshLine(item)
+                         self._countDrag = self._countDrag + 1
+                     self._dropTarget = item
+ 
+                     self.Update()
++                elif item and item.PartialHilight() != hitflags:
++                    item.SetPartialHilight(hitflags)
++                    self.RefreshLine(item)
+ 
+                 if self._countDrag >= 3 and self._oldItem is not None:
+                     # Here I am trying to avoid ugly repainting problems... hope it works
+Index: customtreectrl.py
+===================================================================
+--- customtreectrl.py	(revision 4825)
++++ customtreectrl.py	(working copy)
+@@ -1355,6 +1355,7 @@
+ 
+         self._isCollapsed = True
+         self._hasHilight = False    # same as focused
++        self._hilightPart = 0       # 0: full; else wx.TREE_HITTEST_ONITEM[LOWER|UPPER]PART
+         self._hasPlus = False       # used for item which doesn't have
+                                     # children but has a [+] button
+         self._isBold = False        # render the label in bold font
+@@ -1800,9 +1801,20 @@
+         :param `set`: ``True`` to set the focus to the item, ``False`` otherwise.    
+         """
+ 
+-        self._hasHilight = set 
++        self._hasHilight = set
++        self._hilightPart = 0
+ 
+ 
++    def SetPartialHilight(self, flags=0):
++        """
++        Sets the item hilight style.
++
++        :param `flags`: ``0`` to hilight all of the item; ``wx.TREE_HITTEST_ONITEMUPPERPART`` to hilight the upper third or ``wx.TREE_HITTEST_ONITEMLOWERPART`` for the lower third.
++        """
++
++        self._hilightPart = flags
++
++
+     def HasChildren(self):
+         """Returns whether the item has children or not."""
+ 
+@@ -1815,6 +1827,12 @@
+         return self._hasHilight != 0 
+ 
+ 
++    def PartialHilight(self):
++        """Returns the hilight style"""
++
++        return self._hilightPart
++
++
+     def IsExpanded(self):
+         """Returns whether the item is expanded or not."""
+ 

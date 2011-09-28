@@ -66,6 +66,8 @@ class Sorter(patterns.ListDecorator):
         oldSelf = self[:]
         self.sort(key=self.createSortKeyFunction(), 
                   reverse=not self._sortAscending)
+        # Then sort by 'ordering' attribute; this assumes that list.sort is stable
+        self.sort(lambda x, y: cmp(x.ordering(), y.ordering()))
         if self != oldSelf:
             event.addSource(self, type=self.sortEventType())
 
