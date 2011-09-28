@@ -43,6 +43,12 @@ class BaseCompositeEffort(base.BaseEffort): # pylint: disable-msg=W0223
     def _getEfforts(self):
         raise NotImplementedError
 
+    def ordering(self):
+        return 0
+
+    def setOrdering(self, ordering):
+        pass
+
     def markDirty(self):
         pass # CompositeEfforts cannot be dirty
     
