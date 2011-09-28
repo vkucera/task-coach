@@ -713,6 +713,12 @@ class DefaultTaskStateTest(TaskTestCase, CommonTaskTestsMixin, NoBudgetTestsMixi
         self.task.__setstate__(state)
         self.assertEqual(previousDependencies, self.task.dependencies())                    
 
+    def testTaskStateIncludesOrdering(self):
+        state = self.task.__getstate__()
+        self.task.setOrdering(42)
+        self.task.__setstate__(state)
+        self.assertEqual(0L, self.task.ordering())
+        
 
 class TaskDueTodayTest(TaskTestCase, CommonTaskTestsMixin):
     def taskCreationKeywordArguments(self):

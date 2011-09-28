@@ -44,7 +44,10 @@ class CategoryTest(test.TestCase):
         
     def testGetState_ExclusiveSubcategories(self):
         self.assertEqual(False, self.category.__getstate__()['exclusiveSubcategories'])
-        
+
+    def testGetState_Ordering(self):
+        self.assertEqual(0L, self.category.__getstate__()['ordering'])
+
     def testSetState_ExclusiveSubcategories(self):
         state = self.category.__getstate__()
         self.category.makeSubcategoriesExclusive()

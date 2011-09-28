@@ -183,14 +183,15 @@ class ObjectTest(test.TestCase):
     def testGetState(self):
         self.assertEqual(dict(subject='', description='', id=self.object.id(),
                               status=self.object.getStatus(), fgColor=None,
-                              bgColor=None, font=None, icon='', selectedIcon=''),
+                              bgColor=None, font=None, icon='', selectedIcon='',
+                              ordering=0L),
                          self.object.__getstate__())
 
     def testSetState(self):
         newState = dict(subject='New', description='New', id=None,
                         status=self.object.STATUS_DELETED, 
                         fgColor=wx.GREEN, bgColor=wx.RED, font=wx.SWISS_FONT,
-                        icon='icon', selectedIcon='selectedIcon')
+                        icon='icon', selectedIcon='selectedIcon', ordering=42L)
         self.object.__setstate__(newState)
         self.assertEqual(newState, self.object.__getstate__())
         
@@ -198,7 +199,7 @@ class ObjectTest(test.TestCase):
         newState = dict(subject='New', description='New', id=None,
                         status=self.object.STATUS_DELETED, 
                         fgColor=wx.GREEN, bgColor=wx.RED, font=wx.SWISS_FONT,
-                        icon='icon', selectedIcon='selectedIcon')
+                        icon='icon', selectedIcon='selectedIcon', ordering=42L)
         self.object.__setstate__(newState)
         self.assertEqual(1, len(self.eventsReceived))
         
