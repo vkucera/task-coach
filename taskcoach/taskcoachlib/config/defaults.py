@@ -66,7 +66,7 @@ defaults = { \
     'searchdescription': 'False',
     'columns': "['startDateTime', 'dueDateTime']",
     'columnsalwaysvisible': "['subject']",
-    'columnwidths': "{'attachments': 28, 'notes': 28}",
+    'columnwidths': "{'attachments': 28, 'notes': 28, 'ordering': 38}",
     'columnautoresizing': 'True',
     'tasksdue': 'Never',             # Show tasks when they're due today, tomorrow, etc.
     'taskscompleted': 'Never',       # Show tasks completed today, yesterday, etc.
