@@ -34,6 +34,8 @@ so the user can simply type a new number to overwrite the previous one.''',
         Bug('''When showing effort in detail mode, Task Coach would only 
 consider the start of a period to decide whether to hide the period as a
 repeated period. Now it considers both the start and the end date and time.'''),
+        Bug('''When editing multiple tasks at the same time, changing the
+priority would not automatically check the priority checkbox.''', '3414423')
         ],
     ),
             
