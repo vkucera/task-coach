@@ -328,7 +328,8 @@ class DragAndDropCommand(BaseCommand, SaveStateMixin, CompositeMixin):
         return siblings
 
     def do_command(self):
-        if self.__part == 0:
+        ## if self.__part == 0:
+        if True:
             self.list.removeItems(self.items)
             for item in self.items:
                 item.setParent(self.__itemToDropOn)

@@ -23,7 +23,7 @@ from changetypes import *
 releases = [
             
 Release('1.2.29', 'October 2, 2011',
-    summary='''This is a mixed bugfix and feature release.''',
+    summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''If auto importing of Todo.txt files was turned on, but
 there was no Todo.txt file available for importing, saving would fail.''', 
@@ -35,10 +35,6 @@ so the user can simply type a new number to overwrite the previous one.''',
 consider the start of a period to decide whether to hide the period as a
 repeated period. Now it considers both the start and the end date and time.'''),
         ],
-    featuresAdded=[
-        Feature('''Tasks, notes and categories can be reordered by
-drag and drop.'''),
-        ]
     ),
             
 Release('1.2.28', 'September 18, 2011',

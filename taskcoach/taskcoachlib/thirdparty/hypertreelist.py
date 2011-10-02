@@ -1355,11 +1355,9 @@ class TreeListItem(GenericTreeItem):
 
                 # check for above/below middle
                 y_mid = self._y + h/2
-                y_mid1 = self._y + h/3
-                y_mid2 = self._y + 2*h/3
-                if point.y < y_mid1:
+                if point.y < y_mid:
                     flags |= wx.TREE_HITTEST_ONITEMUPPERPART
-                elif point.y > y_mid2:
+                else:
                     flags |= wx.TREE_HITTEST_ONITEMLOWERPART
                 
                 # check for button hit
@@ -2748,21 +2746,7 @@ class TreeListMainWindow(CustomTreeCtrl):
                 if wnd:
                     wndx, wndy = item.GetWindowSize(self._main_column)
 
-                if item.PartialHilight():
-                    itemrect = wx.Rect(0, item.GetY() + off_h, total_w-1, total_h - off_h)
-                    dc.SetBrush(wx.Brush(colBg, wx.SOLID))
-                    dc.DrawRectangleRect(itemrect)
-
-                itemh = total_h - off_h
-                itemy = item.GetY()
-
-                if item.PartialHilight() == wx.TREE_HITTEST_ONITEMUPPERPART:
-                    itemh = itemh // 3
-                elif item.PartialHilight() == wx.TREE_HITTEST_ONITEMLOWERPART:
-                    itemh = itemh // 3
-                    itemy += total_h - off_h - itemh
-
-                itemrect = wx.Rect(0, itemy, total_w-1, itemh)
+                itemrect = wx.Rect(0, item.GetY() + off_h, total_w-1, total_h - off_h)
                 
                 if self._usegradients:
                     if self._gradientstyle == 0:   # Horizontal
@@ -2780,11 +2764,8 @@ class TreeListMainWindow(CustomTreeCtrl):
                         dc.SetBrush((self._hasFocus and [self._hilightBrush] or [self._hilightUnfocusedBrush])[0])
                         dc.SetPen((self._hasFocus and [self._borderPen] or [wx.TRANSPARENT_PEN])[0])
                         dc.DrawRectangleRect(itemrect)
-
-                if item.PartialHilight():
-                    dc.SetTextForeground(colText)
-                else:
-                    dc.SetTextForeground(colTextHilight)
+                
+                dc.SetTextForeground(colTextHilight)
 
             # On GTK+ 2, drawing a 'normal' background is wrong for themes that
             # don't allow backgrounds to be customized. Not drawing the background,
@@ -2891,10 +2872,7 @@ class TreeListMainWindow(CustomTreeCtrl):
                             else:
                                 dc.DrawRectangleRect(itemrect)
 
-                        if item.PartialHilight():
-                            dc.SetTextForeground(colText)
-                        else:
-                            dc.SetTextForeground(colTextHilight)
+                        dc.SetTextForeground(colTextHilight)
 
                     elif item == self._current:
                         dc.SetPen((self._hasFocus and [wx.BLACK_PEN] or [wx.TRANSPARENT_PEN])[0])
@@ -2960,7 +2938,7 @@ class TreeListMainWindow(CustomTreeCtrl):
                 _paintText(text, textrect, alignment)
                 dc.SetTextForeground(foreground)
             else:
-                if wx.Platform == "__WXMAC__" and item.IsSelected() and self._hasFocus and not item.PartialHilight():
+                if wx.Platform == "__WXMAC__" and item.IsSelected() and self._hasFocus:
                     dc.SetTextForeground(wx.WHITE)
                 _paintText(text, textrect, alignment)
 
@@ -3477,8 +3455,6 @@ class TreeListMainWindow(CustomTreeCtrl):
                     self._oldItem = self._current
                     self._oldSelection = self._current
 
-                hitflags = flags & (wx.TREE_HITTEST_ONITEMLOWERPART|wx.TREE_HITTEST_ONITEMUPPERPART)
-
                 if item != self._dropTarget:
                         
                     # unhighlight the previous drop target
@@ -3487,15 +3463,11 @@ class TreeListMainWindow(CustomTreeCtrl):
                         self.RefreshLine(self._dropTarget)
                     if item:
                         item.SetHilight(True)
-                        item.SetPartialHilight(hitflags)
                         self.RefreshLine(item)
                         self._countDrag = self._countDrag + 1
                     self._dropTarget = item
 
                     self.Update()
-                elif item and item.PartialHilight() != hitflags:
-                    item.SetPartialHilight(hitflags)
-                    self.RefreshLine(item)
 
                 if self._countDrag >= 3 and self._oldItem is not None:
                     # Here I am trying to avoid ugly repainting problems... hope it works
