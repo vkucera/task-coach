@@ -404,10 +404,10 @@ class SortableViewerMixin(object):
                     helpText=self.sortBySubjectHelpText),
                 uicommand.ViewerSortByCommand(viewer=self, value='description',
                     menuText=_('&Description'),
-                    helpText=self.sortByDescriptionHelpText),
-                uicommand.ViewerSortByCommand(viewer=self, value='ordering',
-                    menuText=_('&Manual ordering'),
-                    helpText=self.sortByOrderingHelpText)]
+                    helpText=self.sortByDescriptionHelpText)]
+                ## uicommand.ViewerSortByCommand(viewer=self, value='ordering',
+                ##     menuText=_('&Manual ordering'),
+                ##     helpText=self.sortByOrderingHelpText)]
 
 
 class SortableViewerForEffortMixin(SortableViewerMixin):
