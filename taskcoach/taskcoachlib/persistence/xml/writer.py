@@ -61,7 +61,8 @@ class PIElementTree(ET.ElementTree):
 def sortedById(objects):
     s = [(obj.id(), obj) for obj in objects]
     s.sort()
-    return [obj for id_, obj in s]
+    return [obj for dummy_id, obj in s]
+
 
 class XMLWriter(object):
     maxDateTime = date.DateTime()
@@ -74,8 +75,6 @@ class XMLWriter(object):
               noteContainer, syncMLConfig, guid):
         root = ET.Element('tasks')
 
-        import time
-        t0 = time.time()
         for rootTask in sortedById(taskList.rootItems()):
             self.taskNode(root, rootTask)
         for rootCategory in sortedById(categoryContainer.rootItems()):
