@@ -35,7 +35,10 @@ so the user can simply type a new number to overwrite the previous one.''',
 consider the start of a period to decide whether to hide the period as a
 repeated period. Now it considers both the start and the end date and time.'''),
         Bug('''When editing multiple tasks at the same time, changing the
-priority would not automatically check the priority checkbox.''', '3414423')
+priority would not automatically check the priority checkbox.''', '3414423'),
+        Bug('''Don't reorder the contents of the task file randomly when saving
+the task file. This makes it possible to easily see the differences between 
+versions of a task file using diff.''', '3412300'),
         ],
     ),
             
