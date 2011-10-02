@@ -144,7 +144,8 @@ class Object(SynchronizedObject):
                                 self.appearanceChangedEvent)
         self.__selectedIcon = Attribute(kwargs.pop('selectedIcon', ''), self,
                                         self.appearanceChangedEvent)
-        self.__ordering = kwargs.pop('ordering', 0L)
+        self.__ordering = Attribute(kwargs.pop('ordering', 0L), self,
+                                    self.orderingChangedEvent)
         self.__id = kwargs.pop('id', None) or str(uuid.uuid1())
         super(Object, self).__init__(*args, **kwargs)
         
@@ -162,7 +163,7 @@ class Object(SynchronizedObject):
                           bgColor=self.__bgColor.get(),
                           font=self.__font.get(),
                           icon=self.__icon.get(),
-                          ordering=self.__ordering,
+                          ordering=self.__ordering.get(),
                           selectedIcon=self.__selectedIcon.get()))
         return state
     
@@ -198,7 +199,7 @@ class Object(SynchronizedObject):
             fgColor=self.__fgColor.get(), bgColor=self.__bgColor.get(),
             font=self.__font.get(), icon=self.__icon.get(),
             selectedIcon=self.__selectedIcon.get()),
-            ordering=self.__ordering)
+            ordering=self.__ordering.get())
         return state
     
     def copy(self):
@@ -247,10 +248,25 @@ class Object(SynchronizedObject):
     # Ordering:
 
     def ordering(self):
-        return self.__ordering
+        return self.__ordering.get()
 
-    def setOrdering(self, ordering):
-        self.__ordering = ordering
+    def setOrdering(self, ordering, event=None):
+        self.__ordering.set(ordering, event=event)
+
+    def orderingChangedEvent(self, event):
+        event.addSource(self, self.ordering(), type=self.orderingChangedEventType())
+
+    @classmethod
+    def orderingChangedEventType(class_):
+        return '%s.ordering'%class_
+
+    @staticmethod
+    def orderingSortFunction(**kwargs):
+        return lambda item: item.ordering()
+
+    @classmethod
+    def orderingSortEventTypes(class_):
+        return (class_.orderingChangedEventType(),)
 
     # Description:
     

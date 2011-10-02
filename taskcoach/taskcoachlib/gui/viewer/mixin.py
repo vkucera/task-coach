@@ -404,7 +404,10 @@ class SortableViewerMixin(object):
                     helpText=self.sortBySubjectHelpText),
                 uicommand.ViewerSortByCommand(viewer=self, value='description',
                     menuText=_('&Description'),
-                    helpText=self.sortByDescriptionHelpText)]
+                    helpText=self.sortByDescriptionHelpText),
+                uicommand.ViewerSortByCommand(viewer=self, value='ordering',
+                    menuText=_('&Manual ordering'),
+                    helpText=self.sortByOrderingHelpText)]
 
 
 class SortableViewerForEffortMixin(SortableViewerMixin):
@@ -426,6 +429,7 @@ class SortableViewerForEffortMixin(SortableViewerMixin):
 class SortableViewerForCategoriesMixin(SortableViewerMixin):
     sortBySubjectHelpText = _('Sort categories by subject')
     sortByDescriptionHelpText = _('Sort categories by description')
+    sortByOrderingHelpText = _('Sort categories manually')
 
 
 class SortableViewerForCategorizablesMixin(SortableViewerMixin):
@@ -442,12 +446,14 @@ class SortableViewerForCategorizablesMixin(SortableViewerMixin):
 class SortableViewerForAttachmentsMixin(SortableViewerForCategorizablesMixin):
     sortBySubjectHelpText = _('Sort attachments by subject')
     sortByDescriptionHelpText = _('Sort attachments by description')
+    sortByOrderingHelpText = _('Sort attachments manually')
     sortByCategoryHelpText = _('Sort attachments by category')
     
 
 class SortableViewerForNotesMixin(SortableViewerForCategorizablesMixin):
     sortBySubjectHelpText = _('Sort notes by subject')
     sortByDescriptionHelpText = _('Sort notes by description')
+    sortByOrderingHelpText = _('Sort notes manually')
     sortByCategoryHelpText = _('Sort notes by category')
 
 
@@ -455,6 +461,7 @@ class SortableViewerForTasksMixin(SortableViewerForCategorizablesMixin):
     SorterClass = task.sorter.Sorter
     sortBySubjectHelpText = _('Sort tasks by subject')
     sortByDescriptionHelpText = _('Sort tasks by description')
+    sortByOrderingHelpText = _('Sort tasks manually')
     sortByCategoryHelpText = _('Sort tasks by category')
     
     def __init__(self, *args, **kwargs):
