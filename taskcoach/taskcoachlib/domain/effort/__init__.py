@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from effort import Effort
-from composite import CompositeEffort, CompositeEffortPerPeriod
+from composite import CompositeEffort, CompositeEffortPerPeriod, BaseCompositeEffort
 from effortlist import EffortList
 from sorter import EffortSorter
 from reducer import EffortAggregator
