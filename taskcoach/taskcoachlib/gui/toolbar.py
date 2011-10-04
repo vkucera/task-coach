@@ -33,7 +33,7 @@ if '__WXMSW__' in wx.PlatformInfo:
             short_help_string = kwargs.pop('shortHelp', '')
             bitmap2 = self.MakeDisabledBitmap(bitmap1)
             super(_Toolbar, self).AddTool(id, label, bitmap1, bitmap2, kind, 
-                                          short_help_string, long_help_string, None)
+                                          short_help_string, long_help_string, None, None)
             
         def GetToolState(self, toolid):
             return self.GetToolToggled(toolid)

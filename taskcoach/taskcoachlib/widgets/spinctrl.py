@@ -53,18 +53,20 @@ class SpinCtrl(wx.Panel):
             self._spinButton.SetValue(int(self._textCtrl.GetValue()))
         except (ValueError, OverflowError):
             self._textCtrl.SetValue(str(self._spinButton.GetValue()))
+        self.__postEvent()
         event.Skip()
 
     def onKey(self, event):
-        if not event.HasModifiers():
-            keyCode = event.GetKeyCode()
-            if keyCode in (wx.WXK_UP, wx.WXK_NUMPAD_UP):
-                self.SetValue(self.GetValue() + 1)
-                return
-            elif keyCode in (wx.WXK_DOWN, wx.WXK_NUMPAD_DOWN):
-                self.SetValue(self.GetValue() - 1)
-                return
-        event.Skip()
+        deltaByKeyCode = {wx.WXK_UP: 1, wx.WXK_NUMPAD_UP: 1, 
+                          wx.WXK_DOWN: -1, wx.WXK_NUMPAD_DOWN: -1,
+                          wx.WXK_PAGEUP: 10, wx.WXK_NUMPAD_PAGEUP: 10,
+                          wx.WXK_PAGEDOWN: -10, wx.WXK_NUMPAD_PAGEDOWN: -10}
+        delta = 0 if event.HasModifiers() else deltaByKeyCode.get(event.GetKeyCode(), 0)
+        if delta:
+            self.SetValue(self.GetValue() + delta)
+            self.__postEvent()
+        else:
+            event.Skip()
         
     def onSetFocus(self, event):
         self._textCtrl.SelectAll()
@@ -72,6 +74,7 @@ class SpinCtrl(wx.Panel):
             
     def onSpin(self, event): # pylint: disable-msg=W0613
         self._textCtrl.SetValue(str(self._spinButton.GetValue()))
+        self.__postEvent()
 
     def GetValue(self):
         return self._spinButton.GetValue()
@@ -89,4 +92,7 @@ class SpinCtrl(wx.Panel):
     
     def GetMin(self):
         return self._spinButton.GetMin()
+    
+    def __postEvent(self):
+        wx.PostEvent(self, wx.SpinEvent(wx.wxEVT_COMMAND_SPINCTRL_UPDATED, self.GetId()))
  

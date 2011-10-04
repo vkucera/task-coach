@@ -702,12 +702,6 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
                 width=self.getColumnWidth('description'),  
                 editCommand=command.EditDescriptionCommand, 
                 editControl=inplace_editor.DescriptionCtrl, **kwargs)] + \
-            [widgets.Column('ordering', _('Manual ordering'),
-                task.Task.orderingChangedEventType(),
-                sortCallback=uicommand.ViewerSortByCommand(viewer=self,
-                    value='ordering'),
-                renderCallback=lambda task: '',
-                width=self.getColumnWidth('ordering'))] + \
             [widgets.Column('attachments', '', 
                 task.Task.attachmentsChangedEventType(), 
                 width=self.getColumnWidth('attachments'),
@@ -747,7 +741,14 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
                                                            value='dependencies'),
                 renderCallback=self.renderDependencies,
                 width=self.getColumnWidth('dependencies'), **kwargs)])
-        
+
+            ## [widgets.Column('ordering', _('Manual ordering'),
+            ##     task.Task.orderingChangedEventType(),
+            ##     sortCallback=uicommand.ViewerSortByCommand(viewer=self,
+            ##         value='ordering'),
+            ##     renderCallback=lambda task: '',
+            ##     width=self.getColumnWidth('ordering'))] + \
+
         effortOn = self.settings.getboolean('feature', 'effort')
         dependsOnEffortFeature = ['budget',  'timeSpent', 'budgetLeft',
                                   'hourlyFee', 'fixedFee', 'revenue']
@@ -839,9 +840,9 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
             uicommand.ViewColumn(menuText=_('&Description'),
                 helpText=_('Show/hide description column'),
                 setting='description', viewer=self),
-            uicommand.ViewColumn(menuText=_('&Manual ordering'),
-                helpText=_('Show/hide manual ordering column'),
-                setting='ordering', viewer=self),
+            ## uicommand.ViewColumn(menuText=_('&Manual ordering'),
+            ##     helpText=_('Show/hide manual ordering column'),
+            ##     setting='ordering', viewer=self),
             uicommand.ViewColumn(menuText=_('&Prerequisites'),
                  helpText=_('Show/hide prerequisites column'),
                  setting='prerequisites', viewer=self),
