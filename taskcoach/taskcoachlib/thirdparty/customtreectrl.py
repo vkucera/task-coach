@@ -1355,7 +1355,6 @@ class GenericTreeItem(object):
 
         self._isCollapsed = True
         self._hasHilight = False    # same as focused
-        self._hilightPart = 0       # 0: full; else wx.TREE_HITTEST_ONITEM[LOWER|UPPER]PART
         self._hasPlus = False       # used for item which doesn't have
                                     # children but has a [+] button
         self._isBold = False        # render the label in bold font
@@ -1801,18 +1800,7 @@ class GenericTreeItem(object):
         :param `set`: ``True`` to set the focus to the item, ``False`` otherwise.    
         """
 
-        self._hasHilight = set
-        self._hilightPart = 0
-
-
-    def SetPartialHilight(self, flags=0):
-        """
-        Sets the item hilight style.
-
-        :param `flags`: ``0`` to hilight all of the item; ``wx.TREE_HITTEST_ONITEMUPPERPART`` to hilight the upper third or ``wx.TREE_HITTEST_ONITEMLOWERPART`` for the lower third.
-        """
-
-        self._hilightPart = flags
+        self._hasHilight = set 
 
 
     def HasChildren(self):
@@ -1825,12 +1813,6 @@ class GenericTreeItem(object):
         """Returns whether the item is selected or not."""
 
         return self._hasHilight != 0 
-
-
-    def PartialHilight(self):
-        """Returns the hilight style"""
-
-        return self._hilightPart
 
 
     def IsExpanded(self):
