@@ -126,6 +126,7 @@ class Application(object):
                                          self.settings)
         self.wxApp.SetTopWindow(self.mainwindow)
         if not self.settings.getboolean('file', 'inifileloaded'):
+            self.closeSplash(splash)
             self.warnUserThatIniFileWasNotLoaded()
         if loadTaskFile:
             self.iocontroller.openAfterStart(self._args)

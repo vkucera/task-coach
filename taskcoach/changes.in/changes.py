@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.29', 'October 3, 2011',
+Release('1.2.29', 'October 9, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''If auto importing of Todo.txt files was turned on, but
