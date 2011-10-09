@@ -66,7 +66,7 @@ class Settings(patterns.Observer, CachingConfigParser):
         # have to call the superclass __init__ explicitly:
         super(Settings, self).__init__(*args, **kwargs)
         CachingConfigParser.__init__(self, *args, **kwargs) 
-        self.loadDefaults()
+        self.initializeWithDefaults()
         self.__loadAndSave = load
         self.__iniFileSpecifiedOnCommandLine = iniFile
         if load:
@@ -74,13 +74,13 @@ class Settings(patterns.Observer, CachingConfigParser):
             # if that fails, load the settings file from the settings directory
             try:
                 if not self.read(self.filename(forceProgramDir=True)):
-                    self.read(self.filename()) 
-            except ConfigParser.ParsingError, reason:
+                    self.read(self.filename())
+                errorMessage = ''
+            except ConfigParser.ParsingError, errorMessage:
                 # Ignore exceptions and simply use default values. 
                 # Also record the failure in the settings:
-                self.loadDefaults()
-                self.set('file', 'inifileloaded', 'False') 
-                self.set('file', 'inifileloaderror', str(reason))
+                self.initializeWithDefaults()
+            self.setLoadStatus(unicode(errorMessage))
         else:
             # Assume that if the settings are not to be loaded, we also 
             # should be quiet (i.e. we are probably in test mode):
@@ -96,13 +96,18 @@ class Settings(patterns.Observer, CachingConfigParser):
             except: 
                 return # pylint: disable-msg=W0702
             
-    def loadDefaults(self):
+    def initializeWithDefaults(self):
+        for section in self.sections():
+            self.remove_section(section)
         for section, settings in defaults.defaults.items():
-            self.remove_section(section) # Make sure add_section can't fail
             self.add_section(section)
             for key, value in settings.items():
                 # Don't notify observers while we are initializing
                 super(Settings, self).set(section, key, value)
+                
+    def setLoadStatus(self, message):
+        self.set('file', 'inifileloaded', 'False' if message else 'True')
+        self.set('file', 'inifileloaderror', message)
                 
     def getDefault(self, section, option):
         return defaults.defaults[section.strip('0123456789')][option]
