@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.0', 'September 24, 2011',
+Release('1.3.0', 'October 9, 2011',
     summary='''This release makes all edits done in dialogs immediate.''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -41,7 +41,7 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.29', 'October 3, 2011',
+Release('1.2.29', 'October 9, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''If auto importing of Todo.txt files was turned on, but

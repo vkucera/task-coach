@@ -149,6 +149,16 @@ class SettingsIOTest(SettingsTestCase):
                 self.remove_section('file')
                 raise ConfigParser.ParsingError, 'Testing'
         self.failIf(SettingsThatThrowsParsingError().getboolean('file', 'inifileloaded'))
+        
+    def testFixOldColumnValues(self):
+        section = 'prerequisiteviewerintaskeditor1'
+        self.fakeFile.write("[%s]\ncolumns = ['dueDate']\ncolumnwidths = {'dueDate': 40}\n"%section)
+        self.fakeFile.seek(0)
+        self.settings.readfp(self.fakeFile)
+        self.failUnless(['dueDateTime'], 
+                        self.settings.getlist(section, 'columns'))
+        self.assertEqual(dict(dueDateTime=40), self.settings.getdict(section, 'columnwidths'))
+
 
 class SettingsObservableTest(SettingsTestCase):
     def setUp(self):
