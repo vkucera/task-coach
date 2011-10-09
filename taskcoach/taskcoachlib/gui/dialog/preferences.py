@@ -263,15 +263,21 @@ class SavePage(SettingsPage):
         self.addBooleanSetting('file', 'saveinifileinprogramdir',
             _('Save settings (%s.ini) in the same\ndirectory as the program') \
               %meta.filename, 
-            _('(For running %s\nfrom a removable medium)')%meta.name)
+            _('For running %s from a removable medium')%meta.name)
         self.addPathSetting('file', 'attachmentbase', _('Attachment base directory'),
                             _('When adding an attachment, try to make\nits path relative to this one.'))
         self.addMultipleChoiceSettings('file', 'autoimport', 
                                        _('Before saving, automatically import from'), 
-                                       [('Todo.txt', 'Todo.txt')])
+                                       [('Todo.txt', _('Todo.txt format'))],
+                                       helpText=_('Before saving, %s automatically imports tasks\n'
+                                                  'from a Todo.txt file with the same name as the task file,\n'
+                                                  'but with extension .txt')%meta.name)
         self.addMultipleChoiceSettings('file', 'autoexport', 
                                        _('When saving, automatically export to'), 
-                                       [('Todo.txt', 'Todo.txt')])
+                                       [('Todo.txt', _('Todo.txt format'))],
+                                       helpText=_('When saving, %s automatically exports tasks\n'
+                                                  'to a Todo.txt file with the same name as the task file,\n'
+                                                  'but with extension .txt')%meta.name)
         self.fit()
             
                
