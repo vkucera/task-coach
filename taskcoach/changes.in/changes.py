@@ -22,11 +22,16 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.30', 'October 9, 2011',
+Release('1.2.30', 'October 10, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Better explanation of the automatic import and export of
 Todo.txt format in the preferences dialog.''', '3418906'),
+        Bug('''The task viewer in list mode now also shows the  
+categories, prerequisites and dependencies inherited from parent tasks, between 
+parentheses. In addition, the inherited categories, prerequisites or 
+dependencies are taken into account when sorting by categories, prerequisites or
+dependencies.''', '3414914'),
         ]
     ),
             
