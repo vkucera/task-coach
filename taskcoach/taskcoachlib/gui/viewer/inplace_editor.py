@@ -36,11 +36,11 @@ class DescriptionCtrl(hypertreelist.EditTextCtrl):
         super(DescriptionCtrl, self).__init__(*args, **kwargs)
         
         
-class PriorityCtrl(hypertreelist.EditCtrl, widgets.SpinCtrl):
-    def __init__(self, parent, wxId, item, column, owner, value):
-        super(PriorityCtrl, self).__init__(parent, wxId, item, column, owner, str(value))
+class SpinCtrl(hypertreelist.EditCtrl, widgets.SpinCtrl):
+    def __init__(self, parent, wxId, item, column, owner, value, *args, **kwargs):
+        super(SpinCtrl, self).__init__(parent, wxId, item, column, owner, str(value), *args, **kwargs)
         self._textCtrl.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
-        
+
     def OnKeyDown(self, event):
         keyCode = event.GetKeyCode()
         if keyCode == wx.WXK_ESCAPE:
@@ -52,6 +52,15 @@ class PriorityCtrl(hypertreelist.EditCtrl, widgets.SpinCtrl):
             wx.CallAfter(self.Finish)
         else:
             event.Skip()
+
+        
+class PriorityCtrl(SpinCtrl):
+    pass
+
+            
+class PercentageCtrl(SpinCtrl):
+    def __init__(self, *args, **kwargs):
+        super(PercentageCtrl, self).__init__(min=0, max=100, *args, **kwargs)
 
 
 class Panel(wx.Panel):

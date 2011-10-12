@@ -238,6 +238,24 @@ class MarkCompletedCommand(EditTaskCommand, EffortCommand):
         return self.items
 
 
+class EditPercentageCompleteCommand(EditTaskCommand, EffortCommand):
+    plural_name = _('Edit percentage complete')
+    singular_name = _('Edit percentage complete of "%s"')
+    
+    def __init__(self, *args, **kwargs):
+        self._percentageComplete = kwargs.pop('newValue')
+        super(EditPercentageCompleteCommand, self).__init__(*args, **kwargs)
+        
+    @patterns.eventSource
+    def do_command(self, event=None):
+        super(EditPercentageCompleteCommand, self).do_command(event=event)
+        for item in self.items:
+            item.setPercentageComplete(self._percentageComplete, event=event)
+
+    def tasksToStopTracking(self):
+        return self.items if self._percentageComplete == 100 else []
+
+
 class EditDatesCommand(EditTaskCommand):
     plural_name = _('Edit task dates')
     singular_name = _('Edit "%s" dates')

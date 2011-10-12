@@ -104,7 +104,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
                 value='subject', menuText=_('&Subject'), 
                 helpText=_('Sort notes by subject')),
             imageIndicesCallback=self.subjectImageIndices,
-            editCommand=command.EditSubjectCommand,
+            editCallback=self.onEditSubject,
             editControl=inplace_editor.SubjectCtrl)
         ## orderingColumn = widgets.Column('ordering', _('Manual ordering'),
         ##     note.Note.orderingChangedEventType(),
@@ -122,7 +122,7 @@ class BaseNoteViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W022
             sortCallback=uicommand.ViewerSortByCommand(viewer=self, 
                 value='description', menuText=_('&Description'), 
                 helpText=_('Sort notes by description')),
-            editCommand=command.EditDescriptionCommand,
+            editCallback=self.onEditDescription,
             editControl=inplace_editor.DescriptionCtrl)
         attachmentsColumn = widgets.Column('attachments', '', 
             note.Note.attachmentsChangedEventType(), # pylint: disable-msg=E1101

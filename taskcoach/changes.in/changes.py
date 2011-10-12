@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.2.30', 'October 11, 2011',
+Release('1.2.30', 'October 12, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Better explanation of the automatic import and export of
@@ -39,6 +39,7 @@ categories, prerequisites and dependencies inherited from parent tasks, between
 parentheses. In addition, the inherited categories, prerequisites or 
 dependencies are taken into account when sorting by categories, prerequisites or
 dependencies.''', 'http://uservoice.com/a/ksD1q'),
+        Feature('''Percentage complete of tasks can be edited in place.'''),
         ],
     ),
             

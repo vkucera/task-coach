@@ -362,8 +362,8 @@ class TreeListCtrl(itemctrl.CtrlWithItemsMixin, itemctrl.CtrlWithColumnsMixin,
         event.Veto() # Let us update the tree
         domainObject = self.GetItemPyData(event.GetItem())
         newValue = event.GetLabel()
-        command = self._getColumn(event.GetInt()).editCommand()
-        command(items=[domainObject], newValue=newValue).do()
+        column = self._getColumn(event.GetInt())
+        column.onEndEdit(domainObject, newValue)
         
     def CreateEditCtrl(self, item, columnIndex):
         column = self._getColumn(columnIndex)

@@ -420,6 +420,12 @@ class Viewer(wx.Panel):
     def deleteItemCommandClass(self):
         return command.DeleteCommand
     
+    def onEditSubject(self, item, newValue):
+        command.EditSubjectCommand(items=[item], newValue=newValue).do()
+        
+    def onEditDescription(self, item, newValue):
+        command.EditDescriptionCommand(items=[item], newValue=newValue).do()
+    
 
 class ListViewer(Viewer): # pylint: disable-msg=W0223
     def isTreeViewer(self):
