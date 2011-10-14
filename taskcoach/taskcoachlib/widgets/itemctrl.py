@@ -213,6 +213,7 @@ class Column(object):
         # image cannot be combined with a sortable column
         self.__headerImageIndex = kwargs.pop('headerImageIndex', -1)
         self.__editCommand = kwargs.get('editCommand', None)
+        self.__editCallback = kwargs.get('editCallback', None)
         self.__editControlClass = kwargs.get('editControl', None)
         self.__parse = kwargs.get('parse', lambda value: value)
         
@@ -262,10 +263,13 @@ class Column(object):
         return self.__hasImages
     
     def isEditable(self):
-        return self.__editCommand != None
+        return self.__editCommand != None or self.__editCallback != None
     
-    def editCommand(self):
-        return self.__editCommand
+    def onEndEdit(self, item, newValue):
+        if self.__editCallback:
+            self.__editCallback(item, newValue)
+        else:
+            self.__editCommand(items=[item], newValue=newValue).do()
     
     def editControl(self):
         return self.__editControlClass

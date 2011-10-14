@@ -519,31 +519,37 @@ class EditRecurrenceCommand(base.BaseCommand):
 
     def redo_command(self):
         self.do_command()
+        
     
-    
-class EditPercentageCompleteCommand(base.BaseCommand):
+class EditPercentageCompleteCommand(base.SaveStateMixin, EffortCommand):
     plurar_name = ('Change percentages complete')
     singular_name = _('Change percentage complete of "%s"')
     
     def __init__(self, *args, **kwargs):
-        self.__newPercentage = kwargs.pop('percentage')
+        self.__newPercentage = kwargs.pop('percentage', '') or kwargs.pop('newValue', '')
         super(EditPercentageCompleteCommand, self).__init__(*args, **kwargs)
-        self.__oldPercentages = [item.percentageComplete() for item in self.items]
+        itemsToSave = set([relative for item in self.items for relative in item.family()]) 
+        self.saveStates(itemsToSave)
         
     @patterns.eventSource
     def do_command(self, event=None):
+        super(EditPercentageCompleteCommand, self).do_command()
         for item in self.items:
             item.setPercentageComplete(self.__newPercentage, event=event)
             
     @patterns.eventSource
     def undo_command(self, event=None):
-        for item, oldPercentage in zip(self.items, self.__oldPercentages):
-            item.setPercentageComplete(oldPercentage, event=event)
-            
+        self.undoStates()
+        super(EditPercentageCompleteCommand, self).undo_command()
+        
     def redo_command(self):
-        self.do_command()
+        self.redoStates()
+        super(EditPercentageCompleteCommand, self).redo_command()
+
+    def tasksToStopTracking(self):
+        return self.items if self.__newPercentage == 100 else []
         
-        
+
 class EditShouldMarkCompletedCommand(base.BaseCommand):
     plural_name = _('Change when tasks are marked completed')
     singular_name = _('Change when "%s" is marked completed')
@@ -595,7 +601,7 @@ class EditHourlyFeeCommand(base.BaseCommand):
     singular_name = _('Change hourly fee of "%s"')
     
     def __init__(self, *args, **kwargs):
-        self.__newHourlyFee = kwargs.pop('hourlyFee')
+        self.__newHourlyFee = kwargs.pop('hourlyFee', '') or kwargs.pop('newValue', '')
         super(EditHourlyFeeCommand, self).__init__(*args, **kwargs)
         self.__oldHourlyFees = [item.hourlyFee() for item in self.items]
         
@@ -618,7 +624,7 @@ class EditFixedFeeCommand(base.BaseCommand):
     singular_name = _('Change fixed fee of "%s"')
     
     def __init__(self, *args, **kwargs):
-        self.__newFixedFee = kwargs.pop('fixedFee')
+        self.__newFixedFee = kwargs.pop('fixedFee', '') or kwargs.pop('newValue', '')
         super(EditFixedFeeCommand, self).__init__(*args, **kwargs)
         self.__oldFixedFees = [item.fixedFee() for item in self.items]
         
