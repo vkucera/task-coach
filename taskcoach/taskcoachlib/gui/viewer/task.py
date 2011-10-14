@@ -764,8 +764,8 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
             ('timeSpent', _('Time spent'), None, None, [task.Task.expansionChangedEventType(), 'task.timeSpent']),
             ('budgetLeft', _('Budget left'), None, None, [task.Task.expansionChangedEventType(), 'task.budgetLeft']),            
             ('priority', _('Priority'), inplace_editor.PriorityCtrl, self.onEditPriority, [task.Task.expansionChangedEventType(), 'task.priority']),
-            ('hourlyFee', _('Hourly fee'), None, None, [task.Task.hourlyFeeChangedEventType()]),
-            ('fixedFee', _('Fixed fee'), None, None, [task.Task.expansionChangedEventType(), 'task.fixedFee']),            
+            ('hourlyFee', _('Hourly fee'), inplace_editor.AmountCtrl, self.onEditHourlyFee, [task.Task.hourlyFeeChangedEventType()]),
+            ('fixedFee', _('Fixed fee'), inplace_editor.AmountCtrl, self.onEditFixedFee, [task.Task.expansionChangedEventType(), 'task.fixedFee']),            
             ('revenue', _('Revenue'), None, None, [task.Task.expansionChangedEventType(), 'task.revenue']),
             ('reminder', _('Reminder'), inplace_editor.DateTimeCtrl, self.onEditReminderDateTime, [task.Task.expansionChangedEventType(), 'task.reminder'])]:
             if (name in dependsOnEffortFeature and effortOn) or name not in dependsOnEffortFeature:
@@ -987,7 +987,13 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
         
     def onEditReminderDateTime(self, item, newValue):
         command.EditReminderDateTimeCommand(items=[item], newValue=newValue).do()
-                                
+        
+    def onEditHourlyFee(self, item, newValue):
+        command.EditHourlyFeeCommand(items=[item], newValue=newValue).do()
+        
+    def onEditFixedFee(self, item, newValue):
+        command.EditFixedFeeCommand(items=[item], newValue=newValue).do()
+
     def onEverySecond(self, event):
         # Only update when a column is visible that changes every second 
         if any([self.isVisibleColumnByName(column) for column in 'timeSpent', 

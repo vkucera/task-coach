@@ -254,7 +254,37 @@ class EditPercentageCompleteCommand(EditTaskCommand, EffortCommand):
 
     def tasksToStopTracking(self):
         return self.items if self._percentageComplete == 100 else []
+    
+    
+class EditHourlyFeeCommand(EditTaskCommand):
+    plural_name = _('Edit hourly fee')
+    singular_name = _('Edit hourly fee of "%s"')
+    
+    def __init__(self, *args, **kwargs):
+        self._hourlyFee = kwargs.pop('newValue')
+        super(EditHourlyFeeCommand, self).__init__(*args, **kwargs)
 
+    @patterns.eventSource
+    def do_command(self, event=None):
+        super(EditHourlyFeeCommand, self).do_command(event=event)
+        for item in self.items:
+            item.setHourlyFee(self._hourlyFee, event=event)
+
+
+class EditFixedFeeCommand(EditTaskCommand):
+    plural_name = _('Edit fixed fee')
+    singular_name = _('Edit fixed fee of "%s"')
+    
+    def __init__(self, *args, **kwargs):
+        self._fixedFee = kwargs.pop('newValue')
+        super(EditFixedFeeCommand, self).__init__(*args, **kwargs)
+
+    @patterns.eventSource
+    def do_command(self, event=None):
+        super(EditFixedFeeCommand, self).do_command(event=event)
+        for item in self.items:
+            item.setFixedFee(self._fixedFee, event=event)
+            
 
 class EditDatesCommand(EditTaskCommand):
     plural_name = _('Edit task dates')
