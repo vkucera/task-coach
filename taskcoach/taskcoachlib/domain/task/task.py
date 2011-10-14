@@ -1090,11 +1090,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     # Prerequisites
     
-    def prerequisites(self, recursive=False):
+    def prerequisites(self, recursive=False, upwards=False):
         prerequisites = self.__prerequisites.get() 
-        if recursive:
-            for child in self.children():
-                prerequisites |= child.prerequisites(recursive)
+        if recursive and upwards and self.parent() is not None:
+            prerequisites |= self.parent().prerequisites(recursive=True, upwards=True)
+        elif recursive and not upwards:
+            for child in self.children(recursive=True):
+                prerequisites |= child.prerequisites()
         return prerequisites
     
     @patterns.eventSource
@@ -1131,15 +1133,17 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             have multiple prerequisites we first sort the prerequisites by their
             subjects. If the sorter is in tree mode, we also take the 
             prerequisites of the children of the task into account, after the 
-            prerequisites of the task itself. '''
+            prerequisites of the task itself. If the sorter is in list
+            mode we also take the prerequisites of the parent (recursively) into
+            account, again after the prerequisites of the categorizable itself.'''
         def sortKeyFunction(task):
             def sortedSubjects(items):
                 return sorted([item.subject(recursive=True) for item in items])
             prerequisites = task.prerequisites()
             sortedPrerequisiteSubjects = sortedSubjects(prerequisites)
-            if kwargs.get('treeMode', False):
-                childPrerequisites = task.prerequisites(recursive=True) - prerequisites
-                sortedPrerequisiteSubjects.extend(sortedSubjects(childPrerequisites)) 
+            isListMode = not kwargs.get('treeMode', False)
+            childPrerequisites = task.prerequisites(recursive=True, upwards=isListMode) - prerequisites
+            sortedPrerequisiteSubjects.extend(sortedSubjects(childPrerequisites)) 
             return sortedPrerequisiteSubjects
         return sortKeyFunction
 
@@ -1150,11 +1154,13 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
 
     # Dependencies
     
-    def dependencies(self, recursive=False):
+    def dependencies(self, recursive=False, upwards=False):
         dependencies = self.__dependencies.get()
-        if recursive:
-            for child in self.children():
-                dependencies |= child.dependencies(recursive)
+        if recursive and upwards and self.parent() is not None:
+            dependencies |= self.parent().dependencies(recursive=True, upwards=True)
+        elif recursive and not upwards:
+            for child in self.children(recursive=True):
+                dependencies |= child.dependencies()
         return dependencies
 
     def setDependencies(self, dependencies, event=None):
@@ -1185,15 +1191,17 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             have multiple dependencies we first sort the dependencies by their
             subjects. If the sorter is in tree mode, we also take the 
             dependencies of the children of the task into account, after the 
-            dependencies of the task itself. '''
+            dependencies of the task itself. If the sorter is in list
+            mode we also take the dependencies of the parent (recursively) into
+            account, again after the dependencies of the categorizable itself.'''
         def sortKeyFunction(task):
             def sortedSubjects(items):
                 return sorted([item.subject(recursive=True) for item in items])
             dependencies = task.dependencies()
             sortedDependencySubjects = sortedSubjects(dependencies)
-            if kwargs.get('treeMode', False):
-                childDependencies = task.dependencies(recursive=True) - dependencies
-                sortedDependencySubjects.extend(sortedSubjects(childDependencies)) 
+            isListMode = not kwargs.get('treeMode', False)
+            childDependencies = task.dependencies(recursive=True, upwards=isListMode) - dependencies
+            sortedDependencySubjects.extend(sortedSubjects(childDependencies)) 
             return sortedDependencySubjects
         return sortKeyFunction
 

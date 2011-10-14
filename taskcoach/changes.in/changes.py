@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.0', 'October 9, 2011',
+Release('1.3.0', 'October 14, 2011',
     summary='''This release makes all edits done in dialogs immediate.''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -41,12 +41,26 @@ changes made in other dialogs.''', '1152561')
         ]
     ),
 
-Release('1.2.30', 'October 9, 2011',
+Release('1.2.30', 'October 14, 2011',
     summary='''This is a bugfix release.''',
     bugsFixed=[
         Bug('''Better explanation of the automatic import and export of
 Todo.txt format in the preferences dialog.''', '3418906'),
-        ]
+        Bug('''The task viewer in list mode now also shows the  
+categories, prerequisites and dependencies inherited from parent tasks, between 
+parentheses. In addition, the inherited categories, prerequisites or 
+dependencies are taken into account when sorting by categories, prerequisites or
+dependencies.''', '3414914'),
+        ],
+    featuresAdded=[
+        Feature('''The task viewer in list mode now also shows the  
+categories, prerequisites and dependencies inherited from parent tasks, between 
+parentheses. In addition, the inherited categories, prerequisites or 
+dependencies are taken into account when sorting by categories, prerequisites or
+dependencies.''', 'http://uservoice.com/a/ksD1q'),
+        Feature('''Percentage complete, hourly fee and fixed fee of tasks can 
+be edited in place.'''),
+        ],
     ),
             
 Release('1.2.29', 'October 3, 2011',

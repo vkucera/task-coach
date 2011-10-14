@@ -699,7 +699,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
                 width=self.getColumnWidth('subject'), 
                 imageIndicesCallback=self.subjectImageIndices,
                 renderCallback=self.renderSubject, 
-                editCommand=command.EditSubjectCommand, 
+                editCallback=self.onEditSubject, 
                 editControl=inplace_editor.SubjectCtrl, **kwargs)] + \
             [widgets.Column('description', _('Description'), 
                 task.Task.descriptionChangedEventType(), 
@@ -707,7 +707,7 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
                     value='description'),
                 renderCallback=lambda task: task.description(), 
                 width=self.getColumnWidth('description'),  
-                editCommand=command.EditDescriptionCommand, 
+                editCallback=self.onEditDescription, 
                 editControl=inplace_editor.DescriptionCtrl, **kwargs)] + \
             [widgets.Column('attachments', '', 
                 task.Task.attachmentsChangedEventType(), 
@@ -759,28 +759,28 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
         effortOn = self.settings.getboolean('feature', 'effort')
         dependsOnEffortFeature = ['budget',  'timeSpent', 'budgetLeft',
                                   'hourlyFee', 'fixedFee', 'revenue']
-        for name, columnHeader, editCtrl, editCommand, eventTypes in [
-            ('startDateTime', _('Start date'), inplace_editor.DateTimeCtrl, command.EditStartDateTimeCommand, []),
-            ('dueDateTime', _('Due date'), inplace_editor.DateTimeCtrl, command.EditDueDateTimeCommand, [task.Task.expansionChangedEventType()]),
-            ('completionDateTime', _('Completion date'), inplace_editor.DateTimeCtrl, command.EditCompletionDateTimeCommand, [task.Task.expansionChangedEventType()]),
-            ('percentageComplete', _('% complete'), None, None, [task.Task.expansionChangedEventType(), task.Task.percentageCompleteChangedEventType()]),
+        for name, columnHeader, editCtrl, editCallback, eventTypes in [
+            ('startDateTime', _('Start date'), inplace_editor.DateTimeCtrl, self.onEditStartDateTime, []),
+            ('dueDateTime', _('Due date'), inplace_editor.DateTimeCtrl, self.onEditDueDateTime, [task.Task.expansionChangedEventType()]),
+            ('completionDateTime', _('Completion date'), inplace_editor.DateTimeCtrl, self.onEditCompletionDateTime, [task.Task.expansionChangedEventType()]),
+            ('percentageComplete', _('% complete'), inplace_editor.PercentageCtrl, self.onEditPercentageComplete, [task.Task.expansionChangedEventType(), task.Task.percentageCompleteChangedEventType()]),
             ('timeLeft', _('Time left'), None, None, [task.Task.expansionChangedEventType(), 'task.timeLeft']),
             ('recurrence', _('Recurrence'), None, None, [task.Task.expansionChangedEventType(), task.Task.recurrenceChangedEventType()]),
-            ('budget', _('Budget'), inplace_editor.BudgetCtrl, command.EditBudgetCommand, [task.Task.expansionChangedEventType(), task.Task.budgetChangedEventType()]),            
+            ('budget', _('Budget'), inplace_editor.BudgetCtrl, self.onEditBudget, [task.Task.expansionChangedEventType(), task.Task.budgetChangedEventType()]),            
             ('timeSpent', _('Time spent'), None, None, [task.Task.expansionChangedEventType(), 'task.timeSpent']),
             ('budgetLeft', _('Budget left'), None, None, [task.Task.expansionChangedEventType(), 'task.budgetLeft']),            
-            ('priority', _('Priority'), inplace_editor.PriorityCtrl, command.EditPriorityCommand, [task.Task.expansionChangedEventType(), task.Task.priorityChangedEventType()]),
-            ('hourlyFee', _('Hourly fee'), None, None, [task.Task.hourlyFeeChangedEventType()]),
-            ('fixedFee', _('Fixed fee'), None, None, [task.Task.expansionChangedEventType(), task.Task.fixedFeeChangedEventType()]),            
+            ('priority', _('Priority'), inplace_editor.PriorityCtrl, self.onEditPriority, [task.Task.expansionChangedEventType(), task.Task.priorityChangedEventType()]),
+            ('hourlyFee', _('Hourly fee'), inplace_editor.AmountCtrl, self.onEditHourlyFee, [task.Task.hourlyFeeChangedEventType()]),
+            ('fixedFee', _('Fixed fee'), inplace_editor.AmountCtrl, self.onEditFixedFee, [task.Task.expansionChangedEventType(), task.Task.fixedFeeChangedEventType()]),            
             ('revenue', _('Revenue'), None, None, [task.Task.expansionChangedEventType(), 'task.revenue']),
-            ('reminder', _('Reminder'), inplace_editor.DateTimeCtrl, command.EditReminderDateTimeCommand, [task.Task.expansionChangedEventType(), task.Task.reminderChangedEventType()])]:
+            ('reminder', _('Reminder'), inplace_editor.DateTimeCtrl, self.onEditReminderDateTime, [task.Task.expansionChangedEventType(), task.Task.reminderChangedEventType()])]:
             if (name in dependsOnEffortFeature and effortOn) or name not in dependsOnEffortFeature:
                 renderCallback = getattr(self, 'render%s'%(name[0].capitalize()+name[1:]))
                 columns.append(widgets.Column(name, columnHeader,  
                     sortCallback=uicommand.ViewerSortByCommand(viewer=self, value=name),
                     renderCallback=renderCallback, width=self.getColumnWidth(name),
                     alignment=wx.LIST_FORMAT_RIGHT, editControl=editCtrl, 
-                    editCommand=editCommand, *eventTypes, **kwargs))
+                    editCallback=editCallback, *eventTypes, **kwargs))
         return columns
     
     def createColumnUICommands(self):
@@ -972,7 +972,34 @@ class TaskViewer(mixin.AttachmentDropTargetMixin, # pylint: disable-msg=W0223
                 value = recursiveValue
                 template = '(%s)'
         return template%renderValue(value, *extraRenderArgs)
-                                
+    
+    def onEditStartDateTime(self, item, newValue):
+        command.EditStartDateTimeCommand(items=[item], newValue=newValue).do()
+        
+    def onEditDueDateTime(self, item, newValue):
+        command.EditDueDateTimeCommand(items=[item], newValue=newValue).do()
+        
+    def onEditCompletionDateTime(self, item, newValue):
+        command.EditCompletionDateTimeCommand(items=[item], newValue=newValue).do()
+        
+    def onEditPercentageComplete(self, item, newValue):
+        command.EditPercentageCompleteCommand(items=[item], newValue=newValue).do()
+        
+    def onEditBudget(self, item, newValue):
+        command.EditBudgetCommand(items=[item], newValue=newValue).do()
+        
+    def onEditPriority(self, item, newValue):
+        command.EditPriorityCommand(items=[item], newValue=newValue).do()
+        
+    def onEditReminderDateTime(self, item, newValue):
+        command.EditReminderDateTimeCommand(items=[item], newValue=newValue).do()
+        
+    def onEditHourlyFee(self, item, newValue):
+        command.EditHourlyFeeCommand(items=[item], newValue=newValue).do()
+        
+    def onEditFixedFee(self, item, newValue):
+        command.EditFixedFeeCommand(items=[item], newValue=newValue).do()
+
     def onEverySecond(self, event):
         # Only update when a column is visible that changes every second 
         if any([self.isVisibleColumnByName(column) for column in 'timeSpent', 

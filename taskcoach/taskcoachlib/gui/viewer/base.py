@@ -418,6 +418,12 @@ class Viewer(wx.Panel):
     def deleteItemCommandClass(self):
         return command.DeleteCommand
     
+    def onEditSubject(self, item, newValue):
+        command.EditSubjectCommand(items=[item], newValue=newValue).do()
+        
+    def onEditDescription(self, item, newValue):
+        command.EditDescriptionCommand(items=[item], newValue=newValue).do()
+    
 
 class ListViewer(Viewer): # pylint: disable-msg=W0223
     def isTreeViewer(self):
@@ -705,8 +711,9 @@ class ViewerWithColumns(Viewer): # pylint: disable-msg=W0223
         ownItems = getItems(recursive=False)
         if ownItems:
             subjects.append(self.renderSubjects(ownItems))
-        if self.isItemCollapsed(item):
-            childItems = getItems(recursive=True) - ownItems
+        isListViewer = not self.isTreeViewer() # pylint: disable-msg=E1101
+        if isListViewer or self.isItemCollapsed(item):
+            childItems = getItems(recursive=True, upwards=isListViewer) - ownItems
             if childItems:
                 subjects.append('(%s)'%self.renderSubjects(childItems))
         return ' '.join(subjects)

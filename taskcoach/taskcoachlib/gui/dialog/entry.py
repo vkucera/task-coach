@@ -100,7 +100,6 @@ class TimeDeltaEntry(widgets.PanelWithBoxSizer):
 
 class AmountEntry(widgets.PanelWithBoxSizer):
     def __init__(self, parent, amount=0.0, readonly=False, *args, **kwargs):
-        self.local_conventions = kwargs.pop('localeconv', locale.localeconv())
         super(AmountEntry, self).__init__(parent, *args, **kwargs)
         self._entry = self.createEntry(amount)
         if readonly:
@@ -109,22 +108,7 @@ class AmountEntry(widgets.PanelWithBoxSizer):
         self.fit()
 
     def createEntry(self, amount):
-        decimalChar = self.local_conventions['decimal_point'] or '.'
-        groupChar = self.local_conventions['thousands_sep'] or ','
-        groupDigits = len(self.local_conventions['grouping']) > 1
-        # The thousands separator may come up as ISO-8859-1 character
-        # 0xa0, which looks like a space but isn't ASCII, which
-        # confuses NumCtrl... Play it safe and avoid any non-ASCII
-        # character here, or groupChars that consist of multiple characters.
-        if len(groupChar) > 1 or ord(groupChar) >= 128:
-            groupChar = ' '
-        # Prevent decimalChar and groupChar from being the same:
-        if groupChar == decimalChar:
-            groupChar = ' ' # Space is not allowed as decimal point
-        return widgets.masked.NumCtrl(self, fractionWidth=2,
-            decimalChar=decimalChar, groupChar=groupChar,
-            groupDigits=groupDigits, 
-            selectOnEntry=True, allowNegative=False, value=amount)
+        return widgets.masked.AmountCtrl(self, amount)
   
     def GetValue(self):
         return self._entry.GetValue()
