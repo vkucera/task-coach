@@ -22,7 +22,7 @@ from changetypes import *
 
 releases = [
             
-Release('1.3.0', 'October 14, 2011',
+Release('1.3.0', 'October 15, 2011',
     summary='''This release makes all edits done in dialogs immediate.''',
     featuresAdded=[
         Feature('''Item edit dialogs make changes immediately, thus no need
@@ -37,7 +37,9 @@ item. With earlier releases of Task Coach, the last edit dialog closed would
 overwrite changes made with edit dialogs that were closed earlier. With the new 
 edit dialog functionality introduced in this release, changes are propagated 
 immediately to all open dialogs. This will prevent overwriting
-changes made in other dialogs.''', '1152561')
+changes made in other dialogs.''', '1152561'),
+        Bug('''Don't close the edit dialog when dragging and dropping 
+an item.''', '3424138'),
         ]
     ),
 
