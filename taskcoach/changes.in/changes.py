@@ -53,6 +53,8 @@ categories, prerequisites and dependencies inherited from parent tasks, between
 parentheses. In addition, the inherited categories, prerequisites or 
 dependencies are taken into account when sorting by categories, prerequisites or
 dependencies.''', '3414914'),
+        Bug('''Don't reset the percentage complete to 0 when the user changes
+it from 100 to some other percentage less than 100.'''),
         ],
     featuresAdded=[
         Feature('''The task viewer in list mode now also shows the  

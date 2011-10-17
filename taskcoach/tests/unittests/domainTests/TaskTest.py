@@ -884,6 +884,7 @@ class CompletedTaskTest(TaskTestCase, CommonTaskTestsMixin):
     def testSettingTheCompletionDateTimeToInfiniteMakesTheTaskUncompleted(self):
         self.task.setCompletionDateTime(date.DateTime())
         self.failIf(self.task.completed())
+        self.assertEqual(0, self.task.percentageComplete())
 
     def testSettingTheCompletionDateTimeToAnotherDateTimeLeavesTheTaskCompleted(self):
         self.task.setCompletionDateTime(self.yesterday)
@@ -895,6 +896,7 @@ class CompletedTaskTest(TaskTestCase, CommonTaskTestsMixin):
     def testSetPercentageCompleteToLessThan100MakesTaskUncompleted(self):
         self.task.setPercentageComplete(99)
         self.assertEqual(date.DateTime(), self.task.completionDateTime())
+        self.assertEqual(99, self.task.percentageComplete())
         
     def testPercentageCompleteNotification(self):
         self.registerObserver('task.percentageComplete')
