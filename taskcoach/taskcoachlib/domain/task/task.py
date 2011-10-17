@@ -373,9 +373,10 @@ class Task(note.NoteOwner, attachment.AttachmentOwner,
             if parent and parent.priority(recursive=True) != oldParentPriority:
                 self.priorityEvent(event)              
             if completionDateTime != self.maxDateTime:
-                self.setReminder(None, event)
-            self.setPercentageComplete(100 if completionDateTime != self.maxDateTime else 0, 
-                                       event=event)
+                self.setReminder(None, event=event)
+                self.setPercentageComplete(100, event=event)
+            elif self.percentageComplete() == 100:
+                self.setPercentageComplete(0, event=event)
             if parent:
                 if self.completed():
                     if parent.shouldBeMarkedCompleted():

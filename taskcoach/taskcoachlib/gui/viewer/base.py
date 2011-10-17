@@ -713,7 +713,9 @@ class ViewerWithColumns(Viewer): # pylint: disable-msg=W0223
             subjects.append(self.renderSubjects(ownItems))
         isListViewer = not self.isTreeViewer() # pylint: disable-msg=E1101
         if isListViewer or self.isItemCollapsed(item):
-            childItems = getItems(recursive=True, upwards=isListViewer) - ownItems
+            childItems = getItems(recursive=True, upwards=isListViewer)
+            for myItem in ownItems:
+                childItems.remove(myItem)
             if childItems:
                 subjects.append('(%s)'%self.renderSubjects(childItems))
         return ' '.join(subjects)
