@@ -71,6 +71,7 @@ class EffortViewer(base.ListViewer,
     
     def detach(self):
         super(EffortViewer, self).detach()
+        patterns.Publisher().removeInstance(self.secondRefresher)
         for observer in self.__observersToDetach:
             patterns.Publisher().removeInstance(observer)    
             
